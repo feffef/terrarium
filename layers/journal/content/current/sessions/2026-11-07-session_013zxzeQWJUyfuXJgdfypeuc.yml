@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_013zxzeQWJUyfuXJgdfypeuc
 startedAt: 2026-11-07T07:58:07Z
-endedAt: 2026-11-07T08:37:15Z
+endedAt: 2026-11-07T12:11:57Z
 kind: interactive
-goal: Redesign the glassbox-curate Skill from its first four runs
-status: completed
-outcome: "PR #2923 merged: two-call orientation, proposals as results, run entries without pr and learned"
-summary: "The owner asked me to read issue #2906 and its comments, then to design improvements to glassbox-curate, allowing me to message the sessions that designed and ran it. I asked the designer and the four run sessions which orientation sections they used: all chose focus from the memory page, none used terms or warnings, and two never reached the guide pages. The designer quoted the owner's own plan to trim once the output grew. Every design choice was the owner's (human-instructed): drop pr and learned, a session link on the workshop page, claims through open PRs only, proposal-as-result, the Where next check, the memory-page fixes, and orient.ts in two calls. The owner corrected my first cut: the first paragraph of each page is essential and must stay, Where next can go, and the Skill should explain why. Agent-initiated: removing the Walkthrough links the new check flagged in two Lessons and relinking the orphaned Walkthrough from another Walkthrough. code-review found a stale \"claim\" wording and a misplaced doc comment, both fixed. Gate green; merged as PR #2923."
+goal: Redesign the glassbox-curate Skill from its runs, then fix what the next runs showed
+status: in-review
+outcome: "PR #2923 merged; PR #2929 open: read the Subject before choosing, wait for update PRs, update owns its merge"
+summary: "Phase 1 (human-instructed): the owner had me read issue #2906 and design improvements, consulting the sessions that designed and ran the Skill; PR #2923 (two-call orientation, no pr/learned fields, proposals as results, removal path) merged. Phase 2 (human-instructed): the owner asked me to review the runs after #2923 (the Claude Code split #2924/#2925, the triage-labels cut #2927) and the glassbox-update run #2922, and to have the update session run a retro. I messaged all three sessions; the update session could not reply by tool, so the owner pasted its answer. The owner then chose each fix: cut-fact homes, moved pages keep their update.yml date (grades.yml left to its own script, my objection accepted), curate waits for an open update PR, cost field named, a person may switch a run to autonomous, update's Land owns the merge, scoped checks fetch docs, the report lists changedFiles. The owner interrupted, then asked me to make runs read the whole Subject before choosing their focus, have review name missed pages for the lead to read, and have new Lessons follow the glassbox-lesson Skill. Agent-initiated: renaming \"rough focus\" to \"area\" and aligning the relevance test after review. Gate green; PR #2929 open."
 prs:
   - "2923"
+  - "2929"
 docsRead:
   - path: docs/agents/github-integration.md
     reason: MCP tool map; REST works in the cloud for orient.ts's PR lookup
@@ -40,6 +41,18 @@ docsRead:
   - path: .agents/skills/writing-for-agents/SKILL.md
     reason: Standards subagent read it for the SKILL.md edit; it flagged a restated rule from it
     useful: yes
+  - path: .agents/skills/retro/SKILL.md
+    reason: the categories I asked the update session to use for its retro
+    useful: yes
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: verified the update session's claims on steps 5 and 7 before editing them
+    useful: yes
+  - path: .agents/skills/glassbox-improve/SKILL.md
+    reason: showed grades.yml must not be hand-edited, which reshaped the moves fix
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/SKILL.md
+    reason: its five steps, so the curate Fix step could point to it
+    useful: yes
 skillsUsed:
   - name: code-review
     reason: Standards and Spec review of the diff before the PR
@@ -68,34 +81,55 @@ frictions:
   - description: A scripted SKILL.md edit failed on a mismatched old string and had to be resent in full, since the script aborted before writing
     solution: Grep the exact lines first, or use the Edit tool per hunk so one mismatch does not void the batch
     severity: nit
-durationSec: 2348
+  - description: "Edited the curate Skill while pnpm gate:scoped ran, so the gate aborted and had to run again (pr-workflow: edit nothing while it runs)"
+    solution: Hold new owner requests until the gate finishes, or stop the gate before editing
+    severity: minor
+  - description: Pushed with --force-with-lease after restarting the branch from main; the classifier denied it though a plain push was a fast-forward
+    solution: Check merge-base --is-ancestor before choosing a push form; a branch restarted after its merge needs no force
+    severity: minor
+  - description: The denied command also held the commit-message heredoc, so the message file never existed and the commit failed once more
+    solution: Write the message file with the Write tool in its own step before committing
+    severity: nit
+  - description: A narrowing error in the new changedFiles code passed vitest but failed pnpm typecheck
+    solution: Run pnpm typecheck right after editing a script, as CLAUDE.md says, before the specs
+    severity: nit
+  - description: The update session had no send_message tool, so its retro reached me only because the owner pasted it
+    solution: Before asking a scheduled session for a reply, say it may answer in its own transcript and read it there with the inspect-session Skill
+    severity: minor
+durationSec: 15230
 models:
-  claude-opus-5-5: 220
+  claude-opus-5-5: 423
 toolCounts:
-  Bash: 66
+  Bash: 124
   ToolSearch: 3
-  mcp__github__issue_read: 2
-  mcp__claude-code-remote__send_message: 6
+  mcp__github__issue_read: 5
+  mcp__claude-code-remote__send_message: 9
   mcp__claude-code-remote__get_session: 1
-  AskUserQuestion: 6
-  ReadNotifications: 3
-  Write: 2
+  AskUserQuestion: 11
+  ReadNotifications: 6
+  Write: 3
   SendUserFile: 1
-  Skill: 4
-  Agent: 2
-  Read: 1
+  Skill: 5
+  Agent: 5
+  Read: 3
   mcp__github__list_pull_requests: 1
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 1
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  mcp__github__pull_request_read: 10
   mcp__claude-code-remote__send_later: 1
   mcp__github__add_issue_comment: 1
   mcp__claude-code-remote__delete_trigger: 1
   mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  Edit: 1
 filesEdited:
   - .throwaway/curate-examples.md
   - .agents/skills/glassbox-curate/scripts/orient.ts
   - .agents/skills/glassbox-curate/SKILL.md
+  - layers/glassbox/tenant.config.ts
+  - .agents/skills/glassbox-update/SKILL.md
+  - .agents/skills/glassbox-update/scripts/glassbox-update.ts
+  - .agents/skills/glassbox-update/tests/unit/glassbox-update.spec.ts
+  - layers/glassbox/tests/unit/workshop.spec.ts
   - layers/glassbox/page-checks.ts
   - .agents/skills/glassbox-curate/tests/unit/orient.spec.ts
   - layers/glassbox/app/components/content/WorkshopRuns.vue
@@ -107,7 +141,6 @@ filesEdited:
   - layers/glassbox/content/workshop/runs/2026-11-06T2059.yml
   - layers/glassbox/content/workshop/runs/2026-11-06T2100.yml
   - layers/glassbox/content/workshop/runs/2026-11-06T2242.yml
-  - layers/glassbox/tenant.config.ts
   - layers/glassbox/tests/unit/glassbox-pages.spec.ts
 rulesLoaded:
   - .claude/rules/adr-0027.md
@@ -142,6 +175,8 @@ adrHints:
     via: path
     readAfter: true
     by: main
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0015.md
 docsReadBySubagents:
   - .agents/skills/writing-for-agents/SKILL.md
 ruleVerdicts:
@@ -202,24 +237,47 @@ ruleVerdicts:
   - path: .claude/rules/glossary-terms.md
     reason: No glossary term was added or changed
     useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: Loaded only for a review subagent, which found no installed Skill touched
+    useful: no
 subagents:
   - type: general-purpose
     task: Standards review of curate diff
     durationSec: 59
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 6.7
+    tokenShare: 2.7
   - type: general-purpose
     task: Spec review of curate diff
     durationSec: 50
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 6.5
+    tokenShare: 2.6
+  - type: general-purpose
+    task: Standards review of fixes diff
+    durationSec: 65
+    toolCalls: 7
+    modelCalls: 7
+    tokenShare: 2.4
+  - type: general-purpose
+    task: Spec review of fixes diff
+    durationSec: 67
+    toolCalls: 5
+    modelCalls: 5
+    tokenShare: 2.1
+  - type: general-purpose
+    task: Review full-read Skill commit
+    durationSec: 29
+    toolCalls: 3
+    modelCalls: 3
+    tokenShare: 0.8
 gitBranch: ccr-c1d87eb8-luzwvj
 entrypoint: remote_mobile
 cliVersion: 2.1.319
 learnings:
   - In the Claude app, text written before an AskUserQuestion call is hidden while the dialog is open, so the question must carry its own examples
+  - A get_session call's cost sits at external_metadata.usage.cost_usd; one run looked and reported no cost field
 ideas:
   - Have orient.ts print its own byte count and warn above the tool's save-to-file limit, so a future section that grows the output is noticed by the first run, not after four
+  - Give orient.ts a per-Subject read list (every page path in the chosen area with its word count), so the Read step's cost is visible and pagesRead can be checked against it mechanically
 landedBy: Stop
