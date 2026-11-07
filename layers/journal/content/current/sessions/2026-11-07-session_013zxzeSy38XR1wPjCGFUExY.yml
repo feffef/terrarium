@@ -1,27 +1,33 @@
 schemaVersion: 1
 session: session_013zxzeSy38XR1wPjCGFUExY
 startedAt: 2026-11-07T12:24:33Z
-endedAt: 2026-11-07T13:01:59Z
+endedAt: 2026-11-07T13:20:10Z
 kind: interactive
 goal: Clear the open issue backlog with the clear-backlog workflow
 status: in-review
-outcome: Nine issues explored; one closed, five answered, six builds started, first PR (#2932) open
-summary: "The owner started /clear-backlog. The sweep found nine eligible needs-triage issues (the five older ready-for-human issues were skipped because an agent wrote their latest comment). The explore workflow labelled #2911, #2917 and #2930 ready-for-agent, closed #2914 as already done, and sent #2884, #2913, #2915, #2916 and #2931 to the owner. The owner answered 2a, 3a, 4a, 5a (with 20 hours instead of 24 for the wait limit) and 1a after asking whether a Stop hook can really trigger close-session; I checked the existing Stop hooks and harness-tag-stop.ts and answered that it can only block the stop with a reason, not invoke the Skill. Human-instructed: the whole run, the picks, the 20-hour change and the 1a go-ahead. Agent-initiated: the grouping, the build briefs, and hand fixes for #2917 and #2930 after their review cap (a reflow revert, gate re-runs). #2911 is pushed and open as PR #2932; #2917 and #2930 await gate:scoped re-runs; the #2931, #2916, #2915 and #2913+#2884 builds were still running at this log."
+outcome: Nine issues explored; seven PRs opened, five merged, two wait for the owner's merge
+summary: "The owner started /clear-backlog. The sweep found nine eligible needs-triage issues (the five older ready-for-human issues were skipped because an agent wrote their latest comment). The explore workflow labelled #2911, #2917 and #2930 ready-for-agent, closed #2914 as already done, and sent #2884, #2913, #2915, #2916 and #2931 to the owner. The owner answered 2a, 3a, 4a and 5a (changing the wait limit from 24 to 20 hours) and 1a after asking whether a Stop hook can really trigger close-session; I checked the existing Stop hooks and answered that a hook can only block the stop with a reason. Two follow-up answers (6a, 7a) settled the Journal label and the merge proxy for #2884, which the build had made without asking. Merged by me after green CI and a verdict comment on each PR: #2932 (#2911), #2934 (#2930, after I labelled it ready-for-agent because merge-pr refused the closing keyword), #2935 (#2931, issue stays open for the claim-check cost), #2936 (#2915) and #2938 (#2916). Waiting for the owner's merge: #2933 (#2917, Human-only gate action) and #2937 (#2913 and #2884, Human-only settings.json and hooks). Human-instructed: the run, every pick and the follow-up answers. Agent-initiated: grouping, briefs, hand fixes after the review cap, the #2930 label, and placeholder PR numbers fixed afterwards. Open judgement calls are listed in each PR."
 prs:
   - "2932"
+  - "2933"
+  - "2934"
+  - "2935"
+  - "2936"
+  - "2937"
+  - "2938"
 docsRead:
   - path: .agents/skills/auto-triage/SKILL.md
-    reason: step 1 for resolving the eligible set and the AI-last-comment skip
+    reason: "triage #2884: Task told me to read it for per-issue rules.; triage #2911: Required by the task; per-issue rules and the wayfinder overlay.; triage #2913: Brief told me to read it for per-issue rules.; triage #2914: Task told me to read it; per-issue rules, closing and the wayfinder overlay.; triage #2915: The brief told me to read it; it holds the sweep rules.; triage #2916: Read as the brief directed, for the per-issue rules; triage #2917: Task required it; gave the brave-within-determinability rules and the comment and label rules.; triage #2930: Named by the task; per-issue triage rules and wayfinder overlay; triage #2931: Task told me to read it."
     useful: yes
   - path: docs/agents/github-integration.md
-    reason: which MCP tools and scripts to use for issue reads and PRs; a hook demanded it first
-    useful: partly
+    reason: "triage #2914: A hook asked for it before the first GitHub operation; it covers issue_write label replacement and the comment tool.; triage #2915: A hook asked me to read it after my first GitHub call; I read it, and my later calls matched it.; triage #2931: Hook demanded it before the first GitHub operation; confirmed comment goes through add_issue_comment and labels replace the set."
+    useful: yes
   - path: docs/agents/git-conventions.md
-    reason: required after a first git command; one-command-per-call and gate-then-push separation applied
-    useful: partly
+    reason: "fix fix/glassbox-curate-wait-limit-2931 r1: A hook asked for it after my first commit. Its trailer check was useful: the commit body carries both trailers.; build docs/count-before-stating-2915: A hook told me to read it after my first git command. I read it only after a chained Bash call was refused. It helped: I used `-F` for the commit message and did not chain the gate with git."
+    useful: yes
   - path: .agents/skills/dispatch-subagents/SKILL.md
-    reason: a guard blocked the Workflow call until I read it; nothing in it changed the call
-    useful: partly
+    reason: "triage #2911: The skill the issue targets; used to check what §3 already says.; Spec fix/dispatch-brief-asks-2911 r1: I read the changed file, lines 55-80, and grepped it for 'scratchpad' to see the new line in context and check the existing Stranding scratchpad line (line 54)."
+    useful: yes
   - path: docs/agents/pr-workflow.md
     reason: review-before-PR and PR body rules; confirmed the build's review rounds count and no PR template exists
     useful: yes
@@ -31,44 +37,77 @@ docsRead:
   - path: layers/glassbox/GLOSSARY.md
     reason: checked a stale-plural finding; left it as a judgement call
     useful: partly
+  - path: .agents/prune-trials.yml
+    reason: "triage #2911: Checked for an open trial covering §3 text."
+    useful: yes
   - path: .agents/skills/code-review/SKILL.md
-    reason: (no reason given)
-  - path: /home/user/terrarium/docs/agents/git-conventions.md
-    reason: (no reason given)
+    reason: "Standards fix/dispatch-brief-asks-2911 r1: Read as instructed, for the Standards axis and the smell baseline.; Standards fix/dispatch-brief-asks-2911 r2: I read it because the task told me to. It supplied the Standards axis and the smell baseline.; Standards fix/gate-doorbell-head-sha-2917 r1: Read as the brief instructed. Its smell baseline defines the Standards axis I applied.; Spec fix/gate-doorbell-head-sha-2917 r1: The task told me to read it. I applied only the Spec axis. Its sub-agent spawning does not apply to me.; Standards fix/gate-doorbell-head-sha-2917 r2: Task named it; supplied the smell baseline used for the Standards axis.; Spec fix/gate-doorbell-head-sha-2917 r2: Read because the task required it. Its Spec axis framing (missing, scope creep, wrong implementation) structured the review.; Standards fix/gate-doorbell-head-sha-2917 r3: The task said to read it and apply the Standards axis and the smell baseline. I applied the baseline to the one-line diff and found no smell.; Standards chore/remove-glassbox-improve-2930 r1: Read as instructed; supplied the smell baseline for the Standards axis. No baseline smell applies to a pure deletion diff.; Spec chore/remove-glassbox-improve-2930 r1: The brief told me to read it. It supplied the Spec axis of reporting missing, extra and wrong items against the spec.; Spec chore/remove-glassbox-improve-2930 r3: The task told me to read it and apply the Spec axis. I reviewed alone, since I cannot spawn subagents.; Standards fix/glassbox-curate-wait-limit-2931 r1: Read as instructed by the brief; supplied the smell baseline (none triggered).; Standards fix/glassbox-curate-wait-limit-2931 r2: The task told me to read it. I used its smell baseline for the Standards axis.; Spec fix/glassbox-curate-wait-limit-2931 r3: The task told me to read it and apply the Spec axis. Its Spec brief (missing, unrequested, wrong) was used as given.; Spec docs/rewrite-sample-first-2916 r2: The task told me to read it and apply the Spec axis. Its Spec brief was the structure used: missing, extra, wrong.; Spec docs/rewrite-sample-first-2916 r3: The task told me to read it and apply the Spec axis. I used its Spec brief: missing, extra and wrong items.; Standards docs/count-before-stating-2915 r1: The task told me to read it. It gave the Standards axis and the smell baseline, and none of the smells apply to this prose and YAML change.; Standards docs/count-before-stating-2915 r2: The task told me to apply its Standards axis and smell baseline. No baseline smell applies to this prose and YAML diff.; Spec docs/count-before-stating-2915 r2: The task told me to read it and apply the Spec axis. I used its Spec brief (missing, extra or wrongly implemented requirements). I did not follow its sub-agent parallelism, since I cannot spawn subagents.; Standards docs/count-before-stating-2915 r3: Read as the task directed, for the Standards axis and the smell baseline.; Standards fix/close-session-enforcement-2913-2884 r1: The task told me to read it. It gave the smell baseline (Middle Man and Duplicated Code matched the findings).; Standards fix/close-session-enforcement-2913-2884 r2: Named by the task; it holds the Standards axis and the smell baseline.; Spec fix/close-session-enforcement-2913-2884 r2: The task told me to read it and apply the Spec axis.; Standards fix/close-session-enforcement-2913-2884 r3: The task named it; supplied the Standards axis and smell baseline (Duplicated Code is the one I applied)."
+    useful: yes
   - path: .agents/skills/implement/SKILL.md
-    reason: (no reason given)
+    reason: "build fix/gate-doorbell-head-sha-2917: Task told me to read it and follow it.; build chore/remove-glassbox-improve-2930: The brief told me to read it.; build fix/glassbox-curate-wait-limit-2931: The task said to read and follow it."
+    useful: yes
+  - path: .agents/skills/triage/SKILL.md
+    reason: "triage #2884: Task told me to read it for per-issue rules.; triage #2911: Required by the task; roles and outcomes.; triage #2913: Brief told me to read it.; triage #2914: Task told me to read it; redundancy check, already-implemented close flow.; triage #2915: The brief told me to read it; it holds the per-issue rules.; triage #2916: Read as the brief directed, for the label state machine; triage #2930: Named by the task; state machine and brief rules; triage #2931: Task told me to read it."
+    useful: yes
+  - path: .claude/skills/tdd/SKILL.md
+    reason: "build chore/remove-glassbox-improve-2930: The brief told me to invoke the tdd Skill."
+    useful: partly
+  - path: /home/user/terrarium/CLAUDE.md
+    reason: "Standards chore/remove-glassbox-improve-2930 r1: Loaded as project instructions; gave the subagent-brief and verification expectations.; Standards docs/rewrite-sample-first-2916 r1: Loaded as project instructions; supplied the ADR-0027 simplicity standard and the bullet being edited.; Spec docs/rewrite-sample-first-2916 r1: It is the file the diff changes, and it was in my loaded context. It gave the 'Ask before building' bullet and ADR-0027's rule to cut before adding.; Spec docs/rewrite-sample-first-2916 r2: Loaded as project instructions. It supplied the 'Ask before building' bullet context and the ADR-0027 principle.; Standards docs/rewrite-sample-first-2916 r3: Loaded at session start; ADR-0027 simplicity principle guided the review.; Spec docs/count-before-stating-2915 r2: Loaded at session start. It supplied the 'Count every item' and 'One home per fact' principles and the read-only review limits."
+    useful: yes
+  - path: /home/user/terrarium/GLOSSARY-MAP.md
+    reason: "Standards docs/rewrite-sample-first-2916 r1: Loaded as project instructions; not needed for this review."
+    useful: no
+  - path: CLAUDE.md
+    reason: "triage #2931: Project instructions loaded at start; triggered the github-integration and git-conventions reads.; build fix/dispatch-brief-asks-2911: Loaded at session start; the 'Every subagent brief' bullet is the text the new line points to.; Standards fix/dispatch-brief-asks-2911 r1: Loaded as project instructions. Its 'Every subagent brief' bullet is the target of the new pointer, and its one-home-per-fact rule is the basis for finding 1.; Spec fix/dispatch-brief-asks-2911 r1: Loaded at session start. I used it for the 'Every subagent brief' bullet at line 38 (found with grep) and for the one-home-per-fact principle.; Standards fix/dispatch-brief-asks-2911 r2: Loaded with the session instructions. I checked that the \"Every subagent brief\" bullet exists at CLAUDE.md:38 (grep) and used its \"one home per fact\" rule.; Spec fix/dispatch-brief-asks-2911 r2: Loaded at session start. It holds the 'Every subagent brief' bullet (CLAUDE.md:38, from grep) that the new line points to.; Standards fix/gate-doorbell-head-sha-2917 r1: Project instructions delivered at session start. I used its 'keep it short' and 'one home per fact' standards.; build chore/remove-glassbox-improve-2930: Loaded at session start.; Spec fix/glassbox-curate-wait-limit-2931 r1: Project instructions were in my context at session start. They said to read git-conventions.md before git commands and github-integration.md before GitHub operations; I ran only read-only git diff/log/grep and a read-only issue_read, and I did not open either doc. The hook-injected reminders for both arrived after the calls. The brief-verdict requirement came from here.; Standards fix/glassbox-curate-wait-limit-2931 r2: Project instructions loaded at start. They state the 'keep it short' and ADR-0027 simplicity goal that I used as the review lens.; Spec fix/glassbox-curate-wait-limit-2931 r2: Project instructions loaded at session start; they gave the review constraints and the 'keep it short' rule that guided the simplicity focus.; Spec fix/glassbox-curate-wait-limit-2931 r3: Loaded as project instructions. It gave the subagent-brief and verdict requirements, and the 'keep it short' and 'one home per fact' principles used for the simplicity check.; fix docs/rewrite-sample-first-2916 r2: Project instructions loaded at session start.; Spec docs/count-before-stating-2915 r1: Project instructions in context. Its 'Count every item' and ADR-0027 guidance is the spec's anchor for this review.; Standards docs/count-before-stating-2915 r3: Loaded as project instructions. It supplied the 'Count every item' and 'cut before you add' (ADR-0027) standards the review checked against.; Spec docs/count-before-stating-2915 r3: Loaded at session start. Its 'Verify before you state' and 'Count every item' wording is the existing instruction the brief says to sharpen.; Standards fix/close-session-enforcement-2913-2884 r3: Loaded at session start; gave the 'keep it short', 'one home per fact' and user-facing UI confirmation standards used in the findings."
+    useful: yes
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: "build fix/gate-doorbell-head-sha-2917: Hook asked for a full read after I edited action.yml; confirmed the Human-only merge rule.; build fix/close-session-enforcement-2913-2884: A hook asked me to read it after I wrote a file in scripts/hooks."
+    useful: partly
+  - path: docs/adr/0005-skill-model.md
+    reason: "build fix/dispatch-brief-asks-2911: Hook asked for it after editing the Skill file.; fix fix/glassbox-curate-wait-limit-2931 r1: A hook asked me to read it in full after the SKILL.md edit. It confirmed the edit was right."
+    useful: partly
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: "build fix/gate-doorbell-head-sha-2917: Hook asked for a full read after I edited the parity spec; nothing changed in my work."
+    useful: partly
+  - path: docs/adr/0027-prune-trials.md
+    reason: "build fix/dispatch-brief-asks-2911: Hook asked for it after the edit; confirmed to leave trial-covered text alone.; fix fix/glassbox-curate-wait-limit-2931 r1: A hook asked me to read it in full after the SKILL.md edit. It sent me to check .agents/prune-trials.yml for an open trial.; build docs/count-before-stating-2915: A hook asked me to read it after I edited a Skill. It confirmed that only open trials constrain such edits."
+    useful: yes
   - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: "fix docs/rewrite-sample-first-2916 r1: A hook asked for a full read after I edited CLAUDE.md. I read it; it confirmed that CLAUDE.md is the right home for this clause, so it did not change the edit."
+    useful: partly
+  - path: docs/agents/guards.md
+    reason: "build fix/close-session-enforcement-2913-2884: Read to add the roster row. It was named by the guards rule that loaded.; Spec fix/close-session-enforcement-2913-2884 r2: I read the diff and lines 40-60 to check the conventions the new hook should follow."
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: "triage #2914: A hook asked for it after my label write; I only grepped it, which turned up nothing that changed the outcome."
+    useful: partly
+  - path: docs/agents/triage-labels.md
+    reason: "triage #2915: A hook asked for it after I labelled; it confirmed that ready-for-human is the right label."
+    useful: yes
+  - path: GLOSSARY-MAP.md
+    reason: "Spec fix/dispatch-brief-asks-2911 r1: Loaded at session start. I did not need it for this review.; Spec fix/dispatch-brief-asks-2911 r2: Loaded at session start. It was not needed for this review.; gate fix/dispatch-brief-asks-2911: Loaded as project instructions; not relevant to running the gate.; Standards fix/glassbox-curate-wait-limit-2931 r2: Loaded at session start. It was not needed for this diff.; Spec fix/glassbox-curate-wait-limit-2931 r2: Loaded at session start. It lists the glossaries; I did not need it for this diff."
+    useful: no
+  - path: scripts/lib/author-trust.ts
+    reason: "triage #2916: Read to confirm the trust associations; the issue's author_association is OWNER, so Trusted; triage #2930: Named by the task; OWNER is in the trusted set"
+    useful: yes
+  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+    reason: read after a hook asked; confirmed the derived Session-card flag does not rewrite logs
+    useful: partly
+  - path: /home/user/terrarium/docs/agents/git-conventions.md
     reason: (no reason given)
   - path: layers/journal/content/current/frictions/drafts-caught-by-fact-check.yml
     reason: (read before editing)
   - path: .agents/skills/glassbox-curate/SKILL.md
     reason: (read before editing)
-  - path: docs/adr/0027-prune-trials.md
-    reason: (no reason given)
   - path: .agents/skills/frictions-to-fixes/scripts/ledger-set.ts
-    reason: (no reason given)
-  - path: docs/adr/0005-skill-model.md
     reason: (no reason given)
   - path: .github/actions/gate/action.yml
     reason: (read before editing)
   - path: tests/unit/gate-parity.spec.ts
     reason: (read before editing)
-  - path: docs/adr/0026-gate-workflow-thin-shell.md
-    reason: (no reason given)
-  - path: docs/adr/0004-objective-safety-gate.md
-    reason: (no reason given)
-  - path: .agents/skills/triage/SKILL.md
-    reason: (no reason given)
-  - path: docs/agents/triage-labels.md
-    reason: (no reason given)
-  - path: .agents/prune-trials.yml
-    reason: (no reason given)
-  - path: scripts/lib/author-trust.ts
-    reason: (no reason given)
   - path: layers/journal/content/current/frictions/close-session-bypassed-by-hand-log.yml
     reason: (no reason given)
-  - path: docs/agents/guards.md
-    reason: (read before editing)
   - path: .agents/skills/close-session/SKILL.md
     reason: (read before editing)
   - path: .agents/skills/log-session/SKILL.md
@@ -98,36 +137,48 @@ frictions:
   - description: "Linked worktree(s) left with uncommitted or unpushed work at close: /home/user/terrarium/.claude/worktrees/wf_5a9a699a-f30-1, /home/user/terrarium/.claude/worktrees/wf_5a9a699a-f30-2, /home/user/terrarium/.claude/worktrees/wf_5a9a699a-f30-3, /home/user/terrarium/.claude/worktrees/wf_9fd268bd-b1b-2, /home/user/terrarium/.claude/worktrees/wf_9fd268bd-b1b-3, /home/user/terrarium/.claude/worktrees/wf_fe18fea7-d48-1"
     solution: Push each, or remove it if its work is meant to be dropped.
     severity: minor
-durationSec: 2246
+  - description: "The #2884 build brief left the new Session card label open, so the agent built user-facing UI before the owner decided it; I asked afterwards."
+    solution: In clear-backlog section 2, ask what a displayed value looks like and says in the first grilling round when a pick adds UI.
+    severity: minor
+  - description: "The triage agent left #2930 unlabelled, so merge-pr.ts refused the PR's closing keyword and I labelled the issue by hand."
+    solution: clear-backlog could have the explore step set ready-for-agent on a build result, or the build brief use relates-to.
+    severity: nit
+  - description: Two build agents wrote guessed PR numbers into ledger entries before any PR existed, costing a follow-up commit and push.
+    solution: Brief builders to leave the PR number out and put the real one in after opening the PR.
+    severity: nit
+durationSec: 3337
 models:
-  claude-sonnet-5-5: 71
+  claude-sonnet-5-5: 172
 toolCounts:
-  Bash: 16
-  Read: 5
-  ToolSearch: 2
+  Bash: 50
+  Read: 6
+  ToolSearch: 4
   mcp__github__issue_read: 5
   Workflow: 5
-  PushNotification: 2
-  Edit: 1
+  PushNotification: 3
+  Edit: 6
   Glob: 1
-  mcp__github__create_pull_request: 1
+  mcp__github__create_pull_request: 7
   Skill: 2
   Write: 1
+  mcp__github__pull_request_read: 5
+  mcp__github__add_issue_comment: 6
+  mcp__github__issue_write: 1
 filesEdited:
   - .agents/skills/glassbox-lesson/QUALITY.md
+  - layers/journal/app/components/journal/SessionCard.vue
+  - layers/journal/app/utils/dashboard.ts
+  - layers/journal/content/current/frictions/rewrite-draft-keeps-old-framing.yml
+  - layers/journal/content/current/frictions/drafts-caught-by-fact-check.yml
   - .agents/skills/glassbox-curate/SKILL.md
   - layers/glassbox/content/guide/pages/agents/03.routines.md
   - CLAUDE.md
-  - layers/journal/content/current/frictions/drafts-caught-by-fact-check.yml
   - .agents/skills/dispatch-subagents/SKILL.md
   - tests/unit/gate-parity.spec.ts
   - .github/actions/gate/action.yml
   - tests/unit/merge-close-stop.spec.ts
   - scripts/hooks/merge-close-stop.ts
-  - layers/journal/content/current/frictions/rewrite-draft-keeps-old-framing.yml
   - docs/agents/guards.md
-  - layers/journal/app/components/journal/SessionCard.vue
-  - layers/journal/app/utils/dashboard.ts
   - .agents/skills/close-session/SKILL.md
   - .agents/skills/log-session/SKILL.md
   - .claude/settings.json
@@ -157,12 +208,18 @@ rulesLoaded:
   - .claude/rules/adr-0005.md
   - .claude/rules/adr-0004-human-merge.md
   - .claude/rules/guards.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/ui-verification.md
+  - .claude/rules/adr-0030.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0017.md
 rulesFollowedUp:
+  - .claude/rules/adr-0008.md
   - .claude/rules/adr-0005.md
   - .claude/rules/adr-0029.md
   - .claude/rules/adr-0027.md
@@ -177,6 +234,10 @@ adrHints:
   - adr: 27
     via: path
     readAfter: false
+    by: main
+  - adr: 8
+    via: path
+    readAfter: true
     by: main
   - adr: 5
     via: path
@@ -205,20 +266,15 @@ adrHints:
 rulesLoadedBySubagents:
   - .claude/rules/glassbox-content.md
   - .claude/rules/mermaid-lanes.md
-  - .claude/rules/tenant-glossary.md
-  - .claude/rules/adr-0030.md
-  - .claude/rules/adr-0008.md
   - .claude/rules/adr-0021.md
   - .claude/rules/glossary-terms.md
   - .claude/rules/adr-0002.md
   - .claude/rules/data-shapes.md
   - .claude/rules/mdc-when-to-use.md
-  - .claude/rules/tenant-layers.md
   - .claude/rules/adr-0015.md
   - .claude/rules/adr-0026.md
   - .claude/rules/adr-0028.md
   - .claude/rules/adr-0025.md
-  - .claude/rules/ui-verification.md
 docsReadBySubagents:
   - .agents/skills/code-review/SKILL.md
   - .agents/skills/glassbox-curate/SKILL.md
@@ -229,44 +285,88 @@ docsReadBySubagents:
   - docs/adr/0026-gate-workflow-thin-shell.md
   - docs/adr/0004-objective-safety-gate.md
   - .agents/skills/triage/SKILL.md
-  - docs/agents/triage-labels.md
   - docs/agents/guards.md
   - .agents/skills/close-session/SKILL.md
   - .agents/skills/log-session/SKILL.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
-    reason: Told me to gate:scoped and review before opening PRs and flagged human-merge paths; the summary was enough, I did not open the ADR
+    reason: "triage #2917: Loaded at the start; the Human-only action.yml means a human merge, which I put in the brief.; build fix/dispatch-brief-asks-2911: Loaded at session start; gate:scoped requirement.; fix fix/dispatch-brief-asks-2911 r1: Session-start rule; the gate step applied (gate:scoped passed).; gate fix/dispatch-brief-asks-2911: Loaded at session start; confirms pnpm gate:scoped is the required gate.; Standards fix/gate-doorbell-head-sha-2917 r1: Loaded at session start. It covers the Human-only merge requirement for this PR, which the second finding relies on.; Spec fix/gate-doorbell-head-sha-2917 r1: Loaded at session start. It says an action.yml change is Human-only, and a change that no test or gate step can observe also needs a human.; fix fix/gate-doorbell-head-sha-2917 r1: Loaded at session start; it says Human-only files need a human merge.; Standards fix/gate-doorbell-head-sha-2917 r2: Loaded at session start; confirms action.yml is Human-only and the PR waits for a human merge.; Spec fix/gate-doorbell-head-sha-2917 r2: Loaded at session start. It names Human-only files and the human-merge requirement for action.yml.; fix fix/gate-doorbell-head-sha-2917 r2: Loaded at session start. It says the file is Human-only and a gate must pass, which shaped the PR-body statement.; Spec fix/gate-doorbell-head-sha-2917 r3: Loaded at session start. It confirms that the PR must wait for a human merge because action.yml is Human-only.; Spec chore/remove-glassbox-improve-2930 r3: Loaded at session start. It sets the merge conditions that the human-merge check depends on.; fix fix/glassbox-curate-wait-limit-2931 r2: Session-start rule; gate:scoped requirement applied; gate fix/glassbox-curate-wait-limit-2931: Loaded at session start. It says to run gate:scoped before the PR, which is this task.; fix docs/rewrite-sample-first-2916 r1: Loaded at session start. It requires the gate and says a PR needs review; I ran the gate.; build docs/count-before-stating-2915: Loaded at session start. It requires running the gate before the PR.; fix fix/close-session-enforcement-2913-2884 r2: Loaded at session start. It requires gate:scoped before a PR.; Standards fix/close-session-enforcement-2913-2884 r3: Loaded at session start; gave the human-merge and gate context for settings.json and the hook script.; Spec fix/close-session-enforcement-2913-2884 r3: Always loaded. It points to the Human-only list."
     useful: yes
   - path: .claude/rules/adr-0009.md
-    reason: Reminded me to invoke close-session when the PR opened; summary was enough
+    reason: "triage #2913: Loaded; covers close-session and log-session, the subject of the issue.; Spec fix/close-session-enforcement-2913-2884 r1: Loaded at session start. It frames the log and close-session context for both issues."
     useful: yes
   - path: .claude/rules/adr-0003.md
-    reason: Confirmed PRs open without asking after review and gate and that ready-for-agent is the approval; summary was enough
+    reason: "triage #2930: Loaded at session start; confirms removing a Skill needs Trusted approval, which the owner gave"
     useful: yes
   - path: .claude/rules/adr-0017.md
-    reason: Required the provenance header on the PR body and the commit trailer I checked; summary was enough
+    reason: "triage #2884: Loaded at session start; required the provenance header on my comment.; triage #2911: Loaded at session start; required the provenance header on the comment.; triage #2913: Loaded; the provenance header on my comment.; triage #2914: Loaded at session start; provenance header on writes.; triage #2915: It loaded at session start and sets the provenance header.; triage #2916: Loaded at the start; it requires the provenance header on the comment; triage #2917: Loaded at the start; set the provenance header on my comment.; triage #2931: Loaded at session start; gave the comment header format.; build fix/dispatch-brief-asks-2911: Loaded at session start; commit trailer applied.; fix fix/dispatch-brief-asks-2911 r1: Session-start rule; I checked the commit trailer landed with git log -1 --format=%B.; build fix/glassbox-curate-wait-limit-2931: Loaded at session start; it requires the commit trailer, and I checked that it landed (git log -1).; fix docs/rewrite-sample-first-2916 r1: Loaded at session start. It requires a commit trailer, which I added to my commit.; fix docs/rewrite-sample-first-2916 r2: Loaded at session start. It covers the commit trailer, which I added.; build docs/count-before-stating-2915: Loaded at session start. It requires the commit trailer, which I checked landed.; build fix/close-session-enforcement-2913-2884: Always loaded. I used its commit trailer requirement and checked the trailer landed (git log -1)."
     useful: yes
   - path: .claude/rules/adr-0022.md
-    reason: Defined what the sweep may label ready-for-agent versus ready-for-human; summary was enough
+    reason: "triage #2884: Loaded after reading triage skills; governs which labels a sweep may apply.; triage #2911: Loaded after reading auto-triage; governs when the sweep may label ready-for-agent.; triage #2913: Loaded at session start; governs what a triage run may label.; triage #2915: It loaded when I read the triage Skills. It confirmed that judgment calls go to ready-for-human.; triage #2916: Loaded at the start; it governs what a triage sweep may label and send to ready-for-human; triage #2917: Loaded at the start; governs which labels the sweep may set for a Trusted-authored issue.; triage #2930: Loaded after the Skill reads; defines which issues go ready-for-agent; triage #2931: Loaded on reading auto-triage; governs what a sweep may label."
     useful: yes
   - path: .claude/rules/adr-0027.md
-    reason: "Loaded with the Skill file; reinforced pointing, not restating, in #2911 briefs and open trials"
-    useful: partly
+    reason: "triage #2911: Loaded at session start; shaped the point-don't-restate brief and the check for open prune trials.; build fix/dispatch-brief-asks-2911: Loaded on the Skill edit; warned about the open trial covering the foreground bullet.; Standards fix/dispatch-brief-asks-2911 r1: Loaded at session start. It covers the one-home-per-fact and prune-trial constraints that bear on this edit.; fix fix/dispatch-brief-asks-2911 r1: Loaded for the SKILL.md edit; confirmed point-not-restate and the open-trial restriction.; Standards fix/dispatch-brief-asks-2911 r2: Loaded at session start. It matters here because an open prune trial covers the §3 foreground bullet. I confirmed the diff leaves that bullet alone.; fix chore/remove-glassbox-improve-2930 r2: Loaded on the same edit. It told me to check .agents/prune-trials.yml for an open trial covering the text; none does.; fix fix/glassbox-curate-wait-limit-2931 r1: Loaded after the SKILL.md edit. It told me to check for open prune trials, which I did.; Standards fix/glassbox-curate-wait-limit-2931 r2: Loaded at session start. The brief names ADR-0027 (simplify instructions before adding). The diff adds one sentence, which fits.; fix docs/rewrite-sample-first-2916 r1: Loaded after the CLAUDE.md edit. It told me to cut before adding, which matches the brief's 'add nothing else' and the shortened clause.; Standards docs/rewrite-sample-first-2916 r2: Loaded at session start. It is the cross-cutting rule the brief cites (cut or simplify before adding). It confirmed that a one-clause change is the right size.; Spec docs/rewrite-sample-first-2916 r2: Loaded as a cross-cutting rule. Its 'cut or simplify before adding' principle is the basis for judging the clause as small and sufficient.; Spec docs/rewrite-sample-first-2916 r3: Loaded at session start. It is relevant because the change adds an instruction to CLAUDE.md, and its 'cut or simplify before adding' rule drove the simplicity review.; build docs/count-before-stating-2915: Loaded after I edited a Skill. It says to prefer simplifying or pointing to an existing instruction over adding a new one, and to check for an open trial.; Standards docs/count-before-stating-2915 r1: Loaded at session start. It matters here because an edited Skill could fall under an open prune trial. Grep of .agents/prune-trials.yml for glassbox-curate returned no matches, so none covers this text.; fix docs/count-before-stating-2915 r1: Loaded after editing the Skill; it governs cut-or-simplify and open prune trials.; Standards docs/count-before-stating-2915 r2: Loaded at session start. It covers cutting or sharpening an existing instruction over adding one, and open prune trials. It matches this diff's shape.; Standards docs/count-before-stating-2915 r3: Loaded at session start. It confirmed that cutting or simplifying beats adding, and that an open prune trial covering the text would constrain the edit. I did not check .agents/prune-trials.yml myself; the build decisions say it has no match."
+    useful: yes
   - path: .claude/rules/adr-0029.md
-    reason: Loaded with an instruction-file path; not relevant to a backlog sweep
-    useful: no
-  - path: .claude/rules/adr-0020.md
-    reason: "Trust tiers: every eligible issue was owner-authored, so Trusted; summary was enough"
+    reason: "build docs/rewrite-sample-first-2916: Loaded when I edited CLAUDE.md. It confirms the clause belongs in CLAUDE.md. I did not read the full ADR.; fix docs/rewrite-sample-first-2916 r1: Loaded after the CLAUDE.md edit. It pointed me to the full ADR."
     useful: partly
+  - path: .claude/rules/adr-0020.md
+    reason: "triage #2911: Loaded with the trust-tier check; confirmed the owner-authored issue is Trusted.; triage #2913: Loaded at session start; Trusted vs Public tiers (issue author is OWNER).; triage #2916: Loaded at the start; it set the trust tier for the issue's author; triage #2917: Loaded at the start; I used it to confirm the OWNER author is Trusted, not Public.; triage #2930: Loaded at session start; trust tier check (author is OWNER)"
+    useful: yes
   - path: .claude/rules/adr-0005.md
-    reason: Loaded when I read a Skill; Skills are Platform code, no effect on this orchestration
-    useful: no
+    reason: "triage #2930: Loaded on reading the Skill; covers Skill location and link in .claude/skills; triage #2931: Loaded; Routines are set outside the repo, which supports the human step.; Standards chore/remove-glassbox-improve-2930 r1: Loaded because the diff removes a Skill and its link; confirms the Skill folder plus .claude/skills link convention.; Standards chore/remove-glassbox-improve-2930 r2: Loaded at session start; confirms Skill removal means deleting the folder and its `.claude/skills` link, which the diff does.; Standards chore/remove-glassbox-improve-2930 r3: Loaded. It covers the Skill folder and link layout, which the removal follows (both the folder and the .claude/skills link are gone).; build fix/glassbox-curate-wait-limit-2931: Loaded at session start and again when I read the Skill file.; Standards fix/glassbox-curate-wait-limit-2931 r2: Loaded at session start. The brief names ADR-0005 (Skills are Platform code; the Routine is created outside the repo), and the diff respects it.; Standards fix/glassbox-curate-wait-limit-2931 r3: Loaded at session start. It confirms that creating the Routine is outside the repo (a schedule lives in a Routine, not in the Skill). The diff creates no Routine."
+    useful: yes
   - path: .claude/rules/adr-0004-human-merge.md
-    reason: "Loaded after the hook list; confirmed action.yml in #2917 needs a human merge"
+    reason: "triage #2917: Loaded when I read action.yml; confirmed it is Human-only.; build fix/gate-doorbell-head-sha-2917: Loaded when I touched action.yml; confirms the PR waits for a human merge.; Spec chore/remove-glassbox-improve-2930 r1: I read it to check the human-merge paths list. The diff touches none of those paths: no .claude/rules, package.json or scripts/hooks. Skills are not on the list.; Spec chore/remove-glassbox-improve-2930 r3: I read it to check the touched paths against the human-merge list. None matched.; build fix/close-session-enforcement-2913-2884: Loaded when I touched scripts/hooks. It was the source for the Human-only list.; Standards fix/close-session-enforcement-2913-2884 r2: Read to confirm the human-merge paths; it lists settings.json and scripts/hooks/**.; Spec fix/close-session-enforcement-2913-2884 r2: I read it (lines 10-30) to check whether settings.json and scripts/hooks are Human-only. They are.; Spec fix/close-session-enforcement-2913-2884 r3: I read lines 10-25 to check that the hook script and settings.json are Human-only."
     useful: yes
   - path: .claude/rules/guards.md
-    reason: Pointer to the guards roster; I did not need it as the orchestrator
+    reason: "build fix/close-session-enforcement-2913-2884: Loaded when I touched scripts/hooks. It pointed me to docs/agents/guards.md."
+    useful: yes
+  - path: .claude/rules/adr-0002.md
+    reason: "build docs/rewrite-sample-first-2916: Loaded when I read tenant.config.ts. It was not relevant to this change."
     useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: "triage #2884: Loaded when I read the Journal dashboard util; bears on a derived flag versus regenerating logs.; build fix/close-session-enforcement-2913-2884: Loaded when I read journal files. It gave the derive-don't-regenerate constraint."
+    useful: yes
+  - path: .claude/rules/adr-0015.md
+    reason: "triage #2930: Loaded on reading the Journal Skill entry; Inventory entries are the place for Skill notes, led to the missed yml; build chore/remove-glassbox-improve-2930: Loaded when I read the journal Skill Inventory entries."
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: "triage #2930: Loaded when I read GLOSSARY.md; glossary entry removal only"
+    useful: partly
+  - path: .claude/rules/adr-0025.md
+    reason: "build fix/close-session-enforcement-2913-2884: Loaded while I grepped journal files. Not needed."
+    useful: no
+  - path: .claude/rules/adr-0026.md
+    reason: "triage #2917: Loaded when I read action.yml; confirmed agents may edit the action and a human merges it.; build fix/gate-doorbell-head-sha-2917: Loaded for action.yml and gate-parity.spec.ts; pointed to the parity test where my new test went."
+    useful: yes
+  - path: .claude/rules/adr-0028.md
+    reason: "build fix/gate-doorbell-head-sha-2917: Loaded mid-session; not relevant to this change."
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: "build fix/dispatch-brief-asks-2911: Loaded after reading the ADRs; not relevant.; fix fix/dispatch-brief-asks-2911 r1: Loaded mid-run; irrelevant, since no ADR was edited.; build fix/gate-doorbell-head-sha-2917: Loaded mid-session; not relevant to this change.; fix chore/remove-glassbox-improve-2930 r2: Loaded after the edit. Concerns how ADRs are written, which this change does not touch.; build fix/glassbox-curate-wait-limit-2931: Loaded alongside the human-merge rule; no ADR was edited.; fix docs/rewrite-sample-first-2916 r1: Loaded after the CLAUDE.md edit. It governs ADRs, which I did not touch.; build docs/count-before-stating-2915: Loaded after an ADR read. It is about ADRs, which I did not change.; fix docs/count-before-stating-2915 r1: Loaded after I read the ADR-0005 and ADR-0027 docs; I made no ADR change.; build fix/close-session-enforcement-2913-2884: Loaded while I read ADR-0004. Not needed."
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: "build fix/close-session-enforcement-2913-2884: Loaded while I grepped journal files. I checked it for the new view-model field: staleInReview is derived and adds no stored field, so it does not apply."
+    useful: partly
+  - path: .claude/rules/glassbox-content.md
+    reason: "triage #2931: Loaded when I read the routines page; confirms the Lesson must list every Routine.; build chore/remove-glassbox-improve-2930: Loaded when I read the guide page.; Spec chore/remove-glassbox-improve-2930 r1: I read it to check that the Skill Inventory and the Self-improvement loop lesson stay complete. 09.self-improvement-loop.md has no glassbox-improve mention, so nothing there needed changing. Source: git grep.; build fix/glassbox-curate-wait-limit-2931: Loaded when I read the routines page; it confirmed the Routines list must stay complete and have no schedule facts.; Spec fix/glassbox-curate-wait-limit-2931 r1: I grepped it to confirm that the drift rule keeps the Scheduled tasks list complete (line 12). That confirms the new Routines entry is required."
+    useful: yes
+  - path: .claude/rules/glossary-terms.md
+    reason: "triage #2930: Loaded on glossary read; about adding terms, not removing; build docs/count-before-stating-2915: Loaded when I read the Journal files. I changed no glossary terms.; build fix/close-session-enforcement-2913-2884: Loaded when I read the journal GLOSSARY. Not needed."
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: "triage #2931: Loaded alongside, irrelevant.; build fix/glassbox-curate-wait-limit-2931: Loaded when I read a Glass Box file; no diagram was touched."
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: "triage #2884: Loaded when I read Journal files.; triage #2913: Loaded after a Bash call; not relevant.; triage #2914: Loaded after reading a layers/ file; not relevant here.; triage #2915: It loaded when I read the Journal ledger file. I did not need a glossary.; triage #2916: Loaded when I read the journal frictions file; no Tenant content was written; triage #2930: Loaded on glossary read; no new terms needed; triage #2931: Loaded alongside, not needed.; build fix/glassbox-curate-wait-limit-2931: Loaded when I read a Glass Box file; I did not read the glossary because the edit coins no new terms.; build docs/rewrite-sample-first-2916: Loaded when I read the Journal friction entry. The edit added no Tenant terms.; build docs/count-before-stating-2915: Loaded for the Journal Tenant. I read no Tenant glossary because the edit is ledger YAML.; fix docs/count-before-stating-2915 r2: Loaded when I grepped layers/glassbox content files.; build fix/close-session-enforcement-2913-2884: Loaded when I read journal files. I did not read the journal glossary."
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: "build fix/close-session-enforcement-2913-2884: Loaded when I read journal files. It gave the auto-import and relative-import conventions."
+    useful: partly
+  - path: .claude/rules/ui-verification.md
+    reason: "build fix/close-session-enforcement-2913-2884: Loaded when I touched SessionCard.vue. I did not read docs/agents/verifying-ui-changes.md or take a screenshot; the unit test and gate cover the new field but not the rendered label."
+    useful: partly
 subagents:
   - type: workflow-subagent
     task: Standards fix/glassbox-curate-wait-limit-2931 r1
@@ -274,41 +374,55 @@ subagents:
     durationSec: 17
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 0.7
+    tokenShare: 0.5
   - type: workflow-subagent
     task: Standards fix/glassbox-curate-wait-limit-2931 r2
     model: claude-sonnet-5-5
     durationSec: 21
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: Spec fix/glassbox-curate-wait-limit-2931 r1
     model: claude-sonnet-5-5
     durationSec: 20
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 0.8
+    tokenShare: 0.6
+  - type: workflow-subagent
+    task: Spec fix/glassbox-curate-wait-limit-2931 r3
+    model: claude-sonnet-5-5
+    durationSec: 19
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 0.7
   - type: workflow-subagent
     task: Standards docs/rewrite-sample-first-2916 r1
     model: claude-sonnet-5-5
     durationSec: 15
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: workflow-subagent
     task: fix fix/glassbox-curate-wait-limit-2931 r2
     model: claude-sonnet-5-5
-    durationSec: 621
-    toolCalls: 6
-    modelCalls: 5
-    tokenShare: 1.2
+    durationSec: 1185
+    toolCalls: 8
+    modelCalls: 7
+    tokenShare: 2.1
   - type: workflow-subagent
     task: Standards docs/count-before-stating-2915 r2
     model: claude-sonnet-5-5
     durationSec: 20
     toolCalls: 4
     modelCalls: 3
+    tokenShare: 0.6
+  - type: workflow-subagent
+    task: Standards fix/glassbox-curate-wait-limit-2931 r3
+    model: claude-sonnet-5-5
+    durationSec: 22
+    toolCalls: 5
+    modelCalls: 4
     tokenShare: 0.7
   - type: workflow-subagent
     task: Spec docs/count-before-stating-2915 r3
@@ -316,391 +430,412 @@ subagents:
     durationSec: 21
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 0.8
+    tokenShare: 0.7
   - type: workflow-subagent
     task: build fix/glassbox-curate-wait-limit-2931
     model: claude-sonnet-5-5
     durationSec: 432
     toolCalls: 11
     modelCalls: 7
-    tokenShare: 1.8
+    tokenShare: 1.5
   - type: workflow-subagent
     task: Spec docs/count-before-stating-2915 r1
     model: claude-sonnet-5-5
     durationSec: 22
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: fix docs/rewrite-sample-first-2916 r1
     model: claude-sonnet-5-5
     durationSec: 697
     toolCalls: 10
     modelCalls: 8
-    tokenShare: 2.1
+    tokenShare: 1.7
   - type: workflow-subagent
     task: Spec docs/count-before-stating-2915 r2
     model: claude-sonnet-5-5
     durationSec: 31
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 1.1
+    tokenShare: 0.9
+  - type: workflow-subagent
+    task: gate fix/glassbox-curate-wait-limit-2931
+    model: claude-sonnet-5-5
+    durationSec: 221
+    toolCalls: 3
+    modelCalls: 2
+    tokenShare: 0.4
   - type: workflow-subagent
     task: Spec fix/glassbox-curate-wait-limit-2931 r2
     model: claude-sonnet-5-5
     durationSec: 20
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 0.7
+    tokenShare: 0.5
   - type: workflow-subagent
     task: Spec docs/rewrite-sample-first-2916 r3
     model: claude-sonnet-5-5
     durationSec: 31
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 1
+    tokenShare: 0.8
   - type: workflow-subagent
     task: Standards docs/rewrite-sample-first-2916 r3
     model: claude-sonnet-5-5
     durationSec: 19
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: Standards docs/count-before-stating-2915 r1
     model: claude-sonnet-5-5
     durationSec: 17
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: build docs/count-before-stating-2915
     model: claude-sonnet-5-5
     durationSec: 742
     toolCalls: 30
     modelCalls: 23
-    tokenShare: 4.2
+    tokenShare: 3.4
   - type: workflow-subagent
     task: Spec docs/rewrite-sample-first-2916 r2
     model: claude-sonnet-5-5
     durationSec: 22
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 0.9
+    tokenShare: 0.7
   - type: workflow-subagent
     task: Standards docs/count-before-stating-2915 r3
     model: claude-sonnet-5-5
     durationSec: 22
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: Spec docs/rewrite-sample-first-2916 r1
     model: claude-sonnet-5-5
     durationSec: 20
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 0.8
+    tokenShare: 0.7
   - type: workflow-subagent
     task: build docs/rewrite-sample-first-2916
     model: claude-sonnet-5-5
     durationSec: 448
     toolCalls: 17
     modelCalls: 15
-    tokenShare: 3
+    tokenShare: 2.4
   - type: workflow-subagent
     task: fix docs/count-before-stating-2915 r2
     model: claude-sonnet-5-5
     durationSec: 22
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 0.9
+    tokenShare: 0.7
   - type: workflow-subagent
     task: fix docs/count-before-stating-2915 r1
     model: claude-sonnet-5-5
     durationSec: 607
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 1.5
+    tokenShare: 1.2
   - type: workflow-subagent
     task: Standards docs/rewrite-sample-first-2916 r2
     model: claude-sonnet-5-5
     durationSec: 20
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: fix fix/glassbox-curate-wait-limit-2931 r1
     model: claude-sonnet-5-5
     durationSec: 479
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 1.3
+    tokenShare: 1.1
   - type: workflow-subagent
     task: fix docs/rewrite-sample-first-2916 r2
     model: claude-sonnet-5-5
     durationSec: 404
     toolCalls: 6
     modelCalls: 6
-    tokenShare: 1.4
+    tokenShare: 1.1
   - type: workflow-subagent
     task: Spec fix/dispatch-brief-asks-2911 r1
     model: claude-sonnet-5-5
     durationSec: 14
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: workflow-subagent
     task: build fix/dispatch-brief-asks-2911
     model: claude-sonnet-5-5
     durationSec: 112
     toolCalls: 12
     modelCalls: 8
-    tokenShare: 2.3
+    tokenShare: 1.8
   - type: workflow-subagent
     task: Spec fix/gate-doorbell-head-sha-2917 r2
     model: claude-sonnet-5-5
     durationSec: 23
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 0.8
+    tokenShare: 0.7
   - type: workflow-subagent
     task: Spec chore/remove-glassbox-improve-2930 r2
     model: claude-sonnet-5-5
     durationSec: 27
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 1
+    tokenShare: 0.8
   - type: workflow-subagent
     task: fix fix/gate-doorbell-head-sha-2917 r1
     model: claude-sonnet-5-5
     durationSec: 10
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 0.5
+    tokenShare: 0.4
   - type: workflow-subagent
     task: Standards fix/gate-doorbell-head-sha-2917 r1
     model: claude-sonnet-5-5
     durationSec: 24
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: fix fix/dispatch-brief-asks-2911 r1
     model: claude-sonnet-5-5
     durationSec: 62
     toolCalls: 11
     modelCalls: 7
-    tokenShare: 1.2
+    tokenShare: 1
   - type: workflow-subagent
     task: Spec chore/remove-glassbox-improve-2930 r3
     model: claude-sonnet-5-5
     durationSec: 38
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 1.3
+    tokenShare: 1.1
   - type: workflow-subagent
     task: fix fix/gate-doorbell-head-sha-2917 r2
     model: claude-sonnet-5-5
     durationSec: 1471
     toolCalls: 11
     modelCalls: 9
-    tokenShare: 2.1
+    tokenShare: 1.7
   - type: workflow-subagent
     task: fix chore/remove-glassbox-improve-2930 r1
     model: claude-sonnet-5-5
     durationSec: 555
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 1.6
+    tokenShare: 1.3
   - type: workflow-subagent
     task: Spec fix/dispatch-brief-asks-2911 r2
     model: claude-sonnet-5-5
     durationSec: 21
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 0.9
+    tokenShare: 0.7
   - type: workflow-subagent
     task: Standards fix/dispatch-brief-asks-2911 r1
     model: claude-sonnet-5-5
     durationSec: 13
     toolCalls: 3
     modelCalls: 2
-    tokenShare: 1.4
+    tokenShare: 1.1
   - type: workflow-subagent
     task: Spec fix/gate-doorbell-head-sha-2917 r3
     model: claude-sonnet-5-5
     durationSec: 20
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 0.8
+    tokenShare: 0.6
   - type: workflow-subagent
     task: Standards chore/remove-glassbox-improve-2930 r2
     model: claude-sonnet-5-5
     durationSec: 24
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.8
+    tokenShare: 0.6
   - type: workflow-subagent
     task: build chore/remove-glassbox-improve-2930
     model: claude-sonnet-5-5
     durationSec: 434
     toolCalls: 26
     modelCalls: 19
-    tokenShare: 3.9
+    tokenShare: 3.1
   - type: workflow-subagent
     task: fix chore/remove-glassbox-improve-2930 r2
     model: claude-sonnet-5-5
     durationSec: 492
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 1.4
+    tokenShare: 1.2
   - type: workflow-subagent
     task: Standards fix/dispatch-brief-asks-2911 r2
     model: claude-sonnet-5-5
     durationSec: 13
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: Standards fix/gate-doorbell-head-sha-2917 r3
     model: claude-sonnet-5-5
     durationSec: 10
     toolCalls: 3
     modelCalls: 2
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: workflow-subagent
     task: Spec fix/gate-doorbell-head-sha-2917 r1
     model: claude-sonnet-5-5
     durationSec: 29
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 1.1
+    tokenShare: 0.9
   - type: workflow-subagent
     task: Standards chore/remove-glassbox-improve-2930 r3
     model: claude-sonnet-5-5
     durationSec: 23
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: workflow-subagent
     task: Standards chore/remove-glassbox-improve-2930 r1
     model: claude-sonnet-5-5
     durationSec: 23
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 0.9
+    tokenShare: 0.7
   - type: workflow-subagent
     task: Standards fix/gate-doorbell-head-sha-2917 r2
     model: claude-sonnet-5-5
     durationSec: 13
     toolCalls: 3
     modelCalls: 2
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: workflow-subagent
     task: build fix/gate-doorbell-head-sha-2917
     model: claude-sonnet-5-5
     durationSec: 429
     toolCalls: 30
     modelCalls: 22
-    tokenShare: 4.1
+    tokenShare: 3.3
   - type: workflow-subagent
     task: gate fix/dispatch-brief-asks-2911
     model: claude-sonnet-5-5
     durationSec: 43
     toolCalls: 3
     modelCalls: 2
-    tokenShare: 0.5
+    tokenShare: 0.4
   - type: workflow-subagent
     task: Spec chore/remove-glassbox-improve-2930 r1
     model: claude-sonnet-5-5
     durationSec: 28
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 1
+    tokenShare: 0.8
   - type: workflow-subagent
     task: "triage #2914"
     model: claude-sonnet-5-5
     durationSec: 52
     toolCalls: 15
     modelCalls: 8
-    tokenShare: 1.6
+    tokenShare: 1.3
   - type: workflow-subagent
     task: "triage #2915"
     model: claude-sonnet-5-5
     durationSec: 40
     toolCalls: 14
     modelCalls: 7
-    tokenShare: 1.6
+    tokenShare: 1.3
   - type: workflow-subagent
     task: "triage #2884"
     model: claude-sonnet-5-5
     durationSec: 42
     toolCalls: 15
     modelCalls: 8
-    tokenShare: 1.8
+    tokenShare: 1.4
   - type: workflow-subagent
     task: "triage #2931"
     model: claude-sonnet-5-5
     durationSec: 46
     toolCalls: 16
     modelCalls: 9
-    tokenShare: 2.8
+    tokenShare: 2.2
   - type: workflow-subagent
     task: "triage #2911"
     model: claude-sonnet-5-5
     durationSec: 46
     toolCalls: 15
     modelCalls: 7
-    tokenShare: 1.6
+    tokenShare: 1.2
   - type: workflow-subagent
     task: "triage #2917"
     model: claude-sonnet-5-5
     durationSec: 48
     toolCalls: 16
     modelCalls: 8
-    tokenShare: 1.6
+    tokenShare: 1.3
   - type: workflow-subagent
     task: "triage #2916"
     model: claude-sonnet-5-5
     durationSec: 32
     toolCalls: 11
     modelCalls: 5
-    tokenShare: 1.2
+    tokenShare: 1
   - type: workflow-subagent
     task: "triage #2913"
     model: claude-sonnet-5-5
     durationSec: 41
     toolCalls: 16
     modelCalls: 7
-    tokenShare: 1.5
+    tokenShare: 1.2
   - type: workflow-subagent
     task: "triage #2930"
     model: claude-sonnet-5-5
     durationSec: 44
     toolCalls: 14
     modelCalls: 7
-    tokenShare: 1.6
+    tokenShare: 1.3
   - type: workflow-subagent
     task: Standards fix/close-session-enforcement-2913-2884 r1
     model: claude-sonnet-5-5
     durationSec: 21
     toolCalls: 3
     modelCalls: 2
-    tokenShare: 0.7
+    tokenShare: 0.5
   - type: workflow-subagent
     task: fix fix/close-session-enforcement-2913-2884 r1
     model: claude-sonnet-5-5
     durationSec: 364
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 1.5
+    tokenShare: 1.2
+  - type: workflow-subagent
+    task: Standards fix/close-session-enforcement-2913-2884 r3
+    model: claude-sonnet-5-5
+    durationSec: 20
+    toolCalls: 3
+    modelCalls: 3
+    tokenShare: 0.6
   - type: workflow-subagent
     task: Standards fix/close-session-enforcement-2913-2884 r2
     model: claude-sonnet-5-5
     durationSec: 20
     toolCalls: 4
     modelCalls: 3
+    tokenShare: 0.7
+  - type: workflow-subagent
+    task: Spec fix/close-session-enforcement-2913-2884 r3
+    model: claude-sonnet-5-5
+    durationSec: 29
+    toolCalls: 8
+    modelCalls: 4
     tokenShare: 0.8
   - type: workflow-subagent
     task: Spec fix/close-session-enforcement-2913-2884 r2
@@ -708,28 +843,28 @@ subagents:
     durationSec: 38
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 1.2
+    tokenShare: 1
   - type: workflow-subagent
     task: Spec fix/close-session-enforcement-2913-2884 r1
     model: claude-sonnet-5-5
     durationSec: 35
     toolCalls: 9
     modelCalls: 5
-    tokenShare: 1.2
+    tokenShare: 0.9
   - type: workflow-subagent
     task: fix fix/close-session-enforcement-2913-2884 r2
     model: claude-sonnet-5-5
-    durationSec: 8
-    toolCalls: 2
-    modelCalls: 2
-    tokenShare: 0.5
+    durationSec: 374
+    toolCalls: 4
+    modelCalls: 4
+    tokenShare: 0.9
   - type: workflow-subagent
     task: build fix/close-session-enforcement-2913-2884
     model: claude-sonnet-5-5
     durationSec: 859
     toolCalls: 42
     modelCalls: 33
-    tokenShare: 6.8
+    tokenShare: 5.4
 gitBranch: ccr-74cc988d-km3ftr
 entrypoint: remote_mobile
 cliVersion: 2.1.319
