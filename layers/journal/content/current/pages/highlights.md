@@ -90,7 +90,7 @@ he was asking a different question than he thought.
 
 The four personas write from the same commits, sessions and pull requests the
 [Journal](/t/journal/current) records — see [Scheduled
-tasks](/t/glassbox/guide/claude-code/routines) for the Routine that writes them, and [How
+tasks](/t/glassbox/guide/agents/routines) for the Routine that writes them, and [How
 Terrarium Grew](/t/journal/current/history) for the events these stories sit
 inside. The full archive, all four voices in one feed, is at [the
 Blog](/t/blog).

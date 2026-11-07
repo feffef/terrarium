@@ -107,7 +107,8 @@ nobody writes that list.
 
 ### Subject
 The folder a Lesson is grouped under, usually the tool whose official docs its
-*The concept* section links. **Verification** instead groups the merge gate
+*The concept* section links. A large tool may split into several Subjects by
+topic, as Claude Code does (**Claude Code**, **Hooks**, **Agents & automation**). **Verification** instead groups the merge gate
 with the Lessons on its checks, whatever the tool. Terrarium's own patterns
 with no official doc form the **House rules** Subject, in the folder
 `terrarium-practice/`.

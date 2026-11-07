@@ -13,7 +13,7 @@ An agent session finishes a piece of work and writes down what happened. This Wa
 When its work reaches a coherent state, such as a PR opened or a question answered, the agent runs the `close-session` Skill. The agent judges the moment itself, from the Skill's description; a hint after it opens or merges a PR reminds it, unless it has already run the Skill since. Once the agent has written its part, hooks do the rest, but a session that never gets here leaves no :term[session log].
 
 ::lessons
-[Session logs](/t/glassbox/guide/terrarium-practice/session-logs) · [Claude Code Skills](/t/glassbox/guide/claude-code/skills) · [Hook-added context](/t/glassbox/guide/claude-code/hook-added-context)
+[Session logs](/t/glassbox/guide/terrarium-practice/session-logs) · [Claude Code Skills](/t/glassbox/guide/claude-code/skills) · [Hook-added context](/t/glassbox/guide/hooks/hook-added-context)
 ::
 
 ## 2. The agent writes only its judgement
@@ -21,7 +21,7 @@ When its work reaches a coherent state, such as a PR opened or a question answer
 `close-session` calls `log-session`, and the agent writes a small YAML file with the fields only it can know: its goal, a status, an outcome, a summary, the docs and Skills that mattered, and every :term[Friction]. `scripts/session/log-session.ts --author` checks them and saves them to `.session-logs/pending.scratch.json`, a scratch file git ignores. Run again later, it merges the new pass with the earlier one. It refuses to run from a linked git worktree, where a dispatched subagent shares its parent's scratch path.
 
 ::lessons
-[Session logs](/t/glassbox/guide/terrarium-practice/session-logs) · [Git worktrees](/t/glassbox/guide/git-github/git-worktrees) · [Subagents](/t/glassbox/guide/claude-code/subagents)
+[Session logs](/t/glassbox/guide/terrarium-practice/session-logs) · [Git worktrees](/t/glassbox/guide/git-github/git-worktrees) · [Subagents](/t/glassbox/guide/agents/subagents)
 ::
 
 ## 3. The turn ends and a hook takes over
@@ -29,7 +29,7 @@ When its work reaches a coherent state, such as a PR opened or a question answer
 When Claude finishes responding, Claude Code fires the `Stop` hook wired in `.claude/settings.json`. It checks that a scratch file exists and, if so, runs `log-session.ts --land`, with the hook's payload on stdin; the payload names the session's transcript. Hooks on `SessionEnd` and on `SessionStart` at resume also run `--land`, in case `Stop` missed it. The lander never exits with an error, and if this exact scratch has landed already, it stops there.
 
 ::lessons
-[Claude Code hooks](/t/glassbox/guide/claude-code/hooks) · [Session logs](/t/glassbox/guide/terrarium-practice/session-logs)
+[Claude Code hooks](/t/glassbox/guide/hooks/hooks) · [Session logs](/t/glassbox/guide/terrarium-practice/session-logs)
 ::
 
 ## 4. The transcript supplies the facts
@@ -37,7 +37,7 @@ When Claude finishes responding, Claude Code fires the `Stop` hook wired in `.cl
 Nobody writes the rest of the log: `scripts/session/transcript-trace.ts` reads the transcript, Claude Code's record of every message and tool call, and each subagent's own transcript beside it. It derives the timings, models, tool counts, files read and edited, subagents, Skills used and rules loaded; shell edits come from the session's own commits. A doc read through the shell counts only when the output shows enough of its distinctive lines. The trace and the scratch are then stitched into one entry.
 
 ::lessons
-[Session logs](/t/glassbox/guide/terrarium-practice/session-logs) · [Subagents](/t/glassbox/guide/claude-code/subagents)
+[Session logs](/t/glassbox/guide/terrarium-practice/session-logs) · [Subagents](/t/glassbox/guide/agents/subagents)
 ::
 
 ## 5. The entry is checked against main
@@ -86,7 +86,7 @@ The log shows on the Journal's dashboard. Each run of `pnpm validate:content`, a
 ## Where next
 
 - [Session logs](/t/glassbox/guide/terrarium-practice/session-logs)
-- [Claude Code hooks](/t/glassbox/guide/claude-code/hooks)
+- [Claude Code hooks](/t/glassbox/guide/hooks/hooks)
 - [Schema evolution](/t/glassbox/guide/verification/schema-evolution)
 - [Commit and PR attribution](/t/glassbox/guide/git-github/attribution)
 - [A friction becomes a fix](/t/glassbox/guide/walkthroughs/a-friction-becomes-a-fix)
