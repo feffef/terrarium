@@ -77,7 +77,6 @@ that one commit, never a later fetch.
    and stop. Otherwise follow "Closing a scheduled run's PR" in
    `docs/agents/pr-workflow.md`, one PR titled `glassbox-update: <YYYY-MM-DD>`
    whose body lists each flagged page and term, why, and what changed, and each
-   page fully checked. Subscribe to its activity, merge it with
-   `scripts/github/merge-pr.ts` once green, then re-invoke `close-session`;
-   curate runs wait while it is open. Done when it is merged. If the PR
-   includes anything outside this run's paths, leave it for a human.
+   page fully checked. If the PR includes anything outside this run's paths,
+   leave it for a human. Done when the PR is merged or left for a human, and
+   `close-session` has run again.

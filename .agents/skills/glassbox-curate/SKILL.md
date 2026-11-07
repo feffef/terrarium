@@ -28,10 +28,11 @@ new evidence. `DECISIONS.md` rulings are closed. One PR per run, within the
 remit.
 
 **Remit.** Edit `layers/glassbox/content/guide/`,
-`layers/glassbox/content/drafts/`, the diagram SVGs you re-render and your own
-workshop files. A gap needing a new Lesson goes into an existing Subject, or
-into drafts if it isn't central. A gap needing a new Subject, and any change to
-this Skill, the `glassbox-lesson` docs or the page checks, become issues.
+`layers/glassbox/content/drafts/`, the diagram SVGs you re-render, your own
+workshop files, and a moved page's name in `checks/update.yml`. A gap needing a
+new Lesson goes into an existing Subject, or into drafts if it isn't central. A
+gap needing a new Subject, and any change to this Skill, the `glassbox-lesson`
+docs or the page checks, become issues.
 
 **Read first.** `layers/glassbox/GLOSSARY.md`,
 [`../glassbox-lesson/EVERY-PAGE.md`](../glassbox-lesson/EVERY-PAGE.md),

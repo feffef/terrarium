@@ -16,7 +16,7 @@ export interface PageUpdate {
   file: string
   revision: string
   changedPaths: string[]
-  /** Each changed cited file, and for a cited directory the entries added or removed, so a brief names files, not folders. */
+  /** So a claim-check brief names files, not folders. */
   changedFiles: string[]
   shifted: { path: string; from: string; to: string }[]
   edited: { path: string; lines: string }[]
