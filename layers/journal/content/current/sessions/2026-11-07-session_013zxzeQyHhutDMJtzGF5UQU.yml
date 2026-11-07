@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQyHhutDMJtzGF5UQU
 startedAt: 2026-11-07T19:03:21Z
-endedAt: 2026-11-07T19:17:41Z
+endedAt: 2026-11-07T20:26:19Z
 kind: interactive
 goal: Put the Glass Box guide's Subjects and Lessons in prerequisite order
-status: in-review
-outcome: PR 2951 open, gate green, waits for the owner's merge
-summary: "The owner started glassbox-curate with no focus. I ran the orientation, asked, and the owner chose \"a more logical order of Subjects and Lessons\" (human-instructed), interactive mode, and then ruled: prerequisites first, agent tooling stays first, Lesson prefixes only in tens, no Web standards between the two Nuxt Subjects, and only Nuxt and Vue, Git and GitHub and Agents get reordered. The link graph of all guide pages is full of loops, so I proposed a draft order and asked two questions before editing. I then renumbered 62 guide files, reordered the three Subjects and the Subject list, and repointed update.yml, the memory page, the glossary and glassbox-lesson prefix rule (agent-initiated, within those rulings). The reorder of the three Subjects rests on body links; I read in full only the Agents pair, Nitro and Data fetching, not every page of the Subject as the Skill asks. Code-review (Standards and Spec subagents) found one stale example stem, fixed. Gate passed, PR 2951 opened and left for the owner (it changes the Subject order and a Skill's docs). Cost so far about 1.8 USD."
+status: completed
+outcome: PR 2951 merged by the owner; guide now ordered prerequisites first, in tens
+summary: "The owner started glassbox-curate with no focus. I ran the orientation, asked, and the owner chose \"a more logical order of Subjects and Lessons\" (human-instructed), interactive mode, and then ruled: prerequisites first, agent tooling stays first, Lesson prefixes only in tens, no Web standards between the two Nuxt Subjects, and only Nuxt and Vue, Git and GitHub and Agents get reordered. The link graph of all guide pages is full of loops, so I proposed a draft order and asked two questions before editing. I then renumbered 62 guide files, reordered the three Subjects and the Subject list, and repointed update.yml, the memory page, the glossary and glassbox-lesson prefix rule (agent-initiated, within those rulings). The reorder of the three Subjects rests on body links; I read in full only the Agents pair, Nitro and Data fetching, not every page of the Subject as the Skill asks. Code-review (Standards and Spec subagents) found one stale example stem, fixed. Gate passed, PR 2951 opened and left for the owner (it changes the Subject order and a Skill's docs); the owner merged it five minutes later. I never subscribed to the PR (ADR-0003) and closed as in-review, so the log stayed in-review until the owner pointed it out. Cost about 1.8 USD at PR time."
 prs:
   - "2951"
 docsRead:
@@ -53,17 +53,21 @@ frictions:
   - description: The curate Skill says to read the Glass Box glossary and QUALITY.md first; I read only the prefix paragraph and skipped QUALITY.md.
     solution: Mark which Read-first docs a pure renumbering needs.
     severity: nit
-durationSec: 860
+  - description: Opened PR 2951 without calling subscribe_pr_activity (ADR-0003) and closed as in-review; it merged five minutes later and the log stayed in-review until the owner asked. HUMAN-PROMPTED-CLOSURE
+    solution: Subscribe in the same turn the PR opens, and re-invoke close-session on the merge event; the system prompt's ask-first line must not override ADR-0003.
+    severity: major
+durationSec: 4978
 models:
-  claude-sonnet-5-5: 77
+  claude-sonnet-5-5: 84
 toolCounts:
-  Bash: 26
+  Bash: 27
   Read: 5
   AskUserQuestion: 3
   Skill: 3
   Agent: 4
   mcp__claude-code-remote__get_session: 1
   mcp__github__create_pull_request: 1
+  mcp__github__pull_request_read: 1
 filesEdited:
   - .agents/skills/glassbox-curate/scripts/plain.ts
   - layers/glassbox/content/workshop/runs/2026-11-07T1903.yml
@@ -284,14 +288,14 @@ subagents:
     durationSec: 49
     toolCalls: 13
     modelCalls: 6
-    tokenShare: 13.8
+    tokenShare: 10.8
   - type: general-purpose
     task: Spec review
     model: sonnet
     durationSec: 39
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 11.8
+    tokenShare: 9.2
 gitBranch: ccr-ba5b53d5-yk3pi3
 entrypoint: remote_mobile
 cliVersion: 2.1.319
