@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_013zxzeNqe2cXhykGMMq7vUi
 startedAt: 2026-11-07T13:23:11Z
-endedAt: 2026-11-07T13:37:52Z
+endedAt: 2026-11-07T14:43:28Z
 kind: interactive
 goal: "Curate the Glass Box guide: one home for repeated hook facts"
 status: completed
@@ -84,11 +84,14 @@ frictions:
   - description: After the merge, log-session refused a completed log until close-session ran again, but re-invoking the loaded Skill returned only 'already loaded', which read as circular.
     solution: Make the refusal say a fresh close-session call is what satisfies it, or have the check read the Skill-invocation event after the merge.
     severity: minor
-durationSec: 882
+  - description: The merged run entry lists claude-code/05.mcp-servers in pagesRead, but I only grepped it and never read it in full.
+    solution: List a page in pagesRead only after a full read; the entry in PR 2940 needs a correction in a later run.
+    severity: minor
+durationSec: 4818
 models:
-  claude-sonnet-5-5: 92
+  claude-sonnet-5-5: 101
 toolCounts:
-  Bash: 22
+  Bash: 24
   Read: 10
   AskUserQuestion: 1
   Edit: 4
@@ -97,9 +100,10 @@ toolCounts:
   Agent: 4
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  ReadNotifications: 3
+  ReadNotifications: 4
   mcp__github__pull_request_read: 1
   mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__send_message: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/hooks/03.hook-added-context.md
   - layers/glassbox/content/guide/pages/claude-code/02.path-scoped-rules.md
@@ -178,13 +182,13 @@ subagents:
     durationSec: 28
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 9.3
+    tokenShare: 7.3
   - type: general-purpose
     task: Spec review
     durationSec: 43
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 9.8
+    tokenShare: 7.7
 gitBranch: ccr-726ba078-qq1rbs
 entrypoint: remote_mobile
 cliVersion: 2.1.319
