@@ -39,7 +39,7 @@ These are the owner's goals for the guide. A new Subject needs the owner's appro
 
 ### Ideas not yet decided
 
-**More web standards pages, looked at and left out.** *View Transitions* (Tinkerfund's plugin, mostly a story about a Nuxt hook, so it fits Nuxt & Vue); page metadata such as Open Graph and robots (one Tenant's helper); container queries and `IntersectionObserver` (one or two files each). Reduced motion sits in *Colour and motion settings* at the owner's choice; a reader may look for it under accessibility.
+**More web standards pages, looked at and left out.** *View Transitions* (Tinkerfund's plugin, mostly about a Nuxt hook, so it fits Nuxt & Vue); page metadata for link previews and search engines (one Tenant's helper); container queries and a scroll-watching helper (one or two files each).
 
 **Claude Code and Hooks: giving each fact one home.** In each case the first page keeps a short link.
 - *MCP servers* explains how hooks pick out MCP tools by name. That belongs on *Blocking hooks*.

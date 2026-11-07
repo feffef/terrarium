@@ -8,6 +8,10 @@ changes:
   - "web-standards/04.colour-and-motion-settings | New Lesson on prefers-color-scheme, color-scheme, light-dark() and color-mix(), with reduced motion as a short second part | Tinkerfund's theme switch is the best worked example and the custom-properties page held only a paragraph; titled to cover both settings at the owner's choice"
   - "nuxt-content/07.mermaid-pre-rendering | Repointed the link to CSS custom properties and added SVG to Where next | the move and the new SVG Lesson"
   - "nuxt-vue/05.vue-components | Repointed the link to CSS custom properties | the move"
+  - "verification/05.linting | Where next: SVG replaced Workflow scripts | the linting page names app/utils/svg.ts, which the SVG Lesson teaches"
+  - "verification/03.content-validation | Where next: SVG replaced Cross-tenant reads | the SVG filter runs as a content schema"
+  - "verification/09.headless-browser-checks | Where next: Colour and motion settings replaced Merge gate | the page teaches emulating a dark scheme; I checked the overview index and this page for overlap by grep rather than a full read"
+  - "terms | Added seven term files (assistive-technology, screen-reader, cross-site-scripting, design-token, frontmatter, poster, specimen) | the new Lessons use them"
 pagesRead:
   - nuxt-vue/07.css-custom-properties
   - nuxt-content/07.mermaid-pre-rendering
@@ -17,3 +21,5 @@ pagesRead:
   - verification/04.unit-and-e2e-tests
   - verification/05.linting
   - verification/06.schema-validation
+  - verification/09.headless-browser-checks
+  - index
