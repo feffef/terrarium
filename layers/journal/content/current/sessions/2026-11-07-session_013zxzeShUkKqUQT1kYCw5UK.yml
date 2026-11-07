@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeShUkKqUQT1kYCw5UK
 startedAt: 2026-11-07T16:11:26Z
-endedAt: 2026-11-07T16:27:44Z
+endedAt: 2026-11-07T16:30:51Z
 kind: delegated
 goal: Sync the Glass Box guide to main (glassbox-update run, 2026-11-07)
-status: in-review
-outcome: "PR 2946 open: 72 guide pages re-pinned to f2f883b, three prose sentences corrected, check state rewritten; gate green"
-summary: "Human-instructed: the user's only prompt was the /glassbox-update slash command, which fixes the whole run, so no step was agent-initiated beyond what the Skill lists. The user's saved preference to ask questions first was not exercised: the Skill is a fully specified run with no open choice for the user, so I went straight to it. The script report flagged 30 guide pages and no terms. I advanced the pins with --write --to f2f883b, then had four sonnet subagents claim-check the 30 pages read-only (five of them a full check as the rotation: agents/01-04 and claude-code/04). They found no contradicted claim; I verified and fixed the three that mattered myself: hooks/01 (an Excerpt overlapping the new Stop block, which the script could not pin because it had an edited range, plus a third Stop hook to name), hooks/02 (a sentence naming one Stop hook where there are now two) and agents/03 (glassbox-curate no longer self-merges every PR). Two other staleness notes were left as not contradicted. update.yml now dates the five rotation pages today. Standards and Spec code-review found nothing; gate:scoped was green. The Stop hook twice demanded a commit and push mid-run, so two commits are labelled work in progress."
+status: completed
+outcome: "PR 2946 merged: 72 guide pages re-pinned to f2f883b, three prose sentences corrected, check state rewritten"
+summary: "Human-instructed: the user's only prompt was the /glassbox-update slash command, which fixes the whole run, so no step was agent-initiated beyond what the Skill lists. The user's saved preference to ask questions first was not exercised: the Skill is a fully specified run with no open choice for the user, so I went straight to it. The script report flagged 30 guide pages and no terms. I advanced the pins with --write --to f2f883b, then had four sonnet subagents claim-check the 30 pages read-only (five of them a full check as the rotation: agents/01-04 and claude-code/04). They found no contradicted claim; I verified and fixed the three that mattered myself: hooks/01 (an Excerpt overlapping the new Stop block, which the script could not pin because it had an edited range, plus a third Stop hook to name), hooks/02 (a sentence naming one Stop hook where there are now two) and agents/03 (glassbox-curate no longer self-merges every PR). Two other staleness notes were left as not contradicted. update.yml now dates the five rotation pages today. Standards and Spec code-review found nothing; gate:scoped was green. CI was green and merge-pr.ts merged it as 71d1c3c. The Stop hook twice demanded a commit and push mid-run, so two commits are labelled work in progress."
 prs:
   - "2946"
 docsRead:
@@ -118,16 +118,19 @@ frictions:
   - description: The step-1 report listed 30 pages with 20 distinct changed files; briefing four agents to re-read pages whose only change was a one-line hook entry cost about 600k subagent tokens and found no false claim.
     solution: Let the script drop a flag when a page cites a file only for lines the diff did not touch (it already shifts lines ranges), so a scoped check starts from real overlaps.
     severity: minor
-durationSec: 978
+durationSec: 1165
 models:
-  claude-sonnet-5-5: 94
+  claude-sonnet-5-5: 124
 toolCounts:
   Read: 3
-  Bash: 33
-  Skill: 4
+  Bash: 40
+  Skill: 6
   Agent: 6
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 3
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/agents/03.routines.md
   - layers/glassbox/content/workshop/checks/update.yml
@@ -323,42 +326,42 @@ subagents:
     durationSec: 419
     toolCalls: 70
     modelCalls: 65
-    tokenShare: 35.8
+    tokenShare: 31.9
   - type: general-purpose
     task: Claim check group B
     model: sonnet
     durationSec: 137
     toolCalls: 18
     modelCalls: 15
-    tokenShare: 9
+    tokenShare: 8
   - type: general-purpose
     task: Claim check group C
     model: sonnet
     durationSec: 216
     toolCalls: 30
     modelCalls: 25
-    tokenShare: 13
+    tokenShare: 11.6
   - type: general-purpose
     task: Claim check group D
     model: sonnet
     durationSec: 110
     toolCalls: 14
     modelCalls: 13
-    tokenShare: 7.9
+    tokenShare: 7
   - type: general-purpose
     task: Standards review of diff
     model: sonnet
     durationSec: 35
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1.6
+    tokenShare: 1.4
   - type: general-purpose
     task: Spec review of diff
     model: sonnet
     durationSec: 34
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1.9
+    tokenShare: 1.7
 gitBranch: ccr-dfb38b57-ccmzch
 entrypoint: remote_mobile
 cliVersion: 2.1.319
