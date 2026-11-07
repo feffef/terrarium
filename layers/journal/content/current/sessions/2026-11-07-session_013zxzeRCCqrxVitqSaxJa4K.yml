@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_013zxzeRCCqrxVitqSaxJa4K
 startedAt: 2026-11-07T16:59:33Z
-endedAt: 2026-11-07T17:38:08Z
+endedAt: 2026-11-07T17:41:52Z
 kind: interactive
 goal: Settle the best title for each Glass Box guide page
-status: in-review
-outcome: "PR 2948 open: one title fixed (Engineering Skills), 70 of 72 titles confirmed, file renames left as the next focus"
+status: completed
+outcome: "PR 2948 merged: one title fixed (Engineering Skills), 70 of 72 titles confirmed, file renames left as the next focus"
 summary: "The owner started glassbox-curate with no focus, chose autonomous mode and left the focus to me. I picked renaming guide files to match their titles (the memory page's top lead) and had only pushed the run entry when the owner asked whether a title consolidation came first. They then chose retitle first, rename after, and asked me to think carefully about the best possible title for each lesson, with several proposals per page and overall consistency. I dispatched eight read-only Sonnet reviewers, one per group of Subjects, then re-asked each for 2 to 4 ranked alternatives. They kept 70 of 72 titles; they proposed Engineering Skills (capital S, matching its siblings) and Adding a Tenant. I asked the owner two questions; they chose a capital S for Skills and to keep Adding a site, because the overview says site first. Human-instructed: the focus order, the multi-proposal and consistency bars, and both title decisions. Agent-initiated: the rename focus, the reviewer split, the memory page rewrite, the code-review fixes. The code review found two wrong counts on the memory page and an empty pagesRead; I verified and fixed them. Still open: the 12 file renames (about 186 guide links, one Journal link outside the remit) and DECISIONS.md lines for the owner's two choices, which are outside this Skill's remit."
 prs:
   - "2948"
@@ -62,16 +62,16 @@ frictions:
   - description: My reviewer briefs said read each page in full, but several reviewers read through cut or head filters and truncated long lines, so some keeps rest on ledes and headings.
     solution: State in the brief that page text must not be filtered or cut, and ask each reviewer to name any page it read only in part.
     severity: minor
-durationSec: 2314
+durationSec: 2539
 models:
-  claude-sonnet-5-5: 156
+  claude-sonnet-5-5: 175
 toolCounts:
   AskUserQuestion: 4
-  Bash: 32
+  Bash: 37
   Read: 11
   mcp__claude-code-remote__get_session: 1
   Write: 2
-  Skill: 4
+  Skill: 5
   Agent: 10
   ToolSearch: 1
   SendMessage: 8
@@ -79,6 +79,10 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   mcp__github__pull_request_read: 1
+  ReadNotifications: 2
+  mcp__github__add_issue_comment: 1
+  Edit: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/workshop/runs/2026-11-07T1700.yml
   - layers/glassbox/content/workshop/pages/index.md
@@ -167,70 +171,70 @@ subagents:
     durationSec: 81
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 5
+    tokenShare: 4.5
   - type: general-purpose
     task: "Title review: claude-code, skill-pack"
     model: sonnet
     durationSec: 94
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 4.6
+    tokenShare: 4.2
   - type: general-purpose
     task: "Title review: git-github, deploy"
     model: sonnet
     durationSec: 81
     toolCalls: 9
     modelCalls: 9
-    tokenShare: 5.9
+    tokenShare: 5.3
   - type: general-purpose
     task: "Title review: nuxt-content, web-standards"
     model: sonnet
     durationSec: 77
     toolCalls: 7
     modelCalls: 7
-    tokenShare: 4.7
+    tokenShare: 4.2
   - type: general-purpose
     task: "Title review: nuxt-vue"
     model: sonnet
     durationSec: 67
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 4.1
+    tokenShare: 3.7
   - type: general-purpose
     task: "Title review: terrarium-practice"
     model: sonnet
     durationSec: 80
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 5.2
+    tokenShare: 4.7
   - type: general-purpose
     task: "Title review: verification"
     model: sonnet
     durationSec: 69
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 4.1
+    tokenShare: 3.7
   - type: general-purpose
     task: "Title review: walkthroughs, index"
     model: sonnet
     durationSec: 82
     toolCalls: 6
     modelCalls: 6
-    tokenShare: 4
+    tokenShare: 3.6
   - type: general-purpose
     task: "Code review: Standards axis"
     model: sonnet
     durationSec: 47
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 4.2
+    tokenShare: 3.8
   - type: general-purpose
     task: "Code review: Spec axis"
     model: sonnet
     durationSec: 47
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 3.9
+    tokenShare: 3.5
 gitBranch: ccr-e0d588cc-1xktla
 entrypoint: remote_mobile
 cliVersion: 2.1.319
