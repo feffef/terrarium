@@ -341,8 +341,8 @@ export function glassboxPageProblems(file: string, source: string, site: Glassbo
   return problems
 }
 
-// A reviewer's call, so these warn and never fail (#2701); glassbox-improve
-// takes each but the "so" clause as a finding (issue #2792).
+// A reviewer's call, so these warn and never fail (#2701); glassbox-curate's
+// orientation reads these warnings.
 export const glassboxMotiveWarning = 'In Terrarium may give a motive ("so"); check it states mechanism'
 
 const excerptMaxLines = 15

@@ -37,19 +37,11 @@ source.
 ## Grades
 
 - **A**: best in class on that lens. Several pages of a Subject may hold it;
-  Relevance has none. No rater or writer awards it: `glassbox-improve` elects
-  it by blind comparison (`plannedComparisons` and `nextRecord` in its
-  `scripts/grades.ts`). A page a rater puts in its top 3 on a lens, graded B
-  with no finding, must beat the Subject's holders on that lens (the 3 most
-  recent), or 2 of its other B pages while it has none, in two runs in a row.
-  It loses A only through a confirmed deficit on that lens.
+  Relevance has none. No Skill awards it now: `glassbox-curate` reads the Lenses
+  only and does not grade pages.
 - **B**: meets the bar, even if another wording is imaginable.
 - **C**: a noticeable deficit.
 - **D**: several deficits.
-
-In a PR from before `glassbox-improve`'s `grades.yml` existed, A meant today's
-B, B today's C and C today's D; before its v3, a page had one grade, not one
-per lens.
 
 Each deficit names its lens, quotes the page and says the fix. A B may have
 **gaps to A**: a section where a page holding A on that lens does the same job
