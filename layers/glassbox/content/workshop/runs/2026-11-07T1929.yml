@@ -23,3 +23,19 @@ pagesRead:
   - verification/60.zod-refinements
   - verification/70.schema-evolution
   - deploy/10.continuous-deployment
+  - nuxt-content/50.mdc-components
+  - nuxt-vue/10.layers
+  - nuxt-vue/30.file-routing
+  - nuxt-vue/40.virtual-modules
+  - nuxt-vue/60.nitro
+  - nuxt-vue/70.data-fetching
+  - verification/10.gate
+  - verification/20.type-checking
+  - verification/30.content-validation
+  - verification/50.linting
+  - verification/80.headless-browser-checks
+  - deploy/20.pnpm-lockfile
+  - terrarium-practice/70.cross-tenant-reads
+  - walkthroughs/a-change-goes-live
+  - walkthroughs/from-file-to-browser
+  - walkthroughs/reading-across-tenants
