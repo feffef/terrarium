@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeNqe2cXhykGMMq7vUi
 startedAt: 2026-11-07T13:23:11Z
-endedAt: 2026-11-07T13:30:57Z
+endedAt: 2026-11-07T13:34:43Z
 kind: interactive
 goal: "Curate the Glass Box guide: one home for repeated hook facts"
-status: in-review
-outcome: "PR 2940 open: two Glass Box pages now link instead of repeating; gate green, reviews clean"
-summary: "The owner started glassbox-curate with no focus. I oriented first, then asked (human-instructed) whether the run was interactive or autonomous and which focus; the owner answered autonomous and \"you choose\", so the focus choice and everything after were agent-initiated. I picked the memory page's lead on giving repeated Claude Code and Hooks facts one home, cut the ADR-hint detail from Path-specific rules and the transcript-dedupe detail from Hook-added context in favour of links to the pages that hold them, trimmed the memory page, wrote the run entry, ran the glass box page spec, validate:content and gate:scoped (green), ran code-review as two subagents (standards and spec; one wording nit applied) and opened PR 2940, then subscribed to it. As a removal-only change it skipped the writer, claim checker and fresh reader. Cost was unreported because get_session had no usage field. Still open: wait for CI and self-merge, then re-run close-session as completed."
+status: completed
+outcome: "PR 2940 merged: two Glass Box pages now link instead of repeating hook facts"
+summary: The owner started glassbox-curate with no focus. I oriented first, then asked (human-instructed) whether the run was interactive or autonomous and which focus; the owner answered autonomous and "you choose", so the focus choice and everything after were agent-initiated. I picked the memory page's lead on giving repeated Claude Code and Hooks facts one home, cut the ADR-hint detail from Path-specific rules and the transcript-dedupe detail from Hook-added context in favour of links to the pages that hold them, trimmed the memory page, wrote the run entry, ran the glass box page spec, validate:content and gate:scoped (green), ran code-review as two subagents (standards and spec; one wording nit applied) and opened PR 2940, then subscribed to it. As a removal-only change it skipped the writer, claim checker and fresh reader. Cost was unreported because get_session had no usage field. The PR self-merged once CI was green.
 prs:
   - "2940"
 docsRead:
@@ -62,19 +62,22 @@ frictions:
   - description: The workflow forced a Subject-wide read for a two-sentence edit; orient output was 13KB plus a 5K-word page list, more than this change needed.
     solution: Let orient --pages take a Subject filter so a focused run reads only its area.
     severity: nit
-durationSec: 466
+durationSec: 692
 models:
-  claude-sonnet-5-5: 69
+  claude-sonnet-5-5: 83
 toolCounts:
-  Bash: 17
+  Bash: 21
   Read: 10
   AskUserQuestion: 1
   Edit: 4
   mcp__claude-code-remote__get_session: 1
-  Skill: 4
+  Skill: 5
   Agent: 4
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/hooks/03.hook-added-context.md
   - layers/glassbox/content/guide/pages/claude-code/02.path-scoped-rules.md
@@ -153,13 +156,13 @@ subagents:
     durationSec: 28
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 12.8
+    tokenShare: 10.4
   - type: general-purpose
     task: Spec review
     durationSec: 43
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 13.5
+    tokenShare: 11
 gitBranch: ccr-726ba078-qq1rbs
 entrypoint: remote_mobile
 cliVersion: 2.1.319
