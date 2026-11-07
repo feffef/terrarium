@@ -84,10 +84,10 @@ describe('glassboxWalkthroughParts', () => {
 describe('glassboxLessonChipsDeep', () => {
   it('draws a bullet\'s own :lessons row as chips, labelling a Walkthrough as one', () => {
     expect(glassboxLessonChipsDeep(['ul', {}, ['li', {}, 'A bullet. ', ['lessons', {},
-      link(`${base}/nuxt-vue/layers`, 'Layers'), ' · ', link(`${base}/walkthroughs/adding-a-tenant`, 'Adding a site'),
+      link(`${base}/nuxt-vue/layers`, 'Layers'), ' · ', link(`${base}/walkthroughs/adding-a-site`, 'Adding a site'),
     ]]], base)).toEqual(['ul', {}, ['li', {}, 'A bullet. ', ['ul', { class: 'gb-lessons' },
       ['li', {}, ['span', {}, 'Lesson'], link(`${base}/nuxt-vue/layers`, 'Layers')],
-      ['li', {}, ['span', {}, 'Walkthrough'], link(`${base}/walkthroughs/adding-a-tenant`, 'Adding a site')],
+      ['li', {}, ['span', {}, 'Walkthrough'], link(`${base}/walkthroughs/adding-a-site`, 'Adding a site')],
     ]]])
   })
 })

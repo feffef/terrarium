@@ -3,7 +3,7 @@ pages:
     checked: '2026-11-07'
   - page: agents/02.workflow-scripts
     checked: '2026-11-07'
-  - page: agents/03.routines
+  - page: agents/03.scheduled-tasks
     checked: '2026-11-07'
   - page: agents/04.cloud-sessions
     checked: '2026-11-07'
