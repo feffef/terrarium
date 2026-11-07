@@ -55,7 +55,7 @@ contradicts it, adds a page that exists under another title, or cuts the only
 place a fact was taught. Runs that read only the page they changed repeated a
 sibling page (#2943) and cut the only place a fact was taught (#2927). So
 every run reads at two depths before it edits: the first paragraph of every
-page, to know what the whole guide teaches, and every page of its area in
+page, to know what the whole guide teaches, and every page of its Subject in
 full, to know exactly what its neighbours say.
 
 - **Orient.** This is the orientation step: run
@@ -69,18 +69,19 @@ full, to know exactly what its neighbours say.
   your turn, and orient again once it merges or closes. An autonomous run stops
   without a PR once that PR has been open 20 hours; an interactive run keeps
   waiting.
-- **Area.** From the orientation, pick the Subject (or the Walkthroughs) to
-  work in: from memory leads, the owner's review notes, page-check warnings,
-  problems the orientation shows, or gaps; when nothing is pressing, from pages
-  no fresh reader has seen lately (`pagesRead`). For a gap or a new Subject,
-  the area is the Subject it would join, or the pages nearest its topic.
+- **Subject.** From the orientation, pick the Subject to work in (the
+  Walkthroughs count as one): from memory leads, the owner's review notes,
+  page-check warnings, problems the orientation shows, or gaps; when nothing
+  is pressing, from pages no fresh reader has seen lately (`pagesRead`). For a
+  gap, it is the Subject the new Lesson would join; for a new Subject, the one
+  it takes pages from or sits beside.
   Before you take a gap from the memory page, grep the guide for its key
   terms: a lead can be stale.
-- **Read.** The full depth above. Run `orient.ts --area <folder>` and read its
-  output whole; it ends with the `pagesRead` lines to paste. Also read in full
-  every page outside the area that a change would edit, link or overlap. A
-  change that only removes text reads just the pages it edits, links or
-  overlaps. Edit only after this step.
+- **Read.** The full depth above. Run `orient.ts --subject <folder>` and read
+  its output whole; it ends with the `pagesRead` lines to paste. Also read in
+  full every page outside the Subject that a change would edit, link or
+  overlap. A change that only removes text reads just the pages it edits,
+  links or overlaps. Edit only after this step.
 - **Choose.** Pick this run's focus from what you read. Put every other weak
   spot or proposal you found on the memory page, so later runs inherit the
   reading. The run entry says why you chose the focus.

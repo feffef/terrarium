@@ -2,7 +2,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
-import { areaPages, guidePages, orientation, pageOverview, runStem, shortPath, warningLines } from '../../scripts/orient.ts'
+import { subjectPages, guidePages, orientation, pageOverview, runStem, shortPath, warningLines } from '../../scripts/orient.ts'
 
 const page = `---
 title: Blocking hooks
@@ -73,12 +73,12 @@ describe('orientation', () => {
     expect(seen).toEqual(['2026-11-07T09:00:00Z'])
   })
 
-  it('prints an area\'s pages in full with the pagesRead lines they make', () => {
-    const out = areaPages('claude-code', base)
+  it('prints a Subject\'s pages in full with the pagesRead lines they make', () => {
+    const out = subjectPages('claude-code', base)
     expect(out).toContain('# claude-code/05.blocking-hooks\n\n---\ntitle: Blocking hooks')
     expect(out).toContain('## The concept\n\nBody text.')
     expect(out).toMatch(/pagesRead:\n {2}- claude-code\/05\.blocking-hooks$/)
-    expect(() => areaPages('nope', base)).toThrow(/no guide pages under "nope"/)
+    expect(() => subjectPages('nope', base)).toThrow(/no guide pages under "nope"/)
   })
 
   it('prints the guide pages on their own', () => {
