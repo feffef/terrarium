@@ -53,7 +53,7 @@ once per session; read it whole if you can, since a rule can sit anywhere in it.
   task from the branch name or past commits.
 - **Stay on the branch your session started on.** If that is `main`, fetch
   `origin main` and cut a new branch first.
-- **Invoke `close-session`** before the turn that opens a PR ends, and when a session only answers a question.
+- **Invoke `close-session`** before the turn that opens a PR ends, and again when the work merges, stops or is blocked. A session that opens no PR (it answers a question, or a scheduled run finishes) invokes it once at its end.
 - **Merge your own PR** with `scripts/github/merge-pr.ts <number>` once ADR-0004 allows it.
 - **Verify before you state.** State an id, a count, a cause or another agent's
   claim (a subagent's report too) only after you check it this turn against its

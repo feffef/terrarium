@@ -23,39 +23,6 @@
 #            topic's tools correctly.
 trials:
   - problem: >
-      Backgrounding prose in the guard comments and `dispatch-subagents` §3
-      (-21 net, from `git diff --numstat` against the parent: 9 added, 30
-      deleted in `subagent-background-guard.ts`, `double-background-guard.ts`
-      and the SKILL's foreground bullet; this entry not counted): doc comments
-      restating what the code or deny message already says ("never throws",
-      "always exits 0", the signal-by-signal recap) cut; the foreground bullet
-      now says a guard denies a subagent's background run. Chosen after the
-      search subagent covered the instruction corpus, guard headers and the
-      tracker: backgrounding failed as prose (#694, #814, #964, #1208; #2310
-      and #2426 closed not planned; ledger `double-background` 23 occurrences)
-      and three wired guards now hold it, so it is the safest prune on the
-      board. Little text left to cut: the deny messages and CLAUDE.md's
-      run-in-background bullet stay. Runners-up: read-first docs (git bullet
-      is an open trial), close-session closure, code-review before first push
-      (trialled, #2748 closed not planned). Same run judged and deleted the
-      `git-conventions.md` no-chaining trial (landed ba5ae39d): 41 sessions
-      since, one nit-level chain with no push; rates push-chained-to-gate-run
-      3.3% -> 2.9%, chained-git-step-fails-silently 2.7% -> 0.0%.
-    territory:
-      paths:
-        - "scripts/hooks/subagent-background-guard.ts and double-background-guard.ts: doc comments"
-        - ".agents/skills/dispatch-subagents/SKILL.md: the foreground bullet in §3 'Stranding'"
-      keywords:
-        - run every check in the foreground
-    opened: 2026-11-04
-    proven: true
-    check: >
-      Damage is a major or blocker Friction where a dispatched subagent
-      backgrounded a command or stalled waiting, or a session misread a
-      double-backgrounded command as finished, and the cut wording would have
-      prevented it. NOT damage: the nit-level `double-background` hits the
-      guard denies and the session fixes at once, which is its standing rate.
-  - problem: >
       The gate-freeze prose in `pr-workflow.md` "Review before opening the PR"
       (-1 net, from `git diff --numstat`: 15 added, 16 deleted; this entry not
       counted): "last on the final head and edit nothing until it ends" now
@@ -118,3 +85,43 @@ trials:
       missing header let through), and a cut comment would have prevented it.
       NOT damage: sessions hitting the guard's deny (`session-id-hand-typed`
       at its standing rate); the code and deny messages are unchanged.
+  - problem: >
+      The `close-session` invocation restated in six Skills and
+      `pr-workflow.md` (-19 net, from `git diff --numstat` against the parent:
+      7 added, 26 deleted; this entry not counted): the end-of-Skill "invoke
+      close-session" steps and clauses in `digest`, `visitor-loop`,
+      `glassbox-update`, `frictions-to-fixes`,
+      `clear-backlog` and `blog-post` (its step 13), and step 4 plus the last
+      line of "Closing a scheduled run's PR", cut; CLAUDE.md's bullet is the one
+      home and now says a session with no PR invokes it once at its end. Chosen
+      after the search subagent covered the instruction corpus, guard headers,
+      the tracker and the ledger: the rule failed as prose (#2209, #2363,
+      #2424, #2772; ledger `close-session-bypassed-by-hand-log`) and
+      `read-first-hint.ts` now hints after a PR opens or merges. Kept: the
+      deltas (`clear-backlog`'s `ruleVerdicts` merge, `audit-skills`,
+      `glassbox-update`'s nothing-changed case, `dependabot-sweep`). Runners-up:
+      the dispatch-subagents read (a deny guard holds it, little prose) and the
+      CLAUDE.md read-first triggers (owner-accepted, #2066). Same run judged and
+      deleted the backgrounding-prose trial (landed de9a393f): 42 sessions
+      since, no major or blocker Friction traces to it; double-background 11.8%
+      -> 19.4% (17/144 -> 6/31), owner-accepted nits whose deny message is
+      unchanged (#2310); no issue.
+    territory:
+      paths:
+        - "CLAUDE.md: the close-session bullet"
+        - "docs/agents/pr-workflow.md: 'Closing a scheduled run's PR' (step 4 and the last line)"
+        - ".agents/skills/{digest,visitor-loop,glassbox-update,frictions-to-fixes,clear-backlog,blog-post}/SKILL.md: close-session steps"
+      keywords:
+        - close-session
+    opened: 2026-11-07
+    proven: true
+    check: >
+      Damage is a major or blocker Friction where a scheduled run ended with no
+      session log or a stale `in-review` log because no instruction told it to
+      invoke `close-session`, and a cut line would have prevented it. NOT
+      damage: `close-session-bypassed-by-hand-log` at its standing rate (the
+      read-first hint catches it; compare shares with `friction-rates.ts`).
+      Owner's condition (PR #2939): revert the cut if the share of sessions
+      that fail to log at a closure point rises even a little, whatever the
+      severity; compare `close-session-bypassed-by-hand-log` and
+      `closure-not-invoked-on-answers` with `friction-rates.ts`.

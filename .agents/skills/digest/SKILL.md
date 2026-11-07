@@ -155,7 +155,3 @@ rode into the PR, do **not** run `merge-pr.ts`; leave it open for a human
 
 Done when the PR has **merged with a green gate**, or — in the escalation
 cases above — is open and honestly awaiting a human.
-
-## 7. Log this session
-
-Invoke `close-session` (ADR-0009).

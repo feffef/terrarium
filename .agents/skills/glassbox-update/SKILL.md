@@ -78,5 +78,4 @@ that one commit, never a later fetch.
    `docs/agents/pr-workflow.md`, one PR titled `glassbox-update: <YYYY-MM-DD>`
    whose body lists each flagged page and term, why, and what changed, and each
    page fully checked. If the PR includes anything outside this run's paths,
-   leave it for a human. Done when the PR is merged or left for a human, and
-   `close-session` has run again.
+   leave it for a human. Done when the PR is merged or left for a human.

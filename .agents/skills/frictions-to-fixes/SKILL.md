@@ -150,8 +150,7 @@ whatever happens to the fixes.
      (drops occurrences older than the horizon and deletes empty entries).
 4. **Open the ledger PR.** Review the diff yourself (this Skill's own review
    step, per `docs/agents/pr-workflow.md`), run `pnpm gate:scoped`
-   on the final head, push, and open it. Invoke `close-session` (status
-   `in-review`). Land it by `docs/agents/pr-workflow.md`'s recipe once CI is
+   on the final head, push, and open it. Land it by `docs/agents/pr-workflow.md`'s recipe once CI is
    green. §6 does not wait for it.
 
 Done when every fix is ready to dispatch, filed, dropped with a note, or
