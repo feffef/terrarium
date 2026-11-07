@@ -36,7 +36,9 @@ this Skill, the `glassbox-lesson` docs or the page checks, become issues.
 [`../glassbox-lesson/EVERY-PAGE.md`](../glassbox-lesson/EVERY-PAGE.md),
 [`../glassbox-lesson/QUALITY.md`](../glassbox-lesson/QUALITY.md) (Lenses only),
 [`../glassbox-lesson/DECISIONS.md`](../glassbox-lesson/DECISIONS.md),
-`.claude/rules/glassbox-content.md`.
+`.claude/rules/glassbox-content.md`, and, since every run fetches and opens a
+PR, `docs/agents/git-conventions.md`, `docs/agents/github-integration.md` and
+`docs/agents/pr-workflow.md`.
 Subagents read committed files at the base with `git show <base>:<path>`,
 which can't follow the `.claude/skills/<name>` link, so write every Skill path
 in a brief as `.agents/skills/...`.
@@ -44,19 +46,31 @@ in a brief as `.agents/skills/...`.
 ## How a run goes
 
 - **Orient.** This is the orientation step: run
-  `pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts` and read all
-  of its output. Leave alone every page an open PR touches and every focus
-  another open curate run has claimed.
+  `pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts`, then the
+  same with `--pages`, and read each output whole, never through `head`; if
+  the tool saves one to a file, read that file whole. The first gives the
+  state: where to write the run entry, open PRs, memory, recent runs and
+  warnings. The second gives every page's first paragraph, your only overview
+  of what the guide already teaches: you need it to spot a gap, an overlap or a
+  page that already exists. Leave alone every page an open PR touches.
 - **Choose.** Take the focus from memory leads, the owner's review notes,
   page-check warnings, problems the orientation shows, or gaps; when nothing is
   pressing, from pages no fresh reader has seen lately (`pagesRead`). The run
   entry says why.
+- **Proposal.** A focus that needs the owner's decision (a new Subject, a
+  split, a move between Subjects) is a valid focus, and its result is an issue
+  for the owner. It gives the Subjects and their pages, each move and retitle
+  with its effect on URLs and links, the entries
+  `layers/glassbox/app/utils/subjects.ts` would gain, and the decision asked
+  for as a yes/no or a choice between options. The run's PR then holds only
+  its run entry, whose `changes` names the issue, and the memory page, which
+  says the lead waits for the owner in that issue.
 - **Gaps.** Compare what Terrarium relies on (`package.json`, the ADRs, the
   Skills, `scripts/`) with what the Lessons teach. The memory page keeps known
   gaps, those left uncovered on purpose too. Fix what makes pages hard to learn
   from first; take a gap when no page problem outweighs it.
-- **Claim.** Right after choosing, push the run branch with its run entry, so a
-  concurrent run sees the focus.
+- **Claim.** Right after choosing, write the run entry from the orientation's
+  skeleton, keeping `focus` quoted, and push the run branch.
 - **Diagnose.** Fresh readers (sonnet, no repo access) get each page as plain
   text: MDC stripped, each term followed by its definition, each Excerpt as code
   with its file path. They report where a newcomer gets lost. For structure,
@@ -68,17 +82,26 @@ in a brief as `.agents/skills/...`.
   page. Never reverse a change from the last 5 runs unless it made the page
   false.
 - **Fix.** An opus writer quotes the `path:line` behind every sentence it adds
-  or changes.
+  or changes. Each `The cost:` clause needs a source that states that cost, and
+  the writer runs a command sequence before it says what the sequence does.
 - **Check.** A separate sonnet claim checker checks the changed sentences
   and a promoted draft's whole page. `glassbox-update` owns the claim check of
   unchanged text, so leave that to it. Run EVERY-PAGE.md's Check on the
   changed pages, and a fresh reader re-reads them. One retry, then drop the
   change.
+- **Removal.** A change that only removes text or a page skips the writer, the
+  claim checker and the fresh reader. Still run the page checks, grep for
+  links, slugs and terms that pointed at what you removed, and re-read each
+  sentence next to a cut: it may now point at nothing. The run entry's
+  `changes` says what you skipped.
 - **Land.** Merge `origin/main` and keep the newer pin. Two runs on one day can
   both rewrite the memory page: the later one keeps both runs' leads. Rewrite
   the memory page, complete the run entry, open one self-merged PR
-  (`docs/agents/pr-workflow.md`). Done when the PR is open with the memory page
-  and run entry current.
+  (`docs/agents/pr-workflow.md`) whose body gives the run's cost from
+  `get_session`. Give `code-review` the Lesson contract, EVERY-PAGE.md,
+  DECISIONS.md and the glassbox-content rule as its standards, without the
+  code-smell baseline, and say the page checks already ran. Done when the PR is
+  open with the memory page and run entry current.
 
 ## State
 
@@ -88,10 +111,13 @@ All in `layers/glassbox/content/workshop/`:
   owner's direction and the open ideas. Write it in simple, plain words, so a
   person reads it easily and later runs don't copy needlessly complex wording.
   Each run rewrites it and **cuts** whatever its work addressed and whatever it
-  judges no longer needed, so the page stays short. What a run did goes in its
+  judges no longer needed, so the page stays short. Delete a finished item;
+  never mark it done. A fact the next run still needs stays as a plain current
+  fact under a heading that fits. Count before you write a count. What a run did goes in its
   run entry, not here. The word cap in
   `layers/glassbox/tests/unit/workshop.spec.ts` is a ceiling, not a target.
-- `runs/<YYYY-MM-DDTHHMM>.yml`: one entry per run, named by its UTC start time.
+- `runs/<YYYY-MM-DDTHHMM>.yml`: one entry per run, named by the UTC time the
+  orientation printed.
   Its shape is the `runs` Collection in `layers/glassbox/tenant.config.ts`. A
   `changes` entry is `page | what changed | why`, `page` being the guide page's
   stem (its path under `layers/glassbox/content/guide/pages/` without `.md`,

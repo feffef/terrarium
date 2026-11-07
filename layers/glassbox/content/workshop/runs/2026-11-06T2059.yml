@@ -1,5 +1,4 @@
 session: session_013zxzeRJEE2ehNrQTL62nhX
-pr: 2908
 mode: autonomous
 focus: "Gap — no Lesson taught how Terrarium checks that a page renders (the scripts/ui tools and headless browser checks). Chosen because the memory page listed UI checks as a possible gap, I confirmed the guide never cites scripts/ui or docs/agents/verifying-ui-changes.md, five Skills depend on them, and no open PR touched the guide. A git hooks Lesson was rejected: the repo has one hook, which Commit and PR attribution already teaches."
 changes:
@@ -8,7 +7,3 @@ changes:
 pagesRead:
   - git-github/05.attribution
   - verification/04.unit-and-e2e-tests
-learned:
-  - "The claim checker found three Why-bullet costs the cited file never states and a screenshot.ts sentence that was true only through preview.ts. Check that each cost has a source, and which script owns a flag."
-  - "The fresh reader asked what the Try it's package is and what output to expect. Name the package and show sample output."
-  - "A run-entry value holding ': ' must be quoted, or validate:content fails."

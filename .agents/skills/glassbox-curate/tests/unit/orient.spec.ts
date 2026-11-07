@@ -2,7 +2,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
-import { orientation, pageOverview } from '../../scripts/orient.ts'
+import { guidePages, orientation, pageOverview, runStem, shortPath, warningLines } from '../../scripts/orient.ts'
 
 const page = `---
 title: Blocking hooks
@@ -25,18 +25,16 @@ Body text.
 `
 
 describe('pageOverview', () => {
-  it('gives the title, description, first paragraph and Where next titles', () => {
+  it('gives the title, description and first paragraph', () => {
     expect(pageOverview('claude-code/05.blocking-hooks', page)).toBe([
       '### claude-code/05.blocking-hooks: Blocking hooks',
       'Hooks that refuse a wrong tool call.',
       '',
       'Some instructions keep being missed. A blocking hook checks instead.',
-      '',
-      'Where next: Claude Code hooks · Subagents',
     ].join('\n'))
   })
 
-  it('skips a leading component and omits an empty Where next', () => {
+  it('skips a leading component', () => {
     const walkthrough = `---\ntitle: W\ndescription: D\n---\n\n::diagram\n::\n\nThe story starts here.\n\n## 1. First stop\n`
     expect(pageOverview('walkthroughs/w', walkthrough)).toBe('### walkthroughs/w: W\nD\n\nThe story starts here.')
   })
@@ -59,25 +57,53 @@ describe('orientation', () => {
   })
   afterAll(() => rmSync(base, { recursive: true, force: true }))
 
-  it('prints every section in order, unfiltered, with runs newest first', () => {
+  const run = (log = (_since: string | undefined) => 'abc1234 a guide commit') =>
+    orientation(base, { log, prs: () => '- #1 a PR: layers/glassbox/x.md', now: new Date('2026-11-07T10:05:30Z') })
+
+  it('prints the state sections in order, runs newest first, and no terms or pages', () => {
     const seen: (string | undefined)[] = []
-    const out = orientation(base, (since) => (seen.push(since), 'abc1234 a guide commit'))
+    const out = run((since) => (seen.push(since), 'abc1234 a guide commit'))
     expect(out.split('\n').filter((l) => l.startsWith('# '))).toEqual([
-      '# Memory page', '# Curate runs, newest first', '# glassbox-update checks', '# Terms', '# Page-check warnings', '# Guide and drafts changes since the last curate run', '# Guide pages',
+      '# Run entry', '# Open PRs that touch Glass Box', '# Memory page', '# Last 5 curate runs, newest first', '# glassbox-update checks', '# Page-check warnings', '# Guide and drafts changes since the last curate run',
     ])
-    for (const text of ['A lead.', 'focus: first', 'focus: second', 'pages: []', 'term: Hook', '### claude-code/05.blocking-hooks: Blocking hooks']) expect(out).toContain(text)
+    for (const text of ['workshop/runs/2026-11-07T1005.yml', 'focus: "<', '- #1 a PR', 'A lead.', 'focus: first', 'focus: second', 'pages: []', 'abc1234 a guide commit']) expect(out).toContain(text)
     expect(out.indexOf('focus: second')).toBeLessThan(out.indexOf('focus: first'))
-    expect(out).toContain('may give a motive ("so")')
-    expect(out).toContain('abc1234 a guide commit')
+    expect(out).toContain('05.blocking-hooks.md ×1')
+    for (const text of ['term: Hook', '### claude-code']) expect(out).not.toContain(text)
     expect(seen).toEqual(['2026-11-07T09:00:00Z'])
+  })
+
+  it('prints the guide pages on their own', () => {
+    expect(guidePages(base)).toContain('### claude-code/05.blocking-hooks: Blocking hooks\nHooks that refuse a wrong tool call.\n\nSome instructions')
   })
 
   it('falls back to the last commits before the first run', () => {
     const empty = mkdtempSync(join(tmpdir(), 'orient-empty-'))
     const seen: (string | undefined)[] = []
-    const out = orientation(empty, (since) => (seen.push(since), ''))
+    const out = orientation(empty, { log: (since) => (seen.push(since), ''), prs: () => '' })
     rmSync(empty, { recursive: true, force: true })
     expect(seen).toEqual([undefined])
     expect(out).toContain('# Last 30 guide and drafts changes (no curate run yet)')
+  })
+})
+
+describe('runStem', () => {
+  it('names the entry by the UTC minute', () => expect(runStem(new Date('2026-11-07T09:04:59Z'))).toBe('2026-11-07T0904'))
+})
+
+describe('warningLines', () => {
+  it('counts motive warnings per page and keeps the rest in full', () => {
+    const motive = 'In Terrarium may give a motive ("so"); check it states mechanism: x'
+    expect(warningLines([['a.md', [motive, motive, 'stop "1" has 90 words']], ['b.md', [motive]], ['c.md', []]])).toEqual([
+      '- a.md: stop "1" has 90 words',
+      '- In Terrarium may give a motive ("so"); check it states mechanism: a.md ×2, b.md ×1',
+    ])
+  })
+})
+
+describe('shortPath', () => {
+  it('gives a guide page as its stem and other Glass Box files under the layer', () => {
+    expect(shortPath('layers/glassbox/content/guide/pages/git-github/05.attribution.md')).toBe('git-github/05.attribution')
+    expect(shortPath('layers/glassbox/content/workshop/checks/update.yml')).toBe('content/workshop/checks/update.yml')
   })
 })

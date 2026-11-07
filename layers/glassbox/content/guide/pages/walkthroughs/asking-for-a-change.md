@@ -96,3 +96,4 @@ On 15 October 2026 a Trusted user asked a session to install the `retro` Skill f
 - [Pull requests](/t/glassbox/guide/git-github/every-change-a-pr)
 - [Merge gate](/t/glassbox/guide/verification/gate)
 - [Session logs](/t/glassbox/guide/terrarium-practice/session-logs)
+- [Planning a big change](/t/glassbox/guide/walkthroughs/planning-a-big-change)
