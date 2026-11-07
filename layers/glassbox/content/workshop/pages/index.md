@@ -13,8 +13,8 @@ Pages are named by their title, followed by their file under `layers/glassbox/co
 
 ### Weak spots
 
-- **The Installed Skills pages say little of their own.** *Planning skills* (`skill-pack/02.planning-with-the-pack`) and *Engineering skills* (`skill-pack/03.engineering-skills`) mostly describe Skills that come from outside Terrarium. Only a few of their facts are about choices Terrarium made.
-- **Two Git & GitHub Lessons are long.** *Commit and PR attribution* (`git-github/05.attribution`) and *Issue triage labels* (`git-github/06.issue-triage-labels`) are each about 1,400 to 1,600 words. Both have been trimmed; look for a split only after a fresh reader finds them hard to follow.
+- **The Installed Skills pages say little of their own.** *Planning skills* (`skill-pack/20.planning-with-the-pack`) and *Engineering skills* (`skill-pack/30.engineering-skills`) mostly describe Skills that come from outside Terrarium. Only a few of their facts are about choices Terrarium made.
+- **Two Git & GitHub Lessons are long.** *Commit and PR attribution* (`git-github/60.attribution`) and *Issue triage labels* (`git-github/70.issue-triage-labels`) are each about 1,400 to 1,600 words. Both have been trimmed; look for a split only after a fresh reader finds them hard to follow.
 - **The drafts Space is empty.** A gap that isn't central goes there as a new draft.
 - **The Claude Code, Hooks and Agents & automation Subjects still repeat each other.** The split moved pages without moving facts; the ideas below are about giving each fact one home.
 
@@ -32,6 +32,10 @@ These are the owner's goals for the guide. A run builds toward them directly; a 
 2. **Make structure and titles consistent.** Titles should name the general concept and follow one pattern within a Subject, and file names should match their titles.
 3. **Fill what is missing entirely.** This covers a Lesson, or a whole Subject, for something Terrarium relies on that no page teaches yet.
 
+### Order of the guide
+
+Subjects and Lessons run prerequisites first, and Lesson prefixes go up in tens (10, 20, 30…) so a new Lesson fits between two others. The owner ruled that agent tooling comes first and Web standards never sits between the two Nuxt Subjects. Pages link each other in loops, so the order puts the broader concept first and its use later. A page that links a later one in its body is expected.
+
 ### Good next focuses
 
 1. **None queued.** Pick from the weak spots and ideas below.
@@ -42,17 +46,17 @@ These are the owner's goals for the guide. A run builds toward them directly; a 
 
 **Claude Code and Hooks: giving each fact one home.** In each case the first page keeps a short link.
 - *MCP servers* explains how hooks pick out MCP tools by name. That belongs on *Blocking hooks*.
-- *Session transcripts* explains how a session log is built from the transcript. That belongs on *Session logs* (`terrarium-practice/04.session-logs`).
+- *Session transcripts* explains how a session log is built from the transcript. That belongs on *Session logs* (`terrarium-practice/40.session-logs`).
 
-**Installed Skills.** *Engineering skills* could become part of *Installed skills* (`skill-pack/01.skill-packs`).
+**Installed Skills.** *Engineering skills* could become part of *Installed skills* (`skill-pack/10.skill-packs`).
 
-**A fact about out-of-scope records that no Lesson teaches.** Before it recommends anything, `triage` reads every record in `.out-of-scope/` and shows the person deciding any that resembles the new request (`.agents/skills/triage/SKILL.md`, step 1). *Issue triage labels* (`git-github/06.issue-triage-labels`) teaches the records and their format but not this check. It could be one sentence there, or a section if that page is split after a fresh reader finds it hard to follow.
+**A fact about out-of-scope records that no Lesson teaches.** Before it recommends anything, `triage` reads every record in `.out-of-scope/` and shows the person deciding any that resembles the new request (`.agents/skills/triage/SKILL.md`, step 1). *Issue triage labels* (`git-github/70.issue-triage-labels`) teaches the records and their format but not this check. It could be one sentence there, or a section if that page is split after a fresh reader finds it hard to follow.
 
-**Missing Lessons.** The browser quirks and CSS traps listed in `docs/agents/verifying-ui-changes.md` are only partly taught, in *Headless browser checks* (`verification/09.headless-browser-checks`).
+**Missing Lessons.** The browser quirks and CSS traps listed in `docs/agents/verifying-ui-changes.md` are only partly taught, in *Headless browser checks* (`verification/80.headless-browser-checks`).
 
 **Ideas earlier runs rejected.** Before acting on one, re-check the reasons for and against.
-- Moving the timestamp rule and its warnings from *Content validation* (`verification/03.content-validation`) to *Zod refinements* (`verification/06.zod-refinements`).
-- Moving the warning to return only what a page reads from *Data fetching* (`nuxt-vue/06.data-fetching`) to *queryCollection* (`nuxt-content/04.query-collection`). A related move the other way is under Already decided.
+- Moving the timestamp rule and its warnings from *Content validation* (`verification/30.content-validation`) to *Zod refinements* (`verification/60.zod-refinements`).
+- Moving the warning to return only what a page reads from *Data fetching* (`nuxt-vue/70.data-fetching`) to *queryCollection* (`nuxt-content/40.query-collection`). A related move the other way is under Already decided.
 
 ### Already decided
 
