@@ -5,7 +5,7 @@ pages:
     checked: '2026-11-07'
   - page: claude-code/03.skills
     checked: '2026-11-07'
-  - page: claude-code/04.hooks
+  - page: hooks/01.hooks
     checked: '2026-11-07'
-  - page: claude-code/05.blocking-hooks
+  - page: hooks/02.blocking-hooks
     checked: '2026-11-07'
