@@ -27,7 +27,7 @@ Pages are named by their title, followed by their file under `layers/glassbox/co
 
 ### The owner's direction
 
-These are the owner's goals for the guide. A run builds toward them directly; a PR that adds a Lesson or changes a Subject waits for the owner's merge.
+These are the owner's goals for the guide. A run builds toward them directly; a PR that adds a Lesson, changes a Subject or changes a Skill, the glassbox-lesson docs or the page checks waits for the owner's merge.
 
 1. **Finish the web standards Subject.** It now holds *CSS custom properties*, *SVG*, *ARIA* and *Colour and motion settings*. Still open: no ADR or rule says binary images are kept out of the repository (the repo just holds none), so no page teaches that; and *ARIA* cites components and tests only, because no accessibility practice is recorded. Ask the owner whether to record one.
 2. **Make structure and titles consistent.** Titles should name the general concept and follow one pattern within a Subject, and file names should match their titles.

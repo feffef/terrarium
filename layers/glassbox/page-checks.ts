@@ -386,7 +386,7 @@ export function glassboxOrphans(sources: Record<string, string>): string[] {
   return Object.keys(sources).filter((f) => f !== 'index.md' && !linked.has(glassboxSitePath('guide', f))).sort()
 }
 
-/** Each guide page's title and description cap problems, by file under `pages/`. */
+/** Each guide page's title, title-word and description cap problems, by file under `pages/`. */
 export function glassboxLengthProblems(sources: Record<string, string>): string[] {
   return Object.entries(sources).flatMap(([file, source]) => lengthProblems(`/${contentRoute(file)}`, splitFrontmatter(source).frontmatter).map((p) => `guide/pages/${file}: ${p}`)).sort()
 }
