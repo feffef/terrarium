@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQWJUyfuXJgdfypeuc
 startedAt: 2026-11-07T07:58:07Z
-endedAt: 2026-11-07T12:11:57Z
+endedAt: 2026-11-07T12:16:00Z
 kind: interactive
 goal: Redesign the glassbox-curate Skill from its runs, then fix what the next runs showed
-status: in-review
-outcome: "PR #2923 merged; PR #2929 open: read the Subject before choosing, wait for update PRs, update owns its merge"
-summary: "Phase 1 (human-instructed): the owner had me read issue #2906 and design improvements, consulting the sessions that designed and ran the Skill; PR #2923 (two-call orientation, no pr/learned fields, proposals as results, removal path) merged. Phase 2 (human-instructed): the owner asked me to review the runs after #2923 (the Claude Code split #2924/#2925, the triage-labels cut #2927) and the glassbox-update run #2922, and to have the update session run a retro. I messaged all three sessions; the update session could not reply by tool, so the owner pasted its answer. The owner then chose each fix: cut-fact homes, moved pages keep their update.yml date (grades.yml left to its own script, my objection accepted), curate waits for an open update PR, cost field named, a person may switch a run to autonomous, update's Land owns the merge, scoped checks fetch docs, the report lists changedFiles. The owner interrupted, then asked me to make runs read the whole Subject before choosing their focus, have review name missed pages for the lead to read, and have new Lessons follow the glassbox-lesson Skill. Agent-initiated: renaming \"rough focus\" to \"area\" and aligning the relevance test after review. Gate green; PR #2929 open."
+status: completed
+outcome: "PRs #2923 and #2929 merged: read the Subject before choosing, wait for update PRs, update owns its merge"
+summary: "Phase 1 (human-instructed): the owner had me read issue #2906 and design improvements, consulting the sessions that designed and ran the Skill; PR #2923 (two-call orientation, no pr/learned fields, proposals as results, removal path) merged. Phase 2 (human-instructed): the owner asked me to review the runs after #2923 (the Claude Code split #2924/#2925, the triage-labels cut #2927) and the glassbox-update run #2922, and to have the update session run a retro. I messaged all three sessions; the update session could not reply by tool, so the owner pasted its answer. The owner then chose each fix: cut-fact homes, moved pages keep their update.yml date (grades.yml left to its own script, my objection accepted), curate waits for an open update PR, cost field named, a person may switch a run to autonomous, update's Land owns the merge, scoped checks fetch docs, the report lists changedFiles. The owner interrupted, then asked me to make runs read the whole Subject before choosing their focus, have review name missed pages for the lead to read, and have new Lessons follow the glassbox-lesson Skill. Agent-initiated: renaming \"rough focus\" to \"area\" and aligning the relevance test after review. Gate green; PR #2929 merged."
 prs:
   - "2923"
   - "2929"
@@ -96,30 +96,30 @@ frictions:
   - description: The update session had no send_message tool, so its retro reached me only because the owner pasted it
     solution: Before asking a scheduled session for a reply, say it may answer in its own transcript and read it there with the inspect-session Skill
     severity: minor
-durationSec: 15230
+durationSec: 15473
 models:
-  claude-opus-5-5: 423
+  claude-opus-5-5: 438
 toolCounts:
-  Bash: 124
+  Bash: 127
   ToolSearch: 3
   mcp__github__issue_read: 5
   mcp__claude-code-remote__send_message: 9
   mcp__claude-code-remote__get_session: 1
   AskUserQuestion: 11
-  ReadNotifications: 6
+  ReadNotifications: 8
   Write: 3
   SendUserFile: 1
-  Skill: 5
+  Skill: 6
   Agent: 5
   Read: 3
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 2
-  mcp__github__pull_request_read: 10
-  mcp__claude-code-remote__send_later: 1
-  mcp__github__add_issue_comment: 1
-  mcp__claude-code-remote__delete_trigger: 1
-  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  mcp__github__pull_request_read: 11
+  mcp__claude-code-remote__send_later: 2
+  mcp__github__add_issue_comment: 2
+  mcp__claude-code-remote__delete_trigger: 2
+  mcp__claude-code-remote__unsubscribe_pr_activity: 2
   Edit: 1
 filesEdited:
   - .throwaway/curate-examples.md
@@ -246,31 +246,31 @@ subagents:
     durationSec: 59
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 2.7
+    tokenShare: 2.5
   - type: general-purpose
     task: Spec review of curate diff
     durationSec: 50
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 2.6
+    tokenShare: 2.5
   - type: general-purpose
     task: Standards review of fixes diff
     durationSec: 65
     toolCalls: 7
     modelCalls: 7
-    tokenShare: 2.4
+    tokenShare: 2.3
   - type: general-purpose
     task: Spec review of fixes diff
     durationSec: 67
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 2.1
+    tokenShare: 1.9
   - type: general-purpose
     task: Review full-read Skill commit
     durationSec: 29
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 0.8
+    tokenShare: 0.7
 gitBranch: ccr-c1d87eb8-luzwvj
 entrypoint: remote_mobile
 cliVersion: 2.1.319
