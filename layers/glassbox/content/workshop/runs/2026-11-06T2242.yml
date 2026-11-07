@@ -1,10 +1,7 @@
 session: session_013zxzeQ7Ra7VbsnEayuBNNi
-pr: 2909
 mode: autonomous
 focus: Shorten Commit and PR attribution (git-github/05.attribution), the longest page in the guide at about 1,700 words. Chosen because the memory page lists its length as a weak spot, no open PR touches it, and its last content change was a tightening on 2026-11-04, not within the last runs.
 changes:
   - "git-github/05.attribution | Cut about 150 words: shortened the git hooks paragraph, dropped the registry Excerpt and the 'no text passes' sentence, and folded the commit-msg case list into one sentence | the page was the longest in the guide and these parts repeated what the code and the earlier text already show"
 pagesRead:
   - git-github/05.attribution
-learned:
-  - "A cut-only edit adds almost no new claims; the one rewritten sentence was checked against scripts/session/commit-trailer.ts by the lead, with no fresh reader or claim checker run, to stay in budget."

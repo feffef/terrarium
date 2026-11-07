@@ -1,0 +1,15 @@
+session: session_013zxzeRwjiiLkjj6sQ3u49g
+mode: interactive
+focus: "Split the Claude Code Subject (owner's direction 1). The run first proposed the split as issue #2924, then the owner told it to implement the proposal as written, so the recommended options were taken."
+changes:
+  - "claude-code/04.hooks | Moved to the new Hooks Subject as hooks/01.hooks; the URL changed | the Claude Code Subject held 13 Lessons"
+  - "claude-code/05.blocking-hooks | Moved to hooks/02.blocking-hooks | same split"
+  - "claude-code/06.hook-added-context | Moved to hooks/03.hook-added-context | same split"
+  - "claude-code/13.session-transcripts | Moved to hooks/04.session-transcripts | same split"
+  - "claude-code/07.subagents | Moved to the new Agents & automation Subject as agents/01.subagents | same split"
+  - "claude-code/09.workflow-scripts | Moved to agents/02.workflow-scripts | same split"
+  - "claude-code/10.routines | Moved to agents/03.routines | same split"
+  - "claude-code/11.cloud-sessions | Moved to agents/04.cloud-sessions | same split"
+  - "claude-code/12.permissions | Renumbered to claude-code/04.permissions; the URL is unchanged | the folder lost eight pages"
+  - "claude-code/08.mcp-servers | Renumbered to claude-code/05.mcp-servers; the URL is unchanged | the folder lost eight pages"
+pagesRead: []

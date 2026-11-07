@@ -1,0 +1,225 @@
+schemaVersion: 1
+session: session_013zxzeQWJUyfuXJgdfypeuc
+startedAt: 2026-11-07T07:58:07Z
+endedAt: 2026-11-07T08:37:15Z
+kind: interactive
+goal: Redesign the glassbox-curate Skill from its first four runs
+status: completed
+outcome: "PR #2923 merged: two-call orientation, proposals as results, run entries without pr and learned"
+summary: "The owner asked me to read issue #2906 and its comments, then to design improvements to glassbox-curate, allowing me to message the sessions that designed and ran it. I asked the designer and the four run sessions which orientation sections they used: all chose focus from the memory page, none used terms or warnings, and two never reached the guide pages. The designer quoted the owner's own plan to trim once the output grew. Every design choice was the owner's (human-instructed): drop pr and learned, a session link on the workshop page, claims through open PRs only, proposal-as-result, the Where next check, the memory-page fixes, and orient.ts in two calls. The owner corrected my first cut: the first paragraph of each page is essential and must stay, Where next can go, and the Skill should explain why. Agent-initiated: removing the Walkthrough links the new check flagged in two Lessons and relinking the orphaned Walkthrough from another Walkthrough. code-review found a stale \"claim\" wording and a misplaced doc comment, both fixed. Gate green; merged as PR #2923."
+prs:
+  - "2923"
+docsRead:
+  - path: docs/agents/github-integration.md
+    reason: MCP tool map; REST works in the cloud for orient.ts's PR lookup
+    useful: yes
+  - path: .agents/skills/glassbox-curate/SKILL.md
+    reason: the Skill being redesigned
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: read late, after my first git fetch; confirmed commit and push hygiene
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: review, gate and PR order
+    useful: yes
+  - path: layers/glassbox/GLOSSARY.md
+    reason: Lesson and Walkthrough Where next contracts behind the new check
+    useful: yes
+  - path: docs/adr/0005-skill-model.md
+    reason: hook-prompted after editing orient.ts; nothing changed
+    useful: no
+  - path: docs/adr/0027-prune-trials.md
+    reason: checked no open trial covers the Skill
+    useful: partly
+  - path: docs/agents/verifying-ui-changes.md
+    reason: production build and preview.ts shot for the workshop page
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: brief rules for the two reviewers
+    useful: partly
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: Standards subagent read it for the SKILL.md edit; it flagged a restated rule from it
+    useful: yes
+skillsUsed:
+  - name: code-review
+    reason: Standards and Spec review of the diff before the PR
+  - name: dispatch-subagents
+    reason: before writing the reviewer briefs
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran git fetch before reading docs/agents/git-conventions.md, which CLAUDE.md requires first; a hook pointed to it after the call
+    solution: Read the git doc together with github-integration.md at the first GitHub step; the fetch itself was harmless
+    severity: nit
+  - description: Sent a garbled first send_message to the designer session, with a wrong header id and no content, then had to send a correction
+    solution: Check my own session id with get_session before the first peer message, and write the message before sending
+    severity: minor
+  - description: Examples written in chat before an AskUserQuestion were not visible to the owner in the app; it took two extra rounds to show them
+    solution: Put examples in the question text or option previews, or send them as a file, not in the text before the dialog
+    severity: moderate
+  - description: My first guide-pages proposal cut the first paragraph, which the owner calls essential; I had weighted run reports over the design intent
+    solution: Ask the owner which part of a section serves which decision before proposing cuts to it
+    severity: minor
+  - description: The new Where next check broke two existing Lessons and orphaned a Walkthrough; found only by running the real script
+    solution: Run a new page check against the real guide before writing its test
+    severity: nit
+  - description: A scripted SKILL.md edit failed on a mismatched old string and had to be resent in full, since the script aborted before writing
+    solution: Grep the exact lines first, or use the Edit tool per hunk so one mismatch does not void the batch
+    severity: nit
+durationSec: 2348
+models:
+  claude-opus-5-5: 220
+toolCounts:
+  Bash: 66
+  ToolSearch: 3
+  mcp__github__issue_read: 2
+  mcp__claude-code-remote__send_message: 6
+  mcp__claude-code-remote__get_session: 1
+  AskUserQuestion: 6
+  ReadNotifications: 3
+  Write: 2
+  SendUserFile: 1
+  Skill: 4
+  Agent: 2
+  Read: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+  mcp__claude-code-remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__delete_trigger: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+filesEdited:
+  - .throwaway/curate-examples.md
+  - .agents/skills/glassbox-curate/scripts/orient.ts
+  - .agents/skills/glassbox-curate/SKILL.md
+  - layers/glassbox/page-checks.ts
+  - .agents/skills/glassbox-curate/tests/unit/orient.spec.ts
+  - layers/glassbox/app/components/content/WorkshopRuns.vue
+  - layers/glassbox/content/guide/pages/git-github/06.work-queue.md
+  - layers/glassbox/content/guide/pages/skill-pack/04.wayfinder.md
+  - layers/glassbox/content/guide/pages/walkthroughs/asking-for-a-change.md
+  - layers/glassbox/content/workshop/pages/index.md
+  - layers/glassbox/content/workshop/runs/2026-11-06T1936.yml
+  - layers/glassbox/content/workshop/runs/2026-11-06T2059.yml
+  - layers/glassbox/content/workshop/runs/2026-11-06T2100.yml
+  - layers/glassbox/content/workshop/runs/2026-11-06T2242.yml
+  - layers/glassbox/tenant.config.ts
+  - layers/glassbox/tests/unit/glassbox-pages.spec.ts
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/ui-verification.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0005.md
+adrHints:
+  - adr: 5
+    via: path
+    readAfter: true
+    by: main
+  - adr: 27
+    via: path
+    readAfter: true
+    by: main
+docsReadBySubagents:
+  - .agents/skills/writing-for-agents/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run code-review and gate:scoped before opening the PR; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Session log via close-session at PR open; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Owner approved each piece in chat before I built; open the PR myself
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Header line on the PR body and on peer messages
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Made me check prune-trials.yml before cutting Skill text; no trial applied
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded at start; no rule placement was in question
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Confirmed no touched file is Human-only
+    useful: partly
+  - path: .claude/rules/adr-0005.md
+    reason: Skill change goes through a gated PR, which it did anyway
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Edited only the glassbox manifest for the schema; already the plan
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: Made me get the owner's approval before dropping pr and learned
+    useful: yes
+  - path: .claude/rules/glassbox-content.md
+    reason: Confirmed the workshop Space may hold ids and counts
+    useful: partly
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: No new component or Collection was added
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: No diagram was touched
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Used Glass Box terms (Lesson, Walkthrough, Where next) from its glossary
+    useful: partly
+  - path: .claude/rules/tenant-layers.md
+    reason: "Confirmed the #shared alias import in the layer component"
+    useful: partly
+  - path: .claude/rules/adr-0030.md
+    reason: No ADR was changed
+    useful: no
+  - path: .claude/rules/ui-verification.md
+    reason: Made me screenshot the built workshop page rather than trust the test
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded on reading the glossary; no term was added
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: No glossary term was added or changed
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Standards review of curate diff
+    durationSec: 59
+    toolCalls: 8
+    modelCalls: 7
+    tokenShare: 6.7
+  - type: general-purpose
+    task: Spec review of curate diff
+    durationSec: 50
+    toolCalls: 9
+    modelCalls: 6
+    tokenShare: 6.5
+gitBranch: ccr-c1d87eb8-luzwvj
+entrypoint: remote_mobile
+cliVersion: 2.1.319
+learnings:
+  - In the Claude app, text written before an AskUserQuestion call is hidden while the dialog is open, so the question must carry its own examples
+ideas:
+  - Have orient.ts print its own byte count and warn above the tool's save-to-file limit, so a future section that grows the output is noticed by the first run, not after four
+landedBy: Stop

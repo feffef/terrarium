@@ -1,0 +1,252 @@
+schemaVersion: 1
+session: session_013zxzeS85pNBsS4oQSVQntp
+startedAt: 2026-11-07T07:33:10Z
+endedAt: 2026-11-07T07:41:04Z
+kind: autonomous
+goal: Bring the Glass Box guide pages up to date with main
+status: in-review
+outcome: Pages re-pinned to a438b80f3, two claims fixed, five pages fully checked; PR 2922 open, gate green
+summary: "Scheduled glassbox-update run, no human instruction beyond the stored prompt. All 20 flagged pages and the 5 rotation pages were claim-checked by three read-only sonnet subagents. They found no false claim; I made two small agent-initiated corrections (verification/04 spec scope, claude-code/10 glassbox-update line). The scoped checks did not fetch tool docs, only the rotation agent did. I read the diff myself instead of running code-review, since it was pins plus two lines. Open: merge after CI."
+prs:
+  - "2922"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: required before first git command; nothing changed my route
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: required before the PR; MCP create_pull_request was enough
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: review-before-PR rules and simple-change test
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: Pin and Write rules; subagents used it for the claim check
+    useful: yes
+  - path: layers/glassbox/GLOSSARY.md
+    reason: page shapes; subagents reported partly useful
+    useful: partly
+  - path: docs/agents/guards.md
+    reason: subagent read it as a cited source; reported yes
+    useful: yes
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: subagent read it to check the routines page; yes
+    useful: yes
+  - path: .agents/skills/glassbox-curate/SKILL.md
+    reason: subagent read it for a stale concept; yes
+    useful: yes
+  - path: .agents/skills/tinkerfund-campaign/SKILL.md
+    reason: only in a subagent diff; not relevant
+    useful: no
+  - path: .agents/skills/log-session/SKILL.md
+    reason: only in a subagent diff
+    useful: no
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: only in a subagent diff
+    useful: no
+  - path: layers/glassbox/content/guide/pages/claude-code/01.claude-md.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/claude-code/02.path-scoped-rules.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/claude-code/03.skills.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/claude-code/04.hooks.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/claude-code/05.blocking-hooks.md
+    reason: (read before editing)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: glassbox-update
+    reason: (invoked as a slash command)
+frictions:
+  - description: Skill step 1 and git-conventions say fetch first; I ran git commands before reading git-conventions, and a foreground sleep was blocked.
+    solution: Read the required doc before the first git command; wait with notifications, not sleep.
+    severity: nit
+  - description: Scoped check subagents skipped docs fetches, so tool-doc claims on 16 flagged pages went unverified.
+    solution: State in the brief that scoped checks still fetch docs only when a changed file bears on a docs claim; accepted here.
+    severity: minor
+durationSec: 473
+models:
+  claude-sonnet-5-5: 65
+toolCounts:
+  Bash: 26
+  Skill: 3
+  Agent: 3
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+filesEdited:
+  - layers/glassbox/content/guide/pages/claude-code/01.claude-md.md
+  - layers/glassbox/content/guide/pages/claude-code/02.path-scoped-rules.md
+  - layers/glassbox/content/guide/pages/claude-code/03.skills.md
+  - layers/glassbox/content/guide/pages/claude-code/04.hooks.md
+  - layers/glassbox/content/guide/pages/claude-code/05.blocking-hooks.md
+  - layers/glassbox/content/guide/pages/claude-code/06.hook-added-context.md
+  - layers/glassbox/content/guide/pages/claude-code/07.subagents.md
+  - layers/glassbox/content/guide/pages/claude-code/08.mcp-servers.md
+  - layers/glassbox/content/guide/pages/claude-code/09.workflow-scripts.md
+  - layers/glassbox/content/guide/pages/claude-code/10.routines.md
+  - layers/glassbox/content/guide/pages/claude-code/11.cloud-sessions.md
+  - layers/glassbox/content/guide/pages/claude-code/12.permissions.md
+  - layers/glassbox/content/guide/pages/claude-code/13.session-transcripts.md
+  - layers/glassbox/content/guide/pages/deploy/01.self-updating-container.md
+  - layers/glassbox/content/guide/pages/deploy/02.pnpm-lockfile.md
+  - layers/glassbox/content/guide/pages/git-github/01.every-change-a-pr.md
+  - layers/glassbox/content/guide/pages/git-github/02.git-worktrees.md
+  - layers/glassbox/content/guide/pages/git-github/03.composite-actions.md
+  - layers/glassbox/content/guide/pages/git-github/04.trust-tiers.md
+  - layers/glassbox/content/guide/pages/git-github/05.attribution.md
+  - layers/glassbox/content/guide/pages/git-github/06.work-queue.md
+  - layers/glassbox/content/guide/pages/git-github/07.dependabot-grouping.md
+  - layers/glassbox/content/guide/pages/git-github/08.git-plumbing.md
+  - layers/glassbox/content/guide/pages/index.md
+  - layers/glassbox/content/guide/pages/nuxt-content/01.manifest-collections.md
+  - layers/glassbox/content/guide/pages/nuxt-content/02.multi-tenant-isolation.md
+  - layers/glassbox/content/guide/pages/nuxt-content/03.content-database.md
+  - layers/glassbox/content/guide/pages/nuxt-content/04.query-collection.md
+  - layers/glassbox/content/guide/pages/nuxt-content/05.mdc-components.md
+  - layers/glassbox/content/guide/pages/nuxt-content/07.mermaid-pre-rendering.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/01.layers.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/02.file-routing.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/03.virtual-modules.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/04.auto-imports.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/05.vue-components.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/06.use-async-data.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/07.css-custom-properties.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/08.hydration.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/09.nitro.md
+  - layers/glassbox/content/guide/pages/skill-pack/01.skill-packs.md
+  - layers/glassbox/content/guide/pages/skill-pack/02.planning-with-the-pack.md
+  - layers/glassbox/content/guide/pages/skill-pack/03.engineering-skills.md
+  - layers/glassbox/content/guide/pages/skill-pack/04.wayfinder.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/01.human-in-the-loop.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/02.adrs.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/03.ubiquitous-language.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/04.session-logs.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/05.pruning-instructions.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/07.human-only-list.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/08.cross-tenant-reads.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/09.self-improvement-loop.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/10.outside-contributions.md
+  - layers/glassbox/content/guide/pages/verification/01.gate.md
+  - layers/glassbox/content/guide/pages/verification/02.type-checking.md
+  - layers/glassbox/content/guide/pages/verification/03.content-validation.md
+  - layers/glassbox/content/guide/pages/verification/04.unit-and-e2e-tests.md
+  - layers/glassbox/content/guide/pages/verification/05.linting.md
+  - layers/glassbox/content/guide/pages/verification/06.schema-validation.md
+  - layers/glassbox/content/guide/pages/verification/08.schema-evolution.md
+  - layers/glassbox/content/guide/pages/verification/09.headless-browser-checks.md
+  - layers/glassbox/content/guide/pages/walkthroughs/a-bug-report-becomes-work.md
+  - layers/glassbox/content/guide/pages/walkthroughs/a-change-goes-live.md
+  - layers/glassbox/content/guide/pages/walkthroughs/a-friction-becomes-a-fix.md
+  - layers/glassbox/content/guide/pages/walkthroughs/adding-a-tenant.md
+  - layers/glassbox/content/guide/pages/walkthroughs/asking-for-a-change.md
+  - layers/glassbox/content/guide/pages/walkthroughs/from-file-to-browser.md
+  - layers/glassbox/content/guide/pages/walkthroughs/planning-a-big-change.md
+  - layers/glassbox/content/guide/pages/walkthroughs/reading-across-tenants.md
+  - layers/glassbox/content/guide/pages/walkthroughs/session-log-lands-on-main.md
+  - layers/glassbox/content/workshop/checks/update.yml
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/mermaid-lanes.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+docsReadBySubagents:
+  - docs/agents/guards.md
+  - .agents/skills/glassbox-update/SKILL.md
+  - .agents/skills/tinkerfund-campaign/SKILL.md
+  - .agents/skills/glassbox-curate/SKILL.md
+  - .agents/skills/log-session/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run gate:scoped before the PR; summary was enough, did not open the ADR
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Session log goes to main via close-session; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR myself and stay within the Skill's scope; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Provenance header on the PR body and commit trailer; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Skill layout background; not needed for this task
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary layout; not needed here
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Prune trials; not needed here
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Rule placement; not needed here
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: Loaded on a glossary read; no term changed
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Pointed to the Glass Box glossary, which I read
+    useful: partly
+  - path: .claude/rules/glassbox-content.md
+    reason: Rule against volatile ids in prose; checked my two edits for it
+    useful: yes
+  - path: .claude/rules/adr-0002.md
+    reason: Manifest rule; no manifest changed
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: Loaded by a tenant config grep; update.yml shape unchanged
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: No MDC work
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: No layer code touched
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: No diagrams touched
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Full check rotation pages
+    model: sonnet
+    durationSec: 132
+    toolCalls: 27
+    modelCalls: 14
+    tokenShare: 18.3
+  - type: general-purpose
+    task: Scoped check batch B
+    model: sonnet
+    durationSec: 100
+    toolCalls: 22
+    modelCalls: 14
+    tokenShare: 18.9
+  - type: general-purpose
+    task: Scoped check batch C
+    model: sonnet
+    durationSec: 94
+    toolCalls: 22
+    modelCalls: 15
+    tokenShare: 17.1
+gitBranch: claude/ecstatic-euler-kexkfl
+entrypoint: remote_trigger
+cliVersion: 2.1.319
+trigger: glassbox-update
+landedBy: Stop

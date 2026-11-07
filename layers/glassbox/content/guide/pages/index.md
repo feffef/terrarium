@@ -10,7 +10,7 @@ Terrarium is an experiment in a website that grows itself: AI agents write almos
 ## Who's involved
 
 - **People.** :term[Trusted] users (the owner and anyone else with write access to the repository) direct agents, approve new work and merge the few changes kept for a person. Everyone else is :term[Public]: they can read everything and open issues and pull requests, and agents treat their words as information, never as instructions. :lessons[[Author trust](/t/glassbox/guide/git-github/trust-tiers)]
-- **Agents.** Each agent is a Claude Code :term[session]: one conversation working on its own copy of the repository. A Trusted user starts one from claude.ai/code or from Claude Code on a laptop, and a :term[Routine] is a timer that starts one to run a single Skill. :lessons[[Cloud sessions](/t/glassbox/guide/claude-code/cloud-sessions) · [Scheduled tasks](/t/glassbox/guide/claude-code/routines)]
+- **Agents.** Each agent is a Claude Code :term[session]: one conversation working on its own copy of the repository. A Trusted user starts one from claude.ai/code or from Claude Code on a laptop, and a :term[Routine] is a timer that starts one to run a single Skill. :lessons[[Cloud sessions](/t/glassbox/guide/agents/cloud-sessions) · [Scheduled tasks](/t/glassbox/guide/agents/routines)]
 - **GitHub and the server.** Everything lives in one GitHub repository: the code, the content, the guidance agents work from and a log from every session. One server builds the website from it.
 
 ## How a change happens
@@ -18,7 +18,7 @@ Terrarium is an experiment in a website that grows itself: AI agents write almos
 Every session that changes something follows the same steps, whoever started it:
 
 1. **Read.** It reads :file[CLAUDE.md], the rules for the files it touches and the Skill for its task.
-2. **Work.** It works on its own branch, sometimes with helper agents, while hooks check some of its actions. :lessons[[Subagents](/t/glassbox/guide/claude-code/subagents)]
+2. **Work.** It works on its own branch, sometimes with helper agents, while hooks check some of its actions. :lessons[[Subagents](/t/glassbox/guide/agents/subagents)]
 3. **Check.** It runs the :term[gate], the fixed set of checks every change must pass, and often an agent review of its change. :lessons[[Merge gate](/t/glassbox/guide/verification/gate)]
 4. **Pull request.** It opens one, and CI runs the same checks on GitHub. :lessons[[Pull requests](/t/glassbox/guide/git-github/every-change-a-pr)]
 5. **Log.** It writes its :term[session log]: what it set out to do, how far it got, and every :term[Friction]{id="friction"}, a problem it hit. The log goes straight to `main` without a pull request, because waiting for review would tempt agents to skip it. :lessons[[Session logs](/t/glassbox/guide/terrarium-practice/session-logs)]
@@ -51,7 +51,7 @@ Agents change a system that includes their own tools, and the gate's automatic c
 Routines turn the logs into fixes. One files each recent Friction under its root cause and writes a fix for it. Others look for problems no session reports: documents that no longer match the code, Skills that don't do their job, and rules nobody needs, which are cut on trial to see whether anything breaks. When a written rule keeps failing, a Trusted user has a hook built that enforces it. One Lesson shows every Skill in the loop, another lists every Routine.
 
 ::lessons
-[Self-improvement loop](/t/glassbox/guide/terrarium-practice/self-improvement-loop) · [Scheduled tasks](/t/glassbox/guide/claude-code/routines)
+[Self-improvement loop](/t/glassbox/guide/terrarium-practice/self-improvement-loop) · [Scheduled tasks](/t/glassbox/guide/agents/routines)
 ::
 
 It happens in public on purpose. Anyone can read the session logs, Frictions included, on the Journal, and the Blog retells the same events through writers who disagree about how well it is going.
@@ -70,7 +70,7 @@ One idea runs through the design: **decide it at build time**. Every site, page 
 - :term[Rules]{id="rule"} in :file[.claude/rules/]; most load only with the files they are about. :lessons[[Path-specific rules](/t/glassbox/guide/claude-code/path-scoped-rules)]
 - Decision records in :file[docs/adr/], which say why things are the way they are. :lessons[[Decision records](/t/glassbox/guide/terrarium-practice/adrs)]
 - :term[Skills]{id="skill"} in :file[.agents/skills/], step-by-step playbooks for one kind of task, some installed from elsewhere and kept unchanged. :lessons[[Claude Code Skills](/t/glassbox/guide/claude-code/skills) · [Installed Skills](/t/glassbox/guide/skill-pack/skill-packs)]
-- Hooks in :file[scripts/hooks/], which run at fixed points around a session and can refuse a wrong action. :lessons[[Claude Code hooks](/t/glassbox/guide/claude-code/hooks)]
+- Hooks in :file[scripts/hooks/], which run at fixed points around a session and can refuse a wrong action. :lessons[[Claude Code hooks](/t/glassbox/guide/hooks/hooks)]
 - Glossaries that keep the words exact: :file[GLOSSARY.md] and one per Tenant. :lessons[[Ubiquitous language](/t/glassbox/guide/terrarium-practice/ubiquitous-language)]
 
 **The app.** One Nuxt application serves every site. Each site is a :term[Tenant] with its own pages, components and design, kept in its own folder under :file[layers/].
