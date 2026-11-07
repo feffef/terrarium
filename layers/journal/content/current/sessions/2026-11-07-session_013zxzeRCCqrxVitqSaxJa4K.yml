@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_013zxzeRCCqrxVitqSaxJa4K
 startedAt: 2026-11-07T16:59:33Z
-endedAt: 2026-11-07T17:47:42Z
+endedAt: 2026-11-07T17:55:12Z
 kind: interactive
 goal: Settle the best title for each Glass Box guide page
-status: completed
-outcome: "PR 2948 merged: one title fixed (Engineering Skills), 70 of 72 titles confirmed, file renames left as the next focus"
+status: in-review
+outcome: PR 2948 merged (70 of 72 titles confirmed); follow-up PR 2949 open and waiting for the owner to merge, lowercasing five titles and recording the rulings
 summary: "The owner started glassbox-curate with no focus, chose autonomous mode and left the focus to me. I picked renaming guide files to match their titles (the memory page's top lead) and had only pushed the run entry when the owner asked whether a title consolidation came first. They then chose retitle first, rename after, and asked me to think carefully about the best possible title for each lesson, with several proposals per page and overall consistency. I dispatched eight read-only Sonnet reviewers, one per group of Subjects, then re-asked each for 2 to 4 ranked alternatives. They kept 70 of 72 titles; they proposed Engineering Skills (capital S, matching its siblings) and Adding a Tenant. I asked the owner two questions; they chose a capital S for Skills and to keep Adding a site, because the overview says site first. Human-instructed: the focus order, the multi-proposal and consistency bars, and both title decisions. Agent-initiated: the rename focus, the reviewer split, the memory page rewrite, the code-review fixes. The code review found two wrong counts on the memory page and an empty pagesRead; I verified and fixed them. Still open: the 12 file renames (about 186 guide links, one Journal link outside the remit) and DECISIONS.md lines for the owner's two choices, which are outside this Skill's remit."
 prs:
   - "2948"
+  - "2949"
 docsRead:
   - path: layers/glassbox/GLOSSARY.md
     reason: Lesson, Walkthrough and Subject contracts and the title and link rules
@@ -34,6 +35,12 @@ docsRead:
   - path: .agents/skills/glassbox-curate/SKILL.md
     reason: run steps, Remit, State section; the Standards subagent used it to judge the memory page and run entry
     useful: yes
+  - path: docs/adr/0005-skill-model.md
+    reason: Hook told me to read it after editing DECISIONS.md; it confirmed Skill docs change through a gated PR, so the late read was no friction
+    useful: partly
+  - path: docs/adr/0027-prune-trials.md
+    reason: Hook told me to read it; no open trial covers DECISIONS.md, so the edit stood
+    useful: partly
   - path: layers/glassbox/content/guide/pages/walkthroughs/a-bug-report-becomes-work.md
     reason: (read before editing)
   - path: layers/glassbox/content/guide/pages/walkthroughs/planning-a-big-change.md
@@ -78,22 +85,25 @@ frictions:
   - description: No orient output shows which guide file names differ from their titles or how many links use each old address, so I wrote a throwaway bash loop and hand-counted, which led to the wrong counts.
     solution: Add a section to glassbox-curate orient.ts listing pages whose file name shares no word with the title, with their inbound link counts; a Skill change that waits for the owner's merge.
     severity: minor
-durationSec: 2889
+  - description: Recommended a capital S for Skills in titles as 'following the glossary term', but other glossary terms (Collection, Friction, Routine) are lowercase in titles; the owner caught it after the merge, costing a reversal PR.
+    solution: Before recommending a title convention, list how every comparable word is already cased in the guide (one grep of title lines) instead of reasoning from the glossary alone.
+    severity: moderate
+durationSec: 3339
 models:
-  claude-sonnet-5-5: 188
+  claude-sonnet-5-5: 246
 toolCounts:
-  AskUserQuestion: 4
-  Bash: 39
-  Read: 11
-  mcp__claude-code-remote__get_session: 2
+  AskUserQuestion: 5
+  Bash: 59
+  Read: 13
+  mcp__claude-code-remote__get_session: 3
   Write: 2
-  Skill: 6
-  Agent: 10
+  Skill: 8
+  Agent: 12
   ToolSearch: 1
   SendMessage: 8
   mcp__github__list_pull_requests: 2
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
   mcp__github__pull_request_read: 1
   ReadNotifications: 3
   mcp__github__add_issue_comment: 1
@@ -101,12 +111,29 @@ toolCounts:
   mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/workshop/runs/2026-11-07T1700.yml
+  - .agents/skills/glassbox-lesson/DECISIONS.md
   - layers/glassbox/content/workshop/pages/index.md
+  - layers/glassbox/content/guide/pages/agents/01.subagents.md
+  - layers/glassbox/content/guide/pages/agents/02.workflow-scripts.md
+  - layers/glassbox/content/guide/pages/agents/03.routines.md
+  - layers/glassbox/content/guide/pages/claude-code/01.claude-md.md
+  - layers/glassbox/content/guide/pages/claude-code/02.path-scoped-rules.md
+  - layers/glassbox/content/guide/pages/claude-code/03.skills.md
   - layers/glassbox/content/guide/pages/git-github/01.every-change-a-pr.md
+  - layers/glassbox/content/guide/pages/git-github/06.work-queue.md
+  - layers/glassbox/content/guide/pages/index.md
+  - layers/glassbox/content/guide/pages/skill-pack/01.skill-packs.md
   - layers/glassbox/content/guide/pages/skill-pack/02.planning-with-the-pack.md
   - layers/glassbox/content/guide/pages/skill-pack/03.engineering-skills.md
+  - layers/glassbox/content/guide/pages/skill-pack/04.wayfinder.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/01.human-in-the-loop.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/09.self-improvement-loop.md
   - layers/glassbox/content/guide/pages/walkthroughs/a-bug-report-becomes-work.md
+  - layers/glassbox/content/guide/pages/walkthroughs/a-friction-becomes-a-fix.md
+  - layers/glassbox/content/guide/pages/walkthroughs/asking-for-a-change.md
   - layers/glassbox/content/guide/pages/walkthroughs/planning-a-big-change.md
+  - layers/glassbox/content/guide/pages/walkthroughs/reading-across-tenants.md
+  - layers/glassbox/content/guide/pages/walkthroughs/session-log-lands-on-main.md
 rulesLoaded:
   - .claude/rules/adr-0027.md
   - .claude/rules/adr-0005.md
@@ -121,11 +148,24 @@ rulesLoaded:
   - .claude/rules/tenant-layers.md
   - .claude/rules/mermaid-lanes.md
   - .claude/rules/glassbox-content.md
+  - .claude/rules/adr-0030.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0005.md
+adrHints:
+  - adr: 5
+    via: path
+    readAfter: true
+    by: main
+  - adr: 27
+    via: path
+    readAfter: true
+    by: main
 docsReadBySubagents:
   - .agents/skills/glassbox-curate/SKILL.md
 ruleVerdicts:
@@ -180,6 +220,9 @@ ruleVerdicts:
   - path: .claude/rules/glassbox-content.md
     reason: Says no counts or ids in guide prose and that the workshop may hold them; the new counts stay on the workshop page only.
     useful: yes
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded after the ADR reads; it governs ADR wording and I edited no ADR, so it did not apply.
+    useful: no
 subagents:
   - type: general-purpose
     task: "Title review: agents, hooks"
@@ -187,70 +230,84 @@ subagents:
     durationSec: 81
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 4.2
+    tokenShare: 3.2
   - type: general-purpose
     task: "Title review: claude-code, skill-pack"
     model: sonnet
     durationSec: 94
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 3.9
+    tokenShare: 2.9
   - type: general-purpose
     task: "Title review: git-github, deploy"
     model: sonnet
     durationSec: 81
     toolCalls: 9
     modelCalls: 9
-    tokenShare: 4.9
+    tokenShare: 3.7
   - type: general-purpose
     task: "Title review: nuxt-content, web-standards"
     model: sonnet
     durationSec: 77
     toolCalls: 7
     modelCalls: 7
-    tokenShare: 3.9
+    tokenShare: 3
   - type: general-purpose
     task: "Title review: nuxt-vue"
     model: sonnet
     durationSec: 67
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 3.4
+    tokenShare: 2.6
   - type: general-purpose
     task: "Title review: terrarium-practice"
     model: sonnet
     durationSec: 80
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 4.3
+    tokenShare: 3.3
   - type: general-purpose
     task: "Title review: verification"
     model: sonnet
     durationSec: 69
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 3.5
+    tokenShare: 2.6
   - type: general-purpose
     task: "Title review: walkthroughs, index"
     model: sonnet
     durationSec: 82
     toolCalls: 6
     modelCalls: 6
-    tokenShare: 3.4
+    tokenShare: 2.6
   - type: general-purpose
     task: "Code review: Standards axis"
     model: sonnet
     durationSec: 47
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 3.5
+    tokenShare: 2.7
   - type: general-purpose
     task: "Code review: Spec axis"
     model: sonnet
     durationSec: 47
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 3.3
+    tokenShare: 2.5
+  - type: general-purpose
+    task: "Code review: Standards axis"
+    model: sonnet
+    durationSec: 32
+    toolCalls: 6
+    modelCalls: 5
+    tokenShare: 2.6
+  - type: general-purpose
+    task: "Code review: Spec axis"
+    model: sonnet
+    durationSec: 27
+    toolCalls: 3
+    modelCalls: 3
+    tokenShare: 2
 gitBranch: ccr-e0d588cc-1xktla
 entrypoint: remote_mobile
 cliVersion: 2.1.319
