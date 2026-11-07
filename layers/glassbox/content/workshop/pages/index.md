@@ -47,9 +47,7 @@ These are the owner's goals for the guide. A new Subject needs the owner's appro
 
 **Installed Skills.** *Engineering skills* could become part of *Installed Skills* (`skill-pack/01.skill-packs`).
 
-**Facts cut from *Issue triage labels* that no Lesson teaches now.**
-- The Agent Brief, the comment that comes with `ready-for-agent`: the behaviour wanted and how to tell it is done, without file paths (`.agents/skills/triage/AGENT-BRIEF.md`). Only the *A bug report becomes work* Walkthrough mentions it. It could be a short section of *Planning Skills* (`skill-pack/02.planning-with-the-pack`), next to `to-spec` and `to-tickets`.
-- Out-of-scope records: before it recommends anything, `triage` reads every record in `.out-of-scope/` and shows the person deciding any that resembles the new request. They could get a small Lesson of their own, or a section here if the page is split after a fresh reader finds it hard to follow.
+**A fact about out-of-scope records that no Lesson teaches.** Before it recommends anything, `triage` reads every record in `.out-of-scope/` and shows the person deciding any that resembles the new request (`.agents/skills/triage/SKILL.md`, step 1). *Issue triage labels* (`git-github/06.work-queue`) teaches the records and their format but not this check. It could be one sentence there, or a section if that page is split after a fresh reader finds it hard to follow.
 
 **Missing Lessons.** The browser quirks and CSS traps listed in `docs/agents/verifying-ui-changes.md` are only partly taught, in *Headless browser checks* (`verification/09.headless-browser-checks`).
 
@@ -60,7 +58,7 @@ These are the owner's goals for the guide. A new Subject needs the owner's appro
 ### Already decided
 
 Earlier runs turned these down. Each stays turned down until something in the repository changes the reason.
-- **Folding *Planning Skills* into *Installed Skills*.** Planning Skills holds two facts about Terrarium's own choices that would lose their page.
+- **Folding *Planning Skills* into *Installed Skills*.** Planning Skills holds facts about Terrarium's own choices that would lose their page.
 - **Moving the trust rules from *Human-in-the-loop agents* to *Author trust*.** The first page already links to the second.
 - **Moving the rule about the `ready-for-agent` label into *Issue triage labels*.** That page already shows it.
 - **Moving the payload-size reason from *queryCollection* to *Data fetching*.** Both pages already state it, so moving it gains nothing.
