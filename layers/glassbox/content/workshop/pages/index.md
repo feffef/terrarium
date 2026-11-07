@@ -14,10 +14,10 @@ Pages are named by their title, followed by their file under `layers/glassbox/co
 ### Weak spots
 
 - **The Installed Skills pages say little of their own.** *Planning Skills* (`skill-pack/02.planning-with-the-pack`) and *Engineering skills* (`skill-pack/03.engineering-skills`) mostly describe Skills that come from outside Terrarium. Only a few of their facts are about choices Terrarium made.
-- **A Git & GitHub Lesson is long.** *Issue triage labels* (`git-github/06.work-queue`) is the longest page in the guide.
+- **Two Git & GitHub Lessons are long.** *Commit and PR attribution* (`git-github/05.attribution`) and *Issue triage labels* (`git-github/06.work-queue`) are each about 1,400 to 1,600 words. Both have been trimmed; look for a split only after a fresh reader finds them hard to follow.
 - **The drafts Space is empty.** A gap that isn't central goes there as a new draft.
 - **The Claude Code, Hooks and Agents & automation Subjects still repeat each other.** The split moved pages without moving facts; the ideas below are about giving each fact one home.
-- **Titles are uneven.** Some name Terrarium's own choice instead of the general concept. Within one Subject, some titles start with the tool's name ("Claude Code hooks") and their neighbours don't ("Subagents").
+- **File names and titles differ.** In the Claude Code, Hooks and Agents & automation Subjects every title passes the title rule (a tool's name is in front only where the bare word is ambiguous). But some file names no longer match their titles, such as `agents/03.routines` (*Scheduled tasks*) and `nuxt-vue/06.use-async-data` (*Data fetching*). Renaming a file changes its URL, so it needs the owner.
 
 ### Recurring problems
 
@@ -38,7 +38,7 @@ These are the owner's goals for the guide. A new Subject needs the owner's appro
 
 ### Good next focuses
 
-1. **Make titles consistent** (direction 2), one Subject at a time.
+1. **Ask the owner whether to rename files to match their titles** (direction 2), as an issue that lists each rename and its URL effect.
 2. **Prepare the web standards Subject** (direction 1) as an issue for the owner, listing the pages it would hold.
 
 
@@ -51,6 +51,10 @@ These are the owner's goals for the guide. A new Subject needs the owner's appro
 - *Session transcripts* explains how a session log is built from the transcript. That belongs on *Session logs* (`terrarium-practice/04.session-logs`).
 
 **Installed Skills.** *Engineering skills* could become part of *Installed Skills* (`skill-pack/01.skill-packs`).
+
+**Facts cut from *Issue triage labels* that no Lesson teaches now.**
+- The Agent Brief, the comment that comes with `ready-for-agent`: the behaviour wanted and how to tell it is done, without file paths (`.agents/skills/triage/AGENT-BRIEF.md`). Only the *A bug report becomes work* Walkthrough mentions it. It could be a short section of *Planning Skills* (`skill-pack/02.planning-with-the-pack`), next to `to-spec` and `to-tickets`.
+- Out-of-scope records: before it recommends anything, `triage` reads every record in `.out-of-scope/` and shows the person deciding any that resembles the new request. They could get a small Lesson of their own, or a section here if the page is split after a fresh reader finds it hard to follow.
 
 **Missing Lessons.** The browser quirks and CSS traps listed in `docs/agents/verifying-ui-changes.md` are only partly taught, in *Headless browser checks* (`verification/09.headless-browser-checks`).
 
