@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSkKADXgmp8x1PeS5Z
 startedAt: 2026-11-07T14:20:23Z
-endedAt: 2026-11-07T14:32:39Z
+endedAt: 2026-11-07T14:35:26Z
 kind: delegated
 goal: "Glass Box curate run: teach the Agent Brief"
-status: in-review
-outcome: "PR #2943 open: Agent Brief taught in Planning Skills; gate:scoped green"
-summary: "The user invoked /glassbox-curate with no focus and a preference to be asked first. I asked once for the focus and the mode; the user answered \"You choose\" and \"Autonomous\", which was the only human steering after kickoff. Everything after that was agent-initiated within the Skill's remit. I picked the Agent Brief gap from the memory page, found the out-of-scope records were already taught on Issue triage labels (the memory page was stale there), and wrote a brief paragraph, a sweep paragraph and a Why bullet on Planning Skills. A sonnet claim checker found one false claim (the sweep roll-up does not hold the file list) and a fresh reader found the sweep undefined; code-review Standards and Spec found the sweep paragraph repeated a sibling page and pagesRead was short. All were fixed, the gate passed, and PR #2943 is open and subscribed. Open: the PR is unmerged; cost is unreported because get_session had no usage.cost_usd."
+status: completed
+outcome: "PR #2943 merged: Agent Brief taught in Planning Skills"
+summary: "The user invoked /glassbox-curate with no focus and a preference to be asked first. I asked once for the focus and the mode; the user answered \"You choose\" and \"Autonomous\", which was the only human steering after kickoff. Everything after that was agent-initiated within the Skill's remit. I picked the Agent Brief gap from the memory page, found the out-of-scope records were already taught on Issue triage labels (the memory page was stale there), and wrote a brief paragraph, a sweep paragraph and a Why bullet on Planning Skills. A sonnet claim checker found one false claim (the sweep roll-up does not hold the file list) and a fresh reader found the sweep undefined; code-review Standards and Spec found the sweep paragraph repeated a sibling page and pagesRead was short. All were fixed, the gate passed, I posted a verdict and merged PR #2943 with merge-pr.ts after CI went green. Cost is unreported because get_session had no usage.cost_usd."
 prs:
   - "2943"
 docsRead:
@@ -79,21 +79,24 @@ frictions:
   - description: The memory page said the out-of-scope records were taught nowhere, but Issue triage labels already teaches them; I found it only after reading the page.
     solution: The memory page should be checked against the pages when a run cuts or adds an item; this run rewrote that item.
     severity: nit
-durationSec: 736
+durationSec: 903
 models:
-  claude-sonnet-5-5: 99
+  claude-sonnet-5-5: 114
 toolCounts:
-  Bash: 30
+  Bash: 33
   Read: 12
   AskUserQuestion: 1
   Grep: 1
   mcp__claude-code-remote__get_session: 1
   Agent: 6
-  Skill: 3
+  Skill: 4
   ToolSearch: 1
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/skill-pack/02.planning-with-the-pack.md
   - layers/glassbox/content/workshop/pages/index.md
@@ -173,25 +176,25 @@ subagents:
     durationSec: 40
     toolCalls: 5
     modelCalls: 2
-    tokenShare: 7.5
+    tokenShare: 6.4
   - task: Fresh-reader newcomer check
     model: sonnet
     durationSec: 15
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 6.6
+    tokenShare: 5.7
   - task: Review standards axis
     model: sonnet
     durationSec: 49
     toolCalls: 15
     modelCalls: 5
-    tokenShare: 7.2
+    tokenShare: 6.2
   - task: Review spec axis
     model: sonnet
     durationSec: 44
     toolCalls: 12
     modelCalls: 4
-    tokenShare: 6.1
+    tokenShare: 5.3
 gitBranch: ccr-0805601d-qw55dj
 entrypoint: remote_mobile
 cliVersion: 2.1.319
