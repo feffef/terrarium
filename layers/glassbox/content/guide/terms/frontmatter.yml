@@ -1,0 +1,2 @@
+term: Frontmatter
+definition: The block of YAML fields at the top of a Markdown file, between two lines of three dashes, that holds data about the page rather than its text.
