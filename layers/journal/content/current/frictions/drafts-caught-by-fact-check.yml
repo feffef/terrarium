@@ -17,6 +17,9 @@ fixes:
   - pr: 2864
     date: "2026-11-05"
     summary: "list-recent-prs.ts --diff prints each PR's touched files and first diff lines, and the blog-post gather step uses it so drafts start from the change, not the title (closes #2854)."
+  - pr: 2936
+    date: "2026-11-07"
+    summary: "glassbox-curate's memory-page bullet says to state a count only after counting its items in their source (the shipped 'eight stops' miss, closes #2915)."
 occurrences:
   - session: session_01LyextqGkDsnBpTuPyFxhSm
     date: "2026-10-27"
