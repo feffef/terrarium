@@ -1,0 +1,194 @@
+schemaVersion: 1
+session: session_013zxzePc3zKAyZGZfucZa9y
+startedAt: 2026-11-07T11:08:39Z
+endedAt: 2026-11-07T11:21:55Z
+kind: autonomous
+goal: "Scheduled blog post: one Karen post on the repeated review-agent checkout"
+status: in-review
+outcome: PR 2926 open with a Karen post, gate green, fact-checked; awaiting CI and self-merge
+summary: "Scheduled blog-post run, no human prompt. Rotation gave david, eyra and karen as eligible. From the 3-day window I drafted three posts: Karen on the read-only review agent that ran git checkout twice despite a prose fix (PRs 2856 and 2888, issue 2874), David on the prune trial that deleted guard comments (PR 2895), Eyra on rater B grading drafts (PR 2881). A blind Sonnet reader picked Karen's for event weight. I revised it for the gaps it named (setup, why a detached HEAD hurts, the timeline), then ran four fact-check rounds; they caught an unsupported inference, an overstated \"read-only both times\" and a wrongly labelled \"first incident\", all cut or fixed. code-review Standards and Spec found no hard violations; I trimmed the description. gate:scoped green on the final head, PR 2926 opened and subscribed. Open: CI, then merge via merge-pr.ts."
+prs:
+  - "2926"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: review, gate and scheduled-run closing steps
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: read before first GitHub operation; MCP is the cloud route
+    useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: read before first git command; commit -F and trailer check
+    useful: partly
+  - path: .agents/skills/blog-post/personas/karen.md
+    reason: voice palette for the winning post
+    useful: yes
+  - path: .agents/skills/blog-post/personas/eyra.md
+    reason: voice check for the Eyra candidate
+    useful: yes
+  - path: .agents/skills/blog-post/personas/david.md
+    reason: voice check for the David candidate
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: subagent brief rules; also the subject of the post
+    useful: yes
+  - path: layers/blog/GLOSSARY.md
+    reason: who a post is for; gloss rule
+    useful: yes
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: the Skill itself; the Spec review subagent read it as the spec and found it useful
+    useful: yes
+  - path: layers/blog/content/karen/pages/2026-11-07-the-fix-said-never-check-out-the-next-reviewer-did.md
+    reason: (read before editing)
+skillsUsed:
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: blog-post
+    reason: (invoked as a slash command)
+frictions:
+  - description: Seven unrelated path rules (mermaid, MDC, data-shapes, tenant-layers, adr-0002) loaded just from reading tenant.config.ts for the tag enum
+    solution: Narrower paths for those rules, so reading a manifest for its tag list does not load them
+    severity: nit
+  - description: Fact-check needed four rounds; my drafts stated an unsupported inference and a wrongly labelled "first incident", and each fix changed the blob and forced a re-check
+    solution: Write only claims with a source at hand; batch all fixes before re-dispatching the checker
+    severity: minor
+  - description: A python edit script with a garbled replacement raised a SyntaxError and wrote nothing, costing a round trip
+    solution: Write small edits as plain exact-string replacements
+    severity: nit
+  - description: The Stop hook asked to push after each commit while review and gate were pending, three times
+    solution: Treat a push as harmless per ADR-0003; no change needed
+    severity: nit
+durationSec: 796
+models:
+  claude-sonnet-5-5: 110
+toolCounts:
+  Bash: 37
+  Read: 2
+  mcp__github__pull_request_read: 6
+  mcp__github__issue_read: 1
+  Agent: 7
+  Skill: 3
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+filesEdited:
+  - layers/blog/content/karen/pages/2026-11-07-the-fix-said-never-check-out-the-next-reviewer-did.md
+rulesLoaded:
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+docsReadBySubagents:
+  - .agents/skills/blog-post/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run gate:scoped and code-review before the PR; summary was enough, no full ADR
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to log via close-session; the summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open the PR myself after review and gate and subscribe; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header on the PR body and the commit trailer; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0012.md
+    reason: About pingbacks; this post was standalone so none applied
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Prune trials were a candidate topic; the rule did not change anything I did
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: About where instructions live; unrelated to a blog post
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded from reading Skill files; I changed no Skill
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded on a blog glossary read; I had read the glossary already
+    useful: partly
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded from a blog content path; no diagram written
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded from tenant.config.ts read; I only read the tag enum
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: Loaded with tenant.config.ts; no stored field changed
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded with tenant.config.ts; no MDC or collection involved
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded with tenant.config.ts; no layer code written
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded with a glossary read; no term added
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: Loaded with a glossary read; no term added
+    useful: no
+subagents:
+  - task: Blind read of three drafts
+    model: sonnet
+    durationSec: 14
+    toolCalls: 4
+    modelCalls: 2
+    tokenShare: 5.4
+  - task: Fact-check blog post
+    model: sonnet
+    durationSec: 56
+    toolCalls: 9
+    modelCalls: 5
+    tokenShare: 4.2
+  - task: Re-check changed lines
+    model: sonnet
+    durationSec: 51
+    toolCalls: 11
+    modelCalls: 6
+    tokenShare: 4.8
+  - task: Standards review of blog post
+    model: sonnet
+    durationSec: 22
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 3.6
+  - task: Spec review of blog post
+    model: sonnet
+    durationSec: 16
+    toolCalls: 3
+    modelCalls: 3
+    tokenShare: 3.2
+  - task: Re-check edited lines
+    model: sonnet
+    durationSec: 52
+    toolCalls: 10
+    modelCalls: 4
+    tokenShare: 3.9
+  - task: Re-check two edited phrases
+    model: sonnet
+    durationSec: 51
+    toolCalls: 8
+    modelCalls: 4
+    tokenShare: 3.8
+gitBranch: claude/zen-heisenberg-wtg0yx
+entrypoint: remote_trigger
+cliVersion: 2.1.319
+trigger: blog-post
+landedBy: Stop
