@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSy38XR1wPjCGFUExY
 startedAt: 2026-11-07T12:24:33Z
-endedAt: 2026-11-07T13:20:10Z
+endedAt: 2026-11-07T15:34:09Z
 kind: interactive
 goal: Clear the open issue backlog with the clear-backlog workflow
-status: in-review
-outcome: Nine issues explored; seven PRs opened, five merged, two wait for the owner's merge
-summary: "The owner started /clear-backlog. The sweep found nine eligible needs-triage issues (the five older ready-for-human issues were skipped because an agent wrote their latest comment). The explore workflow labelled #2911, #2917 and #2930 ready-for-agent, closed #2914 as already done, and sent #2884, #2913, #2915, #2916 and #2931 to the owner. The owner answered 2a, 3a, 4a and 5a (changing the wait limit from 24 to 20 hours) and 1a after asking whether a Stop hook can really trigger close-session; I checked the existing Stop hooks and answered that a hook can only block the stop with a reason. Two follow-up answers (6a, 7a) settled the Journal label and the merge proxy for #2884, which the build had made without asking. Merged by me after green CI and a verdict comment on each PR: #2932 (#2911), #2934 (#2930, after I labelled it ready-for-agent because merge-pr refused the closing keyword), #2935 (#2931, issue stays open for the claim-check cost), #2936 (#2915) and #2938 (#2916). Waiting for the owner's merge: #2933 (#2917, Human-only gate action) and #2937 (#2913 and #2884, Human-only settings.json and hooks). Human-instructed: the run, every pick and the follow-up answers. Agent-initiated: grouping, briefs, hand fixes after the review cap, the #2930 label, and placeholder PR numbers fixed afterwards. Open judgement calls are listed in each PR."
+status: completed
+outcome: Nine issues explored; seven PRs opened and all merged
+summary: "The owner started /clear-backlog. The sweep found nine eligible needs-triage issues (the five older ready-for-human issues were skipped because an agent wrote their latest comment). The explore workflow labelled #2911, #2917 and #2930 ready-for-agent, closed #2914 as already done, and sent #2884, #2913, #2915, #2916 and #2931 to the owner. The owner answered 2a, 3a, 4a and 5a (changing the wait limit from 24 to 20 hours) and 1a after asking whether a Stop hook can really trigger close-session; I checked the existing Stop hooks and answered that a hook can only block the stop with a reason. Two follow-up answers (6a, 7a) settled the Journal label and the merge proxy for #2884, which the build had made without asking. Merged by me after green CI and a verdict comment on each PR: #2932 (#2911), #2934 (#2930, after I labelled it ready-for-agent because merge-pr refused the closing keyword), #2935 (#2931, issue stays open for the claim-check cost), #2936 (#2915) and #2938 (#2916). The owner merged the two Human-only PRs, #2933 (#2917) and #2937 (#2913 and #2884); I confirmed both as merged on GitHub. Human-instructed: the run, every pick and the follow-up answers. Agent-initiated: grouping, briefs, hand fixes after the review cap, the #2930 label, and placeholder PR numbers fixed afterwards. Open judgement calls are listed in each PR."
 prs:
   - "2932"
   - "2933"
@@ -146,11 +146,14 @@ frictions:
   - description: Two build agents wrote guessed PR numbers into ledger entries before any PR existed, costing a follow-up commit and push.
     solution: Brief builders to leave the PR number out and put the real one in after opening the PR.
     severity: nit
-durationSec: 3337
+  - description: ADR-0003 says to subscribe to a PR's activity after opening it; I never called subscribe_pr_activity on any of the seven PRs and polled by hand instead, so the owner's merges reached me only when they told me.
+    solution: Subscribe right after create_pull_request; clear-backlog section 4 should say so, since its Land step doesn't name the subscription.
+    severity: moderate
+durationSec: 11376
 models:
-  claude-sonnet-5-5: 172
+  claude-sonnet-5-5: 182
 toolCounts:
-  Bash: 50
+  Bash: 52
   Read: 6
   ToolSearch: 4
   mcp__github__issue_read: 5
@@ -159,9 +162,9 @@ toolCounts:
   Edit: 6
   Glob: 1
   mcp__github__create_pull_request: 7
-  Skill: 2
+  Skill: 3
   Write: 1
-  mcp__github__pull_request_read: 5
+  mcp__github__pull_request_read: 7
   mcp__github__add_issue_comment: 6
   mcp__github__issue_write: 1
 filesEdited:
@@ -381,7 +384,7 @@ subagents:
     durationSec: 21
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: workflow-subagent
     task: Spec fix/glassbox-curate-wait-limit-2931 r1
     model: claude-sonnet-5-5
@@ -395,7 +398,7 @@ subagents:
     durationSec: 19
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: Standards docs/rewrite-sample-first-2916 r1
     model: claude-sonnet-5-5
@@ -409,56 +412,56 @@ subagents:
     durationSec: 1185
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 2.1
+    tokenShare: 2
   - type: workflow-subagent
     task: Standards docs/count-before-stating-2915 r2
     model: claude-sonnet-5-5
     durationSec: 20
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: workflow-subagent
     task: Standards fix/glassbox-curate-wait-limit-2931 r3
     model: claude-sonnet-5-5
     durationSec: 22
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: Spec docs/count-before-stating-2915 r3
     model: claude-sonnet-5-5
     durationSec: 21
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: build fix/glassbox-curate-wait-limit-2931
     model: claude-sonnet-5-5
     durationSec: 432
     toolCalls: 11
     modelCalls: 7
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: workflow-subagent
     task: Spec docs/count-before-stating-2915 r1
     model: claude-sonnet-5-5
     durationSec: 22
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: workflow-subagent
     task: fix docs/rewrite-sample-first-2916 r1
     model: claude-sonnet-5-5
     durationSec: 697
     toolCalls: 10
     modelCalls: 8
-    tokenShare: 1.7
+    tokenShare: 1.6
   - type: workflow-subagent
     task: Spec docs/count-before-stating-2915 r2
     model: claude-sonnet-5-5
     durationSec: 31
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: workflow-subagent
     task: gate fix/glassbox-curate-wait-limit-2931
     model: claude-sonnet-5-5
@@ -479,28 +482,28 @@ subagents:
     durationSec: 31
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 0.8
+    tokenShare: 0.7
   - type: workflow-subagent
     task: Standards docs/rewrite-sample-first-2916 r3
     model: claude-sonnet-5-5
     durationSec: 19
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: workflow-subagent
     task: Standards docs/count-before-stating-2915 r1
     model: claude-sonnet-5-5
     durationSec: 17
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: workflow-subagent
     task: build docs/count-before-stating-2915
     model: claude-sonnet-5-5
     durationSec: 742
     toolCalls: 30
     modelCalls: 23
-    tokenShare: 3.4
+    tokenShare: 3.2
   - type: workflow-subagent
     task: Spec docs/rewrite-sample-first-2916 r2
     model: claude-sonnet-5-5
@@ -514,21 +517,21 @@ subagents:
     durationSec: 22
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: workflow-subagent
     task: Spec docs/rewrite-sample-first-2916 r1
     model: claude-sonnet-5-5
     durationSec: 20
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: build docs/rewrite-sample-first-2916
     model: claude-sonnet-5-5
     durationSec: 448
     toolCalls: 17
     modelCalls: 15
-    tokenShare: 2.4
+    tokenShare: 2.3
   - type: workflow-subagent
     task: fix docs/count-before-stating-2915 r2
     model: claude-sonnet-5-5
@@ -542,7 +545,7 @@ subagents:
     durationSec: 607
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: workflow-subagent
     task: Standards docs/rewrite-sample-first-2916 r2
     model: claude-sonnet-5-5
@@ -556,14 +559,14 @@ subagents:
     durationSec: 479
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 1.1
+    tokenShare: 1
   - type: workflow-subagent
     task: fix docs/rewrite-sample-first-2916 r2
     model: claude-sonnet-5-5
     durationSec: 404
     toolCalls: 6
     modelCalls: 6
-    tokenShare: 1.1
+    tokenShare: 1
   - type: workflow-subagent
     task: Spec fix/dispatch-brief-asks-2911 r1
     model: claude-sonnet-5-5
@@ -577,14 +580,14 @@ subagents:
     durationSec: 112
     toolCalls: 12
     modelCalls: 8
-    tokenShare: 1.8
+    tokenShare: 1.7
   - type: workflow-subagent
     task: Spec fix/gate-doorbell-head-sha-2917 r2
     model: claude-sonnet-5-5
     durationSec: 23
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: Spec chore/remove-glassbox-improve-2930 r2
     model: claude-sonnet-5-5
@@ -605,35 +608,35 @@ subagents:
     durationSec: 24
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: workflow-subagent
     task: fix fix/dispatch-brief-asks-2911 r1
     model: claude-sonnet-5-5
     durationSec: 62
     toolCalls: 11
     modelCalls: 7
-    tokenShare: 1
+    tokenShare: 0.9
   - type: workflow-subagent
     task: Spec chore/remove-glassbox-improve-2930 r3
     model: claude-sonnet-5-5
     durationSec: 38
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 1.1
+    tokenShare: 1
   - type: workflow-subagent
     task: fix fix/gate-doorbell-head-sha-2917 r2
     model: claude-sonnet-5-5
     durationSec: 1471
     toolCalls: 11
     modelCalls: 9
-    tokenShare: 1.7
+    tokenShare: 1.6
   - type: workflow-subagent
     task: fix chore/remove-glassbox-improve-2930 r1
     model: claude-sonnet-5-5
     durationSec: 555
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: Spec fix/dispatch-brief-asks-2911 r2
     model: claude-sonnet-5-5
@@ -668,42 +671,42 @@ subagents:
     durationSec: 434
     toolCalls: 26
     modelCalls: 19
-    tokenShare: 3.1
+    tokenShare: 3
   - type: workflow-subagent
     task: fix chore/remove-glassbox-improve-2930 r2
     model: claude-sonnet-5-5
     durationSec: 492
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: workflow-subagent
     task: Standards fix/dispatch-brief-asks-2911 r2
     model: claude-sonnet-5-5
     durationSec: 13
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: workflow-subagent
     task: Standards fix/gate-doorbell-head-sha-2917 r3
     model: claude-sonnet-5-5
     durationSec: 10
     toolCalls: 3
     modelCalls: 2
-    tokenShare: 0.5
+    tokenShare: 0.4
   - type: workflow-subagent
     task: Spec fix/gate-doorbell-head-sha-2917 r1
     model: claude-sonnet-5-5
     durationSec: 29
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: workflow-subagent
     task: Standards chore/remove-glassbox-improve-2930 r3
     model: claude-sonnet-5-5
     durationSec: 23
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 0.8
+    tokenShare: 0.7
   - type: workflow-subagent
     task: Standards chore/remove-glassbox-improve-2930 r1
     model: claude-sonnet-5-5
@@ -717,14 +720,14 @@ subagents:
     durationSec: 13
     toolCalls: 3
     modelCalls: 2
-    tokenShare: 0.5
+    tokenShare: 0.4
   - type: workflow-subagent
     task: build fix/gate-doorbell-head-sha-2917
     model: claude-sonnet-5-5
     durationSec: 429
     toolCalls: 30
     modelCalls: 22
-    tokenShare: 3.3
+    tokenShare: 3.1
   - type: workflow-subagent
     task: gate fix/dispatch-brief-asks-2911
     model: claude-sonnet-5-5
@@ -745,28 +748,28 @@ subagents:
     durationSec: 52
     toolCalls: 15
     modelCalls: 8
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: "triage #2915"
     model: claude-sonnet-5-5
     durationSec: 40
     toolCalls: 14
     modelCalls: 7
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: "triage #2884"
     model: claude-sonnet-5-5
     durationSec: 42
     toolCalls: 15
     modelCalls: 8
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: workflow-subagent
     task: "triage #2931"
     model: claude-sonnet-5-5
     durationSec: 46
     toolCalls: 16
     modelCalls: 9
-    tokenShare: 2.2
+    tokenShare: 2.1
   - type: workflow-subagent
     task: "triage #2911"
     model: claude-sonnet-5-5
@@ -780,14 +783,14 @@ subagents:
     durationSec: 48
     toolCalls: 16
     modelCalls: 8
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: "triage #2916"
     model: claude-sonnet-5-5
     durationSec: 32
     toolCalls: 11
     modelCalls: 5
-    tokenShare: 1
+    tokenShare: 0.9
   - type: workflow-subagent
     task: "triage #2913"
     model: claude-sonnet-5-5
@@ -801,7 +804,7 @@ subagents:
     durationSec: 44
     toolCalls: 14
     modelCalls: 7
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: Standards fix/close-session-enforcement-2913-2884 r1
     model: claude-sonnet-5-5
@@ -815,7 +818,7 @@ subagents:
     durationSec: 364
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: workflow-subagent
     task: Standards fix/close-session-enforcement-2913-2884 r3
     model: claude-sonnet-5-5
@@ -829,7 +832,7 @@ subagents:
     durationSec: 20
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: Spec fix/close-session-enforcement-2913-2884 r3
     model: claude-sonnet-5-5
@@ -843,7 +846,7 @@ subagents:
     durationSec: 38
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 1
+    tokenShare: 0.9
   - type: workflow-subagent
     task: Spec fix/close-session-enforcement-2913-2884 r1
     model: claude-sonnet-5-5
@@ -857,14 +860,14 @@ subagents:
     durationSec: 374
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: workflow-subagent
     task: build fix/close-session-enforcement-2913-2884
     model: claude-sonnet-5-5
     durationSec: 859
     toolCalls: 42
     modelCalls: 33
-    tokenShare: 5.4
+    tokenShare: 5.1
 gitBranch: ccr-74cc988d-km3ftr
 entrypoint: remote_mobile
 cliVersion: 2.1.319
