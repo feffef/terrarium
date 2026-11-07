@@ -38,14 +38,13 @@ source.
 
 - **A**: best in class on that lens. Several pages of a Subject may hold it;
   Relevance has none. No Skill awards it now: `glassbox-curate` reads the Lenses
-  only and does not grade pages, so a reviewer grades A only against a page
-  that plainly does the job better than the other B pages of its Subject.
+  only and does not grade pages.
 - **B**: meets the bar, even if another wording is imaginable.
 - **C**: a noticeable deficit.
 - **D**: several deficits.
 
 Each deficit names its lens, quotes the page and says the fix. A B may have
-**gaps to A**: a section where a page holding A on that lens does the same job
+**gaps to A**: a section where a page holding A on that lens (where one does) does the same job
 better, named with that page and what to take from it. A gap never lowers a
 grade. Anything short of a deficit or gap goes under **Optional**; an Optional
 item never drives an edit.
