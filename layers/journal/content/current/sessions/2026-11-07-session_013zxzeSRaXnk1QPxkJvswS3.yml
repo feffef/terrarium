@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSRaXnk1QPxkJvswS3
 startedAt: 2026-11-07T00:46:13Z
-endedAt: 2026-11-07T00:56:27Z
+endedAt: 2026-11-07T00:59:31Z
 kind: autonomous
 goal: Weekly check of the Platform's own Skills
-status: in-review
-outcome: Audited 15 Skills, filed 1 issue, opened Inventory PR 2912 awaiting CI
-summary: "Scheduled audit-skills run, agent-initiated by the schedule; no human instruction. Built the scorecard, fetched run costs through one subagent, then dispatched 15 read-only Sonnet subagents (one per Skill) and verified their reports against the logs. No new silent failure beyond repeats of known ones. One repeated finding cleared the bar for an issue: briefs omit CLAUDE.md's every-brief asks (filed #2911, no open match). Step 3: orphanScan scanned 1930 merged PRs, 2 candidates both already resolved (#736, #1063); two human-prompted closures (one already under #2772, one new in frictions-to-fixes 2026-11-06, noted as an observation). Inventory: new glassbox-curate entry (coverage gap), observations on 8 Skills, 7 Routine run costs, no grade or role changes because no Skill met the two-session bar. Standards and Spec review found no hard violations; gate:scoped was green; PR #2912 opened and subscribed. Still open: CI result and merge."
+status: completed
+outcome: Audited 15 Skills, filed 1 issue, merged Inventory PR 2912
+summary: "Scheduled audit-skills run, agent-initiated by the schedule; no human instruction. Built the scorecard, fetched run costs through one subagent, then dispatched 15 read-only Sonnet subagents (one per Skill) and verified their reports against the logs. No new silent failure beyond repeats of known ones. One repeated finding cleared the bar for an issue: briefs omit CLAUDE.md's every-brief asks (filed #2911, no open match). Step 3: orphanScan scanned 1930 merged PRs, 2 candidates both already resolved (#736, #1063); two human-prompted closures (one already under #2772, one new in frictions-to-fixes 2026-11-06, noted as an observation). Inventory: new glassbox-curate entry (coverage gap), observations on 8 Skills, 7 Routine run costs, no grade or role changes because no Skill met the two-session bar. Standards and Spec review found no hard violations; gate:scoped was green; PR #2912 merged after green CI and a posted verdict; the check-conflicting-issues advisory hit only on the keyword 'delete' and was not a real conflict."
 prs:
   - "2912"
 docsRead:
@@ -96,20 +96,25 @@ frictions:
   - description: Review briefs needed the CLAUDE.md every-brief asks pasted by hand; the dispatch-subagents Skill does not carry them.
     solution: "One line in dispatch-subagents section 3 pointing at that CLAUDE.md bullet (issue #2911)."
     severity: minor
-durationSec: 614
+durationSec: 798
 models:
-  claude-sonnet-5-5: 103
+  claude-sonnet-5-5: 124
 toolCounts:
-  Bash: 24
+  Bash: 29
   Read: 1
-  Skill: 4
+  Skill: 5
   Agent: 18
   mcp__Claude_Code_Remote__get_session: 1
   ToolSearch: 2
   mcp__github__issue_write: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 2
+  ReadNotifications: 2
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/routines/audit-docs.yml
   - layers/journal/content/current/routines/audit-skills.yml
@@ -223,109 +228,109 @@ subagents:
     durationSec: 28
     toolCalls: 11
     modelCalls: 5
-    tokenShare: 2.9
+    tokenShare: 2.7
   - task: Check audit-docs behaviour
     model: sonnet
     durationSec: 69
     toolCalls: 11
     modelCalls: 9
-    tokenShare: 4.9
+    tokenShare: 4.6
   - task: Check audit-skills behaviour
     model: sonnet
     durationSec: 74
     toolCalls: 13
     modelCalls: 9
-    tokenShare: 5
+    tokenShare: 4.6
   - task: Check blog-post behaviour
     model: sonnet
     durationSec: 74
     toolCalls: 11
     modelCalls: 9
-    tokenShare: 5
+    tokenShare: 4.6
   - task: Check clear-backlog behaviour
     model: sonnet
     durationSec: 55
     toolCalls: 9
     modelCalls: 8
-    tokenShare: 4.1
+    tokenShare: 3.9
   - task: Check close-session behaviour
     model: sonnet
     durationSec: 43
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 3.2
+    tokenShare: 3
   - task: Check digest behaviour
     model: sonnet
     durationSec: 42
     toolCalls: 10
     modelCalls: 5
-    tokenShare: 3.6
+    tokenShare: 3.3
   - task: Check dispatch-subagents behaviour
     model: sonnet
     durationSec: 100
     toolCalls: 15
     modelCalls: 12
-    tokenShare: 6.5
+    tokenShare: 6.1
   - task: Check frictions-to-fixes behaviour
     model: sonnet
     durationSec: 52
     toolCalls: 9
     modelCalls: 7
-    tokenShare: 4.3
+    tokenShare: 4
   - task: Check glassbox-curate behaviour
     model: sonnet
     durationSec: 31
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 3
+    tokenShare: 2.8
   - task: Check glassbox-improve behaviour
     model: sonnet
     durationSec: 43
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 3.4
+    tokenShare: 3.1
   - task: Check glassbox-update behaviour
     model: sonnet
     durationSec: 37
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 3.2
+    tokenShare: 3
   - task: Check inspect-session behaviour
     model: sonnet
     durationSec: 55
     toolCalls: 10
     modelCalls: 7
-    tokenShare: 4.6
+    tokenShare: 4.2
   - task: Check log-session behaviour
     model: sonnet
     durationSec: 64
     toolCalls: 11
     modelCalls: 9
-    tokenShare: 4.6
+    tokenShare: 4.2
   - task: Check prune-trial behaviour
     model: sonnet
     durationSec: 59
     toolCalls: 9
     modelCalls: 7
-    tokenShare: 4.3
+    tokenShare: 4
   - task: Check visitor-loop behaviour
     model: sonnet
     durationSec: 66
     toolCalls: 13
     modelCalls: 9
-    tokenShare: 4.9
+    tokenShare: 4.6
   - task: Standards review of Inventory diff
     model: sonnet
     durationSec: 27
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.4
+    tokenShare: 1.3
   - task: Spec review of Inventory diff
     model: sonnet
     durationSec: 46
     toolCalls: 8
     modelCalls: 8
-    tokenShare: 2.7
+    tokenShare: 2.6
 gitBranch: claude/upbeat-sagan-gwcusl
 entrypoint: remote_trigger
 cliVersion: 2.1.319
