@@ -57,15 +57,16 @@ in a brief as `.agents/skills/...`.
   page that already exists. Leave alone every page an open PR touches. While a
   `glassbox-update` PR is open, wait for it: subscribe to its activity, end
   your turn, and orient again once it merges or closes.
-- **Rough focus.** From the orientation, pick the Subject (or the
-  Walkthroughs) to work in: from memory leads, the owner's review notes,
-  page-check warnings, problems the orientation shows, or gaps; when nothing is
-  pressing, from pages no fresh reader has seen lately (`pagesRead`).
-- **Read.** Read every page of that Subject in full, and every page outside it
-  that a change would edit or link. Change nothing before this.
-- **Choose.** Pick this run's one task from what you read. Put every other weak
+- **Area.** From the orientation, pick the Subject (or the Walkthroughs) to
+  work in: from memory leads, the owner's review notes, page-check warnings,
+  problems the orientation shows, or gaps; when nothing is pressing, from pages
+  no fresh reader has seen lately (`pagesRead`). For a gap or a new Subject,
+  the area is the Subject it would join, or the pages nearest its topic.
+- **Read.** Read every page of the area in full, and every page outside it
+  that a change would edit, link or overlap. Edit only after this step.
+- **Choose.** Pick this run's focus from what you read. Put every other weak
   spot or proposal you found on the memory page, so later runs inherit the
-  reading. The run entry says why you chose the task.
+  reading. The run entry says why you chose the focus.
 - **Proposal.** A focus that needs the owner's decision (a new Subject, a
   split, a move between Subjects) is a valid focus, and its result is an issue
   for the owner. It gives the Subjects and their pages, each move and retitle
@@ -79,14 +80,12 @@ in a brief as `.agents/skills/...`.
   gaps, those left uncovered on purpose too. Fix what makes pages hard to learn
   from first; take a gap when no page problem outweighs it.
 - **Run entry.** Right after choosing, write it from the orientation's
-  skeleton, keeping `focus` quoted, and push the run branch. `pagesRead` lists
-  every page read in full, by you or a fresh reader, and nothing else.
+  skeleton, keeping `focus` quoted, and push the run branch.
 - **Diagnose.** Fresh readers (sonnet, no repo access) get each page as plain
   text: MDC stripped, each term followed by its definition, each Excerpt as code
-  with its file path. They report where a newcomer gets lost. For structure,
-  read the pages involved in full; for a gap, the sources the new Lesson would
-  cite.
-  For a Subject focus, check each Why bullet against its cited ADR or file.
+  with its file path. They report where a newcomer gets lost. For a gap, read
+  the sources the new Lesson would cite. For a Subject focus, check each Why
+  bullet against its cited ADR or file.
 - **Churn guard.** Before a structural step or a retitle, read
   `git log --oneline origin/main -- <page>` and the run entries that name the
   page. Never reverse a change from the last 5 runs unless it made the page
@@ -116,7 +115,7 @@ in a brief as `.agents/skills/...`.
   the Lesson contract, EVERY-PAGE.md, DECISIONS.md and the glassbox-content
   rule as its standards, without the code-smell baseline, and say the page
   checks already ran. Its Spec reviewer also judges which pages the change
-  needed read (the ones it edits, links or overlaps) and names each one missing
+  needed read (the ones it edits, links or overlaps), and names each one missing
   from `pagesRead`. Read those, recheck the change against them, and add them
   to `pagesRead` before you land. Done when the PR is open with the memory page
   and run entry current.
