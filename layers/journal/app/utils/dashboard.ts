@@ -216,18 +216,18 @@ export function sessionRuleTitles(sources: Record<string, string>): Record<strin
 // shared/schemas/session.ts orders severities least to most severe (Human-only), so rank here.
 const SEVERITY_RANK: Record<Severity, number> = { blocker: 0, major: 1, moderate: 2, minor: 3, nit: 4 }
 
-// A log stays `in-review` when another session merges its PR (ADR-0008: derive,
-// never regenerate logs). The card flags it when every PR it lists also appears
-// in a `completed` log among the loaded sessions, which is the only merge
-// evidence a log carries. It sees only the loaded sessions, so a PR whose
-// completed log is not loaded is not flagged.
+// ADR-0008: derive, never regenerate logs. An `in-review` log whose PRs all
+// appear in a loaded `completed` log has merged; only loaded sessions are seen.
 const prNums = (s: SessionDoc) => (s.prs ?? []).map((p) => p.replace(/^#/, ''))
 
-export function staleInReviewKeys(sessions: SessionDoc[]): Set<string> {
+function staleInReviewKeys(sessions: SessionDoc[]): Set<string> {
   const landed = new Set(sessions.filter((s) => s.status === 'completed').flatMap(prNums))
   return new Set(
     sessions
-      .filter((s) => s.status === 'in-review' && prNums(s).length > 0 && prNums(s).every((p) => landed.has(p)))
+      .filter((s) => {
+        const nums = prNums(s)
+        return s.status === 'in-review' && nums.length > 0 && nums.every((p) => landed.has(p))
+      })
       .map((s) => s.session),
   )
 }

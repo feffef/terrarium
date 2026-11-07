@@ -39,7 +39,7 @@ under `PostToolUse`, `PostToolUseFailure` and `UserPromptSubmit`; `harness-tag-s
 
 ## Conventions every guard follows
 
-- **A crash.** A crashing hint, `deferred-tool-guard` `harness-tag-stop` or `merge-close-stop`
+- **A crash.** A crashing hint, `deferred-tool-guard`, `harness-tag-stop` or `merge-close-stop`
   lets the action go ahead (each uses a bare `|| true`). Any other guard that crashes or can't read
   its context or payload blocks it: its hook entry sets `"onFailure": "block"`,
   which also blocks when the hook can't start or times out (#2073). That needs
