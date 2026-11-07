@@ -39,7 +39,7 @@ A hook commits the :term[session log] straight to `main`, without a PR. The Fric
 A :term[Routine] starts a session that runs the `frictions-to-fixes` Skill, or a Trusted user runs it by hand. It is a session like any other, following the Skill's steps.
 
 ::lessons
-[Self-improvement loop](/t/glassbox/guide/terrarium-practice/self-improvement-loop) · [Scheduled tasks](/t/glassbox/guide/agents/routines) · [Claude Code Skills](/t/glassbox/guide/claude-code/skills)
+[Self-improvement loop](/t/glassbox/guide/terrarium-practice/self-improvement-loop) · [Scheduled tasks](/t/glassbox/guide/agents/routines) · [Claude Code skills](/t/glassbox/guide/claude-code/skills)
 ::
 
 ## 4. A subagent reads the logs
@@ -87,7 +87,7 @@ The run reviews each branch itself, opens its PR and posts its verdict there as 
 The fix lands in a doc, a repo-owned Skill, a script or config. A later session that opens that doc or runs that Skill gets the new text, and its log lists that doc among the docs it read, or that Skill among the Skills it used. The Ledger entry records the fix's PR and the date it merged, and from then on only sessions that started after the fix count as a recurrence.
 
 ::lessons
-[Claude Code Skills](/t/glassbox/guide/claude-code/skills) · [CLAUDE.md](/t/glassbox/guide/claude-code/claude-md) · [Friction Ledger](/t/journal/current/frictions)
+[Claude Code skills](/t/glassbox/guide/claude-code/skills) · [CLAUDE.md](/t/glassbox/guide/claude-code/claude-md) · [Friction Ledger](/t/journal/current/frictions)
 ::
 
 ## A real case

@@ -58,7 +58,7 @@ These are the owner's goals for the guide. A run builds toward them directly; a 
 ### Already decided
 
 Earlier runs turned these down. Each stays turned down until something in the repository changes the reason.
-- **Guide titles.** Every Lesson, Walkthrough and the overview has been weighed against 2 to 4 alternatives. The owner chose a capital S for Skills in titles (*Installed Skills*, *Planning Skills*, *Engineering Skills*, *Claude Code Skills*) and a plain *Adding a site*, because the overview says site first. Closest rivals that lost: *Required status checks* for *Merge gate*, *Claude Code workflows* for *Workflow scripts*, *Adding a Tenant* for *Adding a site*.
+- **Guide titles.** Every Lesson, Walkthrough and the overview has been weighed against 2 to 4 alternatives. Titles are sentence case: a glossary term such as skills or tenants is lowercase, like *Scheduled tasks* and *Content collections*; only proper nouns (*Claude Code*, *Nuxt*, *Zod*) and acronyms keep capitals. The owner chose a plain *Adding a site*, because the overview says site first. Closest rivals that lost: *Required status checks* for *Merge gate*, *Claude Code workflows* for *Workflow scripts*, *Adding a Tenant* for *Adding a site*.
 - **Folding *Planning Skills* into *Installed Skills*.** Planning Skills holds facts about Terrarium's own choices that would lose their page.
 - **Moving the trust rules from *Human-in-the-loop agents* to *Author trust*.** The first page already links to the second.
 - **Moving the rule about the `ready-for-agent` label into *Issue triage labels*.** That page already shows it.

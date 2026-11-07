@@ -69,7 +69,7 @@ One idea runs through the design: **decide it at build time**. Every site, page 
 - :file[CLAUDE.md], the one file every session reads first. :lessons[[CLAUDE.md](/t/glassbox/guide/claude-code/claude-md)]
 - :term[Rules]{id="rule"} in :file[.claude/rules/]; most load only with the files they are about. :lessons[[Path-specific rules](/t/glassbox/guide/claude-code/path-scoped-rules)]
 - Decision records in :file[docs/adr/], which say why things are the way they are. :lessons[[Decision records](/t/glassbox/guide/terrarium-practice/adrs)]
-- :term[Skills]{id="skill"} in :file[.agents/skills/], step-by-step playbooks for one kind of task, some installed from elsewhere and kept unchanged. :lessons[[Claude Code Skills](/t/glassbox/guide/claude-code/skills) · [Installed Skills](/t/glassbox/guide/skill-pack/skill-packs)]
+- :term[Skills]{id="skill"} in :file[.agents/skills/], step-by-step playbooks for one kind of task, some installed from elsewhere and kept unchanged. :lessons[[Claude Code skills](/t/glassbox/guide/claude-code/skills) · [Installed skills](/t/glassbox/guide/skill-pack/skill-packs)]
 - Hooks in :file[scripts/hooks/], which run at fixed points around a session and can refuse a wrong action. :lessons[[Claude Code hooks](/t/glassbox/guide/hooks/hooks)]
 - Glossaries that keep the words exact: :file[GLOSSARY.md] and one per Tenant. :lessons[[Ubiquitous language](/t/glassbox/guide/terrarium-practice/ubiquitous-language)]
 
@@ -88,7 +88,7 @@ One idea runs through the design: **decide it at build time**. Every site, page 
 Each Space gets tables of its own, so a page can never read another Space's content by mistake. Reading across Tenants works only for the shapes a Tenant chose to offer; the Commons builds its search and timeline that way.
 
 ::lessons
-[Multi-tenant isolation](/t/glassbox/guide/nuxt-content/multi-tenant-isolation) · [Cross-tenant reads](/t/glassbox/guide/terrarium-practice/cross-tenant-reads) · [Reading across Tenants](/t/glassbox/guide/walkthroughs/reading-across-tenants)
+[Multi-tenant isolation](/t/glassbox/guide/nuxt-content/multi-tenant-isolation) · [Cross-tenant reads](/t/glassbox/guide/terrarium-practice/cross-tenant-reads) · [Reading across tenants](/t/glassbox/guide/walkthroughs/reading-across-tenants)
 ::
 
 Some Tenants record the real build, such as the Journal, this Glass Box and the Midden, a museum of discarded work. Others are invented practice grounds and demos. :file[GLOSSARY-MAP.md] lists them all and says how each relates to the build.
