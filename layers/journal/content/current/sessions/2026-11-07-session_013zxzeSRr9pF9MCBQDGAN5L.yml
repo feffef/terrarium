@@ -1,15 +1,16 @@
 schemaVersion: 1
 session: session_013zxzeSRr9pF9MCBQDGAN5L
 startedAt: 2026-11-07T02:07:19Z
-endedAt: 2026-11-07T02:24:33Z
+endedAt: 2026-11-07T02:33:36Z
 kind: autonomous
 goal: "Scheduled frictions-to-fixes run: survey session Frictions and retire the worthwhile ones"
-status: in-review
-outcome: Ledger PR 2918 and one doc-fix PR 2919 open; 5 issues filed; closing ledger PR still to come
-summary: "Scheduled run (no human prompt; everything agent-initiated under the Skill). A survey subagent read 31 sessions, added 5 ledger entries and 235 Frictions, recorded 3 merged fixes and reset stale statuses. I filed regression issues 2913, 2914 and 2915 (top three by severity since fix, not tracked or accepted), picked four never-fixed candidates and had a design subagent assess them. Outcomes: gate comment SHA (Human-only file) filed as 2917; rewrite-draft-keeps-old-framing filed as 2916 because its ledger note promised an issue at a third occurrence; constraint-unread-before-build dropped with a ledger note (the agent read ADR-0006 and built against it anyway); glassbox-curate Modes dispatched to a Sonnet worktree agent, reviewed by a Standards and a Spec subagent, one finding fixed (keep the conditional), opened as PR 2919. Ledger PR 2918 passed gate:scoped. Open: CI on both PRs, verdict comments and merges, then the closing ledger PR. The curate fix reverses what the owner chose in one person-started run (issue 2906); the PR says so for the owner to overrule."
+status: completed
+outcome: Ledger PRs 2918 and 2920 and doc-fix PR 2919 merged; 5 issues filed (2913 to 2917)
+summary: "Scheduled run (no human prompt; everything agent-initiated under the Skill). A survey subagent read 31 sessions, added 5 ledger entries and 235 Frictions, recorded 3 merged fixes and reset stale statuses. I filed regression issues 2913, 2914 and 2915 (top three by severity since fix, not tracked or accepted), picked four never-fixed candidates and had a design subagent assess them. Outcomes: gate comment SHA (Human-only file) filed as 2917; rewrite-draft-keeps-old-framing filed as 2916 because its ledger note promised an issue at a third occurrence; constraint-unread-before-build dropped with a ledger note (the agent read ADR-0006 and built against it anyway); glassbox-curate Modes dispatched to a Sonnet worktree agent, reviewed by a Standards and a Spec subagent, one finding fixed (keep the conditional), opened as PR 2919. Ledger PR 2918 passed gate:scoped. All three PRs merged; the closing ledger PR 2920 recorded fix 2919. The curate fix reverses what the owner chose in one person-started run (issue 2906); the PR says so for the owner to overrule."
 prs:
   - "2918"
   - "2919"
+  - "2920"
 docsRead:
   - path: .agents/skills/frictions-to-fixes/survey-brief.md
     reason: survey subagent's brief; followed verbatim, ledger commit resulted
@@ -82,22 +83,30 @@ frictions:
   - description: "Impl subagent's own: ran git switch with discard-changes after editing, silently discarding its first edit, then redid it."
     solution: Brief should say to create the branch before editing.
     severity: minor
-durationSec: 1033
+  - description: I typed a PR head SHA from memory into the verdict comment on PR 2920; it was wrong, and I had to post a corrected verdict after running verdict-line.ts.
+    solution: Run verdict-line.ts first and paste its output, as pr-workflow says.
+    severity: minor
+  - description: A force-with-lease push of the reset session branch was denied by the classifier; a plain push worked because the branch was a fast-forward of the merged history.
+    solution: Check merge-base --is-ancestor before assuming a force is needed.
+    severity: nit
+durationSec: 1577
 models:
-  claude-sonnet-5-5: 99
+  claude-sonnet-5-5: 141
 toolCounts:
-  Bash: 27
+  Bash: 40
   Agent: 6
-  Skill: 4
+  Skill: 5
   ToolSearch: 2
   mcp__github__issue_write: 6
-  mcp__github__create_pull_request: 2
-  mcp__github__subscribe_pr_activity: 2
-  ReadNotifications: 1
+  mcp__github__create_pull_request: 3
+  mcp__github__subscribe_pr_activity: 3
+  ReadNotifications: 3
   SendMessage: 1
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 3
+  mcp__github__add_issue_comment: 4
 filesEdited:
   - .agents/skills/glassbox-curate/SKILL.md
+  - layers/journal/content/current/frictions/curate-autonomous-vs-ask.yml
   - layers/journal/content/current/frictions/adhoc-script-timestamp-mismatch.yml
   - layers/journal/content/current/frictions/adr-check-scope-in-skill-runs.yml
   - layers/journal/content/current/frictions/binding-docs-skipped.yml
@@ -108,7 +117,6 @@ filesEdited:
   - layers/journal/content/current/frictions/constraint-unread-before-build.yml
   - layers/journal/content/current/frictions/counts-from-wrong-filter.yml
   - layers/journal/content/current/frictions/counts-not-tallied.yml
-  - layers/journal/content/current/frictions/curate-autonomous-vs-ask.yml
   - layers/journal/content/current/frictions/dispatch-subagents-skill-unread.yml
   - layers/journal/content/current/frictions/double-background.yml
   - layers/journal/content/current/frictions/drafts-caught-by-fact-check.yml
@@ -273,32 +281,32 @@ subagents:
     durationSec: 434
     toolCalls: 33
     modelCalls: 28
-    tokenShare: 28.7
+    tokenShare: 22.4
   - type: general-purpose
     task: Design fixes for picks
     durationSec: 100
     toolCalls: 14
     modelCalls: 10
-    tokenShare: 6.8
+    tokenShare: 5.3
   - type: general-purpose
     task: Fix glassbox-curate Modes
     model: sonnet
     durationSec: 339
     toolCalls: 29
     modelCalls: 21
-    tokenShare: 9.4
+    tokenShare: 7.3
   - type: general-purpose
     task: Standards review of curate fix
     durationSec: 31
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 3.5
+    tokenShare: 2.7
   - type: general-purpose
     task: Spec review of curate fix
     durationSec: 14
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 1.8
+    tokenShare: 1.4
 gitBranch: claude/eager-ptolemy-k4fhvd
 entrypoint: remote_trigger
 cliVersion: 2.1.319
