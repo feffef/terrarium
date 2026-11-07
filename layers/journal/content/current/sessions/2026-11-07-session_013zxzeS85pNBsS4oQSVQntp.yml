@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeS85pNBsS4oQSVQntp
 startedAt: 2026-11-07T07:33:10Z
-endedAt: 2026-11-07T07:41:04Z
-kind: autonomous
+endedAt: 2026-11-07T12:14:07Z
+kind: interactive
 goal: Bring the Glass Box guide pages up to date with main
-status: in-review
-outcome: Pages re-pinned to a438b80f3, two claims fixed, five pages fully checked; PR 2922 open, gate green
-summary: "Scheduled glassbox-update run, no human instruction beyond the stored prompt. All 20 flagged pages and the 5 rotation pages were claim-checked by three read-only sonnet subagents. They found no false claim; I made two small agent-initiated corrections (verification/04 spec scope, claude-code/10 glassbox-update line). The scoped checks did not fetch tool docs, only the rotation agent did. I read the diff myself instead of running code-review, since it was pins plus two lines. Open: merge after CI."
+status: completed
+outcome: Pages re-pinned to a438b80f3 and five checked; PR 2922 merged by the owner after 3.5 hours open
+summary: Scheduled glassbox-update run (stored prompt, no human steer). Three read-only sonnet subagents claim-checked the 20 flagged and 5 rotation pages and found no false claim; I made two small agent-initiated corrections. Scoped checks skipped docs fetches. I opened PR 2922 but never subscribed to it or merged it, so the owner merged it 3.5 hours later after another session rekeyed update.yml. Later the user asked for a retro (human-instructed) and for closure; the retro answered another session's questions from memory and files.
 prs:
   - "2922"
 docsRead:
@@ -60,7 +60,11 @@ skillsUsed:
     reason: (no reason given)
   - name: log-session
     reason: (no reason given)
+  - name: writing-for-agents
+    reason: (no reason given)
   - name: glassbox-update
+    reason: (invoked as a slash command)
+  - name: retro
     reason: (invoked as a slash command)
 frictions:
   - description: Skill step 1 and git-conventions say fetch first; I ran git commands before reading git-conventions, and a foreground sleep was blocked.
@@ -69,15 +73,20 @@ frictions:
   - description: Scoped check subagents skipped docs fetches, so tool-doc claims on 16 flagged pages went unverified.
     solution: State in the brief that scoped checks still fetch docs only when a changed file bears on a docs claim; accepted here.
     severity: minor
-durationSec: 473
+  - description: Opened PR 2922 without subscribing or merging; ended turn, so it sat 3.5 hours until the owner merged it.
+    solution: Put subscribe, merge-pr.ts and close-session re-invoke in glassbox-update step 7 as its done-criterion.
+    severity: moderate
+durationSec: 16857
 models:
-  claude-sonnet-5-5: 65
+  claude-sonnet-5-5: 80
 toolCounts:
-  Bash: 26
-  Skill: 3
+  Bash: 28
+  Skill: 5
   Agent: 3
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__create_pull_request: 1
+  ReadNotifications: 1
+  mcp__github__pull_request_read: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/claude-code/01.claude-md.md
   - layers/glassbox/content/guide/pages/claude-code/02.path-scoped-rules.md
@@ -230,21 +239,21 @@ subagents:
     durationSec: 132
     toolCalls: 27
     modelCalls: 14
-    tokenShare: 18.3
+    tokenShare: 14.3
   - type: general-purpose
     task: Scoped check batch B
     model: sonnet
     durationSec: 100
     toolCalls: 22
     modelCalls: 14
-    tokenShare: 18.9
+    tokenShare: 14.8
   - type: general-purpose
     task: Scoped check batch C
     model: sonnet
     durationSec: 94
     toolCalls: 22
     modelCalls: 15
-    tokenShare: 17.1
+    tokenShare: 13.4
 gitBranch: claude/ecstatic-euler-kexkfl
 entrypoint: remote_trigger
 cliVersion: 2.1.319
