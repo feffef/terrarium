@@ -1,6 +1,6 @@
 ---
 name: glassbox-curate
-description: Make the Glass Box guide easier to learn from, then fill gaps; one focus per run, one self-merged PR. With a focus from the owner it runs interactively.
+description: Make the Glass Box guide easier to learn from, then fill gaps; one focus per run, one self-merged PR. Started by a person, it runs interactively.
 disable-model-invocation: true
 ---
 
@@ -14,10 +14,10 @@ teaches. You lead and choose the steps; improvise.
 $20. Read your spend with `get_session` called with no session id, and stop at
 the budget. Several runs a day must work.
 
-**Modes.** *Autonomous* (no focus given, e.g. a Routine): decide everything
-yourself, ask nothing, and say in the run entry why you chose the focus.
-*Interactive* (the owner gives a focus): settle every decision with the owner
-via `grilling`. Their decision there counts as ADR-0003 approval for Glass Box
+**Modes.** *Autonomous* (a Routine fired it): decide everything,
+ask nothing, and say in the run entry why you chose the focus.
+*Interactive* (a person started it): if no focus was given, ask for one; settle every
+decision with them via `grilling`. Their decision there counts as ADR-0003 approval for Glass Box
 content only, so a step beyond the remit, such as a new Subject, is allowed;
 changes to this Skill, the page checks or the rules still go through their own
 PRs.
