@@ -217,7 +217,8 @@ export function sessionRuleTitles(sources: Record<string, string>): Record<strin
 const SEVERITY_RANK: Record<Severity, number> = { blocker: 0, major: 1, moderate: 2, minor: 3, nit: 4 }
 
 // ADR-0008: derive, never regenerate logs. An `in-review` log whose PRs all
-// appear in a loaded `completed` log has merged; only loaded sessions are seen.
+// appear in a loaded `completed` log has merged. A proxy: a `completed` log may
+// list an unmerged PR (false flag), and an unloaded one is missed.
 const prNums = (s: SessionDoc) => (s.prs ?? []).map((p) => p.replace(/^#/, ''))
 
 function staleInReviewKeys(sessions: SessionDoc[]): Set<string> {
