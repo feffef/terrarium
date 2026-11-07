@@ -31,7 +31,7 @@ Anyone can open an issue on the repository. The new issue has no label. The labe
 A :term[Trusted] user starts the `auto-triage` sweep by hand, or a `clear-backlog` run starts from the same set of issues and triages them. The sweep reads every open issue and acts on those that need attention, and an issue with no label always does. It applies the per-issue rules of the installed `triage` Skill, one subagent per issue.
 
 ::lessons
-[Issue triage labels](/t/glassbox/guide/git-github/work-queue) · [Subagents](/t/glassbox/guide/claude-code/subagents)
+[Issue triage labels](/t/glassbox/guide/git-github/work-queue) · [Subagents](/t/glassbox/guide/agents/subagents)
 ::
 
 ## 3. Who wrote it decides how far it goes

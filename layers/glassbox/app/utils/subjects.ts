@@ -1,6 +1,8 @@
 // Subject order and display names live here, not in content (issue #1985, Part 3).
 export const glassboxSubjects = [
   { slug: 'claude-code', name: 'Claude Code' },
+  { slug: 'hooks', name: 'Hooks' },
+  { slug: 'agents', name: 'Agents & automation' },
   { slug: 'skill-pack', name: 'Installed Skills' },
   { slug: 'nuxt-vue', name: 'Nuxt & Vue' },
   { slug: 'nuxt-content', name: 'Nuxt Content' },
