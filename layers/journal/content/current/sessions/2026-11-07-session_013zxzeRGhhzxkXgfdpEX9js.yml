@@ -1,0 +1,343 @@
+schemaVersion: 1
+session: session_013zxzeRGhhzxkXgfdpEX9js
+startedAt: 2026-11-07T13:38:49Z
+endedAt: 2026-11-07T14:15:03Z
+kind: interactive
+goal: Add a Web standards Subject to the Glass Box guide
+status: in-review
+outcome: "PR #2942 open with a new Subject, one moved page and three new Lessons; gate green, merge pending CI"
+summary: 'An owner-started glassbox-curate run with no focus given. The owner left the choice to the run, so I (agent-initiated) took their direction 1 from the memory page and first filed a proposal, issue #2941, after checking the repo: no ADR says binary images are kept out, ARIA has no recorded practice or checker, and the Mermaid page fits Nuxt Content better. The owner then asked, in their own words, for accessibility (ARIA) and colour schemes to be added (human-instructed), asked whether reduced motion belongs to accessibility (they chose to keep it in the colour page and retitle it to cover both), and told me to implement the whole thing in the session with glassbox-lesson. I added the Subject, moved CSS custom properties, and had three opus writers draft SVG, ARIA and Colour and motion settings; fresh sonnet readers and a claim checker found unsupported sentences (the receipt-printing reason, two color-scheme default claims) and snags, which I fixed. Title cap forced "settings" over "preferences". Standards and Spec reviews found nothing hard; I added three Where next links. Several first-round subagents stalled and were abandoned. Open for the owner: record an accessibility practice, the binary-image idea, file renames.'
+prs:
+  - "2942"
+docsRead:
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: A guard made me read it before any Agent call; gave the brief checklist and the worktree rule
+    useful: yes
+  - path: layers/glassbox/GLOSSARY.md
+    reason: Lesson contract, Subject and Term rules; subagent reviewers also used it for the standards check
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: Title cap, pin steps, docs fallback; reviewers used it too
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/DECISIONS.md
+    reason: Closed rulings; nothing applied to this run
+    useful: partly
+  - path: .agents/skills/glassbox-lesson/QUALITY.md
+    reason: Lenses only; I did not need them for new pages
+    useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: Read-only git rules and commit-message hygiene before the first git command
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP write tools and the cloud-session limits before filing the issue and PR
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: "Review-before-PR rule: code-review, then gate:scoped on the final head"
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: "How to file an issue: facts versus assumptions"
+    useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: Other Skills file issues as needs-triage
+    useful: yes
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (not read) it only appeared in a grep for CSS traps; I changed no UI
+    useful: no
+  - path: .agents/skills/glassbox-lesson/SKILL.md
+    reason: Subagent writers and reviewers used its five steps; step 4 gave the Where next joins
+    useful: yes
+  - path: .agents/skills/glassbox-curate/SKILL.md
+    reason: Subagent reviewers read it for the Proposal, State and Land rules; I followed it from the invocation
+    useful: yes
+  - path: layers/atlas/GLOSSARY.md
+    reason: SVG writer used it for the Specimen term
+    useful: yes
+  - path: docs/adr/0024-build-time-mermaid-prerender.md
+    reason: SVG writer checked the Mermaid SVG check and dark-mode claim
+    useful: yes
+  - path: docs/adr/0007-derived-files-built-not-committed.md
+    reason: SVG writer read it for the committed Mermaid SVGs; not cited
+    useful: partly
+  - path: layers/glassbox/page-checks.ts
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/web-standards/02.svg.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/web-standards/03.aria.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/web-standards/04.colour-and-motion-settings.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/web-standards/04.colour-schemes.md
+    reason: (read before editing)
+skillsUsed:
+  - name: glassbox-curate
+    reason: the run itself
+  - name: glassbox-lesson
+    reason: owner asked to implement the Lessons with it
+  - name: dispatch-subagents
+    reason: guard required it before briefs
+  - name: code-review
+    reason: Standards and Spec reviews before the PR
+  - name: close-session
+    reason: closure after opening the PR
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Agent calls were blocked by the dispatch-read guard because I wrote subagent briefs before reading the dispatch-subagents Skill, which CLAUDE.md names.
+    solution: Read the Skill before the first brief; the guard worked as designed, one retry.
+    severity: nit
+  - description: The first Standards, Spec and claim-check subagents stalled silently with idle transcripts for over ten minutes and no notification, then were abandoned and rerun on the final head.
+    solution: Set a call budget in every reviewer brief and check transcript activity sooner.
+    severity: minor
+  - description: I renamed a page file while a claim checker was reading it by path, so I waited and later reran the check.
+    solution: Finish all renames before dispatching checkers, or give them a pinned commit instead of the working tree.
+    severity: minor
+  - description: The Stop hook asked repeatedly for commits mid-work, so I committed unfinished drafts to satisfy it.
+    solution: Let the hook skip a branch with no open PR while subagents are still writing.
+    severity: nit
+  - description: MDN, w3.org, vuejs.org and playwright.dev did not resolve from the cloud session, so writers read raw GitHub sources and some doc URLs rest on a source slug.
+    solution: Allow these hosts in the environment, or keep a saved docs mirror for Glass Box runs.
+    severity: minor
+  - description: A retitle to Colour and motion preferences was one character over the 28-character title cap, found only at test time.
+    solution: Say the cap in the glassbox-curate Skill or run the title check before a rename.
+    severity: nit
+durationSec: 2173
+models:
+  claude-sonnet-5-5: 211
+toolCounts:
+  Bash: 73
+  AskUserQuestion: 2
+  Read: 3
+  mcp__github__list_issues: 1
+  ToolSearch: 2
+  mcp__github__issue_write: 2
+  Skill: 4
+  Agent: 14
+  mcp__claude-code-remote__get_session: 2
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - layers/glassbox/content/guide/pages/web-standards/02.svg.md
+  - layers/glassbox/content/guide/pages/web-standards/03.aria.md
+  - layers/glassbox/content/guide/terms/screen-reader.yml
+  - layers/glassbox/content/guide/terms/assistive-technology.yml
+  - layers/glassbox/content/guide/pages/web-standards/04.colour-schemes.md
+  - layers/glassbox/content/guide/terms/design-token.yml
+  - layers/glassbox/content/guide/pages/verification/03.content-validation.md
+  - layers/glassbox/content/guide/pages/verification/05.linting.md
+  - layers/glassbox/content/guide/pages/verification/09.headless-browser-checks.md
+  - layers/glassbox/content/guide/pages/web-standards/04.colour-and-motion-settings.md
+  - layers/glassbox/content/guide/terms/poster.yml
+  - layers/glassbox/content/workshop/pages/index.md
+  - layers/glassbox/content/workshop/runs/2026-11-07T1338.yml
+  - layers/glassbox/content/guide/pages/web-standards/01.css-custom-properties.md
+  - layers/glassbox/content/guide/pages/nuxt-content/07.mermaid-pre-rendering.md
+  - layers/glassbox/content/guide/terms/cross-site-scripting.yml
+  - layers/glassbox/content/guide/terms/frontmatter.yml
+  - layers/glassbox/content/guide/terms/specimen.yml
+  - layers/glassbox/app/utils/subjects.ts
+  - layers/glassbox/content/guide/pages/nuxt-vue/05.vue-components.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/07.css-custom-properties.md
+rulesLoaded:
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/ui-verification.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/adr-0005.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+docsReadBySubagents:
+  - .agents/skills/glassbox-lesson/SKILL.md
+  - .agents/skills/glassbox-curate/SKILL.md
+  - layers/atlas/GLOSSARY.md
+  - docs/adr/0024-build-time-mermaid-prerender.md
+  - docs/adr/0007-derived-files-built-not-committed.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run code-review and gate:scoped before the PR and when an agent may merge; the summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Session logs go to main via close-session; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR myself after review and the gate, and subscribe; new Subject needed owner approval, which the owner gave
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header on the issue and PR bodies; summary was enough
+    useful: yes
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded when reading Tenant files; writers used the Tenant glossaries for terms
+    useful: partly
+  - path: .claude/rules/tenant-layers.md
+    reason: About Tenant layers; this run edited only guide content
+    useful: no
+  - path: .claude/rules/glassbox-content.md
+    reason: Banned counts in prose; caught Three Tenants and five patterns, and the 50% value
+    useful: yes
+  - path: .claude/rules/mermaid-lanes.md
+    reason: About Mermaid diagrams; no diagram was drawn
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Used the paths list to confirm no Human-only file changed; so an agent may merge
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: About glossary placement; I added no glossary term
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: About where instructions load; not relevant to guide content
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: About ADR wording; I changed no ADR
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: About glossary terms; Glass Box term files are a different store
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: About prune trials; none covered this text
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: About the triage sweep; I filed the issue as needs-triage and did not label it ready
+    useful: no
+  - path: .claude/rules/adr-0001.md
+    reason: Single-container architecture; not touched
+    useful: no
+  - path: .claude/rules/adr-0018.md
+    reason: Tenants as layers; not touched
+    useful: no
+  - path: .claude/rules/adr-0028.md
+    reason: Payload navigation; I only cited Hydration, not this
+    useful: no
+  - path: .claude/rules/ui-verification.md
+    reason: Read docs before claiming a UI change works; I made no UI change
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: About the Journal; not relevant
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: About MDC components; not relevant
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Skills are Platform code; I changed no Skill
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded in a subagent only; no verdict reported
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: Loaded in a subagent only; no verdict reported
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Standards review of run diff
+    model: sonnet
+  - type: general-purpose
+    task: Spec review of run diff
+    model: sonnet
+  - type: general-purpose
+    task: Standards review of run diff
+    model: sonnet
+    durationSec: 6
+    toolCalls: 4
+    modelCalls: 1
+    tokenShare: 1.3
+  - type: general-purpose
+    task: Spec review of run diff
+    model: sonnet
+    durationSec: 6
+    toolCalls: 5
+    modelCalls: 2
+    tokenShare: 1.4
+  - type: general-purpose
+    task: Write SVG Lesson
+    model: opus
+    durationSec: 351
+    toolCalls: 64
+    modelCalls: 50
+    tokenShare: 12.1
+  - type: general-purpose
+    task: Write ARIA Lesson
+    model: opus
+    durationSec: 339
+    toolCalls: 63
+    modelCalls: 52
+    tokenShare: 13
+  - type: general-purpose
+    task: Write Colour schemes Lesson
+    model: opus
+    durationSec: 334
+    toolCalls: 62
+    modelCalls: 45
+    tokenShare: 10.7
+  - type: general-purpose
+    task: Claim-check the three new Lessons
+    model: sonnet
+    durationSec: 50
+    toolCalls: 20
+    modelCalls: 5
+    tokenShare: 2.5
+  - type: general-purpose
+    task: "Fresh reader: SVG page"
+    model: sonnet
+    durationSec: 12
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 1.5
+  - type: general-purpose
+    task: "Fresh reader: ARIA page"
+    model: sonnet
+    durationSec: 13
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 1.5
+  - type: general-purpose
+    task: "Fresh reader: Colour schemes page"
+    model: sonnet
+    durationSec: 12
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 1.5
+  - type: general-purpose
+    task: Claim-check the three new Lessons (final text)
+    model: sonnet
+    durationSec: 105
+    toolCalls: 22
+    modelCalls: 7
+    tokenShare: 3
+  - type: general-purpose
+    task: Standards review of the Web standards PR
+    model: sonnet
+    durationSec: 84
+    toolCalls: 21
+    modelCalls: 10
+    tokenShare: 2.7
+  - type: general-purpose
+    task: Spec review of the Web standards PR
+    model: sonnet
+    durationSec: 71
+    toolCalls: 20
+    modelCalls: 7
+    tokenShare: 1.9
+gitBranch: ccr-110d5533-2qn54g
+entrypoint: remote_mobile
+cliVersion: 2.1.319
+learnings:
+  - Reduced motion is an accessibility feature but shares its media-query mechanism with colour schemes; ask the owner early where such a split topic should live.
+landedBy: Stop
