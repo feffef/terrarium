@@ -1,0 +1,6 @@
+session: session_013zxzeT5vcQTn5YZeNHDSvv
+mode: interactive
+focus: "Shorten Issue triage labels (git-github/06.work-queue), now the longest page in the guide at about 1,500 words. The owner gave no focus and left the choice to the run; the memory page lists the page's length as a weak spot, no open PR touches it, and titles in the Claude Code, Hooks and Agents & automation Subjects already pass the title rule, so a retitle pass had nothing to fix."
+changes: []
+pagesRead:
+  - git-github/06.work-queue
