@@ -21,3 +21,8 @@ occurrences:
     severity: minor
     description: "Running code-review with two subagents on a 4-line doc change, after a rewrap round, cost about 120k subagent tokens to find nothing blocking."
     solution: "Let pr-workflow's simple-change test cover a one-sentence addition to a Skill that adds no new rule."
+  - session: session_013zxzeSYWF1rye7qScgSUFV
+    date: "2026-11-06"
+    severity: minor
+    description: "Review of a one-file post cost two extra subagents; the only real catch was length, and each text edit forced a new fact-check round because the Fact-checked blob must match."
+    solution: "Check paragraph count and description hook before step 9, so edits land before the first fact-check."

@@ -22,11 +22,6 @@ fixes:
     date: "2026-11-03"
     summary: "inspect-session: #2806 is closed and the next rejected-cursor case reopens it, so no stale ready-for-agent label sits on an open issue."
 occurrences:
-  - session: session_01PWZU3TqUdSp6uD1KaoQXit
-    date: "2026-10-23"
-    severity: minor
-    description: "Two inspect-session partial reads hit their page limit before the session start (about a minute of events per page), needing resumes; 019CbZiW never reached it after 20 pages."
-    solution: "inspect-session could estimate pages from get_session duration and say so, or offer a start-first cursor walk for questions about a session's opening."
   - session: session_01VW5yg4NTMt1JBnXCcrhjw9
     date: "2026-10-25"
     severity: minor

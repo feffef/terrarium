@@ -25,11 +25,6 @@ fixes:
     date: "2026-10-31"
     summary: "CLAUDE.md and the clear-backlog workflows' shared brief line ask each subagent to give every count, id or attribution with its source (command or file:line) or mark it unverified."
 occurrences:
-  - session: session_01PWZU3TqUdSp6uD1KaoQXit
-    date: "2026-10-23"
-    severity: minor
-    description: "Relayed the Fable agent's derived-log-field option without checking that the authored relevantAdrs field already existed; the owner asked and I found it then."
-    solution: "Grep shared/schemas/session.ts for a field before relaying a proposal that adds one."
   - session: session_01XUmLg8WmTPPmqqnjHA59oX
     date: "2026-10-24"
     severity: minor
@@ -150,3 +145,18 @@ occurrences:
     severity: nit
     description: "A Spec reviewer wrongly said the midden-survey parenthetical was dropped; I reread the file to settle it, a small detour."
     solution: "Give the reviewer the file path to read rather than only the corrected text."
+  - session: session_013zxzeSjNrJGoGzDkoSzhK9
+    date: "2026-11-05"
+    severity: moderate
+    description: "Adopted a subagent reviewer's claim that the generic comma was unneeded in a .vue arrow function without checking it; the next gate went red at lint."
+    solution: "Run lint or typecheck on the reviewer's suggested edit before accepting it, as CLAUDE.md asks for any subagent claim."
+  - session: session_013zxzeQUzcNjB7oD8ukBLGp
+    date: "2026-11-06"
+    severity: minor
+    description: "History subagent marked the 8-item cap as possibly agent-built; the QWJE session log shows the owner chose it, so I had to verify and correct it"
+    solution: "Briefs for history research should name session logs as a source for owner decisions, not only issues and PRs"
+  - session: session_013zxzeShpLwnUmQEGZdog9F
+    date: "2026-11-05"
+    severity: nit
+    description: "Review subagents' counts disagreed on the deleted trial's landing SHA (one found different commits via git log -S); I had to trust find-trial-window.ts output over it."
+    solution: "Have review briefs paste find-trial-window.ts output so reviewers don't re-derive landing commits."

@@ -17,16 +17,6 @@ fixes:
     date: "2026-10-29"
     summary: "The tenant-glossary rule says a Tenant's terms apply to everything written under its layer, code comments included."
 occurrences:
-  - session: session_01CMjFaMZxZgD7oTzNXmWwzv
-    date: "2026-10-23"
-    severity: minor
-    description: "Added a glossary term without reading docs/agents/domain.md first, as CLAUDE.md requires."
-    solution: "Read it when the domain-modeling Skill loads; the Skill could name it."
-  - session: session_01RbgM2L9pxGwnDWbc3Aw6Vq
-    date: "2026-10-23"
-    severity: minor
-    description: "Proposed dek and body wording naming the season without first reading midden-catalogue's plain-words voice rule; review caught it and cost a fourth question round."
-    solution: "Read the Tenant's curatorial voice rules before proposing exact prose for its pages."
   - session: session_015P9szA8dP4wxv4wiXkZcRZ
     date: "2026-10-24"
     severity: moderate

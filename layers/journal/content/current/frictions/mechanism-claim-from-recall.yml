@@ -22,21 +22,6 @@ fixes:
     date: "2026-10-28"
     summary: "glassbox-improve's lead proposes only facts and wording found in the source (an absence claim most of all), and its researcher checks an absence claim against every code location."
 occurrences:
-  - session: session_01PWZU3TqUdSp6uD1KaoQXit
-    date: "2026-10-23"
-    severity: minor
-    description: "First report counted three post-landing errors as happening despite adr-check, trusting skillsUsed; inspect-session showed 012f7o6F's main session never ran it."
-    solution: "Note in docs/agents (or log-session) that skillsUsed folds subagent and workflow calls, so it can't show who ran a Skill."
-  - session: session_01E3XmTJcpKMZstW7MHL2eks
-    date: "2026-10-23"
-    severity: nit
-    description: "First draft of the doc fix overstated that annotations always name the failing file and contradicted the same doc's get_job_logs tail advice; code-review caught both before push."
-    solution: "Fact-check a new doc claim against a live run and grep the target doc for the same tool before drafting the design text."
-  - session: session_019SNgYeofJtzoLvh8QNAwYD
-    date: "2026-10-23"
-    severity: minor
-    description: "Told the owner that session 01Wd2W never loaded ui-verification.md; it had. I misread my own script output and stated it unchecked."
-    solution: "Verify before you state: grep the log file itself before reporting a per-session claim from a script's summary line."
   - session: session_015P9szA8dP4wxv4wiXkZcRZ
     date: "2026-10-24"
     severity: moderate
@@ -62,11 +47,6 @@ occurrences:
     severity: minor
     description: "My first #2577 comment said a cloud run needs the owner's permission for separate branches; the owner corrected that written repo instructions already grant it, so I edited the comment."
     solution: "Treat a Skill's written step as the explicit permission the harness system prompt asks for."
-  - session: session_01Hw8mVJmgWejGc6YWi8ngnm
-    date: "2026-10-23"
-    severity: nit
-    description: "One concision reviewer claimed a guard enforces ToolSearch-before-call; the checker found the premise false, so the finding was dropped."
-    solution: "Tell reviewers to verify any claim about a mechanism before reporting a cut that depends on it."
   - session: session_016edAfTmLE1szSBGNZTorPH
     date: "2026-10-25"
     severity: minor
@@ -187,3 +167,18 @@ occurrences:
     severity: minor
     description: "Posted an unverified guess (sources hash) as the likely cause in the 2871 comment; measuring later showed own edits dominate, needing a correction comment"
     solution: "Measure a cause before posting it, even flagged as a guess, when the measurement is a few minutes away"
+  - session: session_013zxzeSbd2LJtWWawqrWBJD
+    date: "2026-11-05"
+    severity: minor
+    description: "list-human-only-paths.ts printed an empty list, and the PR body still said no Human-only path is touched without confirming the script works."
+    solution: "Check what the script prints for a known Human-only path, or report that it printed nothing."
+  - session: session_013zxzeQUzcNjB7oD8ukBLGp
+    date: "2026-11-06"
+    severity: minor
+    description: "My spec claimed update's deep check would cost about $1-2 a day without checking how many pages update flags daily (14-32); the fable review caught it"
+    solution: "Check an estimate's input counts (here update PR bodies) before stating it in a spec"
+  - session: session_013zxzeRCJHe4rmKN5i2CQ16
+    date: "2026-11-06"
+    severity: moderate
+    description: "Seeded the memory page from grades.yml but checked only one step against the repo; review found two more stale entries."
+    solution: "Before writing a seed, check every cited stem and claim against the current repo with one script."

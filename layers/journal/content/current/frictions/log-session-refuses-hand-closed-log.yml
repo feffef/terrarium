@@ -78,3 +78,8 @@ occurrences:
     severity: nit
     description: "After the last PR merged I authored a completed log before re-invoking close-session; log-session refused it, costing one call."
     solution: "Invoke close-session immediately after merge-pr.ts (the hint already says so)."
+  - session: session_013zxzeTJp1jinYqgNJRczgA
+    date: "2026-11-05"
+    severity: nit
+    description: "log-session --author refused a completed log until I re-invoked close-session, because it saw merge text in my transcript; the extra round trip cost a step and a second skill load"
+    solution: "Say in close-session which transcript signals trigger that refusal, or key it on the merge-pr.ts result only"

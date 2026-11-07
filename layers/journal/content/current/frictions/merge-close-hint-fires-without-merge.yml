@@ -1,9 +1,12 @@
 name: merge-close-hint-fires-without-merge
 surface: guard-or-hook
 summary: The post-merge close-session hint said the PR was merged after a merge-pr.ts command that had not merged it, so the session had to check the PR state.
-cause: "read-first-hint.ts (PostToolUse) pushes MERGE_CLOSE_SESSION_HINT ('PR merged: invoke close-session') for any main-session Bash command whose words name merge-pr.ts, whatever it did: a run that failed with a GitHub 503, or a command that only mentioned the script. Signals: 'PR merged' hint, 'merge-pr.ts failed with 503', 'only named merge-pr.ts', 'had to check origin/main'."
-status: tracked
-ref: "issue #2879"
+cause: "Before PR #2890 (2026-11-06), read-first-hint.ts (PostToolUse) pushed MERGE_CLOSE_SESSION_HINT ('PR merged: invoke close-session') for any main-session Bash command naming merge-pr.ts; it now needs the run's stdout to report merged true. A hint after a run that did not merge, or a merge whose output was piped or cut, would be new. Signals: 'PR merged' hint, 'merge-pr.ts failed with 503', 'only named merge-pr.ts', 'had to check origin/main'."
+status: open
+fixes:
+  - pr: 2890
+    date: "2026-11-06"
+    summary: "read-first-hint.ts counts a main-session merge-pr.ts run for the close-session hint only when its stdout reports \"merged\": true."
 occurrences:
   - session: session_013zxzeSbd2LJtWWawqrWBJD
     date: "2026-11-05"

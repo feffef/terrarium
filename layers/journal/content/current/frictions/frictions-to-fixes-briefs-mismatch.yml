@@ -2,9 +2,9 @@ name: frictions-to-fixes-briefs-mismatch
 summary: >-
   The frictions-to-fixes survey and design briefs disagreed with the repo or left steps out, so their helper agents lost rounds or worked by hand.
 cause: >-
-  survey-brief.md and design-brief.md (not SKILL.md) carry broken or outdated instructions: a dangling fragment and a glob that matches nothing, mixed window dates, no status for closed-not-planned or on-trial entries, search guidance that contradicts github-integration.md, no named way to find merged PRs missing from the ledger, an impossible 'read every full log' ask, no owner/repo slug, and a design-brief wanting only docReadCounts from a 40 KB audit-skills JSON with no filter. PR #2733 (2026-10-31) gave the survey brief {SCRATCH_DIR} output paths and an all-or-nothing note for --append and redirected the design brief's audit-skills output. Signals: a survey or design subagent reporting the brief 'says ... but', a glob matching nothing, work done by hand that the brief should have pointed to.
+  survey-brief.md and design-brief.md (not SKILL.md) carry broken or outdated instructions: a dangling fragment and a glob that matches nothing, mixed window dates, no status for closed-not-planned or on-trial entries, no named way to find merged PRs missing from the ledger, an impossible 'read every full log' ask, no owner/repo slug, and a design-brief wanting only docReadCounts from a 40 KB audit-skills JSON with no filter. PR #2733 (2026-10-31) gave the survey brief {SCRATCH_DIR} output paths and an all-or-nothing note for --append and redirected the design brief's audit-skills output; PR #2891 (2026-11-06) replaced its closed-issue MCP paging, which contradicted github-integration.md, with list-open-issues.ts --closed. Signals: a survey or design subagent reporting the brief 'says ... but', a glob matching nothing, work done by hand that the brief should have pointed to.
 surface: safe
-status: tracked
+status: open
 ref: "issue #2877 (regression of #2733)"
 notes: |-
   2026-10-30 survey: the Prune Trial of PR #2539 was judged and deleted by PR #2681; status reset to open.
@@ -24,17 +24,10 @@ fixes:
   - pr: 2733
     date: "2026-10-31"
     summary: "Survey brief passes --out {SCRATCH_DIR} paths to the summary, candidates and extract calls and redirects the merges and open-issues calls; design brief redirects audit-skills output; states that --append writes all or nothing."
+  - pr: 2891
+    date: "2026-11-06"
+    summary: "list-open-issues.ts gets a --closed flag and the survey brief §3 lists closed issues with it, not with MCP list_issues paging."
 occurrences:
-  - session: session_01CfTFFQrkwq1eUsDy61AJzz
-    date: "2026-10-23"
-    severity: minor
-    description: "The survey subagent reported survey-brief.md pulls opposite ways: it tells agents to search_issues for closed issues while github-integration.md says to prefer list scans."
-    solution: "Make the brief point to github-integration.md for search instead of restating it."
-  - session: session_01E3XmTJcpKMZstW7MHL2eks
-    date: "2026-10-23"
-    severity: minor
-    description: "design-brief.md has a dangling fragment after PICKS ('...what the survey found about it). You') and points to audit-docs house rules that SKILL.md has no section for; the design agent used the eight lenses."
-    solution: "Fix the sentence and name the eight lenses in design-brief.md (tracked with the briefs regression, issue #2436)."
   - session: session_017vrdmQQwC4obwbJS9G5Dyg
     date: "2026-10-25"
     severity: minor
@@ -100,3 +93,8 @@ occurrences:
     severity: minor
     description: "Survey brief asks for paging list_issues CLOSED, which contradicts github-integration.md overflow guidance; subagent substituted gh api and could not confirm paraphrase misses."
     solution: "Replace the CLOSED paging step with a cheap scripted closed-title scan."
+  - session: session_013zxzeQDfNNTXpQYQtt9saY
+    date: "2026-11-06"
+    severity: minor
+    description: "The survey brief's closed-issue paging contradicts github-integration.md, so the survey agent used per-number lookups and could not rule out paraphrase misses."
+    solution: "Already ledgered and now issue 2877; pick one side in the brief or add a closed-issues script."

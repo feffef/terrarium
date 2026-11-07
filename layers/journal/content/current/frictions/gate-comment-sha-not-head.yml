@@ -1,0 +1,22 @@
+name: gate-comment-sha-not-head
+surface: human-only
+summary: The gate's green comments name a merge-ref commit, not the PR head, so agents cannot tell from them whether their head is green.
+cause: "The safety-gate bot comment ('safety-gate green on <sha>') and the check-suite event carry the pull/N/merge ref SHA (.github/actions/gate/action.yml), not the PR head; an agent reads them as a green on its head or cannot tell, and checks the gate check run by hand. Signals: 'safety-gate green on <sha>' naming a commit that is not the PR head, 'merge refs', 'waited for the gate check run'. Typing a wrong SHA into a verdict is verdict-comment-hand-typed."
+status: tracked
+ref: "issue #2917"
+occurrences:
+  - session: session_013zxzeNeTKPqiQ1jj1FgYXh
+    date: "2026-11-06"
+    severity: nit
+    description: "Bot comments 'safety-gate green on <sha>' named shas that were not the PR head (merge refs), so they could be misread as green on my head; I waited for the gate check run instead."
+    solution: "Add one line to docs/agents/pr-workflow.md step 3: the head's check run decides, not the sha in the bot comment."
+  - session: session_013zxzeRJEE2ehNrQTL62nhX
+    date: "2026-11-06"
+    severity: nit
+    description: "Safety-gate bot comments and a check-suite event named commits other than my PR head, briefly looking like a green on my head; I had to confirm the gate run itself."
+    solution: "Have the gate comment and event name the PR head they cover, or say when they are for a merge ref."
+  - session: session_013zxzeQ7Ra7VbsnEayuBNNi
+    date: "2026-11-06"
+    severity: minor
+    description: "The safety-gate green comments named merge-ref SHAs, not my PR head, so I could not tell whether the head was green and checked its runs by hand."
+    solution: "Add a line to docs/agents/pr-workflow.md step 3: confirm green from the head's check runs, not the SHA in the gate comment."

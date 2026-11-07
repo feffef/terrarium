@@ -1,20 +1,16 @@
 name: output-trim-drops-needed-line
 summary: >-
-  An agent trimmed a script's output with tail and lost the line it needed.
+  An agent trimmed or filtered a command's output (tail, head, grep) and lost the line it needed.
 cause: >-
-  A command's output is piped to tail -N assuming the wanted value (a PID, a path) is last, but the script prints other lines after it; later commands get garbage args or fail. The old tail-pipe guard is gone (tail-pipe-guard). Signals: 'tail -3 dropped', 'tail -1 assuming it prints only its path'.
+  A command's output is piped to tail -N, head -N or grep assuming the wanted line (a PID, a path, a section, a status) is in what is kept, but the script prints it elsewhere or the filter hides a failure; later commands get garbage args, work from a truncated report, or the agent reports success it did not see. The old tail-pipe guard is gone (tail-pipe-guard). Signals: 'tail -3 dropped', 'tail -1 assuming it prints only its path', 'filtered through grep, which hid', 'head -300 truncated'.
 surface: safe
-status: open
+status: tracked
+ref: "issue #2884 (log-session --author piped through grep; covers the grep occurrence only)"
 fixes:
   - pr: 2534
     date: "2026-10-25"
     summary: "inspect-session SKILL.md now says outline.ts prints its path with the line count, then a coverage line, not only the path."
 occurrences:
-  - session: session_01Wd2WvrPmFRYHAZmf7DYnrG
-    date: "2026-10-23"
-    severity: nit
-    description: "Preview start printed PID on the third-last line; my `tail -3` dropped it and the first stop call failed, leaving a server up until I read the log."
-    solution: "preview.ts could print PID last, or accept stop without an argument for the newest server."
   - session: session_01Ru6jnZ4cFTdf41ZWLonsTv
     date: "2026-10-24"
     severity: nit
@@ -30,3 +26,8 @@ occurrences:
     severity: nit
     description: "Piped owner-corrections output through head, truncating the JSON, then had to rerun it."
     solution: "Redirect to a file first; the Skill could say so."
+  - session: session_013zxzeQDfNNTXpQYQtt9saY
+    date: "2026-11-06"
+    severity: moderate
+    description: "I filtered the log-session --author output through grep, which hid that the final log update was not accepted, and I then reported the log as written without checking the scratch."
+    solution: "Read the full --author output and check that the scratch status matches before saying the log is written."

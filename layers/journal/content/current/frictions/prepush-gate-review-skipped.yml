@@ -33,11 +33,6 @@ fixes:
     date: "2026-10-28"
     summary: "pr-workflow.md's simple-change bar now says a simple change adds, renames or moves no file, so a rename sweep gets code-review before its first push."
 occurrences:
-  - session: session_01CMjFaMZxZgD7oTzNXmWwzv
-    date: "2026-10-23"
-    severity: minor
-    description: "Two follow-up commits (6 files) got only my own read, not code-review, against pr-workflow.md's follow-up rule; disclosed in the PR."
-    solution: "Run code-review on any follow-up over the simple-change line, or batch follow-ups before the review."
   - session: session_01URZoDXk9zQsY2HDhUruLd4
     date: "2026-10-25"
     severity: minor
@@ -118,3 +113,13 @@ occurrences:
     severity: minor
     description: "Skipped the code-review Skill on a diff that adds a file, though the simple-change test excludes added files; I read the diff myself."
     solution: "Run code-review, or let the pr-workflow simple test exempt Digest pages."
+  - session: session_013zxzeQ7Ra7VbsnEayuBNNi
+    date: "2026-11-06"
+    severity: minor
+    description: "I skipped the Skill's fresh-reader and claim-checker steps and the subagent code-review, doing a lead-only read, a deviation from the Skill and pr-workflow."
+    solution: "Give cut-only edits an explicit lighter path in glassbox-curate, so skipping is allowed rather than a judgement."
+  - session: session_013zxzeSbd2LJtWWawqrWBJD
+    date: "2026-11-05"
+    severity: nit
+    description: "I almost merged PR 2864 without running code-review on my hand-fix commit, then ran it after noticing the follow-up exceeded the simple-change limit, and first gave the review a wrong fixed point."
+    solution: "Apply the pr-workflow simple-change count to a hand-fix commit before opening the PR, and take the fixed point from git log."

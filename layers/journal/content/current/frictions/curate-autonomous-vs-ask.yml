@@ -1,0 +1,22 @@
+name: curate-autonomous-vs-ask
+surface: safe
+summary: The glassbox-curate Skill says a run without a focus decides alone, but the owner's preference and CLAUDE.md lean toward asking, so agents ask one question anyway.
+cause: "glassbox-curate SKILL.md Modes says Autonomous (no focus given) asks nothing, yet an interactive session with no focus named has an owner who prefers to be asked first (CLAUDE.md 'Ask before building'); the agent reconciles the two by asking one focus question after orientation, costing a round trip. Signals: 'autonomous mode asks nothing', 'user preference is to ask first', 'invocation named no focus'."
+status: tracked
+ref: dispatched 2026-11-07 (glassbox-curate Modes by who started the run)
+occurrences:
+  - session: session_013zxzeNeTKPqiQ1jj1FgYXh
+    date: "2026-11-06"
+    severity: nit
+    description: "The Skill says autonomous mode asks nothing, but the user's preference was to ask first and the invocation named no focus, so I asked one mode question."
+    solution: "Say in the Skill how a user-started run with no focus should choose its mode."
+  - session: session_013zxzeRJEE2ehNrQTL62nhX
+    date: "2026-11-06"
+    severity: nit
+    description: "The curate Skill says autonomous mode asks nothing, while the user's preference is to ask first; I had to reconcile them by asking one focus question."
+    solution: "Let the Skill say an interactive invocation with no focus should ask one question."
+  - session: session_013zxzeQ7Ra7VbsnEayuBNNi
+    date: "2026-11-06"
+    severity: nit
+    description: "Skill says no focus means autonomous, but user preference and CLAUDE.md lean toward asking; I ran orientation, then asked, which cost one round trip."
+    solution: "State in the Skill that a slash-command run from a human session may ask once for the focus."

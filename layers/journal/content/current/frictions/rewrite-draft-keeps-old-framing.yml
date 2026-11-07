@@ -2,7 +2,8 @@ name: rewrite-draft-keeps-old-framing
 surface: safe
 summary: A rewrite of an existing guide or README kept the old structure and content instead of asking what its reader needs, and only a second review or the owner found the gap.
 cause: "A rewrite agent starts from the old text's order and lists (Part 1's infrastructure-first order, a Contributing list) and does not ask who reads the result and what they must be able to do. The first draft omits the reader's need (why Terrarium exists; whether an outsider can act on a list) until the owner or a second critical review raises it. Signals: 'kept the old', 'omitted why', 'owner had to point out', rewrite of README or Glass Box overview."
-status: open
+status: tracked
+ref: "issue #2916"
 notes: |-
   2026-11-03 design: no change: CLAUDE.md "Question the premise" already covers it and was read past; widening the owner-approved bullet is the owner's call and more prose has not worked for this family; dropped: file an issue if a third occurrence appears
 occurrences:
@@ -16,3 +17,8 @@ occurrences:
     severity: minor
     description: "I kept the Contributing list from the old README without asking whether an outsider could act on it; the owner had to point out it was arbitrary"
     solution: "Apply CLAUDE.md 'question the premise' to inherited sections too: give each link a reason for the stated audience"
+  - session: session_013zxzeQUzcNjB7oD8ukBLGp
+    date: "2026-11-06"
+    severity: moderate
+    description: "First drafts of the memory page went long and mixed levels; the owner needed three review rounds (retired concepts, derivable facts, plain language) to reach the shape they wanted"
+    solution: "Before drafting a page an agent will read every run, agree its sections and tone with the owner on a short sample"

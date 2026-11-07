@@ -1,26 +1,21 @@
 name: pr-number-guessed-before-create
 summary: >-
-  Agents subscribed to a pull request by guessing its number before the create call returned, then had to resubscribe.
+  A session wrote an expected next PR number (into a subscription or a ledger fixes row) before the PR existed, and another PR took it first.
 cause: >-
-  The session calls subscribe_pr_activity with the expected next PR number in the same turn as create_pull_request, and the guess is off by one when another PR lands first. Signals: 'guessing the next number', 'unsubscribe and resubscribe'.
+  The session predicts the next PR number: it calls subscribe_pr_activity in the same turn as create_pull_request, or writes a fixes row's pr field before the PR is opened, and the guess is off by one or two when another PR lands first, costing a resubscribe or extra commits and gate runs. Signals: 'guessing the next number', 'unsubscribe and resubscribe', 'predicted PR numbers twice'.
 surface: safe
 status: open
 fixes: []
 notes: |-
   2026-10-23 design: a subscribe-after-create sentence or guard dropped: the only home is ADR-0003 (Human-only, an ADR summary cannot add to its ADR) or a guard that cannot tell a guess from a real number, and a wrong guess costs one resubscribe.
 occurrences:
-  - session: session_011hiFhM9A2Sbn4mGYbdtAhJ
-    date: "2026-10-23"
-    severity: nit
-    description: "Called subscribe_pr_activity with pullNumber 0 in parallel with PR creation, before the number existed; it errored and I retried."
-    solution: "Sequence the subscribe after create_pull_request returns."
-  - session: session_01SNKBDEtR5UiaMXBdxvHuuE
-    date: "2026-10-23"
-    severity: nit
-    description: "I guessed the new PR number when subscribing (2470) instead of reading create_pull_request's result (2468), and had to unsubscribe and resubscribe."
-    solution: "Subscribe only after reading the PR number from the create result, not in the same parallel batch."
   - session: session_013zxzeRkASapvnaGkGVdSBk
     date: "2026-10-27"
     severity: nit
     description: "Subscribed to PR #2599 in the same call batch as creating the PR, guessing its number; the real PR was #2600, so one wrong subscribe had to be undone"
     solution: "Subscribe only after create_pull_request returns the PR number"
+  - session: session_013zxzePVGCU1ARYitEsVKoy
+    date: "2026-11-06"
+    severity: minor
+    description: "Predicted PR numbers twice for the ledger fixes row of #2878 (2888, then 2891); other PRs took both, costing two extra commits and a rerun of the gate."
+    solution: "Open the PR first, then add its number in a follow-up commit; or have the build workflow leave the row out and let the orchestrator write it."

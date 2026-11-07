@@ -2,7 +2,7 @@ name: drafts-caught-by-fact-check
 summary: >-
   First drafts of posts, Digests and PR bodies carried wrong or overstated facts that the fact-check step, a reviewer or the drafter's own source check caught.
 cause: >-
-  A Skill that drafts first and checks after (blog posts, blog replies, Digests, PR bodies, reports) catches the draft's unchecked dates, counts and claims by design, at the cost of a rewrite round; a reply angle built from an issue body before its comments is the same slip. Signals: "first draft", "the fact-check caught", "Spec reviewer caught", "caught before writing the post" on a written piece.
+  A Skill that drafts first and checks after (blog posts, blog replies, Digests, PR bodies, reports, Glass Box pages) catches the draft's unchecked dates, counts and claims by design, at the cost of a rewrite round; a reply angle built from an issue body before its comments is the same slip, and so is a shipped page carrying a count copied from a draft. Signals: "first draft", "the fact-check caught", "claim checker caught", "Spec reviewer caught", "caught before writing the post" on a written piece.
 surface: safe
 status: open
 notes: |-
@@ -23,11 +23,6 @@ occurrences:
     severity: nit
     description: "My draft had two factual errors (a follow-up issue called a session; a review-round count) that the fact-check subagent caught."
     solution: "Check issue-versus-session wording against the gather output when drafting."
-  - session: session_01QpBTsuXUNm28Y2oszBnoUb
-    date: "2026-10-23"
-    severity: nit
-    description: "Drafted Karen's reply angle from the issue body alone, claiming the contradiction was unresolved; its comments showed the owner parked it on purpose. Caught before writing the post."
-    solution: "Read an issue's comments, not only its body, before building a reply angle on its state."
   - session: session_013zxzeQifdm2ANF46Z2pQ5w
     date: "2026-10-30"
     severity: minor
@@ -98,3 +93,18 @@ occurrences:
     severity: minor
     description: "First draft described PR 2862 as page-summary history, but it concerns a queued step's gist, and said fold two pages together; the fact-check caught both."
     solution: "Read each PR's diff before describing it, not only its title and the session outcome."
+  - session: session_013zxzeNeTKPqiQ1jj1FgYXh
+    date: "2026-11-06"
+    severity: minor
+    description: "The first draft overstated that all five plumbing commands use GIT_INDEX_FILE and pinned a cost on ADR-0009 that it does not state; the claim checker caught both."
+    solution: "Keep the separate claim checker step; tell writers to cite a cost to code, not to an ADR that does not state it."
+  - session: session_013zxzeQUzcNjB7oD8ukBLGp
+    date: "2026-11-06"
+    severity: minor
+    description: "The memory page I shipped said the draft had eight stops; it had six. I re-checked counts and titles but not that one"
+    solution: "Re-check every count a page states, not a sample"
+  - session: session_013zxzePuqJcsqc92SUXfWFX
+    date: "2026-11-06"
+    severity: nit
+    description: "The memory page said the draft had eight stops; it had six, so the noted case against it was off."
+    solution: "The next run that edits the memory page should state counts only after counting; this run's entry records it."

@@ -1,0 +1,16 @@
+name: grilling-skipped-for-design-settlement
+surface: safe
+summary: Agents settled what to build with the owner (or a spec session) through ad hoc questions instead of the grilling Skill CLAUDE.md names.
+cause: "CLAUDE.md 'Ask before building (the grilling Skill)' is read as optional: an agent asks with AskUserQuestion, or settles shapes and looks with the spec session and not the owner, and never invokes grilling, so decisions are not stress-tested. Signals: 'AskUserQuestion instead of the grilling Skill', 'grilling Skill was not invoked', 'settled with the spec session, not the owner'."
+status: open
+occurrences:
+  - session: session_013zxzeQWJEVk8sAXq1hcSjq
+    date: "2026-11-05"
+    severity: nit
+    description: "Asked clarifying questions with AskUserQuestion instead of the grilling Skill that CLAUDE.md names for settling what to build."
+    solution: "CLAUDE.md could say the grilling Skill is required even for a short round of questions, or accept AskUserQuestion."
+  - session: session_013zxzeRCJHe4rmKN5i2CQ16
+    date: "2026-11-06"
+    severity: minor
+    description: "Zod shapes and the list look were settled with the spec session, not the owner, and the grilling Skill was not invoked."
+    solution: "When the spec says settle with the owner, ask the owner directly in the first round, then use grilling."

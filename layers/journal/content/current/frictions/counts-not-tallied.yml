@@ -20,11 +20,6 @@ fixes:
     date: "2026-10-25"
     summary: "Cut the Verify-before-you-state family to one plain home in CLAUDE.md and dropped its restatements in four Skills and the build reviewer."
 occurrences:
-  - session: session_01Tqm1brfa296Tbs9QnB7rCG
-    date: "2026-10-23"
-    severity: minor
-    description: "Wrote '-3 net' in the ledger entry without counting; the Spec reviewer found the true delta was -2."
-    solution: "Take the line delta from git diff --stat before writing it, per CLAUDE.md 'Verify before you state'."
   - session: session_015P9szA8dP4wxv4wiXkZcRZ
     date: "2026-10-24"
     severity: minor
