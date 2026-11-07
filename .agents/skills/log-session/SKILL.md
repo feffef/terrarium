@@ -61,7 +61,7 @@ docsRead:                          # curated — what each doc gave you, and whe
 skillsUsed:                        # transcript-observed reads/Skills you omit are folded in
   - { name: tdd, reason: "test-first the helper (see #99)" }  # (name cross-refs the Skill Inventory)
 ruleVerdicts:                      # every rule that loaded, yours or a subagent's (step 3)
-  - { path: .claude/rules/adr-0004.md, reason: "Made me run gate:scoped before pushing; summary was enough, skipped the full ADR", useful: yes }
+  - { path: .claude/rules/adr-0004.md, reason: "Made me run gate:scoped before opening the PR; summary was enough, skipped the full ADR", useful: yes }
   - { path: .claude/rules/adr-0023.md, reason: "About guest PRs; this was a Trusted blog post, so it didn't apply", useful: no }
   - { path: .claude/rules/adr-0025.md, reason: "Only Triage #12 loaded it; it reported the rule confirmed queryPages was the right call", useful: yes }
 frictions:                         # REQUIRED (may be []) — list EVERY friction
