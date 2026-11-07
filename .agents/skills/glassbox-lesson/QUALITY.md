@@ -44,9 +44,9 @@ source.
 - **D**: several deficits.
 
 Each deficit names its lens, quotes the page and says the fix. A B may have
-**gaps to A**: a section where a page holding A on that lens (where one does) does the same job
-better, named with that page and what to take from it. A gap never lowers a
-grade. Anything short of a deficit or gap goes under **Optional**; an Optional
+**gaps to A**: a section where a page holding A on that lens does the same
+job better, named with that page and what to take from it. A gap never lowers
+a grade. Anything short of a deficit or gap goes under **Optional**; an Optional
 item never drives an edit.
 
 ## Raising a page
