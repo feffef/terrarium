@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQWJUyfuXJgdfypeuc
 startedAt: 2026-11-07T07:58:07Z
-endedAt: 2026-11-07T08:33:43Z
+endedAt: 2026-11-07T08:37:15Z
 kind: interactive
 goal: Redesign the glassbox-curate Skill from its first four runs
-status: in-review
-outcome: "PR #2923 open: two-call orientation, proposals as results, run entries without pr and learned"
-summary: "The owner asked me to read issue #2906 and its comments, then to design improvements to glassbox-curate, allowing me to message the sessions that designed and ran it. I asked the designer and the four run sessions which orientation sections they used: all chose focus from the memory page, none used terms or warnings, and two never reached the guide pages. The designer quoted the owner's own plan to trim once the output grew. Every design choice was the owner's (human-instructed): drop pr and learned, a session link on the workshop page, claims through open PRs only, proposal-as-result, the Where next check, the memory-page fixes, and orient.ts in two calls. The owner corrected my first cut: the first paragraph of each page is essential and must stay, Where next can go, and the Skill should explain why. Agent-initiated: removing the Walkthrough links the new check flagged in two Lessons and relinking the orphaned Walkthrough from another Walkthrough. code-review found a stale \"claim\" wording and a misplaced doc comment, both fixed. Gate green."
+status: completed
+outcome: "PR #2923 merged: two-call orientation, proposals as results, run entries without pr and learned"
+summary: "The owner asked me to read issue #2906 and its comments, then to design improvements to glassbox-curate, allowing me to message the sessions that designed and ran it. I asked the designer and the four run sessions which orientation sections they used: all chose focus from the memory page, none used terms or warnings, and two never reached the guide pages. The designer quoted the owner's own plan to trim once the output grew. Every design choice was the owner's (human-instructed): drop pr and learned, a session link on the workshop page, claims through open PRs only, proposal-as-result, the Where next check, the memory-page fixes, and orient.ts in two calls. The owner corrected my first cut: the first paragraph of each page is essential and must stay, Where next can go, and the Skill should explain why. Agent-initiated: removing the Walkthrough links the new check flagged in two Lessons and relinking the orphaned Walkthrough from another Walkthrough. code-review found a stale \"claim\" wording and a misplaced doc comment, both fixed. Gate green; merged as PR #2923."
 prs:
   - "2923"
 docsRead:
@@ -65,25 +65,33 @@ frictions:
   - description: The new Where next check broke two existing Lessons and orphaned a Walkthrough; found only by running the real script
     solution: Run a new page check against the real guide before writing its test
     severity: nit
-durationSec: 2136
+  - description: A scripted SKILL.md edit failed on a mismatched old string and had to be resent in full, since the script aborted before writing
+    solution: Grep the exact lines first, or use the Edit tool per hunk so one mismatch does not void the batch
+    severity: nit
+durationSec: 2348
 models:
-  claude-opus-5-5: 196
+  claude-opus-5-5: 220
 toolCounts:
-  Bash: 61
-  ToolSearch: 2
+  Bash: 66
+  ToolSearch: 3
   mcp__github__issue_read: 2
   mcp__claude-code-remote__send_message: 6
   mcp__claude-code-remote__get_session: 1
   AskUserQuestion: 6
-  ReadNotifications: 1
+  ReadNotifications: 3
   Write: 2
   SendUserFile: 1
-  Skill: 3
+  Skill: 4
   Agent: 2
   Read: 1
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+  mcp__claude-code-remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__delete_trigger: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - .throwaway/curate-examples.md
   - .agents/skills/glassbox-curate/scripts/orient.ts
@@ -200,13 +208,13 @@ subagents:
     durationSec: 59
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 7.8
+    tokenShare: 6.7
   - type: general-purpose
     task: Spec review of curate diff
     durationSec: 50
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 7.6
+    tokenShare: 6.5
 gitBranch: ccr-c1d87eb8-luzwvj
 entrypoint: remote_mobile
 cliVersion: 2.1.319
