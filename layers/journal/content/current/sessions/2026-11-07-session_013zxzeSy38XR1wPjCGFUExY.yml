@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_013zxzeSy38XR1wPjCGFUExY
 startedAt: 2026-11-07T12:24:33Z
-endedAt: 2026-11-07T15:34:09Z
+endedAt: 2026-11-07T15:35:01Z
 kind: interactive
 goal: Clear the open issue backlog with the clear-backlog workflow
 status: completed
@@ -16,32 +16,20 @@ prs:
   - "2937"
   - "2938"
 docsRead:
-  - path: .agents/skills/auto-triage/SKILL.md
-    reason: "triage #2884: Task told me to read it for per-issue rules.; triage #2911: Required by the task; per-issue rules and the wayfinder overlay.; triage #2913: Brief told me to read it for per-issue rules.; triage #2914: Task told me to read it; per-issue rules, closing and the wayfinder overlay.; triage #2915: The brief told me to read it; it holds the sweep rules.; triage #2916: Read as the brief directed, for the per-issue rules; triage #2917: Task required it; gave the brave-within-determinability rules and the comment and label rules.; triage #2930: Named by the task; per-issue triage rules and wayfinder overlay; triage #2931: Task told me to read it."
-    useful: yes
-  - path: docs/agents/github-integration.md
-    reason: "triage #2914: A hook asked for it before the first GitHub operation; it covers issue_write label replacement and the comment tool.; triage #2915: A hook asked me to read it after my first GitHub call; I read it, and my later calls matched it.; triage #2931: Hook demanded it before the first GitHub operation; confirmed comment goes through add_issue_comment and labels replace the set."
-    useful: yes
-  - path: docs/agents/git-conventions.md
-    reason: "fix fix/glassbox-curate-wait-limit-2931 r1: A hook asked for it after my first commit. Its trailer check was useful: the commit body carries both trailers.; build docs/count-before-stating-2915: A hook told me to read it after my first git command. I read it only after a chained Bash call was refused. It helped: I used `-F` for the commit message and did not chain the gate with git."
-    useful: yes
-  - path: .agents/skills/dispatch-subagents/SKILL.md
-    reason: "triage #2911: The skill the issue targets; used to check what §3 already says.; Spec fix/dispatch-brief-asks-2911 r1: I read the changed file, lines 55-80, and grepped it for 'scratchpad' to see the new line in context and check the existing Stranding scratchpad line (line 54)."
-    useful: yes
-  - path: docs/agents/pr-workflow.md
-    reason: review-before-PR and PR body rules; confirmed the build's review rounds count and no PR template exists
-    useful: yes
-  - path: .agents/skills/glassbox-lesson/QUALITY.md
-    reason: "the diff I fixed by hand for #2930"
-    useful: yes
-  - path: layers/glassbox/GLOSSARY.md
-    reason: checked a stale-plural finding; left it as a judgement call
+  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+    reason: read after a hook asked; confirmed the derived Session-card flag does not rewrite logs
     useful: partly
   - path: .agents/prune-trials.yml
     reason: "triage #2911: Checked for an open trial covering §3 text."
     useful: yes
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: "triage #2884: Task told me to read it for per-issue rules.; triage #2911: Required by the task; per-issue rules and the wayfinder overlay.; triage #2913: Brief told me to read it for per-issue rules.; triage #2914: Task told me to read it; per-issue rules, closing and the wayfinder overlay.; triage #2915: The brief told me to read it; it holds the sweep rules.; triage #2916: Read as the brief directed, for the per-issue rules; triage #2917: Task required it; gave the brave-within-determinability rules and the comment and label rules.; triage #2930: Named by the task; per-issue triage rules and wayfinder overlay; triage #2931: Task told me to read it."
+    useful: yes
   - path: .agents/skills/code-review/SKILL.md
     reason: "Standards fix/dispatch-brief-asks-2911 r1: Read as instructed, for the Standards axis and the smell baseline.; Standards fix/dispatch-brief-asks-2911 r2: I read it because the task told me to. It supplied the Standards axis and the smell baseline.; Standards fix/gate-doorbell-head-sha-2917 r1: Read as the brief instructed. Its smell baseline defines the Standards axis I applied.; Spec fix/gate-doorbell-head-sha-2917 r1: The task told me to read it. I applied only the Spec axis. Its sub-agent spawning does not apply to me.; Standards fix/gate-doorbell-head-sha-2917 r2: Task named it; supplied the smell baseline used for the Standards axis.; Spec fix/gate-doorbell-head-sha-2917 r2: Read because the task required it. Its Spec axis framing (missing, scope creep, wrong implementation) structured the review.; Standards fix/gate-doorbell-head-sha-2917 r3: The task said to read it and apply the Standards axis and the smell baseline. I applied the baseline to the one-line diff and found no smell.; Standards chore/remove-glassbox-improve-2930 r1: Read as instructed; supplied the smell baseline for the Standards axis. No baseline smell applies to a pure deletion diff.; Spec chore/remove-glassbox-improve-2930 r1: The brief told me to read it. It supplied the Spec axis of reporting missing, extra and wrong items against the spec.; Spec chore/remove-glassbox-improve-2930 r3: The task told me to read it and apply the Spec axis. I reviewed alone, since I cannot spawn subagents.; Standards fix/glassbox-curate-wait-limit-2931 r1: Read as instructed by the brief; supplied the smell baseline (none triggered).; Standards fix/glassbox-curate-wait-limit-2931 r2: The task told me to read it. I used its smell baseline for the Standards axis.; Spec fix/glassbox-curate-wait-limit-2931 r3: The task told me to read it and apply the Spec axis. Its Spec brief (missing, unrequested, wrong) was used as given.; Spec docs/rewrite-sample-first-2916 r2: The task told me to read it and apply the Spec axis. Its Spec brief was the structure used: missing, extra, wrong.; Spec docs/rewrite-sample-first-2916 r3: The task told me to read it and apply the Spec axis. I used its Spec brief: missing, extra and wrong items.; Standards docs/count-before-stating-2915 r1: The task told me to read it. It gave the Standards axis and the smell baseline, and none of the smells apply to this prose and YAML change.; Standards docs/count-before-stating-2915 r2: The task told me to apply its Standards axis and smell baseline. No baseline smell applies to this prose and YAML diff.; Spec docs/count-before-stating-2915 r2: The task told me to read it and apply the Spec axis. I used its Spec brief (missing, extra or wrongly implemented requirements). I did not follow its sub-agent parallelism, since I cannot spawn subagents.; Standards docs/count-before-stating-2915 r3: Read as the task directed, for the Standards axis and the smell baseline.; Standards fix/close-session-enforcement-2913-2884 r1: The task told me to read it. It gave the smell baseline (Middle Man and Duplicated Code matched the findings).; Standards fix/close-session-enforcement-2913-2884 r2: Named by the task; it holds the Standards axis and the smell baseline.; Spec fix/close-session-enforcement-2913-2884 r2: The task told me to read it and apply the Spec axis.; Standards fix/close-session-enforcement-2913-2884 r3: The task named it; supplied the Standards axis and smell baseline (Duplicated Code is the one I applied)."
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: "triage #2911: The skill the issue targets; used to check what §3 already says.; Spec fix/dispatch-brief-asks-2911 r1: I read the changed file, lines 55-80, and grepped it for 'scratchpad' to see the new line in context and check the existing Stranding scratchpad line (line 54)."
     useful: yes
   - path: .agents/skills/implement/SKILL.md
     reason: "build fix/gate-doorbell-head-sha-2917: Task told me to read it and follow it.; build chore/remove-glassbox-improve-2930: The brief told me to read it.; build fix/glassbox-curate-wait-limit-2931: The task said to read and follow it."
@@ -76,6 +64,12 @@ docsRead:
   - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
     reason: "fix docs/rewrite-sample-first-2916 r1: A hook asked for a full read after I edited CLAUDE.md. I read it; it confirmed that CLAUDE.md is the right home for this clause, so it did not change the edit."
     useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: "fix fix/glassbox-curate-wait-limit-2931 r1: A hook asked for it after my first commit. Its trailer check was useful: the commit body carries both trailers.; build docs/count-before-stating-2915: A hook told me to read it after my first git command. I read it only after a chained Bash call was refused. It helped: I used `-F` for the commit message and did not chain the gate with git."
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: "triage #2914: A hook asked for it before the first GitHub operation; it covers issue_write label replacement and the comment tool.; triage #2915: A hook asked me to read it after my first GitHub call; I read it, and my later calls matched it.; triage #2931: Hook demanded it before the first GitHub operation; confirmed comment goes through add_issue_comment and labels replace the set."
+    useful: yes
   - path: docs/agents/guards.md
     reason: "build fix/close-session-enforcement-2913-2884: Read to add the roster row. It was named by the guards rule that loaded.; Spec fix/close-session-enforcement-2913-2884 r2: I read the diff and lines 40-60 to check the conventions the new hook should follow."
     useful: yes
@@ -91,9 +85,8 @@ docsRead:
   - path: scripts/lib/author-trust.ts
     reason: "triage #2916: Read to confirm the trust associations; the issue's author_association is OWNER, so Trusted; triage #2930: Named by the task; OWNER is in the trusted set"
     useful: yes
-  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
-    reason: read after a hook asked; confirmed the derived Session-card flag does not rewrite logs
-    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
   - path: /home/user/terrarium/docs/agents/git-conventions.md
     reason: (no reason given)
   - path: layers/journal/content/current/frictions/drafts-caught-by-fact-check.yml
@@ -108,6 +101,10 @@ docsRead:
     reason: (read before editing)
   - path: layers/journal/content/current/frictions/close-session-bypassed-by-hand-log.yml
     reason: (no reason given)
+  - path: .agents/skills/glassbox-lesson/QUALITY.md
+    reason: (read before editing)
+  - path: layers/glassbox/GLOSSARY.md
+    reason: (read before editing)
   - path: .agents/skills/close-session/SKILL.md
     reason: (read before editing)
   - path: .agents/skills/log-session/SKILL.md
@@ -134,9 +131,6 @@ frictions:
   - description: I wrote the grilling list directly without invoking the grilling Skill that clear-backlog section 2 names.
     solution: Invoke the Skill, or state in clear-backlog that its own list format replaces it.
     severity: nit
-  - description: "Linked worktree(s) left with uncommitted or unpushed work at close: /home/user/terrarium/.claude/worktrees/wf_5a9a699a-f30-1, /home/user/terrarium/.claude/worktrees/wf_5a9a699a-f30-2, /home/user/terrarium/.claude/worktrees/wf_5a9a699a-f30-3, /home/user/terrarium/.claude/worktrees/wf_9fd268bd-b1b-2, /home/user/terrarium/.claude/worktrees/wf_9fd268bd-b1b-3, /home/user/terrarium/.claude/worktrees/wf_fe18fea7-d48-1"
-    solution: Push each, or remove it if its work is meant to be dropped.
-    severity: minor
   - description: "The #2884 build brief left the new Session card label open, so the agent built user-facing UI before the owner decided it; I asked afterwards."
     solution: In clear-backlog section 2, ask what a displayed value looks like and says in the first grilling round when a pick adds UI.
     severity: minor
@@ -148,12 +142,12 @@ frictions:
     severity: nit
   - description: ADR-0003 says to subscribe to a PR's activity after opening it; I never called subscribe_pr_activity on any of the seven PRs and polled by hand instead, so the owner's merges reached me only when they told me.
     solution: Subscribe right after create_pull_request; clear-backlog section 4 should say so, since its Land step doesn't name the subscription.
-    severity: moderate
-durationSec: 11376
+    severity: major
+durationSec: 11428
 models:
-  claude-sonnet-5-5: 182
+  claude-sonnet-5-5: 185
 toolCounts:
-  Bash: 52
+  Bash: 53
   Read: 6
   ToolSearch: 4
   mcp__github__issue_read: 5
@@ -292,60 +286,57 @@ docsReadBySubagents:
   - .agents/skills/close-session/SKILL.md
   - .agents/skills/log-session/SKILL.md
 ruleVerdicts:
-  - path: .claude/rules/adr-0004.md
-    reason: "triage #2917: Loaded at the start; the Human-only action.yml means a human merge, which I put in the brief.; build fix/dispatch-brief-asks-2911: Loaded at session start; gate:scoped requirement.; fix fix/dispatch-brief-asks-2911 r1: Session-start rule; the gate step applied (gate:scoped passed).; gate fix/dispatch-brief-asks-2911: Loaded at session start; confirms pnpm gate:scoped is the required gate.; Standards fix/gate-doorbell-head-sha-2917 r1: Loaded at session start. It covers the Human-only merge requirement for this PR, which the second finding relies on.; Spec fix/gate-doorbell-head-sha-2917 r1: Loaded at session start. It says an action.yml change is Human-only, and a change that no test or gate step can observe also needs a human.; fix fix/gate-doorbell-head-sha-2917 r1: Loaded at session start; it says Human-only files need a human merge.; Standards fix/gate-doorbell-head-sha-2917 r2: Loaded at session start; confirms action.yml is Human-only and the PR waits for a human merge.; Spec fix/gate-doorbell-head-sha-2917 r2: Loaded at session start. It names Human-only files and the human-merge requirement for action.yml.; fix fix/gate-doorbell-head-sha-2917 r2: Loaded at session start. It says the file is Human-only and a gate must pass, which shaped the PR-body statement.; Spec fix/gate-doorbell-head-sha-2917 r3: Loaded at session start. It confirms that the PR must wait for a human merge because action.yml is Human-only.; Spec chore/remove-glassbox-improve-2930 r3: Loaded at session start. It sets the merge conditions that the human-merge check depends on.; fix fix/glassbox-curate-wait-limit-2931 r2: Session-start rule; gate:scoped requirement applied; gate fix/glassbox-curate-wait-limit-2931: Loaded at session start. It says to run gate:scoped before the PR, which is this task.; fix docs/rewrite-sample-first-2916 r1: Loaded at session start. It requires the gate and says a PR needs review; I ran the gate.; build docs/count-before-stating-2915: Loaded at session start. It requires running the gate before the PR.; fix fix/close-session-enforcement-2913-2884 r2: Loaded at session start. It requires gate:scoped before a PR.; Standards fix/close-session-enforcement-2913-2884 r3: Loaded at session start; gave the human-merge and gate context for settings.json and the hook script.; Spec fix/close-session-enforcement-2913-2884 r3: Always loaded. It points to the Human-only list."
-    useful: yes
-  - path: .claude/rules/adr-0009.md
-    reason: "triage #2913: Loaded; covers close-session and log-session, the subject of the issue.; Spec fix/close-session-enforcement-2913-2884 r1: Loaded at session start. It frames the log and close-session context for both issues."
-    useful: yes
+  - path: .claude/rules/adr-0002.md
+    reason: "build docs/rewrite-sample-first-2916: Loaded when I read tenant.config.ts. It was not relevant to this change."
+    useful: no
   - path: .claude/rules/adr-0003.md
     reason: "triage #2930: Loaded at session start; confirms removing a Skill needs Trusted approval, which the owner gave"
-    useful: yes
-  - path: .claude/rules/adr-0017.md
-    reason: "triage #2884: Loaded at session start; required the provenance header on my comment.; triage #2911: Loaded at session start; required the provenance header on the comment.; triage #2913: Loaded; the provenance header on my comment.; triage #2914: Loaded at session start; provenance header on writes.; triage #2915: It loaded at session start and sets the provenance header.; triage #2916: Loaded at the start; it requires the provenance header on the comment; triage #2917: Loaded at the start; set the provenance header on my comment.; triage #2931: Loaded at session start; gave the comment header format.; build fix/dispatch-brief-asks-2911: Loaded at session start; commit trailer applied.; fix fix/dispatch-brief-asks-2911 r1: Session-start rule; I checked the commit trailer landed with git log -1 --format=%B.; build fix/glassbox-curate-wait-limit-2931: Loaded at session start; it requires the commit trailer, and I checked that it landed (git log -1).; fix docs/rewrite-sample-first-2916 r1: Loaded at session start. It requires a commit trailer, which I added to my commit.; fix docs/rewrite-sample-first-2916 r2: Loaded at session start. It covers the commit trailer, which I added.; build docs/count-before-stating-2915: Loaded at session start. It requires the commit trailer, which I checked landed.; build fix/close-session-enforcement-2913-2884: Always loaded. I used its commit trailer requirement and checked the trailer landed (git log -1)."
-    useful: yes
-  - path: .claude/rules/adr-0022.md
-    reason: "triage #2884: Loaded after reading triage skills; governs which labels a sweep may apply.; triage #2911: Loaded after reading auto-triage; governs when the sweep may label ready-for-agent.; triage #2913: Loaded at session start; governs what a triage run may label.; triage #2915: It loaded when I read the triage Skills. It confirmed that judgment calls go to ready-for-human.; triage #2916: Loaded at the start; it governs what a triage sweep may label and send to ready-for-human; triage #2917: Loaded at the start; governs which labels the sweep may set for a Trusted-authored issue.; triage #2930: Loaded after the Skill reads; defines which issues go ready-for-agent; triage #2931: Loaded on reading auto-triage; governs what a sweep may label."
-    useful: yes
-  - path: .claude/rules/adr-0027.md
-    reason: "triage #2911: Loaded at session start; shaped the point-don't-restate brief and the check for open prune trials.; build fix/dispatch-brief-asks-2911: Loaded on the Skill edit; warned about the open trial covering the foreground bullet.; Standards fix/dispatch-brief-asks-2911 r1: Loaded at session start. It covers the one-home-per-fact and prune-trial constraints that bear on this edit.; fix fix/dispatch-brief-asks-2911 r1: Loaded for the SKILL.md edit; confirmed point-not-restate and the open-trial restriction.; Standards fix/dispatch-brief-asks-2911 r2: Loaded at session start. It matters here because an open prune trial covers the §3 foreground bullet. I confirmed the diff leaves that bullet alone.; fix chore/remove-glassbox-improve-2930 r2: Loaded on the same edit. It told me to check .agents/prune-trials.yml for an open trial covering the text; none does.; fix fix/glassbox-curate-wait-limit-2931 r1: Loaded after the SKILL.md edit. It told me to check for open prune trials, which I did.; Standards fix/glassbox-curate-wait-limit-2931 r2: Loaded at session start. The brief names ADR-0027 (simplify instructions before adding). The diff adds one sentence, which fits.; fix docs/rewrite-sample-first-2916 r1: Loaded after the CLAUDE.md edit. It told me to cut before adding, which matches the brief's 'add nothing else' and the shortened clause.; Standards docs/rewrite-sample-first-2916 r2: Loaded at session start. It is the cross-cutting rule the brief cites (cut or simplify before adding). It confirmed that a one-clause change is the right size.; Spec docs/rewrite-sample-first-2916 r2: Loaded as a cross-cutting rule. Its 'cut or simplify before adding' principle is the basis for judging the clause as small and sufficient.; Spec docs/rewrite-sample-first-2916 r3: Loaded at session start. It is relevant because the change adds an instruction to CLAUDE.md, and its 'cut or simplify before adding' rule drove the simplicity review.; build docs/count-before-stating-2915: Loaded after I edited a Skill. It says to prefer simplifying or pointing to an existing instruction over adding a new one, and to check for an open trial.; Standards docs/count-before-stating-2915 r1: Loaded at session start. It matters here because an edited Skill could fall under an open prune trial. Grep of .agents/prune-trials.yml for glassbox-curate returned no matches, so none covers this text.; fix docs/count-before-stating-2915 r1: Loaded after editing the Skill; it governs cut-or-simplify and open prune trials.; Standards docs/count-before-stating-2915 r2: Loaded at session start. It covers cutting or sharpening an existing instruction over adding one, and open prune trials. It matches this diff's shape.; Standards docs/count-before-stating-2915 r3: Loaded at session start. It confirmed that cutting or simplifying beats adding, and that an open prune trial covering the text would constrain the edit. I did not check .agents/prune-trials.yml myself; the build decisions say it has no match."
-    useful: yes
-  - path: .claude/rules/adr-0029.md
-    reason: "build docs/rewrite-sample-first-2916: Loaded when I edited CLAUDE.md. It confirms the clause belongs in CLAUDE.md. I did not read the full ADR.; fix docs/rewrite-sample-first-2916 r1: Loaded after the CLAUDE.md edit. It pointed me to the full ADR."
-    useful: partly
-  - path: .claude/rules/adr-0020.md
-    reason: "triage #2911: Loaded with the trust-tier check; confirmed the owner-authored issue is Trusted.; triage #2913: Loaded at session start; Trusted vs Public tiers (issue author is OWNER).; triage #2916: Loaded at the start; it set the trust tier for the issue's author; triage #2917: Loaded at the start; I used it to confirm the OWNER author is Trusted, not Public.; triage #2930: Loaded at session start; trust tier check (author is OWNER)"
-    useful: yes
-  - path: .claude/rules/adr-0005.md
-    reason: "triage #2930: Loaded on reading the Skill; covers Skill location and link in .claude/skills; triage #2931: Loaded; Routines are set outside the repo, which supports the human step.; Standards chore/remove-glassbox-improve-2930 r1: Loaded because the diff removes a Skill and its link; confirms the Skill folder plus .claude/skills link convention.; Standards chore/remove-glassbox-improve-2930 r2: Loaded at session start; confirms Skill removal means deleting the folder and its `.claude/skills` link, which the diff does.; Standards chore/remove-glassbox-improve-2930 r3: Loaded. It covers the Skill folder and link layout, which the removal follows (both the folder and the .claude/skills link are gone).; build fix/glassbox-curate-wait-limit-2931: Loaded at session start and again when I read the Skill file.; Standards fix/glassbox-curate-wait-limit-2931 r2: Loaded at session start. The brief names ADR-0005 (Skills are Platform code; the Routine is created outside the repo), and the diff respects it.; Standards fix/glassbox-curate-wait-limit-2931 r3: Loaded at session start. It confirms that creating the Routine is outside the repo (a schedule lives in a Routine, not in the Skill). The diff creates no Routine."
     useful: yes
   - path: .claude/rules/adr-0004-human-merge.md
     reason: "triage #2917: Loaded when I read action.yml; confirmed it is Human-only.; build fix/gate-doorbell-head-sha-2917: Loaded when I touched action.yml; confirms the PR waits for a human merge.; Spec chore/remove-glassbox-improve-2930 r1: I read it to check the human-merge paths list. The diff touches none of those paths: no .claude/rules, package.json or scripts/hooks. Skills are not on the list.; Spec chore/remove-glassbox-improve-2930 r3: I read it to check the touched paths against the human-merge list. None matched.; build fix/close-session-enforcement-2913-2884: Loaded when I touched scripts/hooks. It was the source for the Human-only list.; Standards fix/close-session-enforcement-2913-2884 r2: Read to confirm the human-merge paths; it lists settings.json and scripts/hooks/**.; Spec fix/close-session-enforcement-2913-2884 r2: I read it (lines 10-30) to check whether settings.json and scripts/hooks are Human-only. They are.; Spec fix/close-session-enforcement-2913-2884 r3: I read lines 10-25 to check that the hook script and settings.json are Human-only."
     useful: yes
-  - path: .claude/rules/guards.md
-    reason: "build fix/close-session-enforcement-2913-2884: Loaded when I touched scripts/hooks. It pointed me to docs/agents/guards.md."
+  - path: .claude/rules/adr-0004.md
+    reason: "triage #2917: Loaded at the start; the Human-only action.yml means a human merge, which I put in the brief.; build fix/dispatch-brief-asks-2911: Loaded at session start; gate:scoped requirement.; fix fix/dispatch-brief-asks-2911 r1: Session-start rule; the gate step applied (gate:scoped passed).; gate fix/dispatch-brief-asks-2911: Loaded at session start; confirms pnpm gate:scoped is the required gate.; Standards fix/gate-doorbell-head-sha-2917 r1: Loaded at session start. It covers the Human-only merge requirement for this PR, which the second finding relies on.; Spec fix/gate-doorbell-head-sha-2917 r1: Loaded at session start. It says an action.yml change is Human-only, and a change that no test or gate step can observe also needs a human.; fix fix/gate-doorbell-head-sha-2917 r1: Loaded at session start; it says Human-only files need a human merge.; Standards fix/gate-doorbell-head-sha-2917 r2: Loaded at session start; confirms action.yml is Human-only and the PR waits for a human merge.; Spec fix/gate-doorbell-head-sha-2917 r2: Loaded at session start. It names Human-only files and the human-merge requirement for action.yml.; fix fix/gate-doorbell-head-sha-2917 r2: Loaded at session start. It says the file is Human-only and a gate must pass, which shaped the PR-body statement.; Spec fix/gate-doorbell-head-sha-2917 r3: Loaded at session start. It confirms that the PR must wait for a human merge because action.yml is Human-only.; Spec chore/remove-glassbox-improve-2930 r3: Loaded at session start. It sets the merge conditions that the human-merge check depends on.; fix fix/glassbox-curate-wait-limit-2931 r2: Session-start rule; gate:scoped requirement applied; gate fix/glassbox-curate-wait-limit-2931: Loaded at session start. It says to run gate:scoped before the PR, which is this task.; fix docs/rewrite-sample-first-2916 r1: Loaded at session start. It requires the gate and says a PR needs review; I ran the gate.; build docs/count-before-stating-2915: Loaded at session start. It requires running the gate before the PR.; fix fix/close-session-enforcement-2913-2884 r2: Loaded at session start. It requires gate:scoped before a PR.; Standards fix/close-session-enforcement-2913-2884 r3: Loaded at session start; gave the human-merge and gate context for settings.json and the hook script.; Spec fix/close-session-enforcement-2913-2884 r3: Always loaded. It points to the Human-only list."
     useful: yes
-  - path: .claude/rules/adr-0002.md
-    reason: "build docs/rewrite-sample-first-2916: Loaded when I read tenant.config.ts. It was not relevant to this change."
-    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: "triage #2930: Loaded on reading the Skill; covers Skill location and link in .claude/skills; triage #2931: Loaded; Routines are set outside the repo, which supports the human step.; Standards chore/remove-glassbox-improve-2930 r1: Loaded because the diff removes a Skill and its link; confirms the Skill folder plus .claude/skills link convention.; Standards chore/remove-glassbox-improve-2930 r2: Loaded at session start; confirms Skill removal means deleting the folder and its `.claude/skills` link, which the diff does.; Standards chore/remove-glassbox-improve-2930 r3: Loaded. It covers the Skill folder and link layout, which the removal follows (both the folder and the .claude/skills link are gone).; build fix/glassbox-curate-wait-limit-2931: Loaded at session start and again when I read the Skill file.; Standards fix/glassbox-curate-wait-limit-2931 r2: Loaded at session start. The brief names ADR-0005 (Skills are Platform code; the Routine is created outside the repo), and the diff respects it.; Standards fix/glassbox-curate-wait-limit-2931 r3: Loaded at session start. It confirms that creating the Routine is outside the repo (a schedule lives in a Routine, not in the Skill). The diff creates no Routine."
+    useful: yes
   - path: .claude/rules/adr-0008.md
     reason: "triage #2884: Loaded when I read the Journal dashboard util; bears on a derived flag versus regenerating logs.; build fix/close-session-enforcement-2913-2884: Loaded when I read journal files. It gave the derive-don't-regenerate constraint."
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: "triage #2913: Loaded; covers close-session and log-session, the subject of the issue.; Spec fix/close-session-enforcement-2913-2884 r1: Loaded at session start. It frames the log and close-session context for both issues."
     useful: yes
   - path: .claude/rules/adr-0015.md
     reason: "triage #2930: Loaded on reading the Journal Skill entry; Inventory entries are the place for Skill notes, led to the missed yml; build chore/remove-glassbox-improve-2930: Loaded when I read the journal Skill Inventory entries."
     useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: "triage #2884: Loaded at session start; required the provenance header on my comment.; triage #2911: Loaded at session start; required the provenance header on the comment.; triage #2913: Loaded; the provenance header on my comment.; triage #2914: Loaded at session start; provenance header on writes.; triage #2915: It loaded at session start and sets the provenance header.; triage #2916: Loaded at the start; it requires the provenance header on the comment; triage #2917: Loaded at the start; set the provenance header on my comment.; triage #2931: Loaded at session start; gave the comment header format.; build fix/dispatch-brief-asks-2911: Loaded at session start; commit trailer applied.; fix fix/dispatch-brief-asks-2911 r1: Session-start rule; I checked the commit trailer landed with git log -1 --format=%B.; build fix/glassbox-curate-wait-limit-2931: Loaded at session start; it requires the commit trailer, and I checked that it landed (git log -1).; fix docs/rewrite-sample-first-2916 r1: Loaded at session start. It requires a commit trailer, which I added to my commit.; fix docs/rewrite-sample-first-2916 r2: Loaded at session start. It covers the commit trailer, which I added.; build docs/count-before-stating-2915: Loaded at session start. It requires the commit trailer, which I checked landed.; build fix/close-session-enforcement-2913-2884: Always loaded. I used its commit trailer requirement and checked the trailer landed (git log -1)."
+    useful: yes
+  - path: .claude/rules/adr-0020.md
+    reason: "triage #2911: Loaded with the trust-tier check; confirmed the owner-authored issue is Trusted.; triage #2913: Loaded at session start; Trusted vs Public tiers (issue author is OWNER).; triage #2916: Loaded at the start; it set the trust tier for the issue's author; triage #2917: Loaded at the start; I used it to confirm the OWNER author is Trusted, not Public.; triage #2930: Loaded at session start; trust tier check (author is OWNER)"
+    useful: yes
   - path: .claude/rules/adr-0021.md
     reason: "triage #2930: Loaded when I read GLOSSARY.md; glossary entry removal only"
     useful: partly
+  - path: .claude/rules/adr-0022.md
+    reason: "triage #2884: Loaded after reading triage skills; governs which labels a sweep may apply.; triage #2911: Loaded after reading auto-triage; governs when the sweep may label ready-for-agent.; triage #2913: Loaded at session start; governs what a triage run may label.; triage #2915: It loaded when I read the triage Skills. It confirmed that judgment calls go to ready-for-human.; triage #2916: Loaded at the start; it governs what a triage sweep may label and send to ready-for-human; triage #2917: Loaded at the start; governs which labels the sweep may set for a Trusted-authored issue.; triage #2930: Loaded after the Skill reads; defines which issues go ready-for-agent; triage #2931: Loaded on reading auto-triage; governs what a sweep may label."
+    useful: yes
   - path: .claude/rules/adr-0025.md
     reason: "build fix/close-session-enforcement-2913-2884: Loaded while I grepped journal files. Not needed."
     useful: no
   - path: .claude/rules/adr-0026.md
     reason: "triage #2917: Loaded when I read action.yml; confirmed agents may edit the action and a human merges it.; build fix/gate-doorbell-head-sha-2917: Loaded for action.yml and gate-parity.spec.ts; pointed to the parity test where my new test went."
     useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: "triage #2911: Loaded at session start; shaped the point-don't-restate brief and the check for open prune trials.; build fix/dispatch-brief-asks-2911: Loaded on the Skill edit; warned about the open trial covering the foreground bullet.; Standards fix/dispatch-brief-asks-2911 r1: Loaded at session start. It covers the one-home-per-fact and prune-trial constraints that bear on this edit.; fix fix/dispatch-brief-asks-2911 r1: Loaded for the SKILL.md edit; confirmed point-not-restate and the open-trial restriction.; Standards fix/dispatch-brief-asks-2911 r2: Loaded at session start. It matters here because an open prune trial covers the §3 foreground bullet. I confirmed the diff leaves that bullet alone.; fix chore/remove-glassbox-improve-2930 r2: Loaded on the same edit. It told me to check .agents/prune-trials.yml for an open trial covering the text; none does.; fix fix/glassbox-curate-wait-limit-2931 r1: Loaded after the SKILL.md edit. It told me to check for open prune trials, which I did.; Standards fix/glassbox-curate-wait-limit-2931 r2: Loaded at session start. The brief names ADR-0027 (simplify instructions before adding). The diff adds one sentence, which fits.; fix docs/rewrite-sample-first-2916 r1: Loaded after the CLAUDE.md edit. It told me to cut before adding, which matches the brief's 'add nothing else' and the shortened clause.; Standards docs/rewrite-sample-first-2916 r2: Loaded at session start. It is the cross-cutting rule the brief cites (cut or simplify before adding). It confirmed that a one-clause change is the right size.; Spec docs/rewrite-sample-first-2916 r2: Loaded as a cross-cutting rule. Its 'cut or simplify before adding' principle is the basis for judging the clause as small and sufficient.; Spec docs/rewrite-sample-first-2916 r3: Loaded at session start. It is relevant because the change adds an instruction to CLAUDE.md, and its 'cut or simplify before adding' rule drove the simplicity review.; build docs/count-before-stating-2915: Loaded after I edited a Skill. It says to prefer simplifying or pointing to an existing instruction over adding a new one, and to check for an open trial.; Standards docs/count-before-stating-2915 r1: Loaded at session start. It matters here because an edited Skill could fall under an open prune trial. Grep of .agents/prune-trials.yml for glassbox-curate returned no matches, so none covers this text.; fix docs/count-before-stating-2915 r1: Loaded after editing the Skill; it governs cut-or-simplify and open prune trials.; Standards docs/count-before-stating-2915 r2: Loaded at session start. It covers cutting or sharpening an existing instruction over adding one, and open prune trials. It matches this diff's shape.; Standards docs/count-before-stating-2915 r3: Loaded at session start. It confirmed that cutting or simplifying beats adding, and that an open prune trial covering the text would constrain the edit. I did not check .agents/prune-trials.yml myself; the build decisions say it has no match."
+    useful: yes
   - path: .claude/rules/adr-0028.md
     reason: "build fix/gate-doorbell-head-sha-2917: Loaded mid-session; not relevant to this change."
     useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: "build docs/rewrite-sample-first-2916: Loaded when I edited CLAUDE.md. It confirms the clause belongs in CLAUDE.md. I did not read the full ADR.; fix docs/rewrite-sample-first-2916 r1: Loaded after the CLAUDE.md edit. It pointed me to the full ADR."
+    useful: partly
   - path: .claude/rules/adr-0030.md
     reason: "build fix/dispatch-brief-asks-2911: Loaded after reading the ADRs; not relevant.; fix fix/dispatch-brief-asks-2911 r1: Loaded mid-run; irrelevant, since no ADR was edited.; build fix/gate-doorbell-head-sha-2917: Loaded mid-session; not relevant to this change.; fix chore/remove-glassbox-improve-2930 r2: Loaded after the edit. Concerns how ADRs are written, which this change does not touch.; build fix/glassbox-curate-wait-limit-2931: Loaded alongside the human-merge rule; no ADR was edited.; fix docs/rewrite-sample-first-2916 r1: Loaded after the CLAUDE.md edit. It governs ADRs, which I did not touch.; build docs/count-before-stating-2915: Loaded after an ADR read. It is about ADRs, which I did not change.; fix docs/count-before-stating-2915 r1: Loaded after I read the ADR-0005 and ADR-0027 docs; I made no ADR change.; build fix/close-session-enforcement-2913-2884: Loaded while I read ADR-0004. Not needed."
     useful: no
@@ -358,6 +349,9 @@ ruleVerdicts:
   - path: .claude/rules/glossary-terms.md
     reason: "triage #2930: Loaded on glossary read; about adding terms, not removing; build docs/count-before-stating-2915: Loaded when I read the Journal files. I changed no glossary terms.; build fix/close-session-enforcement-2913-2884: Loaded when I read the journal GLOSSARY. Not needed."
     useful: no
+  - path: .claude/rules/guards.md
+    reason: "build fix/close-session-enforcement-2913-2884: Loaded when I touched scripts/hooks. It pointed me to docs/agents/guards.md."
+    useful: yes
   - path: .claude/rules/mermaid-lanes.md
     reason: "triage #2931: Loaded alongside, irrelevant.; build fix/glassbox-curate-wait-limit-2931: Loaded when I read a Glass Box file; no diagram was touched."
     useful: no
@@ -531,7 +525,7 @@ subagents:
     durationSec: 448
     toolCalls: 17
     modelCalls: 15
-    tokenShare: 2.3
+    tokenShare: 2.2
   - type: workflow-subagent
     task: fix docs/count-before-stating-2915 r2
     model: claude-sonnet-5-5
@@ -671,7 +665,7 @@ subagents:
     durationSec: 434
     toolCalls: 26
     modelCalls: 19
-    tokenShare: 3
+    tokenShare: 2.9
   - type: workflow-subagent
     task: fix chore/remove-glassbox-improve-2930 r2
     model: claude-sonnet-5-5
