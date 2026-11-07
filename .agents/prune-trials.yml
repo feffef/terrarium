@@ -121,3 +121,7 @@ trials:
       invoke `close-session`, and a cut line would have prevented it. NOT
       damage: `close-session-bypassed-by-hand-log` at its standing rate (the
       read-first hint catches it; compare shares with `friction-rates.ts`).
+      Owner's condition (PR #2939): revert the cut if the share of sessions
+      that fail to log at a closure point rises even a little, whatever the
+      severity; compare `close-session-bypassed-by-hand-log` and
+      `closure-not-invoked-on-answers` with `friction-rates.ts`.
