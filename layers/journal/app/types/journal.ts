@@ -26,6 +26,8 @@ export interface SessionCardView {
   goal: string
   status: Status
   outcome: string
+  // `in-review` although every listed PR merged per a completed log; shown beside the status pill.
+  staleInReview: boolean
   prs: string[]
   frictionCounts: Record<Severity, number>
   frictionTotal: number

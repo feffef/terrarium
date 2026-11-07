@@ -216,10 +216,24 @@ export function sessionRuleTitles(sources: Record<string, string>): Record<strin
 // shared/schemas/session.ts orders severities least to most severe (Human-only), so rank here.
 const SEVERITY_RANK: Record<Severity, number> = { blocker: 0, major: 1, moderate: 2, minor: 3, nit: 4 }
 
+// A log stays `in-review` when another session merges its PR (ADR-0008: derive,
+// never regenerate logs). The card flags it when every PR it lists also appears
+// in a `completed` log among the loaded sessions, which is the only merge
+// evidence a log carries.
+export function staleInReviewKeys(sessions: SessionDoc[]): Set<string> {
+  const landed = new Set(sessions.filter((s) => s.status === 'completed').flatMap((s) => s.prs ?? []).map((p) => p.replace(/^#/, '')))
+  return new Set(
+    sessions
+      .filter((s) => s.status === 'in-review' && (s.prs ?? []).length > 0 && (s.prs ?? []).every((p) => landed.has(p.replace(/^#/, ''))))
+      .map((s) => s.session),
+  )
+}
+
 export function sessionCardViews(
   sessions: SessionDoc[],
   ruleTitles: Record<string, string> = {},
 ): (SessionCardView & { key: string })[] {
+  const stale = staleInReviewKeys(sessions)
   return sessions.map((s) => {
     const external = s.external === true
     return {
@@ -229,6 +243,7 @@ export function sessionCardViews(
       goal: s.goal,
       status: s.status,
       outcome: s.outcome,
+      staleInReview: stale.has(s.session),
       prs: s.prs ?? [],
       frictionCounts: countFrictions(s.frictions),
       frictionTotal: s.frictions.length,
