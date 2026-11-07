@@ -1,7 +1,6 @@
-// The orientation step of glassbox-curate, one output small enough to read whole.
-// Each guide page shows as its title and description: the run reads its own Subject
-// in full (`--subject`), so the overview need only say what every other page
-// teaches. Terms, Where next and first paragraphs were cut for size (#2906).
+// The orientation step of glassbox-curate, in one output a run reads whole. Each
+// guide page shows as its title and description only: the run reads its own Subject
+// in full (`--subject`), so the overview need only say what every other page teaches.
 // Usage: pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts [--subject <folder>]
 import { existsSync, globSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'

@@ -72,7 +72,6 @@ describe('orientation', () => {
     expect(() => subjectPages('nope', base)).toThrow(/no guide pages under "nope"/)
   })
 
-
   it('falls back to the last commits before the first run', () => {
     const empty = mkdtempSync(join(tmpdir(), 'orient-empty-'))
     const seen: (string | undefined)[] = []

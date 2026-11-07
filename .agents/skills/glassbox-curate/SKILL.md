@@ -57,8 +57,7 @@ sibling page (#2943) and cut the only place a fact was taught (#2927). So
 every run reads at two depths before it edits: every page's title and
 description, to know what the whole guide teaches, and every page of its
 Subject in full, to know exactly what its neighbours say. The first depth is
-only as good as the descriptions, so when a page you read in full has a
-description that doesn't name what it teaches, rewrite it within its cap.
+only as good as the descriptions (Fix says how a run keeps them so).
 
 - **Orient.** This is the orientation step: run
   `pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts` and read its
@@ -111,6 +110,8 @@ description that doesn't name what it teaches, rewrite it within its cap.
   description and Why bullet lengths, and a capitalised link's text being its
   target's title. Each `The cost:` clause needs a source that states that
   cost, and the writer runs a command sequence before it says what it does.
+  A page read in full whose `description` falls short of EVERY-PAGE.md's Pin
+  rule gets a rewrite in the same Fix, which doesn't count as a second focus.
   A new Lesson follows `.agents/skills/glassbox-lesson/SKILL.md` step by step:
   give the writer its path and have it report each step's Done.
 - **Check.** A separate sonnet claim checker checks the changed sentences
