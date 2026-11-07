@@ -52,6 +52,10 @@ These are the owner's goals for the guide. A new Subject needs the owner's appro
 
 **Installed Skills.** *Engineering skills* could become part of *Installed Skills* (`skill-pack/01.skill-packs`).
 
+**Facts cut from *Issue triage labels* that no Lesson teaches now.**
+- The Agent Brief, the comment that comes with `ready-for-agent`: the behaviour wanted and how to tell it is done, without file paths (`.agents/skills/triage/AGENT-BRIEF.md`). Only the *A bug report becomes work* Walkthrough mentions it. It could be a short section of *Planning Skills* (`skill-pack/02.planning-with-the-pack`), next to `to-spec` and `to-tickets`.
+- Out-of-scope records: before it recommends anything, `triage` reads every record in `.out-of-scope/` and shows the person deciding any that resembles the new request. They could get a small Lesson of their own, or a section here if the page is split after a fresh reader finds it hard to follow.
+
 **Missing Lessons.** The browser quirks and CSS traps listed in `docs/agents/verifying-ui-changes.md` are only partly taught, in *Headless browser checks* (`verification/09.headless-browser-checks`).
 
 **Ideas earlier runs rejected.** Before acting on one, re-check the reasons for and against.
