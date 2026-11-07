@@ -29,20 +29,17 @@ Pages are named by their title, followed by their file under `layers/glassbox/co
 
 These are the owner's goals for the guide. A new Subject needs the owner's approval.
 
-1. **Add a web standards Subject** for CSS and SVG. It would include how Terrarium keeps binary image files out of the repository by using SVG. Pages and code to start from:
-   - *CSS custom properties* (`nuxt-vue/07.css-custom-properties`);
-   - *Mermaid pre-rendering* (`nuxt-content/07.mermaid-pre-rendering`), which turns diagrams into SVG files;
-   - `app/utils/svg.ts`, which checks SVG before a page shows it. Today the guide mentions it only as a linting example.
+1. **Finish the web standards Subject.** It now holds *CSS custom properties*, *SVG*, *ARIA* and *Colour and motion settings*. Still open: no ADR or rule says binary images are kept out of the repository (the repo just holds none), so no page teaches that; and *ARIA* cites components and tests only, because no accessibility practice is recorded. Ask the owner whether to record one.
 2. **Make structure and titles consistent.** Titles should name the general concept and follow one pattern within a Subject, and file names should match their titles.
 3. **Fill what is missing entirely.** This covers a Lesson, or a whole Subject, for something Terrarium relies on that no page teaches yet.
 
 ### Good next focuses
 
 1. **Ask the owner whether to rename files to match their titles** (direction 2), as an issue that lists each rename and its URL effect.
-2. **Prepare the web standards Subject** (direction 1) as an issue for the owner, listing the pages it would hold.
-
 
 ### Ideas not yet decided
+
+**More web standards pages, looked at and left out.** *View Transitions* (Tinkerfund's plugin, mostly about a Nuxt hook, so it fits Nuxt & Vue); page metadata for link previews and search engines (one Tenant's helper); container queries and a scroll-watching helper (one or two files each).
 
 **Claude Code and Hooks: giving each fact one home.** In each case the first page keeps a short link.
 - *MCP servers* explains how hooks pick out MCP tools by name. That belongs on *Blocking hooks*.

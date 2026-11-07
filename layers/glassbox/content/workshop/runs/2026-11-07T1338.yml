@@ -1,0 +1,25 @@
+session: session_013zxzeRGhhzxkXgfdpEX9js
+mode: interactive
+focus: "Add the web standards Subject (owner's direction 1). The owner gave no focus and left the choice to the run; the run first proposed the Subject as issue #2941, then the owner added ARIA and colour schemes to it and told the run to implement it in the same session. Mermaid pre-rendering stayed in Nuxt Content, as the issue recommended."
+changes:
+  - "web-standards/01.css-custom-properties | Moved here from the Nuxt & Vue Subject (the URL changed); the Full reference now leads with MDN, the dark-mode sentence about Tinkerfund became a link, Colour and motion settings was added to Where next | the new Web standards Subject; the Colour page now teaches light-dark()"
+  - "web-standards/02.svg | New Lesson on SVG as text, inline against file, and the allowlist filter that every authored illustration and Mermaid file passes | no page taught app/utils/svg.ts, which the guide named only as a linting example"
+  - "web-standards/03.aria | New Lesson on ARIA: native elements first, labels for graphics, live regions and state attributes read by the e2e tests, with the gap that nothing checks ARIA | ARIA is used across the Tenants and no page taught it"
+  - "web-standards/04.colour-and-motion-settings | New Lesson on prefers-color-scheme, color-scheme, light-dark() and color-mix(), with reduced motion as a short second part | Tinkerfund's theme switch is the best worked example and the custom-properties page held only a paragraph; titled to cover both settings at the owner's choice"
+  - "nuxt-content/07.mermaid-pre-rendering | Repointed the link to CSS custom properties and added SVG to Where next | the move and the new SVG Lesson"
+  - "nuxt-vue/05.vue-components | Repointed the link to CSS custom properties | the move"
+  - "verification/05.linting | Where next: SVG replaced Workflow scripts | the linting page names app/utils/svg.ts, which the SVG Lesson teaches"
+  - "verification/03.content-validation | Where next: SVG replaced Cross-tenant reads | the SVG filter runs as a content schema"
+  - "verification/09.headless-browser-checks | Where next: Colour and motion settings replaced Merge gate | the page teaches emulating a dark scheme; I checked the overview index and this page for overlap by grep rather than a full read"
+  - "terms | Added seven term files (assistive-technology, screen-reader, cross-site-scripting, design-token, frontmatter, poster, specimen) | the new Lessons use them"
+pagesRead:
+  - nuxt-vue/07.css-custom-properties
+  - nuxt-content/07.mermaid-pre-rendering
+  - nuxt-vue/05.vue-components
+  - nuxt-vue/08.hydration
+  - verification/03.content-validation
+  - verification/04.unit-and-e2e-tests
+  - verification/05.linting
+  - verification/06.schema-validation
+  - verification/09.headless-browser-checks
+  - index

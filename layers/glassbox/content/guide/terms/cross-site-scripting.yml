@@ -1,0 +1,2 @@
+term: Cross-site scripting
+definition: An attack in which markup someone else wrote runs as script on your page, with all the access your own code has. Often shortened to XSS.

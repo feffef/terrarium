@@ -5,6 +5,7 @@ export const glassboxSubjects = [
   { slug: 'agents', name: 'Agents & automation' },
   { slug: 'skill-pack', name: 'Installed Skills' },
   { slug: 'nuxt-vue', name: 'Nuxt & Vue' },
+  { slug: 'web-standards', name: 'Web standards' },
   { slug: 'nuxt-content', name: 'Nuxt Content' },
   { slug: 'verification', name: 'Verification' },
   { slug: 'deploy', name: 'Deploy' },
