@@ -12,7 +12,8 @@ teaches. You lead and choose the steps; improvise.
 
 **Shape.** One focus per run (a Subject, a structural question or a gap), about
 $20. Read your spend, `external_metadata.usage.cost_usd` from `get_session`
-called with no session id, and stop at the budget. Several runs a day must work.
+called with no session id (it appears only partway into a run), and stop at
+the budget. Several runs a day must work.
 
 **Modes.** *Autonomous* (a Routine fired it): decide everything,
 ask nothing, and say in the run entry why you chose the focus.
@@ -78,8 +79,8 @@ full, to know exactly what its neighbours say.
 - **Read.** The full depth above. Run `orient.ts --area <folder>` and read its
   output whole; it ends with the `pagesRead` lines to paste. Also read in full
   every page outside the area that a change would edit, link or overlap. A
-  change that only removes text reads just those pages. Edit only after this
-  step.
+  change that only removes text reads just the pages it edits, links or
+  overlaps. Edit only after this step.
 - **Choose.** Pick this run's focus from what you read. Put every other weak
   spot or proposal you found on the memory page, so later runs inherit the
   reading. The run entry says why you chose the focus.
@@ -128,9 +129,8 @@ full, to know exactly what its neighbours say.
   both rewrite the memory page: the later one keeps both runs' leads. Rewrite
   the memory page, complete the run entry, and open one PR
   (`docs/agents/pr-workflow.md`), self-merged unless the Remit says it waits.
-  Its body gives the run's cost from `get_session`, read just before you write
-  the body, since the field appears only later in a run; "unreported" when it
-  is still missing. Give `code-review`
+  Its body gives the run's cost, read just before you write the body;
+  "unreported" when it is still missing. Give `code-review`
   the Lesson contract, EVERY-PAGE.md, DECISIONS.md and the glassbox-content
   rule as its standards, without the code-smell baseline, and say the page
   checks already ran. Its Spec reviewer also judges which pages the change
