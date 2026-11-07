@@ -24,6 +24,8 @@ this session, with its final status.
    If a PR-open step (`subscribe_pr_activity`, or this Skill) was rejected, log
    anyway, as `in-review`, and name the skipped step.
 
+Never filter `log-session.ts` output (`grep`, `head`): its refusals and warnings print there.
+
 **Re-invoke** `/close-session` whenever more work follows, such as another PR or
 the merge. Each log replaces the last.
 

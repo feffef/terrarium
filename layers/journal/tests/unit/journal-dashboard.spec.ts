@@ -314,6 +314,14 @@ describe('sessionDurationLabel', () => {
 })
 
 describe('sessionCardViews', () => {
+  it('flags an in-review log whose every PR a completed log lists', () => {
+    const open = session({ session: 'a', status: 'in-review', prs: ['#1', '#2'] })
+    const done = session({ session: 'b', status: 'completed', prs: ['1', '#2'] })
+    const half = session({ session: 'c', status: 'in-review', prs: ['#2', '#9'] })
+    const none = session({ session: 'd', status: 'in-review', prs: [] })
+    expect(sessionCardViews([open, done, half, none]).map((c) => c.staleInReview)).toEqual([true, false, false, false])
+  })
+
   it('lists frictions most severe first, ties in original order, without mutating the log', () => {
     const f = (severity: Severity, description: string) => ({ ...friction(severity), description })
     const frictions = [f('nit', 'a'), f('major', 'b'), f('blocker', 'c'), f('major', 'd'), f('minor', 'e'), f('moderate', 'f')]

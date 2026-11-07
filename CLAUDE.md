@@ -59,9 +59,10 @@ once per session; read it whole if you can, since a rule can sit anywhere in it.
   claim (a subagent's report too) only after you check it this turn against its
   source. Count every item; never take a number from memory or a summary.
 - **Ask before building** something the Trusted user will see (the `grilling`
-  Skill); don't assume. Clarify all user-facing UI with extra care: settle in
-  the first round what each displayed value (label, hover, metric) follows.
-  Data shapes: `.claude/rules/data-shapes.md`.
+  Skill); don't assume. For a new page or rewrite shaped by the owner's taste,
+  agree sections and tone on a short sample first. Clarify all user-facing UI
+  with extra care: settle in the first round what each displayed value (label,
+  hover, metric) follows. Data shapes: `.claude/rules/data-shapes.md`.
 - **Question the premise.** Before you recommend, build or harden a change,
   give each part a reason from the current goal; drop the parts you can't, and
   add nothing beyond the ask. Before you show a new ordering, split or

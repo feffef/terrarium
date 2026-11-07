@@ -42,8 +42,8 @@ Terrarium applies them without reading the source.
 - **Three Spaces.** `guide`, at `/t/glassbox/guide`, holds the pages central to
   Terrarium that the work focuses on; `/t/glassbox` redirects there. `drafts`
   holds the rest; each may be improved and moved to the guide. A guide page never links to a draft; a draft may link to
-  the guide. Walkthroughs sit in `walkthroughs/`. A two-digit filename prefix
-  orders Lessons inside a folder; Subject order and names come from
+  the guide. Walkthroughs sit in `walkthroughs/`. A two-digit filename prefix,
+  in tens, orders Lessons inside a folder, prerequisites first; Subject order and names come from
   `glassboxSubjects` in `layers/glassbox/app/utils/subjects.ts`. `workshop`, at
   `/t/glassbox/workshop`, is one page of state for the improvement Skills: a
   memory text, one entry per curate run and glassbox-update's check state. It
@@ -146,10 +146,6 @@ turned into hyphens: `:term[Nuxt & Vue]` reads `nuxt-vue.yml`,
   written.
 - **`.agents/skills/glassbox-update/SKILL.md`** — how the guide pages are
   brought up to date with `main`.
-- **`.agents/skills/glassbox-improve/SKILL.md`** — how a run raises the
-  guide lens by lens, gating each edit with blind judges; its `grades.yml`
-  holds each page's lens grades and the backlog of findings the run's cap
-  skipped, and `runs.yml` the recent runs.
 - **`.agents/skills/glassbox-curate/SKILL.md`** — how a run makes the guide
   easier to learn from and fills gaps, one focus at a time; its state lives in
   the `workshop` Space.

@@ -86,11 +86,11 @@ trials:
       NOT damage: sessions hitting the guard's deny (`session-id-hand-typed`
       at its standing rate); the code and deny messages are unchanged.
   - problem: >
-      The `close-session` invocation restated in eight Skills and
+      The `close-session` invocation restated in six Skills and
       `pr-workflow.md` (-20 net, from `git diff --numstat` against the parent:
       8 added, 28 deleted; this entry not counted): the end-of-Skill "invoke
       close-session" steps and clauses in `digest`, `visitor-loop`,
-      `glassbox-improve`, `glassbox-update`, `frictions-to-fixes`,
+      `glassbox-update`, `frictions-to-fixes`,
       `clear-backlog` and `blog-post` (its step 13), and step 4 plus the last
       line of "Closing a scheduled run's PR", cut; CLAUDE.md's bullet is the one
       home and now says a session with no PR invokes it once at its end. Chosen
@@ -110,7 +110,7 @@ trials:
       paths:
         - "CLAUDE.md: the close-session bullet"
         - "docs/agents/pr-workflow.md: 'Closing a scheduled run's PR' (step 4 and the last line)"
-        - ".agents/skills/{digest,visitor-loop,glassbox-improve,glassbox-update,frictions-to-fixes,clear-backlog,blog-post}/SKILL.md: close-session steps"
+        - ".agents/skills/{digest,visitor-loop,glassbox-update,frictions-to-fixes,clear-backlog,blog-post}/SKILL.md: close-session steps"
       keywords:
         - close-session
     opened: 2026-11-07

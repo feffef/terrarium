@@ -1,7 +1,7 @@
 ---
 title: A session log lands on main
 description: How an agent session's record of its work reaches main without a PR, from the agent's judgement to one commit built by git plumbing.
-revision: 'a438b80f310f19d9c51a899be43a1110d89af6f6'
+revision: 'f2f883b07d61679095f2a03a06c53d8189db6136'
 revisionDate: '2026-11-07'
 publishedAt: '2026-11-04T23:08:39Z'
 ---
@@ -13,7 +13,7 @@ An agent session finishes a piece of work and writes down what happened. This Wa
 When its work reaches a coherent state, such as a PR opened or a question answered, the agent runs the `close-session` Skill. The agent judges the moment itself, from the Skill's description; a hint after it opens or merges a PR reminds it, unless it has already run the Skill since. Once the agent has written its part, hooks do the rest, but a session that never gets here leaves no :term[session log].
 
 ::lessons
-[Session logs](/t/glassbox/guide/terrarium-practice/session-logs) · [Claude Code Skills](/t/glassbox/guide/claude-code/skills) · [Hook-added context](/t/glassbox/guide/hooks/hook-added-context)
+[Session logs](/t/glassbox/guide/terrarium-practice/session-logs) · [Claude Code skills](/t/glassbox/guide/claude-code/skills) · [Hook-added context](/t/glassbox/guide/hooks/hook-added-context)
 ::
 
 ## 2. The agent writes only its judgement
@@ -64,7 +64,7 @@ Instead of `git commit`, which commits what is staged on the current branch, the
 ::
 
 ::lessons
-[Git plumbing](/t/glassbox/guide/git-github/git-plumbing) · [Pull requests](/t/glassbox/guide/git-github/every-change-a-pr)
+[Git plumbing](/t/glassbox/guide/git-github/git-plumbing) · [Pull requests](/t/glassbox/guide/git-github/pull-requests)
 ::
 
 ## 7. The push retries until it lands

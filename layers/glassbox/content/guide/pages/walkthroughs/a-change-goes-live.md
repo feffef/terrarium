@@ -1,7 +1,7 @@
 ---
 title: A change goes live
 description: How a commit on main reaches visitors, through one container that notices it, builds it beside the live site and swaps only a good build.
-revision: 'a438b80f310f19d9c51a899be43a1110d89af6f6'
+revision: 'f2f883b07d61679095f2a03a06c53d8189db6136'
 revisionDate: '2026-11-07'
 publishedAt: '2026-10-27T18:52:18Z'
 ---
@@ -31,7 +31,7 @@ flowchart TD
 The commit is a merged PR, or a :term[session log], which lands without one. Both take the same road from here: a blog post, a session log and a code fix all go live through the same pull, build and restart.
 
 ::lessons
-[Pull requests](/t/glassbox/guide/git-github/every-change-a-pr) · [Session logs](/t/glassbox/guide/terrarium-practice/session-logs)
+[Pull requests](/t/glassbox/guide/git-github/pull-requests) · [Session logs](/t/glassbox/guide/terrarium-practice/session-logs)
 ::
 
 ## 2. The container notices it
@@ -39,7 +39,7 @@ The commit is a merged PR, or a :term[session log], which lands without one. Bot
 The script that runs the container fetches `main` again after each pause. When `origin/main` differs from its checkout, it resets the checkout to the new commit. It doesn't wait for CI: the Gate also runs on every push to `main`, but nothing in the container reads the result.
 
 ::lessons
-[Continuous deployment](/t/glassbox/guide/deploy/self-updating-container) · [Merge gate](/t/glassbox/guide/verification/gate) · :file[.github/workflows/gate.yml]
+[Continuous deployment](/t/glassbox/guide/deploy/continuous-deployment) · [Merge gate](/t/glassbox/guide/verification/gate) · :file[.github/workflows/gate.yml]
 ::
 
 ## 3. Packages, only when the lockfile changed
@@ -47,7 +47,7 @@ The script that runs the container fetches `main` again after each pause. When `
 The script compares a hash of `pnpm-lock.yaml` with the hash it saved after its last good install. Only when they differ does it install packages again, from the lockfile exactly. If that install fails, the previous build stays live, and the next commit installs again.
 
 ::lessons
-[pnpm and the lockfile](/t/glassbox/guide/deploy/pnpm-lockfile) · [Continuous deployment](/t/glassbox/guide/deploy/self-updating-container)
+[pnpm and the lockfile](/t/glassbox/guide/deploy/pnpm-lockfile) · [Continuous deployment](/t/glassbox/guide/deploy/continuous-deployment)
 ::
 
 ## 4. The build runs beside the live site
@@ -55,7 +55,7 @@ The script compares a hash of `pnpm-lock.yaml` with the hash it saved after its 
 The build runs in the checkout, beside the live server, which keeps answering. It writes `.output/`: a server that runs on its own, with the content inside. If the build fails, nothing is swapped, the old build stays live, and the next commit tries again.
 
 ::lessons
-[Nitro server engine](/t/glassbox/guide/nuxt-vue/nitro) · [Continuous deployment](/t/glassbox/guide/deploy/self-updating-container) · [Content database](/t/glassbox/guide/nuxt-content/content-database)
+[Nitro server engine](/t/glassbox/guide/nuxt-vue/nitro) · [Continuous deployment](/t/glassbox/guide/deploy/continuous-deployment) · [Content database](/t/glassbox/guide/nuxt-content/content-database)
 ::
 
 ## 5. The swap
@@ -63,7 +63,7 @@ The build runs in the checkout, beside the live server, which keeps answering. I
 The script copies the new `.output/` over the folder the server runs from, stops Node and starts it again from that copy. In the short gap while the new server starts, the site doesn't answer.
 
 ::lessons
-[Continuous deployment](/t/glassbox/guide/deploy/self-updating-container)
+[Continuous deployment](/t/glassbox/guide/deploy/continuous-deployment)
 ::
 
 ## 6. The next visitor gets the new content
@@ -80,7 +80,7 @@ On 9 October 2026 an agent checking story 4 of the Terrarium overview's diagram 
 
 ## Where next
 
-- [Continuous deployment](/t/glassbox/guide/deploy/self-updating-container)
+- [Continuous deployment](/t/glassbox/guide/deploy/continuous-deployment)
 - [pnpm and the lockfile](/t/glassbox/guide/deploy/pnpm-lockfile)
 - [Content database](/t/glassbox/guide/nuxt-content/content-database)
 - [From file to browser](/t/glassbox/guide/walkthroughs/from-file-to-browser)

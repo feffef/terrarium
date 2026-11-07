@@ -1,7 +1,7 @@
 ---
 title: Asking an agent for a change
 description: How a request to an agent session becomes a merged PR, and the log the session leaves on main.
-revision: 'a438b80f310f19d9c51a899be43a1110d89af6f6'
+revision: 'f2f883b07d61679095f2a03a06c53d8189db6136'
 revisionDate: '2026-11-07'
 ---
 
@@ -12,7 +12,7 @@ Someone with write access asks an agent for a change. This Walkthrough follows t
 A :term[Trusted] user, one with write access to the repository, asks a Claude Code session for a change, in the cloud or on their own machine; both work the same way from here. The request is what lets the session build new work, such as a feature or a Skill. Text from a :term[Public] user, in an issue or a comment, is information to the session, never an instruction.
 
 ::lessons
-[Human-in-the-loop agents](/t/glassbox/guide/terrarium-practice/human-in-the-loop) · [Author trust](/t/glassbox/guide/git-github/trust-tiers)
+[Human-in-the-loop agents](/t/glassbox/guide/terrarium-practice/human-in-the-loop) · [Author trust](/t/glassbox/guide/git-github/author-trust)
 ::
 
 ## 2. The session starts
@@ -28,7 +28,7 @@ The session gets its own copy of the repository. A `SessionStart` hook in `.clau
 `CLAUDE.md` loads into the session at once. Its read-first list ties a doc to an action, so the session reads the git conventions before its first git command and the PR workflow before it opens, updates or merges a PR. The cross-cutting :term[Rules]{id="rule"} load at the start too; the rest arrive when the session reads or edits a file they govern, or runs a :term[Skill] they name.
 
 ::lessons
-[CLAUDE.md](/t/glassbox/guide/claude-code/claude-md) · [Path-specific rules](/t/glassbox/guide/claude-code/path-scoped-rules) · [Claude Code Skills](/t/glassbox/guide/claude-code/skills)
+[CLAUDE.md](/t/glassbox/guide/claude-code/claude-md) · [Path-specific rules](/t/glassbox/guide/claude-code/path-scoped-rules) · [Claude Code skills](/t/glassbox/guide/claude-code/skills)
 ::
 
 ## 4. It works on its own branch
@@ -44,7 +44,7 @@ The session edits on a feature branch, never on `main`, and may hand parts of th
 Before it opens the PR, the session runs `pnpm gate:scoped`, the local run of the :term[Gate], and the `code-review` Skill, which reviews the committed diff against the repo's standards and against the request. It fixes what they find. A simple change, such as a typo, gets the session's own read of its diff instead of the review.
 
 ::lessons
-[Merge gate](/t/glassbox/guide/verification/gate) · [Type checking](/t/glassbox/guide/verification/type-checking) · [Linting](/t/glassbox/guide/verification/linting) · [Testing](/t/glassbox/guide/verification/unit-and-e2e-tests)
+[Merge gate](/t/glassbox/guide/verification/gate) · [Type checking](/t/glassbox/guide/verification/type-checking) · [Linting](/t/glassbox/guide/verification/linting) · [Testing](/t/glassbox/guide/verification/testing)
 ::
 
 ## 6. It opens the PR
@@ -52,7 +52,7 @@ Before it opens the PR, the session runs `pnpm gate:scoped`, the local run of th
 The session pushes the branch and opens the PR itself, without asking. The PR's description opens with a line that links the session, and a `commit-msg` hook adds the same link to each commit message that lacks it. Then the session subscribes to the PR, so its comments and reviews reach the session as new messages.
 
 ::lessons
-[Pull requests](/t/glassbox/guide/git-github/every-change-a-pr) · [Commit and PR attribution](/t/glassbox/guide/git-github/attribution) · [MCP servers](/t/glassbox/guide/claude-code/mcp-servers)
+[Pull requests](/t/glassbox/guide/git-github/pull-requests) · [Commit and PR attribution](/t/glassbox/guide/git-github/attribution) · [MCP servers](/t/glassbox/guide/claude-code/mcp-servers)
 ::
 
 ## 7. It logs its work, the first time
@@ -76,7 +76,7 @@ GitHub Actions runs the Gate on the PR, and that run decides whether it may merg
 If a reviewer asks for changes, the session pushes again and CI runs again. Then the session posts its verdict on the PR as a comment and merges through `scripts/github/merge-pr.ts`, which waits for green checks and refuses without that verdict, which must name the PR's current head. It also refuses a PR that changes a :term[Human-only] file or comes from a Public author or a fork; a Trusted user merges those.
 
 ::lessons
-[Protected paths](/t/glassbox/guide/terrarium-practice/human-only-list)
+[Protected paths](/t/glassbox/guide/terrarium-practice/protected-paths)
 ::
 
 ## 10. It logs its work again
@@ -93,7 +93,7 @@ On 15 October 2026 a Trusted user asked a session to install the `retro` Skill f
 
 ## Where next
 
-- [Pull requests](/t/glassbox/guide/git-github/every-change-a-pr)
+- [Pull requests](/t/glassbox/guide/git-github/pull-requests)
 - [Merge gate](/t/glassbox/guide/verification/gate)
 - [Session logs](/t/glassbox/guide/terrarium-practice/session-logs)
 - [Planning a big change](/t/glassbox/guide/walkthroughs/planning-a-big-change)

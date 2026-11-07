@@ -341,8 +341,8 @@ export function glassboxPageProblems(file: string, source: string, site: Glassbo
   return problems
 }
 
-// A reviewer's call, so these warn and never fail (#2701); glassbox-improve
-// takes each but the "so" clause as a finding (issue #2792).
+// A reviewer's call, so these warn and never fail (#2701); glassbox-curate's
+// orientation reads these warnings.
 export const glassboxMotiveWarning = 'In Terrarium may give a motive ("so"); check it states mechanism'
 
 const excerptMaxLines = 15
@@ -386,9 +386,21 @@ export function glassboxOrphans(sources: Record<string, string>): string[] {
   return Object.keys(sources).filter((f) => f !== 'index.md' && !linked.has(glassboxSitePath('guide', f))).sort()
 }
 
-// Usage: pnpm exec tsx layers/glassbox/page-checks.ts — prints every page's warnings and the guide's orphans.
+/** Each guide page's title, title-word and description cap problems, by file under `pages/`. */
+export function glassboxLengthProblems(sources: Record<string, string>): string[] {
+  return Object.entries(sources).flatMap(([file, source]) => lengthProblems(`/${contentRoute(file)}`, splitFrontmatter(source).frontmatter).map((p) => `guide/pages/${file}: ${p}`)).sort()
+}
+
+// Usage: pnpm exec tsx layers/glassbox/page-checks.ts [--lengths]: prints every page's warnings and the guide's
+// orphans; with --lengths, fails on a title or description over its cap, so `pnpm validate:content` catches it.
 runIfMain(import.meta.url, () => {
   const content = join(root, 'layers/glassbox/content')
+  if (process.argv.includes('--lengths')) {
+    const guide = join(content, 'guide/pages')
+    const problems = glassboxLengthProblems(Object.fromEntries(globSync('**/*.md', { cwd: guide }).map((f) => [f, readFileSync(join(guide, f), 'utf8')])))
+    for (const p of problems) console.error(p)
+    process.exit(problems.length ? 1 : 0)
+  }
   for (const file of globSync('*/pages/**/*.md', { cwd: content }).sort()) {
     for (const warning of glassboxPageWarnings(readFileSync(join(content, file), 'utf8'))) console.log(`${file}: ${warning}`)
   }

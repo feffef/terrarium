@@ -1,7 +1,7 @@
 ---
 title: A friction becomes a fix
 description: How a pain-point one agent logs becomes a change to the instructions later agents work under, through a scheduled Skill.
-revision: 'a438b80f310f19d9c51a899be43a1110d89af6f6'
+revision: 'f2f883b07d61679095f2a03a06c53d8189db6136'
 revisionDate: '2026-11-07'
 publishedAt: '2026-11-03T13:25:30Z'
 ---
@@ -39,7 +39,7 @@ A hook commits the :term[session log] straight to `main`, without a PR. The Fric
 A :term[Routine] starts a session that runs the `frictions-to-fixes` Skill, or a Trusted user runs it by hand. It is a session like any other, following the Skill's steps.
 
 ::lessons
-[Self-improvement loop](/t/glassbox/guide/terrarium-practice/self-improvement-loop) · [Scheduled tasks](/t/glassbox/guide/agents/routines) · [Claude Code Skills](/t/glassbox/guide/claude-code/skills)
+[Self-improvement loop](/t/glassbox/guide/terrarium-practice/self-improvement-loop) · [Scheduled tasks](/t/glassbox/guide/agents/scheduled-tasks) · [Claude Code skills](/t/glassbox/guide/claude-code/skills)
 ::
 
 ## 4. A subagent reads the logs
@@ -63,7 +63,7 @@ The subagent checks each candidate against the changes merged since its sessions
 The run picks the top candidates and has one design subagent design each fix and judge its risk. A fix the run may not build becomes an issue with the design; the rest go on to be built.
 
 ::lessons
-[Self-improvement loop](/t/glassbox/guide/terrarium-practice/self-improvement-loop) · [Protected paths](/t/glassbox/guide/terrarium-practice/human-only-list) · [Blocking hooks](/t/glassbox/guide/hooks/blocking-hooks) · [Issue triage labels](/t/glassbox/guide/git-github/work-queue)
+[Self-improvement loop](/t/glassbox/guide/terrarium-practice/self-improvement-loop) · [Protected paths](/t/glassbox/guide/terrarium-practice/protected-paths) · [Blocking hooks](/t/glassbox/guide/hooks/blocking-hooks) · [Issue triage labels](/t/glassbox/guide/git-github/issue-triage-labels)
 ::
 
 ## 7. Helper agents write the fixes
@@ -79,7 +79,7 @@ Helper agents write the fixes, each in a git worktree of its own, run the Gate a
 The run reviews each branch itself, opens its PR and posts its verdict there as a comment. A clean, low-risk fix it merges through `scripts/github/merge-pr.ts`, which refuses without that verdict and refuses a PR that changes a Human-only file. A fix whose diff needs a human merge stays open, with the reason, for a Trusted user.
 
 ::lessons
-[Merge gate](/t/glassbox/guide/verification/gate) · [Pull requests](/t/glassbox/guide/git-github/every-change-a-pr)
+[Merge gate](/t/glassbox/guide/verification/gate) · [Pull requests](/t/glassbox/guide/git-github/pull-requests)
 ::
 
 ## 9. The next session reads the fix
@@ -87,7 +87,7 @@ The run reviews each branch itself, opens its PR and posts its verdict there as 
 The fix lands in a doc, a repo-owned Skill, a script or config. A later session that opens that doc or runs that Skill gets the new text, and its log lists that doc among the docs it read, or that Skill among the Skills it used. The Ledger entry records the fix's PR and the date it merged, and from then on only sessions that started after the fix count as a recurrence.
 
 ::lessons
-[Claude Code Skills](/t/glassbox/guide/claude-code/skills) · [CLAUDE.md](/t/glassbox/guide/claude-code/claude-md) · [Friction Ledger](/t/journal/current/frictions)
+[Claude Code skills](/t/glassbox/guide/claude-code/skills) · [CLAUDE.md](/t/glassbox/guide/claude-code/claude-md) · [Friction Ledger](/t/journal/current/frictions)
 ::
 
 ## A real case
@@ -98,6 +98,6 @@ On 8 July 2026 a scheduled session waited about two hours on a PR's CI. It had c
 
 - [Self-improvement loop](/t/glassbox/guide/terrarium-practice/self-improvement-loop)
 - [Session logs](/t/glassbox/guide/terrarium-practice/session-logs)
-- [Scheduled tasks](/t/glassbox/guide/agents/routines)
+- [Scheduled tasks](/t/glassbox/guide/agents/scheduled-tasks)
 - [Asking an agent for a change](/t/glassbox/guide/walkthroughs/asking-for-a-change)
 - [Friction Ledger](/t/journal/current/frictions)

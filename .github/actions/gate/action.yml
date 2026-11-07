@@ -168,5 +168,5 @@ runs:
         GH_TOKEN: ${{ inputs.github-token }}
         PR_NUMBER: ${{ github.event.pull_request.number }}
         REPO: ${{ github.repository }}
-        HEAD_SHA: ${{ github.sha }}
+        HEAD_SHA: ${{ github.event.pull_request.head.sha }}
       run: gh pr comment "$PR_NUMBER" -R "$REPO" --body "✅ safety-gate green on $HEAD_SHA"

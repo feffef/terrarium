@@ -1,0 +1,180 @@
+schemaVersion: 1
+session: session_013zxzePgtT7wXDhHd9eBdH2
+startedAt: 2026-11-07T13:09:54Z
+endedAt: 2026-11-07T13:19:16Z
+kind: autonomous
+goal: Scheduled prune trial of agent instructions
+status: in-review
+outcome: Judged one trial, opened a new prune of close-session restatements in PR 2939
+summary: "Scheduled /prune-trial run, all agent-initiated by the schedule. Judged and deleted the backgrounding-prose trial (no major or blocker damage; double-background rate rise is owner-accepted nits, #2310). A search subagent ranked failed-prose rules; I chose the close-session restatements spread over seven Skills and pr-workflow.md, cut them to CLAUDE.md's single bullet (-20 lines), and recorded a new trial. The first Sonnet probe showed a run with no PR was unclear, so I reworded CLAUDE.md and re-probed at the new SHA, which passed. Gate green; I read the diff myself and skipped code-review (prose-only). PR 2939 is left for a human merge because it touches CLAUDE.md. Still open: the PR merge."
+prs:
+  - "2939"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: read only the top before the first git commit; commit-F rule applied
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: brief checklist before dispatching the search and probe agents
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: Closing a scheduled run's PR section, which I pruned
+    useful: yes
+  - path: docs/agents/guards.md
+    reason: search subagent read the roster; it reported useful yes
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: search subagent read lines 60-72 only; reported partly useful
+    useful: partly
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (read before editing)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: briefed the search and two probe agents
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: prune-trial
+    reason: (invoked as a slash command)
+frictions:
+  - description: Committed the trial deletion early after a Stop hook flagged uncommitted changes while the search subagent ran, instead of waiting to commit it with the prune.
+    solution: Fine as is; the early commit stayed in the one PR.
+    severity: nit
+  - description: First probe pinned the prune but the no-PR scheduled-run case was unclear to Sonnet, costing a rewording of CLAUDE.md and a second probe.
+    solution: Probe a no-PR scenario in the first round when a prune cuts restated invocation steps.
+    severity: minor
+  - description: Opened the PR after the gate with only my own diff read, not code-review, which pr-workflow allows for simple changes; the diff touched nine files of prose.
+    solution: Fine for a prose-only cut; state the skip in the PR as I did.
+    severity: nit
+durationSec: 562
+models:
+  claude-sonnet-5-5: 64
+toolCounts:
+  Bash: 26
+  Agent: 3
+  ReadNotifications: 1
+  mcp__github__create_pull_request: 1
+  Skill: 2
+filesEdited:
+  - .agents/prune-trials.yml
+  - CLAUDE.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/clear-backlog/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/glassbox-improve/SKILL.md
+  - .agents/skills/glassbox-update/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - docs/agents/pr-workflow.md
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0010.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0022.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0015.md
+docsReadBySubagents:
+  - docs/agents/guards.md
+  - docs/agents/github-integration.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to gate and review before the PR; summary was enough, did not open the ADR
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Source of the close-session restatement I pruned around; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Confirmed opening the PR myself and limiting a scheduled run to its Skill; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Header and trailer rule for the PR body and commits; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Governs prune trials and verdict handling; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded with the Skill; confirmed CLAUDE.md is the home for session-wide actions like close-session
+    useful: partly
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded with the Skill; no ADR was edited
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded by a hook after a Bash read; no Tenant work here
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded by a Bash read of a Skill; no Skill structure changed
+    useful: no
+  - path: .claude/rules/adr-0010.md
+    reason: Loaded by reading the digest Skill; only deleted its log step
+    useful: no
+  - path: .claude/rules/adr-0012.md
+    reason: Loaded by reading the blog-post Skill; unrelated to the close step I cut
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Loaded by a Bash read of a Skill; triage sweep not touched
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Only the search subagent loaded it; unrelated, reported no
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: Only the search subagent loaded it; reported no
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Only the search subagent loaded it; reported no
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: Only the search subagent loaded it; pointer only, partly
+    useful: partly
+  - path: .claude/rules/adr-0015.md
+    reason: Only the search subagent loaded it; reported no
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Search failed-prose rules
+    model: sonnet
+    durationSec: 133
+    toolCalls: 19
+    modelCalls: 16
+    tokenShare: 21.6
+  - type: general-purpose
+    task: Probe close-session prune
+    model: sonnet
+    durationSec: 25
+    toolCalls: 3
+    modelCalls: 3
+    tokenShare: 4.5
+  - type: general-purpose
+    task: Re-probe close-session prune
+    model: sonnet
+    durationSec: 17
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 3.5
+gitBranch: claude/practical-rubin-fq7peb
+entrypoint: remote_trigger
+cliVersion: 2.1.319
+trigger: prune-trial
+landedBy: Stop
