@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeT5vcQTn5YZeNHDSvv
 startedAt: 2026-11-07T11:14:33Z
-endedAt: 2026-11-07T11:28:51Z
+endedAt: 2026-11-07T11:33:56Z
 kind: interactive
 goal: Curate the Glass Box guide by shortening one long Lesson
-status: in-review
-outcome: PR 2927 trims Issue triage labels by about 110 words, rewrites the memory page and adds a run entry; gate and code-review done, waiting on the owner to confirm before self-merge
-summary: "A person started glassbox-curate with no focus, so I asked. They answered \"choose yourself\", which was a human delegation of the choice; everything after was agent-initiated within the Skill's remit. I ran the orientation, judged that titles in the three split Claude Code Subjects already pass the title rule, and took the memory page's open weak spot instead: the length of Issue triage labels. The change only removes text (side detail, one Excerpt turned into one sentence), so I skipped the writer, claim checker and fresh reader as the Removal step allows, ran the page checks and the scoped gate, then ran code-review with two subagents. They found a stale \"this week\", an unlogged cut and a wrong phrase in the run entry, all fixed. The memory page now says that renaming files to match titles needs the owner (URL change), as the next focus. PR 2927 is open and subscribed. The owner then asked whether cut-but-relevant facts need homes; two did (Agent Brief, out-of-scope records), so I added them to the memory page as proposals on their request and logged their rule as an idea."
+status: completed
+outcome: PR 2927 trims Issue triage labels by about 110 words, rewrites the memory page and adds a run entry; merged as de5ade7
+summary: "A person started glassbox-curate with no focus, so I asked. They answered \"choose yourself\", which was a human delegation of the choice; everything after was agent-initiated within the Skill's remit. I ran the orientation, judged that titles in the three split Claude Code Subjects already pass the title rule, and took the memory page's open weak spot instead: the length of Issue triage labels. The change only removes text (side detail, one Excerpt turned into one sentence), so I skipped the writer, claim checker and fresh reader as the Removal step allows, ran the page checks and the scoped gate, then ran code-review with two subagents. They found a stale \"this week\", an unlogged cut and a wrong phrase in the run entry, all fixed. The memory page now says that renaming files to match titles needs the owner (URL change), as the next focus. PR 2927 merged after a green gate. The owner then asked whether cut-but-relevant facts need homes; two did (Agent Brief, out-of-scope records), so I added them to the memory page as proposals on their request and logged their rule as an idea."
 prs:
   - "2927"
 docsRead:
@@ -57,23 +57,25 @@ frictions:
   - description: The Skill says to settle decisions with grilling in interactive mode, but the user answered 'choose yourself' to my one question, so I skipped grilling on their delegation.
     solution: The Skill could say that a delegated choice counts as settled.
     severity: nit
-durationSec: 858
+durationSec: 1162
 models:
-  claude-sonnet-5-5: 80
+  claude-sonnet-5-5: 94
 toolCounts:
-  Bash: 18
+  Bash: 22
   AskUserQuestion: 1
   Read: 10
   Edit: 4
-  Skill: 4
+  Skill: 5
   Agent: 2
   mcp__claude-code-remote__get_session: 1
   ToolSearch: 2
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  ReadNotifications: 3
-  mcp__github__pull_request_read: 1
+  ReadNotifications: 4
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/git-github/06.work-queue.md
   - layers/glassbox/content/workshop/pages/index.md
@@ -151,14 +153,14 @@ subagents:
     durationSec: 26
     toolCalls: 8
     modelCalls: 4
-    tokenShare: 11.6
+    tokenShare: 10
   - type: general-purpose
     task: Spec review of Glass Box trim
     model: sonnet
     durationSec: 30
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 10.8
+    tokenShare: 9.3
 gitBranch: ccr-a9812cf0-avektg
 entrypoint: remote_mobile
 cliVersion: 2.1.319
