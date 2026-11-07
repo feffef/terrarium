@@ -6,6 +6,10 @@ status: tracked
 ref: "issue #2916"
 notes: |-
   2026-11-03 design: no change: CLAUDE.md "Question the premise" already covers it and was read past; widening the owner-approved bullet is the owner's call and more prose has not worked for this family; dropped: file an issue if a third occurrence appears
+fixes:
+  - pr: 2916
+    date: "2026-11-07"
+    summary: "CLAUDE.md \"Ask before building\" now says to agree sections and tone on a short sample before drafting a new page or rewrite whose shape is the owner's taste."
 occurrences:
   - session: session_013zxzeRNoKQn8q3NtVRPDyk
     date: "2026-11-02"
