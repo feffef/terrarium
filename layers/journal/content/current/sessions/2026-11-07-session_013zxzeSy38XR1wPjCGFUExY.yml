@@ -1,0 +1,738 @@
+schemaVersion: 1
+session: session_013zxzeSy38XR1wPjCGFUExY
+startedAt: 2026-11-07T12:24:33Z
+endedAt: 2026-11-07T13:01:59Z
+kind: interactive
+goal: Clear the open issue backlog with the clear-backlog workflow
+status: in-review
+outcome: Nine issues explored; one closed, five answered, six builds started, first PR (#2932) open
+summary: "The owner started /clear-backlog. The sweep found nine eligible needs-triage issues (the five older ready-for-human issues were skipped because an agent wrote their latest comment). The explore workflow labelled #2911, #2917 and #2930 ready-for-agent, closed #2914 as already done, and sent #2884, #2913, #2915, #2916 and #2931 to the owner. The owner answered 2a, 3a, 4a, 5a (with 20 hours instead of 24 for the wait limit) and 1a after asking whether a Stop hook can really trigger close-session; I checked the existing Stop hooks and harness-tag-stop.ts and answered that it can only block the stop with a reason, not invoke the Skill. Human-instructed: the whole run, the picks, the 20-hour change and the 1a go-ahead. Agent-initiated: the grouping, the build briefs, and hand fixes for #2917 and #2930 after their review cap (a reflow revert, gate re-runs). #2911 is pushed and open as PR #2932; #2917 and #2930 await gate:scoped re-runs; the #2931, #2916, #2915 and #2913+#2884 builds were still running at this log."
+prs:
+  - "2932"
+docsRead:
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: step 1 for resolving the eligible set and the AI-last-comment skip
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: which MCP tools and scripts to use for issue reads and PRs; a hook demanded it first
+    useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: required after a first git command; one-command-per-call and gate-then-push separation applied
+    useful: partly
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: a guard blocked the Workflow call until I read it; nothing in it changed the call
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: review-before-PR and PR body rules; confirmed the build's review rounds count and no PR template exists
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/QUALITY.md
+    reason: "the diff I fixed by hand for #2930"
+    useful: yes
+  - path: layers/glassbox/GLOSSARY.md
+    reason: checked a stale-plural finding; left it as a judgement call
+    useful: partly
+  - path: .agents/skills/code-review/SKILL.md
+    reason: (no reason given)
+  - path: /home/user/terrarium/docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: .agents/skills/implement/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/frictions/drafts-caught-by-fact-check.yml
+    reason: (read before editing)
+  - path: .agents/skills/glassbox-curate/SKILL.md
+    reason: (read before editing)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/scripts/ledger-set.ts
+    reason: (no reason given)
+  - path: docs/adr/0005-skill-model.md
+    reason: (no reason given)
+  - path: .github/actions/gate/action.yml
+    reason: (read before editing)
+  - path: tests/unit/gate-parity.spec.ts
+    reason: (read before editing)
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: .agents/skills/triage/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: scripts/lib/author-trust.ts
+    reason: (no reason given)
+  - path: layers/journal/content/current/frictions/close-session-bypassed-by-hand-log.yml
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (read before editing)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: clear-backlog
+    reason: (invoked as a slash command)
+  - name: tdd
+    reason: (no reason given)
+frictions:
+  - description: Ran git rev-parse before reading git-conventions.md, though CLAUDE.md says to read it before any non-read-only git command; a hook then told me.
+    solution: The first-git-command hint could fire before the call, not after.
+    severity: nit
+  - description: First Workflow call was blocked by the dispatch-read guard because I had not read dispatch-subagents; I retried unchanged after reading.
+    solution: clear-backlog could list dispatch-subagents among the docs to read before step 1.
+    severity: nit
+  - description: I asked the owner Q1 with picks whose claims I had not verified (the Stop-hook question), and the owner had to ask whether it could work.
+    solution: Verify each pick's claim against its source before the grilling, as the Skill says, and check Stop hook capabilities then.
+    severity: minor
+  - description: I wrote the grilling list directly without invoking the grilling Skill that clear-backlog section 2 names.
+    solution: Invoke the Skill, or state in clear-backlog that its own list format replaces it.
+    severity: nit
+  - description: "Linked worktree(s) left with uncommitted or unpushed work at close: /home/user/terrarium/.claude/worktrees/wf_5a9a699a-f30-1, /home/user/terrarium/.claude/worktrees/wf_5a9a699a-f30-2, /home/user/terrarium/.claude/worktrees/wf_5a9a699a-f30-3, /home/user/terrarium/.claude/worktrees/wf_9fd268bd-b1b-2, /home/user/terrarium/.claude/worktrees/wf_9fd268bd-b1b-3, /home/user/terrarium/.claude/worktrees/wf_fe18fea7-d48-1"
+    solution: Push each, or remove it if its work is meant to be dropped.
+    severity: minor
+durationSec: 2246
+models:
+  claude-sonnet-5-5: 71
+toolCounts:
+  Bash: 16
+  Read: 5
+  ToolSearch: 2
+  mcp__github__issue_read: 5
+  Workflow: 5
+  PushNotification: 2
+  Edit: 1
+  Glob: 1
+  mcp__github__create_pull_request: 1
+  Skill: 2
+  Write: 1
+filesEdited:
+  - .agents/skills/glassbox-lesson/QUALITY.md
+  - .agents/skills/glassbox-curate/SKILL.md
+  - layers/glassbox/content/guide/pages/agents/03.routines.md
+  - CLAUDE.md
+  - layers/journal/content/current/frictions/drafts-caught-by-fact-check.yml
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - tests/unit/gate-parity.spec.ts
+  - .github/actions/gate/action.yml
+  - tests/unit/merge-close-stop.spec.ts
+  - scripts/hooks/merge-close-stop.ts
+  - layers/journal/content/current/frictions/rewrite-draft-keeps-old-framing.yml
+  - docs/agents/guards.md
+  - layers/journal/app/components/journal/SessionCard.vue
+  - layers/journal/app/utils/dashboard.ts
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/log-session/SKILL.md
+  - .claude/settings.json
+  - layers/journal/app/types/journal.ts
+  - layers/journal/tests/unit/journal-dashboard.spec.ts
+  - .agents/skills/glassbox-improve/SKILL.md
+  - .agents/skills/glassbox-improve/grades.yml
+  - .agents/skills/glassbox-improve/judge-brief.md
+  - .agents/skills/glassbox-improve/rater-brief.md
+  - .agents/skills/glassbox-improve/researcher-brief.md
+  - .agents/skills/glassbox-improve/runs.yml
+  - .agents/skills/glassbox-improve/scripts/cost.ts
+  - .agents/skills/glassbox-improve/scripts/grades.ts
+  - .agents/skills/glassbox-improve/tests/unit/cost.spec.ts
+  - .agents/skills/glassbox-improve/tests/unit/grades.spec.ts
+  - .agents/skills/glassbox-improve/writer-brief.md
+  - .claude/skills/glassbox-improve
+  - layers/glassbox/GLOSSARY.md
+  - layers/glassbox/page-checks.ts
+  - layers/glassbox/tests/unit/glassbox-pages.spec.ts
+  - layers/journal/content/current/skills/glassbox-improve.yml
+rulesLoaded:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/guards.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0026.md
+adrHints:
+  - adr: 5
+    via: path
+    readAfter: false
+    by: main
+  - adr: 27
+    via: path
+    readAfter: false
+    by: main
+  - adr: 5
+    via: path
+    readAfter: true
+    by: subagent
+  - adr: 27
+    via: path
+    readAfter: true
+    by: subagent
+  - adr: 29
+    via: path
+    readAfter: true
+    by: subagent
+  - adr: 26
+    via: path
+    readAfter: true
+    by: subagent
+  - adr: 4
+    via: path
+    readAfter: true
+    by: subagent
+  - adr: 8
+    via: path
+    readAfter: false
+    by: subagent
+rulesLoadedBySubagents:
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/ui-verification.md
+docsReadBySubagents:
+  - .agents/skills/code-review/SKILL.md
+  - .agents/skills/glassbox-curate/SKILL.md
+  - .agents/skills/implement/SKILL.md
+  - docs/adr/0005-skill-model.md
+  - docs/adr/0029-instructions-load-with-the-files-they-govern.md
+  - docs/adr/0027-prune-trials.md
+  - docs/adr/0026-gate-workflow-thin-shell.md
+  - docs/adr/0004-objective-safety-gate.md
+  - .agents/skills/triage/SKILL.md
+  - docs/agents/triage-labels.md
+  - docs/agents/guards.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/log-session/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to gate:scoped and review before opening PRs and flagged human-merge paths; the summary was enough, I did not open the ADR
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Reminded me to invoke close-session when the PR opened; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Confirmed PRs open without asking after review and gate and that ready-for-agent is the approval; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the provenance header on the PR body and the commit trailer I checked; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0022.md
+    reason: Defined what the sweep may label ready-for-agent versus ready-for-human; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: "Loaded with the Skill file; reinforced pointing, not restating, in #2911 briefs and open trials"
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded with an instruction-file path; not relevant to a backlog sweep
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: "Trust tiers: every eligible issue was owner-authored, so Trusted; summary was enough"
+    useful: partly
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded when I read a Skill; Skills are Platform code, no effect on this orchestration
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: "Loaded after the hook list; confirmed action.yml in #2917 needs a human merge"
+    useful: yes
+  - path: .claude/rules/guards.md
+    reason: Pointer to the guards roster; I did not need it as the orchestrator
+    useful: no
+subagents:
+  - type: workflow-subagent
+    task: Standards fix/glassbox-curate-wait-limit-2931 r1
+    model: claude-sonnet-5-5
+    durationSec: 17
+    toolCalls: 3
+    modelCalls: 3
+    tokenShare: 0.7
+  - type: workflow-subagent
+    task: Standards fix/glassbox-curate-wait-limit-2931 r2
+    model: claude-sonnet-5-5
+    durationSec: 21
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 0.7
+  - type: workflow-subagent
+    task: Spec fix/glassbox-curate-wait-limit-2931 r1
+    model: claude-sonnet-5-5
+    durationSec: 20
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 0.8
+  - type: workflow-subagent
+    task: Standards docs/rewrite-sample-first-2916 r1
+    model: claude-sonnet-5-5
+    durationSec: 15
+    toolCalls: 3
+    modelCalls: 3
+    tokenShare: 0.6
+  - type: workflow-subagent
+    task: fix fix/glassbox-curate-wait-limit-2931 r2
+    model: claude-sonnet-5-5
+    durationSec: 621
+    toolCalls: 6
+    modelCalls: 5
+    tokenShare: 1.2
+  - type: workflow-subagent
+    task: Standards docs/count-before-stating-2915 r2
+    model: claude-sonnet-5-5
+    durationSec: 20
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 0.7
+  - type: workflow-subagent
+    task: Spec docs/count-before-stating-2915 r3
+    model: claude-sonnet-5-5
+    durationSec: 21
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 0.8
+  - type: workflow-subagent
+    task: build fix/glassbox-curate-wait-limit-2931
+    model: claude-sonnet-5-5
+    durationSec: 432
+    toolCalls: 11
+    modelCalls: 7
+    tokenShare: 1.8
+  - type: workflow-subagent
+    task: Spec docs/count-before-stating-2915 r1
+    model: claude-sonnet-5-5
+    durationSec: 22
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 0.7
+  - type: workflow-subagent
+    task: fix docs/rewrite-sample-first-2916 r1
+    model: claude-sonnet-5-5
+    durationSec: 697
+    toolCalls: 10
+    modelCalls: 8
+    tokenShare: 2.1
+  - type: workflow-subagent
+    task: Spec docs/count-before-stating-2915 r2
+    model: claude-sonnet-5-5
+    durationSec: 31
+    toolCalls: 8
+    modelCalls: 5
+    tokenShare: 1.1
+  - type: workflow-subagent
+    task: Spec fix/glassbox-curate-wait-limit-2931 r2
+    model: claude-sonnet-5-5
+    durationSec: 20
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 0.7
+  - type: workflow-subagent
+    task: Spec docs/rewrite-sample-first-2916 r3
+    model: claude-sonnet-5-5
+    durationSec: 31
+    toolCalls: 7
+    modelCalls: 5
+    tokenShare: 1
+  - type: workflow-subagent
+    task: Standards docs/rewrite-sample-first-2916 r3
+    model: claude-sonnet-5-5
+    durationSec: 19
+    toolCalls: 3
+    modelCalls: 3
+    tokenShare: 0.7
+  - type: workflow-subagent
+    task: Standards docs/count-before-stating-2915 r1
+    model: claude-sonnet-5-5
+    durationSec: 17
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 0.7
+  - type: workflow-subagent
+    task: build docs/count-before-stating-2915
+    model: claude-sonnet-5-5
+    durationSec: 742
+    toolCalls: 30
+    modelCalls: 23
+    tokenShare: 4.2
+  - type: workflow-subagent
+    task: Spec docs/rewrite-sample-first-2916 r2
+    model: claude-sonnet-5-5
+    durationSec: 22
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 0.9
+  - type: workflow-subagent
+    task: Standards docs/count-before-stating-2915 r3
+    model: claude-sonnet-5-5
+    durationSec: 22
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 0.7
+  - type: workflow-subagent
+    task: Spec docs/rewrite-sample-first-2916 r1
+    model: claude-sonnet-5-5
+    durationSec: 20
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 0.8
+  - type: workflow-subagent
+    task: build docs/rewrite-sample-first-2916
+    model: claude-sonnet-5-5
+    durationSec: 448
+    toolCalls: 17
+    modelCalls: 15
+    tokenShare: 3
+  - type: workflow-subagent
+    task: fix docs/count-before-stating-2915 r2
+    model: claude-sonnet-5-5
+    durationSec: 22
+    toolCalls: 5
+    modelCalls: 5
+    tokenShare: 0.9
+  - type: workflow-subagent
+    task: fix docs/count-before-stating-2915 r1
+    model: claude-sonnet-5-5
+    durationSec: 607
+    toolCalls: 9
+    modelCalls: 6
+    tokenShare: 1.5
+  - type: workflow-subagent
+    task: Standards docs/rewrite-sample-first-2916 r2
+    model: claude-sonnet-5-5
+    durationSec: 20
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 0.7
+  - type: workflow-subagent
+    task: fix fix/glassbox-curate-wait-limit-2931 r1
+    model: claude-sonnet-5-5
+    durationSec: 479
+    toolCalls: 7
+    modelCalls: 6
+    tokenShare: 1.3
+  - type: workflow-subagent
+    task: fix docs/rewrite-sample-first-2916 r2
+    model: claude-sonnet-5-5
+    durationSec: 404
+    toolCalls: 6
+    modelCalls: 6
+    tokenShare: 1.4
+  - type: workflow-subagent
+    task: Spec fix/dispatch-brief-asks-2911 r1
+    model: claude-sonnet-5-5
+    durationSec: 14
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 0.6
+  - type: workflow-subagent
+    task: build fix/dispatch-brief-asks-2911
+    model: claude-sonnet-5-5
+    durationSec: 112
+    toolCalls: 12
+    modelCalls: 8
+    tokenShare: 2.3
+  - type: workflow-subagent
+    task: Spec fix/gate-doorbell-head-sha-2917 r2
+    model: claude-sonnet-5-5
+    durationSec: 23
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 0.8
+  - type: workflow-subagent
+    task: Spec chore/remove-glassbox-improve-2930 r2
+    model: claude-sonnet-5-5
+    durationSec: 27
+    toolCalls: 5
+    modelCalls: 5
+    tokenShare: 1
+  - type: workflow-subagent
+    task: fix fix/gate-doorbell-head-sha-2917 r1
+    model: claude-sonnet-5-5
+    durationSec: 10
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.5
+  - type: workflow-subagent
+    task: Standards fix/gate-doorbell-head-sha-2917 r1
+    model: claude-sonnet-5-5
+    durationSec: 24
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 0.7
+  - type: workflow-subagent
+    task: fix fix/dispatch-brief-asks-2911 r1
+    model: claude-sonnet-5-5
+    durationSec: 62
+    toolCalls: 11
+    modelCalls: 7
+    tokenShare: 1.2
+  - type: workflow-subagent
+    task: Spec chore/remove-glassbox-improve-2930 r3
+    model: claude-sonnet-5-5
+    durationSec: 38
+    toolCalls: 8
+    modelCalls: 6
+    tokenShare: 1.3
+  - type: workflow-subagent
+    task: fix fix/gate-doorbell-head-sha-2917 r2
+    model: claude-sonnet-5-5
+    durationSec: 1471
+    toolCalls: 11
+    modelCalls: 9
+    tokenShare: 2.1
+  - type: workflow-subagent
+    task: fix chore/remove-glassbox-improve-2930 r1
+    model: claude-sonnet-5-5
+    durationSec: 555
+    toolCalls: 7
+    modelCalls: 6
+    tokenShare: 1.6
+  - type: workflow-subagent
+    task: Spec fix/dispatch-brief-asks-2911 r2
+    model: claude-sonnet-5-5
+    durationSec: 21
+    toolCalls: 6
+    modelCalls: 5
+    tokenShare: 0.9
+  - type: workflow-subagent
+    task: Standards fix/dispatch-brief-asks-2911 r1
+    model: claude-sonnet-5-5
+    durationSec: 13
+    toolCalls: 3
+    modelCalls: 2
+    tokenShare: 1.4
+  - type: workflow-subagent
+    task: Spec fix/gate-doorbell-head-sha-2917 r3
+    model: claude-sonnet-5-5
+    durationSec: 20
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 0.8
+  - type: workflow-subagent
+    task: Standards chore/remove-glassbox-improve-2930 r2
+    model: claude-sonnet-5-5
+    durationSec: 24
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 0.8
+  - type: workflow-subagent
+    task: build chore/remove-glassbox-improve-2930
+    model: claude-sonnet-5-5
+    durationSec: 434
+    toolCalls: 26
+    modelCalls: 19
+    tokenShare: 3.9
+  - type: workflow-subagent
+    task: fix chore/remove-glassbox-improve-2930 r2
+    model: claude-sonnet-5-5
+    durationSec: 492
+    toolCalls: 9
+    modelCalls: 6
+    tokenShare: 1.4
+  - type: workflow-subagent
+    task: Standards fix/dispatch-brief-asks-2911 r2
+    model: claude-sonnet-5-5
+    durationSec: 13
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 0.7
+  - type: workflow-subagent
+    task: Standards fix/gate-doorbell-head-sha-2917 r3
+    model: claude-sonnet-5-5
+    durationSec: 10
+    toolCalls: 3
+    modelCalls: 2
+    tokenShare: 0.6
+  - type: workflow-subagent
+    task: Spec fix/gate-doorbell-head-sha-2917 r1
+    model: claude-sonnet-5-5
+    durationSec: 29
+    toolCalls: 8
+    modelCalls: 5
+    tokenShare: 1.1
+  - type: workflow-subagent
+    task: Standards chore/remove-glassbox-improve-2930 r3
+    model: claude-sonnet-5-5
+    durationSec: 23
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 0.9
+  - type: workflow-subagent
+    task: Standards chore/remove-glassbox-improve-2930 r1
+    model: claude-sonnet-5-5
+    durationSec: 23
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 0.9
+  - type: workflow-subagent
+    task: Standards fix/gate-doorbell-head-sha-2917 r2
+    model: claude-sonnet-5-5
+    durationSec: 13
+    toolCalls: 3
+    modelCalls: 2
+    tokenShare: 0.6
+  - type: workflow-subagent
+    task: build fix/gate-doorbell-head-sha-2917
+    model: claude-sonnet-5-5
+    durationSec: 429
+    toolCalls: 30
+    modelCalls: 22
+    tokenShare: 4.1
+  - type: workflow-subagent
+    task: gate fix/dispatch-brief-asks-2911
+    model: claude-sonnet-5-5
+    durationSec: 43
+    toolCalls: 3
+    modelCalls: 2
+    tokenShare: 0.5
+  - type: workflow-subagent
+    task: Spec chore/remove-glassbox-improve-2930 r1
+    model: claude-sonnet-5-5
+    durationSec: 28
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 1
+  - type: workflow-subagent
+    task: "triage #2914"
+    model: claude-sonnet-5-5
+    durationSec: 52
+    toolCalls: 15
+    modelCalls: 8
+    tokenShare: 1.6
+  - type: workflow-subagent
+    task: "triage #2915"
+    model: claude-sonnet-5-5
+    durationSec: 40
+    toolCalls: 14
+    modelCalls: 7
+    tokenShare: 1.6
+  - type: workflow-subagent
+    task: "triage #2884"
+    model: claude-sonnet-5-5
+    durationSec: 42
+    toolCalls: 15
+    modelCalls: 8
+    tokenShare: 1.8
+  - type: workflow-subagent
+    task: "triage #2931"
+    model: claude-sonnet-5-5
+    durationSec: 46
+    toolCalls: 16
+    modelCalls: 9
+    tokenShare: 2.8
+  - type: workflow-subagent
+    task: "triage #2911"
+    model: claude-sonnet-5-5
+    durationSec: 46
+    toolCalls: 15
+    modelCalls: 7
+    tokenShare: 1.6
+  - type: workflow-subagent
+    task: "triage #2917"
+    model: claude-sonnet-5-5
+    durationSec: 48
+    toolCalls: 16
+    modelCalls: 8
+    tokenShare: 1.6
+  - type: workflow-subagent
+    task: "triage #2916"
+    model: claude-sonnet-5-5
+    durationSec: 32
+    toolCalls: 11
+    modelCalls: 5
+    tokenShare: 1.2
+  - type: workflow-subagent
+    task: "triage #2913"
+    model: claude-sonnet-5-5
+    durationSec: 41
+    toolCalls: 16
+    modelCalls: 7
+    tokenShare: 1.5
+  - type: workflow-subagent
+    task: "triage #2930"
+    model: claude-sonnet-5-5
+    durationSec: 44
+    toolCalls: 14
+    modelCalls: 7
+    tokenShare: 1.6
+  - type: workflow-subagent
+    task: Standards fix/close-session-enforcement-2913-2884 r1
+    model: claude-sonnet-5-5
+    durationSec: 21
+    toolCalls: 3
+    modelCalls: 2
+    tokenShare: 0.7
+  - type: workflow-subagent
+    task: fix fix/close-session-enforcement-2913-2884 r1
+    model: claude-sonnet-5-5
+    durationSec: 364
+    toolCalls: 6
+    modelCalls: 5
+    tokenShare: 1.5
+  - type: workflow-subagent
+    task: Standards fix/close-session-enforcement-2913-2884 r2
+    model: claude-sonnet-5-5
+    durationSec: 20
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 0.8
+  - type: workflow-subagent
+    task: Spec fix/close-session-enforcement-2913-2884 r2
+    model: claude-sonnet-5-5
+    durationSec: 38
+    toolCalls: 8
+    modelCalls: 5
+    tokenShare: 1.2
+  - type: workflow-subagent
+    task: Spec fix/close-session-enforcement-2913-2884 r1
+    model: claude-sonnet-5-5
+    durationSec: 35
+    toolCalls: 9
+    modelCalls: 5
+    tokenShare: 1.2
+  - type: workflow-subagent
+    task: fix fix/close-session-enforcement-2913-2884 r2
+    model: claude-sonnet-5-5
+    durationSec: 8
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.5
+  - type: workflow-subagent
+    task: build fix/close-session-enforcement-2913-2884
+    model: claude-sonnet-5-5
+    durationSec: 859
+    toolCalls: 42
+    modelCalls: 33
+    tokenShare: 6.8
+gitBranch: ccr-74cc988d-km3ftr
+entrypoint: remote_mobile
+cliVersion: 2.1.319
+learnings:
+  - A Stop hook can block the end of a turn with decision block and a reason, but it cannot invoke a Skill; the model must do that after the block.
+landedBy: Stop
