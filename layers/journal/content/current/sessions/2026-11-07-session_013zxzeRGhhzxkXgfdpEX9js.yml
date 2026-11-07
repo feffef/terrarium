@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_013zxzeRGhhzxkXgfdpEX9js
 startedAt: 2026-11-07T13:38:49Z
-endedAt: 2026-11-07T14:17:43Z
+endedAt: 2026-11-07T14:19:14Z
 kind: interactive
 goal: Add a Web standards Subject to the Glass Box guide
 status: completed
@@ -79,44 +79,54 @@ skillsUsed:
     reason: Standards and Spec reviews before the PR
   - name: close-session
     reason: closure after opening the PR
+  - name: retro
+    reason: owner asked for a retrospective after the merge
+  - name: writing-for-agents
+    reason: loaded by retro for the writing style
   - name: log-session
     reason: (no reason given)
 frictions:
   - description: Agent calls were blocked by the dispatch-read guard because I wrote subagent briefs before reading the dispatch-subagents Skill, which CLAUDE.md names.
     solution: Read the Skill before the first brief; the guard worked as designed, one retry.
     severity: nit
-  - description: The first Standards, Spec and claim-check subagents stalled silently with idle transcripts for over ten minutes and no notification, then were abandoned and rerun on the final head.
-    solution: Set a call budget in every reviewer brief and check transcript activity sooner.
+  - description: Two reviewers and a claim checker went silent for over ten minutes and I abandoned and reran them; the cause is unverified, since a user interrupt fell meanwhile, and the dispatch Skill sets no call budget or idle check.
+    solution: "Add to dispatch-subagents: give every review agent a call budget and check its transcript's last write before waiting."
     severity: minor
   - description: I renamed a page file while a claim checker was reading it by path, so I waited and later reran the check.
     solution: Finish all renames before dispatching checkers, or give them a pinned commit instead of the working tree.
     severity: minor
-  - description: The Stop hook asked repeatedly for commits mid-work, so I committed unfinished drafts to satisfy it.
-    solution: Let the hook skip a branch with no open PR while subagents are still writing.
+  - description: The Stop hook asked repeatedly for commits mid-work while subagents were still writing, so I committed unfinished drafts to quiet it.
+    solution: Let the hook skip while subagents run or no PR is open; scripts/hooks is Human-only, so file an issue.
     severity: nit
-  - description: MDN, w3.org, vuejs.org and playwright.dev did not resolve from the cloud session, so writers read raw GitHub sources and some doc URLs rest on a source slug.
-    solution: Allow these hosts in the environment, or keep a saved docs mirror for Glass Box runs.
+  - description: MDN, w3.org, vuejs.org and playwright.dev did not resolve, and EVERY-PAGE.md's raw-GitHub fallback list omits MDN and W3C, so each writer rediscovered the paths.
+    solution: Add the mdn/content and w3c/using-aria raw paths to the fallback sentence, or allow the four hosts in the environment.
     severity: minor
-  - description: A retitle to Colour and motion preferences was one character over the 28-character title cap, found only at test time.
-    solution: Say the cap in the glassbox-curate Skill or run the title check before a rename.
-    severity: nit
-durationSec: 2334
+  - description: A retitle to Colour and motion preferences was one character over the 28-character title cap; validate:content passed and only the vitest page spec failed, though the Skill names validate:content as the fast loop.
+    solution: Run the title and description length check inside validate:content, or say in the Skill that it does not; page checks are outside a curate run's remit, so file an issue.
+    severity: minor
+  - description: Every curate run hand-builds the plain-text pages for fresh readers (MDC stripped, terms defined, excerpts as code); I wrote a throwaway converter for it.
+    solution: Add a plain.ts script beside orient.ts in glassbox-curate/scripts and point to it from the Diagnose step.
+    severity: minor
+  - description: Changing counts in prose (Three Tenants, five patterns, a 50% value) slipped past the writers, the page checks and the Standards reviewer, and I caught most by reading.
+    solution: Add a page-checks warning for number words or digits before plural nouns in In Terrarium, next to the so warning.
+    severity: minor
+durationSec: 2425
 models:
-  claude-sonnet-5-5: 227
+  claude-sonnet-5-5: 240
 toolCounts:
-  Bash: 76
+  Bash: 78
   AskUserQuestion: 2
   Read: 3
   mcp__github__list_issues: 1
   ToolSearch: 3
-  mcp__github__issue_write: 2
-  Skill: 5
+  mcp__github__issue_write: 3
+  Skill: 6
   Agent: 14
   mcp__claude-code-remote__get_session: 2
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   mcp__github__add_issue_comment: 2
-  ReadNotifications: 2
+  ReadNotifications: 3
   mcp__github__pull_request_read: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/web-standards/02.svg.md
@@ -259,7 +269,7 @@ subagents:
     durationSec: 6
     toolCalls: 4
     modelCalls: 1
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: general-purpose
     task: Spec review of run diff
     model: sonnet
@@ -273,70 +283,70 @@ subagents:
     durationSec: 351
     toolCalls: 64
     modelCalls: 50
-    tokenShare: 11.4
+    tokenShare: 10.9
   - type: general-purpose
     task: Write ARIA Lesson
     model: opus
     durationSec: 339
     toolCalls: 63
     modelCalls: 52
-    tokenShare: 12.2
+    tokenShare: 11.6
   - type: general-purpose
     task: Write Colour schemes Lesson
     model: opus
     durationSec: 334
     toolCalls: 62
     modelCalls: 45
-    tokenShare: 10
+    tokenShare: 9.5
   - type: general-purpose
     task: Claim-check the three new Lessons
     model: sonnet
     durationSec: 50
     toolCalls: 20
     modelCalls: 5
-    tokenShare: 2.4
+    tokenShare: 2.3
   - type: general-purpose
     task: "Fresh reader: SVG page"
     model: sonnet
     durationSec: 12
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: general-purpose
     task: "Fresh reader: ARIA page"
     model: sonnet
     durationSec: 13
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: general-purpose
     task: "Fresh reader: Colour schemes page"
     model: sonnet
     durationSec: 12
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: general-purpose
     task: Claim-check the three new Lessons (final text)
     model: sonnet
     durationSec: 105
     toolCalls: 22
     modelCalls: 7
-    tokenShare: 2.8
+    tokenShare: 2.7
   - type: general-purpose
     task: Standards review of the Web standards PR
     model: sonnet
     durationSec: 84
     toolCalls: 21
     modelCalls: 10
-    tokenShare: 2.5
+    tokenShare: 2.4
   - type: general-purpose
     task: Spec review of the Web standards PR
     model: sonnet
     durationSec: 71
     toolCalls: 20
     modelCalls: 7
-    tokenShare: 1.8
+    tokenShare: 1.7
 gitBranch: ccr-110d5533-2qn54g
 entrypoint: remote_mobile
 cliVersion: 2.1.319
