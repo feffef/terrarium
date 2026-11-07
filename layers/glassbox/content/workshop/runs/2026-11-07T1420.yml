@@ -1,5 +1,8 @@
 session: session_013zxzeSkKADXgmp8x1PeS5Z
 mode: autonomous
-focus: "Fill a gap: the Agent Brief, the comment that comes with ready-for-agent, which only the A bug report becomes work Walkthrough mentions. The run started interactive with no focus; the owner left the choice to the run and chose autonomous. Chosen because the memory page lists it first among the gaps needing no owner decision, and no open PR touches the page."
-changes: []
-pagesRead: []
+focus: "Fill a gap: the Agent Brief, the comment that comes with ready-for-agent, which only the A bug report becomes work Walkthrough mentioned. The run started interactive with no focus; the owner left the choice to the run and chose autonomous. Chosen because the memory page listed it first among the gaps needing no owner decision, and no open PR touches the page."
+changes:
+  - "skill-pack/02.planning-with-the-pack | Added a paragraph on the Agent Brief (what it holds, why it names no files), a paragraph on how the auto-triage sweep posts briefs and uses the files its subagents return, and a Why bullet; re-pinned and set publishedAt | no Lesson taught the brief, and the memory page named this page as its home"
+pagesRead:
+  - skill-pack/02.planning-with-the-pack
+  - git-github/06.work-queue
