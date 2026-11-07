@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRwjiiLkjj6sQ3u49g
 startedAt: 2026-11-07T09:21:16Z
-endedAt: 2026-11-07T09:42:06Z
+endedAt: 2026-11-07T10:42:31Z
 kind: interactive
 goal: "Glass Box curation run: propose splitting the Claude Code Subject"
-status: in-review
-outcome: "Claude Code Subject split into three and implemented in PR #2925, open and unmerged"
-summary: "The user started /glassbox-curate with no focus; I asked, and they said choose yourself and autonomous (agent-initiated focus). I proposed the Claude Code split as issue #2924. The user then told me to implement it, taking glassbox-lesson into account and using subagents where sensible (human-instructed). I took the recommended options, moved 8 Lessons into hooks/ and agents/, rewrote 99 links, added the Subjects, and updated the glossary, run entry and memory page. Two sonnet read-only reviewers found no defects. gate:scoped passed. I skipped code-review and did not rekey checks/update.yml or grades.yml; open PR #2922 re-pins the same pages and will conflict. PR #2925 is open, unmerged, with no subscription."
+status: completed
+outcome: "Claude Code Subject split into three; PR #2925 merged by the owner"
+summary: "The user started /glassbox-curate with no focus; I asked, and they said choose yourself and autonomous (agent-initiated focus). I proposed the Claude Code split as issue #2924. The user then told me to implement it, taking glassbox-lesson into account and using subagents where sensible (human-instructed). I took the recommended options, moved 8 Lessons into hooks/ and agents/, rewrote 99 links, added the Subjects, and updated the glossary, run entry and memory page. Two sonnet read-only reviewers found no defects. gate:scoped passed. I skipped code-review and did not rekey checks/update.yml or grades.yml; open PR #2922 re-pins the same pages and will conflict. PR #2925 was merged by the owner (human merge); I never subscribed to it. The user chose to leave file names unmatched to titles."
 prs:
   - "2925"
 docsRead:
@@ -62,11 +62,11 @@ frictions:
   - description: Did not rekey grades.yml and update.yml page stems after moving pages; their owners' files, so left stale.
     solution: Have the Skills tolerate moved stems or give the move a rekey step.
     severity: minor
-durationSec: 1250
+durationSec: 4875
 models:
-  claude-sonnet-5-5: 78
+  claude-sonnet-5-5: 86
 toolCounts:
-  Bash: 29
+  Bash: 30
   AskUserQuestion: 1
   Read: 1
   ToolSearch: 1
@@ -74,7 +74,7 @@ toolCounts:
   mcp__claude-code-remote__get_session: 1
   mcp__github__create_pull_request: 1
   Skill: 4
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 2
   Agent: 2
   ReadNotifications: 1
   mcp__github__update_pull_request: 1
@@ -203,14 +203,14 @@ subagents:
     durationSec: 28
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 10.8
+    tokenShare: 10
   - type: general-purpose
     task: "Review split: remaining and linking pages"
     model: sonnet
     durationSec: 43
     toolCalls: 9
     modelCalls: 8
-    tokenShare: 14.4
+    tokenShare: 13.2
 gitBranch: ccr-809c77f6-wmehxx
 entrypoint: remote_mobile
 cliVersion: 2.1.319
