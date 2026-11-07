@@ -1,0 +1,8 @@
+session: session_013zxzeRGhhzxkXgfdpEX9js
+mode: interactive
+focus: "Propose the web standards Subject (owner's direction 1) as an issue. The owner gave no focus and left the choice to the run; the proposal is cheap, needs the owner's decision before any page moves, and no open PR touches the guide."
+changes:
+  - "none | Filed issue #2941 with the Subject, the CSS custom properties move and its URL effect, the new SVG Lesson, the Mermaid keep-or-move choice and four decisions; no guide page changed | a new Subject needs the owner's approval; skipped the writer, claim checker and fresh reader because no page text changed"
+pagesRead:
+  - nuxt-vue/07.css-custom-properties
+  - nuxt-content/07.mermaid-pre-rendering

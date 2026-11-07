@@ -29,17 +29,14 @@ Pages are named by their title, followed by their file under `layers/glassbox/co
 
 These are the owner's goals for the guide. A new Subject needs the owner's approval.
 
-1. **Add a web standards Subject** for CSS and SVG. It would include how Terrarium keeps binary image files out of the repository by using SVG. Pages and code to start from:
-   - *CSS custom properties* (`nuxt-vue/07.css-custom-properties`);
-   - *Mermaid pre-rendering* (`nuxt-content/07.mermaid-pre-rendering`), which turns diagrams into SVG files;
-   - `app/utils/svg.ts`, which checks SVG before a page shows it. Today the guide mentions it only as a linting example.
+1. **Add a web standards Subject** for CSS and SVG. The proposal is issue #2941 and waits for the owner's answers; do not start it before they answer. Two facts from it: no ADR or rule says binary images are kept out of the repository (the repo just holds none), so the SVG Lesson has no source for that point until the owner gives it a home; and *Mermaid pre-rendering* should probably stay in Nuxt Content.
 2. **Make structure and titles consistent.** Titles should name the general concept and follow one pattern within a Subject, and file names should match their titles.
 3. **Fill what is missing entirely.** This covers a Lesson, or a whole Subject, for something Terrarium relies on that no page teaches yet.
 
 ### Good next focuses
 
 1. **Ask the owner whether to rename files to match their titles** (direction 2), as an issue that lists each rename and its URL effect.
-2. **Prepare the web standards Subject** (direction 1) as an issue for the owner, listing the pages it would hold.
+2. **Build the web standards Subject** once the owner answers issue #2941.
 
 
 ### Ideas not yet decided
