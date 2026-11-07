@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_013zxzeNqe2cXhykGMMq7vUi
 startedAt: 2026-11-07T13:23:11Z
-endedAt: 2026-11-07T13:34:43Z
+endedAt: 2026-11-07T13:37:52Z
 kind: interactive
 goal: "Curate the Glass Box guide: one home for repeated hook facts"
 status: completed
@@ -46,6 +46,10 @@ skillsUsed:
     reason: PR opened
   - name: log-session
     reason: (no reason given)
+  - name: writing-for-agents
+    reason: (no reason given)
+  - name: retro
+    reason: (invoked as a slash command)
 frictions:
   - description: Ran git fetch and git branch before reading git-conventions.md, which CLAUDE.md requires before any git command beyond read-only ones.
     solution: The orient step and Skill read list could say to read git-conventions.md before the first fetch; no harm resulted.
@@ -62,20 +66,38 @@ frictions:
   - description: The workflow forced a Subject-wide read for a two-sentence edit; orient output was 13KB plus a 5K-word page list, more than this change needed.
     solution: Let orient --pages take a Subject filter so a focused run reads only its area.
     severity: nit
-durationSec: 692
+  - description: get_session returned no usage field, so the Skill's cost budget could not be read or enforced; the PR reports cost as unreported.
+    solution: Have orient.ts print the run's spend, or name a fallback source in the Skill; the get_session owner may need to expose the field.
+    severity: minor
+  - description: orient.ts printed 13KB and --pages 5,400 words for all pages, though the change touched two pages.
+    solution: Let --pages take a Subject filter, and say the full list is for gap and overlap hunts only.
+    severity: minor
+  - description: The Skill's read-first list names eight docs for every run; a removal-only run had no guidance on which it may skip.
+    solution: "Tier the list: removal-only runs read EVERY-PAGE.md and the content rule, writing runs the full set."
+    severity: nit
+  - description: The invocation carried no sign of whether a person or a Routine started the run, so I spent a question round trip on the mode.
+    solution: Have orient.ts print how the run was started, or default to autonomous when nothing says otherwise.
+    severity: minor
+  - description: The code-review Skill's step 4 says to spawn subagents without pointing at dispatch-subagents, so the dispatch-read guard denied two Agent calls.
+    solution: Add one pointer line in code-review step 4 to the dispatch-subagents Skill.
+    severity: minor
+  - description: After the merge, log-session refused a completed log until close-session ran again, but re-invoking the loaded Skill returned only 'already loaded', which read as circular.
+    solution: Make the refusal say a fresh close-session call is what satisfies it, or have the check read the Skill-invocation event after the merge.
+    severity: minor
+durationSec: 882
 models:
-  claude-sonnet-5-5: 83
+  claude-sonnet-5-5: 92
 toolCounts:
-  Bash: 21
+  Bash: 22
   Read: 10
   AskUserQuestion: 1
   Edit: 4
   mcp__claude-code-remote__get_session: 1
-  Skill: 5
+  Skill: 6
   Agent: 4
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  ReadNotifications: 2
+  ReadNotifications: 3
   mcp__github__pull_request_read: 1
   mcp__github__add_issue_comment: 1
 filesEdited:
@@ -156,13 +178,13 @@ subagents:
     durationSec: 28
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 10.4
+    tokenShare: 9.3
   - type: general-purpose
     task: Spec review
     durationSec: 43
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 11
+    tokenShare: 9.8
 gitBranch: ccr-726ba078-qq1rbs
 entrypoint: remote_mobile
 cliVersion: 2.1.319
