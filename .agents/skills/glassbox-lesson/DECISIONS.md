@@ -9,3 +9,5 @@ order added, with where it was made.
 - Field names replace project jargon in titles: *Blocking hooks*, not guards that fail closed; *Commit and PR attribution*, not provenance (owner, #2598).
 - A missing `publishedAt` on a page whose teaching hasn't changed is not a deficit: adding one shows an old page on the Commons Timeline as new (EVERY-PAGE's Pin; review, #2500).
 - *Continuous deployment*'s Full reference stays Wikipedia: a practice has no official docs (review, #2500).
+- A glossary term is lowercase in a title like any common noun (*Installed skills*, *Reading across tenants*); only proper nouns and acronyms keep capitals (owner, curate run of 2026-11-07).
+- *Adding a site* keeps its plain word: the overview introduces "site" before "Tenant" (owner, curate run of 2026-11-07).
