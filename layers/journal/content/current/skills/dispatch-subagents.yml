@@ -495,3 +495,6 @@ observations:
   - date: "2026-11-06"
     note: >-
       Behaviour check, 10 runs, all PRs merged. Third session with a read-only review subagent running git checkout --detach in the lead's checkout (session_013zxzeTJp1jinYqgNJRczgA, after the 11-05 §3 reword; earlier session_013zxzeT8tDd5GPJiRNZRA4J, session_013zxzeRDagsHLSNJ939gcWK): filed #2874. Verified: session_013zxzeT8tDd5GPJiRNZRA4J skipped scratchpad subfolders and §4 same-file check (4 hand-resolved conflicts). Grade unchanged.
+  - date: "2026-11-07"
+    note: >-
+      Behaviour check, 10 runs, all PRs merged, no stranded worktree. Repeated silent failure: briefs omit CLAUDE.md's every-brief asks (verdicts, sourced counts, scratchpad folder) in session_013zxzeNeTKPqiQ1jj1FgYXh and session_013zxzeSYWF1rye7qScgSUFV, after session_013zxzeT8tDd5GPJiRNZRA4J; filed #2911. #2874 (checkout rule) seen working: a 11-07 friction in session_013zxzeSxfK7X25LqaANsqoE says the brief lacked the no-checkout rule, no damage logged. Grade unchanged.

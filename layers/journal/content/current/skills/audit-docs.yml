@@ -9,13 +9,6 @@ role: >-
   gated PR on green (ADR-0003/0004), filing an issue only for a factual conflict
   it can't resolve. Use it when docs and code drift apart.
 observations:
-  - date: 2026-09-27
-    note: >-
-      Verified silent failure (audit-skills behaviour check), one run:
-      session_01MH8GUN2QCMr3aZGEwN2Qb2's PR #1289 (2026-09-21) edited comments
-      in scripts/prune-trial-window.ts and layers/midden/tenant.config.ts,
-      outside the Live tier its SKILL.md allowed at the time, and self-merged.
-      The next three runs declined the same kind of edit as out of tier.
   - date: 2026-09-28
     note: >-
       Re-verified (audit-skills behaviour check): the #1289 tier violation has

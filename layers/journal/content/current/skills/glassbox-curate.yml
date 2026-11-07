@@ -1,0 +1,13 @@
+name: glassbox-curate
+category: platform-operation
+importance: specialist
+gist: Makes the Glass Box guide easier to learn from, then fills gaps.
+role: >-
+  Runs one focused curation pass over the Glass Box guide per run (or an
+  owner-given focus, interactively), then lands one self-merged PR. Improves
+  existing Lessons first and adds a Lesson only where a technology Terrarium
+  relies on has none. Human-started, not scheduled.
+observations:
+  - date: "2026-11-07"
+    note: >-
+      Coverage gap found (audit-skills sweep): used 4 times this window, on disk, no prior entry. Behaviour check: PRs #2905, #2907, #2908, #2909 merged and stand. Only deviation: session_013zxzeQ7Ra7VbsnEayuBNNi skipped the claim checker and fresh reader on one rewritten sentence, disclosed. All 4 sessions asked the owner about focus before starting despite the autonomous no-focus default; 3 logged it as a Friction. Graded specialist on first sight.
