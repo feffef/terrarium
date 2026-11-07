@@ -93,6 +93,8 @@ in a brief as `.agents/skills/...`.
 - **Fix.** An opus writer quotes the `path:line` behind every sentence it adds
   or changes. Each `The cost:` clause needs a source that states that cost, and
   the writer runs a command sequence before it says what the sequence does.
+  A new Lesson follows `.agents/skills/glassbox-lesson/SKILL.md` step by step:
+  give the writer its path and have it report each step's Done.
 - **Check.** A separate sonnet claim checker checks the changed sentences
   and a promoted draft's whole page. `glassbox-update` owns the claim check of
   unchanged text, so leave that to it. Run EVERY-PAGE.md's Check on the
