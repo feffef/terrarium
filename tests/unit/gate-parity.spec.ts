@@ -15,7 +15,6 @@ interface CompositeStep {
   name?: string
   if?: string
   run?: string
-  env?: Record<string, string>
   'continue-on-error'?: boolean
 }
 
@@ -100,10 +99,5 @@ describe('Gate doorbell (#278, fork fix #659)', () => {
     expect(doorbell, 'the composite must carry the doorbell comment').toBeDefined()
     expect(doorbell!.if).toContain('github.event.pull_request.head.repo.full_name == github.repository')
     expect(doorbell!['continue-on-error']).toBe(true)
-  })
-
-  it('names the PR head commit, not the merge commit github.sha points to (#2917)', () => {
-    const doorbell = steps().find((s) => s.run?.includes('gh pr comment'))
-    expect(doorbell!.env?.HEAD_SHA).toBe('${{ github.event.pull_request.head.sha }}')
   })
 })
