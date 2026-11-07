@@ -1,0 +1,166 @@
+schemaVersion: 1
+session: session_013zxzeNqe2cXhykGMMq7vUi
+startedAt: 2026-11-07T13:23:11Z
+endedAt: 2026-11-07T13:30:57Z
+kind: interactive
+goal: "Curate the Glass Box guide: one home for repeated hook facts"
+status: in-review
+outcome: "PR 2940 open: two Glass Box pages now link instead of repeating; gate green, reviews clean"
+summary: "The owner started glassbox-curate with no focus. I oriented first, then asked (human-instructed) whether the run was interactive or autonomous and which focus; the owner answered autonomous and \"you choose\", so the focus choice and everything after were agent-initiated. I picked the memory page's lead on giving repeated Claude Code and Hooks facts one home, cut the ADR-hint detail from Path-specific rules and the transcript-dedupe detail from Hook-added context in favour of links to the pages that hold them, trimmed the memory page, wrote the run entry, ran the glass box page spec, validate:content and gate:scoped (green), ran code-review as two subagents (standards and spec; one wording nit applied) and opened PR 2940, then subscribed to it. As a removal-only change it skipped the writer, claim checker and fresh reader. Cost was unreported because get_session had no usage field. Still open: wait for CI and self-merge, then re-run close-session as completed."
+prs:
+  - "2940"
+docsRead:
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: "page rules: mechanism not motive, link only existing pages, check steps"
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/DECISIONS.md
+    reason: closed rulings; none touched this change
+    useful: no
+  - path: docs/agents/pr-workflow.md
+    reason: review-before-PR order and simple-change test; a new run entry file made it non-simple
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: commit via -F file, trailer check; read after my first git fetch
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: read before the PR; I only used create_pull_request, nothing in it applied
+    useful: no
+  - path: layers/glassbox/GLOSSARY.md
+    reason: not read by me, only the standards subagent; it reported using it for page shape and link rules
+    useful: yes
+  - path: .agents/skills/glassbox-curate/SKILL.md
+    reason: the invoked Skill; the spec subagent also read its Removal and Land sections
+    useful: yes
+  - path: layers/glassbox/content/guide/pages/hooks/03.hook-added-context.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/claude-code/02.path-scoped-rules.md
+    reason: (read before editing)
+skillsUsed:
+  - name: glassbox-curate
+    reason: the run itself
+  - name: code-review
+    reason: standards and spec subagents before opening the PR
+  - name: dispatch-subagents
+    reason: the dispatch-read guard blocked my first Agent calls until I read it
+  - name: close-session
+    reason: PR opened
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran git fetch and git branch before reading git-conventions.md, which CLAUDE.md requires before any git command beyond read-only ones.
+    solution: The orient step and Skill read list could say to read git-conventions.md before the first fetch; no harm resulted.
+    severity: nit
+  - description: The Skill's read-first list names glassbox GLOSSARY and QUALITY; I never read them and relied on the subagent reading the GLOSSARY.
+    solution: Fine for a removal-only edit, but the Skill could say which of the read-first files a removal run may skip.
+    severity: minor
+  - description: The dispatch-read guard blocked my first two Agent calls, costing a retry; I had not read dispatch-subagents before writing the briefs.
+    solution: The code-review Skill step 4 could point to dispatch-subagents, so the read happens before briefs are written.
+    severity: minor
+  - description: Skipped the Diagnose step and wrote the run entry after the edits, not right after choosing the focus as the Skill orders.
+    solution: The Skill could say a removal-only run may skip Diagnose and write the entry at landing.
+    severity: nit
+  - description: The workflow forced a Subject-wide read for a two-sentence edit; orient output was 13KB plus a 5K-word page list, more than this change needed.
+    solution: Let orient --pages take a Subject filter so a focused run reads only its area.
+    severity: nit
+durationSec: 466
+models:
+  claude-sonnet-5-5: 69
+toolCounts:
+  Bash: 17
+  Read: 10
+  AskUserQuestion: 1
+  Edit: 4
+  mcp__claude-code-remote__get_session: 1
+  Skill: 4
+  Agent: 4
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - layers/glassbox/content/guide/pages/hooks/03.hook-added-context.md
+  - layers/glassbox/content/guide/pages/claude-code/02.path-scoped-rules.md
+  - layers/glassbox/content/workshop/pages/index.md
+  - layers/glassbox/content/workshop/runs/2026-11-07T1323.yml
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/tenant-glossary.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/guards.md
+docsReadBySubagents:
+  - layers/glassbox/GLOSSARY.md
+  - .agents/skills/glassbox-curate/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run gate:scoped and code-review before the PR and that I may self-merge; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Session log goes straight to main via close-session; the summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Said to open the PR myself and subscribe; summary was enough, the owner's answer approved the Glass Box content.
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header on the PR body; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: About prune trials; no open trial covered the text I changed, so it did not apply.
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: About Skill storage; I changed no Skill, so it did not apply.
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded by a Human-only path read; my PR touched none, so I may merge it.
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: About where instructions live; nothing I changed was an instruction.
+    useful: no
+  - path: .claude/rules/glassbox-content.md
+    reason: Confirmed the run entry may hold session ids and prose may not; summary was enough.
+    useful: yes
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded by reading guide pages; no diagram was touched, so it did not apply.
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded by reading Glass Box files; I used the GLOSSARY terms only through the standards subagent.
+    useful: partly
+  - path: .claude/rules/adr-0021.md
+    reason: Only the standards subagent loaded it; it reported it did not apply.
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: Only the standards subagent loaded it; it reported it did not apply.
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: Only the standards subagent loaded it; it reported it did not apply.
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Standards review
+  - type: general-purpose
+    task: Spec review
+  - type: general-purpose
+    task: Standards review
+    durationSec: 28
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 12.8
+  - type: general-purpose
+    task: Spec review
+    durationSec: 43
+    toolCalls: 4
+    modelCalls: 4
+    tokenShare: 13.5
+gitBranch: ccr-726ba078-qq1rbs
+entrypoint: remote_mobile
+cliVersion: 2.1.319
+landedBy: Stop
