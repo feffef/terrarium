@@ -191,3 +191,23 @@ occurrences:
     severity: minor
     description: "First Agent call for the fact-check was blocked by the dispatch-read guard because I had not read dispatch-subagents; one wasted call."
     solution: "Digest step 3 could name dispatch-subagents as a read before the fact-check brief."
+  - session: session_013zxzeQDfNNTXpQYQtt9saY
+    date: "2026-11-06"
+    severity: nit
+    description: "My first Agent call for the survey was blocked by the dispatch-read guard because I had not read the dispatch-subagents Skill, which CLAUDE.md requires before writing a brief."
+    solution: "Read the Skill before the first brief; the frictions-to-fixes Skill could name dispatch-subagents at its first dispatch step."
+  - session: session_013zxzePVGCU1ARYitEsVKoy
+    date: "2026-11-06"
+    severity: nit
+    description: "First Workflow call was blocked by the dispatch-read guard though the workflow writes its own briefs; cost one retry."
+    solution: "Have the clear-backlog Skill name dispatch-subagents as a read before its first Workflow call."
+  - session: session_013zxzePuqJcsqc92SUXfWFX
+    date: "2026-11-06"
+    severity: nit
+    description: "Launched an Agent call before reading the dispatch-subagents Skill; a guard blocked it and I had to read the Skill and retry."
+    solution: "Read dispatch-subagents before writing any brief, as CLAUDE.md says."
+  - session: session_013zxzeSxfK7X25LqaANsqoE
+    date: "2026-11-07"
+    severity: minor
+    description: "First Agent call was blocked by the dispatch-read guard because I had not read the dispatch-subagents Skill; the brief also lacked the no-checkout rule."
+    solution: "Read the Skill before writing any subagent brief, as CLAUDE.md says."

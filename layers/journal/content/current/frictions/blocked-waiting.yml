@@ -59,3 +59,13 @@ occurrences:
     severity: nit
     description: "I tried a foreground sleep to wait for the gate; the harness blocked it, wasting a call."
     solution: "End the turn and let the background completion notification wake me."
+  - session: session_013zxzeRLzBAw62ZMjhsbHiq
+    date: "2026-11-06"
+    severity: nit
+    description: "Foreground sleep to wait for the background gate was blocked by a guard; the completion notification was the right mechanism."
+    solution: "Rely on the background-task notification and end the turn."
+  - session: session_013zxzeSYWF1rye7qScgSUFV
+    date: "2026-11-06"
+    severity: nit
+    description: "Tried a chained sleep to wait for a subagent; the harness blocked it."
+    solution: "End the turn and wait for the completion notification."

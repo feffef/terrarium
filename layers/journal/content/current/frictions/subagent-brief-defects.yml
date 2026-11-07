@@ -56,3 +56,8 @@ occurrences:
     severity: nit
     description: "The researcher brief I filled in kept the placeholder phrase listed in the run notes below, which named a list that did not exist; I patched it with sed."
     solution: "Fill briefs from one script that asserts no placeholder text is left, and keep the run notes out of the brief."
+  - session: session_013zxzeRCJHe4rmKN5i2CQ16
+    date: "2026-11-06"
+    severity: minor
+    description: "The curate Skill's first draft missed five design items; the brief pointed at the design issue but the agent worked from my summary, costing three review-and-gate rounds."
+    solution: "In a brief for a Skill built from a design issue, list each required behaviour from the design, or tell the agent to read the numbered steps in full before drafting."

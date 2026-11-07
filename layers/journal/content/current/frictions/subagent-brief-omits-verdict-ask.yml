@@ -1,9 +1,9 @@
 name: subagent-brief-omits-verdict-ask
 summary: Briefs for helper agents left out the lines CLAUDE.md asks every brief to carry (rule and doc verdicts, a scratchpad subfolder per agent), so verdicts went missing and output landed elsewhere.
-cause: "CLAUDE.md asks every subagent brief for a rule/doc verdict in the final reply (PR #2060) and for a scratchpad subfolder named for the agent; nothing puts those lines into a brief, so orchestrators omit them from hand-written, one-off and Skill-templated briefs alike. Since PR #2645 the Journal marks every loaded rule without a verdict as 'no verdict provided', so the omission shows but is not prevented. Signals: 'briefs didn't ask for rule and doc verdicts', 'no verdict provided', output written outside a per-agent scratchpad subfolder."
+cause: "CLAUDE.md asks every subagent brief for a rule/doc verdict in the final reply (PR #2060), a scratchpad subfolder named for the agent, sources for counts, and the read-first triggers (git, GitHub docs) the agent's work needs; nothing puts those lines into a brief and the dispatch-subagents Skill does not carry them, so orchestrators omit them from hand-written, one-off and Skill-templated briefs alike. Since PR #2645 the Journal marks every loaded rule without a verdict as 'no verdict provided', so the omission shows but is not prevented. Signals: 'briefs didn't ask for rule and doc verdicts', 'no verdict provided', output written outside a per-agent scratchpad subfolder, unverified figures in a report, a subagent reading git-conventions late."
 surface: safe
-status: open
-ref: "Owner kept the request (issue #2115 closed not-planned 2026-10-16); 01E2zbWE (nit, after the fix) shows it still gets omitted."
+status: tracked
+ref: "issue #2911"
 fixes:
   - pr: 1964
     date: "2026-10-14"
@@ -43,3 +43,23 @@ occurrences:
     severity: nit
     description: "Gate, rater and researcher briefs asked for per-doc verdicts and sourced counts but my 38 judge prompts did not (CLAUDE.md subagent-brief rule), so the judges report no rule verdicts."
     solution: "Add the verdict and source-your-counts lines to the judge wrapper prompt, or to the judge brief template."
+  - session: session_013zxzeSYWF1rye7qScgSUFV
+    date: "2026-11-06"
+    severity: minor
+    description: "Blind-reader and reviewer briefs omitted two CLAUDE.md brief lines (named scratchpad subfolder; sources for counts or unverified marks), so reports carried unverified figures I had to check myself."
+    solution: "Re-read CLAUDE.md's every-brief rule before the first Agent call, or put the lines in the blog-post Skill's brief text."
+  - session: session_013zxzeNeTKPqiQ1jj1FgYXh
+    date: "2026-11-06"
+    severity: minor
+    description: "Three of four subagent briefs (reader, claim checker, code-review pair) omitted CLAUDE.md's required ask for doc and rule verdicts, scratchpad subfolder and sourced counts; only the writer's brief had them."
+    solution: "Make the dispatch-subagents Skill's brief checklist include the CLAUDE.md every-brief line verbatim, so a brief cannot skip it."
+  - session: session_013zxzeSRaXnk1QPxkJvswS3
+    date: "2026-11-07"
+    severity: minor
+    description: "Review briefs needed the CLAUDE.md every-brief asks pasted by hand; the dispatch-subagents Skill does not carry them."
+    solution: "One line in dispatch-subagents section 3 pointing at that CLAUDE.md bullet (issue #2911)."
+  - session: session_013zxzeTJp1jinYqgNJRczgA
+    date: "2026-11-05"
+    severity: minor
+    description: "Several subagents read git-conventions late after a hook, and Rater C8 ran gh api without reading github-integration.md; my briefs did not carry CLAUDE.md's read-first triggers"
+    solution: "Add one line to dispatch-subagents briefs naming the read-first triggers, or say read-only git show needs no doc"

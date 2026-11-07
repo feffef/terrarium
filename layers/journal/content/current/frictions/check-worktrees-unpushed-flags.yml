@@ -46,3 +46,8 @@ occurrences:
     severity: minor
     description: "Linked worktree(s) left with uncommitted or unpushed work at close: /home/user/terrarium/.claude/worktrees/wf_11240032-753-1"
     solution: "Push each, or remove it if its work is meant to be dropped."
+  - session: session_013zxzePVGCU1ARYitEsVKoy
+    date: "2026-11-06"
+    severity: minor
+    description: "Linked worktree(s) left with uncommitted or unpushed work at close: /home/user/terrarium/.claude/worktrees/wf_ba032cf9-781-1, /home/user/terrarium/.claude/worktrees/wf_ba032cf9-781-2, /home/user/terrarium/.claude/worktrees/wf_ba032cf9-781-3, /home/user/terrarium/.claude/worktrees/wf_ba032cf9-781-4, /home/user/terrarium/.claude/worktrees/wf_ba032cf9-781-5"
+    solution: "Push each, or remove it if its work is meant to be dropped."

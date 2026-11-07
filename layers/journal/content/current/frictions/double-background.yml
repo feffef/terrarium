@@ -121,3 +121,23 @@ occurrences:
     severity: nit
     description: "Sent run_in_background with a trailing & and disown on the gate run; the double-background guard denied it"
     solution: "Pass run_in_background alone; the guard message said so"
+  - session: session_013zxzeSyXPhUKs4jTjqTEw4
+    date: "2026-11-06"
+    severity: nit
+    description: "Combined an edit-and-commit with a backgrounded gate in one Bash call with a trailing ampersand; the double-background guard blocked the whole call."
+    solution: "Pass run_in_background alone with a plain foreground command, as the guard says; keep edits and commits in a separate call."
+  - session: session_013zxzeQwTKjoSLKH31R1ijd
+    date: "2026-11-06"
+    severity: nit
+    description: "Stacked run_in_background with a trailing & on the gate command; the double-background guard denied it and nothing ran."
+    solution: "Pass run_in_background alone with a plain foreground command."
+  - session: session_013zxzeRCJHe4rmKN5i2CQ16
+    date: "2026-11-06"
+    severity: nit
+    description: "A Bash call set run_in_background and also a trailing ampersand, so the double-background guard blocked it and nothing ran."
+    solution: "Use run_in_background alone with a plain foreground command."
+  - session: session_013zxzeRJEE2ehNrQTL62nhX
+    date: "2026-11-06"
+    severity: nit
+    description: "A Bash call set run_in_background and also ended in an ampersand; the double-background guard blocked it and nothing ran."
+    solution: "Pass run_in_background alone with a plain foreground command."

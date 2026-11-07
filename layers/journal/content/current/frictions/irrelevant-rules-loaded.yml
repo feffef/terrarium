@@ -41,3 +41,8 @@ occurrences:
     severity: nit
     description: "Rules unrelated to the task (adr-0021, guards, adr-0022 and others) loaded into the search subagent as hook side effects, adding noise to its report."
     solution: "Narrower paths for those rules so a grep over scripts or journal files doesn't load them."
+  - session: session_013zxzePuqJcsqc92SUXfWFX
+    date: "2026-11-06"
+    severity: nit
+    description: "Eleven of seventeen loaded rules needed a no verdict in log-session, several loaded after Bash commands that only read Glass Box files, so each cost context and an entry."
+    solution: "Narrow the paths of tenant-layers, data-shapes, mdc-when-to-use, adr-0002 and mermaid-lanes, or let an unused loaded rule count as no without an entry."

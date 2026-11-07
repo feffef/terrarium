@@ -18,3 +18,8 @@ occurrences:
     severity: minor
     description: "My first python edit of the Eyra post asserted on a missing string and wrote nothing, yet I committed and resumed the checker; it re-read the unchanged file and a round was wasted."
     solution: "Check the script's exit status and git diff before committing and before resuming a checker."
+  - session: session_013zxzeSxfK7X25LqaANsqoE
+    date: "2026-11-07"
+    severity: minor
+    description: "A scripted Python edit of the Digest garbled the summary and duplicated a PR link, needing a second fix pass."
+    solution: "Rewrite the affected lines directly with Edit instead of chained string replaces."

@@ -18,3 +18,8 @@ occurrences:
     severity: minor
     description: "Merged a PR without first reading docs/agents/pr-workflow.md, which CLAUDE.md requires before merging; the Skill's step named merge-pr.ts directly."
     solution: "Point the dependabot-sweep Skill's merge step at pr-workflow.md, or have merge-pr.ts remind."
+  - session: session_013zxzeRJEE2ehNrQTL62nhX
+    date: "2026-11-06"
+    severity: nit
+    description: "Read pr-workflow.md only after review and gate had started, though CLAUDE.md asks for it before opening a PR."
+    solution: "Read the PR doc before starting the review step."

@@ -56,3 +56,8 @@ occurrences:
     severity: nit
     description: "I typed a session id from memory in my first commit message; the commit-msg hook replaced it with the real one."
     solution: "Copy the id from the env or system reminder before writing the commit message."
+  - session: session_013zxzeRCJHe4rmKN5i2CQ16
+    date: "2026-11-06"
+    severity: nit
+    description: "Wrote the spec session's id into a commit-message trailer; the commit hook corrected it."
+    solution: "Copy the id from my own system-prompt commit template, never from an issue body."

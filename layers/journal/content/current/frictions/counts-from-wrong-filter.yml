@@ -40,3 +40,13 @@ occurrences:
     severity: nit
     description: "My quick check of the Friction files' occurrence counts was a sloppy grep that returned meaningless numbers; I left the issues' counts marked unverified instead of recounting."
     solution: "Count with a short script over the occurrences list, or say unverified up front rather than running a grep that cannot count."
+  - session: session_013zxzeTDG9WP45rYE5hRMpG
+    date: "2026-11-06"
+    severity: nit
+    description: "Page count from ls (66) did not match runs.yml pagesRead (68); left unexplained, so I wrote 'every page' without a verified total"
+    solution: "Count guide pages with the same function grades.ts uses before comparing"
+  - session: session_013zxzePVGCU1ARYitEsVKoy
+    date: "2026-11-06"
+    severity: nit
+    description: "Stated the 21-occurrence count only after checking; my grep of the ledger gave 38 date-like lines, so the figure stayed unverified and I said so."
+    solution: "Ledger tooling should print occurrence counts since a given fix, so a grill question can cite one verified number."

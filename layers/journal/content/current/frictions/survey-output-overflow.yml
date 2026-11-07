@@ -1,8 +1,8 @@
 name: survey-output-overflow
 summary: >-
-  The data the self-improvement Skills read about past sessions was too large to read in one go.
+  A dump of a large data file or script output (session logs, the ledger, Inventory or run YAML, session records) was too large to read in one go.
 cause: >-
-  The reads behind frictions-to-fixes and similar Journal surveys (session-frictions, extract-frictions --compact at about 90-150 KB, the ledger directory, a dump of several Skill Inventory entries) overflow a tool result, so agents slice, truncate or re-query them and can miss lines. Since PR #2640 prune-friction-ledger.ts --summary and --candidates send large output to a file and print a notice. A bare audit-skills.ts run belongs in audit-skills-output-overflow. Signals: output persisted to a file, '| head truncated', a second narrower query, 'printed N KB'.
+  The reads behind frictions-to-fixes and similar surveys (session-frictions, extract-frictions --compact at about 90-250 KB with no per-severity view, the ledger directory, Skill Inventory entries) and cat or dumps of big YAML data files (runs.yml 190 KB, a 32 KB observations file, nine get_session records) overflow a tool result or the context, so agents slice, truncate, re-query or write ad hoc filters and can miss lines. Since PR #2640 prune-friction-ledger.ts --summary and --candidates send large output to a file and print a notice. A bare audit-skills.ts run belongs in audit-skills-output-overflow; the glassbox-curate orientation script is orient-output-truncates. Signals: output persisted to a file, '| head truncated', a second narrower query, 'printed N KB', 'dumped ... twice'.
 surface: safe
 status: open
 fixes:
@@ -31,3 +31,23 @@ occurrences:
     severity: nit
     description: "My first scan printed every post-fix occurrence across the ledger (102 KB), which overflowed to a file and needed a second, filtered grep."
     solution: "Filter by keyword in the first scan, or hand a full-ledger read to subagents from the start."
+  - session: session_013zxzePZAMHv4JxrNhCtzMg
+    date: "2026-11-06"
+    severity: nit
+    description: "Looked up the dispatch-subagents observations by dumping a 32KB YAML twice (output overflowed) before parsing only the last entries."
+    solution: "Print only the last observations with a short python snippet from the start."
+  - session: session_013zxzeQUzcNjB7oD8ukBLGp
+    date: "2026-11-06"
+    severity: minor
+    description: "First Bash call cat'ed grades.yml and the 190 KB runs.yml with the Skill files, overflowing to a saved output and needing re-reads"
+    solution: "Check file sizes with wc first and extract YAML metrics by script, as I did later"
+  - session: session_013zxzeQwTKjoSLKH31R1ijd
+    date: "2026-11-06"
+    severity: nit
+    description: "extract-frictions wrote 245KB of JSON to a file with no per-severity view, so I wrote an ad hoc python filter to find major and blocker hits."
+    solution: "Give extract-frictions a --min-severity flag for the trial-judging use."
+  - session: session_013zxzeQWJEVk8sAXq1hcSjq
+    date: "2026-11-05"
+    severity: minor
+    description: "Printed about 150 lines of runs.yml findings when I only needed the cost columns, then misjudged which runs counted as v3 until the owner corrected me."
+    solution: "Grep the numeric fields first, and ask the owner which runs count before reading them."

@@ -1,0 +1,17 @@
+name: orient-output-truncates
+surface: safe
+summary: The glassbox-curate orientation script prints more than a tool result holds, so a section (the guide pages) was cut off and had to be re-fetched.
+cause: ".agents/skills/glassbox-curate/scripts/orient.ts prints about 73 KB unfiltered; the harness cuts it to a file or the agent pipes it through head -300, losing the guide-pages section at the end, so the curate run works from an incomplete orientation. Signals: 'orient.ts output', 'head -300 truncated the guide-pages section', 'cut to a file and one lost the guide-pages section'."
+status: tracked
+ref: "issue #2906 (item 2: most of orient.ts output is noise)"
+occurrences:
+  - session: session_013zxzeQUzcNjB7oD8ukBLGp
+    date: "2026-11-06"
+    severity: moderate
+    description: "My orientation script design sent 73KB unfiltered, so every curate run had it cut to a file and one lost the guide-pages section; I had measured words, not the tool's output limit"
+    solution: "Size a script meant for a context against the tool output cap (about 30KB), not a word count"
+  - session: session_013zxzeRJEE2ehNrQTL62nhX
+    date: "2026-11-06"
+    severity: minor
+    description: "Piped orient.ts output through head -300, which truncated the guide-pages section of its output."
+    solution: "Redirect orient output to a file and read it whole."

@@ -66,3 +66,8 @@ occurrences:
     severity: nit
     description: "A for-loop Bash call began with cd into the ledger directory, which moved the session's working directory; the harness noted the change."
     solution: "Use absolute paths or a subshell for cd, as the bare-cd Friction already says."
+  - session: session_013zxzeRLzBAw62ZMjhsbHiq
+    date: "2026-11-06"
+    severity: nit
+    description: "A cd into the pages folder in one Bash call made the shell cwd drift for later calls, forcing absolute paths."
+    solution: "Use absolute paths and avoid cd in compound commands."

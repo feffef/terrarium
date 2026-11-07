@@ -16,3 +16,8 @@ occurrences:
     severity: minor
     description: "I kept the Contributing list from the old README without asking whether an outsider could act on it; the owner had to point out it was arbitrary"
     solution: "Apply CLAUDE.md 'question the premise' to inherited sections too: give each link a reason for the stated audience"
+  - session: session_013zxzeQUzcNjB7oD8ukBLGp
+    date: "2026-11-06"
+    severity: moderate
+    description: "First drafts of the memory page went long and mixed levels; the owner needed three review rounds (retired concepts, derivable facts, plain language) to reach the shape they wanted"
+    solution: "Before drafting a page an agent will read every run, agree its sections and tone with the owner on a short sample"

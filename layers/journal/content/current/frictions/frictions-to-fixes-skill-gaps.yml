@@ -90,3 +90,8 @@ occurrences:
     severity: nit
     description: "The skill's regression rule files an issue for minor and nit recurrences too; I filed three issues for sub-moderate regressions where earlier fixes had mostly dropped designs."
     solution: "Rank regressions by cost since the fix, not only by severity, so repeat nits do not take the three slots."
+  - session: session_013zxzeQDfNNTXpQYQtt9saY
+    date: "2026-11-06"
+    severity: nit
+    description: "The Skill's closing PR reuses the session branch, but the first ledger PR had merged; the force-push I tried was denied, so I restarted the branch from main and pushed plainly."
+    solution: "Say in frictions-to-fixes section 8 to restart the merged branch from origin/main and push without force."

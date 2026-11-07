@@ -88,3 +88,8 @@ occurrences:
     severity: nit
     description: "Hand-edited a Friction Ledger entry although survey-brief.md says every ledger edit goes through ledger-set.ts; the Spec review caught it before push"
     solution: "Grep frictions-to-fixes for the ledger edit path before touching layers/journal/content/current/frictions/"
+  - session: session_013zxzeRJEE2ehNrQTL62nhX
+    date: "2026-11-06"
+    severity: minor
+    description: "Wrote the run entry's focus with an unquoted colon-space, which broke the runs YAML and failed validate:content until quoted."
+    solution: "Quote free-text YAML values in run entries; the curate Skill could say so."

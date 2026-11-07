@@ -399,3 +399,48 @@ occurrences:
     severity: nit
     description: "Read git-conventions.md, github-integration.md and issue-tracker.md only after hook prompts, after running git/gh commands, not before as CLAUDE.md says."
     solution: "Read them before the first non-read-only git or GitHub call; the hint hook already prompts after the fact."
+  - session: session_013zxzeR6zoUiicLXRckpnkb
+    date: "2026-11-06"
+    severity: nit
+    description: "I ran git fetch before reading git-conventions.md, which CLAUDE.md requires before any git command beyond the read-only list; a hint reminded me afterwards."
+    solution: "The first-git-command hint could fire on fetch before it runs, not after."
+  - session: session_013zxzePVGCU1ARYitEsVKoy
+    date: "2026-11-06"
+    severity: nit
+    description: "Ran git status and a read-only git command before reading git-conventions.md; hook flagged it after the call."
+    solution: "None needed beyond the hook; the read-only git commands were allowed, so the late read cost nothing."
+  - session: session_013zxzeQUzcNjB7oD8ukBLGp
+    date: "2026-11-06"
+    severity: nit
+    description: "Read docs/agents/github-integration.md only after the first mcp__github__list_issues call, against CLAUDE.md's read-first trigger"
+    solution: "Read it before the first GitHub call; the hook's late reminder was right and the call was already correct"
+  - session: session_013zxzeNeTKPqiQ1jj1FgYXh
+    date: "2026-11-06"
+    severity: nit
+    description: "Ran git fetch before reading docs/agents/git-conventions.md, and an MCP PR list before github-integration.md; both CLAUDE.md triggers. A hook then pointed to each."
+    solution: "Read the trigger docs right after the Skill's orientation step, before the first non-read-only git or GitHub call."
+  - session: session_013zxzePuqJcsqc92SUXfWFX
+    date: "2026-11-06"
+    severity: nit
+    description: "Called mcp__github__list_pull_requests before reading docs/agents/github-integration.md, which CLAUDE.md requires before the first GitHub operation; the call also missed required owner and repo."
+    solution: "Read the doc when the Skill's orientation step first mentions open PRs, before any tool call."
+  - session: session_013zxzeRJEE2ehNrQTL62nhX
+    date: "2026-11-06"
+    severity: minor
+    description: "Ran my first git command and first GitHub call before reading git-conventions.md and github-integration.md; hooks pointed to them only after the call."
+    solution: "Read the CLAUDE.md-triggered docs before the first matching command; a PreToolUse guard could deny the first non-read-only git or GitHub call until that doc is in the transcript, since the hint arrives only after the call."
+  - session: session_013zxzeQ7Ra7VbsnEayuBNNi
+    date: "2026-11-06"
+    severity: nit
+    description: "I ran gh pr list in a cloud session before reading github-integration.md, and it failed with the documented GraphQL 403."
+    solution: "List docs/agents/github-integration.md in the curate Skill's Read first list; findings already collected in issue 2906."
+  - session: session_013zxzeSxfK7X25LqaANsqoE
+    date: "2026-11-07"
+    severity: nit
+    description: "Ran git commands and gathered before reading git-conventions.md; the hook pointed to it late, though my calls were already correct."
+    solution: "Fine as is; the late hint cost only a doc read."
+  - session: session_013zxzeSRaXnk1QPxkJvswS3
+    date: "2026-11-07"
+    severity: nit
+    description: "Ran a gh api issue search before reading github-integration.md, which CLAUDE.md requires before the first GitHub operation."
+    solution: "The hint fires after the call; a pre-tool hint would let the read come first."

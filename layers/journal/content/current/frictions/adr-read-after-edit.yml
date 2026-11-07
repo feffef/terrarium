@@ -113,3 +113,13 @@ occurrences:
     severity: nit
     description: "Hooks told me to read ADR-0005, ADR-0027 and ADR-0021 only after I had edited grades.ts and the glossary; each ADR was consistent with the edit, but the rule can only load once a governed file is touched"
     solution: "Read the ADRs a Skill script change names before the first edit: .agents/skills/glassbox-improve/scripts/ falls under ADR-0005 and ADR-0027"
+  - session: session_013zxzeSyXPhUKs4jTjqTEw4
+    date: "2026-11-06"
+    severity: nit
+    description: "Hooks asked to read ADR-0005 and ADR-0027 only after my edit to a Skill, so the read came late."
+    solution: "A rule for .agents/skills paths could surface before the first Edit; the late read caused no wrong edit."
+  - session: session_013zxzeQUzcNjB7oD8ukBLGp
+    date: "2026-11-06"
+    severity: nit
+    description: "Edited glassbox-curate and glassbox-update SKILL.md before reading ADR-0005 and ADR-0027 in full; the hook flagged it and the edits were already right"
+    solution: "Read the ADRs a Skill's rules name before the first edit to a SKILL.md"

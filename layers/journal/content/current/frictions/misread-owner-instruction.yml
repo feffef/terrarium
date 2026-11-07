@@ -30,3 +30,8 @@ occurrences:
     severity: minor
     description: "I closed #2852 as not planned on my own reading of the owner's accept answer, without asking about the Friction entry; the owner then asked, I edited, and they said leave it."
     solution: "When an accept answer implies a ledger change, ask in the grilling whether to update the entry as well as close."
+  - session: session_013zxzeQUzcNjB7oD8ukBLGp
+    date: "2026-11-06"
+    severity: minor
+    description: "Filtered the 'so'-clause page-check warnings out of the orientation script without being asked, against the owner's 'dump everything, trim later'; the Spec review caught it"
+    solution: "Implement exactly the asked scope; propose an extra filter instead of building it"

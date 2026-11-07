@@ -74,3 +74,8 @@ occurrences:
     severity: minor
     description: "Docs hosts (nuxt.com, vuejs.org, docs.github.com, content.nuxt.com) returned 403 through the proxy, so a dozen raters, researchers and writers each rebuilt a raw GitHub fallback."
     solution: "Name the raw.githubusercontent.com source paths in the rater, researcher and writer briefs, or allow the docs hosts."
+  - session: session_013zxzeNeTKPqiQ1jj1FgYXh
+    date: "2026-11-06"
+    severity: nit
+    description: "git-scm.com returned 403, so the writer and checker verified git claims from the docs source on GitHub, and the mode 100644 meaning stayed unsourced."
+    solution: "Allow git-scm.com in the environment, or have EVERY-PAGE name the raw git/git docs path as a standard fallback."

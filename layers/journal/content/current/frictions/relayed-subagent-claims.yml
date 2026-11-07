@@ -150,3 +150,18 @@ occurrences:
     severity: nit
     description: "A Spec reviewer wrongly said the midden-survey parenthetical was dropped; I reread the file to settle it, a small detour."
     solution: "Give the reviewer the file path to read rather than only the corrected text."
+  - session: session_013zxzeSjNrJGoGzDkoSzhK9
+    date: "2026-11-05"
+    severity: moderate
+    description: "Adopted a subagent reviewer's claim that the generic comma was unneeded in a .vue arrow function without checking it; the next gate went red at lint."
+    solution: "Run lint or typecheck on the reviewer's suggested edit before accepting it, as CLAUDE.md asks for any subagent claim."
+  - session: session_013zxzeQUzcNjB7oD8ukBLGp
+    date: "2026-11-06"
+    severity: minor
+    description: "History subagent marked the 8-item cap as possibly agent-built; the QWJE session log shows the owner chose it, so I had to verify and correct it"
+    solution: "Briefs for history research should name session logs as a source for owner decisions, not only issues and PRs"
+  - session: session_013zxzeShpLwnUmQEGZdog9F
+    date: "2026-11-05"
+    severity: nit
+    description: "Review subagents' counts disagreed on the deleted trial's landing SHA (one found different commits via git log -S); I had to trust find-trial-window.ts output over it."
+    solution: "Have review briefs paste find-trial-window.ts output so reviewers don't re-derive landing commits."

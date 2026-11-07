@@ -187,3 +187,18 @@ occurrences:
     severity: minor
     description: "Posted an unverified guess (sources hash) as the likely cause in the 2871 comment; measuring later showed own edits dominate, needing a correction comment"
     solution: "Measure a cause before posting it, even flagged as a guess, when the measurement is a few minutes away"
+  - session: session_013zxzeSbd2LJtWWawqrWBJD
+    date: "2026-11-05"
+    severity: minor
+    description: "list-human-only-paths.ts printed an empty list, and the PR body still said no Human-only path is touched without confirming the script works."
+    solution: "Check what the script prints for a known Human-only path, or report that it printed nothing."
+  - session: session_013zxzeQUzcNjB7oD8ukBLGp
+    date: "2026-11-06"
+    severity: minor
+    description: "My spec claimed update's deep check would cost about $1-2 a day without checking how many pages update flags daily (14-32); the fable review caught it"
+    solution: "Check an estimate's input counts (here update PR bodies) before stating it in a spec"
+  - session: session_013zxzeRCJHe4rmKN5i2CQ16
+    date: "2026-11-06"
+    severity: moderate
+    description: "Seeded the memory page from grades.yml but checked only one step against the repo; review found two more stale entries."
+    solution: "Before writing a seed, check every cited stem and claim against the current repo with one script."
