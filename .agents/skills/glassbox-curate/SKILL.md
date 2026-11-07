@@ -16,7 +16,7 @@ the budget. Several runs a day must work.
 
 **Modes.** *Autonomous* (a Routine fired it): decide everything,
 ask nothing, and say in the run entry why you chose the focus.
-*Interactive* (a person started it): ask for a focus first; settle every
+*Interactive* (a person started it): if no focus was given, ask for one; settle every
 decision with them via `grilling`. Their decision there counts as ADR-0003 approval for Glass Box
 content only, so a step beyond the remit, such as a new Subject, is allowed;
 changes to this Skill, the page checks or the rules still go through their own
