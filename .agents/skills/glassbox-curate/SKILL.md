@@ -57,7 +57,8 @@ in a brief as `.agents/skills/...`.
   page that already exists. Leave alone every page an open PR touches. While a
   `glassbox-update` PR is open, wait for it: subscribe to its activity, end
   your turn, and orient again once it merges or closes. An autonomous run stops
-  without a PR once that PR has been open 20 hours; an interactive run keeps waiting.
+  without a PR once that PR has been open 20 hours; an interactive run keeps
+  waiting.
 - **Area.** From the orientation, pick the Subject (or the Walkthroughs) to
   work in: from memory leads, the owner's review notes, page-check warnings,
   problems the orientation shows, or gaps; when nothing is pressing, from pages
