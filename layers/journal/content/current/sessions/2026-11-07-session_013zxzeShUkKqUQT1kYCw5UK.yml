@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_013zxzeShUkKqUQT1kYCw5UK
 startedAt: 2026-11-07T16:11:26Z
-endedAt: 2026-11-07T16:30:51Z
+endedAt: 2026-11-07T18:13:23Z
 kind: delegated
 goal: Sync the Glass Box guide to main (glassbox-update run, 2026-11-07)
 status: completed
@@ -105,6 +105,10 @@ skillsUsed:
     reason: (no reason given)
   - name: log-session
     reason: (no reason given)
+  - name: writing-for-agents
+    reason: (no reason given)
+  - name: retro
+    reason: (invoked as a slash command)
 frictions:
   - description: Stated 'pins of 70 guide pages' in the review brief from memory; the diff changed 72 pages (73 files with update.yml).
     solution: Count with git diff --name-only before putting a number in a brief or PR text; I kept the PR body free of the count.
@@ -118,17 +122,29 @@ frictions:
   - description: The step-1 report listed 30 pages with 20 distinct changed files; briefing four agents to re-read pages whose only change was a one-line hook entry cost about 600k subagent tokens and found no false claim.
     solution: Let the script drop a flag when a page cites a file only for lines the diff did not touch (it already shifts lines ranges), so a scoped check starts from real overlaps.
     severity: minor
-durationSec: 1165
+  - description: merge-close-stop.ts blocked the stop saying a PR merged while PR 2946 was still open and merge-pr.ts was only waiting on the gate in the background.
+    solution: Make closureRefusal count a merge only on merge-pr.ts output with merged true; add a transcript test with the command started and no result.
+    severity: minor
+  - description: glassbox-update step 3 asks that every commit since the oldest revision be read against every page; with 123 commits and 72 pages that was not reachable, so I grepped renamed identifiers and leaned on subagents.
+    solution: Have the script list non-content commit subjects and the identifiers they rename, then grep page prose for them, so the criterion is checkable.
+    severity: minor
+  - description: The glassbox-update report did not say which pages it could not pin (those with an edited range); a subagent told me hooks/01 still carried the old revision.
+    solution: List unpinned pages in the report with the cited range the change overlaps, and let the claim check start from those overlaps.
+    severity: minor
+  - description: log-session --pending asked for verdicts on 27 docs that only subagents grepped or git-showed at a pinned commit, which was evidence-gathering rather than guidance, and cost a long YAML pass.
+    solution: Leave reads of pinned-commit content (git show <sha>:path) out of the pending list, or accept one bulk verdict for claim-check reads.
+    severity: nit
+durationSec: 7317
 models:
-  claude-sonnet-5-5: 124
+  claude-sonnet-5-5: 135
 toolCounts:
   Read: 3
-  Bash: 40
-  Skill: 6
+  Bash: 42
+  Skill: 8
   Agent: 6
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  ReadNotifications: 3
+  ReadNotifications: 4
   mcp__github__pull_request_read: 2
   mcp__github__add_issue_comment: 1
 filesEdited:
@@ -326,42 +342,42 @@ subagents:
     durationSec: 419
     toolCalls: 70
     modelCalls: 65
-    tokenShare: 31.9
+    tokenShare: 28.1
   - type: general-purpose
     task: Claim check group B
     model: sonnet
     durationSec: 137
     toolCalls: 18
     modelCalls: 15
-    tokenShare: 8
+    tokenShare: 7.1
   - type: general-purpose
     task: Claim check group C
     model: sonnet
     durationSec: 216
     toolCalls: 30
     modelCalls: 25
-    tokenShare: 11.6
+    tokenShare: 10.3
   - type: general-purpose
     task: Claim check group D
     model: sonnet
     durationSec: 110
     toolCalls: 14
     modelCalls: 13
-    tokenShare: 7
+    tokenShare: 6.2
   - type: general-purpose
     task: Standards review of diff
     model: sonnet
     durationSec: 35
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: general-purpose
     task: Spec review of diff
     model: sonnet
     durationSec: 34
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1.7
+    tokenShare: 1.5
 gitBranch: ccr-dfb38b57-ccmzch
 entrypoint: remote_mobile
 cliVersion: 2.1.319
