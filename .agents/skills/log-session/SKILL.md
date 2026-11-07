@@ -41,6 +41,8 @@ Be honest, **especially about friction** — a flattering log is worse than none
 
 ## 1. Author the interpretive entry
 
+Never filter `log-session.ts` output (`grep`, `head`): its refusals and warnings print there.
+
 Write a small YAML file (e.g. under your scratchpad) with **only** these authored
 fields. A derived field (`startedAt`/`endedAt`, `durationSec`, `models`,
 `toolCounts`, `filesEdited`, `subagents`, `gitBranch`, …) is ignored at best and
