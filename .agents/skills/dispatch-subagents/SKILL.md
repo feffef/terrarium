@@ -67,6 +67,8 @@ every line that applies.
   "request limit" error, not retry.
 
 **Scope and trust**
+- Include the asks in CLAUDE.md's "Every subagent brief" bullet (rule and doc
+  verdicts, sourced counts, scratchpad subfolder).
 - Impl agents never call `merge-pr.ts`, whatever the brief says. They hand back
   a committed, green branch, unpushed. You run `/code-review` on its worktree
   (`pr-workflow.md`, "Review before opening the PR"), resume the agent for
