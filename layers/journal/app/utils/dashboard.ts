@@ -219,12 +219,15 @@ const SEVERITY_RANK: Record<Severity, number> = { blocker: 0, major: 1, moderate
 // A log stays `in-review` when another session merges its PR (ADR-0008: derive,
 // never regenerate logs). The card flags it when every PR it lists also appears
 // in a `completed` log among the loaded sessions, which is the only merge
-// evidence a log carries.
+// evidence a log carries. It sees only the loaded sessions, so a PR whose
+// completed log is not loaded is not flagged.
+const prNums = (s: SessionDoc) => (s.prs ?? []).map((p) => p.replace(/^#/, ''))
+
 export function staleInReviewKeys(sessions: SessionDoc[]): Set<string> {
-  const landed = new Set(sessions.filter((s) => s.status === 'completed').flatMap((s) => s.prs ?? []).map((p) => p.replace(/^#/, '')))
+  const landed = new Set(sessions.filter((s) => s.status === 'completed').flatMap(prNums))
   return new Set(
     sessions
-      .filter((s) => s.status === 'in-review' && (s.prs ?? []).length > 0 && (s.prs ?? []).every((p) => landed.has(p.replace(/^#/, ''))))
+      .filter((s) => s.status === 'in-review' && prNums(s).length > 0 && prNums(s).every((p) => landed.has(p)))
       .map((s) => s.session),
   )
 }

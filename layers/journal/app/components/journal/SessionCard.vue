@@ -48,7 +48,7 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
         <div class="top">
           <span class="when">{{ card.when }} <span class="dur">· {{ card.duration }}</span></span>
           <JournalStatusPill :status="card.status" />
-          <span v-if="card.staleInReview" class="dur" title="Every PR this log lists has merged; the log was not updated">merged since</span>
+          <span v-if="card.staleInReview" class="merged-since" title="Every PR this log lists has merged; the log was not updated">merged since</span>
         </div>
         <h3 class="goal">{{ card.goal }}</h3>
         <p class="outcome">{{ card.outcome }}</p>
@@ -254,6 +254,7 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
   color: var(--jd-muted);
   font-variant-numeric: tabular-nums;
 }
+.merged-since { color: var(--jd-faint); font-size: 0.85em; }
 .when .dur { color: var(--jd-faint); }
 .goal {
   font-family: var(--jd-serif);
