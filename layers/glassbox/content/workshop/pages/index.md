@@ -38,7 +38,7 @@ Subjects and Lessons run prerequisites first, and Lesson prefixes go up in tens 
 
 ### Good next focuses
 
-1. **Back more Lessons with the official docs.** Earlier runs wrote some Lessons while docs sites were blocked. A run on 2026-11-07 re-read the docs for ten (*Content collections*, *Multi-tenant isolation*, *Content database*, *queryCollection*, *Vue components*, *Hydration*, *Testing*, *Zod refinements*, *Schema evolution*, *Continuous deployment*). The same check is still open for pages whose claims came from npm packages or raw GitHub files: the other Nuxt & Vue Lessons (`nuxt-vue/10` to `40`, `60`, `70`), *Type checking*, *Content validation*, *Linting* and *Headless browser checks* in Verification, the Git & GitHub pages that link docs.github.com, and *Mermaid pre-rendering*. A fresh run can fetch each URL and check each tool claim; the writer needs the network open.
+1. **Check more Lessons against the official docs.** Some Lessons were written while docs sites were blocked, so their claims came from npm packages or raw GitHub files. Still unchecked: the other Nuxt & Vue Lessons (`nuxt-vue/10` to `40`, `60`, `70`), *Type checking*, *Content validation*, *Linting* and *Headless browser checks* in Verification, the Git & GitHub pages that link docs.github.com, and *Mermaid pre-rendering*. Fetch each URL and check each claim about the tool; the network must be open.
 
 ### Ideas not yet decided
 
@@ -52,7 +52,11 @@ Subjects and Lessons run prerequisites first, and Lesson prefixes go up in tens 
 
 **A fact about out-of-scope records that no Lesson teaches.** Before it recommends anything, `triage` reads every record in `.out-of-scope/` and shows the person deciding any that resembles the new request (`.agents/skills/triage/SKILL.md`, step 1). *Issue triage labels* (`git-github/70.issue-triage-labels`) teaches the records and their format but not this check. It could be one sentence there, or a section if that page is split after a fresh reader finds it hard to follow.
 
-**Doc findings left alone on 2026-11-07.** *Content collections*: the docs say a `prefix` defaults from the static part of `include`, so `prefix: '/'` may be redundant once `cwd` is set per Space (not checked in code). *Content database*: on a repeat visit in production the browser reads its dump from `localStorage`, so the Try it step may not show the dump request; clearing site data first would make it reliable. *Hydration*: Vue 3.5's `data-allow-mismatch` and Nuxt's `<ClientOnly>` are not taught. *Vue components*: the Vue docs allow some composables to be called inside a lifecycle hook, so "never later from a timer or a click handler" reads stricter than they do. *Multi-tenant isolation* and *Content database* both explain the `database` option; one could link the other. A fresh reader finds the *In Terrarium* sentences of *Content collections* and *Testing* crowded with term glosses; `plain.ts` prints every gloss inline, so check that on the rendered page first.
+**Doc findings not acted on.**
+- *Content collections*: the docs say `prefix` defaults from the start of `include`, so `prefix: '/'` may be needless once `cwd` is set per Space. Not checked in code.
+- *Content database*: on a repeat visit the browser may read its dump from `localStorage`, so the Try it step may not show the dump request. Clearing site data first would fix that.
+- *Hydration*: Vue's `data-allow-mismatch` and Nuxt's `<ClientOnly>` are not taught.
+- *Multi-tenant isolation* and *Content database* both explain the `database` option; one could link the other.
 
 **Missing Lessons.** The browser quirks and CSS traps listed in `docs/agents/verifying-ui-changes.md` are only partly taught, in *Headless browser checks* (`verification/80.headless-browser-checks`).
 
