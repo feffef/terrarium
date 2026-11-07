@@ -1,10 +1,5 @@
-// The orientation step of glassbox-curate, in two outputs, each small enough to
-// be read whole. With no flag: what a run must know before it chooses a focus
-// (a run-entry skeleton, open PRs, the memory page, recent runs, the update
-// checks, page-check warnings and the guide's git log). With `--pages`: every
-// guide page's title, description and first paragraph, the run's only overview
-// of what the guide already teaches, read before it picks a gap, judges overlap
-// or writes a page. Terms and Where next were cut: no run used them (#2906).
+// The orientation step of glassbox-curate, split in two so each output is read
+// whole; terms and Where next were cut because no run used them (#2906).
 // Usage: pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts [--pages]
 import { existsSync, globSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'

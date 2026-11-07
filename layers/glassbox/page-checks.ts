@@ -343,6 +343,8 @@ export function glassboxPageProblems(file: string, source: string, site: Glassbo
 
 // A reviewer's call, so these warn and never fail (#2701); glassbox-improve
 // takes each but the "so" clause as a finding (issue #2792).
+export const glassboxMotiveWarning = 'In Terrarium may give a motive ("so"); check it states mechanism'
+
 const excerptMaxLines = 15
 const stopMaxWords = 80
 const linkOnlyMaxWords = 3
@@ -351,8 +353,6 @@ const wordCount = (text: string) => text.split(/\s+/).filter((w) => /\w/.test(w)
 
 /** What a reviewer should look at on a page: a "so" clause in In Terrarium, long or
  *  comment-only Excerpts, long Walkthrough stops and Why bullets that are only a link. */
-export const glassboxMotiveWarning = 'In Terrarium may give a motive ("so"); check it states mechanism'
-
 export function glassboxPageWarnings(source: string): string[] {
   const { body } = splitFrontmatter(source)
   const warnings = motiveLines(body, 'so').map((l) => `${glassboxMotiveWarning}: ${l}`)

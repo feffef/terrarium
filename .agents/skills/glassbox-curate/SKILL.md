@@ -69,7 +69,7 @@ in a brief as `.agents/skills/...`.
   Skills, `scripts/`) with what the Lessons teach. The memory page keeps known
   gaps, those left uncovered on purpose too. Fix what makes pages hard to learn
   from first; take a gap when no page problem outweighs it.
-- **Claim.** Right after choosing, write the run entry from the orientation's
+- **Run entry.** Right after choosing, write it from the orientation's
   skeleton, keeping `focus` quoted, and push the run branch.
 - **Diagnose.** Fresh readers (sonnet, no repo access) get each page as plain
   text: MDC stripped, each term followed by its definition, each Excerpt as code
@@ -113,8 +113,8 @@ All in `layers/glassbox/content/workshop/`:
   Each run rewrites it and **cuts** whatever its work addressed and whatever it
   judges no longer needed, so the page stays short. Delete a finished item;
   never mark it done. A fact the next run still needs stays as a plain current
-  fact under a heading that fits. Count before you write a count. What a run did goes in its
-  run entry, not here. The word cap in
+  fact under a heading that fits. What a run did goes in its run entry, not
+  here. The word cap in
   `layers/glassbox/tests/unit/workshop.spec.ts` is a ceiling, not a target.
 - `runs/<YYYY-MM-DDTHHMM>.yml`: one entry per run, named by the UTC time the
   orientation printed.
