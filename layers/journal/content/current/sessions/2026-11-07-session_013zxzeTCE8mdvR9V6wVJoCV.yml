@@ -1,0 +1,239 @@
+schemaVersion: 1
+session: session_013zxzeTCE8mdvR9V6wVJoCV
+startedAt: 2026-11-07T18:14:19Z
+endedAt: 2026-11-07T18:42:56Z
+kind: interactive
+goal: Rename 12 Glass Box guide files to match their titles
+status: in-review
+outcome: PR 2950 open, waits for owner merge; gate and reviews green
+summary: "Started via the glassbox-curate Skill with no focus. Human-instructed: the owner chose interactive mode, then chose the file-rename focus after seeing the orientation, approved the exact 12 new names, and asked that the Journal Highlights link be fixed in the same PR. Agent-initiated: the sed-based repoint of about 180 link lines, the memory page and run entry edits, two read-only review subagents (both clean), gate:scoped (green) and opening PR 2950 (ADR-0003). The PR is marked as waiting for the owner's merge. Cost was unreported because get_session showed no cost_usd. Open: old URLs 404 with no redirect; the owner may want redirects."
+prs:
+  - "2950"
+docsRead:
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: A guard blocked my first Agent call until I read it; brief rules confirmed my briefs
+    useful: partly
+  - path: layers/glassbox/GLOSSARY.md
+    reason: Lesson contract and Pin rules; confirmed a rename changes no page content
+    useful: partly
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: "Title and slug rule: a retitle keeps the URL, so renames are a separate step"
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/DECISIONS.md
+    reason: Closed rulings on titles; confirmed titles were settled
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: Fetch and commit hygiene; used -F for the message
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: MCP tool mapping; used create_pull_request
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: Review before PR, simple-change test (renames never simple), gate, verdict steps
+    useful: yes
+skillsUsed:
+  - name: glassbox-curate
+    reason: Invoked by the owner; orientation then rename focus
+  - name: code-review
+    reason: Required before the PR; Standards and Spec subagents
+  - name: dispatch-subagents
+    reason: Guard required reading before briefing the reviewers
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: The dispatch-read guard blocked my first two Agent calls because I had not read dispatch-subagents yet; the briefs were written twice.
+    solution: Make the code-review Skill name dispatch-subagents as a prerequisite, so it is read before briefs are drafted.
+    severity: minor
+  - description: Sed repointed the old URLs but the memory page was left stale until I grepped it, since I excluded workshop pages from the sed.
+    solution: Have the curate Skill's Move step say to repoint the memory page's paths in the same pass.
+    severity: nit
+  - description: get_session showed no cost_usd, so the PR body had to say the run cost was unreported.
+    solution: None needed; the Skill already allows 'unreported'.
+    severity: nit
+durationSec: 1717
+models:
+  claude-sonnet-5-5: 59
+toolCounts:
+  AskUserQuestion: 3
+  Bash: 18
+  Read: 2
+  ToolSearch: 2
+  mcp__claude-code-remote__get_session: 1
+  Skill: 3
+  Agent: 4
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - layers/glassbox/content/guide/pages/agents/03.routines.md
+  - layers/glassbox/content/guide/pages/agents/03.scheduled-tasks.md
+  - layers/glassbox/content/guide/pages/agents/04.cloud-sessions.md
+  - layers/glassbox/content/guide/pages/claude-code/02.path-scoped-rules.md
+  - layers/glassbox/content/guide/pages/claude-code/03.skills.md
+  - layers/glassbox/content/guide/pages/claude-code/04.permissions.md
+  - layers/glassbox/content/guide/pages/claude-code/05.mcp-servers.md
+  - layers/glassbox/content/guide/pages/deploy/01.continuous-deployment.md
+  - layers/glassbox/content/guide/pages/deploy/01.self-updating-container.md
+  - layers/glassbox/content/guide/pages/deploy/02.pnpm-lockfile.md
+  - layers/glassbox/content/guide/pages/git-github/01.every-change-a-pr.md
+  - layers/glassbox/content/guide/pages/git-github/01.pull-requests.md
+  - layers/glassbox/content/guide/pages/git-github/02.git-worktrees.md
+  - layers/glassbox/content/guide/pages/git-github/03.composite-actions.md
+  - layers/glassbox/content/guide/pages/git-github/04.author-trust.md
+  - layers/glassbox/content/guide/pages/git-github/04.trust-tiers.md
+  - layers/glassbox/content/guide/pages/git-github/05.attribution.md
+  - layers/glassbox/content/guide/pages/git-github/06.issue-triage-labels.md
+  - layers/glassbox/content/guide/pages/git-github/06.work-queue.md
+  - layers/glassbox/content/guide/pages/git-github/07.dependabot-grouping.md
+  - layers/glassbox/content/guide/pages/git-github/08.git-plumbing.md
+  - layers/glassbox/content/guide/pages/hooks/01.hooks.md
+  - layers/glassbox/content/guide/pages/hooks/02.blocking-hooks.md
+  - layers/glassbox/content/guide/pages/hooks/04.session-transcripts.md
+  - layers/glassbox/content/guide/pages/index.md
+  - layers/glassbox/content/guide/pages/nuxt-content/01.content-collections.md
+  - layers/glassbox/content/guide/pages/nuxt-content/01.manifest-collections.md
+  - layers/glassbox/content/guide/pages/nuxt-content/02.multi-tenant-isolation.md
+  - layers/glassbox/content/guide/pages/nuxt-content/03.content-database.md
+  - layers/glassbox/content/guide/pages/nuxt-content/04.query-collection.md
+  - layers/glassbox/content/guide/pages/nuxt-content/05.mdc-components.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/01.layers.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/02.file-routing.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/03.virtual-modules.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/05.vue-components.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/06.data-fetching.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/06.use-async-data.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/08.hydration.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/09.nitro.md
+  - layers/glassbox/content/guide/pages/skill-pack/01.skill-packs.md
+  - layers/glassbox/content/guide/pages/skill-pack/02.planning-with-the-pack.md
+  - layers/glassbox/content/guide/pages/skill-pack/03.engineering-skills.md
+  - layers/glassbox/content/guide/pages/skill-pack/04.wayfinder.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/01.human-in-the-loop.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/02.adrs.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/02.decision-records.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/03.ubiquitous-language.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/04.session-logs.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/07.human-only-list.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/07.protected-paths.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/08.cross-tenant-reads.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/09.self-improvement-loop.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/10.outside-contributions.md
+  - layers/glassbox/content/guide/pages/verification/01.gate.md
+  - layers/glassbox/content/guide/pages/verification/02.type-checking.md
+  - layers/glassbox/content/guide/pages/verification/03.content-validation.md
+  - layers/glassbox/content/guide/pages/verification/04.testing.md
+  - layers/glassbox/content/guide/pages/verification/04.unit-and-e2e-tests.md
+  - layers/glassbox/content/guide/pages/verification/06.schema-validation.md
+  - layers/glassbox/content/guide/pages/verification/06.zod-refinements.md
+  - layers/glassbox/content/guide/pages/verification/08.schema-evolution.md
+  - layers/glassbox/content/guide/pages/verification/09.headless-browser-checks.md
+  - layers/glassbox/content/guide/pages/walkthroughs/a-bug-report-becomes-work.md
+  - layers/glassbox/content/guide/pages/walkthroughs/a-change-goes-live.md
+  - layers/glassbox/content/guide/pages/walkthroughs/a-friction-becomes-a-fix.md
+  - layers/glassbox/content/guide/pages/walkthroughs/adding-a-site.md
+  - layers/glassbox/content/guide/pages/walkthroughs/adding-a-tenant.md
+  - layers/glassbox/content/guide/pages/walkthroughs/asking-for-a-change.md
+  - layers/glassbox/content/guide/pages/walkthroughs/from-file-to-browser.md
+  - layers/glassbox/content/guide/pages/walkthroughs/planning-a-big-change.md
+  - layers/glassbox/content/guide/pages/walkthroughs/reading-across-tenants.md
+  - layers/glassbox/content/guide/pages/walkthroughs/session-log-lands-on-main.md
+  - layers/glassbox/content/guide/pages/web-standards/03.aria.md
+  - layers/glassbox/content/workshop/checks/update.yml
+  - layers/glassbox/content/workshop/pages/index.md
+  - layers/glassbox/content/workshop/runs/2026-11-07T1815.yml
+  - layers/glassbox/tests/unit/walkthrough.spec.ts
+  - layers/journal/content/current/pages/highlights.md
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run code-review and gate:scoped before the PR; summary was enough, no full ADR read
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to invoke close-session and keep logs out of the branch; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open the PR without asking and subscribe despite the system prompt; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Told me to start the PR body with the session header; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: About prune trials; no trial touched these pages, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: About where instructions live; I wrote none, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded when a command read a protected path; no protected file changed, so no effect
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: About Skill placement; I edited no Skill, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: About glossaries; I added no terms, so it did not apply
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: About adding glossary terms; none added, did not apply
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Told me to read the Tenant glossary, which I had read already; subagent also found no use
+    useful: partly
+  - path: .claude/rules/glassbox-content.md
+    reason: Confirmed the workshop page may hold ids and counts; the review subagents reported no violation
+    useful: partly
+  - path: .claude/rules/mermaid-lanes.md
+    reason: About Mermaid diagrams; none in scope, subagents reported no use
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded for the Standards subagent only; it reported no use
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: Loaded for a subagent only; it reported no use
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded for a subagent only; it reported no use
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded for a subagent only; it reported no use
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Standards review of rename diff
+  - type: general-purpose
+    task: Spec review of rename diff
+  - type: general-purpose
+    task: Standards review of rename diff
+    durationSec: 36
+    toolCalls: 8
+    modelCalls: 6
+    tokenShare: 13.7
+  - type: general-purpose
+    task: Spec review of rename diff
+    durationSec: 34
+    toolCalls: 6
+    modelCalls: 5
+    tokenShare: 13.5
+gitBranch: ccr-3edce76d-2y3uf4
+entrypoint: remote_mobile
+cliVersion: 2.1.319
+landedBy: Stop
