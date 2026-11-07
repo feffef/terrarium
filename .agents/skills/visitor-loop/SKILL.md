@@ -120,8 +120,8 @@ or refined (or no idea is left: then step 6 is skipped).
 
 Use the session's designated branch (the cloud harness pins one); `claude/visitor-loop-fixes-<YYYY-MM-DD>` is only the fallback. Branch from `origin/main`. Fix every
 consensus finding marked *fix*, in the form step 4 left it. Prove each one in the rendered DOM, before and
-after (`docs/agents/verifying-ui-changes.md`: `eval-in-page.ts` to measure, `preview.ts shot` to screenshot; hand-roll a Playwright script only to prove a click those two can't reach, per the doc's recipe). Commit, then run **`/code-review`** before the first
-push, fixed point `origin/main`, with the refined tally as the spec. **Auto-fix every
+after (`docs/agents/verifying-ui-changes.md`: `eval-in-page.ts` to measure, `preview.ts shot` to screenshot; hand-roll a Playwright script only to prove a click those two can't reach, per the doc's recipe). Commit, then run **`/code-review`** before opening
+the PR, fixed point `origin/main`, with the refined tally as the spec. **Auto-fix every
 important finding yourself** — a real bug, a broken documented standard (an
 ADR included), an accessibility or honesty problem — never defer it to a human
 or a follow-up. Re-review and repeat until nothing important remains. Then
