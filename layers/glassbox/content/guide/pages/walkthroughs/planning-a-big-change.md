@@ -13,7 +13,7 @@ A Trusted user has an idea too big for one session, and the way to it isn't clea
 The Trusted user types `/wayfinder` with the idea; the Skill never starts on its own. The session first grills them to name the destination, such as a spec ready to build, then grills again across the whole idea for the open decisions. It writes the result as one issue labelled `wayfinder:map`: the destination, notes every later session should read, an empty list of decisions so far, and the questions that can't be asked sharply yet.
 
 ::lessons
-[Wayfinder](/t/glassbox/guide/skill-pack/wayfinder) · [Claude Code Skills](/t/glassbox/guide/claude-code/skills)
+[Wayfinder](/t/glassbox/guide/skill-pack/wayfinder) · [Claude Code skills](/t/glassbox/guide/claude-code/skills)
 ::
 
 ## 2. Each sharp question becomes a ticket
@@ -45,7 +45,7 @@ A grilling ticket is a conversation with a Trusted user, run with `grilling` and
 When nothing is left to decide, the way is clear and the work is handed off. `to-spec` writes the decisions up as a spec, an ordinary issue here, and `to-tickets` breaks it into thin stories that each work end to end. Each story is a sub-issue of the spec and starts with a `Part of` line naming it. Both are filed `needs-triage`, not `ready-for-agent` as the installed Skills say; a spec on hold and its stories carry no label.
 
 ::lessons
-[Planning Skills](/t/glassbox/guide/skill-pack/planning-with-the-pack) · [Issue triage labels](/t/glassbox/guide/git-github/work-queue) · :file[.agents/skills/to-spec/SKILL.md] · :file[.agents/skills/to-tickets/SKILL.md]
+[Planning skills](/t/glassbox/guide/skill-pack/planning-with-the-pack) · [Issue triage labels](/t/glassbox/guide/git-github/work-queue) · :file[.agents/skills/to-spec/SKILL.md] · :file[.agents/skills/to-tickets/SKILL.md]
 ::
 
 ## 6. The stories are built, one PR at a time
@@ -53,7 +53,7 @@ When nothing is left to decide, the way is clear and the work is handed off. `to
 From here each story is ordinary work: triage marks it ready to build, then a session builds it on its own branch, reviews it, runs the :term[Gate] and opens a PR. A story the issue view shows as blocked waits for its blockers to close.
 
 ::lessons
-[Engineering Skills](/t/glassbox/guide/skill-pack/engineering-skills) · [Pull requests](/t/glassbox/guide/git-github/every-change-a-pr) · [Merge gate](/t/glassbox/guide/verification/gate)
+[Engineering skills](/t/glassbox/guide/skill-pack/engineering-skills) · [Pull requests](/t/glassbox/guide/git-github/every-change-a-pr) · [Merge gate](/t/glassbox/guide/verification/gate)
 ::
 
 ## A real case
@@ -63,7 +63,7 @@ On 14 October 2026 a session charted a map with the owner, issue #1965, for a ne
 ## Where next
 
 - [Wayfinder](/t/glassbox/guide/skill-pack/wayfinder)
-- [Planning Skills](/t/glassbox/guide/skill-pack/planning-with-the-pack)
+- [Planning skills](/t/glassbox/guide/skill-pack/planning-with-the-pack)
 - [Issue triage labels](/t/glassbox/guide/git-github/work-queue)
-- [Engineering Skills](/t/glassbox/guide/skill-pack/engineering-skills)
+- [Engineering skills](/t/glassbox/guide/skill-pack/engineering-skills)
 - [A bug report becomes work](/t/glassbox/guide/walkthroughs/a-bug-report-becomes-work)

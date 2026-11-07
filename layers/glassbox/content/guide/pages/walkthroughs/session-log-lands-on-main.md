@@ -13,7 +13,7 @@ An agent session finishes a piece of work and writes down what happened. This Wa
 When its work reaches a coherent state, such as a PR opened or a question answered, the agent runs the `close-session` Skill. The agent judges the moment itself, from the Skill's description; a hint after it opens or merges a PR reminds it, unless it has already run the Skill since. Once the agent has written its part, hooks do the rest, but a session that never gets here leaves no :term[session log].
 
 ::lessons
-[Session logs](/t/glassbox/guide/terrarium-practice/session-logs) · [Claude Code Skills](/t/glassbox/guide/claude-code/skills) · [Hook-added context](/t/glassbox/guide/hooks/hook-added-context)
+[Session logs](/t/glassbox/guide/terrarium-practice/session-logs) · [Claude Code skills](/t/glassbox/guide/claude-code/skills) · [Hook-added context](/t/glassbox/guide/hooks/hook-added-context)
 ::
 
 ## 2. The agent writes only its judgement

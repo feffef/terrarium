@@ -28,7 +28,7 @@ The session gets its own copy of the repository. A `SessionStart` hook in `.clau
 `CLAUDE.md` loads into the session at once. Its read-first list ties a doc to an action, so the session reads the git conventions before its first git command and the PR workflow before it opens, updates or merges a PR. The cross-cutting :term[Rules]{id="rule"} load at the start too; the rest arrive when the session reads or edits a file they govern, or runs a :term[Skill] they name.
 
 ::lessons
-[CLAUDE.md](/t/glassbox/guide/claude-code/claude-md) · [Path-specific rules](/t/glassbox/guide/claude-code/path-scoped-rules) · [Claude Code Skills](/t/glassbox/guide/claude-code/skills)
+[CLAUDE.md](/t/glassbox/guide/claude-code/claude-md) · [Path-specific rules](/t/glassbox/guide/claude-code/path-scoped-rules) · [Claude Code skills](/t/glassbox/guide/claude-code/skills)
 ::
 
 ## 4. It works on its own branch
