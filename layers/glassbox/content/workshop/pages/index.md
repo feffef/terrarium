@@ -44,9 +44,7 @@ These are the owner's goals for the guide. A new Subject needs the owner's appro
 
 ### Ideas not yet decided
 
-**Claude Code: giving each fact one home.** In each case the first page keeps a short link.
-- *Path-specific rules* explains the hook that reminds agents to read an ADR (a decision record in `docs/adr/`). That belongs on *Hook-added context*.
-- *Hook-added context* explains how a hint is shown only once per session by looking it up in the transcript. That belongs on *Session transcripts*.
+**Claude Code and Hooks: giving each fact one home.** In each case the first page keeps a short link.
 - *MCP servers* explains how hooks pick out MCP tools by name. That belongs on *Blocking hooks*.
 - *Session transcripts* explains how a session log is built from the transcript. That belongs on *Session logs* (`terrarium-practice/04.session-logs`).
 

@@ -1,0 +1,11 @@
+session: session_013zxzeNqe2cXhykGMMq7vUi
+mode: autonomous
+focus: "Give two repeated Claude Code and Hooks facts one home. The run started interactive, the owner then chose autonomous and left the focus to it. Chosen because the memory page listed these repeats first among the ideas needing no owner decision, no open PR touches either page, and the Hooks Subject split only moved pages, so no change from the last 5 runs is reversed."
+changes:
+  - "claude-code/02.path-scoped-rules | Cut the ADR hint's trigger and dedupe details to one sentence that links Hook-added context | Hook-added context already lists the hook and the events it runs after"
+  - "hooks/03.hook-added-context | Cut how a hint knows it already spoke, and how a subagent's transcript is found, to a link to Session transcripts | Session transcripts holds both and shows the code; skipped the writer, claim checker and fresh reader because the change only removes text"
+pagesRead:
+  - claude-code/02.path-scoped-rules
+  - hooks/03.hook-added-context
+  - hooks/04.session-transcripts
+  - claude-code/05.mcp-servers
