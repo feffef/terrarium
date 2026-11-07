@@ -3,6 +3,8 @@ surface: safe
 summary: A design or build went against a rule or check that governs it, because the agent leaned on precedent or advice instead of reading the rule, and review found it.
 cause: "An agent specs or builds a page or feature without reading the governing rule or check first (ADR-0006: a page reads only its own Space; page-checks.ts: no guide links outside the guide), relying on a precedent (the Journal) or another session's advice; a reviewer or the check finds it after the work is built. Signals: 'although ADR-0006 says', 'page-checks.ts forbids', 'leaned on the Journal precedent', 'caught only by review'."
 status: open
+notes: |-
+  2026-11-07 design: no change: RCJH read ADR-0006 and built the cross-Space read anyway (judgement against a rule in front of it); QUzc's page-check miss is caught mechanically by the gate. dropped: more prose would not change it; revisit on a third occurrence.
 occurrences:
   - session: session_013zxzeRCJHe4rmKN5i2CQ16
     date: "2026-11-06"

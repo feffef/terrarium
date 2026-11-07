@@ -9,16 +9,6 @@ fixes: []
 notes: |-
   2026-10-23 design: a subscribe-after-create sentence or guard dropped: the only home is ADR-0003 (Human-only, an ADR summary cannot add to its ADR) or a guard that cannot tell a guess from a real number, and a wrong guess costs one resubscribe.
 occurrences:
-  - session: session_011hiFhM9A2Sbn4mGYbdtAhJ
-    date: "2026-10-23"
-    severity: nit
-    description: "Called subscribe_pr_activity with pullNumber 0 in parallel with PR creation, before the number existed; it errored and I retried."
-    solution: "Sequence the subscribe after create_pull_request returns."
-  - session: session_01SNKBDEtR5UiaMXBdxvHuuE
-    date: "2026-10-23"
-    severity: nit
-    description: "I guessed the new PR number when subscribing (2470) instead of reading create_pull_request's result (2468), and had to unsubscribe and resubscribe."
-    solution: "Subscribe only after reading the PR number from the create result, not in the same parallel batch."
   - session: session_013zxzeRkASapvnaGkGVdSBk
     date: "2026-10-27"
     severity: nit

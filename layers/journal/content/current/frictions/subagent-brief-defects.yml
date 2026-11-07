@@ -21,16 +21,6 @@ fixes:
 notes: |-
   2026-10-23 re-cluster: 01Fay2Gi (a check grepping failure-only output), 013RCsUF (dated content not excluded), 011RZgGT (explore triage schema lacks the ADR-0004 exception), 011xvPjJ (audit-skills ids, PR 2318), 01XWMuHG (auth research boundary), 01WxHaU2 (workflow agent asked to dispatch), 0135hcUf and 01VH74k3 (frictions-to-fixes Skill briefs) each need their own fix; left here as single low-severity strays.
 occurrences:
-  - session: session_01E3XmTJcpKMZstW7MHL2eks
-    date: "2026-10-23"
-    severity: nit
-    description: "My consolidation brief listed session ids partly as suffixes (ki1C5ArD, NqN7), copied from slice reports; the agent had to add suffix matching to find them."
-    solution: "Give full session ids in briefs; slice agents should report full ids, not trimmed ones."
-  - session: session_01SNKBDEtR5UiaMXBdxvHuuE
-    date: "2026-10-23"
-    severity: nit
-    description: "My subagent brief named app/utils/lesson.ts; the file lives at layers/glassbox/app/utils/lesson.ts. The glossary's path is layer-relative, and I copied it without checking."
-    solution: "Check that every path in a brief exists, as dispatch-subagents §3 already says; the glossary could write the path repo-relative."
   - session: session_016edAfTmLE1szSBGNZTorPH
     date: "2026-10-25"
     severity: nit

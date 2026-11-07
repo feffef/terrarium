@@ -6,11 +6,6 @@ cause: >-
 surface: safe
 status: open
 occurrences:
-  - session: session_019SNgYeofJtzoLvh8QNAwYD
-    date: "2026-10-23"
-    severity: nit
-    description: "First audit script compared a YAML datetime's str() against an ISO string, silently dropping every 2026-10-19 session; caught before reporting."
-    solution: "Normalize timestamps (or parse them) before comparing; print the count of sessions in scope as a sanity check."
   - session: session_019nDDDS9GsXdTKWK44j18fT
     date: "2026-10-24"
     severity: nit

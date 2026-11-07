@@ -10,21 +10,6 @@ notes: |-
   2026-10-24 design: a CLAUDE.md or doc line dropped: CLAUDE.md already says a count is a fact only after you read every item, it was in context for all 5, and the five causes (eligibility rule, outlier drop, window start, ls headers) share no mechanism a helper could check.
 fixes: []
 occurrences:
-  - session: session_01PWZU3TqUdSp6uD1KaoQXit
-    date: "2026-10-23"
-    severity: minor
-    description: "Posted baseline numbers to #2286 from a throwaway script that dropped sessions reading 20+ ADRs; the real audit shows autonomous 40% to 51%, not flat."
-    solution: "Report medians or state outlier exclusions next to any read-share figure; the PR now does."
-  - session: session_012Yzae3uty5Jj8ZPug9zpjr
-    date: "2026-10-23"
-    severity: minor
-    description: "I counted #2286 and #2137 as always-eligible unlabelled issues, but both are on-hold specs whose last comment was an agent's, so auto-triage's on-hold exception would have skipped them; the owner confirmed the set anyway"
-    solution: "Apply auto-triage's on-hold-spec exception when resolving the set; a helper printing eligibility per issue would make it mechanical (#2435's counts-from-wrong-filter cluster)"
-  - session: session_01CMjFaMZxZgD7oTzNXmWwzv
-    date: "2026-10-23"
-    severity: minor
-    description: "Told the owner there were 65 Artifacts from an ls line count that included directory headers; real count 52."
-    solution: "Count files with a glob, not ls output; CLAUDE.md's verify-before-you-state already says so."
   - session: session_013zxzeRynjgY3G22uZYaKCk
     date: "2026-11-02"
     severity: nit
