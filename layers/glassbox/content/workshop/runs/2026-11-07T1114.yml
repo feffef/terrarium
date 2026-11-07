@@ -2,6 +2,6 @@ session: session_013zxzeT5vcQTn5YZeNHDSvv
 mode: interactive
 focus: "Shorten Issue triage labels (git-github/06.work-queue), among the longest pages in the guide at about 1,500 words. The owner gave no focus and left the choice to the run; the memory page lists the page's length as a weak spot, no open PR touches it, and titles in the Claude Code, Hooks and Agents & automation Subjects already pass the title rule, so a retitle pass had nothing to fix."
 changes:
-  - "git-github/06.work-queue | Cut about 110 words: the default-labels sentence, the Agent Brief sentence, the wontfix Excerpt (now one sentence citing the same lines) and the Wayfinder aside | the page was among the longest and these parts were side detail the Excerpts and linked pages already hold"
+  - "git-github/06.work-queue | Cut about 110 words: the default-labels sentence, the Agent Brief sentence, the sentence on triage reading every out-of-scope record, the wontfix Excerpt (now one sentence citing the same Skill) and the Wayfinder aside | the page was among the longest and these parts were side detail the Excerpts and linked pages already hold"
 pagesRead:
   - git-github/06.work-queue
