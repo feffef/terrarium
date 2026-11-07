@@ -58,7 +58,7 @@ These are the owner's goals for the guide. A new Subject needs the owner's appro
 ### Already decided
 
 Earlier runs turned these down. Each stays turned down until something in the repository changes the reason.
-- **Folding *Planning Skills* into *Installed Skills*.** Planning Skills holds two facts about Terrarium's own choices that would lose their page.
+- **Folding *Planning Skills* into *Installed Skills*.** Planning Skills holds facts about Terrarium's own choices that would lose their page.
 - **Moving the trust rules from *Human-in-the-loop agents* to *Author trust*.** The first page already links to the second.
 - **Moving the rule about the `ready-for-agent` label into *Issue triage labels*.** That page already shows it.
 - **Moving the payload-size reason from *queryCollection* to *Data fetching*.** Both pages already state it, so moving it gains nothing.
