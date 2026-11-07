@@ -60,8 +60,9 @@ that one commit, never a later fetch.
    `falseClaims`, quoted, with the `path:line` or URL that contradicts it.
    Report the claims you checked on each page (`claims`, one short line each)
    and the docs URL or fallback you used (`docs`).* For a page that is only
-   flagged, the brief names the changed files and limits it to claims citing
-   them.
+   flagged, the brief names the report's `changedFiles` and limits it to claims
+   citing them; it still fetches the docs URL for any of those claims that
+   rests on a tool's docs.
 
    Confirm each reported contradiction in the source yourself, then make the
    smallest correction of the false claim: no retitle, restructuring or style
@@ -77,4 +78,5 @@ that one commit, never a later fetch.
    `docs/agents/pr-workflow.md`, one PR titled `glassbox-update: <YYYY-MM-DD>`
    whose body lists each flagged page and term, why, and what changed, and each
    page fully checked. If the PR includes anything outside this run's paths,
-   leave it for a human.
+   leave it for a human. Done when the PR is merged or left for a human, and
+   `close-session` has run again.

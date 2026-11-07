@@ -16,6 +16,8 @@ export interface PageUpdate {
   file: string
   revision: string
   changedPaths: string[]
+  /** So a claim-check brief names files, not folders. */
+  changedFiles: string[]
   shifted: { path: string; from: string; to: string }[]
   edited: { path: string; lines: string }[]
 }
@@ -80,7 +82,14 @@ export function glassboxUpdate(cwd = root, { main: mainRef = 'origin/main', writ
     const changed = run('diff', '--name-only', '--no-renames', revision, main).split('\n').filter(Boolean)
     const changedPaths = [...new Set(refs.files.map((r) => r.path))]
       .filter((p) => (p.endsWith('/') ? listing(revision, p) !== listing(main, p) : changed.includes(p)))
-    const update: PageUpdate = { space, file, revision, changedPaths, shifted: [], edited: [] }
+    const changedFiles = changedPaths.flatMap((p) => {
+      if (!p.endsWith('/')) return [p]
+      const entries = (rev: string) => new Set(listing(rev, p)!.split('\n').filter(Boolean))
+      const before = entries(revision)
+      const after = entries(main)
+      return [...new Set([...before, ...after])].filter((f) => before.has(f) !== after.has(f)).sort()
+    })
+    const update: PageUpdate = { space, file, revision, changedPaths, changedFiles, shifted: [], edited: [] }
     const shifts = new Map<string, LineRange>()
     const seen = new Set<string>()
     for (const ref of refs.files) {

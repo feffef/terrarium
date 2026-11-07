@@ -36,7 +36,7 @@ export default defineTenant({
         mode: z.enum(['autonomous', 'interactive']),
         focus: z.string(), // one line: what the run took on and why
         changes: z.array(z.string()), // "page | what changed | why"
-        pagesRead: z.array(z.string()), // read in full by a fresh reader or the lead; tracks coverage
+        pagesRead: z.array(z.string()), // every page read in full by a fresh reader or the lead, and nothing else; tracks coverage
       }),
     },
     // glassbox-update's full-check state; a list because a page-to-date map is not a plain ZodObject.

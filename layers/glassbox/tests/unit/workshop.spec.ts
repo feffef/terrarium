@@ -1,6 +1,7 @@
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
+import { parse } from 'yaml'
 import { splitFrontmatter } from '../../../../scripts/lib/frontmatter.ts'
 import { root } from '../../../../shared/expand.ts'
 import { glassboxCheckRows, glassboxRunChange, glassboxRunStart } from '../../app/utils/workshop.ts'
@@ -58,5 +59,13 @@ describe('the workshop memory page', () => {
   it('places both lists after its text', () => {
     expect(body.indexOf('::workshop-runs')).toBeGreaterThan(body.indexOf('## Memory'))
     expect(body.indexOf('::workshop-checks')).toBeGreaterThan(body.indexOf('::workshop-runs'))
+  })
+})
+
+describe('glassbox-update checks', () => {
+  // A moved page must be renamed here, or it silently loses its check date (glassbox-curate, Move).
+  it('names only guide pages that exist', () => {
+    const { pages } = parse(readFileSync(join(root, 'layers/glassbox/content/workshop/checks/update.yml'), 'utf8')) as { pages: { page: string }[] }
+    expect(pages.map((p) => p.page).filter((page) => !existsSync(join(root, 'layers/glassbox/content/guide/pages', `${page}.md`)))).toEqual([])
   })
 })
