@@ -1,15 +1,16 @@
 schemaVersion: 1
 session: session_013zxzeQWJUyfuXJgdfypeuc
 startedAt: 2026-11-07T07:58:07Z
-endedAt: 2026-11-07T12:20:40Z
+endedAt: 2026-11-07T15:09:30Z
 kind: interactive
 goal: Redesign the glassbox-curate Skill from its runs, then fix what the next runs showed
-status: completed
-outcome: "PRs #2923 and #2929 merged: read the Subject before choosing, wait for update PRs, update owns its merge"
-summary: "Phase 1 (human-instructed): the owner had me read issue #2906 and design improvements, consulting the sessions that designed and ran the Skill; PR #2923 (two-call orientation, no pr/learned fields, proposals as results, removal path) merged. Phase 2 (human-instructed): the owner asked me to review the runs after #2923 (the Claude Code split #2924/#2925, the triage-labels cut #2927) and the glassbox-update run #2922, and to have the update session run a retro. I messaged all three sessions; the update session could not reply by tool, so the owner pasted its answer. The owner then chose each fix: cut-fact homes, moved pages keep their update.yml date (grades.yml left to its own script, my objection accepted), curate waits for an open update PR, cost field named, a person may switch a run to autonomous, update's Land owns the merge, scoped checks fetch docs, the report lists changedFiles. The owner interrupted, then asked me to make runs read the whole Subject before choosing their focus, have review name missed pages for the lead to read, and have new Lessons follow the glassbox-lesson Skill. Agent-initiated: renaming \"rough focus\" to \"area\" and aligning the relevance test after review. Gate green; PR #2929 merged. Then, at the owner's request, I closed #2906, #2896, #2898 and #2899 as done and #2805, #2871 and #2872 as moot, and filed #2930 (remove glassbox-improve, the owner's decision) and #2931 (curate's Routine, a limit on its wait, update's cost measurement)."
+status: in-review
+outcome: "PRs #2923 and #2929 merged; PR #2944 open for a human merge: curate builds instead of filing issues, reads its area by script"
+summary: "Phase 1 (human-instructed): the owner had me read issue #2906 and design improvements, consulting the sessions that designed and ran the Skill; PR #2923 (two-call orientation, no pr/learned fields, proposals as results, removal path) merged. Phase 2 (human-instructed): the owner asked me to review the runs after #2923 (the Claude Code split #2924/#2925, the triage-labels cut #2927) and the glassbox-update run #2922, and to have the update session run a retro. I messaged all three sessions; the update session could not reply by tool, so the owner pasted its answer. The owner then chose each fix: cut-fact homes, moved pages keep their update.yml date (grades.yml left to its own script, my objection accepted), curate waits for an open update PR, cost field named, a person may switch a run to autonomous, update's Land owns the merge, scoped checks fetch docs, the report lists changedFiles. The owner interrupted, then asked me to make runs read the whole Subject before choosing their focus, have review name missed pages for the lead to read, and have new Lessons follow the glassbox-lesson Skill. Agent-initiated: renaming \"rough focus\" to \"area\" and aligning the relevance test after review. Gate green; PR #2929 merged. Then, at the owner's request, I closed #2906, #2896, #2898 and #2899 as done and #2805, #2871 and #2872 as moot, and filed #2930 (remove glassbox-improve, the owner's decision) and #2931 (curate's Routine, a limit on its wait, update's cost measurement). Phase 3 (human-instructed): the owner asked me to review the next three curate runs (#2940, #2942, #2943) and to make curate build new Lessons, Subjects, splits, moves and Skill or page-check changes instead of filing issues, with those PRs waiting for their merge. I asked the three sessions; all read less than their area, and two read the cost before the field existed. The owner chose: orient.ts --area with a removal exemption, plain.ts, writer for any factual sentence, cost at landing, gap grep, docs fallbacks, writer brief caps and lengths in validate:content; and asked the Skill to explain why reading the whole guide matters. Agent-initiated: reverting a guide-page claim whose pin predated the change. PR #2944 waits for the owner's merge."
 prs:
   - "2923"
   - "2929"
+  - "2944"
 docsRead:
   - path: docs/agents/github-integration.md
     reason: MCP tool map; REST works in the cloud for orient.ts's PR lookup
@@ -54,9 +55,20 @@ docsRead:
     reason: its five steps, so the curate Fix step could point to it
     useful: yes
   - path: docs/agents/issue-tracker.md
-    reason: (no reason given)
+    reason: "how to file and close issues before closing #2906 and the others"
+    useful: partly
   - path: docs/agents/triage-labels.md
-    reason: (no reason given)
+    reason: "a non-triage session files needs-triage, so #2930 and #2931 got that label"
+    useful: yes
+  - path: .agents/skills/inspect-session/SKILL.md
+    reason: cost section before reading other sessions with get_session
+    useful: partly
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: the docs fallback list I extended
+    useful: yes
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: "Spec subagent read it and found no conflict: a Subject is not listed new work"
+    useful: yes
 skillsUsed:
   - name: code-review
     reason: Standards and Spec review of the diff before the PR
@@ -100,53 +112,64 @@ frictions:
   - description: The update session had no send_message tool, so its retro reached me only because the owner pasted it
     solution: Before asking a scheduled session for a reply, say it may answer in its own transcript and read it there with the inspect-session Skill
     severity: minor
-durationSec: 15752
+  - description: Ran git checkout origin/main -- . to read a file, which git-conventions.md forbids; the classifier denied it, so nothing was staged
+    solution: Read a file from main with git show origin/main:<path>, as git-conventions says
+    severity: minor
+  - description: "First draft of the Skill's reading rationale cited #2906 for four failures; only two were evidenced, which I caught on re-read"
+    solution: Check each claimed failure against its PR before citing it in a Skill
+    severity: nit
+durationSec: 25883
 models:
-  claude-opus-5-5: 483
+  claude-opus-5-5: 633
 toolCounts:
-  Bash: 132
+  Bash: 183
   ToolSearch: 4
   mcp__github__issue_read: 7
-  mcp__claude-code-remote__send_message: 9
-  mcp__claude-code-remote__get_session: 1
-  AskUserQuestion: 12
-  ReadNotifications: 9
-  Write: 3
+  mcp__claude-code-remote__send_message: 12
+  mcp__claude-code-remote__get_session: 4
+  AskUserQuestion: 14
+  ReadNotifications: 11
+  Write: 6
   SendUserFile: 1
-  Skill: 6
-  Agent: 5
+  Skill: 7
+  Agent: 7
   Read: 3
   mcp__github__list_pull_requests: 1
-  mcp__github__create_pull_request: 2
-  mcp__claude-code-remote__subscribe_pr_activity: 2
+  mcp__github__create_pull_request: 3
+  mcp__claude-code-remote__subscribe_pr_activity: 3
   mcp__github__pull_request_read: 11
-  mcp__claude-code-remote__send_later: 2
+  mcp__claude-code-remote__send_later: 3
   mcp__github__add_issue_comment: 9
   mcp__claude-code-remote__delete_trigger: 2
   mcp__claude-code-remote__unsubscribe_pr_activity: 2
-  Edit: 1
+  Edit: 3
   mcp__github__issue_write: 9
 filesEdited:
   - .throwaway/curate-examples.md
   - .agents/skills/glassbox-curate/scripts/orient.ts
   - .agents/skills/glassbox-curate/SKILL.md
+  - .agents/skills/glassbox-curate/scripts/plain.ts
+  - .agents/skills/glassbox-curate/tests/unit/plain.spec.ts
+  - layers/glassbox/content/workshop/pages/index.md
+  - layers/glassbox/content/guide/pages/agents/03.routines.md
+  - layers/glassbox/page-checks.ts
+  - .agents/skills/glassbox-curate/tests/unit/orient.spec.ts
+  - .agents/skills/glassbox-lesson/EVERY-PAGE.md
+  - layers/glassbox/tests/unit/glassbox-pages.spec.ts
+  - package.json
   - layers/glassbox/tenant.config.ts
   - .agents/skills/glassbox-update/SKILL.md
   - .agents/skills/glassbox-update/scripts/glassbox-update.ts
   - .agents/skills/glassbox-update/tests/unit/glassbox-update.spec.ts
   - layers/glassbox/tests/unit/workshop.spec.ts
-  - layers/glassbox/page-checks.ts
-  - .agents/skills/glassbox-curate/tests/unit/orient.spec.ts
   - layers/glassbox/app/components/content/WorkshopRuns.vue
   - layers/glassbox/content/guide/pages/git-github/06.work-queue.md
   - layers/glassbox/content/guide/pages/skill-pack/04.wayfinder.md
   - layers/glassbox/content/guide/pages/walkthroughs/asking-for-a-change.md
-  - layers/glassbox/content/workshop/pages/index.md
   - layers/glassbox/content/workshop/runs/2026-11-06T1936.yml
   - layers/glassbox/content/workshop/runs/2026-11-06T2059.yml
   - layers/glassbox/content/workshop/runs/2026-11-06T2100.yml
   - layers/glassbox/content/workshop/runs/2026-11-06T2242.yml
-  - layers/glassbox/tests/unit/glassbox-pages.spec.ts
 rulesLoaded:
   - .claude/rules/adr-0027.md
   - .claude/rules/adr-0029.md
@@ -172,6 +195,7 @@ rulesGlobal:
 rulesFollowedUp:
   - .claude/rules/adr-0027.md
   - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0003.md
 adrHints:
   - adr: 5
     via: path
@@ -185,6 +209,7 @@ rulesLoadedBySubagents:
   - .claude/rules/adr-0015.md
 docsReadBySubagents:
   - .agents/skills/writing-for-agents/SKILL.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
     reason: Made me run code-review and gate:scoped before opening the PR; summary enough
@@ -246,37 +271,52 @@ ruleVerdicts:
   - path: .claude/rules/adr-0015.md
     reason: Loaded only for a review subagent, which found no installed Skill touched
     useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Loaded with the triage docs; this session ran no triage sweep, it only closed issues at the owner's request
+    useful: no
 subagents:
   - type: general-purpose
     task: Standards review of curate diff
     durationSec: 59
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 2.3
+    tokenShare: 1.4
   - type: general-purpose
     task: Spec review of curate diff
     durationSec: 50
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 2.2
+    tokenShare: 1.4
   - type: general-purpose
     task: Standards review of fixes diff
     durationSec: 65
     toolCalls: 7
     modelCalls: 7
-    tokenShare: 2
+    tokenShare: 1.3
   - type: general-purpose
     task: Spec review of fixes diff
     durationSec: 67
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 1.8
+    tokenShare: 1.1
   - type: general-purpose
     task: Review full-read Skill commit
     durationSec: 29
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 0.7
+    tokenShare: 0.4
+  - type: general-purpose
+    task: Standards review of build-not-issue diff
+    durationSec: 55
+    toolCalls: 7
+    modelCalls: 6
+    tokenShare: 1.3
+  - type: general-purpose
+    task: Spec review of build-not-issue diff
+    durationSec: 78
+    toolCalls: 8
+    modelCalls: 8
+    tokenShare: 1.4
 gitBranch: ccr-c1d87eb8-luzwvj
 entrypoint: remote_mobile
 cliVersion: 2.1.319
