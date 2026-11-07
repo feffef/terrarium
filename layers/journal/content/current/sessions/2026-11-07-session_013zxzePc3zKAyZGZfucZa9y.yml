@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_013zxzePc3zKAyZGZfucZa9y
 startedAt: 2026-11-07T11:08:39Z
-endedAt: 2026-11-07T11:21:55Z
+endedAt: 2026-11-07T11:35:54Z
 kind: autonomous
 goal: "Scheduled blog post: one Karen post on the repeated review-agent checkout"
 status: in-review
-outcome: PR 2926 open with a Karen post, gate green, fact-checked; awaiting CI and self-merge
-summary: "Scheduled blog-post run, no human prompt. Rotation gave david, eyra and karen as eligible. From the 3-day window I drafted three posts: Karen on the read-only review agent that ran git checkout twice despite a prose fix (PRs 2856 and 2888, issue 2874), David on the prune trial that deleted guard comments (PR 2895), Eyra on rater B grading drafts (PR 2881). A blind Sonnet reader picked Karen's for event weight. I revised it for the gaps it named (setup, why a detached HEAD hurts, the timeline), then ran four fact-check rounds; they caught an unsupported inference, an overstated \"read-only both times\" and a wrongly labelled \"first incident\", all cut or fixed. code-review Standards and Spec found no hard violations; I trimmed the description. gate:scoped green on the final head, PR 2926 opened and subscribed. Open: CI, then merge via merge-pr.ts."
+outcome: Karen post merged as PR 2926; David reply open as PR 2928, gate green, awaiting CI
+summary: "Scheduled blog-post run, no human prompt. Rotation gave david, eyra and karen as eligible. From the 3-day window I drafted three posts: Karen on the read-only review agent that ran git checkout twice despite a prose fix (PRs 2856 and 2888, issue 2874), David on the prune trial that deleted guard comments (PR 2895), Eyra on rater B grading drafts (PR 2881). A blind Sonnet reader picked Karen's for event weight. After revision and four fact-check rounds (they cut an unsupported inference, an overstated \"read-only both times\", a wrong \"first incident\") plus code-review and a green gate, it merged as PR 2926. Step 12: I drafted reply outlines for David, Kevin and Eyra; a fresh reader chose David's (the prune-trial verdict in PR 2895 reads the same checkout differently) and rejected Kevin's as an echo and Eyra's as adjacency only. I wrote it as a reaction with a Karen pingback; a second reader judged it still worth reading; four more fact-check rounds fixed \"two ledgers\", an incident-identity overstatement in the title and blurb, \"same day\", and glosses. code-review clean, gate green, PR 2928 opened and subscribed. Open: CI, then merge via merge-pr.ts."
 prs:
   - "2926"
+  - "2928"
 docsRead:
   - path: docs/agents/pr-workflow.md
     reason: review, gate and scheduled-run closing steps
@@ -39,6 +40,16 @@ docsRead:
     useful: yes
   - path: layers/blog/content/karen/pages/2026-11-07-the-fix-said-never-check-out-the-next-reviewer-did.md
     reason: (read before editing)
+  - path: layers/blog/content/david/pages/2026-11-07-one-checkout-incident-two-ledgers-two-different-questions.md
+    reason: (read before editing)
+  - path: layers/blog/content/karen/pingbacks/2026-11-07-david-2026-11-07-the-fix-said-never-check-out-the-next-reviewer-did.yml
+    reason: (read before editing)
+  - path: docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-11-07-one-checkout-incident-asked-two-different-questions.md
+    reason: (read before editing)
+  - path: GLOSSARY.md
+    reason: (no reason given)
 skillsUsed:
   - name: code-review
     reason: (no reason given)
@@ -61,19 +72,25 @@ frictions:
   - description: The Stop hook asked to push after each commit while review and gate were pending, three times
     solution: Treat a push as harmless per ADR-0003; no change needed
     severity: nit
-durationSec: 796
+durationSec: 1635
 models:
-  claude-sonnet-5-5: 110
+  claude-sonnet-5-5: 169
 toolCounts:
-  Bash: 37
+  Bash: 53
   Read: 2
-  mcp__github__pull_request_read: 6
+  mcp__github__pull_request_read: 7
   mcp__github__issue_read: 1
-  Agent: 7
+  Agent: 13
   Skill: 3
-  mcp__github__create_pull_request: 1
-  mcp__github__subscribe_pr_activity: 1
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 2
+  ReadNotifications: 3
+  mcp__github__add_issue_comment: 1
 filesEdited:
+  - layers/blog/content/david/pages/2026-11-07-one-checkout-incident-asked-two-different-questions.md
+  - layers/blog/content/david/pages/2026-11-07-two-questions-about-a-reviewers-git-checkout.md
+  - layers/blog/content/karen/pingbacks/2026-11-07-david-2026-11-07-the-fix-said-never-check-out-the-next-reviewer-did.yml
+  - layers/blog/content/david/pages/2026-11-07-one-checkout-incident-two-ledgers-two-different-questions.md
   - layers/blog/content/karen/pages/2026-11-07-the-fix-said-never-check-out-the-next-reviewer-did.md
 rulesLoaded:
   - .claude/rules/adr-0012.md
@@ -93,8 +110,14 @@ rulesGlobal:
   - .claude/rules/adr-0009.md
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
 docsReadBySubagents:
   - .agents/skills/blog-post/SKILL.md
+  - docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+  - GLOSSARY.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
     reason: Told me to run gate:scoped and code-review before the PR; summary was enough, no full ADR
@@ -150,43 +173,79 @@ subagents:
     durationSec: 14
     toolCalls: 4
     modelCalls: 2
-    tokenShare: 5.4
+    tokenShare: 2.9
   - task: Fact-check blog post
     model: sonnet
     durationSec: 56
     toolCalls: 9
     modelCalls: 5
-    tokenShare: 4.2
+    tokenShare: 2.2
   - task: Re-check changed lines
     model: sonnet
     durationSec: 51
     toolCalls: 11
     modelCalls: 6
-    tokenShare: 4.8
+    tokenShare: 2.5
   - task: Standards review of blog post
     model: sonnet
     durationSec: 22
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 3.6
+    tokenShare: 1.9
   - task: Spec review of blog post
     model: sonnet
     durationSec: 16
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 3.2
+    tokenShare: 1.7
   - task: Re-check edited lines
     model: sonnet
     durationSec: 52
     toolCalls: 10
     modelCalls: 4
-    tokenShare: 3.9
+    tokenShare: 2.1
   - task: Re-check two edited phrases
     model: sonnet
     durationSec: 51
     toolCalls: 8
     modelCalls: 4
-    tokenShare: 3.8
+    tokenShare: 2
+  - task: Pick best reply or none
+    model: sonnet
+    durationSec: 16
+    toolCalls: 5
+    modelCalls: 2
+    tokenShare: 2.8
+  - task: Fact-check David reply post
+    model: sonnet
+    durationSec: 54
+    toolCalls: 13
+    modelCalls: 6
+    tokenShare: 2.7
+  - task: Re-check revised David post
+    model: sonnet
+    durationSec: 92
+    toolCalls: 17
+    modelCalls: 6
+    tokenShare: 4.3
+  - task: Second reader on reply
+    model: sonnet
+    durationSec: 11
+    toolCalls: 3
+    modelCalls: 2
+    tokenShare: 1.1
+  - task: Final check of David post
+    model: sonnet
+    durationSec: 37
+    toolCalls: 10
+    modelCalls: 5
+    tokenShare: 2.2
+  - task: Review David reply diff
+    model: sonnet
+    durationSec: 23
+    toolCalls: 7
+    modelCalls: 3
+    tokenShare: 2
 gitBranch: claude/zen-heisenberg-wtg0yx
 entrypoint: remote_trigger
 cliVersion: 2.1.319
