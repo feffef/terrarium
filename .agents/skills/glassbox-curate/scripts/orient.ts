@@ -1,8 +1,8 @@
-// The orientation step of glassbox-curate, split in two so each output is read
-// whole; terms and Where next were cut because no run used them (#2906). `--subject`
-// prints one Subject's pages in full, so the Read step is one output to read, not
-// a choice of what to open: runs that chose for themselves read too little.
-// Usage: pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts [--pages | --subject <folder>]
+// The orientation step of glassbox-curate, one output small enough to read whole.
+// Each guide page shows as its title and description: the run reads its own Subject
+// in full (`--subject`), so the overview need only say what every other page
+// teaches. Terms, Where next and first paragraphs were cut for size (#2906).
+// Usage: pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts [--subject <folder>]
 import { existsSync, globSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { fail, flagValue, root, runIfMain } from '../../../../scripts/lib/cli.ts'
@@ -15,11 +15,10 @@ const content = 'layers/glassbox/content'
 // The churn guard looks back this many runs (SKILL.md).
 const recentRuns = 5
 
-/** One page's block: its stem and title, its description, then its first paragraph. */
+/** One page's line: its stem, title and description. */
 export function pageOverview(stem: string, source: string): string {
-  const { frontmatter, body } = splitFrontmatter(source)
-  const lede = body.split(/\n\s*\n/).map((p) => p.trim()).find((p) => p && !/^(#|::|<|```)/.test(p)) ?? ''
-  return [`### ${stem}: ${String(frontmatter.title)}`, String(frontmatter.description), '', lede].join('\n')
+  const { frontmatter } = splitFrontmatter(source)
+  return `- ${stem}: ${String(frontmatter.title)}. ${String(frontmatter.description)}`
 }
 
 /** Each file under `dir` matching `pattern`, sorted, as [path under dir, text]. */
@@ -84,11 +83,8 @@ export function orientation(base = join(root, content), { log = guideLog, prs = 
     section('glassbox-update checks', checks.map(([, t]) => t.trim()).join('\n')),
     section('Page-check warnings', warnings.join('\n')),
     section(runs.length ? 'Guide and drafts changes since the last curate run' : 'Last 30 guide and drafts changes (no curate run yet)', log(runs[0] ? runStart(runs[0][0]) : undefined)),
+    section('Guide pages', guide.map(([f, t]) => pageOverview(f.replace(/\.md$/, ''), t)).join('\n')),
   ].join('\n\n')
-}
-
-export function guidePages(base = join(root, content)): string {
-  return section('Guide pages', files(join(base, 'guide/pages'), '**/*.md').map(([f, t]) => pageOverview(f.replace(/\.md$/, ''), t)).join('\n\n'))
 }
 
 /** Every page of one Subject's folder (or `walkthroughs`) in full, then the `pagesRead` lines they make. */
@@ -106,7 +102,7 @@ runIfMain(import.meta.url, () => {
   const subject = flagValue(process.argv, '--subject')
   if (process.argv.includes('--subject') && !subject) fail('--subject needs a Subject folder, such as git-github')
   try {
-    process.stdout.write(`${subject ? subjectPages(subject) : process.argv.includes('--pages') ? guidePages() : orientation()}\n`)
+    process.stdout.write(`${subject ? subjectPages(subject) : orientation()}\n`)
   } catch (err) {
     fail(err instanceof Error ? err.message : String(err))
   }

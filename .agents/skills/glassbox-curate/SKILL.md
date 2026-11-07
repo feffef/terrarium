@@ -54,16 +54,17 @@ the other pages breaks that: it repeats what a sibling page already teaches,
 contradicts it, adds a page that exists under another title, or cuts the only
 place a fact was taught. Runs that read only the page they changed repeated a
 sibling page (#2943) and cut the only place a fact was taught (#2927). So
-every run reads at two depths before it edits: the first paragraph of every
-page, to know what the whole guide teaches, and every page of its Subject in
-full, to know exactly what its neighbours say.
+every run reads at two depths before it edits: every page's title and
+description, to know what the whole guide teaches, and every page of its
+Subject in full, to know exactly what its neighbours say. The first depth is
+only as good as the descriptions, so when a page you read in full has a
+description that doesn't name what it teaches, rewrite it within its cap.
 
 - **Orient.** This is the orientation step: run
-  `pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts`, then the
-  same with `--pages`, and read each output whole, never through `head`; if
-  the tool saves one to a file, read that file whole. The first gives the
-  state: where to write the run entry, open PRs, memory, recent runs and
-  warnings. The second gives every page's first paragraph: the whole-guide
+  `pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts` and read its
+  output whole, never through `head`; if the tool saves it to a file, read that
+  file whole. It gives where to write the run entry, open PRs, memory, recent
+  runs, warnings, and every page's title and description: the whole-guide
   depth above. Leave alone every page an open PR touches. While a
   `glassbox-update` PR is open, wait for it: subscribe to its activity, end
   your turn, and orient again once it merges or closes. An autonomous run stops
