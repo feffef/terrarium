@@ -2,7 +2,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
-import { guidePages, orientation, pageOverview, runStem, shortPath, warningLines } from '../../scripts/orient.ts'
+import { subjectPages, orientation, pageOverview, runStem, shortPath, warningLines } from '../../scripts/orient.ts'
 
 const page = `---
 title: Blocking hooks
@@ -25,18 +25,8 @@ Body text.
 `
 
 describe('pageOverview', () => {
-  it('gives the title, description and first paragraph', () => {
-    expect(pageOverview('claude-code/05.blocking-hooks', page)).toBe([
-      '### claude-code/05.blocking-hooks: Blocking hooks',
-      'Hooks that refuse a wrong tool call.',
-      '',
-      'Some instructions keep being missed. A blocking hook checks instead.',
-    ].join('\n'))
-  })
-
-  it('skips a leading component', () => {
-    const walkthrough = `---\ntitle: W\ndescription: D\n---\n\n::diagram\n::\n\nThe story starts here.\n\n## 1. First stop\n`
-    expect(pageOverview('walkthroughs/w', walkthrough)).toBe('### walkthroughs/w: W\nD\n\nThe story starts here.')
+  it('gives the stem, title and description on one line, and no body', () => {
+    expect(pageOverview('claude-code/05.blocking-hooks', page)).toBe('- claude-code/05.blocking-hooks: Blocking hooks. Hooks that refuse a wrong tool call.')
   })
 })
 
@@ -60,21 +50,26 @@ describe('orientation', () => {
   const run = (log = (_since: string | undefined) => 'abc1234 a guide commit') =>
     orientation(base, { log, prs: () => '- #1 a PR: layers/glassbox/x.md', now: new Date('2026-11-07T10:05:30Z') })
 
-  it('prints the state sections in order, runs newest first, and no terms or pages', () => {
+  it('prints every section in order, runs newest first, pages as one line each, and no terms', () => {
     const seen: (string | undefined)[] = []
     const out = run((since) => (seen.push(since), 'abc1234 a guide commit'))
     expect(out.split('\n').filter((l) => l.startsWith('# '))).toEqual([
-      '# Run entry', '# Open PRs that touch Glass Box', '# Memory page', '# Last 5 curate runs, newest first', '# glassbox-update checks', '# Page-check warnings', '# Guide and drafts changes since the last curate run',
+      '# Run entry', '# Open PRs that touch Glass Box', '# Memory page', '# Last 5 curate runs, newest first', '# glassbox-update checks', '# Page-check warnings', '# Guide and drafts changes since the last curate run', '# Guide pages',
     ])
     for (const text of ['workshop/runs/2026-11-07T1005.yml', 'focus: "<', '- #1 a PR', 'A lead.', 'focus: first', 'focus: second', 'pages: []', 'abc1234 a guide commit']) expect(out).toContain(text)
     expect(out.indexOf('focus: second')).toBeLessThan(out.indexOf('focus: first'))
     expect(out).toContain('05.blocking-hooks.md ×1')
-    for (const text of ['term: Hook', '### claude-code']) expect(out).not.toContain(text)
+    expect(out).toContain('- claude-code/05.blocking-hooks: Blocking hooks. Hooks that refuse a wrong tool call.')
+    for (const text of ['term: Hook', 'Some instructions keep being missed']) expect(out).not.toContain(text)
     expect(seen).toEqual(['2026-11-07T09:00:00Z'])
   })
 
-  it('prints the guide pages on their own', () => {
-    expect(guidePages(base)).toContain('### claude-code/05.blocking-hooks: Blocking hooks\nHooks that refuse a wrong tool call.\n\nSome instructions')
+  it('prints a Subject\'s pages in full with the pagesRead lines they make', () => {
+    const out = subjectPages('claude-code', base)
+    expect(out).toContain('# claude-code/05.blocking-hooks\n\n---\ntitle: Blocking hooks')
+    expect(out).toContain('## The concept\n\nBody text.')
+    expect(out).toMatch(/pagesRead:\n {2}- claude-code\/05\.blocking-hooks$/)
+    expect(() => subjectPages('nope', base)).toThrow(/no guide pages under "nope"/)
   })
 
   it('falls back to the last commits before the first run', () => {
