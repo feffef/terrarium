@@ -1,0 +1,41 @@
+session: session_013zxzeNpEgoBzTxHw74sJHY
+mode: interactive
+focus: "Back ten Lessons with the primary docs earlier runs couldn't reach. The owner started the run with no focus, then set one: read the official docs that the old network policy blocked (content.nuxt.com, v3.zod.dev, vuejs.org, vitest.dev, docs.github.com, Docker, Caddy) for up to ten Lessons whose PRs say their claims were checked only against npm packages or web-search snippets, fix what the docs contradict, and add deep links. I chose the ten from the PR bodies that named blocked sites (#2034, #2041, #2044, #2763, #2787, #2500)."
+changes:
+  - "nuxt-content/10.content-collections | A page's path now comes from the file's path, not its name; a data collection's schema (not its fields) is its own; deep links to source, queryCollection, path generation and schema overrides | content.nuxt.com collections/types said both types get built-in fields and the path follows the folder structure"
+  - "nuxt-content/20.multi-tenant-isolation | SQLite is the default and the database option can name another adapter; links to the dump build, the database option, the dev database file and node:sqlite | configuration#database lists the adapters"
+  - "nuxt-content/30.content-database | The server loads the dump into the configured database (SQLite by default); links to the cold-start restore, the database option, sqliteConnector and the browser WASM step | advanced/database and getting-started/configuration"
+  - "nuxt-content/40.query-collection | Deep links to the SQL operator list, useAsyncData and the server event form; no sentence changed | the queryCollection URL was never fetched before; every method the page names is in the live docs"
+  - "nuxt-vue/50.vue-components | An SFC is made of blocks (not up to three) and compiles to JavaScript and CSS; deep links to blocks, composable restrictions, universal rendering and state-management advice | vuejs.org sfc-spec and sfc guide say so"
+  - "nuxt-vue/80.hydration | Added the cause that the browser's HTML parser corrects invalid nesting (a div in a p); links to hydration, mismatch causes and useState sharing | vuejs.org ssr#hydration-mismatch lists it first"
+  - "verification/40.testing | With isolation off, files on the same worker share globals (not every file); Playwright's matchers belong to its own test runner; links to the filter, globalSetup and Playwright docs | vitest.dev improving-performance and playwright.dev test-assertions"
+  - "verification/60.zod-refinements | .refine returns any value and a truthy one passes; links to refine, custom and merge | v3.zod.dev .refine arguments"
+  - "verification/70.schema-evolution | Links to strict, union and default; no sentence changed | v3.zod.dev headings"
+  - "deploy/10.continuous-deployment | The start command includes NODE_ENV=production; links to the Nuxt entry-point section, Docker volumes and up, and Caddy's HTTPS section | nuxt.com deployment says to set it, and deploy/entrypoint.sh does"
+pagesRead:
+  - nuxt-content/10.content-collections
+  - nuxt-content/20.multi-tenant-isolation
+  - nuxt-content/30.content-database
+  - nuxt-content/40.query-collection
+  - nuxt-vue/50.vue-components
+  - nuxt-vue/80.hydration
+  - verification/40.testing
+  - verification/60.zod-refinements
+  - verification/70.schema-evolution
+  - deploy/10.continuous-deployment
+  - nuxt-content/50.mdc-components
+  - nuxt-vue/10.layers
+  - nuxt-vue/30.file-routing
+  - nuxt-vue/40.virtual-modules
+  - nuxt-vue/60.nitro
+  - nuxt-vue/70.data-fetching
+  - verification/10.gate
+  - verification/20.type-checking
+  - verification/30.content-validation
+  - verification/50.linting
+  - verification/80.headless-browser-checks
+  - deploy/20.pnpm-lockfile
+  - terrarium-practice/70.cross-tenant-reads
+  - walkthroughs/a-change-goes-live
+  - walkthroughs/from-file-to-browser
+  - walkthroughs/reading-across-tenants

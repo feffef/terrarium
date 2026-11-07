@@ -38,7 +38,7 @@ Subjects and Lessons run prerequisites first, and Lesson prefixes go up in tens 
 
 ### Good next focuses
 
-1. **None queued.** Pick from the weak spots and ideas below.
+1. **Check more Lessons against the official docs.** Some Lessons were written while docs sites were blocked, so their claims came from npm packages or raw GitHub files. Still unchecked: the other Nuxt & Vue Lessons (`nuxt-vue/10` to `40`, `60`, `70`), *Type checking*, *Content validation*, *Linting* and *Headless browser checks* in Verification, the Git & GitHub pages that link docs.github.com, and *Mermaid pre-rendering*. Fetch each URL and check each claim about the tool; the network must be open.
 
 ### Ideas not yet decided
 
@@ -51,6 +51,12 @@ Subjects and Lessons run prerequisites first, and Lesson prefixes go up in tens 
 **Installed Skills.** *Engineering skills* could become part of *Installed skills* (`skill-pack/10.skill-packs`).
 
 **A fact about out-of-scope records that no Lesson teaches.** Before it recommends anything, `triage` reads every record in `.out-of-scope/` and shows the person deciding any that resembles the new request (`.agents/skills/triage/SKILL.md`, step 1). *Issue triage labels* (`git-github/70.issue-triage-labels`) teaches the records and their format but not this check. It could be one sentence there, or a section if that page is split after a fresh reader finds it hard to follow.
+
+**Doc findings not acted on.**
+- *Content collections*: the docs say `prefix` defaults from the start of `include`, so `prefix: '/'` may be needless once `cwd` is set per Space. Not checked in code.
+- *Content database*: on a repeat visit the browser may read its dump from `localStorage`, so the Try it step may not show the dump request. Clearing site data first would fix that.
+- *Hydration*: Vue's `data-allow-mismatch` and Nuxt's `<ClientOnly>` are not taught.
+- *Multi-tenant isolation* and *Content database* both explain the `database` option; one could link the other.
 
 **Missing Lessons.** The browser quirks and CSS traps listed in `docs/agents/verifying-ui-changes.md` are only partly taught, in *Headless browser checks* (`verification/80.headless-browser-checks`).
 
