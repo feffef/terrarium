@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQWJUyfuXJgdfypeuc
 startedAt: 2026-11-07T07:58:07Z
-endedAt: 2026-11-07T15:09:30Z
+endedAt: 2026-11-07T15:29:32Z
 kind: interactive
 goal: Redesign the glassbox-curate Skill from its runs, then fix what the next runs showed
-status: in-review
-outcome: "PRs #2923 and #2929 merged; PR #2944 open for a human merge: curate builds instead of filing issues, reads its area by script"
-summary: "Phase 1 (human-instructed): the owner had me read issue #2906 and design improvements, consulting the sessions that designed and ran the Skill; PR #2923 (two-call orientation, no pr/learned fields, proposals as results, removal path) merged. Phase 2 (human-instructed): the owner asked me to review the runs after #2923 (the Claude Code split #2924/#2925, the triage-labels cut #2927) and the glassbox-update run #2922, and to have the update session run a retro. I messaged all three sessions; the update session could not reply by tool, so the owner pasted its answer. The owner then chose each fix: cut-fact homes, moved pages keep their update.yml date (grades.yml left to its own script, my objection accepted), curate waits for an open update PR, cost field named, a person may switch a run to autonomous, update's Land owns the merge, scoped checks fetch docs, the report lists changedFiles. The owner interrupted, then asked me to make runs read the whole Subject before choosing their focus, have review name missed pages for the lead to read, and have new Lessons follow the glassbox-lesson Skill. Agent-initiated: renaming \"rough focus\" to \"area\" and aligning the relevance test after review. Gate green; PR #2929 merged. Then, at the owner's request, I closed #2906, #2896, #2898 and #2899 as done and #2805, #2871 and #2872 as moot, and filed #2930 (remove glassbox-improve, the owner's decision) and #2931 (curate's Routine, a limit on its wait, update's cost measurement). Phase 3 (human-instructed): the owner asked me to review the next three curate runs (#2940, #2942, #2943) and to make curate build new Lessons, Subjects, splits, moves and Skill or page-check changes instead of filing issues, with those PRs waiting for their merge. I asked the three sessions; all read less than their area, and two read the cost before the field existed. The owner chose: orient.ts --area with a removal exemption, plain.ts, writer for any factual sentence, cost at landing, gap grep, docs fallbacks, writer brief caps and lengths in validate:content; and asked the Skill to explain why reading the whole guide matters. Agent-initiated: reverting a guide-page claim whose pin predated the change. PR #2944 waits for the owner's merge."
+status: completed
+outcome: "PRs #2923, #2929 and #2944 merged: curate builds instead of filing issues, reads its Subject in full, and sees the guide as titles and descriptions"
+summary: "Phase 1 (human-instructed): the owner had me read issue #2906 and design improvements, consulting the sessions that designed and ran the Skill; PR #2923 (two-call orientation, no pr/learned fields, proposals as results, removal path) merged. Phase 2 (human-instructed): the owner asked me to review the runs after #2923 (the Claude Code split #2924/#2925, the triage-labels cut #2927) and the glassbox-update run #2922, and to have the update session run a retro. I messaged all three sessions; the update session could not reply by tool, so the owner pasted its answer. The owner then chose each fix: cut-fact homes, moved pages keep their update.yml date (grades.yml left to its own script, my objection accepted), curate waits for an open update PR, cost field named, a person may switch a run to autonomous, update's Land owns the merge, scoped checks fetch docs, the report lists changedFiles. The owner interrupted, then asked me to make runs read the whole Subject before choosing their focus, have review name missed pages for the lead to read, and have new Lessons follow the glassbox-lesson Skill. Agent-initiated: renaming \"rough focus\" to \"area\" and aligning the relevance test after review. Gate green; PR #2929 merged. Then, at the owner's request, I closed #2906, #2896, #2898 and #2899 as done and #2805, #2871 and #2872 as moot, and filed #2930 (remove glassbox-improve, the owner's decision) and #2931 (curate's Routine, a limit on its wait, update's cost measurement). Phase 3 (human-instructed): the owner asked me to review the next three curate runs (#2940, #2942, #2943) and to make curate build new Lessons, Subjects, splits, moves and Skill or page-check changes instead of filing issues, with those PRs waiting for their merge. I asked the three sessions; all read less than their area, and two read the cost before the field existed. The owner chose: orient.ts --area with a removal exemption, plain.ts, writer for any factual sentence, cost at landing, gap grep, docs fallbacks, writer brief caps and lengths in validate:content; and asked the Skill to explain why reading the whole guide matters. Agent-initiated: reverting a guide-page claim whose pin predated the change. The owner then had me rename area to Subject, drop the first paragraph from the overview in favour of descriptions, and file #2945 for a rewrite of all descriptions (which still render on four visitor surfaces). The owner merged PR #2944."
 prs:
   - "2923"
   - "2929"
@@ -118,43 +118,47 @@ frictions:
   - description: "First draft of the Skill's reading rationale cited #2906 for four failures; only two were evidenced, which I caught on re-read"
     solution: Check each claimed failure against its PR before citing it in a Skill
     severity: nit
-durationSec: 25883
+  - description: I first proposed a design built on the word 'area', which no glossary defines, though CLAUDE.md says to use defined terms; the owner had to ask why
+    solution: Before naming a new step, check GLOSSARY.md and the Tenant glossary for an existing term
+    severity: minor
+durationSec: 27085
 models:
-  claude-opus-5-5: 633
+  claude-opus-5-5: 728
 toolCounts:
-  Bash: 183
-  ToolSearch: 4
+  Bash: 212
+  ToolSearch: 5
   mcp__github__issue_read: 7
   mcp__claude-code-remote__send_message: 12
   mcp__claude-code-remote__get_session: 4
-  AskUserQuestion: 14
-  ReadNotifications: 11
+  AskUserQuestion: 17
+  ReadNotifications: 18
   Write: 6
   SendUserFile: 1
-  Skill: 7
-  Agent: 7
+  Skill: 8
+  Agent: 8
   Read: 3
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 3
   mcp__claude-code-remote__subscribe_pr_activity: 3
-  mcp__github__pull_request_read: 11
+  mcp__github__pull_request_read: 12
   mcp__claude-code-remote__send_later: 3
   mcp__github__add_issue_comment: 9
-  mcp__claude-code-remote__delete_trigger: 2
+  mcp__claude-code-remote__delete_trigger: 3
   mcp__claude-code-remote__unsubscribe_pr_activity: 2
-  Edit: 3
-  mcp__github__issue_write: 9
+  Edit: 4
+  mcp__github__issue_write: 10
+  mcp__github__update_pull_request: 2
 filesEdited:
   - .throwaway/curate-examples.md
   - .agents/skills/glassbox-curate/scripts/orient.ts
   - .agents/skills/glassbox-curate/SKILL.md
   - .agents/skills/glassbox-curate/scripts/plain.ts
   - .agents/skills/glassbox-curate/tests/unit/plain.spec.ts
+  - .agents/skills/glassbox-curate/tests/unit/orient.spec.ts
+  - .agents/skills/glassbox-lesson/EVERY-PAGE.md
   - layers/glassbox/content/workshop/pages/index.md
   - layers/glassbox/content/guide/pages/agents/03.routines.md
   - layers/glassbox/page-checks.ts
-  - .agents/skills/glassbox-curate/tests/unit/orient.spec.ts
-  - .agents/skills/glassbox-lesson/EVERY-PAGE.md
   - layers/glassbox/tests/unit/glassbox-pages.spec.ts
   - package.json
   - layers/glassbox/tenant.config.ts
@@ -187,6 +191,9 @@ rulesLoaded:
   - .claude/rules/adr-0021.md
   - .claude/rules/glossary-terms.md
   - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0006.md
+  - .claude/rules/adr-0016.md
+  - .claude/rules/adr-0025.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -274,49 +281,64 @@ ruleVerdicts:
   - path: .claude/rules/adr-0022.md
     reason: Loaded with the triage docs; this session ran no triage sweep, it only closed issues at the owner's request
     useful: no
+  - path: .claude/rules/adr-0006.md
+    reason: Loaded when I grepped page components for description use; no routing changed
+    useful: no
+  - path: .claude/rules/adr-0016.md
+    reason: Loaded with the same grep; no Tenant root page touched
+    useful: no
+  - path: .claude/rules/adr-0025.md
+    reason: Confirmed Commons Search shows descriptions through the catalog, one of the four surfaces I reported
+    useful: partly
 subagents:
   - type: general-purpose
     task: Standards review of curate diff
     durationSec: 59
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 1.4
+    tokenShare: 1.1
   - type: general-purpose
     task: Spec review of curate diff
     durationSec: 50
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 1.4
+    tokenShare: 1.1
   - type: general-purpose
     task: Standards review of fixes diff
     durationSec: 65
     toolCalls: 7
     modelCalls: 7
-    tokenShare: 1.3
+    tokenShare: 1
   - type: general-purpose
     task: Spec review of fixes diff
     durationSec: 67
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 1.1
+    tokenShare: 0.9
   - type: general-purpose
     task: Review full-read Skill commit
     durationSec: 29
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 0.4
+    tokenShare: 0.3
   - type: general-purpose
     task: Standards review of build-not-issue diff
     durationSec: 55
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 1.3
+    tokenShare: 1
   - type: general-purpose
     task: Spec review of build-not-issue diff
     durationSec: 78
     toolCalls: 8
     modelCalls: 8
-    tokenShare: 1.4
+    tokenShare: 1.1
+  - type: general-purpose
+    task: Review overview follow-up commits
+    durationSec: 43
+    toolCalls: 7
+    modelCalls: 6
+    tokenShare: 0.9
 gitBranch: ccr-c1d87eb8-luzwvj
 entrypoint: remote_mobile
 cliVersion: 2.1.319
