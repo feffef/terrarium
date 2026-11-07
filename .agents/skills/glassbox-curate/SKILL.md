@@ -11,16 +11,17 @@ Second, fill gaps: a technology or process Terrarium relies on that no Lesson
 teaches. You lead and choose the steps; improvise.
 
 **Shape.** One focus per run (a Subject, a structural question or a gap), about
-$20. Read your spend with `get_session` called with no session id, and stop at
-the budget. Several runs a day must work.
+$20. Read your spend, `external_metadata.usage.cost_usd` from `get_session`
+called with no session id, and stop at the budget. Several runs a day must work.
 
 **Modes.** *Autonomous* (a Routine fired it): decide everything,
 ask nothing, and say in the run entry why you chose the focus.
-*Interactive* (a person started it): if no focus was given, ask for one; settle every
-decision with them via `grilling`. Their decision there counts as ADR-0003 approval for Glass Box
-content only, so a step beyond the remit, such as a new Subject, is allowed;
-changes to this Skill, the page checks or the rules still go through their own
-PRs.
+*Interactive* (a person started it): if no focus was given, ask for one; settle
+every decision with them via `grilling`. Their decision there counts as
+ADR-0003 approval for Glass Box content only, so a step beyond the remit, such
+as a new Subject, is allowed; changes to this Skill, the page checks or the
+rules still go through their own PRs. If they answer "autonomous", the run is
+autonomous from then on and its entry says so.
 
 **Hard rules.** Never make a page false. Never undo an earlier change without
 new evidence. `DECISIONS.md` rulings are closed. One PR per run, within the
@@ -52,7 +53,9 @@ in a brief as `.agents/skills/...`.
   state: where to write the run entry, open PRs, memory, recent runs and
   warnings. The second gives every page's first paragraph, your only overview
   of what the guide already teaches: you need it to spot a gap, an overlap or a
-  page that already exists. Leave alone every page an open PR touches.
+  page that already exists. Leave alone every page an open PR touches. While a
+  `glassbox-update` PR is open, wait for it: subscribe to its activity, end
+  your turn, and orient again once it merges or closes.
 - **Choose.** Take the focus from memory leads, the owner's review notes,
   page-check warnings, problems the orientation shows, or gaps; when nothing is
   pressing, from pages no fresh reader has seen lately (`pagesRead`). The run
@@ -92,16 +95,21 @@ in a brief as `.agents/skills/...`.
 - **Removal.** A change that only removes text or a page skips the writer, the
   claim checker and the fresh reader. Still run the page checks, grep for
   links, slugs and terms that pointed at what you removed, and re-read each
-  sentence next to a cut: it may now point at nothing. The run entry's
-  `changes` says what you skipped.
+  sentence next to a cut: it may now point at nothing. Grep the guide for each
+  fact you cut; one no other page teaches goes under the memory page's open
+  ideas, with the page that could teach it. The run entry's `changes` says what
+  you skipped.
+- **Move.** A page moved or renamed keeps its check: rename its `page` in
+  `checks/update.yml` and keep its date.
 - **Land.** Merge `origin/main` and keep the newer pin. Two runs on one day can
   both rewrite the memory page: the later one keeps both runs' leads. Rewrite
   the memory page, complete the run entry, open one self-merged PR
   (`docs/agents/pr-workflow.md`) whose body gives the run's cost from
-  `get_session`. Give `code-review` the Lesson contract, EVERY-PAGE.md,
-  DECISIONS.md and the glassbox-content rule as its standards, without the
-  code-smell baseline, and say the page checks already ran. Done when the PR is
-  open with the memory page and run entry current.
+  `get_session`, or "unreported" when the field is missing. Give `code-review`
+  the Lesson contract, EVERY-PAGE.md, DECISIONS.md and the glassbox-content
+  rule as its standards, without the code-smell baseline, and say the page
+  checks already ran. Done when the PR is open with the memory page and run
+  entry current.
 
 ## State
 
@@ -122,4 +130,5 @@ All in `layers/glassbox/content/workshop/`:
   `changes` entry is `page | what changed | why`, `page` being the guide page's
   stem (its path under `layers/glassbox/content/guide/pages/` without `.md`,
   `index` for the overview).
-- `checks/update.yml` belongs to `glassbox-update`; never write it.
+- `checks/update.yml` belongs to `glassbox-update`; write it only to rename a
+  page you moved.

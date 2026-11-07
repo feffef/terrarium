@@ -65,6 +65,14 @@ describe('glassboxUpdate over a fixture repo history', () => {
     ])
   })
 
+  it('names the changed files: the cited file, or the entries a cited directory gained or lost', () => {
+    expect(report.pages.map((p) => [p.file, p.changedFiles])).toEqual([
+      ['claude-code/01.shifted.md', ['src/a.ts']],
+      ['claude-code/02.edited.md', ['src/a.ts']],
+      ['claude-code/05.dir-grown.md', ['pkg/z.ts']],
+    ])
+  })
+
   it('flags a cited directory only when its listing changed, not when a file under it is edited', () => {
     const flagged = report.pages.map((p) => p.file)
     expect(flagged).not.toContain('claude-code/04.dir-edited.md')
