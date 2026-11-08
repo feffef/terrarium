@@ -1,15 +1,16 @@
 schemaVersion: 1
 session: session_013zxzeQaeB8hhL2FFfcQhv7
 startedAt: 2026-11-08T19:47:55Z
-endedAt: 2026-11-08T22:32:27Z
+endedAt: 2026-11-08T23:27:20Z
 kind: interactive
 goal: Rework the Glass Box guide index that curate runs read, with a teaches field for agents
-status: completed
-outcome: "PRs 2982 and 2983 merged: guide index, teaches, plain descriptions, and two claims to correct recorded"
-summary: "Human-instructed throughout. The owner asked me to read issue 2945 (rewrite Glass Box descriptions), then steered through samples to the decision that agents are the main reader. On the owner's go I added each page's Why/Watch lead-ins, Walkthrough stops, pointer marks and stop Lessons to orient.ts; a fresh subagent judged the overview and named the gap (tool and file names). The owner chose a separate `teaches` field for agents (400 characters), descriptions for visitors, a rewrite of 21 vague lead-ins, read/checked dates and a format key, and said \"build it all\" in one PR. Agent-initiated within that: following renames for read dates, splitting orient into inline state plus an index file, and a trial run. Six writer subagents filled all 72 pages; I fanned out without piloting the brief, which the owner called out (a wrong grep filter, a loose licence giving 29 extra lead-in rewrites). Review found the index exceeded Read's 25,000-token cap, so it now writes parts under 40 KB, each confirmed to Read whole. The owner then kept the extra lead-ins, asked for plain-language descriptions (I agreed tone on six samples, then rewrote 54 myself for one voice and added the rule to EVERY-PAGE.md), and asked for a full fact check like glassbox-update. This time I piloted the checker brief on one group, improved it from the pilot's notes, then ran eight more: about 910 claims, 19 findings (1 false, 1 unsupported, 17 misleading), each confirmed against source; the 17 in new text are fixed, 2 in older sentences are left for glassbox-update and named in the PR. The owner merged PR 2982 and issue 2945 closed; the safety-net check-in was cancelled. Afterwards the owner asked to record the two older-sentence findings on the Glass Box memory page; I restarted the branch from main and opened PR 2983 for that. PR 2983 merged after a green gate and a posted verdict."
+status: in-review
+outcome: PRs 2982 and 2983 merged; PR 2984 drops the teaches cap and waits for the owner's merge
+summary: "Human-instructed throughout. The owner asked me to read issue 2945 (rewrite Glass Box descriptions), then steered through samples to the decision that agents are the main reader. On the owner's go I added each page's Why/Watch lead-ins, Walkthrough stops, pointer marks and stop Lessons to orient.ts; a fresh subagent judged the overview and named the gap (tool and file names). The owner chose a separate `teaches` field for agents (400 characters), descriptions for visitors, a rewrite of 21 vague lead-ins, read/checked dates and a format key, and said \"build it all\" in one PR. Agent-initiated within that: following renames for read dates, splitting orient into inline state plus an index file, and a trial run. Six writer subagents filled all 72 pages; I fanned out without piloting the brief, which the owner called out (a wrong grep filter, a loose licence giving 29 extra lead-in rewrites). Review found the index exceeded Read's 25,000-token cap, so it now writes parts under 40 KB, each confirmed to Read whole. The owner then kept the extra lead-ins, asked for plain-language descriptions (I agreed tone on six samples, then rewrote 54 myself for one voice and added the rule to EVERY-PAGE.md), and asked for a full fact check like glassbox-update. This time I piloted the checker brief on one group, improved it from the pilot's notes, then ran eight more: about 910 claims, 19 findings (1 false, 1 unsupported, 17 misleading), each confirmed against source; the 17 in new text are fixed, 2 in older sentences are left for glassbox-update and named in the PR. The owner merged PR 2982 and issue 2945 closed; the safety-net check-in was cancelled. Afterwards the owner asked to record the two older-sentence findings on the Glass Box memory page; I restarted the branch from main and opened PR 2983 for that. PR 2983 merged after a green gate and a posted verdict. Asked what else belonged in memory, I proposed recording the names the 400 cap had cut; the owner pointed out that costs the same context, so if they matter the cap should go. PR 2984 removes the cap, restores those names on six pages and adds two more memory notes; it waits for the owner's merge."
 prs:
   - "2982"
   - "2983"
+  - "2984"
 docsRead:
   - path: docs/agents/github-integration.md
     reason: MCP tool map; issue_read for issue and comments, entity-encoded bodies
@@ -187,20 +188,23 @@ frictions:
   - description: My diff filter grep '^[-+][^-+]' dropped changed bullet lines, which start '- **', so I briefly misjudged two findings as old text
     solution: Filter diffs with '^[-+]' and exclude only the '---'/'+++' headers; caught by re-grepping before acting
     severity: minor
-durationSec: 9872
+  - description: I kept the 400 teaches cap after the index split made it unneeded, then proposed recording the cut names in memory, which costs the same context
+    solution: "Apply CLAUDE.md's Question the premise when a constraint's reason goes away: the split index removed the cap's job, so drop the cap"
+    severity: minor
+durationSec: 13165
 models:
-  claude-opus-5-5: 487
+  claude-opus-5-5: 531
 toolCounts:
-  Bash: 161
+  Bash: 178
   ToolSearch: 5
   mcp__github__issue_read: 3
   Edit: 7
-  Skill: 7
-  Agent: 20
+  Skill: 8
+  Agent: 21
   mcp__github__list_pull_requests: 1
-  mcp__github__create_pull_request: 2
-  mcp__claude-code-remote__subscribe_pr_activity: 2
-  ReadNotifications: 13
+  mcp__github__create_pull_request: 3
+  mcp__claude-code-remote__subscribe_pr_activity: 3
+  ReadNotifications: 14
   mcp__github__pull_request_read: 1
   mcp__claude-code-remote__send_later: 2
   mcp__github__update_pull_request: 1
@@ -211,7 +215,16 @@ filesEdited:
   - .agents/skills/glassbox-curate/tests/unit/orient.spec.ts
   - layers/glassbox/content/workshop/pages/index.md
   - layers/glassbox/content/guide/pages/deploy/20.pnpm-lockfile.md
+  - .agents/skills/glassbox-lesson/EVERY-PAGE.md
+  - .agents/skills/glassbox-curate/SKILL.md
+  - layers/glassbox/content/guide/pages/agents/10.subagents.md
+  - layers/glassbox/content/guide/pages/agents/30.cloud-sessions.md
+  - layers/glassbox/content/guide/pages/agents/40.scheduled-tasks.md
   - layers/glassbox/content/guide/pages/claude-code/40.permissions.md
+  - layers/glassbox/content/guide/pages/claude-code/50.mcp-servers.md
+  - layers/glassbox/content/guide/pages/hooks/10.hooks.md
+  - layers/glassbox/page-checks.ts
+  - layers/glassbox/tests/unit/glassbox-pages.spec.ts
   - layers/glassbox/content/guide/pages/deploy/10.continuous-deployment.md
   - layers/glassbox/content/guide/pages/walkthroughs/adding-a-site.md
   - layers/glassbox/content/guide/pages/nuxt-content/20.multi-tenant-isolation.md
@@ -224,16 +237,12 @@ filesEdited:
   - layers/glassbox/content/guide/pages/git-github/60.attribution.md
   - layers/glassbox/content/guide/pages/verification/30.content-validation.md
   - layers/glassbox/content/guide/pages/verification/60.zod-refinements.md
-  - layers/glassbox/content/guide/pages/agents/10.subagents.md
   - layers/glassbox/content/guide/pages/hooks/20.blocking-hooks.md
   - layers/glassbox/content/guide/pages/hooks/30.hook-added-context.md
-  - .agents/skills/glassbox-lesson/EVERY-PAGE.md
   - layers/glassbox/content/guide/pages/agents/20.workflow-scripts.md
-  - layers/glassbox/content/guide/pages/agents/40.scheduled-tasks.md
   - layers/glassbox/content/guide/pages/claude-code/10.claude-md.md
   - layers/glassbox/content/guide/pages/claude-code/20.path-scoped-rules.md
   - layers/glassbox/content/guide/pages/claude-code/30.skills.md
-  - layers/glassbox/content/guide/pages/claude-code/50.mcp-servers.md
   - layers/glassbox/content/guide/pages/git-github/10.pull-requests.md
   - layers/glassbox/content/guide/pages/git-github/20.author-trust.md
   - layers/glassbox/content/guide/pages/git-github/30.composite-actions.md
@@ -241,7 +250,6 @@ filesEdited:
   - layers/glassbox/content/guide/pages/git-github/50.git-worktrees.md
   - layers/glassbox/content/guide/pages/git-github/70.issue-triage-labels.md
   - layers/glassbox/content/guide/pages/git-github/80.git-plumbing.md
-  - layers/glassbox/content/guide/pages/hooks/10.hooks.md
   - layers/glassbox/content/guide/pages/hooks/40.session-transcripts.md
   - layers/glassbox/content/guide/pages/nuxt-content/10.content-collections.md
   - layers/glassbox/content/guide/pages/nuxt-content/40.query-collection.md
@@ -266,9 +274,7 @@ filesEdited:
   - layers/glassbox/content/guide/pages/walkthroughs/reading-across-tenants.md
   - layers/glassbox/content/guide/pages/walkthroughs/session-log-lands-on-main.md
   - layers/glassbox/content/guide/pages/web-standards/10.css-custom-properties.md
-  - .agents/skills/glassbox-curate/SKILL.md
   - .agents/skills/glassbox-lesson/DECISIONS.md
-  - layers/glassbox/page-checks.ts
   - layers/glassbox/tenant.config.ts
   - layers/glassbox/content/guide/pages/index.md
   - layers/glassbox/content/guide/pages/skill-pack/10.skill-packs.md
@@ -276,7 +282,6 @@ filesEdited:
   - layers/glassbox/content/guide/pages/terrarium-practice/50.pruning-instructions.md
   - layers/glassbox/content/guide/pages/terrarium-practice/90.outside-contributions.md
   - layers/glassbox/content/guide/pages/nuxt-content/60.mermaid-pre-rendering.md
-  - layers/glassbox/content/guide/pages/agents/30.cloud-sessions.md
   - layers/glassbox/content/guide/pages/verification/50.linting.md
   - layers/glassbox/content/guide/pages/verification/70.schema-evolution.md
   - layers/glassbox/content/guide/pages/verification/80.headless-browser-checks.md
@@ -289,7 +294,6 @@ filesEdited:
   - layers/glassbox/content/guide/pages/walkthroughs/planning-a-big-change.md
   - .agents/skills/glassbox-update/SKILL.md
   - layers/glassbox/GLOSSARY.md
-  - layers/glassbox/tests/unit/glassbox-pages.spec.ts
 rulesLoaded:
   - .claude/rules/adr-0027.md
   - .claude/rules/adr-0029.md
@@ -332,6 +336,7 @@ adrHints:
     by: main
 rulesLoadedBySubagents:
   - .claude/rules/adr-0011.md
+  - .claude/rules/guards.md
 docsReadBySubagents:
   - docs/agents/domain.md
   - docs/adr/0029-instructions-load-with-the-files-they-govern.md
@@ -442,131 +447,138 @@ subagents:
     durationSec: 111
     toolCalls: 12
     modelCalls: 10
-    tokenShare: 1.5
+    tokenShare: 1.3
   - type: general-purpose
     task: Trial-run new orient.ts
     durationSec: 133
     toolCalls: 19
     modelCalls: 14
-    tokenShare: 2
+    tokenShare: 1.8
   - type: general-purpose
     task: "Write teaches: agent tools pages"
     durationSec: 224
     toolCalls: 17
     modelCalls: 16
-    tokenShare: 2.2
+    tokenShare: 2
   - type: general-purpose
     task: "Write teaches: practice pages"
     durationSec: 303
     toolCalls: 25
     modelCalls: 23
-    tokenShare: 2.9
+    tokenShare: 2.6
   - type: general-purpose
     task: "Write teaches: Nuxt pages"
     durationSec: 273
     toolCalls: 30
     modelCalls: 21
-    tokenShare: 2.7
+    tokenShare: 2.5
   - type: general-purpose
     task: "Write teaches: verify/deploy/web pages"
     durationSec: 210
     toolCalls: 17
     modelCalls: 15
-    tokenShare: 2.2
+    tokenShare: 2
   - type: general-purpose
     task: "Write teaches: Git & GitHub pages"
     durationSec: 208
     toolCalls: 19
     modelCalls: 18
-    tokenShare: 2.1
+    tokenShare: 1.9
   - type: general-purpose
     task: "Write teaches: Walkthroughs"
     durationSec: 191
     toolCalls: 19
     modelCalls: 18
-    tokenShare: 2
+    tokenShare: 1.8
   - type: general-purpose
     task: Standards review of branch
     durationSec: 100
     toolCalls: 13
     modelCalls: 12
-    tokenShare: 1.6
+    tokenShare: 1.4
   - type: general-purpose
     task: Spec review of branch
     durationSec: 196
     toolCalls: 25
     modelCalls: 23
-    tokenShare: 2.8
+    tokenShare: 2.5
   - type: general-purpose
     task: Check index parts fit one Read
     model: haiku
     durationSec: 11
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: general-purpose
     task: "Pilot fact check: agents+hooks"
     model: sonnet
     durationSec: 90
     toolCalls: 14
     modelCalls: 11
-    tokenShare: 1.7
+    tokenShare: 1.5
   - type: general-purpose
     task: "Fact check g2: Claude Code, deploy"
     model: sonnet
     durationSec: 158
     toolCalls: 26
     modelCalls: 24
-    tokenShare: 2.8
+    tokenShare: 2.6
   - type: general-purpose
     task: "Fact check g3: Git & GitHub"
     model: sonnet
     durationSec: 87
     toolCalls: 16
     modelCalls: 15
-    tokenShare: 1.8
+    tokenShare: 1.6
   - type: general-purpose
     task: "Fact check g4: Nuxt Content, web"
     model: sonnet
     durationSec: 125
     toolCalls: 24
     modelCalls: 22
-    tokenShare: 2.5
+    tokenShare: 2.3
   - type: general-purpose
     task: "Fact check g5: Nuxt & Vue"
     model: sonnet
     durationSec: 104
     toolCalls: 15
     modelCalls: 14
-    tokenShare: 1.9
+    tokenShare: 1.7
   - type: general-purpose
     task: "Fact check g6: skills, web, practice"
     model: sonnet
     durationSec: 137
     toolCalls: 26
     modelCalls: 24
-    tokenShare: 2.9
+    tokenShare: 2.6
   - type: general-purpose
     task: "Fact check g7: House rules"
     model: sonnet
     durationSec: 116
     toolCalls: 21
     modelCalls: 20
-    tokenShare: 2.3
+    tokenShare: 2.1
   - type: general-purpose
     task: "Fact check g8: Verification"
     model: sonnet
     durationSec: 75
     toolCalls: 14
     modelCalls: 13
-    tokenShare: 1.6
+    tokenShare: 1.5
   - type: general-purpose
     task: "Fact check g9: Walkthroughs"
     model: sonnet
     durationSec: 159
     toolCalls: 32
     modelCalls: 32
-    tokenShare: 3.3
+    tokenShare: 3
+  - type: general-purpose
+    task: Review teaches-cap removal diff
+    model: sonnet
+    durationSec: 29
+    toolCalls: 6
+    modelCalls: 5
+    tokenShare: 0.9
 gitBranch: claude/confident-brown-2l8710
 entrypoint: remote
 cliVersion: 2.1.319
