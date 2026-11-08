@@ -1,6 +1,6 @@
 // SessionStart hook: tell the session which hosts its proxy lets through, so it
 // doesn't discover blocked docs hosts by failing (issue #2959). Best-effort:
-// every probe is bounded by PROBE_TIMEOUT_S and any failure prints nothing.
+// every probe is bounded by PROBE_TIMEOUT_S; a failed probe counts as unknown.
 import { execFile } from 'node:child_process'
 import { isMain } from '../lib/cli.ts'
 
@@ -42,21 +42,20 @@ export async function networkStartMessage(
 ): Promise<string | null> {
   if (!env.HTTPS_PROXY) return null
   const results = await Promise.all(PROBED_HOSTS.map((h) => probe(h).catch((): Reach => 'unknown')))
-  const by = (r: Reach) => PROBED_HOSTS.filter((_, i) => results[i] === r)
-  const readable = by('readable')
-  if (readable.length === PROBED_HOSTS.length) return 'Network reach (probed): all probed hosts readable.'
-  const parts = (['readable', 'blocked', 'unknown'] as const)
-    .filter((r) => by(r).length > 0)
-    .map((r) => `${r}: ${by(r).join(', ')}`)
-  const note = by('blocked').length > 0 ? ' Blocked hosts are not only docs hosts.' : ''
+  const groups = {
+    readable: PROBED_HOSTS.filter((_, i) => results[i] === 'readable'),
+    blocked: PROBED_HOSTS.filter((_, i) => results[i] === 'blocked'),
+    unknown: PROBED_HOSTS.filter((_, i) => results[i] === 'unknown'),
+  }
+  if (groups.readable.length === PROBED_HOSTS.length) return 'Network reach (probed): all probed hosts readable.'
+  const parts = (Object.keys(groups) as Reach[])
+    .filter((r) => groups[r].length > 0)
+    .map((r) => `${r}: ${groups[r].join(', ')}`)
+  const note = groups.blocked.length > 0 ? ' Blocked hosts are not only docs hosts.' : ''
   return `Network reach (probed): ${parts.join('; ')}.${note} Fallbacks and the Unrestricted-environment option: docs/agents/environment-caveats.md.`
 }
 
 if (isMain(import.meta.url)) {
-  try {
-    const msg = await networkStartMessage(process.env)
-    if (msg) console.log(msg)
-  } catch {
-    // Best-effort: a probe failure must never block session start.
-  }
+  const msg = await networkStartMessage(process.env)
+  if (msg) console.log(msg)
 }
