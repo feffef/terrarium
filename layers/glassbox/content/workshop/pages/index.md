@@ -53,10 +53,12 @@ Subjects and Lessons run prerequisites first, and Lesson prefixes go up in tens 
 - *Content database*: on a repeat visit the browser may read its dump from `localStorage`, so the Try it step may not show the dump request. Clearing site data first would fix that.
 - *Hydration*: Vue's `data-allow-mismatch` and Nuxt's `<ClientOnly>` are not taught.
 - *Multi-tenant isolation* and *Content database* both explain the `database` option; one could link the other.
+- *pnpm and the lockfile*: the lead-in says pnpm.io's unversioned pages describe a newer major. The 12.x, 11.x and 10.x docs exist (`pnpm/pnpm.io` `versions.json`), but pnpm.io was blocked, so which major the unversioned pages show is unchecked.
 
 **Claims to correct.** A fact check of PR #2982's new text found these in older sentences it left alone. Fixing one changes a claim, so the page is re-pinned.
 - *Claude Code skills* (`claude-code/30.skills`): the Why bullet on turning model invocation off says a job that opens its own PR, such as the Digest, "never starts unasked". Its only citation, `writing-for-agents/SKILL-MECHANICS.md`, mentions neither, and a Routine starts the Digest. Cite `.agents/skills/digest/SKILL.md` and say no session starts it on its own.
 - *MCP servers* (`claude-code/50.mcp-servers`): the Why bullet says the provenance guard "sees every MCP call's body". It checks only the write tools in its registry (`GITHUB_PROVENANCE_TOOLS` in `scripts/hooks/github-provenance-guard.ts`), as the bullet's own cost sentence says.
+- *Hook-added context* (`hooks/30.hook-added-context`): "A hint also says each thing once: it checks the session's transcript" holds for the hints that point to a doc, not all: `scripts/hooks/stale-push-hint.ts` checks no transcript and fires on every stale push.
 
 **Missing Lessons.** The browser quirks and CSS traps listed in `docs/agents/verifying-ui-changes.md` are only partly taught, in *Headless browser checks* (`verification/80.headless-browser-checks`).
 

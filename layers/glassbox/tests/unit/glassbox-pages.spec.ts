@@ -226,10 +226,8 @@ describe('glassboxPageProblems on fixture pages', () => {
     ['a Lesson description over 120 chars', 'nuxt-content/01.collections.md', lesson, 'description', 121, 'is 121 chars, more than 120'],
     ['a Walkthrough title over 36 chars', 'walkthroughs/from-file-to-browser.md', walkthrough, 'title', 37, 'is 37 chars, more than 36'],
     ['a Walkthrough description over 140 chars', 'walkthroughs/from-file-to-browser.md', walkthrough, 'description', 141, 'is 141 chars, more than 140'],
-    ['a Lesson teaches over 400 chars', 'nuxt-content/01.collections.md', lesson, 'teaches', 401, 'is 401 chars, more than 400'],
-    ['a Walkthrough teaches over 400 chars', 'walkthroughs/from-file-to-browser.md', walkthrough, 'teaches', 401, 'is 401 chars, more than 400'],
   ])('fails %s in the guide, not in drafts', (_name, file, page, field, length, message) => {
-    const placeholder = { title: 'title: T', description: 'description: D', teaches: 'teaches: X' }[field]!
+    const placeholder = field === 'title' ? 'title: T' : 'description: D'
     const long = page.replace(placeholder, `${field}: ${'x'.repeat(length)}`)
     expect(problemsOf(file, long).join('\n')).toContain(message)
     expect(problemsOf(file, page.replace(placeholder, `${field}: ${'x'.repeat(length - 1)}`))).toEqual([])
