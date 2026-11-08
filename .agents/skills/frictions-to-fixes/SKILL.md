@@ -61,7 +61,7 @@ labelled **never-fixed**, **drop**, **open-already** or **regression**.
 - **Regression** (its fix merged, then the friction came back): never pick
   it; a change that already failed once needs human eyes. File an issue saying the earlier fix did not work, linking the earlier
   issue or PR and quoting the original and the new friction. Do this for the
-  top **three** of the still-recurring entries whose status is not `accepted`,
+  top three of the still-recurring entries whose status is not `accepted`,
   `on-trial` or `tracked` and whose highest severity since the latest fix (the
   `since:` in the survey's `--summary` report) is `moderate` or above, ranked
   by that severity; fewer if fewer qualify. List the rest, lower severity
@@ -150,9 +150,9 @@ whatever happens to the fixes.
      its status: only that solution is dropped, not the cluster;
    - run `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/prune-friction-ledger.ts`
      (drops occurrences older than the horizon and deletes empty entries).
-4. **Open the ledger PR.** Review it as `docs/agents/pr-workflow.md` says for a
-   simple change, run `pnpm gate:scoped` on the final head, push, and open it. Land it by `docs/agents/pr-workflow.md`'s recipe once CI is
-   green. §6 does not wait for it.
+4. **Open the ledger PR.** Review it by `docs/agents/pr-workflow.md`'s
+   simple-change test, run `pnpm gate:scoped` on the final head, push, and open
+   it. Land it by that doc's recipe once CI is green. §6 does not wait for it.
 
 Done when every fix is ready to dispatch, filed, dropped with a note, or
 listed for the next run;
@@ -243,8 +243,9 @@ is honest.
 
 1. Wait until the ledger PR has merged and every fix PR is merged,
    escalated or abandoned.
-2. On a fresh branch cut from `origin/main` (not the session branch), land **one** status-only PR, the same way as the
-   ledger PR, through `ledger-set.ts` (§5 step 3):
+2. On a fresh branch cut from `origin/main` (not the session branch), land
+   **one** status-only PR, the same way as the ledger PR, through
+   `ledger-set.ts` (§5 step 3):
    - **merged** fix PR: add a `fixes` entry (`pr`, its UTC merge date, a
      one-line summary from its description) and set `status: open`;
    - **abandoned:** set `status: open`;
