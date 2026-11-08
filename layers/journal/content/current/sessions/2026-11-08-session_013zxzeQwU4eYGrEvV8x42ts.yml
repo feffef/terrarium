@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQwU4eYGrEvV8x42ts
 startedAt: 2026-11-08T11:28:06Z
-endedAt: 2026-11-08T12:11:18Z
+endedAt: 2026-11-08T12:58:24Z
 kind: interactive
 goal: Clear the open issue backlog
-status: in-review
-outcome: 3 Skill-edit PRs open; 1 issue closed, 1 parked; the stop-hook build and three investigations await owner decisions
-summary: "The owner started /clear-backlog (human-instructed). Default-mode sweep found 10 eligible issues: 9 needs-triage plus 2931 (owner comment last); six ready-for-human issues were skipped because an agent commented last (agent decision, per auto-triage). The explore workflow triaged all 10 (5 build, 5 grill). I started builds for the three small Skill edits (2954, 2955, 2960) whose picks needed no owner call, and held 2945 (taste-shaped rewrite) and 2961 (Human-only files) for the grilling. The owner answered Q1a (build 2961 as a PR awaiting human merge), Q2c (park 2945), Q3a (close 2931), Q7a (keep 2956 open) and asked for investigations on Q4, Q5, Q6 instead of picking. I closed 2931, parked 2945 as ready-for-human, launched the 2961 build and three read-only investigation agents (their reports are in; the owner has not seen them yet). Two of the three builds hit the review cap with small wrap and wording findings; I fixed those by hand, re-ran gate:scoped, then pushed and opened PRs 2969, 2970, 2971, subscribed to them, and merged all three myself after green CI and a posted verdict (agent-initiated, allowed by ADR-0004: Skill prose, no Human-only path). The owner then decided Q4 (Routine-fired means autonomous), Q5 (one-sentence edit) and Q6 (docs patch plus an improved SessionStart hook that probes reachable hosts, and a note that agents may suggest the Unrestricted environment); I started builds for those (one glassbox-curate branch for 2962+2958, a docs branch and a hook branch for 2959). The 2961 hook PR 2972 is open and waits for a human merge (Human-only files). PR 2973 (glassbox-curate Modes and memory-lead edits, Q4+Q5) is open. The docs branch for 2959 needed one hand fix (the doc claimed a plain push works after resetting a branch onto main; the friction ledger shows it works only when the reset fast-forwards the remote) and is gated and opened as PR 2974. I relabelled 2962 and 2958 ready-for-agent (recording the owner's decisions) so merge-pr would accept their closing keywords, then merged 2973 and 2974 myself after green CI and posted verdicts. The owner merged 2972 (the Stop hook) themselves. The SessionStart-hook branch had to be rebased onto main (one conflict in guards.md, resolved by keeping all three Stop hooks) and re-gated; its PR 2976 is open and waits for a human merge (2959 closes with it). Not built: 2962's \"choose yourself counts as settled\" clause, since the owner's Q4 pick covered only the detection."
+status: completed
+outcome: 7 PRs merged (5 by me, 2 by the owner), 8 issues closed, 1 parked, 1 kept open; worktrees clean
+summary: "The owner started /clear-backlog (human-instructed). Default-mode sweep found 10 eligible issues: 9 needs-triage plus 2931 (owner comment last); six ready-for-human issues were skipped because an agent commented last (agent decision, per auto-triage). The explore workflow triaged all 10 (5 build, 5 grill). I started builds for the three small Skill edits (2954, 2955, 2960) whose picks needed no owner call, and held 2945 (taste-shaped rewrite) and 2961 (Human-only files) for the grilling. The owner answered Q1a (build 2961 as a PR awaiting human merge), Q2c (park 2945), Q3a (close 2931), Q7a (keep 2956 open) and asked for investigations on Q4, Q5, Q6 instead of picking. I closed 2931, parked 2945 as ready-for-human, launched the 2961 build and three read-only investigation agents (their reports are in; the owner has not seen them yet). Two of the three builds hit the review cap with small wrap and wording findings; I fixed those by hand, re-ran gate:scoped, then pushed and opened PRs 2969, 2970, 2971, subscribed to them, and merged all three myself after green CI and a posted verdict (agent-initiated, allowed by ADR-0004: Skill prose, no Human-only path). The owner then decided Q4 (Routine-fired means autonomous), Q5 (one-sentence edit) and Q6 (docs patch plus an improved SessionStart hook that probes reachable hosts, and a note that agents may suggest the Unrestricted environment); I started builds for those (one glassbox-curate branch for 2962+2958, a docs branch and a hook branch for 2959). The 2961 hook PR 2972 is open and waits for a human merge (Human-only files). PR 2973 (glassbox-curate Modes and memory-lead edits, Q4+Q5) is open. The docs branch for 2959 needed one hand fix (the doc claimed a plain push works after resetting a branch onto main; the friction ledger shows it works only when the reset fast-forwards the remote) and is gated and opened as PR 2974. I relabelled 2962 and 2958 ready-for-agent (recording the owner's decisions) so merge-pr would accept their closing keywords, then merged 2973 and 2974 myself after green CI and posted verdicts. The owner merged 2972 (the Stop hook) themselves. The SessionStart-hook branch had to be rebased onto main (one conflict in guards.md, resolved by keeping all three Stop hooks) and re-gated; its PR 2976 was merged by the owner and closed 2959. Final state: PRs 2969-2971, 2973 and 2974 merged by me; 2972 and 2976 merged by the owner; 2954, 2955, 2958, 2959, 2960, 2961, 2962 and 2931 closed; 2945 parked; 2956 kept open; check:worktrees passes. Not built: 2962's \"choose yourself counts as settled\" clause, since the owner's Q4 pick covered only the detection."
 prs:
   - "2969"
   - "2970"
@@ -158,26 +158,38 @@ frictions:
   - description: "Linked worktree(s) left with uncommitted or unpushed work at close: /home/user/terrarium/.claude/worktrees/wf_3d6e9b49-495-1"
     solution: Push each, or remove it if its work is meant to be dropped.
     severity: minor
-durationSec: 2592
+  - description: The docs build wrote that a session branch reset onto main can be pushed plainly; the friction ledger showed that holds only for a fast-forward. I caught it in my own read before the PR, but the brief had carried the unverified claim.
+    solution: Brief a docs change from the ledger entries' exact conditions, or have the review axis check a new instruction against its cited evidence.
+    severity: minor
+  - description: Started the SessionStart-hook build while the sibling Stop-hook PR was still open on the same files; the branch then needed a rebase with a guards.md conflict and a second gate run.
+    solution: Serialize builds that touch the same Human-only files, or tell the builder to base on the sibling's branch.
+    severity: minor
+  - description: The 2962 triage pick (the Routine's prompt says autonomous) rested on an unverified signal; the investigation I ordered afterwards found the real one, so the first question gave the owner a weaker option.
+    solution: In clear-backlog explore, make the triage agent verify an unverified signal before it becomes a pick, or label the pick unverified in the question.
+    severity: minor
+  - description: Several shell commands failed or ran in the wrong place because the working directory carried between Bash calls after a cd into a worktree (a push by relative path failed).
+    solution: Use absolute paths with git -C for every worktree command.
+    severity: nit
+durationSec: 5418
 models:
-  claude-sonnet-5-5: 292
+  claude-sonnet-5-5: 317
 toolCounts:
-  Bash: 61
+  Bash: 63
   Read: 19
   ToolSearch: 4
-  Grep: 2
-  mcp__github__issue_read: 9
+  Grep: 3
+  mcp__github__issue_read: 10
   Workflow: 6
   PushNotification: 1
-  Edit: 17
-  Skill: 9
+  Edit: 22
+  Skill: 10
   mcp__github__add_issue_comment: 9
   mcp__github__issue_write: 4
   Agent: 3
   mcp__github__create_pull_request: 7
   mcp__claude-code-remote__subscribe_pr_activity: 7
   Write: 1
-  ReadNotifications: 6
+  ReadNotifications: 10
 filesEdited:
   - .agents/skills/glassbox-update/SKILL.md
   - .agents/skills/frictions-to-fixes/SKILL.md
@@ -344,13 +356,13 @@ subagents:
     durationSec: 63
     toolCalls: 16
     modelCalls: 14
-    tokenShare: 2.3
+    tokenShare: 2.1
   - type: general-purpose
     task: "Q5: premise friction proposal"
     durationSec: 30
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: general-purpose
     task: "Q6: network config detection prototype"
     durationSec: 45
@@ -370,70 +382,70 @@ subagents:
     durationSec: 43
     toolCalls: 13
     modelCalls: 8
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: workflow-subagent
     task: "triage #2955"
     model: claude-sonnet-5-5
     durationSec: 51
     toolCalls: 17
     modelCalls: 10
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: workflow-subagent
     task: "triage #2954"
     model: claude-sonnet-5-5
     durationSec: 41
     toolCalls: 15
     modelCalls: 7
-    tokenShare: 1.1
+    tokenShare: 1
   - type: workflow-subagent
     task: "triage #2961"
     model: claude-sonnet-5-5
     durationSec: 37
     toolCalls: 13
     modelCalls: 7
-    tokenShare: 1.1
+    tokenShare: 1
   - type: workflow-subagent
     task: "triage #2960"
     model: claude-sonnet-5-5
     durationSec: 40
     toolCalls: 15
     modelCalls: 7
-    tokenShare: 1.1
+    tokenShare: 1
   - type: workflow-subagent
     task: "triage #2962"
     model: claude-sonnet-5-5
     durationSec: 33
     toolCalls: 13
     modelCalls: 6
-    tokenShare: 1.6
+    tokenShare: 1.5
   - type: workflow-subagent
     task: "triage #2959"
     model: claude-sonnet-5-5
     durationSec: 45
     toolCalls: 14
     modelCalls: 8
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: workflow-subagent
     task: "triage #2931"
     model: claude-sonnet-5-5
     durationSec: 36
     toolCalls: 15
     modelCalls: 8
-    tokenShare: 1.1
+    tokenShare: 1
   - type: workflow-subagent
     task: "triage #2945"
     model: claude-sonnet-5-5
     durationSec: 41
     toolCalls: 13
     modelCalls: 7
-    tokenShare: 1
+    tokenShare: 0.9
   - type: workflow-subagent
     task: fix network-start-hook r2
     model: claude-sonnet-5-5
     durationSec: 168
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: workflow-subagent
     task: Spec network-start-hook r2
     model: claude-sonnet-5-5
@@ -475,7 +487,7 @@ subagents:
     durationSec: 315
     toolCalls: 25
     modelCalls: 17
-    tokenShare: 1.8
+    tokenShare: 1.7
   - type: workflow-subagent
     task: Standards network-start-hook r3
     model: claude-sonnet-5-5
@@ -510,7 +522,7 @@ subagents:
     durationSec: 162
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 0.5
+    tokenShare: 0.4
   - type: workflow-subagent
     task: Standards pr-subscribe-stop-hook r3
     model: claude-sonnet-5-5
@@ -524,7 +536,7 @@ subagents:
     durationSec: 299
     toolCalls: 39
     modelCalls: 18
-    tokenShare: 2.2
+    tokenShare: 2
   - type: workflow-subagent
     task: Spec pr-subscribe-stop-hook r1
     model: claude-sonnet-5-5
@@ -538,7 +550,7 @@ subagents:
     durationSec: 22
     toolCalls: 8
     modelCalls: 4
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: Standards pr-subscribe-stop-hook r1
     model: claude-sonnet-5-5
@@ -559,7 +571,7 @@ subagents:
     durationSec: 21
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: build glassbox-curate-modes-and-leads
     model: claude-sonnet-5-5
@@ -615,7 +627,7 @@ subagents:
     durationSec: 14
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 0.4
+    tokenShare: 0.3
   - type: workflow-subagent
     task: Standards network-caveats-docs r1
     model: claude-sonnet-5-5
@@ -629,7 +641,7 @@ subagents:
     durationSec: 81
     toolCalls: 13
     modelCalls: 8
-    tokenShare: 1
+    tokenShare: 0.9
   - type: workflow-subagent
     task: fix network-caveats-docs r2
     model: claude-sonnet-5-5
@@ -650,7 +662,7 @@ subagents:
     durationSec: 121
     toolCalls: 20
     modelCalls: 12
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: Spec network-caveats-docs r2
     model: claude-sonnet-5-5
@@ -671,7 +683,7 @@ subagents:
     durationSec: 15
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 0.4
+    tokenShare: 0.3
   - type: workflow-subagent
     task: Spec glassbox-curate-modes-and-leads r1
     model: claude-sonnet-5-5
@@ -699,14 +711,14 @@ subagents:
     durationSec: 21
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: workflow-subagent
     task: build frictions-to-fixes-regression-rule
     model: claude-sonnet-5-5
     durationSec: 111
     toolCalls: 14
     modelCalls: 11
-    tokenShare: 1.9
+    tokenShare: 1.8
   - type: workflow-subagent
     task: Standards digest-code-review-step r2
     model: claude-sonnet-5-5
@@ -720,7 +732,7 @@ subagents:
     durationSec: 18
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.5
+    tokenShare: 0.4
   - type: workflow-subagent
     task: Spec glassbox-update-edited-ranges r2
     model: claude-sonnet-5-5
@@ -748,14 +760,14 @@ subagents:
     durationSec: 19
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: workflow-subagent
     task: Standards frictions-to-fixes-regression-rule r2
     model: claude-sonnet-5-5
     durationSec: 28
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: Standards glassbox-update-edited-ranges r1
     model: claude-sonnet-5-5
@@ -769,35 +781,35 @@ subagents:
     durationSec: 24
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: workflow-subagent
     task: fix frictions-to-fixes-regression-rule r2
     model: claude-sonnet-5-5
     durationSec: 52
     toolCalls: 6
     modelCalls: 6
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: build digest-code-review-step
     model: claude-sonnet-5-5
     durationSec: 110
     toolCalls: 17
     modelCalls: 12
-    tokenShare: 1.9
+    tokenShare: 1.8
   - type: workflow-subagent
     task: Spec digest-code-review-step r1
     model: claude-sonnet-5-5
     durationSec: 28
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: fix glassbox-update-edited-ranges r1
     model: claude-sonnet-5-5
     durationSec: 61
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 0.8
+    tokenShare: 0.7
   - type: workflow-subagent
     task: Spec frictions-to-fixes-regression-rule r1
     model: claude-sonnet-5-5
@@ -832,14 +844,14 @@ subagents:
     durationSec: 18
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 0.5
+    tokenShare: 0.4
   - type: workflow-subagent
     task: fix frictions-to-fixes-regression-rule r1
     model: claude-sonnet-5-5
     durationSec: 51
     toolCalls: 6
     modelCalls: 6
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: Spec frictions-to-fixes-regression-rule r2
     model: claude-sonnet-5-5
@@ -853,22 +865,26 @@ subagents:
     durationSec: 22
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.1
+    tokenShare: 1
   - type: workflow-subagent
     task: Standards glassbox-update-edited-ranges r3
     model: claude-sonnet-5-5
     durationSec: 15
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 0.5
+    tokenShare: 0.4
   - type: workflow-subagent
     task: build glassbox-update-edited-ranges
     model: claude-sonnet-5-5
     durationSec: 114
     toolCalls: 15
     modelCalls: 11
-    tokenShare: 1.8
+    tokenShare: 1.7
 gitBranch: ccr-f90b04f4-s88jph
 entrypoint: remote_mobile
 cliVersion: 2.1.319
+learnings:
+  - A scheduled-routine session's first user message carries a system-reminder saying it was fired by a routine; that a person-started run has no such reminder is inferred, not read from a human-started run.
+ideas:
+  - Let the clear-backlog build workflow rebase each ready-to-push branch onto the current origin/main and re-run the scoped gate before returning it, so a sibling PR that merged during the run never turns into a hand-resolved conflict at push time.
 landedBy: Stop
