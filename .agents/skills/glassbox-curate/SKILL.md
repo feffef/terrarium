@@ -65,8 +65,8 @@ keeps them so).
   `pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts` and read its
   output whole, never through `head`; if the tool saves it to a file, read that
   file whole. It gives where to write the run entry, open PRs, memory, recent
-  runs and warnings, and names the guide index file it wrote: read that file
-  whole too, with Read. The index is the whole-guide depth above; its first
+  runs and warnings, and names the guide index files it wrote: read each
+  whole too, one Read per file. The index is the whole-guide depth above; its first
   lines say how to read an entry. Leave alone every page an open PR touches. While a
   `glassbox-update` PR is open, wait for it: subscribe to its activity, end
   your turn, and orient again once it merges or closes. An autonomous run stops

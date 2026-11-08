@@ -280,7 +280,7 @@ function nextProblems(prose: string, lesson: boolean): string[] {
 }
 
 // Caps keep each `title` and `description` short wherever pages are listed, and `teaches` short enough
-// that glassbox-curate's guide index stays one Read (EVERY-PAGE.md, Pin).
+// that glassbox-curate's guide index stays a few Reads (EVERY-PAGE.md, Pin).
 const lengths = { lesson: { title: 28, description: 120, teaches: 400 }, walkthrough: { title: 36, description: 140, teaches: 400 } }
 const lessonTitleWords = 4
 

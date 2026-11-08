@@ -2,8 +2,8 @@
 // page's entry to a file the run reads whole: the run reads its own Subject in full
 // (`--subject`), so an entry need only say what every other page teaches.
 // Usage: pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts [--subject <folder>]
-import { existsSync, globSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
-import { dirname, join } from 'node:path'
+import { existsSync, globSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { join } from 'node:path'
 import { parse as parseYaml, stringify as stringifyYaml } from 'yaml'
 import { fail, flagValue, root, runIfMain } from '../../../../scripts/lib/cli.ts'
 import { tryGit } from '../../../../scripts/lib/git.ts'
@@ -22,16 +22,14 @@ const plainText = (s: string) => s.replace(/:\w+\[([^\]]*)\](\{[^}]*\})?/g, '$1'
 const guideLinks = (line: string) => [...new Set([...line.matchAll(/\]\(\/t\/glassbox\/guide\/([^)#]+)/g)].map((m) => m[1]!))]
 
 /** The bold lead-in of each bullet in the `### <heading>` section of `body`, with the guide pages it links. */
-function leadIns(body: string, heading: string): string[] {
+function leadIns(body: string, heading: string): { lead: string; links: string[] }[] {
   const lines = body.split('\n')
   const at = lines.indexOf(`### ${heading}`)
   if (at < 0) return []
   const end = lines.findIndex((l, i) => i > at && /^#{2,3} /.test(l))
   return lines.slice(at + 1, end < 0 ? undefined : end).flatMap((l) => {
     const lead = /^- \*\*(.+?)\*\*/.exec(l)?.[1]
-    if (!lead) return []
-    const links = guideLinks(l)
-    return [`${plainText(lead)}${links.length ? ` → ${links.join(', ')}` : ''}`]
+    return lead ? [{ lead: plainText(lead), links: guideLinks(l) }] : []
   })
 }
 
@@ -54,8 +52,9 @@ export interface PageDates { read?: string; checked?: string }
 /** One page's entry: its stem, title, description and dates, then what it teaches, its Why and watch lead-ins, or a Walkthrough's stops. */
 export function pageOverview(stem: string, source: string, titles: Record<string, string> = {}, dates: PageDates = {}): string {
   const { frontmatter, body } = splitFrontmatter(source)
-  const titled = (items: string[]) => items.map((item) => item.replace(/ → (.+)$/, (_, paths: string) => ` → ${paths.split(', ').map((p) => titles[p] ?? p).join(', ')}`))
-  const extra = [
+  const titled = (items: { lead: string; links: string[] }[]) =>
+    items.map(({ lead, links }) => `${lead}${links.length ? ` → ${links.map((p) => titles[p] ?? p).join(', ')}` : ''}`)
+  const sections = [
     ['Teaches', frontmatter.teaches ? [String(frontmatter.teaches)] : []],
     ['Stops', stops(body)],
     ['Why', titled(leadIns(body, "Why it's built this way"))],
@@ -63,7 +62,7 @@ export function pageOverview(stem: string, source: string, titles: Record<string
   ] as const
   return [
     `- ${stem}: ${String(frontmatter.title)}. ${String(frontmatter.description)} [read ${dates.read ?? 'never'} · checked ${dates.checked ?? 'never'}]`,
-    ...extra.filter(([, items]) => items.length).map(([label, items]) => `  ${label}: ${items.join(' · ')}`),
+    ...sections.filter(([, items]) => items.length).map(([label, items]) => `  ${label}: ${items.join(' · ')}`),
   ].join('\n')
 }
 
@@ -112,11 +111,13 @@ export function warningLines(byFile: [string, string[]][]): string[] {
 const section = (title: string, body: string) => `# ${title}\n\n${body.trim() || '(none)'}`
 
 /** Where the CLI writes the guide index: git-ignored, and outside the output so neither part outgrows its tool. */
-export const guideIndexFile = '.throwaway/glassbox-curate/guide-pages.md'
+const guideIndexDir = '.throwaway/glassbox-curate'
 
 // A tool result above about 30 KB is saved to a file and shown as a preview, and runs then worked
 // from a cut orientation (Journal Friction orient-output-truncates).
-export const inlineCap = 25_000
+const inlineCap = 25_000
+// Read stops at 25,000 tokens, and the index's code names run near 2.5 bytes a token, so one 66 KB file was cut off.
+const indexPartCap = 40_000
 
 const guideKey = [
   'Each page: `- stem: Title. description [read <date> · checked <date>]`. `read` is the last curate run whose pagesRead lists it, `checked` the last glassbox-update full check.',
@@ -133,8 +134,8 @@ export function guideRenames(): [string, string][] {
   })
 }
 
-/** Every guide page's entry, under the key that says how to read one. */
-export function guideIndex(base = join(root, content), renames = guideRenames): string {
+/** Every guide page's entry, under the key that says how to read one, in parts of at most `partCap` bytes so each fits one Read. */
+export function guideIndex(base = join(root, content), renames = guideRenames, partCap = indexPartCap): string[] {
   const renamed = new Map<string, string>()
   for (const [from, to] of renames()) {
     for (const [old, now] of renamed) if (now === from) renamed.set(old, to)
@@ -149,10 +150,19 @@ export function guideIndex(base = join(root, content), renames = guideRenames): 
   for (const [, t] of files(join(base, 'workshop/checks'), '*.yml')) {
     for (const { page, checked } of (parseYaml(t)?.pages ?? []) as { page: string; checked: string }[]) (dates[page] ??= {}).checked = checked
   }
-  return section('Guide pages', [guideKey, '', ...guide.map(([f, t]) => {
+  const parts: string[][] = [[]]
+  let size = 0
+  for (const [f, t] of guide) {
     const stem = f.replace(/\.md$/, '')
-    return pageOverview(stem, t, titles, dates[stem])
-  })].join('\n'))
+    const entry = pageOverview(stem, t, titles, dates[stem])
+    if (size && size + entry.length > partCap) {
+      parts.push([])
+      size = 0
+    }
+    parts.at(-1)!.push(entry)
+    size += entry.length + 1
+  }
+  return parts.map((entries, i) => section(`Guide pages, part ${i + 1} of ${parts.length}`, [guideKey, '', ...entries].join('\n')))
 }
 
 /** A run entry without its pagesRead list, which the guide index's `read` dates carry. */
@@ -161,7 +171,7 @@ const runSummary = (text: string) => {
   return stringifyYaml(entry).trim()
 }
 
-export function orientation(base = join(root, content), { log = guideLog, prs = openGlassboxPrs, now = new Date(), index = { path: guideIndexFile, bytes: 0 } } = {}): string {
+export function orientation(base = join(root, content), { log = guideLog, prs = openGlassboxPrs, now = new Date(), index = [] as { path: string; bytes: number }[] } = {}): string {
   const guide = files(join(base, 'guide/pages'), '**/*.md')
   const runs = files(join(base, 'workshop/runs'), '*.yml').reverse()
   const memory = files(join(base, 'workshop/pages'), 'index.md')[0]?.[1] ?? ''
@@ -177,7 +187,7 @@ export function orientation(base = join(root, content), { log = guideLog, prs = 
     section(`Last ${recentRuns} curate runs, newest first`, runs.slice(0, recentRuns).map(([f, t]) => `## ${f}\n\n${runSummary(t)}`).join('\n\n')),
     section('Page-check warnings', warnings.join('\n')),
     section(runs.length ? 'Guide and drafts changes since the last curate run' : 'Last 30 guide and drafts changes (no curate run yet)', log(runs[0] ? runStart(runs[0][0]) : undefined)),
-    section('Guide pages', `Every page's entry is in ${index.path} (${Math.round(index.bytes / 1000)} KB). Read that file whole with Read, never through head.`),
+    section('Guide pages', [`Every page's entry is in these files. Read each whole, one Read per file, never through head:`, ...index.map((f) => `- ${f.path} (${Math.round(f.bytes / 1000)} KB)`)].join('\n')),
   ].join('\n\n')
   const bytes = Buffer.byteLength(out)
   return `${out}\n\n(This output: ${Math.round(bytes / 1000)} KB.${bytes > inlineCap ? ` Over ${inlineCap / 1000} KB: a tool may cut it, so shorten a section before it grows further.` : ''})`
@@ -199,10 +209,15 @@ runIfMain(import.meta.url, () => {
   if (process.argv.includes('--subject') && !subject) fail('--subject needs a Subject folder, such as git-github')
   try {
     if (subject) return void process.stdout.write(`${subjectPages(subject)}\n`)
-    const index = guideIndex()
-    mkdirSync(dirname(join(root, guideIndexFile)), { recursive: true })
-    writeFileSync(join(root, guideIndexFile), `${index}\n`)
-    process.stdout.write(`${orientation(undefined, { index: { path: guideIndexFile, bytes: Buffer.byteLength(index) } })}\n`)
+    const dir = join(root, guideIndexDir)
+    rmSync(dir, { recursive: true, force: true })
+    mkdirSync(dir, { recursive: true })
+    const index = guideIndex().map((text, i) => {
+      const path = `${guideIndexDir}/guide-pages-${i + 1}.md`
+      writeFileSync(join(root, path), `${text}\n`)
+      return { path, bytes: Buffer.byteLength(text) }
+    })
+    process.stdout.write(`${orientation(undefined, { index })}\n`)
   } catch (err) {
     fail(err instanceof Error ? err.message : String(err))
   }

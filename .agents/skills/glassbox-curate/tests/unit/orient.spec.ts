@@ -74,7 +74,7 @@ describe('orientation', () => {
     expect(out.split('\n').filter((l) => l.startsWith('# '))).toEqual([
       '# Run entry', '# Open PRs that touch Glass Box', '# Memory page', '# Last 5 curate runs, newest first', '# Page-check warnings', '# Guide and drafts changes since the last curate run', '# Guide pages',
     ])
-    for (const text of ['workshop/runs/2026-11-07T1005.yml', 'focus: "<', '- #1 a PR', 'A lead.', 'focus: first', 'focus: second', 'abc1234 a guide commit', 'guide-pages.md (', 'This output: ']) expect(out).toContain(text)
+    for (const text of ['workshop/runs/2026-11-07T1005.yml', 'focus: "<', '- #1 a PR', 'A lead.', 'focus: first', 'focus: second', 'abc1234 a guide commit', 'Read each whole', 'This output: ']) expect(out).toContain(text)
     expect(out.indexOf('focus: second')).toBeLessThan(out.indexOf('focus: first'))
     expect(out).toContain('05.blocking-hooks.md ×1')
     for (const text of ['term: Hook', 'Some instructions keep being missed', 'pagesRead:\n  - claude-code', 'Blocking hooks. Hooks']) expect(out).not.toContain(text)
@@ -82,9 +82,22 @@ describe('orientation', () => {
   })
 
   it('indexes every page with the dates its runs and checks give, through renames', () => {
-    const out = guideIndex(base, () => [['claude-code/01.old', 'claude-code/02.older'], ['claude-code/02.older', 'claude-code/05.blocking-hooks']])
+    const [out = '', ...rest] = guideIndex(base, () => [['claude-code/01.old', 'claude-code/02.older'], ['claude-code/02.older', 'claude-code/05.blocking-hooks']])
+    expect(rest).toEqual([])
     expect(out).toContain('- claude-code/05.blocking-hooks: Blocking hooks. Hooks that refuse a wrong tool call. [read 2026-11-07 · checked 2026-11-05]')
     expect(out.split('\n')[2]).toMatch(/^Each page: /)
+  })
+
+  it('splits the index into parts under the cap, each with the key', () => {
+    const two = mkdtempSync(join(tmpdir(), 'orient-two-'))
+    for (const stem of ['claude-code/05.a', 'claude-code/06.b']) {
+      mkdirSync(dirname(join(two, `guide/pages/${stem}.md`)), { recursive: true })
+      writeFileSync(join(two, `guide/pages/${stem}.md`), page)
+    }
+    const parts = guideIndex(two, () => [], 1)
+    rmSync(two, { recursive: true, force: true })
+    expect(parts).toHaveLength(2)
+    expect(parts[1]).toMatch(/^# Guide pages, part 2 of 2\n\nEach page: [\s\S]*- claude-code\/06\.b: Blocking hooks\./)
   })
 
   it('prints a Subject\'s pages in full with the pagesRead lines they make', () => {
