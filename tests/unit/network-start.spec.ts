@@ -19,7 +19,10 @@ describe('networkStartMessage', () => {
 
   it('prints nothing without a proxy', async () => {
     let called = false
-    const msg = await networkStartMessage({}, async () => ((called = true), 'readable'))
+    const msg = await networkStartMessage({}, async () => {
+      called = true
+      return 'readable'
+    })
     expect(msg).toBeNull()
     expect(called).toBe(false)
   })
