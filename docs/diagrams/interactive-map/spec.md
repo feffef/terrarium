@@ -499,8 +499,7 @@ Close-up: `visitor-loop`.
 
 ### 13. The Glass Box made easier to learn from — `glassbox-curate`
 
-1. `glassbox-curate` starts on its timer. A person can also start it, then
-   either tell it to act on its own or settle each choice with it.
+1. `glassbox-curate` starts on its timer.
 2. A script (via `scripts`) lists the open pull requests, the earlier runs and
    every guide page's title and description. While a `glassbox-update` pull
    request is open, it waits.
@@ -708,9 +707,8 @@ merges comes from ADR-0004; what each routine may change, from its `SKILL.md`
 
 - Names of single guards, hooks and CI checks. Panels use folders and
   patterns instead.
-- When a routine runs. Say that it runs on a timer, never at what time.
-- Whether a routine's timer is on, paused or removed. The map shows what a
-  routine does when it fires; a paused one stays on it.
+- When a routine runs, or whether its timer is on, paused or removed. Say that
+  it runs on a timer, never at what time; a paused routine stays on the map.
 - Counts that change daily: sessions, skills, how often something happened.
 - Pull request and issue numbers, session ids and commit ids.
 - Line numbers in file pointers.
