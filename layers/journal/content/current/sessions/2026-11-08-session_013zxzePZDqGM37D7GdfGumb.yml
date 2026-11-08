@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzePZDqGM37D7GdfGumb
 startedAt: 2026-11-08T08:47:05Z
-endedAt: 2026-11-08T08:56:20Z
+endedAt: 2026-11-08T09:00:31Z
 kind: autonomous
 goal: Weekly Glass Box curate run on the Hooks pages
-status: in-review
-outcome: "PR 2966 open: gate green, code-review findings addressed; awaiting CI and self-merge"
-summary: "A scheduled glassbox-curate firing (no human prompt; autonomous). I oriented, chose the Hooks Subject because it carried the only hard page-check warning (a 19-line Excerpt on Claude Code hooks) and a repeat the memory page had already flagged. I shortened the Excerpt, and cut from Session transcripts a list and a Why bullet that Session logs and the session-log Walkthrough already teach. I skipped the MCP-matcher move the memory page suggested and recorded it as decided against. Two reviewer subagents (Standards, Spec) found the first Excerpt (4 gap-separated lines) unreadable and an unverified stop anchor; I widened the Excerpt and dropped the anchor. Gate passed, PR opened and subscribed. Cost is unreported because get_session was not read. Still open: CI and the self-merge."
+status: completed
+outcome: "PR 2966 merged: hooks Excerpt shortened, duplicate facts cut from Session transcripts"
+summary: A scheduled glassbox-curate firing (no human prompt; autonomous). I oriented, chose the Hooks Subject because it carried the only hard page-check warning (a 19-line Excerpt on Claude Code hooks) and a repeat the memory page had already flagged. I shortened the Excerpt, and cut from Session transcripts a list and a Why bullet that Session logs and the session-log Walkthrough already teach. I skipped the MCP-matcher move the memory page suggested and recorded it as decided against. Two reviewer subagents (Standards, Spec) found the first Excerpt (4 gap-separated lines) unreadable and an unverified stop anchor; I widened the Excerpt and dropped the anchor. Gate passed, PR opened and subscribed. Cost is unreported because get_session was not read. The PR merged after green CI.
 prs:
   - "2966"
 docsRead:
@@ -62,16 +62,19 @@ frictions:
   - description: I could not verify how the site slugifies a numbered Walkthrough heading, so I dropped the anchor instead.
     solution: Document the slug rule for headings with leading numbers next to the Term id rule in the Glass Box glossary.
     severity: nit
-durationSec: 555
+durationSec: 806
 models:
-  claude-sonnet-5-5: 64
+  claude-sonnet-5-5: 77
 toolCounts:
-  Bash: 23
+  Bash: 27
   Read: 4
-  Skill: 4
+  Skill: 5
   Agent: 4
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/hooks/10.hooks.md
   - layers/glassbox/content/guide/pages/hooks/40.session-transcripts.md
@@ -147,14 +150,14 @@ subagents:
     durationSec: 48
     toolCalls: 13
     modelCalls: 6
-    tokenShare: 11.6
+    tokenShare: 9.5
   - type: general-purpose
     task: Spec review of hooks diff
     model: sonnet
     durationSec: 42
     toolCalls: 17
     modelCalls: 8
-    tokenShare: 12.1
+    tokenShare: 9.9
 gitBranch: claude/compassionate-bardeen-0ufmyf
 entrypoint: remote_trigger
 cliVersion: 2.1.319
