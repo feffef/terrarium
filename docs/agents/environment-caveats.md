@@ -15,12 +15,12 @@ them as new. Incident detail lives in the cited issue.
 - **In the Default (limited) environment, `docs.github.com` 403s through the
   agent proxy.** Fetch `raw.githubusercontent.com/github/docs/...` to check
   GitHub's own docs. (issue #888)
-- **`github.com/user-attachments` (403), `content.nuxt.com`, `zod.dev`,
-  `git-scm.com` and `example.com` are also blocked there.** Don't retry; ask the
-  owner to paste the content into the issue or chat.
-- **The blocked set varies by environment.** Read your own policy with
-  `get_environment`. When a host is blocked, you may suggest the user run the
-  session or Routine in the Unrestricted environment; never switch yourself.
+- **`github.com/user-attachments` (403), `content.nuxt.com`, `zod.dev` and
+  `git-scm.com` are also blocked there.** Don't retry; ask the owner to paste
+  the content into the issue or chat.
+- **The blocked set varies by environment** (read yours with `get_environment`).
+  You may suggest the user run the session or Routine in the Unrestricted
+  environment; never switch yourself.
 - **`~/.ssh/commit_signing_key.pub` can be unprovisioned (0 bytes) here** —
   `git commit -S`, and the Stop hook's `--reset-author` remedy for an
   "Unverified" commit, can silently fail to sign even with a correct author
