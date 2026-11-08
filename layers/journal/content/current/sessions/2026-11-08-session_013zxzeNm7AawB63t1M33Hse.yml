@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeNm7AawB63t1M33Hse
 startedAt: 2026-11-08T13:16:57Z
-endedAt: 2026-11-08T13:31:48Z
+endedAt: 2026-11-08T13:35:44Z
 kind: interactive
 goal: Update Skills and map for a new Routine and a paused one
-status: in-review
-outcome: PR 2978 open with the edits, gate green, awaiting CI and merge
-summary: "The owner asked which repo parts to update after glassbox-curate became a scheduled Routine and visitor-loop's schedule was paused (agent research, an owner question). The owner then directed three edits (human-instructed): fix glassbox-curate's misleading description to name its three ways of running, update the interactive map spec, and teach audit-skills that a Routine can be paused or removed. I made those edits and also trimmed the Inventory role and folded the map's Leave-out bullets after the two-axis review (agent judgement). Per ADR-0005 schedules live outside git, so I left the paused state off the map and out of Inventory. Opened PR 2978 myself under ADR-0003 once the gate passed; no Human-only file is touched. Open: audit-skills will add the glassbox-curate Routine file and chart on its own."
+status: completed
+outcome: PR 2978 merged with the edits, gate green
+summary: "The owner asked which repo parts to update after glassbox-curate became a scheduled Routine and visitor-loop's schedule was paused (agent research, an owner question). The owner then directed three edits (human-instructed): fix glassbox-curate's misleading description to name its three ways of running, update the interactive map spec, and teach audit-skills that a Routine can be paused or removed. I made those edits and also trimmed the Inventory role and folded the map's Leave-out bullets after the two-axis review (agent judgement). Per ADR-0005 schedules live outside git, so I left the paused state off the map and out of Inventory. Opened and merged PR 2978 myself under ADR-0003 once the gate passed; no Human-only file is touched. Open: audit-skills will add the glassbox-curate Routine file and chart on its own."
 prs:
   - "2978"
 docsRead:
@@ -71,20 +71,24 @@ frictions:
   - description: First role edit used a malformed old_string and failed; a retry fixed it.
     solution: Copy the exact block from the file before editing.
     severity: nit
-durationSec: 891
+durationSec: 1127
 models:
-  claude-sonnet-5-5: 94
+  claude-sonnet-5-5: 112
 toolCounts:
   Grep: 1
-  Bash: 30
-  Skill: 5
+  Bash: 34
+  Skill: 6
   Write: 2
   Edit: 13
   Agent: 2
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/skills/glassbox-curate/SKILL.md
   - layers/journal/content/current/skills/glassbox-curate.yml
@@ -193,14 +197,14 @@ subagents:
     durationSec: 32
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 10.4
+    tokenShare: 8.6
   - type: general-purpose
     task: Spec review of diff
     model: sonnet
     durationSec: 27
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 10.8
+    tokenShare: 8.9
 gitBranch: claude/focused-mayer-wukdwq
 entrypoint: remote
 cliVersion: 2.1.319
