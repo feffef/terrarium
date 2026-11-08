@@ -34,10 +34,9 @@ that one commit, never a later fetch.
    every page.
 4. **Re-check and edit** each flagged page as a whole, diagrams included,
    against the commit, and pin it there (EVERY-PAGE.md's Pin, with the
-   commit in place of `origin/main`); re-line each `edited` range the report lists by
-   hand with the pin. A flagged term: re-read its `source`
-   entry and rewrite the `definition` in Glass Box's words where the meaning
-   moved. Done when the script with `--to <the commit>` lists no `pages` and
+   commit in place of `origin/main`); re-line each `edited` range by hand as
+   you pin. A flagged term: re-read its `source` entry and rewrite the
+   `definition` in Glass Box's words where the meaning moved. Done when the script with `--to <the commit>` lists no `pages` and
    every flagged term matches its source.
 5. **Claim check.** Goal: no page states a claim its source contradicts. Check
    two sets, each page by its stem (its path under
