@@ -51,7 +51,7 @@ Terrarium applies them without reading the source.
   cap (`layers/glassbox/tests/unit/workshop.spec.ts`).
 - **Shown in progress.** The Platform homepage gives Glass Box its own band
   under the hero, labelled the newest experiment and work in progress, with
-  both Spaces and a guide Lesson of the day; when it's finished, the label
+  the guide and drafts Spaces and a guide Lesson of the day; when it's finished, the label
   changes and the band stays. Its `pages` are in the Catalog, and reach the Commons Timeline only when they
   teach something new (`publishedAt`: EVERY-PAGE.md's Pin).
 

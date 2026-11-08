@@ -304,7 +304,7 @@ export function glassboxPageProblems(file: string, source: string, site: Glassbo
   problems.push(...glassboxStopProblems(body, glassboxWalkthroughOf(route), space === 'guide' && route === '/', site.cites))
   if (glassboxSubjectOf(route)) problems.push(...lessonProblems(file, body, prose, space))
   if (glassboxSubjectOf(route) || glassboxWalkthroughOf(route)) problems.push(...nextProblems(prose, Boolean(glassboxSubjectOf(route))))
-  // Drafts are set aside (GLOSSARY.md, Two Spaces); a page moved to the guide meets its caps.
+  // Drafts are set aside (GLOSSARY.md, Three Spaces); a page moved to the guide meets its caps.
   if (space === 'guide') problems.push(...lengthProblems(route, frontmatter))
 
   const { revision, revisionDate } = frontmatter
@@ -319,7 +319,7 @@ export function glassboxPageProblems(file: string, source: string, site: Glassbo
     // A link quoting its target's title goes stale when the title changes; lowercase text is running prose (#2114).
     const title = site.titles[path]
     if (space === 'guide' && title !== undefined && !/^[a-z]/.test(text!) && text !== title) problems.push(`link text "${text}" is not the title "${title}" of ${path}`)
-    // The guide stands alone; drafts may lean on it (GLOSSARY.md, Two Spaces).
+    // The guide stands alone; drafts may lean on it (GLOSSARY.md, Three Spaces).
     if (space === 'guide' && path.startsWith('/t/glassbox/') && path !== guide && !path.startsWith(`${guide}/`)) problems.push(`guide page links outside the guide: ${link}`)
     else if (path.startsWith('/t/glassbox/') ? !pages.has(path) : !journal.has(path)) problems.push(`link ${link} resolves to no page`)
   }

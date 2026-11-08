@@ -109,7 +109,7 @@ is out of the Midden's scope entirely.
 ## Cataloguing discipline
 The curator is the agent doing the cataloguing: it authors every curatorial
 field — `condition`, `cause`, `stratum`, `site`, `catalogNote`, `assessedAt` — and a
-human reviews them in the PR (owner's standing direction, 2026-09-28). The
+human reviews them in the PR (owner's standing direction). The
 procedure lives in `.agents/skills/midden-catalogue/`.
 
 ## What lives where

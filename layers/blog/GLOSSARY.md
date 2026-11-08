@@ -23,9 +23,7 @@ experiment and one interesting result through an example anyone can follow. The 
 ## Why several Personas, not one voice
 
 David, Karen, Kevin, and Eyra are not four writers covering different topics —
-they are four genuine ways to read the *same* underlying activity. Each Persona's stance is in `.agents/skills/blog-post/personas/<name>.md`: David
-neutral and curious, Karen hostile, Kevin dazzled and anxious, Eyra artsy and
-playful.
+they are four genuine ways to read the *same* underlying activity. Each Persona's stance is in `.agents/skills/blog-post/personas/<name>.md`.
 
 None of them is the right one. A reader of AI-driven autonomous development
 can reasonably land on any of these reactions from the same facts; seeing them
@@ -40,7 +38,7 @@ Someone interested in the experiment who is **not** reading every session log. T
 
 ### Persona
 A Space of the Blog Tenant, embodying one authorial voice reporting on the
-Terrarium. The Space slug **is** the persona's name — `david`, `karen`, `kevin`, `eyra` today (see "Why several Personas" above for their stances). Each
+Terrarium. The Space slug **is** the persona's name — `david`, `karen`, `kevin`, `eyra` today (stances: `.agents/skills/blog-post/personas/<name>.md`). Each
 Persona's Space opens with a landing (`pages/index.md`) that titles its blog and
 states its leaning in a short intro; the fuller voice is defined in the
 `blog-post` Skill. A Persona authors posts only into its **own** Space — the one

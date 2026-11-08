@@ -5,7 +5,7 @@ the image on every push. ADR-0011 says why.
 
 ## How it works
 
-The image (`deploy/Dockerfile`) is a thin **runner + builder** — Node 22 + git +
+The image (`deploy/Dockerfile`) is a thin **runner + builder** — Node, git and
 pnpm, no app source baked in. On start, `deploy/entrypoint.sh` clones `main` into
 a persistent volume, builds it, and serves a **decoupled copy** of the build
 output. It then polls `origin/main`; on a new commit it rebuilds *while the old
