@@ -9,19 +9,6 @@ role: >-
   the self-judged "invoke at closure" rule fire reliably; its invocation rate is the evidence for ADR-0009's choice
   of a Skill over a reminder hook.
 observations:
-  - date: 2026-09-28
-    note: >-
-      Re-checked (audit-skills behaviour check): session_01TMgZyrN42pwudxkUdHLKwP's
-      log is still stale today, unfixed — remains n=1, not recurring. Checked
-      the 10 newest close-session invocations (session_016PiKSCYGfiAj26Ze7NpkD1
-      through session_01S5bzNzvg1DURebeNRDgVi5) against live PR state: 0/10
-      stale; the one "in-review" status found (session_01N2HSpdwKUEBjztN8Nnz4Da)
-      honestly reflects a genuinely-still-open PR. Structural gap identified:
-      nothing re-verifies a log's status after the authoring turn ends except
-      the agent's own memory to come back — a session whose PR merges right
-      after teardown will always risk this. Not escalated as an issue (a
-      closure finding stays an observation per this Skill's own convention);
-      worth a fix if a second instance turns up.
   - date: "2026-09-30"
     note: >-
       Re-checked (audit-skills behaviour check), 10 newest invocations
@@ -365,3 +352,6 @@ observations:
   - date: "2026-11-07"
     note: >-
       Behaviour check, 10 sessions delivered, no orphan. Human-prompted closure: session_013zxzeQDfNNTXpQYQtt9saY (frictions-to-fixes 2026-11-06) ignored three close-session hints until the owner prompted; PRs unaffected. Earlier one is session_013zxzeRkv6UCWJtPmJ68h32 (#2772). Grade unchanged.
+  - date: "2026-11-08"
+    note: >-
+      Behaviour check, 10 runs delivered, no orphan (2 candidates, both resolved). Human-prompted closures: 3 this week (session_013zxzeRkv6UCWJtPmJ68h32, session_013zxzeQDfNNTXpQYQtt9saY, session_013zxzeQyHhutDMJtzGF5UQU); #2772 is closed, so filed standing thread #2956. Grade unchanged.

@@ -1,0 +1,10 @@
+name: dependabot-sweep
+runs:
+  - session: session_013zxzeQyhG5Jn9REJydTepm
+    startedAt: 2026-11-07T17:05:37Z
+    durationSeconds: 822
+    inputTokens: 40
+    outputTokens: 6364
+    cacheReadTokens: 1748181
+    cacheWriteTokens: 50149
+    costUsd: 0.4391341

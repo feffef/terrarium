@@ -149,3 +149,6 @@ observations:
   - date: "2026-11-07"
     note: >-
       Behaviour check, 7 runs delivered, graded on the pre-f7497331 text. The script's --write pins only pages without an edited range and leaves Excerpt lines stale on edited ones (session_013zxzeNsjXNYsepq7RSwxjV, session_013zxzeRLzBAw62ZMjhsbHiq): manual pins needed, 2 of 3 recent runs. Step 3 'every commit read' was not met at 91 commits (session_013zxzeRpGWPCotTQup1ui46). Grade unchanged.
+  - date: "2026-11-08"
+    note: >-
+      Behaviour check, 8 runs delivered. Verified: edited-range pages stay stale after --write again in session_013zxzeShUkKqUQT1kYCw5UK (PR #2946), after the claim-check text landed; filed #2955. Step 3 'every commit read' unmet again (123 commits, same session). Unverified: docs fetch for flagged pages in #2946. Grade unchanged.
