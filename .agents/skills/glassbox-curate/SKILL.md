@@ -15,11 +15,12 @@ $20. Read your spend, `external_metadata.usage.cost_usd` from `get_session`
 called with no session id (it appears only partway into a run), and stop at
 the budget. Several runs a day must work.
 
-**Modes.** *Autonomous* (a Routine fired it): decide everything,
-ask nothing, and say in the run entry why you chose the focus.
-*Interactive* (a person started it): if no focus was given, ask for one; settle
-every decision with them via `grilling`. If they answer "autonomous", the run
-is autonomous from then on and its entry says so.
+**Modes.** *Autonomous*: your first message carries a system-reminder
+`Fired by routine "/glassbox-curate"`; decide everything, ask nothing, and say
+in the run entry why you chose the focus. *Interactive*: a person typed the
+first message, with no such reminder; if no focus was given, ask for one;
+settle every decision with them via `grilling`. If they answer "autonomous",
+the run is autonomous from then on and its entry says so.
 
 **Hard rules.** Never make a page false. Never undo an earlier change without
 new evidence. `DECISIONS.md` rulings are closed. One PR per run, within the
@@ -75,8 +76,9 @@ only as good as the descriptions (Fix says how a run keeps them so).
   is pressing, from pages no fresh reader has seen lately (`pagesRead`). For a
   gap, it is the Subject the new Lesson would join; for a new Subject, the one
   it takes pages from or sits beside.
-  Before you take a gap from the memory page, grep the guide for its key
-  terms: a lead can be stale.
+  Before you take any lead from the memory page, check it still stands and that
+  no earlier step (settled titles, a pending Subject move) should come first;
+  grep the guide for its key terms.
 - **Read.** The full depth above. Run `orient.ts --subject <folder>` and read
   its output whole; it ends with the `pagesRead` lines to paste. Also read in
   full every page outside the Subject that a change would edit, link or
