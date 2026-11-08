@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQaeB8hhL2FFfcQhv7
 startedAt: 2026-11-08T19:47:55Z
-endedAt: 2026-11-08T22:27:52Z
+endedAt: 2026-11-08T22:32:27Z
 kind: interactive
 goal: Rework the Glass Box guide index that curate runs read, with a teaches field for agents
-status: in-review
-outcome: PR 2982 merged; follow-up PR 2983 records two claims to correct on the memory page
-summary: "Human-instructed throughout. The owner asked me to read issue 2945 (rewrite Glass Box descriptions), then steered through samples to the decision that agents are the main reader. On the owner's go I added each page's Why/Watch lead-ins, Walkthrough stops, pointer marks and stop Lessons to orient.ts; a fresh subagent judged the overview and named the gap (tool and file names). The owner chose a separate `teaches` field for agents (400 characters), descriptions for visitors, a rewrite of 21 vague lead-ins, read/checked dates and a format key, and said \"build it all\" in one PR. Agent-initiated within that: following renames for read dates, splitting orient into inline state plus an index file, and a trial run. Six writer subagents filled all 72 pages; I fanned out without piloting the brief, which the owner called out (a wrong grep filter, a loose licence giving 29 extra lead-in rewrites). Review found the index exceeded Read's 25,000-token cap, so it now writes parts under 40 KB, each confirmed to Read whole. The owner then kept the extra lead-ins, asked for plain-language descriptions (I agreed tone on six samples, then rewrote 54 myself for one voice and added the rule to EVERY-PAGE.md), and asked for a full fact check like glassbox-update. This time I piloted the checker brief on one group, improved it from the pilot's notes, then ran eight more: about 910 claims, 19 findings (1 false, 1 unsupported, 17 misleading), each confirmed against source; the 17 in new text are fixed, 2 in older sentences are left for glassbox-update and named in the PR. The owner merged PR 2982 and issue 2945 closed; the safety-net check-in was cancelled. Afterwards the owner asked to record the two older-sentence findings on the Glass Box memory page; I restarted the branch from main and opened PR 2983 for that."
+status: completed
+outcome: "PRs 2982 and 2983 merged: guide index, teaches, plain descriptions, and two claims to correct recorded"
+summary: "Human-instructed throughout. The owner asked me to read issue 2945 (rewrite Glass Box descriptions), then steered through samples to the decision that agents are the main reader. On the owner's go I added each page's Why/Watch lead-ins, Walkthrough stops, pointer marks and stop Lessons to orient.ts; a fresh subagent judged the overview and named the gap (tool and file names). The owner chose a separate `teaches` field for agents (400 characters), descriptions for visitors, a rewrite of 21 vague lead-ins, read/checked dates and a format key, and said \"build it all\" in one PR. Agent-initiated within that: following renames for read dates, splitting orient into inline state plus an index file, and a trial run. Six writer subagents filled all 72 pages; I fanned out without piloting the brief, which the owner called out (a wrong grep filter, a loose licence giving 29 extra lead-in rewrites). Review found the index exceeded Read's 25,000-token cap, so it now writes parts under 40 KB, each confirmed to Read whole. The owner then kept the extra lead-ins, asked for plain-language descriptions (I agreed tone on six samples, then rewrote 54 myself for one voice and added the rule to EVERY-PAGE.md), and asked for a full fact check like glassbox-update. This time I piloted the checker brief on one group, improved it from the pilot's notes, then ran eight more: about 910 claims, 19 findings (1 false, 1 unsupported, 17 misleading), each confirmed against source; the 17 in new text are fixed, 2 in older sentences are left for glassbox-update and named in the PR. The owner merged PR 2982 and issue 2945 closed; the safety-net check-in was cancelled. Afterwards the owner asked to record the two older-sentence findings on the Glass Box memory page; I restarted the branch from main and opened PR 2983 for that. PR 2983 merged after a green gate and a posted verdict."
 prs:
   - "2982"
   - "2983"
@@ -187,24 +187,25 @@ frictions:
   - description: My diff filter grep '^[-+][^-+]' dropped changed bullet lines, which start '- **', so I briefly misjudged two findings as old text
     solution: Filter diffs with '^[-+]' and exclude only the '---'/'+++' headers; caught by re-grepping before acting
     severity: minor
-durationSec: 9596
+durationSec: 9872
 models:
-  claude-opus-5-5: 470
+  claude-opus-5-5: 487
 toolCounts:
-  Bash: 157
-  ToolSearch: 4
+  Bash: 161
+  ToolSearch: 5
   mcp__github__issue_read: 3
   Edit: 7
-  Skill: 6
+  Skill: 7
   Agent: 20
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 2
-  ReadNotifications: 11
+  ReadNotifications: 13
   mcp__github__pull_request_read: 1
-  mcp__claude-code-remote__send_later: 1
+  mcp__claude-code-remote__send_later: 2
   mcp__github__update_pull_request: 1
-  mcp__claude-code-remote__delete_trigger: 1
+  mcp__claude-code-remote__delete_trigger: 2
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - .agents/skills/glassbox-curate/scripts/orient.ts
   - .agents/skills/glassbox-curate/tests/unit/orient.spec.ts
@@ -447,37 +448,37 @@ subagents:
     durationSec: 133
     toolCalls: 19
     modelCalls: 14
-    tokenShare: 2.1
+    tokenShare: 2
   - type: general-purpose
     task: "Write teaches: agent tools pages"
     durationSec: 224
     toolCalls: 17
     modelCalls: 16
-    tokenShare: 2.3
+    tokenShare: 2.2
   - type: general-purpose
     task: "Write teaches: practice pages"
     durationSec: 303
     toolCalls: 25
     modelCalls: 23
-    tokenShare: 3
+    tokenShare: 2.9
   - type: general-purpose
     task: "Write teaches: Nuxt pages"
     durationSec: 273
     toolCalls: 30
     modelCalls: 21
-    tokenShare: 2.9
+    tokenShare: 2.7
   - type: general-purpose
     task: "Write teaches: verify/deploy/web pages"
     durationSec: 210
     toolCalls: 17
     modelCalls: 15
-    tokenShare: 2.3
+    tokenShare: 2.2
   - type: general-purpose
     task: "Write teaches: Git & GitHub pages"
     durationSec: 208
     toolCalls: 19
     modelCalls: 18
-    tokenShare: 2.2
+    tokenShare: 2.1
   - type: general-purpose
     task: "Write teaches: Walkthroughs"
     durationSec: 191
@@ -495,7 +496,7 @@ subagents:
     durationSec: 196
     toolCalls: 25
     modelCalls: 23
-    tokenShare: 2.9
+    tokenShare: 2.8
   - type: general-purpose
     task: Check index parts fit one Read
     model: haiku
@@ -509,14 +510,14 @@ subagents:
     durationSec: 90
     toolCalls: 14
     modelCalls: 11
-    tokenShare: 1.8
+    tokenShare: 1.7
   - type: general-purpose
     task: "Fact check g2: Claude Code, deploy"
     model: sonnet
     durationSec: 158
     toolCalls: 26
     modelCalls: 24
-    tokenShare: 2.9
+    tokenShare: 2.8
   - type: general-purpose
     task: "Fact check g3: Git & GitHub"
     model: sonnet
@@ -530,42 +531,42 @@ subagents:
     durationSec: 125
     toolCalls: 24
     modelCalls: 22
-    tokenShare: 2.7
+    tokenShare: 2.5
   - type: general-purpose
     task: "Fact check g5: Nuxt & Vue"
     model: sonnet
     durationSec: 104
     toolCalls: 15
     modelCalls: 14
-    tokenShare: 2
+    tokenShare: 1.9
   - type: general-purpose
     task: "Fact check g6: skills, web, practice"
     model: sonnet
     durationSec: 137
     toolCalls: 26
     modelCalls: 24
-    tokenShare: 3
+    tokenShare: 2.9
   - type: general-purpose
     task: "Fact check g7: House rules"
     model: sonnet
     durationSec: 116
     toolCalls: 21
     modelCalls: 20
-    tokenShare: 2.4
+    tokenShare: 2.3
   - type: general-purpose
     task: "Fact check g8: Verification"
     model: sonnet
     durationSec: 75
     toolCalls: 14
     modelCalls: 13
-    tokenShare: 1.7
+    tokenShare: 1.6
   - type: general-purpose
     task: "Fact check g9: Walkthroughs"
     model: sonnet
     durationSec: 159
     toolCalls: 32
     modelCalls: 32
-    tokenShare: 3.4
+    tokenShare: 3.3
 gitBranch: claude/confident-brown-2l8710
 entrypoint: remote
 cliVersion: 2.1.319
