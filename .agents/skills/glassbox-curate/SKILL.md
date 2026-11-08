@@ -1,6 +1,6 @@
 ---
 name: glassbox-curate
-description: Make the Glass Box guide easier to learn from, then fill gaps; one focus per run, one PR (its Remit says which wait for the owner's merge). Started by a person, it runs interactively.
+description: Make the Glass Box guide easier to learn from, then fill gaps; one focus per run, one PR (its Remit says which wait for the owner's merge). A Routine fires it autonomously; a person can start it and tell it to act autonomously, or work with it interactively.
 disable-model-invocation: true
 ---
 

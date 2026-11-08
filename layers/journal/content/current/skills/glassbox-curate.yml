@@ -6,7 +6,8 @@ role: >-
   Runs one focused curation pass over the Glass Box guide per run (or an
   owner-given focus, interactively), then lands one self-merged PR. Improves
   existing Lessons first and adds a Lesson only where a technology Terrarium
-  relies on has none. Human-started, not scheduled.
+  relies on has none. Runs three ways: fired by a Routine, started by hand and
+  told to act autonomously, or interactive with the owner via `grilling`.
 observations:
   - date: "2026-11-07"
     note: >-

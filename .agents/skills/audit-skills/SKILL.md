@@ -130,6 +130,16 @@ Grade each Skill's importance by the definitions below, after reading its
 - **supporting**: useful, but work proceeds without it.
 - **peripheral**: marginal or superseded; little pull even where it applied.
 
+- **A Routine can stop.** Its timer can be paused or removed with no commit.
+  When a Skill's Routine file holds earlier runs and the window has none, read
+  that as a possible stop, not a failure or a missed invocation: file no issue
+  for it. Check `routineRuns` and the Routine file, then add an observation
+  marked unverified (the timer sits in an account we cannot read). A Skill
+  that scheduled sessions no longer run is graded on what is still observed
+  (≥2 windowed sessions to move the grade), and a `role` that says it is
+  scheduled is reworded. The reverse holds too: a hand-run Skill that
+  scheduled sessions now run becomes `routine`. A stopped Routine's Skill that
+  nothing uses any more is a retirement `ideas` entry, never acted on.
 - **Grade on felt absence, not counts.** Read each Skill's `mentionedIn`
   logs for where it **caught** something or where **skipping it cost**
   something; `humanInvokedIn` is a human reaching for it. These are the
