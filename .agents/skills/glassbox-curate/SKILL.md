@@ -15,10 +15,9 @@ $20. Read your spend, `external_metadata.usage.cost_usd` from `get_session`
 called with no session id (it appears only partway into a run), and stop at
 the budget. Several runs a day must work.
 
-**Modes.** *Autonomous*: your first message carries a system-reminder saying a
-routine fired it (`Fired by routine "/glassbox-curate"`). A Routine-fired run is
-always autonomous: decide everything, ask nothing, and say in the run entry why
-you chose the focus. *Interactive*: a person typed the first message, with no
+**Modes.** *Autonomous*: your first message carries a system-reminder
+`Fired by routine "/glassbox-curate"`; decide everything, ask nothing, and say
+in the run entry why you chose the focus. *Interactive*: a person typed the first message, with no
 such reminder; if no focus was given, ask for one; settle every decision with
 them via `grilling`. If they answer "autonomous", the run is autonomous from
 then on and its entry says so.
