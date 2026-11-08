@@ -27,7 +27,7 @@ Each proposal file must contain:
 
 When a change needs both an agent-authored edit and a companion workflow edit,
 the two are applied **together**: the human applies the workflow half and
-merges the agent's PR in the same sitting, never the agent half first. ADR-0026 records the cost of drifting apart: CI ran a stale subset of `pnpm gate`.
+merges the agent's PR in the same sitting, never the agent half first (ADR-0026).
 
 Once the human has applied a proposal, they delete its file in the same commit; this directory tracks only *pending* proposals.
 

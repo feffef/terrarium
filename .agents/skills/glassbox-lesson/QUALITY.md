@@ -63,6 +63,6 @@ item never drives an edit.
   concept across two, move each fact to its one home and link to it from the
   other page.
 - **Promote a draft** by raising it to B on every lens, then moving it into the guide's
-  Subject folder and dropping its links to drafts (GLOSSARY.md, Two Spaces).
+  Subject folder and dropping its links to drafts (GLOSSARY.md, Three Spaces).
 - **Share every correction.** A wrong fact a review finds goes into the brief
   of every agent writing in the same run.
