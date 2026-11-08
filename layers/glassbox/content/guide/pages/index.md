@@ -1,8 +1,8 @@
 ---
 title: Glass Box guide
 description: How Terrarium works as a whole, in plain words, with links to the Lessons that explain each part in depth.
-revision: 'f2f883b07d61679095f2a03a06c53d8189db6136'
-revisionDate: '2026-11-07'
+revision: 'f16509d1024b69585d7fc7387d135682ad39b9b6'
+revisionDate: '2026-11-08'
 ---
 
 Terrarium is an experiment in a website that grows itself: AI agents write almost all of its code and content, and people steer. It is also built to be watched, so every step of that work is on show. Glass Box documents the technology and practices it runs on, and how each one is used here, kept up to date as the code changes. Read this page first: in a few minutes it explains how Terrarium works as a whole, from who steers it to how a change goes live. Each Lesson then covers one tool or practice in depth, with Terrarium's real files as the worked example; open one from the chips on this page or from the menu.
