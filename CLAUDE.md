@@ -17,9 +17,9 @@ once per session; read it whole if you can, since a rule can sit anywhere in it.
   a file they govern or run a Skill they name. When a summary says so, read the
   full ADR before you act.
 - **Before you explain how Terrarium works, or plan or review work that spans
-  its parts** (a new Tenant, Skill or Routine, a cross-cutting review, prose
-  that tells readers how the Platform works): the overview,
-  `layers/glassbox/content/guide/pages/index.md`.
+  its parts** (a new Tenant, Skill or Routine, a cross-cutting review, prose on
+  how the Platform works): the overview, `layers/glassbox/content/guide/pages/index.md`;
+  to plan or design, also the full ADR of each decision the plan touches.
 - **Before your first git command** beyond the read-only `status`, `diff`,
   `show`, `ls-tree`, `cat-file`, `grep` and `ls-files`, or `log`/`blame` used to
   draw a conclusion: `docs/agents/git-conventions.md`.
