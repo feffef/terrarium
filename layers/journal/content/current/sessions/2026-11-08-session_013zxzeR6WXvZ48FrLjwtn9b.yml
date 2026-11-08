@@ -1,0 +1,190 @@
+schemaVersion: 1
+session: session_013zxzeR6WXvZ48FrLjwtn9b
+startedAt: 2026-11-08T11:08:44Z
+endedAt: 2026-11-08T11:21:36Z
+kind: autonomous
+goal: "Scheduled blog post: one Persona post grounded in recent repo activity"
+status: in-review
+outcome: Karen reaction post and Kevin pingback in PR 2967, gate green, awaiting CI and merge
+summary: "Scheduled /blog-post run, no Persona given. Rotation gave eligible eyra, karen, kevin. Drafted three candidates (Kevin on the merge-close Stop hook, Karen on the glassbox-improve Skill's removal reacting to Kevin, Eyra on the gate comment naming the wrong SHA); a blind sonnet reader picked Karen's. Revised for its gaps, then fact-checked over four passes (a misattributed script, an off-by-one link anchor, an overclaim and a loose duration were fixed), ran code-review (Standards and Spec; length and hook comments taken) and gate:scoped (green). Opened PR 2967 and subscribed. Everything was agent-initiated under the Routine; no human instruction. Open: merge after CI, then re-close."
+prs:
+  - "2967"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: review-before-PR and scheduled-run closing recipe
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: fetch before trusting history; commit-message hygiene
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP tool surface; read after hooks asked, nothing changed
+    useful: partly
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: brief rules for the blind and fact-check readers
+    useful: yes
+  - path: .agents/skills/blog-post/personas/karen.md
+    reason: voice do/dont and palette; subagent reviewer also read it and found it useful
+    useful: yes
+  - path: .agents/skills/blog-post/personas/eyra.md
+    reason: voice for the losing Eyra candidate
+    useful: yes
+  - path: .agents/skills/blog-post/personas/kevin.md
+    reason: voice for the losing Kevin candidate
+    useful: yes
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: spec for the review subagent; I followed it from the prompt
+    useful: yes
+  - path: layers/blog/GLOSSARY.md
+    reason: standards reviewer used it for the audience rule
+    useful: yes
+skillsUsed:
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: blog-post
+    reason: (invoked as a slash command)
+frictions:
+  - description: Ran the first GitHub MCP reads before github-integration.md; a hook then said read first. The doc changed nothing I did.
+    solution: Read the doc in the first parallel batch with the other required docs.
+    severity: nit
+  - description: Three candidates plus a draft rewrite for a post whose first-draft body ran six paragraphs; reviewers flagged length and a flat opening, costing a restructure and two extra fact-check passes.
+    solution: Draft to the four-paragraph norm and open on the strongest receipt before the blind read.
+    severity: minor
+  - description: Fact-check caught a misattributed script ('Kevin's script'), an off-by-one link anchor and a loose duration in my draft; fixed before the PR.
+    solution: Cite a line anchor by running sed on the pinned file, and name who wrote a thing from the PR author.
+    severity: nit
+durationSec: 772
+models:
+  claude-sonnet-5-5: 117
+toolCounts:
+  Bash: 39
+  Read: 3
+  mcp__github__pull_request_read: 9
+  mcp__github__issue_read: 6
+  Agent: 4
+  ToolSearch: 1
+  SendMessage: 3
+  Skill: 3
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+filesEdited:
+  - layers/blog/content/karen/pages/2026-11-08-kevin-admired-the-cost-script-the-next-day-its-whole-skill-was-deleted.md
+  - layers/blog/content/kevin/pingbacks/2026-11-08-karen-2026-11-06-the-agent-refused-to-turn-the-price-list-into-dollars.yml
+rulesLoaded:
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/adr-0030.md
+docsReadBySubagents:
+  - .agents/skills/blog-post/SKILL.md
+  - layers/blog/GLOSSARY.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run gate:scoped and code-review before the PR; the summary was enough, I did not open the ADR.
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to close-session at PR open; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Confirmed a scheduled run changes only what its Skill allows; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header on the PR body; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0012.md
+    reason: Told me the pingback stub goes in Kevin's Space only; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: About prune trials; unrelated to a blog post.
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: About where instructions live; unrelated to this task.
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded when I read a Skill; I changed no Skill so it did not apply.
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded on reading frictions and personas; the blog glossary was read by a subagent instead.
+    useful: partly
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded by a read of the hook script; no diagram involved.
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded when I read a Human-only file; my diff touches none.
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: Loaded on reading a hook; no guard work here.
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded on reading tenant.config.ts; I edited no manifest.
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: Loaded on reading tenant.config.ts; no stored field added.
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded on reading tenant.config.ts; no MDC involved.
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded on reading tenant.config.ts; no layer code changed.
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Only a review subagent loaded it; it reported it irrelevant.
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: Only a review subagent loaded it; it reported it irrelevant.
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Only a review subagent loaded it via paths; it reported it irrelevant.
+    useful: no
+subagents:
+  - task: Blind read of three blog drafts
+    model: sonnet
+    durationSec: 12
+    toolCalls: 4
+    modelCalls: 2
+    tokenShare: 5.5
+  - task: Fact-check blog post claims
+    model: sonnet
+    durationSec: 216
+    toolCalls: 18
+    modelCalls: 13
+    tokenShare: 10.8
+  - task: Standards review of blog post
+    model: sonnet
+    durationSec: 32
+    toolCalls: 7
+    modelCalls: 4
+    tokenShare: 3.9
+  - task: Spec review of blog post
+    model: sonnet
+    durationSec: 31
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 3.9
+gitBranch: claude/zen-heisenberg-sma0ku
+entrypoint: remote_trigger
+cliVersion: 2.1.319
+trigger: blog-post
+learnings:
+  - A pingback filename carries the target post's slug, not the reacting post's
+landedBy: Stop
