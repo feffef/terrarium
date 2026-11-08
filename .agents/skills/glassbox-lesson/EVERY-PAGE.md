@@ -71,11 +71,11 @@ page is written or promoted; a retitle keeps the URL.
   MDN: `mdn/content/main/files/en-us/...`, whose folders can differ from the
   URL, e.g. `web/css/reference/values/color_value/light-dark/index.md`; WAI-ARIA
   spec: `w3c/aria/main/index.html`; playwright.dev:
-  `microsoft/playwright/main/docs/src/...`; git-scm.com: `git/git/master/Documentation/...`;
-  other blocked hosts: `docs/agents/environment-caveats.md`; a repo without
-  GitHub access: attach it with `add_repo`),
-  confirm the exact URL and title in web search results, and say so in the
-  PR. Zod links go to v3.zod.dev.
+  `microsoft/playwright/main/docs/src/...`; git-scm.com:
+  `git/git/master/Documentation/...`; other blocked hosts:
+  `docs/agents/environment-caveats.md`), confirm the exact URL and title in
+  web search results, and say so in the PR. A repo without GitHub access:
+  attach it with `add_repo`. Zod links go to v3.zod.dev.
 - **A second tool gets its own link** at its first mention, even though *The
   concept* ends on one Full reference.
 - **Don't repeat a sibling page.** Check a Lesson's *Why it's built this way*
