@@ -59,8 +59,9 @@ labelled **never-fixed**, **drop**, **open-already** or **regression**.
 - **Open-already:** file nothing. If the subagent flags it idle, it is yours
   to pick up in §3 or escalate.
 - **Regression** (its fix merged, then the friction came back): never pick
-  it; a change that already failed once needs human eyes. File an issue saying the earlier fix did not work, linking the earlier
-  issue or PR and quoting the original and the new friction. Do this for the
+  it; a change that already failed once needs human eyes. File an issue
+  saying the earlier fix did not work, linking the earlier issue or PR and
+  quoting the original and the new friction. Do this for the
   top three still-recurring entries (status not `accepted`, `on-trial` or
   `tracked`) whose highest severity since the latest fix (`since:` in the
   survey's `--summary` report) is `moderate` or above, ranked by that
@@ -74,7 +75,7 @@ Done when every candidate is handled as above.
 - A `blocker` dropped only because it is in an open Prune Trial's territory
   still gets an issue naming the trial (search the tracker first).
 - A regression that already has an open issue from an earlier run needs
-  none, and does not count toward the cap.
+  none, and does not take a slot.
 - "Idle" means no commit or comment within the ledger horizon
   (`LEDGER_HORIZON_DAYS` in `layers/journal/app/utils/ledger.ts`).
 
