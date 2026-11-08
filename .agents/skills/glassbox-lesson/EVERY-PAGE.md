@@ -41,8 +41,8 @@ opening it. It holds what those leave out: for a Lesson, `Concept:` then
 `Terrarium:`, naming every tool, option, API, command, file and Skill each
 section explains; for a Walkthrough, `Story:`, `Start:`, `End:` and `Code:`,
 and what *A real case* tells, if any. Write it dense, separated by `;`, from
-the page as it now reads. It has no cap: leave out no name the page explains. Give each bold lead-in a claim that stands alone,
-since the index shows only the lead-in.
+the page as it now reads; it has no cap. Give each bold lead-in a claim that
+stands alone, since the index shows only the lead-in.
 Quote a `description` or `teaches` that holds a colon, or YAML misreads it.
 A `title` and `description` stay within their caps in `lengths` in
 `layers/glassbox/page-checks.ts`,
