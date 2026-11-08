@@ -197,3 +197,8 @@ occurrences:
     severity: moderate
     description: "Recommended a capital S for Skills in titles as 'following the glossary term', but other glossary terms (Collection, Friction, Routine) are lowercase in titles; the owner caught it after the merge, costing a reversal PR."
     solution: "Before recommending a title convention, list how every comparable word is already cased in the guide (one grep of title lines) instead of reasoning from the glossary alone."
+  - session: session_013zxzeQwU4eYGrEvV8x42ts
+    date: "2026-11-08"
+    severity: minor
+    description: "The docs build wrote that a session branch reset onto main can be pushed plainly; the friction ledger showed that holds only for a fast-forward. I caught it in my own read before the PR, but the brief had carried the unverified claim."
+    solution: "Brief a docs change from the ledger entries' exact conditions, or have the review axis check a new instruction against its cited evidence."

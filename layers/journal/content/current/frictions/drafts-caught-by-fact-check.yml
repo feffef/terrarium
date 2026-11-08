@@ -126,3 +126,8 @@ occurrences:
     severity: minor
     description: "Draft Digest misused 'routine' for a Skill and called a lesson addition a trim; the fact-check caught both before merge."
     solution: "Check PR titles and diffs for each claim while drafting, not after."
+  - session: session_013zxzeR6WXvZ48FrLjwtn9b
+    date: "2026-11-08"
+    severity: nit
+    description: "Fact-check caught a misattributed script ('Kevin's script'), an off-by-one link anchor and a loose duration in my draft; fixed before the PR."
+    solution: "Cite a line anchor by running sed on the pinned file, and name who wrote a thing from the PR author."

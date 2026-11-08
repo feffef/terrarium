@@ -63,3 +63,8 @@ occurrences:
     severity: nit
     description: "A read-only grep of layers/glassbox/tenant.config.ts loaded adr-0002, data-shapes, mdc-when-to-use and tenant-layers; all four got a no verdict, and mermaid-lanes loaded on reading walkthroughs with no diagram edit."
     solution: "Their paths are right for editing those files; the cost is the loader firing on read-only access. Decide whether a read-only grep should load rules, or accept the cost."
+  - session: session_013zxzeS3L4tvAUKm5q3d9qD
+    date: "2026-11-08"
+    severity: nit
+    description: "Reading ledger YAML and issue docs loaded unrelated rules (tenant-glossary, adr-0022, adr-0029) that needed verdicts."
+    solution: "Narrower paths on those rules; see the irrelevant-rules-loaded entry."

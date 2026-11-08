@@ -90,3 +90,13 @@ occurrences:
     severity: minor
     description: "Changing counts in prose (Three Tenants, five patterns, a 50% value) slipped past the writers, the page checks and the Standards reviewer, and I caught most by reading."
     solution: "Add a page-checks warning for number words or digits before plural nouns in In Terrarium, next to the so warning."
+  - session: session_013zxzeQhMWFqY3DzWrbVdEs
+    date: "2026-11-08"
+    severity: nit
+    description: "The checker's summary preamble said five CONFIRMED-BUT but listed four; I had to recount the verdicts myself from the body."
+    solution: "Ask checkers to end with a verdict-count line derived from their own list."
+  - session: session_013zxzeRWFHU5d6sAXJTbbP7
+    date: "2026-11-08"
+    severity: minor
+    description: "Stated the guide-page list had 73 lines, and about 30 ADR rules, from memory; actual list had 72 lines. Counted only when asked to file the issue."
+    solution: "Count with wc or grep -c before stating any number, as CLAUDE.md Verify before you state requires."

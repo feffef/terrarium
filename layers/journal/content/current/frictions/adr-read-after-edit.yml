@@ -113,3 +113,13 @@ occurrences:
     severity: nit
     description: "Edited glassbox-curate and glassbox-update SKILL.md before reading ADR-0005 and ADR-0027 in full; the hook flagged it and the edits were already right"
     solution: "Read the ADRs a Skill's rules name before the first edit to a SKILL.md"
+  - session: session_013zxzeQwU4eYGrEvV8x42ts
+    date: "2026-11-08"
+    severity: minor
+    description: "Edited two Skill files in worktrees before reading ADR-0005/0015/0027; the edit hook then demanded them, and the ADRs confirmed the edits were right."
+    solution: "A rule loaded on opening a Skill file could say to read the three ADRs first, or the clear-backlog hand-fix step could list them."
+  - session: session_013zxzeNm7AawB63t1M33Hse
+    date: "2026-11-08"
+    severity: minor
+    description: "Edited governed Skill, spec and Inventory files before reading ADR-0005, 0015 and 0027; hooks told me to read them afterwards."
+    solution: "Read each ADR a rule summary names before the first edit under its paths."

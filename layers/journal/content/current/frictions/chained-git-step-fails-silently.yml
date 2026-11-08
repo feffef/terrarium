@@ -25,3 +25,8 @@ occurrences:
     severity: nit
     description: "I passed both -m and -F to git commit, which git rejects; the failed commit left the branch unchanged and I redid it."
     solution: "Use only -F for commit messages, as git-conventions says."
+  - session: session_013zxzeR6WXvZ48FrLjwtn9b
+    date: "2026-11-08"
+    severity: nit
+    description: "A chained gate command used a remote-tracking ref that did not exist after the branch restart and exited 128 before the gate ran; I had to rerun it."
+    solution: "Run the gate as its own command and check refs in a separate step, as git-conventions says."

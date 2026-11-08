@@ -414,3 +414,28 @@ occurrences:
     severity: nit
     description: "Ran gh api issue searches before reading github-integration.md; they printed nothing, so I wasted two calls and then used list-open-issues.ts."
     solution: "The Bash hook already named the doc after the first call; reading it first would have shown the script escape."
+  - session: session_013zxzeS3L4tvAUKm5q3d9qD
+    date: "2026-11-08"
+    severity: nit
+    description: "I ran my first git commands and read git-conventions.md only after the PostToolUse hint, against CLAUDE.md's read-first rule."
+    solution: "Read docs/agents/git-conventions.md before the first git call, as CLAUDE.md says."
+  - session: session_013zxzeQhMWFqY3DzWrbVdEs
+    date: "2026-11-08"
+    severity: nit
+    description: "Ran the first git command (fetch/log) before reading docs/agents/git-conventions.md, which CLAUDE.md requires first; a hook reminded me afterwards."
+    solution: "Read git-conventions.md as step one of any scheduled run that fetches."
+  - session: session_013zxzeR6WXvZ48FrLjwtn9b
+    date: "2026-11-08"
+    severity: nit
+    description: "Ran the first GitHub MCP reads before github-integration.md; a hook then said read first. The doc changed nothing I did."
+    solution: "Read the doc in the first parallel batch with the other required docs."
+  - session: session_013zxzeRWFHU5d6sAXJTbbP7
+    date: "2026-11-08"
+    severity: nit
+    description: "Ran orient.ts, which calls the GitHub API, and gh api search in the same batch as reading github-integration.md, so the doc was not read first."
+    solution: "Read the GitHub doc in an earlier turn; a script that calls the API could also be named in that CLAUDE.md trigger."
+  - session: session_013zxzeNm7AawB63t1M33Hse
+    date: "2026-11-08"
+    severity: nit
+    description: "Ran git log before reading docs/agents/git-conventions.md; a hook flagged it. Read-only, no harm."
+    solution: "Read the doc first, or avoid git log when a file read suffices."
