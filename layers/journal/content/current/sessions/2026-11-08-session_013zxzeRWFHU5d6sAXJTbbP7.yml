@@ -1,0 +1,73 @@
+schemaVersion: 1
+session: session_013zxzeRWFHU5d6sAXJTbbP7
+startedAt: 2026-11-08T11:49:04Z
+endedAt: 2026-11-08T11:59:45Z
+kind: interactive
+goal: Load the project overview and file an issue for a planning Skill
+status: completed
+outcome: Issue 2975 filed, blocked by the Glass Box description rewrite (2945)
+summary: The kickoff prompt was only "start", so I asked for the task. The owner then asked me, step by step, to read every file in .claude/rules/, the Glass Box guide index.md, and the title and description of every guide page via the glassbox-curate orient script. All of that was human-instructed. The owner then asked whether that load (about 40k tokens) gives a dense overview and whether a mandatory planning Skill should load it. I judged it useful for planning sessions (path-scoped rules never load for them) but suggested trimming it to the ADR summaries, index.md and the page list. The owner asked for an issue, linked to the existing description-rewrite issue 2945, saying the Skill would be another consumer of the new descriptions. I filed 2975 with needs-triage and marked it unapproved. The trimming proposal was my own judgement and is labelled as assumption in the issue. No code, branch or PR was created.
+prs: []
+docsRead:
+  - path: layers/glassbox/content/guide/pages/index.md
+    reason: overview of who decides, change flow, repo layout and deploy; asked for by the owner
+    useful: yes
+  - path: .agents/skills/glassbox-curate/SKILL.md
+    reason: showed how to run orient.ts and that its guide-page section is the title list
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP tool mapping (issue_write, issue_read) and the cloud-session limits before filing
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: "filing convention: separate verified fact from assumption, so the issue does"
+    useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: only triage sets ready labels, so I filed with needs-triage
+    useful: yes
+  - path: .agents/skills/glassbox-curate/scripts/orient.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: session closure, no PR opened
+  - name: log-session
+    reason: author this log
+frictions:
+  - description: Stated the guide-page list had 73 lines, and about 30 ADR rules, from memory; actual list had 72 lines. Counted only when asked to file the issue.
+    solution: Count with wc or grep -c before stating any number, as CLAUDE.md Verify before you state requires.
+    severity: minor
+  - description: Ran orient.ts, which calls the GitHub API, and gh api search in the same batch as reading github-integration.md, so the doc was not read first.
+    solution: Read the GitHub doc in an earlier turn; a script that calls the API could also be named in that CLAUDE.md trigger.
+    severity: nit
+durationSec: 641
+models:
+  claude-sonnet-5-5: 74
+toolCounts:
+  Glob: 2
+  Read: 43
+  Bash: 4
+  ToolSearch: 1
+  mcp__github__issue_read: 1
+  mcp__github__issue_write: 1
+  Skill: 2
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: About gating and merging PRs; no PR was opened, so it did not apply and I did not open the ADR.
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: Told me this log goes straight to main via close-session; summary was enough, I did not open the ADR.
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Made me file the Skill as an unapproved proposal issue, not build it; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header as line one of the issue body; summary was enough.
+    useful: yes
+gitBranch: claude/nifty-einstein-y8pye7
+entrypoint: remote
+cliVersion: 2.1.319
+landedBy: Stop
