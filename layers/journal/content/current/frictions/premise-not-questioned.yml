@@ -2,7 +2,7 @@ name: premise-not-questioned
 summary: >-
   Agents built or hardened a change without first asking whether it should exist at all.
 cause: >-
-  An agent implements or hardens a solution before asking whether the change should exist or how big it should be; the triage-brief shape was fixed 2026-10-06 (auto-triage SKILL line 57), later cases differ.
+  An agent implements or hardens a solution before asking whether the change should exist or how big it should be; the triage-brief shape was fixed 2026-10-06 (auto-triage SKILL line 57); the glassbox-curate memory-lead case (2026-11-07) was fixed by #2973 with a Skill-local check; later cases differ.
 surface: safe
 status: open
 ref: "issue #2520 closed by PR #2535"
@@ -19,6 +19,9 @@ fixes:
   - pr: 2863
     date: "2026-11-05"
     summary: "CLAUDE.md Ask before building: clarify all user-facing UI with extra care, settling in the first round what each displayed value (label, hover, metric) follows (closes #2853)."
+  - pr: 2973
+    date: "2026-11-08"
+    summary: "glassbox-curate SKILL.md: before taking any lead from the memory page, check it still stands and that no earlier step (settled titles, a pending Subject move) should come first (closes #2958)."
 occurrences:
   - session: session_013zxzeQ8EBq9v7NXqWmAFRF
     date: "2026-10-27"
