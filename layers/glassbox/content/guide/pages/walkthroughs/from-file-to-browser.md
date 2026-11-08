@@ -1,6 +1,6 @@
 ---
 title: From file to browser
-description: How a Markdown file in a Tenant folder becomes a table, a dump, a rendered page and a payload the browser reuses.
+description: How a Markdown file becomes a page on a visitor's screen, by way of a database table, a server render and data the browser reuses.
 teaches: "Story: a Blog post's Markdown file reaching a visitor's screen. Start: layers/blog/content/david/pages/. End: the browser navigates by _payload.json, or queries its own SQLite built from the dump. Code: content.config.ts, expand(), key blog_david_pages, pnpm build, nuxt build, SQL dumps, Caddy, Nitro page cache, useSpace, useAsyncData, queryCollection, checksum restore, hydration. No A real case."
 revision: 'f16509d1024b69585d7fc7387d135682ad39b9b6'
 revisionDate: '2026-11-08'

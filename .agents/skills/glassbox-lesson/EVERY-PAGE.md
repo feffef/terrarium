@@ -31,7 +31,9 @@ parentheses or code identifier unless that is the concept's name
 ambiguous outside its Subject (*Claude Code hooks*). A Walkthrough's title names its story.
 `description` is one plain sentence a visitor reads before clicking, on the
 page's search snippet, the home page and Commons Search: it names the concept
-and what the page shows of it, not a list of keywords.
+and what the page shows of it, not a list of keywords. Write it for a web
+developer new to the tool: a product's name is fine, a code name, config key or
+Terrarium term is not, since `teaches` holds those.
 `teaches` is for agents only: `glassbox-curate`'s guide index prints it, with
 the bold lead-ins of the page's Why and What to watch for bullets (a
 Walkthrough's stop headings), so a run learns what the page teaches without

@@ -1,6 +1,6 @@
 ---
 title: A session log lands on main
-description: How an agent session's record of its work reaches main without a PR, from the agent's judgement to one commit built by git plumbing.
+description: How an agent session's record of its work reaches the main branch without a pull request, in one commit built by low-level Git.
 teaches: "Story: a session log reaching main without a PR, from the agent's side. Start: the agent runs close-session. End: the Journal's dashboard; pnpm validate:content checks it. Code: log-session, log-session.ts --author and --land, pending.scratch.json, Stop, SessionEnd, SessionStart hooks, transcript-trace.ts, main's schema, read-tree, commit-tree, push to refs/heads/main, retried. No A real case."
 revision: 'f16509d1024b69585d7fc7387d135682ad39b9b6'
 revisionDate: '2026-11-08'
