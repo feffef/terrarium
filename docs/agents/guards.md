@@ -28,6 +28,7 @@ follow it and don't route around it. If it is wrong, say so on the guard's issue
 | `dispatch-read-guard.ts` | a **main-session** `Agent`, `Workflow` or `SendMessage` call before the transcript shows the `dispatch-subagents` Skill invoked or its `SKILL.md` read | CLAUDE.md | #2543 |
 | `harness-tag-stop.ts` | blocks the stop once when this turn's main-agent text holds a `<task-notification>` or `<agent-message` tag, which only the harness delivers | its script header | #2499, #2503 |
 | `merge-close-stop.ts` | blocks the stop once when this session merged a PR and `close-session` has not run since, by log-session's own `closureRefusal` test | its script header | #2913 |
+| `pr-subscribe-stop.ts` | blocks the stop once when this session opened a PR (`create_pull_request`) and never called `subscribe_pr_activity` | its script header | #2961 |
 | `stale-push-hint.ts` | nothing: a hint, not a guard. After a `git push` rejected as "stale info" it adds the fix to the result | its script header | #1610 |
 | `skill-rules-hint.ts` | nothing: a hint, not a guard. When a Skill runs (Skill tool or slash command) it adds the rules whose `paths` name the Skill's directory | its script header | PR #1741 |
 | `bash-rules-hint.ts` | nothing: a hint, not a guard. After a piped, chained or multi-file Bash read it adds the rules whose `paths` match the files read | its script header | #1764 |
@@ -35,11 +36,11 @@ follow it and don't route around it. If it is wrong, say so on the guard's issue
 | `adr-read-hint.ts` | nothing: a hint, not a guard. After an `Edit`, a `Write` or a Bash `git commit` it points to each ADR whose rule `paths` match a file written, or that the change names, unless this agent already read it in full | its script header | #2286, #2433 |
 
 `.claude/settings.json` wires the guards under `hooks.PreToolUse`, and the hints
-under `PostToolUse`, `PostToolUseFailure` and `UserPromptSubmit`; `harness-tag-stop.ts` and `merge-close-stop.ts` run under `Stop`.
+under `PostToolUse`, `PostToolUseFailure` and `UserPromptSubmit`; `harness-tag-stop.ts`, `merge-close-stop.ts` and `pr-subscribe-stop.ts` run under `Stop`.
 
 ## Conventions every guard follows
 
-- **A crash.** A crashing hint, `deferred-tool-guard`, `harness-tag-stop` or `merge-close-stop`
+- **A crash.** A crashing hint, `deferred-tool-guard`, `harness-tag-stop`, `merge-close-stop` or `pr-subscribe-stop`
   lets the action go ahead (each uses a bare `|| true`). Any other guard that crashes or can't read
   its context or payload blocks it: its hook entry sets `"onFailure": "block"`,
   which also blocks when the hook can't start or times out (#2073). That needs
