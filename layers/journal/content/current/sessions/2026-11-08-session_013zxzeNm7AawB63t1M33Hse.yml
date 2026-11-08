@@ -1,13 +1,14 @@
 schemaVersion: 1
 session: session_013zxzeNm7AawB63t1M33Hse
 startedAt: 2026-11-08T13:16:57Z
-endedAt: 2026-11-08T13:18:15Z
-kind: delegated
-goal: Find repo parts to update after a Routine schedule change
-status: completed
-outcome: Answered with a list of stale references; no files changed
-summary: "The owner said glassbox-curate now runs as a daily scheduled Routine and visitor-loop's schedule is paused, and asked what to update. I grepped the repo for both names and read the Journal Routine records, the Skill Inventory entries, the Glass Box scheduled-tasks page and the cadence check. Finding: schedules live outside git by design, so little needs editing. Stale items are the glassbox-curate Inventory role (\"Human-started, not scheduled\"), its SKILL.md description (\"Started by a person\"), and possibly the interactive-map spec (omits glassbox-curate; says visitor-loop starts on its timer). A Routine cost record and chart for glassbox-curate is audit-skills' job. Everything was agent-initiated research answering the owner's direct question; nothing was edited. I will ask the owner before editing."
-prs: []
+endedAt: 2026-11-08T13:31:48Z
+kind: interactive
+goal: Update Skills and map for a new Routine and a paused one
+status: in-review
+outcome: PR 2978 open with the edits, gate green, awaiting CI and merge
+summary: "The owner asked which repo parts to update after glassbox-curate became a scheduled Routine and visitor-loop's schedule was paused (agent research, an owner question). The owner then directed three edits (human-instructed): fix glassbox-curate's misleading description to name its three ways of running, update the interactive map spec, and teach audit-skills that a Routine can be paused or removed. I made those edits and also trimmed the Inventory role and folded the map's Leave-out bullets after the two-axis review (agent judgement). Per ADR-0005 schedules live outside git, so I left the paused state off the map and out of Inventory. Opened PR 2978 myself under ADR-0003 once the gate passed; no Human-only file is touched. Open: audit-skills will add the glassbox-curate Routine file and chart on its own."
+prs:
+  - "2978"
 docsRead:
   - path: .agents/skills/glassbox-curate/SKILL.md
     reason: showed its autonomous mode already exists; description line is stale
@@ -15,10 +16,41 @@ docsRead:
   - path: .agents/skills/visitor-loop/SKILL.md
     reason: confirmed it states no schedule, so needs no change
     useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: commit and push hygiene; read after the first git log
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: review-before-PR order, simple-change test, scheduled-PR steps
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: use MCP for PR writes in the cloud
+    useful: yes
+  - path: docs/adr/0005-skill-model.md
+    reason: schedules live outside the repo, so paused state stays off docs
+    useful: yes
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: what audit-skills may change and the routine grade
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: checked no open trial covers the edited files
+    useful: partly
+  - path: docs/diagrams/interactive-map/spec.md
+    reason: story style, routine panel table and Leave-out rules I followed
+    useful: yes
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: step 5 grading rules where the stopped-Routine bullet went
+    useful: yes
+  - path: layers/journal/GLOSSARY.md
+    reason: Journal terms for the Inventory edit; nothing needed
+    useful: partly
 skillsUsed:
   - name: close-session
     reason: (no reason given)
   - name: log-session
+    reason: (no reason given)
+  - name: code-review
+    reason: (no reason given)
+  - name: dispatch-subagents
     reason: (no reason given)
 frictions:
   - description: Ran git log before reading docs/agents/git-conventions.md; a hook flagged it. Read-only, no harm.
@@ -30,14 +62,34 @@ frictions:
   - description: A repo-wide grep (28KB) and a dump of whole Routine run files flooded context for little value.
     solution: Use count mode or head limits on Journal Routine records.
     severity: minor
-durationSec: 78
+  - description: Explained Routines without first reading the Glass Box overview page that CLAUDE.md requires for such explanations.
+    solution: Read layers/glassbox/content/guide/pages/index.md before answering.
+    severity: minor
+  - description: Edited governed Skill, spec and Inventory files before reading ADR-0005, 0015 and 0027; hooks told me to read them afterwards.
+    solution: Read each ADR a rule summary names before the first edit under its paths.
+    severity: minor
+  - description: First role edit used a malformed old_string and failed; a retry fixed it.
+    solution: Copy the exact block from the file before editing.
+    severity: nit
+durationSec: 891
 models:
-  claude-sonnet-5-5: 20
+  claude-sonnet-5-5: 94
 toolCounts:
   Grep: 1
-  Bash: 7
-  Skill: 2
-  Write: 1
+  Bash: 30
+  Skill: 5
+  Write: 2
+  Edit: 13
+  Agent: 2
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - .agents/skills/glassbox-curate/SKILL.md
+  - layers/journal/content/current/skills/glassbox-curate.yml
+  - docs/diagrams/interactive-map/spec.md
+  - .agents/skills/audit-skills/SKILL.md
 rulesLoaded:
   - .claude/rules/adr-0015.md
   - .claude/rules/mermaid-lanes.md
@@ -59,6 +111,23 @@ rulesGlobal:
   - .claude/rules/adr-0009.md
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0027.md
+adrHints:
+  - adr: 5
+    via: path
+    readAfter: true
+    by: main
+  - adr: 27
+    via: path
+    readAfter: true
+    by: main
+  - adr: 15
+    via: path
+    readAfter: true
+    by: main
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
     reason: About PR gating; no PR was opened. Summary was enough, did not open the ADR.
@@ -117,6 +186,21 @@ ruleVerdicts:
   - path: .claude/rules/tenant-layers.md
     reason: About Tenant code; no code was touched.
     useful: no
+subagents:
+  - type: general-purpose
+    task: Standards review of diff
+    model: sonnet
+    durationSec: 32
+    toolCalls: 7
+    modelCalls: 4
+    tokenShare: 10.4
+  - type: general-purpose
+    task: Spec review of diff
+    model: sonnet
+    durationSec: 27
+    toolCalls: 6
+    modelCalls: 5
+    tokenShare: 10.8
 gitBranch: claude/focused-mayer-wukdwq
 entrypoint: remote
 cliVersion: 2.1.319
