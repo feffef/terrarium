@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeS3L4tvAUKm5q3d9qD
 startedAt: 2026-11-08T02:07:40Z
-endedAt: 2026-11-08T02:26:58Z
+endedAt: 2026-11-08T02:30:57Z
 kind: autonomous
 goal: Turn recent session Frictions into fixes
-status: in-review
-outcome: "Ledger PR #2963 open and gated; five issues filed (#2958-#2962); no fix dispatched"
-summary: "Scheduled frictions-to-fixes run (agent-initiated by the schedule; no human steer). A survey subagent appended 95 occurrences to the Friction Ledger (9 new entries, fixes recorded for 7 merged PRs) and ranked candidates. I filed regression issues for the top three still-recurring entries (#2958 premise-not-questioned, #2959 harness-proxy-blocks, #2960 frictions-to-fixes-skill-gaps), skipping dispatch-read-guard-deny because the owner closed #2580 as not planned. A design subagent covered six picks: the PR-subscribe Stop hook (#2961) and the glassbox-curate mode-detection wording (#2962) were filed as issues, since one is a Human-only guard and the other rests on an unverified Routine signal; the other four picks were dropped with notes in the ledger. Nothing was dispatched to build, so no fix PRs and no closing ledger PR. The ledger PR #2963 holds both commits; gate:scoped passed; verdict comment posted; subscribed. Open: PR merge by CI green."
+status: completed
+outcome: "Ledger PR #2963 merged; five issues filed (#2958-#2962); no fix dispatched"
+summary: "Scheduled frictions-to-fixes run (agent-initiated by the schedule; no human steer). A survey subagent appended 95 occurrences to the Friction Ledger (9 new entries, fixes recorded for 7 merged PRs) and ranked candidates. I filed regression issues for the top three still-recurring entries (#2958 premise-not-questioned, #2959 harness-proxy-blocks, #2960 frictions-to-fixes-skill-gaps), skipping dispatch-read-guard-deny because the owner closed #2580 as not planned. A design subagent covered six picks: the PR-subscribe Stop hook (#2961) and the glassbox-curate mode-detection wording (#2962) were filed as issues, since one is a Human-only guard and the other rests on an unverified Routine signal; the other four picks were dropped with notes in the ledger. Nothing was dispatched to build, so no fix PRs and no closing ledger PR. The ledger PR #2963 held both commits; gate:scoped passed; verdict posted; merged by merge-pr.ts. The PR merged after one refusal: merge-pr.ts rejected my body's 'Fixes: #2961' as a closing keyword on an unready issue, so I reworded it to 'relates to'."
 prs:
   - "2963"
 docsRead:
@@ -66,18 +66,27 @@ frictions:
   - description: The stop hook asked twice to push unpushed commits while the ledger gate was still running, though the Skill and git rules say not to push during a gate run.
     solution: "Accepted cost (issue #2233); none."
     severity: nit
-durationSec: 1158
+  - description: "merge-close-stop blocked the stop twice saying a PR merged while #2963 was still open and merge-pr.ts was only waiting on CI."
+    solution: Fire the hook only once the PR is merged, not when merge-pr.ts starts (ledger entry merge-close-hint-fires-without-merge).
+    severity: minor
+  - description: "My PR body wrote 'Fixes: #2961' as a label for a filed issue; merge-pr.ts refused it as a closing keyword and cost a rerun."
+    solution: "Write 'relates to #N' for issues a PR does not complete, as pr-workflow.md says."
+    severity: nit
+durationSec: 1397
 models:
-  claude-sonnet-5-5: 58
+  claude-sonnet-5-5: 85
 toolCounts:
-  Bash: 16
+  Bash: 24
   Agent: 3
-  Skill: 3
+  Skill: 4
   ToolSearch: 1
   mcp__github__issue_write: 5
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   mcp__github__add_issue_comment: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__github__update_pull_request: 1
 filesEdited:
   - layers/journal/content/current/frictions/adhoc-script-timestamp-mismatch.yml
   - layers/journal/content/current/frictions/adr-read-after-edit.yml
@@ -240,13 +249,13 @@ subagents:
     durationSec: 539
     toolCalls: 46
     modelCalls: 38
-    tokenShare: 45.6
+    tokenShare: 38.2
   - type: general-purpose
     task: Design fixes for picks
     durationSec: 222
     toolCalls: 29
     modelCalls: 28
-    tokenShare: 18.1
+    tokenShare: 15.2
 gitBranch: claude/eager-ptolemy-le57rp
 entrypoint: remote_trigger
 cliVersion: 2.1.319
