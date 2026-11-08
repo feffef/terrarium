@@ -3,9 +3,9 @@ pages:
     checked: '2026-11-07'
   - page: agents/20.workflow-scripts
     checked: '2026-11-07'
-  - page: agents/40.scheduled-tasks
-    checked: '2026-11-07'
   - page: agents/30.cloud-sessions
+    checked: '2026-11-07'
+  - page: agents/40.scheduled-tasks
     checked: '2026-11-07'
   - page: claude-code/10.claude-md
     checked: '2026-11-07'
@@ -15,6 +15,16 @@ pages:
     checked: '2026-11-07'
   - page: claude-code/40.permissions
     checked: '2026-11-07'
+  - page: claude-code/50.mcp-servers
+    checked: '2026-11-08'
+  - page: deploy/10.continuous-deployment
+    checked: '2026-11-08'
+  - page: deploy/20.pnpm-lockfile
+    checked: '2026-11-08'
+  - page: git-github/10.pull-requests
+    checked: '2026-11-08'
+  - page: git-github/20.author-trust
+    checked: '2026-11-08'
   - page: hooks/10.hooks
     checked: '2026-11-07'
   - page: hooks/20.blocking-hooks
