@@ -23,8 +23,8 @@ that one commit, never a later fetch.
    report. Done when you hold it.
 2. **Advance.** Run the script with `--write --to <the commit>`: it shifts
    moved `lines` ranges and pins every page without an `edited` range to the
-   commit. A page with an `edited` range is left wholly untouched: no pin, no
-   shifted `lines`.
+   commit. A page with an `edited` range is left wholly untouched, shifted
+   `lines` included.
 3. **Flag.** Every page in the step-1 report's `pages` is flagged, and so is
    every term in `terms`. Then read `git log` and `git diff` from each page's
    step-1 `revision` to the commit, and flag any page whose prose describes
