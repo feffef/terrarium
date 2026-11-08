@@ -20,26 +20,11 @@ fixes:
     date: "2026-10-25"
     summary: "Cut the Verify-before-you-state family to one plain home in CLAUDE.md and dropped its restatements in four Skills and the build reviewer."
 occurrences:
-  - session: session_015P9szA8dP4wxv4wiXkZcRZ
-    date: "2026-10-24"
-    severity: minor
-    description: "Told the owner the guide had 25 Lessons before counting; it has 20 (I had counted Walkthroughs and the index). Breaks CLAUDE.md's verify-before-you-state."
-    solution: "Count from the file list (excluding walkthroughs/ and index.md) before stating a number."
-  - session: session_01BjA9rHbNdMX5KiK49Cee99
-    date: "2026-10-24"
-    severity: nit
-    description: "I told the review agent there were 30 draft Lessons from eyeballing a wc listing; there are 31. The agent corrected it."
-    solution: "Count with a command (ls | wc -l) before putting a count in a brief, per CLAUDE.md 'Verify before you state'."
   - session: session_01FDWjoePShpq7fov1iKn4GB
     date: "2026-10-25"
     severity: minor
     description: "First Digest draft overstated a session's fabricated-report count and glossed three re-cuts as two-idea splits; fact-check caught both."
     solution: "Quote the session's own wording or the source count instead of paraphrasing from gather output"
-  - session: session_015bAGZEdCYZMYbsoFckSH59
-    date: "2026-10-24"
-    severity: nit
-    description: "Wrote 'Six renames' in the PR body while listing eight titles."
-    solution: "Count the list before writing a number; fix the description in the next push."
   - session: session_01PGQQj6iUaMYCkphVjFEsBP
     date: "2026-10-25"
     severity: nit

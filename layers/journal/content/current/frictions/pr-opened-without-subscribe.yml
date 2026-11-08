@@ -2,7 +2,8 @@ name: pr-opened-without-subscribe
 surface: safe
 summary: After opening a PR, agents did not subscribe to its activity or did not read all of it, so merges and owner comments reached them late or only when the owner asked.
 cause: "ADR-0003 says to subscribe to a PR's activity after opening it and keep working until it is merged; sessions end the turn or poll by hand without calling subscribe_pr_activity, close as in-review though the PR merges minutes later, or read only review threads and CI after an event and miss PR-level comments. Signals: 'without subscribing', 'never called subscribe_pr_activity', 'sat until the owner merged it', 'the owner had to ask whether I was subscribed', 'missed the owner's PR-level comments'."
-status: open
+status: tracked
+ref: "issue #2961"
 occurrences:
   - session: session_013zxzeS85pNBsS4oQSVQntp
     date: "2026-11-07"

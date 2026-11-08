@@ -25,11 +25,6 @@ fixes:
     date: "2026-10-31"
     summary: "CLAUDE.md and the clear-backlog workflows' shared brief line ask each subagent to give every count, id or attribution with its source (command or file:line) or mark it unverified."
 occurrences:
-  - session: session_01XUmLg8WmTPPmqqnjHA59oX
-    date: "2026-10-24"
-    severity: minor
-    description: "Ledger first said a #1712 was 'read by the subagent' and that #2233 showed the inherited-commits advice failed; Spec review caught both overstatements."
-    solution: "Cite only what I read this run and check each issue is about the rule being pruned before naming it as its failure."
   - session: session_01S9UeKa9mCWdPVBjAezCSaL
     date: "2026-10-25"
     severity: minor

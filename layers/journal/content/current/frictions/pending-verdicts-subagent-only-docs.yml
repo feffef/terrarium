@@ -3,6 +3,8 @@ surface: safe
 summary: The session-closing verdict list asked for a verdict on dozens of docs that only helper agents had read, which cost a long pass for little guidance.
 cause: "log-session --pending lists every rule and doc any subagent loaded or grepped, including evidence-gathering reads at a pinned commit, so the lead writes verdicts it cannot judge as guidance. Signals: 'pending report lists 20 subagent-only rules and docs', 'asked for verdicts on 27 docs that only subagents grepped'."
 status: open
+notes: |-
+  2026-11-08 design: no change dropped: nit, and log-session --pending already prints that the list is a reminder and an omitted entry shows 'no verdict provided'
 occurrences:
   - session: session_013zxzePZAMHv4JxrNhCtzMg
     date: "2026-11-06"

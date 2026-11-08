@@ -5,6 +5,8 @@ cause: "Hook-injected or session-start rule files (adr-0005, adr-0021, adr-0027,
 surface: guard-or-hook
 status: open
 ref: "issue #2167 closed 2026-10-23: owner kept bash-rules-hint.ts as is; no open issue or trial tracks it."
+notes: |-
+  2026-11-08 design: narrow mermaid-lanes.md paths to the Glass Box walkthroughs dropped: .claude/rules/** is Human-only, a nit, and the tenant.config.ts rules are right for editing (RCCqrx agreed); issue #2167 already closed with the loader kept
 occurrences:
   - session: session_01PGQQj6iUaMYCkphVjFEsBP
     date: "2026-10-25"

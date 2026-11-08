@@ -28,11 +28,6 @@ fixes:
     date: "2026-10-28"
     summary: "ledger-set.ts sets summary, cause and surface on an existing entry; prune-friction-ledger.ts --move writes block style into an entry created with empty occurrences."
 occurrences:
-  - session: session_015rVYXi9nGNG7zeGoi2R9ha
-    date: "2026-10-24"
-    severity: nit
-    description: "Brief cannot set ledger notes through ledger-set.ts, so recording a dropped design needed a hand edit of the YAML."
-    solution: "Add a --note flag to ledger-set.ts."
   - session: session_019jfJv6yLmcLUAJiTTomyeu
     date: "2026-10-25"
     severity: minor

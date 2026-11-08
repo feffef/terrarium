@@ -3,6 +3,8 @@ surface: outside
 summary: Examples written in chat before an AskUserQuestion were not visible to the owner in the app, so showing them took extra rounds.
 cause: "One session wrote examples in chat before an AskUserQuestion and the owner could not see them in the app, so showing them took two more rounds. Signals: 'were not visible to the owner in the app', 'two extra rounds to show them'. One occurrence; the mechanism is unverified."
 status: open
+notes: |-
+  2026-11-08 design: no change dropped: one occurrence and the app's chat-before-AskUserQuestion rendering cannot be verified from the repo; reopen on a second session
 occurrences:
   - session: session_013zxzeQWJUyfuXJgdfypeuc
     date: "2026-11-07"

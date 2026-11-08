@@ -11,16 +11,6 @@ fixes:
     date: "2026-10-16"
     summary: "The double-background guard's deny message now says the whole call was denied and nothing in it ran."
 occurrences:
-  - session: session_013SbWSgqz4tjVcTMz9vF1mu
-    date: "2026-10-24"
-    severity: nit
-    description: "Combined `nohup ... &` with `run_in_background: true` for gate:scoped, blocked by the double-background guard (#1208); its bundled `mkdir -p` also silently never ran, costing a second retry to recreate the log directory"
-    solution: "Pass run_in_background: true with a plain foreground command only, never nohup/&; never bundle an mkdir into a command that might be blocked"
-  - session: session_015rVYXi9nGNG7zeGoi2R9ha
-    date: "2026-10-24"
-    severity: nit
-    description: "First background gate call stacked run_in_background with a trailing & and the double-background guard blocked it; resent as separate calls."
-    solution: "None needed; the guard message was clear."
   - session: session_01Cb8ETAZztznLYx6CC7MKyE
     date: "2026-10-26"
     severity: nit

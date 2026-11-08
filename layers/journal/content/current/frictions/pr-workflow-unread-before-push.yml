@@ -8,11 +8,6 @@ status: open
 notes: |-
   2026-10-28 design: dropped: the fix is a read-first hint entry in read-first-hint.ts (Human-only); the five slips of this and pr-workflow-read-in-part span 10-19 to 10-24 with none since, and the two have different causes.
 occurrences:
-  - session: session_01FzJhmX3omaAFqoXjXWkcyK
-    date: "2026-10-24"
-    severity: minor
-    description: "Merged a PR without first reading docs/agents/pr-workflow.md, which CLAUDE.md requires before merging; the Skill's step named merge-pr.ts directly."
-    solution: "Point the dependabot-sweep Skill's merge step at pr-workflow.md, or have merge-pr.ts remind."
   - session: session_013zxzeRJEE2ehNrQTL62nhX
     date: "2026-11-06"
     severity: nit

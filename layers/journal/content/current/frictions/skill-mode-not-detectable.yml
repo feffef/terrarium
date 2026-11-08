@@ -2,7 +2,8 @@ name: skill-mode-not-detectable
 surface: safe
 summary: A Skill that branches on interactive versus scheduled mode gave no way to tell which, so the agent spent a question on it.
 cause: "Skills that say 'in interactive mode, ask' (glassbox-curate, glassbox-update) are invoked with no sign of whether a person or a Routine started the run, so the agent asks the user which mode applies. Signals: 'no way to tell the mode', 'carried no sign of whether a person or a Routine started the run'."
-status: open
+status: tracked
+ref: "issue #2962"
 occurrences:
   - session: session_013zxzeRwjiiLkjj6sQ3u49g
     date: "2026-11-07"

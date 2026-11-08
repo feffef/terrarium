@@ -20,11 +20,6 @@ fixes:
     date: "2026-10-31"
     summary: "describeEntry counts since from in-horizon occurrences only; survey-brief section 5 sends an issue closed not planned to accepted."
 occurrences:
-  - session: session_015rVYXi9nGNG7zeGoi2R9ha
-    date: "2026-10-24"
-    severity: minor
-    description: "The skill says to open three regression issues by severity, but the two highest-severity candidates (major, moderate) were not real regressions and needed checking against ledger dates by hand."
-    solution: "Have the survey report mark whether the recurrence post-dates the issue's closure."
   - session: session_01S9UeKa9mCWdPVBjAezCSaL
     date: "2026-10-25"
     severity: nit

@@ -13,11 +13,6 @@ fixes:
     date: "2026-10-31"
     summary: "gate:scoped takes a per-checkout pid lock and exits 1 if a live gate already runs there; a dead pid is taken over."
 occurrences:
-  - session: session_01BjA9rHbNdMX5KiK49Cee99
-    date: "2026-10-24"
-    severity: moderate
-    description: "I started gate:scoped in the background, got an early 'completed' notice with a truncated log, and started two more runs that overlapped and clobbered .nuxt and the build lock."
-    solution: "Before rerunning a gate, check with ps that no gate.ts or nuxt process is alive; run it in the foreground with a 600s timeout when it fits."
   - session: session_013zxzePtHJNqS19fEy1yRGv
     date: "2026-10-29"
     severity: minor
