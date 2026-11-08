@@ -13,6 +13,8 @@ export default defineTenant({
       schema: z.object({
         title: z.string(),
         description: z.string(),
+        // Read by glassbox-curate's orientation, not shown to visitors (EVERY-PAGE.md, Pin).
+        teaches: z.string().optional(),
         revision: z.string().regex(/^[0-9a-f]{40}$/, 'revision must be a full commit hash'),
         revisionDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'revisionDate must be YYYY-MM-DD'),
       }),

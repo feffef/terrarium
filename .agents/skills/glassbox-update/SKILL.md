@@ -32,7 +32,7 @@ that one commit, never a later fetch.
    change also flags *The concept* of every Lesson whose Full reference links that tool's docs.
    Done when every commit since the oldest `revision` has been read against
    every page.
-4. **Re-check and edit** each flagged page as a whole, diagrams included,
+4. **Re-check and edit** each flagged page as a whole, diagrams and `teaches` included,
    against the commit, and pin it there (EVERY-PAGE.md's Pin, with the
    commit in place of `origin/main`); re-line each `edited` range by hand as
    you pin. A flagged term: re-read its `source` entry and rewrite the

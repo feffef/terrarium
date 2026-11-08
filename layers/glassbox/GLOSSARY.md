@@ -70,7 +70,7 @@ Its body follows one contract, which the page frames like design 1b
 - `## In Terrarium`, with `### Why it's built this way` and
   `### What to watch for`. Why it's built this way gives each reason one
   short bullet a newcomer can follow, with no unexplained jargon. The bullet
-  opens with a bold lead-in naming the reason, then says the problem, what
+  opens with a bold lead-in stating the reason, then says the problem, what
   Terrarium chose, and, after `The cost:`, what that costs, if anything. It may
   end with the ADR that records the decision, as `ADR-NNNN (:file[…])`, or, when
   no ADR does, with the file that holds the reason, as `:file[…]`; never a

@@ -279,8 +279,9 @@ function nextProblems(prose: string, lesson: boolean): string[] {
   return problems
 }
 
-// Caps keep each `title` and `description` short wherever pages are listed (EVERY-PAGE.md, Pin).
-const lengths = { lesson: { title: 28, description: 120 }, walkthrough: { title: 36, description: 140 } }
+// Caps keep each `title` and `description` short wherever pages are listed, and `teaches` short enough
+// that glassbox-curate's guide index stays one Read (EVERY-PAGE.md, Pin).
+const lengths = { lesson: { title: 28, description: 120, teaches: 400 }, walkthrough: { title: 36, description: 140, teaches: 400 } }
 const lessonTitleWords = 4
 
 function lengthProblems(route: string, frontmatter: Record<string, unknown>): string[] {
@@ -288,7 +289,8 @@ function lengthProblems(route: string, frontmatter: Record<string, unknown>): st
   if (!limit) return []
   const words = String(frontmatter.title ?? '').split(/\s+/).filter(Boolean).length
   const wordProblems = glassboxSubjectOf(route) && words > lessonTitleWords ? [`title "${frontmatter.title}" is ${words} words, more than ${lessonTitleWords}`] : []
-  return [...wordProblems, ...(['title', 'description'] as const).flatMap((field) => {
+  const missing = frontmatter.teaches === undefined ? ['no teaches'] : []
+  return [...wordProblems, ...missing, ...(['title', 'description', 'teaches'] as const).flatMap((field) => {
     const text = String(frontmatter[field] ?? '')
     return text.length > limit[field] ? [`${field} "${text}" is ${text.length} chars, more than ${limit[field]}`] : []
   })]
@@ -386,13 +388,13 @@ export function glassboxOrphans(sources: Record<string, string>): string[] {
   return Object.keys(sources).filter((f) => f !== 'index.md' && !linked.has(glassboxSitePath('guide', f))).sort()
 }
 
-/** Each guide page's title, title-word and description cap problems, by file under `pages/`. */
+/** Each guide page's title, title-word, description and teaches cap problems, and a missing teaches, by file under `pages/`. */
 export function glassboxLengthProblems(sources: Record<string, string>): string[] {
   return Object.entries(sources).flatMap(([file, source]) => lengthProblems(`/${contentRoute(file)}`, splitFrontmatter(source).frontmatter).map((p) => `guide/pages/${file}: ${p}`)).sort()
 }
 
 // Usage: pnpm exec tsx layers/glassbox/page-checks.ts [--lengths]: prints every page's warnings and the guide's
-// orphans; with --lengths, fails on a title or description over its cap, so `pnpm validate:content` catches it.
+// orphans; with --lengths, fails on a title, description or teaches over its cap or a missing teaches, so `pnpm validate:content` catches it.
 runIfMain(import.meta.url, () => {
   const content = join(root, 'layers/glassbox/content')
   if (process.argv.includes('--lengths')) {

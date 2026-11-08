@@ -11,3 +11,4 @@ order added, with where it was made.
 - *Continuous deployment*'s Full reference stays Wikipedia: a practice has no official docs (review, #2500).
 - A glossary term is lowercase in a title like any common noun (*Installed skills*, *Reading across tenants*); only proper nouns and acronyms keep capitals (owner, curate run of 2026-11-07).
 - *Adding a site* keeps its plain word: the overview introduces "site" before "Tenant" (owner, curate run of 2026-11-07).
+- `description` serves visitors and `teaches` serves agents; an edit to either, or to a bold lead-in's wording alone, keeps `revision` and `publishedAt`, since it changes no claim (owner, #2945).
