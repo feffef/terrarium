@@ -17,20 +17,37 @@ const recentRuns = 5
 /** Text with its MDC and link markup reduced to the words a reader sees. */
 const plainText = (s: string) => s.replace(/:\w+\[([^\]]*)\](\{[^}]*\})?/g, '$1').replace(/\[([^\]]*)\]\([^)]*\)/g, '$1').replace(/[.,:;]+$/, '')
 
-/** The bold lead-in of each bullet in the `### <heading>` section of `body`. */
+/** The guide pages a line links, by path under the guide: where a shared point may have its home. */
+const guideLinks = (line: string) => [...new Set([...line.matchAll(/\]\(\/t\/glassbox\/guide\/([^)#]+)/g)].map((m) => m[1]!))]
+
+/** The bold lead-in of each bullet in the `### <heading>` section of `body`, with the guide pages it links. */
 function leadIns(body: string, heading: string): string[] {
   const lines = body.split('\n')
   const at = lines.indexOf(`### ${heading}`)
   if (at < 0) return []
   const end = lines.findIndex((l, i) => i > at && /^#{2,3} /.test(l))
-  return lines.slice(at + 1, end < 0 ? undefined : end).flatMap((l) => /^- \*\*(.+?)\*\*/.exec(l)?.[1] ?? []).map(plainText)
+  return lines.slice(at + 1, end < 0 ? undefined : end).flatMap((l) => {
+    const lead = /^- \*\*(.+?)\*\*/.exec(l)?.[1]
+    if (!lead) return []
+    const links = guideLinks(l)
+    return [`${plainText(lead)}${links.length ? ` → ${links.join(', ')}` : ''}`]
+  })
+}
+
+/** Each numbered stop of a Walkthrough, with the titles of the Lessons its `::lessons` row links. */
+function stops(body: string): string[] {
+  return body.split(/^## \d+\. /m).slice(1).map((part) => {
+    const [heading = '', ...rest] = part.split('\n')
+    const row = rest.join('\n').match(/^::lessons\n(.*)$/m)?.[1] ?? ''
+    const lessons = [...row.matchAll(/\[([^\]]+)\]\(\/t\/glassbox\//g)].map((m) => m[1])
+    return `${plainText(heading)}${lessons.length ? ` [${lessons.join(', ')}]` : ''}`
+  })
 }
 
 /** One page's line: its stem, title and description, then its Why and watch lead-ins, or a Walkthrough's stops. */
 export function pageOverview(stem: string, source: string): string {
   const { frontmatter, body } = splitFrontmatter(source)
-  const stops = body.split('\n').flatMap((l) => /^## \d+\. (.+)/.exec(l)?.[1] ?? []).map(plainText)
-  const extra = [['Stops', stops], ['Why', leadIns(body, "Why it's built this way")], ['Watch', leadIns(body, 'What to watch for')]] as const
+  const extra = [['Stops', stops(body)],['Why', leadIns(body, "Why it's built this way")], ['Watch', leadIns(body, 'What to watch for')]] as const
   return [
     `- ${stem}: ${String(frontmatter.title)}. ${String(frontmatter.description)}`,
     ...extra.filter(([, items]) => items.length).map(([label, items]) => `  ${label}: ${items.join(' · ')}`),

@@ -30,16 +30,16 @@ describe('pageOverview', () => {
   })
 
   it('adds the Why and watch lead-ins, as plain words', () => {
-    const lesson = `${page}\n### Why it's built this way\n\n- **A crash blocks.** Text.\n- **Keys from :term[Catalog]{id="catalog"},** text.\n\n### What to watch for\n\n- **The [deny](/x) message is the instruction.** Text.\n\n## Try it\n\n- **Not a lead-in.** Text.\n`
+    const lesson = `${page}\n### Why it's built this way\n\n- **A crash blocks.** Text.\n- **Keys from :term[Catalog]{id="catalog"},** text.\n\n### What to watch for\n\n- **The [deny](/x) message is the instruction.** Text.\n- **A shared point.** [Hooks](/t/glassbox/guide/hooks/hooks#why) says why.\n\n## Try it\n\n- **Not a lead-in.** Text.\n`
     expect(pageOverview('hooks/20.blocking-hooks', lesson).split('\n').slice(1)).toEqual([
       "  Why: A crash blocks · Keys from Catalog",
-      '  Watch: The deny message is the instruction',
+      '  Watch: The deny message is the instruction · A shared point → hooks/hooks',
     ])
   })
 
-  it("adds a Walkthrough's stops", () => {
-    const walk = `---\ntitle: A walk\ndescription: A story.\n---\n\n## 1. A Collection opts in\n\n## 2. The :term[Catalog] lists it\n\n## Where next\n`
-    expect(pageOverview('walkthroughs/a-walk', walk).split('\n')[1]).toBe('  Stops: A Collection opts in · The Catalog lists it')
+  it("adds a Walkthrough's stops, each with the Lessons it links", () => {
+    const walk = `---\ntitle: A walk\ndescription: A story.\n---\n\n## 1. A Collection opts in\n\nText.\n\n::lessons\n[Cross-tenant reads](/t/glassbox/guide/x/y) · :file[a.ts]\n::\n\n## 2. The :term[Catalog] lists it\n\n## Where next\n`
+    expect(pageOverview('walkthroughs/a-walk', walk).split('\n')[1]).toBe('  Stops: A Collection opts in [Cross-tenant reads] · The Catalog lists it')
   })
 })
 
