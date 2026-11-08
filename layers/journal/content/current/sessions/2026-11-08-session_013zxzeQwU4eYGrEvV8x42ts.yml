@@ -1,0 +1,580 @@
+schemaVersion: 1
+session: session_013zxzeQwU4eYGrEvV8x42ts
+startedAt: 2026-11-08T11:28:06Z
+endedAt: 2026-11-08T11:39:59Z
+kind: interactive
+goal: Clear the open issue backlog
+status: in-review
+outcome: 3 Skill-edit PRs open; 1 issue closed, 1 parked; the stop-hook build and three investigations await owner decisions
+summary: "The owner started /clear-backlog (human-instructed). Default-mode sweep found 10 eligible issues: 9 needs-triage plus 2931 (owner comment last); six ready-for-human issues were skipped because an agent commented last (agent decision, per auto-triage). The explore workflow triaged all 10 (5 build, 5 grill). I started builds for the three small Skill edits (2954, 2955, 2960) whose picks needed no owner call, and held 2945 (taste-shaped rewrite) and 2961 (Human-only files) for the grilling. The owner answered Q1a (build 2961 as a PR awaiting human merge), Q2c (park 2945), Q3a (close 2931), Q7a (keep 2956 open) and asked for investigations on Q4, Q5, Q6 instead of picking. I closed 2931, parked 2945 as ready-for-human, launched the 2961 build and three read-only investigation agents (their reports are in; the owner has not seen them yet). Two of the three builds hit the review cap with small wrap and wording findings; I fixed those by hand, re-ran gate:scoped, then pushed and opened PRs 2969, 2970, 2971 and subscribed to them. Still open: the 2961 build (running), the owner's decision on Q4/Q5/Q6 proposals, 2958/2959/2962 follow-up work, and merging the three PRs."
+prs:
+  - "2969"
+  - "2970"
+  - "2971"
+docsRead:
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: "step 1 set resolution: eligibility by last comment, wayfinder skips"
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP tool mapping and label-replace rule for issue writes
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: read after a hook hint following my first git command; commands were read-only
+    useful: no
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: a guard demanded it before the Workflow call; confirmed the call was right
+    useful: partly
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: file I hand-edited
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: file I hand-edited
+    useful: yes
+  - path: docs/adr/0005-skill-model.md
+    reason: edit hook demanded it; confirmed Skill edits go via gated PR
+    useful: partly
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: edit hook demanded it; the Skills I edited are not installed ones
+    useful: partly
+  - path: docs/adr/0027-prune-trials.md
+    reason: edit hook demanded it; confirmed my edits sit outside the open trial
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: before closing and relabeling issues
+    useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: label roles for parking 2945
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: review-before-PR rules and simple-change test
+    useful: yes
+  - path: .agents/skills/triage/SKILL.md
+    reason: read by triage subagents; they reported it set per-issue rules
+    useful: yes
+  - path: .agents/skills/code-review/SKILL.md
+    reason: read by review subagents; applied the two axes
+    useful: yes
+  - path: docs/agents/environment-caveats.md
+    reason: Q6 subagent read it; it holds the hard-coded blocked-host list
+    useful: yes
+  - path: /home/user/terrarium/.agents/skills/inspect-session/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/frictions/premise-not-questioned.yml
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-update/scripts/glassbox-update.ts
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (read before editing)
+  - path: docs/agents/guards.md
+    reason: (read before editing)
+  - path: scripts/lib/author-trust.ts
+    reason: (no reason given)
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-curate/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/implement/SKILL.md
+    reason: (no reason given)
+  - path: scripts/hooks/merge-close-stop.ts
+    reason: (no reason given)
+  - path: tests/unit/merge-close-stop.spec.ts
+    reason: (no reason given)
+  - path: .claude/settings.json
+    reason: (read before editing)
+  - path: scripts/session/transcript-trace.ts
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/triage/AGENT-BRIEF.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: (no reason given)
+  - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
+    reason: (no reason given)
+skillsUsed:
+  - name: clear-backlog
+    reason: the run itself
+  - name: inspect-session
+    reason: loaded before the Q4 subagent paged another session's events
+  - name: dispatch-subagents
+    reason: guard-required read before dispatching
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Called the clear-backlog-explore Workflow before reading dispatch-subagents; the dispatch-read guard denied it and I retried unchanged after reading.
+    solution: The clear-backlog Skill could name dispatch-subagents as a read before its first Workflow call.
+    severity: nit
+  - description: Edited two Skill files in worktrees before reading ADR-0005/0015/0027; the edit hook then demanded them, and the ADRs confirmed the edits were right.
+    solution: A rule loaded on opening a Skill file could say to read the three ADRs first, or the clear-backlog hand-fix step could list them.
+    severity: minor
+  - description: My hand fix of the glassbox-update step 4 line left another over-long line, so I needed a second edit, commit and a full gate:scoped re-run for a whitespace-only change.
+    solution: Check the rewrapped paragraph's line lengths (awk) before running the gate.
+    severity: minor
+  - description: The Stop hook flagged uncommitted changes while the gate runs for those very changes were in progress; I had to inspect the worktrees to show they were not stray.
+    solution: The Stop hook could skip worktrees with a running gate or name which tree is dirty.
+    severity: nit
+  - description: Fixed the 'cap' wording in frictions-to-fixes by hand, but the Done-when line still reads vaguer than before; I left it as an owner judgement call rather than polishing.
+    solution: Decide in the brief whether the Done-when line must keep the count.
+    severity: nit
+durationSec: 713
+models:
+  claude-sonnet-5-5: 132
+toolCounts:
+  Bash: 26
+  Read: 12
+  ToolSearch: 4
+  Grep: 1
+  mcp__github__issue_read: 7
+  Workflow: 4
+  PushNotification: 1
+  Edit: 4
+  Skill: 3
+  mcp__github__add_issue_comment: 2
+  mcp__github__issue_write: 2
+  Agent: 3
+  mcp__github__create_pull_request: 3
+  mcp__claude-code-remote__subscribe_pr_activity: 3
+  Write: 1
+filesEdited:
+  - .agents/skills/glassbox-update/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - tests/unit/pr-subscribe-stop.spec.ts
+  - scripts/hooks/pr-subscribe-stop.ts
+  - .claude/settings.json
+  - docs/agents/guards.md
+  - .agents/skills/digest/SKILL.md
+rulesLoaded:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0010.md
+adrHints:
+  - adr: 5
+    via: path
+    readAfter: true
+    by: main
+  - adr: 15
+    via: path
+    readAfter: true
+    by: main
+  - adr: 27
+    via: path
+    readAfter: true
+    by: main
+  - adr: 4
+    via: path
+    readAfter: true
+    by: subagent
+  - adr: 3
+    via: text
+    readAfter: true
+    by: subagent
+  - adr: 27
+    via: path
+    readAfter: true
+    by: subagent
+  - adr: 29
+    via: path
+    readAfter: true
+    by: subagent
+  - adr: 5
+    via: path
+    readAfter: true
+    by: subagent
+  - adr: 15
+    via: path
+    readAfter: false
+    by: subagent
+  - adr: 10
+    via: path
+    readAfter: true
+    by: subagent
+rulesLoadedBySubagents:
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/adr-0010.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+docsReadBySubagents:
+  - .agents/skills/glassbox-curate/SKILL.md
+  - docs/agents/environment-caveats.md
+  - .agents/skills/triage/SKILL.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/triage/AGENT-BRIEF.md
+  - .agents/skills/digest/SKILL.md
+  - docs/agents/guards.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+  - .agents/skills/glassbox-lesson/EVERY-PAGE.md
+  - .agents/skills/implement/SKILL.md
+  - docs/adr/0004-objective-safety-gate.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/adr/0029-instructions-load-with-the-files-they-govern.md
+  - .agents/skills/code-review/SKILL.md
+  - docs/adr/0010-digests-derived-append-only-journal-pages.md
+  - .agents/skills/frictions-to-fixes/survey-brief.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Review plus gate before PR, and who merges; summary was enough, I did not open the full ADR.
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Session-log rule; reminded me to invoke close-session. The summary sufficed.
+    useful: partly
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open the PRs myself and subscribe; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header on every issue and PR body; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0022.md
+    reason: Sweep may only label Trusted issues ready-for-agent; confirmed the sweep rules.
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Told me to check open Prune Trials before editing Skill text; the full ADR was read after the edit hook.
+    useful: yes
+  - path: .claude/rules/adr-0020.md
+    reason: Trust tiers; all swept issues were Trusted-authored, so nothing special applied.
+    useful: partly
+  - path: .claude/rules/adr-0005.md
+    reason: Skills change through gated PRs; confirmed the route, read the full ADR after the edit hook.
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: About where instructions live; did not bear on this run.
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: Loaded when I edited a Skill; the edited Skills are our own, so it did not apply.
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded with the ADR reads; no ADR was changed.
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded by the worktree reads; no Human-only path was touched by the three PRs.
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Reported by a triage subagent (2945); told it to use layers/glassbox/GLOSSARY.md.
+    useful: partly
+  - path: .claude/rules/glassbox-content.md
+    reason: Reported by the 2931 triage subagent; confirmed the Scheduled tasks list must be complete.
+    useful: yes
+  - path: .claude/rules/guards.md
+    reason: Loaded by the 2961 triage and build subagents; relevant to the Stop hook roster.
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded by a subagent; Tenant boundaries, not relevant to these edits.
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: Loaded by a subagent; no verdict reported.
+    useful: no
+  - path: .claude/rules/adr-0010.md
+    reason: Loaded by the digest build agent; confirms Digests land by gated PR.
+    useful: partly
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded with the routines page read; not relevant.
+    useful: no
+subagents:
+  - type: general-purpose
+    task: "Q4: scheduled-run detection"
+    durationSec: 63
+    toolCalls: 16
+    modelCalls: 14
+    tokenShare: 4.6
+  - type: general-purpose
+    task: "Q5: premise friction proposal"
+    durationSec: 30
+    toolCalls: 7
+    modelCalls: 6
+    tokenShare: 2.7
+  - type: general-purpose
+    task: "Q6: network config detection prototype"
+    durationSec: 45
+    toolCalls: 9
+    modelCalls: 5
+    tokenShare: 2.8
+  - type: workflow-subagent
+    task: "triage #2958"
+    model: claude-sonnet-5-5
+    durationSec: 44
+    toolCalls: 15
+    modelCalls: 8
+    tokenShare: 2.3
+  - type: workflow-subagent
+    task: "triage #2956"
+    model: claude-sonnet-5-5
+    durationSec: 43
+    toolCalls: 13
+    modelCalls: 8
+    tokenShare: 2.4
+  - type: workflow-subagent
+    task: "triage #2955"
+    model: claude-sonnet-5-5
+    durationSec: 51
+    toolCalls: 17
+    modelCalls: 10
+    tokenShare: 2.8
+  - type: workflow-subagent
+    task: "triage #2954"
+    model: claude-sonnet-5-5
+    durationSec: 41
+    toolCalls: 15
+    modelCalls: 7
+    tokenShare: 2.2
+  - type: workflow-subagent
+    task: "triage #2961"
+    model: claude-sonnet-5-5
+    durationSec: 37
+    toolCalls: 13
+    modelCalls: 7
+    tokenShare: 2.2
+  - type: workflow-subagent
+    task: "triage #2960"
+    model: claude-sonnet-5-5
+    durationSec: 40
+    toolCalls: 15
+    modelCalls: 7
+    tokenShare: 2.3
+  - type: workflow-subagent
+    task: "triage #2962"
+    model: claude-sonnet-5-5
+    durationSec: 33
+    toolCalls: 13
+    modelCalls: 6
+    tokenShare: 3.3
+  - type: workflow-subagent
+    task: "triage #2959"
+    model: claude-sonnet-5-5
+    durationSec: 45
+    toolCalls: 14
+    modelCalls: 8
+    tokenShare: 2.4
+  - type: workflow-subagent
+    task: "triage #2931"
+    model: claude-sonnet-5-5
+    durationSec: 36
+    toolCalls: 15
+    modelCalls: 8
+    tokenShare: 2.3
+  - type: workflow-subagent
+    task: "triage #2945"
+    model: claude-sonnet-5-5
+    durationSec: 41
+    toolCalls: 13
+    modelCalls: 7
+    tokenShare: 2.1
+  - type: workflow-subagent
+    task: build pr-subscribe-stop-hook
+    model: claude-sonnet-5-5
+    durationSec: 86
+    toolCalls: 34
+    modelCalls: 14
+    tokenShare: 3.6
+  - type: workflow-subagent
+    task: Spec glassbox-update-edited-ranges r1
+    model: claude-sonnet-5-5
+    durationSec: 21
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 1.2
+  - type: workflow-subagent
+    task: build frictions-to-fixes-regression-rule
+    model: claude-sonnet-5-5
+    durationSec: 111
+    toolCalls: 14
+    modelCalls: 11
+    tokenShare: 3.9
+  - type: workflow-subagent
+    task: Standards digest-code-review-step r2
+    model: claude-sonnet-5-5
+    durationSec: 21
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 1
+  - type: workflow-subagent
+    task: Standards glassbox-update-edited-ranges r2
+    model: claude-sonnet-5-5
+    durationSec: 18
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 1
+  - type: workflow-subagent
+    task: Spec glassbox-update-edited-ranges r2
+    model: claude-sonnet-5-5
+    durationSec: 25
+    toolCalls: 7
+    modelCalls: 5
+    tokenShare: 1.3
+  - type: workflow-subagent
+    task: gate digest-code-review-step
+    model: claude-sonnet-5-5
+    durationSec: 39
+    toolCalls: 3
+    modelCalls: 2
+    tokenShare: 0.7
+  - type: workflow-subagent
+    task: fix glassbox-update-edited-ranges r2
+    model: claude-sonnet-5-5
+    durationSec: 51
+    toolCalls: 5
+    modelCalls: 5
+    tokenShare: 1.2
+  - type: workflow-subagent
+    task: Spec frictions-to-fixes-regression-rule r3
+    model: claude-sonnet-5-5
+    durationSec: 19
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 1.2
+  - type: workflow-subagent
+    task: Standards frictions-to-fixes-regression-rule r2
+    model: claude-sonnet-5-5
+    durationSec: 28
+    toolCalls: 6
+    modelCalls: 5
+    tokenShare: 1.4
+  - type: workflow-subagent
+    task: Standards glassbox-update-edited-ranges r1
+    model: claude-sonnet-5-5
+    durationSec: 18
+    toolCalls: 3
+    modelCalls: 2
+    tokenShare: 0.8
+  - type: workflow-subagent
+    task: Standards frictions-to-fixes-regression-rule r1
+    model: claude-sonnet-5-5
+    durationSec: 24
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 1.2
+  - type: workflow-subagent
+    task: fix frictions-to-fixes-regression-rule r2
+    model: claude-sonnet-5-5
+    durationSec: 52
+    toolCalls: 6
+    modelCalls: 6
+    tokenShare: 1.4
+  - type: workflow-subagent
+    task: build digest-code-review-step
+    model: claude-sonnet-5-5
+    durationSec: 110
+    toolCalls: 17
+    modelCalls: 12
+    tokenShare: 3.9
+  - type: workflow-subagent
+    task: Spec digest-code-review-step r1
+    model: claude-sonnet-5-5
+    durationSec: 28
+    toolCalls: 7
+    modelCalls: 5
+    tokenShare: 1.4
+  - type: workflow-subagent
+    task: fix glassbox-update-edited-ranges r1
+    model: claude-sonnet-5-5
+    durationSec: 61
+    toolCalls: 8
+    modelCalls: 7
+    tokenShare: 1.6
+  - type: workflow-subagent
+    task: Spec frictions-to-fixes-regression-rule r1
+    model: claude-sonnet-5-5
+    durationSec: 33
+    toolCalls: 7
+    modelCalls: 4
+    tokenShare: 1.3
+  - type: workflow-subagent
+    task: Spec digest-code-review-step r2
+    model: claude-sonnet-5-5
+    durationSec: 37
+    toolCalls: 6
+    modelCalls: 3
+    tokenShare: 1
+  - type: workflow-subagent
+    task: Spec glassbox-update-edited-ranges r3
+    model: claude-sonnet-5-5
+    durationSec: 15
+    toolCalls: 3
+    modelCalls: 2
+    tokenShare: 0.8
+  - type: workflow-subagent
+    task: fix digest-code-review-step r1
+    model: claude-sonnet-5-5
+    durationSec: 53
+    toolCalls: 7
+    modelCalls: 6
+    tokenShare: 1.5
+  - type: workflow-subagent
+    task: Standards frictions-to-fixes-regression-rule r3
+    model: claude-sonnet-5-5
+    durationSec: 18
+    toolCalls: 3
+    modelCalls: 3
+    tokenShare: 1
+  - type: workflow-subagent
+    task: fix frictions-to-fixes-regression-rule r1
+    model: claude-sonnet-5-5
+    durationSec: 51
+    toolCalls: 6
+    modelCalls: 6
+    tokenShare: 1.4
+  - type: workflow-subagent
+    task: Spec frictions-to-fixes-regression-rule r2
+    model: claude-sonnet-5-5
+    durationSec: 27
+    toolCalls: 8
+    modelCalls: 5
+    tokenShare: 1.5
+  - type: workflow-subagent
+    task: Standards digest-code-review-step r1
+    model: claude-sonnet-5-5
+    durationSec: 22
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 2.2
+  - type: workflow-subagent
+    task: Standards glassbox-update-edited-ranges r3
+    model: claude-sonnet-5-5
+    durationSec: 15
+    toolCalls: 3
+    modelCalls: 3
+    tokenShare: 0.9
+  - type: workflow-subagent
+    task: build glassbox-update-edited-ranges
+    model: claude-sonnet-5-5
+    durationSec: 114
+    toolCalls: 15
+    modelCalls: 11
+    tokenShare: 3.7
+gitBranch: ccr-f90b04f4-s88jph
+entrypoint: remote_mobile
+cliVersion: 2.1.319
+landedBy: Stop
