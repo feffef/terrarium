@@ -28,6 +28,19 @@ describe('pageOverview', () => {
   it('gives the stem, title and description on one line, and no body', () => {
     expect(pageOverview('claude-code/05.blocking-hooks', page)).toBe('- claude-code/05.blocking-hooks: Blocking hooks. Hooks that refuse a wrong tool call.')
   })
+
+  it('adds the Why and watch lead-ins, as plain words', () => {
+    const lesson = `${page}\n### Why it's built this way\n\n- **A crash blocks.** Text.\n- **Keys from :term[Catalog]{id="catalog"},** text.\n\n### What to watch for\n\n- **The [deny](/x) message is the instruction.** Text.\n\n## Try it\n\n- **Not a lead-in.** Text.\n`
+    expect(pageOverview('hooks/20.blocking-hooks', lesson).split('\n').slice(1)).toEqual([
+      "  Why: A crash blocks · Keys from Catalog",
+      '  Watch: The deny message is the instruction',
+    ])
+  })
+
+  it("adds a Walkthrough's stops", () => {
+    const walk = `---\ntitle: A walk\ndescription: A story.\n---\n\n## 1. A Collection opts in\n\n## 2. The :term[Catalog] lists it\n\n## Where next\n`
+    expect(pageOverview('walkthroughs/a-walk', walk).split('\n')[1]).toBe('  Stops: A Collection opts in · The Catalog lists it')
+  })
 })
 
 describe('orientation', () => {

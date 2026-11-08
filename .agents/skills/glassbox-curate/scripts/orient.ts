@@ -14,10 +14,27 @@ const content = 'layers/glassbox/content'
 // The churn guard looks back this many runs (SKILL.md).
 const recentRuns = 5
 
-/** One page's line: its stem, title and description. */
+/** Text with its MDC and link markup reduced to the words a reader sees. */
+const plainText = (s: string) => s.replace(/:\w+\[([^\]]*)\](\{[^}]*\})?/g, '$1').replace(/\[([^\]]*)\]\([^)]*\)/g, '$1').replace(/[.,:;]+$/, '')
+
+/** The bold lead-in of each bullet in the `### <heading>` section of `body`. */
+function leadIns(body: string, heading: string): string[] {
+  const lines = body.split('\n')
+  const at = lines.indexOf(`### ${heading}`)
+  if (at < 0) return []
+  const end = lines.findIndex((l, i) => i > at && /^#{2,3} /.test(l))
+  return lines.slice(at + 1, end < 0 ? undefined : end).flatMap((l) => /^- \*\*(.+?)\*\*/.exec(l)?.[1] ?? []).map(plainText)
+}
+
+/** One page's line: its stem, title and description, then its Why and watch lead-ins, or a Walkthrough's stops. */
 export function pageOverview(stem: string, source: string): string {
-  const { frontmatter } = splitFrontmatter(source)
-  return `- ${stem}: ${String(frontmatter.title)}. ${String(frontmatter.description)}`
+  const { frontmatter, body } = splitFrontmatter(source)
+  const stops = body.split('\n').flatMap((l) => /^## \d+\. (.+)/.exec(l)?.[1] ?? []).map(plainText)
+  const extra = [['Stops', stops], ['Why', leadIns(body, "Why it's built this way")], ['Watch', leadIns(body, 'What to watch for')]] as const
+  return [
+    `- ${stem}: ${String(frontmatter.title)}. ${String(frontmatter.description)}`,
+    ...extra.filter(([, items]) => items.length).map(([label, items]) => `  ${label}: ${items.join(' · ')}`),
+  ].join('\n')
 }
 
 /** Each file under `dir` matching `pattern`, sorted, as [path under dir, text]. */
