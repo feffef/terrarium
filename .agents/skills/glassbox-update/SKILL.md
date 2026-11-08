@@ -22,8 +22,8 @@ that one commit, never a later fetch.
    `git fetch --unshallow origin main`. Run the script and save its JSON
    report. Done when you hold it.
 2. **Advance.** Run the script with `--write --to <the commit>`: it shifts
-   moved `lines` ranges and pins every page without an `edited` range to the
-   commit.
+   moved `lines` ranges and pins every page to the commit, except a page with
+   an `edited` range, which is left wholly untouched.
 3. **Flag.** Every page in the step-1 report's `pages` is flagged, and so is
    every term in `terms`. Then read `git log` and `git diff` from each page's
    step-1 `revision` to the commit, and flag any page whose prose describes
@@ -34,10 +34,11 @@ that one commit, never a later fetch.
    every page.
 4. **Re-check and edit** each flagged page as a whole, diagrams included,
    against the commit, and pin it there (EVERY-PAGE.md's Pin, with the
-   commit in place of `origin/main`). A flagged term: re-read its `source`
-   entry and rewrite the `definition` in Glass Box's words where the meaning
-   moved. Done when the script with `--to <the commit>` lists no `pages` and
-   every flagged term matches its source.
+   commit in place of `origin/main`); re-line each `edited` range by hand as
+   you pin. A flagged term: re-read its `source` entry and rewrite the
+   `definition` in Glass Box's words where the meaning moved. Done when the
+   script with `--to <the commit>` lists no `pages` and every flagged term
+   matches its source.
 5. **Claim check.** Goal: no page states a claim its source contradicts. Check
    two sets, each page by its stem (its path under
    `layers/glassbox/content/guide/pages/` without `.md`, `index` for the
