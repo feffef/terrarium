@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzePKudcTUhp46zRqz4X
 startedAt: 2026-11-08T00:45:59Z
-endedAt: 2026-11-08T00:56:05Z
+endedAt: 2026-11-08T00:58:34Z
 kind: autonomous
 goal: Weekly check of the Platform's own Skills
-status: in-review
-outcome: "Audit done; 3 issues filed (#2954, #2955, #2956); Inventory PR #2957 open, gate green, awaiting CI and self-merge"
-summary: "Scheduled audit-skills run (agent-initiated by the schedule; no human instructions). Gathered the 7-day scorecard, had one Sonnet subagent fetch usage for 8 unlisted Routine runs and 13 read-only Sonnet subagents check each Skill's behaviour. Orphan scan was clean (2 candidates, both resolved); 3 human-prompted closures. No silent failure did damage. Three repeated findings became needs-triage issues: digest skips code-review on file-adding PRs (#2954), glassbox-update re-pin leaves edited-range Excerpts stale (#2955), and a new standing thread for human-prompted closures because #2772 is closed (#2956). Other findings (glassbox-curate unreadable cost and skipped reads, frictions-to-fixes churn) went to Inventory observations as unverified. No grade or role changed. Routine run costs appended, old observations pruned. Standards and Spec code-review were clean; fixed one wording nit. PR #2957 opened, subscribed, verdict posted; merge follows once CI is green."
+status: completed
+outcome: "Audit done; 3 issues filed (#2954, #2955, #2956); Inventory PR #2957 merged"
+summary: "Scheduled audit-skills run (agent-initiated by the schedule; no human instructions). Gathered the 7-day scorecard, had one Sonnet subagent fetch usage for 8 unlisted Routine runs and 13 read-only Sonnet subagents check each Skill's behaviour. Orphan scan was clean (2 candidates, both resolved); 3 human-prompted closures. No silent failure did damage. Three repeated findings became needs-triage issues: digest skips code-review on file-adding PRs (#2954), glassbox-update re-pin leaves edited-range Excerpts stale (#2955), and a new standing thread for human-prompted closures because #2772 is closed (#2956). Other findings (glassbox-curate unreadable cost and skipped reads, frictions-to-fixes churn) went to Inventory observations as unverified. No grade or role changed. Routine run costs appended, old observations pruned. Standards and Spec code-review were clean; fixed one wording nit. PR #2957 opened, subscribed, verdict posted, CI green, merged with merge-pr.ts."
 prs:
   - "2957"
 docsRead:
@@ -97,12 +97,15 @@ frictions:
   - description: The glassbox-curate and clear-backlog reports were long; the scorecard plus 13 reports cost much context to reconcile into 5 short observations.
     solution: A brief limit of 200 words for runs with no finding would cut reading.
     severity: minor
-durationSec: 605
+  - description: Piped log-session.ts --author output through head, against the close-session rule never to filter it; the refusal was still visible, but a longer warning could have been cut.
+    solution: Run the helper unfiltered; the rule sits on the last line of close-session, which I had read.
+    severity: nit
+durationSec: 755
 models:
-  claude-sonnet-5-5: 105
+  claude-sonnet-5-5: 119
 toolCounts:
-  Bash: 28
-  Skill: 4
+  Bash: 31
+  Skill: 5
   Agent: 16
   Read: 2
   mcp__github__issue_read: 1
@@ -112,6 +115,8 @@ toolCounts:
   mcp__github__subscribe_pr_activity: 1
   mcp__github__add_issue_comment: 1
   mcp__github__pull_request_read: 1
+  ReadNotifications: 2
+  PushNotification: 1
 filesEdited:
   - layers/journal/content/current/routines/audit-docs.yml
   - layers/journal/content/current/routines/audit-skills.yml
@@ -213,112 +218,112 @@ subagents:
     durationSec: 20
     toolCalls: 11
     modelCalls: 4
-    tokenShare: 2.7
+    tokenShare: 2.6
   - type: general-purpose
     task: Audit audit-docs behaviour
     model: sonnet
     durationSec: 78
     toolCalls: 19
     modelCalls: 14
-    tokenShare: 5.9
+    tokenShare: 5.6
   - type: general-purpose
     task: Audit audit-skills behaviour
     model: sonnet
     durationSec: 59
     toolCalls: 13
     modelCalls: 8
-    tokenShare: 4.6
+    tokenShare: 4.4
   - type: general-purpose
     task: Audit blog-post behaviour
     model: sonnet
     durationSec: 86
     toolCalls: 24
     modelCalls: 13
-    tokenShare: 5.9
+    tokenShare: 5.6
   - type: general-purpose
     task: Audit clear-backlog behaviour
     model: sonnet
     durationSec: 56
     toolCalls: 10
     modelCalls: 8
-    tokenShare: 4.2
+    tokenShare: 4
   - type: general-purpose
     task: Audit close-session behaviour
     model: sonnet
     durationSec: 47
     toolCalls: 9
     modelCalls: 8
-    tokenShare: 3.7
+    tokenShare: 3.5
   - type: general-purpose
     task: Audit digest behaviour
     model: sonnet
     durationSec: 57
     toolCalls: 11
     modelCalls: 9
-    tokenShare: 4.2
+    tokenShare: 4
   - type: general-purpose
     task: Audit dispatch-subagents behaviour
     model: sonnet
     durationSec: 73
     toolCalls: 13
     modelCalls: 10
-    tokenShare: 5.3
+    tokenShare: 5.1
   - type: general-purpose
     task: Audit frictions-to-fixes behaviour
     model: sonnet
     durationSec: 77
     toolCalls: 26
     modelCalls: 12
-    tokenShare: 5.6
+    tokenShare: 5.3
   - type: general-purpose
     task: Audit glassbox-curate behaviour
     model: sonnet
     durationSec: 63
     toolCalls: 13
     modelCalls: 11
-    tokenShare: 4.6
+    tokenShare: 4.4
   - type: general-purpose
     task: Audit glassbox-update behaviour
     model: sonnet
     durationSec: 56
     toolCalls: 9
     modelCalls: 8
-    tokenShare: 3.9
+    tokenShare: 3.7
   - type: general-purpose
     task: Audit inspect-session behaviour
     model: sonnet
     durationSec: 79
     toolCalls: 18
     modelCalls: 14
-    tokenShare: 6.5
+    tokenShare: 6.1
   - type: general-purpose
     task: Audit log-session behaviour
     model: sonnet
     durationSec: 76
     toolCalls: 18
     modelCalls: 13
-    tokenShare: 5.6
+    tokenShare: 5.3
   - type: general-purpose
     task: Audit prune-trial behaviour
     model: sonnet
     durationSec: 60
     toolCalls: 12
     modelCalls: 10
-    tokenShare: 4.7
+    tokenShare: 4.5
   - type: general-purpose
     task: Standards review of Inventory diff
     model: sonnet
     durationSec: 34
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 3.1
+    tokenShare: 3
   - type: general-purpose
     task: Spec review of Inventory diff
     model: sonnet
     durationSec: 35
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 3
+    tokenShare: 2.9
 gitBranch: claude/loving-tesla-a7a6uh
 entrypoint: remote_trigger
 cliVersion: 2.1.319
