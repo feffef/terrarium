@@ -1,6 +1,7 @@
 ---
 title: Reading across tenants
 description: How a Blog post becomes a Commons Search result, through a kind named in a manifest, a catalog built with the site and one read function.
+teaches: "Story: a Blog post reaching Commons Search, from the reading code's side. Start: kind: 'page' in layers/blog/tenant.config.ts. End: Collections with no kind (Blog pingbacks, Commons pages). Code: shared/kinds.ts, expand(), catalogFrom(), modules/catalog.ts (#catalog), queryAcrossTenants, queryPages, documentUrl(), Search.vue. Exception: the home page reads Tenants directly. No A real case."
 revision: 'f16509d1024b69585d7fc7387d135682ad39b9b6'
 revisionDate: '2026-11-08'
 publishedAt: '2026-11-04T23:07:44Z'

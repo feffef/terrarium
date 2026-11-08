@@ -1,6 +1,7 @@
 ---
 title: Asking an agent for a change
 description: How a request to an agent session becomes a merged PR, and the log the session leaves on main.
+teaches: "Story: a Trusted user's request becoming a merged PR, from the session's side. Start: the request. End: close-session marks the log completed. Code: SessionStart hook, .claude/settings.json, CLAUDE.md, Rules, guard hooks, worktrees, pnpm gate:scoped, code-review, commit-msg hook, PR subscription, Stop hook, merge-pr.ts. A real case: PR #2089 added the retro Skill, skipping code-review."
 revision: 'f16509d1024b69585d7fc7387d135682ad39b9b6'
 revisionDate: '2026-11-08'
 ---
@@ -15,7 +16,7 @@ A :term[Trusted] user, one with write access to the repository, asks a Claude Co
 [Human-in-the-loop agents](/t/glassbox/guide/terrarium-practice/human-in-the-loop) · [Author trust](/t/glassbox/guide/git-github/author-trust)
 ::
 
-## 2. The session starts
+## 2. A hook sets up the session
 
 The session gets its own copy of the repository. A `SessionStart` hook in `.claude/settings.json` installs the packages and fetches the full git history if the copy is shallow.
 
