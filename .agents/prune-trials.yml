@@ -23,38 +23,6 @@
 #            topic's tools correctly.
 trials:
   - problem: >
-      The gate-freeze prose in `pr-workflow.md` "Review before opening the PR"
-      (-1 net, from `git diff --numstat`: 15 added, 16 deleted; this entry not
-      counted): "last on the final head and edit nothing until it ends" now
-      names the reason ("the gate aborts if HEAD or the tree changes"); the
-      "run it first for any other change" clause and some wrapping cut. Chosen
-      after the search subagent covered the instruction corpus, guard headers
-      and the tracker: the freeze failed as prose (ledger `edit-during-gate-run`,
-      24 occurrences, 6 fixes; #2579 closed not planned) and
-      `scripts/gate/gate.ts` now aborts a run whose HEAD or tree changed
-      (`stepAbort`), so it is the safest prune on the board. Little text to cut.
-      Runners-up: first-push `code-review` (`prepush-gate-review-skipped`; no
-      guard, #2748 closed not planned) and CLAUDE.md's run-in-background bullet
-      (low mass). Same run judged and deleted the `dispatch-subagents`
-      "candidate material" trial (landed 8b32b026): 44 sessions ended since, no
-      major or blocker Friction traces to it; relayed-subagent-claims 12.8% ->
-      14.3% (19/148 -> 5/35), counts-not-tallied 8.8% -> 5.7%. The one moderate
-      hit (adopted a reviewer's lint claim, gate red) was a code claim, not cut
-      prose, and CLAUDE.md "Verify before you state" still covered it; no issue.
-    territory:
-      paths:
-        - "docs/agents/pr-workflow.md: 'Review before opening the PR'"
-      keywords:
-        - edit nothing
-    opened: 2026-11-05
-    proven: true
-    check: >
-      Damage is a major or blocker Friction where a session edited during
-      `gate:scoped` or pushed a head the gate never covered, and the dropped
-      sentence would have prevented it. NOT damage: the nit/minor
-      `edit-during-gate-run` hits that the gate's own abort catches, its
-      standing rate (compare its share of sessions with `friction-rates.ts`).
-  - problem: >
       Doc comments in `scripts/hooks/github-provenance-guard.ts` (-53 net, from
       `git diff --numstat`: 46 added, 99 deleted; code unchanged, this entry
       not counted): the per-function recaps and incident tags ("not dead code
@@ -125,3 +93,32 @@ trials:
       that fail to log at a closure point rises even a little, whatever the
       severity; compare `close-session-bypassed-by-hand-log` and
       `closure-not-invoked-on-answers` with `friction-rates.ts`.
+  - problem: >
+      The `dispatch-subagents` Skill's §2-§3 (-4 net, from `git diff --numstat`:
+      40 added, 44 deleted; this entry not counted): the worktree, stranding and
+      scope bullets merged and reworded, the git-hygiene restatements and the
+      separate pre-dispatch checklist folded into one lead-in; every rule kept.
+      Chosen after the search subagent covered the instruction corpus, guard
+      headers, the tracker and the ledger: the "read the Skill before a brief"
+      rule failed as prose (#2475, #2543; ledger `dispatch-read-guard-deny`, 48
+      occurrences) and `scripts/hooks/dispatch-read-guard.ts` now denies the
+      dispatch until it is read, so the Skill text is what remains to tighten.
+      Little text to cut. Runners-up: CLAUDE.md "Verify before you state"
+      (already cut to one home, PR #2537) and the git-conventions no-chaining
+      rule (pruned once, #2762). Same run judged and deleted the gate-freeze
+      trial (landed a516ce3c): 50 sessions ended since, no major or blocker
+      Friction traces to it; edit-during-gate-run 13.0% -> 7.5% (18/138 -> 3/40),
+      push-chained-to-gate-run 4.3% -> 2.5%; no issue.
+    territory:
+      paths:
+        - ".agents/skills/dispatch-subagents/SKILL.md: sections 2 and 3"
+      keywords:
+        - isolation
+        - stranded
+    opened: 2026-11-08
+    proven: true
+    check: >
+      Damage is a major or blocker Friction where a dispatched subagent's work
+      was lost, stranded or run on the wrong checkout, or a review agent
+      moved a checkout, and a cut line would have prevented it. NOT damage:
+      `dispatch-read-guard-deny` at its standing rate (the guard's own deny).
