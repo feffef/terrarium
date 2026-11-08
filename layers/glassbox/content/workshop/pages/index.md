@@ -16,7 +16,7 @@ Pages are named by their title, followed by their file under `layers/glassbox/co
 - **The Installed Skills pages say little of their own.** *Planning skills* (`skill-pack/20.planning-with-the-pack`) and *Engineering skills* (`skill-pack/30.engineering-skills`) mostly describe Skills that come from outside Terrarium. Only a few of their facts are about choices Terrarium made.
 - **Two Git & GitHub Lessons are long.** *Commit and PR attribution* (`git-github/60.attribution`) and *Issue triage labels* (`git-github/70.issue-triage-labels`) are each about 1,400 to 1,600 words. Both have been trimmed; look for a split only after a fresh reader finds them hard to follow.
 - **The drafts Space is empty.** A gap that isn't central goes there as a new draft.
-- **The Claude Code, Hooks and Agents & automation Subjects still repeat each other.** The split moved pages without moving facts; the ideas below are about giving each fact one home.
+- **The Claude Code, Hooks and Agents & automation Subjects may still repeat each other.** The split moved pages without moving facts. The Hooks pages were read and de-duplicated on 2026-11-08; the other two Subjects were not re-read.
 
 ### Recurring problems
 
@@ -44,10 +44,6 @@ Subjects and Lessons run prerequisites first, and Lesson prefixes go up in tens 
 
 **More web standards pages, looked at and left out.** *View Transitions* (Tinkerfund's plugin, mostly about a Nuxt hook, so it fits Nuxt & Vue); page metadata for link previews and search engines (one Tenant's helper); container queries and a scroll-watching helper (one or two files each).
 
-**Claude Code and Hooks: giving each fact one home.** In each case the first page keeps a short link.
-- *MCP servers* explains how hooks pick out MCP tools by name. That belongs on *Blocking hooks*.
-- *Session transcripts* explains how a session log is built from the transcript. That belongs on *Session logs* (`terrarium-practice/40.session-logs`).
-
 **Installed Skills.** *Engineering skills* could become part of *Installed skills* (`skill-pack/10.skill-packs`).
 
 **A fact about out-of-scope records that no Lesson teaches.** Before it recommends anything, `triage` reads every record in `.out-of-scope/` and shows the person deciding any that resembles the new request (`.agents/skills/triage/SKILL.md`, step 1). *Issue triage labels* (`git-github/70.issue-triage-labels`) teaches the records and their format but not this check. It could be one sentence there, or a section if that page is split after a fresh reader finds it hard to follow.
@@ -67,6 +63,7 @@ Subjects and Lessons run prerequisites first, and Lesson prefixes go up in tens 
 ### Already decided
 
 Earlier runs turned these down. Each stays turned down until something in the repository changes the reason.
+- **Moving the MCP tool-name matcher from *MCP servers* to *Blocking hooks*.** The `mcp__<server>__.*` form is about how MCP names tools, and the page's Why bullet on it is one sentence that links *Claude Code hooks*.
 - **Guide titles.** Every Lesson, Walkthrough and the overview has been weighed against 2 to 4 alternatives; the owner's rulings are in DECISIONS.md. Closest rivals that lost: *Required status checks* for *Merge gate*, *Claude Code workflows* for *Workflow scripts*, *Adding a Tenant* for *Adding a site*.
 - **Folding *Planning skills* into *Installed skills*.** *Planning skills* holds facts about Terrarium's own choices that would lose their page.
 - **Moving the trust rules from *Human-in-the-loop agents* to *Author trust*.** The first page already links to the second.
