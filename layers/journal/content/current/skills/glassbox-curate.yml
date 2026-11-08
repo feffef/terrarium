@@ -11,3 +11,6 @@ observations:
   - date: "2026-11-07"
     note: >-
       Coverage gap found (audit-skills sweep): used 4 times this window, on disk, no prior entry. Behaviour check: PRs #2905, #2907, #2908, #2909 merged and stand. Only deviation: session_013zxzeQ7Ra7VbsnEayuBNNi skipped the claim checker and fresh reader on one rewritten sentence, disclosed. All 4 sessions asked the owner about focus before starting despite the autonomous no-focus default; 3 logged it as a Friction. Graded specialist on first sight.
+  - date: "2026-11-08"
+    note: >-
+      Behaviour check, 10 runs delivered. Unverified from logs: cost_usd unavailable from get_session in at least 3 of 10 runs (session_013zxzeNqe2cXhykGMMq7vUi, session_013zxzeTCE8mdvR9V6wVJoCV, session_013zxzeSkKADXgmp8x1PeS5Z), so the budget stop is unenforced; Subject-wide read and read-first docs skipped in 4 runs (session_013zxzeRCCqrxVitqSaxJa4K among them), caught by Spec review. Skill changed 7 times in the window. Grade unchanged.
