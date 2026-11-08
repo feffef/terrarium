@@ -77,8 +77,8 @@ GitHub left open; on a human merge, check each with `issue_read`.
 
 Before pushing a follow-up to an existing PR branch, check with
 `pull_request_read` that it isn't already merged, or the push silently recreates
-the branch. A branch restarted after the merge is fine: push plainly, without
-`--force-with-lease`.
+the branch. A branch restarted after the merge, or a session branch reset onto `main`, is
+fine: push plainly, without `--force-with-lease`.
 
 Reply on a review thread before calling `resolve_review_thread`: a resolved
 thread with no reply leaves no record.
