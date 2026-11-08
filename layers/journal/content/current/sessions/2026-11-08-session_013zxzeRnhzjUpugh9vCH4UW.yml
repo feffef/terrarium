@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRnhzjUpugh9vCH4UW
 startedAt: 2026-11-08T00:16:16Z
-endedAt: 2026-11-08T00:23:12Z
+endedAt: 2026-11-08T00:27:27Z
 kind: autonomous
 goal: Write the 2026-11-07 Journal Digest and archive old content
-status: in-review
-outcome: PR 2953 opened with the 2026-11-07 Digest and archive sweep; gate green, awaiting merge
-summary: Scheduled digest run, agent-executed with no human input. One closed day (2026-11-07) was listed; I gathered its material, wrote the Digest, ran the archive sweep (1 Digest and 9 session logs moved), and had a sonnet subagent fact-check 39 claims. It found 2 wrong and 2 loose claims (skill vs routine, a lesson addition called a trim, the update-run wait, a stale in-review count), all fixed. Gate:scoped passed and PR 2953 is open and subscribed. I skipped code-review since the fact-check served as the review; a new file is not a simple change under pr-workflow, so that is a deviation. Merge is pending CI.
+status: completed
+outcome: "PR 2953 merged on a green gate: the 2026-11-07 Digest and archive sweep"
+summary: Scheduled digest run, agent-executed with no human input. One closed day (2026-11-07) was listed; I gathered its material, wrote the Digest, ran the archive sweep (1 Digest and 9 session logs moved), and had a sonnet subagent fact-check 39 claims. It found 2 wrong and 2 loose claims (skill vs routine, a lesson addition called a trim, the update-run wait, a stale in-review count), all fixed. Gate:scoped passed and PR 2953 is open and subscribed. I skipped code-review since the fact-check served as the review; a new file is not a simple change under pr-workflow, so that is a deviation. PR 2953 merged on a green gate after a verdict comment.
 prs:
   - "2953"
 docsRead:
@@ -58,17 +58,20 @@ frictions:
   - description: Skipped code-review though the diff adds a file, so it was not a simple change under pr-workflow; relied on the fact-check.
     solution: The digest Skill should state whether fact-check substitutes for code-review.
     severity: minor
-durationSec: 417
+durationSec: 671
 models:
-  claude-sonnet-5-5: 34
+  claude-sonnet-5-5: 48
 toolCounts:
-  Bash: 11
+  Bash: 16
   Read: 6
   Agent: 2
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
-  Skill: 2
+  Skill: 3
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/journal/content/archived/pages/digests/2026-10-31.md
   - layers/journal/content/archived/sessions/2026-10-31-session_013zxzeNZn2iJjZrQj2ortVS.yml
@@ -158,7 +161,7 @@ subagents:
     durationSec: 111
     toolCalls: 23
     modelCalls: 16
-    tokenShare: 43
+    tokenShare: 33.1
 gitBranch: claude/compassionate-lovelace-fzyv78
 entrypoint: remote_trigger
 cliVersion: 2.1.319
