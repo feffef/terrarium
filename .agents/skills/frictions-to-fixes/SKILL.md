@@ -61,9 +61,11 @@ labelled **never-fixed**, **drop**, **open-already** or **regression**.
 - **Regression** (its fix merged, then the friction came back): never pick
   it; a change that already failed once needs human eyes. File an issue saying the earlier fix did not work, linking the earlier
   issue or PR and quoting the original and the new friction. Do this for the
-  top **three**. Rank only still-recurring entries whose status is not
-  `accepted`, `on-trial` or `tracked`, by highest severity since the latest fix
-  (the `since:` in the survey's `--summary` report). List the rest in the ledger PR's description (§5).
+  top **three** of the still-recurring entries whose status is not `accepted`,
+  `on-trial` or `tracked` and whose highest severity since the latest fix (the
+  `since:` in the survey's `--summary` report) is `moderate` or above, ranked
+  by that severity; fewer if fewer qualify. List the rest, lower severity
+  included, only in the ledger PR's description (§5).
 
 Done when every candidate is handled as above.
 
@@ -148,14 +150,13 @@ whatever happens to the fixes.
      its status: only that solution is dropped, not the cluster;
    - run `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/prune-friction-ledger.ts`
      (drops occurrences older than the horizon and deletes empty entries).
-4. **Open the ledger PR.** Review the diff yourself (this Skill's own review
-   step, per `docs/agents/pr-workflow.md`), run `pnpm gate:scoped`
-   on the final head, push, and open it. Land it by `docs/agents/pr-workflow.md`'s recipe once CI is
+4. **Open the ledger PR.** Review it as `docs/agents/pr-workflow.md` says for a
+   simple change, run `pnpm gate:scoped` on the final head, push, and open it. Land it by `docs/agents/pr-workflow.md`'s recipe once CI is
    green. §6 does not wait for it.
 
 Done when every fix is ready to dispatch, filed, dropped with a note, or
 listed for the next run;
-the top three regressions have issues; and the ledger PR is open.
+§2's regression issues are filed; and the ledger PR is open.
 
 ### Edge cases
 
@@ -242,7 +243,7 @@ is honest.
 
 1. Wait until the ledger PR has merged and every fix PR is merged,
    escalated or abandoned.
-2. From `origin/main`, land **one** status-only PR, the same way as the
+2. On a fresh branch cut from `origin/main` (not the session branch), land **one** status-only PR, the same way as the
    ledger PR, through `ledger-set.ts` (§5 step 3):
    - **merged** fix PR: add a `fixes` entry (`pr`, its UTC merge date, a
      one-line summary from its description) and set `status: open`;
