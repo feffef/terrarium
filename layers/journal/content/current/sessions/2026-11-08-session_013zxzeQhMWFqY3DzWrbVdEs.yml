@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQhMWFqY3DzWrbVdEs
 startedAt: 2026-11-08T04:03:19Z
-endedAt: 2026-11-08T04:12:49Z
+endedAt: 2026-11-08T04:16:07Z
 kind: autonomous
 goal: Scheduled audit of the repo's prose for stale or duplicated docs
-status: in-review
-outcome: Sweep PR 2964 open with 6 confirmed doc fixes; gate green, awaiting CI and merge
-summary: 'Scheduled audit-docs run; no human prompted any step (all agent-initiated). Three read-only reviewers returned: Freshness 2 findings, Single-home 6 actionable (plus a no-change note), Coherence 0. One checker fact-checked 8 findings: 2 CONFIRMED (deploy README Node copy, proposals README ADR-0026 anecdote), 4 CONFIRMED-BUT (Three Spaces pointer also in two page-checks.ts comments, glassbox "both Spaces", blog stance cut plus line-43 reword, midden keep attribution and drop only the date), 2 WRONG (atlas removal note placed by the owner in #1984, journal page-list map). I applied the 6 fixes in one commit (7 files, +9/-11), Standards and Spec review were clean (wrapping nits ignored), gate:scoped green on the final head, pushed, opened PR 2964, subscribed. No escalation PR (no ADR or Human-only path touched), no issue filed. Covered: README.md, SECURITY.md, docs/proposals/README.md, deploy/README.md, GLOSSARY.md of journal blog atlas midden marquee tinkerfund, ADRs 0002 0006 0007 0013 0014 0016 0018 0020 0021 0022 0023, Skills atlas-specimen auto-triage, docs/research/public-readiness-review.md.'
+status: completed
+outcome: Sweep PR 2964 merged with 6 confirmed doc fixes
+summary: 'Scheduled audit-docs run; no human prompted any step (all agent-initiated). Three read-only reviewers returned: Freshness 2 findings, Single-home 6 actionable (plus a no-change note), Coherence 0. One checker fact-checked 8 findings: 2 CONFIRMED (deploy README Node copy, proposals README ADR-0026 anecdote), 4 CONFIRMED-BUT (Three Spaces pointer also in two page-checks.ts comments, glassbox "both Spaces", blog stance cut plus line-43 reword, midden keep attribution and drop only the date), 2 WRONG (atlas removal note placed by the owner in #1984, journal page-list map). I applied the 6 fixes in one commit (7 files, +9/-11), Standards and Spec review were clean (wrapping nits ignored), gate:scoped green on the final head, pushed, opened PR 2964, subscribed; merged via merge-pr after green CI. No escalation PR (no ADR or Human-only path touched), no issue filed. Covered: README.md, SECURITY.md, docs/proposals/README.md, deploy/README.md, GLOSSARY.md of journal blog atlas midden marquee tinkerfund, ADRs 0002 0006 0007 0013 0014 0016 0018 0020 0021 0022 0023, Skills atlas-specimen auto-triage, docs/research/public-readiness-review.md.'
 prs:
   - "2964"
 docsRead:
@@ -99,17 +99,21 @@ frictions:
   - description: The checker's summary preamble said five CONFIRMED-BUT but listed four; I had to recount the verdicts myself from the body.
     solution: Ask checkers to end with a verdict-count line derived from their own list.
     severity: nit
-durationSec: 570
+  - description: Stop hook said a PR merged and demanded close-session three times while merge-pr.ts was still polling CI and the PR was open; cost extra checks.
+    solution: Fire the merged-PR check only after the PR state is merged, not when merge-pr.ts starts.
+    severity: minor
+durationSec: 767
 models:
-  claude-sonnet-5-5: 59
+  claude-sonnet-5-5: 83
 toolCounts:
-  Bash: 20
-  Skill: 4
+  Bash: 27
+  Skill: 5
   Agent: 6
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   mcp__github__add_issue_comment: 1
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 4
+  ReadNotifications: 2
 filesEdited:
   - .agents/skills/glassbox-lesson/QUALITY.md
   - deploy/README.md
@@ -232,37 +236,37 @@ subagents:
     durationSec: 44
     toolCalls: 9
     modelCalls: 9
-    tokenShare: 10.3
+    tokenShare: 8.7
   - type: general-purpose
     task: "Audit B: Single-home"
     durationSec: 74
     toolCalls: 12
     modelCalls: 12
-    tokenShare: 13.5
+    tokenShare: 11.5
   - type: general-purpose
     task: "Audit C: Coherence"
     durationSec: 111
     toolCalls: 21
     modelCalls: 20
-    tokenShare: 21.9
+    tokenShare: 18.6
   - type: general-purpose
     task: Fact-check audit findings
     durationSec: 94
     toolCalls: 17
     modelCalls: 14
-    tokenShare: 10.9
+    tokenShare: 9.3
   - type: general-purpose
     task: Standards review of sweep diff
     durationSec: 24
     toolCalls: 4
     modelCalls: 5
-    tokenShare: 3.7
+    tokenShare: 3.2
   - type: general-purpose
     task: Spec review of sweep diff
     durationSec: 16
     toolCalls: 4
     modelCalls: 2
-    tokenShare: 2.8
+    tokenShare: 2.4
 gitBranch: claude/festive-mayer-h25bn6
 entrypoint: remote_trigger
 cliVersion: 2.1.319
