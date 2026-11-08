@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRhiMxk5cCGYkz4u1n
 startedAt: 2026-11-08T13:12:14Z
-endedAt: 2026-11-08T13:20:41Z
+endedAt: 2026-11-08T13:23:57Z
 kind: autonomous
 goal: Scheduled prune trial of the Platform's agent instructions
-status: in-review
-outcome: "Gate-freeze trial judged and deleted; dispatch-subagents Skill tightened as a new trial (PR #2977)"
-summary: "Scheduled /prune-trial run, no human prompt. Judged the one judgeable trial (gate-freeze prose): no major or blocker Friction traces to it and edit-during-gate-run fell 13.0% to 7.5%, so the prune holds and its entry was deleted. A search subagent ranked failed-prose candidates; I chose the dispatch-subagents Skill sections 2-3 because a wired guard already enforces its read-first rule. The cut was small (-4 net) and every rule kept. A Sonnet probe pinned to the post-prune SHA answered a dispatch situation correctly. Code-review found three dropped phrases, which I restored before the gate. Gate green, PR #2977 opened and subscribed. Other two trials are not yet judgeable."
+status: completed
+outcome: "Gate-freeze trial judged and deleted; dispatch-subagents Skill tightened as a new trial, merged (PR #2977)"
+summary: "Scheduled /prune-trial run, no human prompt. Judged the one judgeable trial (gate-freeze prose): no major or blocker Friction traces to it and edit-during-gate-run fell 13.0% to 7.5%, so the prune holds and its entry was deleted. A search subagent ranked failed-prose candidates; I chose the dispatch-subagents Skill sections 2-3 because a wired guard already enforces its read-first rule. The cut was small (-4 net) and every rule kept. A Sonnet probe pinned to the post-prune SHA answered a dispatch situation correctly. Code-review found three dropped phrases, which I restored before the gate. Gate green; PR #2977 opened, verdict posted and merged by me. Other two trials are not yet judgeable."
 prs:
   - "2977"
 docsRead:
@@ -45,17 +45,19 @@ frictions:
   - description: My prune of the dispatch-subagents Skill dropped three phrases that were rules; code-review caught them and I restored them before the gate.
     solution: Diff the pruned section against the old text for imperative phrases before committing.
     severity: minor
-durationSec: 507
+durationSec: 703
 models:
-  claude-sonnet-5-5: 68
+  claude-sonnet-5-5: 82
 toolCounts:
-  Bash: 22
+  Bash: 26
   Read: 3
-  Skill: 4
+  Skill: 5
   Agent: 4
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - .agents/prune-trials.yml
   - .agents/skills/dispatch-subagents/SKILL.md
@@ -152,28 +154,28 @@ subagents:
     durationSec: 61
     toolCalls: 10
     modelCalls: 9
-    tokenShare: 14.7
+    tokenShare: 12.4
   - type: general-purpose
     task: Sonnet probe of pruned Skill
     model: sonnet
     durationSec: 15
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 7.2
+    tokenShare: 6.1
   - type: general-purpose
     task: Standards review of prune
     model: sonnet
     durationSec: 25
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 5.1
+    tokenShare: 4.3
   - type: general-purpose
     task: Spec review of prune
     model: sonnet
     durationSec: 40
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 9.6
+    tokenShare: 8.1
 gitBranch: claude/practical-rubin-ufs0nj
 entrypoint: remote_trigger
 cliVersion: 2.1.319
