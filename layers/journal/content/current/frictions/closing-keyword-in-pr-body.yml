@@ -3,6 +3,8 @@ surface: safe
 summary: A PR body used a closing keyword in a non-closing sense, so GitHub closed an issue or merge-pr.ts refused the body.
 cause: "A PR body wrote 'does not close #N' or 'Fixes: #N' as a label; GitHub and merge-pr.ts read a negated or labelled keyword as a closing one. Signals: 'Fixes:', 'does not close', merge-pr.ts refusing a closing keyword, an issue closed on merge."
 status: open
+notes: |-
+  2026-11-08 design: a PreToolUse guard denying negated or labelled closing keywords in PR bodies dropped: it needs a Human-only guard (.claude/settings.json, scripts/hooks/**) for two low-severity events, pr-workflow.md:74 already warns and both sessions read it, and merge-pr.ts already refuses the labelled form.
 occurrences:
   - session: session_013zxzeRCJHe4rmKN5i2CQ16
     date: "2026-11-06"

@@ -3,6 +3,8 @@ surface: safe
 summary: A late line-length or wording fix needed its own commit and a full gate run.
 cause: "A fix to line wrapping or phrasing is made piecemeal after the first commit (a missed long line, a one-phrase reword), so each costs another commit and full gate:scoped. Signals: '80-column', 'whitespace-only', 'second commit and gate run'."
 status: open
+notes: |-
+  2026-11-08 design: a gate line-length check dropped: it needs a Human-only file (scripts/gate/gate.ts) to enforce an 80-column convention nobody has written down, for one nit and one minor that each cost a gate rerun.
 occurrences:
   - session: session_013zxzeRCJHe4rmKN5i2CQ16
     date: "2026-11-06"

@@ -3,6 +3,8 @@ surface: safe
 summary: Agents used git checkout or switch to read a file or change branch and discarded or tried to stage work.
 cause: "git checkout <ref> -- . or git switch with discard-changes is used to read a file or move branches; git-conventions.md forbids it. Signals: 'git switch --discard-changes', 'git checkout origin/main -- .', classifier denial, a lost edit."
 status: open
+notes: |-
+  2026-11-08 design: a PreToolUse guard denying git switch --discard-changes and git checkout <ref> -- . dropped: it needs a Human-only guard, the harness classifier already denied the costlier case, git-conventions.md:27 already forbids it, and the other cost one redone edit.
 occurrences:
   - session: session_013zxzeSRr9pF9MCBQDGAN5L
     date: "2026-11-07"
