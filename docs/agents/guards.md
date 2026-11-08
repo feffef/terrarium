@@ -34,9 +34,10 @@ follow it and don't route around it. If it is wrong, say so on the guard's issue
 | `bash-rules-hint.ts` | nothing: a hint, not a guard. After a piped, chained or multi-file Bash read it adds the rules whose `paths` match the files read | its script header | #1764 |
 | `read-first-hint.ts` | nothing: a hint, not a guard. At a session's first call of a kind CLAUDE.md or the UI rule binds to a doc (git, GitHub, issue write, screenshot) it points to that doc, once per doc. After a successful `mcp__github__create_pull_request` in the main session it says to invoke `close-session`, unless that was invoked after the PR call; likewise after a successful `merge-pr.ts` run | its script header | #1754, #1859, #2209, #2772 |
 | `adr-read-hint.ts` | nothing: a hint, not a guard. After an `Edit`, a `Write` or a Bash `git commit` it points to each ADR whose rule `paths` match a file written, or that the change names, unless this agent already read it in full | its script header | #2286, #2433 |
+| `network-start.ts` | nothing: a `SessionStart` hint. Probes the hosts in `PROBED_HOSTS` through the proxy and prints which are readable or blocked; prints nothing without `HTTPS_PROXY` | its script header; `environment-caveats.md` (what blocked means) | #2959 |
 
 `.claude/settings.json` wires the guards under `hooks.PreToolUse`, and the hints
-under `PostToolUse`, `PostToolUseFailure` and `UserPromptSubmit`; `harness-tag-stop.ts`, `merge-close-stop.ts` and `pr-subscribe-stop.ts` run under `Stop`.
+under `PostToolUse`, `PostToolUseFailure` and `UserPromptSubmit`; `harness-tag-stop.ts`, `merge-close-stop.ts` and `pr-subscribe-stop.ts` run under `Stop`; `network-start.ts` runs under `SessionStart`.
 
 ## Conventions every guard follows
 
