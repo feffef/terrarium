@@ -1,0 +1,231 @@
+schemaVersion: 1
+session: session_013zxzeRSjTLQV8K5UzQtX95
+startedAt: 2026-11-08T17:04:30Z
+endedAt: 2026-11-08T17:27:09Z
+kind: delegated
+goal: Weekly sweep of recurring session Frictions for fixes
+status: in-review
+outcome: "Ledger PR #2979 open and gated green, merge pending; no fix was worth dispatching or filing this run"
+summary: "The owner's one prompt was the /frictions-to-fixes invocation (human-instructed); everything after followed the Skill's steps (agent-executed). A survey subagent read 33 sessions, appended 35 occurrences to 24 ledger entries, opened 4 new entries, recorded 6 merged fix PRs and reset 3 stale tracked entries. I checked the regression screen myself: only premise-not-questioned qualified for an issue, but issue #2958 had already been filed and closed by PR #2973, which the survey had not recorded on that entry; I recorded it, so no regression issue was needed. I picked three never-fixed entries (closing keyword in PR bodies, git checkout/switch misuse, late formatting fixes). A design subagent read the real guard, hook and gate sources and recommended no change for all three: each needs a Human-only guard or gate file for two low-severity events, and the docs already state the rule and were read. I verified its mechanism claims by grep, recorded the drops as notes, and nothing was dispatched or filed as an issue. Ledger PR #2979 had code-review (Standards and Spec); the Spec axis found one stale cause, fixed. Gate green on the final head; merge-pr.ts is waiting on CI. Still open: the merge, and the closing PR is skipped because no fix PR was opened."
+prs:
+  - "2979"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: required before the first non-read-only git command; commit -F, trailer check, never chain git after a gate
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: required before the first GitHub operation; cloud tool mapping and listing overflow traps
+    useful: partly
+  - path: docs/agents/issue-tracker.md
+    reason: required before filing issues; no issue was filed, so only the regression-issue check used it
+    useful: partly
+  - path: docs/agents/triage-labels.md
+    reason: required with the tracker doc; no issue was filed
+    useful: no
+  - path: docs/agents/pr-workflow.md
+    reason: simple-change test, verdict comment and merge recipe for the ledger PR
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
+    reason: the survey subagent's brief and the Standards/Spec reviewers' spec; I read it whole first; subagents report it useful
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/design-brief.md
+    reason: design subagent's brief
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: only the design subagent read it, for the Prune Trial territory check; it reported it ruled out one edit
+    useful: yes
+  - path: docs/agents/guards.md
+    reason: only the design subagent read it, for the guard roster; it reported it useful
+    useful: yes
+  - path: .claude/skills/frictions-to-fixes/survey-brief.md
+    reason: (no reason given)
+  - path: .claude/skills/frictions-to-fixes/design-brief.md
+    reason: (no reason given)
+  - path: .claude/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: /home/user/terrarium/.claude/skills/frictions-to-fixes/design-brief.md
+    reason: (no reason given)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the run itself
+  - name: dispatch-subagents
+    reason: brief checklist before dispatching survey, design and reviewers
+  - name: code-review
+    reason: Standards and Spec review of the ledger PR diff
+  - name: close-session
+    reason: PR opened
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "The survey subagent appended fixes but missed that PR #2973 closed regression issue #2958 for premise-not-questioned; I found it only because I re-checked the regression screen before filing."
+    solution: Survey-brief §2.4 could say to check each closed regression issue's closing PR and record it as a fix on that entry.
+    severity: minor
+  - description: Picked three two-occurrence minor/nit entries whose only fixes were Human-only guards; the design subagent (96k tokens) returned no change for all three, so the pick, design and drop steps bought only ledger notes.
+    solution: SKILL.md §3 could skip entries whose docs already state the rule and were read and whose only fix is a guard or gate file, before spending a design agent.
+    severity: minor
+  - description: SKILL.md §5 step 4 says to review the ledger PR by the simple-change test, but the ledger diff (25 files, 238 lines) fails that test, so I ran code-review with two subagents.
+    solution: Say in §5 that a ledger PR is exempt from code-review, or that it is reviewed by the ledger content test and gate only.
+    severity: minor
+  - description: "Survey subagent hit ledger-append-refuses-held-session: its single --append call aborted on one held session, so it looped about 36 sequential calls, past the foreground limit, and mistyped four session ids."
+    solution: Let print-ledger-occurrence.ts --append skip already-held sessions and report them, instead of aborting the whole call.
+    severity: minor
+  - description: Stop hook asked me to push twice while work was mid-flight; each time a plain push opened no PR, but it interrupted waiting turns.
+    solution: Already tracked as stop-hook-nag; no new fix.
+    severity: nit
+  - description: A bare cd into a ledger subfolder moved the session's working directory, which the harness reported two turns later.
+    solution: Use absolute paths instead of cd, as CLAUDE.md-adjacent docs already advise (bare-cd-moves-session-cwd).
+    severity: nit
+  - description: The design subagent's note cited line numbers for pr-workflow.md and git-conventions.md that I kept in ledger notes; the Standards reviewer found git-conventions.md does not name git switch --discard-changes, so the note is slightly imprecise.
+    solution: Verify a doc-forbids claim against the exact command before writing it into a note.
+    severity: nit
+durationSec: 1360
+models:
+  claude-sonnet-5-5: 104
+toolCounts:
+  Read: 7
+  Skill: 4
+  Bash: 27
+  Agent: 4
+  ToolSearch: 2
+  mcp__github__issue_read: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+  Write: 1
+filesEdited:
+  - layers/journal/content/current/frictions/frictions-to-fixes-skill-gaps.yml
+  - layers/journal/content/current/frictions/closing-keyword-in-pr-body.yml
+  - layers/journal/content/current/frictions/git-checkout-misused-to-read-or-switch.yml
+  - layers/journal/content/current/frictions/late-formatting-fix-reruns-gate.yml
+  - layers/journal/content/current/frictions/premise-not-questioned.yml
+  - layers/journal/content/current/frictions/adr-read-after-edit.yml
+  - layers/journal/content/current/frictions/bare-cd-moves-session-cwd.yml
+  - layers/journal/content/current/frictions/chained-git-step-fails-silently.yml
+  - layers/journal/content/current/frictions/check-worktrees-unpushed-flags.yml
+  - layers/journal/content/current/frictions/counts-not-tallied.yml
+  - layers/journal/content/current/frictions/dispatch-read-guard-deny.yml
+  - layers/journal/content/current/frictions/drafts-caught-by-fact-check.yml
+  - layers/journal/content/current/frictions/glassbox-curate-run-entry-late.yml
+  - layers/journal/content/current/frictions/glassbox-update-edited-range-pages-left-stale.yml
+  - layers/journal/content/current/frictions/harness-proxy-blocks.yml
+  - layers/journal/content/current/frictions/irrelevant-rules-loaded.yml
+  - layers/journal/content/current/frictions/late-read-first-docs.yml
+  - layers/journal/content/current/frictions/mechanism-claim-from-recall.yml
+  - layers/journal/content/current/frictions/merge-close-hint-fires-without-merge.yml
+  - layers/journal/content/current/frictions/parallel-branches-same-lines-conflict.yml
+  - layers/journal/content/current/frictions/pr-opened-without-subscribe.yml
+  - layers/journal/content/current/frictions/session-id-hand-typed.yml
+  - layers/journal/content/current/frictions/skill-mode-not-detectable.yml
+  - layers/journal/content/current/frictions/stop-hook-nag.yml
+  - layers/journal/content/current/frictions/subagent-brief-defects.yml
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/guards.md
+docsReadBySubagents:
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - docs/agents/guards.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run code-review and gate:scoped before the PR and when an agent may merge; the summary was enough, full ADR not opened
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Session logs go to main without a PR; confirmed close-session's role; summary was enough
+    useful: partly
+  - path: .claude/rules/adr-0003.md
+    reason: Pushed early, opened the PR myself and subscribed; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Gave the provenance header for the PR, issue-less comments and the commit trailer check; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Skill-edit rule; I edited no Skill, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: Installed Skills are not edited; no candidate fix targeted one, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Prune Trial territory check; the design subagent used it to rule out a dispatch-subagents edit
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: About where rules live; I changed no rule or doc, so it did not apply
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded when I read ledger YAML in the Journal layer; no Tenant work was done
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Loaded by the triage-labels read; no sweep or labelling happened
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Gave the Human-only path list that made the guard and gate designs unbuildable by an agent; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded by the human-merge read; I wrote no ADR, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: "Only a subagent loaded it, reading ledger YAML; unrelated to this task (subagent verdict: no)"
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: "Only a subagent loaded it, reading ledger YAML; unrelated to this task (subagent verdict: no)"
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: "Only a subagent loaded it, reading ledger YAML; unrelated (subagent verdict: no)"
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: "Only a subagent loaded it, reading ledger YAML; unrelated (subagent verdict: no)"
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: "Only a subagent loaded it, reading ledger YAML; unrelated (subagent verdict: no)"
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: "Loaded for the design subagent reading hooks; it reported no use (subagent verdict: no)"
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Survey frictions and update ledger
+    durationSec: 611
+    toolCalls: 41
+    modelCalls: 35
+    tokenShare: 35.1
+  - type: general-purpose
+    task: Design fixes for three picks
+    durationSec: 125
+    toolCalls: 12
+    modelCalls: 9
+    tokenShare: 6.2
+  - type: general-purpose
+    task: Standards review of ledger diff
+    durationSec: 63
+    toolCalls: 10
+    modelCalls: 8
+    tokenShare: 6
+  - type: general-purpose
+    task: Spec review of ledger diff
+    durationSec: 41
+    toolCalls: 7
+    modelCalls: 4
+    tokenShare: 4
+gitBranch: ccr-a3f462f9-caqznp
+entrypoint: remote_mobile
+cliVersion: 2.1.319
+learnings:
+  - A closed regression issue can already name the PR that fixed it; read its closed_by_pull_requests before ranking a regression, since the survey may not have recorded that PR as a fix.
+landedBy: Stop
