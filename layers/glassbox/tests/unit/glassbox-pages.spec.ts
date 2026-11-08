@@ -38,7 +38,7 @@ const site: GlassboxSite = {
   titles: { '/t/glassbox/guide': 'Home', '/t/glassbox/guide/nuxt-content/collections': 'Collections', '/t/glassbox/guide/terrarium-practice/gate': 'The Gate', '/t/glassbox/drafts/zod/timestamps': 'Timestamps' },
 }
 
-const frontmatter = `---\ntitle: T\ndescription: D\nrevision: '${rev}'\nrevisionDate: '2026-10-14'\n---\n`
+const frontmatter = `---\ntitle: T\ndescription: D\nteaches: X\nrevision: '${rev}'\nrevisionDate: '2026-10-14'\n---\n`
 const lesson = `${frontmatter}
 Collections come from one manifest.
 
@@ -226,11 +226,20 @@ describe('glassboxPageProblems on fixture pages', () => {
     ['a Lesson description over 120 chars', 'nuxt-content/01.collections.md', lesson, 'description', 121, 'is 121 chars, more than 120'],
     ['a Walkthrough title over 36 chars', 'walkthroughs/from-file-to-browser.md', walkthrough, 'title', 37, 'is 37 chars, more than 36'],
     ['a Walkthrough description over 140 chars', 'walkthroughs/from-file-to-browser.md', walkthrough, 'description', 141, 'is 141 chars, more than 140'],
+    ['a Lesson teaches over 400 chars', 'nuxt-content/01.collections.md', lesson, 'teaches', 401, 'is 401 chars, more than 400'],
+    ['a Walkthrough teaches over 400 chars', 'walkthroughs/from-file-to-browser.md', walkthrough, 'teaches', 401, 'is 401 chars, more than 400'],
   ])('fails %s in the guide, not in drafts', (_name, file, page, field, length, message) => {
-    const long = page.replace(field === 'title' ? 'title: T' : 'description: D', `${field}: ${'x'.repeat(length)}`)
+    const placeholder = { title: 'title: T', description: 'description: D', teaches: 'teaches: X' }[field]!
+    const long = page.replace(placeholder, `${field}: ${'x'.repeat(length)}`)
     expect(problemsOf(file, long).join('\n')).toContain(message)
-    expect(problemsOf(file, page.replace(field === 'title' ? 'title: T' : 'description: D', `${field}: ${'x'.repeat(length - 1)}`))).toEqual([])
+    expect(problemsOf(file, page.replace(placeholder, `${field}: ${'x'.repeat(length - 1)}`))).toEqual([])
     expect(problemsOf(file, long, 'drafts').join('\n')).not.toContain('chars, more than')
+  })
+
+  it('fails a guide page with no teaches, not in drafts', () => {
+    expect(problemsOf('nuxt-content/01.collections.md', lesson.replace('teaches: X\n', ''))).toEqual(['no teaches'])
+    expect(problemsOf('walkthroughs/from-file-to-browser.md', walkthrough.replace('teaches: X\n', ''))).toEqual(['no teaches'])
+    expect(problemsOf('nuxt-content/01.collections.md', lesson.replace('teaches: X\n', ''), 'drafts')).toEqual([])
   })
 
   it('fails a guide Lesson title of more than four words, not in drafts or on a Walkthrough', () => {
@@ -374,7 +383,7 @@ describe('every Glass Box page matches the code at its revision', () => {
 
 describe('glassboxLengthProblems', () => {
   it('names a Lesson title over its cap and passes a page that fits', () => {
-    const page = (title: string) => `---\ntitle: ${title}\ndescription: Short.\n---\n\nBody.\n`
+    const page = (title: string) => `---\ntitle: ${title}\ndescription: Short.\nteaches: Short.\n---\n\nBody.\n`
     expect(glassboxLengthProblems({ 'web-standards/04.colour.md': page('Colour and motion preferences'), 'web-standards/02.svg.md': page('SVG') }))
       .toEqual(['guide/pages/web-standards/04.colour.md: title "Colour and motion preferences" is 29 chars, more than 28'])
   })

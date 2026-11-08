@@ -2,7 +2,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
-import { subjectPages, orientation, pageOverview, runStem, shortPath, warningLines } from '../../scripts/orient.ts'
+import { guideIndex, guidePath, subjectPages, orientation, pageOverview, runStem, shortPath, warningLines } from '../../scripts/orient.ts'
 
 const page = `---
 title: Blocking hooks
@@ -25,8 +25,26 @@ Body text.
 `
 
 describe('pageOverview', () => {
-  it('gives the stem, title and description on one line, and no body', () => {
-    expect(pageOverview('claude-code/05.blocking-hooks', page)).toBe('- claude-code/05.blocking-hooks: Blocking hooks. Hooks that refuse a wrong tool call.')
+  it('gives the stem, title, description and dates on one line, and no body', () => {
+    expect(pageOverview('claude-code/05.blocking-hooks', page, {}, { read: '2026-11-06' })).toBe('- claude-code/05.blocking-hooks: Blocking hooks. Hooks that refuse a wrong tool call. [read 2026-11-06 · checked never]')
+  })
+
+  it('puts Teaches first, from the frontmatter', () => {
+    const taught = page.replace('revision:', 'teaches: "Concept: deny JSON."\nrevision:')
+    expect(pageOverview('hooks/20.blocking-hooks', taught).split('\n')[1]).toBe('  Teaches: Concept: deny JSON.')
+  })
+
+  it('adds the Why and watch lead-ins, as plain words', () => {
+    const lesson = `${page}\n### Why it's built this way\n\n- **A crash blocks.** Text.\n- **Keys from :term[Catalog]{id="catalog"},** text.\n\n### What to watch for\n\n- **The [deny](/x) message is the instruction.** Text.\n- **A shared point.** [Hooks](/t/glassbox/guide/hooks/hooks#why) says why.\n\n## Try it\n\n- **Not a lead-in.** Text.\n`
+    expect(pageOverview('hooks/20.blocking-hooks', lesson, { 'hooks/hooks': 'Claude Code hooks' }).split('\n').slice(1)).toEqual([
+      "  Why: A crash blocks · Keys from Catalog",
+      '  Watch: The deny message is the instruction · A shared point → Claude Code hooks',
+    ])
+  })
+
+  it("adds a Walkthrough's stops, each with the Lessons it links", () => {
+    const walk = `---\ntitle: A walk\ndescription: A story.\n---\n\n## 1. A Collection opts in\n\nText.\n\n::lessons\n[Cross-tenant reads](/t/glassbox/guide/x/y) · :file[a.ts]\n::\n\n## 2. The :term[Catalog] lists it\n\n## Where next\n`
+    expect(pageOverview('walkthroughs/a-walk', walk).split('\n')[1]).toBe('  Stops: A Collection opts in [Cross-tenant reads] · The Catalog lists it')
   })
 })
 
@@ -42,8 +60,8 @@ describe('orientation', () => {
     write('guide/terms/hook.yml', 'term: Hook\ndefinition: A command Claude Code runs on an event.\n')
     write('workshop/pages/index.md', '---\ntitle: Workshop\n---\n\n## Memory\n\nA lead.\n')
     write('workshop/runs/2026-11-06T0900.yml', 'focus: first\n')
-    write('workshop/runs/2026-11-07T0900.yml', 'focus: second\n')
-    write('workshop/checks/update.yml', 'pages: []\n')
+    write('workshop/runs/2026-11-07T0900.yml', 'focus: second\npagesRead:\n  - claude-code/01.old\n')
+    write('workshop/checks/update.yml', "pages:\n  - page: claude-code/05.blocking-hooks\n    checked: '2026-11-05'\n")
   })
   afterAll(() => rmSync(base, { recursive: true, force: true }))
 
@@ -54,14 +72,32 @@ describe('orientation', () => {
     const seen: (string | undefined)[] = []
     const out = run((since) => (seen.push(since), 'abc1234 a guide commit'))
     expect(out.split('\n').filter((l) => l.startsWith('# '))).toEqual([
-      '# Run entry', '# Open PRs that touch Glass Box', '# Memory page', '# Last 5 curate runs, newest first', '# glassbox-update checks', '# Page-check warnings', '# Guide and drafts changes since the last curate run', '# Guide pages',
+      '# Run entry', '# Open PRs that touch Glass Box', '# Memory page', '# Last 5 curate runs, newest first', '# Page-check warnings', '# Guide and drafts changes since the last curate run', '# Guide pages',
     ])
-    for (const text of ['workshop/runs/2026-11-07T1005.yml', 'focus: "<', '- #1 a PR', 'A lead.', 'focus: first', 'focus: second', 'pages: []', 'abc1234 a guide commit']) expect(out).toContain(text)
+    for (const text of ['workshop/runs/2026-11-07T1005.yml', 'focus: "<', '- #1 a PR', 'A lead.', 'focus: first', 'focus: second', 'abc1234 a guide commit', 'Read each whole', 'This output: ']) expect(out).toContain(text)
     expect(out.indexOf('focus: second')).toBeLessThan(out.indexOf('focus: first'))
     expect(out).toContain('05.blocking-hooks.md ×1')
-    expect(out).toContain('- claude-code/05.blocking-hooks: Blocking hooks. Hooks that refuse a wrong tool call.')
-    for (const text of ['term: Hook', 'Some instructions keep being missed']) expect(out).not.toContain(text)
+    for (const text of ['term: Hook', 'Some instructions keep being missed', 'pagesRead:\n  - claude-code', 'Blocking hooks. Hooks']) expect(out).not.toContain(text)
     expect(seen).toEqual(['2026-11-07T09:00:00Z'])
+  })
+
+  it('indexes every page with the dates its runs and checks give, through renames', () => {
+    const [out = '', ...rest] = guideIndex(base, () => [['claude-code/01.old', 'claude-code/02.older'], ['claude-code/02.older', 'claude-code/05.blocking-hooks']])
+    expect(rest).toEqual([])
+    expect(out).toContain('- claude-code/05.blocking-hooks: Blocking hooks. Hooks that refuse a wrong tool call. [read 2026-11-07 · checked 2026-11-05]')
+    expect(out.split('\n')[2]).toMatch(/^Each page: /)
+  })
+
+  it('splits the index into parts under the cap, each with the key', () => {
+    const two = mkdtempSync(join(tmpdir(), 'orient-two-'))
+    for (const stem of ['claude-code/05.a', 'claude-code/06.b']) {
+      mkdirSync(dirname(join(two, `guide/pages/${stem}.md`)), { recursive: true })
+      writeFileSync(join(two, `guide/pages/${stem}.md`), page)
+    }
+    const parts = guideIndex(two, () => [], 1)
+    rmSync(two, { recursive: true, force: true })
+    expect(parts).toHaveLength(2)
+    expect(parts[1]).toMatch(/^# Guide pages, part 2 of 2\n\nEach page: [\s\S]*- claude-code\/06\.b: Blocking hooks\./)
   })
 
   it('prints a Subject\'s pages in full with the pagesRead lines they make', () => {
@@ -80,6 +116,10 @@ describe('orientation', () => {
     expect(seen).toEqual([undefined])
     expect(out).toContain('# Last 30 guide and drafts changes (no curate run yet)')
   })
+})
+
+describe('guidePath', () => {
+  it('drops the order prefixes', () => expect(guidePath('claude-code/05.blocking-hooks')).toBe('claude-code/blocking-hooks'))
 })
 
 describe('runStem', () => {

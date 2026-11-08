@@ -1,6 +1,7 @@
 ---
 title: Planning a big change
 description: How an idea too big for one session becomes a map of decision tickets, then a spec, then stories that agents build one PR at a time.
+teaches: "Story: a Trusted user's big idea becoming stories agents build. Start: /wayfinder, run by hand. End: to-spec writes a spec; to-tickets splits it into stories, one PR each. Code: wayfinder:map, tickets (research, prototype, grilling, task), issue dependencies, grilling, domain-modeling, needs-triage. A real case: map #1965 for this textbook, 11 tickets; task #1987 wrote 23 stories under spec #1985."
 revision: 'f16509d1024b69585d7fc7387d135682ad39b9b6'
 revisionDate: '2026-11-08'
 publishedAt: '2026-11-03T13:25:19Z'

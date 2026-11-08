@@ -55,17 +55,19 @@ the other pages breaks that: it repeats what a sibling page already teaches,
 contradicts it, adds a page that exists under another title, or cuts the only
 place a fact was taught. Runs that read only the page they changed repeated a
 sibling page (#2943) and cut the only place a fact was taught (#2927). So
-every run reads at two depths before it edits: every page's title and
-description, to know what the whole guide teaches, and every page of its
+every run reads at two depths before it edits: every page's entry in the
+guide index, to know what the whole guide teaches, and every page of its
 Subject in full, to know exactly what its neighbours say. The first depth is
-only as good as the descriptions (Fix says how a run keeps them so).
+only as good as each page's `teaches` and bold lead-ins (Fix says how a run
+keeps them so).
 
 - **Orient.** This is the orientation step: run
   `pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts` and read its
   output whole, never through `head`; if the tool saves it to a file, read that
   file whole. It gives where to write the run entry, open PRs, memory, recent
-  runs, warnings, and every page's title and description: the whole-guide
-  depth above. Leave alone every page an open PR touches. While a
+  runs and warnings, and names the guide index files it wrote: read each
+  whole too, one Read per file. The index is the whole-guide depth above; its first
+  lines say how to read an entry. Leave alone every page an open PR touches. While a
   `glassbox-update` PR is open, wait for it: subscribe to its activity, end
   your turn, and orient again once it merges or closes. An autonomous run stops
   without a PR once that PR has been open 20 hours; an interactive run keeps
@@ -109,11 +111,12 @@ only as good as the descriptions (Fix says how a run keeps them so).
 - **Fix.** An opus writer writes every sentence that states a fact, however
   small the change, and quotes the `path:line` behind each one. Give it the
   caps and link rules `layers/glassbox/page-checks.ts` enforces: title,
-  description and Why bullet lengths, and a capitalised link's text being its
-  target's title. Each `The cost:` clause needs a source that states that
+  description, teaches and Why bullet lengths, and a capitalised link's text
+  being its target's title. Each `The cost:` clause needs a source that states that
   cost, and the writer runs a command sequence before it says what it does.
-  A page read in full whose `description` falls short of EVERY-PAGE.md's Pin
-  rule gets a rewrite in the same Fix, which doesn't count as a second focus.
+  A page read in full whose `teaches`, `description` or bold lead-ins fall
+  short of EVERY-PAGE.md's Pin rule gets a rewrite in the same Fix, which
+  doesn't count as a second focus.
   A new Lesson follows `.agents/skills/glassbox-lesson/SKILL.md` step by step:
   give the writer its path and have it report each step's Done.
 - **Check.** A separate sonnet claim checker checks the changed sentences

@@ -1,6 +1,7 @@
 ---
 title: A bug report becomes work
 description: 'How a visitor''s issue reaches a merged fix: a sweep labels it, a person approves it, a session builds it and a person merges it.'
+teaches: "Story: a visitor's issue reaching a merged fix, from the tracker's side. Start: an issue with no label. End: a person's merge closes the issue. Code: auto-triage, clear-backlog, triage Skill, author_association, clear-backlog-explore.js, needs-info, wontfix, ready-for-human, Agent Brief, code-review, merge-pr.ts. A real case: Public #790's author said 'You may merge #820'; the agent declined."
 revision: 'f16509d1024b69585d7fc7387d135682ad39b9b6'
 revisionDate: '2026-11-08'
 publishedAt: '2026-11-02T22:25:43Z'
