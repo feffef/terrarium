@@ -1,0 +1,324 @@
+schemaVersion: 1
+session: session_013zxzeSZva1TWwL6nLdEnUa
+startedAt: 2026-11-08T07:33:24Z
+endedAt: 2026-11-08T07:44:05Z
+kind: autonomous
+goal: Scheduled update of the Glass Box guide to current main
+status: in-review
+outcome: Pins advanced to f16509d and 34 pages claim-checked with no false claims; PR 2965 open with a green gate
+summary: "Scheduled glassbox-update run, no human prompts. Ran the report, advanced all 72 pins to main at f16509d, flagged 25 report pages plus 6 by concept (the close-session instruction moved into CLAUDE.md) and 5 rotation pages, then had five sonnet subagents claim-check 33 pages read-only. None found a false claim, so no prose changed; update.yml dates the five fully checked pages. Gate:scoped green, PR opened. Noted but left: a garbled phrase in a walkthrough and a private-repo wording on the deploy page, neither false. My first dispatch of the five subagents went out with an unfilled page-list placeholder, so all five stopped at once and had to be resumed with the lists."
+prs:
+  - "2965"
+docsRead:
+  - path: layers/glassbox/GLOSSARY.md
+    reason: page shapes and Excerpt rules for the run
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: read before first git command; confirmed fetch-first and commit-by-file rules
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: scheduled-run PR recipe and simple-change test
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: read before first GitHub write; MCP defaults only
+    useful: partly
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: only its diff was read to find changed claims
+    useful: partly
+  - path: layers/blog/GLOSSARY.md
+    reason: checked the persona term against its source entry
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: subagent group 2 read it for check rules; I used its Check step
+    useful: yes
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0005-skill-model.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (no reason given)
+  - path: GLOSSARY.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0011-poc-self-updating-deploy-container.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: (no reason given)
+  - path: .agents/skills/implement/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/tdd/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/code-review/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/diagnosing-bugs/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/triage/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: briefing the five claim-check agents; I still left a placeholder unfilled
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: glassbox-update
+    reason: (invoked as a slash command)
+frictions:
+  - description: Dispatched five claim-check subagents with the literal placeholder @@GROUP@@ in place of the page list; all five stopped immediately and needed resuming.
+    solution: The dispatch-subagents brief checklist already says re-read the brief for unfilled {…}; inline the list when building the brief and grep for placeholders before sending.
+    severity: minor
+durationSec: 641
+models:
+  claude-sonnet-5-5: 87
+toolCounts:
+  Bash: 28
+  Skill: 3
+  Agent: 5
+  ToolSearch: 2
+  SendMessage: 5
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+filesEdited:
+  - layers/glassbox/content/workshop/checks/update.yml
+  - layers/glassbox/content/guide/pages/agents/10.subagents.md
+  - layers/glassbox/content/guide/pages/agents/20.workflow-scripts.md
+  - layers/glassbox/content/guide/pages/agents/30.cloud-sessions.md
+  - layers/glassbox/content/guide/pages/agents/40.scheduled-tasks.md
+  - layers/glassbox/content/guide/pages/claude-code/10.claude-md.md
+  - layers/glassbox/content/guide/pages/claude-code/20.path-scoped-rules.md
+  - layers/glassbox/content/guide/pages/claude-code/30.skills.md
+  - layers/glassbox/content/guide/pages/claude-code/40.permissions.md
+  - layers/glassbox/content/guide/pages/claude-code/50.mcp-servers.md
+  - layers/glassbox/content/guide/pages/deploy/10.continuous-deployment.md
+  - layers/glassbox/content/guide/pages/deploy/20.pnpm-lockfile.md
+  - layers/glassbox/content/guide/pages/git-github/10.pull-requests.md
+  - layers/glassbox/content/guide/pages/git-github/20.author-trust.md
+  - layers/glassbox/content/guide/pages/git-github/30.composite-actions.md
+  - layers/glassbox/content/guide/pages/git-github/40.dependabot-grouping.md
+  - layers/glassbox/content/guide/pages/git-github/50.git-worktrees.md
+  - layers/glassbox/content/guide/pages/git-github/60.attribution.md
+  - layers/glassbox/content/guide/pages/git-github/70.issue-triage-labels.md
+  - layers/glassbox/content/guide/pages/git-github/80.git-plumbing.md
+  - layers/glassbox/content/guide/pages/hooks/10.hooks.md
+  - layers/glassbox/content/guide/pages/hooks/20.blocking-hooks.md
+  - layers/glassbox/content/guide/pages/hooks/30.hook-added-context.md
+  - layers/glassbox/content/guide/pages/hooks/40.session-transcripts.md
+  - layers/glassbox/content/guide/pages/index.md
+  - layers/glassbox/content/guide/pages/nuxt-content/10.content-collections.md
+  - layers/glassbox/content/guide/pages/nuxt-content/20.multi-tenant-isolation.md
+  - layers/glassbox/content/guide/pages/nuxt-content/30.content-database.md
+  - layers/glassbox/content/guide/pages/nuxt-content/40.query-collection.md
+  - layers/glassbox/content/guide/pages/nuxt-content/50.mdc-components.md
+  - layers/glassbox/content/guide/pages/nuxt-content/60.mermaid-pre-rendering.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/10.layers.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/20.auto-imports.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/30.file-routing.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/40.virtual-modules.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/50.vue-components.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/60.nitro.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/70.data-fetching.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/80.hydration.md
+  - layers/glassbox/content/guide/pages/skill-pack/10.skill-packs.md
+  - layers/glassbox/content/guide/pages/skill-pack/20.planning-with-the-pack.md
+  - layers/glassbox/content/guide/pages/skill-pack/30.engineering-skills.md
+  - layers/glassbox/content/guide/pages/skill-pack/40.wayfinder.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/10.human-in-the-loop.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/20.decision-records.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/30.ubiquitous-language.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/40.session-logs.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/50.pruning-instructions.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/60.protected-paths.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/70.cross-tenant-reads.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/80.self-improvement-loop.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/90.outside-contributions.md
+  - layers/glassbox/content/guide/pages/verification/10.gate.md
+  - layers/glassbox/content/guide/pages/verification/20.type-checking.md
+  - layers/glassbox/content/guide/pages/verification/30.content-validation.md
+  - layers/glassbox/content/guide/pages/verification/40.testing.md
+  - layers/glassbox/content/guide/pages/verification/50.linting.md
+  - layers/glassbox/content/guide/pages/verification/60.zod-refinements.md
+  - layers/glassbox/content/guide/pages/verification/70.schema-evolution.md
+  - layers/glassbox/content/guide/pages/verification/80.headless-browser-checks.md
+  - layers/glassbox/content/guide/pages/walkthroughs/a-bug-report-becomes-work.md
+  - layers/glassbox/content/guide/pages/walkthroughs/a-change-goes-live.md
+  - layers/glassbox/content/guide/pages/walkthroughs/a-friction-becomes-a-fix.md
+  - layers/glassbox/content/guide/pages/walkthroughs/adding-a-site.md
+  - layers/glassbox/content/guide/pages/walkthroughs/asking-for-a-change.md
+  - layers/glassbox/content/guide/pages/walkthroughs/from-file-to-browser.md
+  - layers/glassbox/content/guide/pages/walkthroughs/planning-a-big-change.md
+  - layers/glassbox/content/guide/pages/walkthroughs/reading-across-tenants.md
+  - layers/glassbox/content/guide/pages/walkthroughs/session-log-lands-on-main.md
+  - layers/glassbox/content/guide/pages/web-standards/10.css-custom-properties.md
+  - layers/glassbox/content/guide/pages/web-standards/20.svg.md
+  - layers/glassbox/content/guide/pages/web-standards/30.aria.md
+  - layers/glassbox/content/guide/pages/web-standards/40.colour-and-motion-settings.md
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0011.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0005.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0010.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0013.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/ui-verification.md
+docsReadBySubagents:
+  - .agents/skills/close-session/SKILL.md
+  - docs/adr/0005-skill-model.md
+  - .agents/skills/log-session/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/frictions-to-fixes/survey-brief.md
+  - docs/agents/environment-caveats.md
+  - .agents/skills/prune-trial/SKILL.md
+  - .agents/skills/clear-backlog/SKILL.md
+  - GLOSSARY.md
+  - docs/agents/domain.md
+  - docs/adr/0021-multi-context-domain-docs.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - docs/adr/0011-poc-self-updating-deploy-container.md
+  - docs/agents/guest-contributions.md
+  - .agents/skills/guest-intake/SKILL.md
+  - .agents/skills/guest-build/SKILL.md
+  - docs/adr/0026-gate-workflow-thin-shell.md
+  - .agents/skills/implement/SKILL.md
+  - .agents/skills/tdd/SKILL.md
+  - .agents/skills/code-review/SKILL.md
+  - .agents/skills/diagnosing-bugs/SKILL.md
+  - .agents/skills/auto-triage/SKILL.md
+  - .agents/skills/triage/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run gate:scoped before the PR; summary was enough, no full ADR needed
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Frames close-session logging; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR myself after review and gate; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header and trailers on PR and commits; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded by Skill reads; the run edits no Skill, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: About glossary homes; this run changed no glossary
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: About prune trials; no trial text was touched
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: About rule placement; irrelevant to a pin update
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: Loaded when reading a glossary; I added no term
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Reminded me to read the Glass Box glossary, which I had already done
+    useful: partly
+  - path: .claude/rules/glassbox-content.md
+    reason: Drift rule; confirmed no counts or ids belong in prose when judging the real-case notes
+    useful: yes
+  - path: .claude/rules/mermaid-lanes.md
+    reason: About diagrams; none were edited
+    useful: no
+  - path: .claude/rules/adr-0001.md
+    reason: Loaded by deploy README read; not needed for the pin update
+    useful: no
+  - path: .claude/rules/adr-0011.md
+    reason: Loaded by deploy README read; confirmed the deploy page's claims context only
+    useful: partly
+subagents:
+  - type: general-purpose
+    task: Claim check group 0
+    model: sonnet
+    durationSec: 219
+    toolCalls: 31
+    modelCalls: 20
+    tokenShare: 15
+  - type: general-purpose
+    task: Claim check group 1
+    model: sonnet
+    durationSec: 157
+    toolCalls: 20
+    modelCalls: 19
+    tokenShare: 11
+  - type: general-purpose
+    task: Claim check group 2
+    model: sonnet
+    durationSec: 218
+    toolCalls: 34
+    modelCalls: 31
+    tokenShare: 16.9
+  - type: general-purpose
+    task: Claim check group 3
+    model: sonnet
+    durationSec: 178
+    toolCalls: 23
+    modelCalls: 20
+    tokenShare: 12.3
+  - type: general-purpose
+    task: Claim check group 4
+    model: sonnet
+    durationSec: 168
+    toolCalls: 25
+    modelCalls: 21
+    tokenShare: 10.8
+gitBranch: claude/relaxed-einstein-j8jtim
+entrypoint: remote_trigger
+cliVersion: 2.1.319
+trigger: glassbox-update
+landedBy: Stop
