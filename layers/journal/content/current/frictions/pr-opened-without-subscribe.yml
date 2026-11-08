@@ -1,0 +1,26 @@
+name: pr-opened-without-subscribe
+surface: safe
+summary: After opening a PR, agents did not subscribe to its activity or did not read all of it, so merges and owner comments reached them late or only when the owner asked.
+cause: "ADR-0003 says to subscribe to a PR's activity after opening it and keep working until it is merged; sessions end the turn or poll by hand without calling subscribe_pr_activity, close as in-review though the PR merges minutes later, or read only review threads and CI after an event and miss PR-level comments. Signals: 'without subscribing', 'never called subscribe_pr_activity', 'sat until the owner merged it', 'the owner had to ask whether I was subscribed', 'missed the owner's PR-level comments'."
+status: open
+occurrences:
+  - session: session_013zxzeS85pNBsS4oQSVQntp
+    date: "2026-11-07"
+    severity: moderate
+    description: "Opened PR 2922 without subscribing or merging; ended turn, so it sat 3.5 hours until the owner merged it."
+    solution: "Put subscribe, merge-pr.ts and close-session re-invoke in glassbox-update step 7 as its done-criterion."
+  - session: session_013zxzeSy38XR1wPjCGFUExY
+    date: "2026-11-07"
+    severity: major
+    description: "ADR-0003 says to subscribe to a PR's activity after opening it; I never called subscribe_pr_activity on any of the seven PRs and polled by hand instead, so the owner's merges reached me only when they told me."
+    solution: "Subscribe right after create_pull_request; clear-backlog section 4 should say so, since its Land step doesn't name the subscription."
+  - session: session_013zxzePgtT7wXDhHd9eBdH2
+    date: "2026-11-07"
+    severity: moderate
+    description: "Checked only review threads and CI after the subscribe event, missing the owner's two PR-level comments (a question and a merge conflict) until the owner pointed it out."
+    solution: "On a subscribe event read the PR's issue comments (get_comments) and reviews, not only review threads."
+  - session: session_013zxzeQyHhutDMJtzGF5UQU
+    date: "2026-11-07"
+    severity: major
+    description: "Opened PR 2951 without calling subscribe_pr_activity (ADR-0003) and closed as in-review; it merged five minutes later and the log stayed in-review until the owner asked. HUMAN-PROMPTED-CLOSURE"
+    solution: "Subscribe in the same turn the PR opens, and re-invoke close-session on the merge event; the system prompt's ask-first line must not override ADR-0003."

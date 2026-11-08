@@ -71,3 +71,8 @@ occurrences:
     severity: nit
     description: "A cd into the pages folder in one Bash call made the shell cwd drift for later calls, forcing absolute paths."
     solution: "Use absolute paths and avoid cd in compound commands."
+  - session: session_013zxzePKudcTUhp46zRqz4X
+    date: "2026-11-08"
+    severity: nit
+    description: "A relative cd into the skills folder twice left the shell in the wrong directory, so a python read failed with file-not-found."
+    solution: "Use absolute paths in every command instead of cd."

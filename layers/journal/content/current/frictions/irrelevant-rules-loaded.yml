@@ -41,3 +41,23 @@ occurrences:
     severity: nit
     description: "Eleven of seventeen loaded rules needed a no verdict in log-session, several loaded after Bash commands that only read Glass Box files, so each cost context and an entry."
     solution: "Narrow the paths of tenant-layers, data-shapes, mdc-when-to-use, adr-0002 and mermaid-lanes, or let an unused loaded rule count as no without an entry."
+  - session: session_013zxzeRYiNjyrjrq8JVWSuu
+    date: "2026-11-07"
+    severity: nit
+    description: "Subagents loaded and read many rules unrelated to their pool slice (adr-0014, adr-0028); reports spent words on no-verdicts."
+    solution: "Narrower paths on rules loaded by grep-style reads of unrelated Skills."
+  - session: session_013zxzePc3zKAyZGZfucZa9y
+    date: "2026-11-07"
+    severity: nit
+    description: "Seven unrelated path rules (mermaid, MDC, data-shapes, tenant-layers, adr-0002) loaded just from reading tenant.config.ts for the tag enum"
+    solution: "Narrower paths for those rules, so reading a manifest for its tag list does not load them"
+  - session: session_013zxzeNpEgoBzTxHw74sJHY
+    date: "2026-11-07"
+    severity: nit
+    description: "mermaid-lanes loads on every Glass Box page read though only Mermaid pages need it, and adr-0027 and adr-0005 load on any docs/ or .agents/skills/ read; six of my 13 rule verdicts were no."
+    solution: "Narrow mermaid-lanes paths to the Mermaid sources and render script, and trim adr-0027 and adr-0005 paths (ADR-0029)."
+  - session: session_013zxzeRCCqrxVitqSaxJa4K
+    date: "2026-11-07"
+    severity: nit
+    description: "A read-only grep of layers/glassbox/tenant.config.ts loaded adr-0002, data-shapes, mdc-when-to-use and tenant-layers; all four got a no verdict, and mermaid-lanes loaded on reading walkthroughs with no diagram edit."
+    solution: "Their paths are right for editing those files; the cost is the loader firing on read-only access. Decide whether a read-only grep should load rules, or accept the cost."

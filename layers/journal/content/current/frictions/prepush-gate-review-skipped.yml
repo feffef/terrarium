@@ -123,3 +123,18 @@ occurrences:
     severity: nit
     description: "I almost merged PR 2864 without running code-review on my hand-fix commit, then ran it after noticing the follow-up exceeded the simple-change limit, and first gave the review a wrong fixed point."
     solution: "Apply the pr-workflow simple-change count to a hand-fix commit before opening the PR, and take the fixed point from git log."
+  - session: session_013zxzeRwjiiLkjj6sQ3u49g
+    date: "2026-11-07"
+    severity: minor
+    description: "Skipped code-review although the diff adds a file, so it was not a simple change by pr-workflow."
+    solution: "Run code-review, or have pr-workflow exempt state-only run entries."
+  - session: session_013zxzePgtT7wXDhHd9eBdH2
+    date: "2026-11-07"
+    severity: nit
+    description: "Opened the PR after the gate with only my own diff read, not code-review, which pr-workflow allows for simple changes; the diff touched nine files of prose."
+    solution: "Fine for a prose-only cut; state the skip in the PR as I did."
+  - session: session_013zxzeRnhzjUpugh9vCH4UW
+    date: "2026-11-08"
+    severity: minor
+    description: "Skipped code-review though the diff adds a file, so it was not a simple change under pr-workflow; relied on the fact-check."
+    solution: "The digest Skill should state whether fact-check substitutes for code-review."

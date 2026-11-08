@@ -77,3 +77,8 @@ occurrences:
     severity: nit
     description: "Wrote a PR verdict comment's Reviewed SHA by hand (a made-up full hash from a short one) instead of pasting verdict-line.ts output; caught and corrected before merging."
     solution: "Run verdict-line.ts first and paste its output; never type the hash."
+  - session: session_013zxzeSRr9pF9MCBQDGAN5L
+    date: "2026-11-07"
+    severity: minor
+    description: "I typed a PR head SHA from memory into the verdict comment on PR 2920; it was wrong, and I had to post a corrected verdict after running verdict-line.ts."
+    solution: "Run verdict-line.ts first and paste its output, as pr-workflow says."

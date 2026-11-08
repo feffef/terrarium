@@ -2,14 +2,16 @@ name: output-trim-drops-needed-line
 summary: >-
   An agent trimmed or filtered a command's output (tail, head, grep) and lost the line it needed.
 cause: >-
-  A command's output is piped to tail -N, head -N or grep assuming the wanted line (a PID, a path, a section, a status) is in what is kept, but the script prints it elsewhere or the filter hides a failure; later commands get garbage args, work from a truncated report, or the agent reports success it did not see. The old tail-pipe guard is gone (tail-pipe-guard). Signals: 'tail -3 dropped', 'tail -1 assuming it prints only its path', 'filtered through grep, which hid', 'head -300 truncated'.
+  A command's output is piped to tail -N, head -N or grep assuming the wanted line (a PID, a path, a section, a status) is in what is kept, but the script prints it elsewhere or the filter hides a failure; later commands get garbage args, work from a truncated report, or the agent reports success it did not see. The old tail-pipe guard is gone (tail-pipe-guard). Signals: 'tail -3 dropped', 'tail -1 assuming it prints only its path', 'filtered through grep, which hid', 'head -300 truncated'. Since PR #2937 (2026-11-07) close-session and log-session SKILL.md say never to filter log-session.ts output; a piped call can still drop a needed line.
 surface: safe
-status: tracked
-ref: "issue #2884 (log-session --author piped through grep; covers the grep occurrence only)"
+status: open
 fixes:
   - pr: 2534
     date: "2026-10-25"
     summary: "inspect-session SKILL.md now says outline.ts prints its path with the line count, then a coverage line, not only the path."
+  - pr: 2937
+    date: "2026-11-07"
+    summary: "Closes #2884: close-session and log-session SKILL.md now say never to filter log-session.ts output, and a Stop hook blocks the turn's end after a merge without close-session."
 occurrences:
   - session: session_01Ru6jnZ4cFTdf41ZWLonsTv
     date: "2026-10-24"
@@ -31,3 +33,8 @@ occurrences:
     severity: moderate
     description: "I filtered the log-session --author output through grep, which hid that the final log update was not accepted, and I then reported the log as written without checking the scratch."
     solution: "Read the full --author output and check that the scratch status matches before saying the log is written."
+  - session: session_013zxzePKudcTUhp46zRqz4X
+    date: "2026-11-08"
+    severity: nit
+    description: "Piped log-session.ts --author output through head, against the close-session rule never to filter it; the refusal was still visible, but a longer warning could have been cut."
+    solution: "Run the helper unfiltered; the rule sits on the last line of close-session, which I had read."

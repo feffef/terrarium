@@ -1,0 +1,16 @@
+name: peer-session-message-no-reply
+surface: outside
+summary: A message sent to another session was delivered but that session had no tool to answer, so the owner had to relay its reply by hand.
+cause: "The session reached with send_message (a designer or update session) has no send_message tool of its own, so its answer or retro reaches the sender only when the owner pastes it. Signals: 'had no tool to reply', 'the update session had no send_message tool', 'the user relayed its answer by hand'."
+status: open
+occurrences:
+  - session: session_013zxzeR6zoUiicLXRckpnkb
+    date: "2026-11-06"
+    severity: nit
+    description: "My first message to the other session was delivered and read, but it had no tool to reply, so the user relayed its answer by hand; I first misreported this as never reaching it."
+    solution: "Tell the target where to answer, such as an issue comment, since it may be unable to reply. The inspect-session Skill could say so."
+  - session: session_013zxzeQWJUyfuXJgdfypeuc
+    date: "2026-11-07"
+    severity: minor
+    description: "The update session had no send_message tool, so its retro reached me only because the owner pasted it"
+    solution: "Before asking a scheduled session for a reply, say it may answer in its own transcript and read it there with the inspect-session Skill"

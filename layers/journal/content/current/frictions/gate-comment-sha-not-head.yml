@@ -1,9 +1,12 @@
 name: gate-comment-sha-not-head
 surface: human-only
 summary: The gate's green comments name a merge-ref commit, not the PR head, so agents cannot tell from them whether their head is green.
-cause: "The safety-gate bot comment ('safety-gate green on <sha>') and the check-suite event carry the pull/N/merge ref SHA (.github/actions/gate/action.yml), not the PR head; an agent reads them as a green on its head or cannot tell, and checks the gate check run by hand. Signals: 'safety-gate green on <sha>' naming a commit that is not the PR head, 'merge refs', 'waited for the gate check run'. Typing a wrong SHA into a verdict is verdict-comment-hand-typed."
-status: tracked
-ref: "issue #2917"
+cause: "The safety-gate bot comment ('safety-gate green on <sha>') and the check-suite event carry the pull/N/merge ref SHA (.github/actions/gate/action.yml), not the PR head; an agent reads them as a green on its head or cannot tell, and checks the gate check run by hand. Signals: 'safety-gate green on <sha>' naming a commit that is not the PR head, 'merge refs', 'waited for the gate check run'. Typing a wrong SHA into a verdict is verdict-comment-hand-typed. Since PR #2933 (2026-11-07) the Doorbell step takes the PR head SHA from github.event.pull_request.head.sha, so the comment no longer names the merge ref."
+status: open
+fixes:
+  - pr: 2933
+    date: "2026-11-07"
+    summary: "The gate Doorbell comment now names github.event.pull_request.head.sha instead of github.sha."
 occurrences:
   - session: session_013zxzeNeTKPqiQ1jj1FgYXh
     date: "2026-11-06"

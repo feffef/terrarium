@@ -21,3 +21,8 @@ occurrences:
     severity: minor
     description: "glassbox-update script pins every page without an edited range, so pages with one stay on the old revision and fail the spec until pinned by hand."
     solution: "SKILL.md step 2 should say pages with an edited range need a manual pin, or the script should pin them after you re-verify."
+  - session: session_013zxzeShUkKqUQT1kYCw5UK
+    date: "2026-11-07"
+    severity: minor
+    description: "glassbox-update step 3 asks that every commit since the oldest revision be read against every page; with 123 commits and 72 pages that was not reachable, so I grepped renamed identifiers and leaned on subagents."
+    solution: "Have the script list non-content commit subjects and the identifiers they rename, then grep page prose for them, so the criterion is checkable."

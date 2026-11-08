@@ -90,3 +90,18 @@ occurrences:
     severity: minor
     description: "I wrote 'Six more steps were dropped' in the PR body from memory; run.yml counted seven. I caught it at the close-session check and corrected the body."
     solution: "Count from run.yml before writing any figure into a PR body, as Verify before you state says."
+  - session: session_013zxzeShUkKqUQT1kYCw5UK
+    date: "2026-11-07"
+    severity: nit
+    description: "Stated 'pins of 70 guide pages' in the review brief from memory; the diff changed 72 pages (73 files with update.yml)."
+    solution: "Count with git diff --name-only before putting a number in a brief or PR text; I kept the PR body free of the count."
+  - session: session_013zxzeRCCqrxVitqSaxJa4K
+    date: "2026-11-07"
+    severity: minor
+    description: "Verify before you state broken: I told the user 52 titles were kept (the seven reports covered 62) and drafted memory-page counts (12 names sharing no words, about 60 links) that were wrong."
+    solution: "Count with a command before writing any number; really 8 file names share no word with their title, 4 share one, and 186 guide links use the 12 old addresses. The code-review agents caught the memory-page ones."
+  - session: session_013zxzeRGhhzxkXgfdpEX9js
+    date: "2026-11-07"
+    severity: minor
+    description: "Changing counts in prose (Three Tenants, five patterns, a 50% value) slipped past the writers, the page checks and the Standards reviewer, and I caught most by reading."
+    solution: "Add a page-checks warning for number words or digits before plural nouns in In Terrarium, next to the so warning."

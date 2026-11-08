@@ -1,0 +1,20 @@
+name: glassbox-curate-plain-reader-tooling
+surface: safe
+summary: Glass Box curate runs built the plain-text pages for fresh readers by hand, and the shipped plain.ts printed glosses inline so readers reported noise.
+cause: "The curate fresh-reader step needs the MDC stripped, terms defined and excerpts as code: one run hand-built a throwaway converter, another used .agents/skills/glassbox-curate plain.ts, which prints every term gloss inline so reader findings were mostly noise. Signals: 'throwaway converter', 'plain.ts prints every term gloss inline', 'crowded sentences'. Since PR #2944 (2026-11-07) plain.ts does the conversion; its inline glosses are what the later reader found noisy."
+status: open
+fixes:
+  - pr: 2944
+    date: "2026-11-07"
+    summary: "Adds plain.ts, which turns a page into plain text for fresh readers (MDC stripped, terms defined, Excerpts as code)."
+occurrences:
+  - session: session_013zxzeRGhhzxkXgfdpEX9js
+    date: "2026-11-07"
+    severity: minor
+    description: "Every curate run hand-builds the plain-text pages for fresh readers (MDC stripped, terms defined, excerpts as code); I wrote a throwaway converter for it."
+    solution: "Add a plain.ts script beside orient.ts in glassbox-curate/scripts and point to it from the Diagnose step."
+  - session: session_013zxzeNpEgoBzTxHw74sJHY
+    date: "2026-11-07"
+    severity: minor
+    description: "plain.ts prints every term gloss inline, so the fresh reader reported crowded sentences that the rendered page does not have, and findings were mostly noise."
+    solution: "Let plain.ts leave term glosses out, or print them as footnotes, so a reader sees the page's real flow."

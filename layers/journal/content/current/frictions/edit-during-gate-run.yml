@@ -141,3 +141,8 @@ occurrences:
     severity: minor
     description: "Started gate:scoped in parallel with the code-review subagents, then committed their fixes, so the gate aborted and had to run twice more"
     solution: "Run the gate only after review fixes are committed; reviews and the gate are not parallel work"
+  - session: session_013zxzeQWJUyfuXJgdfypeuc
+    date: "2026-11-07"
+    severity: minor
+    description: "Edited the curate Skill while pnpm gate:scoped ran, so the gate aborted and had to run again (pr-workflow: edit nothing while it runs)"
+    solution: "Hold new owner requests until the gate finishes, or stop the gate before editing"

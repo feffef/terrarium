@@ -83,3 +83,13 @@ occurrences:
     severity: nit
     description: "log-session --author refused a completed log until I re-invoked close-session, because it saw merge text in my transcript; the extra round trip cost a step and a second skill load"
     solution: "Say in close-session which transcript signals trigger that refusal, or key it on the merge-pr.ts result only"
+  - session: session_013zxzePc3zKAyZGZfucZa9y
+    date: "2026-11-07"
+    severity: nit
+    description: "After opening the second PR I re-authored the log through the helper without re-invoking close-session, which only refused at completion; skipped the Skill's re-invoke rule"
+    solution: "Re-invoke close-session at every PR open, as its text says"
+  - session: session_013zxzeNqe2cXhykGMMq7vUi
+    date: "2026-11-07"
+    severity: minor
+    description: "After the merge, log-session refused a completed log until close-session ran again, but re-invoking the loaded Skill returned only 'already loaded', which read as circular."
+    solution: "Make the refusal say a fresh close-session call is what satisfies it, or have the check read the Skill-invocation event after the merge."

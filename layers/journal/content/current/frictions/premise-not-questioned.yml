@@ -40,3 +40,8 @@ occurrences:
     severity: minor
     description: "Proposed a claim check on cited-file changes without first reading glassbox-update, which already does it daily; the owner had to point out the overlap"
     solution: "Before proposing a change to one Glass Box Skill, read the sibling Skills that touch the same pages"
+  - session: session_013zxzeRCCqrxVitqSaxJa4K
+    date: "2026-11-07"
+    severity: moderate
+    description: "Planned and costed a 12-file rename, grepping every link, before checking whether titles were settled; the owner's question about a title consolidation redirected the run."
+    solution: "The memory page's good next focus should say titles are not yet reviewed, or the rename lead should wait until they are."

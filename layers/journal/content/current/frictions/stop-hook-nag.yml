@@ -349,3 +349,28 @@ occurrences:
     severity: nit
     description: "Stop hook flagged uncommitted changes while a subagent search ran; I committed the trial deletion early rather than with the prune."
     solution: "Fine as is; the early commit was harmless and still part of the one PR."
+  - session: session_013zxzePc3zKAyZGZfucZa9y
+    date: "2026-11-07"
+    severity: nit
+    description: "The Stop hook asked to push after each commit while review and gate were pending, three times"
+    solution: "Treat a push as harmless per ADR-0003; no change needed"
+  - session: session_013zxzePgtT7wXDhHd9eBdH2
+    date: "2026-11-07"
+    severity: nit
+    description: "Committed the trial deletion early after a Stop hook flagged uncommitted changes while the search subagent ran, instead of waiting to commit it with the prune."
+    solution: "Fine as is; the early commit stayed in the one PR."
+  - session: session_013zxzeRGhhzxkXgfdpEX9js
+    date: "2026-11-07"
+    severity: nit
+    description: "The Stop hook asked repeatedly for commits mid-work while subagents were still writing, so I committed unfinished drafts to quiet it."
+    solution: "Let the hook skip while subagents run or no PR is open; scripts/hooks is Human-only, so file an issue."
+  - session: session_013zxzeShUkKqUQT1kYCw5UK
+    date: "2026-11-07"
+    severity: nit
+    description: "The Stop hook demanded a commit and push twice mid-run, forcing two commits labelled work in progress before the review was done."
+    solution: "Have the hook ignore a branch with no PR yet, or let the run commit once at the end."
+  - session: session_013zxzeNpEgoBzTxHw74sJHY
+    date: "2026-11-07"
+    severity: nit
+    description: "The Stop hook demanded commits while writers were still editing, so I committed three work-in-progress commits with mixed content to the run branch."
+    solution: "Let the Stop hook skip when background subagents are running, or squash before the PR."

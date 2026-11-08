@@ -35,3 +35,8 @@ occurrences:
     severity: nit
     description: "Stated the 21-occurrence count only after checking; my grep of the ledger gave 38 date-like lines, so the figure stayed unverified and I said so."
     solution: "Ledger tooling should print occurrence counts since a given fix, so a grill question can cite one verified number."
+  - session: session_013zxzeRCCqrxVitqSaxJa4K
+    date: "2026-11-07"
+    severity: minor
+    description: "No orient output shows which guide file names differ from their titles or how many links use each old address, so I wrote a throwaway bash loop and hand-counted, which led to the wrong counts."
+    solution: "Add a section to glassbox-curate orient.ts listing pages whose file name shares no word with the title, with their inbound link counts; a Skill change that waits for the owner's merge."

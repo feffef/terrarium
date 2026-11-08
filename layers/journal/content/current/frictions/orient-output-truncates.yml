@@ -1,9 +1,15 @@
 name: orient-output-truncates
 surface: safe
 summary: The glassbox-curate orientation script prints more than a tool result holds, so a section (the guide pages) was cut off and had to be re-fetched.
-cause: ".agents/skills/glassbox-curate/scripts/orient.ts prints about 73 KB unfiltered; the harness cuts it to a file or the agent pipes it through head -300, losing the guide-pages section at the end, so the curate run works from an incomplete orientation. Signals: 'orient.ts output', 'head -300 truncated the guide-pages section', 'cut to a file and one lost the guide-pages section'."
-status: tracked
-ref: "issue #2906 (item 2: most of orient.ts output is noise)"
+cause: ".agents/skills/glassbox-curate/scripts/orient.ts prints about 73 KB unfiltered; the harness cuts it to a file or the agent pipes it through head -300, losing the guide-pages section at the end, so the curate run works from an incomplete orientation. Signals: 'orient.ts output', 'head -300 truncated the guide-pages section', 'cut to a file and one lost the guide-pages section'. Since PRs #2929 and #2944 (2026-11-07) orient.ts prints one line per page in a single output of about 27 KB and has a --subject read; issue #2906 closed completed."
+status: open
+fixes:
+  - pr: 2929
+    date: "2026-11-07"
+    summary: "glassbox-curate reads the Subject first and orient.ts gains a per-Subject read."
+  - pr: 2944
+    date: "2026-11-07"
+    summary: "orient.ts prints one line per page (title and description) in one output of about 27 KB; the separate --pages call is gone."
 occurrences:
   - session: session_013zxzeQUzcNjB7oD8ukBLGp
     date: "2026-11-06"
@@ -15,3 +21,8 @@ occurrences:
     severity: minor
     description: "Piped orient.ts output through head -300, which truncated the guide-pages section of its output."
     solution: "Redirect orient output to a file and read it whole."
+  - session: session_013zxzeNqe2cXhykGMMq7vUi
+    date: "2026-11-07"
+    severity: minor
+    description: "orient.ts printed 13KB and --pages 5,400 words for all pages, though the change touched two pages."
+    solution: "Let --pages take a Subject filter, and say the full list is for gap and overlap hunts only."

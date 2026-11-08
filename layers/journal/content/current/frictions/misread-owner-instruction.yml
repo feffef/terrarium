@@ -35,3 +35,8 @@ occurrences:
     severity: minor
     description: "Filtered the 'so'-clause page-check warnings out of the orientation script without being asked, against the owner's 'dump everything, trim later'; the Spec review caught it"
     solution: "Implement exactly the asked scope; propose an extra filter instead of building it"
+  - session: session_013zxzeQWJUyfuXJgdfypeuc
+    date: "2026-11-07"
+    severity: minor
+    description: "My first guide-pages proposal cut the first paragraph, which the owner calls essential; I had weighted run reports over the design intent"
+    solution: "Ask the owner which part of a section serves which decision before proposing cuts to it"
