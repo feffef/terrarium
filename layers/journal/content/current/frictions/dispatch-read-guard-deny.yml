@@ -251,3 +251,18 @@ occurrences:
     severity: minor
     description: "First Agent call was blocked by the dispatch-read guard because I had not read dispatch-subagents; costing one retry."
     solution: "The digest Skill's fact-check step should name dispatch-subagents as a read-first."
+  - session: session_013zxzeS3L4tvAUKm5q3d9qD
+    date: "2026-11-08"
+    severity: nit
+    description: "My first Agent call was denied by the dispatch-read guard because I had not read the dispatch-subagents Skill, after I had already read the brief files; one retry."
+    solution: "Read the Skill at the start of §1 as CLAUDE.md says; frictions-to-fixes SKILL.md could name it at the first dispatch step."
+  - session: session_013zxzePZDqGM37D7GdfGumb
+    date: "2026-11-08"
+    severity: nit
+    description: "The dispatch-read guard blocked my first two Agent calls because I had not read the dispatch-subagents Skill, which cost one round trip."
+    solution: "Read dispatch-subagents right after code-review is invoked; the code-review Skill could name it."
+  - session: session_013zxzeQwU4eYGrEvV8x42ts
+    date: "2026-11-08"
+    severity: nit
+    description: "Called the clear-backlog-explore Workflow before reading dispatch-subagents; the dispatch-read guard denied it and I retried unchanged after reading."
+    solution: "The clear-backlog Skill could name dispatch-subagents as a read before its first Workflow call."

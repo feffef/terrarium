@@ -359,3 +359,13 @@ occurrences:
     severity: nit
     description: "The Stop hook demanded commits while writers were still editing, so I committed three work-in-progress commits with mixed content to the run branch."
     solution: "Let the Stop hook skip when background subagents are running, or squash before the PR."
+  - session: session_013zxzeS3L4tvAUKm5q3d9qD
+    date: "2026-11-08"
+    severity: nit
+    description: "The stop hook asked twice to push unpushed commits while the ledger gate was still running, though the Skill and git rules say not to push during a gate run."
+    solution: "Accepted cost (issue #2233); none."
+  - session: session_013zxzeQwU4eYGrEvV8x42ts
+    date: "2026-11-08"
+    severity: nit
+    description: "The Stop hook flagged uncommitted changes while the gate runs for those very changes were in progress; I had to inspect the worktrees to show they were not stray."
+    solution: "The Stop hook could skip worktrees with a running gate or name which tree is dirty."

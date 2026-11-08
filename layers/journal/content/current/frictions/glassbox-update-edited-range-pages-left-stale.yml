@@ -1,9 +1,12 @@
 name: glassbox-update-edited-range-pages-left-stale
 surface: safe
 summary: glassbox-update left pages with an edited range stale (old revision or Excerpt lines) without saying so in its report.
-cause: "glassbox-update.ts --write shifts ranges but pins or leaves pages whose cited range was edited, and the report does not list them, so Excerpt lines and old revisions are found by hand or by a helper agent. Signals: 'left Excerpt lines stale', 'hooks/01 still carried the old revision', 'did not say which pages it could not pin'."
-status: tracked
-ref: "issue #2955"
+cause: "glassbox-update.ts --write skips both the pin and the line shift on a page with an edited range, and its report did not list those pages, so Excerpt lines and old revisions were found by hand or by a helper agent. PR #2971 (2026-11-08) documents the skip in the Skill; the script is unchanged. Signals: 'left Excerpt lines stale', 'hooks/01 still carried the old revision', 'did not say which pages it could not pin'."
+status: open
+fixes:
+  - pr: 2971
+    date: "2026-11-08"
+    summary: "glassbox-update SKILL.md steps 2 and 4 now say --write leaves an edited-range page wholly untouched and the agent re-lines each edited range by hand; no script change."
 occurrences:
   - session: session_013zxzeRLzBAw62ZMjhsbHiq
     date: "2026-11-06"

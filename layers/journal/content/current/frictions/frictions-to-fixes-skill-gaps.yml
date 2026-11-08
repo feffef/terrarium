@@ -1,6 +1,6 @@
 name: frictions-to-fixes-skill-gaps
 summary: "The frictions-to-fixes SKILL.md leaves recurring situations unspecified, so the run asks the owner or improvises."
-cause: "SKILL.md (not the survey or design briefs or the scripts) does not say how many regressions get issues, what to do when one already has an open issue, how to rank by severity (the top-three rule puts owner-decided or superseded entries first, so runs skip them by judgement), that a skipped cluster needs a recorded reason, how a ledger ref names a PR that does not exist yet, or that the owner's start approves the run's picks; the user is asked or the run improvises. PR #2735 (2026-10-31) moved a not-planned close to accepted and made since count in-horizon occurrences. Brief defects belong to frictions-to-fixes-briefs-mismatch, --summary date counting to ledger-summary-same-day-counting, repeated sessions to survey-appends-duplicate-sessions. Signals: 'the Skill says ... but not what to do', 'had to ask the user how many'."
+cause: "SKILL.md (not the survey or design briefs or the scripts) does not say how many regressions get issues, what to do when one already has an open issue, how to rank by severity (the top-three rule puts owner-decided or superseded entries first, so runs skip them by judgement), that a skipped cluster needs a recorded reason, how a ledger ref names a PR that does not exist yet, or that the owner's start approves the run's picks; the user is asked or the run improvises. PR #2735 (2026-10-31) moved a not-planned close to accepted and made since count in-horizon occurrences. Brief defects belong to frictions-to-fixes-briefs-mismatch, --summary date counting to ledger-summary-same-day-counting, repeated sessions to survey-appends-duplicate-sessions. Signals: 'the Skill says ... but not what to do', 'had to ask the user how many'. PR #2970 (2026-11-08) made §2 file regression issues only for moderate-or-worse entries and the ledger PR use the simple-change review."
 surface: safe
 status: open
 fixes:
@@ -19,6 +19,9 @@ fixes:
   - pr: 2735
     date: "2026-10-31"
     summary: "describeEntry counts since from in-horizon occurrences only; survey-brief section 5 sends an issue closed not planned to accepted."
+  - pr: 2970
+    date: "2026-11-08"
+    summary: "SKILL.md §2 files regression issues only for still-recurring entries at moderate or worse (top three of those); the ledger PR gets the simple-change review."
 occurrences:
   - session: session_01S9UeKa9mCWdPVBjAezCSaL
     date: "2026-10-25"
@@ -85,3 +88,8 @@ occurrences:
     severity: minor
     description: "Skill section 5 step 4 says review the diff yourself, while pr-workflow.md says a Skill meaning change needs code-review; two review subagents were spent on a 5-line prose edit."
     solution: "Let the frictions-to-fixes Skill name which rule wins for a dispatched fix of a few lines."
+  - session: session_013zxzeS3L4tvAUKm5q3d9qD
+    date: "2026-11-08"
+    severity: minor
+    description: "The Skill says to file regression issues for the top three by severity, but almost all 42 still-recurring entries are minor or nit and several were owner-accepted, so the third pick was a judgement call."
+    solution: "Restrict regression issues to moderate and above, as issue #2960 proposes."

@@ -1,0 +1,16 @@
+name: glassbox-curate-run-entry-late
+surface: safe
+summary: The glassbox-curate run entry was written after the edits or the issue, not at the step the Skill orders.
+cause: "glassbox-curate sessions write the run entry (and skip Diagnose) at landing instead of right after choosing the focus. Signals: 'wrote the run entry after', 'Skipped the Diagnose step'."
+status: open
+occurrences:
+  - session: session_013zxzeRwjiiLkjj6sQ3u49g
+    date: "2026-11-07"
+    severity: nit
+    description: "Filtered orientation output with grep instead of reading it whole, and wrote the run entry after filing the issue, against the Skill's steps."
+    solution: "None needed beyond following the Skill; its wording was clear."
+  - session: session_013zxzeNqe2cXhykGMMq7vUi
+    date: "2026-11-07"
+    severity: nit
+    description: "Skipped the Diagnose step and wrote the run entry after the edits, not right after choosing the focus as the Skill orders."
+    solution: "The Skill could say a removal-only run may skip Diagnose and write the entry at landing."

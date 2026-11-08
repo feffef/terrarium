@@ -23,3 +23,13 @@ occurrences:
     severity: minor
     description: "merge-close-stop.ts blocked the stop saying a PR merged while PR 2946 was still open and merge-pr.ts was only waiting on the gate in the background."
     solution: "Make closureRefusal count a merge only on merge-pr.ts output with merged true; add a transcript test with the command started and no result."
+  - session: session_013zxzeS3L4tvAUKm5q3d9qD
+    date: "2026-11-08"
+    severity: minor
+    description: "merge-close-stop blocked the stop twice saying a PR merged while #2963 was still open and merge-pr.ts was only waiting on CI."
+    solution: "Fire the hook only once the PR is merged, not when merge-pr.ts starts (ledger entry merge-close-hint-fires-without-merge)."
+  - session: session_013zxzeQhMWFqY3DzWrbVdEs
+    date: "2026-11-08"
+    severity: minor
+    description: "Stop hook said a PR merged and demanded close-session three times while merge-pr.ts was still polling CI and the PR was open; cost extra checks."
+    solution: "Fire the merged-PR check only after the PR state is merged, not when merge-pr.ts starts."

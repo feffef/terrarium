@@ -21,3 +21,8 @@ occurrences:
     severity: minor
     description: "Skipped dispatch-subagents section 4: sixteen writers edited overlapping pages in parallel, giving four merge conflicts (04.hooks, a promoted Walkthrough, the Routines draft, Path-specific rules) I resolved by hand."
     solution: "Have grades.ts briefs merge writers that touch the same page (a step's trims versus a Subject writer's items) or serialize them."
+  - session: session_013zxzeQwU4eYGrEvV8x42ts
+    date: "2026-11-08"
+    severity: minor
+    description: "Started the SessionStart-hook build while the sibling Stop-hook PR was still open on the same files; the branch then needed a rebase with a guards.md conflict and a second gate run."
+    solution: "Serialize builds that touch the same Human-only files, or tell the builder to base on the sibling's branch."

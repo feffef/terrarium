@@ -2,7 +2,7 @@ name: harness-proxy-blocks
 summary: >-
   The hosting environment's network proxy blocked sites and downloads the work needed, with no way to override it in the session.
 cause: >-
-  The cloud agent proxy or its DNS refuses a host (github.com/user-attachments, content.nuxt.com, zod.dev, nitro.build, nuxt.com, docs.github.com, the deployed site) with a 403 or connection failure and no in-session override; the fix is to list the host and its workaround in environment-caveats.md, and since PR #2647 the Glass Box page guide fetches blocked GitHub docs from raw.githubusercontent.com. Signals: proxy 403, curl 000, a DNS failure from WebFetch. Auto-mode classifier denials (a deleted pushed branch, a review subagent's script, a force-with-lease push) with no shared fix also stay here; CI job logs are ci-job-logs-unreachable, Self-Modification denials auto-mode-self-modification-denials. Since PR #2811 (2026-11-03) the orchestrator, not the subagent, pushes every reviewed branch, so a classifier denial no longer strands an agent's branch.
+  The cloud agent proxy or its DNS refuses a host (github.com/user-attachments, content.nuxt.com, zod.dev, nitro.build, nuxt.com, docs.github.com, the deployed site) with a 403 or connection failure and no in-session override; the fix is to list the host and its workaround in environment-caveats.md, and since PR #2647 the Glass Box page guide fetches blocked GitHub docs from raw.githubusercontent.com. Signals: proxy 403, curl 000, a DNS failure from WebFetch. Auto-mode classifier denials (a deleted pushed branch, a review subagent's script, a force-with-lease push) with no shared fix also stay here; CI job logs are ci-job-logs-unreachable, Self-Modification denials auto-mode-self-modification-denials. Since PR #2811 (2026-11-03) the orchestrator, not the subagent, pushes every reviewed branch, so a classifier denial no longer strands an agent's branch. PR #2974 (2026-11-08) scoped the blocked-host list in environment-caveats.md to the Default environment and PR #2976 added a SessionStart hook that reports which hosts the proxy lets through.
 surface: outside
 status: open
 fixes:
@@ -18,6 +18,12 @@ fixes:
   - pr: 2811
     date: "2026-11-03"
     summary: "dispatch-subagents: impl agents hand back an unpushed branch and the orchestrator pushes every reviewed branch, so a classifier-denied subagent push cannot strand it."
+  - pr: 2974
+    date: "2026-11-08"
+    summary: "environment-caveats.md scopes the blocked-host list to the Default environment, adds git-scm.com and says the blocked set varies by environment."
+  - pr: 2976
+    date: "2026-11-08"
+    summary: "SessionStart hook network-start.ts probes 8 hosts through the proxy and reports which are reachable."
 occurrences:
   - session: session_01Hpd1KMhzJC2NxHSxp7erFi
     date: "2026-10-25"

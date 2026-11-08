@@ -1,0 +1,16 @@
+name: late-formatting-fix-reruns-gate
+surface: safe
+summary: A late line-length or wording fix needed its own commit and a full gate run.
+cause: "A fix to line wrapping or phrasing is made piecemeal after the first commit (a missed long line, a one-phrase reword), so each costs another commit and full gate:scoped. Signals: '80-column', 'whitespace-only', 'second commit and gate run'."
+status: open
+occurrences:
+  - session: session_013zxzeRCJHe4rmKN5i2CQ16
+    date: "2026-11-06"
+    severity: nit
+    description: "An 80-column re-wrap needed two commits because the agent missed one long line, and each commit meant another full gate run."
+    solution: "Give the agent the awk check up front and ask it to run it before committing."
+  - session: session_013zxzeQwU4eYGrEvV8x42ts
+    date: "2026-11-08"
+    severity: minor
+    description: "My hand fix of the glassbox-update step 4 line left another over-long line, so I needed a second edit, commit and a full gate:scoped re-run for a whitespace-only change."
+    solution: "Check the rewrapped paragraph's line lengths (awk) before running the gate."

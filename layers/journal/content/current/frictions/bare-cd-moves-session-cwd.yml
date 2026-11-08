@@ -71,3 +71,8 @@ occurrences:
     severity: nit
     description: "A relative cd into the skills folder twice left the shell in the wrong directory, so a python read failed with file-not-found."
     solution: "Use absolute paths in every command instead of cd."
+  - session: session_013zxzeQwU4eYGrEvV8x42ts
+    date: "2026-11-08"
+    severity: nit
+    description: "Several shell commands failed or ran in the wrong place because the working directory carried between Bash calls after a cd into a worktree (a push by relative path failed)."
+    solution: "Use absolute paths with git -C for every worktree command."

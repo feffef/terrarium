@@ -71,3 +71,8 @@ occurrences:
     severity: minor
     description: "Sent a garbled first send_message to the designer session, with a wrong header id and no content, then had to send a correction"
     solution: "Check my own session id with get_session before the first peer message, and write the message before sending"
+  - session: session_013zxzeRhiMxk5cCGYkz4u1n
+    date: "2026-11-08"
+    severity: nit
+    description: "I first typed a session id copied from a friction list into a commit message; I caught it before committing and let the hook add the trailer."
+    solution: "Never hand-type the Claude-Session trailer; the commit-msg hook adds it."

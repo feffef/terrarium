@@ -1,0 +1,16 @@
+name: git-checkout-misused-to-read-or-switch
+surface: safe
+summary: Agents used git checkout or switch to read a file or change branch and discarded or tried to stage work.
+cause: "git checkout <ref> -- . or git switch with discard-changes is used to read a file or move branches; git-conventions.md forbids it. Signals: 'git switch --discard-changes', 'git checkout origin/main -- .', classifier denial, a lost edit."
+status: open
+occurrences:
+  - session: session_013zxzeSRr9pF9MCBQDGAN5L
+    date: "2026-11-07"
+    severity: minor
+    description: "Impl subagent's own: ran git switch with discard-changes after editing, silently discarding its first edit, then redid it."
+    solution: "Brief should say to create the branch before editing."
+  - session: session_013zxzeQWJUyfuXJgdfypeuc
+    date: "2026-11-07"
+    severity: minor
+    description: "Ran git checkout origin/main -- . to read a file, which git-conventions.md forbids; the classifier denied it, so nothing was staged"
+    solution: "Read a file from main with git show origin/main:<path>, as git-conventions says"

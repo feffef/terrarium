@@ -51,3 +51,8 @@ occurrences:
     severity: minor
     description: "The curate Skill's first draft missed five design items; the brief pointed at the design issue but the agent worked from my summary, costing three review-and-gate rounds."
     solution: "In a brief for a Skill built from a design issue, list each required behaviour from the design, or tell the agent to read the numbered steps in full before drafting."
+  - session: session_013zxzeSZva1TWwL6nLdEnUa
+    date: "2026-11-08"
+    severity: minor
+    description: "Dispatched five claim-check subagents with the literal placeholder @@GROUP@@ in place of the page list; all five stopped immediately and needed resuming."
+    solution: "The dispatch-subagents brief checklist already says re-read the brief for unfilled {…}; inline the list when building the brief and grep for placeholders before sending."
