@@ -10,11 +10,6 @@ fixes:
     date: "2026-10-25"
     summary: "Its git-conventions section now also covers a git add of an ignored path and a commit given both -m and -F, and says to read git log -1 before the gate."
 occurrences:
-  - session: session_01Ku4KD2Ua5MXi6eQ95TG4aj
-    date: "2026-10-24"
-    severity: nit
-    description: "A git add with an excluded ignored directory failed and the chained commit silently did not run; HEAD stayed on an old commit until I noticed."
-    solution: "Use plain git add -A with .throwaway ignored; check git log after commit."
   - session: session_01EQ8sMcrX7UwDXFBx6tfUWu
     date: "2026-10-25"
     severity: nit

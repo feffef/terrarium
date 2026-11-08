@@ -22,11 +22,6 @@ fixes:
     date: "2026-10-28"
     summary: "glassbox-improve's lead proposes only facts and wording found in the source (an absence claim most of all), and its researcher checks an absence claim against every code location."
 occurrences:
-  - session: session_015P9szA8dP4wxv4wiXkZcRZ
-    date: "2026-10-24"
-    severity: moderate
-    description: "First rewrite stated facts from memory (payload files written for cached routes, unpushed commits being the only copy) that source research later proved wrong."
-    solution: "Before rewriting a Lesson's teaching, check each mechanism claim in node_modules or the cited file, as EVERY-PAGE's Write step implies."
   - session: session_011Rbnf9T9YqNztEcWNXsHsF
     date: "2026-10-25"
     severity: nit
@@ -182,3 +177,23 @@ occurrences:
     severity: moderate
     description: "Seeded the memory page from grades.yml but checked only one step against the repo; review found two more stale entries."
     solution: "Before writing a seed, check every cited stem and claim against the current repo with one script."
+  - session: session_013zxzeQWJUyfuXJgdfypeuc
+    date: "2026-11-07"
+    severity: nit
+    description: "First draft of the Skill's reading rationale cited #2906 for four failures; only two were evidenced, which I caught on re-read"
+    solution: "Check each claimed failure against its PR before citing it in a Skill"
+  - session: session_013zxzeSy38XR1wPjCGFUExY
+    date: "2026-11-07"
+    severity: minor
+    description: "I asked the owner Q1 with picks whose claims I had not verified (the Stop-hook question), and the owner had to ask whether it could work."
+    solution: "Verify each pick's claim against its source before the grilling, as the Skill says, and check Stop hook capabilities then."
+  - session: session_013zxzeShUkKqUQT1kYCw5UK
+    date: "2026-11-07"
+    severity: minor
+    description: "PR body said no diagram SVGs were due a re-render, but no step checked it; the spec reviewer noted it was unchecked."
+    solution: "Either check the guide pages' mermaid fences against app/assets/mermaid or leave the sentence out."
+  - session: session_013zxzeRCCqrxVitqSaxJa4K
+    date: "2026-11-07"
+    severity: moderate
+    description: "Recommended a capital S for Skills in titles as 'following the glossary term', but other glossary terms (Collection, Friction, Routine) are lowercase in titles; the owner caught it after the merge, costing a reversal PR."
+    solution: "Before recommending a title convention, list how every comparable word is already cased in the guide (one grep of title lines) instead of reasoning from the glossary alone."

@@ -23,3 +23,13 @@ occurrences:
     severity: minor
     description: "A scripted Python edit of the Digest garbled the summary and duplicated a PR link, needing a second fix pass."
     solution: "Rewrite the affected lines directly with Edit instead of chained string replaces."
+  - session: session_013zxzeQWJUyfuXJgdfypeuc
+    date: "2026-11-07"
+    severity: nit
+    description: "A scripted SKILL.md edit failed on a mismatched old string and had to be resent in full, since the script aborted before writing"
+    solution: "Grep the exact lines first, or use the Edit tool per hunk so one mismatch does not void the batch"
+  - session: session_013zxzePc3zKAyZGZfucZa9y
+    date: "2026-11-07"
+    severity: nit
+    description: "A python edit script with a garbled replacement raised a SyntaxError and wrote nothing, costing a round trip"
+    solution: "Write small edits as plain exact-string replacements"

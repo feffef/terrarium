@@ -11,11 +11,6 @@ fixes:
     date: "2026-10-25"
     summary: "dispatch-subagents §3 and clear-backlog-build.js now say run git as git -C <worktree-root>, never cd: the Bash tool keeps its cwd and parallel calls share it."
 occurrences:
-  - session: session_01PYyNMqrrDLZdXEej11LMzs
-    date: "2026-10-24"
-    severity: moderate
-    description: "Two parallel Bash pushes using cd raced on the shared cwd; the #2475 commit went to fix/2476-sidefinding-sources. Force-push was denied, so #2476 moved to a new branch and a stray branch was left"
-    solution: "Never run git in parallel Bash calls that rely on cd; use git -C with an absolute worktree path, one push per call"
   - session: session_019jfJv6yLmcLUAJiTTomyeu
     date: "2026-10-25"
     severity: nit
@@ -71,3 +66,8 @@ occurrences:
     severity: nit
     description: "A cd into the pages folder in one Bash call made the shell cwd drift for later calls, forcing absolute paths."
     solution: "Use absolute paths and avoid cd in compound commands."
+  - session: session_013zxzePKudcTUhp46zRqz4X
+    date: "2026-11-08"
+    severity: nit
+    description: "A relative cd into the skills folder twice left the shell in the wrong directory, so a python read failed with file-not-found."
+    solution: "Use absolute paths in every command instead of cd."

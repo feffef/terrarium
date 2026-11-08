@@ -7,11 +7,6 @@ ref: "Comes from PR #1869's fix for search results flooding context (the former 
 notes: |-
   2026-10-29 design: per-Skill 'pass fields' lines dropped: the guard already names the fix and every session recovered in one retry; a rule cannot order a step before the read that loads it (ADR-0029)
 occurrences:
-  - session: session_013SbWSgqz4tjVcTMz9vF1mu
-    date: "2026-10-24"
-    severity: nit
-    description: "Called search_issues without `fields`, blocked by the GitHub search-fields guard (#1860); retried immediately with fields"
-    solution: "Pass `fields` on every search_issues/search_pull_requests call from the start, per github-integration.md's own warning"
   - session: session_01BZNS3KuWTBxqAHxTfx3uzp
     date: "2026-10-25"
     severity: nit

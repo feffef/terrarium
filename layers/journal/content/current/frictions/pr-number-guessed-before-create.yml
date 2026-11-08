@@ -19,3 +19,8 @@ occurrences:
     severity: minor
     description: "Predicted PR numbers twice for the ledger fixes row of #2878 (2888, then 2891); other PRs took both, costing two extra commits and a rerun of the gate."
     solution: "Open the PR first, then add its number in a follow-up commit; or have the build workflow leave the row out and let the orchestrator write it."
+  - session: session_013zxzeSy38XR1wPjCGFUExY
+    date: "2026-11-07"
+    severity: nit
+    description: "Two build agents wrote guessed PR numbers into ledger entries before any PR existed, costing a follow-up commit and push."
+    solution: "Brief builders to leave the PR number out and put the real one in after opening the PR."

@@ -11,16 +11,6 @@ fixes:
     date: "2026-10-16"
     summary: "The double-background guard's deny message now says the whole call was denied and nothing in it ran."
 occurrences:
-  - session: session_013SbWSgqz4tjVcTMz9vF1mu
-    date: "2026-10-24"
-    severity: nit
-    description: "Combined `nohup ... &` with `run_in_background: true` for gate:scoped, blocked by the double-background guard (#1208); its bundled `mkdir -p` also silently never ran, costing a second retry to recreate the log directory"
-    solution: "Pass run_in_background: true with a plain foreground command only, never nohup/&; never bundle an mkdir into a command that might be blocked"
-  - session: session_015rVYXi9nGNG7zeGoi2R9ha
-    date: "2026-10-24"
-    severity: nit
-    description: "First background gate call stacked run_in_background with a trailing & and the double-background guard blocked it; resent as separate calls."
-    solution: "None needed; the guard message was clear."
   - session: session_01Cb8ETAZztznLYx6CC7MKyE
     date: "2026-10-26"
     severity: nit
@@ -136,3 +126,18 @@ occurrences:
     severity: nit
     description: "A Bash call set run_in_background and also ended in an ampersand; the double-background guard blocked it and nothing ran."
     solution: "Pass run_in_background alone with a plain foreground command."
+  - session: session_013zxzeSRr9pF9MCBQDGAN5L
+    date: "2026-11-07"
+    severity: minor
+    description: "I backgrounded the gate with a trailing ampersand plus run_in_background; the double-background guard refused the whole call, including the commit chained before it, so I had to redo both."
+    solution: "Pass run_in_background alone, and never chain a commit before a gate run."
+  - session: session_013zxzeNpEgoBzTxHw74sJHY
+    date: "2026-11-07"
+    severity: nit
+    description: "I sent a Bash call with run_in_background and a trailing ampersand; the double-background guard blocked it and I resent the commands."
+    solution: "Pass run_in_background alone with a plain foreground command, as the guard message says."
+  - session: session_013zxzePKudcTUhp46zRqz4X
+    date: "2026-11-08"
+    severity: nit
+    description: "First attempt to start the gate stacked run_in_background with a trailing ampersand and the double-background guard refused it."
+    solution: "Pass run_in_background alone; the guard message said so."

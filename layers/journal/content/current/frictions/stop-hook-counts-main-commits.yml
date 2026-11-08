@@ -13,11 +13,6 @@ fixes:
     date: "2026-10-16"
     summary: "git-conventions.md now says to push a branch whose only unpushed commits are main's, ending the per-turn Stop hook nag."
 occurrences:
-  - session: session_019nDDDS9GsXdTKWK44j18fT
-    date: "2026-10-24"
-    severity: nit
-    description: "After the PR merged, the branch was restarted from origin/main, and the Stop hook then flagged inherited main commits as unpushed three times while builders and the gate ran."
-    solution: "The Stop hook could count only commits not on origin/main, as git-conventions.md already advises readers to check by hand."
   - session: session_013zxzeQvE9RNYoZRiZEEKBG
     date: "2026-10-28"
     severity: nit
@@ -28,3 +23,8 @@ occurrences:
     severity: nit
     description: "After the fix PR merged, the Stop hook counted main's merge and log commits as 3 unpushed and kept asking for a push on the re-cut branch."
     solution: "Have the stop hook compare against origin/main when the remote branch was deleted by a merge."
+  - session: session_013zxzeRCCqrxVitqSaxJa4K
+    date: "2026-11-07"
+    severity: nit
+    description: "After PR 2948 merged and GitHub deleted its branch, the stop hook kept reporting 5 unpushed commits against a stale remote-tracking ref, which cost a fetch and ancestry check before a plain push."
+    solution: "The hook could compare against origin/main when the remote branch no longer exists, or git-conventions could name this case."

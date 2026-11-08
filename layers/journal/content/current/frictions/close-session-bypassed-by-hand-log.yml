@@ -2,7 +2,7 @@ name: close-session-bypassed-by-hand-log
 summary: >-
   An agent wrote or updated its session log by hand instead of running the closing Skill, so the Skill's steps were skipped and the user could have to ask for a proper close.
 cause: >-
-  A session that has the close-session or log-session text in context authors the log directly instead of invoking the Skill, skipping its steps such as the rule re-read. log-session refuses only a completed log after a merge (PR #2536); since PR #2707 its text no longer invites a direct call and log-session.ts --pending lists awaiting verdicts; since PR #2798 (2026-11-02) a hint after a successful merge-pr.ts run names close-session (a piped run can still miss it), yet session QDfN (2026-11-06) ignored three such hints after its merges and the owner had to prompt the log. A log written by hand at a PR open or a first merge can still get through; a refused completed log that cost only a call belongs in log-session-refuses-hand-closed-log. Signals: HUMAN-PROMPTED-CLOSURE, 'authored the log directly', 'updated the log with log-session directly', 'ignored three hook hints', 'having edited a Skill is not having run it'.
+  A session that has the close-session or log-session text in context authors the log directly instead of invoking the Skill, skipping its steps such as the rule re-read. log-session refuses only a completed log after a merge (PR #2536); since PR #2707 its text no longer invites a direct call and log-session.ts --pending lists awaiting verdicts; since PR #2798 (2026-11-02) a hint after a successful merge-pr.ts run names close-session (a piped run can still miss it), yet session QDfN (2026-11-06) ignored three such hints after its merges and the owner had to prompt the log. A log written by hand at a PR open or a first merge can still get through; a refused completed log that cost only a call belongs in log-session-refuses-hand-closed-log. Signals: HUMAN-PROMPTED-CLOSURE, 'authored the log directly', 'updated the log with log-session directly', 'ignored three hook hints', 'having edited a Skill is not having run it'. Since PR #2937 (2026-11-07) a Stop hook (merge-close-stop.ts) blocks the end of a turn once after a merge without close-session.
 surface: safe
 status: open
 fixes:
@@ -14,6 +14,9 @@ fixes:
   - pr: 2798
     date: "2026-11-02"
     summary: "read-first-hint.ts now hints close-session after a successful merge-pr.ts run, unless close-session already ran after that merge."
+  - pr: 2937
+    date: "2026-11-07"
+    summary: "Closes #2913: merge-close-stop.ts, a Stop hook, blocks the end of a turn once when this session merged a PR and close-session has not run since."
 occurrences:
   - session: session_01PdrNTJLJJMKBGGZfsAhL6w
     date: "2026-10-25"

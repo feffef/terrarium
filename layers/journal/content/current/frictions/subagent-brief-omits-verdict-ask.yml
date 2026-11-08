@@ -1,9 +1,8 @@
 name: subagent-brief-omits-verdict-ask
 summary: Briefs for helper agents left out the lines CLAUDE.md asks every brief to carry (rule and doc verdicts, a scratchpad subfolder per agent), so verdicts went missing and output landed elsewhere.
-cause: "CLAUDE.md asks every subagent brief for a rule/doc verdict in the final reply (PR #2060), a scratchpad subfolder named for the agent, sources for counts, and the read-first triggers (git, GitHub docs) the agent's work needs; nothing puts those lines into a brief and the dispatch-subagents Skill does not carry them, so orchestrators omit them from hand-written, one-off and Skill-templated briefs alike. Since PR #2645 the Journal marks every loaded rule without a verdict as 'no verdict provided', so the omission shows but is not prevented. Signals: 'briefs didn't ask for rule and doc verdicts', 'no verdict provided', output written outside a per-agent scratchpad subfolder, unverified figures in a report, a subagent reading git-conventions late."
+cause: "CLAUDE.md asks every subagent brief for a rule/doc verdict in the final reply (PR #2060), a scratchpad subfolder named for the agent, sources for counts, and the read-first triggers (git, GitHub docs) the agent's work needs; nothing puts those lines into a brief and the dispatch-subagents Skill does not carry them, so orchestrators omit them from hand-written, one-off and Skill-templated briefs alike. Since PR #2645 the Journal marks every loaded rule without a verdict as 'no verdict provided', so the omission shows but is not prevented. Signals: 'briefs didn't ask for rule and doc verdicts', 'no verdict provided', output written outside a per-agent scratchpad subfolder, unverified figures in a report, a subagent reading git-conventions late. Since PR #2932 (2026-11-07) dispatch-subagents section 3 opens with a pointer to CLAUDE.md's every-brief asks."
 surface: safe
-status: tracked
-ref: "issue #2911"
+status: open
 fixes:
   - pr: 1964
     date: "2026-10-14"
@@ -17,6 +16,9 @@ fixes:
   - pr: 2645
     date: "2026-10-28"
     summary: "The Journal session card marks every loaded rule without a verdict as 'no verdict provided', whoever loaded it, so omitted verdicts show."
+  - pr: 2932
+    date: "2026-11-07"
+    summary: "Closes #2911: dispatch-subagents SKILL.md section 3 points at CLAUDE.md's every-brief asks instead of restating them."
 occurrences:
   - session: session_013zxzeQZYwzDuf4JEncnqAa
     date: "2026-11-02"

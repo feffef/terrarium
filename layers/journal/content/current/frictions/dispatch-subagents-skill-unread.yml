@@ -16,21 +16,6 @@ fixes:
     date: "2026-10-25"
     summary: "A guard blocks the first subagent dispatch until the dispatch-subagents Skill is read."
 occurrences:
-  - session: session_015Nvs8t9mqbbyFbkR9Pb1nk
-    date: "2026-10-24"
-    severity: minor
-    description: "Dispatched the fact-check and review subagents without invoking the dispatch-subagents Skill that CLAUDE.md names before writing a brief."
-    solution: "Have the digest Skill's fact-check step point to dispatch-subagents."
-  - session: session_013SbWSgqz4tjVcTMz9vF1mu
-    date: "2026-10-24"
-    severity: minor
-    description: "Wrote 13 parallel behaviour-check subagent briefs without first reading the dispatch-subagents Skill, although CLAUDE.md requires it before writing any subagent brief"
-    solution: "Read dispatch-subagents' SKILL.md before the first brief of a multi-agent dispatch, even when the brief's shape (scratchpad subfolder, verdict reporting) is already familiar from the task's own instructions"
-  - session: session_01LEbdj6aqcGncPCZnNtS2ZX
-    date: "2026-10-24"
-    severity: minor
-    description: "Read dispatch-subagents SKILL only after the first subagent dispatch, when the hook hinted; CLAUDE.md says read it before writing a brief."
-    solution: "Read it before the step 6 brief; the blog-post Skill could name it at step 6."
   - session: session_01GKJysgAiGN7bmdFJcKvFoC
     date: "2026-10-25"
     severity: minor

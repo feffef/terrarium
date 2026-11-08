@@ -1,0 +1,17 @@
+name: glassbox-update-edited-range-pages-left-stale
+surface: safe
+summary: glassbox-update left pages with an edited range stale (old revision or Excerpt lines) without saying so in its report.
+cause: "glassbox-update.ts --write shifts ranges but pins or leaves pages whose cited range was edited, and the report does not list them, so Excerpt lines and old revisions are found by hand or by a helper agent. Signals: 'left Excerpt lines stale', 'hooks/01 still carried the old revision', 'did not say which pages it could not pin'."
+status: tracked
+ref: "issue #2955"
+occurrences:
+  - session: session_013zxzeRLzBAw62ZMjhsbHiq
+    date: "2026-11-06"
+    severity: minor
+    description: "glassbox-update --write shifted ranges but left Excerpt lines stale on pages with an edited range; fixed by hand after reading files at the commit."
+    solution: "Have the script report the new line numbers for edited ranges or flag them explicitly in step 2."
+  - session: session_013zxzeShUkKqUQT1kYCw5UK
+    date: "2026-11-07"
+    severity: minor
+    description: "The glassbox-update report did not say which pages it could not pin (those with an edited range); a subagent told me hooks/01 still carried the old revision."
+    solution: "List unpinned pages in the report with the cited range the change overlaps, and let the claim check start from those overlaps."

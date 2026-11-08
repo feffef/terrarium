@@ -20,11 +20,6 @@ fixes:
     date: "2026-10-31"
     summary: "describeEntry counts since from in-horizon occurrences only; survey-brief section 5 sends an issue closed not planned to accepted."
 occurrences:
-  - session: session_015rVYXi9nGNG7zeGoi2R9ha
-    date: "2026-10-24"
-    severity: minor
-    description: "The skill says to open three regression issues by severity, but the two highest-severity candidates (major, moderate) were not real regressions and needed checking against ledger dates by hand."
-    solution: "Have the survey report mark whether the recurrence post-dates the issue's closure."
   - session: session_01S9UeKa9mCWdPVBjAezCSaL
     date: "2026-10-25"
     severity: nit
@@ -85,3 +80,8 @@ occurrences:
     severity: nit
     description: "The Skill's closing PR reuses the session branch, but the first ledger PR had merged; the force-push I tried was denied, so I restarted the branch from main and pushed plainly."
     solution: "Say in frictions-to-fixes section 8 to restart the merged branch from origin/main and push without force."
+  - session: session_013zxzeSRr9pF9MCBQDGAN5L
+    date: "2026-11-07"
+    severity: minor
+    description: "Skill section 5 step 4 says review the diff yourself, while pr-workflow.md says a Skill meaning change needs code-review; two review subagents were spent on a 5-line prose edit."
+    solution: "Let the frictions-to-fixes Skill name which rule wins for a dispatched fix of a few lines."

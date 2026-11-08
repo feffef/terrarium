@@ -11,13 +11,13 @@ fixes:
     date: "2026-10-17"
     summary: "A cited directory now flags a page only when its listing changes between the page's pinned revision and main."
 occurrences:
-  - session: session_01JJcYmSGnRbUcVyvdPbkGs9
-    date: "2026-10-24"
-    severity: minor
-    description: "The update script flags every page and term on any path change, so reading 182 commits per page took many tool calls."
-    solution: "Have the script print per-page diffs of just the cited paths."
   - session: session_013zxzeNsjXNYsepq7RSwxjV
     date: "2026-11-04"
     severity: minor
     description: "glassbox-update script pins every page without an edited range, so pages with one stay on the old revision and fail the spec until pinned by hand."
     solution: "SKILL.md step 2 should say pages with an edited range need a manual pin, or the script should pin them after you re-verify."
+  - session: session_013zxzeShUkKqUQT1kYCw5UK
+    date: "2026-11-07"
+    severity: minor
+    description: "glassbox-update step 3 asks that every commit since the oldest revision be read against every page; with 123 commits and 72 pages that was not reachable, so I grepped renamed identifiers and leaned on subagents."
+    solution: "Have the script list non-content commit subjects and the identifiers they rename, then grep page prose for them, so the criterion is checkable."

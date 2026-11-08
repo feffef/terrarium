@@ -111,3 +111,18 @@ occurrences:
     severity: nit
     description: "The memory page said the draft had eight stops; it had six, so the noted case against it was off."
     solution: "The next run that edits the memory page should state counts only after counting; this run's entry records it."
+  - session: session_013zxzePc3zKAyZGZfucZa9y
+    date: "2026-11-07"
+    severity: minor
+    description: "Fact-check needed four rounds; my drafts stated an unsupported inference and a wrongly labelled \"first incident\", and each fix changed the blob and forced a re-check"
+    solution: "Write only claims with a source at hand; batch all fixes before re-dispatching the checker"
+  - session: session_013zxzeT5vcQTn5YZeNHDSvv
+    date: "2026-11-07"
+    severity: nit
+    description: "First run entry and memory page had a stale 'this week', an unlogged cut and a wrong phrase; code-review caught them before merge."
+    solution: "Diff the page against origin/main and list every cut before writing the run entry; avoid relative dates on the memory page."
+  - session: session_013zxzeRnhzjUpugh9vCH4UW
+    date: "2026-11-08"
+    severity: minor
+    description: "Draft Digest misused 'routine' for a Skill and called a lesson addition a trim; the fact-check caught both before merge."
+    solution: "Check PR titles and diffs for each claim while drafting, not after."

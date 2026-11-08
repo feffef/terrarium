@@ -19,11 +19,6 @@ fixes:
     date: "2026-11-03"
     summary: "dispatch-subagents: impl agents hand back an unpushed branch and the orchestrator pushes every reviewed branch, so a classifier-denied subagent push cannot strand it."
 occurrences:
-  - session: session_015P9szA8dP4wxv4wiXkZcRZ
-    date: "2026-10-24"
-    severity: minor
-    description: "docs.github.com is blocked by the proxy (WebFetch DNS fail, curl 403), so a GitHub docs claim could not be verified and was dropped."
-    solution: "EVERY-PAGE's fallback (sparse clone of github/docs) costs more than one sentence; allowlisting docs.github.com would help Glass Box work."
   - session: session_01Hpd1KMhzJC2NxHSxp7erFi
     date: "2026-10-25"
     severity: minor
@@ -79,3 +74,23 @@ occurrences:
     severity: nit
     description: "git-scm.com returned 403, so the writer and checker verified git claims from the docs source on GitHub, and the mode 100644 meaning stayed unsourced."
     solution: "Allow git-scm.com in the environment, or have EVERY-PAGE name the raw git/git docs path as a standard fallback."
+  - session: session_013zxzeSRr9pF9MCBQDGAN5L
+    date: "2026-11-07"
+    severity: nit
+    description: "A force-with-lease push of the reset session branch was denied by the classifier; a plain push worked because the branch was a fast-forward of the merged history."
+    solution: "Check merge-base --is-ancestor before assuming a force is needed."
+  - session: session_013zxzeQWJUyfuXJgdfypeuc
+    date: "2026-11-07"
+    severity: minor
+    description: "Pushed with --force-with-lease after restarting the branch from main; the classifier denied it though a plain push was a fast-forward"
+    solution: "Check merge-base --is-ancestor before choosing a push form; a branch restarted after its merge needs no force"
+  - session: session_013zxzeRGhhzxkXgfdpEX9js
+    date: "2026-11-07"
+    severity: minor
+    description: "MDN, w3.org, vuejs.org and playwright.dev did not resolve, and EVERY-PAGE.md's raw-GitHub fallback list omits MDN and W3C, so each writer rediscovered the paths."
+    solution: "Add the mdn/content and w3c/using-aria raw paths to the fallback sentence, or allow the four hosts in the environment."
+  - session: session_013zxzeQyhG5Jn9REJydTepm
+    date: "2026-11-07"
+    severity: minor
+    description: "gh api for upstream release notes returned 403 (repo not attached), so I relied on the notes pasted in the Dependabot PR body."
+    solution: "Sweep Skill could say the PR body notes are the expected source."

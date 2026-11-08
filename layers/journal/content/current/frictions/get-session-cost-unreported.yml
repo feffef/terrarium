@@ -1,0 +1,30 @@
+name: get-session-cost-unreported
+surface: outside
+summary: A Skill or PR body needed the run's cost, but get_session showed none (or none yet), so the PR said the cost was unreported.
+cause: "get_session returns no cost_usd or usage field at some calls (once the field appeared only on a later call than the session's single early one), so a Skill step that requires the run cost in the PR body cannot be met. Signals: 'get_session returned no cost figure', 'no usage field', 'Run cost: unreported', 'cost_usd 2.85 on a later call'. Since PR #2944 (2026-11-07) glassbox-curate says to read the cost at landing, not early."
+status: open
+fixes:
+  - pr: 2944
+    date: "2026-11-07"
+    summary: "glassbox-curate says to read cost at landing, since two runs read get_session early and reported unreported."
+occurrences:
+  - session: session_013zxzeRwjiiLkjj6sQ3u49g
+    date: "2026-11-07"
+    severity: minor
+    description: "get_session returned no cost figure, so the PR cannot give the run's cost as the Skill requires."
+    solution: "Name where the Skill reads cost, or accept 'unreported'."
+  - session: session_013zxzeNqe2cXhykGMMq7vUi
+    date: "2026-11-07"
+    severity: minor
+    description: "get_session returned no usage field, so the Skill's cost budget could not be read or enforced; the PR reports cost as unreported."
+    solution: "Have orient.ts print the run's spend, or name a fallback source in the Skill; the get_session owner may need to expose the field."
+  - session: session_013zxzeTCE8mdvR9V6wVJoCV
+    date: "2026-11-07"
+    severity: nit
+    description: "get_session showed no cost_usd, so the PR body had to say the run cost was unreported."
+    solution: "None needed; the Skill already allows 'unreported'."
+  - session: session_013zxzeRCCqrxVitqSaxJa4K
+    date: "2026-11-07"
+    severity: minor
+    description: "Wrote 'Run cost: unreported' in the PR body after calling get_session only once, at the start; the Land step says to read the cost just before writing the body. A later call showed cost_usd 2.85."
+    solution: "Call get_session again right before writing the PR body and quote cost_usd; the main-session figure may not include subagent runs, which I could not verify."

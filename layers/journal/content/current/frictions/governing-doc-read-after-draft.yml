@@ -17,11 +17,6 @@ fixes:
     date: "2026-10-29"
     summary: "The tenant-glossary rule says a Tenant's terms apply to everything written under its layer, code comments included."
 occurrences:
-  - session: session_015P9szA8dP4wxv4wiXkZcRZ
-    date: "2026-10-24"
-    severity: moderate
-    description: "Asked the owner to pick a title style before reading EVERY-PAGE's title rule; the picked titles broke it and needed a second owner decision and retitle round."
-    solution: "Read the Tenant's writing Skill (glassbox-lesson/EVERY-PAGE.md) before asking a design question it already settles; the Tenant glossary could point to it."
   - session: session_013zxzeQV6Jcqg4jYk2tkwBq
     date: "2026-10-27"
     severity: nit

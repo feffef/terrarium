@@ -1,6 +1,6 @@
 name: glassbox-improve-run-cost
 summary: A glassbox-improve run spent many agents, hand-run dispatch waves and review rounds, or a retyped PR body, on a few small page changes.
-cause: "glassbox-improve v1 re-graded after each round, took every structural step two raters raised (about 35 subagents) and had the lead paste page and draft lists into each rater brief by hand. PR #2688 (v2) dropped re-grade rounds and ranks structural raises; PR #2711 caps a run at 3 structural steps, fills rater briefs from the tally and saves hand-backs in pairs; PR #2794 (v3) keeps run state in repo YAML and plans briefs by script. A run still retyped a 40-53 KB tally into the PR body (create_pull_request takes body only inline) and the first v3 run dispatched about 127 judges by hand in waves. The first-run cooling-off cost is glassbox-improve-first-run-cost. Signals: 'rounds', 'raters twice', 'about 35 subagents', 'token cost', 'under-10 guidance', 'brief pasted by hand', 'PR body', 'judges dispatched by hand'."
+cause: "glassbox-improve v1 re-graded after each round, took every structural step two raters raised (about 35 subagents) and had the lead paste page and draft lists into each rater brief by hand. PR #2688 (v2) dropped re-grade rounds and ranks structural raises; PR #2711 caps a run at 3 structural steps, fills rater briefs from the tally and saves hand-backs in pairs; PR #2794 (v3) keeps run state in repo YAML and plans briefs by script. A run still retyped a 40-53 KB tally into the PR body (create_pull_request takes body only inline) and the first v3 run dispatched about 127 judges by hand in waves. The first-run cooling-off cost is glassbox-improve-first-run-cost. Signals: 'rounds', 'raters twice', 'about 35 subagents', 'token cost', 'under-10 guidance', 'brief pasted by hand', 'PR body', 'judges dispatched by hand'. PR #2934 (2026-11-07) removed the glassbox-improve Skill, so no new occurrence can come from it."
 surface: safe
 status: tracked
 ref: "#2805"
@@ -20,6 +20,9 @@ fixes:
   - pr: 2868
     date: "2026-11-05"
     summary: "glassbox-improve caps a run at 8 items and steps together (rest stays pending) and records cost per phase in runs.yml via phases.yml and costBreakdown (relates to #2850)."
+  - pr: 2934
+    date: "2026-11-07"
+    summary: "Removes the glassbox-improve Skill (issue #2930, owner decision), the source of this cluster's runs."
 occurrences:
   - session: session_013zxzeQ5JaiqQgggGaNSagD
     date: "2026-10-29"

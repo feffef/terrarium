@@ -31,11 +31,6 @@ occurrences:
     severity: minor
     description: "On #2527 I pushed a prose follow-up commit without re-running gate:scoped on the final head, which pr-workflow.md asks for before the first push."
     solution: "Re-read the pr-workflow.md 'Review before the first push' recipe before any hand edit to a ready-to-push branch."
-  - session: session_015XP8ctSXnTaR7KEnyPpUP1
-    date: "2026-10-24"
-    severity: minor
-    description: "gate:scoped reused an e2e build made before my last refactor, so the final head was not actually exercised until I forced a fresh build."
-    solution: "Have gate:scoped rebuild when layer sources are newer than .output."
   - session: session_013Hy2tG56JDVU7649kkyZCb
     date: "2026-10-25"
     severity: minor
@@ -141,3 +136,8 @@ occurrences:
     severity: minor
     description: "Started gate:scoped in parallel with the code-review subagents, then committed their fixes, so the gate aborted and had to run twice more"
     solution: "Run the gate only after review fixes are committed; reviews and the gate are not parallel work"
+  - session: session_013zxzeQWJUyfuXJgdfypeuc
+    date: "2026-11-07"
+    severity: minor
+    description: "Edited the curate Skill while pnpm gate:scoped ran, so the gate aborted and had to run again (pr-workflow: edit nothing while it runs)"
+    solution: "Hold new owner requests until the gate finishes, or stop the gate before editing"

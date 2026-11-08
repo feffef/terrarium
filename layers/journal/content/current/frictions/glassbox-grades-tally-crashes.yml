@@ -1,12 +1,15 @@
 name: glassbox-grades-tally-crashes
 surface: safe
 summary: The glassbox-improve grades.ts tally crashed with a TypeError on a rater's report it did not expect, with no line named.
-cause: "grades.ts tally summary threw a bare TypeError on an input it did not validate (a gap written with keys better instead of exemplar and take; a cut step without a gist). PR #2862 (2026-11-05) rejects a step with no gist, shows a restated dropped step's history beside it and has the lesson Task name the page to write; a rater report that breaks the shape (a gap shaped as quote and fix, a graded page outside its plan) is still refused by the tally and fixed by hand in the saved hand-back. Signals: 'grades.ts tally', 'TypeError in summary', 'tally rejected the hand-back', 'crashed'."
+cause: "grades.ts tally summary threw a bare TypeError on an input it did not validate (a gap written with keys better instead of exemplar and take; a cut step without a gist). PR #2862 (2026-11-05) rejects a step with no gist, shows a restated dropped step's history beside it and has the lesson Task name the page to write; a rater report that breaks the shape (a gap shaped as quote and fix, a graded page outside its plan) is still refused by the tally and fixed by hand in the saved hand-back. Signals: 'grades.ts tally', 'TypeError in summary', 'tally rejected the hand-back', 'crashed'. PR #2934 (2026-11-07) removed the glassbox-improve Skill, so no new occurrence can come from it."
 status: open
 fixes:
   - pr: 2862
     date: "2026-11-05"
     summary: "glassbox-improve: tally lists the earlier decided date, status and gist beside a restated dropped step, reportProblems rejects a step with no gist, and a lesson step's Task starts with the new page to write (closes #2848)."
+  - pr: 2934
+    date: "2026-11-07"
+    summary: "Removes the glassbox-improve Skill (issue #2930, owner decision), the source of this cluster's runs."
 occurrences:
   - session: session_013zxzeSAtjCQiatdUuuFCRJ
     date: "2026-11-03"

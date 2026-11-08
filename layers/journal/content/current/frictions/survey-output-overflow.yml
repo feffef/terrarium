@@ -51,3 +51,8 @@ occurrences:
     severity: minor
     description: "Printed about 150 lines of runs.yml findings when I only needed the cost columns, then misjudged which runs counted as v3 until the owner corrected me."
     solution: "Grep the numeric fields first, and ask the owner which runs count before reading them."
+  - session: session_013zxzeQyhG5Jn9REJydTepm
+    date: "2026-11-07"
+    severity: minor
+    description: "pull_request_read method get returned 92k characters, overflowing context, and needed a python slice to read."
+    solution: "github-integration.md overflow list should name pull_request_read get; use get_files and get_check_runs first."

@@ -1,0 +1,33 @@
+name: glassbox-curate-read-first-skipped
+surface: safe
+summary: Glass Box curate runs edited or dispatched before reading the Skill's required first reads (glossary, QUALITY.md, the Subject's pages), and the Spec reviewer found the gap.
+cause: "The glassbox-curate Skill lists the Glass Box GLOSSARY, QUALITY.md (Lenses) and the Subject's pages to read first; runs skip or truncate them, leave pagesRead short, and a reviewer names the unread pages. Signals: 'never opened QUALITY.md', 'pagesRead was short', 'skipped the curate Read step', 'short of the Skill's read-the-Subject step'. Since PRs #2929 and #2944 (2026-11-07) the Skill reads the Subject first, in full, with orient.ts --subject printing its pages and the pagesRead lines."
+status: open
+fixes:
+  - pr: 2929
+    date: "2026-11-07"
+    summary: "glassbox-curate and glassbox-update read the Subject first, wait for updates, own the merge."
+  - pr: 2944
+    date: "2026-11-07"
+    summary: "glassbox-curate gets 'Know the guide before you change it' and orient.ts --subject, which prints a chosen Subject's pages in full with the pagesRead lines."
+occurrences:
+  - session: session_013zxzeNqe2cXhykGMMq7vUi
+    date: "2026-11-07"
+    severity: minor
+    description: "The Skill's read-first list names glassbox GLOSSARY and QUALITY; I never read them and relied on the subagent reading the GLOSSARY."
+    solution: "Fine for a removal-only edit, but the Skill could say which of the read-first files a removal run may skip."
+  - session: session_013zxzeSkKADXgmp8x1PeS5Z
+    date: "2026-11-07"
+    severity: minor
+    description: "pagesRead was short at review; the Walkthrough and Wayfinder pages overlapping the sweep paragraph were unread until the Spec reviewer named them."
+    solution: "Grep the guide for the topic's terms during Read and read each hit before editing."
+  - session: session_013zxzeQyHhutDMJtzGF5UQU
+    date: "2026-11-07"
+    severity: minor
+    description: "Read only the Agents pair, Nitro and Data fetching in full; ordered Nuxt and Vue and Git and GitHub from link graphs, short of the Skill's read-the-Subject step."
+    solution: "Budget the full reads up front, or let the Skill allow link-graph ordering for pure reorders."
+  - session: session_013zxzeRCCqrxVitqSaxJa4K
+    date: "2026-11-07"
+    severity: minor
+    description: "Skipped the curate Read step: I edited after reading only two walkthroughs myself, relying on reviewer reports, and left pagesRead empty until the Standards reviewer flagged it."
+    solution: "Read the pages the change edits, links or overlaps before the edit, then fill pagesRead from what I read."

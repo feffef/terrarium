@@ -36,3 +36,8 @@ occurrences:
     severity: minor
     description: "Survey subagent: a 32-call per-triple --append loop outran the foreground limit; all-or-nothing --append plus --unledgered meant bulk calls wrote nothing; --move refusal looked like success."
     solution: "Have --append skip held sessions and print refusals clearly; the brief should say how to batch."
+  - session: session_013zxzeSRr9pF9MCBQDGAN5L
+    date: "2026-11-07"
+    severity: minor
+    description: "Survey subagent's own: mistyped 22-character session ids in the append triples and hit the all-or-nothing refusal for sessions already held, costing two reruns."
+    solution: "Accept the last four characters of an id and add a dry-run flag to the append script."

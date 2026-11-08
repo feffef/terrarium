@@ -61,3 +61,13 @@ occurrences:
     severity: nit
     description: "Wrote the spec session's id into a commit-message trailer; the commit hook corrected it."
     solution: "Copy the id from my own system-prompt commit template, never from an issue body."
+  - session: session_013zxzeRYiNjyrjrq8JVWSuu
+    date: "2026-11-07"
+    severity: nit
+    description: "Typed the session id by hand in the commit message; it was wrong, the commit-msg hook rewrote the trailer."
+    solution: "Copy the id from the system-reminder template, or leave the trailer to the hook."
+  - session: session_013zxzeQWJUyfuXJgdfypeuc
+    date: "2026-11-07"
+    severity: minor
+    description: "Sent a garbled first send_message to the designer session, with a wrong header id and no content, then had to send a correction"
+    solution: "Check my own session id with get_session before the first peer message, and write the message before sending"

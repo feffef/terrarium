@@ -211,3 +211,43 @@ occurrences:
     severity: minor
     description: "First Agent call was blocked by the dispatch-read guard because I had not read the dispatch-subagents Skill; the brief also lacked the no-checkout rule."
     solution: "Read the Skill before writing any subagent brief, as CLAUDE.md says."
+  - session: session_013zxzeSRr9pF9MCBQDGAN5L
+    date: "2026-11-07"
+    severity: nit
+    description: "My first Agent call was blocked by the dispatch-read guard; I had not read the dispatch-subagents Skill, though CLAUDE.md names that trigger. Cost one retry."
+    solution: "Read dispatch-subagents before the first brief."
+  - session: session_013zxzeSy38XR1wPjCGFUExY
+    date: "2026-11-07"
+    severity: nit
+    description: "First Workflow call was blocked by the dispatch-read guard because I had not read dispatch-subagents; I retried unchanged after reading."
+    solution: "clear-backlog could list dispatch-subagents among the docs to read before step 1."
+  - session: session_013zxzeNqe2cXhykGMMq7vUi
+    date: "2026-11-07"
+    severity: minor
+    description: "The dispatch-read guard blocked my first two Agent calls, costing a retry; I had not read dispatch-subagents before writing the briefs."
+    solution: "The code-review Skill step 4 could point to dispatch-subagents, so the read happens before briefs are written."
+  - session: session_013zxzeRGhhzxkXgfdpEX9js
+    date: "2026-11-07"
+    severity: nit
+    description: "Agent calls were blocked by the dispatch-read guard because I wrote subagent briefs before reading the dispatch-subagents Skill, which CLAUDE.md names."
+    solution: "Read the Skill before the first brief; the guard worked as designed, one retry."
+  - session: session_013zxzeSkKADXgmp8x1PeS5Z
+    date: "2026-11-07"
+    severity: minor
+    description: "First two Agent calls were blocked by the dispatch-read guard because I wrote briefs before reading the dispatch-subagents Skill that CLAUDE.md names."
+    solution: "Read dispatch-subagents before the first brief; a CLAUDE.md trigger the guard enforces is cheaper to follow up front."
+  - session: session_013zxzeTCE8mdvR9V6wVJoCV
+    date: "2026-11-07"
+    severity: minor
+    description: "The dispatch-read guard blocked my first two Agent calls because I had not read dispatch-subagents yet; the briefs were written twice."
+    solution: "Make the code-review Skill name dispatch-subagents as a prerequisite, so it is read before briefs are drafted."
+  - session: session_013zxzeQyHhutDMJtzGF5UQU
+    date: "2026-11-07"
+    severity: nit
+    description: "Dispatched two review subagents before reading dispatch-subagents; the dispatch-read guard denied both calls and I re-sent them."
+    solution: "Read the dispatch-subagents Skill when the code-review Skill says to spawn sub-agents, or name it in the code-review Skill."
+  - session: session_013zxzeRnhzjUpugh9vCH4UW
+    date: "2026-11-08"
+    severity: minor
+    description: "First Agent call was blocked by the dispatch-read guard because I had not read dispatch-subagents; costing one retry."
+    solution: "The digest Skill's fact-check step should name dispatch-subagents as a read-first."
