@@ -28,7 +28,7 @@ follow it and don't route around it. If it is wrong, say so on the guard's issue
 | `dispatch-read-guard.ts` | a **main-session** `Agent`, `Workflow` or `SendMessage` call before the transcript shows the `dispatch-subagents` Skill invoked or its `SKILL.md` read | CLAUDE.md | #2543 |
 | `harness-tag-stop.ts` | blocks the stop once when this turn's main-agent text holds a `<task-notification>` or `<agent-message` tag, which only the harness delivers | its script header | #2499, #2503 |
 | `merge-close-stop.ts` | blocks the stop once when this session merged a PR and `close-session` has not run since, by log-session's own `closureRefusal` test | its script header | #2913 |
-| `pr-subscribe-stop.ts` | blocks the stop once when this session opened a PR (`create_pull_request`) and never called `subscribe_pr_activity`; no same-turn-merge exemption | its script header | #2961 |
+| `pr-subscribe-stop.ts` | blocks the stop once when this session opened a PR (`create_pull_request`) and never called `subscribe_pr_activity` | its script header | #2961 |
 | `stale-push-hint.ts` | nothing: a hint, not a guard. After a `git push` rejected as "stale info" it adds the fix to the result | its script header | #1610 |
 | `skill-rules-hint.ts` | nothing: a hint, not a guard. When a Skill runs (Skill tool or slash command) it adds the rules whose `paths` name the Skill's directory | its script header | PR #1741 |
 | `bash-rules-hint.ts` | nothing: a hint, not a guard. After a piped, chained or multi-file Bash read it adds the rules whose `paths` match the files read | its script header | #1764 |
