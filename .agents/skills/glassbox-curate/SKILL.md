@@ -17,10 +17,10 @@ the budget. Several runs a day must work.
 
 **Modes.** *Autonomous*: your first message carries a system-reminder
 `Fired by routine "/glassbox-curate"`; decide everything, ask nothing, and say
-in the run entry why you chose the focus. *Interactive*: a person typed the first message, with no
-such reminder; if no focus was given, ask for one; settle every decision with
-them via `grilling`. If they answer "autonomous", the run is autonomous from
-then on and its entry says so.
+in the run entry why you chose the focus. *Interactive*: a person typed the
+first message, with no such reminder; if no focus was given, ask for one;
+settle every decision with them via `grilling`. If they answer "autonomous",
+the run is autonomous from then on and its entry says so.
 
 **Hard rules.** Never make a page false. Never undo an earlier change without
 new evidence. `DECISIONS.md` rulings are closed. One PR per run, within the
