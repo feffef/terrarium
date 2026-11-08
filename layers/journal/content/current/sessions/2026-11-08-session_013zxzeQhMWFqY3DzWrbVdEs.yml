@@ -1,0 +1,270 @@
+schemaVersion: 1
+session: session_013zxzeQhMWFqY3DzWrbVdEs
+startedAt: 2026-11-08T04:03:19Z
+endedAt: 2026-11-08T04:12:49Z
+kind: autonomous
+goal: Scheduled audit of the repo's prose for stale or duplicated docs
+status: in-review
+outcome: Sweep PR 2964 open with 6 confirmed doc fixes; gate green, awaiting CI and merge
+summary: 'Scheduled audit-docs run; no human prompted any step (all agent-initiated). Three read-only reviewers returned: Freshness 2 findings, Single-home 6 actionable (plus a no-change note), Coherence 0. One checker fact-checked 8 findings: 2 CONFIRMED (deploy README Node copy, proposals README ADR-0026 anecdote), 4 CONFIRMED-BUT (Three Spaces pointer also in two page-checks.ts comments, glassbox "both Spaces", blog stance cut plus line-43 reword, midden keep attribution and drop only the date), 2 WRONG (atlas removal note placed by the owner in #1984, journal page-list map). I applied the 6 fixes in one commit (7 files, +9/-11), Standards and Spec review were clean (wrapping nits ignored), gate:scoped green on the final head, pushed, opened PR 2964, subscribed. No escalation PR (no ADR or Human-only path touched), no issue filed. Covered: README.md, SECURITY.md, docs/proposals/README.md, deploy/README.md, GLOSSARY.md of journal blog atlas midden marquee tinkerfund, ADRs 0002 0006 0007 0013 0014 0016 0018 0020 0021 0022 0023, Skills atlas-specimen auto-triage, docs/research/public-readiness-review.md.'
+prs:
+  - "2964"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: fetch origin main before trusting history; --no-renames; read after my first git command
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: Closing a scheduled run's PR, review exemptions, recipe; read in parts
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: cloud tool map and write traps before opening the PR
+    useful: partly
+  - path: .claude/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (read before editing)
+  - path: layers/journal/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/midden/GLOSSARY.md
+    reason: (read before editing)
+  - path: layers/marquee/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/blog/GLOSSARY.md
+    reason: (read before editing)
+  - path: layers/atlas/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/tinkerfund/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/david.md
+    reason: (no reason given)
+  - path: docs/research/content-client-queries-without-wasm.md
+    reason: (no reason given)
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: (no reason given)
+  - path: docs/research/nuxt-content-review-grounding.md
+    reason: (no reason given)
+  - path: docs/research/shell-reads-by-output-matching.md
+    reason: (no reason given)
+  - path: .agents/skills/triage/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: (no reason given)
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: (no reason given)
+  - path: docs/adr/0002-manifest-driven-config-generation.md
+    reason: (no reason given)
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: (no reason given)
+  - path: docs/adr/0007-derived-files-built-not-committed.md
+    reason: (no reason given)
+  - path: docs/adr/0013-content-config-built-from-manifests.md
+    reason: (no reason given)
+  - path: docs/adr/0014-build-time-virtual-routing-module.md
+    reason: (no reason given)
+  - path: docs/adr/0016-tenant-root-layer-routes.md
+    reason: (no reason given)
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: (no reason given)
+  - path: docs/research/public-readiness-review.md
+    reason: (no reason given)
+  - path: docs/research/making-repo-public.md
+    reason: (no reason given)
+  - path: layers/glassbox/GLOSSARY.md
+    reason: (read before editing)
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: the scheduled task itself
+  - name: dispatch-subagents
+    reason: brief contents for reviewers and checker
+  - name: code-review
+    reason: Standards and Spec review of the sweep diff
+  - name: close-session
+    reason: closure after opening the PR
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran the first git command (fetch/log) before reading docs/agents/git-conventions.md, which CLAUDE.md requires first; a hook reminded me afterwards.
+    solution: Read git-conventions.md as step one of any scheduled run that fetches.
+    severity: nit
+  - description: The checker's summary preamble said five CONFIRMED-BUT but listed four; I had to recount the verdicts myself from the body.
+    solution: Ask checkers to end with a verdict-count line derived from their own list.
+    severity: nit
+durationSec: 570
+models:
+  claude-sonnet-5-5: 59
+toolCounts:
+  Bash: 20
+  Skill: 4
+  Agent: 6
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__pull_request_read: 1
+filesEdited:
+  - .agents/skills/glassbox-lesson/QUALITY.md
+  - deploy/README.md
+  - docs/proposals/README.md
+  - layers/blog/GLOSSARY.md
+  - layers/glassbox/GLOSSARY.md
+  - layers/glassbox/page-checks.ts
+  - layers/midden/GLOSSARY.md
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0011.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0002.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0023.md
+docsReadBySubagents:
+  - docs/proposals/README.md
+  - layers/journal/GLOSSARY.md
+  - layers/midden/GLOSSARY.md
+  - layers/marquee/GLOSSARY.md
+  - layers/blog/GLOSSARY.md
+  - layers/atlas/GLOSSARY.md
+  - layers/tinkerfund/GLOSSARY.md
+  - .agents/skills/blog-post/personas/david.md
+  - docs/research/content-client-queries-without-wasm.md
+  - docs/research/github-branch-protection-vs-autonomous-log-commits.md
+  - docs/research/nuxt-content-review-grounding.md
+  - docs/research/shell-reads-by-output-matching.md
+  - .agents/skills/triage/SKILL.md
+  - docs/agents/triage-labels.md
+  - .agents/skills/blog-post/SKILL.md
+  - docs/adr/0021-multi-context-domain-docs.md
+  - .agents/skills/atlas-specimen/SKILL.md
+  - .agents/skills/auto-triage/SKILL.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+  - docs/adr/0002-manifest-driven-config-generation.md
+  - docs/adr/0006-runtime-routing-path-prefix.md
+  - docs/adr/0007-derived-files-built-not-committed.md
+  - docs/adr/0013-content-config-built-from-manifests.md
+  - docs/adr/0014-build-time-virtual-routing-module.md
+  - docs/adr/0016-tenant-root-layer-routes.md
+  - docs/adr/0018-tenant-layers-under-layers-directory.md
+  - docs/research/public-readiness-review.md
+  - docs/research/making-repo-public.md
+  - layers/glassbox/GLOSSARY.md
+  - docs/adr/0026-gate-workflow-thin-shell.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run gate:scoped and code-review before the PR; summary was enough, did not open the ADR
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Confirmed none of my edited paths are Human-only, so no escalation PR; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Reminded me to open the PR myself after review and gate; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Log goes to main by hook, kept out of the branch; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Provenance header on the PR body and commit trailer; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Made me check prune trials before editing; none overlapped; summary was enough
+    useful: partly
+  - path: .claude/rules/adr-0021.md
+    reason: Single-home for glossary terms guided the blog and midden edits; summary was enough
+    useful: partly
+  - path: .claude/rules/adr-0030.md
+    reason: No ADR edited, so it did not apply this run
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Orphan-addition lens basis for Agent A; no new agent docs found
+    useful: partly
+  - path: .claude/rules/adr-0005.md
+    reason: Skill location rules; I edited only a sibling file of a Skill, nothing structural
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: Installed-Skill and Inventory rules; no installed Skill touched
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: Loaded on glossary edit; I only removed text, added no term
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded on tenant glossary edits; I read the glossaries anyway
+    useful: partly
+  - path: .claude/rules/adr-0001.md
+    reason: Loaded by a deploy/README read; unrelated to a prose edit
+    useful: no
+  - path: .claude/rules/adr-0011.md
+    reason: Loaded by a deploy/README read; unrelated to a prose edit
+    useful: no
+subagents:
+  - type: general-purpose
+    task: "Audit A: Freshness"
+    durationSec: 44
+    toolCalls: 9
+    modelCalls: 9
+    tokenShare: 10.3
+  - type: general-purpose
+    task: "Audit B: Single-home"
+    durationSec: 74
+    toolCalls: 12
+    modelCalls: 12
+    tokenShare: 13.5
+  - type: general-purpose
+    task: "Audit C: Coherence"
+    durationSec: 111
+    toolCalls: 21
+    modelCalls: 20
+    tokenShare: 21.9
+  - type: general-purpose
+    task: Fact-check audit findings
+    durationSec: 94
+    toolCalls: 17
+    modelCalls: 14
+    tokenShare: 10.9
+  - type: general-purpose
+    task: Standards review of sweep diff
+    durationSec: 24
+    toolCalls: 4
+    modelCalls: 5
+    tokenShare: 3.7
+  - type: general-purpose
+    task: Spec review of sweep diff
+    durationSec: 16
+    toolCalls: 4
+    modelCalls: 2
+    tokenShare: 2.8
+gitBranch: claude/festive-mayer-h25bn6
+entrypoint: remote_trigger
+cliVersion: 2.1.319
+trigger: audit-docs
+landedBy: Stop
