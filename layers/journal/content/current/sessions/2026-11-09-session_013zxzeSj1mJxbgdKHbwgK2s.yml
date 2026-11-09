@@ -1,42 +1,42 @@
 schemaVersion: 1
 session: session_013zxzeSj1mJxbgdKHbwgK2s
 startedAt: 2026-11-09T07:54:17Z
-endedAt: 2026-11-09T08:12:19Z
+endedAt: 2026-11-09T08:13:41Z
 kind: interactive
 goal: Clear the open issue backlog (clear-backlog run)
-status: in-review
-outcome: 4 issues triaged; 1 closed, 1 parked, 1 blocked until 2026-11-12; the fix for one is in PR 3001 awaiting CI
-summary: "Owner invoked /clear-backlog. The sweep found four needs-triage issues (2997, 2996, 2992, 2987); the seven others were skipped because an agent commented last, and none was ready-for-agent. The explore workflow triaged them and labelled the three grill issues ready-for-human. One grilling round followed. Owner answers (human-instructed): 2996 parked until its prune trial ends; 2997 closed as wontfix, no change; 2987 fixed in glassbox-curate. 2992 is time-gated to 2026-11-12 and goes in the report. I labelled 2987 ready-for-agent and closed 2997 on those answers. Mid-build the owner refined the 2987 pick to state the rules as Done-when conditions, so I stopped the running build and re-ran it with the new brief (agent-initiated mechanics, human-instructed change). The build hit its 3-round review cap with only cosmetic findings; I fixed those by hand, passed gate:scoped on the final head, pushed to fix-2987-glassbox-curate-rules (a branch other than the session branch, as clear-backlog section 4 directs) and opened PR 3001, subscribed. Open: CI, my verdict, merge, and the owner's call on the two judgement calls in the PR body. I read my own follow-up diff instead of re-running code-review on it; pr-workflow wants code-review for a follow-up that changes a Skill's meaning, so that is a deviation I disclosed in the PR body."
+status: completed
+outcome: "Backlog run done: 2987 fixed and merged (PR 3001), 2997 closed, 2996 parked, 2992 blocked until 2026-11-12"
+summary: "Owner invoked /clear-backlog. The sweep found four needs-triage issues (2997, 2996, 2992, 2987); the seven others were skipped because an agent commented last, and none was ready-for-agent. The explore workflow triaged them and labelled the three grill issues ready-for-human. One grilling round followed. Owner answers (human-instructed): 2996 parked until its prune trial ends; 2997 closed as wontfix, no change; 2987 fixed in glassbox-curate. 2992 is time-gated to 2026-11-12 and goes in the report. I labelled 2987 ready-for-agent and closed 2997 on those answers. Mid-build the owner refined the 2987 pick to state the rules as Done-when conditions, so I stopped the running build and re-ran it with the new brief (agent-initiated mechanics, human-instructed change). The build hit its 3-round review cap with only cosmetic findings; I fixed those by hand, passed gate:scoped on the final head, pushed to fix-2987-glassbox-curate-rules (a branch other than the session branch, as clear-backlog section 4 directs) and opened PR 3001, subscribed. CI went green on the head, I posted my verdict and merged PR 3001 with merge-pr.ts (it closed 2987), then removed the worktree; check-worktrees exits 0. The owner may still weigh the two judgement calls in the PR body. I read my own follow-up diff instead of re-running code-review on it; pr-workflow wants code-review for a follow-up that changes a Skill's meaning, so that is a deviation I disclosed in the PR body."
 prs:
   - "3001"
 docsRead:
   - path: .agents/skills/auto-triage/SKILL.md
-    reason: Step 1 told me how to resolve the sweep set and the skip rules
+    reason: "Step 1 told me how to resolve the sweep set and the skip rules; subagents: triage #2987: Named in the brief; gives the per-issue sweep rules.; triage #2996: Read as the brief directed; gave the per-issue rules and the ready-for-human line for obsolete or judgment cases.; triage #2997: Read as the brief directed; gave the brave/judgment rules and regression handling."
     useful: yes
   - path: docs/agents/github-integration.md
-    reason: Read before first GitHub op; the list script and MCP write routes were what I used
+    reason: "Read before first GitHub op; the list script and MCP write routes were what I used; subagents: triage #2996: Read after a hook pointed to it; confirmed issue_write labels and add_issue_comment usage."
     useful: yes
   - path: docs/agents/issue-tracker.md
-    reason: Read before triage work; I used none of its recipes beyond confirming MCP writes
+    reason: "Read before triage work; I used none of its recipes beyond confirming MCP writes; subagents: triage #2997: Read for filing and wayfinder rules; confirmed no wayfinder labels applied."
     useful: partly
   - path: docs/agents/triage-labels.md
-    reason: Gave the label mapping, wontfix and ready-for-agent, for my label updates
-    useful: yes
+    reason: "Gave the label mapping, wontfix and ready-for-agent, for my label updates; subagents: triage #2987: A hook asked for it after I labelled an issue; it confirmed the ready-for-human mapping."
+    useful: partly
   - path: docs/agents/git-conventions.md
-    reason: Hook asked for it after my first git command; the commit -F and no-chain advice applied
-    useful: yes
+    reason: "Hook asked for it after my first git command; the commit -F and no-chain advice applied; subagents: triage #2987: A hook asked for it after I ran git log to draw a conclusion; my log call was already consistent with it.; build fix-2987-glassbox-curate-rules: Hook prompted a read before my first git command; I read its first 60 lines only and followed the fetch and commit-message advice."
+    useful: partly
   - path: .agents/skills/dispatch-subagents/SKILL.md
-    reason: Dispatch guard denied the workflow until I read it; the saved workflow builds its own briefs so little applied
+    reason: "Dispatch guard denied the workflow until I read it; the saved workflow builds its own briefs so little applied; subagents: triage #2996: Read directly because the issue concerns it; showed §3 wording and its scope."
     useful: partly
   - path: .agents/skills/glassbox-curate/SKILL.md
-    reason: Read the lines the issue cites to verify the triage claims
+    reason: "Read the lines the issue cites to verify the triage claims; subagents: triage #2987: The issue is about this Skill; read to verify the claims against it.; build fix-2987-glassbox-curate-rules: The file being edited."
     useful: yes
   - path: docs/adr/0005-skill-model.md
     reason: Hook demanded it after my SKILL.md edit; it confirmed the edit was fine
     useful: partly
   - path: docs/adr/0027-prune-trials.md
-    reason: Hook demanded it after my SKILL.md edit; it confirmed cut-before-add and the open-trial check
-    useful: yes
+    reason: "Hook demanded it after my SKILL.md edit; it confirmed cut-before-add and the open-trial check; subagents: fix fix-2987-glassbox-curate-rules r1: Hook asked for it after the commit; not read in full, I applied the cut-before-add rule from CLAUDE.md summary."
+    useful: partly
   - path: docs/agents/pr-workflow.md
     reason: Gave the review-before-PR test, recipe and verdict steps for landing
     useful: yes
@@ -44,17 +44,23 @@ docsRead:
     reason: Checked whether a Skill prose edit needs a human merge; it does not
     useful: yes
   - path: .agents/skills/implement/SKILL.md
-    reason: Build subagent reported it as partly useful
+    reason: "Build subagent reported it as partly useful; subagents: build fix-2987-glassbox-curate-rules: Named by the task; short, I followed it except for the skipped code-review step."
     useful: partly
   - path: .agents/skills/code-review/SKILL.md
-    reason: Review subagents reported it as useful for the Standards and Spec axes
+    reason: "Review subagents reported it as useful for the Standards and Spec axes; subagents: Standards fix-2987-glassbox-curate-rules r1: The brief told me to apply its Standards axis and smell baseline. The baseline found nothing in a prose-only diff; the repo's own standards (ADR-0027, CLAUDE.md 'keep it short') produced the findings.; Spec fix-2987-glassbox-curate-rules r1: The brief told me to read it and apply the Spec axis. I did, using the brief and the issue as the spec. The parallel subagent step did not apply because I cannot spawn subagents.; Spec fix-2987-glassbox-curate-rules r2: Task told me to apply its Spec axis; I did this myself because I cannot spawn subagents. Useful for the Spec brief and the quote-the-spec-line discipline.; Standards fix-2987-glassbox-curate-rules r3: The task told me to read it and apply the Standards axis and smell baseline. I applied the baseline and found no smells in a prose-only diff."
     useful: yes
   - path: .agents/skills/triage/SKILL.md
-    reason: Triage subagents read it for the per-issue rules; reported useful
+    reason: "Triage subagents read it for the per-issue rules; reported useful; subagents: triage #2987: Named in the brief; gives the per-issue rules and label roles."
     useful: yes
   - path: docs/adr/0022-autonomous-triage-sweep.md
-    reason: A triage subagent read it in full and reported it useful
+    reason: "A triage subagent read it in full and reported it useful; subagents: triage #2987: Read the full ADR behind the ADR-0022 summary rule that governs the recommendation."
     useful: yes
+  - path: CLAUDE.md
+    reason: "triage #2997: Project instructions, loaded at session start; triggered the GitHub, issue and git doc reads.; build fix-2987-glassbox-curate-rules: Project instructions loaded at start; gave the git, GitHub and subagent-return conventions.; Standards fix-2987-glassbox-curate-rules r1: Loaded as project instructions. It supplied the 'keep it short' and 'one home per fact' standards used in the review.; fix fix-2987-glassbox-curate-rules r1: Project instructions loaded at start; set commit trailer and branch rules.; Standards fix-2987-glassbox-curate-rules r3: Loaded as project instructions. The 'keep it short' and one-home-per-fact guidance informed the simplicity review.; Spec fix-2987-glassbox-curate-rules r3: Loaded as project instructions. It supplied the ADR-0027 cut-before-add principle that I applied to the diff."
+    useful: yes
+  - path: GLOSSARY-MAP.md
+    reason: "triage #2992: Loaded at session start. It was not needed.; Spec fix-2987-glassbox-curate-rules r3: Loaded with the project instructions; no glossary term was needed for this review."
+    useful: no
   - path: scripts/lib/author-trust.ts
     reason: (no reason given)
 skillsUsed:
@@ -85,18 +91,18 @@ frictions:
   - description: Did not run code-review on my follow-up commit that moved a Skill sentence; pr-workflow says a Skill-meaning follow-up gets its own review. I read the diff and disclosed it.
     solution: Run code-review on the follow-up diff, or state in pr-workflow that a reorder of an already reviewed sentence counts as simple.
     severity: minor
-durationSec: 1082
+durationSec: 1164
 models:
-  claude-sonnet-5-5: 84
+  claude-sonnet-5-5: 103
 toolCounts:
-  Bash: 18
+  Bash: 24
   Read: 11
   mcp__github__issue_read: 1
   Workflow: 4
-  Skill: 3
+  Skill: 4
   ToolSearch: 2
   PushNotification: 1
-  mcp__github__add_issue_comment: 3
+  mcp__github__add_issue_comment: 4
   mcp__github__issue_write: 2
   TaskStop: 1
   Edit: 3
@@ -104,6 +110,7 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   mcp__github__pull_request_read: 1
+  ReadNotifications: 2
 filesEdited:
   - .agents/skills/glassbox-curate/SKILL.md
 rulesLoaded:
@@ -153,47 +160,47 @@ docsReadBySubagents:
   - docs/adr/0022-autonomous-triage-sweep.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
-    reason: Told me to run gate:scoped and review before the PR; I opened the full ADR to check if a Skill edit needs a human merge
+    reason: "Told me to run gate:scoped and review before the PR; I opened the full ADR to check if a Skill edit needs a human merge; subagents: fix fix-2987-glassbox-curate-rules r2: Loaded at session start. It requires gate:scoped, which I ran: EXIT=0 in the scratchpad log fix-2987-glassbox-curate-rules-r2-gate.log."
     useful: yes
   - path: .claude/rules/adr-0009.md
-    reason: About session logs; the log-session step applies it, nothing else needed from it
+    reason: "About session logs; the log-session step applies it, nothing else needed from it; subagents: triage #2987: Loaded at session start; no bearing on a triage verdict.; triage #2992: Loaded at session start. It was not relevant to a blocked outcome.; triage #2996: Loaded at session start; not used.; triage #2997: Loaded at session start; close-session not applicable to this subagent.; Standards fix-2987-glassbox-curate-rules r1: Loaded at session start. Not relevant to the diff review.; Spec fix-2987-glassbox-curate-rules r1: Loaded at session start. It covers session logs, which this review does not touch.; Standards fix-2987-glassbox-curate-rules r2: Loaded at session start. Not relevant to a read-only review.; Spec fix-2987-glassbox-curate-rules r2: Loaded at session start. It is about session logs and does not bear on this review.; Standards fix-2987-glassbox-curate-rules r3: Loaded at session start. It covers session logs, which are irrelevant to this review.; Spec fix-2987-glassbox-curate-rules r3: Loaded at session start; it covers session logs, which a read-only subagent does not write."
     useful: partly
   - path: .claude/rules/adr-0003.md
-    reason: Said to open the PR myself and subscribe; the summary was enough
-    useful: yes
+    reason: "Said to open the PR myself and subscribe; the summary was enough; subagents: triage #2987: Loaded at session start; no bearing on a triage verdict.; triage #2992: Loaded at session start. It was not relevant to a blocked outcome.; triage #2996: Loaded at session start; not used (triage never builds).; triage #2997: Loaded at session start; not needed for a triage verdict.; Standards fix-2987-glassbox-curate-rules r1: Loaded at session start. Not relevant to the diff review.; Spec fix-2987-glassbox-curate-rules r1: Loaded at session start. It covers PR and approval flow, not this review.; Standards fix-2987-glassbox-curate-rules r2: Loaded at session start. Not relevant to a read-only review.; Spec fix-2987-glassbox-curate-rules r2: Loaded at session start. It does not bear on this read-only review.; Standards fix-2987-glassbox-curate-rules r3: Loaded at session start. It covers PR and approval flow, which this review does not touch.; Spec fix-2987-glassbox-curate-rules r3: Loaded at session start; it covers PR and approval flow, not this review."
+    useful: partly
   - path: .claude/rules/adr-0017.md
-    reason: Required the provenance header on every GitHub body; the summary was enough
+    reason: "Required the provenance header on every GitHub body; the summary was enough; subagents: triage #2987: Loaded; the provenance header on the comment.; triage #2996: Loaded at session start; supplied the provenance header rule for my comment.; triage #2997: Loaded at session start; set the provenance header on my comment."
     useful: yes
   - path: .claude/rules/adr-0022.md
-    reason: Defined what the sweep may label; a triage subagent read the full ADR, the summary was enough for me
+    reason: "Defined what the sweep may label; a triage subagent read the full ADR, the summary was enough for me; subagents: triage #2987: Loaded after I read the issue; it governs what a sweep may label.; triage #2996: Loaded at session start; confirmed what goes to ready-for-human.; triage #2997: Loaded after reading the triage skills; defines what the sweep may label and judgment-call routing."
     useful: yes
   - path: .claude/rules/adr-0027.md
-    reason: Open-trial and cut-before-add rules shaped the 2996 and 2987 picks; hook also made me read the full ADR
+    reason: "Open-trial and cut-before-add rules shaped the 2996 and 2987 picks; hook also made me read the full ADR; subagents: triage #2987: Loaded; supports the cut-before-add pick.; triage #2996: Loaded at session start; decisive, since it bars rewording text inside an open prune trial.; triage #2997: Loaded with triage context; relevant because the issue's friction cites ADR-0027 and the cut-before-add rule drove my pick.; build fix-2987-glassbox-curate-rules: Loaded when touching a Skill; told me to check prune trials and cut before adding.; Standards fix-2987-glassbox-curate-rules r1: Loaded when I read the glassbox-curate SKILL.md, which falls under prune-trial governance. It supplied 'cut or simplify before adding' (the focus of finding 1) and the open-trial check, which I confirmed with grep of .agents/prune-trials.yml.; Spec fix-2987-glassbox-curate-rules r1: Loaded at session start. It matters because the edit touches a Skill, and the brief names ADR-0027 for cutting before adding and for open trials. I used it to check the prune-trial constraint and to judge the diff on simplicity.; Standards fix-2987-glassbox-curate-rules r2: Loaded in-session. It supplies the cut-before-add principle that I checked the diff against.; Spec fix-2987-glassbox-curate-rules r2: Loaded after the issue read; it says to cut or simplify before adding and to check for an open prune trial. I used it to judge the diff and checked .agents/prune-trials.yml.; Standards fix-2987-glassbox-curate-rules r3: L"
     useful: yes
   - path: .claude/rules/adr-0020.md
-    reason: "Trusted/Public tiers: all four issues were owner-filed, so no Public gating applied"
+    reason: "Trusted/Public tiers: all four issues were owner-filed, so no Public gating applied; subagents: triage #2987: Loaded; sets the Trusted/Public tier. The issue author is OWNER, so Trusted.; triage #2997: Loaded at triage; confirmed the issue is Trusted-authored (author_association OWNER)."
     useful: partly
   - path: .claude/rules/adr-0005.md
-    reason: Skill edits go through a gated PR; loaded on my edit and the hook made me read the full ADR
+    reason: "Skill edits go through a gated PR; loaded on my edit and the hook made me read the full ADR; subagents: triage #2987: Loaded; Skills are Platform code changed through a PR.; build fix-2987-glassbox-curate-rules: Loaded on Skill edit; confirmed the change goes through a gated PR.; Standards fix-2987-glassbox-curate-rules r1: Loaded because the edited file is a Skill. It confirms a gated-PR change is fine and that nothing outside the Skill's folder is needed. It did not change the review.; Spec fix-2987-glassbox-curate-rules r1: Loaded at session start. The change edits a Skill, so it was relevant context. It added nothing to this review beyond confirming a Skill edit goes through a gated PR.; Standards fix-2987-glassbox-curate-rules r2: Loaded in-session because the diff edits a Skill. It confirms a Skill change goes through a gated PR; nothing in it affected the review.; Spec fix-2987-glassbox-curate-rules r2: Loaded as a Skill-governing rule. It confirms Skill edits go through a gated PR, but nothing in it affects this review.; Standards fix-2987-glassbox-curate-rules r3: Loaded as a rule because the change is to a Skill (SKILL.md). It confirms the change is a gated-PR edit and no workflow script is involved."
     useful: partly
   - path: .claude/rules/adr-0029.md
-    reason: About where rules live; I changed no rule or doc, so it did not apply
+    reason: "About where rules live; I changed no rule or doc, so it did not apply; subagents: triage #2987: Loaded; no rule or doc was changed.; triage #2996: Loaded after a read; not used.; triage #2997: Loaded after bash reads; not needed.; build fix-2987-glassbox-curate-rules: Loaded after the first Bash call; not relevant to this edit."
     useful: no
   - path: .claude/rules/tenant-glossary.md
-    reason: Loaded after a Bash read in a worktree; no Tenant work happened, so it did not apply
+    reason: "Loaded after a Bash read in a worktree; no Tenant work happened, so it did not apply; subagents: triage #2996: Loaded after a Bash read of a Journal ledger file; not used."
     useful: no
   - path: .claude/rules/adr-0030.md
-    reason: About ADR wording; I changed no ADR
+    reason: "About ADR wording; I changed no ADR; subagents: triage #2987: Loaded; no ADR was changed."
     useful: no
   - path: .claude/rules/adr-0004-human-merge.md
-    reason: Loaded on my edit; the Human-only list printed empty for this diff, so the PR may self-merge
-    useful: yes
+    reason: "Loaded on my edit; the Human-only list printed empty for this diff, so the PR may self-merge; subagents: triage #2987: Loaded; no file was touched.; triage #2996: Loaded after an issue_read; I touched no Human-only file, so not used."
+    useful: partly
   - path: .claude/rules/adr-0015.md
     reason: Loaded for a subagent only; I used nothing from it
     useful: no
   - path: .claude/rules/guards.md
-    reason: Loaded for a subagent only; I used nothing from it
-    useful: no
+    reason: "Loaded for a subagent only; I used nothing from it; subagents: triage #2996: Loaded after I read a guard script; I did not read docs/agents/guards.md."
+    useful: partly
 subagents:
   - type: workflow-subagent
     task: build fix-2987-glassbox-curate-rules
@@ -201,98 +208,98 @@ subagents:
     durationSec: 12
     toolCalls: 9
     modelCalls: 3
-    tokenShare: 5.8
+    tokenShare: 5.2
   - type: workflow-subagent
     task: fix fix-2987-glassbox-curate-rules r1
     model: claude-sonnet-5-5
     durationSec: 48
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 2.7
+    tokenShare: 2.4
   - type: workflow-subagent
     task: Spec fix-2987-glassbox-curate-rules r2
     model: claude-sonnet-5-5
     durationSec: 24
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 3.1
+    tokenShare: 2.8
   - type: workflow-subagent
     task: Standards fix-2987-glassbox-curate-rules r2
     model: claude-sonnet-5-5
     durationSec: 18
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 2.4
+    tokenShare: 2.2
   - type: workflow-subagent
     task: Standards fix-2987-glassbox-curate-rules r1
     model: claude-sonnet-5-5
     durationSec: 17
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 5.5
+    tokenShare: 4.9
   - type: workflow-subagent
     task: Spec fix-2987-glassbox-curate-rules r3
     model: claude-sonnet-5-5
     durationSec: 17
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 2.3
+    tokenShare: 2.1
   - type: workflow-subagent
     task: build fix-2987-glassbox-curate-rules
     model: claude-sonnet-5-5
     durationSec: 116
     toolCalls: 15
     modelCalls: 10
-    tokenShare: 6.2
+    tokenShare: 5.6
   - type: workflow-subagent
     task: Standards fix-2987-glassbox-curate-rules r3
     model: claude-sonnet-5-5
     durationSec: 27
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 2.9
+    tokenShare: 2.6
   - type: workflow-subagent
     task: fix fix-2987-glassbox-curate-rules r2
     model: claude-sonnet-5-5
     durationSec: 48
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 3.1
+    tokenShare: 2.8
   - type: workflow-subagent
     task: Spec fix-2987-glassbox-curate-rules r1
     model: claude-sonnet-5-5
     durationSec: 22
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 3
+    tokenShare: 2.7
   - type: workflow-subagent
     task: "triage #2997"
     model: claude-sonnet-5-5
     durationSec: 38
     toolCalls: 16
     modelCalls: 7
-    tokenShare: 8.9
+    tokenShare: 7.9
   - type: workflow-subagent
     task: "triage #2987"
     model: claude-sonnet-5-5
     durationSec: 46
     toolCalls: 16
     modelCalls: 9
-    tokenShare: 6.7
+    tokenShare: 6
   - type: workflow-subagent
     task: "triage #2992"
     model: claude-sonnet-5-5
     durationSec: 12
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 2.7
+    tokenShare: 2.4
   - type: workflow-subagent
     task: "triage #2996"
     model: claude-sonnet-5-5
     durationSec: 42
     toolCalls: 14
     modelCalls: 8
-    tokenShare: 6
+    tokenShare: 5.4
 gitBranch: ccr-72d20d50-tdvth8
 entrypoint: remote_mobile
 cliVersion: 2.1.319
