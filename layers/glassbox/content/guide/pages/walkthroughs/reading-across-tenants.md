@@ -2,8 +2,8 @@
 title: Reading across tenants
 description: How a Blog post shows up in another site's search, through a label in its setup file, a list built with the site and one read function.
 teaches: "Story: a Blog post reaching Commons Search, from the reading code's side. Start: kind: 'page' in layers/blog/tenant.config.ts. End: Collections with no kind (Blog pingbacks, Commons pages). Code: shared/kinds.ts, expand(), catalogFrom(), modules/catalog.ts (#catalog), queryAcrossTenants, queryPages, documentUrl(), Search.vue. Exception: the home page reads Tenants directly. No A real case."
-revision: 'f16509d1024b69585d7fc7387d135682ad39b9b6'
-revisionDate: '2026-11-08'
+revision: '73b1c9c1e53a649d4e7c97a6933d38ed58a44972'
+revisionDate: '2026-11-09'
 publishedAt: '2026-11-04T23:07:44Z'
 ---
 
