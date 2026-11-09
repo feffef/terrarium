@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQMfaaC4C4CNuFY3EH
 startedAt: 2026-11-09T07:33:23Z
-endedAt: 2026-11-09T07:42:47Z
+endedAt: 2026-11-09T07:46:47Z
 kind: autonomous
 goal: Scheduled update of the Glass Box guide pages
-status: in-review
-outcome: "PR #3000 opened: pages re-pinned to main, two excerpts re-lined, one claim fixed, rotation recorded; gate green"
-summary: "Scheduled glassbox-update run, nothing human-instructed beyond the stored prompt. Ran the script, advanced pins to 73b1c9c1, then flagged 29 pages. Two pages with hand-edited ranges (subagents, git-worktrees) were left untouched by --write, so I re-lined their excerpts and pinned them by hand. Four sonnet subagents claim-checked flagged claims plus the 5 oldest-checked rotation pages; no false claims, two imprecisions (one fixed in path-scoped-rules, one left). Recorded rotation dates in update.yml, gate:scoped green, opened PR #3000 and subscribed. I read the non-pin diff myself instead of dispatching code-review, since it was mechanical; the PR says so."
+status: completed
+outcome: "PR #3000 merged: pages re-pinned to main, two excerpts re-lined, one claim fixed, rotation recorded"
+summary: "Scheduled glassbox-update run, nothing human-instructed beyond the stored prompt. Ran the script, advanced pins to 73b1c9c1, then flagged 29 pages. Two pages with hand-edited ranges (subagents, git-worktrees) were left untouched by --write, so I re-lined their excerpts and pinned them by hand. Four sonnet subagents claim-checked flagged claims plus the 5 oldest-checked rotation pages; no false claims, two imprecisions (one fixed in path-scoped-rules, one left). Recorded rotation dates in update.yml, gate:scoped green, opened PR #3000, subscribed, posted a verdict and merged it with merge-pr.ts once CI was green. I read the non-pin diff myself instead of dispatching code-review, since it was mechanical; the PR says so."
 prs:
   - "3000"
 docsRead:
@@ -70,16 +70,18 @@ frictions:
   - description: Skipped code-review for a mechanical 73-file diff that fails the simple-change count; read the non-pin diff myself.
     solution: pr-workflow could name pin-only glassbox-update diffs as simple.
     severity: minor
-durationSec: 564
+durationSec: 804
 models:
-  claude-sonnet-5-5: 94
+  claude-sonnet-5-5: 108
 toolCounts:
-  Bash: 38
+  Bash: 43
   Agent: 4
-  Skill: 3
+  Skill: 4
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/agents/10.subagents.md
   - layers/glassbox/content/guide/pages/git-github/50.git-worktrees.md
@@ -247,25 +249,25 @@ subagents:
     durationSec: 174
     toolCalls: 39
     modelCalls: 32
-    tokenShare: 19.4
+    tokenShare: 17.8
   - task: Claim check batch 2
     model: sonnet
     durationSec: 133
     toolCalls: 29
     modelCalls: 20
-    tokenShare: 15.3
+    tokenShare: 14
   - task: Claim check batch 3
     model: sonnet
     durationSec: 103
     toolCalls: 25
     modelCalls: 21
-    tokenShare: 14.5
+    tokenShare: 13.2
   - task: Claim check batch 4
     model: sonnet
     durationSec: 112
     toolCalls: 29
     modelCalls: 19
-    tokenShare: 12.4
+    tokenShare: 11.3
 gitBranch: claude/relaxed-einstein-2eb7kp
 entrypoint: remote_trigger
 cliVersion: 2.1.319
