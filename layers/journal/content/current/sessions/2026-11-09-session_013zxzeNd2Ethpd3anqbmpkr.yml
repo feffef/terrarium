@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeNd2Ethpd3anqbmpkr
 startedAt: 2026-11-09T20:36:03Z
-endedAt: 2026-11-09T22:31:36Z
+endedAt: 2026-11-09T22:41:18Z
 kind: interactive
 goal: Audit how useful the Platform's rules were since Oct 16
 status: completed
 outcome: Published an audit artifact with an ADR-read study, plus a reviewed capture redesign draft; no repo changes
-summary: "The user first asked when the per-rule verdict instruction last changed; I asked which one they meant and answered from git history. They then asked for a full audit of the rules since Oct 16 (human-instructed). Per their stated preference I asked scoping questions first; they chose all 40 rules, logs plus sampled transcripts, report only, and an artifact page. I built aggregation scripts in .throwaway, ran Haiku subagents on transcripts, and at the user's request added log analysis of why low-yield rules were useful plus eight more transcript checks. Mid-turn follow-ups were handled in the same turn: path history, a description of each rule on the page, subagent models, whether sessions complain about rules, the cost of subagent verdicts, and whether loads can be captured mechanically. The user asked me to try an InstructionsLoaded hook; a throwaway headless Claude showed it fires for the parent and a subagent with the trigger file and agent id. They then asked for a redesign of verdict capture; I drafted it and a Fable reviewer, which also ran six throwaway hook tests, found that the forced SubagentStop ask replaces the subagent's report, that the Stop ask repeats, that my hint-hook edit broke the no-trigger-change constraint, and that I understated cost; I recommended adopting its minimal version and asked the user to settle the stored-field shape. Last, the user asked whether agents read full ADRs when pointed to them and whether it helped: ADRs were read in 53 percent of sessions that edited a governed file (35 percent before the Oct 23 hint, 60 percent after) and 14 percent otherwise, and six transcript checks found five of six reads came after the first edit and none changed an edit, while three sessions' own claims about the read did not hold. I added that to the artifact (https://claude.ai/artifact/XZj2n5SbM7dqVKv6t4Ao3v, version 6). The user then pointed out that verdicts in subagent reports eat the main session context; a throwaway headless test showed a SubagentStart hook can inject the ask, the subagent records its answer with a script, and its report stays intact with no block. The user then asked for the simplest version that keeps the evidence and bothers agents least; I cut the holdout, judge, scale and derived signals, adopted positive-only naming of helpful rules and docs, tested the wording in three throwaway runs and wrote scratchpad design/rule-doc-capture-simple.md. Still open: the user's decision on a v0.2 capture design. No repo files changed and no PR was opened."
+summary: "The user first asked when the per-rule verdict instruction last changed; I asked which one they meant and answered from git history. They then asked for a full audit of the rules since Oct 16 (human-instructed). Per their stated preference I asked scoping questions first; they chose all 40 rules, logs plus sampled transcripts, report only, and an artifact page. I built aggregation scripts in .throwaway, ran Haiku subagents on transcripts, and at the user's request added log analysis of why low-yield rules were useful plus eight more transcript checks. Mid-turn follow-ups were handled in the same turn: path history, a description of each rule on the page, subagent models, whether sessions complain about rules, the cost of subagent verdicts, and whether loads can be captured mechanically. The user asked me to try an InstructionsLoaded hook; a throwaway headless Claude showed it fires for the parent and a subagent with the trigger file and agent id. They then asked for a redesign of verdict capture; I drafted it and a Fable reviewer, which also ran six throwaway hook tests, found that the forced SubagentStop ask replaces the subagent's report, that the Stop ask repeats, that my hint-hook edit broke the no-trigger-change constraint, and that I understated cost; I recommended adopting its minimal version and asked the user to settle the stored-field shape. Last, the user asked whether agents read full ADRs when pointed to them and whether it helped: the trace shows the ADR was read in full after its rule loaded in 46 percent of edit sessions (25 percent before the Oct 23 hint, 54 percent after) and in 76 percent of hints (my first any-read count gave 53 percent and 35 to 60), and six transcript checks found five of six reads came after the first edit and none changed an edit, while three sessions' own claims about the read did not hold. I added that to the artifact (https://claude.ai/artifact/XZj2n5SbM7dqVKv6t4Ao3v, version 6). The user then pointed out that verdicts in subagent reports eat the main session context; a throwaway headless test showed a SubagentStart hook can inject the ask, the subagent records its answer with a script, and its report stays intact with no block. The user then asked for the simplest version that keeps the evidence and bothers agents least; I cut the holdout, judge, scale and derived signals, adopted positive-only naming of helpful rules and docs, tested the wording in three throwaway runs and wrote scratchpad design/rule-doc-capture-simple.md. Still open: the user's decision on a v0.2 capture design. No repo files changed and no PR was opened."
 prs: []
 docsRead:
   - path: docs/agents/git-conventions.md
@@ -83,18 +83,18 @@ frictions:
   - description: Labelled one transcript-check session as a Digest session in a draft table; it edited pr-workflow.md and a trial file. Caught while assembling the page.
     solution: Take the task label from the session's filesEdited, not from the sibling sessions in the same batch.
     severity: nit
-durationSec: 6933
+durationSec: 7515
 models:
-  claude-sonnet-5-5: 445
+  claude-sonnet-5-5: 463
 toolCounts:
-  Grep: 5
+  Grep: 6
   Read: 9
-  Bash: 79
+  Bash: 82
   AskUserQuestion: 2
-  Write: 24
+  Write: 25
   Agent: 27
-  Artifact: 7
-  Edit: 28
+  Artifact: 8
+  Edit: 29
   Skill: 2
   ToolSearch: 1
   SendMessage: 1
@@ -113,6 +113,7 @@ filesEdited:
   - .throwaway/rule-audit/adr-reads.ts
   - .throwaway/rule-audit/adr-opened.ts
   - .throwaway/rule-audit/pick-adr.ts
+  - .throwaway/rule-audit/adr-followed.ts
 rulesLoaded:
   - .claude/rules/adr-0027.md
   - .claude/rules/adr-0029.md
@@ -190,7 +191,7 @@ subagents:
     durationSec: 110
     toolCalls: 18
     modelCalls: 18
-    tokenShare: 1.7
+    tokenShare: 1.6
   - type: general-purpose
     task: Peek session 017X5SQq rule loads
     model: haiku
@@ -204,7 +205,7 @@ subagents:
     durationSec: 164
     toolCalls: 33
     modelCalls: 32
-    tokenShare: 2.6
+    tokenShare: 2.5
   - type: general-purpose
     task: Peek session 013zxzeR rule loads
     model: haiku
@@ -218,14 +219,14 @@ subagents:
     durationSec: 93
     toolCalls: 19
     modelCalls: 18
-    tokenShare: 1.6
+    tokenShare: 1.5
   - type: general-purpose
     task: Peek session 016THR5o rule loads
     model: haiku
     durationSec: 208
     toolCalls: 42
     modelCalls: 41
-    tokenShare: 3.5
+    tokenShare: 3.4
   - type: general-purpose
     task: Peek session 01QMsuxS rule loads
     model: haiku
@@ -238,7 +239,7 @@ subagents:
     durationSec: 67
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: general-purpose
     task: Why ADR-0021 and tenant-glossary were useful
     durationSec: 75
@@ -284,14 +285,14 @@ subagents:
     durationSec: 177
     toolCalls: 30
     modelCalls: 29
-    tokenShare: 2.6
+    tokenShare: 2.5
   - type: general-purpose
     task: "Check 01NFv67i: ADR-0028 page cache"
     model: haiku
     durationSec: 203
     toolCalls: 36
     modelCalls: 35
-    tokenShare: 3.8
+    tokenShare: 3.7
   - type: general-purpose
     task: "Check 01JJcYmS: tenant-glossary in Glass Box sync"
     model: haiku
@@ -325,42 +326,42 @@ subagents:
     durationSec: 2193
     toolCalls: 56
     modelCalls: 45
-    tokenShare: 8.2
+    tokenShare: 8
   - type: general-purpose
     task: "ADR read timing: session 014yTcrj"
     model: haiku
     durationSec: 159
     toolCalls: 27
     modelCalls: 26
-    tokenShare: 2.7
+    tokenShare: 2.6
   - type: general-purpose
     task: "ADR read timing: session 013zxzeQ"
     model: haiku
     durationSec: 113
     toolCalls: 17
     modelCalls: 16
-    tokenShare: 1.6
+    tokenShare: 1.5
   - type: general-purpose
     task: "ADR read timing: session 012YhKmF"
     model: haiku
     durationSec: 194
     toolCalls: 32
     modelCalls: 32
-    tokenShare: 2.8
+    tokenShare: 2.7
   - type: general-purpose
     task: "ADR read timing: session 01Lyextq"
     model: haiku
     durationSec: 242
     toolCalls: 42
     modelCalls: 42
-    tokenShare: 4.1
+    tokenShare: 4
   - type: general-purpose
     task: "ADR read timing: session 013zxzeR"
     model: haiku
     durationSec: 131
     toolCalls: 27
     modelCalls: 27
-    tokenShare: 2.6
+    tokenShare: 2.5
   - type: general-purpose
     task: "ADR read timing: session 013zxzeP"
     model: haiku
