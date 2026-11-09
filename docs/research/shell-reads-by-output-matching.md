@@ -127,11 +127,9 @@ matches 10 lines once it has).
 
 - The index needs the repo checkout. The advisory already injects a
   filesystem-backed glob resolver at author time (#1246), and the landing hook
-  runs in the same checkout. ADR-0009 calls the trace "derived from `tool_use`
-  calls, not results"; #1247's grep output-gating already reads results.
+  runs in the same checkout. #1247's grep output-gating already reads results.
 - A doc edited between two derivations of the same session can change the
-  result, which touches ADR-0009's superset and byte-identity premises for
-  the idempotent re-derive.
+  result of the idempotent re-derive.
 - Line uniqueness is global across docs, so a doc that quotes another doc
   verbatim credits only the one whose lines are unique. No decoy exercised
   this.
