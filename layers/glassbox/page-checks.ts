@@ -11,6 +11,7 @@ import { root } from '../../shared/expand.ts'
 import { glassboxLessonIds, glassboxLessonLabels } from './app/utils/lesson.ts'
 import { glassboxSubjectOf, glassboxSubjects, glassboxWalkthroughOf } from './app/utils/subjects.ts'
 import { glassboxStopNumber } from './app/utils/walkthrough.ts'
+import { glassboxStemRoute } from './app/utils/workshop.ts'
 import { glassboxExcerptGap, glassboxPageRefs, glassboxTermId, parseLineRanges, rangeText, type FileRef } from './page-refs.ts'
 
 export interface GlassboxGit {
@@ -54,9 +55,7 @@ export interface GlassboxSite {
 const cap = 5
 
 /** Nuxt Content's route for a content file: two-digit prefixes and `index` dropped. */
-function contentRoute(file: string) {
-  return file.replace(/\.(md|vue)$/, '').split('/').map((s) => s.replace(/^\d+\./, '')).join('/').replace(/(^|\/)index$/, '')
-}
+const contentRoute = (file: string) => glassboxStemRoute(file.replace(/\.(md|vue)$/, ''))
 const sitePath = (base: string, file: string) => (contentRoute(file) ? `${base}/${contentRoute(file)}` : base)
 
 /** A Glass Box page's site path, from its Space and its file in that Space's `pages/`. */

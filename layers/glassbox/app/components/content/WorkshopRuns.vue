@@ -19,21 +19,26 @@ const { data } = await useAsyncData('glassbox-workshop-runs', async () => {
 <template>
   <p v-if="!data?.length" class="empty">No curate runs yet.</p>
   <ol v-else class="runs">
-    <li v-for="run in data" :key="run.stem">
-      <p class="head">
-        <time class="when">{{ glassboxRunStart(run.stem) }}</time>
-        <span class="mode">{{ run.mode }}</span>
-        <a :href="sessionUrl(run.session)">session ↗</a>
-      </p>
-      <p class="focus">{{ run.focus }}</p>
-      <ul v-if="run.changes.length" class="changes">
-        <li v-for="(change, i) in run.changes" :key="i">
-          <template v-if="'raw' in change">{{ change.raw }}</template>
-          <template v-else>
-            <code>{{ change.page }}</code>: {{ change.what }}. <em>{{ change.why }}</em>
-          </template>
-        </li>
-      </ul>
+    <li v-for="(run, i) in data" :key="run.stem">
+      <!-- The newest runs open; the rest fold up so the page is not one long wall. -->
+      <details :open="i < 3">
+        <summary>
+          <span class="head">
+            <time class="when">{{ glassboxRunStart(run.stem) }}</time>
+            <span class="mode">{{ run.mode }}</span>
+          </span>
+          <span class="focus">{{ run.focus }}</span>
+        </summary>
+        <p class="session"><a :href="sessionUrl(run.session)">session ↗</a></p>
+        <ul v-if="run.changes.length" class="changes">
+          <li v-for="(change, j) in run.changes" :key="j">
+            <template v-if="'raw' in change">{{ change.raw }}</template>
+            <template v-else>
+              <code>{{ change.page }}</code>: {{ change.what }}. <em>{{ change.why }}</em>
+            </template>
+          </li>
+        </ul>
+      </details>
     </li>
   </ol>
 </template>
@@ -48,8 +53,11 @@ const { data } = await useAsyncData('glassbox-workshop-runs', async () => {
   background: var(--gb-pane);
   box-shadow: var(--gb-pane-shadow);
 }
-.head { display: flex; flex-wrap: wrap; gap: 4px 12px; margin: 0; font: 12px var(--gb-mono); color: var(--gb-muted); }
+summary { cursor: pointer; }
+.head { display: flex; flex-wrap: wrap; gap: 4px 12px; font: 12px var(--gb-mono); color: var(--gb-muted); }
 .mode { text-transform: uppercase; letter-spacing: 0.08em; }
-.focus { margin: 6px 0 0; font-weight: 600; }
+.focus { display: block; margin-top: 6px; font-weight: 600; }
+details:not([open]) .focus { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+.session { margin: 8px 0 0; font: 12px var(--gb-mono); }
 .changes { margin: 8px 0 0; padding-left: 1.2em; font-size: 15px; overflow-wrap: anywhere; }
 </style>

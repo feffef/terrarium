@@ -4,7 +4,8 @@ import { describe, expect, it } from 'vitest'
 import { parse } from 'yaml'
 import { splitFrontmatter } from '../../../../scripts/lib/frontmatter.ts'
 import { root } from '../../../../shared/expand.ts'
-import { glassboxCheckRows, glassboxRunChange, glassboxRunStart } from '../../app/utils/workshop.ts'
+import { glassboxSitePath } from '../../page-checks.ts'
+import { glassboxCheckRows, glassboxGuidePath, glassboxRunChange, glassboxRunStart } from '../../app/utils/workshop.ts'
 
 describe('glassboxRunStart', () => {
   it('reads the UTC start time off the run entry\'s filename', () => {
@@ -48,6 +49,14 @@ describe('glassboxCheckRows', () => {
   })
 })
 
+describe('glassboxGuidePath', () => {
+  it('drops the two-digit prefix and maps index to the guide landing', () => {
+    expect(glassboxGuidePath('git-github/60.attribution')).toBe('/t/glassbox/guide/git-github/attribution')
+    expect(glassboxGuidePath('walkthroughs/asking-for-a-change')).toBe('/t/glassbox/guide/walkthroughs/asking-for-a-change')
+    expect(glassboxGuidePath('index')).toBe('/t/glassbox/guide')
+  })
+})
+
 describe('the workshop memory page', () => {
   const { body } = splitFrontmatter(readFileSync(join(root, 'layers/glassbox/content/workshop/pages/index.md'), 'utf8'))
 
@@ -63,6 +72,11 @@ describe('the workshop memory page', () => {
 })
 
 describe('glassbox-update checks', () => {
+  it('links only pages that exist, by the path glassboxGuidePath builds', () => {
+    const { pages } = parse(readFileSync(join(root, 'layers/glassbox/content/workshop/checks/update.yml'), 'utf8')) as { pages: { page: string }[] }
+    for (const { page } of pages) expect(glassboxGuidePath(page)).toBe(glassboxSitePath('guide', `${page}.md`))
+  })
+
   // A moved page must be renamed here, or it silently loses its check date (glassbox-curate, Move).
   it('names only guide pages that exist', () => {
     const { pages } = parse(readFileSync(join(root, 'layers/glassbox/content/workshop/checks/update.yml'), 'utf8')) as { pages: { page: string }[] }

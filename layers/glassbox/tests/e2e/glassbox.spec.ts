@@ -18,4 +18,19 @@ describe('glassbox Tenant', async () => {
     expect(html).toContain('id="gb-nav"')
     expect(html).toContain('How a change happens')
   })
+
+  // The workshop is a live record of one page: no Subject menu, no edition date, and a way back to the guide.
+  it('serves the workshop without a sidebar or edition date, linking back to the guide', async () => {
+    const html = await $fetch<string>('/t/glassbox/workshop')
+    expect(html).not.toContain('id="gb-nav"')
+    expect(html).not.toContain('Last updated')
+    expect(html).toMatch(/<a[^>]*class="gb-brand"[^>]*href="\/t\/glassbox\/guide"|<a[^>]*href="\/t\/glassbox\/guide"[^>]*class="gb-brand"/)
+    expect(html).toContain('Back to the guide')
+  })
+
+  it('keeps the sidebar and edition date on the drafts Space', async () => {
+    const html = await $fetch<string>('/t/glassbox/drafts')
+    expect(html).toContain('id="gb-nav"')
+    expect(html).toContain('Last updated')
+  })
 })

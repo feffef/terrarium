@@ -40,14 +40,18 @@ const source = computed(() => page.value ? glassboxFileUrl(`layers/glassbox/cont
 provide(glassboxTermsKey, computed(() => data.value?.terms ?? {}))
 
 const { menuOpen, openMenu, closeMenu } = useGlassboxMenu()
+// The workshop is a live record of one page, not a textbook edition: no Subjects to list and no
+// edition date (GLOSSARY.md, A curated textbook and Three Spaces).
+const live = space === 'workshop'
 
 useHead(() => ({ title: `${page.value?.title ?? 'Not found'} · glassbox` }))
 useSeoMeta({ description: () => page.value?.description })
 </script>
 
 <template>
-  <main class="gb gb-doc" :class="{ 'menu-open': menuOpen }" @keydown.esc="closeMenu">
+  <main class="gb gb-doc" :class="{ 'menu-open': menuOpen, 'gb-bare': live }" @keydown.esc="closeMenu">
     <GlassboxSidebar
+      v-if="!live"
       id="gb-nav"
       class="gb-sidebar"
       :base="base"
@@ -59,9 +63,10 @@ useSeoMeta({ description: () => page.value?.description })
 
     <div class="gb-main">
       <header class="gb-header">
-        <GlassboxBrand :to="base" />
-        <GlassboxUpdated v-if="page" placement="header" :date="page.revisionDate" :source="source" />
+        <GlassboxBrand :to="live ? '/t/glassbox/guide' : base" />
+        <GlassboxUpdated v-if="page && !live" placement="header" :date="page.revisionDate" :source="source" />
         <button
+          v-if="!live"
           ref="menuButton"
           type="button"
           class="gb-menu"
@@ -72,7 +77,7 @@ useSeoMeta({ description: () => page.value?.description })
         >≡</button>
       </header>
 
-      <GlassboxArticle v-if="page" class="gb-column" :page="page" :base="base" :surround="data?.surround ?? null" :through="data?.through ?? []" :draft="space === 'drafts'" :source="source" />
+      <GlassboxArticle v-if="page" class="gb-column" :page="page" :base="base" :surround="data?.surround ?? null" :through="data?.through ?? []" :draft="space === 'drafts'" :dated="!live" :source="source" />
 
       <div v-else class="gb-column">
         <h1>Not found</h1>
