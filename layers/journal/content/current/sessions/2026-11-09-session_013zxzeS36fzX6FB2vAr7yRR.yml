@@ -1,0 +1,327 @@
+schemaVersion: 1
+session: session_013zxzeS36fzX6FB2vAr7yRR
+startedAt: 2026-11-09T01:23:55Z
+endedAt: 2026-11-09T01:57:16Z
+kind: interactive
+goal: "Visitor loop on the Glass Box workshop: fix what visitors agree on"
+status: in-review
+outcome: "Fix PR #2994 open with gate green and verdict posted; the Lately feature PR and the issues are still to do."
+summary: "The owner invoked /visitor-loop with the focus \"glassbox workshop, starting from the teaser on the homepage\". The Skill's glassbox row says to stay inside /t/glassbox/guide, so I asked two questions first (the owner's standing preference), and the owner chose: enter at `/`, follow the tile to /t/glassbox/workshop, and allow fixes to the workshop and the homepage tile. That scope override was human-instructed; everything else (build, three blind visitors on sonnet, fable and opus, the tally, the fit check, the fixes, the PR) was agent-initiated within the Skill. Visitors converged on the workshop being a dead end: an empty sidebar column and menu drawer, a brand link to itself, an opaque intro, a stale \"Last updated\" date, a wrapped \"On this page\" bar and a 14,600px wall of runs. Twelve consensus clusters; the refiner dropped one (the homepage tile note had just been owner-merged in #2988), I dropped three more (session links unverified, guide-to-workshop link ruled out by the glossary, linking stale page stems). Eight fixes shipped in PR #2994 with before/after DOM evidence. Review caught one real regression of mine (drafts lost its sidebar because I keyed the layout on an empty Subject list); fixed in a second commit. The chosen feature, a \"Lately\" strip of the newest run changes with linked pages, is not built yet, and the unbuilt single-visitor findings are still to go into ideas. Nothing is merged: CI is pending."
+prs:
+  - "2994"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: Read before the first non-read-only git command; commit with -F and no push inside a gate command
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: The dispatch guard demanded this path; brief rules (scratchpad folders, foreground checks)
+    useful: yes
+  - path: layers/glassbox/GLOSSARY.md
+    reason: "Product decisions: workshop has no sidebar and no link from the guide, a live record; ruled out two findings"
+    useful: yes
+  - path: docs/agents/verifying-ui-changes.md
+    reason: Told me to measure the rendered DOM with eval-in-page and screenshot, not grep HTML
+    useful: yes
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: A page reads only its own Space; the hook asked for it after my slug-page edit, which it confirmed was fine
+    useful: partly
+  - path: docs/adr/0016-tenant-root-layer-routes.md
+    reason: Loaded with the same edit; root page rules did not apply to a Space page
+    useful: no
+  - path: docs/agents/pr-workflow.md
+    reason: Review before the PR, the recipe, the verdict comment and the follow-up review test
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP tool mapping and the list-before-create check
+    useful: partly
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: Standing rulings, filter for the tally; the refiner also read it and cited line 11 for the homepage note
+    useful: yes
+  - path: .agents/skills/visitor-loop/refiner-brief.md
+    reason: Brief for the fit-check subagent, used verbatim
+    useful: yes
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: First 40 lines only, to see what the checks file records; supported the 15-of-72 wording
+    useful: partly
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: Refiner read it for the Remit; its report called it useful
+    useful: yes
+  - path: .agents/skills/glassbox-curate/SKILL.md
+    reason: "Refiner read its State section: memory is written in plain words, which shaped the intro rewrite"
+    useful: yes
+  - path: .claude/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: .claude/skills/visitor-loop/visitor-brief.md
+    reason: (no reason given)
+  - path: layers/glassbox/tenant.config.ts
+    reason: (no reason given)
+  - path: layers/glassbox/content/workshop/pages/index.md
+    reason: (read before editing)
+  - path: layers/glassbox/app/pages/t/glassbox/[space]/[...slug].vue
+    reason: (read before editing)
+  - path: layers/glassbox/app/components/glassbox/Brand.vue
+    reason: (no reason given)
+  - path: layers/glassbox/app/components/glassbox/Toc.vue
+    reason: (read before editing)
+  - path: layers/glassbox/app/components/content/WorkshopChecks.vue
+    reason: (read before editing)
+  - path: layers/glassbox/app/components/glassbox/Article.vue
+    reason: (read before editing)
+  - path: layers/glassbox/app/components/glassbox/Sidebar.vue
+    reason: (no reason given)
+  - path: layers/glassbox/app/utils/workshop.ts
+    reason: (read before editing)
+  - path: layers/glassbox/app/components/glassbox/Updated.vue
+    reason: (no reason given)
+  - path: layers/glassbox/app/components/content/WorkshopRuns.vue
+    reason: (read before editing)
+  - path: layers/glassbox/tests/unit/workshop.spec.ts
+    reason: (read before editing)
+  - path: .claude/skills/visitor-loop/refiner-brief.md
+    reason: (no reason given)
+  - path: layers/glassbox/app/assets/theme.css
+    reason: (read before editing)
+  - path: scripts/lib/chromium.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: visitor-loop
+    reason: the whole run
+  - name: dispatch-subagents
+    reason: visitor, refiner and review briefs
+  - name: code-review
+    reason: Standards and Spec review before opening the PR
+  - name: close-session
+    reason: PR opened
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Skill's glassbox row says stay inside /t/glassbox/guide, but the argument asked for the workshop; the Skill never says whether an argument can widen a focus's note.
+    solution: Say in the Skill's focus section that an argument may widen or replace a row's Note, or add a workshop row.
+    severity: minor
+  - description: First Agent dispatch was blocked by the dispatch-read guard because I had read the .claude/skills link, not the .agents/skills path it checks; three long briefs were sent twice.
+    solution: Make the guard accept the .claude/skills symlink path, or say the canonical path in CLAUDE.md's dispatch bullet.
+    severity: nit
+  - description: Stop hook said there were untracked files and uncommitted changes when git status was empty, and again mid-verification before I could commit.
+    solution: Have the Stop hook skip files git ignores and wait for an in-flight background run.
+    severity: nit
+  - description: I keyed the bare layout on an empty Subject list, which would have stripped drafts of its sidebar; only the Spec review caught it before landing.
+    solution: Key a Space-specific layout on the Space name, and measure drafts and guide too when changing a shared page.
+    severity: minor
+  - description: A python string replace cut a Vue template at the first closing tag and left a broken fragment in WorkshopRuns.vue; I read the diff and repaired it.
+    solution: Rewrite whole component templates with the Write tool instead of slicing by string index.
+    severity: nit
+  - description: Reading Glass Box layer files loaded about ten unrelated rules (mermaid-lanes, mdc-when-to-use, adr-0021, adr-0025, adr-0030) into context.
+    solution: Narrow the paths of mermaid-lanes.md and mdc-when-to-use.md to files that hold diagrams or content components.
+    severity: nit
+durationSec: 2001
+models:
+  claude-sonnet-5-5: 188
+toolCounts:
+  Grep: 6
+  AskUserQuestion: 1
+  Read: 27
+  Bash: 50
+  Agent: 10
+  Write: 2
+  Skill: 3
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - layers/glassbox/app/components/content/WorkshopChecks.vue
+  - layers/glassbox/app/pages/t/glassbox/[space]/[...slug].vue
+  - layers/glassbox/app/utils/workshop.ts
+  - layers/glassbox/page-checks.ts
+  - app/components/HomeShowcase.vue
+  - layers/glassbox/app/assets/theme.css
+  - layers/glassbox/app/components/content/WorkshopRuns.vue
+  - layers/glassbox/app/components/glassbox/Article.vue
+  - layers/glassbox/app/components/glassbox/Toc.vue
+  - layers/glassbox/content/workshop/pages/index.md
+  - layers/glassbox/content/workshop/terms
+  - layers/glassbox/tests/unit/workshop.spec.ts
+rulesLoaded:
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0006.md
+  - .claude/rules/ui-verification.md
+  - .claude/rules/adr-0016.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/adr-0030.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0006.md
+  - .claude/rules/adr-0016.md
+adrHints:
+  - adr: 6
+    via: path
+    readAfter: true
+    by: main
+  - adr: 16
+    via: path
+    readAfter: true
+    by: main
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0014.md
+docsReadBySubagents:
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/glassbox-curate/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Gate and code-review before opening; merge once green and verdict posted. Summary was enough, full ADR not opened.
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to invoke close-session at PR open; summary enough, ADR not opened.
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR myself after review and gate, then subscribe; summary enough, ADR not opened.
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Header on the PR body and comment, and commit trailer checked; summary enough.
+    useful: yes
+  - path: .claude/rules/adr-0028.md
+    reason: "Payload fields: new components return only what they show; summary enough, ADR not opened."
+    useful: partly
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded with the Skill file; no prune trial touched, did not apply.
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded with the Skill file; about where instructions live, did not apply.
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded with the Skill file; I edited no Skill, did not apply.
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: Confirmed the Lately feature must add no stored field, so it reads existing runs and checks.
+    useful: yes
+  - path: .claude/rules/tenant-glossary.md
+    reason: Told me to read the Glass Box glossary before editing the layer; it held the decisive rulings.
+    useful: yes
+  - path: .claude/rules/tenant-layers.md
+    reason: Auto-import naming and no cross-Tenant code; I prefixed the new util glassbox and shared nothing.
+    useful: partly
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded when I read the manifest; I changed no manifest, did not apply.
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded with layer files; I added no MDC component or Collection, did not apply.
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded with the glossary; I added no term of my own, did not apply.
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: Loaded with the glossary; I edited no glossary entry, did not apply.
+    useful: no
+  - path: .claude/rules/glassbox-content.md
+    reason: Workshop may hold counts and ids, so the checks count line is allowed; also confirmed the refiner's reading.
+    useful: yes
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded with Glass Box files; no diagram touched, did not apply.
+    useful: no
+  - path: .claude/rules/adr-0006.md
+    reason: A page reads only its own Space; stopped me linking page titles from the guide Space. Summary then full ADR opened by hook request.
+    useful: yes
+  - path: .claude/rules/ui-verification.md
+    reason: Made me read verifying-ui-changes before screenshots; I measured the DOM instead of trusting greps.
+    useful: yes
+  - path: .claude/rules/adr-0016.md
+    reason: Tenant root page rules; the edit was a Space page, did not apply.
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded with the homepage file; the refiner checked its paths and no changed file is Human-only.
+    useful: partly
+  - path: .claude/rules/adr-0025.md
+    reason: Loaded with app/pages/index.vue; I only added a title attribute, did not apply.
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: About how ADRs are written; I changed no ADR, did not apply.
+    useful: no
+  - path: .claude/rules/adr-0014.md
+    reason: Refiner loaded it with shared files; it reported it as no use.
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Visitor (sonnet)
+    model: sonnet
+  - type: general-purpose
+    task: Visitor (fable)
+    model: fable
+  - type: general-purpose
+    task: Visitor (opus)
+    model: opus
+  - type: general-purpose
+    task: Visitor (sonnet)
+    model: sonnet
+    durationSec: 74
+    toolCalls: 14
+    modelCalls: 10
+    tokenShare: 4.5
+  - type: general-purpose
+    task: Visitor (fable)
+    model: fable
+    durationSec: 389
+    toolCalls: 39
+    modelCalls: 28
+    tokenShare: 11.1
+  - type: general-purpose
+    task: Visitor (opus)
+    model: opus
+    durationSec: 243
+    toolCalls: 31
+    modelCalls: 24
+    tokenShare: 9.5
+  - type: general-purpose
+    task: Fit check (refiner)
+    model: opus
+    durationSec: 387
+    toolCalls: 46
+    modelCalls: 37
+    tokenShare: 15.9
+  - type: general-purpose
+    task: Standards review
+    durationSec: 29
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 3.3
+  - type: general-purpose
+    task: Spec review
+    durationSec: 33
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 3.3
+  - type: general-purpose
+    task: Review follow-up commit
+    durationSec: 13
+    toolCalls: 3
+    modelCalls: 3
+    tokenShare: 1.3
+gitBranch: claude/visitor-loop-glassbox-workshop-n7ztq0
+entrypoint: remote_mobile
+cliVersion: 2.1.319
+learnings:
+  - A Space's `terms` Collection can be a git symlink to another Space's terms folder, as drafts does, which gives the workshop `:term` chips with no new Collection or field.
+  - 37 of 73 page names in the Glass Box curate run entries are stale stems of renamed pages, so any link built from them 404s unless checked against the update-checks list.
+ideas:
+  - Add a Glass Box check that every page stem named in a workshop run entry still exists or is mapped to its new stem, so run history stays linkable instead of rotting after renames.
+  - Fold the homepage tile note, the workshop intro and the guide's one-line 'what is this' into a single source so a tile note and its target page cannot drift apart again within hours.
+  - On the drafts landing, when the Space is empty, show 'No drafts right now' with a link to the workshop's ideas instead of an empty index with a Draft banner (visitor finding, single reporter).
+  - Make code blocks on narrow phones show a right-edge fade so truncated lines such as 'payloa' read as scrollable (guide lesson excerpts at 390px; two visitors hinted, not verified).
+landedBy: Stop
