@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_013zxzeR2kKbsT81QWkXUrvK
 startedAt: 2026-11-09T14:04:30Z
-endedAt: 2026-11-09T14:45:31Z
+endedAt: 2026-11-09T18:26:26Z
 kind: interactive
 goal: Journal KPI tiles first on the current Space
-status: completed
-outcome: "Five banded link tiles with breakdown tooltips on current, none on archived; merged as PR #3006"
-summary: "The owner (Steffen Sauder) handed over a spec with ten acceptance criteria: put five KPI tiles and the Frictions-per-day chart under the Journal masthead on `current`, show none on `archived`, build the tiles in one pure function, and drop the PRs-referenced tile. I built it test-first (unit tests for journalKpiTiles, e2e for page order, links and the archived page), ran a two-axis code review, and fixed its findings. On seeing the first screenshot the owner redesigned the tiles interactively. Each tile now has four aligned bands (explanation, large number, breakdown mini-stats with hover, focus and tap tooltips, a named CTA stretched over the tile). Every breakdown entry shows, zeros included, and Frictions list all five severities with colour dots. Ideas became Suggestions (ideas + learnings) and Platform Skills became Skills (platform + installed). The on-ramp's text links went, and the chart moved back between Daily digests and Recent activity. Every layout, copy and order change after the first screenshot was human-instructed; I proposed the copy table, the CTA labels and the tooltip mechanics, and the owner picked options or adjusted them. Agent-initiated: deleting frictionOtherCount and the Friction Ledger count query, which lost their only callers, plus the round-2 review fixes (tap-off and Escape close, singular labels, phone-grid overflow). The owner asked for a second review and a self-merge; PR #3006 merged once CI's safety gate was green on the reviewed head. The spec's docs/sdd baseline file and SDD stages do not exist in this repo, which the PR body notes."
+status: in-review
+outcome: "Five banded link tiles with breakdown tooltips on current, none on archived; PR #3006 merged, font-fit follow-up PR #3008 open"
+summary: "The owner (Steffen Sauder) handed over a spec with ten acceptance criteria: put five KPI tiles and the Frictions-per-day chart under the Journal masthead on `current`, show none on `archived`, build the tiles in one pure function, and drop the PRs-referenced tile. I built it test-first (unit tests for journalKpiTiles, e2e for page order, links and the archived page), ran a two-axis code review, and fixed its findings. On seeing the first screenshot the owner redesigned the tiles interactively. Each tile now has four aligned bands (explanation, large number, breakdown mini-stats with hover, focus and tap tooltips, a named CTA stretched over the tile). Every breakdown entry shows, zeros included, and Frictions list all five severities with colour dots. Ideas became Suggestions (ideas + learnings) and Platform Skills became Skills (platform + installed). The on-ramp's text links went, and the chart moved back between Daily digests and Recent activity. Every layout, copy and order change after the first screenshot was human-instructed; I proposed the copy table, the CTA labels and the tooltip mechanics, and the owner picked options or adjusted them. Agent-initiated: deleting frictionOtherCount and the Friction Ledger count query, which lost their only callers, plus the round-2 review fixes (tap-off and Escape close, singular labels, phone-grid overflow). The owner asked for a second review and a self-merge; PR #3006 merged once CI's safety gate was green on the reviewed head. After the merge the owner reported, with a MacBook screenshot, that the Sessions and Frictions breakdowns wrapped onto a second row: macOS renders the serif and mono stacks wider than this Linux build. I reproduced it by forcing DejaVu fonts (wider than Iowan Old Style; Charter, the closer match, is a Type1 font Chromium can't load), tightened padding, gap and label size in StatTile.vue until every breakdown fit on one row, and opened follow-up PR #3008, a simple CSS change I reviewed myself. The spec's docs/sdd baseline file and SDD stages do not exist in this repo, which the PR body notes."
 prs:
   - "3006"
+  - "3008"
 docsRead:
   - path: .agents/skills/implement-spec/SKILL.md
     reason: Checked whether the spec format came from it; it assumes tickets this task did not have
@@ -72,23 +73,26 @@ frictions:
   - description: pnpm test:e2e with a file argument still runs the whole e2e suite, since the script prefixes tests/e2e
     solution: Add a test:e2e:file script, or note in tests/README.md to use vitest run --project e2e with the path
     severity: nit
-durationSec: 2461
+  - description: Checked tile text fit only with this Linux build's narrow fallback fonts; on macOS it wrapped, which took a follow-up PR
+    solution: When text must fit a fixed width, check it with a wider font forced (DejaVu Serif and Sans Mono) before calling the layout done
+    severity: moderate
+durationSec: 15716
 models:
-  claude-opus-5-5: 251
+  claude-opus-5-5: 312
 toolCounts:
-  Bash: 90
-  Read: 16
+  Bash: 112
+  Read: 18
   Skill: 5
   Write: 3
   Agent: 4
   AskUserQuestion: 1
-  SendUserFile: 3
+  SendUserFile: 4
   ToolSearch: 1
   mcp__github__list_pull_requests: 1
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
-  mcp__github__add_issue_comment: 1
-  ReadNotifications: 2
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  mcp__github__add_issue_comment: 2
+  ReadNotifications: 3
   mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/app/components/journal/StatTile.vue
@@ -208,31 +212,32 @@ subagents:
     durationSec: 55
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 4.9
+    tokenShare: 3.5
   - type: general-purpose
     task: Spec review of KPI diff
     durationSec: 51
     toolCalls: 8
     modelCalls: 8
-    tokenShare: 4.9
+    tokenShare: 3.5
   - type: general-purpose
     task: Standards review round 2
     durationSec: 76
     toolCalls: 10
     modelCalls: 10
-    tokenShare: 6.4
+    tokenShare: 4.6
   - type: general-purpose
     task: Spec review round 2
     durationSec: 71
     toolCalls: 10
     modelCalls: 9
-    tokenShare: 3.8
+    tokenShare: 2.7
 gitBranch: claude/awesome-darwin-8xg068
 entrypoint: remote
 cliVersion: 2.1.319
 learnings:
   - "`pnpm test:e2e <file>` runs every e2e spec: vitest takes both `tests/e2e` and the path as filters, and the project includes every layer's e2e folder"
   - A tooltip inside a stretched-link tile needs the stat buttons positioned above the link's ::after; z-index on a non-positioned flex item works but reads as accidental
+  - Chromium in this container can't load Type1 fonts (Bitstream Charter), so DejaVu Serif and DejaVu Sans Mono are the usable wide-font proxies for checking that macOS text fits
 ideas:
   - Give journalKpiTiles-style page data a screenshot-diff e2e (Playwright toHaveScreenshot at 1280 and 360) so tile layout regressions like the 360px CTA overflow fail CI instead of needing a manual shot
 landedBy: Stop
