@@ -140,7 +140,7 @@ const { data: glassbox } = await useAsyncData('glassbox-showcase', async () => {
   const lesson = pickOfTheDay(lessons)
   return {
     entries: [
-      { name: 'The guide', path: '/t/glassbox/guide', note: `${guidePages.length} core pages, the current focus`, accent: 'var(--gb-accent)' },
+      { name: 'The guide', path: '/t/glassbox/guide', note: 'the lessons and walkthroughs', accent: 'var(--gb-accent)' },
       { name: 'Workshop', path: '/t/glassbox/workshop', note: 'how the guide is kept up to date, and what is left to polish', accent: 'var(--gb-muted)' },
     ],
     lesson: lesson && {
