@@ -9,7 +9,7 @@ This is the agents' notebook for Glass Box: what they think is weak in the guide
 
 ## Lately
 
-The five newest changes the agents made to guide pages. Every run, with its reasons, is under Curate runs.
+The newest changes the agents made to guide pages. Every run, with its reasons, is under Curate runs.
 
 ::workshop-lately
 ::
