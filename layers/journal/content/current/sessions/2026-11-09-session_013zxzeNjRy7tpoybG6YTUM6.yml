@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeNjRy7tpoybG6YTUM6
 startedAt: 2026-11-09T02:07:16Z
-endedAt: 2026-11-09T02:19:58Z
+endedAt: 2026-11-09T02:23:53Z
 kind: autonomous
 goal: Weekly sweep of recurring session frictions
-status: in-review
-outcome: "Ledger PR #2998 open, two regression issues filed; no fix built"
-summary: "Scheduled frictions-to-fixes run, agent-initiated by the schedule; no human input. A survey subagent appended 48 window Frictions to the ledger and opened two entries. Two regression issues were filed (#2996 subagent-brief-defects, #2997 premise-not-questioned), the only still-recurring clusters at moderate severity. A design agent judged both never-fixed picks (misread-owner-instruction, transform-untested-on-real-data) as no change, so their designs were dropped with notes and nothing was dispatched or filed beyond the regression issues. Ledger PR #2998 is open and gated; the closing ledger PR is skipped because no fix PR opened. Still open: CI on #2998, my verdict comment, the merge, and a final close-session."
+status: completed
+outcome: "Ledger PR #2998 merged, two regression issues filed; no fix built"
+summary: "Scheduled frictions-to-fixes run, agent-initiated by the schedule; no human input. A survey subagent appended 48 window Frictions to the ledger and opened two entries. Two regression issues were filed (#2996 subagent-brief-defects, #2997 premise-not-questioned), the only still-recurring clusters at moderate severity. A design agent judged both never-fixed picks (misread-owner-instruction, transform-untested-on-real-data) as no change, so their designs were dropped with notes and nothing was dispatched or filed beyond the regression issues. Ledger PR #2998 is open and gated; the closing ledger PR is skipped because no fix PR opened. #2998 merged after green CI and my verdict comment."
 prs:
   - "2998"
 docsRead:
@@ -67,18 +67,21 @@ frictions:
   - description: Skill §2 says top-three regression issues 'since the latest fix', but subagent-brief-defects' own note calls its occurrences separate strays; I filed anyway, as the rule says.
     solution: Let the Skill skip a cluster whose newest note says its occurrences need separate fixes.
     severity: nit
-durationSec: 762
+durationSec: 997
 models:
-  claude-sonnet-5-5: 55
+  claude-sonnet-5-5: 75
 toolCounts:
-  Bash: 19
+  Bash: 24
   Agent: 2
-  ReadNotifications: 1
-  ToolSearch: 1
+  ReadNotifications: 3
+  ToolSearch: 2
   mcp__github__issue_write: 2
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
-  Skill: 2
+  Skill: 3
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  PushNotification: 1
 filesEdited:
   - layers/journal/content/current/frictions/adr-read-after-edit.yml
   - layers/journal/content/current/frictions/audit-run-data-not-recorded.yml
@@ -222,13 +225,13 @@ subagents:
     durationSec: 340
     toolCalls: 44
     modelCalls: 37
-    tokenShare: 50.1
+    tokenShare: 42.7
   - type: general-purpose
     task: Design fixes for picks
     durationSec: 76
     toolCalls: 13
     modelCalls: 9
-    tokenShare: 7.3
+    tokenShare: 6.2
 gitBranch: claude/eager-ptolemy-mi7ff5
 entrypoint: remote_trigger
 cliVersion: 2.1.319
