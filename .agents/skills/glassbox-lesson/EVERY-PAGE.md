@@ -18,8 +18,8 @@ integration tip).
 
 Set `publishedAt` to now (`date -u +%Y-%m-%dT%H:%M:%SZ`) when you write a page,
 move it to the guide, or change what it teaches; it puts the page on the
-Commons Timeline. Leave it as it is for a re-pin, a typo or a moved `lines`
-range.
+Commons Timeline. Leave it as it is for a re-pin, a typo, a moved `lines` range
+or an edit that `DECISIONS.md` says keeps it.
 
 Frontmatter holds `title`, `description`, `teaches`, `revision`,
 `revisionDate` and `publishedAt` only; the page draws `title` as its heading,

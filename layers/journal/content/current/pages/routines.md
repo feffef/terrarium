@@ -34,6 +34,12 @@ top is a run that went past it. Only the newest runs of each Routine are kept.
 ::routine-chart{routine="glassbox-update"}
 ::
 
+::routine-chart{routine="glassbox-curate"}
+::
+
+::routine-chart{routine="dependabot-sweep"}
+::
+
 ## Week by week
 
 The same metric, summed over consecutive seven-day windows, the newest ending at
