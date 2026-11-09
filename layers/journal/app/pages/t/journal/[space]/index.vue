@@ -6,7 +6,7 @@
 // Isolation-respecting and presentation-only: it resolves the Space to its keyed
 // collections through the SAME shared, unit-tested resolver the catch-all uses
 // (via the read-only useSpace composable — no isolation logic is duplicated or
-// changed), then reads only `journal_<space>_{pages,skills,sessions}`. Spaces
+// changed), then reads only `journal_<space>_*` collections. Spaces
 // cannot leak.
 //
 // Pure aggregation/formatting lives in the layer-local, unit-tested
@@ -15,7 +15,7 @@
 // distinct from the exports, or the bindings merge and vue-tsc rejects the
 // ambiguity (see dashboard.ts's header comment).
 import { routingMap } from '#routing'
-import type { SessionDoc, SkillDoc } from '../../../../types/journal'
+import type { RoutineDoc, SessionDoc, SkillDoc } from '../../../../types/journal'
 
 const route = useRoute()
 const tenant = 'journal'
@@ -36,9 +36,8 @@ const { data } = await useAsyncData(route.path, async () => {
   // Newest-first, ordered in SQL rather than re-sorted client-side.
   const sessions = await queryCollection(collections.sessions).order('endedAt', 'DESC').limit(JOURNAL_SESSIONS_LOADED).all()
   const sessionTotal = await queryCollection(collections.sessions).count()
-  const ledgerSize = await queryCollection(collections.frictions).count()
-  const routineCount = await queryCollection(collections.routines).count()
-  return { pages, skills, sessions, sessionTotal, ledgerSize, routineCount }
+  const routines = await queryCollection(collections.routines).select('name', 'runs').all()
+  return { pages, skills, sessions, sessionTotal, routines }
 })
 
 // `.all()` returns the full page Documents with their parsed body, so the root's
@@ -63,26 +62,6 @@ const onrampCards = computed(() =>
     to: `/t/${tenant}/${space}${s.path}`,
   })),
 )
-// The Friction Ledger and Routine costs are Vue pages, not Documents, so their doors
-// are added here, as compact links under the cards so they don't weigh as much as the steps.
-const onrampDoors = computed(() => [
-  ...(data.value?.ledgerSize
-    ? [{
-        key: 'frictions',
-        title: 'What went wrong recently',
-        blurb: 'The Friction Ledger: recent recurring pain-points agents logged, grouped by cause, worst and most frequent first, fixed ones included.',
-        to: `/t/${tenant}/${space}/frictions`,
-      }]
-    : []),
-  ...(data.value?.routineCount
-    ? [{
-        key: 'routines',
-        title: 'What the scheduled runs cost',
-        blurb: 'Every Routine run as a chart, plus a weekly table. Switch between dollars, tokens and time.',
-        to: `/t/${tenant}/${space}/routines`,
-      }]
-    : []),
-])
 
 // Page-wide accordion: a single item — one session card OR one digest — is open
 // at a time, tracked by its deep-link anchor. Both inline feeds share this one
@@ -99,13 +78,14 @@ const { isOpen, toggle } = useAccordionDeepLink(() => route.path)
 // here instead of being silently erased by an `as unknown as` cast.
 const skills = computed<SkillDoc[]>(() => data.value?.skills ?? [])
 const sessions = computed<SessionDoc[]>(() => data.value?.sessions ?? [])
+const routines = computed<RoutineDoc[]>(() => data.value?.routines ?? [])
 const sessionTotal = computed(() => data.value?.sessionTotal ?? 0)
 const sessionsCappedLabel = computed(() =>
   sessionTotal.value > sessions.value.length ? `newest ${sessions.value.length} of ${sessionTotal.value}` : '',
 )
 
 // ── Derived dashboard data — thin wrappers over the pure module ──
-// The wrapped functions (sessionCardViews, frictionTotals, …) are dashboard.ts
+// The wrapped functions (sessionCardViews, journalKpiTiles, …) are dashboard.ts
 // exports arriving via auto-import; each local name is distinct.
 const ruleSources = import.meta.glob('../../../../../../../.claude/rules/*.md', {
   query: '?raw',
@@ -143,36 +123,17 @@ const sessionView = computed(() => {
 // Same `v-show` reasoning: on a phone seven open-ended digest rows pushed the session log off-screen.
 const DIGESTS_VISIBLE = 3
 const showAllDigests = ref(false)
-const frictionSeverityTotals = computed(() => frictionTotals(sessions.value))
-const totalFrictions = computed(() => frictionCount(sessions.value))
-const otherFrictions = computed(() => frictionOtherCount(frictionSeverityTotals.value))
 const sessionKindCounts = computed(() => kindCounts(sessions.value))
-const referencedPrs = computed(() => prRefs(sessions.value))
-const referencedPrParts = computed(() => prRefsParts(referencedPrs.value))
 
 const dailyFrictions = computed(() => frictionsByDay(sessions.value))
 const dailyMax = computed(() => Math.max(1, ...dailyFrictions.value.map((d) => d.perSession)))
 
-const notes = computed(() => sessionNotes(sessions.value))
-
-const platformSkills = computed(() => ownSkills(skills.value))
-const installedSkillTotal = computed(() => installedSkillCount(skills.value))
-
-// The stat tiles below only ever read THIS Space's own collections (see
-// the resolver comment atop this file), and archiving retains just the newest
-// RETAIN_DATES=7 dates on `current` (.agents/skills/digest/scripts/archive-journal-content.ts) —
-// so the tiles' scope tracks which Space is showing, not an explicit filter.
-// Zero kinds are dropped so the breakdown fits a fifth of the strip.
-const kindSubtext = computed(() =>
-  Object.entries(sessionKindCounts.value)
-    .filter(([, n]) => n)
-    .map(([k, n]) => `${n} ${k}`)
-    .join(' · '),
+const kpiTiles = computed(() =>
+  journalKpiTiles({ space, sessions: sessions.value, skills: skills.value, routines: routines.value }),
 )
-const tilesHeadline = computed(() => {
-  if (sessionsCappedLabel.value) return `Counts from the ${sessionsCappedLabel.value} logs`
-  return space === 'archived' ? 'Counts from older logs, before the last week' : 'Counts from the last week of logs; Skills are as of today'
-})
+const tilesHeadline = computed(() =>
+  sessionsCappedLabel.value ? `Counts from the ${sessionsCappedLabel.value} logs` : 'Counts from the last week of logs',
+)
 
 const title = computed(() => rootDoc.value?.title ?? `The Journal — ${space}`)
 const lede = computed(() => rootDoc.value?.description ?? `The ${space} Space of the journal Tenant.`)
@@ -214,26 +175,25 @@ useSeoMeta({
       </div>
     </header>
 
-    <p v-if="rootDoc?.lead" class="intro-lead">{{ rootDoc.lead }}</p>
+    <template v-if="kpiTiles.length">
+      <p class="tiles-headline">{{ tilesHeadline }}</p>
+      <section class="tiles" aria-label="State of this Space">
+        <JournalStatTile v-for="t in kpiTiles" :key="t.key" :tile="t" />
+      </section>
+    </template>
 
-    <!-- Newcomer on-ramp: after the short lead that gives it context, before the
-         longer intro and the data-heavy feed. -->
-    <section v-if="onrampCards.length || onrampDoors.length" class="onramp" aria-label="Start here">
-      <p v-if="onrampCards.length" class="onramp-lead">New here? Start with <NuxtLink to="/t/glassbox/guide">how Terrarium works</NuxtLink>, the overview that opens the Glass Box guide. Then the short version:</p>
-      <div v-if="onrampCards.length" class="onramp-cards">
+    <section v-if="onrampCards.length" class="onramp" aria-label="Start here">
+      <p class="onramp-lead">New here? Start with <NuxtLink to="/t/glassbox/guide">how Terrarium works</NuxtLink>, the overview that opens the Glass Box guide. Then the short version:</p>
+      <div class="onramp-cards">
         <NuxtLink v-for="c in onrampCards" :key="c.key" :to="c.to" class="onramp-card">
           <span class="onramp-kicker">{{ c.kicker }}</span>
           <span class="onramp-card-title">{{ c.title }}<span class="onramp-arrow" aria-hidden="true">→</span></span>
           <span class="onramp-blurb">{{ c.blurb }}</span>
         </NuxtLink>
       </div>
-      <ul v-if="onrampDoors.length" class="onramp-doors">
-        <li v-for="c in onrampDoors" :key="c.key">
-          <NuxtLink :to="c.to">{{ c.title }}<span aria-hidden="true"> →</span></NuxtLink>
-          <span class="onramp-blurb"> {{ c.blurb }}</span>
-        </li>
-      </ul>
     </section>
+
+    <p v-if="rootDoc?.lead" class="intro-lead">{{ rootDoc.lead }}</p>
 
     <!-- Free-form editorial intro — the root page's Markdown body -->
     <section v-if="rootDoc" class="intro jd-prose">
@@ -291,52 +251,9 @@ useSeoMeta({
       </button>
     </section>
 
-    <p class="tiles-headline">{{ tilesHeadline }}</p>
-    <section class="tiles" :class="{ 'tiles-4': space === 'archived' }" aria-label="State of this Space">
-      <JournalStatTile
-        label="Sessions logged" gloss="One agent session, logged. Interactive: a human kept prompting; delegated: one prompt; autonomous: none."
-        :value="sessions.length"
-        :sub="kindSubtext"
-      />
-      <JournalStatTile v-if="space !== 'archived'" label="Platform Skills" gloss="Reusable playbooks the agents follow" :value="platformSkills.length">
-        <template #sub>
-          <template v-if="installedSkillTotal">+{{ installedSkillTotal }} installed · </template>
-          <NuxtLink class="pr-link" :to="{ name: 'journal-skills', params: { space } }">browse →</NuxtLink>
-        </template>
-      </JournalStatTile>
-      <JournalStatTile label="Ideas noted" gloss="Proposals for the future, noted but not planned" :value="notes.ideas.length">
-        <template #sub>
-          {{ notes.learnings.length }} learning{{ notes.learnings.length === 1 ? '' : 's' }} ·
-          <NuxtLink class="pr-link" :to="{ name: 'journal-ideas', params: { space } }">browse →</NuxtLink>
-        </template>
-      </JournalStatTile>
-      <JournalStatTile label="Frictions surfaced" gloss="Problems an agent hit and wrote down, every one, however small" :value="totalFrictions">
-        <template #sub>
-          <JournalFrictionStrata :counts="frictionSeverityTotals" :total="totalFrictions">
-            {{ frictionSeverityTotals.blocker }} blocker{{ frictionSeverityTotals.blocker === 1 ? '' : 's' }} ·
-            {{ frictionSeverityTotals.major }} major{{ frictionSeverityTotals.major === 1 ? '' : 's' }}
-            <template v-if="otherFrictions"> · {{ otherFrictions }} lesser</template>
-            <template v-if="data?.ledgerSize"> · <NuxtLink class="pr-link" :to="{ name: 'journal-frictions', params: { space } }">browse →</NuxtLink></template>
-          </JournalFrictionStrata>
-        </template>
-      </JournalStatTile>
-      <JournalStatTile
-        label="PRs referenced" gloss="Pull requests the session logs mention"
-        :value="referencedPrs.length"
-      >
-        <template #sub>
-          <template v-if="referencedPrParts.shown.length">
-            <template v-for="(p, i) in referencedPrParts.shown" :key="p">
-              <template v-if="i"> · </template><a class="pr-link" :href="prUrl(p)">#{{ p }}</a>
-            </template>
-            <template v-if="referencedPrParts.rest"> +{{ referencedPrParts.rest }} earlier</template>
-          </template>
-          <template v-else>none yet</template>
-        </template>
-      </JournalStatTile>
-    </section>
 
-    <section v-if="dailyFrictions.length > 1" class="panel trend" aria-labelledby="trend-h">
+    <!-- A KPI view too, so it shows wherever the tiles do (journalKpiTiles decides). -->
+    <section v-if="kpiTiles.length && dailyFrictions.length > 1" class="panel trend" aria-labelledby="trend-h">
       <div class="section-head">
         <h2 id="trend-h">Frictions per session, by day</h2>
         <span class="count">self-reported, UTC days</span>
@@ -473,8 +390,6 @@ h1 {
 .onramp-kicker { font-family: var(--jd-mono); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--jd-muted); }
 .onramp-arrow { color: var(--jd-accent); transition: transform 0.15s ease; }
 .onramp-card:hover .onramp-arrow { transform: translateX(3px); }
-.onramp-doors { list-style: none; margin: 0.9rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 0.35rem; }
-.onramp-doors a { font-weight: 600; color: var(--jd-accent); }
 .onramp-blurb { color: var(--jd-muted); font-size: 0.88rem; line-height: 1.45; }
 
 .spaces { display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-end; }
@@ -532,9 +447,7 @@ h1 {
   margin: 0 0 2.25rem;
 }
 
-.tiles-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-
-.trend { margin-bottom: 1.25rem; }
+.trend { margin-top: 1.75rem; }
 .trend-bars { list-style: none; margin: 0 0 0.7rem; padding: 0; display: flex; gap: 0.4rem; align-items: stretch; }
 .trend-bars li { position: relative; flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 0.2rem; font-family: var(--jd-mono); font-size: 0.68rem; color: var(--jd-faint); }
 .trend-bar { display: flex; align-items: flex-end; width: 100%; height: 4.5rem; }
@@ -545,11 +458,9 @@ h1 {
   .trend-bars { overflow-x: auto; padding-bottom: 0.2rem; }
   .trend-bars li { flex: 1 0 1.9rem; }
 }
-.pr-link { color: var(--jd-accent); text-decoration: none; }
-.pr-link:hover { text-decoration: underline; }
 
 /* scroll-margin-top: breathing room when a "#session-log" link scrolls here. */
-.feed { scroll-margin-top: 1.5rem; }
+.feed { margin-top: 1.75rem; scroll-margin-top: 1.5rem; }
 
 .digests { margin-top: 1.75rem; }
 .panel-intro { margin: 0 0 0.95rem; color: var(--jd-muted); font-size: 0.92rem; line-height: 1.5; }
@@ -671,7 +582,7 @@ h1 {
   .drow .caret { grid-area: caret; }
 }
 @media (max-width: 900px) {
-  .tiles { grid-template-columns: repeat(2, 1fr); }
+  .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .masthead { grid-template-columns: 1fr; }
   .spaces { align-items: flex-start; }
   .snapshot { text-align: left; }

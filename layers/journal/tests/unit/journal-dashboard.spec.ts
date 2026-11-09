@@ -30,14 +30,12 @@ import {
   sessionModelsLabel,
   subagentUsageLabel,
   frictionCount,
-  frictionOtherCount,
   frictionTotals,
   kindCounts,
   ownSkills,
   installedSkills,
   skillUseCounts,
-  prRefs,
-  prRefsParts,
+  journalKpiTiles,
   prUrl,
   sessionShortId,
   skillGroups,
@@ -141,13 +139,6 @@ describe('frictionTotals / frictionCount', () => {
   })
 })
 
-describe('frictionOtherCount', () => {
-  it('sums everything but blocker and major', () => {
-    expect(frictionOtherCount({ nit: 2, minor: 3, moderate: 1, major: 1, blocker: 1 })).toBe(6)
-    expect(frictionOtherCount({ nit: 0, minor: 0, moderate: 0, major: 1, blocker: 1 })).toBe(0)
-  })
-})
-
 describe('kindCounts', () => {
   it('counts interactive, delegated, and autonomous sessions', () => {
     const sessions = [
@@ -160,36 +151,78 @@ describe('kindCounts', () => {
   })
 })
 
-describe('prRefs', () => {
-  it('strips a leading #, de-dupes, and sorts numerically', () => {
-    const sessions = [session({ prs: ['#12', '12'] }), session({ prs: ['3'] })]
-    expect(prRefs(sessions)).toEqual(['3', '12'])
+describe('journalKpiTiles', () => {
+  const run = (startedAt: string, costUsd: number) => ({
+    session: 's', startedAt, durationSeconds: 1, inputTokens: 0, outputTokens: 0, cacheReadTokens: 0, cacheWriteTokens: 0, costUsd,
+  })
+  const tiles = (over: Partial<Parameters<typeof journalKpiTiles>[0]> = {}) =>
+    journalKpiTiles({ space: 'current', sessions: [], skills: [], routines: [], ...over })
+  const tile = (key: string, over: Partial<Parameters<typeof journalKpiTiles>[0]> = {}) =>
+    tiles(over).find((t) => t.key === key)!
+  const stats = (key: string, over: Partial<Parameters<typeof journalKpiTiles>[0]> = {}) =>
+    tile(key, over).stats.map((s) => `${s.value} ${s.label}`)
+
+  it('shows five tiles on current, in order, each with its label, CTA and link', () => {
+    expect(tiles().map(({ key, label, cta, to }) => ({ key, label, cta, to }))).toEqual([
+      { key: 'sessions', label: 'Sessions logged', cta: 'Session logs ↓', to: '#session-log' },
+      { key: 'frictions', label: 'Frictions surfaced', cta: 'Worst problems →', to: '/t/journal/current/frictions' },
+      { key: 'routines', label: 'Routine spend', cta: 'Cost breakdown →', to: '/t/journal/current/routines' },
+      { key: 'ideas', label: 'Suggestions', cta: 'Ideas & learnings →', to: '/t/journal/current/ideas' },
+      { key: 'skills', label: 'Skills', cta: 'Roles & usage →', to: '/t/journal/current/skills' },
+    ])
+    expect(tiles().map((t) => t.value)).toEqual([0, 0, '$0.00', 0, 0])
+    for (const t of tiles()) {
+      expect(t.gloss).not.toBe('')
+      for (const s of t.stats) expect(s.hint).not.toBe('')
+    }
   })
 
-  it('sorts numerically, not lexically', () => {
-    const sessions = [session({ prs: ['#2', '#10', '#1'] })]
-    expect(prRefs(sessions)).toEqual(['1', '2', '10'])
-  })
-})
-
-describe('prRefsParts', () => {
-  it('is empty with no overflow when no PRs are referenced', () => {
-    expect(prRefsParts([])).toEqual({ shown: [], rest: 0 })
+  it('shows no tiles on any other Space', () => {
+    expect(tiles({ space: 'archived', sessions: [session()] })).toEqual([])
+    expect(tiles({ space: 'other' })).toEqual([])
   })
 
-  it('shows all PRs newest-first when they fit', () => {
-    expect(prRefsParts(['3', '12'])).toEqual({ shown: ['12', '3'], rest: 0 })
-    expect(prRefsParts(['1', '2', '10'])).toEqual({ shown: ['10', '2', '1'], rest: 0 })
+  it('counts sessions, with every kind as a stat, zeros included', () => {
+    const sessions = [session({ kind: 'autonomous' }), session(), session()]
+    expect(tile('sessions', { sessions }).value).toBe(3)
+    expect(stats('sessions', { sessions })).toEqual(['2 interactive', '0 delegated', '1 autonomous'])
   })
 
-  it('folds the overflow into a rest count', () => {
-    expect(prRefsParts(['1', '2', '3', '4', '5'])).toEqual({ shown: ['5', '4', '3'], rest: 2 })
+  it('counts Frictions, with every severity as a stat, worst first', () => {
+    const sessions = [session({ frictions: [friction('blocker'), friction('major'), friction('minor')] }),
+      session({ frictions: [friction('major'), friction('nit'), friction('minor')] })]
+    expect(tile('frictions', { sessions }).value).toBe(6)
+    expect(stats('frictions', { sessions })).toEqual(['1 blk', '2 maj', '0 mod', '2 min', '1 nit'])
+    expect(tile('frictions', { sessions }).stats.map((s) => s.severity)).toEqual(['blocker', 'major', 'moderate', 'minor', 'nit'])
+    expect(tile('frictions')).toMatchObject({ value: 0, to: '/t/journal/current/frictions' })
   })
 
-  it('does not mutate the input list', () => {
-    const refs = ['1', '2', '3', '4']
-    prRefsParts(refs)
-    expect(refs).toEqual(['1', '2', '3', '4'])
+  it('sums Routine spend over runs started on or after the oldest session date (UTC)', () => {
+    const sessions = [session({ endedAt: '2026-11-08T10:00:00Z' }), session({ endedAt: '2026-10-10T23:00:00Z' })]
+    const routines = [
+      { name: 'a', runs: [run('2026-10-09T23:59:59Z', 4), run('2026-10-10T00:00:00Z', 5.9716483)] },
+      { name: 'b', runs: [run('2026-11-08T04:00:00Z', 1.5)] },
+      { name: 'c', runs: [] },
+    ]
+    expect(tile('routines', { sessions, routines }).value).toBe('$7.47')
+    expect(stats('routines', { sessions, routines })).toEqual(['2 runs'])
+    expect(tile('routines', { sessions, routines: [{ name: 'a', runs: [run('2026-10-11T00:00:00Z', 150.4)] }] }).value).toBe('$150')
+    expect(tile('routines', { routines }).value).toBe('$0.00')
+    expect(stats('routines', { routines })).toEqual(['0 runs'])
+  })
+
+  it('counts ideas plus learnings as Suggestions, learnings as sessionNotes counts them', () => {
+    const sessions = [session({ ideas: ['i1', 'i2'], learnings: ['l1'] }), session({ external: true, learnings: ['l2'] })]
+    expect(tile('ideas', { sessions }).value).toBe(3)
+    expect(stats('ideas', { sessions })).toEqual(['2 ideas', '1 learning'])
+  })
+
+  it('counts every Skill, split into platform and installed, whatever the sessions', () => {
+    const skills = [skill(), skill({ name: 'b' }), skill({ name: 'c', category: 'general-engineering' })]
+    expect(tile('skills', { skills }).value).toBe(3)
+    expect(stats('skills', { skills })).toEqual(['2 platform', '1 installed'])
+    expect(stats('skills', { skills: [skill()] })).toEqual(['1 platform', '0 installed'])
+    expect(tile('skills', { skills, sessions: [session(), session()] }).value).toBe(3)
   })
 })
 

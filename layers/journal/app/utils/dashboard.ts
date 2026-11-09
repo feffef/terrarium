@@ -21,7 +21,8 @@
 // export below, and truly generic helpers stay module-private. This module,
 // for its part, never relies on auto-import itself: it stays dependency-free
 // and explicit.
-import type { Friction, Importance, SessionCardView, SessionDoc, Severity, SkillDoc, NoteItem, Subagent } from '../types/journal'
+import type { Friction, Importance, RoutineDoc, SessionCardView, SessionDoc, Severity, SkillDoc, NoteItem, Subagent } from '../types/journal'
+import { formatRoutineMetric } from './routineRuns'
 import { REPO_URL } from '../../../../app/utils/repo'
 import { sessionUrl } from '#shared/session-url'
 
@@ -100,46 +101,17 @@ export function frictionCount(sessions: SessionDoc[]): number {
   return sessions.reduce((n, s) => n + s.frictions.length, 0)
 }
 
-// Everything below blocker/major — the stat tile calls the worst two out by
-// name and folds the rest into this one term, rather than leaving them out
-// of the visible caption entirely (visitor-loop finding, 2026-09-28).
-export function frictionOtherCount(totals: Record<Severity, number>): number {
-  return totals.nit + totals.minor + totals.moderate
-}
-
 export function kindCounts(sessions: SessionDoc[]): { interactive: number; delegated: number; autonomous: number } {
   const counts = { interactive: 0, delegated: 0, autonomous: 0 }
   for (const s of sessions) counts[s.kind]++
   return counts
 }
 
-// De-duplicated, numerically sorted PR references (strips a leading `#`).
-// `prs` carries a manifest `.default([])` (tenant.config.ts), so the generated
-// collection type marks it optional even though it is always populated by the
-// time content is queried — guard it structurally rather than assume that.
-export function prRefs(sessions: SessionDoc[]): string[] {
-  const seen = new Set<string>()
-  for (const s of sessions) for (const pr of s.prs ?? []) seen.add(pr.replace(/^#/, ''))
-  return [...seen].sort((a, b) => Number(a) - Number(b))
-}
-
 export function prUrl(pr: string): string {
   return `${REPO_URL}/pull/${pr.replace(/^#/, '')}`
 }
 
-// Compact sub-line for the "PRs referenced" stat tile. Enumerating every PR
-// stopped fitting once the list grew past a handful, so show only the newest
-// few (highest-numbered first) and fold the rest into a "+N earlier" tail.
-// Returns structure, not a string, so the tile can link each shown PR.
 export const PR_SUB_MAX = 3
-
-export function prRefsParts(refs: string[]): { shown: string[]; rest: number } {
-  const newestFirst = refs.slice().reverse()
-  return {
-    shown: newestFirst.slice(0, PR_SUB_MAX),
-    rest: Math.max(0, newestFirst.length - PR_SUB_MAX),
-  }
-}
 
 // ── Skill Inventory ──────────────────────────────────────
 // OWN Skills are the platform-operation ones the Platform authors and evolves;
@@ -418,4 +390,107 @@ export function frictionsByDay(
     .sort(([a], [b]) => a.localeCompare(b))
     .slice(-max)
     .map(([date, d]) => ({ date, ...d, perSession: Math.round((d.frictions / d.sessions) * 10) / 10 }))
+}
+
+// ── KPI tiles ────────────────────────────────────────────
+// Only `current` has them: archived detail pages mostly hold nothing. Every
+// count but Skills is scoped to the sessions `current` holds.
+export interface JournalKpiStat {
+  key: string
+  label: string
+  value: number
+  hint: string
+  severity?: Severity
+}
+
+export interface JournalKpiTile {
+  key: 'sessions' | 'frictions' | 'routines' | 'ideas' | 'skills'
+  label: string
+  gloss: string
+  value: number | string
+  stats: JournalKpiStat[]
+  cta: string
+  to: string
+}
+
+// Short display copy of the grades `log-session` defines, worst first; change both together.
+const KPI_SEVERITY_HINTS: [Severity, string, string][] = [
+  ['blocker', 'blk', "Blocker: the goal couldn't proceed without a workaround or human help"],
+  ['major', 'maj', 'Major: derailed part of the session or degraded the outcome'],
+  ['moderate', 'mod', 'Moderate: cost real time or forced a workaround'],
+  ['minor', 'min', 'Minor: a contained papercut'],
+  ['nit', 'nit', 'Nit: an annoyance with no real cost'],
+]
+
+export function journalKpiTiles({ space, sessions, skills, routines }: {
+  space: string
+  sessions: SessionDoc[]
+  skills: SkillDoc[]
+  routines: RoutineDoc[]
+}): JournalKpiTile[] {
+  if (space !== 'current') return []
+  const base = `/t/journal/${space}`
+  const kinds = kindCounts(sessions)
+  const sev = frictionTotals(sessions)
+  const since = sessions.map((s) => s.endedAt.slice(0, 10)).sort()[0]
+  const runs = since ? routines.flatMap((r) => r.runs).filter((r) => r.startedAt.slice(0, 10) >= since) : []
+  const notes = sessionNotes(sessions)
+  const noun = (n: number, word: string) => (n === 1 ? word : `${word}s`)
+  return [
+    {
+      key: 'sessions',
+      label: 'Sessions logged',
+      gloss: 'Agent sessions, logged',
+      value: sessions.length,
+      stats: [
+        { key: 'interactive', label: 'interactive', value: kinds.interactive, hint: 'A human kept prompting' },
+        { key: 'delegated', label: 'delegated', value: kinds.delegated, hint: 'One human prompt, then the agent worked alone' },
+        { key: 'autonomous', label: 'autonomous', value: kinds.autonomous, hint: 'No human prompt: a schedule or another agent started it' },
+      ],
+      cta: 'Session logs ↓',
+      to: '#session-log',
+    },
+    {
+      key: 'frictions',
+      label: 'Frictions surfaced',
+      gloss: 'Problems agents hit and wrote down',
+      value: frictionCount(sessions),
+      stats: KPI_SEVERITY_HINTS.map(([severity, label, hint]) => ({ key: severity, label, value: sev[severity], hint, severity })),
+      cta: 'Worst problems →',
+      to: `${base}/frictions`,
+    },
+    {
+      key: 'routines',
+      label: 'Routine spend',
+      gloss: 'What scheduled runs cost',
+      value: formatRoutineMetric('costUsd', runs.reduce((sum, r) => sum + r.costUsd, 0)),
+      stats: [{ key: 'runs', label: noun(runs.length, 'run'), value: runs.length, hint: "Routine runs started since this Space's oldest session" }],
+      cta: 'Cost breakdown →',
+      to: `${base}/routines`,
+    },
+    {
+      key: 'ideas',
+      label: 'Suggestions',
+      gloss: 'Proposals from agents, to apply by hand',
+      value: notes.ideas.length + notes.learnings.length,
+      stats: [
+        { key: 'ideas', label: noun(notes.ideas.length, 'idea'), value: notes.ideas.length, hint: 'Proposals for future work, noted but not planned' },
+        { key: 'learnings', label: noun(notes.learnings.length, 'learning'), value: notes.learnings.length, hint: 'Lessons a session wrote down for future agents' },
+      ],
+      cta: 'Ideas & learnings →',
+      to: `${base}/ideas`,
+    },
+    {
+      key: 'skills',
+      label: 'Skills',
+      gloss: 'Playbooks the agents follow, as of today',
+      value: skills.length,
+      stats: [
+        { key: 'platform', label: 'platform', value: ownSkills(skills).length, hint: 'Skills the Platform writes and evolves itself' },
+        { key: 'installed', label: 'installed', value: installedSkillCount(skills), hint: "Third-party Skills the agents use but don't evolve" },
+      ],
+      cta: 'Roles & usage →',
+      to: `${base}/skills`,
+    },
+  ]
 }

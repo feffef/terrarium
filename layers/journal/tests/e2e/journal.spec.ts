@@ -198,7 +198,7 @@ describe('journal Tenant', async () => {
     expect(html).toContain('Frictions surfaced')
     expect(html).toContain('href="/t/journal/current/skills"')
     expect(html).toContain('href="/t/journal/current/ideas"')
-    expect(html.split('href="/t/journal/current/frictions"').length - 1).toBe(2) // on-ramp card and KPI tile
+    expect(html.split('href="/t/journal/current/frictions"').length - 1).toBe(1) // the KPI tile
     expect(html).toContain('aria-expanded="false"')
     expect(html).toMatch(/role="button"/)
   })
@@ -459,6 +459,43 @@ describe('journal Tenant', async () => {
     const shown = Math.min(total, JOURNAL_SESSIONS_LOADED)
     expect(html.match(/<article [^>]*class="card[\s"]/g)?.length ?? 0).toBe(shown)
     if (total > JOURNAL_SESSIONS_LOADED) expect(html).toContain(`newest ${shown} of ${total} session logs`)
+  })
+
+  it('puts the KPI tiles first on current, and the Frictions chart just above the sessions', async () => {
+    const html = await $fetch<string>('/t/journal/current')
+    const marks = ['class="masthead', 'class="tiles-headline', 'class="tiles"', 'class="onramp"',
+      'class="intro-lead', 'class="intro ', 'id="digests"', 'id="trend-h"', 'id="session-log"']
+    const at = marks.map((m) => html.indexOf(m))
+    expect(at.every((i) => i >= 0), JSON.stringify(Object.fromEntries(marks.map((m, i) => [m, at[i]])))).toBe(true)
+    expect(at).toEqual([...at].sort((a, b) => a - b))
+  })
+
+  it('makes each KPI tile one link to the page behind its number', async () => {
+    const html = await $fetch<string>('/t/journal/current')
+    const tiles = /<section class="tiles"[^>]*>([\s\S]*?)<\/section>/.exec(html)![1]!
+    const hrefs = [...tiles.matchAll(/<a\b[^>]*\bhref="([^"]*)"/g)].map((m) => m[1]!.replace('/t/journal/current#', '#'))
+    expect(hrefs).toEqual(['#session-log', ...['frictions', 'routines', 'ideas', 'skills'].map((p) => `/t/journal/current/${p}`)])
+    expect(html).not.toContain('PRs referenced')
+  })
+
+  it('opens a KPI stat tooltip on tap without following the tile link, and closes it on a tap elsewhere', async () => {
+    const route = '/t/journal/current'
+    await withRendered(route, async (page) => {
+      const stat = page.locator('.tiles .stat').first()
+      const tip = page.locator('.tiles [role="tooltip"]').first()
+      await stat.click()
+      expect(new URL(page.url()).pathname).toBe(route)
+      expect(await tip.isVisible()).toBe(true)
+      await page.locator('h1').click()
+      expect(await tip.isVisible()).toBe(false)
+    })
+  })
+
+  it('shows no KPI tiles or Frictions chart on archived', async () => {
+    const html = await $fetch<string>('/t/journal/archived')
+    expect(html).not.toContain('class="tiles')
+    expect(html).not.toContain('Frictions per session, by day')
+    expect(html).toContain('Recent activity')
   })
 
   // Both feeds are one page-wide accordion: opening a session card collapses an

@@ -25,9 +25,8 @@ const detailId = useId()
 const maintainerView = useMaintainerView()
 const sessionHref = computed(() => (maintainerView.value ? card.url : null))
 // A session touching a double-digit run of PRs (a workflow-built batch of
-// Tenant pages, say) turned the foot row into unscannable chip soup — cap the
-// same way the "PRs referenced" stat tile already does (visitor-loop fix,
-// 2026-09-26).
+// Tenant pages, say) turned the foot row into unscannable chip soup (visitor-loop
+// fix, 2026-09-26).
 const prParts = computed(() => ({
   shown: card.prs.slice(0, PR_SUB_MAX),
   rest: Math.max(0, card.prs.length - PR_SUB_MAX),
