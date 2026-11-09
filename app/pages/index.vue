@@ -140,7 +140,7 @@ const { data: glassbox } = await useAsyncData('glassbox-showcase', async () => {
   const lesson = pickOfTheDay(lessons)
   return {
     entries: [
-      { name: 'The guide', path: '/t/glassbox/guide', note: 'read the handbook', accent: 'var(--gb-accent)' },
+      { name: 'The guide', path: '/t/glassbox/guide', note: 'Discover short lessons and walkthroughs that show how the concepts tie together', accent: 'var(--gb-accent)' },
       { name: 'Workshop', path: '/t/glassbox/workshop', note: 'how the guide is kept up to date, and what is left to polish', accent: 'var(--gb-muted)' },
     ],
     lesson: lesson && {
@@ -198,7 +198,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
       <div class="explore-head">
         <h2 id="newest-heading" class="eyebrow">Newest experiment <span class="wip">work in progress</span></h2>
         <p class="tagline">
-          A handbook for learning the concepts and technology behind Terrarium, using Terrarium as the example.
+          A textbook for learning the concepts and technology behind Terrarium, using Terrarium as the example.
         </p>
       </div>
       <HomeShowcase
