@@ -9,14 +9,4 @@ role: >-
   subagent has cited a fabricated line; CLAUDE.md's "Verify before you state"
   covers it. It reviews a diff against a fixed point; for a
   whole tree, treat the tree as the diff or run per directory.
-observations:
-  - date: 2026-09-29
-    note: >-
-      Promoted supporting → essential on the owner's call, backed by the
-      session logs: used in 15 of 86 logged sessions, and in 6 it caught real
-      defects self-review missed (session_01TMgZyrN42pwudxkUdHLKwP,
-      session_01X3GnBV8wPH4zeb4suiktD1, session_01N2HSpdwKUEBjztN8Nnz4Da,
-      session_01NT2TmgJJGjEsc84AW6oAi7, session_01BWLBKCE8jBVrfvxzMu87hJ,
-      session_01Bwzp9LzTsRFbM7AGRc1nGS). Skipping it cost a major friction in
-      session_01Lm5nzVoByigqhQ1YxFggTk: four impl PRs opened unreviewed, and a
-      later review found an ADR-0016 violation.
+observations: []

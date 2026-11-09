@@ -9,30 +9,6 @@ role: >-
   Inventory's grades in line with usage as a by-product, self-merging those
   edits (ADR-0015).
 observations:
-  - date: 2026-09-29
-    note: >-
-      Self-check, independently re-verified: all 8 usedIn sessions
-      (2026-09-22 to 2026-09-28) hold up against GitHub/git — PR #1453
-      (Inventory-only, 8 files), issues #1449-#1452 all filed as claimed and
-      later closed via merged PR #1477 (normal lifecycle, not a
-      contradiction), PR #1433 (the 09-27 rewrite) correctly human-merged
-      since it touched ADR-0015, and the six pre-rewrite "clean sweep" runs'
-      internal claims (orphan-scan counts, resolvedBy citations) match
-      primary sources. Today's own run dispatched a fresh behaviour-check
-      subagent per qualifying Skill (11, since visitor-loop newly crossed the
-      ≥3-session bar), found two new silent failures (blog-post's step-7
-      fact-check dispatch silently skipped in 2/7 runs; dispatch-subagents'
-      cd-into-worktree footgun recurring 2 days running) and filed them as
-      #1479/#1480; the rest — audit-docs, audit-skills (self), auto-triage,
-      close-session, digest, frictions-to-fixes, log-session, prune-trial,
-      visitor-loop — came back clean, or the prior finding turned out to
-      already be resolved (log-session's word cap and prune-trial's
-      verbatim-quote gap were both retired by pruning the rule itself rather
-      than fixed; visitor-loop's decisions.md gap was actually fixed).
-      Closure completeness (step 3): orphan scan ran (917 merged PRs, 771
-      with a session), both orphan candidates already resolved-by-annotation,
-      no new orphans, and no human-prompted or manually-rescued closures this
-      window.
   - date: "2026-09-30"
     note: >-
       Self-check, independently re-verified: audit-docs's newest session
@@ -671,3 +647,6 @@ observations:
       Run session_013zxzeRkv6UCWJtPmJ68h32 took 23358s: audit done in 15 min, PR #2750 merged 01:01Z, log completed 07:15Z after a human nudge (also
       recorded on close-session). Step 6 says to invoke close-session once, not again after the merge; ADR-0009 does. The 11-04 run hit the same
       refusal once. Tracked as #2772. 11-01 summary omitted orphanScan counts (third time); 11-02 to 11-04 had them. Grade unchanged.
+  - date: "2026-11-09"
+    note: >-
+      Behaviour check, 7 runs delivered, all PRs merged. Unverified: with the standing thread closed, step 4 gives no rule for a repeat finding; session_013zxzeSaEvHWNU8EdNqcqGG commented on closed #2607 and #2724 without setting needs-triage, session_013zxzeQAvRVQM2NhW8WWUPJ kept a note only. Idea: say what to do when the thread is closed. Grade unchanged.

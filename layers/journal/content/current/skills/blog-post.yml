@@ -9,20 +9,6 @@ role: >-
   PR, and a merged post owes a decision on whether another Persona replies.
   Gives the Terrarium a multi-voice commentary on its own development.
 observations:
-  - date: 2026-09-29
-    note: >-
-      Verified silent failure (audit-skills behaviour check), filed as issue
-      #1479: step 7's mandatory fresh fact-check subagent dispatch was
-      silently skipped in 2 of the 7 sessions checked —
-      session_01C7aQVrdqpNfjZx6UhwLqsk (PR #1295, Kevin, 09-22) and
-      session_0198W2yA7utj1k3WEi5fWw35 (PR #1308, David, 09-24) — both
-      self-verified citations instead of spawning the required independent
-      subagent, shipped with no fact-check tally, and logged no friction
-      noting the gap. The other 5 runs this window (#1301, #1336, #1394,
-      #1431, #1472) each show a genuine third dispatch with an explicit
-      tally. Rotation gate (never same Persona twice, forced if missing from
-      last 4) verified clean across the full merge sequence; all 7 PRs
-      merged as claimed; no reverts found.
   - date: "2026-09-30"
     note: >-
       Re-verified (audit-skills behaviour check), same 7 sessions: #1479's

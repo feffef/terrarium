@@ -1,0 +1,10 @@
+name: glassbox-curate
+runs:
+  - session: session_013zxzePZDqGM37D7GdfGumb
+    startedAt: 2026-11-08T08:47:05Z
+    durationSeconds: 806
+    inputTokens: 146
+    outputTokens: 32340
+    cacheReadTokens: 6862563
+    cacheWriteTokens: 255425
+    costUsd: 1.8514623
