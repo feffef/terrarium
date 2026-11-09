@@ -1,0 +1,11 @@
+name: glassbox-curate-run-cost
+surface: safe
+summary: A glassbox-curate run's subagent fan-out spends most of the session budget.
+cause: "glassbox-curate dispatches writers, checkers and fresh readers per page, each brief repeating standing instructions and rereading the same pages; signal: get_session cost near the session budget after a curate run (SKTB, 19.20 of 20 dollars)."
+status: open
+occurrences:
+  - session: session_013zxzeSKTBjSfYnUxNHTJw1
+    date: "2026-11-09"
+    severity: moderate
+    description: "Each subagent brief repeated the same standing instructions, and the fan-out (16 subagent spawns, 6 resumes, per the transcript) took the session to 19.20 dollars of a 20 dollar budget (get_session)."
+    solution: "Keep the writer, checker and reader boilerplate in one file under the glassbox-curate Skill folder and point each brief to it."

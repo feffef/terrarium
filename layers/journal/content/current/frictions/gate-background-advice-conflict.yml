@@ -10,11 +10,6 @@ fixes:
     date: "2026-10-25"
     summary: "dispatch-subagents §3's foreground-gate line is now phrased as a line for a subagent's brief, so it no longer reads as conflicting with CLAUDE.md."
 occurrences:
-  - session: session_019jfJv6yLmcLUAJiTTomyeu
-    date: "2026-10-25"
-    severity: minor
-    description: "CLAUDE.md says run gate:scoped in the background with a log, while dispatch-subagents says run it in the foreground because a guard denies backgrounding; I used background for my own gate and it worked."
-    solution: "Make the two agree: say which applies to the primary session and which to subagents."
   - session: session_013zxzePnfDGz3F3p9spej9f
     date: "2026-10-30"
     severity: minor

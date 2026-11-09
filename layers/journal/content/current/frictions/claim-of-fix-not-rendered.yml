@@ -18,3 +18,8 @@ occurrences:
     severity: moderate
     description: "Impl subagent reported the Canopy smudge as green in its screenshots; it was grey (theme.css binds --sig-1 on :root so Biome classes never re-tint it)."
     solution: "Read hand-back screenshots yourself before review; the atlas-specimen Skill could note that a plate outside the Specimen page must re-bind --sig-1."
+  - session: session_013zxzeRB6ciegpxcRDfedSF
+    date: "2026-11-09"
+    severity: minor
+    description: "CLAUDE.md says to read the UI verification doc before claiming a UI change works; I never rendered the page, relying on e2e passing."
+    solution: "Read docs/agents/verifying-ui-changes.md and screenshot the tile before closing."

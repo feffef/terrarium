@@ -31,3 +31,8 @@ occurrences:
     severity: nit
     description: "The Skill says to settle decisions with grilling in interactive mode, but the user answered 'choose yourself' to my one question, so I skipped grilling on their delegation."
     solution: "The Skill could say that a delegated choice counts as settled."
+  - session: session_013zxzeRB6ciegpxcRDfedSF
+    date: "2026-11-09"
+    severity: minor
+    description: "Trimmed the tile intro instead of asking what it should say, so the user had to flag it as meaningless; one extra round and commit."
+    solution: "Settle every displayed string, intro lines included, in the first question round, as CLAUDE.md says for user-facing UI."

@@ -23,3 +23,8 @@ occurrences:
     severity: minor
     description: "First diagnostic diffed page files naively and reported every page's text changed, missing that pageHash already strips revision lines"
     solution: "Reuse the Skill's own exported hash functions in a diagnostic from the start"
+  - session: session_013zxzeRCJHe4rmKN5i2CQ16
+    date: "2026-11-06"
+    severity: nit
+    description: "Called a sentence in the new Skill unsupported after one grep; reviewers showed glassbox-improve already held it with its reason."
+    solution: "Before calling a claim unsupported, grep the sibling Skills for its key terms and read the neighbouring lines."

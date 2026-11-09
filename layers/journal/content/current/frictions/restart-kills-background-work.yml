@@ -9,11 +9,6 @@ fixes:
     date: "2026-10-16"
     summary: "clear-backlog §3 now says a restart kills running workflows and a resumeFromRunId resume must pass the original args."
 occurrences:
-  - session: session_013QKXoGLaEHEJanyw5TrPqj
-    date: "2026-10-25"
-    severity: nit
-    description: "The container restarted while the second build ran; the result survived only because the workflow had finished and its output file was intact."
-    solution: "None needed this time; clear-backlog already says to check the run journal mtime after a restart."
   - session: session_013zxzeQn5ksJrQasTk95LKb
     date: "2026-10-29"
     severity: nit

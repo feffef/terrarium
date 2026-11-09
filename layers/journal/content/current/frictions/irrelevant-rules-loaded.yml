@@ -8,16 +8,6 @@ ref: "issue #2167 closed 2026-10-23: owner kept bash-rules-hint.ts as is; no ope
 notes: |-
   2026-11-08 design: narrow mermaid-lanes.md paths to the Glass Box walkthroughs dropped: .claude/rules/** is Human-only, a nit, and the tenant.config.ts rules are right for editing (RCCqrx agreed); issue #2167 already closed with the loader kept
 occurrences:
-  - session: session_01PGQQj6iUaMYCkphVjFEsBP
-    date: "2026-10-25"
-    severity: minor
-    description: "Every subagent loaded about a dozen unrelated rules (ADR summaries, mermaid-lanes, glossary rules) for prose-only work, and each had to grade them."
-    solution: "Narrow the paths of adr-0021, tenant-glossary, glossary-terms and mermaid-lanes so they do not load when reading Glass Box content pages."
-  - session: session_017vrdmQQwC4obwbJS9G5Dyg
-    date: "2026-10-25"
-    severity: nit
-    description: "Reading ledger and tenant.config.ts files loaded five unrelated rules (adr-0002, adr-0008, data-shapes, mdc-when-to-use, tenant-layers) into this ledger-only run."
-    solution: "Narrow those rules' paths so reading the Journal ledger files does not load them."
   - session: session_013zxzeRrC6V68k1QwREpWtf
     date: "2026-11-02"
     severity: minor
@@ -68,3 +58,13 @@ occurrences:
     severity: nit
     description: "Reading ledger YAML and issue docs loaded unrelated rules (tenant-glossary, adr-0022, adr-0029) that needed verdicts."
     solution: "Narrower paths on those rules; see the irrelevant-rules-loaded entry."
+  - session: session_013zxzeRYFqNFGvBn4FsDkTk
+    date: "2026-11-09"
+    severity: nit
+    description: "ADR-0029 and ADR-0030 loaded in a session that touched no ADR or rule, and the log then needed a verdict for each."
+    solution: "Narrow both rules' paths to the files they govern (their current paths unverified this session)."
+  - session: session_013zxzeS36fzX6FB2vAr7yRR
+    date: "2026-11-09"
+    severity: nit
+    description: "Reading Glass Box layer files loaded about ten unrelated rules (mermaid-lanes, mdc-when-to-use, adr-0021, adr-0025, adr-0030) into context."
+    solution: "Narrow the paths of mermaid-lanes.md and mdc-when-to-use.md to files that hold diagrams or content components."

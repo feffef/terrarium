@@ -8,16 +8,6 @@ notes: |-
   2026-10-28 design: another digest Skill line dropped: it already says to read ADR-0010 before the first Digest; the hint is the designed backstop and the late read changed nothing. dropped: a guard would be Human-only.
   2026-10-30 design: change the hint or its rules' paths (issue #2575's candidates) dropped: all Human-only files; 85 of 86 late reads changed nothing, 0 'no' verdicts, so the cost is one call
 occurrences:
-  - session: session_01FDWjoePShpq7fov1iKn4GB
-    date: "2026-10-25"
-    severity: nit
-    description: "Wrote the Digest before reading ADR-0010 in full; the post-write hook prompted the read. The page was already right."
-    solution: "Read the ADR before the Write, as the digest Skill's rule summary implies"
-  - session: session_013Hy2tG56JDVU7649kkyZCb
-    date: "2026-10-25"
-    severity: nit
-    description: "ADR-0027/0029 were read only after the first edit, when the post-edit hook prompted them, not before."
-    solution: "The hook caught it; read the governing ADRs before editing a doc."
   - session: session_014yTcrjFw1Qa6ABqQoGpzYq
     date: "2026-10-26"
     severity: nit
@@ -123,3 +113,13 @@ occurrences:
     severity: minor
     description: "Edited governed Skill, spec and Inventory files before reading ADR-0005, 0015 and 0027; hooks told me to read them afterwards."
     solution: "Read each ADR a rule summary names before the first edit under its paths."
+  - session: session_013zxzeRB6ciegpxcRDfedSF
+    date: "2026-11-09"
+    severity: nit
+    description: "Did not read ADR-0025 before editing app/pages/index.vue; a post-commit hook told me to. The edit was compliant, so no cost."
+    solution: "Load the ADR-0025 rule on read of the file, not only on edit, so it arrives before the edit."
+  - session: session_013zxzeRYFqNFGvBn4FsDkTk
+    date: "2026-11-09"
+    severity: minor
+    description: "Read ADR-0005 and ADR-0027 only after editing the Skill, when the PostToolUse hook prompted; the edit turned out fine."
+    solution: "Read the ADRs a rule names before the first edit of a governed file, or load the rule at read time."

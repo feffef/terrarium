@@ -141,3 +141,8 @@ occurrences:
     severity: nit
     description: "First attempt to start the gate stacked run_in_background with a trailing ampersand and the double-background guard refused it."
     solution: "Pass run_in_background alone; the guard message said so."
+  - session: session_013zxzeSKTBjSfYnUxNHTJw1
+    date: "2026-11-09"
+    severity: nit
+    description: "I gave a background gate run both run_in_background and a trailing nohup ampersand; the double-background guard (issue 1208) refused it, nothing ran, and I resent it once."
+    solution: "CLAUDE.md or the dispatch Skill could show the one correct form: a plain foreground command, run_in_background true, output redirected to a log."

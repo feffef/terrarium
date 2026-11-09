@@ -31,3 +31,8 @@ occurrences:
     severity: minor
     description: "Skipped the curate Read step: I edited after reading only two walkthroughs myself, relying on reviewer reports, and left pagesRead empty until the Standards reviewer flagged it."
     solution: "Read the pages the change edits, links or overlaps before the edit, then fill pagesRead from what I read."
+  - session: session_013zxzeSKTBjSfYnUxNHTJw1
+    date: "2026-11-09"
+    severity: nit
+    description: "The glassbox-curate Skill lists QUALITY.md (Lenses only) as read-first; I never opened it and chose the checks without the Lenses. No page problem traced to the skip."
+    solution: "Mark which read-first files a run may skip, or have orient.ts print the Lenses with the skeleton."

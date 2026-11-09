@@ -9,12 +9,8 @@ notes: |-
   2026-10-20 design: a pr-workflow.md step-4 sentence (do not merge while a question you asked the owner about this PR is unanswered) dropped: one occurrence of that boundary; revisit on a fourth.
   2026-10-23 design: the pr-workflow.md step-4 sentence dropped again: 01DtK8w6 (moved here by the re-cluster, dated 2026-10-12) is a bare Yes to two combined questions, a different boundary (ask a merge as its own question), and no occurrence is new; pr-workflow.md is in the open Prune Trial (PR #2412), revisit when it is judged.
   2026-10-25 design: no change: the five occurrences are five different boundaries (a session type, "link the concepts", "last N days", a bare Yes to two questions, a lens name), nothing new unites them, pr-workflow.md is in the open Prune Trial (PR #2412), and CLAUDE.md "Ask before building" already says to ask; revisit when a fourth shares one boundary.
+  2026-11-09 design: a CLAUDE.md clause (state each option's full effect in the owner's terms) dropped: the two newest occurrences share one boundary (option wording diverges from intent), only two, not the four the 2026-10-25 note set; the owner corrected both in-session; revisit at a third on that boundary.
 occurrences:
-  - session: session_01VW5yg4NTMt1JBnXCcrhjw9
-    date: "2026-10-25"
-    severity: moderate
-    description: "I took 'coherence lens' literally and spent ~270k subagent tokens on it; the user meant concision"
-    solution: "When a user's lens name doesn't match their stated symptom (churn), ask which one first"
   - session: session_013zxzeStBRUtsbccz5kMYNU
     date: "2026-10-31"
     severity: minor
@@ -40,3 +36,13 @@ occurrences:
     severity: minor
     description: "My first guide-pages proposal cut the first paragraph, which the owner calls essential; I had weighted run reports over the design intent"
     solution: "Ask the owner which part of a section serves which decision before proposing cuts to it"
+  - session: session_013zxzeRL5rU5zS3WRCkH3TE
+    date: "2026-11-08"
+    severity: moderate
+    description: "Offered Q2 option 2a as sharpening the overview line only, which narrowed the owner's intent (make the whole read-first section more encouraging); they picked it on my framing and corrected me after the merge."
+    solution: "Before grilling, state the premise in the owner's terms and ask what scope they mean; do not fold a scope limit into an option label."
+  - session: session_013zxzeRB6ciegpxcRDfedSF
+    date: "2026-11-09"
+    severity: minor
+    description: "Took the option \"Drop the intro line\" literally and deleted the wording the user wanted kept; the user said so and I redid it as a fold into the blurb."
+    solution: "When an option removes user-visible text, say where its wording goes before acting, and ask if that is unclear."

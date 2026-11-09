@@ -14,26 +14,6 @@ fixes:
     date: "2026-10-15"
     summary: "Hint now says a late read that clears the call is not a Friction."
 occurrences:
-  - session: session_013QKXoGLaEHEJanyw5TrPqj
-    date: "2026-10-25"
-    severity: nit
-    description: "Ran git rev-parse --is-shallow-repository before reading git-conventions.md; a hook flagged it. The call was harmless."
-    solution: "clear-backlog §1's first command is a git command; it could name git-conventions.md as the read before it."
-  - session: session_01PGQQj6iUaMYCkphVjFEsBP
-    date: "2026-10-25"
-    severity: nit
-    description: "Read git-conventions.md only after a hook prompted it, following my first git command; CLAUDE.md says to read it before any non-status git command."
-    solution: "Treat the Skill's first step (rev-parse, fetch) as the trigger and read the doc first."
-  - session: session_017vrdmQQwC4obwbJS9G5Dyg
-    date: "2026-10-25"
-    severity: nit
-    description: "Ran git rev-parse before reading git-conventions.md; a hook prompted the read after the fact, though CLAUDE.md says to read it before the first non-status git command."
-    solution: "Treat any Skill step that touches git as the trigger and read the doc first."
-  - session: session_01S9UeKa9mCWdPVBjAezCSaL
-    date: "2026-10-25"
-    severity: nit
-    description: "Ran git rev-parse HEAD before reading git-conventions.md, though CLAUDE.md names it before any git command beyond status and diff; hook told me afterwards."
-    solution: "Read the doc in the same step as the first Skill-driven git command."
   - session: session_01C8G2W6ZfQN7WE4UNUi2GzA
     date: "2026-10-26"
     severity: nit
@@ -94,11 +74,6 @@ occurrences:
     severity: nit
     description: "Read git-conventions.md and github-integration.md only after hooks fired post first git and GitHub calls, although CLAUDE.md requires them before."
     solution: "Load both when the audit Skill is invoked so a scheduled run reads them up front."
-  - session: session_011Rbnf9T9YqNztEcWNXsHsF
-    date: "2026-10-25"
-    severity: nit
-    description: "Read triage-labels.md and ADR-0015 only after the label write and the close-session.yml edit, when hooks prompted them."
-    solution: "Read each doc in the same batch as the first matching write."
   - session: session_019g1t4RX7PcR54io7GRdxXK
     date: "2026-10-27"
     severity: nit
@@ -439,3 +414,28 @@ occurrences:
     severity: nit
     description: "Ran git log before reading docs/agents/git-conventions.md; a hook flagged it. Read-only, no harm."
     solution: "Read the doc first, or avoid git log when a file read suffices."
+  - session: session_013zxzeRL5rU5zS3WRCkH3TE
+    date: "2026-11-08"
+    severity: nit
+    description: "Ran git rev-parse for shallow check before reading git-conventions.md, which CLAUDE.md requires before any git command beyond the read-only list; a hook then flagged it."
+    solution: "No impact, as the doc did not change the call. The skill's own shallow-check step could say it is exempt, or the read-only list could include rev-parse."
+  - session: session_013zxzeQaeB8hhL2FFfcQhv7
+    date: "2026-11-08"
+    severity: minor
+    description: "Ran git stash and stash pop to measure old output before reading docs/agents/git-conventions.md, against CLAUDE.md's read-first trigger"
+    solution: "Use git show or a temporary worktree for before/after measurements; the read-first hint fired only after the command"
+  - session: session_013zxzeRwYp54RD4CM5MiabZ
+    date: "2026-11-09"
+    severity: nit
+    description: "Ran git status and the first digest commands before reading git-conventions.md, which CLAUDE.md requires before non-read-only git; a hook flagged it afterwards."
+    solution: "Read git-conventions.md at the start of any run that will commit."
+  - session: session_013zxzeTCierbbAWbnFNcAE5
+    date: "2026-11-09"
+    severity: nit
+    description: "I ran git commands before reading git-conventions.md, and a first background gate call was blocked by the double-background guard."
+    solution: "Read the doc at first git command; pass run_in_background alone without a trailing ampersand."
+  - session: session_013zxzeR9Usddfqi4gQ697DR
+    date: "2026-11-09"
+    severity: nit
+    description: "Ran git log on the Glass Box layer before reading docs/agents/git-conventions.md; the late-read hook flagged it."
+    solution: "None needed: the doc's read-only list does not name log used to trace a fact; a one-line mention would have prompted the read."
