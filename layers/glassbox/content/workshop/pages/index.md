@@ -44,7 +44,7 @@ Subjects and Lessons run prerequisites first, and Lesson prefixes go up in tens 
 
 ### Good next focuses
 
-1. **Re-read the Claude Code, Hooks and Agents & automation Subjects for repeats and density.** They were checked against the docs on 2026-11-09, not de-duplicated. A fresh reader found them heavy with undefined repo terms (:term[Human-only], :term[Friction], :term[Routine]), and found a cross-page loose end: `|| true` is explained as deliberate only in *Hook-added context*, while *Blocking hooks* calls it a bug that lets a guard fail open.
+1. **Re-read the Claude Code and Agents & automation Subjects for repeats and density.** They were checked against the docs on 2026-11-09, not de-duplicated. A fresh reader found them heavy with undefined repo terms (:term[Human-only], :term[Friction], :term[Routine]). The Hooks Subject got this pass on 2026-11-09. Two of its findings are left: *Claude Code hooks* describes landing the session log three times (SessionStart on resume, the first Stop hook, SessionEnd), and *Session transcripts* says what an unreadable file means three times.
 2. **Re-pin the overview.** `index` is pinned to an older commit because only one sentence was checked after the pin moved. Read its Routines and Skills paragraphs against `main`, then move the pin.
 3. **Check the docs again for the pages whose claims the docs left silent** (the list under *Doc findings not acted on*), by reading the tool's source where the docs have no page.
 
@@ -64,7 +64,7 @@ Subjects and Lessons run prerequisites first, and Lesson prefixes go up in tens 
 - *pnpm and the lockfile*: the lead-in says pnpm.io's unversioned pages describe a newer major. The 12.x, 11.x and 10.x docs exist (`pnpm/pnpm.io` `versions.json`), but pnpm.io was blocked, so which major the unversioned pages show is unchecked.
 
 **Doc checks of 2026-11-09, claims the docs were silent on.** Each may be true; a later run should read the tool's source or run it.
-- *Subagents* (`agents/10.subagents`): "only a subagent's payload carries an agent id". The hooks docs say `agent_type` also appears under `--agent` and say nothing on whether `agent_id` ever appears outside a subagent. *Claude Code hooks* says the same of `agent_type` alone.
+- *Subagents* (`agents/10.subagents`): "only a subagent's payload carries an agent id". The hooks docs say `agent_type` also appears under `--agent` and say nothing on whether `agent_id` ever appears outside a subagent (they also name in-process teammates). *Claude Code hooks* now claims only what the docs say.
 - *Nitro server engine* (`nuxt-vue/60.nitro`): the dev cache path `.nuxt/cache/nitro/routes` (the Nitro docs say a temporary directory), `cache: false`, a payload for a plain `cache` rule, and "Nuxt 4 runs Nitro v2".
 - *Cloud sessions* (`agents/30.cloud-sessions`): that the proxy refuses `.github/workflows/` pushes and repository-settings writes.
 - *Scheduled tasks* (`agents/40.scheduled-tasks`): that a Routine's prompt arrives as the first turn like a typed command, and that a `disable-model-invocation` Skill runs from a Routine prompt. The Skills docs say a session-scoped scheduled task that fires such a Skill is stopped; a cloud Routine is a different case.

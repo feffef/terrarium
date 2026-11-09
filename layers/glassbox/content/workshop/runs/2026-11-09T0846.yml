@@ -1,5 +1,13 @@
 session: session_013zxzeRSMtPAREKXCce9GT6
 mode: autonomous
 focus: "Hooks Subject: remove repeats and loose ends the memory page's top lead named (the `|| true` wiring, a claim about subagent payloads that the hooks docs don't make). Chosen because no open PR touches the guide, the Scout found no new topic to document, and the lead came from a fresh reader's finding the run before."
-changes: []
-pagesRead: []
+changes:
+  - hooks/10.hooks | New paragraph after the Stop excerpt says what the trailing `|| true` does on the Stop, log-landing SessionStart and hint hooks (any exit becomes 0, so no block and no hook-error notice) and that a Stop hook still blocks by printing a decision; the subagent bullet now says agent_id and agent_type identify the subagent and agent_type also appears under --agent | the page showed `|| true` with no explanation, and 'a main session's lacks, and that pair is the only signal' is not in the hooks docs (settings.json:196-228; harness-tag-stop.ts:42; hooks docs, common input fields)
+  - hooks/20.blocking-hooks | Gave defer and ask a clause each in the decision order, said what `|| true` does at its first mention, and cut the second explanation | a fresh reader could not tell what defer and ask meant, and the page said the same thing about `|| true` twice (hooks docs, PreToolUse decisions)
+  - hooks/30.hook-added-context | The Why bullet Fail open keeps the reason and its cost and points to In Terrarium for the mechanics | the bullet repeated the In Terrarium paragraph almost word for word. Wording only: kept revision and publishedAt
+  - hooks/40.session-transcripts | No change | fresh reader found only link-stripping noise; its agent_id wording claims nothing about a main session
+pagesRead:
+  - hooks/10.hooks
+  - hooks/20.blocking-hooks
+  - hooks/30.hook-added-context
+  - hooks/40.session-transcripts
