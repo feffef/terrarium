@@ -74,12 +74,12 @@ changes:
     start, not 'the one file ... first' | claude-md.md no longer says 'one file'
     and the memory docs list other launch-time files. Kept the old pin: only
     this sentence was checked"
-  - "nuxt-vue/10.layers, nuxt-vue/20.auto-imports, nuxt-vue/30.file-routing,
-    nuxt-vue/40.virtual-modules, nuxt-vue/60.nitro, verification/30.content-validation
-    | No change | checked against the docs: no claim contradicted; the docs are
-    silent on several (see the memory page). Content validation's Nuxt Content
-    claims were confirmed in the installed @nuxt/content source. file-routing's
-    empty catch-all claim was confirmed by running vue-router 5.4.0"
+  - "nuxt-vue/10.layers | No change | checked against the Nuxt docs: no claim contradicted"
+  - "nuxt-vue/20.auto-imports | No change | checked against the Nuxt docs: none contradicted; the docs are silent on name clashes, the scan option and local-name shadowing"
+  - "nuxt-vue/30.file-routing | No change | the empty catch-all claim was confirmed by running vue-router 5.4.0; the docs are silent on how pages from layers are ranked"
+  - "nuxt-vue/40.virtual-modules | No change | checked against the Nuxt docs: none contradicted; the docs are silent on nuxt/kit"
+  - "nuxt-vue/60.nitro | No change | checked against the Nitro and Nuxt docs: none contradicted; the docs are silent on the dev cache path and some options (memory page)"
+  - "verification/30.content-validation | No change | every Nuxt Content claim confirmed in the installed @nuxt/content source"
 pagesRead:
   - agents/10.subagents
   - agents/20.workflow-scripts
@@ -111,7 +111,13 @@ pagesRead:
   - nuxt-vue/60.nitro
   - nuxt-vue/70.data-fetching
   - skill-pack/10.skill-packs
+  - terrarium-practice/40.session-logs
+  - terrarium-practice/60.protected-paths
+  - terrarium-practice/80.self-improvement-loop
+  - verification/10.gate
   - verification/20.type-checking
   - verification/30.content-validation
   - verification/50.linting
   - verification/80.headless-browser-checks
+  - walkthroughs/asking-for-a-change
+  - walkthroughs/session-log-lands-on-main

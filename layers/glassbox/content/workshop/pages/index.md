@@ -37,7 +37,7 @@ Subjects and Lessons run prerequisites first, and Lesson prefixes go up in tens 
 
 ### Good next focuses
 
-1. **Re-read the Claude Code, Hooks and Agents & automation Subjects for repeats and density.** They were checked against the docs on 2026-11-09, not de-duplicated. A fresh reader found them heavy with undefined repo terms (*Human-only*, *Friction*, *Routine*), and found two cross-page loose ends: `|| true` is explained as deliberate only in *Hook-added context*, while *Blocking hooks* calls it a bug that lets a guard fail open; and a reader cannot tell from *Claude Code skills* how a Routine starts a Skill whose model invocation is off.
+1. **Re-read the Claude Code, Hooks and Agents & automation Subjects for repeats and density.** They were checked against the docs on 2026-11-09, not de-duplicated. A fresh reader found them heavy with undefined repo terms (*Human-only*, *Friction*, *Routine*), and found a cross-page loose end: `|| true` is explained as deliberate only in *Hook-added context*, while *Blocking hooks* calls it a bug that lets a guard fail open.
 2. **Re-pin the overview.** `index` is pinned to an older commit because only one sentence was checked after the pin moved. Read its Routines and Skills paragraphs against `main`, then move the pin.
 3. **Check the docs again for the pages whose claims the docs left silent** (the list under *Doc findings not acted on*), by reading the tool's source where the docs have no page.
 
@@ -66,6 +66,7 @@ Subjects and Lessons run prerequisites first, and Lesson prefixes go up in tens 
 - *Linting* (`verification/50.linting`): the sentence on the rules `@nuxt/eslint` turns on and the absence of formatting rules.
 - *Content validation* (`verification/30.content-validation`): the `?id=safeparse` anchor on v3.zod.dev, which loads only in a browser.
 - *Hooks* (`hooks/10.hooks`): the `network-start.ts` SessionStart hook is not mentioned.
+- *Asking an agent for a change* (`walkthroughs/asking-for-a-change`): stop 1 says a cloud session and a local one work the same way, and stop 2 has the `SessionStart` hook install packages. *Claude Code hooks* now says a session on several repositories, or a project thread, runs none of the committed hooks. Both hold for Terrarium's usual one-repository session; the Walkthrough could say so. *A session log lands on main* says "the `Stop` hook" in the singular, though four are wired.
 
 **Missing Lessons.** The browser quirks and CSS traps listed in `docs/agents/verifying-ui-changes.md` are only partly taught, in *Headless browser checks* (`verification/80.headless-browser-checks`).
 
