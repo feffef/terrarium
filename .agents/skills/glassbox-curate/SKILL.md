@@ -72,6 +72,14 @@ keeps them so).
   your turn, and orient again once it merges or closes. An autonomous run stops
   without a PR once that PR has been open 20 hours; an interactive run keeps
   waiting.
+- **Scout.** Right after orienting, start a background sonnet subagent and
+  never wait for it: choosing the Subject and focus goes on without it. It runs
+  `orient.ts` itself, to know what the guide already teaches where, then reads
+  every commit to `origin/main` since the last run entry's time (all paths,
+  `--no-renames`) and returns the changes worth a Lesson or a rewrite that no
+  page covers yet, each with its commits and the nearest existing page. Its
+  findings are memory-page leads: fold them in at Land, or sooner if they
+  change your choice. A lead already on the memory page isn't repeated.
 - **Subject.** From the orientation, pick the Subject to work in (the
   Walkthroughs count as one): from memory leads, the owner's review notes,
   page-check warnings, problems the orientation shows, or gaps; when nothing
@@ -137,6 +145,8 @@ keeps them so).
   both rewrite the memory page: the later one keeps both runs' leads. Rewrite
   the memory page, complete the run entry, and open one PR
   (`docs/agents/pr-workflow.md`), self-merged unless the Remit says it waits.
+  Fold the Scout's findings into the memory page's open ideas first; if it
+  hasn't returned, wait for it now.
   Its body gives the run's cost, read just before you write the body;
   "unreported" when it is still missing. Give `code-review`
   the Lesson contract, EVERY-PAGE.md, DECISIONS.md and the glassbox-content
