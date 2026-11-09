@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQ93oSKkX5CBEcFiXU
 startedAt: 2026-11-09T15:23:30Z
-endedAt: 2026-11-09T15:32:39Z
+endedAt: 2026-11-09T15:36:02Z
 kind: delegated
 goal: Journal weekly Routine cost table shows only the newest four weeks
-status: in-review
-outcome: "PR #3007 drops the partial first week column; the table now always shows four seven-day windows"
-summary: "Human-instructed: the owner sent a phone screenshot of the Journal's Routine costs page and asked to hide the incomplete first week column and always show 4x7 days. Cause: routineWeekTable kept every window starting at or after the oldest run of any Routine; visitor-loop reached back to 10-04 while pruning (RUNS_KEPT) had cut the other daily Routines' runs before about 10-10, which produced a partial 10-12 column. Fix: a fixed four newest windows, with prose and unit tests updated. Checked against the real data (values identical to the old last four columns) and with a 390px production screenshot. The Spec reviewer noted that completeness now depends on daily cadence and RUNS_KEPT; that was kept as-is because the owner asked for \"always 4\", and it is noted in the PR. I did not ask clarifying questions first despite the user's ask-first preference, because the request was specific. The PR was agent-initiated per ADR-0003; merge-pr.ts was waiting on CI at the time of this log."
+status: completed
+outcome: "Merged PR #3007: the Journal weekly Routine table drops the partial first week and always shows four seven-day windows"
+summary: "Human-instructed: the owner sent a phone screenshot of the Journal's Routine costs page and asked to hide the incomplete first week column and always show 4x7 days. Cause: routineWeekTable kept every window starting at or after the oldest run of any Routine; visitor-loop reached back to 10-04 while pruning (RUNS_KEPT) had cut the other daily Routines' runs before about 10-10, which produced a partial 10-12 column. Fix: a fixed four newest windows, with prose and unit tests updated. Checked against the real data (values identical to the old last four columns) and with a 390px production screenshot. The Spec reviewer noted that completeness now depends on daily cadence and RUNS_KEPT; that was kept as-is because the owner asked for \"always 4\", and it is noted in the PR. I did not ask clarifying questions first despite the user's ask-first preference, because the request was specific. The PR was agent-initiated per ADR-0003; CI went green and merge-pr.ts merged it."
 prs:
   - "3007"
 docsRead:
@@ -38,12 +38,12 @@ frictions:
   - description: The first test fix guessed wrong which window a boundary run fell in, so one extra vitest round was needed.
     solution: Compute floor((end-t)/7d) by hand before editing an expected array.
     severity: nit
-durationSec: 549
+durationSec: 752
 models:
-  claude-opus-5-5: 70
+  claude-opus-5-5: 80
 toolCounts:
   Grep: 1
-  Bash: 26
+  Bash: 28
   Skill: 4
   Agent: 2
   Read: 1
@@ -52,6 +52,8 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   mcp__github__add_issue_comment: 1
+  ReadNotifications: 2
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/app/utils/routineRuns.ts
   - layers/journal/tests/unit/routineRuns.spec.ts
@@ -134,13 +136,13 @@ subagents:
     durationSec: 32
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 14.2
+    tokenShare: 12.2
   - type: general-purpose
     task: Spec review of diff
     durationSec: 55
     toolCalls: 6
     modelCalls: 6
-    tokenShare: 16.6
+    tokenShare: 14.3
 gitBranch: ccr-de116a74-iww5kj
 entrypoint: remote_mobile
 cliVersion: 2.1.319
