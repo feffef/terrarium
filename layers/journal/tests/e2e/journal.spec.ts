@@ -461,6 +461,30 @@ describe('journal Tenant', async () => {
     if (total > JOURNAL_SESSIONS_LOADED) expect(html).toContain(`newest ${shown} of ${total} session logs`)
   })
 
+  it('puts the KPI tiles and the Frictions chart first on current, in the agreed order', async () => {
+    const html = await $fetch<string>('/t/journal/current')
+    const marks = ['class="masthead', 'class="tiles-headline', 'class="tiles"', 'id="trend-h"', 'class="onramp"',
+      'class="intro-lead', 'class="intro ', 'id="digests"', 'id="session-log"']
+    const at = marks.map((m) => html.indexOf(m))
+    expect(at.every((i) => i >= 0), JSON.stringify(Object.fromEntries(marks.map((m, i) => [m, at[i]])))).toBe(true)
+    expect(at).toEqual([...at].sort((a, b) => a - b))
+  })
+
+  it('makes each KPI tile one link to the page behind its number', async () => {
+    const html = await $fetch<string>('/t/journal/current')
+    const tiles = /<section class="tiles"[^>]*>([\s\S]*?)<\/section>/.exec(html)![1]!
+    const hrefs = [...tiles.matchAll(/<a\b[^>]*\bhref="([^"]*)"/g)].map((m) => m[1]!.replace('/t/journal/current#', '#'))
+    expect(hrefs).toEqual(['#session-log', ...['frictions', 'routines', 'ideas', 'skills'].map((p) => `/t/journal/current/${p}`)])
+    expect(html).not.toContain('PRs referenced')
+  })
+
+  it('shows no KPI tiles or Frictions chart on archived', async () => {
+    const html = await $fetch<string>('/t/journal/archived')
+    expect(html).not.toContain('class="tiles')
+    expect(html).not.toContain('Frictions per session, by day')
+    expect(html).toContain('Recent activity')
+  })
+
   // Both feeds are one page-wide accordion: opening a session card collapses an
   // already-open digest (and vice versa), so at most one item is ever expanded.
   it('keeps a single item open across both feeds (accordion)', async () => {

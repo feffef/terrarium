@@ -36,8 +36,7 @@ import {
   ownSkills,
   installedSkills,
   skillUseCounts,
-  prRefs,
-  prRefsParts,
+  journalKpiTiles,
   prUrl,
   sessionShortId,
   skillGroups,
@@ -160,36 +159,67 @@ describe('kindCounts', () => {
   })
 })
 
-describe('prRefs', () => {
-  it('strips a leading #, de-dupes, and sorts numerically', () => {
-    const sessions = [session({ prs: ['#12', '12'] }), session({ prs: ['3'] })]
-    expect(prRefs(sessions)).toEqual(['3', '12'])
+describe('journalKpiTiles', () => {
+  const run = (startedAt: string, costUsd: number) => ({
+    session: 's', startedAt, durationSeconds: 1, inputTokens: 0, outputTokens: 0, cacheReadTokens: 0, cacheWriteTokens: 0, costUsd,
+  })
+  const tiles = (over: Partial<Parameters<typeof journalKpiTiles>[0]> = {}) =>
+    journalKpiTiles({ space: 'current', sessions: [], skills: [], routines: [], ...over })
+  const tile = (key: string, over: Partial<Parameters<typeof journalKpiTiles>[0]> = {}) =>
+    tiles(over).find((t) => t.key === key)!
+
+  it('AC-01: current shows five tiles in order, each with its label and link', () => {
+    expect(tiles().map(({ key, label, to }) => ({ key, label, to }))).toEqual([
+      { key: 'sessions', label: 'Sessions logged', to: '#session-log' },
+      { key: 'frictions', label: 'Frictions surfaced', to: '/t/journal/current/frictions' },
+      { key: 'routines', label: 'Routine spend', to: '/t/journal/current/routines' },
+      { key: 'ideas', label: 'Ideas noted', to: '/t/journal/current/ideas' },
+      { key: 'skills', label: 'Platform Skills', to: '/t/journal/current/skills' },
+    ])
+    expect(tiles().map((t) => t.value)).toEqual([0, 0, '$0.00', 0, 0])
   })
 
-  it('sorts numerically, not lexically', () => {
-    const sessions = [session({ prs: ['#2', '#10', '#1'] })]
-    expect(prRefs(sessions)).toEqual(['1', '2', '10'])
-  })
-})
-
-describe('prRefsParts', () => {
-  it('is empty with no overflow when no PRs are referenced', () => {
-    expect(prRefsParts([])).toEqual({ shown: [], rest: 0 })
+  it('AC-02: any other Space shows no tiles', () => {
+    expect(tiles({ space: 'archived', sessions: [session()] })).toEqual([])
+    expect(tiles({ space: 'other' })).toEqual([])
   })
 
-  it('shows all PRs newest-first when they fit', () => {
-    expect(prRefsParts(['3', '12'])).toEqual({ shown: ['12', '3'], rest: 0 })
-    expect(prRefsParts(['1', '2', '10'])).toEqual({ shown: ['10', '2', '1'], rest: 0 })
+  it('AC-03: Sessions logged counts sessions and names each non-zero kind', () => {
+    const sessions = [session({ kind: 'autonomous' }), session(), session()]
+    expect(tile('sessions', { sessions })).toMatchObject({ value: 3, sub: '2 interactive · 1 autonomous' })
+    expect(tile('sessions').sub).toBeUndefined()
   })
 
-  it('folds the overflow into a rest count', () => {
-    expect(prRefsParts(['1', '2', '3', '4', '5'])).toEqual({ shown: ['5', '4', '3'], rest: 2 })
+  it('AC-04: Frictions surfaced counts and breaks down by severity', () => {
+    const sessions = [session({ frictions: [friction('blocker'), friction('major'), friction('minor')] }),
+      session({ frictions: [friction('major'), friction('nit'), friction('moderate')] })]
+    expect(tile('frictions', { sessions })).toMatchObject({ value: 6, sub: '1 blocker · 2 majors · 3 lesser' })
+    expect(tile('frictions')).toMatchObject({ value: 0, sub: '0 blockers · 0 majors', to: '/t/journal/current/frictions' })
   })
 
-  it('does not mutate the input list', () => {
-    const refs = ['1', '2', '3', '4']
-    prRefsParts(refs)
-    expect(refs).toEqual(['1', '2', '3', '4'])
+  it('AC-05: Routine spend sums runs started on or after the oldest session date (UTC)', () => {
+    const sessions = [session({ endedAt: '2026-11-08T10:00:00Z' }), session({ endedAt: '2026-10-10T23:00:00Z' })]
+    const routines = [
+      { name: 'a', runs: [run('2026-10-09T23:59:59Z', 4), run('2026-10-10T00:00:00Z', 5.9716483)] },
+      { name: 'b', runs: [run('2026-11-08T04:00:00Z', 1.5)] },
+      { name: 'c', runs: [] },
+    ]
+    expect(tile('routines', { sessions, routines })).toMatchObject({ value: '$7.47', sub: '2 runs' })
+    expect(tile('routines', { sessions, routines: [{ name: 'a', runs: [run('2026-10-11T00:00:00Z', 150.4)] }] }))
+      .toMatchObject({ value: '$150', sub: '1 run' })
+    expect(tile('routines', { routines })).toMatchObject({ value: '$0.00', sub: '0 runs' })
+  })
+
+  it('AC-06: Ideas noted counts ideas, with learnings as sessionNotes counts them', () => {
+    const sessions = [session({ ideas: ['i1', 'i2'], learnings: ['l1'] }), session({ external: true, learnings: ['l2'] })]
+    expect(tile('ideas', { sessions })).toMatchObject({ value: 2, sub: '1 learning' })
+    expect(tile('ideas').sub).toBe('0 learnings')
+  })
+
+  it('AC-07: Platform Skills counts own Skills, with installed ones as a sub-line', () => {
+    const skills = [skill(), skill({ name: 'b' }), skill({ name: 'c', category: 'general-engineering' })]
+    expect(tile('skills', { skills })).toMatchObject({ value: 2, sub: '+1 installed' })
+    expect(tile('skills', { skills: [skill()] }).sub).toBeUndefined()
   })
 })
 

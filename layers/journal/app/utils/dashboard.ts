@@ -21,7 +21,8 @@
 // export below, and truly generic helpers stay module-private. This module,
 // for its part, never relies on auto-import itself: it stays dependency-free
 // and explicit.
-import type { Friction, Importance, SessionCardView, SessionDoc, Severity, SkillDoc, NoteItem, Subagent } from '../types/journal'
+import type { Friction, Importance, RoutineDoc, SessionCardView, SessionDoc, Severity, SkillDoc, NoteItem, Subagent } from '../types/journal'
+import { formatRoutineMetric } from './routineRuns'
 import { REPO_URL } from '../../../../app/utils/repo'
 import { sessionUrl } from '#shared/session-url'
 
@@ -113,33 +114,12 @@ export function kindCounts(sessions: SessionDoc[]): { interactive: number; deleg
   return counts
 }
 
-// De-duplicated, numerically sorted PR references (strips a leading `#`).
-// `prs` carries a manifest `.default([])` (tenant.config.ts), so the generated
-// collection type marks it optional even though it is always populated by the
-// time content is queried — guard it structurally rather than assume that.
-export function prRefs(sessions: SessionDoc[]): string[] {
-  const seen = new Set<string>()
-  for (const s of sessions) for (const pr of s.prs ?? []) seen.add(pr.replace(/^#/, ''))
-  return [...seen].sort((a, b) => Number(a) - Number(b))
-}
-
 export function prUrl(pr: string): string {
   return `${REPO_URL}/pull/${pr.replace(/^#/, '')}`
 }
 
-// Compact sub-line for the "PRs referenced" stat tile. Enumerating every PR
-// stopped fitting once the list grew past a handful, so show only the newest
-// few (highest-numbered first) and fold the rest into a "+N earlier" tail.
-// Returns structure, not a string, so the tile can link each shown PR.
+// The session card's PR chips show at most this many.
 export const PR_SUB_MAX = 3
-
-export function prRefsParts(refs: string[]): { shown: string[]; rest: number } {
-  const newestFirst = refs.slice().reverse()
-  return {
-    shown: newestFirst.slice(0, PR_SUB_MAX),
-    rest: Math.max(0, newestFirst.length - PR_SUB_MAX),
-  }
-}
 
 // ── Skill Inventory ──────────────────────────────────────
 // OWN Skills are the platform-operation ones the Platform authors and evolves;
@@ -418,4 +398,57 @@ export function frictionsByDay(
     .sort(([a], [b]) => a.localeCompare(b))
     .slice(-max)
     .map(([date, d]) => ({ date, ...d, perSession: Math.round((d.frictions / d.sessions) * 10) / 10 }))
+}
+
+// ── KPI tiles ────────────────────────────────────────────
+// Only `current` has them: archived detail pages mostly hold nothing. Every
+// count but Platform Skills is scoped to the sessions `current` holds.
+export interface JournalKpiTile {
+  key: 'sessions' | 'frictions' | 'routines' | 'ideas' | 'skills'
+  label: string
+  value: number | string
+  sub: string | undefined
+  to: string
+}
+
+export function journalKpiTiles({ space, sessions, skills, routines }: {
+  space: string
+  sessions: SessionDoc[]
+  skills: SkillDoc[]
+  routines: RoutineDoc[]
+}): JournalKpiTile[] {
+  if (space !== 'current') return []
+  const base = `/t/journal/${space}`
+  const kinds = Object.entries(kindCounts(sessions)).filter(([, n]) => n).map(([k, n]) => `${n} ${k}`)
+  const sev = frictionTotals(sessions)
+  const lesser = frictionOtherCount(sev)
+  const since = sessions.map((s) => s.endedAt.slice(0, 10)).sort()[0]
+  const runs = since ? routines.flatMap((r) => r.runs).filter((r) => r.startedAt.slice(0, 10) >= since) : []
+  const notes = sessionNotes(sessions)
+  const installed = installedSkillCount(skills)
+  return [
+    { key: 'sessions', label: 'Sessions logged', value: sessions.length, sub: kinds.join(' · ') || undefined, to: '#session-log' },
+    {
+      key: 'frictions',
+      label: 'Frictions surfaced',
+      value: frictionCount(sessions),
+      sub: `${countOf(sev.blocker, 'blocker')} · ${countOf(sev.major, 'major')}${lesser ? ` · ${lesser} lesser` : ''}`,
+      to: `${base}/frictions`,
+    },
+    {
+      key: 'routines',
+      label: 'Routine spend',
+      value: formatRoutineMetric('costUsd', runs.reduce((sum, r) => sum + r.costUsd, 0)),
+      sub: countOf(runs.length, 'run'),
+      to: `${base}/routines`,
+    },
+    { key: 'ideas', label: 'Ideas noted', value: notes.ideas.length, sub: countOf(notes.learnings.length, 'learning'), to: `${base}/ideas` },
+    {
+      key: 'skills',
+      label: 'Platform Skills',
+      value: ownSkills(skills).length,
+      sub: installed ? `+${installed} installed` : undefined,
+      to: `${base}/skills`,
+    },
+  ]
 }

@@ -1,23 +1,26 @@
 <script setup lang="ts">
 // One KPI readout in the Space's state strip. Presentational — the page computes
 // the number and its breakdown from this Space's collections. The breakdown is
-// either the `sub` string or, when it needs markup (e.g. links), the #sub slot.
+// either the `sub` string or, when it needs markup, the #sub slot. With `to`,
+// the whole tile is one link, so the slot must hold no link of its own.
 defineProps<{
   label: string
   value: number | string
   sub?: string
   gloss?: string
+  to?: string
 }>()
 const slots = useSlots()
+const NuxtLink = resolveComponent('NuxtLink')
 </script>
 
 <template>
-  <div class="tile">
+  <component :is="to ? NuxtLink : 'div'" :to="to" class="tile" :class="{ link: to }">
     <div class="label">{{ label }}</div>
     <div v-if="gloss" class="gloss">{{ gloss }}</div>
     <div class="num">{{ value }}</div>
     <div v-if="sub || slots.sub" class="sub"><slot name="sub">{{ sub }}</slot></div>
-  </div>
+  </component>
 </template>
 
 <style scoped>
@@ -30,6 +33,14 @@ const slots = useSlots()
   overflow: hidden;
   box-shadow: var(--jd-shadow);
 }
+.link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+.link:hover { border-color: var(--jd-accent); transform: translateY(-2px); }
+.link:focus-visible { outline: 2px solid var(--jd-accent); outline-offset: 3px; }
 .tile::before {
   content: '';
   position: absolute;

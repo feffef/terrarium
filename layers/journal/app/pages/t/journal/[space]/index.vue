@@ -15,7 +15,7 @@
 // distinct from the exports, or the bindings merge and vue-tsc rejects the
 // ambiguity (see dashboard.ts's header comment).
 import { routingMap } from '#routing'
-import type { SessionDoc, SkillDoc } from '../../../../types/journal'
+import type { RoutineDoc, SessionDoc, SkillDoc } from '../../../../types/journal'
 
 const route = useRoute()
 const tenant = 'journal'
@@ -37,8 +37,8 @@ const { data } = await useAsyncData(route.path, async () => {
   const sessions = await queryCollection(collections.sessions).order('endedAt', 'DESC').limit(JOURNAL_SESSIONS_LOADED).all()
   const sessionTotal = await queryCollection(collections.sessions).count()
   const ledgerSize = await queryCollection(collections.frictions).count()
-  const routineCount = await queryCollection(collections.routines).count()
-  return { pages, skills, sessions, sessionTotal, ledgerSize, routineCount }
+  const routines = await queryCollection(collections.routines).select('name', 'runs').all()
+  return { pages, skills, sessions, sessionTotal, ledgerSize, routines }
 })
 
 // `.all()` returns the full page Documents with their parsed body, so the root's
@@ -74,7 +74,7 @@ const onrampDoors = computed(() => [
         to: `/t/${tenant}/${space}/frictions`,
       }]
     : []),
-  ...(data.value?.routineCount
+  ...(routines.value.length
     ? [{
         key: 'routines',
         title: 'What the scheduled runs cost',
@@ -99,6 +99,7 @@ const { isOpen, toggle } = useAccordionDeepLink(() => route.path)
 // here instead of being silently erased by an `as unknown as` cast.
 const skills = computed<SkillDoc[]>(() => data.value?.skills ?? [])
 const sessions = computed<SessionDoc[]>(() => data.value?.sessions ?? [])
+const routines = computed<RoutineDoc[]>(() => data.value?.routines ?? [])
 const sessionTotal = computed(() => data.value?.sessionTotal ?? 0)
 const sessionsCappedLabel = computed(() =>
   sessionTotal.value > sessions.value.length ? `newest ${sessions.value.length} of ${sessionTotal.value}` : '',
@@ -143,36 +144,25 @@ const sessionView = computed(() => {
 // Same `v-show` reasoning: on a phone seven open-ended digest rows pushed the session log off-screen.
 const DIGESTS_VISIBLE = 3
 const showAllDigests = ref(false)
-const frictionSeverityTotals = computed(() => frictionTotals(sessions.value))
-const totalFrictions = computed(() => frictionCount(sessions.value))
-const otherFrictions = computed(() => frictionOtherCount(frictionSeverityTotals.value))
 const sessionKindCounts = computed(() => kindCounts(sessions.value))
-const referencedPrs = computed(() => prRefs(sessions.value))
-const referencedPrParts = computed(() => prRefsParts(referencedPrs.value))
 
 const dailyFrictions = computed(() => frictionsByDay(sessions.value))
 const dailyMax = computed(() => Math.max(1, ...dailyFrictions.value.map((d) => d.perSession)))
 
-const notes = computed(() => sessionNotes(sessions.value))
-
-const platformSkills = computed(() => ownSkills(skills.value))
-const installedSkillTotal = computed(() => installedSkillCount(skills.value))
-
-// The stat tiles below only ever read THIS Space's own collections (see
-// the resolver comment atop this file), and archiving retains just the newest
-// RETAIN_DATES=7 dates on `current` (.agents/skills/digest/scripts/archive-journal-content.ts) —
-// so the tiles' scope tracks which Space is showing, not an explicit filter.
-// Zero kinds are dropped so the breakdown fits a fifth of the strip.
-const kindSubtext = computed(() =>
-  Object.entries(sessionKindCounts.value)
-    .filter(([, n]) => n)
-    .map(([k, n]) => `${n} ${k}`)
-    .join(' · '),
+const kpiTiles = computed(() =>
+  journalKpiTiles({ space, sessions: sessions.value, skills: skills.value, routines: routines.value }),
 )
-const tilesHeadline = computed(() => {
-  if (sessionsCappedLabel.value) return `Counts from the ${sessionsCappedLabel.value} logs`
-  return space === 'archived' ? 'Counts from older logs, before the last week' : 'Counts from the last week of logs; Skills are as of today'
-})
+const KPI_GLOSS: Record<string, string> = {
+  sessions: 'One agent session, logged. Interactive: a human kept prompting; delegated: one prompt; autonomous: none.',
+  frictions: 'Problems an agent hit and wrote down, every one, however small',
+  routines: 'What the scheduled Routine runs cost',
+  ideas: 'Proposals for the future, noted but not planned',
+  skills: 'Reusable playbooks the agents follow',
+}
+const kpiFrictionTotals = computed(() => frictionTotals(sessions.value))
+const tilesHeadline = computed(() =>
+  sessionsCappedLabel.value ? `Counts from the ${sessionsCappedLabel.value} logs` : 'Counts from the last week of logs; Skills are as of today',
+)
 
 const title = computed(() => rootDoc.value?.title ?? `The Journal — ${space}`)
 const lede = computed(() => rootDoc.value?.description ?? `The ${space} Space of the journal Tenant.`)
@@ -214,10 +204,43 @@ useSeoMeta({
       </div>
     </header>
 
-    <p v-if="rootDoc?.lead" class="intro-lead">{{ rootDoc.lead }}</p>
+    <template v-if="kpiTiles.length">
+      <p class="tiles-headline">{{ tilesHeadline }}</p>
+      <section class="tiles" aria-label="State of this Space">
+        <JournalStatTile
+          v-for="t in kpiTiles"
+          :key="t.key"
+          :label="t.label"
+          :gloss="KPI_GLOSS[t.key]"
+          :value="t.value"
+          :sub="t.sub"
+          :to="t.to"
+        >
+          <template v-if="t.key === 'frictions'" #sub>
+            <JournalFrictionStrata :counts="kpiFrictionTotals" :total="Number(t.value)">{{ t.sub }}</JournalFrictionStrata>
+          </template>
+        </JournalStatTile>
+      </section>
+    </template>
 
-    <!-- Newcomer on-ramp: after the short lead that gives it context, before the
-         longer intro and the data-heavy feed. -->
+    <section v-if="kpiTiles.length && dailyFrictions.length > 1" class="panel trend" aria-labelledby="trend-h">
+      <div class="section-head">
+        <h2 id="trend-h">Frictions per session, by day</h2>
+        <span class="count">self-reported, UTC days</span>
+      </div>
+      <ol class="trend-bars" aria-label="Frictions per session, by day">
+        <li v-for="d in dailyFrictions" :key="d.date">
+          <span class="trend-val">{{ d.perSession }}<span class="trend-raw"> per session on {{ d.date }}: {{ countOf(d.frictions, 'friction') }} in {{ countOf(d.sessions, 'session') }}</span></span>
+          <span class="trend-bar"><span :style="{ height: `${Math.max(4, (d.perSession / dailyMax) * 100)}%` }" /></span>
+          <span class="trend-day">{{ d.date.slice(5) }}</span>
+        </li>
+      </ol>
+      <p class="panel-intro">
+        Frictions agents wrote down, divided by that day's sessions. Logging more honestly raises it, so read it as a
+        rough pulse, not a score.
+      </p>
+    </section>
+
     <section v-if="onrampCards.length || onrampDoors.length" class="onramp" aria-label="Start here">
       <p v-if="onrampCards.length" class="onramp-lead">New here? Start with <NuxtLink to="/t/glassbox/guide">how Terrarium works</NuxtLink>, the overview that opens the Glass Box guide. Then the short version:</p>
       <div v-if="onrampCards.length" class="onramp-cards">
@@ -234,6 +257,8 @@ useSeoMeta({
         </li>
       </ul>
     </section>
+
+    <p v-if="rootDoc?.lead" class="intro-lead">{{ rootDoc.lead }}</p>
 
     <!-- Free-form editorial intro — the root page's Markdown body -->
     <section v-if="rootDoc" class="intro jd-prose">
@@ -291,68 +316,6 @@ useSeoMeta({
       </button>
     </section>
 
-    <p class="tiles-headline">{{ tilesHeadline }}</p>
-    <section class="tiles" :class="{ 'tiles-4': space === 'archived' }" aria-label="State of this Space">
-      <JournalStatTile
-        label="Sessions logged" gloss="One agent session, logged. Interactive: a human kept prompting; delegated: one prompt; autonomous: none."
-        :value="sessions.length"
-        :sub="kindSubtext"
-      />
-      <JournalStatTile v-if="space !== 'archived'" label="Platform Skills" gloss="Reusable playbooks the agents follow" :value="platformSkills.length">
-        <template #sub>
-          <template v-if="installedSkillTotal">+{{ installedSkillTotal }} installed · </template>
-          <NuxtLink class="pr-link" :to="{ name: 'journal-skills', params: { space } }">browse →</NuxtLink>
-        </template>
-      </JournalStatTile>
-      <JournalStatTile label="Ideas noted" gloss="Proposals for the future, noted but not planned" :value="notes.ideas.length">
-        <template #sub>
-          {{ notes.learnings.length }} learning{{ notes.learnings.length === 1 ? '' : 's' }} ·
-          <NuxtLink class="pr-link" :to="{ name: 'journal-ideas', params: { space } }">browse →</NuxtLink>
-        </template>
-      </JournalStatTile>
-      <JournalStatTile label="Frictions surfaced" gloss="Problems an agent hit and wrote down, every one, however small" :value="totalFrictions">
-        <template #sub>
-          <JournalFrictionStrata :counts="frictionSeverityTotals" :total="totalFrictions">
-            {{ frictionSeverityTotals.blocker }} blocker{{ frictionSeverityTotals.blocker === 1 ? '' : 's' }} ·
-            {{ frictionSeverityTotals.major }} major{{ frictionSeverityTotals.major === 1 ? '' : 's' }}
-            <template v-if="otherFrictions"> · {{ otherFrictions }} lesser</template>
-            <template v-if="data?.ledgerSize"> · <NuxtLink class="pr-link" :to="{ name: 'journal-frictions', params: { space } }">browse →</NuxtLink></template>
-          </JournalFrictionStrata>
-        </template>
-      </JournalStatTile>
-      <JournalStatTile
-        label="PRs referenced" gloss="Pull requests the session logs mention"
-        :value="referencedPrs.length"
-      >
-        <template #sub>
-          <template v-if="referencedPrParts.shown.length">
-            <template v-for="(p, i) in referencedPrParts.shown" :key="p">
-              <template v-if="i"> · </template><a class="pr-link" :href="prUrl(p)">#{{ p }}</a>
-            </template>
-            <template v-if="referencedPrParts.rest"> +{{ referencedPrParts.rest }} earlier</template>
-          </template>
-          <template v-else>none yet</template>
-        </template>
-      </JournalStatTile>
-    </section>
-
-    <section v-if="dailyFrictions.length > 1" class="panel trend" aria-labelledby="trend-h">
-      <div class="section-head">
-        <h2 id="trend-h">Frictions per session, by day</h2>
-        <span class="count">self-reported, UTC days</span>
-      </div>
-      <ol class="trend-bars" aria-label="Frictions per session, by day">
-        <li v-for="d in dailyFrictions" :key="d.date">
-          <span class="trend-val">{{ d.perSession }}<span class="trend-raw"> per session on {{ d.date }}: {{ countOf(d.frictions, 'friction') }} in {{ countOf(d.sessions, 'session') }}</span></span>
-          <span class="trend-bar"><span :style="{ height: `${Math.max(4, (d.perSession / dailyMax) * 100)}%` }" /></span>
-          <span class="trend-day">{{ d.date.slice(5) }}</span>
-        </li>
-      </ol>
-      <p class="panel-intro">
-        Frictions agents wrote down, divided by that day's sessions. Logging more honestly raises it, so read it as a
-        rough pulse, not a score.
-      </p>
-    </section>
 
     <section id="session-log" class="feed">
       <div class="section-head">
@@ -532,8 +495,6 @@ h1 {
   margin: 0 0 2.25rem;
 }
 
-.tiles-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-
 .trend { margin-bottom: 1.25rem; }
 .trend-bars { list-style: none; margin: 0 0 0.7rem; padding: 0; display: flex; gap: 0.4rem; align-items: stretch; }
 .trend-bars li { position: relative; flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 0.2rem; font-family: var(--jd-mono); font-size: 0.68rem; color: var(--jd-faint); }
@@ -545,11 +506,9 @@ h1 {
   .trend-bars { overflow-x: auto; padding-bottom: 0.2rem; }
   .trend-bars li { flex: 1 0 1.9rem; }
 }
-.pr-link { color: var(--jd-accent); text-decoration: none; }
-.pr-link:hover { text-decoration: underline; }
 
 /* scroll-margin-top: breathing room when a "#session-log" link scrolls here. */
-.feed { scroll-margin-top: 1.5rem; }
+.feed { margin-top: 1.75rem; scroll-margin-top: 1.5rem; }
 
 .digests { margin-top: 1.75rem; }
 .panel-intro { margin: 0 0 0.95rem; color: var(--jd-muted); font-size: 0.92rem; line-height: 1.5; }
