@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_013zxzeRB6ciegpxcRDfedSF
 startedAt: 2026-11-09T00:33:00Z
-endedAt: 2026-11-09T00:49:12Z
+endedAt: 2026-11-09T00:52:48Z
 kind: interactive
 goal: Link the Glass Box workshop, not the drafts, from the home page
-status: completed
-outcome: "PR 2986 merged: home page tile links the workshop, with a new intro and glossary line"
-summary: The user asked to drop the home page's link to the Glass Box drafts and link the workshop instead (human-instructed). I asked one question about the workshop row's note and the user chose its wording (human-instructed). I replaced the Drafts row with a Workshop row in app/pages/index.vue, removed the unused drafts count and query, and updated the e2e smoke test (agent-initiated follow-through). The user then said the tile intro was not a meaningful summary; I asked, and they chose a textbook-only line mentioning concepts and technology (human-instructed). The user asked for /code-review against origin/main; two review subagents ran and both found that layers/glassbox/GLOSSARY.md still said the band shows the drafts Space, which I fixed (agent-initiated fix of a review finding). gate:scoped passed before the PR, and CI was green on the final head. The PR was merged by a human, as index.vue is Human-only.
+status: in-review
+outcome: PR 2986 merged; follow-up PR 2988 drops the stale guide page count and awaits a human merge
+summary: "The user asked to drop the home page's link to the Glass Box drafts and link the workshop instead (human-instructed). I asked one question about the workshop row's note and the user chose its wording (human-instructed). I replaced the Drafts row with a Workshop row in app/pages/index.vue, removed the unused drafts count and query, and updated the e2e smoke test (agent-initiated follow-through). The user then said the tile intro was not a meaningful summary; I asked, and they chose a textbook-only line mentioning concepts and technology (human-instructed). The user asked for /code-review against origin/main; two review subagents ran and both found that layers/glassbox/GLOSSARY.md still said the band shows the drafts Space, which I fixed (agent-initiated fix of a review finding). gate:scoped passed before the PR, and CI was green on the final head. The PR was merged by a human, as index.vue is Human-only. The user then asked whether the guide row's \\\"core pages, the current focus\\\" still made sense without drafts and said a count goes stale (human-instructed); I made the note static text in follow-up PR 2988 (agent-initiated wording: the lessons and walkthroughs)."
 prs:
   - "2986"
+  - "2988"
 docsRead:
   - path: docs/agents/git-conventions.md
     reason: commit hygiene before the first commit; nothing changed
@@ -60,19 +61,19 @@ frictions:
   - description: Edited layers/glassbox/GLOSSARY.md before the ADR-0021 and tenant-glossary reads that the hook and rule asked for; the edit was right, no cost.
     solution: Read the Tenant glossary before editing a Tenant's files, as the tenant-glossary rule says.
     severity: nit
-durationSec: 972
+durationSec: 1189
 models:
-  claude-sonnet-5-5: 103
+  claude-sonnet-5-5: 119
 toolCounts:
   Grep: 4
   Read: 9
-  AskUserQuestion: 3
-  Bash: 18
+  AskUserQuestion: 4
+  Bash: 23
   Skill: 5
   ToolSearch: 2
   mcp__github__list_pull_requests: 1
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
   ReadNotifications: 8
   mcp__github__pull_request_read: 3
   Edit: 2
@@ -172,13 +173,13 @@ subagents:
     durationSec: 17
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 9.4
+    tokenShare: 8.4
   - type: general-purpose
     task: Spec review of PR diff
     durationSec: 17
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 9.9
+    tokenShare: 8.9
 gitBranch: claude/admiring-hopper-1jtsne
 entrypoint: remote
 cliVersion: 2.1.319
