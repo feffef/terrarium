@@ -478,6 +478,19 @@ describe('journal Tenant', async () => {
     expect(html).not.toContain('PRs referenced')
   })
 
+  it('opens a KPI stat tooltip on tap without following the tile link, and closes it on a tap elsewhere', async () => {
+    const route = '/t/journal/current'
+    await withRendered(route, async (page) => {
+      const stat = page.locator('.tiles .stat').first()
+      const tip = page.locator('.tiles [role="tooltip"]').first()
+      await stat.click()
+      expect(new URL(page.url()).pathname).toBe(route)
+      expect(await tip.isVisible()).toBe(true)
+      await page.locator('h1').click()
+      expect(await tip.isVisible()).toBe(false)
+    })
+  })
+
   it('shows no KPI tiles or Frictions chart on archived', async () => {
     const html = await $fetch<string>('/t/journal/archived')
     expect(html).not.toContain('class="tiles')

@@ -6,8 +6,16 @@
 import type { JournalKpiTile } from '../../utils/dashboard'
 
 const props = defineProps<{ tile: JournalKpiTile }>()
-const openStat = ref<string | null>(null)
+// Shared by every tile, so opening one tooltip closes any other.
+const openTip = useState<string | null>('journal-kpi-tip', () => null)
 const tipId = (stat: string) => `kpi-${props.tile.key}-${stat}`
+const toggleTip = (id: string) => (openTip.value = openTip.value === id ? null : id)
+// A tap doesn't focus a button on iOS Safari, so blur can't close it; any tap off a stat does.
+const closeOnTapOff = (e: PointerEvent) => {
+  if (!(e.target as Element | null)?.closest('.stat')) openTip.value = null
+}
+onMounted(() => document.addEventListener('pointerdown', closeOnTapOff))
+onBeforeUnmount(() => document.removeEventListener('pointerdown', closeOnTapOff))
 </script>
 
 <template>
@@ -18,20 +26,20 @@ const tipId = (stat: string) => `kpi-${props.tile.key}-${stat}`
     </div>
     <div class="band num">{{ tile.value }}</div>
     <div class="band stats">
-      <button
-        v-for="s in tile.stats"
-        :key="s.key"
-        type="button"
-        class="stat"
-        :class="{ open: openStat === s.key }"
-        :aria-describedby="tipId(s.key)"
-        @click="openStat = openStat === s.key ? null : s.key"
-        @blur="openStat = null"
-      >
-        <span class="stat-value">{{ s.value }}</span>
-        <span class="stat-label"><span v-if="s.severity" class="dot" :style="{ background: `var(--jd-sev-${s.severity})` }" />{{ s.label }}</span>
+      <span v-for="s in tile.stats" :key="s.key">
+        <button
+          type="button"
+          class="stat"
+          :class="{ open: openTip === tipId(s.key) }"
+          :aria-describedby="tipId(s.key)"
+          @click="toggleTip(tipId(s.key))"
+          @keydown.escape="openTip = null"
+        >
+          <span class="stat-value">{{ s.value }}</span>
+          <span class="stat-label"><span v-if="s.severity" class="dot" :style="{ background: `var(--jd-sev-${s.severity})` }" />{{ s.label }}</span>
+        </button>
         <span :id="tipId(s.key)" role="tooltip" class="tip">{{ s.hint }}</span>
-      </button>
+      </span>
     </div>
     <div class="band foot">
       <NuxtLink :to="tile.to" class="cta">{{ tile.cta }}</NuxtLink>
@@ -87,6 +95,8 @@ const tipId = (stat: string) => `kpi-${props.tile.key}-${stat}`
 /* Positioned so every tooltip spans the band's full width and stays inside the tile. */
 .stats { position: relative; display: flex; flex-wrap: wrap; gap: 0.3rem 0.65rem; align-content: start; }
 .stat {
+  /* Above the CTA's stretched ::after, so a tap reaches the stat, not the link. */
+  position: relative;
   z-index: 1;
   display: flex;
   flex-direction: column;
@@ -125,14 +135,13 @@ const tipId = (stat: string) => `kpi-${props.tile.key}-${stat}`
   box-shadow: var(--jd-shadow);
   pointer-events: none;
 }
-.stat:hover .tip, .stat:focus-visible .tip, .stat.open .tip { display: block; }
+.stat:hover + .tip, .stat:focus-visible + .tip, .stat.open + .tip { display: block; }
 .stat:focus-visible { outline: 2px solid var(--jd-accent); outline-offset: 2px; border-radius: 3px; }
 
 .foot { align-self: end; }
 .cta {
   display: inline-block;
   padding: 0.2rem 0.6rem;
-  white-space: nowrap;
   font-family: var(--jd-mono);
   font-size: 0.72rem;
   font-weight: 600;

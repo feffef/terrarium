@@ -413,7 +413,7 @@ export interface JournalKpiTile {
   to: string
 }
 
-// The grades `log-session` defines, worst first.
+// Short display copy of the grades `log-session` defines, worst first; change both together.
 const KPI_SEVERITY_HINTS: [Severity, string, string][] = [
   ['blocker', 'blk', "Blocker: the goal couldn't proceed without a workaround or human help"],
   ['major', 'maj', 'Major: derailed part of the session or degraded the outcome'],
@@ -435,6 +435,7 @@ export function journalKpiTiles({ space, sessions, skills, routines }: {
   const since = sessions.map((s) => s.endedAt.slice(0, 10)).sort()[0]
   const runs = since ? routines.flatMap((r) => r.runs).filter((r) => r.startedAt.slice(0, 10) >= since) : []
   const notes = sessionNotes(sessions)
+  const noun = (n: number, word: string) => (n === 1 ? word : `${word}s`)
   return [
     {
       key: 'sessions',
@@ -463,7 +464,7 @@ export function journalKpiTiles({ space, sessions, skills, routines }: {
       label: 'Routine spend',
       gloss: 'What scheduled runs cost',
       value: formatRoutineMetric('costUsd', runs.reduce((sum, r) => sum + r.costUsd, 0)),
-      stats: [{ key: 'runs', label: 'runs', value: runs.length, hint: "Routine runs started since this Space's oldest session" }],
+      stats: [{ key: 'runs', label: noun(runs.length, 'run'), value: runs.length, hint: "Routine runs started since this Space's oldest session" }],
       cta: 'Cost breakdown →',
       to: `${base}/routines`,
     },
@@ -473,8 +474,8 @@ export function journalKpiTiles({ space, sessions, skills, routines }: {
       gloss: 'Proposals from agents, to apply by hand',
       value: notes.ideas.length + notes.learnings.length,
       stats: [
-        { key: 'ideas', label: 'ideas', value: notes.ideas.length, hint: 'Proposals for future work, noted but not planned' },
-        { key: 'learnings', label: 'learnings', value: notes.learnings.length, hint: 'Lessons a session wrote down for future agents' },
+        { key: 'ideas', label: noun(notes.ideas.length, 'idea'), value: notes.ideas.length, hint: 'Proposals for future work, noted but not planned' },
+        { key: 'learnings', label: noun(notes.learnings.length, 'learning'), value: notes.learnings.length, hint: 'Lessons a session wrote down for future agents' },
       ],
       cta: 'Ideas & learnings →',
       to: `${base}/ideas`,

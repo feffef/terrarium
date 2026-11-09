@@ -85,7 +85,7 @@ const sessionsCappedLabel = computed(() =>
 )
 
 // ── Derived dashboard data — thin wrappers over the pure module ──
-// The wrapped functions (sessionCardViews, frictionTotals, …) are dashboard.ts
+// The wrapped functions (sessionCardViews, journalKpiTiles, …) are dashboard.ts
 // exports arriving via auto-import; each local name is distinct.
 const ruleSources = import.meta.glob('../../../../../../../.claude/rules/*.md', {
   query: '?raw',
@@ -252,6 +252,7 @@ useSeoMeta({
     </section>
 
 
+    <!-- A KPI view too, so it shows wherever the tiles do (journalKpiTiles decides). -->
     <section v-if="kpiTiles.length && dailyFrictions.length > 1" class="panel trend" aria-labelledby="trend-h">
       <div class="section-head">
         <h2 id="trend-h">Frictions per session, by day</h2>
@@ -581,7 +582,7 @@ h1 {
   .drow .caret { grid-area: caret; }
 }
 @media (max-width: 900px) {
-  .tiles { grid-template-columns: repeat(2, 1fr); }
+  .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .masthead { grid-template-columns: 1fr; }
   .spaces { align-items: flex-start; }
   .snapshot { text-align: left; }

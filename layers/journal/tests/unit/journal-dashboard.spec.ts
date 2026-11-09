@@ -214,7 +214,7 @@ describe('journalKpiTiles', () => {
   it('counts ideas plus learnings as Suggestions, learnings as sessionNotes counts them', () => {
     const sessions = [session({ ideas: ['i1', 'i2'], learnings: ['l1'] }), session({ external: true, learnings: ['l2'] })]
     expect(tile('ideas', { sessions }).value).toBe(3)
-    expect(stats('ideas', { sessions })).toEqual(['2 ideas', '1 learnings'])
+    expect(stats('ideas', { sessions })).toEqual(['2 ideas', '1 learning'])
   })
 
   it('counts every Skill, split into platform and installed, whatever the sessions', () => {
