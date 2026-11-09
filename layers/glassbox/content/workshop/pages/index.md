@@ -16,7 +16,6 @@ Pages are named by their title, followed by their file under `layers/glassbox/co
 - **The Installed Skills pages say little of their own.** *Planning skills* (`skill-pack/20.planning-with-the-pack`) and *Engineering skills* (`skill-pack/30.engineering-skills`) mostly describe Skills that come from outside Terrarium. Only a few of their facts are about choices Terrarium made.
 - **Two Git & GitHub Lessons are long.** *Commit and PR attribution* (`git-github/60.attribution`) and *Issue triage labels* (`git-github/70.issue-triage-labels`) are each about 1,400 to 1,600 words. Both have been trimmed; look for a split only after a fresh reader finds them hard to follow.
 - **The drafts Space is empty.** A gap that isn't central goes there as a new draft.
-- **The Claude Code, Hooks and Agents & automation Subjects may still repeat each other.** The split moved pages without moving facts. The Hooks pages were read and de-duplicated on 2026-11-08; the other two Subjects were not re-read.
 
 ### Recurring problems
 
@@ -38,7 +37,9 @@ Subjects and Lessons run prerequisites first, and Lesson prefixes go up in tens 
 
 ### Good next focuses
 
-1. **Check more Lessons against the official docs.** Some Lessons were written while docs sites were blocked, so their claims came from npm packages or raw GitHub files. Still unchecked: the other Nuxt & Vue Lessons (`nuxt-vue/10` to `40`, `60`, `70`), *Type checking*, *Content validation*, *Linting* and *Headless browser checks* in Verification, the Git & GitHub pages that link docs.github.com, and *Mermaid pre-rendering*. Fetch each URL and check each claim about the tool; the network must be open.
+1. **Re-read the Claude Code, Hooks and Agents & automation Subjects for repeats and density.** They were checked against the docs on 2026-11-09, not de-duplicated. A fresh reader found them heavy with undefined repo terms (*Human-only*, *Friction*, *Routine*), and found two cross-page loose ends: `|| true` is explained as deliberate only in *Hook-added context*, while *Blocking hooks* calls it a bug that lets a guard fail open; and a reader cannot tell from *Claude Code skills* how a Routine starts a Skill whose model invocation is off.
+2. **Re-pin the overview.** `index` is pinned to an older commit because only one sentence was checked after the pin moved. Read its Routines and Skills paragraphs against `main`, then move the pin.
+3. **Check the docs again for the pages whose claims the docs left silent** (the list under *Doc findings not acted on*), by reading the tool's source where the docs have no page.
 
 ### Ideas not yet decided
 
@@ -55,10 +56,16 @@ Subjects and Lessons run prerequisites first, and Lesson prefixes go up in tens 
 - *Multi-tenant isolation* and *Content database* both explain the `database` option; one could link the other.
 - *pnpm and the lockfile*: the lead-in says pnpm.io's unversioned pages describe a newer major. The 12.x, 11.x and 10.x docs exist (`pnpm/pnpm.io` `versions.json`), but pnpm.io was blocked, so which major the unversioned pages show is unchecked.
 
-**Claims to correct.** A fact check of PR #2982's new text found these in older sentences it left alone. Fixing one changes a claim, so the page is re-pinned.
-- *Claude Code skills* (`claude-code/30.skills`): the Why bullet on turning model invocation off says a job that opens its own PR, such as the Digest, "never starts unasked". Its only citation, `writing-for-agents/SKILL-MECHANICS.md`, mentions neither, and a Routine starts the Digest. Cite `.agents/skills/digest/SKILL.md` and say no session starts it on its own.
-- *MCP servers* (`claude-code/50.mcp-servers`): the Why bullet says the provenance guard "sees every MCP call's body". It checks only the write tools in its registry (`GITHUB_PROVENANCE_TOOLS` in `scripts/hooks/github-provenance-guard.ts`), as the bullet's own cost sentence says.
-- *Hook-added context* (`hooks/30.hook-added-context`): "A hint also says each thing once: it checks the session's transcript" holds for the hints that point to a doc, not all: `scripts/hooks/stale-push-hint.ts` checks no transcript and fires on every stale push.
+**Doc checks of 2026-11-09, claims the docs were silent on.** Each may be true; a later run should read the tool's source or run it.
+- *Subagents* (`agents/10.subagents`): "only a subagent's payload carries an agent id". The hooks docs say `agent_type` also appears under `--agent` and say nothing on whether `agent_id` ever appears outside a subagent. *Claude Code hooks* says the same of `agent_type` alone.
+- *Nitro server engine* (`nuxt-vue/60.nitro`): the dev cache path `.nuxt/cache/nitro/routes` (the Nitro docs say a temporary directory), `cache: false`, a payload for a plain `cache` rule, and "Nuxt 4 runs Nitro v2".
+- *Cloud sessions* (`agents/30.cloud-sessions`): that the proxy refuses `.github/workflows/` pushes and repository-settings writes.
+- *Scheduled tasks* (`agents/40.scheduled-tasks`): that a Routine's prompt arrives as the first turn like a typed command, and that a `disable-model-invocation` Skill runs from a Routine prompt. The Skills docs say a session-scoped scheduled task that fires such a Skill is stopped; a cloud Routine is a different case.
+- *Session transcripts* (`hooks/40.session-transcripts`): the record types and fields, the 2 KB preview, and a subagent's `transcript_path` inside tool hooks.
+- *Author trust* (`git-github/20.author-trust`): what each `author_association` value means, and that `pull_request_target` ignores the approval setting. *Dependabot grouping*: that `/` doesn't reach a nested action.
+- *Linting* (`verification/50.linting`): the sentence on the rules `@nuxt/eslint` turns on and the absence of formatting rules.
+- *Content validation* (`verification/30.content-validation`): the `?id=safeparse` anchor on v3.zod.dev, which loads only in a browser.
+- *Hooks* (`hooks/10.hooks`): the `network-start.ts` SessionStart hook is not mentioned.
 
 **Missing Lessons.** The browser quirks and CSS traps listed in `docs/agents/verifying-ui-changes.md` are only partly taught, in *Headless browser checks* (`verification/80.headless-browser-checks`).
 

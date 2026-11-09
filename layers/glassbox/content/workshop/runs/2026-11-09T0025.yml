@@ -1,9 +1,117 @@
 session: session_013zxzeSKTBjSfYnUxNHTJw1
 mode: autonomous
-focus: "Correct the three false or overstated claims the memory page listed
-  (Claude Code skills, MCP servers, Hook-added context), then check the Nuxt &
-  Vue Lessons that were written without the official docs against those docs.
-  The run started interactive with no focus; the owner chose these two leads
-  and autonomous mode."
-changes: []
-pagesRead: []
+focus: "Correct the three claims the memory page listed (Claude Code skills, MCP
+  servers, Hook-added context), then check the Lessons written while docs sites
+  were blocked against the live official docs: Nuxt & Vue, Verification, Git &
+  GitHub, Claude Code, Hooks and Agents. The run started interactive with no
+  focus; the owner chose these two leads and autonomous mode, then said to widen
+  the doc check to more Subjects in the same PR while spend stayed low."
+changes:
+  - "claude-code/30.skills | The Why bullet on turning model invocation off now
+    says only a person's typed name or a Routine's prompt starts such a Skill,
+    cites digest/SKILL.md for the Digest being scheduled, and has a sourced
+    cost clause | the old bullet said the Digest 'never starts unasked' and
+    cited a file that names neither"
+  - "claude-code/50.mcp-servers | The provenance guard reads what each write tool
+    in its registry posts, and only a shell command's text, so a gh api or curl
+    write inside a script goes unchecked | the old bullet said it saw every MCP
+    call's body; it checks only registry tools (github-provenance-guard.ts)"
+  - "hooks/30.hook-added-context | Only hints that point to a doc check the
+    transcript; the stale-push hint checks none and fires after every stale push
+    | stale-push-hint.ts reads no transcript"
+  - "claude-code/10.claude-md | CLAUDE.md loads at the start of every session
+    from the start directory and those above it, again after compaction;
+    subdirectory files load on demand; a path-specific rule can't order a step
+    | code.claude.com memory docs list other launch-time files and rules
+    without paths load at launch"
+  - "claude-code/40.permissions | Protected paths are not all Claude Code's own;
+    auto and bypassPermissions can't be set from project or local settings;
+    dontAsk still runs calls an allow rule or hook approves | permission-modes
+    and settings docs"
+  - "hooks/10.hooks | Only a cloud session on one repository loads the committed
+    hook file; several repositories or a project thread run none of its hooks;
+    strictest-decision rule scoped to PreToolUse; fourth Stop hook
+    (pr-subscribe-stop.ts) added and the Excerpt ranges moved with the new pin
+    | settings docs, 'Settings in cloud sessions'; the page contradicted
+    claude-code/40"
+  - "hooks/20.blocking-hooks | onFailure needs Claude Code v2.1.295, does
+    nothing on Stop, SubagentStop, TaskCompleted, TeammateIdle or background
+    command hooks; precedence deny, defer, ask, allow | hooks docs"
+  - "agents/20.workflow-scripts | The ESLint-skip item says Terrarium's scripts
+    end in a top-level return, which no ES module may hold, and the unit test
+    compiles each as an async function body | the old wording called the script
+    'not an ES module', which the docs never say"
+  - "agents/30.cloud-sessions | A several-repository session reads only
+    enabledPlugins and extraKnownMarketplaces and installs none of what they
+    declare; Terrarium's file sets neither | cloud-environments and settings
+    docs"
+  - "agents/40.scheduled-tasks | /loop fires only while its session runs and
+    resuming restores a fixed-interval loop that hasn't expired, never a
+    self-paced one | the old text said it lasts only as long as the session,
+    against the page's own resume paragraph and the scheduled-tasks docs"
+  - "git-github/20.author-trust | Organisation members get Read on public
+    repositories by default; the fork-PR claim (no secrets, read-only token) now
+    cites Events that trigger workflows, and pull_request_target is worded by
+    what Secure use says | the docs scope the default to public repositories"
+  - "git-github/30.composite-actions | The 'other files need only ordinary write
+    access' claim became: a token needs the workflow scope for a workflow file,
+    and an action.yml sits outside .github/workflows/ | the cited scopes page
+    never names .github/actions/"
+  - "nuxt-vue/70.data-fetching | A link prefetches when the pointer moves onto or
+    presses it, or the keyboard focuses it; prefetch is defined where the config
+    excerpt appears | nuxt-link.js wires onPointerenter, onFocus and
+    onPointerdown; the docs name hover and focus"
+  - "verification/20.type-checking | nuxt typecheck runs vue-tsc, or Golar with
+    --checker golar | the typecheck docs and @nuxt/cli source"
+  - "verification/50.linting | The @nuxt/eslint module writes
+    .nuxt/eslint.config.mjs and creates a root eslint.config.mjs only when no
+    flat config exists; link updated to nuxt.com/modules/eslint | module
+    source; eslint.nuxt.com now redirects"
+  - "verification/80.headless-browser-checks | Link to Chrome's headless mode
+    page replaced a redirecting 2017 blog URL | the old URL 301s to a page about
+    a different binary. Link only, no re-pin"
+  - "index | The overview calls CLAUDE.md the file every session reads at its
+    start, not 'the one file ... first' | claude-md.md no longer says 'one file'
+    and the memory docs list other launch-time files. Kept the old pin: only
+    this sentence was checked"
+  - "nuxt-vue/10.layers, nuxt-vue/20.auto-imports, nuxt-vue/30.file-routing,
+    nuxt-vue/40.virtual-modules, nuxt-vue/60.nitro, verification/30.content-validation
+    | No change | checked against the docs: no claim contradicted; the docs are
+    silent on several (see the memory page). Content validation's Nuxt Content
+    claims were confirmed in the installed @nuxt/content source. file-routing's
+    empty catch-all claim was confirmed by running vue-router 5.4.0"
+pagesRead:
+  - agents/10.subagents
+  - agents/20.workflow-scripts
+  - agents/30.cloud-sessions
+  - agents/40.scheduled-tasks
+  - claude-code/10.claude-md
+  - claude-code/20.path-scoped-rules
+  - claude-code/30.skills
+  - claude-code/40.permissions
+  - claude-code/50.mcp-servers
+  - git-github/10.pull-requests
+  - git-github/20.author-trust
+  - git-github/30.composite-actions
+  - git-github/40.dependabot-grouping
+  - git-github/50.git-worktrees
+  - git-github/60.attribution
+  - git-github/70.issue-triage-labels
+  - git-github/80.git-plumbing
+  - hooks/10.hooks
+  - hooks/20.blocking-hooks
+  - hooks/30.hook-added-context
+  - hooks/40.session-transcripts
+  - index
+  - nuxt-content/60.mermaid-pre-rendering
+  - nuxt-vue/10.layers
+  - nuxt-vue/20.auto-imports
+  - nuxt-vue/30.file-routing
+  - nuxt-vue/40.virtual-modules
+  - nuxt-vue/60.nitro
+  - nuxt-vue/70.data-fetching
+  - skill-pack/10.skill-packs
+  - verification/20.type-checking
+  - verification/30.content-validation
+  - verification/50.linting
+  - verification/80.headless-browser-checks

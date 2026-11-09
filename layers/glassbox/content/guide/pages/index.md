@@ -2,8 +2,8 @@
 title: Glass Box guide
 description: How Terrarium works as a whole, in plain words, with links to the Lessons that explain each part in depth.
 teaches: "Who's involved: Trusted and Public users, sessions, Routines; a change: read, branch, gate, PR, session log, merge, attribution; who decides: approval, triage labels, clear-backlog, Human-only merges; improving: Frictions, fixes, prune trials, Journal; the repo: CLAUDE.md, rules, ADRs, Skills, hooks, glossaries, Tenants, Spaces, Collections, manifests; shipping: deploy, hydration; why Nuxt."
-revision: 'ca693e8332ce020c14c206f92d98da88705096cc'
-revisionDate: '2026-11-09'
+revision: 'f16509d1024b69585d7fc7387d135682ad39b9b6'
+revisionDate: '2026-11-08'
 ---
 
 Terrarium is an experiment in a website that grows itself: AI agents write almost all of its code and content, and people steer. It is also built to be watched, so every step of that work is on show. Glass Box documents the technology and practices it runs on, and how each one is used here, kept up to date as the code changes. Read this page first: in a few minutes it explains how Terrarium works as a whole, from who steers it to how a change goes live. Each Lesson then covers one tool or practice in depth, with Terrarium's real files as the worked example; open one from the chips on this page or from the menu.
