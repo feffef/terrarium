@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSKTBjSfYnUxNHTJw1
 startedAt: 2026-11-09T00:25:11Z
-endedAt: 2026-11-09T00:58:29Z
+endedAt: 2026-11-09T01:01:30Z
 kind: interactive
 goal: Fix false claims in the Glass Box guide and check its Lessons against the live docs
-status: in-review
-outcome: PR opened with 16 corrected guide pages; gate green, CI and merge still pending
-summary: 'The owner typed /glassbox-curate with no focus. I ran the orientation and offered candidates; the owner answered "1 & 2 autonomous": fix the three false claims the memory page listed, and check Lessons written while docs sites were blocked against the live docs. Mid-run, in answer to my narrowness, the owner asked me to widen the check to more Subjects in the same PR while spend stayed low; that widening (Verification, Git and GitHub, Claude Code, Hooks, Agents) was human-instructed. Everything else was agent-initiated within that remit: I dispatched read-only sonnet checkers per Subject, opus writers for every sentence that states a fact, a separate claim checker, two fresh readers, code-review (both axes) and a pin-drift checker. About 45 pages were read against the docs. Sixteen pages changed; six more were checked and left alone. Findings the docs were silent on were checked in the installed package source where possible and otherwise left on the memory page. Surprises: the hooks page contradicted the permissions page on whether cloud sessions load the committed settings; a writer re-pinned the overview after checking one sentence, which I reverted; the Spec reviewer named six pages I should have read first, and I read them before landing. Gate passed on the final head; PR 2990 is open and subscribed. Still open: CI, my verdict comment, the merge through merge-pr.ts, and a final close-session.'
+status: completed
+outcome: 16 corrected guide pages merged after a green gate and green CI
+summary: 'The owner typed /glassbox-curate with no focus. I ran the orientation and offered candidates; the owner answered "1 & 2 autonomous": fix the three false claims the memory page listed, and check Lessons written while docs sites were blocked against the live docs. Mid-run, in answer to my narrowness, the owner asked me to widen the check to more Subjects in the same PR while spend stayed low; that widening (Verification, Git and GitHub, Claude Code, Hooks, Agents) was human-instructed. Everything else was agent-initiated within that remit: I dispatched read-only sonnet checkers per Subject, opus writers for every sentence that states a fact, a separate claim checker, two fresh readers, code-review (both axes) and a pin-drift checker. About 45 pages were read against the docs. Sixteen pages changed; six more were checked and left alone. Findings the docs were silent on were checked in the installed package source where possible and otherwise left on the memory page. Surprises: the hooks page contradicted the permissions page on whether cloud sessions load the committed settings; a writer re-pinned the overview after checking one sentence, which I reverted; the Spec reviewer named six pages I should have read first, and I read them before landing. Gate passed on the final head and in CI; I posted my verdict and merged PR 2990 with merge-pr.ts. Spend ended at about 19.2 dollars of the 20 dollar budget. Open for a later run: re-pin the overview, and the claims the docs were silent on (on the memory page).'
 prs:
   - "2990"
 docsRead:
@@ -120,11 +120,11 @@ frictions:
   - description: The first fresh-reader pass over 7 Claude Code pages mostly returned density complaints that were already there, costing tokens for little that changed a page.
     solution: Scope fresh readers to the changed sentences plus their neighbours, as the Skill's Check step implies, instead of whole pages.
     severity: minor
-durationSec: 1998
+durationSec: 2179
 models:
-  claude-sonnet-5-5: 225
+  claude-sonnet-5-5: 246
 toolCounts:
-  Bash: 45
+  Bash: 49
   Read: 21
   mcp__claude-code-remote__get_session: 3
   Agent: 16
@@ -132,10 +132,14 @@ toolCounts:
   SendMessage: 6
   Edit: 7
   Write: 2
-  Skill: 3
+  Skill: 4
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/claude-code/30.skills.md
   - layers/glassbox/content/workshop/runs/2026-11-09T0025.yml
@@ -252,105 +256,105 @@ subagents:
     durationSec: 950
     toolCalls: 25
     modelCalls: 25
-    tokenShare: 6
+    tokenShare: 5.7
   - type: general-purpose
     task: Docs check Nuxt Lessons A
     model: sonnet
     durationSec: 58
     toolCalls: 17
     modelCalls: 4
-    tokenShare: 1.6
+    tokenShare: 1.5
   - type: general-purpose
     task: Docs check Nuxt Lessons B
     model: sonnet
     durationSec: 75
     toolCalls: 26
     modelCalls: 5
-    tokenShare: 1.7
+    tokenShare: 1.6
   - type: general-purpose
     task: Docs check Verification pages
     model: sonnet
     durationSec: 120
     toolCalls: 45
     modelCalls: 10
-    tokenShare: 2
+    tokenShare: 1.9
   - type: general-purpose
     task: Docs check Git GitHub pages
     model: sonnet
     durationSec: 109
     toolCalls: 34
     modelCalls: 9
-    tokenShare: 1.8
+    tokenShare: 1.7
   - type: general-purpose
     task: Fix docs-check findings
     model: opus
     durationSec: 760
     toolCalls: 82
     modelCalls: 75
-    tokenShare: 12.4
+    tokenShare: 11.8
   - type: general-purpose
     task: Docs check Claude Code Subject
     model: sonnet
     durationSec: 178
     toolCalls: 25
     modelCalls: 12
-    tokenShare: 3.4
+    tokenShare: 3.2
   - type: general-purpose
     task: Docs check Agents Subject
     model: sonnet
     durationSec: 169
     toolCalls: 33
     modelCalls: 9
-    tokenShare: 4
+    tokenShare: 3.8
   - type: general-purpose
     task: Fix Agents page claims
     model: opus
     durationSec: 933
     toolCalls: 42
     modelCalls: 25
-    tokenShare: 8.9
+    tokenShare: 8.4
   - type: general-purpose
     task: Fix Claude Code page claims
     model: opus
     durationSec: 916
     toolCalls: 32
     modelCalls: 27
-    tokenShare: 8.3
+    tokenShare: 7.8
   - type: general-purpose
     task: Claim-check changed sentences
     model: sonnet
     durationSec: 166
     toolCalls: 33
     modelCalls: 12
-    tokenShare: 3.9
+    tokenShare: 3.7
   - type: general-purpose
     task: Fresh reader pages set 1
     model: sonnet
     durationSec: 48
     toolCalls: 8
     modelCalls: 2
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: general-purpose
     task: Fresh reader pages set 2
     model: sonnet
     durationSec: 47
     toolCalls: 9
     modelCalls: 2
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: general-purpose
     task: "Code review: Standards axis"
     model: sonnet
     durationSec: 68
     toolCalls: 11
     modelCalls: 9
-    tokenShare: 1.7
+    tokenShare: 1.6
   - type: general-purpose
     task: "Code review: Spec axis"
     model: sonnet
     durationSec: 48
     toolCalls: 9
     modelCalls: 8
-    tokenShare: 1.6
+    tokenShare: 1.5
   - type: general-purpose
     task: Pin drift check on re-pinned pages
     model: sonnet
