@@ -1,0 +1,192 @@
+schemaVersion: 1
+session: session_013zxzeNd2Ethpd3anqbmpkr
+startedAt: 2026-11-09T20:36:03Z
+endedAt: 2026-11-09T20:58:34Z
+kind: interactive
+goal: Audit how useful the Platform's rules were since Oct 16
+status: completed
+outcome: Published an artifact report with per-rule ratings, evidence and proposed path changes; no repo changes
+summary: "The user first asked when the per-rule verdict instruction last changed; I asked which one they meant, then answered from git history on origin/main (wording from 2026-10-15, later edits only rewraps and small additions). They then asked for a full audit of the rules since Oct 16 (human-instructed): a per-rule breakdown of useful, partly and not-useful ratings from the session logs, a peek into sampled sessions for patterns, and ideas for adding, narrowing or removing rule paths. Per their stated preference I asked four scoping questions first; they chose all 40 rules, logs plus sampled transcripts, report only, and an artifact page. Agent-initiated within that scope: the aggregation scripts in .throwaway, seven Haiku subagents that each read one session's events, the choice of which sessions to sample, and the proposals. Two user follow-ups arrived mid-turn and were handled the same turn: whether rule paths changed recently (yes, 11 commits; four rules were created inside the window, now a caveat on the page) and a request to describe each rule on the page (done). Result, at https://claude.ai/artifact/XZj2n5SbM7dqVKv6t4Ao3v: path-scoped rules were rated yes 17 percent, partly 18 percent, no 66 percent; the yes-rate is 34 percent when the session edited a governed file and 10 percent otherwise; six rules hold 46 percent of the no ratings. The transcripts could confirm rule loads in only 4 of 7 sessions, so the logs' own reason text carried the evidence on triggers. I read ADR-0029 and ADR-0027 in full only after drafting the proposals; ADR-0029 says broad paths are fine, which turned the advice from narrow these rules into candidates for a trial a Trusted user starts. Still open: record the triggering path in the log so per-path advice rests on data. No repo files changed and no PR was opened."
+prs: []
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: Required before git commands; told me to fetch and scope history to origin/main, which I did
+    useful: yes
+  - path: .agents/skills/inspect-session/SKILL.md
+    reason: Gave the partial-read brief and flatten/search scripts the seven subagents used
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: Brief checklist and the scratchpad-subfolder step; I skipped its save-handback step
+    useful: partly
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: Showed broad paths are intended and loads on read are by design, so I reframed narrowing as trial candidates
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: Told me ADR summary rules change only in a trial a Trusted user starts, which sets who decides each proposal
+    useful: yes
+  - path: .agents/skills/log-session/SKILL.md
+    reason: Defines the ruleVerdicts field I had to find and aggregate
+    useful: yes
+  - path: scripts/hooks/bash-rules-hint.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: inspect-session
+    reason: Partial-read brief for the transcript peeks
+  - name: dispatch-subagents
+    reason: Brief checklist for the seven subagents
+  - name: close-session
+    reason: Closure; no PR was opened
+  - name: log-session
+    reason: Writes this log
+frictions:
+  - description: Did not save the seven subagent hand-backs with save-handback.ts as dispatch-subagents says; I quoted them in chat, so the raw reports are not kept.
+    solution: Name save-handback in the brief checklist's first line so it is done per hand-back before summarising.
+    severity: nit
+  - description: Keyed sessions by a 10-character id prefix; three of 390 collided and skewed the edit-versus-read table until I reran on full ids. Caught before publishing.
+    solution: Key by full session id and assert uniqueness in throwaway aggregation scripts.
+    severity: nit
+  - description: "Dispatched seven transcript subagents (about 774k subagent tokens) before probing one: events omit hook-injected rule context in some sessions, so three reports found no loads."
+    solution: inspect-session should say events may omit hook output; probe one session before fanning out.
+    severity: moderate
+  - description: Drafted rule-path proposals before reading ADR-0029 and the Bash hint, though CLAUDE.md says read the full ADR before planning; its broad-paths stance reframed the advice.
+    solution: Make CLAUDE.md's plan trigger name audits and reviews of a mechanism, so the ADR is read first.
+    severity: minor
+  - description: An interim chat message said seven rules loaded in 300-383 sessions and were rated no in 60-80 percent; only five loaded in 300+, and two of the seven were 49 and 88 percent.
+    solution: Compute chat summaries from the table output, not from memory; corrected in the final reply.
+    severity: minor
+  - description: Compared rules across a 24-day window without checking path history; the user's question showed four rules were created mid-window, so load counts are not comparable.
+    solution: Run git log on .claude/rules for path changes before comparing rules over a window.
+    severity: minor
+  - description: A throwaway script imported picomatch, which is not a direct dependency, and failed; switched to node:path matchesGlob.
+    solution: Use node:path matchesGlob for glob checks in throwaway scripts.
+    severity: nit
+durationSec: 1351
+models:
+  claude-sonnet-5-5: 201
+toolCounts:
+  Grep: 3
+  Read: 6
+  Bash: 36
+  AskUserQuestion: 1
+  Write: 9
+  Agent: 7
+  Artifact: 4
+  Edit: 27
+  Skill: 2
+filesEdited:
+  - .throwaway/rule-audit/cov.ts
+  - .throwaway/rule-audit/agg.ts
+  - .throwaway/rule-audit/edit-match.ts
+  - .throwaway/rule-audit/pick.ts
+  - .throwaway/rule-audit/cost.ts
+  - .throwaway/rule-audit/missed.ts
+  - .throwaway/rule-audit/frictions.ts
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0030.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+rulesLoadedBySubagents:
+  - .claude/rules/tenant-glossary.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: No PR was opened, so the gate and merge steps did not apply
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to invoke close-session and that the log goes to main; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Confirmed proposals stay proposals until a Trusted user approves, so I changed no rule; summary was enough
+    useful: partly
+  - path: .claude/rules/adr-0017.md
+    reason: I wrote nothing to GitHub or git, so the provenance header did not apply
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded while I read trial-related files; I opened the full ADR to learn who may change summary rules
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded on docs reads; the audit was about this rule, so I read the full ADR and it changed my framing
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded by reading Skill files; I changed no Skill
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded after I read hook files and settings; only confirmed that rule edits need a human merge
+    useful: partly
+  - path: .claude/rules/guards.md
+    reason: Loaded by reading the Bash hook; it only points to docs/agents/guards.md, which I did not open
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded on ADR reads; I wrote no ADR
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: A transcript subagent got it from its own Bash read of layers files and reported it not useful
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Peek session 01SRYx7b rule loads
+    model: haiku
+    durationSec: 110
+    toolCalls: 18
+    modelCalls: 18
+    tokenShare: 6.9
+  - type: general-purpose
+    task: Peek session 017X5SQq rule loads
+    model: haiku
+    durationSec: 139
+    toolCalls: 24
+    modelCalls: 22
+    tokenShare: 8
+  - type: general-purpose
+    task: Peek session 011toGE7 rule loads
+    model: haiku
+    durationSec: 164
+    toolCalls: 33
+    modelCalls: 32
+    tokenShare: 10.6
+  - type: general-purpose
+    task: Peek session 013zxzeR rule loads
+    model: haiku
+    durationSec: 81
+    toolCalls: 17
+    modelCalls: 16
+    tokenShare: 5.9
+  - type: general-purpose
+    task: Peek session 013zxzeS rule loads
+    model: haiku
+    durationSec: 93
+    toolCalls: 19
+    modelCalls: 18
+    tokenShare: 6.5
+  - type: general-purpose
+    task: Peek session 016THR5o rule loads
+    model: haiku
+    durationSec: 208
+    toolCalls: 42
+    modelCalls: 41
+    tokenShare: 14.6
+  - type: general-purpose
+    task: Peek session 01QMsuxS rule loads
+    model: haiku
+    durationSec: 88
+    toolCalls: 16
+    modelCalls: 14
+    tokenShare: 5.9
+gitBranch: claude/ecstatic-gates-elqk6e
+entrypoint: remote
+cliVersion: 2.1.321
+learnings:
+  - "list_events appears to omit hook-injected rule context in some sessions: 3 of 7 sampled transcripts showed no Contents of rules blocks although their logs list loads, and logs and events disagreed on which rules loaded. Inferred from the sample, not documented."
+ideas:
+  - Record the triggering path and tool for every rule load in the session log (rulesLoaded entries become rule, path, tool), then rank each path glob by the share of its loads rated yes. It turns this one-off audit into a standing view, so narrowing or adding paths rests on evidence and the weekly rule-coverage audit another session proposed gets its data.
+landedBy: Stop
