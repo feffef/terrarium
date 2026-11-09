@@ -72,7 +72,7 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', closeOnTapOff)
   opacity: 0.5;
 }
 .tile:hover { border-color: var(--jd-accent); transform: translateY(-2px); }
-.band { padding: 0.75rem 0.9rem; }
+.band { padding: 0.75rem 0.7rem; }
 .stats, .foot { padding-block: 0.5rem; }
 .band + .band { border-top: 1px solid var(--jd-line); }
 .label {
@@ -93,7 +93,7 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', closeOnTapOff)
 }
 
 /* Positioned so every tooltip spans the band's full width and stays inside the tile. */
-.stats { position: relative; display: flex; flex-wrap: wrap; gap: 0.3rem 0.65rem; align-content: start; }
+.stats { position: relative; display: flex; flex-wrap: wrap; gap: 0.3rem 0.35rem; align-content: start; }
 .stat {
   /* Above the CTA's stretched ::after, so a tap reaches the stat, not the link. */
   position: relative;
@@ -108,16 +108,16 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', closeOnTapOff)
   border: 0;
   cursor: help;
 }
-.stat-value { font-family: var(--jd-mono); font-variant-numeric: tabular-nums; font-size: 0.95rem; color: var(--jd-ink); }
+.stat-value { font-family: var(--jd-mono); font-variant-numeric: tabular-nums; font-size: 0.9rem; color: var(--jd-ink); }
 .stat-label {
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
-  font-size: 0.74rem;
+  font-size: 0.65rem;
   color: var(--jd-muted);
   border-bottom: 1px dotted var(--jd-faint);
 }
-.dot { width: 6px; height: 6px; border-radius: 50%; }
+.dot { width: 5px; height: 5px; border-radius: 50%; }
 .tip {
   display: none;
   position: absolute;
