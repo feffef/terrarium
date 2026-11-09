@@ -66,14 +66,17 @@ export interface RoutineWeekTable {
   grandTotal: number
 }
 
-/** Each Routine's `metric` summed over consecutive seven-day windows, newest
- *  window ending at the newest run (not the clock, so server and browser render
- *  the same table). Only windows that start at or after the oldest run are
- *  kept: older runs are pruned, so an earlier window would be incomplete. */
+const WEEKS_SHOWN = 4
+
+/** Each Routine's `metric` summed over the newest four seven-day windows, the
+ *  newest ending at the newest run (not the clock, so server and browser render
+ *  the same table). Four, because pruning (`RUNS_KEPT` in
+ *  scripts/session/prune-routine-runs.ts) leaves a daily Routine just over four
+ *  weeks of runs: a fifth window would be incomplete. */
 export function routineWeekTable(routines: readonly RoutineDoc[], metric: RoutineMetric): RoutineWeekTable {
   const times = routines.flatMap((r) => r.runs.map((run) => Date.parse(run.startedAt)))
   const end = times.length ? Math.max(...times) : 0
-  const count = times.length ? Math.floor((end - Math.min(...times)) / WINDOW_MS) : 0
+  const count = times.length ? WEEKS_SHOWN : 0
   const weeks = Array.from({ length: count }, (_, i) =>
     new Date(end - WINDOW_MS * (count - 1 - i)).toISOString().slice(0, 10),
   )
