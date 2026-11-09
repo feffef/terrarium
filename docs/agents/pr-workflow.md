@@ -9,13 +9,13 @@ The `mcp__github__*` tool surface (retries, polling, overflow traps):
 
 ## Review before opening the PR
 
-Push early and often; a push opens nothing. The PR is where CI runs and an agent
-can merge (ADR-0003), so review first. Before you open a branch's PR: check no
-PR exists for it, commit, run the
+Push early; a push opens nothing. Open the PR only on a head that has been
+reviewed and has passed the gate: the PR is where an agent can merge. Check no
+PR exists for the branch, commit, run the
 [`code-review`](../../.agents/skills/code-review/SKILL.md) Skill on the
 committed diff against `origin/main` in the checkout that holds it, fix the
-findings, then run `pnpm gate:scoped` on the final head. Edit nothing while it
-runs: the gate aborts if HEAD or the tree changes. Push that head, then open the
+findings, then run `pnpm gate:scoped` on the final head and edit nothing until
+it ends (it aborts if HEAD or the tree changes). Push that head, then open the
 PR. Exempt: a session-log commit, and a Skill whose own steps review the diff
 before the PR (`midden-catalogue` §4).
 
@@ -40,8 +40,8 @@ re-review each story or repeat its findings.
 
 ## The recipe
 
-1. Run `pnpm gate:scoped` and wait, unless the rules above let you skip it. A
-   red gate never merges.
+1. Check the head passed the review and gate above, or that a rule above let
+   you skip it. A red gate never merges.
 2. Run `pnpm exec tsx scripts/github/check-conflicting-issues.ts --pr <number>`.
    It is advisory: a hit means read that issue (#798), not that there is a
    conflict.
@@ -101,8 +101,7 @@ many per run) close with these steps once their work is staged. Each SKILL.md
 adds only its delta: what its diff is limited to, and what to do when something
 outside that scope rides in.
 
-1. Commit, then follow "Review before opening the PR". Done when
-   `pnpm gate:scoped` is green on the final head.
+1. Commit, then follow "Review before opening the PR".
 2. Push with retry and open **one gated PR** scoped to the Skill's own diff
    (more only if its SKILL.md says so).
 3. Subscribe on open and land via this doc's recipe once green.

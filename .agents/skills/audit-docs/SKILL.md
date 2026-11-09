@@ -180,7 +180,7 @@ Goal: a committed, reviewed head with a green gate, ready to push.
 ### Instructions
 
 Follow step 1 of `docs/agents/pr-workflow.md`'s "Closing a scheduled run's
-PR": commit, review, then run `pnpm gate:scoped` last, on the final head.
+PR".
 
 Done when the gate is green.
 
