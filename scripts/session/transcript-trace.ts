@@ -851,7 +851,8 @@ export function foldSubagentTrace(
     const trigger = l.via === 'native' && rows.find((r) => r.rule === l.rule)?.trigger
     return trigger ? { ...l, trigger } : l
   })
-  const mainRows = ledger.filter((r) => r.agentId === undefined)
+  const rowsOf = (agentId?: string) => ledger.filter((r) => r.agentId === agentId)
+  const mainRows = rowsOf(undefined)
   if (subagents.length === 0) return { ...trace, ruleLoads: triggered(trace.ruleLoads, mainRows) }
   const subs = subagents.map(({ records }) => extractTrace(records, env, docIndex))
   const folded = { ...trace }
@@ -876,11 +877,11 @@ export function foldSubagentTrace(
   folded.ruleLoads = triggered(trace.ruleLoads.filter((l) => !folded.rulesGlobal.includes(l.rule)), mainRows)
   folded.ruleUse = subs.flatMap((s, i) => {
     if (!s.helpedAsked && !s.helpedNamed) return []
-    const { agentId } = subagents[i]!
+    const { agentId, agent } = subagents[i]!
     // A subagent with no id can't be told from another, or from the main agent.
-    const loads = triggered(s.ruleLoads.filter((l) => !folded.rulesGlobal.includes(l.rule)), agentId ? ledger.filter((r) => r.agentId === agentId) : [])
+    const loads = triggered(s.ruleLoads.filter((l) => !folded.rulesGlobal.includes(l.rule)), agentId ? rowsOf(agentId) : [])
     return [{
-      by: subagents[i]!.agent?.type ?? 'workflow',
+      by: agent?.type ?? 'workflow',
       answered: !!s.helpedNamed,
       loads,
       helped: markUnloaded((s.helpedNamed ?? []).map((path) => ({ path })), loads, folded.rulesGlobal),

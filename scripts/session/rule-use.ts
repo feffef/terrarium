@@ -71,12 +71,12 @@ export const ruleKey = (path: string) => {
  *  `.claude/rules/` key: both what an agent names and what loaded match on it. */
 export const ruleName = (name: string) => {
   const key = ruleKey(name.includes('/') ? name : `.claude/rules/${name}`)
-  return /\.md$/i.test(key) ? key : `${key}.md`
+  return /\.md$/i.test(key) ? key.replace(/\.md$/i, '.md') : `${key}.md`
 }
 
 const isShell = (word = '') => /(^|\/)(ba)?sh$/.test(word)
 const isRedirect = (token = '') => /^\d*&?[<>]+&?$/.test(token)
-const isNoName = (token: string) => token.startsWith('-') || /[<>]/.test(token) || token.toLowerCase() === 'none'
+const isNoName = (token: string) => !token || token.startsWith('-') || token.toLowerCase() === 'none' || /^(rule|doc):$/.test(token)
 
 /** The names in the last `helped.sh` call among `commands`, normalised: `rule:x`
  *  becomes `.claude/rules/x.md`, `doc:x` the repo-relative path. `undefined`
@@ -94,7 +94,8 @@ export function helpedNames(commands: string[], rel: (p: string) => string): str
   if (args === undefined) return undefined
   // Agents separate names by commas or quote several in one argument.
   const tokens = args.flatMap((a) => a.split(/[\s,]+/)).filter(Boolean)
-  const names = tokens.filter((t, i) => !isNoName(t) && !isRedirect(tokens[i - 1]))
+  // An unspaced redirect (`rule:a>out`, `2>err`) leaves only what precedes it.
+  const names = tokens.flatMap((t, i) => (isRedirect(tokens[i - 1]) ? [] : [t.split(/\d*&?[<>]/)[0]!])).filter((t) => !isNoName(t))
   return [...new Set(names.map((t) => {
     const name = t.replace(/^(rule|doc):/, '')
     return t.startsWith('rule:') || name.includes('.claude/rules/') ? ruleName(name) : rel(name)

@@ -95,8 +95,9 @@ describe('helpedNames() — the names a helped.sh call gave', () => {
   it('drops every redirection form with its target, and NONE in any case', () => {
     expect(names('rule:x.md &> log doc:docs/a.md &>>log2 2> err NONE')).toEqual(['.claude/rules/x.md', 'docs/a.md'])
   })
-  it('keeps a rule name already ending in .MD as one rule', () => {
-    expect(names('rule:adr-0004.MD')).toEqual(['.claude/rules/adr-0004.MD'])
+  it('folds a .MD extension to .md, and keeps a name before an unspaced redirect', () => {
+    expect(names('rule:adr-0004.MD')).toEqual(['.claude/rules/adr-0004.md'])
+    expect(names('rule:a>out rule:b.md>/dev/null 2>err rule:')).toEqual(['.claude/rules/a.md', '.claude/rules/b.md'])
   })
   it('finds a call inside bash -c or -lc, and after shell flags', () => {
     expect(helpedNames([`bash -c "${S} rule:a.md"`], (p) => p)).toEqual(['.claude/rules/a.md'])
