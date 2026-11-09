@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSKTBjSfYnUxNHTJw1
 startedAt: 2026-11-09T00:25:11Z
-endedAt: 2026-11-09T01:07:52Z
+endedAt: 2026-11-09T01:12:26Z
 kind: interactive
 goal: Fix false claims in the Glass Box guide and check its Lessons against the live docs
 status: completed
-outcome: 16 corrected guide pages merged after a green gate and green CI
-summary: 'The owner typed /glassbox-curate with no focus. I ran the orientation and offered candidates; the owner answered "1 & 2 autonomous": fix the three false claims the memory page listed, and check Lessons written while docs sites were blocked against the live docs. Mid-run, in answer to my narrowness, the owner asked me to widen the check to more Subjects in the same PR while spend stayed low; that widening (Verification, Git and GitHub, Claude Code, Hooks, Agents) was human-instructed. Everything else was agent-initiated within that remit: I dispatched read-only sonnet checkers per Subject, opus writers for every sentence that states a fact, a separate claim checker, two fresh readers, code-review (both axes) and a pin-drift checker. About 45 pages were read against the docs. Sixteen pages changed; six more were checked and left alone. Findings the docs were silent on were checked in the installed package source where possible and otherwise left on the memory page. Surprises: the hooks page contradicted the permissions page on whether cloud sessions load the committed settings; a writer re-pinned the overview after checking one sentence, which I reverted; the Spec reviewer named six pages I should have read first, and I read them before landing. Gate passed on the final head and in CI; I posted my verdict and merged PR 2990 with merge-pr.ts. Spend ended at about 19.2 dollars of the 20 dollar budget. Open for a later run: re-pin the overview, and the claims the docs were silent on (on the memory page).'
+outcome: 17 corrected guide pages merged after a green gate and green CI
+summary: "The owner typed /glassbox-curate with no focus. I ran the orientation and offered candidates; the owner answered \"1 & 2 autonomous\": fix the three false claims the memory page listed, and check Lessons written while docs sites were blocked against the live docs. Mid-run, in answer to my narrowness, the owner asked me to widen the check to more Subjects in the same PR while spend stayed low; that widening (Verification, Git and GitHub, Claude Code, Hooks, Agents) was human-instructed. Everything else was agent-initiated within that remit. The transcript shows 16 subagent spawns and 6 follow-up messages to them: six read-only docs checkers (one per Subject group), four opus writers, a separate claim checker, two fresh readers, two code-review reviewers (Standards and Spec) and a pin-drift checker. The run entry's pagesRead lists 40 pages. Seventeen guide files changed (git diff of the merge range): 16 pages plus the overview; 15 carry the new pin, the overview keeps its old pin and one page changed only a link. Six more pages were checked and left alone. Findings the docs were silent on were checked in the installed package source where possible and otherwise left on the memory page. Surprises: the hooks page contradicted the permissions page on whether cloud sessions load the committed settings; a writer re-pinned the overview after checking one sentence, which I reverted; the Spec reviewer named six pages I should have read first, and I read them before landing. Gate passed on the final head and in CI; I posted my verdict and merged PR 2990 with merge-pr.ts. Session cost ended at 19.20 dollars of the 20 dollar budget (get_session). After the merge the owner asked for a retrospective, then for its findings to be logged, then for this log and the PR body to be corrected: my first PR body and log had wrong counts (about 45 pages, five checkers, 16 changed pages), which I found only when the owner asked whether the entries had enough detail. Open for a later run: re-pin the overview, the claims the docs were silent on (memory page), and the tooling ideas below."
 prs:
   - "2990"
 docsRead:
@@ -95,56 +95,59 @@ skillsUsed:
   - name: code-review
     reason: Standards and Spec axes before the gate, as ADR-0004 asks
   - name: close-session
-    reason: closure at PR open
+    reason: closure at PR open and again after the merge
   - name: log-session
     reason: this log
-  - name: writing-for-agents
-    reason: (no reason given)
   - name: retro
-    reason: (invoked as a slash command)
+    reason: the owner's retrospective request after the merge
+  - name: writing-for-agents
+    reason: loaded by retro as its first step
 frictions:
-  - description: Stop hook asked me four times to commit while subagent writers were still editing, so I pushed WIP commits of unreviewed drafts to the branch.
-    solution: Have the commit-and-push Stop hook stay quiet while a dispatched subagent is running, or word the ask as safe to defer until it finishes.
+  - description: "Stop hook feedback from command hook 5 said uncommitted changes five times, plus once for unpushed commits, while subagent writers were still editing; I pushed WIP drafts. The repo wires four Stop hooks, so its origin is outside the repo (unverified). Cost: noise commits on a feature branch, nothing landed unreviewed."
+    solution: Have that hook stay quiet while a dispatched subagent is running; find which config wires it, since the repo's .claude/settings.json does not.
     severity: minor
-  - description: I gave a background gate run both run_in_background and a trailing nohup ampersand; the double-background guard refused it and nothing ran.
+  - description: I gave a background gate run both run_in_background and a trailing nohup ampersand; the double-background guard (issue 1208) refused it, nothing ran, and I resent it once.
     solution: "CLAUDE.md or the dispatch Skill could show the one correct form: a plain foreground command, run_in_background true, output redirected to a log."
     severity: nit
-  - description: I skipped QUALITY.md, which the glassbox-curate Skill lists as read-first for its Lenses, and chose subagent checks without them.
-    solution: Skill read-first lists could mark which files a run may skip; or the orientation could print the Lenses with the skeleton.
+  - description: The glassbox-curate Skill lists QUALITY.md (Lenses only) as read-first; I never opened it and chose the checks without the Lenses. No page problem traced to the skip.
+    solution: Mark which read-first files a run may skip, or have orient.ts print the Lenses with the skeleton.
     severity: nit
-  - description: I dispatched writers before reading the overlapping pages (walkthroughs, protected paths, gate); the Spec reviewer then named six I had to read afterwards.
-    solution: The curate Skill's Read step could have orient.ts print, per edited page, the pages that link or overlap it, so they are read before the writers start.
+  - description: "I dispatched writers before reading overlapping pages; the Spec reviewer then named six: terrarium-practice session-logs, protected-paths and self-improvement-loop, verification gate, and two walkthroughs. I read them before landing; they needed no edit. Token cost not measured."
+    solution: Have orient.ts print, per Subject page, the pages that link to it or share its cited files, so they are read before the writers start.
     severity: minor
-  - description: A writer re-pinned the overview to the new commit after checking one sentence, which would have claimed the whole page true there; I caught it only on reading its report.
+  - description: A writer set the overview index.md to the new revision after checking one sentence, which would have claimed the whole page true at that commit; I caught it in its report and restored the old pin.
     solution: Tell writers in every brief to re-pin only pages whose cited files they re-read in full, or have the page test refuse a re-pin without a recorded read.
     severity: minor
-  - description: Checker reports quoted line numbers that did not match the page files (for example author-trust 91 and 93 against real lines 16 and 18), so writers had to relocate every finding.
+  - description: A checker quoted line numbers that did not match the page files (author-trust 91 and 93 against real lines 16 and 18), so the writer relocated each finding by hand.
     solution: Briefs for checkers should ask for the quoted sentence, not a line number, since fetched plain text numbers differently.
     severity: nit
-  - description: The first fresh-reader pass over 7 Claude Code pages mostly returned density complaints that were already there, costing tokens for little that changed a page.
+  - description: The first fresh-reader pass read 7 whole Claude Code pages (93,117 subagent tokens per its notice); most complaints predated my edits, and the changed sentences yielded two small fixes.
     solution: Scope fresh readers to the changed sentences plus their neighbours, as the Skill's Check step implies, instead of whole pages.
     severity: minor
-  - description: Re-pinning 15 pages needed a whole subagent to diff each page's cited files between the old and new revision; no script does it.
+  - description: Re-pinning 15 pages (counted from the revision lines) needed a whole subagent to diff each page's cited files between the old and new revision; it used 109,166 subagent tokens and found two real gaps.
     solution: Add a pin-drift script to the glassbox tooling that prints each cited file's diff between a page's old and new revision.
     severity: minor
-  - description: The Standards reviewer found three pages whose teaches field was stale against the body; nothing in page-checks compares teaches with the files a page cites.
+  - description: The Standards reviewer found three pages whose teaches field was stale against the body (blocking-hooks, hooks/10, permissions); nothing in page-checks compares teaches with the files a page cites.
     solution: Add a page check that warns when a path cited in a page is missing from its teaches field.
     severity: minor
-  - description: Each subagent brief repeated about 300 words of standing instructions, and the fan-out across 17 pages used nearly the whole 20 dollar budget.
+  - description: Each subagent brief repeated the same standing instructions, and the fan-out (16 subagent spawns, 6 resumes, per the transcript) took the session to 19.20 dollars of a 20 dollar budget (get_session).
     solution: Keep the writer, checker and reader boilerplate in one file under the glassbox-curate Skill folder and point each brief to it.
     severity: moderate
-durationSec: 2561
+  - description: My PR body and first log said about 45 pages and five checkers and 16 changed pages; the run entry lists 40 pages, I dispatched six checkers and 17 files changed. I found it only when the owner asked; CLAUDE.md says count every item.
+    solution: The curate Skill's Land step should say to take page and checker counts from the run entry and git diff --name-only before writing the PR body.
+    severity: moderate
+durationSec: 2835
 models:
-  claude-sonnet-5-5: 256
+  claude-sonnet-5-5: 286
 toolCounts:
-  Bash: 50
-  Read: 21
+  Bash: 56
+  Read: 22
   mcp__claude-code-remote__get_session: 3
   Agent: 16
-  ToolSearch: 3
+  ToolSearch: 4
   SendMessage: 6
   Edit: 7
-  Write: 2
+  Write: 4
   Skill: 5
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
@@ -153,6 +156,7 @@ toolCounts:
   mcp__github__pull_request_read: 2
   mcp__github__add_issue_comment: 1
   mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  mcp__github__update_pull_request: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/claude-code/30.skills.md
   - layers/glassbox/content/workshop/runs/2026-11-09T0025.yml
@@ -269,105 +273,105 @@ subagents:
     durationSec: 950
     toolCalls: 25
     modelCalls: 25
-    tokenShare: 5.5
+    tokenShare: 5.2
   - type: general-purpose
     task: Docs check Nuxt Lessons A
     model: sonnet
     durationSec: 58
     toolCalls: 17
     modelCalls: 4
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: general-purpose
     task: Docs check Nuxt Lessons B
     model: sonnet
     durationSec: 75
     toolCalls: 26
     modelCalls: 5
-    tokenShare: 1.6
+    tokenShare: 1.5
   - type: general-purpose
     task: Docs check Verification pages
     model: sonnet
     durationSec: 120
     toolCalls: 45
     modelCalls: 10
-    tokenShare: 1.8
+    tokenShare: 1.7
   - type: general-purpose
     task: Docs check Git GitHub pages
     model: sonnet
     durationSec: 109
     toolCalls: 34
     modelCalls: 9
-    tokenShare: 1.7
+    tokenShare: 1.6
   - type: general-purpose
     task: Fix docs-check findings
     model: opus
     durationSec: 760
     toolCalls: 82
     modelCalls: 75
-    tokenShare: 11.4
+    tokenShare: 10.8
   - type: general-purpose
     task: Docs check Claude Code Subject
     model: sonnet
     durationSec: 178
     toolCalls: 25
     modelCalls: 12
-    tokenShare: 3.1
+    tokenShare: 2.9
   - type: general-purpose
     task: Docs check Agents Subject
     model: sonnet
     durationSec: 169
     toolCalls: 33
     modelCalls: 9
-    tokenShare: 3.7
+    tokenShare: 3.5
   - type: general-purpose
     task: Fix Agents page claims
     model: opus
     durationSec: 933
     toolCalls: 42
     modelCalls: 25
-    tokenShare: 8.1
+    tokenShare: 7.7
   - type: general-purpose
     task: Fix Claude Code page claims
     model: opus
     durationSec: 916
     toolCalls: 32
     modelCalls: 27
-    tokenShare: 7.6
+    tokenShare: 7.1
   - type: general-purpose
     task: Claim-check changed sentences
     model: sonnet
     durationSec: 166
     toolCalls: 33
     modelCalls: 12
-    tokenShare: 3.5
+    tokenShare: 3.3
   - type: general-purpose
     task: Fresh reader pages set 1
     model: sonnet
     durationSec: 48
     toolCalls: 8
     modelCalls: 2
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: general-purpose
     task: Fresh reader pages set 2
     model: sonnet
     durationSec: 47
     toolCalls: 9
     modelCalls: 2
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: general-purpose
     task: "Code review: Standards axis"
     model: sonnet
     durationSec: 68
     toolCalls: 11
     modelCalls: 9
-    tokenShare: 1.6
+    tokenShare: 1.5
   - type: general-purpose
     task: "Code review: Spec axis"
     model: sonnet
     durationSec: 48
     toolCalls: 9
     modelCalls: 8
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: general-purpose
     task: Pin drift check on re-pinned pages
     model: sonnet
@@ -382,4 +386,5 @@ learnings:
   - vue-router 5.4.0 with a path like /blog/:slug(.*)* leaves the param absent for /blog and /blog/, so the file-routing page's empty catch-all claim is right; the docs summary suggested otherwise.
 ideas:
   - "Add a pin-drift script to the glassbox tooling: given a page, diff each file it cites between its old and new revision and print the changes beside the prose that names them. Today it takes a whole subagent per run, and it is what finds claims that went false when a page was re-pinned."
+  - Make orient.ts print, for each page a Subject focus would edit, the pages that link to it or cite the same files, so the Read step becomes a lookup instead of a judgement the Spec reviewer has to audit.
 landedBy: Stop
