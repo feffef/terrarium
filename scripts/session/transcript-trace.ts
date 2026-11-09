@@ -43,7 +43,6 @@ import {
   type DocLineIndex,
   type DocText,
   type NearMiss,
-  type ShellCommand,
 } from './shell-reads.ts'
 import { adrDocNumber, adrHintsIn, ruleAdr, ruleBlockFiles, type AdrHintVia } from '../lib/adr-rules.ts'
 import { root, runIfMain } from '../lib/cli.ts'
