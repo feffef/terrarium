@@ -99,6 +99,34 @@ describe('recentPrs()', () => {
   })
 })
 
+describe('recentPrs() with a grep', () => {
+  const mk = (n: number, hour: number, title: string): RawMergeCommit => ({
+    hash: `h${n}`,
+    isoCommitTime: `2026-07-11T${hour}:00:00Z`,
+    subject: `Merge pull request #${n} from feffef/b${n}`,
+    body: title,
+  })
+  const commits = [mk(1, 10, 'Fix Glossary typo'), mk(2, 11, 'add tests'), mk(3, 12, 'glossary: new term'), mk(4, 13, 'axb and a.b')]
+  const numbers = (prs: { number: number }[]) => prs.map((p) => p.number)
+
+  it('matches the title case-insensitively', () => {
+    expect(numbers(recentPrs(commits, 20, 'GLOSSARY'))).toEqual([3, 1])
+  })
+  it('returns [] when no title matches', () => {
+    expect(recentPrs(commits, 20, 'nothing')).toEqual([])
+  })
+  it('filters before the limit, so N means the last N matches', () => {
+    expect(numbers(recentPrs(commits, 1, 'glossary'))).toEqual([3])
+  })
+  it('combines with since', () => {
+    expect(numbers(prsSince(commits, '2026-07-11T11:00:00Z', 'glossary'))).toEqual([3])
+  })
+  it('treats the text as a plain substring, not a regex', () => {
+    expect(numbers(recentPrs([mk(5, 10, 'axb')], 20, 'a.b'))).toEqual([])
+    expect(numbers(recentPrs(commits, 20, 'a.b'))).toEqual([4])
+  })
+})
+
 describe('prsSince()', () => {
   const commits: RawMergeCommit[] = [
     { hash: 'h1', isoCommitTime: '2026-07-11T09:00:00Z', subject: 'Merge pull request #312 from feffef/foo', body: 'on the boundary' },

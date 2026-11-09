@@ -22,6 +22,8 @@
 //   Add --diff to either form to also print each PR's touched files (renames
 //   as delete + add) and the first lines of its diff, so a draft starts from
 //   the change, not the title (#2854): { number, title, mergedAtUtc, files, diff }.
+//   Add --grep <text> to keep only PRs whose title contains the text (case-
+//   insensitive, plain substring). It filters first, so N is the last N matches.
 import { git, readMergeCommits, type RawMergeCommit } from '../lib/git.ts'
 import { toUtcIso } from './list-merges-since.ts'
 import { root, fail, runIfMain } from '../lib/cli.ts'
@@ -80,14 +82,16 @@ export function toRecentPr(commit: RawMergeCommit): RecentPr | null {
   }
 }
 
-/** The last `limit` PR merges out of `commits`, newest-first. Non-PR-merge
+/** The last `limit` PR merges (whose title contains `grep`, if given), newest-first. Non-PR-merge
  *  commits are silently skipped (see `toRecentPr`); commits are re-sorted by
  *  their own timestamp rather than trusting input order, since `git log`'s
  *  ordering can differ once merges/rebases are involved. */
-export function recentPrs(commits: RawMergeCommit[], limit = DEFAULT_LIMIT): RecentPr[] {
+export function recentPrs(commits: RawMergeCommit[], limit = DEFAULT_LIMIT, grep?: string): RecentPr[] {
+  const needle = grep?.toLowerCase()
   return commits
     .map((c) => ({ commit: c, pr: toRecentPr(c) }))
     .filter((x): x is { commit: RawMergeCommit; pr: RecentPr } => x.pr !== null)
+    .filter((x) => needle === undefined || x.pr.title.toLowerCase().includes(needle))
     .sort((a, b) => Date.parse(b.pr.mergedAtUtc) - Date.parse(a.pr.mergedAtUtc))
     .slice(0, limit)
     .map((x) => x.pr)
@@ -95,10 +99,10 @@ export function recentPrs(commits: RawMergeCommit[], limit = DEFAULT_LIMIT): Rec
 
 /** Every PR merge at or after `since` (an ISO date or datetime), newest-first,
  *  with no count cap — a story window must not silently drop PRs. */
-export function prsSince(commits: RawMergeCommit[], since: string): RecentPr[] {
+export function prsSince(commits: RawMergeCommit[], since: string, grep?: string): RecentPr[] {
   const sinceMs = Date.parse(since)
   if (Number.isNaN(sinceMs)) throw new Error(`not an ISO date or datetime: ${since}`)
-  return recentPrs(commits, Infinity).filter((pr) => Date.parse(pr.mergedAtUtc) >= sinceMs)
+  return recentPrs(commits, Infinity, grep).filter((pr) => Date.parse(pr.mergedAtUtc) >= sinceMs)
 }
 
 /** Attach a PR's touched files and the first changed lines of its diff
@@ -129,7 +133,13 @@ function describeChanges(prs: RecentPr[]): RecentPr[] {
 
 function main(): void {
   const raw = process.argv.slice(2)
-  const argv = raw.filter((a) => a !== '--diff')
+  const g = raw.indexOf('--grep')
+  let grep: string | undefined
+  if (g !== -1) {
+    grep = raw[g + 1]
+    if (grep === undefined) fail('--grep needs text to match in titles')
+  }
+  const argv = raw.filter((a, i) => a !== '--diff' && a !== '--grep' && !(g !== -1 && i === g + 1))
   // `hash` only feeds --diff; keep it out of the printed shape.
   const print = (prs: RecentPr[]) =>
     process.stdout.write(
@@ -139,7 +149,7 @@ function main(): void {
     const since = argv[1]
     if (since === undefined) fail('--since needs an ISO date or datetime')
     try {
-      print(prsSince(readMergeCommits(root), since))
+      print(prsSince(readMergeCommits(root), since, grep))
     } catch (e) {
       fail((e as Error).message)
     }
@@ -151,7 +161,7 @@ function main(): void {
     limit = Number(limitArg)
     if (!Number.isInteger(limit) || limit <= 0) fail(`not a positive integer: ${limitArg}`)
   }
-  print(recentPrs(readMergeCommits(root), limit))
+  print(recentPrs(readMergeCommits(root), limit, grep))
 }
 
 runIfMain(import.meta.url, main)
