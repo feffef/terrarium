@@ -32,5 +32,4 @@ line, or issue/PR number) and says in one line what that source decides. A
 report: modify no file and post nothing to GitHub.
 
 Report one line per item: `item | verdict | source | reason | refined
-proposal (refine only)`. Then, for each rule and doc you loaded or read: its
-path, why it loaded or was read, and whether it was useful (yes, partly, no).
+proposal (refine only)`.

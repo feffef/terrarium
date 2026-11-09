@@ -30,7 +30,6 @@ is ruled in or out.
 
 Report every finding labelled silent failure or missed invocation, with its
 session ids, quoted evidence, what the Skill promised against what happened,
-and your best guess at why. For each rule and doc you loaded or read: its
-path, why it loaded or was read, and whether it was useful (yes, partly, no).
+and your best guess at why.
 
 Report in under 300 words plus 150 per finding.

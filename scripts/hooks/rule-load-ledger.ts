@@ -17,9 +17,11 @@ const str = (obj: unknown, key: string) => {
 export function ledgerRowOf(payload: unknown): RuleLoadRow | null {
   const file = str(payload, 'file_path')
   if (str(payload, 'load_reason') !== 'path_glob_match' || !file?.includes('/.claude/rules/')) return null
-  const cwd = str(payload, 'cwd')
+  // Relative to the root the rule loaded from (a worktree's, for a worktree
+  // agent), not the cwd, which a `cd` moves.
+  const base = file.slice(0, file.lastIndexOf('/.claude/rules/'))
   const trigger = str(payload, 'trigger_file_path')
-  const rel = trigger && cwd && trigger.startsWith(`${cwd}/`) ? trigger.slice(cwd.length + 1) : trigger
+  const rel = trigger?.startsWith(`${base}/`) ? trigger.slice(base.length + 1) : trigger
   const agentId = str(payload, 'agent_id')?.replace(/^agent-/, '')
   const agentType = str(payload, 'agent_type')
   return {

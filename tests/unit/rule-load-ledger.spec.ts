@@ -21,6 +21,10 @@ describe('ledgerRowOf()', () => {
       .toEqual({ rule: '.claude/rules/adr-0004.md', trigger: 'scripts/gate/gate.ts', agentId: 'a1', agentType: 'Explore' })
   })
 
+  it('makes the trigger relative to the root the rule loaded from, not the cwd', () => {
+    expect(ledgerRowOf(load({ cwd: '/repo/scripts' }))).toEqual({ rule: '.claude/rules/adr-0004.md', trigger: 'scripts/gate/gate.ts' })
+  })
+
   it('strips a worktree root from the trigger', () => {
     const row = ledgerRowOf(load({ cwd: '/repo/.claude/worktrees/w1', file_path: '/repo/.claude/worktrees/w1/.claude/rules/adr-0004.md', trigger_file_path: '/repo/.claude/worktrees/w1/app/x.vue' }))
     expect(row).toEqual({ rule: '.claude/rules/adr-0004.md', trigger: 'app/x.vue' })

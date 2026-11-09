@@ -269,5 +269,3 @@ Return, in your final reply:
   severity since (`--summary`'s `since:`).
 - **(f) The shared Frictions:** each one `--summary` lists in two clusters,
   moved or kept because its text names both causes.
-- For each rule and doc you loaded or read: its path, why it loaded or was
-  read, and whether it was useful (yes/partly/no).

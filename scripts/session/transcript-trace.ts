@@ -681,7 +681,8 @@ export function extractTrace(
 
   const rel = relativizer(records)
   const firstLoads = new Map<string, RuleLoad>()
-  for (const l of loads) if (!alwaysLoadedRules.includes(l.rule) && !firstLoads.has(l.rule)) firstLoads.set(l.rule, l)
+  // A rule loaded both ways counts as native: only a native load has a ledger trigger.
+  for (const l of loads) if (!alwaysLoadedRules.includes(l.rule) && firstLoads.get(l.rule)?.via !== 'native') firstLoads.set(l.rule, l)
   const adrReadAfter = (rule: string, at: number): boolean => {
     const n = ruleAdr(basename(rule))
     return n !== undefined && adrReadInFull(records.slice(at + 1), n, docIndex, rel)
@@ -845,8 +846,9 @@ export function foldSubagentTrace(
 ): MechanicalTrace {
   if (subagents.length === 0 && ledger.length === 0) return trace
   // The ledger records native loads only: a hint hook fires no InstructionsLoaded.
-  const triggered = (loads: RuleLoad[], agentId?: string) => loads.map((l) => {
-    const trigger = l.via === 'native' && ledger.find((r) => r.rule === l.rule && (r.agentId ?? undefined) === agentId)?.trigger
+  // `agentId` undefined is the main agent; a subagent without one gets no trigger.
+  const triggered = (loads: RuleLoad[], agentId?: string | null) => loads.map((l) => {
+    const trigger = l.via === 'native' && agentId !== null && ledger.find((r) => r.rule === l.rule && r.agentId === agentId)?.trigger
     return trigger ? { ...l, trigger } : l
   })
   if (subagents.length === 0) return { ...trace, ruleLoads: triggered(trace.ruleLoads) }
@@ -873,7 +875,7 @@ export function foldSubagentTrace(
   folded.ruleLoads = triggered(trace.ruleLoads.filter((l) => !folded.rulesGlobal.includes(l.rule)))
   folded.ruleUse = subs.flatMap((s, i) => {
     if (!s.helpedAsked && !s.helpedNamed) return []
-    const loads = triggered(s.ruleLoads.filter((l) => !folded.rulesGlobal.includes(l.rule)), subagents[i]!.agentId)
+    const loads = triggered(s.ruleLoads.filter((l) => !folded.rulesGlobal.includes(l.rule)), subagents[i]!.agentId ?? null)
     return [{
       by: subagents[i]!.agent?.type ?? 'workflow',
       answered: !!s.helpedNamed,
@@ -890,12 +892,14 @@ export function foldSubagentTrace(
   return folded
 }
 
-/** A named rule with no load for that agent keeps its entry, marked (#3009). */
+/** A named rule with no load for that agent keeps its entry, marked; an
+ *  always-loaded one is dropped, since loads leave those out (#3009). */
 function markUnloaded(helped: HelpedEntry[], loads: RuleLoad[], global: string[]): HelpedEntry[] {
-  return helped.map((h) => {
+  return helped.flatMap((h) => {
     const path = h.path.includes('.claude/rules/') ? ruleKey(h.path) : h.path
-    const loaded = !path.startsWith('.claude/rules/') || global.includes(path) || loads.some((l) => l.rule === path)
-    return loaded ? { ...h, path } : { path, why: NO_LOAD_WHY }
+    if (global.includes(path)) return []
+    const loaded = !path.startsWith('.claude/rules/') || loads.some((l) => l.rule === path)
+    return [loaded ? { ...h, path } : { path, why: h.why ? `${NO_LOAD_WHY} ${h.why}` : NO_LOAD_WHY }]
   })
 }
 

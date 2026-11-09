@@ -3,7 +3,7 @@
 // rule-load ledger in, the stitched session log out.
 import { describe, expect, it } from 'vitest'
 import { extractTrace, foldSubagentTrace, stitch, type AuthoredScratch } from '../../scripts/session/transcript-trace.ts'
-import { subagentNote, type RuleLoadRow } from '../../scripts/session/rule-use.ts'
+import { helpedNames, subagentNote, type RuleLoadRow } from '../../scripts/session/rule-use.ts'
 import { validateEntry } from '../../scripts/session/journal-files.ts'
 
 const NO_ENV = {}
@@ -40,9 +40,16 @@ describe('ruleUse — the main agent', () => {
     expect(validateEntry(entry).ok).toBe(true)
   })
 
-  it('gives a trigger only to a native load: a hint-injected load fires no ledger row', () => {
-    const trace = extractTrace([cwd, hinted('adr-0004.md'), native('adr-0004.md')], NO_ENV)
-    const folded = foldSubagentTrace(trace, [], NO_ENV, undefined, [{ rule: '.claude/rules/adr-0004.md', trigger: 'x.ts' }])
+  it('records a rule loaded both ways as native, with its trigger, whichever came first', () => {
+    const ledger: RuleLoadRow[] = [{ rule: '.claude/rules/adr-0004.md', trigger: 'x.ts' }]
+    for (const records of [[cwd, hinted('adr-0004.md'), native('adr-0004.md')], [cwd, native('adr-0004.md'), hinted('adr-0004.md')]]) {
+      const folded = foldSubagentTrace(extractTrace(records, NO_ENV), [], NO_ENV, undefined, ledger)
+      expect(ruleUseOf(stitch(authored({ helped: [] }), folded))[0]!.loads).toEqual([{ rule: '.claude/rules/adr-0004.md', via: 'native', trigger: 'x.ts' }])
+    }
+  })
+
+  it('gives a hint-only load no trigger: a hint hook fires no ledger row', () => {
+    const folded = foldSubagentTrace(extractTrace([cwd, hinted('adr-0004.md')], NO_ENV), [], NO_ENV, undefined, [{ rule: '.claude/rules/adr-0004.md', trigger: 'x.ts' }])
     expect(ruleUseOf(stitch(authored({ helped: [] }), folded))[0]!.loads).toEqual([{ rule: '.claude/rules/adr-0004.md', via: 'hint' }])
   })
 
@@ -56,14 +63,32 @@ describe('ruleUse — the main agent', () => {
     expect(stitch(authored({ helped: [] }), extractTrace([cwd, always('adr-0003.md')], NO_ENV))).not.toHaveProperty('ruleUse')
   })
 
-  it('marks a named rule this agent never loaded, but not an always-loaded one', () => {
+  it('marks a named rule this agent never loaded, keeping its why, and drops an always-loaded one', () => {
     const trace = extractTrace([cwd, always('adr-0003.md'), native('adr-0004.md')], NO_ENV)
-    const helped = [{ path: '.claude/rules/adr-0003.md' }, { path: '.claude/rules/adr-0012.md' }, { path: 'docs/agents/pr-workflow.md' }]
+    const helped = [{ path: '.claude/rules/adr-0003.md' }, { path: '.claude/rules/adr-0012.md', why: 'pingbacks' }, { path: 'docs/agents/pr-workflow.md' }]
     expect(ruleUseOf(stitch(authored({ helped }), trace))[0]!.helped).toEqual([
-      { path: '.claude/rules/adr-0003.md' },
-      { path: '.claude/rules/adr-0012.md', why: '(no load recorded)' },
+      { path: '.claude/rules/adr-0012.md', why: '(no load recorded) pingbacks' },
       { path: 'docs/agents/pr-workflow.md' },
     ])
+  })
+})
+
+describe('helpedNames() — the names a helped.sh call gave', () => {
+  const S = 'sh /repo/scripts/session/helped.sh'
+  const names = (args: string) => helpedNames([`${S} ${args}`], (p) => p)
+  it('normalises rule names, with or without .md', () => {
+    expect(names('rule:adr-0004 rule:adr-0005.md doc:docs/a.md')).toEqual(['.claude/rules/adr-0004.md', '.claude/rules/adr-0005.md', 'docs/a.md'])
+  })
+  it('drops redirections, flags, a literal none and separating commas', () => {
+    expect(names('-v rule:a.md, doc:docs/b.md > /dev/null 2>&1')).toEqual(['.claude/rules/a.md', 'docs/b.md'])
+    expect(names('rule:a.md >>log')).toEqual(['.claude/rules/a.md'])
+    expect(names('none')).toEqual([])
+  })
+  it('splits one quoted argument holding several names', () => {
+    expect(names("'rule:a.md doc:docs/b.md'")).toEqual(['.claude/rules/a.md', 'docs/b.md'])
+  })
+  it('finds a call inside bash -c', () => {
+    expect(helpedNames([`bash -c "${S} rule:a.md"`], (p) => p)).toEqual(['.claude/rules/a.md'])
   })
 })
 
@@ -126,6 +151,12 @@ describe('ruleUse — subagents', () => {
   it('leaves out a subagent that was never asked and never answered', () => {
     const folded = foldSubagentTrace(main, [sub([native('adr-0004.md')])], NO_ENV)
     expect(stitch(authored({ helped: [] }), folded)).not.toHaveProperty('ruleUse')
+  })
+
+  it("never gives a subagent with no agent id the main agent's triggers", () => {
+    const folded = foldSubagentTrace(main, [{ records: [cwd, note, native('adr-0004.md')], agent: { type: 'Explore' } }], NO_ENV, undefined,
+      [{ rule: '.claude/rules/adr-0004.md', trigger: 'main.ts' }])
+    expect(ruleUseOf(stitch(authored({ helped: [] }), folded))[0]!.loads).toEqual([{ rule: '.claude/rules/adr-0004.md', via: 'native' }])
   })
 
   it('counts a workflow agent with no type as `workflow`', () => {
