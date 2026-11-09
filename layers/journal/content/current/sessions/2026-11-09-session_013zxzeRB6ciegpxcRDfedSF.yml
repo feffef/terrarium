@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRB6ciegpxcRDfedSF
 startedAt: 2026-11-09T00:33:00Z
-endedAt: 2026-11-09T00:52:48Z
+endedAt: 2026-11-09T01:17:21Z
 kind: interactive
 goal: Link the Glass Box workshop, not the drafts, from the home page
-status: in-review
-outcome: PR 2986 merged; follow-up PR 2988 drops the stale guide page count and awaits a human merge
-summary: "The user asked to drop the home page's link to the Glass Box drafts and link the workshop instead (human-instructed). I asked one question about the workshop row's note and the user chose its wording (human-instructed). I replaced the Drafts row with a Workshop row in app/pages/index.vue, removed the unused drafts count and query, and updated the e2e smoke test (agent-initiated follow-through). The user then said the tile intro was not a meaningful summary; I asked, and they chose a textbook-only line mentioning concepts and technology (human-instructed). The user asked for /code-review against origin/main; two review subagents ran and both found that layers/glassbox/GLOSSARY.md still said the band shows the drafts Space, which I fixed (agent-initiated fix of a review finding). gate:scoped passed before the PR, and CI was green on the final head. The PR was merged by a human, as index.vue is Human-only. The user then asked whether the guide row's \\\"core pages, the current focus\\\" still made sense without drafts and said a count goes stale (human-instructed); I made the note static text in follow-up PR 2988 (agent-initiated wording: the lessons and walkthroughs)."
+status: completed
+outcome: "PRs 2986 and 2988 merged: the home page tile links the workshop, with new notes and blurb"
+summary: "The user asked to drop the home page's link to the Glass Box drafts and link the workshop instead (human-instructed). I replaced the Drafts row with a Workshop row in app/pages/index.vue, removed the unused drafts count and query, and updated the e2e smoke test (agent-initiated follow-through); gate:scoped passed and PR 2986 merged. The user then steered the tile wording over follow-up PR 2988, each step a human instruction answered through questions: a meaningful intro, then dropping the stale page count, then plain words a visitor knows, then an encouraging guide note naming lessons and walkthroughs (their review comment), then matching the workshop note to it. The user asked me to read the whole tile section and compare it with the workshop page; that showed the intro and the blurb both said textbook, so I removed the intro line and, after the user said I had dropped it literally, folded its wording into the blurb. Two /code-review runs (the second dispatched two review subagents) found a stale line in layers/glassbox/GLOSSARY.md, which I fixed (agent-initiated). The owner enabled auto-merge on 2988 and it merged."
 prs:
   - "2986"
   - "2988"
@@ -33,6 +33,10 @@ docsRead:
     reason: (read before editing)
   - path: tests/e2e/smoke.spec.ts
     reason: (read before editing)
+  - path: layers/glassbox/content/workshop/pages/index.md
+    reason: (no reason given)
+  - path: app/components/HomeShowcase.vue
+    reason: (no reason given)
 skillsUsed:
   - name: code-review
     reason: owed because the diff was over the simple-change limit; found the stale glossary line
@@ -61,24 +65,32 @@ frictions:
   - description: Edited layers/glassbox/GLOSSARY.md before the ADR-0021 and tenant-glossary reads that the hook and rule asked for; the edit was right, no cost.
     solution: Read the Tenant glossary before editing a Tenant's files, as the tenant-glossary rule says.
     severity: nit
-durationSec: 1189
+  - description: Took the option "Drop the intro line" literally and deleted the wording the user wanted kept; the user said so and I redid it as a fold into the blurb.
+    solution: When an option removes user-visible text, say where its wording goes before acting, and ask if that is unclear.
+    severity: minor
+  - description: Edited the tile's wording twice without reading the whole section; the user had to tell me to read such a section in full, which then showed the repeated textbook.
+    solution: Read the whole tile section in index.vue and HomeShowcase before the first wording edit.
+    severity: minor
+durationSec: 2661
 models:
-  claude-sonnet-5-5: 119
+  claude-sonnet-5-5: 221
 toolCounts:
-  Grep: 4
-  Read: 9
-  AskUserQuestion: 4
-  Bash: 23
+  Grep: 5
+  Read: 12
+  AskUserQuestion: 11
+  Bash: 39
   Skill: 5
-  ToolSearch: 2
+  ToolSearch: 3
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 2
-  ReadNotifications: 8
-  mcp__github__pull_request_read: 3
-  Edit: 2
-  mcp__github__update_pull_request: 1
+  ReadNotifications: 25
+  mcp__github__pull_request_read: 6
+  Edit: 3
+  mcp__github__update_pull_request: 6
   Agent: 2
+  mcp__github__add_reply_to_pull_request_comment: 1
+  Glob: 1
 filesEdited:
   - app/pages/index.vue
   - layers/glassbox/GLOSSARY.md
@@ -93,6 +105,8 @@ rulesLoaded:
   - .claude/rules/adr-0021.md
   - .claude/rules/tenant-glossary.md
   - .claude/rules/glossary-terms.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -167,19 +181,25 @@ ruleVerdicts:
   - path: .claude/rules/tenant-layers.md
     reason: Only the spec review agent loaded it; it reported it did not apply
     useful: no
+  - path: .claude/rules/glassbox-content.md
+    reason: Loaded when I read the workshop page; it says Glass Box prose holds no changing counts, which backed dropping the page count; it applies to guide prose, not the home page
+    useful: partly
+  - path: .claude/rules/mermaid-lanes.md
+    reason: About Mermaid diagrams; I touched none
+    useful: no
 subagents:
   - type: general-purpose
     task: Standards review of PR diff
     durationSec: 17
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 8.4
+    tokenShare: 4
   - type: general-purpose
     task: Spec review of PR diff
     durationSec: 17
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 8.9
+    tokenShare: 4.2
 gitBranch: claude/admiring-hopper-1jtsne
 entrypoint: remote
 cliVersion: 2.1.319
