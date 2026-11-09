@@ -25,6 +25,16 @@ pages:
     checked: '2026-11-08'
   - page: git-github/20.author-trust
     checked: '2026-11-08'
+  - page: git-github/30.composite-actions
+    checked: '2026-11-09'
+  - page: git-github/40.dependabot-grouping
+    checked: '2026-11-09'
+  - page: git-github/50.git-worktrees
+    checked: '2026-11-09'
+  - page: git-github/60.attribution
+    checked: '2026-11-09'
+  - page: git-github/70.issue-triage-labels
+    checked: '2026-11-09'
   - page: hooks/10.hooks
     checked: '2026-11-07'
   - page: hooks/20.blocking-hooks
