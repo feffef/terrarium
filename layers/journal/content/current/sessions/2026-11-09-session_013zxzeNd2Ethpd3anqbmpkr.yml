@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeNd2Ethpd3anqbmpkr
 startedAt: 2026-11-09T20:36:03Z
-endedAt: 2026-11-09T20:58:34Z
+endedAt: 2026-11-09T21:13:13Z
 kind: interactive
 goal: Audit how useful the Platform's rules were since Oct 16
 status: completed
-outcome: Published an artifact report with per-rule ratings, evidence and proposed path changes; no repo changes
-summary: "The user first asked when the per-rule verdict instruction last changed; I asked which one they meant, then answered from git history on origin/main (wording from 2026-10-15, later edits only rewraps and small additions). They then asked for a full audit of the rules since Oct 16 (human-instructed): a per-rule breakdown of useful, partly and not-useful ratings from the session logs, a peek into sampled sessions for patterns, and ideas for adding, narrowing or removing rule paths. Per their stated preference I asked four scoping questions first; they chose all 40 rules, logs plus sampled transcripts, report only, and an artifact page. Agent-initiated within that scope: the aggregation scripts in .throwaway, seven Haiku subagents that each read one session's events, the choice of which sessions to sample, and the proposals. Two user follow-ups arrived mid-turn and were handled the same turn: whether rule paths changed recently (yes, 11 commits; four rules were created inside the window, now a caveat on the page) and a request to describe each rule on the page (done). Result, at https://claude.ai/artifact/XZj2n5SbM7dqVKv6t4Ao3v: path-scoped rules were rated yes 17 percent, partly 18 percent, no 66 percent; the yes-rate is 34 percent when the session edited a governed file and 10 percent otherwise; six rules hold 46 percent of the no ratings. The transcripts could confirm rule loads in only 4 of 7 sessions, so the logs' own reason text carried the evidence on triggers. I read ADR-0029 and ADR-0027 in full only after drafting the proposals; ADR-0029 says broad paths are fine, which turned the advice from narrow these rules into candidates for a trial a Trusted user starts. Still open: record the triggering path in the log so per-path advice rests on data. No repo files changed and no PR was opened."
+outcome: Published an artifact report on per-rule usefulness with evidence and revised proposals; no repo changes
+summary: "The user first asked when the per-rule verdict instruction last changed; I asked which one they meant, then answered from git history on origin/main. They then asked for a full audit of the rules since Oct 16 (human-instructed): per-rule useful, partly and not-useful ratings from the session logs, a peek into sampled sessions for patterns, and ideas for adding, narrowing or removing rule paths. Per their stated preference I asked four scoping questions first; they chose all 40 rules, logs plus sampled transcripts, report only, and an artifact page. Agent-initiated within that scope: the aggregation scripts in .throwaway, seven Haiku subagents reading one session each, and the first proposals. Mid-turn user follow-ups, each handled in the same turn: whether rule paths changed recently (11 commits, four rules created inside the window, now a caveat), a request to describe each rule on the page, which model the subagents use, and whether sessions complain about rules. The user then asked for subagents to dig into more sessions, especially why low-yield rules were useful in specific sessions; after asking which rules and what depth they chose all four rule groups, logs first. Four subagents analysed the 136 yes ratings of ten rules from the logs, then eight Haiku subagents checked the best short sessions in transcripts. Result at https://claude.ai/artifact/XZj2n5SbM7dqVKv6t4Ao3v: path-scoped rules were rated yes 17 percent, partly 18 percent, no 66 percent, with 34 percent yes when the session edited a governed file and 10 percent otherwise. Of 11 yes ratings checked against transcripts, 4 shaped a decision, 3 only confirmed it and 4 left no trace, so yes is an upper bound. Only 18 of 1,907 frictions complain about rule noise, all nit or minor. The ledger cluster irrelevant-rules-loaded shows the owner already decided to keep the Bash read hint (issue #2167) and dropped narrowing mermaid-lanes, which I only found after the user asked about frictions; I withdrew two of my first proposals (drop CLAUDE.md and docs/agents from ADR-0029, drop .agents/skills from ADR-0005) and demoted two. Still open: record the triggering path of each load in the log. No repo files changed and no PR was opened."
 prs: []
 docsRead:
   - path: docs/agents/git-conventions.md
@@ -60,18 +60,27 @@ frictions:
   - description: A throwaway script imported picomatch, which is not a direct dependency, and failed; switched to node:path matchesGlob.
     solution: Use node:path matchesGlob for glob checks in throwaway scripts.
     severity: nit
-durationSec: 1351
+  - description: Eight phase-two transcript checks cost about 1.05M subagent tokens and mostly could not show whether a rule changed anything, as events omit hook-injected rule text.
+    solution: Before fanning out, confirm the target rule's text or a Read of it appears in one session's events; else use logs only.
+    severity: minor
+  - description: Published two path-removal proposals from rule-level counts before checking per-path dependence; the second round showed they would lose yes sessions and I withdrew them.
+    solution: Compute per-path dependence of the yes sessions before proposing any path removal.
+    severity: minor
+  - description: Proposed changes to the Bash read hint and mermaid-lanes without checking the Friction Ledger and closed issues; the owner had already decided both, found only after the user's frictions question.
+    solution: Search the ledger and closed issues for an existing decision before proposing a change to a mechanism.
+    severity: minor
+durationSec: 2230
 models:
-  claude-sonnet-5-5: 201
+  claude-sonnet-5-5: 282
 toolCounts:
   Grep: 3
   Read: 6
-  Bash: 36
-  AskUserQuestion: 1
-  Write: 9
-  Agent: 7
-  Artifact: 4
-  Edit: 27
+  Bash: 47
+  AskUserQuestion: 2
+  Write: 13
+  Agent: 19
+  Artifact: 5
+  Edit: 28
   Skill: 2
 filesEdited:
   - .throwaway/rule-audit/cov.ts
@@ -81,6 +90,8 @@ filesEdited:
   - .throwaway/rule-audit/cost.ts
   - .throwaway/rule-audit/missed.ts
   - .throwaway/rule-audit/frictions.ts
+  - .throwaway/rule-audit/dig-data.ts
+  - .throwaway/rule-audit/fr2.ts
 rulesLoaded:
   - .claude/rules/adr-0027.md
   - .claude/rules/adr-0029.md
@@ -88,6 +99,7 @@ rulesLoaded:
   - .claude/rules/adr-0004-human-merge.md
   - .claude/rules/guards.md
   - .claude/rules/adr-0030.md
+  - .claude/rules/tenant-glossary.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -96,8 +108,6 @@ rulesGlobal:
 rulesFollowedUp:
   - .claude/rules/adr-0027.md
   - .claude/rules/adr-0029.md
-rulesLoadedBySubagents:
-  - .claude/rules/tenant-glossary.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
     reason: No PR was opened, so the gate and merge steps did not apply
@@ -139,54 +149,136 @@ subagents:
     durationSec: 110
     toolCalls: 18
     modelCalls: 18
-    tokenShare: 6.9
+    tokenShare: 3.1
   - type: general-purpose
     task: Peek session 017X5SQq rule loads
     model: haiku
     durationSec: 139
     toolCalls: 24
     modelCalls: 22
-    tokenShare: 8
+    tokenShare: 3.6
   - type: general-purpose
     task: Peek session 011toGE7 rule loads
     model: haiku
     durationSec: 164
     toolCalls: 33
     modelCalls: 32
-    tokenShare: 10.6
+    tokenShare: 4.7
   - type: general-purpose
     task: Peek session 013zxzeR rule loads
     model: haiku
     durationSec: 81
     toolCalls: 17
     modelCalls: 16
-    tokenShare: 5.9
+    tokenShare: 2.6
   - type: general-purpose
     task: Peek session 013zxzeS rule loads
     model: haiku
     durationSec: 93
     toolCalls: 19
     modelCalls: 18
-    tokenShare: 6.5
+    tokenShare: 2.9
   - type: general-purpose
     task: Peek session 016THR5o rule loads
     model: haiku
     durationSec: 208
     toolCalls: 42
     modelCalls: 41
-    tokenShare: 14.6
+    tokenShare: 6.5
   - type: general-purpose
     task: Peek session 01QMsuxS rule loads
     model: haiku
     durationSec: 88
     toolCalls: 16
     modelCalls: 14
-    tokenShare: 5.9
+    tokenShare: 2.6
+  - type: general-purpose
+    task: Why ADR-0029 and ADR-0030 were useful
+    durationSec: 67
+    toolCalls: 7
+    modelCalls: 6
+    tokenShare: 1.6
+  - type: general-purpose
+    task: Why ADR-0021 and tenant-glossary were useful
+    durationSec: 75
+    toolCalls: 8
+    modelCalls: 7
+    tokenShare: 1.7
+  - type: general-purpose
+    task: Why ADR-0005 and ADR-0008 were useful
+    durationSec: 50
+    toolCalls: 6
+    modelCalls: 6
+    tokenShare: 1.5
+  - type: general-purpose
+    task: Why four small-yield rules were useful
+    durationSec: 42
+    toolCalls: 5
+    modelCalls: 5
+    tokenShare: 1.5
+  - type: general-purpose
+    task: "Check 01F2JGBV: ADR-0029 and mdc rule use"
+    model: haiku
+    durationSec: 137
+    toolCalls: 26
+    modelCalls: 24
+    tokenShare: 4.1
+  - type: general-purpose
+    task: "Check 013zxzeS: ADR-0029 orphan test"
+    model: haiku
+    durationSec: 166
+    toolCalls: 25
+    modelCalls: 24
+    tokenShare: 5.1
+  - type: general-purpose
+    task: "Check 013zxzeR: ADR-0005 scope guard"
+    model: haiku
+    durationSec: 129
+    toolCalls: 18
+    modelCalls: 17
+    tokenShare: 3.6
+  - type: general-purpose
+    task: "Check 01XWMuHG: ADR-0005 placement"
+    model: haiku
+    durationSec: 177
+    toolCalls: 30
+    modelCalls: 29
+    tokenShare: 4.8
+  - type: general-purpose
+    task: "Check 01NFv67i: ADR-0028 page cache"
+    model: haiku
+    durationSec: 203
+    toolCalls: 36
+    modelCalls: 35
+    tokenShare: 7.1
+  - type: general-purpose
+    task: "Check 01JJcYmS: tenant-glossary in Glass Box sync"
+    model: haiku
+    durationSec: 169
+    toolCalls: 30
+    modelCalls: 29
+    tokenShare: 4.5
+  - type: general-purpose
+    task: "Check 013zxzeQ: ADR-0030 numbers out of ADR"
+    model: haiku
+    durationSec: 111
+    toolCalls: 19
+    modelCalls: 19
+    tokenShare: 3.2
+  - type: general-purpose
+    task: "Check 013zxzeR docs audit: three rules"
+    model: haiku
+    durationSec: 59
+    toolCalls: 9
+    modelCalls: 5
+    tokenShare: 1.8
 gitBranch: claude/ecstatic-gates-elqk6e
 entrypoint: remote
 cliVersion: 2.1.321
 learnings:
   - "list_events appears to omit hook-injected rule context in some sessions: 3 of 7 sampled transcripts showed no Contents of rules blocks although their logs list loads, and logs and events disagreed on which rules loaded. Inferred from the sample, not documented."
+  - "A yes rating is weak evidence of causation: in 11 yes ratings checked against transcripts, 4 shaped a decision, 3 only confirmed it and 4 left no trace. Inferred from subagent reports, not read from a doc."
 ideas:
   - Record the triggering path and tool for every rule load in the session log (rulesLoaded entries become rule, path, tool), then rank each path glob by the share of its loads rated yes. It turns this one-off audit into a standing view, so narrowing or adding paths rests on evidence and the weekly rule-coverage audit another session proposed gets its data.
+  - Replace the yes, partly, no rating with changed something, only confirmed, no effect. In the transcripts agents said yes for rules that matched what they were already doing, so the current scale overstates usefulness and hides which rules actually steer work.
 landedBy: Stop
