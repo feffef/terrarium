@@ -140,8 +140,8 @@ const { data: glassbox } = await useAsyncData('glassbox-showcase', async () => {
   const lesson = pickOfTheDay(lessons)
   return {
     entries: [
-      { name: 'The guide', path: '/t/glassbox/guide', note: `${guidePages.length} core pages, the current focus`, accent: 'var(--gb-accent)' },
-      { name: 'Workshop', path: '/t/glassbox/workshop', note: 'how the guide is kept up to date, and what is left to polish', accent: 'var(--gb-muted)' },
+      { name: 'The guide', path: '/t/glassbox/guide', note: 'Discover short lessons and walkthroughs that show how the concepts tie together', accent: 'var(--gb-accent)' },
+      { name: 'Workshop', path: '/t/glassbox/workshop', note: 'Peek behind the scenes at how the guide is kept up to date and what is left to polish', accent: 'var(--gb-muted)' },
     ],
     lesson: lesson && {
       url: `/t/glassbox/guide${lesson.path}`,
@@ -197,9 +197,6 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
     <section v-if="glassbox" class="explore" aria-labelledby="newest-heading">
       <div class="explore-head">
         <h2 id="newest-heading" class="eyebrow">Newest experiment <span class="wip">work in progress</span></h2>
-        <p class="tagline">
-          A textbook of the concepts and technology Terrarium is built on, using Terrarium itself as the example.
-        </p>
       </div>
       <HomeShowcase
         tenant="Glass Box"
@@ -207,7 +204,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
         path="/t/glassbox"
         noun="spaces"
         teaser-label="Lesson of the day"
-        blurb="A textbook on how Terrarium works — Claude Code, Nuxt, Zod, Git and the house rules — with Terrarium itself as the worked example, every page pinned to a dated commit."
+        blurb="A textbook for learning the concepts and technology behind Terrarium — Claude Code, Nuxt, Zod, Git and the house rules — with Terrarium itself as the worked example, every page pinned to a dated commit."
         :entries="glassbox.entries"
         wide
       >

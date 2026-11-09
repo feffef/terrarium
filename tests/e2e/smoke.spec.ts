@@ -150,7 +150,7 @@ describe('L2 smoke render', async () => {
         const tile = page.locator('.tile--glassbox')
         expect(await attrs(tile.locator('a.room'), 'href')).toEqual(['/t/glassbox/guide', '/t/glassbox/workshop'])
         expect(await tile.locator('a.room').allTextContents()).toEqual([
-          expect.stringMatching(/\d+ core pages, the current focus/),
+          expect.stringMatching(/short lessons and walkthroughs/),
           expect.stringMatching(/how the guide is kept up to date/),
         ])
         // A Lesson, never a Walkthrough: Walkthroughs aren't ready to lead with (layers/glassbox/GLOSSARY.md).
