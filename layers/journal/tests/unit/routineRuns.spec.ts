@@ -29,7 +29,7 @@ describe('routineWeekTable', () => {
   it('sums seven-day windows ending at the newest run, and totals rows and columns', () => {
     const t = routineWeekTable(routines, 'costUsd')
     expect(t.weeks).toEqual(['2026-10-01', '2026-10-08', '2026-10-15', '2026-10-22'])
-    // a: the 10-01 run ends the first window, so the one before it, which is not shown.
+    // a: the 10-01 run lies exactly at the first window's end, so it counts in that window.
     expect(t.rows).toEqual([
       { name: 'a', cells: [1, 2, 3, 4], total: 10 },
       { name: 'b', cells: [0, 0, 0, 4], total: 4 },
