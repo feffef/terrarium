@@ -12,8 +12,8 @@ teaches. You lead and choose the steps; improvise.
 
 **Shape.** One focus per run (a Subject, a structural question or a gap), about
 $20. Read your spend, `external_metadata.usage.cost_usd` from `get_session`
-called with no session id (it appears only partway into a run), and stop at
-the budget. Several runs a day must work.
+called with no session id (it appears only partway into a run, and some runs
+never see it), and stop at the budget once you can read it. Several runs a day must work.
 
 **Modes.** *Autonomous*: your first message carries a system-reminder
 `Fired by routine "/glassbox-curate"`; decide everything, ask nothing, and say
@@ -92,7 +92,9 @@ keeps them so).
   its output whole; it ends with the `pagesRead` lines to paste. Also read in
   full every page outside the Subject that a change would edit, link or
   overlap. A change that only removes text reads just the pages it edits,
-  links or overlaps. Edit only after this step.
+  links or overlaps. Done when every page of the Subject is read in full, plus
+  those pages; edit only after that, however small or mechanical the change
+  (a renumber, retitle or link-only run included).
 - **Choose.** Pick this run's focus from what you read. Put every other weak
   spot or proposal you found on the memory page, so later runs inherit the
   reading. The run entry says why you chose the focus.
@@ -146,15 +148,15 @@ keeps them so).
   (`docs/agents/pr-workflow.md`), self-merged unless the Remit says it waits.
   Wait for the Scout now and add each of its topics not already there to the
   memory page's open ideas, as a possible future task.
-  The PR body gives the run's cost, read just before you write the body;
-  "unreported" when it is still missing. Give `code-review`
+  Read `cost_usd` again just before you write the PR body. Give `code-review`
   the Lesson contract, EVERY-PAGE.md, DECISIONS.md and the glassbox-content
   rule as its standards, without the code-smell baseline, and say the page
   checks already ran. Its Spec reviewer also judges which pages the change
   needed read (the ones it edits, links or overlaps), and names each one missing
   from `pagesRead`. Read those, recheck the change against them, and add them
-  to `pagesRead` before you land. Done when the PR is open with the memory page
-  and run entry current.
+  to `pagesRead` before you land. Done when the PR is open, its body gives the run's cost
+  ("unreported" only when `cost_usd` is still missing after that re-read), and
+  the memory page and run entry are current.
 
 ## State
 
