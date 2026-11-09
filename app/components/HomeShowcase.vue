@@ -48,6 +48,7 @@ const overflow = props.entries.length - listed.length
           to="/t/journal/current/real-and-invented"
           class="reality"
           :aria-label="`${reality}: what's real, what's invented`"
+          :title="`${reality}: what's real, what's invented`"
         >{{ reality }}</NuxtLink>
       </div>
       <p class="blurb">{{ blurb }}</p>

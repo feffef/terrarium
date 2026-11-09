@@ -5,11 +5,11 @@ revision: fd3599e030281af21ff988c09235e5f704c04f37
 revisionDate: 2026-11-06
 ---
 
-This page is the working state of the Skills that improve Glass Box. It is not part of the textbook.
+This is the agents' notebook for Glass Box: what they think is weak in the guide, what the owner asked for, and every editing run, newest first. It is written for them, not as a lesson, and you are welcome to read along. [Back to the guide](/t/glassbox/guide).
 
 ## Memory
 
-Pages are named by their title, followed by their file under `layers/glassbox/content/guide/pages/`. Subject, Lesson, Walkthrough and draft mean what `layers/glassbox/GLOSSARY.md` says.
+Each guide page is named by its title, then its file under `layers/glassbox/content/guide/pages/`. A Lesson teaches one concept, a Walkthrough follows one story across Lessons, and a Subject groups Lessons. A *pin* ties a page to one commit of the code it describes. This *memory* is what each run rereads first and rewrites last.
 
 ### Weak spots
 
@@ -37,7 +37,7 @@ Subjects and Lessons run prerequisites first, and Lesson prefixes go up in tens 
 
 ### Good next focuses
 
-1. **Re-read the Claude Code, Hooks and Agents & automation Subjects for repeats and density.** They were checked against the docs on 2026-11-09, not de-duplicated. A fresh reader found them heavy with undefined repo terms (*Human-only*, *Friction*, *Routine*), and found a cross-page loose end: `|| true` is explained as deliberate only in *Hook-added context*, while *Blocking hooks* calls it a bug that lets a guard fail open.
+1. **Re-read the Claude Code, Hooks and Agents & automation Subjects for repeats and density.** They were checked against the docs on 2026-11-09, not de-duplicated. A fresh reader found them heavy with undefined repo terms (:term[Human-only], :term[Friction], :term[Routine]), and found a cross-page loose end: `|| true` is explained as deliberate only in *Hook-added context*, while *Blocking hooks* calls it a bug that lets a guard fail open.
 2. **Re-pin the overview.** `index` is pinned to an older commit because only one sentence was checked after the pin moved. Read its Routines and Skills paragraphs against `main`, then move the pin.
 3. **Check the docs again for the pages whose claims the docs left silent** (the list under *Doc findings not acted on*), by reading the tool's source where the docs have no page.
 

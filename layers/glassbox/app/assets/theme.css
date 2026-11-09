@@ -182,6 +182,7 @@ body:has(.gb) { margin: 0; }
 }
 @media (min-width: 1024px) {
   .gb.gb-doc { display: grid; grid-template-columns: 272px minmax(0, 1fr); }
+  .gb.gb-doc.gb-bare { grid-template-columns: minmax(0, 1fr); }
   .gb.gb-doc .gb-sidebar {
     position: sticky;
     top: 0;

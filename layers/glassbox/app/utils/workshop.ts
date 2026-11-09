@@ -21,3 +21,10 @@ export function glassboxRunChange(entry: string): GlassboxRunChange {
 export function glassboxCheckRows(checks: Array<{ page: string, checked: string }>) {
   return [...checks].sort((a, b) => a.checked.localeCompare(b.checked) || a.page.localeCompare(b.page))
 }
+
+/** A guide page's site path from its stem (`git-github/60.attribution`): Nuxt Content drops the
+ *  two-digit prefixes and `index`, as `contentRoute` in page-checks.ts does for files. */
+export function glassboxGuidePath(stem: string) {
+  const route = stem.split('/').map((s) => s.replace(/^\d+\./, '')).join('/').replace(/(^|\/)index$/, '')
+  return route ? `/t/glassbox/guide/${route}` : '/t/glassbox/guide'
+}

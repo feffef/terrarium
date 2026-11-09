@@ -8,6 +8,7 @@ const props = defineProps<{
   surround: ReturnType<typeof glassboxSurround>
   through: GlassboxPageLink[]
   draft: boolean
+  dated: boolean
   source?: string
 }>()
 
@@ -53,7 +54,7 @@ const parts = computed(() => {
       </ul>
     </template>
     <GlassboxSurround v-if="surround" :base="base" :prev="surround.prev" :next="surround.next" />
-    <GlassboxUpdated placement="end" :date="page.revisionDate" :source="source" />
+    <GlassboxUpdated v-if="dated" placement="end" :date="page.revisionDate" :source="source" />
   </article>
 </template>
 

@@ -83,7 +83,7 @@ watch(entries, () => nextTick(track))
   top: var(--gb-toc-top);
   z-index: 5;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 10px;
   margin: 28px 0;
   padding: 6px 8px 6px 16px;
@@ -95,7 +95,7 @@ watch(entries, () => nextTick(track))
   line-height: 1.3;
 }
 .toggle { display: none; }
-.lead { flex: none; white-space: nowrap; }
+.lead { flex: none; padding-block: 8px; white-space: nowrap; }
 ol { display: flex; flex-wrap: wrap; align-items: center; gap: 2px; margin: 0; padding: 0; list-style: none; }
 a {
   display: block;
