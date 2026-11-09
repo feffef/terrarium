@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQyUMxeD3fYivwaeLU
 startedAt: 2026-11-09T04:03:29Z
-endedAt: 2026-11-09T04:14:41Z
+endedAt: 2026-11-09T04:18:41Z
 kind: autonomous
 goal: Scheduled audit of the repo's docs for staleness and muddle
-status: in-review
-outcome: Sweep PR 2999 open with 5 verified doc fixes; gate green, awaiting CI and merge
-summary: "Scheduled audit-docs run; no human prompted any step (all agent-initiated). Three read-only reviewers returned (Freshness 1 finding, Single-home 7 plus 1 optional, Coherence 7). After merging overlaps there were 14 distinct findings; two checkers returned 6 CONFIRMED-BUT, 7 WRONG and 1 not-a-contradiction (0 plain CONFIRMED). I applied 5 of the 6 CONFIRMED-BUT using the checkers' shorter corrected text (routines.md charts for glassbox-curate and dependabot-sweep, mermaid research note pointer to ADR-0024, shell-reads research note ADR-0009 claims dropped, QUALITY.md promote rule, EVERY-PAGE.md publishedAt pointer) and left the cosmetic #1985 link. Notable WRONGs: a cut of the interactive-map README history and a move of the ruleset note both lose owner-placed content; the ADR-0030 line-guide edit would have escalated for no gain. One commit, 5 files +15/-15; Standards and Spec review clean; gate:scoped green on the final head; pushed, opened PR 2999, subscribed. No ADR touched, so no escalation PR; no issue filed. My first PR body miscounted the verdicts; I corrected it. Merge pending CI and a verdict comment. Covered: glassbox-lesson/-curate/-walkthrough/-update/blog-post/guest-intake Skills, ADRs 0001 0005 0008 0010 0011 0012 0015 0017 0019 0024 0025 0026 0028 0029 0030, docs/research, journal facing pages, interactive-map README."
+status: completed
+outcome: Sweep PR 2999 merged with 5 verified doc fixes; gate and CI green
+summary: "Scheduled audit-docs run; no human prompted any step (all agent-initiated). Three read-only reviewers returned (Freshness 1 finding, Single-home 7 plus 1 optional, Coherence 7). After merging overlaps there were 14 distinct findings; two checkers returned 6 CONFIRMED-BUT, 7 WRONG and 1 not-a-contradiction (0 plain CONFIRMED). I applied 5 of the 6 CONFIRMED-BUT using the checkers' shorter corrected text (routines.md charts for glassbox-curate and dependabot-sweep, mermaid research note pointer to ADR-0024, shell-reads research note ADR-0009 claims dropped, QUALITY.md promote rule, EVERY-PAGE.md publishedAt pointer) and left the cosmetic #1985 link. Notable WRONGs: a cut of the interactive-map README history and a move of the ruleset note both lose owner-placed content; the ADR-0030 line-guide edit would have escalated for no gain. One commit, 5 files +15/-15; Standards and Spec review clean; gate:scoped green on the final head; pushed, opened PR 2999, subscribed. No ADR touched, so no escalation PR; no issue filed. My first PR body miscounted the verdicts; I corrected it. Posted the verdict comment and merged via merge-pr after green CI. Covered: glassbox-lesson/-curate/-walkthrough/-update/blog-post/guest-intake Skills, ADRs 0001 0005 0008 0010 0011 0012 0015 0017 0019 0024 0025 0026 0028 0029 0030, docs/research, journal facing pages, interactive-map README."
 prs:
   - "2999"
 docsRead:
@@ -113,16 +113,19 @@ frictions:
   - description: Every subagent and I received the same dozen unrelated ADR rules via hooks on read-only greps, costing context for no use.
     solution: Narrow the rule paths so a read-only grep of a doc does not load ADR rules it cannot use.
     severity: nit
-durationSec: 672
+durationSec: 912
 models:
-  claude-sonnet-5-5: 57
+  claude-sonnet-5-5: 71
 toolCounts:
-  Bash: 17
-  Skill: 4
+  Bash: 21
+  Skill: 5
   Agent: 7
   mcp__github__create_pull_request: 1
   mcp__github__update_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - .agents/skills/glassbox-lesson/EVERY-PAGE.md
   - .agents/skills/glassbox-lesson/QUALITY.md
@@ -252,43 +255,43 @@ subagents:
     durationSec: 82
     toolCalls: 20
     modelCalls: 20
-    tokenShare: 11.3
+    tokenShare: 10.5
   - type: general-purpose
     task: Single-home review
     durationSec: 150
     toolCalls: 28
     modelCalls: 25
-    tokenShare: 19
+    tokenShare: 17.7
   - type: general-purpose
     task: Coherence review
     durationSec: 174
     toolCalls: 28
     modelCalls: 26
-    tokenShare: 20.7
+    tokenShare: 19.3
   - type: general-purpose
     task: Fact-check findings AB
     durationSec: 121
     toolCalls: 25
     modelCalls: 24
-    tokenShare: 10.6
+    tokenShare: 9.9
   - type: general-purpose
     task: Fact-check findings C
     durationSec: 100
     toolCalls: 16
     modelCalls: 12
-    tokenShare: 6.5
+    tokenShare: 6.1
   - type: general-purpose
     task: Standards review
     durationSec: 21
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 4.7
+    tokenShare: 4.3
   - type: general-purpose
     task: Spec review
     durationSec: 11
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 3.8
+    tokenShare: 3.6
 gitBranch: claude/festive-mayer-ugwllj
 entrypoint: remote_trigger
 cliVersion: 2.1.319
