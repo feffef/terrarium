@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeR9Usddfqi4gQ697DR
 startedAt: 2026-11-09T01:27:16Z
-endedAt: 2026-11-09T01:34:27Z
+endedAt: 2026-11-09T01:38:02Z
 kind: interactive
 goal: Find and fix an invented "weekly" in yesterday's Digest
-status: in-review
-outcome: "Digest fixed in PR #2993, Friction logged; awaiting gate and merge"
-summary: "The owner asked where the \"weekly schedule\" in the 2026-11-08 Digest came from. I traced it: no file sets a cadence (the timer lives in a Routine outside the repo), and the likeliest source was session goals such as \"Weekly Glass Box curate run\". The owner then said the job is daily and recently set up, so \"weekly\" was made up, and asked me to log a Friction and correct it. Human-instructed: the investigation, the Friction and the correction. Agent-initiated: opening the PR (ADR-0003) and subscribing to it. I changed one word (\"weekly\" to \"scheduled\", since Digests never state a cadence), ran the scoped gate green, pushed and opened PR #2993. Left alone and flagged in the PR: the 2026-11-02 to 11-05 Digests also call jobs \"weekly\" in their Also-shipped lists, cadences unverified. The session goals saying \"Weekly\" are other sessions' logs, which I must not edit."
+status: completed
+outcome: "Digest fixed and merged in PR #2993, Friction logged"
+summary: "The owner asked where the \"weekly schedule\" in the 2026-11-08 Digest came from. I traced it: no file sets a cadence (the timer lives in a Routine outside the repo), and the likeliest source was session goals such as \"Weekly Glass Box curate run\". The owner then said the job is daily and recently set up, so \"weekly\" was made up, and asked me to log a Friction and correct it. Human-instructed: the investigation, the Friction and the correction. Agent-initiated: opening the PR (ADR-0003) and subscribing to it. I changed one word (\"weekly\" to \"scheduled\", since Digests never state a cadence), ran the scoped gate green, pushed, opened PR #2993, and merged it once CI was green with a verdict comment. Left alone and flagged in the PR: the 2026-11-02 to 11-05 Digests also call jobs \"weekly\" in their Also-shipped lists, cadences unverified. The session goals saying \"Weekly\" are other sessions' logs, which I must not edit."
 prs:
   - "2993"
 docsRead:
@@ -45,20 +45,24 @@ frictions:
   - description: Ran git log on the Glass Box layer before reading docs/agents/git-conventions.md; the late-read hook flagged it.
     solution: "None needed: the doc's read-only list does not name log used to trace a fact; a one-line mention would have prompted the read."
     severity: nit
-durationSec: 431
+durationSec: 647
 models:
-  claude-sonnet-5-5: 61
+  claude-sonnet-5-5: 84
 toolCounts:
   Grep: 14
   Read: 10
-  Bash: 7
-  Edit: 1
-  ToolSearch: 1
+  Bash: 11
+  Edit: 4
+  ToolSearch: 3
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  Skill: 1
+  Skill: 2
   Write: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-11-08.md
 rulesLoaded:
@@ -121,4 +125,6 @@ ruleVerdicts:
 gitBranch: ccr-c590f5ac-0y6srv
 entrypoint: remote_mobile
 cliVersion: 2.1.319
+learnings:
+  - "Inferred, not read: the Digest writer most likely took 'weekly' from session goals (e.g. 'Weekly Glass Box curate run'); no file states the job's cadence, since the timer lives in a Routine outside the repo."
 landedBy: Stop
