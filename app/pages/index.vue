@@ -125,17 +125,13 @@ const { data: tinkerfund } = await useAsyncData('tinkerfund-showcase', async () 
   }
 })
 
-// Glass Box is the newest experiment, shown in progress: both its Spaces, the
-// guide in focus and the drafts set aside (layers/glassbox/GLOSSARY.md). The
+// Glass Box is the newest experiment, shown in progress: the guide in focus and
+// the workshop that tracks its upkeep (layers/glassbox/GLOSSARY.md). The
 // teaser is a guide Lesson, not a Walkthrough: those aren't ready to lead with.
 const { data: glassbox } = await useAsyncData('glassbox-showcase', async () => {
   const guide = resolveSpaceRoute('glassbox', 'guide', undefined)
-  const drafts = resolveSpaceRoute('glassbox', 'drafts', undefined)
-  if (!guide || !drafts) return null
-  const [guidePages, draftCount] = await Promise.all([
-    queryCollection(guide.pagesKey).where('path', '<>', '/').select('path', 'title', 'description').all(),
-    queryCollection(drafts.pagesKey).where('path', '<>', '/').count(),
-  ])
+  if (!guide) return null
+  const guidePages = await queryCollection(guide.pagesKey).where('path', '<>', '/').select('path', 'title', 'description').all()
   const lessons = guidePages.flatMap((page) => {
     const subject = glassboxSubjectOf(page.path)
     return subject ? [{ ...page, subject: subject.name }] : []
@@ -145,7 +141,7 @@ const { data: glassbox } = await useAsyncData('glassbox-showcase', async () => {
   return {
     entries: [
       { name: 'The guide', path: '/t/glassbox/guide', note: `${guidePages.length} core pages, the current focus`, accent: 'var(--gb-accent)' },
-      { name: 'Drafts', path: '/t/glassbox/drafts', note: `${draftCount} pages still being written`, accent: 'var(--gb-muted)' },
+      { name: 'Workshop', path: '/t/glassbox/workshop', note: 'how the guide is kept up to date, and what is left to polish', accent: 'var(--gb-muted)' },
     ],
     lesson: lesson && {
       url: `/t/glassbox/guide${lesson.path}`,
@@ -202,7 +198,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
       <div class="explore-head">
         <h2 id="newest-heading" class="eyebrow">Newest experiment <span class="wip">work in progress</span></h2>
         <p class="tagline">
-          The agents' latest site, still being written: a core set of pages gets the attention first, the rest wait as drafts.
+          The agents' latest site, still being written: a core set of pages gets the attention first.
         </p>
       </div>
       <HomeShowcase
