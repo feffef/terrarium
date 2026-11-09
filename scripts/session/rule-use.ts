@@ -6,6 +6,7 @@
 // `helped.sh` is `answered: false`, not "nothing helped".
 import { appendFileSync, mkdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
+import { commandWords } from './shell-reads.ts'
 import { SCRATCH_DIR } from './transcript-trace.ts'
 
 export const HELPED_SCRIPT = 'scripts/session/helped.sh'
@@ -66,16 +67,17 @@ export const ruleKey = (path: string) => {
   return at === -1 ? path : path.slice(at)
 }
 
-const unquote = (token: string) => token.replace(/^(['"])(.*)\1$/, '$2')
-
 /** The names in the last `helped.sh` call among `commands`, normalised: `rule:x`
  *  becomes `.claude/rules/x`, `doc:x` becomes the repo-relative path. `undefined`
  *  when no call was made, `[]` for a bare call ("none helped"). */
 export function helpedNames(commands: string[], rel: (p: string) => string): string[] | undefined {
-  const call = commands.findLast((c) => c.includes(HELPED_SCRIPT))
-  if (call === undefined) return undefined
-  const args = call.slice(call.indexOf(HELPED_SCRIPT) + HELPED_SCRIPT.length).split(/[;&|\n]/)[0]!
-  const names = args.trim().split(/\s+/).map(unquote).filter((t) => t && !t.startsWith('-') && t !== "'" && t !== '"')
+  const calls = commands.flatMap(commandWords).flatMap((words) => {
+    // Run, not named: the script is the verb, or `sh`/`bash`'s first argument.
+    const at = /^(ba)?sh$/.test(words[0] ?? '') ? 1 : 0
+    return words[at]?.endsWith(HELPED_SCRIPT) ? [words.slice(at + 1)] : []
+  })
+  const names = calls.at(-1)
+  if (names === undefined) return undefined
   return [...new Set(names.map((t) => {
     const name = t.replace(/^(rule|doc):/, '')
     if (t.startsWith('rule:') || name.includes('.claude/rules/')) return ruleKey(name.includes('/') ? name : `.claude/rules/${name}`)

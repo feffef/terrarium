@@ -32,7 +32,7 @@
 //   Prints the derived trace as JSON.
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { basename, dirname, join } from 'node:path'
-import type { AdrHint, RuleLoad, RuleUseEntry } from '../../shared/schemas/session.ts'
+import type { AdrHint, HelpedEntry, RuleLoad, RuleUseEntry } from '../../shared/schemas/session.ts'
 import { DERIVED_REASON, FOLDED_TRACE_FIELDS } from '../../shared/trace-fields.ts'
 import {
   buildDocLineIndex,
@@ -271,7 +271,7 @@ export interface FoldedShellReadScan {
   nearMisses: NearMiss[]
 }
 
-export interface LabelledRecords {
+interface LabelledRecords {
   label: string
   records: Record<string, unknown>[]
 }
@@ -352,7 +352,7 @@ function resolveAgainstCdDir(p: string, command: string, rel: (s: string) => str
 }
 
 /** The label both read-source maps give the main session's own reads. */
-export const MAIN_SOURCE = 'this session'
+const MAIN_SOURCE = 'this session'
 
 /** The shell-read scan WITH its near-misses, for the author-time advisory the
  *  `log-session` Skill prints (#1074's loop): credit from the same output
@@ -844,8 +844,9 @@ export function foldSubagentTrace(
   ledger: RuleLoadRow[] = [],
 ): MechanicalTrace {
   if (subagents.length === 0 && ledger.length === 0) return trace
+  // The ledger records native loads only: a hint hook fires no InstructionsLoaded.
   const triggered = (loads: RuleLoad[], agentId?: string) => loads.map((l) => {
-    const trigger = ledger.find((r) => r.rule === l.rule && (r.agentId ?? undefined) === agentId)?.trigger
+    const trigger = l.via === 'native' && ledger.find((r) => r.rule === l.rule && (r.agentId ?? undefined) === agentId)?.trigger
     return trigger ? { ...l, trigger } : l
   })
   if (subagents.length === 0) return { ...trace, ruleLoads: triggered(trace.ruleLoads) }
@@ -890,7 +891,7 @@ export function foldSubagentTrace(
 }
 
 /** A named rule with no load for that agent keeps its entry, marked (#3009). */
-function markUnloaded(helped: { path: string; why?: string }[], loads: RuleLoad[], global: string[]): { path: string; why?: string }[] {
+function markUnloaded(helped: HelpedEntry[], loads: RuleLoad[], global: string[]): HelpedEntry[] {
   return helped.map((h) => {
     const path = h.path.includes('.claude/rules/') ? ruleKey(h.path) : h.path
     const loaded = !path.startsWith('.claude/rules/') || global.includes(path) || loads.some((l) => l.rule === path)
@@ -898,7 +899,7 @@ function markUnloaded(helped: { path: string; why?: string }[], loads: RuleLoad[
   })
 }
 
-export const NO_LOAD_WHY = '(no load recorded)'
+const NO_LOAD_WHY = '(no load recorded)'
 
 // ── Stitch ────────────────────────────────────────────────────────────────
 
@@ -931,7 +932,7 @@ export interface AuthoredScratch {
   skillsUsed?: { name: string; reason: string }[]
   /** Required by `--author` (empty means none helped); absent only on the
    *  dropped-scratch placeholder, which the log records as unanswered. */
-  helped?: { path: string; why?: string }[]
+  helped?: HelpedEntry[]
   frictions: { description: string; solution: string; severity: string }[]
   learnings?: string[]
   ideas?: string[]
@@ -958,14 +959,11 @@ function mergeRefs<T extends Record<string, string | undefined>>(
 export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Record<string, unknown> {
   const editedSet = new Set(trace.filesEdited)
   // Derived only: what helped goes in `helped`, not a doc's reason (#3009).
-  const docsRead = mergeRefs(
-    [] as { path: string; reason: string }[],
-    // A rule file is logged as a rule (rulesGlobal/rulesLoaded, ruleUse),
-    // even when close-session has the agent re-read it.
-    [...trace.filesRead, ...trace.docsReadViaShell].filter((p) => !p.startsWith('.claude/rules/')),
-    'path',
-    (path) => (editedSet.has(path) ? DERIVED_REASON_EDITED : DERIVED_REASON),
-  )
+  // A rule file is logged as a rule (rulesGlobal/rulesLoaded, ruleUse),
+  // even when close-session has the agent re-read it.
+  const docsRead = dedup([...trace.filesRead, ...trace.docsReadViaShell])
+    .filter((p) => !p.startsWith('.claude/rules/'))
+    .map((path) => ({ path, reason: editedSet.has(path) ? DERIVED_REASON_EDITED : DERIVED_REASON }))
   const docsReadBySubagents = (trace.docsReadBySubagents ?? []).filter((p) => docsRead.some((d) => d.path === p))
   const entry: Record<string, unknown> = {
     schemaVersion: 1,

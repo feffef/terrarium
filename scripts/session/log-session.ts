@@ -33,6 +33,7 @@ import { tmpdir } from 'node:os'
 import { basename, dirname, join, resolve } from 'node:path'
 import { parse as parseYaml, stringify as stringifyYaml } from 'yaml'
 import { z } from 'zod'
+import { helpedEntry } from '../../shared/schemas/session.ts'
 import { sessionUrl } from '../../shared/session-url.ts'
 import { fetchOriginMain, git, SESSION_TRAILER, tryGit } from '../lib/git.ts'
 import { parseWorktreeList, runSweep, type Finding, type SweepResult } from '../git/check-worktrees.ts'
@@ -92,7 +93,7 @@ const authoredScratchSchema = z
     prs: z.array(z.string()).optional(),
     skillsUsed: z.array(z.object({ name: z.string(), reason: z.string() })).optional(),
     // Required like `frictions`: [] means nothing helped, absent means skipped (#3009).
-    helped: z.array(z.object({ path: z.string(), why: z.string().optional() })),
+    helped: z.array(helpedEntry),
     frictions: z.array(
       z.object({
         description: z.string(),

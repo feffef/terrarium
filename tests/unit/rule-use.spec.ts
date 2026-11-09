@@ -40,6 +40,12 @@ describe('ruleUse — the main agent', () => {
     expect(validateEntry(entry).ok).toBe(true)
   })
 
+  it('gives a trigger only to a native load: a hint-injected load fires no ledger row', () => {
+    const trace = extractTrace([cwd, hinted('adr-0004.md'), native('adr-0004.md')], NO_ENV)
+    const folded = foldSubagentTrace(trace, [], NO_ENV, undefined, [{ rule: '.claude/rules/adr-0004.md', trigger: 'x.ts' }])
+    expect(ruleUseOf(stitch(authored({ helped: [] }), folded))[0]!.loads).toEqual([{ rule: '.claude/rules/adr-0004.md', via: 'hint' }])
+  })
+
   it('records an empty helped list as answered, and a missing one (the dropped-scratch placeholder) as unanswered', () => {
     const trace = extractTrace([cwd, native('adr-0004.md')], NO_ENV)
     expect(ruleUseOf(stitch(authored({ helped: [] }), trace))[0]).toMatchObject({ answered: true, helped: [] })
@@ -105,6 +111,14 @@ describe('ruleUse — subagents', () => {
     const folded = foldSubagentTrace(main, [sub([note, native('adr-0004.md'),
       bash('sh /repo/scripts/session/helped.sh'), bash("sh '/repo/scripts/session/helped.sh' 'rule:adr-0004.md'")])], NO_ENV)
     expect(ruleUseOf(stitch(authored({ helped: [] }), folded))[0]!.helped).toEqual([{ path: '.claude/rules/adr-0004.md' }])
+  })
+
+  it('counts only a call that runs helped.sh, not a command that names it', () => {
+    const folded = foldSubagentTrace(main, [sub([note, native('adr-0004.md'),
+      bash('git diff origin/main -- scripts/session/helped.sh scripts/session/rule-use.ts'), bash('cat /repo/scripts/session/helped.sh')])], NO_ENV)
+    expect(ruleUseOf(stitch(authored({ helped: [] }), folded))[0]).toMatchObject({ answered: false, helped: [] })
+    const run = foldSubagentTrace(main, [sub([note, bash('cd /repo && /repo/scripts/session/helped.sh doc:GLOSSARY.md')])], NO_ENV)
+    expect(ruleUseOf(stitch(authored({ helped: [] }), run))[0]).toMatchObject({ answered: true, helped: [{ path: 'GLOSSARY.md' }] })
   })
 
   it('leaves out a subagent that was never asked and never answered', () => {

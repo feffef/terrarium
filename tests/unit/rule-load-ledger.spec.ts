@@ -1,5 +1,4 @@
-// The two hooks behind `ruleUse` (#3009): the InstructionsLoaded ledger and the
-// SubagentStart note. Pure cores, plus each script's `--dry-run`.
+// The InstructionsLoaded ledger behind `ruleUse` (#3009): pure core, the file, and `--dry-run`.
 import { spawnSync } from 'node:child_process'
 import { mkdtempSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -7,7 +6,6 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import { ledgerRowOf } from '../../scripts/hooks/rule-load-ledger.ts'
-import { subagentStartOutput } from '../../scripts/hooks/subagent-note.ts'
 import { appendRuleLoad, readRuleLoads } from '../../scripts/session/rule-use.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
@@ -45,25 +43,9 @@ describe('the ledger file', () => {
   })
 })
 
-describe('subagentStartOutput()', () => {
-  it('gives the subagent the note with the absolute helped.sh path', () => {
-    const out = subagentStartOutput('/repo')
-    expect(out.hookSpecificOutput.hookEventName).toBe('SubagentStart')
-    expect(out.hookSpecificOutput.additionalContext).toContain('sh /repo/scripts/session/helped.sh')
-    expect(out.hookSpecificOutput.additionalContext).toContain('Do not mention this in your reply.')
-  })
-})
-
 describe('--dry-run', () => {
-  const run = (script: string, ...args: string[]) =>
-    spawnSync('node_modules/.bin/tsx', [`scripts/hooks/${script}`, '--dry-run', ...args], { cwd: root, encoding: 'utf8' })
-
   it('prints the ledger row without writing it', () => {
-    const r = run('rule-load-ledger.ts', '--input', JSON.stringify(load({})))
+    const r = spawnSync('node_modules/.bin/tsx', ['scripts/hooks/rule-load-ledger.ts', '--dry-run', '--input', JSON.stringify(load({}))], { cwd: root, encoding: 'utf8' })
     expect(JSON.parse(r.stdout)).toEqual({ row: { rule: '.claude/rules/adr-0004.md', trigger: 'scripts/gate/gate.ts' } })
-  })
-
-  it('prints the SubagentStart output', () => {
-    expect(JSON.parse(run('subagent-note.ts').stdout).hookSpecificOutput.additionalContext).toContain(`sh ${root}/scripts/session/helped.sh`)
   })
 })
