@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_013zxzeSKTBjSfYnUxNHTJw1
 startedAt: 2026-11-09T00:25:11Z
-endedAt: 2026-11-09T01:01:30Z
+endedAt: 2026-11-09T01:07:52Z
 kind: interactive
 goal: Fix false claims in the Glass Box guide and check its Lessons against the live docs
 status: completed
@@ -98,6 +98,10 @@ skillsUsed:
     reason: closure at PR open
   - name: log-session
     reason: this log
+  - name: writing-for-agents
+    reason: (no reason given)
+  - name: retro
+    reason: (invoked as a slash command)
 frictions:
   - description: Stop hook asked me four times to commit while subagent writers were still editing, so I pushed WIP commits of unreviewed drafts to the branch.
     solution: Have the commit-and-push Stop hook stay quiet while a dispatched subagent is running, or word the ask as safe to defer until it finishes.
@@ -120,11 +124,20 @@ frictions:
   - description: The first fresh-reader pass over 7 Claude Code pages mostly returned density complaints that were already there, costing tokens for little that changed a page.
     solution: Scope fresh readers to the changed sentences plus their neighbours, as the Skill's Check step implies, instead of whole pages.
     severity: minor
-durationSec: 2179
+  - description: Re-pinning 15 pages needed a whole subagent to diff each page's cited files between the old and new revision; no script does it.
+    solution: Add a pin-drift script to the glassbox tooling that prints each cited file's diff between a page's old and new revision.
+    severity: minor
+  - description: The Standards reviewer found three pages whose teaches field was stale against the body; nothing in page-checks compares teaches with the files a page cites.
+    solution: Add a page check that warns when a path cited in a page is missing from its teaches field.
+    severity: minor
+  - description: Each subagent brief repeated about 300 words of standing instructions, and the fan-out across 17 pages used nearly the whole 20 dollar budget.
+    solution: Keep the writer, checker and reader boilerplate in one file under the glassbox-curate Skill folder and point each brief to it.
+    severity: moderate
+durationSec: 2561
 models:
-  claude-sonnet-5-5: 246
+  claude-sonnet-5-5: 256
 toolCounts:
-  Bash: 49
+  Bash: 50
   Read: 21
   mcp__claude-code-remote__get_session: 3
   Agent: 16
@@ -132,11 +145,11 @@ toolCounts:
   SendMessage: 6
   Edit: 7
   Write: 2
-  Skill: 4
+  Skill: 5
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  ReadNotifications: 2
+  ReadNotifications: 3
   mcp__github__pull_request_read: 2
   mcp__github__add_issue_comment: 1
   mcp__claude-code-remote__unsubscribe_pr_activity: 1
@@ -256,7 +269,7 @@ subagents:
     durationSec: 950
     toolCalls: 25
     modelCalls: 25
-    tokenShare: 5.7
+    tokenShare: 5.5
   - type: general-purpose
     task: Docs check Nuxt Lessons A
     model: sonnet
@@ -277,7 +290,7 @@ subagents:
     durationSec: 120
     toolCalls: 45
     modelCalls: 10
-    tokenShare: 1.9
+    tokenShare: 1.8
   - type: general-purpose
     task: Docs check Git GitHub pages
     model: sonnet
@@ -291,42 +304,42 @@ subagents:
     durationSec: 760
     toolCalls: 82
     modelCalls: 75
-    tokenShare: 11.8
+    tokenShare: 11.4
   - type: general-purpose
     task: Docs check Claude Code Subject
     model: sonnet
     durationSec: 178
     toolCalls: 25
     modelCalls: 12
-    tokenShare: 3.2
+    tokenShare: 3.1
   - type: general-purpose
     task: Docs check Agents Subject
     model: sonnet
     durationSec: 169
     toolCalls: 33
     modelCalls: 9
-    tokenShare: 3.8
+    tokenShare: 3.7
   - type: general-purpose
     task: Fix Agents page claims
     model: opus
     durationSec: 933
     toolCalls: 42
     modelCalls: 25
-    tokenShare: 8.4
+    tokenShare: 8.1
   - type: general-purpose
     task: Fix Claude Code page claims
     model: opus
     durationSec: 916
     toolCalls: 32
     modelCalls: 27
-    tokenShare: 7.8
+    tokenShare: 7.6
   - type: general-purpose
     task: Claim-check changed sentences
     model: sonnet
     durationSec: 166
     toolCalls: 33
     modelCalls: 12
-    tokenShare: 3.7
+    tokenShare: 3.5
   - type: general-purpose
     task: Fresh reader pages set 1
     model: sonnet
@@ -361,7 +374,7 @@ subagents:
     durationSec: 39
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 1.4
+    tokenShare: 1.3
 gitBranch: claude/inspiring-mendel-u6ghp1
 entrypoint: remote
 cliVersion: 2.1.319
