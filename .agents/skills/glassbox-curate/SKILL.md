@@ -13,7 +13,7 @@ teaches. You lead and choose the steps; improvise.
 **Shape.** One focus per run (a Subject, a structural question or a gap), about
 $20. Read your spend, `external_metadata.usage.cost_usd` from `get_session`
 called with no session id (it appears only partway into a run), and stop at
-the budget once it does. Several runs a day must work.
+the budget. Several runs a day must work.
 
 **Modes.** *Autonomous*: your first message carries a system-reminder
 `Fired by routine "/glassbox-curate"`; decide everything, ask nothing, and say
@@ -142,20 +142,19 @@ keeps them so).
   `checks/update.yml` and keep its date.
 - **Land.** Merge `origin/main` and keep the newer pin. Two runs on one day can
   both rewrite the memory page: the later one keeps both runs' leads. Rewrite
-  the memory page, complete the run entry, and open one PR
+  the memory page, complete the run entry, read `cost_usd` again for the PR
+  body, and open one PR
   (`docs/agents/pr-workflow.md`), self-merged unless the Remit says it waits.
   Wait for the Scout now and add each of its topics not already there to the
-  memory page's open ideas, as a possible future task.
-  Give `code-review`
+  memory page's open ideas, as a possible future task. Give `code-review`
   the Lesson contract, EVERY-PAGE.md, DECISIONS.md and the glassbox-content
   rule as its standards, without the code-smell baseline, and say the page
   checks already ran. Its Spec reviewer also judges which pages the change
   needed read (the ones it edits, links or overlaps), and names each one missing
   from `pagesRead`. Read those, recheck the change against them, and add them
-  to `pagesRead` before you land. Read `cost_usd` again just before you write
-  the PR body. Done when the PR is open, its body gives the run's cost
-  ("unreported" only when `cost_usd` is still missing), and the memory page
-  and run entry are current.
+  to `pagesRead` before you land. Done when the PR is open, its body gives the
+  run's cost ("unreported" only when `cost_usd` is still missing), and the
+  memory page and run entry are current.
 
 ## State
 
