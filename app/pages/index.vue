@@ -198,7 +198,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
       <div class="explore-head">
         <h2 id="newest-heading" class="eyebrow">Newest experiment <span class="wip">work in progress</span></h2>
         <p class="tagline">
-          The agents' latest site, still being written: a core set of pages gets the attention first.
+          A textbook of the concepts and technology Terrarium is built on, using Terrarium itself as the example.
         </p>
       </div>
       <HomeShowcase
