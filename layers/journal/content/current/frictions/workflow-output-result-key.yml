@@ -15,11 +15,6 @@ fixes:
     date: "2026-10-27"
     summary: "run-summary.ts --verdicts now merges the verdicts of several saved runs into one block."
 occurrences:
-  - session: session_01VfbgTTxASAKYdiziaLGuXM
-    date: "2026-10-25"
-    severity: minor
-    description: "Merging five runs of run-summary --verdicts into one ruleVerdicts/docsRead list took a hand-written script and two retries (duplicate YAML key, yes/no parsed as booleans)."
-    solution: "run-summary.ts --verdicts could take several run outputs and emit one merged block per path."
   - session: session_01Cb8ETAZztznLYx6CC7MKyE
     date: "2026-10-26"
     severity: minor

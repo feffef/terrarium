@@ -16,11 +16,6 @@ fixes:
     date: "2026-10-28"
     summary: "prune-friction-ledger --summary and --candidates write output over a size threshold to a file under TMPDIR and print one notice line; --out PATH always writes to that path."
 occurrences:
-  - session: session_019jfJv6yLmcLUAJiTTomyeu
-    date: "2026-10-25"
-    severity: minor
-    description: "Survey subagent reported: --summary | head truncated the two-cluster list, large outputs needed --out, and ledger-set refuses a session already in an entry with no way to upgrade its severity."
-    solution: "Brief should say the two-cluster list is at the end of --summary, to use --out, and what to do when a new friction outranks the stored one."
   - session: session_013zxzeQvE9RNYoZRiZEEKBG
     date: "2026-10-28"
     severity: minor

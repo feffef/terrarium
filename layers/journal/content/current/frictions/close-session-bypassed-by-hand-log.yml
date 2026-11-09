@@ -18,11 +18,6 @@ fixes:
     date: "2026-11-07"
     summary: "Closes #2913: merge-close-stop.ts, a Stop hook, blocks the end of a turn once when this session merged a PR and close-session has not run since."
 occurrences:
-  - session: session_01PdrNTJLJJMKBGGZfsAhL6w
-    date: "2026-10-25"
-    severity: nit
-    description: "After the first merges (PRs 2532-2534) I updated the log with log-session directly instead of re-invoking close-session, which the ADR-0009 rule asks for at a merge."
-    solution: "Re-invoke close-session at every merge, not log-session; PR #2536 now refuses only the completed case."
   - session: session_01Cb8ETAZztznLYx6CC7MKyE
     date: "2026-10-26"
     severity: nit

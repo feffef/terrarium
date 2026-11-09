@@ -9,11 +9,6 @@ notes: |-
   2026-10-20 design: a repo doc granting pushes to other branches dropped: the harness pins one pushable branch and a repo doc cannot grant that; issue-tracker.md already says to flag it upfront and ask.
 fixes: []
 occurrences:
-  - session: session_013QKXoGLaEHEJanyw5TrPqj
-    date: "2026-10-25"
-    severity: minor
-    description: "clear-backlog §4 says push each branch from its worktree, while the harness restricts pushes to the session branch. I pushed the worktree HEAD to the session branch instead of its own name."
-    solution: "clear-backlog §4 could say what to do with a one-branch run in a cloud session that has a designated branch."
   - session: session_01BgQzSd9CmFPiugdXAQh6HW
     date: "2026-10-26"
     severity: nit

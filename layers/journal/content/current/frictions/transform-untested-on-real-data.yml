@@ -7,6 +7,7 @@ surface: safe
 status: open
 notes: |-
   2026-10-23 design: a general run-it-on-real-data rule dropped: the three transforms differ in kind, code-review caught two before push, and Verify before you state already covers the third.
+  2026-11-09 design: a general run-it-on-real-data rule dropped: the two moderate occurrences differ in kind (regex backtracking vs a trial on stand-in data) and the second's code fix already landed; revisit at a third.
 occurrences:
   - session: session_01Vg1qDutnhKVav7JDNUdr8J
     date: "2026-10-26"

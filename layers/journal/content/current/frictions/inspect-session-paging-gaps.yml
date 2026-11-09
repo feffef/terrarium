@@ -22,11 +22,6 @@ fixes:
     date: "2026-11-03"
     summary: "inspect-session: #2806 is closed and the next rejected-cursor case reopens it, so no stale ready-for-agent label sits on an open issue."
 occurrences:
-  - session: session_01VW5yg4NTMt1JBnXCcrhjw9
-    date: "2026-10-25"
-    severity: minor
-    description: "The 10-24 partial read hit its 25-page limit before reaching Agent D's hand-back; it answered from the checker's re-listing"
-    solution: "For an audit run, page limit ~40, or search for the reviewer dispatch first"
   - session: session_013zxzeQ8EBq9v7NXqWmAFRF
     date: "2026-10-27"
     severity: minor

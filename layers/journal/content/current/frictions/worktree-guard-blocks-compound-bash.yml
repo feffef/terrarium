@@ -11,11 +11,6 @@ fixes:
     date: "2026-10-31"
     summary: "environment-caveats.md replaces the guess at the guard's triggers with a dated probe list: only $VAR expansion in a git command was refused; one git command per call with literal paths."
 occurrences:
-  - session: session_019jfJv6yLmcLUAJiTTomyeu
-    date: "2026-10-25"
-    severity: nit
-    description: "Design subagent reported: the isolation guard's source is not in the repo, so whether git -C passes had to be tested empirically (the impl agent did), and docsRead merges subagent reasons into one field."
-    solution: "Document the guard's accepted forms in environment-caveats, or put its source under scripts/hooks."
   - session: session_013zxzeSvdGhiM7SLEUgzvmF
     date: "2026-11-01"
     severity: nit

@@ -25,11 +25,6 @@ fixes:
     date: "2026-11-08"
     summary: "SessionStart hook network-start.ts probes 8 hosts through the proxy and reports which are reachable."
 occurrences:
-  - session: session_01Hpd1KMhzJC2NxHSxp7erFi
-    date: "2026-10-25"
-    severity: minor
-    description: "docs.github.com returns 403 through the proxy and github/docs is out of repo scope, so verifying the Full reference URL took a web search detour"
-    solution: "EVERY-PAGE.md could name web search as the fallback for docs.github.com URLs"
   - session: session_013zxzeQmVnqMqDkRgFRWx5T
     date: "2026-10-28"
     severity: nit

@@ -13,11 +13,6 @@ fixes:
     date: "2026-11-07"
     summary: "Closes #2884: close-session and log-session SKILL.md now say never to filter log-session.ts output, and a Stop hook blocks the turn's end after a merge without close-session."
 occurrences:
-  - session: session_017vrdmQQwC4obwbJS9G5Dyg
-    date: "2026-10-25"
-    severity: nit
-    description: "I cut the advisory conflicting-issues output with tail before merging PR 2524 and read the hit only afterwards; it was my own issue 2520, so no harm."
-    solution: "Read the whole advisory output before merge-pr, as the recipe says; print it without tail."
   - session: session_013zxzePCZc7PkwLBo6YoDJt
     date: "2026-11-03"
     severity: nit
