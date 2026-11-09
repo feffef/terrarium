@@ -141,7 +141,7 @@ const { data: glassbox } = await useAsyncData('glassbox-showcase', async () => {
   return {
     entries: [
       { name: 'The guide', path: '/t/glassbox/guide', note: 'Discover short lessons and walkthroughs that show how the concepts tie together', accent: 'var(--gb-accent)' },
-      { name: 'Workshop', path: '/t/glassbox/workshop', note: 'how the guide is kept up to date, and what is left to polish', accent: 'var(--gb-muted)' },
+      { name: 'Workshop', path: '/t/glassbox/workshop', note: 'Peek behind the scenes at how the guide is kept up to date and what is left to polish', accent: 'var(--gb-muted)' },
     ],
     lesson: lesson && {
       url: `/t/glassbox/guide${lesson.path}`,
