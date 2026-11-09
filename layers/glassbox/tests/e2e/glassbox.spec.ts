@@ -26,6 +26,7 @@ describe('glassbox Tenant', async () => {
     expect(html).not.toContain('Last updated')
     expect(html).toMatch(/<a[^>]*class="gb-brand"[^>]*href="\/t\/glassbox\/guide"|<a[^>]*href="\/t\/glassbox\/guide"[^>]*class="gb-brand"/)
     expect(html).toContain('Back to the guide')
+    expect(html).toContain('id="lately"')
   })
 
   it('keeps the sidebar and edition date on the drafts Space', async () => {

@@ -5,7 +5,7 @@ import { parse } from 'yaml'
 import { splitFrontmatter } from '../../../../scripts/lib/frontmatter.ts'
 import { root } from '../../../../shared/expand.ts'
 import { glassboxSitePath } from '../../page-checks.ts'
-import { glassboxCheckRows, glassboxGuidePath, glassboxRunChange, glassboxRunStart } from '../../app/utils/workshop.ts'
+import { glassboxCheckRows, glassboxGuidePath, glassboxLatelyChanges, glassboxRunChange, glassboxRunStart } from '../../app/utils/workshop.ts'
 
 describe('glassboxRunStart', () => {
   it('reads the UTC start time off the run entry\'s filename', () => {
@@ -29,6 +29,25 @@ describe('glassboxRunChange', () => {
   it('falls back to the raw string when it does not split into three parts', () => {
     expect(glassboxRunChange('one | two')).toEqual({ raw: 'one | two' })
     expect(glassboxRunChange('plain text')).toEqual({ raw: 'plain text' })
+  })
+})
+
+describe('glassboxLatelyChanges', () => {
+  const runs = [
+    { stem: '2026-11-09T0025', changes: [{ page: 'a/10.x', what: 'No change', why: 'fine' }, { page: 'a/20.y', what: 'reworded', why: 'w' }, { raw: 'plain text' }] },
+    { stem: '2026-11-08T0847', changes: [{ page: 'b/10.z', what: 'cut a repeat', why: 'w' }, { page: 'b/20.q', what: 'Fixed a claim', why: 'w' }] },
+  ]
+
+  it('lists changes newest run first and skips "No change" entries and raw strings', () => {
+    expect(glassboxLatelyChanges(runs).map((c) => c.page)).toEqual(['a/20.y', 'b/10.z', 'b/20.q'])
+  })
+
+  it('stops at the limit', () => {
+    expect(glassboxLatelyChanges(runs, 2).map((c) => c.page)).toEqual(['a/20.y', 'b/10.z'])
+  })
+
+  it('is empty when no run changed anything', () => {
+    expect(glassboxLatelyChanges([{ stem: 's', changes: [{ raw: 'x' }] }])).toEqual([])
   })
 })
 
@@ -63,6 +82,11 @@ describe('the workshop memory page', () => {
   it('stays within 2,500 words, not counting its component lines', () => {
     const words = body.split('\n').filter((line) => !line.startsWith('::')).join(' ').split(/\s+/).filter(Boolean)
     expect(words.length).toBeLessThanOrEqual(2500)
+  })
+
+  it('puts the Lately list before the memory text', () => {
+    expect(body.indexOf('::workshop-lately')).toBeGreaterThan(-1)
+    expect(body.indexOf('::workshop-lately')).toBeLessThan(body.indexOf('## Memory'))
   })
 
   it('places both lists after its text', () => {
