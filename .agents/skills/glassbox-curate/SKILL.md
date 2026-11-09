@@ -111,7 +111,7 @@ keeps them so).
 - **Fix.** An opus writer writes every sentence that states a fact, however
   small the change, and quotes the `path:line` behind each one. Give it the
   caps and link rules `layers/glassbox/page-checks.ts` enforces: title,
-  description, teaches and Why bullet lengths, and a capitalised link's text
+  description and Why bullet lengths, and a capitalised link's text
   being its target's title. Each `The cost:` clause needs a source that states that
   cost, and the writer runs a command sequence before it says what it does.
   A page read in full whose `teaches`, `description` or bold lead-ins fall

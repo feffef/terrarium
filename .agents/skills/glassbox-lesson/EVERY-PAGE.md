@@ -41,10 +41,11 @@ opening it. It holds what those leave out: for a Lesson, `Concept:` then
 `Terrarium:`, naming every tool, option, API, command, file and Skill each
 section explains; for a Walkthrough, `Story:`, `Start:`, `End:` and `Code:`,
 and what *A real case* tells, if any. Write it dense, separated by `;`, from
-the page as it now reads. Give each bold lead-in a claim that stands alone,
-since the index shows only the lead-in.
+the page as it now reads; it has no cap. Give each bold lead-in a claim that
+stands alone, since the index shows only the lead-in.
 Quote a `description` or `teaches` that holds a colon, or YAML misreads it.
-Each stays within its cap in `lengths` in `layers/glassbox/page-checks.ts`,
+A `title` and `description` stay within their caps in `lengths` in
+`layers/glassbox/page-checks.ts`,
 which also checks a Lesson title's word count and each Why bullet's length
 (`ownWords`). The slug follows the title when a
 page is written or promoted; a retitle keeps the URL.
