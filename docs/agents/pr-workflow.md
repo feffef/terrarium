@@ -40,7 +40,8 @@ re-review each story or repeat its findings.
 
 ## The recipe
 
-1. Check the head passed the review and gate above. A red gate never merges.
+1. Check the head passed the review and gate above, or that a rule above let
+   you skip it. A red gate never merges.
 2. Run `pnpm exec tsx scripts/github/check-conflicting-issues.ts --pr <number>`.
    It is advisory: a hit means read that issue (#798), not that there is a
    conflict.
