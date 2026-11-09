@@ -35,12 +35,12 @@ export type AdrHint = z.infer<typeof adrHint>
 export const ruleLoad = z.object({ rule: z.string(), via: z.enum(['native', 'hint']), trigger: z.string().optional() })
 export type RuleLoad = z.infer<typeof ruleLoad>
 // A rule or doc an agent named as having changed or enabled something it did.
-export const helpedEntry = z.object({ path: z.string(), why: z.string().optional() }).strict()
+export const helpedEntry = z.object({ path: z.string(), why: z.string().optional() })
 export type HelpedEntry = z.infer<typeof helpedEntry>
 // Per agent: what loaded, whether it answered the "what helped" ask, and the
 // rules and docs it named. Unnamed means no claim, not unhelpful (#3009). A
 // subagent has an entry when it was asked or answered; the main agent only
-// when it loaded or named something, so rate main's answers over its loads.
+// when it loaded a rule or named something that is not always-loaded.
 export const ruleUseEntry = z.object({
   by: z.string(), // `main`, or the subagent's agent type (`workflow` when it has none)
   answered: z.boolean(),

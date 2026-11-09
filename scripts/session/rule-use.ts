@@ -67,26 +67,36 @@ export const ruleKey = (path: string) => {
   return at === -1 ? path : path.slice(at)
 }
 
+/** A rule named by a path or a bare file name, with or without `.md`, as its
+ *  `.claude/rules/` key: both what an agent names and what loaded match on it. */
+export const ruleName = (name: string) => {
+  const key = ruleKey(name.includes('/') ? name : `.claude/rules/${name}`)
+  return /\.md$/i.test(key) ? key : `${key}.md`
+}
+
+const isShell = (word = '') => /(^|\/)(ba)?sh$/.test(word)
+const isRedirect = (token = '') => /^\d*&?[<>]+&?$/.test(token)
+const isNoName = (token: string) => token.startsWith('-') || /[<>]/.test(token) || token.toLowerCase() === 'none'
+
 /** The names in the last `helped.sh` call among `commands`, normalised: `rule:x`
- *  becomes `.claude/rules/x`, `doc:x` becomes the repo-relative path. `undefined`
+ *  becomes `.claude/rules/x.md`, `doc:x` the repo-relative path. `undefined`
  *  when no call was made, `[]` for a bare call ("none helped"). */
 export function helpedNames(commands: string[], rel: (p: string) => string): string[] | undefined {
   const callsIn = (command: string): string[][] => commandWords(command).flatMap((words) => {
-    const shell = /(^|\/)(ba)?sh$/.test(words[0] ?? '')
-    if (shell && words[1] === '-c') return callsIn(words[2] ?? '')
-    // Run, not named: the script is the verb, or `sh`/`bash`'s first argument.
-    const at = shell ? 1 : 0
-    return words[at]?.endsWith(HELPED_SCRIPT) ? [words.slice(at + 1)] : []
+    // Run, not named: the script is the verb, or a shell's first non-flag
+    // argument; a shell's `-c` (also `-lc`) runs the next word as a command.
+    if (!isShell(words[0])) return words[0]?.endsWith(HELPED_SCRIPT) ? [words.slice(1)] : []
+    const at = words.findIndex((w, i) => i > 0 && !w.startsWith('-'))
+    if (words.slice(1, at === -1 ? undefined : at).some((f) => /^-\w*c\w*$/.test(f))) return callsIn(words[at] ?? '')
+    return at !== -1 && words[at]!.endsWith(HELPED_SCRIPT) ? [words.slice(at + 1)] : []
   })
   const args = commands.flatMap(callsIn).at(-1)
   if (args === undefined) return undefined
-  // Agents separate names by commas or quote several in one argument; a flag,
-  // a redirection with its target, and a literal "none" are no names.
+  // Agents separate names by commas or quote several in one argument.
   const tokens = args.flatMap((a) => a.split(/[\s,]+/)).filter(Boolean)
-  const names = tokens.filter((t, i) => !/^-|[<>]/.test(t) && !/^\d*[<>]+&?$/.test(tokens[i - 1] ?? '') && t !== 'none')
+  const names = tokens.filter((t, i) => !isNoName(t) && !isRedirect(tokens[i - 1]))
   return [...new Set(names.map((t) => {
     const name = t.replace(/^(rule|doc):/, '')
-    if (!t.startsWith('rule:') && !name.includes('.claude/rules/')) return rel(name)
-    return ruleKey(name.includes('/') ? name : `.claude/rules/${name}`).replace(/(?<!\.md)$/, '.md')
+    return t.startsWith('rule:') || name.includes('.claude/rules/') ? ruleName(name) : rel(name)
   }))]
 }

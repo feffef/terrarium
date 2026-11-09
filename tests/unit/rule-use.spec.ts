@@ -53,6 +53,11 @@ describe('ruleUse — the main agent', () => {
     expect(ruleUseOf(stitch(authored({ helped: [] }), folded))[0]!.loads).toEqual([{ rule: '.claude/rules/adr-0004.md', via: 'hint' }])
   })
 
+  it("matches the main agent's rule named without .md to its load", () => {
+    const trace = extractTrace([cwd, native('adr-0004.md')], NO_ENV)
+    expect(ruleUseOf(stitch(authored({ helped: [{ path: '.claude/rules/adr-0004' }] }), trace))[0]!.helped).toEqual([{ path: '.claude/rules/adr-0004.md' }])
+  })
+
   it('records an empty helped list as answered, and a missing one (the dropped-scratch placeholder) as unanswered', () => {
     const trace = extractTrace([cwd, native('adr-0004.md')], NO_ENV)
     expect(ruleUseOf(stitch(authored({ helped: [] }), trace))[0]).toMatchObject({ answered: true, helped: [] })
@@ -87,8 +92,16 @@ describe('helpedNames() — the names a helped.sh call gave', () => {
   it('splits one quoted argument holding several names', () => {
     expect(names("'rule:a.md doc:docs/b.md'")).toEqual(['.claude/rules/a.md', 'docs/b.md'])
   })
-  it('finds a call inside bash -c', () => {
+  it('drops every redirection form with its target, and NONE in any case', () => {
+    expect(names('rule:x.md &> log doc:docs/a.md &>>log2 2> err NONE')).toEqual(['.claude/rules/x.md', 'docs/a.md'])
+  })
+  it('keeps a rule name already ending in .MD as one rule', () => {
+    expect(names('rule:adr-0004.MD')).toEqual(['.claude/rules/adr-0004.MD'])
+  })
+  it('finds a call inside bash -c or -lc, and after shell flags', () => {
     expect(helpedNames([`bash -c "${S} rule:a.md"`], (p) => p)).toEqual(['.claude/rules/a.md'])
+    expect(helpedNames([`bash -lc "${S} rule:a.md"`], (p) => p)).toEqual(['.claude/rules/a.md'])
+    expect(helpedNames(['sh -x /repo/scripts/session/helped.sh rule:a.md'], (p) => p)).toEqual(['.claude/rules/a.md'])
   })
 })
 

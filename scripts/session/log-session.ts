@@ -93,7 +93,7 @@ const authoredScratchSchema = z
     prs: z.array(z.string()).optional(),
     skillsUsed: z.array(z.object({ name: z.string(), reason: z.string() })).optional(),
     // Required like `frictions`: [] means nothing helped, absent means skipped (#3009).
-    helped: z.array(helpedEntry),
+    helped: z.array(helpedEntry.strict()),
     frictions: z.array(
       z.object({
         description: z.string(),
