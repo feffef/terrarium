@@ -30,7 +30,6 @@ import {
   sessionModelsLabel,
   subagentUsageLabel,
   frictionCount,
-  frictionOtherCount,
   frictionTotals,
   kindCounts,
   ownSkills,
@@ -140,13 +139,6 @@ describe('frictionTotals / frictionCount', () => {
   })
 })
 
-describe('frictionOtherCount', () => {
-  it('sums everything but blocker and major', () => {
-    expect(frictionOtherCount({ nit: 2, minor: 3, moderate: 1, major: 1, blocker: 1 })).toBe(6)
-    expect(frictionOtherCount({ nit: 0, minor: 0, moderate: 0, major: 1, blocker: 1 })).toBe(0)
-  })
-})
-
 describe('kindCounts', () => {
   it('counts interactive, delegated, and autonomous sessions', () => {
     const sessions = [
@@ -167,62 +159,70 @@ describe('journalKpiTiles', () => {
     journalKpiTiles({ space: 'current', sessions: [], skills: [], routines: [], ...over })
   const tile = (key: string, over: Partial<Parameters<typeof journalKpiTiles>[0]> = {}) =>
     tiles(over).find((t) => t.key === key)!
+  const stats = (key: string, over: Partial<Parameters<typeof journalKpiTiles>[0]> = {}) =>
+    tile(key, over).stats.map((s) => `${s.value} ${s.label}`)
 
-  it('AC-01: current shows five tiles in order, each with its label and link', () => {
-    expect(tiles().map(({ key, label, to }) => ({ key, label, to }))).toEqual([
-      { key: 'sessions', label: 'Sessions logged', to: '#session-log' },
-      { key: 'frictions', label: 'Frictions surfaced', to: '/t/journal/current/frictions' },
-      { key: 'routines', label: 'Routine spend', to: '/t/journal/current/routines' },
-      { key: 'ideas', label: 'Ideas noted', to: '/t/journal/current/ideas' },
-      { key: 'skills', label: 'Platform Skills', to: '/t/journal/current/skills' },
+  it('shows five tiles on current, in order, each with its label, CTA and link', () => {
+    expect(tiles().map(({ key, label, cta, to }) => ({ key, label, cta, to }))).toEqual([
+      { key: 'sessions', label: 'Sessions logged', cta: 'Session logs ↓', to: '#session-log' },
+      { key: 'frictions', label: 'Frictions surfaced', cta: 'Worst problems →', to: '/t/journal/current/frictions' },
+      { key: 'routines', label: 'Routine spend', cta: 'Cost breakdown →', to: '/t/journal/current/routines' },
+      { key: 'ideas', label: 'Suggestions', cta: 'Ideas & learnings →', to: '/t/journal/current/ideas' },
+      { key: 'skills', label: 'Skills', cta: 'Roles & usage →', to: '/t/journal/current/skills' },
     ])
     expect(tiles().map((t) => t.value)).toEqual([0, 0, '$0.00', 0, 0])
+    for (const t of tiles()) {
+      expect(t.gloss).not.toBe('')
+      for (const s of t.stats) expect(s.hint).not.toBe('')
+    }
   })
 
-  it('AC-02: any other Space shows no tiles', () => {
+  it('shows no tiles on any other Space', () => {
     expect(tiles({ space: 'archived', sessions: [session()] })).toEqual([])
     expect(tiles({ space: 'other' })).toEqual([])
   })
 
-  it('AC-03: Sessions logged counts sessions and names each non-zero kind', () => {
+  it('counts sessions, with every kind as a stat, zeros included', () => {
     const sessions = [session({ kind: 'autonomous' }), session(), session()]
-    expect(tile('sessions', { sessions })).toMatchObject({ value: 3, sub: '2 interactive · 1 autonomous' })
-    expect(tile('sessions', { sessions: [session({ kind: 'autonomous' }), session({ kind: 'delegated' }), session()] }).sub)
-      .toBe('1 interactive · 1 delegated · 1 autonomous')
-    expect(tile('sessions').sub).toBeUndefined()
+    expect(tile('sessions', { sessions }).value).toBe(3)
+    expect(stats('sessions', { sessions })).toEqual(['2 interactive', '0 delegated', '1 autonomous'])
   })
 
-  it('AC-04: Frictions surfaced counts and breaks down by severity', () => {
+  it('counts Frictions, with every severity as a stat, worst first', () => {
     const sessions = [session({ frictions: [friction('blocker'), friction('major'), friction('minor')] }),
-      session({ frictions: [friction('major'), friction('nit'), friction('moderate')] })]
-    expect(tile('frictions', { sessions })).toMatchObject({ value: 6, sub: '1 blocker · 2 majors · 3 lesser' })
-    expect(tile('frictions')).toMatchObject({ value: 0, sub: '0 blockers · 0 majors', to: '/t/journal/current/frictions' })
+      session({ frictions: [friction('major'), friction('nit'), friction('minor')] })]
+    expect(tile('frictions', { sessions }).value).toBe(6)
+    expect(stats('frictions', { sessions })).toEqual(['1 blk', '2 maj', '0 mod', '2 min', '1 nit'])
+    expect(tile('frictions', { sessions }).stats.map((s) => s.severity)).toEqual(['blocker', 'major', 'moderate', 'minor', 'nit'])
+    expect(tile('frictions')).toMatchObject({ value: 0, to: '/t/journal/current/frictions' })
   })
 
-  it('AC-05: Routine spend sums runs started on or after the oldest session date (UTC)', () => {
+  it('sums Routine spend over runs started on or after the oldest session date (UTC)', () => {
     const sessions = [session({ endedAt: '2026-11-08T10:00:00Z' }), session({ endedAt: '2026-10-10T23:00:00Z' })]
     const routines = [
       { name: 'a', runs: [run('2026-10-09T23:59:59Z', 4), run('2026-10-10T00:00:00Z', 5.9716483)] },
       { name: 'b', runs: [run('2026-11-08T04:00:00Z', 1.5)] },
       { name: 'c', runs: [] },
     ]
-    expect(tile('routines', { sessions, routines })).toMatchObject({ value: '$7.47', sub: '2 runs' })
-    expect(tile('routines', { sessions, routines: [{ name: 'a', runs: [run('2026-10-11T00:00:00Z', 150.4)] }] }))
-      .toMatchObject({ value: '$150', sub: '1 run' })
-    expect(tile('routines', { routines })).toMatchObject({ value: '$0.00', sub: '0 runs' })
+    expect(tile('routines', { sessions, routines }).value).toBe('$7.47')
+    expect(stats('routines', { sessions, routines })).toEqual(['2 runs'])
+    expect(tile('routines', { sessions, routines: [{ name: 'a', runs: [run('2026-10-11T00:00:00Z', 150.4)] }] }).value).toBe('$150')
+    expect(tile('routines', { routines }).value).toBe('$0.00')
+    expect(stats('routines', { routines })).toEqual(['0 runs'])
   })
 
-  it('AC-06: Ideas noted counts ideas, with learnings as sessionNotes counts them', () => {
+  it('counts ideas plus learnings as Suggestions, learnings as sessionNotes counts them', () => {
     const sessions = [session({ ideas: ['i1', 'i2'], learnings: ['l1'] }), session({ external: true, learnings: ['l2'] })]
-    expect(tile('ideas', { sessions })).toMatchObject({ value: 2, sub: '1 learning' })
-    expect(tile('ideas').sub).toBe('0 learnings')
+    expect(tile('ideas', { sessions }).value).toBe(3)
+    expect(stats('ideas', { sessions })).toEqual(['2 ideas', '1 learnings'])
   })
 
-  it('AC-07: Platform Skills counts own Skills, with installed ones as a sub-line', () => {
+  it('counts every Skill, split into platform and installed, whatever the sessions', () => {
     const skills = [skill(), skill({ name: 'b' }), skill({ name: 'c', category: 'general-engineering' })]
-    expect(tile('skills', { skills })).toMatchObject({ value: 2, sub: '+1 installed' })
-    expect(tile('skills', { skills: [skill()] }).sub).toBeUndefined()
-    expect(tile('skills', { skills, sessions: [session(), session()] })).toMatchObject({ value: 2, sub: '+1 installed' })
+    expect(tile('skills', { skills }).value).toBe(3)
+    expect(stats('skills', { skills })).toEqual(['2 platform', '1 installed'])
+    expect(stats('skills', { skills: [skill()] })).toEqual(['1 platform', '0 installed'])
+    expect(tile('skills', { skills, sessions: [session(), session()] }).value).toBe(3)
   })
 })
 

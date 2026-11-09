@@ -36,9 +36,8 @@ const { data } = await useAsyncData(route.path, async () => {
   // Newest-first, ordered in SQL rather than re-sorted client-side.
   const sessions = await queryCollection(collections.sessions).order('endedAt', 'DESC').limit(JOURNAL_SESSIONS_LOADED).all()
   const sessionTotal = await queryCollection(collections.sessions).count()
-  const ledgerSize = await queryCollection(collections.frictions).count()
   const routines = await queryCollection(collections.routines).select('name', 'runs').all()
-  return { pages, skills, sessions, sessionTotal, ledgerSize, routines }
+  return { pages, skills, sessions, sessionTotal, routines }
 })
 
 // `.all()` returns the full page Documents with their parsed body, so the root's
@@ -63,26 +62,6 @@ const onrampCards = computed(() =>
     to: `/t/${tenant}/${space}${s.path}`,
   })),
 )
-// The Friction Ledger and Routine costs are Vue pages, not Documents, so their doors
-// are added here, as compact links under the cards so they don't weigh as much as the steps.
-const onrampDoors = computed(() => [
-  ...(data.value?.ledgerSize
-    ? [{
-        key: 'frictions',
-        title: 'What went wrong recently',
-        blurb: 'The Friction Ledger: recent recurring pain-points agents logged, grouped by cause, worst and most frequent first, fixed ones included.',
-        to: `/t/${tenant}/${space}/frictions`,
-      }]
-    : []),
-  ...(routines.value.length
-    ? [{
-        key: 'routines',
-        title: 'What the scheduled runs cost',
-        blurb: 'Every Routine run as a chart, plus a weekly table. Switch between dollars, tokens and time.',
-        to: `/t/${tenant}/${space}/routines`,
-      }]
-    : []),
-])
 
 // Page-wide accordion: a single item — one session card OR one digest — is open
 // at a time, tracked by its deep-link anchor. Both inline feeds share this one
@@ -152,16 +131,8 @@ const dailyMax = computed(() => Math.max(1, ...dailyFrictions.value.map((d) => d
 const kpiTiles = computed(() =>
   journalKpiTiles({ space, sessions: sessions.value, skills: skills.value, routines: routines.value }),
 )
-const KPI_GLOSS: Record<JournalKpiTile['key'], string> = {
-  sessions: 'One agent session, logged. Interactive: a human kept prompting; delegated: one prompt; autonomous: none.',
-  frictions: 'Problems an agent hit and wrote down, every one, however small',
-  routines: 'What the scheduled Routine runs cost',
-  ideas: 'Proposals for the future, noted but not planned',
-  skills: 'Reusable playbooks the agents follow',
-}
-const kpiFrictionTotals = computed(() => frictionTotals(sessions.value))
 const tilesHeadline = computed(() =>
-  sessionsCappedLabel.value ? `Counts from the ${sessionsCappedLabel.value} logs` : 'Counts from the last week of logs; Skills are as of today',
+  sessionsCappedLabel.value ? `Counts from the ${sessionsCappedLabel.value} logs` : 'Counts from the last week of logs',
 )
 
 const title = computed(() => rootDoc.value?.title ?? `The Journal — ${space}`)
@@ -207,55 +178,19 @@ useSeoMeta({
     <template v-if="kpiTiles.length">
       <p class="tiles-headline">{{ tilesHeadline }}</p>
       <section class="tiles" aria-label="State of this Space">
-        <JournalStatTile
-          v-for="t in kpiTiles"
-          :key="t.key"
-          :label="t.label"
-          :gloss="KPI_GLOSS[t.key]"
-          :value="t.value"
-          :sub="t.sub"
-          :to="t.to"
-        >
-          <template v-if="t.key === 'frictions'" #sub>
-            <JournalFrictionStrata :counts="kpiFrictionTotals" :total="Number(t.value)">{{ t.sub }}</JournalFrictionStrata>
-          </template>
-        </JournalStatTile>
+        <JournalStatTile v-for="t in kpiTiles" :key="t.key" :tile="t" />
       </section>
     </template>
 
-    <section v-if="kpiTiles.length && dailyFrictions.length > 1" class="panel trend" aria-labelledby="trend-h">
-      <div class="section-head">
-        <h2 id="trend-h">Frictions per session, by day</h2>
-        <span class="count">self-reported, UTC days</span>
-      </div>
-      <ol class="trend-bars" aria-label="Frictions per session, by day">
-        <li v-for="d in dailyFrictions" :key="d.date">
-          <span class="trend-val">{{ d.perSession }}<span class="trend-raw"> per session on {{ d.date }}: {{ countOf(d.frictions, 'friction') }} in {{ countOf(d.sessions, 'session') }}</span></span>
-          <span class="trend-bar"><span :style="{ height: `${Math.max(4, (d.perSession / dailyMax) * 100)}%` }" /></span>
-          <span class="trend-day">{{ d.date.slice(5) }}</span>
-        </li>
-      </ol>
-      <p class="panel-intro">
-        Frictions agents wrote down, divided by that day's sessions. Logging more honestly raises it, so read it as a
-        rough pulse, not a score.
-      </p>
-    </section>
-
-    <section v-if="onrampCards.length || onrampDoors.length" class="onramp" aria-label="Start here">
-      <p v-if="onrampCards.length" class="onramp-lead">New here? Start with <NuxtLink to="/t/glassbox/guide">how Terrarium works</NuxtLink>, the overview that opens the Glass Box guide. Then the short version:</p>
-      <div v-if="onrampCards.length" class="onramp-cards">
+    <section v-if="onrampCards.length" class="onramp" aria-label="Start here">
+      <p class="onramp-lead">New here? Start with <NuxtLink to="/t/glassbox/guide">how Terrarium works</NuxtLink>, the overview that opens the Glass Box guide. Then the short version:</p>
+      <div class="onramp-cards">
         <NuxtLink v-for="c in onrampCards" :key="c.key" :to="c.to" class="onramp-card">
           <span class="onramp-kicker">{{ c.kicker }}</span>
           <span class="onramp-card-title">{{ c.title }}<span class="onramp-arrow" aria-hidden="true">→</span></span>
           <span class="onramp-blurb">{{ c.blurb }}</span>
         </NuxtLink>
       </div>
-      <ul v-if="onrampDoors.length" class="onramp-doors">
-        <li v-for="c in onrampDoors" :key="c.key">
-          <NuxtLink :to="c.to">{{ c.title }}<span aria-hidden="true"> →</span></NuxtLink>
-          <span class="onramp-blurb"> {{ c.blurb }}</span>
-        </li>
-      </ul>
     </section>
 
     <p v-if="rootDoc?.lead" class="intro-lead">{{ rootDoc.lead }}</p>
@@ -316,6 +251,24 @@ useSeoMeta({
       </button>
     </section>
 
+
+    <section v-if="kpiTiles.length && dailyFrictions.length > 1" class="panel trend" aria-labelledby="trend-h">
+      <div class="section-head">
+        <h2 id="trend-h">Frictions per session, by day</h2>
+        <span class="count">self-reported, UTC days</span>
+      </div>
+      <ol class="trend-bars" aria-label="Frictions per session, by day">
+        <li v-for="d in dailyFrictions" :key="d.date">
+          <span class="trend-val">{{ d.perSession }}<span class="trend-raw"> per session on {{ d.date }}: {{ countOf(d.frictions, 'friction') }} in {{ countOf(d.sessions, 'session') }}</span></span>
+          <span class="trend-bar"><span :style="{ height: `${Math.max(4, (d.perSession / dailyMax) * 100)}%` }" /></span>
+          <span class="trend-day">{{ d.date.slice(5) }}</span>
+        </li>
+      </ol>
+      <p class="panel-intro">
+        Frictions agents wrote down, divided by that day's sessions. Logging more honestly raises it, so read it as a
+        rough pulse, not a score.
+      </p>
+    </section>
 
     <section id="session-log" class="feed">
       <div class="section-head">
@@ -436,8 +389,6 @@ h1 {
 .onramp-kicker { font-family: var(--jd-mono); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--jd-muted); }
 .onramp-arrow { color: var(--jd-accent); transition: transform 0.15s ease; }
 .onramp-card:hover .onramp-arrow { transform: translateX(3px); }
-.onramp-doors { list-style: none; margin: 0.9rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 0.35rem; }
-.onramp-doors a { font-weight: 600; color: var(--jd-accent); }
 .onramp-blurb { color: var(--jd-muted); font-size: 0.88rem; line-height: 1.45; }
 
 .spaces { display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-end; }
@@ -495,7 +446,7 @@ h1 {
   margin: 0 0 2.25rem;
 }
 
-.trend { margin-bottom: 1.25rem; }
+.trend { margin-top: 1.75rem; }
 .trend-bars { list-style: none; margin: 0 0 0.7rem; padding: 0; display: flex; gap: 0.4rem; align-items: stretch; }
 .trend-bars li { position: relative; flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 0.2rem; font-family: var(--jd-mono); font-size: 0.68rem; color: var(--jd-faint); }
 .trend-bar { display: flex; align-items: flex-end; width: 100%; height: 4.5rem; }

@@ -101,13 +101,6 @@ export function frictionCount(sessions: SessionDoc[]): number {
   return sessions.reduce((n, s) => n + s.frictions.length, 0)
 }
 
-// Everything below blocker/major — the stat tile calls the worst two out by
-// name and folds the rest into this one term, rather than leaving them out
-// of the visible caption entirely (visitor-loop finding, 2026-09-28).
-export function frictionOtherCount(totals: Record<Severity, number>): number {
-  return totals.nit + totals.minor + totals.moderate
-}
-
 export function kindCounts(sessions: SessionDoc[]): { interactive: number; delegated: number; autonomous: number } {
   const counts = { interactive: 0, delegated: 0, autonomous: 0 }
   for (const s of sessions) counts[s.kind]++
@@ -401,14 +394,33 @@ export function frictionsByDay(
 
 // ── KPI tiles ────────────────────────────────────────────
 // Only `current` has them: archived detail pages mostly hold nothing. Every
-// count but Platform Skills is scoped to the sessions `current` holds.
+// count but Skills is scoped to the sessions `current` holds.
+export interface JournalKpiStat {
+  key: string
+  label: string
+  value: number
+  hint: string
+  severity?: Severity
+}
+
 export interface JournalKpiTile {
   key: 'sessions' | 'frictions' | 'routines' | 'ideas' | 'skills'
   label: string
+  gloss: string
   value: number | string
-  sub: string | undefined
+  stats: JournalKpiStat[]
+  cta: string
   to: string
 }
+
+// The grades `log-session` defines, worst first.
+const KPI_SEVERITY_HINTS: [Severity, string, string][] = [
+  ['blocker', 'blk', "Blocker: the goal couldn't proceed without a workaround or human help"],
+  ['major', 'maj', 'Major: derailed part of the session or degraded the outcome'],
+  ['moderate', 'mod', 'Moderate: cost real time or forced a workaround'],
+  ['minor', 'min', 'Minor: a contained papercut'],
+  ['nit', 'nit', 'Nit: an annoyance with no real cost'],
+]
 
 export function journalKpiTiles({ space, sessions, skills, routines }: {
   space: string
@@ -418,35 +430,65 @@ export function journalKpiTiles({ space, sessions, skills, routines }: {
 }): JournalKpiTile[] {
   if (space !== 'current') return []
   const base = `/t/journal/${space}`
-  const kinds = Object.entries(kindCounts(sessions)).filter(([, n]) => n).map(([k, n]) => `${n} ${k}`)
+  const kinds = kindCounts(sessions)
   const sev = frictionTotals(sessions)
-  const lesser = frictionOtherCount(sev)
   const since = sessions.map((s) => s.endedAt.slice(0, 10)).sort()[0]
   const runs = since ? routines.flatMap((r) => r.runs).filter((r) => r.startedAt.slice(0, 10) >= since) : []
   const notes = sessionNotes(sessions)
-  const installed = installedSkillCount(skills)
   return [
-    { key: 'sessions', label: 'Sessions logged', value: sessions.length, sub: kinds.join(' · ') || undefined, to: '#session-log' },
+    {
+      key: 'sessions',
+      label: 'Sessions logged',
+      gloss: 'Agent sessions, logged',
+      value: sessions.length,
+      stats: [
+        { key: 'interactive', label: 'interactive', value: kinds.interactive, hint: 'A human kept prompting' },
+        { key: 'delegated', label: 'delegated', value: kinds.delegated, hint: 'One human prompt, then the agent worked alone' },
+        { key: 'autonomous', label: 'autonomous', value: kinds.autonomous, hint: 'No human prompt: a schedule or another agent started it' },
+      ],
+      cta: 'Session logs ↓',
+      to: '#session-log',
+    },
     {
       key: 'frictions',
       label: 'Frictions surfaced',
+      gloss: 'Problems agents hit and wrote down',
       value: frictionCount(sessions),
-      sub: `${countOf(sev.blocker, 'blocker')} · ${countOf(sev.major, 'major')}${lesser ? ` · ${lesser} lesser` : ''}`,
+      stats: KPI_SEVERITY_HINTS.map(([severity, label, hint]) => ({ key: severity, label, value: sev[severity], hint, severity })),
+      cta: 'Worst problems →',
       to: `${base}/frictions`,
     },
     {
       key: 'routines',
       label: 'Routine spend',
+      gloss: 'What scheduled runs cost',
       value: formatRoutineMetric('costUsd', runs.reduce((sum, r) => sum + r.costUsd, 0)),
-      sub: countOf(runs.length, 'run'),
+      stats: [{ key: 'runs', label: 'runs', value: runs.length, hint: "Routine runs started since this Space's oldest session" }],
+      cta: 'Cost breakdown →',
       to: `${base}/routines`,
     },
-    { key: 'ideas', label: 'Ideas noted', value: notes.ideas.length, sub: countOf(notes.learnings.length, 'learning'), to: `${base}/ideas` },
+    {
+      key: 'ideas',
+      label: 'Suggestions',
+      gloss: 'Proposals from agents, to apply by hand',
+      value: notes.ideas.length + notes.learnings.length,
+      stats: [
+        { key: 'ideas', label: 'ideas', value: notes.ideas.length, hint: 'Proposals for future work, noted but not planned' },
+        { key: 'learnings', label: 'learnings', value: notes.learnings.length, hint: 'Lessons a session wrote down for future agents' },
+      ],
+      cta: 'Ideas & learnings →',
+      to: `${base}/ideas`,
+    },
     {
       key: 'skills',
-      label: 'Platform Skills',
-      value: ownSkills(skills).length,
-      sub: installed ? `+${installed} installed` : undefined,
+      label: 'Skills',
+      gloss: 'Playbooks the agents follow, as of today',
+      value: skills.length,
+      stats: [
+        { key: 'platform', label: 'platform', value: ownSkills(skills).length, hint: 'Skills the Platform writes and evolves itself' },
+        { key: 'installed', label: 'installed', value: installedSkillCount(skills), hint: "Third-party Skills the agents use but don't evolve" },
+      ],
+      cta: 'Roles & usage →',
       to: `${base}/skills`,
     },
   ]

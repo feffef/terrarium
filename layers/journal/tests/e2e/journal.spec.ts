@@ -198,7 +198,7 @@ describe('journal Tenant', async () => {
     expect(html).toContain('Frictions surfaced')
     expect(html).toContain('href="/t/journal/current/skills"')
     expect(html).toContain('href="/t/journal/current/ideas"')
-    expect(html.split('href="/t/journal/current/frictions"').length - 1).toBe(2) // on-ramp card and KPI tile
+    expect(html.split('href="/t/journal/current/frictions"').length - 1).toBe(1) // the KPI tile
     expect(html).toContain('aria-expanded="false"')
     expect(html).toMatch(/role="button"/)
   })
@@ -461,10 +461,10 @@ describe('journal Tenant', async () => {
     if (total > JOURNAL_SESSIONS_LOADED) expect(html).toContain(`newest ${shown} of ${total} session logs`)
   })
 
-  it('puts the KPI tiles and the Frictions chart first on current, in the agreed order', async () => {
+  it('puts the KPI tiles first on current, and the Frictions chart just above the sessions', async () => {
     const html = await $fetch<string>('/t/journal/current')
-    const marks = ['class="masthead', 'class="tiles-headline', 'class="tiles"', 'id="trend-h"', 'class="onramp"',
-      'class="intro-lead', 'class="intro ', 'id="digests"', 'id="session-log"']
+    const marks = ['class="masthead', 'class="tiles-headline', 'class="tiles"', 'class="onramp"',
+      'class="intro-lead', 'class="intro ', 'id="digests"', 'id="trend-h"', 'id="session-log"']
     const at = marks.map((m) => html.indexOf(m))
     expect(at.every((i) => i >= 0), JSON.stringify(Object.fromEntries(marks.map((m, i) => [m, at[i]])))).toBe(true)
     expect(at).toEqual([...at].sort((a, b) => a - b))
