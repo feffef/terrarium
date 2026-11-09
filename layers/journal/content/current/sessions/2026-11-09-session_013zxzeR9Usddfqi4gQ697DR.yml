@@ -1,0 +1,124 @@
+schemaVersion: 1
+session: session_013zxzeR9Usddfqi4gQ697DR
+startedAt: 2026-11-09T01:27:16Z
+endedAt: 2026-11-09T01:34:27Z
+kind: interactive
+goal: Find and fix an invented "weekly" in yesterday's Digest
+status: in-review
+outcome: "Digest fixed in PR #2993, Friction logged; awaiting gate and merge"
+summary: "The owner asked where the \"weekly schedule\" in the 2026-11-08 Digest came from. I traced it: no file sets a cadence (the timer lives in a Routine outside the repo), and the likeliest source was session goals such as \"Weekly Glass Box curate run\". The owner then said the job is daily and recently set up, so \"weekly\" was made up, and asked me to log a Friction and correct it. Human-instructed: the investigation, the Friction and the correction. Agent-initiated: opening the PR (ADR-0003) and subscribing to it. I changed one word (\"weekly\" to \"scheduled\", since Digests never state a cadence), ran the scoped gate green, pushed and opened PR #2993. Left alone and flagged in the PR: the 2026-11-02 to 11-05 Digests also call jobs \"weekly\" in their Also-shipped lists, cadences unverified. The session goals saying \"Weekly\" are other sessions' logs, which I must not edit."
+prs:
+  - "2993"
+docsRead:
+  - path: .agents/skills/digest/SKILL.md
+    reason: Showed the Skill is daily and tells writers never to state how often a job runs
+    useful: yes
+  - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+    reason: Confirmed a wrong fact in a Digest is fixed by an ordinary PR
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: Read for the commit-file and push rules; nothing new for a one-line fix
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: Gave the review-before-PR rule and the simple-change test
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: Confirmed writing through MCP; nothing else applied
+    useful: partly
+  - path: .agents/skills/close-session/SKILL.md
+    reason: Closure steps
+    useful: yes
+  - path: .agents/skills/log-session/SKILL.md
+    reason: Log format and step 3 verdicts
+    useful: yes
+  - path: layers/journal/content/current/skills/digest.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/digests/2026-11-08.md
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: PR opened, so in-review log
+frictions:
+  - description: Digest for 2026-11-08 called the concept guide's upkeep job weekly; it runs daily. The writer took the word from session goals, not a source for the cadence.
+    solution: The digest Skill already says never state how often a job runs; its fact-check should flag any cadence word (weekly, daily) as unverifiable. Other Digests (11-02 to 11-05) use it too.
+    severity: minor
+  - description: Ran git log on the Glass Box layer before reading docs/agents/git-conventions.md; the late-read hook flagged it.
+    solution: "None needed: the doc's read-only list does not name log used to trace a fact; a one-line mention would have prompted the read."
+    severity: nit
+durationSec: 431
+models:
+  claude-sonnet-5-5: 61
+toolCounts:
+  Grep: 14
+  Read: 10
+  Bash: 7
+  Edit: 1
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Skill: 1
+  Write: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-11-08.md
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0010.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0010.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run gate:scoped and read a simple diff myself; the summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Says logs go straight to main via close-session; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open the PR myself after the gate and subscribe; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header on the PR body and the commit trailer; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: About prune trials; none covered this Digest line
+    useful: no
+  - path: .claude/rules/adr-0010.md
+    reason: Pointed me to ADR-0010, whose full text confirmed a PR fix is allowed
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: About where Skills and schedules live; confirmed a schedule is a Routine, not in the Skill
+    useful: partly
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded for the Journal page; I did not need the Journal glossary for one word
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: About installed Skills and the Inventory; not relevant to this fix
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: About Mermaid diagrams; none touched
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: About where instructions live; not relevant
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: About ADR rewrites; not relevant
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Human-only list; the Digest page is not on it, so I may merge
+    useful: partly
+gitBranch: ccr-c590f5ac-0y6srv
+entrypoint: remote_mobile
+cliVersion: 2.1.319
+landedBy: Stop
