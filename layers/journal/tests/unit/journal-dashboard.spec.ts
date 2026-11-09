@@ -187,6 +187,8 @@ describe('journalKpiTiles', () => {
   it('AC-03: Sessions logged counts sessions and names each non-zero kind', () => {
     const sessions = [session({ kind: 'autonomous' }), session(), session()]
     expect(tile('sessions', { sessions })).toMatchObject({ value: 3, sub: '2 interactive · 1 autonomous' })
+    expect(tile('sessions', { sessions: [session({ kind: 'autonomous' }), session({ kind: 'delegated' }), session()] }).sub)
+      .toBe('1 interactive · 1 delegated · 1 autonomous')
     expect(tile('sessions').sub).toBeUndefined()
   })
 
@@ -220,6 +222,7 @@ describe('journalKpiTiles', () => {
     const skills = [skill(), skill({ name: 'b' }), skill({ name: 'c', category: 'general-engineering' })]
     expect(tile('skills', { skills })).toMatchObject({ value: 2, sub: '+1 installed' })
     expect(tile('skills', { skills: [skill()] }).sub).toBeUndefined()
+    expect(tile('skills', { skills, sessions: [session(), session()] })).toMatchObject({ value: 2, sub: '+1 installed' })
   })
 })
 

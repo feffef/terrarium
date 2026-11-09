@@ -118,7 +118,6 @@ export function prUrl(pr: string): string {
   return `${REPO_URL}/pull/${pr.replace(/^#/, '')}`
 }
 
-// The session card's PR chips show at most this many.
 export const PR_SUB_MAX = 3
 
 // ── Skill Inventory ──────────────────────────────────────

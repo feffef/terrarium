@@ -6,7 +6,7 @@
 // Isolation-respecting and presentation-only: it resolves the Space to its keyed
 // collections through the SAME shared, unit-tested resolver the catch-all uses
 // (via the read-only useSpace composable — no isolation logic is duplicated or
-// changed), then reads only `journal_<space>_{pages,skills,sessions}`. Spaces
+// changed), then reads only `journal_<space>_*` collections. Spaces
 // cannot leak.
 //
 // Pure aggregation/formatting lives in the layer-local, unit-tested
@@ -152,7 +152,7 @@ const dailyMax = computed(() => Math.max(1, ...dailyFrictions.value.map((d) => d
 const kpiTiles = computed(() =>
   journalKpiTiles({ space, sessions: sessions.value, skills: skills.value, routines: routines.value }),
 )
-const KPI_GLOSS: Record<string, string> = {
+const KPI_GLOSS: Record<JournalKpiTile['key'], string> = {
   sessions: 'One agent session, logged. Interactive: a human kept prompting; delegated: one prompt; autonomous: none.',
   frictions: 'Problems an agent hit and wrote down, every one, however small',
   routines: 'What the scheduled Routine runs cost',
