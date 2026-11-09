@@ -9,18 +9,20 @@ const { data } = await useAsyncData('glassbox-workshop-checks', async () => {
 
 <template>
   <p v-if="!data?.length" class="empty">No full checks yet.</p>
-  <p v-else class="count">{{ data.length }} guide pages have a recorded full check; pages not listed have none yet.</p>
-  <table v-if="data?.length" class="checks">
-    <thead>
-      <tr><th scope="col">Last full check</th><th scope="col">Page</th></tr>
-    </thead>
-    <tbody>
-      <tr v-for="row in data" :key="row.page">
-        <td class="when">{{ row.checked }}</td>
-        <td class="page"><NuxtLink :to="glassboxGuidePath(row.page)">{{ row.page }}</NuxtLink></td>
-      </tr>
-    </tbody>
-  </table>
+  <template v-else>
+    <p class="count">{{ data.length }} guide {{ data.length === 1 ? 'page has' : 'pages have' }} a recorded full check; pages not listed have none yet.</p>
+    <table class="checks">
+      <thead>
+        <tr><th scope="col">Last full check</th><th scope="col">Page</th></tr>
+      </thead>
+      <tbody>
+        <tr v-for="row in data" :key="row.page">
+          <td class="when">{{ row.checked }}</td>
+          <td class="page"><NuxtLink :to="glassboxGuidePath(row.page)">{{ row.page }}</NuxtLink></td>
+        </tr>
+      </tbody>
+    </table>
+  </template>
 </template>
 
 <style scoped>
