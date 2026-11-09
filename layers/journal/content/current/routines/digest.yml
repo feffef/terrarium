@@ -1,13 +1,5 @@
 name: digest
 runs:
-  - session: session_01EmaH5A6Ziwjndz9esnsJ22
-    startedAt: 2026-10-10T00:15:48Z
-    durationSeconds: 949
-    inputTokens: 114
-    outputTokens: 17051
-    cacheReadTokens: 5087815
-    cacheWriteTokens: 172936
-    costUsd: 1.2646675
   - session: session_013GkBtC56M36dmz5AtEb1Hp
     startedAt: 2026-10-11T00:16:20Z
     durationSeconds: 706
@@ -240,3 +232,11 @@ runs:
     cacheReadTokens: 5261823
     cacheWriteTokens: 201291
     costUsd: 1.3905803
+  - session: session_013zxzeRwYp54RD4CM5MiabZ
+    startedAt: 2026-11-09T00:15:46Z
+    durationSeconds: 609
+    inputTokens: 133
+    outputTokens: 31534
+    cacheReadTokens: 5581158
+    cacheWriteTokens: 344918
+    costUsd: 1.8702548

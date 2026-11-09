@@ -8,28 +8,6 @@ role: >-
   and the post-dispatch check that no finished subagent work is stranded. Every
   rule in it was paid for by a session that lost work.
 observations:
-  - date: 2026-09-29
-    note: >-
-      The cd-into-worktree footgun named above (session_01S5bzNzvg1DURebeNRDgVi5)
-      recurred the very next day in session_0185EAXqfuX1twvr6Z67SsY4 —
-      near-identical wording, same self-recovery, no damage either time. Two
-      occurrences on consecutive days against an already-explicit,
-      already-once-recorded rule cleared the escalation bar; filed as issue
-      #1480. Two further single-instance findings, not yet escalated:
-      session_01S5bzNzvg1DURebeNRDgVi5 also passed `isolation:'worktree'`
-      only in prompt text rather than as the actual Agent-tool parameter —
-      exactly the mistake §2 warns against by name — caught via TaskStop
-      before any work occurred; and session_01NT2TmgJJGjEsc84AW6oAi7 hit a
-      parallel-load test-fixture tmp-path collision (a variant of the
-      #847/#1191 artifact-naming-collision class, but a shared fixture path
-      rather than a named log/scratch output), self-caught via rerun. Both
-      recorded here for a future run's screen. No other rule-adjacent
-      incident recurred among the 10 newest sessions checked; the near-miss
-      missed-invocation (session_01LKfKKxwgThbVFE79NWohET) remains the only
-      real instance in the window — a broader check of the ~30 non-users
-      whose goals plausibly implied subagent work found no new missed
-      invocation (every one dispatched only read-only subagents, outside
-      this Skill's git/worktree remit).
   - date: "2026-09-30"
     note: >-
       Re-checked (audit-skills behaviour check), 10 newest sessions (09-27
@@ -477,3 +455,6 @@ observations:
   - date: "2026-11-07"
     note: >-
       Behaviour check, 10 runs, all PRs merged, no stranded worktree. Repeated silent failure: briefs omit CLAUDE.md's every-brief asks (verdicts, sourced counts, scratchpad folder) in session_013zxzeNeTKPqiQ1jj1FgYXh and session_013zxzeSYWF1rye7qScgSUFV, after session_013zxzeT8tDd5GPJiRNZRA4J; filed #2911. #2874 (checkout rule) seen working: a 11-07 friction in session_013zxzeSxfK7X25LqaANsqoE says the brief lacked the no-checkout rule, no damage logged. Grade unchanged.
+  - date: "2026-11-09"
+    note: >-
+      Behaviour check, 10 runs, all PRs merged, no stranded worktree. Unverified weak signals: a brief with a literal @@GROUP@@ placeholder slipped past the section 3 re-read rule (session_013zxzeSZva1TWwL6nLdEnUa, cost one resume), and six writers ran on an unpiloted brief (session_013zxzeQaeB8hhL2FFfcQhv7, moderate friction; it proposed a pilot step). Escalate on a repeat. Grade unchanged.

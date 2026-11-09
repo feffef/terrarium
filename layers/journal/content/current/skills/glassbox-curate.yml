@@ -15,3 +15,6 @@ observations:
   - date: "2026-11-08"
     note: >-
       Behaviour check, 10 runs delivered. Unverified from logs: cost_usd unavailable from get_session in at least 3 of 10 runs (session_013zxzeNqe2cXhykGMMq7vUi, session_013zxzeTCE8mdvR9V6wVJoCV, session_013zxzeSkKADXgmp8x1PeS5Z), so the budget stop is unenforced; Subject-wide read and read-first docs skipped in 4 runs (session_013zxzeRCCqrxVitqSaxJa4K among them), caught by Spec review. Skill changed 7 times in the window. Grade unchanged.
+  - date: "2026-11-09"
+    note: >-
+      Behaviour check, 10 runs delivered, 11 PRs merged. Repeated silent failure, both already noted 11-08: Subject-wide read skipped (session_013zxzeQyHhutDMJtzGF5UQU quotes it) and cost_usd unreported (session_013zxzeTCE8mdvR9V6wVJoCV): filed #2987. Unverified: session_013zxzePZDqGM37D7GdfGumb skipping the get_session cost read. Grade unchanged.

@@ -9,15 +9,6 @@ role: >-
   gated PR on green (ADR-0003/0004), filing an issue only for a factual conflict
   it can't resolve. Use it when docs and code drift apart.
 observations:
-  - date: 2026-09-29
-    note: >-
-      Re-verified (audit-skills behaviour check), 4 newly-checked sessions
-      beyond the 09-28 set: session_01E7nzKhxh1riVDMpn8YytKM (PR #1461),
-      session_01UAmBCUoSXva1vKut9gFfsr (#1426),
-      session_01EJbTDDTwGJttwa6Sj8LLNH (#1356), and
-      session_01758bqHEsb6P5mXAHymjmsy (#1334) — all merged, one commit each,
-      diffs match each log's claimed fix list, no human-only surface touched,
-      no reverts.
   - date: "2026-09-30"
     note: >-
       Re-verified (audit-skills behaviour check), one newly-checked session:
@@ -414,3 +405,6 @@ observations:
       own read of a one-line diff (self-logged); reviewer coverage thin on
       10-29/10-30 (fixed by #2726; the 11-01 Covered line is unverified).
       session_01BgQzSd9CmFPiugdXAQh6HW (10-26) not checked.
+  - date: "2026-11-09"
+    note: >-
+      Behaviour check, 7 runs delivered. Unverified: session_013zxzeRYiNjyrjrq8JVWSuu (11-07) log read in-review after its PR merged, so the re-close on merge did not happen; the Stop-hook stale-log flag (797a8a599) landed that day. Grade unchanged.
