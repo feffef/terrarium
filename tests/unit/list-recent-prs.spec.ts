@@ -9,6 +9,7 @@ import {
   parsePrNumber,
   prsSince,
   recentPrs,
+  takeGrep,
   toRecentPr,
   withChange,
 } from '../../scripts/git/list-recent-prs.ts'
@@ -124,6 +125,18 @@ describe('recentPrs() with a grep', () => {
   it('treats the text as a plain substring, not a regex', () => {
     expect(numbers(recentPrs([mk(5, 10, 'axb')], 20, 'a.b'))).toEqual([])
     expect(numbers(recentPrs(commits, 20, 'a.b'))).toEqual([4])
+  })
+})
+
+describe('takeGrep()', () => {
+  it('takes the value and leaves the other args, wherever --grep sits', () => {
+    expect(takeGrep(['--grep', 'x', '5'])).toEqual({ grep: 'x', rest: ['5'] })
+    expect(takeGrep(['5', '--grep', 'x'])).toEqual({ grep: 'x', rest: ['5'] })
+    expect(takeGrep(['5'])).toEqual({ grep: undefined, rest: ['5'] })
+  })
+  it('rejects a missing value or one that is another flag', () => {
+    expect(() => takeGrep(['5', '--grep'])).toThrow(/--grep needs/)
+    expect(() => takeGrep(['--grep', '--diff'])).toThrow(/--grep needs/)
   })
 })
 

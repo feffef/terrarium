@@ -14,8 +14,8 @@
 // been observed to produce one, but a squash-merge or a manually-crafted
 // merge commit could), the merge subject line itself is used as a fallback.
 //
-// Usage:  tsx scripts/git/list-recent-prs.ts [N]
-//         tsx scripts/git/list-recent-prs.ts --since <ISO date or datetime>
+// Usage:  tsx scripts/git/list-recent-prs.ts [N] [--grep <text>] [--diff]
+//         tsx scripts/git/list-recent-prs.ts --since <ISO date or datetime> [--grep <text>] [--diff]
 //   Prints the last N merged PRs (default 20) on `origin/main` as JSON:
 //   { number, title, mergedAtUtc }. Newest-first. With --since, prints every
 //   PR merged at or after that time instead (a bare date is midnight UTC).
@@ -122,6 +122,16 @@ export function withChange(pr: RecentPr, nameOnly: string, patch: string): Recen
   return { ...pr, files: files.slice(0, MAX_FILES), diff }
 }
 
+/** Pull `--grep <text>` out of `args`; a missing value or another flag in its
+ *  place would silently swallow that flag, so it throws instead. */
+export function takeGrep(args: string[]): { grep: string | undefined; rest: string[] } {
+  const i = args.indexOf('--grep')
+  if (i === -1) return { grep: undefined, rest: args }
+  const grep = args[i + 1]
+  if (grep === undefined || grep.startsWith('--')) throw new Error('--grep needs text to match in titles')
+  return { grep, rest: args.filter((_, j) => j !== i && j !== i + 1) }
+}
+
 function describeChanges(prs: RecentPr[]): RecentPr[] {
   return prs.map((pr) => {
     const run = (flag: string) => git(['diff', '--no-renames', flag, '--no-color', `${pr.hash}^1`, pr.hash], root)
@@ -133,13 +143,14 @@ function describeChanges(prs: RecentPr[]): RecentPr[] {
 
 function main(): void {
   const raw = process.argv.slice(2)
-  const g = raw.indexOf('--grep')
-  let grep: string | undefined
-  if (g !== -1) {
-    grep = raw[g + 1]
-    if (grep === undefined) fail('--grep needs text to match in titles')
+  let grepped: ReturnType<typeof takeGrep> | undefined
+  try {
+    grepped = takeGrep(raw)
+  } catch (e) {
+    fail((e as Error).message)
   }
-  const argv = raw.filter((a, i) => a !== '--diff' && a !== '--grep' && !(g !== -1 && i === g + 1))
+  const { grep, rest } = grepped
+  const argv = rest.filter((a) => a !== '--diff')
   // `hash` only feeds --diff; keep it out of the printed shape.
   const print = (prs: RecentPr[]) =>
     process.stdout.write(
