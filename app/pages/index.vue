@@ -197,9 +197,6 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
     <section v-if="glassbox" class="explore" aria-labelledby="newest-heading">
       <div class="explore-head">
         <h2 id="newest-heading" class="eyebrow">Newest experiment <span class="wip">work in progress</span></h2>
-        <p class="tagline">
-          A textbook for learning the concepts and technology behind Terrarium, using Terrarium as the example.
-        </p>
       </div>
       <HomeShowcase
         tenant="Glass Box"
