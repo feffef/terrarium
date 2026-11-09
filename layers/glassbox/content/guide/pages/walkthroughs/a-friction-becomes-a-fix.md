@@ -2,8 +2,8 @@
 title: A friction becomes a fix
 description: How a problem one agent reports becomes a change to the instructions later agents follow, through a scheduled Skill.
 teaches: "Story: one Friction becoming a changed instruction. Start: a session logs it to main. End: a later session reads the fix; the Ledger records its PR. Code: a Routine, frictions-to-fixes, extract-frictions.ts, Friction Ledger, list-merges-since.ts, Prune Trials, worktrees, merge-pr.ts. A real case: ScheduleWakeup outside /loop; #241, #425, regression #814; PR #843 added loop-only-tool-guard.ts."
-revision: 'f16509d1024b69585d7fc7387d135682ad39b9b6'
-revisionDate: '2026-11-08'
+revision: '73b1c9c1e53a649d4e7c97a6933d38ed58a44972'
+revisionDate: '2026-11-09'
 publishedAt: '2026-11-03T13:25:30Z'
 ---
 

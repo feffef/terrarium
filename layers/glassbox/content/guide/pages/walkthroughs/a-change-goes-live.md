@@ -2,8 +2,8 @@
 title: A change goes live
 description: How a commit on main reaches visitors, through one container that notices it, builds it beside the live site and swaps only a good build.
 teaches: "Story: a commit on main reaching visitors, from the container's side. Start: a merged PR or session log. End: the restarted server; a Collection's first query restores its table from the dump. Code: reset to origin/main, pnpm-lock.yaml hash, install, build to .output/, copy, restart; Gate result unread. A real case: issue #1701, deploy/entrypoint.sh skipped installs after a failed one; PR #1717."
-revision: 'f16509d1024b69585d7fc7387d135682ad39b9b6'
-revisionDate: '2026-11-08'
+revision: '73b1c9c1e53a649d4e7c97a6933d38ed58a44972'
+revisionDate: '2026-11-09'
 publishedAt: '2026-10-27T18:52:18Z'
 ---
 
