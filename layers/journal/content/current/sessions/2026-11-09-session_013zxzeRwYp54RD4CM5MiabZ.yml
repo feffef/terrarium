@@ -1,0 +1,210 @@
+schemaVersion: 1
+session: session_013zxzeRwYp54RD4CM5MiabZ
+startedAt: 2026-11-09T00:15:46Z
+endedAt: 2026-11-09T00:25:55Z
+kind: autonomous
+goal: Write the 2026-11-08 Journal Digest and archive old content
+status: completed
+outcome: "PR 2985 merged on a green gate: the 2026-11-08 Digest plus the archive sweep (9 renames)"
+summary: 'Scheduled digest run (agent-initiated by the schedule; no human instruction beyond the stored prompt). Found one closed day without a Digest (2026-11-08), gathered its material, wrote the Digest, and ran a sonnet fact-check subagent: it found 5 wrong or loose claims (wrong job name twice, a PR misattributed to the index rework, a trial described as replaced, "cleared" overstated), all fixed. The archive sweep moved 9 files. The code-review Standards axis then flagged project jargon (textbook, ledger, trial, push wording) and an obscure Read-limit detail; I rewrote those and dropped the detail. Spec axis found nothing. Gate was green before the final prose-only commit, which I covered with validate:content and CI. Merged via merge-pr.'
+prs:
+  - "2985"
+docsRead:
+  - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+    reason: Digest scope and written-once rule; confirms the PR path
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: read after the first git command; nothing in it changed my calls
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: review-before-PR order, prose-only follow-up may skip the gate, merge recipe
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP write conventions for the PR and comment
+    useful: partly
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: read only because the dispatch-read guard blocked my first Agent call
+    useful: partly
+  - path: .agents/skills/digest/SKILL.md
+    reason: subagent read it as the standards and spec source; it held the jargon and word-count rules
+    useful: yes
+  - path: layers/journal/GLOSSARY.md
+    reason: Standards subagent read it for the Digest definition; only partly relevant
+    useful: partly
+  - path: docs/agents/environment-caveats.md
+    reason: fact-check subagent saw it in a diff of PR 2974 only, not a real read
+    useful: no
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: shown only in a PR diff by the fact-check subagent
+    useful: no
+  - path: .agents/skills/glassbox-curate/SKILL.md
+    reason: shown only in a PR diff by the fact-check subagent; it showed the job name
+    useful: partly
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: shown only in a PR diff by the fact-check subagent
+    useful: partly
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: shown only in a PR diff by the fact-check subagent
+    useful: partly
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: shown only in a PR diff by the fact-check subagent
+    useful: partly
+  - path: layers/journal/content/current/pages/digests/2026-11-08.md
+    reason: (read before editing)
+skillsUsed:
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: digest
+    reason: (invoked as a slash command)
+frictions:
+  - description: Ran git status and the first digest commands before reading git-conventions.md, which CLAUDE.md requires before non-read-only git; a hook flagged it afterwards.
+    solution: Read git-conventions.md at the start of any run that will commit.
+    severity: nit
+  - description: First Agent call was blocked by the dispatch-read guard because I had not read dispatch-subagents; one retry.
+    solution: Read dispatch-subagents before the first brief of a digest run.
+    severity: nit
+  - description: First draft used project jargon (textbook, ledger, trial, push wording) the Skill forbids; the Standards review caught it, costing a rewrite commit and a second look.
+    solution: Re-read the Skill's plain-English rule against the draft before the fact-check.
+    severity: minor
+  - description: Draft misnamed the Glass Box job, cited PR 2983 under the wrong work and described a trial as replaced; the fact-check caught all before merge.
+    solution: Read each PR's touched files, not its title, while drafting.
+    severity: minor
+  - description: Stop hook asked to push while the gate was running; I held off per the rules, then pushed after.
+    solution: Hook could skip the nudge while a gate log is active.
+    severity: nit
+durationSec: 609
+models:
+  claude-sonnet-5-5: 55
+toolCounts:
+  Bash: 21
+  Agent: 4
+  Read: 1
+  Skill: 3
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-11-08.md
+  - layers/journal/content/archived/pages/digests/2026-11-01.md
+  - layers/journal/content/archived/sessions/2026-11-01-session_013zxzeNqa4MUJF5DT5wQ1zf.yml
+  - layers/journal/content/archived/sessions/2026-11-01-session_013zxzeNxm9jTD6DwkDXzzG8.yml
+  - layers/journal/content/archived/sessions/2026-11-01-session_013zxzeQFGrFi821yVm6n746.yml
+  - layers/journal/content/archived/sessions/2026-11-01-session_013zxzeQhja1Bc1XguRdExuY.yml
+  - layers/journal/content/archived/sessions/2026-11-01-session_013zxzeRkv6UCWJtPmJ68h32.yml
+  - layers/journal/content/archived/sessions/2026-11-01-session_013zxzeRpGWPCotTQup1ui46.yml
+  - layers/journal/content/archived/sessions/2026-11-01-session_013zxzeSgWhesrfA7R1JBnhE.yml
+  - layers/journal/content/archived/sessions/2026-11-01-session_013zxzeSvdGhiM7SLEUgzvmF.yml
+  - layers/journal/content/current/pages/digests/2026-11-01.md
+rulesLoaded:
+  - .claude/rules/adr-0010.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0005.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0010.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/adr-0015.md
+docsReadBySubagents:
+  - .agents/skills/digest/SKILL.md
+  - layers/journal/GLOSSARY.md
+  - .agents/skills/glassbox-lesson/EVERY-PAGE.md
+  - docs/agents/environment-caveats.md
+  - .agents/skills/glassbox-curate/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/glassbox-update/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to review and gate before the PR; the summary sufficed, so I read pr-workflow instead of the ADR
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Drove the close-session log; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Said to open the PR myself and subscribe; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header on PR and comment and the commit trailer; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0010.md
+    reason: Digest rule; I read the full ADR because the Skill said to
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded after a gather read; no Human-only file touched, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded by the dispatch Skill read; no trial text touched, did not apply
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded with other ADR reads; I edited no ADR, did not apply
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded by a git-conventions read; no rule edits, did not apply
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: No diagrams in a Digest, did not apply
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Journal glossary applies to Digest wording; the Standards subagent checked it, partly relevant
+    useful: partly
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded by the dispatch Skill read; no Skill edited, did not apply
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Only subagents loaded it; no Tenant change, did not apply
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Only subagents loaded it; Journal kinds were not in question
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: Only subagents loaded it; the Journal glossary terms were checked by the Standards agent
+    useful: partly
+  - path: .claude/rules/adr-0015.md
+    reason: Only subagents loaded it; no installed Skill touched, did not apply
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Fact-check 2026-11-08 Digest
+    model: sonnet
+  - type: general-purpose
+    task: Fact-check 2026-11-08 Digest
+    model: sonnet
+    durationSec: 97
+    toolCalls: 45
+    modelCalls: 12
+    tokenShare: 23.1
+  - task: Standards review of Digest PR
+    model: sonnet
+    durationSec: 19
+    toolCalls: 6
+    modelCalls: 3
+    tokenShare: 10.7
+  - task: Spec review of Digest PR
+    model: sonnet
+    durationSec: 36
+    toolCalls: 7
+    modelCalls: 5
+    tokenShare: 12
+gitBranch: claude/compassionate-lovelace-8qtzlv
+entrypoint: remote_trigger
+cliVersion: 2.1.319
+trigger: digest
+learnings:
+  - The code-review Skill assumes code and a spec issue; for a Digest PR the spec is the digest Skill itself, and only prose rules apply.
+landedBy: Stop
