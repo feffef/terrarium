@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeS36fzX6FB2vAr7yRR
 startedAt: 2026-11-09T01:23:55Z
-endedAt: 2026-11-09T02:11:07Z
+endedAt: 2026-11-09T02:15:16Z
 kind: interactive
 goal: "Visitor loop on the Glass Box workshop: fix what visitors agree on"
-status: in-review
-outcome: "Fix PR #2994 merged; the Lately feature PR #2995 is open with the gate green and verdict posted, waiting on CI."
-summary: "The owner invoked /visitor-loop with the focus \"glassbox workshop, starting from the teaser on the homepage\". The Skill's glassbox row says to stay inside /t/glassbox/guide, so I asked two questions first (the owner's standing preference), and the owner chose: enter at `/`, follow the tile to /t/glassbox/workshop, and allow fixes to the workshop and the homepage tile. That scope override was human-instructed; everything else (build, three blind visitors on sonnet, fable and opus, the tally, the fit check, the fixes, the PR) was agent-initiated within the Skill. Visitors converged on the workshop being a dead end: an empty sidebar column and menu drawer, a brand link to itself, an opaque intro, a stale \"Last updated\" date, a wrapped \"On this page\" bar and a 14,600px wall of runs. Twelve consensus clusters; the refiner dropped one (the homepage tile note had just been owner-merged in #2988), I dropped three more (session links unverified, guide-to-workshop link ruled out by the glossary, linking stale page stems). Eight fixes shipped in PR #2994 with before/after DOM evidence. Review caught one real regression of mine (drafts lost its sidebar because I keyed the layout on an empty Subject list); fixed in a second commit. Before merging I saw that ADR-0004 sends behaviour no test can observe to a human, so I added three e2e assertions (workshop has no sidebar or date and links to the guide; drafts keeps both), re-posted the verdict and merged #2994 myself. The chosen feature, a \"Lately\" strip of the newest five run changes with pages linked only where the checks list proves they exist, is built on the re-cut session branch with unit and e2e tests, passed Standards and Spec review (two small fixes applied), passed the gate and is open as PR #2995 with my verdict posted. Single-visitor findings go into ideas below."
+status: completed
+outcome: "Both PRs merged: #2994 (workshop fixes) and #2995 (Lately list); no out-of-remit issues to file."
+summary: "The owner invoked /visitor-loop with the focus \"glassbox workshop, starting from the teaser on the homepage\". The Skill's glassbox row says to stay inside /t/glassbox/guide, so I asked two questions first (the owner's standing preference), and the owner chose: enter at `/`, follow the tile to /t/glassbox/workshop, and allow fixes to the workshop and the homepage tile. That scope override was human-instructed; everything else (build, three blind visitors on sonnet, fable and opus, the tally, the fit check, the fixes, the PR) was agent-initiated within the Skill. Visitors converged on the workshop being a dead end: an empty sidebar column and menu drawer, a brand link to itself, an opaque intro, a stale \"Last updated\" date, a wrapped \"On this page\" bar and a 14,600px wall of runs. Twelve consensus clusters; the refiner dropped one (the homepage tile note had just been owner-merged in #2988), I dropped three more (session links unverified, guide-to-workshop link ruled out by the glossary, linking stale page stems). Eight fixes shipped in PR #2994 with before/after DOM evidence. Review caught one real regression of mine (drafts lost its sidebar because I keyed the layout on an empty Subject list); fixed in a second commit. Before merging I saw that ADR-0004 sends behaviour no test can observe to a human, so I added three e2e assertions (workshop has no sidebar or date and links to the guide; drafts keeps both), re-posted the verdict and merged #2994 myself. The chosen feature, a \"Lately\" strip of the newest five run changes with pages linked only where the checks list proves they exist, is built on the re-cut session branch with unit and e2e tests, passed Standards and Spec review (two small fixes applied), passed the gate and merged as PR #2995 after I posted my verdict. No finding was out of remit, so no issue was filed. Single-visitor findings go into ideas below."
 prs:
   - "2994"
   - "2995"
@@ -120,23 +120,23 @@ frictions:
   - description: I only noticed ADR-0004's 'behaviour no test can observe' exception after the fix PR's gate was green, then had to add e2e assertions and a second verdict.
     solution: Ask which test would fail if this regressed when planning each fix, before opening the PR.
     severity: nit
-durationSec: 2831
+durationSec: 3081
 models:
-  claude-sonnet-5-5: 268
+  claude-sonnet-5-5: 278
 toolCounts:
   Grep: 6
   AskUserQuestion: 1
   Read: 29
-  Bash: 73
+  Bash: 76
   Agent: 12
   Write: 2
-  Skill: 6
+  Skill: 7
   ToolSearch: 1
   mcp__github__list_pull_requests: 2
   mcp__github__create_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 2
   mcp__github__add_issue_comment: 3
-  ReadNotifications: 5
+  ReadNotifications: 7
   mcp__github__pull_request_read: 1
 filesEdited:
   - layers/glassbox/content/workshop/pages/index.md
@@ -286,58 +286,58 @@ subagents:
     durationSec: 74
     toolCalls: 14
     modelCalls: 10
-    tokenShare: 3.2
+    tokenShare: 3.1
   - type: general-purpose
     task: Visitor (fable)
     model: fable
     durationSec: 389
     toolCalls: 39
     modelCalls: 28
-    tokenShare: 7.8
+    tokenShare: 7.5
   - type: general-purpose
     task: Visitor (opus)
     model: opus
     durationSec: 243
     toolCalls: 31
     modelCalls: 24
-    tokenShare: 6.8
+    tokenShare: 6.4
   - type: general-purpose
     task: Fit check (refiner)
     model: opus
     durationSec: 387
     toolCalls: 46
     modelCalls: 37
-    tokenShare: 11.3
+    tokenShare: 10.8
   - type: general-purpose
     task: Standards review
     durationSec: 29
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 2.3
+    tokenShare: 2.2
   - type: general-purpose
     task: Spec review
     durationSec: 33
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 2.3
+    tokenShare: 2.2
   - type: general-purpose
     task: Review follow-up commit
     durationSec: 13
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: general-purpose
     task: Standards review (feature)
     durationSec: 22
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 2
+    tokenShare: 1.9
   - type: general-purpose
     task: Spec review (feature)
     durationSec: 27
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 2.4
+    tokenShare: 2.3
 gitBranch: claude/visitor-loop-glassbox-workshop-n7ztq0
 entrypoint: remote_mobile
 cliVersion: 2.1.319
