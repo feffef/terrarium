@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeS36fzX6FB2vAr7yRR
 startedAt: 2026-11-09T01:23:55Z
-endedAt: 2026-11-09T01:57:16Z
+endedAt: 2026-11-09T02:07:19Z
 kind: interactive
 goal: "Visitor loop on the Glass Box workshop: fix what visitors agree on"
-status: in-review
-outcome: "Fix PR #2994 open with gate green and verdict posted; the Lately feature PR and the issues are still to do."
-summary: "The owner invoked /visitor-loop with the focus \"glassbox workshop, starting from the teaser on the homepage\". The Skill's glassbox row says to stay inside /t/glassbox/guide, so I asked two questions first (the owner's standing preference), and the owner chose: enter at `/`, follow the tile to /t/glassbox/workshop, and allow fixes to the workshop and the homepage tile. That scope override was human-instructed; everything else (build, three blind visitors on sonnet, fable and opus, the tally, the fit check, the fixes, the PR) was agent-initiated within the Skill. Visitors converged on the workshop being a dead end: an empty sidebar column and menu drawer, a brand link to itself, an opaque intro, a stale \"Last updated\" date, a wrapped \"On this page\" bar and a 14,600px wall of runs. Twelve consensus clusters; the refiner dropped one (the homepage tile note had just been owner-merged in #2988), I dropped three more (session links unverified, guide-to-workshop link ruled out by the glossary, linking stale page stems). Eight fixes shipped in PR #2994 with before/after DOM evidence. Review caught one real regression of mine (drafts lost its sidebar because I keyed the layout on an empty Subject list); fixed in a second commit. The chosen feature, a \"Lately\" strip of the newest run changes with linked pages, is not built yet, and the unbuilt single-visitor findings are still to go into ideas. Nothing is merged: CI is pending."
+status: partial
+outcome: "Fix PR #2994 merged; the Lately feature is built and under review, its PR not yet opened."
+summary: "The owner invoked /visitor-loop with the focus \"glassbox workshop, starting from the teaser on the homepage\". The Skill's glassbox row says to stay inside /t/glassbox/guide, so I asked two questions first (the owner's standing preference), and the owner chose: enter at `/`, follow the tile to /t/glassbox/workshop, and allow fixes to the workshop and the homepage tile. That scope override was human-instructed; everything else (build, three blind visitors on sonnet, fable and opus, the tally, the fit check, the fixes, the PR) was agent-initiated within the Skill. Visitors converged on the workshop being a dead end: an empty sidebar column and menu drawer, a brand link to itself, an opaque intro, a stale \"Last updated\" date, a wrapped \"On this page\" bar and a 14,600px wall of runs. Twelve consensus clusters; the refiner dropped one (the homepage tile note had just been owner-merged in #2988), I dropped three more (session links unverified, guide-to-workshop link ruled out by the glossary, linking stale page stems). Eight fixes shipped in PR #2994 with before/after DOM evidence. Review caught one real regression of mine (drafts lost its sidebar because I keyed the layout on an empty Subject list); fixed in a second commit. Before merging I saw that ADR-0004 sends behaviour no test can observe to a human, so I added three e2e assertions (workshop has no sidebar or date and links to the guide; drafts keeps both), re-posted the verdict and merged #2994 myself. The chosen feature, a \"Lately\" strip of the newest five run changes with pages linked only where the checks list proves they exist, is built on the re-cut session branch with unit and e2e tests and is under Standards and Spec review; its PR is not open yet. Single-visitor findings go into ideas below."
 prs:
   - "2994"
 docsRead:
@@ -83,6 +83,8 @@ docsRead:
     reason: (read before editing)
   - path: scripts/lib/chromium.ts
     reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
 skillsUsed:
   - name: visitor-loop
     reason: the whole run
@@ -113,35 +115,43 @@ frictions:
   - description: Reading Glass Box layer files loaded about ten unrelated rules (mermaid-lanes, mdc-when-to-use, adr-0021, adr-0025, adr-0030) into context.
     solution: Narrow the paths of mermaid-lanes.md and mdc-when-to-use.md to files that hold diagrams or content components.
     severity: nit
-durationSec: 2001
+  - description: I only noticed ADR-0004's 'behaviour no test can observe' exception after the fix PR's gate was green, then had to add e2e assertions and a second verdict.
+    solution: Ask which test would fail if this regressed when planning each fix, before opening the PR.
+    severity: nit
+durationSec: 2604
 models:
-  claude-sonnet-5-5: 188
+  claude-sonnet-5-5: 249
 toolCounts:
   Grep: 6
   AskUserQuestion: 1
-  Read: 27
-  Bash: 50
-  Agent: 10
+  Read: 29
+  Bash: 68
+  Agent: 12
   Write: 2
-  Skill: 3
+  Skill: 4
   ToolSearch: 1
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  mcp__github__add_issue_comment: 1
+  mcp__github__add_issue_comment: 2
+  ReadNotifications: 4
+  mcp__github__pull_request_read: 1
 filesEdited:
+  - layers/glassbox/content/workshop/pages/index.md
+  - layers/glassbox/tests/e2e/glassbox.spec.ts
+  - layers/glassbox/GLOSSARY.md
+  - layers/glassbox/app/components/content/WorkshopLately.vue
+  - layers/glassbox/app/utils/workshop.ts
+  - layers/glassbox/tests/unit/workshop.spec.ts
   - layers/glassbox/app/components/content/WorkshopChecks.vue
   - layers/glassbox/app/pages/t/glassbox/[space]/[...slug].vue
-  - layers/glassbox/app/utils/workshop.ts
   - layers/glassbox/page-checks.ts
   - app/components/HomeShowcase.vue
   - layers/glassbox/app/assets/theme.css
   - layers/glassbox/app/components/content/WorkshopRuns.vue
   - layers/glassbox/app/components/glassbox/Article.vue
   - layers/glassbox/app/components/glassbox/Toc.vue
-  - layers/glassbox/content/workshop/pages/index.md
   - layers/glassbox/content/workshop/terms
-  - layers/glassbox/tests/unit/workshop.spec.ts
 rulesLoaded:
   - .claude/rules/adr-0028.md
   - .claude/rules/adr-0027.md
@@ -184,6 +194,7 @@ rulesLoadedBySubagents:
 docsReadBySubagents:
   - .agents/skills/visitor-loop/SKILL.md
   - .agents/skills/glassbox-curate/SKILL.md
+  - docs/agents/mdc-when-to-use.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
     reason: Gate and code-review before opening; merge once green and verdict posted. Summary was enough, full ADR not opened.
@@ -273,46 +284,58 @@ subagents:
     durationSec: 74
     toolCalls: 14
     modelCalls: 10
-    tokenShare: 4.5
+    tokenShare: 3.4
   - type: general-purpose
     task: Visitor (fable)
     model: fable
     durationSec: 389
     toolCalls: 39
     modelCalls: 28
-    tokenShare: 11.1
+    tokenShare: 8.4
   - type: general-purpose
     task: Visitor (opus)
     model: opus
     durationSec: 243
     toolCalls: 31
     modelCalls: 24
-    tokenShare: 9.5
+    tokenShare: 7.2
   - type: general-purpose
     task: Fit check (refiner)
     model: opus
     durationSec: 387
     toolCalls: 46
     modelCalls: 37
-    tokenShare: 15.9
+    tokenShare: 12.1
   - type: general-purpose
     task: Standards review
     durationSec: 29
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 3.3
+    tokenShare: 2.5
   - type: general-purpose
     task: Spec review
     durationSec: 33
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 3.3
+    tokenShare: 2.5
   - type: general-purpose
     task: Review follow-up commit
     durationSec: 13
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 1.3
+    tokenShare: 0.9
+  - type: general-purpose
+    task: Standards review (feature)
+    durationSec: 22
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 2.1
+  - type: general-purpose
+    task: Spec review (feature)
+    durationSec: 27
+    toolCalls: 5
+    modelCalls: 5
+    tokenShare: 2.6
 gitBranch: claude/visitor-loop-glassbox-workshop-n7ztq0
 entrypoint: remote_mobile
 cliVersion: 2.1.319
