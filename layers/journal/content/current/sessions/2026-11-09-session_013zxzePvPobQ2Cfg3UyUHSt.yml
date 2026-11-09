@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzePvPobQ2Cfg3UyUHSt
 startedAt: 2026-11-09T13:18:00Z
-endedAt: 2026-11-09T13:28:58Z
+endedAt: 2026-11-09T14:54:54Z
 kind: autonomous
 goal: Scheduled prune trial of the Platform's agent instructions
-status: in-review
-outcome: No trial judgeable; opened a small new prune trial as PR 3005, gate green, waiting for a human merge
-summary: "Scheduled /prune-trial run, no human prompt. find-trial-window.ts showed all three open trials before their judgeable-from time, so nothing was judged. A search subagent ranked failed-prose candidates; I chose the review-then-gate rule in pr-workflow.md (failed as prose, nothing holds the first-push review), so the cut is deliberately small (-2 net) and keeps every rule: goal-first rewording, recipe step 1 and Closing step 1 cut to pointers, audit-docs Gate restatement cut. A pinned Sonnet probe answered four situations correctly; Standards and Spec reviews found recipe step 1 had dropped the skip allowance, which I restored. Gate green on the final head, PR 3005 opened and subscribed. All work was agent-initiated under the scheduled prompt. Open: the search subagent did not query the tracker, so issue states are ledger-derived and unverified."
+status: completed
+outcome: No trial judgeable; opened a small new prune trial, PR 3005 merged by a human
+summary: "Scheduled /prune-trial run, no human prompt. find-trial-window.ts showed all three open trials before their judgeable-from time, so nothing was judged. A search subagent ranked failed-prose candidates; I chose the review-then-gate rule in pr-workflow.md (failed as prose, nothing holds the first-push review), so the cut is deliberately small (-2 net) and keeps every rule: goal-first rewording, recipe step 1 and Closing step 1 cut to pointers, audit-docs Gate restatement cut. A pinned Sonnet probe answered four situations correctly; Standards and Spec reviews found recipe step 1 had dropped the skip allowance, which I restored. Gate green on the final head, PR 3005 opened, subscribed and later merged by a human. All work was agent-initiated under the scheduled prompt. Open: the search subagent did not query the tracker, so issue states are ledger-derived and unverified."
 prs:
   - "3005"
 docsRead:
@@ -63,20 +63,22 @@ frictions:
   - description: Prune is only -2 lines; the picked problem's prose was already dense and mostly rules, so the trial likely tells little.
     solution: Let the Skill prefer a problem where the cut is large, or count a tiny cut as no new trial this run.
     severity: nit
-durationSec: 658
+durationSec: 5814
 models:
-  claude-sonnet-5-5: 63
+  claude-sonnet-5-5: 79
 toolCounts:
-  Bash: 15
+  Bash: 16
   Read: 6
   Agent: 4
-  ReadNotifications: 1
+  ReadNotifications: 5
   Grep: 1
   Edit: 5
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  Skill: 2
+  Skill: 3
+  mcp__github__pull_request_read: 1
+  PushNotification: 1
 filesEdited:
   - docs/agents/pr-workflow.md
   - .agents/skills/audit-docs/SKILL.md
@@ -182,28 +184,28 @@ subagents:
     durationSec: 82
     toolCalls: 17
     modelCalls: 13
-    tokenShare: 18.4
+    tokenShare: 12.5
   - type: general-purpose
     task: Probe pruned PR workflow
     model: sonnet
     durationSec: 17
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 3.4
+    tokenShare: 2.3
   - type: general-purpose
     task: Standards review of prune diff
     model: sonnet
     durationSec: 23
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 9.8
+    tokenShare: 6.6
   - type: general-purpose
     task: Spec review of prune diff
     model: sonnet
     durationSec: 22
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 8.7
+    tokenShare: 5.9
 gitBranch: claude/practical-rubin-1jpcvq
 entrypoint: remote_trigger
 cliVersion: 2.1.319
