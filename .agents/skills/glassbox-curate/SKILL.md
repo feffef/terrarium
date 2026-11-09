@@ -91,8 +91,8 @@ keeps them so).
 - **Read.** The full depth above. Run `orient.ts --subject <folder>` and read
   its output whole; it ends with the `pagesRead` lines to paste. Also read in
   full every page outside the Subject that a change would edit, link or
-  overlap. A change that only removes text reads just the pages it edits,
-  links or overlaps. Edit only after this step.
+  overlap. Done when every page of the Subject is read in full, plus every
+  outside page a change would edit, link or overlap.
 - **Choose.** Pick this run's focus from what you read. Put every other weak
   spot or proposal you found on the memory page, so later runs inherit the
   reading. The run entry says why you chose the focus.
@@ -142,19 +142,19 @@ keeps them so).
   `checks/update.yml` and keep its date.
 - **Land.** Merge `origin/main` and keep the newer pin. Two runs on one day can
   both rewrite the memory page: the later one keeps both runs' leads. Rewrite
-  the memory page, complete the run entry, and open one PR
+  the memory page, complete the run entry, read `cost_usd` again for the PR
+  body, and open one PR
   (`docs/agents/pr-workflow.md`), self-merged unless the Remit says it waits.
   Wait for the Scout now and add each of its topics not already there to the
-  memory page's open ideas, as a possible future task.
-  The PR body gives the run's cost, read just before you write the body;
-  "unreported" when it is still missing. Give `code-review`
+  memory page's open ideas, as a possible future task. Give `code-review`
   the Lesson contract, EVERY-PAGE.md, DECISIONS.md and the glassbox-content
   rule as its standards, without the code-smell baseline, and say the page
   checks already ran. Its Spec reviewer also judges which pages the change
   needed read (the ones it edits, links or overlaps), and names each one missing
   from `pagesRead`. Read those, recheck the change against them, and add them
-  to `pagesRead` before you land. Done when the PR is open with the memory page
-  and run entry current.
+  to `pagesRead` before you land. Done when the PR is open, its body gives the
+  run's cost ("unreported" only when `cost_usd` is still missing), and the
+  memory page and run entry are current.
 
 ## State
 
