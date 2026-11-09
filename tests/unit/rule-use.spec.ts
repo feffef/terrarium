@@ -119,6 +119,8 @@ describe('ruleUse — subagents', () => {
     expect(ruleUseOf(stitch(authored({ helped: [] }), folded))[0]).toMatchObject({ answered: false, helped: [] })
     const run = foldSubagentTrace(main, [sub([note, bash('cd /repo && /repo/scripts/session/helped.sh doc:GLOSSARY.md')])], NO_ENV)
     expect(ruleUseOf(stitch(authored({ helped: [] }), run))[0]).toMatchObject({ answered: true, helped: [{ path: 'GLOSSARY.md' }] })
+    const noisy = foldSubagentTrace(main, [sub([note, bash('echo done\n/bin/sh /repo/scripts/session/helped.sh -x doc:GLOSSARY.md 2>&1 >/dev/null\necho bye')])], NO_ENV)
+    expect(ruleUseOf(stitch(authored({ helped: [] }), noisy))[0]).toMatchObject({ answered: true, helped: [{ path: 'GLOSSARY.md' }] })
   })
 
   it('leaves out a subagent that was never asked and never answered', () => {

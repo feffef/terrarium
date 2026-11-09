@@ -73,10 +73,11 @@ export const ruleKey = (path: string) => {
 export function helpedNames(commands: string[], rel: (p: string) => string): string[] | undefined {
   const calls = commands.flatMap(commandWords).flatMap((words) => {
     // Run, not named: the script is the verb, or `sh`/`bash`'s first argument.
-    const at = /^(ba)?sh$/.test(words[0] ?? '') ? 1 : 0
+    const at = /(^|\/)(ba)?sh$/.test(words[0] ?? '') ? 1 : 0
     return words[at]?.endsWith(HELPED_SCRIPT) ? [words.slice(at + 1)] : []
   })
-  const names = calls.at(-1)
+  // A flag or a redirection (`2>&1`, `>/dev/null`) is no name.
+  const names = calls.at(-1)?.filter((t) => !/^-|[<>]/.test(t))
   if (names === undefined) return undefined
   return [...new Set(names.map((t) => {
     const name = t.replace(/^(rule|doc):/, '')
