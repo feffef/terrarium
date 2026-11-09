@@ -204,7 +204,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
         path="/t/glassbox"
         noun="spaces"
         teaser-label="Lesson of the day"
-        blurb="A textbook on how Terrarium works — Claude Code, Nuxt, Zod, Git and the house rules — with Terrarium itself as the worked example, every page pinned to a dated commit."
+        blurb="A textbook for learning the concepts and technology behind Terrarium — Claude Code, Nuxt, Zod, Git and the house rules — with Terrarium itself as the worked example, every page pinned to a dated commit."
         :entries="glassbox.entries"
         wide
       >
