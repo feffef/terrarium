@@ -65,7 +65,6 @@ Subjects and Lessons run prerequisites first, and Lesson prefixes go up in tens 
 - *Author trust* (`git-github/20.author-trust`): what each `author_association` value means, and that `pull_request_target` ignores the approval setting. *Dependabot grouping*: that `/` doesn't reach a nested action.
 - *Linting* (`verification/50.linting`): the sentence on the rules `@nuxt/eslint` turns on and the absence of formatting rules.
 - *Content validation* (`verification/30.content-validation`): the `?id=safeparse` anchor on v3.zod.dev, which loads only in a browser.
-- *Hooks* (`hooks/10.hooks`): the `network-start.ts` SessionStart hook is not mentioned.
 - *Asking an agent for a change* (`walkthroughs/asking-for-a-change`): stop 1 says a cloud session and a local one work the same way, and stop 2 has the `SessionStart` hook install packages. *Claude Code hooks* now says a session on several repositories, or a project thread, runs none of the committed hooks. Both hold for Terrarium's usual one-repository session; the Walkthrough could say so. *A session log lands on main* says "the `Stop` hook" in the singular, though four are wired.
 
 **Missing Lessons.** The browser quirks and CSS traps listed in `docs/agents/verifying-ui-changes.md` are only partly taught, in *Headless browser checks* (`verification/80.headless-browser-checks`).
