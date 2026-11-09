@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_013zxzeRB6ciegpxcRDfedSF
 startedAt: 2026-11-09T00:33:00Z
-endedAt: 2026-11-09T00:39:01Z
+endedAt: 2026-11-09T00:52:48Z
 kind: interactive
 goal: Link the Glass Box workshop, not the drafts, from the home page
 status: in-review
-outcome: PR 2986 opened and gate:scoped green; waits for a human merge
-summary: The user asked to drop the home page's link to the Glass Box drafts and link the workshop instead (human-instructed). I asked one question about the workshop row's note, per the user's preference and CLAUDE.md, and the user chose the wording (human-instructed). I then replaced the Drafts row with a Workshop row in app/pages/index.vue, removed the now-unused drafts count and query, trimmed the tile intro, and updated the e2e smoke test (agent-initiated follow-through). Typecheck and gate:scoped passed. The diff was over the 10-line limit for a simple change, so code-review was owed; I read the diff myself instead of dispatching the two review subagents, which is a skipped step. PR opened and subscribed; it likely needs a human merge as index.vue is Human-only.
+outcome: PR 2986 merged; follow-up PR 2988 drops the stale guide page count and awaits a human merge
+summary: "The user asked to drop the home page's link to the Glass Box drafts and link the workshop instead (human-instructed). I asked one question about the workshop row's note and the user chose its wording (human-instructed). I replaced the Drafts row with a Workshop row in app/pages/index.vue, removed the unused drafts count and query, and updated the e2e smoke test (agent-initiated follow-through). The user then said the tile intro was not a meaningful summary; I asked, and they chose a textbook-only line mentioning concepts and technology (human-instructed). The user asked for /code-review against origin/main; two review subagents ran and both found that layers/glassbox/GLOSSARY.md still said the band shows the drafts Space, which I fixed (agent-initiated fix of a review finding). gate:scoped passed before the PR, and CI was green on the final head. The PR was merged by a human, as index.vue is Human-only. The user then asked whether the guide row's \\\"core pages, the current focus\\\" still made sense without drafts and said a count goes stale (human-instructed); I made the note static text in follow-up PR 2988 (agent-initiated wording: the lessons and walkthroughs)."
 prs:
   - "2986"
+  - "2988"
 docsRead:
   - path: docs/agents/git-conventions.md
     reason: commit hygiene before the first commit; nothing changed
@@ -22,13 +23,21 @@ docsRead:
   - path: docs/agents/pr-workflow.md
     reason: review-before-PR rules and the simple-change test
     useful: yes
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: confirmed a Tenant's glossary is the home for its facts; read after the edit
+    useful: yes
+  - path: layers/glassbox/GLOSSARY.md
+    reason: found the stale Shown in progress line the reviewers flagged
+    useful: yes
   - path: app/pages/index.vue
     reason: (read before editing)
   - path: tests/e2e/smoke.spec.ts
     reason: (read before editing)
 skillsUsed:
   - name: code-review
-    reason: (no reason given)
+    reason: owed because the diff was over the simple-change limit; found the stale glossary line
+  - name: dispatch-subagents
+    reason: brief rules before dispatching the two review agents
   - name: close-session
     reason: (no reason given)
   - name: log-session
@@ -43,21 +52,36 @@ frictions:
   - description: CLAUDE.md says to read the UI verification doc before claiming a UI change works; I never rendered the page, relying on e2e passing.
     solution: Read docs/agents/verifying-ui-changes.md and screenshot the tile before closing.
     severity: minor
-durationSec: 362
+  - description: Trimmed the tile intro instead of asking what it should say, so the user had to flag it as meaningless; one extra round and commit.
+    solution: Settle every displayed string, intro lines included, in the first question round, as CLAUDE.md says for user-facing UI.
+    severity: minor
+  - description: Changed a fact but grepped only code for its other statements, so the stale line in layers/glassbox/GLOSSARY.md surfaced only in code review.
+    solution: Grep the Tenant glossary and docs for the old fact in the same edit, as CLAUDE.md One home per fact says.
+    severity: minor
+  - description: Edited layers/glassbox/GLOSSARY.md before the ADR-0021 and tenant-glossary reads that the hook and rule asked for; the edit was right, no cost.
+    solution: Read the Tenant glossary before editing a Tenant's files, as the tenant-glossary rule says.
+    severity: nit
+durationSec: 1189
 models:
-  claude-sonnet-5-5: 43
+  claude-sonnet-5-5: 119
 toolCounts:
-  Grep: 3
-  Read: 7
-  AskUserQuestion: 1
-  Bash: 10
-  Skill: 3
-  ToolSearch: 1
+  Grep: 4
+  Read: 9
+  AskUserQuestion: 4
+  Bash: 23
+  Skill: 5
+  ToolSearch: 2
   mcp__github__list_pull_requests: 1
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  ReadNotifications: 8
+  mcp__github__pull_request_read: 3
+  Edit: 2
+  mcp__github__update_pull_request: 1
+  Agent: 2
 filesEdited:
   - app/pages/index.vue
+  - layers/glassbox/GLOSSARY.md
   - tests/e2e/smoke.spec.ts
 rulesLoaded:
   - .claude/rules/adr-0025.md
@@ -66,6 +90,9 @@ rulesLoaded:
   - .claude/rules/adr-0029.md
   - .claude/rules/adr-0030.md
   - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/glossary-terms.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -73,11 +100,21 @@ rulesGlobal:
   - .claude/rules/adr-0017.md
 rulesFollowedUp:
   - .claude/rules/adr-0025.md
+  - .claude/rules/adr-0021.md
 adrHints:
   - adr: 25
     via: path
     readAfter: true
     by: main
+  - adr: 21
+    via: path
+    readAfter: true
+    by: main
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
     reason: Told me to run gate:scoped and review before the PR; summary was enough, pr-workflow held the steps
@@ -109,6 +146,40 @@ ruleVerdicts:
   - path: .claude/rules/adr-0004-human-merge.md
     reason: Flagged index.vue as Human-only, so I noted the PR waits for a human merge
     useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded on the glossary edit; I opened the full ADR to confirm the edit belonged in the Tenant glossary
+    useful: yes
+  - path: .claude/rules/tenant-glossary.md
+    reason: Says to read the Tenant glossary before working on it; I read it only after the first edit, via the reviewers
+    useful: partly
+  - path: .claude/rules/glossary-terms.md
+    reason: About adding or changing a term; I changed a fact in a definition, not a term, so I skipped domain.md
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Only the spec review agent loaded it; it reported it did not apply to this diff
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: Only the spec review agent loaded it; it reported it did not apply
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Only the spec review agent loaded it; it reported it did not apply
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Only the spec review agent loaded it; it reported it did not apply
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Standards review of PR diff
+    durationSec: 17
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 8.4
+  - type: general-purpose
+    task: Spec review of PR diff
+    durationSec: 17
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 8.9
 gitBranch: claude/admiring-hopper-1jtsne
 entrypoint: remote
 cliVersion: 2.1.319
