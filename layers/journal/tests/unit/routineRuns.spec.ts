@@ -28,29 +28,29 @@ describe('routineWeekTable', () => {
 
   it('sums seven-day windows ending at the newest run, and totals rows and columns', () => {
     const t = routineWeekTable(routines, 'costUsd')
-    expect(t.weeks).toEqual(['2026-10-08', '2026-10-15', '2026-10-22'])
-    // a: the 10-01 run is exactly at the first window's start, so it belongs to the one before it.
+    expect(t.weeks).toEqual(['2026-10-01', '2026-10-08', '2026-10-15', '2026-10-22'])
+    // a: the 10-01 run lies exactly at the first window's end, so it counts in that window.
     expect(t.rows).toEqual([
-      { name: 'a', cells: [2, 3, 4], total: 9 },
-      { name: 'b', cells: [0, 0, 4], total: 4 },
+      { name: 'a', cells: [1, 2, 3, 4], total: 10 },
+      { name: 'b', cells: [0, 0, 0, 4], total: 4 },
     ])
-    expect(t.totals).toEqual([2, 3, 8])
-    expect(t.grandTotal).toBe(13)
+    expect(t.totals).toEqual([1, 2, 3, 8])
+    expect(t.grandTotal).toBe(14)
   })
 
-  it('keeps only windows that start at or after the oldest run', () => {
-    const t = routineWeekTable([{ name: 'a', runs: [run('2026-10-01T04:00:00Z', 1), run('2026-10-21T03:00:00Z', 2)] }], 'costUsd')
-    expect(t.weeks).toEqual(['2026-10-14', '2026-10-21'])
+  it('always shows the newest four windows, however far back runs go', () => {
+    const t = routineWeekTable([{ name: 'a', runs: [run('2026-09-01T04:00:00Z', 5), run('2026-10-21T03:00:00Z', 2)] }], 'costUsd')
+    expect(t.weeks).toEqual(['2026-09-30', '2026-10-07', '2026-10-14', '2026-10-21'])
+    expect(t.rows[0]!.cells).toEqual([0, 0, 0, 2])
   })
 
   it('sums the metric it is given', () => {
     const t = routineWeekTable([{ name: 'a', runs: [run('2026-10-01T03:00:00Z', 1, 900), run('2026-10-02T04:00:00Z', 1, 500), run('2026-10-08T04:00:00Z', 1, 250)] }], 'outputTokens')
-    expect(t.rows[0]!.cells).toEqual([750])
+    expect(t.rows[0]!.cells).toEqual([0, 0, 900, 750])
   })
 
-  it('is empty without a full window of runs', () => {
+  it('is empty without runs', () => {
     expect(routineWeekTable([{ name: 'a', runs: [] }], 'costUsd')).toEqual({ weeks: [], rows: [{ name: 'a', cells: [], total: 0 }], totals: [], grandTotal: 0 })
-    expect(routineWeekTable([{ name: 'a', runs: [run('2026-10-01T04:00:00Z', 1), run('2026-10-05T04:00:00Z', 1)] }], 'costUsd').weeks).toEqual([])
   })
 })
 
