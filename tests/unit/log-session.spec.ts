@@ -17,7 +17,7 @@ import {
   loadAuthorContext,
   mergeAuthored,
   pendingMain,
-  reportUnexplainedReads,
+  reportReads,
   mergedWorktreesToRemove,
   validateAuthored,
   type WorktreeSeam,
@@ -245,7 +245,7 @@ describe('derived-only fields cannot be authored', () => {
   // `.strict()` would reject it as an anonymous "Unrecognized key"; the named
   // refusal exists because the right next action — log a Friction — is not
   // guessable from that (issue #1074).
-  it('refuses an authored docsReadViaShell and points at docsRead', () => {
+  it('refuses an authored docsReadViaShell and points at helped', () => {
     const res = validateAuthored({
       session: 'session_01A',
       goal: 'g',
@@ -258,12 +258,27 @@ describe('derived-only fields cannot be authored', () => {
     expect(res.ok).toBe(false)
     if (!res.ok) {
       expect(res.errors).toContain('cannot be authored')
-      expect(res.errors).toContain("'(not read)'")
+      expect(res.errors).toContain('helped')
     }
+  })
+
+  // #3009: docsRead is derived and ruleVerdicts is gone; helped is required.
+  it('refuses docsRead and ruleVerdicts by name, and a log without helped', () => {
+    const base = { session: 'session_01A', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }
+    for (const field of ['docsRead', 'ruleVerdicts']) {
+      const res = validateAuthored({ ...base, helped: [], [field]: [] })
+      expect(res.ok).toBe(false)
+      if (!res.ok) expect(res.errors).toContain(`${field}: cannot be authored`)
+    }
+    const missing = validateAuthored(base)
+    expect(missing.ok).toBe(false)
+    if (!missing.ok) expect(missing.errors).toContain('helped')
+    expect(validateAuthored({ ...base, helped: [] }).ok).toBe(true)
+    expect(validateAuthored({ ...base, helped: [{ path: 'docs/agents/pr-workflow.md', why: 'the merge steps' }] }).ok).toBe(true)
   })
 })
 
-describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
+describe('reportReads (the names helped is picked from)', () => {
   // Builds a fake harness transcript store so the report can be driven end to
   // end — it is the agent-facing half of #1074's loop, and its silence rules
   // matter as much as its output.
@@ -312,11 +327,11 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
     }
     return { home, root }
   }
-  const run = ({ home, root }: { home: string; root: string }, authored: Pick<AuthoredScratch, 'docsRead' | 'ruleVerdicts'> = {}): string[] => {
+  const run = ({ home, root }: { home: string; root: string }): string[] => {
     const lines: string[] = []
     vi.stubEnv('HOME', home)
     try {
-      reportUnexplainedReads(loadAuthorContext(root, root), authored, (l) => lines.push(l))
+      reportReads(loadAuthorContext(root, root), (l) => lines.push(l))
     } finally {
       vi.unstubAllEnvs()
     }
@@ -339,81 +354,35 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
     expect(run({ home: mkdtempSync(join(tmpdir(), 'shellread-empty-')), root: mkdtempSync(join(tmpdir(), 'shellread-noroot-')) })).toEqual([])
   })
 
-  // Issue #1244: each detected path shows its crediting command and where it ran.
-  it("shows the session's own crediting command", () => {
-    const out = run(store([['cat   docs/agents/guards.md', FIXTURE_DOCS['docs/agents/guards.md']!]], ['echo hi']))
-    expect(out).toContain('    docs/agents/guards.md')
-    expect(out).toContain('      [this session] cat docs/agents/guards.md')
-  })
+  const withRule = (fixture: { home: string; root: string }, rule: string, at = '') => {
+    const dir = join(fixture.home, '.claude', 'projects', fixture.root.replace(/[/.]/g, '-'), at)
+    const file = join(dir, at ? 'agent-a1.jsonl' : 'session.jsonl')
+    const load = { type: 'attachment', attachment: { type: 'nested_memory', path: join(fixture.root, `.claude/rules/${rule}`) } }
+    writeFileSync(file, `${readFileSync(file, 'utf8')}\n${JSON.stringify(load)}`)
+    return fixture
+  }
 
-  it("names the subagent by its meta.json description, else its agent id", () => {
-    const meta = JSON.stringify({ description: 'Triage issue #869' })
+  it("lists the main agent's own rules and docs by name only, never a subagent's", () => {
     const guards: Cmd = ['cat docs/agents/guards.md', FIXTURE_DOCS['docs/agents/guards.md']!]
-    const named = run(store(['git status'], [guards], meta))
-    expect(named).toContain('      [subagent: Triage issue #869] cat docs/agents/guards.md')
-    expect(run(store(['git status'], [{ read: 'docs/agents/guards.md' }], meta))).toContain('      [subagent: Triage issue #869] Read tool')
-    const bare = run(store(['git status'], [guards], '{not json'))
-    expect(bare).toContain('      [subagent: a1] cat docs/agents/guards.md')
+    const fixture = withRule(store([['cat GLOSSARY.md', FIXTURE_DOCS['GLOSSARY.md']!]], [guards]), 'adr-0012.md')
+    withRule(fixture, 'adr-0099.md', 'session/subagents')
+    const out = run(fixture)
+    expect(out.filter((l) => l.startsWith('    '))).toEqual(['    .claude/rules/adr-0012.md', '    GLOSSARY.md'])
+    expect(out.join('\n')).not.toMatch(/verdict|useful/)
   })
 
-  const subagentOnly = 'only a subagent loaded or read, no verdict yet; take it from the subagent\'s final reply, or it shows as "no verdict provided"'
-  it('asks the main session about its own docs, and reminds about a doc only a subagent read until docsRead rates it', () => {
-    const guards: Cmd = ['cat docs/agents/guards.md', FIXTURE_DOCS['docs/agents/guards.md']!]
-    const fixture = store([['cat GLOSSARY.md', FIXTURE_DOCS['GLOSSARY.md']!]], [guards])
-    const out = run(fixture).join('\n')
-    expect(out).toContain('1 instruction doc(s) read with no reason or verdict yet:\n    GLOSSARY.md')
-    expect(out).toContain("the reason '(not read)' for a doc no command of this")
-    expect(out).toContain(`1 rule(s) or doc(s) ${subagentOnly}:\n    docs/agents/guards.md (doc)`)
-    const rated = { path: 'docs/agents/guards.md', reason: 'subagent a1 reported: r', useful: 'yes' as const }
-    expect(run(fixture, { docsRead: [rated] }).join('\n')).not.toContain(subagentOnly)
-  })
-
-  it('still asks the main session about a doc both it and a subagent read', () => {
+  it('lists a doc both it and a subagent read, and a Read-tool doc', () => {
     const ctx: Cmd = ['cat GLOSSARY.md', FIXTURE_DOCS['GLOSSARY.md']!]
-    const out = run(store([ctx], [ctx])).join('\n')
-    expect(out).toContain('1 instruction doc(s) read with no reason or verdict yet:\n    GLOSSARY.md')
-    expect(out).not.toContain(subagentOnly)
+    const out = run(store([ctx, { read: 'docs/agents/guards.md' }], [ctx]))
+    expect(out.filter((l) => l.startsWith('    '))).toEqual(['    docs/agents/guards.md', '    GLOSSARY.md'])
   })
 
-  it('lists a Read-tool doc too, and drops every doc the agent already answered', () => {
-    const fixture = store([['cat GLOSSARY.md', FIXTURE_DOCS['GLOSSARY.md']!], { read: 'docs/agents/guards.md' }])
-    const out = run(fixture).join('\n')
-    expect(out).toContain('docs/agents/guards.md\n      [this session] Read tool')
-    expect(run(fixture, { docsRead: [{ path: 'GLOSSARY.md', reason: 'glossary', useful: 'yes' }, { path: 'docs/agents/guards.md', reason: '(not read)' }] })).toEqual([])
-  })
-
-  it('still asks for a verdict on a doc given only a reason', () => {
-    const fixture = store([['cat GLOSSARY.md', FIXTURE_DOCS['GLOSSARY.md']!]])
-    expect(run(fixture, { docsRead: [{ path: 'GLOSSARY.md', reason: 'glossary' }] }).join('\n')).toContain('    GLOSSARY.md')
-  })
-
-  it('asks for a verdict on every loaded rule until one is given', () => {
-    const fixture = store(['git status'])
-    const dir = join(fixture.home, '.claude', 'projects', fixture.root.replace(/[/.]/g, '-'))
-    const rule = { type: 'attachment', attachment: { type: 'nested_memory', path: join(fixture.root, '.claude/rules/adr-0012.md') } }
-    writeFileSync(join(dir, 'session.jsonl'), `${readFileSync(join(dir, 'session.jsonl'), 'utf8')}\n${JSON.stringify(rule)}`)
-    expect(run(fixture).join('\n')).toContain('1 rule(s) loaded with no verdict yet:\n    .claude/rules/adr-0012.md')
-    expect(run(fixture, { ruleVerdicts: [{ path: '.claude/rules/adr-0012.md', reason: 'pingbacks', useful: 'no' }] })).toEqual([])
-  })
-
-  it('asks for a verdict on a global rule too', () => {
+  it('leaves out the always-loaded rules', () => {
     const fixture = store(['git status'])
     const dir = join(fixture.home, '.claude', 'projects', fixture.root.replace(/[/.]/g, '-'))
     const start = { type: 'attachment', attachment: { type: 'instructions', files: [{ path: join(fixture.root, '.claude/rules/adr-0003.md') }] } }
     writeFileSync(join(dir, 'session.jsonl'), `${readFileSync(join(dir, 'session.jsonl'), 'utf8')}\n${JSON.stringify(start)}`)
-    expect(run(fixture).join('\n')).toContain('    .claude/rules/adr-0003.md')
-  })
-
-  // Issue #1941: a rule only a subagent loaded is a reminder, not a block.
-  it('reminds, without asking as for its own rules, about a rule only a subagent loaded until ruleVerdicts rates it', () => {
-    const fixture = store(['git status'], ['git status'])
-    const subs = join(fixture.home, '.claude', 'projects', fixture.root.replace(/[/.]/g, '-'), 'session', 'subagents')
-    const rule = { type: 'attachment', attachment: { type: 'nested_memory', path: join(fixture.root, '.claude/rules/adr-0012.md') } }
-    writeFileSync(join(subs, 'agent-a1.jsonl'), `${readFileSync(join(subs, 'agent-a1.jsonl'), 'utf8')}\n${JSON.stringify(rule)}`)
-    const out = run(fixture).join('\n')
-    expect(out).not.toContain('loaded with no verdict yet')
-    expect(out).toContain(`1 rule(s) or doc(s) ${subagentOnly}:\n    .claude/rules/adr-0012.md (rule)`)
-    expect(run(fixture, { ruleVerdicts: [{ path: '.claude/rules/adr-0012.md', reason: 'subagent a1 reported: r', useful: 'no' }] })).toEqual([])
+    expect(run(fixture)).toEqual([])
   })
 
   it('caps the near-miss list rather than burying the detected paths', () => {
@@ -427,63 +396,44 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
 
   // Issue #2687: the report before the first --author pass, writing nothing.
   describe('pendingMain()', () => {
-    const withRules = () => {
-      const fixture = store(['git status'])
-      const dir = join(fixture.home, '.claude', 'projects', fixture.root.replace(/[/.]/g, '-'))
-      const rules = ['adr-0012', 'adr-0013'].map((r) => ({ type: 'attachment', attachment: { type: 'nested_memory', path: join(fixture.root, `.claude/rules/${r}.md`) } }))
-      writeFileSync(join(dir, 'session.jsonl'), [readFileSync(join(dir, 'session.jsonl'), 'utf8'), ...rules.map((r) => JSON.stringify(r))].join('\n'))
-      return fixture
-    }
-    const pending = (fixture: { home: string; root: string }, scratchAbs = join(fixture.root, 'scratch.json')) => {
+    const pending = (fixture: { home: string; root: string }) => {
       const logs: string[] = []
       vi.spyOn(console, 'log').mockImplementation((l: string) => void logs.push(l))
       vi.stubEnv('HOME', fixture.home)
       try {
-        pendingMain({ cwd: fixture.root, scratchAbs })
+        pendingMain({ cwd: fixture.root })
       } finally {
         vi.unstubAllEnvs()
         vi.restoreAllMocks()
       }
-      return { out: logs.join('\n'), scratchWritten: existsSync(scratchAbs) }
+      return logs.join('\n')
     }
 
-    it('prints the open rules with no scratch, and writes no file', () => {
-      const res = pending(withRules())
-      expect(res.out).toContain('2 rule(s) loaded with no verdict yet:\n    .claude/rules/adr-0012.md\n    .claude/rules/adr-0013.md')
-      expect(res.scratchWritten).toBe(false)
+    it('prints the loaded rules', () => {
+      const fixture = withRule(withRule(store(['git status']), 'adr-0012.md'), 'adr-0013.md')
+      expect(pending(fixture)).toContain('    .claude/rules/adr-0012.md\n    .claude/rules/adr-0013.md')
     })
 
-    it('leaves out the rules the scratch already rates', () => {
-      const fixture = withRules()
-      const scratchAbs = join(fixture.root, 'scratch.json')
-      writeFileSync(scratchAbs, JSON.stringify({ ruleVerdicts: [{ path: '.claude/rules/adr-0012.md', reason: 'r', useful: 'no' }] }))
-      const { out } = pending(fixture, scratchAbs)
-      expect(out).toContain('1 rule(s) loaded with no verdict yet:\n    .claude/rules/adr-0013.md')
-      expect(out).not.toContain('adr-0012')
-    })
-
-    it('says so in one line when nothing is open', () => {
-      expect(pending(store(['git status'])).out).toBe('log-session: no rule or doc awaits a verdict.')
+    it('says so in one line when nothing loaded or was read', () => {
+      expect(pending(store(['git status']))).toBe('log-session: no rule loaded and no doc read; author helped: [].')
     })
   })
 
   describe('authorMain()', () => {
-    const authored = 'session: session_01A\ngoal: g\nstatus: completed\noutcome: o\nsummary: s\nfrictions: []\n'
+    const authored = 'session: session_01A\ngoal: g\nstatus: completed\noutcome: o\nsummary: s\nfrictions: []\nhelped: []\n'
     // `exit` throws so a refusal is catchable; `log` lines are what the agent sees.
     function author(
       fixture: { home: string; root: string },
-      { mainSchemaFn = () => null, notRead = [], scratchAbs = join(fixture.root, 'scratch.json'), extra = '', status = 'completed', worktrees }: {
+      { mainSchemaFn = () => null, scratchAbs = join(fixture.root, 'scratch.json'), extra = '', status = 'completed', worktrees }: {
         mainSchemaFn?: (entry: unknown) => string | null
         worktrees?: WorktreeSeam
-        notRead?: string[]
         scratchAbs?: string
         extra?: string
         status?: string
       } = {},
     ) {
       const yml = join(fixture.root, 'authored.yml')
-      const docsRead = notRead.map((p) => `  - { path: ${p}, reason: "(not read)" }\n`).join('')
-      writeFileSync(yml, authored.replace('completed', status) + (docsRead && `docsRead:\n${docsRead}`) + extra)
+      writeFileSync(yml, authored.replace('completed', status) + extra)
       const logs: string[] = []
       const errors: string[] = []
       vi.spyOn(console, 'log').mockImplementation((l: string) => void logs.push(l))
@@ -505,34 +455,6 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
       return { logs, errors: errors.join('\n'), exited, scratchWritten: existsSync(scratchAbs) }
     }
 
-    it('refuses (not read) for a doc a subagent opened with the Read tool, and writes no scratch', () => {
-      const res = author(store(['git status'], [{ read: 'docs/agents/guards.md' }]), { notRead: ['docs/agents/guards.md'] })
-      expect(res).toMatchObject({ exited: true, scratchWritten: false })
-      expect(res.errors).toContain('docs/agents/guards.md — opened by [subagent: a1]')
-      expect(res.errors).toContain("subagent reads count as the session's")
-    })
-
-    it('matches .claude/skills and .agents/skills spellings of one doc, both ways', () => {
-      const [claude, agents] = ['.claude/skills/x/SKILL.md', '.agents/skills/x/SKILL.md']
-      expect(author(store([{ read: claude }]), { notRead: [agents] }).exited).toBe(true)
-      expect(author(store([{ read: agents }]), { notRead: [claude] }).exited).toBe(true)
-    })
-
-    it('refuses a (not read) merged from an earlier pass too', () => {
-      const fixture = store([{ read: 'GLOSSARY.md' }])
-      const scratchAbs = join(fixture.root, 'scratch.json')
-      const pass1 = { session: 'session_01A', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }
-      writeFileSync(scratchAbs, JSON.stringify({ ...pass1, docsRead: [{ path: 'GLOSSARY.md', reason: '(not read)' }] }))
-      expect(author(fixture, { scratchAbs }).exited).toBe(true)
-    })
-
-    it('accepts (not read) for a shell-only credit, or when no transcript is found', () => {
-      const shell = store([['cat GLOSSARY.md', FIXTURE_DOCS['GLOSSARY.md']!]])
-      expect(author(shell, { notRead: ['GLOSSARY.md'] })).toMatchObject({ exited: false, scratchWritten: true })
-      const none = { home: mkdtempSync(join(tmpdir(), 'shellread-empty-')), root: mkdtempSync(join(tmpdir(), 'shellread-noroot-')) }
-      tmpDirs.push(none.home, none.root)
-      expect(author(none, { notRead: ['GLOSSARY.md'] })).toMatchObject({ exited: false, scratchWritten: true })
-    })
     // Issue #2521: a completed log after a merge with no close-session since is refused.
     it('refuses a completed log after a merge without close-session, and writes no scratch', () => {
       const res = author(store(['pnpm tsx scripts/github/merge-pr.ts 12']))
@@ -545,46 +467,6 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
       const merged = store(['pnpm tsx scripts/github/merge-pr.ts 12'])
       expect(author(merged, { status: 'blocked' })).toMatchObject({ exited: false, scratchWritten: true })
     })
-    // Issue #1943: a verdict needs a rule that loaded in this session.
-    const withRule = () => {
-      const fixture = store(['git status'])
-      const dir = join(fixture.home, '.claude', 'projects', fixture.root.replace(/[/.]/g, '-'))
-      const rule = { type: 'attachment', attachment: { type: 'nested_memory', path: join(fixture.root, '.claude/rules/adr-0012.md') } }
-      writeFileSync(join(dir, 'session.jsonl'), `${readFileSync(join(dir, 'session.jsonl'), 'utf8')}\n${JSON.stringify(rule)}`)
-      return fixture
-    }
-    const verdict = (path: string, useful = 'no') => `ruleVerdicts:\n  - { path: ${path}, reason: r, useful: ${useful} }\n`
-
-    it('refuses a ruleVerdict on a rule that never loaded, and writes no scratch', () => {
-      const res = author(withRule(), { extra: verdict('.claude/rules/adr-0099.md') })
-      expect(res).toMatchObject({ exited: true, scratchWritten: false })
-      expect(res.errors).toContain('.claude/rules/adr-0099.md')
-      expect(author(withRule(), { extra: verdict('.claude/rules/adr-0012.md') })).toMatchObject({ exited: false, scratchWritten: true })
-    })
-
-    it('accepts a ruleVerdict on a rule only a subagent loaded', () => {
-      const fixture = store(['git status'], ['git status'])
-      const subs = join(fixture.home, '.claude', 'projects', fixture.root.replace(/[/.]/g, '-'), 'session', 'subagents')
-      const rule = { type: 'attachment', attachment: { type: 'nested_memory', path: join(fixture.root, '.claude/rules/adr-0012.md') } }
-      writeFileSync(join(subs, 'agent-a1.jsonl'), `${readFileSync(join(subs, 'agent-a1.jsonl'), 'utf8')}\n${JSON.stringify(rule)}`)
-      expect(author(fixture, { extra: verdict('.claude/rules/adr-0012.md') })).toMatchObject({ exited: false, scratchWritten: true })
-      expect(author(fixture, { extra: verdict('.claude/rules/adr-0099.md') }).exited).toBe(true)
-    })
-
-    it("reminds, without blocking, when a later pass omits an earlier 'no' verdict", () => {
-      const fixture = withRule()
-      const scratchAbs = join(fixture.root, 'scratch.json')
-      const pass1 = { session: 'session_01A', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }
-      writeFileSync(scratchAbs, JSON.stringify({ ...pass1, ruleVerdicts: [{ path: '.claude/rules/adr-0012.md', reason: 'r', useful: 'no' }] }))
-      const res = author(fixture, { scratchAbs })
-      expect(res).toMatchObject({ exited: false, scratchWritten: true })
-      expect(res.logs.join('\n')).toContain("earlier 'no' verdict(s) this pass omits")
-      expect(res.logs.join('\n')).toContain('    .claude/rules/adr-0012.md')
-      const changed = author(fixture, { scratchAbs, extra: verdict('.claude/rules/adr-0012.md', 'yes') })
-      expect(changed.logs.join('\n')).not.toContain("'no' verdict")
-      expect(JSON.parse(readFileSync(scratchAbs, 'utf8')).ruleVerdicts[0].useful).toBe('yes')
-    })
-
     // Issue #2721: the worktree sweep at close, behind a seam so no real worktree is touched.
     describe('worktree sweep', () => {
       const stranded = finding({ path: '/r/.claude/worktrees/wt-a', uncommitted: true })
@@ -714,10 +596,10 @@ describe('mergeAuthored() — merge on re-fire (issue #688)', () => {
     expect(merged.summary).toBe(pass2.summary)
   })
 
-  it('merges rule verdicts by path, the later pass winning', () => {
-    const v = (useful: 'yes' | 'no') => ({ path: '.claude/rules/adr-0012.md', reason: 'r', useful })
-    const merged = mergeAuthored({ ...pass1, ruleVerdicts: [v('no')] }, { ...pass2, ruleVerdicts: [v('yes')] })
-    expect(merged.ruleVerdicts).toEqual([v('yes')])
+  it('merges helped by path, the later pass winning', () => {
+    const h = (why: string) => ({ path: '.claude/rules/adr-0012.md', why })
+    const merged = mergeAuthored({ ...pass1, helped: [h('first'), { path: 'GLOSSARY.md' }] }, { ...pass2, helped: [h('second')] })
+    expect(merged.helped).toEqual([h('second'), { path: 'GLOSSARY.md' }])
   })
 
   it('replaces, never merges, a scratch left behind by a different session', () => {

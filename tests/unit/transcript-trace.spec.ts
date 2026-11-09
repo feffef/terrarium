@@ -6,7 +6,6 @@
 import { describe, expect, it } from 'vitest'
 import {
   adrReadInFull,
-  NOT_READ_REASON,
   DERIVED_REASON_COMMAND,
   DERIVED_REASON_EDITED,
   deriveTrigger,
@@ -263,17 +262,6 @@ describe('rulesLoaded and rulesGlobal — rules that loaded', () => {
     expect(entry.rulesLoaded).toEqual(trace.rulesLoaded)
     expect(validateEntry(entry).ok).toBe(true)
   })
-  it('carries authored rule verdicts and doc verdicts through the stitch', () => {
-    const authored: AuthoredScratch = {
-      session: 'session_01RL', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [],
-      docsRead: [{ path: 'GLOSSARY.md', reason: 'glossary', useful: 'yes' }],
-      ruleVerdicts: [{ path: '.claude/rules/adr-0024.md', reason: 'diagram tokens', useful: 'no' }],
-    }
-    const entry = stitch(authored, trace)
-    expect(entry.ruleVerdicts).toEqual(authored.ruleVerdicts)
-    expect(entry.docsRead).toContainEqual({ path: 'GLOSSARY.md', reason: 'glossary', useful: 'yes' })
-    expect(validateEntry(entry).ok).toBe(true)
-  })
   it('logs a re-read rule file as a rule, not a doc read', () => {
     const authored: AuthoredScratch = { session: 'session_01RL', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }
     const entry = stitch(authored, { ...trace, filesRead: ['.claude/rules/adr-0004.md', 'GLOSSARY.md'] })
@@ -429,7 +417,7 @@ describe('readSubagentJsonls()', () => {
     // A directory named like a transcript: readdir lists it, readFileSync throws
     // on it — the hook must lose that one contribution, not the whole trace.
     mkdirSync(join(subs, 'agent-b.jsonl'))
-    expect(readSubagentJsonls(parent)).toEqual([{ label: 'a', jsonl: 'A', agent: { task: 'a' } }])
+    expect(readSubagentJsonls(parent)).toEqual([{ label: 'a', jsonl: 'A', agent: { task: 'a' }, agentId: 'a' }])
   })
 
   it('returns [] for a session that dispatched nobody', () => {
@@ -555,7 +543,6 @@ describe('stitch()', () => {
     status: 'completed',
     outcome: 'It merges',
     summary: 'Authored summary.',
-    docsRead: [{ path: 'GLOSSARY.md', reason: 'the domain model' }],
     skillsUsed: [],
     frictions: [],
   }
@@ -581,11 +568,9 @@ describe('stitch()', () => {
     expect(fallback.session).toBe('session_01ABC') // scratch.session, the last resort
   })
 
-  it('keeps the agent-curated reason and does not duplicate an already-cited read', () => {
+  it('derives docsRead, with a placeholder reason for a read the session did not edit', () => {
     const docs = entry.docsRead as { path: string; reason: string }[]
-    const ctx = docs.filter((d) => d.path === 'GLOSSARY.md')
-    expect(ctx).toHaveLength(1)
-    expect(ctx[0]?.reason).toBe('the domain model') // authored reason preserved, not clobbered
+    expect(docs.filter((d) => d.path === 'GLOSSARY.md')).toEqual([{ path: 'GLOSSARY.md', reason: DERIVED_REASON }])
   })
 
   it('folds an uncited-but-also-edited read in with the edited-specific reason', () => {
@@ -613,14 +598,6 @@ describe('stitch()', () => {
     const withTrigger = stitch(scratch, { ...trace, trigger: 'audit-docs' })
     expect(withTrigger.trigger).toBe('audit-docs')
     expect(validateEntry(withTrigger).ok).toBe(true)
-  })
-
-  it('keeps docsReadBySubagents to docs still in docsRead', () => {
-    const notRead = stitch(
-      { ...scratch, docsRead: [{ path: 'docs/agents/x.md', reason: NOT_READ_REASON }] },
-      { ...trace, filesRead: [...trace.filesRead, 'docs/agents/x.md'], docsReadBySubagents: ['docs/agents/x.md'] },
-    )
-    expect(notRead).not.toHaveProperty('docsReadBySubagents')
   })
 
   it('omits learnings/ideas entirely when the scratch has none', () => {
@@ -708,40 +685,15 @@ describe('docsReadViaShell (issues #1074, #1545)', () => {
     expect(validateEntry(entry).ok).toBe(true)
   })
 
-  it('keeps an authored reason, and lists a doc read both ways once', () => {
+  it('lists a doc read both ways once', () => {
     const records = withCwd(bash('cat GLOSSARY.md', CONTEXT))
     records.push({
       type: 'assistant',
       timestamp: '2026-08-29T10:01:00.000Z',
       message: { model: 'claude-opus-5', content: [{ type: 'tool_use', name: 'Read', input: { file_path: '/repo/GLOSSARY.md' } }] },
     })
-    const authored: AuthoredScratch = {
-      session: 'session_01SH', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [],
-      docsRead: [{ path: 'GLOSSARY.md', reason: 'glossary' }],
-    }
-    expect(stitch(authored, extractTrace(records, process.env, index)).docsRead).toEqual([{ path: 'GLOSSARY.md', reason: 'glossary' }])
-  })
-
-  it(`drops a path marked ${NOT_READ_REASON}, filing a friction when the shell detector credited it`, () => {
-    const trace = extractTrace(withCwd(bash('cat GLOSSARY.md', CONTEXT)), process.env, index)
-    trace.filesRead = ['docs/agents/domain.md']
-    const authored: AuthoredScratch = {
-      session: 'session_01SH', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [],
-      docsRead: [
-        { path: 'GLOSSARY.md', reason: NOT_READ_REASON },
-        { path: 'docs/agents/domain.md', reason: NOT_READ_REASON },
-      ],
-    }
-    const entry = stitch(authored, trace)
-    expect(entry.docsRead).toEqual([])
-    const frictions = entry.frictions as { description: string; solution: string; severity: string }[]
-    expect(frictions).toHaveLength(1)
-    expect(frictions[0]!.description).toContain('SHELL-READ-DETECTION')
-    expect(frictions[0]!.description).toContain('GLOSSARY.md')
-    expect(frictions[0]!.description).not.toContain('false positive')
-    expect(frictions[0]!.solution).toContain('which command')
-    expect(frictions[0]!.severity).toBe('moderate')
-    expect(validateEntry(entry).ok).toBe(true)
+    const authored: AuthoredScratch = { session: 'session_01SH', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }
+    expect(stitch(authored, extractTrace(records, process.env, index)).docsRead).toEqual([{ path: 'GLOSSARY.md', reason: DERIVED_REASON }])
   })
 
   describe('the author-time advisory (shellReadScanOf)', () => {

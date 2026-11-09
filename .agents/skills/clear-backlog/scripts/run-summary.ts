@@ -4,12 +4,10 @@
 // Usage:
 //   pnpm exec tsx .agents/skills/clear-backlog/scripts/run-summary.ts
 //     <run .output> --triage | --build
-//     <run .output>... --verdicts
 import { readFileSync } from 'node:fs'
 import { fail, runIfMain } from '../../../../scripts/lib/cli.ts'
 
 type Question = { choice: string; options: string[]; pick: string; why: string }
-type Verdict = { path: string; kind: 'rule' | 'doc'; reason: string; useful: 'yes' | 'partly' | 'no'; agent?: string }
 type Triage = {
   outcome: string
   summary: string
@@ -22,7 +20,6 @@ type Triage = {
   relatedTo: number[]
   sideFindings: { finding: string; source: string }[]
   writes: string[]
-  verdicts?: Verdict[]
 }
 type Finding = { title: string; detail: string; file?: string }
 type Branch = {
@@ -35,7 +32,6 @@ type Branch = {
   question?: string
   reason?: string
   openFindings?: Finding[]
-  verdicts?: Verdict[]
 }
 type Explore = { results: Record<string, Triage>; missing: number[]; grouping: { issues: number[]; sharedFiles: string[] }[] }
 
@@ -83,52 +79,17 @@ function build(r: Branch[]): string[] {
   ].join('\n'))
 }
 
-const RANK = { no: 0, partly: 1, yes: 2 }
-
-const repoRelative = (p: string) => p
-  .replace(/^.*?\/\.claude\/worktrees\/[^/]+\//, '')
-  .replace(/^.*?\/(?=(\.claude|\.agents|docs|layers)\/)/, '')
-
-/** One entry per path across all runs, as close-session's `ruleVerdicts` and `docsRead` take them. */
-function verdicts(runs: (Explore | Branch[])[]): string[] {
-  const raw = runs.flatMap((r) => Array.isArray(r)
-    ? r.flatMap((b) => b.verdicts ?? [])
-    : Object.entries(r.results).flatMap(([n, t]) => (t.verdicts ?? []).map((v) => ({ ...v, agent: `triage #${n}` }))))
-  // log-session refuses anything but repo-relative paths; subagents give absolute (worktree) or comma-joined ones.
-  const all = raw.flatMap((v) => v.path.split(/\s*,\s*/).filter(Boolean).map((p) => ({ ...v, path: repoRelative(p) })))
-  const best = new Map<string, Verdict[]>()
-  for (const v of all) {
-    const kept = best.get(v.path)
-    if (!kept || RANK[v.useful] > RANK[kept[0]!.useful]) best.set(v.path, [v])
-    else if (RANK[v.useful] === RANK[kept[0]!.useful]) kept.push(v)
-  }
-  const entries = [...best.values()].sort((a, b) => a[0]!.path.localeCompare(b[0]!.path))
-  const yaml = (vs: Verdict[]) => {
-    const reason = [...new Set(vs.map((v) => (v.agent ? `${v.agent}: ${v.reason}` : v.reason)))].join('; ')
-    return `  - { path: ${JSON.stringify(vs[0]!.path)}, reason: ${JSON.stringify(reason)}, useful: ${vs[0]!.useful} }`
-  }
-  return [
-    'ruleVerdicts:',
-    ...entries.filter((vs) => vs[0]!.kind === 'rule').map(yaml),
-    'docsRead:',
-    ...entries.filter((vs) => vs[0]!.kind === 'doc').map(yaml),
-  ]
-}
-
 const MODES = {
-  '--triage': ([r]: unknown[]) => triage(r as Explore).join('\n\n'),
-  '--build': ([r]: unknown[]) => build(r as Branch[]).join('\n\n'),
-  '--verdicts': (rs: unknown[]) => verdicts(rs as (Explore | Branch[])[]).join('\n'),
+  '--triage': (r: unknown) => triage(r as Explore).join('\n\n'),
+  '--build': (r: unknown) => build(r as Branch[]).join('\n\n'),
 }
 
-export function runSummary(paths: string | string[], mode: keyof typeof MODES): string {
-  return MODES[mode]([paths].flat().map(result))
+export function runSummary(path: string, mode: keyof typeof MODES): string {
+  return MODES[mode](result(path))
 }
 
 runIfMain(import.meta.url, () => {
-  const paths = process.argv.slice(2)
-  const mode = paths.pop()
-  if (!paths.length || !mode || !Object.hasOwn(MODES, mode) || (mode !== '--verdicts' && paths.length > 1))
-    fail('usage: run-summary.ts <run .output> --triage | --build, or <run .output>... --verdicts')
-  console.log(runSummary(paths, mode as keyof typeof MODES))
+  const [path, mode, ...rest] = process.argv.slice(2)
+  if (!path || !mode || rest.length || !Object.hasOwn(MODES, mode)) fail('usage: run-summary.ts <run .output> --triage | --build')
+  console.log(runSummary(path, mode as keyof typeof MODES))
 })

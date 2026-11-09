@@ -21,7 +21,7 @@
 //       validate the interpretive fields and write the scratch (the
 //       model-invocable path; does NOT commit — the hooks do).
 //   tsx scripts/session/log-session.ts --pending
-//       print the rules and docs still awaiting a verdict; writes nothing.
+//       print the rules that loaded and the docs read, to pick `helped` from; writes nothing.
 //   tsx scripts/session/log-session.ts --land [--dry-run] [--transcript <p>] [--scratch <p>]
 //       the hook path: stitch the scratch with the trace and land it.
 //   tsx scripts/session/log-session.ts <path-to-entry.yml> [--dry-run] [--remote <name>]
@@ -33,7 +33,6 @@ import { tmpdir } from 'node:os'
 import { basename, dirname, join, resolve } from 'node:path'
 import { parse as parseYaml, stringify as stringifyYaml } from 'yaml'
 import { z } from 'zod'
-import { ruleVerdict, usefulVerdict } from '../../shared/schemas/session.ts'
 import { sessionUrl } from '../../shared/session-url.ts'
 import { fetchOriginMain, git, SESSION_TRAILER, tryGit } from '../lib/git.ts'
 import { parseWorktreeList, runSweep, type Finding, type SweepResult } from '../git/check-worktrees.ts'
@@ -51,21 +50,19 @@ import {
   readSubagentJsonls,
   stitch,
   shellReadScanOf,
-  NOT_READ_REASON,
-  MAIN_SOURCE,
   LAST_LANDED_FILE,
   SCRATCH_DIR,
   SCRATCH_FILE,
   STAGING_DIR,
   type AuthoredScratch,
   type FoldedShellReadScan,
-  type LabelledRecords,
   type MechanicalTrace,
   type SessionIdEnv,
   type SubagentJsonl,
 } from './transcript-trace.ts'
-import { canonicalizeInstructionPath, isInstructionDoc, type DocLineIndex } from './shell-reads.ts'
+import { isInstructionDoc, type DocLineIndex } from './shell-reads.ts'
 import { fail, flagValue, root, runIfMain } from '../lib/cli.ts'
+import { readRuleLoads, type RuleLoadRow } from './rule-use.ts'
 
 /** The `schemaVersion` newly authored logs should carry; evolution policy: ADR-0009. */
 export const CURRENT_SESSIONS_SCHEMA_VERSION = 1
@@ -93,9 +90,9 @@ const authoredScratchSchema = z
     outcome: z.string(),
     summary: z.string(),
     prs: z.array(z.string()).optional(),
-    docsRead: z.array(z.object({ path: z.string(), reason: z.string(), useful: usefulVerdict.optional() })).optional(),
     skillsUsed: z.array(z.object({ name: z.string(), reason: z.string() })).optional(),
-    ruleVerdicts: z.array(ruleVerdict).optional(),
+    // Required like `frictions`: [] means nothing helped, absent means skipped (#3009).
+    helped: z.array(z.object({ path: z.string(), why: z.string().optional() })),
     frictions: z.array(
       z.object({
         description: z.string(),
@@ -115,8 +112,9 @@ const authoredScratchSchema = z
  *  generic error (issue #1074). */
 const DERIVED_ONLY_FIELDS: Record<string, string> = {
   adrHints: 'derived from the adr-read-hint pointers in the transcript.',
-  docsReadViaShell:
-    `shell reads fold into docsRead; answer them there, with a reason or '${NOT_READ_REASON}' (log-session Skill, step 3).`,
+  docsReadViaShell: 'shell reads fold into docsRead, which is derived; name a doc that helped in helped.',
+  docsRead: 'derived from the transcript; name a doc that helped in helped (#3009).',
+  ruleVerdicts: 'replaced by helped: name only the rules and docs that helped (#3009).',
 }
 
 export function validateAuthored(
@@ -165,9 +163,8 @@ export function mergeAuthored(existing: AuthoredScratch | undefined, incoming: A
   return {
     ...incoming,
     frictions: [...existing.frictions, ...incoming.frictions.filter((f) => !seen.has(frictionKey(f)))],
-    docsRead: unionBy(existing.docsRead, incoming.docsRead, (x) => x.path),
     skillsUsed: unionBy(existing.skillsUsed, incoming.skillsUsed, (x) => x.name),
-    ruleVerdicts: unionBy(existing.ruleVerdicts, incoming.ruleVerdicts, (x) => x.path),
+    helped: unionBy(existing.helped, incoming.helped, (x) => x.path),
     prs: union(existing.prs, incoming.prs),
     learnings: union(existing.learnings, incoming.learnings),
     ideas: union(existing.ideas, incoming.ideas),
@@ -472,6 +469,8 @@ export interface LandOpts {
   mainSchemaFn?: (entry: unknown, remote: string) => string | null
   env?: SessionIdEnv
   subagents?: SubagentJsonl[]
+  /** The InstructionsLoaded ledger: each rule load's trigger file (#3009). */
+  ruleLoads?: RuleLoadRow[]
   /** The doc-line index `docsReadViaShell` is derived against; built from `root` when absent. */
   docIndex?: DocLineIndex
   /** `git log` output for a session's commits; `sessionCommitsLog` when absent. */
@@ -653,10 +652,11 @@ function withoutLandedBy(yaml: string): string {
  *  and Skill invocations folded in, plus its workflow agents — `subagents` is
  *  passed by `landMain` from disk and by tests inline, so neither entry point can
  *  drift from the other. */
-function traceOf(transcriptJsonl: string, opts: Pick<LandOpts, 'env' | 'subagents' | 'docIndex' | 'gitLogFn'>): MechanicalTrace {
+function traceOf(transcriptJsonl: string, opts: Pick<LandOpts, 'env' | 'subagents' | 'ruleLoads' | 'docIndex' | 'gitLogFn'>): MechanicalTrace {
   const docIndex = opts.docIndex ?? loadDocLineIndex(root)
   const trace = extractTrace(parseTranscript(transcriptJsonl), opts.env, docIndex)
-  const folded = foldSubagentTrace(trace, (opts.subagents ?? []).map((s) => ({ records: parseTranscript(s.jsonl), agent: s.agent, toolUseId: s.toolUseId })), opts.env, docIndex)
+  const subagents = (opts.subagents ?? []).map((s) => ({ records: parseTranscript(s.jsonl), agent: s.agent, toolUseId: s.toolUseId, agentId: s.agentId }))
+  const folded = foldSubagentTrace(trace, subagents, opts.env, docIndex, opts.ruleLoads)
   if (!folded.session) return folded
   const committed = committedFiles((opts.gitLogFn ?? sessionCommitsLog)(folded.session), folded.session)
   return { ...folded, filesEdited: [...new Set([...folded.filesEdited, ...committed])] }
@@ -754,8 +754,6 @@ export function handle(
  *  would bury the reads it sits beside. */
 const NEAR_MISS_LIMIT = 5
 
-const VERDICTS = usefulVerdict.options.join(' | ')
-
 const oneLine = (command: string): string => command.replace(/\s+/g, ' ').slice(0, 100)
 
 /** What `--author` derives from this session's transcripts, loaded once. */
@@ -763,9 +761,6 @@ export interface AuthorContext {
   /** From `traceOf`, so author time checks exactly what `--land` will stitch. */
   trace: MechanicalTrace
   scan: FoldedShellReadScan
-  /** Canonical path → first transcript whose Read tool opened it: a subagent's
-   *  read is the session's, so `(not read)` can't deny it (issue #1786). */
-  sources: Map<string, string>
 }
 
 /** Best-effort (see `findLatestTranscript`): undefined when no transcript can be
@@ -782,96 +777,38 @@ export function loadAuthorContext(cwd: string, repoRoot: string = root): AuthorC
     return {
       trace: traceOf(jsonl, { subagents: subs, docIndex }),
       scan: shellReadScanOf(records, subagents, { repoRoot, docIndex }),
-      sources: readToolSources([{ label: MAIN_SOURCE, records }, ...subagents.map((s) => ({ ...s, label: `subagent: ${s.label}` }))]),
     }
   } catch {
     return undefined
   }
 }
 
-function readToolSources(sets: LabelledRecords[]): Map<string, string> {
-  const sources = new Map<string, string>()
-  for (const { label, records } of sets) {
-    for (const p of extractTrace(records).filesRead) {
-      const doc = canonicalizeInstructionPath(p)
-      if (!sources.has(doc)) sources.set(doc, label)
-    }
-  }
-  return sources
-}
-
-/** List every instruction doc the trace will fold into `docsRead` and every
- *  rule that loaded that the agent has not yet given a reason and a `useful`
- *  verdict, with the evidence for each doc, so the agent can explain it or mark
- *  it `NOT_READ_REASON` (ADR-0009). Prints
- *  nothing when there is nothing to answer — including when the transcript
+/** The names the main agent picks `helped` from: its own path-scoped rule
+ *  loads and the instruction docs it read, never a subagent's, which answers
+ *  for itself (#3009). Also the docs a command named but did not show enough
+ *  of, since `docsRead` cannot hold them. Prints nothing when the transcript
  *  can't be found, which degrades the report, never the authoring. */
-export function reportUnexplainedReads(
-  ctx: AuthorContext | undefined,
-  authored: Pick<AuthoredScratch, 'docsRead' | 'ruleVerdicts'> = {},
-  log: (line: string) => void = console.log,
-): void {
+export function reportReads(ctx: AuthorContext | undefined, log: (line: string) => void = console.log): void {
   if (!ctx) return
-  const { trace, scan, sources } = ctx
-  const rulesLoaded = [...trace.rulesGlobal, ...trace.rulesLoaded]
-  const answered = new Set(
-    (authored.docsRead ?? []).filter((d) => d.useful || d.reason === NOT_READ_REASON).map((d) => d.path),
-  )
-  const ruled = new Set((authored.ruleVerdicts ?? []).map((r) => r.path))
-  const openRules = rulesLoaded.filter((r) => !ruled.has(r))
-  const open = new Map<string, string>()
-  for (const p of trace.filesRead) {
-    const source = sources.get(canonicalizeInstructionPath(p))
-    if (isInstructionDoc(p) && !answered.has(p)) open.set(p, source ? `[${source}] Read tool` : 'Read tool')
+  const { trace, scan } = ctx
+  const bySubagents = new Set(trace.docsReadBySubagents ?? [])
+  const docs = [...new Set([...trace.filesRead, ...trace.docsReadViaShell])]
+    .filter((p) => isInstructionDoc(p) && !p.startsWith('.claude/rules/') && !bySubagents.has(p))
+  const rules = trace.ruleLoads.map((l) => l.rule)
+  if (rules.length || docs.length) {
+    log('')
+    log('  helped — pick only the rules and docs that changed or enabled something you did:')
+    for (const r of rules) log(`    ${r}`)
+    for (const d of docs) log(`    ${d}`)
   }
-  for (const [p, { command, source }] of scan.provenance) {
-    if (!answered.has(p) && !open.has(p)) open.set(p, `[${source}] ${oneLine(command)}`)
-  }
-  // Only a subagent can say what these gave it, so the main session asks it (#1941).
-  const docsBySubagents = new Set(trace.docsReadBySubagents ?? [])
-  const unrated: [string, string?][] = []
-  for (const [p, evidence] of open) {
-    if (!docsBySubagents.has(p)) continue
-    open.delete(p)
-    unrated.push([`${p} (doc)`, evidence])
-  }
-  for (const r of trace.rulesLoadedBySubagents ?? []) if (!ruled.has(r)) unrated.push([`${r} (rule)`])
-  const misses = scan.nearMisses.filter((m) => !answered.has(m.path))
-  if (open.size === 0 && misses.length === 0 && openRules.length === 0 && unrated.length === 0) return
-
-  log('')
-  if (open.size) {
-    log(`  docsRead — ${open.size} instruction doc(s) read with no reason or verdict yet:`)
-    for (const [p, evidence] of open) {
-      log(`    ${p}`)
-      log(`      ${evidence}`)
-    }
-    log('  Re-run --author with a docsRead entry for each: a one-line reason (what it gave you) and')
-    log(`  useful: ${VERDICTS}, or the reason '${NOT_READ_REASON}' for a doc no command of this`)
-    log('  session or its subagents showed you.')
-    log('  A shell-credited doc marked so is dropped and logged as a SHELL-READ-DETECTION friction.')
-  }
-  if (openRules.length) {
-    log(`  ruleVerdicts — ${openRules.length} rule(s) loaded with no verdict yet:`)
-    for (const r of openRules) log(`    ${r}`)
-    log('  Re-run --author with a ruleVerdicts entry for each: a one-sentence reason and')
-    log(`  useful: ${VERDICTS}, as log-session step 3 says.`)
-  }
-  if (unrated.length) {
-    log(`  ${unrated.length} rule(s) or doc(s) only a subagent loaded or read, no verdict yet; take it from the subagent's final reply, or it shows as "no verdict provided":`)
-    for (const [item, evidence] of unrated) {
-      log(`    ${item}`)
-      if (evidence) log(`      ${evidence}`)
-    }
-    log("  A reminder, not a block: add each answer to ruleVerdicts or docsRead (log-session step 3).")
-  }
-  if (misses.length) {
-    log(`  Not counted as read via shell (${misses.length}), and why:`)
-    for (const m of misses.slice(0, NEAR_MISS_LIMIT)) {
+  if (scan.nearMisses.length) {
+    log('')
+    log(`  Not counted as read via shell (${scan.nearMisses.length}), and why:`)
+    for (const m of scan.nearMisses.slice(0, NEAR_MISS_LIMIT)) {
       log(`    ${m.token} — ${m.rule}`)
       log(`      ${oneLine(m.command)}`)
     }
-    if (misses.length > NEAR_MISS_LIMIT) log(`    …and ${misses.length - NEAR_MISS_LIMIT} more`)
+    if (scan.nearMisses.length > NEAR_MISS_LIMIT) log(`    …and ${scan.nearMisses.length - NEAR_MISS_LIMIT} more`)
     log("  If one of these was a real read, log a Friction: severity at least 'moderate', marker")
     log('  SHELL-READ-DETECTION, the command verbatim, and the path expected.')
   }
@@ -930,29 +867,9 @@ export function authorMain(
   if (!result.ok) fail(`authored scratch is invalid:\n${result.errors}`)
   const merged = mergeAuthored(readScratch(scratchAbs), result.data)
   const ctx = loadAuthorContext(cwd)
-  const misNotRead = (merged.docsRead ?? []).flatMap((d) => {
-    const source = d.reason === NOT_READ_REASON && ctx?.sources.get(canonicalizeInstructionPath(d.path))
-    return source ? [`  ${d.path} — opened by [${source}]`] : []
-  })
-  if (misNotRead.length) {
-    fail(
-      `refusing '${NOT_READ_REASON}' for doc(s) the Read tool opened; subagent reads count as the session's:\n` +
-        `${misNotRead.join('\n')}\nGive each a reason and a useful verdict instead.`,
-    )
-  }
-  // #1943: a verdict needs a rule this session or one of its subagents loaded.
-  const loaded = ctx && new Set([...ctx.trace.rulesGlobal, ...ctx.trace.rulesLoaded, ...(ctx.trace.rulesLoadedBySubagents ?? [])])
-  const neverLoaded = loaded ? (result.data.ruleVerdicts ?? []).filter((v) => !loaded.has(v.path)) : []
-  if (neverLoaded.length) {
-    fail(
-      `refusing ruleVerdicts for rule(s) this session never loaded:\n${neverLoaded.map((v) => `  ${v.path}`).join('\n')}\n` +
-        'Drop them.',
-    )
-  }
   const closure = ctx && closureRefusal(merged.status, ctx.trace)
   if (closure) fail(closure)
   sweepWorktreesAtClose(merged, cwd, opts.worktrees ?? gitWorktrees)
-  const keptNo = droppedNoVerdicts(merged, result.data)
   // Its existence is the wrap-up signal the landing path gates on.
   mkdirSync(dirname(scratchAbs), { recursive: true })
   writeFileSync(scratchAbs, JSON.stringify(merged, null, 2))
@@ -970,12 +887,7 @@ export function authorMain(
   } else {
     console.log('  the Stop hook will stitch it with the derived trace and commit, live, at the end of this turn.')
   }
-  if (keptNo.length) {
-    console.log(`  ruleVerdicts — ${keptNo.length} earlier 'no' verdict(s) this pass omits; each still stands:`)
-    for (const p of keptNo) console.log(`    ${p}`)
-    console.log('  Re-confirm it, or send a changed verdict: verdicts may change over a session.')
-  }
-  reportUnexplainedReads(ctx, merged)
+  reportReads(ctx)
 }
 
 /** Re-authoring merges with this session's earlier pass (issue #688); a corrupt
@@ -989,19 +901,13 @@ function readScratch(scratchAbs: string): AuthoredScratch | undefined {
 }
 
 /** `--pending`: the reads report alone, before the first `--author` pass (#2687). Writes nothing. */
-export function pendingMain(opts: { cwd?: string; scratchAbs?: string } = {}): void {
-  let open = false
-  reportUnexplainedReads(loadAuthorContext(opts.cwd ?? process.cwd()), readScratch(opts.scratchAbs ?? join(root, SCRATCH_FILE)), (line) => {
-    open = true
+export function pendingMain(opts: { cwd?: string } = {}): void {
+  let printed = false
+  reportReads(loadAuthorContext(opts.cwd ?? process.cwd()), (line) => {
+    printed = true
     console.log(line)
   })
-  if (!open) console.log('log-session: no rule or doc awaits a verdict.')
-}
-
-/** Earlier 'no' rule verdicts the merge kept though the incoming pass left them out (#1943). */
-function droppedNoVerdicts(merged: AuthoredScratch, incoming: AuthoredScratch): string[] {
-  const sent = new Set((incoming.ruleVerdicts ?? []).map((v) => v.path))
-  return (merged.ruleVerdicts ?? []).filter((v) => v.useful === 'no' && !sent.has(v.path)).map((v) => v.path)
+  if (!printed) console.log('log-session: no rule loaded and no doc read; author helped: [].')
 }
 
 function readStdin(): string {
@@ -1011,6 +917,9 @@ function readStdin(): string {
     return ''
   }
 }
+
+/** The ledger is named by the CLI session id, the transcript's basename. */
+const ledgerOf = (transcriptPath: string) => readRuleLoads(root, basename(transcriptPath, '.jsonl'))
 
 /** `--land`: the hook path. Never throws and never exits non-zero — a handler
  *  bug must not wedge teardown (PR #148); errors go to stderr only. */
@@ -1043,6 +952,7 @@ function landMain(argv: string[]): void {
         remote: 'origin',
         landedBy,
         subagents: readSubagentJsonls(transcriptPath),
+        ruleLoads: ledgerOf(transcriptPath),
       })
       if (result.action === 'landed' || result.action === 'dry-run') {
         console.error(
@@ -1089,6 +999,7 @@ function landMain(argv: string[]): void {
     remote: 'origin',
     landedBy,
     subagents: readSubagentJsonls(transcriptPath),
+    ruleLoads: ledgerOf(transcriptPath),
   })
   switch (result.action) {
     case 'invalid':

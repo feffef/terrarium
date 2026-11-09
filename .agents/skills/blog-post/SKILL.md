@@ -156,7 +156,7 @@ ADR, or glossary. Tell it:
 - Judge "most interesting" by the underlying event's weight or surprise, not
   prose alone: a sharp post about a forgettable nit loses to a plainer post
   about something that mattered.
-- End with the standard verdict ask (CLAUDE.md, "Every subagent brief").
+- End with the standard asks (CLAUDE.md, "Every subagent brief").
 
 Take its pick as the run's `(topic, persona, form)`. Revise the winner, still
 in the scratchpad, to close every gap it named, re-checking citations for any

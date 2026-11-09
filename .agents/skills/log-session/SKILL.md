@@ -57,15 +57,11 @@ outcome: Mechanism built and tested # one-liner — nuance on status
 summary: >-                        # the fuller narrative — sized to the session, see below
   What you set out to do and what actually happened.
 prs: ["42"]                        # work-PR refs (in-review is fine); [] if none
-docsRead:                          # curated — what each doc gave you, and whether it helped
-  - { path: GLOSSARY.md, reason: "glossary: Space vs Collection", useful: yes }  # useful: yes | partly | no
-  - { path: "app/pages/t/[tenant]/[space]/[...slug].vue", reason: routing, useful: partly }
-skillsUsed:                        # transcript-observed reads/Skills you omit are folded in
+skillsUsed:                        # transcript-observed Skills you omit are folded in
   - { name: tdd, reason: "test-first the helper (see #99)" }  # (name cross-refs the Skill Inventory)
-ruleVerdicts:                      # every rule that loaded, yours or a subagent's (step 3)
-  - { path: .claude/rules/adr-0004.md, reason: "Made me run gate:scoped before opening the PR; summary was enough, skipped the full ADR", useful: yes }
-  - { path: .claude/rules/adr-0023.md, reason: "About guest PRs; this was a Trusted blog post, so it didn't apply", useful: no }
-  - { path: .claude/rules/adr-0025.md, reason: "Only Triage #12 loaded it; it reported the rule confirmed queryPages was the right call", useful: yes }
+helped:                            # REQUIRED (may be []) — only what changed or enabled something you did (step 3)
+  - { path: .claude/rules/adr-0004.md, why: "ran gate:scoped before the PR" }  # why: optional, up to 8 words
+  - { path: docs/agents/pr-workflow.md }
 frictions:                         # REQUIRED (may be []) — list EVERY friction
   - description: …                 # ~20 words, honest
     solution: …                    # the fix, or what would have helped
@@ -97,8 +93,7 @@ ideas:                             # OPTIONAL — omit unless something sparked
   - `blocker`: the goal couldn't proceed without a workaround or human help.
 - **`learnings`/`ideas` are optional: add one only when the session genuinely
   produced it.** `GLOSSARY.md` → **Session** and **Idea** define them; don't restate them here.
-  - `learnings` — a fact you read from a file is a `docsRead` entry, not a
-    learning. Some things you'd log as a `nit` friction are better here —
+  - `learnings` — a fact you read from a file is not a learning. Some things you'd log as a `nit` friction are better here —
     research/interactive sessions often end with learnings and no friction at all.
   - `ideas` — be creative and concrete: name the thing to build and why it's
     worth doing, so a later reader could file it as a GitHub issue without
@@ -108,12 +103,8 @@ ideas:                             # OPTIONAL — omit unless something sparked
 - **Don't set `external`.** That optional boolean marks a log from a *different*
   harness (an outside contributor's own agent); absent means internal, and
   ADR-0009 says what it changes for mining.
-- `docsRead`/`skillsUsed` are your **curated** picks (worth a `reason`); you need
-  not list everything you touched, since the extractor folds observed reads in.
-  A cited read keeps your `reason`; the rest get `(read before editing)` if you
-  also edited that path, otherwise `(no reason given)`. A `docsRead` `reason`
-  says briefly what the doc told you; `useful` says whether it helped. Step 3
-  covers `ruleVerdicts`.
+- `skillsUsed` holds your **curated** picks (worth a `reason`); the extractor
+  folds in the Skills you omit. `docsRead` is derived only: don't author it.
 - **frictions is the point.** List *every* one — anything that felt unnecessarily
   complex, token-heavy, or repetitive. A **doc contradiction found mid-session** is
   itself a friction: record it with a `solution` pointing at the single home to fix.
@@ -143,8 +134,8 @@ field from ground truth whenever it can (issue #387), so it is only a fallback.
 
 ## 2. Write the scratch
 
-First print what still needs a verdict, and answer every item (step 3) in the
-YAML before your first pass:
+First print the rules that loaded for you and the docs you read, to pick
+`helped` from (step 3):
 
 ```
 pnpm exec tsx scripts/session/log-session.ts --pending
@@ -160,37 +151,20 @@ It validates the interpretive fields and writes `.session-logs/pending.scratch.j
 (gitignored). The hook lands it only if the scratch exists, so authoring it *is*
 your "this session is done" signal.
 
-## 3. Answer the reads report
+## 3. Name what helped
 
-`--pending`, and again `--author` as a check, list every instruction doc you read (Read tool or a Bash command's
-output) that has no reason and `useful` verdict yet, with the evidence for each.
-Answer each with a `docsRead` entry: a
-one-line reason and a `useful` verdict, or the reason `(not read)` when no
-command of this session or its subagents showed you that doc. The stitch drops a `(not read)` entry, and logs a Friction
-if shell output had credited it.
-
-Give one verdict per rule and per doc for the whole session. For one a
-subagent also loaded or read, take the verdicts from its final reply
-(CLAUDE.md), merge its view with yours, and say in the `reason` what it
-reported. The report lists each rule or doc only a subagent loaded or read that
-has no verdict yet, a reminder, not a block: unanswered, it shows as "no verdict
-provided".
-
-It also lists every rule that loaded in this session with no `ruleVerdicts` entry,
-including the always-loaded ones (no `paths`; they load at session start). Answer each with a `useful` verdict
-and a one-sentence `reason` (about 20 words) that says why: for `yes` or
-`partly`, what in the rule changed or confirmed something you did; for `no`,
-why it didn't apply to this task, or what it got wrong. For a `yes` or `partly`
-rule that points to a full ADR or doc, also say why you did or didn't open it
-(the trace records whether): the summary was enough, or you needed a detail it
-held. Don't restate the rule.
+`--pending`, and `--author` again, list the path-scoped rules that loaded for
+you and the instruction docs you read. In `helped`, name only those that
+changed or enabled something you did; a rule or doc you leave out is "no
+claim", not "unhelpful". Write `helped: []` when none did. Leave out what only
+confirmed what you were already doing. A subagent answers for itself
+(the SubagentStart note), so don't collect its view.
 
 Every pass is a full scratch with every field the schema requires. Its lists
-merge with the earlier pass, so list only new entries, plus any `docsRead`,
-`skillsUsed` or `ruleVerdicts` entry you change, written whole (it replaces the
-one with the same `path` or `name`). An earlier `no` rule
-verdict you leave out stands, and the report lists it to re-confirm or change. Repeat a friction word for word, severity
-included, or it is logged twice.
+merge with the earlier pass, so list only new entries, plus any `skillsUsed`
+or `helped` entry you change, written whole (it replaces the one with the same
+`name` or `path`). Repeat a friction word for word, severity included, or it
+is logged twice.
 
 The report also lists docs a command named but did not show enough of to
 count; `scripts/session/shell-reads.ts`'s header lists what stays invisible. If one of them was a real read, log a Friction:

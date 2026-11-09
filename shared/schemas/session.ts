@@ -29,6 +29,20 @@ export const adrHint = z.object({
   by: z.enum(['main', 'subagent']),
 })
 export type AdrHint = z.infer<typeof adrHint>
+// One path-scoped rule load: `native` when the harness loaded it, `hint` when
+// a hint hook injected it; `trigger` is the file whose access loaded it, from
+// the InstructionsLoaded ledger when that survived (#3009).
+export const ruleLoad = z.object({ rule: z.string(), via: z.enum(['native', 'hint']), trigger: z.string().optional() })
+export type RuleLoad = z.infer<typeof ruleLoad>
+// Per agent: what loaded, whether it answered the "what helped" ask, and the
+// rules and docs it named. Unnamed means no claim, not unhelpful (#3009).
+export const ruleUseEntry = z.object({
+  by: z.string(), // `main`, or the subagent's agent type (`workflow` when it has none)
+  answered: z.boolean(),
+  loads: z.array(ruleLoad),
+  helped: z.array(z.object({ path: z.string(), why: z.string().optional() })),
+})
+export type RuleUseEntry = z.infer<typeof ruleUseEntry>
 
 /**
  * The grow-only `sessions` schema (ADR-0009). `status`/`kind` are queryable spines;
@@ -57,8 +71,8 @@ export const sessionSchema = z
     summary: z.string(), // the fuller narrative; sizing guidance: log-session Skill
     prs: z.array(z.string()).default([]), // 0..N already-landed work-PR refs
     // docsRead/skillsUsed merge the agent's entries with derived ones, folded in
-    // with a placeholder `reason` (ADR-0009). `useful` is authored only, so absent
-    // on derived reads and older logs.
+    // with a placeholder `reason` (ADR-0009). `useful` is no longer written
+    // (`ruleUse` replaced it, #3009); the key stays so older logs validate.
     docsRead: z
       .array(z.object({ path: z.string(), reason: z.string(), useful: usefulVerdict.optional() }))
       .default([]),
@@ -82,11 +96,13 @@ export const sessionSchema = z
     // (adr, via, by); workflow agents count as `subagent`.
     adrHints: z.array(adrHint).optional(),
     // Rules only a subagent or workflow agent loaded, and the `docsRead`
-    // instruction docs only one read. Their verdicts sit in `ruleVerdicts` and
-    // `docsRead` like any other, merged by the main session (#1941).
+    // instruction docs only one read (#1941).
     rulesLoadedBySubagents: z.array(z.string()).optional(),
     docsReadBySubagents: z.array(z.string()).optional(),
+    // DEPRECATED — no longer written; `ruleUse` replaced it (#3009). The key
+    // stays so older logs validate (ADR-0009).
     ruleVerdicts: z.array(ruleVerdict).optional(),
+    ruleUse: z.array(ruleUseEntry).optional(),
     // DEPRECATED — no longer written; shell reads fold into `docsRead`. The key
     // stays so older logs validate (ADR-0009).
     docsReadViaShell: z.array(z.string()).optional(),
