@@ -33,3 +33,12 @@ export function glassboxGuidePath(stem: string) {
   const route = glassboxStemRoute(stem)
   return route ? `/t/glassbox/guide/${route}` : '/t/glassbox/guide'
 }
+
+/** The newest changes across curate runs (given newest first), for the workshop's "Lately" list.
+ *  A run entry that only records a page was checked and left alone ("No change") is not a change. */
+export function glassboxLatelyChanges(runs: Array<{ stem: string, changes: GlassboxRunChange[] }>, limit = 5) {
+  return runs
+    .flatMap((run) => run.changes.flatMap((change) =>
+      'page' in change && !/^no change/i.test(change.what) ? [{ stem: run.stem, page: change.page, what: change.what }] : []))
+    .slice(0, limit)
+}

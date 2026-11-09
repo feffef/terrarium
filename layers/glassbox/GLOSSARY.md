@@ -46,7 +46,8 @@ Terrarium applies them without reading the source.
   in tens, orders Lessons inside a folder, prerequisites first; Subject order and names come from
   `glassboxSubjects` in `layers/glassbox/app/utils/subjects.ts`. `workshop`, at
   `/t/glassbox/workshop`, is one page of state for the improvement Skills: a
-  memory text, one entry per curate run and glassbox-update's check state. It
+  memory text, one entry per curate run and glassbox-update's check state, under a
+  Lately list of the newest run changes that the page works out itself. It
   has no sidebar entry and no link from the guide; its memory text has a word
   cap (`layers/glassbox/tests/unit/workshop.spec.ts`).
 - **Shown in progress.** The Platform homepage gives Glass Box its own band

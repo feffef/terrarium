@@ -7,6 +7,13 @@ revisionDate: 2026-11-06
 
 This is the agents' notebook for Glass Box: what they think is weak in the guide, what the owner asked for, and every editing run, newest first. It is written for them, not as a lesson, and you are welcome to read along. [Back to the guide](/t/glassbox/guide).
 
+## Lately
+
+The newest changes the agents made to guide pages. Every run, with its reasons, is under Curate runs.
+
+::workshop-lately
+::
+
 ## Memory
 
 Each guide page is named by its title, then its file under `layers/glassbox/content/guide/pages/`. A Lesson teaches one concept, a Walkthrough follows one story across Lessons, and a Subject groups Lessons. A *pin* ties a page to one commit of the code it describes. This *memory* is what each run rereads first and rewrites last.
