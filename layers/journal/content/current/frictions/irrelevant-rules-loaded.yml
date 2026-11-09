@@ -68,3 +68,13 @@ occurrences:
     severity: nit
     description: "Reading ledger YAML and issue docs loaded unrelated rules (tenant-glossary, adr-0022, adr-0029) that needed verdicts."
     solution: "Narrower paths on those rules; see the irrelevant-rules-loaded entry."
+  - session: session_013zxzeRYFqNFGvBn4FsDkTk
+    date: "2026-11-09"
+    severity: nit
+    description: "ADR-0029 and ADR-0030 loaded in a session that touched no ADR or rule, and the log then needed a verdict for each."
+    solution: "Narrow both rules' paths to the files they govern (their current paths unverified this session)."
+  - session: session_013zxzeS36fzX6FB2vAr7yRR
+    date: "2026-11-09"
+    severity: nit
+    description: "Reading Glass Box layer files loaded about ten unrelated rules (mermaid-lanes, mdc-when-to-use, adr-0021, adr-0025, adr-0030) into context."
+    solution: "Narrow the paths of mermaid-lanes.md and mdc-when-to-use.md to files that hold diagrams or content components."

@@ -100,3 +100,8 @@ occurrences:
     severity: minor
     description: "Stated the guide-page list had 73 lines, and about 30 ADR rules, from memory; actual list had 72 lines. Counted only when asked to file the issue."
     solution: "Count with wc or grep -c before stating any number, as CLAUDE.md Verify before you state requires."
+  - session: session_013zxzeSKTBjSfYnUxNHTJw1
+    date: "2026-11-09"
+    severity: moderate
+    description: "My PR body and first log said about 45 pages and five checkers and 16 changed pages; the run entry lists 40 pages, I dispatched six checkers and 17 files changed. I found it only when the owner asked; CLAUDE.md says count every item."
+    solution: "The curate Skill's Land step should say to take page and checker counts from the run entry and git diff --name-only before writing the PR body."

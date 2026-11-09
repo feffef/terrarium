@@ -93,3 +93,8 @@ occurrences:
     severity: minor
     description: "The Skill says to file regression issues for the top three by severity, but almost all 42 still-recurring entries are minor or nit and several were owner-accepted, so the third pick was a judgement call."
     solution: "Restrict regression issues to moderate and above, as issue #2960 proposes."
+  - session: session_013zxzeRSjTLQV8K5UzQtX95
+    date: "2026-11-08"
+    severity: minor
+    description: "SKILL.md §5 step 4 says to review the ledger PR by the simple-change test, but the ledger diff (25 files, 238 lines) fails that test, so I ran code-review with two subagents."
+    solution: "Say in §5 that a ledger PR is exempt from code-review, or that it is reviewed by the ledger content test and gate only."

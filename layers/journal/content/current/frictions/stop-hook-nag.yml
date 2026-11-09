@@ -369,3 +369,23 @@ occurrences:
     severity: nit
     description: "The Stop hook flagged uncommitted changes while the gate runs for those very changes were in progress; I had to inspect the worktrees to show they were not stray."
     solution: "The Stop hook could skip worktrees with a running gate or name which tree is dirty."
+  - session: session_013zxzeRSjTLQV8K5UzQtX95
+    date: "2026-11-08"
+    severity: nit
+    description: "Stop hook asked me to push twice while work was mid-flight; each time a plain push opened no PR, but it interrupted waiting turns."
+    solution: "Already tracked as stop-hook-nag; no new fix."
+  - session: session_013zxzeRwYp54RD4CM5MiabZ
+    date: "2026-11-09"
+    severity: nit
+    description: "Stop hook asked to push while the gate was running; I held off per the rules, then pushed after."
+    solution: "Hook could skip the nudge while a gate log is active."
+  - session: session_013zxzeSKTBjSfYnUxNHTJw1
+    date: "2026-11-09"
+    severity: minor
+    description: "Stop hook feedback from command hook 5 said uncommitted changes five times, plus once for unpushed commits, while subagent writers were still editing; I pushed WIP drafts. The repo wires four Stop hooks, so its origin is outside the repo (unverified). Cost: noise commits on a feature branch, nothing landed unreviewed."
+    solution: "Have that hook stay quiet while a dispatched subagent is running; find which config wires it, since the repo's .claude/settings.json does not."
+  - session: session_013zxzeS36fzX6FB2vAr7yRR
+    date: "2026-11-09"
+    severity: nit
+    description: "Stop hook said there were untracked files and uncommitted changes when git status was empty, and again mid-verification before I could commit."
+    solution: "Have the Stop hook skip files git ignores and wait for an in-flight background run."

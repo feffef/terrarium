@@ -40,3 +40,8 @@ occurrences:
     severity: minor
     description: "No orient output shows which guide file names differ from their titles or how many links use each old address, so I wrote a throwaway bash loop and hand-counted, which led to the wrong counts."
     solution: "Add a section to glassbox-curate orient.ts listing pages whose file name shares no word with the title, with their inbound link counts; a Skill change that waits for the owner's merge."
+  - session: session_013zxzeQaeB8hhL2FFfcQhv7
+    date: "2026-11-08"
+    severity: minor
+    description: "My diff filter grep '^[-+][^-+]' dropped changed bullet lines, which start '- **', so I briefly misjudged two findings as old text"
+    solution: "Filter diffs with '^[-+]' and exclude only the '---'/'+++' headers; caught by re-grepping before acting"

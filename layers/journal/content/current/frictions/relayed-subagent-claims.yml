@@ -155,3 +155,13 @@ occurrences:
     severity: nit
     description: "Review subagents' counts disagreed on the deleted trial's landing SHA (one found different commits via git log -S); I had to trust find-trial-window.ts output over it."
     solution: "Have review briefs paste find-trial-window.ts output so reviewers don't re-derive landing commits."
+  - session: session_013zxzeRL5rU5zS3WRCkH3TE
+    date: "2026-11-08"
+    severity: minor
+    description: "Triage agent cited commit eaa88a95e (a Stop hook about PR subscription) as a likely fix for 2956; it is unrelated, and I had to check the commit titles myself."
+    solution: "Brief triage agents to quote each cited commit's subject so a mismatch shows in the result."
+  - session: session_013zxzeTCierbbAWbnFNcAE5
+    date: "2026-11-09"
+    severity: minor
+    description: "A behaviour subagent quoted a glassbox-curate log line (newest run skipped the cost read) that does not exist; I only caught it by grepping the log before filing."
+    solution: "Briefs should require each quote to carry file:line; the brief.md says to verify, which saved the issue."

@@ -39,3 +39,8 @@ occurrences:
     severity: nit
     description: "A review fix asked for an ADR chip that the page test refuses because a linked Lesson already cites it; the reviewer brief lacks that rule"
     solution: "The rule is in layers/glassbox/GLOSSARY.md:92 and enforced by glassbox-pages.spec.ts:361; step 9's review addendum should have reviewers run that test on proposed fixes"
+  - session: session_013zxzeRGhhzxkXgfdpEX9js
+    date: "2026-11-07"
+    severity: minor
+    description: "A retitle to Colour and motion preferences was one character over the 28-character title cap; validate:content passed and only the vitest page spec failed, though the Skill names validate:content as the fast loop."
+    solution: "Run the title and description length check inside validate:content, or say in the Skill that it does not; page checks are outside a curate run's remit, so file an issue."

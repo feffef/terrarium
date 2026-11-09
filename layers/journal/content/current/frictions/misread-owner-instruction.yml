@@ -40,3 +40,13 @@ occurrences:
     severity: minor
     description: "My first guide-pages proposal cut the first paragraph, which the owner calls essential; I had weighted run reports over the design intent"
     solution: "Ask the owner which part of a section serves which decision before proposing cuts to it"
+  - session: session_013zxzeRL5rU5zS3WRCkH3TE
+    date: "2026-11-08"
+    severity: moderate
+    description: "Offered Q2 option 2a as sharpening the overview line only, which narrowed the owner's intent (make the whole read-first section more encouraging); they picked it on my framing and corrected me after the merge."
+    solution: "Before grilling, state the premise in the owner's terms and ask what scope they mean; do not fold a scope limit into an option label."
+  - session: session_013zxzeRB6ciegpxcRDfedSF
+    date: "2026-11-09"
+    severity: minor
+    description: "Took the option \"Drop the intro line\" literally and deleted the wording the user wanted kept; the user said so and I redid it as a fold into the blurb."
+    solution: "When an option removes user-visible text, say where its wording goes before acting, and ask if that is unclear."

@@ -56,3 +56,13 @@ occurrences:
     severity: minor
     description: "Dispatched five claim-check subagents with the literal placeholder @@GROUP@@ in place of the page list; all five stopped immediately and needed resuming."
     solution: "The dispatch-subagents brief checklist already says re-read the brief for unfilled {…}; inline the list when building the brief and grep for placeholders before sending."
+  - session: session_013zxzeRCCqrxVitqSaxJa4K
+    date: "2026-11-07"
+    severity: minor
+    description: "Dispatched eight reviewers asking for one title proposal each, then resumed all eight to ask for ranked alternatives, so every reviewer read its pages and reported twice."
+    solution: "Settle the number of proposals per page before dispatch (dispatch-subagents section 1, lock the shared design axis); skipped because the run began autonomous and ran no grilling."
+  - session: session_013zxzeQaeB8hhL2FFfcQhv7
+    date: "2026-11-08"
+    severity: moderate
+    description: "Fanned out six writer subagents on an untried brief; its grep filter was wrong and its loose licence gave 29 uneven extra lead-in rewrites"
+    solution: "Pilot a fan-out brief on one agent or a cold reviewer first; dispatch-subagents could say so for any brief sent to more than two agents"

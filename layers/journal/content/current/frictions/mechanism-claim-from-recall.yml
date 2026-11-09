@@ -202,3 +202,8 @@ occurrences:
     severity: minor
     description: "The docs build wrote that a session branch reset onto main can be pushed plainly; the friction ledger showed that holds only for a fast-forward. I caught it in my own read before the PR, but the brief had carried the unverified claim."
     solution: "Brief a docs change from the ledger entries' exact conditions, or have the review axis check a new instruction against its cited evidence."
+  - session: session_013zxzeR9Usddfqi4gQ697DR
+    date: "2026-11-09"
+    severity: minor
+    description: "Digest for 2026-11-08 called the concept guide's upkeep job weekly; it runs daily. The writer took the word from session goals, not a source for the cadence."
+    solution: "The digest Skill already says never state how often a job runs; its fact-check should flag any cadence word (weekly, daily) as unverifiable. Other Digests (11-02 to 11-05) use it too."

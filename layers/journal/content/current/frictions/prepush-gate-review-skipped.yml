@@ -138,3 +138,13 @@ occurrences:
     severity: minor
     description: "Skipped code-review though the diff adds a file, so it was not a simple change under pr-workflow; relied on the fact-check."
     solution: "The digest Skill should state whether fact-check substitutes for code-review."
+  - session: session_013zxzeRB6ciegpxcRDfedSF
+    date: "2026-11-09"
+    severity: minor
+    description: "Change was over the 10-line simple limit, so code-review was owed, but I read the diff myself instead of dispatching the review subagents."
+    solution: "Dispatch the two review agents, or state the skip in the PR; the diff was tiny so the risk was low."
+  - session: session_013zxzeRYFqNFGvBn4FsDkTk
+    date: "2026-11-09"
+    severity: moderate
+    description: "Second commit changes the Skill's meaning, so it fails pr-workflow's simple-change test, yet I read the diff myself instead of re-running code-review; disclosed in the PR body."
+    solution: "Re-run code-review on a follow-up that changes meaning, or ask whether the owner accepts the lighter check."

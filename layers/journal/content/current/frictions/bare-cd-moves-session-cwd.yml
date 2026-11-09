@@ -76,3 +76,8 @@ occurrences:
     severity: nit
     description: "Several shell commands failed or ran in the wrong place because the working directory carried between Bash calls after a cd into a worktree (a push by relative path failed)."
     solution: "Use absolute paths with git -C for every worktree command."
+  - session: session_013zxzeRSjTLQV8K5UzQtX95
+    date: "2026-11-08"
+    severity: nit
+    description: "A bare cd into a ledger subfolder moved the session's working directory, which the harness reported two turns later."
+    solution: "Use absolute paths instead of cd, as CLAUDE.md-adjacent docs already advise (bare-cd-moves-session-cwd)."

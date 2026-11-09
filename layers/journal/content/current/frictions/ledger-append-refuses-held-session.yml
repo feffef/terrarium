@@ -41,3 +41,8 @@ occurrences:
     severity: minor
     description: "Survey subagent's own: mistyped 22-character session ids in the append triples and hit the all-or-nothing refusal for sessions already held, costing two reruns."
     solution: "Accept the last four characters of an id and add a dry-run flag to the append script."
+  - session: session_013zxzeRSjTLQV8K5UzQtX95
+    date: "2026-11-08"
+    severity: minor
+    description: "Survey subagent hit ledger-append-refuses-held-session: its single --append call aborted on one held session, so it looped about 36 sequential calls, past the foreground limit, and mistyped four session ids."
+    solution: "Let print-ledger-occurrence.ts --append skip already-held sessions and report them, instead of aborting the whole call."

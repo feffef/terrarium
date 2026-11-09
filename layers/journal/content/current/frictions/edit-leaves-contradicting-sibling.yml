@@ -28,3 +28,13 @@ occurrences:
     severity: minor
     description: "The planning writer linked a work-queue anchor that the git-github writer removed in the same run; only code-review found it."
     solution: "Add to writer-brief: link a section of a page another writer edits this run without an anchor, or ask the coordinator."
+  - session: session_013zxzeRwjiiLkjj6sQ3u49g
+    date: "2026-11-07"
+    severity: minor
+    description: "Did not rekey grades.yml and update.yml page stems after moving pages; their owners' files, so left stale."
+    solution: "Have the Skills tolerate moved stems or give the move a rekey step."
+  - session: session_013zxzeRB6ciegpxcRDfedSF
+    date: "2026-11-09"
+    severity: minor
+    description: "Changed a fact but grepped only code for its other statements, so the stale line in layers/glassbox/GLOSSARY.md surfaced only in code review."
+    solution: "Grep the Tenant glossary and docs for the old fact in the same edit, as CLAUDE.md One home per fact says."

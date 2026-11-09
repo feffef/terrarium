@@ -29,3 +29,8 @@ occurrences:
     severity: minor
     description: "Read docs/agents/github-integration.md with head -80, against CLAUDE.md's read-it-whole rule; a later write trap could have been missed"
     solution: "Read trigger docs whole with the Read tool; it costs a few hundred tokens"
+  - session: session_013zxzeRCCqrxVitqSaxJa4K
+    date: "2026-11-07"
+    severity: minor
+    description: "My reviewer briefs said read each page in full, but several reviewers read through cut or head filters and truncated long lines, so some keeps rest on ledes and headings."
+    solution: "State in the brief that page text must not be filtered or cut, and ask each reviewer to name any page it read only in part."

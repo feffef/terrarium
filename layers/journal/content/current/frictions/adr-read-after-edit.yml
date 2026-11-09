@@ -123,3 +123,13 @@ occurrences:
     severity: minor
     description: "Edited governed Skill, spec and Inventory files before reading ADR-0005, 0015 and 0027; hooks told me to read them afterwards."
     solution: "Read each ADR a rule summary names before the first edit under its paths."
+  - session: session_013zxzeRB6ciegpxcRDfedSF
+    date: "2026-11-09"
+    severity: nit
+    description: "Did not read ADR-0025 before editing app/pages/index.vue; a post-commit hook told me to. The edit was compliant, so no cost."
+    solution: "Load the ADR-0025 rule on read of the file, not only on edit, so it arrives before the edit."
+  - session: session_013zxzeRYFqNFGvBn4FsDkTk
+    date: "2026-11-09"
+    severity: minor
+    description: "Read ADR-0005 and ADR-0027 only after editing the Skill, when the PostToolUse hook prompted; the edit turned out fine."
+    solution: "Read the ADRs a rule names before the first edit of a governed file, or load the rule at read time."

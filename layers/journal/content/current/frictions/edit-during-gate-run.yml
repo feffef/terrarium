@@ -141,3 +141,8 @@ occurrences:
     severity: minor
     description: "Edited the curate Skill while pnpm gate:scoped ran, so the gate aborted and had to run again (pr-workflow: edit nothing while it runs)"
     solution: "Hold new owner requests until the gate finishes, or stop the gate before editing"
+  - session: session_013zxzeRYFqNFGvBn4FsDkTk
+    date: "2026-11-09"
+    severity: minor
+    description: "Committed while the first background gate:scoped run was still going, so it aborted with HEAD and tree changed and was re-run."
+    solution: "Wait for the gate notification before any git command; pr-workflow already says edit nothing while it runs."

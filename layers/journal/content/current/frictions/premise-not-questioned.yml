@@ -48,3 +48,8 @@ occurrences:
     severity: moderate
     description: "Planned and costed a 12-file rename, grepping every link, before checking whether titles were settled; the owner's question about a title consolidation redirected the run."
     solution: "The memory page's good next focus should say titles are not yet reviewed, or the rename lead should wait until they are."
+  - session: session_013zxzeRL5rU5zS3WRCkH3TE
+    date: "2026-11-08"
+    severity: moderate
+    description: "Briefed the build with an unrequested same-length-or-shorter ceiling from ADR-0027 (an add, not a fix), so it cut the overview examples; the owner had to ask why and a restore PR followed."
+    solution: "Brief only the constraints the issue or owner stated; ask before trading existing text for new text, and apply ADR-0027 only when an instruction caused a problem."
