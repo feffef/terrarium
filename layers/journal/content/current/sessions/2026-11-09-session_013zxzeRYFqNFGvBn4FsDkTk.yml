@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRYFqNFGvBn4FsDkTk
 startedAt: 2026-11-09T00:55:35Z
-endedAt: 2026-11-09T01:05:37Z
+endedAt: 2026-11-09T01:17:42Z
 kind: interactive
 goal: Make glassbox-curate scout recent git history for topics worth documenting
 status: completed
 outcome: PR 2991 added a background Scout step to glassbox-curate and was merged
-summary: "The owner asked whether glassbox-curate looks at recent git history for new topics. I read the Skill and orient.ts and answered no: its Gaps step compares the current tree, and orient.ts only logs guide and drafts commits. I then asked three scoping questions (user preference: ask first), and the owner answered: all changes, a subagent that also uses orient.ts, always in the background on sonnet without blocking focus selection, and a window since the last run. Building that was a direct human instruction. I added a Scout step and a Land sentence to the Skill, ran the scoped gate (the first run aborted because I committed during it), and ran code-review with a Standards and a Spec subagent. Their findings were a \"never wait\" vs \"wait now\" contradiction, Scout re-running orient.ts (it rewrites the index files), an unclear window start and some scope creep; I fixed these in a second commit, which I reviewed myself instead of re-running code-review. Opened PR 2991, which says it waits for the owner's merge because it changes a Skill. Opening the PR itself followed ADR-0003 and was agent-initiated. The Stop hook then made me subscribe to PR activity; CI went green and the owner merged the PR. The Scout's cost is not added to the run's reported cost, left open."
+summary: "The owner asked whether glassbox-curate looks at recent git history for new topics. I read the Skill and orient.ts and answered no: its Gaps step compares the current tree, and orient.ts only logs guide and drafts commits. I then asked three scoping questions (user preference: ask first), and the owner answered: all changes, a subagent that also uses orient.ts, always in the background on sonnet without blocking focus selection, and a window since the last run. Building that was a direct human instruction. I added a Scout step and a Land sentence to the Skill, ran the scoped gate (the first run aborted because I committed during it), and ran code-review with a Standards and a Spec subagent. Their findings were a \"never wait\" vs \"wait now\" contradiction, Scout re-running orient.ts (it rewrites the index files), an unclear window start and some scope creep; I fixed these in a second commit, which I reviewed myself instead of re-running code-review. Opened PR 2991, which says it waits for the owner's merge because it changes a Skill. Opening the PR itself followed ADR-0003 and was agent-initiated. The Stop hook then made me subscribe to PR activity; CI went green and the owner merged the PR. A /retro followed, and at the owner's ask I filed issue 2992 to check the Scout's output on 2026-11-12 and logged the retro's findings as frictions. The Scout's cost is not added to the run's reported cost, left open."
 prs:
   - "2991"
 docsRead:
@@ -34,6 +34,12 @@ docsRead:
   - path: .agents/skills/writing-for-agents/SKILL-MECHANICS.md
     reason: only the Standards subagent read it; it reported frontmatter-only, not useful here
     useful: no
+  - path: docs/agents/issue-tracker.md
+    reason: read before filing the issue; said what to write, mark verified versus assumed, and that needs-triage is the label
+    useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: confirmed that a non-triage Skill files issues as needs-triage
+    useful: yes
   - path: .agents/skills/glassbox-curate/scripts/orient.ts
     reason: (no reason given)
   - path: .agents/prune-trials.yml
@@ -49,6 +55,8 @@ skillsUsed:
     reason: PR opened
   - name: log-session
     reason: (no reason given)
+  - name: retro
+    reason: (invoked as a slash command)
 frictions:
   - description: Read ADR-0005 and ADR-0027 only after editing the Skill, when the PostToolUse hook prompted; the edit turned out fine.
     solution: Read the ADRs a rule names before the first edit of a governed file, or load the rule at read time.
@@ -65,23 +73,36 @@ frictions:
   - description: Opened the PR and ran close-session without calling subscribe_pr_activity; the Stop hook had to prompt me (ADR-0003).
     solution: Subscribe in the same step as opening the PR, before close-session.
     severity: minor
-durationSec: 601
+  - description: Shipped the Scout step without being able to run it; whether a sonnet subagent can use the index files and window as written is unproven.
+    solution: Issue 2992 asks for a check of the Scout's memory-page input on 2026-11-12.
+    severity: minor
+  - description: ADR-0029 and ADR-0030 loaded in a session that touched no ADR or rule, and the log then needed a verdict for each.
+    solution: Narrow both rules' paths to the files they govern (their current paths unverified this session).
+    severity: nit
+  - description: code-review has the baseline of code smells pasted in full for a prose-only Skill diff; the Standards agent reported none applied.
+    solution: Have code-review skip the smell baseline when the diff holds no code.
+    severity: nit
+  - description: pr-workflow does not say whether a follow-up commit that only applies review findings counts as simple, so I guessed and took the lighter check.
+    solution: Say in pr-workflow.md which way a findings-only follow-up goes.
+    severity: minor
+durationSec: 1326
 models:
-  claude-sonnet-5-5: 95
+  claude-sonnet-5-5: 120
 toolCounts:
   Glob: 4
   Grep: 4
-  Read: 7
+  Read: 9
   Skill: 6
-  Bash: 16
-  Edit: 9
+  Bash: 21
+  Edit: 13
   Agent: 2
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   Write: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   ReadNotifications: 3
+  mcp__github__issue_write: 1
 filesEdited:
   - .agents/skills/glassbox-curate/SKILL.md
 rulesLoaded:
@@ -90,6 +111,7 @@ rulesLoaded:
   - .claude/rules/adr-0029.md
   - .claude/rules/adr-0030.md
   - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0022.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -138,19 +160,22 @@ ruleVerdicts:
   - path: .claude/rules/adr-0004-human-merge.md
     reason: Loaded on the Skill edit; I put the waits-for-human-merge line in the PR body, and did not check whether the file is Human-only
     useful: partly
+  - path: .claude/rules/adr-0022.md
+    reason: Loaded when I read the issue docs; about the triage sweep and Trusted issues, not my task, so I did not open the full ADR
+    useful: no
 subagents:
   - type: Explore
     task: Standards review of Skill diff
     durationSec: 30
     toolCalls: 9
     modelCalls: 3
-    tokenShare: 9.7
+    tokenShare: 8
   - type: Explore
     task: Spec review of Skill diff
     durationSec: 31
     toolCalls: 4
     modelCalls: 2
-    tokenShare: 8.2
+    tokenShare: 6.7
 gitBranch: claude/wonderful-feynman-79zm58
 entrypoint: remote
 cliVersion: 2.1.319
