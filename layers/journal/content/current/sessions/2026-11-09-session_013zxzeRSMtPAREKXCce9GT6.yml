@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRSMtPAREKXCce9GT6
 startedAt: 2026-11-09T08:46:14Z
-endedAt: 2026-11-09T08:58:53Z
+endedAt: 2026-11-09T09:02:00Z
 kind: autonomous
 goal: "Scheduled curate run on the Glass Box guide: Hooks pages"
-status: in-review
-outcome: "PR #3002 open, gate green; fixes to four hooks and subagent pages and the memory page, awaiting CI and merge"
-summary: "Scheduled /glassbox-curate run, fully agent-initiated; no human prompted it. I oriented, started the Scout (it found no new topic since the last run), and chose the Hooks Subject from the memory page's top lead. Four fresh readers read the pages as plain text; most of what they flagged was link-stripping noise from plain.ts, but they confirmed three real things: the trailing || true was never explained on the Claude Code hooks page, Fail open repeated the In Terrarium paragraph, and a claim about subagent payloads was unsourced. An opus writer made the edits, a sonnet claim checker confirmed every changed sentence against settings.json, the Stop scripts and the hooks docs, and code-review (Standards and Spec) caught a full-list wording problem and a sibling page (Subagents) with the same unsourced claim, both fixed. Dropped because a reader raised them and the pages were otherwise sound: restructuring or defining more repo terms. cost_usd was not available to this session (no get_session tool), so the PR says unreported. Left open on the memory page: two remaining repeats on the Claude Code hooks and Session transcripts pages. PR is not a Human-only or Lesson/Subject/Skill change, so it self-merges once CI is green."
+status: completed
+outcome: "PR #3002 merged after green CI; hooks, subagent and memory-page fixes landed"
+summary: "Scheduled /glassbox-curate run, fully agent-initiated; no human prompted it. I oriented, started the Scout (it found no new topic since the last run), and chose the Hooks Subject from the memory page's top lead. Four fresh readers read the pages as plain text; most of what they flagged was link-stripping noise from plain.ts, but they confirmed three real things: the trailing || true was never explained on the Claude Code hooks page, Fail open repeated the In Terrarium paragraph, and a claim about subagent payloads was unsourced. An opus writer made the edits, a sonnet claim checker confirmed every changed sentence against settings.json, the Stop scripts and the hooks docs, and code-review (Standards and Spec) caught a full-list wording problem and a sibling page (Subagents) with the same unsourced claim, both fixed. Dropped because a reader raised them and the pages were otherwise sound: restructuring or defining more repo terms. cost_usd was not available to this session (no get_session tool), so the PR says unreported. Left open on the memory page: two remaining repeats on the Claude Code hooks and Session transcripts pages. PR is not a Human-only or Lesson/Subject/Skill change, so I merged it myself once CI was green."
 prs:
   - "3002"
 docsRead:
@@ -90,11 +90,14 @@ frictions:
   - description: get_session was not available to this session, so the Skill's cost_usd budget check and the PR's cost line could not be filled.
     solution: The curate Skill could say what to do when get_session is absent; the run reported cost as unreported.
     severity: minor
-durationSec: 759
+  - description: Ran plain.ts with a bare file stem for four pages and got 'no guide page', then reran with the folder-qualified stem.
+    solution: plain.ts could accept the bare stem or its usage line could show a folder-qualified example.
+    severity: nit
+durationSec: 946
 models:
-  claude-sonnet-5-5: 137
+  claude-sonnet-5-5: 151
 toolCounts:
-  Bash: 25
+  Bash: 29
   Read: 18
   Agent: 11
   WebFetch: 1
@@ -104,11 +107,12 @@ toolCounts:
   mcp__claude-code-remote__unsubscribe_pr_activity: 1
   mcp__github__get_me: 1
   ToolSearch: 2
-  Skill: 3
+  Skill: 4
   TaskStop: 1
-  ReadNotifications: 1
+  ReadNotifications: 3
   mcp__github__create_pull_request: 1
   mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/glassbox/content/workshop/runs/2026-11-09T0846.yml
   - layers/glassbox/content/guide/pages/hooks/10.hooks.md
@@ -183,61 +187,61 @@ subagents:
     durationSec: 23
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 5.4
+    tokenShare: 4.8
   - task: "Fresh reader: Claude Code hooks"
     model: sonnet
     durationSec: 11
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 1.4
+    tokenShare: 1.2
   - task: "Fresh reader: Blocking hooks"
     model: sonnet
     durationSec: 11
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 1.4
+    tokenShare: 1.3
   - task: "Fresh reader: Hook-added context"
     model: sonnet
     durationSec: 11
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 1.4
+    tokenShare: 1.2
   - task: "Fresh reader: Session transcripts"
     model: sonnet
     durationSec: 11
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 1.4
+    tokenShare: 1.2
   - task: Write Hooks Subject fixes
     model: opus
     durationSec: 136
     toolCalls: 23
     modelCalls: 12
-    tokenShare: 8.1
+    tokenShare: 7.2
   - task: Claim-check Hooks edits
     model: sonnet
     durationSec: 61
     toolCalls: 10
     modelCalls: 5
-    tokenShare: 3.2
+    tokenShare: 2.8
   - task: Fresh reader re-read hooks
     model: sonnet
     durationSec: 6
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 1.4
+    tokenShare: 1.3
   - task: Standards review of Hooks edits
     model: sonnet
     durationSec: 35
     toolCalls: 8
     modelCalls: 4
-    tokenShare: 4.5
+    tokenShare: 4
   - task: Spec review of Hooks edits
     model: sonnet
     durationSec: 27
     toolCalls: 11
     modelCalls: 5
-    tokenShare: 4.3
+    tokenShare: 3.9
 gitBranch: claude/compassionate-bardeen-g8jvi1
 entrypoint: remote_trigger
 cliVersion: 2.1.319
