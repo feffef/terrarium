@@ -67,7 +67,7 @@ One idea runs through the design: **decide it at build time**. Every site, page 
 
 **Guidance for agents:**
 
-- :file[CLAUDE.md], the one file every session reads first. :lessons[[CLAUDE.md](/t/glassbox/guide/claude-code/claude-md)]
+- :file[CLAUDE.md], the file every session reads at its start. :lessons[[CLAUDE.md](/t/glassbox/guide/claude-code/claude-md)]
 - :term[Rules]{id="rule"} in :file[.claude/rules/]; most load only with the files they are about. :lessons[[Path-specific rules](/t/glassbox/guide/claude-code/path-scoped-rules)]
 - Decision records in :file[docs/adr/], which say why things are the way they are. :lessons[[Decision records](/t/glassbox/guide/terrarium-practice/decision-records)]
 - :term[Skills]{id="skill"} in :file[.agents/skills/], step-by-step playbooks for one kind of task, some installed from elsewhere and kept unchanged. :lessons[[Claude Code skills](/t/glassbox/guide/claude-code/skills) · [Installed skills](/t/glassbox/guide/skill-pack/skill-packs)]
