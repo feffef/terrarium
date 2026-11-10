@@ -23,37 +23,6 @@
 #            topic's tools correctly.
 trials:
   - problem: >
-      Doc comments in `scripts/hooks/github-provenance-guard.ts` (-53 net, from
-      `git diff --numstat`: 46 added, 99 deleted; code unchanged, this entry
-      not counted): the per-function recaps and incident tags ("not dead code
-      despite #784", "never throws", the field-by-field restatements) cut; the
-      header keeps the rule, its five failed-prose issues, the finding kinds
-      and the fail-open list. Chosen after the search subagent covered the
-      instruction corpus, guard headers, the tracker and the ledger: the
-      session-id rule failed as prose five times (#387, #605, #628, #723, #788;
-      ledger `session-id-hand-typed`, 10 occurrences) and this wired guard holds
-      it, and its 124 comment lines are the largest single home. The deny
-      messages, `adr-0017.md` and `guards.md` stay. Runners-up:
-      `loop-only-tool-guard.ts` comments (#814) and the close-session prose
-      (#2521, #2772). Same run judged and deleted the CLAUDE.md git-bullet
-      trial (landed ae537404): 36 sessions ended since, no major or blocker
-      Friction traces to it; binding-docs-skipped 0/148 -> 0/27. The one
-      moderate git hit (a review subagent ran `git checkout --detach`) was not
-      the cut command list; no issue.
-    territory:
-      paths:
-        - "scripts/hooks/github-provenance-guard.ts: comments"
-      keywords:
-        - provenance guard
-    opened: 2026-11-06
-    proven: true
-    check: >
-      Damage is a major or blocker Friction where a session edited the guard
-      wrongly, or a guard change regressed (a compliant post denied or a
-      missing header let through), and a cut comment would have prevented it.
-      NOT damage: sessions hitting the guard's deny (`session-id-hand-typed`
-      at its standing rate); the code and deny messages are unchanged.
-  - problem: >
       The `close-session` invocation restated in six Skills and
       `pr-workflow.md` (-19 net, from `git diff --numstat` against the parent:
       7 added, 26 deleted; this entry not counted): the end-of-Skill "invoke
@@ -153,3 +122,34 @@ trials:
       edited during a gate run, because a cut line no longer said so. Compare
       `prepush-gate-review-skipped` and `edit-during-gate-run` shares with
       `friction-rates.ts`. NOT damage: those entries at their standing rates.
+  - problem: >
+      The git-conventions.md chaining rules (+3 net, from
+      `git diff --numstat`: 12 added, 9 deleted; this entry not counted):
+      "Don't chain git past a step that can fail silently" reworded to the goal
+      (a failed step never lets a later git command run on the wrong state)
+      plus two bullets; every rule kept, widened to add and amend, and the
+      `tail` exit-code trap added. Chosen after the search subagent covered
+      CLAUDE.md, `docs/agents/`, rules, Skills, guard headers, the tracker and
+      the ledger: the rule failed as prose twice (#2359, #2407, both doc-only
+      narrowings; ledger `push-chained-to-gate-run`, 7 occurrences, #2752 open;
+      `chained-git-step-fails-silently`, 4 occurrences) and nothing wired holds
+      it, so the cut is deliberately small. Runners-up: CLAUDE.md "Question the
+      premise" (63 words; owner closed #2997 with no change) and "One home per
+      fact" (#2753, #3025). Same run judged and deleted the provenance-guard
+      comments trial (landed e21985af): 74 sessions ended since, no major or
+      blocker Friction traces to it, the guard file is unchanged, and
+      `session-id-hand-typed` 9/121 -> 5/63 (7.4% -> 7.9%); no issue.
+    territory:
+      paths:
+        - "docs/agents/git-conventions.md: 'Keep git apart from steps that can fail'"
+      keywords:
+        - chained git
+        - gate exit status
+    opened: 2026-11-10
+    proven: true
+    check: >
+      Damage is a major or blocker Friction where a push or commit ran on a
+      wrong or failed state because the cut wording no longer said so. Compare
+      `push-chained-to-gate-run` and `chained-git-step-fails-silently` shares
+      with `friction-rates.ts`; a clear rise in either is also damage. NOT
+      damage: those entries at their standing rates (nits already recur).
