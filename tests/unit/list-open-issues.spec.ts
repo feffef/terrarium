@@ -3,7 +3,7 @@
 // shell is a thin wrapper over these, exercised by running the script
 // directly (`tsx scripts/github/list-open-issues.ts`).
 import { describe, expect, it } from 'vitest'
-import { openIssues, parseArgs, toOpenIssue, type RawIssueApiRecord } from '../../scripts/github/list-open-issues.ts'
+import { formatOutput, openIssues, parseArgs, toOpenIssue, type RawIssueApiRecord } from '../../scripts/github/list-open-issues.ts'
 
 describe('toOpenIssue()', () => {
   it('maps a plain issue record to an OpenIssue, decoding the title', () => {
@@ -77,5 +77,16 @@ describe('parseArgs()', () => {
   })
   it('rejects a non-positive limit', () => {
     expect(() => parseArgs(['0'])).toThrow('not a positive integer: 0')
+  })
+})
+
+describe('formatOutput()', () => {
+  const issues = [toOpenIssue({ number: 1, title: 'a', labels: [], updated_at: '2026-01-01T00:00:00Z' })!]
+  it('prints only the count and a newline with count', () => {
+    expect(formatOutput(issues, true)).toBe('1\n')
+    expect(formatOutput([], true)).toBe('0\n')
+  })
+  it('prints the JSON list otherwise', () => {
+    expect(formatOutput(issues, false)).toBe(JSON.stringify(issues, null, 2) + '\n')
   })
 })

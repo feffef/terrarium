@@ -131,6 +131,10 @@ export function parseArgs(argv: string[]): { state: IssueState; limit: number; c
   return { state, limit, count }
 }
 
+export function formatOutput(issues: OpenIssue[], count: boolean): string {
+  return (count ? String(issues.length) : JSON.stringify(issues, null, 2)) + '\n'
+}
+
 function main(): void {
   let args: ReturnType<typeof parseArgs>
   try {
@@ -138,8 +142,7 @@ function main(): void {
   } catch (err) {
     fail(err instanceof Error ? err.message : String(err))
   }
-  const issues = listOpenIssues(args.limit, root, args.state)
-  process.stdout.write((args.count ? String(issues.length) : JSON.stringify(issues, null, 2)) + '\n')
+  process.stdout.write(formatOutput(listOpenIssues(args.limit, root, args.state), args.count))
 }
 
 runIfMain(import.meta.url, main)
