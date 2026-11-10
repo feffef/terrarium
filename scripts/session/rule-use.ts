@@ -1,9 +1,9 @@
-// The "what helped" capture (#3009): which rules loaded for each agent, from
-// which file, and which rules and docs the agent said changed or enabled
-// something it did. The InstructionsLoaded hook writes the ledger, the
-// SubagentStart hook gives each subagent the note, and the trace derives the
-// rest at landing. Silence is recorded as silence: an agent that never ran
-// `helped.sh` is `answered: false`, not "nothing helped".
+// The rule-use capture (#3009): which rules loaded for each agent, from which
+// file, and which rules and docs the agent reported as having changed or
+// confirmed something it did. The InstructionsLoaded hook writes the ledger,
+// the SubagentStart hook gives each subagent the note, and the trace derives
+// the rest at landing. Silence is recorded as silence: an agent that never
+// ran `helped.sh` is `answered: false`, not "nothing to report".
 import { appendFileSync, mkdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { ruleValue, type ReportedEntry } from '../../shared/schemas/session.ts'
@@ -70,6 +70,9 @@ export const ruleKey = (path: string) => {
   return at === -1 ? path : path.slice(at)
 }
 
+/** The one test of whether a reported path is a rule, which alone takes a value. */
+export const isRulePath = (path: string) => path.includes('.claude/rules/')
+
 /** A rule named by a path or a bare file name, with or without `.md`, as its
  *  `.claude/rules/` key: both what an agent names and what loaded match on it. */
 export const ruleName = (name: string) => {
@@ -104,15 +107,17 @@ export function reportedNames(commands: string[], rel: (p: string) => string): R
   const names = tokens.flatMap((t, i) => (isRedirect(tokens[i - 1]) ? [] : [t.split(/&?[<>]/)[0]!])).filter((t) => !isNoName(t))
   const entries = new Map<string, ReportedEntry>()
   for (const t of names) {
-    const eq = t.lastIndexOf('=')
-    const name = (eq === -1 ? t : t.slice(0, eq)).replace(/^(rule|doc):/, '')
-    if (!name) continue
-    if (!t.startsWith('rule:') && !name.includes('.claude/rules/')) {
-      entries.set(rel(name), { path: rel(name) })
+    if (!t.startsWith('rule:') && !isRulePath(t)) {
+      // A doc takes no value: drop one given anyway, but keep any other `=` as path.
+      const path = rel(t.replace(/^doc:/, '').replace(/=(changed|confirmed|none|unsure)$/i, ''))
+      if (path) entries.set(path, { path })
       continue
     }
-    const raw = eq === -1 ? undefined : t.slice(eq + 1).toLowerCase()
-    const value = raw === undefined ? undefined : (ruleValue.safeParse(raw).data ?? 'unsure')
+    const eq = t.lastIndexOf('=')
+    const name = (eq === -1 ? t : t.slice(0, eq)).replace(/^rule:/, '').replace(/=+$/, '')
+    if (!name) continue
+    const raw = eq === -1 ? '' : t.slice(eq + 1).toLowerCase()
+    const value = raw ? (ruleValue.safeParse(raw).data ?? 'unsure') : entries.get(ruleName(name))?.value
     entries.set(ruleName(name), value ? { path: ruleName(name), value } : { path: ruleName(name) })
   }
   return [...entries.values()]

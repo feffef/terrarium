@@ -1,5 +1,5 @@
-// SubagentStart hook (#3009): gives every subagent the static "what helped"
-// note, so no brief has to carry the ask. The note's command path is absolute
+// SubagentStart hook (#3009): gives every subagent the static rule-use note,
+// so no brief has to carry the ask. The note's command path is absolute
 // because a worktree agent's cwd is not the main checkout.
 //
 // Usage: tsx scripts/hooks/subagent-note.ts --dry-run

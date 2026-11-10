@@ -284,6 +284,8 @@ describe('derived-only fields cannot be authored', () => {
     expect(ok([{ path: '.claude/rules/adr-0004.md' }])).toBe(false)
     expect(ok([{ path: '.claude/rules/adr-0004.md', value: 'yes' }])).toBe(false)
     expect(ok([{ path: 'docs/agents/pr-workflow.md', value: 'changed' }])).toBe(false)
+    const doc = validateAuthored({ ...base, reported: [{ path: 'adr-0004.md', value: 'changed' }] })
+    if (!doc.ok) expect(doc.errors).toContain('a .claude/rules/ path needs a value')
     const old = validateAuthored({ ...base, helped: [] })
     expect(old.ok).toBe(false)
     if (!old.ok) expect(old.errors).toContain('renamed to reported')

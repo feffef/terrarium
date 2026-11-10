@@ -19,7 +19,7 @@ const bash = (command: string) => ({ type: 'assistant', message: { content: [{ t
 const authored = (extra: Partial<AuthoredScratch> = {}): AuthoredScratch => ({
   session: 'session_01RU', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [], ...extra,
 })
-type Entry = { by: string; answered: boolean; loads: { rule: string; via: string; trigger?: string }[]; reported: { path: string; why?: string }[] }
+type Entry = { by: string; answered: boolean; loads: { rule: string; via: string; trigger?: string }[]; reported: { path: string; value?: string; why?: string }[] }
 const ruleUseOf = (entry: Record<string, unknown>) => entry.ruleUse as Entry[]
 
 describe('ruleUse — the main agent', () => {
@@ -109,6 +109,14 @@ describe('reportedNames() — what a helped.sh call reported', () => {
       { path: 'docs/x.md' },
       { path: '.claude/rules/e.md', value: 'none' },
       { path: '.claude/rules/f=x.md', value: 'unsure' },
+    ])
+  })
+  it('treats an empty value as missing, keeps = in a doc path, and keeps an earlier value on a later bare mention', () => {
+    expect(reportedNames([`${S} rule:x= rule:y==changed doc:docs/a=b.md rule:z=confirmed rule:z`], (p) => p)).toEqual([
+      { path: '.claude/rules/x.md' },
+      { path: '.claude/rules/y.md', value: 'changed' },
+      { path: 'docs/a=b.md' },
+      { path: '.claude/rules/z.md', value: 'confirmed' },
     ])
   })
   it('finds a call inside bash -c or -lc, and after shell flags', () => {

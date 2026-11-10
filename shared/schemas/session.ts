@@ -34,15 +34,14 @@ export type AdrHint = z.infer<typeof adrHint>
 // the InstructionsLoaded ledger when that survived (#3009).
 export const ruleLoad = z.object({ rule: z.string(), via: z.enum(['native', 'hint']), trigger: z.string().optional() })
 export type RuleLoad = z.infer<typeof ruleLoad>
-// A rule or doc an agent reported. Only a rule carries a value: `changed` (it
-// did, avoided or decided something differently), `confirmed` (it matched what
-// it was already doing), `none` or `unsure`; absent when the agent gave none.
+// A rule or doc an agent reported. Only a rule carries a value, absent when the
+// agent gave none; what each value means: the log-session Skill, step 3.
 export const ruleValue = z.enum(['changed', 'confirmed', 'none', 'unsure'])
 export type RuleValue = z.infer<typeof ruleValue>
 export const reportedEntry = z.object({ path: z.string(), value: ruleValue.optional(), why: z.string().optional() })
 export type ReportedEntry = z.infer<typeof reportedEntry>
-// Per agent: what loaded, whether it answered the "what helped" ask, and the
-// rules and docs it named. Unnamed means no claim, not unhelpful (#3009). A
+// Per agent: what loaded, whether it answered the rule-use ask, and the
+// rules and docs it reported. Unnamed means no claim, not unhelpful (#3009). A
 // subagent has an entry when it was asked or answered; the main agent only
 // when it loaded a rule or named something that is not always-loaded.
 export const ruleUseEntry = z.object({

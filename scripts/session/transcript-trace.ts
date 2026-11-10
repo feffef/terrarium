@@ -46,7 +46,7 @@ import {
 } from './shell-reads.ts'
 import { adrDocNumber, adrHintsIn, ruleAdr, ruleBlockFiles, type AdrHintVia } from '../lib/adr-rules.ts'
 import { root, runIfMain } from '../lib/cli.ts'
-import { HELPED_SCRIPT, reportedNames, ruleKey, ruleName, type RuleLoadRow } from './rule-use.ts'
+import { HELPED_SCRIPT, isRulePath, reportedNames, ruleKey, ruleName, type RuleLoadRow } from './rule-use.ts'
 
 /** The one authored-scratch file per container (one session per container in the
  *  remote model). Gitignored — its home is `main`. Single-homed here so its
@@ -899,11 +899,11 @@ export function foldSubagentTrace(
 /** A named rule with no load for that agent keeps its entry, marked; an
  *  always-loaded one is dropped, since loads leave those out (#3009). */
 function markUnloaded(reported: ReportedEntry[], loads: RuleLoad[], global: string[]): ReportedEntry[] {
-  return reported.flatMap((h) => {
-    const path = h.path.includes('.claude/rules/') ? ruleName(h.path) : h.path
+  return reported.flatMap((e) => {
+    const path = isRulePath(e.path) ? ruleName(e.path) : e.path
     if (global.includes(path)) return []
     const loaded = !path.startsWith('.claude/rules/') || loads.some((l) => l.rule === path)
-    return [loaded ? { ...h, path } : { ...h, path, why: h.why ? `${NO_LOAD_WHY} ${h.why}` : NO_LOAD_WHY }]
+    return [loaded ? { ...e, path } : { ...e, path, why: e.why ? `${NO_LOAD_WHY} ${e.why}` : NO_LOAD_WHY }]
   })
 }
 
@@ -966,7 +966,7 @@ function mergeRefs<T extends Record<string, string | undefined>>(
  *  dropped so a minimal session stays clean. */
 export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Record<string, unknown> {
   const editedSet = new Set(trace.filesEdited)
-  // Derived only: what helped goes in `reported`, not a doc's reason (#3009).
+  // Derived only: what changed or confirmed something goes in `reported` (#3009).
   // A rule file is logged as a rule (rulesGlobal/rulesLoaded, ruleUse),
   // even when close-session has the agent re-read it.
   const docsRead = dedup([...trace.filesRead, ...trace.docsReadViaShell])

@@ -63,7 +63,7 @@ import {
 } from './transcript-trace.ts'
 import { isInstructionDoc, type DocLineIndex } from './shell-reads.ts'
 import { fail, flagValue, root, runIfMain } from '../lib/cli.ts'
-import { readRuleLoads, type RuleLoadRow } from './rule-use.ts'
+import { isRulePath, readRuleLoads, type RuleLoadRow } from './rule-use.ts'
 
 /** The `schemaVersion` newly authored logs should carry; evolution policy: ADR-0009. */
 export const CURRENT_SESSIONS_SCHEMA_VERSION = 1
@@ -94,8 +94,8 @@ const authoredScratchSchema = z
     skillsUsed: z.array(z.object({ name: z.string(), reason: z.string() })).optional(),
     // Required like `frictions`: [] means nothing to report, absent means skipped (#3009).
     reported: z.array(
-      reportedEntry.strict().refine((e) => e.path.includes('.claude/rules/') === (e.value !== undefined), {
-        message: 'give a rule a value (changed | confirmed | none | unsure), and a doc none',
+      reportedEntry.strict().refine((e) => isRulePath(e.path) === (e.value !== undefined), {
+        message: 'a .claude/rules/ path needs a value (changed | confirmed | none | unsure); any other path takes none',
       }),
     ),
     frictions: z.array(
@@ -117,8 +117,8 @@ const authoredScratchSchema = z
  *  generic error (issue #1074). */
 const DERIVED_ONLY_FIELDS: Record<string, string> = {
   adrHints: 'derived from the adr-read-hint pointers in the transcript.',
-  docsReadViaShell: 'shell reads fold into docsRead, which is derived; name a doc that helped in reported.',
-  docsRead: 'derived from the transcript; name a doc that helped in reported (#3009).',
+  docsReadViaShell: 'shell reads fold into docsRead, which is derived; list a doc that changed or confirmed something in reported.',
+  docsRead: 'derived from the transcript; list a doc that changed or confirmed something in reported (#3009).',
   helped: 'renamed to reported: give each rule a value, changed | confirmed | none | unsure (#3009).',
   ruleVerdicts: 'replaced by reported: list the rules and docs that changed or confirmed something (#3009).',
 }
