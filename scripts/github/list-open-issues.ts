@@ -28,9 +28,11 @@
 // to look for an already-fixed cause without paging `list_issues` (issue #2877).
 // The file keeps its name because other scripts import its types.
 //
-// Usage:  tsx scripts/github/list-open-issues.ts [N] [--closed]
+// Usage:  tsx scripts/github/list-open-issues.ts [N] [--closed] [--label <name>]
 //   Prints up to N open (or, with --closed, closed) issues (default 50) as
 //   JSON: { number, title, labels, updatedAt }. Newest-updated-first.
+//   --label keeps only issues carrying that label (exact, case-insensitive),
+//   applied before the cap N.
 import { fail, root, runIfMain } from '../lib/cli.ts'
 import { decodeHtmlEntities, listAll, NO_ACCESS_MESSAGE, resolveAccess, type Access } from '../lib/github-client.ts'
 
@@ -77,10 +79,12 @@ export function toOpenIssue(raw: RawIssueApiRecord): OpenIssue | null {
  *  records are re-sorted by their own `updated_at` rather than trusting API
  *  order, since pages arrive one after another rather than as a single global
  *  sort. */
-export function openIssues(records: RawIssueApiRecord[], limit = DEFAULT_LIMIT): OpenIssue[] {
+export function openIssues(records: RawIssueApiRecord[], limit = DEFAULT_LIMIT, label?: string): OpenIssue[] {
+  const want = label?.toLowerCase()
   return records
     .map(toOpenIssue)
     .filter((x): x is OpenIssue => x !== null)
+    .filter((x) => want === undefined || x.labels.some((l) => l.toLowerCase() === want))
     .sort((a, b) => Date.parse(b.updatedAt) - Date.parse(a.updatedAt))
     .slice(0, limit)
 }
@@ -102,14 +106,14 @@ const withCaveat = (err: unknown): Error => {
   return new Error(`${msg}. ${MCP_FALLBACK_CAVEAT}`, { cause: err })
 }
 
-export function listOpenIssues(limit = DEFAULT_LIMIT, cwd = root, state: IssueState = 'open'): OpenIssue[] {
+export function listOpenIssues(limit = DEFAULT_LIMIT, cwd = root, state: IssueState = 'open', label?: string): OpenIssue[] {
   let access: Access
   try {
     access = resolveAccess(cwd)
   } catch (err) {
     throw err instanceof Error && err.message === NO_ACCESS_MESSAGE ? withCaveat(err) : err
   }
-  const list = () => openIssues(listAll<RawIssueApiRecord>(access, 'issues', { state }), limit)
+  const list = () => openIssues(listAll<RawIssueApiRecord>(access, 'issues', { state }), limit, label)
   if (access.strategy === 'gh') return list()
   try {
     return list()
@@ -120,13 +124,26 @@ export function listOpenIssues(limit = DEFAULT_LIMIT, cwd = root, state: IssueSt
 
 // ── CLI ───────────────────────────────────────────────────────────────────────
 
-export function parseArgs(argv: string[]): { state: IssueState; limit: number } {
-  const state: IssueState = argv.includes('--closed') ? 'closed' : 'open'
-  const limitArg = argv.find((a) => a !== '--closed')
-  if (limitArg === undefined) return { state, limit: DEFAULT_LIMIT }
+export function parseArgs(argv: string[]): { state: IssueState; limit: number; label?: string } {
+  let label: string | undefined
+  const rest: string[] = []
+  const queue = [...argv]
+  for (let arg = queue.shift(); arg !== undefined; arg = queue.shift()) {
+    if (arg !== '--label') {
+      rest.push(arg)
+      continue
+    }
+    const value = queue.shift()
+    if (value === undefined || value.startsWith('--')) throw new Error('--label needs a value')
+    label = value
+  }
+  const state: IssueState = rest.includes('--closed') ? 'closed' : 'open'
+  const limitArg = rest.find((a) => a !== '--closed')
+  const extra = label === undefined ? {} : { label }
+  if (limitArg === undefined) return { state, limit: DEFAULT_LIMIT, ...extra }
   const limit = Number(limitArg)
   if (!Number.isInteger(limit) || limit <= 0) throw new Error(`not a positive integer: ${limitArg}`)
-  return { state, limit }
+  return { state, limit, ...extra }
 }
 
 function main(): void {
@@ -136,7 +153,7 @@ function main(): void {
   } catch (err) {
     fail(err instanceof Error ? err.message : String(err))
   }
-  process.stdout.write(JSON.stringify(listOpenIssues(args.limit, root, args.state), null, 2) + '\n')
+  process.stdout.write(JSON.stringify(listOpenIssues(args.limit, root, args.state, args.label), null, 2) + '\n')
 }
 
 runIfMain(import.meta.url, main)

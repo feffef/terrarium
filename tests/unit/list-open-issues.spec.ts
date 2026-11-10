@@ -57,6 +57,23 @@ describe('openIssues()', () => {
   it('defaults to 50 when no limit is given', () => {
     expect(openIssues(records)).toHaveLength(3)
   })
+
+  describe('with a label', () => {
+    const labelled: RawIssueApiRecord[] = [
+      { number: 10, title: 'newest, unlabelled', labels: [], updated_at: '2026-07-11T12:00:00Z' },
+      { number: 11, title: 'bugfix only', labels: [{ name: 'bugfix' }], updated_at: '2026-07-11T11:00:00Z' },
+      { number: 12, title: 'bug', labels: [{ name: 'Bug' }, 'ui'], updated_at: '2026-07-11T10:00:00Z' },
+      { number: 13, title: 'older bug', labels: ['bug'], updated_at: '2026-07-11T09:00:00Z' },
+    ]
+
+    it('matches the label exactly and case-insensitively, never as a substring', () => {
+      expect(openIssues(labelled, 50, 'BUG').map((i) => i.number)).toEqual([12, 13])
+    })
+
+    it('filters before the cap, so a newer unlabelled issue does not use up the limit', () => {
+      expect(openIssues(labelled, 1, 'bug').map((i) => i.number)).toEqual([12])
+    })
+  })
 })
 
 describe('parseArgs()', () => {
@@ -67,6 +84,17 @@ describe('parseArgs()', () => {
     expect(parseArgs(['--closed'])).toEqual({ state: 'closed', limit: 50 })
     expect(parseArgs(['20', '--closed'])).toEqual({ state: 'closed', limit: 20 })
     expect(parseArgs(['--closed', '20'])).toEqual({ state: 'closed', limit: 20 })
+  })
+  it('--label takes its value in any position beside the limit and --closed', () => {
+    const want = { state: 'closed', limit: 20, label: 'bug' }
+    expect(parseArgs(['--label', 'bug', '20', '--closed'])).toEqual(want)
+    expect(parseArgs(['20', '--closed', '--label', 'bug'])).toEqual(want)
+    expect(parseArgs(['--closed', '--label', 'bug', '20'])).toEqual(want)
+    expect(parseArgs(['--label', '20'])).toEqual({ state: 'open', limit: 50, label: '20' })
+  })
+  it('rejects --label without a value', () => {
+    expect(() => parseArgs(['--label'])).toThrow('--label needs a value')
+    expect(() => parseArgs(['--label', '--closed'])).toThrow('--label needs a value')
   })
   it('rejects a non-positive limit', () => {
     expect(() => parseArgs(['0'])).toThrow('not a positive integer: 0')

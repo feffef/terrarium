@@ -84,8 +84,8 @@ Large results overflow your context. Keep them small and read every hit.
 
 - **Recently merged PRs:** `pnpm exec tsx scripts/git/list-recent-prs.ts [N]` reads
   `git log origin/main` (number, title, merge time only; `--diff` adds touched files and first diff lines).
-- **Open (or closed) issues:** `pnpm exec tsx scripts/github/list-open-issues.ts [N] [--closed]`
-  (number, title, labels, updated time). It falls back to `curl` with `GH_TOKEN` /
+- **Open (or closed) issues:** `pnpm exec tsx scripts/github/list-open-issues.ts [N] [--closed] [--label <name>]`
+  (number, title, labels, updated time; `--label` filters before the cap). It falls back to `curl` with `GH_TOKEN` /
   `GITHUB_TOKEN` when `gh` is missing; with neither, use the MCP tools.
 - **An AI comment may claim a triage-label change the issue never got**
   (issue #325). `pnpm exec tsx scripts/github/check-triage-drift.ts [N]` prints such
