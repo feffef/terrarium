@@ -189,8 +189,6 @@ ruleUse:
     reported:
       - path: docs/agents/git-conventions.md
       - path: docs/agents/github-integration.md
-      - path: .claude/rules/tenant-glossary.md
-        value: none
   - by: general-purpose
     subagent: 2
     answered: true
@@ -219,9 +217,9 @@ ruleUse:
         via: hint
     reported:
       - path: .claude/rules/adr-0005.md
-        value: confirmed
+        value: backed
       - path: .claude/rules/tenant-glossary.md
-        value: confirmed
+        value: backed
       - path: docs/agents/github-integration.md
   - by: general-purpose
     subagent: 3
@@ -249,7 +247,7 @@ ruleUse:
         via: hint
     reported:
       - path: .claude/rules/tenant-glossary.md
-        value: confirmed
+        value: backed
       - path: layers/blog/GLOSSARY.md
   - by: general-purpose
     subagent: 4
@@ -328,9 +326,9 @@ ruleUse:
         via: hint
     reported:
       - path: .claude/rules/adr-0012.md
-        value: confirmed
+        value: backed
       - path: .claude/rules/tenant-glossary.md
-        value: confirmed
+        value: backed
   - by: general-purpose
     subagent: 7
     answered: true
@@ -380,7 +378,7 @@ ruleUse:
         via: hint
     reported:
       - path: .claude/rules/adr-0012.md
-        value: confirmed
+        value: backed
       - path: .agents/skills/blog-post/SKILL.md
       - path: .agents/skills/blog-post/personas/kevin.md
 subagents:

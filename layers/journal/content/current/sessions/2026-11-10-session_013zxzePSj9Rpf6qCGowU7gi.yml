@@ -185,7 +185,7 @@ ruleUse:
         why: page shapes for edits
       - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
       - path: .claude/rules/glassbox-content.md
-        value: confirmed
+        value: backed
       - path: docs/agents/pr-workflow.md
   - by: general-purpose
     subagent: 0
@@ -218,7 +218,7 @@ ruleUse:
         via: hint
     reported:
       - path: .claude/rules/glassbox-content.md
-        value: confirmed
+        value: backed
       - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
   - by: general-purpose
     subagent: 1
@@ -251,7 +251,7 @@ ruleUse:
         via: hint
     reported:
       - path: .claude/rules/glassbox-content.md
-        value: confirmed
+        value: backed
       - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
   - by: general-purpose
     subagent: 2
@@ -284,7 +284,7 @@ ruleUse:
         via: hint
     reported:
       - path: .claude/rules/glassbox-content.md
-        value: confirmed
+        value: backed
       - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
   - by: general-purpose
     subagent: 3
@@ -313,7 +313,7 @@ ruleUse:
         trigger: .claude/rules/glassbox-content.md
     reported:
       - path: .claude/rules/glassbox-content.md
-        value: confirmed
+        value: backed
       - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
   - by: general-purpose
     subagent: 4
@@ -346,7 +346,7 @@ ruleUse:
         via: hint
     reported:
       - path: .claude/rules/glassbox-content.md
-        value: confirmed
+        value: backed
       - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
 subagents:
   - type: general-purpose

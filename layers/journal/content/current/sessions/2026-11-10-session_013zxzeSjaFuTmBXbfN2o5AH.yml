@@ -198,9 +198,9 @@ ruleUse:
         trigger: layers/glassbox/content/guide/pages/verification/70.schema-evolution.md
     reported:
       - path: .claude/rules/adr-0004-human-merge.md
-        value: confirmed
+        value: backed
       - path: .claude/rules/glassbox-content.md
-        value: changed
+        value: steered
         why: kept counts and ids out of pages
       - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
         why: writer briefs and page checks
@@ -253,9 +253,9 @@ ruleUse:
         via: hint
     reported:
       - path: .claude/rules/glassbox-content.md
-        value: confirmed
+        value: backed
       - path: .claude/rules/tenant-glossary.md
-        value: confirmed
+        value: backed
       - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
       - path: layers/glassbox/GLOSSARY.md
   - by: general-purpose
@@ -296,9 +296,9 @@ ruleUse:
         trigger: layers/glassbox/content/guide/pages/nuxt-content/50.mdc-components.md
     reported:
       - path: .claude/rules/glassbox-content.md
-        value: confirmed
+        value: backed
       - path: .claude/rules/tenant-glossary.md
-        value: confirmed
+        value: backed
       - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
       - path: layers/glassbox/GLOSSARY.md
       - path: layers/glassbox/page-checks.ts
@@ -354,7 +354,7 @@ ruleUse:
         trigger: layers/glassbox/content/guide/pages/web-standards/10.css-custom-properties.md
     reported:
       - path: .claude/rules/glassbox-content.md
-        value: confirmed
+        value: backed
       - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
       - path: layers/glassbox/GLOSSARY.md
       - path: layers/glassbox/page-checks.ts
@@ -410,11 +410,11 @@ ruleUse:
         trigger: layers/glassbox/content/guide/pages/verification/10.gate.md
     reported:
       - path: .claude/rules/glassbox-content.md
-        value: confirmed
+        value: backed
       - path: .claude/rules/tenant-glossary.md
-        value: confirmed
+        value: backed
       - path: .claude/rules/adr-0004-human-merge.md
-        value: changed
+        value: steered
   - by: general-purpose
     subagent: 18
     answered: true
@@ -440,9 +440,9 @@ ruleUse:
         via: hint
     reported:
       - path: .claude/rules/glassbox-content.md
-        value: confirmed
+        value: backed
       - path: .claude/rules/tenant-glossary.md
-        value: confirmed
+        value: backed
       - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
       - path: layers/glassbox/GLOSSARY.md
       - path: layers/glassbox/page-checks.ts
@@ -509,9 +509,9 @@ ruleUse:
         trigger: layers/glassbox/content/guide/pages/nuxt-vue/10.layers.md
     reported:
       - path: .claude/rules/glassbox-content.md
-        value: confirmed
+        value: backed
       - path: .claude/rules/tenant-glossary.md
-        value: confirmed
+        value: backed
       - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
       - path: layers/glassbox/GLOSSARY.md
   - by: general-purpose
@@ -541,9 +541,9 @@ ruleUse:
         trigger: layers/glassbox/content/guide/pages/nuxt-vue/50.vue-components.md
     reported:
       - path: .claude/rules/glassbox-content.md
-        value: confirmed
+        value: backed
       - path: .claude/rules/tenant-glossary.md
-        value: confirmed
+        value: backed
       - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
       - path: layers/glassbox/GLOSSARY.md
       - path: layers/glassbox/page-checks.ts
@@ -559,10 +559,7 @@ ruleUse:
         via: hint
     reported:
       - path: .claude/rules/glassbox-content.md
-        value: confirmed
-      - path: .claude/rules/tenant-layers.md
-        value: none
-        why: (no load recorded)
+        value: backed
   - by: general-purpose
     subagent: 26
     answered: true
@@ -583,7 +580,7 @@ ruleUse:
         via: hint
     reported:
       - path: .claude/rules/glassbox-content.md
-        value: confirmed
+        value: backed
   - by: general-purpose
     subagent: 27
     answered: true
@@ -604,7 +601,7 @@ ruleUse:
         via: hint
     reported:
       - path: .claude/rules/glassbox-content.md
-        value: confirmed
+        value: backed
       - path: .agents/skills/glassbox-curate/SKILL.md
 subagents:
   - task: Scout new undocumented topics

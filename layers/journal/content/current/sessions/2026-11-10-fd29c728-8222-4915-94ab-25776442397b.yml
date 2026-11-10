@@ -104,10 +104,10 @@ ruleUse:
       - path: docs/agents/github-integration.md
       - path: docs/agents/environment-caveats.md
       - path: .claude/rules/adr-0011.md
-        value: confirmed
+        value: backed
         why: failed build waits for the next commit
       - path: .claude/rules/adr-0004-human-merge.md
-        value: confirmed
+        value: backed
         why: deploy/README.md not Human-only, so self-merged
       - path: docs/agents/pr-workflow.md
       - path: docs/adr/0011-poc-self-updating-deploy-container.md

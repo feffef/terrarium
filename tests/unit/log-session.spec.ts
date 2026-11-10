@@ -280,11 +280,12 @@ describe('derived-only fields cannot be authored', () => {
   it('requires a value on a reported rule, refuses one on a doc, and names the old helped key', () => {
     const base = { session: 'session_01A', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }
     const ok = (reported: unknown[]) => validateAuthored({ ...base, reported }).ok
-    expect(ok([{ path: '.claude/rules/adr-0004.md', value: 'confirmed', why: 'gate first' }])).toBe(true)
+    expect(ok([{ path: '.claude/rules/adr-0004.md', value: 'steered', why: 'gate first' }])).toBe(true)
     expect(ok([{ path: '.claude/rules/adr-0004.md' }])).toBe(false)
     expect(ok([{ path: '.claude/rules/adr-0004.md', value: 'yes' }])).toBe(false)
-    expect(ok([{ path: 'docs/agents/pr-workflow.md', value: 'changed' }])).toBe(false)
-    const doc = validateAuthored({ ...base, reported: [{ path: 'adr-0004.md', value: 'changed' }] })
+    expect(ok([{ path: '.claude/rules/adr-0004.md', value: 'confirmed' }])).toBe(false)
+    expect(ok([{ path: 'docs/agents/pr-workflow.md', value: 'backed' }])).toBe(false)
+    const doc = validateAuthored({ ...base, reported: [{ path: 'adr-0004.md', value: 'backed' }] })
     if (!doc.ok) expect(doc.errors).toContain('a .claude/rules/ path needs a value')
     const old = validateAuthored({ ...base, helped: [] })
     expect(old.ok).toBe(false)
@@ -381,22 +382,25 @@ describe('reportReads (the names reported is picked from)', () => {
     const fixture = withRule(store([['cat GLOSSARY.md', FIXTURE_DOCS['GLOSSARY.md']!]], [guards]), 'adr-0012.md')
     withRule(fixture, 'adr-0099.md', 'session/subagents')
     const out = run(fixture)
-    expect(out.filter((l) => l.startsWith('    '))).toEqual(['    .claude/rules/adr-0012.md', '    GLOSSARY.md'])
+    expect(out.filter((l) => /^ {4}[^\s(]\S*$/.test(l))).toEqual(['    .claude/rules/adr-0012.md', '    GLOSSARY.md'])
     expect(out.join('\n')).not.toMatch(/verdict|useful/)
   })
 
   it('lists a doc both it and a subagent read, and a Read-tool doc', () => {
     const ctx: Cmd = ['cat GLOSSARY.md', FIXTURE_DOCS['GLOSSARY.md']!]
     const out = run(store([ctx, { read: 'docs/agents/guards.md' }], [ctx]))
-    expect(out.filter((l) => l.startsWith('    '))).toEqual(['    docs/agents/guards.md', '    GLOSSARY.md'])
+    expect(out.filter((l) => /^ {4}[^\s(]\S*$/.test(l))).toEqual(['    docs/agents/guards.md', '    GLOSSARY.md'])
   })
 
-  it('leaves out the always-loaded rules', () => {
+  it('lists the always-loaded rules, marked, with what each value means', () => {
     const fixture = store(['git status'])
     const dir = join(fixture.home, '.claude', 'projects', fixture.root.replace(/[/.]/g, '-'))
     const start = { type: 'attachment', attachment: { type: 'instructions', files: [{ path: join(fixture.root, '.claude/rules/adr-0003.md') }] } }
     writeFileSync(join(dir, 'session.jsonl'), `${readFileSync(join(dir, 'session.jsonl'), 'utf8')}\n${JSON.stringify(start)}`)
-    expect(run(fixture)).toEqual([])
+    const out = run(fixture).join('\n')
+    expect(out).toContain('    .claude/rules/adr-0003.md (loaded at start)')
+    expect(out).toContain('  steered  you did')
+    expect(out).toContain('  backed   it matched')
   })
 
   it('caps the near-miss list rather than burying the detected paths', () => {

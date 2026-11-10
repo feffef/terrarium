@@ -104,9 +104,9 @@ ruleUse:
         via: hint
     reported:
       - path: .claude/rules/adr-0027.md
-        value: confirmed
+        value: backed
       - path: .claude/rules/adr-0004-human-merge.md
-        value: confirmed
+        value: backed
         why: checked my paths were not on its list
       - path: docs/agents/pr-workflow.md
       - path: docs/agents/git-conventions.md
@@ -148,9 +148,7 @@ ruleUse:
         via: hint
     reported:
       - path: .claude/rules/adr-0027.md
-        value: confirmed
-      - path: .claude/rules/adr-0030.md
-        value: none
+        value: backed
   - by: general-purpose
     subagent: 3
     answered: true
@@ -169,7 +167,7 @@ ruleUse:
         trigger: .agents/skills/prune-trial/SKILL.md
     reported:
       - path: .claude/rules/adr-0027.md
-        value: confirmed
+        value: backed
 subagents:
   - type: general-purpose
     task: Search for failed-prose rule

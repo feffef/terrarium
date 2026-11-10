@@ -113,13 +113,13 @@ ruleUse:
         via: hint
     reported:
       - path: .claude/rules/data-shapes.md
-        value: changed
+        value: steered
         why: asked the owner before adding the field
       - path: .claude/rules/adr-0004-human-merge.md
-        value: changed
+        value: steered
         why: PR marked as waiting for human merge
       - path: .claude/rules/tenant-layers.md
-        value: confirmed
+        value: backed
       - path: docs/agents/pr-workflow.md
       - path: docs/agents/git-conventions.md
       - path: docs/agents/github-integration.md
@@ -143,12 +143,12 @@ ruleUse:
         via: hint
     reported:
       - path: .claude/rules/data-shapes.md
-        value: changed
+        value: steered
         why: (no load recorded)
       - path: .claude/rules/adr-0004-human-merge.md
-        value: changed
+        value: steered
       - path: .claude/rules/tenant-layers.md
-        value: confirmed
+        value: backed
         why: (no load recorded)
   - by: general-purpose
     subagent: 1
@@ -160,9 +160,7 @@ ruleUse:
         via: hint
       - rule: .claude/rules/data-shapes.md
         via: hint
-    reported:
-      - path: .claude/rules/data-shapes.md
-        value: none
+    reported: []
 subagents:
   - type: general-purpose
     task: Standards review of diff

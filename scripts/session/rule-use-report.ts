@@ -22,12 +22,13 @@ export interface RuleRow {
   loads: number
   /** Loads by agents that answered; the shares' denominator. */
   answeringLoads: number
-  changed: number
-  changedOrConfirmed: number
-  none: number
+  steered: number
+  backed: number
   enoughData: boolean
+  start: number
   native: number
   hint: number
+  read: number
   /** Native loads by the file that triggered them. */
   triggers: Record<string, number>
 }
@@ -37,10 +38,9 @@ export interface RuleUseReport {
   coverage: { logs: number; withRuleUse: number }
   answered: Record<string, { entries: number; answered: number }>
   rules: RuleRow[]
-  via: { native: number; hint: number }
-  /** `unsure` includes unknown values the writer coerced to it; an unanswered
-   *  subagent may never have been asked (its loads still count, #3019). */
-  quality: { noLoadRecorded: number; unsure: number; unansweredSubagents: number }
+  via: { start: number; native: number; hint: number; read: number }
+  /** An unanswered subagent may never have been asked (its loads still count, #3019). */
+  quality: { noLoadRecorded: number; unansweredSubagents: number }
 }
 
 const share = (n: number, of: number) => (of ? Math.round((1000 * n) / of) / 1000 : 0)
@@ -50,19 +50,16 @@ export function ruleUseReport(logs: SessionLog[], since: number): RuleUseReport 
   const entries = inWindow.flatMap(({ data }) => (data.ruleUse ?? []) as RuleUseEntry[])
   const answered: RuleUseReport['answered'] = {}
   const rows = new Map<string, RuleRow & { values: Record<string, number> }>()
-  const via = { native: 0, hint: 0 }
-  const quality = { noLoadRecorded: 0, unsure: 0, unansweredSubagents: 0 }
+  const via = { start: 0, native: 0, hint: 0, read: 0 }
+  const quality = { noLoadRecorded: 0, unansweredSubagents: 0 }
   for (const e of entries) {
     const a = (answered[e.by] ??= { entries: 0, answered: 0 })
     a.entries++
     if (e.answered) a.answered++
     else if (e.by !== 'main') quality.unansweredSubagents++
-    for (const r of e.reported) {
-      if (r.why?.startsWith(NO_LOAD_WHY)) quality.noLoadRecorded++
-      if (r.value === 'unsure') quality.unsure++
-    }
+    for (const r of e.reported) if (r.why?.startsWith(NO_LOAD_WHY)) quality.noLoadRecorded++
     for (const l of e.loads) {
-      const row = rows.get(l.rule) ?? { rule: l.rule, loads: 0, answeringLoads: 0, changed: 0, changedOrConfirmed: 0, none: 0, enoughData: false, native: 0, hint: 0, triggers: {}, values: {} }
+      const row = rows.get(l.rule) ?? { rule: l.rule, loads: 0, answeringLoads: 0, steered: 0, backed: 0, enoughData: false, start: 0, native: 0, hint: 0, read: 0, triggers: {}, values: {} }
       rows.set(l.rule, row)
       row.loads++
       row[l.via]++
@@ -77,9 +74,8 @@ export function ruleUseReport(logs: SessionLog[], since: number): RuleUseReport 
   }
   const rules = [...rows.values()].map(({ values, ...row }) => ({
     ...row,
-    changed: share(values.changed ?? 0, row.answeringLoads),
-    changedOrConfirmed: share((values.changed ?? 0) + (values.confirmed ?? 0), row.answeringLoads),
-    none: share(values.none ?? 0, row.answeringLoads),
+    steered: share(values.steered ?? 0, row.answeringLoads),
+    backed: share(values.backed ?? 0, row.answeringLoads),
     enoughData: row.answeringLoads >= ENOUGH_DATA,
   })).sort((a, b) => b.loads - a.loads || a.rule.localeCompare(b.rule))
   return {
@@ -106,13 +102,13 @@ export function renderReport(r: RuleUseReport): string {
     ...r.rules.flatMap((row) => [
       `  ${row.rule}: ${row.loads} loads, ${row.answeringLoads} answering — ` +
         (row.enoughData
-          ? `changed ${pct(row.changed)}, changed or confirmed ${pct(row.changedOrConfirmed)}, none ${pct(row.none)}`
+          ? `steered ${pct(row.steered)}, backed ${pct(row.backed)}`
           : `not enough data (under ${ENOUGH_DATA})`),
-      `    native ${row.native}, hint ${row.hint}${Object.keys(row.triggers).length ? `; triggers: ${Object.entries(row.triggers).map(([t, n]) => `${t} ${n}`).join(', ')}` : ''}`,
+      `    start ${row.start}, native ${row.native}, hint ${row.hint}, read ${row.read}${Object.keys(row.triggers).length ? `; triggers: ${Object.entries(row.triggers).map(([t, n]) => `${t} ${n}`).join(', ')}` : ''}`,
     ]),
     '',
-    `Loads by via: native ${r.via.native}, hint ${r.via.hint}`,
-    `Data quality: ${r.quality.noLoadRecorded} reported with no load recorded, ${r.quality.unsure} unsure (includes coerced unknown values), ${r.quality.unansweredSubagents} subagent entries unanswered`,
+    `Loads by via: start ${r.via.start}, native ${r.via.native}, hint ${r.via.hint}, read ${r.via.read}`,
+    `Data quality: ${r.quality.noLoadRecorded} reported with no load recorded, ${r.quality.unansweredSubagents} subagent entries unanswered`,
   ]
   return `${lines.join('\n')}\n`
 }

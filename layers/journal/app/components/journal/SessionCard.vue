@@ -32,6 +32,10 @@ const prParts = computed(() => ({
   rest: Math.max(0, card.prs.length - PR_SUB_MAX),
 }))
 const NO_VERDICT = 'no verdict provided'
+const ruleUseCount = computed(() => {
+  const u = card.ruleUse
+  return u ? new Set([...u.main.rules, ...u.subagents.rules].map((r) => r.path)).size : 0
+})
 const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conjunction' }).format(
   FOLDED_TRACE_FIELDS.map((f) => f.label),
 )
@@ -122,7 +126,7 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
           <!-- Mechanical trace — verbose, transcript-derived lists. Tucked behind
                individual disclosures so they inform without swamping the narrative. -->
           <div
-            v-if="card.docsRead.length || card.docsReadViaShell.length || card.filesEdited.length || card.rules.length || card.tools.length"
+            v-if="card.docsRead.length || card.docsReadViaShell.length || card.filesEdited.length || card.rules.length || card.ruleUse || card.tools.length"
             class="trace-group"
           >
             <details v-if="card.docsRead.length" class="trace">
@@ -131,9 +135,11 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
                 <li v-for="d in card.docsRead" :key="d.path">
                   <div class="entry-head">
                     <code>{{ d.path }}</code><span v-if="d.useful" class="useful" :data-useful="d.useful">useful: {{ d.useful }}</span
-                    ><span v-if="d.viaSubagent" class="via">via subagent<template v-if="d.unknown"> · {{ NO_VERDICT }}</template></span>
+                    ><span v-if="d.reportedBy" class="via">{{ d.reportedBy }}</span
+                    ><span v-else-if="d.viaSubagent" class="via">via subagent<template v-if="d.unknown"> · {{ NO_VERDICT }}</template></span>
                   </div>
                   <div v-if="d.reason !== DERIVED_REASON" class="entry-reason">{{ d.reason }}</div>
+                  <div v-for="w in d.whys" :key="w" class="entry-reason">{{ w }}</div>
                 </li>
               </ul>
             </details>
@@ -153,7 +159,44 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
                 <li v-for="f in card.filesEdited" :key="f"><code>{{ f }}</code></li>
               </ul>
             </details>
-            <details v-if="card.rules.length" class="trace">
+            <details v-if="card.ruleUse" class="trace">
+              <summary>Rules loaded <span class="n">{{ ruleUseCount }}</span></summary>
+              <h4 class="rule-group">Main session</h4>
+              <p v-if="card.ruleUse.main.answered === false" class="subnote">Didn't answer the rule-use question.</p>
+              <ul>
+                <li v-for="r in card.ruleUse.main.rules" :key="r.path">
+                  <div class="entry-head">
+                    <span :title="r.hover">{{ r.title ?? r.path }}</span
+                    ><span v-if="r.value" class="useful" :data-value="r.value">{{ r.value }}</span
+                    ><span v-if="r.alwaysLoaded" class="always">always loaded</span
+                    ><span v-if="r.followedUp" class="followed"> — full ADR read</span>
+                  </div>
+                  <div v-for="w in r.whys" :key="w" class="entry-reason">{{ w }}</div>
+                </li>
+              </ul>
+              <template v-if="card.ruleUse.subagents.total">
+                <h4 class="rule-group">
+                  Subagents <span class="n">{{ card.ruleUse.subagents.total }}</span
+                  ><span v-if="card.ruleUse.subagents.unanswered" class="via"
+                    >{{ card.ruleUse.subagents.unanswered }} of {{ card.ruleUse.subagents.total }} didn't answer</span
+                  >
+                </h4>
+                <ul>
+                  <li v-for="r in card.ruleUse.subagents.rules" :key="r.path">
+                    <div class="entry-head">
+                      <span :title="r.hover">{{ r.title ?? r.path }}</span
+                      ><span v-if="r.alwaysLoaded" class="always">always loaded</span
+                      ><span class="via">{{ r.loadedBy ? `loaded by ${r.loadedBy}` : 'no load recorded' }}</span
+                      ><span v-for="v in r.values" :key="v.value" class="useful" :data-value="v.value" :title="v.hover"
+                        >{{ v.value }} {{ v.n }} · {{ v.percent }}%</span
+                      >
+                    </div>
+                    <div v-for="w in r.whys" :key="w" class="entry-reason">{{ w }}</div>
+                  </li>
+                </ul>
+              </template>
+            </details>
+            <details v-else-if="card.rules.length" class="trace">
               <summary>Rules loaded <span class="n">{{ card.rules.length }}</span></summary>
               <ul>
                 <li v-for="(r, i) in card.rules" :key="i">
@@ -400,6 +443,10 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
 .trace .useful[data-useful='yes'] { color: var(--jd-accent); }
 .trace .useful[data-useful='partly'] { color: var(--jd-sev-minor); }
 .trace .useful[data-useful='no'] { color: var(--jd-sev-major); }
+.trace .useful[data-value='steered'] { color: var(--jd-accent); }
+.trace .useful[data-value='backed'] { color: var(--jd-ink); }
+.trace .rule-group { margin: 0.5rem 0.75rem 0.2rem; font-family: var(--jd-mono); font-size: 0.68rem; font-weight: 400; letter-spacing: 0.07em; text-transform: uppercase; color: var(--jd-faint); }
+.trace .rule-group + .subnote { margin: 0 0.75rem 0.3rem; }
 .tools { display: flex; flex-wrap: wrap; gap: 0.35rem; padding: 0 0.7rem 0.6rem; }
 .tool {
   display: inline-flex;

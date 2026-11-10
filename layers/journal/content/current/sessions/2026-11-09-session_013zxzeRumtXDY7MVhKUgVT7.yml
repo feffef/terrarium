@@ -209,18 +209,16 @@ ruleUse:
       - path: .agents/skills/inspect-session/SKILL.md
         why: read a test session's report cheaply
       - path: .claude/rules/adr-0027.md
-        value: changed
+        value: steered
         why: kept trial text; checked brief overlap
       - path: .claude/rules/data-shapes.md
-        value: changed
+        value: steered
         why: waited for every shape sign-off
       - path: .claude/rules/adr-0004-human-merge.md
-        value: changed
+        value: steered
         why: asked before bypassing merge-pr.ts
       - path: .claude/rules/guards.md
-        value: confirmed
-      - path: .claude/rules/adr-0005.md
-        value: none
+        value: backed
   - by: general-purpose
     answered: true
     loads:
@@ -271,7 +269,6 @@ ruleUse:
       - rule: .claude/rules/adr-0030.md
         via: hint
     reported:
-      - path: .claude/rules/data-shapes.md
       - path: docs/agents/guards.md
   - by: general-purpose
     answered: true
@@ -296,9 +293,9 @@ ruleUse:
         via: hint
     reported:
       - path: .claude/rules/data-shapes.md
-        value: changed
+        value: steered
       - path: .claude/rules/guards.md
-        value: confirmed
+        value: backed
       - path: docs/agents/guards.md
       - path: .agents/skills/writing-for-agents/SKILL.md
   - by: general-purpose
@@ -321,7 +318,7 @@ ruleUse:
         via: hint
     reported:
       - path: .claude/rules/data-shapes.md
-        value: confirmed
+        value: backed
   - by: general-purpose
     answered: true
     loads: []
@@ -356,7 +353,6 @@ ruleUse:
         via: native
         trigger: layers/journal/app/utils/dashboard.ts
     reported:
-      - path: .claude/rules/adr-0027.md
       - path: docs/agents/guards.md
   - by: general-purpose
     answered: true
@@ -375,9 +371,7 @@ ruleUse:
         via: hint
       - rule: .claude/rules/guards.md
         via: hint
-    reported:
-      - path: .claude/rules/data-shapes.md
-      - path: .claude/rules/adr-0027.md
+    reported: []
   - by: general-purpose
     answered: true
     loads: []

@@ -81,11 +81,9 @@ ruleUse:
         via: hint
     reported:
       - path: .claude/rules/adr-0011.md
-        value: changed
+        value: steered
         why: pointed the diagnosis at the poll-and-build container
       - path: docs/adr/0011-poc-self-updating-deploy-container.md
-      - path: .claude/rules/ui-verification.md
-        value: none
 gitBranch: ccr-3ef80ca4-2vua5v
 entrypoint: remote_mobile
 cliVersion: 2.1.322

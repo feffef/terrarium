@@ -46,7 +46,7 @@ import {
 } from './shell-reads.ts'
 import { adrDocNumber, adrHintsIn, ruleAdr, ruleBlockFiles, type AdrHintVia } from '../lib/adr-rules.ts'
 import { root, runIfMain } from '../lib/cli.ts'
-import { HELPED_SCRIPT, isRulePath, reportedNames, ruleKey, ruleName, type RuleLoadRow } from './rule-use.ts'
+import { RULE_USE_CALL, isRulePath, reportedNames, ruleKey, ruleName, type RuleLoadRow } from './rule-use.ts'
 
 /** The one authored-scratch file per container (one session per container in the
  *  remote model). Gitignored — its home is `main`. Single-homed here so its
@@ -141,7 +141,7 @@ export interface MechanicalTrace {
   rulesRead: string[]
   /** The SubagentStart note reached this agent. */
   helpedAsked: boolean
-  /** What its last `helped.sh` call reported; absent when it never ran it. */
+  /** What its last `echo rule-use:` call reported; absent when it never ran it. */
   reportedNamed?: ReportedEntry[]
   /** Subagent entries (which ones: `ruleUseEntry`), in `subagents` order. Set by `foldSubagentTrace`. */
   ruleUse?: RuleUseEntry[]
@@ -237,27 +237,29 @@ function persistedOutput(text: string): string {
  *  land several records after its tool_use. A command whose result is missing
  *  (a torn transcript) pairs with `''` — the same as a real zero-output run,
  *  which undercounts rather than guesses. */
-function bashCommandsOf(records: Record<string, unknown>[]): { command: string; output: string }[] {
+function bashCommandsOf(records: Record<string, unknown>[]): { command: string; output: string; failed: boolean }[] {
   const outputs = new Map<string, string>()
+  const failed = new Set<string>()
   for (const rec of records) {
     const content = (rec.message as { content?: unknown } | undefined)?.content
     if (!Array.isArray(content)) continue
     for (const block of content) {
-      const b = block as { type?: string; tool_use_id?: string; content?: unknown }
+      const b = block as { type?: string; tool_use_id?: string; content?: unknown; is_error?: boolean }
       if (b?.type === 'tool_result' && typeof b.tool_use_id === 'string') {
+        if (b.is_error) failed.add(b.tool_use_id)
         const text = persistedOutput(toolResultText(b.content))
         outputs.set(b.tool_use_id, text.trim() === EMPTY_BASH_OUTPUT ? '' : text)
       }
     }
   }
-  const commands: { command: string; output: string }[] = []
+  const commands: { command: string; output: string; failed: boolean }[] = []
   for (const rec of records) {
     const content = (rec.message as { content?: unknown } | undefined)?.content
     if (!Array.isArray(content)) continue
     for (const block of content) {
       const b = block as { type?: string; name?: string; id?: string; input?: { command?: unknown } }
       if (b?.type === 'tool_use' && b.name === 'Bash' && typeof b.input?.command === 'string') {
-        commands.push({ command: b.input.command, output: outputs.get(b.id ?? '') ?? '' })
+        commands.push({ command: b.input.command, output: outputs.get(b.id ?? '') ?? '', failed: failed.has(b.id ?? '') })
       }
     }
   }
@@ -623,7 +625,7 @@ export function extractTrace(
       const hinted = hintedRules(att.content)
       rules.push(...hinted)
       loads.push(...hinted.map((rule) => ({ rule, via: 'hint' as const })))
-      if (hintText(att.content).includes(HELPED_SCRIPT)) helpedAsked = true
+      if (hintText(att.content).includes(RULE_USE_CALL)) helpedAsked = true
       hintAt.push(...adrHintsIn(hintText(att.content)).map((h) => [h, i] as const))
     }
     if (att?.type === 'instructions') {
@@ -712,10 +714,17 @@ export function extractTrace(
     adrHints: mergeAdrHints(hintAt.map(([h, at]) => ({
       adr: Number(h.adr), via: h.via, readAfter: adrReadInFull(records.slice(at + 1), h.adr, docIndex, rel), by: 'main' as const,
     }))),
-    ruleLoads: [...loadByRule.values()],
+    // A rule read as a file counts as loaded: the harness may then skip its path load.
+    ruleLoads: [
+      ...dedup(alwaysLoadedRules).map((rule) => ({ rule, via: 'start' as const })),
+      ...loadByRule.values(),
+      ...dedup(reads).filter((p) => isRulePath(p)).map(ruleKey)
+        .filter((rule) => !alwaysLoadedRules.includes(rule) && !loadByRule.has(rule)).map((rule) => ({ rule, via: 'read' as const })),
+    ],
     rulesRead: dedup(reads).filter((p) => isRulePath(p)).map(ruleKey),
     helpedAsked,
-    reportedNamed: reportedNames(bashCommandsOf(records).map((c) => c.command), rel),
+    // A denied call (a permission classifier, say) is no answer.
+    reportedNamed: reportedNames(bashCommandsOf(records).filter((c) => !c.failed).map((c) => c.command), rel),
     skillsUsed: dedup([...skills, ...commandSkills]),
     commandSkills: dedup(commandSkills),
     subagents,
@@ -874,7 +883,7 @@ export function foldSubagentTrace(
   // lists those fields, and the card tags these 'via subagent' instead.
   folded.rulesGlobal = dedup([...trace.rulesGlobal, ...subs.flatMap((s) => s.rulesGlobal)])
   folded.rulesLoaded = trace.rulesLoaded.filter((r) => !folded.rulesGlobal.includes(r))
-  folded.ruleLoads = triggered(trace.ruleLoads.filter((l) => !folded.rulesGlobal.includes(l.rule)), mainRows)
+  folded.ruleLoads = triggered(trace.ruleLoads, mainRows)
   // Each transcript's row in `folded.subagents`, which lists dispatches first.
   const rowOf = (i: number) => {
     const dispatchedAt = trace.subagents.findIndex((s) => transcriptOf(s.toolUseId) === i)
@@ -884,14 +893,16 @@ export function foldSubagentTrace(
   folded.ruleUse = subs.flatMap((s, i) => {
     const { agentId, agent } = subagents[i]!
     // A subagent with no id can't be told from another, or from the main agent.
-    const loads = triggered(s.ruleLoads.filter((l) => !folded.rulesGlobal.includes(l.rule)), agentId ? rowsOf(agentId) : [])
+    // An always-loaded rule counts as loaded at start, however it arrived.
+    const asStart = s.ruleLoads.map((l) => (folded.rulesGlobal.includes(l.rule) ? { rule: l.rule, via: 'start' as const } : l))
+    const loads = triggered(asStart.filter((l, j) => asStart.findIndex((m) => m.rule === l.rule) === j), agentId ? rowsOf(agentId) : [])
     if (!s.helpedAsked && !s.reportedNamed && !loads.length) return []
     return [{
       by: agent?.type ?? 'workflow',
       ...(agent ? { subagent: rowOf(i) } : {}),
       answered: !!s.reportedNamed,
       loads,
-      reported: markUnloaded(s.reportedNamed ?? [], seenRules(loads, s.rulesRead), folded.rulesGlobal),
+      reported: markUnloaded(s.reportedNamed ?? [], seenRules(loads, s.rulesRead)),
     }]
   }).sort((a, b) => (a.subagent ?? Infinity) - (b.subagent ?? Infinity))
   folded.rulesFollowedUp = dedup([...trace.rulesFollowedUp, ...subs.flatMap((s) => s.rulesFollowedUp)])
@@ -905,14 +916,12 @@ export function foldSubagentTrace(
 
 const seenRules = (loads: RuleLoad[], read: string[]) => [...loads.map((l) => l.rule), ...read]
 
-/** A reported rule this agent neither loaded nor read keeps its entry, marked; an
- *  always-loaded one is dropped, since loads leave those out (#3009). */
-function markUnloaded(reported: ReportedEntry[], seen: string[], global: string[]): ReportedEntry[] {
-  return reported.flatMap((e) => {
+/** A reported rule this agent neither loaded nor read keeps its entry, marked. */
+function markUnloaded(reported: ReportedEntry[], seen: string[]): ReportedEntry[] {
+  return reported.map((e) => {
     const path = isRulePath(e.path) ? ruleName(e.path) : e.path
-    if (global.includes(path)) return []
     const loaded = !isRulePath(path) || seen.includes(path)
-    return [loaded ? { ...e, path } : { ...e, path, why: e.why ? `${NO_LOAD_WHY} ${e.why}` : NO_LOAD_WHY }]
+    return loaded ? { ...e, path } : { ...e, path, why: e.why ? `${NO_LOAD_WHY} ${e.why}` : NO_LOAD_WHY }
   })
 }
 
@@ -975,7 +984,7 @@ function mergeRefs<T extends Record<string, string | undefined>>(
  *  dropped so a minimal session stays clean. */
 export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Record<string, unknown> {
   const editedSet = new Set(trace.filesEdited)
-  // Derived only: what changed or confirmed something goes in `reported` (#3009).
+  // Derived only: what steered or backed it, and docs that helped, go in `reported` (#3009).
   // A rule file is logged as a rule (rulesGlobal, ruleUse),
   // even when close-session has the agent re-read it.
   const docsRead = dedup([...trace.filesRead, ...trace.docsReadViaShell])
@@ -1015,7 +1024,7 @@ export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Recor
     by: 'main',
     answered: authored.reported !== undefined,
     loads: trace.ruleLoads,
-    reported: markUnloaded(authored.reported ?? [], seenRules(trace.ruleLoads, trace.rulesRead), trace.rulesGlobal),
+    reported: markUnloaded(authored.reported ?? [], seenRules(trace.ruleLoads, trace.rulesRead)),
   }
   const ruleUse = [...(main.loads.length || main.reported.length ? [main] : []), ...(trace.ruleUse ?? [])]
   if (ruleUse.length) entry.ruleUse = ruleUse

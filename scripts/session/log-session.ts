@@ -33,7 +33,7 @@ import { tmpdir } from 'node:os'
 import { basename, dirname, join, resolve } from 'node:path'
 import { parse as parseYaml, stringify as stringifyYaml } from 'yaml'
 import { z } from 'zod'
-import { reportedEntry } from '../../shared/schemas/session.ts'
+import { reportedEntry, reportedEntryHasItsValue } from '../../shared/schemas/session.ts'
 import { sessionUrl } from '../../shared/session-url.ts'
 import { fetchOriginMain, git, SESSION_TRAILER, tryGit } from '../lib/git.ts'
 import { parseWorktreeList, runSweep, type Finding, type SweepResult } from '../git/check-worktrees.ts'
@@ -63,7 +63,7 @@ import {
 } from './transcript-trace.ts'
 import { isInstructionDoc, type DocLineIndex } from './shell-reads.ts'
 import { fail, flagValue, root, runIfMain } from '../lib/cli.ts'
-import { isRulePath, readRuleLoads, type RuleLoadRow } from './rule-use.ts'
+import { readRuleLoads, ruleUseAsk, type RuleLoadRow } from './rule-use.ts'
 
 /** The `schemaVersion` newly authored logs should carry; evolution policy: ADR-0009. */
 export const CURRENT_SESSIONS_SCHEMA_VERSION = 1
@@ -94,8 +94,8 @@ const authoredScratchSchema = z
     skillsUsed: z.array(z.object({ name: z.string(), reason: z.string() })).optional(),
     // Required like `frictions`: [] means nothing to report, absent means skipped (#3009).
     reported: z.array(
-      reportedEntry.strict().refine((e) => isRulePath(e.path) === (e.value !== undefined), {
-        message: 'a .claude/rules/ path needs a value (changed | confirmed | none | unsure); any other path takes none',
+      reportedEntry.strict().refine(reportedEntryHasItsValue, {
+        message: 'a .claude/rules/ path needs a value (steered | backed); any other path takes none',
       }),
     ),
     frictions: z.array(
@@ -117,10 +117,10 @@ const authoredScratchSchema = z
  *  generic error (issue #1074). */
 const DERIVED_ONLY_FIELDS: Record<string, string> = {
   adrHints: 'derived from the adr-read-hint pointers in the transcript.',
-  docsReadViaShell: 'shell reads fold into docsRead, which is derived; list a doc that changed or confirmed something in reported.',
-  docsRead: 'derived from the transcript; list a doc that changed or confirmed something in reported (#3009).',
-  helped: 'renamed to reported: give each rule a value, changed | confirmed | none | unsure (#3009).',
-  ruleVerdicts: 'replaced by reported: list the rules and docs that changed or confirmed something (#3009).',
+  docsReadViaShell: 'shell reads fold into docsRead, which is derived; list a doc that helped in reported.',
+  docsRead: 'derived from the transcript; list a doc that helped in reported (#3009).',
+  helped: 'renamed to reported: give each rule a value, steered | backed (#3009).',
+  ruleVerdicts: 'replaced by reported: list the rules that steered or backed you and the docs that helped (#3009).',
 }
 
 export function validateAuthored(
@@ -800,12 +800,11 @@ export function reportReads(ctx: AuthorContext | undefined, log: (line: string) 
   const bySubagents = new Set(trace.docsReadBySubagents ?? [])
   const docs = [...new Set([...trace.filesRead, ...trace.docsReadViaShell])]
     .filter((p) => isInstructionDoc(p) && !p.startsWith('.claude/rules/') && !bySubagents.has(p))
-  const rules = trace.ruleLoads.map((l) => l.rule)
-  if (rules.length || docs.length) {
+  if (trace.ruleLoads.length || docs.length) {
     log('')
-    log('  reported — list only the rules and docs that changed or confirmed something you did; give each rule')
-    log('  a value: changed | confirmed (or none | unsure if you want to say so):')
-    for (const r of rules) log(`    ${r}`)
+    const ask = ruleUseAsk(trace.ruleLoads, 'Fill in `reported`', '{ path: .claude/rules/example-rule.md, value: backed }, { path: docs/example.md }')
+    for (const line of ask) log(line ? `  ${line}` : '')
+    if (docs.length) log('  Docs you read:')
     for (const d of docs) log(`    ${d}`)
   }
   if (scan.nearMisses.length) {

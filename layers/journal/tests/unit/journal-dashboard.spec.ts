@@ -464,20 +464,81 @@ describe('sessionCardViews', () => {
     ])
   })
 
-  // Issue #3019: a log written after the old lists were retired carries only `ruleUse`.
-  it('lists the rules a log records only in ruleUse, tagging those only a subagent loaded', () => {
-    const load = (rule: string) => ({ rule: `.claude/rules/${rule}`, via: 'native' as const })
-    const s = session({
-      ruleUse: [
-        { by: 'main', answered: true, loads: [load('adr-0004.md')], reported: [] },
-        { by: 'general-purpose', subagent: 0, answered: false, loads: [load('adr-0004.md'), load('adr-0012.md')], reported: [] },
-      ],
+  // Issue #3020: a `ruleUse` log groups its rules by Main session and Subagents.
+  describe('ruleUse logs', () => {
+    const load = (rule: string, via: 'start' | 'native' | 'hint' = 'native', trigger?: string) =>
+      ({ rule: `.claude/rules/${rule}`, via, ...(trigger && { trigger }) })
+    const view = (over: Partial<SessionDoc>) => sessionCardViews([session(over)], { '.claude/rules/adr-0003.md': 'ADR-0003: T' })[0]!
+
+    it('lists main rules start-first with its values, and leaves the old flat list empty', () => {
+      const c = view({
+        ruleUse: [{ by: 'main', answered: true, loads: [load('adr-0004.md', 'hint'), load('adr-0003.md', 'start')], reported: [{ path: '.claude/rules/adr-0004.md', value: 'steered', why: 'ran the gate' }] }],
+      })
+      expect(c.rules).toEqual([])
+      expect(c.ruleUse!.main).toEqual({
+        answered: true,
+        rules: [
+          { path: '.claude/rules/adr-0003.md', title: 'ADR-0003: T', alwaysLoaded: true, followedUp: false, hover: '.claude/rules/adr-0003.md\nloaded at start', value: undefined, whys: [] },
+          { path: '.claude/rules/adr-0004.md', title: undefined, alwaysLoaded: false, followedUp: false, hover: '.claude/rules/adr-0004.md\nloaded by a hint hook', value: 'steered', whys: ['ran the gate'] },
+        ],
+      })
     })
-    const [c] = sessionCardViews([s])
-    expect(c!.rules.map(({ path, viaSubagent }) => [path, viaSubagent])).toEqual([
-      ['.claude/rules/adr-0004.md', false],
-      ['.claude/rules/adr-0012.md', true],
-    ])
+
+    it('tallies subagents per rule, with shares over the answering ones that loaded it', () => {
+      const c = view({
+        subagents: [{ type: 'Explore', task: 'scan' }, { type: 'Explore', task: 'check' }, { type: 'Explore', task: 'late' }],
+        ruleUse: [
+          { by: 'Explore', subagent: 0, answered: true, loads: [load('adr-0004.md', 'native', 'a.ts')], reported: [{ path: '.claude/rules/adr-0004.md', value: 'backed', why: 'x' }] },
+          { by: 'Explore', subagent: 1, answered: true, loads: [load('adr-0004.md', 'native', 'a.ts')], reported: [] },
+          { by: 'Explore', subagent: 2, answered: false, loads: [load('adr-0004.md', 'hint')], reported: [] },
+        ],
+      })
+      expect(c.ruleUse!.main).toEqual({ answered: null, rules: [] })
+      expect(c.ruleUse!.subagents).toEqual({
+        total: 3,
+        unanswered: 1,
+        rules: [{
+          path: '.claude/rules/adr-0004.md',
+          title: undefined,
+          alwaysLoaded: false,
+          hover: '.claude/rules/adr-0004.md\nnative 2 · hint 1\ntriggered by a.ts ×2',
+          loadedBy: 3,
+          values: [{ value: 'backed', n: 1, percent: 50, hover: "1 of 2 answering subagents that loaded it named it backed; 1 didn't name it" }],
+          whys: ['scan: x'],
+        }],
+      })
+    })
+
+    it('shows the session-wide always-loaded rules under main on a log with no start loads', () => {
+      const c = view({ rulesGlobal: ['.claude/rules/adr-0003.md'], ruleUse: [{ by: 'main', answered: true, loads: [load('adr-0004.md')], reported: [] }] })
+      expect(c.ruleUse!.main.rules.map((r) => [r.path, r.alwaysLoaded])).toEqual([['.claude/rules/adr-0003.md', true], ['.claude/rules/adr-0004.md', false]])
+    })
+
+    it('keeps a row for a rule an agent named but never loaded', () => {
+      const why = '(no load recorded)'
+      const c = view({
+        subagents: [{ type: 'Explore', task: 'scan' }],
+        ruleUse: [
+          { by: 'main', answered: true, loads: [], reported: [{ path: '.claude/rules/adr-0012.md', value: 'steered', why }] },
+          { by: 'Explore', subagent: 0, answered: true, loads: [], reported: [{ path: '.claude/rules/adr-0012.md', value: 'backed', why }] },
+        ],
+      })
+      expect(c.ruleUse!.main.rules.map((r) => [r.path, r.value, r.hover])).toEqual([['.claude/rules/adr-0012.md', 'steered', '.claude/rules/adr-0012.md\nno load recorded']])
+      expect(c.ruleUse!.subagents.rules.map((r) => [r.path, r.loadedBy, r.values.map((v) => v.percent), r.whys])).toEqual([['.claude/rules/adr-0012.md', 0, [100], [`scan: ${why}`]]])
+    })
+
+    it('says who reported a doc instead of "no verdict"', () => {
+      const c = view({
+        docsRead: [{ path: 'docs/a.md', reason: 'r' }],
+        docsReadBySubagents: ['docs/a.md'],
+        subagents: [{ type: 'Explore', task: 'scan' }],
+        ruleUse: [
+          { by: 'main', answered: true, loads: [], reported: [{ path: 'docs/a.md' }] },
+          { by: 'Explore', subagent: 0, answered: true, loads: [], reported: [{ path: 'docs/a.md', why: '(no load recorded)' }] },
+        ],
+      })
+      expect(c.docsRead).toEqual([{ path: 'docs/a.md', reason: 'r', viaSubagent: true, unknown: false, reportedBy: 'reported by main and 1 subagent', whys: ['scan: (no load recorded)'] }])
+    })
   })
 
   // Issue #2607: a main-session or always-loaded rule left without a verdict is
