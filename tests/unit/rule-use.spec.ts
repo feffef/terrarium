@@ -98,6 +98,7 @@ describe('helpedNames() — the names a helped.sh call gave', () => {
   it('folds a .MD extension to .md, and keeps a name before an unspaced redirect', () => {
     expect(names('rule:adr-0004.MD')).toEqual(['.claude/rules/adr-0004.md'])
     expect(names('rule:a>out rule:b.md>/dev/null 2>err rule:')).toEqual(['.claude/rules/a.md', '.claude/rules/b.md'])
+    expect(names('rule:adr-0004>out doc:docs/a2>>log 2>&1')).toEqual(['.claude/rules/adr-0004.md', 'docs/a2'])
   })
   it('finds a call inside bash -c or -lc, and after shell flags', () => {
     expect(helpedNames([`bash -c "${S} rule:a.md"`], (p) => p)).toEqual(['.claude/rules/a.md'])

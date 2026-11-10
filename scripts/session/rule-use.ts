@@ -71,12 +71,13 @@ export const ruleKey = (path: string) => {
  *  `.claude/rules/` key: both what an agent names and what loaded match on it. */
 export const ruleName = (name: string) => {
   const key = ruleKey(name.includes('/') ? name : `.claude/rules/${name}`)
-  return /\.md$/i.test(key) ? key.replace(/\.md$/i, '.md') : `${key}.md`
+  return `${key.replace(/\.md$/i, '')}.md`
 }
 
 const isShell = (word = '') => /(^|\/)(ba)?sh$/.test(word)
 const isRedirect = (token = '') => /^\d*&?[<>]+&?$/.test(token)
-const isNoName = (token: string) => !token || token.startsWith('-') || token.toLowerCase() === 'none' || /^(rule|doc):$/.test(token)
+// A bare fd number is what an unspaced `2>err` or `2>&1` leaves.
+const isNoName = (token: string) => !token || /^\d+$/.test(token) || token.startsWith('-') || token.toLowerCase() === 'none' || /^(rule|doc):$/.test(token)
 
 /** The names in the last `helped.sh` call among `commands`, normalised: `rule:x`
  *  becomes `.claude/rules/x.md`, `doc:x` the repo-relative path. `undefined`
@@ -95,7 +96,7 @@ export function helpedNames(commands: string[], rel: (p: string) => string): str
   // Agents separate names by commas or quote several in one argument.
   const tokens = args.flatMap((a) => a.split(/[\s,]+/)).filter(Boolean)
   // An unspaced redirect (`rule:a>out`, `2>err`) leaves only what precedes it.
-  const names = tokens.flatMap((t, i) => (isRedirect(tokens[i - 1]) ? [] : [t.split(/\d*&?[<>]/)[0]!])).filter((t) => !isNoName(t))
+  const names = tokens.flatMap((t, i) => (isRedirect(tokens[i - 1]) ? [] : [t.split(/&?[<>]/)[0]!])).filter((t) => !isNoName(t))
   return [...new Set(names.map((t) => {
     const name = t.replace(/^(rule|doc):/, '')
     return t.startsWith('rule:') || name.includes('.claude/rules/') ? ruleName(name) : rel(name)
