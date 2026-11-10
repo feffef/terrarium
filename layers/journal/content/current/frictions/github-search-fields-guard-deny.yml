@@ -7,16 +7,6 @@ ref: "Comes from PR #1869's fix for search results flooding context (the former 
 notes: |-
   2026-10-29 design: per-Skill 'pass fields' lines dropped: the guard already names the fix and every session recovered in one retry; a rule cannot order a step before the read that loads it (ADR-0029)
 occurrences:
-  - session: session_01Y1i7HTUED6iQYzbSLBbu79
-    date: "2026-10-26"
-    severity: nit
-    description: "Called search_issues without fields; the search-fields guard blocked it and I had to read github-integration.md first."
-    solution: "Read github-integration.md before the first GitHub call, as CLAUDE.md says."
-  - session: session_01C8G2W6ZfQN7WE4UNUi2GzA
-    date: "2026-10-26"
-    severity: nit
-    description: "First mcp__github__search_issues call omitted the fields array and was blocked; I read github-integration.md only afterwards."
-    solution: "Read the doc before the first GitHub operation."
   - session: session_019g1t4RX7PcR54io7GRdxXK
     date: "2026-10-27"
     severity: nit

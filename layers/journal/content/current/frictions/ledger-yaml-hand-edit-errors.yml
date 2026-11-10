@@ -28,16 +28,6 @@ fixes:
     date: "2026-10-28"
     summary: "ledger-set.ts sets summary, cause and surface on an existing entry; prune-friction-ledger.ts --move writes block style into an entry created with empty occurrences."
 occurrences:
-  - session: session_01TaUpbA3idjNZSgGpNjXj8S
-    date: "2026-10-26"
-    severity: nit
-    description: "I wrote a folded YAML note that ended a line in a hyphen; validate:content rejected it as a split word."
-    solution: "Have the note-appending step run validate:content right after writing, or wrap without breaking hyphenated words."
-  - session: session_01CpD4piFGbFhvGG5KWdtsCG
-    date: "2026-10-26"
-    severity: nit
-    description: "ledger-set.ts cannot set a ref empty or add notes; the survey agent reported its resets left ref empty strings, and the brief does not say if that is acceptable."
-    solution: "Add a clear-ref flag, or say in survey-brief.md step 5 what to do."
   - session: session_019g1t4RX7PcR54io7GRdxXK
     date: "2026-10-27"
     severity: nit

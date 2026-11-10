@@ -9,11 +9,6 @@ notes: |-
   2026-10-20 design: a repo doc granting pushes to other branches dropped: the harness pins one pushable branch and a repo doc cannot grant that; issue-tracker.md already says to flag it upfront and ask.
 fixes: []
 occurrences:
-  - session: session_01BgQzSd9CmFPiugdXAQh6HW
-    date: "2026-10-26"
-    severity: nit
-    description: "Worked on a local branch audit-docs/2026-10-26 and pushed it to the designated session branch rather than staying on it."
-    solution: "Rename the session branch instead of cutting a second one."
   - session: session_013zxzeSKLjL9xzvaR2kQ4po
     date: "2026-11-04"
     severity: minor

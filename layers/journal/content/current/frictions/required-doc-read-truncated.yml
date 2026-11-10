@@ -14,11 +14,6 @@ fixes:
     date: "2026-10-28"
     summary: "CLAUDE.md says to read a required doc whole if you can, no longer in one Read call: partial reads are encouraged against, not required."
 occurrences:
-  - session: session_01Vg1qDutnhKVav7JDNUdr8J
-    date: "2026-10-26"
-    severity: minor
-    description: "Read github-integration.md with cat | head -80 and dispatch-subagents SKILL.md with head -150, against CLAUDE.md's one-Read-call-per-doc rule; parts may have been cut."
-    solution: "Read trigger docs with the Read tool, unlimited, at the first GitHub call; nothing I needed was in the cut part this time."
   - session: session_013zxzeQ97mDYdTytqEL7wD6
     date: "2026-10-27"
     severity: nit

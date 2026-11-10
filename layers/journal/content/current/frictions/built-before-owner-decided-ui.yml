@@ -2,7 +2,8 @@ name: built-before-owner-decided-ui
 surface: safe
 summary: Agents built user-facing UI from a spec or a one-line ask before the owner settled its labels or saw a sample, so it was redesigned or the owner was asked afterwards.
 cause: "CLAUDE.md 'Ask before building' (the grilling Skill: settle what each displayed value shows, agree a short sample first) is not applied: a build brief leaves a label open, a tile is built whole from a spec, or a screenshot request is built without confirming. Signals: 'built user-facing UI before the owner decided', 'before showing the owner a sample', 'triggered a full redesign', 'ask-first preference not applied'."
-status: open
+status: tracked
+ref: "issue #3026"
 occurrences:
   - session: session_013zxzeSy38XR1wPjCGFUExY
     date: "2026-11-07"

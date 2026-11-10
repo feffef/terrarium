@@ -3,6 +3,8 @@ surface: guard-or-hook
 summary: A subagent briefed as read-only is hinted to run helped.sh, which the permission classifier denies or the agent skips, leaving its rule-verdict row unanswered.
 cause: "The SubagentStart hint tells every subagent to run scripts/session/helped.sh even when the brief says read-only; the agent either follows the brief and skips it or runs it and the auto-mode classifier denies it. Signals: 'read-only', 'helped.sh', 'classifier denied', 'ledger row unanswered'."
 status: open
+notes: |-
+  2026-11-10 design: no change dropped: commit 3a74927f6 (#3009, 00:45Z) already tells read-only subagents to run helped.sh; both sessions began before it. Reopen if a later session shows a skip or denial.
 occurrences:
   - session: session_013zxzeSreQ7NRPpBQ2QtvEs
     date: "2026-11-10"

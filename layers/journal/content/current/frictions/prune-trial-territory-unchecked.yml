@@ -11,11 +11,6 @@ fixes:
     date: "2026-10-26"
     summary: "audit-docs step 1 tells reviewer agents to skip text under an open Prune Trial (partial)."
 occurrences:
-  - session: session_01BgQzSd9CmFPiugdXAQh6HW
-    date: "2026-10-26"
-    severity: minor
-    description: "Reviewers were not told about open Prune Trials, so 3 of 5 rejected findings targeted text ADR-0027 bars changing."
-    solution: "Add one line to the audit-docs reviewer instructions: skip text covered by .agents/prune-trials.yml."
   - session: session_013zxzeSgD6cuF2mawqY6jWM
     date: "2026-10-29"
     severity: minor

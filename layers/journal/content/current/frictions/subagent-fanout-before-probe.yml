@@ -3,6 +3,8 @@ surface: safe
 summary: A session dispatched many transcript-reading subagents before probing one, so most reports could not answer the question and about a million subagent tokens were spent.
 cause: "A plan fans out subagents over session transcripts (events omit hook-injected rule text in some sessions) without a one-subagent probe of whether the data answers the question first. Signals: 'before probing one', 'could not show whether a rule changed anything', subagent token totals in the hundreds of thousands."
 status: open
+notes: |-
+  2026-11-10 design: a dispatch-subagents §1 line (probe one before fanning out) dropped: one owner-directed session, the cause is a data omission, and the Skill sits beside an open Prune Trial. Re-raise on a second occurrence.
 occurrences:
   - session: session_013zxzeNd2Ethpd3anqbmpkr
     date: "2026-11-09"
