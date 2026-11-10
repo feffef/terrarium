@@ -1,0 +1,138 @@
+schemaVersion: 1
+session: session_013zxzeQ8ESLv4uAjZnhztdz
+startedAt: 2026-11-10T20:30:05Z
+endedAt: 2026-11-10T20:33:32Z
+kind: delegated
+goal: Add a --min-loads flag to the rule-use report
+status: completed
+outcome: Flag built, tested and reviewed on a local branch; nothing pushed, by instruction
+summary: "Human-instructed (the single kickoff prompt): add --min-loads N to rule-use-report.ts with a unit test, dispatch an Explore agent first for callers, commit locally on a new branch, review with code-review and fix findings; never push or open a PR. I followed those steps. The Explore agent found one caller (main) and one spec. I filtered rules by answeringLoads in ruleUseReport. Review found that a bare --min-loads silently meant 0 and the N boundary was untested; I fixed both (agent-initiated fixes within the ask). Totals (via, answered, quality) still count omitted rules; left as is. I ran only the touched spec, not pnpm typecheck."
+prs: []
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: scripts/session/rule-use-report.ts
+    reason: (read before editing)
+  - path: tests/unit/rule-use-report.spec.ts
+    reason: (read before editing)
+  - path: scripts/lib/cli.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: brief the Explore and review agents
+  - name: code-review
+    reason: review the local commit against the base branch
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran the touched spec but not pnpm typecheck after changing a function signature, which CLAUDE.md asks for.
+    solution: Run pnpm typecheck right after the spec when a signature changes.
+    severity: nit
+durationSec: 206
+models:
+  claude-sonnet-5-5: 62
+toolCounts:
+  Skill: 4
+  Read: 4
+  Bash: 13
+  Agent: 3
+  Edit: 8
+  ToolSearch: 1
+  mcp__claude-code-remote__send_message: 1
+filesEdited:
+  - scripts/session/rule-use-report.ts
+  - tests/unit/rule-use-report.spec.ts
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+    reported:
+      - path: .claude/rules/adr-0017.md
+        value: backed
+        why: commit trailer added
+      - path: .claude/rules/adr-0004.md
+        value: backed
+        why: ran code-review before finishing
+      - path: .claude/rules/adr-0009.md
+        value: backed
+        why: closed with close-session
+      - path: docs/agents/git-conventions.md
+  - by: Explore
+    subagent: 0
+    answered: true
+    loads: []
+    reported: []
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+subagents:
+  - type: Explore
+    task: Find ruleUseReport callers
+    durationSec: 17
+    toolCalls: 7
+    modelCalls: 3
+    tokenShare: 10.1
+  - type: general-purpose
+    task: Standards review of diff
+    durationSec: 16
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 12.9
+  - type: general-purpose
+    task: Spec review of diff
+    durationSec: 14
+    toolCalls: 3
+    modelCalls: 3
+    tokenShare: 15.5
+gitBranch: HEAD
+entrypoint: remote
+cliVersion: 2.1.322
+landedBy: SessionStart
