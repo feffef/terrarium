@@ -1,0 +1,84 @@
+schemaVersion: 1
+session: session_013zxzeR6YXBiMLnmDFQpBs9
+startedAt: 2026-11-10T07:09:59Z
+endedAt: 2026-11-10T07:13:31Z
+kind: interactive
+goal: Find why the latest audit-docs log is missing from the live Journal
+status: completed
+outcome: Log and build are fine; the live server is stuck one commit behind main, which needs the operator's container logs
+summary: "Human-instructed question: a Routine log on main (the user said audit-logs; their screenshot showed it was the audit-docs run, commit 95de88ccb at 04:11 UTC) does not show on the live Journal. Agent-initiated investigation: the log passes validate:content; Recent Activity has no status filter; a local pnpm build of main succeeds and the preview's Journal lists the log (All 112 versus 111 live). The live site serves exactly main minus that commit, so the ADR-0011 self-updating container either failed that build on the server or stopped polling. The deployed site and its logs cannot be reached from a cloud session, so the next step (docker compose logs on the server) is the user's. No code changed, no PR."
+prs: []
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/adr/0011-poc-self-updating-deploy-container.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran git fetch and git log before reading docs/agents/git-conventions.md, breaking the CLAUDE.md read-first trigger; no harm since both were read-only in effect.
+    solution: The PostToolUse hint caught it; reading the doc before the first fetch would have avoided the miss
+    severity: nit
+  - description: The user said audit-logs, which no Routine is named; grepping for it cost a few calls before the screenshot showed it was audit-docs.
+    solution: Ask which run or list the latest Routine logs first when a named Routine does not exist
+    severity: minor
+  - description: Cloud sessions cannot reach the deployed site or its container logs, so the cause on the server stays unconfirmed.
+    solution: Expose the deployed build's commit (for example a /version endpoint or footer) so a session can compare it with main
+    severity: moderate
+durationSec: 212
+models:
+  claude-opus-5-5: 53
+toolCounts:
+  Bash: 25
+  Skill: 2
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0001.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0011.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0011.md
+        value: changed
+        why: pointed the diagnosis at the poll-and-build container
+      - path: docs/adr/0011-poc-self-updating-deploy-container.md
+      - path: .claude/rules/ui-verification.md
+        value: none
+gitBranch: ccr-3ef80ca4-2vua5v
+entrypoint: remote_mobile
+cliVersion: 2.1.322
+ideas:
+  - Show the served commit SHA and build time in the site footer, and have the deploy entrypoint write a last-build-failed marker the site displays, so a stale deploy is visible without server access
+landedBy: Stop
