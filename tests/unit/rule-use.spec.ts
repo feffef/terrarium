@@ -156,6 +156,15 @@ describe('ruleUse — subagents', () => {
     expect(validateEntry(entry).ok).toBe(true)
   })
 
+  it('does not mark a rule the agent read directly as unloaded', () => {
+    const read = { type: 'assistant', message: { content: [{ type: 'tool_use', name: 'Read', input: { file_path: '/repo/.claude/rules/glassbox-content.md' } }] } }
+    const folded = foldSubagentTrace(main, [sub([note, read, bash('sh /repo/scripts/session/helped.sh rule:glassbox-content.md=confirmed')])], NO_ENV)
+    expect(ruleUseOf(stitch(authored({ reported: [] }), folded))[0]!.reported).toEqual([{ path: '.claude/rules/glassbox-content.md', value: 'confirmed' }])
+    const own = extractTrace([cwd, read], NO_ENV)
+    expect(ruleUseOf(stitch(authored({ reported: [{ path: '.claude/rules/glassbox-content.md', value: 'confirmed' }] }), own))[0]!.reported)
+      .toEqual([{ path: '.claude/rules/glassbox-content.md', value: 'confirmed' }])
+  })
+
   it('keeps the values a subagent reported', () => {
     const folded = foldSubagentTrace(main, [sub([note, native('adr-0004.md'), bash('sh /repo/scripts/session/helped.sh rule:adr-0004.md=confirmed rule:adr-0099=changed')])], NO_ENV)
     expect(ruleUseOf(stitch(authored({ reported: [] }), folded))[0]!.reported).toEqual([

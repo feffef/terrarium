@@ -135,6 +135,9 @@ export interface MechanicalTrace {
   /** This transcript's path-scoped rule loads, first per rule; `trigger` comes
    *  from the ledger in `foldSubagentTrace` (#3009). */
   ruleLoads: RuleLoad[]
+  /** This agent's own Read-tool reads of rule files, which no load event records;
+   *  a rule it reports is then not marked unloaded. Never folded. */
+  rulesRead: string[]
   /** The SubagentStart note reached this agent. */
   helpedAsked: boolean
   /** What its last `helped.sh` call reported; absent when it never ran it. */
@@ -711,6 +714,7 @@ export function extractTrace(
       adr: Number(h.adr), via: h.via, readAfter: adrReadInFull(records.slice(at + 1), h.adr, docIndex, rel), by: 'main' as const,
     }))),
     ruleLoads: [...loadByRule.values()],
+    rulesRead: dedup(reads).filter((p) => isRulePath(p)).map(ruleKey),
     helpedAsked,
     reportedNamed: reportedNames(bashCommandsOf(records).map((c) => c.command), rel),
     skillsUsed: dedup([...skills, ...commandSkills]),
@@ -884,7 +888,7 @@ export function foldSubagentTrace(
       by: agent?.type ?? 'workflow',
       answered: !!s.reportedNamed,
       loads,
-      reported: markUnloaded(s.reportedNamed ?? [], loads, folded.rulesGlobal),
+      reported: markUnloaded(s.reportedNamed ?? [], [...loads.map((l) => l.rule), ...s.rulesRead], folded.rulesGlobal),
     }]
   })
   folded.rulesFollowedUp = dedup([...trace.rulesFollowedUp, ...subs.flatMap((s) => s.rulesFollowedUp)])
@@ -896,13 +900,13 @@ export function foldSubagentTrace(
   return folded
 }
 
-/** A named rule with no load for that agent keeps its entry, marked; an
+/** A reported rule this agent neither loaded nor read keeps its entry, marked; an
  *  always-loaded one is dropped, since loads leave those out (#3009). */
-function markUnloaded(reported: ReportedEntry[], loads: RuleLoad[], global: string[]): ReportedEntry[] {
+function markUnloaded(reported: ReportedEntry[], seen: string[], global: string[]): ReportedEntry[] {
   return reported.flatMap((e) => {
     const path = isRulePath(e.path) ? ruleName(e.path) : e.path
     if (global.includes(path)) return []
-    const loaded = !path.startsWith('.claude/rules/') || loads.some((l) => l.rule === path)
+    const loaded = !isRulePath(path) || seen.includes(path)
     return [loaded ? { ...e, path } : { ...e, path, why: e.why ? `${NO_LOAD_WHY} ${e.why}` : NO_LOAD_WHY }]
   })
 }
@@ -1008,7 +1012,7 @@ export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Recor
     by: 'main',
     answered: authored.reported !== undefined,
     loads: trace.ruleLoads,
-    reported: markUnloaded(authored.reported ?? [], trace.ruleLoads, trace.rulesGlobal),
+    reported: markUnloaded(authored.reported ?? [], [...trace.ruleLoads.map((l) => l.rule), ...(trace.rulesRead ?? [])], trace.rulesGlobal),
   }
   const ruleUse = [...(main.loads.length || main.reported.length ? [main] : []), ...(trace.ruleUse ?? [])]
   if (ruleUse.length) entry.ruleUse = ruleUse
