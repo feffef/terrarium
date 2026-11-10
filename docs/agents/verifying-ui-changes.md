@@ -67,7 +67,7 @@ cite it.
   (tiles, badges, fixed-width columns): its fallback fonts are narrow. Before
   calling the layout done, force a wider font (DejaVu Serif and Sans Mono,
   installed here) and compare `scrollWidth` with `clientWidth` (or the bounding
-  rect) with `scripts/ui/eval-in-page.ts`; pin it with an e2e assert.
+  rect) with `scripts/ui/eval-in-page.ts`; ideally pin it with an e2e assert.
 - **A diagram, illustration or layout from a brief needs the human's eye first.**
   Agree the reader and the question it answers, and show a rough draft for a
   quick reaction before you polish and publish. Passing gates is necessary, not
