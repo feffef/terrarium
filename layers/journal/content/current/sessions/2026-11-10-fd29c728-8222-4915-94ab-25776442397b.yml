@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: fd29c728-8222-4915-94ab-25776442397b
 startedAt: 2026-11-10T08:12:21Z
-endedAt: 2026-11-10T11:01:59Z
+endedAt: 2026-11-10T11:02:38Z
 kind: interactive
 goal: Find why the live site served a stale build for three hours
-status: in-review
-outcome: "Deploy builds are intermittently OOM-killed; 2 GB swapfile added on vigia, documented in PR #3035, #3029 closed"
-summary: "Human-instructed: the owner asked me to inspect deploy-terrarium-1's logs on vigia over ssh for issue #3029, then (explicit green-light) to post the findings and add a swapfile. The build of 95de88ccb was killed by the kernel's global OOM killer at 04:41 UTC after 28 minutes of memory pressure (a normal build takes ~55 s); entrypoint.sh then waited for the next commit, as the issue's theory said. Fetch never failed. The container log shows 10 OOM-killed builds since 2026-09-28, 6 since 2026-11-07, and one recurred live during the session (05772903a at 08:18), recovering only because ee9aee159 landed. The build's node peaks at ~2.1 GB beside openclaw (~560 MB) and dockerd (~310 MB) on a 3.8 GB host with no swap. I posted the findings on #3029, then created /swapfile (2 GB, persisted in /etc/fstab, backup at /etc/fstab.bak-2026-11-10). At close, on the owner's instruction, I removed the clean worktree terrarium-2175 (its branch stays local) so the log could land. No repo change: the capped retry in deploy/entrypoint.sh still awaits the owner's decision on #3029. Then, on the owner's instruction, I documented the swapfile and the measured build peak in deploy/README.md (PR #3035, also correcting its claim that an OOM-killed build retries) and commented on and closed #3029, naming the capped retry as not done. The session was restarted once because a stale TMPDIR broke every guard hook."
+status: completed
+outcome: "Deploy builds are intermittently OOM-killed; 2 GB swapfile added on vigia, documented in merged PR #3035, #3029 closed"
+summary: "Human-instructed: the owner asked me to inspect deploy-terrarium-1's logs on vigia over ssh for issue #3029, then (explicit green-light) to post the findings and add a swapfile. The build of 95de88ccb was killed by the kernel's global OOM killer at 04:41 UTC after 28 minutes of memory pressure (a normal build takes ~55 s); entrypoint.sh then waited for the next commit, as the issue's theory said. Fetch never failed. The container log shows 10 OOM-killed builds since 2026-09-28, 6 since 2026-11-07, and one recurred live during the session (05772903a at 08:18), recovering only because ee9aee159 landed. The build's node peaks at ~2.1 GB beside openclaw (~560 MB) and dockerd (~310 MB) on a 3.8 GB host with no swap. I posted the findings on #3029, then created /swapfile (2 GB, persisted in /etc/fstab, backup at /etc/fstab.bak-2026-11-10). At close, on the owner's instruction, I removed the clean worktree terrarium-2175 (its branch stays local) so the log could land. No repo change: the capped retry in deploy/entrypoint.sh still awaits the owner's decision on #3029. Then, on the owner's instruction, I documented the swapfile and the measured build peak in deploy/README.md (PR #3035, merged by me once CI was green; it also correcting its claim that an OOM-killed build retries) and commented on and closed #3029, naming the capped retry as not done. The session was restarted once because a stale TMPDIR broke every guard hook."
 prs:
   - "3035"
 docsRead:
@@ -46,13 +46,16 @@ frictions:
   - description: "pnpm gate:scoped failed twice for environment reasons: the session-start install bumped playwright-core without its Chromium headless shell, then a run stretched to 95 min (Mac likely slept) and 6 unrelated tests timed out."
     solution: Have the session-start install hook run playwright-core install chromium-headless-shell when the browser revision changes; keep the Mac awake during a gate run.
     severity: moderate
-durationSec: 10178
+  - description: "Before commenting on and closing #3029 I only grepped issue-tracker.md and triage-labels.md instead of reading them whole, as CLAUDE.md asks before triage."
+    solution: Read both docs in full before closing an issue; here the grep happened to cover the closing rules.
+    severity: nit
+durationSec: 10217
 models:
-  claude-opus-5-5: 138
+  claude-opus-5-5: 147
 toolCounts:
-  Bash: 61
+  Bash: 63
   Read: 1
-  Skill: 3
+  Skill: 5
   Write: 1
   AskUserQuestion: 1
   Edit: 2
@@ -100,6 +103,14 @@ ruleUse:
     reported:
       - path: docs/agents/github-integration.md
       - path: docs/agents/environment-caveats.md
+      - path: .claude/rules/adr-0011.md
+        value: confirmed
+        why: failed build waits for the next commit
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: confirmed
+        why: deploy/README.md not Human-only, so self-merged
+      - path: docs/agents/pr-workflow.md
+      - path: docs/adr/0011-poc-self-updating-deploy-container.md
 gitBranch: main
 entrypoint: cli
 cliVersion: 2.1.303
