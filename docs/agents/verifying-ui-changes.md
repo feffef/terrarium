@@ -65,9 +65,9 @@ cite it.
   (above); pin it with an e2e assert.
 - **A screenshot from this Linux build can't confirm text fits a fixed width**
   (tiles, badges, fixed-width columns): its fallback fonts are narrow. Before
-  calling the layout done, force a wider font (DejaVu Serif and Sans Mono, installed
-  here) and compare `scrollWidth` with `clientWidth` (or the bounding rect) with
-  `scripts/ui/eval-in-page.ts`; pin it with an e2e assert.
+  calling the layout done, force a wider font (DejaVu Serif and Sans Mono,
+  installed here) and compare `scrollWidth` with `clientWidth` (or the bounding
+  rect) with `scripts/ui/eval-in-page.ts`; pin it with an e2e assert.
 - **A diagram, illustration or layout from a brief needs the human's eye first.**
   Agree the reader and the question it answers, and show a rough draft for a
   quick reaction before you polish and publish. Passing gates is necessary, not
