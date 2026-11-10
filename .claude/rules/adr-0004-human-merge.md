@@ -23,7 +23,7 @@ paths:
   - "scripts/lib/author-trust.ts"
   - "package.json"
 ---
-# ADR-0004: Files that need a human merge
+# Human-only files (ADR-0004)
 
 You just touched a Human-only file: this rule's `paths` are the list. If your
 PR changes one of them, a human merges it. Open the PR as usual and say in its

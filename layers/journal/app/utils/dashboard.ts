@@ -21,11 +21,11 @@
 // export below, and truly generic helpers stay module-private. This module,
 // for its part, never relies on auto-import itself: it stays dependency-free
 // and explicit.
-import type { Friction, Importance, RoutineDoc, RuleUseView, SessionCardView, SessionDoc, Severity, SkillDoc, NoteItem, Subagent } from '../types/journal'
+import type { Friction, Importance, RoutineDoc, RuleUseLabel, RuleUseView, SessionCardView, SessionDoc, Severity, SkillDoc, NoteItem, Subagent } from '../types/journal'
 import { formatRoutineMetric } from './routineRuns'
 import { REPO_URL } from '../../../../app/utils/repo'
 import { sessionUrl } from '#shared/session-url'
-import { loadedRules, ruleValue, type RuleLoad, type RuleUseEntry } from '#shared/schemas/session'
+import { loadedRules, type RuleLoad, type RuleUseEntry } from '#shared/schemas/session'
 
 /** The dashboard loads only the newest this-many sessions: every loaded one
  *  ships in the HTML, and uncapped, `archived` passed 10 MB. */
@@ -270,6 +270,10 @@ export function sessionCardViews(
 
 // ── Rule use (#3020) ─────────────────────────────────────
 // Unnamed means no claim (#3009), so a rule nobody named gets no value.
+// The values the card shows; a rule an agent loaded without one is unmentioned.
+const RULE_USE_LABELS = { changed: 'steered', confirmed: 'backed' } as const
+
+const ruleUseLabel = (v?: string): RuleUseLabel | undefined => RULE_USE_LABELS[v as keyof typeof RULE_USE_LABELS]
 const taskOf = (e: RuleUseEntry, subagents: Subagent[]) => (e.subagent === undefined ? undefined : subagents[e.subagent]?.task)
 const withTask = (why: string, task?: string) => (task ? `${task}: ${why}` : why)
 
@@ -303,7 +307,7 @@ export function sessionRuleUseView(s: SessionDoc, ruleTitles: Record<string, str
       alwaysLoaded,
       followedUp: !!s.rulesFollowedUp?.includes(path),
       hover: load ? `${path}\n${mainLoadLine(load)}` : path,
-      value: r?.value,
+      value: ruleUseLabel(r?.value),
       whys: r?.why ? [r.why] : [],
     }
   }
@@ -317,16 +321,19 @@ export function sessionRuleUseView(s: SessionDoc, ruleTitles: Record<string, str
       total: subs.length,
       unanswered: subs.filter((e) => !e.answered).length,
       rules: subRules.map((path) => {
-        const loads = subs.flatMap((e) => e.loads.filter((l) => l.rule === path))
+        const loaders = subs.filter((e) => e.loads.some((l) => l.rule === path))
+        const labelOf = (e: RuleUseEntry) => ruleUseLabel(e.reported.find((r) => r.path === path)?.value)
+        const loads = loaders.flatMap((e) => e.loads.filter((l) => l.rule === path))
         const reports = subs.flatMap((e) => e.reported.filter((r) => r.path === path).map((r) => ({ r, task: taskOf(e, subagents) })))
         return {
           path,
           title: ruleTitles[path],
           hover: [path, ...subagentLoadLines(loads)].join('\n'),
-          loadedBy: subs.filter((e) => e.loads.some((l) => l.rule === path)).length,
-          values: ruleValue.options
-            .map((value) => ({ value, n: reports.filter(({ r }) => r.value === value).length }))
-            .filter((v) => v.n > 0),
+          loadedBy: loaders.length,
+          values: [
+            ...Object.values(RULE_USE_LABELS).map((value) => ({ value, n: loaders.filter((e) => labelOf(e) === value).length })),
+            { value: 'unmentioned' as const, n: loaders.filter((e) => !labelOf(e)).length },
+          ].filter((v) => v.n > 0),
           whys: [...new Set(reports.flatMap(({ r, task }) => (r.why ? [withTask(r.why, task)] : [])))],
         }
       }),

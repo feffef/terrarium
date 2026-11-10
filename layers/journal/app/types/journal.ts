@@ -1,5 +1,5 @@
 import type { z } from 'zod'
-import type { RuleValue, RuleVerdict, sessionSchema } from '../../../../shared/schemas/session'
+import type { RuleVerdict, sessionSchema } from '../../../../shared/schemas/session'
 import type { frictionClusterSchema, routineSchema, skillSchema } from '../../tenant.config'
 
 // `z.input`, not `z.infer`: the schemas' `.default([])` fields are optional on the
@@ -73,8 +73,9 @@ export interface SessionCardView {
 // how the rule loaded; `whys` are the agents' reasons, a subagent's prefixed
 // with its task.
 interface RuleUseRowBase { path: string; title?: string; hover: string; whys: string[] }
-export interface RuleUseMainRow extends RuleUseRowBase { alwaysLoaded: boolean; followedUp: boolean; value?: RuleValue }
-export interface RuleUseSubagentRow extends RuleUseRowBase { loadedBy: number; values: { value: RuleValue; n: number }[] }
+export type RuleUseLabel = 'steered' | 'backed'
+export interface RuleUseMainRow extends RuleUseRowBase { alwaysLoaded: boolean; followedUp: boolean; value?: RuleUseLabel }
+export interface RuleUseSubagentRow extends RuleUseRowBase { loadedBy: number; values: { value: RuleUseLabel | 'unmentioned'; n: number }[] }
 export interface RuleUseView {
   // null: the log has no main entry, so whether main answered is unknown.
   main: { answered: boolean | null; rules: RuleUseMainRow[] }
