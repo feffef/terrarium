@@ -1,17 +1,23 @@
 schemaVersion: 1
 session: session_013zxzeR6YXBiMLnmDFQpBs9
 startedAt: 2026-11-10T07:09:59Z
-endedAt: 2026-11-10T07:13:31Z
+endedAt: 2026-11-10T07:21:16Z
 kind: interactive
 goal: Find why the latest audit-docs log is missing from the live Journal
 status: completed
-outcome: Log and build are fine; the live server is stuck one commit behind main, which needs the operator's container logs
-summary: "Human-instructed question: a Routine log on main (the user said audit-logs; their screenshot showed it was the audit-docs run, commit 95de88ccb at 04:11 UTC) does not show on the live Journal. Agent-initiated investigation: the log passes validate:content; Recent Activity has no status filter; a local pnpm build of main succeeds and the preview's Journal lists the log (All 112 versus 111 live). The live site serves exactly main minus that commit, so the ADR-0011 self-updating container either failed that build on the server or stopped polling. The deployed site and its logs cannot be reached from a cloud session, so the next step (docker compose logs on the server) is the user's. No code changed, no PR."
+outcome: Live site was stuck one commit behind main; issue 3029 filed for the owner to check the server logs
+summary: "Human-instructed question: a Routine log on main (the user said audit-logs; their screenshot showed it was the audit-docs run, commit 95de88ccb at 04:11 UTC) does not show on the live Journal. Agent-initiated investigation: the log passes validate:content; Recent Activity has no status filter; a local pnpm build of main succeeds and the preview's Journal lists the log (All 112 versus 111 live). The live site serves exactly main minus that commit, so the ADR-0011 self-updating container either failed that build on the server or stopped polling. The deployed site and its logs cannot be reached from a cloud session, so the next step (docker compose logs on the server) is the user's. No code changed, no PR. After the owner merged PR 3028 the log appeared; the git timeline shows the site caught up only once new commits landed, which fits a failed server build that the entrypoint retries only on the next commit. At the owner's request I filed issue 3029 (needs-triage) to check the server logs."
 prs: []
 docsRead:
   - path: docs/agents/git-conventions.md
     reason: (no reason given)
   - path: docs/adr/0011-poc-self-updating-deploy-container.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
     reason: (no reason given)
 skillsUsed:
   - name: close-session
@@ -28,12 +34,14 @@ frictions:
   - description: Cloud sessions cannot reach the deployed site or its container logs, so the cause on the server stays unconfirmed.
     solution: Expose the deployed build's commit (for example a /version endpoint or footer) so a session can compare it with main
     severity: moderate
-durationSec: 212
+durationSec: 677
 models:
-  claude-opus-5-5: 53
+  claude-opus-5-5: 63
 toolCounts:
-  Bash: 25
+  Bash: 28
   Skill: 2
+  ToolSearch: 1
+  mcp__github__issue_write: 1
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -68,6 +76,8 @@ ruleUse:
       - rule: .claude/rules/mdc-when-to-use.md
         via: hint
       - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
         via: hint
     reported:
       - path: .claude/rules/adr-0011.md
