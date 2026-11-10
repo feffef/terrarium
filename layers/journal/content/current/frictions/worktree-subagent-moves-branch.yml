@@ -44,3 +44,8 @@ occurrences:
     severity: minor
     description: "The Standards reviewer ran git checkout --detach in my checkout because my brief only said read-only; dispatch-subagents section 3 says review agents never use the lead's checkout"
     solution: "Add 'read commits with git show only; never check out or switch branches' to every review and research brief"
+  - session: session_013zxzeSB2Asdc9k89JQywv9
+    date: "2026-11-10"
+    severity: minor
+    description: "Impl agent ran checkout -B on the branch my main checkout held, moving the shared ref and leaving a stale staged revert in my checkout."
+    solution: "dispatch-subagents should say an impl agent never reuses the orchestrator's branch name; give it its own branch."

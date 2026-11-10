@@ -1,7 +1,7 @@
 name: glassbox-curate-read-first-skipped
 surface: safe
 summary: Glass Box curate runs edited or dispatched before reading the Skill's required first reads (glossary, QUALITY.md, the Subject's pages), and the Spec reviewer found the gap.
-cause: "The glassbox-curate Skill lists the Glass Box GLOSSARY, QUALITY.md (Lenses) and the Subject's pages to read first; runs skip or truncate them, leave pagesRead short, and a reviewer names the unread pages. Signals: 'never opened QUALITY.md', 'pagesRead was short', 'skipped the curate Read step', 'short of the Skill's read-the-Subject step'. Since PRs #2929 and #2944 (2026-11-07) the Skill reads the Subject first, in full, with orient.ts --subject printing its pages and the pagesRead lines."
+cause: "The glassbox-curate Skill lists the Glass Box GLOSSARY, QUALITY.md (Lenses) and the Subject's pages to read first; runs skip or truncate them, leave pagesRead short, and a reviewer names the unread pages. Signals: 'never opened QUALITY.md', 'pagesRead was short', 'skipped the curate Read step', 'short of the Skill's read-the-Subject step'. Since PRs #2929 and #2944 (2026-11-07) the Skill reads the Subject first, in full, with orient.ts --subject printing its pages and the pagesRead lines. Since PR #3001 (2026-11-09) SKILL.md states the Subject read as a Done-when."
 status: open
 fixes:
   - pr: 2929
@@ -10,6 +10,9 @@ fixes:
   - pr: 2944
     date: "2026-11-07"
     summary: "glassbox-curate gets 'Know the guide before you change it' and orient.ts --subject, which prints a chosen Subject's pages in full with the pagesRead lines."
+  - pr: 3001
+    date: "2026-11-09"
+    summary: "glassbox-curate SKILL.md states the Subject read as a Done-when (every Subject page read in full, plus outside pages a change would edit) and drops the removal-only exemption."
 occurrences:
   - session: session_013zxzeNqe2cXhykGMMq7vUi
     date: "2026-11-07"

@@ -63,3 +63,8 @@ occurrences:
     severity: minor
     description: "Wrote the run entry's focus with an unquoted colon-space, which broke the runs YAML and failed validate:content until quoted."
     solution: "Quote free-text YAML values in run entries; the curate Skill could say so."
+  - session: session_013zxzeRSMtPAREKXCce9GT6
+    date: "2026-11-09"
+    severity: minor
+    description: "The run entry's changes line held a colon followed by a space, which YAML read as an object and failed validate:content."
+    solution: "The orient.ts skeleton or the curate Skill's State section could warn that a changes entry must avoid a colon followed by a space."

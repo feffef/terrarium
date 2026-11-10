@@ -146,3 +146,8 @@ occurrences:
     severity: nit
     description: "I gave a background gate run both run_in_background and a trailing nohup ampersand; the double-background guard (issue 1208) refused it, nothing ran, and I resent it once."
     solution: "CLAUDE.md or the dispatch Skill could show the one correct form: a plain foreground command, run_in_background true, output redirected to a log."
+  - session: session_013zxzeRSMtPAREKXCce9GT6
+    date: "2026-11-09"
+    severity: nit
+    description: "Sent a background Bash call with a trailing nohup and ampersand as well as run_in_background; the double-background guard blocked it."
+    solution: "Pass run_in_background alone, as the guard's message and dispatch-subagents say."

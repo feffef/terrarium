@@ -123,3 +123,13 @@ occurrences:
     severity: minor
     description: "Read ADR-0005 and ADR-0027 only after editing the Skill, when the PostToolUse hook prompted; the edit turned out fine."
     solution: "Read the ADRs a rule names before the first edit of a governed file, or load the rule at read time."
+  - session: session_013zxzeSj1mJxbgdKHbwgK2s
+    date: "2026-11-09"
+    severity: nit
+    description: "Read ADR-0005 and ADR-0027 only after a hook demanded them following my SKILL.md edit, not before editing."
+    solution: "Read the governing ADRs when the Skill is first opened; the edit was consistent with both."
+  - session: session_013zxzePvPobQ2Cfg3UyUHSt
+    date: "2026-11-09"
+    severity: nit
+    description: "Edited pr-workflow.md before reading ADR-0027 and ADR-0029; a hook asked for a late full read, and I read only ADR-0027 and skipped ADR-0029 and ADR-0003."
+    solution: "Read the ADRs a Skill's own rule names (ADR-0027) before the first edit; the hook's late read is the only reminder."

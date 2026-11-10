@@ -57,3 +57,8 @@ occurrences:
     severity: moderate
     description: "Fanned out six writer subagents on an untried brief; its grep filter was wrong and its loose licence gave 29 uneven extra lead-in rewrites"
     solution: "Pilot a fan-out brief on one agent or a cold reviewer first; dispatch-subagents could say so for any brief sent to more than two agents"
+  - session: session_013zxzePvPobQ2Cfg3UyUHSt
+    date: "2026-11-09"
+    severity: minor
+    description: "Criterion 1 search subagent did not query the issue tracker, only ledger refs and doc incident tags, so issue states in the ledger entry are unverified."
+    solution: "Brief the search subagent with a tracker query command (gh api search/issues) so it can verify issue states, or have the Skill name one."

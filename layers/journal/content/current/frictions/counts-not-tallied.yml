@@ -95,3 +95,13 @@ occurrences:
     severity: moderate
     description: "My PR body and first log said about 45 pages and five checkers and 16 changed pages; the run entry lists 40 pages, I dispatched six checkers and 17 files changed. I found it only when the owner asked; CLAUDE.md says count every item."
     solution: "The curate Skill's Land step should say to take page and checker counts from the run entry and git diff --name-only before writing the PR body."
+  - session: session_013zxzeQyUMxeD3fYivwaeLU
+    date: "2026-11-09"
+    severity: nit
+    description: "My first PR body miscounted verdicts (17 findings, 9 WRONG) against the pool's real 14, 7 WRONG; caught on a recount and corrected."
+    solution: "Count verdicts from the checker files before writing the PR body, as CLAUDE.md's 'Verify before you state' says."
+  - session: session_013zxzeNd2Ethpd3anqbmpkr
+    date: "2026-11-09"
+    severity: minor
+    description: "An interim chat message said seven rules loaded in 300-383 sessions and were rated no in 60-80 percent; only five loaded in 300+, and two of the seven were 49 and 88 percent."
+    solution: "Compute chat summaries from the table output, not from memory; corrected in the final reply."

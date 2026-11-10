@@ -83,3 +83,8 @@ occurrences:
     severity: minor
     description: "The survey brief's closed-issue paging contradicts github-integration.md, so the survey agent used per-number lookups and could not rule out paraphrase misses."
     solution: "Already ledgered and now issue 2877; pick one side in the brief or add a closed-issues script."
+  - session: session_013zxzeRSjTLQV8K5UzQtX95
+    date: "2026-11-08"
+    severity: minor
+    description: "The survey subagent appended fixes but missed that PR #2973 closed regression issue #2958 for premise-not-questioned; I found it only because I re-checked the regression screen before filing."
+    solution: "Survey-brief §2.4 could say to check each closed regression issue's closing PR and record it as a fix on that entry."

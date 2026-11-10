@@ -136,3 +136,13 @@ occurrences:
     severity: minor
     description: "Draft misnamed the Glass Box job, cited PR 2983 under the wrong work and described a trial as replaced; the fact-check caught all before merge."
     solution: "Read each PR's touched files, not its title, while drafting."
+  - session: session_013zxzePitVv4rX66ZhZa4kw
+    date: "2026-11-09"
+    severity: nit
+    description: "Karen draft miscounted fixes ('fifth' while later calling #2974 a second PR); the fact-checker caught it before landing, costing two extra check rounds."
+    solution: "Count items from the source list before drafting a tally claim, as CLAUDE.md says; the draft relied on memory of the PR body."
+  - session: session_013zxzeNkk5oEC8RnBdMeMEt
+    date: "2026-11-10"
+    severity: minor
+    description: "The digest Skill's wording invites unsourced cadence words: I wrote 'weekly' and 'runs daily' for jobs with no source; the fact-check caught the weekly one."
+    solution: "Digest Skill: tell writers to state no cadence unless a doc names it."

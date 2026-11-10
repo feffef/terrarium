@@ -33,3 +33,18 @@ occurrences:
     severity: nit
     description: "A python edit script with a garbled replacement raised a SyntaxError and wrote nothing, costing a round trip"
     solution: "Write small edits as plain exact-string replacements"
+  - session: session_013zxzeS36fzX6FB2vAr7yRR
+    date: "2026-11-09"
+    severity: nit
+    description: "A python string replace cut a Vue template at the first closing tag and left a broken fragment in WorkshopRuns.vue; I read the diff and repaired it."
+    solution: "Rewrite whole component templates with the Write tool instead of slicing by string index."
+  - session: session_013zxzeR2kKbsT81QWkXUrvK
+    date: "2026-11-09"
+    severity: minor
+    description: "A Python reorder script sliced the page template with indexes computed after an earlier move, duplicating a block"
+    solution: "Move template blocks with explicit Edit calls, or recompute indexes after each move; caught by counting sections"
+  - session: session_013zxzeRumtXDY7MVhKUgVT7
+    date: "2026-11-09"
+    severity: minor
+    description: "I wiped tests/unit/rule-use.spec.ts with a Python open-for-write that read the same file afterwards; restored it from git, but it cost a redo of that file's edits."
+    solution: "Read a file into a variable before opening it for write; prefer the Edit tool for in-place changes."

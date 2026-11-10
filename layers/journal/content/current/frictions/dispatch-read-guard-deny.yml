@@ -286,3 +286,13 @@ occurrences:
     severity: nit
     description: "First Agent dispatch was blocked by the dispatch-read guard because I had read the .claude/skills link, not the .agents/skills path it checks; three long briefs were sent twice."
     solution: "Make the guard accept the .claude/skills symlink path, or say the canonical path in CLAUDE.md's dispatch bullet."
+  - session: session_013zxzeSj1mJxbgdKHbwgK2s
+    date: "2026-11-09"
+    severity: nit
+    description: "Launched the explore workflow before reading dispatch-subagents; the dispatch-read guard denied it and I had to read the Skill and retry."
+    solution: "The guard is the fix; a saved workflow that builds its own briefs could be exempt from it."
+  - session: session_013zxzeRSMtPAREKXCce9GT6
+    date: "2026-11-09"
+    severity: nit
+    description: "Called the Agent tool for the Scout without reading the dispatch-subagents Skill first, so the dispatch-read guard blocked the call."
+    solution: "CLAUDE.md already says to read it before writing a brief; the curate Skill's Scout step could name dispatch-subagents so the read comes first."

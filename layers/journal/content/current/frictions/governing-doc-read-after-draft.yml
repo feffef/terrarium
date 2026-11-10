@@ -47,3 +47,8 @@ occurrences:
     severity: minor
     description: "I dispatched writers before reading overlapping pages; the Spec reviewer then named six: terrarium-practice session-logs, protected-paths and self-improvement-loop, verification gate, and two walkthroughs. I read them before landing; they needed no edit. Token cost not measured."
     solution: "Have orient.ts print, per Subject page, the pages that link to it or share its cited files, so they are read before the writers start."
+  - session: session_013zxzeNm7AawB63t1M33Hse
+    date: "2026-11-08"
+    severity: minor
+    description: "Explained Routines without first reading the Glass Box overview page that CLAUDE.md requires for such explanations."
+    solution: "Read layers/glassbox/content/guide/pages/index.md before answering."

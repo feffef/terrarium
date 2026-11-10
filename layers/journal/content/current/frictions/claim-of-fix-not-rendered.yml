@@ -23,3 +23,8 @@ occurrences:
     severity: minor
     description: "CLAUDE.md says to read the UI verification doc before claiming a UI change works; I never rendered the page, relying on e2e passing."
     solution: "Read docs/agents/verifying-ui-changes.md and screenshot the tile before closing."
+  - session: session_013zxzeR2kKbsT81QWkXUrvK
+    date: "2026-11-09"
+    severity: moderate
+    description: "Checked tile text fit only with this Linux build's narrow fallback fonts; on macOS it wrapped, which took a follow-up PR"
+    solution: "When text must fit a fixed width, check it with a wider font forced (DejaVu Serif and Sans Mono) before calling the layout done"

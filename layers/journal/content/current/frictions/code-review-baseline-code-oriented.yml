@@ -14,3 +14,8 @@ occurrences:
     severity: nit
     description: "The code-review smell baseline is code-oriented, so most of it did not fit a prose-only diff and the Standards reviewer had to say so."
     solution: "Let code-review mark which baseline smells apply to prose, such as duplicated statements of one fact."
+  - session: session_013zxzeRYFqNFGvBn4FsDkTk
+    date: "2026-11-09"
+    severity: nit
+    description: "code-review has the baseline of code smells pasted in full for a prose-only Skill diff; the Standards agent reported none applied."
+    solution: "Have code-review skip the smell baseline when the diff holds no code."

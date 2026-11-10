@@ -133,3 +133,13 @@ occurrences:
     severity: moderate
     description: "Second commit changes the Skill's meaning, so it fails pr-workflow's simple-change test, yet I read the diff myself instead of re-running code-review; disclosed in the PR body."
     solution: "Re-run code-review on a follow-up that changes meaning, or ask whether the owner accepts the lighter check."
+  - session: session_013zxzeQMfaaC4C4CNuFY3EH
+    date: "2026-11-09"
+    severity: minor
+    description: "Skipped code-review for a mechanical 73-file diff that fails the simple-change count; read the non-pin diff myself."
+    solution: "pr-workflow could name pin-only glassbox-update diffs as simple."
+  - session: session_013zxzeSj1mJxbgdKHbwgK2s
+    date: "2026-11-09"
+    severity: minor
+    description: "Did not run code-review on my follow-up commit that moved a Skill sentence; pr-workflow says a Skill-meaning follow-up gets its own review. I read the diff and disclosed it."
+    solution: "Run code-review on the follow-up diff, or state in pr-workflow that a reorder of an already reviewed sentence counts as simple."

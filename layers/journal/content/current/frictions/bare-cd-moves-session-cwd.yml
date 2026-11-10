@@ -71,3 +71,8 @@ occurrences:
     severity: nit
     description: "A bare cd into a ledger subfolder moved the session's working directory, which the harness reported two turns later."
     solution: "Use absolute paths instead of cd, as CLAUDE.md-adjacent docs already advise (bare-cd-moves-session-cwd)."
+  - session: session_013zxzeRL5rU5zS3WRCkH3TE
+    date: "2026-11-08"
+    severity: nit
+    description: "My shell cd'd into the build worktree to run verdict-line and merge, which moved the harness working directory there; dispatch-subagents says to cd back."
+    solution: "Use git -C and pnpm -C with absolute paths for worktree commands so the main checkout stays the working directory."

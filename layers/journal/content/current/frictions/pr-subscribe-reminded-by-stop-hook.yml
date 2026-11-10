@@ -10,3 +10,8 @@ occurrences:
     severity: minor
     description: "Opened the PR and ran close-session without calling subscribe_pr_activity; the Stop hook had to prompt me (ADR-0003)."
     solution: "Subscribe in the same step as opening the PR, before close-session."
+  - session: session_013zxzeSB2Asdc9k89JQywv9
+    date: "2026-11-10"
+    severity: nit
+    description: "Stop hooks demanded subscribe_pr_activity after I opened the test PR, though the task said not to subscribe."
+    solution: "Let the hook skip PRs whose title carries a test marker, or let a session mark a PR as not to watch."

@@ -25,3 +25,8 @@ occurrences:
     severity: nit
     description: "A chained gate command used a remote-tracking ref that did not exist after the branch restart and exited 128 before the gate ran; I had to rerun it."
     solution: "Run the gate as its own command and check refs in a separate step, as git-conventions says."
+  - session: session_013zxzeQWJUyfuXJgdfypeuc
+    date: "2026-11-07"
+    severity: nit
+    description: "The denied command also held the commit-message heredoc, so the message file never existed and the commit failed once more"
+    solution: "Write the message file with the Write tool in its own step before committing"

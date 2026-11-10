@@ -45,3 +45,8 @@ occurrences:
     severity: minor
     description: "My diff filter grep '^[-+][^-+]' dropped changed bullet lines, which start '- **', so I briefly misjudged two findings as old text"
     solution: "Filter diffs with '^[-+]' and exclude only the '---'/'+++' headers; caught by re-grepping before acting"
+  - session: session_013zxzeNd2Ethpd3anqbmpkr
+    date: "2026-11-09"
+    severity: nit
+    description: "Keyed sessions by a 10-character id prefix; three of 390 collided and skewed the edit-versus-read table until I reran on full ids. Caught before publishing."
+    solution: "Key by full session id and assert uniqueness in throwaway aggregation scripts."

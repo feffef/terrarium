@@ -29,3 +29,8 @@ occurrences:
     severity: nit
     description: "Issued create_pull_request and subscribe_pr_activity in one call with a guessed PR number 2981; it matched, but the subscription depended on the create result."
     solution: "Wait for the create result before subscribing."
+  - session: session_013zxzeRSMtPAREKXCce9GT6
+    date: "2026-11-09"
+    severity: minor
+    description: "Subscribed to PR activity on a guessed PR number (1) before any PR existed, then had to unsubscribe and ignore a stale wake event."
+    solution: "Subscribe only with the number returned by create_pull_request; the PR-open hint could say so."

@@ -439,3 +439,28 @@ occurrences:
     severity: nit
     description: "Ran git log on the Glass Box layer before reading docs/agents/git-conventions.md; the late-read hook flagged it."
     solution: "None needed: the doc's read-only list does not name log used to trace a fact; a one-line mention would have prompted the read."
+  - session: session_013zxzeSj1mJxbgdKHbwgK2s
+    date: "2026-11-09"
+    severity: nit
+    description: "Ran git rev-parse before reading git-conventions.md; a hook then demanded the read. The doc showed the call was already fine."
+    solution: "None needed; the hook caught it with no cost."
+  - session: session_013zxzeR2kKbsT81QWkXUrvK
+    date: "2026-11-09"
+    severity: nit
+    description: "Ran my first git fetch before reading docs/agents/git-conventions.md, which CLAUDE.md requires first"
+    solution: "Read the doc at session start when a task will clearly use git; the hook reminder came after the command"
+  - session: session_013zxzeRB6ciegpxcRDfedSF
+    date: "2026-11-09"
+    severity: nit
+    description: "Edited layers/glassbox/GLOSSARY.md before the ADR-0021 and tenant-glossary reads that the hook and rule asked for; the edit was right, no cost."
+    solution: "Read the Tenant glossary before editing a Tenant's files, as the tenant-glossary rule says."
+  - session: session_013zxzePXTf8YZ6THtADS4yY
+    date: "2026-11-10"
+    severity: nit
+    description: "Ran git branch --show-current before reading docs/agents/git-conventions.md; the late-read hook fired after. The doc showed the call was fine."
+    solution: "Treat --show-current as read-only in CLAUDE.md's list, or have the hook skip it."
+  - session: session_013zxzeNkk5oEC8RnBdMeMEt
+    date: "2026-11-10"
+    severity: nit
+    description: "Ran git status and the first digest commands before reading git-conventions.md, which CLAUDE.md requires before non-read-only git; a hook flagged it afterwards."
+    solution: "Read git-conventions.md at the start of any run that will commit."
