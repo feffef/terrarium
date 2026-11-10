@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzePSj9Rpf6qCGowU7gi
 startedAt: 2026-11-10T07:32:57Z
-endedAt: 2026-11-10T07:42:53Z
+endedAt: 2026-11-10T07:47:16Z
 kind: autonomous
 goal: Scheduled sync of the Glass Box guide pages to main
-status: in-review
-outcome: PR 3030 opened, gate green, awaiting CI to merge
-summary: "Scheduled glassbox-update run, fully agent-initiated (no human prompt). The script flagged 38 guide pages against main a943030c; I advanced pins, then dispatched five sonnet subagents (8 pages each, shared checkout, edit-only) to re-check and claim-check the flagged pages plus the 5 oldest-checked rotation pages. I confirmed their two reported contradictions in source (docsRead derived-only; deny-a-read path removed), hand-pinned the four pages the script left alone because of edited ranges, replaced the StatTile Excerpt, fixed two stale ranges, updated update.yml, and ran gate:scoped green. Opened PR 3030 and subscribed. Open: ADR-0009 text still has the stale wording; hooks/40 docs claims and part of index were not fully re-verified."
+status: completed
+outcome: PR 3030 merged; guide pages pinned to a943030c
+summary: "Scheduled glassbox-update run, fully agent-initiated (no human prompt). The script flagged 38 guide pages against main a943030c; I advanced pins, then dispatched five sonnet subagents (8 pages each, shared checkout, edit-only) to re-check and claim-check the flagged pages plus the 5 oldest-checked rotation pages. I confirmed their two reported contradictions in source (docsRead derived-only; deny-a-read path removed), hand-pinned the four pages the script left alone because of edited ranges, replaced the StatTile Excerpt, fixed two stale ranges, updated update.yml, and ran gate:scoped green. Opened PR 3030, CI green, merged it via merge-pr. Open: ADR-0009 text still has the stale wording; hooks/40 docs claims and part of index were not fully re-verified."
 prs:
   - "3030"
 docsRead:
@@ -54,16 +54,19 @@ frictions:
   - description: The update script leaves pages with edited ranges unpinned, so subagents could not pass their tests until I pinned by hand.
     solution: Brief agents to pin edited pages themselves, or have the script pin them after re-lining.
     severity: minor
-durationSec: 596
+durationSec: 859
 models:
-  claude-sonnet-5-5: 78
+  claude-sonnet-5-5: 94
 toolCounts:
-  Bash: 27
-  Skill: 3
+  Bash: 32
+  Skill: 4
   Agent: 5
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/agents/10.subagents.md
   - layers/glassbox/content/guide/pages/agents/20.workflow-scripts.md
@@ -352,35 +355,35 @@ subagents:
     durationSec: 112
     toolCalls: 27
     modelCalls: 19
-    tokenShare: 11.7
+    tokenShare: 10.8
   - type: general-purpose
     task: Recheck guide pages G1
     model: sonnet
     durationSec: 118
     toolCalls: 24
     modelCalls: 20
-    tokenShare: 12.3
+    tokenShare: 11.4
   - type: general-purpose
     task: Recheck guide pages G2
     model: sonnet
     durationSec: 160
     toolCalls: 32
     modelCalls: 26
-    tokenShare: 15.8
+    tokenShare: 14.6
   - type: general-purpose
     task: Recheck guide pages G3
     model: sonnet
     durationSec: 134
     toolCalls: 31
     modelCalls: 27
-    tokenShare: 14.8
+    tokenShare: 13.7
   - type: general-purpose
     task: Recheck guide pages G4
     model: sonnet
     durationSec: 152
     toolCalls: 35
     modelCalls: 30
-    tokenShare: 18
+    tokenShare: 16.6
 gitBranch: claude/relaxed-einstein-f0546m
 entrypoint: remote_trigger
 cliVersion: 2.1.322
