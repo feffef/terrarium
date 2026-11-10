@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzePY5ruxnnX3PjPY9WM
 startedAt: 2026-11-10T04:03:28Z
-endedAt: 2026-11-10T04:11:31Z
+endedAt: 2026-11-10T07:16:10Z
 kind: autonomous
 goal: Scheduled audit of the repo's docs for staleness and muddle
-status: in-review
-outcome: One ADR-0009 drift fix is in PR 3028, which waits for a human merge; no sweep PR
-summary: "Scheduled audit-docs run; no human prompted any step (all agent-initiated). Three read-only reviewers returned 9 findings (Freshness 0, Single-home 6, Coherence 3); no overlaps. One checker returned 1 CONFIRMED-BUT and 8 WRONG. The 8 WRONGs were duplicates that are really a specific case plus a pointer (B1, B3, B4), text covered by open prune trials (B2, C2), placements stated by a commit or issue (B5, B6), an invented \"10 lines\" definition (C2) and a text that was not ambiguous (C3). The survivor was ADR-0009's claim that read-first-hint.ts is the one reminder hook; merge-close-stop.ts also blocks one stop after a merge. I fixed it in place, restamped the rule, ran Standards and Spec review (clean, one wording nit applied) and gate:scoped (green), pushed, opened PR 3028 and subscribed. The PR touches an ADR, so it is escalated for a human merge. No sweep PR (no other fix survived) and no issue filed. Two commits instead of one because an amend of the pushed commit was denied. Covered: CLAUDE.md, GLOSSARY.md, GLOSSARY-MAP.md, docs/agents/*, tests/README.md, ADRs 0003 0004 0009 0027, glassbox and commons GLOSSARY.md, Skills close-session code-review dispatch-subagents clear-backlog dependabot-sweep."
+status: completed
+outcome: One ADR-0009 drift fix merged in PR 3028 after a human merge; no sweep PR
+summary: "Scheduled audit-docs run; no human prompted any step (all agent-initiated). Three read-only reviewers returned 9 findings (Freshness 0, Single-home 6, Coherence 3); no overlaps. One checker returned 1 CONFIRMED-BUT and 8 WRONG. The 8 WRONGs were duplicates that are really a specific case plus a pointer (B1, B3, B4), text covered by open prune trials (B2, C2), placements stated by a commit or issue (B5, B6), an invented \"10 lines\" definition (C2) and a text that was not ambiguous (C3). The survivor was ADR-0009's claim that read-first-hint.ts is the one reminder hook; merge-close-stop.ts also blocks one stop after a merge. I fixed it in place, restamped the rule, ran Standards and Spec review (clean, one wording nit applied) and gate:scoped (green), pushed, opened PR 3028 and subscribed. The PR touches an ADR, so it was escalated; a human merged it later (the merge event arrived hours after CI went green). No sweep PR (no other fix survived) and no issue filed. Two commits instead of one because an amend of the pushed commit was denied. A human asked \"You didn't log yet?\" after the in-review log had already landed; that was a check, not a missed PR-open log. Covered: CLAUDE.md, GLOSSARY.md, GLOSSARY-MAP.md, docs/agents/*, tests/README.md, ADRs 0003 0004 0009 0027, glassbox and commons GLOSSARY.md, Skills close-session code-review dispatch-subagents clear-backlog dependabot-sweep."
 prs:
   - "3028"
 docsRead:
@@ -93,15 +93,15 @@ frictions:
   - description: The Stop hook asked for a push before review and gate had finished, so the branch holds two commits though the Skill asks for one.
     solution: Tell scheduled-run Skills that a squash-merge makes the commit count moot.
     severity: nit
-durationSec: 483
+durationSec: 11562
 models:
-  claude-sonnet-5-5: 70
+  claude-sonnet-5-5: 88
 toolCounts:
-  Bash: 21
+  Bash: 24
   Read: 2
-  Skill: 4
+  Skill: 5
   Agent: 6
-  ReadNotifications: 1
+  ReadNotifications: 5
   Edit: 2
   ToolSearch: 1
   mcp__github__list_pull_requests: 1
@@ -359,37 +359,37 @@ subagents:
     durationSec: 55
     toolCalls: 12
     modelCalls: 11
-    tokenShare: 11.3
+    tokenShare: 9.1
   - type: general-purpose
     task: Single-home reviewer
     durationSec: 77
     toolCalls: 14
     modelCalls: 10
-    tokenShare: 12.8
+    tokenShare: 10.3
   - type: general-purpose
     task: Coherence reviewer
     durationSec: 130
     toolCalls: 20
     modelCalls: 18
-    tokenShare: 18.9
+    tokenShare: 15.3
   - type: general-purpose
     task: Fact-check findings pool
     durationSec: 108
     toolCalls: 24
     modelCalls: 22
-    tokenShare: 13.7
+    tokenShare: 11
   - type: general-purpose
     task: Standards review
     durationSec: 16
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 2.8
+    tokenShare: 2.3
   - type: general-purpose
     task: Spec review
     durationSec: 18
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 2.3
+    tokenShare: 1.9
 gitBranch: claude/festive-mayer-056auw
 entrypoint: remote_trigger
 cliVersion: 2.1.322
