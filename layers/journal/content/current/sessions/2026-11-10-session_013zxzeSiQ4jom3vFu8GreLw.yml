@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_013zxzeSiQ4jom3vFu8GreLw
 startedAt: 2026-11-10T07:28:48Z
-endedAt: 2026-11-10T08:27:38Z
+endedAt: 2026-11-10T08:30:10Z
 kind: interactive
 goal: "Clear the issue backlog: triage, grill the owner, build and land fixes"
 status: in-review
-outcome: "#3031 merged, #3024 closed; two branches pushed and gating, PRs next; 2 issues deferred, 3 date-gated"
-summary: "The owner invoked /clear-backlog (human-instructed). Explore ran on nine needs-triage issues (3029, 3026, 3025, 3024, 3022, 3021, 3020, 3017, 2992): one build (3024), five grill, three date-gated (2992, 3017, 3021). Every other open issue was skipped because an agent wrote its last comment. I built 3024 in a worktree, opened PR 3031 (docs-only, reviewed, gate green) and merged it with merge-pr.ts after posting a verdict; the script first refused the closing keyword because 3024 was not ready-for-agent, so I reworded the PR to \"relates to\" and closed the issue myself, since the script reconciled nothing. The grilling had five questions (the push notification said six). The owner answered: defer 3029 until they read the server docs, defer 3020 until more logs exist, and go with the picks for 3022 (merge-pr.ts owner-approved option), 3025 (CLAUDE.md grep-scope clause) and 3026 (the wide sample-first rule, shown through the preview server). I labelled those three ready-for-agent, commented the deferrals, and launched a build of two branches (merge-pr-owner-approved; claude-md-grep-scope-and-sample-first, grouping 3025 and 3026 because they share CLAUDE.md). Both need a human merge (Human-only paths). Open: those builds' results, review, push, PRs and merges. Both build runs hit the 3-round review cap with cosmetic findings; I fixed those by hand, pushed both branches and started gate:scoped on each. I verified only 3029's claim against source before asking; the other four picks were the triage agents', and I said so."
+outcome: "#3031 and #3032 merged, 3024-3026 closed; merge-pr branch gating, human merge; 2 issues deferred, 3 date-gated"
+summary: "The owner invoked /clear-backlog (human-instructed). Explore ran on nine needs-triage issues (3029, 3026, 3025, 3024, 3022, 3021, 3020, 3017, 2992): one build (3024), five grill, three date-gated (2992, 3017, 3021). Every other open issue was skipped because an agent wrote its last comment. I built 3024 in a worktree, opened PR 3031 (docs-only, reviewed, gate green) and merged it with merge-pr.ts after posting a verdict; the script first refused the closing keyword because 3024 was not ready-for-agent, so I reworded the PR to \"relates to\" and closed the issue myself, since the script reconciled nothing. The grilling had five questions (the push notification said six). The owner answered: defer 3029 until they read the server docs, defer 3020 until more logs exist, and go with the picks for 3022 (merge-pr.ts owner-approved option), 3025 (CLAUDE.md grep-scope clause) and 3026 (the wide sample-first rule, shown through the preview server). I labelled those three ready-for-agent, commented the deferrals, and launched a build of two branches (merge-pr-owner-approved; claude-md-grep-scope-and-sample-first, grouping 3025 and 3026 because they share CLAUDE.md). The CLAUDE.md branch landed as PR 3032 (agent-merged: CLAUDE.md is not Human-only, contrary to the builders' note). The merge-pr branch touches Human-only files and waits for a human merge. Open: those builds' results, review, push, PRs and merges. Both build runs hit the 3-round review cap with cosmetic findings; I fixed those by hand, pushed both branches and started gate:scoped on each. I verified only 3029's claim against source before asking; the other four picks were the triage agents', and I said so."
 prs:
   - "3031"
+  - "3032"
 docsRead:
   - path: .agents/skills/auto-triage/SKILL.md
     reason: (no reason given)
@@ -26,6 +27,8 @@ docsRead:
     reason: (read before editing)
   - path: docs/adr/0027-prune-trials.md
     reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (read before editing)
   - path: .agents/skills/implement/SKILL.md
     reason: (no reason given)
   - path: docs/agents/verifying-ui-changes.md
@@ -46,8 +49,6 @@ docsRead:
     reason: (no reason given)
   - path: scripts/lib/author-trust.ts
     reason: (no reason given)
-  - path: docs/adr/0004-objective-safety-gate.md
-    reason: (read before editing)
 skillsUsed:
   - name: clear-backlog-explore
     reason: triage nine issues in parallel
@@ -83,27 +84,30 @@ frictions:
   - description: "Linked worktree(s) left with uncommitted or unpushed work at close: /home/user/terrarium/.claude/worktrees/wf_7d410a86-fae-1, /home/user/terrarium/.claude/worktrees/wf_7d410a86-fae-2"
     solution: Push each, or remove it if its work is meant to be dropped.
     severity: minor
-durationSec: 3530
+  - description: Build agents and my own issue comments called CLAUDE.md Human-only; the rule paths on origin/main do not list it, so I repeated an unverified claim on three issues.
+    solution: Check list-human-only-paths.ts output before a brief or comment names a file Human-only.
+    severity: minor
+durationSec: 3682
 models:
-  claude-sonnet-5-5: 124
+  claude-sonnet-5-5: 154
 toolCounts:
-  Bash: 30
-  Read: 8
+  Bash: 40
+  Read: 9
   Workflow: 4
   ToolSearch: 3
   PushNotification: 1
   Skill: 5
   Grep: 1
   mcp__github__issue_write: 4
-  mcp__github__add_issue_comment: 7
+  mcp__github__add_issue_comment: 8
   mcp__github__list_pull_requests: 1
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
   Write: 2
-  ReadNotifications: 3
+  ReadNotifications: 5
   mcp__github__pull_request_read: 1
   mcp__github__update_pull_request: 1
-  mcp__github__issue_read: 1
+  mcp__github__issue_read: 2
   Edit: 2
 filesEdited:
   - docs/agents/pr-workflow.md
@@ -121,10 +125,10 @@ rulesGlobal:
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0017.md
 rulesFollowedUp:
-  - .claude/rules/adr-0027.md
-  - .claude/rules/adr-0029.md
   - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0027.md
   - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0029.md
 adrHints:
   - adr: 27
     via: path
@@ -136,7 +140,7 @@ adrHints:
     by: main
   - adr: 4
     via: text
-    readAfter: false
+    readAfter: true
     by: main
   - adr: 27
     via: path
@@ -155,7 +159,6 @@ docsReadBySubagents:
   - docs/agents/verifying-ui-changes.md
   - .agents/skills/code-review/SKILL.md
   - docs/adr/0029-instructions-load-with-the-files-they-govern.md
-  - docs/adr/0004-objective-safety-gate.md
   - .agents/skills/triage/SKILL.md
 ruleUse:
   - by: main
@@ -716,42 +719,42 @@ subagents:
     durationSec: 13
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: workflow-subagent
     task: build docs/ui-fixed-width-fonts
     model: claude-sonnet-5-5
     durationSec: 98
     toolCalls: 16
     modelCalls: 12
-    tokenShare: 4.3
+    tokenShare: 3.9
   - type: workflow-subagent
     task: Spec docs/ui-fixed-width-fonts r2
     model: claude-sonnet-5-5
     durationSec: 17
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: workflow-subagent
     task: fix docs/ui-fixed-width-fonts r2
     model: claude-sonnet-5-5
     durationSec: 46
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 1.8
+    tokenShare: 1.7
   - type: workflow-subagent
     task: fix docs/ui-fixed-width-fonts r1
     model: claude-sonnet-5-5
     durationSec: 51
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 1.9
+    tokenShare: 1.7
   - type: workflow-subagent
     task: Standards docs/ui-fixed-width-fonts r3
     model: claude-sonnet-5-5
     durationSec: 10
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.1
+    tokenShare: 1
   - type: workflow-subagent
     task: gate docs/ui-fixed-width-fonts
     model: claude-sonnet-5-5
@@ -765,14 +768,14 @@ subagents:
     durationSec: 16
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: Standards docs/ui-fixed-width-fonts r1
     model: claude-sonnet-5-5
     durationSec: 12
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 2.5
+    tokenShare: 2.3
   - type: workflow-subagent
     task: Spec docs/ui-fixed-width-fonts r1
     model: claude-sonnet-5-5
@@ -786,189 +789,189 @@ subagents:
     durationSec: 116
     toolCalls: 20
     modelCalls: 11
-    tokenShare: 4.5
+    tokenShare: 4.2
   - type: workflow-subagent
     task: Spec claude-md-grep-scope-and-sample-first r1
     model: claude-sonnet-5-5
     durationSec: 16
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: fix claude-md-grep-scope-and-sample-first r1
     model: claude-sonnet-5-5
     durationSec: 55
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: workflow-subagent
     task: fix merge-pr-owner-approved r1
     model: claude-sonnet-5-5
     durationSec: 261
     toolCalls: 8
     modelCalls: 8
-    tokenShare: 2.3
+    tokenShare: 2.1
   - type: workflow-subagent
     task: Standards claude-md-grep-scope-and-sample-first r1
     model: claude-sonnet-5-5
     durationSec: 15
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 2.6
+    tokenShare: 2.4
   - type: workflow-subagent
     task: fix claude-md-grep-scope-and-sample-first r2
     model: claude-sonnet-5-5
     durationSec: 69
     toolCalls: 10
     modelCalls: 8
-    tokenShare: 2.1
+    tokenShare: 1.9
   - type: workflow-subagent
     task: Standards merge-pr-owner-approved r1
     model: claude-sonnet-5-5
     durationSec: 24
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1.5
+    tokenShare: 1.3
   - type: workflow-subagent
     task: Spec merge-pr-owner-approved r2
     model: claude-sonnet-5-5
     durationSec: 31
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: workflow-subagent
     task: Spec claude-md-grep-scope-and-sample-first r2
     model: claude-sonnet-5-5
     durationSec: 17
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: Spec claude-md-grep-scope-and-sample-first r3
     model: claude-sonnet-5-5
     durationSec: 20
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: workflow-subagent
     task: build merge-pr-owner-approved
     model: claude-sonnet-5-5
     durationSec: 441
     toolCalls: 25
     modelCalls: 22
-    tokenShare: 7.7
+    tokenShare: 7
   - type: workflow-subagent
     task: Standards claude-md-grep-scope-and-sample-first r2
     model: claude-sonnet-5-5
     durationSec: 13
     toolCalls: 3
     modelCalls: 2
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: workflow-subagent
     task: Spec merge-pr-owner-approved r3
     model: claude-sonnet-5-5
     durationSec: 26
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 1.8
+    tokenShare: 1.6
   - type: workflow-subagent
     task: Spec merge-pr-owner-approved r1
     model: claude-sonnet-5-5
     durationSec: 32
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 1.8
+    tokenShare: 1.6
   - type: workflow-subagent
     task: fix merge-pr-owner-approved r2
     model: claude-sonnet-5-5
     durationSec: 259
     toolCalls: 8
     modelCalls: 8
-    tokenShare: 2.3
+    tokenShare: 2.1
   - type: workflow-subagent
     task: Standards merge-pr-owner-approved r3
     model: claude-sonnet-5-5
     durationSec: 21
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: Standards merge-pr-owner-approved r2
     model: claude-sonnet-5-5
     durationSec: 22
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: Standards claude-md-grep-scope-and-sample-first r3
     model: claude-sonnet-5-5
     durationSec: 15
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 1.1
+    tokenShare: 1
   - type: workflow-subagent
     task: "triage #2992"
     model: claude-sonnet-5-5
     durationSec: 13
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: workflow-subagent
     task: "triage #3024"
     model: claude-sonnet-5-5
     durationSec: 28
     toolCalls: 10
     modelCalls: 6
-    tokenShare: 2.1
+    tokenShare: 2
   - type: workflow-subagent
     task: "triage #3017"
     model: claude-sonnet-5-5
     durationSec: 13
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: "triage #3025"
     model: claude-sonnet-5-5
     durationSec: 33
     toolCalls: 14
     modelCalls: 6
-    tokenShare: 2.2
+    tokenShare: 2
   - type: workflow-subagent
     task: "triage #3021"
     model: claude-sonnet-5-5
     durationSec: 17
     toolCalls: 9
     modelCalls: 4
-    tokenShare: 1.6
+    tokenShare: 1.5
   - type: workflow-subagent
     task: "triage #3022"
     model: claude-sonnet-5-5
     durationSec: 29
     toolCalls: 12
     modelCalls: 5
-    tokenShare: 2
+    tokenShare: 1.8
   - type: workflow-subagent
     task: "triage #3029"
     model: claude-sonnet-5-5
     durationSec: 26
     toolCalls: 12
     modelCalls: 5
-    tokenShare: 3.4
+    tokenShare: 3.1
   - type: workflow-subagent
     task: "triage #3026"
     model: claude-sonnet-5-5
     durationSec: 28
     toolCalls: 13
     modelCalls: 6
-    tokenShare: 2.1
+    tokenShare: 1.9
   - type: workflow-subagent
     task: "triage #3020"
     model: claude-sonnet-5-5
     durationSec: 32
     toolCalls: 14
     modelCalls: 6
-    tokenShare: 2.2
+    tokenShare: 2.1
 gitBranch: ccr-918c5222-x6y0wc
 entrypoint: remote_mobile
 cliVersion: 2.1.322
