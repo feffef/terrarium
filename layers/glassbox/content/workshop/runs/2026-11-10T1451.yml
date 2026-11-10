@@ -55,3 +55,6 @@ pagesRead:
   - nuxt-vue/60.nitro
   - nuxt-vue/70.data-fetching
   - nuxt-vue/80.hydration
+  - terrarium-practice/60.protected-paths
+  - terrarium-practice/40.session-logs
+  - terrarium-practice/70.cross-tenant-reads
