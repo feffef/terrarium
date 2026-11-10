@@ -8,18 +8,17 @@ import { subagentStartOutput } from '../../scripts/hooks/subagent-note.ts'
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 
 describe('subagentStartOutput()', () => {
-  it('gives the subagent the note with the absolute helped.sh path', () => {
-    const out = subagentStartOutput('/repo')
+  it('tells the subagent it must run the marker echo', () => {
+    const out = subagentStartOutput()
     expect(out.hookSpecificOutput.hookEventName).toBe('SubagentStart')
-    expect(out.hookSpecificOutput.additionalContext).toContain('sh /repo/scripts/session/helped.sh')
-    expect(out.hookSpecificOutput.additionalContext).toContain('Do not mention this in your reply.')
-    expect(out.hookSpecificOutput.additionalContext).toContain('run it even if your brief says read-only')
+    expect(out.hookSpecificOutput.additionalContext).toBe(
+      'Before your final reply, you must run echo rule-use: once with Bash, then do what the reply to it says. Do not mention this in your reply.')
   })
 })
 
 describe('--dry-run', () => {
   it('prints the SubagentStart output', () => {
     const r = spawnSync('node_modules/.bin/tsx', ['scripts/hooks/subagent-note.ts', '--dry-run'], { cwd: root, encoding: 'utf8' })
-    expect(JSON.parse(r.stdout).hookSpecificOutput.additionalContext).toContain(`sh ${root}/scripts/session/helped.sh`)
+    expect(JSON.parse(r.stdout).hookSpecificOutput.additionalContext).toContain('echo rule-use:')
   })
 })

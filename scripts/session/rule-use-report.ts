@@ -28,6 +28,7 @@ export interface RuleRow {
   start: number
   native: number
   hint: number
+  read: number
   /** Native loads by the file that triggered them. */
   triggers: Record<string, number>
 }
@@ -37,7 +38,7 @@ export interface RuleUseReport {
   coverage: { logs: number; withRuleUse: number }
   answered: Record<string, { entries: number; answered: number }>
   rules: RuleRow[]
-  via: { start: number; native: number; hint: number }
+  via: { start: number; native: number; hint: number; read: number }
   /** An unanswered subagent may never have been asked (its loads still count, #3019). */
   quality: { noLoadRecorded: number; unansweredSubagents: number }
 }
@@ -49,7 +50,7 @@ export function ruleUseReport(logs: SessionLog[], since: number): RuleUseReport 
   const entries = inWindow.flatMap(({ data }) => (data.ruleUse ?? []) as RuleUseEntry[])
   const answered: RuleUseReport['answered'] = {}
   const rows = new Map<string, RuleRow & { values: Record<string, number> }>()
-  const via = { start: 0, native: 0, hint: 0 }
+  const via = { start: 0, native: 0, hint: 0, read: 0 }
   const quality = { noLoadRecorded: 0, unansweredSubagents: 0 }
   for (const e of entries) {
     const a = (answered[e.by] ??= { entries: 0, answered: 0 })
@@ -58,7 +59,7 @@ export function ruleUseReport(logs: SessionLog[], since: number): RuleUseReport 
     else if (e.by !== 'main') quality.unansweredSubagents++
     for (const r of e.reported) if (r.why?.startsWith(NO_LOAD_WHY)) quality.noLoadRecorded++
     for (const l of e.loads) {
-      const row = rows.get(l.rule) ?? { rule: l.rule, loads: 0, answeringLoads: 0, steered: 0, backed: 0, enoughData: false, start: 0, native: 0, hint: 0, triggers: {}, values: {} }
+      const row = rows.get(l.rule) ?? { rule: l.rule, loads: 0, answeringLoads: 0, steered: 0, backed: 0, enoughData: false, start: 0, native: 0, hint: 0, read: 0, triggers: {}, values: {} }
       rows.set(l.rule, row)
       row.loads++
       row[l.via]++
@@ -103,10 +104,10 @@ export function renderReport(r: RuleUseReport): string {
         (row.enoughData
           ? `steered ${pct(row.steered)}, backed ${pct(row.backed)}`
           : `not enough data (under ${ENOUGH_DATA})`),
-      `    start ${row.start}, native ${row.native}, hint ${row.hint}${Object.keys(row.triggers).length ? `; triggers: ${Object.entries(row.triggers).map(([t, n]) => `${t} ${n}`).join(', ')}` : ''}`,
+      `    start ${row.start}, native ${row.native}, hint ${row.hint}, read ${row.read}${Object.keys(row.triggers).length ? `; triggers: ${Object.entries(row.triggers).map(([t, n]) => `${t} ${n}`).join(', ')}` : ''}`,
     ]),
     '',
-    `Loads by via: start ${r.via.start}, native ${r.via.native}, hint ${r.via.hint}`,
+    `Loads by via: start ${r.via.start}, native ${r.via.native}, hint ${r.via.hint}, read ${r.via.read}`,
     `Data quality: ${r.quality.noLoadRecorded} reported with no load recorded, ${r.quality.unansweredSubagents} subagent entries unanswered`,
   ]
   return `${lines.join('\n')}\n`

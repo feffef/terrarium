@@ -46,7 +46,7 @@ import {
 } from './shell-reads.ts'
 import { adrDocNumber, adrHintsIn, ruleAdr, ruleBlockFiles, type AdrHintVia } from '../lib/adr-rules.ts'
 import { root, runIfMain } from '../lib/cli.ts'
-import { HELPED_SCRIPT, isRulePath, reportedNames, ruleKey, ruleName, type RuleLoadRow } from './rule-use.ts'
+import { RULE_USE_CALL, isRulePath, reportedNames, ruleKey, ruleName, type RuleLoadRow } from './rule-use.ts'
 
 /** The one authored-scratch file per container (one session per container in the
  *  remote model). Gitignored — its home is `main`. Single-homed here so its
@@ -141,7 +141,7 @@ export interface MechanicalTrace {
   rulesRead: string[]
   /** The SubagentStart note reached this agent. */
   helpedAsked: boolean
-  /** What its last `helped.sh` call reported; absent when it never ran it. */
+  /** What its last `echo rule-use:` call reported; absent when it never ran it. */
   reportedNamed?: ReportedEntry[]
   /** Subagent entries (which ones: `ruleUseEntry`), in `subagents` order. Set by `foldSubagentTrace`. */
   ruleUse?: RuleUseEntry[]
@@ -625,7 +625,7 @@ export function extractTrace(
       const hinted = hintedRules(att.content)
       rules.push(...hinted)
       loads.push(...hinted.map((rule) => ({ rule, via: 'hint' as const })))
-      if (hintText(att.content).includes(HELPED_SCRIPT)) helpedAsked = true
+      if (hintText(att.content).includes(RULE_USE_CALL)) helpedAsked = true
       hintAt.push(...adrHintsIn(hintText(att.content)).map((h) => [h, i] as const))
     }
     if (att?.type === 'instructions') {
@@ -714,7 +714,13 @@ export function extractTrace(
     adrHints: mergeAdrHints(hintAt.map(([h, at]) => ({
       adr: Number(h.adr), via: h.via, readAfter: adrReadInFull(records.slice(at + 1), h.adr, docIndex, rel), by: 'main' as const,
     }))),
-    ruleLoads: [...dedup(alwaysLoadedRules).map((rule) => ({ rule, via: 'start' as const })), ...loadByRule.values()],
+    // A rule read as a file counts as loaded: the harness may then skip its path load.
+    ruleLoads: [
+      ...dedup(alwaysLoadedRules).map((rule) => ({ rule, via: 'start' as const })),
+      ...loadByRule.values(),
+      ...dedup(reads).filter((p) => isRulePath(p)).map(ruleKey)
+        .filter((rule) => !alwaysLoadedRules.includes(rule) && !loadByRule.has(rule)).map((rule) => ({ rule, via: 'read' as const })),
+    ],
     rulesRead: dedup(reads).filter((p) => isRulePath(p)).map(ruleKey),
     helpedAsked,
     // A denied call (a permission classifier, say) is no answer.

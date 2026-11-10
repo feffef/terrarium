@@ -126,7 +126,7 @@
           },
           {
             "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/hooks/helped-ask.sh || true"
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/hooks/rule-use-ask.sh || true"
           }
         ]
       },

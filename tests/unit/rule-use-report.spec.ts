@@ -32,14 +32,14 @@ describe('ruleUseReport', () => {
   it('rates each rule over the answering agents that loaded it, flagging thin data', () => {
     expect(report.rules).toEqual([
       { rule: A, loads: 3, answeringLoads: 2, steered: 0.5, backed: 0.5, enoughData: false,
-        start: 0, native: 3, hint: 0, triggers: { 'CLAUDE.md': 2, '(none)': 1 } },
+        start: 0, native: 3, hint: 0, read: 0, triggers: { 'CLAUDE.md': 2, '(none)': 1 } },
       { rule: B, loads: 1, answeringLoads: 1, steered: 0, backed: 0, enoughData: false,
-        start: 1, native: 0, hint: 0, triggers: {} },
+        start: 1, native: 0, hint: 0, read: 0, triggers: {} },
     ])
   })
 
   it('counts loads by via, and the data-quality gaps', () => {
-    expect(report.via).toEqual({ start: 1, native: 3, hint: 0 })
+    expect(report.via).toEqual({ start: 1, native: 3, hint: 0, read: 0 })
     expect(report.quality).toEqual({ noLoadRecorded: 1, unansweredSubagents: 1 })
   })
 

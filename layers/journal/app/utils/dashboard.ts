@@ -280,7 +280,7 @@ function tally(items: string[]): string {
   return [...counts].map(([k, n]) => (n > 1 ? `${k} ×${n}` : k)).join(', ')
 }
 
-const VIA_LABELS: Record<RuleLoad['via'], string> = { start: 'loaded at start', native: 'loaded natively', hint: 'loaded by a hint hook' }
+const VIA_LABELS: Record<RuleLoad['via'], string> = { start: 'loaded at start', native: 'loaded natively', hint: 'loaded by a hint hook', read: 'read as a file' }
 
 function mainLoadLine(l: RuleLoad): string {
   return l.trigger ? `${VIA_LABELS[l.via]}, triggered by ${l.trigger}` : VIA_LABELS[l.via]

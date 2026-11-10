@@ -32,10 +32,10 @@ export type AdrHint = z.infer<typeof adrHint>
 // One rule load: `start` when it loaded at session start (an always-loaded
 // rule, rated like the rest so moving a rule into or out of that set can be
 // measured, #3020), `native` when the harness loaded it for a path, `hint` when
-// a hint hook injected it; `trigger` is the file whose access loaded it, from
+// a hint hook injected it, `read` when the agent read the rule file itself; `trigger` is the file whose access loaded it, from
 // the InstructionsLoaded ledger when that survived (#3009). Logs before #3020
-// record no `start` loads.
-export const ruleLoad = z.object({ rule: z.string(), via: z.enum(['start', 'native', 'hint']), trigger: z.string().optional() })
+// record no `start` or `read` loads.
+export const ruleLoad = z.object({ rule: z.string(), via: z.enum(['start', 'native', 'hint', 'read']), trigger: z.string().optional() })
 export type RuleLoad = z.infer<typeof ruleLoad>
 // A rule or doc an agent reported. A rule always carries a value, a doc never;
 // what each value means: `ruleUseAsk` in scripts/session/rule-use.ts.
