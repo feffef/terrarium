@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSjaFuTmBXbfN2o5AH
 startedAt: 2026-11-10T14:51:02Z
-endedAt: 2026-11-10T15:27:21Z
+endedAt: 2026-11-10T15:34:42Z
 kind: delegated
 goal: Improve four Glass Box guide Subjects (curate run)
-status: in-review
-outcome: "PR 3040 open: 25 guide pages clarified and one false claim fixed; gate green, awaiting CI and self-merge"
-summary: "One human prompt started a glassbox-curate run, told to work autonomously and pick focuses until spend passed $20. The Scout found no new topic. I then ran four de-duplication passes (Nuxt Content, Web standards, Verification, Nuxt & Vue). Choosing those Subjects and running four instead of the Skill's one focus was agent-initiated, justified by the owner's keep-going instruction. Each page went to a fresh sonnet reader, an opus writer fixed only findings it could confirm from source, and a separate sonnet claim checker read every changed sentence. That caught one false old claim (Mermaid fallback colours) and two writer claims I had briefed wrongly (nested MDC colon counts) or that would go stale (no two layers export one name); I softened the latter myself. code-review then found three Why or Watch bullets that had lost a cost or reason, which I restored, and three linked pages missing from pagesRead, which I read. The first gate run aborted because I edited during it; the rerun on the final tree passed. Still open: CI, my verdict comment, merge via merge-pr.ts, and a final log once merged."
+status: completed
+outcome: "PR 3040 merged: 25 guide pages clarified, one false claim fixed, memory page and run entry updated"
+summary: "One human prompt started a glassbox-curate run, told to work autonomously and pick focuses until spend passed $20. The Scout found no new topic. I then ran four de-duplication passes (Nuxt Content, Web standards, Verification, Nuxt & Vue). Choosing those Subjects and running four instead of the Skill's one focus was agent-initiated, justified by the owner's keep-going instruction, and the PR body said so. Each page went to a fresh sonnet reader, an opus writer fixed only findings it could confirm from source, and a separate sonnet claim checker read every changed sentence. That caught one false old claim (Mermaid fallback colours), one claim I had briefed wrongly (nested MDC colon counts), and a writer claim that would go stale (no two layers export one name), which I softened. code-review then found three Why or Watch bullets that had lost a cost or reason, which I restored, and linked pages missing from pagesRead, of which I read three. The first gate run aborted because I edited during it; the rerun on the final tree passed. CI's safety-gate went green on the head, I posted the verdict, and merged PR 3040 with merge-pr.ts. I stopped at about $18 of the $20 budget so that review and landing fit. Left on the memory page: Git & GitHub, Installed skills, Deploy and the Walkthroughs have not had the pass, and a wrong code comment in app/utils/mermaid.ts is outside the Skill's remit."
 prs:
   - "3040"
 docsRead:
@@ -102,20 +102,29 @@ frictions:
   - description: orient.ts output for a Subject is 50 to 70 KB, so I read it in two pages three times; plain.ts for readers duplicated it.
     solution: Let orient --subject skip the frontmatter and Excerpt blocks, or print plain text only.
     severity: minor
-durationSec: 2179
+  - description: log-session --author rejected value on two skills docs in reported; only .claude/rules paths take one, which --pending does not say.
+    solution: Have --pending print which listed paths take a value.
+    severity: nit
+durationSec: 2619
 models:
-  claude-sonnet-5-5: 232
+  claude-sonnet-5-5: 254
 toolCounts:
-  Bash: 50
+  Bash: 53
   Read: 19
   mcp__claude-code-remote__get_session: 6
   Agent: 28
-  Write: 3
+  Write: 4
   Edit: 8
-  Skill: 3
+  Skill: 4
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__claude-code-remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__delete_trigger: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/workshop/runs/2026-11-10T1451.yml
   - layers/glassbox/content/guide/pages/verification/70.schema-evolution.md
@@ -199,6 +208,7 @@ ruleUse:
         why: kept revision and publishedAt
       - path: .agents/skills/dispatch-subagents/SKILL.md
       - path: docs/agents/pr-workflow.md
+        why: verdict comment and merge-pr.ts steps
       - path: docs/agents/git-conventions.md
       - path: docs/agents/github-integration.md
   - by: general-purpose
@@ -604,13 +614,13 @@ subagents:
     durationSec: 14
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 1.6
+    tokenShare: 1.5
   - task: "Fresh reader: pages 10 and 20"
     model: sonnet
     durationSec: 13
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.6
+    tokenShare: 0.5
   - task: "Fresh reader: pages 30 and 40"
     model: sonnet
     durationSec: 13
@@ -622,31 +632,31 @@ subagents:
     durationSec: 16
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.6
+    tokenShare: 0.5
   - task: "Opus writer: Nuxt Content fixes"
     model: opus
     durationSec: 138
     toolCalls: 17
     modelCalls: 16
-    tokenShare: 3.5
+    tokenShare: 3.3
   - task: Claim-check changed sentences
     model: sonnet
     durationSec: 43
     toolCalls: 14
     modelCalls: 7
-    tokenShare: 1.2
+    tokenShare: 1.1
   - task: "Opus writer: MDC and Mermaid fixes"
     model: opus
     durationSec: 220
     toolCalls: 38
     modelCalls: 34
-    tokenShare: 6.4
+    tokenShare: 6
   - task: Claim-check pages 50 and 60
     model: sonnet
     durationSec: 43
     toolCalls: 9
     modelCalls: 7
-    tokenShare: 1.1
+    tokenShare: 1
   - task: "Fresh reader: web standards 10, 20"
     model: sonnet
     durationSec: 15
@@ -664,13 +674,13 @@ subagents:
     durationSec: 132
     toolCalls: 34
     modelCalls: 14
-    tokenShare: 2.9
+    tokenShare: 2.7
   - task: Claim-check web standards edits
     model: sonnet
     durationSec: 40
     toolCalls: 13
     modelCalls: 8
-    tokenShare: 1.3
+    tokenShare: 1.2
   - task: "Fresh reader: verification 10, 20"
     model: sonnet
     durationSec: 14
@@ -682,31 +692,31 @@ subagents:
     durationSec: 15
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.6
+    tokenShare: 0.5
   - task: "Fresh reader: verification 50, 60"
     model: sonnet
     durationSec: 16
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.6
+    tokenShare: 0.5
   - task: "Fresh reader: verification 70, 80"
     model: sonnet
     durationSec: 14
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.6
+    tokenShare: 0.5
   - task: "Opus writer: Verification 10-40"
     model: opus
     durationSec: 181
     toolCalls: 42
     modelCalls: 25
-    tokenShare: 4.4
+    tokenShare: 4.1
   - task: "Opus writer: Verification 50-80"
     model: opus
     durationSec: 208
     toolCalls: 28
     modelCalls: 27
-    tokenShare: 4.7
+    tokenShare: 4.4
   - task: Claim-check Verification 10-40
     model: sonnet
     durationSec: 36
@@ -724,7 +734,7 @@ subagents:
     durationSec: 20
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 0.7
+    tokenShare: 0.6
   - task: "Fresh reader: nuxt-vue 50, 60, 70, 80"
     model: sonnet
     durationSec: 20
@@ -736,36 +746,37 @@ subagents:
     durationSec: 213
     toolCalls: 52
     modelCalls: 34
-    tokenShare: 5.3
+    tokenShare: 5
   - task: "Opus writer: Nuxt & Vue 50-80"
     model: opus
     durationSec: 183
     toolCalls: 43
     modelCalls: 28
-    tokenShare: 4.8
+    tokenShare: 4.5
   - task: Claim-check Nuxt & Vue edits
     model: sonnet
     durationSec: 71
     toolCalls: 23
     modelCalls: 13
-    tokenShare: 2
+    tokenShare: 1.9
   - task: "Code review: Standards axis"
     model: sonnet
     durationSec: 45
     toolCalls: 11
     modelCalls: 9
-    tokenShare: 2.6
+    tokenShare: 2.4
   - task: "Code review: Spec axis"
     model: sonnet
     durationSec: 39
     toolCalls: 12
     modelCalls: 6
-    tokenShare: 1.9
+    tokenShare: 1.8
 gitBranch: ccr-45c334dd-qxjizy
 entrypoint: remote_mobile
 cliVersion: 2.1.322
 learnings:
   - A scoped gate run aborts at its next step if any file changes during it, so review fixes have to land before the gate starts.
+  - A subscribed PR gets no check runs for a few minutes after opening; the green comment from the gate action is the wake signal, not get_check_runs.
 ideas:
   - Add a fresh-reader mode to glassbox-curate that runs once per Subject and writes its findings to a file in the workshop, so a later run reuses them instead of rereading, and the memory page stops growing leftovers.
 landedBy: Stop
