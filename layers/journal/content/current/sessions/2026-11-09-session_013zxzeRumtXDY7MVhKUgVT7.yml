@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRumtXDY7MVhKUgVT7
 startedAt: 2026-11-09T23:02:38Z
-endedAt: 2026-11-10T00:54:59Z
+endedAt: 2026-11-10T00:59:28Z
 kind: interactive
-goal: Replace rule and doc verdicts with out-of-band "what helped" capture
+goal: Replace rule and doc verdicts with out-of-band rule-use capture
 status: completed
 outcome: "PR 3010 merged: rule use is captured out of band with changed/confirmed/none/unsure values; 3009 closed, 3017 filed for the week review"
-summary: "Implemented issue 3009 (human-instructed: the owner ran /implement 3009, told me to ask the research session for questions, then said \"go ahead and build it\"). I first stopped because the issue was on hold; the research session relayed the owner's decisions (shape approved, docsRead reason/useful dropped, dashboard left alone, go-ahead; later: drop the (not read) over-credit check, mark a named rule with no load \"(no load recorded)\"). The owner directly decided to keep the prune trial untouched. Built test-first: an InstructionsLoaded ledger hook, a SubagentStart note hook, a no-op helped.sh, the per-agent ruleUse derivation, a required authored helped key, a names-only pending report, and removal of the verdict flows (CLAUDE.md ask, log-session step 3, authored docsRead, clear-backlog verdicts, six Skill briefs). Agent-initiated choices: omit ruleUse when empty (main's schema check would otherwise hold every log), `by: workflow` for untyped agents. Then, at the owner's direction, autonomous hardening: a headless smoke test, a review by the design's author (owner-requested), five code-review rounds on follow-up commits, and three live Sonnet test sessions (owner-requested; draft test PRs 3011-3013 against this branch, not to be merged). Reviews found real parser and join bugs (a command naming helped.sh counted as an answer; dual-loaded rules losing their trigger; redirect targets as names; trailing digits lost before an unspaced redirect; .md-less rule names), all fixed with tests. The live tests found no bugs: 11 of 11 subagents answered, none leaked the note, triggers joined per agent. This session's own log is held until 3010 merges (main's schema rejects ruleUse)."
+summary: "Implemented issue 3009 (human-instructed: the owner ran /implement 3009, told me to ask the research session for questions, then said \"go ahead and build it\"). I first stopped because the issue was on hold; the research session relayed the owner's decisions (shape approved, docsRead reason/useful dropped, dashboard left alone, go-ahead; later: drop the (not read) over-credit check, mark a named rule with no load \"(no load recorded)\"). The owner directly decided to keep the prune trial untouched. Built test-first: an InstructionsLoaded ledger hook, a SubagentStart note hook, a no-op helped.sh, the per-agent ruleUse derivation, a required authored helped key, a names-only pending report, and removal of the verdict flows (CLAUDE.md ask, log-session step 3, authored docsRead, clear-backlog verdicts, six Skill briefs). Agent-initiated choices: omit ruleUse when empty (main's schema check would otherwise hold every log), `by: workflow` for untyped agents. Then, at the owner's direction, autonomous hardening: a headless smoke test, a review by the design's author (owner-requested), five code-review rounds on follow-up commits, and three live Sonnet test sessions (owner-requested; draft test PRs 3011-3013 against this branch, not to be merged). Reviews found real parser and join bugs (a command naming helped.sh counted as an answer; dual-loaded rules losing their trigger; redirect targets as names; trailing digits lost before an unspaced redirect; .md-less rule names), all fixed with tests. The live tests found no bugs: 11 of 11 subagents answered, none leaked the note, triggers joined per agent. Later the owner asked to restore a rule value scale (changed/confirmed/none/unsure), which the design author had cut on its own reading of \"strip it\"; with the owner's sign-off the list became `reported` with per-rule values. Three more live tests (4-6) found two bugs (a rule read directly was marked unloaded; a read-only brief suppressed the call), both fixed and re-tested. The owner gave an explicit green light to merge; merge-pr.ts refused (Human-only files) and, after asking, I merged via the GitHub merge tool. Closed test PRs 3011-3013 at the owner's request; tests 4-6 closed their own PRs and landed abandoned logs through the new mechanism. Filed 3017 for the 7-day comparison against the audit artifact, and (owner-requested review of this log) issue 3019 for a ruleUse report script and joinable subagent entries."
 prs:
   - "3010"
 docsRead:
@@ -84,15 +84,15 @@ frictions:
   - description: "ADR-0004 reserves merging Human-only PRs for a human; I merged 3010 myself through the GitHub merge tool on the owner's explicit in-session green light, after merge-pr.ts refused and after asking (answer: no preference)."
     solution: Record owner-delegated merges explicitly (the verdict comment did); see the merge-pr.ts override idea.
     severity: minor
-durationSec: 6741
+durationSec: 7009
 models:
-  claude-opus-5-5: 616
+  claude-opus-5-5: 638
 toolCounts:
   ToolSearch: 7
-  Bash: 179
+  Bash: 187
   mcp__github__issue_read: 3
   mcp__claude-code-remote__send_message: 10
-  ReadNotifications: 34
+  ReadNotifications: 35
   Read: 1
   WebFetch: 1
   Skill: 6
@@ -113,7 +113,7 @@ toolCounts:
   Artifact: 1
   mcp__github__add_issue_comment: 1
   mcp__github__merge_pull_request: 1
-  mcp__github__issue_write: 1
+  mcp__github__issue_write: 2
 filesEdited:
   - tests/unit/rule-use.spec.ts
   - scripts/session/rule-use.ts
@@ -388,7 +388,7 @@ subagents:
     durationSec: 81
     toolCalls: 13
     modelCalls: 13
-    tokenShare: 1.6
+    tokenShare: 1.5
   - type: general-purpose
     task: "Spec review of #3009 diff"
     durationSec: 92
@@ -412,7 +412,7 @@ subagents:
     durationSec: 68
     toolCalls: 11
     modelCalls: 11
-    tokenShare: 1.1
+    tokenShare: 1
   - type: general-purpose
     task: Standards review of fix commit
     durationSec: 74
@@ -424,13 +424,13 @@ subagents:
     durationSec: 91
     toolCalls: 15
     modelCalls: 14
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: general-purpose
     task: Standards review of commit 7f5d12070
     durationSec: 36
     toolCalls: 6
     modelCalls: 6
-    tokenShare: 0.5
+    tokenShare: 0.4
   - type: general-purpose
     task: Spec review of commit 7f5d12070
     durationSec: 74
@@ -448,7 +448,7 @@ subagents:
     durationSec: 41
     toolCalls: 6
     modelCalls: 6
-    tokenShare: 0.8
+    tokenShare: 0.7
   - type: general-purpose
     task: Standards review of rule-value commit
     durationSec: 76
@@ -460,13 +460,13 @@ subagents:
     durationSec: 74
     toolCalls: 10
     modelCalls: 10
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: general-purpose
     task: Review last two fix commits
     durationSec: 53
     toolCalls: 9
     modelCalls: 9
-    tokenShare: 1
+    tokenShare: 0.9
 gitBranch: claude/confident-meitner-iaoj5x
 entrypoint: remote
 cliVersion: 2.1.321
