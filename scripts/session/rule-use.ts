@@ -21,7 +21,8 @@ export function subagentNote(repoRoot: string): string {
     'confirmed something you did. Give each rule a value: =changed if you did, avoided or decided something ' +
     'differently because of it, =confirmed if it matched what you were already doing; you may also mark one ' +
     '=none or =unsure. Name docs without a value (for example rule:example-rule.md=confirmed doc:docs/example.md). ' +
-    'If nothing applies, run it with no names. Do not mention this in your reply.'
+    'If nothing applies, run it with no names. It writes nothing, so run it even if your brief says read-only. ' +
+    'Do not mention this in your reply.'
   )
 }
 
