@@ -1,0 +1,255 @@
+schemaVersion: 1
+session: session_013zxzeNvpKDRhFYp216ti6n
+startedAt: 2026-11-10T08:46:52Z
+endedAt: 2026-11-10T09:00:23Z
+kind: autonomous
+goal: Scheduled curation pass on the Glass Box guide's Claude Code Subject
+status: in-review
+outcome: "PR #3034 opened with fewer repeats and clearer sentences; gate green, waiting for CI then self-merge"
+summary: "Autonomous glassbox-curate run, fired by a schedule; no human instruction. I chose the Claude Code Subject myself from the memory page's top lead. A fresh reader (sonnet) found repeats and unclear sentences; an opus writer made wording-only edits to four pages and the Rule term; a sonnet claim checker found two imprecise wordings, which I fixed; a fresh reader re-read; code-review found no hard violations and named pages missing from pagesRead, of which I read four and left four unread (said so in the PR). The Scout's two new topics went to the memory page as open ideas. The cost figure is unreported because get_session was not available. One slip: my own git add -A swept the writer's in-progress edits into an early commit; harmless as nothing was pushed yet."
+prs:
+  - "3034"
+docsRead:
+  - path: layers/glassbox/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-lesson/DECISIONS.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: .throwaway/glassbox-curate/guide-pages-1.md
+    reason: (no reason given)
+  - path: .throwaway/glassbox-curate/guide-pages-2.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/hooks/20.blocking-hooks.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/60.protected-paths.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/20.decision-records.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/hooks/30.hook-added-context.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/claude-code/10.claude-md.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/claude-code/20.path-scoped-rules.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/claude-code/40.permissions.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/claude-code/50.mcp-servers.md
+    reason: (read before editing)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+skillsUsed:
+  - name: glassbox-curate
+    reason: the routine's task
+  - name: dispatch-subagents
+    reason: before briefing the Scout, reader, writer and checker
+  - name: code-review
+    reason: required before the PR
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran git add -A while the background writer was still editing, so partial edits landed in my claim commit.
+    solution: Commit only my own files by path while a subagent edits the same checkout.
+    severity: nit
+  - description: ScheduleWakeup was blocked outside /loop; I tried it to wait for a subagent that self-notifies.
+    solution: The skill text could say subagents self-notify, so never schedule a wakeup.
+    severity: nit
+  - description: get_session was not available, so the run cost could not be read for the PR body.
+    solution: Expose get_session in scheduled curate runs, or let the skill accept 'unreported' earlier.
+    severity: minor
+durationSec: 811
+models:
+  claude-sonnet-5-5: 88
+toolCounts:
+  Bash: 24
+  Read: 15
+  Skill: 4
+  Agent: 7
+  ScheduleWakeup: 1
+  Edit: 2
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - layers/glassbox/content/guide/pages/claude-code/10.claude-md.md
+  - layers/glassbox/content/guide/pages/claude-code/50.mcp-servers.md
+  - layers/glassbox/content/guide/terms/rule.yml
+  - layers/glassbox/content/guide/pages/claude-code/20.path-scoped-rules.md
+  - layers/glassbox/content/guide/pages/claude-code/40.permissions.md
+  - layers/glassbox/content/workshop/runs/2026-11-10T0847.yml
+  - layers/glassbox/content/workshop/pages/index.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+docsReadBySubagents:
+  - docs/agents/guards.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/DECISIONS.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/DECISIONS.md
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/guards.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/claude-code/10.claude-md.md
+    reported:
+      - path: .claude/rules/glassbox-content.md
+        value: confirmed
+      - path: layers/glassbox/GLOSSARY.md
+      - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+      - path: .agents/skills/glassbox-lesson/DECISIONS.md
+      - path: docs/agents/pr-workflow.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads: []
+    reported: []
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads: []
+    reported: []
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/claude-code/10.claude-md.md
+      - rule: .claude/rules/glassbox-content.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/claude-code/10.claude-md.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/claude-code/10.claude-md.md
+    reported:
+      - path: .claude/rules/glassbox-content.md
+        value: changed
+      - path: .claude/rules/tenant-glossary.md
+        value: confirmed
+      - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+      - path: layers/glassbox/GLOSSARY.md
+  - by: general-purpose
+    subagent: 3
+    answered: false
+    loads: []
+    reported: []
+  - by: general-purpose
+    subagent: 4
+    answered: true
+    loads: []
+    reported: []
+  - by: general-purpose
+    subagent: 5
+    answered: false
+    loads: []
+    reported: []
+  - by: general-purpose
+    subagent: 6
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/guards.md
+        via: hint
+    reported: []
+subagents:
+  - type: general-purpose
+    task: Scout new topics
+    model: sonnet
+    durationSec: 22
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 6.1
+  - type: general-purpose
+    task: "Fresh reader: 5 Claude Code pages"
+    model: sonnet
+    durationSec: 19
+    toolCalls: 7
+    modelCalls: 3
+    tokenShare: 4.3
+  - type: general-purpose
+    task: "Writer: Claude Code pages edits"
+    model: opus
+    durationSec: 173
+    toolCalls: 38
+    modelCalls: 25
+    tokenShare: 15.9
+  - type: general-purpose
+    task: Claim check changed sentences
+    model: sonnet
+    durationSec: 55
+    toolCalls: 17
+    modelCalls: 8
+    tokenShare: 6.1
+  - type: general-purpose
+    task: Fresh reader re-read
+    model: sonnet
+    durationSec: 21
+    toolCalls: 6
+    modelCalls: 3
+    tokenShare: 2.5
+  - type: general-purpose
+    task: Standards review
+    model: sonnet
+    durationSec: 30
+    toolCalls: 9
+    modelCalls: 6
+    tokenShare: 4.1
+  - type: general-purpose
+    task: Spec review
+    model: sonnet
+    durationSec: 34
+    toolCalls: 8
+    modelCalls: 6
+    tokenShare: 4
+gitBranch: claude/compassionate-bardeen-namc9a
+entrypoint: remote_trigger
+cliVersion: 2.1.322
+trigger: glassbox-curate
+landedBy: Stop
