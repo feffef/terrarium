@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_013zxzeRUqTUUjXiStVQaM2D
 startedAt: 2026-11-10T20:30:08Z
-endedAt: 2026-11-10T20:31:44Z
+endedAt: 2026-11-10T21:21:17Z
 kind: delegated
 goal: Tighten the Transient failures section of the GitHub integration doc
 status: completed
@@ -23,16 +23,17 @@ skillsUsed:
   - name: log-session
     reason: (no reason given)
 frictions: []
-durationSec: 96
+durationSec: 3069
 models:
-  claude-sonnet-5-5: 29
+  claude-sonnet-5-5: 35
 toolCounts:
   Grep: 2
   Read: 4
-  Bash: 7
+  Bash: 8
   Edit: 1
-  Skill: 2
+  Skill: 3
   mcp__claude-code-remote__send_message: 1
+  ReadNotifications: 1
 filesEdited:
   - docs/agents/github-integration.md
 rulesGlobal:
@@ -90,4 +91,4 @@ ruleUse:
 gitBranch: HEAD
 entrypoint: remote
 cliVersion: 2.1.322
-landedBy: SessionStart
+landedBy: Stop
