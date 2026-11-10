@@ -216,7 +216,8 @@ describe('ruleUse — subagents', () => {
   it('points each subagent entry at its subagents[] row, in that order', () => {
     const dispatch = (id: string, description: string) =>
       ({ type: 'assistant', message: { content: [{ type: 'tool_use', id, name: 'Agent', input: { subagent_type: 'general-purpose', description } }] } })
-    const parent = extractTrace([cwd, always('adr-0003.md'), dispatch('tu-review', 'review'), dispatch('tu-build', 'build')], NO_ENV)
+    // `tu-lost` left no transcript but keeps its row in subagents[].
+    const parent = extractTrace([cwd, always('adr-0003.md'), dispatch('tu-review', 'review'), dispatch('tu-lost', 'lost'), dispatch('tu-build', 'build')], NO_ENV)
     // Transcripts sort by agent id, not dispatch order (#3019).
     const folded = foldSubagentTrace(parent, [
       { ...sub([note, bash('sh /repo/scripts/session/helped.sh')], 'a1'), toolUseId: 'tu-build' },

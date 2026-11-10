@@ -38,8 +38,9 @@ export interface RuleUseReport {
   answered: Record<string, { entries: number; answered: number }>
   rules: RuleRow[]
   via: { native: number; hint: number }
-  /** `unsure` includes unknown values the writer coerced to it. */
-  quality: { noLoadRecorded: number; unsure: number; silentSubagents: number }
+  /** `unsure` includes unknown values the writer coerced to it; an unanswered
+   *  subagent may never have been asked (its loads still count, #3019). */
+  quality: { noLoadRecorded: number; unsure: number; unansweredSubagents: number }
 }
 
 const share = (n: number, of: number) => (of ? Math.round((1000 * n) / of) / 1000 : 0)
@@ -50,12 +51,12 @@ export function ruleUseReport(logs: SessionLog[], since: number): RuleUseReport 
   const answered: RuleUseReport['answered'] = {}
   const rows = new Map<string, RuleRow & { values: Record<string, number> }>()
   const via = { native: 0, hint: 0 }
-  const quality = { noLoadRecorded: 0, unsure: 0, silentSubagents: 0 }
+  const quality = { noLoadRecorded: 0, unsure: 0, unansweredSubagents: 0 }
   for (const e of entries) {
     const a = (answered[e.by] ??= { entries: 0, answered: 0 })
     a.entries++
     if (e.answered) a.answered++
-    else if (e.by !== 'main') quality.silentSubagents++
+    else if (e.by !== 'main') quality.unansweredSubagents++
     for (const r of e.reported) {
       if (r.why?.startsWith(NO_LOAD_WHY)) quality.noLoadRecorded++
       if (r.value === 'unsure') quality.unsure++
@@ -66,7 +67,8 @@ export function ruleUseReport(logs: SessionLog[], since: number): RuleUseReport 
       row.loads++
       row[l.via]++
       via[l.via]++
-      if (l.via === 'native') row.triggers[l.trigger ?? '(none)'] = (row.triggers[l.trigger ?? '(none)'] ?? 0) + 1
+      const trigger = l.trigger ?? '(none)'
+      if (l.via === 'native') row.triggers[trigger] = (row.triggers[trigger] ?? 0) + 1
       if (!e.answered) continue
       row.answeringLoads++
       const value = e.reported.find((r) => r.path === l.rule)?.value
@@ -110,7 +112,7 @@ export function renderReport(r: RuleUseReport): string {
     ]),
     '',
     `Loads by via: native ${r.via.native}, hint ${r.via.hint}`,
-    `Data quality: ${r.quality.noLoadRecorded} reported with no load recorded, ${r.quality.unsure} unsure (includes coerced unknown values), ${r.quality.silentSubagents} subagent entries unanswered`,
+    `Data quality: ${r.quality.noLoadRecorded} reported with no load recorded, ${r.quality.unsure} unsure (includes coerced unknown values), ${r.quality.unansweredSubagents} subagent entries unanswered`,
   ]
   return `${lines.join('\n')}\n`
 }

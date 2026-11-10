@@ -40,7 +40,7 @@ describe('ruleUseReport', () => {
 
   it('counts loads by via, and the data-quality gaps', () => {
     expect(report.via).toEqual({ native: 3, hint: 1 })
-    expect(report.quality).toEqual({ noLoadRecorded: 1, unsure: 1, silentSubagents: 1 })
+    expect(report.quality).toEqual({ noLoadRecorded: 1, unsure: 1, unansweredSubagents: 1 })
   })
 
   it('renders text that names each rule and says when data is thin', () => {

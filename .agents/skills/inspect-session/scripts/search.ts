@@ -5,7 +5,7 @@
 import { readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { parse as parseYaml } from 'yaml'
-import { loadedRules, type RuleUseEntry } from '../../../../shared/schemas/session.ts'
+import { loadedRules } from '../../../../shared/schemas/session.ts'
 import { extractFlag, fail, root, runIfMain } from '../../../../scripts/lib/cli.ts'
 import { claimedAgent, coverageLine, cut, nextLine, readFlat, shown, sibling, skillFile, THINKING, toLine, type FlatLine, type Meta } from './flat.ts'
 
@@ -83,18 +83,15 @@ export function search(lines: FlatLine[], sel: Selector, agent?: string): { hits
   return { hits, missing: hits.length ? [] : [selectorLabel(sel)] }
 }
 
-const LOG_READ_FIELDS = ['docsRead', 'docsReadBySubagents', 'rulesGlobal', 'rulesLoaded', 'rulesLoadedBySubagents', 'skillsUsed'] as const
+const LOG_READ_FIELDS = ['docsRead', 'docsReadBySubagents', 'rulesGlobal', 'rules loaded by main', 'rules loaded only by subagents', 'skillsUsed'] as const
 
 /** Session-log reads matching each asked-for path: events never show rule loads or workflow-agent reads. */
 export function logReads(logYaml: string, paths: string[]): { path: string; hit: string }[] {
   const log = (parseYaml(logYaml) ?? {}) as Record<string, unknown>
   const out: { path: string; hit: string }[] = []
-  // A log after #3019 records rule loads only in `ruleUse`.
-  const derived = log.ruleUse && !log.rulesLoaded && !log.rulesLoadedBySubagents
-    ? loadedRules({ ruleUse: log.ruleUse as RuleUseEntry[] })
-    : undefined
-  const lists: Record<string, unknown> = { ...log, ...(derived && { 'ruleUse (main)': derived.main, 'ruleUse (subagents only)': derived.bySubagents }) }
-  for (const field of [...LOG_READ_FIELDS, 'ruleUse (main)', 'ruleUse (subagents only)']) {
+  const loaded = loadedRules(log as Parameters<typeof loadedRules>[0])
+  const lists: Record<string, unknown> = { ...log, 'rules loaded by main': loaded.main, 'rules loaded only by subagents': loaded.bySubagents }
+  for (const field of LOG_READ_FIELDS) {
     const items = (Array.isArray(lists[field]) ? lists[field] : []) as (string | { path?: string; name?: string })[]
     const names = items.map((i) => (typeof i === 'string' ? i : (i.path ?? (i.name ? skillFile(i.name) : ''))))
     for (const path of paths) for (const n of names) if (globRegex(path).test(n)) out.push({ path, hit: `${n} in ${field}` })

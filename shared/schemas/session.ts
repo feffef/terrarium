@@ -46,7 +46,8 @@ export type ReportedEntry = z.infer<typeof reportedEntry>
 // agent only when it loaded a rule or named something that is not always-loaded.
 export const ruleUseEntry = z.object({
   by: z.string(), // `main`, or the subagent's agent type (`workflow` when it has none)
-  // A subagent's index in `subagents`; absent on `main` and on logs before #3019.
+  // A subagent's index in `subagents`; absent on `main`, on logs before #3019,
+  // and on an agent no dispatch or transcript metadata names.
   subagent: z.number().int().nonnegative().optional(),
   answered: z.boolean(),
   loads: z.array(ruleLoad),
@@ -196,7 +197,7 @@ export function loadedRules(log: {
   if (log.rulesLoaded || log.rulesLoadedBySubagents || !log.ruleUse) {
     return { main: log.rulesLoaded ?? [], bySubagents: log.rulesLoadedBySubagents ?? [] }
   }
-  const of = (entries: RuleUseEntry[]) => [...new Set(entries.flatMap((e) => e.loads.map((l) => l.rule)))]
-  const main = of(log.ruleUse.filter((e) => e.by === 'main'))
-  return { main, bySubagents: of(log.ruleUse.filter((e) => e.by !== 'main')).filter((r) => !main.includes(r)) }
+  const rulesIn = (entries: RuleUseEntry[]) => [...new Set(entries.flatMap((e) => e.loads.map((l) => l.rule)))]
+  const main = rulesIn(log.ruleUse.filter((e) => e.by === 'main'))
+  return { main, bySubagents: rulesIn(log.ruleUse.filter((e) => e.by !== 'main')).filter((r) => !main.includes(r)) }
 }

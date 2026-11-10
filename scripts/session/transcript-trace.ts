@@ -143,8 +143,7 @@ export interface MechanicalTrace {
   helpedAsked: boolean
   /** What its last `helped.sh` call reported; absent when it never ran it. */
   reportedNamed?: ReportedEntry[]
-  /** One entry per subagent that was asked, answered or loaded a rule, in
-   *  `subagents` order. Set by `foldSubagentTrace`. */
+  /** Subagent entries (which ones: `ruleUseEntry`), in `subagents` order. Set by `foldSubagentTrace`. */
   ruleUse?: RuleUseEntry[]
   /** Instruction docs only a subagent or workflow agent read. Set by `foldSubagentTrace`. */
   docsReadBySubagents?: string[]
