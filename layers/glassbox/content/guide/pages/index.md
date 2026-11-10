@@ -1,8 +1,8 @@
 ---
 title: Glass Box guide
 description: How Terrarium works as a whole, in plain words, with links to the Lessons that explain each part in depth.
-teaches: "Who's involved: Trusted and Public users, sessions, Routines; a change: read, branch, gate, PR, session log, merge, attribution; who decides: approval, triage labels, clear-backlog, Human-only merges; improving: Frictions, fixes, prune trials, Journal; the repo: CLAUDE.md, rules, ADRs, Skills, hooks, glossaries, Tenants, Spaces, Collections, manifests; shipping: deploy, hydration; why Nuxt."
-revision: 'a943030c7f8f2e8cd1c6b3021caa593b3cdfff16'
+teaches: "Who's involved: Trusted and Public users, sessions, Routines; a change: read, branch, gate, PR, session log, merge, attribution; who decides: approval, triage labels, clear-backlog, Human-only merges, owner waiver; improving: Frictions, fixes, prune trials, Journal; the repo: CLAUDE.md, rules, ADRs, Skills, hooks, glossaries, Tenants, Spaces, Collections, manifests; shipping: deploy, hydration; why Nuxt."
+revision: '3c5bd1beb14cb8c31288bb7fc963364b579817c0'
 revisionDate: '2026-11-10'
 ---
 
@@ -39,7 +39,7 @@ Agents may propose anything, but they build new work, such as a new Tenant, feat
 [Human-in-the-loop agents](/t/glassbox/guide/terrarium-practice/human-in-the-loop) · [Issue triage labels](/t/glassbox/guide/git-github/issue-triage-labels)
 ::
 
-Agents change a system that includes their own tools, and the gate's automatic checks are what make that safe. So an agent merges its own work on a green gate, and a person merges what a machine can't judge, such as a change to a :term[Human-only] file like the rules themselves, a new dependency, or work that came from a Public user. ADR-0004 (:file[docs/adr/0004-objective-safety-gate.md]) gives the full list, and a Lesson shows how those files are kept.
+Agents change a system that includes their own tools, and the gate's automatic checks are what make that safe. So an agent merges its own work on a green gate, and a person merges what a machine can't judge, such as a change to a :term[Human-only] file like the rules themselves, a new dependency, or work that came from a Public user. ADR-0004 (:file[docs/adr/0004-objective-safety-gate.md]) gives the full list, and lets the owner tell an agent to merge a Human-only change it wrote; a Lesson shows how those files are kept.
 
 ::lessons
 [Protected paths](/t/glassbox/guide/terrarium-practice/protected-paths)
@@ -49,7 +49,7 @@ Agents change a system that includes their own tools, and the gate's automatic c
 
 > work → session log with Frictions → fixes → better guidance → fewer Frictions next time
 
-Routines turn the logs into fixes. One files each recent Friction under its root cause and writes a fix for it. Others look for problems no session reports: documents that no longer match the code, Skills that don't do their job, and rules nobody needs, which are cut on trial to see whether anything breaks. When a written rule keeps failing, a Trusted user has a hook built that enforces it. One Lesson shows every Skill in the loop, another lists every Routine.
+Routines turn the logs into fixes. One files each recent Friction under its root cause, then fixes the safe causes and files the rest as issues. Others look for problems no session reports: documents that no longer match the code, Skills that don't do their job, and rules nobody needs, which are cut on trial to see whether anything breaks. When a written rule keeps failing, a Trusted user has a hook built that enforces it. One Lesson shows every Skill in the loop, another lists every Routine.
 
 ::lessons
 [Self-improvement loop](/t/glassbox/guide/terrarium-practice/self-improvement-loop) · [Scheduled tasks](/t/glassbox/guide/agents/scheduled-tasks)
@@ -92,7 +92,7 @@ Each Space gets tables of its own, so a page can never read another Space's cont
 [Multi-tenant isolation](/t/glassbox/guide/nuxt-content/multi-tenant-isolation) · [Cross-tenant reads](/t/glassbox/guide/terrarium-practice/cross-tenant-reads) · [Reading across tenants](/t/glassbox/guide/walkthroughs/reading-across-tenants)
 ::
 
-Some Tenants record the real build, such as the Journal, this Glass Box and the Midden, a museum of discarded work. Others are invented practice grounds and demos. :file[GLOSSARY-MAP.md] lists them all and says how each relates to the build.
+Some Tenants record the real build, such as the Journal, this Glass Box and the Midden, a museum of discarded work. Others are invented practice grounds and demos, and the Commons re-presents the content the others share. :file[GLOSSARY-MAP.md] lists them all and says how each relates to the build.
 
 ## How it ships and serves
 

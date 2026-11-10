@@ -1,0 +1,49 @@
+session: session_013zxzeQN4dgz9seaMtnRf7u
+mode: autonomous
+focus: "Four passes in one run: de-duplicate the Agents & automation and Hooks Subjects, read House rules and re-pin Protected paths for the owner waiver, and re-pin the overview. Chosen because no open PR touches the guide and the memory page's leads named the first, the fourth and the Hooks leftovers; the Scout's waiver topic (an ADR-0004 change after the pins) made Protected paths urgent. The run started interactive with no focus; the owner then said to go autonomous, use subagents for writing and review, and keep taking focuses until the budget is spent."
+changes:
+  - agents/10.subagents | The lede says what comes back is what they return and that a new subagent starts blank; one name for the starter and the builder; the depth sentence says the environment sets it to one; the impl-agent Excerpt is the whole bullet (lines 70-76); the brief says commit before stopping and says scratch files vs the report; the guard sentence is folded in | a fresh reader found 'They' with no referent, three names for one helper, a depth claim that read as a contradiction, and facts said twice (dispatch-subagents SKILL.md:52-56, 70-76; clear-backlog-build.js:106). Wording only, so revision and publishedAt are kept
+  - agents/20.workflow-scripts | The lede says the script decides which agent runs next; the round sentences are split; the settings and spec sentence is its own paragraph; the Gate fact is one Why cost; the lint bullet is short sentences | ambiguous 'one that', an orphaned sentence, and the Gate and null facts said twice (clear-backlog-build.js:140-160; settings.json:9-10). Wording only
+  - agents/30.cloud-sessions | The lede and intro are true for one repository and say other sessions get less; the several-repository bullet leads with the outcome; the limits paragraph is split; the settings bullet no longer repeats the cases | the page said a session 'gets all of it' against its own case list (workflow-edit-guard.ts:13-14; environment-caveats.md:7-8; guards.md:83-84). Wording only
+  - agents/40.scheduled-tasks | The lede reads back only runs that fired; the resume rule, the plain-text /loop fire and the cadence rule are each said once; the transcript-trace sentence says what its Excerpt shows | the lede overstated what the logs hold, and four facts were repeated (guest-intake SKILL.md:18-20; ADR-0005:25-26). Wording only
+  - hooks/10.hooks | The session log's landing and its two fallbacks are said once, in the log paragraph; the SessionEnd sentence names log-session.ts --land; the || true paragraph says 'without || true'; the rule-load sentence no longer introduces the Stop excerpt | a fresh reader found the log landing described three times and an ambiguous 'the other way' (settings.json:200-239; log-session.ts:931-932). Wording only
+  - hooks/30.hook-added-context | The Fail-open and Say-it-once reasons are in Why and the mechanisms in In Terrarium, once each; || true is explained only on Claude Code hooks | the same mechanisms were stated in both places (hook-io.ts:114-126). Wording only
+  - hooks/40.session-transcripts | The unreadable-transcript behaviour is in one paragraph, with one short sentence for attribution and a one-line takeaway | the same behaviour was said three times (skill-inline-guard.ts:56; adr-read-hint.ts:155-156; read-first-hint.ts:121-123). Wording only
+  - terrarium-practice/60.protected-paths | Re-pinned to main; teaches the owner waiver (--owner-approved, humanMergeWaiver); a PR that edits the list is refused unless the owner waives it; the merge-pr.ts Excerpt range moved; publishedAt set | the waiver landed after the old pin (merge-pr.ts:207-215, 549-554, 665-667; ADR-0004 Owner waiver)
+  - terms/human-only | The definition names two exceptions, the owner waiver and the Dependabot bump | ADR-0004 Owner waiver and Dependabot exception
+  - terrarium-practice/30.ubiquitous-language | The rule of two is said once; the last bullet says an old entry is no precedent | the rule was stated in In Terrarium, Why and What to watch for. Wording only
+  - index | Re-pinned to main; ADR-0004's sentence adds the owner waiver; the Friction paragraph says the Routine fixes the safe causes and files the rest as issues; the Tenants sentence says the Commons re-presents the content the others share | the three sentences the sources contradicted or left out (adr-0004 Owner waiver; frictions-to-fixes SKILL.md; GLOSSARY-MAP.md Relationships). publishedAt not present
+  - terrarium-practice/10.human-in-the-loop | No change | read in full; no deficit a fresh reader or the lenses found
+  - terrarium-practice/20.decision-records | No change | read in full; no deficit
+  - terrarium-practice/40.session-logs | No change | read in full; no deficit
+  - terrarium-practice/50.pruning-instructions | No change | read in full; no deficit
+  - terrarium-practice/70.cross-tenant-reads | No change | read in full; no deficit
+  - terrarium-practice/80.self-improvement-loop | No change | read in full; no deficit
+  - terrarium-practice/90.outside-contributions | No change | read in full; no deficit
+pagesRead:
+  - agents/10.subagents
+  - agents/20.workflow-scripts
+  - agents/30.cloud-sessions
+  - agents/40.scheduled-tasks
+  - hooks/10.hooks
+  - hooks/20.blocking-hooks
+  - hooks/30.hook-added-context
+  - hooks/40.session-transcripts
+  - terrarium-practice/10.human-in-the-loop
+  - terrarium-practice/20.decision-records
+  - terrarium-practice/30.ubiquitous-language
+  - terrarium-practice/40.session-logs
+  - terrarium-practice/50.pruning-instructions
+  - terrarium-practice/60.protected-paths
+  - terrarium-practice/70.cross-tenant-reads
+  - terrarium-practice/80.self-improvement-loop
+  - terrarium-practice/90.outside-contributions
+  - index
+  - git-github/30.composite-actions
+  - git-github/20.author-trust
+  - claude-code/20.path-scoped-rules
+  - claude-code/30.skills
+  - claude-code/40.permissions
+  - verification/10.gate
+  - verification/50.linting
+  - walkthroughs/session-log-lands-on-main
