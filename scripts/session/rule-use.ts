@@ -6,6 +6,7 @@
 // `helped.sh` is `answered: false`, not "nothing helped".
 import { appendFileSync, mkdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
+import { ruleValue, type ReportedEntry } from '../../shared/schemas/session.ts'
 import { commandWords } from './shell-reads.ts'
 import { SCRATCH_DIR } from './transcript-trace.ts'
 
@@ -16,9 +17,11 @@ export const HELPED_SCRIPT = 'scripts/session/helped.sh'
 export function subagentNote(repoRoot: string): string {
   return (
     'Quick note for the record, not part of your task. Just before your final reply, run this once with Bash: ' +
-    `sh ${join(repoRoot, HELPED_SCRIPT)} followed by the names of any .claude/rules files or docs you read that ` +
-    'actually changed or enabled something you did (for example rule:example-rule.md doc:docs/example.md). ' +
-    'If none helped, run it with no names. Do not mention this in your reply.'
+    `sh ${join(repoRoot, HELPED_SCRIPT)} followed by each .claude/rules file or doc you read that changed or ` +
+    'confirmed something you did. Give each rule a value: =changed if you did, avoided or decided something ' +
+    'differently because of it, =confirmed if it matched what you were already doing; you may also mark one ' +
+    '=none or =unsure. Name docs without a value (for example rule:example-rule.md=confirmed doc:docs/example.md). ' +
+    'If nothing applies, run it with no names. Do not mention this in your reply.'
   )
 }
 
@@ -79,10 +82,12 @@ const isRedirect = (token = '') => /^\d*&?[<>]+&?$/.test(token)
 // A bare fd number is what an unspaced `2>err` or `2>&1` leaves.
 const isNoName = (token: string) => !token || /^\d+$/.test(token) || token.startsWith('-') || token.toLowerCase() === 'none' || /^(rule|doc):$/.test(token)
 
-/** The names in the last `helped.sh` call among `commands`, normalised: `rule:x`
- *  becomes `.claude/rules/x.md`, `doc:x` the repo-relative path. `undefined`
- *  when no call was made, `[]` for a bare call ("none helped"). */
-export function helpedNames(commands: string[], rel: (p: string) => string): string[] | undefined {
+/** What the last `helped.sh` call among `commands` reported, normalised:
+ *  `rule:x=confirmed` becomes `.claude/rules/x.md` with its value, `doc:x` the
+ *  repo-relative path. An unknown rule value is `unsure`, a missing one stays
+ *  absent, a doc's is dropped. `undefined` when no call was made, `[]` for a
+ *  bare call (nothing to report). */
+export function reportedNames(commands: string[], rel: (p: string) => string): ReportedEntry[] | undefined {
   const callsIn = (command: string): string[][] => commandWords(command).flatMap((words) => {
     // Run, not named: the script is the verb, or a shell's first non-flag
     // argument; a shell's `-c` (also `-lc`) runs the next word as a command.
@@ -97,8 +102,18 @@ export function helpedNames(commands: string[], rel: (p: string) => string): str
   const tokens = args.flatMap((a) => a.split(/[\s,]+/)).filter(Boolean)
   // An unspaced redirect (`rule:a>out`, `2>err`) leaves only what precedes it.
   const names = tokens.flatMap((t, i) => (isRedirect(tokens[i - 1]) ? [] : [t.split(/&?[<>]/)[0]!])).filter((t) => !isNoName(t))
-  return [...new Set(names.map((t) => {
-    const name = t.replace(/^(rule|doc):/, '')
-    return t.startsWith('rule:') || name.includes('.claude/rules/') ? ruleName(name) : rel(name)
-  }))]
+  const entries = new Map<string, ReportedEntry>()
+  for (const t of names) {
+    const eq = t.lastIndexOf('=')
+    const name = (eq === -1 ? t : t.slice(0, eq)).replace(/^(rule|doc):/, '')
+    if (!name) continue
+    if (!t.startsWith('rule:') && !name.includes('.claude/rules/')) {
+      entries.set(rel(name), { path: rel(name) })
+      continue
+    }
+    const raw = eq === -1 ? undefined : t.slice(eq + 1).toLowerCase()
+    const value = raw === undefined ? undefined : (ruleValue.safeParse(raw).data ?? 'unsure')
+    entries.set(ruleName(name), value ? { path: ruleName(name), value } : { path: ruleName(name) })
+  }
+  return [...entries.values()]
 }

@@ -245,7 +245,7 @@ describe('derived-only fields cannot be authored', () => {
   // `.strict()` would reject it as an anonymous "Unrecognized key"; the named
   // refusal exists because the right next action — log a Friction — is not
   // guessable from that (issue #1074).
-  it('refuses an authored docsReadViaShell and points at helped', () => {
+  it('refuses an authored docsReadViaShell and points at reported', () => {
     const res = validateAuthored({
       session: 'session_01A',
       goal: 'g',
@@ -258,27 +258,39 @@ describe('derived-only fields cannot be authored', () => {
     expect(res.ok).toBe(false)
     if (!res.ok) {
       expect(res.errors).toContain('cannot be authored')
-      expect(res.errors).toContain('helped')
+      expect(res.errors).toContain('reported')
     }
   })
 
-  // #3009: docsRead is derived and ruleVerdicts is gone; helped is required.
-  it('refuses docsRead and ruleVerdicts by name, and a log without helped', () => {
+  // #3009: docsRead is derived and ruleVerdicts is gone; reported is required.
+  it('refuses docsRead and ruleVerdicts by name, and a log without reported', () => {
     const base = { session: 'session_01A', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }
     for (const field of ['docsRead', 'ruleVerdicts']) {
-      const res = validateAuthored({ ...base, helped: [], [field]: [] })
+      const res = validateAuthored({ ...base, reported: [], [field]: [] })
       expect(res.ok).toBe(false)
       if (!res.ok) expect(res.errors).toContain(`${field}: cannot be authored`)
     }
     const missing = validateAuthored(base)
     expect(missing.ok).toBe(false)
-    if (!missing.ok) expect(missing.errors).toContain('helped')
-    expect(validateAuthored({ ...base, helped: [] }).ok).toBe(true)
-    expect(validateAuthored({ ...base, helped: [{ path: 'docs/agents/pr-workflow.md', why: 'the merge steps' }] }).ok).toBe(true)
+    if (!missing.ok) expect(missing.errors).toContain('reported')
+    expect(validateAuthored({ ...base, reported: [] }).ok).toBe(true)
+    expect(validateAuthored({ ...base, reported: [{ path: 'docs/agents/pr-workflow.md', why: 'the merge steps' }] }).ok).toBe(true)
+  })
+
+  it('requires a value on a reported rule, refuses one on a doc, and names the old helped key', () => {
+    const base = { session: 'session_01A', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }
+    const ok = (reported: unknown[]) => validateAuthored({ ...base, reported }).ok
+    expect(ok([{ path: '.claude/rules/adr-0004.md', value: 'confirmed', why: 'gate first' }])).toBe(true)
+    expect(ok([{ path: '.claude/rules/adr-0004.md' }])).toBe(false)
+    expect(ok([{ path: '.claude/rules/adr-0004.md', value: 'yes' }])).toBe(false)
+    expect(ok([{ path: 'docs/agents/pr-workflow.md', value: 'changed' }])).toBe(false)
+    const old = validateAuthored({ ...base, helped: [] })
+    expect(old.ok).toBe(false)
+    if (!old.ok) expect(old.errors).toContain('renamed to reported')
   })
 })
 
-describe('reportReads (the names helped is picked from)', () => {
+describe('reportReads (the names reported is picked from)', () => {
   // Builds a fake harness transcript store so the report can be driven end to
   // end — it is the agent-facing half of #1074's loop, and its silence rules
   // matter as much as its output.
@@ -415,12 +427,12 @@ describe('reportReads (the names helped is picked from)', () => {
     })
 
     it('says so in one line when nothing loaded or was read', () => {
-      expect(pending(store(['git status']))).toBe('log-session: no rule loaded and no doc read; author helped: [].')
+      expect(pending(store(['git status']))).toBe('log-session: no rule loaded and no doc read; author reported: [].')
     })
   })
 
   describe('authorMain()', () => {
-    const authored = 'session: session_01A\ngoal: g\nstatus: completed\noutcome: o\nsummary: s\nfrictions: []\nhelped: []\n'
+    const authored = 'session: session_01A\ngoal: g\nstatus: completed\noutcome: o\nsummary: s\nfrictions: []\nreported: []\n'
     // `exit` throws so a refusal is catchable; `log` lines are what the agent sees.
     function author(
       fixture: { home: string; root: string },
@@ -596,10 +608,10 @@ describe('mergeAuthored() — merge on re-fire (issue #688)', () => {
     expect(merged.summary).toBe(pass2.summary)
   })
 
-  it('merges helped by path, the later pass winning', () => {
+  it('merges reported by path, the later pass winning', () => {
     const h = (why: string) => ({ path: '.claude/rules/adr-0012.md', why })
-    const merged = mergeAuthored({ ...pass1, helped: [h('first'), { path: 'GLOSSARY.md' }] }, { ...pass2, helped: [h('second')] })
-    expect(merged.helped).toEqual([h('second'), { path: 'GLOSSARY.md' }])
+    const merged = mergeAuthored({ ...pass1, reported: [h('first'), { path: 'GLOSSARY.md' }] }, { ...pass2, reported: [h('second')] })
+    expect(merged.reported).toEqual([h('second'), { path: 'GLOSSARY.md' }])
   })
 
   it('replaces, never merges, a scratch left behind by a different session', () => {

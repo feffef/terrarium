@@ -59,9 +59,10 @@ summary: >-                        # the fuller narrative — sized to the sessi
 prs: ["42"]                        # work-PR refs (in-review is fine); [] if none
 skillsUsed:                        # transcript-observed Skills you omit are folded in
   - { name: tdd, reason: "test-first the helper (see #99)" }  # (name cross-refs the Skill Inventory)
-helped:                            # REQUIRED (may be []) — only what changed or enabled something you did (step 3)
-  - { path: .claude/rules/adr-0004.md, why: "ran gate:scoped before the PR" }  # why: optional, up to 8 words
-  - { path: docs/agents/pr-workflow.md }
+reported:                          # REQUIRED (may be []) — what changed or confirmed something you did (step 3)
+  - { path: .claude/rules/adr-0004.md, value: changed, why: "ran gate:scoped before the PR" }  # why: optional, up to 8 words
+  - { path: .claude/rules/adr-0003.md, value: confirmed }  # value: rules only, changed | confirmed | none | unsure
+  - { path: docs/agents/pr-workflow.md }                   # docs take no value
 frictions:                         # REQUIRED (may be []) — list EVERY friction
   - description: …                 # ~20 words, honest
     solution: …                    # the fix, or what would have helped
@@ -135,7 +136,7 @@ field from ground truth whenever it can (issue #387), so it is only a fallback.
 ## 2. Write the scratch
 
 First print the rules that loaded for you and the docs you read, to pick
-`helped` from (step 3):
+`reported` from (step 3):
 
 ```
 pnpm exec tsx scripts/session/log-session.ts --pending
@@ -151,18 +152,20 @@ It validates the interpretive fields and writes `.session-logs/pending.scratch.j
 (gitignored). The hook lands it only if the scratch exists, so authoring it *is*
 your "this session is done" signal.
 
-## 3. Name what helped
+## 3. Report what changed or confirmed something
 
 `--pending`, and `--author` again, list the path-scoped rules that loaded for
-you and the instruction docs you read. In `helped`, name only those that
-changed or enabled something you did; a rule or doc you leave out is "no
-claim", not "unhelpful". Write `helped: []` when none did. Leave out what only
-confirmed what you were already doing. A subagent answers for itself
-(the SubagentStart note), so don't collect its view.
+you and the instruction docs you read. In `reported`, list those that changed
+or confirmed something you did. Give each rule a `value`: `changed` if you did,
+avoided or decided something differently because of it, `confirmed` if it
+matched what you were already doing; you may also mark one `none` or `unsure`.
+A doc takes no value. A rule or doc you leave out is "no claim", not
+"unhelpful". Write `reported: []` when nothing applies. A subagent answers for
+itself (the SubagentStart note), so don't collect its view.
 
 Every pass is a full scratch with every field the schema requires. Its lists
 merge with the earlier pass, so list only new entries, plus any `skillsUsed`
-or `helped` entry you change, written whole (it replaces the one with the same
+or `reported` entry you change, written whole (it replaces the one with the same
 `name` or `path`). Repeat a friction word for word, severity included, or it
 is logged twice.
 

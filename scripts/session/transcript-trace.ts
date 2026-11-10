@@ -32,7 +32,7 @@
 //   Prints the derived trace as JSON.
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { basename, dirname, join } from 'node:path'
-import type { AdrHint, HelpedEntry, RuleLoad, RuleUseEntry } from '../../shared/schemas/session.ts'
+import type { AdrHint, ReportedEntry, RuleLoad, RuleUseEntry } from '../../shared/schemas/session.ts'
 import { DERIVED_REASON, FOLDED_TRACE_FIELDS } from '../../shared/trace-fields.ts'
 import {
   buildDocLineIndex,
@@ -46,7 +46,7 @@ import {
 } from './shell-reads.ts'
 import { adrDocNumber, adrHintsIn, ruleAdr, ruleBlockFiles, type AdrHintVia } from '../lib/adr-rules.ts'
 import { root, runIfMain } from '../lib/cli.ts'
-import { HELPED_SCRIPT, helpedNames, ruleKey, ruleName, type RuleLoadRow } from './rule-use.ts'
+import { HELPED_SCRIPT, reportedNames, ruleKey, ruleName, type RuleLoadRow } from './rule-use.ts'
 
 /** The one authored-scratch file per container (one session per container in the
  *  remote model). Gitignored — its home is `main`. Single-homed here so its
@@ -137,8 +137,8 @@ export interface MechanicalTrace {
   ruleLoads: RuleLoad[]
   /** The SubagentStart note reached this agent. */
   helpedAsked: boolean
-  /** The names its last `helped.sh` call gave; absent when it never ran it. */
-  helpedNamed?: string[]
+  /** What its last `helped.sh` call reported; absent when it never ran it. */
+  reportedNamed?: ReportedEntry[]
   /** One entry per asked or answering subagent. Set by `foldSubagentTrace`. */
   ruleUse?: RuleUseEntry[]
   /** Rules only a subagent or workflow agent loaded. Set by `foldSubagentTrace`. */
@@ -187,7 +187,7 @@ export const hintText = (content: unknown) => (Array.isArray(content) ? content 
 const hintedRules = (content: unknown) => ruleBlockFiles(hintText(content))
 
 /** Relativize repo paths to match how the agent cites them (`docs/adr/…`, not
- *  `/home/user/terrarium/docs/adr/…`) so a read and a `helped` name for one
+ *  `/home/user/terrarium/docs/adr/…`) so a read and a `reported` name for one
  *  file share a key. Applied AFTER
  *  the noise filter, which keys on absolute paths. Paths outside the repo stay
  *  absolute — honestly flagging an external file. Shared with the author-time
@@ -712,7 +712,7 @@ export function extractTrace(
     }))),
     ruleLoads: [...loadByRule.values()],
     helpedAsked,
-    helpedNamed: helpedNames(bashCommandsOf(records).map((c) => c.command), rel),
+    reportedNamed: reportedNames(bashCommandsOf(records).map((c) => c.command), rel),
     skillsUsed: dedup([...skills, ...commandSkills]),
     commandSkills: dedup(commandSkills),
     subagents,
@@ -876,15 +876,15 @@ export function foldSubagentTrace(
   )
   folded.ruleLoads = triggered(trace.ruleLoads.filter((l) => !folded.rulesGlobal.includes(l.rule)), mainRows)
   folded.ruleUse = subs.flatMap((s, i) => {
-    if (!s.helpedAsked && !s.helpedNamed) return []
+    if (!s.helpedAsked && !s.reportedNamed) return []
     const { agentId, agent } = subagents[i]!
     // A subagent with no id can't be told from another, or from the main agent.
     const loads = triggered(s.ruleLoads.filter((l) => !folded.rulesGlobal.includes(l.rule)), agentId ? rowsOf(agentId) : [])
     return [{
       by: agent?.type ?? 'workflow',
-      answered: !!s.helpedNamed,
+      answered: !!s.reportedNamed,
       loads,
-      helped: markUnloaded((s.helpedNamed ?? []).map((path) => ({ path })), loads, folded.rulesGlobal),
+      reported: markUnloaded(s.reportedNamed ?? [], loads, folded.rulesGlobal),
     }]
   })
   folded.rulesFollowedUp = dedup([...trace.rulesFollowedUp, ...subs.flatMap((s) => s.rulesFollowedUp)])
@@ -898,12 +898,12 @@ export function foldSubagentTrace(
 
 /** A named rule with no load for that agent keeps its entry, marked; an
  *  always-loaded one is dropped, since loads leave those out (#3009). */
-function markUnloaded(helped: HelpedEntry[], loads: RuleLoad[], global: string[]): HelpedEntry[] {
-  return helped.flatMap((h) => {
+function markUnloaded(reported: ReportedEntry[], loads: RuleLoad[], global: string[]): ReportedEntry[] {
+  return reported.flatMap((h) => {
     const path = h.path.includes('.claude/rules/') ? ruleName(h.path) : h.path
     if (global.includes(path)) return []
     const loaded = !path.startsWith('.claude/rules/') || loads.some((l) => l.rule === path)
-    return [loaded ? { ...h, path } : { path, why: h.why ? `${NO_LOAD_WHY} ${h.why}` : NO_LOAD_WHY }]
+    return [loaded ? { ...h, path } : { ...h, path, why: h.why ? `${NO_LOAD_WHY} ${h.why}` : NO_LOAD_WHY }]
   })
 }
 
@@ -938,9 +938,9 @@ export interface AuthoredScratch {
   summary: string
   prs?: string[]
   skillsUsed?: { name: string; reason: string }[]
-  /** Required by `--author` (empty means none helped); absent only on the
+  /** Required by `--author` ([] means nothing to report); absent only on the
    *  dropped-scratch placeholder, which the log records as unanswered. */
-  helped?: HelpedEntry[]
+  reported?: ReportedEntry[]
   frictions: { description: string; solution: string; severity: string }[]
   learnings?: string[]
   ideas?: string[]
@@ -966,7 +966,7 @@ function mergeRefs<T extends Record<string, string | undefined>>(
  *  dropped so a minimal session stays clean. */
 export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Record<string, unknown> {
   const editedSet = new Set(trace.filesEdited)
-  // Derived only: what helped goes in `helped`, not a doc's reason (#3009).
+  // Derived only: what helped goes in `reported`, not a doc's reason (#3009).
   // A rule file is logged as a rule (rulesGlobal/rulesLoaded, ruleUse),
   // even when close-session has the agent re-read it.
   const docsRead = dedup([...trace.filesRead, ...trace.docsReadViaShell])
@@ -1006,11 +1006,11 @@ export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Recor
   // adds nothing a rate could count, and an empty log stays empty.
   const main: RuleUseEntry = {
     by: 'main',
-    answered: authored.helped !== undefined,
+    answered: authored.reported !== undefined,
     loads: trace.ruleLoads,
-    helped: markUnloaded(authored.helped ?? [], trace.ruleLoads, trace.rulesGlobal),
+    reported: markUnloaded(authored.reported ?? [], trace.ruleLoads, trace.rulesGlobal),
   }
-  const ruleUse = [...(main.loads.length || main.helped.length ? [main] : []), ...(trace.ruleUse ?? [])]
+  const ruleUse = [...(main.loads.length || main.reported.length ? [main] : []), ...(trace.ruleUse ?? [])]
   if (ruleUse.length) entry.ruleUse = ruleUse
   const total = [trace.usage, ...trace.subagents].reduce((n, u) => n + (u?.weightedTokens ?? 0), 0)
   const share = (w?: number) => (w === undefined || total === 0 ? {} : { tokenShare: Math.round((1000 * w) / total) / 10 })

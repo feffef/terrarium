@@ -21,7 +21,7 @@
 //       validate the interpretive fields and write the scratch (the
 //       model-invocable path; does NOT commit — the hooks do).
 //   tsx scripts/session/log-session.ts --pending
-//       print the rules that loaded and the docs read, to pick `helped` from; writes nothing.
+//       print the rules that loaded and the docs read, to pick `reported` from; writes nothing.
 //   tsx scripts/session/log-session.ts --land [--dry-run] [--transcript <p>] [--scratch <p>]
 //       the hook path: stitch the scratch with the trace and land it.
 //   tsx scripts/session/log-session.ts <path-to-entry.yml> [--dry-run] [--remote <name>]
@@ -33,7 +33,7 @@ import { tmpdir } from 'node:os'
 import { basename, dirname, join, resolve } from 'node:path'
 import { parse as parseYaml, stringify as stringifyYaml } from 'yaml'
 import { z } from 'zod'
-import { helpedEntry } from '../../shared/schemas/session.ts'
+import { reportedEntry } from '../../shared/schemas/session.ts'
 import { sessionUrl } from '../../shared/session-url.ts'
 import { fetchOriginMain, git, SESSION_TRAILER, tryGit } from '../lib/git.ts'
 import { parseWorktreeList, runSweep, type Finding, type SweepResult } from '../git/check-worktrees.ts'
@@ -92,8 +92,12 @@ const authoredScratchSchema = z
     summary: z.string(),
     prs: z.array(z.string()).optional(),
     skillsUsed: z.array(z.object({ name: z.string(), reason: z.string() })).optional(),
-    // Required like `frictions`: [] means nothing helped, absent means skipped (#3009).
-    helped: z.array(helpedEntry.strict()),
+    // Required like `frictions`: [] means nothing to report, absent means skipped (#3009).
+    reported: z.array(
+      reportedEntry.strict().refine((e) => e.path.includes('.claude/rules/') === (e.value !== undefined), {
+        message: 'give a rule a value (changed | confirmed | none | unsure), and a doc none',
+      }),
+    ),
     frictions: z.array(
       z.object({
         description: z.string(),
@@ -113,9 +117,10 @@ const authoredScratchSchema = z
  *  generic error (issue #1074). */
 const DERIVED_ONLY_FIELDS: Record<string, string> = {
   adrHints: 'derived from the adr-read-hint pointers in the transcript.',
-  docsReadViaShell: 'shell reads fold into docsRead, which is derived; name a doc that helped in helped.',
-  docsRead: 'derived from the transcript; name a doc that helped in helped (#3009).',
-  ruleVerdicts: 'replaced by helped: name only the rules and docs that helped (#3009).',
+  docsReadViaShell: 'shell reads fold into docsRead, which is derived; name a doc that helped in reported.',
+  docsRead: 'derived from the transcript; name a doc that helped in reported (#3009).',
+  helped: 'renamed to reported: give each rule a value, changed | confirmed | none | unsure (#3009).',
+  ruleVerdicts: 'replaced by reported: list the rules and docs that changed or confirmed something (#3009).',
 }
 
 export function validateAuthored(
@@ -165,7 +170,7 @@ export function mergeAuthored(existing: AuthoredScratch | undefined, incoming: A
     ...incoming,
     frictions: [...existing.frictions, ...incoming.frictions.filter((f) => !seen.has(frictionKey(f)))],
     skillsUsed: unionBy(existing.skillsUsed, incoming.skillsUsed, (x) => x.name),
-    helped: unionBy(existing.helped, incoming.helped, (x) => x.path),
+    reported: unionBy(existing.reported, incoming.reported, (x) => x.path),
     prs: union(existing.prs, incoming.prs),
     learnings: union(existing.learnings, incoming.learnings),
     ideas: union(existing.ideas, incoming.ideas),
@@ -784,7 +789,7 @@ export function loadAuthorContext(cwd: string, repoRoot: string = root): AuthorC
   }
 }
 
-/** The names the main agent picks `helped` from: its own path-scoped rule
+/** The names the main agent picks `reported` from: its own path-scoped rule
  *  loads and the instruction docs it read, never a subagent's, which answers
  *  for itself (#3009). Also the docs a command named but did not show enough
  *  of, since `docsRead` cannot hold them. Prints nothing when the transcript
@@ -798,7 +803,8 @@ export function reportReads(ctx: AuthorContext | undefined, log: (line: string) 
   const rules = trace.ruleLoads.map((l) => l.rule)
   if (rules.length || docs.length) {
     log('')
-    log('  helped — pick only the rules and docs that changed or enabled something you did:')
+    log('  reported — list only the rules and docs that changed or confirmed something you did; give each rule')
+    log('  a value: changed | confirmed (or none | unsure if you want to say so):')
     for (const r of rules) log(`    ${r}`)
     for (const d of docs) log(`    ${d}`)
   }
@@ -908,7 +914,7 @@ export function pendingMain(opts: { cwd?: string } = {}): void {
     printed = true
     console.log(line)
   })
-  if (!printed) console.log('log-session: no rule loaded and no doc read; author helped: [].')
+  if (!printed) console.log('log-session: no rule loaded and no doc read; author reported: [].')
 }
 
 function readStdin(): string {
