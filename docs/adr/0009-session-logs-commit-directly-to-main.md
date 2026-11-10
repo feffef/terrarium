@@ -68,8 +68,8 @@ and its own commits.
 - **A hook that reminds or blocks until a log exists, at every pause.** It is
   runtime code the gate can't test. The narrow ones we keep fire only after a
   PR opens or merges: `read-first-hint.ts` says to invoke `close-session`, and
-  `merge-close-stop.ts` blocks the stop once after a merge if it has not run. A
-  Skill whose use we measure is the cheaper bet for the rest.
+  `merge-close-stop.ts` blocks the stop once after a merge if `close-session`
+  has not run. A Skill whose use we measure is the cheaper bet for the rest.
 - **Find shell reads by parsing the command.** Each glob, loop or `cd` needs
   a new rule.
 
