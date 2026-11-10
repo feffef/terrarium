@@ -95,6 +95,7 @@ describe('parseArgs()', () => {
   it('rejects --label without a value', () => {
     expect(() => parseArgs(['--label'])).toThrow('--label needs a value')
     expect(() => parseArgs(['--label', '--closed'])).toThrow('--label needs a value')
+    expect(() => parseArgs(['--label', ''])).toThrow('--label needs a value')
   })
   it('rejects a non-positive limit', () => {
     expect(() => parseArgs(['0'])).toThrow('not a positive integer: 0')

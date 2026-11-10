@@ -80,11 +80,11 @@ export function toOpenIssue(raw: RawIssueApiRecord): OpenIssue | null {
  *  order, since pages arrive one after another rather than as a single global
  *  sort. */
 export function openIssues(records: RawIssueApiRecord[], limit = DEFAULT_LIMIT, label?: string): OpenIssue[] {
-  const want = label?.toLowerCase()
+  const wanted = label?.toLowerCase()
   return records
     .map(toOpenIssue)
     .filter((x): x is OpenIssue => x !== null)
-    .filter((x) => want === undefined || x.labels.some((l) => l.toLowerCase() === want))
+    .filter((x) => wanted === undefined || x.labels.some((l) => l.toLowerCase() === wanted))
     .sort((a, b) => Date.parse(b.updatedAt) - Date.parse(a.updatedAt))
     .slice(0, limit)
 }
@@ -126,24 +126,22 @@ export function listOpenIssues(limit = DEFAULT_LIMIT, cwd = root, state: IssueSt
 
 export function parseArgs(argv: string[]): { state: IssueState; limit: number; label?: string } {
   let label: string | undefined
-  const rest: string[] = []
+  const positional: string[] = []
   const queue = [...argv]
   for (let arg = queue.shift(); arg !== undefined; arg = queue.shift()) {
     if (arg !== '--label') {
-      rest.push(arg)
+      positional.push(arg)
       continue
     }
     const value = queue.shift()
-    if (value === undefined || value.startsWith('--')) throw new Error('--label needs a value')
+    if (!value || value.startsWith('--')) throw new Error('--label needs a value')
     label = value
   }
-  const state: IssueState = rest.includes('--closed') ? 'closed' : 'open'
-  const limitArg = rest.find((a) => a !== '--closed')
-  const extra = label === undefined ? {} : { label }
-  if (limitArg === undefined) return { state, limit: DEFAULT_LIMIT, ...extra }
-  const limit = Number(limitArg)
+  const state: IssueState = positional.includes('--closed') ? 'closed' : 'open'
+  const limitArg = positional.find((a) => a !== '--closed')
+  const limit = limitArg === undefined ? DEFAULT_LIMIT : Number(limitArg)
   if (!Number.isInteger(limit) || limit <= 0) throw new Error(`not a positive integer: ${limitArg}`)
-  return { state, limit, ...extra }
+  return label === undefined ? { state, limit } : { state, limit, label }
 }
 
 function main(): void {
