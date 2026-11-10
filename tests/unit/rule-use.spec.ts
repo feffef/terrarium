@@ -160,6 +160,8 @@ describe('ruleUse — subagents', () => {
     const read = { type: 'assistant', message: { content: [{ type: 'tool_use', name: 'Read', input: { file_path: '/repo/.claude/rules/glassbox-content.md' } }] } }
     const folded = foldSubagentTrace(main, [sub([note, read, bash('sh /repo/scripts/session/helped.sh rule:glassbox-content.md=confirmed')])], NO_ENV)
     expect(ruleUseOf(stitch(authored({ reported: [] }), folded))[0]!.reported).toEqual([{ path: '.claude/rules/glassbox-content.md', value: 'confirmed' }])
+    const byMain = ruleUseOf(stitch(authored({ reported: [{ path: '.claude/rules/glassbox-content.md', value: 'confirmed' }] }), folded))[0]!
+    expect(byMain).toMatchObject({ by: 'main', reported: [{ path: '.claude/rules/glassbox-content.md', value: 'confirmed', why: '(no load recorded)' }] })
     const own = extractTrace([cwd, read], NO_ENV)
     expect(ruleUseOf(stitch(authored({ reported: [{ path: '.claude/rules/glassbox-content.md', value: 'confirmed' }] }), own))[0]!.reported)
       .toEqual([{ path: '.claude/rules/glassbox-content.md', value: 'confirmed' }])

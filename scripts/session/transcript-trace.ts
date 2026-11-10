@@ -135,8 +135,9 @@ export interface MechanicalTrace {
   /** This transcript's path-scoped rule loads, first per rule; `trigger` comes
    *  from the ledger in `foldSubagentTrace` (#3009). */
   ruleLoads: RuleLoad[]
-  /** This agent's own Read-tool reads of rule files, which no load event records;
-   *  a rule it reports is then not marked unloaded. Never folded. */
+  /** This agent's own Read-tool reads of rule files, which no load event records,
+   *  so a rule it reports is not marked unloaded. Kept per agent: a main agent
+   *  can't claim a rule only its subagent read. */
   rulesRead: string[]
   /** The SubagentStart note reached this agent. */
   helpedAsked: boolean
@@ -888,7 +889,7 @@ export function foldSubagentTrace(
       by: agent?.type ?? 'workflow',
       answered: !!s.reportedNamed,
       loads,
-      reported: markUnloaded(s.reportedNamed ?? [], [...loads.map((l) => l.rule), ...s.rulesRead], folded.rulesGlobal),
+      reported: markUnloaded(s.reportedNamed ?? [], seenRules(loads, s.rulesRead), folded.rulesGlobal),
     }]
   })
   folded.rulesFollowedUp = dedup([...trace.rulesFollowedUp, ...subs.flatMap((s) => s.rulesFollowedUp)])
@@ -899,6 +900,8 @@ export function foldSubagentTrace(
   )
   return folded
 }
+
+const seenRules = (loads: RuleLoad[], read: string[]) => [...loads.map((l) => l.rule), ...read]
 
 /** A reported rule this agent neither loaded nor read keeps its entry, marked; an
  *  always-loaded one is dropped, since loads leave those out (#3009). */
@@ -1012,7 +1015,7 @@ export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Recor
     by: 'main',
     answered: authored.reported !== undefined,
     loads: trace.ruleLoads,
-    reported: markUnloaded(authored.reported ?? [], [...trace.ruleLoads.map((l) => l.rule), ...(trace.rulesRead ?? [])], trace.rulesGlobal),
+    reported: markUnloaded(authored.reported ?? [], seenRules(trace.ruleLoads, trace.rulesRead), trace.rulesGlobal),
   }
   const ruleUse = [...(main.loads.length || main.reported.length ? [main] : []), ...(trace.ruleUse ?? [])]
   if (ruleUse.length) entry.ruleUse = ruleUse
