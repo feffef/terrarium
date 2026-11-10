@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeS3L4n7Fke1jtRbDTc
 startedAt: 2026-11-10T13:16:13Z
-endedAt: 2026-11-10T13:26:43Z
+endedAt: 2026-11-10T13:30:12Z
 kind: autonomous
 goal: "Scheduled prune trial: judge open trials, prune one problem"
-status: in-review
-outcome: "PR 3039 open: provenance-guard trial judged and deleted, git chaining rule pruned to its goal"
-summary: 'Scheduled /prune-trial run, no human involved. Of four open trials only the provenance-guard comments one was judgeable; 74 sessions since, no major/blocker Friction traces to it, session-id-hand-typed steady at about 7-8%, so it holds and its entry was deleted. A search subagent ranked failed-prose candidates; I chose the git-conventions chaining rule (failed twice as doc-only fixes, #2752 open, nothing wired holds it) over CLAUDE.md "Question the premise" (owner already closed #2997 with no change). Pruned it to a goal plus two bullets (+3 net), wrote the new trial entry, probed on Sonnet pinned to the commit (passed), ran code-review (one finding, the dropped git add -A advice, restored), gate green on the final head, PR 3039 opened and subscribed. All work was agent-initiated under the scheduled prompt; nothing was human-instructed.'
+status: completed
+outcome: "PR 3039 merged: provenance-guard trial judged and deleted, git chaining rule pruned to its goal"
+summary: 'Scheduled /prune-trial run, no human involved. Of four open trials only the provenance-guard comments one was judgeable; 74 sessions since, no major/blocker Friction traces to it, session-id-hand-typed steady at about 7-8%, so it holds and its entry was deleted. A search subagent ranked failed-prose candidates; I chose the git-conventions chaining rule (failed twice as doc-only fixes, #2752 open, nothing wired holds it) over CLAUDE.md "Question the premise" (owner already closed #2997 with no change). Pruned it to a goal plus two bullets (+3 net), wrote the new trial entry, probed on Sonnet pinned to the commit (passed), ran code-review (one finding, the dropped git add -A advice, restored), gate green on the final head, PR 3039 opened, verdict posted and merged via merge-pr.ts once CI was green. All work was agent-initiated under the scheduled prompt; nothing was human-instructed.'
 prs:
   - "3039"
 docsRead:
@@ -48,17 +48,20 @@ frictions:
   - description: Review finding arrived mid-gate; I had to wait for the first gate to finish, then rerun the gate on the fixed head.
     solution: Run code-review before starting the gate, as pr-workflow's order says.
     severity: minor
-durationSec: 630
+durationSec: 838
 models:
-  claude-sonnet-5-5: 70
+  claude-sonnet-5-5: 88
 toolCounts:
-  Bash: 27
-  Skill: 4
+  Bash: 32
+  Skill: 5
   Read: 2
   Agent: 4
   Edit: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - docs/agents/git-conventions.md
   - .agents/prune-trials.yml
@@ -93,7 +96,8 @@ ruleUse:
         via: native
         trigger: docs/agents/github-integration.md
       - rule: .claude/rules/adr-0030.md
-        via: hint
+        via: native
+        trigger: .claude/rules/adr-0004-human-merge.md
       - rule: .claude/rules/tenant-glossary.md
         via: hint
       - rule: .claude/rules/adr-0004-human-merge.md
@@ -102,7 +106,8 @@ ruleUse:
       - path: .claude/rules/adr-0027.md
         value: confirmed
       - path: .claude/rules/adr-0004-human-merge.md
-        value: none
+        value: confirmed
+        why: checked my paths were not on its list
       - path: docs/agents/pr-workflow.md
       - path: docs/agents/git-conventions.md
       - path: docs/agents/github-integration.md
@@ -172,28 +177,28 @@ subagents:
     durationSec: 86
     toolCalls: 10
     modelCalls: 9
-    tokenShare: 14
+    tokenShare: 11.5
   - type: general-purpose
     task: Probe pruned git rule
     model: sonnet
     durationSec: 11
     toolCalls: 3
     modelCalls: 2
-    tokenShare: 3.5
+    tokenShare: 2.9
   - type: general-purpose
     task: Standards review of prune diff
     model: sonnet
     durationSec: 24
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 9.2
+    tokenShare: 7.6
   - type: general-purpose
     task: Spec review of prune diff
     model: sonnet
     durationSec: 20
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 10
+    tokenShare: 8.2
 gitBranch: claude/practical-rubin-ap6gej
 entrypoint: remote_trigger
 cliVersion: 2.1.322
