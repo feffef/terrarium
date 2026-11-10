@@ -81,10 +81,6 @@ ruleUse:
         via: native
         trigger: docs/agents/git-conventions.md
     reported:
-      - path: .claude/rules/adr-0027.md
-        value: none
-      - path: .claude/rules/adr-0029.md
-        value: none
       - path: docs/agents/git-conventions.md
       - path: docs/agents/github-integration.md
       - path: docs/agents/pr-workflow.md

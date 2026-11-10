@@ -21,7 +21,7 @@
 // export below, and truly generic helpers stay module-private. This module,
 // for its part, never relies on auto-import itself: it stays dependency-free
 // and explicit.
-import type { Friction, Importance, RoutineDoc, RuleUseLabel, RuleUseView, SessionCardView, SessionDoc, Severity, SkillDoc, NoteItem, Subagent } from '../types/journal'
+import type { Friction, Importance, RoutineDoc, RuleUseView, SessionCardView, SessionDoc, Severity, SkillDoc, NoteItem, Subagent } from '../types/journal'
 import { formatRoutineMetric } from './routineRuns'
 import { REPO_URL } from '../../../../app/utils/repo'
 import { sessionUrl } from '#shared/session-url'
@@ -269,13 +269,11 @@ export function sessionCardViews(
 }
 
 // ── Rule use (#3020) ─────────────────────────────────────
-// Unnamed means no claim (#3009), so a rule nobody named gets no value.
-// The values the card shows; a rule an agent loaded without one is unmentioned.
-const RULE_USE_LABELS = { changed: 'steered', confirmed: 'backed' } as const
-
-const ruleUseLabel = (v?: string): RuleUseLabel | undefined => RULE_USE_LABELS[v as keyof typeof RULE_USE_LABELS]
+// A loaded rule an agent left out neither steered nor backed what it did.
+const RULE_VALUES = ['steered', 'backed'] as const
 const taskOf = (e: RuleUseEntry, subagents: Subagent[]) => (e.subagent === undefined ? undefined : subagents[e.subagent]?.task)
 const withTask = (why: string, task?: string) => (task ? `${task}: ${why}` : why)
+const percent = (n: number, of: number) => (of ? Math.round((100 * n) / of) : 0)
 
 function tally(items: string[]): string {
   const counts = new Map<string, number>()
@@ -283,31 +281,38 @@ function tally(items: string[]): string {
   return [...counts].map(([k, n]) => (n > 1 ? `${k} ×${n}` : k)).join(', ')
 }
 
+const VIA_LABELS = { start: 'loaded at start', native: 'loaded natively', hint: 'loaded by a hint hook' } as const
+
 function mainLoadLine(l: RuleLoad): string {
-  const how = l.via === 'hint' ? 'loaded by a hint hook' : 'loaded natively'
-  return l.trigger ? `${how}, triggered by ${l.trigger}` : how
+  return l.trigger ? `${VIA_LABELS[l.via]}, triggered by ${l.trigger}` : VIA_LABELS[l.via]
 }
 
 function subagentLoadLines(loads: RuleLoad[]): string[] {
-  const native = loads.filter((l) => l.via === 'native').length
+  const n = (via: RuleLoad['via']) => loads.filter((l) => l.via === via).length
   const triggers = loads.flatMap((l) => (l.trigger ? [l.trigger] : []))
-  return [`native ${native} · hint ${loads.length - native}`, ...(triggers.length ? [`triggered by ${tally(triggers)}`] : [])]
+  const vias = (['start', 'native', 'hint'] as const).filter((v) => n(v)).map((v) => `${v} ${n(v)}`)
+  return [vias.join(' · '), ...(triggers.length ? [`triggered by ${tally(triggers)}`] : [])]
 }
+
+// Always-loaded rules first; a stable sort keeps the log's order otherwise.
+const startFirst = <T extends { alwaysLoaded: boolean }>(rows: T[]) => [...rows].sort((x, y) => Number(y.alwaysLoaded) - Number(x.alwaysLoaded))
 
 export function sessionRuleUseView(s: SessionDoc, ruleTitles: Record<string, string>): RuleUseView {
   const entries = s.ruleUse ?? []
   const subagents = s.subagents ?? []
   const main = entries.find((e) => e.by === 'main')
   const subs = entries.filter((e) => e.by !== 'main')
-  const mainRow = (path: string, alwaysLoaded: boolean, load?: RuleLoad) => {
+  // Logs before #3020 record no start loads, only the session-wide list.
+  const legacyGlobal = entries.some((e) => e.loads.some((l) => l.via === 'start')) ? [] : (s.rulesGlobal ?? [])
+  const mainRow = (path: string, load?: RuleLoad) => {
     const r = main?.reported.find((x) => x.path === path)
     return {
       path,
       title: ruleTitles[path],
-      alwaysLoaded,
+      alwaysLoaded: !load || load.via === 'start',
       followedUp: !!s.rulesFollowedUp?.includes(path),
       hover: load ? `${path}\n${mainLoadLine(load)}` : path,
-      value: ruleUseLabel(r?.value),
+      value: r?.value,
       whys: r?.why ? [r.why] : [],
     }
   }
@@ -315,28 +320,36 @@ export function sessionRuleUseView(s: SessionDoc, ruleTitles: Record<string, str
   return {
     main: {
       answered: main ? main.answered : null,
-      rules: [...(s.rulesGlobal ?? []).map((p) => mainRow(p, true)), ...(main?.loads ?? []).map((l) => mainRow(l.rule, false, l))],
+      rules: startFirst([...legacyGlobal.map((p) => mainRow(p)), ...(main?.loads ?? []).map((l) => mainRow(l.rule, l))]),
     },
     subagents: {
       total: subs.length,
       unanswered: subs.filter((e) => !e.answered).length,
-      rules: subRules.map((path) => {
+      rules: startFirst(subRules.map((path) => {
         const loaders = subs.filter((e) => e.loads.some((l) => l.rule === path))
-        const labelOf = (e: RuleUseEntry) => ruleUseLabel(e.reported.find((r) => r.path === path)?.value)
+        const answering = loaders.filter((e) => e.answered)
         const loads = loaders.flatMap((e) => e.loads.filter((l) => l.rule === path))
+        const valueOf = (e: RuleUseEntry) => e.reported.find((r) => r.path === path)?.value
         const reports = subs.flatMap((e) => e.reported.filter((r) => r.path === path).map((r) => ({ r, task: taskOf(e, subagents) })))
+        const unnamed = answering.filter((e) => !valueOf(e)).length
         return {
           path,
           title: ruleTitles[path],
+          alwaysLoaded: loads.some((l) => l.via === 'start'),
           hover: [path, ...subagentLoadLines(loads)].join('\n'),
           loadedBy: loaders.length,
-          values: [
-            ...Object.values(RULE_USE_LABELS).map((value) => ({ value, n: loaders.filter((e) => labelOf(e) === value).length })),
-            { value: 'unmentioned' as const, n: loaders.filter((e) => !labelOf(e)).length },
-          ].filter((v) => v.n > 0),
+          values: RULE_VALUES.map((value) => {
+            const n = answering.filter((e) => valueOf(e) === value).length
+            return {
+              value,
+              n,
+              percent: percent(n, answering.length),
+              hover: `${n} of ${answering.length} answering subagents that loaded it named it ${value}; ${unnamed} didn't name it`,
+            }
+          }).filter((v) => v.n > 0),
           whys: [...new Set(reports.flatMap(({ r, task }) => (r.why ? [withTask(r.why, task)] : [])))],
         }
-      }),
+      })),
     },
   }
 }

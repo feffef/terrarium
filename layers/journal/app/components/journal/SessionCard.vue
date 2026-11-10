@@ -185,8 +185,11 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
                   <li v-for="r in card.ruleUse.subagents.rules" :key="r.path">
                     <div class="entry-head">
                       <span :title="r.hover">{{ r.title ?? r.path }}</span
+                      ><span v-if="r.alwaysLoaded" class="always">always loaded</span
                       ><span class="via">loaded by {{ r.loadedBy }}</span
-                      ><span v-for="v in r.values" :key="v.value" class="useful" :data-value="v.value">{{ v.value }} {{ v.n }}</span>
+                      ><span v-for="v in r.values" :key="v.value" class="useful" :data-value="v.value" :title="v.hover"
+                        >{{ v.value }} {{ v.n }} · {{ v.percent }}%</span
+                      >
                     </div>
                     <div v-for="w in r.whys" :key="w" class="entry-reason">{{ w }}</div>
                   </li>
@@ -442,7 +445,6 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
 .trace .useful[data-useful='no'] { color: var(--jd-sev-major); }
 .trace .useful[data-value='steered'] { color: var(--jd-accent); }
 .trace .useful[data-value='backed'] { color: var(--jd-ink); }
-.trace .useful[data-value='unmentioned'] { border-style: dashed; }
 .trace .rule-group { margin: 0.5rem 0.75rem 0.2rem; font-family: var(--jd-mono); font-size: 0.68rem; font-weight: 400; letter-spacing: 0.07em; text-transform: uppercase; color: var(--jd-faint); }
 .trace .rule-group + .subnote { margin: 0 0.75rem 0.3rem; }
 .tools { display: flex; flex-wrap: wrap; gap: 0.35rem; padding: 0 0.7rem 0.6rem; }

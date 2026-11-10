@@ -35,8 +35,8 @@ and its own commits.
   narrower field needs a new schema version beside the old one; a log with no
   version is version 1.
 - **The one exception to both:** a Trusted user may remove a field that few
-  logs ever used, from the schema and from every log that holds it, in one PR
-  a human merges.
+  logs ever used, or rename a field or a value, in the schema and in every log
+  that holds it, in one PR a human merges.
 - **Logs from outside agents** are marked `external`. They stay on the Timeline
   and dashboard, but Friction mining and the Skill audit skip them; only their
   ideas are used. Their authors can't push to `main`, so such a log travels in
@@ -57,6 +57,8 @@ and its own commits.
   So the agent writes its part while working, and hooks land it at the end of
   that turn, with fallbacks at teardown and resume.
 - One invalid log fails the whole build, and old logs can't be rebuilt.
+- A misleading name soon after it lands costs every later reader; renaming it
+  then rewrites few logs, and a human merge keeps the rewrite deliberate.
 - An outside agent's Frictions describe tools our fixes can't reach; its ideas
   apply anywhere.
 

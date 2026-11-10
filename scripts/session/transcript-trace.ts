@@ -712,7 +712,7 @@ export function extractTrace(
     adrHints: mergeAdrHints(hintAt.map(([h, at]) => ({
       adr: Number(h.adr), via: h.via, readAfter: adrReadInFull(records.slice(at + 1), h.adr, docIndex, rel), by: 'main' as const,
     }))),
-    ruleLoads: [...loadByRule.values()],
+    ruleLoads: [...dedup(alwaysLoadedRules).map((rule) => ({ rule, via: 'start' as const })), ...loadByRule.values()],
     rulesRead: dedup(reads).filter((p) => isRulePath(p)).map(ruleKey),
     helpedAsked,
     reportedNamed: reportedNames(bashCommandsOf(records).map((c) => c.command), rel),
@@ -874,7 +874,7 @@ export function foldSubagentTrace(
   // lists those fields, and the card tags these 'via subagent' instead.
   folded.rulesGlobal = dedup([...trace.rulesGlobal, ...subs.flatMap((s) => s.rulesGlobal)])
   folded.rulesLoaded = trace.rulesLoaded.filter((r) => !folded.rulesGlobal.includes(r))
-  folded.ruleLoads = triggered(trace.ruleLoads.filter((l) => !folded.rulesGlobal.includes(l.rule)), mainRows)
+  folded.ruleLoads = triggered(trace.ruleLoads, mainRows)
   // Each transcript's row in `folded.subagents`, which lists dispatches first.
   const rowOf = (i: number) => {
     const dispatchedAt = trace.subagents.findIndex((s) => transcriptOf(s.toolUseId) === i)
@@ -884,14 +884,16 @@ export function foldSubagentTrace(
   folded.ruleUse = subs.flatMap((s, i) => {
     const { agentId, agent } = subagents[i]!
     // A subagent with no id can't be told from another, or from the main agent.
-    const loads = triggered(s.ruleLoads.filter((l) => !folded.rulesGlobal.includes(l.rule)), agentId ? rowsOf(agentId) : [])
+    // An always-loaded rule counts as loaded at start, however it arrived.
+    const asStart = s.ruleLoads.map((l) => (folded.rulesGlobal.includes(l.rule) ? { rule: l.rule, via: 'start' as const } : l))
+    const loads = triggered(asStart.filter((l, j) => asStart.findIndex((m) => m.rule === l.rule) === j), agentId ? rowsOf(agentId) : [])
     if (!s.helpedAsked && !s.reportedNamed && !loads.length) return []
     return [{
       by: agent?.type ?? 'workflow',
       ...(agent ? { subagent: rowOf(i) } : {}),
       answered: !!s.reportedNamed,
       loads,
-      reported: markUnloaded(s.reportedNamed ?? [], seenRules(loads, s.rulesRead), folded.rulesGlobal),
+      reported: markUnloaded(s.reportedNamed ?? [], seenRules(loads, s.rulesRead)),
     }]
   }).sort((a, b) => (a.subagent ?? Infinity) - (b.subagent ?? Infinity))
   folded.rulesFollowedUp = dedup([...trace.rulesFollowedUp, ...subs.flatMap((s) => s.rulesFollowedUp)])
@@ -905,14 +907,12 @@ export function foldSubagentTrace(
 
 const seenRules = (loads: RuleLoad[], read: string[]) => [...loads.map((l) => l.rule), ...read]
 
-/** A reported rule this agent neither loaded nor read keeps its entry, marked; an
- *  always-loaded one is dropped, since loads leave those out (#3009). */
-function markUnloaded(reported: ReportedEntry[], seen: string[], global: string[]): ReportedEntry[] {
-  return reported.flatMap((e) => {
+/** A reported rule this agent neither loaded nor read keeps its entry, marked. */
+function markUnloaded(reported: ReportedEntry[], seen: string[]): ReportedEntry[] {
+  return reported.map((e) => {
     const path = isRulePath(e.path) ? ruleName(e.path) : e.path
-    if (global.includes(path)) return []
     const loaded = !isRulePath(path) || seen.includes(path)
-    return [loaded ? { ...e, path } : { ...e, path, why: e.why ? `${NO_LOAD_WHY} ${e.why}` : NO_LOAD_WHY }]
+    return loaded ? { ...e, path } : { ...e, path, why: e.why ? `${NO_LOAD_WHY} ${e.why}` : NO_LOAD_WHY }
   })
 }
 
@@ -975,7 +975,7 @@ function mergeRefs<T extends Record<string, string | undefined>>(
  *  dropped so a minimal session stays clean. */
 export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Record<string, unknown> {
   const editedSet = new Set(trace.filesEdited)
-  // Derived only: what changed or confirmed something goes in `reported` (#3009).
+  // Derived only: what steered or backed something goes in `reported` (#3009).
   // A rule file is logged as a rule (rulesGlobal, ruleUse),
   // even when close-session has the agent re-read it.
   const docsRead = dedup([...trace.filesRead, ...trace.docsReadViaShell])
@@ -1015,7 +1015,7 @@ export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Recor
     by: 'main',
     answered: authored.reported !== undefined,
     loads: trace.ruleLoads,
-    reported: markUnloaded(authored.reported ?? [], seenRules(trace.ruleLoads, trace.rulesRead), trace.rulesGlobal),
+    reported: markUnloaded(authored.reported ?? [], seenRules(trace.ruleLoads, trace.rulesRead)),
   }
   const ruleUse = [...(main.loads.length || main.reported.length ? [main] : []), ...(trace.ruleUse ?? [])]
   if (ruleUse.length) entry.ruleUse = ruleUse

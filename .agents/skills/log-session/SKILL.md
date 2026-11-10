@@ -59,9 +59,9 @@ summary: >-                        # the fuller narrative — sized to the sessi
 prs: ["42"]                        # work-PR refs (in-review is fine); [] if none
 skillsUsed:                        # transcript-observed Skills you omit are folded in
   - { name: tdd, reason: "test-first the helper (see #99)" }  # (name cross-refs the Skill Inventory)
-reported:                          # REQUIRED (may be []) — what changed or confirmed something you did (step 3)
-  - { path: .claude/rules/adr-0004.md, value: changed, why: "ran gate:scoped before the PR" }  # why: optional, up to 8 words
-  - { path: .claude/rules/adr-0003.md, value: confirmed }  # value: rules only, changed | confirmed | none | unsure
+reported:                          # REQUIRED (may be []) — the rules that steered or backed what you did, and docs that helped (step 3)
+  - { path: .claude/rules/adr-0004.md, value: steered, why: "ran gate:scoped before the PR" }  # why: optional, up to 8 words
+  - { path: .claude/rules/adr-0003.md, value: backed }     # value: rules only, steered | backed
   - { path: docs/agents/pr-workflow.md }                   # docs take no value
 frictions:                         # REQUIRED (may be []) — list EVERY friction
   - description: …                 # ~20 words, honest
@@ -152,15 +152,12 @@ It validates the interpretive fields and writes `.session-logs/pending.scratch.j
 (gitignored). The hook lands it only if the scratch exists, so authoring it *is*
 your "this session is done" signal.
 
-## 3. Report what changed or confirmed something
+## 3. Report what steered or backed you
 
-`--pending`, and `--author` again, list the path-scoped rules that loaded for
-you and the instruction docs you read. In `reported`, list those that changed
-or confirmed something you did. Give each rule a `value`: `changed` if you did,
-avoided or decided something differently because of it, `confirmed` if it
-matched what you were already doing; you may also mark one `none` or `unsure`.
-A doc takes no value. A rule or doc you leave out is "no claim", not
-"unhelpful". Write `reported: []` when nothing applies. A subagent answers for
+`--pending`, and `--author` again, list the rules that loaded for you, those
+loaded at start included, and the instruction docs you read, and say what
+`steered` and `backed` mean. Follow what they print; write `reported: []`
+when nothing applies. A subagent answers for
 itself (the SubagentStart note), so don't collect its view.
 
 Every pass is a full scratch with every field the schema requires. Its lists

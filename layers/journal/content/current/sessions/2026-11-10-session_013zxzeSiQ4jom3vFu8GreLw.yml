@@ -194,9 +194,9 @@ ruleUse:
         trigger: docs/adr/0027-prune-trials.md
     reported:
       - path: .claude/rules/adr-0022.md
-        value: confirmed
+        value: backed
       - path: .claude/rules/adr-0020.md
-        value: confirmed
+        value: backed
       - path: .agents/skills/auto-triage/SKILL.md
         why: resolved the sweep set
       - path: docs/agents/pr-workflow.md
@@ -225,7 +225,7 @@ ruleUse:
     reported:
       - path: docs/agents/git-conventions.md
       - path: .claude/rules/adr-0027.md
-        value: confirmed
+        value: backed
   - by: workflow-subagent
     subagent: 2
     answered: true
@@ -238,7 +238,7 @@ ruleUse:
         trigger: .agents/skills/code-review/SKILL.md
     reported:
       - path: .claude/rules/adr-0027.md
-        value: confirmed
+        value: backed
       - path: .agents/skills/code-review/SKILL.md
   - by: workflow-subagent
     subagent: 3
@@ -258,7 +258,7 @@ ruleUse:
         trigger: docs/adr/0027-prune-trials.md
     reported:
       - path: .claude/rules/adr-0027.md
-        value: confirmed
+        value: backed
   - by: workflow-subagent
     subagent: 4
     answered: true
@@ -277,9 +277,9 @@ ruleUse:
         trigger: docs/adr/0027-prune-trials.md
     reported:
       - path: .claude/rules/adr-0027.md
-        value: confirmed
+        value: backed
       - path: .claude/rules/adr-0029.md
-        value: confirmed
+        value: backed
   - by: workflow-subagent
     subagent: 5
     answered: true
@@ -292,7 +292,7 @@ ruleUse:
         trigger: .agents/skills/code-review/SKILL.md
     reported:
       - path: .claude/rules/adr-0027.md
-        value: confirmed
+        value: backed
   - by: workflow-subagent
     subagent: 6
     answered: true
@@ -310,7 +310,7 @@ ruleUse:
         trigger: .agents/skills/code-review/SKILL.md
     reported:
       - path: .claude/rules/adr-0027.md
-        value: confirmed
+        value: backed
       - path: .agents/skills/code-review/SKILL.md
   - by: workflow-subagent
     subagent: 8
@@ -324,7 +324,7 @@ ruleUse:
         trigger: .agents/skills/code-review/SKILL.md
     reported:
       - path: .claude/rules/adr-0027.md
-        value: confirmed
+        value: backed
   - by: workflow-subagent
     subagent: 9
     answered: true
@@ -353,9 +353,9 @@ ruleUse:
         trigger: docs/adr/0029-instructions-load-with-the-files-they-govern.md
     reported:
       - path: .claude/rules/adr-0027.md
-        value: confirmed
+        value: backed
       - path: .claude/rules/adr-0029.md
-        value: confirmed
+        value: backed
       - path: docs/agents/git-conventions.md
       - path: docs/agents/verifying-ui-changes.md
   - by: workflow-subagent
@@ -372,7 +372,7 @@ ruleUse:
         trigger: CLAUDE.md
     reported:
       - path: .claude/rules/adr-0029.md
-        value: confirmed
+        value: backed
   - by: workflow-subagent
     subagent: 13
     answered: true
@@ -390,9 +390,7 @@ ruleUse:
         trigger: .agents/skills/code-review/SKILL.md
     reported:
       - path: .claude/rules/adr-0027.md
-        value: confirmed
-      - path: .claude/rules/adr-0005.md
-        value: none
+        value: backed
   - by: workflow-subagent
     subagent: 15
     answered: true
@@ -411,11 +409,11 @@ ruleUse:
         trigger: docs/adr/0029-instructions-load-with-the-files-they-govern.md
     reported:
       - path: .claude/rules/adr-0027.md
-        value: confirmed
+        value: backed
       - path: .claude/rules/adr-0029.md
-        value: confirmed
+        value: backed
       - path: .claude/rules/adr-0004-human-merge.md
-        value: confirmed
+        value: backed
       - path: docs/agents/git-conventions.md
   - by: workflow-subagent
     subagent: 16
@@ -460,7 +458,7 @@ ruleUse:
         trigger: docs/adr/0004-objective-safety-gate.md
     reported:
       - path: .claude/rules/adr-0030.md
-        value: changed
+        value: steered
       - path: docs/agents/git-conventions.md
   - by: workflow-subagent
     subagent: 21
@@ -495,7 +493,7 @@ ruleUse:
         trigger: .agents/skills/code-review/SKILL.md
     reported:
       - path: .claude/rules/adr-0027.md
-        value: confirmed
+        value: backed
   - by: workflow-subagent
     subagent: 26
     answered: true
@@ -534,9 +532,9 @@ ruleUse:
         via: hint
     reported:
       - path: .claude/rules/adr-0022.md
-        value: confirmed
+        value: backed
       - path: .claude/rules/adr-0020.md
-        value: confirmed
+        value: backed
       - path: docs/agents/github-integration.md
       - path: docs/agents/verifying-ui-changes.md
   - by: workflow-subagent
@@ -569,7 +567,7 @@ ruleUse:
     reported:
       - path: docs/agents/github-integration.md
       - path: .claude/rules/adr-0027.md
-        value: confirmed
+        value: backed
   - by: workflow-subagent
     subagent: 32
     answered: true
@@ -593,9 +591,9 @@ ruleUse:
         via: hint
     reported:
       - path: .claude/rules/adr-0022.md
-        value: confirmed
+        value: backed
       - path: .claude/rules/adr-0020.md
-        value: confirmed
+        value: backed
       - path: docs/agents/github-integration.md
   - by: workflow-subagent
     subagent: 33
@@ -624,7 +622,7 @@ ruleUse:
         trigger: docs/adr/0004-objective-safety-gate.md
     reported:
       - path: .claude/rules/adr-0022.md
-        value: confirmed
+        value: backed
       - path: docs/agents/github-integration.md
       - path: docs/adr/0004-objective-safety-gate.md
   - by: workflow-subagent
@@ -655,11 +653,11 @@ ruleUse:
         trigger: docs/agents/github-integration.md
     reported:
       - path: .claude/rules/adr-0011.md
-        value: confirmed
+        value: backed
       - path: .claude/rules/adr-0022.md
-        value: confirmed
+        value: backed
       - path: .claude/rules/adr-0020.md
-        value: confirmed
+        value: backed
       - path: docs/agents/github-integration.md
   - by: workflow-subagent
     subagent: 35
@@ -682,9 +680,9 @@ ruleUse:
         trigger: docs/agents/github-integration.md
     reported:
       - path: .claude/rules/adr-0022.md
-        value: confirmed
+        value: backed
       - path: .claude/rules/adr-0020.md
-        value: confirmed
+        value: backed
       - path: docs/agents/github-integration.md
   - by: workflow-subagent
     subagent: 36
@@ -715,9 +713,9 @@ ruleUse:
         via: hint
     reported:
       - path: .claude/rules/adr-0022.md
-        value: confirmed
+        value: backed
       - path: .claude/rules/adr-0020.md
-        value: confirmed
+        value: backed
       - path: docs/agents/github-integration.md
 subagents:
   - type: workflow-subagent

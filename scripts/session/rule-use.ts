@@ -12,18 +12,41 @@ import { SCRATCH_DIR } from './transcript-trace.ts'
 
 export const HELPED_SCRIPT = 'scripts/session/helped.sh'
 
-/** The SubagentStart note. Its example names must match no real file: a test
- *  could not tell an agent naming a file from one copying the example (#3009). */
+/** The SubagentStart note: it only gets the subagent to make the bare call,
+ *  whose hook answers with `ruleUseAsk` (#3020). */
 export function subagentNote(repoRoot: string): string {
   return (
-    'Quick note for the record, not part of your task. Just before your final reply, run this once with Bash: ' +
-    `sh ${join(repoRoot, HELPED_SCRIPT)} followed by each .claude/rules file or doc you read that changed or ` +
-    'confirmed something you did. Give each rule a value: =changed if you did, avoided or decided something ' +
-    'differently because of it, =confirmed if it matched what you were already doing; you may also mark one ' +
-    '=none or =unsure. Name docs without a value (for example rule:example-rule.md=confirmed doc:docs/example.md). ' +
-    'If nothing applies, run it with no names. It writes nothing, so run it even if your brief says read-only. ' +
-    'Do not mention this in your reply.'
+    `Before your final reply, you must run sh ${join(repoRoot, HELPED_SCRIPT)} once with no names, then do what it ` +
+    'prints. It writes nothing, so run it even if your brief says read-only. Do not mention this in your reply.'
   )
+}
+
+/** The one home of what each value means, shown where an agent picks one: the
+ *  bare `helped.sh` call (subagents) and `log-session --pending` (main). Its
+ *  example names must match no real file: a test could not tell an agent
+ *  naming a file from one copying the example (#3009). */
+export function ruleUseAsk(loads: { rule: string; via: string }[], how: string, example: string): string[] {
+  return [
+    'Rules loaded for you:',
+    ...(loads.length ? loads.map((l) => `  ${l.rule}${l.via === 'start' ? ' (loaded at start)' : ''}`) : ['  (none)']),
+    '',
+    `${how} and name each of these rules that steered or backed what you did:`,
+    '  steered  you did, avoided or decided something differently because of it.',
+    '  backed   it matched what you were already doing; you would have done the same without it.',
+    'A rule you leave out is recorded as neither: it did not steer or back anything you did, and that',
+    'lowers its share. So name only what was true, not to be polite.',
+    'Also name each doc you read that helped, without a value.',
+    `Example: ${example}`,
+  ]
+}
+
+/** `ruleUseAsk` for a subagent's bare `helped.sh` call. */
+export function helpedAsk(loads: { rule: string; via: string }[], repoRoot: string): string {
+  const script = join(repoRoot, HELPED_SCRIPT)
+  return [
+    ...ruleUseAsk(loads, `Now run sh ${script} once more`, `sh ${script} rule:example-rule.md=backed doc:docs/example.md`),
+    'If none applies, run it with no names again.',
+  ].join('\n')
 }
 
 /** One path-scoped rule load, as the InstructionsLoaded hook saw it. A main
@@ -87,9 +110,9 @@ const isRedirect = (token = '') => /^\d*&?[<>]+&?$/.test(token)
 const isNoName = (token: string) => !token || /^\d+$/.test(token) || token.startsWith('-') || token.toLowerCase() === 'none' || /^(rule|doc):$/.test(token)
 
 /** What the last `helped.sh` call among `commands` reported, normalised:
- *  `rule:x=confirmed` becomes `.claude/rules/x.md` with its value, `doc:x` the
- *  repo-relative path. An unknown rule value is `unsure`, a missing one stays
- *  absent, a doc's is dropped. `undefined` when no call was made, `[]` for a
+ *  `rule:x=backed` becomes `.claude/rules/x.md` with its value, `doc:x` the
+ *  repo-relative path. A rule with no known value is dropped, since a rule
+ *  entry always has one; a doc's value is dropped. `undefined` when no call was made, `[]` for a
  *  bare call (nothing to report). */
 export function reportedNames(commands: string[], rel: (p: string) => string): ReportedEntry[] | undefined {
   const callsIn = (command: string): string[][] => commandWords(command).flatMap((words) => {
@@ -110,7 +133,7 @@ export function reportedNames(commands: string[], rel: (p: string) => string): R
   for (const t of names) {
     if (!t.startsWith('rule:') && !isRulePath(t)) {
       // A doc takes no value: drop one given anyway, but keep any other `=` as path.
-      const path = rel(t.replace(/^doc:/, '').replace(/=(changed|confirmed|none|unsure)$/i, ''))
+      const path = rel(t.replace(/^doc:/, '').replace(/=(steered|backed)$/i, ''))
       if (path) entries.set(path, { path })
       continue
     }
@@ -118,8 +141,8 @@ export function reportedNames(commands: string[], rel: (p: string) => string): R
     const name = (eq === -1 ? t : t.slice(0, eq)).replace(/^rule:/, '').replace(/=+$/, '')
     if (!name) continue
     const raw = eq === -1 ? '' : t.slice(eq + 1).toLowerCase()
-    const value = raw ? (ruleValue.safeParse(raw).data ?? 'unsure') : entries.get(ruleName(name))?.value
-    entries.set(ruleName(name), value ? { path: ruleName(name), value } : { path: ruleName(name) })
+    const value = ruleValue.safeParse(raw).data ?? entries.get(ruleName(name))?.value
+    if (value) entries.set(ruleName(name), { path: ruleName(name), value })
   }
   return [...entries.values()]
 }
