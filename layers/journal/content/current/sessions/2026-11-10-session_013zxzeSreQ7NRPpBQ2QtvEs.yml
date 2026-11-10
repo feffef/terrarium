@@ -1,0 +1,156 @@
+schemaVersion: 1
+session: session_013zxzeSreQ7NRPpBQ2QtvEs
+startedAt: 2026-11-10T00:36:11Z
+endedAt: 2026-11-10T00:54:15Z
+kind: delegated
+goal: "Live test of rule-use capture: add --count to list-open-issues"
+status: abandoned
+outcome: "Test PR #3016 built, gated, reported and closed unmerged on purpose"
+summary: "Delegated test run for PR #3010 (issue #3009), all steps human-instructed in the kickoff prompt. I cut a branch, had an Explore agent map the script, a Sonnet impl agent add --count test-first in a worktree, ran code-review (Standards and Spec agents), had the impl agent fix two findings (formatOutput extraction and tests, docs reflow), ran gate:scoped (passed), pushed, and opened draft PR #3016 against the test base branch. I ran the derive script and reported its output to the coordinating session, then closed the PR unmerged after #3010 merged. I deliberately did not subscribe to the PR or invoke close-session early, as instructed; the Stop hook asked for a subscription anyway. Count semantics (capped by N) were my call, not asked for; the Spec reviewer flagged it as a decision for the owner."
+prs:
+  - "3016"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (read before editing)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: scripts/github/list-open-issues.ts
+    reason: (read before editing)
+  - path: tests/unit/list-open-issues.spec.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: (no reason given)
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Stop hook repeatedly flagged unpushed inherited commits on the impl worktree branch during review, and demanded PR subscription the task forbade.
+    solution: Let the hook skip worktree impl branches awaiting orchestrator review, and honour an explicit no-subscribe instruction.
+    severity: nit
+  - description: Impl worktree started at a stale SHA, not the pinned one, so the agent had to re-branch from the pushed branch.
+    solution: Have worktree creation base on the pinned SHA.
+    severity: nit
+  - description: A read-only brief barring writes made the Explore agent skip helped.sh, leaving its ledger row unanswered.
+    solution: Exempt helped.sh from read-only brief wording.
+    severity: minor
+durationSec: 1084
+models:
+  claude-sonnet-5-5: 63
+toolCounts:
+  Read: 3
+  Bash: 12
+  Skill: 4
+  Agent: 4
+  SendMessage: 1
+  ToolSearch: 3
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__send_message: 1
+  ReadNotifications: 1
+  mcp__github__update_pull_request: 1
+filesEdited:
+  - docs/agents/github-integration.md
+  - scripts/github/list-open-issues.ts
+  - tests/unit/list-open-issues.spec.ts
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0022.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+    reported:
+      - path: .claude/rules/adr-0027.md
+        value: none
+      - path: .claude/rules/adr-0029.md
+        value: none
+      - path: docs/agents/git-conventions.md
+      - path: docs/agents/github-integration.md
+      - path: docs/agents/pr-workflow.md
+  - by: general-purpose
+    answered: true
+    loads: []
+    reported:
+      - path: docs/agents/github-integration.md
+  - by: general-purpose
+    answered: true
+    loads: []
+    reported: []
+  - by: Explore
+    answered: false
+    loads:
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/adr-0020.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+    reported: []
+  - by: general-purpose
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+    reported:
+      - path: docs/agents/git-conventions.md
+subagents:
+  - type: Explore
+    task: Map list-open-issues script
+    durationSec: 29
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 5.6
+  - type: general-purpose
+    task: Implement --count test-first
+    model: sonnet
+    durationSec: 133
+    toolCalls: 17
+    modelCalls: 14
+    tokenShare: 21.8
+  - type: general-purpose
+    task: Standards review of --count diff
+    durationSec: 16
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 4.7
+  - type: general-purpose
+    task: Spec review of --count diff
+    durationSec: 11
+    toolCalls: 3
+    modelCalls: 2
+    tokenShare: 3.9
+gitBranch: HEAD
+entrypoint: remote
+cliVersion: 2.1.321
+landedBy: Stop
