@@ -237,27 +237,29 @@ function persistedOutput(text: string): string {
  *  land several records after its tool_use. A command whose result is missing
  *  (a torn transcript) pairs with `''` — the same as a real zero-output run,
  *  which undercounts rather than guesses. */
-function bashCommandsOf(records: Record<string, unknown>[]): { command: string; output: string }[] {
+function bashCommandsOf(records: Record<string, unknown>[]): { command: string; output: string; failed: boolean }[] {
   const outputs = new Map<string, string>()
+  const failed = new Set<string>()
   for (const rec of records) {
     const content = (rec.message as { content?: unknown } | undefined)?.content
     if (!Array.isArray(content)) continue
     for (const block of content) {
-      const b = block as { type?: string; tool_use_id?: string; content?: unknown }
+      const b = block as { type?: string; tool_use_id?: string; content?: unknown; is_error?: boolean }
       if (b?.type === 'tool_result' && typeof b.tool_use_id === 'string') {
+        if (b.is_error) failed.add(b.tool_use_id)
         const text = persistedOutput(toolResultText(b.content))
         outputs.set(b.tool_use_id, text.trim() === EMPTY_BASH_OUTPUT ? '' : text)
       }
     }
   }
-  const commands: { command: string; output: string }[] = []
+  const commands: { command: string; output: string; failed: boolean }[] = []
   for (const rec of records) {
     const content = (rec.message as { content?: unknown } | undefined)?.content
     if (!Array.isArray(content)) continue
     for (const block of content) {
       const b = block as { type?: string; name?: string; id?: string; input?: { command?: unknown } }
       if (b?.type === 'tool_use' && b.name === 'Bash' && typeof b.input?.command === 'string') {
-        commands.push({ command: b.input.command, output: outputs.get(b.id ?? '') ?? '' })
+        commands.push({ command: b.input.command, output: outputs.get(b.id ?? '') ?? '', failed: failed.has(b.id ?? '') })
       }
     }
   }
@@ -715,7 +717,8 @@ export function extractTrace(
     ruleLoads: [...dedup(alwaysLoadedRules).map((rule) => ({ rule, via: 'start' as const })), ...loadByRule.values()],
     rulesRead: dedup(reads).filter((p) => isRulePath(p)).map(ruleKey),
     helpedAsked,
-    reportedNamed: reportedNames(bashCommandsOf(records).map((c) => c.command), rel),
+    // A denied call (a permission classifier, say) is no answer.
+    reportedNamed: reportedNames(bashCommandsOf(records).filter((c) => !c.failed).map((c) => c.command), rel),
     skillsUsed: dedup([...skills, ...commandSkills]),
     commandSkills: dedup(commandSkills),
     subagents,

@@ -188,6 +188,13 @@ describe('ruleUse — subagents', () => {
     expect(silent).toMatchObject({ by: 'Explore', answered: false, reported: [] })
   })
 
+  it('counts a denied call as no answer', () => {
+    const call = { type: 'assistant', message: { content: [{ type: 'tool_use', id: 'tu-h', name: 'Bash', input: { command: 'sh /repo/scripts/session/helped.sh' } }] } }
+    const denied = { type: 'user', message: { content: [{ type: 'tool_result', tool_use_id: 'tu-h', is_error: true, content: 'Permission for this action was denied' }] } }
+    const folded = foldSubagentTrace(main, [sub([note, native('adr-0004.md'), call, denied])], NO_ENV)
+    expect(ruleUseOf(stitch(authored({ reported: [] }), folded))[0]).toMatchObject({ answered: false, reported: [] })
+  })
+
   it('takes the last call when an agent answers twice', () => {
     const folded = foldSubagentTrace(main, [sub([note, native('adr-0004.md'),
       bash('sh /repo/scripts/session/helped.sh'), bash("sh '/repo/scripts/session/helped.sh' 'rule:adr-0004.md=backed'")])], NO_ENV)
