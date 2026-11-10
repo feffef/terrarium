@@ -1,0 +1,432 @@
+schemaVersion: 1
+session: session_013zxzeSBfN7oWScF9TgN4eB
+startedAt: 2026-11-10T18:17:57Z
+endedAt: 2026-11-10T21:20:18Z
+kind: interactive
+goal: Show rule use on the Journal session card, and make agents rate every loaded rule
+status: completed
+outcome: "Merged as PR #3041 after two rounds of test sessions came back clean; #3020 closed"
+summary: "The owner asked for a grilling on issue #3020 (the session card showed \"no verdict provided\" for every log since ruleUse replaced ruleVerdicts). Every design choice was settled with the owner over many rounds and posted on #3020. Human-decided: show ruleUse on the SessionCard only, grouped by Main session and Subagents, with per-rule shares over answering subagents; rename the values to steered | backed, dropping none and unsure, and rewrite the 16 existing logs, with ADR-0009 changed to allow that; rate always-loaded rules too (via: start), reversing a #3009 exclusion the owner judged wrong; give each subagent its own list of loaded rules at rating time rather than asking from memory; rename the human-merge rule's heading. The owner also asked for Sonnet test sessions with realistic tasks, repeated until the process worked, workflows included. Agent-found and fixed after review or testing: the ask could repeat forever on a second bare call; rules named but never loaded vanished from the card; a call the permission classifier denied counted as an answer; the classifier denied `sh helped.sh` for read-only agents (the owner chose `echo rule-use:` instead); `backed` was under-reported where the task said the same (the owner approved new wording); a rule read as a file never showed as loaded (the owner approved `via: read`). Round 2 of the three test sessions (subagents with Explore and code-review, a 3-agent workflow, main agent only) was clean. The six test sessions are idle; asked the owner whether to archive them so their held logs never land. The owner merged PR #3041 and #3020 closed."
+prs:
+  - "3041"
+docsRead:
+  - path: scripts/session/transcript-trace.ts
+    reason: (read before editing)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: layers/journal/GLOSSARY.md
+    reason: (no reason given)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (read before editing)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (read before editing)
+  - path: docs/agents/guards.md
+    reason: (read before editing)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: grilling
+    reason: settled every display and data decision with the owner before building
+  - name: code-review
+    reason: Standards and Spec review of the branch; its findings were real bugs
+  - name: dispatch-subagents
+    reason: reviewer briefs; the dispatch-read guard sent me to it
+  - name: domain-modeling
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: grill-with-docs
+    reason: (invoked as a slash command)
+frictions:
+  - description: Ran `git checkout origin/main -- layers/journal/content` before reading git-conventions.md, which forbids checkout of a ref onto paths (it stages them).
+    solution: Read git-conventions.md before the first non-read-only git command, as CLAUDE.md says; it was a no-op only because the branch equalled main.
+    severity: moderate
+  - description: "Relayed two of #3009's reasons for excluding always-loaded rules as if sound; the owner had to point out they were weak."
+    solution: Before passing on a prior decision's rationale, test each reason against the current goal (CLAUDE.md, Question the premise).
+    severity: moderate
+  - description: First migration script was not idempotent; after an interrupt, re-running it would have deleted the new steered/backed values.
+    solution: Write data migrations to leave already-migrated values untouched, so a partial run can be resumed.
+    severity: minor
+  - description: A half-finished export rename in rule-use.ts made a Bash PreToolUse guard crash on import, blocking every Bash call until fixed via Edit.
+    solution: Guards that import session modules could fail open on an import error, or rename an export and its importers in one edit.
+    severity: minor
+  - description: The nuxt dev server reloaded the SessionCard template but not the edited dashboard.ts utils, so one screenshot mixed old and new code.
+    solution: Restart the preview server after editing a layer util before a screenshot (or note it in verifying-ui-changes.md).
+    severity: minor
+  - description: Editing files while gate:scoped ran aborted it twice; each fix round meant a full gate rerun.
+    solution: Batch review fixes and start the gate only once no more edits are pending.
+    severity: minor
+  - description: First Agent call blocked by the dispatch-read guard because dispatch-subagents had not been read.
+    solution: Read the dispatch-subagents Skill before the first subagent brief, as CLAUDE.md says.
+    severity: nit
+  - description: Code-review spec file I wrote for the reviewer left out the owner's 'always loaded' tag decision, so the reviewer flagged it as scope creep.
+    solution: Copy each owner decision into a review spec from the issue comment, not from memory.
+    severity: nit
+durationSec: 10940
+models:
+  claude-opus-5-5: 534
+toolCounts:
+  Skill: 6
+  Bash: 192
+  ToolSearch: 4
+  mcp__github__issue_read: 3
+  mcp__github__add_issue_comment: 2
+  mcp__github__issue_write: 1
+  mcp__claude-code-remote__report_preview_port: 1
+  Read: 7
+  SendUserFile: 2
+  Agent: 7
+  Write: 2
+  mcp__claude-code-remote__create_session: 6
+  mcp__claude-code-remote__send_later: 3
+  ReadNotifications: 10
+  Edit: 1
+  mcp__claude-code-remote__delete_trigger: 2
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 3
+filesEdited:
+  - scripts/session/transcript-trace.ts
+  - .claude/settings.json
+  - docs/agents/guards.md
+  - layers/journal/app/utils/dashboard.ts
+  - scripts/hooks/helped-ask.sh
+  - scripts/hooks/helped-ask.ts
+  - scripts/hooks/rule-use-ask.sh
+  - scripts/hooks/rule-use-ask.ts
+  - scripts/hooks/subagent-note.ts
+  - scripts/session/helped.sh
+  - scripts/session/rule-use-report.ts
+  - scripts/session/rule-use.ts
+  - shared/schemas/session.ts
+  - tests/unit/helped-ask.spec.ts
+  - tests/unit/rule-use-ask.spec.ts
+  - tests/unit/rule-use-report.spec.ts
+  - tests/unit/rule-use.spec.ts
+  - tests/unit/subagent-note.spec.ts
+  - layers/journal/app/components/journal/SessionCard.vue
+  - layers/journal/tests/unit/journal-dashboard.spec.ts
+  - .claude/rules/adr-0009.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - scripts/session/log-session.ts
+  - tests/unit/log-session.spec.ts
+  - .agents/skills/log-session/SKILL.md
+  - layers/journal/app/types/journal.ts
+  - .claude/rules/adr-0004-human-merge.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0009.md
+docsReadBySubagents:
+  - .agents/skills/writing-for-agents/SKILL.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/log-session/SKILL.md
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: shared/schemas/session.ts
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/adr-0025.md
+        via: native
+        trigger: shared/schemas/session.ts
+      - rule: .claude/rules/data-shapes.md
+        via: native
+        trigger: shared/schemas/session.ts
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+      - rule: .claude/rules/adr-0006.md
+        via: hint
+      - rule: .claude/rules/adr-0016.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/log-session/SKILL.md
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/guards.md
+        via: hint
+    reported:
+      - path: .claude/rules/data-shapes.md
+        value: steered
+        why: asked the owner before each stored-field change
+      - path: .claude/rules/adr-0030.md
+        value: steered
+        why: rewrote ADR-0009 in place with its rule
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: steered
+        why: PR says it waits for a human merge
+      - path: .claude/rules/ui-verification.md
+        value: steered
+        why: checked the rendered card, caught stale dev server
+      - path: .claude/rules/adr-0004.md
+        value: backed
+        why: gate and code-review before the PR
+      - path: .claude/rules/adr-0003.md
+        value: backed
+        why: opened and subscribed to the PR myself
+      - path: .claude/rules/adr-0017.md
+        value: backed
+        why: session header on every GitHub body
+      - path: .claude/rules/adr-0009.md
+        value: backed
+      - path: .claude/rules/guards.md
+        value: backed
+        why: followed hook conventions for rule-use-ask
+      - path: .claude/rules/adr-0027.md
+        value: backed
+        why: checked no open trial covered log-session
+      - path: .claude/rules/tenant-layers.md
+        value: backed
+      - path: docs/agents/github-integration.md
+      - path: docs/agents/git-conventions.md
+      - path: docs/agents/pr-workflow.md
+      - path: docs/agents/guards.md
+      - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+  - by: general-purpose
+    subagent: 1
+    answered: false
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported: []
+  - by: general-purpose
+    subagent: 2
+    answered: false
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+    reported: []
+  - by: general-purpose
+    subagent: 3
+    answered: false
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/guards.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported: []
+  - by: general-purpose
+    subagent: 4
+    answered: false
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/adr-0025.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/guards.md
+        via: hint
+    reported: []
+  - by: general-purpose
+    subagent: 5
+    answered: false
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/guards.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+    reported: []
+  - by: general-purpose
+    subagent: 6
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/guards.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+    reported:
+      - path: .claude/rules/guards.md
+        value: backed
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: backed
+      - path: docs/agents/guards.md
+      - path: docs/agents/git-conventions.md
+subagents:
+  - type: general-purpose
+    task: Trivial probe subagent
+  - type: general-purpose
+    task: Trivial probe subagent
+    durationSec: 20
+    toolCalls: 3
+    modelCalls: 3
+    tokenShare: 1
+  - type: general-purpose
+    task: Standards review of branch
+    durationSec: 93
+    toolCalls: 14
+    modelCalls: 14
+    tokenShare: 2.7
+  - type: general-purpose
+    task: Spec review of branch
+    durationSec: 115
+    toolCalls: 14
+    modelCalls: 14
+    tokenShare: 2.8
+  - type: general-purpose
+    task: Review follow-up fix commit
+    durationSec: 56
+    toolCalls: 6
+    modelCalls: 6
+    tokenShare: 0.9
+  - type: general-purpose
+    task: Review second fix commit
+    durationSec: 36
+    toolCalls: 6
+    modelCalls: 6
+    tokenShare: 0.8
+  - type: general-purpose
+    task: Review last two follow-ups
+    durationSec: 91
+    toolCalls: 14
+    modelCalls: 13
+    tokenShare: 2.5
+gitBranch: claude/relaxed-heisenberg-8t55cz
+entrypoint: remote
+cliVersion: 2.1.322
+learnings:
+  - The Claude Code auto-mode classifier can deny `sh <repo script>` for read-only subagents (Explore) as risky; a plain `echo` passes.
+  - "Inferred, not verified: once an agent reads a rule file directly, the harness may skip that rule's later path-scoped load, so the rule never shows as loaded."
+  - A PostToolUse hook can find a subagent's own transcript from the payload's agent_id plus the parent transcript_path; the subagent transcript carries its own `instructions` attachment with the always-loaded rules.
+ideas:
+  - "A reusable test-session harness Skill: spawn N Sonnet sessions on a branch with a realistic task each, a fixed evidence script and a report format, then diff their reports. This session hand-built one and it found four bugs unit tests missed."
+landedBy: Stop
