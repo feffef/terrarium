@@ -9,20 +9,6 @@ role: >-
   bounded exception). Usually invoked by `close-session`; call it directly only
   to amend a written log.
 observations:
-  - date: "2026-09-30"
-    note: >-
-      Re-checked (audit-skills behaviour check), 10 newest sessions under the
-      rewritten (numeric-cap-free) SKILL.md: field-split and wording clean,
-      no violations. The `git log -p` false-negative lead is now fixed
-      upstream (commit 64facc5d, merged before this batch ran) and did not
-      recur. The cd-prefix absolute-path over-rebasing lead remains open and
-      unfixed in `resolveAgainstCdDir` but did not manifest again in this
-      batch — still n=1. One soft, unconfirmed anomaly noted for a future
-      screen: session_01FQ9WV8BrFC4WVuHDKH2Ezb's docsReadViaShell credits
-      `.agents/skills/visitor-loop/SKILL.md`, a path not mentioned anywhere
-      in its own summary/frictions and not quoted in any doc it read —
-      plausibly a genuine background read, not confirmed as a new
-      false-positive shape.
   - date: "2026-10-01"
     note: >-
       Verified silent failure, confirmed in code (audit-skills behaviour
@@ -420,3 +406,6 @@ observations:
   - date: "2026-11-07"
     note: >-
       Behaviour check, 10 runs, all logs landed, PRs merged. ruleVerdicts incomplete in 2 of 10: session_013zxzeNeTKPqiQ1jj1FgYXh (adr-0022 missing) and session_013zxzeSxfK7X25LqaANsqoE (adr-0005, subagent-loaded). Ninth window; tracked by #2607 and #2645, no new comment. Grade unchanged.
+  - date: "2026-11-10"
+    note: >-
+      Behaviour check, 10 runs, all logs landed, PRs merged. ruleVerdicts incomplete in 4 of 10 (tenth window; rates now 3,1,1,3,3,1,2,4,1,2,4): session_013zxzeQyUMxeD3fYivwaeLU 21 of 33 missing, session_013zxzeQMfaaC4C4CNuFY3EH 15 of 29 (both subagent-loaded, no friction logged), session_013zxzeNd2Ethpd3anqbmpkr 1, session_013zxzePitVv4rX66ZhZa4kw 1. Tracked by #2607 and #2645, no new comment. Grade unchanged.

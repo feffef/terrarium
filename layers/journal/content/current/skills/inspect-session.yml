@@ -139,3 +139,6 @@ observations:
   - date: "2026-11-07"
     note: >-
       Behaviour check, 4 runs delivered. Borderline missed invocations, n=1 each, cost-wording cause: session_013zxzeSAtjCQiatdUuuFCRJ (2 get_session calls, claimed cost_usd included subagents unchecked) and session_013zxzeQWJEVk8sAXq1hcSjq (11 get_session calls for cost, no Skill). Escalate if a third appears. Grade unchanged.
+  - date: "2026-11-10"
+    note: >-
+      Behaviour check, 5 runs delivered. Unfixed gap, n=1: session_013zxzeNd2Ethpd3anqbmpkr fanned out 7 transcript subagents (about 774k tokens) before finding that events omit hook-injected rule context in some sessions; its proposed line (probe one session first) is not in SKILL.md. No new missed invocations. Grade unchanged.

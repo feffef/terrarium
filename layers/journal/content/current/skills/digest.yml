@@ -10,22 +10,6 @@ role: >-
   gated PR (ADR-0003) it merges itself on a green gate, never via the
   `log-session` direct-to-main path. Scheduled; run it by hand to catch up.
 observations:
-  - date: "2026-09-30"
-    note: >-
-      First audit-skills behaviour check, 7 usedIn sessions (Digests for
-      2026-09-23 through 09-29). 6/7 clean (files, PRs, retention sweeps all
-      verified). 1 silent failure: session_01D6NdBrbYTiiCPZwkP3L98b (2026-09-29
-      log, PR #1478, the 2026-09-28 Digest) shipped a factually wrong claim —
-      "the homepage gained a map of what is real and what is invented" — when
-      PR #1475 actually added that page to the Journal, not the homepage. It
-      stood live on main for ~7h until a human caught it; a different session
-      (session_01JFdzvuah2DATTv7ixCAPJg) fixed the wording and, in the same
-      commit (98ece44f), added SKILL.md's fact-check step that would have
-      caught this class of error. At the time session_01D6NdBrbYTiiCPZwkP3L98b
-      ran, no fact-check step existed yet, so it didn't violate its own
-      instructions — but it still shipped an unverified wrong claim. Not
-      escalated as an issue: the gap that caused it is already closed by the
-      fix commit itself, so there is no open action item left for a human.
   - date: "2026-10-01"
     note: >-
       Re-verified (audit-skills behaviour check): the PR #1478 case
@@ -355,3 +339,6 @@ observations:
   - date: "2026-11-08"
     note: >-
       Behaviour check, 7 runs delivered. code-review skipped again, now by a second session (session_013zxzeRnhzjUpugh9vCH4UW, PR #2953; earlier session_013zxzePsSguQyDiqnq52irG). Verified; filed #2954. Dispatch-read guard blocked the first Agent call in 4 of 7 logs. Grade unchanged.
+  - date: "2026-11-10"
+    note: >-
+      Behaviour check, 7 runs delivered. Verified: an invented 'weekly' shipped in the 2026-11-08 Digest (session_013zxzeRwYp54RD4CM5MiabZ, PR #2985) and was fixed about 1 h later by #2993; the next run drafted cadence words again and its fact-check caught them. The fact-check brief does not name cadence as a claim type (unverified cause). code-review skips stopped after c955ac303. Grade unchanged.
