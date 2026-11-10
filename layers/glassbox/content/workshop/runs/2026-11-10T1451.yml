@@ -1,5 +1,57 @@
 session: session_013zxzeSjaFuTmBXbfN2o5AH
 mode: autonomous
-focus: "Nuxt Content Subject: remove repeats between Multi-tenant isolation and queryCollection (how a page gets its keys) and fix the Content database Try it step. Chosen because no open PR touches the guide, the memory page's top lead named this Subject as not yet de-duplicated, and the Scout found no new topic."
-changes: []
-pagesRead: []
+focus: "Four de-duplication passes in one run, on the Subjects the memory page said were not yet read by a fresh reader: Nuxt Content, Web standards, Verification and Nuxt & Vue. Chosen because no open PR touches the guide, the Scout found no new topic, and the owner said to keep taking focuses until the budget is spent. Each page went to a fresh reader; a writer fixed only the findings that were real; a separate claim checker read every changed sentence."
+changes:
+  - nuxt-content/60.mermaid-pre-rendering | A variable a Tenant does not map falls back to a fixed light colour from DIAGRAM_TOKEN_FALLBACKS, not Mermaid's own defaults; the lede says once per source and font; placeholder colour defined; the font and the dependency facts are said once | the old sentence was false (app/utils/mermaid.ts:29-37; render-mermaid.ts:48-57). Wording otherwise, so revision and publishedAt are kept
+  - nuxt-content/50.mdc-components | Frontmatter, slots and the folder for content components are defined; nested blocks may use more colons but need not; replacement is app-wide or per render; the no-schema fact is said once | fresh reader found undefined terms and a repeat (remark-mdc README; module.mjs:3256). Wording only
+  - nuxt-content/10.content-collections | kind glossed at first use; the key joins the three names with an underscore; prefix '/' means no Tenant or Space segment in the path | undefined term and two ambiguous sentences (shared/manifest.ts:66-68,173-176; content.config.ts:32). Wording only
+  - nuxt-content/20.multi-tenant-isolation | The lede says by mistake; the routing map comes before the resolver; the Human-only sentence is kept in the Why bullet only | a lede that overclaimed against Separate is not secret, and a repeat (adr-0004-human-merge.md). Wording only
+  - nuxt-content/30.content-database | The lede says Nuxt Content parses once at build and a server only loads the result; Try it says to use a fresh window because a production build may answer from localStorage; links Multi-tenant isolation for the database option | the lede contradicted the server section; the Try it step could show no request (database.client.js:85-97; database.server.js:52-121). Wording only
+  - nuxt-content/40.query-collection | Document and Digest use their terms; the Several Spaces bullet and the repeated select watch bullet are cut | repeats of Multi-tenant isolation and the Why bullet (catalog.ts:46-60). Removal and wording only
+  - web-standards/10.css-custom-properties | Tokens sit on an element above the components; dark mode in the Journal is one way; the stylesheet-on-every-page fact is said once; the Space class sits next to the base atlas class | the lede named the wrapper only, though the Blog and Atlas use :root (Shell.vue:3; atlas [space]/index.vue:71). Wording only
+  - web-standards/20.svg | The lede says the filter runs in the Gate before merge; the allowed references are listed once; the html option is named where svgHazard appears; Tinkerfund figures cannot define an id target | the lede claimed more than the build does (svg.ts:28; tinkerfund/schemas.ts:30; validate-content-schema.ts:134). Wording only
+  - web-standards/30.aria | The lede says ARIA changes only what assistive technology is told; .self and .prevent are named Vue event modifiers; the live-region, aria-hidden and Enter-on-link repeats are cut; a colon splice is fixed | the lede ignored aria-hidden; four repeats (Disclosure.vue:36-37; DealBanner.vue:53,55). Wording only
+  - web-standards/40.colour-and-motion-settings | The lede says following the colour setting takes two jobs; has-child wording is plain; the light-dark and default-scheme facts are said once | motion was swallowed by a colour-only lede, and two repeats (Shell.vue:3). Wording only
+  - verification/10.gate | CI defined; the Inert and Skill-file skip paragraphs agree; the fail-closed sentence and the Human-only list are said once | the two paragraphs read as a contradiction (gate.ts:21-65). Wording only
+  - verification/20.type-checking | The lede says a file no config names and nothing imports; Golar and the DOM libs are glossed; most of the tests are in the second program | the lede contradicted the concept and the watch bullet (typecheck dist, tsconfig.node.json:17,66-69). Wording only
+  - verification/30.content-validation | The read-twice cost says once by the build and once by the check; the timestamp Why bullet points back to The concept | an unexplained cost and a repeat. Wording only
+  - verification/40.testing | The e2e level is named L2 as tests/README.md names it; the watch bullet is the instruction only; pnpm test:e2e is explicit | three statements of one build rule (tests/README.md:9-36; package.json:18). Wording only
+  - verification/50.linting | pnpm lint's coverage is stated; four repeated facts are said once; the lede says warning or error | the page said whole repo and then listed ignores (package.json:16; eslint.config.mjs:5). Wording only
+  - verification/60.zod-refinements | kind and contract glossed at first use; z.custom is stated once; the extend note is short; a missing blank line before Why is added | an undefined term and repeats (shared/kinds.ts:22-24; zod v3 types.js:3560-3590). Wording only
+  - verification/70.schema-evolution | A log without schemaVersion counts as version 1; removing a field is ADR-0009's one exception; the strict object is explained; a repeat is cut | the lede and the removal rule looked at odds (session.ts:66-69; adr-0009:35-39). Wording only
+  - verification/80.headless-browser-checks | The default wait, networkidle and attached are stated; the Playwright caveat and the pkill warning are said once | unexplained terms and repeats (screenshot.ts:30,131-132). Wording only
+  - nuxt-vue/10.layers | The root config sentence says it has no extends list; the tilde fact is said once; no two layers define a page, so the priority rule has nothing to decide | cryptic sentence and a repeat (nuxt.config.ts:3-12). Wording only
+  - nuxt-vue/20.auto-imports | The clash mechanism is in The concept only; the rule clause is quoted; the imports.scan Try it paragraph is split; the home page builds from two Tenants | the same silent-clash fact was in three places (tenant-layers.md:16-17; nuxt dist/index.mjs:6270-6290). Wording only
+  - nuxt-vue/30.file-routing | The lede says a maintained list; the 404 for an unknown Space is said at first mention; navigateTo's result must be awaited and the code after it still runs | a lede that overclaimed, and two sentences that read as one rule split in two (space.ts:21-26; navigate-to docs). Wording only
+  - nuxt-vue/40.virtual-modules | The map is written once as data and once as its type; the tsconfig sentence is split; zod and Nitro are glossed | hard sentences and two undefined terms (modules/routing.ts; tsconfig.node.json:36-39). Wording only
+  - nuxt-vue/50.vue-components | The progress bar's --n is placed where it is set; the lede says setup runs on the server and again in the browser; the timer's hooks are named; a repeated cost is cut | the text named --n that its Excerpt does not show (ProgressBar.vue:7-25). Wording only
+  - nuxt-vue/60.nitro | swr is on unless set to false; varies keeps a separate copy for each value; payload is explained at first use | unclear statements (nitropack cache.mjs:13-19,136,154-155). Wording only
+  - nuxt-vue/70.data-fetching | The lede says useAsyncData fetches once on the server for the first page; the handler never runs when the payload loads; the cost names varies | lede overclaimed and a dangling pointer (nuxt asyncData.js:114,463-465). Wording only
+  - nuxt-vue/80.hydration | The class and style mechanism is in The concept only; the production error is one error without details; later cards skip the read | the watch bullet and the concept disagreed on what production reports (vue runtime-core 2253-2260). Wording only
+pagesRead:
+  - nuxt-content/10.content-collections
+  - nuxt-content/20.multi-tenant-isolation
+  - nuxt-content/30.content-database
+  - nuxt-content/40.query-collection
+  - nuxt-content/50.mdc-components
+  - nuxt-content/60.mermaid-pre-rendering
+  - web-standards/10.css-custom-properties
+  - web-standards/20.svg
+  - web-standards/30.aria
+  - web-standards/40.colour-and-motion-settings
+  - verification/10.gate
+  - verification/20.type-checking
+  - verification/30.content-validation
+  - verification/40.testing
+  - verification/50.linting
+  - verification/60.zod-refinements
+  - verification/70.schema-evolution
+  - verification/80.headless-browser-checks
+  - nuxt-vue/10.layers
+  - nuxt-vue/20.auto-imports
+  - nuxt-vue/30.file-routing
+  - nuxt-vue/40.virtual-modules
+  - nuxt-vue/50.vue-components
+  - nuxt-vue/60.nitro
+  - nuxt-vue/70.data-fetching
+  - nuxt-vue/80.hydration

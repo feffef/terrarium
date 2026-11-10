@@ -26,7 +26,7 @@ Each guide page is named by its title, then its file under `layers/glassbox/cont
 
 ### Recurring problems
 
-- **New text has contained false claims.** Twice, a newly written page or fix said something its source contradicted, and it was only noticed a day later.
+- **New text has contained false claims.** Twice, a newly written page or fix said something its source contradicted, and it was only noticed a day later. Older text can be false too: a claim check of the 2026-11-10 Nuxt Content pass found *Mermaid pre-rendering* saying unmapped colours fall back to Mermaid's own defaults, when they are fixed light colours.
 - **Neighbouring pages repeat each other.** Most structural changes so far took a reason that two pages both explained and left it on just one of them.
 - **Changes have been undone soon after.** Two pages were added to the guide, or kept, by one run and then folded into another page a few runs later: *Prose overrides* and *Invariant tests*.
 
@@ -44,7 +44,7 @@ Subjects and Lessons run prerequisites first, and Lesson prefixes go up in tens 
 
 ### Good next focuses
 
-1. **Re-read the Subjects not yet de-duplicated.** Claude Code, Hooks and Agents & automation have had this pass; Nuxt Content, Nuxt & Vue, Verification, Git & GitHub, Installed skills and Web standards have not. In House rules only *Protected paths* and *Ubiquitous language* changed; the other seven pages were read and left alone.
+1. **Re-read the Subjects not yet de-duplicated.** Claude Code, Hooks, Agents & automation, Nuxt Content, Nuxt & Vue, Verification and Web standards have had this pass; Git & GitHub, Installed skills, Deploy and the Walkthroughs have not (no fresh reader has seen the Walkthroughs). In House rules only *Protected paths* and *Ubiquitous language* changed; the other seven pages were read and left alone.
 2. **Decide how pages say "a person merges" a Human-only file.** Since the owner waiver (ADR-0004), an agent may merge one when the owner says so in the session. *Protected paths*, *Human-only* and the overview say so. These still state it flatly, each true as the default: *Path-specific rules*, *Decision records*, *Merge gate*, *Claude Code hooks* (twice), *Composite actions*, *Author trust*, *Cross-tenant reads* and *Asking an agent for a change*. Ask the owner whether to name the waiver there or keep one home.
 3. **Check the docs again for the pages whose claims the docs left silent** (the list under *Doc findings not acted on*), by reading the tool's source where the docs have no page.
 
@@ -68,15 +68,19 @@ Subjects and Lessons run prerequisites first, and Lesson prefixes go up in tens 
 
 **Topics the Scout found with no page (2026-11-10).** A Nuxt build peaks near 2.1 GB, and the live host has a 2 GB swapfile added after builds were killed (`deploy/README.md`); a sentence for *Continuous deployment* (`deploy/10.continuous-deployment`), not a page. Also: agents report which rules and docs helped through a no-op script, `scripts/session/helped.sh`; the session log reads the call from the transcript (`scripts/session/rule-use.ts`, a `ruleUse` field in `shared/schemas/session.ts`), and `scripts/session/rule-use-report.ts` totals it per rule. Nearest page: *Session logs* (`terrarium-practice/40.session-logs`). Also: `docs/agents/verifying-ui-changes.md` now says Linux screenshots can't confirm fixed-width text fit; nearest page *Headless browser checks* (`verification/80.headless-browser-checks`).
 
+**Left over from the 2026-11-10 Nuxt Content, Web standards, Verification and Nuxt & Vue passes.** Fresh readers found these; none is false.
+- Several pages use *Space*, *Document*, *Catalog* or *Tenant* before they are glossed, or gloss one twice (*Vue components*, *Hydration*, *File routing*, *queryCollection*). A short rule for where each is glossed first would settle it.
+- *Mermaid pre-rendering*: the comment above `DIAGRAM_TOKEN_FALLBACKS` in `app/utils/mermaid.ts` still says the fallbacks are Mermaid's base-theme defaults, which they are not (outside this run's remit; a code comment).
+- *Content validation*: the lede says the build passes with a misspelt field, yet a `page` Collection with no schema is skipped by the check.
+- *Testing* never says what the `L2` in `setupL2()` means beyond `tests/README.md`; *Headless browser checks* gives no reason for `--no-sandbox` (the sources give none).
+
 **Installed Skills.** *Engineering skills* could become part of *Installed skills* (`skill-pack/10.skill-packs`).
 
 **A fact about out-of-scope records that no Lesson teaches.** Before it recommends anything, `triage` reads every record in `.out-of-scope/` and shows the person deciding any that resembles the new request (`.agents/skills/triage/SKILL.md`, step 1). *Issue triage labels* (`git-github/70.issue-triage-labels`) teaches the records and their format but not this check. It could be one sentence there, or a section if that page is split after a fresh reader finds it hard to follow.
 
 **Doc findings not acted on.**
 - *Content collections*: the docs say `prefix` defaults from the start of `include`, so `prefix: '/'` may be needless once `cwd` is set per Space. Not checked in code.
-- *Content database*: on a repeat visit the browser may read its dump from `localStorage`, so the Try it step may not show the dump request. Clearing site data first would fix that.
 - *Hydration*: Vue's `data-allow-mismatch` and Nuxt's `<ClientOnly>` are not taught.
-- *Multi-tenant isolation* and *Content database* both explain the `database` option; one could link the other.
 - *pnpm and the lockfile*: the lead-in says pnpm.io's unversioned pages describe a newer major. The 12.x, 11.x and 10.x docs exist (`pnpm/pnpm.io` `versions.json`), but pnpm.io was blocked, so which major the unversioned pages show is unchecked.
 
 **Doc checks of 2026-11-09, claims the docs were silent on.** Each may be true; a later run should read the tool's source or run it.
