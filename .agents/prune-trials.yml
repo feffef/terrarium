@@ -123,10 +123,11 @@ trials:
       `prepush-gate-review-skipped` and `edit-during-gate-run` shares with
       `friction-rates.ts`. NOT damage: those entries at their standing rates.
   - problem: >
-      The git-conventions.md chaining rules (+2 net, from
-      `git diff --numstat`: 11 added, 9 deleted; this entry not counted): "Don't chain git past a step that can
-      fail silently" reworded to the goal (a failed step never lets a later git
-      command run on the wrong state) plus two bullets; every rule kept, the
+      The git-conventions.md chaining rules (+3 net, from
+      `git diff --numstat`: 12 added, 9 deleted; this entry not counted):
+      "Don't chain git past a step that can fail silently" reworded to the goal
+      (a failed step never lets a later git command run on the wrong state)
+      plus two bullets; every rule kept, widened to add and amend, and the
       `tail` exit-code trap added. Chosen after the search subagent covered
       CLAUDE.md, `docs/agents/`, rules, Skills, guard headers, the tracker and
       the ledger: the rule failed as prose twice (#2359, #2407, both doc-only
