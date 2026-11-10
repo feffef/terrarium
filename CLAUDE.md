@@ -58,10 +58,11 @@ once per session; read it whole if you can, since a rule can sit anywhere in it.
   claim (a subagent's report too) only after you check it this turn against its
   source. Count every item; never take a number from memory or a summary.
 - **Ask before building** something the Trusted user will see (the `grilling`
-  Skill); don't assume. For a new page or rewrite shaped by the owner's taste,
-  agree sections and tone on a short sample first. Clarify all user-facing UI
-  with extra care: settle in the first round what each displayed value (label,
-  hover, metric) follows. Data shapes: `.claude/rules/data-shapes.md`.
+  Skill); don't assume. Before any UI build, agree it on a short sample,
+  shown with `scripts/ui/preview.ts start --dev` (no full build needed).
+  Clarify all user-facing UI with extra care: settle in the first round what
+  each displayed value (label, hover, metric) follows. Data shapes:
+  `.claude/rules/data-shapes.md`.
 - **Question the premise.** Before you recommend, build or harden a change,
   give each part a reason from the current goal; drop the parts you can't, and
   add nothing beyond the ask. Before you show a new ordering, split or
@@ -69,7 +70,8 @@ once per session; read it whole if you can, since a rule can sit anywhere in it.
   across consecutive runs if it rotates or carries state.
 - **One home per fact.** Write each fact once; elsewhere, point to it. When a
   fact and reality differ, fix its home. When you change a fact, grep for its
-  other statements and its consumers in the same edit.
+  other statements and its consumers in the same edit: docs, Tenant glossaries
+  and every phrasing, not only code.
 - **Code comments say WHY, never WHAT.** Default to no comment. When the why
   isn't obvious, point to the doc that holds it (an ADR, an issue).
 
