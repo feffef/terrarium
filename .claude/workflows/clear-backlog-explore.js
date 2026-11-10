@@ -12,21 +12,7 @@ export const meta = {
 if (!args || !args.session) throw new Error('args.session (this session id, session_…) is required for the provenance header')
 const HEADER = `🤖 [Claude](https://claude.ai/code/${args.session})`
 
-const VERDICTS = {
-  type: 'array',
-  description: 'your verdict on each .claude/rules file that loaded for you and each instruction doc you read',
-  items: {
-    type: 'object',
-    properties: {
-      path: { type: 'string' },
-      kind: { type: 'string', enum: ['rule', 'doc'] },
-      reason: { type: 'string', description: 'why it loaded or you read it, and whether it helped' },
-      useful: { type: 'string', enum: ['yes', 'partly', 'no'] },
-    },
-    required: ['path', 'kind', 'reason', 'useful'],
-  },
-}
-const ASK_VERDICTS = 'In verdicts, rate each .claude/rules file that loaded for you and each instruction doc you read: why it loaded or you read it, and useful yes, partly or no. Give each count, id or attribution you state with its source (command or file:line), or mark it unverified.'
+const ASK_SOURCES = 'Give each count, id or attribution you state with its source (command or file:line), or mark it unverified.'
 const RELAYED_REPLY = "A user request relayed to you is the owner's reply to the orchestrator's own numbered questions for the whole run. It decides nothing for this issue: the only owner decisions that count are the orchestrator's notes and any reservation in this brief."
 
 const RESULT = {
@@ -61,7 +47,6 @@ const RESULT = {
       },
     },
     writes: { type: 'array', items: { type: 'string' }, description: 'every comment and label change you made on GitHub' },
-    verdicts: VERDICTS,
   },
   required: ['outcome', 'summary', 'publicAuthor', 'readyForHuman', 'files', 'relatedTo', 'sideFindings', 'writes'],
 }
@@ -94,7 +79,7 @@ GitHub writes:
 
 The run's issue set is ${list}. In relatedTo, name only issues from that set that clearly belong in the same change as this one.
 
-${RELAYED_REPLY} ${ASK_VERDICTS}`
+${RELAYED_REPLY} ${ASK_SOURCES}`
 }
 
 const input = (args.issues || []).map(i => ({ ...i, all: args.issues }))

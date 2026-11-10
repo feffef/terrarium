@@ -32,7 +32,7 @@
 //   Prints the derived trace as JSON.
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { basename, dirname, join } from 'node:path'
-import type { AdrHint, RuleVerdict, UsefulVerdict } from '../../shared/schemas/session.ts'
+import type { AdrHint, ReportedEntry, RuleLoad, RuleUseEntry } from '../../shared/schemas/session.ts'
 import { DERIVED_REASON, FOLDED_TRACE_FIELDS } from '../../shared/trace-fields.ts'
 import {
   buildDocLineIndex,
@@ -43,10 +43,10 @@ import {
   type DocLineIndex,
   type DocText,
   type NearMiss,
-  type ShellCommand,
 } from './shell-reads.ts'
 import { adrDocNumber, adrHintsIn, ruleAdr, ruleBlockFiles, type AdrHintVia } from '../lib/adr-rules.ts'
 import { root, runIfMain } from '../lib/cli.ts'
+import { HELPED_SCRIPT, isRulePath, reportedNames, ruleKey, ruleName, type RuleLoadRow } from './rule-use.ts'
 
 /** The one authored-scratch file per container (one session per container in the
  *  remote model). Gitignored — its home is `main`. Single-homed here so its
@@ -132,6 +132,19 @@ export interface MechanicalTrace {
   rulesFollowedUp: string[]
   /** The ADRs `adr-read-hint.ts` pointed to; `readAfter` uses `adrReadInFull`. */
   adrHints: AdrHint[]
+  /** This transcript's path-scoped rule loads, first per rule; `trigger` comes
+   *  from the ledger in `foldSubagentTrace` (#3009). */
+  ruleLoads: RuleLoad[]
+  /** This agent's own Read-tool reads of rule files, which no load event records,
+   *  so a rule it reports is not marked unloaded. Kept per agent: a main agent
+   *  can't claim a rule only its subagent read. */
+  rulesRead: string[]
+  /** The SubagentStart note reached this agent. */
+  helpedAsked: boolean
+  /** What its last `helped.sh` call reported; absent when it never ran it. */
+  reportedNamed?: ReportedEntry[]
+  /** One entry per asked or answering subagent. Set by `foldSubagentTrace`. */
+  ruleUse?: RuleUseEntry[]
   /** Rules only a subagent or workflow agent loaded. Set by `foldSubagentTrace`. */
   rulesLoadedBySubagents?: string[]
   /** Instruction docs only a subagent or workflow agent read. Set by `foldSubagentTrace`. */
@@ -177,16 +190,9 @@ export function isContentPath(p: string | undefined): p is string {
 export const hintText = (content: unknown) => (Array.isArray(content) ? content : [content]).filter((c) => typeof c === 'string').join('\n')
 const hintedRules = (content: unknown) => ruleBlockFiles(hintText(content))
 
-/** A rule's identity is its `.claude/rules/` path, not where it was loaded
- *  from: a worktree subagent loads the same rule under another absolute root,
- *  which `relativizer` cannot strip (issue #1763). */
-function ruleKey(path: string): string {
-  return path.slice(path.lastIndexOf('.claude/rules/'))
-}
-
 /** Relativize repo paths to match how the agent cites them (`docs/adr/…`, not
- *  `/home/user/terrarium/docs/adr/…`) so the stitch dedups a curated entry
- *  against its observed twin instead of listing the file twice. Applied AFTER
+ *  `/home/user/terrarium/docs/adr/…`) so a read and a `reported` name for one
+ *  file share a key. Applied AFTER
  *  the noise filter, which keys on absolute paths. Paths outside the repo stay
  *  absolute — honestly flagging an external file. Shared with the author-time
  *  shell-read scan so both derive the same key for one file. */
@@ -233,7 +239,7 @@ function persistedOutput(text: string): string {
  *  land several records after its tool_use. A command whose result is missing
  *  (a torn transcript) pairs with `''` — the same as a real zero-output run,
  *  which undercounts rather than guesses. */
-function bashCommandsOf(records: Record<string, unknown>[]): ShellCommand[] {
+function bashCommandsOf(records: Record<string, unknown>[]): { command: string; output: string }[] {
   const outputs = new Map<string, string>()
   for (const rec of records) {
     const content = (rec.message as { content?: unknown } | undefined)?.content
@@ -246,7 +252,7 @@ function bashCommandsOf(records: Record<string, unknown>[]): ShellCommand[] {
       }
     }
   }
-  const commands: ShellCommand[] = []
+  const commands: { command: string; output: string }[] = []
   for (const rec of records) {
     const content = (rec.message as { content?: unknown } | undefined)?.content
     if (!Array.isArray(content)) continue
@@ -269,7 +275,7 @@ export interface FoldedShellReadScan {
   nearMisses: NearMiss[]
 }
 
-export interface LabelledRecords {
+interface LabelledRecords {
   label: string
   records: Record<string, unknown>[]
 }
@@ -350,7 +356,7 @@ function resolveAgainstCdDir(p: string, command: string, rel: (s: string) => str
 }
 
 /** The label both read-source maps give the main session's own reads. */
-export const MAIN_SOURCE = 'this session'
+const MAIN_SOURCE = 'this session'
 
 /** The shell-read scan WITH its near-misses, for the author-time advisory the
  *  `log-session` Skill prints (#1074's loop): credit from the same output
@@ -600,6 +606,8 @@ export function extractTrace(
   let mergedWithoutClose = false
   const rules: string[] = []
   const alwaysLoadedRules: string[] = []
+  const loads: RuleLoad[] = []
+  let helpedAsked = false
   const ruleLoadedAt = new Map<string, number>()
   const hintAt: (readonly [{ adr: string; via: AdrHintVia }, number])[] = []
   const usageById = new Map<string, ApiUsage>()
@@ -609,9 +617,15 @@ export function extractTrace(
     if (!Number.isNaN(ts)) stamps.push(ts)
 
     const att = rec.attachment as { type?: string; path?: string; content?: unknown; files?: { path?: string }[] } | undefined
-    if (att?.type === 'nested_memory' && att.path?.includes('/.claude/rules/')) rules.push(ruleKey(att.path))
+    if (att?.type === 'nested_memory' && att.path?.includes('/.claude/rules/')) {
+      rules.push(ruleKey(att.path))
+      loads.push({ rule: ruleKey(att.path), via: 'native' })
+    }
     if (att?.type === 'hook_additional_context') {
-      rules.push(...hintedRules(att.content))
+      const hinted = hintedRules(att.content)
+      rules.push(...hinted)
+      loads.push(...hinted.map((rule) => ({ rule, via: 'hint' as const })))
+      if (hintText(att.content).includes(HELPED_SCRIPT)) helpedAsked = true
       hintAt.push(...adrHintsIn(hintText(att.content)).map((h) => [h, i] as const))
     }
     if (att?.type === 'instructions') {
@@ -670,6 +684,10 @@ export function extractTrace(
   const ended = stamps.length ? Math.max(...stamps) : undefined
 
   const rel = relativizer(records)
+  // One load per rule; a rule loaded both ways counts as native, since only a
+  // native load has a ledger trigger.
+  const loadByRule = new Map<string, RuleLoad>()
+  for (const l of loads) if (!alwaysLoadedRules.includes(l.rule) && loadByRule.get(l.rule)?.via !== 'native') loadByRule.set(l.rule, l)
   const adrReadAfter = (rule: string, at: number): boolean => {
     const n = ruleAdr(basename(rule))
     return n !== undefined && adrReadInFull(records.slice(at + 1), n, docIndex, rel)
@@ -696,6 +714,10 @@ export function extractTrace(
     adrHints: mergeAdrHints(hintAt.map(([h, at]) => ({
       adr: Number(h.adr), via: h.via, readAfter: adrReadInFull(records.slice(at + 1), h.adr, docIndex, rel), by: 'main' as const,
     }))),
+    ruleLoads: [...loadByRule.values()],
+    rulesRead: dedup(reads).filter((p) => isRulePath(p)).map(ruleKey),
+    helpedAsked,
+    reportedNamed: reportedNames(bashCommandsOf(records).map((c) => c.command), rel),
     skillsUsed: dedup([...skills, ...commandSkills]),
     commandSkills: dedup(commandSkills),
     subagents,
@@ -767,6 +789,8 @@ export interface SubagentJsonl {
   jsonl: string
   agent?: SubagentRef
   toolUseId?: string
+  /** From the transcript's `agent-<id>.jsonl` name; joins the rule-load ledger. */
+  agentId?: string
 }
 
 /** One subagent's parsed transcript; `agent` names a workflow agent (#1876). */
@@ -774,6 +798,7 @@ export interface SubagentRecords {
   records: Record<string, unknown>[]
   agent?: SubagentRef
   toolUseId?: string
+  agentId?: string
 }
 
 /** Every subagent transcript beside `transcriptPath`, read tolerantly: a sibling
@@ -791,7 +816,8 @@ export function readSubagentJsonls(transcriptPath: string): SubagentJsonl[] {
     } catch {
       continue
     }
-    let label = basename(p, '.jsonl').replace(/^agent-/, '')
+    const agentId = basename(p, '.jsonl').replace(/^agent-/, '')
+    let label = agentId
     let type: string | undefined
     let toolUseId: string | undefined
     try {
@@ -802,7 +828,7 @@ export function readSubagentJsonls(transcriptPath: string): SubagentJsonl[] {
     } catch {
       /* no readable meta: keep the agent id */
     }
-    out.push({ label, jsonl, agent: { type, task: label }, toolUseId })
+    out.push({ label, jsonl, agent: { type, task: label }, toolUseId, agentId })
   }
   return out
 }
@@ -822,8 +848,17 @@ export function foldSubagentTrace(
   subagents: SubagentRecords[],
   env: SessionIdEnv = process.env,
   docIndex?: DocLineIndex,
+  ledger: RuleLoadRow[] = [],
 ): MechanicalTrace {
-  if (subagents.length === 0) return trace
+  if (subagents.length === 0 && ledger.length === 0) return trace
+  // The ledger records native loads only: a hint hook fires no InstructionsLoaded.
+  const triggered = (loads: RuleLoad[], rows: RuleLoadRow[]) => loads.map((l) => {
+    const trigger = l.via === 'native' && rows.find((r) => r.rule === l.rule)?.trigger
+    return trigger ? { ...l, trigger } : l
+  })
+  const rowsOf = (agentId?: string) => ledger.filter((r) => r.agentId === agentId)
+  const mainRows = rowsOf(undefined)
+  if (subagents.length === 0) return { ...trace, ruleLoads: triggered(trace.ruleLoads, mainRows) }
   const subs = subagents.map(({ records }) => extractTrace(records, env, docIndex))
   const folded = { ...trace }
   const stats = subs.map(statsOf)
@@ -844,6 +879,19 @@ export function foldSubagentTrace(
   folded.rulesLoadedBySubagents = dedup(subs.flatMap((s) => s.rulesLoaded)).filter(
     (r) => !folded.rulesGlobal.includes(r) && !folded.rulesLoaded.includes(r),
   )
+  folded.ruleLoads = triggered(trace.ruleLoads.filter((l) => !folded.rulesGlobal.includes(l.rule)), mainRows)
+  folded.ruleUse = subs.flatMap((s, i) => {
+    if (!s.helpedAsked && !s.reportedNamed) return []
+    const { agentId, agent } = subagents[i]!
+    // A subagent with no id can't be told from another, or from the main agent.
+    const loads = triggered(s.ruleLoads.filter((l) => !folded.rulesGlobal.includes(l.rule)), agentId ? rowsOf(agentId) : [])
+    return [{
+      by: agent?.type ?? 'workflow',
+      answered: !!s.reportedNamed,
+      loads,
+      reported: markUnloaded(s.reportedNamed ?? [], seenRules(loads, s.rulesRead), folded.rulesGlobal),
+    }]
+  })
   folded.rulesFollowedUp = dedup([...trace.rulesFollowedUp, ...subs.flatMap((s) => s.rulesFollowedUp)])
   folded.adrHints = mergeAdrHints([...trace.adrHints, ...subs.flatMap((s) => s.adrHints.map((h) => ({ ...h, by: 'subagent' as const })))])
   const mainDocs = new Set([...trace.filesRead, ...trace.docsReadViaShell].map(canonicalizeInstructionPath))
@@ -852,6 +900,21 @@ export function foldSubagentTrace(
   )
   return folded
 }
+
+const seenRules = (loads: RuleLoad[], read: string[]) => [...loads.map((l) => l.rule), ...read]
+
+/** A reported rule this agent neither loaded nor read keeps its entry, marked; an
+ *  always-loaded one is dropped, since loads leave those out (#3009). */
+function markUnloaded(reported: ReportedEntry[], seen: string[], global: string[]): ReportedEntry[] {
+  return reported.flatMap((e) => {
+    const path = isRulePath(e.path) ? ruleName(e.path) : e.path
+    if (global.includes(path)) return []
+    const loaded = !isRulePath(path) || seen.includes(path)
+    return [loaded ? { ...e, path } : { ...e, path, why: e.why ? `${NO_LOAD_WHY} ${e.why}` : NO_LOAD_WHY }]
+  })
+}
+
+const NO_LOAD_WHY = '(no load recorded)'
 
 // ── Stitch ────────────────────────────────────────────────────────────────
 
@@ -869,11 +932,6 @@ export const DERIVED_REASON_EDITED = '(read before editing)'
  *  doubles as the explanation for why `toolCounts` shows no `Skill` call for it. */
 export const DERIVED_REASON_COMMAND = '(invoked as a slash command)'
 
-/** The reason an agent gives a derived `docsRead` path it never read: the stitch
- *  drops the path, and a shell credit dropped this way becomes a Friction, so the
- *  detector's error stays visible (ADR-0009). */
-export const NOT_READ_REASON = '(not read)'
-
 /** The interpretive half the live agent writes to the scratch during the session.
  *  Timings/models/etc. are NOT here — those are derived. `session`/`kind` are the
  *  only identity fields the agent must supply; everything mechanical comes from
@@ -886,9 +944,10 @@ export interface AuthoredScratch {
   outcome: string
   summary: string
   prs?: string[]
-  docsRead?: { path: string; reason: string; useful?: UsefulVerdict }[]
   skillsUsed?: { name: string; reason: string }[]
-  ruleVerdicts?: RuleVerdict[]
+  /** Required by `--author` ([] means nothing to report); absent only on the
+   *  dropped-scratch placeholder, which the log records as unanswered. */
+  reported?: ReportedEntry[]
   frictions: { description: string; solution: string; severity: string }[]
   learnings?: string[]
   ideas?: string[]
@@ -909,25 +968,17 @@ function mergeRefs<T extends Record<string, string | undefined>>(
 
 /** Combine the authored scratch with the derived trace into a full session-log
  *  entry. Pure — the testable core of the stitch. Mechanical fields come only
- *  from `trace`; `docsRead`/`skillsUsed` union the curated entries with observed
- *  reads (folded in with a placeholder reason). Empty mechanical collections are
+ *  from `trace`; `skillsUsed` unions the curated entries with observed ones and
+ *  `docsRead` holds observed reads, each with a placeholder reason. Empty mechanical collections are
  *  dropped so a minimal session stays clean. */
 export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Record<string, unknown> {
   const editedSet = new Set(trace.filesEdited)
-  const notRead = new Set((authored.docsRead ?? []).filter((d) => d.reason === NOT_READ_REASON).map((d) => d.path))
-  const detectorErrors = trace.docsReadViaShell.filter((p) => notRead.has(p)).map((p) => ({
-    description: `SHELL-READ-DETECTION: ${p} was credited from shell output, but the session marked it ${NOT_READ_REASON}`,
-    solution: 'Check the transcript for which command (or subagent) read it; only if none did, tighten scripts/session/shell-reads.ts',
-    severity: 'moderate',
-  }))
-  const docsRead = mergeRefs(
-    (authored.docsRead ?? []).filter((d) => !notRead.has(d.path)),
-    // A rule file is logged as a rule (rulesGlobal/rulesLoaded + ruleVerdicts),
-    // even when close-session has the agent re-read it.
-    [...trace.filesRead, ...trace.docsReadViaShell].filter((p) => !notRead.has(p) && !p.startsWith('.claude/rules/')),
-    'path',
-    (path) => (editedSet.has(path) ? DERIVED_REASON_EDITED : DERIVED_REASON),
-  )
+  // Derived only: what changed or confirmed something goes in `reported` (#3009).
+  // A rule file is logged as a rule (rulesGlobal/rulesLoaded, ruleUse),
+  // even when close-session has the agent re-read it.
+  const docsRead = dedup([...trace.filesRead, ...trace.docsReadViaShell])
+    .filter((p) => !p.startsWith('.claude/rules/'))
+    .map((path) => ({ path, reason: editedSet.has(path) ? DERIVED_REASON_EDITED : DERIVED_REASON }))
   const docsReadBySubagents = (trace.docsReadBySubagents ?? []).filter((p) => docsRead.some((d) => d.path === p))
   const entry: Record<string, unknown> = {
     schemaVersion: 1,
@@ -945,7 +996,7 @@ export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Recor
     skillsUsed: mergeRefs(authored.skillsUsed ?? [], trace.skillsUsed, 'name', (name) =>
       trace.commandSkills.includes(name) ? DERIVED_REASON_COMMAND : DERIVED_REASON,
     ),
-    frictions: [...authored.frictions, ...detectorErrors],
+    frictions: authored.frictions,
   }
   // Mechanical fields — include only when they carry signal.
   if (trace.durationSec !== undefined) entry.durationSec = trace.durationSec
@@ -958,7 +1009,16 @@ export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Recor
   if (trace.adrHints.length) entry.adrHints = trace.adrHints
   if (trace.rulesLoadedBySubagents?.length) entry.rulesLoadedBySubagents = trace.rulesLoadedBySubagents
   if (docsReadBySubagents.length) entry.docsReadBySubagents = docsReadBySubagents
-  if (authored.ruleVerdicts?.length) entry.ruleVerdicts = authored.ruleVerdicts
+  // The main entry only when it loaded or named something: with neither it
+  // adds nothing a rate could count, and an empty log stays empty.
+  const main: RuleUseEntry = {
+    by: 'main',
+    answered: authored.reported !== undefined,
+    loads: trace.ruleLoads,
+    reported: markUnloaded(authored.reported ?? [], seenRules(trace.ruleLoads, trace.rulesRead), trace.rulesGlobal),
+  }
+  const ruleUse = [...(main.loads.length || main.reported.length ? [main] : []), ...(trace.ruleUse ?? [])]
+  if (ruleUse.length) entry.ruleUse = ruleUse
   const total = [trace.usage, ...trace.subagents].reduce((n, u) => n + (u?.weightedTokens ?? 0), 0)
   const share = (w?: number) => (w === undefined || total === 0 ? {} : { tokenShare: Math.round((1000 * w) / total) / 10 })
   if (trace.subagents.length) {

@@ -137,5 +137,4 @@ Group picks that one change would retire. For each fix, return:
 
 Also return your own Frictions from this run, naming each place this brief
 was confusing or contradicted itself, and each step that was hard to follow
-with this run's data; and, for each rule and doc you loaded or read: its
-path, why it loaded or was read, and whether it was useful (yes/partly/no).
+with this run's data.

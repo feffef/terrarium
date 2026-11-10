@@ -36,12 +36,10 @@ once per session; read it whole if you can, since a rule can sit anywhere in it.
   read its API cost and token usage (`get_session`): the `inspect-session` Skill.
 - **Before you write a subagent brief, or resume a stopped subagent:** the
   `dispatch-subagents` Skill.
-- **Every subagent brief** asks it to return, in its final reply, a verdict
-  (path, why it loaded or was read, useful yes/partly/no) on each rule and doc
-  it loaded or read, to give each count, id or attribution with its source
-  (command or file:line) or mark it unverified, and to write every file it
-  creates, scripts included, in a scratchpad subfolder named for itself
-  (subagents share one scratchpad); a script that imports repo packages
+- **Every subagent brief** asks it to give each count, id or attribution
+  with its source (command or file:line) or mark it unverified, and to write
+  every file it creates, scripts included, in a scratchpad subfolder named for
+  itself (subagents share one scratchpad); a script that imports repo packages
   goes in `.throwaway/<its name>/` instead.
 - **Before you debug a tool, push, network or permission error** that your
   diff doesn't explain: `docs/agents/environment-caveats.md`.

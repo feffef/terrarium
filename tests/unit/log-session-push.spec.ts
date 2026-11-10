@@ -163,7 +163,7 @@ describe('pushWithRetry() / buildLogCommit() — against a throwaway bare remote
     const noSweep: WorktreeSeam = { read: () => ({ result: { findings: [], failures: [] }, current: '', atMainTip: [] }), remove: () => [] }
 
     function authoredYaml(session: string, goal: string): string {
-      return `session: ${session}\ngoal: ${goal}\nstatus: completed\noutcome: ok\nsummary: s\nfrictions: []\n`
+      return `session: ${session}\ngoal: ${goal}\nstatus: completed\noutcome: ok\nsummary: s\nfrictions: []\nreported: []\n`
     }
 
     beforeEach(() => {

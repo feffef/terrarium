@@ -1,6 +1,4 @@
 import { spawnSync } from 'node:child_process'
-import { mkdtempSync, writeFileSync } from 'node:fs'
-import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { runSummary } from '../../scripts/run-summary.ts'
@@ -62,61 +60,9 @@ describe('--build', () => {
   })
 })
 
-describe('--verdicts', () => {
-  it('merges a triage run to one entry per path, keeping the most useful verdict and its reasons', () => {
-    expect(runSummary(fixture('explore.output'), '--verdicts')).toBe(
-      [
-        'ruleVerdicts:',
-        '  - { path: ".claude/rules/adr-0004.md", reason: "triage #12: made me gate", useful: partly }',
-        'docsRead:',
-        '  - { path: "docs/agents/issue-tracker.md", reason: "triage #11: told me the labels", useful: yes }',
-      ].join('\n'),
-    )
-  })
-
-  it('merges a build run the same way, joining the reasons of equally useful verdicts', () => {
-    expect(runSummary(fixture('build.output'), '--verdicts')).toBe(
-      [
-        'ruleVerdicts:',
-        '  - { path: ".claude/rules/adr-0004.md", reason: "build fix-typo-11: ran the gate; fix fix-typo-11 r1: ran the gate", useful: yes }',
-        'docsRead:',
-        '  - { path: "docs/agents/pr-workflow.md", reason: "build big-13: steps for the push", useful: partly }',
-      ].join('\n'),
-    )
-  })
-
-  it('cuts absolute and comma-joined paths to single repo-relative entries', () => {
-    const file = join(mkdtempSync(join(tmpdir(), 'verdicts-')), 'build.output')
-    const v = (path: string) => ({ path, kind: 'rule', reason: 'r', useful: 'yes', agent: 'a' })
-    writeFileSync(file, JSON.stringify({ result: [{ verdicts: [v('/home/u/t/.claude/worktrees/w1/.claude/rules/a.md'), v('.claude/rules/b.md, /home/u/t/.claude/rules/a.md,')] }] }))
-    expect(runSummary(file, '--verdicts')).toBe(
-      ['ruleVerdicts:', '  - { path: ".claude/rules/a.md", reason: "a: r", useful: yes }', '  - { path: ".claude/rules/b.md", reason: "a: r", useful: yes }', 'docsRead:'].join('\n'),
-    )
-  })
-
-  it('merges several runs into one ruleVerdicts and one docsRead list', () => {
-    expect(runSummary([fixture('explore.output'), fixture('build.output')], '--verdicts')).toBe(
-      [
-        'ruleVerdicts:',
-        '  - { path: ".claude/rules/adr-0004.md", reason: "build fix-typo-11: ran the gate; fix fix-typo-11 r1: ran the gate", useful: yes }',
-        'docsRead:',
-        '  - { path: "docs/agents/issue-tracker.md", reason: "triage #11: told me the labels", useful: yes }',
-        '  - { path: "docs/agents/pr-workflow.md", reason: "build big-13: steps for the push", useful: partly }',
-      ].join('\n'),
-    )
-  })
-})
-
 describe('the command line', () => {
   const script = join(import.meta.dirname, '../../scripts/run-summary.ts')
   const cli = (...args: string[]) => spawnSync(process.execPath, ['--import', 'tsx', script, ...args], { encoding: 'utf8' })
-
-  it('takes several outputs for --verdicts', () => {
-    const run = cli(fixture('explore.output'), fixture('build.output'), '--verdicts')
-    expect(run.status).toBe(0)
-    expect(run.stdout.match(/^ruleVerdicts:$/gm)).toHaveLength(1)
-    expect(run.stdout.match(/^docsRead:$/gm)).toHaveLength(1)
-  })
 
   it.each(['--triage', '--build'])('rejects several outputs for %s with the usage line', (mode) => {
     const run = cli(fixture('explore.output'), fixture('build.output'), mode)

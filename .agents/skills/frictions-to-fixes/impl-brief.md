@@ -54,9 +54,7 @@ Goal: a committed, unpushed branch for the main session to review.
 
 1. Commit. Leave the branch unpushed. Never merge and never enable
    auto-merge: the main session reviews and opens the PR.
-2. In your final reply, name the branch and its head commit, and for each
-   rule and doc you loaded or read: its path, why it loaded or was read,
-   and whether it was useful (yes/partly/no).
+2. In your final reply, name the branch and its head commit.
 
 ### Done when
 
