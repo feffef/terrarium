@@ -18,3 +18,8 @@ occurrences:
     severity: minor
     description: "The glassbox-update report did not say which pages it could not pin (those with an edited range); a subagent told me hooks/01 still carried the old revision."
     solution: "List unpinned pages in the report with the cited range the change overlaps, and let the claim check start from those overlaps."
+  - session: session_013zxzeQMfaaC4C4CNuFY3EH
+    date: "2026-11-09"
+    severity: minor
+    description: "glassbox-update --write leaves hand-edited pages' revision unpinned; I only noticed through a failing glassbox-pages spec."
+    solution: "Step 2 could say those pages' revision and revisionDate still need pinning by hand in step 4."

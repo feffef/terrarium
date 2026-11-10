@@ -1,12 +1,15 @@
 name: run-summary-verdict-paths
 surface: safe
 summary: The run summary script printed rule paths in a form the session-log author step refused, so the agent normalised them by hand.
-cause: "run-summary.ts --verdicts emits subagent rule paths as absolute /home/user/terrarium/.claude/rules/... paths (and once a comma-joined list), which log-session --author refuses; the session filters or rewrites them by hand. Signals: 'run-summary.ts --verdicts', 'absolute paths', 'log-session --author refused'."
+cause: "run-summary.ts --verdicts emits subagent rule paths as absolute /home/user/terrarium/.claude/rules/... paths (and once a comma-joined list), which log-session --author refuses; the session filters or rewrites them by hand. Signals: 'run-summary.ts --verdicts', 'absolute paths', 'log-session --author refused'. Since PR #3023 (2026-11-10) the old rule lists are no longer written, so --verdicts paths come from ruleUse."
 status: open
 fixes:
   - pr: 2776
     date: "2026-11-02"
     summary: "run-summary.ts --verdicts splits comma-joined paths, strips worktree prefixes and cuts absolute paths to repo-relative."
+  - pr: 3023
+    date: "2026-11-10"
+    summary: "Joins ruleUse entries to their subagent and retires the old rulesLoaded lists, so the verdict path rows are no longer derived."
 occurrences:
   - session: session_013zxzeStBRUtsbccz5kMYNU
     date: "2026-10-31"
@@ -18,3 +21,8 @@ occurrences:
     severity: minor
     description: "run-summary.ts --verdicts printed some rule paths as absolute /home/user/terrarium/.claude/rules/... paths, and log-session --author refused the pass until I filtered them out."
     solution: "Have run-summary.ts --verdicts normalise rule paths to repo-relative before printing."
+  - session: session_013zxzeRL5rU5zS3WRCkH3TE
+    date: "2026-11-08"
+    severity: nit
+    description: "run-summary --verdicts printed bare-path rows such as adr-0003.md from a subagent review, which are not real rule paths; I dropped them when writing this log."
+    solution: "Have run-summary normalize bare names to their .claude/rules path or drop them."

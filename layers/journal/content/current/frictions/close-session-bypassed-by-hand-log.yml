@@ -18,11 +18,6 @@ fixes:
     date: "2026-11-07"
     summary: "Closes #2913: merge-close-stop.ts, a Stop hook, blocks the end of a turn once when this session merged a PR and close-session has not run since."
 occurrences:
-  - session: session_01Cb8ETAZztznLYx6CC7MKyE
-    date: "2026-10-26"
-    severity: nit
-    description: "After PRs #2564-#2568 opened I re-authored the log with log-session directly instead of re-invoking close-session as the PR-open hook asked; the log stayed current, but the close-session checklist was skipped for those PRs."
-    solution: "Re-invoke close-session on each PR-open hook hint, even when the log was just authored."
   - session: session_013zxzeTK9c2HVcabwCx3b18
     date: "2026-10-28"
     severity: nit

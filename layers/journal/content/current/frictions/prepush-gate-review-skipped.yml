@@ -33,16 +33,6 @@ fixes:
     date: "2026-10-28"
     summary: "pr-workflow.md's simple-change bar now says a simple change adds, renames or moves no file, so a rename sweep gets code-review before its first push."
 occurrences:
-  - session: session_014yTcrjFw1Qa6ABqQoGpzYq
-    date: "2026-10-26"
-    severity: minor
-    description: "Ran the git-diff self-read instead of the code-review Skill after invoking it; the diff exceeds the 2-file simple bar though it was only one page plus pure renames."
-    solution: "Let pr-workflow's simple-change test exempt pure renames and a single new Digest page."
-  - session: session_01A7PwrNRBtY9LTX6HrttXWW
-    date: "2026-10-26"
-    severity: minor
-    description: "Skipped the code-review Skill for a diff over the simple-change limit, reading the hunks myself because nearly all of it was mechanical pin lines."
-    solution: "pr-workflow could name a pin-only exemption for glassbox-update, or the Skill could say how to review a mostly-mechanical diff."
   - session: session_019g1t4RX7PcR54io7GRdxXK
     date: "2026-10-27"
     severity: minor
@@ -133,3 +123,13 @@ occurrences:
     severity: moderate
     description: "Second commit changes the Skill's meaning, so it fails pr-workflow's simple-change test, yet I read the diff myself instead of re-running code-review; disclosed in the PR body."
     solution: "Re-run code-review on a follow-up that changes meaning, or ask whether the owner accepts the lighter check."
+  - session: session_013zxzeQMfaaC4C4CNuFY3EH
+    date: "2026-11-09"
+    severity: minor
+    description: "Skipped code-review for a mechanical 73-file diff that fails the simple-change count; read the non-pin diff myself."
+    solution: "pr-workflow could name pin-only glassbox-update diffs as simple."
+  - session: session_013zxzeSj1mJxbgdKHbwgK2s
+    date: "2026-11-09"
+    severity: minor
+    description: "Did not run code-review on my follow-up commit that moved a Skill sentence; pr-workflow says a Skill-meaning follow-up gets its own review. I read the diff and disclosed it."
+    solution: "Run code-review on the follow-up diff, or state in pr-workflow that a reorder of an already reviewed sentence counts as simple."

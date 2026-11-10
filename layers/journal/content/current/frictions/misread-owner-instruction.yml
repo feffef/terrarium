@@ -46,3 +46,8 @@ occurrences:
     severity: minor
     description: "Took the option \"Drop the intro line\" literally and deleted the wording the user wanted kept; the user said so and I redid it as a fold into the blurb."
     solution: "When an option removes user-visible text, say where its wording goes before acting, and ask if that is unclear."
+  - session: session_013zxzeNd2Ethpd3anqbmpkr
+    date: "2026-11-09"
+    severity: minor
+    description: "I cut the four-value scale for rules on my own reading of 'strip it' when the owner had not chosen between my two options; they asked for it back much later, after the implementer built the binary form."
+    solution: "When a reply does not pick between options I offered, ask again before acting on one."

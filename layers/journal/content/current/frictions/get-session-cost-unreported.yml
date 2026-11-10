@@ -1,12 +1,15 @@
 name: get-session-cost-unreported
 surface: outside
 summary: A Skill or PR body needed the run's cost, but get_session showed none (or none yet), so the PR said the cost was unreported.
-cause: "get_session returns no cost_usd or usage field at some calls (once the field appeared only on a later call than the session's single early one), so a Skill step that requires the run cost in the PR body cannot be met. Signals: 'get_session returned no cost figure', 'no usage field', 'Run cost: unreported', 'cost_usd 2.85 on a later call'. Since PR #2944 (2026-11-07) glassbox-curate says to read the cost at landing, not early."
+cause: "get_session returns no cost_usd or usage field at some calls (once the field appeared only on a later call than the session's single early one), so a Skill step that requires the run cost in the PR body cannot be met. Signals: 'get_session returned no cost figure', 'no usage field', 'Run cost: unreported', 'cost_usd 2.85 on a later call'. Since PR #2944 (2026-11-07) glassbox-curate says to read the cost at landing, not early. Since PR #3001 (2026-11-09) glassbox-curate re-reads cost_usd just before the PR body."
 status: open
 fixes:
   - pr: 2944
     date: "2026-11-07"
     summary: "glassbox-curate says to read cost at landing, since two runs read get_session early and reported unreported."
+  - pr: 3001
+    date: "2026-11-09"
+    summary: "glassbox-curate SKILL.md reads cost_usd again just before the PR body and makes the run's cost a Done-when ('unreported' only when still missing)."
 occurrences:
   - session: session_013zxzeRwjiiLkjj6sQ3u49g
     date: "2026-11-07"
@@ -28,3 +31,8 @@ occurrences:
     severity: minor
     description: "Wrote 'Run cost: unreported' in the PR body after calling get_session only once, at the start; the Land step says to read the cost just before writing the body. A later call showed cost_usd 2.85."
     solution: "Call get_session again right before writing the PR body and quote cost_usd; the main-session figure may not include subagent runs, which I could not verify."
+  - session: session_013zxzeRSMtPAREKXCce9GT6
+    date: "2026-11-09"
+    severity: minor
+    description: "get_session was not available to this session, so the Skill's cost_usd budget check and the PR's cost line could not be filled."
+    solution: "The curate Skill could say what to do when get_session is absent; the run reported cost as unreported."

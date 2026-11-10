@@ -9,3 +9,8 @@ occurrences:
     severity: moderate
     description: "Each subagent brief repeated the same standing instructions, and the fan-out (16 subagent spawns, 6 resumes, per the transcript) took the session to 19.20 dollars of a 20 dollar budget (get_session)."
     solution: "Keep the writer, checker and reader boilerplate in one file under the glassbox-curate Skill folder and point each brief to it."
+  - session: session_013zxzeShUkKqUQT1kYCw5UK
+    date: "2026-11-07"
+    severity: minor
+    description: "The step-1 report listed 30 pages with 20 distinct changed files; briefing four agents to re-read pages whose only change was a one-line hook entry cost about 600k subagent tokens and found no false claim."
+    solution: "Let the script drop a flag when a page cites a file only for lines the diff did not touch (it already shifts lines ranges), so a scoped check starts from real overlaps."

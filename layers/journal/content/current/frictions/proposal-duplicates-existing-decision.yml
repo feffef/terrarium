@@ -16,3 +16,8 @@ occurrences:
     severity: moderate
     description: "Feature duplicate check filtered for atlas and missed the homepage's existing Specimen of the day, and the owner's plates removal sat in the Atlas glossary, not decisions.md; two feature picks died in refinement."
     solution: "Have step 3 grep git log and the Tenant glossary's Product decisions, and add Tenant removal rulings to decisions.md."
+  - session: session_013zxzeNd2Ethpd3anqbmpkr
+    date: "2026-11-09"
+    severity: minor
+    description: "Proposed changes to the Bash read hint and mermaid-lanes without checking the Friction Ledger and closed issues; the owner had already decided both, found only after the user's frictions question."
+    solution: "Search the ledger and closed issues for an existing decision before proposing a change to a mechanism."

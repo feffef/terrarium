@@ -8,11 +8,6 @@ notes: |-
   2026-10-28 design: another digest Skill line dropped: it already says to read ADR-0010 before the first Digest; the hint is the designed backstop and the late read changed nothing. dropped: a guard would be Human-only.
   2026-10-30 design: change the hint or its rules' paths (issue #2575's candidates) dropped: all Human-only files; 85 of 86 late reads changed nothing, 0 'no' verdicts, so the cost is one call
 occurrences:
-  - session: session_014yTcrjFw1Qa6ABqQoGpzYq
-    date: "2026-10-26"
-    severity: nit
-    description: "Wrote the Digest before reading ADR-0010 in full; the post-write hook prompted the read. The page was already right."
-    solution: "Name ADR-0010 as a read-first in the digest Skill's step 3."
   - session: session_013zxzePJnRATi9QoJAjCxgq
     date: "2026-10-27"
     severity: minor
@@ -123,3 +118,13 @@ occurrences:
     severity: minor
     description: "Read ADR-0005 and ADR-0027 only after editing the Skill, when the PostToolUse hook prompted; the edit turned out fine."
     solution: "Read the ADRs a rule names before the first edit of a governed file, or load the rule at read time."
+  - session: session_013zxzeSj1mJxbgdKHbwgK2s
+    date: "2026-11-09"
+    severity: nit
+    description: "Read ADR-0005 and ADR-0027 only after a hook demanded them following my SKILL.md edit, not before editing."
+    solution: "Read the governing ADRs when the Skill is first opened; the edit was consistent with both."
+  - session: session_013zxzePvPobQ2Cfg3UyUHSt
+    date: "2026-11-09"
+    severity: nit
+    description: "Edited pr-workflow.md before reading ADR-0027 and ADR-0029; a hook asked for a late full read, and I read only ADR-0027 and skipped ADR-0029 and ADR-0003."
+    solution: "Read the ADRs a Skill's own rule names (ADR-0027) before the first edit; the hook's late read is the only reminder."

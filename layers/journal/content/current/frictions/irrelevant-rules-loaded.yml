@@ -68,3 +68,18 @@ occurrences:
     severity: nit
     description: "Reading Glass Box layer files loaded about ten unrelated rules (mermaid-lanes, mdc-when-to-use, adr-0021, adr-0025, adr-0030) into context."
     solution: "Narrow the paths of mermaid-lanes.md and mdc-when-to-use.md to files that hold diagrams or content components."
+  - session: session_013zxzeQyUMxeD3fYivwaeLU
+    date: "2026-11-09"
+    severity: nit
+    description: "Every subagent and I received the same dozen unrelated ADR rules via hooks on read-only greps, costing context for no use."
+    solution: "Narrow the rule paths so a read-only grep of a doc does not load ADR rules it cannot use."
+  - session: session_013zxzePitVv4rX66ZhZa4kw
+    date: "2026-11-09"
+    severity: minor
+    description: "Hook-injected rules (about 17) loaded from incidental reads of journal and glassbox files, requiring verdicts that mostly said not applicable."
+    solution: "Narrower paths on rules that load when reading a PR diff's touched files, or fewer ADR summary rules loading on journal reads."
+  - session: session_013zxzeNkk5oEC8RnBdMeMEt
+    date: "2026-11-10"
+    severity: nit
+    description: "Subagents loaded about 15 unrelated ADR rules via hooks on read-only greps and git calls, costing context for no use."
+    solution: "Narrow the paths of adr-0027, adr-0029, adr-0030 and mermaid-lanes."

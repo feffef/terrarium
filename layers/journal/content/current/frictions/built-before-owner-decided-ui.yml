@@ -1,0 +1,22 @@
+name: built-before-owner-decided-ui
+surface: safe
+summary: Agents built user-facing UI from a spec or a one-line ask before the owner settled its labels or saw a sample, so it was redesigned or the owner was asked afterwards.
+cause: "CLAUDE.md 'Ask before building' (the grilling Skill: settle what each displayed value shows, agree a short sample first) is not applied: a build brief leaves a label open, a tile is built whole from a spec, or a screenshot request is built without confirming. Signals: 'built user-facing UI before the owner decided', 'before showing the owner a sample', 'triggered a full redesign', 'ask-first preference not applied'."
+status: tracked
+ref: "issue #3026"
+occurrences:
+  - session: session_013zxzeSy38XR1wPjCGFUExY
+    date: "2026-11-07"
+    severity: minor
+    description: "The #2884 build brief left the new Session card label open, so the agent built user-facing UI before the owner decided it; I asked afterwards."
+    solution: "In clear-backlog section 2, ask what a displayed value looks like and says in the first grilling round when a pick adds UI."
+  - session: session_013zxzeR2kKbsT81QWkXUrvK
+    date: "2026-11-09"
+    severity: moderate
+    description: "Built the whole tile UI from the spec before showing the owner a sample; the first screenshot triggered a full tile redesign"
+    solution: "CLAUDE.md says to agree a short sample first for user-facing UI; send a screenshot after the first tile renders, before tests and review"
+  - session: session_013zxzeQ93oSKkX5CBEcFiXU
+    date: "2026-11-09"
+    severity: nit
+    description: "The CLAUDE.md 'Ask before building' rule and the user's ask-first preference were not applied; I built from a one-line screenshot request without confirming."
+    solution: "Low cost here because the request was specific; for a fixed-count UI choice, a one-question check such as 'four even when data is younger?' would have been cheap."

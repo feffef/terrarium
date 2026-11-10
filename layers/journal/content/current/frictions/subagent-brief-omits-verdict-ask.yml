@@ -1,6 +1,6 @@
 name: subagent-brief-omits-verdict-ask
 summary: Briefs for helper agents left out the lines CLAUDE.md asks every brief to carry (rule and doc verdicts, a scratchpad subfolder per agent), so verdicts went missing and output landed elsewhere.
-cause: "CLAUDE.md asks every subagent brief for a rule/doc verdict in the final reply (PR #2060), a scratchpad subfolder named for the agent, sources for counts, and the read-first triggers (git, GitHub docs) the agent's work needs; nothing puts those lines into a brief and the dispatch-subagents Skill does not carry them, so orchestrators omit them from hand-written, one-off and Skill-templated briefs alike. Since PR #2645 the Journal marks every loaded rule without a verdict as 'no verdict provided', so the omission shows but is not prevented. Signals: 'briefs didn't ask for rule and doc verdicts', 'no verdict provided', output written outside a per-agent scratchpad subfolder, unverified figures in a report, a subagent reading git-conventions late. Since PR #2932 (2026-11-07) dispatch-subagents section 3 opens with a pointer to CLAUDE.md's every-brief asks."
+cause: "CLAUDE.md asks every subagent brief for a rule/doc verdict in the final reply (PR #2060), a scratchpad subfolder named for the agent, sources for counts, and the read-first triggers (git, GitHub docs) the agent's work needs; nothing puts those lines into a brief and the dispatch-subagents Skill does not carry them, so orchestrators omit them from hand-written, one-off and Skill-templated briefs alike. Since PR #2645 the Journal marks every loaded rule without a verdict as 'no verdict provided', so the omission shows but is not prevented. Signals: 'briefs didn't ask for rule and doc verdicts', 'no verdict provided', output written outside a per-agent scratchpad subfolder, unverified figures in a report, a subagent reading git-conventions late. Since PR #2932 (2026-11-07) dispatch-subagents section 3 opens with a pointer to CLAUDE.md's every-brief asks. Since PR #3010 (2026-11-10) rule use is captured by hooks (a SubagentStart note and a rule-load ledger), not a brief line; the verdict ask is retired."
 surface: safe
 status: open
 fixes:
@@ -19,6 +19,9 @@ fixes:
   - pr: 2932
     date: "2026-11-07"
     summary: "Closes #2911: dispatch-subagents SKILL.md section 3 points at CLAUDE.md's every-brief asks instead of restating them."
+  - pr: 3010
+    date: "2026-11-10"
+    summary: "Replaced the rule and doc verdict ask in subagent briefs with out-of-band rule-load and helped.sh hooks that give every subagent a static note."
 occurrences:
   - session: session_013zxzeQZYwzDuf4JEncnqAa
     date: "2026-11-02"
@@ -60,3 +63,13 @@ occurrences:
     severity: minor
     description: "Several subagents read git-conventions late after a hook, and Rater C8 ran gh api without reading github-integration.md; my briefs did not carry CLAUDE.md's read-first triggers"
     solution: "Add one line to dispatch-subagents briefs naming the read-first triggers, or say read-only git show needs no doc"
+  - session: session_013zxzeNjRy7tpoybG6YTUM6
+    date: "2026-11-09"
+    severity: nit
+    description: "Survey and design briefs say 'verbatim' with values filled in, but the CLAUDE.md every-brief asks must be appended by hand; easy to forget."
+    solution: "Put the every-brief asks line inside the survey and design brief files, or name them in the Skill's step."
+  - session: session_013zxzePitVv4rX66ZhZa4kw
+    date: "2026-11-09"
+    severity: nit
+    description: "Subagent briefs did not name a scratchpad subfolder per CLAUDE.md; the three agents wrote no files, so no collision occurred."
+    solution: "Put the scratchpad-subfolder line in the blog-post step briefs, or confirm it is only needed for agents that write files."

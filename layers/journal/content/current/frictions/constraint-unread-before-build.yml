@@ -25,3 +25,13 @@ occurrences:
     severity: minor
     description: "Explained how Routines work without first reading the Glass Box overview page that CLAUDE.md requires for such explanations."
     solution: "Read layers/glassbox/content/guide/pages/index.md before answering."
+  - session: session_013zxzeNd2Ethpd3anqbmpkr
+    date: "2026-11-09"
+    severity: minor
+    description: "Drafted rule-path proposals before reading ADR-0029 and the Bash hint, though CLAUDE.md says read the full ADR before planning; its broad-paths stance reframed the advice."
+    solution: "Make CLAUDE.md's plan trigger name audits and reviews of a mechanism, so the ADR is read first."
+  - session: session_013zxzeSjczLUzQPWWSHP4t9
+    date: "2026-11-10"
+    severity: minor
+    description: "Planned a session-log schema change without reading the full ADR-0009, which CLAUDE.md requires before planning; I relied on its summary rule."
+    solution: "Read docs/adr/0009 before designing a schema change; the summary rule happened to cover the additive-only constraint."

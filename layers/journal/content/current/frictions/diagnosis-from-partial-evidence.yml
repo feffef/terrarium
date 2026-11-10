@@ -28,3 +28,8 @@ occurrences:
     severity: nit
     description: "Called a sentence in the new Skill unsupported after one grep; reviewers showed glassbox-improve already held it with its reason."
     solution: "Before calling a claim unsupported, grep the sibling Skills for its key terms and read the neighbouring lines."
+  - session: session_013zxzeNd2Ethpd3anqbmpkr
+    date: "2026-11-09"
+    severity: minor
+    description: "Compared rules across a 24-day window without checking path history; the user's question showed four rules were created mid-window, so load counts are not comparable."
+    solution: "Run git log on .claude/rules for path changes before comparing rules over a window."

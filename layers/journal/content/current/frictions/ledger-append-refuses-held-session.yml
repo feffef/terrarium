@@ -41,3 +41,8 @@ occurrences:
     severity: minor
     description: "Survey subagent hit ledger-append-refuses-held-session: its single --append call aborted on one held session, so it looped about 36 sequential calls, past the foreground limit, and mistyped four session ids."
     solution: "Let print-ledger-occurrence.ts --append skip already-held sessions and report them, instead of aborting the whole call."
+  - session: session_013zxzeNjRy7tpoybG6YTUM6
+    date: "2026-11-09"
+    severity: minor
+    description: "Survey subagent's --append hit 13 of 61 triples already held by the entry through a different Friction index; one failed call and a pre-check loop."
+    solution: "Have print-ledger-occurrence --append skip held sessions with a warning, or say in the brief that a held session can match another index."

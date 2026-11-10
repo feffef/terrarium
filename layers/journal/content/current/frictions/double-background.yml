@@ -11,11 +11,6 @@ fixes:
     date: "2026-10-16"
     summary: "The double-background guard's deny message now says the whole call was denied and nothing in it ran."
 occurrences:
-  - session: session_01Cb8ETAZztznLYx6CC7MKyE
-    date: "2026-10-26"
-    severity: nit
-    description: "My first attempt to gate two branches in one background call with & was blocked by the double-background guard; I resent it as two calls."
-    solution: "Run one background Bash call per gate from the start."
   - session: session_013zxzePhRwXqYLtsycYUhqv
     date: "2026-10-28"
     severity: nit
@@ -146,3 +141,8 @@ occurrences:
     severity: nit
     description: "I gave a background gate run both run_in_background and a trailing nohup ampersand; the double-background guard (issue 1208) refused it, nothing ran, and I resent it once."
     solution: "CLAUDE.md or the dispatch Skill could show the one correct form: a plain foreground command, run_in_background true, output redirected to a log."
+  - session: session_013zxzeRSMtPAREKXCce9GT6
+    date: "2026-11-09"
+    severity: nit
+    description: "Sent a background Bash call with a trailing nohup and ampersand as well as run_in_background; the double-background guard blocked it."
+    solution: "Pass run_in_background alone, as the guard's message and dispatch-subagents say."

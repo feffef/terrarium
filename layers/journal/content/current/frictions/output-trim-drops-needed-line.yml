@@ -28,3 +28,13 @@ occurrences:
     severity: nit
     description: "Piped log-session.ts --author output through head, against the close-session rule never to filter it; the refusal was still visible, but a longer warning could have been cut."
     solution: "Run the helper unfiltered; the rule sits on the last line of close-session, which I had read."
+  - session: session_013zxzeRL5rU5zS3WRCkH3TE
+    date: "2026-11-08"
+    severity: nit
+    description: "Piped log-session.ts --author output through head -30, which close-session forbids; the output was 12 lines, so no refusal or warning was lost."
+    solution: "Run log-session.ts bare, as the skill says; a refusal could print past the cut."
+  - session: session_013zxzeRumtXDY7MVhKUgVT7
+    date: "2026-11-09"
+    severity: nit
+    description: "I piped one log-session.ts --author run through head, which the log-session Skill forbids because refusals and warnings print there; nothing was hidden that time, but a refusal could have been."
+    solution: "Run log-session.ts unfiltered; the Skill's step-1 line already says so, so this is a read-and-follow slip."

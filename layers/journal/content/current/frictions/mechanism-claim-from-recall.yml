@@ -32,11 +32,6 @@ occurrences:
     severity: minor
     description: "My first #2577 comment said a cloud run needs the owner's permission for separate branches; the owner corrected that written repo instructions already grant it, so I edited the comment."
     solution: "Treat a Skill's written step as the explicit permission the harness system prompt asks for."
-  - session: session_01NHL7eNYVjV814TB7bS83kv
-    date: "2026-10-26"
-    severity: nit
-    description: "A Standards reviewer wrongly claimed the closureRefusal line anchor was off by one and a Spec reviewer wrongly said +33 -20 was one commit's numstat; both needed my own git and API checks."
-    solution: "Brief reviewers to verify anchors with git show before calling them wrong."
   - session: session_013zxzeTGYbEWeFyEywFafxw
     date: "2026-10-28"
     severity: moderate

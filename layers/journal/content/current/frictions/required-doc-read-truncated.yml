@@ -14,11 +14,6 @@ fixes:
     date: "2026-10-28"
     summary: "CLAUDE.md says to read a required doc whole if you can, no longer in one Read call: partial reads are encouraged against, not required."
 occurrences:
-  - session: session_01Vg1qDutnhKVav7JDNUdr8J
-    date: "2026-10-26"
-    severity: minor
-    description: "Read github-integration.md with cat | head -80 and dispatch-subagents SKILL.md with head -150, against CLAUDE.md's one-Read-call-per-doc rule; parts may have been cut."
-    solution: "Read trigger docs with the Read tool, unlimited, at the first GitHub call; nothing I needed was in the cut part this time."
   - session: session_013zxzeQ97mDYdTytqEL7wD6
     date: "2026-10-27"
     severity: nit
@@ -34,3 +29,8 @@ occurrences:
     severity: minor
     description: "My reviewer briefs said read each page in full, but several reviewers read through cut or head filters and truncated long lines, so some keeps rest on ledes and headings."
     solution: "State in the brief that page text must not be filtered or cut, and ask each reviewer to name any page it read only in part."
+  - session: session_013zxzeRL5rU5zS3WRCkH3TE
+    date: "2026-11-08"
+    severity: nit
+    description: "Labelled 2975 after only grepping issue-tracker.md; the hook asked for the whole doc, which I read afterwards and which held the supersession and trial checks I then ran."
+    solution: "Read issue-tracker.md whole before the first label call, as CLAUDE.md says; the late read cost nothing here."

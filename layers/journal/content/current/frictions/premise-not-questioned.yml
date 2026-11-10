@@ -4,8 +4,9 @@ summary: >-
 cause: >-
   An agent implements or hardens a solution before asking whether the change should exist or how big it should be; the triage-brief shape was fixed 2026-10-06 (auto-triage SKILL line 57); the glassbox-curate memory-lead case (2026-11-07) was fixed by #2973 with a Skill-local check; later cases differ.
 surface: safe
-status: tracked
-ref: "issue #2997"
+status: accepted
+notes: |-
+  2026-11-10 survey: issue #2997 closed not planned 2026-11-09 (owner decision in clear-backlog grilling): close with no change; one occurrence, CLAUDE.md 'Question the premise' already covers it and earlier added rules did not stop the cluster.
 fixes:
   - pr: 1821
     date: "2026-10-12"

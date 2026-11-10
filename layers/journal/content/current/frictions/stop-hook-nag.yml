@@ -19,21 +19,6 @@ fixes:
     date: "2026-11-04"
     summary: "ADR-0003/0004 and pr-workflow.md: agents may push early and often, the PR opens only after review and the gate; git-conventions says to push when the Stop hook asks."
 occurrences:
-  - session: session_014yTcrjFw1Qa6ABqQoGpzYq
-    date: "2026-10-26"
-    severity: nit
-    description: "Stop hook asked to commit and push three times while the fact-check and gate were running; ADR-0004 says review and gate first."
-    solution: "Have the Stop hook skip its push nag while a background gate or subagent runs."
-  - session: session_01NHL7eNYVjV814TB7bS83kv
-    date: "2026-10-26"
-    severity: nit
-    description: "The Stop hook asked to push five times while the review, fact-check and gate were still running, each time needing a reply to hold the push."
-    solution: "Let the Stop hook stay quiet while a scheduled-run gate or subagent is in flight."
-  - session: session_01Y1i7HTUED6iQYzbSLBbu79
-    date: "2026-10-26"
-    severity: nit
-    description: "Stop hook asked to push three times while the probe and gate were pending; ADR-0004 says review and gate first."
-    solution: "Let the Stop hook skip its push nag while a background gate or agent runs (known, #2233)."
   - session: session_01LyextqGkDsnBpTuPyFxhSm
     date: "2026-10-27"
     severity: nit
@@ -349,3 +334,13 @@ occurrences:
     severity: nit
     description: "Stop hook said there were untracked files and uncommitted changes when git status was empty, and again mid-verification before I could commit."
     solution: "Have the Stop hook skip files git ignores and wait for an in-flight background run."
+  - session: session_013zxzeNjRy7tpoybG6YTUM6
+    date: "2026-11-09"
+    severity: nit
+    description: "Stop hook asked me to push twice while a background gate ran; I pushed mid-gate, safe only because a push leaves HEAD and tree unchanged."
+    solution: "Have the Stop hook skip its push nag while a gate:scoped run is in progress."
+  - session: session_013zxzeSreQ7NRPpBQ2QtvEs
+    date: "2026-11-10"
+    severity: nit
+    description: "Stop hook repeatedly flagged unpushed inherited commits on the impl worktree branch during review, and demanded PR subscription the task forbade."
+    solution: "Let the hook skip worktree impl branches awaiting orchestrator review, and honour an explicit no-subscribe instruction."

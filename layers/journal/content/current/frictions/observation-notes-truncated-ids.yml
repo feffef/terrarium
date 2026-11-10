@@ -8,11 +8,6 @@ fixes:
     date: "2026-10-27"
     summary: "The Skill Inventory schema now rejects an observation note that cites a truncated session id."
 occurrences:
-  - session: session_01TaUpbA3idjNZSgGpNjXj8S
-    date: "2026-10-26"
-    severity: nit
-    description: "Two notes used truncated session ids; code-review caught it and I swapped in full ids."
-    solution: "Say in step 5 that a note quotes a full id."
   - session: session_019g1t4RX7PcR54io7GRdxXK
     date: "2026-10-27"
     severity: nit
