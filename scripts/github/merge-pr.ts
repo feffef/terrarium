@@ -17,6 +17,7 @@
 // authenticated REST call via `curl` (not `fetch` — issue #567) when it is not.
 //
 // Usage:  tsx scripts/github/merge-pr.ts <pr-number> [--merge-method merge|squash|rebase] [--interval-ms N] [--timeout-ms N]
+//             [--owner-approved "<quote>"]  (waives only the Human-only refusal; the quote goes in the merge commit, #3022)
 //   Refuses up front for a fork or Public-authored PR, a PR labelled
 //   `guest-pipeline` (ADR-0023), a PR that changes a Human-only path (ADR-0004),
 //   a PR whose closing keywords name an open issue not labelled
@@ -138,8 +139,12 @@ export function failingCheckNames(runs: RawCheckRun[]): string[] {
 /** The merge PUT's fields, shared by the `gh api` and REST paths. `sha` pins
  *  the polled head, so a push during polling fails the merge (409) instead of
  *  landing an unchecked commit. */
-export function mergeRequestFields(method: MergeMethod, sha: string): { merge_method: MergeMethod; sha: string } {
-  return { merge_method: method, sha }
+export function mergeRequestFields(
+  method: MergeMethod,
+  sha: string,
+  commitMessage?: string,
+): { merge_method: MergeMethod; sha: string; commit_message?: string } {
+  return commitMessage ? { merge_method: method, sha, commit_message: commitMessage } : { merge_method: method, sha }
 }
 
 export interface VerdictBody {
@@ -193,6 +198,16 @@ export function humanMergeRefusal(files: string[], globs: string[]): string | nu
   return hits.length
     ? `refused: a human merges a PR that changes ${hits.join(', ')} (ADR-0004, ${HUMAN_MERGE_RULE})`
     : null
+}
+
+/** `--owner-approved` (#3022): the owner told this session in-session to merge a
+ *  Human-only PR. Waives only that refusal; returns the merge commit message
+ *  that records the quote, or null when there is nothing to waive. An unreadable
+ *  rule stays refused. */
+export function humanMergeWaiver(files: string[], globs: string[], quote: string | undefined): string | null {
+  const hits = files.filter((f) => globs.some((g) => matchesGlob(f, g)))
+  if (!quote?.trim() || hits.length === 0) return null
+  return `Human-only merge waived on the owner's word (ADR-0004): "${quote.trim()}"\nHuman-only files: ${hits.join(', ')}`
 }
 
 /** The label `guest-build` puts on every PR it opens. */
@@ -412,8 +427,8 @@ function readCheckRuns(a: Access, sha: string): RawCheckRun[] {
   return getJson<{ check_runs: RawCheckRun[] }>(a, `commits/${sha}/check-runs?per_page=${PER_PAGE}`).check_runs
 }
 
-function mergePr(a: Access, prNumber: number, mergeMethod: MergeMethod, sha: string): string {
-  return requestJson<{ sha: string }>(a, 'PUT', `pulls/${prNumber}/merge`, mergeRequestFields(mergeMethod, sha)).sha
+function mergePr(a: Access, prNumber: number, mergeMethod: MergeMethod, sha: string, note?: string): string {
+  return requestJson<{ sha: string }>(a, 'PUT', `pulls/${prNumber}/merge`, mergeRequestFields(mergeMethod, sha, note)).sha
 }
 
 type RawIssue = { state: string; labels: { name: string }[] }
@@ -508,7 +523,7 @@ export async function reconcileClosingKeywords(
 
 export async function mergePrWhenGreen(
   prNumber: number,
-  opts: PollOptions & { mergeMethod: MergeMethod },
+  opts: PollOptions & { mergeMethod: MergeMethod; ownerApproved?: string },
   cwd = root,
 ): Promise<MergeResult> {
   const access = resolveAccess(cwd)
@@ -516,6 +531,7 @@ export async function mergePrWhenGreen(
 
   const meta = readPrMeta(access, prNumber)
   const files = readPrFiles(access, prNumber)
+  let waiver: string | null = null
   if (meta.authorLogin === DEPENDABOT_LOGIN) {
     const bumpRefusal = dependabotBumpRefusal(meta, files, owner, repo)
     if (bumpRefusal !== null) {
@@ -526,8 +542,10 @@ export async function mergePrWhenGreen(
     if (originRefusal !== null) {
       return { pr: prNumber, verdict: 'untrusted-origin', merged: false, message: originRefusal }
     }
-    const humanRefusal = humanMergeRefusal(prFilePaths(files), readHumanMergeGlobsFromMain(cwd))
-    if (humanRefusal !== null) {
+    const globs = readHumanMergeGlobsFromMain(cwd)
+    const humanRefusal = humanMergeRefusal(prFilePaths(files), globs)
+    waiver = humanMergeWaiver(prFilePaths(files), globs, opts.ownerApproved)
+    if (humanRefusal !== null && waiver === null) {
       return { pr: prNumber, verdict: 'human-merge', merged: false, message: humanRefusal }
     }
   }
@@ -574,7 +592,7 @@ export async function mergePrWhenGreen(
 
   let mergeCommitSha: string
   try {
-    mergeCommitSha = mergePr(access, prNumber, opts.mergeMethod, sha)
+    mergeCommitSha = mergePr(access, prNumber, opts.mergeMethod, sha, waiver ?? undefined)
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err)
     return {
@@ -615,10 +633,11 @@ function parseArgsOrFail(argv: string[]): {
   mergeMethod: MergeMethod
   intervalMs: number
   timeoutMs: number
+  ownerApproved?: string
 } {
   const prArg = argv[0]
   if (!prArg) {
-    fail('usage: tsx scripts/github/merge-pr.ts <pr-number> [--merge-method merge|squash|rebase] [--interval-ms N] [--timeout-ms N]')
+    fail('usage: tsx scripts/github/merge-pr.ts <pr-number> [--merge-method merge|squash|rebase] [--interval-ms N] [--timeout-ms N] [--owner-approved "<quote>"]')
   }
   const prNumber = Number(prArg)
   if (!Number.isInteger(prNumber) || prNumber <= 0) fail(`not a positive integer PR number: ${prArg}`)
@@ -626,6 +645,7 @@ function parseArgsOrFail(argv: string[]): {
   let mergeMethod: MergeMethod = 'merge'
   let intervalMs = DEFAULT_INTERVAL_MS
   let timeoutMs = DEFAULT_TIMEOUT_MS
+  let ownerApproved: string | undefined
   for (let i = 1; i < argv.length; i += 2) {
     const flag = argv[i]
     const value = argv[i + 1]
@@ -638,16 +658,20 @@ function parseArgsOrFail(argv: string[]): {
     } else if (flag === '--timeout-ms') {
       timeoutMs = Number(value)
       if (!Number.isInteger(timeoutMs) || timeoutMs <= 0) fail(`invalid --timeout-ms: ${value}`)
+    } else if (flag === '--owner-approved') {
+      if (!value?.trim()) fail('--owner-approved needs the owner\'s quote')
+      ownerApproved = value
     } else {
       fail(`unknown flag: ${flag}`)
     }
   }
-  return { prNumber, mergeMethod, intervalMs, timeoutMs }
+  if (ownerApproved && mergeMethod === 'rebase') fail('--owner-approved records its quote in the merge commit; use merge or squash')
+  return { prNumber, mergeMethod, intervalMs, timeoutMs, ownerApproved }
 }
 
 async function main(): Promise<void> {
-  const { prNumber, mergeMethod, intervalMs, timeoutMs } = parseArgsOrFail(process.argv.slice(2))
-  const result = await mergePrWhenGreen(prNumber, { mergeMethod, intervalMs, timeoutMs })
+  const { prNumber, mergeMethod, intervalMs, timeoutMs, ownerApproved } = parseArgsOrFail(process.argv.slice(2))
+  const result = await mergePrWhenGreen(prNumber, { mergeMethod, intervalMs, timeoutMs, ownerApproved })
   process.stdout.write(JSON.stringify(result, null, 2) + '\n')
   if (!result.merged) process.exitCode = 1
 }

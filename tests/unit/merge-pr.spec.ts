@@ -13,6 +13,7 @@ import {
   dependabotBumpRefusal,
   factCheckedBlobRefusal,
   humanMergeRefusal,
+  humanMergeWaiver,
   mergeRequestFields,
   GUEST_PIPELINE_LABEL,
   parseClosingKeywordIssues,
@@ -95,6 +96,36 @@ describe('failingCheckNames()', () => {
 describe('mergeRequestFields()', () => {
   it('pins the polled head SHA alongside the merge method', () => {
     expect(mergeRequestFields('squash', 'abc123')).toEqual({ merge_method: 'squash', sha: 'abc123' })
+  })
+})
+
+describe('mergeRequestFields() with a waiver', () => {
+  it('sends the waiver as the merge commit message', () => {
+    expect(mergeRequestFields('merge', 'abc', 'note')).toEqual({ merge_method: 'merge', sha: 'abc', commit_message: 'note' })
+  })
+})
+
+describe('humanMergeWaiver() — --owner-approved (#3022)', () => {
+  const globs = ['docs/adr/**']
+  const files = ['app/app.vue', 'docs/adr/0004.md']
+
+  it('records the owner quote and the waived files', () => {
+    const note = humanMergeWaiver(files, globs, 'merge it')
+    expect(note).toContain('merge it')
+    expect(note).toContain('docs/adr/0004.md')
+  })
+
+  it('waives nothing without a quote, or for a blank one', () => {
+    expect(humanMergeWaiver(files, globs, undefined)).toBeNull()
+    expect(humanMergeWaiver(files, globs, '  ')).toBeNull()
+  })
+
+  it('has nothing to waive when no Human-only file changed', () => {
+    expect(humanMergeWaiver(['app/app.vue'], globs, 'merge it')).toBeNull()
+  })
+
+  it('does not waive an unreadable rule', () => {
+    expect(humanMergeWaiver(files, [], 'merge it')).toBeNull()
   })
 })
 

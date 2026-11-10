@@ -38,6 +38,10 @@ A human merges the few PRs whose risk the gate cannot see.
   human-merge rule.
   `scripts/github/merge-pr.ts` reads it from `main`, so a PR cannot shrink it for
   itself.
+- **Owner waiver.** When the owner tells an agent in-session to merge a
+  Human-only PR the agent wrote, the agent may merge it, quoting the owner in
+  the merge record. The waiver covers only the Human-only list; every other
+  exception and check still applies.
 - **Merging, not editing.** Agents may edit Human-only files; only the merge
   waits for a human.
 - **"A human"** is any Trusted user, with one exception (ADR-0020).
