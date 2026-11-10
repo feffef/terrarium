@@ -40,3 +40,18 @@ describe('askFor()', () => {
     expect(askFor(payload('cat /repo/scripts/session/helped.sh', path, 'a1'))).toBeNull()
   })
 })
+
+describe('askFor() after the first ask', () => {
+  const asked = { type: 'attachment', attachment: { type: 'hook_additional_context', content: ['Rules loaded for you:\n  (none)'] } }
+  const path = transcripts([], [native('adr-0027.md'), asked])
+
+  it('stays silent on a later bare call, so "none applies" can end', () => {
+    expect(askFor(payload('sh /repo/scripts/session/helped.sh', path, 'a1'))).toBeNull()
+  })
+
+  it('names the rules a call gave no valid value, whatever came before', () => {
+    const reply = askFor(payload('sh /repo/scripts/session/helped.sh rule:adr-0027.md=changed rule:adr-0004 doc:docs/a.md rule:adr-0005.md=backed', path, 'a1'))
+    expect(reply).toContain('Not recorded, since a rule needs =steered or =backed: .claude/rules/adr-0027.md .claude/rules/adr-0004.md.')
+    expect(reply).not.toContain('adr-0005')
+  })
+})

@@ -975,7 +975,7 @@ function mergeRefs<T extends Record<string, string | undefined>>(
  *  dropped so a minimal session stays clean. */
 export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Record<string, unknown> {
   const editedSet = new Set(trace.filesEdited)
-  // Derived only: what steered or backed something goes in `reported` (#3009).
+  // Derived only: what steered or backed it, and docs that helped, go in `reported` (#3009).
   // A rule file is logged as a rule (rulesGlobal, ruleUse),
   // even when close-session has the agent re-read it.
   const docsRead = dedup([...trace.filesRead, ...trace.docsReadViaShell])

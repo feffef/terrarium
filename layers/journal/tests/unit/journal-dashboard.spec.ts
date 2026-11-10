@@ -514,6 +514,19 @@ describe('sessionCardViews', () => {
       expect(c.ruleUse!.main.rules.map((r) => [r.path, r.alwaysLoaded])).toEqual([['.claude/rules/adr-0003.md', true], ['.claude/rules/adr-0004.md', false]])
     })
 
+    it('keeps a row for a rule an agent named but never loaded', () => {
+      const why = '(no load recorded)'
+      const c = view({
+        subagents: [{ type: 'Explore', task: 'scan' }],
+        ruleUse: [
+          { by: 'main', answered: true, loads: [], reported: [{ path: '.claude/rules/adr-0012.md', value: 'steered', why }] },
+          { by: 'Explore', subagent: 0, answered: true, loads: [], reported: [{ path: '.claude/rules/adr-0012.md', value: 'backed', why }] },
+        ],
+      })
+      expect(c.ruleUse!.main.rules.map((r) => [r.path, r.value, r.hover])).toEqual([['.claude/rules/adr-0012.md', 'steered', '.claude/rules/adr-0012.md\nno load recorded']])
+      expect(c.ruleUse!.subagents.rules.map((r) => [r.path, r.loadedBy, r.values.map((v) => v.percent), r.whys])).toEqual([['.claude/rules/adr-0012.md', 1, [100], [`scan: ${why}`]]])
+    })
+
     it('says who reported a doc instead of "no verdict"', () => {
       const c = view({
         docsRead: [{ path: 'docs/a.md', reason: 'r' }],

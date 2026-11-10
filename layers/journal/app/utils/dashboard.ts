@@ -25,7 +25,7 @@ import type { Friction, Importance, RoutineDoc, RuleUseView, SessionCardView, Se
 import { formatRoutineMetric } from './routineRuns'
 import { REPO_URL } from '../../../../app/utils/repo'
 import { sessionUrl } from '#shared/session-url'
-import { loadedRules, type RuleLoad, type RuleUseEntry } from '#shared/schemas/session'
+import { loadedRules, ruleLoad, ruleValue, type RuleLoad, type RuleUseEntry } from '#shared/schemas/session'
 
 /** The dashboard loads only the newest this-many sessions: every loaded one
  *  ships in the HTML, and uncapped, `archived` passed 10 MB. */
@@ -270,7 +270,7 @@ export function sessionCardViews(
 
 // ── Rule use (#3020) ─────────────────────────────────────
 // A loaded rule an agent left out neither steered nor backed what it did.
-const RULE_VALUES = ['steered', 'backed'] as const
+const isRule = (path: string) => path.includes('.claude/rules/')
 const taskOf = (e: RuleUseEntry, subagents: Subagent[]) => (e.subagent === undefined ? undefined : subagents[e.subagent]?.task)
 const withTask = (why: string, task?: string) => (task ? `${task}: ${why}` : why)
 const percent = (n: number, of: number) => (of ? Math.round((100 * n) / of) : 0)
@@ -281,7 +281,7 @@ function tally(items: string[]): string {
   return [...counts].map(([k, n]) => (n > 1 ? `${k} ×${n}` : k)).join(', ')
 }
 
-const VIA_LABELS = { start: 'loaded at start', native: 'loaded natively', hint: 'loaded by a hint hook' } as const
+const VIA_LABELS: Record<RuleLoad['via'], string> = { start: 'loaded at start', native: 'loaded natively', hint: 'loaded by a hint hook' }
 
 function mainLoadLine(l: RuleLoad): string {
   return l.trigger ? `${VIA_LABELS[l.via]}, triggered by ${l.trigger}` : VIA_LABELS[l.via]
@@ -290,11 +290,10 @@ function mainLoadLine(l: RuleLoad): string {
 function subagentLoadLines(loads: RuleLoad[]): string[] {
   const n = (via: RuleLoad['via']) => loads.filter((l) => l.via === via).length
   const triggers = loads.flatMap((l) => (l.trigger ? [l.trigger] : []))
-  const vias = (['start', 'native', 'hint'] as const).filter((v) => n(v)).map((v) => `${v} ${n(v)}`)
-  return [vias.join(' · '), ...(triggers.length ? [`triggered by ${tally(triggers)}`] : [])]
+  const vias = ruleLoad.shape.via.options.filter((v) => n(v)).map((v) => `${v} ${n(v)}`)
+  return [vias.join(' · ') || 'no load recorded', ...(triggers.length ? [`triggered by ${tally(triggers)}`] : [])]
 }
 
-// Always-loaded rules first; a stable sort keeps the log's order otherwise.
 const startFirst = <T extends { alwaysLoaded: boolean }>(rows: T[]) => [...rows].sort((x, y) => Number(y.alwaysLoaded) - Number(x.alwaysLoaded))
 
 export function sessionRuleUseView(s: SessionDoc, ruleTitles: Record<string, string>): RuleUseView {
@@ -304,29 +303,34 @@ export function sessionRuleUseView(s: SessionDoc, ruleTitles: Record<string, str
   const subs = entries.filter((e) => e.by !== 'main')
   // Logs before #3020 record no start loads, only the session-wide list.
   const legacyGlobal = entries.some((e) => e.loads.some((l) => l.via === 'start')) ? [] : (s.rulesGlobal ?? [])
-  const mainRow = (path: string, load?: RuleLoad) => {
+  const mainRow = (path: string, alwaysLoaded: boolean, load?: RuleLoad) => {
     const r = main?.reported.find((x) => x.path === path)
     return {
       path,
       title: ruleTitles[path],
-      alwaysLoaded: !load || load.via === 'start',
+      alwaysLoaded,
       followedUp: !!s.rulesFollowedUp?.includes(path),
-      hover: load ? `${path}\n${mainLoadLine(load)}` : path,
+      hover: load ? `${path}\n${mainLoadLine(load)}` : alwaysLoaded ? path : `${path}\nno load recorded`,
       value: r?.value,
       whys: r?.why ? [r.why] : [],
     }
   }
-  const subRules = [...new Set(subs.flatMap((e) => e.loads.map((l) => l.rule)))]
+  // A rule an agent named but never loaded keeps its row; its why says so.
+  const subRules = [...new Set(subs.flatMap((e) => [...e.loads.map((l) => l.rule), ...e.reported.map((r) => r.path).filter(isRule)]))]
   return {
     main: {
       answered: main ? main.answered : null,
-      rules: startFirst([...legacyGlobal.map((p) => mainRow(p)), ...(main?.loads ?? []).map((l) => mainRow(l.rule, l))]),
+      rules: startFirst([
+        ...legacyGlobal.map((p) => mainRow(p, true)),
+        ...(main?.loads ?? []).map((l) => mainRow(l.rule, l.via === 'start', l)),
+        ...(main?.reported ?? []).filter((r) => isRule(r.path) && !main!.loads.some((l) => l.rule === r.path) && !legacyGlobal.includes(r.path)).map((r) => mainRow(r.path, false)),
+      ]),
     },
     subagents: {
       total: subs.length,
       unanswered: subs.filter((e) => !e.answered).length,
       rules: startFirst(subRules.map((path) => {
-        const loaders = subs.filter((e) => e.loads.some((l) => l.rule === path))
+        const loaders = subs.filter((e) => e.loads.some((l) => l.rule === path) || e.reported.some((r) => r.path === path))
         const answering = loaders.filter((e) => e.answered)
         const loads = loaders.flatMap((e) => e.loads.filter((l) => l.rule === path))
         const valueOf = (e: RuleUseEntry) => e.reported.find((r) => r.path === path)?.value
@@ -338,7 +342,7 @@ export function sessionRuleUseView(s: SessionDoc, ruleTitles: Record<string, str
           alwaysLoaded: loads.some((l) => l.via === 'start'),
           hover: [path, ...subagentLoadLines(loads)].join('\n'),
           loadedBy: loaders.length,
-          values: RULE_VALUES.map((value) => {
+          values: ruleValue.options.map((value) => {
             const n = answering.filter((e) => valueOf(e) === value).length
             return {
               value,

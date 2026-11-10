@@ -35,8 +35,8 @@ and its own commits.
   narrower field needs a new schema version beside the old one; a log with no
   version is version 1.
 - **The one exception to both:** a Trusted user may remove a field that few
-  logs ever used, or rename a field or a value, in the schema and in every log
-  that holds it, in one PR a human merges.
+  logs ever used, rename a field, or rename or drop a value, in the schema and
+  in every log that holds it, in one PR a human merges.
 - **Logs from outside agents** are marked `external`. They stay on the Timeline
   and dashboard, but Friction mining and the Skill audit skip them; only their
   ideas are used. Their authors can't push to `main`, so such a log travels in

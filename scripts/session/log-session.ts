@@ -33,7 +33,7 @@ import { tmpdir } from 'node:os'
 import { basename, dirname, join, resolve } from 'node:path'
 import { parse as parseYaml, stringify as stringifyYaml } from 'yaml'
 import { z } from 'zod'
-import { reportedEntry } from '../../shared/schemas/session.ts'
+import { reportedEntry, reportedEntryHasItsValue } from '../../shared/schemas/session.ts'
 import { sessionUrl } from '../../shared/session-url.ts'
 import { fetchOriginMain, git, SESSION_TRAILER, tryGit } from '../lib/git.ts'
 import { parseWorktreeList, runSweep, type Finding, type SweepResult } from '../git/check-worktrees.ts'
@@ -63,7 +63,7 @@ import {
 } from './transcript-trace.ts'
 import { isInstructionDoc, type DocLineIndex } from './shell-reads.ts'
 import { fail, flagValue, root, runIfMain } from '../lib/cli.ts'
-import { isRulePath, readRuleLoads, ruleUseAsk, type RuleLoadRow } from './rule-use.ts'
+import { readRuleLoads, ruleUseAsk, type RuleLoadRow } from './rule-use.ts'
 
 /** The `schemaVersion` newly authored logs should carry; evolution policy: ADR-0009. */
 export const CURRENT_SESSIONS_SCHEMA_VERSION = 1
@@ -94,7 +94,7 @@ const authoredScratchSchema = z
     skillsUsed: z.array(z.object({ name: z.string(), reason: z.string() })).optional(),
     // Required like `frictions`: [] means nothing to report, absent means skipped (#3009).
     reported: z.array(
-      reportedEntry.strict().refine((e) => isRulePath(e.path) === (e.value !== undefined), {
+      reportedEntry.strict().refine(reportedEntryHasItsValue, {
         message: 'a .claude/rules/ path needs a value (steered | backed); any other path takes none',
       }),
     ),
