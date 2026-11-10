@@ -1,0 +1,196 @@
+schemaVersion: 1
+session: session_013zxzeNkk5oEC8RnBdMeMEt
+startedAt: 2026-11-10T00:15:55Z
+endedAt: 2026-11-10T00:23:18Z
+kind: autonomous
+goal: Write the 2026-11-09 Journal Digest and archive old content
+status: in-review
+outcome: PR 3014 open with the 2026-11-09 Digest and the archive sweep (19 renames); gate green, awaiting CI
+summary: Scheduled run, no human prompts. The one closed day without a Digest was 2026-11-09. I gathered it, wrote the Digest, had a fresh subagent fact-check it (24 claims, 0 wrong, 2 unverifiable; I reworded the unsourced "weekly" and "runs daily" claims), ran the archive sweep, then code-review. Review moved two routine PRs out of the prose and removed jargon from Also shipped. Gate passed; PR 3014 opened and subscribed. Merging on green CI is still to do.
+prs:
+  - "3014"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: read after the first git status and digest commands; the commands were read-only anyway
+    useful: partly
+  - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+    reason: Skill requires it before saving a Digest; confirmed written-once and live index
+    useful: partly
+  - path: layers/journal/GLOSSARY.md
+    reason: tenant-glossary rule; defines Digest, no constraint on this work
+    useful: no
+  - path: docs/agents/pr-workflow.md
+    reason: closing steps for a scheduled run's PR and the review-before-PR rule
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: read after creating the PR; call was already right
+    useful: no
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: brief requirements for the fact-check and review subagents
+    useful: yes
+  - path: .agents/skills/digest/SKILL.md
+    reason: "subagent spec review read it; Skill text was in my prompt (Spec reviewer: useful yes)"
+    useful: yes
+  - path: .agents/skills/glassbox-curate/SKILL.md
+    reason: only the fact-check subagent looked at it, to verify a PR claim; I did not read it
+    useful: no
+  - path: layers/journal/content/current/pages/digests/2026-11-09.md
+    reason: (read before editing)
+skillsUsed:
+  - name: digest
+    reason: the scheduled task itself
+  - name: code-review
+    reason: required before opening the Digest PR
+  - name: dispatch-subagents
+    reason: briefs for fact-check and review agents
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran git status and the first digest commands before reading git-conventions.md, which CLAUDE.md requires before non-read-only git; a hook flagged it afterwards.
+    solution: Read git-conventions.md at the start of any run that will commit.
+    severity: nit
+  - description: Read github-integration.md only after creating the PR, though CLAUDE.md says before the first GitHub operation; the call was already right.
+    solution: Read it before the first mcp__github__ call.
+    severity: nit
+  - description: "The digest Skill's wording invites unsourced cadence words: I wrote 'weekly' and 'runs daily' for jobs with no source; the fact-check caught the weekly one."
+    solution: "Digest Skill: tell writers to state no cadence unless a doc names it."
+    severity: minor
+  - description: First draft put two routine PRs in the prose and used jargon in Also shipped; the Standards review caught it, costing one more commit and a gate rerun.
+    solution: Before saving, check each prose PR against the routine-PR rule.
+    severity: minor
+  - description: Subagents loaded about 15 unrelated ADR rules via hooks on read-only greps and git calls, costing context for no use.
+    solution: Narrow the paths of adr-0027, adr-0029, adr-0030 and mermaid-lanes.
+    severity: nit
+durationSec: 443
+models:
+  claude-sonnet-5-5: 45
+toolCounts:
+  Bash: 12
+  Read: 7
+  Write: 1
+  Agent: 3
+  Skill: 3
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-11-09.md
+  - layers/journal/content/archived/pages/digests/2026-11-02.md
+  - layers/journal/content/archived/sessions/2026-11-01-session_013zxzeTLLY3FmiXzuBKgc2o.yml
+  - layers/journal/content/archived/sessions/2026-11-02-session_013zxzeQ61FGG5kRKhi89YE9.yml
+  - layers/journal/content/archived/sessions/2026-11-02-session_013zxzeQBuD3C4A1V2DpoHYu.yml
+  - layers/journal/content/archived/sessions/2026-11-02-session_013zxzeQCoXnRxbyzhHyy3M1.yml
+  - layers/journal/content/archived/sessions/2026-11-02-session_013zxzeQZYwzDuf4JEncnqAa.yml
+  - layers/journal/content/archived/sessions/2026-11-02-session_013zxzeQqRBLg9tUfsbNCCz8.yml
+  - layers/journal/content/archived/sessions/2026-11-02-session_013zxzeQqj3Eh1SgeFLWsNcD.yml
+  - layers/journal/content/archived/sessions/2026-11-02-session_013zxzeR2kopqGDtf5GQztz6.yml
+  - layers/journal/content/archived/sessions/2026-11-02-session_013zxzeRNoKQn8q3NtVRPDyk.yml
+  - layers/journal/content/archived/sessions/2026-11-02-session_013zxzeRkQabGaMQ8gphe4Ra.yml
+  - layers/journal/content/archived/sessions/2026-11-02-session_013zxzeRrC6V68k1QwREpWtf.yml
+  - layers/journal/content/archived/sessions/2026-11-02-session_013zxzeRrK38XMhpkF7RSfp2.yml
+  - layers/journal/content/archived/sessions/2026-11-02-session_013zxzeRwpRf2gj4m4keF6bn.yml
+  - layers/journal/content/archived/sessions/2026-11-02-session_013zxzeRynjgY3G22uZYaKCk.yml
+  - layers/journal/content/archived/sessions/2026-11-02-session_013zxzeSaEvHWNU8EdNqcqGG.yml
+  - layers/journal/content/archived/sessions/2026-11-02-session_013zxzeSbc2WJGVqnu6YVjXr.yml
+  - layers/journal/content/archived/sessions/2026-11-02-session_013zxzeSkTLmRxa2PWgt3kPw.yml
+  - layers/journal/content/archived/sessions/2026-11-02-session_013zxzeSuucewJSDd3eyaNnh.yml
+  - layers/journal/content/current/pages/digests/2026-11-02.md
+rulesLoaded:
+  - .claude/rules/adr-0010.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/glossary-terms.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0010.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0015.md
+docsReadBySubagents:
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/glassbox-curate/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run gate:scoped and code-review before opening the PR; the summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Session log goes straight to main; confirmed keeping logs out of the branch. Summary was enough.
+    useful: partly
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR and subscribe; confirmed the scheduled-run scope. Summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Provenance header on the PR body and commit trailer; I checked the trailer landed.
+    useful: yes
+  - path: .claude/rules/adr-0010.md
+    reason: Digest rules; I read the full ADR because the Skill demands it before saving.
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: About prune trials; loaded by reading Digest data, not relevant here.
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: About where instructions live; I edited no rules or docs, so it did not apply.
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: ADR style rule; I edited no ADR, so it did not apply.
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded on touching a path; my diff has no Human-only file, so self-merge stays allowed.
+    useful: partly
+  - path: .claude/rules/adr-0005.md
+    reason: About Skills as code; I changed no Skill.
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: No mermaid diagram in this work.
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Made me read the Journal glossary; it added nothing for a Digest.
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary placement rule; I added no term.
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Journal-as-logbook rule; confirmed Digests are derived. Summary was enough.
+    useful: partly
+  - path: .claude/rules/glossary-terms.md
+    reason: About adding glossary terms; I added none.
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: Only the fact-check subagent loaded it; it reported not relevant.
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Fact-check 2026-11-09 Digest
+    model: sonnet
+    durationSec: 73
+    toolCalls: 32
+    modelCalls: 11
+    tokenShare: 28
+  - task: Standards review of Digest PR
+    model: sonnet
+    durationSec: 29
+    toolCalls: 8
+    modelCalls: 5
+    tokenShare: 7.6
+  - task: Spec review of Digest PR
+    model: sonnet
+    durationSec: 33
+    toolCalls: 11
+    modelCalls: 6
+    tokenShare: 9.1
+gitBranch: claude/compassionate-lovelace-8bsf2b
+entrypoint: remote_trigger
+cliVersion: 2.1.321
+trigger: digest
+landedBy: Stop
