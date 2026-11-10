@@ -189,12 +189,12 @@ ruleUse:
         trigger: docs/adr/0009-session-logs-commit-directly-to-main.md
     reported:
       - path: .claude/rules/adr-0004-human-merge.md
-        value: changed
+        value: steered
         why: escalated the ADR edit to a human merge
       - path: .claude/rules/adr-0030.md
-        value: confirmed
+        value: backed
       - path: .claude/rules/adr-0027.md
-        value: changed
+        value: steered
         why: dropped findings inside open trials
       - path: docs/agents/pr-workflow.md
       - path: docs/agents/github-integration.md
@@ -230,7 +230,7 @@ ruleUse:
         via: hint
     reported:
       - path: .claude/rules/adr-0027.md
-        value: confirmed
+        value: backed
       - path: docs/agents/guards.md
   - by: general-purpose
     subagent: 1
@@ -264,11 +264,11 @@ ruleUse:
         via: hint
     reported:
       - path: .claude/rules/adr-0021.md
-        value: confirmed
+        value: backed
       - path: .claude/rules/adr-0029.md
-        value: confirmed
+        value: backed
       - path: .claude/rules/adr-0027.md
-        value: confirmed
+        value: backed
       - path: docs/agents/guards.md
   - by: general-purpose
     subagent: 2
@@ -313,7 +313,7 @@ ruleUse:
     loads: []
     reported:
       - path: .claude/rules/guards.md
-        value: confirmed
+        value: backed
         why: (no load recorded)
       - path: docs/agents/pr-workflow.md
   - by: general-purpose
@@ -335,9 +335,9 @@ ruleUse:
         via: hint
     reported:
       - path: .claude/rules/adr-0030.md
-        value: confirmed
+        value: backed
       - path: .claude/rules/adr-0029.md
-        value: confirmed
+        value: backed
       - path: docs/adr/0030-adrs-document-a-decision-not-its-history.md
   - by: general-purpose
     subagent: 5

@@ -255,7 +255,7 @@ ruleUse:
         via: hint
     reported:
       - path: .claude/rules/glassbox-content.md
-        value: confirmed
+        value: backed
   - by: general-purpose
     subagent: 7
     answered: true
@@ -286,9 +286,9 @@ ruleUse:
         trigger: layers/glassbox/GLOSSARY.md
     reported:
       - path: .claude/rules/glassbox-content.md
-        value: confirmed
+        value: backed
       - path: .claude/rules/adr-0005.md
-        value: confirmed
+        value: backed
       - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
       - path: layers/glassbox/GLOSSARY.md
   - by: general-purpose
@@ -323,7 +323,7 @@ ruleUse:
         via: hint
     reported:
       - path: .claude/rules/glassbox-content.md
-        value: confirmed
+        value: backed
       - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
       - path: docs/agents/environment-caveats.md
       - path: docs/agents/guards.md
@@ -357,9 +357,9 @@ ruleUse:
         via: hint
     reported:
       - path: .claude/rules/glassbox-content.md
-        value: changed
+        value: steered
       - path: .claude/rules/adr-0005.md
-        value: confirmed
+        value: backed
       - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
       - path: layers/glassbox/page-checks.ts
   - by: general-purpose
@@ -400,7 +400,7 @@ ruleUse:
         via: hint
     reported:
       - path: .claude/rules/glassbox-content.md
-        value: confirmed
+        value: backed
       - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
       - path: layers/glassbox/GLOSSARY.md
       - path: docs/agents/git-conventions.md
@@ -428,7 +428,7 @@ ruleUse:
         trigger: .claude/rules/glassbox-content.md
     reported:
       - path: .claude/rules/glassbox-content.md
-        value: confirmed
+        value: backed
       - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
   - by: general-purpose
     subagent: 14
@@ -470,9 +470,9 @@ ruleUse:
         via: hint
     reported:
       - path: .claude/rules/glassbox-content.md
-        value: confirmed
+        value: backed
       - path: .claude/rules/adr-0004-human-merge.md
-        value: confirmed
+        value: backed
       - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
       - path: layers/glassbox/GLOSSARY.md
   - by: general-purpose
@@ -511,7 +511,7 @@ ruleUse:
         trigger: .claude/rules/glassbox-content.md
     reported:
       - path: .claude/rules/glassbox-content.md
-        value: changed
+        value: steered
       - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
       - path: layers/glassbox/GLOSSARY.md
       - path: docs/adr/0004-objective-safety-gate.md
@@ -545,7 +545,7 @@ ruleUse:
         via: hint
     reported:
       - path: .claude/rules/glassbox-content.md
-        value: confirmed
+        value: backed
   - by: general-purpose
     subagent: 21
     answered: false
@@ -580,7 +580,7 @@ ruleUse:
         trigger: layers/glassbox/content/guide/pages/git-github/20.author-trust.md
     reported:
       - path: .claude/rules/glassbox-content.md
-        value: confirmed
+        value: backed
 subagents:
   - task: Scout new topics since last run
     model: sonnet

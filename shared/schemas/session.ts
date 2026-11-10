@@ -29,21 +29,25 @@ export const adrHint = z.object({
   by: z.enum(['main', 'subagent']),
 })
 export type AdrHint = z.infer<typeof adrHint>
-// One path-scoped rule load: `native` when the harness loaded it, `hint` when
+// One rule load: `start` when it loaded at session start (an always-loaded
+// rule, rated like the rest so moving a rule into or out of that set can be
+// measured, #3020), `native` when the harness loaded it for a path, `hint` when
 // a hint hook injected it; `trigger` is the file whose access loaded it, from
-// the InstructionsLoaded ledger when that survived (#3009).
-export const ruleLoad = z.object({ rule: z.string(), via: z.enum(['native', 'hint']), trigger: z.string().optional() })
+// the InstructionsLoaded ledger when that survived (#3009). Logs before #3020
+// record no `start` loads.
+export const ruleLoad = z.object({ rule: z.string(), via: z.enum(['start', 'native', 'hint']), trigger: z.string().optional() })
 export type RuleLoad = z.infer<typeof ruleLoad>
-// A rule or doc an agent reported. Only a rule carries a value, absent when the
-// agent gave none; what each value means: the log-session Skill, step 3.
-export const ruleValue = z.enum(['changed', 'confirmed', 'none', 'unsure'])
+// A rule or doc an agent reported. A rule always carries a value, a doc never;
+// what each value means: `ruleUseAsk` in scripts/session/rule-use.ts.
+export const ruleValue = z.enum(['steered', 'backed'])
 export type RuleValue = z.infer<typeof ruleValue>
 export const reportedEntry = z.object({ path: z.string(), value: ruleValue.optional(), why: z.string().optional() })
 export type ReportedEntry = z.infer<typeof reportedEntry>
+export const reportedEntryHasItsValue = (e: ReportedEntry) => e.path.includes('.claude/rules/') === (e.value !== undefined)
 // Per agent: what loaded, whether it answered the rule-use ask, and the
-// rules and docs it reported. Unnamed means no claim, not unhelpful (#3009). A
-// subagent has an entry when it was asked, answered or loaded a rule; the main
-// agent only when it loaded a rule or named something that is not always-loaded.
+// rules and docs it reported. A loaded rule it left out neither steered nor
+// backed anything it did. A subagent has an entry when it was asked, answered
+// or loaded a rule; the main agent when it loaded a rule or named something.
 export const ruleUseEntry = z.object({
   by: z.string(), // `main`, or the subagent's agent type (`workflow` when it has none)
   // A subagent's index in `subagents`; absent on `main`, on logs before #3019,
@@ -51,7 +55,7 @@ export const ruleUseEntry = z.object({
   subagent: z.number().int().nonnegative().optional(),
   answered: z.boolean(),
   loads: z.array(ruleLoad),
-  reported: z.array(reportedEntry),
+  reported: z.array(reportedEntry.refine(reportedEntryHasItsValue, { message: 'a rule takes a value (steered | backed), a doc none' })),
 })
 export type RuleUseEntry = z.infer<typeof ruleUseEntry>
 
@@ -197,7 +201,7 @@ export function loadedRules(log: {
   if (log.rulesLoaded || log.rulesLoadedBySubagents || !log.ruleUse) {
     return { main: log.rulesLoaded ?? [], bySubagents: log.rulesLoadedBySubagents ?? [] }
   }
-  const rulesIn = (entries: RuleUseEntry[]) => [...new Set(entries.flatMap((e) => e.loads.map((l) => l.rule)))]
+  const rulesIn = (entries: RuleUseEntry[]) => [...new Set(entries.flatMap((e) => e.loads.filter((l) => l.via !== 'start').map((l) => l.rule)))]
   const main = rulesIn(log.ruleUse.filter((e) => e.by === 'main'))
   return { main, bySubagents: rulesIn(log.ruleUse.filter((e) => e.by !== 'main')).filter((r) => !main.includes(r)) }
 }

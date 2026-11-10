@@ -210,11 +210,11 @@ ruleUse:
         via: hint
     reported:
       - path: .claude/rules/adr-0027.md
-        value: confirmed
+        value: backed
       - path: .claude/rules/adr-0005.md
-        value: confirmed
+        value: backed
       - path: .claude/rules/adr-0004-human-merge.md
-        value: confirmed
+        value: backed
       - path: docs/agents/guards.md
 subagents:
   - type: general-purpose

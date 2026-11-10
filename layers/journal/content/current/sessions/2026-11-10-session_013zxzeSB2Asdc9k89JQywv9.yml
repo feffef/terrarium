@@ -89,10 +89,6 @@ ruleUse:
         via: native
         trigger: docs/agents/pr-workflow.md
     reported:
-      - path: .claude/rules/adr-0027.md
-        value: none
-      - path: .claude/rules/adr-0029.md
-        value: none
       - path: docs/agents/git-conventions.md
       - path: docs/agents/pr-workflow.md
       - path: docs/agents/github-integration.md
@@ -115,9 +111,9 @@ ruleUse:
         via: hint
     reported:
       - path: .claude/rules/glassbox-content.md
-        value: confirmed
+        value: backed
       - path: .claude/rules/tenant-glossary.md
-        value: confirmed
+        value: backed
   - by: general-purpose
     answered: true
     loads:
@@ -138,10 +134,10 @@ ruleUse:
         trigger: layers/glassbox/content/guide/pages/claude-code/10.claude-md.md
     reported:
       - path: .claude/rules/glassbox-content.md
-        value: confirmed
+        value: backed
         why: (no load recorded)
       - path: .claude/rules/adr-0027.md
-        value: confirmed
+        value: backed
       - path: docs/agents/git-conventions.md
   - by: general-purpose
     answered: false
