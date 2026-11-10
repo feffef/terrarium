@@ -524,7 +524,7 @@ describe('sessionCardViews', () => {
         ],
       })
       expect(c.ruleUse!.main.rules.map((r) => [r.path, r.value, r.hover])).toEqual([['.claude/rules/adr-0012.md', 'steered', '.claude/rules/adr-0012.md\nno load recorded']])
-      expect(c.ruleUse!.subagents.rules.map((r) => [r.path, r.loadedBy, r.values.map((v) => v.percent), r.whys])).toEqual([['.claude/rules/adr-0012.md', 1, [100], [`scan: ${why}`]]])
+      expect(c.ruleUse!.subagents.rules.map((r) => [r.path, r.loadedBy, r.values.map((v) => v.percent), r.whys])).toEqual([['.claude/rules/adr-0012.md', 0, [100], [`scan: ${why}`]]])
     })
 
     it('says who reported a doc instead of "no verdict"', () => {

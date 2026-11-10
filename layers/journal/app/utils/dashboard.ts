@@ -25,7 +25,7 @@ import type { Friction, Importance, RoutineDoc, RuleUseView, SessionCardView, Se
 import { formatRoutineMetric } from './routineRuns'
 import { REPO_URL } from '../../../../app/utils/repo'
 import { sessionUrl } from '#shared/session-url'
-import { loadedRules, ruleLoad, ruleValue, type RuleLoad, type RuleUseEntry } from '#shared/schemas/session'
+import { isRulePath, loadedRules, ruleLoad, ruleValue, type RuleLoad, type RuleUseEntry } from '#shared/schemas/session'
 
 /** The dashboard loads only the newest this-many sessions: every loaded one
  *  ships in the HTML, and uncapped, `archived` passed 10 MB. */
@@ -270,7 +270,6 @@ export function sessionCardViews(
 
 // ── Rule use (#3020) ─────────────────────────────────────
 // A loaded rule an agent left out neither steered nor backed what it did.
-const isRule = (path: string) => path.includes('.claude/rules/')
 const taskOf = (e: RuleUseEntry, subagents: Subagent[]) => (e.subagent === undefined ? undefined : subagents[e.subagent]?.task)
 const withTask = (why: string, task?: string) => (task ? `${task}: ${why}` : why)
 const percent = (n: number, of: number) => (of ? Math.round((100 * n) / of) : 0)
@@ -315,23 +314,25 @@ export function sessionRuleUseView(s: SessionDoc, ruleTitles: Record<string, str
       whys: r?.why ? [r.why] : [],
     }
   }
-  // A rule an agent named but never loaded keeps its row; its why says so.
-  const subRules = [...new Set(subs.flatMap((e) => [...e.loads.map((l) => l.rule), ...e.reported.map((r) => r.path).filter(isRule)]))]
+  // A rule an agent named but never loaded keeps its row; its hover says so.
+  const subRules = [...new Set(subs.flatMap((e) => [...e.loads.map((l) => l.rule), ...e.reported.map((r) => r.path).filter(isRulePath)]))]
   return {
     main: {
       answered: main ? main.answered : null,
       rules: startFirst([
         ...legacyGlobal.map((p) => mainRow(p, true)),
         ...(main?.loads ?? []).map((l) => mainRow(l.rule, l.via === 'start', l)),
-        ...(main?.reported ?? []).filter((r) => isRule(r.path) && !main!.loads.some((l) => l.rule === r.path) && !legacyGlobal.includes(r.path)).map((r) => mainRow(r.path, false)),
+        ...(main?.reported ?? []).filter((r) => isRulePath(r.path) && !main!.loads.some((l) => l.rule === r.path) && !legacyGlobal.includes(r.path)).map((r) => mainRow(r.path, false)),
       ]),
     },
     subagents: {
       total: subs.length,
       unanswered: subs.filter((e) => !e.answered).length,
       rules: startFirst(subRules.map((path) => {
-        const loaders = subs.filter((e) => e.loads.some((l) => l.rule === path) || e.reported.some((r) => r.path === path))
-        const answering = loaders.filter((e) => e.answered)
+        const loaders = subs.filter((e) => e.loads.some((l) => l.rule === path))
+        const namedUnloaded = subs.filter((e) => !loaders.includes(e) && e.reported.some((r) => r.path === path))
+        // Shares count a subagent that named the rule without a recorded load too.
+        const answering = [...loaders, ...namedUnloaded].filter((e) => e.answered)
         const loads = loaders.flatMap((e) => e.loads.filter((l) => l.rule === path))
         const valueOf = (e: RuleUseEntry) => e.reported.find((r) => r.path === path)?.value
         const reports = subs.flatMap((e) => e.reported.filter((r) => r.path === path).map((r) => ({ r, task: taskOf(e, subagents) })))
@@ -348,7 +349,7 @@ export function sessionRuleUseView(s: SessionDoc, ruleTitles: Record<string, str
               value,
               n,
               percent: percent(n, answering.length),
-              hover: `${n} of ${answering.length} answering subagents that loaded it named it ${value}; ${unnamed} didn't name it`,
+              hover: `${n} of ${answering.length} answering subagents that loaded${namedUnloaded.length ? ' or named' : ''} it named it ${value}; ${unnamed} didn't name it`,
             }
           }).filter((v) => v.n > 0),
           whys: [...new Set(reports.flatMap(({ r, task }) => (r.why ? [withTask(r.why, task)] : [])))],

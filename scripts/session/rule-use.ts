@@ -6,7 +6,7 @@
 // ran `helped.sh` is `answered: false`, not "nothing to report".
 import { appendFileSync, mkdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { ruleValue, type ReportedEntry, type RuleLoad } from '../../shared/schemas/session.ts'
+import { isRulePath, ruleValue, type ReportedEntry, type RuleLoad } from '../../shared/schemas/session.ts'
 import { commandWords } from './shell-reads.ts'
 import { SCRATCH_DIR } from './transcript-trace.ts'
 
@@ -96,8 +96,7 @@ export const ruleKey = (path: string) => {
   return at === -1 ? path : path.slice(at)
 }
 
-/** The one test of whether a reported path is a rule, which alone takes a value. */
-export const isRulePath = (path: string) => path.includes('.claude/rules/')
+export { isRulePath }
 
 /** A rule named by a path or a bare file name, with or without `.md`, as its
  *  `.claude/rules/` key: both what an agent names and what loaded match on it. */

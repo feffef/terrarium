@@ -43,7 +43,9 @@ export const ruleValue = z.enum(['steered', 'backed'])
 export type RuleValue = z.infer<typeof ruleValue>
 export const reportedEntry = z.object({ path: z.string(), value: ruleValue.optional(), why: z.string().optional() })
 export type ReportedEntry = z.infer<typeof reportedEntry>
-export const reportedEntryHasItsValue = (e: ReportedEntry) => e.path.includes('.claude/rules/') === (e.value !== undefined)
+/** The one test of whether a reported path is a rule, which alone takes a value. */
+export const isRulePath = (path: string) => path.includes('.claude/rules/')
+export const reportedEntryHasItsValue = (e: ReportedEntry) => isRulePath(e.path) === (e.value !== undefined)
 // Per agent: what loaded, whether it answered the rule-use ask, and the
 // rules and docs it reported. A loaded rule it left out neither steered nor
 // backed anything it did. A subagent has an entry when it was asked, answered

@@ -12,7 +12,7 @@
 //   tsx scripts/hooks/helped-ask.ts --dry-run (--input '<payload json>' | --input-file <path>)
 import { root } from '../lib/cli.ts'
 import { printDryRunResult, prop, readHookPayload, readTranscript, resolveDryRunInput, runGuard } from './hook-io.ts'
-import { agentTranscript, extractTrace } from '../session/transcript-trace.ts'
+import { agentTranscript, extractTrace, hintText } from '../session/transcript-trace.ts'
 import { helpedAsk, helpedCall, RULE_USE_ASK_HEAD } from '../session/rule-use.ts'
 
 export function askFor(payload: unknown): string | null {
@@ -29,8 +29,8 @@ export function askFor(payload: unknown): string | null {
   const agent = prop(payload, 'agent_id')
   const records = readTranscript(agent === undefined ? parent : agentTranscript(parent, String(agent))) ?? []
   const asked = records.some((r) => {
-    const att = r.attachment as { type?: string } | undefined
-    return att?.type === 'hook_additional_context' && JSON.stringify(att).includes(RULE_USE_ASK_HEAD)
+    const att = r.attachment as { type?: string; content?: unknown } | undefined
+    return att?.type === 'hook_additional_context' && hintText(att.content).includes(RULE_USE_ASK_HEAD)
   })
   return asked ? null : helpedAsk(extractTrace(records).ruleLoads, root)
 }
