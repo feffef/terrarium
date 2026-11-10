@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_013zxzeNvpKDRhFYp216ti6n
 startedAt: 2026-11-10T08:46:52Z
-endedAt: 2026-11-10T09:00:23Z
+endedAt: 2026-11-10T09:04:45Z
 kind: autonomous
 goal: Scheduled curation pass on the Glass Box guide's Claude Code Subject
-status: in-review
-outcome: "PR #3034 opened with fewer repeats and clearer sentences; gate green, waiting for CI then self-merge"
+status: completed
+outcome: "PR #3034 merged: fewer repeats and clearer sentences in the Claude Code Subject; run cost unreported"
 summary: "Autonomous glassbox-curate run, fired by a schedule; no human instruction. I chose the Claude Code Subject myself from the memory page's top lead. A fresh reader (sonnet) found repeats and unclear sentences; an opus writer made wording-only edits to four pages and the Rule term; a sonnet claim checker found two imprecise wordings, which I fixed; a fresh reader re-read; code-review found no hard violations and named pages missing from pagesRead, of which I read four and left four unread (said so in the PR). The Scout's two new topics went to the memory page as open ideas. The cost figure is unreported because get_session was not available. One slip: my own git add -A swept the writer's in-progress edits into an early commit; harmless as nothing was pushed yet."
 prs:
   - "3034"
@@ -65,19 +65,23 @@ frictions:
   - description: get_session was not available, so the run cost could not be read for the PR body.
     solution: Expose get_session in scheduled curate runs, or let the skill accept 'unreported' earlier.
     severity: minor
-durationSec: 811
+durationSec: 1073
 models:
-  claude-sonnet-5-5: 88
+  claude-sonnet-5-5: 103
 toolCounts:
-  Bash: 24
+  Bash: 28
   Read: 15
-  Skill: 4
+  Skill: 5
   Agent: 7
   ScheduleWakeup: 1
   Edit: 2
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/claude-code/10.claude-md.md
   - layers/glassbox/content/guide/pages/claude-code/50.mcp-servers.md
@@ -205,49 +209,49 @@ subagents:
     durationSec: 22
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 6.1
+    tokenShare: 5.3
   - type: general-purpose
     task: "Fresh reader: 5 Claude Code pages"
     model: sonnet
     durationSec: 19
     toolCalls: 7
     modelCalls: 3
-    tokenShare: 4.3
+    tokenShare: 3.8
   - type: general-purpose
     task: "Writer: Claude Code pages edits"
     model: opus
     durationSec: 173
     toolCalls: 38
     modelCalls: 25
-    tokenShare: 15.9
+    tokenShare: 13.9
   - type: general-purpose
     task: Claim check changed sentences
     model: sonnet
     durationSec: 55
     toolCalls: 17
     modelCalls: 8
-    tokenShare: 6.1
+    tokenShare: 5.4
   - type: general-purpose
     task: Fresh reader re-read
     model: sonnet
     durationSec: 21
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 2.5
+    tokenShare: 2.2
   - type: general-purpose
     task: Standards review
     model: sonnet
     durationSec: 30
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 4.1
+    tokenShare: 3.6
   - type: general-purpose
     task: Spec review
     model: sonnet
     durationSec: 34
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 4
+    tokenShare: 3.5
 gitBranch: claude/compassionate-bardeen-namc9a
 entrypoint: remote_trigger
 cliVersion: 2.1.322
