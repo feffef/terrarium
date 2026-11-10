@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_013zxzePoFBZHvQ8EHpb5cvL
 startedAt: 2026-11-10T20:30:07Z
-endedAt: 2026-11-10T20:33:09Z
+endedAt: 2026-11-10T21:21:25Z
 kind: delegated
 goal: Check three Glass Box pages against the content rule
 status: completed
@@ -32,17 +32,18 @@ frictions:
   - description: Called Workflow without first reading the dispatch-subagents Skill that CLAUDE.md requires before a subagent brief; the guard blocked the call.
     solution: Read the Skill when the task names a subagent or workflow, before writing the script.
     severity: minor
-durationSec: 182
+durationSec: 3078
 models:
-  claude-sonnet-5-5: 45
+  claude-sonnet-5-5: 51
 toolCounts:
   Skill: 4
   Read: 6
-  Bash: 12
+  Bash: 14
   Workflow: 2
   Edit: 1
   Write: 4
   mcp__claude-code-remote__send_message: 1
+  ReadNotifications: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/hooks/10.hooks.md
   - .throwaway/rule-use-test/print-rule-use.ts
@@ -191,22 +192,22 @@ subagents:
     durationSec: 19
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 18.7
+    tokenShare: 17.1
   - type: workflow-subagent
     task: check-subagents
     model: claude-sonnet-5-5
     durationSec: 16
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 7.6
+    tokenShare: 6.9
   - type: workflow-subagent
     task: check-hooks
     model: claude-sonnet-5-5
     durationSec: 19
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 9
+    tokenShare: 8.2
 gitBranch: HEAD
 entrypoint: remote
 cliVersion: 2.1.322
-landedBy: SessionStart
+landedBy: Stop
