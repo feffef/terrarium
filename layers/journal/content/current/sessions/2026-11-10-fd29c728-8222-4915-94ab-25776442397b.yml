@@ -1,0 +1,70 @@
+schemaVersion: 1
+session: fd29c728-8222-4915-94ab-25776442397b
+startedAt: 2026-11-10T08:12:21Z
+endedAt: 2026-11-10T08:25:25Z
+kind: interactive
+goal: Find why the live site served a stale build for three hours
+status: completed
+outcome: "Deploy builds are intermittently OOM-killed; findings posted on #3029 and a 2 GB swapfile added on vigia"
+summary: "Human-instructed: the owner asked me to inspect deploy-terrarium-1's logs on vigia over ssh for issue #3029, then (explicit green-light) to post the findings and add a swapfile. The build of 95de88ccb was killed by the kernel's global OOM killer at 04:41 UTC after 28 minutes of memory pressure (a normal build takes ~55 s); entrypoint.sh then waited for the next commit, as the issue's theory said. Fetch never failed. The container log shows 10 OOM-killed builds since 2026-09-28, 6 since 2026-11-07, and one recurred live during the session (05772903a at 08:18), recovering only because ee9aee159 landed. The build's node peaks at ~2.1 GB beside openclaw (~560 MB) and dockerd (~310 MB) on a 3.8 GB host with no swap. I posted the findings on #3029, then created /swapfile (2 GB, persisted in /etc/fstab, backup at /etc/fstab.bak-2026-11-10). At close, on the owner's instruction, I removed the clean worktree terrarium-2175 (its branch stays local) so the log could land. No repo change: the capped retry in deploy/entrypoint.sh still awaits the owner's decision on #3029. The session was restarted once because a stale TMPDIR broke every guard hook."
+prs: []
+docsRead:
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Stale TMPDIR after a terminal suspend made every PreToolUse guard hook fail with EACCES, blocking all Bash until the owner restarted Claude Code.
+    solution: Known terminal quirk (memory stale-tmpdir-after-suspend); a guard wrapper could fall back to getconf DARWIN_USER_TEMP_DIR when TMPDIR is unwritable.
+    severity: moderate
+  - description: ssh vigia from sandboxed Bash hung 120s and then timed out in banner exchange; I first blamed LocalForward or a passphrase before trying outside the sandbox.
+    solution: Run ssh to vigia with the sandbox disabled from the start; saved as a memory.
+    severity: moderate
+  - description: Ran git fetch before reading docs/agents/git-conventions.md, which CLAUDE.md requires before any non-read-only git command; a hook flagged it.
+    solution: Read git-conventions.md before the first fetch; a read-only fetch caused no harm here.
+    severity: nit
+  - description: An awk one-liner misread the kernel OOM dump's columns and printed nonsense, costing one extra ssh call.
+    solution: Print the raw task lines sorted by the rss column instead of guessing field offsets.
+    severity: nit
+  - description: log-session refused a completed log because of another session's linked worktree (terrarium-2175, 11 unpushed commits) that this session never touched.
+    solution: The owner chose to remove it (branch kept locally); the sweep in scripts/session/log-session.ts could warn rather than refuse for worktrees the session did not create.
+    severity: minor
+durationSec: 784
+models:
+  claude-opus-5-5: 81
+toolCounts:
+  Bash: 33
+  Read: 1
+  Skill: 3
+  Write: 1
+  AskUserQuestion: 1
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+    reported:
+      - path: docs/agents/github-integration.md
+      - path: docs/agents/environment-caveats.md
+gitBranch: main
+entrypoint: cli
+cliVersion: 2.1.303
+learnings:
+  - "Sandboxed Bash cannot hold an ssh session to vigia: TCP connects but the banner exchange times out."
+  - Terrarium's production build peaks at about 2.1 GB RSS, right at the edge of what vigia can spare.
+ideas:
+  - "Have deploy/entrypoint.sh post a GitHub commit status (success or failure, with the served SHA) after each build, so cloud agents can see a stale or failed deploy without server access and #3029-style incidents surface in minutes instead of hours."
+landedBy: Stop
