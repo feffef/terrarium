@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeNkk5oEC8RnBdMeMEt
 startedAt: 2026-11-10T00:15:55Z
-endedAt: 2026-11-10T00:23:18Z
+endedAt: 2026-11-10T00:26:20Z
 kind: autonomous
 goal: Write the 2026-11-09 Journal Digest and archive old content
-status: in-review
-outcome: PR 3014 open with the 2026-11-09 Digest and the archive sweep (19 renames); gate green, awaiting CI
-summary: Scheduled run, no human prompts. The one closed day without a Digest was 2026-11-09. I gathered it, wrote the Digest, had a fresh subagent fact-check it (24 claims, 0 wrong, 2 unverifiable; I reworded the unsourced "weekly" and "runs daily" claims), ran the archive sweep, then code-review. Review moved two routine PRs out of the prose and removed jargon from Also shipped. Gate passed; PR 3014 opened and subscribed. Merging on green CI is still to do.
+status: completed
+outcome: "PR 3014 merged on a green gate: the 2026-11-09 Digest plus the archive sweep (19 renames)"
+summary: Scheduled run, no human prompts. The one closed day without a Digest was 2026-11-09. I gathered it, wrote the Digest, had a fresh subagent fact-check it (24 claims, 0 wrong, 2 unverifiable; I reworded the unsourced "weekly" and "runs daily" claims), ran the archive sweep, then code-review. Review moved two routine PRs out of the prose and removed jargon from Also shipped. Gate passed; PR 3014 opened and subscribed. Merged on green CI after a verdict comment.
 prs:
   - "3014"
 docsRead:
@@ -63,17 +63,20 @@ frictions:
   - description: Subagents loaded about 15 unrelated ADR rules via hooks on read-only greps and git calls, costing context for no use.
     solution: Narrow the paths of adr-0027, adr-0029, adr-0030 and mermaid-lanes.
     severity: nit
-durationSec: 443
+durationSec: 625
 models:
-  claude-sonnet-5-5: 45
+  claude-sonnet-5-5: 59
 toolCounts:
-  Bash: 12
+  Bash: 16
   Read: 7
   Write: 1
   Agent: 3
-  Skill: 3
+  Skill: 4
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-11-09.md
   - layers/journal/content/archived/pages/digests/2026-11-02.md
@@ -176,19 +179,19 @@ subagents:
     durationSec: 73
     toolCalls: 32
     modelCalls: 11
-    tokenShare: 28
+    tokenShare: 22.9
   - task: Standards review of Digest PR
     model: sonnet
     durationSec: 29
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 7.6
+    tokenShare: 6.3
   - task: Spec review of Digest PR
     model: sonnet
     durationSec: 33
     toolCalls: 11
     modelCalls: 6
-    tokenShare: 9.1
+    tokenShare: 7.4
 gitBranch: claude/compassionate-lovelace-8bsf2b
 entrypoint: remote_trigger
 cliVersion: 2.1.321
