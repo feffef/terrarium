@@ -59,15 +59,17 @@ GitHub PR-files API has the same gap: read `previous_filename` too.
   it can re-parent the chain and drop commits. Fix the tip commit only, with
   `git commit --amend -F <file>`.
 
-## Don't chain git past a step that can fail silently
+## Keep git apart from steps that can fail
 
-- Don't `&&`-chain a commit or push after a step that can fail silently (a
-  branch rename or create, a `git add <path>` of an ignored path, a commit given
-  both `-m` and `-F`). Check the step landed first (`git rev-parse --verify
-  <branch>`, `git log -1 --oneline`); prefer `git add -A` or `-u`.
-- Never run a push, or any other state-changing git command, in the same Bash
-  command as a gate or test run, foreground or backgrounded. Read the run's
-  exit status in a separate step first.
+A failed step must never let a later git command run on the wrong state. So:
+
+- Run each state-changing git command (add, commit, amend, branch create or
+  rename, push) in its own Bash call, then check it landed (`git log -1
+  --oneline`, `git rev-parse --verify <branch>`) before the next step. Silent
+  failures: `git add` of an ignored path, a commit given both `-m` and `-F`.
+- Never put one in the same command as a gate or test run, foreground or
+  backgrounded. Read that run's own exit status (not `tail`'s) in a separate
+  step first.
 
 ## Before a destructive command
 
