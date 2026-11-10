@@ -143,7 +143,7 @@ export function failingCheckNames(runs: RawCheckRun[]): string[] {
 export function mergeRequestFields(
   method: MergeMethod,
   sha: string,
-  commitMessage?: string,
+  commitMessage: string | null = null,
 ): { merge_method: MergeMethod; sha: string; commit_message?: string } {
   return commitMessage ? { merge_method: method, sha, commit_message: commitMessage } : { merge_method: method, sha }
 }
@@ -431,7 +431,7 @@ function readCheckRuns(a: Access, sha: string): RawCheckRun[] {
   return getJson<{ check_runs: RawCheckRun[] }>(a, `commits/${sha}/check-runs?per_page=${PER_PAGE}`).check_runs
 }
 
-function mergePr(a: Access, prNumber: number, mergeMethod: MergeMethod, sha: string, commitMessage?: string): string {
+function mergePr(a: Access, prNumber: number, mergeMethod: MergeMethod, sha: string, commitMessage: string | null = null): string {
   return requestJson<{ sha: string }>(a, 'PUT', `pulls/${prNumber}/merge`, mergeRequestFields(mergeMethod, sha, commitMessage)).sha
 }
 
@@ -535,7 +535,7 @@ export async function mergePrWhenGreen(
 
   const meta = readPrMeta(access, prNumber)
   const files = readPrFiles(access, prNumber)
-  let waiver: string | undefined
+  let waiver: string | null = null
   if (meta.authorLogin === DEPENDABOT_LOGIN) {
     const bumpRefusal = dependabotBumpRefusal(meta, files, owner, repo)
     if (bumpRefusal !== null) {
@@ -549,8 +549,8 @@ export async function mergePrWhenGreen(
     const globs = readHumanMergeGlobsFromMain(cwd)
     const humanRefusal = humanMergeRefusal(prFilePaths(files), globs)
     if (humanRefusal !== null) {
-      waiver = humanMergeWaiver(prFilePaths(files), globs, opts.ownerApproved, opts.mergeMethod) ?? undefined
-      if (waiver === undefined) return { pr: prNumber, verdict: 'human-merge', merged: false, message: humanRefusal }
+      waiver = humanMergeWaiver(prFilePaths(files), globs, opts.ownerApproved, opts.mergeMethod)
+      if (waiver === null) return { pr: prNumber, verdict: 'human-merge', merged: false, message: humanRefusal }
     }
   }
 
