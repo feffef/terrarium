@@ -1,13 +1,5 @@
 name: audit-docs
 runs:
-  - session: session_01Tcn6x6mZizT14rJuQqYivt
-    startedAt: 2026-10-10T04:01:27Z
-    durationSeconds: 1505
-    inputTokens: 359
-    outputTokens: 157005
-    cacheReadTokens: 20318198
-    cacheWriteTokens: 876094
-    costUsd: 5.9716483
   - session: session_01GbMt1vGTDZpQxZ3h4pNsF8
     startedAt: 2026-10-11T04:00:50Z
     durationSeconds: 1343
@@ -240,3 +232,11 @@ runs:
     cacheReadTokens: 12077313
     cacheWriteTokens: 531166
     costUsd: 3.2590548
+  - session: session_013zxzeQyUMxeD3fYivwaeLU
+    startedAt: 2026-11-09T04:03:29Z
+    durationSeconds: 912
+    inputTokens: 339
+    outputTokens: 97224
+    cacheReadTokens: 18026202
+    cacheWriteTokens: 844455
+    costUsd: 5.0658222

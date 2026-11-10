@@ -6,9 +6,4 @@ gist: Steps through resolving an in-progress git merge or rebase conflict.
 role: >-
   The Platform's only guided path through a merge or rebase that actually
   conflicts: rare, but it spares manual conflict-marker surgery.
-observations:
-  - date: "2026-09-30"
-    note: >-
-      Coverage gap (scheduled audit-skills sweep): on disk, used once
-      (session_01JeNNPB1Q8Lirwm4V4VadnB, 2026-09-27), no Inventory entry;
-      added. Too little evidence for a behaviour check.
+observations: []

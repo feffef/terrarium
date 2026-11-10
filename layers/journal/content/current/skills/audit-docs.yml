@@ -9,14 +9,6 @@ role: >-
   gated PR on green (ADR-0003/0004), filing an issue only for a factual conflict
   it can't resolve. Use it when docs and code drift apart.
 observations:
-  - date: "2026-09-30"
-    note: >-
-      Re-verified (audit-skills behaviour check), one newly-checked session:
-      session_01SMWeh3VabxWtpXBdoMbpqF (PR #1486, 2026-09-29) merged one
-      commit across CLAUDE.md, docs/agents/*, three Skill files, and a
-      research note, matching its log's claimed fix list line-for-line; no
-      ADR/CI/routing/human-only surface touched, no issue filed. The
-      #1266→#1486 commit chain shows no revert. Still clean.
   - date: "2026-10-01"
     note: >-
       Re-verified (audit-skills behaviour check), 7 newest sessions

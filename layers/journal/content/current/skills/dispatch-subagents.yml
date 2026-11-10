@@ -8,18 +8,6 @@ role: >-
   and the post-dispatch check that no finished subagent work is stranded. Every
   rule in it was paid for by a session that lost work.
 observations:
-  - date: "2026-09-30"
-    note: >-
-      Re-checked (audit-skills behaviour check), 10 newest sessions (09-27
-      through 09-29): no stranded work, no merge-pr.ts dispatched to a
-      subagent, no new branch/worktree collision. Issue #1480
-      (cd-into-worktree) is still open/unassigned/unfixed but has not
-      recurred a third time in this batch. Screened all 62 nonUsers by goal,
-      opened 16 of the plausible ones: every dispatch found was strictly
-      read-only (behaviour-check/review/fact-check/visitor/research agents);
-      no new missed invocation. The prior window's near-miss
-      (session_01LKfKKxwgThbVFE79NWohET) remains the only real instance to
-      date.
   - date: "2026-10-01"
     note: >-
       Re-checked (audit-skills behaviour check), 10 newest sessions
@@ -458,3 +446,6 @@ observations:
   - date: "2026-11-09"
     note: >-
       Behaviour check, 10 runs, all PRs merged, no stranded worktree. Unverified weak signals: a brief with a literal @@GROUP@@ placeholder slipped past the section 3 re-read rule (session_013zxzeSZva1TWwL6nLdEnUa, cost one resume), and six writers ran on an unpiloted brief (session_013zxzeQaeB8hhL2FFfcQhv7, moderate friction; it proposed a pilot step). Escalate on a repeat. Grade unchanged.
+  - date: "2026-11-10"
+    note: >-
+      Behaviour check, 10 runs; no stranded worktrees, no reverts. Self-logged gaps: CLAUDE.md every-brief asks left out (session_013zxzeNjRy7tpoybG6YTUM6, session_013zxzePitVv4rX66ZhZa4kw; same family as #2911), save-handback skipped for 7 subagents (session_013zxzeNd2Ethpd3anqbmpkr). The read-first guard blocked the first Agent call in 5 more sessions. Grade unchanged.

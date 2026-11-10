@@ -152,3 +152,6 @@ observations:
   - date: "2026-11-08"
     note: >-
       Behaviour check, 8 runs delivered. Verified: edited-range pages stay stale after --write again in session_013zxzeShUkKqUQT1kYCw5UK (PR #2946), after the claim-check text landed; filed #2955. Step 3 'every commit read' unmet again (123 commits, same session). Unverified: docs fetch for flagged pages in #2946. Grade unchanged.
+  - date: "2026-11-10"
+    note: >-
+      Behaviour check, 8 runs delivered. code-review replaced by an own read of the re-pin diff again in 4 runs (session_013zxzeQMfaaC4C4CNuFY3EH, 73 files; #2748 closed not planned, #2472 family). session_013zxzeS85pNBsS4oQSVQntp left PR #2922 unsubscribed and unmerged for 3.5 h; the 11-08 and 11-09 runs merged their own. Edited-range pin gap still hit on 11-09 but is now documented in steps 2 and 4. Grade unchanged.

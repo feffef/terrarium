@@ -9,19 +9,6 @@ role: >-
   load-bearing. Its PR merges like any agent's, except that a trial changing an ADR or its
   summary rule starts only with a Trusted user and is merged by a human.
 observations:
-  - date: "2026-09-30"
-    note: >-
-      Re-checked (audit-skills behaviour check), 7 newest sessions: SKILL.md's
-      verbatim-quote clause confirmed gone. The ADR-0017 provenance trial is
-      now judged ("holds", commit 62b5a45d, 2026-09-29) — the ledger gap
-      resolved itself as expected. All 7 sessions deliver clean against the
-      current contract; ledger parses cleanly (6 open trials, no malformed
-      entries); no reverts found. New near-miss, same narrow-margin shape as
-      the ADR-0017 case: the docs/agents/domain.md whole-file-rewrite trial
-      became judgeable at 2026-09-29T13:36:01Z and the day's run (started
-      13:18:30Z) missed it by ~17 minutes — as of this check it's ~11-24h
-      past floor with no run since. Likely just awaiting today's scheduled
-      fire; worth confirming it clears after that run.
   - date: "2026-10-01"
     note: >-
       The domain.md trial did clear as expected: judged "holds" via commit
@@ -417,3 +404,6 @@ observations:
       Unverified: session_013zxzeQmQLYRYBUN1FkDfN6 (10-30) filed no issue when harness-proxy-blocks rose from 4/177 to 4/41 sessions, judging it
       unrelated to the reword (#2695 closed, a different topic); 11-02 filed #2784 on a smaller rise. All 7 runs delivered; cut deltas matched git.
       Grade unchanged.
+  - date: "2026-11-10"
+    note: >-
+      Behaviour check, 7 runs delivered, deltas match git. Verified: session_013zxzePvPobQ2Cfg3UyUHSt (PR #3005) did not query the tracker and its ledger entry says #2472 closed not planned, but it is closed completed (#2748 is not planned). The Skill gives no tracker command. Cuts of -1 to -4 lines in 3 of 7 runs. Grade unchanged.

@@ -9,16 +9,6 @@ role: >-
   User-invoked, by hand or on an interval, to keep the Trusted-authored backlog
   moving. Escalates judgment calls and design uncertainty to a human.
 observations:
-  - date: "2026-09-30"
-    note: >-
-      First audit-skills behaviour check, 3 usedIn sessions
-      (session_01C1P912tWDL3b8gtuQezv3Z 09-28, session_019yVYHWm1Fzsj3gBFWkHHU1
-      09-27, session_01TgYzP52EJ4TkR38M19FAR3 09-24). All clean: every
-      labeled/closed claim confirmed against GitHub, every merged PR really
-      merged and closing the issues claimed, escalations followed the
-      brave/judgment-call and auto-close-wontfix rules, wayfinder:* overlay
-      labels preserved. No revert of the Skill's own text in the last two
-      weeks.
   - date: "2026-10-01"
     note: >-
       Re-verified (audit-skills behaviour check), same 3 usedIn sessions,
