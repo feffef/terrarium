@@ -49,7 +49,7 @@ Agents change a system that includes their own tools, and the gate's automatic c
 
 > work → session log with Frictions → fixes → better guidance → fewer Frictions next time
 
-Routines turn the logs into fixes. One files each recent Friction under its root cause, then fixes the worst causes or files them as issues. Others look for problems no session reports: documents that no longer match the code, Skills that don't do their job, and rules nobody needs, which are cut on trial to see whether anything breaks. When a written rule keeps failing, a Trusted user has a hook built that enforces it. One Lesson shows every Skill in the loop, another lists every Routine.
+Routines turn the logs into fixes. One files each recent Friction under its root cause, then fixes the safe causes and files the rest as issues. Others look for problems no session reports: documents that no longer match the code, Skills that don't do their job, and rules nobody needs, which are cut on trial to see whether anything breaks. When a written rule keeps failing, a Trusted user has a hook built that enforces it. One Lesson shows every Skill in the loop, another lists every Routine.
 
 ::lessons
 [Self-improvement loop](/t/glassbox/guide/terrarium-practice/self-improvement-loop) · [Scheduled tasks](/t/glassbox/guide/agents/scheduled-tasks)
@@ -92,7 +92,7 @@ Each Space gets tables of its own, so a page can never read another Space's cont
 [Multi-tenant isolation](/t/glassbox/guide/nuxt-content/multi-tenant-isolation) · [Cross-tenant reads](/t/glassbox/guide/terrarium-practice/cross-tenant-reads) · [Reading across tenants](/t/glassbox/guide/walkthroughs/reading-across-tenants)
 ::
 
-Some Tenants record the real build, such as the Journal, this Glass Box and the Midden, a museum of discarded work. Others are invented practice grounds and demos, and the Commons reads across them all. :file[GLOSSARY-MAP.md] lists them all and says how each relates to the build.
+Some Tenants record the real build, such as the Journal, this Glass Box and the Midden, a museum of discarded work. Others are invented practice grounds and demos, and the Commons re-presents the content the others share. :file[GLOSSARY-MAP.md] lists them all and says how each relates to the build.
 
 ## How it ships and serves
 

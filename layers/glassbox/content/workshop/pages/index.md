@@ -44,8 +44,8 @@ Subjects and Lessons run prerequisites first, and Lesson prefixes go up in tens 
 
 ### Good next focuses
 
-1. **Re-read the Agents & automation Subject for repeats and density.** It was checked against the docs on 2026-11-09, not de-duplicated. The Claude Code Subject got this pass on 2026-11-10, and the Hooks Subject on 2026-11-09. Hooks has two findings left: *Claude Code hooks* describes landing the session log three times (when a session resumes, at its first stop, and at teardown), and *Session transcripts* says what an unreadable file means three times.
-2. **Re-pin the overview.** `index` is pinned to an older commit because only one sentence was checked after the pin moved. Read its Routines and Skills paragraphs against `main`, then move the pin.
+1. **Re-read the Subjects not yet de-duplicated.** Claude Code, Hooks and Agents & automation have had this pass; Nuxt Content, Nuxt & Vue, Verification, Git & GitHub, Installed skills and Web standards have not. In House rules only *Protected paths* and *Ubiquitous language* changed; the other seven pages were read and left alone.
+2. **Decide how pages say "a person merges" a Human-only file.** Since the owner waiver (ADR-0004), an agent may merge one when the owner says so in the session. *Protected paths*, *Human-only* and the overview say so. These still state it flatly, each true as the default: *Path-specific rules*, *Decision records*, *Merge gate*, *Claude Code hooks* (twice), *Composite actions*, *Author trust*, *Cross-tenant reads* and *Asking an agent for a change*. Ask the owner whether to name the waiver there or keep one home.
 3. **Check the docs again for the pages whose claims the docs left silent** (the list under *Doc findings not acted on*), by reading the tool's source where the docs have no page.
 
 ### Ideas not yet decided
@@ -59,7 +59,14 @@ Subjects and Lessons run prerequisites first, and Lesson prefixes go up in tens 
 - *Claude Code permissions* says protected paths are not auto-approved "in some interactive plan-mode sessions" without saying which.
 - The Claude Code permission-modes docs say a mod, not only a `PreToolUse` hook, can approve a `dontAsk` call; the page names the hook only.
 
-**Topics the Scout found with no page (2026-11-10).** Agents report which rules and docs helped through a no-op script, `scripts/session/helped.sh`; the session log reads the call from the transcript (`scripts/session/rule-use.ts`, a `ruleUse` field in `shared/schemas/session.ts`), and `scripts/session/rule-use-report.ts` totals it per rule. Nearest page: *Session logs* (`terrarium-practice/40.session-logs`). Also: `docs/agents/verifying-ui-changes.md` now says Linux screenshots can't confirm fixed-width text fit; nearest page *Headless browser checks* (`verification/80.headless-browser-checks`).
+**Left over from the 2026-11-10 Agents and Hooks passes.** Fresh readers still found these; none is false.
+- *Claude Code hooks*: the lede says a hook runs "every time", yet a several-repository session runs none; the Human-only wiring is in both a Why and a What to watch bullet; "every matching call starts the command" is also on *Hook-added context*; `agent_id` is also on *Session transcripts*.
+- *Hook-added context*: the stale-push hint adds its fix every time while the page says a hint says things once; the page says so itself.
+- *Subagents*: the background guard is named in both In Terrarium and Why; the page can't say what depth 1 means (no docs text in the repo).
+- *Cloud sessions*: the lede says the other cases get "less", the list says "nothing".
+- *Scheduled tasks*: the cadence rule is still stated in three places.
+
+**Topics the Scout found with no page (2026-11-10).** A Nuxt build peaks near 2.1 GB, and the live host has a 2 GB swapfile added after builds were killed (`deploy/README.md`); a sentence for *Continuous deployment* (`deploy/10.continuous-deployment`), not a page. Also: agents report which rules and docs helped through a no-op script, `scripts/session/helped.sh`; the session log reads the call from the transcript (`scripts/session/rule-use.ts`, a `ruleUse` field in `shared/schemas/session.ts`), and `scripts/session/rule-use-report.ts` totals it per rule. Nearest page: *Session logs* (`terrarium-practice/40.session-logs`). Also: `docs/agents/verifying-ui-changes.md` now says Linux screenshots can't confirm fixed-width text fit; nearest page *Headless browser checks* (`verification/80.headless-browser-checks`).
 
 **Installed Skills.** *Engineering skills* could become part of *Installed skills* (`skill-pack/10.skill-packs`).
 
