@@ -1,5 +1,5 @@
 import type { z } from 'zod'
-import type { RuleVerdict, sessionSchema } from '../../../../shared/schemas/session'
+import type { RuleValue, RuleVerdict, sessionSchema } from '../../../../shared/schemas/session'
 import type { frictionClusterSchema, routineSchema, skillSchema } from '../../tenant.config'
 
 // `z.input`, not `z.infer`: the schemas' `.default([])` fields are optional on the
@@ -47,7 +47,7 @@ export interface SessionCardView {
   subagents: (Subagent & { usage: string })[]
   // `viaSubagent`: only a subagent read it (#1941). `unknown`: such an entry no
   // agent gave a verdict on, which counts as neither useful nor not.
-  docsRead: (DocRead & { viaSubagent: boolean; unknown: boolean })[]
+  docsRead: (DocRead & { viaSubagent: boolean; unknown: boolean; reportedBy?: string; whys?: string[] })[]
   skillsUsed: { name: string; reason: string }[]
   frictions: Friction[]
   // Authored note fields — normalized to arrays (empty ⇒ the card hides them).
@@ -63,7 +63,22 @@ export interface SessionCardView {
   // `reason`/`useful` are the agent's verdict, absent on logs older than it.
   // `viaSubagent` as on `docsRead`; `unknown`: no verdict, whoever loaded it (#2607).
   rules: ({ path: string; title?: string; alwaysLoaded: boolean; followedUp: boolean; viaSubagent: boolean; unknown: boolean } & Partial<Omit<RuleVerdict, 'path'>>)[]
+  // Set on a log with `ruleUse` (#3020); `rules` then stays empty. `docsRead`
+  // entries then carry `reportedBy` instead of `unknown`.
+  ruleUse: RuleUseView | null
   tools: { name: string; count: number }[]
+}
+
+// One rule row of a `ruleUse` log's card (#3020). `hover` holds the path and
+// how the rule loaded; `whys` are the agents' reasons, a subagent's prefixed
+// with its task.
+interface RuleUseRowBase { path: string; title?: string; hover: string; whys: string[] }
+export interface RuleUseMainRow extends RuleUseRowBase { alwaysLoaded: boolean; followedUp: boolean; value?: RuleValue }
+export interface RuleUseSubagentRow extends RuleUseRowBase { loadedBy: number; values: { value: RuleValue; n: number }[] }
+export interface RuleUseView {
+  // null: the log has no main entry, so whether main answered is unknown.
+  main: { answered: boolean | null; rules: RuleUseMainRow[] }
+  subagents: { total: number; unanswered: number; rules: RuleUseSubagentRow[] }
 }
 
 // ── Ideas & learnings (issue #440) ───────────────────────

@@ -21,11 +21,11 @@
 // export below, and truly generic helpers stay module-private. This module,
 // for its part, never relies on auto-import itself: it stays dependency-free
 // and explicit.
-import type { Friction, Importance, RoutineDoc, SessionCardView, SessionDoc, Severity, SkillDoc, NoteItem, Subagent } from '../types/journal'
+import type { Friction, Importance, RoutineDoc, RuleUseView, SessionCardView, SessionDoc, Severity, SkillDoc, NoteItem, Subagent } from '../types/journal'
 import { formatRoutineMetric } from './routineRuns'
 import { REPO_URL } from '../../../../app/utils/repo'
 import { sessionUrl } from '#shared/session-url'
-import { loadedRules } from '#shared/schemas/session'
+import { loadedRules, ruleValue, type RuleLoad, type RuleUseEntry } from '#shared/schemas/session'
 
 /** The dashboard loads only the newest this-many sessions: every loaded one
  *  ships in the HTML, and uncapped, `archived` passed 10 MB. */
@@ -235,7 +235,8 @@ export function sessionCardViews(
       subagents: (s.subagents ?? []).map((a) => ({ ...a, usage: subagentUsageLabel(a) })),
       docsRead: (s.docsRead ?? []).map((d) => {
         const viaSubagent = !!s.docsReadBySubagents?.includes(d.path)
-        return { ...d, viaSubagent, unknown: viaSubagent && !d.useful }
+        if (!s.ruleUse) return { ...d, viaSubagent, unknown: viaSubagent && !d.useful }
+        return { ...d, viaSubagent, unknown: false, ...docReport(s.ruleUse, s.subagents ?? [], d.path) }
       }),
       skillsUsed: s.skillsUsed ?? [],
       // Array.sort is stable: equal severities keep their logged order.
@@ -244,7 +245,8 @@ export function sessionCardViews(
       ideas: s.ideas ?? [],
       filesEdited: s.filesEdited ?? [],
       docsReadViaShell: s.docsReadViaShell ?? [],
-      rules: [
+      ruleUse: s.ruleUse ? sessionRuleUseView(s, ruleTitles) : null,
+      rules: s.ruleUse ? [] : [
         ...(s.rulesGlobal ?? []).map((path) => ({ path, alwaysLoaded: true, viaSubagent: false })),
         ...loaded.main.map((path) => ({ path, alwaysLoaded: false, viaSubagent: false })),
         ...loaded.bySubagents.map((path) => ({ path, alwaysLoaded: false, viaSubagent: true })),
@@ -264,6 +266,80 @@ export function sessionCardViews(
       tools: sessionToolEntries(s.toolCounts),
     }
   })
+}
+
+// ── Rule use (#3020) ─────────────────────────────────────
+// Unnamed means no claim (#3009), so a rule nobody named gets no value.
+const taskOf = (e: RuleUseEntry, subagents: Subagent[]) => (e.subagent === undefined ? undefined : subagents[e.subagent]?.task)
+const withTask = (why: string, task?: string) => (task ? `${task}: ${why}` : why)
+
+function tally(items: string[]): string {
+  const counts = new Map<string, number>()
+  for (const i of items) counts.set(i, (counts.get(i) ?? 0) + 1)
+  return [...counts].map(([k, n]) => (n > 1 ? `${k} ×${n}` : k)).join(', ')
+}
+
+function mainLoadLine(l: RuleLoad): string {
+  const how = l.via === 'hint' ? 'loaded by a hint hook' : 'loaded natively'
+  return l.trigger ? `${how}, triggered by ${l.trigger}` : how
+}
+
+function subagentLoadLines(loads: RuleLoad[]): string[] {
+  const native = loads.filter((l) => l.via === 'native').length
+  const triggers = loads.flatMap((l) => (l.trigger ? [l.trigger] : []))
+  return [`native ${native} · hint ${loads.length - native}`, ...(triggers.length ? [`triggered by ${tally(triggers)}`] : [])]
+}
+
+export function sessionRuleUseView(s: SessionDoc, ruleTitles: Record<string, string>): RuleUseView {
+  const entries = s.ruleUse ?? []
+  const subagents = s.subagents ?? []
+  const main = entries.find((e) => e.by === 'main')
+  const subs = entries.filter((e) => e.by !== 'main')
+  const mainRow = (path: string, alwaysLoaded: boolean, load?: RuleLoad) => {
+    const r = main?.reported.find((x) => x.path === path)
+    return {
+      path,
+      title: ruleTitles[path],
+      alwaysLoaded,
+      followedUp: !!s.rulesFollowedUp?.includes(path),
+      hover: load ? `${path}\n${mainLoadLine(load)}` : path,
+      value: r?.value,
+      whys: r?.why ? [r.why] : [],
+    }
+  }
+  const subRules = [...new Set(subs.flatMap((e) => e.loads.map((l) => l.rule)))]
+  return {
+    main: {
+      answered: main ? main.answered : null,
+      rules: [...(s.rulesGlobal ?? []).map((p) => mainRow(p, true)), ...(main?.loads ?? []).map((l) => mainRow(l.rule, false, l))],
+    },
+    subagents: {
+      total: subs.length,
+      unanswered: subs.filter((e) => !e.answered).length,
+      rules: subRules.map((path) => {
+        const loads = subs.flatMap((e) => e.loads.filter((l) => l.rule === path))
+        const reports = subs.flatMap((e) => e.reported.filter((r) => r.path === path).map((r) => ({ r, task: taskOf(e, subagents) })))
+        return {
+          path,
+          title: ruleTitles[path],
+          hover: [path, ...subagentLoadLines(loads)].join('\n'),
+          loadedBy: subs.filter((e) => e.loads.some((l) => l.rule === path)).length,
+          values: ruleValue.options
+            .map((value) => ({ value, n: reports.filter(({ r }) => r.value === value).length }))
+            .filter((v) => v.n > 0),
+          whys: [...new Set(reports.flatMap(({ r, task }) => (r.why ? [withTask(r.why, task)] : [])))],
+        }
+      }),
+    },
+  }
+}
+
+function docReport(entries: RuleUseEntry[], subagents: Subagent[], path: string): { reportedBy?: string; whys: string[] } {
+  const by = entries.filter((e) => e.reported.some((r) => r.path === path))
+  const nSubs = by.filter((e) => e.by !== 'main').length
+  const parts = [...(by.some((e) => e.by === 'main') ? ['main'] : []), ...(nSubs ? [`${nSubs} subagent${nSubs > 1 ? 's' : ''}`] : [])]
+  const whys = by.flatMap((e) => e.reported.filter((r) => r.path === path && r.why).map((r) => withTask(r.why!, e.by === 'main' ? undefined : taskOf(e, subagents))))
+  return { reportedBy: parts.length ? `reported by ${parts.join(' and ')}` : undefined, whys: [...new Set(whys)] }
 }
 
 // ── Daily digests ────────────────────────────────────────
