@@ -60,9 +60,9 @@ once per session; read it whole if you can, since a rule can sit anywhere in it.
 - **Ask before building** something the Trusted user will see (the `grilling`
   Skill); don't assume. Before any owner-visible UI build, agree sections and
   tone on a short sample, shown with `scripts/ui/preview.ts start --dev` (no
-  full build needed). Clarify all user-facing UI
-  with extra care: settle in the first round what each displayed value (label,
-  hover, metric) follows. Data shapes: `.claude/rules/data-shapes.md`.
+  full build needed). Clarify all user-facing UI with extra care: settle in the
+  first round what each displayed value (label, hover, metric) follows. Data
+  shapes: `.claude/rules/data-shapes.md`.
 - **Question the premise.** Before you recommend, build or harden a change,
   give each part a reason from the current goal; drop the parts you can't, and
   add nothing beyond the ask. Before you show a new ordering, split or
