@@ -1,5 +1,16 @@
 session: session_013zxzeNvpKDRhFYp216ti6n
 mode: autonomous
 focus: "Claude Code Subject: remove repeats and unclear sentences a fresh reader found (protected paths stated three times, a muddled registry sentence on MCP servers, a Rule term that read as always loading at session start). Chosen because no open PR touches the guide, the memory page's top lead named this Subject as not yet de-duplicated, and the Scout's two new topics (rule-use capture, UI-check caveats) are not central."
-changes: []
-pagesRead: []
+changes:
+  - claude-code/40.permissions | Cut the second statement of the protected-paths rule from the first watch bullet, kept one Cloud sessions link, and reworded the dontAsk clause plainly | a fresh reader found protected paths said three times and the cloud link twice (permission-modes docs, dontAsk; claim checker TRUE). Wording only, so revision and publishedAt are kept
+  - claude-code/50.mcp-servers | The registry sentences are plain, the hint that matches the whole server says what its .sh filter does, the Why lead-in says guards name tools, and the overflow bullet points to the overflow traps | the muddled sentence about the registry and the apparent clash between a server-wide matcher and per-tool guards (github-provenance-guard.ts:1-2, 12-13, 43-44; read-first-hint.sh; settings.json:130). Wording only
+  - claude-code/20.path-scoped-rules | The ADR-summary paragraph is split in two and says the adr field belongs to the Skills ADR summary | a fresh reader could not tell whose adr field it was (validate-adr-rules.ts:3-5, adr-0005.md:2-9). Wording only
+  - claude-code/10.claude-md | The first hook is glossed as a handler, usually a shell command | a fresh reader met hook with no gloss (hooks guide, handler types). Wording only
+  - claude-code/30.skills | No change | fresh reader found only terms defined by their links
+  - terms/rule | The Rule term says session start applies only to a rule that names no files | it read as if every rule loads at session start, against Path-specific rules (GLOSSARY.md Rule entry)
+pagesRead:
+  - claude-code/10.claude-md
+  - claude-code/20.path-scoped-rules
+  - claude-code/30.skills
+  - claude-code/40.permissions
+  - claude-code/50.mcp-servers

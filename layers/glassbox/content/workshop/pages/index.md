@@ -44,13 +44,22 @@ Subjects and Lessons run prerequisites first, and Lesson prefixes go up in tens 
 
 ### Good next focuses
 
-1. **Re-read the Claude Code and Agents & automation Subjects for repeats and density.** They were checked against the docs on 2026-11-09, not de-duplicated. A fresh reader found them heavy with undefined repo terms (:term[Human-only], :term[Friction], :term[Routine]). The Hooks Subject got this pass on 2026-11-09. Two of its findings are left: *Claude Code hooks* describes landing the session log three times (when a session resumes, at its first stop, and at teardown), and *Session transcripts* says what an unreadable file means three times.
+1. **Re-read the Agents & automation Subject for repeats and density.** It was checked against the docs on 2026-11-09, not de-duplicated. The Claude Code Subject got this pass on 2026-11-10, and the Hooks Subject on 2026-11-09. Hooks has two findings left: *Claude Code hooks* describes landing the session log three times (when a session resumes, at its first stop, and at teardown), and *Session transcripts* says what an unreadable file means three times.
 2. **Re-pin the overview.** `index` is pinned to an older commit because only one sentence was checked after the pin moved. Read its Routines and Skills paragraphs against `main`, then move the pin.
 3. **Check the docs again for the pages whose claims the docs left silent** (the list under *Doc findings not acted on*), by reading the tool's source where the docs have no page.
 
 ### Ideas not yet decided
 
 **More web standards pages, looked at and left out.** *View Transitions* (Tinkerfund's plugin, mostly about a Nuxt hook, so it fits Nuxt & Vue); page metadata for link previews and search engines (one Tenant's helper); container queries and a scroll-watching helper (one or two files each).
+
+**Left over from the 2026-11-10 Claude Code pass.** A fresh reader still found these; none is false.
+- *MCP servers* says one hint matches the whole server while the guards list tools, and gives no reason for the difference (the sources give none; ask the owner or leave it as a plain fact).
+- *CLAUDE.md* uses *hint* and *guard* before defining them; the hooks Subject defines both.
+- *Path-specific rules* and *CLAUDE.md* both say a rule can't order a step, and the *Short ADR summaries* and "Every ADR also has a summary rule" passages overlap a little.
+- *Claude Code permissions* says protected paths are not auto-approved "in some interactive plan-mode sessions" without saying which.
+- The Claude Code permission-modes docs say a mod, not only a `PreToolUse` hook, can approve a `dontAsk` call; the page names the hook only.
+
+**Topics the Scout found with no page (2026-11-10).** Agents report which rules and docs helped through a no-op script, `scripts/session/helped.sh`; the session log reads the call from the transcript (`scripts/session/rule-use.ts`, a `ruleUse` field in `shared/schemas/session.ts`), and `scripts/session/rule-use-report.ts` totals it per rule. Nearest page: *Session logs* (`terrarium-practice/40.session-logs`). Also: `docs/agents/verifying-ui-changes.md` now says Linux screenshots can't confirm fixed-width text fit; nearest page *Headless browser checks* (`verification/80.headless-browser-checks`).
 
 **Installed Skills.** *Engineering skills* could become part of *Installed skills* (`skill-pack/10.skill-packs`).
 
