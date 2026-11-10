@@ -143,10 +143,8 @@ export interface MechanicalTrace {
   helpedAsked: boolean
   /** What its last `helped.sh` call reported; absent when it never ran it. */
   reportedNamed?: ReportedEntry[]
-  /** One entry per asked or answering subagent. Set by `foldSubagentTrace`. */
+  /** Subagent entries (which ones: `ruleUseEntry`), in `subagents` order. Set by `foldSubagentTrace`. */
   ruleUse?: RuleUseEntry[]
-  /** Rules only a subagent or workflow agent loaded. Set by `foldSubagentTrace`. */
-  rulesLoadedBySubagents?: string[]
   /** Instruction docs only a subagent or workflow agent read. Set by `foldSubagentTrace`. */
   docsReadBySubagents?: string[]
   skillsUsed: string[]
@@ -876,22 +874,26 @@ export function foldSubagentTrace(
   // lists those fields, and the card tags these 'via subagent' instead.
   folded.rulesGlobal = dedup([...trace.rulesGlobal, ...subs.flatMap((s) => s.rulesGlobal)])
   folded.rulesLoaded = trace.rulesLoaded.filter((r) => !folded.rulesGlobal.includes(r))
-  folded.rulesLoadedBySubagents = dedup(subs.flatMap((s) => s.rulesLoaded)).filter(
-    (r) => !folded.rulesGlobal.includes(r) && !folded.rulesLoaded.includes(r),
-  )
   folded.ruleLoads = triggered(trace.ruleLoads.filter((l) => !folded.rulesGlobal.includes(l.rule)), mainRows)
+  // Each transcript's row in `folded.subagents`, which lists dispatches first.
+  const rowOf = (i: number) => {
+    const dispatchedAt = trace.subagents.findIndex((s) => transcriptOf(s.toolUseId) === i)
+    if (dispatchedAt !== -1) return dispatchedAt
+    return trace.subagents.length + subagents.slice(0, i).filter(({ agent }, j) => agent && !dispatched.has(j)).length
+  }
   folded.ruleUse = subs.flatMap((s, i) => {
-    if (!s.helpedAsked && !s.reportedNamed) return []
     const { agentId, agent } = subagents[i]!
     // A subagent with no id can't be told from another, or from the main agent.
     const loads = triggered(s.ruleLoads.filter((l) => !folded.rulesGlobal.includes(l.rule)), agentId ? rowsOf(agentId) : [])
+    if (!s.helpedAsked && !s.reportedNamed && !loads.length) return []
     return [{
       by: agent?.type ?? 'workflow',
+      ...(agent ? { subagent: rowOf(i) } : {}),
       answered: !!s.reportedNamed,
       loads,
       reported: markUnloaded(s.reportedNamed ?? [], seenRules(loads, s.rulesRead), folded.rulesGlobal),
     }]
-  })
+  }).sort((a, b) => (a.subagent ?? Infinity) - (b.subagent ?? Infinity))
   folded.rulesFollowedUp = dedup([...trace.rulesFollowedUp, ...subs.flatMap((s) => s.rulesFollowedUp)])
   folded.adrHints = mergeAdrHints([...trace.adrHints, ...subs.flatMap((s) => s.adrHints.map((h) => ({ ...h, by: 'subagent' as const })))])
   const mainDocs = new Set([...trace.filesRead, ...trace.docsReadViaShell].map(canonicalizeInstructionPath))
@@ -914,7 +916,7 @@ function markUnloaded(reported: ReportedEntry[], seen: string[], global: string[
   })
 }
 
-const NO_LOAD_WHY = '(no load recorded)'
+export const NO_LOAD_WHY = '(no load recorded)'
 
 // ── Stitch ────────────────────────────────────────────────────────────────
 
@@ -974,7 +976,7 @@ function mergeRefs<T extends Record<string, string | undefined>>(
 export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Record<string, unknown> {
   const editedSet = new Set(trace.filesEdited)
   // Derived only: what changed or confirmed something goes in `reported` (#3009).
-  // A rule file is logged as a rule (rulesGlobal/rulesLoaded, ruleUse),
+  // A rule file is logged as a rule (rulesGlobal, ruleUse),
   // even when close-session has the agent re-read it.
   const docsRead = dedup([...trace.filesRead, ...trace.docsReadViaShell])
     .filter((p) => !p.startsWith('.claude/rules/'))
@@ -1003,11 +1005,9 @@ export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Recor
   if (Object.keys(trace.models).length) entry.models = trace.models
   if (Object.keys(trace.toolCounts).length) entry.toolCounts = trace.toolCounts
   if (trace.filesEdited.length) entry.filesEdited = trace.filesEdited
-  if (trace.rulesLoaded.length) entry.rulesLoaded = trace.rulesLoaded
   if (trace.rulesGlobal.length) entry.rulesGlobal = trace.rulesGlobal
   if (trace.rulesFollowedUp.length) entry.rulesFollowedUp = trace.rulesFollowedUp
   if (trace.adrHints.length) entry.adrHints = trace.adrHints
-  if (trace.rulesLoadedBySubagents?.length) entry.rulesLoadedBySubagents = trace.rulesLoadedBySubagents
   if (docsReadBySubagents.length) entry.docsReadBySubagents = docsReadBySubagents
   // The main entry only when it loaded or named something: with neither it
   // adds nothing a rate could count, and an empty log stays empty.

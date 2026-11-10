@@ -142,6 +142,7 @@ describe('ruleUse — subagents', () => {
     const entry = stitch(authored({ reported: [] }), folded)
     expect(ruleUseOf(entry)[0]).toEqual({
       by: 'general-purpose',
+      subagent: 0,
       answered: true,
       loads: [
         { rule: '.claude/rules/adr-0004.md', via: 'native', trigger: 'scripts/gate/gate.ts' },
@@ -201,8 +202,8 @@ describe('ruleUse — subagents', () => {
     expect(ruleUseOf(stitch(authored({ reported: [] }), noisy))[0]).toMatchObject({ answered: true, reported: [{ path: 'GLOSSARY.md' }] })
   })
 
-  it('leaves out a subagent that was never asked and never answered', () => {
-    const folded = foldSubagentTrace(main, [sub([native('adr-0004.md')])], NO_ENV)
+  it('leaves out a subagent that was never asked, never answered and loaded nothing', () => {
+    const folded = foldSubagentTrace(main, [sub([always('adr-0003.md')])], NO_ENV)
     expect(stitch(authored({ reported: [] }), folded)).not.toHaveProperty('ruleUse')
   })
 
@@ -210,6 +211,38 @@ describe('ruleUse — subagents', () => {
     const folded = foldSubagentTrace(main, [{ records: [cwd, note, native('adr-0004.md')], agent: { type: 'Explore' } }], NO_ENV, undefined,
       [{ rule: '.claude/rules/adr-0004.md', trigger: 'main.ts' }])
     expect(ruleUseOf(stitch(authored({ reported: [] }), folded))[0]!.loads).toEqual([{ rule: '.claude/rules/adr-0004.md', via: 'native' }])
+  })
+
+  it('points each subagent entry at its subagents[] row, in that order', () => {
+    const dispatch = (id: string, description: string) =>
+      ({ type: 'assistant', message: { content: [{ type: 'tool_use', id, name: 'Agent', input: { subagent_type: 'general-purpose', description } }] } })
+    // `tu-lost` left no transcript but keeps its row in subagents[].
+    const parent = extractTrace([cwd, always('adr-0003.md'), dispatch('tu-review', 'review'), dispatch('tu-lost', 'lost'), dispatch('tu-build', 'build')], NO_ENV)
+    // Transcripts sort by agent id, not dispatch order (#3019).
+    const folded = foldSubagentTrace(parent, [
+      { ...sub([note, bash('sh /repo/scripts/session/helped.sh')], 'a1'), toolUseId: 'tu-build' },
+      { ...sub([note, bash('sh /repo/scripts/session/helped.sh rule:adr-0027.md')], 'a2'), toolUseId: 'tu-review' },
+      sub([note], 'w1', 'workflow-agent'),
+    ], NO_ENV)
+    const entry = stitch(authored({ reported: [] }), folded)
+    const subagents = entry.subagents as { task: string }[]
+    const joined = (entry.ruleUse as (Entry & { subagent?: number })[]).map((e) => [subagents[e.subagent!]!.task, e.reported.map((r) => r.path)])
+    expect(joined).toEqual([['review', ['.claude/rules/adr-0027.md']], ['build', []], ['t', []]])
+    expect(validateEntry(entry).ok).toBe(true)
+  })
+
+  it('keeps the loads of a subagent that was never asked, as unanswered', () => {
+    const folded = foldSubagentTrace(main, [sub([native('adr-0004.md')])], NO_ENV)
+    expect(ruleUseOf(stitch(authored({ reported: [] }), folded))).toEqual([
+      { by: 'general-purpose', subagent: 0, answered: false, loads: [{ rule: '.claude/rules/adr-0004.md', via: 'native' }], reported: [] },
+    ])
+  })
+
+  it('no longer writes rulesLoaded or rulesLoadedBySubagents', () => {
+    const parent = extractTrace([cwd, native('adr-0012.md')], NO_ENV)
+    const entry = stitch(authored({ reported: [] }), foldSubagentTrace(parent, [sub([note, native('adr-0004.md')])], NO_ENV))
+    expect(entry).not.toHaveProperty('rulesLoaded')
+    expect(entry).not.toHaveProperty('rulesLoadedBySubagents')
   })
 
   it('counts a workflow agent with no type as `workflow`', () => {

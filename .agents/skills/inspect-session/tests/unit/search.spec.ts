@@ -94,8 +94,17 @@ describe('logReads', () => {
     const log = 'docsRead:\n  - path: GLOSSARY.md\n    reason: x\nrulesLoadedBySubagents:\n  - .claude/rules/adr-0015.md\nskillsUsed:\n  - name: close-session\n'
     expect(logReads(log, ['GLOSSARY.md', 'adr-0015.md', 'close-session/SKILL.md']).map((h) => h.hit)).toEqual([
       'GLOSSARY.md in docsRead',
-      '.claude/rules/adr-0015.md in rulesLoadedBySubagents',
+      '.claude/rules/adr-0015.md in rules loaded only by subagents',
       '.agents/skills/close-session/SKILL.md in skillsUsed',
+    ])
+  })
+
+  it('finds a rule load a log records only in ruleUse (#3019)', () => {
+    const log = 'ruleUse:\n  - by: main\n    answered: true\n    loads:\n      - rule: .claude/rules/adr-0004.md\n        via: native\n    reported: []\n'
+      + '  - by: Explore\n    subagent: 0\n    answered: false\n    loads:\n      - rule: .claude/rules/adr-0015.md\n        via: hint\n    reported: []\n'
+    expect(logReads(log, ['adr-0004.md', 'adr-0015.md']).map((h) => h.hit)).toEqual([
+      '.claude/rules/adr-0004.md in rules loaded by main',
+      '.claude/rules/adr-0015.md in rules loaded only by subagents',
     ])
   })
 })
