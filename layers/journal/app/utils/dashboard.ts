@@ -25,6 +25,7 @@ import type { Friction, Importance, RoutineDoc, SessionCardView, SessionDoc, Sev
 import { formatRoutineMetric } from './routineRuns'
 import { REPO_URL } from '../../../../app/utils/repo'
 import { sessionUrl } from '#shared/session-url'
+import { loadedRules } from '#shared/schemas/session'
 
 /** The dashboard loads only the newest this-many sessions: every loaded one
  *  ships in the HTML, and uncapped, `archived` passed 10 MB. */
@@ -212,6 +213,7 @@ export function sessionCardViews(
   const stale = staleInReviewKeys(sessions)
   return sessions.map((s) => {
     const external = s.external === true
+    const loaded = loadedRules(s)
     return {
       key: s.session,
       when: sessionWhen(s.endedAt),
@@ -244,8 +246,8 @@ export function sessionCardViews(
       docsReadViaShell: s.docsReadViaShell ?? [],
       rules: [
         ...(s.rulesGlobal ?? []).map((path) => ({ path, alwaysLoaded: true, viaSubagent: false })),
-        ...(s.rulesLoaded ?? []).map((path) => ({ path, alwaysLoaded: false, viaSubagent: false })),
-        ...(s.rulesLoadedBySubagents ?? []).map((path) => ({ path, alwaysLoaded: false, viaSubagent: true })),
+        ...loaded.main.map((path) => ({ path, alwaysLoaded: false, viaSubagent: false })),
+        ...loaded.bySubagents.map((path) => ({ path, alwaysLoaded: false, viaSubagent: true })),
       ].map(({ path, alwaysLoaded, viaSubagent }) => {
         const v = s.ruleVerdicts?.find((r) => r.path === path)
         return {

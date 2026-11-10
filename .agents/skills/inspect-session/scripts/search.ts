@@ -5,6 +5,7 @@
 import { readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { parse as parseYaml } from 'yaml'
+import { loadedRules, type RuleUseEntry } from '../../../../shared/schemas/session.ts'
 import { extractFlag, fail, root, runIfMain } from '../../../../scripts/lib/cli.ts'
 import { claimedAgent, coverageLine, cut, nextLine, readFlat, shown, sibling, skillFile, THINKING, toLine, type FlatLine, type Meta } from './flat.ts'
 
@@ -88,8 +89,13 @@ const LOG_READ_FIELDS = ['docsRead', 'docsReadBySubagents', 'rulesGlobal', 'rule
 export function logReads(logYaml: string, paths: string[]): { path: string; hit: string }[] {
   const log = (parseYaml(logYaml) ?? {}) as Record<string, unknown>
   const out: { path: string; hit: string }[] = []
-  for (const field of LOG_READ_FIELDS) {
-    const items = (Array.isArray(log[field]) ? log[field] : []) as (string | { path?: string; name?: string })[]
+  // A log after #3019 records rule loads only in `ruleUse`.
+  const derived = log.ruleUse && !log.rulesLoaded && !log.rulesLoadedBySubagents
+    ? loadedRules({ ruleUse: log.ruleUse as RuleUseEntry[] })
+    : undefined
+  const lists: Record<string, unknown> = { ...log, ...(derived && { 'ruleUse (main)': derived.main, 'ruleUse (subagents only)': derived.bySubagents }) }
+  for (const field of [...LOG_READ_FIELDS, 'ruleUse (main)', 'ruleUse (subagents only)']) {
+    const items = (Array.isArray(lists[field]) ? lists[field] : []) as (string | { path?: string; name?: string })[]
     const names = items.map((i) => (typeof i === 'string' ? i : (i.path ?? (i.name ? skillFile(i.name) : ''))))
     for (const path of paths) for (const n of names) if (globRegex(path).test(n)) out.push({ path, hit: `${n} in ${field}` })
   }

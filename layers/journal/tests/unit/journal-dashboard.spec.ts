@@ -464,6 +464,22 @@ describe('sessionCardViews', () => {
     ])
   })
 
+  // Issue #3019: a log written after the old lists were retired carries only `ruleUse`.
+  it('lists the rules a log records only in ruleUse, tagging those only a subagent loaded', () => {
+    const load = (rule: string) => ({ rule: `.claude/rules/${rule}`, via: 'native' as const })
+    const s = session({
+      ruleUse: [
+        { by: 'main', answered: true, loads: [load('adr-0004.md')], reported: [] },
+        { by: 'general-purpose', subagent: 0, answered: false, loads: [load('adr-0004.md'), load('adr-0012.md')], reported: [] },
+      ],
+    })
+    const [c] = sessionCardViews([s])
+    expect(c!.rules.map(({ path, viaSubagent }) => [path, viaSubagent])).toEqual([
+      ['.claude/rules/adr-0004.md', false],
+      ['.claude/rules/adr-0012.md', true],
+    ])
+  })
+
   // Issue #2607: a main-session or always-loaded rule left without a verdict is
   // unknown too, so the gap shows on the card.
   it('marks every loaded rule with no verdict as unknown, main-session ones included', () => {

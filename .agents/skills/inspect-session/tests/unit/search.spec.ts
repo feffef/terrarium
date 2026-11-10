@@ -98,6 +98,15 @@ describe('logReads', () => {
       '.agents/skills/close-session/SKILL.md in skillsUsed',
     ])
   })
+
+  it('finds a rule load a log records only in ruleUse (#3019)', () => {
+    const log = 'ruleUse:\n  - by: main\n    answered: true\n    loads:\n      - rule: .claude/rules/adr-0004.md\n        via: native\n    reported: []\n'
+      + '  - by: Explore\n    subagent: 0\n    answered: false\n    loads:\n      - rule: .claude/rules/adr-0015.md\n        via: hint\n    reported: []\n'
+    expect(logReads(log, ['adr-0004.md', 'adr-0015.md']).map((h) => h.hit)).toEqual([
+      '.claude/rules/adr-0004.md in ruleUse (main)',
+      '.claude/rules/adr-0015.md in ruleUse (subagents only)',
+    ])
+  })
 })
 
 describe('outline', () => {

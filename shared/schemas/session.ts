@@ -42,10 +42,12 @@ export const reportedEntry = z.object({ path: z.string(), value: ruleValue.optio
 export type ReportedEntry = z.infer<typeof reportedEntry>
 // Per agent: what loaded, whether it answered the rule-use ask, and the
 // rules and docs it reported. Unnamed means no claim, not unhelpful (#3009). A
-// subagent has an entry when it was asked or answered; the main agent only
-// when it loaded a rule or named something that is not always-loaded.
+// subagent has an entry when it was asked, answered or loaded a rule; the main
+// agent only when it loaded a rule or named something that is not always-loaded.
 export const ruleUseEntry = z.object({
   by: z.string(), // `main`, or the subagent's agent type (`workflow` when it has none)
+  // A subagent's index in `subagents`; absent on `main` and on logs before #3019.
+  subagent: z.number().int().nonnegative().optional(),
   answered: z.boolean(),
   loads: z.array(ruleLoad),
   reported: z.array(reportedEntry),
@@ -92,8 +94,8 @@ export const sessionSchema = z
     models: z.record(z.string(), z.number().int()).optional(), // model id → assistant-turn count
     toolCounts: z.record(z.string(), z.number().int()).optional(), // tool name → call count
     filesEdited: z.array(z.string()).optional(),
-    // Path-scoped `.claude/rules/` files that loaded on a file touch, so an audit
-    // can see which ADR summaries fired and whether a full read followed.
+    // DEPRECATED — no longer written; `ruleUse` loads replaced it (#3019). Read
+    // both through `loadedRules`. The key stays so older logs validate (ADR-0009).
     rulesLoaded: z.array(z.string()).optional(),
     // Rules with no `paths`, which load at session start.
     rulesGlobal: z.array(z.string()).optional(),
@@ -103,9 +105,9 @@ export const sessionSchema = z
     // it, and whether that agent read it in full afterwards. One entry per
     // (adr, via, by); workflow agents count as `subagent`.
     adrHints: z.array(adrHint).optional(),
-    // Rules only a subagent or workflow agent loaded, and the `docsRead`
-    // instruction docs only one read (#1941).
+    // DEPRECATED like `rulesLoaded` (#3019): rules only a subagent loaded.
     rulesLoadedBySubagents: z.array(z.string()).optional(),
+    // The `docsRead` instruction docs only a subagent or workflow agent read (#1941).
     docsReadBySubagents: z.array(z.string()).optional(),
     // DEPRECATED — no longer written; `ruleUse` replaced it (#3009). The key
     // stays so older logs validate (ADR-0009).
@@ -181,4 +183,20 @@ export const sessionSchema = z
  *  ADR-0009). Absent/false/non-object ⇒ internal. */
 export function isExternalSession(raw: unknown): boolean {
   return typeof raw === 'object' && raw !== null && (raw as Record<string, unknown>).external === true
+}
+
+/** The path-scoped rules a log records as loaded by the main agent and only by
+ *  subagents: the deprecated lists on a log that has them, else derived from
+ *  `ruleUse` (#3019). Always-loaded rules are in neither. */
+export function loadedRules(log: {
+  rulesLoaded?: string[]
+  rulesLoadedBySubagents?: string[]
+  ruleUse?: RuleUseEntry[]
+}): { main: string[]; bySubagents: string[] } {
+  if (log.rulesLoaded || log.rulesLoadedBySubagents || !log.ruleUse) {
+    return { main: log.rulesLoaded ?? [], bySubagents: log.rulesLoadedBySubagents ?? [] }
+  }
+  const of = (entries: RuleUseEntry[]) => [...new Set(entries.flatMap((e) => e.loads.map((l) => l.rule)))]
+  const main = of(log.ruleUse.filter((e) => e.by === 'main'))
+  return { main, bySubagents: of(log.ruleUse.filter((e) => e.by !== 'main')).filter((r) => !main.includes(r)) }
 }
