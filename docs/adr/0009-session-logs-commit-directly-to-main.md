@@ -66,10 +66,10 @@ and its own commits.
 - **Land the log only at session end.** That hook can't prompt the agent,
   can't tell a pause from an end, and can fail with no network.
 - **A hook that reminds or blocks until a log exists, at every pause.** It is
-  runtime code the gate can't test. The one reminder we keep is narrow:
-  `read-first-hint.ts` says to invoke `close-session` after a PR opens or
-  merges. A Skill
-  whose use we measure is the cheaper bet for the rest.
+  runtime code the gate can't test. The narrow ones we keep fire only after a
+  PR opens or merges: `read-first-hint.ts` says to invoke `close-session`, and
+  `merge-close-stop.ts` blocks the stop once after a merge if it has not run. A
+  Skill whose use we measure is the cheaper bet for the rest.
 - **Find shell reads by parsing the command.** Each glob, loop or `cd` needs
   a new rule.
 
