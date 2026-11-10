@@ -382,14 +382,14 @@ describe('reportReads (the names reported is picked from)', () => {
     const fixture = withRule(store([['cat GLOSSARY.md', FIXTURE_DOCS['GLOSSARY.md']!]], [guards]), 'adr-0012.md')
     withRule(fixture, 'adr-0099.md', 'session/subagents')
     const out = run(fixture)
-    expect(out.filter((l) => /^    \S+$/.test(l))).toEqual(['    .claude/rules/adr-0012.md', '    GLOSSARY.md'])
+    expect(out.filter((l) => /^ {4}[^\s(]\S*$/.test(l))).toEqual(['    .claude/rules/adr-0012.md', '    GLOSSARY.md'])
     expect(out.join('\n')).not.toMatch(/verdict|useful/)
   })
 
   it('lists a doc both it and a subagent read, and a Read-tool doc', () => {
     const ctx: Cmd = ['cat GLOSSARY.md', FIXTURE_DOCS['GLOSSARY.md']!]
     const out = run(store([ctx, { read: 'docs/agents/guards.md' }], [ctx]))
-    expect(out.filter((l) => /^    \S+$/.test(l))).toEqual(['    docs/agents/guards.md', '    GLOSSARY.md'])
+    expect(out.filter((l) => /^ {4}[^\s(]\S*$/.test(l))).toEqual(['    docs/agents/guards.md', '    GLOSSARY.md'])
   })
 
   it('lists the always-loaded rules, marked, with what each value means', () => {
