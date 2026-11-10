@@ -68,7 +68,7 @@ re-review each story or repeat its findings.
    verdict naming its head (why: #1276). Check the other ADR-0004 exceptions (untested
    behaviour, Tenant-reach logic, a PR built from a Public request) yourself first.
    The owner's in-session word to merge a Human-only PR you wrote (ADR-0004)
-   goes in as `--owner-approved "<their words>"` (merge or squash): it waives only
+   goes in as `--owner-approved "<their words>"`: it waives only
    that refusal and the quote lands in the merge commit. Never use it on your own
    say-so.
 6. Escalate a PR that needs a human merge or is out of scope instead of merging

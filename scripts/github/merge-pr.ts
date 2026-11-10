@@ -19,9 +19,8 @@
 // Usage:  tsx scripts/github/merge-pr.ts <pr-number> [--merge-method merge|squash|rebase] [--interval-ms N] [--timeout-ms N]
 //             [--owner-approved "<quote>"]
 //   Refuses up front for a fork or Public-authored PR, a PR labelled
-//   `guest-pipeline` (ADR-0023), a PR that changes a Human-only path (ADR-0004)
-//   unless `--owner-approved` waives that alone, the quote going in the merge
-//   commit (#3022),
+//   `guest-pipeline` (ADR-0023), a PR that changes a Human-only path (ADR-0004,
+//   unless --owner-approved, #3022),
 //   a PR whose closing keywords name an open issue not labelled
 //   `ready-for-agent` (#2104, #2691), a PR adding a blog post whose blob is not
 //   the one its `Fact-checked:` line names (#2370), or unless this session's
@@ -208,10 +207,10 @@ export function humanMergeRefusal(files: string[], globs: string[]): string | nu
 /** `--owner-approved` (#3022): the owner told this session in-session to merge a
  *  Human-only PR. Waives only that refusal; returns the merge commit message
  *  that records the quote, or null when there is nothing to waive. An unreadable
- *  rule stays refused. */
-export function humanMergeWaiver(files: string[], globs: string[], quote: string | undefined): string | null {
+ *  rule stays refused, and so does a rebase, which drops the message. */
+export function humanMergeWaiver(files: string[], globs: string[], quote: string | undefined, method: MergeMethod): string | null {
   const hits = humanOnlyFiles(files, globs)
-  if (!quote || hits.length === 0) return null
+  if (!quote || hits.length === 0 || method === 'rebase') return null
   return `Human-only merge waived on the owner's word (ADR-0004): "${quote}"\nHuman-only files: ${hits.join(', ')}`
 }
 
@@ -536,7 +535,7 @@ export async function mergePrWhenGreen(
 
   const meta = readPrMeta(access, prNumber)
   const files = readPrFiles(access, prNumber)
-  let waiver: string | null = null
+  let waiver: string | undefined
   if (meta.authorLogin === DEPENDABOT_LOGIN) {
     const bumpRefusal = dependabotBumpRefusal(meta, files, owner, repo)
     if (bumpRefusal !== null) {
@@ -549,9 +548,9 @@ export async function mergePrWhenGreen(
     }
     const globs = readHumanMergeGlobsFromMain(cwd)
     const humanRefusal = humanMergeRefusal(prFilePaths(files), globs)
-    waiver = humanMergeWaiver(prFilePaths(files), globs, opts.ownerApproved)
-    if (humanRefusal !== null && waiver === null) {
-      return { pr: prNumber, verdict: 'human-merge', merged: false, message: humanRefusal }
+    if (humanRefusal !== null) {
+      waiver = humanMergeWaiver(prFilePaths(files), globs, opts.ownerApproved, opts.mergeMethod) ?? undefined
+      if (waiver === undefined) return { pr: prNumber, verdict: 'human-merge', merged: false, message: humanRefusal }
     }
   }
 
@@ -597,7 +596,7 @@ export async function mergePrWhenGreen(
 
   let mergeCommitSha: string
   try {
-    mergeCommitSha = mergePr(access, prNumber, opts.mergeMethod, sha, waiver ?? undefined)
+    mergeCommitSha = mergePr(access, prNumber, opts.mergeMethod, sha, waiver)
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err)
     return {
@@ -670,7 +669,6 @@ function parseArgsOrFail(argv: string[]): {
       fail(`unknown flag: ${flag}`)
     }
   }
-  if (ownerApproved && mergeMethod === 'rebase') fail('--owner-approved records its quote in the merge commit; use merge or squash')
   return { prNumber, mergeMethod, intervalMs, timeoutMs, ownerApproved }
 }
 
