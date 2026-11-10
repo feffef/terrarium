@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQN4dgz9seaMtnRf7u
 startedAt: 2026-11-10T12:48:41Z
-endedAt: 2026-11-10T13:16:27Z
+endedAt: 2026-11-10T13:21:20Z
 kind: interactive
 goal: "Curate the Glass Box guide: de-duplicate Agents and Hooks pages, teach the owner waiver"
-status: in-review
-outcome: PR 3038 open with Agents, Hooks, House rules and overview passes; gate green, waiting on CI to merge
-summary: "The owner started /glassbox-curate with no focus, then chose autonomous and, mid-run, told me to use subagents for writing and review and to keep taking new focuses until the $20 budget. All of that was human-instructed; the choice of Subjects (Agents & automation, Hooks, House rules, the overview) and of each fix was agent-initiated from the memory page's leads and the Scout's report. Per Subject I read the pages in full, ran sonnet fresh readers, had opus writers make wording-only fixes, and sonnet claim checkers found three small false or loose claims, which I fixed. The Scout's report of an ADR-0004 owner waiver landing after the pins led to re-pinning Protected paths and the overview and updating the Human-only term. code-review (Standards and Spec) then found a motive clause, a vague lead-in, an over-flat 'a person merges' and eight unread linked pages, which I read and fixed. gate:scoped passed. Still open: CI, the verdict comment and the self-merge; nine other pages still say a person merges flatly, left for the owner (memory page)."
+status: completed
+outcome: "PR 3038 merged: Agents, Hooks, House rules and overview passes landed with the gate green"
+summary: The owner started /glassbox-curate with no focus, then chose autonomous and, mid-run, told me to use subagents for writing and review and to keep taking new focuses until the $20 budget. All of that was human-instructed; the choice of Subjects (Agents & automation, Hooks, House rules, the overview) and of each fix was agent-initiated from the memory page's leads and the Scout's report. Per Subject I read the pages in full, ran sonnet fresh readers, had opus writers make wording-only fixes, and sonnet claim checkers found three small false or loose claims, which I fixed. The Scout's report of an ADR-0004 owner waiver landing after the pins led to re-pinning Protected paths and the overview and updating the Human-only term. code-review (Standards and Spec) then found a motive clause, a vague lead-in, an over-flat 'a person merges' and eight unread linked pages, which I read and fixed. gate:scoped and CI passed, I posted my verdict and merged with merge-pr.ts. I stopped at about $14 of the $20 because each turn on a long context costs more; nine other pages that still say a person merges flatly are left for the owner (memory page).
 prs:
   - "3038"
 docsRead:
@@ -109,23 +109,27 @@ frictions:
   - description: "A page description I edited came back over its 120-character cap twice, and an unquoted # in the run entry broke validate:content; both only showed after a commit."
     solution: Run glassbox-pages.spec.ts and validate:content after each edit to a description or run entry, and note the cap in the writer brief.
     severity: nit
-durationSec: 1666
+durationSec: 1959
 models:
-  claude-sonnet-5-5: 214
+  claude-sonnet-5-5: 233
 toolCounts:
   AskUserQuestion: 1
   Read: 17
-  Bash: 40
+  Bash: 44
   Agent: 23
   mcp__claude-code-remote__get_session: 5
   Write: 4
   Grep: 3
-  Edit: 24
-  Skill: 3
-  ToolSearch: 1
+  Edit: 26
+  Skill: 4
+  ToolSearch: 2
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/workshop/runs/2026-11-10T1249.yml
   - layers/glassbox/content/guide/pages/agents/10.subagents.md
@@ -585,7 +589,7 @@ subagents:
     durationSec: 20
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 2.5
+    tokenShare: 2.3
   - task: "Fresh reader: Subagents page"
     model: sonnet
     durationSec: 23
@@ -597,13 +601,13 @@ subagents:
     durationSec: 16
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 0.7
+    tokenShare: 0.6
   - task: "Fresh reader: Cloud sessions page"
     model: sonnet
     durationSec: 13
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 0.7
+    tokenShare: 0.6
   - task: "Fresh reader: Scheduled tasks page"
     model: sonnet
     durationSec: 20
@@ -615,55 +619,55 @@ subagents:
     durationSec: 107
     toolCalls: 13
     modelCalls: 9
-    tokenShare: 3.3
+    tokenShare: 3.1
   - task: "Writer: Workflow scripts fixes"
     model: opus
     durationSec: 83
     toolCalls: 10
     modelCalls: 8
-    tokenShare: 2.7
+    tokenShare: 2.5
   - task: "Writer: Cloud sessions fixes"
     model: opus
     durationSec: 103
     toolCalls: 11
     modelCalls: 8
-    tokenShare: 2.9
+    tokenShare: 2.7
   - task: "Writer: Scheduled tasks fixes"
     model: opus
     durationSec: 66
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 2.2
+    tokenShare: 2
   - task: Claim check changed sentences
     model: sonnet
     durationSec: 51
     toolCalls: 10
     modelCalls: 7
-    tokenShare: 1.7
+    tokenShare: 1.6
   - task: Fresh re-read of four pages
     model: sonnet
     durationSec: 14
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 0.9
+    tokenShare: 0.8
   - task: "Writer: hooks/10 and hooks/30 repeats"
     model: opus
     durationSec: 96
     toolCalls: 17
     modelCalls: 9
-    tokenShare: 2.2
+    tokenShare: 2
   - task: "Writer: hooks/40 session transcripts"
     model: opus
     durationSec: 47
     toolCalls: 11
     modelCalls: 8
-    tokenShare: 1.5
+    tokenShare: 1.4
   - task: Claim check Hooks changes
     model: sonnet
     durationSec: 46
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 1.4
+    tokenShare: 1.3
   - task: Fresh re-read of three Hooks pages
     model: sonnet
     durationSec: 22
@@ -675,43 +679,43 @@ subagents:
     durationSec: 113
     toolCalls: 15
     modelCalls: 15
-    tokenShare: 3
+    tokenShare: 2.8
   - task: Claim check Protected paths and term
     model: sonnet
     durationSec: 34
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 1.2
+    tokenShare: 1.1
   - task: "Writer: re-pin the overview page"
     model: opus
     durationSec: 172
     toolCalls: 26
     modelCalls: 23
-    tokenShare: 5.1
+    tokenShare: 4.8
   - task: Claim check overview changes
     model: sonnet
     durationSec: 18
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 0.9
+    tokenShare: 0.8
   - task: "Review: Standards axis"
     model: sonnet
     durationSec: 56
     toolCalls: 10
     modelCalls: 9
-    tokenShare: 3.6
+    tokenShare: 3.3
   - task: "Review: Spec axis"
     model: sonnet
     durationSec: 71
     toolCalls: 14
     modelCalls: 11
-    tokenShare: 3.7
+    tokenShare: 3.5
   - task: Read the pages the review named
     model: sonnet
     durationSec: 28
     toolCalls: 13
     modelCalls: 5
-    tokenShare: 1.8
+    tokenShare: 1.7
 gitBranch: claude/zealous-curie-22jhhj
 entrypoint: remote
 cliVersion: 2.1.322
