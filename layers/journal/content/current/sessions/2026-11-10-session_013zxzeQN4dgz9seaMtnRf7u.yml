@@ -1,13 +1,14 @@
 schemaVersion: 1
 session: session_013zxzeQN4dgz9seaMtnRf7u
 startedAt: 2026-11-10T12:48:41Z
-endedAt: 2026-11-10T13:00:31Z
+endedAt: 2026-11-10T13:16:27Z
 kind: interactive
-goal: "Curate the Glass Box guide: de-duplicate Agents, Hooks and House rules pages"
-status: partial
-outcome: Agents & automation and Hooks pages de-duplicated and pushed; House rules re-pin still running; PR not yet open
-summary: "The owner started /glassbox-curate with no focus, then chose autonomous and, mid-run, told me to use subagents for writing and review and to keep taking new focuses until the $20 budget. All of that was human-instructed; the choice of Subjects (Agents & automation, Hooks, House rules) and of each fix was agent-initiated from the memory page's leads. Per Subject I read the pages in full, ran sonnet fresh readers, had opus writers make wording-only fixes, and a sonnet claim checker then fixed three small claims. Pages changed: Subagents, Workflow scripts, Cloud sessions, Scheduled tasks, Claude Code hooks, Hook-added context, Session transcripts, Ubiquitous language. A writer is re-pinning Protected paths to main to teach the owner waiver added after its pin. Still open: run entry changes list, memory page, PR, cost in the PR body."
-prs: []
+goal: "Curate the Glass Box guide: de-duplicate Agents and Hooks pages, teach the owner waiver"
+status: in-review
+outcome: PR 3038 open with Agents, Hooks, House rules and overview passes; gate green, waiting on CI to merge
+summary: "The owner started /glassbox-curate with no focus, then chose autonomous and, mid-run, told me to use subagents for writing and review and to keep taking new focuses until the $20 budget. All of that was human-instructed; the choice of Subjects (Agents & automation, Hooks, House rules, the overview) and of each fix was agent-initiated from the memory page's leads and the Scout's report. Per Subject I read the pages in full, ran sonnet fresh readers, had opus writers make wording-only fixes, and sonnet claim checkers found three small false or loose claims, which I fixed. The Scout's report of an ADR-0004 owner waiver landing after the pins led to re-pinning Protected paths and the overview and updating the Human-only term. code-review (Standards and Spec) then found a motive clause, a vague lead-in, an over-flat 'a person merges' and eight unread linked pages, which I read and fixed. gate:scoped passed. Still open: CI, the verdict comment and the self-merge; nine other pages still say a person merges flatly, left for the owner (memory page)."
+prs:
+  - "3038"
 docsRead:
   - path: layers/glassbox/GLOSSARY.md
     reason: (no reason given)
@@ -29,10 +30,28 @@ docsRead:
     reason: (no reason given)
   - path: .agents/skills/dispatch-subagents/SKILL.md
     reason: (no reason given)
+  - path: layers/glassbox/content/workshop/pages/index.md
+    reason: (read before editing)
   - path: layers/glassbox/content/guide/pages/agents/20.workflow-scripts.md
     reason: (read before editing)
   - path: layers/glassbox/content/guide/pages/hooks/40.session-transcripts.md
     reason: (read before editing)
+  - path: git-github/30.composite-actions.md
+    reason: (no reason given)
+  - path: claude-code/20.path-scoped-rules.md
+    reason: (no reason given)
+  - path: verification/10.gate.md
+    reason: (no reason given)
+  - path: git-github/20.author-trust.md
+    reason: (no reason given)
+  - path: walkthroughs/session-log-lands-on-main.md
+    reason: (no reason given)
+  - path: claude-code/30.skills.md
+    reason: (no reason given)
+  - path: claude-code/40.permissions.md
+    reason: (no reason given)
+  - path: verification/50.linting.md
+    reason: (no reason given)
   - path: layers/glassbox/content/guide/pages/agents/10.subagents.md
     reason: (read before editing)
   - path: layers/glassbox/page-checks.ts
@@ -43,19 +62,33 @@ docsRead:
     reason: (read before editing)
   - path: .agents/skills/clear-backlog/SKILL.md
     reason: (no reason given)
-  - path: docs/agents/environment-caveats.md
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
     reason: (no reason given)
   - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: layers/marquee/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/commons/GLOSSARY.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
     reason: (no reason given)
   - path: .agents/skills/guest-intake/SKILL.md
     reason: (no reason given)
   - path: docs/adr/0005-skill-model.md
     reason: (no reason given)
-  - path: docs/adr/0004-objective-safety-gate.md
+  - path: GLOSSARY-MAP.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-curate/SKILL.md
     reason: (no reason given)
 skillsUsed:
   - name: glassbox-curate
     reason: the requested workflow
+  - name: code-review
+    reason: reviewed the diff before opening the PR
   - name: close-session
     reason: (no reason given)
   - name: log-session
@@ -73,29 +106,40 @@ frictions:
   - description: plain.ts strips term chips, so fresh readers kept reporting Skill, Routine and Gate as undefined and I had to filter that noise by hand.
     solution: Have plain.ts print each term's definition, or have the brief say to ignore capitalised glossary terms.
     severity: nit
-durationSec: 710
+  - description: "A page description I edited came back over its 120-character cap twice, and an unquoted # in the run entry broke validate:content; both only showed after a commit."
+    solution: Run glassbox-pages.spec.ts and validate:content after each edit to a description or run entry, and note the cap in the writer brief.
+    severity: nit
+durationSec: 1666
 models:
-  claude-sonnet-5-5: 126
+  claude-sonnet-5-5: 214
 toolCounts:
   AskUserQuestion: 1
-  Read: 16
-  Bash: 20
-  Agent: 17
-  mcp__claude-code-remote__get_session: 3
-  Write: 2
-  Grep: 2
-  Edit: 7
-  Skill: 2
+  Read: 17
+  Bash: 40
+  Agent: 23
+  mcp__claude-code-remote__get_session: 5
+  Write: 4
+  Grep: 3
+  Edit: 24
+  Skill: 3
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/workshop/runs/2026-11-10T1249.yml
   - layers/glassbox/content/guide/pages/agents/10.subagents.md
   - layers/glassbox/content/guide/pages/agents/40.scheduled-tasks.md
   - layers/glassbox/content/guide/pages/hooks/10.hooks.md
   - layers/glassbox/content/guide/pages/terrarium-practice/30.ubiquitous-language.md
+  - layers/glassbox/content/guide/terms/human-only.yml
+  - layers/glassbox/content/guide/pages/terrarium-practice/60.protected-paths.md
+  - layers/glassbox/content/guide/pages/index.md
+  - layers/glassbox/content/workshop/pages/index.md
+  - layers/glassbox/content/guide/pages/agents/30.cloud-sessions.md
   - layers/glassbox/content/guide/pages/hooks/40.session-transcripts.md
   - layers/glassbox/content/guide/pages/hooks/30.hook-added-context.md
   - layers/glassbox/content/guide/pages/agents/20.workflow-scripts.md
-  - layers/glassbox/content/guide/pages/agents/30.cloud-sessions.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -106,11 +150,17 @@ rulesFollowedUp:
   - .claude/rules/adr-0004-human-merge.md
 docsReadBySubagents:
   - .agents/skills/clear-backlog/SKILL.md
-  - docs/agents/environment-caveats.md
+  - docs/adr/0004-objective-safety-gate.md
+  - GLOSSARY.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
   - docs/agents/guards.md
+  - layers/marquee/GLOSSARY.md
+  - layers/commons/GLOSSARY.md
+  - docs/agents/environment-caveats.md
   - .agents/skills/guest-intake/SKILL.md
   - docs/adr/0005-skill-model.md
-  - docs/adr/0004-objective-safety-gate.md
+  - GLOSSARY-MAP.md
+  - .agents/skills/glassbox-curate/SKILL.md
 ruleUse:
   - by: main
     answered: true
@@ -394,7 +444,7 @@ ruleUse:
     reported: []
   - by: general-purpose
     subagent: 16
-    answered: false
+    answered: true
     loads:
       - rule: .claude/rules/adr-0004-human-merge.md
         via: hint
@@ -414,7 +464,119 @@ ruleUse:
         via: hint
       - rule: .claude/rules/glossary-terms.md
         via: hint
+    reported:
+      - path: .claude/rules/glassbox-content.md
+        value: confirmed
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: confirmed
+      - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+      - path: layers/glassbox/GLOSSARY.md
+  - by: general-purpose
+    subagent: 17
+    answered: true
+    loads: []
     reported: []
+  - by: general-purpose
+    subagent: 18
+    answered: true
+    loads:
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+    reported:
+      - path: .claude/rules/glassbox-content.md
+        value: changed
+      - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+      - path: layers/glassbox/GLOSSARY.md
+      - path: docs/adr/0004-objective-safety-gate.md
+      - path: docs/agents/guards.md
+  - by: general-purpose
+    subagent: 19
+    answered: true
+    loads: []
+    reported: []
+  - by: general-purpose
+    subagent: 20
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+    reported:
+      - path: .claude/rules/glassbox-content.md
+        value: confirmed
+  - by: general-purpose
+    subagent: 21
+    answered: false
+    loads:
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+    reported: []
+  - by: general-purpose
+    subagent: 22
+    answered: true
+    loads:
+      - rule: .claude/rules/glassbox-content.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/git-github/20.author-trust.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/git-github/20.author-trust.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/git-github/20.author-trust.md
+    reported:
+      - path: .claude/rules/glassbox-content.md
+        value: confirmed
 subagents:
   - task: Scout new topics since last run
     model: sonnet
@@ -423,97 +585,133 @@ subagents:
     durationSec: 20
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 4.5
+    tokenShare: 2.5
   - task: "Fresh reader: Subagents page"
     model: sonnet
     durationSec: 23
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 1.3
+    tokenShare: 0.7
   - task: "Fresh reader: Workflow scripts page"
     model: sonnet
     durationSec: 16
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 1.3
+    tokenShare: 0.7
   - task: "Fresh reader: Cloud sessions page"
     model: sonnet
     durationSec: 13
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 1.2
+    tokenShare: 0.7
   - task: "Fresh reader: Scheduled tasks page"
     model: sonnet
     durationSec: 20
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 1.3
+    tokenShare: 0.7
   - task: "Writer: Subagents page fixes"
     model: opus
     durationSec: 107
     toolCalls: 13
     modelCalls: 9
-    tokenShare: 6.1
+    tokenShare: 3.3
   - task: "Writer: Workflow scripts fixes"
     model: opus
     durationSec: 83
     toolCalls: 10
     modelCalls: 8
-    tokenShare: 4.9
+    tokenShare: 2.7
   - task: "Writer: Cloud sessions fixes"
     model: opus
     durationSec: 103
     toolCalls: 11
     modelCalls: 8
-    tokenShare: 5.3
+    tokenShare: 2.9
   - task: "Writer: Scheduled tasks fixes"
     model: opus
     durationSec: 66
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 4
+    tokenShare: 2.2
   - task: Claim check changed sentences
     model: sonnet
     durationSec: 51
     toolCalls: 10
     modelCalls: 7
-    tokenShare: 3.1
+    tokenShare: 1.7
   - task: Fresh re-read of four pages
     model: sonnet
     durationSec: 14
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 1.6
+    tokenShare: 0.9
   - task: "Writer: hooks/10 and hooks/30 repeats"
     model: opus
     durationSec: 96
     toolCalls: 17
     modelCalls: 9
-    tokenShare: 4
+    tokenShare: 2.2
   - task: "Writer: hooks/40 session transcripts"
     model: opus
     durationSec: 47
     toolCalls: 11
     modelCalls: 8
-    tokenShare: 2.8
+    tokenShare: 1.5
   - task: Claim check Hooks changes
     model: sonnet
     durationSec: 46
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 2.6
+    tokenShare: 1.4
   - task: Fresh re-read of three Hooks pages
     model: sonnet
     durationSec: 22
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 1.5
+    tokenShare: 0.8
   - task: "Writer: Protected paths re-pin + waiver"
     model: opus
-    durationSec: 38
-    toolCalls: 7
-    modelCalls: 7
+    durationSec: 113
+    toolCalls: 15
+    modelCalls: 15
     tokenShare: 3
+  - task: Claim check Protected paths and term
+    model: sonnet
+    durationSec: 34
+    toolCalls: 7
+    modelCalls: 5
+    tokenShare: 1.2
+  - task: "Writer: re-pin the overview page"
+    model: opus
+    durationSec: 172
+    toolCalls: 26
+    modelCalls: 23
+    tokenShare: 5.1
+  - task: Claim check overview changes
+    model: sonnet
+    durationSec: 18
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 0.9
+  - task: "Review: Standards axis"
+    model: sonnet
+    durationSec: 56
+    toolCalls: 10
+    modelCalls: 9
+    tokenShare: 3.6
+  - task: "Review: Spec axis"
+    model: sonnet
+    durationSec: 71
+    toolCalls: 14
+    modelCalls: 11
+    tokenShare: 3.7
+  - task: Read the pages the review named
+    model: sonnet
+    durationSec: 28
+    toolCalls: 13
+    modelCalls: 5
+    tokenShare: 1.8
 gitBranch: claude/zealous-curie-22jhhj
 entrypoint: remote
 cliVersion: 2.1.322
