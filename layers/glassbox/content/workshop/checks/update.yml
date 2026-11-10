@@ -35,7 +35,17 @@ pages:
     checked: '2026-11-09'
   - page: git-github/70.issue-triage-labels
     checked: '2026-11-09'
+  - page: git-github/80.git-plumbing
+    checked: '2026-11-10'
   - page: hooks/10.hooks
     checked: '2026-11-07'
   - page: hooks/20.blocking-hooks
     checked: '2026-11-07'
+  - page: hooks/30.hook-added-context
+    checked: '2026-11-10'
+  - page: hooks/40.session-transcripts
+    checked: '2026-11-10'
+  - page: index
+    checked: '2026-11-10'
+  - page: nuxt-content/10.content-collections
+    checked: '2026-11-10'

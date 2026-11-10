@@ -2,8 +2,8 @@
 title: A session log lands on main
 description: How an agent session's record of its work reaches the main branch without a pull request, in one commit built by low-level Git.
 teaches: "Story: a session log reaching main without a PR, from the agent's side. Start: the agent runs close-session. End: the Journal's dashboard; pnpm validate:content checks it. Code: log-session, log-session.ts --author and --land, pending.scratch.json, Stop, SessionEnd, SessionStart hooks, transcript-trace.ts, main's schema, read-tree, commit-tree, push to refs/heads/main, retried. No A real case."
-revision: '73b1c9c1e53a649d4e7c97a6933d38ed58a44972'
-revisionDate: '2026-11-09'
+revision: 'a943030c7f8f2e8cd1c6b3021caa593b3cdfff16'
+revisionDate: '2026-11-10'
 publishedAt: '2026-11-04T23:08:39Z'
 ---
 
@@ -19,7 +19,7 @@ When its work reaches a coherent state, such as a PR opened or a question answer
 
 ## 2. The agent writes only its judgement
 
-`close-session` calls `log-session`, and the agent writes a small YAML file with the fields only it can know: its goal, a status, an outcome, a summary, the docs and Skills that mattered, and every :term[Friction]. `scripts/session/log-session.ts --author` checks them and saves them to `.session-logs/pending.scratch.json`, a scratch file git ignores. Run again later, it merges the new pass with the earlier one. It refuses to run from a linked git worktree, where a dispatched subagent shares its parent's scratch path.
+`close-session` calls `log-session`, and the agent writes a small YAML file with the fields only it can know: its goal, a status, an outcome, a summary, what changed or confirmed its work, and every :term[Friction]. `scripts/session/log-session.ts --author` checks them and saves them to `.session-logs/pending.scratch.json`, a scratch file git ignores. Run again later, it merges the new pass with the earlier one. It refuses to run from a linked git worktree, where a dispatched subagent shares its parent's scratch path.
 
 ::lessons
 [Session logs](/t/glassbox/guide/terrarium-practice/session-logs) · [Git worktrees](/t/glassbox/guide/git-github/git-worktrees) · [Subagents](/t/glassbox/guide/agents/subagents)
@@ -53,7 +53,7 @@ The stitched entry must pass the session schema, and its file name is fixed: the
 
 Instead of `git commit`, which commits what is staged on the current branch, the lander uses git's plumbing, low-level commands meant for scripts, on a temporary index. The session's working copy and branch never change.
 
-::excerpt{path="scripts/session/log-session.ts" lines="279-291"}
+::excerpt{path="scripts/session/log-session.ts" lines="282-294"}
 ```ts
     git(['read-tree', base], cwd, { env: idxEnv }) // start from main's tree
     const blob = git(['hash-object', '-w', absPath], cwd).trim()
