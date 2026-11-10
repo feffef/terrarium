@@ -67,8 +67,11 @@ re-review each story or repeat its findings.
    fact-checker didn't read (`blog-post` step 9), and a PR without your step-4
    verdict naming its head (why: #1276). Check the other ADR-0004 exceptions (untested
    behaviour, Tenant-reach logic, a PR built from a Public request) yourself first.
-6. Escalate a PR that needs a human merge or is out of scope instead of merging
-   it.
+   The owner's in-session word to merge a Human-only PR you wrote (ADR-0004)
+   goes in as `--owner-approved "<their words>"`: it waives only that refusal
+   and the quote lands in the merge commit.
+6. Escalate a PR that needs a human merge (bar step 5's owner word) or is out
+   of scope instead of merging it.
 
 Use a closing keyword (`Closes`/`Fixes`/`Resolves #N`) only for an issue the PR
 completes; GitHub matches it loosely, so a quoted or negated mention closes too
