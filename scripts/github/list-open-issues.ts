@@ -28,9 +28,10 @@
 // to look for an already-fixed cause without paging `list_issues` (issue #2877).
 // The file keeps its name because other scripts import its types.
 //
-// Usage:  tsx scripts/github/list-open-issues.ts [N] [--closed]
+// Usage:  tsx scripts/github/list-open-issues.ts [N] [--closed] [--count]
 //   Prints up to N open (or, with --closed, closed) issues (default 50) as
 //   JSON: { number, title, labels, updatedAt }. Newest-updated-first.
+//   --count prints only how many that list holds (still capped by N), as an integer.
 import { fail, root, runIfMain } from '../lib/cli.ts'
 import { decodeHtmlEntities, listAll, NO_ACCESS_MESSAGE, resolveAccess, type Access } from '../lib/github-client.ts'
 
@@ -120,13 +121,14 @@ export function listOpenIssues(limit = DEFAULT_LIMIT, cwd = root, state: IssueSt
 
 // ── CLI ───────────────────────────────────────────────────────────────────────
 
-export function parseArgs(argv: string[]): { state: IssueState; limit: number } {
+export function parseArgs(argv: string[]): { state: IssueState; limit: number; count: boolean } {
   const state: IssueState = argv.includes('--closed') ? 'closed' : 'open'
-  const limitArg = argv.find((a) => a !== '--closed')
-  if (limitArg === undefined) return { state, limit: DEFAULT_LIMIT }
+  const count = argv.includes('--count')
+  const limitArg = argv.find((a) => a !== '--closed' && a !== '--count')
+  if (limitArg === undefined) return { state, limit: DEFAULT_LIMIT, count }
   const limit = Number(limitArg)
   if (!Number.isInteger(limit) || limit <= 0) throw new Error(`not a positive integer: ${limitArg}`)
-  return { state, limit }
+  return { state, limit, count }
 }
 
 function main(): void {
@@ -136,7 +138,8 @@ function main(): void {
   } catch (err) {
     fail(err instanceof Error ? err.message : String(err))
   }
-  process.stdout.write(JSON.stringify(listOpenIssues(args.limit, root, args.state), null, 2) + '\n')
+  const issues = listOpenIssues(args.limit, root, args.state)
+  process.stdout.write((args.count ? String(issues.length) : JSON.stringify(issues, null, 2)) + '\n')
 }
 
 runIfMain(import.meta.url, main)

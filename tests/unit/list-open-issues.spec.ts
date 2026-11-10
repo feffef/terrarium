@@ -61,12 +61,19 @@ describe('openIssues()', () => {
 
 describe('parseArgs()', () => {
   it('defaults to open issues, limit 50', () => {
-    expect(parseArgs([])).toEqual({ state: 'open', limit: 50 })
+    expect(parseArgs([])).toEqual({ state: 'open', limit: 50, count: false })
   })
   it('--closed selects closed issues, in any position beside the limit', () => {
-    expect(parseArgs(['--closed'])).toEqual({ state: 'closed', limit: 50 })
-    expect(parseArgs(['20', '--closed'])).toEqual({ state: 'closed', limit: 20 })
-    expect(parseArgs(['--closed', '20'])).toEqual({ state: 'closed', limit: 20 })
+    expect(parseArgs(['--closed'])).toEqual({ state: 'closed', limit: 50, count: false })
+    expect(parseArgs(['20', '--closed'])).toEqual({ state: 'closed', limit: 20, count: false })
+    expect(parseArgs(['--closed', '20'])).toEqual({ state: 'closed', limit: 20, count: false })
+  })
+  it('--count sets count without being read as the limit, in any order', () => {
+    expect(parseArgs(['--count'])).toEqual({ state: 'open', limit: 50, count: true })
+    expect(parseArgs(['--count', '20'])).toEqual({ state: 'open', limit: 20, count: true })
+    expect(parseArgs(['20', '--count'])).toEqual({ state: 'open', limit: 20, count: true })
+    expect(parseArgs(['--count', '--closed'])).toEqual({ state: 'closed', limit: 50, count: true })
+    expect(parseArgs(['--closed', '5', '--count'])).toEqual({ state: 'closed', limit: 5, count: true })
   })
   it('rejects a non-positive limit', () => {
     expect(() => parseArgs(['0'])).toThrow('not a positive integer: 0')
