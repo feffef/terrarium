@@ -1,0 +1,93 @@
+schemaVersion: 1
+session: session_013zxzeQSBS5f2YkUy9rMRSz
+startedAt: 2026-11-10T20:18:25Z
+endedAt: 2026-11-10T20:19:55Z
+kind: delegated
+goal: Tighten the Transient failures section of the GitHub integration doc
+status: completed
+outcome: Section rewritten to two sentences with every fact kept; committed locally on a test branch, nothing pushed
+summary: "Human-instructed test session: tighten one doc section to at most two sentences, commit locally on test/rule-use-3, no push or PR. I read the doc and git-conventions, reworded the second sentence (the fallback to search_issues), checked no open prune trial covers the file, read ADR-0027 and ADR-0029 after the post-edit hint, then committed with the ADR-0017 trailer. The section was already two sentences, so the change is a minor wording tightening. All agent-initiated choices were wording only."
+prs: []
+docsRead:
+  - path: docs/agents/github-integration.md
+    reason: (read before editing)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: ADR-0030 rule loaded while I read ADR-0027 and ADR-0029; it had nothing to do with a doc wording edit.
+    solution: Narrow adr-0030.md paths so reading other ADRs does not load it.
+    severity: nit
+durationSec: 90
+models:
+  claude-sonnet-5-5: 27
+toolCounts:
+  Read: 4
+  Bash: 9
+  Edit: 1
+  Skill: 2
+  ToolSearch: 1
+  mcp__claude-code-remote__send_message: 1
+filesEdited:
+  - docs/agents/github-integration.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+adrHints:
+  - adr: 27
+    via: path
+    readAfter: true
+    by: main
+  - adr: 29
+    via: path
+    readAfter: true
+    by: main
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/github-integration.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/github-integration.md
+      - rule: .claude/rules/adr-0030.md
+        via: native
+        trigger: docs/adr/0027-prune-trials.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: docs/adr/0027-prune-trials.md
+    reported:
+      - path: .claude/rules/adr-0027.md
+        value: steered
+        why: checked open trials before editing
+      - path: .claude/rules/adr-0017.md
+        value: backed
+      - path: docs/agents/git-conventions.md
+      - path: docs/agents/github-integration.md
+gitBranch: HEAD
+entrypoint: remote
+cliVersion: 2.1.322
+landedBy: SessionStart
