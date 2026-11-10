@@ -14,3 +14,7 @@ pagesRead:
   - claude-code/30.skills
   - claude-code/40.permissions
   - claude-code/50.mcp-servers
+  - hooks/20.blocking-hooks
+  - terrarium-practice/60.protected-paths
+  - terrarium-practice/20.decision-records
+  - hooks/30.hook-added-context
