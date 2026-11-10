@@ -117,7 +117,7 @@ describe('humanMergeWaiver() — --owner-approved (#3022)', () => {
 
   it('waives nothing without a quote, or for a blank one', () => {
     expect(humanMergeWaiver(files, globs, undefined)).toBeNull()
-    expect(humanMergeWaiver(files, globs, '  ')).toBeNull()
+    expect(humanMergeWaiver(files, globs, '')).toBeNull()
   })
 
   it('has nothing to waive when no Human-only file changed', () => {

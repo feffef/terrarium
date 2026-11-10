@@ -17,9 +17,11 @@
 // authenticated REST call via `curl` (not `fetch` — issue #567) when it is not.
 //
 // Usage:  tsx scripts/github/merge-pr.ts <pr-number> [--merge-method merge|squash|rebase] [--interval-ms N] [--timeout-ms N]
-//             [--owner-approved "<quote>"]  (waives only the Human-only refusal; the quote goes in the merge commit, #3022)
+//             [--owner-approved "<quote>"]
 //   Refuses up front for a fork or Public-authored PR, a PR labelled
-//   `guest-pipeline` (ADR-0023), a PR that changes a Human-only path (ADR-0004),
+//   `guest-pipeline` (ADR-0023), a PR that changes a Human-only path (ADR-0004)
+//   unless `--owner-approved` waives that alone, the quote going in the merge
+//   commit (#3022),
 //   a PR whose closing keywords name an open issue not labelled
 //   `ready-for-agent` (#2104, #2691), a PR adding a blog post whose blob is not
 //   the one its `Fact-checked:` line names (#2370), or unless this session's
@@ -190,11 +192,14 @@ export function verdictRefusal(bodies: VerdictBody[], sessionId: string | null, 
  *  Read from `origin/main`, so a PR cannot shrink the list for itself. */
 export const HUMAN_MERGE_RULE = '.claude/rules/adr-0004-human-merge.md'
 
+const humanOnlyFiles = (files: string[], globs: string[]): string[] =>
+  files.filter((f) => globs.some((g) => matchesGlob(f, g)))
+
 /** Why this script must leave the PR to a human, or null. An empty list fails
  *  closed: it means the rule could not be read. */
 export function humanMergeRefusal(files: string[], globs: string[]): string | null {
   if (globs.length === 0) return `refused: no Human-only paths read from origin/main:${HUMAN_MERGE_RULE}`
-  const hits = files.filter((f) => globs.some((g) => matchesGlob(f, g)))
+  const hits = humanOnlyFiles(files, globs)
   return hits.length
     ? `refused: a human merges a PR that changes ${hits.join(', ')} (ADR-0004, ${HUMAN_MERGE_RULE})`
     : null
@@ -205,9 +210,9 @@ export function humanMergeRefusal(files: string[], globs: string[]): string | nu
  *  that records the quote, or null when there is nothing to waive. An unreadable
  *  rule stays refused. */
 export function humanMergeWaiver(files: string[], globs: string[], quote: string | undefined): string | null {
-  const hits = files.filter((f) => globs.some((g) => matchesGlob(f, g)))
-  if (!quote?.trim() || hits.length === 0) return null
-  return `Human-only merge waived on the owner's word (ADR-0004): "${quote.trim()}"\nHuman-only files: ${hits.join(', ')}`
+  const hits = humanOnlyFiles(files, globs)
+  if (!quote || hits.length === 0) return null
+  return `Human-only merge waived on the owner's word (ADR-0004): "${quote}"\nHuman-only files: ${hits.join(', ')}`
 }
 
 /** The label `guest-build` puts on every PR it opens. */
@@ -427,8 +432,8 @@ function readCheckRuns(a: Access, sha: string): RawCheckRun[] {
   return getJson<{ check_runs: RawCheckRun[] }>(a, `commits/${sha}/check-runs?per_page=${PER_PAGE}`).check_runs
 }
 
-function mergePr(a: Access, prNumber: number, mergeMethod: MergeMethod, sha: string, note?: string): string {
-  return requestJson<{ sha: string }>(a, 'PUT', `pulls/${prNumber}/merge`, mergeRequestFields(mergeMethod, sha, note)).sha
+function mergePr(a: Access, prNumber: number, mergeMethod: MergeMethod, sha: string, commitMessage?: string): string {
+  return requestJson<{ sha: string }>(a, 'PUT', `pulls/${prNumber}/merge`, mergeRequestFields(mergeMethod, sha, commitMessage)).sha
 }
 
 type RawIssue = { state: string; labels: { name: string }[] }
@@ -659,8 +664,8 @@ function parseArgsOrFail(argv: string[]): {
       timeoutMs = Number(value)
       if (!Number.isInteger(timeoutMs) || timeoutMs <= 0) fail(`invalid --timeout-ms: ${value}`)
     } else if (flag === '--owner-approved') {
-      if (!value?.trim()) fail('--owner-approved needs the owner\'s quote')
-      ownerApproved = value
+      ownerApproved = value?.trim()
+      if (!ownerApproved) fail('--owner-approved needs the owner\'s quote')
     } else {
       fail(`unknown flag: ${flag}`)
     }
