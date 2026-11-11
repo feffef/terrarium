@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQdDhmjuBmtPSZi6tK
 startedAt: 2026-11-11T00:46:34Z
-endedAt: 2026-11-11T00:57:07Z
+endedAt: 2026-11-11T01:00:45Z
 kind: autonomous
 goal: Weekly check of the Platform's own Skills
-status: in-review
-outcome: "Inventory observations and Routine run costs in PR #3044; one issue filed, one commented"
-summary: "Scheduled audit-skills run, started by the schedule with no human prompt. Gathered the 7-day scorecard, had one Sonnet subagent fetch usage for 8 Routine runs and 13 read-only Sonnet subagents check each Skill's behaviour. Orphan scan: scanned, 2023 merged PRs, 2 candidates both already resolved (#736, #1063); 2 human-nudged closures already tracked on #2956; 0 manually rescued. Escalated two findings on my own judgement under step 4: commented on #2987 (cost still unreported in Routine glassbox-curate runs after its fix, set needs-triage) and filed #3043 (clear-backlog stranded worktrees, repeat). Everything else became observations on 11 Skill entries; no grade or role change. Ran code-review (Standards and Spec clean), gate:scoped passed, opened PR #3044 and subscribed; it still needs CI green and a merge."
+status: completed
+outcome: "Inventory observations and Routine run costs merged in PR #3044; one issue filed, one commented"
+summary: "Scheduled audit-skills run, started by the schedule with no human prompt. Gathered the 7-day scorecard, had one Sonnet subagent fetch usage for 8 Routine runs and 13 read-only Sonnet subagents check each Skill's behaviour. Orphan scan: scanned, 2023 merged PRs, 2 candidates both already resolved (#736, #1063); 2 human-nudged closures already tracked on #2956; 0 manually rescued. Escalated two findings on my own judgement under step 4: commented on #2987 (cost still unreported in Routine glassbox-curate runs after its fix, set needs-triage) and filed #3043 (clear-backlog stranded worktrees, repeat). Everything else became observations on 11 Skill entries; no grade or role change. Ran code-review (Standards and Spec clean), gate:scoped passed, opened PR #3044 and subscribed; CI went green and I merged it with merge-pr.ts after posting my verdict."
 prs:
   - "3044"
 docsRead:
@@ -71,20 +71,22 @@ frictions:
   - description: "First check-states run on my #2987 comment flagged a normal phrase as a state misread; reworded."
     solution: Known flag-prone prose; reword as the Skill says.
     severity: nit
-durationSec: 633
+durationSec: 851
 models:
-  claude-sonnet-5-5: 107
+  claude-sonnet-5-5: 122
 toolCounts:
-  Bash: 27
-  Skill: 4
+  Bash: 31
+  Skill: 5
   Agent: 16
   Read: 3
   ToolSearch: 1
-  mcp__github__add_issue_comment: 1
+  mcp__github__add_issue_comment: 2
   mcp__github__issue_write: 2
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   mcp__github__pull_request_read: 1
+  ReadNotifications: 2
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/routines/audit-docs.yml
   - layers/journal/content/current/routines/audit-skills.yml
@@ -572,97 +574,97 @@ subagents:
     durationSec: 26
     toolCalls: 12
     modelCalls: 3
-    tokenShare: 2.9
+    tokenShare: 2.7
   - task: Behaviour check audit-docs
     model: sonnet
     durationSec: 51
     toolCalls: 9
     modelCalls: 8
-    tokenShare: 3.3
+    tokenShare: 3.1
   - task: Behaviour check audit-skills
     model: sonnet
     durationSec: 72
     toolCalls: 12
     modelCalls: 9
-    tokenShare: 3.7
+    tokenShare: 3.5
   - task: Behaviour check blog-post
     model: sonnet
     durationSec: 143
     toolCalls: 21
     modelCalls: 18
-    tokenShare: 7.7
+    tokenShare: 7.3
   - task: Behaviour check clear-backlog
     model: sonnet
     durationSec: 71
     toolCalls: 12
     modelCalls: 12
-    tokenShare: 4.2
+    tokenShare: 4
   - task: Behaviour check close-session
     model: sonnet
     durationSec: 65
     toolCalls: 14
     modelCalls: 8
-    tokenShare: 3.1
+    tokenShare: 2.9
   - task: Behaviour check digest
     model: sonnet
     durationSec: 81
     toolCalls: 14
     modelCalls: 10
-    tokenShare: 3.8
+    tokenShare: 3.6
   - task: Behaviour check dispatch-subagents
     model: sonnet
     durationSec: 145
     toolCalls: 22
     modelCalls: 21
-    tokenShare: 9.1
+    tokenShare: 8.6
   - task: Behaviour check frictions-to-fixes
     model: sonnet
     durationSec: 97
     toolCalls: 14
     modelCalls: 11
-    tokenShare: 6.2
+    tokenShare: 5.9
   - task: Behaviour check glassbox-curate
     model: sonnet
     durationSec: 94
     toolCalls: 16
     modelCalls: 12
-    tokenShare: 4.6
+    tokenShare: 4.3
   - task: Behaviour check glassbox-update
     model: sonnet
     durationSec: 49
     toolCalls: 9
     modelCalls: 8
-    tokenShare: 3
+    tokenShare: 2.9
   - task: Behaviour check inspect-session
     model: sonnet
     durationSec: 99
     toolCalls: 18
     modelCalls: 12
-    tokenShare: 7
+    tokenShare: 6.6
   - task: Behaviour check log-session
     model: sonnet
     durationSec: 67
     toolCalls: 10
     modelCalls: 9
-    tokenShare: 3.4
+    tokenShare: 3.2
   - task: Behaviour check prune-trial
     model: sonnet
     durationSec: 83
     toolCalls: 14
     modelCalls: 12
-    tokenShare: 4.7
+    tokenShare: 4.4
   - task: "Code review: Standards axis"
     model: sonnet
     durationSec: 26
     toolCalls: 9
     modelCalls: 5
-    tokenShare: 2.1
+    tokenShare: 2
   - task: "Code review: Spec axis"
     model: sonnet
     durationSec: 25
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 2.2
+    tokenShare: 2.1
 gitBranch: claude/loving-tesla-x11olt
 entrypoint: remote_trigger
 cliVersion: 2.1.322
