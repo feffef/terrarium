@@ -10,6 +10,7 @@ notes: |-
   2026-10-23 design: the pr-workflow.md step-4 sentence dropped again: 01DtK8w6 (moved here by the re-cluster, dated 2026-10-12) is a bare Yes to two combined questions, a different boundary (ask a merge as its own question), and no occurrence is new; pr-workflow.md is in the open Prune Trial (PR #2412), revisit when it is judged.
   2026-10-25 design: no change: the five occurrences are five different boundaries (a session type, "link the concepts", "last N days", a bare Yes to two questions, a lens name), nothing new unites them, pr-workflow.md is in the open Prune Trial (PR #2412), and CLAUDE.md "Ask before building" already says to ask; revisit when a fourth shares one boundary.
   2026-11-09 design: a CLAUDE.md clause (state each option's full effect in the owner's terms) dropped: the two newest occurrences share one boundary (option wording diverges from intent), only two, not the four the 2026-10-25 note set; the owner corrected both in-session; revisit at a third on that boundary.
+  2026-11-11 design: no change: the new NhTeF occurrence (relaunched a build on a guess of a correction's scope) is a different mechanism from the 2026-11-09 option-wording pair, so no third occurrence shares that boundary; each was corrected in-session at minor severity; pr-workflow.md is in an open Prune Trial. dropped: a CLAUDE.md clause to restate a corrected scope and wait for a yes. Revisit when a third shares one boundary.
 occurrences:
   - session: session_013zxzeStBRUtsbccz5kMYNU
     date: "2026-10-31"
