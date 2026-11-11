@@ -4,7 +4,7 @@ export const meta = {
   whenToUse: 'Run only from the clear-backlog Skill, with the planned branches as args',
   phases: [
     { title: 'Build', detail: 'one worktree per branch, based on origin/main' },
-    { title: 'Review', detail: 'Standards and Spec reviewers in parallel, then a fix agent, until clean; then a final gate agent' },
+    { title: 'Review', detail: 'Standards and Spec reviewers in parallel, then a fix agent, until clean; then a final gate agent, unless round 1 was clean and the build passed its gate' },
   ],
 }
 
@@ -147,7 +147,9 @@ async function reviewBranch(built, b) {
     const toFix = all.filter(f => f.worthFixing)
     out.judgementCalls = all.filter(f => !f.worthFixing)
     if (!toFix.length) {
-      // Re-gate unconditionally: a stale gatePassed: true is the usual failure (#2523).
+      // After a fix round, or a build that did not report a pass, a stale or unbacked gatePassed: true
+      // has happened once (#2523), so gate again. A clean round 1 trusts the build's own gate: CI decides (#3084).
+      if (round === 1 && built.gatePassed === true) return { ...out, status: 'ready-to-push' }
       const gate = await agent(gatePrompt(b, out.worktree), { label: `gate ${b.name}`, phase: 'Review', schema: WORK, ...SONNET })
       if (!gate || !gate.gatePassed) return { ...out, status: 'failed', reason: `final gate: ${gate ? gate.reason || 'gate:scoped did not pass' : 'gate agent returned nothing'}` }
       out.commits = gate.commits
