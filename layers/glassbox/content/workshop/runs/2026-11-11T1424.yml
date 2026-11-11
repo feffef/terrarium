@@ -1,5 +1,36 @@
 session: session_013zxzeSgDqRuwZif7Rgt2MW
 mode: autonomous
-focus: "Walkthroughs Subject: read all nine with fresh readers, fix what a newcomer gets lost on, and check two Walkthrough claims the memory page flagged (Planning a big change stop 3 vs Wayfinder on ready-for-human; Asking an agent for a change stops 1 and 2). Chosen because no open PR touches the guide, the memory page's top lead named the Walkthroughs as the one Subject no fresh reader has seen, and the owner started the run autonomous and asked to keep choosing focuses until the budget is spent."
-changes: []
-pagesRead: []
+focus: "Two passes: (1) the Walkthroughs Subject, read by fresh readers, with two Walkthrough claims the memory page flagged checked against their sources; (2) the Claude Code Subject, whose 2026-11-10 leftovers the memory page still listed. Chosen because no open PR touches the guide, the Scout found no new topic, the memory page's top lead named the Walkthroughs as the one Subject no fresh reader had seen, and the owner started the run autonomous and asked to keep choosing focuses until the budget is spent. A third lead, adding the harvest Skill to the Routine list, was dropped after the owner said no Routine runs it yet."
+changes:
+  - walkthroughs/a-bug-report-becomes-work | Stop 3 says a Trusted issue the sweep labels ready-for-agent skips stop 5; stop 4 says the comment is shaped like an Agent Brief and drops the checkout and build words | readers could not tell which stops follow which author (auto-triage SKILL.md:46-49; triage SKILL.md:80; clear-backlog-explore.js:105). Wording only, so revision and publishedAt are kept
+  - walkthroughs/a-change-goes-live | The real case says PR 1717 left the script that stop 3 describes | stop 3 read as contradicting the case (deploy/entrypoint.sh:52-62,149-150). Wording only
+  - walkthroughs/a-friction-becomes-a-fix | Stop 4 says the subagent's one write is a commit on the run's branch; stop 7 says the run opens the Ledger PR on top of it; stop 5 glosses the four labels | stops 4 and 7 read as contradicting each other, and four undefined labels (frictions-to-fixes SKILL.md:17-21,56-57; survey-brief.md:123-135). Wording only
+  - walkthroughs/adding-a-site | The lede says GLOSSARY-MAP.md is the one file the site must change and a home-page tile is optional | the lede contradicted stop 9 (adr-0021.md; app/pages/index.vue). Wording only
+  - walkthroughs/asking-for-a-change | Stop 5 says a change that adds, renames or moves a file is never simple; stop 7 says the Friction names each rule or step skipped | the real case relied on a rule stop 5 never stated (pr-workflow.md:22-26; close-session SKILL.md:9-25). Wording only
+  - walkthroughs/from-file-to-browser | Stop 6 says the browser takes over that page without fetching its data again | the next sentence fetches a payload, which read as a contradiction (Data fetching Lesson). Wording only
+  - walkthroughs/planning-a-big-change | Stop 3 says a session claims a ticket by assigning it, and resolves one ticket, research tickets apart, which it may resolve several of; stop 5 says a spec whose body puts it on hold, and its stories, carry no label | the old wording was hard to parse and conflicted with stop 2 (wayfinder SKILL.md:67,105; issue-tracker.md:60-71). Wording only
+  - walkthroughs/reading-across-tenants | Stop 2 says expand() adds the contract fields the schema does not already declare; stop 5 says the server renders the first rows with a button for more while every row travels in the page data | two sentences a reader could not square (shared/expand.ts:109-114; Search.vue:7,30-41,72-74). Wording only
+  - walkthroughs/session-log-lands-on-main | A linked worktree is glossed; the trailer names the model and the session | undefined terms (log-session.ts:180-188,290-294). Wording only
+  - skill-pack/40.wayfinder | The sweep labels wayfinder tickets ready-for-human on grilling and prototype tickets and ready-for-agent on unblocked, unclaimed research ones; the unsourced claim that an unlabelled issue is invisible to building agents is cut | the bullet named only ready-for-agent (auto-triage SKILL.md:79-87). Wording only
+  - claude-code/40.permissions | The lede says no allow rule pre-approves a protected-path write; the plan-mode exception is named; only permissions.allow is dropped in an untrusted workspace; the unattended-edit bullet says the classifier decides in auto mode | a lede that said never against its own exceptions, and an unnamed exception (permission-modes docs; environment-caveats.md:9-10). Wording only
+  - claude-code/30.skills | With model invocation off Claude no longer sees the description, which serves people only | two sentences that read as disagreeing (writing-for-agents SKILL-MECHANICS.md:10). Wording only
+  - claude-code/50.mcp-servers | The registry is glossed; the hint is said not to be a guard | undefined term and a whole-server matcher beside Guards name tools (github-provenance-guard.ts:55-56; guards.md:36). Wording only
+  - claude-code/20.path-scoped-rules | Summary rules and the gate agree, since a rule named for an ADR may skip paths; the two below references are told apart | the gate checks the name, not relevance (validate-adr-rules.ts:42-43). Wording only
+  - claude-code/10.claude-md | Compacted is glossed; a missing blank line before What to watch for is added | an undefined term. Wording only
+  - agents/40.scheduled-tasks | No change | a harvest bullet was written, then reverted because the owner said no Routine runs the Skill yet
+pagesRead:
+  - walkthroughs/a-bug-report-becomes-work
+  - walkthroughs/a-change-goes-live
+  - walkthroughs/a-friction-becomes-a-fix
+  - walkthroughs/adding-a-site
+  - walkthroughs/asking-for-a-change
+  - walkthroughs/from-file-to-browser
+  - walkthroughs/planning-a-big-change
+  - walkthroughs/reading-across-tenants
+  - walkthroughs/session-log-lands-on-main
+  - claude-code/10.claude-md
+  - claude-code/20.path-scoped-rules
+  - claude-code/30.skills
+  - claude-code/40.permissions
+  - claude-code/50.mcp-servers
+  - terrarium-practice/80.self-improvement-loop
