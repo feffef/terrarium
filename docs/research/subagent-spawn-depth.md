@@ -8,6 +8,7 @@ Anthropic's official docs only, plus one grep of the installed binary.
 from the fetched text, which the fetch tool summarises, so wording is close, not
 guaranteed byte-exact). Local binary: `/opt/claude-code/bin/claude`,
 `claude --version` printed `2.1.322 (Claude Code)`.
+**Status: reference; decides nothing** (the proposal is issue #3110).
 
 ## Findings
 
@@ -22,7 +23,7 @@ guaranteed byte-exact). Local binary: `/opt/claude-code/bin/claude`,
 - Default history: 1 in v2.1.217 through v2.1.218, 3 from v2.1.219. (same page)
 - Binary agrees: the reader returns the env value if set, else a feature-flag
   value (`tengu_hazel_trellis`), else constant `3`; valid is an integer >= 1.
-  (`strings /opt/claude-code/bin/claude`, line 553868 of the output)
+  (`strings -n 8 /opt/claude-code/bin/claude`, line 553868 of the output)
 
 **2. Nested spawning is supported, by default.**
 - "By default, a subagent can spawn subagents of its own, up to three layers below
@@ -37,7 +38,7 @@ guaranteed byte-exact). Local binary: `/opt/claude-code/bin/claude`,
   but any type list inside the parentheses is ignored." (same page)
 - Binary's refusal text at the limit: "Complete this task directly using your
   tools instead of spawning another agent. ... ask them to raise
-  CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH." (strings output, line 396314)
+  CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH." (`strings -n 8` output, line 396314)
 
 **3. Where it can be set.**
 - Settings `env` is documented: the sub-agents page shows
@@ -52,8 +53,6 @@ guaranteed byte-exact). Local binary: `/opt/claude-code/bin/claude`,
   user or project settings." (https://code.claude.com/docs/en/env-vars#precedence)
   The page defers the exceptions ("sessions that keep the inherited value") to the
   settings reference `env` entry, which I did not read (unverified).
-- A managed-policy `env` block is covered by the generic rule above; no page
-  names this variable for managed policy specifically.
 - Agent SDK: set it through the `env` option; TypeScript replaces the subprocess
   environment (spread `process.env`), Python merges. Default 3, `1` stops
   nesting. (https://code.claude.com/docs/en/agent-sdk/subagents, "Cap subagent
@@ -109,8 +108,8 @@ guaranteed byte-exact). Local binary: `/opt/claude-code/bin/claude`,
 
 ## Not documented / unverified
 
-- (See the follow-up section.) Whether the depth limit applies to, or is inherited by, Workflow `agent()`
-  agents (docs only say they "follow their own limits").
+- Whether the depth limit applies to Workflow `agent()` agents (finding 4; the
+  follow-up below adds the binary check, still unverified).
 - Whether Workflow-started agents can be resumed with `SendMessage` or agent IDs.
 - Whether the cloud platform sets this variable, and which names it refuses; the
   value `1` seen here is local observation only.
@@ -138,19 +137,16 @@ the line numbers above come from `-n 8` and differ. Nothing was run.
    {scriptPath: string}, args?)` - run another workflow inline as a sub-step ...
    The child shares this run's concurrency cap, agent counter, abort signal, and
    token budget ... Nesting is one level only: workflow() inside a child throws."
-   (line 672757.) A matching error exists: "nest with workflow('<name>') instead."
+   (line 672752.) A matching error exists: "nest with workflow('<name>') instead."
    (line 584855.) The public workflows page does not mention `workflow()`
    (https://code.claude.com/docs/en/workflows). Whether an agent inside a workflow
    may call the `Workflow` tool: not documented; the `sub-agents` page lists
    `Workflow` among tools its first filter removes from subagents (quoted in
    the fetched page, "The first filter removes these tools ... `Workflow`"), which
    suggests no, but I did not read the full list context (unverified).
-3. **Tool description.** The `Workflow` tool description in the binary is two
-   sentences: "Execute a workflow script that orchestrates multiple subagents
-   deterministically. Workflows run in the background ..." (line 651664). It says
-   nothing about nesting, depth or the `Agent` tool. The script reference
-   (line 672745 onward) says only that agents reach MCP tools via ToolSearch and
-   get the same CLAUDE.md files.
+3. **Tool description.** The `Workflow` tool description in the binary (line
+   651664) and the script reference (line 672745 onward) say nothing about
+   nesting, depth or the `Agent` tool.
 4. **Repo workflows.** `.claude/workflows/clear-backlog-build.js` and
    `clear-backlog-explore.js` use only `label, phase, schema, isolation, model`
    in `agent()` opts (build.js lines 132-162, explore.js line 149); no tool
