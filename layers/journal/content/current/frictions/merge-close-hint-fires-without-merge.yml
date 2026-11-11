@@ -38,3 +38,13 @@ occurrences:
     severity: minor
     description: "The Stop hook claimed a PR merged and close-session had not run, though this session merged nothing; it made me close early."
     solution: "Have the merge-close hook match only a merge-pr.ts run in this session, not merge text in tool output."
+  - session: session_013zxzeRpiY8hmJh8z3HELvr
+    date: "2026-11-11"
+    severity: nit
+    description: "Stop hook said a PR merged and demanded close-session while merge-pr.ts for #3051 was still waiting on CI; PR was open."
+    solution: "Have the Stop hook confirm the merge (PR state or merge-pr.ts exit) before claiming one."
+  - session: session_013zxzeR9nyx91atfAKEs7c3
+    date: "2026-11-11"
+    severity: minor
+    description: "Stop hook demanded close-session claiming a PR merged, while this run opened none, forcing an early log mid-run."
+    solution: "Make the merged-PR check ignore sessions that opened no PR."

@@ -118,3 +118,8 @@ occurrences:
     severity: minor
     description: "Did not run code-review on my follow-up commit that moved a Skill sentence; pr-workflow says a Skill-meaning follow-up gets its own review. I read the diff and disclosed it."
     solution: "Run code-review on the follow-up diff, or state in pr-workflow that a reorder of an already reviewed sentence counts as simple."
+  - session: session_013zxzeR9nyx91atfAKEs7c3
+    date: "2026-11-11"
+    severity: nit
+    description: "ADR-0004 asks for code-review on a diff over ten lines; I read the 72-file content diff myself instead, since it held no code."
+    solution: "Let pr-workflow's simple-change test exempt pure re-pin diffs, or state that scheduled content syncs need only the own-read."

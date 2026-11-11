@@ -444,3 +444,33 @@ occurrences:
     severity: nit
     description: "Read github-integration.md, git-conventions.md and pr-workflow.md only after hooks prompted, after my first GitHub call, first git commit and PR prep."
     solution: "A hook before the first call, or read the docs named in CLAUDE.md at start of a scheduled run."
+  - session: session_013zxzeNa1RNcdysLXBJAD5N
+    date: "2026-11-11"
+    severity: nit
+    description: "Filed three issues before reading docs/agents/triage-labels.md, which CLAUDE.md requires before filing; the hook reminded me afterwards."
+    solution: "Read triage-labels.md together with issue-tracker.md before the first issue_write."
+  - session: session_013zxzeNhTeF9B47tZ5Egyhx
+    date: "2026-11-11"
+    severity: nit
+    description: "Ran git rev-parse as my first git command before reading git-conventions.md; a hook flagged it afterwards."
+    solution: "Read git-conventions.md first, or list rev-parse among the read-only commands CLAUDE.md allows."
+  - session: session_013zxzeS6w7fCCAw12ds3rtt
+    date: "2026-11-11"
+    severity: nit
+    description: "Called list_pull_requests, my first GitHub operation, before reading github-integration.md; a hook then asked me to read it first."
+    solution: "Read the doc at session start when a PR is the planned end, or make the read-first hint fire before the call."
+  - session: session_013zxzeQjCNYD6UbYX7LTjkR
+    date: "2026-11-11"
+    severity: minor
+    description: "Read git-conventions.md and ADR-0008 and ADR-0006 only after hooks flagged them post-edit, though CLAUDE.md says to read before the first git command."
+    solution: "Read the named docs before the first git command or edit of a governed file."
+  - session: session_013zxzeR7qQ3HKogNsnf5Zm8
+    date: "2026-11-11"
+    severity: nit
+    description: "I called list_pull_requests before reading github-integration.md; the hook caught it, no impact since the call was right."
+    solution: "Read the doc before the first mcp__github__ call, as CLAUDE.md says."
+  - session: session_013zxzeSvnCo3utAZGMChBZA
+    date: "2026-11-11"
+    severity: nit
+    description: "First git command (rev-parse --is-shallow-repository) was not on CLAUDE.md's read-only list and ran before docs/agents/git-conventions.md; the hook asked for the read."
+    solution: "Put the shallow check on the read-only list, or read git-conventions first."

@@ -26,3 +26,13 @@ occurrences:
     severity: minor
     description: "First Scout draft contradicted itself (never wait vs wait now) and had Scout re-run orient.ts, which rewrites the index files; only code-review caught it."
     solution: "Before committing a new instruction, run its steps on a concrete run, as CLAUDE.md's question-the-premise rule says."
+  - session: session_013zxzeNd2Ethpd3anqbmpkr
+    date: "2026-11-09"
+    severity: minor
+    description: "My capture-design draft broke its own no-trigger-change constraint by editing the hint hooks and understated cost by ignoring cache re-reads; the Fable reviewer caught both before anything was built."
+    solution: "Check a draft against its own stated constraints, and price a forced extra turn as a context re-read, before sending it for review."
+  - session: session_013zxzeNhTeF9B47tZ5Egyhx
+    date: "2026-11-11"
+    severity: minor
+    description: "Picked a diff-based gate check for #3047 without running it on the three recorded occurrences; it catches 1 of 3 and audit-docs already covers it. The owner's question exposed this, costing one round."
+    solution: "Run a proposed check on the issue's own concrete cases before presenting it as a pick."

@@ -1,6 +1,6 @@
 name: check-worktrees-unpushed-flags
 summary: check:worktrees reported a worktree or checkout as unpushed or detached after a push or build that the Skill had not told the session to follow up.
-cause: "A worktree pushed with 'git push origin HEAD:branch' has no upstream, or the main checkout was left on a detached HEAD by a build workflow; check:worktrees fails until the session pushes the run branch or sets upstreams by hand. PR #2811 (2026-11-03) has the orchestrator push reviewed branches; issue #2831 closed 2026-11-04 as most likely fixed, unproven (no later session tested it). Since PR #2739, log-session --author also runs the sweep at close and lists linked worktrees left with uncommitted or unpushed work as a Friction or a refusal. Signals: 'pnpm check:worktrees failed', 'reported them unpushed', 'no upstream', 'detached HEAD'."
+cause: "A worktree pushed with 'git push origin HEAD:branch' has no upstream, or the main checkout was left on a detached HEAD by a build workflow; check:worktrees fails until the session pushes the run branch or sets upstreams by hand. PR #2811 (2026-11-03) has the orchestrator push reviewed branches; PR #3053 (2026-11-11) makes clear-backlog push with a following fetch (so a remote-tracking ref exists) and remove the worktree once its PR lands; issue #2831 closed 2026-11-04 as most likely fixed, unproven (no later session tested it). Since PR #2739, log-session --author also runs the sweep at close and lists linked worktrees left with uncommitted or unpushed work as a Friction or a refusal. Signals: 'pnpm check:worktrees failed', 'reported them unpushed', 'no upstream', 'detached HEAD'."
 surface: safe
 status: open
 fixes:
@@ -10,6 +10,9 @@ fixes:
   - pr: 2811
     date: "2026-11-03"
     summary: "dispatch-subagents §3: impl agents hand back an unpushed branch and the orchestrator pushes the reviewed branch, so no subagent push is classifier-denied or leaves a worktree without upstream."
+  - pr: 3053
+    date: "2026-11-11"
+    summary: "clear-backlog SKILL.md section 4 pushes with a following git fetch so check:worktrees finds a remote-tracking ref, and removes each worktree once its PR merges or waits for a human."
 occurrences:
   - session: session_013zxzeQDh7MCP7HpYBYBTeh
     date: "2026-10-28"

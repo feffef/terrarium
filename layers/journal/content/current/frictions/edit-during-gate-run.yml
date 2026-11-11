@@ -1,9 +1,8 @@
 name: edit-during-gate-run
 summary: "The gate passed on a different tree than the one pushed, because files were edited during its run or committed after it."
-cause: "Agents start gate:scoped before the final head exists: they keep editing while it runs, so the e2e step builds the old tree then runs new tests, or they run it before code-review or commit, amend or fix wording after it and push without rerunning it; or the e2e step reuses an .output built before the last commit, so the final head is never exercised. glassbox-improve now runs the gate once on the final head (PRs #2626, #2629). Signals: \"edited files while gate:scoped was building\", \"had to run a second time on the final head\", gate run before code-review, an amend or follow-up commit pushed after the gate, \"reused an .output\", \"L2 reuse\"."
+cause: "Agents start gate:scoped before the final head exists: they keep editing while it runs, so the e2e step builds the old tree then runs new tests, or they run it before code-review or commit, amend or fix wording after it and push without rerunning it; or the e2e step reuses an .output built before the last commit, so the final head is never exercised. glassbox-improve now runs the gate once on the final head (PRs #2626, #2629), and since PR #3058 (2026-11-11) gate-edit-guard.ts denies Edit, Write, NotebookEdit and git commit while a gate:scoped run holds its run lock in that checkout, so the edit-while-running half is refused and only a run before code-review or commit can still pass on an older tree. Signals: \"edited files while gate:scoped was building\", \"had to run a second time on the final head\", gate run before code-review, an amend or follow-up commit pushed after the gate, \"reused an .output\", \"L2 reuse\"."
 surface: safe
-status: tracked
-ref: "issue #3046"
+status: open
 notes: |-
   2026-11-04 reopened: fixes #2626 and #2629 (2026-10-28) merged after the owner accepted it on 2026-10-27.
 fixes:
@@ -25,6 +24,9 @@ fixes:
   - pr: 2629
     date: "2026-10-28"
     summary: "glassbox-improve step 7 fixes a false claim from the last re-grade before step 8's gate, and Done counts it."
+  - pr: 3058
+    date: "2026-11-11"
+    summary: "gate-edit-guard.ts hook denies Edit, Write, NotebookEdit and git commit while a gate:scoped run holds its run lock in the checkout."
 occurrences:
   - session: session_013zxzeR86n7CjfWXZh4HXyc
     date: "2026-10-28"
@@ -151,3 +153,18 @@ occurrences:
     severity: minor
     description: "Editing files while gate:scoped ran aborted it twice; each fix round meant a full gate rerun."
     solution: "Batch review fixes and start the gate only once no more edits are pending."
+  - session: session_013zxzeS3L4n7Fke1jtRbDTc
+    date: "2026-11-10"
+    severity: minor
+    description: "Review finding arrived mid-gate; I had to wait for the first gate to finish, then rerun the gate on the fixed head."
+    solution: "Run code-review before starting the gate, as pr-workflow's order says."
+  - session: session_013zxzeQjCNYD6UbYX7LTjkR
+    date: "2026-11-11"
+    severity: minor
+    description: "Started gate:scoped before code-review and then edited, so that run was wasted and a second run refused with gate already running."
+    solution: "Follow pr-workflow: code-review first, then run the gate once on the final head."
+  - session: session_013zxzeR7qQ3HKogNsnf5Zm8
+    date: "2026-11-11"
+    severity: minor
+    description: "I started gate:scoped in the background and then edited the file, so that gate run was wasted."
+    solution: "Edit nothing while the gate runs, or confirm the design with the owner before starting it."

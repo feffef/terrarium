@@ -47,3 +47,13 @@ occurrences:
     severity: minor
     description: "Edited layers/journal/app/utils/dashboard.ts and its spec without reading layers/journal/GLOSSARY.md, which the tenant-glossary rule requires."
     solution: "Read the Tenant glossary when the rule loads; the change was data-only, so impact was low."
+  - session: session_013zxzeRpiY8hmJh8z3HELvr
+    date: "2026-11-11"
+    severity: nit
+    description: "Broke tenant-glossary.md: edited layers/journal without reading layers/journal/GLOSSARY.md; the change added no prose, so it cost nothing."
+    solution: "Reading it at the first layer edit would have satisfied the rule; low impact for a pure template change."
+  - session: session_013zxzePhW9hepYUkqdiWzwf
+    date: "2026-11-11"
+    severity: nit
+    description: "Worked on the Journal Tenant but only grepped its GLOSSARY.md instead of reading it, against the tenant-glossary rule."
+    solution: "Read layers/journal/GLOSSARY.md whole before editing under that layer; the rule loaded only after I had already edited."

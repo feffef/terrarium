@@ -2,10 +2,13 @@ name: harness-classifier-denials
 summary: >-
   The auto-mode classifier denied a git command that rewrites history or discards work, and the session fell back to a follow-up commit or a plain push.
 cause: >-
-  The classifier denies amend or force-with-lease of an already-pushed commit and `git reset --hard HEAD` used to clear a stale index, with no reason and no in-session override. A plain push or a follow-up commit works; a branch restarted after its merge is a fast-forward and needs no force. The Stop hook pushes early, so a commit is often already pushed when the session wants to amend it.
+  The classifier denies amend or force-with-lease of an already-pushed commit and `git reset --hard HEAD` used to clear a stale index, with no reason and no in-session override. A plain push or a follow-up commit works; a branch restarted after its merge is a fast-forward and needs no force. The Stop hook pushes early, so a commit is often already pushed when the session wants to amend it. PR #3057 (2026-11-11) changed git-conventions.md: a pushed commit gets a follow-up commit, not an amend, and a stale index is cleared with git restore --staged . then git restore ., not git reset --hard HEAD.
 surface: outside
-status: tracked
-ref: "issue #3045"
+status: open
+fixes:
+  - pr: 3057
+    date: "2026-11-11"
+    summary: "git-conventions.md: amend covers an unpushed tip commit only, and a stale index is cleared with git restore instead of git reset --hard HEAD."
 occurrences:
   - session: session_013zxzeQmVnqMqDkRgFRWx5T
     date: "2026-10-28"

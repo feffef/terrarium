@@ -35,3 +35,8 @@ occurrences:
     severity: nit
     description: "Chained git add -A and git commit in one call, against the very rule I was pruning; I checked the commit landed."
     solution: "Run add and commit as separate calls, as the pruned section says."
+  - session: session_013zxzeR7qQ3HKogNsnf5Zm8
+    date: "2026-11-11"
+    severity: nit
+    description: "I chained git add, a heredoc and git commit in one Bash call, against git-conventions one-state-changing-command-per-call; no harm."
+    solution: "Run add, commit and push each in their own Bash call and check each landed."

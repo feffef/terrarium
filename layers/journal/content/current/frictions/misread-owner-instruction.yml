@@ -10,6 +10,7 @@ notes: |-
   2026-10-23 design: the pr-workflow.md step-4 sentence dropped again: 01DtK8w6 (moved here by the re-cluster, dated 2026-10-12) is a bare Yes to two combined questions, a different boundary (ask a merge as its own question), and no occurrence is new; pr-workflow.md is in the open Prune Trial (PR #2412), revisit when it is judged.
   2026-10-25 design: no change: the five occurrences are five different boundaries (a session type, "link the concepts", "last N days", a bare Yes to two questions, a lens name), nothing new unites them, pr-workflow.md is in the open Prune Trial (PR #2412), and CLAUDE.md "Ask before building" already says to ask; revisit when a fourth shares one boundary.
   2026-11-09 design: a CLAUDE.md clause (state each option's full effect in the owner's terms) dropped: the two newest occurrences share one boundary (option wording diverges from intent), only two, not the four the 2026-10-25 note set; the owner corrected both in-session; revisit at a third on that boundary.
+  2026-11-11 design: no change: the new NhTeF occurrence (relaunched a build on a guess of a correction's scope) is a different mechanism from the 2026-11-09 option-wording pair, so no third occurrence shares that boundary; each was corrected in-session at minor severity; pr-workflow.md is in an open Prune Trial. dropped: a CLAUDE.md clause to restate a corrected scope and wait for a yes. Revisit when a third shares one boundary.
 occurrences:
   - session: session_013zxzeStBRUtsbccz5kMYNU
     date: "2026-10-31"
@@ -51,3 +52,18 @@ occurrences:
     severity: minor
     description: "I cut the four-value scale for rules on my own reading of 'strip it' when the owner had not chosen between my two options; they asked for it back much later, after the implementer built the binary form."
     solution: "When a reply does not pick between options I offered, ask again before acting on one."
+  - session: session_013zxzeR6YXBiMLnmDFQpBs9
+    date: "2026-11-10"
+    severity: minor
+    description: "The user said audit-logs, which no Routine is named; grepping for it cost a few calls before the screenshot showed it was audit-docs."
+    solution: "Ask which run or list the latest Routine logs first when a named Routine does not exist"
+  - session: session_013zxzeNhTeF9B47tZ5Egyhx
+    date: "2026-11-11"
+    severity: minor
+    description: "Relaunched the #3046 build on my own reading of the owner's correction to 4c without confirming the scope first; the owner interrupted to ask what was being built."
+    solution: "Restate a corrected scope in one line and wait for a yes before relaunching a build."
+  - session: session_013zxzeRumtXDY7MVhKUgVT7
+    date: "2026-11-09"
+    severity: minor
+    description: "Owner decisions reached me relayed through another session, several messages apart; I built while one question was still open and proceeded on my default."
+    solution: "Collect every open design question before building and send them in one message to the deciding session."

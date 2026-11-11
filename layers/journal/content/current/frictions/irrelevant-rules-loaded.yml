@@ -103,3 +103,8 @@ occurrences:
     severity: nit
     description: "Five rules unrelated to the task (mermaid-lanes, tenant-glossary, adr-0027, adr-0029, human-merge) loaded after reading a doc and a skill, and I had to judge each for rating."
     solution: "Narrower paths for those rules, or a smaller rating list."
+  - session: session_013zxzeS6w7fCCAw12ds3rtt
+    date: "2026-11-11"
+    severity: minor
+    description: "The Human-only rule (adr-0004-human-merge) loaded though none of my edited files is on its paths list, so I told the user the PR needed a human merge for the wrong reason until I checked the list."
+    solution: "Have the rule-loaded notice name the path that matched; unverified why it loaded for these files."

@@ -146,3 +146,8 @@ occurrences:
     severity: nit
     description: "Sent a background Bash call with a trailing nohup and ampersand as well as run_in_background; the double-background guard blocked it."
     solution: "Pass run_in_background alone, as the guard's message and dispatch-subagents say."
+  - session: session_013zxzeNa1RNcdysLXBJAD5N
+    date: "2026-11-11"
+    severity: nit
+    description: "First gate launch used a trailing & plus run_in_background; the double-background guard blocked it and I resent it plain."
+    solution: "Pass run_in_background alone, as CLAUDE.md says."

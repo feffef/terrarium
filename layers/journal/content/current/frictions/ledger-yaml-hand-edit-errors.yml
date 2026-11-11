@@ -53,3 +53,8 @@ occurrences:
     severity: minor
     description: "The run entry's changes line held a colon followed by a space, which YAML read as an object and failed validate:content."
     solution: "The orient.ts skeleton or the curate Skill's State section could warn that a changes entry must avoid a colon followed by a space."
+  - session: session_013zxzeNeWJTvqXPTEeR63qC
+    date: "2026-11-11"
+    severity: nit
+    description: "Two content files failed validation on a colon in an unquoted YAML scalar, found only when the full validator or page test ran."
+    solution: "Quote any description or changes entry that holds a colon; the glassbox-curate run-entry skeleton could show them quoted."

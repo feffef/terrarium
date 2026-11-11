@@ -22,3 +22,8 @@ occurrences:
     severity: moderate
     description: "Ran `git checkout origin/main -- layers/journal/content` before reading git-conventions.md, which forbids checkout of a ref onto paths (it stages them)."
     solution: "Read git-conventions.md before the first non-read-only git command, as CLAUDE.md says; it was a no-op only because the branch equalled main."
+  - session: session_013zxzeSSDUXBAYYrwXtej8b
+    date: "2026-11-10"
+    severity: nit
+    description: "A stray git checkout -b tmp-check in a compound command moved me off the session branch briefly; fixed with checkout and branch -d."
+    solution: "Keep exploratory git read-only (git show) per git-conventions."
