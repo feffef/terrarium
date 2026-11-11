@@ -4,7 +4,7 @@
 // `routines` collection; the prose and the chart blocks come from its
 // `/routines` page Document, whose `::routine-chart` and `::routine-weekly-table`
 // read what this page provides (app/composables/routineData.ts).
-import type { RoutineDoc } from '../../../../types/journal'
+import type { RoutineView } from '../../../../composables/routineData'
 
 definePageMeta({ name: 'journal-routines' })
 const PAGE_TITLE = 'Routine costs'
@@ -15,8 +15,12 @@ const { space, pagesKey, collections } = useSpace('journal')
 const { data } = await useAsyncData(route.path, async () => ({
   page: await queryCollection(pagesKey).path('/routines').first(),
   routines: await queryCollection(collections.routines).select('name', 'runs').all(),
+  skills: await queryCollection(collections.skills).select('name', 'gist').all(),
 }))
-const routines = computed<RoutineDoc[]>(() => data.value?.routines ?? [])
+const routines = computed<RoutineView[]>(() => {
+  const gists = new Map(data.value?.skills.map((s) => [s.name, s.gist]))
+  return (data.value?.routines ?? []).map((r) => ({ ...r, gist: gists.get(r.name) }))
+})
 provideRoutineData(routines)
 
 const metric = useRoutineMetric()
