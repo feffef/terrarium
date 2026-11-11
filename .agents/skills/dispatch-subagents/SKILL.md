@@ -13,6 +13,8 @@ will see, a length bound, who owns a shared item; even two agents
 on a small pass), settle it first with the `grilling` Skill. A choice
 that shifts after agents have started forces a full redo.
 
+More than 3 agents from one brief you improvised this session: start one first and check its result before the rest; a brief defined in the repo needs no pilot.
+
 ## 2. Pick the isolation
 
 - **A dispatched subagent that touches git:** pass `isolation: 'worktree'` on the

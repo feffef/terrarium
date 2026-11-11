@@ -5,7 +5,9 @@
 // shows that Skill invoked or its SKILL.md read (Read tool, or a shell read the
 // session trace recognises). A subagent (payload has `agent_id`) cannot
 // dispatch, so it is never guarded. A missing or unreadable transcript lets the
-// call through: denying would block every dispatch for good.
+// call through: denying would block every dispatch for good. Separately, any
+// caller's brief with an unfilled placeholder is denied (issue #2996); that
+// needs no transcript.
 //
 // Usage:
 //   tsx scripts/hooks/dispatch-read-guard.ts                # hook payload on stdin
@@ -32,13 +34,30 @@ export const formatGuardMessage = () =>
   `Blocked by the ${LABEL} (${REF}): read \`${DOC}\` first (CLAUDE.md: "Before you write a subagent brief, or resume ` +
   'a stopped subagent"), then retry this call unchanged if the Skill shows it was right.'
 
-const decide = (payload: unknown) => shouldDeny(prop(payload, 'agent_id'), readTranscript(prop(payload, 'transcript_path') as string | undefined))
+// A Workflow brief is filled inside its script at run time, so only these two
+// tools are checked. `{NAME}` is narrow to skip JSON, code and template literals.
+const PLACEHOLDER = /@@\w+@@|(?<!\$)\{[A-Z_]+\}/
+const BRIEF_FIELD: Record<string, string> = { Agent: 'prompt', SendMessage: 'message' }
+
+export function unfilledPlaceholder(toolName: unknown, toolInput: unknown): string | null {
+  const field = typeof toolName === 'string' ? BRIEF_FIELD[toolName] : undefined
+  if (!field) return null
+  const text = prop(toolInput, field)
+  return typeof text === 'string' ? (PLACEHOLDER.exec(text)?.[0] ?? null) : null
+}
+
+const decide = (payload: unknown) => {
+  if (shouldDeny(prop(payload, 'agent_id'), readTranscript(prop(payload, 'transcript_path') as string | undefined))) return formatGuardMessage()
+  const found = unfilledPlaceholder(prop(payload, 'tool_name'), prop(payload, 'tool_input'))
+  return found && `Blocked by the ${LABEL} (issue #2996): the brief still holds the unfilled placeholder \`${found}\`. Fill it from its source, then retry.`
+}
 
 function main(): void {
   const read = readHookPayload()
   if (read.kind === 'none') return
   if (read.kind !== 'ok') return denyUninspectable(LABEL, REF, 'the hook payload was unreadable or named no tool')
-  if (decide(read.payload)) process.stdout.write(JSON.stringify(buildDenyOutput(formatGuardMessage())))
+  const message = decide(read.payload)
+  if (message) process.stdout.write(JSON.stringify(buildDenyOutput(message)))
 }
 
 function dryRun(argv: string[]): void {
