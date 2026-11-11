@@ -1,0 +1,13 @@
+session: session_013zxzeQ2wC57fFKCB2ZNBZb
+mode: autonomous
+focus: "Git & GitHub Subject: de-duplicate and clarify its eight pages after a fresh read. Chosen because no open PR touches the guide, the Scout found only a rule-use topic that is not central, and the memory page's top lead named this Subject as not yet de-duplicated."
+changes: []
+pagesRead:
+  - git-github/10.pull-requests
+  - git-github/20.author-trust
+  - git-github/30.composite-actions
+  - git-github/40.dependabot-grouping
+  - git-github/50.git-worktrees
+  - git-github/60.attribution
+  - git-github/70.issue-triage-labels
+  - git-github/80.git-plumbing
