@@ -64,8 +64,8 @@ transition) needs its timeout raised per-call —
   `layers/*/tests/unit/**` and `.agents/skills/*/tests/unit/**`.
 - `pnpm test:e2e` — the L2 specs, in parallel, on the gate's build. To run
   one spec file, use `pnpm exec vitest run --project e2e <path>`: vitest ORs
-  positional filters, so a path appended to `pnpm test:e2e` (`vitest run
-  tests/e2e <path>`) still runs everything. A narrowed run never shows a
+  positional filters, so a path appended to `pnpm test:e2e` still runs
+  everything. A narrowed run never shows a
   failure is pre-existing: `docs/agents/verifying-ui-changes.md`.
 
 Both are part of the safety gate (ADR-0004); the steps live in `package.json`'s `gate`,

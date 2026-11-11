@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
+import { captureScreenshot, captureScreenshotWaitingFor } from '../../scripts/ui/screenshot.ts'
 
 // Issue #3070: both capture paths must re-scroll to the URL #anchor.
 const scrollIntoViewIfNeeded = vi.fn(async () => {})
@@ -11,8 +12,6 @@ const page = {
 vi.mock('../../scripts/lib/chromium.ts', () => ({
   launchChromium: async () => ({ newPage: async () => page, close: async () => {} }),
 }))
-
-const { captureScreenshot, captureScreenshotWaitingFor } = await import('../../scripts/ui/screenshot.ts')
 
 describe('screenshot anchor scroll', () => {
   it('scrolls to the #anchor after a fixed wait', async () => {
