@@ -16,7 +16,7 @@ const entry = computed(() => terms?.value[glassboxTermId(glassboxSlotText(slots)
     :aria-expanded="open"
     :aria-controls="definitionId"
     @click="open = !open"
-  ><slot /></button><span v-show="open" :id="definitionId" class="definition" role="note">{{ entry.definition }}<File v-if="entry.source" class="source">{{ entry.source }}</File></span></span>
+  ><slot /></button><span v-show="open" :id="definitionId" class="definition" role="note">{{ entry.definition }}<span v-if="entry.lesson" class="lesson"><span>{{ glassboxLessonLabels.lesson }}</span><NuxtLink :to="entry.lesson">{{ entry.lessonTitle ?? 'Read the Lesson' }}</NuxtLink></span><File v-else-if="entry.source" class="source">{{ entry.source }}</File></span></span>
   <slot v-else />
 </template>
 
@@ -58,4 +58,18 @@ button[aria-expanded='true'] { color: var(--gb-accent); }
   font-size: 0.92em;
 }
 .source { margin-inline-start: 0.4em; }
+/* The look of a Lesson chip (Article.vue's .gb-lessons), as spans: a list can't sit inside a paragraph. */
+.lesson {
+  display: inline-block;
+  margin-inline-start: 0.4em;
+  padding: 0 8px;
+  border: 1px solid var(--gb-pane-edge);
+  border-radius: 8px;
+  background: var(--gb-bg);
+  font-size: 0.95em;
+}
+.lesson span { color: var(--gb-muted); }
+.lesson span::after { content: ' · '; }
+.lesson a { color: var(--gb-ink); text-decoration: none; }
+.lesson a::after { content: ' →'; }
 </style>

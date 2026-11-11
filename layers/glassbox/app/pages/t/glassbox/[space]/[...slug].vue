@@ -17,12 +17,12 @@ const { data, status, error } = await useAsyncData(route.path, async () => {
   ])
   const termIds = glassboxPageTerms(page?.body)
   const terms = termIds.length
-    ? await queryCollection(collections.terms).where('stem', 'IN', termIds).select('stem', 'definition', 'source').all()
+    ? await queryCollection(collections.terms).where('stem', 'IN', termIds).select('stem', 'definition', 'source', 'lesson').all()
     : []
   return {
     page,
     through: glassboxWalkthroughsThrough(walkthroughs, `${base}${path}`),
-    terms: Object.fromEntries(terms.map(({ stem, ...t }) => [stem, t])),
+    terms: Object.fromEntries(terms.map(({ stem, ...t }) => [stem, { ...t, lessonTitle: pages.find((p) => `/t/glassbox/guide${p.path}` === t.lesson)?.title }])),
     subjects: glassboxDirectory(pages),
     walkthroughs: glassboxWalkthroughs(pages),
     surround: glassboxSurround(pages, path),

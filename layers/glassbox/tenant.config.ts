@@ -26,6 +26,7 @@ export default defineTenant({
         term: z.string(),
         definition: z.string(),
         source: z.string().optional(),
+        lesson: z.string().optional(), // GLOSSARY.md, Term
       }),
     },
     // The workshop Space's state (GLOSSARY.md): one entry per curate run, named

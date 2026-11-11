@@ -409,12 +409,19 @@ runIfMain(import.meta.url, () => {
   for (const file of glassboxOrphans(sources)) console.log(`guide/pages/${file}: ${glassboxOrphanText}`)
 })
 
+interface GlassboxTermEntry { source?: string, lesson?: string }
+
 /** Every entry in the `terms` Collection, by id. */
-export function glassboxTerms(projectRoot = root): Record<string, { source?: string }> {
+export function glassboxTerms(projectRoot = root): Record<string, GlassboxTermEntry> {
   const dir = join(projectRoot, 'layers/glassbox/content/guide/terms')
-  return Object.fromEntries(globSync('**/*.yml', { cwd: dir }).map((f) => [f.replace(/\.yml$/, ''), parseDocument(join(dir, f)) as { source?: string }]))
+  return Object.fromEntries(globSync('**/*.yml', { cwd: dir }).map((f) => [f.replace(/\.yml$/, ''), parseDocument(join(dir, f)) as GlassboxTermEntry]))
 }
 
-export function glassboxTermProblems(terms: Record<string, { source?: string }>, exists: (path: string) => boolean): string[] {
-  return Object.entries(terms).filter(([, t]) => t.source && !exists(t.source)).map(([id, t]) => `term ${id}: source ${t.source} does not exist`)
+/** A term links its Lesson or, with none, its glossary: never both. */
+export function glassboxTermProblems(terms: Record<string, GlassboxTermEntry>, exists: (path: string) => boolean, pages: string[]): string[] {
+  return Object.entries(terms).flatMap(([id, t]) => [
+    ...(t.source && !exists(t.source) ? [`term ${id}: source ${t.source} does not exist`] : []),
+    ...(t.lesson && !pages.includes(t.lesson) ? [`term ${id}: lesson ${t.lesson} is not a page`] : []),
+    ...(t.lesson && t.source ? [`term ${id}: has a lesson, so drop its source`] : []),
+  ])
 }

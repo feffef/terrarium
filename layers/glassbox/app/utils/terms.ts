@@ -3,6 +3,9 @@ import type { ComputedRef, InjectionKey, Slots, VNode } from 'vue'
 export interface GlassboxTerm {
   definition: string
   source?: string
+  lesson?: string
+  /** The Lesson's page title, which the page adds from its own page list. */
+  lessonTitle?: string
 }
 
 /** The page's terms by entry id, picked by `glassboxPageTerms`. */

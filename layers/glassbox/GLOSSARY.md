@@ -130,7 +130,8 @@ at its `revision`. `page-checks.ts` checks every page in `pnpm test`.
 
 ### Term
 A word a page expands inline, defined in Glass Box's own words. Definitions live
-in the `terms` Collection, each with an optional `source` glossary. A
+in the `terms` Collection, each with an optional `lesson` (the guide Lesson that teaches it) or, for a
+term no Lesson teaches, a `source` glossary, never both. A
 `:term[…]` finds its entry by its `id` attribute, else by its text lowercased,
 stripped of everything but letters, digits, hyphens and spaces, with spaces
 turned into hyphens: `:term[Nuxt & Vue]` reads `nuxt-vue.yml`,

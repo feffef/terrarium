@@ -336,8 +336,15 @@ describe('glassboxOrphans', () => {
 describe('glassboxTermProblems', () => {
   it('fails a term whose source does not exist, and passes one that does or has none', () => {
     const exists = (path: string) => path === 'GLOSSARY.md'
-    expect(glassboxTermProblems({ space: { source: 'GLOSSARY.md' }, zod: {} }, exists)).toEqual([])
-    expect(glassboxTermProblems({ space: { source: 'GLOSARY.md' } }, exists)).toEqual(['term space: source GLOSARY.md does not exist'])
+    expect(glassboxTermProblems({ space: { source: 'GLOSSARY.md' }, zod: {} }, exists, [])).toEqual([])
+    expect(glassboxTermProblems({ space: { source: 'GLOSARY.md' } }, exists, [])).toEqual(['term space: source GLOSARY.md does not exist'])
+  })
+
+  it('fails a lesson that is not a page, and a term with both a lesson and a source', () => {
+    const pages = ['/t/glassbox/guide/verification/gate']
+    expect(glassboxTermProblems({ gate: { lesson: pages[0] } }, () => true, pages)).toEqual([])
+    expect(glassboxTermProblems({ gate: { lesson: '/t/glassbox/guide/gate' } }, () => true, pages)).toEqual(['term gate: lesson /t/glassbox/guide/gate is not a page'])
+    expect(glassboxTermProblems({ gate: { lesson: pages[0], source: 'GLOSSARY.md' } }, () => true, pages)).toEqual(['term gate: has a lesson, so drop its source'])
   })
 })
 
@@ -374,8 +381,8 @@ describe('every Glass Box page matches the code at its revision', () => {
     expect(globSync('*.yml', { cwd: join(content, 'drafts/terms') }).sort()).toEqual(globSync('*.yml', { cwd: join(content, 'guide/terms') }).sort())
   })
 
-  it('every term source exists', () => {
-    expect(glassboxTermProblems(terms, (path) => existsSync(join(root, path)))).toEqual([])
+  it('every term source exists and every term lesson is a page', () => {
+    expect(glassboxTermProblems(terms, (path) => existsSync(join(root, path)), realSite.pages)).toEqual([])
   })
 })
 

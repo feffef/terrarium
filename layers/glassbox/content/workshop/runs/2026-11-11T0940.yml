@@ -1,0 +1,13 @@
+session: session_013zxzeNeWJTvqXPTEeR63qC
+mode: interactive
+focus: "Skill inventory Lesson: make its concept and Terrarium sections teach how the inventory is produced and read, after the owner called the concept weak. The owner gave the focus and asked for the glassbox-lesson and glassbox-curate steps."
+changes:
+  - "terrarium-practice/85.skill-inventory | Rewritten: the concept gives the three jobs of an inventory, an example entry and when it is the wrong tool; In Terrarium follows the data (session logs, the audit-skills Routine, four readers) with the triage entry as the Excerpt | the owner found the concept weak; a fresh reader found undefined terms and repeats (audit-skills.ts:123-151; audit-skills SKILL.md:125-168; dashboard.ts:129-137; auto-triage SKILL.md:17-18; importance-consistency.spec.ts:29-48). publishedAt set"
+  - "claude-code/30.skills | Where next links the Lesson in place of the Journal page | the Lesson is closer than the Journal page"
+  - "skill-pack/10.skill-packs | Where next links the Lesson in place of the Journal page | same"
+  - "terrarium-practice/80.self-improvement-loop | Where next links the Lesson in place of Subagents | the Lesson is closer"
+pagesRead:
+  - terrarium-practice/85.skill-inventory
+  - terrarium-practice/80.self-improvement-loop
+  - terrarium-practice/50.pruning-instructions
+  - skill-pack/10.skill-packs
