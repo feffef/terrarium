@@ -581,7 +581,7 @@ describe('reportReads (the names reported is picked from)', () => {
     it('says the log lands without the fields main does not know, rather than holding', () => {
       const strip = () => ({ errors: "  (root): Unrecognized key(s) in object: 'newField'", unknownKeys: ['newField'] })
       const out = author(store(['git status']), { mainSchemaFn: strip }).logs.join('\n')
-      expect(out).toContain('without newField')
+      expect(out).toContain('does not know newField')
       expect(out).not.toContain('first turn that ends after that merge')
     })
   })

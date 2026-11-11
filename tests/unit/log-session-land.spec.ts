@@ -181,7 +181,7 @@ describe("main's session schema — a branch's new field cannot land a log main 
     expect(schemaRejection(schemaFile, { ...entry, newField: 1, goal: 5 })?.unknownKeys).toBeNull()
   })
 
-  it('schemaRejection() never strips a nested unknown key, and an empty key list is not strippable', () => {
+  it('schemaRejection() never strips a nested unknown key', () => {
     // Inside the repo so the temp schema resolves `zod` from node_modules.
     const dir = join(repoRoot, '.throwaway', 'log-strip-nested')
     mkdirSync(dir, { recursive: true })
@@ -191,10 +191,6 @@ describe("main's session schema — a branch's new field cannot land a log main 
       const res = schemaRejection(nested, { a: { extra: 1 } })
       expect(res?.errors).toContain('a')
       expect(res?.unknownKeys).toBeNull()
-
-      const keyless = join(dir, 'keyless.ts')
-      writeFileSync(keyless, "export const sessionSchema = { safeParse: () => ({ success: false, error: { issues: [{ path: [], code: 'unrecognized_keys', message: 'x' }] } }) }\n")
-      expect(schemaRejection(keyless, {})?.unknownKeys).toBeNull()
     } finally {
       rmSync(dir, { recursive: true, force: true })
     }

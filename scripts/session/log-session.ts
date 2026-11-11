@@ -423,12 +423,14 @@ export function schemaRejection(schemaFile: string, entry: unknown): SchemaRejec
   if (!out.trim()) return null
   const issues = JSON.parse(out) as { path: (string | number)[]; code: string; message: string; keys?: string[] }[]
   const strippable = issues.every((i) => i.code === 'unrecognized_keys' && i.path.length === 0)
-  const keys = strippable ? issues.flatMap((i) => i.keys ?? []) : []
   return {
     errors: issues.map((i) => '  ' + (i.path.join('.') || '(root)') + ': ' + i.message).join('\n'),
-    unknownKeys: keys.length ? keys : null, // no named keys: nothing to strip, so keep refusing
+    unknownKeys: strippable ? issues.flatMap((i) => i.keys!) : null, // zod always names the keys
   }
 }
+
+const droppedNote = (fields: string[]) =>
+  `main's schema does not know ${fields.join(', ')} yet; the log lands without them, and in full once that schema merges`
 
 /** The log lands on `main`, so it must pass `main`'s `.strict()` schema, not just
  *  this branch's: a branch that adds a session field would otherwise land a log
@@ -912,7 +914,7 @@ export function authorMain(
     rejection = null // a check that can't run counts as `main` unreadable: authoring never fails on it
   }
   if (rejection?.unknownKeys) {
-    console.log(`  the Stop hook will commit it without ${rejection.unknownKeys.join(', ')}, which main's schema does not know yet; the full log lands after that schema merges.`)
+    console.log(`  ${droppedNote(rejection.unknownKeys)}`)
   } else if (rejection) {
     console.log(`  the Stop hook will hold it, not commit it this turn: ${refusalOf(rejection, 'origin').detail}`)
     console.log('  It lands on the first turn that ends after that merge, so stay subscribed to the schema PR.')
@@ -1043,7 +1045,7 @@ function landMain(argv: string[]): void {
     default:
       console.error(`log-session: ${result.action} ${result.relPath ?? ''}`)
   }
-  if (result.dropped) console.error(`log-session: main's schema does not know ${result.dropped.join(', ')} yet; logged without them, the full log re-lands once it does`)
+  if (result.dropped) console.error(`log-session: ${droppedNote(result.dropped)}`)
 
   // Record what we landed so the next event's gate no-ops until the scratch changes.
   // Both 'landed' and 'skipped-unchanged' mean this scratch's content is on `main`.
