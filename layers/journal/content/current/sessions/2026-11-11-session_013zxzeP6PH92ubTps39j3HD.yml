@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeP6PH92ubTps39j3HD
 startedAt: 2026-11-11T16:40:30Z
-endedAt: 2026-11-11T17:10:21Z
+endedAt: 2026-11-11T17:14:10Z
 kind: interactive
 goal: Harvest learnings from recent session logs into Seedlings
-status: in-review
-outcome: Three Seedlings filed (3103-3105); harvest Skill fixes open as PR 3106.
-summary: "Scheduled-style harvest run with the argument learnings. First pass was agent-initiated and too shallow: I opened about ten of the 204 unharvested learnings' clusters, screened mostly by keyword grep, and filed nothing. The owner then asked whether nothing was worth documenting (human-instructed) and told me to do a second pass and think about improving the Skill (human-instructed). The second pass checked the GitHub, git and harness clusters against docs/agents, the tracker and the Friction Ledger, dropped what the Ledger or open issues already cover (closing keywords, helper agents moving the branch, gate comment SHA, hand-back guidance), and filed three workflow Seedlings, each adding a few lines to one existing doc - 3103 (github-integration.md), 3104 (environment-caveats.md), 3105 (git-conventions.md) - all verified with check-posted. Product clusters stayed unfiled because their facts already sit in code comments or are single-session. The owner then told me to build the Skill changes in this session (human-instructed): PR 3106 changes harvest step 1, 3, 4, 5 and adds stateReason to list-open-issues.ts, reviewed with code-review (valid findings applied) and gated green before the push. Earlier open question, now settled: the Skill's rule that a change must retire as much as it adds blocks nearly every doc-fact learning, so the first pass dropped real candidates for that reason."
+status: completed
+outcome: Three Seedlings filed (3103-3105); harvest Skill fixes merged in PR 3106.
+summary: "Scheduled-style harvest run with the argument learnings. First pass was agent-initiated and too shallow: I opened about ten of the 204 unharvested learnings' clusters, screened mostly by keyword grep, and filed nothing. The owner then asked whether nothing was worth documenting (human-instructed) and told me to do a second pass and think about improving the Skill (human-instructed). The second pass checked the GitHub, git and harness clusters against docs/agents, the tracker and the Friction Ledger, dropped what the Ledger or open issues already cover (closing keywords, helper agents moving the branch, gate comment SHA, hand-back guidance), and filed three workflow Seedlings, each adding a few lines to one existing doc - 3103 (github-integration.md), 3104 (environment-caveats.md), 3105 (git-conventions.md) - all verified with check-posted. Product clusters stayed unfiled because their facts already sit in code comments or are single-session. The owner then told me to build the Skill changes in this session (human-instructed): PR 3106 changes harvest step 1, 3, 4, 5 and adds stateReason to list-open-issues.ts, reviewed with code-review (valid findings applied), gated green before the push, and merged by me through merge-pr.ts after the green gate and my verdict comment. Earlier open question, now settled: the Skill's rule that a change must retire as much as it adds blocks nearly every doc-fact learning, so the first pass dropped real candidates for that reason."
 prs:
   - "3106"
 docsRead:
@@ -61,14 +61,14 @@ frictions:
   - description: Started pnpm gate:scoped before committing and running code-review, against pr-workflow.md's order; stopped it and restarted, costing a few minutes.
     solution: "The pre-PR checklist in the harvest-style build flow could be one numbered list: commit, review, fix, gate."
     severity: nit
-durationSec: 1791
+durationSec: 2020
 models:
-  claude-sonnet-5-5: 150
+  claude-sonnet-5-5: 168
 toolCounts:
-  Bash: 40
+  Bash: 43
   Read: 13
-  Skill: 7
-  ToolSearch: 3
+  Skill: 8
+  ToolSearch: 5
   mcp__github__issue_write: 3
   Edit: 16
   TaskStop: 1
@@ -76,6 +76,9 @@ toolCounts:
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 3
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - scripts/github/list-open-issues.ts
   - tests/unit/list-open-issues.spec.ts
@@ -213,14 +216,14 @@ subagents:
     durationSec: 18
     toolCalls: 7
     modelCalls: 3
-    tokenShare: 6.2
+    tokenShare: 5.2
   - type: general-purpose
     task: Spec review of harvest edit
     model: sonnet
     durationSec: 23
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 6.9
+    tokenShare: 5.8
 gitBranch: ccr-b6694994-xb7qi2
 entrypoint: remote_mobile
 cliVersion: 2.1.322
