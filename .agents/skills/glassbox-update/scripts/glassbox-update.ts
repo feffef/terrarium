@@ -107,8 +107,10 @@ export function glassboxUpdate(cwd = root, { main: mainRef = 'origin/main', writ
         update.shifted.push({ path: ref.path, from, to: rangeText(moved) })
       }
     }
-    update.needsReader = update.edited.length > 0 || changedPaths.some((p) => refs.files.some((r) => r.path === p && !r.lines))
-    if (changedPaths.length) report.pages.push(update)
+    if (changedPaths.length) {
+      update.needsReader = update.edited.length > 0 || changedPaths.some((p) => refs.files.some((r) => r.path === p && !r.lines))
+      report.pages.push(update)
+    }
 
     for (const id of new Set(refs.terms)) {
       const termSource = terms[id]?.source

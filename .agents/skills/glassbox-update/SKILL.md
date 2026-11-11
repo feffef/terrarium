@@ -24,15 +24,15 @@ that one commit, never a later fetch.
 2. **Advance.** Run the script with `--write --to <the commit>`: it shifts
    moved `lines` ranges and pins every page to the commit, except a page with
    an `edited` range, which is left wholly untouched.
-3. **Flag.** Every page in the step-1 report's `pages` is flagged (a page with
-   `needsReader` false needs no reader, step 5), and so is every term in `terms`. Then read `git log` and `git diff` from each page's
+3. **Flag.** Every page in the step-1 report's `pages` is flagged, and so is
+   every term in `terms`. Then read `git log` and `git diff` from each page's
    step-1 `revision` to the commit, and flag any page whose prose describes
    something that changed even though it cites no changed file (match by
    concept: a renamed step, a moved rule, a retired Skill). A `major` version
    change also flags *The concept* of every Lesson whose Full reference links that tool's docs.
    Done when every commit since the oldest `revision` has been read against
    every page.
-4. **Re-check and edit** each flagged page (not a shifted-only one with `needsReader` false, unless step 3 flagged it by prose) as a whole, diagrams and `teaches` included,
+4. **Re-check and edit** each flagged page as a whole, diagrams and `teaches` included,
    against the commit, and pin it there (EVERY-PAGE.md's Pin, with the
    commit in place of `origin/main`); re-line each `edited` range by hand as
    you pin. A flagged term: re-read its `source` entry and rewrite the
@@ -45,8 +45,7 @@ that one commit, never a later fetch.
    overview):
    - **Flagged pages** with `needsReader` true: only the claims that cite a
      file changed since the page's step-1 `revision`. A flagged page with
-     `needsReader` false (every changed path cited only by shifted ranges,
-     whose lines are unchanged) gets no reader, unless it is in the rotation.
+     `needsReader` false gets no reader, unless it is in the rotation.
    - **Rotation:** the 5 pages whose `checked` in
      `layers/glassbox/content/workshop/checks/update.yml` is oldest, a page
      with none oldest of all, ties by page path. Each gets a **full
