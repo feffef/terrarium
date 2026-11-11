@@ -268,10 +268,14 @@ function lessonProblems(file: string, body: string, prose: string, space: string
 }
 
 // Where next holds the closest pages, any one Journal page last; a Lesson's lists only Lessons (GLOSSARY.md, Lesson).
-function nextProblems(prose: string, lesson: boolean): string[] {
+const nextItems = (prose: string) => {
   const lines = prose.split('\n')
   const at = lines.findIndex((l) => /^## /.test(l) && glassboxTermId(l.slice(3)) === glassboxLessonIds.whereNext)
-  const next = at < 0 ? [] : lines.slice(at + 1).filter((l) => l.startsWith('- '))
+  return at < 0 ? [] : lines.slice(at + 1).filter((l) => l.startsWith('- '))
+}
+
+function nextProblems(prose: string, lesson: boolean): string[] {
+  const next = nextItems(prose)
   const problems = next.length > cap ? [`Where next lists ${next.length} pages, more than ${cap}`] : []
   if (next.slice(0, -1).some((l) => l.includes('](/t/journal'))) problems.push('Where next lists a Journal page before its end')
   if (lesson && next.some((l) => l.includes('](/t/glassbox/guide/walkthroughs/'))) problems.push('Where next on a Lesson lists a Walkthrough')
@@ -314,12 +318,15 @@ export function glassboxPageProblems(file: string, source: string, site: Glassbo
   const pages = new Set(site.pages)
   const journal = new Set(site.journal)
   const guide = glassboxSitePath('guide', 'index.md')
+  const nextLines = nextItems(prose)
   for (const [, text, link] of prose.matchAll(/\[([^[\]]*)\]\((\/t\/(?:glassbox\/[a-z0-9]+|journal)(?:\/[^)\s#?]*)?)/g)) {
     const path = link!.replace(/\/$/, '')
     // A link quoting its target's title goes stale when the title changes; lowercase text is running prose (#2114).
-    // A bare link `[](…)` in Where next renders the title itself (glassboxNextList), so it cannot go stale.
+    // A bare link `[](…)` in Where next renders the title itself (glassboxNextList), so it cannot go stale; elsewhere nothing fills it.
     const title = site.titles[path]
-    if (space === 'guide' && title !== undefined && text !== '' && !/^[a-z]/.test(text!) && text !== title) problems.push(`link text "${text}" is not the title "${title}" of ${path}`)
+    if (text === '') {
+      if (space === 'guide' && !nextLines.some((l) => l.includes(`[](${link}`))) problems.push(`bare link ${link} is outside Where next, which renders no title for it`)
+    } else if (space === 'guide' && title !== undefined && !/^[a-z]/.test(text!) && text !== title) problems.push(`link text "${text}" is not the title "${title}" of ${path}`)
     // The guide stands alone; drafts may lean on it (GLOSSARY.md, Three Spaces).
     if (space === 'guide' && path.startsWith('/t/glassbox/') && path !== guide && !path.startsWith(`${guide}/`)) problems.push(`guide page links outside the guide: ${link}`)
     else if (path.startsWith('/t/glassbox/') ? !pages.has(path) : !journal.has(path)) problems.push(`link ${link} resolves to no page`)

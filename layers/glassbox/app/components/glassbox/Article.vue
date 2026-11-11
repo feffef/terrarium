@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import type { MinimarkTree, Toc } from '@nuxt/content'
 import type { GlassboxPageLink } from '../../utils/subjects'
+import type { GlassboxTitles } from '../../utils/lesson'
 
 const props = defineProps<{
   page: { path: string, title: string, revisionDate: string, body: MinimarkTree & { toc?: Toc } }
   base: string
   surround: ReturnType<typeof glassboxSurround>
   through: GlassboxPageLink[]
-  titles: Record<string, string>
+  titles: GlassboxTitles
   draft: boolean
   dated: boolean
   source?: string
