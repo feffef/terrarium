@@ -1,0 +1,262 @@
+schemaVersion: 1
+session: session_013zxzeQjCNYD6UbYX7LTjkR
+startedAt: 2026-11-11T07:56:26Z
+endedAt: 2026-11-11T08:06:07Z
+kind: interactive
+goal: Show each Routine's Skill gist on the Routine costs charts
+status: in-review
+outcome: PR 3055 opened with the gist on every chart and on table hover; gate green
+summary: "The owner asked (direct ask) that the Routine charts on /t/journal/current/routines show the Skill's title from the Skill Inventory, since they showed only the name. The Inventory has no title field, so I asked four questions; the owner chose the gist field, under the name, always visible in the charts and on hover in the weekly table, name only when there is no gist (all human-decided). I built it agent-initiated as the smallest join: the page also loads the skills collection and attaches each gist to the Routine of the same name; no stored field changed. After pushing I stopped and asked about a PR; the owner said to open it, which ADR-0003 already required. Then I ran code-review (two read-only subagents; no hard findings, one real spacing typo fixed, one subagent miscounted Routines), the gate on the final head, opened PR 3055 and subscribed to it. Open: merge once CI is green and the verdict is posted."
+prs:
+  - "3055"
+docsRead:
+  - path: layers/journal/content/current/skills/audit-skills.yml
+    reason: (no reason given)
+  - path: layers/journal/app/components/content/RoutineChart.vue
+    reason: (read before editing)
+  - path: layers/journal/app/composables/routineData.ts
+    reason: (read before editing)
+  - path: layers/journal/app/components/content/RoutineWeeklyTable.vue
+    reason: (read before editing)
+  - path: layers/journal/app/pages/t/journal/[space]/routines.vue
+    reason: (read before editing)
+  - path: layers/journal/GLOSSARY.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: layers/journal/tenant.config.ts
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+    reason: (no reason given)
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: reviewed the four-file diff before the PR
+  - name: dispatch-subagents
+    reason: brief for the two review agents
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Stopped after pushing and asked about a PR, though ADR-0003 says to open it myself even if the system prompt says not to; the owner had to tell me.
+    solution: Read the ADR-0003 rule at the end of the work, before the turn ends; it overrides the generic no-PR line.
+    severity: moderate
+  - description: Read git-conventions.md and ADR-0008 and ADR-0006 only after hooks flagged them post-edit, though CLAUDE.md says to read before the first git command.
+    solution: Read the named docs before the first git command or edit of a governed file.
+    severity: minor
+  - description: Started gate:scoped before code-review and then edited, so that run was wasted and a second run refused with gate already running.
+    solution: "Follow pr-workflow: code-review first, then run the gate once on the final head."
+    severity: minor
+  - description: scripts/ui/preview.ts is not executable, so running it directly failed; had to use pnpm exec tsx.
+    solution: Docs should show the pnpm exec tsx form, or the file should be made executable.
+    severity: nit
+  - description: My own Edit dropped a space in const fmt, and a review subagent reported 9 Routines when there are 10; both were caught only by checking.
+    solution: Check a subagent's counts and reread an edit's diff before relying on them.
+    severity: nit
+durationSec: 580
+models:
+  claude-sonnet-5-5: 108
+toolCounts:
+  Grep: 7
+  Glob: 1
+  Read: 15
+  AskUserQuestion: 1
+  Bash: 26
+  Edit: 8
+  Skill: 4
+  Agent: 2
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Write: 1
+filesEdited:
+  - layers/journal/app/composables/routineData.ts
+  - layers/journal/app/pages/t/journal/[space]/routines.vue
+  - layers/journal/app/components/content/RoutineChart.vue
+  - layers/journal/app/components/content/RoutineWeeklyTable.vue
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0006.md
+adrHints:
+  - adr: 8
+    via: path
+    readAfter: true
+    by: main
+  - adr: 6
+    via: path
+    readAfter: true
+    by: main
+  - adr: 16
+    via: path
+    readAfter: false
+    by: main
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/journal/content/current/skills/audit-skills.yml
+      - rule: .claude/rules/adr-0015.md
+        via: native
+        trigger: layers/journal/content/current/skills/audit-skills.yml
+      - rule: .claude/rules/tenant-layers.md
+        via: native
+        trigger: layers/journal/app/components/content/RoutineChart.vue
+      - rule: .claude/rules/ui-verification.md
+        via: native
+        trigger: layers/journal/app/components/content/RoutineChart.vue
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: native
+        trigger: layers/journal/app/components/content/RoutineChart.vue
+      - rule: .claude/rules/adr-0008.md
+        via: native
+        trigger: layers/journal/app/components/content/RoutineChart.vue
+      - rule: .claude/rules/adr-0006.md
+        via: native
+        trigger: layers/journal/app/pages/t/journal/[space]/routines.vue
+      - rule: .claude/rules/adr-0016.md
+        via: native
+        trigger: layers/journal/app/pages/t/journal/[space]/routines.vue
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/journal/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/journal/GLOSSARY.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/verifying-ui-changes.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/verifying-ui-changes.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: native
+        trigger: layers/journal/tenant.config.ts
+      - rule: .claude/rules/adr-0002.md
+        via: native
+        trigger: layers/journal/tenant.config.ts
+      - rule: .claude/rules/adr-0030.md
+        via: native
+        trigger: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+    reported:
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: opened the PR after being told
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: review then gate before the PR
+      - path: .claude/rules/data-shapes.md
+        value: backed
+      - path: .claude/rules/tenant-layers.md
+        value: backed
+      - path: docs/agents/pr-workflow.md
+      - path: docs/agents/git-conventions.md
+  - by: Explore
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: CLAUDE.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: .claude/rules/tenant-layers.md
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/journal/GLOSSARY.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/journal/GLOSSARY.md
+      - rule: .claude/rules/adr-0008.md
+        via: native
+        trigger: layers/journal/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/journal/GLOSSARY.md
+      - rule: .claude/rules/tenant-layers.md
+        via: read
+      - rule: .claude/rules/data-shapes.md
+        via: read
+    reported:
+      - path: .claude/rules/tenant-layers.md
+        value: backed
+      - path: .claude/rules/tenant-glossary.md
+        value: backed
+      - path: .claude/rules/data-shapes.md
+        value: backed
+      - path: CLAUDE.md
+      - path: layers/journal/GLOSSARY.md
+  - by: Explore
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+    reported:
+      - path: .claude/rules/data-shapes.md
+        value: backed
+      - path: .claude/rules/tenant-layers.md
+        value: backed
+subagents:
+  - type: Explore
+    task: Review standards axis
+    durationSec: 24
+    toolCalls: 9
+    modelCalls: 4
+    tokenShare: 9.4
+  - type: Explore
+    task: Review spec axis
+    durationSec: 24
+    toolCalls: 8
+    modelCalls: 5
+    tokenShare: 9.6
+gitBranch: claude/festive-goodall-e5i8oe
+entrypoint: remote
+cliVersion: 2.1.322
+landedBy: Stop
