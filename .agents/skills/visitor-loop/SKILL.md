@@ -38,7 +38,7 @@ wins. Otherwise take row
 | 2 | journal | `/t/journal/current` | |
 | 3 | midden | `/t/midden` | |
 | 4 | tinkerfund | `/t/tinkerfund` | |
-| 5 | glassbox | `/t/glassbox/guide` | Stay inside /t/glassbox/guide. Fixes and the feature leave the `drafts` Space alone. |
+| 5 | glassbox | `/t/glassbox/guide` | Stay inside /t/glassbox/guide. |
 | 6 | homepage | `/` | |
 
 Both PR titles start `visitor-loop (<focus>): …` — on a pinned branch that is how

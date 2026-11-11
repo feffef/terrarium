@@ -23,8 +23,7 @@ import {
   learningDocsPrompt,
   sessionNotes,
   sessionAnchor,
-  sessionDurationMin,
-  sessionDurationLabel,
+  sessionDurationSec,
   installedSkillCount,
   sessionWhen,
   sessionModelsLabel,
@@ -90,19 +89,16 @@ describe('countFrictions', () => {
   })
 })
 
-describe('sessionDurationMin', () => {
-  it('rounds to the nearest minute', () => {
-    // 90s → 1.5 min → rounds to 2
-    expect(sessionDurationMin('2026-07-05T00:00:00Z', '2026-07-05T00:01:30Z')).toBe(2)
-    // 100 min exactly
-    expect(sessionDurationMin('2026-07-05T10:00:00Z', '2026-07-05T11:40:00Z')).toBe(100)
+describe('sessionDurationSec', () => {
+  it('measures the span in seconds', () => {
+    expect(sessionDurationSec('2026-07-05T00:00:00Z', '2026-07-05T00:01:30Z')).toBe(90)
+    expect(sessionDurationSec('2026-07-05T10:00:00Z', '2026-07-05T11:40:00Z')).toBe(6000)
   })
 
-  it('clamps zero and negative durations to at least 1', () => {
-    expect(sessionDurationMin('2026-07-05T10:00:00Z', '2026-07-05T10:00:00Z')).toBe(1) // 0 → 1
-    expect(sessionDurationMin('2026-07-05T11:00:00Z', '2026-07-05T10:00:00Z')).toBe(1) // negative → 1
-    // a sub-30s positive span rounds to 0 then clamps to 1
-    expect(sessionDurationMin('2026-07-05T10:00:00Z', '2026-07-05T10:00:10Z')).toBe(1)
+  it('clamps zero, negative and sub-minute spans to one minute', () => {
+    expect(sessionDurationSec('2026-07-05T10:00:00Z', '2026-07-05T10:00:00Z')).toBe(60)
+    expect(sessionDurationSec('2026-07-05T11:00:00Z', '2026-07-05T10:00:00Z')).toBe(60)
+    expect(sessionDurationSec('2026-07-05T10:00:00Z', '2026-07-05T10:00:10Z')).toBe(60)
   })
 })
 
@@ -338,14 +334,6 @@ describe('subagentUsageLabel', () => {
   })
 })
 
-describe('sessionDurationLabel', () => {
-  it('shows hours from 60 minutes up', () => {
-    expect(sessionDurationLabel(596)).toBe('9 h 56 min')
-    expect(sessionDurationLabel(42)).toBe('42 min')
-    expect(sessionDurationLabel(60)).toBe('1 h 0 min')
-  })
-})
-
 describe('sessionCardViews', () => {
   it('flags an in-review log whose every PR a completed log lists', () => {
     const open = session({ session: 'a', status: 'in-review', prs: ['#1', '#2'] })
@@ -378,7 +366,7 @@ describe('sessionCardViews', () => {
     expect(c!.sid).toBe('session_01234…XYZW')
     expect(c!.url).toBe('https://claude.ai/code/session_0123456789abcdefXYZW')
     expect(c!.when).toBe('Jul 5 · 11:30 UTC')
-    expect(c!.duration).toBe('1 h 30 min')
+    expect(c!.duration).toBe('1h 30m')
     expect(c!.frictionCounts).toEqual({ nit: 1, minor: 0, moderate: 0, major: 0, blocker: 1 })
     expect(c!.frictionTotal).toBe(2)
     expect(c!.skillsUsed).toEqual([{ name: 'tdd', reason: 'r' }])

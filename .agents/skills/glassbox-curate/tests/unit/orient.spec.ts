@@ -72,7 +72,7 @@ describe('orientation', () => {
     const seen: (string | undefined)[] = []
     const out = run((since) => (seen.push(since), 'abc1234 a guide commit'))
     expect(out.split('\n').filter((l) => l.startsWith('# '))).toEqual([
-      '# Run entry', '# Open PRs that touch Glass Box', '# Memory page', '# Last 5 curate runs, newest first', '# Page-check warnings', '# Guide and drafts changes since the last curate run', '# Guide pages',
+      '# Run entry', '# Open PRs that touch Glass Box', '# Memory page', '# Last 5 curate runs, newest first', '# Page-check warnings', '# Guide changes since the last curate run', '# Guide pages',
     ])
     for (const text of ['workshop/runs/2026-11-07T1005.yml', 'focus: "<', '- #1 a PR', 'A lead.', 'focus: first', 'focus: second', 'abc1234 a guide commit', 'Read each whole', 'This output: ']) expect(out).toContain(text)
     expect(out.indexOf('focus: second')).toBeLessThan(out.indexOf('focus: first'))
@@ -114,7 +114,7 @@ describe('orientation', () => {
     const out = orientation(empty, { log: (since) => (seen.push(since), ''), prs: () => '' })
     rmSync(empty, { recursive: true, force: true })
     expect(seen).toEqual([undefined])
-    expect(out).toContain('# Last 30 guide and drafts changes (no curate run yet)')
+    expect(out).toContain('# Last 30 guide changes (no curate run yet)')
   })
 })
 

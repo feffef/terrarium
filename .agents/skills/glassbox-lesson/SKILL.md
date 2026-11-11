@@ -16,7 +16,7 @@ every page shares are in [`EVERY-PAGE.md`](EVERY-PAGE.md).
    `layers/glassbox/content/guide/pages/<subject>/NN.<slug>.md`: `<subject>` a
    slug in `glassboxSubjects` (`layers/glassbox/app/utils/subjects.ts`), `NN`
    a free two-digit prefix that puts it after the Lessons it builds on and
-   before those that build on it (`layers/glassbox/GLOSSARY.md`, Three Spaces,
+   before those that build on it (`layers/glassbox/GLOSSARY.md`, Two Spaces,
    says how to number). Done when the path and docs URLs are chosen.
 2. **Pin** it (EVERY-PAGE.md).
 3. **Write** it to the contract, in plain words. *The concept* is true of any

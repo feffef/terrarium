@@ -12,5 +12,5 @@ order added, with where it was made.
 - A glossary term is lowercase in a title like any common noun (*Installed skills*, *Reading across tenants*); only proper nouns and acronyms keep capitals (owner, curate run of 2026-11-07).
 - *Adding a site* keeps its plain word: the overview introduces "site" before "Tenant" (owner, curate run of 2026-11-07).
 - `description` serves visitors and `teaches` serves agents; an edit to either, or rewording a bold lead-in and its sentence to match, keeps `revision` and `publishedAt` when it changes no claim (owner, #2945).
-- Gaps in the Lesson numbers are intended, not a deficit: they make reordering cheap (GLOSSARY.md, Three Spaces; owner, #3066).
+- Gaps in the Lesson numbers are intended, not a deficit: they make reordering cheap (GLOSSARY.md, Two Spaces; owner, #3066).
 - Agent tooling comes first in the guide's order, and Web standards never sits between the two Nuxt Subjects (owner; moved from the workshop memory page).
