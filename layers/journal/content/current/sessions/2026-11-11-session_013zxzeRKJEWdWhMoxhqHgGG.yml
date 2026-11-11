@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRKJEWdWhMoxhqHgGG
 startedAt: 2026-11-11T04:03:37Z
-endedAt: 2026-11-11T04:19:34Z
+endedAt: 2026-11-11T06:52:13Z
 kind: autonomous
 goal: Scheduled audit of the repo's docs for stale or muddled prose
-status: in-review
-outcome: Sweep PR 3049 merged; ADR-fix PR 3050 open, waiting for a human merge
-summary: "Scheduled audit-docs run; no human prompted any step (all agent-initiated). Three read-only reviewers returned 14 findings (Freshness 1, Single-home 7 plus sub-items, Coherence 3). Two checkers returned 18 verdicts counting sub-items: 2 CONFIRMED, 5 CONFIRMED-BUT, 11 WRONG. The sweep PR (3049, one commit, 8 files) shortened six Skill Inventory roles to the ~50-word limit, pointed auto-triage's latitude paragraph at ADR-0022, and dropped the Blog Tag count copy; code-review clean (one wrap nit fixed and amended), gate:scoped green, merged via merge-pr. A second commit holds the ADR fixes (ADR-0009 who-writes-what drift, one sentence each from ADR-0013 and ADR-0016, rules restamped); it went out as escalation PR 3050 (gate green, code-review clean), subscribed, waiting for a human merge. No issue filed. My first PR verdict comment miscounted the verdicts; I edited it. Covered: README.md, SECURITY.md, deploy/README.md, ADRs 0002 0006 0007 0013 0014 0016 0018 0020 0021 0022 0023, atlas blog marquee midden tinkerfund GLOSSARY.md, Skill Inventory entries, Skills auto-triage audit-skills prune-trial visitor-loop digest frictions-to-fixes triage wizard (partly by script)."
+status: completed
+outcome: Sweep PR 3049 merged by me; ADR-fix PR 3050 merged by a human
+summary: "Scheduled audit-docs run; no human prompted any step (all agent-initiated). Three read-only reviewers returned 14 findings (Freshness 1, Single-home 7 plus sub-items, Coherence 3). Two checkers returned 18 verdicts counting sub-items: 2 CONFIRMED, 5 CONFIRMED-BUT, 11 WRONG. The sweep PR (3049, one commit, 8 files) shortened six Skill Inventory roles to the ~50-word limit, pointed auto-triage's latitude paragraph at ADR-0022, and dropped the Blog Tag count copy; code-review clean (one wrap nit fixed and amended), gate:scoped green, merged via merge-pr. A second commit holds the ADR fixes (ADR-0009 who-writes-what drift, one sentence each from ADR-0013 and ADR-0016, rules restamped); it went out as escalation PR 3050 (gate green, code-review clean), subscribed; a human merged it hours later. No issue filed. My first PR verdict comment miscounted the verdicts; I edited it. Covered: README.md, SECURITY.md, deploy/README.md, ADRs 0002 0006 0007 0013 0014 0016 0018 0020 0021 0022 0023, atlas blog marquee midden tinkerfund GLOSSARY.md, Skill Inventory entries, Skills auto-triage audit-skills prune-trial visitor-loop digest frictions-to-fixes triage wizard (partly by script)."
 prs:
   - "3049"
   - "3050"
@@ -110,12 +110,12 @@ frictions:
   - description: My first PR verdict comment gave verdict counts I had not tallied; I corrected it after counting the checker replies.
     solution: Tally verdicts before writing the comment.
     severity: minor
-durationSec: 957
+durationSec: 10116
 models:
-  claude-sonnet-5-5: 100
+  claude-sonnet-5-5: 112
 toolCounts:
   Read: 2
-  Bash: 32
+  Bash: 33
   Skill: 4
   Agent: 8
   Edit: 1
@@ -124,7 +124,8 @@ toolCounts:
   mcp__github__subscribe_pr_activity: 2
   mcp__github__add_issue_comment: 2
   mcp__github__update_issue_comment: 1
-  ReadNotifications: 1
+  ReadNotifications: 5
+  PushNotification: 1
 filesEdited:
   - .agents/skills/auto-triage/SKILL.md
   - .claude/rules/adr-0009.md
@@ -525,49 +526,49 @@ subagents:
     durationSec: 70
     toolCalls: 23
     modelCalls: 18
-    tokenShare: 9.1
+    tokenShare: 7.8
   - type: general-purpose
     task: Single-home review
     durationSec: 122
     toolCalls: 26
     modelCalls: 24
-    tokenShare: 13.5
+    tokenShare: 11.6
   - type: general-purpose
     task: Coherence review
     durationSec: 95
     toolCalls: 28
     modelCalls: 18
-    tokenShare: 10.3
+    tokenShare: 8.8
   - type: general-purpose
     task: Fact-check findings A
     durationSec: 152
     toolCalls: 27
     modelCalls: 21
-    tokenShare: 10.7
+    tokenShare: 9.2
   - type: general-purpose
     task: Fact-check findings B
     durationSec: 98
     toolCalls: 17
     modelCalls: 15
-    tokenShare: 6.5
+    tokenShare: 5.6
   - type: general-purpose
     task: Standards review
     durationSec: 16
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 4
+    tokenShare: 3.4
   - type: general-purpose
     task: Spec review
     durationSec: 18
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 4
+    tokenShare: 3.4
   - type: general-purpose
     task: Review ADR fixes
     durationSec: 18
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 4
+    tokenShare: 3.4
 gitBranch: claude/festive-mayer-6jjw5i
 entrypoint: remote_trigger
 cliVersion: 2.1.322
