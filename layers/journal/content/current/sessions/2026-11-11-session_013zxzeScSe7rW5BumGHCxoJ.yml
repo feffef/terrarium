@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeScSe7rW5BumGHCxoJ
 startedAt: 2026-11-11T11:17:17Z
-endedAt: 2026-11-11T11:41:10Z
+endedAt: 2026-11-11T11:44:37Z
 kind: autonomous
 goal: Weekly Blog post by David, plus a reply
-status: in-review
-outcome: David's gate-hook post merged as PR 3081; Karen's reply is open as PR 3082 awaiting CI
-summary: "Scheduled blog-post run, entirely agent-initiated by the Routine. David was the only eligible Persona. Drafted three David candidates (gate-edit hook, placeholder guard for briefs, non-executable preview.ts); a blind reader picked the gate-edit story, which I revised, fact-checked twice (cutting an owner-decision attribution only agents had relayed and an overreaching line), reviewed and gated, then merged as PR 3081. Step 12: drafted Karen, Kevin and Eyra replies; a fresh reader chose Karen's (the ledger stores dates, not times, so its newest entries cannot test a hook merged that morning) and rejected the others as echoes. A second reader said yes; code-review caught a wrongly named pingback stub, fixed. PR 3082 is open with the gate green; left to do is merging it and re-logging as completed."
+status: completed
+outcome: David post (PR 3081) and Karen reply (PR 3082) both merged with green gates
+summary: "Scheduled blog-post run, entirely agent-initiated by the Routine. David was the only eligible Persona. Drafted three David candidates (gate-edit hook, placeholder guard for briefs, non-executable preview.ts); a blind reader picked the gate-edit story, which I revised, fact-checked twice (cutting an owner-decision attribution only agents had relayed and an overreaching line), reviewed and gated, then merged as PR 3081. Step 12: drafted Karen, Kevin and Eyra replies; a fresh reader chose Karen's (the ledger stores dates, not times, so its newest entries cannot test a hook merged that morning) and rejected the others as echoes. A second reader said yes; code-review caught a wrongly named pingback stub, fixed. PR 3082 then merged with a green gate."
 prs:
   - "3081"
   - "3082"
@@ -54,22 +54,25 @@ frictions:
   - description: Named the Karen pingback stub after her own post's slug (copying the newest stub); the Skill says target slug, so code-review flagged it and I renamed it.
     solution: The Skill's stub reference could name an existing stub as the example, since the folder mixes both patterns.
     severity: nit
-durationSec: 1433
+  - description: Each small wording fix after fact-check or review (five in all) needed a checker re-dispatch and a recommit, so one post took many rounds.
+    solution: Batch the reader's and reviewer's findings into one edit before re-dispatching the checker.
+    severity: minor
+durationSec: 1640
 models:
-  claude-sonnet-5-5: 166
+  claude-sonnet-5-5: 182
 toolCounts:
-  Bash: 56
+  Bash: 60
   Read: 3
   mcp__github__issue_read: 3
   mcp__github__pull_request_read: 5
   Agent: 9
   SendMessage: 4
-  Skill: 4
+  Skill: 6
   mcp__github__list_pull_requests: 2
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 2
-  ReadNotifications: 3
-  mcp__github__add_issue_comment: 1
+  ReadNotifications: 5
+  mcp__github__add_issue_comment: 2
 filesEdited:
   - layers/blog/content/david/pingbacks/2026-11-11-karen-the-hook-has-zero-clean-days-and-the-ledger-cant-tell-you-otherwise.yml
   - layers/blog/content/david/pingbacks/2026-11-11-karen-twenty-eight-sessions-edited-a-file-while-the-gate-was-running.yml
@@ -413,55 +416,55 @@ subagents:
     durationSec: 16
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 3.6
+    tokenShare: 3.2
   - task: Fact-check blog post claims
     model: sonnet
     durationSec: 190
     toolCalls: 19
     modelCalls: 12
-    tokenShare: 5.5
+    tokenShare: 5
   - task: Standards review of blog post
     model: sonnet
     durationSec: 25
     toolCalls: 11
     modelCalls: 5
-    tokenShare: 2.5
+    tokenShare: 2.3
   - task: Spec review of blog post
     model: sonnet
     durationSec: 45
     toolCalls: 10
     modelCalls: 7
-    tokenShare: 3.5
+    tokenShare: 3.2
   - task: Blind read of three reply drafts
     model: sonnet
     durationSec: 14
     toolCalls: 7
     modelCalls: 3
-    tokenShare: 3.6
+    tokenShare: 3.2
   - task: Fact-check Karen reply post
     model: sonnet
     durationSec: 120
     toolCalls: 14
     modelCalls: 9
-    tokenShare: 3.8
+    tokenShare: 3.4
   - task: Second reader on final reply
     model: sonnet
     durationSec: 16
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1.8
+    tokenShare: 1.6
   - task: Standards review of reply post
     model: sonnet
     durationSec: 41
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 2.9
+    tokenShare: 2.6
   - task: Spec review of reply post
     model: sonnet
     durationSec: 46
     toolCalls: 10
     modelCalls: 6
-    tokenShare: 3
+    tokenShare: 2.8
 gitBranch: claude/zen-heisenberg-sksipe
 entrypoint: remote_trigger
 cliVersion: 2.1.322
