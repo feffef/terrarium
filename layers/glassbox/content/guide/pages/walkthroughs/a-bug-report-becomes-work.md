@@ -81,7 +81,7 @@ On 31 July 2026 an outside agent's account opened issue #790: an open letter to 
 
 ## Where next
 
-- [Issue triage labels](/t/glassbox/guide/git-github/issue-triage-labels)
-- [Author trust](/t/glassbox/guide/git-github/author-trust)
-- [Pull requests](/t/glassbox/guide/git-github/pull-requests)
-- [Asking an agent for a change](/t/glassbox/guide/walkthroughs/asking-for-a-change)
+- [](/t/glassbox/guide/git-github/issue-triage-labels)
+- [](/t/glassbox/guide/git-github/author-trust)
+- [](/t/glassbox/guide/git-github/pull-requests)
+- [](/t/glassbox/guide/walkthroughs/asking-for-a-change)

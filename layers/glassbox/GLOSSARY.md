@@ -83,7 +83,9 @@ Its body follows one contract, which the page frames like design 1b
   about consequences for the reader, and links an ADR rather than restating
   its Scope or Consequences;
 - `## Try it in your project`;
-- `## Where next`, a list of bare links to at most the 5 closest pages:
+- `## Where next`, a list of at most the 5 closest pages, each in this Space a bare link
+  `[](/t/glassbox/guide/…)` that renders its target's current title (a Journal
+  link keeps typed text):
   related Lessons first, then optionally one Journal page as evidence. A
   Lesson with no related Lesson yet lists only that Journal page.
 
@@ -102,7 +104,9 @@ design 1b (`layers/glassbox/app/utils/walkthrough.ts`):
   `:term` alone doesn't count. A stop holds at most 5 chips, Lessons first;
   drop a `:file` or ADR a linked Lesson already cites;
 - optionally `## A real case`: one dated story;
-- `## Where next`, a list of bare links to at most the 5 closest pages:
+- `## Where next`, a list of at most the 5 closest pages, each in this Space a bare link
+  `[](/t/glassbox/guide/…)` that renders its target's current title (a Journal
+  link keeps typed text):
   Lessons first, then Walkthroughs, then optionally one Journal page as
   evidence.
 
