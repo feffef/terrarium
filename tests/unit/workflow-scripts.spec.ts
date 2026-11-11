@@ -46,8 +46,8 @@ describe('clear-backlog-build final gate (#2523, #3084)', () => {
   const clean = { findings: [], summary: '' }
   const dirty = { findings: [{ worthFixing: true }], summary: '' }
 
-  /** Runs the script on one branch: the build reports `build`, each review round (two reviewers) returns the next of `rounds`, the fix agent returns `fix`, and the final gate returns `gate`. */
-  async function run(gate: unknown, build = work(false, ['a']), rounds: object[] = [clean], fix = work(true, ['a', 'f'])) {
+  /** Runs the script on one branch: the build reports `build`, each review round (two reviewers) returns the next of `rounds`, the fix agent returns a passed gate, and the final gate returns `gate`. */
+  async function run(gate: unknown, build = work(false, ['a']), rounds: object[] = [clean]) {
     const labels: string[] = []
     let reviews = 0
     const globals: Record<string, unknown> = {
@@ -55,7 +55,7 @@ describe('clear-backlog-build final gate (#2523, #3084)', () => {
         labels.push(o.label)
         if (o.label.startsWith('build')) return build
         if (o.label.startsWith('gate')) return gate
-        if (o.label.startsWith('fix')) return fix
+        if (o.label.startsWith('fix')) return work(true, ['a', 'f'])
         return rounds[Math.min(Math.floor(reviews++ / 2), rounds.length - 1)]
       },
       pipeline: (items: unknown[], ...stages: ((x: unknown, i: unknown) => unknown)[]) =>
