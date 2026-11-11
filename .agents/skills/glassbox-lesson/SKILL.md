@@ -15,7 +15,9 @@ every page shares are in [`EVERY-PAGE.md`](EVERY-PAGE.md).
    including its Corrections. The file is
    `layers/glassbox/content/guide/pages/<subject>/NN.<slug>.md`: `<subject>` a
    slug in `glassboxSubjects` (`layers/glassbox/app/utils/subjects.ts`), `NN`
-   a free two-digit prefix after the Lessons it builds on and before those that build on it, numbered as `layers/glassbox/GLOSSARY.md` (Three Spaces) says. Done when the path and docs URLs are chosen.
+   a free two-digit prefix that puts it after the Lessons it builds on and
+   before those that build on it (`layers/glassbox/GLOSSARY.md`, Three Spaces,
+   says how to number). Done when the path and docs URLs are chosen.
 2. **Pin** it (EVERY-PAGE.md).
 3. **Write** it to the contract, in plain words. *The concept* is true of any
    project; *In Terrarium* is what this repo does. For *Why it's built this
