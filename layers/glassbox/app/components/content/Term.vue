@@ -71,5 +71,4 @@ button[aria-expanded='true'] { color: var(--gb-accent); }
 .lesson span { color: var(--gb-muted); }
 .lesson span::after { content: ' · '; }
 .lesson a { color: var(--gb-ink); text-decoration: none; }
-.lesson a::after { content: ' →'; }
 </style>
