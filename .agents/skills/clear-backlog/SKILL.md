@@ -123,7 +123,9 @@ branch, or its question or failure is in the report.
 
 Push each `ready-to-push` branch from its worktree with
 `git push origin HEAD:<branch>` (a build whose branch the main checkout holds
-commits on a `worktree-wf_…` branch) and open its PR with the branch's
+commits on a `worktree-wf_…` branch), then `git fetch origin <branch>` so a
+remote-tracking ref exists (`check:worktrees` counts commits on none as
+unpushed), and open its PR with the branch's
 decisions, its remaining judgement calls, any cherry-picked PR, and
 the Human-only paths that `pnpm exec tsx .agents/skills/clear-backlog/scripts/list-human-only-paths.ts
 <worktree>` prints (a non-zero exit means the list couldn't be read: stop
@@ -132,7 +134,8 @@ fix (CI, a PR comment), re-run that branch with its `worktree` and the fix
 in its `brief`. A PR built from a Public issue waits for a human merge
 (ADR-0020), even though `scripts/github/merge-pr.ts` would accept it. Merge
 the rest unless ADR-0004 reserves it for a human; `merge-pr.ts` checks only
-some of its exceptions.
+some of its exceptions. Once a PR merges or waits for a human, run
+`git worktree remove <worktree>` for its branch.
 
 **Done:** every PR is merged or waiting for a human merge, and
 `pnpm check:worktrees` exits 0.
