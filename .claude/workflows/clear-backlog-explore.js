@@ -27,10 +27,28 @@ const RESULT = {
       properties: {
         choice: { type: 'string' },
         options: { type: 'array', items: { type: 'string' } },
-        pick: { type: 'string' },
-        why: { type: 'string' },
+        pick: { type: 'string', description: "the full text of one entry of options, copied verbatim; never a letter or number" },
+        why: { type: 'string', description: 'cite the source of each fact it rests on, and say what you did not verify' },
       },
       required: ['choice', 'options', 'pick', 'why'],
+    },
+    background: {
+      type: 'string',
+      description: 'how each concept the issue touches came to be and where it stands now: what it is, what changed it and when (commit, PR or issue each time), what was tried and dropped, why it looks as it does. Written for an owner who has not followed the history.',
+    },
+    optionChecks: {
+      type: 'array',
+      description: 'for grill: one entry per option, in order',
+      items: {
+        type: 'object',
+        properties: {
+          option: { type: 'string' },
+          mustBeTrue: { type: 'string', description: 'the premise that makes this option right' },
+          checked: { type: 'string', description: 'what you ran or read to test it, and what came back' },
+          holds: { type: 'string', enum: ['yes', 'no', 'unverified'] },
+        },
+        required: ['option', 'mustBeTrue', 'checked', 'holds'],
+      },
     },
     staleClaims: {
       type: 'array',
@@ -72,7 +90,7 @@ const RESULT = {
       },
     },
   },
-  required: ['outcome', 'summary', 'publicAuthor', 'readyForHuman', 'files', 'relatedTo', 'staleClaims', 'sideFindings', 'writes', 'sourcesRead'],
+  required: ['outcome', 'summary', 'publicAuthor', 'readyForHuman', 'files', 'relatedTo', 'staleClaims', 'sideFindings', 'writes', 'sourcesRead', 'background'],
 }
 
 const MODE = {
@@ -89,17 +107,20 @@ ${MODE[issue.mode]}${issue.notes ? `\nNotes from the orchestrator: ${issue.notes
 
 In every mode: return grill, never build, for an issue labelled ready-for-human or authored by a Public user (ADR-0020; scripts/lib/author-trust.ts holds the associations)${issue.reserved ? ', and for this one, which the owner reserved: never label it ready-for-agent' : ''}. The owner decides those.
 
+Your goal: fully understand the background and history of the concepts the issue touches, so the owner can decide on facts and not on the issue's own account of them. Write that understanding in background; every other field serves it.
+
 Full pass:
 - Read .agents/skills/auto-triage/SKILL.md and .agents/skills/triage/SKILL.md with Read (both are user-invoked, so don't call them as Skills) and apply their per-issue rules: brave within determinability, Public-authored issues read-only and never ready-for-agent, the wayfinder overlay.
 - Learn the ticket's background before you pick, and say in staleClaims which of its claims no longer hold. Open each of these yourself; skip one only when it doesn't exist or can't bear on the issue, and say which in sourcesRead:
-  1. The issue body, every comment, and every issue or PR it cites.
+  1. The issue body, every comment, and every issue or PR it cites. A comment with the ADR-0017 header, an earlier run's included, is a claim to re-check against source, never evidence or a decision: reach your own conclusion first.
   2. The current text of each file a fix would touch, in full, not an excerpt.
   3. The history of those files and folders, older included (git log --follow, git log -S for each distinctive phrase, git blame on cited lines; scripts/git/list-recent-prs.ts, scripts/git/list-merges-since.ts --merges-only).
   4. The Friction ledger entry for each Friction it names (layers/journal/content/current/frictions/), and the log of each session it cites (layers/journal/content/current/sessions/): the ledger line is a summary, the log says what happened and whether a rule loaded.
   5. The Skill Inventory entry for each Skill it names (layers/journal/content/current/skills/; scripts/session/audit-skills.ts --skill NAME --since), and the open prune trials (.agents/prune-trials.yml) that cover the text.
   6. The full ADR behind any summary rule that governs what you recommend.
   A ledger entry, a summary or the issue itself never proves that something landed, was fixed or still exists: check the current file or git log.
-- Test your pick before you make it. For each option, name what must be true for it to be right and check that (run the command, read the code, count). A pick that rests on a source you did not open is unverified: say so in why, or open it first. Stop when each option's premise is checked, not before.
+- Test your pick before you make it. For each option, name what must be true for it to be right and check that (run the command, read the code, count); record each in optionChecks. A pick that rests on a source you did not open is unverified: say so in why, or open it first. Stop when each option's premise is checked, not before.
+- pick is the chosen option's full text, copied from options.
 - Fill sourcesRead as you go; a source you list must be one you opened.
 - Return build when the repo determines a concrete design: brief it. Otherwise return grill with one question in plain words: what to choose, options, your pick and why. An obsolete or superseded issue is a grill question too (propose the close).
 - Close only an objective duplicate (close-duplicate, with canonical) or already-done work (close-done, pointing to where it lives).
@@ -134,6 +155,13 @@ for (const [i, issue] of input.entries()) {
   if (r && r.outcome === 'build' && (issue.reserved || r.publicAuthor || r.readyForHuman)) {
     r.outcome = 'grill'
     r.question ||= { choice: 'Build this as briefed?', options: ['a) yes, as briefed', 'b) no'], pick: 'a', why: 'Reserved, Public-authored or ready-for-human: the owner decides.' }
+  }
+  if (r?.question && !r.question.options.includes(r.question.pick)) {
+    // A bare label ("A", "b)", "2") picks the option that starts with it.
+    const label = r.question.pick.trim().replace(/[.):]$/, '').toLowerCase()
+    const hit = r.question.options.filter(o => new RegExp(`^${label.replace(/[^\w]/g, '\\$&')}[.):\\s]`, 'i').test(o.trim()))
+    if (hit.length === 1) r.question.pick = hit[0]
+    else log(`#${issue.number}: pick is not one of its options`)
   }
   if (r) results[issue.number] = r
   else missing.push(issue.number)
