@@ -42,8 +42,11 @@ Terrarium applies them without reading the source.
 - **Three Spaces.** `guide`, at `/t/glassbox/guide`, holds the pages central to
   Terrarium that the work focuses on; `/t/glassbox` redirects there. `drafts`
   holds the rest; each may be improved and moved to the guide. A guide page never links to a draft; a draft may link to
-  the guide. Walkthroughs sit in `walkthroughs/`. A two-digit filename prefix,
-  in tens, orders Lessons inside a folder, prerequisites first; Subject order and names come from
+  the guide. Walkthroughs sit in `walkthroughs/`. A two-digit filename prefix
+  orders Lessons inside a folder, prerequisites first. Prefixes start in tens;
+  a Lesson that belongs between two takes the number between them (85 between 80
+  and 90), and no Lesson is renumbered, since workshop entries name pages by
+  file stem. Subject order and names come from
   `glassboxSubjects` in `layers/glassbox/app/utils/subjects.ts`. `workshop`, at
   `/t/glassbox/workshop`, is one page of state for the improvement Skills: a
   memory text, one entry per curate run and glassbox-update's check state, under a

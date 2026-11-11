@@ -11,4 +11,5 @@ order added, with where it was made.
 - *Continuous deployment*'s Full reference stays Wikipedia: a practice has no official docs (review, #2500).
 - A glossary term is lowercase in a title like any common noun (*Installed skills*, *Reading across tenants*); only proper nouns and acronyms keep capitals (owner, curate run of 2026-11-07).
 - *Adding a site* keeps its plain word: the overview introduces "site" before "Tenant" (owner, curate run of 2026-11-07).
+- Lessons keep their prefixes in tens, and a Lesson between two takes the number between them (*Skill inventory* is 85); no Lesson is renumbered to open a gap (owner, #3062).
 - `description` serves visitors and `teaches` serves agents; an edit to either, or rewording a bold lead-in and its sentence to match, keeps `revision` and `publishedAt` when it changes no claim (owner, #2945).
