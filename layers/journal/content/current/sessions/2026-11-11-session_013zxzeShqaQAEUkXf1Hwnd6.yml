@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeShqaQAEUkXf1Hwnd6
 startedAt: 2026-11-11T10:51:09Z
-endedAt: 2026-11-11T12:10:38Z
+endedAt: 2026-11-11T13:04:55Z
 kind: interactive
 goal: Make clear-backlog's explore agents research issues in depth
 status: completed
-outcome: PR 3083 merged by the owner after a green gate; explore brief, summary and Skill note improved
-summary: "The owner started /clear-backlog on all seedlings and regressions. The first explore run (11 issues) wrote comments and labels and closed one issue as the Skill is designed to, and was shallow (2-3 file reads and 2-8 shell commands per agent). The owner asked whether it was deep, then redirected the session: improve the explore brief, use the same 11 tickets as test candidates, and never act on their results. I reverted what could be reverted (relabelled #3076, reopened #2996); later the owner had me delete the ten first-run comments. Over five more explore runs I changed the brief, the result schema and run-summary.ts, measured depth from the agent transcripts (tool counts, sources opened, no write calls, issue timestamps unchanged), and compared each pick across runs. Picks held in 9 of 11 between runs 3 and 4 but only 6 of 11 between runs 4-5 and 5-6, because they turn on judgement calls, so the owner chose to make each pick state what would flip it (wouldChange) and to settle unverified options. Owner-instructed: the redirect, a dry-run mode (later removed at the owner's word, with wouldPost), option 2, seedlings always grill, run-summary showing the new fields and always the workflow logs, the SKILL.md note on what a build brief carries, deleting the first-run comments, and opening the PR. Agent-initiated: the pick normaliser (later removed), the title field and seedling demotion of every outcome, dropping the sourcesRead minimum, the soft cost line, a stubbed-agent test, two code-review rounds (required by pr-workflow), the full gate, and subscribing to the PR. The PR (3083) passed the gate in CI and the owner merged it about four minutes after it opened; I cancelled the safety-net check-in. Still open: picks are leanings not researched answers, and a seedling an agent already closed in a real run is guarded only by the brief. The owner plans a real run in a new session, which has not happened here."
+outcome: PR 3083 merged by the owner after a green gate; the real run in another session confirmed the improved explore
+summary: "The owner started /clear-backlog on all seedlings and regressions. The first explore run (11 issues) wrote comments and labels and closed one issue as the Skill is designed to, and was shallow (2-3 file reads and 2-8 shell commands per agent). The owner asked whether it was deep, then redirected the session: improve the explore brief, use the same 11 tickets as test candidates, and never act on their results. I reverted what could be reverted (relabelled #3076, reopened #2996); later the owner had me delete the ten first-run comments. Over five more explore runs I changed the brief, the result schema and run-summary.ts, measured depth from the agent transcripts (tool counts, sources opened, no write calls, issue timestamps unchanged), and compared each pick across runs. Picks held in 9 of 11 between runs 3 and 4 but only 6 of 11 between runs 4-5 and 5-6, because they turn on judgement calls, so the owner chose to make each pick state what would flip it (wouldChange) and to settle unverified options. Owner-instructed: the redirect, a dry-run mode (later removed at the owner's word, with wouldPost), option 2, seedlings always grill, run-summary showing the new fields and always the workflow logs, the SKILL.md note on what a build brief carries, deleting the first-run comments, opening the PR, and asking the real-run session how exploration went. Agent-initiated: the pick normaliser (later removed), the title field and seedling demotion of every outcome, dropping the sourcesRead minimum, the soft cost line, a stubbed-agent test, two code-review rounds (required by pr-workflow), the full gate, subscribing to the PR, and the follow-up question about #3073 and #3075 (my pick of what to ask). The PR (3083) passed the gate in CI and the owner merged it about four minutes after it opened. The owner then ran the real clear-backlog in another session; its report (second-hand, not checked by me beyond comparing with my runs) said all 11 came back as grill with nothing missing and no log warnings, in about 173 s and 1.19M tokens, with 15 of 36 option checks unverified and the two flip-prone picks (#3073, #3075) on the majority answer of my test runs. Still open: picks are leanings not researched answers, and a seedling an agent already closed in a real run is guarded only by the brief."
 prs:
   - "3083"
 docsRead:
@@ -170,11 +170,11 @@ frictions:
   - description: Piped log-session.ts --author output through head, against the close-session rule never to filter it; its warnings could have been cut, so I re-ran it unfiltered.
     solution: Run the command bare and read all its output.
     severity: nit
-durationSec: 4769
+durationSec: 8026
 models:
-  claude-sonnet-5-5: 382
+  claude-sonnet-5-5: 405
 toolCounts:
-  Bash: 86
+  Bash: 89
   Read: 19
   Workflow: 7
   Skill: 5
@@ -185,16 +185,17 @@ toolCounts:
   mcp__github__issue_write: 2
   Edit: 46
   Grep: 2
-  Write: 4
+  Write: 5
   Glob: 3
   Agent: 4
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  ReadNotifications: 3
+  ReadNotifications: 5
   mcp__github__pull_request_read: 5
   mcp__claude-code-remote__send_later: 1
   mcp__claude-code-remote__delete_trigger: 1
+  mcp__claude-code-remote__send_message: 2
 filesEdited:
   - .claude/workflows/clear-backlog-explore.js
   - .agents/skills/clear-backlog/scripts/run-summary.ts
@@ -3350,7 +3351,7 @@ subagents:
     durationSec: 49
     toolCalls: 10
     modelCalls: 6
-    tokenShare: 1
+    tokenShare: 0.9
   - type: general-purpose
     task: "Review follow-up diff: Standards"
     durationSec: 22
@@ -3383,7 +3384,7 @@ subagents:
     durationSec: 85
     toolCalls: 17
     modelCalls: 8
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: workflow-subagent
     task: "triage #3071"
     model: claude-sonnet-5-5
@@ -3397,7 +3398,7 @@ subagents:
     durationSec: 91
     toolCalls: 18
     modelCalls: 8
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: workflow-subagent
     task: "triage #3076"
     model: claude-sonnet-5-5
@@ -3411,21 +3412,21 @@ subagents:
     durationSec: 77
     toolCalls: 16
     modelCalls: 8
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: workflow-subagent
     task: "triage #3072"
     model: claude-sonnet-5-5
     durationSec: 98
     toolCalls: 21
     modelCalls: 7
-    tokenShare: 1
+    tokenShare: 0.9
   - type: workflow-subagent
     task: "triage #3073"
     model: claude-sonnet-5-5
     durationSec: 90
     toolCalls: 18
     modelCalls: 8
-    tokenShare: 1.1
+    tokenShare: 1
   - type: workflow-subagent
     task: "triage #3075"
     model: claude-sonnet-5-5
@@ -3439,7 +3440,7 @@ subagents:
     durationSec: 91
     toolCalls: 19
     modelCalls: 8
-    tokenShare: 1
+    tokenShare: 0.9
   - type: workflow-subagent
     task: "triage #3073"
     model: claude-sonnet-5-5
@@ -3523,7 +3524,7 @@ subagents:
     durationSec: 233
     toolCalls: 24
     modelCalls: 14
-    tokenShare: 2
+    tokenShare: 1.9
   - type: workflow-subagent
     task: "triage #3073"
     model: claude-sonnet-5-5
@@ -3537,7 +3538,7 @@ subagents:
     durationSec: 85
     toolCalls: 16
     modelCalls: 7
-    tokenShare: 0.8
+    tokenShare: 0.7
   - type: workflow-subagent
     task: "triage #3070"
     model: claude-sonnet-5-5
@@ -3565,7 +3566,7 @@ subagents:
     durationSec: 83
     toolCalls: 17
     modelCalls: 9
-    tokenShare: 1
+    tokenShare: 0.9
   - type: workflow-subagent
     task: "triage #3069"
     model: claude-sonnet-5-5
@@ -3586,14 +3587,14 @@ subagents:
     durationSec: 357
     toolCalls: 32
     modelCalls: 22
-    tokenShare: 2.3
+    tokenShare: 2.2
   - type: workflow-subagent
     task: "triage #3075"
     model: claude-sonnet-5-5
     durationSec: 92
     toolCalls: 20
     modelCalls: 9
-    tokenShare: 1
+    tokenShare: 0.9
   - type: workflow-subagent
     task: "triage #3073"
     model: claude-sonnet-5-5
@@ -3642,14 +3643,14 @@ subagents:
     durationSec: 67
     toolCalls: 15
     modelCalls: 8
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: workflow-subagent
     task: "triage #3069"
     model: claude-sonnet-5-5
     durationSec: 78
     toolCalls: 17
     modelCalls: 8
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: workflow-subagent
     task: "triage #3075"
     model: claude-sonnet-5-5
@@ -3684,7 +3685,7 @@ subagents:
     durationSec: 74
     toolCalls: 15
     modelCalls: 6
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: "triage #3070"
     model: claude-sonnet-5-5
@@ -3698,7 +3699,7 @@ subagents:
     durationSec: 104
     toolCalls: 16
     modelCalls: 7
-    tokenShare: 1
+    tokenShare: 0.9
   - type: workflow-subagent
     task: "triage #3074"
     model: claude-sonnet-5-5
@@ -3754,14 +3755,14 @@ subagents:
     durationSec: 86
     toolCalls: 17
     modelCalls: 9
-    tokenShare: 1
+    tokenShare: 0.9
   - type: workflow-subagent
     task: "triage #3075"
     model: claude-sonnet-5-5
     durationSec: 128
     toolCalls: 29
     modelCalls: 12
-    tokenShare: 1.8
+    tokenShare: 1.7
   - type: workflow-subagent
     task: "triage #2996"
     model: claude-sonnet-5-5
@@ -3775,21 +3776,21 @@ subagents:
     durationSec: 91
     toolCalls: 19
     modelCalls: 9
-    tokenShare: 1
+    tokenShare: 0.9
   - type: workflow-subagent
     task: "triage #3071"
     model: claude-sonnet-5-5
     durationSec: 117
     toolCalls: 25
     modelCalls: 12
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: workflow-subagent
     task: "triage #3068"
     model: claude-sonnet-5-5
     durationSec: 104
     toolCalls: 22
     modelCalls: 12
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: "triage #2752"
     model: claude-sonnet-5-5
@@ -3810,14 +3811,14 @@ subagents:
     durationSec: 107
     toolCalls: 24
     modelCalls: 9
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: "triage #3072"
     model: claude-sonnet-5-5
     durationSec: 116
     toolCalls: 21
     modelCalls: 12
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: "triage #3074"
     model: claude-sonnet-5-5
