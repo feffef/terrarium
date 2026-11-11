@@ -10,22 +10,6 @@ role: >-
   gated PR (ADR-0003) it merges itself on a green gate, never via the
   `log-session` direct-to-main path. Scheduled; run it by hand to catch up.
 observations:
-  - date: "2026-10-01"
-    note: >-
-      Re-verified (audit-skills behaviour check): the PR #1478 case
-      re-confirmed directly (PR #1475's own body says "why it isn't a
-      homepage change"; the wrong claim was corrected by commit 98ece44f,
-      which also added the fact-check step in the same commit). Spot-checked
-      9 claims across the other 6 digests (#1443, #1506, #1402, #1322,
-      #1504, #1447, #1346, #1496, #1309) against live PR bodies/diffs — all
-      matched, no second factual error found. Confirmed the fact-check step
-      is genuinely running post-fix, not silently skipped like blog-post's
-      step 7 was: session_01NbSN3foQRduNSW6jJyZD5F (PR #1497) and
-      session_01D3f62f5e7GhdAZLcuHjkdc (PR #1513) both show an explicit
-      dispatched fact-check subagent with a claim tally (28 and 22 claims
-      respectively, none wrong). Retention sweep matches spec
-      (`RETAIN_DATES = 7`): PR #1513's diff moves exactly one digest and six
-      session logs from `current/` to `archived/`. Grade/role unchanged.
   - date: "2026-10-02"
     note: >-
       Re-verified (audit-skills behaviour check), 4 freshly-checked sessions
@@ -342,3 +326,6 @@ observations:
   - date: "2026-11-10"
     note: >-
       Behaviour check, 7 runs delivered. Verified: an invented 'weekly' shipped in the 2026-11-08 Digest (session_013zxzeRwYp54RD4CM5MiabZ, PR #2985) and was fixed about 1 h later by #2993; the next run drafted cadence words again and its fact-check caught them. The fact-check brief does not name cadence as a claim type (unverified cause). code-review skips stopped after c955ac303. Grade unchanged.
+  - date: "2026-11-11"
+    note: >-
+      Behaviour check, 7 runs delivered. Unverified: 'weekly Skill check' and 'weekly cost table' cadence words in the 11-04, 11-05 and 11-09 digests. Dispatch-read guard blocked the first Agent call in 5 of 7 logs. Grade unchanged.

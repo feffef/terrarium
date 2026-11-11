@@ -21,3 +21,6 @@ observations:
   - date: "2026-11-10"
     note: >-
       Behaviour check, 10 runs, 11 PRs merged. Verified from logs: cost_usd stayed unreported in session_013zxzeRSMtPAREKXCce9GT6, which started after commit 144b52946 (the fix for #2987) landed, so the tool may be missing in some Routine sessions (unverified: the usage fetch read its cost fine). Subject-wide read still skipped (session_013zxzeQyHhutDMJtzGF5UQU, session_013zxzeRCCqrxVitqSaxJa4K). New, unverified: session_013zxzeNpEgoBzTxHw74sJHY chose ten Lessons interactively without owner confirmation. Grade unchanged.
+  - date: "2026-11-11"
+    note: >-
+      Behaviour check, 10 runs, 11 PRs merged. Verified: cost_usd still unreported in Routine runs after the #2987 fix (session_013zxzeRSMtPAREKXCce9GT6, session_013zxzeNvpKDRhFYp216ti6n); commented on #2987, set needs-triage. Unverified: get_session absent from Routine sessions. Spec-review pages left unread in session_013zxzeNvpKDRhFYp216ti6n (disclosed). Grade unchanged.

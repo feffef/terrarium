@@ -221,3 +221,6 @@ observations:
   - date: "2026-11-07"
     note: >-
       Behaviour check, 8 runs, 33 PRs merged. Repeat, unverified why: session_013zxzePVGCU1ARYitEsVKoy claims check:worktrees passes yet logs stranded wf_* worktrees at close; same in session_013zxzeSbd2LJtWWawqrWBJD. Section 4 gives no cleanup for wf_* worktrees. Not issued (no damage; #2721 closed). Grade unchanged.
+  - date: "2026-11-11"
+    note: >-
+      Behaviour check, 8 runs, 31 PRs merged. Repeat of the 11-06 and 11-07 stranded wf_* worktrees (session_013zxzeSiQ4jom3vFu8GreLw, session_013zxzeQwU4eYGrEvV8x42ts, session_013zxzePVGCU1ARYitEsVKoy): filed #3043. Unverified: grilling Skill skipped in session_013zxzeSy38XR1wPjCGFUExY. Dispatch-read guard blocked the first Workflow call in 7 of 8 runs. Grade unchanged.

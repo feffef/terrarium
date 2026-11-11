@@ -142,3 +142,6 @@ observations:
   - date: "2026-11-10"
     note: >-
       Behaviour check, 5 runs delivered. Unfixed gap, n=1: session_013zxzeNd2Ethpd3anqbmpkr fanned out 7 transcript subagents (about 774k tokens) before finding that events omit hook-injected rule context in some sessions; its proposed line (probe one session first) is not in SKILL.md. No new missed invocations. Grade unchanged.
+  - date: "2026-11-11"
+    note: >-
+      Behaviour check, 5 runs delivered. Unfixed gap, second window: events omit hook-injected rule context, so session_013zxzeNd2Ethpd3anqbmpkr spent about 774k subagent tokens; SKILL.md has no probe-one-first line. n=1. Grade unchanged.

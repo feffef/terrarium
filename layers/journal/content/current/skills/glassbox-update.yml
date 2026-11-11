@@ -155,3 +155,6 @@ observations:
   - date: "2026-11-10"
     note: >-
       Behaviour check, 8 runs delivered. code-review replaced by an own read of the re-pin diff again in 4 runs (session_013zxzeQMfaaC4C4CNuFY3EH, 73 files; #2748 closed not planned, #2472 family). session_013zxzeS85pNBsS4oQSVQntp left PR #2922 unsubscribed and unmerged for 3.5 h; the 11-08 and 11-09 runs merged their own. Edited-range pin gap still hit on 11-09 but is now documented in steps 2 and 4. Grade unchanged.
+  - date: "2026-11-11"
+    note: >-
+      Behaviour check, 8 PRs merged. Partial silent failure: session_013zxzePSj9Rpf6qCGowU7gi stamped checked on hooks/40 and index pages its own log says were not fully re-verified. Not issued (no damage, single). Grade unchanged.

@@ -10,27 +10,6 @@ role: >-
   for `decisions.md` (prose alone failed 5/5), so rejected ideas stay rejected;
   not yet proven end-to-end on a real revert.
 observations:
-  - date: "2026-10-01"
-    note: >-
-      Escalated as issue #1515 (audit-skills behaviour check): the
-      #1452 fix (commit 886f26de) has now failed both times it's been
-      tested. A run fired since #1494 merged —
-      session_01GoNR7LgfGTcJfKqZ8gUDSx (2026-09-30) — and its log states
-      "No owner corrections had accrued, so decisions.md was not changed."
-      That's false: PR #1494 explicitly says "Follow-up to #1492" and
-      touches the exact same files #1492 did, the precise case 886f26de was
-      written to catch. decisions.md's only commits remain the original 4;
-      nothing since the fix landed. Worse than the pre-fix state: this
-      skip wasn't even self-caught as a friction (unlike the first,
-      2026-09-29 skip) — it was asserted as a checked-and-clean result
-      while an unambiguous rework sat unrecorded, and the session's own
-      toolCounts show no PR-search call was made at all. Otherwise clean:
-      3-model dispatch, ≥2-visitor consensus, and code-review-before-merge
-      all independently re-confirmed (not just trusted from the logs)
-      across all 9 usedIn sessions. Role's "remembers the owner's review
-      rulings" claim softened to reflect this — see role field.
-      Grade/importance unchanged (still routine); this is a reliability
-      finding, not a breadth/scheduling one.
   - date: "2026-10-02"
     note: >-
       Third chance, third failure (audit-skills behaviour check) — commented

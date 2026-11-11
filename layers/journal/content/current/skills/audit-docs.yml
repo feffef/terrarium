@@ -9,17 +9,6 @@ role: >-
   gated PR on green (ADR-0003/0004), filing an issue only for a factual conflict
   it can't resolve. Use it when docs and code drift apart.
 observations:
-  - date: "2026-10-01"
-    note: >-
-      Re-verified (audit-skills behaviour check), 7 newest sessions
-      (2026-09-24 through 09-30, PRs #1307/#1334/#1356/#1426/#1461/#1486/#1501):
-      all merged, each diff matching its log's claimed fix list, no human-only
-      surface touched, no revert found in the unbroken #1266→#1501 PR chain.
-      session_01E7nzKhxh1riVDMpn8YytKM (#1461)'s two highest-risk claims
-      (a guards.md stale-narration cut, a history.md factual correction) both
-      independently confirmed in-scope rather than a hidden tier violation.
-      Seventh consecutive clean check since the one 2026-09-27 lapse; grade
-      unchanged.
   - date: "2026-10-02"
     note: >-
       Re-verified (audit-skills behaviour check), 7 usedIn sessions
@@ -400,3 +389,6 @@ observations:
   - date: "2026-11-09"
     note: >-
       Behaviour check, 7 runs delivered. Unverified: session_013zxzeRYiNjyrjrq8JVWSuu (11-07) log read in-review after its PR merged, so the re-close on merge did not happen; the Stop-hook stale-log flag (797a8a599) landed that day. Grade unchanged.
+  - date: "2026-11-11"
+    note: >-
+      Behaviour check, 7 runs delivered. session_013zxzeRYiNjyrjrq8JVWSuu (PR #2921) log still says in-review though the PR merged; the stale-log Stop hook landed after it, so not issued. Grade unchanged.
