@@ -1,0 +1,27 @@
+{
+  "summary": "clear-backlog §1",
+  "agentCount": 1,
+  "logs": [],
+  "result": {
+    "results": {
+      "31": {
+        "outcome": "grill",
+        "title": "Show the build time",
+        "summary": "Show the build time",
+        "publicAuthor": false,
+        "readyForHuman": false,
+        "files": ["app/SiteFooter.vue"],
+        "relatedTo": [],
+        "staleClaims": [],
+        "sideFindings": [],
+        "writes": [],
+        "question": { "choice": "Show it at all?", "options": ["a) Yes", "b) No"], "pick": "a) Yes", "why": "asked for", "wouldChange": "" },
+        "followUps": [
+          { "choice": "Which pages?", "options": ["a) Home only", "b) All"], "pick": "a) Home only", "why": "least noise", "wouldChange": "" }
+        ]
+      }
+    },
+    "missing": [],
+    "grouping": [{ "issues": [31], "sharedFiles": [] }]
+  }
+}
