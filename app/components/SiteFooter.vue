@@ -4,6 +4,8 @@
 // 2026-09-24 — see that run's PR for the finding). Deliberately theme-neutral
 // (currentColor-derived, no Tenant CSS vars) so one component works unstyled
 // inside every Tenant's own look.
+// The build stamp only helps on landing pages; on content pages it distracts (#3075).
+defineProps<{ showBuild?: boolean }>()
 const route = useRoute()
 const build = useRuntimeConfig().public.build
 // Linking a visitor to the wing they are already in is a dead link.
@@ -21,7 +23,7 @@ const sites = computed(() => SITES.filter((s) => s.to.split('/')[2] !== route.pa
       </span>
     </span>
     <a class="site-footer-source" :href="REPO_URL">Source on GitHub</a>
-    <small class="site-footer-build">
+    <small v-if="showBuild" class="site-footer-build">
       build <template v-if="build.sha"><a :href="`${REPO_URL}/commit/${build.sha}`">{{ build.sha }}</a> · </template>{{ build.time }}
     </small>
   </footer>

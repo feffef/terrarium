@@ -332,7 +332,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
         </HomeShowcase>
       </div>
     </section>
-    <SiteFooter class="home-footer" />
+    <SiteFooter class="home-footer" show-build />
   </main>
 </template>
 
