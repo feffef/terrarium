@@ -9,7 +9,8 @@ layout bug, or asserting a style took effect.
 
 - **The deployed site (terrarium.feffef.de) is blocked in cloud sessions:** the
   proxy answers 403 on CONNECT. Review a local production build instead:
-  `pnpm build`, then `scripts/ui/preview.ts start`, `shot` or `review`.
+  `pnpm build`, then `pnpm exec tsx scripts/ui/preview.ts start`, `shot` or `review`
+  (scripts are not executable; later verbs take the same prefix).
 - **One screenshot:** `scripts/ui/preview.ts shot` (flags: its `USAGE`).
   It starts a server on its own port and stops it, so
   there is nothing to `pkill` (issue #240). By default it serves the production
