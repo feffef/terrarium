@@ -22,7 +22,7 @@ const { data, status, error } = await useAsyncData(route.path, async () => {
   return {
     page,
     through: glassboxWalkthroughsThrough(walkthroughs, `${base}${path}`),
-    terms: Object.fromEntries(terms.map(({ stem, ...t }) => [stem, t])),
+    terms: Object.fromEntries(terms.map(({ stem, ...t }) => [stem, { ...t, lessonTitle: pages.find((p) => `/t/glassbox/guide${p.path}` === t.lesson)?.title }])),
     subjects: glassboxDirectory(pages),
     walkthroughs: glassboxWalkthroughs(pages),
     surround: glassboxSurround(pages, path),
