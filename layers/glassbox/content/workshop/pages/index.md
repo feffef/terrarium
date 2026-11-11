@@ -80,11 +80,8 @@ Subjects and Lessons run prerequisites first, and Lesson prefixes go up in tens 
 - *Author trust*: the `trusted` label is "a display, not the check", yet a missing label means Public; the *OWNER isn't proof of a person* bullet is terse. *Issue triage labels* says only triage sets `ready-for-agent`, and later that a Trusted user's `ready-for-agent` label is an approval; a reader can't tell whether a person sets it by hand.
 - *Dependabot grouping*: why a 0.x minor counts as a major is not explained, and "the merge line" is jargon.
 - *Git worktrees* and *Git plumbing*: *Git worktrees* says Session logs shows how the script tells a linked worktree, without saying how; *Git plumbing* never says why `commit-tree` takes `env` and the other calls `idxEnv`.
-- *Pull requests* says a person merges the Human-only files, true as the default (see item 2 above).
 
 **Installed Skills.** *Engineering skills* could become part of *Installed skills* (`skill-pack/10.skill-packs`).
-
-**A fact about out-of-scope records that no Lesson teaches.** Before it recommends anything, `triage` reads every record in `.out-of-scope/` and shows the person deciding any that resembles the new request (`.agents/skills/triage/SKILL.md`, step 1). *Issue triage labels* (`git-github/70.issue-triage-labels`) teaches the records and their format but not this check. It could be one sentence there, or a section if that page is split after a fresh reader finds it hard to follow.
 
 **Doc findings not acted on.**
 - *Content collections*: the docs say `prefix` defaults from the start of `include`, so `prefix: '/'` may be needless once `cwd` is set per Space. Not checked in code.

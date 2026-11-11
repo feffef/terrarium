@@ -5,7 +5,7 @@ changes:
   - git-github/10.pull-requests | The lede says except a session's own log; the session-log exception, the verdict mechanism and the open-then-subscribe rule are each said once; head commit is glossed; the outside-PR exception is stated plainly | a fresh reader found repeats and a confusing bar (merge-pr.ts:166-187; pr-workflow.md:54; adr-0004). Wording only, so revision and publishedAt are kept
   - git-github/20.author-trust | The organisation caveat, the label, the owner and pull_request_target facts are said once; trigger and verdict are glossed; the pull_request_target bullet keeps its condition (when it checks out the PR's code) | repeats and undefined terms (merge-pr.ts:163-164,238; pr-authorassociation-label.yml:16-18). Wording only
   - git-github/30.composite-actions | The doorbell comment and the push fence are named in prose; the parity test is described before its name; opens nothing says what it means; the secrets watch bullet is cut (the concept and the Excerpt still teach it) | undefined terms and a repeat (action.yml:151-161; ADR-0026:14-38). Wording and one removal
-  - git-github/40.dependabot-grouping | The Why lead-in no longer claims the groups are the merge line; the 0.x fact and the grouping are said once; the sweep is named at first use; Try it says the next scheduled run | a lead-in the 0.x fact contradicted (dependabot.yml:10-11; dependabot-sweep SKILL.md:15,24-29). Wording only
+  - git-github/40.dependabot-grouping | The Why lead-in says the groups split updates by type, as the merge line does, and no longer repeats the 0.x fact; the 0.x fact and the grouping are said once; the sweep is named at first use; Try it says the next scheduled run | a lead-in the 0.x fact contradicted (dependabot.yml:10-11; dependabot-sweep SKILL.md:15,24-29). Wording only
   - git-github/50.git-worktrees | The lede keeps to the branch race; HEAD, remote-tracking branch and squash merge are glossed; the sweep is one passage in short sentences; refuses is used for one sense; the repeated folder, install and rules facts are said once | a fresh reader found repeats and a long sentence (dispatch-subagents SKILL.md:18-25; log-session.ts:529-588; check-worktrees.ts:150-194). Wording only
   - git-github/60.attribution | The lede says the owner facts once; both trailers are named in the repair sentence; the guard paragraph is split and --owner-approved explained; ToolSearch glossed; the A mark is not trust bullet is cut (the concept and the Why cost still say it) | repeats and a long sentence (commit-trailer.ts:204-222; merge-pr.ts:207-214). Wording and one removal
   - git-github/70.issue-triage-labels | Triage reads every record in .out-of-scope/ before it recommends; all four states are defined; the long first sentence is split; spec, idempotent and Wayfinder are glossed; the category-and-state rule is said once | the memory page's one-sentence gap plus reader findings (triage SKILL.md:41,70-72; triage-labels.md:14-17; issue-tracker.md:55-65). teaches and publishedAt changed because the page teaches a new fact
@@ -19,3 +19,13 @@ pagesRead:
   - git-github/60.attribution
   - git-github/70.issue-triage-labels
   - git-github/80.git-plumbing
+  - agents/10.subagents
+  - agents/30.cloud-sessions
+  - claude-code/20.path-scoped-rules
+  - claude-code/50.mcp-servers
+  - hooks/20.blocking-hooks
+  - skill-pack/10.skill-packs
+  - skill-pack/20.planning-with-the-pack
+  - skill-pack/40.wayfinder
+  - terrarium-practice/40.session-logs
+  - verification/10.gate
