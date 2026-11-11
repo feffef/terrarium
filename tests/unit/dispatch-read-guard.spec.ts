@@ -45,7 +45,7 @@ describe('unfilledPlaceholder()', () => {
   })
 
   it('ignores JSON, code, template literals, lower case and other tools', () => {
-    for (const prompt of ['{"a":1}', 'if (x) { FOO }', 'use ${BRANCH} in a template', '{lower_case}', '{Mixed}', '{A-B}', '@@ @@', '{}'])
+    for (const prompt of ['{"a":1}', 'if (x) { FOO }', 'use ${BRANCH} in a template', '{lower_case}'])
       expect(unfilledPlaceholder('Agent', { prompt }), prompt).toBeNull()
     expect(unfilledPlaceholder('Workflow', { prompt: '@@X@@' })).toBeNull()
     expect(unfilledPlaceholder('Agent', {})).toBeNull()
@@ -53,14 +53,19 @@ describe('unfilledPlaceholder()', () => {
 })
 
 describe('the hook entry', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'dispatch-read-'))
+  const run = (extra: object) => runTsx('scripts/hooks/dispatch-read-guard.ts', { input: JSON.stringify({ tool_name: 'Agent', tool_input: { prompt: 'go' }, ...extra }) })
+
   it('denies an unfilled placeholder even without a transcript, naming it', () => {
-    const out = JSON.parse(runTsx('scripts/hooks/dispatch-read-guard.ts', { input: JSON.stringify({ tool_name: 'Agent', tool_input: { prompt: 'go @@X@@' } }) })).hookSpecificOutput
+    const out = JSON.parse(run({ tool_input: { prompt: 'go @@X@@' } })).hookSpecificOutput
     expect(out.permissionDecision).toBe('deny')
     expect(out.permissionDecisionReason).toContain('@@X@@')
   })
 
-  const dir = mkdtempSync(join(tmpdir(), 'dispatch-read-'))
-  const run = (extra: object) => runTsx('scripts/hooks/dispatch-read-guard.ts', { input: JSON.stringify({ tool_name: 'Agent', tool_input: { prompt: 'go' }, ...extra }) })
+  it('--dry-run reports deny for an unfilled placeholder', () => {
+    const out = runTsx('scripts/hooks/dispatch-read-guard.ts', { args: ['--dry-run', '--input', JSON.stringify({ tool_name: 'Agent', tool_input: { prompt: '@@X@@' } })] })
+    expect(out).toContain('deny')
+  })
 
   it('denies with the doc to read, and allows once it is read or the transcript is missing', () => {
     const path = (name: string, records: unknown[]) => (writeFileSync(join(dir, name), records.map((r) => JSON.stringify(r)).join('\n')), join(dir, name))

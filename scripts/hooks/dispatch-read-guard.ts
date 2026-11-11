@@ -5,7 +5,9 @@
 // shows that Skill invoked or its SKILL.md read (Read tool, or a shell read the
 // session trace recognises). A subagent (payload has `agent_id`) cannot
 // dispatch, so it is never guarded. A missing or unreadable transcript lets the
-// call through: denying would block every dispatch for good.
+// call through: denying would block every dispatch for good. Separately, any
+// caller's brief with an unfilled placeholder is denied (issue #2996); that
+// needs no transcript.
 //
 // Usage:
 //   tsx scripts/hooks/dispatch-read-guard.ts                # hook payload on stdin
@@ -38,29 +40,23 @@ export const formatGuardMessage = () =>
 // narrow (caps and underscores, no `$` before it) to skip JSON, code and
 // template literals.
 const PLACEHOLDER = /@@\w+@@|(?<!\$)\{[A-Z]+(?:_[A-Z]+)*\}/
-const BRIEF_FIELD: Record<string, string> = { Agent: 'prompt', SendMessage: 'message' }
 
 export function unfilledPlaceholder(toolName: unknown, toolInput: unknown): string | null {
-  const text = prop(toolInput, BRIEF_FIELD[toolName as string] ?? '')
+  const text = prop(toolInput, toolName === 'Agent' ? 'prompt' : toolName === 'SendMessage' ? 'message' : '')
   return typeof text === 'string' ? (PLACEHOLDER.exec(text)?.[0] ?? null) : null
 }
 
-export const formatPlaceholderMessage = (found: string) =>
-  `Blocked by the ${LABEL} (issue #2996): the brief still holds the unfilled placeholder \`${found}\`. ` +
-  'Fill it from its source, then retry.'
-
-const decide = (payload: unknown) => shouldDeny(prop(payload, 'agent_id'), readTranscript(prop(payload, 'transcript_path') as string | undefined))
-const decideMessage = (payload: unknown) => {
-  if (decide(payload)) return formatGuardMessage()
+const decide = (payload: unknown) => {
+  if (shouldDeny(prop(payload, 'agent_id'), readTranscript(prop(payload, 'transcript_path') as string | undefined))) return formatGuardMessage()
   const found = unfilledPlaceholder(prop(payload, 'tool_name'), prop(payload, 'tool_input'))
-  return found ? formatPlaceholderMessage(found) : null
+  return found && `Blocked by the ${LABEL} (issue #2996): the brief still holds the unfilled placeholder \`${found}\`. Fill it from its source, then retry.`
 }
 
 function main(): void {
   const read = readHookPayload()
   if (read.kind === 'none') return
   if (read.kind !== 'ok') return denyUninspectable(LABEL, REF, 'the hook payload was unreadable or named no tool')
-  const message = decideMessage(read.payload)
+  const message = decide(read.payload)
   if (message) process.stdout.write(JSON.stringify(buildDenyOutput(message)))
 }
 
