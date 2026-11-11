@@ -67,7 +67,9 @@ or dropped.
 These mechanical signals cover `close-session`'s missed invocations. They are
 the measure ADR-0009 uses to decide whether to widen its reminder hook.
 
-- `orphanedSessions`: sessions that shipped a merged PR but never logged.
+- `orphanedSessions`: sessions that merged a PR or filed an issue, updated
+  within the window (`orphanScan.since`), but never logged. File each one the
+  day it appears: older ones are not rescanned.
   Read `orphanScan` first. `scanned: false` means nothing was looked at, so
   report the orphan check as inconclusive with its `reason`, not as zero
   orphans.

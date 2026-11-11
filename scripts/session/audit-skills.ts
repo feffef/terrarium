@@ -28,10 +28,10 @@ export const DEFAULT_WINDOW_DAYS = 7
 export const BEHAVIOUR_CHECK_MIN_USES = 3
 
 /** Calendar window bounding the work-commit scan behind `manuallyRescuedClosures`
- *  ONLY. It deliberately no longer reaches the orphan check, whose candidates now
- *  come from merged pull requests with no window at all (issue #738) — that check
- *  is the one a windowed scan silently truncated. A rescue is a *timing* signal
- *  about a recent close, so a short window costs it nothing. */
+ *  ONLY. The orphan check uses the scorecard window instead, and reports its
+ *  cutoff in `orphanScan.since` so a short window can't pass as a clean sweep
+ *  (issue #738). A rescue is a *timing* signal about a recent close, so a short
+ *  window costs it nothing. */
 export const WORK_COMMIT_SCAN_DAYS = 4
 /** The exact keyword a session records — in a friction's `description` — when a
  *  human, not the session's own judgement, prompted its closure (`close-session`
@@ -46,8 +46,7 @@ export const HUMAN_PROMPTED_CLOSURE = 'HUMAN-PROMPTED-CLOSURE'
 export const RESCUED_GAP_HOURS = 6
 /** Session id → resolving issue/PR reference, for an `orphanedSessions` entry
  *  already triaged: it stays visible with a `resolvedBy` cutoff rather than
- *  resurfacing as fresh evidence — the orphan check has no time window
- *  (issue #738), so this is its only cutoff lever (issue #447 item 4). */
+ *  resurfacing as fresh evidence (issue #447 item 4). */
 export const RESOLVED_ORPHANED_SESSIONS: ReadonlyMap<string, string> = new Map([
   ['session_019aeaoPHYWMJVekmUvTMhQ9', '#736'],
   ['session_01QdPGeF2hNwJLtnvzv1Rsi1', '#1063'],
@@ -556,6 +555,16 @@ export interface RawPullRequestApiRecord {
   body: string | null
   merged_at: string | null
   merge_commit_sha: string | null
+  updated_at?: string
+}
+
+/** One raw record of the REST `issues` list endpoint (which also lists pull
+ *  requests, told apart by `pull_request`). */
+export interface RawIssueBodyRecord {
+  number: number
+  body: string | null
+  created_at: string
+  pull_request?: unknown
 }
 
 /** Whether the orphan check's candidate source could be read at all, and how
@@ -565,7 +574,7 @@ export interface RawPullRequestApiRecord {
  *  what let a real orphan pass as a clean sweep. Reported on the scorecard;
  *  carries no candidate data, so it stays cheap to include on every run. */
 export type OrphanScanStatus =
-  | { scanned: true; mergedPullRequests: number; withSession: number }
+  | { scanned: true; since: string; mergedPullRequests: number; issues: number; withSession: number }
   | { scanned: false; reason: string }
 
 /** `OrphanScanStatus` plus the candidates themselves — the reader's own return
@@ -642,6 +651,17 @@ export function pullRequestSessionRef(record: RawPullRequestApiRecord): SessionT
   const session = readProvenanceHeader(body)?.sessionId ?? legacyTrailerSession(body)
   if (!session) return null
   return { sha: record.merge_commit_sha || `pr-${record.number}`, date: record.merged_at, session }
+}
+
+/** The session an issue records as its origin, keyed `issue-<number>` (an issue
+ *  has no merge commit). Catches a session that only filed issues. `null` for a
+ *  pull request in the issues listing or a body with no deliberate marker. */
+export function issueSessionRef(record: RawIssueBodyRecord): SessionTrailerRef | null {
+  if (record.pull_request) return null
+  const body = record.body ?? ''
+  const session = readProvenanceHeader(body)?.sessionId ?? legacyTrailerSession(body)
+  if (!session) return null
+  return { sha: `issue-${record.number}`, date: record.created_at, session }
 }
 
 /** Every merged pull request's originating session, as the candidate set the
@@ -957,21 +977,37 @@ function readLock(cwd = root): Set<string> {
 // every judgement is made by the pure `parseMergedPullRequests`/
 // `findOrphanedSessions` pair, so the comparison stays testable with no network.
 
-function readClosedPullRequests(access: Access): RawPullRequestApiRecord[] {
-  return listAll<RawPullRequestApiRecord>(access, 'pulls', { state: 'closed' })
+/** Newest-updated first, stopping at the first page wholly older than `since`:
+ *  `updated_at` is never earlier than `merged_at`, so no PR merged in the window
+ *  is cut off, and the scan costs a page or two instead of the whole history. */
+function readRecentClosedPullRequests(access: Access, since: string): RawPullRequestApiRecord[] {
+  const stale = (r: RawPullRequestApiRecord) => (r.updated_at ?? '') < since
+  return listAll<RawPullRequestApiRecord>(
+    access,
+    'pulls',
+    { state: 'closed', sort: 'updated', direction: 'desc' },
+    { until: (page) => page.every(stale) },
+  ).filter((r) => !stale(r))
 }
 
-/** Every merged pull request's originating session — the orphan check's whole
- *  candidate set, unbounded in time (issue #738). Every failure to reach the
- *  source returns `scanned: false` with the reason rather than an empty set: an
- *  empty set is a claim that nothing is orphaned, and this reader is not
- *  entitled to make that claim when it could not look. */
-export function readPullRequestSessionRefs(cwd = root): PullRequestScan {
+function readRecentIssues(access: Access, since: string): RawIssueBodyRecord[] {
+  return listAll<RawIssueBodyRecord>(access, 'issues', { state: 'all', since, sort: 'updated', direction: 'desc' })
+}
+
+/** The orphan check's candidate set: the originating session of every pull
+ *  request merged, and every issue filed, that was updated since `since`. An
+ *  orphan stays on the scorecard only while the audit runs inside that window,
+ *  so the audit must run more often than the window is long. Every failure to
+ *  reach a source returns `scanned: false` with the reason rather than an empty
+ *  set: an empty set is a claim that nothing is orphaned, and this reader is not
+ *  entitled to make that claim when it could not look (issue #738). */
+export function readOrphanCandidates(since: string, cwd = root): PullRequestScan {
   try {
-    const records = readClosedPullRequests(resolveAccess(cwd))
-    const merged = records.filter((r) => r.merged_at !== null)
-    const refs = parseMergedPullRequests(merged)
-    return { status: { scanned: true, mergedPullRequests: merged.length, withSession: refs.length }, refs }
+    const access = resolveAccess(cwd)
+    const merged = readRecentClosedPullRequests(access, since).filter((r) => r.merged_at !== null)
+    const issues = readRecentIssues(access, since).filter((r) => !r.pull_request)
+    const refs = [...parseMergedPullRequests(merged), ...issues.map(issueSessionRef).filter((r): r is SessionTrailerRef => r !== null)]
+    return { status: { scanned: true, since, mergedPullRequests: merged.length, issues: issues.length, withSession: refs.length }, refs }
   } catch (err) {
     return { status: { scanned: false, reason: err instanceof Error ? err.message : String(err) }, refs: [] }
   }
@@ -985,7 +1021,7 @@ export function scorecard(windowDays = DEFAULT_WINDOW_DAYS, cwd = root, now = Da
   const since = new Date(now - windowDays * 86_400_000).toISOString()
   const window = pickWindow(all, since)
   const skills = buildSkillRows(readOnDiskSkills(cwd, skillNames), readInventory(cwd), window, all, readLock(cwd), readLandings(cwd, since))
-  const scan = readPullRequestSessionRefs(cwd)
+  const scan = readOrphanCandidates(since, cwd)
   const orphans = findOrphanedSessions(scan.refs, readKnownSessionIds(cwd), readCommitFileChanges(cwd))
   return {
     windowDays,
