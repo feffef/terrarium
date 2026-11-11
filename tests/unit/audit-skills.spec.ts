@@ -17,6 +17,7 @@ import {
   issuesNamingSkill,
   HUMAN_PROMPTED_CLOSURE,
   isSessionLogPath,
+  issueSessionRef,
   lastUsed,
   parseCommitFileChanges,
   parseLandings,
@@ -41,6 +42,7 @@ import {
   type InventoryEntry,
   type Landing,
   type OnDiskSkill,
+  type RawIssueBodyRecord,
   type RawPullRequestApiRecord,
   type Session,
   type SessionTrailerRef,
@@ -412,10 +414,27 @@ describe('pullRequestSessionRef() — the orphan candidate source (issue #738)',
     const record = pr({ merge_commit_sha: null, body: '🤖 [M](https://claude.ai/code/session_A)' })
     expect(pullRequestSessionRef(record)?.sha).toBe('pr-649')
   })
+})
 
-  it('is bounded by no time window at all — an arbitrarily old merged PR still yields a candidate', () => {
-    const ancient = pr({ merged_at: '2026-01-01T00:00:00Z', body: '🤖 [M](https://claude.ai/code/session_OLD)' })
-    expect(pullRequestSessionRef(ancient)?.date).toBe('2026-01-01T00:00:00Z')
+describe('issueSessionRef() — sessions that only filed issues', () => {
+  const issue = (over: Partial<RawIssueBodyRecord> = {}): RawIssueBodyRecord => ({
+    number: 12,
+    body: '🤖 [Claude](https://claude.ai/code/session_A)\n\nProposal.',
+    created_at: '2026-11-10T08:00:00Z',
+    ...over,
+  })
+
+  it('reads the session from the header, keyed issue-<number> and dated at creation', () => {
+    expect(issueSessionRef(issue())).toEqual({ sha: 'issue-12', date: '2026-11-10T08:00:00Z', session: 'session_A' })
+  })
+
+  it('skips a pull request, which the issues listing also returns', () => {
+    expect(issueSessionRef(issue({ pull_request: {} }))).toBeNull()
+  })
+
+  it('skips an issue with no deliberate marker or a merely quoted session URL', () => {
+    expect(issueSessionRef(issue({ body: null }))).toBeNull()
+    expect(issueSessionRef(issue({ body: 'See https://claude.ai/code/session_OTHER' }))).toBeNull()
   })
 })
 
