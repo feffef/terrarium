@@ -4,7 +4,7 @@ export const meta = {
   whenToUse: 'Run only from the clear-backlog Skill, with the issue set its sweep computed as args',
   phases: [
     { title: 'Triage', detail: 'one agent per issue' },
-    { title: 'Retry', detail: 're-run each issue whose agent returned nothing, once' },
+    { title: 'Retry', detail: 're-run each issue whose agent returned nothing or a thin result, once' },
   ],
 }
 
@@ -136,11 +136,16 @@ GitHub writes:
 
 The run's issue set is ${list}. In relatedTo, name only issues from that set that clearly belong in the same change as this one.
 
+If the output is rejected, add the missing real content; never pad it with empty values or a placeholder.
+
 ${RELAYED_REPLY} ${ASK_SOURCES}`
 }
 
 const input = (args.issues || []).map(i => ({ ...i, all: args.issues }))
 for (const i of input) if (!MODE[i.mode]) throw new Error(`#${i.number}: unknown mode ${i.mode}`)
+// A rejected output can be re-sent with filler that passes the schema (#3084's stub: background "x", no sources), so check content too.
+const MIN_BACKGROUND = 100
+const thin = r => !r.sourcesRead.length || r.background.trim().length < MIN_BACKGROUND || (r.outcome === 'grill' && !r.question)
 const triage = (issue, phase) => agent(brief(issue), { label: `triage #${issue.number}`, phase, schema: RESULT, model: 'sonnet' })
 
 phase('Triage')
@@ -151,9 +156,13 @@ const results = {}
 const missing = []
 for (const [i, issue] of input.entries()) {
   let r = first[i]
-  if (!r) {
-    log(`#${issue.number}: no result, re-running once`)
+  if (!r || thin(r)) {
+    log(`#${issue.number}: ${r ? 'thin result' : 'no result'}, re-running once`)
     r = await triage(issue, 'Retry')
+    if (r && thin(r)) {
+      log(`#${issue.number}: thin result again`)
+      r = null
+    }
   }
   // The owner decides every seedling (build, block or close), so only a grill survives for one.
   const seedling = /^\s*seedling\b/i.test(r?.title || '')

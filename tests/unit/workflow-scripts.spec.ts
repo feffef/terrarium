@@ -91,25 +91,28 @@ describe('clear-backlog-build final gate (#2523, #3084)', () => {
   })
 })
 
-describe('clear-backlog-explore seedlings', () => {
+describe('clear-backlog-explore', () => {
   const source = readFileSync(join(DIR, 'clear-backlog-explore.js'), 'utf8').replace(/^export const meta/m, 'const meta')
+  const background = 'b'.repeat(100)
   const found = (outcome: string, title: string, over: object = {}) => ({
-    outcome, title, summary: 's', publicAuthor: false, readyForHuman: false, files: [], relatedTo: [], staleClaims: [], sideFindings: [], writes: [], ...over,
+    outcome, title, summary: 's', publicAuthor: false, readyForHuman: false, files: [], relatedTo: [], staleClaims: [], sideFindings: [], writes: [],
+    sourcesRead: [{ source: 'f', learned: 'l' }], background, ...over,
   })
 
-  /** Runs the script on issue 1 with an agent that returns `result`; returns its results and log lines. */
-  async function run(result: object) {
+  /** Runs the script on issue 1; its agent returns each of `results` in turn, the last one repeating. */
+  async function run(...results: object[]) {
     const logs: string[] = []
+    let calls = 0
     const globals: Record<string, unknown> = {
-      agent: async () => result,
+      agent: async () => results[Math.min(calls++, results.length - 1)],
       pipeline: (items: unknown[], ...stages: ((x: unknown) => unknown)[]) => Promise.all(items.map(async (i) => { let x = i; for (const s of stages) x = await s(x); return x })),
       parallel: (fns: (() => unknown)[]) => Promise.all(fns.map((f) => f())),
       phase: () => {},
       log: (l: string) => logs.push(l),
       args: { session: 'session_x', issues: [{ number: 1, mode: 'full' }] },
     }
-    const out = await new AsyncFunction(...GLOBALS, source)(...GLOBALS.map((g) => globals[g])) as { results: Record<string, unknown> }
-    return { r: out.results[1] as { outcome: string; question?: { pick: string } }, logs }
+    const out = await new AsyncFunction(...GLOBALS, source)(...GLOBALS.map((g) => globals[g])) as { results: Record<string, unknown>; missing: number[] }
+    return { r: out.results[1] as { outcome: string; question?: { pick: string } }, missing: out.missing, calls, logs }
   }
 
   it.each(['build', 'blocked', 'close-done', 'close-duplicate'])('turns a seedling\'s %s result into a grill with a question', async (outcome) => {
@@ -126,5 +129,27 @@ describe('clear-backlog-explore seedlings', () => {
   it('logs a pick that is not one of its options', async () => {
     const question = { choice: 'c', options: ['a) x', 'b) y'], pick: 'b', why: 'w', wouldChange: 'v' }
     expect((await run(found('grill', 'Seedling: x', { question }))).logs).toEqual(['#1: pick is not one of its options'])
+  })
+
+  const stub = (over: object = {}) => found('grill', 'Fix x', { sourcesRead: [], background: 'x', ...over })
+
+  it.each([
+    ['no sources', { background, sourcesRead: [] }],
+    ['a placeholder background', { sourcesRead: [{ source: 'f', learned: 'l' }], background: 'x' }],
+    ['a grill without a question', {}],
+  ])('re-runs a result with %s once, and keeps the retry (#3084)', async (_name, over) => {
+    const good = found('grill', 'Fix x', { question: { choice: 'c', options: ['a'], pick: 'a', why: 'w', wouldChange: 'v' } })
+    const { r, missing, calls } = await run(found('grill', 'Fix x', over), good)
+    expect({ calls, missing, outcome: r.outcome }).toEqual({ calls: 2, missing: [], outcome: 'grill' })
+  })
+
+  it('reports an issue whose retry is thin again as missing (#3084)', async () => {
+    const { r, missing, calls, logs } = await run(stub())
+    expect({ r, calls, missing }).toEqual({ r: undefined, calls: 2, missing: [1] })
+    expect(logs).toContain('#1: thin result again')
+  })
+
+  it('does not re-run a good result', async () => {
+    expect((await run(found('blocked', 'Wait for a date'))).calls).toBe(1)
   })
 })
