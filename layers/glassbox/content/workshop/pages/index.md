@@ -46,7 +46,7 @@ These are the owner's goals for the guide. A run builds toward them directly; a 
 
 ### Ideas not yet decided
 
-**More web standards pages, looked at and left out.** *View Transitions* (Tinkerfund's plugin, mostly about a Nuxt hook, so it fits Nuxt & Vue); page metadata for link previews and search engines (one Tenant's helper); container queries and a scroll-watching helper (one or two files each).
+**More web standards pages, looked at and left out.** *View Transitions* (mostly a Nuxt hook, so it fits Nuxt & Vue); page metadata for link previews; container queries and a scroll-watching helper.
 
 **Left over from the 2026-11-10 Claude Code pass.** A fresh reader still found these; none is false.
 - *MCP servers* says one hint matches the whole server while the guards list tools, and gives no reason for the difference (the sources give none; ask the owner or leave it as a plain fact).
@@ -61,7 +61,7 @@ These are the owner's goals for the guide. A run builds toward them directly; a 
 - *Cloud sessions*: the lede says the other cases get "less", the list says "nothing".
 - *Scheduled tasks*: the cadence rule is still stated in three places.
 
-**Topics the Scout found with no page (2026-11-10).** A Nuxt build peaks near 2.1 GB, and the live host has a 2 GB swapfile added after builds were killed (`deploy/README.md`); a sentence for *Continuous deployment* (`deploy/10.continuous-deployment`), not a page. Also: each session now rates every rule it was shown as *steered* (it changed what the session did) or *backed* (it matched what the session was doing). The session log keeps this as `ruleUse` (`shared/schemas/session.ts`, `scripts/session/rule-use.ts`), a hook answers a bare `echo rule-use:` call with the list, `scripts/session/rule-use-report.ts` totals it per rule, and the Journal session card shows it. Nearest pages: *Pruning instructions* (`terrarium-practice/50.pruning-instructions`) and *Session logs* (`terrarium-practice/40.session-logs`). Also: `docs/agents/verifying-ui-changes.md` now says Linux screenshots can't confirm fixed-width text fit; nearest page *Headless browser checks* (`verification/80.headless-browser-checks`).
+**Topics the Scout found with no page (2026-11-10).** A Nuxt build peaks near 2.1 GB, and the live host has a 2 GB swapfile added after builds were killed (`deploy/README.md`); a sentence for *Continuous deployment* (`deploy/10.continuous-deployment`), not a page. Also: each session rates every rule it was shown as *steered* or *backed*, kept in the log as `ruleUse` (`shared/schemas/session.ts`, `scripts/session/rule-use-report.ts` totals it). Nearest pages: *Pruning instructions* and *Session logs*. Also: `docs/agents/verifying-ui-changes.md` now says Linux screenshots can't confirm fixed-width text fit; nearest page *Headless browser checks* (`verification/80.headless-browser-checks`).
 
 **Left over from the 2026-11-10 Nuxt Content, Web standards, Verification and Nuxt & Vue passes.** Fresh readers found these; none is false.
 - Several pages use *Space*, *Document*, *Catalog* or *Tenant* before they are glossed, or gloss one twice (*Vue components*, *Hydration*, *File routing*, *queryCollection*). A short rule for where each is glossed first would settle it.
@@ -80,6 +80,7 @@ These are the owner's goals for the guide. A run builds toward them directly; a 
 - *MCP servers*: "the `.sh` filter" and the hint's trigger words are hard to follow. *Claude Code permissions* says the untrusted-workspace fact in three places. *Claude Code skills*: "importance and role are the Inventory's own judgement" is unclear.
 - *Path-specific rules*: the Human-only sentence is long and nested.
 - *Blocking hooks*: "hints and recorders", "pure check" and "shell pre-filters" are used before they are glossed. *Hook-added context* and *Session transcripts* were not re-read after the 2026-11-10 pass (the fresh reader for them never reported).
+- *Issue triage labels* is pinned before `docs/agents/triage-labels.md` gained its `harvest` exception (it says only triage sets the two ready labels, and its Excerpt lacks the exception). Re-pin it and show the exception. *Skill inventory*, *Scheduled tasks* and *Schema evolution* were only searched, not re-read, against the new *Ideas and lessons learned* Lesson.
 - The `harvest` Skill's own text (`SKILL.md:3,8`) says a Routine runs it; the owner says none does yet. Fixing a Skill is outside this Skill's remit, so ask the owner.
 
 **Installed Skills.** *Engineering skills* could become part of *Installed skills* (`skill-pack/10.skill-packs`).
@@ -90,7 +91,7 @@ These are the owner's goals for the guide. A run builds toward them directly; a 
 - The Corepack link on *pnpm and the lockfile* (`nodejs.org/api/corepack.html`) now redirects to GitHub; Node 22's docs page `nodejs.org/docs/latest-v22.x/api/corepack.html` is a candidate, and Corepack stops shipping with Node 25.
 - The page 40 excerpt of `.agents/skills/auto-triage/SKILL.md` (*Wayfinder*) shifts to `lines="75-79"` once the pin moves past 2026-11-11.
 
-**Topics the Scout found with no page (2026-11-11).** The `harvest` Skill (files up to 10 `ready-for-human` Seedling issues from ideas and learnings in session logs, at most 3 about workflow; `.agents/skills/harvest/SKILL.md`). The owner said on 2026-11-11 that no Routine runs it yet but one will. Once it does, add it to *Scheduled tasks* (`agents/40.scheduled-tasks`, which lists every Routine) and ask the owner whether it belongs in *Self-improvement loop* (`terrarium-practice/80.self-improvement-loop`). The build line in the page footer (`shared/build-info.ts`, shows the commit and time of the build on the home page and the Journal landing): a sentence for *Continuous deployment*. `scripts/ui/screenshot.ts` scrolls `--wait-for` captures to an `#anchor`: a sentence for *Headless browser checks* (`verification/80.headless-browser-checks`).
+**Topics the Scout found with no page (2026-11-11).** The owner said on 2026-11-11 that no Routine runs `harvest` yet but one will. Once it does, add it to *Scheduled tasks* (`agents/40.scheduled-tasks`, which lists every Routine). The build line in the page footer (`shared/build-info.ts`, shows the commit and time of the build on the home page and the Journal landing): a sentence for *Continuous deployment*. `scripts/ui/screenshot.ts` scrolls `--wait-for` captures to an `#anchor`: a sentence for *Headless browser checks* (`verification/80.headless-browser-checks`).
 
 **Doc findings not acted on.**
 - *Content collections*: the docs say `prefix` defaults from the start of `include`, so `prefix: '/'` may be needless once `cwd` is set per Space. Not checked in code.
@@ -98,14 +99,14 @@ These are the owner's goals for the guide. A run builds toward them directly; a 
 - *pnpm and the lockfile*: the lead-in says pnpm.io's unversioned pages describe a newer major. The 12.x, 11.x and 10.x docs exist (`pnpm/pnpm.io` `versions.json`), but pnpm.io was blocked, so which major the unversioned pages show is unchecked.
 
 **Doc checks of 2026-11-09, claims the docs were silent on.** Each may be true; a later run should read the tool's source or run it.
-- *Nitro server engine* (`nuxt-vue/60.nitro`): the dev cache path `.nuxt/cache/nitro/routes` (the Nitro docs say a temporary directory), `cache: false`, a payload for a plain `cache` rule, and "Nuxt 4 runs Nitro v2".
+- *Nitro server engine* (`nuxt-vue/60.nitro`): the dev cache path `.nuxt/cache/nitro/routes`, `cache: false`, a payload for a plain `cache` rule, and "Nuxt 4 runs Nitro v2".
 - *Cloud sessions* (`agents/30.cloud-sessions`): that the proxy refuses `.github/workflows/` pushes and repository-settings writes.
-- *Scheduled tasks* (`agents/40.scheduled-tasks`): that a Routine's prompt arrives as the first turn like a typed command, and that a `disable-model-invocation` Skill runs from a Routine prompt. The Skills docs say a session-scoped scheduled task that fires such a Skill is stopped; a cloud Routine is a different case.
+- *Scheduled tasks* (`agents/40.scheduled-tasks`): that a Routine's prompt arrives as the first turn, and that a `disable-model-invocation` Skill runs from it.
 - *Session transcripts* (`hooks/40.session-transcripts`): the record types and fields, the 2 KB preview, and a subagent's `transcript_path` inside tool hooks.
 - *Author trust* (`git-github/20.author-trust`): what each `author_association` value means, and that `pull_request_target` ignores the approval setting. *Dependabot grouping*: that `/` doesn't reach a nested action.
 - *Linting* (`verification/50.linting`): the sentence on the rules `@nuxt/eslint` turns on and the absence of formatting rules.
 - *Content validation* (`verification/30.content-validation`): the `?id=safeparse` anchor on v3.zod.dev, which loads only in a browser.
-- *Asking an agent for a change* (`walkthroughs/asking-for-a-change`): stop 1 says a cloud session and a local one work the same way, and stop 2 has the `SessionStart` hook install packages. *Claude Code hooks* now says a session on several repositories, or a project thread, runs none of the committed hooks. Both hold for Terrarium's usual one-repository session; the Walkthrough could say so. *A session log lands on main* says "the `Stop` hook" in the singular, though four are wired.
+- *Asking an agent for a change* (`walkthroughs/asking-for-a-change`): stop 1 says a cloud session and a local one work the same way, and stop 2 has the `SessionStart` hook install packages. Both hold for Terrarium's usual one-repository session; the Walkthrough could say so. *A session log lands on main* says "the `Stop` hook" in the singular, though four are wired.
 
 **Missing Lessons.** The browser quirks and CSS traps listed in `docs/agents/verifying-ui-changes.md` are only partly taught, in *Headless browser checks* (`verification/80.headless-browser-checks`).
 
