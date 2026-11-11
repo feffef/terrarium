@@ -1,28 +1,47 @@
 schemaVersion: 1
 session: session_013zxzeP6PH92ubTps39j3HD
 startedAt: 2026-11-11T16:40:30Z
-endedAt: 2026-11-11T16:59:50Z
+endedAt: 2026-11-11T17:10:21Z
 kind: interactive
 goal: Harvest learnings from recent session logs into Seedlings
-status: completed
-outcome: Three Seedlings filed (3103-3105) after the owner asked for a deeper second pass.
-summary: "Scheduled-style harvest run with the argument learnings. First pass was agent-initiated and too shallow: I opened about ten of the 204 unharvested learnings' clusters, screened mostly by keyword grep, and filed nothing. The owner then asked whether nothing was worth documenting (human-instructed) and told me to do a second pass and think about improving the Skill (human-instructed). The second pass checked the GitHub, git and harness clusters against docs/agents, the tracker and the Friction Ledger, dropped what the Ledger or open issues already cover (closing keywords, helper agents moving the branch, gate comment SHA, hand-back guidance), and filed three workflow Seedlings, each adding a few lines to one existing doc - 3103 (github-integration.md), 3104 (environment-caveats.md), 3105 (git-conventions.md) - all verified with check-posted. Product clusters stayed unfiled because their facts already sit in code comments or are single-session. Open question for the owner: the Skill's rule that a change must retire as much as it adds blocks nearly every doc-fact learning, so the first pass dropped real candidates for that reason."
-prs: []
+status: in-review
+outcome: Three Seedlings filed (3103-3105); harvest Skill fixes open as PR 3106.
+summary: "Scheduled-style harvest run with the argument learnings. First pass was agent-initiated and too shallow: I opened about ten of the 204 unharvested learnings' clusters, screened mostly by keyword grep, and filed nothing. The owner then asked whether nothing was worth documenting (human-instructed) and told me to do a second pass and think about improving the Skill (human-instructed). The second pass checked the GitHub, git and harness clusters against docs/agents, the tracker and the Friction Ledger, dropped what the Ledger or open issues already cover (closing keywords, helper agents moving the branch, gate comment SHA, hand-back guidance), and filed three workflow Seedlings, each adding a few lines to one existing doc - 3103 (github-integration.md), 3104 (environment-caveats.md), 3105 (git-conventions.md) - all verified with check-posted. Product clusters stayed unfiled because their facts already sit in code comments or are single-session. The owner then told me to build the Skill changes in this session (human-instructed): PR 3106 changes harvest step 1, 3, 4, 5 and adds stateReason to list-open-issues.ts, reviewed with code-review (valid findings applied) and gated green before the push. Earlier open question, now settled: the Skill's rule that a change must retire as much as it adds blocks nearly every doc-fact learning, so the first pass dropped real candidates for that reason."
+prs:
+  - "3106"
 docsRead:
   - path: .claude/skills/harvest/body-template.md
     reason: (no reason given)
   - path: docs/agents/github-integration.md
     reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: .agents/skills/harvest/SKILL.md
+    reason: (read before editing)
+  - path: tests/unit/list-open-issues.spec.ts
+    reason: (read before editing)
+  - path: docs/adr/0005-skill-model.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: (no reason given)
   - path: docs/agents/mdc-when-to-use.md
     reason: (no reason given)
   - path: docs/agents/tenant-layers.md
-    reason: (no reason given)
-  - path: docs/agents/git-conventions.md
     reason: (no reason given)
 skillsUsed:
   - name: close-session
     reason: (no reason given)
   - name: log-session
+    reason: (no reason given)
+  - name: writing-for-agents
+    reason: (no reason given)
+  - name: code-review
+    reason: (no reason given)
+  - name: dispatch-subagents
     reason: (no reason given)
   - name: harvest
     reason: (invoked as a slash command)
@@ -39,20 +58,47 @@ frictions:
   - description: Filed Seedlings through issue_write before reading issue-tracker.md and triage-labels.md, which CLAUDE.md requires before filing; the label turned out right.
     solution: harvest step 4 could name those two docs, since the hook only hints after the call.
     severity: nit
-durationSec: 1160
+  - description: Started pnpm gate:scoped before committing and running code-review, against pr-workflow.md's order; stopped it and restarted, costing a few minutes.
+    solution: "The pre-PR checklist in the harvest-style build flow could be one numbered list: commit, review, fix, gate."
+    severity: nit
+durationSec: 1791
 models:
-  claude-sonnet-5-5: 77
+  claude-sonnet-5-5: 150
 toolCounts:
-  Bash: 26
-  Read: 7
-  Skill: 3
-  ToolSearch: 1
+  Bash: 40
+  Read: 13
+  Skill: 7
+  ToolSearch: 3
   mcp__github__issue_write: 3
+  Edit: 16
+  TaskStop: 1
+  Agent: 2
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - scripts/github/list-open-issues.ts
+  - tests/unit/list-open-issues.spec.ts
+  - .agents/skills/harvest/SKILL.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0005.md
+adrHints:
+  - adr: 5
+    via: path
+    readAfter: true
+    by: main
+  - adr: 27
+    via: path
+    readAfter: true
+    by: main
+docsReadBySubagents:
+  - .agents/skills/writing-for-agents/SKILL.md
 ruleUse:
   - by: main
     answered: true
@@ -75,7 +121,8 @@ ruleUse:
         via: native
         trigger: docs/agents/github-integration.md
       - rule: .claude/rules/adr-0004-human-merge.md
-        via: hint
+        via: native
+        trigger: docs/adr/0005-skill-model.md
       - rule: .claude/rules/adr-0021.md
         via: hint
       - rule: .claude/rules/glossary-terms.md
@@ -104,6 +151,9 @@ ruleUse:
         via: hint
       - rule: .claude/rules/adr-0022.md
         via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: native
+        trigger: docs/adr/0005-skill-model.md
     reported:
       - path: .claude/rules/adr-0003.md
         value: backed
@@ -111,6 +161,66 @@ ruleUse:
       - path: docs/agents/tenant-layers.md
       - path: docs/agents/mdc-when-to-use.md
       - path: docs/agents/github-integration.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/harvest/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/harvest/SKILL.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: .agents/skills/writing-for-agents/SKILL.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: .claude/rules/data-shapes.md
+      - rule: .claude/rules/data-shapes.md
+        via: read
+    reported:
+      - path: .claude/rules/data-shapes.md
+        value: backed
+      - path: .agents/skills/writing-for-agents/SKILL.md
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+subagents:
+  - type: general-purpose
+    task: Standards review of harvest edit
+    model: sonnet
+    durationSec: 18
+    toolCalls: 7
+    modelCalls: 3
+    tokenShare: 6.2
+  - type: general-purpose
+    task: Spec review of harvest edit
+    model: sonnet
+    durationSec: 23
+    toolCalls: 7
+    modelCalls: 5
+    tokenShare: 6.9
 gitBranch: ccr-b6694994-xb7qi2
 entrypoint: remote_mobile
 cliVersion: 2.1.322
