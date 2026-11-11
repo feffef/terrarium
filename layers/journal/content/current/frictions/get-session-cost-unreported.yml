@@ -41,3 +41,8 @@ occurrences:
     severity: minor
     description: "get_session was not available, so the run cost could not be read for the PR body."
     solution: "Expose get_session in scheduled curate runs, or let the skill accept 'unreported' earlier."
+  - session: session_013zxzeQ2wC57fFKCB2ZNBZb
+    date: "2026-11-11"
+    severity: minor
+    description: "get_session was not available, so the run's cost_usd could not be read and the PR says unreported."
+    solution: "Say in the Skill how to read cost when no get_session tool exists, or allow unreported as the Skill already does."

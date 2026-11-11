@@ -95,3 +95,8 @@ occurrences:
     severity: nit
     description: "The push notification said six questions but the grill had five; I had not counted the issues first."
     solution: "Count the grill results before sending the notification."
+  - session: session_013zxzeRKJEWdWhMoxhqHgGG
+    date: "2026-11-11"
+    severity: minor
+    description: "My first PR verdict comment gave verdict counts I had not tallied; I corrected it after counting the checker replies."
+    solution: "Tally verdicts before writing the comment."

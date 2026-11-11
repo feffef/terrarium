@@ -51,3 +51,8 @@ occurrences:
     severity: minor
     description: "Survey subagent could not pre-check that --append refuses sessions already held under another Friction index, so whole calls failed twice."
     solution: "Have --unledgered or --append report held sessions up front."
+  - session: session_013zxzeNa1RNcdysLXBJAD5N
+    date: "2026-11-11"
+    severity: minor
+    description: "Survey subagent: print-ledger-occurrence --append refused the whole call on 7 held sessions, and short session ids were mistyped three times; the --unledgered count fell by 101 while 80 occurrences were added, unexplained."
+    solution: "Let --append skip held sessions with a warning, and accept short suffixes; document why --unledgered counts differ."

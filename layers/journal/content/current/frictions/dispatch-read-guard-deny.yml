@@ -296,3 +296,18 @@ occurrences:
     severity: nit
     description: "First Agent call was blocked by the dispatch-read guard because I had not read dispatch-subagents before writing a brief."
     solution: "The digest Skill's fact-check step could name dispatch-subagents."
+  - session: session_013zxzeNhTeF9B47tZ5Egyhx
+    date: "2026-11-11"
+    severity: nit
+    description: "The dispatch-read guard blocked my first Workflow call until I read dispatch-subagents; one retry."
+    solution: "Read dispatch-subagents before any Workflow call; clear-backlog could name it."
+  - session: session_013zxzeQ2wC57fFKCB2ZNBZb
+    date: "2026-11-11"
+    severity: nit
+    description: "My first Agent call was denied by the dispatch-read guard because I had not read the dispatch-subagents Skill before writing a brief."
+    solution: "Read dispatch-subagents right after orienting, as CLAUDE.md says before any subagent brief."
+  - session: session_013zxzeSvnCo3utAZGMChBZA
+    date: "2026-11-11"
+    severity: nit
+    description: "First Workflow call was blocked by the dispatch-read guard because I had not read the dispatch-subagents Skill, though CLAUDE.md names Workflow briefs as a trigger."
+    solution: "Read dispatch-subagents before the first Workflow or Agent call."

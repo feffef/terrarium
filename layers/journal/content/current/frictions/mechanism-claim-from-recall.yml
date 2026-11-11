@@ -182,3 +182,13 @@ occurrences:
     severity: minor
     description: "I first told the owner the test session could not message back, inferred from an incomplete tool list in get_session; the owner corrected me and later test sessions did reply via send_message."
     solution: "Don't infer a missing tool from get_session's turn_handoff list; ask the session to reply and see."
+  - session: session_013zxzeRpiY8hmJh8z3HELvr
+    date: "2026-11-11"
+    severity: minor
+    description: "Guessed the session-card anchor as session-<filename>; it is session-<session id>, so the first screenshot waited out a 120s timeout."
+    solution: "Name the anchor format (sessionAnchor, keyed by the session id) in verifying-ui-changes.md or the Journal glossary's What lives where."
+  - session: session_013zxzeSvnCo3utAZGMChBZA
+    date: "2026-11-11"
+    severity: minor
+    description: "Told the owner PR 2938's rewrite sample-first clause was in CLAUDE.md; I only saw a grep hit on a UI sentence. PR 3032 had replaced it; the deep pass caught it."
+    solution: "Run git log -S on the file before stating a clause exists (CLAUDE.md Verify before you state)."

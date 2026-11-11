@@ -86,3 +86,8 @@ occurrences:
     severity: nit
     description: "Typed a wrong session id in the commit trailer; the commit-msg hook corrected it."
     solution: "Copy the id from the attribution reminder instead of retyping it."
+  - session: session_013zxzeSucFXKnyzvRpP8pnm
+    date: "2026-11-11"
+    severity: nit
+    description: "I typed this session's id from memory in the first commit message; the commit-msg hook added the right trailer, but I had to strip my line."
+    solution: "Leave the trailer to the hook, as the commit-msg hook is meant to."

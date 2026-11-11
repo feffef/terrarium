@@ -83,3 +83,8 @@ occurrences:
     severity: nit
     description: "Subagents reported the design brief's {PICKS} placeholder confusing and the ledger cause for scripted-text-replace-edits pointing at a CLAUDE.md Read-tool rule that does not exist."
     solution: "Fix the stale pointer in that entry's cause; hand picks by path as one clean line."
+  - session: session_013zxzeNa1RNcdysLXBJAD5N
+    date: "2026-11-11"
+    severity: minor
+    description: "Design subagent: my picks named the wrong Skills (digest, glassbox-update, not blog or curate), and the design brief has no shape for a no-change recommendation; it spent about 137k tokens to drop all four picks."
+    solution: "Name each session's Skill in a pick; give the design brief a no-change form and an early drop path for guard-only fixes."

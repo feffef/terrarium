@@ -4,8 +4,9 @@ summary: >-
 cause: >-
   After adding, changing, moving or cutting a section, rule, field or test, the author did not grep the same file and its consumers (docs, Skills, scripts, tests, typechecked callers, code comments, cross-references) for statements it overrides or references it breaks. Signals: a leftover line contradicting a new section, a dangling section reference, callers pointing at a removed section, a required field breaking another spec's typecheck, a test assertion built on a matcher or order the suite lacks; caught by code-review or the gate.
 surface: safe
-status: tracked
-ref: "issue #3047"
+status: accepted
+notes: |-
+  2026-11-11 survey: issue #3047 closed not planned 2026-11-11: the owner leaves the Friction logged as accepted noise; a diff-based gate check would have caught 1 of 3 recent occurrences and audit-docs already greps the nouns the last 48 hours removed. Reopen if it turns moderate or recurs at a higher rate.
 fixes:
   - pr: 2336
     date: "2026-10-20"

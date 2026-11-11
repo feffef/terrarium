@@ -1,0 +1,21 @@
+name: preview-dev-server-stale-or-unhydrated
+surface: safe
+summary: A UI check against the nuxt dev server showed old code, old CSS or no hydrated page, so a screenshot or DOM probe misled or timed out and was redone.
+cause: "The long-lived dev server (preview.ts start --dev or a cold shot --dev) misses edits to utils or CSS, serves a stale content database after a fast-forward, times out on a cold start, or never hydrates in headless Chromium, so a screenshot or probe reflects old or unhydrated code. Signals: 'stale CSS', 'did not reload', 'content database was stale', 'never hydrated', 'timed out three times', 'probe ran before hydration'."
+status: open
+occurrences:
+  - session: session_013zxzeSBfN7oWScF9TgN4eB
+    date: "2026-11-10"
+    severity: minor
+    description: "The nuxt dev server reloaded the SessionCard template but not the edited dashboard.ts utils, so one screenshot mixed old and new code."
+    solution: "Restart the preview server after editing a layer util before a screenshot (or note it in verifying-ui-changes.md)."
+  - session: session_013zxzeR7qQ3HKogNsnf5Zm8
+    date: "2026-11-11"
+    severity: moderate
+    description: "preview.ts shot --dev on a cold dev server timed out three times; only a persistent start --dev polled until 200 worked."
+    solution: "Apply verifying-ui-changes.md: start a persistent dev server and poll before any screenshot."
+  - session: session_013zxzeNeWJTvqXPTEeR63qC
+    date: "2026-11-11"
+    severity: minor
+    description: "The dev preview server never hydrated in headless Chromium, so two checks returned empty before I rebuilt production, which cost a few minutes."
+    solution: "verifying-ui-changes.md could say dev preview may not hydrate in the headless check, so build first."

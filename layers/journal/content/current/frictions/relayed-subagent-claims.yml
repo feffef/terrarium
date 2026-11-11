@@ -155,3 +155,8 @@ occurrences:
     severity: moderate
     description: "Relayed two of #3009's reasons for excluding always-loaded rules as if sound; the owner had to point out they were weak."
     solution: "Before passing on a prior decision's rationale, test each reason against the current goal (CLAUDE.md, Question the premise)."
+  - session: session_013zxzeQjCNYD6UbYX7LTjkR
+    date: "2026-11-11"
+    severity: nit
+    description: "My own Edit dropped a space in const fmt, and a review subagent reported 9 Routines when there are 10; both were caught only by checking."
+    solution: "Check a subagent's counts and reread an edit's diff before relying on them."

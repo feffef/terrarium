@@ -138,3 +138,23 @@ occurrences:
     severity: nit
     description: "Edited governed Inventory yml before reading ADR-0015 in full; the hook asked afterwards. Also grepped triage-labels.md instead of reading it before labelling."
     solution: "Name ADR-0015 and triage-labels in audit-skills step 5 and 4 as read-first."
+  - session: session_013zxzeRKJEWdWhMoxhqHgGG
+    date: "2026-11-11"
+    severity: nit
+    description: "A path-hook asked to read ADRs 0005, 0020, 0027 in full after an auto-triage edit; I only word-counted them and read ADR-0022."
+    solution: "Read the named ADRs, or skip them when the edit is a pointer to an ADR already read."
+  - session: session_013zxzeS6w7fCCAw12ds3rtt
+    date: "2026-11-11"
+    severity: nit
+    description: "Edited audit-skills.ts and its SKILL.md before reading the full ADRs the PostToolUse hooks named; the ADRs showed the edits were fine."
+    solution: "The rule summaries said to read the ADR to change governed work; read it at the first Read of the governed file."
+  - session: session_013zxzePhW9hepYUkqdiWzwf
+    date: "2026-11-11"
+    severity: nit
+    description: "ADR-0015 loaded and its full read was demanded only after I had already edited the Inventory entry."
+    solution: "A rule matching layers/journal/content/current/skills/ that loads on first read, not on edit, would have put it ahead of the change."
+  - session: session_013zxzeSucFXKnyzvRpP8pnm
+    date: "2026-11-11"
+    severity: nit
+    description: "Edited the workflow and run-summary.ts before reading ADR-0005, 0022 and 0027; a hook asked for the reads afterwards."
+    solution: "Read the governing ADRs of the files before the first edit, as CLAUDE.md says."

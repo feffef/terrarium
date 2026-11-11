@@ -28,3 +28,8 @@ occurrences:
     severity: nit
     description: "plain.ts strips term chips, so fresh readers kept reporting Skill, Routine and Gate as undefined and I had to filter that noise by hand."
     solution: "Have plain.ts print each term's definition, or have the brief say to ignore capitalised glossary terms."
+  - session: session_013zxzeQ2wC57fFKCB2ZNBZb
+    date: "2026-11-11"
+    severity: minor
+    description: "plain.ts pastes term definitions inline and strips link text, so fresh readers kept reporting those artifacts as confusion and I had to filter them out."
+    solution: "Have plain.ts keep terms as a short gloss outside the sentence, and keep link labels, or tell readers about both artifacts in the brief."

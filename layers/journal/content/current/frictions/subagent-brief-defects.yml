@@ -2,7 +2,7 @@ name: subagent-brief-defects
 summary: >-
   Briefs for helper agents carried a wrong path, value or unfilled placeholder that the orchestrator wrote from memory, which cost a wasted run or a review catch.
 cause: >-
-  Orchestrators write briefs from memory instead of copying from the source, and send them without re-reading: an unfilled {PAGES} placeholder, paths relative to a Skill folder or missing the Collection folder, a status value, ADR level or scope claim restated wrongly. The agent runs on the bad brief before anyone notices. PR #2643 fixed two sources (the inspect-session Selector placeholder, layer-relative paths in the Glass Box GLOSSARY) and added no general rule. Signals: 'brief', 'placeholder', 'path did not exist', a value in a brief that differs from its source. A brief that relays another agent's unchecked claim belongs in relayed-subagent-claims; a missing CLAUDE.md brief line in subagent-brief-omits-verdict-ask.
+  Orchestrators write briefs from memory instead of copying from the source, and send them without re-reading: an unfilled {PAGES} placeholder, paths relative to a Skill folder or missing the Collection folder, a status value, ADR level or scope claim restated wrongly. The agent runs on the bad brief before anyone notices. PR #2643 fixed two sources (the inspect-session Selector placeholder, layer-relative paths in the Glass Box GLOSSARY) and added no general rule. PR #3064 (2026-11-11) makes dispatch-read-guard.ts deny an Agent prompt or SendMessage message that still holds an unfilled @@NAME@@ or {UPPER_CASE} placeholder (a Workflow script is not inspected), and PR #3063 (2026-11-11) has clear-backlog-explore's brief name the sources its triage agents must learn (ledger, Skill Inventory, open prune trials, older file history). Signals: 'brief', 'placeholder', 'path did not exist', a value in a brief that differs from its source. A brief that relays another agent's unchecked claim belongs in relayed-subagent-claims; a missing CLAUDE.md brief line in subagent-brief-omits-verdict-ask.
 surface: safe
 status: tracked
 ref: "issue #2996"
@@ -19,6 +19,12 @@ fixes:
   - pr: 2643
     date: "2026-10-28"
     summary: "The inspect-session brief template's Selector placeholder shows a two-argument example matching the script's parser; three layer-relative paths in the Glass Box GLOSSARY became repo-relative."
+  - pr: 3064
+    date: "2026-11-11"
+    summary: "dispatch-read-guard.ts denies a dispatched prompt or message holding an unfilled placeholder; dispatch-subagents gains a pilot-first line."
+  - pr: 3063
+    date: "2026-11-11"
+    summary: "clear-backlog-explore brief names the sources triage agents learn from (ledger, Skill Inventory, open prune trials, file history)."
 notes: |-
   2026-10-23 re-cluster: 01Fay2Gi (a check grepping failure-only output), 013RCsUF (dated content not excluded), 011RZgGT (explore triage schema lacks the ADR-0004 exception), 011xvPjJ (audit-skills ids, PR 2318), 01XWMuHG (auth research boundary), 01WxHaU2 (workflow agent asked to dispatch), 0135hcUf and 01VH74k3 (frictions-to-fixes Skill briefs) each need their own fix; left here as single low-severity strays.
 occurrences:
@@ -62,3 +68,8 @@ occurrences:
     severity: nit
     description: "Code-review spec file I wrote for the reviewer left out the owner's 'always loaded' tag decision, so the reviewer flagged it as scope creep."
     solution: "Copy each owner decision into a review spec from the issue comment, not from memory."
+  - session: session_013zxzeSvnCo3utAZGMChBZA
+    date: "2026-11-11"
+    severity: minor
+    description: "The saved clear-backlog-explore first pass was superficial: three of four picks changed or rested on stale facts after a deeper pass; its brief lacks the ledger, Skill Inventory and prune-trial sources."
+    solution: "Issue 3061: name those sources in the brief and allow a background-understanding pass."

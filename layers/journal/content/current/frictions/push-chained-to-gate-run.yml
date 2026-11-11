@@ -49,3 +49,8 @@ occurrences:
     severity: nit
     description: "Chained git add -A onto the gate command in one Bash call, against git-conventions.md, before I had read that doc's rule about it."
     solution: "A hook or CLAUDE.md line that loads the doc before the first staging command, not only before the first non-read-only git command."
+  - session: session_013zxzeRKJEWdWhMoxhqHgGG
+    date: "2026-11-11"
+    severity: nit
+    description: "I ran git log and status in the same Bash command as the backgrounded gate, against git-conventions."
+    solution: "Run the git check in its own call before starting the gate."

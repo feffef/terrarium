@@ -354,3 +354,8 @@ occurrences:
     severity: minor
     description: "The Stop hook demanded commit and push several times while fact-check and review subagents were still running, forcing repeated holds."
     solution: "Stop hooks should skip the nag while subagents are running."
+  - session: session_013zxzeQ2wC57fFKCB2ZNBZb
+    date: "2026-11-11"
+    severity: nit
+    description: "The Stop hook asked me to commit while a writer was still editing, forcing a partial commit of one writer's files."
+    solution: "Brief writers to commit their own pages in a worktree, or have the hook skip while a subagent runs."

@@ -1,0 +1,16 @@
+name: pr-asked-before-opening
+surface: safe
+summary: Sessions stopped after pushing and asked the owner whether to run the gate or open the PR, though ADR-0003 says to open it without asking.
+cause: "ADR-0003 says to open the PR yourself once the branch passed review and the gate, without asking, even if the harness says not to; sessions ask instead and the owner has to tell them. Signals: 'asked about a PR', 'why do you even ask', 'the owner had to tell me', stopped after push."
+status: open
+occurrences:
+  - session: session_013zxzeQjCNYD6UbYX7LTjkR
+    date: "2026-11-11"
+    severity: moderate
+    description: "Stopped after pushing and asked about a PR, though ADR-0003 says to open it myself even if the system prompt says not to; the owner had to tell me."
+    solution: "Read the ADR-0003 rule at the end of the work, before the turn ends; it overrides the generic no-PR line."
+  - session: session_013zxzeR7qQ3HKogNsnf5Zm8
+    date: "2026-11-11"
+    severity: minor
+    description: "I asked whether to run the gate and open the PR; ADR-0003 says open it without asking, and the owner replied why do you even ask."
+    solution: "ADR-0003 rule text could say a user preference to ask first does not waive opening the PR."

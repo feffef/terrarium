@@ -54,3 +54,8 @@ occurrences:
     severity: minor
     description: "I kept the 400 teaches cap after the index split made it unneeded, then proposed recording the cut names in memory, which costs the same context"
     solution: "Apply CLAUDE.md's Question the premise when a constraint's reason goes away: the split index removed the cap's job, so drop the cap"
+  - session: session_013zxzeNeWJTvqXPTEeR63qC
+    date: "2026-11-11"
+    severity: moderate
+    description: "Wrote the first Skill inventory Lesson from the schema and audit-skills alone, without tracing who reads the inventory; the owner found the concept weak and I redid it."
+    solution: "Before a Lesson on Terrarium data, grep for every consumer of that data, as glassbox-lesson's read-the-source step intends, then write the concept."
