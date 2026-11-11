@@ -56,8 +56,10 @@ GitHub PR-files API has the same gap: read `previous_filename` too.
 - A commit titled as a session-log commit holds only the session log. Title any
   other commit for its work.
 - Never patch a commit body with `git commit-tree` or other history rewriting;
-  it can re-parent the chain and drop commits. Fix the tip commit only, with
-  `git commit --amend -F <file>`.
+  it can re-parent the chain and drop commits. Fix an unpushed tip commit only,
+  with `git commit --amend -F <file>`.
+- A pushed commit is final: the auto-mode classifier denies amending or
+  force-pushing it, so add a follow-up commit.
 
 ## Keep git apart from steps that can fail
 
@@ -76,6 +78,9 @@ A failed step must never let a later git command run on the wrong state. So:
 
 - Before `git reset --hard` or anything that discards uncommitted work, run
   `git status` and stash or commit what it shows.
+- The classifier denies `git reset --hard HEAD`. To clear a stale index (a
+  worktree moved the branch), run `git status`, then `git restore --staged .`
+  and `git restore .`; untracked files stay.
 - After `git stash pop` on staged `git mv` renames, run `git add -A`; each
   rename comes back as a staged add plus an unstaged delete.
 - Never send a state-changing git command's output to `/dev/null`. A silenced

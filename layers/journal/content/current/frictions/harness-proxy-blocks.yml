@@ -2,7 +2,7 @@ name: harness-proxy-blocks
 summary: >-
   The hosting environment's network proxy blocked sites and downloads the work needed, with no way to override it in the session.
 cause: >-
-  The cloud agent proxy or its DNS refuses a host (github.com/user-attachments, content.nuxt.com, zod.dev, nitro.build, nuxt.com, docs.github.com, the deployed site) with a 403 or connection failure and no in-session override; the fix is to list the host and its workaround in environment-caveats.md, and since PR #2647 the Glass Box page guide fetches blocked GitHub docs from raw.githubusercontent.com. Signals: proxy 403, curl 000, a DNS failure from WebFetch. Auto-mode classifier denials (a deleted pushed branch, a review subagent's script, a force-with-lease push) with no shared fix also stay here; CI job logs are ci-job-logs-unreachable, Self-Modification denials auto-mode-self-modification-denials. Since PR #2811 (2026-11-03) the orchestrator, not the subagent, pushes every reviewed branch, so a classifier denial no longer strands an agent's branch. PR #2974 (2026-11-08) scoped the blocked-host list in environment-caveats.md to the Default environment and PR #2976 added a SessionStart hook that reports which hosts the proxy lets through.
+  The cloud agent proxy or its DNS refuses a host (github.com/user-attachments, content.nuxt.com, zod.dev, nitro.build, nuxt.com, docs.github.com, the deployed site) with a 403 or connection failure and no in-session override; the fix is to list the host and its workaround in environment-caveats.md, and since PR #2647 the Glass Box page guide fetches blocked GitHub docs from raw.githubusercontent.com. Signals: proxy 403, curl 000, a DNS failure from WebFetch. The deployed site and its logs stay unreachable from a cloud session, a known limit. Other auto-mode classifier denials (a deleted pushed branch, a review subagent's script) with no shared fix also stay here; amend, force-with-lease and `git reset --hard` denials are harness-classifier-denials; CI job logs are ci-job-logs-unreachable, Self-Modification denials auto-mode-self-modification-denials. Since PR #2811 (2026-11-03) the orchestrator, not the subagent, pushes every reviewed branch, so a classifier denial no longer strands an agent's branch. PR #2974 (2026-11-08) scoped the blocked-host list in environment-caveats.md to the Default environment and PR #2976 added a SessionStart hook that reports which hosts the proxy lets through.
 surface: outside
 status: tracked
 ref: "issue #3045"
@@ -26,11 +26,6 @@ fixes:
     date: "2026-11-08"
     summary: "SessionStart hook network-start.ts probes 8 hosts through the proxy and reports which are reachable."
 occurrences:
-  - session: session_013zxzeQmVnqMqDkRgFRWx5T
-    date: "2026-10-28"
-    severity: nit
-    description: "A force-with-lease push of the restarted session branch was denied by the auto-mode classifier. The remote branch had been deleted on merge, so a plain push worked; one wasted call."
-    solution: "The restart-after-merge recipe in the system prompt should say to try a plain push first, since the remote branch is deleted on merge."
   - session: session_013zxzeT84bc5MXpkCAApyxA
     date: "2026-10-29"
     severity: moderate
@@ -46,16 +41,6 @@ occurrences:
     severity: minor
     description: "Survey subagent: print-ledger-occurrence --append aborts the whole call on one held session, forcing grep pre-checks; gh api --paginate failed through the proxy."
     solution: "Let --append skip held sessions and report them; note the proxy pagination workaround in github-integration.md."
-  - session: session_013zxzePnfDGz3F3p9spej9f
-    date: "2026-10-30"
-    severity: nit
-    description: "Force-with-lease push of the branch restarted after merge was denied by the auto-mode classifier; I fast-forwarded the old tip onto main and cherry-picked instead (one extra call)."
-    solution: "pr-workflow: for a restarted branch, fast-forward the old tip onto main and cherry-pick, never force-push."
-  - session: session_013zxzeSiq7TZmfmF5D5Rbwt
-    date: "2026-10-31"
-    severity: nit
-    description: "Posted a PR verdict comment with a placeholder SHA and had to edit it; the closing PR's branch needed a force push, which the auto-mode classifier denied, so I pushed it as a fast-forward."
-    solution: "Get the head SHA before writing the verdict; after a merged PR, check whether the reset branch is a fast-forward of the remote before forcing."
   - session: session_013zxzeSkTLmRxa2PWgt3kPw
     date: "2026-11-02"
     severity: minor
@@ -76,16 +61,6 @@ occurrences:
     severity: nit
     description: "git-scm.com returned 403, so the writer and checker verified git claims from the docs source on GitHub, and the mode 100644 meaning stayed unsourced."
     solution: "Allow git-scm.com in the environment, or have EVERY-PAGE name the raw git/git docs path as a standard fallback."
-  - session: session_013zxzeSRr9pF9MCBQDGAN5L
-    date: "2026-11-07"
-    severity: nit
-    description: "A force-with-lease push of the reset session branch was denied by the classifier; a plain push worked because the branch was a fast-forward of the merged history."
-    solution: "Check merge-base --is-ancestor before assuming a force is needed."
-  - session: session_013zxzeQWJUyfuXJgdfypeuc
-    date: "2026-11-07"
-    severity: minor
-    description: "Pushed with --force-with-lease after restarting the branch from main; the classifier denied it though a plain push was a fast-forward"
-    solution: "Check merge-base --is-ancestor before choosing a push form; a branch restarted after its merge needs no force"
   - session: session_013zxzeRGhhzxkXgfdpEX9js
     date: "2026-11-07"
     severity: minor
@@ -96,21 +71,6 @@ occurrences:
     severity: minor
     description: "gh api for upstream release notes returned 403 (repo not attached), so I relied on the notes pasted in the Dependabot PR body."
     solution: "Sweep Skill could say the PR body notes are the expected source."
-  - session: session_013zxzeQaeB8hhL2FFfcQhv7
-    date: "2026-11-08"
-    severity: minor
-    description: "Tried amend plus force-with-lease to fix a stale commit message; the auto-mode classifier denied it, so the message stays wrong"
-    solution: "Write the commit message after the subagent reports, not as a checkpoint label; or accept a follow-up commit"
-  - session: session_013zxzePY5ruxnnX3PjPY9WM
-    date: "2026-11-10"
-    severity: minor
-    description: "I tried to amend a commit I had already pushed; the auto-mode classifier denied it, so I added a second commit."
-    solution: "Push only after review and gate, or default to a follow-up commit once pushed (the Stop hook pushes early)."
-  - session: session_013zxzeSB2Asdc9k89JQywv9
-    date: "2026-11-10"
-    severity: nit
-    description: "git reset --hard HEAD to clear that stale index was denied by the auto-mode classifier, so Stop hooks kept flagging uncommitted changes."
-    solution: "Document a safe way to resync an index after a worktree moves the branch, such as git restore --staged then git restore."
   - session: session_013zxzeR6YXBiMLnmDFQpBs9
     date: "2026-11-10"
     severity: moderate

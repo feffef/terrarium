@@ -1,0 +1,49 @@
+name: harness-classifier-denials
+summary: >-
+  The auto-mode classifier denied a git command that rewrites history or discards work, and the session fell back to a follow-up commit or a plain push.
+cause: >-
+  The classifier denies amend or force-with-lease of an already-pushed commit and `git reset --hard HEAD` used to clear a stale index, with no reason and no in-session override. A plain push or a follow-up commit works; a branch restarted after its merge is a fast-forward and needs no force. The Stop hook pushes early, so a commit is often already pushed when the session wants to amend it.
+surface: outside
+status: tracked
+ref: "issue #3045"
+occurrences:
+  - session: session_013zxzeQmVnqMqDkRgFRWx5T
+    date: "2026-10-28"
+    severity: nit
+    description: "A force-with-lease push of the restarted session branch was denied by the auto-mode classifier. The remote branch had been deleted on merge, so a plain push worked; one wasted call."
+    solution: "The restart-after-merge recipe in the system prompt should say to try a plain push first, since the remote branch is deleted on merge."
+  - session: session_013zxzePnfDGz3F3p9spej9f
+    date: "2026-10-30"
+    severity: nit
+    description: "Force-with-lease push of the branch restarted after merge was denied by the auto-mode classifier; I fast-forwarded the old tip onto main and cherry-picked instead (one extra call)."
+    solution: "pr-workflow: for a restarted branch, fast-forward the old tip onto main and cherry-pick, never force-push."
+  - session: session_013zxzeSiq7TZmfmF5D5Rbwt
+    date: "2026-10-31"
+    severity: nit
+    description: "Posted a PR verdict comment with a placeholder SHA and had to edit it; the closing PR's branch needed a force push, which the auto-mode classifier denied, so I pushed it as a fast-forward."
+    solution: "Get the head SHA before writing the verdict; after a merged PR, check whether the reset branch is a fast-forward of the remote before forcing."
+  - session: session_013zxzeSRr9pF9MCBQDGAN5L
+    date: "2026-11-07"
+    severity: nit
+    description: "A force-with-lease push of the reset session branch was denied by the classifier; a plain push worked because the branch was a fast-forward of the merged history."
+    solution: "Check merge-base --is-ancestor before assuming a force is needed."
+  - session: session_013zxzeQWJUyfuXJgdfypeuc
+    date: "2026-11-07"
+    severity: minor
+    description: "Pushed with --force-with-lease after restarting the branch from main; the classifier denied it though a plain push was a fast-forward"
+    solution: "Check merge-base --is-ancestor before choosing a push form; a branch restarted after its merge needs no force"
+  - session: session_013zxzeQaeB8hhL2FFfcQhv7
+    date: "2026-11-08"
+    severity: minor
+    description: "Tried amend plus force-with-lease to fix a stale commit message; the auto-mode classifier denied it, so the message stays wrong"
+    solution: "Write the commit message after the subagent reports, not as a checkpoint label; or accept a follow-up commit"
+  - session: session_013zxzePY5ruxnnX3PjPY9WM
+    date: "2026-11-10"
+    severity: minor
+    description: "I tried to amend a commit I had already pushed; the auto-mode classifier denied it, so I added a second commit."
+    solution: "Push only after review and gate, or default to a follow-up commit once pushed (the Stop hook pushes early)."
+  - session: session_013zxzeSB2Asdc9k89JQywv9
+    date: "2026-11-10"
+    severity: nit
+    description: "git reset --hard HEAD to clear that stale index was denied by the auto-mode classifier, so Stop hooks kept flagging uncommitted changes."
+    solution: "Document a safe way to resync an index after a worktree moves the branch, such as git restore --staged then git restore."
