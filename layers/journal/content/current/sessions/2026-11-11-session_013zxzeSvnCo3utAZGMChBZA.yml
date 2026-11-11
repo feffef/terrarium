@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSvnCo3utAZGMChBZA
 startedAt: 2026-11-11T09:15:26Z
-endedAt: 2026-11-11T09:50:48Z
+endedAt: 2026-11-11T09:51:51Z
 kind: interactive
 goal: Clear the open backlog issues the owner left in scope
-status: in-review
-outcome: One PR merged, one waits for a human merge; two issues stay open with corrections; one new issue filed
-summary: "Human-instructed: the owner started /clear-backlog and excluded the node/typescript, date-blocked, GitHub App and ADR-split issues, which left four (#2996, #2956, #2916, #2752). Agent-initiated: the first explore workflow (one triage agent per issue) and the grilling. The owner then asked for a deeper read-only pass (one Explore agent per issue: issue history, git log, Friction ledger, session logs, audit-skills observations), which changed three of my four picks and showed one first-pass claim was wrong (the sample-first rewrite clause was no longer in CLAUDE.md after PR #3032). The owner answered 1b 2a 3a 4a, with a condition on the pilot line (only for more than 3 agents from an improvised brief). I then commented on #2752, #2956 and #2916 (kept open, stale references corrected), built two branches with clear-backlog-build, hand-applied the one open review finding on the guard branch, ran gate:scoped on the final head, and opened PR 3064 (dispatch-read-guard placeholder deny plus a pilot line in dispatch-subagents section 1; Human-only hook, waits for a human merge) and PR 3065 (stale ledger text for #2916, mine to merge once CI is green). The owner also green-lit filing issue 3061 (the explore workflow's brief lacks the ledger, Skill Inventory and prune-trial sources and an explicit go-ahead to learn each ticket's background) and a reply to another session's questions about it. After CI went green on PR 3065 I posted my verdict and merged it with merge-pr.ts (dac47fa63), then removed both worktrees (check:worktrees passes). The owner enabled auto-merge on PR 3064 (a human merge), so it is not mine to land. Still open: PR 3064 merging; whether PR 3032 meant to drop rewrite coverage was left to the owner."
+status: completed
+outcome: Both PRs merged (one by the owner); two issues stay open with corrections; one new issue filed
+summary: "Human-instructed: the owner started /clear-backlog and excluded the node/typescript, date-blocked, GitHub App and ADR-split issues, which left four (#2996, #2956, #2916, #2752). Agent-initiated: the first explore workflow (one triage agent per issue) and the grilling. The owner then asked for a deeper read-only pass (one Explore agent per issue: issue history, git log, Friction ledger, session logs, audit-skills observations), which changed three of my four picks and showed one first-pass claim was wrong (the sample-first rewrite clause was no longer in CLAUDE.md after PR #3032). The owner answered 1b 2a 3a 4a, with a condition on the pilot line (only for more than 3 agents from an improvised brief). I then commented on #2752, #2956 and #2916 (kept open, stale references corrected), built two branches with clear-backlog-build, hand-applied the one open review finding on the guard branch, ran gate:scoped on the final head, and opened PR 3064 (dispatch-read-guard placeholder deny plus a pilot line in dispatch-subagents section 1; Human-only hook, waits for a human merge) and PR 3065 (stale ledger text for #2916, mine to merge once CI is green). The owner also green-lit filing issue 3061 (the explore workflow's brief lacks the ledger, Skill Inventory and prune-trial sources and an explicit go-ahead to learn each ticket's background) and a reply to another session's questions about it. After CI went green on PR 3065 I posted my verdict and merged it with merge-pr.ts (dac47fa63), then removed both worktrees (check:worktrees passes). The owner enabled auto-merge on PR 3064 (a human merge, so not mine to land) and it merged at 09:51Z. Still open: whether PR 3032 meant to drop rewrite coverage was left to the owner; issues 2752 and 2956 wait on their re-checks."
 prs:
   - "3064"
   - "3065"
@@ -67,11 +67,11 @@ frictions:
   - description: "The saved clear-backlog-explore first pass was superficial: three of four picks changed or rested on stale facts after a deeper pass; its brief lacks the ledger, Skill Inventory and prune-trial sources."
     solution: "Issue 3061: name those sources in the brief and allow a background-understanding pass."
     severity: minor
-durationSec: 2122
+durationSec: 2185
 models:
-  claude-sonnet-5-5: 140
+  claude-sonnet-5-5: 152
 toolCounts:
-  Bash: 23
+  Bash: 24
   Read: 7
   Workflow: 3
   ToolSearch: 5
@@ -79,14 +79,14 @@ toolCounts:
   Agent: 4
   mcp__github__issue_write: 1
   mcp__github__add_issue_comment: 4
-  ReadNotifications: 4
+  ReadNotifications: 6
   mcp__claude-code-remote__send_message: 1
   mcp__github__create_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 2
   Skill: 3
   Write: 1
-  mcp__github__pull_request_read: 3
-  Edit: 2
+  mcp__github__pull_request_read: 4
+  Edit: 4
 filesEdited:
   - tests/unit/dispatch-read-guard.spec.ts
   - scripts/hooks/dispatch-read-guard.ts
@@ -628,46 +628,46 @@ subagents:
     durationSec: 66
     toolCalls: 11
     modelCalls: 8
-    tokenShare: 3.8
+    tokenShare: 3.6
   - type: Explore
     task: "Deep explore #2956"
     durationSec: 85
     toolCalls: 18
     modelCalls: 14
-    tokenShare: 5.3
+    tokenShare: 5.1
   - type: Explore
     task: "Deep explore #2916"
     durationSec: 94
     toolCalls: 20
     modelCalls: 16
-    tokenShare: 5.9
+    tokenShare: 5.7
   - type: Explore
     task: "Deep explore #2752"
     durationSec: 93
     toolCalls: 18
     modelCalls: 13
-    tokenShare: 4.8
+    tokenShare: 4.6
   - type: workflow-subagent
     task: Spec fix/dispatch-guard-placeholders-2996 r1
     model: claude-sonnet-5-5
     durationSec: 17
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: workflow-subagent
     task: build docs/ledger-rewrite-framing-2916
     model: claude-sonnet-5-5
     durationSec: 355
     toolCalls: 12
     modelCalls: 11
-    tokenShare: 4.8
+    tokenShare: 4.6
   - type: workflow-subagent
     task: Standards docs/ledger-rewrite-framing-2916 r1
     model: claude-sonnet-5-5
     durationSec: 15
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 3.1
+    tokenShare: 2.9
   - type: workflow-subagent
     task: Spec docs/ledger-rewrite-framing-2916 r1
     model: claude-sonnet-5-5
@@ -681,91 +681,91 @@ subagents:
     durationSec: 308
     toolCalls: 11
     modelCalls: 7
-    tokenShare: 2.5
+    tokenShare: 2.4
   - type: workflow-subagent
     task: Spec fix/dispatch-guard-placeholders-2996 r3
     model: claude-sonnet-5-5
     durationSec: 15
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: workflow-subagent
     task: Standards fix/dispatch-guard-placeholders-2996 r3
     model: claude-sonnet-5-5
     durationSec: 22
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 1.6
+    tokenShare: 1.5
   - type: workflow-subagent
     task: Standards fix/dispatch-guard-placeholders-2996 r2
     model: claude-sonnet-5-5
     durationSec: 23
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 3.3
+    tokenShare: 3.1
   - type: workflow-subagent
     task: fix fix/dispatch-guard-placeholders-2996 r2
     model: claude-sonnet-5-5
     durationSec: 244
     toolCalls: 13
     modelCalls: 8
-    tokenShare: 2.9
+    tokenShare: 2.7
   - type: workflow-subagent
     task: Spec fix/dispatch-guard-placeholders-2996 r2
     model: claude-sonnet-5-5
     durationSec: 21
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 1.7
+    tokenShare: 1.6
   - type: workflow-subagent
     task: Standards fix/dispatch-guard-placeholders-2996 r1
     model: claude-sonnet-5-5
     durationSec: 15
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: workflow-subagent
     task: gate docs/ledger-rewrite-framing-2916
     model: claude-sonnet-5-5
     durationSec: 232
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: workflow-subagent
     task: build fix/dispatch-guard-placeholders-2996
     model: claude-sonnet-5-5
     durationSec: 406
     toolCalls: 34
     modelCalls: 19
-    tokenShare: 7.9
+    tokenShare: 7.5
   - type: workflow-subagent
     task: "triage #2996"
     model: claude-sonnet-5-5
     durationSec: 17
     toolCalls: 9
     modelCalls: 4
-    tokenShare: 3.7
+    tokenShare: 3.5
   - type: workflow-subagent
     task: "triage #2956"
     model: claude-sonnet-5-5
     durationSec: 23
     toolCalls: 10
     modelCalls: 6
-    tokenShare: 2.4
+    tokenShare: 2.3
   - type: workflow-subagent
     task: "triage #2916"
     model: claude-sonnet-5-5
     durationSec: 18
     toolCalls: 9
     modelCalls: 4
-    tokenShare: 1.9
+    tokenShare: 1.8
   - type: workflow-subagent
     task: "triage #2752"
     model: claude-sonnet-5-5
     durationSec: 17
     toolCalls: 9
     modelCalls: 4
-    tokenShare: 1.9
+    tokenShare: 1.8
 gitBranch: claude/bold-fermi-c7v6jn
 entrypoint: remote
 cliVersion: 2.1.322
