@@ -1,0 +1,275 @@
+schemaVersion: 1
+session: session_013zxzeScSe7rW5BumGHCxoJ
+startedAt: 2026-11-11T11:17:17Z
+endedAt: 2026-11-11T11:28:03Z
+kind: autonomous
+goal: Weekly Blog post by David on a real recent event
+status: in-review
+outcome: David post on the gate-edit hook is gated and open as PR 3081, awaiting CI and merge
+summary: "Scheduled blog-post run, entirely agent-initiated by the Routine. Rotation left David as the only eligible Persona. Drafted three David candidates (the gate-edit hook, the placeholder guard for dispatched briefs, the non-executable preview.ts docs fix); a blind Sonnet reader picked the gate-edit story, whose confusions (who Karen and the owner are, why code review matters, the title) I fixed. Two fact-check rounds cut an owner-decision attribution only agents had relayed, a mis-ranged blob link and an overreaching line; code-review's two unsourced sentences were narrowed and re-checked. gate:scoped passed on the final head and PR 3081 is open. Still to do after CI: merge via merge-pr.ts, then step 12 reply decision."
+prs:
+  - "3081"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: layers/blog/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/david.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-11-11-twenty-eight-sessions-edited-a-file-while-the-gate-was-running.md
+    reason: (read before editing)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: the scheduled task itself
+  - name: code-review
+    reason: review before opening the PR
+  - name: dispatch-subagents
+    reason: briefs for the blind reader and fact-checker
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Cut a local branch for the post, then had to delete it and return to the session branch, against the start-on-your-branch rule.
+    solution: The blog-post step 7 wording 'cut a working branch' reads against CLAUDE.md; say 'stay on the session branch'.
+    severity: nit
+  - description: Started gate:scoped with run_in_background plus a text-level ampersand; the double-background guard blocked it and I resent it.
+    solution: blog-post or CLAUDE.md could show the plain run_in_background form for the gate.
+    severity: nit
+durationSec: 646
+models:
+  claude-sonnet-5-5: 97
+toolCounts:
+  Bash: 32
+  Read: 3
+  mcp__github__issue_read: 3
+  mcp__github__pull_request_read: 5
+  Agent: 4
+  SendMessage: 2
+  Skill: 3
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+filesEdited:
+  - layers/blog/content/david/pages/2026-11-11-twenty-eight-sessions-edited-a-file-while-the-gate-was-running.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+docsReadBySubagents:
+  - .agents/skills/blog-post/SKILL.md
+  - layers/blog/GLOSSARY.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/pr-workflow.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/pr-workflow.md
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/guards.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0003.md
+        value: backed
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: gate and code-review before the PR
+      - path: .claude/rules/adr-0012.md
+        value: backed
+      - path: docs/agents/pr-workflow.md
+      - path: .agents/skills/dispatch-subagents/SKILL.md
+      - path: .agents/skills/blog-post/personas/david.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported: []
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/content/david/pages/2026-11-11-twenty-eight-sessions-edited-a-file-while-the-gate-was-running.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/blog/content/david/pages/2026-11-11-twenty-eight-sessions-edited-a-file-while-the-gate-was-running.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: layers/blog/content/david/pages/2026-11-11-twenty-eight-sessions-edited-a-file-while-the-gate-was-running.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/blog/GLOSSARY.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/blog/GLOSSARY.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/blog-post/personas/david.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: .agents/skills/blog-post/personas/david.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/blog-post/personas/david.md
+    reported:
+      - path: .claude/rules/tenant-glossary.md
+        value: steered
+      - path: layers/blog/GLOSSARY.md
+      - path: .agents/skills/blog-post/SKILL.md
+      - path: .agents/skills/blog-post/personas/david.md
+  - by: general-purpose
+    subagent: 3
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+subagents:
+  - task: Blind read of three drafts
+    model: sonnet
+    durationSec: 16
+    toolCalls: 6
+    modelCalls: 3
+    tokenShare: 7.2
+  - task: Fact-check blog post claims
+    model: sonnet
+    durationSec: 190
+    toolCalls: 19
+    modelCalls: 12
+    tokenShare: 11.1
+  - task: Standards review of blog post
+    model: sonnet
+    durationSec: 25
+    toolCalls: 11
+    modelCalls: 5
+    tokenShare: 5
+  - task: Spec review of blog post
+    model: sonnet
+    durationSec: 45
+    toolCalls: 10
+    modelCalls: 7
+    tokenShare: 7.1
+gitBranch: claude/zen-heisenberg-sksipe
+entrypoint: remote_trigger
+cliVersion: 2.1.322
+trigger: blog-post
+landedBy: Stop
