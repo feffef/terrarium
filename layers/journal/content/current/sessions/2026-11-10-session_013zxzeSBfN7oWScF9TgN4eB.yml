@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSBfN7oWScF9TgN4eB
 startedAt: 2026-11-10T18:17:57Z
-endedAt: 2026-11-10T21:20:18Z
+endedAt: 2026-11-11T07:37:56Z
 kind: interactive
 goal: Show rule use on the Journal session card, and make agents rate every loaded rule
 status: completed
 outcome: "Merged as PR #3041 after two rounds of test sessions came back clean; #3020 closed"
-summary: "The owner asked for a grilling on issue #3020 (the session card showed \"no verdict provided\" for every log since ruleUse replaced ruleVerdicts). Every design choice was settled with the owner over many rounds and posted on #3020. Human-decided: show ruleUse on the SessionCard only, grouped by Main session and Subagents, with per-rule shares over answering subagents; rename the values to steered | backed, dropping none and unsure, and rewrite the 16 existing logs, with ADR-0009 changed to allow that; rate always-loaded rules too (via: start), reversing a #3009 exclusion the owner judged wrong; give each subagent its own list of loaded rules at rating time rather than asking from memory; rename the human-merge rule's heading. The owner also asked for Sonnet test sessions with realistic tasks, repeated until the process worked, workflows included. Agent-found and fixed after review or testing: the ask could repeat forever on a second bare call; rules named but never loaded vanished from the card; a call the permission classifier denied counted as an answer; the classifier denied `sh helped.sh` for read-only agents (the owner chose `echo rule-use:` instead); `backed` was under-reported where the task said the same (the owner approved new wording); a rule read as a file never showed as loaded (the owner approved `via: read`). Round 2 of the three test sessions (subagents with Explore and code-review, a 3-agent workflow, main agent only) was clean. The six test sessions are idle; asked the owner whether to archive them so their held logs never land. The owner merged PR #3041 and #3020 closed."
+summary: "The owner asked for a grilling on issue #3020 (the session card showed \"no verdict provided\" for every log since ruleUse replaced ruleVerdicts). Every design choice was settled with the owner over many rounds and posted on #3020. Human-decided: show ruleUse on the SessionCard only, grouped by Main session and Subagents, with per-rule shares over answering subagents; rename the values to steered | backed, dropping none and unsure, and rewrite the 16 existing logs, with ADR-0009 changed to allow that; rate always-loaded rules too (via: start), reversing a #3009 exclusion the owner judged wrong; give each subagent its own list of loaded rules at rating time rather than asking from memory; rename the human-merge rule's heading. The owner also asked for Sonnet test sessions with realistic tasks, repeated until the process worked, workflows included. Agent-found and fixed after review or testing: the ask could repeat forever on a second bare call; rules named but never loaded vanished from the card; a call the permission classifier denied counted as an answer; the classifier denied `sh helped.sh` for read-only agents (the owner chose `echo rule-use:` instead); `backed` was under-reported where the task said the same (the owner approved new wording); a rule read as a file never showed as loaded (the owner approved `via: read`). Round 2 of the three test sessions (subagents with Explore and code-review, a 3-agent workflow, main agent only) was clean. The six test sessions are idle; asked the owner whether to archive them so their held logs never land. The owner merged PR #3041 and #3020 closed. Afterwards, on the owner's ask: the six test sessions' held logs landed; a new session was started for a card follow-up (hide 'loaded by N' on always-loaded subagent rows); and review issues #3017 and #3021 were rewritten for the new design, counting only logs from 2026-11-11 on (reviews from 2026-11-18 and 2026-11-12)."
 prs:
   - "3041"
 docsRead:
@@ -74,30 +74,32 @@ frictions:
   - description: Code-review spec file I wrote for the reviewer left out the owner's 'always loaded' tag decision, so the reviewer flagged it as scope creep.
     solution: Copy each owner decision into a review spec from the issue comment, not from memory.
     severity: nit
-durationSec: 10940
+durationSec: 47998
 models:
-  claude-opus-5-5: 534
+  claude-opus-5-5: 587
 toolCounts:
   Skill: 6
-  Bash: 192
+  Bash: 203
   ToolSearch: 4
-  mcp__github__issue_read: 3
+  mcp__github__issue_read: 7
   mcp__github__add_issue_comment: 2
-  mcp__github__issue_write: 1
+  mcp__github__issue_write: 3
   mcp__claude-code-remote__report_preview_port: 1
   Read: 7
   SendUserFile: 2
   Agent: 7
   Write: 2
-  mcp__claude-code-remote__create_session: 6
+  mcp__claude-code-remote__create_session: 7
   mcp__claude-code-remote__send_later: 3
-  ReadNotifications: 10
+  ReadNotifications: 12
   Edit: 1
-  mcp__claude-code-remote__delete_trigger: 2
+  mcp__claude-code-remote__delete_trigger: 3
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   mcp__github__pull_request_read: 3
+  mcp__claude-code-remote__send_message: 6
+  mcp__claude-code-remote__list_triggers: 1
 filesEdited:
   - scripts/session/transcript-trace.ts
   - .claude/settings.json
@@ -389,37 +391,37 @@ subagents:
     durationSec: 20
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 1
+    tokenShare: 0.9
   - type: general-purpose
     task: Standards review of branch
     durationSec: 93
     toolCalls: 14
     modelCalls: 14
-    tokenShare: 2.7
+    tokenShare: 2.2
   - type: general-purpose
     task: Spec review of branch
     durationSec: 115
     toolCalls: 14
     modelCalls: 14
-    tokenShare: 2.8
+    tokenShare: 2.3
   - type: general-purpose
     task: Review follow-up fix commit
     durationSec: 56
     toolCalls: 6
     modelCalls: 6
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: general-purpose
     task: Review second fix commit
     durationSec: 36
     toolCalls: 6
     modelCalls: 6
-    tokenShare: 0.8
+    tokenShare: 0.7
   - type: general-purpose
     task: Review last two follow-ups
     durationSec: 91
     toolCalls: 14
     modelCalls: 13
-    tokenShare: 2.5
+    tokenShare: 2.1
 gitBranch: claude/relaxed-heisenberg-8t55cz
 entrypoint: remote
 cliVersion: 2.1.322
