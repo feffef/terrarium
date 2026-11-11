@@ -33,6 +33,16 @@ them as new. Incident detail lives in the cited issue.
   `create_trigger` with `run_once_at`. A "user sent a message instead" result
   is not a failure: the text arrives next turn, so don't re-ask.
   (issues #145, #229, #359)
+- **A session you `send_message` may have no `send_message` of its own to
+  answer with.** A web-started session can reply by message (it arrives here as a
+  turn); a scheduled Routine's session cannot: none of its tool lists names
+  `send_message` and `ToolSearch` finds none (probed 2026-11-11). A message to
+  an idle or disconnected session wakes it and costs a turn. Don't count on a
+  reply message; ask for the answer in the session's **final reply** (say
+  "read-only, answer in your final reply") and read it with `list_events`,
+  `kinds:["result"]`, `limit 100`: the text is in the newest result's `result`
+  field. `get_session`'s `turn_handoff.tools` does not show this reliably, so
+  check the session's own events, not that list.
 - **A fired self-bind Routine's output may not show as a turn.** Check
   `last_run.fired_at` via `list_triggers` before deciding it didn't fire.
   (issue #834)
