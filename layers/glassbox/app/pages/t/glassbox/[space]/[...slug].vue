@@ -26,6 +26,7 @@ const { data, status, error } = await useAsyncData(route.path, async () => {
     subjects: glassboxDirectory(pages),
     walkthroughs: glassboxWalkthroughs(pages),
     surround: glassboxSurround(pages, path),
+    titles: Object.fromEntries(pages.map((p) => [p.path, p.title])),
   }
 })
 
@@ -77,7 +78,7 @@ useSeoMeta({ description: () => page.value?.description })
         >≡</button>
       </header>
 
-      <GlassboxArticle v-if="page" class="gb-column" :page="page" :base="base" :surround="data?.surround ?? null" :through="data?.through ?? []" :dated="!live" :source="source" />
+      <GlassboxArticle v-if="page" class="gb-column" :page="page" :base="base" :surround="data?.surround ?? null" :through="data?.through ?? []" :titles="data?.titles ?? {}" :dated="!live" :source="source" />
 
       <div v-else class="gb-column">
         <h1>Not found</h1>

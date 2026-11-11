@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { MinimarkNode } from '@nuxt/content'
-import { glassboxLessonSections } from '../../app/utils/lesson.ts'
+import { glassboxLessonSections, glassboxNextList } from '../../app/utils/lesson.ts'
 
 const h2 = (id: string, text: string): MinimarkNode => ['h2', { id }, text]
 const h3 = (id: string, text: string): MinimarkNode => ['h3', { id }, text]
@@ -55,6 +55,21 @@ describe('glassboxLessonSections', () => {
     expect(glassboxLessonSections([h3('what-to-watch-for', 'What to watch for'), ['p', {}, 'Trap.'], h3('more', 'More')], '/t/glassbox/guide')).toEqual([
       ['div', { class: 'gb-cards' }, ['div', { class: 'gb-card' }, h3('what-to-watch-for', 'What to watch for'), ['p', {}, 'Trap.']]],
       h3('more', 'More'),
+    ])
+  })
+})
+
+describe('glassboxNextList', () => {
+  const base = '/t/glassbox/guide'
+  const bare = (href: string): MinimarkNode => ['li', {}, ['a', { href }]]
+
+  it('fills a bare link with its target\'s current title, and leaves typed text and other targets alone', () => {
+    expect(glassboxNextList(['ul', {}, bare(`${base}/verification/schemas`), bare('/t/journal/current/history'), bare(`${base}/missing`),
+      ['li', {}, ['a', { href: `${base}/verification/schemas` }, 'Typed']]], base, { '/verification/schemas': 'Schemas' })).toEqual(['ul', { class: 'gb-next' },
+      ['li', {}, ['span', {}, 'Lesson'], ['a', { href: `${base}/verification/schemas` }, 'Schemas']],
+      ['li', {}, ['span', {}, 'Journal'], ['a', { href: '/t/journal/current/history' }]],
+      ['li', {}, ['span', {}, 'Page'], ['a', { href: `${base}/missing` }]],
+      ['li', {}, ['span', {}, 'Lesson'], ['a', { href: `${base}/verification/schemas` }, 'Typed']],
     ])
   })
 })

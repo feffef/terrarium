@@ -91,3 +91,13 @@ describe('glassboxLessonChipsDeep', () => {
     ]]])
   })
 })
+
+describe('glassboxWalkthroughParts — Where next titles', () => {
+  it('fills a bare Where next link with its target\'s title', () => {
+    const parts = glassboxWalkthroughParts([
+      ['h2', { id: 'where-next' }, 'Where next'] as MinimarkNode,
+      ['ul', {}, ['li', {}, ['a', { href: `${base}/verification/schemas` }]]] as MinimarkNode,
+    ], base, { '/verification/schemas': 'Schemas' })
+    expect(JSON.stringify(parts)).toContain('"Schemas"')
+  })
+})

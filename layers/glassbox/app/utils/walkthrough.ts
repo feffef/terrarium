@@ -1,5 +1,5 @@
 import type { MinimarkElement, MinimarkNode } from '@nuxt/content'
-import { glassboxLessonIds, glassboxLessonLabels, glassboxLinkLabel, glassboxNextList } from './lesson'
+import { glassboxLessonIds, glassboxLessonLabels, glassboxLinkLabel, glassboxNextList, type GlassboxTitles } from './lesson'
 import { glassboxWalkthroughs, type GlassboxPageLink } from './subjects'
 
 // Design 1b's stops, keyed on the headings writers already write (#1993). The
@@ -22,7 +22,7 @@ export interface GlassboxWalkthroughPart {
  *  h2) on its own, its number moved out of the heading and its `::lessons`
  *  drawn as chips; whatever lies between stops in plain parts, with A real case
  *  framed and Where next drawn as rows. */
-export function glassboxWalkthroughParts(nodes: MinimarkNode[], base: string): GlassboxWalkthroughPart[] {
+export function glassboxWalkthroughParts(nodes: MinimarkNode[], base: string, titles: GlassboxTitles = {}): GlassboxWalkthroughPart[] {
   const parts: GlassboxWalkthroughPart[] = []
   let section = ''
   let box: MinimarkElement | undefined
@@ -42,7 +42,7 @@ export function glassboxWalkthroughParts(nodes: MinimarkNode[], base: string): G
     if (!parts.length) parts.push({ nodes: [] })
     const part = parts.at(-1)!
     const isNextList = section === glassboxLessonIds.whereNext && tag === 'ul'
-    ;(box ?? part.nodes).push(part.stop ? glassboxLessonChips(node, base) : isNextList ? glassboxNextList(node, base) : node)
+    ;(box ?? part.nodes).push(part.stop ? glassboxLessonChips(node, base) : isNextList ? glassboxNextList(node, base, titles) : node)
   }
   return parts
 }

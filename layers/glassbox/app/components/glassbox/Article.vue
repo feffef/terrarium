@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import type { MinimarkTree, Toc } from '@nuxt/content'
 import type { GlassboxPageLink } from '../../utils/subjects'
+import type { GlassboxTitles } from '../../utils/lesson'
 
 const props = defineProps<{
   page: { path: string, title: string, revisionDate: string, body: MinimarkTree & { toc?: Toc } }
   base: string
   surround: ReturnType<typeof glassboxSurround>
   through: GlassboxPageLink[]
+  titles: GlassboxTitles
   dated: boolean
   source?: string
 }>()
@@ -18,13 +20,13 @@ const current = ref<string>()
 // lede and the first section, and each Walkthrough stop can show it is current.
 const parts = computed(() => {
   const { body } = props.page
-  const framed = subject.value ? glassboxLessonSections(body.value, props.base) : body.value
+  const framed = subject.value ? glassboxLessonSections(body.value, props.base, props.titles) : body.value
   const [intro, rest] = glassboxSplitBeforeBody(framed)
   const sections = glassboxFrameDiagrams(rest)
   const withBody = (nodes: typeof intro) => ({ ...props.page, body: { ...body, value: nodes } })
   return {
     intro: withBody(walkthrough.value ? intro : intro.map((node) => glassboxLessonChipsDeep(node, props.base))),
-    sections: (walkthrough.value ? glassboxWalkthroughParts(sections, props.base) : [{ nodes: sections.map((node) => glassboxLessonChipsDeep(node, props.base)) }])
+    sections: (walkthrough.value ? glassboxWalkthroughParts(sections, props.base, props.titles) : [{ nodes: sections.map((node) => glassboxLessonChipsDeep(node, props.base)) }])
       .map((part) => ({ ...part, value: withBody(part.nodes) })),
     toc: body.toc?.links ?? [],
   }

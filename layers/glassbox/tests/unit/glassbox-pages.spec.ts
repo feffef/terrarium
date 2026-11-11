@@ -248,6 +248,19 @@ describe('glassboxPageProblems on fixture pages', () => {
     expect(problemsOf('nuxt-content/01.collections.md', lesson.replace('[The Gate](', '[the gate step]('))).toEqual([])
   })
 
+  it('passes a bare Where next link, which renders its target\'s title, and still checks its target exists', () => {
+    expect(problemsOf('nuxt-content/01.collections.md', `${lesson}- [](/t/glassbox/guide/terrarium-practice/gate)\n`)).toEqual([])
+    expect(problemsOf('nuxt-content/01.collections.md', `${lesson}- [](/t/glassbox/guide/terrarium-practice/nope)\n`)).toEqual(['link /t/glassbox/guide/terrarium-practice/nope resolves to no page'])
+  })
+
+  it('flags a bare link outside Where next, where nothing renders its title', () => {
+    expect(problemsOf('nuxt-content/01.collections.md', lesson.replace('## Try it in your project\n', '## Try it in your project\n\nSee [](/t/glassbox/guide/terrarium-practice/gate).\n'))).toContain('bare link /t/glassbox/guide/terrarium-practice/gate must sit in Where next and point into this Space: nothing else fills its title')
+  })
+
+  it('flags a bare Journal link in Where next, which keeps typed text', () => {
+    expect(problemsOf('nuxt-content/01.collections.md', `${lesson}- [](/t/journal/current/history)\n`)).toContain('bare link /t/journal/current/history must sit in Where next and point into this Space: nothing else fills its title')
+  })
+
   it('passes a Where next of 5 pages ending in one Journal page', () => {
     expect(problemsOf('nuxt-content/01.collections.md', `${lesson}${gateItem.repeat(3)}${journalItem}`)).toEqual([])
   })

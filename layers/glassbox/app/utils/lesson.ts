@@ -27,7 +27,7 @@ const ids = glassboxLessonIds
 const labels = glassboxLessonLabels
 
 /** A Lesson body with design 1b's section frames added; other nodes unchanged. */
-export function glassboxLessonSections(nodes: MinimarkNode[], base: string): MinimarkNode[] {
+export function glassboxLessonSections(nodes: MinimarkNode[], base: string, titles: GlassboxTitles = {}): MinimarkNode[] {
   const out: MinimarkNode[] = []
   let section = ''
   let box: MinimarkElement | undefined
@@ -49,7 +49,7 @@ export function glassboxLessonSections(nodes: MinimarkNode[], base: string): Min
     }
     const inConcept = section === ids.concept
     const isNextList = section === ids.whereNext && tag === 'ul'
-    ;(box ?? out).push(inConcept ? fullReference(node) : isNextList ? glassboxNextList(node, base) : skipLine(node))
+    ;(box ?? out).push(inConcept ? fullReference(node) : isNextList ? glassboxNextList(node, base, titles) : skipLine(node))
   }
   return out
 }
@@ -70,21 +70,31 @@ function skipLine(node: MinimarkNode): MinimarkNode {
   return skips ? ['p', { ...props, class: 'gb-skip' }, ...children] : node
 }
 
+/** Page titles of the current Space by path within it; they already travel in the page payload (ADR-0028). */
+export type GlassboxTitles = Record<string, string>
+
+const spacePath = (href: string, base: string) => href.startsWith(`${base}/`) ? href.slice(base.length) : ''
+
 /** What a link leads to, for the label on its Where next row. */
 export function glassboxLinkLabel(href: string, base: string) {
-  const path = href.startsWith(`${base}/`) ? href.slice(base.length) : ''
+  const path = spacePath(href, base)
   if (glassboxSubjectOf(path)) return labels.lesson
   if (glassboxWalkthroughOf(path)) return labels.walkthrough
   return href.startsWith('/t/journal/') ? labels.journal : labels.page
 }
 
-/** A Where next list drawn as rows, each labelled by what its link leads to. */
-export function glassboxNextList(node: MinimarkNode, base: string): MinimarkNode {
+/** A Where next list drawn as rows, each labelled by what its link leads to;
+ *  a bare link `[](/…)` to a page in this Space shows that page's current title. */
+export function glassboxNextList(node: MinimarkNode, base: string, titles: GlassboxTitles = {}): MinimarkNode {
   if (typeof node === 'string') return node
   const [, props, ...items] = node
   return ['ul', { ...props, class: 'gb-next' }, ...(items as MinimarkNode[]).map((item) => {
     if (typeof item === 'string') return item
     const link = item.slice(2).find((child) => Array.isArray(child) && child[0] === 'a') as MinimarkElement | undefined
-    return [item[0], item[1], ['span', {}, glassboxLinkLabel(String(link?.[1].href ?? ''), base)], ...item.slice(2)] as MinimarkNode
+    const href = String(link?.[1].href ?? '')
+    const isBare = link?.length === 2
+    const title = isBare ? titles[spacePath(href, base)] : undefined
+    const filled = title ? [...link!, title] : link
+    return [item[0], item[1], ['span', {}, glassboxLinkLabel(href, base)], ...item.slice(2).map((child) => child === link ? filled : child)] as MinimarkNode
   })]
 }
