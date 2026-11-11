@@ -34,15 +34,15 @@ export const formatGuardMessage = () =>
   `Blocked by the ${LABEL} (${REF}): read \`${DOC}\` first (CLAUDE.md: "Before you write a subagent brief, or resume ` +
   'a stopped subagent"), then retry this call unchanged if the Skill shows it was right.'
 
-// Issue #2996: a brief sent with a template slot unfilled. `Agent` carries the
-// brief in `prompt`, `SendMessage` in `message`. A `Workflow` brief is filled
-// inside its script at run time, so it cannot be checked here. `{NAME}` is
-// narrow (caps and underscores, no `$` before it) to skip JSON, code and
-// template literals.
+// A Workflow brief is filled inside its script at run time, so only these two
+// tools are checked. `{NAME}` is narrow to skip JSON, code and template literals.
 const PLACEHOLDER = /@@\w+@@|(?<!\$)\{[A-Z]+(?:_[A-Z]+)*\}/
+const BRIEF_FIELD: Record<string, string> = { Agent: 'prompt', SendMessage: 'message' }
 
 export function unfilledPlaceholder(toolName: unknown, toolInput: unknown): string | null {
-  const text = prop(toolInput, toolName === 'Agent' ? 'prompt' : toolName === 'SendMessage' ? 'message' : '')
+  const field = typeof toolName === 'string' ? BRIEF_FIELD[toolName] : undefined
+  if (!field) return null
+  const text = prop(toolInput, field)
   return typeof text === 'string' ? (PLACEHOLDER.exec(text)?.[0] ?? null) : null
 }
 
