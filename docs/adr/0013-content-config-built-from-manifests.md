@@ -17,9 +17,6 @@ is committed or needs regenerating.
 - **When it runs.** Nuxt Content loads the config at every `nuxt prepare`,
   build and dev-server start, so each of those rebuilds the list from the
   manifests. Nothing needs regenerating or committing after a manifest edit.
-- **The same expansion feeds the routes.** `modules/routing.ts` runs the same
-  `expand()` to build the routing map (ADR-0014), so collections and routes
-  cannot disagree.
 - **It is ordinary code.** `content.config.ts` carries no "generated" banner,
   and the linter checks it like any other module.
 
