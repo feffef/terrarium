@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQjCNYD6UbYX7LTjkR
 startedAt: 2026-11-11T07:56:26Z
-endedAt: 2026-11-11T08:06:07Z
+endedAt: 2026-11-11T08:14:18Z
 kind: interactive
 goal: Show each Routine's Skill gist on the Routine costs charts
-status: in-review
-outcome: PR 3055 opened with the gist on every chart and on table hover; gate green
-summary: "The owner asked (direct ask) that the Routine charts on /t/journal/current/routines show the Skill's title from the Skill Inventory, since they showed only the name. The Inventory has no title field, so I asked four questions; the owner chose the gist field, under the name, always visible in the charts and on hover in the weekly table, name only when there is no gist (all human-decided). I built it agent-initiated as the smallest join: the page also loads the skills collection and attaches each gist to the Routine of the same name; no stored field changed. After pushing I stopped and asked about a PR; the owner said to open it, which ADR-0003 already required. Then I ran code-review (two read-only subagents; no hard findings, one real spacing typo fixed, one subagent miscounted Routines), the gate on the final head, opened PR 3055 and subscribed to it. Open: merge once CI is green and the verdict is posted."
+status: completed
+outcome: "PR 3055 merged: gist under each chart name and on weekly-table hover, with an e2e assertion"
+summary: "The owner asked (direct ask) that the Routine charts on /t/journal/current/routines show the Skill's title from the Skill Inventory, since they showed only the name. The Inventory has no title field, so I asked four questions; the owner chose the gist field, under the name, always visible in the charts and on hover in the weekly table, name only when there is no gist (all human-decided). I built it agent-initiated as the smallest join: the page also loads the skills collection and attaches each gist to the Routine of the same name; no stored field changed. After pushing I stopped and asked about a PR; the owner said to open it, which ADR-0003 already required. Then I ran code-review (two read-only subagents; no hard findings, one real spacing typo fixed, one subagent miscounted Routines) and the gate, and opened PR 3055. Before merging I noticed no test observed the gist, which ADR-0004 would have sent to a human; I added a one-line e2e assertion (agent-initiated), reran the gate, posted my verdict and merged with merge-pr.ts."
 prs:
   - "3055"
 docsRead:
@@ -63,28 +63,33 @@ frictions:
   - description: My own Edit dropped a space in const fmt, and a review subagent reported 9 Routines when there are 10; both were caught only by checking.
     solution: Check a subagent's counts and reread an edit's diff before relying on them.
     severity: nit
-durationSec: 580
+durationSec: 1071
 models:
-  claude-sonnet-5-5: 108
+  claude-sonnet-5-5: 152
 toolCounts:
-  Grep: 7
+  Grep: 8
   Glob: 1
   Read: 15
   AskUserQuestion: 1
-  Bash: 26
-  Edit: 8
-  Skill: 4
+  Bash: 36
+  Edit: 9
+  Skill: 5
   Agent: 2
   ToolSearch: 1
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  Write: 1
+  Write: 2
+  ReadNotifications: 4
+  mcp__github__pull_request_read: 3
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/app/composables/routineData.ts
   - layers/journal/app/pages/t/journal/[space]/routines.vue
   - layers/journal/app/components/content/RoutineChart.vue
   - layers/journal/app/components/content/RoutineWeeklyTable.vue
+  - layers/journal/tests/e2e/journal.spec.ts
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -174,7 +179,7 @@ ruleUse:
         why: opened the PR after being told
       - path: .claude/rules/adr-0004.md
         value: steered
-        why: review then gate before the PR
+        why: added a test so an agent could merge
       - path: .claude/rules/data-shapes.md
         value: backed
       - path: .claude/rules/tenant-layers.md
@@ -249,13 +254,13 @@ subagents:
     durationSec: 24
     toolCalls: 9
     modelCalls: 4
-    tokenShare: 9.4
+    tokenShare: 6.3
   - type: Explore
     task: Review spec axis
     durationSec: 24
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 9.6
+    tokenShare: 6.4
 gitBranch: claude/festive-goodall-e5i8oe
 entrypoint: remote
 cliVersion: 2.1.322
