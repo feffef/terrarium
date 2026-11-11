@@ -1,3 +1,5 @@
+import { resolveBuildInfo } from './shared/build-info'
+
 // Platform-wide Nuxt config (ADR-0001: one Nuxt app / one container).
 // Content collections are built in content.config.ts (ADR-0013).
 export default defineNuxtConfig({
@@ -26,6 +28,9 @@ export default defineNuxtConfig({
   // Nothing reads them: the server runs without --enable-source-maps. Skipping them
   // saves several seconds of the build.
   sourcemap: { server: false, client: false },
+
+  // Shown in the Platform footer; resolved once per build.
+  runtimeConfig: { public: { build: resolveBuildInfo() } },
 
   content: {
     // Native node:sqlite (unflagged from Node 22.13) — no better-sqlite3 native build in CI.
