@@ -30,8 +30,9 @@ const RESULT = {
         options: { type: 'array', items: { type: 'string' } },
         pick: { type: 'string', description: "the full text of one entry of options, copied verbatim; never a letter or number" },
         why: { type: 'string', description: 'cite the source of each fact it rests on, and say what you did not verify' },
+        wouldChange: { type: 'string', description: 'the finding or owner preference that would make a different option the right pick, so the owner can see how firm the pick is' },
       },
-      required: ['choice', 'options', 'pick', 'why'],
+      required: ['choice', 'options', 'pick', 'why', 'wouldChange'],
     },
     background: {
       type: 'string',
@@ -47,8 +48,9 @@ const RESULT = {
           mustBeTrue: { type: 'string', description: 'the premise that makes this option right' },
           checked: { type: 'string', description: 'what you ran or read to test it, and what came back' },
           holds: { type: 'string', enum: ['yes', 'no', 'unverified'] },
+          settledBy: { type: 'string', description: 'when holds is unverified: the specific command, file or data that would settle it, and why you could not run it; otherwise empty' },
         },
-        required: ['option', 'mustBeTrue', 'checked', 'holds'],
+        required: ['option', 'mustBeTrue', 'checked', 'holds', 'settledBy'],
       },
     },
     staleClaims: {
@@ -121,6 +123,7 @@ Full pass:
   6. The full ADR behind any summary rule that governs what you recommend.
   A ledger entry, a summary or the issue itself never proves that something landed, was fixed or still exists: check the current file or git log.
 - Test your pick before you make it. For each option, name what must be true for it to be right and check that (run the command, read the code, count); record each in optionChecks. A pick that rests on a source you did not open is unverified: say so in why, or open it first. Stop when each option's premise is checked, not before.
+- Before you stop, try to settle every option you would mark unverified: if a command, file read or count can settle it, run it. Mark it unverified only when no check can (it turns on the owner's preference, future data or access you lack), and say in settledBy what would settle it. In wouldChange, state the finding or preference that would flip your pick.
 - pick is the chosen option's full text, copied from options.
 - Fill sourcesRead as you go; a source you list must be one you opened.
 - Return build when the repo determines a concrete design: brief it. Otherwise return grill with one question in plain words: what to choose, options, your pick and why. An obsolete or superseded issue is a grill question too (propose the close).
