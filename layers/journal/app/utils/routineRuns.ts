@@ -2,6 +2,7 @@
 // the `::routine-chart` / `::routine-weekly-table` blocks). The numbers come from
 // the `routines` collection, so a new run row shows up with no page edit.
 import type { RoutineDoc } from '../types/journal'
+import { formatJournalDuration } from './duration'
 
 export type RoutineRun = RoutineDoc['runs'][number]
 export type RoutineMetric =
@@ -25,10 +26,7 @@ const TOKENS = new Intl.NumberFormat('en-US', { notation: 'compact', maximumFrac
 
 export function formatRoutineMetric(metric: RoutineMetric, value: number): string {
   if (metric === 'costUsd') return `$${value.toFixed(value >= 100 ? 0 : 2)}`
-  if (metric === 'durationSeconds') {
-    const minutes = Math.round(value / 60)
-    return minutes >= 60 ? `${Math.floor(minutes / 60)}h ${minutes % 60}m` : `${minutes}m`
-  }
+  if (metric === 'durationSeconds') return formatJournalDuration(value)
   return TOKENS.format(value)
 }
 
