@@ -58,8 +58,7 @@ once per session; read it whole if you can, since a rule can sit anywhere in it.
   claim (a subagent's report too) only after you check it this turn against its
   source. Count every item; never take a number from memory or a summary.
 - **Ask before building** something the Trusted user will see (the `grilling`
-  Skill); don't assume. Before any UI build, agree it on a short sample,
-  shown with `scripts/ui/preview.ts start --dev` (no full build needed).
+  Skill); don't assume. Owner-facing UI: `.claude/rules/ui-verification.md`.
   Clarify all user-facing UI with extra care: settle in the first round what
   each displayed value (label, hover, metric) follows. Data shapes:
   `.claude/rules/data-shapes.md`.
