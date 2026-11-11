@@ -1,0 +1,11 @@
+name: gate-local-env-failures
+surface: outside
+summary: pnpm gate:scoped failed for environment reasons on a local machine (a browser build missing after an install, a run stretched by a sleep) rather than for the change.
+cause: "A local session's session-start install bumped a dependency (playwright-core) without fetching its Chromium build, or the machine slept mid-run so unrelated tests timed out; the gate fails with no pointer to the environment. Signals: 'playwright ... headless shell', 'gate ran 95 min', 'unrelated tests timed out'."
+status: open
+occurrences:
+  - session: fd29c728-8222-4915-94ab-25776442397b
+    date: "2026-11-10"
+    severity: moderate
+    description: "pnpm gate:scoped failed twice for environment reasons: the session-start install bumped playwright-core without its Chromium headless shell, then a run stretched to 95 min (Mac likely slept) and 6 unrelated tests timed out."
+    solution: "Have the session-start install hook run playwright-core install chromium-headless-shell when the browser revision changes; keep the Mac awake during a gate run."

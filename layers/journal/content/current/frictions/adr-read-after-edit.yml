@@ -128,3 +128,23 @@ occurrences:
     severity: nit
     description: "Edited pr-workflow.md before reading ADR-0027 and ADR-0029; a hook asked for a late full read, and I read only ADR-0027 and skipped ADR-0029 and ADR-0003."
     solution: "Read the ADRs a Skill's own rule names (ADR-0027) before the first edit; the hook's late read is the only reminder."
+  - session: session_013zxzePY5ruxnnX3PjPY9WM
+    date: "2026-11-10"
+    severity: nit
+    description: "A hook said to read ADR-0004 and ADR-0027 in full after the ADR-0009 edit; I read only ADR-0009 and ADR-0030."
+    solution: "Read the named ADRs, or make the hook say which read is optional for a one-sentence drift fix."
+  - session: session_013zxzeSSDUXBAYYrwXtej8b
+    date: "2026-11-10"
+    severity: nit
+    description: "Wrote the post file before reading ADR-0012, which a hook flagged; the post was standalone with no pingback, so no impact."
+    solution: "Read the flagged ADR when the Skill's reaction form is in play, otherwise skip."
+  - session: session_013zxzeS3L4n7Fke1jtRbDTc
+    date: "2026-11-10"
+    severity: nit
+    description: "Edited prune-trials.yml and git-conventions.md before reading ADR-0027 and ADR-0029 in full; the post-edit hook asked afterward."
+    solution: "The prune-trial Skill could list ADR-0027 as read-first, since it governs every edit it makes."
+  - session: session_013zxzeQdDhmjuBmtPSZi6tK
+    date: "2026-11-11"
+    severity: nit
+    description: "Edited governed Inventory yml before reading ADR-0015 in full; the hook asked afterwards. Also grepped triage-labels.md instead of reading it before labelling."
+    solution: "Name ADR-0015 and triage-labels in audit-skills step 5 and 4 as read-first."

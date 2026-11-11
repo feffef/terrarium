@@ -16,3 +16,8 @@ occurrences:
     severity: minor
     description: "Ran git checkout origin/main -- . to read a file, which git-conventions.md forbids; the classifier denied it, so nothing was staged"
     solution: "Read a file from main with git show origin/main:<path>, as git-conventions says"
+  - session: session_013zxzeSBfN7oWScF9TgN4eB
+    date: "2026-11-10"
+    severity: moderate
+    description: "Ran `git checkout origin/main -- layers/journal/content` before reading git-conventions.md, which forbids checkout of a ref onto paths (it stages them)."
+    solution: "Read git-conventions.md before the first non-read-only git command, as CLAUDE.md says; it was a no-op only because the branch equalled main."

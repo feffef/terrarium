@@ -83,3 +83,23 @@ occurrences:
     severity: nit
     description: "Subagents loaded about 15 unrelated ADR rules via hooks on read-only greps and git calls, costing context for no use."
     solution: "Narrow the paths of adr-0027, adr-0029, adr-0030 and mermaid-lanes."
+  - session: session_013zxzeSB2Asdc9k89JQywv9
+    date: "2026-11-10"
+    severity: nit
+    description: "ADR-0027 and ADR-0029 rules loaded when I read pr-workflow.md, though neither bore on a one-line content edit."
+    solution: "Narrow those rules' paths so reading an agent doc does not load them."
+  - session: session_013zxzeQuK5ndJWaxisLTRKu
+    date: "2026-11-10"
+    severity: nit
+    description: "adr-0027 and adr-0029 loaded when I invoked dispatch-subagents, though the task touched neither prune trials nor rule placement."
+    solution: "Narrow when those two summary rules load; they are cross-cutting prose, not tied to files I touched."
+  - session: session_013zxzeQSBS5f2YkUy9rMRSz
+    date: "2026-11-10"
+    severity: nit
+    description: "ADR-0030 rule loaded while I read ADR-0027 and ADR-0029; it had nothing to do with a doc wording edit."
+    solution: "Narrow adr-0030.md paths so reading other ADRs does not load it."
+  - session: session_013zxzeRwsuRCoox75Nx14kj
+    date: "2026-11-10"
+    severity: nit
+    description: "Five rules unrelated to the task (mermaid-lanes, tenant-glossary, adr-0027, adr-0029, human-merge) loaded after reading a doc and a skill, and I had to judge each for rating."
+    solution: "Narrower paths for those rules, or a smaller rating list."

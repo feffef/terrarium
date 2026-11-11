@@ -151,3 +151,13 @@ occurrences:
     severity: moderate
     description: "Started gate:scoped before code-review, then committed review fixes mid-run; the gate aborted on the HEAD change and needed a full rerun (~10 min)."
     solution: "Follow pr-workflow.md's order: review, fix, then one gate on the final head; read pr-workflow.md before the first gate, not only before opening the PR."
+  - session: session_013zxzeSjaFuTmBXbfN2o5AH
+    date: "2026-11-10"
+    severity: minor
+    description: "I edited page text while pnpm gate:scoped ran, so it aborted at the tree-changed check and wasted a full test pass."
+    solution: "Finish every edit, including review fixes, before starting the gate; the pr-workflow doc says so but I started it in parallel with code-review."
+  - session: session_013zxzeSBfN7oWScF9TgN4eB
+    date: "2026-11-10"
+    severity: minor
+    description: "Editing files while gate:scoped ran aborted it twice; each fix round meant a full gate rerun."
+    solution: "Batch review fixes and start the gate only once no more edits are pending."

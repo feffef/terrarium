@@ -454,3 +454,38 @@ occurrences:
     severity: nit
     description: "Ran git status and the first digest commands before reading git-conventions.md, which CLAUDE.md requires before non-read-only git; a hook flagged it afterwards."
     solution: "Read git-conventions.md at the start of any run that will commit."
+  - session: session_013zxzeR6YXBiMLnmDFQpBs9
+    date: "2026-11-10"
+    severity: nit
+    description: "Ran git fetch and git log before reading docs/agents/git-conventions.md, breaking the CLAUDE.md read-first trigger; no harm since both were read-only in effect."
+    solution: "The PostToolUse hint caught it; reading the doc before the first fetch would have avoided the miss"
+  - session: session_013zxzeSiQ4jom3vFu8GreLw
+    date: "2026-11-10"
+    severity: nit
+    description: "Ran git commands before reading git-conventions.md; a hook flagged it afterwards. The doc showed the commands were read-only, so no harm."
+    solution: "Read the doc at session start when a Skill's first step is a git command."
+  - session: fd29c728-8222-4915-94ab-25776442397b
+    date: "2026-11-10"
+    severity: nit
+    description: "Ran git fetch before reading docs/agents/git-conventions.md, which CLAUDE.md requires before any non-read-only git command; a hook flagged it."
+    solution: "Read git-conventions.md before the first fetch; a read-only fetch caused no harm here."
+  - session: session_013zxzeSSDUXBAYYrwXtej8b
+    date: "2026-11-10"
+    severity: minor
+    description: "Called pull_request_read before reading docs/agents/github-integration.md, which CLAUDE.md requires before the first GitHub operation; a hook reminded me."
+    solution: "Read that doc at session start when the task clearly uses GitHub."
+  - session: session_013zxzeS3L4n7Fke1jtRbDTc
+    date: "2026-11-10"
+    severity: nit
+    description: "Ran gh api search before reading github-integration.md, the first GitHub operation; a hook flagged it after the call."
+    solution: "Read the doc at session start for scheduled Skills that file or search issues."
+  - session: session_013zxzeSvVL3Eaha8hHj2Q8i
+    date: "2026-11-11"
+    severity: nit
+    description: "Ran git status, add and commit and the first GitHub tool call before reading git-conventions.md and github-integration.md, which CLAUDE.md requires first; read late, no harm."
+    solution: "A hook that blocks the first non-read-only git command until the doc is read."
+  - session: session_013zxzeQdDhmjuBmtPSZi6tK
+    date: "2026-11-11"
+    severity: nit
+    description: "Read github-integration.md, git-conventions.md and pr-workflow.md only after hooks prompted, after my first GitHub call, first git commit and PR prep."
+    solution: "A hook before the first call, or read the docs named in CLAUDE.md at start of a scheduled run."

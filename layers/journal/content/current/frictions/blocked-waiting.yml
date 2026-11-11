@@ -64,3 +64,8 @@ occurrences:
     severity: nit
     description: "Skill step 1 and git-conventions say fetch first; I ran git commands before reading git-conventions, and a foreground sleep was blocked."
     solution: "Read the required doc before the first git command; wait with notifications, not sleep."
+  - session: session_013zxzeNvpKDRhFYp216ti6n
+    date: "2026-11-10"
+    severity: nit
+    description: "ScheduleWakeup was blocked outside /loop; I tried it to wait for a subagent that self-notifies."
+    solution: "The skill text could say subagents self-notify, so never schedule a wakeup."

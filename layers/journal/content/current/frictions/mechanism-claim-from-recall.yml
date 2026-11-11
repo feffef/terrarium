@@ -187,3 +187,8 @@ occurrences:
     severity: minor
     description: "Digest for 2026-11-08 called the concept guide's upkeep job weekly; it runs daily. The writer took the word from session goals, not a source for the cadence."
     solution: "The digest Skill already says never state how often a job runs; its fact-check should flag any cadence word (weekly, daily) as unverifiable. Other Digests (11-02 to 11-05) use it too."
+  - session: session_013zxzeRumtXDY7MVhKUgVT7
+    date: "2026-11-09"
+    severity: minor
+    description: "I first told the owner the test session could not message back, inferred from an incomplete tool list in get_session; the owner corrected me and later test sessions did reply via send_message."
+    solution: "Don't infer a missing tool from get_session's turn_handoff list; ask the session to reply and see."

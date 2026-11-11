@@ -16,3 +16,8 @@ occurrences:
     severity: minor
     description: "My hand fix of the glassbox-update step 4 line left another over-long line, so I needed a second edit, commit and a full gate:scoped re-run for a whitespace-only change."
     solution: "Check the rewrapped paragraph's line lengths (awk) before running the gate."
+  - session: session_013zxzeRumtXDY7MVhKUgVT7
+    date: "2026-11-09"
+    severity: minor
+    description: "The first gate:scoped run failed at lint on an unused import I left after removing authored docsRead; I had run typecheck and specs but not eslint before the multi-minute gate."
+    solution: "Run eslint on touched files alongside typecheck before gate:scoped when removing code; CLAUDE.md's pre-gate step names only typecheck and the spec."

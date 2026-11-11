@@ -56,3 +56,13 @@ occurrences:
     severity: minor
     description: "Linked worktree(s) left with uncommitted or unpushed work at close: /home/user/terrarium/.claude/worktrees/wf_48077a04-70c-1"
     solution: "Push each, or remove it if its work is meant to be dropped."
+  - session: session_013zxzeSiQ4jom3vFu8GreLw
+    date: "2026-11-10"
+    severity: minor
+    description: "Linked worktree(s) left with uncommitted or unpushed work at close: /home/user/terrarium/.claude/worktrees/wf_7d410a86-fae-2"
+    solution: "Push each, or remove it if its work is meant to be dropped."
+  - session: fd29c728-8222-4915-94ab-25776442397b
+    date: "2026-11-10"
+    severity: minor
+    description: "log-session refused a completed log because of another session's linked worktree (terrarium-2175, 11 unpushed commits) that this session never touched."
+    solution: "The owner chose to remove it (branch kept locally); the sweep in scripts/session/log-session.ts could warn rather than refuse for worktrees the session did not create."

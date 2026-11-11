@@ -62,3 +62,13 @@ occurrences:
     severity: minor
     description: "Criterion 1 search subagent did not query the issue tracker, only ledger refs and doc incident tags, so issue states in the ledger entry are unverified."
     solution: "Brief the search subagent with a tracker query command (gh api search/issues) so it can verify issue states, or have the Skill name one."
+  - session: session_013zxzeSjaFuTmBXbfN2o5AH
+    date: "2026-11-10"
+    severity: nit
+    description: "My brief to a writer said an inner MDC block needs more colons; the writer found it false in the parser. A fresh reader's guess went into my brief unchecked."
+    solution: "Mark reader findings as unverified in writer briefs; the writer already re-checks."
+  - session: session_013zxzeSBfN7oWScF9TgN4eB
+    date: "2026-11-10"
+    severity: nit
+    description: "Code-review spec file I wrote for the reviewer left out the owner's 'always loaded' tag decision, so the reviewer flagged it as scope creep."
+    solution: "Copy each owner decision into a review spec from the issue comment, not from memory."

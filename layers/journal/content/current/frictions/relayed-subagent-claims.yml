@@ -145,3 +145,18 @@ occurrences:
     severity: minor
     description: "A behaviour subagent quoted a glassbox-curate log line (newest run skipped the cost read) that does not exist; I only caught it by grepping the log before filing."
     solution: "Briefs should require each quote to carry file:line; the brief.md says to verify, which saved the issue."
+  - session: session_013zxzeRSjTLQV8K5UzQtX95
+    date: "2026-11-08"
+    severity: nit
+    description: "The design subagent's note cited line numbers for pr-workflow.md and git-conventions.md that I kept in ledger notes; the Standards reviewer found git-conventions.md does not name git switch --discard-changes, so the note is slightly imprecise."
+    solution: "Verify a doc-forbids claim against the exact command before writing it into a note."
+  - session: session_013zxzeSiQ4jom3vFu8GreLw
+    date: "2026-11-10"
+    severity: minor
+    description: "Build agents and my own issue comments called CLAUDE.md Human-only; the rule paths on origin/main do not list it, so I repeated an unverified claim on three issues."
+    solution: "Check list-human-only-paths.ts output before a brief or comment names a file Human-only."
+  - session: session_013zxzeSBfN7oWScF9TgN4eB
+    date: "2026-11-10"
+    severity: moderate
+    description: "Relayed two of #3009's reasons for excluding always-loaded rules as if sound; the owner had to point out they were weak."
+    solution: "Before passing on a prior decision's rationale, test each reason against the current goal (CLAUDE.md, Question the premise)."

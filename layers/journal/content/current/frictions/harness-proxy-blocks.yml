@@ -95,3 +95,23 @@ occurrences:
     severity: minor
     description: "gh api for upstream release notes returned 403 (repo not attached), so I relied on the notes pasted in the Dependabot PR body."
     solution: "Sweep Skill could say the PR body notes are the expected source."
+  - session: session_013zxzeQaeB8hhL2FFfcQhv7
+    date: "2026-11-08"
+    severity: minor
+    description: "Tried amend plus force-with-lease to fix a stale commit message; the auto-mode classifier denied it, so the message stays wrong"
+    solution: "Write the commit message after the subagent reports, not as a checkpoint label; or accept a follow-up commit"
+  - session: session_013zxzePY5ruxnnX3PjPY9WM
+    date: "2026-11-10"
+    severity: minor
+    description: "I tried to amend a commit I had already pushed; the auto-mode classifier denied it, so I added a second commit."
+    solution: "Push only after review and gate, or default to a follow-up commit once pushed (the Stop hook pushes early)."
+  - session: session_013zxzeSB2Asdc9k89JQywv9
+    date: "2026-11-10"
+    severity: nit
+    description: "git reset --hard HEAD to clear that stale index was denied by the auto-mode classifier, so Stop hooks kept flagging uncommitted changes."
+    solution: "Document a safe way to resync an index after a worktree moves the branch, such as git restore --staged then git restore."
+  - session: session_013zxzeR6YXBiMLnmDFQpBs9
+    date: "2026-11-10"
+    severity: moderate
+    description: "Cloud sessions cannot reach the deployed site or its container logs, so the cause on the server stays unconfirmed."
+    solution: "Expose the deployed build's commit (for example a /version endpoint or footer) so a session can compare it with main"

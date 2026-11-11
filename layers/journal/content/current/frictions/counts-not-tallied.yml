@@ -100,3 +100,8 @@ occurrences:
     severity: minor
     description: "An interim chat message said seven rules loaded in 300-383 sessions and were rated no in 60-80 percent; only five loaded in 300+, and two of the seven were 49 and 88 percent."
     solution: "Compute chat summaries from the table output, not from memory; corrected in the final reply."
+  - session: session_013zxzeSiQ4jom3vFu8GreLw
+    date: "2026-11-10"
+    severity: nit
+    description: "The push notification said six questions but the grill had five; I had not counted the issues first."
+    solution: "Count the grill results before sending the notification."

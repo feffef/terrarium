@@ -33,3 +33,8 @@ occurrences:
     severity: minor
     description: "Stop hook said a PR merged and demanded close-session three times while merge-pr.ts was still polling CI and the PR was open; cost extra checks."
     solution: "Fire the merged-PR check only after the PR state is merged, not when merge-pr.ts starts."
+  - session: session_013zxzeQN4dgz9seaMtnRf7u
+    date: "2026-11-10"
+    severity: minor
+    description: "The Stop hook claimed a PR merged and close-session had not run, though this session merged nothing; it made me close early."
+    solution: "Have the merge-close hook match only a merge-pr.ts run in this session, not merge text in tool output."

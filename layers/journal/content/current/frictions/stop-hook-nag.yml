@@ -344,3 +344,33 @@ occurrences:
     severity: nit
     description: "Stop hook repeatedly flagged unpushed inherited commits on the impl worktree branch during review, and demanded PR subscription the task forbade."
     solution: "Let the hook skip worktree impl branches awaiting orchestrator review, and honour an explicit no-subscribe instruction."
+  - session: session_013zxzePY5ruxnnX3PjPY9WM
+    date: "2026-11-10"
+    severity: nit
+    description: "The Stop hook asked for a push before review and gate had finished, so the branch holds two commits though the Skill asks for one."
+    solution: "Tell scheduled-run Skills that a squash-merge makes the commit count moot."
+  - session: session_013zxzePSj9Rpf6qCGowU7gi
+    date: "2026-11-10"
+    severity: nit
+    description: "Stop hook repeatedly demanded commit and push while subagents were still editing pages, a premature nag."
+    solution: "Have the hook skip while subagents are running, or accept a WIP commit."
+  - session: session_013zxzeQN4dgz9seaMtnRf7u
+    date: "2026-11-10"
+    severity: nit
+    description: "The uncommitted-changes Stop hook fired repeatedly while writer subagents were still editing, so committing then would have mixed half-finished edits."
+    solution: "Let the hook skip while background subagents are running."
+  - session: session_013zxzeSjaFuTmBXbfN2o5AH
+    date: "2026-11-10"
+    severity: nit
+    description: "The Stop hook said uncommitted changes five or more times while subagents were still editing pages, and each time needed an explanation instead of an action."
+    solution: "Let the hook skip while background subagents are running, or say so in its text."
+  - session: session_013zxzeRwsuRCoox75Nx14kj
+    date: "2026-11-10"
+    severity: nit
+    description: "Stop hook asked to push unpushed commits while the task forbade pushing; ADR-0003 also says to open a PR, so rules conflicted."
+    solution: "Test-session prompts override it; the hook cannot know. Nothing to change."
+  - session: session_013zxzeSvVL3Eaha8hHj2Q8i
+    date: "2026-11-11"
+    severity: minor
+    description: "The Stop hook demanded commit and push several times while fact-check and review subagents were still running, forcing repeated holds."
+    solution: "Stop hooks should skip the nag while subagents are running."

@@ -26,3 +26,8 @@ occurrences:
     severity: moderate
     description: "Didn't see until the Spec review that the K=3 rotation made two consecutive A wins impossible on 4 of 5 lenses; needed a third design round with the user"
     solution: "Before showing a selection rule, run it on two concrete cases across runs (CLAUDE.md Question the premise), including how rules interact over time"
+  - session: session_013zxzeRYFqNFGvBn4FsDkTk
+    date: "2026-11-09"
+    severity: minor
+    description: "First Scout draft contradicted itself (never wait vs wait now) and had Scout re-run orient.ts, which rewrites the index files; only code-review caught it."
+    solution: "Before committing a new instruction, run its steps on a concrete run, as CLAUDE.md's question-the-premise rule says."

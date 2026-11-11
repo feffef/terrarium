@@ -36,3 +36,8 @@ occurrences:
     severity: minor
     description: "get_session was not available to this session, so the Skill's cost_usd budget check and the PR's cost line could not be filled."
     solution: "The curate Skill could say what to do when get_session is absent; the run reported cost as unreported."
+  - session: session_013zxzeNvpKDRhFYp216ti6n
+    date: "2026-11-10"
+    severity: minor
+    description: "get_session was not available, so the run cost could not be read for the PR body."
+    solution: "Expose get_session in scheduled curate runs, or let the skill accept 'unreported' earlier."
