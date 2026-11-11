@@ -105,3 +105,6 @@ them as new. Incident detail lives in the cited issue.
   every `tsx` guard exits with EACCES, its `"onFailure": "block"` blocks the
   call, and nearly every tool call is blocked. Not a repo bug: ask the owner to
   restart Claude Code from a shell with a fresh `TMPDIR`. (session 92148909)
+- **`ssh` from a sandboxed local Bash can hang.** This is a local-sandbox
+  fact, not a cloud-environment one. Seen in session fd29c728 (log lines 34,
+  118); give any `ssh` call a timeout and don't wait on it.
