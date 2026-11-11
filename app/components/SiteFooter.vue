@@ -5,7 +5,7 @@
 // (currentColor-derived, no Tenant CSS vars) so one component works unstyled
 // inside every Tenant's own look.
 const route = useRoute()
-const build = useRuntimeConfig().public.build as { sha: string; time: string }
+const build = useRuntimeConfig().public.build
 // Linking a visitor to the wing they are already in is a dead link.
 const sites = computed(() => SITES.filter((s) => s.to.split('/')[2] !== route.path.split('/')[2]))
 </script>
@@ -22,7 +22,7 @@ const sites = computed(() => SITES.filter((s) => s.to.split('/')[2] !== route.pa
     </span>
     <a class="site-footer-source" :href="REPO_URL">Source on GitHub</a>
     <small class="site-footer-build">
-      build <a v-if="build.sha" :href="`${REPO_URL}/commit/${build.sha}`">{{ build.sha }}</a><template v-if="build.sha"> · </template>{{ build.time }}
+      build <template v-if="build.sha"><a :href="`${REPO_URL}/commit/${build.sha}`">{{ build.sha }}</a> · </template>{{ build.time }}
     </small>
   </footer>
 </template>
