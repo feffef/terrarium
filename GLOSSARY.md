@@ -116,7 +116,9 @@ How the Platform fixes itself, semi-autonomously. Each **Session** logs its
 **Frictions**; **Routines** run `frictions-to-fixes` (into the **Friction
 Ledger**, then fix PRs), `audit-skills` (into the **Skill Inventory**) and
 `audit-docs` (doc fixes). What they can't fix themselves they file as
-`needs-triage` issues, which the owner's `clear-backlog` run takes up. Every PR
+`needs-triage` issues, which the owner's `clear-backlog` run takes up; `harvest`
+files the ideas and learnings still worth acting on as `ready-for-human`
+issues. Every PR
 still clears the **Gate**, and a human decides what ADR-0004 reserves.
 
 ### Catalog

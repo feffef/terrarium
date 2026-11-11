@@ -19,7 +19,9 @@ the AFK-ready triage label"), use that string.
 
 > **Who sets the state.** Only triage sets `ready-for-agent` and
 > `ready-for-human`: `triage`, `auto-triage`, `clear-backlog` and the guest
-> pipeline. Every other Skill, installed Skills included, files its issues
+> pipeline. The one exception: `harvest` files its `Seedling:` issues as
+> `ready-for-human`, since a Trusted user's green light is what they wait for.
+> Every other Skill, installed Skills included, files its issues
 > `needs-triage`, however settled they look (`to-spec` and `to-tickets` say
 > `ready-for-agent`; don't apply it), except a spec on hold, which carries no
 > label (`issue-tracker.md`, Specs).

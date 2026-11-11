@@ -25,6 +25,9 @@ Never scan a `wayfinder:map` (an index, not work), whoever last commented on it.
 
 For everything else, fetch the **most recent comment** and check who wrote it:
 
+- **A `Seedling:` issue** (filed by `harvest`) **stays `ready-for-human`** until a
+  Trusted user relabels it or says to build it. Skip it, even uncommented or
+  with a human comment that only asks a question.
 - **No state label, `needs-triage`, or no comments.** Always eligible, whoever
   filed it or commented last, except an on-hold spec or sub-issue
   (`docs/agents/issue-tracker.md`'s Specs), which follows the next bullet.
