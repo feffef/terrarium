@@ -20,6 +20,11 @@ describe('toOpenIssue()', () => {
       updatedAt: '2026-07-15T01:13:49Z',
     })
   })
+  it('carries a closed issue\'s close reason and leaves an open one without', () => {
+    const base = { number: 7, title: 't', labels: [], updated_at: '2026-07-11T09:00:00Z' }
+    expect(toOpenIssue({ ...base, state_reason: 'not_planned' })?.stateReason).toBe('not_planned')
+    expect(toOpenIssue({ ...base, state_reason: null })).not.toHaveProperty('stateReason')
+  })
   it('returns null for a record that is actually a pull request', () => {
     const record: RawIssueApiRecord = {
       number: 319,

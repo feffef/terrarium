@@ -25,11 +25,12 @@ harvests both.
    It lists unharvested entries from the last 28 days (archived logs
    included). Within a kind the newest come first and the kinds alternate, idea
    first; recency is the only ranking, so an idea from a smooth session ranks like
-   any other. Then read `harvest list <scratchpad>/harvest-extract.json`: every
+   any other. Then redirect `harvest list <scratchpad>/harvest-extract.json` to
+   `<scratchpad>/harvest-list.txt` and read that file whole: every
    entry in that order, with each session's start, PRs, goal, outcome and source
    file printed once before its first entry. It holds everything steps 2 and 3
    read; use `jq` on the JSON only for more on an entry (the list's last lines
-   show how). Done when you have the counts per kind and the ordered entries.
+   show how). Done when you have the counts per kind and the last entry's number.
 2. **Cluster, in order.** Merge near-duplicate entries into clusters, taking
    entries from the top, and label each cluster **product** (what a visitor or
    the owner sees or uses on the site: a Tenant, its content, the UI) or
@@ -47,8 +48,8 @@ harvests both.
    - **Unfiled.** Entries the list marks "same session in issues" were possibly
      reworded: read those issues. List the tracker with
      `pnpm exec tsx scripts/github/list-open-issues.ts 5000 [--closed]` and
-     match titles. A title match is a hint. An issue closed as completed
-     settles the cluster. One closed as not planned rejects it. Any other
+     match titles. A title match is a hint. Read a closed issue's `stateReason`:
+     `completed` settles the cluster, `not_planned` rejects it. Any other
      closed issue goes in the Seedling as the reason to reopen.
    - **Unrejected.** Not in `.out-of-scope/`, not under an open Prune Trial
      (`.agents/prune-trials.yml`), no `wontfix` issue.
@@ -57,19 +58,23 @@ harvests both.
      that names the cluster's problem, whatever its status, means
      `frictions-to-fixes` owns it. A cluster the Ledger covers in part stays,
      narrowed to the part it misses.
-   - **Simplifying.** The change gives the Platform a capability it lacks or
+   - **Simplifying.** An idea gives the Platform a capability it lacks or
      makes it simpler, and retires as much as it adds: a new flag, file, check or
-     concept names the one it replaces.
+     concept names the one it replaces. A learning is a fact for its home doc:
+     it passes when the doc lacks it and two sessions raised it or it cost one a
+     wrong turn.
    - **Unacted.** Its source log's `prs` and outcome do not show the session
      already did it.
    Done when each checked cluster records the file read or merge list checked,
    the issue number matched or "no match" with the filter used, the Ledger entry
-   that covers it or "none", and what the change retires or simplifies.
+   that covers it or "none", and what the change retires or simplifies. A
+   dropped cluster names the test it failed.
 4. **File one Seedling per passing cluster,** at most 10 in total and, when
    harvesting both kinds, 5 per kind, unless the other kind has fewer passing
    (then it fills the rest). At most 3 of them are workflow clusters, however
    few product clusters passed. Learnings that belong in one doc share one
-   Seedling. For each:
+   Seedling. Read `docs/agents/issue-tracker.md` and `triage-labels.md` first,
+   once. For each:
    - Read its source logs whole (each entry's `file`): the entry alone lacks the
      story.
    - Write the body to a scratchpad file as [`body-template.md`](body-template.md)
@@ -84,5 +89,6 @@ harvests both.
      stop the run naming the issue if it still fails.
    Done when every filed issue's stored keys equal its file's keys and you have
    listed every number.
-5. **Close.** Invoke `close-session` once; done when it has run. A run where
-   nothing passed says so and files no issue.
+5. **Close.** Invoke `close-session` once; done when it has run. Its summary
+   counts the clusters checked, passed and dropped. A run where nothing passed
+   says so and files no issue.

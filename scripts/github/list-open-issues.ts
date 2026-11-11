@@ -30,7 +30,8 @@
 //
 // Usage:  tsx scripts/github/list-open-issues.ts [N] [--closed]
 //   Prints up to N open (or, with --closed, closed) issues (default 50) as
-//   JSON: { number, title, labels, updatedAt }. Newest-updated-first.
+//   JSON: { number, title, labels, updatedAt }, plus stateReason on a closed
+//   issue. Newest-updated-first.
 import { fail, root, runIfMain } from '../lib/cli.ts'
 import { decodeHtmlEntities, listAll, NO_ACCESS_MESSAGE, resolveAccess, type Access } from '../lib/github-client.ts'
 
@@ -46,6 +47,7 @@ export interface RawIssueApiRecord {
   title: string
   labels: Array<{ name: string } | string>
   updated_at: string
+  state_reason?: string | null
   pull_request?: unknown
 }
 
@@ -56,6 +58,7 @@ export interface OpenIssue {
   title: string
   labels: string[]
   updatedAt: string
+  stateReason?: string
 }
 
 // ── Pure core (unit-tested) ─────────────────────────────────────────────────
@@ -69,6 +72,7 @@ export function toOpenIssue(raw: RawIssueApiRecord): OpenIssue | null {
     title: decodeHtmlEntities(raw.title),
     labels: raw.labels.map((label) => (typeof label === 'string' ? label : label.name)),
     updatedAt: raw.updated_at,
+    ...(raw.state_reason ? { stateReason: raw.state_reason } : {}),
   }
 }
 
