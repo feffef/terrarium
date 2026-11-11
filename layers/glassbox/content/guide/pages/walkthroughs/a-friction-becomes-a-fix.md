@@ -45,7 +45,7 @@ A :term[Routine] starts a session that runs the `frictions-to-fixes` Skill, or a
 
 ## 4. A subagent reads the logs
 
-One subagent reads the logs and hands back a short ranked report. It reads every log in a recent window and files each matching Friction under an entry of the :term[Friction Ledger]: one entry per root cause, with every recent session that hit it. It commits those Ledger changes and changes nothing else.
+One subagent reads the logs and hands back a short ranked report. It reads every log in a recent window and files each matching Friction under an entry of the :term[Friction Ledger]: one entry per root cause, with every recent session that hit it. Its one write is a commit of those Ledger changes on the run's branch.
 
 ::lessons
 [Subagents](/t/glassbox/guide/agents/subagents) · [Friction Ledger](/t/journal/current/frictions) · :file[scripts/session/extract-frictions.ts] · :file[layers/journal/content/current/frictions/]
@@ -53,7 +53,7 @@ One subagent reads the logs and hands back a short ranked report. It reads every
 
 ## 5. It screens out what a fix can't help
 
-The subagent checks each candidate against the changes merged since its sessions, the open and closed issues, the open PRs, and the open :term[Prune Trial]s. It labels each one never-fixed, dropped, already tracked or a regression, and ranks what is left.
+The subagent checks each candidate against the changes merged since its sessions, the open and closed issues, the open PRs, and the open :term[Prune Trial]s. It labels each one never-fixed (no issue or PR addresses it), dropped (fixed since, on trial, or not the repo's to change), already tracked (an open issue or PR covers it) or a regression (back after its fix merged), and ranks what is left.
 
 ::lessons
 [Self-improvement loop](/t/glassbox/guide/terrarium-practice/self-improvement-loop) · [Pruning instructions](/t/glassbox/guide/terrarium-practice/pruning-instructions) · :file[scripts/git/list-merges-since.ts]
@@ -69,7 +69,7 @@ The run picks the top candidates and has one design subagent design each fix and
 
 ## 7. Helper agents write the fixes
 
-Helper agents write the fixes, each in a git worktree of its own, run the Gate and hand back a committed branch; they never merge. All the doc fixes go to one agent as one branch, and each code or config fix gets a branch of its own. The run's update to the Friction Ledger goes in a PR of its own, every run, fixes or none.
+Helper agents write the fixes, each in a git worktree of its own, run the Gate and hand back a committed branch; they never merge. All the doc fixes go to one agent as one branch, and each code or config fix gets a branch of its own. The run itself opens its Friction Ledger update, on top of that survey commit, as a PR of its own, every run, fixes or none.
 
 ::lessons
 [Subagents](/t/glassbox/guide/agents/subagents)

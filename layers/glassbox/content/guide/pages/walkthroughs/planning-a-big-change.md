@@ -27,7 +27,7 @@ Every question that can be stated precisely becomes a decision ticket: a sub-iss
 
 ## 3. One ticket per session
 
-A later session loads the map and takes the first open ticket that nothing blocks and nobody holds, and assigns it to claim it before any work. It resolves only that ticket, research tickets apart: an answer in a comment, the issue closed, and one line in the map's decisions. Questions the answer makes sharp become new tickets. The triage sweep may add a triage label beside a ticket's `wayfinder:` label: `ready-for-human` on a grilling or prototype ticket.
+A later session loads the map and takes the first open ticket that nothing blocks and nobody holds, and claims it by assigning it first. Unlike stop 2's session with its research subagents, it resolves only one ticket: an answer in a comment, the issue closed, and one line in the map's decisions. Questions the answer makes sharp become new tickets. The triage sweep may add a triage label beside its `wayfinder:` label: `ready-for-human` on a grilling or prototype ticket.
 
 ::lessons
 [Wayfinder](/t/glassbox/guide/skill-pack/wayfinder) · [Issue triage labels](/t/glassbox/guide/git-github/issue-triage-labels)
@@ -43,7 +43,7 @@ A grilling ticket is a conversation with a Trusted user, run with `grilling` and
 
 ## 5. The map hands off to a spec
 
-When nothing is left to decide, the way is clear and the work is handed off. `to-spec` writes the decisions up as a spec, an ordinary issue here, and `to-tickets` breaks it into thin stories that each work end to end. Each story is a sub-issue of the spec and starts with a `Part of` line naming it. Both are filed `needs-triage`, not `ready-for-agent` as the installed Skills say; a spec on hold and its stories carry no label.
+When nothing is left to decide, the way is clear. `to-spec` writes the decisions up as a spec, an ordinary issue here, and `to-tickets` breaks it into thin stories that each work end to end. Each story is a sub-issue of the spec and starts with a `Part of` line naming it. Both are filed `needs-triage`, not `ready-for-agent` as the installed Skills say; a spec whose body puts it on hold, and its stories, carry no label.
 
 ::lessons
 [Planning skills](/t/glassbox/guide/skill-pack/planning-with-the-pack) · [Issue triage labels](/t/glassbox/guide/git-github/issue-triage-labels) · :file[.agents/skills/to-spec/SKILL.md] · :file[.agents/skills/to-tickets/SKILL.md]
