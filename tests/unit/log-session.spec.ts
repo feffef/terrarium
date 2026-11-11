@@ -2,6 +2,7 @@
 // (fetch → rebuild → push) is side-effecting and exercised via `--dry-run`; here we
 // pin the two guards that decide whether an entry is safe to land on `main`:
 // schema validation (the L1 stand-in) and the canonical `<date>-<session>.yml` filename.
+import { execFileSync } from 'node:child_process'
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
@@ -19,6 +20,7 @@ import {
   pendingMain,
   reportReads,
   mergedWorktreesToRemove,
+  gitWorktrees,
   validateAuthored,
   type WorktreeSeam,
 } from '../../scripts/session/log-session.ts'
@@ -492,7 +494,7 @@ describe('reportReads (the names reported is picked from)', () => {
         read: () => ({
           result: { findings, failures: findings.filter((f) => !f.isPrimary && (f.uncommitted || f.unpushed) && !f.excusedBy) },
           current: '/r',
-          atMainTip: [],
+          onMainLine: [],
         }),
         remove: (paths) => (removed.push(...paths), paths),
       })
@@ -719,8 +721,46 @@ describe('mergedWorktreesToRemove() — cleanup at close (#2721)', () => {
     ]
     expect(mergedWorktreesToRemove(findings, '/r/wt/current', [])).toEqual(['/r/wt/clean-merged'])
   })
-  it('keeps a worktree whose HEAD is the origin/main tip: a build agent may have just added it', () => {
+  it('keeps a worktree whose HEAD is on the origin/main first-parent line: a build agent may have just added it', () => {
     const findings = [finding({ path: '/r/wt/fresh', mergedToMain: true }), finding({ path: '/r/wt/done', mergedToMain: true })]
     expect(mergedWorktreesToRemove(findings, '/r', ['/r/wt/fresh'])).toEqual(['/r/wt/done'])
+  })
+})
+
+describe('gitWorktrees.read() — a commitless worktree is not a merged one', () => {
+  it('lists a worktree cut from an older main commit, so the sweep keeps it', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'wt-sweep-'))
+    const g = (...a: string[]) => execFileSync('git', ['-C', dir, '-c', 'user.name=t', '-c', 'user.email=t@t', ...a], { encoding: 'utf8' }).trim()
+    try {
+      g('init', '-q', '-b', 'main')
+      g('commit', '-q', '--allow-empty', '-m', 'one')
+      g('commit', '-q', '--allow-empty', '-m', 'two')
+      g('update-ref', 'refs/remotes/origin/main', 'HEAD')
+      g('worktree', 'add', '-q', '-b', 'build', join(dir, 'wt'), 'HEAD~1')
+      const { result, onMainLine } = gitWorktrees.read(dir)
+      const wt = result.findings.find((f) => f.branch === 'build')!
+      expect(wt.mergedToMain).toBe(true)
+      expect(mergedWorktreesToRemove(result.findings, dir, onMainLine)).toEqual([])
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
+  })
+
+  it('still sweeps a worktree whose own commits were merged by a merge commit', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'wt-sweep-'))
+    const g = (...a: string[]) => execFileSync('git', ['-C', dir, '-c', 'user.name=t', '-c', 'user.email=t@t', ...a], { encoding: 'utf8' }).trim()
+    try {
+      g('init', '-q', '-b', 'main')
+      g('commit', '-q', '--allow-empty', '-m', 'one')
+      g('worktree', 'add', '-q', '-b', 'done', join(dir, 'wt'), 'HEAD')
+      execFileSync('git', ['-C', join(dir, 'wt'), '-c', 'user.name=t', '-c', 'user.email=t@t', 'commit', '-q', '--allow-empty', '-m', 'own'])
+      g('commit', '-q', '--allow-empty', '-m', 'two')
+      g('merge', '-q', '--no-ff', '-m', 'merge', 'done')
+      g('update-ref', 'refs/remotes/origin/main', 'HEAD')
+      const { result, onMainLine } = gitWorktrees.read(dir)
+      expect(mergedWorktreesToRemove(result.findings, dir, onMainLine)).toHaveLength(1)
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
   })
 })
