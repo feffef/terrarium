@@ -40,7 +40,7 @@ These are the owner's goals for the guide. A run builds toward them directly; a 
 
 ### Good next focuses
 
-1. **Re-read the Subjects not yet de-duplicated.** Git & GitHub, Installed skills, Deploy, the Walkthroughs and Claude Code have had this pass (2026-11-11). Last read on 2026-11-10 and not since: Agents, Hooks, Nuxt Content, Web standards, Verification, Nuxt & Vue. In House rules only *Protected paths* and *Ubiquitous language* changed; the other seven pages were read and left alone.
+1. **Re-read the Subjects not yet de-duplicated.** Git & GitHub, Installed skills, Deploy, the Walkthroughs and Claude Code have had this pass (2026-11-11). Last read on 2026-11-10 and not since: Agents, half of Hooks (*Hook-added context* and *Session transcripts*), Nuxt Content, Web standards, Verification, Nuxt & Vue. In House rules only *Protected paths* and *Ubiquitous language* changed; the other seven pages were read and left alone.
 2. **Decide how pages say "a person merges" a Human-only file.** Since the owner waiver (ADR-0004), an agent may merge one when the owner says so in the session. *Protected paths*, *Human-only* and the overview say so. These still state it flatly, each true as the default: *Path-specific rules*, *Decision records*, *Merge gate*, *Claude Code hooks* (twice), *Composite actions*, *Author trust*, *Cross-tenant reads* and *Asking an agent for a change*. Ask the owner whether to name the waiver there or keep one home.
 3. **Check the docs again for the pages whose claims the docs left silent** (the list under *Doc findings not acted on*), by reading the tool's source where the docs have no page.
 
@@ -55,7 +55,7 @@ These are the owner's goals for the guide. A run builds toward them directly; a 
 - The Claude Code permission-modes docs say a mod, not only a `PreToolUse` hook, can approve a `dontAsk` call; the page names the hook only.
 
 **Left over from the 2026-11-10 Agents and Hooks passes.** Fresh readers still found these; none is false.
-- *Claude Code hooks*: the lede says a hook runs "every time", yet a several-repository session runs none; the Human-only wiring is in both a Why and a What to watch bullet; "every matching call starts the command" is also on *Hook-added context*; `agent_id` is also on *Session transcripts*.
+- *Claude Code hooks*: the Human-only wiring is in both a Why and a What to watch bullet; the page uses *guard* and *hint* before saying what they are; "every matching call starts the command" is also on *Hook-added context*; `agent_id` is also on *Session transcripts*.
 - *Hook-added context*: the stale-push hint adds its fix every time while the page says a hint says things once; the page says so itself.
 - *Subagents*: the background guard is named in both In Terrarium and Why; the page can't say what depth 1 means (no docs text in the repo).
 - *Cloud sessions*: the lede says the other cases get "less", the list says "nothing".
@@ -79,6 +79,8 @@ These are the owner's goals for the guide. A run builds toward them directly; a 
 - *A bug report becomes work*: `wontfix (completed)` in the real case is not explained; stop 7 mixes the Trusted author with the Public requester. *A change goes live* stop 2 never says how long the pause is.
 - *MCP servers*: "the `.sh` filter" and the hint's trigger words are hard to follow. *Claude Code permissions* says the untrusted-workspace fact in three places. *Claude Code skills*: "importance and role are the Inventory's own judgement" is unclear.
 - *Path-specific rules*: the Human-only sentence is long and nested.
+- *Blocking hooks*: "hints and recorders", "pure check" and "shell pre-filters" are used before they are glossed. *Hook-added context* and *Session transcripts* were not re-read after the 2026-11-10 pass (the fresh reader for them never reported).
+- The `harvest` Skill's own text (`SKILL.md:3,8`) says a Routine runs it; the owner says none does yet. Fixing a Skill is outside this Skill's remit, so ask the owner.
 
 **Installed Skills.** *Engineering skills* could become part of *Installed skills* (`skill-pack/10.skill-packs`).
 

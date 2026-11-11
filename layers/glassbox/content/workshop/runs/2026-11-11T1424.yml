@@ -1,6 +1,6 @@
 session: session_013zxzeSgDqRuwZif7Rgt2MW
 mode: autonomous
-focus: "Two passes: (1) the Walkthroughs Subject, read by fresh readers, with two Walkthrough claims the memory page flagged checked against their sources; (2) the Claude Code Subject, whose 2026-11-10 leftovers the memory page still listed. Chosen because no open PR touches the guide, the Scout found no new topic, the memory page's top lead named the Walkthroughs as the one Subject no fresh reader had seen, and the owner started the run autonomous and asked to keep choosing focuses until the budget is spent. A third lead, adding the harvest Skill to the Routine list, was dropped after the owner said no Routine runs it yet."
+focus: "Four passes: (1) the Walkthroughs Subject, read by fresh readers, with two Walkthrough claims the memory page flagged checked against their sources; (2) the Claude Code Subject, whose 2026-11-10 leftovers the memory page still listed; (3) a new Lesson, Ideas and lessons learned, which the owner asked for mid-run after finding that Session logs never mentions ideas, learnings or Seedlings (they chose a House rules Lesson plus a mention in Session logs); (4) the first two Hooks pages. Chosen because no open PR touches the guide, the Scout found no new topic, the memory page's top lead named the Walkthroughs as the one Subject no fresh reader had seen, and the owner started the run autonomous and asked to keep choosing focuses until the budget is spent. A third lead, adding the harvest Skill to the Routine list, was dropped after the owner said no Routine runs it yet."
 changes:
   - walkthroughs/a-bug-report-becomes-work | Stop 3 says a Trusted issue the sweep labels ready-for-agent skips stop 5; stop 4 says the comment is shaped like an Agent Brief and drops the checkout and build words | readers could not tell which stops follow which author (auto-triage SKILL.md:46-49; triage SKILL.md:80; clear-backlog-explore.js:105). Wording only, so revision and publishedAt are kept
   - walkthroughs/a-change-goes-live | The real case says PR 1717 left the script that stop 3 describes | stop 3 read as contradicting the case (deploy/entrypoint.sh:52-62,149-150). Wording only
@@ -17,6 +17,12 @@ changes:
   - claude-code/50.mcp-servers | The registry is glossed; the hint is said not to be a guard | undefined term and a whole-server matcher beside Guards name tools (github-provenance-guard.ts:55-56; guards.md:36). Wording only
   - claude-code/20.path-scoped-rules | Summary rules and the gate agree, since a rule named for an ADR may skip paths; the two below references are told apart | the gate checks the name, not relevance (validate-adr-rules.ts:42-43). Wording only
   - claude-code/10.claude-md | Compacted is glossed; a missing blank line before What to watch for is added | an undefined term. Wording only
+  - terrarium-practice/45.ideas-and-lessons-learned | New Lesson in House rules on the learnings and ideas fields of a session log, how close-session asks for them, how harvest ranks them by recency, clusters them and files each passing cluster as a Seedling, and why a Trusted user decides; no Routine or cadence is claimed | the owner found that no page taught these (session.ts:167-178; harvest SKILL.md and harvest.ts; auto-triage SKILL.md:28-30; triage-labels.md:20-23). publishedAt set. Waits for the owner's merge
+  - terms/seedling | New term for the Seedling, pointing at the new Lesson | the new Lesson uses it (GLOSSARY.md:56-60)
+  - terrarium-practice/40.session-logs | A log may also hold optional ideas and learnings, with a link; Where next links the new Lesson in place of Scheduled tasks, which the body never mentions | Session logs said nothing about them. Wording only, so revision and publishedAt are kept
+  - terrarium-practice/80.self-improvement-loop | The Skill list has a Propose bullet for harvest; Where next links the new Lesson in place of Claude Code skills | the loop lists every Skill in it and the root glossary puts harvest in the loop (GLOSSARY.md:126-128). Wording only
+  - hooks/10.hooks | The lede says a loaded hook runs every time; PostToolUseFailure and SubagentStart join the event list; a Stop hook may block, and || true changes only the exit code; the repeated every-matching-call sentence is cut | the lede contradicted the several-repository case, and the Stop sentence had no basis in The concept (Claude Code hooks docs; harness-tag-stop.ts:42). Wording only
+  - hooks/20.blocking-hooks | Exit 2 is said to block with stderr as the reason; -p is glossed; the unsourced wrapper and commit details are cut from A crash blocks; the excerpt lead-in says which command is which | readers could not square exit 0 with exit 2, and two details had no source (Claude Code hooks docs; guards.md:48-52). Wording only
   - agents/40.scheduled-tasks | No change | a harvest bullet was written, then reverted because the owner said no Routine runs the Skill yet
 pagesRead:
   - walkthroughs/a-bug-report-becomes-work
@@ -34,3 +40,8 @@ pagesRead:
   - claude-code/40.permissions
   - claude-code/50.mcp-servers
   - terrarium-practice/80.self-improvement-loop
+  - hooks/10.hooks
+  - hooks/20.blocking-hooks
+  - hooks/30.hook-added-context
+  - hooks/40.session-transcripts
+  - terrarium-practice/45.ideas-and-lessons-learned
