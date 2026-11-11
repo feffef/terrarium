@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_013zxzeRpiY8hmJh8z3HELvr
 startedAt: 2026-11-11T06:56:42Z
-endedAt: 2026-11-11T07:05:29Z
+endedAt: 2026-11-11T07:06:20Z
 kind: delegated
 goal: Hide the duplicate "loaded by" pill on always-loaded subagent rules
 status: in-review
@@ -35,18 +35,24 @@ frictions:
   - description: "Broke tenant-glossary.md: edited layers/journal without reading layers/journal/GLOSSARY.md; the change added no prose, so it cost nothing."
     solution: Reading it at the first layer edit would have satisfied the rule; low impact for a pure template change.
     severity: nit
-durationSec: 526
+  - description: "Stop hook said a PR merged and demanded close-session while merge-pr.ts for #3051 was still waiting on CI; PR was open."
+    solution: Have the Stop hook confirm the merge (PR state or merge-pr.ts exit) before claiming one.
+    severity: nit
+durationSec: 578
 models:
-  claude-opus-5-5: 56
+  claude-opus-5-5: 71
 toolCounts:
-  Bash: 24
+  Bash: 28
   Edit: 1
   Read: 1
   SendUserFile: 1
-  ToolSearch: 2
+  ToolSearch: 4
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   Skill: 2
+  ReadNotifications: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__pull_request_read: 1
 filesEdited:
   - layers/journal/app/components/journal/SessionCard.vue
 rulesGlobal:
