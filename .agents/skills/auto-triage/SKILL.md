@@ -49,7 +49,7 @@ the repo **determines** a concrete, well-understood design. Escalate to
 as ADR-0022 defines them.
 
 An issue that would add or change what visitors or the owner see carries the
-`clear-backlog` §2's three questions as open questions in its comment.
+three questions of `clear-backlog` §2 as open questions in its comment.
 
 **Implementation choices a brief leaves open (ADR-0022) are not uncertainty.**
 When the reporter can supply the missing piece, prefer `needs-info` (`/triage`'s Triage Notes template)
