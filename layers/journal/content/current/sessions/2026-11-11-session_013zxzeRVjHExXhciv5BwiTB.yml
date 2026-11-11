@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRVjHExXhciv5BwiTB
 startedAt: 2026-11-11T12:10:23Z
-endedAt: 2026-11-11T13:29:34Z
+endedAt: 2026-11-11T13:33:09Z
 kind: interactive
 goal: Clear the backlog of agent-written Seedling and Regression issues
-status: in-review
-outcome: 8 PRs merged, 1 follow-up PR open, 11 issues closed or decided, 1 parked
-summary: "The owner invoked /clear-backlog with the scope \"all seedlings and regressions, even when ready-for-human\" (human-instructed). I resolved 11 open issues (#2752, #2996, #3068-#3076), ran the explore workflow (11 agents, all returned grill), spot-checked three agent claims against source, and grilled the owner in one round of 11 questions; the owner answered \"1a 2a 3b 4b 5a 6a 7a 8a 9a 10a 11a\" (human-instructed, including 5a, which differed from my pick of two facts) and later \"12a\" (close #3074). I recorded the answers on the issues (closed #2996 and #3074, relabelled #3068-#3076 ready-for-agent, left #2752 parked behind an open prune trial) and ran the build workflow for 9 branches (57 agents, about 4.6M tokens). #3074 returned needs-owner because the Lately component already shows unknown stems as plain text. Five branches came back ready-to-push and three hit the review cap. I pushed and opened PRs #3090-#3097 (agent-initiated, as ADR-0003 requires). For #3069 I reverted the builder's edit of the installed grilling Skill (ADR-0015; my brief had told it to touch that file) and moved the fact into environment-caveats.md; #3073's open finding held up against the zod types. On #3070 my hand fix (a static import in its new spec) broke CI under the unit project's isolate: false; I reproduced it with one worker, fixed it with vi.resetModules and pushed. Merged by me after green CI and a verdict comment: #3090, #3091, #3092, #3095, #3096, #3097; the owner merged the two Human-only PRs #3093 and #3094. #2752 stays open and parked behind the open prune trial; #3084 is open for triage. pnpm check:worktrees passes. At the owner's request I filed #3084 (the build workflow re-gates an already-gated HEAD) and, on their go-ahead, sent two reports about the explore run to the session that improved the explore brief. After the run the owner said the #3075 grilling was too vague for a UI change: the footer line showed on every page, not just the home page and the Journal. They then chose where it shows (Q13b), kept its look (Q14) and asked me to file the grilling gap as an issue (#3098, first mislabelled by me as a Seedling, then corrected at their direction, along with a glossary line that only harvest files Seedlings). I fixed the footer scope and the glossary in PR #3100 (agent-initiated follow-up to those instructions); it awaits CI."
+status: completed
+outcome: 9 PRs merged, 11 issues closed or decided, 1 parked, 2 new issues filed
+summary: "The owner invoked /clear-backlog with the scope \"all seedlings and regressions, even when ready-for-human\" (human-instructed). I resolved 11 open issues (#2752, #2996, #3068-#3076), ran the explore workflow (11 agents, all returned grill), spot-checked three agent claims against source, and grilled the owner in one round of 11 questions; the owner answered \"1a 2a 3b 4b 5a 6a 7a 8a 9a 10a 11a\" (human-instructed, including 5a, which differed from my pick of two facts) and later \"12a\" (close #3074). I recorded the answers on the issues (closed #2996 and #3074, relabelled #3068-#3076 ready-for-agent, left #2752 parked behind an open prune trial) and ran the build workflow for 9 branches (57 agents, about 4.6M tokens). #3074 returned needs-owner because the Lately component already shows unknown stems as plain text. Five branches came back ready-to-push and three hit the review cap. I pushed and opened PRs #3090-#3097 (agent-initiated, as ADR-0003 requires). For #3069 I reverted the builder's edit of the installed grilling Skill (ADR-0015; my brief had told it to touch that file) and moved the fact into environment-caveats.md; #3073's open finding held up against the zod types. On #3070 my hand fix (a static import in its new spec) broke CI under the unit project's isolate: false; I reproduced it with one worker, fixed it with vi.resetModules and pushed. Merged by me after green CI and a verdict comment: #3090, #3091, #3092, #3095, #3096, #3097; the owner merged the two Human-only PRs #3093 and #3094. #2752 stays open and parked behind the open prune trial; #3084 is open for triage. pnpm check:worktrees passes. At the owner's request I filed #3084 (the build workflow re-gates an already-gated HEAD) and, on their go-ahead, sent two reports about the explore run to the session that improved the explore brief. After the run the owner said the #3075 grilling was too vague for a UI change: the footer line showed on every page, not just the home page and the Journal. They then chose where it shows (Q13b), kept its look (Q14) and asked me to file the grilling gap as an issue (#3098, first mislabelled by me as a Seedling, then corrected at their direction, along with a glossary line that only harvest files Seedlings). I fixed the footer scope and the glossary in PR #3100 (agent-initiated follow-up to those instructions) and merged it after green CI and a verdict comment."
 prs:
   - "3090"
   - "3091"
@@ -148,25 +148,25 @@ frictions:
   - description: Chose not to read the ADRs two edit hooks asked for (0006, 0008, 0016, 0025) on a one-prop footer change, judging them irrelevant.
     solution: Have the adr-read-hint skip a change that touches no routing or data-reading line.
     severity: nit
-durationSec: 4751
+durationSec: 4966
 models:
-  claude-sonnet-5-5: 366
+  claude-sonnet-5-5: 381
 toolCounts:
-  Bash: 81
+  Bash: 84
   Read: 22
   Workflow: 3
   ToolSearch: 3
   PushNotification: 2
-  mcp__github__add_issue_comment: 19
+  mcp__github__add_issue_comment: 20
   mcp__github__issue_write: 14
   Grep: 5
   mcp__github__issue_read: 1
-  ReadNotifications: 10
+  ReadNotifications: 12
   mcp__claude-code-remote__send_message: 2
-  Edit: 14
+  Edit: 17
   mcp__github__create_pull_request: 9
   mcp__claude-code-remote__subscribe_pr_activity: 9
-  Skill: 7
+  Skill: 8
   Write: 2
   mcp__github__list_pull_requests: 1
   mcp__github__pull_request_read: 4
@@ -2085,14 +2085,14 @@ subagents:
     durationSec: 15
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 0.4
+    tokenShare: 0.3
   - type: workflow-subagent
     task: build clear-backlog/3069-environment-facts
     model: claude-sonnet-5-5
     durationSec: 783
     toolCalls: 17
     modelCalls: 13
-    tokenShare: 2.1
+    tokenShare: 2
   - type: workflow-subagent
     task: fix clear-backlog/3070-ui-doc-gaps r2
     model: claude-sonnet-5-5
@@ -2162,7 +2162,7 @@ subagents:
     durationSec: 251
     toolCalls: 16
     modelCalls: 12
-    tokenShare: 1.1
+    tokenShare: 1
   - type: workflow-subagent
     task: fix clear-backlog/3073-log-strip-fields r2
     model: claude-sonnet-5-5
@@ -2183,7 +2183,7 @@ subagents:
     durationSec: 1227
     toolCalls: 48
     modelCalls: 33
-    tokenShare: 3.8
+    tokenShare: 3.7
   - type: workflow-subagent
     task: Standards clear-backlog/3072-glassbox-skip-shifted r3
     model: claude-sonnet-5-5
@@ -2197,14 +2197,14 @@ subagents:
     durationSec: 96
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 0.4
+    tokenShare: 0.3
   - type: workflow-subagent
     task: build clear-backlog/3070-ui-doc-gaps
     model: claude-sonnet-5-5
     durationSec: 830
     toolCalls: 22
     modelCalls: 16
-    tokenShare: 2.5
+    tokenShare: 2.4
   - type: workflow-subagent
     task: Spec clear-backlog/3069-environment-facts r3
     model: claude-sonnet-5-5
@@ -2232,7 +2232,7 @@ subagents:
     durationSec: 559
     toolCalls: 14
     modelCalls: 12
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: workflow-subagent
     task: Standards clear-backlog/3073-log-strip-fields r2
     model: claude-sonnet-5-5
@@ -2274,7 +2274,7 @@ subagents:
     durationSec: 262
     toolCalls: 19
     modelCalls: 14
-    tokenShare: 1.7
+    tokenShare: 1.6
   - type: workflow-subagent
     task: fix clear-backlog/3073-log-strip-fields r1
     model: claude-sonnet-5-5
@@ -2288,14 +2288,14 @@ subagents:
     durationSec: 19
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 0.4
+    tokenShare: 0.3
   - type: workflow-subagent
     task: build clear-backlog/3073-log-strip-fields
     model: claude-sonnet-5-5
     durationSec: 1257
     toolCalls: 48
     modelCalls: 32
-    tokenShare: 4.1
+    tokenShare: 4
   - type: workflow-subagent
     task: Standards clear-backlog/3070-ui-doc-gaps r2
     model: claude-sonnet-5-5
@@ -2309,14 +2309,14 @@ subagents:
     durationSec: 22
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 0.5
+    tokenShare: 0.4
   - type: workflow-subagent
     task: gate clear-backlog/3068-resume-section
     model: claude-sonnet-5-5
     durationSec: 111
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 0.4
+    tokenShare: 0.3
   - type: workflow-subagent
     task: Spec clear-backlog/3075-footer-sha r2
     model: claude-sonnet-5-5
@@ -2351,7 +2351,7 @@ subagents:
     durationSec: 15
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: workflow-subagent
     task: Standards clear-backlog/3070-ui-doc-gaps r1
     model: claude-sonnet-5-5
@@ -2414,14 +2414,14 @@ subagents:
     durationSec: 964
     toolCalls: 10
     modelCalls: 9
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: build clear-backlog/3076-ui-rule-move
     model: claude-sonnet-5-5
     durationSec: 295
     toolCalls: 15
     modelCalls: 13
-    tokenShare: 1.1
+    tokenShare: 1
   - type: workflow-subagent
     task: gate clear-backlog/3071-survey-closed-by
     model: claude-sonnet-5-5
@@ -2442,14 +2442,14 @@ subagents:
     durationSec: 428
     toolCalls: 11
     modelCalls: 8
-    tokenShare: 1
+    tokenShare: 0.9
   - type: workflow-subagent
     task: Spec clear-backlog/3073-log-strip-fields r2
     model: claude-sonnet-5-5
     durationSec: 22
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 0.5
+    tokenShare: 0.4
   - type: workflow-subagent
     task: Spec clear-backlog/3069-environment-facts r2
     model: claude-sonnet-5-5
@@ -2463,7 +2463,7 @@ subagents:
     durationSec: 62
     toolCalls: 10
     modelCalls: 7
-    tokenShare: 0.8
+    tokenShare: 0.7
   - type: workflow-subagent
     task: Spec clear-backlog/3075-footer-sha r1
     model: claude-sonnet-5-5
@@ -2498,14 +2498,14 @@ subagents:
     durationSec: 83
     toolCalls: 23
     modelCalls: 12
-    tokenShare: 1.8
+    tokenShare: 1.7
   - type: workflow-subagent
     task: "triage #2996"
     model: claude-sonnet-5-5
     durationSec: 73
     toolCalls: 13
     modelCalls: 6
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: workflow-subagent
     task: "triage #3072"
     model: claude-sonnet-5-5
@@ -2526,7 +2526,7 @@ subagents:
     durationSec: 85
     toolCalls: 19
     modelCalls: 10
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: "triage #3069"
     model: claude-sonnet-5-5
@@ -2540,7 +2540,7 @@ subagents:
     durationSec: 73
     toolCalls: 13
     modelCalls: 9
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: workflow-subagent
     task: "triage #2752"
     model: claude-sonnet-5-5
