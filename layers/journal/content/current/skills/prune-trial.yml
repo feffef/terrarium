@@ -3,11 +3,11 @@ category: platform-operation
 importance: routine
 gist: Tries cutting a rule to see whether anyone actually needed it.
 role: >-
-  The only Skill whose whole job is subtraction, run by a scheduled Routine:
-  each run cuts one problem's instructions to their goal and leaves the cut
-  standing as a trial; later sessions' frictions decide whether the prose was
-  load-bearing. Its PR merges like any agent's, except that a trial changing an ADR or its
-  summary rule starts only with a Trusted user and is merged by a human.
+  Subtraction as a scheduled Routine: each run cuts one problem's instructions
+  to their goal and leaves the cut standing as a trial; later sessions'
+  frictions decide whether the prose was load-bearing. Merges like any agent's
+  PR, except a trial changing an ADR or its summary rule starts only with a
+  Trusted user and a human merges it.
 observations:
   - date: "2026-10-02"
     note: >-

@@ -45,10 +45,8 @@ the repo **determines** a concrete, well-understood design. Escalate to
 `ready-for-human` only on a genuine judgment call or genuine design uncertainty,
 as ADR-0022 defines them.
 
-**Ordinary implementation latitude is not uncertainty.** The impl choices every
-Agent Brief deliberately leaves open — naming, which helper, exact wording — stay
-with the implementing agent; never escalate for them. When the reporter can
-supply the missing piece, prefer `needs-info` (`/triage`'s Triage Notes template)
+**Implementation choices a brief leaves open (ADR-0022) are not uncertainty.**
+When the reporter can supply the missing piece, prefer `needs-info` (`/triage`'s Triage Notes template)
 over `ready-for-human`. But a dependency major bump with no stated concrete
 benefit, or a bug where which behaviour is right is a policy choice, is a judgment
 call: `ready-for-human`.
