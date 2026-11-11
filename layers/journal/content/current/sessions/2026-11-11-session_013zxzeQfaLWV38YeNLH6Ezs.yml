@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQfaLWV38YeNLH6Ezs
 startedAt: 2026-11-11T13:15:09Z
-endedAt: 2026-11-11T13:23:04Z
+endedAt: 2026-11-11T13:27:33Z
 kind: autonomous
 goal: Scheduled prune trial of agent instructions
-status: in-review
-outcome: Judged two trials (both hold) and opened PR 3099 with a new blocked-hosts trial
-summary: Scheduled /prune-trial run, agent-initiated by the schedule; no human prompt. Judged and deleted the close-session trial (0/57 after vs 3/131 before on the bypass entry; the one major Friction predates the landing) and the dispatch-subagents trial (guard-deny share flat, brief Frictions unrelated). A search subagent ranked failed-prose candidates; I chose the proxy-blocked hosts bullets in environment-caveats.md because network-start.ts now holds the host list, merged three bullets into one (-3 net), and a Sonnet probe pinned to the post-prune SHA answered correctly. code-review and gate:scoped passed; PR 3099 opened and subscribed, awaiting CI and merge.
+status: completed
+outcome: Judged two trials (both hold) and merged PR 3099 opening a blocked-hosts trial
+summary: Scheduled /prune-trial run, agent-initiated by the schedule; no human prompt. Judged and deleted the close-session trial (0/57 after vs 3/131 before on the bypass entry; the one major Friction predates the landing) and the dispatch-subagents trial (guard-deny share flat, brief Frictions unrelated). A search subagent ranked failed-prose candidates; I chose the proxy-blocked hosts bullets in environment-caveats.md because network-start.ts now holds the host list, merged three bullets into one (-3 net), and a Sonnet probe pinned to the post-prune SHA answered correctly. code-review and gate:scoped passed; PR 3099 opened and subscribed, merged after green CI.
 prs:
   - "3099"
 docsRead:
@@ -42,17 +42,20 @@ frictions:
   - description: Read dispatch-subagents only after planning the brief; no guard hit, but the order was wrong.
     solution: Read the Skill before drafting any subagent brief.
     severity: nit
-durationSec: 475
+durationSec: 744
 models:
-  claude-sonnet-5-5: 62
+  claude-sonnet-5-5: 76
 toolCounts:
-  Bash: 19
+  Bash: 23
   Read: 6
   Agent: 4
-  Skill: 3
+  Skill: 4
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - .agents/prune-trials.yml
   - docs/agents/environment-caveats.md
@@ -208,28 +211,28 @@ subagents:
     durationSec: 49
     toolCalls: 9
     modelCalls: 8
-    tokenShare: 14.2
+    tokenShare: 11.5
   - type: general-purpose
     task: Probe pruned caveats on Sonnet
     model: sonnet
     durationSec: 8
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 5
+    tokenShare: 4.1
   - type: general-purpose
     task: Standards review of prune diff
     model: sonnet
     durationSec: 22
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 6.8
+    tokenShare: 5.5
   - type: general-purpose
     task: Spec review of prune diff
     model: sonnet
     durationSec: 18
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 7.2
+    tokenShare: 5.9
 gitBranch: claude/practical-rubin-xva6nk
 entrypoint: remote_trigger
 cliVersion: 2.1.322
