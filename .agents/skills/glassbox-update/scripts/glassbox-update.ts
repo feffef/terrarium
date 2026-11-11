@@ -20,6 +20,8 @@ export interface PageUpdate {
   changedFiles: string[]
   shifted: { path: string; from: string; to: string }[]
   edited: { path: string; lines: string }[]
+  /** False when every changed path is cited only by line ranges the diff left byte-identical. */
+  needsReader: boolean
 }
 
 export interface VersionChange {
@@ -89,7 +91,7 @@ export function glassboxUpdate(cwd = root, { main: mainRef = 'origin/main', writ
       const after = entries(main)
       return [...new Set([...before, ...after])].filter((f) => before.has(f) !== after.has(f)).sort()
     })
-    const update: PageUpdate = { space, file, revision, changedPaths, changedFiles, shifted: [], edited: [] }
+    const update: PageUpdate = { space, file, revision, changedPaths, changedFiles, shifted: [], edited: [], needsReader: false }
     const shifts = new Map<string, LineRange>()
     const seen = new Set<string>()
     for (const ref of refs.files) {
@@ -105,6 +107,7 @@ export function glassboxUpdate(cwd = root, { main: mainRef = 'origin/main', writ
         update.shifted.push({ path: ref.path, from, to: rangeText(moved) })
       }
     }
+    update.needsReader = update.edited.length > 0 || changedPaths.some((p) => refs.files.some((r) => r.path === p && !r.lines))
     if (changedPaths.length) report.pages.push(update)
 
     for (const id of new Set(refs.terms)) {

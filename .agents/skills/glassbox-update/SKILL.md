@@ -43,8 +43,10 @@ that one commit, never a later fetch.
    two sets, each page by its stem (its path under
    `layers/glassbox/content/guide/pages/` without `.md`, `index` for the
    overview):
-   - **Flagged pages:** only the claims that cite a file changed since the
-     page's step-1 `revision`.
+   - **Flagged pages** with `needsReader` true: only the claims that cite a
+     file changed since the page's step-1 `revision`. A flagged page with
+     `needsReader` false (every changed path cited only by shifted ranges,
+     whose lines are unchanged) gets no reader, unless it is in the rotation.
    - **Rotation:** the 5 pages whose `checked` in
      `layers/glassbox/content/workshop/checks/update.yml` is oldest, a page
      with none oldest of all, ties by page path. Each gets a **full
