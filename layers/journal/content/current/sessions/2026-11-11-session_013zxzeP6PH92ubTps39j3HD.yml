@@ -1,0 +1,103 @@
+schemaVersion: 1
+session: session_013zxzeP6PH92ubTps39j3HD
+startedAt: 2026-11-11T16:40:30Z
+endedAt: 2026-11-11T16:44:14Z
+kind: autonomous
+goal: Harvest learnings from recent session logs into Seedlings
+status: completed
+outcome: "No Seedling filed: the checked learning clusters were already documented, tracked or too thin."
+summary: "Agent-initiated scheduled harvest run with the argument learnings (no human instruction beyond the Skill). Extracted 204 unharvested learnings from the last 28 days, read them all, and screened product clusters first (Nuxt Content and CSS gotchas, the Routine costs page, Glass Box page checks) and then workflow clusters (Routine existence not readable from the repo, hand-back mechanics, gate abort on tree change, Stop-hook nag). Each was dropped on the Skill's tests: the Atlas --sig-1 rebind and the zone-less datetime fact already sit in code comments at the place they matter (Atlas NotFound component, Tinkerfund clock.ts); Glass Box page-check gaps and handback guidance are already open Seedlings (3074, 3068); the gate-abort and Stop-hook nag are covered by Friction Ledger entries or a prune trial; the Routine cadence cluster overlaps open issues 813 and 834 and a Ledger entry. What remains (symlinked Space folders, zero-padded filename prefixes, Lightning CSS token scope, Shiki default) are single-session doc bullets for a doc whose rule loads are rated not useful (issue 1937), so I filed nothing. I did not exhaustively check all 30 clusters; I stopped after the strongest candidates in each label failed."
+prs: []
+docsRead:
+  - path: .claude/skills/harvest/body-template.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: harvest
+    reason: (invoked as a slash command)
+frictions:
+  - description: Piped harvest list through head -300, truncating it at entry 175 of 204; I read a partial list and had to rerun to a file.
+    solution: The Skill's step 1 could say to write list output to a file and read it whole.
+    severity: minor
+  - description: Issue listing carries no state or close reason, so matching closed issues needed extra reads; I could not tell if 813, 834, 2175 were closed.
+    solution: list-open-issues.ts --closed should include state and state_reason fields.
+    severity: minor
+durationSec: 223
+models:
+  claude-sonnet-5-5: 40
+toolCounts:
+  Bash: 16
+  Read: 3
+  Skill: 2
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .claude/skills/harvest/body-template.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .claude/skills/harvest/body-template.md
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/adr-0006.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/adr-0016.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/adr-0001.md
+        via: hint
+      - rule: .claude/rules/adr-0018.md
+        via: hint
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0003.md
+        value: backed
+        why: filed nothing without approval
+      - path: docs/agents/tenant-layers.md
+      - path: docs/agents/mdc-when-to-use.md
+gitBranch: ccr-b6694994-xb7qi2
+entrypoint: remote_mobile
+cliVersion: 2.1.322
+learnings:
+  - list-open-issues.ts output carries only labels, number, title and updatedAt, so a title match cannot show whether the issue is closed as completed or not planned.
+landedBy: Stop
