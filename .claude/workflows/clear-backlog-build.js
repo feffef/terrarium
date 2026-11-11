@@ -147,8 +147,7 @@ async function reviewBranch(built, b) {
     const toFix = all.filter(f => f.worthFixing)
     out.judgementCalls = all.filter(f => !f.worthFixing)
     if (!toFix.length) {
-      // After a fix round, or a build that did not report a pass, a stale or unbacked gatePassed: true
-      // has happened once (#2523), so gate again. A clean round 1 trusts the build's own gate: CI decides (#3084).
+      // A stale or unbacked gatePassed: true after a fix round happened once (#2523); a clean round 1 trusts the build gate, CI decides (#3084).
       if (round === 1 && built.gatePassed === true) return { ...out, status: 'ready-to-push' }
       const gate = await agent(gatePrompt(b, out.worktree), { label: `gate ${b.name}`, phase: 'Review', schema: WORK, ...SONNET })
       if (!gate || !gate.gatePassed) return { ...out, status: 'failed', reason: `final gate: ${gate ? gate.reason || 'gate:scoped did not pass' : 'gate agent returned nothing'}` }
