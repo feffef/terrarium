@@ -68,13 +68,11 @@ on any pick you could not verify. Where its format differs, this list wins:
   then the options, your pick and why. Flag a pick you changed from the
   triage agent's. The owner never needs to open a ticket.
 - **An issue that adds or changes what visitors or the owner see** gets these
-  questions before its pick (`CLAUDE.md`'s UI rule says why): (1) which pages
-  or Spaces show it, naming each from a grep of the touched component's
-  callers, (2) what it displays and what each value follows, (3) the look,
-  described in words for approval. The pick follows the answers. If the owner
-  says the design must be seen first, prototype it with the `prototype` Skill
-  in this session after the grilling and before §3, and build from what they
-  approve.
+  questions before its pick (`CLAUDE.md`, "Ask before building"): (1) which
+  pages or Spaces show it, (2) what it displays and what each value follows,
+  (3) the look, described in words for approval. The pick follows the answers.
+  If a concrete design is essential, offer a prototype (`prototype` Skill, in
+  this session, after the grilling and before §3).
 - Put the most important questions first, and end with "accept my picks for
   the rest".
 - Ask only about issues in §1's set; the ones the sweep skipped wait for a
