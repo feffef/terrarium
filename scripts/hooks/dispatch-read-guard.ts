@@ -32,13 +32,36 @@ export const formatGuardMessage = () =>
   `Blocked by the ${LABEL} (${REF}): read \`${DOC}\` first (CLAUDE.md: "Before you write a subagent brief, or resume ` +
   'a stopped subagent"), then retry this call unchanged if the Skill shows it was right.'
 
+// Issue #2996: a brief sent with a template slot unfilled. `Agent` carries the
+// brief in `prompt`, `SendMessage` in `message`. A `Workflow` brief is filled
+// inside its script at run time, so it cannot be checked here. `{NAME}` is
+// narrow (caps and underscores, no `$` before it) to skip JSON, code and
+// template literals.
+const PLACEHOLDER = /@@\w+@@|(?<!\$)\{[A-Z]+(?:_[A-Z]+)*\}/
+const BRIEF_FIELD: Record<string, string> = { Agent: 'prompt', SendMessage: 'message' }
+
+export function unfilledPlaceholder(toolName: unknown, toolInput: unknown): string | null {
+  const text = prop(toolInput, BRIEF_FIELD[toolName as string] ?? '')
+  return typeof text === 'string' ? (PLACEHOLDER.exec(text)?.[0] ?? null) : null
+}
+
+export const formatPlaceholderMessage = (found: string) =>
+  `Blocked by the ${LABEL} (issue #2996): the brief still holds the unfilled placeholder \`${found}\`. ` +
+  'Fill it from its source, then retry.'
+
 const decide = (payload: unknown) => shouldDeny(prop(payload, 'agent_id'), readTranscript(prop(payload, 'transcript_path') as string | undefined))
+const decideMessage = (payload: unknown) => {
+  if (decide(payload)) return formatGuardMessage()
+  const found = unfilledPlaceholder(prop(payload, 'tool_name'), prop(payload, 'tool_input'))
+  return found ? formatPlaceholderMessage(found) : null
+}
 
 function main(): void {
   const read = readHookPayload()
   if (read.kind === 'none') return
   if (read.kind !== 'ok') return denyUninspectable(LABEL, REF, 'the hook payload was unreadable or named no tool')
-  if (decide(read.payload)) process.stdout.write(JSON.stringify(buildDenyOutput(formatGuardMessage())))
+  const message = decideMessage(read.payload)
+  if (message) process.stdout.write(JSON.stringify(buildDenyOutput(message)))
 }
 
 function dryRun(argv: string[]): void {
