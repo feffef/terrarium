@@ -1,13 +1,13 @@
 name: dependabot-sweep
 category: platform-operation
 importance: supporting
-gist: Reviews every open Dependabot PR daily; merges safe bumps, triages the rest.
+gist: Reacts when a Dependabot PR opens; merges safe bumps, triages the rest.
 role: >-
-  Designed as a scheduled daily sweep (user-invoked only, model-invocation
-  disabled) over every open Dependabot PR: merges a safe minor/patch bump
-  itself, leaves a major for a human, with a written risk/benefit case in a
-  `needs-triage` issue (opened or commented on). Opens no branch,
-  edits no file.
+  Runs when a Dependabot PR is opened, with no fixed schedule (user-invoked
+  only, model-invocation disabled), over every open Dependabot PR: merges a
+  safe minor/patch bump itself, leaves a major for a human, with a written
+  risk/benefit case in a `needs-triage` issue (opened or commented on). Opens
+  no branch, edits no file.
 observations:
   - date: "2026-10-20"
     note: >-
