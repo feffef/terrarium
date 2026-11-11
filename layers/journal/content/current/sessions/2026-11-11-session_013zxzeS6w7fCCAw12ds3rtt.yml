@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeS6w7fCCAw12ds3rtt
 startedAt: 2026-11-11T07:42:31Z
-endedAt: 2026-11-11T07:56:59Z
+endedAt: 2026-11-11T08:02:02Z
 kind: interactive
 goal: Make the audit-skills orphan check cheap and cover issue-only sessions
-status: in-review
-outcome: "PR 3054 open: orphan scan reads only the last 7 days of PRs and issues; gate green, code review done, waits for a human merge"
-summary: 'The owner asked how expensive the orphan scan over 2000+ closed PRs is, proposed limiting it to 7 days (the audit runs daily) and adding issues updated in the last 7 days to catch sessions that only filed issues. I read the code, gave a cost estimate (about 21 requests per run, growing), and asked three questions first; the owner confirmed the 7-day window, said an old issue commented on today should count, and said the stale RESOLVED_ORPHANED_SESSIONS map can stay as long as it does not grow. Human-instructed: the 7-day window, the issue source, leaving the map alone, and "continue with code review". Agent-initiated: building it without asking again, dropping the opt-in full-scan flag (nothing needs it), the sort=updated early stop, putting the cutoff in orphanScan, the originSession helper and type rename from review findings, and opening the PR (ADR-0003 standing rule; the owner had not asked for a PR explicitly). Both review axes found no rule violations; the untested live GitHub reader is the reason the PR says it needs a human merge, which I first misattributed to a Human-only path before checking the list. A live run showed 151 merged PRs and 63 issues in the window with no orphans. Open: no test covers readOrphanCandidates itself (early stop, failure path); the orphan window also shrinks with --days N.'
+status: completed
+outcome: "PR 3054 merged by the owner: the orphan scan reads only the last 7 days of PRs and issues"
+summary: 'The owner asked how expensive the orphan scan over 2000+ closed PRs is, proposed limiting it to 7 days (the audit runs daily) and adding issues updated in the last 7 days to catch sessions that only filed issues. I read the code, gave a cost estimate (about 21 requests per run, growing), and asked three questions first; the owner confirmed the 7-day window, said an old issue commented on today should count, and said the stale RESOLVED_ORPHANED_SESSIONS map can stay as long as it does not grow. Human-instructed: the 7-day window, the issue source, leaving the map alone, "continue with code review", and the merge itself (the owner merged the PR). Agent-initiated: building it without asking again, dropping the opt-in full-scan flag (nothing needs it), the sort=updated early stop, putting the cutoff in orphanScan, the originSession helper and type rename from review findings, and opening the PR (ADR-0003 standing rule; the owner had not asked for a PR explicitly). Both review axes found no rule violations; the untested live GitHub reader is the reason the PR said it needed a human merge, which I first misattributed to a Human-only path before checking the list. A live run showed 151 merged PRs and 63 issues in the window with no orphans. Still open after the merge: no test covers readOrphanCandidates itself (early stop, failure path), and the orphan window also shrinks with --days N.'
 prs:
   - "3054"
 docsRead:
@@ -60,22 +60,24 @@ frictions:
   - description: Ended a turn with the review-fix commit unpushed while the gate ran, so the Stop hook asked me to push; costing one extra turn.
     solution: Push the review-fix commit right after committing; a push does not disturb a running gate.
     severity: nit
-durationSec: 867
+durationSec: 1171
 models:
-  claude-sonnet-5-5: 136
+  claude-sonnet-5-5: 162
 toolCounts:
   Grep: 9
   Read: 16
-  Bash: 23
+  Bash: 26
   Edit: 17
-  Write: 4
-  Skill: 4
+  Write: 5
+  Skill: 5
   Glob: 2
   Agent: 2
   mcp__github__list_pull_requests: 1
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 4
+  mcp__github__pull_request_read: 4
 filesEdited:
   - scripts/session/audit-skills.ts
   - tests/unit/audit-skills.spec.ts
@@ -198,13 +200,13 @@ subagents:
     durationSec: 20
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 10.2
+    tokenShare: 8
   - type: general-purpose
     task: Spec review of orphan-scan diff
     durationSec: 28
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 11.1
+    tokenShare: 8.7
 gitBranch: claude/jolly-mayer-47n3no
 entrypoint: remote
 cliVersion: 2.1.322
