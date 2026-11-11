@@ -1,0 +1,686 @@
+schemaVersion: 1
+session: session_013zxzeS6uNt5yvnz5LyUCCe
+startedAt: 2026-11-11T18:55:04Z
+endedAt: 2026-11-11T19:25:44Z
+kind: interactive
+goal: Clear the open issue backlog and harden the explore workflow
+status: in-review
+outcome: One issue built into an open PR; the explore stub fix is committed and pushed but its PR is not open yet
+summary: "Ran /clear-backlog (owner-started). The sweep resolved 4 issues: #3084 plus three date-gated checks (#3021, #3017, #2992) that the explore workflow confirmed as blocked until 2026-11-12 and 2026-11-18. The #3084 explore agent returned a stub (grill with no question, empty sourcesRead, background \"x\"), so I read the issue and the script myself and grilled the owner. The owner overrode my pick (keep the unconditional gate) and chose to trust the build agent's gate on a clean first round; I checked the Friction ledger first, as they asked. The build workflow made the change in a worktree, hit its review cap on two small findings, and I fixed one by hand and refused the other (a Glass Box page pinned to an older revision). PR 3108 is open and subscribed, gate passed. At the owner's request I then found why the stub appeared (a rejected StructuredOutput re-sent with filler that passed the schema) and committed a fix with tests to this session's branch; the owner asked for it (human-instructed). Also at the owner's request I messaged the last three clear-backlog sessions and a scheduled session: two web sessions and one more replied by send_message, the scheduled glassbox-curate session has no send_message tool (verified in its events), so its answer is read from its final reply. Still open: the stub-fix PR, the docs update for the send_message workaround (owner asked; not yet written), merging PR 3108 after CI, and the owner's other open question about stub frequency, which three sessions' data could not settle."
+prs:
+  - "3108"
+docsRead:
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/frictions/build-workflow-gate-not-final.yml
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (read before editing)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: (no reason given)
+  - path: .agents/skills/inspect-session/SKILL.md
+    reason: (read before editing)
+  - path: docs/adr/0005-skill-model.md
+    reason: (no reason given)
+  - path: .agents/skills/triage/SKILL.md
+    reason: (no reason given)
+  - path: .claude/workflows/clear-backlog-build.js
+    reason: (read before editing)
+  - path: .agents/skills/implement/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/code-review/SKILL.md
+    reason: (no reason given)
+  - path: tests/unit/workflow-scripts.spec.ts
+    reason: (read before editing)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: layers/glassbox/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (read before editing)
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: (no reason given)
+skillsUsed:
+  - name: clear-backlog
+    reason: the run itself
+  - name: grilling
+    reason: "one list for #3084"
+  - name: inspect-session
+    reason: read the scheduled session's events in a subagent
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: code-review
+    reason: (no reason given)
+frictions:
+  - description: Launched the explore Workflow before reading dispatch-subagents; the dispatch-read guard denied it and I retried unchanged after reading.
+    solution: clear-backlog section 1 could name dispatch-subagents as a read before running the explore workflow.
+    severity: nit
+  - description: "Accepted an explore agent's writes: [] as true; the agent had posted a comment and relabelled the issue, found only later in the transcript."
+    solution: The explore script could compare the writes list with the issue's events, or the orchestrator check events before trusting an empty writes.
+    severity: minor
+  - description: "The #3084 explore agent re-sent a rejected StructuredOutput with filler (background x, empty sources) that passed the schema, dropping its real findings."
+    solution: Schema minimums plus a script check that re-runs a thin result once; committed on this branch.
+    severity: moderate
+  - description: Stated that the web sessions had no messaging tool, inferred from get_session turn_handoff.tools, before checking; one of them then replied by send_message.
+    solution: Verify a tool's availability from the session's own events before explaining a missing reply.
+    severity: minor
+  - description: "Replaced #3084's whole label set with the single ready-for-agent label, dropping enhancement that the triage agent had added."
+    solution: Read the issue's current labels and pass the full final set, as github-integration.md says.
+    severity: nit
+  - description: A compound cd into a worktree moved the session's working directory; later commands needed absolute paths and git -C.
+    solution: Use git -C and absolute paths for a worktree; never cd in a compound command.
+    severity: nit
+  - description: First test edit failed on a wrong end-of-file assertion and left the spec file with a dangling describe, a parse error until I redid it.
+    solution: Run the spec right after each scripted edit; apply edits with Edit instead of a Python rewrite.
+    severity: nit
+durationSec: 1840
+models:
+  claude-sonnet-5-5: 244
+toolCounts:
+  Bash: 64
+  Read: 12
+  Workflow: 3
+  ToolSearch: 2
+  Skill: 5
+  PushNotification: 1
+  Grep: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__issue_write: 1
+  mcp__claude-code-remote__get_session: 4
+  mcp__claude-code-remote__send_message: 4
+  ReadNotifications: 3
+  mcp__claude-code-remote__list_triggers: 1
+  mcp__claude-code-remote__list_events: 1
+  Agent: 3
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Write: 1
+  Edit: 2
+filesEdited:
+  - docs/agents/environment-caveats.md
+  - .agents/skills/inspect-session/SKILL.md
+  - .claude/workflows/clear-backlog-build.js
+  - .agents/skills/clear-backlog/SKILL.md
+  - .claude/workflows/clear-backlog-explore.js
+  - tests/unit/workflow-scripts.spec.ts
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0022.md
+adrHints:
+  - adr: 27
+    via: path
+    readAfter: true
+    by: main
+  - adr: 29
+    via: path
+    readAfter: true
+    by: main
+  - adr: 5
+    via: path
+    readAfter: true
+    by: main
+  - adr: 5
+    via: path
+    readAfter: true
+    by: subagent
+  - adr: 22
+    via: path
+    readAfter: true
+    by: subagent
+  - adr: 27
+    via: path
+    readAfter: true
+    by: subagent
+docsReadBySubagents:
+  - .agents/skills/triage/SKILL.md
+  - .agents/skills/clear-backlog/SKILL.md
+  - .agents/skills/implement/SKILL.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+  - .agents/skills/code-review/SKILL.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0022.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/adr-0020.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/github-integration.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/journal/content/current/frictions/build-workflow-gate-not-final.yml
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: native
+        trigger: docs/adr/0027-prune-trials.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: docs/adr/0027-prune-trials.md
+    reported:
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: opened PR and subscribed
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: gate and review before PR
+      - path: .claude/rules/adr-0017.md
+        value: backed
+      - path: .claude/rules/adr-0022.md
+        value: backed
+      - path: .claude/rules/adr-0005.md
+        value: backed
+      - path: .claude/rules/glassbox-content.md
+        value: steered
+        why: left pinned Glass Box page alone
+      - path: docs/agents/pr-workflow.md
+      - path: docs/agents/github-integration.md
+      - path: .agents/skills/dispatch-subagents/SKILL.md
+      - path: .agents/skills/inspect-session/SKILL.md
+  - by: general-purpose
+    subagent: 0
+    answered: false
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported: []
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0030.md
+        via: native
+        trigger: .claude/rules/adr-0005.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: .claude/rules/adr-0005.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: .claude/rules/adr-0005.md
+      - rule: .claude/rules/adr-0005.md
+        via: read
+    reported:
+      - path: .claude/rules/adr-0005.md
+        value: backed
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0005.md
+        value: backed
+  - by: workflow-subagent
+    subagent: 3
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .claude/rules/adr-0017.md
+        value: backed
+  - by: workflow-subagent
+    subagent: 4
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0017.md
+        value: backed
+  - by: workflow-subagent
+    subagent: 5
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/github-integration.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/github-integration.md
+    reported:
+      - path: .claude/rules/adr-0017.md
+        value: backed
+      - path: docs/agents/github-integration.md
+  - by: workflow-subagent
+    subagent: 6
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0022.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/adr-0020.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/github-integration.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: backed
+      - path: .claude/rules/adr-0022.md
+        value: backed
+      - path: .claude/rules/adr-0017.md
+        value: backed
+      - path: docs/agents/github-integration.md
+  - by: workflow-subagent
+    subagent: 7
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: workflow-subagent
+    subagent: 8
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/implement/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/implement/SKILL.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0022.md
+        via: native
+        trigger: .agents/skills/clear-backlog/SKILL.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0005.md
+        value: backed
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .claude/rules/adr-0017.md
+        value: backed
+      - path: .claude/rules/adr-0027.md
+        value: backed
+      - path: docs/agents/git-conventions.md
+  - by: workflow-subagent
+    subagent: 9
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/code-review/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/code-review/SKILL.md
+    reported:
+      - path: .claude/rules/adr-0005.md
+        value: backed
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: workflow-subagent
+    subagent: 10
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .claude/rules/adr-0017.md
+        value: backed
+  - by: workflow-subagent
+    subagent: 11
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: workflow-subagent
+    subagent: 12
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: workflow-subagent
+    subagent: 13
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/code-review/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/code-review/SKILL.md
+    reported:
+      - path: .claude/rules/adr-0005.md
+        value: backed
+      - path: .claude/rules/adr-0027.md
+        value: backed
+  - by: workflow-subagent
+    subagent: 14
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .claude/workflows/clear-backlog-build.js
+      - rule: .claude/rules/adr-0030.md
+        via: native
+        trigger: docs/adr/0005-skill-model.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/adr/0005-skill-model.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: docs/adr/0005-skill-model.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .claude/rules/adr-0003.md
+        value: backed
+  - by: workflow-subagent
+    subagent: 15
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+subagents:
+  - type: general-purpose
+    task: Inspect scheduled session's tool calls
+    model: haiku
+    durationSec: 54
+    toolCalls: 10
+    modelCalls: 9
+    tokenShare: 3.7
+  - type: general-purpose
+    task: Standards review of explore fix
+    durationSec: 16
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 2.6
+  - type: general-purpose
+    task: Spec review of explore fix
+    durationSec: 25
+    toolCalls: 4
+    modelCalls: 4
+    tokenShare: 2.9
+  - type: workflow-subagent
+    task: "triage #3021"
+    model: claude-sonnet-5-5
+    durationSec: 18
+    toolCalls: 7
+    modelCalls: 4
+    tokenShare: 2.9
+  - type: workflow-subagent
+    task: "triage #3017"
+    model: claude-sonnet-5-5
+    durationSec: 18
+    toolCalls: 7
+    modelCalls: 4
+    tokenShare: 1.4
+  - type: workflow-subagent
+    task: "triage #2992"
+    model: claude-sonnet-5-5
+    durationSec: 21
+    toolCalls: 9
+    modelCalls: 5
+    tokenShare: 1.6
+  - type: workflow-subagent
+    task: "triage #3084"
+    model: claude-sonnet-5-5
+    durationSec: 49
+    toolCalls: 22
+    modelCalls: 9
+    tokenShare: 3.5
+  - type: workflow-subagent
+    task: Standards fix/3084-skip-final-gate-clean-round r3
+    model: claude-sonnet-5-5
+    durationSec: 10
+    toolCalls: 3
+    modelCalls: 3
+    tokenShare: 1.1
+  - type: workflow-subagent
+    task: build fix/3084-skip-final-gate-clean-round
+    model: claude-sonnet-5-5
+    durationSec: 360
+    toolCalls: 26
+    modelCalls: 22
+    tokenShare: 7
+  - type: workflow-subagent
+    task: Standards fix/3084-skip-final-gate-clean-round r1
+    model: claude-sonnet-5-5
+    durationSec: 18
+    toolCalls: 6
+    modelCalls: 3
+    tokenShare: 2.7
+  - type: workflow-subagent
+    task: fix fix/3084-skip-final-gate-clean-round r2
+    model: claude-sonnet-5-5
+    durationSec: 235
+    toolCalls: 9
+    modelCalls: 7
+    tokenShare: 1.9
+  - type: workflow-subagent
+    task: Spec fix/3084-skip-final-gate-clean-round r2
+    model: claude-sonnet-5-5
+    durationSec: 11
+    toolCalls: 3
+    modelCalls: 3
+    tokenShare: 1.1
+  - type: workflow-subagent
+    task: Spec fix/3084-skip-final-gate-clean-round r3
+    model: claude-sonnet-5-5
+    durationSec: 18
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 1.2
+  - type: workflow-subagent
+    task: Standards fix/3084-skip-final-gate-clean-round r2
+    model: claude-sonnet-5-5
+    durationSec: 12
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 1.2
+  - type: workflow-subagent
+    task: fix fix/3084-skip-final-gate-clean-round r1
+    model: claude-sonnet-5-5
+    durationSec: 251
+    toolCalls: 11
+    modelCalls: 9
+    tokenShare: 2.4
+  - type: workflow-subagent
+    task: Spec fix/3084-skip-final-gate-clean-round r1
+    model: claude-sonnet-5-5
+    durationSec: 17
+    toolCalls: 3
+    modelCalls: 3
+    tokenShare: 1.1
+gitBranch: claude/exciting-thompson-3q380s
+entrypoint: remote
+cliVersion: 2.1.322
+learnings:
+  - A scheduled Routine session lacks the send_message tool (its ToolSearch finds none and no init lists it), while web-started sessions have it; get_session turn_handoff.tools does not show the difference reliably.
+landedBy: Stop
