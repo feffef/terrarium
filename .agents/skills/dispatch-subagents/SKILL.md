@@ -110,3 +110,9 @@ worktree, not your own tree.
 
 Use `SendMessage` to its agent id. A fresh `Agent` call gets a brand-new checkout
 with no memory, risking a duplicate branch or lost local commits.
+
+- A resumed agent keeps its branch and scratchpad but sees only the new message:
+  spell out the check it must run. Keep its later replies with `save-handback.ts` too.
+- A hand-back after a resume may be the earlier report delivered late: wait for
+  the next notification before re-sending the instruction, and verify the work
+  against git.
