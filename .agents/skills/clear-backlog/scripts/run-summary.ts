@@ -116,6 +116,7 @@ function build(r: Branch[], ids?: Map<string, string>): string[] {
     const agents = ids && labels.flatMap((l) => (ids.has(l) ? [`${l.split(' ')[0]} ${ids.get(l)}`] : []))
     return [
       `${b.branch} ${b.status}${b.reviews ? ` r${b.round}` : ''}`,
+      ...field('dir', b.dir),
       ...field('worktree', b.worktree),
       ...field('commits', b.commits?.join(', ')),
       ...field('agents', agents?.join(', ')),
@@ -141,7 +142,7 @@ export const triageSummary = (path: string) => withLogs(path, (r) => triage(r as
 export const buildSummary = (path: string, runId?: string, home?: string) =>
   withLogs(path, (r) => build(r as Branch[], runId ? agentIds(runId, home) : undefined).join('\n\n'))
 
-/** A review's findings file as numbered `kind: title` lines; with `detail`, that one finding's detail, which the orchestrator reads for an owner-call only. */
+/** A review's findings file as numbered `kind: title` lines; with `detail`, that one finding and its detail. */
 export function findingsSummary(path: string, detail?: number): string {
   const { findings } = JSON.parse(readFileSync(path, 'utf8')) as Review
   if (detail === undefined) return findings.map(finding).join('\n') || 'no findings'

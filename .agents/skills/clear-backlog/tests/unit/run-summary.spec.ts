@@ -102,6 +102,7 @@ describe('--build', () => {
     expect(out.split('\n\n')).toEqual([
       [
         'fix/typo-11 reviewed r1',
+        `  dir: ${join(dir, 'fix-typo-11')}`,
         '  worktree: /wt/a',
         '  commits: abc123, def456',
         `  Standards: ${join(dir, 'fix-typo-11/Standards-r1.json')}`,
@@ -110,8 +111,8 @@ describe('--build', () => {
         '    1 defect: Wrong anchor (README.md)',
         '    2 owner-call: Keep the old name?',
       ].join('\n'),
-      'rename-12 needs-owner\n  question: Go or Start? a) Go b) Start; pick b',
-      'big-13 failed\n  worktree: /wt/c\n  reason: round 2: a reviewer returned nothing',
+      `rename-12 needs-owner\n  dir: ${join(dir, 'rename-12')}\n  question: Go or Start? a) Go b) Start; pick b`,
+      `big-13 failed\n  dir: ${join(dir, 'big-13')}\n  worktree: /wt/c\n  reason: round 2: a reviewer returned nothing`,
       'crash-14 failed\n  reason: stage threw',
     ])
   })

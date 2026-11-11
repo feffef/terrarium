@@ -134,16 +134,19 @@ Resume an agent with `SendMessage` to its id. Send the resumes of all
 branches in one message, except gates: at most 2 at once. Each agent replies
 with one line; check what it claims with `git -C <worktree> log --oneline -3`
 before you go on. If an agent can't be resumed (a session restart may lose
-it), dispatch a plain `Agent` with the same message plus, for a builder, its
-`brief` and `worktree`, or, for a reviewer, its findings file; it takes that
-role from then on.
+it), dispatch a plain `Agent` with the same message, the branch's `brief`,
+`worktree` and `dir`, this session's id, and, for a reviewer, its findings
+file. Tell it to read `.claude/workflows/clear-backlog-build.js` and follow
+`rules()` (a builder) or `reviewPrompt()` (a reviewer) as if called with that
+branch. It takes that role from then on.
 
 Act on each branch's `status`:
 
 - `needs-owner`: an interrupt (the script lists the conditions). Send a push
   notification and ask its `question` in the running `Q` numbering. The rest
-  keep going. With the answer, resume the builder to go on; once it replies,
-  run the workflow on that branch with `review: true` and `round: 1`. A builder
+  keep going. With the answer, resume the builder to go on, run the fast
+  checks, commit, and reply with one line: `BUILT <HEAD sha>`. Then run the
+  workflow on that branch with `review: true` and `round: 1`. A builder
   with no `worktree` yet re-runs instead, with its `question` and the `answer`.
 - `failed`: read the journal for the cause, then fix the brief and re-run the
   branch, or report it.
@@ -155,13 +158,14 @@ For each `reviewed` branch, in round N:
    `missing-test` you accept (the round's majors), and the nits worth their
    cost. Each other nit goes to the PR as a judgement call. An `owner-call` is
    an interrupt: `run-summary.ts <file> --findings --detail <n>` prints its
-   detail, the one finding you read in full; resume the builder with the
-   answer. Nothing picked: go to step 5.
+   detail, the one finding you read in full; its answer is a fix, through
+   steps 2 and 3. Nothing picked: go to step 5.
 2. **Fix.** Resume the builder: "Fix findings `<numbers>` in `<file>`. You may
    refuse one you can prove wrong. Run the fast checks, commit, and reply with
    one line: `FIXED <sha before> <sha after>`, plus `refused <number>:
-   <proof>` per refusal." A builder may instead reply `NEEDS-OWNER` with a
-   question: ask it, and resume the builder with the answer.
+   <proof>` per refusal." Pass an owner's answer the same way, as what to do
+   in place of a finding. A builder may instead reply `NEEDS-OWNER` with a
+   question: ask it, and pass the answer back as a fix.
 3. **Re-check.** Resume each reviewer whose findings were fixed or refused,
    every time: "The builder fixed your findings `<numbers>` and refused
    `<numbers>: <proof>`. Read only `git -C <worktree> diff <before>..<after>`.
