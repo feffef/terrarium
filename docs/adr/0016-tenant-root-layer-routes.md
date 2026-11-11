@@ -19,8 +19,7 @@ through the shared resolver, and gets tested by its own Tenant.
   home page is not a root page; ADR-0025 names it as the one page that may read
   the Tenants it features directly.
 - **What stays the same.** The manifest, the routing map and the resolver know
-  nothing about root pages. Only Spaces have routes there, and only Spaces are
-  in the list of entry routes the smoke test visits.
+  nothing about root pages. Only Spaces have routes there.
 - **Who merges.** A root page adds no routing logic, so it merges like any
   other Tenant layer page.
 - **Testing.** The smoke test never visits a root page, so each Tenant tests
@@ -31,8 +30,7 @@ through the shared resolver, and gets tested by its own Tenant.
 - A landing page is not a Space. Faking one as an empty Space would put a place
   with no content in every list of Spaces.
 - Keeping the page in the layer leaves the routing model and the isolation
-  code untouched. The resolver stays the one way to reach a Space's data, so a
-  root page adds nothing a human must review.
+  code untouched. The resolver stays the one way to reach a Space's data.
 - Each Tenant decides what its root shows. A landing page and a redirect are
   both just a page.
 
