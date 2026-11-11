@@ -1,7 +1,7 @@
 // The mechanical half of the glassbox-update Skill: what changed in the code each
 // Glass Box page cites, between the page's `revision` and main.
-// Usage: pnpm exec tsx .agents/skills/glassbox-update/scripts/glassbox-update.ts [--spaces guide,drafts] [--write --to <sha>]
-import { existsSync, globSync, readFileSync, writeFileSync } from 'node:fs'
+// Usage: pnpm exec tsx .agents/skills/glassbox-update/scripts/glassbox-update.ts [--write --to <sha>]
+import { globSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { glassboxTerms } from '../../../../layers/glassbox/page-checks.ts'
 import { glassboxPageRefs, glassboxRelineRefs, rangeText, shiftLines, type LineRange } from '../../../../layers/glassbox/page-refs.ts'
@@ -9,10 +9,9 @@ import { fetchOriginMain, git } from '../../../../scripts/lib/git.ts'
 import { splitFrontmatter } from '../../../../scripts/lib/frontmatter.ts'
 import { flagValue, root, runIfMain } from '../../../../scripts/lib/cli.ts'
 
-const pagesDir = (space: string) => `layers/glassbox/content/${space}/pages`
+const pagesDir = 'layers/glassbox/content/guide/pages'
 
 export interface PageUpdate {
-  space: string
   file: string
   revision: string
   changedPaths: string[]
@@ -52,7 +51,7 @@ function dependencies(packageJson: string): Record<string, string> {
 
 /** `write` shifts each page's ranges and pins it to `main`, except a page with an
  *  edited range: the Skill re-checks and pins that one itself. */
-export function glassboxUpdate(cwd = root, { main: mainRef = 'origin/main', write = false, spaces = ['guide'] } = {}): UpdateReport {
+export function glassboxUpdate(cwd = root, { main: mainRef = 'origin/main', write = false } = {}): UpdateReport {
   const run = (...args: string[]) => git(args, cwd)
   if (run('rev-parse', '--is-shallow-repository').trim() === 'true') {
     throw new Error('this clone is shallow, so a page\'s revision may be missing. Run `git fetch --unshallow origin main` first.')
@@ -70,12 +69,8 @@ export function glassboxUpdate(cwd = root, { main: mainRef = 'origin/main', writ
   }
 
   const report: UpdateReport = { main, mainDate, pages: [], terms: [], versions: {} }
-  for (const space of new Set(spaces)) {
-    if (!existsSync(join(cwd, pagesDir(space)))) throw new Error(`no Space "${space}" under layers/glassbox/content`)
-  }
-  const pages = [...new Set(spaces)].flatMap((space) => globSync('**/*.md', { cwd: join(cwd, pagesDir(space)) }).sort().map((file) => ({ space, file })))
-  for (const { space, file } of pages) {
-    const path = join(cwd, pagesDir(space), file)
+  for (const file of globSync('**/*.md', { cwd: join(cwd, pagesDir) }).sort()) {
+    const path = join(cwd, pagesDir, file)
     const source = readFileSync(path, 'utf8')
     const { frontmatter, body } = splitFrontmatter(source)
     const revision = String(frontmatter.revision)
@@ -91,7 +86,7 @@ export function glassboxUpdate(cwd = root, { main: mainRef = 'origin/main', writ
       const after = entries(main)
       return [...new Set([...before, ...after])].filter((f) => before.has(f) !== after.has(f)).sort()
     })
-    const update: PageUpdate = { space, file, revision, changedPaths, changedFiles, shifted: [], edited: [], needsReader: false }
+    const update: PageUpdate = { file, revision, changedPaths, changedFiles, shifted: [], edited: [], needsReader: false }
     const shifts = new Map<string, LineRange>()
     const seen = new Set<string>()
     for (const ref of refs.files) {
@@ -137,14 +132,11 @@ export function glassboxUpdate(cwd = root, { main: mainRef = 'origin/main', writ
 function main(): void {
   const argv = process.argv.slice(2)
   const write = argv.includes('--write')
-  const spacesArg = flagValue(argv, '--spaces')
-  const spaces = spacesArg?.split(',').filter(Boolean)
-  if (argv.includes('--spaces') && (spacesArg?.startsWith('--') || !spaces?.length)) throw new Error('--spaces needs a comma-separated list, e.g. guide,drafts')
   const to = flagValue(argv, '--to')
   // Pin only to the commit the agent reviewed; a fresh fetch could pass unread changes.
   if (write && !to) throw new Error('--write needs --to <sha>, the `main` of the report you reviewed')
   if (!to) fetchOriginMain(root)
-  process.stdout.write(`${JSON.stringify(glassboxUpdate(root, { main: to ?? 'origin/main', write, spaces }), null, 2)}\n`)
+  process.stdout.write(`${JSON.stringify(glassboxUpdate(root, { main: to ?? 'origin/main', write }), null, 2)}\n`)
 }
 
 runIfMain(import.meta.url, main)

@@ -41,7 +41,7 @@ provide(glassboxTermsKey, computed(() => data.value?.terms ?? {}))
 
 const { menuOpen, openMenu, closeMenu } = useGlassboxMenu()
 // The workshop is a live record of one page, not a textbook edition: no Subjects to list and no
-// edition date (GLOSSARY.md, A curated textbook and Three Spaces).
+// edition date (GLOSSARY.md, A curated textbook and Two Spaces).
 const live = space === 'workshop'
 
 useHead(() => ({ title: `${page.value?.title ?? 'Not found'} · glassbox` }))
@@ -77,7 +77,7 @@ useSeoMeta({ description: () => page.value?.description })
         >≡</button>
       </header>
 
-      <GlassboxArticle v-if="page" class="gb-column" :page="page" :base="base" :surround="data?.surround ?? null" :through="data?.through ?? []" :draft="space === 'drafts'" :dated="!live" :source="source" />
+      <GlassboxArticle v-if="page" class="gb-column" :page="page" :base="base" :surround="data?.surround ?? null" :through="data?.through ?? []" :dated="!live" :source="source" />
 
       <div v-else class="gb-column">
         <h1>Not found</h1>

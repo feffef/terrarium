@@ -29,10 +29,4 @@ describe('glassbox Tenant', async () => {
     expect(html).toContain('id="lately"')
     expect(html).toContain('class="lately"')
   })
-
-  it('keeps the sidebar and edition date on the drafts Space', async () => {
-    const html = await $fetch<string>('/t/glassbox/drafts')
-    expect(html).toContain('id="gb-nav"')
-    expect(html).toContain('Last updated')
-  })
 })
