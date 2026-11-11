@@ -40,15 +40,24 @@ it('every .claude/workflows/*.js compiles, and its meta.name is its basename', a
   }
 })
 
-describe('clear-backlog-build final gate (#2523)', () => {
+describe('clear-backlog-build final gate (#2523, #3084)', () => {
   const source = readFileSync(join(DIR, 'clear-backlog-build.js'), 'utf8').replace(/^export const meta/m, 'const meta')
   const work = (gatePassed: boolean, commits: string[]) => ({ status: 'done', worktree: '/wt', commits, gatePassed, decisions: [] })
+  const clean = { findings: [], summary: '' }
+  const dirty = { findings: [{ worthFixing: true }], summary: '' }
 
-  /** Runs the script on one branch: its build reports a failed gate, its review is clean, and the final gate returns `gate`. */
-  async function run(gate: unknown) {
+  /** Runs the script on one branch: the build reports `build`, each review round (two reviewers) returns the next of `rounds`, the fix agent returns a passed gate, and the final gate returns `gate`. */
+  async function run(gate: unknown, build = work(false, ['a']), rounds: object[] = [clean]) {
+    const labels: string[] = []
+    let reviews = 0
     const globals: Record<string, unknown> = {
-      agent: async (_p: string, o: { label: string }) =>
-        o.label.startsWith('build') ? work(false, ['a']) : o.label.startsWith('gate') ? gate : { findings: [], summary: '' },
+      agent: async (_p: string, o: { label: string }) => {
+        labels.push(o.label)
+        if (o.label.startsWith('build')) return build
+        if (o.label.startsWith('gate')) return gate
+        if (o.label.startsWith('fix')) return work(true, ['a', 'f'])
+        return rounds[Math.min(Math.floor(reviews++ / 2), rounds.length - 1)]
+      },
       pipeline: (items: unknown[], ...stages: ((x: unknown, i: unknown) => unknown)[]) =>
         Promise.all(items.map(async (i) => { let x = i; for (const s of stages) x = await s(x, i); return x })),
       parallel: (fns: (() => unknown)[]) => Promise.all(fns.map((f) => f())),
@@ -56,15 +65,29 @@ describe('clear-backlog-build final gate (#2523)', () => {
       args: { session: 'session_x', branches: [{ name: 'fix/1-x', issues: [1], brief: 'b' }] },
     }
     const [r] = await new AsyncFunction(...GLOBALS, source)(...GLOBALS.map((g) => globals[g])) as unknown[]
-    return r
+    return { r, gated: labels.some((l) => l.startsWith('gate')) }
   }
 
-  it('gates a clean branch even after its build reported a failed gate, and takes the gate agent\'s commits', async () => {
-    expect(await run(work(true, ['a', 'b']))).toMatchObject({ status: 'ready-to-push', commits: ['a', 'b'] })
+  it('gates a clean branch whose build reported a failed gate, and takes the gate agent\'s commits', async () => {
+    const { r, gated } = await run(work(true, ['a', 'b']))
+    expect(gated).toBe(true)
+    expect(r).toMatchObject({ status: 'ready-to-push', commits: ['a', 'b'] })
+  })
+
+  it('skips the final gate when round 1 is clean and the build reported a passed gate', async () => {
+    const { r, gated } = await run(null, work(true, ['a']))
+    expect(gated).toBe(false)
+    expect(r).toMatchObject({ status: 'ready-to-push', commits: ['a'] })
+  })
+
+  it('gates a branch that is clean only after a fix round, even if the build passed its gate', async () => {
+    const { r, gated } = await run(work(true, ['a', 'f', 'g']), work(true, ['a']), [dirty, clean])
+    expect(gated).toBe(true)
+    expect(r).toMatchObject({ status: 'ready-to-push', commits: ['a', 'f', 'g'] })
   })
 
   it.each([[null], [work(false, ['a'])]])('fails the branch, naming the final gate, when the gate agent returns %j', async (gate) => {
-    expect(await run(gate)).toMatchObject({ status: 'failed', reason: expect.stringMatching(/final gate/) })
+    expect((await run(gate)).r).toMatchObject({ status: 'failed', reason: expect.stringMatching(/final gate/) })
   })
 })
 
