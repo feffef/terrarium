@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_013zxzeQRndZ5iHweDq8ceMP
 startedAt: 2026-11-11T10:01:15Z
-endedAt: 2026-11-11T11:29:27Z
+endedAt: 2026-11-11T12:41:13Z
 kind: interactive
 goal: Build a weekly Skill that files agent ideas and learnings as issues
-status: completed
-outcome: harvest Skill merged in PR 3080; 8 earlier issues rewritten as Seedlings; owner still creates the Routine
-summary: "The owner asked for the ideas and learnings of the past week to be mined with an explore agent (full logs, git history for what is resolved), then ranked as issue proposals, then asked for a top 10 with quick wins flagged, and then told me to file items 1-6, 9 and 10: all human-instructed, with the picks and wording mine. I filed eight issues (3068-3075). The owner then asked for unattended Skills doing the same weekly, up to 10 issues per run, filed ready-for-human as agent suggestions. After clarifying questions (labels, window, scope, structure), they chose: one Skill, Seedling as the marker word (Proposal clashes with GLOSSARY, which defines it as a file in docs/proposals), state derived from the issues themselves with no state file, a fixed 28-day lookback so entries ranked below the cap return next week, and 30 clusters checked per run. The design went through two Fable review rounds (duplicate key by source entry hash, auto-triage guard, Routine is created outside the repo, archived logs needed for 28 days, format verification before and after posting). I then built it on the session branch, rewrote 3068-3075 as Seedlings with script-rendered keys (the owner asked whether I had), ran code-review passes with fixes, and opened PR 3080. The owner's review comments then asked for a /harvest ideas or learnings argument (which I had cut on a reviewer's advice without confirming), a Seedling glossary entry, and what best-first meant; the last led the owner to steer the ranking to recency only, so positive and creative ideas are not buried by a pain signal I had assumed. The owner enabled auto-merge after CI went green on the final head, so a human made the merge call ADR-0004 requires and I did not merge it. Still open: the owner creates the weekly Routine; the routines.md chart line and Skill Inventory entry wait for its first run; rejected entries are re-judged each run until they age out of the 28 days."
+status: in-review
+outcome: harvest merged in PR 3080; a follow-up in PR 3085 focuses it on product ideas and self-contained issues, waiting for a human merge
+summary: "The owner asked for the ideas and learnings of the past week to be mined with an explore agent, then ranked as issue proposals, then asked for a top 10 with quick wins flagged, and told me to file items 1-6, 9 and 10 (human-instructed, with picks and wording mine); I filed eight issues (3068-3075). The owner then asked for an unattended Skill doing the same weekly, up to 10 issues per run, filed ready-for-human. After clarifying questions they chose one Skill, Seedling as the marker word, state derived from the issues themselves, a fixed 28-day lookback, 30 clusters checked per run, and later a /harvest ideas or learnings argument and recency-only ranking. The design went through two Fable review rounds. I built it, rewrote 3068-3075 as Seedlings, and it merged as PR 3080 (the owner enabled auto-merge; a human made the merge call). After the merge the owner asked for more: leave Frictions to frictions-to-fixes (check the Friction Ledger summaries), prefer positive ideas that simplify, prefer tenant, content and UI ideas over agent-workflow ones (capped at 3 workflow Seedlings per run, the owner said yes to my question), and make Seedling bodies self-contained so the owner never needs the repo or a session log. I restarted the branch from main, rewrote the Skill, added body-template.md and a check-body section and session-id check, dry-ran the template on a real idea, ran a Standards and Spec review and applied its findings, and opened PR 3085. It needs a human merge under ADR-0004's outside side effect exception, so I will not self-merge. Still open: the owner creates the weekly Routine, and decides whether the eight first Seedlings, which predate the template, get rewritten."
 prs:
   - "3080"
+  - "3085"
 docsRead:
   - path: docs/agents/github-integration.md
     reason: (no reason given)
@@ -62,6 +63,8 @@ docsRead:
     reason: (read before editing)
   - path: .agents/skills/frictions-to-fixes/SKILL.md
     reason: (no reason given)
+  - path: layers/glassbox/GLOSSARY.md
+    reason: (no reason given)
   - path: .agents/skills/writing-for-agents/SKILL.md
     reason: (no reason given)
   - path: .agents/skills/log-session/SKILL.md
@@ -90,6 +93,8 @@ docsRead:
     reason: (no reason given)
   - path: .agents/skills/inspect-session/SKILL.md
     reason: (no reason given)
+  - path: .agents/skills/harvest/body-template.md
+    reason: (read before editing)
 skillsUsed:
   - name: dispatch-subagents
     reason: briefs for the mining and design-review agents
@@ -132,25 +137,28 @@ frictions:
   - description: I ranked harvest entries by the session's Friction severity without asking what best meant; the owner then said creative ideas must not be buried, costing a code, test and Skill-text change.
     solution: Ask the owner what the selection criterion should favour before building the ranking, not after a review comment.
     severity: minor
-durationSec: 5292
+  - description: The Stop hook counted 46 unpushed commits against a remote branch deleted after the merge, though almost all were main's own commits.
+    solution: Count commits against origin/main, or skip the nag when the remote branch no longer exists.
+    severity: nit
+durationSec: 9598
 models:
-  claude-sonnet-5-5: 484
+  claude-sonnet-5-5: 587
 toolCounts:
   Skill: 6
-  Grep: 5
-  Bash: 74
-  Agent: 7
-  Read: 31
+  Grep: 6
+  Bash: 97
+  Agent: 9
+  Read: 34
   ToolSearch: 6
   mcp__github__issue_write: 16
-  Write: 17
+  Write: 24
   AskUserQuestion: 1
-  Edit: 52
+  Edit: 69
   SendMessage: 2
   SendUserFile: 1
-  mcp__github__list_pull_requests: 1
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__list_pull_requests: 2
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
   ReadNotifications: 19
   mcp__github__pull_request_read: 6
   mcp__claude-code-remote__send_later: 1
@@ -165,6 +173,7 @@ filesEdited:
   - docs/agents/triage-labels.md
   - GLOSSARY.md
   - .agents/skills/auto-triage/SKILL.md
+  - .agents/skills/harvest/body-template.md
   - .claude/skills/harvest
 rulesGlobal:
   - .claude/rules/adr-0004.md
@@ -239,6 +248,7 @@ docsReadBySubagents:
   - .agents/skills/glassbox-update/SKILL.md
   - docs/agents/verifying-ui-changes.md
   - .agents/skills/inspect-session/SKILL.md
+  - .agents/skills/harvest/body-template.md
 ruleUse:
   - by: main
     answered: true
@@ -275,7 +285,8 @@ ruleUse:
         via: native
         trigger: GLOSSARY.md
       - rule: .claude/rules/adr-0015.md
-        via: hint
+        via: native
+        trigger: .agents/skills/frictions-to-fixes/SKILL.md
       - rule: .claude/rules/adr-0020.md
         via: native
         trigger: .agents/skills/auto-triage/SKILL.md
@@ -289,6 +300,16 @@ ruleUse:
       - rule: .claude/rules/adr-0030.md
         via: native
         trigger: docs/adr/0027-prune-trials.md
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
     reported:
       - path: .claude/rules/adr-0017.md
         value: steered
@@ -555,6 +576,48 @@ ruleUse:
     reported:
       - path: .claude/rules/adr-0004.md
         value: backed
+  - by: general-purpose
+    subagent: 7
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .claude/rules/adr-0003.md
+        value: backed
+  - by: general-purpose
+    subagent: 8
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .claude/rules/adr-0003.md
+        value: backed
 subagents:
   - type: Explore
     task: Mine week's ideas and learnings
@@ -562,44 +625,56 @@ subagents:
     durationSec: 520
     toolCalls: 40
     modelCalls: 39
-    tokenShare: 8.3
+    tokenShare: 6.2
   - type: general-purpose
     task: Review harvest Skills design
     model: fable
     durationSec: 751
     toolCalls: 38
     modelCalls: 31
-    tokenShare: 8.3
+    tokenShare: 6.2
   - type: general-purpose
     task: Standards review of harvest Skill
     durationSec: 40
     toolCalls: 8
     modelCalls: 4
-    tokenShare: 1.5
+    tokenShare: 1.1
   - type: general-purpose
     task: Spec review of harvest Skill
     durationSec: 35
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 1.6
+    tokenShare: 1.2
   - type: general-purpose
     task: Standards review of follow-up diff
     durationSec: 26
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 0.7
+    tokenShare: 0.5
   - type: general-purpose
     task: Spec review of follow-up diff
     durationSec: 24
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 0.6
+    tokenShare: 0.4
   - type: general-purpose
     task: Review the --kind follow-up diff
     durationSec: 26
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 1.4
+    tokenShare: 1
+  - type: general-purpose
+    task: Standards review of harvest follow-up
+    durationSec: 35
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 1
+  - type: general-purpose
+    task: Spec review of harvest follow-up
+    durationSec: 22
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 1
 gitBranch: claude/awesome-noether-fd6ban
 entrypoint: remote
 cliVersion: 2.1.322
@@ -608,8 +683,10 @@ learnings:
   - REST issue bodies come back raw while MCP reads are entity-encoded, so a machine-read key line must use an alphabet that entity decoding cannot change.
   - A full open and closed issue listing with bodies takes about 36 seconds, so one scan per run is fine but a read-back per issue is not; read back the single issue instead.
   - An agent-posted GitHub review comment arrives as a pull_request_review_comment event from the owner's login, so the event looks human; the ADR-0017 header is the only way to tell it is your own echo.
+  - After a PR merges the remote session branch can be auto-deleted, so the first push of follow-up work after restarting the branch from main reports a new branch.
 ideas:
   - Add a script that lists a week's ideas and learnings from Session logs with a resolved or open status, so this review is one command instead of a 200k-token agent run; stamp each idea with the issue that filed it so nothing is filed twice.
   - Add a script that lists a week's ideas and learnings with a resolved or open status; the harvest Skill now does the extraction half, so a status column from its relevance check could feed the Journal.
   - Let harvest remember which entries its relevance check rejected, for example by filing a closed not-planned issue carrying their key lines, so rejected entries stop consuming the 30-cluster budget each week until they age out of the window.
+  - Run harvest's relevance check against a sample of real entries and print which product and workflow clusters it would file, so the owner can tune the cap and criteria before the first scheduled run.
 landedBy: Stop
