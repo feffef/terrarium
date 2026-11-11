@@ -1,13 +1,14 @@
 schemaVersion: 1
 session: session_013zxzeSPxncNsUJXwnc2DvG
 startedAt: 2026-11-11T10:26:31Z
-endedAt: 2026-11-11T10:38:27Z
+endedAt: 2026-11-11T10:42:41Z
 kind: delegated
 goal: Turn this window's recurring agent Frictions into fixes (frictions-to-fixes run)
-status: partial
-outcome: Survey, design and ledger done and pushed; ledger PR gate still running, doc fix not yet dispatched
-summary: "The owner invoked /frictions-to-fixes, so the whole run is human-instructed by that one prompt; every later step follows the Skill. A survey subagent updated the Friction Ledger (commit 51a3d2502) and ranked candidates. I verified its regression list against the ledger: only built-before-owner-decided-ui is a true regression, so I filed issue 3076 for it. The survey called preview-dev-server-stale-or-unhydrated never-fixed, but open issue 3070 already covers it, so I marked it tracked instead. harness-proxy-blocks was not filed: its one post-fix occurrence is about the deployed site, which open issue 3075 covers. I picked three never-fixed entries and a design subagent recommended: dispatch a two-line doc fix for preview.ts shown bare in docs (mode 100644, no shebang); no change for pr-asked-before-opening (ADR-0003 already says it, a Stop hook would be a new guard) and misread-owner-instruction. Ledger status commit 976509f39 pushed; gate:scoped was running in the background at the time of this log. Still open: ledger PR, the doc-fix dispatch and PR, the closing ledger PR. The Stop hook's claim that a PR merged was false: none has merged this run."
-prs: []
+status: in-review
+outcome: Ledger PR 3077 open and gated; doc-fix agent building; closing ledger PR still to do
+summary: "The owner invoked /frictions-to-fixes, so the whole run is human-instructed by that one prompt; every later step follows the Skill. A survey subagent updated the Friction Ledger (commit 51a3d2502) and ranked candidates. I verified its regression list against the ledger: only built-before-owner-decided-ui is a true regression, so I filed issue 3076 for it. The survey called preview-dev-server-stale-or-unhydrated never-fixed, but open issue 3070 already covers it, so I marked it tracked instead. harness-proxy-blocks was not filed: its one post-fix occurrence is about the deployed site, which open issue 3075 covers. I picked three never-fixed entries and a design subagent recommended: dispatch a two-line doc fix for preview.ts shown bare in docs (mode 100644, no shebang); no change for pr-asked-before-opening (ADR-0003 already says it, a Stop hook would be a new guard) and misread-owner-instruction. Ledger commits pushed, gate:scoped passed on 976509f39, and ledger PR 3077 is open and subscribed. A Sonnet agent is building the doc fix in a worktree. Still open: land 3077, review and open the doc-fix PR, the closing ledger PR. The Stop hook's claim that a PR merged was false: none has merged this run."
+prs:
+  - "3077"
 docsRead:
   - path: .claude/skills/frictions-to-fixes/survey-brief.md
     reason: (no reason given)
@@ -22,6 +23,12 @@ docsRead:
   - path: .claude/skills/frictions-to-fixes/design-brief.md
     reason: (no reason given)
   - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: .claude/skills/frictions-to-fixes/impl-brief.md
+    reason: (no reason given)
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
     reason: (no reason given)
 skillsUsed:
   - name: frictions-to-fixes
@@ -45,18 +52,23 @@ frictions:
   - description: The Stop hook claimed a PR had merged and demanded close-session, though no PR had merged or opened this run.
     solution: Make the merge-close hint check the session's own PRs before firing.
     severity: nit
-durationSec: 716
+durationSec: 970
 models:
-  claude-sonnet-5-5: 72
+  claude-sonnet-5-5: 96
 toolCounts:
-  Read: 7
-  Bash: 18
+  Read: 8
+  Bash: 23
   Skill: 3
-  Agent: 3
-  ToolSearch: 1
+  Agent: 4
+  ToolSearch: 2
   mcp__github__issue_write: 1
   mcp__github__issue_read: 2
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
 filesEdited:
+  - CLAUDE.md
+  - docs/agents/verifying-ui-changes.md
   - layers/journal/content/current/frictions/built-before-owner-decided-ui.yml
   - layers/journal/content/current/frictions/misread-owner-instruction.yml
   - layers/journal/content/current/frictions/pr-asked-before-opening.yml
@@ -96,6 +108,21 @@ rulesGlobal:
   - .claude/rules/adr-0009.md
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+adrHints:
+  - adr: 29
+    via: path
+    readAfter: true
+    by: subagent
+  - adr: 27
+    via: path
+    readAfter: true
+    by: subagent
+docsReadBySubagents:
+  - docs/adr/0029-instructions-load-with-the-files-they-govern.md
+  - docs/adr/0027-prune-trials.md
 ruleUse:
   - by: main
     answered: true
@@ -223,6 +250,31 @@ ruleUse:
         value: backed
       - path: .claude/rules/guards.md
         value: backed
+  - by: general-purpose
+    subagent: 3
+    answered: false
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0030.md
+        via: native
+        trigger: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reported: []
 subagents:
   - type: general-purpose
     task: Survey frictions and update ledger
@@ -231,13 +283,20 @@ subagents:
     durationSec: 432
     toolCalls: 39
     modelCalls: 35
-    tokenShare: 50.6
+    tokenShare: 41.4
   - type: general-purpose
     task: Design fixes for three picks
     durationSec: 86
     toolCalls: 11
     modelCalls: 9
-    tokenShare: 8.8
+    tokenShare: 7.2
+  - type: general-purpose
+    task: Implement preview.ts doc fix
+    model: sonnet
+    durationSec: 20
+    toolCalls: 10
+    modelCalls: 5
+    tokenShare: 6.6
 gitBranch: claude/eager-dirac-rgvbzk
 entrypoint: remote
 cliVersion: 2.1.322
