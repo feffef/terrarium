@@ -47,6 +47,7 @@ describe('glassboxUpdate over a fixture repo history', () => {
     write('package.json', deps('^4.0.2', '^3.2.0', '^0.4.0'))
     write(`${pagesDir}/claude-code/01.shifted.md`, page(base, shiftedBody('1-2')))
     write(`${pagesDir}/claude-code/02.edited.md`, page(base, 'See :file[src/a.ts]{lines="5-6"}.'))
+    write(`${pagesDir}/claude-code/06.whole-file.md`, page(base, 'See :file[src/a.ts]{lines="1-2"} and :file[src/a.ts].'))
     write(`${pagesDir}/walkthroughs/quiet.md`, page(base, 'See :file[src/b.ts] and a :term[Space].'))
     write('layers/glassbox/content/drafts/pages/claude-code/03.draft.md', page(base, 'See :file[src/a.ts].'))
     write('layers/glassbox/content/guide/terms/space.yml', 'term: Space\ndefinition: A variant.\nsource: GLOSSARY.md\n')
@@ -62,6 +63,7 @@ describe('glassboxUpdate over a fixture repo history', () => {
       ['claude-code/01.shifted.md', ['src/a.ts']],
       ['claude-code/02.edited.md', ['src/a.ts']],
       ['claude-code/05.dir-grown.md', ['pkg/']],
+      ['claude-code/06.whole-file.md', ['src/a.ts']],
     ])
   })
 
@@ -70,6 +72,7 @@ describe('glassboxUpdate over a fixture repo history', () => {
       ['claude-code/01.shifted.md', ['src/a.ts']],
       ['claude-code/02.edited.md', ['src/a.ts']],
       ['claude-code/05.dir-grown.md', ['pkg/z.ts']],
+      ['claude-code/06.whole-file.md', ['src/a.ts']],
     ])
   })
 
@@ -95,6 +98,15 @@ describe('glassboxUpdate over a fixture repo history', () => {
     expect(shifted!.shifted).toEqual([{ path: 'src/a.ts', from: '1-2', to: '3-4' }])
     expect(shifted!.edited).toEqual([])
     expect(edited!.edited).toEqual([{ path: 'src/a.ts', lines: '5-6' }])
+  })
+
+  it('needs a claim-check reader unless every changed path is covered by shifted ranges alone', () => {
+    expect(report.pages.map((p) => [p.file, p.needsReader])).toEqual([
+      ['claude-code/01.shifted.md', false],
+      ['claude-code/02.edited.md', true],
+      ['claude-code/05.dir-grown.md', true],
+      ['claude-code/06.whole-file.md', true],
+    ])
   })
 
   it('lists a term whose source changed since a page citing it was pinned', () => {
