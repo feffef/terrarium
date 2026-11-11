@@ -21,9 +21,10 @@ harvests both.
 1. **Extract.** `harvest extract --out <scratchpad>/harvest-extract.json`, plus
    `--kind ideas` or `--kind learnings` when the run has that argument.
    It lists unharvested entries from the last 28 days (archived logs
-   included). Within a kind, entries of sessions that logged a `moderate`-or-worse
-   Friction come first, then the newest; the kinds alternate, idea first. Read
-   the file whole. Done when you have the counts per kind and the ordered entries.
+   included). Within a kind the newest come first and the kinds alternate, idea
+   first; recency is the only ranking, so an idea from a smooth session ranks like
+   any other. Read the file whole. Done when you have the counts per kind and the
+   ordered entries.
 2. **Cluster, in order.** Merge near-duplicate entries into clusters,
    taking entries from the top, only until 10 clusters pass step 3 or 30 have
    been checked. Done when each checked cluster lists its entry numbers and the

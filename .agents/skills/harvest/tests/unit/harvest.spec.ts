@@ -141,7 +141,7 @@ describe('buildEntries()', () => {
     expect(entries[0]!.sameSession).toEqual([3])
   })
 
-  it('ranks heavy-friction sessions first, then newest, and alternates kinds', () => {
+  it('ranks newest first whatever Friction its session logged, and alternates kinds', () => {
     const { entries } = buildEntries(
       [
         log({ session: 'session_a', endedAt: '2026-11-09T00:00:00Z', ideas: ['a-idea'], learnings: ['a-learn'] }),
@@ -151,8 +151,8 @@ describe('buildEntries()', () => {
       noState,
       since,
     )
-    // ideas: c (heavy), b (newer), a; learnings: a. Alternating, then the rest.
-    expect(entries.map((e) => e.text)).toEqual(['c-idea', 'a-learn', 'b-idea', 'a-idea'])
+    // ideas by recency: b, a, c (a major Friction does not lift c); learnings: a. Alternating, then the rest.
+    expect(entries.map((e) => e.text)).toEqual(['b-idea', 'a-learn', 'a-idea', 'c-idea'])
     expect(entries.map((e) => e.n)).toEqual([1, 2, 3, 4])
   })
 })

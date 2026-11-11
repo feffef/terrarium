@@ -26,7 +26,6 @@ export const BODY_LIMIT = 60_000
 export const NOTE = 'Machine-read, keep as is:'
 /** Runs of these Skills log ideas on purpose and never act on them; harvest's own logs too. */
 export const SKIPPED_TRIGGERS = new Set(['harvest', 'visitor-loop', 'audit-skills'])
-const HEAVY = new Set(['moderate', 'major', 'blocker'])
 
 /** The whole key line. Its alphabet holds none of `& < > " '`, so HTML-entity
  *  decoding cannot change it. A session id is `session_...` or a raw UUID. */
@@ -47,8 +46,6 @@ export interface Entry {
   goal: string
   outcome: string
   prs: string[]
-  /** The session logged a `moderate`-or-worse Friction. */
-  heavy: boolean
   text: string
   /** Issues whose keys already name this session: a hint for a reworded entry. */
   sameSession: number[]
@@ -108,12 +105,10 @@ export function noteTexts(raw: Record<string, unknown>): { kind: Kind; text: str
   ]
 }
 
-const isHeavy = (raw: Record<string, unknown>): boolean =>
-  Array.isArray(raw.frictions) && raw.frictions.some((f) => HEAVY.has(String((f as Record<string, unknown>)?.severity)))
-
-/** Unharvested entries from logs that ended in the window, ordered: within a kind,
- *  sessions that logged a heavy Friction first, then newest first; the two kinds
- *  alternate (idea first) and one that runs out lets the other continue. */
+/** Unharvested entries from logs that ended in the window, newest first within a
+ *  kind. Recency is the only signal: ranking by a session's Friction would bury the
+ *  positive and creative ideas of a smooth session. The two kinds alternate (idea
+ *  first) and one that runs out lets the other continue. */
 export function buildEntries(
   logs: SessionLog[],
   state: HarvestState,
@@ -149,14 +144,12 @@ export function buildEntries(
         goal: flattenText(data.goal),
         outcome: flattenText(data.outcome),
         prs: Array.isArray(data.prs) ? data.prs.map(String) : [],
-        heavy: isHeavy(data),
         text: flattenText(text),
         sameSession: state.bySession.get(session) ?? [],
       })
     }
   }
-  const rank = (a: Draft, b: Draft) =>
-    Number(b.heavy) - Number(a.heavy) || b.endedAt.localeCompare(a.endedAt) || a.key.localeCompare(b.key)
+  const rank = (a: Draft, b: Draft) => b.endedAt.localeCompare(a.endedAt) || a.key.localeCompare(b.key)
   const ideas = all.filter((e) => e.kind === 'idea').sort(rank)
   const learnings = all.filter((e) => e.kind === 'learning').sort(rank)
   const ordered: Draft[] = []
