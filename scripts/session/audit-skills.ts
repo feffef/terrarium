@@ -580,7 +580,7 @@ export type OrphanScanStatus =
 /** `OrphanScanStatus` plus the candidates themselves — the reader's own return
  *  shape, kept separate so the scorecard reports the status without carrying one
  *  entry per merged pull request. */
-export type PullRequestScan = { status: OrphanScanStatus; refs: SessionTrailerRef[] }
+export type OrphanCandidateScan = { status: OrphanScanStatus; refs: SessionTrailerRef[] }
 
 /** One commit's added/removed file paths (`git log --name-status`) along
  *  `origin/main`'s first-parent line — the raw material `resolvedMisfilePath`
@@ -627,6 +627,12 @@ function legacyTrailerSession(body: string): string | undefined {
   return undefined
 }
 
+/** The session a PR or issue body names as its origin: ADR-0017's header, else
+ *  the legacy footer (never a quoted URL; see `pullRequestSessionRef`). */
+function originSession(body: string | null): string | undefined {
+  return readProvenanceHeader(body ?? '')?.sessionId ?? legacyTrailerSession(body ?? '')
+}
+
 /** The session a merged pull request records as its origin, shaped as the same
  *  `SessionTrailerRef` the comparison already consumes so only the *source*
  *  changes (issue #738). `null` for a closed-unmerged pull request, or a merged
@@ -647,8 +653,7 @@ function legacyTrailerSession(body: string): string | undefined {
  *  to remove. */
 export function pullRequestSessionRef(record: RawPullRequestApiRecord): SessionTrailerRef | null {
   if (!record.merged_at) return null
-  const body = record.body ?? ''
-  const session = readProvenanceHeader(body)?.sessionId ?? legacyTrailerSession(body)
+  const session = originSession(record.body)
   if (!session) return null
   return { sha: record.merge_commit_sha || `pr-${record.number}`, date: record.merged_at, session }
 }
@@ -658,8 +663,7 @@ export function pullRequestSessionRef(record: RawPullRequestApiRecord): SessionT
  *  pull request in the issues listing or a body with no deliberate marker. */
 export function issueSessionRef(record: RawIssueBodyRecord): SessionTrailerRef | null {
   if (record.pull_request) return null
-  const body = record.body ?? ''
-  const session = readProvenanceHeader(body)?.sessionId ?? legacyTrailerSession(body)
+  const session = originSession(record.body)
   if (!session) return null
   return { sha: `issue-${record.number}`, date: record.created_at, session }
 }
@@ -1001,7 +1005,7 @@ function readRecentIssues(access: Access, since: string): RawIssueBodyRecord[] {
  *  reach a source returns `scanned: false` with the reason rather than an empty
  *  set: an empty set is a claim that nothing is orphaned, and this reader is not
  *  entitled to make that claim when it could not look (issue #738). */
-export function readOrphanCandidates(since: string, cwd = root): PullRequestScan {
+export function readOrphanCandidates(since: string, cwd = root): OrphanCandidateScan {
   try {
     const access = resolveAccess(cwd)
     const merged = readRecentClosedPullRequests(access, since).filter((r) => r.merged_at !== null)

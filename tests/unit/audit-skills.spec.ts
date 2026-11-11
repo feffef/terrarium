@@ -17,10 +17,10 @@ import {
   issuesNamingSkill,
   HUMAN_PROMPTED_CLOSURE,
   isSessionLogPath,
+  issueSessionRef,
   lastUsed,
   parseCommitFileChanges,
   parseLandings,
-  issueSessionRef,
   parseMergedPullRequests,
   parseSessionTrailers,
   pickBehaviourChecks,
@@ -414,7 +414,6 @@ describe('pullRequestSessionRef() — the orphan candidate source (issue #738)',
     const record = pr({ merge_commit_sha: null, body: '🤖 [M](https://claude.ai/code/session_A)' })
     expect(pullRequestSessionRef(record)?.sha).toBe('pr-649')
   })
-
 })
 
 describe('issueSessionRef() — sessions that only filed issues', () => {
