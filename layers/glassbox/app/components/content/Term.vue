@@ -27,7 +27,21 @@ button {
   text-decoration: underline 1px dotted var(--gb-accent);
   text-underline-offset: 4px;
 }
-button::after { content: ' ?'; font-family: var(--gb-sans, sans-serif); font-size: 0.75em; }
+button::after {
+  content: '?';
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  inline-size: 1.25em;
+  block-size: 1.25em;
+  margin-inline-start: 0.4em;
+  border: 1px solid var(--gb-accent);
+  border-radius: 50%;
+  color: var(--gb-accent);
+  font: 600 0.7em var(--gb-sans, sans-serif);
+  vertical-align: 0.15em;
+}
 button:focus-visible {
   outline: 2px solid var(--gb-accent);
   outline-offset: 2px;
