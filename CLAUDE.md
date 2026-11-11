@@ -93,7 +93,8 @@ docs/research/            dated reference notes
 scripts/                  repo tooling by area: gate/ (the gate and its checks), hooks/ (tool-call
                           guards and hints), session/ (session logs; Skill usage: audit-skills.ts --skill;
                           Frictions since a date: extract-frictions.ts --since; rule use: rule-use-report.ts --since),
-                          github/, git/, ui/, lib/ (shared)
+                          github/, git/, ui/, lib/ (shared). Not executable: run
+                          `pnpm exec tsx scripts/<area>/<file>.ts`, even where a doc shows it bare
 tests/                    Platform tests; each Tenant keeps its own in its layer
 ```
 
