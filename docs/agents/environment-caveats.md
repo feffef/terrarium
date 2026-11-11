@@ -22,8 +22,7 @@ them as new. Incident detail lives in the cited issue.
   `git commit -S`, and the Stop hook's `--reset-author` remedy for an
   "Unverified" commit, can silently fail to sign even with a correct author
   email.
-- **A Stop hook cannot invoke a Skill; its message can only tell you to.**
-  Invoke it yourself next turn. (session_013zxzeSy38XR1wPjCGFUExY; seen once)
+- **A Stop hook cannot invoke a Skill.** Invoke it yourself next turn. (session_013zxzeSy38XR1wPjCGFUExY; seen once)
 - **Session-only state can vanish across a resume, with no error:** a
   `/loop` or `CronCreate` job, a backgrounded `Agent` subagent, a scratchpad
   file. After a resume, check that each is still registered, alive or intact.
