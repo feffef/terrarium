@@ -45,7 +45,10 @@ if (import.meta.dev && !series.value) {
 <template>
   <figure v-if="series" class="rc">
     <figcaption class="rc-head">
-      <span class="rc-name">{{ series.name }}</span>
+      <span class="rc-title">
+        <span class="rc-name">{{ series.name }}</span>
+        <span v-if="series.gist" class="rc-gist">{{ series.gist }}</span>
+      </span>
       <span class="rc-sum">
         {{ formatRoutineMetric(metric, total) }} over {{ runs.length }} {{ runs.length === 1 ? 'run' : 'runs' }}
       </span>
@@ -87,6 +90,8 @@ if (import.meta.dev && !series.value) {
   box-shadow: var(--jd-shadow);
 }
 .rc-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.2rem 1rem; margin-bottom: 0.5rem; }
+.rc-title { display: flex; flex-direction: column; gap: 0.1rem; }
+.rc-gist { font-size: 0.8rem; color: var(--jd-muted); }
 .rc-name { font-family: var(--jd-mono); font-size: 0.85rem; color: var(--jd-ink); }
 .rc-sum { font-family: var(--jd-mono); font-size: 0.75rem; color: var(--jd-muted); font-variant-numeric: tabular-nums; }
 .rc-svg { display: block; width: 100%; height: 5rem; }

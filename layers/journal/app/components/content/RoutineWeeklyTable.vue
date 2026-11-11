@@ -5,6 +5,7 @@ const routines = useRoutineData()
 const metric = useRoutineMetric()
 
 const table = computed(() => routineWeekTable(routines.value, metric.value))
+const gistOf = (name: string) => routines.value.find((r) => r.name === name)?.gist
 const fmt = (v: number) => formatRoutineMetric(metric.value, v)
 </script>
 
@@ -21,7 +22,7 @@ const fmt = (v: number) => formatRoutineMetric(metric.value, v)
       </thead>
       <tbody>
         <tr v-for="row in table.rows" :key="row.name">
-          <th scope="row">{{ row.name }}</th>
+          <th scope="row" :title="gistOf(row.name)">{{ row.name }}</th>
           <td v-for="(c, i) in row.cells" :key="table.weeks[i]" class="num">{{ c > 0 ? fmt(c) : '–' }}</td>
           <td class="num">{{ fmt(row.total) }}</td>
         </tr>

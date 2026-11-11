@@ -6,13 +6,17 @@ import type { InjectionKey, Ref } from 'vue'
 import type { RoutineDoc } from '../types/journal'
 import type { RoutineMetric } from '../utils/routineRuns'
 
-const ROUTINE_DATA: InjectionKey<Ref<RoutineDoc[]>> = Symbol('journal-routine-data')
+// A Routine runs the Skill of the same name; `gist` is that Skill's Inventory
+// gist, so newcomers see what the Routine does, not only its name.
+export type RoutineView = RoutineDoc & { gist?: string }
 
-export function provideRoutineData(routines: Ref<RoutineDoc[]>) {
+const ROUTINE_DATA: InjectionKey<Ref<RoutineView[]>> = Symbol('journal-routine-data')
+
+export function provideRoutineData(routines: Ref<RoutineView[]>) {
   provide(ROUTINE_DATA, routines)
 }
 
-export function useRoutineData(): Ref<RoutineDoc[]> {
+export function useRoutineData(): Ref<RoutineView[]> {
   return inject(ROUTINE_DATA, ref([]))
 }
 

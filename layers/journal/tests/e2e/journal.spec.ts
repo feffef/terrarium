@@ -274,6 +274,7 @@ describe('journal Tenant', async () => {
     expect(html).toContain('significantly lower')
     expect(html).toContain('Seven days ending (UTC)')
     expect(html).toContain('aria-label="audit-skills: Cost (USD) per run')
+    expect(html).toMatch(/class="rc-gist"/)
     expect(html).not.toContain('No Routine named')
     expect(html).not.toMatch(/No document at <code[\s>]/)
     // Another Space has no routines, so it must render the empty state.
