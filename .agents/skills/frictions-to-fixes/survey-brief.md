@@ -186,7 +186,8 @@ resolution.
      horizon is idle: surface it as a candidate for the main session to pick
      up or escalate.
    - **Regression:** it reappeared after its fix merged, so the fix did not
-     hold.
+     hold. When its issue is closed, read the issue's `closed_by_pull_requests`
+     (`issue_read`) and cite any PR that closed it.
 
 ### Done when
 
