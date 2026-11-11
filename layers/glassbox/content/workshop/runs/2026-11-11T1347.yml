@@ -19,3 +19,5 @@ pagesRead:
   - deploy/20.pnpm-lockfile
   - verification/70.schema-evolution
   - walkthroughs/session-log-lands-on-main
+  - walkthroughs/planning-a-big-change
+  - terrarium-practice/40.session-logs

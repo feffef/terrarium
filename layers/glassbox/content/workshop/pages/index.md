@@ -79,7 +79,7 @@ These are the owner's goals for the guide. A run builds toward them directly; a 
 **Installed Skills.** *Engineering skills* could become part of *Installed skills* (`skill-pack/10.skill-packs`).
 
 **Left over from the 2026-11-11 Installed skills and Deploy pass.** Fresh readers still found these; none is false.
-- Owner question: *Wayfinder* says the sweep adds `ready-for-agent`, "work fully specified for an agent to build alone", to wayfinder tickets, yet most are human-in-the-loop decisions. Ask the owner whether the label fits them.
+- *Wayfinder* says the sweep adds `ready-for-agent` beside the `wayfinder:` label, while the Walkthrough *Planning a big change* (stop 3) says `ready-for-human` goes on grilling and prototype tickets. Check the `auto-triage` Skill and make the two agree; ask the owner if it is unclear.
 - *Wayfinder*: the installed Skill gives no reason research tickets may resolve more than one per session. *Planning skills*: `ready-for-agent`, `needs-triage` and *Agent Brief* are glossed only briefly.
 - *Continuous deployment* and *pnpm and the lockfile* use *ADR*, *Merge gate* and *Content database* as bare pointers; *Continuous deployment* has no excerpt for the failed-install and Node-restart claims.
 - The Corepack link on *pnpm and the lockfile* (`nodejs.org/api/corepack.html`) now redirects to GitHub; Node 22's docs page `nodejs.org/docs/latest-v22.x/api/corepack.html` is a candidate, and Corepack stops shipping with Node 25.
