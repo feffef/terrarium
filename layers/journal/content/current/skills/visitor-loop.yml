@@ -3,12 +3,11 @@ category: platform-operation
 importance: routine
 gist: Sends test visitors through the site and fixes what they flag.
 role: >-
-  The Terrarium's self-growth loop: three blind first-time visitors, each a
-  different model, browse one rotating part of a live build; the run fixes what
-  two or more flag, builds their best feature idea, and self-merges both PRs on
-  a green gate after `code-review`. A script lists candidate owner corrections
-  for `decisions.md` (prose alone failed 5/5), so rejected ideas stay rejected;
-  not yet proven end-to-end on a real revert.
+  The self-growth loop: three blind first-time visitors, each a different
+  model, browse one rotating part of a live build; the run fixes what two or
+  more flag, builds their best feature idea, and self-merges both PRs after
+  `code-review` on a green gate. A script lists owner corrections for
+  `decisions.md`, so rejected ideas stay rejected.
 observations:
   - date: "2026-10-02"
     note: >-
