@@ -85,6 +85,14 @@ async function withPage<T>(width: number, height: number, { colorScheme, mobile 
   }
 }
 
+// The browser's native anchor-scroll fires once, at navigation time — before
+// Nuxt's client-side hydration has added the target element to the DOM, so it
+// never actually scrolls anywhere (issue #965). Re-scroll explicitly once the
+// page has rendered.
+async function scrollToAnchor(page: Page, anchor: string, timeout: number): Promise<void> {
+  if (anchor) await page.locator(`#${anchor}`).scrollIntoViewIfNeeded({ timeout })
+}
+
 /**
  * Capture a screenshot of `url` to `out` at `windowSize` (an already-parsed
  * `W,H` string, e.g. `1280,800`). Waits `waitMs` (default
@@ -104,11 +112,7 @@ export async function captureScreenshot(
   await withPage(width, height, opts, async (page) => {
     await page.goto(url)
     if (waitMs > 0) await page.waitForTimeout(waitMs)
-    // The browser's native anchor-scroll fires once, at navigation time —
-    // before Nuxt's client-side hydration has added the target element to
-    // the DOM, so it never actually scrolls anywhere (issue #965). Re-scroll
-    // explicitly now that hydration has had the wait above to complete.
-    if (anchor) await page.locator(`#${anchor}`).scrollIntoViewIfNeeded({ timeout: waitMs > 0 ? waitMs : 5000 })
+    await scrollToAnchor(page, anchor, waitMs > 0 ? waitMs : 5000)
     await page.screenshot({ path: out, fullPage: opts.fullPage })
   })
 }
@@ -127,9 +131,11 @@ export async function captureScreenshotWaitingFor(
   { windowSize = '1280,800', timeoutMs = 15_000, ...opts }: CaptureOptions & { timeoutMs?: number } = {},
 ): Promise<void> {
   const [width, height] = parseWindowSize(windowSize)
+  const anchor = new URL(url).hash.slice(1)
   await withPage(width, height, opts, async (page) => {
     await page.goto(url, { waitUntil: 'networkidle' })
     await page.locator(selector).first().waitFor({ state: 'attached', timeout: timeoutMs })
+    await scrollToAnchor(page, anchor, timeoutMs)
     await page.screenshot({ path: out, fullPage: opts.fullPage })
   })
 }
