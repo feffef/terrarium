@@ -29,6 +29,8 @@ describe('checkGateEdit()', () => {
     expect(edit(join(repo, 'a.ts'))).toBeNull()
     writeFileSync(lock(), '999999999') // dead pid: a killed run
     expect(edit(join(repo, 'a.ts'))).toBeNull()
+    writeFileSync(lock(), '0') // kill(0, 0) probes a process group, not a run
+    expect(edit(join(repo, 'a.ts'))).toBeNull()
   })
 
   describe('with a live run', () => {
