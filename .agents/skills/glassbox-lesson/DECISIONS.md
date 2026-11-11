@@ -13,3 +13,4 @@ order added, with where it was made.
 - *Adding a site* keeps its plain word: the overview introduces "site" before "Tenant" (owner, curate run of 2026-11-07).
 - `description` serves visitors and `teaches` serves agents; an edit to either, or rewording a bold lead-in and its sentence to match, keeps `revision` and `publishedAt` when it changes no claim (owner, #2945).
 - Lessons keep their prefixes in tens, and a Lesson between two takes the number between them (*Skill inventory* is 85); no Lesson is renumbered to open a gap (owner, #3062).
+- Agent tooling comes first in the guide's order, and Web standards never sits between the two Nuxt Subjects (owner; moved from the workshop memory page).

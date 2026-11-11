@@ -43,7 +43,9 @@ Terrarium applies them without reading the source.
   Terrarium that the work focuses on; `/t/glassbox` redirects there. `drafts`
   holds the rest; each may be improved and moved to the guide. A guide page never links to a draft; a draft may link to
   the guide. Walkthroughs sit in `walkthroughs/`. A two-digit filename prefix
-  orders Lessons inside a folder, prerequisites first. Prefixes go up in tens;
+  orders Lessons inside a folder, prerequisites first. Pages link each other in
+  loops, so the order puts the broader concept first and a page may link a later
+  one in its body. Prefixes go up in tens;
   a Lesson that belongs between two takes the number between them (85 between 80
   and 90), and no Lesson is renumbered, since workshop entries name pages by
   file stem. Subject order and names come from
