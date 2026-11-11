@@ -36,7 +36,7 @@ export const formatGuardMessage = () =>
 
 // A Workflow brief is filled inside its script at run time, so only these two
 // tools are checked. `{NAME}` is narrow to skip JSON, code and template literals.
-const PLACEHOLDER = /@@\w+@@|(?<!\$)\{[A-Z]+(?:_[A-Z]+)*\}/
+const PLACEHOLDER = /@@\w+@@|(?<!\$)\{[A-Z_]+\}/
 const BRIEF_FIELD: Record<string, string> = { Agent: 'prompt', SendMessage: 'message' }
 
 export function unfilledPlaceholder(toolName: unknown, toolInput: unknown): string | null {
