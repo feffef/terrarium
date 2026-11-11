@@ -27,6 +27,7 @@ button {
   text-decoration: underline 1px dotted var(--gb-accent);
   text-underline-offset: 4px;
 }
+button::after { content: ' ?'; font-family: var(--gb-sans, sans-serif); }
 button:focus-visible {
   outline: 2px solid var(--gb-accent);
   outline-offset: 2px;
