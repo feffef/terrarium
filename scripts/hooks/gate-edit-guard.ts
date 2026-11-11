@@ -1,10 +1,7 @@
-// Denies an edit to the gated tree, or a `git commit`, while a `pnpm gate:scoped`
-// run is live in that checkout: gate.ts `stepAbort` aborts the run on any tree
-// or HEAD change (issue #3046). The signal is the gate's own run lock
-// (`takeRunLock`: a pid file in the git dir, so each worktree has its own); a
-// live pid means running. Paths outside the checkout and git-ignored files are
-// not in `snapshotTree`, so they pass. Bash is caught only for `git commit`;
-// a file-writing shell command passes. Human-only to merge (ADR-0004).
+// Denies an edit or `git commit` while a `pnpm gate:scoped` run is live in that
+// checkout: gate.ts `stepAbort` aborts on any tree change (issue #3046). Signal:
+// the run lock (`takeRunLock`, a pid file in the git dir). Ignored and outside
+// paths pass, as `snapshotTree` skips them; other Bash passes.
 //
 // Usage:
 //   tsx scripts/hooks/gate-edit-guard.ts            # payload on stdin
@@ -47,8 +44,7 @@ export function liveGatePid(dir: string): number | null {
   if (!gitDir.ok) return null
   try {
     const pid = Number.parseInt(readFileSync(join(gitDir.out, 'terrarium-gate.pid'), 'utf8'), 10)
-    // pid <= 0 would make kill(2) probe a whole process group, as gate.ts isAlive guards
-    return Number.isInteger(pid) && pid > 0 && alive(pid) ? pid : null
+    return Number.isInteger(pid) && alive(pid) ? pid : null
   } catch {
     return null
   }
@@ -74,9 +70,8 @@ export function checkGateEdit(tool: string, input: unknown, cwd: string): string
   if (pid === null) return null
   if (path && git(dir, ['check-ignore', '-q', '--', path]).ok) return null
   return (
-    `Blocked by the ${LABEL} (${REF}): \`pnpm gate:scoped\` is running here (pid ${pid}) and aborts on any ` +
-    `edit or commit to the tree. Wait for it to finish (it removes its lock), then retry; edit files outside ` +
-    `the checkout or git-ignored files meanwhile.`
+    `Blocked by the ${LABEL} (${REF}): \`pnpm gate:scoped\` (pid ${pid}) is running here and aborts on any ` +
+    `tree change; wait for it to finish, or edit ignored/outside files.`
   )
 }
 

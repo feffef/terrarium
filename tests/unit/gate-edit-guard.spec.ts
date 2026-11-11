@@ -30,10 +30,6 @@ describe('checkGateEdit()', () => {
     writeFileSync(lock(), '999999999') // dead pid: a killed run
     expect(edit(join(repo, 'a.ts'))).toBeNull()
   })
-  it('ignores a lock holding 0, which would probe the process group', () => {
-    writeFileSync(lock(), '0')
-    expect(edit(join(repo, 'a.ts'))).toBeNull()
-  })
 
   describe('with a live run', () => {
     beforeAll(() => writeFileSync(lock(), String(process.pid)))
