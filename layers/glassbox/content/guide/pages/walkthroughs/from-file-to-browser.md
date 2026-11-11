@@ -66,7 +66,7 @@ The first query for a Collection since the server started compares the checksum 
 
 ## 6. The browser hydrates, then navigates by payload
 
-Vue renders the page to HTML with the `useAsyncData` result inside, and the browser shows it, then takes the page over without fetching that data again. When the pointer enters a link, a finger touches it or the keyboard focuses it, the browser fetches that route's code and its `_payload.json`, and the click builds the next page from them with no query. A query no payload answers runs instead in an SQLite database the browser builds from the Collection's dump.
+Vue renders the page to HTML with the `useAsyncData` result inside, and the browser shows it, then takes over that page without fetching its data again. When the pointer enters a link, a finger touches it or the keyboard focuses it, the browser fetches that route's code and its `_payload.json`, and the click builds the next page from them with no query. A query no payload answers runs instead in an SQLite database the browser builds from the Collection's dump.
 
 ::lessons
 [Hydration](/t/glassbox/guide/nuxt-vue/hydration) · [Data fetching](/t/glassbox/guide/nuxt-vue/data-fetching) · [Content database](/t/glassbox/guide/nuxt-content/content-database)

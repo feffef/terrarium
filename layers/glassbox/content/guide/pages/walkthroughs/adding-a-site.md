@@ -7,7 +7,7 @@ revisionDate: '2026-11-11'
 publishedAt: '2026-10-27T18:52:48Z'
 ---
 
-A new site joins Terrarium. This Walkthrough follows the work from the side of the agent that builds it: from the approval, through one new folder and the manifest inside it, to the site answering at its own address with the Gate checking it. [Marquee](/t/marquee/reel), a small movie-blog Tenant, is the example throughout. Outside that folder, it needs to change only one file: `GLOSSARY-MAP.md`.
+A new site joins Terrarium. This Walkthrough follows the work from the side of the agent that builds it: from the approval, through one new folder and the manifest inside it, to the site answering at its own address with the Gate checking it. [Marquee](/t/marquee/reel), a small movie-blog Tenant, is the example throughout. Outside that folder, the one file it must change is `GLOSSARY-MAP.md`; a tile on the home page is optional (stop 9).
 
 ## 1. Someone approves it
 

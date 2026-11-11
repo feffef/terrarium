@@ -77,7 +77,7 @@ The restarted server serves the new build. The first query for each Collection c
 
 ## A real case
 
-On 9 October 2026 an agent checking story 4 of the Terrarium overview's diagram against :file[deploy/entrypoint.sh] found a gap in the step stop 3 covers: the script moved its checkout to the new commit before installing, so after a failed install the next commit's lockfile hash already matched, the install was skipped, and the build ran on the old packages. It filed [issue #1701](https://github.com/feffef/terrarium/issues/1701); the case had not happened on the live server yet. [PR #1717](https://github.com/feffef/terrarium/pull/1717) made the script keep the hash of its last good install outside the checkout. Its description said no test covers the script's behaviour, so a human had to merge it, and a Trusted user did at 05:53 UTC on 10 October.
+On 9 October 2026 an agent checking story 4 of the Terrarium overview's diagram against :file[deploy/entrypoint.sh] found a gap in the step stop 3 covers: the script moved its checkout to the new commit before installing, so after a failed install the next commit's lockfile hash already matched, the install was skipped, and the build ran on the old packages. It filed [issue #1701](https://github.com/feffef/terrarium/issues/1701); the case had not happened on the live server yet. [PR #1717](https://github.com/feffef/terrarium/pull/1717) made the script keep the hash of its last good install outside the checkout, leaving the script stop 3 describes. Its description said no test covers the script's behaviour, so a human had to merge it, and a Trusted user did at 05:53 UTC on 10 October.
 
 ## Where next
 

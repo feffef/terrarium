@@ -19,7 +19,7 @@ The Blog's :term[manifest] gives its `pages` :term[Collection] one extra field, 
 
 ## 2. The contract joins the schema
 
-When `expand()` builds the Blog's collections, it adds the `page` contract's fields to the Blog's own page schema, keeping any Blog field of the same name. The Blog's schema doesn't declare `publishedAt`; its posts get that field from the contract. `pnpm validate:content` checks every post against the combined schema, so a reader can rely on those fields' names and types.
+When `expand()` builds the Blog's collections, it adds to the Blog's own page schema each field of the `page` contract that the schema doesn't already declare. The Blog's schema declares no `publishedAt`, so its posts take that field from the contract. `pnpm validate:content` checks every post against the combined schema, so a reader can rely on those fields' names and types.
 
 ::lessons
 [Content collections](/t/glassbox/guide/nuxt-content/content-collections) · [Content validation](/t/glassbox/guide/verification/content-validation)
@@ -43,7 +43,7 @@ A visitor opens `/t/commons/search`. The Commons layer's Space page renders its 
 
 ## 5. The browser filters the list
 
-The server renders the first rows; the whole list travels in the page's data. Typing in the box filters that list in the browser, by title, description, Tenant and Space, with no new query. The filter and the sort order are code in the Commons layer, not in the shared read functions. A click on a result goes to the post's own address under `/t/blog/`, where the Blog's own pages render it.
+The server renders only the list's first rows, with a button that shows more, but every row travels in the page's data. Typing in the box filters that list in the browser, by title, description, Tenant and Space, with no new query. The filter and the sort order are code in the Commons layer, not in the shared read functions. A click on a result goes to the post's own address under `/t/blog/`, where the Blog's own pages render it.
 
 ::lessons
 [Data fetching](/t/glassbox/guide/nuxt-vue/data-fetching) · [File routing](/t/glassbox/guide/nuxt-vue/file-routing) · :file[layers/commons/app/components/commons/Search.vue] · :file[layers/commons/app/pages/t/commons/]

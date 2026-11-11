@@ -42,7 +42,7 @@ The session edits on a feature branch, never on `main`, and may hand parts of th
 
 ## 5. It checks its own work
 
-Before it opens the PR, the session runs `pnpm gate:scoped`, the local run of the :term[Gate], and the `code-review` Skill, which reviews the committed diff against the repo's standards and against the request. It fixes what they find. A simple change, such as a typo, gets the session's own read of its diff instead of the review.
+Before it opens the PR, the session runs `pnpm gate:scoped`, the local run of the :term[Gate], and the `code-review` Skill, which reviews the committed diff against the repo's standards and against the request. It fixes what they find. A simple change, such as a typo, gets the session's own read of its diff instead of the review; a change that adds, renames or moves a file is never simple.
 
 ::lessons
 [Merge gate](/t/glassbox/guide/verification/gate) · [Type checking](/t/glassbox/guide/verification/type-checking) · [Linting](/t/glassbox/guide/verification/linting) · [Testing](/t/glassbox/guide/verification/testing)
@@ -58,7 +58,7 @@ The session pushes the branch and opens the PR itself, without asking. The PR's 
 
 ## 7. It logs its work, the first time
 
-With the PR open, the session runs `close-session`. The session first checks itself against `CLAUDE.md` and the always-loaded rules, then writes its :term[session log]: its goal, how far it got and every :term[Friction] it hit, among them one for each rule it broke or skipped. At the end of that turn a `Stop` hook commits that one file straight to `main`.
+With the PR open, the session runs `close-session`. The session first checks itself against `CLAUDE.md` and the always-loaded rules, then writes its :term[session log]: its goal, how far it got and every :term[Friction] it hit, including a Friction that names each rule or step it broke or skipped. At the end of that turn a `Stop` hook commits that one file straight to `main`.
 
 ::lessons
 [Session logs](/t/glassbox/guide/terrarium-practice/session-logs) · [Self-improvement loop](/t/glassbox/guide/terrarium-practice/self-improvement-loop)
