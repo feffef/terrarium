@@ -134,11 +134,12 @@ Resume an agent with `SendMessage` to its id. Send the resumes of all
 branches in one message, except gates: at most 2 at once. Each agent replies
 with one line; check what it claims with `git -C <worktree> log --oneline -3`
 before you go on. If an agent can't be resumed (a session restart may lose
-it), dispatch a plain `Agent` with the same message, the branch's `brief`,
-`worktree` and `dir`, this session's id, and, for a reviewer, its findings
-file. Tell it to read `.claude/workflows/clear-backlog-build.js` and follow
-`rules()` (a builder) or `reviewPrompt()` (a reviewer) as if called with that
-branch. It takes that role from then on.
+it), dispatch a plain `Agent` with the same message, the branch's entry as you
+passed it to the workflow (with its `picks` and any `answer`), its `worktree`,
+the run's `dir`, this session's id, and, for a reviewer, its findings file.
+Tell it to read `.claude/workflows/clear-backlog-build.js` and follow `rules()`
+(a builder) or `reviewPrompt()` (a reviewer) as if called with that entry and
+`args`. It takes that role from then on.
 
 Act on each branch's `status`:
 
