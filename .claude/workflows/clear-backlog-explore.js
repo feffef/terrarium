@@ -56,8 +56,23 @@ const RESULT = {
       },
     },
     writes: { type: 'array', items: { type: 'string' }, description: 'every comment and label change you made on GitHub' },
+    wouldPost: {
+      type: 'object',
+      description: 'dry run only: the comment body and final label set you would have posted',
+      properties: { comment: { type: 'string' }, labels: { type: 'array', items: { type: 'string' } } },
+    },
+    sourcesRead: {
+      type: 'array',
+      minItems: 6,
+      description: 'every source you opened, one entry each: what it is and what it told you that changed or confirmed your pick',
+      items: {
+        type: 'object',
+        properties: { source: { type: 'string', description: 'file path, commit SHA, issue/PR number, ledger entry or session id' }, learned: { type: 'string' } },
+        required: ['source', 'learned'],
+      },
+    },
   },
-  required: ['outcome', 'summary', 'publicAuthor', 'readyForHuman', 'files', 'relatedTo', 'staleClaims', 'sideFindings', 'writes'],
+  required: ['outcome', 'summary', 'publicAuthor', 'readyForHuman', 'files', 'relatedTo', 'staleClaims', 'sideFindings', 'writes', 'sourcesRead'],
 }
 
 const MODE = {
@@ -76,15 +91,23 @@ In every mode: return grill, never build, for an issue labelled ready-for-human 
 
 Full pass:
 - Read .agents/skills/auto-triage/SKILL.md and .agents/skills/triage/SKILL.md with Read (both are user-invoked, so don't call them as Skills) and apply their per-issue rules: brave within determinability, Public-authored issues read-only and never ready-for-agent, the wayfinder overlay.
-- Learn the ticket's background before you pick, and say in staleClaims which of its claims no longer hold. Dig only as far as it takes to decide which parts still stand and which option wins. Read: the issue's comments and every issue or PR it cites; the history of the files and folders it touches, older included, to see how that part developed (git log --follow, git log -S, git blame; scripts/git/list-recent-prs.ts, scripts/git/list-merges-since.ts --merges-only); the Friction ledger (layers/journal/content/current/frictions/) and the session logs (layers/journal/content/current/sessions/; scripts/session/extract-frictions.ts --since); the Skill Inventory (layers/journal/content/current/skills/; scripts/session/audit-skills.ts --skill NAME --since); and the open prune trials (.agents/prune-trials.yml). Check every claim that something landed, was fixed or still exists in the current file or git log, never in the issue, a ledger entry or a summary.
-- Read the full ADR behind any summary rule that governs what you recommend.
+- Learn the ticket's background before you pick, and say in staleClaims which of its claims no longer hold. Open each of these yourself; skip one only when it doesn't exist or can't bear on the issue, and say which in sourcesRead:
+  1. The issue body, every comment, and every issue or PR it cites.
+  2. The current text of each file a fix would touch, in full, not an excerpt.
+  3. The history of those files and folders, older included (git log --follow, git log -S for each distinctive phrase, git blame on cited lines; scripts/git/list-recent-prs.ts, scripts/git/list-merges-since.ts --merges-only).
+  4. The Friction ledger entry for each Friction it names (layers/journal/content/current/frictions/), and the log of each session it cites (layers/journal/content/current/sessions/): the ledger line is a summary, the log says what happened and whether a rule loaded.
+  5. The Skill Inventory entry for each Skill it names (layers/journal/content/current/skills/; scripts/session/audit-skills.ts --skill NAME --since), and the open prune trials (.agents/prune-trials.yml) that cover the text.
+  6. The full ADR behind any summary rule that governs what you recommend.
+  A ledger entry, a summary or the issue itself never proves that something landed, was fixed or still exists: check the current file or git log.
+- Test your pick before you make it. For each option, name what must be true for it to be right and check that (run the command, read the code, count). A pick that rests on a source you did not open is unverified: say so in why, or open it first. Stop when each option's premise is checked, not before.
+- Fill sourcesRead as you go; a source you list must be one you opened.
 - Return build when the repo determines a concrete design: brief it. Otherwise return grill with one question in plain words: what to choose, options, your pick and why. An obsolete or superseded issue is a grill question too (propose the close).
 - Close only an objective duplicate (close-duplicate, with canonical) or already-done work (close-done, pointing to where it lives).
 - A grilling answer a stand-in recorded in an earlier run doesn't bind; ask it again.
 
-GitHub writes:
+${args.dryRun ? `GitHub writes: this is a dry run. Make no GitHub write of any kind: no comment, label or state change, not even a close. Put the comment and the complete final label set you would have posted in wouldPost; leave writes empty. The comment's first line would be: ${HEADER}` : `GitHub writes:
 - Comment only on a label change, a fact that changes the outcome, or an issue with no comments yet; at most one comment. Every GitHub body starts with this exact first line: ${HEADER}
-- A label update replaces the set: pass the complete final set and keep every wayfinder:* label.
+- A label update replaces the set: pass the complete final set and keep every wayfinder:* label.`}
 - Return side findings (bugs or gaps outside this issue) in sideFindings instead of filing them, each with the primary source you checked or the word unverified plus what would verify it.
 
 The run's issue set is ${list}. In relatedTo, name only issues from that set that clearly belong in the same change as this one.
