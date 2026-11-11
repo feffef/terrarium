@@ -39,10 +39,8 @@ Terrarium applies them without reading the source.
   reading order: readers use the sidebar, where
   Lessons lead and Walkthroughs follow the Subjects, plainly listed, none
   named a starting point while they are still being worked out.
-- **Three Spaces.** `guide`, at `/t/glassbox/guide`, holds the pages central to
-  Terrarium that the work focuses on; `/t/glassbox` redirects there. `drafts`
-  holds the rest; each may be improved and moved to the guide. A guide page never links to a draft; a draft may link to
-  the guide. Walkthroughs sit in `walkthroughs/`. A two-digit filename prefix
+- **Two Spaces.** `guide`, at `/t/glassbox/guide`, holds the pages central to
+  Terrarium that the work focuses on; `/t/glassbox` redirects there. A guide page never links outside the guide. Walkthroughs sit in `walkthroughs/`. A two-digit filename prefix
   steers the order of Lessons inside a folder, prerequisites first: pages link
   each other in loops, so the broader concept comes first and a page may link a
   later one in its body. Prefixes go up in tens, and a Lesson that belongs

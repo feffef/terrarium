@@ -70,9 +70,9 @@ export function pageOverview(stem: string, source: string, titles: Record<string
 const files = (dir: string, pattern: string): [string, string][] =>
   existsSync(dir) ? globSync(pattern, { cwd: dir }).sort().map((f) => [f, readFileSync(join(dir, f), 'utf8')]) : []
 
-/** Commits to the guide and drafts since `since` (ISO time), or their last 30 when no run has happened yet. */
+/** Commits to the guide since `since` (ISO time), or their last 30 when no run has happened yet. */
 export function guideLog(since: string | undefined): string {
-  const r = tryGit(['log', '--oneline', '--no-merges', ...(since ? [`--since=${since}`] : ['-n', '30']), '--', `${content}/guide`, `${content}/drafts`], root)
+  const r = tryGit(['log', '--oneline', '--no-merges', ...(since ? [`--since=${since}`] : ['-n', '30']), '--', `${content}/guide`], root)
   return r.ok ? r.out : '(git log failed)'
 }
 
@@ -186,7 +186,7 @@ export function orientation(base = join(root, content), { log = guideLog, prs = 
     section('Memory page', splitFrontmatter(memory).body),
     section(`Last ${recentRuns} curate runs, newest first`, runs.slice(0, recentRuns).map(([f, t]) => `## ${f}\n\n${runSummary(t)}`).join('\n\n')),
     section('Page-check warnings', warnings.join('\n')),
-    section(runs.length ? 'Guide and drafts changes since the last curate run' : 'Last 30 guide and drafts changes (no curate run yet)', log(runs[0] ? runStart(runs[0][0]) : undefined)),
+    section(runs.length ? 'Guide changes since the last curate run' : 'Last 30 guide changes (no curate run yet)', log(runs[0] ? runStart(runs[0][0]) : undefined)),
     section('Guide pages', [`Every page's entry is in these files. Read each whole, one Read per file, never through head:`, ...index.map((f) => `- ${f.path} (${Math.round(f.bytes / 1000)} KB)`)].join('\n')),
   ].join('\n\n')
   const bytes = Buffer.byteLength(out)

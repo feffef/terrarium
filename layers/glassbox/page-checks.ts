@@ -218,7 +218,7 @@ function placeProblems(file: string): string[] {
 
 // The Lesson contract in GLOSSARY.md: these sections, in this order; the two under In Terrarium are h3.
 const subsections: string[] = [glassboxLessonIds.why, glassboxLessonIds.watch]
-// Why it's built this way explains each reason in a bullet of its own words (GLOSSARY.md, Lesson); drafts meet the bullet form and length bounds on promotion.
+// Why it's built this way explains each reason in a bullet of its own words (GLOSSARY.md, Lesson).
 const adrCite = /ADR-(\d{4}) \(:file\[docs\/adr\/(\d{4})-[^\]\s]+\.md\]\)/g
 const ownWords = { min: 12, max: 65 }
 
@@ -241,7 +241,7 @@ function whyItems(prose: string): string[] {
   return start < 0 ? [] : lines.slice(start + 1, end < 0 ? undefined : end).join('\n').split(/\n\s*\n|\n(?=- )/).filter((p) => p.trim())
 }
 
-function lessonProblems(file: string, body: string, prose: string, space: string): string[] {
+function lessonProblems(file: string, body: string, prose: string): string[] {
   const headings = [...prose.matchAll(/^(#{2,3}) (.+)$/gm)].map((m) => ({ level: m[1]!.length, id: glassboxTermId(m[2]!) }))
   const problems: string[] = []
   let last = -1
@@ -256,12 +256,11 @@ function lessonProblems(file: string, body: string, prose: string, space: string
     if ([...p.matchAll(adrCite)].some((m) => m[1] !== m[2])) problems.push(`Why it's built this way cites an ADR by another ADR's file: ${p}`)
     const rest = p.replace(adrCite, '')
     if (/\bADR-\d{4}\b|docs\/adr\//.test(rest)) problems.push(`Why it's built this way cites an ADR not as "ADR-NNNN (:file[…])": ${p}`)
-    if (space !== 'guide') continue
     if (!/^- \*\*[^*]+\*\*/.test(p)) problems.push(`Why it's built this way item is not a bullet that opens with a bold lead-in: ${p}`)
     const words = rest.replace(/:file\[[^\]]*\]/g, '').split(/\s+/).filter((w) => /\w/.test(w)).length
     if (words < ownWords.min || words > ownWords.max) problems.push(`Why it's built this way item has ${words} words of its own, not ${ownWords.min}-${ownWords.max}: ${p}`)
   }
-  if (space === 'guide') for (const l of motiveLines(body, 'because')) problems.push(`In Terrarium gives a motive ("because"); move it to Why it's built this way: ${l}`)
+  for (const l of motiveLines(body, 'because')) problems.push(`In Terrarium gives a motive ("because"); move it to Why it's built this way: ${l}`)
   const fullReference = new RegExp(`^${glassboxLessonLabels.fullReference}:?\\s*\\[[^\\]]+\\]\\(https://`, 'm')
   if (!file.startsWith('terrarium-practice/') && !fullReference.test(prose)) problems.push('Lesson has no "Full reference" https link')
   return problems
@@ -295,17 +294,16 @@ function lengthProblems(route: string, frontmatter: Record<string, unknown>): st
 }
 
 /** `file` is relative to its Space's `pages/`. */
-export function glassboxPageProblems(file: string, source: string, site: GlassboxSite, git: GlassboxGit, space: string): string[] {
+export function glassboxPageProblems(file: string, source: string, site: GlassboxSite, git: GlassboxGit): string[] {
   const { frontmatter, body } = splitFrontmatter(source)
   const { prose } = readBody(body)
   const refs = glassboxPageRefs(body)
   const problems = placeProblems(file)
   const route = `/${contentRoute(file)}`
-  problems.push(...glassboxStopProblems(body, glassboxWalkthroughOf(route), space === 'guide' && route === '/', site.cites))
-  if (glassboxSubjectOf(route)) problems.push(...lessonProblems(file, body, prose, space))
+  problems.push(...glassboxStopProblems(body, glassboxWalkthroughOf(route), route === '/', site.cites))
+  if (glassboxSubjectOf(route)) problems.push(...lessonProblems(file, body, prose))
   if (glassboxSubjectOf(route) || glassboxWalkthroughOf(route)) problems.push(...nextProblems(prose, Boolean(glassboxSubjectOf(route))))
-  // Drafts are set aside (GLOSSARY.md, Three Spaces); a page moved to the guide meets its caps.
-  if (space === 'guide') problems.push(...lengthProblems(route, frontmatter))
+  problems.push(...lengthProblems(route, frontmatter))
 
   const { revision, revisionDate } = frontmatter
   if (typeof revision === 'string') problems.push(...gitProblems(revision, revisionDate, refs.files, prose, git))
@@ -318,9 +316,9 @@ export function glassboxPageProblems(file: string, source: string, site: Glassbo
     const path = link!.replace(/\/$/, '')
     // A link quoting its target's title goes stale when the title changes; lowercase text is running prose (#2114).
     const title = site.titles[path]
-    if (space === 'guide' && title !== undefined && !/^[a-z]/.test(text!) && text !== title) problems.push(`link text "${text}" is not the title "${title}" of ${path}`)
-    // The guide stands alone; drafts may lean on it (GLOSSARY.md, Three Spaces).
-    if (space === 'guide' && path.startsWith('/t/glassbox/') && path !== guide && !path.startsWith(`${guide}/`)) problems.push(`guide page links outside the guide: ${link}`)
+    if (title !== undefined && !/^[a-z]/.test(text!) && text !== title) problems.push(`link text "${text}" is not the title "${title}" of ${path}`)
+    // The guide stands alone (GLOSSARY.md, Two Spaces).
+    if (path.startsWith('/t/glassbox/') && path !== guide && !path.startsWith(`${guide}/`)) problems.push(`guide page links outside the guide: ${link}`)
     else if (path.startsWith('/t/glassbox/') ? !pages.has(path) : !journal.has(path)) problems.push(`link ${link} resolves to no page`)
   }
   // With one range, Excerpt.vue numbers only the runs that touch its ends.

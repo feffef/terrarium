@@ -1,6 +1,6 @@
 ---
 name: glassbox-update
-description: Bring every Glass Box guide page (drafts opt-in) up to date with main, claim-check flagged pages and a daily rotation, then land it as one self-merging gated PR.
+description: Bring every Glass Box guide page up to date with main, claim-check flagged pages and a daily rotation, then land it as one self-merging gated PR.
 disable-model-invocation: true
 ---
 
@@ -14,7 +14,7 @@ diagram SVGs it re-renders in `app/assets/mermaid/`. Read
 Write, Diagrams, Check) first.
 
 The script is `.agents/skills/glassbox-update/scripts/glassbox-update.ts`, run
-with `pnpm exec tsx`; `--spaces guide,drafts` adds other Spaces (default
+with `pnpm exec tsx`; `--spaces guide,workshop` adds other Spaces (default
 `guide`). Its report's `main` is **the commit**: this run reviews and pins to
 that one commit, never a later fetch.
 

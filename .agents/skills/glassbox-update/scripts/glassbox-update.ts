@@ -1,6 +1,6 @@
 // The mechanical half of the glassbox-update Skill: what changed in the code each
 // Glass Box page cites, between the page's `revision` and main.
-// Usage: pnpm exec tsx .agents/skills/glassbox-update/scripts/glassbox-update.ts [--spaces guide,drafts] [--write --to <sha>]
+// Usage: pnpm exec tsx .agents/skills/glassbox-update/scripts/glassbox-update.ts [--spaces guide,workshop] [--write --to <sha>]
 import { existsSync, globSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { glassboxTerms } from '../../../../layers/glassbox/page-checks.ts'
@@ -139,7 +139,7 @@ function main(): void {
   const write = argv.includes('--write')
   const spacesArg = flagValue(argv, '--spaces')
   const spaces = spacesArg?.split(',').filter(Boolean)
-  if (argv.includes('--spaces') && (spacesArg?.startsWith('--') || !spaces?.length)) throw new Error('--spaces needs a comma-separated list, e.g. guide,drafts')
+  if (argv.includes('--spaces') && (spacesArg?.startsWith('--') || !spaces?.length)) throw new Error('--spaces needs a comma-separated list, e.g. guide,workshop')
   const to = flagValue(argv, '--to')
   // Pin only to the commit the agent reviewed; a fresh fetch could pass unread changes.
   if (write && !to) throw new Error('--write needs --to <sha>, the `main` of the report you reviewed')

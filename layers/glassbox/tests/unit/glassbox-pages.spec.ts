@@ -31,11 +31,11 @@ const fakeGit: GlassboxGit = {
   read: (r, path) => (r === rev ? files[path] : undefined),
 }
 const site: GlassboxSite = {
-  pages: ['/t/glassbox/guide', '/t/glassbox/guide/nuxt-content/collections', '/t/glassbox/guide/terrarium-practice/gate', '/t/glassbox/guide/walkthroughs/from-file-to-browser', '/t/glassbox/drafts/zod/timestamps'],
+  pages: ['/t/glassbox/guide', '/t/glassbox/guide/nuxt-content/collections', '/t/glassbox/guide/terrarium-practice/gate', '/t/glassbox/guide/walkthroughs/from-file-to-browser'],
   journal: ['/t/journal/current', '/t/journal/current/history', '/t/journal/current/skills'],
   terms: ['collection'],
   cites: { '/t/glassbox/guide/nuxt-content/collections': ['shared/expand.ts'] },
-  titles: { '/t/glassbox/guide': 'Home', '/t/glassbox/guide/nuxt-content/collections': 'Collections', '/t/glassbox/guide/terrarium-practice/gate': 'The Gate', '/t/glassbox/drafts/zod/timestamps': 'Timestamps' },
+  titles: { '/t/glassbox/guide': 'Home', '/t/glassbox/guide/nuxt-content/collections': 'Collections', '/t/glassbox/guide/terrarium-practice/gate': 'The Gate' },
 }
 
 const frontmatter = `---\ntitle: T\ndescription: D\nteaches: X\nrevision: '${rev}'\nrevisionDate: '2026-10-14'\n---\n`
@@ -116,7 +116,7 @@ return \`out\`. // Not. A. Sentence.
 - [Home](/t/glassbox/guide)
 `
 
-const problemsOf = (file: string, source: string, space = 'guide') => glassboxPageProblems(file, source, site, fakeGit, space)
+const problemsOf = (file: string, source: string) => glassboxPageProblems(file, source, site, fakeGit)
 
 describe('glassboxPageProblems on fixture pages', () => {
   it('passes a good Lesson, House rules Lesson, Walkthrough and landing page', () => {
@@ -214,11 +214,9 @@ describe('glassboxPageProblems on fixture pages', () => {
     expect(problemsOf(file, lesson).join('\n')).toContain(message)
   })
 
-  it('fails a guide page linking into drafts, and passes a draft linking either way', () => {
-    const toDraft = lesson.replace(gateItem, `${gateItem}- [Timestamps](/t/glassbox/drafts/zod/timestamps)\n`)
-    expect(problemsOf('nuxt-content/01.collections.md', toDraft)).toEqual(['guide page links outside the guide: /t/glassbox/drafts/zod/timestamps'])
-    expect(problemsOf('nuxt-content/01.collections.md', toDraft, 'drafts')).toEqual([])
-    expect(problemsOf('nuxt-content/01.collections.md', toDraft.replace('zod/timestamps', 'zod/gone'), 'drafts')).toEqual(['link /t/glassbox/drafts/zod/gone resolves to no page'])
+  it('fails a guide page linking outside the guide', () => {
+    const outside = lesson.replace(gateItem, `${gateItem}- [Workshop](/t/glassbox/workshop)\n`)
+    expect(problemsOf('nuxt-content/01.collections.md', outside)).toEqual(['guide page links outside the guide: /t/glassbox/workshop'])
   })
 
   it.each([
@@ -226,32 +224,28 @@ describe('glassboxPageProblems on fixture pages', () => {
     ['a Lesson description over 120 chars', 'nuxt-content/01.collections.md', lesson, 'description', 121, 'is 121 chars, more than 120'],
     ['a Walkthrough title over 36 chars', 'walkthroughs/from-file-to-browser.md', walkthrough, 'title', 37, 'is 37 chars, more than 36'],
     ['a Walkthrough description over 140 chars', 'walkthroughs/from-file-to-browser.md', walkthrough, 'description', 141, 'is 141 chars, more than 140'],
-  ])('fails %s in the guide, not in drafts', (_name, file, page, field, length, message) => {
+  ])('fails %s in the guide', (_name, file, page, field, length, message) => {
     const placeholder = field === 'title' ? 'title: T' : 'description: D'
     const long = page.replace(placeholder, `${field}: ${'x'.repeat(length)}`)
     expect(problemsOf(file, long).join('\n')).toContain(message)
     expect(problemsOf(file, page.replace(placeholder, `${field}: ${'x'.repeat(length - 1)}`))).toEqual([])
-    expect(problemsOf(file, long, 'drafts').join('\n')).not.toContain('chars, more than')
   })
 
-  it('fails a guide page with no teaches, not in drafts', () => {
+  it('fails a guide page with no teaches', () => {
     expect(problemsOf('nuxt-content/01.collections.md', lesson.replace('teaches: X\n', ''))).toEqual(['no teaches'])
     expect(problemsOf('walkthroughs/from-file-to-browser.md', walkthrough.replace('teaches: X\n', ''))).toEqual(['no teaches'])
-    expect(problemsOf('nuxt-content/01.collections.md', lesson.replace('teaches: X\n', ''), 'drafts')).toEqual([])
   })
 
-  it('fails a guide Lesson title of more than four words, not in drafts or on a Walkthrough', () => {
+  it('fails a guide Lesson title of more than four words, not on a Walkthrough', () => {
     const titled = (page: string, title: string) => page.replace('title: T', `title: ${title}`)
     expect(problemsOf('nuxt-content/01.collections.md', titled(lesson, 'One two three four'))).toEqual([])
     expect(problemsOf('nuxt-content/01.collections.md', titled(lesson, 'One two three four five'))).toEqual(['title "One two three four five" is 5 words, more than 4'])
-    expect(problemsOf('nuxt-content/01.collections.md', titled(lesson, 'One two three four five'), 'drafts')).toEqual([])
     expect(problemsOf('walkthroughs/from-file-to-browser.md', titled(walkthrough, 'One two three four five'))).toEqual([])
   })
 
-  it('fails guide link text that is not its target\'s title, unless it starts lowercase, and passes it in drafts', () => {
+  it('fails guide link text that is not its target\'s title, unless it starts lowercase', () => {
     const stale = lesson.replace('[The Gate](', '[The Old Gate](')
     expect(problemsOf('nuxt-content/01.collections.md', stale)).toEqual(['link text "The Old Gate" is not the title "The Gate" of /t/glassbox/guide/terrarium-practice/gate'])
-    expect(problemsOf('nuxt-content/01.collections.md', stale, 'drafts')).toEqual([])
     expect(problemsOf('nuxt-content/01.collections.md', lesson.replace('[The Gate](', '[the gate step]('))).toEqual([])
   })
 
@@ -279,11 +273,10 @@ describe('In Terrarium motive and long Excerpts', () => {
   const file = 'nuxt-content/01.collections.md'
   const because = lesson.replace(', one per :file[layers/].', ', one per :file[layers/], because each Tenant is a `layer`.')
 
-  it('fails a "because" clause in a guide Lesson\'s In Terrarium, and passes one in Why, What to watch for or a draft', () => {
+  it('fails a "because" clause in a guide Lesson\'s In Terrarium, and passes one in Why or What to watch for', () => {
     expect(problemsOf(file, because)).toEqual(['In Terrarium gives a motive ("because"); move it to Why it\'s built this way: Built in :file[shared/expand.ts]{lines="3-7"}, one per :file[layers/], because each Tenant is a `layer`.'])
     expect(problemsOf(file, lesson.replace('keeps mistakes off', 'because it keeps mistakes off'))).toEqual([])
     expect(problemsOf(file, lesson.replace('See ADR-0004', 'Because of ADR-0004, see it'))).toEqual([])
-    expect(problemsOf(file, because, 'drafts')).toEqual([])
   })
 
   it('warns on a "so" clause in In Terrarium, not in code or Why', () => {
@@ -368,17 +361,13 @@ describe('every Glass Box page matches the code at its revision', () => {
     expect(realSite.journal).toEqual(expect.arrayContaining(['/t/journal/current', '/t/journal/current/history', '/t/journal/archived/skills']))
   })
 
-  it('finds the landing page and a draft (canary: the walk must not match nothing)', () => {
+  it('finds the landing page (canary: the walk must not match nothing)', () => {
     expect(files.guide).toContain('index.md')
-    expect(files.drafts!.length).toBeGreaterThan(0)
+    expect(files.guide!.length).toBeGreaterThan(1)
   })
 
   it.each(pages.map(({ space, file }) => [`${space}/${file}`, space, file]))('%s', (_name, space, file) => {
-    expect(glassboxPageProblems(file, read(space, file), realSite, repoGit, space)).toEqual([])
-  })
-
-  it('reads the drafts Space\'s terms through its link to the guide\'s', () => {
-    expect(globSync('*.yml', { cwd: join(content, 'drafts/terms') }).sort()).toEqual(globSync('*.yml', { cwd: join(content, 'guide/terms') }).sort())
+    expect(glassboxPageProblems(file, read(space, file), realSite, repoGit)).toEqual([])
   })
 
   it('every term source exists and every term lesson is a page', () => {
