@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_013zxzeNeWJTvqXPTEeR63qC
 startedAt: 2026-11-11T09:07:42Z
-endedAt: 2026-11-11T09:49:46Z
+endedAt: 2026-11-11T09:53:18Z
 kind: interactive
 goal: Glass Box terms link their Lesson, not the raw glossary
-status: in-review
-outcome: "PR 3062 open: terms show a titled Lesson chip, Skill inventory Lesson rewritten after review; CI green, waits for the owner's merge"
+status: completed
+outcome: "PR 3062 merged: terms show a titled Lesson chip, Skill inventory Lesson added and rewritten after review"
 summary: "The owner asked whether each expanded Glass Box term has a matching Lesson, and wanted terms to link the Lesson instead of GLOSSARY.md. I mapped all terms to Lessons and found about nine without a good one, asked three questions, and the owner decided: Lesson only when there is one, keep the glossary link for no-Lesson and Tenant-specific terms, delete Proposal and Pingback, write a Skill inventory Lesson, leave XSS unlinked. Those were human-instructed. I built an optional lesson field, a check that rejects both fields or a missing page, the term data, a first Lesson draft and the doc edits. My first Term.vue link just said Lesson; the owner pointed out the existing titled Lesson-chip design, so I redrew it from the page list. Later the owner called the Lesson's concept weak and asked me to research how the inventory is used and apply glassbox-lesson and glassbox-curate: I traced its producers and readers, rewrote the page around them, had a separate claim checker and a fresh reader review it, fixed what they found, and added a run entry and a memory note. Review by two read-only subagents earlier found no hard violations. Open: the Lesson uses prefix 85 against the tens rule, and a human must merge the PR."
 prs:
   - "3062"
@@ -108,11 +108,11 @@ frictions:
   - description: Two content files failed validation on a colon in an unquoted YAML scalar, found only when the full validator or page test ran.
     solution: Quote any description or changes entry that holds a colon; the glassbox-curate run-entry skeleton could show them quoted.
     severity: nit
-durationSec: 2523
+durationSec: 2736
 models:
-  claude-sonnet-5-5: 228
+  claude-sonnet-5-5: 237
 toolCounts:
-  Bash: 80
+  Bash: 81
   Read: 9
   AskUserQuestion: 1
   Write: 5
@@ -122,7 +122,7 @@ toolCounts:
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  ReadNotifications: 3
+  ReadNotifications: 6
   mcp__github__pull_request_read: 1
   mcp__github__update_pull_request: 1
 filesEdited:
@@ -460,28 +460,28 @@ subagents:
     durationSec: 36
     toolCalls: 10
     modelCalls: 6
-    tokenShare: 4.5
+    tokenShare: 4.2
   - type: general-purpose
     task: Spec review of branch diff
     model: sonnet
     durationSec: 43
     toolCalls: 11
     modelCalls: 7
-    tokenShare: 5.2
+    tokenShare: 4.8
   - type: general-purpose
     task: Claim-check the Skill inventory Lesson
     model: sonnet
     durationSec: 50
     toolCalls: 30
     modelCalls: 7
-    tokenShare: 5.6
+    tokenShare: 5.2
   - type: general-purpose
     task: Fresh-reader test of the Lesson
     model: sonnet
     durationSec: 14
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.3
+    tokenShare: 1.2
 gitBranch: claude/optimistic-albattani-xfxbiz
 entrypoint: remote
 cliVersion: 2.1.322
