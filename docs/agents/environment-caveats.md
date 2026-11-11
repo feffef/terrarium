@@ -12,15 +12,12 @@ them as new. Incident detail lives in the cited issue.
   A local CLI has no such server to allow. `mcp__github__*` stays silent
   through a separate auto-approve path, not the allowlist. A real MCP server in
   a trusted local CLI works normally. (issue #288)
-- **In the Default (limited) environment, `docs.github.com` 403s through the
-  agent proxy.** Fetch `raw.githubusercontent.com/github/docs/...` to check
-  GitHub's own docs. (issue #888)
-- **`github.com/user-attachments` (403), `content.nuxt.com`, `zod.dev` and
-  `git-scm.com` are also blocked there.** Don't retry; ask the owner to paste
-  the content into the issue or chat.
-- **The blocked set varies by environment** (read yours with `get_environment`).
-  You may suggest the user run the session or Routine in the Unrestricted
-  environment; never switch yourself.
+- **The agent proxy blocks some hosts, and the set varies by environment.**
+  The SessionStart "Network reach" line lists what it let through; trust it and
+  don't retry a blocked host (`github.com/user-attachments` is blocked too but
+  not probed). For GitHub docs read `raw.githubusercontent.com/github/docs/...`
+  (issue #888); otherwise ask the owner to paste the content. You may suggest the
+  Unrestricted environment for the session or Routine; never switch yourself.
 - **`~/.ssh/commit_signing_key.pub` can be unprovisioned (0 bytes) here** —
   `git commit -S`, and the Stop hook's `--reset-author` remedy for an
   "Unverified" commit, can silently fail to sign even with a correct author

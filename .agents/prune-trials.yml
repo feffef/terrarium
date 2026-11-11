@@ -23,75 +23,6 @@
 #            topic's tools correctly.
 trials:
   - problem: >
-      The `close-session` invocation restated in six Skills and
-      `pr-workflow.md` (-19 net, from `git diff --numstat` against the parent:
-      7 added, 26 deleted; this entry not counted): the end-of-Skill "invoke
-      close-session" steps and clauses in `digest`, `visitor-loop`,
-      `glassbox-update`, `frictions-to-fixes`,
-      `clear-backlog` and `blog-post` (its step 13), and step 4 plus the last
-      line of "Closing a scheduled run's PR", cut; CLAUDE.md's bullet is the one
-      home and now says a session with no PR invokes it once at its end. Chosen
-      after the search subagent covered the instruction corpus, guard headers,
-      the tracker and the ledger: the rule failed as prose (#2209, #2363,
-      #2424, #2772; ledger `close-session-bypassed-by-hand-log`) and
-      `read-first-hint.ts` now hints after a PR opens or merges. Kept: the
-      deltas (`clear-backlog`'s `ruleVerdicts` merge, `audit-skills`,
-      `glassbox-update`'s nothing-changed case, `dependabot-sweep`). Runners-up:
-      the dispatch-subagents read (a deny guard holds it, little prose) and the
-      CLAUDE.md read-first triggers (owner-accepted, #2066). Same run judged and
-      deleted the backgrounding-prose trial (landed de9a393f): 42 sessions
-      since, no major or blocker Friction traces to it; double-background 11.8%
-      -> 19.4% (17/144 -> 6/31), owner-accepted nits whose deny message is
-      unchanged (#2310); no issue.
-    territory:
-      paths:
-        - "CLAUDE.md: the close-session bullet"
-        - "docs/agents/pr-workflow.md: 'Closing a scheduled run's PR' (step 4 and the last line)"
-        - ".agents/skills/{digest,visitor-loop,glassbox-update,frictions-to-fixes,clear-backlog,blog-post}/SKILL.md: close-session steps"
-      keywords:
-        - close-session
-    opened: 2026-11-07
-    proven: true
-    check: >
-      Damage is a major or blocker Friction where a scheduled run ended with no
-      session log or a stale `in-review` log because no instruction told it to
-      invoke `close-session`, and a cut line would have prevented it. NOT
-      damage: `close-session-bypassed-by-hand-log` at its standing rate (the
-      read-first hint catches it; compare shares with `friction-rates.ts`).
-      Owner's condition (PR #2939): revert the cut if the share of sessions
-      that fail to log at a closure point rises even a little, whatever the
-      severity; compare `close-session-bypassed-by-hand-log` and
-      `closure-not-invoked-on-answers` with `friction-rates.ts`.
-  - problem: >
-      The `dispatch-subagents` Skill's §2-§3 (-4 net, from `git diff --numstat`:
-      40 added, 44 deleted; this entry not counted): the worktree, stranding and
-      scope bullets merged and reworded, the git-hygiene restatements and the
-      separate pre-dispatch checklist folded into one lead-in; every rule kept.
-      Chosen after the search subagent covered the instruction corpus, guard
-      headers, the tracker and the ledger: the "read the Skill before a brief"
-      rule failed as prose (#2475, #2543; ledger `dispatch-read-guard-deny`, 48
-      occurrences) and `scripts/hooks/dispatch-read-guard.ts` now denies the
-      dispatch until it is read, so the Skill text is what remains to tighten.
-      Little text to cut. Runners-up: CLAUDE.md "Verify before you state"
-      (already cut to one home, PR #2537) and the git-conventions no-chaining
-      rule (pruned once, #2762). Same run judged and deleted the gate-freeze
-      trial (landed a516ce3c): 50 sessions ended since, no major or blocker
-      Friction traces to it; edit-during-gate-run 13.0% -> 7.5% (18/138 -> 3/40),
-      push-chained-to-gate-run 4.3% -> 2.5%; no issue.
-    territory:
-      paths:
-        - ".agents/skills/dispatch-subagents/SKILL.md: sections 2 and 3"
-      keywords:
-        - isolation
-        - stranded
-    opened: 2026-11-08
-    proven: true
-    check: >
-      Damage is a major or blocker Friction where a dispatched subagent's work
-      was lost, stranded or run on the wrong checkout, or a review agent
-      moved a checkout, and a cut line would have prevented it. NOT damage:
-      `dispatch-read-guard-deny` at its standing rate (the guard's own deny).
-  - problem: >
       The review-then-gate rule before a PR opens (-2 net, from
       `git diff --numstat`: 8 added, 10 deleted; this entry not counted):
       `pr-workflow.md` "Review before opening the PR" reworded to state the goal
@@ -153,3 +84,40 @@ trials:
       `push-chained-to-gate-run` and `chained-git-step-fails-silently` shares
       with `friction-rates.ts`; a clear rise in either is also damage. NOT
       damage: those entries at their standing rates (nits already recur).
+  - problem: >
+      The proxy-blocked-hosts bullets in `environment-caveats.md` (-3 net, from
+      `git diff --numstat`: 6 added, 9 deleted; this entry not counted): three
+      bullets that listed blocked hosts and fallbacks merged into one that points
+      at the SessionStart "Network reach" line (`network-start.ts`, which now
+      reports which hosts are blocked) and keeps the raw.githubusercontent.com
+      fallback, the no-retry rule and the Unrestricted-environment suggestion.
+      Chosen after the search subagent covered CLAUDE.md, `docs/agents/`, rules,
+      Skills, guard headers, the tracker and the ledger: `harness-proxy-blocks`
+      (10 occurrences, 6 fixes, 4 Regression issues, #3045 the latest) failed as
+      prose, each fix adding hosts to the list; the hook now holds the list, so
+      the prose is the safest cut. Runners-up: CLAUDE.md "Verify before you
+      state" and "Question the premise" (accepted ledger entries, nothing wired)
+      and the fact-check steps (caught by design). Same run judged and deleted
+      two trials: close-session (landed b9e6bdc4): 57 sessions since,
+      `close-session-bypassed-by-hand-log` 3/131 -> 0/57 and
+      `closure-not-invoked-on-answers` 2/131 -> 0/57; the one major Friction
+      (tzGF5UQU) started before the landing and traces to ADR-0003, not the cut;
+      no issue. dispatch-subagents §2-§3 (landed f1635bde): `dispatch-read-guard-deny`
+      28.9% -> 26.1% (41/142 -> 12/46), `dispatch-subagents-skill-unread`
+      0.7% -> 0%; moderate brief Frictions (UxNHTJw1, FFfcQhv7, anqbmpkr) concern
+      fan-out cost and untried briefs, not the cut worktree, stranding or scope
+      lines; no issue.
+    territory:
+      paths:
+        - "docs/agents/environment-caveats.md: the blocked-hosts bullet (was three)"
+      keywords:
+        - blocked host
+        - Network reach
+    opened: 2026-11-11
+    proven: true
+    check: >
+      Damage is a major or blocker Friction where a session lost real time on a
+      blocked host, or retried one, because a cut line no longer said what to do.
+      Compare `harness-proxy-blocks` share with `friction-rates.ts`; a clear rise
+      is also damage. NOT damage: the entry at its standing rate for the
+      deployed site or classifier denials (outside this cut).
