@@ -18,8 +18,7 @@ layout bug, or asserting a style took effect.
   badge can cover real content and look like a UI bug. It can also serve stale
   layer utils or CSS, time out on a cold start, or never hydrate in headless
   Chromium: when a shot looks stale or unhydrated, `pnpm build` and shoot the
-  build instead. A `#anchor` in `<route>`
-  scrolls to an element.
+  build instead. A `#anchor` in `<route>` scrolls to an element.
 - **A page review:** `scripts/ui/preview.ts review` writes four full-page shots (desktop and mobile, light and dark) from one server (`USAGE` has the names and sizes).
 - **A server that stays up:** `scripts/ui/preview.ts start [--dev]` prints `PID=`
   and `URL=`; `scripts/ui/preview.ts stop <pid>` stops it (always exits 0).
@@ -44,12 +43,11 @@ cite it.
   one step.
 - **Before calling an e2e/Playwright failure "pre-existing" or
   "environment-only," reproduce it on both `origin/main` and the branch** with the
-  full `pnpm test:e2e` suite, never a `-t`-filtered single test (one spec file
-  for a quick look: `tests/README.md`): a filtered test
+  full `pnpm test:e2e` suite, never a `-t`-filtered single test. A filtered test
   skips setup and ordering the full suite exercises (rebuild rules:
-  `tests/README.md`). A PR once called a
-  failing assertion pre-existing on a narrowed or stale repro, and CI then failed
-  for real on it (issue #907).
+  `tests/README.md`). A PR once called a failing assertion pre-existing on a
+  narrowed or stale repro, and CI then failed for real on it (issue #907). For
+  a quick look at one spec file see `tests/README.md`.
 - **To read one in-page value from an already-serving page** (a computed style,
   a bounding rect, any `page.evaluate` result), use `scripts/ui/eval-in-page.ts` (usage in its header) before an
   ad-hoc script; it handles the gotchas below.
