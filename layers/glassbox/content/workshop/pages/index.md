@@ -22,7 +22,6 @@ Each guide page is named by its title, then its file under `layers/glassbox/cont
 
 - **The Installed Skills pages say little of their own.** *Planning skills* (`skill-pack/20.planning-with-the-pack`) and *Engineering skills* (`skill-pack/30.engineering-skills`) mostly describe Skills that come from outside Terrarium. Only a few of their facts are about choices Terrarium made.
 - **Two Git & GitHub Lessons are long.** *Commit and PR attribution* (`git-github/60.attribution`) and *Issue triage labels* (`git-github/70.issue-triage-labels`) are each about 1,400 to 1,600 words. Both have been trimmed; look for a split only after a fresh reader finds them hard to follow.
-- **One Walkthrough stop is long.** The page check warns that stop 2 of *A session log lands on main* has more than 80 words; move detail to the Lessons it links.
 - **The drafts Space is empty.** A gap that isn't central goes there as a new draft.
 
 ### Recurring problems
@@ -41,7 +40,7 @@ These are the owner's goals for the guide. A run builds toward them directly; a 
 
 ### Good next focuses
 
-1. **Re-read the Subjects not yet de-duplicated.** Git & GitHub joined the ones that have had this pass on 2026-11-11. *Installed skills*, Deploy and the Walkthroughs have not (no fresh reader has seen the Walkthroughs). In House rules only *Protected paths* and *Ubiquitous language* changed; the other seven pages were read and left alone.
+1. **Re-read the Subjects not yet de-duplicated.** Git & GitHub, Installed skills and Deploy have had this pass (2026-11-11). Only the Walkthroughs have not (no fresh reader has seen them; two were re-pinned on 2026-11-11 for the log lander). In House rules only *Protected paths* and *Ubiquitous language* changed; the other seven pages were read and left alone.
 2. **Decide how pages say "a person merges" a Human-only file.** Since the owner waiver (ADR-0004), an agent may merge one when the owner says so in the session. *Protected paths*, *Human-only* and the overview say so. These still state it flatly, each true as the default: *Path-specific rules*, *Decision records*, *Merge gate*, *Claude Code hooks* (twice), *Composite actions*, *Author trust*, *Cross-tenant reads* and *Asking an agent for a change*. Ask the owner whether to name the waiver there or keep one home.
 3. **Check the docs again for the pages whose claims the docs left silent** (the list under *Doc findings not acted on*), by reading the tool's source where the docs have no page.
 
@@ -78,6 +77,15 @@ These are the owner's goals for the guide. A run builds toward them directly; a 
 - *Git worktrees* and *Git plumbing*: *Git worktrees* says Session logs shows how the script tells a linked worktree, without saying how; *Git plumbing* never says why `commit-tree` takes `env` and the other calls `idxEnv`.
 
 **Installed Skills.** *Engineering skills* could become part of *Installed skills* (`skill-pack/10.skill-packs`).
+
+**Left over from the 2026-11-11 Installed skills and Deploy pass.** Fresh readers still found these; none is false.
+- *Wayfinder* says the sweep adds `ready-for-agent` beside the `wayfinder:` label, while the Walkthrough *Planning a big change* (stop 3) says `ready-for-human` goes on grilling and prototype tickets. Check the `auto-triage` Skill and make the two agree; ask the owner if it is unclear.
+- *Wayfinder*: the installed Skill gives no reason research tickets may resolve more than one per session. *Planning skills*: `ready-for-agent`, `needs-triage` and *Agent Brief* are glossed only briefly.
+- *Continuous deployment* and *pnpm and the lockfile* use *ADR*, *Merge gate* and *Content database* as bare pointers; *Continuous deployment* has no excerpt for the failed-install and Node-restart claims.
+- The Corepack link on *pnpm and the lockfile* (`nodejs.org/api/corepack.html`) now redirects to GitHub; Node 22's docs page `nodejs.org/docs/latest-v22.x/api/corepack.html` is a candidate, and Corepack stops shipping with Node 25.
+- The page 40 excerpt of `.agents/skills/auto-triage/SKILL.md` (*Wayfinder*) shifts to `lines="75-79"` once the pin moves past 2026-11-11.
+
+**Topics the Scout found with no page (2026-11-11).** The `harvest` Skill (a weekly Routine; files up to 10 `ready-for-human` Seedling issues from ideas and learnings in session logs, at most 3 about workflow; `.agents/skills/harvest/SKILL.md`): nearest *Self-improvement loop* (`terrarium-practice/80.self-improvement-loop`), which lists the loop's Skills in full and so needs it added. The build line in the page footer (`shared/build-info.ts`, shows the commit and time of the build on the home page and the Journal landing): a sentence for *Continuous deployment*. `scripts/ui/screenshot.ts` scrolls `--wait-for` captures to an `#anchor`: a sentence for *Headless browser checks* (`verification/80.headless-browser-checks`).
 
 **Doc findings not acted on.**
 - *Content collections*: the docs say `prefix` defaults from the start of `include`, so `prefix: '/'` may be needless once `cwd` is set per Space. Not checked in code.

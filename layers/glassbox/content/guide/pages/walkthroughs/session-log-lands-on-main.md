@@ -1,10 +1,10 @@
 ---
 title: A session log lands on main
 description: How an agent session's record of its work reaches the main branch without a pull request, in one commit built by low-level Git.
-teaches: "Story: a session log reaching main without a PR, from the agent's side. Start: the agent runs close-session. End: the Journal's dashboard; pnpm validate:content checks it. Code: log-session, log-session.ts --author and --land, pending.scratch.json, Stop, SessionEnd, SessionStart hooks, transcript-trace.ts, main's schema, read-tree, commit-tree, push to refs/heads/main, retried. No A real case."
-revision: 'c922a2cb843ae88030276b88cf51ae71b33f3e9d'
+teaches: "Story: a session log reaching main without a PR, from the agent's side. Start: the agent runs close-session. End: the Journal's dashboard; pnpm validate:content checks it. Code: log-session, log-session.ts --author and --land, pending.scratch.json, Stop, SessionEnd, SessionStart hooks, transcript-trace.ts, main's schema, top-level fields it lacks dropped and named, the full log re-landed once it merges, other rejections held back; read-tree, commit-tree, push to refs/heads/main, retried. No A real case."
+revision: '5ffa0df585a95e625348a489a104f1cbe723c9db'
 revisionDate: '2026-11-11'
-publishedAt: '2026-11-04T23:08:39Z'
+publishedAt: '2026-11-11T13:59:11Z'
 ---
 
 An agent session finishes a piece of work and writes down what happened. This Walkthrough follows that record from the agent's side: from the moment the session judges its work done, through the hooks that complete the record from the transcript, to one commit on `main` that holds nothing else. It ends where the log is read.
@@ -19,7 +19,7 @@ When its work reaches a coherent state, such as a PR opened or a question answer
 
 ## 2. The agent writes only its judgement
 
-`close-session` calls `log-session`, and the agent writes a small YAML file with the fields only it can know: its goal, a status, an outcome, a summary, the rules that steered or backed its work and the docs that helped, and every :term[Friction]. `scripts/session/log-session.ts --author` checks them and saves them to `.session-logs/pending.scratch.json`, a scratch file git ignores. Run again later, it merges the new pass with the earlier one. It refuses to run from a linked git worktree, where a dispatched subagent shares its parent's scratch path.
+`close-session` calls `log-session`, and the agent writes a small YAML file with the fields only it can know: its goal, a status, an outcome, a summary, the rules that steered or backed its work and the docs that helped, and every :term[Friction]. `scripts/session/log-session.ts --author` checks them and saves them to `.session-logs/pending.scratch.json`, a scratch file git ignores. It refuses to run from a linked git worktree, where a dispatched subagent shares its parent's scratch path.
 
 ::lessons
 [Session logs](/t/glassbox/guide/terrarium-practice/session-logs) · [Git worktrees](/t/glassbox/guide/git-github/git-worktrees) · [Subagents](/t/glassbox/guide/agents/subagents)
@@ -27,7 +27,7 @@ When its work reaches a coherent state, such as a PR opened or a question answer
 
 ## 3. The turn ends and a hook takes over
 
-When Claude finishes responding, Claude Code fires the `Stop` hook wired in `.claude/settings.json`. It checks that a scratch file exists and, if so, runs `log-session.ts --land`, with the hook's payload on stdin; the payload names the session's transcript. Hooks on `SessionEnd` and on `SessionStart` at resume also run `--land`, in case `Stop` missed it. The lander never exits with an error, and if this exact scratch has landed already, it stops there.
+When Claude finishes responding, Claude Code fires the `Stop` hook wired in `.claude/settings.json`. It checks that a scratch file exists and, if so, runs `log-session.ts --land`, with the hook's payload on stdin; the payload names the session's transcript. Hooks on `SessionEnd` and on `SessionStart` at resume also run `--land`, in case `Stop` missed it. The lander never exits with an error, and if this exact scratch has landed in full already, it stops there.
 
 ::lessons
 [Claude Code hooks](/t/glassbox/guide/hooks/hooks) · [Session logs](/t/glassbox/guide/terrarium-practice/session-logs)
@@ -43,7 +43,7 @@ Nobody writes the rest of the log: `scripts/session/transcript-trace.ts` reads t
 
 ## 5. The entry is checked against main
 
-The stitched entry must pass the session schema, and its file name is fixed: the date the session started, then its id. The lander compares the entry with the copy already on `main` at that path and does nothing if they match. It also checks the entry against `main`'s own copy of the schema, which the session's branch may have changed. An entry `main` would reject waits, and lands on the first turn that ends after the schema change merges.
+The stitched entry must pass the session schema, and its file name is fixed: the session's start date, then its id. The lander does nothing if `main` already holds the same entry at that path. It also checks the entry against `main`'s copy of the schema, which the branch may have changed. Top-level fields `main` doesn't know yet are dropped and named, and land once the schema change merges; any other rejection holds the whole entry back.
 
 ::lessons
 [Schema evolution](/t/glassbox/guide/verification/schema-evolution)

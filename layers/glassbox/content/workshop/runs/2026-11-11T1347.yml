@@ -1,0 +1,23 @@
+session: session_013zxzeQuYEfmPngc6xxNTn1
+mode: autonomous
+focus: "Three passes in one run. (1) Installed skills Subject (skill-pack): de-duplicate and clarify its four pages after a fresh read; chosen because no open PR touches the guide, the memory page's top lead named this Subject as not yet de-duplicated, and two of its pages were listed as weak spots. (2) Re-pin Schema evolution and the session-log Walkthrough: the Scout found that main's log lander now drops unknown top-level fields instead of holding the whole log back, which made both pages stale. (3) Deploy Subject, plus the long Walkthrough stop. The owner started the run autonomous and asked to keep choosing focuses until the budget is spent."
+changes:
+  - skill-pack/10.skill-packs | pin, cataloged and the two hashes are said plainly; the lock is named as what makes a Skill installed; the example Skill is grilling; update is by npx skills update | a fresh reader could not follow the excerpt or tell the two hashes apart (validate-skills-lock.ts:15-22,48-53,116-122; ADR-0015:58-60). Wording only, so revision and publishedAt are kept
+  - skill-pack/20.planning-with-the-pack | ready-for-agent and ready-for-human are glossed; the override rule is stated before the pointer; on hold is explained and the excerpt range moved to 60-73; the sweep's subagent sentence is plain; disable-model-invocation is glossed; the clear-backlog and wayfinder:* exclusion gives its reason | undefined labels and a dangling rule (triage-labels.md:16-25; issue-tracker.md:60-73; auto-triage SKILL.md:120-121; clear-backlog SKILL.md:32-33). Wording only
+  - skill-pack/30.engineering-skills | The lede says the three Skills call each other; code-review is a step, not a fixed one; rounds, the fix agent and the final gate are described; why the build agent skips code-review is stated; clear-backlog is glossed; subagent spelled the guide's way | the lede and In Terrarium read as contradicting each other (clear-backlog-build.js:15,47,88,122-161; implement SKILL.md:7-15). Wording only
+  - skill-pack/40.wayfinder | The map's section for its fog is named once, as Not yet specified; Wayfinding operations is the tracker doc's section; gist, driving dev, stamp and overlay are glossed; the kept-branch rule and the sweep's starter are stated | two names for one section and undefined words (wayfinder SKILL.md:23,44,67,84-91; ADR-0003:13-15; ADR-0022:3-6,60-61). Wording only
+  - verification/70.schema-evolution | Re-pinned; the Excerpt shows the top-level-only strip and the other-rejection hold; a log with a new top-level field lands without it and re-lands in full later; a nested field still waits; publishedAt set | main's lander changed after the old pin (log-session.ts:425,520-522,769-779,1048-1055)
+  - walkthroughs/session-log-lands-on-main | Re-pinned; stop 5 says unknown top-level fields are dropped and named and any other rejection holds the entry; stop 3 says landed in full; stop 5 and stop 2 trimmed to 80 words | same change (log-session.ts:517-522,769-779). publishedAt set
+  - deploy/10.continuous-deployment | The lede says a failed build never replaces the live copy; image and reverse proxy are glossed at first use; set -e, GIT_ASKPASS and the port sentence are plain; the image holds Node with Corepack; the reinstall rule points to pnpm and the lockfile; the token sentence says the setup asks for a read-only, repo-limited token | the lede claimed more than the page showed, and undefined terms (entrypoint.sh:10,12-15,33-43,149-151; Dockerfile:10-25; README.md:43-47). Wording only
+  - deploy/20.pnpm-lockfile | CI, Corepack, install scripts, jiti and the pnpm store are glossed in a clause | fresh reader found undefined terms (Dockerfile:13; shared/expand.ts:60; entrypoint.sh:27,60). Wording only
+pagesRead:
+  - skill-pack/10.skill-packs
+  - skill-pack/20.planning-with-the-pack
+  - skill-pack/30.engineering-skills
+  - skill-pack/40.wayfinder
+  - deploy/10.continuous-deployment
+  - deploy/20.pnpm-lockfile
+  - verification/70.schema-evolution
+  - walkthroughs/session-log-lands-on-main
+  - walkthroughs/planning-a-big-change
+  - terrarium-practice/40.session-logs
