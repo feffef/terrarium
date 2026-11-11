@@ -1,19 +1,23 @@
 schemaVersion: 1
 session: session_013zxzeP6PH92ubTps39j3HD
 startedAt: 2026-11-11T16:40:30Z
-endedAt: 2026-11-11T16:44:14Z
-kind: autonomous
+endedAt: 2026-11-11T16:59:50Z
+kind: interactive
 goal: Harvest learnings from recent session logs into Seedlings
 status: completed
-outcome: "No Seedling filed: the checked learning clusters were already documented, tracked or too thin."
-summary: "Agent-initiated scheduled harvest run with the argument learnings (no human instruction beyond the Skill). Extracted 204 unharvested learnings from the last 28 days, read them all, and screened product clusters first (Nuxt Content and CSS gotchas, the Routine costs page, Glass Box page checks) and then workflow clusters (Routine existence not readable from the repo, hand-back mechanics, gate abort on tree change, Stop-hook nag). Each was dropped on the Skill's tests: the Atlas --sig-1 rebind and the zone-less datetime fact already sit in code comments at the place they matter (Atlas NotFound component, Tinkerfund clock.ts); Glass Box page-check gaps and handback guidance are already open Seedlings (3074, 3068); the gate-abort and Stop-hook nag are covered by Friction Ledger entries or a prune trial; the Routine cadence cluster overlaps open issues 813 and 834 and a Ledger entry. What remains (symlinked Space folders, zero-padded filename prefixes, Lightning CSS token scope, Shiki default) are single-session doc bullets for a doc whose rule loads are rated not useful (issue 1937), so I filed nothing. I did not exhaustively check all 30 clusters; I stopped after the strongest candidates in each label failed."
+outcome: Three Seedlings filed (3103-3105) after the owner asked for a deeper second pass.
+summary: "Scheduled-style harvest run with the argument learnings. First pass was agent-initiated and too shallow: I opened about ten of the 204 unharvested learnings' clusters, screened mostly by keyword grep, and filed nothing. The owner then asked whether nothing was worth documenting (human-instructed) and told me to do a second pass and think about improving the Skill (human-instructed). The second pass checked the GitHub, git and harness clusters against docs/agents, the tracker and the Friction Ledger, dropped what the Ledger or open issues already cover (closing keywords, helper agents moving the branch, gate comment SHA, hand-back guidance), and filed three workflow Seedlings, each adding a few lines to one existing doc - 3103 (github-integration.md), 3104 (environment-caveats.md), 3105 (git-conventions.md) - all verified with check-posted. Product clusters stayed unfiled because their facts already sit in code comments or are single-session. Open question for the owner: the Skill's rule that a change must retire as much as it adds blocks nearly every doc-fact learning, so the first pass dropped real candidates for that reason."
 prs: []
 docsRead:
   - path: .claude/skills/harvest/body-template.md
     reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
   - path: docs/agents/mdc-when-to-use.md
     reason: (no reason given)
   - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
     reason: (no reason given)
 skillsUsed:
   - name: close-session
@@ -29,13 +33,21 @@ frictions:
   - description: Issue listing carries no state or close reason, so matching closed issues needed extra reads; I could not tell if 813, 834, 2175 were closed.
     solution: list-open-issues.ts --closed should include state and state_reason fields.
     severity: minor
-durationSec: 223
+  - description: First pass stopped after about ten clusters of 204 entries and filed nothing; the owner had to challenge it before a real second pass found three Seedlings.
+    solution: harvest step 3 should require checking each learning cluster against its doc home by grep before dropping it, and count dropped clusters with a reason.
+    severity: moderate
+  - description: Filed Seedlings through issue_write before reading issue-tracker.md and triage-labels.md, which CLAUDE.md requires before filing; the label turned out right.
+    solution: harvest step 4 could name those two docs, since the hook only hints after the call.
+    severity: nit
+durationSec: 1160
 models:
-  claude-sonnet-5-5: 40
+  claude-sonnet-5-5: 77
 toolCounts:
-  Bash: 16
-  Read: 3
-  Skill: 2
+  Bash: 26
+  Read: 7
+  Skill: 3
+  ToolSearch: 1
+  mcp__github__issue_write: 3
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -60,7 +72,8 @@ ruleUse:
         via: native
         trigger: .claude/skills/harvest/body-template.md
       - rule: .claude/rules/adr-0029.md
-        via: hint
+        via: native
+        trigger: docs/agents/github-integration.md
       - rule: .claude/rules/adr-0004-human-merge.md
         via: hint
       - rule: .claude/rules/adr-0021.md
@@ -89,15 +102,21 @@ ruleUse:
         via: hint
       - rule: .claude/rules/adr-0028.md
         via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
     reported:
       - path: .claude/rules/adr-0003.md
         value: backed
-        why: filed nothing without approval
+        why: filed issues, built nothing
       - path: docs/agents/tenant-layers.md
       - path: docs/agents/mdc-when-to-use.md
+      - path: docs/agents/github-integration.md
 gitBranch: ccr-b6694994-xb7qi2
 entrypoint: remote_mobile
 cliVersion: 2.1.322
 learnings:
   - list-open-issues.ts output carries only labels, number, title and updatedAt, so a title match cannot show whether the issue is closed as completed or not planned.
+  - In a detached HEAD, git push origin feat pushes feat's old commit, not HEAD; reproduced in a scratch repo.
+ideas:
+  - Make harvest step 3 weigh a learning by recurrence across sessions and by whether its home doc lacks the fact, instead of the retire-as-much-as-it-adds test, which fits ideas but rejects almost every doc-fact learning.
 landedBy: Stop
