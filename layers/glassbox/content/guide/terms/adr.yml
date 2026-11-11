@@ -1,2 +1,3 @@
 term: ADR
 definition: An architecture decision record, a short file stating one decision, why it was made, and the alternatives it rejected.
+lesson: /t/glassbox/guide/terrarium-practice/decision-records

@@ -1,2 +1,3 @@
 term: Design token
 definition: A named design value, such as a colour, font or spacing, defined once and read everywhere it is used. On the web a token is usually a CSS custom property, such as --accent.
+lesson: /t/glassbox/guide/web-standards/css-custom-properties

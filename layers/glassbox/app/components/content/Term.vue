@@ -16,7 +16,7 @@ const entry = computed(() => terms?.value[glassboxTermId(glassboxSlotText(slots)
     :aria-expanded="open"
     :aria-controls="definitionId"
     @click="open = !open"
-  ><slot /></button><span v-show="open" :id="definitionId" class="definition" role="note">{{ entry.definition }}<File v-if="entry.source" class="source">{{ entry.source }}</File></span></span>
+  ><slot /></button><span v-show="open" :id="definitionId" class="definition" role="note">{{ entry.definition }}<NuxtLink v-if="entry.lesson" :to="entry.lesson" class="source">Lesson</NuxtLink><File v-else-if="entry.source" class="source">{{ entry.source }}</File></span></span>
   <slot v-else />
 </template>
 

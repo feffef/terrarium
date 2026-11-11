@@ -25,7 +25,8 @@ export default defineTenant({
       schema: z.object({
         term: z.string(),
         definition: z.string(),
-        source: z.string().optional(),
+        source: z.string().optional(), // a glossary file; only for a term with no lesson
+        lesson: z.string().optional(), // the guide Lesson that teaches it, as its site path
       }),
     },
     // The workshop Space's state (GLOSSARY.md): one entry per curate run, named
