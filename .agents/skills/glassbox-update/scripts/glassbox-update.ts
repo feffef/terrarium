@@ -1,6 +1,6 @@
 // The mechanical half of the glassbox-update Skill: what changed in the code each
 // Glass Box page cites, between the page's `revision` and main.
-// Usage: pnpm exec tsx .agents/skills/glassbox-update/scripts/glassbox-update.ts[--write --to <sha>]
+// Usage: pnpm exec tsx .agents/skills/glassbox-update/scripts/glassbox-update.ts [--write --to <sha>]
 import { globSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { glassboxTerms } from '../../../../layers/glassbox/page-checks.ts'
