@@ -7,6 +7,7 @@
 //
 // Usage:
 //   tsx .agents/skills/harvest/scripts/harvest.ts extract [--kind ideas|learnings] [--out PATH]
+//   tsx .agents/skills/harvest/scripts/harvest.ts list <extract.json>
 //   tsx .agents/skills/harvest/scripts/harvest.ts block <extract.json> <n> [n...]
 //   tsx .agents/skills/harvest/scripts/harvest.ts check-body <body-file> --extract <extract.json> [--title T]
 //   tsx .agents/skills/harvest/scripts/harvest.ts check-posted <issue-number> <body-file>
@@ -16,6 +17,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { isExternalSession } from '../../../../shared/schemas/session.ts'
 import { fail, flagValue, root, runIfMain } from '../../../../scripts/lib/cli.ts'
+import { bareAngleBracketSpan } from '../../../../scripts/hooks/github-provenance-guard.ts'
 import { getJson, listAll, resolveAccess } from '../../../../scripts/lib/github-client.ts'
 import { readSessionLogs, type SessionLog } from '../../../../scripts/session/journal-files.ts'
 import { flattenText } from '../../../../scripts/session/extract-frictions.ts'
@@ -30,6 +32,9 @@ export const SKIPPED_TRIGGERS = new Set(['harvest', 'visitor-loop', 'audit-skill
 /** The whole key line. Its alphabet holds none of `& < > " '`, so HTML-entity
  *  decoding cannot change it. A session id is `session_...` or a raw UUID. */
 export const KEY_RE = /^Harvested: (\S+) (idea|learning) ([0-9a-f]{8})$/
+
+/** A session id in either form (`session_...` or a raw UUID): the owner cannot open one. */
+const SESSION_ID_RE = /session_[A-Za-z0-9]{6,}|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/
 
 export type Kind = 'idea' | 'learning'
 
@@ -160,17 +165,57 @@ export function buildEntries(
   return { entries: ordered.map((e, i) => ({ ...e, n: i + 1 })), skippedHarvested }
 }
 
+/** One line per entry in extract order. A session's start, PRs, goal, outcome and source
+ *  file print once, as an `S<n>` line before its first entry, so everything the relevance
+ *  checks read is here and needs no lookup in the JSON (the key and line are derivable
+ *  with `block`). */
+export function renderList(entries: Entry[]): string {
+  const handles = new Map<string, string>()
+  const out: string[] = []
+  for (const e of entries) {
+    let h = handles.get(e.session)
+    if (!h) {
+      h = `S${handles.size + 1}`
+      handles.set(e.session, h)
+      out.push(`${h} ${e.session} | started ${e.startedAt} | prs ${e.prs.join(',') || '-'} | goal: ${e.goal} | outcome: ${e.outcome} | file: ${e.file}`)
+    }
+    const filed = e.sameSession.length ? ` | same session in issues ${e.sameSession.map((n) => `#${n}`).join(',')}` : ''
+    out.push(`${e.n} ${e.kind} ${e.endedAt.slice(0, 10)} ${h}${filed}: ${e.text}`)
+  }
+  return out.join('\n')
+}
+
 /** The note plus the key lines of the given entries: what a Seedling body pastes. */
 export function renderBlock(entries: Entry[]): string {
   return [NOTE, ...entries.map((e) => e.line)].join('\n')
 }
 
+/** The sections `body-template.md` asks for: a body without them sends the owner into the repo. */
+export const REQUIRED_HEADINGS = [
+  '## The idea',
+  '## Why it matters',
+  '## Where it came from',
+  '## What would change',
+  '## What I checked',
+  '## Sources',
+]
+
 /** What is wrong with a Seedling body before it is posted (empty: fine). The
- *  provenance guard already enforces the session header and bare angle brackets. */
+ *  provenance guard enforces the session header, and its own bare-angle-bracket rule
+ *  is reused here so the failure shows before the post, not as a blocked call. */
 export function checkBody(body: string, emitted: Set<string>, title?: string): string[] {
   const problems: string[] = []
   const ls = lines(body)
+  for (const h of REQUIRED_HEADINGS) if (!ls.includes(h)) problems.push(`missing the section "${h}"`)
+  // The header line and the key block carry ids by design, and Sources names the logs by filename.
+  const sources = ls.indexOf('## Sources')
+  const prose = ls.filter((l, i) => !KEY_RE.test(l) && !l.startsWith('🤖') && (sources < 0 || i < sources))
+  if (prose.some((l) => SESSION_ID_RE.test(l))) problems.push('names a session id outside Sources: say its date and what it was doing')
   if (title !== undefined && !title.startsWith('Seedling:')) problems.push('title must start with "Seedling:"')
+  for (const [field, text] of [['title', title], ['body', body]] as const) {
+    const span = text === undefined ? null : bareAngleBracketSpan(text)
+    if (span) problems.push(`bare angle-bracket span ${span} in the ${field}: wrap it in a fenced block, or GitHub drops it`)
+  }
   if (body.length > BODY_LIMIT) problems.push(`body is ${body.length} characters, over ${BODY_LIMIT}`)
   for (const l of ls) if (l.startsWith('Harvested:') && !KEY_RE.test(l)) problems.push(`malformed key line: ${l}`)
   const keyIdx = ls.flatMap((l, i) => (KEY_RE.test(l) ? [i] : []))
@@ -243,6 +288,14 @@ function readExtract(path: string): { entries: Entry[] } {
 function main(): void {
   const [cmd, ...argv] = process.argv.slice(2)
   if (cmd === 'extract') return cmdExtract(argv)
+  if (cmd === 'list') {
+    const [path] = argv
+    if (!path) fail('usage: list <extract.json>')
+    console.log(renderList(readExtract(path).entries))
+    console.log(`\nMore on an entry or a session: jq '.entries[] | select(.n == 13)' ${path}`)
+    console.log(`  jq -r '.entries[] | select(.session == "SESSION_ID") | .text' ${path}`)
+    return
+  }
   if (cmd === 'block') {
     const [path, ...ns] = argv
     if (!path || !ns.length) fail('usage: block <extract.json> <n> [n...]')
@@ -266,7 +319,7 @@ function main(): void {
     if (problems.length) fail(problems.join('\n'))
     return console.log(`check-posted: #${number} stores the checked keys`)
   }
-  fail('unknown command; expected extract | block | check-body | check-posted')
+  fail('unknown command; expected extract | list | block | check-body | check-posted')
 }
 
 runIfMain(import.meta.url, main)

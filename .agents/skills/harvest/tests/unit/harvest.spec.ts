@@ -1,11 +1,13 @@
 // Unit tests for the harvest helper's pure core: key rendering and parsing, the
 // harvested-state scan, entry ordering, and the before/after-posting checks.
 // The IO shell (GitHub listing, files) is exercised by running the script.
+import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import { decodeHtmlEntities } from '../../../../../scripts/lib/github-client.ts'
 import {
   BODY_LIMIT,
   NOTE,
+  REQUIRED_HEADINGS,
   buildEntries,
   checkBody,
   comparePosted,
@@ -14,6 +16,7 @@ import {
   noteTexts,
   parseKeys,
   renderBlock,
+  renderList,
   type Entry,
 } from '../../scripts/harvest.ts'
 
@@ -157,11 +160,59 @@ describe('buildEntries()', () => {
   })
 })
 
+describe('renderList()', () => {
+  const entry = (over: Partial<Entry>): Entry => ({
+    n: 1,
+    key: 'k',
+    line: 'l',
+    kind: 'idea',
+    session: 'session_a',
+    file: 'layers/journal/content/current/sessions/a.yml',
+    startedAt: '2026-11-09T01:23:55.000Z',
+    endedAt: '2026-11-09T02:15:16.000Z',
+    goal: 'The goal',
+    outcome: 'The outcome',
+    prs: ['2994', '2995'],
+    text: 'The idea text',
+    sameSession: [],
+    ...over,
+  })
+
+  it('carries everything the relevance checks read, so none needs a lookup in the JSON', () => {
+    const out = renderList([entry({ sameSession: [3074, 3070] })])
+    for (const needle of ['session_a', '2026-11-09T01:23:55.000Z', 'prs 2994,2995', 'goal: The goal', 'outcome: The outcome', 'sessions/a.yml', '1 idea 2026-11-09', '#3074,#3070', 'The idea text']) {
+      expect(out).toContain(needle)
+    }
+  })
+
+  it('prints a session header once, before its first entry, and keeps the entry order', () => {
+    const out = renderList([entry({ n: 1 }), entry({ n: 2, session: 'session_b' }), entry({ n: 3, kind: 'learning' })]).split('\n')
+    expect(out.filter((l) => l.startsWith('S')).map((l) => l.slice(0, 12))).toEqual(['S1 session_a', 'S2 session_b'])
+    expect(out.filter((l) => /^\d/.test(l)).map((l) => l.slice(0, 3))).toEqual(['1 i', '2 i', '3 l'])
+    expect(out[1]).toContain('S1')
+    expect(out[4]).toContain('S1')
+  })
+
+  it('shows - for a session with no PRs and adds nothing when no issue names the session', () => {
+    const out = renderList([entry({ prs: [] })])
+    expect(out).toContain('prs - |')
+    expect(out).not.toContain('same session in issues')
+  })
+})
+
 describe('checkBody() and comparePosted()', () => {
   const key = entryKey(SESSION, 'idea', 'x')
   const emitted = new Set([key])
   const entry = { line: `Harvested: ${key}` } as Entry
-  const good = ['🤖 [Claude](https://claude.ai/code/session_x)', '', 'Agent seedling from harvest, not approved.', '', renderBlock([entry]), '', 'Body.'].join('\n')
+  const good = [
+    '🤖 [Claude](https://claude.ai/code/session_x)',
+    '',
+    'Agent seedling from harvest, not approved.',
+    '',
+    renderBlock([entry]),
+    '',
+    ...REQUIRED_HEADINGS.flatMap((h) => [h, 'Text.', '']),
+  ].join('\n')
 
   it('renders the note and the key lines', () => {
     expect(renderBlock([entry])).toBe(`${NOTE}\nHarvested: ${key}`)
@@ -181,6 +232,30 @@ describe('checkBody() and comparePosted()', () => {
     expect(checkBody(good.replace(NOTE, 'Keys:'), emitted).join()).toContain('missing the line')
     expect(checkBody(good.replace('Agent seedling', 'Something'), emitted).join()).toContain('no banner')
     expect(checkBody(good + `\n\nHarvested: ${key}`, emitted).join()).toContain('one block')
+  })
+
+  it('rejects a body missing a template section, so the owner is not sent into the repo', () => {
+    for (const h of REQUIRED_HEADINGS) expect(checkBody(good.replace(h, 'Other'), emitted)).toEqual([`missing the section "${h}"`])
+  })
+
+  it('rejects a session id in the prose but allows one under Sources, in the header and in the key block', () => {
+    expect(checkBody(good.replace('## The idea\nText.', `## The idea\nSee ${SESSION}.`), emitted)).toEqual([
+      'names a session id outside Sources: say its date and what it was doing',
+    ])
+    expect(checkBody(good.replace('## Sources\nText.', `## Sources\n${SESSION}.yml`), emitted)).toEqual([])
+  })
+
+  it('rejects a bare angle-bracket span in the body or title, but not one in code', () => {
+    const bare = (text: string) => checkBody(good.replace('## The idea\nText.', `## The idea\n${text}`), emitted, 'Seedling: x')
+    expect(bare('Reports "link text of <page>".').join()).toContain('bare angle-bracket span <page> in the body')
+    expect(bare('Reports `of <page>` in code.')).toEqual([])
+    expect(bare('A fence:\n```\n<page>\n```')).toEqual([])
+    expect(checkBody(good, emitted, 'Seedling: a <b> c').join()).toContain('in the title')
+  })
+
+  it('lists in body-template.md the same headings check-body requires', () => {
+    const template = readFileSync(new URL('../../body-template.md', import.meta.url), 'utf8')
+    expect([...template.matchAll(/`(## [^`]+)`/g)].map((m) => m[1])).toEqual(REQUIRED_HEADINGS)
   })
 
   it('rejects a wrong title and an oversize body', () => {
