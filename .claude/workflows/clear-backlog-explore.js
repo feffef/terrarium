@@ -19,6 +19,7 @@ const RESULT = {
   type: 'object',
   properties: {
     outcome: { type: 'string', enum: ['build', 'grill', 'blocked', 'close-duplicate', 'close-done'] },
+    title: { type: 'string', description: "the issue's exact title, copied from GitHub" },
     summary: { type: 'string', description: 'one line: what the issue is' },
     brief: { type: 'string', description: 'for build or grill: what to build, its done-when, the relevant ADRs' },
     question: {
@@ -90,7 +91,7 @@ const RESULT = {
       },
     },
   },
-  required: ['outcome', 'summary', 'publicAuthor', 'readyForHuman', 'files', 'relatedTo', 'staleClaims', 'sideFindings', 'writes', 'sourcesRead', 'background', 'optionChecks'],
+  required: ['outcome', 'title', 'summary', 'publicAuthor', 'readyForHuman', 'files', 'relatedTo', 'staleClaims', 'sideFindings', 'writes', 'sourcesRead', 'background', 'optionChecks'],
 }
 
 const MODE = {
@@ -105,7 +106,7 @@ function brief(issue) {
 
 ${MODE[issue.mode]}${issue.notes ? `\nNotes from the orchestrator: ${issue.notes}` : ''}
 
-In every mode: return grill, never build, for an issue labelled ready-for-human or authored by a Public user (ADR-0020; scripts/lib/author-trust.ts holds the associations)${issue.reserved ? ', and for this one, which the owner reserved: never label it ready-for-agent' : ''}. The owner decides those.
+In every mode: return grill, never build, for an issue labelled ready-for-human, titled "Seedling: …" (the owner decides every seedling, however determined it looks; still fact-check it fully, so the owner can discuss or reject it on facts) or authored by a Public user (ADR-0020; scripts/lib/author-trust.ts holds the associations)${issue.reserved ? ', and for this one, which the owner reserved: never label it ready-for-agent' : ''}. The owner decides those.
 
 Your goal: fully understand the background and history of the concepts the issue touches, so the owner can decide on facts and not on the issue's own account of them. Write that understanding in background; every other field serves it.
 
@@ -123,7 +124,7 @@ Full pass:
 - pick is the chosen option's full text, copied from options.
 - Fill sourcesRead as you go; a source you list must be one you opened.
 - Return build when the repo determines a concrete design: brief it. Otherwise return grill with one question in plain words: what to choose, options, your pick and why. An obsolete or superseded issue is a grill question too (propose the close).
-- Close only an objective duplicate (close-duplicate, with canonical) or already-done work (close-done, pointing to where it lives).
+- Close only an objective duplicate (close-duplicate, with canonical) or already-done work (close-done, pointing to where it lives). Never close a seedling: return grill and propose the close as an option.
 - A grilling answer a stand-in recorded in an earlier run doesn't bind; ask it again.
 
 ${args.dryRun ? `GitHub writes: this is a dry run. Make no GitHub write of any kind: no comment, label or state change, not even a close. Put the comment and the complete final label set you would have posted in wouldPost; leave writes empty. The comment's first line would be: ${HEADER}` : `GitHub writes:
@@ -152,9 +153,11 @@ for (const [i, issue] of input.entries()) {
     log(`#${issue.number}: no result, re-running once`)
     r = await triage(issue, 'Retry')
   }
-  if (r && r.outcome === 'build' && (issue.reserved || r.publicAuthor || r.readyForHuman)) {
+  // The owner decides every seedling's build, so a build result never survives for one.
+  const seedling = /^\s*seedling\b/i.test(r?.title || '')
+  if (r && r.outcome === 'build' && (issue.reserved || seedling || r.publicAuthor || r.readyForHuman)) {
     r.outcome = 'grill'
-    r.question ||= { choice: 'Build this as briefed?', options: ['a) yes, as briefed', 'b) no'], pick: 'a', why: 'Reserved, Public-authored or ready-for-human: the owner decides.' }
+    r.question ||= { choice: 'Build this as briefed?', options: ['a) yes, as briefed', 'b) no'], pick: 'a', why: 'Reserved, seedling, Public-authored or ready-for-human: the owner decides.' }
   }
   if (r?.question && !r.question.options.includes(r.question.pick)) {
     // A bare label ("A", "b)", "2") picks the option that starts with it.
