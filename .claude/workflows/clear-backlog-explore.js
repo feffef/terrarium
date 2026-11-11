@@ -38,7 +38,7 @@ const RESULT = {
     },
     optionChecks: {
       type: 'array',
-      description: 'for grill: one entry per option, in order',
+      description: 'for grill: one entry per option, in order; empty for any other outcome',
       items: {
         type: 'object',
         properties: {
@@ -90,7 +90,7 @@ const RESULT = {
       },
     },
   },
-  required: ['outcome', 'summary', 'publicAuthor', 'readyForHuman', 'files', 'relatedTo', 'staleClaims', 'sideFindings', 'writes', 'sourcesRead', 'background'],
+  required: ['outcome', 'summary', 'publicAuthor', 'readyForHuman', 'files', 'relatedTo', 'staleClaims', 'sideFindings', 'writes', 'sourcesRead', 'background', 'optionChecks'],
 }
 
 const MODE = {
