@@ -39,12 +39,6 @@ These are the owner's goals for the guide. A run builds toward them directly; a 
 2. **Make structure and titles consistent.** Titles should name the general concept and follow one pattern within a Subject, and file names should match their titles.
 3. **Fill what is missing entirely.** This covers a Lesson, or a whole Subject, for something Terrarium relies on that no page teaches yet.
 
-### Order of the guide
-
-Subjects and Lessons run prerequisites first, and Lesson prefixes go up in tens (10, 20, 30…) so a new Lesson fits between two others. The owner ruled that agent tooling comes first and Web standards never sits between the two Nuxt Subjects. Pages link each other in loops, so the order puts the broader concept first and its use later. A page that links a later one in its body is expected.
-
-The new *Skill inventory* (`terrarium-practice/85.skill-inventory`) is numbered 85 because 80 and 90 leave no free ten between them. Ask the owner whether to renumber the House rules Lessons.
-
 ### Good next focuses
 
 1. **Re-read the Subjects not yet de-duplicated.** Git & GitHub joined the ones that have had this pass on 2026-11-11. *Installed skills*, Deploy and the Walkthroughs have not (no fresh reader has seen the Walkthroughs). In House rules only *Protected paths* and *Ubiquitous language* changed; the other seven pages were read and left alone.
