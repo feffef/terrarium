@@ -224,8 +224,9 @@ const parts = computed(() => {
 .article :deep(.gb-lessons span:first-child) { color: var(--gb-muted); }
 .article :deep(.gb-lessons span:first-child)::after { content: ' · '; }
 .article :deep(.gb-lessons li > a:not(.file)) { color: var(--gb-ink); text-decoration: none; }
-/* A book marks a link to another Glass Box page, as "?" marks a term. */
-.article :deep(a[href^="/t/glassbox/"]:not(.file, .gb-next a))::after {
+/* A book marks a link to another Glass Box page, as "?" marks a term. Navigation (the
+   subject chip, Surround cards, Where next rows) is already read as a link, and a file link has its ↗. */
+.article :deep(a[href^="/t/glassbox/"]:not(.file, .chip, .card, .gb-next a))::after {
   content: '';
   display: inline-block;
   inline-size: 0.85em;
