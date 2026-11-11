@@ -2,8 +2,8 @@
 title: A session log lands on main
 description: How an agent session's record of its work reaches the main branch without a pull request, in one commit built by low-level Git.
 teaches: "Story: a session log reaching main without a PR, from the agent's side. Start: the agent runs close-session. End: the Journal's dashboard; pnpm validate:content checks it. Code: log-session, log-session.ts --author and --land, pending.scratch.json, Stop, SessionEnd, SessionStart hooks, transcript-trace.ts, main's schema, read-tree, commit-tree, push to refs/heads/main, retried. No A real case."
-revision: 'a943030c7f8f2e8cd1c6b3021caa593b3cdfff16'
-revisionDate: '2026-11-10'
+revision: 'c922a2cb843ae88030276b88cf51ae71b33f3e9d'
+revisionDate: '2026-11-11'
 publishedAt: '2026-11-04T23:08:39Z'
 ---
 
@@ -19,7 +19,7 @@ When its work reaches a coherent state, such as a PR opened or a question answer
 
 ## 2. The agent writes only its judgement
 
-`close-session` calls `log-session`, and the agent writes a small YAML file with the fields only it can know: its goal, a status, an outcome, a summary, what changed or confirmed its work, and every :term[Friction]. `scripts/session/log-session.ts --author` checks them and saves them to `.session-logs/pending.scratch.json`, a scratch file git ignores. Run again later, it merges the new pass with the earlier one. It refuses to run from a linked git worktree, where a dispatched subagent shares its parent's scratch path.
+`close-session` calls `log-session`, and the agent writes a small YAML file with the fields only it can know: its goal, a status, an outcome, a summary, the rules that steered or backed its work and the docs that helped, and every :term[Friction]. `scripts/session/log-session.ts --author` checks them and saves them to `.session-logs/pending.scratch.json`, a scratch file git ignores. Run again later, it merges the new pass with the earlier one. It refuses to run from a linked git worktree, where a dispatched subagent shares its parent's scratch path.
 
 ::lessons
 [Session logs](/t/glassbox/guide/terrarium-practice/session-logs) · [Git worktrees](/t/glassbox/guide/git-github/git-worktrees) · [Subagents](/t/glassbox/guide/agents/subagents)
