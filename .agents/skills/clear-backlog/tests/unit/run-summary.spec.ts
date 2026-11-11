@@ -53,6 +53,16 @@ describe('--triage evidence fields', () => {
   })
 })
 
+describe('logs', () => {
+  it('ends with the workflow logs when there are any, and prints no logs section when there are none', () => {
+    expect(runSummary(fixture('explore-evidence.output'), '--triage')).toMatch(
+      /\n\nlogs:\n {2}- \[triage #21\] \[harness: subagent output matched instruction-shaped pattern\(s\): settings-json\]$/,
+    )
+    expect(runSummary(fixture('explore.output'), '--triage')).not.toContain('logs:')
+    expect(runSummary(fixture('build.output'), '--build')).not.toContain('logs:')
+  })
+})
+
 describe('--build', () => {
   const out = runSummary(fixture('build.output'), '--build')
 

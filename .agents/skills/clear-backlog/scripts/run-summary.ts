@@ -40,10 +40,10 @@ type Branch = {
 }
 type Explore = { results: Record<string, Triage>; missing: number[]; grouping: { issues: number[]; sharedFiles: string[] }[] }
 
-/** The workflow's return value; the saved `.output` holds it under `result`, sometimes as a JSON string. */
-function result(path: string): unknown {
-  const { result } = JSON.parse(readFileSync(path, 'utf8')) as { result: unknown }
-  return typeof result === 'string' ? JSON.parse(result) : result
+/** The workflow's return value, which the saved `.output` holds under `result` (sometimes as a JSON string), and its log lines. */
+function saved(path: string): { result: unknown; logs: string[] } {
+  const { result, logs } = JSON.parse(readFileSync(path, 'utf8')) as { result: unknown; logs?: string[] }
+  return { result: typeof result === 'string' ? JSON.parse(result) : result, logs: logs ?? [] }
 }
 
 const issues = (ns: number[]) => ns.map((n) => `#${n}`).join(', ')
@@ -100,8 +100,10 @@ const MODES = {
   '--build': (r: unknown) => build(r as Branch[]).join('\n\n'),
 }
 
+// The logs hold harness warnings about an agent's output and the workflow's own notes (retries, a pick that matched no option); always show them.
 export function runSummary(path: string, mode: keyof typeof MODES): string {
-  return MODES[mode](result(path))
+  const { result, logs } = saved(path)
+  return [MODES[mode](result), ...(logs.length ? [['logs:', ...logs.map((l) => `  - ${l}`)].join('\n')] : [])].join('\n\n')
 }
 
 runIfMain(import.meta.url, () => {

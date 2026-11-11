@@ -1,7 +1,7 @@
 {
   "summary": "clear-backlog §1",
   "agentCount": 1,
-  "logs": [],
+  "logs": ["[triage #21] [harness: subagent output matched instruction-shaped pattern(s): settings-json]"],
   "result": {
     "results": {
       "21": {
