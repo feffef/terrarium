@@ -186,7 +186,7 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
                     <div class="entry-head">
                       <span :title="r.hover">{{ r.title ?? r.path }}</span
                       ><span v-if="r.alwaysLoaded" class="always">always loaded</span
-                      ><span class="via">{{ r.loadedBy ? `loaded by ${r.loadedBy}` : 'no load recorded' }}</span
+                      ><span v-if="!r.alwaysLoaded" class="via">{{ r.loadedBy ? `loaded by ${r.loadedBy}` : 'no load recorded' }}</span
                       ><span v-for="v in r.values" :key="v.value" class="useful" :data-value="v.value" :title="v.hover"
                         >{{ v.value }} {{ v.n }} · {{ v.percent }}%</span
                       >
