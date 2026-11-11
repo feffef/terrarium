@@ -1,0 +1,156 @@
+schemaVersion: 1
+session: session_013zxzeQRndZ5iHweDq8ceMP
+startedAt: 2026-11-11T10:01:15Z
+endedAt: 2026-11-11T10:17:53Z
+kind: interactive
+goal: Turn a week of Session ideas and learnings into issue proposals
+status: completed
+outcome: Eight issues filed (3068-3075) from a ranked top 10; no PR needed
+summary: "The owner asked for the ideas and learnings filed in the last week to be mined with an explore agent (reading the full session logs and checking git history for what is already resolved), then ranked as issue suggestions. I dispatched one read-only Explore agent over the 57 in-scope logs (40 ideas, 83 learnings). It reported most entries resolved or moot (glassbox-improve was deleted) and the rest open with no issue. The owner then asked for a top 10 with exact proposals and quick wins flagged, and later told me to file items 1-6, 9 and 10: both the ranking and the filing were human-instructed; the picks and wording were mine. I verified the facts behind the quick wins against the repo (dispatch-subagents section 6, test:e2e script, log-session worktree sweep, missing doc lines) and marked everything else in each issue as agent-reported and unverified. Filed feffef/terrarium#3068-#3075 as separate needs-triage issues. Not filed: items 7 (log-session worktree sweep) and 8 (clear-backlog rebase), which the owner skipped."
+prs: []
+docsRead:
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-curate/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: .agents/skills/inspect-session/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: brief for the read-only mining agent
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: The explore agent read summaries and traces of only 1 of 57 logs though I asked for full reads; I had to disclose that gap in my reply.
+    solution: Brief should say a partial read is not acceptable, or split the logs across several agents.
+    severity: minor
+  - description: The agent's report quoted ids as 8-character tails, so I cited logs by tail in the issues; nobody can open them without a lookup.
+    solution: Ask agents for full filenames, or add a tail-to-file helper to the Journal tooling.
+    severity: nit
+durationSec: 998
+models:
+  claude-sonnet-5-5: 44
+toolCounts:
+  Skill: 3
+  Grep: 1
+  Bash: 6
+  Agent: 1
+  Read: 3
+  ToolSearch: 1
+  mcp__github__issue_write: 8
+  Write: 1
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+docsReadBySubagents:
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/glassbox-curate/SKILL.md
+  - docs/agents/pr-workflow.md
+  - .agents/skills/frictions-to-fixes/survey-brief.md
+  - .agents/skills/glassbox-update/SKILL.md
+  - docs/agents/verifying-ui-changes.md
+  - .agents/skills/inspect-session/SKILL.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/github-integration.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/github-integration.md
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: native
+        trigger: docs/agents/triage-labels.md
+    reported:
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: session header on every issue
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: filed proposals as issues, built nothing
+      - path: .claude/rules/adr-0022.md
+        value: backed
+      - path: docs/agents/github-integration.md
+      - path: docs/agents/issue-tracker.md
+      - path: docs/agents/triage-labels.md
+  - by: Explore
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/adr-0001.md
+        via: hint
+      - rule: .claude/rules/adr-0011.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0005.md
+        value: backed
+      - path: docs/agents/verifying-ui-changes.md
+      - path: docs/agents/pr-workflow.md
+      - path: docs/agents/git-conventions.md
+subagents:
+  - type: Explore
+    task: Mine week's ideas and learnings
+    model: opus
+    durationSec: 520
+    toolCalls: 40
+    modelCalls: 39
+    tokenShare: 69.3
+gitBranch: claude/awesome-noether-fd6ban
+entrypoint: remote
+cliVersion: 2.1.322
+learnings:
+  - A read-only Explore agent cannot write files, so a 200-line catalogue only comes back as a final message; budget for that in the brief.
+ideas:
+  - Add a script that lists a week's ideas and learnings from Session logs with a resolved or open status, so this review is one command instead of a 200k-token agent run; stamp each idea with the issue that filed it so nothing is filed twice.
+landedBy: Stop
