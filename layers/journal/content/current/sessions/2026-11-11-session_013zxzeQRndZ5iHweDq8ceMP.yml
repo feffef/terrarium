@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQRndZ5iHweDq8ceMP
 startedAt: 2026-11-11T10:01:15Z
-endedAt: 2026-11-11T11:11:25Z
+endedAt: 2026-11-11T11:29:27Z
 kind: interactive
 goal: Build a weekly Skill that files agent ideas and learnings as issues
-status: in-review
-outcome: harvest Skill in PR 3080, CI green, waiting for a human merge; 8 earlier issues rewritten as Seedlings
-summary: "The owner asked for the ideas and learnings of the past week to be mined with an explore agent (full logs, git history for what is resolved), then ranked as issue proposals, then asked for a top 10 with quick wins flagged, and then told me to file items 1-6, 9 and 10: all human-instructed, with the picks and wording mine. I filed eight issues (3068-3075). The owner then asked for unattended Skills doing the same weekly, up to 10 issues per run, filed ready-for-human as agent suggestions. After clarifying questions (labels, window, scope, structure), they chose: one Skill, Seedling as the marker word (Proposal clashes with GLOSSARY, which defines it as a file in docs/proposals), state derived from the issues themselves with no state file, a fixed 28-day lookback so entries ranked below the cap return next week, and 30 clusters checked per run. The design went through two Fable review rounds (duplicate key by source entry hash, auto-triage guard, Routine is created outside the repo, archived logs needed for 28 days, format verification before and after posting). I then built it on the session branch, rewrote 3068-3075 as Seedlings with script-rendered keys (the owner asked whether I had), ran code-review passes with fixes, and opened PR 3080. The owner's two review comments then asked for a /harvest ideas or learnings argument, which I had cut on a reviewer's advice without confirming, and a Seedling glossary entry; both are done, with a review-found fix to the --kind parsing. It needs a human merge under ADR-0004's outside side effect exception, so I will not self-merge; CI is green on the head. The owner still has to create the Routine, and the routines.md line and Inventory entry wait for its first run."
+status: completed
+outcome: harvest Skill merged in PR 3080; 8 earlier issues rewritten as Seedlings; owner still creates the Routine
+summary: "The owner asked for the ideas and learnings of the past week to be mined with an explore agent (full logs, git history for what is resolved), then ranked as issue proposals, then asked for a top 10 with quick wins flagged, and then told me to file items 1-6, 9 and 10: all human-instructed, with the picks and wording mine. I filed eight issues (3068-3075). The owner then asked for unattended Skills doing the same weekly, up to 10 issues per run, filed ready-for-human as agent suggestions. After clarifying questions (labels, window, scope, structure), they chose: one Skill, Seedling as the marker word (Proposal clashes with GLOSSARY, which defines it as a file in docs/proposals), state derived from the issues themselves with no state file, a fixed 28-day lookback so entries ranked below the cap return next week, and 30 clusters checked per run. The design went through two Fable review rounds (duplicate key by source entry hash, auto-triage guard, Routine is created outside the repo, archived logs needed for 28 days, format verification before and after posting). I then built it on the session branch, rewrote 3068-3075 as Seedlings with script-rendered keys (the owner asked whether I had), ran code-review passes with fixes, and opened PR 3080. The owner's review comments then asked for a /harvest ideas or learnings argument (which I had cut on a reviewer's advice without confirming), a Seedling glossary entry, and what best-first meant; the last led the owner to steer the ranking to recency only, so positive and creative ideas are not buried by a pain signal I had assumed. The owner enabled auto-merge after CI went green on the final head, so a human made the merge call ADR-0004 requires and I did not merge it. Still open: the owner creates the weekly Routine; the routines.md chart line and Skill Inventory entry wait for its first run; rejected entries are re-judged each run until they age out of the 28 days."
 prs:
   - "3080"
 docsRead:
@@ -57,6 +57,8 @@ docsRead:
   - path: docs/agents/domain.md
     reason: (no reason given)
   - path: .agents/skills/harvest/scripts/harvest.ts
+    reason: (read before editing)
+  - path: .agents/skills/harvest/tests/unit/harvest.spec.ts
     reason: (read before editing)
   - path: .agents/skills/frictions-to-fixes/SKILL.md
     reason: (no reason given)
@@ -127,31 +129,35 @@ frictions:
   - description: My first --kind implementation validated against a plain object, so inherited names like constructor passed; a code-review pass caught it before merge.
     solution: Use a Map or Object.hasOwn for a flag-to-value lookup; the review step worked as designed.
     severity: nit
-durationSec: 4209
+  - description: I ranked harvest entries by the session's Friction severity without asking what best meant; the owner then said creative ideas must not be buried, costing a code, test and Skill-text change.
+    solution: Ask the owner what the selection criterion should favour before building the ranking, not after a review comment.
+    severity: minor
+durationSec: 5292
 models:
-  claude-sonnet-5-5: 392
+  claude-sonnet-5-5: 484
 toolCounts:
-  Skill: 5
-  Grep: 3
-  Bash: 63
+  Skill: 6
+  Grep: 5
+  Bash: 74
   Agent: 7
-  Read: 26
+  Read: 31
   ToolSearch: 6
   mcp__github__issue_write: 16
-  Write: 14
+  Write: 17
   AskUserQuestion: 1
-  Edit: 41
+  Edit: 52
   SendMessage: 2
   SendUserFile: 1
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  ReadNotifications: 9
-  mcp__github__pull_request_read: 5
+  ReadNotifications: 19
+  mcp__github__pull_request_read: 6
   mcp__claude-code-remote__send_later: 1
-  mcp__github__add_reply_to_pull_request_comment: 2
+  mcp__github__add_reply_to_pull_request_comment: 4
   mcp__github__resolve_review_thread: 2
-  mcp__github__update_pull_request: 1
+  mcp__github__update_pull_request: 2
+  mcp__claude-code-remote__delete_trigger: 1
 filesEdited:
   - .agents/skills/harvest/scripts/harvest.ts
   - .agents/skills/harvest/tests/unit/harvest.spec.ts
@@ -556,44 +562,44 @@ subagents:
     durationSec: 520
     toolCalls: 40
     modelCalls: 39
-    tokenShare: 10.8
+    tokenShare: 8.3
   - type: general-purpose
     task: Review harvest Skills design
     model: fable
     durationSec: 751
     toolCalls: 38
     modelCalls: 31
-    tokenShare: 10.8
+    tokenShare: 8.3
   - type: general-purpose
     task: Standards review of harvest Skill
     durationSec: 40
     toolCalls: 8
     modelCalls: 4
-    tokenShare: 1.9
+    tokenShare: 1.5
   - type: general-purpose
     task: Spec review of harvest Skill
     durationSec: 35
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 2.1
+    tokenShare: 1.6
   - type: general-purpose
     task: Standards review of follow-up diff
     durationSec: 26
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 0.9
+    tokenShare: 0.7
   - type: general-purpose
     task: Spec review of follow-up diff
     durationSec: 24
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 0.8
+    tokenShare: 0.6
   - type: general-purpose
     task: Review the --kind follow-up diff
     durationSec: 26
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 1.8
+    tokenShare: 1.4
 gitBranch: claude/awesome-noether-fd6ban
 entrypoint: remote
 cliVersion: 2.1.322
@@ -601,7 +607,9 @@ learnings:
   - A read-only Explore agent cannot write files, so a 200-line catalogue only comes back as a final message; budget for that in the brief.
   - REST issue bodies come back raw while MCP reads are entity-encoded, so a machine-read key line must use an alphabet that entity decoding cannot change.
   - A full open and closed issue listing with bodies takes about 36 seconds, so one scan per run is fine but a read-back per issue is not; read back the single issue instead.
+  - An agent-posted GitHub review comment arrives as a pull_request_review_comment event from the owner's login, so the event looks human; the ADR-0017 header is the only way to tell it is your own echo.
 ideas:
   - Add a script that lists a week's ideas and learnings from Session logs with a resolved or open status, so this review is one command instead of a 200k-token agent run; stamp each idea with the issue that filed it so nothing is filed twice.
   - Add a script that lists a week's ideas and learnings with a resolved or open status; the harvest Skill now does the extraction half, so a status column from its relevance check could feed the Journal.
+  - Let harvest remember which entries its relevance check rejected, for example by filing a closed not-planned issue carrying their key lines, so rejected entries stop consuming the 30-cluster budget each week until they age out of the window.
 landedBy: Stop
