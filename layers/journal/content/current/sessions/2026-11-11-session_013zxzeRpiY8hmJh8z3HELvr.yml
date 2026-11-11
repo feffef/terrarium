@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRpiY8hmJh8z3HELvr
 startedAt: 2026-11-11T06:56:42Z
-endedAt: 2026-11-11T07:06:20Z
+endedAt: 2026-11-11T07:08:28Z
 kind: delegated
 goal: Hide the duplicate "loaded by" pill on always-loaded subagent rules
-status: in-review
-outcome: "One-line SessionCard change; PR #3051 open, gate green"
-summary: "Human-instructed: the owner's kickoff asked for the Journal session card's Subagents rule group to drop the \"loaded by N\" pill on rows that already show \"always loaded\", with a screenshot first, then landing as usual. I made it a single v-if in SessionCard.vue. To find a card with both kinds of row, I wrote a throwaway script that scans session logs for subagent start loads next to other loads. I shot session 013zxzeSvVL3Eaha8hHj2Q8i on a dev server and sent the image to the owner. gate:scoped passed. The diff is 1 line, so I reviewed it by reading it myself (the simple-change rule), and opened PR #3051."
+status: completed
+outcome: "One-line SessionCard change merged in PR #3051"
+summary: "Human-instructed: the owner's kickoff asked for the Journal session card's Subagents rule group to drop the \"loaded by N\" pill on rows that already show \"always loaded\", with a screenshot first, then landing as usual. I made it a single v-if in SessionCard.vue. To find a card with both kinds of row, I wrote a throwaway script that scans session logs for subagent start loads next to other loads. I shot session 013zxzeSvVL3Eaha8hHj2Q8i on a dev server and sent the image to the owner. gate:scoped passed. The diff is 1 line, so I reviewed it by reading it myself (the simple-change rule), opened PR #3051 and merged it with merge-pr.ts once CI was green."
 prs:
   - "3051"
 docsRead:
@@ -38,21 +38,22 @@ frictions:
   - description: "Stop hook said a PR merged and demanded close-session while merge-pr.ts for #3051 was still waiting on CI; PR was open."
     solution: Have the Stop hook confirm the merge (PR state or merge-pr.ts exit) before claiming one.
     severity: nit
-durationSec: 578
+durationSec: 706
 models:
-  claude-opus-5-5: 71
+  claude-opus-5-5: 91
 toolCounts:
-  Bash: 28
+  Bash: 33
   Edit: 1
   Read: 1
   SendUserFile: 1
-  ToolSearch: 4
+  ToolSearch: 5
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  Skill: 2
-  ReadNotifications: 1
+  Skill: 4
+  ReadNotifications: 3
   mcp__github__add_issue_comment: 1
   mcp__github__pull_request_read: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/app/components/journal/SessionCard.vue
 rulesGlobal:
@@ -96,13 +97,17 @@ ruleUse:
       - rule: .claude/rules/adr-0029.md
         via: hint
       - rule: .claude/rules/adr-0004-human-merge.md
-        via: hint
+        via: native
+        trigger: scripts/hooks/merge-close-stop.ts
       - rule: .claude/rules/adr-0030.md
         via: hint
       - rule: .claude/rules/adr-0006.md
         via: hint
       - rule: .claude/rules/adr-0016.md
         via: hint
+      - rule: .claude/rules/guards.md
+        via: native
+        trigger: scripts/hooks/merge-close-stop.ts
     reported:
       - path: .claude/rules/adr-0004.md
         value: steered
