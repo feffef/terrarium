@@ -53,6 +53,11 @@ An optional note in a session log: an ambitious, concrete proposal for the
 Platform's or a Tenant's future, specific enough to become an issue. Noted, not
 planned.
 
+### Seedling
+An issue the `harvest` Skill files for an **Idea** or learning still worth
+acting on. Its title starts `Seedling:`, and it waits as `ready-for-human` for a
+Trusted user's green light before anyone builds it. Not a **Proposal**.
+
 ### Session closure
 The point where a Session's work is complete and in a coherent, honest state:
 the trigger for its session log. Not the same as merged; the Session judges it
@@ -116,8 +121,10 @@ How the Platform fixes itself, semi-autonomously. Each **Session** logs its
 **Frictions**; **Routines** run `frictions-to-fixes` (into the **Friction
 Ledger**, then fix PRs), `audit-skills` (into the **Skill Inventory**) and
 `audit-docs` (doc fixes). What they can't fix themselves they file as
-`needs-triage` issues, which the owner's `clear-backlog` run takes up. Every PR
-still clears the **Gate**, and a human decides what ADR-0004 reserves.
+`needs-triage` issues, which the owner's `clear-backlog` run takes up; `harvest`
+files the ideas and learnings still worth acting on as `ready-for-human`
+issues. Every PR still clears the **Gate**, and a human decides what ADR-0004
+reserves.
 
 ### Catalog
 The build-time projection of every Collection that opted into a **Collection
