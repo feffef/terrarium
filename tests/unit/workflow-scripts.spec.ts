@@ -70,12 +70,13 @@ describe('clear-backlog-build final gate (#2523)', () => {
 
 describe('clear-backlog-explore', () => {
   const source = readFileSync(join(DIR, 'clear-backlog-explore.js'), 'utf8').replace(/^export const meta/m, 'const meta')
+  const background = 'b'.repeat(100)
   const found = (outcome: string, title: string, over: object = {}) => ({
     outcome, title, summary: 's', publicAuthor: false, readyForHuman: false, files: [], relatedTo: [], staleClaims: [], sideFindings: [], writes: [],
-    sourcesRead: [{ source: 'f', learned: 'l' }], background: 'b'.repeat(100), ...over,
+    sourcesRead: [{ source: 'f', learned: 'l' }], background, ...over,
   })
 
-  /** Runs the script on issue 1 with an agent that returns each of `results` in turn (the last one repeats); returns its results, missing issues, agent calls and log lines. */
+  /** Runs the script on issue 1; its agent returns each of `results` in turn, the last one repeating. */
   async function run(...results: object[]) {
     const logs: string[] = []
     let calls = 0
@@ -110,7 +111,7 @@ describe('clear-backlog-explore', () => {
   const stub = (over: object = {}) => found('grill', 'Fix x', { sourcesRead: [], background: 'x', ...over })
 
   it.each([
-    ['no sources', { background: 'b'.repeat(100), sourcesRead: [] }],
+    ['no sources', { background, sourcesRead: [] }],
     ['a placeholder background', { sourcesRead: [{ source: 'f', learned: 'l' }], background: 'x' }],
     ['a grill without a question', {}],
   ])('re-runs a result with %s once, and keeps the retry (#3084)', async (_name, over) => {

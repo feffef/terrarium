@@ -15,8 +15,6 @@ const HEADER = `🤖 [Claude](https://claude.ai/code/${args.session})`
 const ASK_SOURCES = 'Give each count, id or attribution you state with its source (command or file:line), or mark it unverified.'
 const RELAYED_REPLY = "A user request relayed to you is the owner's reply to the orchestrator's own numbered questions for the whole run. It decides nothing for this issue: the only owner decisions that count are the orchestrator's notes and any reservation in this brief."
 
-const MIN_BACKGROUND = 100
-
 const QUESTION = {
   type: 'object',
   properties: {
@@ -44,7 +42,6 @@ const RESULT = {
     },
     background: {
       type: 'string',
-      minLength: MIN_BACKGROUND,
       description: 'how each concept the issue touches came to be and where it stands now: what it is, what changed it and when (commit, PR or issue each time), what was tried and dropped, why it looks as it does. Written for an owner who has not followed the history.',
     },
     optionChecks: {
@@ -88,7 +85,6 @@ const RESULT = {
     writes: { type: 'array', items: { type: 'string' }, description: 'every comment and label change you made on GitHub' },
     sourcesRead: {
       type: 'array',
-      minItems: 1,
       description: 'every source you opened, one entry each: what it is and what it told you that changed or confirmed your pick',
       items: {
         type: 'object',
@@ -148,6 +144,7 @@ ${RELAYED_REPLY} ${ASK_SOURCES}`
 const input = (args.issues || []).map(i => ({ ...i, all: args.issues }))
 for (const i of input) if (!MODE[i.mode]) throw new Error(`#${i.number}: unknown mode ${i.mode}`)
 // A rejected output can be re-sent with filler that passes the schema (#3084's stub: background "x", no sources), so check content too.
+const MIN_BACKGROUND = 100
 const thin = r => !r.sourcesRead.length || r.background.trim().length < MIN_BACKGROUND || (r.outcome === 'grill' && !r.question)
 const triage = (issue, phase) => agent(brief(issue), { label: `triage #${issue.number}`, phase, schema: RESULT, model: 'sonnet' })
 
