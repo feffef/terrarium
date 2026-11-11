@@ -26,4 +26,5 @@ Write these parts in order:
    assumptions, kept apart.
 8. `## Sources`: the source logs by full filename.
 
-Fence any quoted text that contains angle brackets.
+Fence any quoted text that contains angle brackets; `check-body` rejects a bare
+span, as the provenance guard would.

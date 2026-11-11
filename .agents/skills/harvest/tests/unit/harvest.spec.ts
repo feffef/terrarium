@@ -204,6 +204,14 @@ describe('checkBody() and comparePosted()', () => {
     expect(checkBody(good.replace('## Sources\nText.', `## Sources\n${SESSION}.yml`), emitted)).toEqual([])
   })
 
+  it('rejects a bare angle-bracket span in the body or title, but not one in code', () => {
+    const bare = (text: string) => checkBody(good.replace('## The idea\nText.', `## The idea\n${text}`), emitted, 'Seedling: x')
+    expect(bare('Reports "link text of <page>".').join()).toContain('bare angle-bracket span <page> in the body')
+    expect(bare('Reports `of <page>` in code.')).toEqual([])
+    expect(bare('A fence:\n```\n<page>\n```')).toEqual([])
+    expect(checkBody(good, emitted, 'Seedling: a <b> c').join()).toContain('in the title')
+  })
+
   it('lists in body-template.md the same headings check-body requires', () => {
     const template = readFileSync(new URL('../../body-template.md', import.meta.url), 'utf8')
     expect([...template.matchAll(/`(## [^`]+)`/g)].map((m) => m[1])).toEqual(REQUIRED_HEADINGS)

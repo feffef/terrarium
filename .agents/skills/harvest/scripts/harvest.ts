@@ -16,6 +16,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { isExternalSession } from '../../../../shared/schemas/session.ts'
 import { fail, flagValue, root, runIfMain } from '../../../../scripts/lib/cli.ts'
+import { bareAngleBracketSpan } from '../../../../scripts/hooks/github-provenance-guard.ts'
 import { getJson, listAll, resolveAccess } from '../../../../scripts/lib/github-client.ts'
 import { readSessionLogs, type SessionLog } from '../../../../scripts/session/journal-files.ts'
 import { flattenText } from '../../../../scripts/session/extract-frictions.ts'
@@ -179,7 +180,8 @@ export const REQUIRED_HEADINGS = [
 ]
 
 /** What is wrong with a Seedling body before it is posted (empty: fine). The
- *  provenance guard already enforces the session header and bare angle brackets. */
+ *  provenance guard enforces the session header, and its own bare-angle-bracket rule
+ *  is reused here so the failure shows before the post, not as a blocked call. */
 export function checkBody(body: string, emitted: Set<string>, title?: string): string[] {
   const problems: string[] = []
   const ls = lines(body)
@@ -189,6 +191,10 @@ export function checkBody(body: string, emitted: Set<string>, title?: string): s
   const prose = ls.filter((l, i) => !KEY_RE.test(l) && !l.startsWith('🤖') && (sources < 0 || i < sources))
   if (prose.some((l) => SESSION_ID_RE.test(l))) problems.push('names a session id outside Sources: say its date and what it was doing')
   if (title !== undefined && !title.startsWith('Seedling:')) problems.push('title must start with "Seedling:"')
+  for (const [field, text] of [['title', title], ['body', body]] as const) {
+    const span = text === undefined ? null : bareAngleBracketSpan(text)
+    if (span) problems.push(`bare angle-bracket span ${span} in the ${field}: wrap it in a fenced block, or GitHub drops it`)
+  }
   if (body.length > BODY_LIMIT) problems.push(`body is ${body.length} characters, over ${BODY_LIMIT}`)
   for (const l of ls) if (l.startsWith('Harvested:') && !KEY_RE.test(l)) problems.push(`malformed key line: ${l}`)
   const keyIdx = ls.flatMap((l, i) => (KEY_RE.test(l) ? [i] : []))
