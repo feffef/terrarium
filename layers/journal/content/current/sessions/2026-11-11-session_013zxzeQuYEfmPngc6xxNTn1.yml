@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQuYEfmPngc6xxNTn1
 startedAt: 2026-11-11T13:46:58Z
-endedAt: 2026-11-11T14:18:53Z
+endedAt: 2026-11-11T14:22:27Z
 kind: delegated
 goal: "Glass Box curate run: make the guide easier to learn from"
-status: in-review
-outcome: "PR 3101 open: Installed skills and Deploy pages clarified, two stale log pages re-pinned, memory page updated; gate green"
-summary: "The owner typed /glassbox-curate with the instruction to work autonomously and keep picking focuses until a 20 dollar budget; every choice after that was mine (agent-initiated within the Skill's remit). I oriented, started a Scout, and picked the Installed skills Subject because the memory page named it as not yet de-duplicated. A fresh reader found undefined terms and pointer-only sentences; an opus writer fixed them, a separate claim checker read each changed sentence, and one retry round followed. The Scout found that main's session-log lander now drops unknown top-level fields, which made Schema evolution and the session-log Walkthrough false; a second focus re-pinned them. A third focus covered the two Deploy pages and one long Walkthrough stop. code-review's Standards axis then caught paraphrases of ADRs, an id inside an excerpt and stale publishedAt/teaches values that my writer brief had not made explicit; those were fixed and re-checked. gate:scoped passed. I stopped at about 12 dollars rather than a fourth focus, because landing (review, gate, PR) needed headroom; the budget is not spent. Open: the Wayfinder page says the sweep adds ready-for-agent while Planning a big change says ready-for-human goes on grilling and prototype tickets (on the memory page); Scout topics (harvest Skill, footer build line, screenshot anchors) are on the memory page."
+status: completed
+outcome: "PR 3101 merged: Installed skills and Deploy pages clarified, two stale log pages re-pinned, memory page updated"
+summary: "The owner typed /glassbox-curate with the instruction to work autonomously and keep picking focuses until a 20 dollar budget; every choice after that was mine (agent-initiated within the Skill's remit). I oriented, started a Scout, and picked the Installed skills Subject because the memory page named it as not yet de-duplicated. A fresh reader found undefined terms and pointer-only sentences; an opus writer fixed them, a separate claim checker read each changed sentence, and one retry round followed. The Scout found that main's session-log lander now drops unknown top-level fields, which made Schema evolution and the session-log Walkthrough false; a second focus re-pinned them. A third focus covered the two Deploy pages and one long Walkthrough stop. code-review's Standards axis then caught paraphrases of ADRs, an id inside an excerpt and stale publishedAt/teaches values that my writer brief had not made explicit; those were fixed and re-checked. gate:scoped and CI passed and I merged the PR with merge-pr.ts after posting a verdict. I stopped at about 12 dollars rather than a fourth focus, because the Skill allows one PR per run and the PR had landed; the 20 dollar budget is not spent. Open: the Wayfinder page says the sweep adds ready-for-agent while Planning a big change says ready-for-human goes on grilling and prototype tickets (on the memory page); Scout topics (harvest Skill, footer build line, screenshot anchors) are on the memory page."
 prs:
   - "3101"
 docsRead:
@@ -86,23 +86,25 @@ frictions:
   - description: The Stop hook demanded commits mid-run several times, so intermediate states were committed and pushed before the claim checks had finished.
     solution: "Accepted: a branch push opens no PR; no change needed beyond noting that WIP commits are expected during a curate run."
     severity: nit
-durationSec: 1915
+durationSec: 2129
 models:
-  claude-sonnet-5-5: 175
+  claude-sonnet-5-5: 192
 toolCounts:
-  Bash: 38
+  Bash: 42
   Read: 14
   Agent: 14
   mcp__claude-code-remote__get_session: 4
   Write: 3
-  ReadNotifications: 1
+  ReadNotifications: 3
   SendMessage: 2
   Grep: 3
   Edit: 9
-  Skill: 3
+  Skill: 4
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/glassbox/content/workshop/runs/2026-11-11T1347.yml
   - layers/glassbox/content/workshop/pages/index.md
@@ -544,7 +546,7 @@ subagents:
     durationSec: 39
     toolCalls: 12
     modelCalls: 7
-    tokenShare: 3.7
+    tokenShare: 3.5
   - type: general-purpose
     task: Fresh reader of four pages
     model: sonnet
@@ -558,35 +560,35 @@ subagents:
     durationSec: 1323
     toolCalls: 55
     modelCalls: 55
-    tokenShare: 23.2
+    tokenShare: 21.7
   - type: general-purpose
     task: Claim-check changed sentences
     model: sonnet
     durationSec: 90
     toolCalls: 19
     modelCalls: 13
-    tokenShare: 4.7
+    tokenShare: 4.4
   - type: general-purpose
     task: Fresh reader re-reads new text
     model: sonnet
     durationSec: 75
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 2.3
+    tokenShare: 2.2
   - type: general-purpose
     task: Re-pin two stale log pages
     model: opus
     durationSec: 135
     toolCalls: 31
     modelCalls: 16
-    tokenShare: 4.6
+    tokenShare: 4.3
   - type: general-purpose
     task: Claim-check re-pinned log pages
     model: sonnet
     durationSec: 45
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 1.8
+    tokenShare: 1.7
   - type: general-purpose
     task: Fresh reader of deploy pages
     model: sonnet
@@ -600,35 +602,35 @@ subagents:
     durationSec: 193
     toolCalls: 40
     modelCalls: 18
-    tokenShare: 5.3
+    tokenShare: 5
   - type: general-purpose
     task: Claim-check deploy edits
     model: sonnet
     durationSec: 44
     toolCalls: 10
     modelCalls: 6
-    tokenShare: 1.6
+    tokenShare: 1.5
   - type: general-purpose
     task: Standards review of diff
     model: sonnet
     durationSec: 59
     toolCalls: 12
     modelCalls: 6
-    tokenShare: 2.3
+    tokenShare: 2.1
   - type: general-purpose
     task: Spec review of diff
     model: sonnet
     durationSec: 41
     toolCalls: 13
     modelCalls: 8
-    tokenShare: 2.1
+    tokenShare: 2
   - type: general-purpose
     task: Claim-check final edits
     model: sonnet
     durationSec: 68
     toolCalls: 15
     modelCalls: 10
-    tokenShare: 2.5
+    tokenShare: 2.3
 gitBranch: ccr-f023a309-ryhjsc
 entrypoint: remote_mobile
 cliVersion: 2.1.322
