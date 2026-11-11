@@ -1,0 +1,681 @@
+schemaVersion: 1
+session: session_013zxzeQ2wC57fFKCB2ZNBZb
+startedAt: 2026-11-11T08:47:43Z
+endedAt: 2026-11-11T09:01:41Z
+kind: autonomous
+goal: Make the Git & GitHub pages of the Glass Box guide clearer
+status: in-review
+outcome: PR 3060 open with eight clarified Lessons, one added fact, memory page and run entry; CI and merge still to come
+summary: "Scheduled glassbox-curate run, fully agent-initiated (no human prompt). I oriented, started a Scout, and chose the Git & GitHub Subject because the memory page listed it as not yet de-duplicated. Eight sonnet fresh readers read each page as plain text; two opus writers fixed the real findings with sources at the pinned commit; a sonnet claim checker found no false sentence and four weakened ones, two of which I fixed; four readers re-read the result. code-review found no Standards violation, and its Spec axis caught a stale memory-page item, a wrong run-entry line and ten pages missing from pagesRead, which I fixed after a reader checked those pages. PR 3060 is open and subscribed. Cost is unreported because no get_session tool was available. Still open: wait for CI, post the verdict, merge with merge-pr.ts."
+prs:
+  - "3060"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: .throwaway/glassbox-curate/guide-pages-1.md
+    reason: (no reason given)
+  - path: .throwaway/glassbox-curate/guide-pages-2.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: layers/glassbox/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-lesson/DECISIONS.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/git-github/50.git-worktrees.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/git-github/60.attribution.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/git-github/70.issue-triage-labels.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/git-github/80.git-plumbing.md
+    reason: (read before editing)
+  - path: agents/30.cloud-sessions.md
+    reason: (no reason given)
+  - path: agents/10.subagents.md
+    reason: (no reason given)
+  - path: claude-code/20.path-scoped-rules.md
+    reason: (no reason given)
+  - path: claude-code/50.mcp-servers.md
+    reason: (no reason given)
+  - path: hooks/20.blocking-hooks.md
+    reason: (no reason given)
+  - path: skill-pack/10.skill-packs.md
+    reason: (no reason given)
+  - path: skill-pack/20.planning-with-the-pack.md
+    reason: (no reason given)
+  - path: skill-pack/40.wayfinder.md
+    reason: (no reason given)
+  - path: terrarium-practice/40.session-logs.md
+    reason: (no reason given)
+  - path: verification/10.gate.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: .agents/skills/triage/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-curate/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: (no reason given)
+skillsUsed:
+  - name: glassbox-curate
+    reason: the scheduled task this run executed
+  - name: code-review
+    reason: ADR-0004 review before the PR
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: My first Agent call was denied by the dispatch-read guard because I had not read the dispatch-subagents Skill before writing a brief.
+    solution: Read dispatch-subagents right after orienting, as CLAUDE.md says before any subagent brief.
+    severity: nit
+  - description: get_session was not available, so the run's cost_usd could not be read and the PR says unreported.
+    solution: Say in the Skill how to read cost when no get_session tool exists, or allow unreported as the Skill already does.
+    severity: minor
+  - description: plain.ts pastes term definitions inline and strips link text, so fresh readers kept reporting those artifacts as confusion and I had to filter them out.
+    solution: Have plain.ts keep terms as a short gloss outside the sentence, and keep link labels, or tell readers about both artifacts in the brief.
+    severity: minor
+  - description: The Stop hook asked me to commit while a writer was still editing, forcing a partial commit of one writer's files.
+    solution: Brief writers to commit their own pages in a worktree, or have the hook skip while a subagent runs.
+    severity: nit
+durationSec: 838
+models:
+  claude-sonnet-5-5: 121
+toolCounts:
+  Bash: 27
+  Read: 13
+  Agent: 20
+  Grep: 1
+  Edit: 2
+  Skill: 3
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - layers/glassbox/content/guide/pages/git-github/20.author-trust.md
+  - layers/glassbox/content/guide/pages/git-github/30.composite-actions.md
+  - layers/glassbox/content/guide/pages/git-github/50.git-worktrees.md
+  - layers/glassbox/content/guide/pages/git-github/60.attribution.md
+  - layers/glassbox/content/guide/pages/git-github/70.issue-triage-labels.md
+  - layers/glassbox/content/guide/pages/git-github/80.git-plumbing.md
+  - layers/glassbox/content/workshop/pages/index.md
+  - layers/glassbox/content/workshop/runs/2026-11-11T0848.yml
+  - layers/glassbox/content/guide/pages/git-github/10.pull-requests.md
+  - layers/glassbox/content/guide/pages/git-github/40.dependabot-grouping.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0004-human-merge.md
+docsReadBySubagents:
+  - docs/agents/triage-labels.md
+  - .agents/skills/triage/SKILL.md
+  - docs/agents/issue-tracker.md
+  - .agents/skills/glassbox-curate/SKILL.md
+  - docs/agents/environment-caveats.md
+  - .agents/skills/auto-triage/SKILL.md
+  - docs/adr/0004-objective-safety-gate.md
+  - docs/adr/0026-gate-workflow-thin-shell.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/dispatch-subagents/SKILL.md
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/git-github/20.author-trust.md
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: opened the PR and subscribed
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: ran the checks and code-review first
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: session header on the PR body
+      - path: .claude/rules/glassbox-content.md
+        value: backed
+      - path: docs/agents/pr-workflow.md
+      - path: .agents/skills/dispatch-subagents/SKILL.md
+      - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported: []
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: general-purpose
+    subagent: 3
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: general-purpose
+    subagent: 4
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: general-purpose
+    subagent: 5
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: general-purpose
+    subagent: 6
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: general-purpose
+    subagent: 7
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0017.md
+        value: backed
+  - by: general-purpose
+    subagent: 8
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported: []
+  - by: general-purpose
+    subagent: 9
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported: []
+  - by: general-purpose
+    subagent: 10
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+    reported:
+      - path: .claude/rules/glassbox-content.md
+        value: backed
+      - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+      - path: layers/glassbox/GLOSSARY.md
+      - path: .agents/skills/glassbox-lesson/DECISIONS.md
+  - by: general-purpose
+    subagent: 11
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/git-github/50.git-worktrees.md
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+    reported:
+      - path: .claude/rules/glassbox-content.md
+        value: steered
+      - path: .claude/rules/tenant-glossary.md
+        value: backed
+      - path: layers/glassbox/GLOSSARY.md
+      - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+      - path: .agents/skills/glassbox-lesson/DECISIONS.md
+  - by: general-purpose
+    subagent: 12
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0017.md
+        value: backed
+  - by: general-purpose
+    subagent: 13
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported: []
+  - by: general-purpose
+    subagent: 14
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported: []
+  - by: general-purpose
+    subagent: 15
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .claude/rules/adr-0017.md
+        value: backed
+  - by: general-purpose
+    subagent: 16
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: general-purpose
+    subagent: 17
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+    reported:
+      - path: .claude/rules/glassbox-content.md
+        value: backed
+  - by: general-purpose
+    subagent: 18
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: general-purpose
+    subagent: 19
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/glassbox-content.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/agents/30.cloud-sessions.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/agents/30.cloud-sessions.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/agents/30.cloud-sessions.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+subagents:
+  - task: Scout new topics
+    model: sonnet
+  - task: Scout new topics
+    model: sonnet
+    durationSec: 25
+    toolCalls: 8
+    modelCalls: 6
+    tokenShare: 3.7
+  - task: "Reader: pull-requests"
+    model: sonnet
+    durationSec: 16
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 1
+  - task: "Reader: author-trust"
+    model: sonnet
+    durationSec: 16
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 1
+  - task: "Reader: composite-actions"
+    model: sonnet
+    durationSec: 14
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 1
+  - task: "Reader: dependabot"
+    model: sonnet
+    durationSec: 16
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 1
+  - task: "Reader: worktrees"
+    model: sonnet
+    durationSec: 15
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 1
+  - task: "Reader: attribution"
+    model: sonnet
+    durationSec: 15
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 1.1
+  - task: "Reader: triage-labels"
+    model: sonnet
+    durationSec: 16
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 1
+  - task: "Reader: git-plumbing"
+    model: sonnet
+    durationSec: 14
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 1
+  - task: "Writer A: four Git pages"
+    model: opus
+    durationSec: 234
+    toolCalls: 24
+    modelCalls: 24
+    tokenShare: 8.4
+  - task: "Writer B: four Git pages"
+    model: opus
+    durationSec: 262
+    toolCalls: 66
+    modelCalls: 33
+    tokenShare: 12.7
+  - task: Claim check of Git diff
+    model: sonnet
+    durationSec: 75
+    toolCalls: 14
+    modelCalls: 9
+    tokenShare: 4.7
+  - task: Re-read pages 10 and 20
+    model: sonnet
+    durationSec: 17
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 1.8
+  - task: Re-read pages 30 and 40
+    model: sonnet
+    durationSec: 18
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 1.8
+  - task: Re-read pages 50 and 60
+    model: sonnet
+    durationSec: 18
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 1.9
+  - task: Re-read pages 70 and 80
+    model: sonnet
+    durationSec: 18
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 1.9
+  - task: Review standards axis
+    model: sonnet
+    durationSec: 51
+    toolCalls: 15
+    modelCalls: 9
+    tokenShare: 4.6
+  - task: Review spec axis
+    model: sonnet
+    durationSec: 29
+    toolCalls: 6
+    modelCalls: 5
+    tokenShare: 2.8
+  - task: Read overlap pages and check edits
+    model: sonnet
+    durationSec: 46
+    toolCalls: 19
+    modelCalls: 7
+    tokenShare: 4.2
+gitBranch: claude/compassionate-bardeen-2slt8v
+entrypoint: remote_trigger
+cliVersion: 2.1.322
+trigger: glassbox-curate
+landedBy: Stop
