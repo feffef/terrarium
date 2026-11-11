@@ -67,3 +67,41 @@ describe('clear-backlog-build final gate (#2523)', () => {
     expect(await run(gate)).toMatchObject({ status: 'failed', reason: expect.stringMatching(/final gate/) })
   })
 })
+
+describe('clear-backlog-explore seedlings', () => {
+  const source = readFileSync(join(DIR, 'clear-backlog-explore.js'), 'utf8').replace(/^export const meta/m, 'const meta')
+  const found = (outcome: string, title: string, over: object = {}) => ({
+    outcome, title, summary: 's', publicAuthor: false, readyForHuman: false, files: [], relatedTo: [], staleClaims: [], sideFindings: [], writes: [], ...over,
+  })
+
+  /** Runs the script on issue 1 with an agent that returns `result`; returns its results and log lines. */
+  async function run(result: object) {
+    const logs: string[] = []
+    const globals: Record<string, unknown> = {
+      agent: async () => result,
+      pipeline: (items: unknown[], ...stages: ((x: unknown) => unknown)[]) => Promise.all(items.map(async (i) => { let x = i; for (const s of stages) x = await s(x); return x })),
+      parallel: (fns: (() => unknown)[]) => Promise.all(fns.map((f) => f())),
+      phase: () => {},
+      log: (l: string) => logs.push(l),
+      args: { session: 'session_x', issues: [{ number: 1, mode: 'full' }] },
+    }
+    const out = await new AsyncFunction(...GLOBALS, source)(...GLOBALS.map((g) => globals[g])) as { results: Record<string, unknown> }
+    return { r: out.results[1] as { outcome: string; question?: { pick: string } }, logs }
+  }
+
+  it.each(['build', 'blocked', 'close-done', 'close-duplicate'])('turns a seedling\'s %s result into a grill with a question', async (outcome) => {
+    const { r } = await run(found(outcome, 'Seedling: do a thing'))
+    expect(r).toMatchObject({ outcome: 'grill', question: { pick: 'yes' } })
+  })
+
+  it('keeps a seedling\'s own question, and leaves another issue\'s build alone', async () => {
+    const question = { choice: 'c', options: ['x', 'y'], pick: 'x', why: 'w', wouldChange: 'v' }
+    expect((await run(found('build', 'seedling: lower case', { question }))).r).toMatchObject({ outcome: 'grill', question })
+    expect((await run(found('build', 'Fix the typo'))).r.outcome).toBe('build')
+  })
+
+  it('logs a pick that is not one of its options', async () => {
+    const question = { choice: 'c', options: ['a) x', 'b) y'], pick: 'b', why: 'w', wouldChange: 'v' }
+    expect((await run(found('grill', 'Seedling: x', { question }))).logs).toEqual(['#1: pick is not one of its options'])
+  })
+})

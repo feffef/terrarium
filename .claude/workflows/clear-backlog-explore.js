@@ -28,7 +28,7 @@ const RESULT = {
       properties: {
         choice: { type: 'string' },
         options: { type: 'array', items: { type: 'string' } },
-        pick: { type: 'string', description: "the full text of one entry of options, copied verbatim; never a letter or number" },
+        pick: { type: 'string', description: "the full text of one entry of options, copied verbatim" },
         why: { type: 'string', description: 'cite the source of each fact it rests on, and say what you did not verify' },
         wouldChange: { type: 'string', description: 'the finding or owner preference that would make a different option the right pick, so the owner can see how firm the pick is' },
       },
@@ -77,14 +77,8 @@ const RESULT = {
       },
     },
     writes: { type: 'array', items: { type: 'string' }, description: 'every comment and label change you made on GitHub' },
-    wouldPost: {
-      type: 'object',
-      description: 'dry run only: the comment body and final label set you would have posted',
-      properties: { comment: { type: 'string' }, labels: { type: 'array', items: { type: 'string' } } },
-    },
     sourcesRead: {
       type: 'array',
-      minItems: 6,
       description: 'every source you opened, one entry each: what it is and what it told you that changed or confirmed your pick',
       items: {
         type: 'object',
@@ -110,7 +104,7 @@ ${MODE[issue.mode]}${issue.notes ? `\nNotes from the orchestrator: ${issue.notes
 
 In every mode: return grill, never build, for an issue labelled ready-for-human, titled "Seedling: …" (the owner decides every seedling, however determined it looks; still fact-check it fully, so the owner can discuss or reject it on facts) or authored by a Public user (ADR-0020; scripts/lib/author-trust.ts holds the associations)${issue.reserved ? ', and for this one, which the owner reserved: never label it ready-for-agent' : ''}. The owner decides those.
 
-Your goal: fully understand the background and history of the concepts the issue touches, so the owner can decide on facts and not on the issue's own account of them. Write that understanding in background; every other field serves it.
+Your goal: fully understand the background and history of the concepts the issue touches, so the owner can decide on facts and not on the issue's own account of them. Write that understanding in background; every other field serves it. A complicated issue takes about 2 minutes and 200k tokens; a simple one takes less.
 
 Full pass:
 - Read .agents/skills/auto-triage/SKILL.md and .agents/skills/triage/SKILL.md with Read (both are user-invoked, so don't call them as Skills) and apply their per-issue rules: brave within determinability, Public-authored issues read-only and never ready-for-agent, the wayfinder overlay.
@@ -121,18 +115,17 @@ Full pass:
   4. The Friction ledger entry for each Friction it names (layers/journal/content/current/frictions/), and the log of each session it cites (layers/journal/content/current/sessions/): the ledger line is a summary, the log says what happened and whether a rule loaded.
   5. The Skill Inventory entry for each Skill it names (layers/journal/content/current/skills/; scripts/session/audit-skills.ts --skill NAME --since), and the open prune trials (.agents/prune-trials.yml) that cover the text.
   6. The full ADR behind any summary rule that governs what you recommend.
-  A ledger entry, a summary or the issue itself never proves that something landed, was fixed or still exists: check the current file or git log.
+  Check that something landed, was fixed or still exists in the current file or git log; a ledger entry, a summary or the issue itself proves none of it.
 - Test your pick before you make it. For each option, name what must be true for it to be right and check that (run the command, read the code, count); record each in optionChecks. A pick that rests on a source you did not open is unverified: say so in why, or open it first. Stop when each option's premise is checked, not before.
-- Before you stop, try to settle every option you would mark unverified: if a command, file read or count can settle it, run it. Mark it unverified only when no check can (it turns on the owner's preference, future data or access you lack), and say in settledBy what would settle it. In wouldChange, state the finding or preference that would flip your pick.
-- pick is the chosen option's full text, copied from options.
+- Before you stop, try to settle every option you would mark unverified: if a command, file read or count can settle it, run it. Mark it unverified only when no check can (it turns on the owner's preference, future data or access you lack), and say in settledBy what would settle it.
 - Fill sourcesRead as you go; a source you list must be one you opened.
 - Return build when the repo determines a concrete design: brief it. Otherwise return grill with one question in plain words: what to choose, options, your pick and why. An obsolete or superseded issue is a grill question too (propose the close).
 - Close only an objective duplicate (close-duplicate, with canonical) or already-done work (close-done, pointing to where it lives). Never close a seedling: return grill and propose the close as an option.
 - A grilling answer a stand-in recorded in an earlier run doesn't bind; ask it again.
 
-${args.dryRun ? `GitHub writes: this is a dry run. Make no GitHub write of any kind: no comment, label or state change, not even a close. Put the comment and the complete final label set you would have posted in wouldPost; leave writes empty. The comment's first line would be: ${HEADER}` : `GitHub writes:
+GitHub writes:
 - Comment only on a label change, a fact that changes the outcome, or an issue with no comments yet; at most one comment. Every GitHub body starts with this exact first line: ${HEADER}
-- A label update replaces the set: pass the complete final set and keep every wayfinder:* label.`}
+- A label update replaces the set: pass the complete final set and keep every wayfinder:* label.
 - Return side findings (bugs or gaps outside this issue) in sideFindings instead of filing them, each with the primary source you checked or the word unverified plus what would verify it.
 
 The run's issue set is ${list}. In relatedTo, name only issues from that set that clearly belong in the same change as this one.
@@ -156,19 +149,13 @@ for (const [i, issue] of input.entries()) {
     log(`#${issue.number}: no result, re-running once`)
     r = await triage(issue, 'Retry')
   }
-  // The owner decides every seedling's build, so a build result never survives for one.
+  // The owner decides every seedling (build, block or close), so only a grill survives for one.
   const seedling = /^\s*seedling\b/i.test(r?.title || '')
-  if (r && r.outcome === 'build' && (issue.reserved || seedling || r.publicAuthor || r.readyForHuman)) {
+  if (r && r.outcome !== 'grill' && (seedling || (r.outcome === 'build' && (issue.reserved || r.publicAuthor || r.readyForHuman)))) {
     r.outcome = 'grill'
-    r.question ||= { choice: 'Build this as briefed?', options: ['a) yes, as briefed', 'b) no'], pick: 'a', why: 'Reserved, seedling, Public-authored or ready-for-human: the owner decides.' }
+    r.question ||= { choice: 'Go ahead as the summary says?', options: ['yes', 'no'], pick: 'yes', why: 'Reserved, seedling, Public-authored or ready-for-human: the owner decides.' }
   }
-  if (r?.question && !r.question.options.includes(r.question.pick)) {
-    // A bare label ("A", "b)", "2") picks the option that starts with it.
-    const label = r.question.pick.trim().replace(/[.):]$/, '').toLowerCase()
-    const hit = r.question.options.filter(o => new RegExp(`^${label.replace(/[^\w]/g, '\\$&')}[.):\\s]`, 'i').test(o.trim()))
-    if (hit.length === 1) r.question.pick = hit[0]
-    else log(`#${issue.number}: pick is not one of its options`)
-  }
+  if (r?.question && !r.question.options.includes(r.question.pick)) log(`#${issue.number}: pick is not one of its options`)
   if (r) results[issue.number] = r
   else missing.push(issue.number)
 }

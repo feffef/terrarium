@@ -102,8 +102,8 @@ becomes binding. Give it the result's `staleClaims` (what the issue gets wrong
 now), the picked option's `optionChecks` (premises already settled, and the
 `unverified` ones the agent settles first), its `files`, and a trimmed
 `background` of what was tried and dropped. Add a `sideFinding` only when it
-touches the branch's files. The owner's pick is the decision; the triage
-agent's `pick` and `why` stay out.
+touches the branch's files. Take the decision from the owner's pick, not from
+the triage agent's `pick` and `why`.
 
 Act on each branch's `status` (`run-summary.ts --build`):
 

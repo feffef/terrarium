@@ -100,7 +100,7 @@ const MODES = {
   '--build': (r: unknown) => build(r as Branch[]).join('\n\n'),
 }
 
-// The logs hold harness warnings about an agent's output and the workflow's own notes (retries, a pick that matched no option); always show them.
+// The logs carry harness warnings and workflow notes that no result does, so always show them.
 export function runSummary(path: string, mode: keyof typeof MODES): string {
   const { result, logs } = saved(path)
   return [MODES[mode](result), ...(logs.length ? [['logs:', ...logs.map((l) => `  - ${l}`)].join('\n')] : [])].join('\n\n')
