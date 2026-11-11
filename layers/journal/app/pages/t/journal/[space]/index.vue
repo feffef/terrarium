@@ -317,7 +317,7 @@ useSeoMeta({
       </button>
     </section>
 
-    <SiteFooter />
+    <SiteFooter show-build />
   </main>
 </template>
 

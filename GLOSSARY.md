@@ -54,9 +54,11 @@ Platform's or a Tenant's future, specific enough to become an issue. Noted, not
 planned.
 
 ### Seedling
-An issue the `harvest` Skill files for an **Idea** or learning still worth
-acting on. Its title starts `Seedling:`, and it waits as `ready-for-human` for a
-Trusted user's green light before anyone builds it. Not a **Proposal**.
+An issue only the `harvest` Skill files, for an **Idea** or learning still
+worth acting on. Its title starts `Seedling:`, and it waits as `ready-for-human`
+for a Trusted user's green light before anyone builds it. No other Skill or
+session files one, whoever asked; their proposals are plain issues.
+Not a **Proposal**.
 
 ### Session closure
 The point where a Session's work is complete and in a coherent, honest state:
