@@ -82,7 +82,6 @@ export interface HarvestState {
   bySession: Map<string, number[]>
 }
 
-/** An entry before it gets its position in the ordered list. */
 type Draft = Omit<Entry, 'n'>
 
 export function harvestedState(issues: IssueBody[]): HarvestState {
@@ -129,7 +128,8 @@ export function buildEntries(
     const session = String(data.session ?? '')
     // An id-less log cannot carry a parseable key.
     if (!session) continue
-    const started = new Date(data.startedAt as string | Date)
+    // `??` because new Date(null) is the epoch, which would pass the NaN check below.
+    const started = new Date((data.startedAt ?? data.endedAt) as string | Date)
     for (const { kind, text } of noteTexts(data)) {
       const key = entryKey(session, kind, text)
       if (state.keys.has(key)) {
@@ -216,14 +216,13 @@ function listIssueBodies(): IssueBody[] {
 const DEFAULT_OUT = join(tmpdir(), 'harvest-extract.json')
 
 function cmdExtract(argv: string[]): void {
-  const days = WINDOW_DAYS
-  const since = Date.now() - days * 86_400_000
+  const since = Date.now() - WINDOW_DAYS * 86_400_000
   const state = harvestedState(listIssueBodies())
   const { entries, skippedHarvested } = buildEntries(readSessionLogs(root, { archived: true }), state, since)
   const out = flagValue(argv, '--out') ?? DEFAULT_OUT
   const count = (k: Kind) => entries.filter((e) => e.kind === k).length
-  writeFileSync(out, JSON.stringify({ since: new Date(since).toISOString(), days, skippedHarvested, entries }, null, 2) + '\n')
-  console.log(`harvest: window ${new Date(since).toISOString()} .. now (${days} days)`)
+  writeFileSync(out, JSON.stringify({ since: new Date(since).toISOString(), days: WINDOW_DAYS, skippedHarvested, entries }, null, 2) + '\n')
+  console.log(`harvest: window ${new Date(since).toISOString()} .. now (${WINDOW_DAYS} days)`)
   console.log(`harvest: ${count('idea')} ideas and ${count('learning')} learnings unharvested; ${skippedHarvested} already harvested`)
   console.log(`harvest: ${entries.length} entries, ordered, written to ${out}`)
 }

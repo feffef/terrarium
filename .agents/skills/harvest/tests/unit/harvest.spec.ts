@@ -107,7 +107,7 @@ describe('buildEntries()', () => {
 
   it('carries the session start, falling back to its end when the log has none', () => {
     const { entries } = buildEntries(
-      [log({ session: 'session_a', ideas: ['a'] }), log({ session: 'session_b', startedAt: undefined, ideas: ['b'] })],
+      [log({ session: 'session_a', ideas: ['a'] }), log({ session: 'session_b', startedAt: null, ideas: ['b'] })],
       noState,
       since,
     )

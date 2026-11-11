@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 A Routine runs this Skill; its schedule lives there, not here (ADR-0005). Its
 approval covers only the steps below (ADR-0003): it files issues and changes
-no file.
+nothing in the repo but its own session log.
 
 A **Seedling** is an issue an agent files for an idea or learning that is still
 worth acting on. It waits, labelled `ready-for-human`, for a Trusted user's
@@ -61,5 +61,5 @@ entry once. The helper is
      stop the run naming the issue if it still fails.
    Done when every filed issue's stored keys equal its file's keys and you have
    listed every number.
-5. **Close.** A run where nothing passed says so and files no issue. Done when
-   `close-session` has run once.
+5. **Close.** Invoke `close-session` once; done when it has run. A run where
+   nothing passed says so and files no issue.
