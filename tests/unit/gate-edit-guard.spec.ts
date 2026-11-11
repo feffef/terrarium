@@ -30,13 +30,20 @@ describe('checkGateEdit()', () => {
     writeFileSync(lock(), '999999999') // dead pid: a killed run
     expect(edit(join(repo, 'a.ts'))).toBeNull()
   })
+  it('ignores a lock holding 0, which would probe the process group', () => {
+    writeFileSync(lock(), '0')
+    expect(edit(join(repo, 'a.ts'))).toBeNull()
+  })
 
   describe('with a live run', () => {
     beforeAll(() => writeFileSync(lock(), String(process.pid)))
 
-    it.each(['Edit', 'Write', 'NotebookEdit'])('denies %s of a tree path, even in a new directory', (tool) => {
-      const input = tool === 'NotebookEdit' ? { notebook_path: join(repo, 'new/dir/n.ipynb') } : { file_path: join(repo, 'new/dir/a.ts') }
-      expect(checkGateEdit(tool, input, repo)).toContain('gate:scoped')
+    it.each([
+      ['Edit', 'file_path', 'new/dir/a.ts'],
+      ['Write', 'file_path', 'new/dir/a.ts'],
+      ['NotebookEdit', 'notebook_path', 'new/dir/n.ipynb'],
+    ])('denies %s of a tree path, even in a new directory', (tool, key, rel) => {
+      expect(checkGateEdit(tool, { [key]: join(repo, rel) }, repo)).toContain('gate:scoped')
     })
     it('denies git commit, including via -C', () => {
       expect(checkGateEdit('Bash', { command: 'git commit -m x' }, repo)).toContain('gate:scoped')

@@ -47,7 +47,8 @@ export function liveGatePid(dir: string): number | null {
   if (!gitDir.ok) return null
   try {
     const pid = Number.parseInt(readFileSync(join(gitDir.out, 'terrarium-gate.pid'), 'utf8'), 10)
-    return Number.isInteger(pid) && alive(pid) ? pid : null
+    // pid <= 0 would make kill(2) probe a whole process group, as gate.ts isAlive guards
+    return Number.isInteger(pid) && pid > 0 && alive(pid) ? pid : null
   } catch {
     return null
   }
