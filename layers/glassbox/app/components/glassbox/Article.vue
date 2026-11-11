@@ -224,7 +224,18 @@ const parts = computed(() => {
 .article :deep(.gb-lessons span:first-child) { color: var(--gb-muted); }
 .article :deep(.gb-lessons span:first-child)::after { content: ' · '; }
 .article :deep(.gb-lessons li > a:not(.file)) { color: var(--gb-ink); text-decoration: none; }
-.article :deep(.gb-lessons li > a:not(.file))::after { content: ' →'; }
+/* A book marks a link to another Glass Box page, as "?" marks a term. */
+.article :deep(a[href^="/t/glassbox/"]:not(.file, .gb-next a))::after {
+  content: '';
+  display: inline-block;
+  inline-size: 0.85em;
+  block-size: 0.85em;
+  margin-inline-start: 0.3em;
+  vertical-align: -0.08em;
+  background: currentColor;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 3.5C6.5 2.5 4 2.3 1.5 2.8v9.7c2.5-.5 5-.3 6.5.7 1.5-1 4-1.2 6.5-.7V2.8C12 2.3 9.5 2.5 8 3.5zM8 3.5v9.7' fill='none' stroke='black' stroke-width='1.4' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+.article :deep(:is(.gb-lessons li, .lesson) > a:not(.file))::after { background: var(--gb-accent); }
 .article :deep(li > .gb-lessons), .article :deep(li > p > .gb-lessons) { display: inline; margin: 0; }
 .article :deep(li > .gb-lessons li), .article :deep(li > p > .gb-lessons li) { display: inline-block; margin: 3px 6px 3px 0; padding: 0 8px; font-size: 13px; }
 
