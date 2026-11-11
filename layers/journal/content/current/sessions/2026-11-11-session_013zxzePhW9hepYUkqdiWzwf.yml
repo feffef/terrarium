@@ -1,0 +1,128 @@
+schemaVersion: 1
+session: session_013zxzePhW9hepYUkqdiWzwf
+startedAt: 2026-11-11T08:49:11Z
+endedAt: 2026-11-11T08:56:06Z
+kind: delegated
+goal: Correct the dependabot-sweep entry in the Skill Inventory
+status: completed
+outcome: PR 3059 merged by a human; the entry now says it reacts to opened Dependabot PRs
+summary: "The user (direct ask) said the Skill Inventory still described dependabot-sweep as a daily review, when it now reacts to opened Dependabot PRs and has no fixed schedule. I found the entry in layers/journal/content/current/skills/dependabot-sweep.yml and rewrote its gist and role. Everything after that was agent-initiated routine landing, per CLAUDE.md and ADR-0003: committed, pushed, opened PR 3059, subscribed to it and closed the session. I treated it as a simple change (one file, six lines) and read the diff myself instead of running code-review and gate:scoped; validate:content passed and CI's gate went green. I left the SKILL.md description alone, since \"a Routine runs it\" still holds. The file is Human-only, so I did not merge it; a human did, and the PR is merged."
+prs:
+  - "3059"
+docsRead:
+  - path: layers/journal/content/current/skills/dependabot-sweep.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/routines/dependabot-sweep.yml
+    reason: (no reason given)
+  - path: .github/dependabot.yml
+    reason: (no reason given)
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: .agents/skills/dependabot-sweep/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: PR opened
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Worked on the Journal Tenant but only grepped its GLOSSARY.md instead of reading it, against the tenant-glossary rule.
+    solution: Read layers/journal/GLOSSARY.md whole before editing under that layer; the rule loaded only after I had already edited.
+    severity: nit
+  - description: ADR-0015 loaded and its full read was demanded only after I had already edited the Inventory entry.
+    solution: A rule matching layers/journal/content/current/skills/ that loads on first read, not on edit, would have put it ahead of the change.
+    severity: nit
+durationSec: 415
+models:
+  claude-sonnet-5-5: 55
+toolCounts:
+  Grep: 2
+  Bash: 11
+  Read: 7
+  Edit: 1
+  Write: 3
+  ToolSearch: 2
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  Skill: 3
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 4
+  mcp__github__pull_request_read: 2
+filesEdited:
+  - layers/journal/content/current/skills/dependabot-sweep.yml
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0015.md
+adrHints:
+  - adr: 15
+    via: path
+    readAfter: true
+    by: main
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/adr/0015-audit-skills-and-conditional-importance.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/journal/content/current/skills/dependabot-sweep.yml
+      - rule: .claude/rules/adr-0015.md
+        via: native
+        trigger: layers/journal/content/current/skills/dependabot-sweep.yml
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: native
+        trigger: docs/adr/0015-audit-skills-and-conditional-importance.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: docs/adr/0015-audit-skills-and-conditional-importance.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+    reported:
+      - path: .claude/rules/adr-0015.md
+        value: steered
+        why: kept role free of ids
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: steered
+        why: left the merge to a human
+      - path: .claude/rules/adr-0003.md
+        value: backed
+      - path: .claude/rules/adr-0017.md
+        value: backed
+      - path: docs/agents/pr-workflow.md
+      - path: docs/agents/git-conventions.md
+      - path: docs/agents/github-integration.md
+gitBranch: claude/happy-cannon-89rs27
+entrypoint: remote
+cliVersion: 2.1.322
+learnings:
+  - The Skill Inventory entry (journal skills yml) and the SKILL.md description are separate places for a Skill's cadence; the schedule itself lives in a Routine.
+landedBy: Stop
