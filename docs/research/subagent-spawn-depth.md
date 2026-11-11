@@ -107,8 +107,9 @@ guaranteed byte-exact). Local binary: `/opt/claude-code/bin/claude`,
 
 - Whether the depth limit applies to Workflow `agent()` agents: untested in the
   docs and binary, but see "Tests run": they lack `Agent` even at depth 2.
-- Whether Workflow-started agents can be resumed with `SendMessage` or agent IDs
-  (the owner reports it did not work; the `agent()` signature has no such option).
+- Whether the docs cover resuming Workflow-started agents: they do not, but it
+  works by raw agent id (tests 6 to 9 below); the `agent()` signature has no
+  resume option.
 - Which names the cloud platform refuses in an environment's variables, and why
   a stored `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH` did not apply (the stored value
   is not shown by `get_environment`).
@@ -194,6 +195,30 @@ own tool list (marked self-reported, not checked by a command). One run each.
    `ReportFindings`, `SuggestSkills`, and among deferred tools the Cron and
    `Task*` tools). So within the `agent()` options tried, the missing `Agent`
    follows from being a workflow agent, not from depth or `agentType`.
+
+6. **Workflow agents cannot be addressed by label.** After a two-agent Workflow
+   (labels `resume-test-A`, `resume-test-B`), `ListAgents` in the main session and
+   in agent B listed no agents, and `SendMessage` to `resume-test-A` returned
+   `No agent named 'resume-test-A' is reachable`. Agent A said it cannot tell its
+   own agent id.
+7. **By raw id from the run journal, a workflow agent resumes and keeps its
+   context.** The id is in `~/.claude/projects/<project>/<session>/subagents/workflows/<run id>/journal.jsonl`
+   (line `{"type":"started","agentId":...,"label":...}`). `SendMessage` from the
+   main session to A's id returned `success: true, Resuming agent ...`; asked "reply
+   `RESUMED-OK`, the secret word backwards, and 17*23", it answered
+   `RESUMED-OK 247-MULP 391` (self-report; the harness notice showed 70,560 tokens,
+   1 tool use, 2.4 s, a real new turn). A first attempt asking for "just the word"
+   got a near-repeat of its old report; unexplained. A plain subagent resumed the
+   same way is the control and answered a new question.
+8. **A workflow agent can find a sibling's id and message it.** Agent D read the
+   journal with Bash (`ls -dt ~/.claude/projects/*/*/subagents/workflows/*/ | head -1`,
+   then `grep` the label) and `SendMessage` to C's id returned `success: true`.
+   D saw no reply in the tool result, and the reply was not observed anywhere
+   (unverified; likely it goes to the main session, not the sender). So a script
+   cannot wait for a resumed sibling's answer inside the run.
+9. **`resumeFromRunId` is a replay, not a resume.** Re-running the same script
+   with it returned byte-identical output with 0 tokens, 0 tool uses and 12 ms:
+   completed agents came from cache (matches the docs).
 
 ## The Agent SDK route (docs only; nothing run)
 
