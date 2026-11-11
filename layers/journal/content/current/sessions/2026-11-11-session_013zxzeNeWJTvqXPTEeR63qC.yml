@@ -1,0 +1,315 @@
+schemaVersion: 1
+session: session_013zxzeNeWJTvqXPTEeR63qC
+startedAt: 2026-11-11T09:07:42Z
+endedAt: 2026-11-11T09:36:42Z
+kind: interactive
+goal: Glass Box terms link their Lesson, not the raw glossary
+status: in-review
+outcome: "PR 3062 open: terms show a titled Lesson chip, new Skill inventory Lesson; gate green, waits for the owner's merge"
+summary: "The owner asked whether each expanded Glass Box term has a matching Lesson, and wanted terms to link the Lesson instead of GLOSSARY.md. I mapped all terms to Lessons and found about nine without a good one, asked three questions, and the owner decided: Lesson only when there is one, keep the glossary link for no-Lesson and Tenant-specific terms, delete Proposal and Pingback, write a Skill inventory Lesson, leave XSS unlinked. Those were human-instructed. I built an optional lesson field, a check that rejects both fields or a missing page, the term data, the new Lesson and the doc edits. My first Term.vue link just said Lesson; the owner pointed out the existing titled Lesson-chip design, so I redrew it from the page list (agent-initiated wording of the first version, owner-corrected). Code review by two read-only subagents found no hard violations; I moved Session to Session logs and cut a duplicate bullet and comment. Open: the new Lesson uses prefix 85 against the tens rule, and a human must merge it."
+prs:
+  - "3062"
+docsRead:
+  - path: layers/glassbox/content/guide/pages/index.md
+    reason: (no reason given)
+  - path: /term.png
+    reason: (no reason given)
+  - path: /term2.png
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/85.skill-inventory.md
+    reason: (read before editing)
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: (read before editing)
+  - path: layers/glassbox/GLOSSARY.md
+    reason: (read before editing)
+  - path: .agents/skills/glassbox-lesson/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: two-axis review of the branch diff before the PR
+  - name: dispatch-subagents
+    reason: read before briefing the review agents
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Built a new Term.vue link with the plain text Lesson without agreeing a sample first; the owner then pointed to the existing titled Lesson chip.
+    solution: Before a UI change, grep the tenant for an existing component for the same element and show a sample with preview, as CLAUDE.md says.
+    severity: moderate
+  - description: The dev preview server never hydrated in headless Chromium, so two checks returned empty before I rebuilt production, which cost a few minutes.
+    solution: verifying-ui-changes.md could say dev preview may not hydrate in the headless check, so build first.
+    severity: minor
+  - description: TMPDIR was empty, so gate logs and screenshots landed in the filesystem root instead of the scratchpad.
+    solution: Write to the scratchpad path named in the system prompt, never to TMPDIR.
+    severity: nit
+  - description: scripts/ui/preview.ts is not executable, so running it directly failed with permission denied; it needs pnpm exec tsx.
+    solution: Document the pnpm exec tsx form in verifying-ui-changes.md or mark the script executable.
+    severity: nit
+durationSec: 1739
+models:
+  claude-sonnet-5-5: 153
+toolCounts:
+  Bash: 60
+  Read: 4
+  AskUserQuestion: 1
+  Write: 2
+  Skill: 4
+  Agent: 2
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - layers/glassbox/content/guide/pages/terrarium-practice/85.skill-inventory.md
+  - layers/glassbox/app/components/content/Term.vue
+  - layers/glassbox/app/pages/t/glassbox/[space]/[...slug].vue
+  - layers/glassbox/app/utils/terms.ts
+  - layers/glassbox/content/guide/terms/session.yml
+  - layers/glassbox/tenant.config.ts
+  - layers/glassbox/content/guide/pages/claude-code/30.skills.md
+  - layers/glassbox/content/guide/pages/skill-pack/10.skill-packs.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/80.self-improvement-loop.md
+  - layers/glassbox/content/guide/terms/skill-inventory.yml
+  - .agents/skills/glassbox-lesson/EVERY-PAGE.md
+  - layers/glassbox/GLOSSARY.md
+  - layers/glassbox/content/guide/pages/git-github/30.composite-actions.md
+  - layers/glassbox/content/guide/terms/adr.yml
+  - layers/glassbox/content/guide/terms/aggregator.yml
+  - layers/glassbox/content/guide/terms/assistive-technology.yml
+  - layers/glassbox/content/guide/terms/catalog.yml
+  - layers/glassbox/content/guide/terms/collection-kind.yml
+  - layers/glassbox/content/guide/terms/collection.yml
+  - layers/glassbox/content/guide/terms/design-token.yml
+  - layers/glassbox/content/guide/terms/document.yml
+  - layers/glassbox/content/guide/terms/ecosystem.yml
+  - layers/glassbox/content/guide/terms/floor.yml
+  - layers/glassbox/content/guide/terms/friction-ledger.yml
+  - layers/glassbox/content/guide/terms/friction.yml
+  - layers/glassbox/content/guide/terms/frontmatter.yml
+  - layers/glassbox/content/guide/terms/gate.yml
+  - layers/glassbox/content/guide/terms/heavy.yml
+  - layers/glassbox/content/guide/terms/human-only.yml
+  - layers/glassbox/content/guide/terms/inert.yml
+  - layers/glassbox/content/guide/terms/manifest.yml
+  - layers/glassbox/content/guide/terms/nitro.yml
+  - layers/glassbox/content/guide/terms/pingback.yml
+  - layers/glassbox/content/guide/terms/proposal.yml
+  - layers/glassbox/content/guide/terms/prune-trial.yml
+  - layers/glassbox/content/guide/terms/public.yml
+  - layers/glassbox/content/guide/terms/routine.yml
+  - layers/glassbox/content/guide/terms/rule.yml
+  - layers/glassbox/content/guide/terms/screen-reader.yml
+  - layers/glassbox/content/guide/terms/session-log.yml
+  - layers/glassbox/content/guide/terms/skill.yml
+  - layers/glassbox/content/guide/terms/space.yml
+  - layers/glassbox/content/guide/terms/tenant.yml
+  - layers/glassbox/content/guide/terms/trusted.yml
+  - layers/glassbox/content/guide/terms/workflow.yml
+  - layers/glassbox/page-checks.ts
+  - layers/glassbox/tests/unit/glassbox-pages.spec.ts
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0015.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/glassbox-content.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/index.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/index.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/index.md
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/adr-0006.md
+        via: hint
+      - rule: .claude/rules/adr-0016.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: native
+        trigger: layers/glassbox/app/utils/lesson.ts
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: gate:scoped and code-review before PR
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: owner approved the new Lesson first
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: session header on PR body
+      - path: .claude/rules/glassbox-content.md
+        value: steered
+        why: no counts or ids in the Lesson
+      - path: .claude/rules/ui-verification.md
+        value: steered
+        why: rendered the chip before claiming it works
+      - path: .claude/rules/glossary-terms.md
+        value: backed
+      - path: .claude/rules/tenant-glossary.md
+        value: backed
+      - path: .claude/rules/adr-0015.md
+        value: backed
+      - path: docs/agents/pr-workflow.md
+      - path: docs/agents/verifying-ui-changes.md
+      - path: layers/glassbox/GLOSSARY.md
+      - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+      - path: docs/agents/git-conventions.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/glassbox-content.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/terrarium-practice/85.skill-inventory.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/terrarium-practice/85.skill-inventory.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/terrarium-practice/85.skill-inventory.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/adr-0006.md
+        via: hint
+      - rule: .claude/rules/adr-0016.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+subagents:
+  - type: general-purpose
+    task: Standards review of branch diff
+    model: sonnet
+    durationSec: 36
+    toolCalls: 10
+    modelCalls: 6
+    tokenShare: 8
+  - type: general-purpose
+    task: Spec review of branch diff
+    model: sonnet
+    durationSec: 43
+    toolCalls: 11
+    modelCalls: 7
+    tokenShare: 9.2
+gitBranch: claude/optimistic-albattani-xfxbiz
+entrypoint: remote
+cliVersion: 2.1.322
+learnings:
+  - A ul inside a term note would be inside a paragraph in server HTML, and the parser closes the paragraph at the ul, so the Lesson chip uses spans.
+landedBy: Stop
