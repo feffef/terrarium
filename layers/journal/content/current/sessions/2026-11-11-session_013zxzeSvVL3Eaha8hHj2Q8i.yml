@@ -1,0 +1,254 @@
+schemaVersion: 1
+session: session_013zxzeSvVL3Eaha8hHj2Q8i
+startedAt: 2026-11-11T00:15:57Z
+endedAt: 2026-11-11T00:22:36Z
+kind: autonomous
+goal: Write the 2026-11-10 Journal Digest and archive old content
+status: in-review
+outcome: Digest plus archive sweep (14 renames) pushed and gated; PR 3042 open and subscribed, CI pending
+summary: Scheduled digest run (agent-initiated by the schedule; no human instruction). One closed day (2026-11-10) was missing a Digest. I gathered its material, wrote the page, had a read-only subagent fact-check it (three claims fixed, one unverifiable), ran the archive sweep, then code-review (Standards and Spec, no hard findings, wording tweaks applied), gate:scoped on the final head, and opened PR 3042. The merge on green is still to come.
+prs:
+  - "3042"
+docsRead:
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/digests/2026-11-10.md
+    reason: (read before editing)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/digests/2026-11-09.md
+    reason: (no reason given)
+  - path: .claude/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: digest
+    reason: (invoked as a slash command)
+frictions:
+  - description: Ran git status, add and commit and the first GitHub tool call before reading git-conventions.md and github-integration.md, which CLAUDE.md requires first; read late, no harm.
+    solution: A hook that blocks the first non-read-only git command until the doc is read.
+    severity: nit
+  - description: First Agent call was blocked by the dispatch-read guard because I had not read dispatch-subagents before writing a brief.
+    solution: The digest Skill's fact-check step could name dispatch-subagents.
+    severity: nit
+  - description: Typed a wrong session id in the commit trailer; the commit-msg hook corrected it.
+    solution: Copy the id from the attribution reminder instead of retyping it.
+    severity: nit
+  - description: Wrote the footer's worst-problem line from a loose reading of the data; the fact-check flagged it, so I named the worst and the most repeated.
+    solution: The digest Skill could say how to pick the worst problem.
+    severity: minor
+  - description: The Stop hook demanded commit and push several times while fact-check and review subagents were still running, forcing repeated holds.
+    solution: Stop hooks should skip the nag while subagents are running.
+    severity: minor
+durationSec: 399
+models:
+  claude-sonnet-5-5: 68
+toolCounts:
+  Bash: 16
+  Write: 2
+  Agent: 4
+  Read: 2
+  ReadNotifications: 5
+  Edit: 5
+  Skill: 3
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-11-10.md
+  - layers/journal/content/archived/pages/digests/2026-11-03.md
+  - layers/journal/content/archived/sessions/2026-11-03-session_013zxzePCZc7PkwLBo6YoDJt.yml
+  - layers/journal/content/archived/sessions/2026-11-03-session_013zxzePh7qKycsJT9g2eqU1.yml
+  - layers/journal/content/archived/sessions/2026-11-03-session_013zxzePhrV1oZiDPfSuW2Hm.yml
+  - layers/journal/content/archived/sessions/2026-11-03-session_013zxzeQH3GSc8uMpvhebnFr.yml
+  - layers/journal/content/archived/sessions/2026-11-03-session_013zxzeQbPLMkHvh94sawgDU.yml
+  - layers/journal/content/archived/sessions/2026-11-03-session_013zxzeQrhKwVsWaJZV8Bs7y.yml
+  - layers/journal/content/archived/sessions/2026-11-03-session_013zxzeR4cgWA8MkV51fqC4t.yml
+  - layers/journal/content/archived/sessions/2026-11-03-session_013zxzeR8CEiWCmTmvjhCZ1A.yml
+  - layers/journal/content/archived/sessions/2026-11-03-session_013zxzeRUFEQvJ2mE6PXbv3w.yml
+  - layers/journal/content/archived/sessions/2026-11-03-session_013zxzeSAtjCQiatdUuuFCRJ.yml
+  - layers/journal/content/archived/sessions/2026-11-03-session_013zxzeSF22kmtzW5QWaTDTX.yml
+  - layers/journal/content/archived/sessions/2026-11-03-session_013zxzeSrSkYPpnoS2ag6EbC.yml
+  - layers/journal/content/archived/sessions/2026-11-03-session_013zxzeSuptjybJT9eajhiUR.yml
+  - layers/journal/content/current/pages/digests/2026-11-03.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0010.md
+docsReadBySubagents:
+  - .agents/skills/digest/SKILL.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0010.md
+        via: native
+        trigger: layers/journal/content/current/pages/digests/2026-11-10.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/dispatch-subagents/SKILL.md
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/journal/content/current/pages/digests/2026-11-10.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/journal/content/current/pages/digests/2026-11-10.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/dispatch-subagents/SKILL.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/github-integration.md
+    reported:
+      - path: .claude/rules/adr-0010.md
+        value: steered
+        why: never touched index, PR not main
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: review and gate before PR
+      - path: .claude/rules/adr-0003.md
+        value: backed
+      - path: .claude/rules/adr-0017.md
+        value: backed
+      - path: docs/agents/pr-workflow.md
+      - path: .agents/skills/dispatch-subagents/SKILL.md
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/journal/content/current/pages/digests/2026-11-10.md
+      - rule: .claude/rules/adr-0010.md
+        via: native
+        trigger: layers/journal/content/current/pages/digests/2026-11-10.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/journal/content/current/pages/digests/2026-11-10.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+    reported: []
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/digest/SKILL.md
+      - rule: .claude/rules/adr-0010.md
+        via: native
+        trigger: .agents/skills/digest/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/digest/SKILL.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/journal/content/current/pages/digests/2026-11-10.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/journal/content/current/pages/digests/2026-11-10.md
+    reported:
+      - path: .agents/skills/digest/SKILL.md
+  - by: general-purpose
+    subagent: 3
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .claude/skills/digest/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .claude/skills/digest/SKILL.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/journal/content/current/pages/digests/2026-11-10.md
+      - rule: .claude/rules/adr-0010.md
+        via: native
+        trigger: layers/journal/content/current/pages/digests/2026-11-10.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/journal/content/current/pages/digests/2026-11-10.md
+    reported:
+      - path: .claude/skills/digest/SKILL.md
+subagents:
+  - task: Fact-check digest
+    model: sonnet
+  - task: Fact-check digest
+    model: sonnet
+    durationSec: 82
+    toolCalls: 34
+    modelCalls: 13
+    tokenShare: 23.7
+  - task: Review standards
+    model: sonnet
+    durationSec: 16
+    toolCalls: 8
+    modelCalls: 3
+    tokenShare: 4.9
+  - task: Review spec
+    model: sonnet
+    durationSec: 28
+    toolCalls: 9
+    modelCalls: 5
+    tokenShare: 6.3
+gitBranch: claude/compassionate-lovelace-vklirj
+entrypoint: remote_trigger
+cliVersion: 2.1.322
+trigger: digest
+landedBy: Stop
