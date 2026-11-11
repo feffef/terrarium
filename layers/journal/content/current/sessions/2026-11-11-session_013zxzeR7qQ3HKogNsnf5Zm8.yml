@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeR7qQ3HKogNsnf5Zm8
 startedAt: 2026-11-11T08:07:01Z
-endedAt: 2026-11-11T10:07:31Z
+endedAt: 2026-11-11T10:11:57Z
 kind: interactive
 goal: Mark expandable terms with a ? icon and Lesson links with a book icon on Glass Box pages
-status: in-review
-outcome: "? icon merged as PR 3056; book icon for Lesson links and chips is PR 3067, gate green, awaiting CI and merge"
-summary: "The owner asked (direct ask) that Glass Box glossary terms that expand carry a \"?\" marker, like the arrow on code links. Following their preference to ask first, I read Term.vue and File.vue and asked three questions (placement, scope, open state); the owner answered all three. I built it, and the owner then steered the look by direct asks (smaller, then an icon that does not read as part of the sentence, then smaller again) and approved it; the circled-icon design and sizes were agent-proposed within those asks. gate:scoped passed, I read the one-file diff myself and merged PR 3056 (agent-initiated merge per ADR-0004). The owner then asked (direct ask) for a similar marker on inline links to other lessons and which icon to use. I surveyed the existing glyphs, proposed a book, the owner chose it, asked for it on Lesson chips too, and asked for a sample of 2-3 designs; I rendered three, the owner picked variant A (outline open book) and said to build, review and merge (and to merge main if content needed touching, which it did not). The rule is one CSS mask in Article.vue matched by href /t/glassbox/, plus removing the dead arrow in Term.vue; main's new Lesson chip inside Term definitions needed that cleanup. Because the diff was over 10 lines I ran code-review (two read-only subagents, agent-initiated per the PR workflow): it found my selector also hit the subject chip and the prev/next cards, which I verified in the DOM and excluded before landing. gate:scoped passed on 8117fab23 and I opened PR 3067 and subscribed. Still open: CI result and the merge. Verification cost the most again: stale dev servers (CSS, then the content database after fast-forwarding main) and screenshot scripts that sampled the wrong element, each caught by reading computed values or counts in the DOM."
+status: completed
+outcome: "Both icons shipped: ? on expandable terms (PR 3056) and a book on Lesson links and chips (PR 3067), each merged after a green gate"
+summary: "The owner asked (direct ask) that Glass Box glossary terms that expand carry a \"?\" marker, like the arrow on code links. Following their preference to ask first, I read Term.vue and File.vue and asked three questions (placement, scope, open state); the owner answered all three. I built it, and the owner then steered the look by direct asks (smaller, then an icon that does not read as part of the sentence, then smaller again) and approved it; the circled-icon design and sizes were agent-proposed within those asks. gate:scoped passed, I read the one-file diff myself and merged PR 3056 (agent-initiated merge per ADR-0004). The owner then asked (direct ask) for a similar marker on inline links to other lessons and which icon to use. I surveyed the existing glyphs, proposed a book, the owner chose it, asked for it on Lesson chips too, and asked for a sample of 2-3 designs; I rendered three, the owner picked variant A (outline open book) and said to build, review and merge (and to merge main if content needed touching, which it did not). The rule is one CSS mask in Article.vue matched by href /t/glassbox/, plus removing the dead arrow in Term.vue; main's new Lesson chip inside Term definitions needed that cleanup. Because the diff was over 10 lines I ran code-review (two read-only subagents, agent-initiated per the PR workflow): it found my selector also hit the subject chip and the prev/next cards, which I verified in the DOM and excluded before landing. gate:scoped passed on 8117fab23, CI's gate went green, I posted my verdict and merged PR 3067 as defa1ddf9 through merge-pr.ts (agent-initiated per ADR-0004, owner had said merge). Verification cost the most again: stale dev servers (CSS, then the content database after fast-forwarding main) and screenshot scripts that sampled the wrong element, each caught by reading computed values or counts in the DOM instead of trusting the picture."
 prs:
   - "3056"
   - "3067"
@@ -86,29 +86,29 @@ frictions:
   - description: A DOM probe ran before hydration and reported zero terms, which I first misread as a content problem.
     solution: Use a longer --wait-ms, or wait for a selector, before reading counts.
     severity: nit
-durationSec: 7230
+durationSec: 7496
 models:
-  claude-sonnet-5-5: 284
+  claude-sonnet-5-5: 303
 toolCounts:
   Grep: 9
   Read: 17
   AskUserQuestion: 2
   Edit: 10
-  Bash: 73
+  Bash: 76
   mcp__github__list_pull_requests: 2
   SendUserFile: 4
   Glob: 2
   ToolSearch: 2
   mcp__github__create_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 2
-  Skill: 6
-  Write: 5
-  ReadNotifications: 3
-  mcp__github__pull_request_read: 3
-  mcp__claude-code-remote__send_later: 1
-  mcp__github__add_issue_comment: 1
-  mcp__claude-code-remote__unsubscribe_pr_activity: 1
-  mcp__claude-code-remote__delete_trigger: 1
+  Skill: 7
+  Write: 6
+  ReadNotifications: 5
+  mcp__github__pull_request_read: 6
+  mcp__claude-code-remote__send_later: 2
+  mcp__github__add_issue_comment: 2
+  mcp__claude-code-remote__unsubscribe_pr_activity: 2
+  mcp__claude-code-remote__delete_trigger: 2
   Agent: 2
 filesEdited:
   - layers/glassbox/app/components/content/Term.vue
@@ -239,17 +239,19 @@ subagents:
     durationSec: 28
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 3.2
+    tokenShare: 2.9
   - type: Explore
     task: Spec review of icon diff
     durationSec: 41
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 4.1
+    tokenShare: 3.7
 gitBranch: claude/adoring-pasteur-b6iv18
 entrypoint: remote
 cliVersion: 2.1.322
 learnings:
   - A long-lived nuxt dev server can serve stale scoped CSS after several edits; verify computed style and restart it (inferred, not read from docs)
   - Vue scoped :deep(a[href^=...]:not(.file, .chip, .card, .gb-next a)) compiles and matches correctly in the dev build (verified by computed style)
+ideas:
+  - "Give scripts/ui/preview.ts a restart subcommand, and make start --dev warn when a long-lived server predates the last edit or a pull of main: three stale-server detours in one session each cost a probe round and were only caught by reading computed values"
 landedBy: Stop
