@@ -12,11 +12,6 @@ fixes:
     date: "2026-11-04"
     summary: "clear-backlog-build reviewPrompt and the REVIEW schema say worthFixing is false only for a call that needs the owner's choice, so a cheap spec mismatch is fixed, not left as a judgement call."
 occurrences:
-  - session: session_013zxzeQTGBbhXQGepc3y2z8
-    date: "2026-10-27"
-    severity: minor
-    description: "clear-backlog-build's Standards and Spec review passed a #2582 regex that rejected prose like session_id; I caught it reading the diff before the push"
-    solution: "The build brief should ask for a negative test on look-alike text whenever a change adds a validation regex"
   - session: session_013zxzeTK9c2HVcabwCx3b18
     date: "2026-10-28"
     severity: minor
@@ -27,11 +22,6 @@ occurrences:
     severity: minor
     description: "A first-round Zod fix ('type and schema overlap on one rule') was false and passed code-review; only the last re-grade caught it"
     solution: "Have the review's Spec agent re-check every sentence a fix round rewrote against its source, not only the targeted deficit"
-  - session: session_013zxzeQ8EBq9v7NXqWmAFRF
-    date: "2026-10-27"
-    severity: minor
-    description: "The Skill took three review rounds after the Fable pass (Standards+Spec, then two follow-ups), each finding real gaps in how an unattended run ends (refusing writers, empty runs, dropped false claims)."
-    solution: "For an unattended Skill, write each step's failure exits (refuse, empty, stall) before review, not after."
   - session: session_013zxzeRkQabGaMQ8gphe4Ra
     date: "2026-11-02"
     severity: moderate

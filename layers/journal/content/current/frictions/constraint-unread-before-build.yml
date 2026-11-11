@@ -35,3 +35,8 @@ occurrences:
     severity: minor
     description: "Planned a session-log schema change without reading the full ADR-0009, which CLAUDE.md requires before planning; I relied on its summary rule."
     solution: "Read docs/adr/0009 before designing a schema change; the summary rule happened to cover the additive-only constraint."
+  - session: session_013zxzeS36fzX6FB2vAr7yRR
+    date: "2026-11-09"
+    severity: nit
+    description: "I only noticed ADR-0004's 'behaviour no test can observe' exception after the fix PR's gate was green, then had to add e2e assertions and a second verdict."
+    solution: "Ask which test would fail if this regressed when planning each fix, before opening the PR."

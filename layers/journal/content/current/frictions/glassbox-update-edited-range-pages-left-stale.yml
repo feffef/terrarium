@@ -23,3 +23,8 @@ occurrences:
     severity: minor
     description: "glassbox-update --write leaves hand-edited pages' revision unpinned; I only noticed through a failing glassbox-pages spec."
     solution: "Step 2 could say those pages' revision and revisionDate still need pinning by hand in step 4."
+  - session: session_013zxzePSj9Rpf6qCGowU7gi
+    date: "2026-11-10"
+    severity: minor
+    description: "The update script leaves pages with edited ranges unpinned, so subagents could not pass their tests until I pinned by hand."
+    solution: "Brief agents to pin edited pages themselves, or have the script pin them after re-lining."

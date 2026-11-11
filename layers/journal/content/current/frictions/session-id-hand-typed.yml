@@ -6,11 +6,6 @@ status: open
 notes: |-
   2026-10-28 design: a guard or prose line dropped: .githooks/commit-msg corrects a wrong trailer and github-provenance-guard.ts denies a wrong id on a post and hands back the right one, so a slip costs one retry, and a guard edit is Human-only.
 occurrences:
-  - session: session_013zxzeQV6Jcqg4jYk2tkwBq
-    date: "2026-10-27"
-    severity: nit
-    description: "I typed another session's id into the commit trailer, copied from a PR body; the commit-msg hook corrected it."
-    solution: "Copy the id only from the system-prompt template."
   - session: session_013zxzeRpJV1qxKtqhnjBVTy
     date: "2026-10-28"
     severity: minor
@@ -81,3 +76,13 @@ occurrences:
     severity: nit
     description: "Typed a made-up session id into a draft commit-message file; caught before committing and the commit-msg hook then added the correct trailer."
     solution: "Leave the trailer to the commit-msg hook, or copy the id from the system prompt instead of retyping it."
+  - session: session_013zxzeSSDUXBAYYrwXtej8b
+    date: "2026-11-10"
+    severity: nit
+    description: "Typed a wrong session id in a commit trailer file; the commit-msg hook replaced it, so no harm."
+    solution: "Copy the id from the attribution reminder and check the trailer landed."
+  - session: session_013zxzeSvVL3Eaha8hHj2Q8i
+    date: "2026-11-11"
+    severity: nit
+    description: "Typed a wrong session id in the commit trailer; the commit-msg hook corrected it."
+    solution: "Copy the id from the attribution reminder instead of retyping it."

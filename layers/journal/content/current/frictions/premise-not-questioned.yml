@@ -24,11 +24,6 @@ fixes:
     date: "2026-11-08"
     summary: "glassbox-curate SKILL.md: before taking any lead from the memory page, check it still stands and that no earlier step (settled titles, a pending Subject move) should come first (closes #2958)."
 occurrences:
-  - session: session_013zxzeQ8EBq9v7NXqWmAFRF
-    date: "2026-10-27"
-    severity: minor
-    description: "I designed the running out-of-remit issue without checking that the Friction Ledger already clusters run problems; run 1's finding landed in both, and the owner had to point it out."
-    solution: "Before adding a place to record findings, check what the Ledger and session-log fields already capture."
   - session: session_013zxzeSAtjCQiatdUuuFCRJ
     date: "2026-11-03"
     severity: minor
@@ -54,3 +49,8 @@ occurrences:
     severity: moderate
     description: "Briefed the build with an unrequested same-length-or-shorter ceiling from ADR-0027 (an add, not a fix), so it cut the overview examples; the owner had to ask why and a restore PR followed."
     solution: "Brief only the constraints the issue or owner stated; ask before trading existing text for new text, and apply ADR-0027 only when an instruction caused a problem."
+  - session: session_013zxzeQaeB8hhL2FFfcQhv7
+    date: "2026-11-08"
+    severity: minor
+    description: "I kept the 400 teaches cap after the index split made it unneeded, then proposed recording the cut names in memory, which costs the same context"
+    solution: "Apply CLAUDE.md's Question the premise when a constraint's reason goes away: the split index removed the cap's job, so drop the cap"

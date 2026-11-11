@@ -20,16 +20,6 @@ fixes:
     date: "2026-10-25"
     summary: "Cut the Verify-before-you-state family to one plain home in CLAUDE.md and dropped its restatements in four Skills and the build reviewer."
 occurrences:
-  - session: session_013zxzeQV6Jcqg4jYk2tkwBq
-    date: "2026-10-27"
-    severity: minor
-    description: "I wrote an uncounted claim tally (54) into the PR body, then recounted the fact-check rows (49) and corrected it."
-    solution: "Count rows before writing the tally."
-  - session: session_013zxzePJnRATi9QoJAjCxgq
-    date: "2026-10-27"
-    severity: nit
-    description: "The ledger numbers (66/67) were stale after review-fix edits and had to be recomputed and re-committed."
-    solution: "Compute numstat and the ledger entry only after the review fixes land."
   - session: session_013zxzeR94ZpyH5mhKXDH22Y
     date: "2026-10-28"
     severity: nit
@@ -100,3 +90,8 @@ occurrences:
     severity: minor
     description: "An interim chat message said seven rules loaded in 300-383 sessions and were rated no in 60-80 percent; only five loaded in 300+, and two of the seven were 49 and 88 percent."
     solution: "Compute chat summaries from the table output, not from memory; corrected in the final reply."
+  - session: session_013zxzeSiQ4jom3vFu8GreLw
+    date: "2026-11-10"
+    severity: nit
+    description: "The push notification said six questions but the grill had five; I had not counted the issues first."
+    solution: "Count the grill results before sending the notification."

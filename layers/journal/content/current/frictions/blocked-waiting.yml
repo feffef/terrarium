@@ -14,11 +14,6 @@ fixes:
     date: "2026-10-30"
     summary: "CLAUDE.md: in the main session end your turn and let the completion notification wake you; never wait with pgrep -f"
 occurrences:
-  - session: session_013zxzePwzHSC4uh6dyhsHxg
-    date: "2026-10-27"
-    severity: nit
-    description: "A foreground sleep chain to wait for the build was blocked, costing a retry."
-    solution: "Start builds with run_in_background and wait with an until-loop from the first call."
   - session: session_013zxzeRpJV1qxKtqhnjBVTy
     date: "2026-10-28"
     severity: nit
@@ -64,3 +59,8 @@ occurrences:
     severity: nit
     description: "Skill step 1 and git-conventions say fetch first; I ran git commands before reading git-conventions, and a foreground sleep was blocked."
     solution: "Read the required doc before the first git command; wait with notifications, not sleep."
+  - session: session_013zxzeNvpKDRhFYp216ti6n
+    date: "2026-11-10"
+    severity: nit
+    description: "ScheduleWakeup was blocked outside /loop; I tried it to wait for a subagent that self-notifies."
+    solution: "The skill text could say subagents self-notify, so never schedule a wakeup."

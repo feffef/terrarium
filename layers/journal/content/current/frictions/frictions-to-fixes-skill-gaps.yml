@@ -23,11 +23,6 @@ fixes:
     date: "2026-11-08"
     summary: "SKILL.md §2 files regression issues only for still-recurring entries at moderate or worse (top three of those); the ledger PR gets the simple-change review."
 occurrences:
-  - session: session_013zxzeRNBrVkwWy4fcM4Pxa
-    date: "2026-10-27"
-    severity: minor
-    description: "The Skill has no tie-break for the top-three regression issues when many entries share minor severity since the fix; I chose by recurrence myself."
-    solution: "Say in frictions-to-fixes §2 to break ties by occurrences since the fix."
   - session: session_013zxzeQvE9RNYoZRiZEEKBG
     date: "2026-10-28"
     severity: minor
@@ -88,3 +83,8 @@ occurrences:
     severity: minor
     description: "SKILL.md §5 step 4 says to review the ledger PR by the simple-change test, but the ledger diff (25 files, 238 lines) fails that test, so I ran code-review with two subagents."
     solution: "Say in §5 that a ledger PR is exempt from code-review, or that it is reviewed by the ledger content test and gate only."
+  - session: session_013zxzeNjRy7tpoybG6YTUM6
+    date: "2026-11-09"
+    severity: nit
+    description: "Skill §2 says top-three regression issues 'since the latest fix', but subagent-brief-defects' own note calls its occurrences separate strays; I filed anyway, as the rule says."
+    solution: "Let the Skill skip a cluster whose newest note says its occurrences need separate fixes."

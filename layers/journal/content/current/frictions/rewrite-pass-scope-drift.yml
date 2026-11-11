@@ -18,3 +18,8 @@ occurrences:
     severity: minor
     description: "My first prune cut the ADR bullet and typecheck clause in ways that lost meaning; reviewers caught both before the push and I reverted them."
     solution: "Before committing a CLAUDE.md wording cut, reread each cut bullet against the rule summaries it paraphrases."
+  - session: session_013zxzeRhiMxk5cCGYkz4u1n
+    date: "2026-11-08"
+    severity: minor
+    description: "My prune of the dispatch-subagents Skill dropped three phrases that were rules; code-review caught them and I restored them before the gate."
+    solution: "Diff the pruned section against the old text for imperative phrases before committing."

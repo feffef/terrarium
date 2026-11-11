@@ -1,0 +1,13 @@
+name: stale-tmpdir-blocks-guard-hooks
+surface: outside
+summary: After a terminal suspend, a stale TMPDIR made every guard hook fail, so every Bash call was blocked until the owner restarted Claude Code.
+cause: "A local CLI session resumed with a TMPDIR that no longer exists or is not writable, so each PreToolUse guard hook crashes with EACCES before the tool runs. Signals: 'stale TMPDIR', 'EACCES' in a PreToolUse hook, all Bash blocked after a suspend."
+status: open
+notes: |-
+  2026-11-11 design: TMPDIR fallback in every hook command dropped: it needs Human-only hook edits, reverses the fail-closed choice of #2073, and the owner fixed it by restart; environment-caveats.md already documents it.
+occurrences:
+  - session: fd29c728-8222-4915-94ab-25776442397b
+    date: "2026-11-10"
+    severity: moderate
+    description: "Stale TMPDIR after a terminal suspend made every PreToolUse guard hook fail with EACCES, blocking all Bash until the owner restarted Claude Code."
+    solution: "Known terminal quirk (memory stale-tmpdir-after-suspend); a guard wrapper could fall back to getconf DARWIN_USER_TEMP_DIR when TMPDIR is unwritable."

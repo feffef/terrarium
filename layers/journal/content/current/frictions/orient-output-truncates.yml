@@ -26,3 +26,8 @@ occurrences:
     severity: minor
     description: "orient.ts printed 13KB and --pages 5,400 words for all pages, though the change touched two pages."
     solution: "Let --pages take a Subject filter, and say the full list is for gap and overlap hunts only."
+  - session: session_013zxzeSjaFuTmBXbfN2o5AH
+    date: "2026-11-10"
+    severity: minor
+    description: "orient.ts output for a Subject is 50 to 70 KB, so I read it in two pages three times; plain.ts for readers duplicated it."
+    solution: "Let orient --subject skip the frontmatter and Excerpt blocks, or print plain text only."

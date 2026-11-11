@@ -28,11 +28,6 @@ fixes:
     date: "2026-11-06"
     summary: "list-open-issues.ts gets a --closed flag and the survey brief §3 lists closed issues with it, not with MCP list_issues paging."
 occurrences:
-  - session: session_013zxzeRNBrVkwWy4fcM4Pxa
-    date: "2026-10-27"
-    severity: minor
-    description: "Survey subagent reported the brief omits --out for --summary and --candidates, that --append is all-or-nothing on a duplicate session, and that §3 tracker paging is heavy for about 140 candidates."
-    solution: "Add --out to the survey brief's summary step and an append mode that skips sessions an entry already holds."
   - session: session_013zxzeRnPtjPsVQM71SzX63
     date: "2026-10-29"
     severity: nit
@@ -83,3 +78,8 @@ occurrences:
     severity: minor
     description: "The survey subagent appended fixes but missed that PR #2973 closed regression issue #2958 for premise-not-questioned; I found it only because I re-checked the regression screen before filing."
     solution: "Survey-brief §2.4 could say to check each closed regression issue's closing PR and record it as a fix on that entry."
+  - session: session_013zxzeP1cnvEr2zK5BaCnc9
+    date: "2026-11-10"
+    severity: nit
+    description: "Subagents reported the design brief's {PICKS} placeholder confusing and the ledger cause for scripted-text-replace-edits pointing at a CLAUDE.md Read-tool rule that does not exist."
+    solution: "Fix the stale pointer in that entry's cause; hand picks by path as one clean line."

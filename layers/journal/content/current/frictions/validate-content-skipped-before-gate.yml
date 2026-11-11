@@ -11,3 +11,8 @@ occurrences:
     severity: moderate
     description: "My text wrapping split hyphenated words across folded YAML lines, so the first gate:scoped failed on validate-content-schema and I reran the gate. I had not run validate:content first."
     solution: "Run pnpm validate:content after any Journal content edit and before gate:scoped, as ADR-0004 says."
+  - session: session_013zxzeQN4dgz9seaMtnRf7u
+    date: "2026-11-10"
+    severity: nit
+    description: "A page description I edited came back over its 120-character cap twice, and an unquoted # in the run entry broke validate:content; both only showed after a commit."
+    solution: "Run glassbox-pages.spec.ts and validate:content after each edit to a description or run entry, and note the cap in the writer brief."

@@ -6,11 +6,6 @@ status: open
 notes: |-
   2026-10-28 design: a looser follow-up review bar dropped: three of six predate the simple-change bar, the others read pr-workflow.md and followed it, and ADR-0004 rejects skipping review for prose. dropped: a policy change for a human, not a fix.
 occurrences:
-  - session: session_013zxzeRNBrVkwWy4fcM4Pxa
-    date: "2026-10-27"
-    severity: minor
-    description: "Running code-review with two subagents on a 4-line doc change, after a rewrap round, cost about 120k subagent tokens to find nothing blocking."
-    solution: "Let pr-workflow's simple-change test cover a one-sentence addition to a Skill that adds no new rule."
   - session: session_013zxzeSYWF1rye7qScgSUFV
     date: "2026-11-06"
     severity: minor

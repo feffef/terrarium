@@ -22,16 +22,6 @@ fixes:
     date: "2026-10-28"
     summary: "glassbox-improve's lead proposes only facts and wording found in the source (an absence claim most of all), and its researcher checks an absence claim against every code location."
 occurrences:
-  - session: session_013zxzeSSnD8PnNngq431n1o
-    date: "2026-10-27"
-    severity: moderate
-    description: "My first grilling round stated commandWords was linear without measuring it; a Fable verifier found it quadratic and crash-prone"
-    solution: "Before claiming a performance property in a proposal, run a quick timing probe on adversarial input"
-  - session: session_013zxzeSUpjg6SAiwnSEaefz
-    date: "2026-10-27"
-    severity: minor
-    description: "My first #2577 comment said a cloud run needs the owner's permission for separate branches; the owner corrected that written repo instructions already grant it, so I edited the comment."
-    solution: "Treat a Skill's written step as the explicit permission the harness system prompt asks for."
   - session: session_013zxzeTGYbEWeFyEywFafxw
     date: "2026-10-28"
     severity: moderate
@@ -187,3 +177,8 @@ occurrences:
     severity: minor
     description: "Digest for 2026-11-08 called the concept guide's upkeep job weekly; it runs daily. The writer took the word from session goals, not a source for the cadence."
     solution: "The digest Skill already says never state how often a job runs; its fact-check should flag any cadence word (weekly, daily) as unverifiable. Other Digests (11-02 to 11-05) use it too."
+  - session: session_013zxzeRumtXDY7MVhKUgVT7
+    date: "2026-11-09"
+    severity: minor
+    description: "I first told the owner the test session could not message back, inferred from an incomplete tool list in get_session; the owner corrected me and later test sessions did reply via send_message."
+    solution: "Don't infer a missing tool from get_session's turn_handoff list; ask the session to reply and see."

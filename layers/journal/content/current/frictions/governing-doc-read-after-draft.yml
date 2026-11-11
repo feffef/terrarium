@@ -17,21 +17,6 @@ fixes:
     date: "2026-10-29"
     summary: "The tenant-glossary rule says a Tenant's terms apply to everything written under its layer, code comments included."
 occurrences:
-  - session: session_013zxzeQV6Jcqg4jYk2tkwBq
-    date: "2026-10-27"
-    severity: nit
-    description: "I read layers/blog/GLOSSARY.md and ADR-0012 only after hooks asked, after the post was written."
-    solution: "Read the Tenant glossary at step 1, before drafting."
-  - session: session_013zxzePnX2He1hvzhQj7LrJ
-    date: "2026-10-27"
-    severity: nit
-    description: "Did not read layers/tinkerfund/GLOSSARY.md as the tenant-glossary rule asks before working on a Tenant."
-    solution: "Read it at first Tenant touch; no term was misused here."
-  - session: session_013zxzePY9L4aufht9ct94ec
-    date: "2026-10-27"
-    severity: minor
-    description: "The impl agent and its follow-up wrote 'wing' for Biome in code comments despite the tenant-glossary rule loading; caught only by the second review."
-    solution: "Brief impl agents to use the Tenant's glossary terms in comments, not only page copy."
   - session: session_013zxzeQDh7MCP7HpYBYBTeh
     date: "2026-10-28"
     severity: minor
@@ -52,3 +37,13 @@ occurrences:
     severity: minor
     description: "Explained Routines without first reading the Glass Box overview page that CLAUDE.md requires for such explanations."
     solution: "Read layers/glassbox/content/guide/pages/index.md before answering."
+  - session: session_013zxzeR2kKbsT81QWkXUrvK
+    date: "2026-11-09"
+    severity: nit
+    description: "Did not read layers/journal/GLOSSARY.md before working on the Journal layer, as tenant-glossary.md requires; only grepped it"
+    solution: "Read the Tenant glossary at the first edit under its layer"
+  - session: session_013zxzeSjczLUzQPWWSHP4t9
+    date: "2026-11-10"
+    severity: minor
+    description: "Edited layers/journal/app/utils/dashboard.ts and its spec without reading layers/journal/GLOSSARY.md, which the tenant-glossary rule requires."
+    solution: "Read the Tenant glossary when the rule loads; the change was data-only, so impact was low."

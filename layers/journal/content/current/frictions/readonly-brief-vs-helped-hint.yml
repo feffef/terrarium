@@ -16,3 +16,8 @@ occurrences:
     severity: nit
     description: "Explore subagent, told to be read-only, was hinted to run helped.sh and the permission classifier denied it."
     solution: "Do not hint read-only subagents to run a script, or allow helped.sh for them."
+  - session: session_013zxzeQuK5ndJWaxisLTRKu
+    date: "2026-11-10"
+    severity: minor
+    description: "The Explore subagent was denied running helped.sh by the permission classifier, so it could not follow its start hook."
+    solution: "Allow helped.sh for subagents in the classifier, or stop asking read-only agents to run it."

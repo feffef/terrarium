@@ -1,0 +1,11 @@
+name: sandboxed-ssh-hang
+surface: outside
+summary: An ssh from the sandboxed Bash tool hung until timeout, and the agent blamed port forwarding or a passphrase before trying outside the sandbox.
+cause: "The Bash sandbox blocks or stalls outbound ssh (banner exchange timeout) and nothing in the output says the sandbox is the cause. Signals: 'ssh ... timed out in banner exchange', a 120s hang, a fix by rerunning outside the sandbox."
+status: open
+occurrences:
+  - session: fd29c728-8222-4915-94ab-25776442397b
+    date: "2026-11-10"
+    severity: moderate
+    description: "ssh vigia from sandboxed Bash hung 120s and then timed out in banner exchange; I first blamed LocalForward or a passphrase before trying outside the sandbox."
+    solution: "Run ssh to vigia with the sandbox disabled from the start; saved as a memory."

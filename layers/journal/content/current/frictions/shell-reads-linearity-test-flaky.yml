@@ -8,11 +8,6 @@ fixes:
     date: "2026-10-28"
     summary: "Retries the shell-reads linearity test twice, so a load spike passes and a quadratic scan still fails."
 occurrences:
-  - session: session_013zxzeQ8EBq9v7NXqWmAFRF
-    date: "2026-10-27"
-    severity: minor
-    description: "CI gate on #2627 failed on tests/unit/shell-reads.spec.ts:796 (commandWords linearity: 94ms vs an 81ms limit), unrelated to the diff and green on one re-run; its slack was tightened the day before in 273cf2b99."
-    solution: "Base the linearity check on a ratio with more slack, or on operation counts instead of wall-clock time, so runner load can't fail it."
   - session: session_013zxzeRpJV1qxKtqhnjBVTy
     date: "2026-10-28"
     severity: minor

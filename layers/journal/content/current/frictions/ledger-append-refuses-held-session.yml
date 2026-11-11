@@ -46,3 +46,8 @@ occurrences:
     severity: minor
     description: "Survey subagent's --append hit 13 of 61 triples already held by the entry through a different Friction index; one failed call and a pre-check loop."
     solution: "Have print-ledger-occurrence --append skip held sessions with a warning, or say in the brief that a held session can match another index."
+  - session: session_013zxzeP1cnvEr2zK5BaCnc9
+    date: "2026-11-10"
+    severity: minor
+    description: "Survey subagent could not pre-check that --append refuses sessions already held under another Friction index, so whole calls failed twice."
+    solution: "Have --unledgered or --append report held sessions up front."

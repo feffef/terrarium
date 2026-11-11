@@ -14,11 +14,6 @@ fixes:
     date: "2026-10-29"
     summary: "The git-conventions read-first hint now skips read-only git show, ls-tree and cat-file, and CLAUDE.md names the skipped subcommands."
 occurrences:
-  - session: session_013zxzeRkASapvnaGkGVdSBk
-    date: "2026-10-27"
-    severity: nit
-    description: "Sonnet reviewer skipped git-conventions.md after its git hint fired; reviewers also re-derived the same ~30 file checks three times"
-    solution: "For multi-model comparisons, accept the duplicated verification as the cost of independence"
   - session: session_013zxzeQ5JaiqQgggGaNSagD
     date: "2026-10-29"
     severity: nit

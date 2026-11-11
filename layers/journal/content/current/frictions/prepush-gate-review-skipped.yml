@@ -33,21 +33,6 @@ fixes:
     date: "2026-10-28"
     summary: "pr-workflow.md's simple-change bar now says a simple change adds, renames or moves no file, so a rename sweep gets code-review before its first push."
 occurrences:
-  - session: session_019g1t4RX7PcR54io7GRdxXK
-    date: "2026-10-27"
-    severity: minor
-    description: "Followed review fixes in 4 files with my own read instead of code-review, though a follow-up over 2 files is not simple by pr-workflow."
-    solution: "Count files before choosing the self-read path; the fixes were the reviewers' own findings and the gate passed."
-  - session: session_013zxzePLLgArtn1cuyZAmNd
-    date: "2026-10-27"
-    severity: minor
-    description: "Ran code-review's skill load but skipped its subagents on a 31-file mechanical re-pin, which exceeds the written simple-change limit."
-    solution: "Let pr-workflow treat a pure revision re-pin plus a verified prose edit as simple, so scheduled runs need no judgement call."
-  - session: session_013zxzeRkASapvnaGkGVdSBk
-    date: "2026-10-27"
-    severity: minor
-    description: "Second-round review follow-up (11 files, 20 lines) got my own read, not code-review, though pr-workflow.md asks code-review for a follow-up over the simple-change size"
-    solution: "Run code-review on the follow-up diff, or have the fix agent stay within the simple-change limit"
   - session: session_013zxzeSJQfnNdJHrSWjVT2x
     date: "2026-10-28"
     severity: minor

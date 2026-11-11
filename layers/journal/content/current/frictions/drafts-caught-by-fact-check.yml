@@ -21,11 +21,6 @@ fixes:
     date: "2026-11-07"
     summary: "glassbox-curate's memory-page bullet says to state a count only after counting its items in their source (the shipped 'eight stops' miss, closes #2915)."
 occurrences:
-  - session: session_01LyextqGkDsnBpTuPyFxhSm
-    date: "2026-10-27"
-    severity: nit
-    description: "My draft had two factual errors (a follow-up issue called a session; a review-round count) that the fact-check subagent caught."
-    solution: "Check issue-versus-session wording against the gather output when drafting."
   - session: session_013zxzeQifdm2ANF46Z2pQ5w
     date: "2026-10-30"
     severity: minor
@@ -146,3 +141,18 @@ occurrences:
     severity: minor
     description: "The digest Skill's wording invites unsourced cadence words: I wrote 'weekly' and 'runs daily' for jobs with no source; the fact-check caught the weekly one."
     solution: "Digest Skill: tell writers to state no cadence unless a doc names it."
+  - session: session_013zxzeNd2Ethpd3anqbmpkr
+    date: "2026-11-09"
+    severity: nit
+    description: "Labelled one transcript-check session as a Digest session in a draft table; it edited pr-workflow.md and a trial file. Caught while assembling the page."
+    solution: "Take the task label from the session's filesEdited, not from the sibling sessions in the same batch."
+  - session: session_013zxzeSSDUXBAYYrwXtej8b
+    date: "2026-11-10"
+    severity: minor
+    description: "Draft said \"a scheduled run called visitor-loop\" from an inference the PR did not support; the fact-checker caught it and it cost two extra checker rounds."
+    solution: "Take a run's kind from the PR wording or the Routine file before writing agency words."
+  - session: session_013zxzeSvVL3Eaha8hHj2Q8i
+    date: "2026-11-11"
+    severity: minor
+    description: "Wrote the footer's worst-problem line from a loose reading of the data; the fact-check flagged it, so I named the worst and the most repeated."
+    solution: "The digest Skill could say how to pick the worst problem."

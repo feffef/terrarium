@@ -13,3 +13,13 @@ occurrences:
     severity: minor
     description: "clear-backlog-build hit its 3-round review cap on a prose-only #2725 branch, leaving one finding to fix by hand"
     solution: "Brief scope lines should match the done-when line; the brief named only some §3.3 calls while done-when covered all"
+  - session: session_013zxzeSj1mJxbgdKHbwgK2s
+    date: "2026-11-09"
+    severity: minor
+    description: "The 2987 build ran its 3 review rounds and returned failed on three cosmetic findings; two review rounds went to rewrapping and wording churn."
+    solution: "Treat cosmetic-only findings as a stop condition for the review loop so the branch returns ready-to-push."
+  - session: session_013zxzeSiQ4jom3vFu8GreLw
+    date: "2026-11-10"
+    severity: minor
+    description: "Both build runs hit the 3-round review cap on cosmetic findings (wrap, a null default, one doc clause), then I fixed them by hand; many agent tokens for nits."
+    solution: "Let the build workflow stop at cosmetic-only findings, or give the builder the 80-column wrap rule up front."

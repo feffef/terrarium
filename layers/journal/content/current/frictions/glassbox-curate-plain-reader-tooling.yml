@@ -18,3 +18,13 @@ occurrences:
     severity: minor
     description: "plain.ts prints every term gloss inline, so the fresh reader reported crowded sentences that the rendered page does not have, and findings were mostly noise."
     solution: "Let plain.ts leave term glosses out, or print them as footnotes, so a reader sees the page's real flow."
+  - session: session_013zxzeRSMtPAREKXCce9GT6
+    date: "2026-11-09"
+    severity: nit
+    description: "Ran plain.ts with a bare file stem for four pages and got 'no guide page', then reran with the folder-qualified stem."
+    solution: "plain.ts could accept the bare stem or its usage line could show a folder-qualified example."
+  - session: session_013zxzeQN4dgz9seaMtnRf7u
+    date: "2026-11-10"
+    severity: nit
+    description: "plain.ts strips term chips, so fresh readers kept reporting Skill, Routine and Gate as undefined and I had to filter that noise by hand."
+    solution: "Have plain.ts print each term's definition, or have the brief say to ignore capitalised glossary terms."
