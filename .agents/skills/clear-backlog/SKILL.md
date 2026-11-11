@@ -122,12 +122,11 @@ branch, or its question or failure is in the report.
 ## 4. Land and report
 
 Push each `ready-to-push` branch from its worktree with
-`git push origin HEAD:<branch>` (a build whose branch the main checkout holds
-commits on a `worktree-wf_…` branch), then `git fetch origin <branch>` so a
-remote-tracking ref exists (`check:worktrees` counts commits on none as
-unpushed), and open its PR with the branch's
-decisions, its remaining judgement calls, any cherry-picked PR, and
-the Human-only paths that `pnpm exec tsx .agents/skills/clear-backlog/scripts/list-human-only-paths.ts
+`git push origin HEAD:<branch> && git fetch origin <branch>` (a build whose
+branch the main checkout holds commits on a `worktree-wf_…` branch). The fetch
+matters: `check:worktrees` counts commits on no remote-tracking ref as
+unpushed. Open its PR with the branch's decisions, its remaining judgement
+calls, any cherry-picked PR, and the Human-only paths that `pnpm exec tsx .agents/skills/clear-backlog/scripts/list-human-only-paths.ts
 <worktree>` prints (a non-zero exit means the list couldn't be read: stop
 and report it). Land it with `docs/agents/pr-workflow.md`. For a later
 fix (CI, a PR comment), re-run that branch with its `worktree` and the fix
