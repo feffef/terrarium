@@ -6,7 +6,7 @@ const metric = useRoutineMetric()
 
 const table = computed(() => routineWeekTable(routines.value, metric.value))
 const gistOf = (name: string) => routines.value.find((r) => r.name === name)?.gist
-const fmt =(v: number) => formatRoutineMetric(metric.value, v)
+const fmt = (v: number) => formatRoutineMetric(metric.value, v)
 </script>
 
 <template>
