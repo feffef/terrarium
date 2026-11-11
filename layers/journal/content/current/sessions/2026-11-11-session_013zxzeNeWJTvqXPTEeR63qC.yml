@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_013zxzeNeWJTvqXPTEeR63qC
 startedAt: 2026-11-11T09:07:42Z
-endedAt: 2026-11-11T09:53:18Z
+endedAt: 2026-11-11T10:05:51Z
 kind: interactive
 goal: Glass Box terms link their Lesson, not the raw glossary
-status: completed
-outcome: "PR 3062 merged: terms show a titled Lesson chip, Skill inventory Lesson added and rewritten after review"
+status: in-review
+outcome: "PR 3062 merged (titled Lesson chips, Skill inventory Lesson); PR 3066 open: documents the Lesson numbering, waits for the owner"
 summary: "The owner asked whether each expanded Glass Box term has a matching Lesson, and wanted terms to link the Lesson instead of GLOSSARY.md. I mapped all terms to Lessons and found about nine without a good one, asked three questions, and the owner decided: Lesson only when there is one, keep the glossary link for no-Lesson and Tenant-specific terms, delete Proposal and Pingback, write a Skill inventory Lesson, leave XSS unlinked. Those were human-instructed. I built an optional lesson field, a check that rejects both fields or a missing page, the term data, a first Lesson draft and the doc edits. My first Term.vue link just said Lesson; the owner pointed out the existing titled Lesson-chip design, so I redrew it from the page list. Later the owner called the Lesson's concept weak and asked me to research how the inventory is used and apply glassbox-lesson and glassbox-curate: I traced its producers and readers, rewrote the page around them, had a separate claim checker and a fresh reader review it, fixed what they found, and added a run entry and a memory note. Review by two read-only subagents earlier found no hard violations. Open: the Lesson uses prefix 85 against the tens rule, and a human must merge the PR."
 prs:
   - "3062"
+  - "3066"
 docsRead:
   - path: layers/glassbox/content/guide/pages/index.md
     reason: (no reason given)
@@ -61,7 +62,7 @@ docsRead:
   - path: layers/glassbox/GLOSSARY.md
     reason: (read before editing)
   - path: .agents/skills/glassbox-lesson/SKILL.md
-    reason: (no reason given)
+    reason: (read before editing)
   - path: docs/agents/git-conventions.md
     reason: (no reason given)
   - path: GLOSSARY.md
@@ -75,7 +76,7 @@ docsRead:
   - path: .agents/skills/glassbox-lesson/QUALITY.md
     reason: (no reason given)
   - path: .agents/skills/glassbox-lesson/DECISIONS.md
-    reason: (no reason given)
+    reason: (read before editing)
 skillsUsed:
   - name: code-review
     reason: two-axis review of the branch diff before the PR
@@ -108,25 +109,31 @@ frictions:
   - description: Two content files failed validation on a colon in an unquoted YAML scalar, found only when the full validator or page test ran.
     solution: Quote any description or changes entry that holds a colon; the glassbox-curate run-entry skeleton could show them quoted.
     severity: nit
-durationSec: 2736
+  - description: Raised the 85 prefix as an owner question in the PR and memory page, although the Lesson docs already say prefixes go up in tens so a Lesson fits between two; the owner had to say it was deliberate.
+    solution: State in GLOSSARY.md that a Lesson between two takes the number between them, so an agent doesn't ask.
+    severity: nit
+durationSec: 3489
 models:
-  claude-sonnet-5-5: 237
+  claude-sonnet-5-5: 269
 toolCounts:
-  Bash: 81
+  Bash: 91
   Read: 9
   AskUserQuestion: 1
   Write: 5
   Skill: 6
-  Agent: 4
+  Agent: 5
   ToolSearch: 3
   mcp__github__list_pull_requests: 1
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
   ReadNotifications: 6
   mcp__github__pull_request_read: 1
   mcp__github__update_pull_request: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/terrarium-practice/85.skill-inventory.md
+  - .agents/skills/glassbox-lesson/DECISIONS.md
+  - layers/glassbox/GLOSSARY.md
+  - .agents/skills/glassbox-lesson/SKILL.md
   - layers/glassbox/content/workshop/pages/index.md
   - layers/glassbox/content/workshop/runs/2026-11-11T0940.yml
   - layers/glassbox/app/components/content/Term.vue
@@ -139,7 +146,6 @@ filesEdited:
   - layers/glassbox/content/guide/pages/terrarium-practice/80.self-improvement-loop.md
   - layers/glassbox/content/guide/terms/skill-inventory.yml
   - .agents/skills/glassbox-lesson/EVERY-PAGE.md
-  - layers/glassbox/GLOSSARY.md
   - layers/glassbox/content/guide/pages/git-github/30.composite-actions.md
   - layers/glassbox/content/guide/terms/adr.yml
   - layers/glassbox/content/guide/terms/aggregator.yml
@@ -453,6 +459,37 @@ ruleUse:
     reported:
       - path: .claude/rules/adr-0004.md
         value: backed
+  - by: general-purpose
+    subagent: 4
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .claude/rules/adr-0003.md
+        value: backed
 subagents:
   - type: general-purpose
     task: Standards review of branch diff
@@ -460,28 +497,35 @@ subagents:
     durationSec: 36
     toolCalls: 10
     modelCalls: 6
-    tokenShare: 4.2
+    tokenShare: 3.5
   - type: general-purpose
     task: Spec review of branch diff
     model: sonnet
     durationSec: 43
     toolCalls: 11
     modelCalls: 7
-    tokenShare: 4.8
+    tokenShare: 4.1
   - type: general-purpose
     task: Claim-check the Skill inventory Lesson
     model: sonnet
     durationSec: 50
     toolCalls: 30
     modelCalls: 7
-    tokenShare: 5.2
+    tokenShare: 4.4
   - type: general-purpose
     task: Fresh-reader test of the Lesson
     model: sonnet
     durationSec: 14
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.2
+    tokenShare: 1
+  - type: general-purpose
+    task: Review numbering docs change
+    model: sonnet
+    durationSec: 24
+    toolCalls: 9
+    modelCalls: 6
+    tokenShare: 3.2
 gitBranch: claude/optimistic-albattani-xfxbiz
 entrypoint: remote
 cliVersion: 2.1.322
