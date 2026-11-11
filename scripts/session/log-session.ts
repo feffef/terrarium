@@ -547,8 +547,7 @@ export function closureRefusal(status: string, trace: Pick<MechanicalTrace, 'mer
 
 /** The git side of the worktree sweep at close (#2721): a seam, so tests touch no real worktree. */
 export interface WorktreeSeam {
-  /** `onMainLine`: linked worktrees whose HEAD sits on `origin/main`'s first-parent line: a
-   *  branch with no commit of its own. */
+  /** `onMainLine`: see `mergedWorktreesToRemove`. */
   read: (cwd: string) => { result: SweepResult; current: string; onMainLine: string[] }
   /** Removes each path it can and returns those it removed. */
   remove: (paths: string[], cwd: string) => string[]
