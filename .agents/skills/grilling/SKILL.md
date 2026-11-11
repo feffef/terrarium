@@ -21,7 +21,7 @@ Format a round like so:
 ➡️ <your recommended answer>
 ```
 
-If you ask through `AskUserQuestion`, put any example content inside the questions: text written before the call was hidden by the dialog in one session (seen once).
+If you ask through `AskUserQuestion`, put any example content inside the questions: text written before the call may be hidden by the dialog (seen once).
 
 Word each question so "yes" accepts your recommended answer.
 
