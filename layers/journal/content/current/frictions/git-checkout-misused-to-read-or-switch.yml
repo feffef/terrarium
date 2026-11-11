@@ -5,6 +5,7 @@ cause: "git checkout <ref> -- . or git switch with discard-changes is used to re
 status: open
 notes: |-
   2026-11-08 design: a PreToolUse guard denying git switch --discard-changes and git checkout <ref> -- . dropped: it needs a Human-only guard, the harness classifier already denied the costlier case, git-conventions.md:27 already forbids it, and the other cost one redone edit.
+  2026-11-11 design: no non-guard fix dropped: git-conventions.md:26-28 already forbids it, SBfN's call was a no-op, and the owner accepts late reads.
 occurrences:
   - session: session_013zxzeSRr9pF9MCBQDGAN5L
     date: "2026-11-07"

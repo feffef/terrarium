@@ -14,11 +14,6 @@ fixes:
     date: "2026-10-28"
     summary: "CLAUDE.md says to read a required doc whole if you can, no longer in one Read call: partial reads are encouraged against, not required."
 occurrences:
-  - session: session_013zxzeQ97mDYdTytqEL7wD6
-    date: "2026-10-27"
-    severity: nit
-    description: "Bundled the Lessons with cat; one output was persisted to a file and a later Read truncated, costing two extra reads"
-    solution: "Read large page sets in chunks under ~35k tokens per call from the start"
   - session: session_013zxzeTDG9WP45rYE5hRMpG
     date: "2026-11-06"
     severity: minor

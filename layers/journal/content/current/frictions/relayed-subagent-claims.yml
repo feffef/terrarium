@@ -25,11 +25,6 @@ fixes:
     date: "2026-10-31"
     summary: "CLAUDE.md and the clear-backlog workflows' shared brief line ask each subagent to give every count, id or attribution with its source (command or file:line) or mark it unverified."
 occurrences:
-  - session: session_013zxzeQ8EBq9v7NXqWmAFRF
-    date: "2026-10-27"
-    severity: minor
-    description: "Told the owner several quality rules were unwritten, taken from a subagent's report without checking; mechanism-not-motive and no-counts already existed. I corrected it a turn later. Breaks CLAUDE.md's verify-before-you-state."
-    solution: "Grep the writing docs for each rule a subagent calls unwritten before stating it."
   - session: session_013zxzeQmVnqMqDkRgFRWx5T
     date: "2026-10-28"
     severity: minor

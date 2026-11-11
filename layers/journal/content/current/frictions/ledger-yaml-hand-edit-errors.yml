@@ -28,11 +28,6 @@ fixes:
     date: "2026-10-28"
     summary: "ledger-set.ts sets summary, cause and surface on an existing entry; prune-friction-ledger.ts --move writes block style into an entry created with empty occurrences."
 occurrences:
-  - session: session_019g1t4RX7PcR54io7GRdxXK
-    date: "2026-10-27"
-    severity: nit
-    description: "textwrap split hyphenated words in appended observations, so validate:content failed on four files and I rejoined them by hand."
-    solution: "Wrap with break_on_hyphens=False, or give audit-skills a script that appends observations."
   - session: session_013zxzeR86n7CjfWXZh4HXyc
     date: "2026-10-28"
     severity: minor

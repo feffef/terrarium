@@ -11,16 +11,6 @@ fixes:
     date: "2026-11-10"
     summary: "verifying-ui-changes.md: a Linux screenshot can't confirm fixed-width text fits; force a wider font and compare scrollWidth with clientWidth."
 occurrences:
-  - session: session_013zxzePnX2He1hvzhQj7LrJ
-    date: "2026-10-27"
-    severity: moderate
-    description: "f1b551f27 claimed a dark-mode fix that never rendered; no test or screenshot covered it, so the bug survived three weeks."
-    solution: "Pin colour-scheme fixes with a computed-style e2e assert, as this PR does."
-  - session: session_013zxzePY9L4aufht9ct94ec
-    date: "2026-10-27"
-    severity: moderate
-    description: "Impl subagent reported the Canopy smudge as green in its screenshots; it was grey (theme.css binds --sig-1 on :root so Biome classes never re-tint it)."
-    solution: "Read hand-back screenshots yourself before review; the atlas-specimen Skill could note that a plate outside the Specimen page must re-bind --sig-1."
   - session: session_013zxzeRB6ciegpxcRDfedSF
     date: "2026-11-09"
     severity: minor

@@ -6,11 +6,6 @@ status: open
 notes: |-
   2026-10-28 design: a doc line dropped: one occurrence was a raw vue-tsc run (pnpm typecheck prepares itself), the other an install with scripts skipped; gate.ts and package.json are Human-only and environment-caveats.md is in an open trial. dropped: one extra gate run each.
 occurrences:
-  - session: session_013zxzeSaiStBeXUY9SwzAhv
-    date: "2026-10-27"
-    severity: nit
-    description: "Typecheck failed on the new auto-imported constant until I ran nuxt prepare; I ran vue-tsc before regenerating the imports."
-    solution: "Run nuxt prepare after adding an export to a layer's app/utils before typechecking."
   - session: session_013zxzeR94ZpyH5mhKXDH22Y
     date: "2026-10-28"
     severity: minor
