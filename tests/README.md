@@ -65,8 +65,8 @@ transition) needs its timeout raised per-call —
 - `pnpm test:e2e` — the L2 specs, in parallel, on the gate's build. To run
   one spec file, use `pnpm exec vitest run --project e2e <path>`: vitest ORs
   positional filters, so a path appended to `pnpm test:e2e` (`vitest run
-  tests/e2e <path>`) still runs everything (#3070). A narrowed run never
-  settles whether a failure is pre-existing (`docs/agents/verifying-ui-changes.md`, #907).
+  tests/e2e <path>`) still runs everything. A narrowed run is for a quick look
+  only: `docs/agents/verifying-ui-changes.md` says how to call a failure pre-existing.
 
 Both are part of the safety gate (ADR-0004); the steps live in `package.json`'s `gate`,
 `scripts/gate/gate.ts` and the CI action, which must agree (ADR-0026).
