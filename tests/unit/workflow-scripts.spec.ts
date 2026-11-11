@@ -42,7 +42,7 @@ it('every .claude/workflows/*.js compiles, and its meta.name is its basename', a
 
 describe('clear-backlog-build (#3110)', () => {
   const source = readFileSync(join(DIR, 'clear-backlog-build.js'), 'utf8').replace(/^export const meta/m, 'const meta')
-  const built = { status: 'done', worktree: '/wt', commits: ['a'], decisions: ['d'] }
+  const built = { status: 'done', worktree: '/wt', commits: ['a'] }
   const review = (kind: string) => ({ findings: [{ kind, title: 't', detail: 'x' }], summary: '' })
 
   /** Runs the script on one branch; the build returns `build`, and each reviewer its axis's entry of `reviews`. */
@@ -57,7 +57,7 @@ describe('clear-backlog-build (#3110)', () => {
         Promise.all(items.map(async (i) => { let x = i; for (const s of stages) x = await s(x, i); return x })),
       parallel: (fns: (() => unknown)[]) => Promise.all(fns.map((f) => f())),
       log: () => {},
-      args: { session: 'session_x', branches: [{ name: 'fix/1-x', issues: [1], brief: 'b', ...branch }] },
+      args: { session: 'session_x', dir: '/d', branches: [{ name: 'fix/1-x', issues: [1], brief: 'b', ...branch }] },
     }
     const [r] = await new AsyncFunction(...GLOBALS, source)(...GLOBALS.map((g) => globals[g])) as unknown[]
     return { r, calls }
@@ -66,23 +66,41 @@ describe('clear-backlog-build (#3110)', () => {
   it('builds, then returns one fresh review round per axis, labelled so the orchestrator can resume each agent', async () => {
     const { r, calls } = await run({})
     expect(calls.map((c) => c.label)).toEqual(['build fix/1-x', 'Standards fix/1-x r1', 'Spec fix/1-x r1'])
-    expect(r).toMatchObject({ status: 'reviewed', round: 1, worktree: '/wt', commits: ['a'], decisions: ['d'], reviews: { Standards: review('nit'), Spec: review('defect') } })
+    expect(r).toMatchObject({ status: 'reviewed', round: 1, dir: '/d/fix-1-x', worktree: '/wt', commits: ['a'], reviews: { Standards: review('nit'), Spec: review('defect') } })
   })
 
-  it('tells the build agent to skip gate:scoped, which runs once after review', async () => {
+  it('tells the build agent to skip gate:scoped until asked, and gives the gate its log and timeout', async () => {
     const { calls } = await run({})
     expect(calls[0]!.prompt).toMatch(/Do not run `pnpm gate:scoped` now/)
+    expect(calls[0]!.prompt).toContain('pnpm gate:scoped > /d/fix-1-x/gate.log 2>&1; echo EXIT=$? >> /d/fix-1-x/gate.log` with Bash timeout 600000')
+  })
+
+  it('points the builder and the reviewers at one decisions file in the branch folder', async () => {
+    const { calls } = await run({})
+    for (const c of calls) expect(c.prompt, c.label).toContain('/d/fix-1-x/decisions.md')
   })
 
   it('in review-only mode skips the build and reviews the given worktree as the given round', async () => {
-    const { r, calls } = await run({ review: true, round: 2, worktree: '/wt/b', decisions: ['kept'] })
+    const { r, calls } = await run({ review: true, round: 2, worktree: '/wt/b' })
     expect(calls.map((c) => c.label)).toEqual(['Standards fix/1-x r2', 'Spec fix/1-x r2'])
     expect(calls[0]!.prompt).toContain('/wt/b')
-    expect(r).toMatchObject({ status: 'reviewed', round: 2, worktree: '/wt/b', decisions: ['kept'] })
+    expect(r).toMatchObject({ status: 'reviewed', round: 2, worktree: '/wt/b' })
+  })
+
+  it('fails a review-only branch given no round, without running a reviewer', async () => {
+    const { r, calls } = await run({ review: true, worktree: '/wt/b' })
+    expect(calls).toHaveLength(0)
+    expect(r).toMatchObject({ status: 'failed', reason: 'review: true needs round' })
+  })
+
+  it('keeps a re-built branch\'s round, so its findings files and the round count carry on', async () => {
+    const { r, calls } = await run({ round: 2, worktree: '/wt' })
+    expect(calls.map((c) => c.label)).toEqual(['build fix/1-x', 'Standards fix/1-x r2', 'Spec fix/1-x r2'])
+    expect(r).toMatchObject({ status: 'reviewed', round: 2 })
   })
 
   it('passes a needs-owner build through without review', async () => {
-    const { r, calls } = await run({}, { status: 'needs-owner', commits: [], decisions: [], question: 'q?' })
+    const { r, calls } = await run({}, { status: 'needs-owner', commits: [], question: 'q?' })
     expect(calls).toHaveLength(1)
     expect(r).toMatchObject({ status: 'needs-owner', question: 'q?' })
   })

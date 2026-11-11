@@ -103,14 +103,15 @@ implies (`docs/agents/triage-labels.md`, `docs/agents/issue-tracker.md`).
 
 ## 3. Build and review
 
-Run `clear-backlog-build` with `{ session, branches: [...] }`, one entry
-per branch: `name`, `issues`, `brief`, the agreed `picks` (only that branch's
-own, never the whole owner reply), and `cherryPick` when a
-closed, unmerged PR already implements the agreed pick. It builds each branch
-in its own worktree off `origin/main`, with fast checks and no gate, then runs
-one fresh review round: a Standards and a Spec reviewer, each giving every
-finding a `kind`. This loop's rounds and re-checks are the review before
-opening the PR (`pr-workflow.md`).
+Run `clear-backlog-build` with `{ session, dir, branches: [...] }`: `dir` is
+`<scratchpad>/clear-backlog`, where each branch keeps its decisions, gate log
+and findings in a folder of its own. One entry per branch: `name`, `issues`,
+`brief`, the agreed `picks` (only that branch's own, never the whole owner
+reply), and `cherryPick` when a closed, unmerged PR already implements the
+agreed pick. It builds each branch in its own worktree off `origin/main`, with
+fast checks and no gate, then runs one fresh review round: a Standards and a
+Spec reviewer, each giving every finding a `kind`. This loop's rounds and
+re-checks are the review before opening the PR (`pr-workflow.md`).
 
 Write each `brief` from the explore result, with only claims you verified
 against source: the Spec reviewer takes the brief as the spec, so a wrong claim
@@ -121,58 +122,69 @@ now), the picked option's `optionChecks` (premises already settled, and the
 touches the branch's files. Take the decision from the owner's pick, not from
 the triage agent's `pick` and `why`.
 
-Then run `run-summary.ts <output> --build --dir <scratchpad>/clear-backlog
---run <run id>`, with the run id from the Workflow result. Per branch it
-prints the status, the builder's and each reviewer's agent id, and each
-review's findings file with one numbered `kind: title` line per finding. Read
-nothing more: no findings file, diff or agent report. The builder and
-reviewers read those; every turn of yours re-reads your whole context.
+Then run `run-summary.ts <output> --build --run <run id>`, with the run id
+from the Workflow result. Per branch it prints the status, the builder's and
+each reviewer's agent id, and each review's findings file with one numbered
+`kind: title` line per finding. Keep each builder's id: a later round's run
+prints only its reviewers. Read nothing more (no findings file, diff, agent
+report or decisions file) until §4: the builder and reviewers read those, and
+every turn of yours re-reads your whole context.
+
+Resume an agent with `SendMessage` to its id. Send the resumes of all
+branches in one message, except gates: at most 2 at once. Each agent replies
+with one line; check what it claims with `git -C <worktree> log --oneline -3`
+before you go on. If an agent can't be resumed (a session restart may lose
+it), dispatch a plain `Agent` with the same message plus, for a builder, its
+`brief` and `worktree`, or, for a reviewer, its findings file; it takes that
+role from then on.
 
 Act on each branch's `status`:
 
 - `needs-owner`: an interrupt (the script lists the conditions). Send a push
-  notification, ask its `question` in the running `Q` numbering, and re-run
-  just that branch with its `question`, the `answer`, and its `worktree` if
-  it returned one (without, the branch restarts from `origin/main`). The rest
-  keep going.
+  notification and ask its `question` in the running `Q` numbering. The rest
+  keep going. With the answer, resume the builder to go on; once it replies,
+  run the workflow on that branch with `review: true` and `round: 1`. A builder
+  with no `worktree` yet re-runs instead, with its `question` and the `answer`.
 - `failed`: read the journal for the cause, then fix the brief and re-run the
   branch, or report it.
 - `reviewed`: the loop below.
-
-Resume an agent with `SendMessage` to its id. Send every branch's resumes
-in one message: they run at once. Each agent replies with one line; check
-what it claims with `git -C <worktree> log --oneline -3` before you go on. If
-an agent can't be resumed (a session restart may lose it), re-run the branch
-with its `worktree` and the findings to fix in its `brief`; that build agent
-is its builder from then on.
 
 For each `reviewed` branch, in round N:
 
 1. **Triage.** Pick the findings to fix: every `defect`, `spec-mismatch` and
    `missing-test` you accept (the round's majors), and the nits worth their
-   cost. Each other nit goes to the PR as a judgement call; an `owner-call`
-   is an interrupt, as for `needs-owner`. Nothing picked: go to step 5.
+   cost. Each other nit goes to the PR as a judgement call. An `owner-call` is
+   an interrupt: `run-summary.ts <file> --findings --detail <n>` prints its
+   detail, the one finding you read in full; resume the builder with the
+   answer. Nothing picked: go to step 5.
 2. **Fix.** Resume the builder: "Fix findings `<numbers>` in `<file>`. You may
    refuse one you can prove wrong. Run the fast checks, commit, and reply with
    one line: `FIXED <sha before> <sha after>`, plus `refused <number>:
-   <proof>` per refusal."
-3. **Re-check.** Resume each reviewer whose findings were fixed, every time:
-   "The builder fixed your findings `<numbers>` (refused: ...). Read only
-   `git -C <worktree> diff <before>..<after>`. Check each is resolved and the
-   change adds no new problem. With Bash, write your findings in your review's
-   shape to `<dir>/<branch>/<axis>-r<N>-c<k>.json`, and reply with one line:
+   <proof>` per refusal." A builder may instead reply `NEEDS-OWNER` with a
+   question: ask it, and resume the builder with the answer.
+3. **Re-check.** Resume each reviewer whose findings were fixed or refused,
+   every time: "The builder fixed your findings `<numbers>` and refused
+   `<numbers>: <proof>`. Read only `git -C <worktree> diff <before>..<after>`.
+   Check each fix is right and the change adds no new problem, and judge each
+   refusal's proof. With Bash, write your findings in your review's shape to
+   `<your review's file, with -c<k> before .json>`, and reply with one line:
    `CLEAN` or `FINDINGS <file>`." `run-summary.ts <file> --findings` prints a
    findings file's lines; triage and fix them from step 1. After 2 re-checks
    in a round, what is still open is that round's result.
-4. **Next round.** If round N had a major and N is below 3, re-run the
-   workflow with that branch's `review: true`, `round: N+1`, `worktree` and
-   decisions so far: a fresh pair reads the whole diff. One run covers every
-   branch due a round; the builder stays. A major in round 3 still gets its
-   fix and re-check, and the branch's PR waits for the owner's merge (§4).
-5. **Gate.** Resume the builder: "Run `pnpm gate:scoped` on HEAD. If it
-   fails, fix the cause and run it again until it exits 0. Reply with one
-   line: `GATE EXIT=0 <HEAD sha>`." A gate fix beyond the failing check gets
-   a step-3 re-check.
+4. **Next round.** If round N had a major, or you judge the branch hard or
+   large, and N is below 3, run the workflow on that branch with `review:
+   true`, `round: N+1` and its `worktree`: a fresh pair reads the whole diff,
+   and the builder stays. Start a branch's round as soon as it is due; if a
+   second run is refused while one runs, batch the branches due. A major in
+   round 3 still gets its fix and re-check, and the branch's PR waits for the
+   owner's merge (§4).
+5. **Gate.** Resume the builder: "Run `pnpm gate:scoped` on HEAD with your
+   rules' gate command and timeout. If it fails, fix the cause and run it
+   again until it exits 0. Reply with one line: `GATE <log> <sha before>
+   <HEAD sha>`." Check `tail -n 1 <log>` reads `EXIT=0` and HEAD matches. If
+   HEAD moved, resume the latest round's Standards reviewer on `<sha
+   before>..<HEAD sha>` as in step 3, then gate once more; if that fails or
+   moves HEAD again, report the branch.
 
 After a session resume or restart, check the run journal's mtime before you
 call a build live: a restart kills running workflows.
@@ -190,12 +202,14 @@ Push each gated branch from its worktree with
 `git push origin HEAD:<branch> && git fetch origin <branch>` (a build whose
 branch the main checkout holds commits on a `worktree-wf_…` branch). The fetch
 matters: `check:worktrees` counts commits on no remote-tracking ref as
-unpushed. Open its PR with the branch's decisions, its remaining judgement
+unpushed. Open its PR with the branch's decisions (its folder's
+`decisions.md`), its remaining judgement
 calls, any cherry-picked PR, and the Human-only paths that `pnpm exec tsx .agents/skills/clear-backlog/scripts/list-human-only-paths.ts
 <worktree>` prints (a non-zero exit means the list couldn't be read: stop
 and report it). Land it with `docs/agents/pr-workflow.md`. For a later
-fix (CI, a PR comment), resume the branch's builder with it, and re-check a
-code change as in §3 step 3. A PR built from a Public issue waits for a human merge
+fix (CI, a PR comment), resume the branch's builder with it, re-check a code
+change as in §3 step 3, and gate it as in §3 step 5 unless `pr-workflow.md`
+lets the push rely on CI. A PR built from a Public issue waits for a human merge
 (ADR-0020), even though `scripts/github/merge-pr.ts` would accept it. So does a
 branch with a major in round 3: its PR says why it waits and lists, under
 `Remaining findings`, each finding not resolved by a clean re-check, with its
@@ -210,6 +224,6 @@ some of its exceptions. Once a PR merges or waits for a human, run
 Report one line per issue: `#N | outcome | PR or "no PR: why" | merged / waits
 for you (why)`. Then re-invoke `close-session`. Its log's
 `summary` carries one line per merged or opened branch: what it changed (from
-that branch's `decisions`) and any judgement calls left open. In a workflow
+that branch's `decisions.md`) and any judgement calls left open. In a workflow
 run the orchestrator's log is the Journal's only record of what its agents
 built.
