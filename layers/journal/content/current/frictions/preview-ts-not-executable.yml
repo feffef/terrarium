@@ -1,8 +1,12 @@
 name: preview-ts-not-executable
 surface: safe
 summary: Agents ran scripts/ui/preview.ts directly, as the docs show it, and the shell refused it because the file is not executable, so they retried through pnpm exec tsx.
-cause: "scripts/ui/preview.ts has no executable bit while docs and CLAUDE.md show it as a bare command; a direct call exits 126 (permission denied). Signals: 'Exit 126', 'not executable', 'permission denied', 'preview.ts' run bare."
-status: tracked
+cause: "scripts/ui/preview.ts has no executable bit, so a bare call exits 126 (permission denied); before PR #3078 (2026-11-11) docs and CLAUDE.md showed it bare. Since then CLAUDE.md Repo layout says scripts run through pnpm exec tsx, and verifying-ui-changes.md writes its first call that way. Signals: 'Exit 126', 'not executable', 'permission denied', 'preview.ts' run bare."
+status: open
+fixes:
+  - pr: 3078
+    date: "2026-11-11"
+    summary: "CLAUDE.md Repo layout says scripts run as pnpm exec tsx scripts/<area>/<file>.ts; verifying-ui-changes.md writes the first preview.ts call that way."
 occurrences:
   - session: session_013zxzeRpiY8hmJh8z3HELvr
     date: "2026-11-11"
