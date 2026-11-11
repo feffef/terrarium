@@ -423,9 +423,10 @@ export function schemaRejection(schemaFile: string, entry: unknown): SchemaRejec
   if (!out.trim()) return null
   const issues = JSON.parse(out) as { path: (string | number)[]; code: string; message: string; keys?: string[] }[]
   const strippable = issues.every((i) => i.code === 'unrecognized_keys' && i.path.length === 0)
+  const keys = strippable ? issues.flatMap((i) => i.keys ?? []) : []
   return {
     errors: issues.map((i) => '  ' + (i.path.join('.') || '(root)') + ': ' + i.message).join('\n'),
-    unknownKeys: strippable ? issues.flatMap((i) => i.keys ?? []) : null,
+    unknownKeys: keys.length ? keys : null, // no named keys: nothing to strip, so keep refusing
   }
 }
 
@@ -771,7 +772,9 @@ export function handle(
   const dropped = rejection.unknownKeys
   const stripped = entryYaml(Object.fromEntries(Object.entries(entry).filter(([k]) => !dropped.includes(k))), opts)
   const onMain = current !== null && withoutLandedBy(current) === withoutLandedBy(stripped)
-  return { ...(onMain ? { action: 'skipped-unchanged' as const, relPath } : stageAndLand(relPath, stripped, opts)), dropped }
+  const res: HandlerResult = onMain ? { action: 'skipped-unchanged', relPath } : stageAndLand(relPath, stripped, opts)
+  // Only a log that is on main without the fields counts as stripped.
+  return res.action === 'landed' || res.action === 'skipped-unchanged' ? { ...res, dropped } : res
 }
 
 // ── CLI entry points ────────────────────────────────────────────────────────

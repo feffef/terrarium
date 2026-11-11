@@ -5,7 +5,7 @@
 // `landedBy` instrumentation. The push plumbing itself is covered by
 // log-session-push.spec.ts; here `land` is stubbed so we observe *what path* it
 // is handed and *when* it is called.
-import { existsSync, readFileSync, rmSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { afterEach, describe, expect, it, vi } from 'vitest'
@@ -181,6 +181,25 @@ describe("main's session schema — a branch's new field cannot land a log main 
     expect(schemaRejection(schemaFile, { ...entry, newField: 1, goal: 5 })?.unknownKeys).toBeNull()
   })
 
+  it('schemaRejection() never strips a nested unknown key, and an empty key list is not strippable', () => {
+    // Inside the repo so the temp schema resolves `zod` from node_modules.
+    const dir = join(repoRoot, '.throwaway', 'log-strip-nested')
+    mkdirSync(dir, { recursive: true })
+    try {
+      const nested = join(dir, 'nested.ts')
+      writeFileSync(nested, "import { z } from 'zod'\nexport const sessionSchema = z.object({ a: z.object({}).strict() }).strict()\n")
+      const res = schemaRejection(nested, { a: { extra: 1 } })
+      expect(res?.errors).toContain('a')
+      expect(res?.unknownKeys).toBeNull()
+
+      const keyless = join(dir, 'keyless.ts')
+      writeFileSync(keyless, "export const sessionSchema = { safeParse: () => ({ success: false, error: { issues: [{ path: [], code: 'unrecognized_keys', message: 'x' }] } }) }\n")
+      expect(schemaRejection(keyless, {})?.unknownKeys).toBeNull()
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
+  })
+
   describe('when main rejects only fields the branch adds', () => {
     const strip = { errors: "  (root): Unrecognized key(s) in object: 'outcome'", unknownKeys: ['outcome'] }
     const run = (mainVersionFn: () => string | null, landFn: unknown) =>
@@ -221,6 +240,18 @@ describe("main's session schema — a branch's new field cannot land a log main 
       const res = run(() => yaml, landFn)
       expect(res).toMatchObject({ action: 'skipped-unchanged', dropped: ['outcome'] })
       expect(landFn).not.toHaveBeenCalled()
+    })
+
+    it('reports no dropped fields when nothing landed', () => {
+      const res = handle(scratch, transcript, {
+        dryRun: true,
+        remote: 'origin',
+        env: {},
+        mainVersionFn: () => null,
+        mainSchemaFn: () => strip,
+      })
+      expect(res.action).toBe('dry-run')
+      expect(res.dropped).toBeUndefined()
     })
   })
 })
