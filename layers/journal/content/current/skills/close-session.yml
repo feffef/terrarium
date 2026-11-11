@@ -9,24 +9,6 @@ role: >-
   the self-judged "invoke at closure" rule fire reliably; its invocation rate is the evidence for ADR-0009's choice
   of a Skill over a reminder hook.
 observations:
-  - date: "2026-10-01"
-    note: >-
-      Re-checked (audit-skills behaviour check), 10 newest invocations
-      (PRs #1501-#1511, #1513): 0/10 stale, every log's `endedAt` within
-      seconds to minutes of its PR's `merged_at`. session_01TMgZyrN42pwudxkUdHLKwP
-      directly re-checked a fourth time (09-27, 09-28, 09-29, now 10-01):
-      still stale, still unfixed — `git log --follow` on its log file shows
-      no commit since the original 09-25 log, it's still in `current/` not
-      `archived/`. Four consecutive confirmations of the same single
-      instance, zero recurrence elsewhere (30+ other sessions checked
-      across this window's four audits) — this stays a structural-gap
-      observation per this Skill's own convention (closure findings don't
-      get an issue), not escalated. Closure completeness (step 3, the
-      mechanical signals this observation partly covers): this run's orphan
-      scan itself failed (`scanned: false`, a `gh api --paginate` 403 —
-      filed as #1514) so it is reported here as inconclusive, not as zero
-      orphans; humanPromptedClosures and manuallyRescuedClosures were both
-      empty for the window that did run. Grade/role unchanged.
   - date: "2026-10-02"
     note: >-
       Re-checked (audit-skills behaviour check), 10 newest invocations
@@ -344,3 +326,6 @@ observations:
   - date: "2026-11-08"
     note: >-
       Behaviour check, 10 runs delivered, no orphan (2 candidates, both resolved). Human-prompted closures: 3 this week (session_013zxzeRkv6UCWJtPmJ68h32, session_013zxzeQDfNNTXpQYQtt9saY, session_013zxzeQyHhutDMJtzGF5UQU); #2772 is closed, so filed standing thread #2956. Grade unchanged.
+  - date: "2026-11-11"
+    note: >-
+      Behaviour check, 10 runs, 0 missed. Four no-PR test sessions had their logs rescued by SessionStart about an hour late (Stop hook did not land them; held-log mechanism, unverified cause). Not issued. Grade unchanged.
