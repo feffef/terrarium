@@ -116,6 +116,15 @@ describe('buildEntries()', () => {
     expect(start('session_b')).toBe('2026-11-10T10:00:00.000Z')
   })
 
+  it('keeps only the requested kind, and does not count the other as harvested', () => {
+    const logs = [log({ ideas: ['i'], learnings: ['l'] })]
+    expect(buildEntries(logs, noState, since, ['idea']).entries.map((e) => e.kind)).toEqual(['idea'])
+    expect(buildEntries(logs, noState, since, ['learning']).entries.map((e) => e.kind)).toEqual(['learning'])
+    expect(buildEntries(logs, noState, since).entries).toHaveLength(2)
+    const taken = { keys: new Set([entryKey(SESSION, 'learning', 'l')]), bySession: new Map<string, number[]>() }
+    expect(buildEntries(logs, taken, since, ['idea']).skippedHarvested).toBe(0)
+  })
+
   it('skips a log with no session id: its key could not be parsed back', () => {
     expect(buildEntries([log({ session: '', ideas: ['x'] })], noState, since).entries).toEqual([])
   })

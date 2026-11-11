@@ -6,7 +6,7 @@
 // (open or closed, whatever its title) marks an entry as harvested.
 //
 // Usage:
-//   tsx .agents/skills/harvest/scripts/harvest.ts extract [--out PATH]
+//   tsx .agents/skills/harvest/scripts/harvest.ts extract [--kind ideas|learnings] [--out PATH]
 //   tsx .agents/skills/harvest/scripts/harvest.ts block <extract.json> <n> [n...]
 //   tsx .agents/skills/harvest/scripts/harvest.ts check-body <body-file> --extract <extract.json> [--title T]
 //   tsx .agents/skills/harvest/scripts/harvest.ts check-posted <issue-number> <body-file>
@@ -118,6 +118,7 @@ export function buildEntries(
   logs: SessionLog[],
   state: HarvestState,
   since: number,
+  kinds: Kind[] = ['idea', 'learning'],
 ): { entries: Entry[]; skippedHarvested: number } {
   const all: Draft[] = []
   let skippedHarvested = 0
@@ -131,6 +132,7 @@ export function buildEntries(
     // `??` because new Date(null) is the epoch, which would pass the NaN check below.
     const started = new Date((data.startedAt ?? data.endedAt) as string | Date)
     for (const { kind, text } of noteTexts(data)) {
+      if (!kinds.includes(kind)) continue
       const key = entryKey(session, kind, text)
       if (state.keys.has(key)) {
         skippedHarvested++
@@ -215,10 +217,19 @@ function listIssueBodies(): IssueBody[] {
 
 const DEFAULT_OUT = join(tmpdir(), 'harvest-extract.json')
 
+const KIND_ARGS: Record<string, Kind> = { ideas: 'idea', learnings: 'learning' }
+
 function cmdExtract(argv: string[]): void {
   const since = Date.now() - WINDOW_DAYS * 86_400_000
+  const kindArg = flagValue(argv, '--kind')
+  if (kindArg !== undefined && !KIND_ARGS[kindArg]) fail('--kind must be ideas or learnings')
   const state = harvestedState(listIssueBodies())
-  const { entries, skippedHarvested } = buildEntries(readSessionLogs(root, { archived: true }), state, since)
+  const { entries, skippedHarvested } = buildEntries(
+    readSessionLogs(root, { archived: true }),
+    state,
+    since,
+    kindArg === undefined ? undefined : [KIND_ARGS[kindArg]!],
+  )
   const out = flagValue(argv, '--out') ?? DEFAULT_OUT
   const count = (k: Kind) => entries.filter((e) => e.kind === k).length
   writeFileSync(out, JSON.stringify({ since: new Date(since).toISOString(), days: WINDOW_DAYS, skippedHarvested, entries }, null, 2) + '\n')

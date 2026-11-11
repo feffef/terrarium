@@ -1,6 +1,7 @@
 ---
 name: harvest
 description: File up to 10 Seedlings, issues that turn the last 28 days of Session logs' ideas and learnings into proposals for a Trusted user to green-light. User-invoked; a Routine runs it.
+argument-hint: "[ideas|learnings] (default: both)"
 disable-model-invocation: true
 ---
 
@@ -15,8 +16,12 @@ on any issue marks its entry as taken, so a rerun or a missed week files each
 entry once. The helper is
 `pnpm exec tsx .agents/skills/harvest/scripts/harvest.ts`; below it is `harvest`.
 
-1. **Extract.** `harvest extract --out <scratchpad>/harvest-extract.json`.
-   It lists unharvested ideas and learnings from the last 28 days (archived logs
+The argument `ideas` or `learnings` harvests that kind alone; with none, the run
+harvests both.
+
+1. **Extract.** `harvest extract --out <scratchpad>/harvest-extract.json`, plus
+   `--kind ideas` or `--kind learnings` when the run has that argument.
+   It lists unharvested entries from the last 28 days (archived logs
    included), ordered best-first with the kinds alternating. Read the file
    whole. Done when you have the counts per kind and the ordered entries.
 2. **Cluster, in order.** Merge near-duplicate entries into clusters,
@@ -41,8 +46,9 @@ entry once. The helper is
      already did it.
    Done when each checked cluster records the file read or merge list checked
    and the issue number matched, or "no match" with the filter used.
-4. **File one Seedling per passing cluster,** at most 10 in total and 5 per
-   kind, unless the other kind has fewer passing (then it fills the rest).
+4. **File one Seedling per passing cluster,** at most 10 in total and, when
+   harvesting both kinds, 5 per kind, unless the other kind has fewer passing
+   (then it fills the rest).
    Learnings that belong in one doc share one Seedling. For each:
    - Write the body to a file in the scratchpad: the ADR-0017 header, a banner
      line `Agent seedling from harvest, not approved. Waits for a Trusted user's green light (ADR-0003).`,
