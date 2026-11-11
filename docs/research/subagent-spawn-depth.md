@@ -194,3 +194,41 @@ own tool list (marked self-reported, not checked by a command). One run each.
    `ReportFindings`, `SuggestSkills`, and among deferred tools the Cron and
    `Task*` tools). So within the `agent()` options tried, the missing `Agent`
    follows from being a workflow agent, not from depth or `agentType`.
+
+## The Agent SDK route (docs only; nothing run)
+
+Whether a driver script on the Claude Agent SDK could replace the Workflow tool
+for build, review, fix. Fetched 2026-11-11 from code.claude.com (summarised by the
+fetch tool, so wording is close, not byte-exact).
+
+- **Nesting works there.** Define the builder in `agents` with `Agent` in its
+  `tools` (inherited if `tools` is omitted); a type list in `Agent(...)` is
+  ignored in a subagent definition. The depth variable applies (default 3; set it
+  through the SDK `env` option, TypeScript replaces the subprocess env so spread
+  `process.env`). (https://code.claude.com/docs/en/agent-sdk/subagents, "Cap
+  subagent depth, concurrency, and spend"; https://code.claude.com/docs/en/sub-agents)
+- **Resume is documented, through the parent.** Keep `session_id` and the
+  `agentId` from the Agent tool result, call `query()` again with `resume:
+  sessionId` and a prompt asking to resume that agent; the subagent "retains its
+  full conversation history". `SendMessage` by id or name also resumes. A
+  driver-side call straight to a subagent id is not documented. (agent-sdk/subagents,
+  "Resume subagents"; sub-agents page)
+- **Auth is the open point.** The quickstart documents `ANTHROPIC_API_KEY` (or
+  Bedrock, Vertex, Foundry switches) and says third parties may not offer claude.ai
+  login. The authentication page documents `CLAUDE_CODE_OAUTH_TOKEN` for CI and
+  scripts, tied to a subscription plan. Whether it may be used for an own-use SDK
+  script, and how it counts against limits, is not documented in what was read.
+  (agent-sdk/quickstart; https://code.claude.com/docs/en/authentication)
+- **Cloud sessions.** `api.anthropic.com` and the npm registry are in the default
+  allowed domains and Node 22 is preinstalled, so running a script looks feasible.
+  The authentication page says cloud sessions always use subscription OAuth and
+  ignore `ANTHROPIC_API_KEY` set in the environment. Whether a child SDK process
+  in the VM gets a usable credential is undocumented. (cloud-environments;
+  authentication)
+- **Settings.** Omitting `settingSources` loads user, project and local settings,
+  CLAUDE.md, rules, skills and hooks as the CLI does. (agent-sdk/claude-code-features)
+- **Workflow tool.** Available in the TypeScript SDK from v0.3.149; the docs
+  describe no workflow replacement built on the SDK, and nothing on whether an
+  SDK-defined subagent can have `Workflow`. (agent-sdk/subagents, "Scale up with
+  dynamic workflows")
+
