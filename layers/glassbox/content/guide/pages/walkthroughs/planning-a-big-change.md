@@ -27,7 +27,7 @@ Every question that can be stated precisely becomes a decision ticket: a sub-iss
 
 ## 3. One ticket per session
 
-A later session loads the map and takes the first open ticket that nothing blocks and nobody holds, and claims it by assigning it first. Unlike stop 2's session with its research subagents, it resolves only one ticket: an answer in a comment, the issue closed, and one line in the map's decisions. Questions the answer makes sharp become new tickets. The triage sweep may add a triage label beside its `wayfinder:` label: `ready-for-human` on a grilling or prototype ticket.
+A later session loads the map, takes the first open ticket that nothing blocks and nobody holds, and claims it by assigning it first. It resolves one ticket, research tickets apart, which it may resolve several of: an answer in a comment, the issue closed, and one line in the map's decisions. Questions the answer makes sharp become new tickets. The triage sweep may add `ready-for-human` beside a grilling or prototype ticket's `wayfinder:` label.
 
 ::lessons
 [Wayfinder](/t/glassbox/guide/skill-pack/wayfinder) · [Issue triage labels](/t/glassbox/guide/git-github/issue-triage-labels)

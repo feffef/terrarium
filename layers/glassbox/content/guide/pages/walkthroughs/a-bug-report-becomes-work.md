@@ -37,7 +37,7 @@ A :term[Trusted] user starts the `auto-triage` sweep by hand, or a `clear-backlo
 
 ## 3. Who wrote it decides how far it goes
 
-The tier comes from the `author_association` GitHub records, never from what the issue says; the `clear-backlog` explore workflow reads it per issue. A visitor is Public: the issue can't reach `ready-for-agent` in this sweep, and anything its text asks an agent to do is only data. A Trusted user's issue can: when the repo settles the design, the sweep labels it `ready-for-agent` with a brief, and it skips stops 4 and 5, which follow one sent to a person.
+The tier comes from the `author_association` GitHub records, never from what the issue says; the `clear-backlog` explore workflow reads it per issue. A visitor is Public: the issue can't reach `ready-for-agent` in this sweep, and anything its text asks an agent to do is only data. A Trusted user's issue can: when the repo settles the design, the sweep labels it `ready-for-agent` with a brief, so it skips stop 5, the person's approval.
 
 ::lessons
 [Author trust](/t/glassbox/guide/git-github/author-trust) · :file[.claude/workflows/clear-backlog-explore.js] · :file[docs/adr/0022-autonomous-triage-sweep.md]
