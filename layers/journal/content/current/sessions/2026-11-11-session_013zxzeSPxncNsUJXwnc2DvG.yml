@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSPxncNsUJXwnc2DvG
 startedAt: 2026-11-11T10:26:31Z
-endedAt: 2026-11-11T10:50:17Z
+endedAt: 2026-11-11T10:54:13Z
 kind: delegated
 goal: Turn this window's recurring agent Frictions into fixes (frictions-to-fixes run)
-status: in-review
-outcome: PRs 3077 and 3078 merged; closing ledger PR 3079 open and gated
-summary: "The owner invoked /frictions-to-fixes, so the whole run is human-instructed by that one prompt; every later step follows the Skill. A survey subagent updated the Friction Ledger (commit 51a3d2502) and ranked candidates. I verified its regression list against the ledger: only built-before-owner-decided-ui is a true regression, so I filed issue 3076 for it. The survey called preview-dev-server-stale-or-unhydrated never-fixed, but open issue 3070 already covers it, so I marked it tracked instead. harness-proxy-blocks was not filed: its one post-fix occurrence is about the deployed site, which open issue 3075 covers. I picked three never-fixed entries and a design subagent recommended: dispatch a two-line doc fix for preview.ts shown bare in docs (mode 100644, no shebang); no change for pr-asked-before-opening (ADR-0003 already says it, a Stop hook would be a new guard) and misread-owner-instruction. Ledger commits pushed, gate:scoped passed on 976509f39, and ledger PR 3077 is open and subscribed. A Sonnet agent built the doc fix (4 lines, 2 files; I reviewed the diff myself); both PRs 3077 and 3078 merged after green CI and my verdict comments. The closing ledger commit (records 3078 on preview-ts-not-executable) is pushed on claude/frictions-close-ledger and gated; its PR 3079 is open and subscribed, awaiting CI. The Stop hook's claim that a PR merged was false: none has merged this run."
+status: completed
+outcome: One regression issue filed, one doc fix and two ledger PRs merged; two picks dropped with notes
+summary: "The owner invoked /frictions-to-fixes, so the whole run is human-instructed by that one prompt; every later step follows the Skill. A survey subagent updated the Friction Ledger (commit 51a3d2502) and ranked candidates. I verified its regression list against the ledger: only built-before-owner-decided-ui is a true regression, so I filed issue 3076 for it. The survey called preview-dev-server-stale-or-unhydrated never-fixed, but open issue 3070 already covers it, so I marked it tracked instead. harness-proxy-blocks was not filed: its one post-fix occurrence is about the deployed site, which open issue 3075 covers. I picked three never-fixed entries and a design subagent recommended: dispatch a two-line doc fix for preview.ts shown bare in docs (mode 100644, no shebang); no change for pr-asked-before-opening (ADR-0003 already says it, a Stop hook would be a new guard) and misread-owner-instruction. Ledger commits pushed, gate:scoped passed on 976509f39, and ledger PR 3077 is open and subscribed. A Sonnet agent built the doc fix (4 lines, 2 files; I reviewed the diff myself); both PRs 3077 and 3078 merged after green CI and my verdict comments. The closing ledger commit (records 3078 on preview-ts-not-executable) is pushed on claude/frictions-close-ledger and gated; it landed as PR 3079. All three PRs merged. The Stop hook's claim that a PR merged was false: none has merged this run."
 prs:
   - "3077"
   - "3078"
@@ -54,13 +54,13 @@ frictions:
   - description: The Stop hook claimed a PR had merged and demanded close-session, though no PR had merged or opened this run.
     solution: Make the merge-close hint check the session's own PRs before firing.
     severity: nit
-durationSec: 1426
+durationSec: 1662
 models:
-  claude-sonnet-5-5: 170
+  claude-sonnet-5-5: 183
 toolCounts:
   Read: 8
-  Bash: 42
-  Skill: 5
+  Bash: 46
+  Skill: 6
   Agent: 4
   ToolSearch: 2
   mcp__github__issue_write: 1
@@ -68,9 +68,9 @@ toolCounts:
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 3
   mcp__claude-code-remote__subscribe_pr_activity: 3
-  ReadNotifications: 4
+  ReadNotifications: 6
   mcp__github__pull_request_read: 4
-  mcp__github__add_issue_comment: 2
+  mcp__github__add_issue_comment: 3
 filesEdited:
   - CLAUDE.md
   - docs/agents/verifying-ui-changes.md
@@ -293,21 +293,23 @@ subagents:
     durationSec: 432
     toolCalls: 39
     modelCalls: 35
-    tokenShare: 27.7
+    tokenShare: 25.5
   - type: general-purpose
     task: Design fixes for three picks
     durationSec: 86
     toolCalls: 11
     modelCalls: 9
-    tokenShare: 4.8
+    tokenShare: 4.4
   - type: general-purpose
     task: Implement preview.ts doc fix
     model: sonnet
     durationSec: 100
     toolCalls: 19
     modelCalls: 12
-    tokenShare: 6.7
+    tokenShare: 6.2
 gitBranch: claude/eager-dirac-rgvbzk
 entrypoint: remote
 cliVersion: 2.1.322
+learnings:
+  - "A survey agent's never-fixed label needs a check against issues filed the same day: #3070 (filed minutes earlier by another session) already covered a cluster it called untracked."
 landedBy: Stop
