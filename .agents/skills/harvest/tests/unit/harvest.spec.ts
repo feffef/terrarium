@@ -24,7 +24,7 @@ const DAY = 86_400_000
 
 const log = (over: Record<string, unknown>) => ({
   file: `${over.session}.yml`,
-  data: { session: SESSION, endedAt: '2026-11-10T10:00:00Z', goal: 'g', outcome: 'o', prs: [], frictions: [], ...over },
+  data: { session: SESSION, startedAt: '2026-11-10T09:00:00Z', endedAt: '2026-11-10T10:00:00Z', goal: 'g', outcome: 'o', prs: [], frictions: [], ...over },
 })
 const noState = { keys: new Set<string>(), bySession: new Map<string, number[]>() }
 
@@ -103,6 +103,21 @@ describe('buildEntries()', () => {
       since,
     )
     expect(entries.map((e) => e.session).sort()).toEqual(['session_in', 'session_other'])
+  })
+
+  it('carries the session start, falling back to its end when the log has none', () => {
+    const { entries } = buildEntries(
+      [log({ session: 'session_a', ideas: ['a'] }), log({ session: 'session_b', startedAt: undefined, ideas: ['b'] })],
+      noState,
+      since,
+    )
+    const start = (s: string) => entries.find((e) => e.session === s)!.startedAt
+    expect(start('session_a')).toBe('2026-11-10T09:00:00.000Z')
+    expect(start('session_b')).toBe('2026-11-10T10:00:00.000Z')
+  })
+
+  it('skips a log with no session id: its key could not be parsed back', () => {
+    expect(buildEntries([log({ session: '', ideas: ['x'] })], noState, since).entries).toEqual([])
   })
 
   it('skips harvested entries and counts them', () => {

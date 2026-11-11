@@ -6,7 +6,7 @@
 // (open or closed, whatever its title) marks an entry as harvested.
 //
 // Usage:
-//   tsx .agents/skills/harvest/scripts/harvest.ts extract [--days N] [--out PATH]
+//   tsx .agents/skills/harvest/scripts/harvest.ts extract [--out PATH]
 //   tsx .agents/skills/harvest/scripts/harvest.ts block <extract.json> <n> [n...]
 //   tsx .agents/skills/harvest/scripts/harvest.ts check-body <body-file> --extract <extract.json> [--title T]
 //   tsx .agents/skills/harvest/scripts/harvest.ts check-posted <issue-number> <body-file>
@@ -42,6 +42,7 @@ export interface Entry {
   kind: Kind
   session: string
   file: string
+  startedAt: string
   endedAt: string
   goal: string
   outcome: string
@@ -75,8 +76,16 @@ export interface IssueBody {
   body: string | null
 }
 
-/** Every harvested key, and per session the issues that name it. */
-export function harvestedState(issues: IssueBody[]): { keys: Set<string>; bySession: Map<string, number[]> } {
+/** What the issues already hold: every harvested key, and per session the issues naming it. */
+export interface HarvestState {
+  keys: Set<string>
+  bySession: Map<string, number[]>
+}
+
+/** An entry before it gets its position in the ordered list. */
+type Draft = Omit<Entry, 'n'>
+
+export function harvestedState(issues: IssueBody[]): HarvestState {
   const keys = new Set<string>()
   const bySession = new Map<string, number[]>()
   for (const { number, body } of issues) {
@@ -108,16 +117,19 @@ const isHeavy = (raw: Record<string, unknown>): boolean =>
  *  alternate (idea first) and one that runs out lets the other continue. */
 export function buildEntries(
   logs: SessionLog[],
-  state: { keys: Set<string>; bySession: Map<string, number[]> },
+  state: HarvestState,
   since: number,
 ): { entries: Entry[]; skippedHarvested: number } {
-  const all: Omit<Entry, 'n'>[] = []
+  const all: Draft[] = []
   let skippedHarvested = 0
   for (const { file, data } of logs) {
     const ended = new Date(data.endedAt as string | Date)
     if (Number.isNaN(ended.getTime()) || ended.getTime() < since) continue
     if (SKIPPED_TRIGGERS.has(String(data.trigger ?? ''))) continue
     const session = String(data.session ?? '')
+    // An id-less log cannot carry a parseable key.
+    if (!session) continue
+    const started = new Date(data.startedAt as string | Date)
     for (const { kind, text } of noteTexts(data)) {
       const key = entryKey(session, kind, text)
       if (state.keys.has(key)) {
@@ -130,6 +142,7 @@ export function buildEntries(
         kind,
         session,
         file,
+        startedAt: (Number.isNaN(started.getTime()) ? ended : started).toISOString(),
         endedAt: ended.toISOString(),
         goal: flattenText(data.goal),
         outcome: flattenText(data.outcome),
@@ -140,11 +153,11 @@ export function buildEntries(
       })
     }
   }
-  const rank = (a: Omit<Entry, 'n'>, b: Omit<Entry, 'n'>) =>
+  const rank = (a: Draft, b: Draft) =>
     Number(b.heavy) - Number(a.heavy) || b.endedAt.localeCompare(a.endedAt) || a.key.localeCompare(b.key)
   const ideas = all.filter((e) => e.kind === 'idea').sort(rank)
   const learnings = all.filter((e) => e.kind === 'learning').sort(rank)
-  const ordered: Omit<Entry, 'n'>[] = []
+  const ordered: Draft[] = []
   for (let i = 0; i < Math.max(ideas.length, learnings.length); i++) {
     if (ideas[i]) ordered.push(ideas[i]!)
     if (learnings[i]) ordered.push(learnings[i]!)
@@ -203,11 +216,8 @@ function listIssueBodies(): IssueBody[] {
 const DEFAULT_OUT = join(tmpdir(), 'harvest-extract.json')
 
 function cmdExtract(argv: string[]): void {
-  const daysArg = flagValue(argv, '--days')
-  const days = daysArg === undefined ? WINDOW_DAYS : Number(daysArg)
-  if (!(days > 0)) fail('--days must be a positive number')
-  const now = Date.now()
-  const since = now - days * 86_400_000
+  const days = WINDOW_DAYS
+  const since = Date.now() - days * 86_400_000
   const state = harvestedState(listIssueBodies())
   const { entries, skippedHarvested } = buildEntries(readSessionLogs(root, { archived: true }), state, since)
   const out = flagValue(argv, '--out') ?? DEFAULT_OUT

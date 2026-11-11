@@ -5,14 +5,14 @@ disable-model-invocation: true
 ---
 
 A Routine runs this Skill; its schedule lives there, not here (ADR-0005). Its
-approval covers only the steps below (ADR-0003): it files issues and builds
-nothing.
+approval covers only the steps below (ADR-0003): it files issues and changes
+no file.
 
 A **Seedling** is an issue an agent files for an idea or learning that is still
 worth acting on. It waits, labelled `ready-for-human`, for a Trusted user's
 green light. State lives in the Seedlings themselves: a `Harvested:` key line
-on any issue marks its entry as taken, so a rerun or a missed week repeats
-nothing. The helper is
+on any issue marks its entry as taken, so a rerun or a missed week files each
+entry once. The helper is
 `pnpm exec tsx .agents/skills/harvest/scripts/harvest.ts`; below it is `harvest`.
 
 1. **Extract.** `harvest extract --out <scratchpad>/harvest-extract.json`.
@@ -25,8 +25,8 @@ nothing. The helper is
    count of distinct sessions behind it.
 3. **Check relevance.** A cluster is still open when all of these hold:
    - **Unbuilt.** Name the file or symbol it would change and read it now. Run
-     `pnpm exec tsx scripts/git/list-merges-since.ts` from the source session's
-     start. For a learning, grep `CLAUDE.md`, `.claude/rules/`, `docs/agents/`
+     `pnpm exec tsx scripts/git/list-merges-since.ts` from the entry's
+     `startedAt`. For a learning, grep `CLAUDE.md`, `.claude/rules/`, `docs/agents/`
      and the Skills for the fact itself.
    - **Unfiled.** Entries with a non-empty `sameSession` were possibly
      reworded: read those issues. List the tracker with
@@ -61,5 +61,5 @@ nothing. The helper is
      stop the run naming the issue if it still fails.
    Done when every filed issue's stored keys equal its file's keys and you have
    listed every number.
-5. **Close.** Invoke `close-session` once. A run where nothing passed files
-   nothing and says so.
+5. **Close.** A run where nothing passed says so and files no issue. Done when
+   `close-session` has run once.
