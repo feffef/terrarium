@@ -64,7 +64,8 @@ harvests both.
    that covers it or "none", and what the change retires or simplifies.
 4. **File one Seedling per passing cluster,** at most 10 in total and, when
    harvesting both kinds, 5 per kind, unless the other kind has fewer passing
-   (then it fills the rest). Learnings that belong in one doc share one
+   (then it fills the rest). At most 3 of them are workflow clusters, however
+   few product clusters passed. Learnings that belong in one doc share one
    Seedling. For each:
    - Read its source logs whole (each entry's `file`): the entry alone lacks the
      story.
