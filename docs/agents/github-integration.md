@@ -107,8 +107,9 @@ Large results overflow your context. Keep them small and read every hit.
 - **CI success is not delivered natively.** A green gate wakes a subscribed
   session only through the comment the gate action posts on green (its "doorbell",
   `.github/actions/gate/action.yml`; none on a fork PR). A new PR shows no
-  checks for minutes; wait for the doorbell. Poll `get_check_runs` when you can't rely on that: at agent-completion checkpoints,
-  or with `send_later` when no agent is running. Babysit cadence: step 3 of
+  checks for minutes, so wait for the doorbell. Otherwise poll `get_check_runs`
+  at agent-completion checkpoints, or with `send_later` when no agent is
+  running. Babysit cadence: step 3 of
   [`pr-workflow.md`](./pr-workflow.md).
 - **A conflicted PR gets no check runs.** If none appear, check the merge first
   (`git merge-tree`), not the gate.
