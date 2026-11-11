@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQ2wC57fFKCB2ZNBZb
 startedAt: 2026-11-11T08:47:43Z
-endedAt: 2026-11-11T09:01:41Z
+endedAt: 2026-11-11T09:05:14Z
 kind: autonomous
 goal: Make the Git & GitHub pages of the Glass Box guide clearer
-status: in-review
-outcome: PR 3060 open with eight clarified Lessons, one added fact, memory page and run entry; CI and merge still to come
-summary: "Scheduled glassbox-curate run, fully agent-initiated (no human prompt). I oriented, started a Scout, and chose the Git & GitHub Subject because the memory page listed it as not yet de-duplicated. Eight sonnet fresh readers read each page as plain text; two opus writers fixed the real findings with sources at the pinned commit; a sonnet claim checker found no false sentence and four weakened ones, two of which I fixed; four readers re-read the result. code-review found no Standards violation, and its Spec axis caught a stale memory-page item, a wrong run-entry line and ten pages missing from pagesRead, which I fixed after a reader checked those pages. PR 3060 is open and subscribed. Cost is unreported because no get_session tool was available. Still open: wait for CI, post the verdict, merge with merge-pr.ts."
+status: completed
+outcome: "PR 3060 merged: eight clarified Lessons, one added fact, memory page and run entry"
+summary: Scheduled glassbox-curate run, fully agent-initiated (no human prompt). I oriented, started a Scout, and chose the Git & GitHub Subject because the memory page listed it as not yet de-duplicated. Eight sonnet fresh readers read each page as plain text; two opus writers fixed the real findings with sources at the pinned commit; a sonnet claim checker found no false sentence and four weakened ones, two of which I fixed; four readers re-read the result. code-review found no Standards violation, and its Spec axis caught a stale memory-page item, a wrong run-entry line and ten pages missing from pagesRead, which I fixed after a reader checked those pages. PR 3060 was opened and subscribed. Cost is unreported because no get_session tool was available. CI went green, I posted the verdict and merged with merge-pr.ts.
 prs:
   - "3060"
 docsRead:
@@ -94,19 +94,22 @@ frictions:
   - description: The Stop hook asked me to commit while a writer was still editing, forcing a partial commit of one writer's files.
     solution: Brief writers to commit their own pages in a worktree, or have the hook skip while a subagent runs.
     severity: nit
-durationSec: 838
+durationSec: 1051
 models:
-  claude-sonnet-5-5: 121
+  claude-sonnet-5-5: 138
 toolCounts:
-  Bash: 27
+  Bash: 31
   Read: 13
   Agent: 20
   Grep: 1
   Edit: 2
-  Skill: 3
+  Skill: 4
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/git-github/20.author-trust.md
   - layers/glassbox/content/guide/pages/git-github/30.composite-actions.md
@@ -565,115 +568,115 @@ subagents:
     durationSec: 25
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 3.7
+    tokenShare: 3.4
   - task: "Reader: pull-requests"
     model: sonnet
     durationSec: 16
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1
+    tokenShare: 0.9
   - task: "Reader: author-trust"
     model: sonnet
     durationSec: 16
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1
+    tokenShare: 0.9
   - task: "Reader: composite-actions"
     model: sonnet
     durationSec: 14
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1
+    tokenShare: 0.9
   - task: "Reader: dependabot"
     model: sonnet
     durationSec: 16
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1
+    tokenShare: 0.9
   - task: "Reader: worktrees"
     model: sonnet
     durationSec: 15
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1
+    tokenShare: 0.9
   - task: "Reader: attribution"
     model: sonnet
     durationSec: 15
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.1
+    tokenShare: 1
   - task: "Reader: triage-labels"
     model: sonnet
     durationSec: 16
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1
+    tokenShare: 0.9
   - task: "Reader: git-plumbing"
     model: sonnet
     durationSec: 14
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1
+    tokenShare: 0.9
   - task: "Writer A: four Git pages"
     model: opus
     durationSec: 234
     toolCalls: 24
     modelCalls: 24
-    tokenShare: 8.4
+    tokenShare: 7.7
   - task: "Writer B: four Git pages"
     model: opus
     durationSec: 262
     toolCalls: 66
     modelCalls: 33
-    tokenShare: 12.7
+    tokenShare: 11.6
   - task: Claim check of Git diff
     model: sonnet
     durationSec: 75
     toolCalls: 14
     modelCalls: 9
-    tokenShare: 4.7
+    tokenShare: 4.3
   - task: Re-read pages 10 and 20
     model: sonnet
     durationSec: 17
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 1.8
+    tokenShare: 1.7
   - task: Re-read pages 30 and 40
     model: sonnet
     durationSec: 18
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 1.8
+    tokenShare: 1.7
   - task: Re-read pages 50 and 60
     model: sonnet
     durationSec: 18
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 1.9
+    tokenShare: 1.7
   - task: Re-read pages 70 and 80
     model: sonnet
     durationSec: 18
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 1.9
+    tokenShare: 1.7
   - task: Review standards axis
     model: sonnet
     durationSec: 51
     toolCalls: 15
     modelCalls: 9
-    tokenShare: 4.6
+    tokenShare: 4.2
   - task: Review spec axis
     model: sonnet
     durationSec: 29
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 2.8
+    tokenShare: 2.6
   - task: Read overlap pages and check edits
     model: sonnet
     durationSec: 46
     toolCalls: 19
     modelCalls: 7
-    tokenShare: 4.2
+    tokenShare: 3.8
 gitBranch: claude/compassionate-bardeen-2slt8v
 entrypoint: remote_trigger
 cliVersion: 2.1.322
