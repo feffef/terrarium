@@ -1,0 +1,328 @@
+schemaVersion: 1
+session: session_013zxzeQQzVdav2Lzx9D5WBr
+startedAt: 2026-11-11T22:49:28Z
+endedAt: 2026-11-11T23:40:14Z
+kind: interactive
+goal: Redesign the clear-backlog build and review loop to reuse agents
+status: in-review
+outcome: "PR #3119 open: builders and reviewers are resumed by id; three reviewers returned CLEAN and the gate passed"
+summary: "Human-instructed throughout. The owner asked me to read issue #3110, ask its author session once for more detail, and check the test session could be reached; both sessions answered, and I added the author's numbers to #3110 in one comment. The owner then asked for a redesign of clear-backlog-build: priority 1 reuse builders for fixes, priority 2 reuse reviewers for smaller fixes, a fresh reviewer pair for hard or large branches, and fewer gate runs. On the owner's instruction a Fable design agent proposed the mechanism and asked for four read-only experiments, which I relayed to the test session and the #3110 author; experiment A showed finished workflow agents resume by id concurrently. The owner settled the decisions in session: gate once at the end, fresh reviewers (not a fresh builder), the orchestrator judges which findings get fixed, the orchestrator never reviews a fix itself (the owner pointed out its large context makes that the costlier option, overturning my own cost argument), fresh pairs while a round has a major with a cap of 3, a round-3 major waits for the owner's merge, and the Skill keeps the chat quiet but raises owner items and repeats unanswered questions. The owner gave the build go-ahead and the review process: Fable checks the vision, two Opus code-review agents review, and the PR opens only once all agree. That took three fix rounds, each re-checked on its delta (the same re-check the new flow prescribes); all three returned CLEAN on 0e5cc4a and gate:scoped passed. Still open for the owner: fresh rounds 2 and 3 on Sonnet versus the default model, and triage on finding titles alone. The Glass Box pages that describe the old loop are pinned and left to glassbox-curate."
+prs:
+  - "3119"
+docsRead:
+  - path: .agents/skills/clear-backlog/scripts/run-summary.ts
+    reason: (read before editing)
+  - path: .agents/skills/clear-backlog/tests/unit/run-summary.spec.ts
+    reason: (read before editing)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (read before editing)
+  - path: .claude/workflows/clear-backlog-build.js
+    reason: (read before editing)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/research/subagent-spawn-depth.md
+    reason: (no reason given)
+  - path: docs/adr/0005-skill-model.md
+    reason: (no reason given)
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: brief the Fable design agent and the Opus reviewers
+  - name: workflow-authoring
+    reason: check whether a workflow script can learn its agents' ids
+  - name: code-review
+    reason: two-axis Opus review the owner asked for
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran git fetch before reading docs/agents/git-conventions.md, which CLAUDE.md requires before the first non-read-only git command; a hook flagged it.
+    solution: Read git-conventions.md at session start when the task will touch git; the hook hint worked as designed.
+    severity: nit
+  - description: Wrote the workflow script and run-summary.ts before reading ADR-0005, ADR-0022 and ADR-0027 in full; hooks prompted the late reads, none changed the edit.
+    solution: Read the governing ADRs when the rule loads on first Read, before the first Edit.
+    severity: nit
+  - description: In the first build I cut the builder's gate:scoped log and Bash-timeout recipe while simplifying rules(); all three reviewers caught it, costing a fix round.
+    solution: When rewriting a prompt, diff the removed lines and give each a reason to drop; a removed timeout is load-bearing.
+    severity: moderate
+  - description: First fix round introduced a fallback that lacked the workflow's rules, then one lacking picks and dir; two further re-check rounds to converge.
+    solution: Before adding a fallback path, list every input the primary path receives (rules, common(b), args) and check the fallback gets each.
+    severity: minor
+  - description: I argued the orchestrator should review simple fixes itself to save a reviewer resume; the owner pointed out its large context makes that far costlier.
+    solution: Cost a step by the context of whoever runs it, not by the work it does; the orchestrator's context dominates.
+    severity: minor
+  - description: A python string-replace script failed on a slice boundary (substring not found), and save-handback failed once because its output folder didn't exist.
+    solution: Edit with the Edit tool for multi-hunk changes; mkdir -p the scratch subfolder before save-handback.
+    severity: nit
+durationSec: 3046
+models:
+  claude-opus-5-5: 280
+toolCounts:
+  Bash: 69
+  ToolSearch: 5
+  mcp__github__issue_read: 2
+  mcp__claude-code-remote__get_session: 2
+  mcp__claude-code-remote__list_sessions: 1
+  mcp__claude-code-remote__send_message: 4
+  ReadNotifications: 4
+  AskUserQuestion: 2
+  Skill: 5
+  Agent: 3
+  mcp__github__add_issue_comment: 1
+  Write: 6
+  SendMessage: 13
+  Read: 10
+  Edit: 18
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - .claude/workflows/clear-backlog-build.js
+  - .agents/skills/clear-backlog/scripts/run-summary.ts
+  - .agents/skills/clear-backlog/tests/unit/run-summary.spec.ts
+  - tests/unit/workflow-scripts.spec.ts
+  - .agents/skills/clear-backlog/SKILL.md
+  - .agents/skills/clear-backlog/tests/unit/fixtures/build.output
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0004-human-merge.md
+adrHints:
+  - adr: 5
+    via: path
+    readAfter: true
+    by: main
+  - adr: 22
+    via: path
+    readAfter: true
+    by: main
+  - adr: 27
+    via: path
+    readAfter: true
+    by: main
+  - adr: 20
+    via: text
+    readAfter: true
+    by: main
+  - adr: 4
+    via: text
+    readAfter: true
+    by: main
+docsReadBySubagents:
+  - .agents/skills/dispatch-subagents/SKILL.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/github-integration.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/github-integration.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .claude/workflows/clear-backlog-build.js
+      - rule: .claude/rules/adr-0022.md
+        via: native
+        trigger: .agents/skills/clear-backlog/scripts/run-summary.ts
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/guards.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: gate:scoped and review before opening the PR
+      - path: .claude/rules/adr-0003.md
+        value: backed
+        why: owner approved the redesign before building
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: provenance header on the comment and PR
+      - path: .claude/rules/adr-0009.md
+        value: backed
+      - path: .claude/rules/adr-0027.md
+        value: steered
+        why: checked no prune trial covers clear-backlog
+      - path: .claude/rules/adr-0005.md
+        value: backed
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: steered
+        why: confirmed no Human-only path is touched
+      - path: .claude/rules/glassbox-content.md
+        value: steered
+        why: left pinned Glass Box pages to curate
+      - path: docs/agents/github-integration.md
+      - path: docs/agents/pr-workflow.md
+      - path: docs/agents/git-conventions.md
+      - path: docs/research/subagent-spawn-depth.md
+      - path: .agents/skills/clear-backlog/SKILL.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/guards.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: steered
+      - path: .claude/rules/adr-0005.md
+        value: backed
+      - path: docs/research/subagent-spawn-depth.md
+      - path: .agents/skills/dispatch-subagents/SKILL.md
+      - path: docs/agents/pr-workflow.md
+      - path: docs/adr/0005-skill-model.md
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/clear-backlog/SKILL.md
+      - rule: .claude/rules/adr-0022.md
+        via: native
+        trigger: .agents/skills/clear-backlog/SKILL.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/clear-backlog/SKILL.md
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+    reported:
+      - path: .claude/rules/glassbox-content.md
+        value: steered
+      - path: .claude/rules/adr-0005.md
+        value: backed
+      - path: .claude/rules/adr-0027.md
+        value: backed
+      - path: .agents/skills/dispatch-subagents/SKILL.md
+      - path: docs/research/subagent-spawn-depth.md
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .claude/rules/adr-0005.md
+        value: backed
+      - path: docs/research/subagent-spawn-depth.md
+      - path: .agents/skills/dispatch-subagents/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Design builder-reuse mechanism
+    model: fable
+    durationSec: 2109
+    toolCalls: 27
+    modelCalls: 22
+    tokenShare: 15.2
+  - type: general-purpose
+    task: Standards review (Opus)
+    model: opus
+    durationSec: 822
+    toolCalls: 22
+    modelCalls: 21
+    tokenShare: 8.5
+  - type: general-purpose
+    task: Spec review (Opus)
+    model: opus
+    durationSec: 822
+    toolCalls: 25
+    modelCalls: 20
+    tokenShare: 7.2
+gitBranch: claude/trusting-fermat-lgl66f
+entrypoint: remote
+cliVersion: 2.1.322
+learnings:
+  - Each orchestrator turn re-reads its whole context, so in a long clear-backlog session one tool call can cost more than a resumed 71K-token subagent turn; push reading work to agents.
+  - A workflow script cannot learn its own agents' ids; the run journal's started lines map labels to ids, which the main session can use to resume them.
+ideas:
+  - Add a run-summary.ts mode that prints the build workflow's rules() for a branch, so a fallback agent gets the exact rules text without reading the workflow file, and a test can assert the fallback brief and the resume brief share one source.
+landedBy: Stop
