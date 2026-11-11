@@ -293,7 +293,7 @@ function lengthProblems(route: string, frontmatter: Record<string, unknown>): st
   })]
 }
 
-/** `file` is relative to its Space's `pages/`. */
+/** `file` is relative to the guide's `pages/`. */
 export function glassboxPageProblems(file: string, source: string, site: GlassboxSite, git: GlassboxGit): string[] {
   const { frontmatter, body } = splitFrontmatter(source)
   const { prose } = readBody(body)
