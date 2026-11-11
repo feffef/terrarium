@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeNeWJTvqXPTEeR63qC
 startedAt: 2026-11-11T09:07:42Z
-endedAt: 2026-11-11T10:05:51Z
+endedAt: 2026-11-11T10:53:36Z
 kind: interactive
 goal: Glass Box terms link their Lesson, not the raw glossary
-status: in-review
-outcome: "PR 3062 merged (titled Lesson chips, Skill inventory Lesson); PR 3066 open: documents the Lesson numbering, waits for the owner"
-summary: "The owner asked whether each expanded Glass Box term has a matching Lesson, and wanted terms to link the Lesson instead of GLOSSARY.md. I mapped all terms to Lessons and found about nine without a good one, asked three questions, and the owner decided: Lesson only when there is one, keep the glossary link for no-Lesson and Tenant-specific terms, delete Proposal and Pingback, write a Skill inventory Lesson, leave XSS unlinked. Those were human-instructed. I built an optional lesson field, a check that rejects both fields or a missing page, the term data, a first Lesson draft and the doc edits. My first Term.vue link just said Lesson; the owner pointed out the existing titled Lesson-chip design, so I redrew it from the page list. Later the owner called the Lesson's concept weak and asked me to research how the inventory is used and apply glassbox-lesson and glassbox-curate: I traced its producers and readers, rewrote the page around them, had a separate claim checker and a fresh reader review it, fixed what they found, and added a run entry and a memory note. Review by two read-only subagents earlier found no hard violations. Open: the Lesson uses prefix 85 against the tens rule, and a human must merge the PR."
+status: completed
+outcome: PR 3062 (titled Lesson chips, Skill inventory Lesson) and PR 3066 (Lesson numbering documented) both merged
+summary: "The owner asked whether each expanded Glass Box term has a matching Lesson, and wanted terms to link the Lesson instead of GLOSSARY.md. I mapped all terms to Lessons and found about nine without a good one, asked three questions, and the owner decided: Lesson only when there is one, keep the glossary link for no-Lesson and Tenant-specific terms, delete Proposal and Pingback, write a Skill inventory Lesson, leave XSS unlinked. Those were human-instructed. I built an optional lesson field, a check that rejects both fields or a missing page, the term data, a first Lesson draft and the doc edits. My first Term.vue link just said Lesson; the owner pointed out the existing titled Lesson-chip design, so I redrew it from the page list. Later the owner called the Lesson's concept weak and asked me to research how the inventory is used and apply glassbox-lesson and glassbox-curate: I traced its producers and readers, rewrote the page around them, had a separate claim checker and a fresh reader review it, fixed what they found, and added a run entry. PR 3062 merged. The owner then said the in-between numbering (85) is deliberate and asked me to document it for agents; that was human-instructed. I restarted the branch from main and opened PR 3066. On review the owner asked that the memory page hold tasks only, so I moved its order rules to GLOSSARY.md and DECISIONS.md, stated the numbering once, and re-read all four touched files for duplication, all on the owner's instruction. The owner merged both PRs. Nothing is open."
 prs:
   - "3062"
   - "3066"
@@ -26,6 +26,14 @@ docsRead:
   - path: layers/glassbox/content/guide/pages/terrarium-practice/80.self-improvement-loop.md
     reason: (read before editing)
   - path: layers/glassbox/content/guide/pages/terrarium-practice/85.skill-inventory.md
+    reason: (read before editing)
+  - path: layers/glassbox/GLOSSARY.md
+    reason: (read before editing)
+  - path: .agents/skills/glassbox-lesson/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/glassbox-lesson/DECISIONS.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/workshop/pages/index.md
     reason: (read before editing)
   - path: /plain.txt
     reason: (no reason given)
@@ -59,10 +67,6 @@ docsRead:
     reason: (no reason given)
   - path: .agents/skills/log-session/SKILL.md
     reason: (no reason given)
-  - path: layers/glassbox/GLOSSARY.md
-    reason: (read before editing)
-  - path: .agents/skills/glassbox-lesson/SKILL.md
-    reason: (read before editing)
   - path: docs/agents/git-conventions.md
     reason: (no reason given)
   - path: GLOSSARY.md
@@ -75,8 +79,6 @@ docsRead:
     reason: (no reason given)
   - path: .agents/skills/glassbox-lesson/QUALITY.md
     reason: (no reason given)
-  - path: .agents/skills/glassbox-lesson/DECISIONS.md
-    reason: (read before editing)
 skillsUsed:
   - name: code-review
     reason: two-axis review of the branch diff before the PR
@@ -112,28 +114,29 @@ frictions:
   - description: Raised the 85 prefix as an owner question in the PR and memory page, although the Lesson docs already say prefixes go up in tens so a Lesson fits between two; the owner had to say it was deliberate.
     solution: State in GLOSSARY.md that a Lesson between two takes the number between them, so an agent doesn't ask.
     severity: nit
-durationSec: 3489
+durationSec: 6353
 models:
-  claude-sonnet-5-5: 269
+  claude-sonnet-5-5: 326
 toolCounts:
-  Bash: 91
-  Read: 9
+  Bash: 100
+  Read: 13
   AskUserQuestion: 1
   Write: 5
   Skill: 6
   Agent: 5
-  ToolSearch: 3
+  ToolSearch: 4
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 2
-  ReadNotifications: 6
-  mcp__github__pull_request_read: 1
+  ReadNotifications: 17
+  mcp__github__pull_request_read: 2
   mcp__github__update_pull_request: 1
+  mcp__github__add_reply_to_pull_request_comment: 2
 filesEdited:
   - layers/glassbox/content/guide/pages/terrarium-practice/85.skill-inventory.md
   - .agents/skills/glassbox-lesson/DECISIONS.md
-  - layers/glassbox/GLOSSARY.md
   - .agents/skills/glassbox-lesson/SKILL.md
+  - layers/glassbox/GLOSSARY.md
   - layers/glassbox/content/workshop/pages/index.md
   - layers/glassbox/content/workshop/runs/2026-11-11T0940.yml
   - layers/glassbox/app/components/content/Term.vue
@@ -497,35 +500,35 @@ subagents:
     durationSec: 36
     toolCalls: 10
     modelCalls: 6
-    tokenShare: 3.5
+    tokenShare: 2.7
   - type: general-purpose
     task: Spec review of branch diff
     model: sonnet
     durationSec: 43
     toolCalls: 11
     modelCalls: 7
-    tokenShare: 4.1
+    tokenShare: 3.1
   - type: general-purpose
     task: Claim-check the Skill inventory Lesson
     model: sonnet
     durationSec: 50
     toolCalls: 30
     modelCalls: 7
-    tokenShare: 4.4
+    tokenShare: 3.3
   - type: general-purpose
     task: Fresh-reader test of the Lesson
     model: sonnet
     durationSec: 14
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1
+    tokenShare: 0.8
   - type: general-purpose
     task: Review numbering docs change
     model: sonnet
     durationSec: 24
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 3.2
+    tokenShare: 2.4
 gitBranch: claude/optimistic-albattani-xfxbiz
 entrypoint: remote
 cliVersion: 2.1.322
