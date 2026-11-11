@@ -41,6 +41,9 @@ like this:
 - **Comment on an issue or PR** → `add_issue_comment`. Never use `issue_write`
   with `method: update` and a `body` for this: it *overwrites the description*
   with no confirmation and no diff (issue #723).
+- **Delete an issue comment** → no MCP tool does; `gh api -X DELETE
+  repos/{owner}/{repo}/issues/comments/{id}`. The one REST write allowed
+  despite ADR-0017: it has no body, so the provenance guard has nothing to check.
 - **Read an issue, its comments, or sub-issues** → `issue_read`
 - **Read a PR or its diff** → `pull_request_read`
 - **List / search PRs** → `list_pull_requests` / `search_pull_requests`
@@ -103,10 +106,13 @@ Large results overflow your context. Keep them small and read every hit.
   `get_job_logs`, see "Three calls return huge output" above.
 - **CI success is not delivered natively.** A green gate wakes a subscribed
   session only through the comment the gate action posts on green (its "doorbell",
-  `.github/actions/gate/action.yml`; none on a fork PR). Poll
+  `.github/actions/gate/action.yml`; none on a fork PR); it names the PR head
+  SHA, and a new PR shows no checks for minutes, so wait for it. Poll
   `get_check_runs` when you can't rely on that: at agent-completion checkpoints,
   or with `send_later` when no agent is running. Babysit cadence: step 3 of
   [`pr-workflow.md`](./pr-workflow.md).
+- **A conflicted PR gets no check runs.** If none appear, check the merge first
+  (`git merge-tree`), not the gate.
 - **Re-running an old workflow run does not recompute the merge ref.** It
   re-checks-out that run's original `refs/pull/N/merge` snapshot, so it can stay
   red after the fix has merged. Only a fresh push or branch update recomputes
