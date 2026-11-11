@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQRndZ5iHweDq8ceMP
 startedAt: 2026-11-11T10:01:15Z
-endedAt: 2026-11-11T12:56:38Z
+endedAt: 2026-11-11T13:17:39Z
 kind: interactive
 goal: Build a weekly Skill that files agent ideas and learnings as issues
-status: in-review
-outcome: harvest merged in PR 3080; follow-up PR 3085 awaits a human merge; the owner's first /harvest ideas run filed 4 Seedlings (3086-3089)
-summary: "The owner asked for the ideas and learnings of the past week to be mined, ranked, and filed as issues (I filed 3068-3075 on their picks), then for an unattended weekly Skill doing the same, up to 10 issues per run, filed ready-for-human. After clarifying questions they chose one Skill, Seedling as the marker word, state derived from the issues themselves, a 28-day lookback, 30 clusters checked per run, a /harvest ideas or learnings argument and recency-only ranking. It merged as PR 3080. The owner then asked for more: leave Frictions to frictions-to-fixes, prefer positive ideas that simplify, prefer Tenant, content and UI ideas over agent-workflow ones (workflow Seedlings capped at 3), and self-contained issue bodies; I restarted the branch from main, rewrote the Skill, added body-template.md and check-body section and session-id checks, ran a Standards and Spec review and opened PR 3085, which needs a human merge (ADR-0004). The owner told me not to rewrite 3068-3075 because they are already being processed. The owner then ran /harvest ideas as the first real run of the Skill as it stands on the PR branch. Of 161 unharvested ideas, most concerned Glass Box curation tooling or other agent workflow; product clusters were checked first, several were already built (code-block fade, per Tenant diagram font, Routine cost charts), several fell to the Glass Box glossary or added new concepts without retiring any. Four passed every check and were filed as 3086 (one duration format in the Journal), 3087 (empty state for the Glass Box drafts page), 3088 (a folder-tree diagram for the Adding a site Walkthrough) and 3089 (Where next rows show the target title); all stored their keys on read-back and a rerun skips them. No workflow cluster was filed. The run filed 4 of a possible 10, which I judge correct rather than a shortfall. Still open: PR 3085 awaits a human merge, and the owner creates the Routine."
+status: completed
+outcome: harvest merged in PR 3080 and refined in PR 3085; its first real run filed 4 Seedlings (3086-3089)
+summary: "The owner asked for the ideas and learnings of the past week to be mined, ranked, and filed as issues (I filed 3068-3075 on their picks), then for an unattended weekly Skill doing the same, up to 10 issues per run, filed ready-for-human. After clarifying questions they chose one Skill, Seedling as the marker word, state derived from the issues themselves, a 28-day lookback, 30 clusters checked per run, a /harvest ideas or learnings argument and recency-only ranking. It merged as PR 3080 (the owner enabled auto-merge). The owner then asked for more: leave Frictions to frictions-to-fixes, prefer positive ideas that simplify, prefer Tenant, content and UI ideas over agent-workflow ones (workflow Seedlings capped at 3), and self-contained issue bodies. I restarted the branch from main, rewrote the Skill, added body-template.md and check-body checks (six sections, no session id outside Sources), ran a Standards and Spec review and opened PR 3085. The owner told me not to rewrite 3068-3075 and ran /harvest ideas as the first real run: 161 unharvested ideas, most about Glass Box curation tooling or other agent workflow, several product ideas already built or ruled out; 4 passed every check and were filed as 3086-3089, each verified on read-back. The run exposed two gaps, both fixed in PR 3085: check-body let a bare angle-bracket span through (the guard blocked the post), and the compact view I made by hand hid prs, outcome and startedAt that the relevance checks read, so I skipped the list-merges-since step; harvest list now prints those, with jq for more. A human made the ADR-0004 merge call on both PRs by enabling auto-merge; I merged neither. Still open: the owner creates the weekly Routine."
 prs:
   - "3080"
   - "3085"
@@ -148,32 +148,35 @@ frictions:
   - description: The Skill says to read the extract whole, but the JSON is 150 KB, mostly repeated fields; I printed a compact one-line-per-entry view instead.
     solution: Have extract also print or write that compact list and say to read it.
     severity: minor
-durationSec: 10523
+  - description: On the first real run I skipped the Skill's list-merges-since step and wrote no per-cluster record, using greps of the current repo instead; I only noticed when the owner asked what the compact view had hidden.
+    solution: Follow the Skill's steps as written or say which I replaced; the new harvest list carries the start time and outcome the checks need.
+    severity: minor
+durationSec: 11784
 models:
-  claude-sonnet-5-5: 676
+  claude-sonnet-5-5: 759
 toolCounts:
-  Skill: 6
+  Skill: 7
   Grep: 6
-  Bash: 120
+  Bash: 136
   Agent: 9
-  Read: 34
+  Read: 35
   ToolSearch: 6
   mcp__github__issue_write: 21
-  Write: 29
+  Write: 32
   AskUserQuestion: 1
-  Edit: 71
+  Edit: 85
   SendMessage: 2
   SendUserFile: 1
   mcp__github__list_pull_requests: 2
   mcp__github__create_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 2
-  ReadNotifications: 22
-  mcp__github__pull_request_read: 8
+  ReadNotifications: 27
+  mcp__github__pull_request_read: 9
   mcp__claude-code-remote__send_later: 2
   mcp__github__add_reply_to_pull_request_comment: 4
   mcp__github__resolve_review_thread: 2
-  mcp__github__update_pull_request: 2
-  mcp__claude-code-remote__delete_trigger: 1
+  mcp__github__update_pull_request: 4
+  mcp__claude-code-remote__delete_trigger: 2
 filesEdited:
   - .agents/skills/harvest/scripts/harvest.ts
   - .agents/skills/harvest/tests/unit/harvest.spec.ts
@@ -325,6 +328,8 @@ ruleUse:
       - rule: .claude/rules/glassbox-content.md
         via: hint
       - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/guards.md
         via: hint
     reported:
       - path: .claude/rules/adr-0017.md
@@ -641,26 +646,26 @@ subagents:
     durationSec: 520
     toolCalls: 40
     modelCalls: 39
-    tokenShare: 5.3
+    tokenShare: 4.5
   - type: general-purpose
     task: Review harvest Skills design
     model: fable
     durationSec: 751
     toolCalls: 38
     modelCalls: 31
-    tokenShare: 5.3
+    tokenShare: 4.5
   - type: general-purpose
     task: Standards review of harvest Skill
     durationSec: 40
     toolCalls: 8
     modelCalls: 4
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: general-purpose
     task: Spec review of harvest Skill
     durationSec: 35
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 1
+    tokenShare: 0.9
   - type: general-purpose
     task: Standards review of follow-up diff
     durationSec: 26
@@ -672,25 +677,25 @@ subagents:
     durationSec: 24
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 0.4
+    tokenShare: 0.3
   - type: general-purpose
     task: Review the --kind follow-up diff
     durationSec: 26
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: general-purpose
     task: Standards review of harvest follow-up
     durationSec: 35
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 0.9
+    tokenShare: 0.7
   - type: general-purpose
     task: Spec review of harvest follow-up
     durationSec: 22
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 0.8
+    tokenShare: 0.7
 gitBranch: claude/awesome-noether-fd6ban
 entrypoint: remote
 cliVersion: 2.1.322
@@ -701,10 +706,12 @@ learnings:
   - An agent-posted GitHub review comment arrives as a pull_request_review_comment event from the owner's login, so the event looks human; the ADR-0017 header is the only way to tell it is your own echo.
   - After a PR merges the remote session branch can be auto-deleted, so the first push of follow-up work after restarting the branch from main reports a new branch.
   - The Ledger-summary grep is a cheap overlap check for ideas about agent workflow, but for product ideas the decisive checks were the repo itself, the Glass Box glossary's product decisions and the closed-issue list.
+  - A compact view built by hand silently drops the fields later checks read; generate it from the tool so the dropped fields are known and the checks can rely on it.
 ideas:
   - Add a script that lists a week's ideas and learnings from Session logs with a resolved or open status, so this review is one command instead of a 200k-token agent run; stamp each idea with the issue that filed it so nothing is filed twice.
   - Add a script that lists a week's ideas and learnings with a resolved or open status; the harvest Skill now does the extraction half, so a status column from its relevance check could feed the Journal.
   - Let harvest remember which entries its relevance check rejected, for example by filing a closed not-planned issue carrying their key lines, so rejected entries stop consuming the 30-cluster budget each week until they age out of the window.
   - Run harvest's relevance check against a sample of real entries and print which product and workflow clusters it would file, so the owner can tune the cap and criteria before the first scheduled run.
   - Teach harvest extract to print the compact entry list (number, date, short session, related issues, text) it already computes, so a run reads about 15k tokens instead of the 150 KB JSON.
+  - Have harvest write a short run report per cluster checked (label, files read, merge list, Ledger entry, verdict) to the scratchpad, so a later reader can audit why entries were dropped without rerunning the checks.
 landedBy: Stop
