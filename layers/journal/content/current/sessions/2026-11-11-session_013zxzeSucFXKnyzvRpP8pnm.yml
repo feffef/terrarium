@@ -1,0 +1,189 @@
+schemaVersion: 1
+session: session_013zxzeSucFXKnyzvRpP8pnm
+startedAt: 2026-11-11T09:25:50Z
+endedAt: 2026-11-11T09:41:55Z
+kind: interactive
+goal: Give backlog triage agents the sources to learn a ticket's background
+status: in-review
+outcome: Grilled issue 3061 with the owner, built the change, PR 3063 open and waiting for a human merge
+summary: "The owner asked me to read issue 3061, grill the idea with them, and message the session that opened it. I read the issue and the workflow script, messaged the origin session (its answers showed a longer source list alone would not have fixed one of the four cases, and that the comparison was not like for like), then ran three grilling rounds. Every design choice was the owner's: one widened agent instead of a second pass, named sources plus helper scripts and older file history (they asked for scripts to be named and dropped rule-use-report), background step in every mode except blocked-check, a required staleClaims field, sonnet kept, no formal test since the four issues are being fixed. I made the check-that-it-landed wording and the one-sentence dig scope as proposals they accepted. After the owner confirmed, I implemented it, added staleClaims printing to run-summary.ts with a fixture line (agent-initiated, a consequence of the owner seeing stale claims), ran code-review via two subagents, fixed the one real defect (ready-recheck was not pointed at the background step), ran gate:scoped green, and opened the PR myself per ADR-0003. It touches a Human-only file, so a human merges it. Still open: whether the wider brief works, to be judged on the next real clear-backlog run."
+prs:
+  - "3063"
+docsRead:
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: .claude/workflows/clear-backlog-explore.js
+    reason: (read before editing)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: .agents/skills/clear-backlog/scripts/run-summary.ts
+    reason: (read before editing)
+  - path: .agents/skills/clear-backlog/tests/unit/run-summary.spec.ts
+    reason: (read before editing)
+  - path: docs/adr/0005-skill-model.md
+    reason: (no reason given)
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: grilling
+    reason: the owner asked for a grill; no skill named grill-with-docs exists
+  - name: code-review
+    reason: reviewed the commit before the PR
+  - name: dispatch-subagents
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Edited the workflow and run-summary.ts before reading ADR-0005, 0022 and 0027; a hook asked for the reads afterwards.
+    solution: Read the governing ADRs of the files before the first edit, as CLAUDE.md says.
+    severity: nit
+  - description: The user typed /grill-with-docs, which is not a listed skill; I used grilling without telling them at first.
+    solution: Say which skill stood in for the unknown name.
+    severity: nit
+  - description: I typed this session's id from memory in the first commit message; the commit-msg hook added the right trailer, but I had to strip my line.
+    solution: Leave the trailer to the hook, as the commit-msg hook is meant to.
+    severity: nit
+durationSec: 964
+models:
+  claude-sonnet-5-5: 90
+toolCounts:
+  Read: 9
+  ToolSearch: 2
+  Skill: 5
+  mcp__github__issue_read: 2
+  ListAgents: 1
+  Bash: 19
+  mcp__claude-code-remote__send_message: 1
+  ReadNotifications: 1
+  Edit: 9
+  Write: 2
+  Agent: 2
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - .claude/workflows/clear-backlog-explore.js
+  - .agents/skills/clear-backlog/scripts/run-summary.ts
+  - .agents/skills/clear-backlog/tests/unit/fixtures/explore.output
+  - .agents/skills/clear-backlog/tests/unit/run-summary.spec.ts
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0022.md
+adrHints:
+  - adr: 5
+    via: path
+    readAfter: true
+    by: main
+  - adr: 22
+    via: path
+    readAfter: true
+    by: main
+  - adr: 27
+    via: path
+    readAfter: true
+    by: main
+docsReadBySubagents:
+  - .agents/skills/writing-for-agents/SKILL.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/github-integration.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/github-integration.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .claude/workflows/clear-backlog-explore.js
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: native
+        trigger: .agents/skills/clear-backlog/scripts/run-summary.ts
+      - rule: .claude/rules/adr-0030.md
+        via: native
+        trigger: docs/adr/0005-skill-model.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: docs/adr/0005-skill-model.md
+    reported:
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: opened the PR myself
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: steered
+        why: flagged human merge in PR
+      - path: .claude/rules/adr-0017.md
+        value: backed
+      - path: .claude/rules/adr-0005.md
+        value: backed
+      - path: .claude/rules/adr-0027.md
+        value: steered
+        why: replaced old clause, not appended
+      - path: docs/agents/pr-workflow.md
+      - path: docs/agents/git-conventions.md
+      - path: docs/agents/github-integration.md
+  - by: Explore
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0027.md
+        value: backed
+      - path: .claude/rules/adr-0005.md
+        value: backed
+      - path: .agents/skills/writing-for-agents/SKILL.md
+      - path: tests/unit/workflow-scripts.spec.ts
+  - by: Explore
+    subagent: 1
+    answered: true
+    loads: []
+    reported: []
+subagents:
+  - type: Explore
+    task: Standards review of diff
+    durationSec: 27
+    toolCalls: 7
+    modelCalls: 5
+    tokenShare: 10.2
+  - type: Explore
+    task: Spec review of diff
+    durationSec: 26
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 9.1
+gitBranch: claude/keen-feynman-6zdz3z
+entrypoint: remote
+cliVersion: 2.1.322
+landedBy: Stop
