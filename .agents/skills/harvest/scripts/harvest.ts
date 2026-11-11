@@ -7,6 +7,7 @@
 //
 // Usage:
 //   tsx .agents/skills/harvest/scripts/harvest.ts extract [--kind ideas|learnings] [--out PATH]
+//   tsx .agents/skills/harvest/scripts/harvest.ts list <extract.json>
 //   tsx .agents/skills/harvest/scripts/harvest.ts block <extract.json> <n> [n...]
 //   tsx .agents/skills/harvest/scripts/harvest.ts check-body <body-file> --extract <extract.json> [--title T]
 //   tsx .agents/skills/harvest/scripts/harvest.ts check-posted <issue-number> <body-file>
@@ -164,6 +165,26 @@ export function buildEntries(
   return { entries: ordered.map((e, i) => ({ ...e, n: i + 1 })), skippedHarvested }
 }
 
+/** One line per entry in extract order. A session's start, PRs, goal, outcome and source
+ *  file print once, as an `S<n>` line before its first entry, so everything the relevance
+ *  checks read is here and needs no lookup in the JSON (the key and line are derivable
+ *  with `block`). */
+export function renderList(entries: Entry[]): string {
+  const handles = new Map<string, string>()
+  const out: string[] = []
+  for (const e of entries) {
+    let h = handles.get(e.session)
+    if (!h) {
+      h = `S${handles.size + 1}`
+      handles.set(e.session, h)
+      out.push(`${h} ${e.session} | started ${e.startedAt} | prs ${e.prs.join(',') || '-'} | goal: ${e.goal} | outcome: ${e.outcome} | file: ${e.file}`)
+    }
+    const filed = e.sameSession.length ? ` | same session in issues ${e.sameSession.map((n) => `#${n}`).join(',')}` : ''
+    out.push(`${e.n} ${e.kind} ${e.endedAt.slice(0, 10)} ${h}${filed}: ${e.text}`)
+  }
+  return out.join('\n')
+}
+
 /** The note plus the key lines of the given entries: what a Seedling body pastes. */
 export function renderBlock(entries: Entry[]): string {
   return [NOTE, ...entries.map((e) => e.line)].join('\n')
@@ -267,6 +288,14 @@ function readExtract(path: string): { entries: Entry[] } {
 function main(): void {
   const [cmd, ...argv] = process.argv.slice(2)
   if (cmd === 'extract') return cmdExtract(argv)
+  if (cmd === 'list') {
+    const [path] = argv
+    if (!path) fail('usage: list <extract.json>')
+    console.log(renderList(readExtract(path).entries))
+    console.log(`\nMore on an entry or a session: jq '.entries[] | select(.n == 13)' ${path}`)
+    console.log(`  jq -r '.entries[] | select(.session == "SESSION_ID") | .text' ${path}`)
+    return
+  }
   if (cmd === 'block') {
     const [path, ...ns] = argv
     if (!path || !ns.length) fail('usage: block <extract.json> <n> [n...]')
@@ -290,7 +319,7 @@ function main(): void {
     if (problems.length) fail(problems.join('\n'))
     return console.log(`check-posted: #${number} stores the checked keys`)
   }
-  fail('unknown command; expected extract | block | check-body | check-posted')
+  fail('unknown command; expected extract | list | block | check-body | check-posted')
 }
 
 runIfMain(import.meta.url, main)

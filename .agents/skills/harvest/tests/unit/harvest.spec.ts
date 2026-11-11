@@ -16,6 +16,7 @@ import {
   noteTexts,
   parseKeys,
   renderBlock,
+  renderList,
   type Entry,
 } from '../../scripts/harvest.ts'
 
@@ -156,6 +157,46 @@ describe('buildEntries()', () => {
     // ideas by recency: b, a, c (a major Friction does not lift c); learnings: a. Alternating, then the rest.
     expect(entries.map((e) => e.text)).toEqual(['b-idea', 'a-learn', 'a-idea', 'c-idea'])
     expect(entries.map((e) => e.n)).toEqual([1, 2, 3, 4])
+  })
+})
+
+describe('renderList()', () => {
+  const entry = (over: Partial<Entry>): Entry => ({
+    n: 1,
+    key: 'k',
+    line: 'l',
+    kind: 'idea',
+    session: 'session_a',
+    file: 'layers/journal/content/current/sessions/a.yml',
+    startedAt: '2026-11-09T01:23:55.000Z',
+    endedAt: '2026-11-09T02:15:16.000Z',
+    goal: 'The goal',
+    outcome: 'The outcome',
+    prs: ['2994', '2995'],
+    text: 'The idea text',
+    sameSession: [],
+    ...over,
+  })
+
+  it('carries everything the relevance checks read, so none needs a lookup in the JSON', () => {
+    const out = renderList([entry({ sameSession: [3074, 3070] })])
+    for (const needle of ['session_a', '2026-11-09T01:23:55.000Z', 'prs 2994,2995', 'goal: The goal', 'outcome: The outcome', 'sessions/a.yml', '1 idea 2026-11-09', '#3074,#3070', 'The idea text']) {
+      expect(out).toContain(needle)
+    }
+  })
+
+  it('prints a session header once, before its first entry, and keeps the entry order', () => {
+    const out = renderList([entry({ n: 1 }), entry({ n: 2, session: 'session_b' }), entry({ n: 3, kind: 'learning' })]).split('\n')
+    expect(out.filter((l) => l.startsWith('S')).map((l) => l.slice(0, 12))).toEqual(['S1 session_a', 'S2 session_b'])
+    expect(out.filter((l) => /^\d/.test(l)).map((l) => l.slice(0, 3))).toEqual(['1 i', '2 i', '3 l'])
+    expect(out[1]).toContain('S1')
+    expect(out[4]).toContain('S1')
+  })
+
+  it('shows - for a session with no PRs and adds nothing when no issue names the session', () => {
+    const out = renderList([entry({ prs: [] })])
+    expect(out).toContain('prs - |')
+    expect(out).not.toContain('same session in issues')
   })
 })
 

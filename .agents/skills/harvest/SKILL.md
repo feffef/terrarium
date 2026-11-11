@@ -25,8 +25,11 @@ harvests both.
    It lists unharvested entries from the last 28 days (archived logs
    included). Within a kind the newest come first and the kinds alternate, idea
    first; recency is the only ranking, so an idea from a smooth session ranks like
-   any other. Read the file whole. Done when you have the counts per kind and the
-   ordered entries.
+   any other. Then read `harvest list <scratchpad>/harvest-extract.json`: every
+   entry in that order, with each session's start, PRs, goal, outcome and source
+   file printed once before its first entry. It holds everything steps 2 and 3
+   read; use `jq` on the JSON only for more on an entry (the list's last lines
+   show how). Done when you have the counts per kind and the ordered entries.
 2. **Cluster, in order.** Merge near-duplicate entries into clusters, taking
    entries from the top, and label each cluster **product** (what a visitor or
    the owner sees or uses on the site: a Tenant, its content, the UI) or
@@ -38,10 +41,10 @@ harvests both.
    distinct sessions behind it.
 3. **Check relevance.** A cluster is still open when all of these hold:
    - **Unbuilt.** Name the file or symbol it would change and read it now. Run
-     `pnpm exec tsx scripts/git/list-merges-since.ts` from the entry's
-     `startedAt`. For a learning, grep `CLAUDE.md`, `.claude/rules/`, `docs/agents/`
+     `pnpm exec tsx scripts/git/list-merges-since.ts` from its session's start
+     (`started` in the list). For a learning, grep `CLAUDE.md`, `.claude/rules/`, `docs/agents/`
      and the Skills for the fact itself.
-   - **Unfiled.** Entries with a non-empty `sameSession` were possibly
+   - **Unfiled.** Entries the list marks "same session in issues" were possibly
      reworded: read those issues. List the tracker with
      `pnpm exec tsx scripts/github/list-open-issues.ts 5000 [--closed]` and
      match titles. A title match is a hint. An issue closed as completed
