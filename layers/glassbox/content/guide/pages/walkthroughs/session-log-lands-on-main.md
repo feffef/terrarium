@@ -19,7 +19,7 @@ When its work reaches a coherent state, such as a PR opened or a question answer
 
 ## 2. The agent writes only its judgement
 
-`close-session` calls `log-session`, and the agent writes a small YAML file with the fields only it can know: its goal, a status, an outcome, a summary, the rules that steered or backed its work and the docs that helped, and every :term[Friction]. `scripts/session/log-session.ts --author` checks them and saves them to `.session-logs/pending.scratch.json`, a scratch file git ignores. Run again later, it merges the new pass with the earlier one. It refuses to run from a linked git worktree, where a dispatched subagent shares its parent's scratch path.
+`close-session` calls `log-session`, and the agent writes a small YAML file with the fields only it can know: its goal, a status, an outcome, a summary, the rules that steered or backed its work and the docs that helped, and every :term[Friction]. `scripts/session/log-session.ts --author` checks them and saves them to `.session-logs/pending.scratch.json`, a scratch file git ignores. It refuses to run from a linked git worktree, where a dispatched subagent shares its parent's scratch path.
 
 ::lessons
 [Session logs](/t/glassbox/guide/terrarium-practice/session-logs) · [Git worktrees](/t/glassbox/guide/git-github/git-worktrees) · [Subagents](/t/glassbox/guide/agents/subagents)
