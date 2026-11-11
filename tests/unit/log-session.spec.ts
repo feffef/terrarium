@@ -745,4 +745,22 @@ describe('gitWorktrees.read() — a commitless worktree is not a merged one', ()
       rmSync(dir, { recursive: true, force: true })
     }
   })
+
+  it('still sweeps a worktree whose own commits were merged by a merge commit', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'wt-sweep-'))
+    const g = (...a: string[]) => execFileSync('git', ['-C', dir, '-c', 'user.name=t', '-c', 'user.email=t@t', ...a], { encoding: 'utf8' }).trim()
+    try {
+      g('init', '-q', '-b', 'main')
+      g('commit', '-q', '--allow-empty', '-m', 'one')
+      g('worktree', 'add', '-q', '-b', 'done', join(dir, 'wt'), 'HEAD')
+      execFileSync('git', ['-C', join(dir, 'wt'), '-c', 'user.name=t', '-c', 'user.email=t@t', 'commit', '-q', '--allow-empty', '-m', 'own'])
+      g('commit', '-q', '--allow-empty', '-m', 'two')
+      g('merge', '-q', '--no-ff', '-m', 'merge', 'done')
+      g('update-ref', 'refs/remotes/origin/main', 'HEAD')
+      const { result, onMainLine } = gitWorktrees.read(dir)
+      expect(mergedWorktreesToRemove(result.findings, dir, onMainLine)).toHaveLength(1)
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
+  })
 })

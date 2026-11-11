@@ -27,9 +27,8 @@ commit under review.
   `git checkout <ref> -- <path>` (stages it) or `git checkout origin/main`
   (detaches HEAD).
 
-- `.claude/skills/<name>` is a symlink into `.agents/skills/<name>`:
-  `git show origin/main:.claude/skills/<name>/SKILL.md` fails, and the bare path
-  prints the link target. Use the `.agents/skills/` path.
+- `.claude/skills/<name>` is a symlink, so `git show <ref>:.claude/skills/<name>/SKILL.md`
+  fails; use the `.agents/skills/<name>` path.
 
 A clean merge is not proof of correctness. Git flags only overlapping lines, so
 a rename on one side can leave a stale reference on the other. On any file both
