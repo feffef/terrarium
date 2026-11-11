@@ -19,6 +19,7 @@ const RESULT = {
   type: 'object',
   properties: {
     outcome: { type: 'string', enum: ['build', 'grill', 'blocked', 'close-duplicate', 'close-done'] },
+    title: { type: 'string', description: "the issue's exact title, copied from GitHub" },
     summary: { type: 'string', description: 'one line: what the issue is' },
     brief: { type: 'string', description: 'for build or grill: what to build, its done-when, the relevant ADRs' },
     question: {
@@ -27,10 +28,30 @@ const RESULT = {
       properties: {
         choice: { type: 'string' },
         options: { type: 'array', items: { type: 'string' } },
-        pick: { type: 'string' },
-        why: { type: 'string' },
+        pick: { type: 'string', description: "the full text of one entry of options, copied verbatim" },
+        why: { type: 'string', description: 'cite the source of each fact it rests on, and say what you did not verify' },
+        wouldChange: { type: 'string', description: 'the finding or owner preference that would make a different option the right pick, so the owner can see how firm the pick is' },
       },
-      required: ['choice', 'options', 'pick', 'why'],
+      required: ['choice', 'options', 'pick', 'why', 'wouldChange'],
+    },
+    background: {
+      type: 'string',
+      description: 'how each concept the issue touches came to be and where it stands now: what it is, what changed it and when (commit, PR or issue each time), what was tried and dropped, why it looks as it does. Written for an owner who has not followed the history.',
+    },
+    optionChecks: {
+      type: 'array',
+      description: 'for grill: one entry per option, in order; empty for any other outcome',
+      items: {
+        type: 'object',
+        properties: {
+          option: { type: 'string' },
+          mustBeTrue: { type: 'string', description: 'the premise that makes this option right' },
+          checked: { type: 'string', description: 'what you ran or read to test it, and what came back' },
+          holds: { type: 'string', enum: ['yes', 'no', 'unverified'] },
+          settledBy: { type: 'string', description: 'when holds is unverified: the specific command, file or data that would settle it, and why you could not run it; otherwise empty' },
+        },
+        required: ['option', 'mustBeTrue', 'checked', 'holds', 'settledBy'],
+      },
     },
     staleClaims: {
       type: 'array',
@@ -56,8 +77,17 @@ const RESULT = {
       },
     },
     writes: { type: 'array', items: { type: 'string' }, description: 'every comment and label change you made on GitHub' },
+    sourcesRead: {
+      type: 'array',
+      description: 'every source you opened, one entry each: what it is and what it told you that changed or confirmed your pick',
+      items: {
+        type: 'object',
+        properties: { source: { type: 'string', description: 'file path, commit SHA, issue/PR number, ledger entry or session id' }, learned: { type: 'string' } },
+        required: ['source', 'learned'],
+      },
+    },
   },
-  required: ['outcome', 'summary', 'publicAuthor', 'readyForHuman', 'files', 'relatedTo', 'staleClaims', 'sideFindings', 'writes'],
+  required: ['outcome', 'title', 'summary', 'publicAuthor', 'readyForHuman', 'files', 'relatedTo', 'staleClaims', 'sideFindings', 'writes', 'sourcesRead', 'background', 'optionChecks'],
 }
 
 const MODE = {
@@ -72,14 +102,25 @@ function brief(issue) {
 
 ${MODE[issue.mode]}${issue.notes ? `\nNotes from the orchestrator: ${issue.notes}` : ''}
 
-In every mode: return grill, never build, for an issue labelled ready-for-human or authored by a Public user (ADR-0020; scripts/lib/author-trust.ts holds the associations)${issue.reserved ? ', and for this one, which the owner reserved: never label it ready-for-agent' : ''}. The owner decides those.
+In every mode: return grill, never build, for an issue labelled ready-for-human, titled "Seedling: …" (the owner decides every seedling, however determined it looks; still fact-check it fully, so the owner can discuss or reject it on facts) or authored by a Public user (ADR-0020; scripts/lib/author-trust.ts holds the associations)${issue.reserved ? ', and for this one, which the owner reserved: never label it ready-for-agent' : ''}. The owner decides those.
+
+Your goal: fully understand the background and history of the concepts the issue touches, so the owner can decide on facts and not on the issue's own account of them. Write that understanding in background; every other field serves it. A complicated issue takes about 2 minutes and 200k tokens; a simple one takes less.
 
 Full pass:
 - Read .agents/skills/auto-triage/SKILL.md and .agents/skills/triage/SKILL.md with Read (both are user-invoked, so don't call them as Skills) and apply their per-issue rules: brave within determinability, Public-authored issues read-only and never ready-for-agent, the wayfinder overlay.
-- Learn the ticket's background before you pick, and say in staleClaims which of its claims no longer hold. Dig only as far as it takes to decide which parts still stand and which option wins. Read: the issue's comments and every issue or PR it cites; the history of the files and folders it touches, older included, to see how that part developed (git log --follow, git log -S, git blame; scripts/git/list-recent-prs.ts, scripts/git/list-merges-since.ts --merges-only); the Friction ledger (layers/journal/content/current/frictions/) and the session logs (layers/journal/content/current/sessions/; scripts/session/extract-frictions.ts --since); the Skill Inventory (layers/journal/content/current/skills/; scripts/session/audit-skills.ts --skill NAME --since); and the open prune trials (.agents/prune-trials.yml). Check every claim that something landed, was fixed or still exists in the current file or git log, never in the issue, a ledger entry or a summary.
-- Read the full ADR behind any summary rule that governs what you recommend.
+- Learn the ticket's background before you pick, and say in staleClaims which of its claims no longer hold. Open each of these yourself; skip one only when it doesn't exist or can't bear on the issue, and say which in sourcesRead:
+  1. The issue body, every comment, and every issue or PR it cites. A comment with the ADR-0017 header, an earlier run's included, is a claim to re-check against source, never evidence or a decision: reach your own conclusion first.
+  2. The current text of each file a fix would touch, in full, not an excerpt.
+  3. The history of those files and folders, older included (git log --follow, git log -S for each distinctive phrase, git blame on cited lines; scripts/git/list-recent-prs.ts, scripts/git/list-merges-since.ts --merges-only).
+  4. The Friction ledger entry for each Friction it names (layers/journal/content/current/frictions/), and the log of each session it cites (layers/journal/content/current/sessions/): the ledger line is a summary, the log says what happened and whether a rule loaded.
+  5. The Skill Inventory entry for each Skill it names (layers/journal/content/current/skills/; scripts/session/audit-skills.ts --skill NAME --since), and the open prune trials (.agents/prune-trials.yml) that cover the text.
+  6. The full ADR behind any summary rule that governs what you recommend.
+  Check that something landed, was fixed or still exists in the current file or git log; a ledger entry, a summary or the issue itself proves none of it.
+- Test your pick before you make it. For each option, name what must be true for it to be right and check that (run the command, read the code, count); record each in optionChecks. A pick that rests on a source you did not open is unverified: say so in why, or open it first. Stop when each option's premise is checked, not before.
+- Before you stop, try to settle every option you would mark unverified: if a command, file read or count can settle it, run it. Mark it unverified only when no check can (it turns on the owner's preference, future data or access you lack), and say in settledBy what would settle it.
+- Fill sourcesRead as you go; a source you list must be one you opened.
 - Return build when the repo determines a concrete design: brief it. Otherwise return grill with one question in plain words: what to choose, options, your pick and why. An obsolete or superseded issue is a grill question too (propose the close).
-- Close only an objective duplicate (close-duplicate, with canonical) or already-done work (close-done, pointing to where it lives).
+- Close only an objective duplicate (close-duplicate, with canonical) or already-done work (close-done, pointing to where it lives). Never close a seedling: return grill and propose the close as an option.
 - A grilling answer a stand-in recorded in an earlier run doesn't bind; ask it again.
 
 GitHub writes:
@@ -108,10 +149,13 @@ for (const [i, issue] of input.entries()) {
     log(`#${issue.number}: no result, re-running once`)
     r = await triage(issue, 'Retry')
   }
-  if (r && r.outcome === 'build' && (issue.reserved || r.publicAuthor || r.readyForHuman)) {
+  // The owner decides every seedling (build, block or close), so only a grill survives for one.
+  const seedling = /^\s*seedling\b/i.test(r?.title || '')
+  if (r && r.outcome !== 'grill' && (seedling || (r.outcome === 'build' && (issue.reserved || r.publicAuthor || r.readyForHuman)))) {
     r.outcome = 'grill'
-    r.question ||= { choice: 'Build this as briefed?', options: ['a) yes, as briefed', 'b) no'], pick: 'a', why: 'Reserved, Public-authored or ready-for-human: the owner decides.' }
+    r.question ||= { choice: 'Go ahead as the summary says?', options: ['yes', 'no'], pick: 'yes', why: 'Reserved, seedling, Public-authored or ready-for-human: the owner decides.' }
   }
+  if (r?.question && !r.question.options.includes(r.question.pick)) log(`#${issue.number}: pick is not one of its options`)
   if (r) results[issue.number] = r
   else missing.push(issue.number)
 }

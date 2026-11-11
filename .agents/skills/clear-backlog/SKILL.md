@@ -43,7 +43,10 @@ the owner reserved ("I decide this one", directly or relayed).
 --triage` prints each issue's result, the `missing` ones and a `grouping`: one
 branch per group of issues in which every pair shares a file or is clearly
 related. Adjust the grouping where you know better; a grouping you are unsure of is a grilling question. Then start §3
-for the groups whose issues are all `build`, and grill while it runs.
+for the groups whose issues are all `build`, and grill while it runs. The
+summary runs several thousand characters per issue and ends with the
+workflow's `logs`, which carry harness warnings about an agent's output: write
+it to a file and `Read` it in parts, and relay each warning to the owner.
 
 **Done:** every issue has a result, or is in `missing` and goes to the
 report with that word.
@@ -92,6 +95,15 @@ reviews its agents itself. Each branch is built in its own worktree off
 `origin/main`, then reviewed on both `code-review` axes and fixed until only
 judgement calls remain. Its review rounds are the review before opening the PR
 (`pr-workflow.md`).
+
+Write each `brief` from the explore result, with only claims you verified
+against source: the Spec reviewer takes the brief as the spec, so a wrong claim
+becomes binding. Give it the result's `staleClaims` (what the issue gets wrong
+now), the picked option's `optionChecks` (premises already settled, and the
+`unverified` ones the agent settles first), its `files`, and a trimmed
+`background` of what was tried and dropped. Add a `sideFinding` only when it
+touches the branch's files. Take the decision from the owner's pick, not from
+the triage agent's `pick` and `why`.
 
 Act on each branch's `status` (`run-summary.ts --build`):
 

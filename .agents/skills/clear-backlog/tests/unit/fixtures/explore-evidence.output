@@ -1,0 +1,39 @@
+{
+  "summary": "clear-backlog §1",
+  "agentCount": 1,
+  "logs": ["[triage #21] [harness: subagent output matched instruction-shaped pattern(s): settings-json]"],
+  "result": {
+    "results": {
+      "21": {
+        "outcome": "grill",
+        "title": "Seedling: Rename the button",
+        "summary": "Rename the button",
+        "publicAuthor": false,
+        "readyForHuman": true,
+        "files": ["README.md"],
+        "relatedTo": [],
+        "staleClaims": [],
+        "sideFindings": [],
+        "writes": [],
+        "background": "The button was named in #5, renamed in #9.",
+        "question": {
+          "choice": "Which name?",
+          "options": ["a) Go", "b) Start"],
+          "pick": "b) Start",
+          "why": "clearer",
+          "wouldChange": "an owner preference for the short name"
+        },
+        "optionChecks": [
+          { "option": "a) Go", "mustBeTrue": "short names fit", "checked": "read the layout", "holds": "no", "settledBy": "" },
+          { "option": "b) Start", "mustBeTrue": "users know it", "checked": "none", "holds": "unverified", "settledBy": "a usage count, not logged" }
+        ],
+        "sourcesRead": [
+          { "source": "README.md", "learned": "the label" },
+          { "source": "#9", "learned": "the rename" }
+        ]
+      }
+    },
+    "missing": [],
+    "grouping": [{ "issues": [21], "sharedFiles": [] }]
+  }
+}

@@ -32,6 +32,37 @@ describe('--triage', () => {
   })
 })
 
+describe('--triage evidence fields', () => {
+  const out = runSummary(fixture('explore-evidence.output'), '--triage')
+
+  it('prints the background, what would flip the pick, each option check and the source count', () => {
+    expect(out).toContain(
+      [
+        '  background: The button was named in #5, renamed in #9.',
+        '  question: Which name?',
+        '    a) Go',
+        '    b) Start',
+        '    pick: b) Start (clearer)',
+        '    wouldChange: an owner preference for the short name',
+        '  optionChecks:',
+        '    - no: a) Go',
+        '    - unverified: b) Start (settle by: a usage count, not logged)',
+        '  sourcesRead: 2',
+      ].join('\n'),
+    )
+  })
+})
+
+describe('logs', () => {
+  it('ends with the workflow logs when there are any, and prints no logs section when there are none', () => {
+    expect(runSummary(fixture('explore-evidence.output'), '--triage')).toMatch(
+      /\n\nlogs:\n {2}- \[triage #21\] \[harness: subagent output matched instruction-shaped pattern\(s\): settings-json\]$/,
+    )
+    expect(runSummary(fixture('explore.output'), '--triage')).not.toContain('logs:')
+    expect(runSummary(fixture('build.output'), '--build')).not.toContain('logs:')
+  })
+})
+
 describe('--build', () => {
   const out = runSummary(fixture('build.output'), '--build')
 

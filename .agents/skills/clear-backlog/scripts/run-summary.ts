@@ -7,7 +7,8 @@
 import { readFileSync } from 'node:fs'
 import { fail, runIfMain } from '../../../../scripts/lib/cli.ts'
 
-type Question = { choice: string; options: string[]; pick: string; why: string }
+type Question = { choice: string; options: string[]; pick: string; why: string; wouldChange?: string }
+type OptionCheck = { option: string; holds: string; settledBy?: string }
 type Triage = {
   outcome: string
   summary: string
@@ -21,6 +22,9 @@ type Triage = {
   staleClaims?: { claim: string; why: string; source: string }[]
   sideFindings: { finding: string; source: string }[]
   writes: string[]
+  background?: string
+  optionChecks?: OptionCheck[]
+  sourcesRead?: unknown[]
 }
 type Finding = { title: string; detail: string; file?: string }
 type Branch = {
@@ -36,10 +40,10 @@ type Branch = {
 }
 type Explore = { results: Record<string, Triage>; missing: number[]; grouping: { issues: number[]; sharedFiles: string[] }[] }
 
-/** The workflow's return value; the saved `.output` holds it under `result`, sometimes as a JSON string. */
-function result(path: string): unknown {
-  const { result } = JSON.parse(readFileSync(path, 'utf8')) as { result: unknown }
-  return typeof result === 'string' ? JSON.parse(result) : result
+/** The workflow's return value, which the saved `.output` holds under `result` (sometimes as a JSON string), and its log lines. */
+function saved(path: string): { result: unknown; logs: string[] } {
+  const { result, logs } = JSON.parse(readFileSync(path, 'utf8')) as { result: unknown; logs?: string[] }
+  return { result: typeof result === 'string' ? JSON.parse(result) : result, logs: logs ?? [] }
 }
 
 const issues = (ns: number[]) => ns.map((n) => `#${n}`).join(', ')
@@ -52,7 +56,17 @@ function triage(r: Explore): string[] {
     ...field('summary', t.summary),
     ...field('canonical', t.canonical ? `#${t.canonical}` : undefined),
     ...field('brief', t.brief),
-    ...(t.question ? [`  question: ${t.question.choice}`, ...t.question.options.map((o) => `    ${o}`), `    pick: ${t.question.pick} (${t.question.why})`] : []),
+    ...field('background', t.background),
+    ...(t.question
+      ? [
+          `  question: ${t.question.choice}`,
+          ...t.question.options.map((o) => `    ${o}`),
+          `    pick: ${t.question.pick} (${t.question.why})`,
+          ...(t.question.wouldChange ? [`    wouldChange: ${t.question.wouldChange}`] : []),
+        ]
+      : []),
+    ...list('optionChecks', t.optionChecks?.map((o) => `${o.holds}: ${o.option}${o.settledBy ? ` (settle by: ${o.settledBy})` : ''}`)),
+    ...field('sourcesRead', t.sourcesRead ? String(t.sourcesRead.length) : undefined),
     ...field('blocker', t.blocker),
     ...field('files', t.files.join(', ')),
     ...field('relatedTo', issues(t.relatedTo)),
@@ -86,8 +100,10 @@ const MODES = {
   '--build': (r: unknown) => build(r as Branch[]).join('\n\n'),
 }
 
+// The logs carry harness warnings and workflow notes that no result does, so always show them.
 export function runSummary(path: string, mode: keyof typeof MODES): string {
-  return MODES[mode](result(path))
+  const { result, logs } = saved(path)
+  return [MODES[mode](result), ...(logs.length ? [['logs:', ...logs.map((l) => `  - ${l}`)].join('\n')] : [])].join('\n\n')
 }
 
 runIfMain(import.meta.url, () => {
