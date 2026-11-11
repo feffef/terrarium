@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_013zxzeS6uNt5yvnz5LyUCCe
 startedAt: 2026-11-11T18:55:04Z
-endedAt: 2026-11-11T19:27:17Z
+endedAt: 2026-11-11T19:27:38Z
 kind: interactive
 goal: Clear the open issue backlog and harden the explore workflow
 status: in-review
@@ -87,15 +87,18 @@ frictions:
   - description: First test edit failed on a wrong end-of-file assertion and left the spec file with a dangling describe, a parse error until I redid it.
     solution: Run the spec right after each scripted edit; apply edits with Edit instead of a Python rewrite.
     severity: nit
-durationSec: 1933
+  - description: After PR 3108 merged I refreshed the log by running log-session.ts --author by hand instead of invoking close-session; the Stop hook flagged it.
+    solution: Invoke close-session whenever a PR merges, as its Skill says, before touching the scratch.
+    severity: nit
+durationSec: 1954
 models:
-  claude-sonnet-5-5: 273
+  claude-sonnet-5-5: 279
 toolCounts:
-  Bash: 73
+  Bash: 74
   Read: 12
   Workflow: 3
   ToolSearch: 2
-  Skill: 5
+  Skill: 6
   PushNotification: 1
   Grep: 1
   mcp__github__add_issue_comment: 2
@@ -574,7 +577,7 @@ subagents:
     durationSec: 54
     toolCalls: 10
     modelCalls: 9
-    tokenShare: 3.4
+    tokenShare: 3.3
   - type: general-purpose
     task: Standards review of explore fix
     durationSec: 16
@@ -600,21 +603,21 @@ subagents:
     durationSec: 18
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: "triage #2992"
     model: claude-sonnet-5-5
     durationSec: 21
     toolCalls: 9
     modelCalls: 5
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: workflow-subagent
     task: "triage #3084"
     model: claude-sonnet-5-5
     durationSec: 49
     toolCalls: 22
     modelCalls: 9
-    tokenShare: 3.2
+    tokenShare: 3.1
   - type: workflow-subagent
     task: Standards fix/3084-skip-final-gate-clean-round r3
     model: claude-sonnet-5-5
@@ -628,14 +631,14 @@ subagents:
     durationSec: 360
     toolCalls: 26
     modelCalls: 22
-    tokenShare: 6.4
+    tokenShare: 6.3
   - type: workflow-subagent
     task: Standards fix/3084-skip-final-gate-clean-round r1
     model: claude-sonnet-5-5
     durationSec: 18
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 2.5
+    tokenShare: 2.4
   - type: workflow-subagent
     task: fix fix/3084-skip-final-gate-clean-round r2
     model: claude-sonnet-5-5
@@ -656,7 +659,7 @@ subagents:
     durationSec: 18
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 1.1
+    tokenShare: 1
   - type: workflow-subagent
     task: Standards fix/3084-skip-final-gate-clean-round r2
     model: claude-sonnet-5-5
@@ -670,7 +673,7 @@ subagents:
     durationSec: 251
     toolCalls: 11
     modelCalls: 9
-    tokenShare: 2.2
+    tokenShare: 2.1
   - type: workflow-subagent
     task: Spec fix/3084-skip-final-gate-clean-round r1
     model: claude-sonnet-5-5
