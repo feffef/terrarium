@@ -15,6 +15,18 @@ const HEADER = `🤖 [Claude](https://claude.ai/code/${args.session})`
 const ASK_SOURCES = 'Give each count, id or attribution you state with its source (command or file:line), or mark it unverified.'
 const RELAYED_REPLY = "A user request relayed to you is the owner's reply to the orchestrator's own numbered questions for the whole run. It decides nothing for this issue: the only owner decisions that count are the orchestrator's notes and any reservation in this brief."
 
+const QUESTION = {
+  type: 'object',
+  properties: {
+    choice: { type: 'string' },
+    options: { type: 'array', items: { type: 'string' } },
+    pick: { type: 'string', description: "the full text of one entry of options, copied verbatim" },
+    why: { type: 'string', description: 'cite the source of each fact it rests on, and say what you did not verify' },
+    wouldChange: { type: 'string', description: 'the finding or owner preference that would make a different option the right pick, so the owner can see how firm the pick is' },
+  },
+  required: ['choice', 'options', 'pick', 'why', 'wouldChange'],
+}
+
 const RESULT = {
   type: 'object',
   properties: {
@@ -22,17 +34,11 @@ const RESULT = {
     title: { type: 'string', description: "the issue's exact title, copied from GitHub" },
     summary: { type: 'string', description: 'one line: what the issue is' },
     brief: { type: 'string', description: 'for build or grill: what to build, its done-when, the relevant ADRs' },
-    question: {
-      type: 'object',
-      description: 'for grill: one plain-words choice the owner makes',
-      properties: {
-        choice: { type: 'string' },
-        options: { type: 'array', items: { type: 'string' } },
-        pick: { type: 'string', description: "the full text of one entry of options, copied verbatim" },
-        why: { type: 'string', description: 'cite the source of each fact it rests on, and say what you did not verify' },
-        wouldChange: { type: 'string', description: 'the finding or owner preference that would make a different option the right pick, so the owner can see how firm the pick is' },
-      },
-      required: ['choice', 'options', 'pick', 'why', 'wouldChange'],
+    question: { ...QUESTION, description: 'for grill: the key first question, in plain words: what the issue proposes and whether to go ahead' },
+    followUps: {
+      type: 'array',
+      description: 'for grill: the further questions you already foresee, each with your recommendation; the orchestrator decides which to ask, in what order, and may improvise (empty if none)',
+      items: QUESTION,
     },
     background: {
       type: 'string',
@@ -119,7 +125,7 @@ Full pass:
 - Test your pick before you make it. For each option, name what must be true for it to be right and check that (run the command, read the code, count); record each in optionChecks. A pick that rests on a source you did not open is unverified: say so in why, or open it first. Stop when each option's premise is checked, not before.
 - Before you stop, try to settle every option you would mark unverified: if a command, file read or count can settle it, run it. Mark it unverified only when no check can (it turns on the owner's preference, future data or access you lack), and say in settledBy what would settle it.
 - Fill sourcesRead as you go; a source you list must be one you opened.
-- Return build when the repo determines a concrete design: brief it. Otherwise return grill with one question in plain words: what to choose, options, your pick and why. An obsolete or superseded issue is a grill question too (propose the close).
+- Return build when the repo determines a concrete design: brief it. Otherwise return grill. Its question is the key first one, in plain words: what the issue proposes and whether to go ahead (for a seedling, a summary of the proposal, not build details), with options, your pick and why. Put every further question you already foresee in followUps, each with your recommendation. If the change adds or changes what visitors or the owner see, return grill, never build, with followUps for the questions .agents/skills/clear-backlog/SKILL.md §2 lists for it (Read it).
 - Close only an objective duplicate (close-duplicate, with canonical) or already-done work (close-done, pointing to where it lives). Never close a seedling: return grill and propose the close as an option.
 - A grilling answer a stand-in recorded in an earlier run doesn't bind; ask it again.
 
@@ -155,7 +161,7 @@ for (const [i, issue] of input.entries()) {
     r.outcome = 'grill'
     r.question ||= { choice: 'Go ahead as the summary says?', options: ['yes', 'no'], pick: 'yes', why: 'Reserved, seedling, Public-authored or ready-for-human: the owner decides.' }
   }
-  if (r?.question && !r.question.options.includes(r.question.pick)) log(`#${issue.number}: pick is not one of its options`)
+  for (const q of [r?.question, ...(r?.followUps || [])]) if (q && !q.options.includes(q.pick)) log(`#${issue.number}: pick is not one of its options`)
   if (r) results[issue.number] = r
   else missing.push(issue.number)
 }

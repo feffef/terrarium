@@ -16,6 +16,7 @@ type Triage = {
   brief?: string
   canonical?: number
   question?: Question
+  followUps?: Question[]
   blocker?: string
   files: string[]
   relatedTo: number[]
@@ -57,14 +58,16 @@ function triage(r: Explore): string[] {
     ...field('canonical', t.canonical ? `#${t.canonical}` : undefined),
     ...field('brief', t.brief),
     ...field('background', t.background),
-    ...(t.question
-      ? [
-          `  question: ${t.question.choice}`,
-          ...t.question.options.map((o) => `    ${o}`),
-          `    pick: ${t.question.pick} (${t.question.why})`,
-          ...(t.question.wouldChange ? [`    wouldChange: ${t.question.wouldChange}`] : []),
-        ]
-      : []),
+    ...[t.question, ...(t.followUps ?? [])].flatMap((q, i) =>
+      q
+        ? [
+            `  ${i ? 'followUp' : 'question'}: ${q.choice}`,
+            ...q.options.map((o) => `    ${o}`),
+            `    pick: ${q.pick} (${q.why})`,
+            ...(q.wouldChange ? [`    wouldChange: ${q.wouldChange}`] : []),
+          ]
+        : [],
+    ),
     ...list('optionChecks', t.optionChecks?.map((o) => `${o.holds}: ${o.option}${o.settledBy ? ` (settle by: ${o.settledBy})` : ''}`)),
     ...field('sourcesRead', t.sourcesRead ? String(t.sourcesRead.length) : undefined),
     ...field('blocker', t.blocker),

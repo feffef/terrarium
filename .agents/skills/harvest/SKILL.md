@@ -79,6 +79,8 @@ harvests both.
      story.
    - Write the body to a scratchpad file as [`body-template.md`](body-template.md)
      says (read it first).
+   - If the Seedling would add or change what visitors or the owner see, list
+     the three questions of `clear-backlog` §2 as its open questions.
    - `harvest check-body <file> --extract <extract.json> --title "Seedling: ..."`
      must print `ok`.
    - Post it through MCP `issue_write` with that title and the single label

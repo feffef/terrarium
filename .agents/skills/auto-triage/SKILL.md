@@ -48,6 +48,9 @@ the repo **determines** a concrete, well-understood design. Escalate to
 `ready-for-human` only on a genuine judgment call or genuine design uncertainty,
 as ADR-0022 defines them.
 
+An issue that would add or change what visitors or the owner see carries the
+three questions of `clear-backlog` §2 as open questions in its comment.
+
 **Implementation choices a brief leaves open (ADR-0022) are not uncertainty.**
 When the reporter can supply the missing piece, prefer `needs-info` (`/triage`'s Triage Notes template)
 over `ready-for-human`. But a dependency major bump with no stated concrete

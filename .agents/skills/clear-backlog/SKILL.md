@@ -67,6 +67,16 @@ on any pick you could not verify. Where its format differs, this list wins:
 - Each question gives one line on what the issue is and one on the choice,
   then the options, your pick and why. Flag a pick you changed from the
   triage agent's. The owner never needs to open a ticket.
+- Ask each issue's key `question` first, then pick from its `followUps` the ones
+  still worth asking, in the order that suits the answers; an answer outside
+  the options may call for a question of your own.
+- **An issue that adds or changes what visitors or the owner see** gets these
+  questions before its pick (`CLAUDE.md`, "Ask before building"): (1) which
+  pages or Spaces show it, (2) what it displays and what each value follows,
+  (3) the look, described in words for approval. Explore returns it as a `grill`
+  with these as `followUps`; ask any it missed. The pick follows the answers.
+  If a concrete design is essential, offer a prototype (`prototype` Skill, in
+  this session, after the grilling and before §3).
 - Put the most important questions first, and end with "accept my picks for
   the rest".
 - Ask only about issues in §1's set; the ones the sweep skipped wait for a

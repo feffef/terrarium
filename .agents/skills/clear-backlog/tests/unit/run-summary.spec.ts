@@ -53,6 +53,14 @@ describe('--triage evidence fields', () => {
   })
 })
 
+describe('--triage follow-ups', () => {
+  it('prints the key question first, then each follow-up with its pick', () => {
+    expect(runSummary(fixture('explore-followups.output'), '--triage')).toContain(
+      ['  question: Show it at all?', '    a) Yes', '    b) No', '    pick: a) Yes (asked for)', '  followUp: Which pages?', '    a) Home only', '    b) All', '    pick: a) Home only (least noise)'].join('\n'),
+    )
+  })
+})
+
 describe('logs', () => {
   it('ends with the workflow logs when there are any, and prints no logs section when there are none', () => {
     expect(runSummary(fixture('explore-evidence.output'), '--triage')).toMatch(
