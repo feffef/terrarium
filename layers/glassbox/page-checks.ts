@@ -326,6 +326,7 @@ export function glassboxPageProblems(file: string, source: string, site: Glassbo
     const title = site.titles[path]
     if (text === '') {
       if (space === 'guide' && !nextLines.some((l) => l.includes(`[](${link}`))) problems.push(`bare link ${link} is outside Where next, which renders no title for it`)
+      else if (!path.startsWith('/t/glassbox/')) problems.push(`bare link ${link} must be a Glass Box page`)
     } else if (space === 'guide' && title !== undefined && !/^[a-z]/.test(text!) && text !== title) problems.push(`link text "${text}" is not the title "${title}" of ${path}`)
     // The guide stands alone; drafts may lean on it (GLOSSARY.md, Three Spaces).
     if (space === 'guide' && path.startsWith('/t/glassbox/') && path !== guide && !path.startsWith(`${guide}/`)) problems.push(`guide page links outside the guide: ${link}`)

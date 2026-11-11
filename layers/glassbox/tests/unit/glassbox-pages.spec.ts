@@ -264,6 +264,10 @@ describe('glassboxPageProblems on fixture pages', () => {
     expect(problemsOf('nuxt-content/01.collections.md', lesson.replace('## Try it in your project\n', '## Try it in your project\n\nSee [](/t/glassbox/guide/terrarium-practice/gate).\n'))).toContain('bare link /t/glassbox/guide/terrarium-practice/gate is outside Where next, which renders no title for it')
   })
 
+  it('flags a bare Journal link in Where next, which keeps typed text', () => {
+    expect(problemsOf('nuxt-content/01.collections.md', `${lesson}- [](/t/journal/current/history)\n`)).toContain('bare link /t/journal/current/history must be a Glass Box page')
+  })
+
   it('passes a Where next of 5 pages ending in one Journal page', () => {
     expect(problemsOf('nuxt-content/01.collections.md', `${lesson}${gateItem.repeat(3)}${journalItem}`)).toEqual([])
   })

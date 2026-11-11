@@ -93,8 +93,7 @@ export function glassboxNextList(node: MinimarkNode, base: string, titles: Glass
     const link = item.slice(2).find((child) => Array.isArray(child) && child[0] === 'a') as MinimarkElement | undefined
     const href = String(link?.[1].href ?? '')
     const title = titles[spacePath(href, base)]
-    const isBare = link?.length === 2
-    const filled = isBare && title ? [...link, title] : link
+    const filled = link?.length === 2 && title ? [...link, title] : link
     return [item[0], item[1], ['span', {}, glassboxLinkLabel(href, base)], ...item.slice(2).map((child) => child === link ? filled : child)] as MinimarkNode
   })]
 }
