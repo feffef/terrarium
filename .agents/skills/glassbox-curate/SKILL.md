@@ -26,11 +26,11 @@ the run is autonomous from then on and its entry says so.
 new evidence. `DECISIONS.md` rulings are closed. One PR per run, within the
 remit.
 
-**Remit.** Edit `layers/glassbox/content/guide/`, the diagram SVGs you re-render, your own
-workshop files, and a moved page's name in `checks/update.yml`. Build, in any
-mode and never as an issue: a new Lesson, a new
-Subject with its `layers/glassbox/app/utils/subjects.ts` entry, a split or a
-move between Subjects, and a change to this Skill, the `glassbox-lesson` docs
+**Remit.** Edit `layers/glassbox/content/guide/`, the diagram SVGs you
+re-render, your own workshop files, and a moved page's name in
+`checks/update.yml`. Build, in any mode and never as an issue: a new Lesson, a
+new Subject with its `layers/glassbox/app/utils/subjects.ts` entry, a split or
+a move between Subjects, and a change to this Skill, the `glassbox-lesson` docs
 or the page checks. A PR holding any of these waits for the owner's merge: its
 body says so, and you don't merge it.
 
@@ -125,9 +125,9 @@ keeps them so).
   doesn't count as a second focus.
   A new Lesson follows `.agents/skills/glassbox-lesson/SKILL.md` step by step:
   give the writer its path and have it report each step's Done.
-- **Check.** A separate sonnet claim checker checks the changed sentences
-  `glassbox-update` owns the claim check of
-  unchanged text, so leave that to it. Run EVERY-PAGE.md's Check on the
+- **Check.** A separate sonnet claim checker checks the changed sentences;
+  `glassbox-update` owns the claim check of unchanged text, so leave that to
+  it. Run EVERY-PAGE.md's Check on the
   changed pages, and a fresh reader re-reads them. One retry, then drop the
   change.
 - **Removal.** A change that only removes text or a page skips the writer, the

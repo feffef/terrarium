@@ -14,8 +14,7 @@ diagram SVGs it re-renders in `app/assets/mermaid/`. Read
 Write, Diagrams, Check) first.
 
 The script is `.agents/skills/glassbox-update/scripts/glassbox-update.ts`, run
-with `pnpm exec tsx`; `--spaces guide,workshop` adds other Spaces (default
-`guide`). Its report's `main` is **the commit**: this run reviews and pins to
+with `pnpm exec tsx`. Its report's `main` is **the commit**: this run reviews and pins to
 that one commit, never a later fetch.
 
 1. **Report.** If `git rev-parse --is-shallow-repository` says `true`, run

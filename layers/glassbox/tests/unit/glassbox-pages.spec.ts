@@ -3,7 +3,6 @@ import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { splitFrontmatter } from '../../../../scripts/lib/frontmatter.ts'
 import { root } from '../../../../shared/expand.ts'
-import glassbox from '../../tenant.config.ts'
 import { glassboxCites, glassboxLengthProblems, glassboxJournalRoutes, glassboxOrphans, glassboxPageProblems, glassboxPageWarnings, glassboxSitePath, glassboxTermProblems, glassboxTerms, repoGit, type GlassboxGit, type GlassboxSite } from '../../page-checks.ts'
 
 const rev = 'a'.repeat(40)
@@ -344,17 +343,16 @@ describe('glassboxTermProblems', () => {
 describe('every Glass Box page matches the code at its revision', () => {
   const content = join(root, 'layers/glassbox/content')
   // The workshop's memory page is state, not a Lesson (workshop.spec.ts checks it).
-  const spaces = glassbox.spaces.filter((space) => space !== 'workshop')
-  const read = (space: string, file: string) => readFileSync(join(content, space, 'pages', file), 'utf8')
-  const files = Object.fromEntries(spaces.map((space) => [space, globSync('**/*.md', { cwd: join(content, space, 'pages') }).sort()]))
-  const pages = spaces.flatMap((space) => files[space]!.map((file) => ({ space, file })))
+  const space = 'guide'
+  const read = (file: string) => readFileSync(join(content, space, 'pages', file), 'utf8')
+  const files = globSync('**/*.md', { cwd: join(content, space, 'pages') }).sort()
   const terms = glassboxTerms()
   const realSite: GlassboxSite = {
-    pages: pages.map(({ space, file }) => glassboxSitePath(space, file)),
+    pages: files.map((file) => glassboxSitePath(space, file)),
     journal: glassboxJournalRoutes(),
     terms: Object.keys(terms),
-    cites: Object.assign({}, ...spaces.map((space) => glassboxCites(Object.fromEntries(files[space]!.map((file) => [file, read(space, file)])), space))),
-    titles: Object.fromEntries(pages.map(({ space, file }) => [glassboxSitePath(space, file), String(splitFrontmatter(read(space, file)).frontmatter.title)])),
+    cites: glassboxCites(Object.fromEntries(files.map((file) => [file, read(file)])), space),
+    titles: Object.fromEntries(files.map((file) => [glassboxSitePath(space, file), String(splitFrontmatter(read(file)).frontmatter.title)])),
   }
 
   it('reaches Journal content pages and the Journal\'s own Vue routes', () => {
@@ -362,12 +360,11 @@ describe('every Glass Box page matches the code at its revision', () => {
   })
 
   it('finds the landing page (canary: the walk must not match nothing)', () => {
-    expect(files.guide).toContain('index.md')
-    expect(files.guide!.length).toBeGreaterThan(1)
+    expect(files).toContain('index.md')
   })
 
-  it.each(pages.map(({ space, file }) => [`${space}/${file}`, space, file]))('%s', (_name, space, file) => {
-    expect(glassboxPageProblems(file, read(space, file), realSite, repoGit)).toEqual([])
+  it.each(files)('%s', (file) => {
+    expect(glassboxPageProblems(file, read(file), realSite, repoGit)).toEqual([])
   })
 
   it('every term source exists and every term lesson is a page', () => {

@@ -48,7 +48,7 @@ A `title` and `description` stay within their caps in `lengths` in
 `layers/glassbox/page-checks.ts`,
 which also checks a Lesson title's word count and each Why bullet's length
 (`ownWords`). The slug follows the title when a
-page is written or promoted; a retitle keeps the URL.
+page is written; a retitle keeps the URL.
 
 ## Write
 
