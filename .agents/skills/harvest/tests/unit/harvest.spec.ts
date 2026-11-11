@@ -6,6 +6,7 @@ import { decodeHtmlEntities } from '../../../../../scripts/lib/github-client.ts'
 import {
   BODY_LIMIT,
   NOTE,
+  REQUIRED_HEADINGS,
   buildEntries,
   checkBody,
   comparePosted,
@@ -161,7 +162,15 @@ describe('checkBody() and comparePosted()', () => {
   const key = entryKey(SESSION, 'idea', 'x')
   const emitted = new Set([key])
   const entry = { line: `Harvested: ${key}` } as Entry
-  const good = ['🤖 [Claude](https://claude.ai/code/session_x)', '', 'Agent seedling from harvest, not approved.', '', renderBlock([entry]), '', 'Body.'].join('\n')
+  const good = [
+    '🤖 [Claude](https://claude.ai/code/session_x)',
+    '',
+    'Agent seedling from harvest, not approved.',
+    '',
+    renderBlock([entry]),
+    '',
+    ...REQUIRED_HEADINGS.flatMap((h) => [h, 'Text.', '']),
+  ].join('\n')
 
   it('renders the note and the key lines', () => {
     expect(renderBlock([entry])).toBe(`${NOTE}\nHarvested: ${key}`)
@@ -181,6 +190,10 @@ describe('checkBody() and comparePosted()', () => {
     expect(checkBody(good.replace(NOTE, 'Keys:'), emitted).join()).toContain('missing the line')
     expect(checkBody(good.replace('Agent seedling', 'Something'), emitted).join()).toContain('no banner')
     expect(checkBody(good + `\n\nHarvested: ${key}`, emitted).join()).toContain('one block')
+  })
+
+  it('rejects a body missing a template section, so the owner is not sent into the repo', () => {
+    for (const h of REQUIRED_HEADINGS) expect(checkBody(good.replace(h, 'Other'), emitted)).toEqual([`missing the section "${h}"`])
   })
 
   it('rejects a wrong title and an oversize body', () => {

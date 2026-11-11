@@ -165,11 +165,22 @@ export function renderBlock(entries: Entry[]): string {
   return [NOTE, ...entries.map((e) => e.line)].join('\n')
 }
 
+/** The sections `body-template.md` asks for: a body without them sends the owner into the repo. */
+export const REQUIRED_HEADINGS = [
+  '## The idea',
+  '## Why it matters',
+  '## Where it came from',
+  '## What would change',
+  '## What I checked',
+  '## Sources',
+]
+
 /** What is wrong with a Seedling body before it is posted (empty: fine). The
  *  provenance guard already enforces the session header and bare angle brackets. */
 export function checkBody(body: string, emitted: Set<string>, title?: string): string[] {
   const problems: string[] = []
   const ls = lines(body)
+  for (const h of REQUIRED_HEADINGS) if (!ls.includes(h)) problems.push(`missing the section "${h}"`)
   if (title !== undefined && !title.startsWith('Seedling:')) problems.push('title must start with "Seedling:"')
   if (body.length > BODY_LIMIT) problems.push(`body is ${body.length} characters, over ${BODY_LIMIT}`)
   for (const l of ls) if (l.startsWith('Harvested:') && !KEY_RE.test(l)) problems.push(`malformed key line: ${l}`)
