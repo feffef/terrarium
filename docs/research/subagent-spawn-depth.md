@@ -213,9 +213,11 @@ own tool list (marked self-reported, not checked by a command). One run each.
 8. **A workflow agent can find a sibling's id and message it.** Agent D read the
    journal with Bash (`ls -dt ~/.claude/projects/*/*/subagents/workflows/*/ | head -1`,
    then `grep` the label) and `SendMessage` to C's id returned `success: true`.
-   D saw no reply in the tool result, and the reply was not observed anywhere
-   (unverified; likely it goes to the main session, not the sender). So a script
-   cannot wait for a resumed sibling's answer inside the run.
+   D saw no reply in the tool result. C did answer: the hand-back (`509-IWIK 144`,
+   a real new turn with its context; harness notice 68,161 tokens, 1 tool use,
+   4.5 s) reached the main session, not D. Not tested: whether D would receive it
+   if D were still running. So a script cannot wait for a resumed sibling's
+   answer inside the run.
 9. **`resumeFromRunId` is a replay, not a resume.** Re-running the same script
    with it returned byte-identical output with 0 tokens, 0 tool uses and 12 ms:
    completed agents came from cache (matches the docs).
