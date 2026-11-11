@@ -1,0 +1,119 @@
+schemaVersion: 1
+session: session_013zxzeRpiY8hmJh8z3HELvr
+startedAt: 2026-11-11T06:56:42Z
+endedAt: 2026-11-11T07:05:29Z
+kind: delegated
+goal: Hide the duplicate "loaded by" pill on always-loaded subagent rules
+status: in-review
+outcome: "One-line SessionCard change; PR #3051 open, gate green"
+summary: "Human-instructed: the owner's kickoff asked for the Journal session card's Subagents rule group to drop the \"loaded by N\" pill on rows that already show \"always loaded\", with a screenshot first, then landing as usual. I made it a single v-if in SessionCard.vue. To find a card with both kinds of row, I wrote a throwaway script that scans session logs for subagent start loads next to other loads. I shot session 013zxzeSvVL3Eaha8hHj2Q8i on a dev server and sent the image to the owner. gate:scoped passed. The diff is 1 line, so I reviewed it by reading it myself (the simple-change rule), and opened PR #3051."
+prs:
+  - "3051"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: PR opened
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran scripts/ui/preview.ts directly and got Exit 126 (not executable); docs show it bare, so a shell call fails.
+    solution: Mark scripts/ui/preview.ts executable, or write it as pnpm exec tsx scripts/ui/preview.ts in verifying-ui-changes.md.
+    severity: minor
+  - description: Guessed the session-card anchor as session-<filename>; it is session-<session id>, so the first screenshot waited out a 120s timeout.
+    solution: Name the anchor format (sessionAnchor, keyed by the session id) in verifying-ui-changes.md or the Journal glossary's What lives where.
+    severity: minor
+  - description: "Broke tenant-glossary.md: edited layers/journal without reading layers/journal/GLOSSARY.md; the change added no prose, so it cost nothing."
+    solution: Reading it at the first layer edit would have satisfied the rule; low impact for a pure template change.
+    severity: nit
+durationSec: 526
+models:
+  claude-opus-5-5: 56
+toolCounts:
+  Bash: 24
+  Edit: 1
+  Read: 1
+  SendUserFile: 1
+  ToolSearch: 2
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Skill: 2
+filesEdited:
+  - layers/journal/app/components/journal/SessionCard.vue
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0008.md
+adrHints:
+  - adr: 8
+    via: path
+    readAfter: true
+    by: main
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0008.md
+        via: native
+        trigger: layers/journal/app/components/journal/SessionCard.vue
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/journal/app/components/journal/SessionCard.vue
+      - rule: .claude/rules/tenant-layers.md
+        via: native
+        trigger: layers/journal/app/components/journal/SessionCard.vue
+      - rule: .claude/rules/ui-verification.md
+        via: native
+        trigger: layers/journal/app/components/journal/SessionCard.vue
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/adr-0006.md
+        via: hint
+      - rule: .claude/rules/adr-0016.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: gate:scoped and simple-change self-read before PR
+      - path: .claude/rules/ui-verification.md
+        value: steered
+        why: rendered-DOM screenshot, not grepped HTML
+      - path: .claude/rules/adr-0003.md
+        value: backed
+      - path: .claude/rules/adr-0017.md
+        value: backed
+      - path: .claude/rules/adr-0009.md
+        value: backed
+      - path: docs/agents/verifying-ui-changes.md
+      - path: docs/agents/pr-workflow.md
+      - path: docs/agents/git-conventions.md
+gitBranch: HEAD
+entrypoint: remote
+cliVersion: 2.1.322
+landedBy: Stop
