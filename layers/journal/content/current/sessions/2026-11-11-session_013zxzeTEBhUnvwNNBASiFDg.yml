@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeTEBhUnvwNNBASiFDg
 startedAt: 2026-11-11T21:21:31Z
-endedAt: 2026-11-11T22:23:46Z
+endedAt: 2026-11-11T22:28:15Z
 kind: interactive
 goal: Clear the Seedling backlog (7 issues), plus review cost and subagent spawn depth
 status: in-review
-outcome: Six seedling PRs and a research PR are open with passing gates, none merged; one seedling closed; review cost filed as an issue
-summary: "Human-instructed: the owner ran /clear-backlog with \"all seedlings\", which was the green light to build the seven open Seedling issues; the owner then answered two grilling rounds (1a; drafts Space removed entirely instead of an empty state; #3088 rejected; 4a, 5b, 6b, 7c with the tool fix; 8a, 9, 10, 11c, 12 yes), said detached worktrees do not matter in cloud containers, and asked for the issue, the research doc commit and its PR. Agent-initiated: the hand fixes after capped reviews, the diagnostics of the spawn-depth variable (including asking two peer sessions), and the PR bodies' judgement calls. Explore ran 7 agents (765K tokens); build ran 52 agents (4.4M tokens) and five of six branches hit the 3-round review cap on mostly cosmetic findings, which I fixed by hand (a real logic fix for the bare-link page check in #3089, a missing merged-worktree test in #3105). The owner questioned the cost; I analysed the journal (34 review reports), filed #3110 with the cause and a proposal, and researched whether subagents or workflows may nest. The spawn depth value 1 is passed by the platform launcher into claude at start; a stored environment variable did not override it in the owner's test session; a retest with value 2 was handed to a third session and its reply is still open. Open: #3112 is a draft until the owner approves the Journal look from screenshots; the stash entry t3105 left by a build agent is still on the shared stack (my drop was denied)."
+outcome: Three docs PRs merged, four seedling PRs still waiting on CI or the owner; one seedling closed; review cost filed as an issue
+summary: "Human-instructed: the owner ran /clear-backlog with \"all seedlings\", which was the green light to build the seven open Seedling issues; the owner then answered two grilling rounds (1a; drafts Space removed entirely instead of an empty state; #3088 rejected; 4a, 5b, 6b, 7c with the tool fix; 8a, 9, 10, 11c, 12 yes), said detached worktrees do not matter in cloud containers, and asked for the issue, the research doc commit and its PR. Agent-initiated: the hand fixes after capped reviews, the diagnostics of the spawn-depth variable (including asking two peer sessions), and the PR bodies' judgement calls. Explore ran 7 agents (765K tokens); build ran 52 agents (4.4M tokens) and five of six branches hit the 3-round review cap on mostly cosmetic findings, which I fixed by hand (a real logic fix for the bare-link page check in #3089, a missing merged-worktree test in #3105). The owner questioned the cost; I analysed the journal (34 review reports), filed #3110 with the cause and a proposal, and researched whether subagents or workflows may nest. The spawn depth value 1 is passed by the platform launcher into claude at start; a stored environment variable did not override it in the owner's test session; a retest with value 2 was handed to a third session and its reply is still open. The retest in a session started after the owner stored the value 2 still showed 1 in the process and its launcher, so the platform value seems to win over the stored one; the settings.json env route is untested. Merged by me after a posted verdict: the research PR 3111, 3115 and 3116 (all docs only). Open: 3112 is a draft until the owner approves the Journal look from screenshots; 3113, 3114 and 3117 wait on CI; the stash entry t3105 left by a build agent is still on the shared stack (my drop was denied)."
 prs:
   - "3111"
   - "3112"
@@ -76,8 +76,6 @@ docsRead:
     reason: (read before editing)
   - path: .agents/skills/glassbox-update/SKILL.md
     reason: (read before editing)
-  - path: .agents/skills/glassbox-lesson/QUALITY.md
-    reason: (read before editing)
   - path: .agents/skills/blog-post/SKILL.md
     reason: (no reason given)
   - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
@@ -96,6 +94,8 @@ skillsUsed:
   - name: close-session
     reason: (no reason given)
   - name: log-session
+    reason: (no reason given)
+  - name: resolving-merge-conflicts
     reason: (no reason given)
   - name: clear-backlog
     reason: (invoked as a slash command)
@@ -120,18 +120,18 @@ frictions:
   - description: clear-backlog-build used 52 agents and 4.4M tokens on six small branches; five hit the 3-round cap on cosmetic findings, and the cost showed only after the run.
     solution: Skip reviewers for simple diffs, one round for the rest, nits reported not fixed; filed as issue 3110.
     severity: moderate
-durationSec: 3735
+durationSec: 4004
 models:
-  claude-sonnet-5-5: 224
+  claude-sonnet-5-5: 280
 toolCounts:
-  Bash: 63
+  Bash: 80
   mcp__github__list_issues: 1
   Workflow: 3
   Read: 4
-  Skill: 4
-  ToolSearch: 4
+  Skill: 6
+  ToolSearch: 5
   PushNotification: 2
-  mcp__github__add_issue_comment: 8
+  mcp__github__add_issue_comment: 14
   mcp__github__issue_write: 8
   mcp__claude-code-remote__get_environment: 1
   mcp__claude-code-remote__read_documentation: 1
@@ -141,10 +141,11 @@ toolCounts:
   mcp__claude-code-remote__send_message: 2
   mcp__github__create_pull_request: 7
   mcp__claude-code-remote__subscribe_pr_activity: 7
-  ReadNotifications: 2
-  mcp__github__pull_request_read: 1
+  ReadNotifications: 3
+  mcp__github__pull_request_read: 7
   SendUserFile: 1
   Write: 1
+  mcp__github__update_pull_request: 1
 filesEdited:
   - tests/unit/log-session.spec.ts
   - docs/research/subagent-spawn-depth.md
@@ -159,6 +160,7 @@ filesEdited:
   - layers/journal/app/utils/routineRuns.ts
   - .throwaway/seedling3089/p.ts
   - .throwaway/fix3086/sub.ts
+  - .claude/settings.json
   - docs/agents/git-conventions.md
   - layers/glassbox/app/utils/lesson.ts
   - layers/glassbox/page-checks.ts
@@ -242,9 +244,7 @@ docsReadBySubagents:
   - .agents/skills/code-review/SKILL.md
   - .agents/skills/implement/SKILL.md
   - .agents/skills/glassbox-update/SKILL.md
-  - .agents/skills/glassbox-lesson/QUALITY.md
   - .agents/skills/blog-post/SKILL.md
-  - docs/agents/environment-caveats.md
   - docs/adr/0017-provenance-footer-on-agent-authored-content.md
   - layers/journal/GLOSSARY.md
   - docs/adr/0008-self-documentation-tenant-is-a-journal.md
@@ -288,6 +288,12 @@ ruleUse:
       - rule: .claude/rules/tenant-layers.md
         via: native
         trigger: layers/glassbox/app/utils/walkthrough.ts
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/guards.md
+        via: hint
     reported:
       - path: .claude/rules/adr-0003.md
         value: steered
@@ -1911,12 +1917,12 @@ subagents:
     durationSec: 187
     toolCalls: 30
     modelCalls: 17
-    tokenShare: 4.5
+    tokenShare: 4.1
   - task: Standards review of research doc
     durationSec: 21
     toolCalls: 8
     modelCalls: 3
-    tokenShare: 1.2
+    tokenShare: 1.1
   - task: Spec review of research doc
     durationSec: 36
     toolCalls: 5
@@ -1928,7 +1934,7 @@ subagents:
     durationSec: 28
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 0.8
+    tokenShare: 0.7
   - type: workflow-subagent
     task: Standards seedling-3103-github-integration-bullets r3
     model: claude-sonnet-5-5
@@ -1942,14 +1948,14 @@ subagents:
     durationSec: 38
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: workflow-subagent
     task: fix seedling-3105-git-conventions-and-worktree-sweep r1
     model: claude-sonnet-5-5
     durationSec: 415
     toolCalls: 14
     modelCalls: 9
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: Standards seedling-3089-where-next-bare-links r3
     model: claude-sonnet-5-5
@@ -1970,7 +1976,7 @@ subagents:
     durationSec: 824
     toolCalls: 25
     modelCalls: 24
-    tokenShare: 4.9
+    tokenShare: 4.5
   - type: workflow-subagent
     task: fix seedling-3105-git-conventions-and-worktree-sweep r2
     model: claude-sonnet-5-5
@@ -1984,7 +1990,7 @@ subagents:
     durationSec: 23
     toolCalls: 9
     modelCalls: 4
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: Standards seedling-3089-where-next-bare-links r1
     model: claude-sonnet-5-5
@@ -1998,35 +2004,35 @@ subagents:
     durationSec: 20
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: workflow-subagent
     task: Standards seedling-3105-git-conventions-and-worktree-sweep r3
     model: claude-sonnet-5-5
     durationSec: 27
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: workflow-subagent
     task: fix seedling-3089-where-next-bare-links r1
     model: claude-sonnet-5-5
     durationSec: 620
     toolCalls: 11
     modelCalls: 8
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: workflow-subagent
     task: build seedling-3103-github-integration-bullets
     model: claude-sonnet-5-5
     durationSec: 171
     toolCalls: 25
     modelCalls: 18
-    tokenShare: 2
+    tokenShare: 1.8
   - type: workflow-subagent
     task: build seedling-3104-environment-caveats-lines
     model: claude-sonnet-5-5
     durationSec: 134
     toolCalls: 15
     modelCalls: 10
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: workflow-subagent
     task: fix seedling-3103-github-integration-bullets r2
     model: claude-sonnet-5-5
@@ -2040,28 +2046,28 @@ subagents:
     durationSec: 31
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: workflow-subagent
     task: build seedling-3086-one-duration-format
     model: claude-sonnet-5-5
     durationSec: 581
     toolCalls: 36
     modelCalls: 19
-    tokenShare: 3.5
+    tokenShare: 3.2
   - type: workflow-subagent
     task: Standards seedling-3087-remove-glassbox-drafts r1
     model: claude-sonnet-5-5
     durationSec: 32
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: workflow-subagent
     task: Spec seedling-3089-where-next-bare-links r3
     model: claude-sonnet-5-5
     durationSec: 30
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: Spec seedling-3089-where-next-bare-links r1
     model: claude-sonnet-5-5
@@ -2075,28 +2081,28 @@ subagents:
     durationSec: 103
     toolCalls: 16
     modelCalls: 10
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: workflow-subagent
     task: fix seedling-3089-where-next-bare-links r2
     model: claude-sonnet-5-5
     durationSec: 253
     toolCalls: 11
     modelCalls: 9
-    tokenShare: 1
+    tokenShare: 0.9
   - type: workflow-subagent
     task: Spec seedling-3087-remove-glassbox-drafts r1
     model: claude-sonnet-5-5
     durationSec: 39
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 1.1
+    tokenShare: 1
   - type: workflow-subagent
     task: Standards seedling-3087-remove-glassbox-drafts r2
     model: claude-sonnet-5-5
     durationSec: 21
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 0.8
+    tokenShare: 0.7
   - type: workflow-subagent
     task: Standards seedling-3104-environment-caveats-lines r3
     model: claude-sonnet-5-5
@@ -2110,21 +2116,21 @@ subagents:
     durationSec: 424
     toolCalls: 16
     modelCalls: 13
-    tokenShare: 2.2
+    tokenShare: 2
   - type: workflow-subagent
     task: fix seedling-3104-environment-caveats-lines r2
     model: claude-sonnet-5-5
     durationSec: 90
     toolCalls: 11
     modelCalls: 8
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: workflow-subagent
     task: Spec seedling-3087-remove-glassbox-drafts r3
     model: claude-sonnet-5-5
     durationSec: 26
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 1
+    tokenShare: 0.9
   - type: workflow-subagent
     task: Spec seedling-3103-github-integration-bullets r1
     model: claude-sonnet-5-5
@@ -2138,28 +2144,28 @@ subagents:
     durationSec: 358
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 1
+    tokenShare: 0.9
   - type: workflow-subagent
     task: Spec seedling-3103-github-integration-bullets r3
     model: claude-sonnet-5-5
     durationSec: 16
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 0.5
+    tokenShare: 0.4
   - type: workflow-subagent
     task: Standards seedling-3105-git-conventions-and-worktree-sweep r2
     model: claude-sonnet-5-5
     durationSec: 23
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: workflow-subagent
     task: Standards seedling-3086-one-duration-format r2
     model: claude-sonnet-5-5
     durationSec: 18
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: workflow-subagent
     task: Standards seedling-3103-github-integration-bullets r2
     model: claude-sonnet-5-5
@@ -2173,28 +2179,28 @@ subagents:
     durationSec: 29
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 1
+    tokenShare: 0.9
   - type: workflow-subagent
     task: build seedling-3105-git-conventions-and-worktree-sweep
     model: claude-sonnet-5-5
     durationSec: 585
     toolCalls: 24
     modelCalls: 20
-    tokenShare: 2.9
+    tokenShare: 2.7
   - type: workflow-subagent
     task: Standards seedling-3104-environment-caveats-lines r1
     model: claude-sonnet-5-5
     durationSec: 16
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.1
+    tokenShare: 1
   - type: workflow-subagent
     task: Spec seedling-3104-environment-caveats-lines r1
     model: claude-sonnet-5-5
     durationSec: 20
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 0.5
+    tokenShare: 0.4
   - type: workflow-subagent
     task: Spec seedling-3104-environment-caveats-lines r2
     model: claude-sonnet-5-5
@@ -2229,28 +2235,28 @@ subagents:
     durationSec: 875
     toolCalls: 37
     modelCalls: 33
-    tokenShare: 4.7
+    tokenShare: 4.3
   - type: workflow-subagent
     task: fix seedling-3086-one-duration-format r1
     model: claude-sonnet-5-5
     durationSec: 238
     toolCalls: 29
     modelCalls: 24
-    tokenShare: 2.9
+    tokenShare: 2.6
   - type: workflow-subagent
     task: gate seedling-3086-one-duration-format
     model: claude-sonnet-5-5
     durationSec: 445
     toolCalls: 9
     modelCalls: 7
-    tokenShare: 0.8
+    tokenShare: 0.7
   - type: workflow-subagent
     task: Spec seedling-3089-where-next-bare-links r2
     model: claude-sonnet-5-5
     durationSec: 26
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: workflow-subagent
     task: Spec seedling-3086-one-duration-format r2
     model: claude-sonnet-5-5
@@ -2264,14 +2270,14 @@ subagents:
     durationSec: 17
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 0.5
+    tokenShare: 0.4
   - type: workflow-subagent
     task: fix seedling-3104-environment-caveats-lines r1
     model: claude-sonnet-5-5
     durationSec: 78
     toolCalls: 11
     modelCalls: 7
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: workflow-subagent
     task: Standards seedling-3086-one-duration-format r1
     model: claude-sonnet-5-5
@@ -2292,55 +2298,56 @@ subagents:
     durationSec: 82
     toolCalls: 21
     modelCalls: 11
-    tokenShare: 2.4
+    tokenShare: 2.1
   - type: workflow-subagent
     task: "triage #3089"
     model: claude-sonnet-5-5
     durationSec: 104
     toolCalls: 22
     modelCalls: 11
-    tokenShare: 2.1
+    tokenShare: 1.9
   - type: workflow-subagent
     task: "triage #3104"
     model: claude-sonnet-5-5
     durationSec: 73
     toolCalls: 17
     modelCalls: 7
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: "triage #3088"
     model: claude-sonnet-5-5
     durationSec: 90
     toolCalls: 23
     modelCalls: 12
-    tokenShare: 2
+    tokenShare: 1.8
   - type: workflow-subagent
     task: "triage #3087"
     model: claude-sonnet-5-5
     durationSec: 67
     toolCalls: 14
     modelCalls: 6
-    tokenShare: 1.1
+    tokenShare: 1
   - type: workflow-subagent
     task: "triage #3086"
     model: claude-sonnet-5-5
     durationSec: 90
     toolCalls: 18
     modelCalls: 8
-    tokenShare: 1.4
+    tokenShare: 1.2
   - type: workflow-subagent
     task: "triage #3103"
     model: claude-sonnet-5-5
     durationSec: 70
     toolCalls: 18
     modelCalls: 10
-    tokenShare: 1.5
+    tokenShare: 1.4
 gitBranch: ccr-2e05078b-11nhkc
 entrypoint: remote_mobile
 cliVersion: 2.1.322
 learnings:
   - In cloud sessions CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1 is inherited from environment-manager into claude at launch (checked through the parent pid chain); it is in no settings or init file, and the documented default is 3.
   - Whether a Workflow agent can start subagents, or whether a workflow counts as a depth level, is undocumented and unverified.
+  - A cloud session started after the environment stored CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=2 still had 1 in the claude process and its launcher; the stored value is shown by name only, so the override rule is inferred, not read.
 ideas:
   - "Let clear-backlog-build size its review by diff: docs-only or under about 50 lines gets the orchestrator's own read, larger diffs one reviewer round, so a daily run stops paying for nit loops (issue 3110 holds the proposal)."
 landedBy: Stop
