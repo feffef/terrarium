@@ -318,15 +318,14 @@ export function glassboxPageProblems(file: string, source: string, site: Glassbo
   const pages = new Set(site.pages)
   const journal = new Set(site.journal)
   const guide = glassboxSitePath('guide', 'index.md')
-  const nextLines = nextItems(prose)
+  const nextLinks = new Set(nextItems(prose).flatMap((l) => [...l.matchAll(/\[\]\(([^)\s]+)\)/g)].map((m) => m[1])))
   for (const [, text, link] of prose.matchAll(/\[([^[\]]*)\]\((\/t\/(?:glassbox\/[a-z0-9]+|journal)(?:\/[^)\s#?]*)?)/g)) {
     const path = link!.replace(/\/$/, '')
     // A link quoting its target's title goes stale when the title changes; lowercase text is running prose (#2114).
     // A bare link `[](…)` in Where next renders the title itself (glassboxNextList), so it cannot go stale; elsewhere nothing fills it.
     const title = site.titles[path]
     if (text === '') {
-      if (space === 'guide' && !nextLines.some((l) => l.includes(`[](${link}`))) problems.push(`bare link ${link} is outside Where next, which renders no title for it`)
-      else if (!path.startsWith('/t/glassbox/')) problems.push(`bare link ${link} must be a Glass Box page`)
+      if (!nextLinks.has(link!) || !path.startsWith(`/t/glassbox/${space}/`)) problems.push(`bare link ${link} must sit in Where next and point into this Space: nothing else fills its title`)
     } else if (space === 'guide' && title !== undefined && !/^[a-z]/.test(text!) && text !== title) problems.push(`link text "${text}" is not the title "${title}" of ${path}`)
     // The guide stands alone; drafts may lean on it (GLOSSARY.md, Three Spaces).
     if (space === 'guide' && path.startsWith('/t/glassbox/') && path !== guide && !path.startsWith(`${guide}/`)) problems.push(`guide page links outside the guide: ${link}`)
