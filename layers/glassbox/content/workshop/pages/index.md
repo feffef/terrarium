@@ -22,6 +22,7 @@ Each guide page is named by its title, then its file under `layers/glassbox/cont
 
 - **The Installed Skills pages say little of their own.** *Planning skills* (`skill-pack/20.planning-with-the-pack`) and *Engineering skills* (`skill-pack/30.engineering-skills`) mostly describe Skills that come from outside Terrarium. Only a few of their facts are about choices Terrarium made.
 - **Two Git & GitHub Lessons are long.** *Commit and PR attribution* (`git-github/60.attribution`) and *Issue triage labels* (`git-github/70.issue-triage-labels`) are each about 1,400 to 1,600 words. Both have been trimmed; look for a split only after a fresh reader finds them hard to follow.
+- **One Walkthrough stop is long.** The page check warns that stop 2 of *A session log lands on main* has more than 80 words; move detail to the Lessons it links.
 - **The drafts Space is empty.** A gap that isn't central goes there as a new draft.
 
 ### Recurring problems
@@ -44,7 +45,7 @@ Subjects and Lessons run prerequisites first, and Lesson prefixes go up in tens 
 
 ### Good next focuses
 
-1. **Re-read the Subjects not yet de-duplicated.** Claude Code, Hooks, Agents & automation, Nuxt Content, Nuxt & Vue, Verification and Web standards have had this pass; Git & GitHub, Installed skills, Deploy and the Walkthroughs have not (no fresh reader has seen the Walkthroughs). In House rules only *Protected paths* and *Ubiquitous language* changed; the other seven pages were read and left alone.
+1. **Re-read the Subjects not yet de-duplicated.** Git & GitHub joined the ones that have had this pass on 2026-11-11. *Installed skills*, Deploy and the Walkthroughs have not (no fresh reader has seen the Walkthroughs). In House rules only *Protected paths* and *Ubiquitous language* changed; the other seven pages were read and left alone.
 2. **Decide how pages say "a person merges" a Human-only file.** Since the owner waiver (ADR-0004), an agent may merge one when the owner says so in the session. *Protected paths*, *Human-only* and the overview say so. These still state it flatly, each true as the default: *Path-specific rules*, *Decision records*, *Merge gate*, *Claude Code hooks* (twice), *Composite actions*, *Author trust*, *Cross-tenant reads* and *Asking an agent for a change*. Ask the owner whether to name the waiver there or keep one home.
 3. **Check the docs again for the pages whose claims the docs left silent** (the list under *Doc findings not acted on*), by reading the tool's source where the docs have no page.
 
@@ -66,13 +67,20 @@ Subjects and Lessons run prerequisites first, and Lesson prefixes go up in tens 
 - *Cloud sessions*: the lede says the other cases get "less", the list says "nothing".
 - *Scheduled tasks*: the cadence rule is still stated in three places.
 
-**Topics the Scout found with no page (2026-11-10).** A Nuxt build peaks near 2.1 GB, and the live host has a 2 GB swapfile added after builds were killed (`deploy/README.md`); a sentence for *Continuous deployment* (`deploy/10.continuous-deployment`), not a page. Also: agents report which rules and docs helped through a no-op script, `scripts/session/helped.sh`; the session log reads the call from the transcript (`scripts/session/rule-use.ts`, a `ruleUse` field in `shared/schemas/session.ts`), and `scripts/session/rule-use-report.ts` totals it per rule. Nearest page: *Session logs* (`terrarium-practice/40.session-logs`). Also: `docs/agents/verifying-ui-changes.md` now says Linux screenshots can't confirm fixed-width text fit; nearest page *Headless browser checks* (`verification/80.headless-browser-checks`).
+**Topics the Scout found with no page (2026-11-10).** A Nuxt build peaks near 2.1 GB, and the live host has a 2 GB swapfile added after builds were killed (`deploy/README.md`); a sentence for *Continuous deployment* (`deploy/10.continuous-deployment`), not a page. Also: each session now rates every rule it was shown as *steered* (it changed what the session did) or *backed* (it matched what the session was doing). The session log keeps this as `ruleUse` (`shared/schemas/session.ts`, `scripts/session/rule-use.ts`), a hook answers a bare `echo rule-use:` call with the list, `scripts/session/rule-use-report.ts` totals it per rule, and the Journal session card shows it. Nearest pages: *Pruning instructions* (`terrarium-practice/50.pruning-instructions`) and *Session logs* (`terrarium-practice/40.session-logs`). Also: `docs/agents/verifying-ui-changes.md` now says Linux screenshots can't confirm fixed-width text fit; nearest page *Headless browser checks* (`verification/80.headless-browser-checks`).
 
 **Left over from the 2026-11-10 Nuxt Content, Web standards, Verification and Nuxt & Vue passes.** Fresh readers found these; none is false.
 - Several pages use *Space*, *Document*, *Catalog* or *Tenant* before they are glossed, or gloss one twice (*Vue components*, *Hydration*, *File routing*, *queryCollection*). A short rule for where each is glossed first would settle it.
 - *Mermaid pre-rendering*: the comment above `DIAGRAM_TOKEN_FALLBACKS` in `app/utils/mermaid.ts` still says the fallbacks are Mermaid's base-theme defaults, which they are not (outside this run's remit; a code comment).
 - *Content validation*: the lede says the build passes with a misspelt field, yet a `page` Collection with no schema is skipped by the check.
 - *Testing* never says what the `L2` in `setupL2()` means beyond `tests/README.md`; *Headless browser checks* gives no reason for `--no-sandbox` (the sources give none).
+
+**Left over from the 2026-11-11 Git & GitHub pass.** A fresh reader still found these; none is false.
+- *Pull requests*: one sentence runs "from the review and the local Gate run before the PR opens to the merge" and reads hard; *Trusted author* is used before it is glossed.
+- *Author trust*: the `trusted` label is "a display, not the check", yet a missing label means Public; the *OWNER isn't proof of a person* bullet is terse. *Issue triage labels* says only triage sets `ready-for-agent`, and later that a Trusted user's `ready-for-agent` label is an approval; a reader can't tell whether a person sets it by hand.
+- *Dependabot grouping*: why a 0.x minor counts as a major is not explained, and "the merge line" is jargon.
+- *Git worktrees* and *Git plumbing*: *Git worktrees* says Session logs shows how the script tells a linked worktree, without saying how; *Git plumbing* never says why `commit-tree` takes `env` and the other calls `idxEnv`.
+- *Pull requests* says a person merges the Human-only files, true as the default (see item 2 above).
 
 **Installed Skills.** *Engineering skills* could become part of *Installed skills* (`skill-pack/10.skill-packs`).
 
