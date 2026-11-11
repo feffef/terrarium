@@ -398,29 +398,43 @@ const SCHEMA_DIR = 'shared/schemas'
 /** Inside the repo, so the copied schema resolves `zod` from its node_modules. */
 const MAIN_SCHEMA_DIR = join(SCRATCH_DIR, 'main-schema')
 
+/** Why a schema rejects an entry. `unknownKeys` lists the top-level keys it does
+ *  not recognise when that is the ONLY problem, else null: only then is dropping
+ *  them enough to pass. Nested unknown keys never count (#3073). */
+export interface SchemaRejection {
+  errors: string
+  unknownKeys: string[] | null
+}
+
 /** Validate `entry` with the `sessionSchema` exported by `schemaFile`, in a child
- *  process because the lander is synchronous. Errors, or null when it passes. */
-export function schemaErrors(schemaFile: string, entry: unknown): string | null {
+ *  process because the lander is synchronous. The rejection, or null when it passes. */
+export function schemaRejection(schemaFile: string, entry: unknown): SchemaRejection | null {
   const check = `
     import { readFileSync } from 'node:fs'
     import { pathToFileURL } from 'node:url'
     const { sessionSchema } = await import(pathToFileURL(process.argv[1]).href)
     const res = sessionSchema.safeParse(JSON.parse(readFileSync(0, 'utf8')))
-    if (!res.success) console.log(res.error.issues.map((i) => '  ' + (i.path.join('.') || '(root)') + ': ' + i.message).join('\\n'))`
+    if (!res.success) console.log(JSON.stringify(res.error.issues))`
   const out = execFileSync(process.execPath, ['--import', 'tsx', '--input-type=module', '-e', check, schemaFile], {
     cwd: root,
     encoding: 'utf8',
     input: JSON.stringify(entry),
   })
-  return out.trim() ? out.trimEnd() : null
+  if (!out.trim()) return null
+  const issues = JSON.parse(out) as { path: (string | number)[]; code: string; message: string; keys?: string[] }[]
+  const strippable = issues.every((i) => i.code === 'unrecognized_keys' && i.path.length === 0)
+  return {
+    errors: issues.map((i) => '  ' + (i.path.join('.') || '(root)') + ': ' + i.message).join('\n'),
+    unknownKeys: strippable ? issues.flatMap((i) => i.keys ?? []) : null,
+  }
 }
 
 /** The log lands on `main`, so it must pass `main`'s `.strict()` schema, not just
  *  this branch's: a branch that adds a session field would otherwise land a log
  *  that fails `main`'s content validation. Skips the child process when `main`'s
  *  schema files match the checkout's; an unreadable `main` falls through, as in
- *  `mainVersion`. Errors, or null when it passes. */
-function mainSchemaErrors(entry: unknown, remote: string): string | null {
+ *  `mainVersion`. The rejection, or null when it passes. */
+function mainSchemaErrors(entry: unknown, remote: string): SchemaRejection | null {
   const show = (args: string[]) =>
     git(args, root, { stdio: ['ignore', 'pipe', 'ignore'] })
   let files: Record<string, string>
@@ -442,24 +456,25 @@ function mainSchemaErrors(entry: unknown, remote: string): string | null {
     mkdirSync(dirname(join(dir, p)), { recursive: true })
     writeFileSync(join(dir, p), text)
   }
-  return schemaErrors(join(dir, SCHEMA_DIR, 'session.ts'), entry)
+  return schemaRejection(join(dir, SCHEMA_DIR, 'session.ts'), entry)
 }
+
+const mainRejection = (entry: unknown, opts: Pick<LandOpts, 'remote' | 'mainSchemaFn'>): SchemaRejection | null =>
+  (opts.mainSchemaFn ?? mainSchemaErrors)(entry, opts.remote)
 
 /** Refuse a log `main`'s schema would reject; it lands on a later Stop once the
  *  schema change has merged, since the sentinel records only a landed log. */
-function mainSchemaRefusal(entry: unknown, opts: Pick<LandOpts, 'remote' | 'mainSchemaFn'>): HandlerResult | null {
-  const errors = (opts.mainSchemaFn ?? mainSchemaErrors)(entry, opts.remote)
-  if (errors === null) return null
-  return {
-    action: 'invalid',
-    detail: `${opts.remote}/main's session schema rejects this entry; it lands once the schema change merges:\n${errors}`,
-  }
-}
+const refusalOf = (rejection: SchemaRejection, remote: string): HandlerResult => ({
+  action: 'invalid',
+  detail: `${remote}/main's session schema rejects this entry; it lands once the schema change merges:\n${rejection.errors}`,
+})
 
 export interface HandlerResult {
   action: 'skipped-no-scratch' | 'skipped-unchanged' | 'invalid' | 'landed' | 'dry-run'
   relPath?: string
   detail?: string
+  /** Fields left out because `main`'s schema does not know them yet (#3073). */
+  dropped?: string[]
 }
 
 /** What `handle`/`recoverDroppedScratch` need beyond their inputs. `landFn` and
@@ -471,8 +486,8 @@ export interface LandOpts {
   landedBy?: string
   landFn?: typeof land
   mainVersionFn?: (relPath: string, remote: string) => string | null
-  /** `main`'s schema errors for an entry, or null; see `mainSchemaErrors`. */
-  mainSchemaFn?: (entry: unknown, remote: string) => string | null
+  /** `main`'s schema rejection of an entry, or null; see `mainSchemaErrors`. */
+  mainSchemaFn?: (entry: unknown, remote: string) => SchemaRejection | null
   env?: SessionIdEnv
   subagents?: SubagentJsonl[]
   /** The InstructionsLoaded ledger: each rule load's trigger file (#3009). */
@@ -499,8 +514,9 @@ export function scratchHashOf(scratchRaw: string): string {
 export function isAlreadyLanded(scratchRaw: string, sentinelRaw: string | null): boolean {
   if (sentinelRaw === null) return false
   try {
-    const sentinel = JSON.parse(sentinelRaw) as { scratchHash?: string }
-    return sentinel.scratchHash === scratchHashOf(scratchRaw)
+    const sentinel = JSON.parse(sentinelRaw) as { scratchHash?: string; strippedFields?: string[] }
+    // A stripped landing is not the full log: look again on every Stop until main takes it.
+    return sentinel.scratchHash === scratchHashOf(scratchRaw) && !sentinel.strippedFields?.length
   } catch {
     return false // unreadable sentinel — treat as not landed
   }
@@ -719,8 +735,8 @@ export function recoverDroppedScratch(transcriptJsonl: string, opts: LandOpts): 
     return { action: 'skipped-unchanged', relPath }
   }
 
-  const refusal = mainSchemaRefusal(entry, opts)
-  if (refusal) return refusal
+  const rejection = mainRejection(entry, opts)
+  if (rejection) return refusalOf(rejection, opts.remote)
 
   return stageAndLand(relPath, entryYaml(entry, opts), opts)
 }
@@ -747,10 +763,15 @@ export function handle(
     return { action: 'skipped-unchanged', relPath }
   }
 
-  const refusal = mainSchemaRefusal(entry, opts)
-  if (refusal) return refusal
-
-  return stageAndLand(relPath, yaml, opts)
+  const rejection = mainRejection(entry, opts)
+  if (!rejection) return stageAndLand(relPath, yaml, opts)
+  // Fields only this branch's schema knows: land without them and report them, so
+  // the sentinel keeps the full log pending until `main` accepts it (#3073).
+  if (!rejection.unknownKeys) return refusalOf(rejection, opts.remote)
+  const dropped = rejection.unknownKeys
+  const stripped = entryYaml(Object.fromEntries(Object.entries(entry).filter(([k]) => !dropped.includes(k))), opts)
+  const onMain = current !== null && withoutLandedBy(current) === withoutLandedBy(stripped)
+  return { ...(onMain ? { action: 'skipped-unchanged' as const, relPath } : stageAndLand(relPath, stripped, opts)), dropped }
 }
 
 // ── CLI entry points ────────────────────────────────────────────────────────
@@ -820,7 +841,7 @@ export function reportReads(ctx: AuthorContext | undefined, log: (line: string) 
   }
 }
 
-function fetchedMainSchemaErrors(entry: unknown, remote: string): string | null {
+function fetchedMainSchemaErrors(entry: unknown, remote: string): SchemaRejection | null {
   try {
     fetchOriginMain(root, remote, undefined, true)
   } catch {
@@ -881,14 +902,16 @@ export function authorMain(
   writeFileSync(scratchAbs, JSON.stringify(merged, null, 2))
   console.log(`✓ authored scratch written → ${SCRATCH_FILE}`)
   // The lander's refusal reaches only the hook's stderr, so say it here (issue #1784).
-  let hold: HandlerResult | null | undefined
+  let rejection: SchemaRejection | null | undefined
   try {
-    hold = ctx && mainSchemaRefusal(stitch(merged, ctx.trace), { remote: 'origin', mainSchemaFn: opts.mainSchemaFn ?? fetchedMainSchemaErrors })
+    rejection = ctx && mainRejection(stitch(merged, ctx.trace), { remote: 'origin', mainSchemaFn: opts.mainSchemaFn ?? fetchedMainSchemaErrors })
   } catch {
-    hold = null // a check that can't run counts as `main` unreadable: authoring never fails on it
+    rejection = null // a check that can't run counts as `main` unreadable: authoring never fails on it
   }
-  if (hold) {
-    console.log(`  the Stop hook will hold it, not commit it this turn: ${hold.detail}`)
+  if (rejection?.unknownKeys) {
+    console.log(`  the Stop hook will commit it without ${rejection.unknownKeys.join(', ')}, which main's schema does not know yet; the full log lands after that schema merges.`)
+  } else if (rejection) {
+    console.log(`  the Stop hook will hold it, not commit it this turn: ${refusalOf(rejection, 'origin').detail}`)
     console.log('  It lands on the first turn that ends after that merge, so stay subscribed to the schema PR.')
   } else {
     console.log('  the Stop hook will stitch it with the derived trace and commit, live, at the end of this turn.')
@@ -1017,12 +1040,14 @@ function landMain(argv: string[]): void {
     default:
       console.error(`log-session: ${result.action} ${result.relPath ?? ''}`)
   }
+  if (result.dropped) console.error(`log-session: main's schema does not know ${result.dropped.join(', ')} yet; logged without them, the full log re-lands once it does`)
 
   // Record what we landed so the next event's gate no-ops until the scratch changes.
   // Both 'landed' and 'skipped-unchanged' mean this scratch's content is on `main`.
   if (!dryRun && (result.action === 'landed' || result.action === 'skipped-unchanged') && result.relPath) {
     mkdirSync(dirname(sentinelPath), { recursive: true })
-    writeFileSync(sentinelPath, JSON.stringify({ scratchHash: scratchHashOf(scratchRaw), relPath: result.relPath }, null, 2))
+    const strippedFields = result.dropped
+    writeFileSync(sentinelPath, JSON.stringify({ scratchHash: scratchHashOf(scratchRaw), relPath: result.relPath, strippedFields }, null, 2))
   }
 }
 

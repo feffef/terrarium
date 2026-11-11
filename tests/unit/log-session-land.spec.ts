@@ -17,7 +17,7 @@ import {
   handle,
   isAlreadyLanded,
   recoverDroppedScratch,
-  schemaErrors,
+  schemaRejection,
   scratchHashOf,
 } from '../../scripts/session/log-session.ts'
 import { SESSIONS_DIR, validateEntry } from '../../scripts/session/journal-files.ts'
@@ -157,7 +157,7 @@ describe("main's session schema — a branch's new field cannot land a log main 
       env: {},
       landFn,
       mainVersionFn: () => null,
-      mainSchemaFn: () => "  (root): Unrecognized key(s) in object: 'newField'",
+      mainSchemaFn: () => ({ errors: "  (root): Unrecognized key(s) in object: 'newField'", unknownKeys: null }),
     })
     expect(res.action).toBe('invalid')
     expect(res.detail).toContain("origin/main's session schema rejects this entry")
@@ -166,11 +166,62 @@ describe("main's session schema — a branch's new field cannot land a log main 
     expect(existsSync(stagingAbs)).toBe(false)
   })
 
-  it('schemaErrors() runs a schema file against an entry', () => {
+  it('schemaRejection() runs a schema file against an entry', () => {
     const schemaFile = join(repoRoot, 'shared/schemas/session.ts')
     const entry = stitch(scratch, extractTrace(parseTranscript(transcript), {}))
-    expect(schemaErrors(schemaFile, entry)).toBeNull()
-    expect(schemaErrors(schemaFile, { ...entry, newField: 1 })).toContain('newField')
+    expect(schemaRejection(schemaFile, entry)).toBeNull()
+    const added = schemaRejection(schemaFile, { ...entry, newField: 1 })
+    expect(added?.errors).toContain('newField')
+    expect(added?.unknownKeys).toEqual(['newField'])
+  })
+
+  it('schemaRejection() reports no strippable keys when any error is not a top-level unknown key', () => {
+    const schemaFile = join(repoRoot, 'shared/schemas/session.ts')
+    const entry = stitch(scratch, extractTrace(parseTranscript(transcript), {}))
+    expect(schemaRejection(schemaFile, { ...entry, newField: 1, goal: 5 })?.unknownKeys).toBeNull()
+  })
+
+  describe('when main rejects only fields the branch adds', () => {
+    const strip = { errors: "  (root): Unrecognized key(s) in object: 'outcome'", unknownKeys: ['outcome'] }
+    const run = (mainVersionFn: () => string | null, landFn: unknown) =>
+      handle(scratch, transcript, {
+        dryRun: false,
+        remote: 'origin',
+        env: {},
+        mainVersionFn,
+        mainSchemaFn: () => strip,
+        landFn: landFn as typeof import('../../scripts/session/log-session.ts').land,
+      })
+
+    it('lands the log without those fields and names them', () => {
+      let yaml = ''
+      const res = run(
+        () => null,
+        (_rel: string, abs: string) => {
+          yaml = readFileSync(abs, 'utf8')
+          return 'x'
+        },
+      )
+      expect(res.action).toBe('landed')
+      expect(res.dropped).toEqual(['outcome'])
+      expect(yaml).toMatch(/^goal:/m)
+      expect(yaml).not.toMatch(/^outcome:/m)
+    })
+
+    it('reports the strip when the stripped log is already on main, so the sentinel keeps it', () => {
+      let yaml = ''
+      run(
+        () => null,
+        (_rel: string, abs: string) => {
+          yaml = readFileSync(abs, 'utf8')
+          return 'x'
+        },
+      )
+      const landFn = vi.fn()
+      const res = run(() => yaml, landFn)
+      expect(res).toMatchObject({ action: 'skipped-unchanged', dropped: ['outcome'] })
+      expect(landFn).not.toHaveBeenCalled()
+    })
   })
 })
 
@@ -314,5 +365,10 @@ describe('isAlreadyLanded() / scratchHashOf() — the landing gate (#148)', () =
 
   it('treats an unreadable sentinel as not-landed (fail open, so the log lands)', () => {
     expect(isAlreadyLanded(raw, 'not json{')).toBe(false)
+  })
+
+  it('does not treat a stripped landing as landed: the full log re-lands once main accepts it', () => {
+    const sentinel = JSON.stringify({ scratchHash: scratchHashOf(raw), relPath: expectedRel, strippedFields: ['outcome'] })
+    expect(isAlreadyLanded(raw, sentinel)).toBe(false)
   })
 })
