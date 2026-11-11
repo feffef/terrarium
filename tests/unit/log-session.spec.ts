@@ -443,7 +443,7 @@ describe('reportReads (the names reported is picked from)', () => {
     function author(
       fixture: { home: string; root: string },
       { mainSchemaFn = () => null, scratchAbs = join(fixture.root, 'scratch.json'), extra = '', status = 'completed', worktrees }: {
-        mainSchemaFn?: (entry: unknown) => string | null
+        mainSchemaFn?: (entry: unknown) => { errors: string; unknownKeys: string[] | null } | null
         worktrees?: WorktreeSeam
         scratchAbs?: string
         extra?: string
@@ -569,13 +569,20 @@ describe('reportReads (the names reported is picked from)', () => {
     })
 
     it("holds, rather than promising a commit, when main's schema rejects the stitched entry", () => {
-      const reject = () => "  (root): Unrecognized key(s) in object: 'newField'"
+      const reject = () => ({ errors: "  (root): Unrecognized key(s) in object: 'newField'", unknownKeys: null })
       const { logs, scratchWritten } = author(store(['git status']), { mainSchemaFn: reject })
       const out = logs.join('\n')
       expect(scratchWritten).toBe(true)
       expect(out).toContain("Unrecognized key(s) in object: 'newField'")
       expect(out).toContain('first turn that ends after that merge, so stay subscribed to the schema PR.')
       expect(out).not.toContain('at the end of this turn')
+    })
+
+    it('says the log lands without the fields main does not know, rather than holding', () => {
+      const strip = () => ({ errors: "  (root): Unrecognized key(s) in object: 'newField'", unknownKeys: ['newField'] })
+      const out = author(store(['git status']), { mainSchemaFn: strip }).logs.join('\n')
+      expect(out).toContain('does not know newField')
+      expect(out).not.toContain('first turn that ends after that merge')
     })
   })
 })
