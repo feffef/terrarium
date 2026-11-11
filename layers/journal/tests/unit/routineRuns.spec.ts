@@ -77,7 +77,7 @@ describe('formatRoutineMetric', () => {
     expect(formatRoutineMetric('costUsd', 121.48)).toBe('$121')
     expect(formatRoutineMetric('cacheReadTokens', 22_557_819)).toBe('22.6M')
     expect(formatRoutineMetric('outputTokens', 950)).toBe('950')
-    expect(formatRoutineMetric('durationSeconds', 1147)).toBe('19m')
+    expect(formatRoutineMetric('durationSeconds', 1147)).toBe('19m 7s')
     expect(formatRoutineMetric('durationSeconds', 5642)).toBe('1h 34m')
   })
 })

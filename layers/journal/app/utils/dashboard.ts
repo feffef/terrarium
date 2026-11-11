@@ -22,6 +22,7 @@
 // for its part, never relies on auto-import itself: it stays dependency-free
 // and explicit.
 import type { Friction, Importance, RoutineDoc, RuleUseView, SessionCardView, SessionDoc, Severity, SkillDoc, NoteItem, Subagent } from '../types/journal'
+import { formatJournalDuration } from './duration'
 import { formatRoutineMetric } from './routineRuns'
 import { REPO_URL } from '../../../../app/utils/repo'
 import { sessionUrl } from '#shared/session-url'
@@ -42,12 +43,8 @@ export function sessionWhen(iso: string): string {
   return `${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()} · ${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())} UTC`
 }
 
-export function sessionDurationMin(a: string, b: string): number {
-  return Math.max(1, Math.round((new Date(b).getTime() - new Date(a).getTime()) / 60000))
-}
-
-export function sessionDurationLabel(min: number): string {
-  return min >= 60 ? `${Math.floor(min / 60)} h ${min % 60} min` : `${min} min`
+export function sessionDurationSec(a: string, b: string): number {
+  return Math.max(60, Math.round((new Date(b).getTime() - new Date(a).getTime()) / 1000))
 }
 
 export function sessionShortId(s: string): string {
@@ -76,10 +73,7 @@ export function sessionToolEntries(counts?: Record<string, number>): { name: str
 export function subagentUsageLabel(a: Pick<Subagent, 'tokenShare' | 'durationSec'>): string {
   const parts: string[] = []
   if (a.tokenShare !== undefined) parts.push(a.tokenShare < 1 ? '<1%' : `${Math.round(a.tokenShare)}%`)
-  if (a.durationSec !== undefined) {
-    const m = Math.floor(a.durationSec / 60)
-    parts.push(m ? `${m}m ${a.durationSec % 60}s` : `${a.durationSec}s`)
-  }
+  if (a.durationSec !== undefined) parts.push(formatJournalDuration(a.durationSec))
   return parts.join(' · ')
 }
 
@@ -217,7 +211,7 @@ export function sessionCardViews(
     return {
       key: s.session,
       when: sessionWhen(s.endedAt),
-      duration: sessionDurationLabel(sessionDurationMin(s.startedAt, s.endedAt)),
+      duration: formatJournalDuration(sessionDurationSec(s.startedAt, s.endedAt)),
       goal: s.goal,
       status: s.status,
       outcome: s.outcome,
