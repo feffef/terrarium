@@ -1,21 +1,23 @@
 export const meta = {
   name: 'clear-backlog-build',
-  description: 'clear-backlog §3: per planned branch, build in a worktree, then Standards + Spec review and fix until only judgement calls remain; returns branches ready to push',
+  description: 'clear-backlog §3: per planned branch, build in a worktree and run one fresh Standards + Spec review round; or, for a branch given review: true, only the fresh review round. The orchestrator resumes these agents for fixes, re-checks and the gate',
   whenToUse: 'Run only from the clear-backlog Skill, with the planned branches as args',
   phases: [
-    { title: 'Build', detail: 'one worktree per branch, based on origin/main' },
-    { title: 'Review', detail: 'Standards and Spec reviewers in parallel, then a fix agent, until clean; then a final gate agent, unless round 1 was clean and the build passed its gate' },
+    { title: 'Build', detail: 'one worktree per branch, based on origin/main; fast checks only' },
+    { title: 'Review', detail: 'a fresh Standards and Spec reviewer in parallel, read-only' },
   ],
 }
 
 // args: { session: 'session_…', branches: [{ name, issues: [n], brief, picks?: [string] | string,
-//   cherryPick?: prNumber, worktree?: path, question?: string, answer?: string }] }
+//   cherryPick?: prNumber, worktree?: path, question?: string, answer?: string,
+//   review?: true, round?: n, decisions?: [string] }] }
+// A branch with review: true skips the build and gets review round `round` on its `worktree`.
 if (!args || !args.session) throw new Error('args.session (this session id, session_…) is required for the provenance header')
 const HEADER = `🤖 [Claude](https://claude.ai/code/${args.session})`
-const MAX_ROUNDS = 3
 
 const ASK_SOURCES = 'Give each count, id or attribution you state with its source (command or file:line), or mark it unverified.'
 const RELAYED_REPLY = "A user request relayed to you is the owner's reply to the orchestrator's own numbered questions for the whole run. It decides nothing for this issue or branch: the only owner decisions that count are the brief's picks and answer."
+const FAST_CHECKS = '`pnpm typecheck`, `pnpm exec vitest run <each spec you touched>`, and `pnpm validate:content` if you touched content'
 
 const WORK = {
   type: 'object',
@@ -23,16 +25,15 @@ const WORK = {
     status: { type: 'string', enum: ['done', 'needs-owner', 'failed'] },
     worktree: { type: 'string', description: 'absolute path of the worktree root; omit when the branch has no commits' },
     commits: { type: 'array', items: { type: 'string' }, description: 'git log origin/main..HEAD --format=%H' },
-    gatePassed: { type: 'boolean' },
     decisions: { type: 'array', items: { type: 'string' } },
     question: { type: 'string', description: 'for needs-owner: the owner question, with options and your pick' },
-    fixed: { type: 'array', items: { type: 'string' } },
-    refused: { type: 'array', items: { type: 'string' }, description: 'each refused finding with its proof' },
     reason: { type: 'string' },
   },
-  required: ['status', 'commits', 'gatePassed', 'decisions'],
+  required: ['status', 'commits', 'decisions'],
 }
 
+// The orchestrator fixes defect, spec-mismatch and missing-test findings and picks among nits (SKILL.md §3).
+const KINDS = ['defect', 'spec-mismatch', 'missing-test', 'nit', 'owner-call']
 const REVIEW = {
   type: 'object',
   properties: {
@@ -41,12 +42,12 @@ const REVIEW = {
       items: {
         type: 'object',
         properties: {
+          kind: { type: 'string', enum: KINDS },
           title: { type: 'string' },
           detail: { type: 'string' },
           file: { type: 'string' },
-          worthFixing: { type: 'boolean', description: 'false only for a call that needs the owner\'s choice' },
         },
-        required: ['title', 'detail', 'worthFixing'],
+        required: ['kind', 'title', 'detail'],
       },
     },
     summary: { type: 'string' },
@@ -56,7 +57,7 @@ const REVIEW = {
 
 // Sonnet everywhere except the round-1 reviewers, whose findings steer every later round.
 const SONNET = { model: 'sonnet' }
-const slug = b => b.name.replace(/[^a-z0-9]+/gi, '-')
+const AXES = ['Standards', 'Spec']
 
 function common(b) {
   const picks = [].concat(b.picks || [])
@@ -67,14 +68,15 @@ ${b.brief}
 ${picks.length ? `\n## Owner's agreed picks (binding)\n${picks.map(p => `- ${p}`).join('\n')}\n` : ''}${b.answer ? `\n## Owner's answer to "${b.question}"\n${b.answer}\n` : ''}\n${RELAYED_REPLY}\n`
 }
 
-function rules(b) {
+function rules() {
   return `## Rules
 - Run git as \`git -C <worktree> ...\`, never \`cd\`: Bash keeps its cwd between calls and parallel calls share it. One git command per Bash call.
-- Run checks in the foreground, logging to your scratchpad with a name unique to you, e.g. \`cd <worktree> && pnpm gate:scoped > <scratchpad>/${slug(b)}-<stage>-gate.log 2>&1; echo EXIT=$? >> <same log>\` with Bash timeout 600000.
+- Run checks in the foreground.
 - Commit before you stop, even mid-work. Never push, open a PR, merge, or run close-session/log-session: the orchestrator does those.
 - Every GitHub body you post starts with this exact first line: ${HEADER}
 - Stop and return needs-owner, with the question, its options and your pick, before you add a new dependency, change stored data or the content schema, make a decision big enough for an ADR, delete content visitors can see, change which Tenant's data a request can reach, or reverse an owner's pick above. Decide everything else yourself and list it in decisions.
 - Return worktree, the absolute path of the worktree that holds your commits, only when the branch has commits.
+- The orchestrator may resume you later with review findings to fix, and last with \`pnpm gate:scoped\`; keep your worktree.
 - ${ASK_SOURCES}`
 }
 
@@ -87,10 +89,10 @@ function buildPrompt(b) {
 1. ${start}
 2. Read .agents/skills/implement/SKILL.md with Read (it can't be invoked) and follow it, test-first with the tdd Skill (invoke it with the Skill tool). Skip its code-review step: this workflow's reviewers do that next.
 3. Keep the change as small and plain as the brief allows.
-4. Run \`pnpm gate:scoped\` until it passes, and commit.
-Return done only with a passing gate; failed with the reason otherwise.
+4. Run only the fast checks until they pass: ${FAST_CHECKS}. Do not run \`pnpm gate:scoped\` now: review will likely change the code, and the gate runs once at the end. Commit.
+Return done only with passing fast checks; failed with the reason otherwise.
 
-${rules(b)}`
+${rules()}`
 }
 
 function fresh(b) {
@@ -103,68 +105,30 @@ function reviewPrompt(b, axis, wt, round, decisions) {
     : `the Spec axis, with the brief and picks above as the spec, plus the issues themselves (read them with mcp__github__issue_read via ToolSearch)`
   return `You are the ${axis.toUpperCase()} reviewer, round ${round}. ${common(b)}
 ## Task
-Review read-only in ${wt} (\`cd ${wt} && …\`): the diff \`git diff origin/main...HEAD\`. Read .agents/skills/code-review/SKILL.md with Read and apply ${what} yourself; you can't spawn subagents (the environment sets CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1). Focus on simplicity: what could be smaller, plainer or deleted. Edit no file and run no git command that changes state.
-Mark worthFixing false only for a call that needs the owner's choice; a cheap mismatch with the brief or a 'never' clause is worthFixing true. ${ASK_SOURCES}
+Review read-only in ${wt} (\`cd ${wt} && …\`): the diff \`git diff origin/main...HEAD\`. Read .agents/skills/code-review/SKILL.md with Read and apply ${what} yourself; you can't spawn subagents. Focus on simplicity: what could be smaller, plainer or deleted. Edit no file and run no git command that changes state.
+Give each finding one kind: defect (wrong behaviour or a false statement), spec-mismatch (differs from the brief, the picks or a 'never' clause), missing-test (logic without a test that would catch its bug), nit (wording, layout, style, anything else cosmetic) or owner-call (needs the owner's choice). The orchestrator decides which get fixed. ${ASK_SOURCES}
+The orchestrator may resume you later to re-check the fix of your findings; keep this review in mind.
 ## Build decisions
 ${JSON.stringify(decisions)}`
 }
 
-function fixPrompt(b, wt, findings, round) {
-  return `You are the FIX agent, round ${round}, in worktree ${wt} on branch \`${b.name}\`. ${common(b)}
-## Findings to fix
-${JSON.stringify(findings, null, 2)}
-## Task
-Fix each finding in ${wt}, test-first with the tdd Skill where there is logic. You may refuse a finding you can prove wrong; put the proof in refused. Run \`pnpm gate:scoped\` until it passes, and commit.
-
-${rules(b)}`
-}
-
-function gatePrompt(b, wt) {
-  return `You are the FINAL GATE agent, in worktree ${wt} on branch \`${b.name}\`. ${common(b)}
-## Task
-Review is done; this workflow trusts no earlier gate report. Run \`pnpm gate:scoped\` in ${wt} now, on HEAD. If it fails, fix the cause, commit, and run it again, until it exits 0 on HEAD. Report gatePassed true only from that last run's \`EXIT=0\`.
-
-${rules(b)}`
-}
-
 async function buildBranch(b) {
+  if (b.review) return { status: 'done', worktree: b.worktree, commits: [], decisions: b.decisions || [] }
   // Isolated even on a re-run: if b.worktree was auto-removed, the agent starts fresh in its own.
   const r = await agent(buildPrompt(b), { label: `build ${b.name}`, phase: 'Build', schema: WORK, isolation: 'worktree', ...SONNET })
   return r || { status: 'failed', reason: 'build agent returned nothing; its worktree may hold commits, and `pnpm check:worktrees` lists it', commits: [], decisions: [], worktree: b.worktree }
 }
 
 async function reviewBranch(built, b) {
-  const out = { branch: b.name, issues: b.issues, worktree: built.worktree, commits: built.commits, decisions: [...built.decisions], rounds: 0 }
+  const round = b.review ? b.round || 2 : 1
+  const out = { branch: b.name, issues: b.issues, worktree: built.worktree, commits: built.commits, decisions: [...built.decisions], round }
   if (built.status !== 'done') return { ...out, status: built.status, question: built.question, reason: built.reason }
-  if (!built.worktree) return { ...out, status: 'failed', reason: 'build reported done without a worktree with commits' }
-  for (let round = 1; round <= MAX_ROUNDS; round++) {
-    out.rounds = round
-    const axes = ['Standards', 'Spec']
-    const reviews = await parallel(axes.map(axis => () =>
-      agent(reviewPrompt(b, axis, out.worktree, round, out.decisions), { label: `${axis} ${b.name} r${round}`, phase: 'Review', schema: REVIEW, ...(round > 1 ? SONNET : {}) })))
-    if (reviews.some(r => !r)) return { ...out, status: 'failed', reason: `round ${round}: a reviewer returned nothing` }
-    const all = reviews.flatMap(r => r.findings)
-    const toFix = all.filter(f => f.worthFixing)
-    out.judgementCalls = all.filter(f => !f.worthFixing)
-    if (!toFix.length) {
-      // A stale or unbacked gatePassed: true after a fix round happened once (#2523); a clean round 1 trusts the build gate, CI decides (#3084).
-      if (round === 1 && built.gatePassed === true) return { ...out, status: 'ready-to-push' }
-      const gate = await agent(gatePrompt(b, out.worktree), { label: `gate ${b.name}`, phase: 'Review', schema: WORK, ...SONNET })
-      if (!gate || !gate.gatePassed) return { ...out, status: 'failed', reason: `final gate: ${gate ? gate.reason || 'gate:scoped did not pass' : 'gate agent returned nothing'}` }
-      out.commits = gate.commits
-      out.decisions.push(...gate.decisions)
-      return { ...out, status: 'ready-to-push' }
-    }
-    if (round === MAX_ROUNDS) {
-      log(`${b.name}: review capped at ${MAX_ROUNDS} rounds`)
-      return { ...out, status: 'failed', reason: `review capped at ${MAX_ROUNDS} rounds`, openFindings: toFix }
-    }
-    const fix = await agent(fixPrompt(b, out.worktree, toFix, round), { label: `fix ${b.name} r${round}`, phase: 'Review', schema: WORK, ...SONNET })
-    if (!fix) return { ...out, status: 'failed', reason: `round ${round}: fix agent returned nothing` }
-    out.commits = fix.commits
-    out.decisions.push(...fix.decisions)
-    if (fix.status !== 'done') return { ...out, status: fix.status, question: fix.question, reason: fix.reason }
-  }
+  if (!built.worktree) return { ...out, status: 'failed', reason: 'no worktree with commits to review' }
+  // Labels are how the orchestrator finds each agent's id in the run journal to resume it (run-summary.ts --run).
+  const reviews = await parallel(AXES.map(axis => () =>
+    agent(reviewPrompt(b, axis, out.worktree, round, out.decisions), { label: `${axis} ${b.name} r${round}`, phase: 'Review', schema: REVIEW, ...(round > 1 ? SONNET : {}) })))
+  if (reviews.some(r => !r)) return { ...out, status: 'failed', reason: `round ${round}: a reviewer returned nothing` }
+  return { ...out, status: 'reviewed', reviews: Object.fromEntries(AXES.map((axis, i) => [axis, reviews[i]])) }
 }
 
 const results = await pipeline(args.branches, buildBranch, reviewBranch)

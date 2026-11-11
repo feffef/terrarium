@@ -40,54 +40,56 @@ it('every .claude/workflows/*.js compiles, and its meta.name is its basename', a
   }
 })
 
-describe('clear-backlog-build final gate (#2523, #3084)', () => {
+describe('clear-backlog-build (#3110)', () => {
   const source = readFileSync(join(DIR, 'clear-backlog-build.js'), 'utf8').replace(/^export const meta/m, 'const meta')
-  const work = (gatePassed: boolean, commits: string[]) => ({ status: 'done', worktree: '/wt', commits, gatePassed, decisions: [] })
-  const clean = { findings: [], summary: '' }
-  const dirty = { findings: [{ worthFixing: true }], summary: '' }
+  const built = { status: 'done', worktree: '/wt', commits: ['a'], decisions: ['d'] }
+  const review = (kind: string) => ({ findings: [{ kind, title: 't', detail: 'x' }], summary: '' })
 
-  /** Runs the script on one branch: the build reports `build`, each review round (two reviewers) returns the next of `rounds`, the fix agent returns a passed gate, and the final gate returns `gate`. */
-  async function run(gate: unknown, build = work(false, ['a']), rounds: object[] = [clean]) {
-    const labels: string[] = []
-    let reviews = 0
+  /** Runs the script on one branch; the build returns `build`, and each reviewer its axis's entry of `reviews`. */
+  async function run(branch: object, build: unknown = built, reviews: Record<string, unknown> = { Standards: review('nit'), Spec: review('defect') }) {
+    const calls: { label: string; prompt: string }[] = []
     const globals: Record<string, unknown> = {
-      agent: async (_p: string, o: { label: string }) => {
-        labels.push(o.label)
-        if (o.label.startsWith('build')) return build
-        if (o.label.startsWith('gate')) return gate
-        if (o.label.startsWith('fix')) return work(true, ['a', 'f'])
-        return rounds[Math.min(Math.floor(reviews++ / 2), rounds.length - 1)]
+      agent: async (prompt: string, o: { label: string }) => {
+        calls.push({ label: o.label, prompt })
+        return o.label.startsWith('build') ? build : reviews[o.label.split(' ')[0]!]
       },
       pipeline: (items: unknown[], ...stages: ((x: unknown, i: unknown) => unknown)[]) =>
         Promise.all(items.map(async (i) => { let x = i; for (const s of stages) x = await s(x, i); return x })),
       parallel: (fns: (() => unknown)[]) => Promise.all(fns.map((f) => f())),
       log: () => {},
-      args: { session: 'session_x', branches: [{ name: 'fix/1-x', issues: [1], brief: 'b' }] },
+      args: { session: 'session_x', branches: [{ name: 'fix/1-x', issues: [1], brief: 'b', ...branch }] },
     }
     const [r] = await new AsyncFunction(...GLOBALS, source)(...GLOBALS.map((g) => globals[g])) as unknown[]
-    return { r, gated: labels.some((l) => l.startsWith('gate')) }
+    return { r, calls }
   }
 
-  it('gates a clean branch whose build reported a failed gate, and takes the gate agent\'s commits', async () => {
-    const { r, gated } = await run(work(true, ['a', 'b']))
-    expect(gated).toBe(true)
-    expect(r).toMatchObject({ status: 'ready-to-push', commits: ['a', 'b'] })
+  it('builds, then returns one fresh review round per axis, labelled so the orchestrator can resume each agent', async () => {
+    const { r, calls } = await run({})
+    expect(calls.map((c) => c.label)).toEqual(['build fix/1-x', 'Standards fix/1-x r1', 'Spec fix/1-x r1'])
+    expect(r).toMatchObject({ status: 'reviewed', round: 1, worktree: '/wt', commits: ['a'], decisions: ['d'], reviews: { Standards: review('nit'), Spec: review('defect') } })
   })
 
-  it('skips the final gate when round 1 is clean and the build reported a passed gate', async () => {
-    const { r, gated } = await run(null, work(true, ['a']))
-    expect(gated).toBe(false)
-    expect(r).toMatchObject({ status: 'ready-to-push', commits: ['a'] })
+  it('tells the build agent to skip gate:scoped, which runs once after review', async () => {
+    const { calls } = await run({})
+    expect(calls[0]!.prompt).toMatch(/Do not run `pnpm gate:scoped` now/)
   })
 
-  it('gates a branch that is clean only after a fix round, even if the build passed its gate', async () => {
-    const { r, gated } = await run(work(true, ['a', 'f', 'g']), work(true, ['a']), [dirty, clean])
-    expect(gated).toBe(true)
-    expect(r).toMatchObject({ status: 'ready-to-push', commits: ['a', 'f', 'g'] })
+  it('in review-only mode skips the build and reviews the given worktree as the given round', async () => {
+    const { r, calls } = await run({ review: true, round: 2, worktree: '/wt/b', decisions: ['kept'] })
+    expect(calls.map((c) => c.label)).toEqual(['Standards fix/1-x r2', 'Spec fix/1-x r2'])
+    expect(calls[0]!.prompt).toContain('/wt/b')
+    expect(r).toMatchObject({ status: 'reviewed', round: 2, worktree: '/wt/b', decisions: ['kept'] })
   })
 
-  it.each([[null], [work(false, ['a'])]])('fails the branch, naming the final gate, when the gate agent returns %j', async (gate) => {
-    expect((await run(gate)).r).toMatchObject({ status: 'failed', reason: expect.stringMatching(/final gate/) })
+  it('passes a needs-owner build through without review', async () => {
+    const { r, calls } = await run({}, { status: 'needs-owner', commits: [], decisions: [], question: 'q?' })
+    expect(calls).toHaveLength(1)
+    expect(r).toMatchObject({ status: 'needs-owner', question: 'q?' })
+  })
+
+  it('fails the branch when a reviewer returns nothing', async () => {
+    const { r } = await run({}, built, { Standards: review('nit'), Spec: null })
+    expect(r).toMatchObject({ status: 'failed', reason: 'round 1: a reviewer returned nothing' })
   })
 })
 
