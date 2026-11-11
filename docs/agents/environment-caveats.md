@@ -106,5 +106,6 @@ them as new. Incident detail lives in the cited issue.
   call, and nearly every tool call is blocked. Not a repo bug: ask the owner to
   restart Claude Code from a shell with a fresh `TMPDIR`. (session 92148909)
 - **`ssh` from a sandboxed local Bash can hang** (local sandbox only, not
-  cloud). Don't run it there; ask the owner to run it or to lift the sandbox
-  for that call. (session fd29c728, log lines 34, 118)
+  cloud). (session fd29c728, log lines 34, 118)
+- **Text you write before an `AskUserQuestion` call may be hidden by its
+  dialog** (seen once): put any example content inside the questions.
