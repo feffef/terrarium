@@ -23,14 +23,14 @@ them as new. Incident detail lives in the cited issue.
   "Unverified" commit, can silently fail to sign even with a correct author
   email.
 - **A Stop hook cannot invoke a Skill; its message can only tell you to.**
-  Invoke it yourself next turn. (session log 2026-11-07; seen once)
+  Invoke it yourself next turn. (session_013zxzeSy38XR1wPjCGFUExY; seen once)
 - **Session-only state can vanish across a resume, with no error:** a
   `/loop` or `CronCreate` job, a backgrounded `Agent` subagent, a scratchpad
   file. After a resume, check that each is still registered, alive or intact.
   (issues #571, #794, #891)
 - **A background task can send a "completed" notice before its work ends.**
   Check the log or output for the real end first.
-  (session log 2026-10-24; seen once)
+  (session_01BjA9rHbNdMX5KiK49Cee99; seen once)
 - **Any `mcp__claude-code-remote__*` call (`mcp__Claude_Code_Remote__*` in some
   sessions) and `AskUserQuestion` can fail once with "permission stream
   closed".** Retry once only. If that fails: for `AskUserQuestion`, take the
