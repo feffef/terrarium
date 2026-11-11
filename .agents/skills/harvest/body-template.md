@@ -1,17 +1,18 @@
 # Seedling body
 
 Reference for `harvest` step 4. The owner decides from the body alone, so it
-must not send them into the repo or a session log. Explain in half a sentence
-every term a reader outside those sessions would not know (a Skill, a guard, a
-Collection). Name a session by its date and what it was doing, never by its id;
-filenames go only under Sources.
+holds everything they need and they never open the repo or a session log.
+Explain in half a sentence every term a reader outside those sessions would not
+know (a Skill, a guard, a Collection, the visitor loop). Name a session by its
+date and what it was doing; filenames go only under Sources, and `check-body`
+rejects a session id anywhere else.
 
 Write these parts in order:
 
 1. The ADR-0017 header, then the banner line
-   `Agent seedling from harvest, not approved. Waits for a Trusted user's green light (ADR-0003).`
+   `Agent seedling from harvest, not approved. It waits for a Trusted user's green light before anyone builds it.`
 2. The output of `harvest block <extract.json> <n> [n...]` for the cluster's
-   entries, pasted unchanged: the key lines are rendered, never typed.
+   entries, pasted unchanged; `harvest block` renders the key lines.
 3. `## The idea`: two or three plain sentences on what would be built or
    changed.
 4. `## Why it matters`: who benefits (a visitor, the owner, agents) and what is
@@ -21,8 +22,7 @@ Write these parts in order:
    how recent it is. Name related earlier issues or PRs in plain words.
 6. `## What would change`: the areas and files touched, the rough size, and what
    it retires or simplifies, so the Platform ends up no more complicated.
-7. `## What I checked`: the facts you verified with their source (still
-   unbuilt, not in the Friction Ledger, no existing issue), then your
+7. `## What I checked`: the facts you verified, each with its source, then your
    assumptions, kept apart.
 8. `## Sources`: the source logs by full filename.
 

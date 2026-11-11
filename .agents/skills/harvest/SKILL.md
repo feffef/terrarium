@@ -9,10 +9,9 @@ A Routine runs this Skill; its schedule lives there, not here (ADR-0005). Its
 approval covers only the steps below (ADR-0003): it files issues and changes
 nothing in the repo but its own session log.
 
-`frictions-to-fixes` retires the pains the Friction Ledger records, and most of
-what agents report concerns how they are instructed and fenced. `harvest` is
-its complement: positive ideas the Ledger does not carry, preferring those for
-Tenants, content and the UI. A Seedling (GLOSSARY.md) is labelled
+`harvest` files positive ideas the Friction Ledger does not carry, preferring
+those for Tenants, content and the UI; `frictions-to-fixes` owns the pains. A
+Seedling (GLOSSARY.md) is labelled
 `ready-for-human` and waits for a Trusted user's green light. State lives in the
 Seedlings themselves: a `Harvested:` key line on any issue marks its entry as
 taken, so a rerun or a missed week files each entry once. The helper is
@@ -29,14 +28,14 @@ harvests both.
    any other. Read the file whole. Done when you have the counts per kind and the
    ordered entries.
 2. **Cluster, in order.** Merge near-duplicate entries into clusters, taking
-   entries from the top, and label each cluster **product** (a Tenant, its
-   content, the UI, or a feature a visitor or the owner uses) or **workflow**
-   (how agents are instructed or fenced: `CLAUDE.md`, rules, ADRs, Skills,
-   guards, hooks, the gate). Work the product clusters first; check a workflow
-   cluster only when the product clusters ran out before 10 passed step 3. Stop
-   when 10 clusters have passed or 30 have been checked. Done when each checked
-   cluster lists its entry numbers, its label and the count of distinct sessions
-   behind it.
+   entries from the top, and label each cluster **product** (what a visitor or
+   the owner sees or uses on the site: a Tenant, its content, the UI) or
+   **workflow** (how agents are instructed, fenced or equipped: `CLAUDE.md`,
+   rules, ADRs, Skills, guards, hooks, the gate, scripts agents run). The label
+   outranks recency: check every product cluster before the first workflow one.
+   Stop when step 4's quota is filled or 30 clusters have been checked. Done when
+   each checked cluster lists its entry numbers, its label and the count of
+   distinct sessions behind it.
 3. **Check relevance.** A cluster is still open when all of these hold:
    - **Unbuilt.** Name the file or symbol it would change and read it now. Run
      `pnpm exec tsx scripts/git/list-merges-since.ts` from the entry's
@@ -51,17 +50,18 @@ harvests both.
    - **Unrejected.** Not in `.out-of-scope/`, not under an open Prune Trial
      (`.agents/prune-trials.yml`), no `wontfix` issue.
    - **Beyond the Ledger.** Read the Ledger's summaries with
-     `grep -H '^summary:' layers/journal/content/current/frictions/*.yml`. When an
-     entry already describes the cluster's problem, whatever its status,
-     `frictions-to-fixes` owns it. Keep a cluster the Ledger misses or touches
-     only in passing.
-   - **Positive.** The change gives the Platform a capability it lacks or makes
-     it simpler, and retires as much as it adds: a new flag, file, check or
+     `grep -H '^summary:' layers/journal/content/current/frictions/*.yml`. An entry
+     that names the cluster's problem, whatever its status, means
+     `frictions-to-fixes` owns it. A cluster the Ledger covers in part stays,
+     narrowed to the part it misses.
+   - **Simplifying.** The change gives the Platform a capability it lacks or
+     makes it simpler, and retires as much as it adds: a new flag, file, check or
      concept names the one it replaces.
    - **Unacted.** Its source log's `prs` and outcome do not show the session
      already did it.
-   Done when each checked cluster records the file read or merge list checked
-   and the issue number matched, or "no match" with the filter used.
+   Done when each checked cluster records the file read or merge list checked,
+   the issue number matched or "no match" with the filter used, the Ledger entry
+   that covers it or "none", and what the change retires or simplifies.
 4. **File one Seedling per passing cluster,** at most 10 in total and, when
    harvesting both kinds, 5 per kind, unless the other kind has fewer passing
    (then it fills the rest). Learnings that belong in one doc share one
@@ -69,8 +69,7 @@ harvests both.
    - Read its source logs whole (each entry's `file`): the entry alone lacks the
      story.
    - Write the body to a scratchpad file as [`body-template.md`](body-template.md)
-     says (read it first). The owner must grasp the idea, why it matters and
-     where it came from from the body alone, without opening the repo or a log.
+     says (read it first).
    - `harvest check-body <file> --extract <extract.json> --title "Seedling: ..."`
      must print `ok`.
    - Post it through MCP `issue_write` with that title and the single label

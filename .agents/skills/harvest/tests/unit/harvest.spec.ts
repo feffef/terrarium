@@ -1,6 +1,7 @@
 // Unit tests for the harvest helper's pure core: key rendering and parsing, the
 // harvested-state scan, entry ordering, and the before/after-posting checks.
 // The IO shell (GitHub listing, files) is exercised by running the script.
+import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import { decodeHtmlEntities } from '../../../../../scripts/lib/github-client.ts'
 import {
@@ -194,6 +195,18 @@ describe('checkBody() and comparePosted()', () => {
 
   it('rejects a body missing a template section, so the owner is not sent into the repo', () => {
     for (const h of REQUIRED_HEADINGS) expect(checkBody(good.replace(h, 'Other'), emitted)).toEqual([`missing the section "${h}"`])
+  })
+
+  it('rejects a session id in the prose but allows one under Sources, in the header and in the key block', () => {
+    expect(checkBody(good.replace('## The idea\nText.', `## The idea\nSee ${SESSION}.`), emitted)).toEqual([
+      'names a session id outside Sources: say its date and what it was doing',
+    ])
+    expect(checkBody(good.replace('## Sources\nText.', `## Sources\n${SESSION}.yml`), emitted)).toEqual([])
+  })
+
+  it('lists in body-template.md the same headings check-body requires', () => {
+    const template = readFileSync(new URL('../../body-template.md', import.meta.url), 'utf8')
+    expect([...template.matchAll(/`(## [^`]+)`/g)].map((m) => m[1])).toEqual(REQUIRED_HEADINGS)
   })
 
   it('rejects a wrong title and an oversize body', () => {

@@ -31,6 +31,9 @@ export const SKIPPED_TRIGGERS = new Set(['harvest', 'visitor-loop', 'audit-skill
  *  decoding cannot change it. A session id is `session_...` or a raw UUID. */
 export const KEY_RE = /^Harvested: (\S+) (idea|learning) ([0-9a-f]{8})$/
 
+/** A session id in either form (`session_...` or a raw UUID): the owner cannot open one. */
+const SESSION_ID_RE = /session_[A-Za-z0-9]{6,}|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/
+
 export type Kind = 'idea' | 'learning'
 
 export interface Entry {
@@ -181,6 +184,10 @@ export function checkBody(body: string, emitted: Set<string>, title?: string): s
   const problems: string[] = []
   const ls = lines(body)
   for (const h of REQUIRED_HEADINGS) if (!ls.includes(h)) problems.push(`missing the section "${h}"`)
+  // The header line and the key block carry ids by design, and Sources names the logs by filename.
+  const sources = ls.indexOf('## Sources')
+  const prose = ls.filter((l, i) => !KEY_RE.test(l) && !l.startsWith('🤖') && (sources < 0 || i < sources))
+  if (prose.some((l) => SESSION_ID_RE.test(l))) problems.push('names a session id outside Sources: say its date and what it was doing')
   if (title !== undefined && !title.startsWith('Seedling:')) problems.push('title must start with "Seedling:"')
   if (body.length > BODY_LIMIT) problems.push(`body is ${body.length} characters, over ${BODY_LIMIT}`)
   for (const l of ls) if (l.startsWith('Harvested:') && !KEY_RE.test(l)) problems.push(`malformed key line: ${l}`)
