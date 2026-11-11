@@ -96,23 +96,22 @@ guaranteed byte-exact). Local binary: `/opt/claude-code/bin/claude`,
   variable that beats an environment value. The docs also say transport
   variables (`NODE_EXTRA_CA_CERTS`, mTLS) in a repo's `settings.json` `env` are
   ignored.
-- Observed, not documented: this session's process environment has
-  `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1` (`env | grep SPAWN_DEPTH`; also in
-  `/proc/self/environ`). It is in no settings file I checked
-  (`/root/.claude/settings*.json`, `/home/user/terrarium/.claude/settings*.json`,
-  `/etc/claude-code`), so the platform or harness set it. Which of them, and
-  whether an environment variable of the same name would override it, is
-  unverified. The `create_environment` tool's own description (not an official
-  doc) says names that steer the session runtime "may be refused"; no docs page
-  lists which.
+- Observed, not documented: cloud sessions start with
+  `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1`, passed in by the platform's launcher;
+  a variable stored in the environment did not override it, a settings `env`
+  entry did (see "Tests run" below). The `create_environment` tool's own
+  description (not an official doc) says names that steer the session runtime
+  "may be refused"; no docs page lists which.
 
 ## Not documented / unverified
 
-- Whether the depth limit applies to Workflow `agent()` agents (finding 4; the
-  follow-up below adds the binary check, still unverified).
-- Whether Workflow-started agents can be resumed with `SendMessage` or agent IDs.
-- Whether the cloud platform sets this variable, and which names it refuses; the
-  value `1` seen here is local observation only.
+- Whether the depth limit applies to Workflow `agent()` agents: untested in the
+  docs and binary, but see "Tests run": they lack `Agent` even at depth 2.
+- Whether Workflow-started agents can be resumed with `SendMessage` or agent IDs
+  (the owner reports it did not work; the `agent()` signature has no such option).
+- Which names the cloud platform refuses in an environment's variables, and why
+  a stored `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH` did not apply (the stored value
+  is not shown by `get_environment`).
 - Exceptions to "settings `env` beats shell" for this variable (settings
   reference `env` entry, not read), and managed-policy `env` for it specifically.
 - Binary: which call sites consume the value, and how workflow agents are counted,
@@ -121,7 +120,8 @@ guaranteed byte-exact). Local binary: `/opt/claude-code/bin/claude`,
 ## Follow-up: nesting inside Workflow scripts
 
 Line numbers below are from `strings -n 6 /opt/claude-code/bin/claude` (v2.1.322);
-the line numbers above come from `-n 8` and differ. Nothing was run.
+the line numbers above come from `-n 8` and differ. Nothing was run in this
+section; "Tests run" below ran workflows.
 
 1. **Workflow agents starting subagents, and the depth variable: not documented.**
    The docs page and sub-agents page are silent (see finding 4 above). The binary's
@@ -154,3 +154,43 @@ the line numbers above come from `-n 8` and differ. Nothing was run.
    environment sets CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1)": the repo author's
    belief, consistent with the value seen in this session, not evidence that a
    workflow counts as a level.
+
+## Tests run 2026-11-11 (cloud sessions, Claude Code 2.1.322)
+
+Each result is that session's own command output, or an agent's report of its
+own tool list (marked self-reported, not checked by a command). One run each.
+
+1. **Where the `1` comes from.** In the session that wrote this note,
+   `env | grep SPAWN_DEPTH` printed `1`; so did `/proc/<pid>/environ` of the
+   `claude` process and of its parent `environment-manager task-run`. Nothing
+   matched in `/etc/profile*`, `/etc/profile.d`, `~/.bashrc`, `/root/.ccr` or
+   `~/.claude`. At that time `get_environment` listed no variables for the
+   session's environment, so `1` was a platform default.
+2. **A stored environment variable did not override it.** After the owner stored
+   the variable in the personal "Unrestricted" environment (they report the
+   value `2`; `get_environment` shows names only), a session created
+   22:21:15Z still had `1` in `env`, and `1` in the parent pids it could read
+   (165, 156). So the stored value did not apply. Why is unknown; the platform's
+   value winning fits.
+3. **A settings `env` entry did.** With `"CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH":
+   "2"` in `.claude/settings.json` on a branch, a session created 22:28:38Z
+   printed `2` from `env`. Its launcher's value was not readable (pid 1:
+   permission denied). This matches the env-vars page ("the settings file value
+   applies in most sessions").
+4. **Plain subagents nest one level at depth 2.** In that session a general-purpose
+   subagent reported an `Agent` tool and `SPAWN_DEPTH=2`, started a child and was
+   not refused; the child reported `SPAWN_DEPTH=2` and no `Agent` tool
+   (self-reported).
+5. **Workflow agents never got `Agent`, at depth 2.** One Workflow ran four
+   `agent()` calls in parallel: default options, `{agentType: 'claude'}`,
+   `{agentType: 'general-purpose'}` and `{disallowedTools: ['WebFetch']}`.
+   Every option was accepted without error; every agent reported no `Agent` or
+   `Task` tool and `SPAWN_DEPTH=2`; their loaded tool lists were identical (56
+   names, diffed by script from the run's journal). `disallowedTools` did not
+   remove `WebFetch` from the list (ignored, or it only affects the loaded list:
+   unverified). An earlier one-agent Workflow gave the same answer. Against a
+   plain subagent's list (47 loaded names, self-reported) the workflow agents
+   lack only `Agent` and carry extras (`ListAgents`, `SendUserFile`,
+   `ReportFindings`, `SuggestSkills`, and among deferred tools the Cron and
+   `Task*` tools). So within the `agent()` options tried, the missing `Agent`
+   follows from being a workflow agent, not from depth or `agentType`.
