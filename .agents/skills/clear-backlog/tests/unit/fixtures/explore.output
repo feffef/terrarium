@@ -12,6 +12,7 @@
         "readyForHuman": false,
         "files": ["README.md", "docs/a.md"],
         "relatedTo": [12],
+        "staleClaims": [{ "claim": "README has the typo twice", "why": "only once now", "source": "README.md:4" }],
         "sideFindings": [{ "finding": "docs/b.md links nowhere", "source": "docs/b.md:3" }],
         "writes": ["labelled ready-for-agent"],
         "verdicts": [
