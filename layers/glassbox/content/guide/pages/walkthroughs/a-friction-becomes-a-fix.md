@@ -77,7 +77,7 @@ Helper agents write the fixes, each in a git worktree of its own, run the Gate a
 
 ## 8. The run reviews and merges
 
-The run reviews each branch itself, opens its PR and posts its verdict there as a comment. A clean, low-risk fix it merges through `scripts/github/merge-pr.ts`, which refuses without that verdict and refuses a PR that changes a Human-only file. A fix whose diff needs a human merge stays open, with the reason, for a Trusted user.
+The run reviews each branch itself, opens its PR and posts its verdict there as a comment. A clean, low-risk fix it merges through `scripts/github/merge-pr.ts`, which refuses without that verdict and refuses a PR that changes a Human-only file unless the owner approves that in-session. A fix whose diff needs a human merge stays open, with the reason, for a Trusted user.
 
 ::lessons
 [Merge gate](/t/glassbox/guide/verification/gate) · [Pull requests](/t/glassbox/guide/git-github/pull-requests)

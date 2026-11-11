@@ -49,3 +49,13 @@ pages:
     checked: '2026-11-10'
   - page: nuxt-content/10.content-collections
     checked: '2026-11-10'
+  - page: nuxt-content/20.multi-tenant-isolation
+    checked: '2026-11-11'
+  - page: nuxt-content/30.content-database
+    checked: '2026-11-11'
+  - page: nuxt-content/40.query-collection
+    checked: '2026-11-11'
+  - page: nuxt-content/50.mdc-components
+    checked: '2026-11-11'
+  - page: nuxt-content/60.mermaid-pre-rendering
+    checked: '2026-11-11'
