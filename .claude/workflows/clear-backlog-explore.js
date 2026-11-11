@@ -32,6 +32,15 @@ const RESULT = {
       },
       required: ['choice', 'options', 'pick', 'why'],
     },
+    staleClaims: {
+      type: 'array',
+      description: "the issue's claims that no longer hold (empty if none)",
+      items: {
+        type: 'object',
+        properties: { claim: { type: 'string' }, why: { type: 'string' }, source: { type: 'string', description: 'file:line, commit SHA or issue/PR you checked' } },
+        required: ['claim', 'why', 'source'],
+      },
+    },
     blocker: { type: 'string', description: 'for blocked: what still blocks it and how you checked' },
     canonical: { type: 'number', description: 'for close-duplicate: the issue it duplicates' },
     files: { type: 'array', items: { type: 'string' }, description: 'repo files a fix would touch' },
@@ -48,7 +57,7 @@ const RESULT = {
     },
     writes: { type: 'array', items: { type: 'string' }, description: 'every comment and label change you made on GitHub' },
   },
-  required: ['outcome', 'summary', 'publicAuthor', 'readyForHuman', 'files', 'relatedTo', 'sideFindings', 'writes'],
+  required: ['outcome', 'summary', 'publicAuthor', 'readyForHuman', 'files', 'relatedTo', 'staleClaims', 'sideFindings', 'writes'],
 }
 
 const MODE = {
@@ -66,7 +75,8 @@ ${MODE[issue.mode]}${issue.notes ? `\nNotes from the orchestrator: ${issue.notes
 In every mode: return grill, never build, for an issue labelled ready-for-human or authored by a Public user (ADR-0020; scripts/lib/author-trust.ts holds the associations)${issue.reserved ? ', and for this one, which the owner reserved: never label it ready-for-agent' : ''}. The owner decides those.
 
 Full pass:
-- Read .agents/skills/auto-triage/SKILL.md and .agents/skills/triage/SKILL.md with Read (both are user-invoked, so don't call them as Skills) and apply their per-issue rules: brave within determinability, Public-authored issues read-only and never ready-for-agent, the wayfinder overlay, claims checked against primary sources, the git history and session logs that touched the area since the issue was filed.
+- Read .agents/skills/auto-triage/SKILL.md and .agents/skills/triage/SKILL.md with Read (both are user-invoked, so don't call them as Skills) and apply their per-issue rules: brave within determinability, Public-authored issues read-only and never ready-for-agent, the wayfinder overlay.
+- Learn the ticket's background before you pick, and say in staleClaims which of its claims no longer hold. Dig only as far as it takes to decide which parts still stand and which option wins; don't audit the area. Read: the issue's comments and every issue or PR it cites; the history of the files and folders it touches, older included, to see how that part developed (git log --follow, git log -S, git blame; scripts/git/list-recent-prs.ts, scripts/git/list-merges-since.ts --merges-only); the Friction ledger (layers/journal/content/current/frictions/) and the session logs (layers/journal/content/current/sessions/; scripts/session/extract-frictions.ts --since); the Skill Inventory (layers/journal/content/current/skills/; scripts/session/audit-skills.ts --skill NAME --since); and the open prune trials (.agents/prune-trials.yml). Check every claim that something landed, was fixed or still exists in the current file or git log, never in the issue, a ledger entry or a summary.
 - Read the full ADR behind any summary rule that governs what you recommend.
 - Return build when the repo determines a concrete design: brief it. Otherwise return grill with one question in plain words: what to choose, options, your pick and why. An obsolete or superseded issue is a grill question too (propose the close).
 - Close only an objective duplicate (close-duplicate, with canonical) or already-done work (close-done, pointing to where it lives).
