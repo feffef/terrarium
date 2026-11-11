@@ -32,6 +32,27 @@ describe('--triage', () => {
   })
 })
 
+describe('--triage evidence fields', () => {
+  const out = runSummary(fixture('explore-evidence.output'), '--triage')
+
+  it('prints the background, what would flip the pick, each option check and the source count', () => {
+    expect(out).toContain(
+      [
+        '  background: The button was named in #5, renamed in #9.',
+        '  question: Which name?',
+        '    a) Go',
+        '    b) Start',
+        '    pick: b) Start (clearer)',
+        '    wouldChange: an owner preference for the short name',
+        '  optionChecks:',
+        '    - no: a) Go',
+        '    - unverified: b) Start (settle by: a usage count, not logged)',
+        '  sourcesRead: 2',
+      ].join('\n'),
+    )
+  })
+})
+
 describe('--build', () => {
   const out = runSummary(fixture('build.output'), '--build')
 

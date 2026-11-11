@@ -7,7 +7,8 @@
 import { readFileSync } from 'node:fs'
 import { fail, runIfMain } from '../../../../scripts/lib/cli.ts'
 
-type Question = { choice: string; options: string[]; pick: string; why: string }
+type Question = { choice: string; options: string[]; pick: string; why: string; wouldChange?: string }
+type OptionCheck = { option: string; holds: string; settledBy?: string }
 type Triage = {
   outcome: string
   summary: string
@@ -21,6 +22,9 @@ type Triage = {
   staleClaims?: { claim: string; why: string; source: string }[]
   sideFindings: { finding: string; source: string }[]
   writes: string[]
+  background?: string
+  optionChecks?: OptionCheck[]
+  sourcesRead?: unknown[]
 }
 type Finding = { title: string; detail: string; file?: string }
 type Branch = {
@@ -52,7 +56,17 @@ function triage(r: Explore): string[] {
     ...field('summary', t.summary),
     ...field('canonical', t.canonical ? `#${t.canonical}` : undefined),
     ...field('brief', t.brief),
-    ...(t.question ? [`  question: ${t.question.choice}`, ...t.question.options.map((o) => `    ${o}`), `    pick: ${t.question.pick} (${t.question.why})`] : []),
+    ...field('background', t.background),
+    ...(t.question
+      ? [
+          `  question: ${t.question.choice}`,
+          ...t.question.options.map((o) => `    ${o}`),
+          `    pick: ${t.question.pick} (${t.question.why})`,
+          ...(t.question.wouldChange ? [`    wouldChange: ${t.question.wouldChange}`] : []),
+        ]
+      : []),
+    ...list('optionChecks', t.optionChecks?.map((o) => `${o.holds}: ${o.option}${o.settledBy ? ` (settle by: ${o.settledBy})` : ''}`)),
+    ...field('sourcesRead', t.sourcesRead ? String(t.sourcesRead.length) : undefined),
     ...field('blocker', t.blocker),
     ...field('files', t.files.join(', ')),
     ...field('relatedTo', issues(t.relatedTo)),
