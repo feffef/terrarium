@@ -22,10 +22,14 @@ them as new. Incident detail lives in the cited issue.
   `git commit -S`, and the Stop hook's `--reset-author` remedy for an
   "Unverified" commit, can silently fail to sign even with a correct author
   email.
+- **A Stop hook cannot invoke a Skill.** Invoke it yourself next turn. (session_013zxzeSy38XR1wPjCGFUExY; seen once)
 - **Session-only state can vanish across a resume, with no error:** a
   `/loop` or `CronCreate` job, a backgrounded `Agent` subagent, a scratchpad
   file. After a resume, check that each is still registered, alive or intact.
   (issues #571, #794, #891)
+- **A background task can send a "completed" notice before its work ends.**
+  Check the log or output for the real end first.
+  (session_01BjA9rHbNdMX5KiK49Cee99; seen once)
 - **Any `mcp__claude-code-remote__*` call (`mcp__Claude_Code_Remote__*` in some
   sessions) and `AskUserQuestion` can fail once with "permission stream
   closed".** Retry once only. If that fails: for `AskUserQuestion`, take the
@@ -70,12 +74,10 @@ them as new. Incident detail lives in the cited issue.
   (issues #923, #928, #940)
 - **The container's worktree-isolation guard can wrongly block an ordinary
   command.** Probed 2026-10-31 in an isolated worktree: only `$VAR` expansion
-  in a git command was refused; accepted were `git -C <root>`, the `cd <root> &&`
-  prefix, `&&`/`;` chains and pipes with git, a git `for` loop, heredocs (with
-  or without `git`), a redirected `pnpm` or `git push --dry-run`, git named
-  twice, "git" in a branch name, and "Bash" with "pnpm" in text. Earlier
-  reports of the other forms did not reproduce; if blocked, run one git
-  command per call with literal paths.
+  in a git command was refused; `git -C <root>`, the `cd <root> &&` prefix,
+  `&&`/`;` chains, pipes, a git `for` loop, heredocs, a redirected `pnpm` and
+  `git push --dry-run` all passed. Earlier reports of the other forms did not
+  reproduce; if blocked, run one git command per call with literal paths.
   (issues #1180, #1499, #2612)
 - **A scheduled or autonomous session can find `mcp__github__*` unauthenticated
   with no `gh` CLI fallback.** Nothing in the repo fixes that. Push the branch as usual,
