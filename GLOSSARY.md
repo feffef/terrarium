@@ -53,6 +53,11 @@ An optional note in a session log: an ambitious, concrete proposal for the
 Platform's or a Tenant's future, specific enough to become an issue. Noted, not
 planned.
 
+### Seedling
+An issue the `harvest` Skill files for an **Idea** or learning still worth
+acting on. Its title starts `Seedling:`, and it waits as `ready-for-human` for a
+Trusted user's green light before anyone builds it. Not a **Proposal**.
+
 ### Session closure
 The point where a Session's work is complete and in a coherent, honest state:
 the trigger for its session log. Not the same as merged; the Session judges it

@@ -1,6 +1,6 @@
 ---
 name: harvest
-description: File up to 10 Seedlings, issues that turn the last 28 days of Session logs' ideas and learnings into proposals for a Trusted user to green-light. User-invoked; a Routine runs it.
+description: File up to 10 Seedlings, issues that turn the last 28 days of Session logs' ideas and learnings (both, or one kind) into proposals for a Trusted user to green-light. User-invoked; a Routine runs it.
 argument-hint: "[ideas|learnings] (default: both)"
 disable-model-invocation: true
 ---
@@ -9,11 +9,10 @@ A Routine runs this Skill; its schedule lives there, not here (ADR-0005). Its
 approval covers only the steps below (ADR-0003): it files issues and changes
 nothing in the repo but its own session log.
 
-A **Seedling** is an issue an agent files for an idea or learning that is still
-worth acting on. It waits, labelled `ready-for-human`, for a Trusted user's
-green light. State lives in the Seedlings themselves: a `Harvested:` key line
-on any issue marks its entry as taken, so a rerun or a missed week files each
-entry once. The helper is
+A Seedling (GLOSSARY.md) is labelled `ready-for-human` and waits for a Trusted
+user's green light. State lives in the Seedlings themselves: a `Harvested:` key
+line on any issue marks its entry as taken, so a rerun or a missed week files
+each entry once. The helper is
 `pnpm exec tsx .agents/skills/harvest/scripts/harvest.ts`; below it is `harvest`.
 
 The argument `ideas` or `learnings` harvests that kind alone; with none, the run

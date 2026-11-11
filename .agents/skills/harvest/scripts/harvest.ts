@@ -217,19 +217,24 @@ function listIssueBodies(): IssueBody[] {
 
 const DEFAULT_OUT = join(tmpdir(), 'harvest-extract.json')
 
-const KIND_ARGS: Record<string, Kind> = { ideas: 'idea', learnings: 'learning' }
+// A Map, not an object: `--kind constructor` must not find an inherited member.
+const KIND_BY_FLAG = new Map<string, Kind>([
+  ['ideas', 'idea'],
+  ['learnings', 'learning'],
+])
+
+/** The kinds `--kind` names; undefined (no flag) means both. */
+function parseKinds(argv: string[]): Kind[] | undefined {
+  if (!argv.includes('--kind')) return undefined
+  const kind = KIND_BY_FLAG.get(flagValue(argv, '--kind') ?? '')
+  return kind ? [kind] : fail('--kind must be ideas or learnings')
+}
 
 function cmdExtract(argv: string[]): void {
   const since = Date.now() - WINDOW_DAYS * 86_400_000
-  const kindArg = flagValue(argv, '--kind')
-  if (kindArg !== undefined && !KIND_ARGS[kindArg]) fail('--kind must be ideas or learnings')
+  const kinds = parseKinds(argv)
   const state = harvestedState(listIssueBodies())
-  const { entries, skippedHarvested } = buildEntries(
-    readSessionLogs(root, { archived: true }),
-    state,
-    since,
-    kindArg === undefined ? undefined : [KIND_ARGS[kindArg]!],
-  )
+  const { entries, skippedHarvested } = buildEntries(readSessionLogs(root, { archived: true }), state, since, kinds)
   const out = flagValue(argv, '--out') ?? DEFAULT_OUT
   const count = (k: Kind) => entries.filter((e) => e.kind === k).length
   writeFileSync(out, JSON.stringify({ since: new Date(since).toISOString(), days: WINDOW_DAYS, skippedHarvested, entries }, null, 2) + '\n')
