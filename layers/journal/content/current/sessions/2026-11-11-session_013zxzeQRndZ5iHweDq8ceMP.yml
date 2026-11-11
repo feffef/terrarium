@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQRndZ5iHweDq8ceMP
 startedAt: 2026-11-11T10:01:15Z
-endedAt: 2026-11-11T12:41:13Z
+endedAt: 2026-11-11T12:56:38Z
 kind: interactive
 goal: Build a weekly Skill that files agent ideas and learnings as issues
 status: in-review
-outcome: harvest merged in PR 3080; a follow-up in PR 3085 focuses it on product ideas and self-contained issues, waiting for a human merge
-summary: "The owner asked for the ideas and learnings of the past week to be mined with an explore agent, then ranked as issue proposals, then asked for a top 10 with quick wins flagged, and told me to file items 1-6, 9 and 10 (human-instructed, with picks and wording mine); I filed eight issues (3068-3075). The owner then asked for an unattended Skill doing the same weekly, up to 10 issues per run, filed ready-for-human. After clarifying questions they chose one Skill, Seedling as the marker word, state derived from the issues themselves, a fixed 28-day lookback, 30 clusters checked per run, and later a /harvest ideas or learnings argument and recency-only ranking. The design went through two Fable review rounds. I built it, rewrote 3068-3075 as Seedlings, and it merged as PR 3080 (the owner enabled auto-merge; a human made the merge call). After the merge the owner asked for more: leave Frictions to frictions-to-fixes (check the Friction Ledger summaries), prefer positive ideas that simplify, prefer tenant, content and UI ideas over agent-workflow ones (capped at 3 workflow Seedlings per run, the owner said yes to my question), and make Seedling bodies self-contained so the owner never needs the repo or a session log. I restarted the branch from main, rewrote the Skill, added body-template.md and a check-body section and session-id check, dry-ran the template on a real idea, ran a Standards and Spec review and applied its findings, and opened PR 3085. It needs a human merge under ADR-0004's outside side effect exception, so I will not self-merge. Still open: the owner creates the weekly Routine, and decides whether the eight first Seedlings, which predate the template, get rewritten."
+outcome: harvest merged in PR 3080; follow-up PR 3085 awaits a human merge; the owner's first /harvest ideas run filed 4 Seedlings (3086-3089)
+summary: "The owner asked for the ideas and learnings of the past week to be mined, ranked, and filed as issues (I filed 3068-3075 on their picks), then for an unattended weekly Skill doing the same, up to 10 issues per run, filed ready-for-human. After clarifying questions they chose one Skill, Seedling as the marker word, state derived from the issues themselves, a 28-day lookback, 30 clusters checked per run, a /harvest ideas or learnings argument and recency-only ranking. It merged as PR 3080. The owner then asked for more: leave Frictions to frictions-to-fixes, prefer positive ideas that simplify, prefer Tenant, content and UI ideas over agent-workflow ones (workflow Seedlings capped at 3), and self-contained issue bodies; I restarted the branch from main, rewrote the Skill, added body-template.md and check-body section and session-id checks, ran a Standards and Spec review and opened PR 3085, which needs a human merge (ADR-0004). The owner told me not to rewrite 3068-3075 because they are already being processed. The owner then ran /harvest ideas as the first real run of the Skill as it stands on the PR branch. Of 161 unharvested ideas, most concerned Glass Box curation tooling or other agent workflow; product clusters were checked first, several were already built (code-block fade, per Tenant diagram font, Routine cost charts), several fell to the Glass Box glossary or added new concepts without retiring any. Four passed every check and were filed as 3086 (one duration format in the Journal), 3087 (empty state for the Glass Box drafts page), 3088 (a folder-tree diagram for the Adding a site Walkthrough) and 3089 (Where next rows show the target title); all stored their keys on read-back and a rerun skips them. No workflow cluster was filed. The run filed 4 of a possible 10, which I judge correct rather than a shortfall. Still open: PR 3085 awaits a human merge, and the owner creates the Routine."
 prs:
   - "3080"
   - "3085"
@@ -106,6 +106,8 @@ skillsUsed:
     reason: (no reason given)
   - name: log-session
     reason: (no reason given)
+  - name: harvest
+    reason: (invoked as a slash command)
 frictions:
   - description: The explore agent read summaries and traces of only 1 of 57 logs though I asked for full reads; I had to disclose that gap in my reply.
     solution: Brief should say a partial read is not acceptable, or split the logs across several agents.
@@ -140,28 +142,34 @@ frictions:
   - description: The Stop hook counted 46 unpushed commits against a remote branch deleted after the merge, though almost all were main's own commits.
     solution: Count commits against origin/main, or skip the nag when the remote branch no longer exists.
     severity: nit
-durationSec: 9598
+  - description: check-body printed ok on a body quoting an error message with a bare angle-bracket span; the provenance guard then blocked the post and I reworded and reposted.
+    solution: Have check-body reject a bare angle-bracket span outside a fenced block, as the template already asks, so the failure shows before the post.
+    severity: nit
+  - description: The Skill says to read the extract whole, but the JSON is 150 KB, mostly repeated fields; I printed a compact one-line-per-entry view instead.
+    solution: Have extract also print or write that compact list and say to read it.
+    severity: minor
+durationSec: 10523
 models:
-  claude-sonnet-5-5: 587
+  claude-sonnet-5-5: 676
 toolCounts:
   Skill: 6
   Grep: 6
-  Bash: 97
+  Bash: 120
   Agent: 9
   Read: 34
   ToolSearch: 6
-  mcp__github__issue_write: 16
-  Write: 24
+  mcp__github__issue_write: 21
+  Write: 29
   AskUserQuestion: 1
-  Edit: 69
+  Edit: 71
   SendMessage: 2
   SendUserFile: 1
   mcp__github__list_pull_requests: 2
   mcp__github__create_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 2
-  ReadNotifications: 19
-  mcp__github__pull_request_read: 6
-  mcp__claude-code-remote__send_later: 1
+  ReadNotifications: 22
+  mcp__github__pull_request_read: 8
+  mcp__claude-code-remote__send_later: 2
   mcp__github__add_reply_to_pull_request_comment: 4
   mcp__github__resolve_review_thread: 2
   mcp__github__update_pull_request: 2
@@ -309,6 +317,14 @@ ruleUse:
       - rule: .claude/rules/tenant-glossary.md
         via: hint
       - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/adr-0006.md
+        via: hint
+      - rule: .claude/rules/adr-0016.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
         via: hint
     reported:
       - path: .claude/rules/adr-0017.md
@@ -625,32 +641,32 @@ subagents:
     durationSec: 520
     toolCalls: 40
     modelCalls: 39
-    tokenShare: 6.2
+    tokenShare: 5.3
   - type: general-purpose
     task: Review harvest Skills design
     model: fable
     durationSec: 751
     toolCalls: 38
     modelCalls: 31
-    tokenShare: 6.2
+    tokenShare: 5.3
   - type: general-purpose
     task: Standards review of harvest Skill
     durationSec: 40
     toolCalls: 8
     modelCalls: 4
-    tokenShare: 1.1
+    tokenShare: 0.9
   - type: general-purpose
     task: Spec review of harvest Skill
     durationSec: 35
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 1.2
+    tokenShare: 1
   - type: general-purpose
     task: Standards review of follow-up diff
     durationSec: 26
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 0.5
+    tokenShare: 0.4
   - type: general-purpose
     task: Spec review of follow-up diff
     durationSec: 24
@@ -662,19 +678,19 @@ subagents:
     durationSec: 26
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 1
+    tokenShare: 0.9
   - type: general-purpose
     task: Standards review of harvest follow-up
     durationSec: 35
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1
+    tokenShare: 0.9
   - type: general-purpose
     task: Spec review of harvest follow-up
     durationSec: 22
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 1
+    tokenShare: 0.8
 gitBranch: claude/awesome-noether-fd6ban
 entrypoint: remote
 cliVersion: 2.1.322
@@ -684,9 +700,11 @@ learnings:
   - A full open and closed issue listing with bodies takes about 36 seconds, so one scan per run is fine but a read-back per issue is not; read back the single issue instead.
   - An agent-posted GitHub review comment arrives as a pull_request_review_comment event from the owner's login, so the event looks human; the ADR-0017 header is the only way to tell it is your own echo.
   - After a PR merges the remote session branch can be auto-deleted, so the first push of follow-up work after restarting the branch from main reports a new branch.
+  - The Ledger-summary grep is a cheap overlap check for ideas about agent workflow, but for product ideas the decisive checks were the repo itself, the Glass Box glossary's product decisions and the closed-issue list.
 ideas:
   - Add a script that lists a week's ideas and learnings from Session logs with a resolved or open status, so this review is one command instead of a 200k-token agent run; stamp each idea with the issue that filed it so nothing is filed twice.
   - Add a script that lists a week's ideas and learnings with a resolved or open status; the harvest Skill now does the extraction half, so a status column from its relevance check could feed the Journal.
   - Let harvest remember which entries its relevance check rejected, for example by filing a closed not-planned issue carrying their key lines, so rejected entries stop consuming the 30-cluster budget each week until they age out of the window.
   - Run harvest's relevance check against a sample of real entries and print which product and workflow clusters it would file, so the owner can tune the cap and criteria before the first scheduled run.
+  - Teach harvest extract to print the compact entry list (number, date, short session, related issues, text) it already computes, so a run reads about 15k tokens instead of the 150 KB JSON.
 landedBy: Stop
