@@ -130,8 +130,9 @@ keeps them so).
 - **Check.** A separate sonnet claim checker checks the changed sentences;
   `glassbox-update` owns the claim check of unchanged text, so leave that to
   it. Run writing-pages.md's Check on the changed pages, and a fresh reader
-  re-reads them. One retry, then drop the change. The memory page takes a reader finding
-  only if it is an owner question, outside the Remit or sourceless.
+  re-reads them. One retry, then drop the change. The memory page takes a
+  reader finding only if it is an owner question, outside the Remit or
+  sourceless.
 - **Removal.** A change that only removes text or a page skips the writer, the
   claim checker and the fresh reader. Still run the page checks, grep for
   links, slugs and terms that pointed at what you removed, and re-read each
