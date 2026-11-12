@@ -1,0 +1,184 @@
+schemaVersion: 1
+session: session_013zxzeQTY3RfDbuhXBkvo8B
+startedAt: 2026-11-12T18:13:32Z
+endedAt: 2026-11-12T18:40:34Z
+kind: interactive
+goal: Cut the cost and friction of the clear-backlog Skill using its run reports
+status: in-review
+outcome: Rule-use note reworded and five Skill, workflow and script changes built, reviewed and gated; PR open, waits for a human merge
+summary: "Human-instructed: the owner asked me to read the standing clear-backlog report issue (#3143) and its related issues and PRs, then to compare the frictions in the three runs' session logs with the reports' candidates. They said the rule-use calls are worth their cost and asked for a wording change (the note now says the data is essential to analyse whether the rules help), then asked for proposals to cut cost without dropping essential reviews, then agreed to all five (P1 to P5) and I built them. Agent-initiated: the 50-line bar for a missing-test, the single `Both` reviewer for `small` branches and its escalation path, the NO WRITES flag, the commit and push after the Stop hook asked, running code-review with two subagents and fixing four of their findings, and opening PR 3196 and subscribing to it (ADR-0003). What the analysis found: most logged frictions already sit in a report candidate; the new information was the resume-while-run-live hazard, the dispatch-subagents guard hitting all three orchestrators, and leftover worktrees at close. The rule-use note gave agents no purpose, so I could not tell whether the complaints came from cost or from missing context; the owner's closing comment on #3147 said the same. Open: the 50-line bar is a guess from the reports; token savings are not measured; the PR waits for a human because the Skill prose is behaviour no test observes (ADR-0004)."
+prs:
+  - "3196"
+docsRead:
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (read before editing)
+  - path: .claude/workflows/clear-backlog-build.js
+    reason: (read before editing)
+  - path: .agents/skills/clear-backlog/scripts/run-summary.ts
+    reason: (read before editing)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: .agents/skills/inspect-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/code-review/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: writing-for-agents
+    reason: edited a Skill and a workflow prompt, pruned restatements
+  - name: code-review
+    reason: Standards and Spec subagent review before the PR; four findings fixed
+  - name: dispatch-subagents
+    reason: read before writing the two reviewer briefs
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran git fetch before reading git-conventions.md; the hook flagged it after the call and CLAUDE.md says to read it before the first non-read-only git command.
+    solution: Read the named docs in the first batch of tool calls once CLAUDE.md's trigger applies.
+    severity: nit
+  - description: A gh api search call used a since filter and --paginate and the proxy answered 403 for numeric repo paths, so the listing had to be redone with other calls.
+    solution: Say in github-integration.md that a paginated gh api issues call can 403 through the proxy and list_issues with since is the way.
+    severity: nit
+  - description: Edited rules() with unescaped backticks inside the workflow's template literal, which broke the whole script until tests failed with a syntax error.
+    solution: The workflow-scripts spec caught it; a one-line note at the top of rules() that its text sits in a template literal would have spared the slip.
+    severity: nit
+  - description: The system prompt says commit and push only when asked while CLAUDE.md says push early and often, so I left edits uncommitted until the Stop hook demanded a commit.
+    solution: State once in CLAUDE.md that a Stop-hook request to commit and push is enough, or drop the conflicting system line.
+    severity: nit
+durationSec: 1623
+models:
+  claude-sonnet-5-5: 118
+toolCounts:
+  Read: 6
+  ToolSearch: 2
+  mcp__github__issue_read: 2
+  Bash: 39
+  mcp__github__list_issues: 1
+  Write: 4
+  Skill: 5
+  Agent: 2
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - .agents/skills/clear-backlog/SKILL.md
+  - .claude/workflows/clear-backlog-build.js
+  - .agents/skills/clear-backlog/scripts/run-summary.ts
+  - .agents/skills/clear-backlog/tests/unit/run-summary.spec.ts
+  - tests/unit/workflow-scripts.spec.ts
+  - scripts/session/rule-use.ts
+  - tests/unit/subagent-note.spec.ts
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/github-integration.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/github-integration.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/clear-backlog/SKILL.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: native
+        trigger: .agents/skills/clear-backlog/SKILL.md
+    reported:
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: opened the PR myself after gate
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: ran code-review and gate before the PR
+      - path: .claude/rules/adr-0017.md
+        value: backed
+      - path: .claude/rules/adr-0027.md
+        value: steered
+        why: framed changes as cuts first
+      - path: .claude/rules/adr-0005.md
+        value: backed
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: backed
+      - path: docs/agents/github-integration.md
+      - path: docs/agents/git-conventions.md
+      - path: docs/agents/pr-workflow.md
+      - path: .agents/skills/clear-backlog/SKILL.md
+      - path: .agents/skills/code-review/SKILL.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/pr-workflow.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/pr-workflow.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+subagents:
+  - type: general-purpose
+    task: Standards review of clear-backlog change
+    durationSec: 17
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 7.6
+  - type: general-purpose
+    task: Spec review of clear-backlog change
+    durationSec: 28
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 7.5
+gitBranch: claude/serene-lamport-m7hi3j
+entrypoint: remote
+cliVersion: 2.1.322
+learnings:
+  - The rule-use SubagentStart note names no purpose, so agents' retros call the calls pointless; the stated reason lived only in an issue comment.
+landedBy: Stop
