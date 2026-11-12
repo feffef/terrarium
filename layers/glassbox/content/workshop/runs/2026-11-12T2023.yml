@@ -13,10 +13,7 @@ focus: "Hooks Subject (its four pages): strengthen the Try-it sections that give
   every changed sentence supported or unverifiable without a live Claude Code
   run, and suggested one wording (applied). The Try-it outcomes that need a live
   session (the hook-error notice texts, the /hooks label, the file watcher) are
-  taken from the Claude Code docs, not observed. To stay under the memory page's
-  word cap it lost three whole items: the Terms-glossed-late note, the House
-  rules leftovers and the pending line shift of one Wayfinder excerpt (the pin
-  move handles it), plus the Atlas stylesheet comment remark. The code review's
+  taken from the Claude Code docs, not observed. The code review's
   Spec reviewer named outside pages (Subagents, Inspecting past sessions,
   Scheduled tasks, Cloud sessions, Claude Code permissions, MCP servers,
   Path-specific rules, Protected paths, Session logs, Commit and PR
@@ -36,6 +33,17 @@ changes:
     (docs/agents/guards.md roster and Conventions; tests/unit/guards-wiring.spec.ts:8,19-22;
     Claude Code hooks docs and hooks guide). Wording and Try-it only, so
     revision and publishedAt are kept
+  - hooks/10.hooks, 20.blocking-hooks, 30.hook-added-context,
+    40.session-transcripts (cheap reader findings) | the session log and
+    close-session are glossed; the deferred-tool and loop-only-tool guards say
+    what they deny; the test's FAIL_OPEN list is named; the onFailure version
+    is stated where the watch bullet says it; the Say-it-once cost says which
+    hints still fire without a transcript; a subagent's transcript file and
+    the cse_ to session_ swap are stated | readers could not follow them
+    (scripts/session/transcript-trace.ts:482-485,767-778;
+    scripts/hooks/deferred-tool-guard.ts:1-6;
+    scripts/hooks/loop-only-tool-guard.ts:1-4; docs/agents/guards.md
+    Conventions). Wording only
   - hooks/20.blocking-hooks | Try-it gives one copyable guard that exits 1,
     the required Claude Code version, the warning that || true defeats
     onFailure, and the notice shown when the call is blocked and when it is not |
@@ -55,10 +63,10 @@ changes:
     page disagreed with the hooks page on agent_type (Claude Code hooks and
     directory docs). Wording and Try-it only
   - workshop/pages/index | the Hooks leftovers rewritten to what the readers
-    still found; the Try-it focus notes Hooks is done; a soft decision on what
-    a guard is; a Scout topic (the clear-backlog interaction phase) added; four
-    low-value items cut for the word cap | the memory page keeps what a later
-    run inherits
+    still found; the Try-it focus notes a soft decision on what a guard is; a
+    Scout topic (the clear-backlog interaction phase) added; the reader
+    findings fixable in a clause were fixed instead of parked | the memory page
+    keeps what a later run inherits
 pagesRead:
   - hooks/10.hooks
   - hooks/20.blocking-hooks
