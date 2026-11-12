@@ -125,7 +125,7 @@ export function glassboxLinkLabel(href: string, base: string) {
 }
 
 /** A Where next list drawn as rows, each labelled by what its link leads to;
- *  a bare link `[](/…)` to a page in this Space shows that page's current title.
+ *  a Lesson's label is its Subject's name. A bare link `[](/…)` to a page in this Space shows that page's current title.
  *  Any link to a page of this Space also shows that page's description under its text.
  *  Rows whose Lesson is in `read` are left out; the Lessons already read section shows them. */
 export function glassboxNextList(node: MinimarkNode, base: string, titles: GlassboxTitles = {}, read: string[] = [], descriptions: GlassboxTitles = {}): MinimarkNode {
@@ -141,6 +141,7 @@ export function glassboxNextList(node: MinimarkNode, base: string, titles: Glass
     const description = descriptions[spacePath(href, base)]
     // The text sits in one cell with the title, so the row stays label | text | arrow.
     const text = description ? ['div', {}, filled, ['small', {}, description]] : filled
-    return [item[0], item[1], ['span', {}, glassboxLinkLabel(href, base)], ...item.slice(2).map((child) => child === link ? text : child)] as MinimarkNode
+    const label = glassboxSubjectOf(spacePath(href, base))?.name ?? glassboxLinkLabel(href, base)
+    return [item[0], item[1], ['span', {}, label], ...item.slice(2).map((child) => child === link ? text : child)] as MinimarkNode
   })]
 }

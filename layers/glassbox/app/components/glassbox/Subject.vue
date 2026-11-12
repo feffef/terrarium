@@ -36,6 +36,6 @@ const readCount = computed(() => props.lessons.filter((lesson) => read.value.inc
   background: currentColor;
   mask: var(--gb-book) center / contain no-repeat;
 }
-.list a:hover { text-decoration: underline; }
+.list a:hover { color: var(--gb-accent); }
 .list p { margin: 4px 0 0; color: var(--gb-muted); font-size: 15px; }
 </style>

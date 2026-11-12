@@ -43,7 +43,7 @@ describe('glassboxLessonSections', () => {
       ['div', { class: 'gb-try' }, h2('try-it-in-your-project', 'Try it in your project'), ['p', {}, 'Step.']],
       h2('where-next', 'Where next'),
       ['ul', { class: 'gb-next' },
-        ['li', {}, ['span', {}, 'Lesson'], ['a', { href: '/t/glassbox/guide/verification/schemas' }, 'Schemas']],
+        ['li', {}, ['span', {}, 'Verification'], ['a', { href: '/t/glassbox/guide/verification/schemas' }, 'Schemas']],
         ['li', {}, ['span', {}, 'Journal'], ['a', { href: '/t/journal/current/history' }, 'How']],
       ],
     ])
@@ -66,24 +66,24 @@ describe('glassboxNextList', () => {
   it('fills a bare link with its target\'s current title, and leaves typed text and other targets alone', () => {
     expect(glassboxNextList(['ul', {}, bare(`${base}/verification/schemas`), bare('/t/journal/current/history'), bare(`${base}/missing`),
       ['li', {}, ['a', { href: `${base}/verification/schemas` }, 'Typed']]], base, { '/verification/schemas': 'Schemas' })).toEqual(['ul', { class: 'gb-next' },
-      ['li', {}, ['span', {}, 'Lesson'], ['a', { href: `${base}/verification/schemas` }, 'Schemas']],
+      ['li', {}, ['span', {}, 'Verification'], ['a', { href: `${base}/verification/schemas` }, 'Schemas']],
       ['li', {}, ['span', {}, 'Journal'], ['a', { href: '/t/journal/current/history' }]],
       ['li', {}, ['span', {}, 'Page'], ['a', { href: `${base}/missing` }]],
-      ['li', {}, ['span', {}, 'Lesson'], ['a', { href: `${base}/verification/schemas` }, 'Typed']],
+      ['li', {}, ['span', {}, 'Verification'], ['a', { href: `${base}/verification/schemas` }, 'Typed']],
     ])
   })
 
   it('shows a page\'s description under any in-Space link, typed or bare, and none under other targets', () => {
     const link = `${base}/verification/schemas`
     expect(glassboxNextList(['ul', {}, ['li', {}, ['a', { href: link }, 'Typed']], bare('/t/journal/current/history')], base, {}, [], { '/verification/schemas': 'What it does' })).toEqual(['ul', { class: 'gb-next' },
-      ['li', {}, ['span', {}, 'Lesson'], ['div', {}, ['a', { href: link }, 'Typed'], ['small', {}, 'What it does']]],
+      ['li', {}, ['span', {}, 'Verification'], ['div', {}, ['a', { href: link }, 'Typed'], ['small', {}, 'What it does']]],
       ['li', {}, ['span', {}, 'Journal'], ['a', { href: '/t/journal/current/history' }]],
     ])
   })
 
   it('leaves out the rows whose Lesson was read, and keeps the other targets', () => {
     expect(glassboxNextList(['ul', {}, bare(`${base}/verification/schemas`), bare(`${base}/hooks/gate`), bare('/t/journal/current/history')], base, {}, ['/verification/schemas'])).toEqual(['ul', { class: 'gb-next' },
-      ['li', {}, ['span', {}, 'Lesson'], ['a', { href: `${base}/hooks/gate` }]],
+      ['li', {}, ['span', {}, 'Hooks'], ['a', { href: `${base}/hooks/gate` }]],
       ['li', {}, ['span', {}, 'Journal'], ['a', { href: '/t/journal/current/history' }]],
     ])
   })
@@ -112,7 +112,7 @@ describe('Where next and read Lessons', () => {
   it('keeps the heading while an unread link remains, and drops it once every link is read', () => {
     expect(glassboxLessonSections(body(a, b), base, {}, ['/verification/schemas'])).toEqual([
       h2('where-next', 'Where next'),
-      ['ul', { class: 'gb-next' }, ['li', {}, ['span', {}, 'Lesson'], ['a', { href: b }]]],
+      ['ul', { class: 'gb-next' }, ['li', {}, ['span', {}, 'Hooks'], ['a', { href: b }]]],
     ])
     expect(glassboxLessonSections(body(a, b), base, {}, ['/verification/schemas', '/hooks/gate'])).toEqual([])
   })

@@ -109,7 +109,10 @@ const parts = computed(() => {
 .read li { display: grid; grid-template-columns: 120px minmax(0, 1fr) auto; align-items: center; min-height: 48px; padding-block: 8px; border-bottom: 1px solid var(--gb-line); }
 .read small { display: block; margin-top: 2px; font-size: 14px; line-height: 1.45; color: var(--gb-muted); }
 .read li span:first-child { font: 11px var(--gb-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--gb-muted); }
+.read li { position: relative; }
+/* The link's box covers the whole row, as in Where next, so a click anywhere on it opens the Lesson. */
 .read a { color: var(--gb-ink); font-weight: 500; text-decoration: none; }
+.read a::after { content: ''; position: absolute; inset: 0; }
 .read a:hover { color: var(--gb-accent); }
 .tick { color: var(--gb-accent); }
 .reset { margin-top: 14px; padding: 0; border: 0; background: none; font: 12.5px var(--gb-mono); color: var(--gb-muted); text-decoration: underline; cursor: pointer; }
@@ -218,6 +221,8 @@ const parts = computed(() => {
   mask: var(--gb-book) center / contain no-repeat;
 }
 .article :deep(.gb-next a) { color: var(--gb-ink); font-weight: 500; text-decoration: none; }
+/* Rows, teasers and sidebar entries share one hover: the title turns the accent colour. */
+.article :deep(.gb-next a:hover) { color: var(--gb-accent); }
 .article :deep(.gb-next a)::after { content: ''; position: absolute; inset: 0; }
 .article :deep(.gb-next li) { padding-block: 8px; }
 .article :deep(.gb-next small) { display: block; margin-top: 2px; font-size: 14px; line-height: 1.45; color: var(--gb-muted); }
