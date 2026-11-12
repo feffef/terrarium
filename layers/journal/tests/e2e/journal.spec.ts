@@ -420,10 +420,10 @@ describe('journal Tenant', async () => {
   it('ends each on-ramp page with a numbered Read-next step', async () => {
     expect(await $fetch('/t/journal/current')).toContain('href="/t/glassbox/guide"')
     const first = await $fetch('/t/journal/current/history')
-    expect(first).toContain('Start here · 1 of 3')
+    expect(first).toContain('Start here · 1 of 2')
     expect(first).toMatch(/<a[^>]*href="\/t\/journal\/current\/highlights"[^>]*rel="next"|<a[^>]*rel="next"[^>]*href="\/t\/journal\/current\/highlights"/)
-    const last = await $fetch('/t/journal/current/real-and-invented')
-    expect(last).toContain('Start here · 3 of 3')
+    const last = await $fetch('/t/journal/current/highlights')
+    expect(last).toContain('Start here · 2 of 2')
     expect(last).toContain('back to the Journal')
     const digest = await $fetch(`/t/journal/current/digests/${currentDigestDates().at(-1)!}`)
     expect(digest).not.toContain('Start here ·')

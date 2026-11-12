@@ -23,7 +23,7 @@ fixes a human must merge.
   `docs/proposals/README.md`, `tests/README.md`, `deploy/README.md`, each
   `layers/<tenant>/GLOSSARY.md`, our own Skills (not keyed in
   `skills-lock.json`) with their sibling files, the journal's facing pages
-  `layers/journal/content/current/pages/{highlights,history,index,real-and-invented,routines}.md`,
+  `layers/journal/content/current/pages/{highlights,history,index,routines}.md`,
   and Skill Inventory entries (`layers/journal/content/current/skills/*.yml`;
   never their `importance` grade).
 - **Decisions:** `docs/adr/*`. An ADR states the current decision
