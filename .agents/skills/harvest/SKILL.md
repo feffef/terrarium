@@ -58,8 +58,9 @@ harvests both.
      `completed` settles the cluster, `not_planned` rejects it. Any other
      closed issue goes in the Seedling as the reason to reopen.
    - **Unrejected.** Not in `.out-of-scope/`, not under an open Prune Trial
-     (`.agents/prune-trials.yml`), no `wontfix` issue, not ruled out by a
-     Tenant's `GLOSSARY.md` or `.agents/skills/visitor-loop/decisions.md`.
+     (`trial-territory.ts <files or words>` in `prune-trial/scripts/`), no
+     `wontfix` issue, not ruled out by a Tenant's `GLOSSARY.md` or
+     `.agents/skills/visitor-loop/decisions.md`.
    - **Beyond the Ledger.** Read every summary line it prints:
      `grep -H '^summary:' layers/journal/content/current/frictions/*.yml`. An entry
      that names the cluster's problem, whatever its status, means

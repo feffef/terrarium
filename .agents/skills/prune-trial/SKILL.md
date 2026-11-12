@@ -80,7 +80,7 @@ every candidate's full smear to rank them):
 
 It must not touch the territory of any trial that was open at the **start** of
 this run — including one you just judged and deleted — or no verdict can be
-attributed.
+attributed. `trial-territory.ts <files or words>` names the trial covering each.
 
 **"Nothing clears the bar" is a result you earn, not one you inherit.** Say it
 only after criterion 1's subagent search ran this run, and name what it
