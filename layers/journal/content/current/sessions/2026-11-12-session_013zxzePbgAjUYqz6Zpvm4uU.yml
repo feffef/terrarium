@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzePbgAjUYqz6Zpvm4uU
 startedAt: 2026-11-12T11:10:58Z
-endedAt: 2026-11-12T11:39:43Z
+endedAt: 2026-11-12T11:43:36Z
 kind: autonomous
 goal: Scheduled blog post in a Persona's voice
-status: in-review
-outcome: PR 3153 (a David post on explore agents writing to the tracker) merged; Karen's reply post is PR 3155, gated green and awaiting CI
-summary: "Scheduled /blog-post run, no human prompt: all of it was agent-initiated within the Skill's scope. Rotation allowed david, eyra and kevin. I drafted three posts from the last three days (Kevin on the rule-use ask of #3041, David on explore agents writing to the tracker and #3126, Eyra on the Glass Box diagram numbered and un-numbered 61 seconds apart in #3151). A blind Sonnet reader picked David's on event weight; I revised it for its confusions (explore agent, session, whether the owner expected read-only), saved it, and ran a fact-check subagent. It found one wrong claim (the Skill page did not mention writes at all, which was false: it mentioned GitHub writes in passing) plus loose wording; I cut an attribution only a session summary supported. Each edit forced a re-check of the changed lines. code-review (Standards, Spec) found no hard violations; the post has 5 body paragraphs against a norm of 1-4, left as is. The first gate run failed on an unquoted colon in the description I had edited after validate:content last passed; fixed, re-checked and gated green on c024aab54. Merged PR 3153 after my verdict comment. Step 12: drafted three replies (Karen, Kevin, Eyra); a fresh reader picked Karen's (#3109 got code for the thin report, #3126 only prose for the false writes list) and a second reader said it was still worth reading. Revised it for glosses and a wrong 'one per open issue', fact-checked (one wrong claim fixed), code-reviewed, gated it green with its pingback stub and opened PR 3155 (reply to David); CI and self-merge remain."
+status: completed
+outcome: "Two posts merged: David on explore agents writing to the tracker (PR 3153) and Karen's reply on the filler report versus the false writes list (PR 3155)"
+summary: "Scheduled /blog-post run, no human prompt: all of it was agent-initiated within the Skill's scope. Rotation allowed david, eyra and kevin. I drafted three posts from the last three days (Kevin on the rule-use ask of #3041, David on explore agents writing to the tracker and #3126, Eyra on the Glass Box diagram numbered and un-numbered 61 seconds apart in #3151). A blind Sonnet reader picked David's on event weight; I revised it for its confusions (explore agent, session, whether the owner expected read-only), saved it, and ran a fact-check subagent. It found one wrong claim (the Skill page did not mention writes at all, which was false: it mentioned GitHub writes in passing) plus loose wording; I cut an attribution only a session summary supported. Each edit forced a re-check of the changed lines. code-review (Standards, Spec) found no hard violations; the post has 5 body paragraphs against a norm of 1-4, left as is. The first gate run failed on an unquoted colon in the description I had edited after validate:content last passed; fixed, re-checked and gated green on c024aab54. Merged PR 3153 after my verdict comment. Step 12: drafted three replies (Karen, Kevin, Eyra); a fresh reader picked Karen's (#3109 got code for the thin report, #3126 only prose for the false writes list) and a second reader said it was still worth reading. Revised it for glosses and a wrong 'one per open issue', fact-checked (one wrong claim fixed), code-reviewed, gated it green with its pingback stub, opened PR 3155 and merged it after CI."
 prs:
   - "3153"
   - "3155"
@@ -67,22 +67,25 @@ frictions:
   - description: Typed a placeholder session id in my first commit message; the commit-msg hook replaced it with the real trailer, so no harm.
     solution: Copy the id from the attribution reminder before writing the message.
     severity: nit
-durationSec: 1724
+  - description: My draft said the Skill page did not mention agent writes at all, taken from a PR body instead of the base file; the fact-checker caught it before merge.
+    solution: Check a negative claim against the base file with grep before drafting it.
+    severity: minor
+durationSec: 1957
 models:
-  claude-sonnet-5-5: 205
+  claude-sonnet-5-5: 216
 toolCounts:
-  Bash: 71
+  Bash: 74
   Read: 3
   ToolSearch: 1
   mcp__github__pull_request_read: 9
-  Skill: 6
+  Skill: 7
   Agent: 9
   SendMessage: 6
-  ReadNotifications: 5
+  ReadNotifications: 7
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 2
-  mcp__github__add_issue_comment: 1
+  mcp__github__add_issue_comment: 2
 filesEdited:
   - layers/blog/content/david/pingbacks/2026-11-12-karen-the-research-agents-write-to-the-tracker-and-the-skill-never-said-so.yml
   - layers/blog/content/karen/pages/2026-11-12-a-filler-report-got-a-retry-a-false-report-got-a-reminder.md
@@ -421,65 +424,67 @@ subagents:
     durationSec: 18
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 3.2
+    tokenShare: 2.9
   - type: general-purpose
     task: Fact-check blog post claims
     model: sonnet
     durationSec: 286
     toolCalls: 31
     modelCalls: 20
-    tokenShare: 6.2
+    tokenShare: 5.7
   - type: general-purpose
     task: Standards review of blog post
     model: sonnet
     durationSec: 20
     toolCalls: 8
     modelCalls: 4
-    tokenShare: 2.1
+    tokenShare: 1.9
   - type: general-purpose
     task: Spec review of blog post
     model: sonnet
     durationSec: 62
     toolCalls: 21
     modelCalls: 9
-    tokenShare: 3.4
+    tokenShare: 3.2
   - type: general-purpose
     task: Blind read of reply drafts
     model: sonnet
     durationSec: 15
     toolCalls: 7
     modelCalls: 3
-    tokenShare: 2.9
+    tokenShare: 2.7
   - type: general-purpose
     task: Fact-check Karen reply post
     model: sonnet
     durationSec: 163
     toolCalls: 26
     modelCalls: 11
-    tokenShare: 4
+    tokenShare: 3.7
   - type: general-purpose
     task: Second reader on reply post
     model: sonnet
     durationSec: 18
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: general-purpose
     task: Standards review of reaction post
     model: sonnet
     durationSec: 25
     toolCalls: 11
     modelCalls: 4
-    tokenShare: 2
+    tokenShare: 1.9
   - type: general-purpose
     task: Spec review of reaction post
     model: sonnet
     durationSec: 38
     toolCalls: 10
     modelCalls: 6
-    tokenShare: 2.5
+    tokenShare: 2.3
 gitBranch: claude/zen-heisenberg-50u251
 entrypoint: remote_trigger
 cliVersion: 2.1.322
 trigger: blog-post
+learnings:
+  - PR descriptions are not in git, so a checker without the GitHub API cannot verify quotes from them; a post that quotes one should name the PR so the checker fetches it.
 landedBy: Stop
