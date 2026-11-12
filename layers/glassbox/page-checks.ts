@@ -222,7 +222,7 @@ const subsections: string[] = [glassboxLessonIds.why, glassboxLessonIds.watch]
 const adrCite = /ADR-(\d{4}) \(:file\[docs\/adr\/(\d{4})-[^\]\s]+\.md\]\)/g
 const ownWords = { min: 12, max: 65 }
 
-// EVERY-PAGE.md, Mechanism, not motive: In Terrarium's own lines, before its two h3 subsections.
+// writing-pages.md, Mechanism, not motive: In Terrarium's own lines, before its two h3 subsections.
 // Matches outside code but quotes the raw line; readBody keeps one prose line per body line.
 function motiveLines(body: string, word: string) {
   const lines = readBody(body).prose.split('\n')
@@ -283,7 +283,7 @@ function nextProblems(prose: string, lesson: boolean): string[] {
   return problems
 }
 
-// Caps keep each `title` and `description` short wherever pages are listed (EVERY-PAGE.md, Pin).
+// Caps keep each `title` and `description` short wherever pages are listed (writing-pages.md, Pin).
 const lengths = { lesson: { title: 28, description: 120 }, walkthrough: { title: 36, description: 140 } }
 const lessonTitleWords = 4
 
@@ -337,7 +337,7 @@ export function glassboxPageProblems(file: string, source: string, site: Glassbo
     if (ref.lines && !ref.runs && gaps > 1) problems.push(`the Excerpt of ${ref.path} has ${gaps} gaps: give lines one range per run`)
     // Excerpt.vue counts runs from the gap lines, so none may be empty but the last.
     if (ref.runs && ref.excerpt !== undefined && excerptRuns(ref.excerpt).slice(0, -1).some((r) => !r.length)) problems.push(`the Excerpt of ${ref.path} opens with a gap or has two in a row`)
-    // EVERY-PAGE.md, Excerpts teach: end on a whole statement.
+    // writing-pages.md, Excerpts teach: end on a whole statement.
     const last = ref.excerpt === undefined ? undefined : excerptRuns(ref.excerpt).flat().filter((l) => l.trim()).at(-1)
     if (last && /[{[(]\s*$/.test(last)) problems.push(`the Excerpt of ${ref.path} ends on an open bracket: end it on a whole statement`)
   }

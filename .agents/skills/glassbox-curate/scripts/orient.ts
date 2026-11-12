@@ -99,7 +99,7 @@ const runStart = (stem: string) => `${stem.slice(0, 13)}:${stem.slice(13, 15)}:0
 /** `now` as a run entry's file stem. */
 export const runStem = (now: Date) => now.toISOString().slice(0, 16).replace(':', '')
 
-/** "In Terrarium may give a motive" warnings, which are mostly fine (EVERY-PAGE.md), as one count per page; the rest in full. */
+/** "In Terrarium may give a motive" warnings, which are mostly fine (writing-pages.md), as one count per page; the rest in full. */
 export function warningLines(byFile: [string, string[]][]): string[] {
   const motives = byFile.map(([f, ws]) => [f, ws.filter((w) => w.startsWith(glassboxMotiveWarning)).length] as const).filter(([, n]) => n)
   return [

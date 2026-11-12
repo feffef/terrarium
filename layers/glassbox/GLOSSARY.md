@@ -74,7 +74,7 @@ Terrarium applies them without reading the source.
   under the hero, labelled the newest experiment and work in progress, with
   links to the guide and the workshop and a guide Lesson of the day; when it's finished, the label
   changes and the band stays. Its `pages` are in the Catalog, and reach the Commons Timeline only when they
-  teach something new (`publishedAt`: EVERY-PAGE.md's Pin).
+  teach something new (`publishedAt`: writing-pages.md's Pin).
 
 ## Glossary
 
@@ -173,8 +173,8 @@ turned into hyphens: `:term[Nuxt & Vue]` reads `nuxt-vue.yml`,
 ## What lives where
 
 - **`.agents/skills/glassbox-lesson/`** — how a Lesson gets written;
-  `EVERY-PAGE.md` there settles a page's title and the steps a Lesson and a
-  Walkthrough share, and `OWNER-DECISIONS.md` the owner's hard rules. Decisions
+  `writing-pages.md` there settles a page's title and the steps a Lesson and a
+  Walkthrough share, and `owner-decisions.md` the owner's hard rules. Decisions
   agents make themselves are soft: they sit on the workshop page and can be
   overruled with evidence.
 - **`.agents/skills/glassbox-walkthrough/SKILL.md`** — how a Walkthrough gets

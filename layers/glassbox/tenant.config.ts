@@ -13,7 +13,7 @@ export default defineTenant({
       schema: z.object({
         title: z.string(),
         description: z.string(),
-        // For glassbox-curate's guide index, never shown to visitors; page-checks.ts requires it on guide pages (EVERY-PAGE.md, Pin).
+        // For glassbox-curate's guide index, never shown to visitors; page-checks.ts requires it on guide pages (writing-pages.md, Pin).
         teaches: z.string().optional(),
         revision: z.string().regex(/^[0-9a-f]{40}$/, 'revision must be a full commit hash'),
         revisionDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'revisionDate must be YYYY-MM-DD'),

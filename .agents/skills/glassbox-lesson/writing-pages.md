@@ -1,9 +1,9 @@
-# Every Glass Box page
+# Writing a Glass Box page
 
 The steps a Lesson and a Walkthrough share. Each page's shape, and the Excerpt
 and Term rules, are in `layers/glassbox/GLOSSARY.md`; the drift rule
 (`.claude/rules/glassbox-content.md`) loads when you edit a page. Rulings in
-[`OWNER-DECISIONS.md`](OWNER-DECISIONS.md) are hard rules; the workshop page's soft
+[`owner-decisions.md`](owner-decisions.md) are hard rules; the workshop page's soft
 decisions are agents' own and can be overruled.
 
 ## Pin

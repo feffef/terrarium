@@ -23,7 +23,7 @@ settle every decision with them via `grilling`. If they answer "autonomous",
 the run is autonomous from then on and its entry says so.
 
 **Hard rules.** Never make a page false. Never undo an earlier change without
-new evidence. `OWNER-DECISIONS.md` lines are hard rules: never go against one.
+new evidence. `owner-decisions.md` lines are hard rules: never go against one.
 One PR per run, within the remit.
 
 **Remit.** Edit `layers/glassbox/content/guide/`, the diagram SVGs you
@@ -35,8 +35,8 @@ or the page checks. A PR holding any of these waits for the owner's merge: its
 body says so, and you don't merge it.
 
 **Read first, in full.** `layers/glassbox/GLOSSARY.md`,
-[`../glassbox-lesson/EVERY-PAGE.md`](../glassbox-lesson/EVERY-PAGE.md),
-[`../glassbox-lesson/OWNER-DECISIONS.md`](../glassbox-lesson/OWNER-DECISIONS.md),
+[`../glassbox-lesson/writing-pages.md`](../glassbox-lesson/writing-pages.md),
+[`../glassbox-lesson/owner-decisions.md`](../glassbox-lesson/owner-decisions.md),
 `.claude/rules/glassbox-content.md`,
 `.agents/skills/dispatch-subagents/SKILL.md`, and, since every run fetches and
 opens a PR, `docs/agents/git-conventions.md`, `docs/agents/github-integration.md`
@@ -121,13 +121,13 @@ keeps them so).
   being its target's title. Each `The cost:` clause needs a source that states that
   cost, and the writer runs a command sequence before it says what it does.
   A page read in full whose `teaches`, `description` or bold lead-ins fall
-  short of EVERY-PAGE.md's Pin rule gets a rewrite in the same Fix, which
+  short of writing-pages.md's Pin rule gets a rewrite in the same Fix, which
   doesn't count as a second focus.
   A new Lesson follows `.agents/skills/glassbox-lesson/SKILL.md` step by step:
   give the writer its path and have it report each step's Done.
 - **Check.** A separate sonnet claim checker checks the changed sentences;
   `glassbox-update` owns the claim check of unchanged text, so leave that to
-  it. Run EVERY-PAGE.md's Check on the changed pages, and a fresh reader
+  it. Run writing-pages.md's Check on the changed pages, and a fresh reader
   re-reads them. One retry, then drop the change.
 - **Removal.** A change that only removes text or a page skips the writer, the
   claim checker and the fresh reader. Still run the page checks, grep for
@@ -145,7 +145,7 @@ keeps them so).
   (`docs/agents/pr-workflow.md`), self-merged unless the Remit says it waits.
   Wait for the Scout now and add each of its topics not already there to the
   memory page's open ideas, as a possible future task. Give `code-review`
-  the Lesson contract, EVERY-PAGE.md, OWNER-DECISIONS.md and the glassbox-content
+  the Lesson contract, writing-pages.md, owner-decisions.md and the glassbox-content
   rule as its standards, without the code-smell baseline, and say the page
   checks already ran. Its Spec reviewer also judges which pages the change
   needed read (the ones it edits, links or overlaps), and names each one missing
@@ -157,8 +157,8 @@ keeps them so).
 ## Lenses
 
 What to read a page for, as two readers: a developer new to the tool, and one
-who knows the tool but not Terrarium. A page's rules are in EVERY-PAGE.md and
-its shape in the glossary; an `OWNER-DECISIONS.md` line is never a deficit.
+who knows the tool but not Terrarium. A page's rules are in writing-pages.md and
+its shape in the glossary; an `owner-decisions.md` line is never a deficit.
 
 - **Clarity.** The order, plain words, each term introduced before use, a title
   that passes the title rule.
@@ -200,8 +200,8 @@ All in `layers/glassbox/content/workshop/`:
   **Soft decisions** (its heading) are decisions you, a reviewer or a claim
   checker made: write each there as it is made, with what decided it. They are
   not rules. Overrule or delete one when you have evidence against it or when
-  changed content makes it obsolete. Never put one in `OWNER-DECISIONS.md`.
-- `../glassbox-lesson/OWNER-DECISIONS.md` holds the owner's hard rules. Add a
+  changed content makes it obsolete. Never put one in `owner-decisions.md`.
+- `../glassbox-lesson/owner-decisions.md` holds the owner's hard rules. Add a
   line only when the owner says to, in an interactive session, never in a
   scheduled run. If your change would go against a line, don't make it: log a
   Friction if that seriously hurts the quality or outcome of your task, or an
