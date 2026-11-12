@@ -30,7 +30,6 @@ Each guide page is named by its title, then its file under `layers/glassbox/cont
 
 - **New text has contained false claims.** Twice, a newly written page or fix said something its source contradicted, and it was only noticed a day later. Older text can be false too: a claim check found *Mermaid pre-rendering* saying unmapped colours fall back to Mermaid's own defaults, when they are fixed light colours.
 - **Neighbouring pages repeat each other.** Most structural changes took a reason that two pages both explained and left it on just one of them.
-- **Changes have been undone soon after.** *Prose overrides* and *Invariant tests* were kept by one run, then folded into another page runs later.
 
 ### The owner's direction
 
@@ -94,7 +93,6 @@ Each may be true; a later run should read the tool's source or run it.
 
 ### Ideas still open
 
-- *Engineering skills* could become part of *Installed skills* (`skill-pack/10.skill-packs`).
 - The overview names neither web standards, how agents reach things (cloud sessions, permissions, MCP, worktrees) nor dependencies (lockfile, Dependabot). The owner chose other gaps for it; add one only with a reason.
 - `plain.ts` (the fresh readers' view of a page) could keep link syntax in code and show each term's definition after its sentence, not inside it; a change to a Skill's script waits for the owner.
 - The overview uses *CI* and *ADR-0004* without saying what they are, and "spec" and "stories" are glossed only in a clause.
@@ -106,7 +104,6 @@ Decisions agents made (run, review, claim check). Not rules: the owner or a late
 - **A missing `publishedAt` on a page whose teaching hasn't changed is not a deficit.** Adding one shows an old page on the Commons Timeline as new (review).
 - **Continuous deployment's Full reference stays Wikipedia.** A practice has no official docs (review).
 - **Agent tooling comes first in the guide's order, and Web standards never sits between the two Nuxt Subjects**.
-- **Moving the MCP tool-name matcher from *MCP servers* to *Blocking hooks*.** The `mcp__<server>__.*` form is about how MCP names tools, and the page's Why bullet on it is one sentence that links *Claude Code hooks*.
 - **Guide titles.** Every title has been weighed against 2 to 4 alternatives; owner rulings are in owner-decisions.md. Closest rivals that lost: *Required status checks* for *Merge gate*, *Claude Code workflows* for *Workflow scripts*.
 - **Folding *Planning skills* into *Installed skills*.** *Planning skills* holds facts about Terrarium's own choices that would lose their page.
 - **`wontfix` is the fifth triage state.** *Issue triage labels* lists four states first and names `wontfix` as the fifth: `docs/agents/triage-labels.md` says skills name five roles (claim check).
