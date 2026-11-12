@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeNq8X5Pc3Xwjpv6Wxe
 startedAt: 2026-11-12T04:03:13Z
-endedAt: 2026-11-12T04:11:54Z
+endedAt: 2026-11-12T04:14:48Z
 kind: autonomous
 goal: Scheduled audit of the repo's docs for drift and duplication
-status: in-review
-outcome: Sweep PR 3128 open with 2 fixes; merge-pr.ts still polling CI
-summary: "Scheduled audit-docs run; no human prompted any step (all agent-initiated). Three read-only reviewers returned 6 findings (Freshness 1, Single-home 3, Coherence 2); all three said their coverage was partial. One checker returned 2 CONFIRMED, 0 CONFIRMED-BUT, 4 WRONG: the e2e-bullet move contradicts tests/README's pointer, the MCP-write rewrite changes the condition, and the 2h threshold and close-session reading were unsourced. Fixed the glassbox-update Inventory role (removed drafts Space) and cut guards.md's second copy of the hook wiring. Own read of the 2-file diff, gate:scoped green, pushed, opened PR 3128, subscribed, posted verdict, started merge-pr.ts in the background; merge not yet confirmed. No ADR edits so no escalation PR; no issue filed. Covered: CLAUDE.md, docs/agents/{pr-workflow,git-conventions,github-integration,environment-caveats,guards,issue-tracker,triage-labels,verifying-ui-changes}.md."
+status: completed
+outcome: Sweep PR 3128 merged with 2 doc fixes
+summary: "Scheduled audit-docs run; no human prompted any step (all agent-initiated). Three read-only reviewers returned 6 findings (Freshness 1, Single-home 3, Coherence 2); all three said their coverage was partial. One checker returned 2 CONFIRMED, 0 CONFIRMED-BUT, 4 WRONG: the e2e-bullet move contradicts tests/README's pointer, the MCP-write rewrite changes the condition, and the 2h threshold and close-session reading were unsourced. Fixed the glassbox-update Inventory role (removed drafts Space) and cut guards.md's second copy of the hook wiring. Own read of the 2-file diff, gate:scoped green, pushed, opened PR 3128, subscribed, posted verdict, merged it via merge-pr.ts once CI was green (merge commit 83c07564a). No ADR edits so no escalation PR; no issue filed. Covered: CLAUDE.md, docs/agents/{pr-workflow,git-conventions,github-integration,environment-caveats,guards,issue-tracker,triage-labels,verifying-ui-changes}.md."
 prs:
   - "3128"
 docsRead:
@@ -51,11 +51,11 @@ frictions:
   - description: Reviewer agents B and C read only about eight docs/agents files; most Live files went unread, so coverage is thin.
     solution: Split each lens over narrower file sets so each agent can finish.
     severity: minor
-durationSec: 521
+durationSec: 695
 models:
-  claude-sonnet-5-5: 54
+  claude-sonnet-5-5: 70
 toolCounts:
-  Bash: 21
+  Bash: 25
   Agent: 4
   Edit: 2
   mcp__github__list_pull_requests: 1
@@ -63,7 +63,8 @@ toolCounts:
   mcp__github__subscribe_pr_activity: 1
   mcp__github__add_issue_comment: 1
   Skill: 2
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 3
+  ReadNotifications: 2
 filesEdited:
   - layers/journal/content/current/skills/glassbox-update.yml
   - docs/agents/guards.md
@@ -256,25 +257,25 @@ subagents:
     durationSec: 27
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 11.8
+    tokenShare: 10.4
   - type: general-purpose
     task: "Audit docs: Single-home"
     durationSec: 30
     toolCalls: 12
     modelCalls: 6
-    tokenShare: 13.1
+    tokenShare: 11.5
   - type: general-purpose
     task: "Audit docs: Coherence"
     durationSec: 51
     toolCalls: 18
     modelCalls: 11
-    tokenShare: 16.2
+    tokenShare: 14.3
   - type: general-purpose
     task: Fact-check audit findings
     durationSec: 61
     toolCalls: 20
     modelCalls: 10
-    tokenShare: 10.9
+    tokenShare: 9.6
 gitBranch: claude/festive-mayer-rk3esm
 entrypoint: remote_trigger
 cliVersion: 2.1.322
