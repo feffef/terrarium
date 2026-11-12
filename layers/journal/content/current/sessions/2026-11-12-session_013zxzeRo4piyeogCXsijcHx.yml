@@ -1,0 +1,432 @@
+schemaVersion: 1
+session: session_013zxzeRo4piyeogCXsijcHx
+startedAt: 2026-11-12T17:22:42Z
+endedAt: 2026-11-12T17:44:40Z
+kind: autonomous
+goal: "Curate the Glass Box guide: Nuxt & Vue pages"
+status: in-review
+outcome: PR 3183 open with lowercase terms and clearer wording on eight pages; gate passed, CI and merge pending
+summary: "Started by the glassbox-curate routine (autonomous, handed over from an earlier session in the same chain), so every decision was agent-made; the only human words were a mid-run \"Fix leftovers on this session\" (followed: two small fixes made here instead of parked) and a reply that the overview idea I cut did not matter. I oriented, chose the Nuxt & Vue Subject (next one still capitalising glossary terms, last read 2026-11-10), had two fresh sonnet readers read the plain text, and an opus writer fix the findings with a source per fact. A sonnet claim checker found one overstated sentence (Nuxt's automatic key has no line number), corrected. Code review's Spec reviewer named outside pages; I read two in full, the rest were grepped by the reviewer. The memory page went over its word cap and lost three whole items; one swap (the version-1 lock hash note for a restored Terms glossed late note) was a judgement call on two same-day items. Scout was skipped and disclosed. Open: CI, verdict comment and merge via merge-pr.ts."
+prs:
+  - "3183"
+docsRead:
+  - path: layers/glassbox/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-lesson/writing-pages.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-lesson/owner-decisions.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: .throwaway/glassbox-curate/guide-pages-1.md
+    reason: (no reason given)
+  - path: .throwaway/glassbox-curate/guide-pages-2.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-content/20.multi-tenant-isolation.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/verification/20.type-checking.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-curate/SKILL.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/10.layers.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/20.auto-imports.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/30.file-routing.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/40.virtual-modules.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/50.vue-components.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/60.nitro.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/70.data-fetching.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/80.hydration.md
+    reason: (read before editing)
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: (no reason given)
+  - path: docs/adr/0028-navigation-reads-server-payloads.md
+    reason: (no reason given)
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: (no reason given)
+  - path: GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/tinkerfund/GLOSSARY.md
+    reason: (no reason given)
+skillsUsed:
+  - name: glassbox-curate
+    reason: the run's procedure
+  - name: code-review
+    reason: Standards and Spec review before the PR
+  - name: close-session
+    reason: closure at PR open
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Orientation output was 69 KB for one Subject, so reading it took paging; the guide index files were another 80 KB read whole.
+    solution: orient.ts --subject could print only the Subject's page bodies once; the index files are already read from the first run.
+    severity: minor
+  - description: The Stop hook demanded commits and pushes while subagents were still running; two extra commit and push turns resulted.
+    solution: Commit page edits right after the writer returns, before launching checkers.
+    severity: nit
+  - description: The memory page hit its word cap again and two same-day items had to be swapped for each other; the reviewer then called one cut premature.
+    solution: Make the cap check part of orient.ts output so a run budgets its additions before writing them.
+    severity: minor
+durationSec: 1318
+models:
+  claude-sonnet-5-5: 136
+toolCounts:
+  Bash: 32
+  Read: 15
+  Write: 3
+  Agent: 7
+  Grep: 2
+  Edit: 8
+  Skill: 3
+  mcp__claude-code-remote__get_session: 1
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - layers/glassbox/content/workshop/runs/2026-11-12T1722.yml
+  - layers/glassbox/content/guide/pages/nuxt-vue/10.layers.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/70.data-fetching.md
+  - layers/glassbox/content/workshop/pages/index.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/20.auto-imports.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/30.file-routing.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/40.virtual-modules.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/50.vue-components.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/60.nitro.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/80.hydration.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+docsReadBySubagents:
+  - .agents/skills/glassbox-curate/SKILL.md
+  - docs/adr/0018-tenant-layers-under-layers-directory.md
+  - docs/adr/0028-navigation-reads-server-payloads.md
+  - docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+  - GLOSSARY.md
+  - layers/tinkerfund/GLOSSARY.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/writing-pages.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/writing-pages.md
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/nuxt-vue/10.layers.md
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: gate:scoped and code-review before the PR
+      - path: .claude/rules/adr-0003.md
+        value: backed
+      - path: .claude/rules/adr-0017.md
+        value: backed
+      - path: .claude/rules/adr-0009.md
+        value: backed
+      - path: .claude/rules/glassbox-content.md
+        value: steered
+        why: kept dated narrative out of pages
+      - path: .claude/rules/tenant-glossary.md
+        value: backed
+      - path: layers/glassbox/GLOSSARY.md
+      - path: .agents/skills/glassbox-lesson/writing-pages.md
+      - path: .agents/skills/glassbox-lesson/owner-decisions.md
+      - path: docs/agents/pr-workflow.md
+      - path: docs/agents/git-conventions.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported: []
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported: []
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/nuxt-vue/10.layers.md
+      - rule: .claude/rules/glassbox-content.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/nuxt-vue/10.layers.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/nuxt-vue/10.layers.md
+      - rule: .claude/rules/adr-0001.md
+        via: hint
+      - rule: .claude/rules/adr-0018.md
+        via: hint
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+    reported:
+      - path: .claude/rules/glassbox-content.md
+        value: steered
+      - path: .claude/rules/tenant-layers.md
+        value: backed
+      - path: .claude/rules/adr-0025.md
+        value: backed
+        why: (no load recorded)
+      - path: .claude/rules/adr-0018.md
+        value: backed
+      - path: layers/glassbox/GLOSSARY.md
+      - path: .agents/skills/glassbox-lesson/writing-pages.md
+      - path: .agents/skills/glassbox-lesson/owner-decisions.md
+  - by: general-purpose
+    subagent: 3
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+    reported:
+      - path: .claude/rules/glassbox-content.md
+        value: steered
+      - path: docs/agents/git-conventions.md
+  - by: general-purpose
+    subagent: 4
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported: []
+  - by: general-purpose
+    subagent: 5
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/writing-pages.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/writing-pages.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+    reported:
+      - path: .claude/rules/glassbox-content.md
+        value: backed
+      - path: layers/glassbox/GLOSSARY.md
+  - by: general-purpose
+    subagent: 6
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/glassbox-curate/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/glassbox-curate/SKILL.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0006.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/adr-0016.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .claude/rules/adr-0003.md
+        value: backed
+subagents:
+  - task: Fresh reader, Nuxt pages A
+    model: sonnet
+    durationSec: 35
+    toolCalls: 7
+    modelCalls: 4
+    tokenShare: 2.7
+  - task: Fresh reader, Nuxt pages B
+    model: sonnet
+    durationSec: 33
+    toolCalls: 7
+    modelCalls: 4
+    tokenShare: 2.7
+  - task: Opus writer, Nuxt & Vue fixes
+    model: opus
+    durationSec: 502
+    toolCalls: 125
+    modelCalls: 75
+    tokenShare: 30.2
+  - task: Claim check, Nuxt & Vue changes
+    model: sonnet
+    durationSec: 205
+    toolCalls: 39
+    modelCalls: 35
+    tokenShare: 12.8
+  - task: Fresh re-read, Nuxt pages
+    model: sonnet
+    durationSec: 32
+    toolCalls: 11
+    modelCalls: 3
+    tokenShare: 2.9
+  - task: Standards review of Nuxt & Vue diff
+    model: sonnet
+    durationSec: 47
+    toolCalls: 13
+    modelCalls: 7
+    tokenShare: 4.4
+  - task: Spec review of Nuxt & Vue diff
+    model: sonnet
+    durationSec: 56
+    toolCalls: 14
+    modelCalls: 11
+    tokenShare: 5
+gitBranch: HEAD
+entrypoint: remote
+cliVersion: 2.1.322
+learnings:
+  - Nuxt's automatic useAsyncData key is the file path plus a per-file call ordinal, not a line number (nuxt dist/index.mjs:7189).
+ideas:
+  - Have orient.ts print the memory page's word count against its cap, so runs cut whole items before editing instead of after the test fails.
+landedBy: Stop
