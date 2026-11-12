@@ -1,10 +1,9 @@
 ---
 name: dependabot-sweep
-description: Review every open Dependabot PR — merge the safe minor/patch bumps, leave the rest for a human with a written reason, and turn each major into a risk/benefit issue. User-invoked; a Routine runs it.
+description: Review every open Dependabot PR — merge the safe minor/patch bumps, leave the rest for a human with a written reason, and turn each major into a risk/benefit issue. User-invoked.
 disable-model-invocation: true
 ---
 
-A Routine runs this Skill; its schedule lives there, not here (ADR-0005).
 Its approval covers only the steps below (ADR-0003): it opens no branch and
 edits no file.
 

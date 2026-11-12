@@ -106,6 +106,8 @@ workflow that runs the **Gate**.
 ### Routine
 A scheduled trigger, set up outside the repo, that runs one **Skill**. The Skill
 holds what the run does; the Routine holds only when (ADR-0005).
+The repo cannot read a Routine's timer (it lives in the owner's claude.ai
+account), so a Skill's mention of one is intent, not fact; ask the owner.
 
 ### Agent Authorship
 The invariant that agents author essentially all content and code; **Trusted**
