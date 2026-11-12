@@ -1,47 +1,50 @@
-// The one home for how the Journal's History page counts (issue #3176): the table
-// rows and header totals, from the session logs and git, as of a date. The periods
-// are the page's fixed eight (no free date range); `validate-history.ts` fails the
-// gate when the page drifts from this output.
-// Print: pnpm exec tsx scripts/history/history-stats.ts [--as-of YYYY-MM-DD]
+// The one home for how the Journal's History page counts (issue #3176): prints the
+// header totals as of a date and a ready-to-paste table row for one period, from
+// the session logs and git.
+// Run: pnpm exec tsx scripts/history/history-stats.ts --name "Founding" --from 2026-07-04 --to 2026-07-10 [--as-of YYYY-MM-DD]
 import { execFileSync } from 'node:child_process'
 import { readSessionLogs } from '../session/journal-files.ts'
 import { flagValue, root, runIfMain } from '../lib/cli.ts'
 
-export const PERIODS: { name: string; from: string; to: string }[] = [
-  { name: 'Founding', from: '2026-07-04', to: '2026-07-10' },
-  { name: 'Opening up', from: '2026-07-11', to: '2026-07-24' },
-  { name: 'Fewer asks', from: '2026-07-25', to: '2026-08-08' },
-  { name: 'The floor', from: '2026-08-09', to: '2026-08-25' },
-  { name: 'Idling and pruning', from: '2026-08-26', to: '2026-09-24' },
-  { name: 'The owner returns', from: '2026-09-25', to: '2026-10-02' },
-  { name: 'Simplifying the rules', from: '2026-10-03', to: '2026-10-17' },
-  { name: 'Measuring and explaining', from: '2026-10-18', to: '2026-11-11' },
-]
-
 /** `date` is the log file's date; `autonomous` is `kind: autonomous` (a delegated
  *  session counts as person-started: the owner's 12 Nov ruling). */
 export interface LogFacts { date: string; autonomous: boolean; frictions: number }
+export interface Period { name: string; from: string; to: string }
 export interface Row { sessionsPerWeek: number; agentShare: number; frictionsPerSession: number; newSites: number }
-export interface Stats { commits: number; sessions: number; frictions: number; rows: Row[] }
+export interface Totals { commits: number; sessions: number; frictions: number }
 
 const DAY = 864e5
 const inRange = (d: string, from: string, to: string) => d >= from && d <= to
 
-/** Pure. `siteDates` are the dates each site first appeared; `commitCount` is
- *  already limited to `asOf`. Logs after `asOf` are ignored. */
-export function computeStats(logs: LogFacts[], commitCount: number, siteDates: string[], asOf: string): Stats {
+/** Pure. `siteDates` are the dates each site first appeared. Logs after `asOf`
+ *  are ignored. */
+export function computeRow(logs: LogFacts[], siteDates: string[], { from, to }: Period, asOf: string): Row {
+  const s = logs.filter((l) => l.date <= asOf && inRange(l.date, from, to))
+  const days = (Date.parse(to) - Date.parse(from)) / DAY + 1
+  return {
+    sessionsPerWeek: Math.round(s.length / (days / 7)),
+    agentShare: s.length ? Math.round((100 * s.filter((l) => l.autonomous).length) / s.length) : 0,
+    frictionsPerSession: s.length ? Math.round((10 * s.reduce((n, l) => n + l.frictions, 0)) / s.length) / 10 : 0,
+    newSites: siteDates.filter((d) => inRange(d, from, to)).length,
+  }
+}
+
+export function computeTotals(logs: LogFacts[], commits: number, asOf: string): Totals {
   const upto = logs.filter((l) => l.date <= asOf)
-  const rows = PERIODS.map(({ from, to }) => {
-    const s = upto.filter((l) => inRange(l.date, from, to))
-    const days = (Date.parse(to) - Date.parse(from)) / DAY + 1
-    return {
-      sessionsPerWeek: Math.round(s.length / (days / 7)),
-      agentShare: s.length ? Math.round((100 * s.filter((l) => l.autonomous).length) / s.length) : 0,
-      frictionsPerSession: s.length ? Math.round((10 * s.reduce((n, l) => n + l.frictions, 0)) / s.length) / 10 : 0,
-      newSites: siteDates.filter((d) => inRange(d, from, to)).length,
-    }
-  })
-  return { commits: commitCount, sessions: upto.length, frictions: upto.reduce((n, l) => n + l.frictions, 0), rows }
+  return { commits, sessions: upto.length, frictions: upto.reduce((n, l) => n + l.frictions, 0) }
+}
+
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+
+/** The row as the page writes it: `**[Name](#anchor)** · 4–10 Jul | …`; the anchor
+ *  follows the section heading "Name — 4 to 10 July". */
+export function formatRow(p: Period, r: Row): string {
+  const [a, b] = [p.from, p.to].map((d) => ({ day: Number(d.slice(8)), month: MONTHS[Number(d.slice(5, 7)) - 1]! }))
+  const same = a!.month === b!.month
+  const short = (m: string) => m.slice(0, 3)
+  const range = same ? `${a!.day}–${b!.day} ${short(b!.month)}` : `${a!.day} ${short(a!.month)}–${b!.day} ${short(b!.month)}`
+  const slug = `${p.name}-${a!.day}${same ? '' : `-${a!.month}`}-to-${b!.day}-${b!.month}`.toLowerCase().replace(/ /g, '-')
+  return `| **[${p.name}](#${slug})** · ${range} | ${r.sessionsPerWeek} | ${r.agentShare}% | ${r.frictionsPerSession.toFixed(1)} | ${r.newSites} |`
 }
 
 function git(...args: string[]): string {
@@ -83,16 +86,16 @@ export function readLogFacts(): LogFacts[] {
   }))
 }
 
-export function statsAsOf(asOf: string): Stats {
-  const { commitCount, siteDates } = gitFacts(asOf)
-  return computeStats(readLogFacts(), commitCount, siteDates, asOf)
-}
-
 function main(): void {
-  const asOf = flagValue(process.argv, '--as-of') ?? new Date().toISOString().slice(0, 10)
-  const s = statsAsOf(asOf)
-  console.log(`as of ${asOf}: ${s.commits} commits, ${s.sessions} sessions, ${s.frictions} frictions`)
-  s.rows.forEach((r, i) => console.log(`${PERIODS[i]!.name}\t${r.sessionsPerWeek}\t${r.agentShare}%\t${r.frictionsPerSession.toFixed(1)}\t${r.newSites}`))
+  const arg = (n: string) => flagValue(process.argv, n)
+  const [name, from, to] = [arg('--name'), arg('--from'), arg('--to')]
+  if (!name || !from || !to) throw new Error('usage: --name <period> --from YYYY-MM-DD --to YYYY-MM-DD [--as-of YYYY-MM-DD]')
+  const asOf = arg('--as-of') ?? new Date().toISOString().slice(0, 10)
+  const { commitCount, siteDates } = gitFacts(asOf)
+  const logs = readLogFacts()
+  const t = computeTotals(logs, commitCount, asOf)
+  console.log(`as of ${asOf}: ${t.commits.toLocaleString('en-US')} commits, ${t.sessions.toLocaleString('en-US')} recorded sessions, ${t.frictions.toLocaleString('en-US')} frictions`)
+  console.log(formatRow({ name, from, to }, computeRow(logs, siteDates, { name, from, to }, asOf)))
 }
 
 runIfMain(import.meta.url, main)

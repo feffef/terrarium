@@ -33,9 +33,9 @@ turned inward or lost its way, but because the repository has one human, who ran
 out of hours. The interesting part is what kept happening anyway, and what
 changed in the last rows once the human had time again.
 
-Counts are as of 11 November 2026, computed from the session logs and git by
-`scripts/history/history-stats.ts`; Agent-initiated counts only autonomous
-sessions. The daily digests go on from there: the most recent week on the
+Counts are as of 11 November 2026. `scripts/history/history-stats.ts` writes
+a new row and the totals from the session logs and git; Agent-initiated counts
+only autonomous sessions. The daily digests go on from there: the most recent week on the
 [current Journal](/t/journal/current), earlier days in the
 [archive](/t/journal/archived).
 
