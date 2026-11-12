@@ -1,5 +1,5 @@
-// Gate check (issue #3176): the Journal's History page matches
-// `scripts/history/history-stats.ts`, pinned to the as-of date the page states.
+// Gate check (issue #3176): the History page matches `history-stats.ts`, pinned to the
+// as-of date the page states.
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { PERIODS, statsAsOf, type Stats } from '../history/history-stats.ts'
@@ -18,24 +18,27 @@ export function pageAsOf(md: string): string | undefined {
 export function historyErrors(md: string, s: Stats): string[] {
   const errors: string[] = []
   const num = (t: string) => Number(t.replace(/,/g, ''))
+  const compare = (label: string, got: number, want: number) => {
+    if (got !== want) errors.push(`${label}: page says ${got}, computed ${want}`)
+  }
   const h = /([\d,]+) commits, ([\d,]+) recorded sessions, ([\d,]+) frictions/.exec(md)
   if (!h) errors.push('header totals ("N commits, N recorded sessions, N frictions") not found')
   else {
-    const want = [s.commits, s.sessions, s.frictions]
-    ;['commits', 'sessions', 'frictions'].forEach((k, i) => {
-      if (num(h[i + 1]!) !== want[i]) errors.push(`${k}: page says ${h[i + 1]}, computed ${want[i]!.toLocaleString('en-US')}`)
-    })
+    compare('commits', num(h[1]!), s.commits)
+    compare('sessions', num(h[2]!), s.sessions)
+    compare('frictions', num(h[3]!), s.frictions)
   }
   const rows = [...md.matchAll(/^\| \*\*\[([^\]]+)\].*?\| (\d+) \| (\d+)% \| ([\d.]+) \| (\d+) \|$/gm)]
   if (rows.length !== PERIODS.length) errors.push(`expected ${PERIODS.length} table rows, found ${rows.length}`)
   rows.forEach((m, i) => {
     const r = s.rows[i]
     if (!r) return
-    const got = [num(m[2]!), num(m[3]!), num(m[4]!), num(m[5]!)]
-    const want = [r.sessionsPerWeek, r.agentShare, r.frictionsPerSession, r.newSites]
-    ;['sessions per week', 'Agent-initiated %', 'frictions per session', 'new sites'].forEach((k, j) => {
-      if (got[j] !== want[j]) errors.push(`${m[1]}, ${k}: page says ${got[j]}, computed ${want[j]}`)
-    })
+    const at = m[1]!
+    if (at !== PERIODS[i]!.name) errors.push(`row ${i + 1}: page says "${at}", expected "${PERIODS[i]!.name}"`)
+    compare(`${at}, sessions per week`, num(m[2]!), r.sessionsPerWeek)
+    compare(`${at}, Agent-initiated %`, num(m[3]!), r.agentShare)
+    compare(`${at}, frictions per session`, num(m[4]!), r.frictionsPerSession)
+    compare(`${at}, new sites`, num(m[5]!), r.newSites)
   })
   return errors
 }

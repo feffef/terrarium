@@ -1,6 +1,7 @@
 // The one home for how the Journal's History page counts (issue #3176): the table
-// rows and header totals, from the session logs and git. `scripts/gate/validate-history.ts`
-// fails the gate when the page drifts from this output.
+// rows and header totals, from the session logs and git, as of a date. The periods
+// are the page's fixed eight (no free date range); `validate-history.ts` fails the
+// gate when the page drifts from this output.
 // Print: pnpm exec tsx scripts/history/history-stats.ts [--as-of YYYY-MM-DD]
 import { execFileSync } from 'node:child_process'
 import { readSessionLogs } from '../session/journal-files.ts'
@@ -35,8 +36,8 @@ export function computeStats(logs: LogFacts[], commitCount: number, siteDates: s
     const days = (Date.parse(to) - Date.parse(from)) / DAY + 1
     return {
       sessionsPerWeek: Math.round(s.length / (days / 7)),
-      agentShare: Math.round((100 * s.filter((l) => l.autonomous).length) / s.length),
-      frictionsPerSession: Math.round((10 * s.reduce((n, l) => n + l.frictions, 0)) / s.length) / 10,
+      agentShare: s.length ? Math.round((100 * s.filter((l) => l.autonomous).length) / s.length) : 0,
+      frictionsPerSession: s.length ? Math.round((10 * s.reduce((n, l) => n + l.frictions, 0)) / s.length) / 10 : 0,
       newSites: siteDates.filter((d) => inRange(d, from, to)).length,
     }
   })
@@ -47,25 +48,31 @@ function git(...args: string[]): string {
   return execFileSync('git', args, { cwd: root, encoding: 'utf8', maxBuffer: 1 << 26 })
 }
 
-/** Commit dates on HEAD, which holds origin/main's history (a PR's own commits
- *  postdate any as-of date). Reads full history: the gate unshallows. */
-export function gitFacts(asOf: string): { commitCount: number; siteDates: string[] } {
-  const commitCount = Number(git('rev-list', '--count', `--until=${asOf}T23:59:59Z`, 'HEAD').trim())
-  // A site is a Tenant manifest's first appearance. A commit that also deletes a
-  // manifest folds one Tenant into another (Search into Commons): not a new site.
-  const out = git('log', '--reverse', '--name-status', '--format=D %cs', '--diff-filter=AD', '--', 'layers/*/tenant.config.ts')
+/** Pure. A site is a Tenant manifest's first appearance; a commit that also
+ *  deletes a manifest folds one Tenant into another (Search into Commons), so
+ *  its adds are not new sites. Input is `git log --name-status --format='D %cs'`. */
+export function parseSiteDates(log: string): string[] {
   const siteDates: string[] = []
   let date = ''
   let added = 0
   let deleted = false
   const flush = () => { if (!deleted) for (let i = 0; i < added; i++) siteDates.push(date); added = 0; deleted = false }
-  for (const line of out.split('\n')) {
+  for (const line of log.split('\n')) {
     if (line.startsWith('D 20')) { flush(); date = line.slice(2) }
     else if (line.startsWith('A\t')) added++
     else if (line.startsWith('D\t')) deleted = true
   }
   flush()
-  return { commitCount, siteDates }
+  return siteDates
+}
+
+/** Commit dates on HEAD, which holds origin/main's history (a PR's own commits
+ *  postdate any as-of date). */
+export function gitFacts(asOf: string): { commitCount: number; siteDates: string[] } {
+  if (git('rev-parse', '--is-shallow-repository').trim() === 'true') throw new Error('shallow checkout: run `git fetch --unshallow`')
+  const commitCount = Number(git('rev-list', '--count', `--until=${asOf}T23:59:59Z`, 'HEAD').trim())
+  const log = git('log', '--reverse', '--name-status', '--format=D %cs', '--diff-filter=AD', '--', 'layers/*/tenant.config.ts')
+  return { commitCount, siteDates: parseSiteDates(log) }
 }
 
 export function readLogFacts(): LogFacts[] {
