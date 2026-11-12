@@ -1,18 +1,19 @@
 schemaVersion: 1
 session: session_013zxzeNrvAWHmAPYsSy8u7x
 startedAt: 2026-11-12T18:00:56Z
-endedAt: 2026-11-12T18:33:35Z
+endedAt: 2026-11-12T18:39:15Z
 kind: interactive
 goal: Harvest recent session ideas and learnings into Seedlings
-status: completed
-outcome: Five Seedlings (3186-3190), a retro Seedling (3191), then at the owner's ask a trial-territory Seedling (3193) and a hint-skip-list issue (3194); no repo changes
-summary: "Human-instructed: the owner ran the harvest Skill, whose steps drove the first half. Extract gave 381 entries; 17 clusters were checked, 5 passed (four Glass Box and Journal product ideas, one environment-caveats learning) and 12 were dropped with evidence. Agent-initiated within the Skill: which clusters to check and drop, the wording of each Seedling, and the retro Seedling 3191. I caught three of my own unverified claims before posting (a truncated merge list, an unread CI-fonts remark, a missed Prune Trial on environment-caveats.md). Then the owner ran /retro on the session (human-instructed); it produced three candidates. After it the owner steered: they leaned toward a 7-day harvest window and more frequent runs instead of 3191's text cut (not yet edited into 3191), asked for a Seedling for a trial-territory lookup script (3193) and an issue listing git commands to add to the read-first-hint skip list (3194); I filed both. Still open: all eight issues await the owner or triage, and 3191 still describes the text-cut proposal, not the 7-day window."
-prs: []
+status: in-review
+outcome: Five Seedlings (3186-3190), retro Seedling 3191, trial-territory Seedling 3193, hint issue 3194; PR 3195 shortens the harvest window to 7 days and awaits CI
+summary: "Human-instructed: the owner ran the harvest Skill, whose steps drove the first half. Extract gave 381 entries; 17 clusters were checked, 5 passed (four Glass Box and Journal product ideas, one environment-caveats learning) and 12 were dropped with evidence. Agent-initiated within the Skill: which clusters to check and drop, the wording of each Seedling, and the retro Seedling 3191. I caught three of my own unverified claims before posting. The owner then ran /retro (human-instructed), leaned toward a 7-day window and more frequent runs, and asked for a Seedling for a trial-territory lookup script (3193) and an issue listing git commands for the read-first-hint skip list (3194); I filed both. Last, the owner asked me to close 3191 and just change the window to 7 days in this session (human-instructed): I changed WINDOW_DAYS and three statements in harvest SKILL.md, ran code-review (two subagents) and the scoped gate, and opened PR 3195. Both reviewers called a 28-day test fixture cosmetic; I tested that and it breaks the ranking test at 7 days, so it stays. Still open: PR 3195 awaits CI, then merge through merge-pr.ts; issue 3191 still has to be closed with a comment saying the window change supersedes its text-cut idea (the git log swap is dropped); running harvest more often is a Routine setting outside the repo."
+prs:
+  - "3195"
 docsRead:
   - path: docs/agents/git-conventions.md
     reason: (no reason given)
   - path: .agents/skills/harvest/scripts/harvest.ts
-    reason: (no reason given)
+    reason: (read before editing)
   - path: docs/agents/issue-tracker.md
     reason: (no reason given)
   - path: docs/agents/triage-labels.md
@@ -29,6 +30,16 @@ docsRead:
     reason: (no reason given)
   - path: .agents/skills/prune-trial/scripts/find-trial-window.ts
     reason: (no reason given)
+  - path: docs/adr/0005-skill-model.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: .agents/skills/harvest/tests/unit/harvest.spec.ts
+    reason: (read before editing)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
   - path: .agents/skills/harvest/body-template.md
     reason: (no reason given)
   - path: .agents/skills/glassbox-lesson/owner-decisions.md
@@ -39,8 +50,6 @@ docsRead:
     reason: (no reason given)
   - path: .agents/skills/dispatch-subagents/SKILL.md
     reason: (no reason given)
-  - path: docs/agents/pr-workflow.md
-    reason: (no reason given)
   - path: docs/agents/github-integration.md
     reason: (no reason given)
   - path: docs/agents/tenant-layers.md
@@ -50,7 +59,7 @@ docsRead:
   - path: .agents/skills/retro/SKILL.md
     reason: (no reason given)
   - path: .agents/skills/harvest/SKILL.md
-    reason: (no reason given)
+    reason: (read before editing)
 skillsUsed:
   - name: harvest
     reason: the whole run
@@ -59,6 +68,10 @@ skillsUsed:
   - name: close-session
     reason: closure
   - name: log-session
+    reason: (no reason given)
+  - name: code-review
+    reason: (no reason given)
+  - name: dispatch-subagents
     reason: (no reason given)
   - name: retro
     reason: (invoked as a slash command)
@@ -81,24 +94,52 @@ frictions:
   - description: Found issue 3105 had already said the detached-HEAD push is in the Ledger only after drafting it as a candidate; my summary-line check had missed the covering entry.
     solution: Read a closed Seedling on the same doc before drafting a learning for it.
     severity: nit
-durationSec: 1959
+  - description: Ran two code-review subagents (about 164,000 tokens) on a 4-line, 2-file change because pr-workflow's simple-change test excludes any code-logic change, even a constant.
+    solution: Let the simple-change test treat a single constant or number change as simple, or let code-review run both axes inline for a diff this small.
+    severity: minor
+  - description: The post-edit hook asked for ADR-0005 and ADR-0027 reads after I edited harvest files; I read them then and the edits were right.
+    solution: Read the ADRs a Skill's rules name before the first edit to a Skill file.
+    severity: nit
+durationSec: 2299
 models:
-  claude-sonnet-5-5: 171
+  claude-sonnet-5-5: 240
 toolCounts:
-  Bash: 52
-  Read: 13
-  ToolSearch: 1
-  mcp__github__issue_read: 10
-  Write: 3
+  Bash: 70
+  Read: 17
+  ToolSearch: 2
+  mcp__github__issue_read: 11
+  Write: 5
   mcp__claude-code-remote__get_session: 1
   mcp__github__issue_write: 8
-  Skill: 4
+  Skill: 6
   Grep: 3
+  Edit: 8
+  Agent: 2
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - .agents/skills/harvest/scripts/harvest.ts
+  - .agents/skills/harvest/SKILL.md
+  - .agents/skills/harvest/tests/unit/harvest.spec.ts
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0005.md
+adrHints:
+  - adr: 5
+    via: path
+    readAfter: true
+    by: main
+  - adr: 27
+    via: path
+    readAfter: true
+    by: main
 ruleUse:
   - by: main
     answered: true
@@ -184,10 +225,82 @@ ruleUse:
       - path: layers/glassbox/GLOSSARY.md
       - path: .agents/skills/clear-backlog/SKILL.md
       - path: .agents/skills/retro/SKILL.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/prune-trials.yml
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/harvest/tests/unit/harvest.spec.ts
+    reported:
+      - path: .claude/rules/adr-0027.md
+        value: backed
+      - path: .claude/rules/adr-0005.md
+        value: backed
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0020.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+subagents:
+  - type: general-purpose
+    task: Standards review of window change
+    durationSec: 21
+    toolCalls: 10
+    modelCalls: 5
+    tokenShare: 3.2
+  - type: general-purpose
+    task: Spec review of window change
+    durationSec: 28
+    toolCalls: 9
+    modelCalls: 7
+    tokenShare: 3.7
 gitBranch: ccr-961e972f-yq0gd3
 entrypoint: remote_mobile
 cliVersion: 2.1.322
 learnings:
   - list-merges-since.ts prints merge subjects that name only a branch, so file-level evidence for whether an idea is built needs git log origin/main --since=START --name-only.
   - "A closed-completed Seedling can leave part of its body unbuilt: issue 3178 was closed by PR 3182, which changed only step 4's wording; read the PR's file list before treating a completed close as settling a cluster."
+  - "A reviewer subagent that does not run the spec can call a hard-coded test fixture cosmetic when it is not: tying harvest.spec.ts's fixture to WINDOW_DAYS fails the ranking test because one log falls outside 7 days."
 landedBy: Stop
