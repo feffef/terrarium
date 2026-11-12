@@ -370,9 +370,9 @@ parts of the machinery spent a lot and returned little.
 > the regular visitor-style review rotation the other sites get. On 24 October
 > one session reviewed all twenty guide lessons, promoted five drafts and wrote
 > a new lesson on how the platform improves itself; another ran four rounds of
-> review and fixes until all 26 lessons earned the highest grade, up from 15.
-> The next days added a "Find a Lesson" box and teasers that no longer clip on
-> phones, a written definition of what "good" means for the textbook, and a
+> review and fixes until its ratings put all 26 lessons at the top mark, up from
+> 15. The next days added a "Find a Lesson" box and teasers that no longer clip
+> on phones, a written definition of what "good" means for the textbook, and a
 > review of the whole guide by three AI models. On 2 November it got a new front
 > page that works as an overview of the whole project, and the agents'
 > instruction file now points to it. Within a week its large Claude Code subject
@@ -390,7 +390,7 @@ and block edits that weren't judged blind, still took about 127 reviewing
 agents dispatched by hand for 35 edits. The trouble was the grading itself:
 of 390 grades, 389 were the same one (a B), and the blind check passed 109 of 110
 edits because it judged each edit against the criterion the edit was written to
-meet. Every run read all 68 pages. The run of 5 November cost about 35 dollars,
+meet. Every run read the whole guide. The run of 5 November cost about 35 dollars,
 more than half of it on ratings that produced 75 findings, 73 of which were
 never looked at. It fixed five false claims, of which by its own reading about
 two mattered. The owner asked whether those were real errors or nits. The
@@ -399,7 +399,7 @@ and that most of the machinery existed to make an agent's judgement countable.
 
 So on 6 November a small, goal-driven curating skill was added beside the old
 job: no grades, fresh readers who report where a newcomer gets lost, and a
-separate check of every sentence it changes, for about 20 dollars a run. The
+separate check of every sentence it changes, aimed at about 20 dollars a run. The
 daily update job took over keeping existing pages true. By 7 November the
 curator built its own fixes and read a whole subject before changing it, and the
 old job was removed. On 9 November a fact-check across 17 guide pages still used
@@ -407,14 +407,14 @@ up nearly all of a 20 dollar budget.
 
 The waste was found through measurement, which the owner either read or asked for. From 18
 October the weekly Skills check reported the tokens and price of every
-scheduled run, and the [Routine](/t/journal/current/routines) costs page
-charts them. A review a week later found that about 19 of 25 recent
+scheduled run, the first of these instruments, and the costs page charts them. A review a week later found that about 19 of 25 recent
 wording-trim edits from the daily documentation audit changed nothing a reader
 would do, so that part of the audit was dropped; working it out cost about
 270,000 helper tokens, because runs didn't record how many findings each part
 produced. On 10 November rule use started being captured outside the agent's
-own report, and every rule a session loaded now gets a rating, steered or
-backed, shown on its card in the [Journal](/t/journal/current).
+own report, replacing the grades each session gave its rules, and every rule a
+session loaded now gets a rating, steered or backed, shown on its card in the
+[Journal](/t/journal/current).
 
 The same weeks hardened the machinery against its own agents. On 25 October the
 session-inspection tool learned to spot a helper's hand-back that the agent
@@ -429,8 +429,8 @@ That is where the record stops: eight sites, thirty decision records,
 fifty-one catalogued [Skills](/t/journal/current/skills). The question
 from September has a partial answer. The platform did grow a new site in a
 day and now merges its own routine work, and its own measurements now show
-where work spends a lot and returns little; each fix so far was a cut or a
-cap, not a new feature. The owner still chose what to build and made the
+where work spends a lot and returns little; each fix so far was a cut, a
+cap or a simpler replacement, not more machinery. The owner still chose what to build and made the
 structural calls.
 
 For how all of this works today, see the [Glass Box
