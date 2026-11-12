@@ -1,7 +1,7 @@
 name: research
 category: general-engineering
 importance: supporting
-installedSha256: 985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4
+installedSha256: 1f629e18ab899412683bc6a1c4efb4339999e27c2fdac328f26ee10a8c031d33
 role: >-
   Gather facts from primary sources into the repo — e.g. pulling Nuxt Content
   docs when the docs host is unreachable — so decisions rest on verified sources.

@@ -1,7 +1,7 @@
 name: implement-spec
 category: general-engineering
 importance: peripheral
-installedSha256: 7a22dd2e60b8fcece478ced9d2533582adf3520d695acd3ab715341535c9e56d
+installedSha256: 1993a473cec40ac85d081c112cdffdc63ec3267c2e412055ad09e013a2f623d1
 role: >-
   Implements a spec and its tickets on one integration branch with subagents.
   An installed Skill with no use recorded here; to-spec and to-tickets, its

@@ -1,7 +1,7 @@
 name: wayfinder
 category: general-engineering
 importance: specialist
-installedSha256: 9be7b478c389605a24517d27752f278933588da97a1b5921b165f455edf4c5b7
+installedSha256: 0c9fa96791aebf3b7d654cf35c6aadde97d81f57c17b07d13b27c14d9c46561f
 gist: Maps out a big investigation into trackable, shareable steps.
 role: >-
   Charts a shared map of investigation tickets for work too big to fit in one
