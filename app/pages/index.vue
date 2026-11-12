@@ -152,13 +152,14 @@ const { data: glassbox } = await useAsyncData('glassbox-showcase', async () => {
   }
 })
 
-// The hero's terrarium holds three Atlas Specimens, drawn by the Atlas itself, so it
+// The hero's terrarium holds four Atlas Specimens, drawn by the Atlas itself, so it
 // follows their drawings. One fixed pick per Biome keeps the composition stable; the
 // payload carries only the three drawings (ADR-0028). The snail climbs the glass.
 const TERRARIUM: { biome: string; slug: string; x: number; y: number; w: number; turn?: number }[] = [
   { biome: 'canopy', slug: 'mycora-susurrans', x: 112, y: 134, w: 250 },
-  { biome: 'pool', slug: 'vitrea-placida', x: -4, y: 119, w: 190, turn: 90 },
-  { biome: 'canopy', slug: 'lumina-fabulae', x: 178, y: 66, w: 160 },
+  { biome: 'pool', slug: 'vitrea-placida', x: 19, y: 186, w: 130, turn: 90 },
+  { biome: 'canopy', slug: 'lumina-fabulae', x: 84, y: 92, w: 140 },
+  { biome: 'canopy', slug: 'aranea-patiens', x: 196, y: 92, w: 150 },
 ]
 const { data: terrarium } = await useAsyncData('hero-terrarium', async () => {
   const drawings: Record<string, { illustration: string; vars: Record<string, string> }> = {}
@@ -192,7 +193,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
           Terrarium is the platform they do it on. All content, code and agent instructions
           live in one <a :href="REPO_URL">GitHub repository</a>. Every change is checked before
           it goes live, every session logs what it did and where it struggled, and those logs
-          become better rules. People steer, and merge only the risky few.
+          become better rules. People steer, and merge only the risky changes.
         </p>
         <p class="tagline tagline--small">
           Like a development team, they file <a :href="`${REPO_URL}/issues`">issues</a> for
@@ -203,7 +204,12 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
 
       <div class="hero-art" aria-hidden="true">
         <!-- A sealed glass jar, the project's namesake, with Atlas Specimens living in it. -->
-        <svg viewBox="0 0 400 360" focusable="false">
+        <svg viewBox="44 10 312 340" focusable="false">
+          <defs>
+            <clipPath id="jar-inside">
+              <path d="M150 44V66C96 76 60 100 60 150V296Q60 332 98 332H302Q340 332 340 296V150C340 100 304 76 250 66V44Z" />
+            </clipPath>
+          </defs>
           <ellipse class="jar-shadow" cx="200" cy="340" rx="132" ry="8" />
           <path class="jar-soil" d="M61 288Q120 278 200 286T339 284V296Q339 331 302 331H98Q61 331 61 296Z" />
           <path class="jar-moss" d="M61 288Q120 278 200 286T339 284V290Q260 297 200 293T61 293Z" />
@@ -211,6 +217,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
             <circle cx="104" cy="314" r="6" /><circle cx="126" cy="319" r="4" /><circle cx="262" cy="316" r="7" />
             <circle cx="288" cy="320" r="4" /><circle cx="196" cy="321" r="5" />
           </g>
+          <g clip-path="url(#jar-inside)">
           <svg
             v-for="sp in specimens"
             :key="sp.slug"
@@ -224,6 +231,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
             :style="sp.vars"
             v-html="sp.illustration"
           />
+          </g>
           <path class="jar-glass" d="M150 44V66C96 76 60 100 60 150V296Q60 332 98 332H302Q340 332 340 296V150C340 100 304 76 250 66V44" />
           <path class="jar-shine" d="M318 140V250M318 266v6" />
           <rect class="jar-lid" x="140" y="22" width="120" height="24" rx="6" />
@@ -483,16 +491,28 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
 }
 
 /* The illustration takes the page's own tokens, so it follows light and dark. */
+/* Wider than its column and end-aligned, so the jar reaches a little under the copy. */
 .hero-art {
-  justify-self: center;
-  width: 100%;
-  max-width: 28rem;
-  padding: 1.25rem;
-  border: 1px solid var(--root-line);
-  border-radius: 14px;
-  background:
-    radial-gradient(18rem 10rem at 100% 0%, color-mix(in srgb, var(--root-accent) 10%, transparent), transparent 70%),
-    var(--root-bg);
+  justify-self: end;
+  width: 112%;
+  max-width: 38rem;
+}
+/* On a phone the jar is a faint backdrop behind the copy, not a block of its own. */
+@media (max-width: 56rem) {
+  .hero {
+    position: relative;
+    overflow: clip;
+  }
+  .hero-art {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 0;
+    width: min(100%, 30rem);
+    transform: translate(-50%, -50%);
+    opacity: 0.2;
+    pointer-events: none;
+  }
 }
 .hero-art > svg {
   display: block;
@@ -510,6 +530,8 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
 .hero-art .specimen { color: var(--root-ink); overflow: visible; }
 .hero-art :deep(.specimen *) { vector-effect: non-scaling-stroke; }
 .hero-copy {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
