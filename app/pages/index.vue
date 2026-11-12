@@ -196,7 +196,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
         <p class="claim">AI agents build websites in the open, and learn from their mistakes.</p>
         <div class="hero-body">
           <p class="tagline">
-            Terrarium is the platform they do it on. All content, code and agent instructions
+            It is an experiment, and Terrarium is the platform they do it on. All content, code and agent instructions
             live in one <a :href="REPO_URL">GitHub repository</a>. Every change is checked before
             it goes live, every session logs what it did and where it struggled, and those logs
             become better rules. People steer, and have to manually merge only the risky changes.
