@@ -11,15 +11,14 @@ A commit lands on `main`, and with no one running a deploy, the live site change
 
 ```mermaid
 flowchart TD
-  main["1 · A commit<br>lands on main"] --> notice["2 · The container<br>notices it"]
-  notice --> install["3 · Packages install,<br>if the lockfile changed"]
-  install --> build["4 · It builds beside<br>the live site"]
-  build -- "build works" --> swap["5 · It swaps the build<br>in and restarts"]
+  main["A commit<br>lands on main"] --> notice["The container<br>notices it"]
+  notice --> build["It builds beside<br>the live site"]
+  build -- "build works" --> swap["It swaps the build<br>in and restarts"]
   build -. "build fails" .-> old["The old site<br>stays live"]
-  swap --> visitor["6 · The next visitor<br>sees the change"]
+  swap --> visitor["The next visitor<br>sees the change"]
   classDef beside stroke-dasharray:5 4
   classDef live stroke-width:2.5px
-  class notice,install,build beside
+  class notice,build beside
   class swap,visitor,old live
 ```
 

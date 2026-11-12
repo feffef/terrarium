@@ -119,8 +119,10 @@ side by side, shorter labels) or drop it.
 A diagram is a simplified picture, read beside the steps (a Walkthrough shows it
 next to them on wide screens, after them elsewhere). Draw about 5 to 7 boxes in
 one mostly straight line, in the order of the steps and in their words, with at
-most one side branch for the case that matters and no loops. Not every step
-needs a box, nor every box a step: match them roughly, not hard. The model is
+most one side branch for the case that matters, and a loop only where it is the
+point. Don't number the boxes after the steps: that promises a 1:1 match the
+picture can't keep. Not every step needs a box, nor every box a step: match
+them roughly, not hard. The model is
 `walkthroughs/a-change-goes-live`: six boxes, one branch (a failed build keeps
 the old site), and the lockfile and install detail left to the steps.
 
