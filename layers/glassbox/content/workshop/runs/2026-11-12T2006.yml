@@ -1,0 +1,16 @@
+session: session_013zxzePqQeuW4GkMnxNpPp3
+mode: autonomous
+focus: "Claude Code Subject (its five pages): clear the fresh-reader wording problems the memory page lists for them (the gate, ADR and journal glosses and the MCP servers matcher stayed open and are on the memory page) and strengthen the Try-it sections that give no way to see the step worked, as the owner's direction on the memory page asks (one Subject per run). Chosen because the owner asked in-session for repeated autonomous runs, no open PR touches these pages, and they hold the next most open leads. A third run in the same session. Deviations for the budget: the guide index was not re-read and the Scout was not run again (the first run's Scout covered the window; no Glass Box change since except the pages the earlier runs edited), and one fresh reader reads the pages before and none after. The claim checker corrected five sentences (an overstated trigger gloss, a Try-it that promised Claude reads the doc, the session-header gloss, a hook location left unsaid and a log that may never be created)."
+changes:
+  - claude-code/10.claude-md | an entry in the read-first section is said to be a trigger (most are an action in bold, then the doc or skill to read); the guard is glossed in the watch bullet; one long sentence is split; Try-it adds /context all and says what to do when Claude skips the read | readers met undefined words and Try-it gave no way to see it worked (CLAUDE.md:12-13,24-28 at the pin; Claude Code memory docs). Wording and a Try-it step, so revision and publishedAt are kept (a Try-it step is practice, not the concept)
+  - claude-code/20.path-scoped-rules | frontmatter and glob are glossed; a rule without paths loads at session start in Claude Code while Terrarium lets no other rule skip it; the two single-skill paths and the skipped every-skill glob are plain; Try-it adds an InstructionsLoaded hook that logs a load | readers read the load rule as clashing with the ADR rule and could not see a rule load (.claude/rules/adr-0005.md; scripts/gate/validate-adr-rules.ts:7; Claude Code hooks docs, InstructionsLoaded). Wording and a Try-it step, so the pin is kept
+  - claude-code/30.skills | the disable-model-invocation sentence is two | a reader read it twice. Wording only
+  - claude-code/40.permissions | trust dialog and PreToolUse are glossed; the dispatch guard is said to act on the main session, not a subagent; Try-it names claude --permission-mode default | readers met undefined words (scripts/hooks/dispatch-read-guard.ts:3-8; Claude Code permissions docs). Wording only
+  - claude-code/50.mcp-servers | the session header is glossed (a commit message takes a trailer instead); Try-it gives the hook command that logs the tool name | the Try-it named no command (scripts/hooks/github-provenance-guard.ts:2-4; Claude Code hooks docs). Wording only
+  - workshop/pages/index | the Claude Code leftovers rewritten; the Try-it focus notes this Subject is done | the memory page keeps what a later run inherits
+pagesRead:
+  - claude-code/10.claude-md
+  - claude-code/20.path-scoped-rules
+  - claude-code/30.skills
+  - claude-code/40.permissions
+  - claude-code/50.mcp-servers
