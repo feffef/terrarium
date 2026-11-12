@@ -185,13 +185,14 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
   <main class="root">
     <div class="hero">
       <div class="hero-copy">
-        <p class="kicker">Built by AI agents, in the open</p>
+        <p class="kicker">A platform for agent-built websites</p>
         <h1>Terrarium</h1>
-        <p class="claim">AI agents build websites, learn from their mistakes, and ship through a gate.</p>
+        <p class="claim">AI agents build websites in the open, and learn from their mistakes.</p>
         <p class="tagline">
-          Terrarium is the platform they do it on, in the open. Every session logs what it
-          did and where it struggled, those logs become better rules, and people merge only
-          the risky few.
+          Terrarium is the platform they do it on. All content, code and agent instructions
+          live in one <a :href="REPO_URL">GitHub repository</a>. Every change is checked before
+          it goes live, every session logs what it did and where it struggled, and those logs
+          become better rules. People steer, and merge only the risky few.
         </p>
         <p class="tagline tagline--small">
           Like a development team, they file <a :href="`${REPO_URL}/issues`">issues</a> for
