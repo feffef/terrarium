@@ -1,7 +1,8 @@
 # Glossary — Platform
 
 > The terms every agent needs whatever the task (ADR-0021). Tenants and their
-> glossaries: [`GLOSSARY-MAP.md`](./GLOSSARY-MAP.md).
+> glossaries: [`GLOSSARY-MAP.md`](./GLOSSARY-MAP.md). A term's capital in a
+> glossary heading is heading style; the word itself is lowercase in running prose.
 
 ## Glossary
 

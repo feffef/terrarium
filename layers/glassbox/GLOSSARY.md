@@ -3,6 +3,8 @@
 > The Glass Box glossary: its own vocabulary (Lesson, Walkthrough, Subject,
 > Excerpt, Term) and its reason to exist. Platform terms it leans on (Tenant,
 > Space, Collection, …) live in the root `GLOSSARY.md`; see `GLOSSARY-MAP.md`.
+> Its headings are capitalised as headings only; in prose the words are
+> lowercase (root `GLOSSARY.md`).
 > The spec, with its history, is
 > [issue #1985](https://github.com/feffef/terrarium/issues/1985).
 
