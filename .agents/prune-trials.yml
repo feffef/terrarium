@@ -121,3 +121,38 @@ trials:
       Compare `harness-proxy-blocks` share with `friction-rates.ts`; a clear rise
       is also damage. NOT damage: the entry at its standing rate for the
       deployed site or classifier denials (outside this cut).
+  - problem: >
+      The `frictions-to-fixes` SKILL.md procedure (-113 net, from
+      `git diff --numstat`: 110 added, 223 deleted; this entry not counted):
+      rewritten goal-first, keeping the §1-§8 numbers other Skills cite; the
+      per-step "Done when", "Edge cases" and "Instructions" scaffolding folded into
+      prose, repeated restatements of the briefs and ledger commands cut; every
+      rule kept (regression cap, 3-issue cap, Human-only and guard surfaces, doc
+      batching, two gates at once, review comment before merge, escalation,
+      closing ledger PR). Briefs untouched. Chosen after the search subagent
+      covered CLAUDE.md, `docs/agents/`, rules, Skills and the 125 ledger files
+      plus the tracker (not guard records or workflows): ledger
+      `frictions-to-fixes-skill-gaps` (11 occurrences; #2333, #2545, #2724, #2960)
+      and `frictions-to-fixes-briefs-mismatch` (12; #2436, #2725, #2877) failed as
+      prose, 92 commits narrowed the file, nothing wired holds the steps.
+      Runners-up: dispatch-subagents §3 (already cut once, #3123) and
+      close-session/log-session (small, log-session.ts refuses a hand log).
+      No open trial was judgeable this run (`find-trial-window.ts`: all three
+      before `judgeable from:`).
+    territory:
+      paths:
+        - ".agents/skills/frictions-to-fixes/SKILL.md"
+      keywords:
+        - frictions-to-fixes
+        - ledger PR
+    opened: 2026-11-12
+    proven: true
+    check: >
+      Damage is a major or blocker Friction where a `frictions-to-fixes` run
+      skipped a rule the old text had (opened no ledger PR, picked a regression,
+      filed over the cap, dispatched a Human-only or guard fix, merged without a
+      posted review, skipped the closing ledger PR) or could not follow a step.
+      Compare `frictions-to-fixes-skill-gaps` and
+      `frictions-to-fixes-briefs-mismatch` shares with `friction-rates.ts`; a
+      clear rise is also damage. NOT damage: those entries at their standing
+      rates.
