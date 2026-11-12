@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRAAoP9CzJpQyWDDh6
 startedAt: 2026-11-12T13:13:25Z
-endedAt: 2026-11-12T13:21:44Z
+endedAt: 2026-11-12T13:26:11Z
 kind: autonomous
 goal: Scheduled prune of the Platform's own instructions
-status: in-review
-outcome: "Pruned the frictions-to-fixes Skill to its goals; PR #3158 open with a trial entry"
-summary: "Scheduled prune-trial run, agent-initiated; no human instructions. No open trial was judgeable (all three before their window), so none was judged. A search subagent chose the frictions-to-fixes SKILL.md (ledger entries frictions-to-fixes-skill-gaps and -briefs-mismatch failed as prose). Rewrote it goal-first, keeping the §1-§8 numbers that guest-build cites. A Sonnet probe pinned to the post-prune SHA answered five situations correctly. Gate was green; code-review found small weakenings (tracker search, six-part check, buried §2/§8 rules), restored in a follow-up commit. Opened PR #3158 with a ledger entry; CI and merge remain."
+status: completed
+outcome: "Pruned the frictions-to-fixes Skill to its goals; PR #3158 merged with a trial entry"
+summary: "Scheduled prune-trial run, agent-initiated; no human instructions. No open trial was judgeable (all three before their window), so none was judged. A search subagent chose the frictions-to-fixes SKILL.md (ledger entries frictions-to-fixes-skill-gaps and -briefs-mismatch failed as prose). Rewrote it goal-first, keeping the §1-§8 numbers that guest-build cites. A Sonnet probe pinned to the post-prune SHA answered five situations correctly. Gate was green; code-review found small weakenings (tracker search, six-part check, buried §2/§8 rules), restored in a follow-up commit. Opened PR #3158, CI green, merged by me with a posted verdict; its ledger entry now opens the trial."
 prs:
   - "3158"
 docsRead:
@@ -47,18 +47,22 @@ frictions:
   - description: Combined run_in_background with a trailing & in one Bash call; the double-background guard denied it and nothing ran.
     solution: Pass run_in_background alone with a plain command, as the guard says.
     severity: nit
-durationSec: 499
+durationSec: 766
 models:
-  claude-sonnet-5-5: 66
+  claude-sonnet-5-5: 85
 toolCounts:
-  Bash: 24
+  Bash: 28
   Read: 4
   Agent: 4
   Write: 1
-  Skill: 3
-  ToolSearch: 1
+  Skill: 4
+  ToolSearch: 3
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/skills/frictions-to-fixes/SKILL.md
   - .agents/prune-trials.yml
@@ -255,28 +259,28 @@ subagents:
     durationSec: 60
     toolCalls: 11
     modelCalls: 9
-    tokenShare: 13.8
+    tokenShare: 11.1
   - type: general-purpose
     task: Sonnet probe of pruned Skill
     model: sonnet
     durationSec: 16
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 4.2
+    tokenShare: 3.4
   - type: general-purpose
     task: Standards review of prune diff
     model: sonnet
     durationSec: 37
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 7.8
+    tokenShare: 6.3
   - type: general-purpose
     task: Spec review of prune diff
     model: sonnet
     durationSec: 44
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 7.9
+    tokenShare: 6.3
 gitBranch: claude/practical-rubin-nho2id
 entrypoint: remote_trigger
 cliVersion: 2.1.322
