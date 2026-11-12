@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRxuQbrK3YcdGVkpU4
 startedAt: 2026-11-12T00:15:39Z
-endedAt: 2026-11-12T00:24:32Z
+endedAt: 2026-11-12T00:28:53Z
 kind: autonomous
 goal: Write the 2026-11-11 Journal Digest and archive old content
-status: in-review
-outcome: PR 3120 open with the Digest and archive sweep; gate green, awaiting CI and merge
-summary: Scheduled digest run, no human prompts. Found one closed day (2026-11-11), gathered its material (53 merged PRs, 29 sessions), wrote the Digest, and ran a fact-check subagent that found 5 wrong or overstated claims (a weekly job that did not yet exist, two guide runs wrongly called scheduled, a research-note count, footer scope, causation of fixes), all fixed. Ran the archive sweep (1 Digest and 12 session logs moved), then code-review (Standards and Spec in parallel), applied its wording fixes, ran gate:scoped green, pushed, opened PR 3120 and subscribed. Merge via merge-pr.ts is still to do once CI is green. Everything was agent-initiated under the digest Skill's own steps.
+status: completed
+outcome: "PR 3120 merged on a green gate: the 2026-11-11 Digest plus the archive sweep (1 Digest, 12 session logs)"
+summary: Scheduled digest run, no human prompts. Found one closed day (2026-11-11), gathered its material (53 merged PRs, 29 sessions), wrote the Digest, and ran a fact-check subagent that found 5 wrong or overstated claims (a weekly job that did not yet exist, two guide runs wrongly called scheduled, a research-note count, footer scope, causation of fixes), all fixed. Ran the archive sweep (1 Digest and 12 session logs moved), then code-review (Standards and Spec in parallel), applied its wording fixes, ran gate:scoped green, pushed, opened PR 3120 and subscribed. Merged with merge-pr.ts after the CI gate went green. Everything was agent-initiated under the digest Skill's own steps.
 prs:
   - "3120"
 docsRead:
@@ -52,17 +52,23 @@ frictions:
   - description: Amended the unpushed commit, then needed follow-up commits for review wording fixes after pushing, leaving three commits on a Digest PR.
     solution: Run the Standards review before the first push.
     severity: nit
-durationSec: 534
+durationSec: 794
 models:
-  claude-sonnet-5-5: 61
+  claude-sonnet-5-5: 79
 toolCounts:
-  Bash: 22
+  Bash: 26
   Read: 5
   Agent: 4
-  Skill: 3
+  Skill: 4
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-11-11.md
   - layers/journal/content/archived/pages/digests/2026-11-04.md
@@ -250,19 +256,19 @@ subagents:
     durationSec: 166
     toolCalls: 26
     modelCalls: 19
-    tokenShare: 31
+    tokenShare: 26.1
   - task: Standards review of digest PR
     model: sonnet
     durationSec: 18
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 4.4
+    tokenShare: 3.7
   - task: Spec review of digest PR
     model: sonnet
     durationSec: 28
     toolCalls: 12
     modelCalls: 4
-    tokenShare: 6.3
+    tokenShare: 5.3
 gitBranch: claude/compassionate-lovelace-g1ij5v
 entrypoint: remote_trigger
 cliVersion: 2.1.322
