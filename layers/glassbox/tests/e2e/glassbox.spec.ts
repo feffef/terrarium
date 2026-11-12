@@ -60,7 +60,7 @@ describe('glassbox Tenant', async () => {
       await page.locator(`#gb-nav a[href="${layers}"] .tick`).waitFor()
       await page.goto(new URL(subject, page.url()).href)
       await page.locator(`.list a[href="${layers}"] .tick`).waitFor()
-      expect(await page.locator('.count').textContent()).toMatch(/^1 of \d+ read$/)
+      expect(await page.locator('article .count').textContent()).toMatch(/^1 of \d+ read$/)
     })
   })
 
