@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRvdzBc3xXGo24TkVf
 startedAt: 2026-11-12T13:12:31Z
-endedAt: 2026-11-12T14:42:45Z
+endedAt: 2026-11-12T14:46:48Z
 kind: interactive
 goal: Add a Glass Box Lesson on inspecting past sessions
-status: in-review
-outcome: PR 3160 merged (Lesson, orient.ts --index, glassbox-lesson changes); follow-up PR 3162 open to reorder the Lesson's In Terrarium section and fix a claim
-summary: "Human-instructed throughout. The owner asked for a Lesson on inspect-session and on asking an earlier session to search its own transcript, and to explore recent session logs first. I read the Glass Box contracts, the Skill and about two dozen session logs (every log that used inspect-session, current and archived), then asked three scoping questions (Subject, one Lesson or two, which gotchas) per their preference. They chose Agents & automation, one Lesson, all four gotchas. The owner directed every later change: built-in records versus Terrarium's session log, a Haiku subagent doing the reading, search-not-recall as the key to getting facts from an old session, section-anchored links at bullet ends, bare Where next links, dropping the own-id gotcha, and the lede wording. They also pointed out twice that I had not used orient.ts, which led to a new orient.ts --index flag (their choice), a first Orient step in glassbox-lesson (moved out of writing-pages.md at their request) and a curate note. Agent-initiated: fixing a YAML quoting error, an e2e test that needed a Journal row in Cloud sessions' Where next, page-check failures, and the code-review findings (changing counts and history in prose against glassbox-content.md, an unanchored link, a repeated type in orient.ts). PR 3160 merged after the owner told me to merge it myself; being Human-only, it needed their quoted instruction as --owner-approved. After the merge the owner read the page in full and found that the asking paragraph had no antecedent, came after the events paragraph against the page's own ladder, and that the single excerpt mixed both approaches without explanation. I proposed a reorder and an excerpt split, then did both as follow-up PR 3162 (human-instructed in effect; I proceeded after they added the excerpt complaint). Code-review on that diff found the missing still-reachable condition and a dangling routine sentence, both fixed. The owner then asked for a full claim check as glassbox-update describes; a sonnet checker found one real false claim (the Haiku lead-in was too broad, as the Skill sets Haiku only for a full read) and one I rejected after checking the source (usage cost_usd); I also added the page's check date to update.yml, which they had not asked for. Gate green on the final head; PR 3162 open and subscribed, to be merged by me once CI is green (a Lesson-only PR, so no Human-only waiver should be needed). Left open for the owner: whether the title is general enough, and scheduled-tasks losing its Journal evidence row."
+status: completed
+outcome: "PRs 3160 and 3162 merged: the Lesson, orient.ts --index and glassbox-lesson changes, then the Lesson reordered and claim-checked"
+summary: "Human-instructed throughout. The owner asked for a Lesson on inspect-session and on asking an earlier session to search its own transcript, and to explore recent session logs first. I read the Glass Box contracts, the Skill and about two dozen session logs (every log that used inspect-session, current and archived), then asked three scoping questions (Subject, one Lesson or two, which gotchas) per their preference. They chose Agents & automation, one Lesson, all four gotchas. The owner directed every later change: built-in records versus Terrarium's session log, a Haiku subagent doing the reading, search-not-recall as the key to getting facts from an old session, section-anchored links at bullet ends, bare Where next links, dropping the own-id gotcha, and the lede wording. They also pointed out twice that I had not used orient.ts, which led to a new orient.ts --index flag (their choice), a first Orient step in glassbox-lesson (moved out of writing-pages.md at their request) and a curate note. Agent-initiated: fixing a YAML quoting error, an e2e test that needed a Journal row in Cloud sessions' Where next, page-check failures, and the code-review findings (changing counts and history in prose against glassbox-content.md, an unanchored link, a repeated type in orient.ts). PR 3160 merged after the owner told me to merge it myself; being Human-only, it needed their quoted instruction as --owner-approved. After the merge the owner read the page in full and found that the asking paragraph had no antecedent, came after the events paragraph against the page's own ladder, and that the single excerpt mixed both approaches without explanation. I proposed a reorder and an excerpt split, then did both as follow-up PR 3162 (human-instructed in effect; I proceeded after they added the excerpt complaint). Code-review on that diff found the missing still-reachable condition and a dangling routine sentence, both fixed. The owner then asked for a full claim check as glassbox-update describes; a sonnet checker found one real false claim (the Haiku lead-in was too broad, as the Skill sets Haiku only for a full read) and one I rejected after checking the source (usage cost_usd); I also added the page's check date to update.yml, which they had not asked for. Gate and CI green on the final head; PR 3162 merged by me through merge-pr.ts without a waiver, as a Lesson-only PR. Left open for the owner: whether the title is general enough, and scheduled-tasks losing its Journal evidence row."
 prs:
   - "3160"
   - "3162"
@@ -101,14 +101,14 @@ frictions:
   - description: Wrote a bullet lead-in saying Haiku does the reading, in the owner's words, without checking that the Skill sets a model only for the full read; only the claim check caught it.
     solution: Check an owner-requested wording against its source before writing it, and say where it overgeneralises.
     severity: nit
-durationSec: 5414
+durationSec: 5657
 models:
-  claude-sonnet-5-5: 328
+  claude-sonnet-5-5: 349
 toolCounts:
-  Bash: 135
+  Bash: 140
   Read: 5
   AskUserQuestion: 5
-  Skill: 4
+  Skill: 5
   Write: 5
   mcp__claude-code-remote__get_session: 1
   Edit: 7
@@ -117,10 +117,10 @@ toolCounts:
   mcp__github__list_pull_requests: 2
   mcp__github__create_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 2
-  ReadNotifications: 3
-  mcp__github__pull_request_read: 2
-  mcp__github__add_issue_comment: 1
-  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  ReadNotifications: 5
+  mcp__github__pull_request_read: 5
+  mcp__github__add_issue_comment: 2
+  mcp__claude-code-remote__unsubscribe_pr_activity: 2
 filesEdited:
   - layers/glassbox/content/guide/pages/agents/50.inspecting-past-sessions.md
   - layers/glassbox/content/workshop/checks/update.yml
@@ -307,32 +307,32 @@ subagents:
     durationSec: 63
     toolCalls: 13
     modelCalls: 6
-    tokenShare: 3.1
+    tokenShare: 2.9
   - type: general-purpose
     task: Review spec axis
     durationSec: 38
     toolCalls: 9
     modelCalls: 4
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: general-purpose
     task: Review standards axis
     durationSec: 36
     toolCalls: 12
     modelCalls: 5
-    tokenShare: 2.6
+    tokenShare: 2.4
   - type: general-purpose
     task: Review spec axis
     durationSec: 30
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 2.4
+    tokenShare: 2.3
   - type: general-purpose
     task: Full claim check of one Lesson
     model: sonnet
     durationSec: 44
     toolCalls: 12
     modelCalls: 6
-    tokenShare: 1.7
+    tokenShare: 1.6
 gitBranch: claude/affectionate-bell-pzkg3j
 entrypoint: remote
 cliVersion: 2.1.322
