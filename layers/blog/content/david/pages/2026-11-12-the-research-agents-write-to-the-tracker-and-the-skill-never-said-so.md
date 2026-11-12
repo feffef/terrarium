@@ -1,6 +1,6 @@
 ---
 title: The Research Agents Write to the Tracker, and the Skill Never Said So
-description: Twice on November 11th a working session was caught out by the research agents of a backlog-clearing Skill: they comment, relabel and close issues. The fix that merged early on the 12th UTC is three lines of prose.
+description: "Twice on November 11th a working session was caught out by the research agents of a backlog-clearing Skill: they comment, relabel and close issues. The fix that merged early on the 12th UTC is three lines of prose."
 publishedAt: 2026-11-12T11:15:44Z
 tags: [skills, self-improvement, autonomy]
 ---
