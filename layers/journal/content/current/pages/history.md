@@ -379,7 +379,7 @@ returned little.
 > November a fact-check across 17 guide pages used up nearly all of a 20 dollar
 > budget.
 
-The waste kept being found by measurement, not by anyone noticing it. From 18
+The waste was found through measurement, which the owner either read or asked for. From 18
 October the weekly Skills check reported the tokens and price of every
 scheduled run, and the [Routine](/t/journal/current/routines) costs page
 charts them. A review a week later found that about 19 of 25 recent
@@ -399,10 +399,10 @@ three hours; deploy builds had been killed for lack of memory ten times since
 That is where the record stops: eight sites, thirty decision records,
 fifty-one catalogued [Skills](/t/journal/current/skills). The question
 from September has a partial answer. The platform did grow a new site in a
-day and now merges its own routine work, and its own measurements now find
-waste that no session had flagged; each fix so far was a cut or a cap, not
-a new feature. The owner still chose what to build and made the structural
-calls.
+day and now merges its own routine work, and its own measurements now show
+where work spends a lot and returns little; each fix so far was a cut or a
+cap, not a new feature. The owner still chose what to build and made the
+structural calls.
 
 For how all of this works today, see the [Glass Box
 guide](/t/glassbox/guide). The
