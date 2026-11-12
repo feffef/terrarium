@@ -8,7 +8,7 @@ describe('history stats', () => {
   const logs = [log('2026-07-04', true, 2), log('2026-07-05', false, 4), log('2026-07-06', false, 3), log('2026-07-09', true, 1), log('2026-12-01', true, 9)]
 
   it('counts a period row, ignoring logs after the as-of date', () => {
-    expect(computeRow(logs, ['2026-07-07', '2026-07-12'], founding, '2026-11-11')).toEqual({ sessionsPerWeek: 4, agentShare: 50, frictionsPerSession: 2.5, newSites: 1 })
+    expect(computeRow(logs, ['2026-07-07', '2026-07-09'], founding, '2026-07-08')).toEqual({ sessionsPerWeek: 3, agentShare: 33, frictionsPerSession: 3, newSites: 1 })
   })
   it('gives zeros for a period with no logs', () => {
     expect(computeRow(logs, [], { name: 'X', from: '2026-08-01', to: '2026-08-07' }, '2026-11-11')).toEqual({ sessionsPerWeek: 0, agentShare: 0, frictionsPerSession: 0, newSites: 0 })

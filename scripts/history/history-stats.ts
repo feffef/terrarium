@@ -16,8 +16,8 @@ export interface Totals { commits: number; sessions: number; frictions: number }
 const DAY = 864e5
 const inRange = (d: string, from: string, to: string) => d >= from && d <= to
 
-/** Pure. `siteDates` are the dates each site first appeared. Logs after `asOf`
- *  are ignored. */
+/** Pure. `siteDates` are the dates each site first appeared. Logs and sites after
+ *  `asOf` are ignored. */
 export function computeRow(logs: LogFacts[], siteDates: string[], { from, to }: Period, asOf: string): Row {
   const s = logs.filter((l) => l.date <= asOf && inRange(l.date, from, to))
   const days = (Date.parse(to) - Date.parse(from)) / DAY + 1
@@ -25,7 +25,7 @@ export function computeRow(logs: LogFacts[], siteDates: string[], { from, to }: 
     sessionsPerWeek: Math.round(s.length / (days / 7)),
     agentShare: s.length ? Math.round((100 * s.filter((l) => l.autonomous).length) / s.length) : 0,
     frictionsPerSession: s.length ? Math.round((10 * s.reduce((n, l) => n + l.frictions, 0)) / s.length) / 10 : 0,
-    newSites: siteDates.filter((d) => inRange(d, from, to)).length,
+    newSites: siteDates.filter((d) => d <= asOf && inRange(d, from, to)).length,
   }
 }
 
