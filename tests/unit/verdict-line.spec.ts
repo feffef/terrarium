@@ -1,7 +1,7 @@
 // Unit tests for the verdict-line script's pure core (issue #2833). The git
 // and GitHub reads are a thin shell over these.
 import { describe, expect, it } from 'vitest'
-import { verdictLine, headMismatchWarning, resolveSha, isHexSha } from '../../scripts/github/verdict-line.ts'
+import { verdictLine, headMismatchWarning, isHexSha } from '../../scripts/github/verdict-line.ts'
 
 const SHA = '0123456789abcdef0123456789abcdef01234567'
 
@@ -20,32 +20,8 @@ describe('isHexSha', () => {
   })
 })
 
-describe('resolveSha', () => {
-  it('expands an abbreviated SHA to the PR head, with no warning', () => {
-    expect(resolveSha('0123456', SHA, 7)).toEqual({ sha: SHA, warning: null })
-  })
-
-  it('matches a prefix ignoring case', () => {
-    expect(resolveSha('0123456789ABCDEF', SHA, 7).sha).toBe(SHA)
-  })
-
-  it('keeps a full matching SHA without a warning', () => {
-    expect(resolveSha(SHA, SHA, 7)).toEqual({ sha: SHA, warning: null })
-  })
-
-  it('keeps the given SHA and warns when it is no prefix of the PR head', () => {
-    const r = resolveSha('fffffff', SHA, 7)
-    expect(r.sha).toBe('fffffff')
-    expect(r.warning).toContain(SHA)
-  })
-
-  it('has nothing to compare without a PR head', () => {
-    expect(resolveSha('0123abc', null, 7)).toEqual({ sha: '0123abc', warning: null })
-  })
-})
-
 describe('headMismatchWarning', () => {
-  it('is null when HEAD is the PR head, ignoring case', () => {
+  it('is null when the SHA is the PR head, ignoring case', () => {
     expect(headMismatchWarning(SHA, SHA.toUpperCase(), 7)).toBeNull()
   })
 
@@ -54,5 +30,14 @@ describe('headMismatchWarning', () => {
     expect(w).toContain(SHA)
     expect(w).toContain('f'.repeat(40))
     expect(w).toContain('#7')
+  })
+
+  it('matches an abbreviation of the PR head, ignoring case', () => {
+    expect(headMismatchWarning('0123456', SHA, 7)).toBeNull()
+    expect(headMismatchWarning('0123456789ABCDEF', SHA, 7)).toBeNull()
+  })
+
+  it('warns on an abbreviation that is no prefix of the PR head', () => {
+    expect(headMismatchWarning('fffffff', SHA, 7)).toContain(SHA)
   })
 })

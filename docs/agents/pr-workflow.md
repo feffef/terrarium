@@ -54,8 +54,8 @@ re-review each story or repeat its findings.
 4. Before merging, post your verdict as a PR comment, even a clean "merging
    as-is": the merge must never be the only trace. End it with the
    output of `pnpm exec tsx scripts/github/verdict-line.ts <pr-number>`, pasted
-   (run in the checkout holding the reviewed head, or from any checkout add
-   `--sha <the reviewed SHA>` when it is gone; it warns if that isn't the PR
+   (run in the checkout holding the reviewed head, or add `--sha <the SHA in
+   the builder's GATE line>` once it is gone; it warns if that isn't the PR
    head); after any later push,
    review the new commits and post a new verdict. Use `event=COMMENT` or
    `add_issue_comment`, never an APPROVE review: on a fork PR it would fake the

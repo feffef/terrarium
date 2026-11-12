@@ -12,20 +12,14 @@ export function verdictLine(sha: string): string {
   return `Reviewed: ${sha}`
 }
 
-export function headMismatchWarning(head: string, prHead: string, prNumber: number): string | null {
-  if (head.toLowerCase() === prHead.toLowerCase()) return null
-  return `warning: HEAD ${head} is not PR #${prNumber}'s head ${prHead}; the verdict would not cover it.`
+/** `sha` may be an abbreviation: a case-insensitive prefix of the PR head matches. */
+export function headMismatchWarning(sha: string, prHead: string, prNumber: number): string | null {
+  if (prHead.toLowerCase().startsWith(sha.toLowerCase())) return null
+  return `warning: ${sha} is not PR #${prNumber}'s head ${prHead}; the verdict would not cover it.`
 }
 
 export function isHexSha(s: string): boolean {
   return /^[0-9a-f]{7,40}$/i.test(s)
-}
-
-/** A prefix of the PR head expands to the full head; anything else is kept and warned about. */
-export function resolveSha(sha: string, prHead: string | null, prNumber: number): { sha: string; warning: string | null } {
-  if (prHead === null) return { sha, warning: null }
-  if (prHead.toLowerCase().startsWith(sha.toLowerCase())) return { sha: prHead, warning: null }
-  return { sha, warning: headMismatchWarning(sha, prHead, prNumber) }
 }
 
 function main(): void {
@@ -34,14 +28,14 @@ function main(): void {
   const arg = rest[0]
   const prNumber = arg === undefined ? null : Number(arg)
   if (prNumber !== null && !Number.isInteger(prNumber)) fail(usage)
+  // extractFlag yields undefined for a trailing `--sha`; don't fall back to HEAD silently.
   if (process.argv.includes('--sha') && (shaFlag === undefined || !isHexSha(shaFlag))) fail(`--sha needs 7 to 40 hex digits. ${usage}`)
-  const given = shaFlag ?? git(['rev-parse', 'HEAD'], process.cwd()).trim()
-  let sha = given
+  let sha = shaFlag ?? git(['rev-parse', 'HEAD'], process.cwd()).trim()
   if (prNumber !== null) {
-    const pr = getJson<{ head: { sha: string } }>(resolveAccess(root), `pulls/${prNumber}`)
-    const r = resolveSha(given, pr.head.sha, prNumber)
-    sha = r.sha
-    if (r.warning) console.error(r.warning)
+    const prHead = getJson<{ head: { sha: string } }>(resolveAccess(root), `pulls/${prNumber}`).head.sha
+    const warning = headMismatchWarning(sha, prHead, prNumber)
+    if (warning) console.error(warning)
+    else sha = prHead
   }
   console.log(verdictLine(sha))
 }
