@@ -40,6 +40,16 @@
   --gb-code-bg: #f6f8fa;
   --gb-sans: 'Glass Box Sans', system-ui, sans-serif;
   --gb-mono: 'Glass Box Mono', ui-monospace, monospace;
+  /* The one tick for "read": the sidebar, Subject page, Lessons already read and read links. */
+  --gb-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 8.5l3.2 3.2L13 4.6' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+.gb-tick {
+  display: inline-block;
+  inline-size: 1em;
+  block-size: 1em;
+  vertical-align: -0.12em;
+  background: currentColor;
+  mask: var(--gb-check) center / contain no-repeat;
 }
 .gb {
   /* The sticky bars and the menu panel: solid, since page text read through a

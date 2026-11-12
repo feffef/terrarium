@@ -9,8 +9,8 @@ const base = `/t/glassbox/${space}`
 const { data, status, error } = await useAsyncData(route.path, async () => {
   const [page, pages, walkthroughs] = await Promise.all([
     queryCollection(pagesKey).path(path).first(),
-    // A Subject page also lists each Lesson's description; no other page carries it.
-    glassboxSubjectAt(path)
+    // A Subject page lists each Lesson's description and a Where next row shows its target's; no other page carries them.
+    glassboxSubjectAt(path) || glassboxSubjectOf(path) || glassboxWalkthroughOf(path)
       ? queryCollection(pagesKey).order('stem', 'ASC').select('path', 'title', 'description').all()
       : queryCollection(pagesKey).order('stem', 'ASC').select('path', 'title').all(),
     // The prefix glassboxWalkthroughOf tests, as SQL.
@@ -22,14 +22,17 @@ const { data, status, error } = await useAsyncData(route.path, async () => {
   const terms = termIds.length
     ? await queryCollection(collections.terms).where('stem', 'IN', termIds).select('stem', 'definition', 'source', 'lesson').all()
     : []
+  // Only a Subject page's list reads descriptions off these; a Where next row reads them from `descriptions`.
+  const links = glassboxSubjectAt(path) ? pages : pages.map(({ path, title }) => ({ path, title }))
   return {
     page,
     through: glassboxWalkthroughsThrough(walkthroughs, `${base}${path}`),
     terms: Object.fromEntries(terms.map(({ stem, ...t }) => [stem, { ...t, lessonTitle: pages.find((p) => `/t/glassbox/guide${p.path}` === t.lesson)?.title }])),
-    subjects: glassboxDirectory(pages),
-    walkthroughs: glassboxWalkthroughs(pages),
-    surround: glassboxSurround(pages, path),
+    subjects: glassboxDirectory(links),
+    walkthroughs: glassboxWalkthroughs(links),
+    surround: glassboxSurround(links, path),
     titles: Object.fromEntries(pages.map((p) => [p.path, p.title])),
+    descriptions: Object.fromEntries(pages.flatMap((p): [string, string][] => 'description' in p && p.description ? [[p.path, String(p.description)]] : [])),
   }
 })
 
@@ -49,11 +52,23 @@ const live = space === 'workshop'
 
 // Read state is browser-only, so it is set after mount (GLOSSARY.md, Reading progress).
 const reading = useGlassboxRead()
-onMounted(() => {
+let seen: IntersectionObserver | undefined
+onMounted(async () => {
   // Every page shows sidebar ticks, so load always; only a Lesson page then marks itself read.
   reading.load()
-  if (page.value && glassboxSubjectOf(path)) reading.mark(path)
+  if (!page.value || !glassboxSubjectOf(path)) return
+  // Read means the visitor scrolled to Where next, or to Lessons already read, which replaces it once all its links are read.
+  await nextTick()
+  const end = document.querySelector(`.gb-column #${glassboxLessonIds.whereNext}, .gb-column .read`)
+  if (!end) return
+  seen = new IntersectionObserver((entries) => {
+    if (!entries.some((e) => e.isIntersecting)) return
+    reading.mark(path)
+    seen?.disconnect()
+  })
+  seen.observe(end)
 })
+onBeforeUnmount(() => seen?.disconnect())
 
 useHead(() => ({ title: `${page.value?.title ?? subject.value?.name ?? 'Not found'} · glassbox` }))
 useSeoMeta({ description: () => page.value?.description })
@@ -88,7 +103,7 @@ useSeoMeta({ description: () => page.value?.description })
         >≡</button>
       </header>
 
-      <GlassboxArticle v-if="page" class="gb-column" :page="page" :base="base" :surround="data?.surround ?? null" :through="data?.through ?? []" :titles="data?.titles ?? {}" :dated="!live" :source="source" />
+      <GlassboxArticle v-if="page" class="gb-column" :page="page" :base="base" :surround="data?.surround ?? null" :through="data?.through ?? []" :titles="data?.titles ?? {}" :descriptions="data?.descriptions ?? {}" :dated="!live" :source="source" />
 
       <GlassboxSubject v-else-if="subject" class="gb-column" :name="subject.name" :lessons="subject.lessons" :base="base" />
 

@@ -9,6 +9,7 @@ const props = defineProps<{
   surround: ReturnType<typeof glassboxSurround>
   through: GlassboxPageLink[]
   titles: GlassboxTitles
+  descriptions: GlassboxTitles
   dated: boolean
   source?: string
 }>()
@@ -30,13 +31,13 @@ const current = ref<string>()
 // lede and the first section, and each Walkthrough stop can show it is current.
 const parts = computed(() => {
   const { body } = props.page
-  const framed = subject.value ? glassboxLessonSections(body.value, props.base, props.titles, readable.value) : body.value
+  const framed = subject.value ? glassboxLessonSections(body.value, props.base, props.titles, readable.value, props.descriptions) : body.value
   const [intro, rest] = glassboxSplitBeforeBody(framed)
   const sections = glassboxFrameDiagrams(rest)
-  const withBody = (nodes: typeof intro) => ({ ...props.page, body: { ...body, value: nodes } })
+  const withBody = (nodes: typeof intro) => ({ ...props.page, body: { ...body, value: nodes.map((node) => glassboxMarkSeen(node, props.base, readable.value)) } })
   return {
     intro: withBody(walkthrough.value ? intro : intro.map((node) => glassboxLessonChipsDeep(node, props.base))),
-    sections: (walkthrough.value ? glassboxWalkthroughParts(sections, props.base, props.titles) : [{ nodes: sections.map((node) => glassboxLessonChipsDeep(node, props.base)) }])
+    sections: (walkthrough.value ? glassboxWalkthroughParts(sections, props.base, props.titles, props.descriptions) : [{ nodes: sections.map((node) => glassboxLessonChipsDeep(node, props.base)) }])
       .map((part) => ({ ...part, value: withBody(part.nodes) })),
     toc: subject.value ? glassboxLessonToc(body.toc?.links ?? [], body.value, props.base, readable.value) : body.toc?.links ?? [],
   }
@@ -60,12 +61,12 @@ const parts = computed(() => {
     <section v-if="readNext.length" class="read">
       <h2>Lessons already read</h2>
       <ul>
-        <li v-for="lesson in readNext" :key="lesson.path"><span>{{ lesson.subject }}</span><NuxtLink :to="`${base}${lesson.path}`">{{ lesson.title }}</NuxtLink><span class="tick" role="img" aria-label="Read">✓</span></li>
+        <li v-for="lesson in readNext" :key="lesson.path"><span>{{ lesson.subject }}</span><NuxtLink :to="`${base}${lesson.path}`">{{ lesson.title }}</NuxtLink><span class="tick gb-tick" role="img" aria-label="Read"></span></li>
       </ul>
       <button type="button" class="reset" @click="reset">Reset reading progress</button>
     </section>
     <template v-if="through.length">
-      <h2>Walkthroughs through this Lesson</h2>
+      <h2>Walkthroughs related to this Lesson</h2>
       <ul class="gb-next">
         <li v-for="w in through" :key="w.path"><span>{{ glassboxLessonLabels.walkthrough }}</span><NuxtLink :to="`${base}${w.path}`">{{ w.title }}</NuxtLink></li>
       </ul>
@@ -197,6 +198,8 @@ const parts = computed(() => {
 .article :deep(.gb-next li)::after { content: '→'; color: var(--gb-accent); }
 .article :deep(.gb-next a) { color: var(--gb-ink); font-weight: 500; text-decoration: none; }
 .article :deep(.gb-next a)::after { content: ''; position: absolute; inset: 0; }
+.article :deep(.gb-next li) { padding-block: 8px; }
+.article :deep(.gb-next small) { display: block; margin-top: 2px; font-size: 14px; line-height: 1.45; color: var(--gb-muted); }
 
 /* Walkthrough stops: numbered circles on a thread, each stop its own pane. */
 .stop { position: relative; display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 16px; margin-top: 16px; }
@@ -254,6 +257,8 @@ const parts = computed(() => {
   background: currentColor;
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 3.5C6.5 2.5 4 2.3 1.5 2.8v9.7c2.5-.5 5-.3 6.5.7 1.5-1 4-1.2 6.5-.7V2.8C12 2.3 9.5 2.5 8 3.5zM8 3.5v9.7' fill='none' stroke='black' stroke-width='1.4' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat;
 }
+/* A read Lesson's link shows the same tick as the sidebar, in the book's place. */
+.article :deep(a.seen:not(.file, .chip, .card, .gb-next a, .read a))::after { mask: var(--gb-check) center / contain no-repeat; }
 .article :deep(:is(.gb-lessons li, .lesson) > a:not(.file))::after { background: var(--gb-accent); }
 .article :deep(li > .gb-lessons), .article :deep(li > p > .gb-lessons) { display: inline; margin: 0; }
 .article :deep(li > .gb-lessons li), .article :deep(li > p > .gb-lessons li) { display: inline-block; margin: 3px 6px 3px 0; padding: 0 8px; font-size: 13px; }

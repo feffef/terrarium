@@ -12,7 +12,7 @@ const readCount = computed(() => props.lessons.filter((lesson) => read.value.inc
     <p class="count">{{ glassboxSubjectCount(readCount, lessons.length) }}</p>
     <ul class="list">
       <li v-for="lesson in lessons" :key="lesson.path">
-        <NuxtLink :to="`${base}${lesson.path}`">{{ lesson.title }}<span v-if="read.includes(lesson.path)" class="tick" role="img" aria-label="Read">✓</span></NuxtLink>
+        <NuxtLink :to="`${base}${lesson.path}`">{{ lesson.title }}<span v-if="read.includes(lesson.path)" class="tick gb-tick" role="img" aria-label="Read"></span></NuxtLink>
         <p v-if="lesson.description">{{ lesson.description }}</p>
       </li>
     </ul>

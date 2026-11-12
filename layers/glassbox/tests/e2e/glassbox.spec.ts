@@ -30,11 +30,12 @@ describe('glassbox Tenant', async () => {
   })
 
   // Reading progress lives in the visitor's browser, applied after mount (GLOSSARY.md, Reading progress).
-  it('ticks an opened Lesson in the sidebar and moves its Where next link into Lessons already read', async () => {
+  it('ticks a Lesson once Where next is scrolled into view and moves its link into Lessons already read', async () => {
     const layers = '/t/glassbox/guide/nuxt-vue/layers'
     const routing = '/t/glassbox/guide/nuxt-vue/file-routing'
     expect(await $fetch<string>(layers)).not.toContain('Lessons already read')
     await withRendered(layers, async (page) => {
+      await page.locator('#where-next').scrollIntoViewIfNeeded()
       await page.locator(`#gb-nav a[href="${layers}"] .tick`).waitFor()
       expect(await page.locator('#gb-nav summary:has-text("Nuxt") .count').first().textContent()).toMatch(/^1\/\d+$/)
       expect(await page.locator('.read').count()).toBe(0)
@@ -43,7 +44,8 @@ describe('glassbox Tenant', async () => {
       // File routing lists Nuxt layers in Where next; once read, it moves below.
       await page.locator(`#gb-nav a[href="${routing}"]`).click()
       await page.locator('.read').waitFor()
-      expect(await page.locator('.read li').allTextContents()).toEqual(['Nuxt & VueNuxt layers✓'])
+      expect(await page.locator('.read li').allTextContents()).toEqual(['Nuxt & VueNuxt layers'])
+      expect(await page.locator('.read li .gb-tick').count()).toBe(1)
       expect(await page.locator(`.gb-next a[href="${layers}"]`).count()).toBe(0)
 
       await page.locator('.read .reset').click()
@@ -57,6 +59,7 @@ describe('glassbox Tenant', async () => {
     const subject = '/t/glassbox/guide/nuxt-vue'
     const layers = `${subject}/layers`
     await withRendered(layers, async (page) => {
+      await page.locator('#where-next').scrollIntoViewIfNeeded()
       await page.locator(`#gb-nav a[href="${layers}"] .tick`).waitFor()
       await page.goto(new URL(subject, page.url()).href)
       await page.locator(`.list a[href="${layers}"] .tick`).waitFor()

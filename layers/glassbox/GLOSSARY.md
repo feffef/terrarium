@@ -54,13 +54,16 @@ Terrarium applies them without reading the source.
   Lately list of the newest run changes that the page works out itself. It
   has no sidebar entry and no link from the guide; its memory text has a word
   cap (`layers/glassbox/tests/unit/workshop.spec.ts`).
-- **Reading progress.** A Lesson is *read* once its page is opened in this
+- **Reading progress.** A Lesson is *read* once its Where next heading, or the
+  `Lessons already read` section that replaces it, has scrolled into view in this
   browser; Walkthroughs and the workshop are never marked. The list lives in
   `localStorage` under `glassbox:read` and is applied only after the page mounts,
   so the cached server render is the same for every visitor (ADR-0028). Read
-  Lessons get a ✓ after their title in the sidebar, where a Subject's count
-  reads `3/8` once any is read. A Subject page ticks them the same way and its
-  count line reads `3 of 8 read` once any is read; it has no reset. A Lesson's
+  Lessons get a ✓ (one shared SVG) after their title in the sidebar, where a
+  Subject's count reads `3/8` once any is read. A Subject page ticks them the
+  same way and its count line reads `3 of 8 read` once any is read; it has no
+  reset. In a Lesson or Walkthrough, an inline link or chip to a read Lesson
+  shows that ✓ in place of the book. A Lesson's
   hand-written Where next links that are read move out of Where next into a
   `Lessons already read` section right below it (Subject, title, ✓); Where
   next, heading included, vanishes once all are read, and the section is hidden
