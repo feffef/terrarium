@@ -69,3 +69,13 @@ pages:
     checked: '2026-11-12'
   - page: nuxt-vue/50.vue-components
     checked: '2026-11-12'
+  - page: nuxt-vue/60.nitro
+    checked: '2026-11-12'
+  - page: nuxt-vue/70.data-fetching
+    checked: '2026-11-12'
+  - page: nuxt-vue/80.hydration
+    checked: '2026-11-12'
+  - page: skill-pack/10.skill-packs
+    checked: '2026-11-12'
+  - page: skill-pack/20.planning-with-the-pack
+    checked: '2026-11-12'
