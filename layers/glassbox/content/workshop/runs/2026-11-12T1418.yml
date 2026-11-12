@@ -19,3 +19,16 @@ pagesRead:
   - git-github/60.attribution
   - git-github/70.issue-triage-labels
   - git-github/80.git-plumbing
+  - agents/30.cloud-sessions
+  - agents/10.subagents
+  - terrarium-practice/40.session-logs
+  - verification/10.gate
+  - terrarium-practice/60.protected-paths
+  - terrarium-practice/10.human-in-the-loop
+  - terrarium-practice/90.outside-contributions
+  - skill-pack/20.planning-with-the-pack
+  - skill-pack/10.skill-packs
+  - terrarium-practice/85.skill-inventory
+  - terrarium-practice/80.self-improvement-loop
+  - hooks/10.hooks
+  - hooks/20.blocking-hooks
