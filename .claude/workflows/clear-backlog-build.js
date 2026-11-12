@@ -74,9 +74,9 @@ ${picks.length ? `\n## Owner's agreed picks (binding)\n${picks.map(p => `- ${p}`
 function rules(b) {
   const dir = folder(b)
   return `## Rules
-- Run git as \`git -C <worktree> ...\`, never \`cd\`: Bash keeps its cwd between calls and parallel calls share it. One git command per Bash call, and no \`&&\`, \`;\` or \`$(...)\` in a worktree: the guard refuses them, and a refused chain can drop an edit silently.
+- Run git as \`git -C <worktree> ...\`, never \`cd\`: Bash keeps its cwd between calls and parallel calls share it. One git command per Bash call, and outside the gate command below no \`&&\`, \`;\` or \`$(...)\` in a worktree: the guard refuses them, and a refused chain can drop an edit silently.
 - Run checks in the foreground. Run \`pnpm gate:scoped\` only when the orchestrator asks, as \`cd <worktree> && pnpm gate:scoped > ${dir}/gate.log 2>&1; echo EXIT=$? >> ${dir}/gate.log\` with Bash timeout 600000.
-- Before each commit, check the lines you added against the wrap width the file keeps (\`git -C <worktree> diff -U0 | awk 'length>81'\` for 80 columns); a rewrap that only moves an overrun is not a fix.
+- Before each commit, check the lines you added against the wrap width the file keeps (\`git -C <worktree> diff -U0 | awk 'length>81 && !/^\\+\\+\\+/'\` for 80 columns); a rewrap that only moves an overrun is not a fix.
 - Commit before you stop, even mid-work. Never push, open a PR, merge, or run close-session/log-session: the orchestrator does those.
 - Every GitHub body you post starts with this exact first line: ${HEADER}
 - Stop and return needs-owner, with the question, its options and your pick, before you add a new dependency, change stored data or the content schema, make a decision big enough for an ADR, delete content visitors can see, change which Tenant's data a request can reach, or reverse an owner's pick above. Decide everything else yourself, and append each decision as one line to ${dir}/decisions.md (\`mkdir -p ${dir}\` first), now and in every later turn.

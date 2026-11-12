@@ -19,8 +19,7 @@ every question of theirs still unanswered.
 
 Two saved workflows do the agent work, so their steps can't be skipped:
 `clear-backlog-explore` (§1) and `clear-backlog-build` (§3). Invoking this
-Skill is the opt-in: read `dispatch-subagents` once (its guard blocks the first
-Workflow call otherwise), then run each by name with the Workflow tool, pass `args` as
+Skill is the opt-in: read `dispatch-subagents` once (the Workflow guard asks for it), then run each by name with the Workflow tool, pass `args` as
 a JSON value, and act on the structured result. Pass `session` (this
 session's id, `session_…`) in both: every GitHub write carries it as the
 ADR-0017 header. A workflow can't ask the owner, wait on CI or merge, so you
@@ -114,8 +113,7 @@ and findings in a folder of its own. One entry per branch: `name`, `issues`,
 `brief`, the agreed `picks` (only that branch's own, never the whole owner
 reply), and `cherryPick` when a closed, unmerged PR already implements the
 agreed pick. Set `small: true` on a branch whose whole change meets
-`pr-workflow.md`'s simple-change test (at most 10 lines in 2 files; no logic,
-hooks, workflow scripts or Skill meaning): it gets one fresh reviewer, `Both`,
+`pr-workflow.md`'s simple-change test: it gets one fresh reviewer, `Both`,
 in place of the pair. It builds each branch in its own worktree off `origin/main`, with
 fast checks and no gate, then runs one fresh review round: a Standards and a
 Spec reviewer, each giving every finding a `kind`. This loop's rounds and
@@ -183,8 +181,8 @@ For each `reviewed` branch, in round N:
    the change adds no new problem, and judge each refusal's proof; leave
    skipped nits alone, they go to the owner. With Bash, write your findings in
    `{ findings: [{ kind, title, detail, file? }], summary }` (`findings: []` when
-   clean) to `<your review's file, with -c<k> before .json>`; a wrapped-line or
-   column overrun is no finding. Reply with one line: `CLEAN` or `FINDINGS <file>`." An owner's answer
+   clean) to `<your review's file, with -c<k> before .json>`; wrap width is
+   the builder's check, not a finding. Reply with one line: `CLEAN` or `FINDINGS <file>`." An owner's answer
    goes to the reviewer whose finding asked it. `run-summary.ts <file>
    --findings` prints a findings file's lines; send them to the builder from
    step 2. After 2 re-checks in a round, what is still open is that round's
