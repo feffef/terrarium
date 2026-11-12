@@ -1,6 +1,6 @@
 ---
 name: harvest
-description: File up to 10 Seedlings (plus a retro on this Skill), self-contained issues that turn the last 7 days of Session logs' ideas and learnings (both, or one kind) into proposals for a Trusted user to green-light, preferring Tenant, content and UI ideas and leaving Frictions to frictions-to-fixes. User-invoked.
+description: File up to 10 Seedlings (plus a retro on this Skill), self-contained issues that turn the last 7 days of Session logs' ideas and learnings (both, or one kind) into proposals for a Trusted user to green-light, preferring Tenant, content and UI ideas and leaving Frictions to frictions-to-fixes. It runs autonomously, or interactively with a person.
 argument-hint: "[ideas|learnings] (default: both)"
 disable-model-invocation: true
 ---

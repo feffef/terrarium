@@ -40,6 +40,9 @@ top is a run that went past it. Only the newest runs of each Routine are kept.
 ::routine-chart{routine="dependabot-sweep"}
 ::
 
+::routine-chart{routine="harvest"}
+::
+
 ## Week by week
 
 The same metric, summed over the last four seven-day windows, the newest ending
