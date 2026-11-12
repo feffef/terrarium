@@ -9,15 +9,13 @@ const props = defineProps<{
   tenant: string
   path: string
   /** Plural noun for the entry count, e.g. "voices" — the number is derived. */
-  noun: string
+  noun?: string
   blurb: string
-  /** Short label for how the Tenant relates to reality, worded as the Journal's real-and-invented page groups the sites. */
-  reality?: string
   /** `accent` is any CSS colour — including a `var()` reference to a Tenant's own token. */
   entries: { name: string; path: string; note?: string; accent: string }[]
   teaserLabel: string
-  /** Spans a whole row: the teaser sits beside the header and entries. */
-  wide?: boolean
+  /** A primary tile's button, linking to `path`; the other tiles have none. */
+  cta?: string
 }>()
 
 const dress = props.path.split('/')[2]
@@ -32,10 +30,11 @@ const overflow = props.entries.length - listed.length
 <template>
   <article
     class="tile"
-    :class="[`tile--${dress}`, { 'tf-tokens': dress === 'tinkerfund', 'gb-tokens': dress === 'glassbox', 'tile--wide': wide }]"
+    :class="[`tile--${dress}`, { 'tf-tokens': dress === 'tinkerfund', 'gb-tokens': dress === 'glassbox' }]"
   >
     <span class="rail" aria-hidden="true">
       <span v-for="e in entries" :key="e.path" class="rail-seg" :style="{ background: e.accent }" />
+      <span v-if="!entries.length" class="rail-seg" :style="{ background: 'var(--tile-accent)' }" />
     </span>
 
     <header class="head">
@@ -43,18 +42,11 @@ const overflow = props.entries.length - listed.length
         <h3 class="title">
           <NuxtLink :to="path" class="title-link">{{ tenant }}<span class="arrow" aria-hidden="true">→</span></NuxtLink>
         </h3>
-        <NuxtLink
-          v-if="reality"
-          to="/t/journal/current/real-and-invented"
-          class="reality"
-          :aria-label="`${reality}: what's real, what's invented`"
-          :title="`${reality}: what's real, what's invented`"
-        >{{ reality }}</NuxtLink>
       </div>
       <p class="blurb">{{ blurb }}</p>
     </header>
 
-    <nav class="rooms" :aria-label="`${tenant}: ${entries.length} ${noun}`">
+    <nav v-if="entries.length" class="rooms" :aria-label="noun ? `${tenant}: ${entries.length} ${noun}` : tenant">
       <ul class="room-list">
         <li v-for="e in listed" :key="e.path">
           <NuxtLink :to="e.path" class="room" :style="{ '--ea': e.accent }">
@@ -72,6 +64,10 @@ const overflow = props.entries.length - listed.length
       <p class="teaser-label">{{ teaserLabel }}</p>
       <slot />
     </div>
+
+    <NuxtLink v-if="cta" :to="path" class="cta">
+      {{ cta }} <span class="cta-arrow" aria-hidden="true">→</span>
+    </NuxtLink>
   </article>
 </template>
 
@@ -148,17 +144,6 @@ const overflow = props.entries.length - listed.length
   flex-wrap: wrap;
   align-items: baseline;
   column-gap: 0.6rem;
-}
-.reality {
-  color: var(--root-muted);
-  text-decoration: underline dotted;
-  text-underline-offset: 3px;
-  font-size: 0.72rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-.reality:hover {
-  color: var(--root-ink);
 }
 .title {
   margin: 0;
@@ -253,23 +238,29 @@ const overflow = props.entries.length - listed.length
   color: var(--tile-accent);
 }
 
-@media (min-width: 56.01rem) {
-  .tile--wide {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-rows: auto auto 1fr;
-  }
-  .tile--wide .rail {
-    grid-column: 1 / -1;
-  }
-  .tile--wide .rooms {
-    padding-bottom: 1rem;
-  }
-  .tile--wide .teaser {
-    grid-column: 2;
-    grid-row: 2 / span 2;
-    margin-top: 0.8rem;
-  }
+.cta {
+  margin: 0 0.8rem 0.9rem;
+  padding: 0.8rem 1.25rem;
+  border-radius: 999px;
+  background: var(--tile-accent);
+  color: var(--root-accent-ink);
+  font-size: 1.05rem;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  box-shadow: 0 6px 20px -8px rgba(0, 0, 0, 0.35);
+  transition: filter 0.15s ease, transform 0.15s ease;
+}
+.cta:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+.cta-arrow {
+  display: inline-block;
+  transition: transform 0.15s ease;
+}
+.cta:hover .cta-arrow {
+  transform: translateX(3px);
 }
 
 /* index.vue's own focus rule is scoped to its DOM and never reaches these links. */

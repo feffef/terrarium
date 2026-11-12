@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { resolveSpaceRoute } from '#shared/routing'
 
-// The showcase Tenants below the hero. Each one is ONE tile, and its entries are
-// DERIVED from that Tenant's own single-homed list — `PERSONA_SLUGS`
-// (layers/blog/app/utils/personas.ts) and `BIOMES` (layers/atlas/app/utils/biomes.ts)
-// — so a Persona or Biome added there appears here without this page being
-// touched, and can never drift from that Tenant's names or colours.
+// The Blog's and the Atlas's tile entries are DERIVED from each Tenant's own
+// single-homed list — `PERSONA_SLUGS` (layers/blog/app/utils/personas.ts) and
+// `BIOMES` (layers/atlas/app/utils/biomes.ts) — so a Persona or Biome added there
+// appears here without this page being touched, and can never drift from that
+// Tenant's names or colours.
 
 const blogEntries = PERSONA_SLUGS.map((slug) => ({
   name: personaMeta(slug).name,
@@ -125,9 +125,9 @@ const { data: tinkerfund } = await useAsyncData('tinkerfund-showcase', async () 
   }
 })
 
-// Glass Box is the newest experiment, shown in progress: the guide in focus and
-// the workshop that tracks its upkeep (layers/glassbox/GLOSSARY.md). The
-// teaser is a guide Lesson, not a Walkthrough: those aren't ready to lead with.
+// Glass Box is where a newcomer starts: the guide in focus and the workshop that
+// tracks its upkeep (layers/glassbox/GLOSSARY.md). The teaser is a guide Lesson,
+// not a Walkthrough: those aren't ready to lead with.
 const { data: glassbox } = await useAsyncData('glassbox-showcase', async () => {
   const guide = resolveSpaceRoute('glassbox', 'guide', undefined)
   if (!guide) return null
@@ -152,85 +152,168 @@ const { data: glassbox } = await useAsyncData('glassbox-showcase', async () => {
   }
 })
 
-useHead({ title: 'terrarium · a self-growing garden of websites' })
+// The hero's terrarium holds four Atlas Specimens, drawn by the Atlas itself, so it
+// follows their drawings. Fixed picks keep the composition stable; the payload
+// carries only those drawings (ADR-0028). The snail climbs the glass.
+const TERRARIUM: { biome: string; slug: string; x: number; y: number; w: number; turn?: number }[] = [
+  { biome: 'canopy', slug: 'mycora-susurrans', x: 112, y: 134, w: 250 },
+  { biome: 'pool', slug: 'vitrea-placida', x: 19, y: 186, w: 130, turn: 90 },
+  { biome: 'canopy', slug: 'lumina-fabulae', x: 88, y: 100, w: 130 },
+  { biome: 'canopy', slug: 'aranea-patiens', x: 214, y: 84, w: 110 },
+]
+const { data: terrarium } = await useAsyncData('hero-terrarium', async () => {
+  const drawings: Record<string, { illustration: string; vars: Record<string, string> }> = {}
+  for (const t of TERRARIUM) {
+    const r = resolveSpaceRoute('atlas', t.biome, undefined)
+    if (!r) continue
+    const doc = await queryCollection(r.pagesKey).where('path', '=', `/${t.slug}`).first()
+    const specimen = doc && toSpecimenView(doc)
+    if (specimen?.illustration) drawings[t.slug] = { illustration: specimen.illustration, vars: signatureVars(specimen.signature?.colors) }
+  }
+  return drawings
+})
+const specimens = computed(() =>
+  TERRARIUM.flatMap((t) => {
+    const d = terrarium.value?.[t.slug]
+    return d ? [{ ...t, ...d, h: t.w * 0.75 }] : []
+  }),
+)
+
+// Hand-drawn outline (slightly off true, like the Specimens' engraved lines); the clip
+// path is the same shape drawn true, so nothing inside can cross the glass.
+const JAR_OUTLINE = 'M150 45q-1 11 0 21c-47 9-88 34-90 84q-1 73 0 146q1 34 40 36q100 3 201-1q38-2 39-36q1-76 0-146c-2-50-43-75-90-84q1-10 0-21'
+const JAR_CLIP = 'M150 44V66C96 76 60 100 60 150V296Q60 332 98 332H302Q340 332 340 296V150C340 100 304 76 250 66V44Z'
+
+useHead({ title: 'terrarium · AI agents build websites in the open' })
 </script>
 
 <template>
   <main class="root">
     <div class="hero">
       <div class="hero-copy">
-        <p class="kicker">A self-growing garden of websites</p>
+        <p class="kicker">A platform for agent-built websites</p>
         <h1>Terrarium</h1>
-        <p class="tagline">
-          A handful of small websites built and run by AI coding agents, in the
-          open. They write the code, the pages, and an honest log of their own
-          work, mistakes included — a human signs off on anything new or risky;
-          routine upkeep ships on its own.
-        </p>
-        <p class="tagline">
-          Like a development team, they file <a :href="`${REPO_URL}/issues`">issues</a> for
-          what can't be fixed yet and explain every change in a
-          <a :href="`${REPO_URL}/pulls`">pull request</a>.
-        </p>
-        <p class="tagline">The Journal shows how humans and agents build this together, one session at a time.</p>
-        <NuxtLink to="/t/journal/current" class="cta">
-          Enter the Journal <span class="cta-arrow" aria-hidden="true">→</span>
-        </NuxtLink>
+        <p class="claim">AI agents build websites in the open, and learn from their mistakes.</p>
+        <div class="hero-body">
+          <p class="tagline">
+            It is an experiment, and Terrarium is the platform they do it on. All content, code and agent instructions
+            live in one <a :href="REPO_URL">GitHub repository</a>. Every change is checked before
+            it goes live, every session logs what it did and where it struggled, and those logs
+            become better rules. People steer, and have to manually merge only the risky changes.
+          </p>
+          <p class="tagline tagline--small">
+            Like a development team, they plan in <a :href="`${REPO_URL}/issues`">issues</a> and
+            explain every change in a <a :href="`${REPO_URL}/pulls`">pull request</a>.
+          </p>
+        </div>
       </div>
 
-      <section v-if="digests.length" class="digests" aria-labelledby="digests-heading">
-        <h2 id="digests-heading" class="eyebrow">Latest from the Journal</h2>
-        <div class="scroll-well">
-          <ul class="digest-list scroll-box">
-            <li v-for="d in digests" :key="d.url">
-              <NuxtLink :to="d.url" class="digest">
-                <time class="digest-date" :datetime="d.when">{{ shortDate(d.when) }}</time>
-                <span class="digest-summary">{{ d.summary }}</span>
-              </NuxtLink>
-            </li>
-          </ul>
-        </div>
-        <NuxtLink to="/t/journal/current#digests" class="all-digests">All daily digests <span aria-hidden="true">→</span></NuxtLink>
-      </section>
+      <div class="hero-art" aria-hidden="true">
+        <svg viewBox="56 10 288 340" focusable="false">
+          <defs>
+            <clipPath id="terrarium-inside"><path :d="JAR_CLIP" /></clipPath>
+            <path id="terrarium-outline" :d="JAR_OUTLINE" />
+            <path id="pebble" d="M0 0q6-7 12-1q4 6-2 10q-8 3-10-9z" />
+          </defs>
+          <path class="art-line art-faint" d="M96 341q104 7 208 0M118 347q84 4 168 0" />
+          <g clip-path="url(#terrarium-inside)">
+            <rect class="art-glass" x="44" y="10" width="312" height="340" />
+            <path class="art-soil" d="M56 288q32-9 67-4q40 7 80 2q70-9 137-2V340H56z" />
+            <path class="art-moss" d="M56 288q32-9 67-4q40 7 80 2q70-9 137-2v7q-68-7-137 2q-40 5-80-2q-34-6-67 3z" />
+            <path class="art-line art-faint" d="M80 306l5-5M104 316l6-5M146 308l5-5M172 320l6-5M214 310l5-5M244 322l6-5M284 308l5-5M312 318l6-5" />
+            <path class="art-line art-tuft" d="M84 285l-2-7M92 284l1-8M132 284l-1-6M178 287l2-7M236 286l-1-7M262 284l2-7M300 283l-1-6" />
+            <g class="art-pebble">
+              <use href="#pebble" transform="translate(98 314)" />
+              <use href="#pebble" transform="translate(124 320) scale(.7)" />
+              <use href="#pebble" transform="translate(258 313) scale(1.15)" />
+              <use href="#pebble" transform="translate(284 321) scale(.7)" />
+              <use href="#pebble" transform="translate(192 322) scale(.85)" />
+            </g>
+            <!-- eslint-disable vue/no-v-html -- schema-checked SVG (app/utils/svg.ts), as in the Atlas plate -->
+            <svg
+              v-for="sp in specimens"
+              :key="sp.slug"
+              class="jar-specimen"
+              :x="sp.x"
+              :y="sp.y"
+              :width="sp.w"
+              :height="sp.h"
+              :transform="sp.turn ? `rotate(${sp.turn} ${sp.x + sp.w / 2} ${sp.y + sp.h / 2})` : undefined"
+              viewBox="0 0 400 300"
+              :style="sp.vars"
+              v-html="sp.illustration"
+            />
+            <!-- eslint-enable vue/no-v-html -->
+          </g>
+          <use href="#terrarium-outline" class="art-line" />
+          <use href="#terrarium-outline" class="art-line art-ghost" transform="translate(1.6 1.2)" />
+          <path class="art-line art-faint" d="M324 158q-2 24 0 48M331 164q-1 16 0 34" />
+          <path class="art-line art-lid" d="M141 24q60-3 118 0q3 11 0 22q-59 3-118 0q-3-11 0-22z" />
+          <path class="art-line art-faint" d="M156 30l5 10M172 29l5 11M188 29l5 11M204 29l5 11M220 29l5 11M236 30l5 10M147 49q53 4 106 0" />
+        </svg>
+      </div>
     </div>
 
-    <section v-if="glassbox" class="explore" aria-labelledby="newest-heading">
+    <section v-if="glassbox" class="explore" aria-labelledby="begin-heading">
       <div class="explore-head">
-        <h2 id="newest-heading" class="eyebrow">Newest experiment <span class="wip">work in progress</span></h2>
+        <h2 id="begin-heading" class="eyebrow">Where to begin</h2>
+        <p class="tagline">
+          First understand how it works, then watch it happen.
+        </p>
       </div>
-      <HomeShowcase
-        tenant="Glass Box"
-        reality="real"
-        path="/t/glassbox"
-        noun="spaces"
-        teaser-label="Lesson of the day"
-        blurb="A textbook for learning the concepts and technology behind Terrarium — Claude Code, Nuxt, Zod, Git and the house rules — with Terrarium itself as the worked example, every page pinned to a dated commit."
-        :entries="glassbox.entries"
-        wide
-      >
-        <NuxtLink v-if="glassbox.lesson" :to="glassbox.lesson.url" class="lesson">
-          <span class="lesson-subject">{{ glassbox.lesson.subject }}</span>
-          <span class="lesson-title">{{ glassbox.lesson.title }}</span>
-          <span class="lesson-description">{{ glassbox.lesson.description }}</span>
-        </NuxtLink>
-      </HomeShowcase>
+      <div class="explore-grid">
+        <HomeShowcase
+          tenant="Glass Box"
+          path="/t/glassbox"
+          noun="spaces"
+          teaser-label="Lesson of the day"
+          blurb="A textbook for learning the concepts and technology behind Terrarium — Claude Code, Nuxt, Zod, Git and the house rules — with Terrarium itself as the worked example. All written and kept up to date by the agents."
+          cta="Start with the Glass Box"
+          :entries="glassbox.entries"
+        >
+          <NuxtLink v-if="glassbox.lesson" :to="glassbox.lesson.url" class="lesson">
+            <span class="lesson-subject">{{ glassbox.lesson.subject }}</span>
+            <span class="lesson-title">{{ glassbox.lesson.title }}</span>
+            <span class="lesson-description">{{ glassbox.lesson.description }}</span>
+          </NuxtLink>
+        </HomeShowcase>
+
+        <HomeShowcase
+          tenant="The Journal"
+          path="/t/journal/current"
+          teaser-label="Latest digests"
+          blurb="The agents' logbook: every session records what it did, what went wrong and what it learned, so you can see how humans and agents build this together."
+          cta="Follow along in the Journal"
+          :entries="[]"
+        >
+          <div class="scroll-well">
+            <ul class="digest-list scroll-box">
+              <li v-for="d in digests" :key="d.url">
+                <NuxtLink :to="d.url" class="digest">
+                  <time class="digest-date" :datetime="d.when">{{ shortDate(d.when) }}</time>
+                  <span class="digest-summary">{{ d.summary }}</span>
+                </NuxtLink>
+              </li>
+            </ul>
+          </div>
+        </HomeShowcase>
+      </div>
     </section>
 
     <section class="explore" aria-labelledby="around-heading">
       <div class="explore-head">
-        <h2 id="around-heading" class="eyebrow">Commentary on the build</h2>
+        <h2 id="around-heading" class="eyebrow">Commentary on the experiment itself</h2>
         <p class="tagline">
-          The experiment seen from outside — its work retold in plain words, and what it threw away, dug up again.
+          Recent interesting events, retold in several voices, and discarded work curated like a museum.
         </p>
       </div>
       <div class="explore-grid">
         <HomeShowcase
           tenant="The Blog"
-          reality="real, in character"
           path="/t/blog"
           noun="voices"
           teaser-label="Latest posts"
-          blurb="A plain-language read on the experiment — the same work seen as impressive, as flawed, plainly observed, or painted as a living place."
+          blurb="AI personas read the experiment in plain language — the same work seen as impressive, as flawed, plainly observed, or painted as a living place."
           :entries="blogEntries"
         >
           <div class="scroll-well">
@@ -251,7 +334,6 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
 
         <HomeShowcase
           tenant="The Midden"
-          reality="real"
           path="/t/midden"
           noun="rooms"
           teaser-label="Today's find"
@@ -277,13 +359,33 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
       <div class="explore-head">
         <h2 id="build-heading" class="eyebrow">What the agents build</h2>
         <p class="tagline">
-          Sites the agents design and grow as their own practice — each with its own voice and its own rooms to wander.
+          Invented practice grounds the agents keep growing, each with its own voice.
         </p>
       </div>
       <div class="explore-grid">
         <HomeShowcase
+          v-if="tinkerfund"
+          tenant="Tinkerfund"
+          path="/t/tinkerfund"
+          noun="spaces"
+          teaser-label="Campaign of the day"
+          blurb="A crowdfunding shop the agents built to a real storefront's standard, for inventions like a mug that stirs itself counterclockwise. Every pledge and checkout is simulated in your browser; nothing is charged. Like a real product, it runs in two environments: prod and qa."
+          :entries="tinkerfundEntries"
+        >
+          <NuxtLink v-if="tinkerfund.campaign" :to="tinkerfund.campaign.url" class="campaign">
+            <span class="campaign-fig">
+              <span class="tf-label">FIG. 1 · {{ tinkerfund.campaign.registry }}</span>
+              <!-- eslint-disable-next-line vue/no-v-html -- schema-checked SVG (app/utils/svg.ts, issue #1363) -->
+              <svg viewBox="0 0 400 300" aria-hidden="true" v-html="tinkerfund.campaign.figure" />
+            </span>
+            <span class="campaign-title">{{ tinkerfund.campaign.title }}</span>
+            <span class="campaign-funded">{{ tinkerfund.campaign.percent }}% funded</span>
+            <TinkerfundProgressBar :percent="tinkerfund.campaign.percent" aria-hidden="true" />
+          </NuxtLink>
+        </HomeShowcase>
+
+        <HomeShowcase
           tenant="The Atlas"
-          reality="invented"
           path="/t/atlas"
           noun="wings"
           teaser-label="Specimen of the day"
@@ -308,31 +410,9 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
             <span class="specimen-where">{{ spotlight.biome.name }}</span>
           </NuxtLink>
         </HomeShowcase>
-
-        <HomeShowcase
-          v-if="tinkerfund"
-          tenant="Tinkerfund"
-          reality="invented"
-          path="/t/tinkerfund"
-          noun="spaces"
-          teaser-label="Campaign of the day"
-          blurb="A crowdfunding shop the agents built to a real storefront's standard, for inventions like a mug that stirs itself counterclockwise. Every pledge and checkout is simulated in your browser; nothing is charged. Like a real product, it runs in two environments: prod and qa."
-          :entries="tinkerfundEntries"
-        >
-          <NuxtLink v-if="tinkerfund.campaign" :to="tinkerfund.campaign.url" class="campaign">
-            <span class="campaign-fig">
-              <span class="tf-label">FIG. 1 · {{ tinkerfund.campaign.registry }}</span>
-              <!-- eslint-disable-next-line vue/no-v-html -- schema-checked SVG (app/utils/svg.ts, issue #1363) -->
-              <svg viewBox="0 0 400 300" aria-hidden="true" v-html="tinkerfund.campaign.figure" />
-            </span>
-            <span class="campaign-title">{{ tinkerfund.campaign.title }}</span>
-            <span class="campaign-funded">{{ tinkerfund.campaign.percent }}% funded</span>
-            <TinkerfundProgressBar :percent="tinkerfund.campaign.percent" aria-hidden="true" />
-          </NuxtLink>
-        </HomeShowcase>
       </div>
     </section>
-    <SiteFooter class="home-footer" show-build />
+    <SiteFooter class="home-footer" show-build build-only />
   </main>
 </template>
 
@@ -398,15 +478,109 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
 
 .hero {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 2rem 1.1rem;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 2rem 3rem;
 }
 @media (max-width: 56rem) {
   .hero {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+.claim {
+  margin: 0;
+  font-size: clamp(1.45rem, 3.2vw, 2rem);
+  font-weight: 650;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+/* The line under each section heading reads as the section's pitch, so it is larger than body copy. */
+.explore-head .tagline {
+  font-size: clamp(1.15rem, 2.2vw, 1.4rem);
+  line-height: 1.4;
+}
+.tagline--small {
+  font-size: 0.95rem;
+}
+
+/* Wider than its column and end-aligned, so the jar reaches a little under the copy. */
+.hero-art {
+  justify-self: end;
+  width: 94%;
+  max-width: 32rem;
+}
+@media (max-width: 56rem) {
+  .hero-art {
+    justify-self: center;
+    width: 100%;
+    max-width: 26rem;
+  }
+}
+/* On a phone the jar is a faint backdrop behind the body text only, so the copy's
+   children join the hero's grid and the jar shares a cell with the body. */
+@media (max-width: 36rem) {
+  .hero {
+    gap: 1rem;
+  }
+  /* `.hero >` outranks the later base `.hero-copy` rule. */
+  .hero > .hero-copy {
+    display: contents;
+  }
+  .hero-copy > * {
+    position: relative;
+    z-index: 1;
+  }
+  .hero-body {
+    grid-area: 4 / 1;
+  }
+  .hero-art {
+    position: relative;
+    z-index: 0;
+    grid-area: 4 / 1;
+    justify-self: stretch;
+    align-self: stretch;
+    width: auto;
+    max-width: none;
+    opacity: 0.16;
+    pointer-events: none;
+  }
+}
+.hero-art > svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+@media (max-width: 36rem) {
+  .hero-art > svg {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+  }
+}
+/* Hand-drawn like the Specimens: thin ink lines at a constant weight, flat tints
+   from the page's tokens so it follows light and dark. */
+.hero-art path, .hero-art use { vector-effect: non-scaling-stroke; }
+.art-line { fill: none; stroke: var(--root-ink); stroke-width: 1.4px; stroke-linecap: round; stroke-linejoin: round; }
+.art-faint { opacity: 0.38; }
+.art-ghost { opacity: 0.3; }
+.art-glass { fill: color-mix(in srgb, var(--root-accent) 6%, transparent); }
+.art-lid { fill: color-mix(in srgb, var(--root-accent) 40%, var(--root-bg)); }
+.art-soil { fill: color-mix(in srgb, var(--root-muted) 35%, transparent); }
+.art-moss { fill: color-mix(in srgb, var(--root-accent) 45%, transparent); }
+.art-tuft { stroke: var(--root-accent); opacity: 0.8; }
+.art-pebble { fill: color-mix(in srgb, var(--root-muted) 55%, transparent); stroke: var(--root-ink); stroke-width: 1.1px; }
+/* The Specimens keep their engraved line weight at any scale. */
+.hero-art .jar-specimen { color: var(--root-ink); overflow: visible; }
+.hero-art :deep(.jar-specimen *) { vector-effect: non-scaling-stroke; }
+.hero-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
 .hero-copy {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -427,33 +601,6 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
 }
 .tagline a { color: inherit; text-underline-offset: 2px; }
 .tagline a:hover { color: var(--root-ink); }
-
-.cta {
-  margin-top: 0.5rem;
-  display: inline-block;
-  padding: 0.85rem 1.75rem;
-  border-radius: 999px;
-  background: var(--root-accent);
-  color: var(--root-accent-ink);
-  font-size: 1.15rem;
-  font-weight: 600;
-  text-decoration: none;
-  box-shadow: 0 6px 20px -8px rgba(0, 0, 0, 0.35);
-  transition: filter 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
-}
-.cta:hover {
-  filter: brightness(1.08);
-  transform: translateY(-1px);
-  box-shadow: 0 10px 24px -8px rgba(0, 0, 0, 0.4);
-}
-.cta-arrow {
-  display: inline-block;
-  transition: transform 0.15s ease;
-}
-.cta:hover .cta-arrow {
-  transform: translateX(3px);
-}
-
 
 /* Desktop: a well fills whatever height its row already has and scrolls the
    rest, so a long list never sets that height — the hero copy sets the digests'
@@ -489,20 +636,6 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
   }
 }
 
-.digests {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
-}
-.all-digests {
-  align-self: flex-start;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--root-accent);
-  text-underline-offset: 2px;
-}
-.all-digests:hover { color: var(--root-ink); }
 .digest-list {
   list-style: none;
   margin: 0;
@@ -580,17 +713,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
   }
 }
 
-/* ── Glass Box band: a work-in-progress badge, and its Lesson of the day. ── */
-.wip {
-  margin-left: 0.5rem;
-  padding: 0.1rem 0.45rem;
-  border: 1px dashed currentColor;
-  border-radius: 999px;
-  font-size: 0.68rem;
-  letter-spacing: 0.08em;
-  color: var(--root-muted);
-  white-space: nowrap;
-}
+/* ── Glass Box: its Lesson of the day. ── */
 .lesson {
   display: flex;
   flex-direction: column;
