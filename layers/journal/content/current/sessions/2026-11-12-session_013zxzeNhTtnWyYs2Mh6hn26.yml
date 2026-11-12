@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeNhTtnWyYs2Mh6hn26
 startedAt: 2026-11-12T14:17:21Z
-endedAt: 2026-11-12T15:10:20Z
+endedAt: 2026-11-12T15:15:11Z
 kind: delegated
 goal: "Curate the Glass Box guide: Git & GitHub pass, then Claude Code pass"
-status: in-review
-outcome: PR 3163 (Git & GitHub pages) merged; PR 3164 (Claude Code pages) open, merge pending CI
-summary: "A person started the glassbox-curate Skill with one prompt and said to run autonomously, choosing focuses repeatedly until the context reaches 500k and then to hand over to a new sonnet session; everything after that was agent-initiated. First run: I oriented, started a Scout (no new topic) and chose the Git & GitHub Subject because open PR 3160 held the agents, hooks and session-log pages and the memory page's lowercase sweep and Git & GitHub wording leads were the oldest. Four fresh readers, four opus writers, a sonnet claim checker (three claims not fully true, six overstated, all corrected by a second writer pass), code-review and a 13-page overlap check led to PR 3163, which passed the gate and merged through merge-pr.ts. Second run: I restarted the branch from main, wrote a new run entry and chose the Claude Code Subject (five pages) for the same lowercase sweep and the wording leftovers on the memory page; three fresh readers, two opus writers, a claim checker (four overstatements, corrected), code-review and the gate led to PR 3164, opened and subscribed. In this run I skipped the whole-index re-read and the Scout to save context. Still open: CI, the verdict and the merge of PR 3164, the hand-over to a new sonnet session at 500k, and a final log marking the work completed."
+status: completed
+outcome: Git & GitHub pages (PR 3163) and Claude Code pages (PR 3164) merged; a new sonnet session took over
+summary: "A person started the glassbox-curate Skill with one prompt and said to run autonomously, choosing focuses repeatedly until the context reaches 500k and then to hand over to a new sonnet session; everything after that was agent-initiated. First run: I oriented, started a Scout (no new topic) and chose the Git & GitHub Subject because open PR 3160 held the agents, hooks and session-log pages and the memory page's lowercase sweep and Git & GitHub wording leads were the oldest. Four fresh readers, four opus writers, a sonnet claim checker (three claims not fully true, six overstated, all corrected by a second writer pass), code-review and a 13-page overlap check led to PR 3163, which passed the gate and merged through merge-pr.ts. Second run: I restarted the branch from main, wrote a new run entry and chose the Claude Code Subject (five pages) for the same lowercase sweep and the wording leftovers on the memory page; three fresh readers, two opus writers, a claim checker (four overstatements, corrected), code-review and the gate led to PR 3164, which passed the gate and merged through merge-pr.ts. In this run I skipped the whole-index re-read and the Scout to save context. With the context near 465k and the budget for another full focus gone, I created the hand-over session (session_013zxzePDpmX3Lq9AEQGGTTW) on sonnet with the person's exact instructions, which was the person's own ask for the 500k point; I did that slightly before 500k because a further focus would not have fit. Memory-page leads left for the next run: the lowercase sweep for the other Subjects, the Walkthrough diagrams, the unread outside pages the Spec reviewer named, and the owner questions on the 0.x rule and the plain.ts change."
 prs:
   - "3163"
   - "3164"
@@ -119,26 +119,27 @@ frictions:
   - description: In the second run I skipped re-reading the whole guide index and the Scout, both steps the Skill requires, to save context, and the code-review Spec reviewer named outside pages I had not read.
     solution: Budget a whole-index re-read per run, or let the Skill say a second run in one session may reuse the first run's index read.
     severity: minor
-durationSec: 3178
+durationSec: 3470
 models:
-  claude-sonnet-5-5: 324
+  claude-sonnet-5-5: 344
 toolCounts:
   Read: 19
-  Bash: 75
+  Bash: 79
   Agent: 27
   mcp__claude-code-remote__get_session: 3
   Write: 7
-  Edit: 33
-  Skill: 4
+  Edit: 35
+  Skill: 5
   Grep: 2
   TaskStop: 1
   ToolSearch: 2
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 2
-  ReadNotifications: 3
+  ReadNotifications: 5
   mcp__github__pull_request_read: 1
-  mcp__github__add_issue_comment: 1
+  mcp__github__add_issue_comment: 2
+  mcp__claude-code-remote__create_session: 1
 filesEdited:
   - layers/glassbox/content/workshop/runs/2026-11-12T1418.yml
   - layers/glassbox/content/workshop/pages/index.md
@@ -897,7 +898,7 @@ subagents:
     durationSec: 20
     toolCalls: 9
     modelCalls: 3
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: general-purpose
     task: "Fresh reader: pull requests, author trust"
     model: sonnet
@@ -932,84 +933,84 @@ subagents:
     durationSec: 252
     toolCalls: 29
     modelCalls: 29
-    tokenShare: 3.7
+    tokenShare: 3.6
   - type: general-purpose
     task: "Opus writer: composite actions, Dependabot"
     model: opus
     durationSec: 231
     toolCalls: 43
     modelCalls: 20
-    tokenShare: 3.1
+    tokenShare: 3
   - type: general-purpose
     task: "Opus writer: worktrees, attribution"
     model: opus
     durationSec: 248
     toolCalls: 37
     modelCalls: 32
-    tokenShare: 4.1
+    tokenShare: 4
   - type: general-purpose
     task: "Opus writer: triage labels, plumbing"
     model: opus
     durationSec: 237
     toolCalls: 46
     modelCalls: 31
-    tokenShare: 3.8
+    tokenShare: 3.6
   - type: general-purpose
     task: Claim checker for changed sentences
     model: sonnet
     durationSec: 226
     toolCalls: 57
     modelCalls: 23
-    tokenShare: 3.9
+    tokenShare: 3.7
   - type: general-purpose
     task: "Fresh re-read: pull requests, trust, actions"
     model: sonnet
     durationSec: 32
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: general-purpose
     task: "Fresh re-read: Dependabot, worktrees, attribution"
     model: sonnet
     durationSec: 35
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: general-purpose
     task: "Fresh re-read: triage labels, plumbing"
     model: sonnet
     durationSec: 26
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: general-purpose
     task: "Opus writer: second fix pass"
     model: opus
     durationSec: 269
     toolCalls: 62
     modelCalls: 38
-    tokenShare: 4.7
+    tokenShare: 4.5
   - type: general-purpose
     task: "Code review: Standards axis"
     model: sonnet
     durationSec: 47
     toolCalls: 13
     modelCalls: 6
-    tokenShare: 1.7
+    tokenShare: 1.6
   - type: general-purpose
     task: "Code review: Spec axis"
     model: sonnet
     durationSec: 56
     toolCalls: 14
     modelCalls: 7
-    tokenShare: 1.8
+    tokenShare: 1.7
   - type: general-purpose
     task: Read overlapping pages against the change
     model: sonnet
     durationSec: 101
     toolCalls: 19
     modelCalls: 8
-    tokenShare: 2.1
+    tokenShare: 2
   - type: general-purpose
     task: "Fresh reader: CLAUDE.md, path rules"
     model: sonnet
@@ -1037,14 +1038,14 @@ subagents:
     durationSec: 216
     toolCalls: 35
     modelCalls: 30
-    tokenShare: 3.8
+    tokenShare: 3.7
   - type: general-purpose
     task: "Opus writer: permissions, MCP servers"
     model: opus
     durationSec: 247
     toolCalls: 31
     modelCalls: 29
-    tokenShare: 4
+    tokenShare: 3.8
   - type: general-purpose
     task: "Claim checker: Claude Code pages"
     model: sonnet
@@ -1065,7 +1066,7 @@ subagents:
     durationSec: 112
     toolCalls: 29
     modelCalls: 15
-    tokenShare: 2.1
+    tokenShare: 2
   - type: general-purpose
     task: "Code review: Standards axis"
     model: sonnet
