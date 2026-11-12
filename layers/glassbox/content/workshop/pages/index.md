@@ -44,7 +44,7 @@ These are the owner's goals for the guide. A run builds toward them directly; a 
 1. **Decide how pages say "a person merges" a Human-only file.** Since the owner waiver (ADR-0004), an agent may merge one when the owner says so in the session. *Protected paths*, *Human-only* and the overview say so. These still state it flatly, each true as the default: *Path-specific rules*, *Decision records*, *Merge gate*, *Claude Code hooks* (twice), *Composite actions*, *Author trust*, *Cross-tenant reads* and *Asking an agent for a change*. Ask the owner whether to name the waiver there or keep one home.
 2. **Check the pages whose claims the docs left silent** (see *Claims to check*), by reading the tool's source where the docs have no page.
 
-3. **Check every Walkthrough diagram against its stops.** A diagram is read beside the stops (it now sits next to them on wide screens), so each box, arrow and branch should roughly match what the steps say; a reader who can't match them gains nothing. Fix whichever side is wrong; so far the stops read better than the diagrams, so expect to redraw the diagram. Keep the same check for any new diagram.
+3. **Check every Walkthrough diagram against its stops.** A diagram is read beside the stops (it now sits next to them on wide screens), so what it shows should roughly match the steps; a reader who can't match them gains nothing. It is a simplified picture, never a 1:1 copy: not every box or arrow needs a stop. Try to match, but not too hard, and keep it simple. So far the stops read better than the diagrams, so expect to redraw the diagram. Keep the same check for any new diagram.
 
 ### Wording fresh readers still find hard
 
