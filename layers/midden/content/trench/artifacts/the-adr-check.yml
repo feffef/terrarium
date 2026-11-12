@@ -1,0 +1,51 @@
+title: the instructions for reading the project's decisions
+stratum: current-midden
+condition: intact
+cause: cost-more-than-it-caught
+provenance:
+  kind: commit
+  hash: 46886f5a7f26310f9076335ebeca0408751598f9
+  path: .agents/skills/adr-check/SKILL.md
+  url: https://github.com/feffef/terrarium/commit/46886f5a7f26310f9076335ebeca0408751598f9
+  continuityCheck: >-
+    the instructions, their script and the line that named them are gone from
+    the project's main branch. The pull request that removed them (#2431) added
+    an automatic reminder that tells an agent, as it edits a file, which
+    decision records tied to that file it has not yet read in full. That serves
+    the same aim by a different means: a reminder while writing, in place of a
+    lookup before planning. What was discarded is the lookup. Whether that makes
+    this a find or a replacement in place is a close call; it is catalogued
+    because the lookup itself ended, and the owner asked.
+site: short-lives
+catalogNote: >-
+  A set of written instructions for an agent, called a skill, that sent it to
+  the project's recorded decisions before it planned, recommended or built a
+  change. It was added on 19 October 2026, closing an issue that reported
+  agents kept skipping the decision records they are bound by. The owner chose
+  it while working through the open issues, in place of a line in the standing
+  instructions that told agents to search the records; the owner had
+  questioned that search, and an agent showed that it missed. A script printed
+  a summary of every decision, then the files and keywords covered by each
+  open trial of removing instructions. The agent was to read in full any
+  decision even slightly related, leave the instructions under trial alone, and
+  give each part of its
+  change a reason. On 23 October a review the owner had asked for compared 86
+  session records from before it with 61 after. The agent that counted found
+  some gain in how often sessions with a person present read decisions in
+  full, though the review and the later pull request counted it differently;
+  little change in the recorded mistakes about decisions, 4 before and 3
+  after; and a run that printed 447 lines. On average 12.7 of the 30 summaries
+  were already in the agent's view. The counts were small and mostly
+  self-reported, as the review itself said. It traced three mistakes and found
+  none that came from the skill being run as written. The owner chose to
+  retire the skill, and the prompt that named it, in one change that put the
+  automatic reminder in their place. That change was merged less than four days
+  after the skill was added.
+removedIn: 46886f5a7f26310f9076335ebeca0408751598f9
+remains:
+  - label: the instructions, at their last revision
+    url: https://github.com/feffef/terrarium/blob/b6b8bd1dfd06d4fbb46c348dc352da6d175bcc17/.agents/skills/adr-check/SKILL.md
+assessedAt: 2026-11-12
+inscription:
+  text: "Use before you plan, recommend, implement or give an opinion on a change to this repo, even one asked in chat: finds the ADRs and open prune trials relevant to it and reads the ADRs in full."
+  source: "the skill's description, .agents/skills/adr-check/SKILL.md"

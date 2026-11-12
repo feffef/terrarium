@@ -1,8 +1,8 @@
 // L2 e2e assertions specific to the **midden** Tenant. Serves the gate's build
 // via `setupL2()` and never builds (tests/README.md).
 //
-// Content covers the real `trench` Space (15 catalogued Sites, 42 Artifacts), the
-// `stores` Space (10 Artifacts held off display, no Sites — GLOSSARY.md's "The
+// Content covers the real `trench` Space (16 catalogued Sites, 47 Artifacts), the
+// `stores` Space (11 Artifacts held off display, no Sites — GLOSSARY.md's "The
 // Stores"), plus the Tenant-root `/t/midden` foreword page (issue #515). Assertions
 // here target ROUTES, not files on disk — mirroring
 // `layers/atlas/tests/e2e/atlas.spec.ts`'s shape: every assertion below is
