@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_013zxzeP4WS4kX4LSBrVszT6
 startedAt: 2026-11-12T06:12:57Z
-endedAt: 2026-11-12T06:24:24Z
+endedAt: 2026-11-12T06:25:05Z
 kind: autonomous
 goal: Harvest recent session ideas into Seedlings
 status: completed
@@ -31,11 +31,17 @@ frictions:
   - description: Read step 3's simplifying test as barring any visitor-facing addition and dropped three passing product ideas; the owner had to ask for a second look.
     solution: Word the test so it says a feature in an existing component with nothing named replaced still passes, or give a worked example.
     severity: moderate
-durationSec: 688
+  - description: Piped log-session.ts output through tail and head, though close-session says never to filter it; a refusal or warning could have been cut.
+    solution: Run the script bare; a hook could flag a filtered log-session.ts call.
+    severity: minor
+  - description: Ran git log -S for conclusions and used GitHub tools without first reading git-conventions.md and github-integration.md, which CLAUDE.md requires and the hooks named.
+    solution: Read both docs at the first such call, as CLAUDE.md says.
+    severity: minor
+durationSec: 729
 models:
-  claude-sonnet-5-5: 68
+  claude-sonnet-5-5: 81
 toolCounts:
-  Bash: 28
+  Bash: 32
   Read: 2
   mcp__github__issue_read: 2
   Skill: 2
