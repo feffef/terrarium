@@ -71,11 +71,11 @@ export function parseStorage(entries: string[]): Record<string, string> | undefi
 }
 
 export interface CaptureOptions {
-  /** localStorage entries set before the page's own scripts run. */
   windowSize?: string
   colorScheme?: ColorScheme
   fullPage?: boolean
   mobile?: boolean
+  /** localStorage entries set before the page's own scripts run. */
   storage?: Record<string, string>
 }
 
