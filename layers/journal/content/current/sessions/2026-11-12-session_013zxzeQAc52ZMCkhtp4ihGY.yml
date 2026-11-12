@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_013zxzeQAc52ZMCkhtp4ihGY
 startedAt: 2026-11-12T22:15:17Z
-endedAt: 2026-11-12T22:33:34Z
+endedAt: 2026-11-12T22:42:24Z
 kind: delegated
 goal: "Curate the Glass Box guide: Verification Subject Try-it sections"
 status: in-review
-outcome: PR 3211 merged; a second focus (Web standards) is in progress
-summary: "The owner invoked the glassbox-curate skill and, when asked, chose autonomous mode, several focuses in sequence until 500k context, and a Sonnet handoff session with unrestricted network at the end (human-instructed). I took the Verification Subject as the focus (agent-chosen from the memory page's open leads). Two fresh readers found weak Try-it sections and wording problems; an opus writer edited seven pages; a claim checker found every changed sentence supported; code-review's two reviewers led to a pagesRead fix and a teaches update; pnpm gate:scoped passed; PR 3211 merged after CI went green. A second run on the Web standards Subject has started. Still open: its PR, further focuses and the handoff session."
+outcome: PR 3211 merged; PR 3212 (Web standards) open with gate green
+summary: "The owner invoked the glassbox-curate skill and, when asked, chose autonomous mode, several focuses in sequence until 500k context, and a Sonnet handoff session with unrestricted network at the end (human-instructed). I took the Verification Subject as the focus (agent-chosen from the memory page's open leads). Two fresh readers found weak Try-it sections and wording problems; an opus writer edited seven pages; a claim checker found every changed sentence supported; code-review's two reviewers led to a pagesRead fix and a teaches update; pnpm gate:scoped passed; PR 3211 merged after CI went green. A second run on the Web standards Subject opened PR 3212 (gate green, code-review done). Still open: CI and merge of 3212, further focuses and the handoff session."
 prs:
   - "3211"
+  - "3212"
 docsRead:
   - path: docs/agents/git-conventions.md
     reason: (no reason given)
@@ -30,16 +31,18 @@ docsRead:
     reason: (no reason given)
   - path: .throwaway/glassbox-curate/guide-pages-3.md
     reason: (no reason given)
+  - path: .agents/skills/glassbox-curate/SKILL.md
+    reason: (no reason given)
   - path: layers/glassbox/page-checks.ts
     reason: (no reason given)
   - path: layers/glassbox/content/guide/pages/web-standards/10.css-custom-properties.md
-    reason: (no reason given)
+    reason: (read before editing)
   - path: layers/glassbox/content/guide/pages/web-standards/20.svg.md
-    reason: (no reason given)
+    reason: (read before editing)
   - path: layers/glassbox/content/guide/pages/web-standards/30.aria.md
-    reason: (no reason given)
+    reason: (read before editing)
   - path: layers/glassbox/content/guide/pages/web-standards/40.colour-and-motion-settings.md
-    reason: (no reason given)
+    reason: (read before editing)
   - path: layers/glassbox/content/guide/pages/verification/10.gate.md
     reason: (read before editing)
   - path: layers/glassbox/content/guide/pages/verification/20.type-checking.md
@@ -57,8 +60,6 @@ docsRead:
   - path: layers/glassbox/content/guide/pages/verification/80.headless-browser-checks.md
     reason: (read before editing)
   - path: scripts/ui/screenshot.ts
-    reason: (no reason given)
-  - path: .agents/skills/glassbox-curate/SKILL.md
     reason: (no reason given)
   - path: layers/atlas/GLOSSARY.md
     reason: (no reason given)
@@ -83,24 +84,29 @@ frictions:
   - description: Read docs/agents/git-conventions.md only after my first git command, as the hook reminded.
     solution: Read the listed docs before any git command.
     severity: nit
-durationSec: 1097
+durationSec: 1628
 models:
-  claude-sonnet-5-5: 126
+  claude-sonnet-5-5: 160
 toolCounts:
   AskUserQuestion: 1
-  Bash: 36
+  Bash: 48
   Read: 15
-  Agent: 8
-  Write: 2
-  mcp__claude-code-remote__get_session: 2
+  Agent: 11
+  Write: 3
+  mcp__claude-code-remote__get_session: 3
   Skill: 4
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
-  ReadNotifications: 2
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  ReadNotifications: 3
   mcp__github__pull_request_read: 1
   mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/glassbox/content/workshop/runs/2026-11-12T2216.yml
+  - layers/glassbox/content/workshop/runs/2026-11-12T2232.yml
+  - layers/glassbox/content/guide/pages/web-standards/10.css-custom-properties.md
+  - layers/glassbox/content/guide/pages/web-standards/20.svg.md
+  - layers/glassbox/content/guide/pages/web-standards/30.aria.md
+  - layers/glassbox/content/guide/pages/web-standards/40.colour-and-motion-settings.md
   - layers/glassbox/content/guide/pages/verification/10.gate.md
   - layers/glassbox/content/guide/pages/verification/20.type-checking.md
   - layers/glassbox/content/guide/pages/verification/30.content-validation.md
@@ -108,18 +114,17 @@ filesEdited:
   - layers/glassbox/content/guide/pages/verification/50.linting.md
   - layers/glassbox/content/guide/pages/verification/60.zod-refinements.md
   - layers/glassbox/content/guide/pages/verification/80.headless-browser-checks.md
-  - layers/glassbox/content/workshop/runs/2026-11-12T2232.yml
-  - layers/glassbox/content/guide/pages/verification/70.schema-evolution.md
   - layers/glassbox/content/workshop/pages/index.md
+  - layers/glassbox/content/guide/pages/verification/70.schema-evolution.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0017.md
 docsReadBySubagents:
+  - .agents/skills/glassbox-curate/SKILL.md
   - layers/atlas/GLOSSARY.md
   - .agents/skills/clear-backlog/SKILL.md
-  - .agents/skills/glassbox-curate/SKILL.md
 ruleUse:
   - by: main
     answered: true
@@ -156,7 +161,8 @@ ruleUse:
       - rule: .claude/rules/glassbox-content.md
         via: hint
       - rule: .claude/rules/mermaid-lanes.md
-        via: hint
+        via: native
+        trigger: layers/glassbox/content/workshop/pages/index.md
     reported:
       - path: .claude/rules/adr-0004.md
         value: steered
@@ -396,7 +402,7 @@ ruleUse:
         value: backed
   - by: general-purpose
     subagent: 7
-    answered: false
+    answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
         via: start
@@ -432,58 +438,207 @@ ruleUse:
         trigger: layers/glassbox/content/guide/pages/web-standards/10.css-custom-properties.md
       - rule: .claude/rules/adr-0008.md
         via: hint
+      - rule: .claude/rules/adr-0006.md
+        via: hint
+      - rule: .claude/rules/adr-0016.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+    reported:
+      - path: .claude/rules/glassbox-content.md
+        value: steered
+      - path: .claude/rules/tenant-glossary.md
+        value: backed
+      - path: .agents/skills/glassbox-lesson/writing-pages.md
+      - path: .agents/skills/glassbox-lesson/owner-decisions.md
+      - path: layers/glassbox/GLOSSARY.md
+  - by: general-purpose
+    subagent: 8
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/adr-0006.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/adr-0016.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .claude/rules/adr-0017.md
+        value: backed
+  - by: general-purpose
+    subagent: 9
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/writing-pages.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/writing-pages.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
       - rule: .claude/rules/glassbox-content.md
         via: read
-    reported: []
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: general-purpose
+    subagent: 10
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/glassbox-curate/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/glassbox-curate/SKILL.md
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0006.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/adr-0016.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
 subagents:
   - task: Scout new topics
     model: sonnet
     durationSec: 20
     toolCalls: 9
     modelCalls: 5
-    tokenShare: 5
+    tokenShare: 3.3
   - task: "Fresh reader: gate pages A"
     model: sonnet
     durationSec: 20
     toolCalls: 7
     modelCalls: 3
-    tokenShare: 1.7
+    tokenShare: 1.1
   - task: "Fresh reader: pages B"
     model: sonnet
     durationSec: 19
     toolCalls: 7
     modelCalls: 3
-    tokenShare: 1.7
+    tokenShare: 1.1
   - task: Write Verification page fixes
     model: opus
     durationSec: 223
     toolCalls: 54
     modelCalls: 33
-    tokenShare: 18.8
+    tokenShare: 12.5
   - task: Claim-check changed sentences
     model: sonnet
     durationSec: 44
     toolCalls: 11
     modelCalls: 7
-    tokenShare: 3
+    tokenShare: 2
   - task: Standards review
     model: sonnet
     durationSec: 28
     toolCalls: 8
     modelCalls: 4
-    tokenShare: 4.2
+    tokenShare: 2.8
   - task: Spec review
     model: sonnet
     durationSec: 40
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 5.4
+    tokenShare: 3.6
   - task: Write Web standards fixes
     model: opus
-    durationSec: 14
-    toolCalls: 11
+    durationSec: 247
+    toolCalls: 60
+    modelCalls: 42
+    tokenShare: 13.7
+  - task: Claim-check Web standards diff
+    model: sonnet
+    durationSec: 44
+    toolCalls: 12
+    modelCalls: 9
+    tokenShare: 3.3
+  - task: Standards review web std
+    model: sonnet
+    durationSec: 32
+    toolCalls: 10
     modelCalls: 4
-    tokenShare: 4.7
+    tokenShare: 2.8
+  - task: Spec review web std
+    model: sonnet
+    durationSec: 36
+    toolCalls: 10
+    modelCalls: 6
+    tokenShare: 3.2
 gitBranch: HEAD
 entrypoint: remote
 cliVersion: 2.1.322
