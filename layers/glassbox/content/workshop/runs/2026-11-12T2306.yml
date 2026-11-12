@@ -1,0 +1,19 @@
+session: session_013zxzeT2YDMzAWKoi2AC98c
+mode: autonomous
+focus: "Git & GitHub Subject (its eight pages): give the Try-it sections that name no command or visible result (Pull requests, Author trust, Composite actions, Dependabot grouping, Issue triage labels) a concrete step and a way to see it worked, and clear the fresh-reader wording problems the memory page lists for them, as the owner's direction asks (one Subject per run). Deviations for the budget: the guide index and Scout were read once in this session and not run again, and no new fresh readers read the pages. The claim checker found nothing contradicted; the gh output values (OPEN, MERGED, CLOSED), the Actions run-log shape and the exact grouped-PR title could not be run here (GraphQL is blocked). The wording problems the memory page lists for these pages stay open. The review named many outside pages that mention gh or labels; their lines were grepped and none restates the new commands, and none was read in full, so none is in pagesRead. Its point that the new Try-it steps move publishedAt was left: a Try-it step is practice, not the concept, so revision and publishedAt are kept (as earlier runs did). Fixed from review: the checkout version in the example matches the repo, and the grouped-PR title example holds no count. Chosen because the owner asked in-session for several autonomous runs, no open PR touches these pages, and Git & GitHub is the next Subject on the Try-it list."
+changes:
+  - git-github/10.pull-requests | Try-it gives the git and gh commands from branch to merged state and a gh pr list check that shows whether a PR was opened | the old Try-it named no command or visible result (gh pr create, checks and list --help; GitHub GraphQL docs PullRequestState). Try-it only, so revision and publishedAt are kept
+  - git-github/20.author-trust | Try-it gives the gh api commands that read author_association and the grep for pull_request_target with what a hit or no hit means | the old Try-it named no command (GitHub REST issue comments docs; grep run). Try-it only
+  - git-github/30.composite-actions | Try-it gives a minimal action.yml, the workflow call, where the run log shows the composite, and a node parity check that exits 1 on a difference | the old Try-it had no way to see it worked (GitHub composite action tutorial; parity script run). Try-it only
+  - git-github/40.dependabot-grouping | Try-it gives the groups snippet, the Insights button that runs a check at once and the pull request list command | the reader would have waited for the schedule (GitHub re-run Dependabot jobs docs). Try-it only
+  - git-github/70.issue-triage-labels | Try-it gives gh label create, the queue filter and the edit that moves an issue out of it | the old Try-it named no command (gh label, issue list and issue edit --help; docs/agents/triage-labels.md). Try-it only
+  - workshop/pages/index | Git & GitHub dropped from the Try-it list of Subjects still to do | the memory page keeps what a later run inherits
+pagesRead:
+  - git-github/10.pull-requests
+  - git-github/20.author-trust
+  - git-github/30.composite-actions
+  - git-github/40.dependabot-grouping
+  - git-github/50.git-worktrees
+  - git-github/60.attribution
+  - git-github/70.issue-triage-labels
+  - git-github/80.git-plumbing
