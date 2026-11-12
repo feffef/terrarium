@@ -7,6 +7,8 @@ pages:
     checked: '2026-11-07'
   - page: agents/40.scheduled-tasks
     checked: '2026-11-07'
+  - page: agents/50.inspecting-past-sessions
+    checked: '2026-11-12'
   - page: claude-code/10.claude-md
     checked: '2026-11-07'
   - page: claude-code/20.path-scoped-rules
