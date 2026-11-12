@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_013zxzePDpmX3Lq9AEQGGTTW
 startedAt: 2026-11-12T15:14:51Z
-endedAt: 2026-11-12T15:39:47Z
+endedAt: 2026-11-12T15:54:57Z
 kind: delegated
 goal: "Curate the Glass Box guide: Agents & automation pages"
 status: partial
-outcome: PR 3165 merged (Agents & automation pages); the goal of repeated focuses until the context budget is spent is still running, a second focus is under way
-summary: The person invoked /glassbox-curate with the instruction to pick focuses autonomously until the context reached 500k, then hand over to a new sonnet session; that one prompt and the Skill's own steps were the human instruction. Everything else was agent-chosen. I oriented, read the whole guide index, picked the Agents & automation Subject (no open PR touched the guide, it still capitalised glossary terms and one page had never been read by a run), ran a Scout (no new topic), two fresh readers, two opus writers, a claim checker, a second reader and a code-review round. The claim checker found two unsupported cost clauses and two overstated sentences, which I corrected by hand. The pages keep revision and publishedAt (wording only). I opened PR 3165, waited for the green gate, posted a verdict and merged it with merge-pr.ts; a second focus (Installed skills pages) was then started because the person asked for repeated focuses until the budget is spent. The thirteen outside pages the Spec reviewer named were grep-checked for the changed claims, not read in full, and the run entry says so.
+outcome: PR 3165 merged (Agents & automation pages); PR 3169 open (Installed skills pages), gate green; more focuses may follow
+summary: The person invoked /glassbox-curate with the instruction to pick focuses autonomously until the context reached 500k, then hand over to a new sonnet session; that one prompt and the Skill's own steps were the human instruction. Everything else was agent-chosen. I oriented, read the whole guide index, picked the Agents & automation Subject (no open PR touched the guide, it still capitalised glossary terms and one page had never been read by a run), ran a Scout (no new topic), two fresh readers, two opus writers, a claim checker, a second reader and a code-review round. The claim checker found two unsupported cost clauses and two overstated sentences, which I corrected by hand. The pages keep revision and publishedAt (wording only). I opened PR 3165, waited for the green gate, posted a verdict and merged it with merge-pr.ts; a second focus (Installed skills pages) was then run the same way, because the person asked for repeated focuses until the budget is spent, and PR 3169 was opened for it. The person also corrected my first log status from completed to partial, and asked whether leftovers meant not worth acting on; I answered that they are findings parked on the memory page after the one retry the Skill allows, and that five older memory items were cut to fit its word cap. The thirteen outside pages the Spec reviewer named were grep-checked for the changed claims, not read in full, and the run entry says so.
 prs:
   - "3165"
+  - "3169"
 docsRead:
   - path: layers/glassbox/GLOSSARY.md
     reason: (no reason given)
@@ -28,6 +29,8 @@ docsRead:
     reason: (no reason given)
   - path: .throwaway/glassbox-curate/guide-pages-2.md
     reason: (no reason given)
+  - path: .agents/skills/glassbox-curate/SKILL.md
+    reason: (no reason given)
   - path: layers/glassbox/page-checks.ts
     reason: (no reason given)
   - path: layers/glassbox/content/guide/pages/agents/10.subagents.md
@@ -36,7 +39,45 @@ docsRead:
     reason: (read before editing)
   - path: layers/glassbox/content/guide/pages/agents/30.cloud-sessions.md
     reason: (read before editing)
-  - path: .agents/skills/glassbox-curate/SKILL.md
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/implement/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/tdd/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/code-review/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/diagnosing-bugs/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/wayfinder/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/ask-matt/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/prototype/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/research/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: (no reason given)
+  - path: .agents/skills/to-spec/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/to-tickets/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/triage/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: .agents/skills/setup-matt-pocock-skills/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: (no reason given)
+  - path: .agents/skills/grilling/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/triage/AGENT-BRIEF.md
+    reason: (no reason given)
+  - path: .agents/skills/domain-modeling/SKILL.md
     reason: (no reason given)
   - path: docs/research/subagent-spawn-depth.md
     reason: (no reason given)
@@ -55,8 +96,6 @@ docsRead:
   - path: GLOSSARY.md
     reason: (no reason given)
   - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
-    reason: (no reason given)
-  - path: .agents/skills/clear-backlog/SKILL.md
     reason: (no reason given)
 skillsUsed:
   - name: code-review
@@ -77,32 +116,40 @@ frictions:
   - description: Logged the session completed after one PR merged though the person asked for repeated focuses; the person corrected it to partial.
     solution: "Judge status against the whole instruction, not the last PR: repeated-focus sessions stay partial until the budget stops them."
     severity: minor
-durationSec: 1496
+  - description: Wrote a session cost of about $17 in a PR body from memory; the real session total read $19.28 and I corrected the body.
+    solution: Read cost_usd from get_session before writing any figure, as CLAUDE.md's verify-before-you-state rule says.
+    severity: minor
+durationSec: 2406
 models:
-  claude-sonnet-5-5: 153
+  claude-sonnet-5-5: 217
 toolCounts:
   Read: 13
-  Bash: 40
+  Bash: 60
   Write: 1
-  Agent: 11
+  Agent: 17
   ReadNotifications: 5
   Edit: 5
-  Skill: 5
-  mcp__claude-code-remote__get_session: 1
-  ToolSearch: 2
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Skill: 6
+  mcp__claude-code-remote__get_session: 2
+  ToolSearch: 3
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
   mcp__github__pull_request_read: 1
   mcp__github__add_issue_comment: 1
+  mcp__github__update_pull_request: 1
 filesEdited:
   - layers/glassbox/content/workshop/runs/2026-11-12T1515.yml
   - layers/glassbox/content/guide/pages/agents/10.subagents.md
   - layers/glassbox/content/guide/pages/agents/50.inspecting-past-sessions.md
   - layers/glassbox/content/guide/pages/agents/30.cloud-sessions.md
+  - layers/glassbox/content/guide/pages/skill-pack/30.engineering-skills.md
   - layers/glassbox/content/guide/pages/agents/20.workflow-scripts.md
   - layers/glassbox/content/workshop/runs/2026-11-12T1538.yml
-  - layers/glassbox/content/guide/pages/agents/40.scheduled-tasks.md
+  - layers/glassbox/content/guide/pages/skill-pack/10.skill-packs.md
+  - layers/glassbox/content/guide/pages/skill-pack/40.wayfinder.md
   - layers/glassbox/content/workshop/pages/index.md
+  - layers/glassbox/content/guide/pages/skill-pack/20.planning-with-the-pack.md
+  - layers/glassbox/content/guide/pages/agents/40.scheduled-tasks.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -111,7 +158,27 @@ rulesGlobal:
 rulesFollowedUp:
   - .claude/rules/adr-0017.md
 docsReadBySubagents:
+  - .agents/skills/auto-triage/SKILL.md
+  - .agents/skills/implement/SKILL.md
+  - .agents/skills/tdd/SKILL.md
+  - .agents/skills/code-review/SKILL.md
+  - .agents/skills/diagnosing-bugs/SKILL.md
+  - .agents/skills/clear-backlog/SKILL.md
+  - .agents/skills/wayfinder/SKILL.md
+  - .agents/skills/ask-matt/SKILL.md
+  - .agents/skills/prototype/SKILL.md
+  - .agents/skills/research/SKILL.md
+  - docs/adr/0022-autonomous-triage-sweep.md
   - .agents/skills/glassbox-curate/SKILL.md
+  - .agents/skills/to-spec/SKILL.md
+  - .agents/skills/to-tickets/SKILL.md
+  - .agents/skills/triage/SKILL.md
+  - docs/agents/issue-tracker.md
+  - .agents/skills/setup-matt-pocock-skills/SKILL.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - .agents/skills/grilling/SKILL.md
+  - .agents/skills/triage/AGENT-BRIEF.md
+  - .agents/skills/domain-modeling/SKILL.md
   - docs/research/subagent-spawn-depth.md
   - docs/agents/guards.md
   - .agents/skills/inspect-session/SKILL.md
@@ -121,7 +188,6 @@ docsReadBySubagents:
   - .agents/skills/audit-skills/SKILL.md
   - GLOSSARY.md
   - docs/adr/0017-provenance-footer-on-agent-authored-content.md
-  - .agents/skills/clear-backlog/SKILL.md
 ruleUse:
   - by: main
     answered: true
@@ -428,6 +494,201 @@ ruleUse:
       - rule: .claude/rules/adr-0017.md
         via: start
     reported: []
+  - by: general-purpose
+    subagent: 11
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+    reported:
+      - path: .claude/rules/glassbox-content.md
+        value: backed
+      - path: .claude/rules/tenant-glossary.md
+        value: backed
+      - path: .claude/rules/adr-0005.md
+        value: backed
+      - path: .agents/skills/glassbox-lesson/writing-pages.md
+      - path: .agents/skills/glassbox-lesson/owner-decisions.md
+      - path: layers/glassbox/GLOSSARY.md
+      - path: layers/glassbox/page-checks.ts
+  - by: general-purpose
+    subagent: 12
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/glassbox-content.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/skill-pack/30.engineering-skills.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/skill-pack/30.engineering-skills.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/skill-pack/30.engineering-skills.md
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+    reported:
+      - path: .claude/rules/glassbox-content.md
+        value: steered
+      - path: .claude/rules/adr-0005.md
+        value: backed
+      - path: .claude/rules/tenant-glossary.md
+        value: backed
+      - path: .agents/skills/glassbox-lesson/writing-pages.md
+      - path: .agents/skills/glassbox-lesson/owner-decisions.md
+      - path: layers/glassbox/GLOSSARY.md
+  - by: general-purpose
+    subagent: 13
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: general-purpose
+    subagent: 14
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: general-purpose
+    subagent: 15
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/writing-pages.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/writing-pages.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/glassbox-content.md
+        via: read
+    reported:
+      - path: .claude/rules/glassbox-content.md
+        value: backed
+  - by: general-purpose
+    subagent: 16
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/owner-decisions.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/owner-decisions.md
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
 subagents:
   - type: general-purpose
     task: Scout new topics
@@ -435,77 +696,119 @@ subagents:
     durationSec: 21
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 3
+    tokenShare: 1.8
   - type: general-purpose
     task: Fresh reader A
     model: sonnet
     durationSec: 45
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 2
+    tokenShare: 1.2
   - type: general-purpose
     task: Fresh reader B
     model: sonnet
     durationSec: 41
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 1.9
+    tokenShare: 1.2
   - type: general-purpose
     task: "Writer: agents pages 10-30"
     model: opus
     durationSec: 400
     toolCalls: 78
     modelCalls: 44
-    tokenShare: 17.5
+    tokenShare: 10.8
   - type: general-purpose
     task: "Writer: agents pages 40-50"
     model: opus
     durationSec: 345
     toolCalls: 42
     modelCalls: 40
-    tokenShare: 13.5
+    tokenShare: 8.3
   - type: general-purpose
     task: Claim check changed sentences
     model: sonnet
     durationSec: 126
     toolCalls: 28
     modelCalls: 18
-    tokenShare: 6.8
+    tokenShare: 4.2
   - type: general-purpose
     task: Fresh reader re-read
     model: sonnet
     durationSec: 32
     toolCalls: 8
     modelCalls: 3
-    tokenShare: 2.2
+    tokenShare: 1.4
   - type: general-purpose
     task: Standards review
     model: sonnet
     durationSec: 36
     toolCalls: 12
     modelCalls: 6
-    tokenShare: 3.1
+    tokenShare: 1.9
   - type: general-purpose
     task: Spec review
     model: sonnet
     durationSec: 36
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 2.8
+    tokenShare: 1.7
   - type: general-purpose
     task: Fresh reader skill-pack 1
     model: sonnet
     durationSec: 27
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 1.9
+    tokenShare: 1.2
   - type: general-purpose
     task: Fresh reader skill-pack 2
     model: sonnet
     durationSec: 21
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 1.9
+    tokenShare: 1.2
+  - type: general-purpose
+    task: "Writer: skill-pack 10-20"
+    model: opus
+    durationSec: 285
+    toolCalls: 31
+    modelCalls: 30
+    tokenShare: 7.4
+  - type: general-purpose
+    task: "Writer: skill-pack 30-40"
+    model: opus
+    durationSec: 296
+    toolCalls: 31
+    modelCalls: 29
+    tokenShare: 6
+  - type: general-purpose
+    task: Claim check skill-pack
+    model: sonnet
+    durationSec: 138
+    toolCalls: 28
+    modelCalls: 21
+    tokenShare: 4.2
+  - type: general-purpose
+    task: Fresh reader skill-pack re-read
+    model: sonnet
+    durationSec: 33
+    toolCalls: 7
+    modelCalls: 3
+    tokenShare: 1.3
+  - type: general-purpose
+    task: Standards review skill-pack
+    model: sonnet
+    durationSec: 35
+    toolCalls: 11
+    modelCalls: 7
+    tokenShare: 2
+  - type: general-purpose
+    task: Spec review skill-pack
+    model: sonnet
+    durationSec: 47
+    toolCalls: 14
+    modelCalls: 10
+    tokenShare: 2.3
 gitBranch: HEAD
 entrypoint: remote
 cliVersion: 2.1.322
