@@ -57,8 +57,8 @@ planned.
 An issue only the `harvest` Skill files, for an **Idea** or learning still
 worth acting on, or, once per run, for a retro on the Skill itself. Its title
 starts `Seedling:`, and it waits as `ready-for-human` for a Trusted user's green
-light before anyone builds it. No other Skill or
-session files one, whoever asked; their proposals are plain issues.
+light before anyone builds it. No other Skill or session files one, whoever
+asked; their proposals are plain issues.
 Not a **Proposal**.
 
 ### Session closure

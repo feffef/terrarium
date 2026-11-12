@@ -303,7 +303,7 @@ describe('retro key', () => {
 })
 
 describe('checkClusters()', () => {
-  const ns = new Set([1, 2, 3])
+  const ns = new Map([[1, 'a'], [2, 'b'], [3, 'b']])
   const open = (label: string, extra = '') =>
     `## c\nlabel: ${label}\nentries: 1, 2\nsessions: 2\nunbuilt: read x.ts\nunfiled: no match, title filter\nunrejected: none\nledger: none\nunacted: prs empty\n${extra}verdict: open\n`
 
@@ -316,7 +316,12 @@ describe('checkClusters()', () => {
     expect(checkClusters(open('workflow'), ns)).toEqual(['cluster 1: no "simplifying:" evidence'])
     expect(checkClusters('## d\nlabel: product\nentries: 1\nsessions: 1\nverdict: dropped\n', ns).join()).toContain('verdict must be')
     expect(checkClusters(open('product').replace('1, 2', '9'), ns).join()).toContain('entry numbers')
+    expect(checkClusters(open('product').replace('sessions: 2', 'sessions: 5'), ns).join()).toContain('distinct sessions')
     expect(checkClusters('nothing', ns)).toEqual(['no "## " cluster blocks'])
+  })
+
+  it('refuses a simplifying drop of a product cluster', () => {
+    expect(checkClusters('## d\nlabel: product\nentries: 1\nsessions: 1\nsimplifying: s\nverdict: dropped simplifying\n', ns).join()).toContain('for workflow clusters')
   })
 
   it('refuses a product cluster after a workflow one', () => {

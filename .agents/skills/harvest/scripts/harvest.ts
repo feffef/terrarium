@@ -212,7 +212,7 @@ export const TESTS = ['unbuilt', 'unfiled', 'unrejected', 'ledger', 'simplifying
  *  `field: value` lines. An open one holds evidence for every test (`simplifying` only
  *  when workflow); a dropped one holds the evidence of the test it failed. Product
  *  clusters come before the first workflow one. */
-export function checkClusters(text: string, entryNumbers: Set<number>): string[] {
+export function checkClusters(text: string, sessionOf: Map<number, string>): string[] {
   const problems: string[] = []
   const blocks = text.split(/^## /m).slice(1)
   if (!blocks.length) return ['no "## " cluster blocks']
@@ -229,12 +229,13 @@ export function checkClusters(text: string, entryNumbers: Set<number>): string[]
     if (label === 'workflow') workflowSeen = true
     else if (label === 'product' && workflowSeen) problems.push(`${at}: a product cluster after a workflow one; check every product cluster first`)
     const ns = (f.get('entries') ?? '').split(',').map((n) => Number(n.trim()))
-    if (!f.has('entries') || ns.some((n) => !entryNumbers.has(n))) problems.push(`${at}: entries must list entry numbers of the extract`)
-    if (!/^[1-9]\d*$/.test(f.get('sessions') ?? '')) problems.push(`${at}: sessions must be a count`)
+    if (!f.has('entries') || ns.some((n) => !sessionOf.has(n))) problems.push(`${at}: entries must list entry numbers of the extract`)
+    else if (Number(f.get('sessions')) !== new Set(ns.map((n) => sessionOf.get(n))).size) problems.push(`${at}: sessions must be the count of distinct sessions behind the entries`)
     const verdict = f.get('verdict') ?? ''
     const dropped = /^dropped (\w+)$/.exec(verdict)?.[1]
     if (verdict !== 'open' && !dropped) problems.push(`${at}: verdict must be "open" or "dropped <test>"`)
     else if (dropped && !(TESTS as readonly string[]).includes(dropped)) problems.push(`${at}: "${dropped}" is not a test (${TESTS.join(', ')})`)
+    if (dropped === 'simplifying' && label === 'product') problems.push(`${at}: the simplifying test is for workflow clusters`)
     const need = verdict === 'open' ? TESTS.filter((t) => t !== 'simplifying' || label === 'workflow') : dropped ? [dropped] : []
     for (const t of need) if (!f.has(t)) problems.push(`${at}: no "${t}:" evidence`)
   })
@@ -356,14 +357,15 @@ function main(): void {
     const entries = readExtract(path).entries
     const picked = ns.map((n) => entries.find((e) => e.n === Number(n)) ?? fail(`no entry ${n} in ${path}`))
     const summaries = new Map(picked.map((e) => [e.session, summaryOf(readFileSync(join(root, e.file), 'utf8'))] as const))
-    console.error(renderSummaries(picked, summaries))
+    const read = renderSummaries(picked, summaries)
+    if (read) console.error(read)
     return console.log(renderBlock(picked))
   }
   if (cmd === 'check-clusters') {
     const [file] = argv
     const extract = flagValue(argv, '--extract')
     if (!file || !extract) fail('usage: check-clusters <harvest-checks.md> --extract <extract.json>')
-    const problems = checkClusters(readFileSync(file, 'utf8'), new Set(readExtract(extract).entries.map((e) => e.n)))
+    const problems = checkClusters(readFileSync(file, 'utf8'), new Map(readExtract(extract).entries.map((e) => [e.n, e.session] as const)))
     if (problems.length) fail(problems.join('\n'))
     return console.log('check-clusters: ok')
   }

@@ -47,7 +47,7 @@ harvests both.
    read or ran, and a search that printed nothing is not evidence until you know
    its pattern can match. Do not filter script output with `head` or `tail`.
    Step 4 starts only when `harvest check-clusters <that file> --extract
-   <extract.json>` prints `ok`. A cluster is open when all of these hold:
+   <extract.json>` passes. A cluster is open when all of these hold:
    - **Unbuilt.** Name the file or symbol it would change and read it now. Run
      `pnpm exec tsx scripts/git/list-merges-since.ts` from its session's start
      (`started` in the list). For a learning, grep `CLAUDE.md`, `.claude/rules/`, `docs/agents/`
