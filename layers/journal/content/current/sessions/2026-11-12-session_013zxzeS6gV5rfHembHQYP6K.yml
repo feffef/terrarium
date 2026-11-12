@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeS6gV5rfHembHQYP6K
 startedAt: 2026-11-12T16:05:08Z
-endedAt: 2026-11-12T16:13:52Z
-kind: autonomous
+endedAt: 2026-11-12T16:27:16Z
+kind: interactive
 goal: Harvest recent session ideas and learnings into Seedlings
 status: completed
-outcome: Six Seedlings filed (3172-3177) plus one retro Seedling (3178); stored keys checked; no repo changes
-summary: "Fired as the harvest Skill with no human prompt, so every step was agent-initiated. Extracted 391 unharvested entries (177 ideas, 214 learnings), read the whole list, and checked clusters against the tracker (88 open, 1013 closed), the Friction Ledger, owner decisions and the code. Dropped four product clusters (a reading path and concept map ruled out by the owner's no Start-here decision, three already built: token share bar, code fade, Routine cost panel) and an explore-writes idea held by two Ledger entries. Filed five product Seedlings (changed-since-read dot, sources-changed badge, diagram box highlight, homepage placement in the manifest, History table script) and one workflow Seedling (a Skill's Routine claim is intent, not fact; eight sessions). Two passing workflow clusters (glassbox-update leftovers report, merge-pr squash message) stayed unfiled because the 5-per-kind cap is unclear for mixed clusters; the retro Seedling says so, with a cheaper whole read. check-clusters, check-body and check-posted all passed."
+outcome: Six Seedlings filed (3172-3177) plus one retro Seedling (3178); a user-asked retro and four more ideas logged; no repo changes
+summary: "Fired as the harvest Skill with no human prompt, so every harvest step was agent-initiated. Extracted 391 unharvested entries (177 ideas, 214 learnings), read the whole list, and checked clusters against the tracker (88 open, 1013 closed), the Friction Ledger, owner decisions and the code. Dropped four product clusters (a reading path and concept map ruled out by the owner's no Start-here decision, three already built: token share bar, code fade, Routine cost panel) and an explore-writes idea held by two Ledger entries. Filed five product Seedlings (changed-since-read dot, sources-changed badge, diagram box highlight, homepage placement in the manifest, History table script) and one workflow Seedling (a Skill's Routine claim is intent, not fact; eight sessions). Two passing workflow clusters (glassbox-update leftovers report, merge-pr squash message) stayed unfiled because the 5-per-kind cap is unclear for mixed clusters; the retro Seedling says so, with a cheaper whole read. check-clusters, check-body and check-posted all passed. Afterwards the user asked, in their own words, for a retro of this run (presented in chat, nothing filed) and then for other improvement ideas in this log; those four ideas were added at that request."
 prs: []
 docsRead:
   - path: docs/agents/git-conventions.md
@@ -36,7 +36,11 @@ skillsUsed:
     reason: (no reason given)
   - name: log-session
     reason: (no reason given)
+  - name: writing-for-agents
+    reason: (no reason given)
   - name: harvest
+    reason: (invoked as a slash command)
+  - name: retro
     reason: (invoked as a slash command)
 frictions:
   - description: Ran git log (to draw a conclusion) and the GitHub listing scripts before reading git-conventions.md and github-integration.md; hooks sent me to them afterwards.
@@ -51,16 +55,16 @@ frictions:
   - description: My first Seedling drafts said I read a script and a source I had only grepped; I caught it before posting and reworded them.
     solution: Describe a grep as a grep in What I checked.
     severity: nit
-durationSec: 524
+durationSec: 1329
 models:
-  claude-sonnet-5-5: 86
+  claude-sonnet-5-5: 93
 toolCounts:
-  Bash: 34
+  Bash: 35
   Read: 6
   mcp__claude-code-remote__get_session: 1
   ToolSearch: 1
   mcp__github__issue_write: 7
-  Skill: 2
+  Skill: 3
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -129,4 +133,9 @@ ruleUse:
 gitBranch: ccr-c31f21c8-nkovdt
 entrypoint: remote_mobile
 cliVersion: 2.1.322
+ideas:
+  - "Make harvest step 3's tracker scan one compact line per issue (number, state, stateReason, labels, title): list-open-issues.ts printed about 9,300 lines of JSON for the closed list and no stateReason, so every run rebuilds it with jq and cannot tell a completed close from not planned without reading each issue."
+  - Add a harvest rulings command that greps one keyword set across .out-of-scope, owner-decisions.md, visitor-loop decisions.md and the Tenant GLOSSARY.md product decisions, so the unrejected test is one call instead of reading four files in full (this run read each by hand).
+  - "Have harvest draft print a Seedling scaffold from the extract: banner, key lines, the Where it came from session sentences, quoted entry words and the Sources filenames, so the agent writes only the idea, why and what-would-change parts; bodies of about 1,200 tokens were typed twice, once to a file and once into the issue call."
+  - Let check-clusters verify mechanically that each unbuilt field names a path that exists in the repo and that each cited issue number appears in the tracker lists, so a cluster cannot pass on evidence that points at nothing.
 landedBy: Stop
