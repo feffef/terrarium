@@ -1,15 +1,16 @@
 schemaVersion: 1
 session: session_013zxzeP3xBUNvHd5kGFihuo
 startedAt: 2026-11-12T02:07:32Z
-endedAt: 2026-11-12T02:27:22Z
+endedAt: 2026-11-12T02:30:22Z
 kind: autonomous
 goal: Turn recurring session Frictions into fixes
 status: in-review
-outcome: "Ledger PR #3125 and doc fix #3126 merged; the closing ledger PR waits on its gate"
+outcome: "Ledger PR #3125 and doc fix #3126 merged; closing ledger PR #3127 waits on CI"
 summary: "Scheduled frictions-to-fixes run, no human prompt. A survey subagent updated the Friction Ledger (about 80 occurrences, 4 new entries, 5 fixes recorded, 3 stale statuses reset). I filed regression issues #3123 and #3124; #3110 already tracked the third regression. One never-fixed pick, explore-agent-writes-to-tracker: the design agent found the ledger cause wrong (explore writes by design; the Skill never says so), so the fix is 3 lines in clear-backlog SKILL.md, built by a Sonnet agent, reviewed with code-review, merged as #3126. Ledger PR #3125 merged after a green gate and code-review. The closing ledger PR (records fix #3126) is on branch claude/frictions-ledger-close, gate running. Skipped for the next run: misread-owner-instruction, minor regressions. All work was agent-initiated under the schedule."
 prs:
   - "3125"
   - "3126"
+  - "3127"
 docsRead:
   - path: docs/agents/git-conventions.md
     reason: (no reason given)
@@ -75,20 +76,20 @@ frictions:
   - description: "close-session was prompted by the Stop hook after the first merge, not run by me when #3125 opened."
     solution: Run close-session in the same turn that opens a PR, before ending the turn.
     severity: minor
-durationSec: 1189
+durationSec: 1369
 models:
-  claude-sonnet-5-5: 135
+  claude-sonnet-5-5: 145
 toolCounts:
-  Bash: 38
+  Bash: 41
   Read: 5
   Agent: 9
   ToolSearch: 2
   mcp__github__issue_write: 2
   Skill: 4
-  mcp__github__create_pull_request: 2
-  mcp__github__subscribe_pr_activity: 2
+  mcp__github__create_pull_request: 3
+  mcp__github__subscribe_pr_activity: 3
   SendMessage: 1
-  ReadNotifications: 5
+  ReadNotifications: 6
   mcp__github__pull_request_read: 2
   mcp__github__add_issue_comment: 2
 filesEdited:
@@ -439,44 +440,44 @@ subagents:
     durationSec: 434
     toolCalls: 34
     modelCalls: 32
-    tokenShare: 25.1
+    tokenShare: 23.5
   - type: general-purpose
     task: Design fix for explore writes
     durationSec: 47
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 3.1
+    tokenShare: 2.9
   - type: general-purpose
     task: Build explore-writes doc fix
     model: sonnet
     durationSec: 370
     toolCalls: 20
     modelCalls: 16
-    tokenShare: 7.2
+    tokenShare: 6.7
   - type: general-purpose
     task: Standards review of ledger diff
     durationSec: 34
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 2.5
+    tokenShare: 2.4
   - type: general-purpose
     task: Spec review of ledger diff
     durationSec: 51
     toolCalls: 9
     modelCalls: 8
-    tokenShare: 3.6
+    tokenShare: 3.4
   - type: general-purpose
     task: Standards review of doc fix
     durationSec: 18
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1.7
+    tokenShare: 1.6
   - type: general-purpose
     task: Spec review of doc fix
     durationSec: 18
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1.7
+    tokenShare: 1.6
 gitBranch: claude/eager-ptolemy-25ilv4
 entrypoint: remote_trigger
 cliVersion: 2.1.322
