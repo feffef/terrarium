@@ -4,8 +4,8 @@
 // Keeps the positional `<route> <out> [WxH]` parsing unaware of the flags, so
 // this is where the extraction contract is pinned.
 import { describe, expect, it } from 'vitest'
-import { extractFlag, extractSwitch } from '../../scripts/lib/cli.ts'
-import { parseScheme } from '../../scripts/ui/screenshot.ts'
+import { extractFlag, extractFlags, extractSwitch } from '../../scripts/lib/cli.ts'
+import { parseScheme, parseStorage } from '../../scripts/ui/screenshot.ts'
 import { reviewShots } from '../../scripts/ui/preview.ts'
 
 describe('extractFlag()', () => {
@@ -78,5 +78,31 @@ describe('reviewShots()', () => {
       { out: 'out/mobile-light.png', windowSize: '390,844', scheme: 'light', mobile: true },
       { out: 'out/mobile-dark.png', windowSize: '390,844', scheme: 'dark', mobile: true },
     ])
+  })
+})
+
+describe('extractFlags()', () => {
+  it('collects every value of a repeated flag and leaves the positionals', () => {
+    const { values, rest } = extractFlags(['/r', '--storage', 'a=1', 'o.png', '--storage', 'b=2'], '--storage')
+    expect(values).toEqual(['a=1', 'b=2'])
+    expect(rest).toEqual(['/r', 'o.png'])
+  })
+
+  it('returns no values when the flag is absent', () => {
+    expect(extractFlags(['/r', 'o.png'], '--storage')).toEqual({ values: [], rest: ['/r', 'o.png'] })
+  })
+})
+
+describe('parseStorage()', () => {
+  it('splits each entry at the first "=" so a value may contain "="', () => {
+    expect(parseStorage(['a=1', 'glassbox:read=["/x?y=z"]'])).toEqual({ a: '1', 'glassbox:read': '["/x?y=z"]' })
+  })
+
+  it('returns undefined when there are no entries', () => {
+    expect(parseStorage([])).toBeUndefined()
+  })
+
+  it('throws a usage error when an entry has no "="', () => {
+    expect(() => parseStorage(['nokey'])).toThrow(/KEY=VALUE/)
   })
 })

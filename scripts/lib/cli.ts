@@ -63,6 +63,22 @@ export function extractFlag(argv: string[], flag: string): { value: string | und
   return { value, rest }
 }
 
+/** Like {@link extractFlag}, but keeps every value of a repeated flag, in order. */
+export function extractFlags(argv: string[], flag: string): { values: string[]; rest: string[] } {
+  const values: string[] = []
+  const rest: string[] = []
+  for (let i = 0; i < argv.length; i++) {
+    const arg = argv[i]
+    if (arg === flag) {
+      const next = argv[++i]
+      if (next !== undefined) values.push(next)
+    } else if (arg !== undefined) {
+      rest.push(arg)
+    }
+  }
+  return { values, rest }
+}
+
 /** Pull a boolean `--flag` out of `argv`, reporting whether it was present. */
 export function extractSwitch(argv: string[], flag: string): { on: boolean; rest: string[] } {
   return { on: argv.includes(flag), rest: argv.filter((arg) => arg !== flag) }

@@ -58,11 +58,25 @@ function parseWindowSize(windowSize: string): [width: number, height: number] {
   return [width, height]
 }
 
+/** Parse repeated `KEY=VALUE` entries (split at the first `=`); `undefined` when none. */
+export function parseStorage(entries: string[]): Record<string, string> | undefined {
+  if (entries.length === 0) return undefined
+  const storage: Record<string, string> = {}
+  for (const entry of entries) {
+    const i = entry.indexOf('=')
+    if (i < 0) throw new Error(`Invalid --storage "${entry}" — expected KEY=VALUE.`)
+    storage[entry.slice(0, i)] = entry.slice(i + 1)
+  }
+  return storage
+}
+
 export interface CaptureOptions {
   windowSize?: string
   colorScheme?: ColorScheme
   fullPage?: boolean
   mobile?: boolean
+  /** localStorage entries set before the page's own scripts run. */
+  storage?: Record<string, string>
 }
 
 /**
@@ -71,13 +85,16 @@ export interface CaptureOptions {
  * it, then always close the browser — shared by both capture paths below so
  * the launch args and viewport handling stay single-homed.
  */
-async function withPage<T>(width: number, height: number, { colorScheme, mobile }: CaptureOptions, fn: (page: Page) => Promise<T>): Promise<T> {
+async function withPage<T>(width: number, height: number, { colorScheme, mobile, storage }: CaptureOptions, fn: (page: Page) => Promise<T>): Promise<T> {
   // --hide-scrollbars: the raw-binary invocation this replaced always
   // passed it (issue #575); keep captures scrollbar-free by default.
   const browser = await launchChromium(['--hide-scrollbars'])
   try {
     const device = mobile ? { isMobile: true, hasTouch: true, deviceScaleFactor: 2 } : {}
     const page = await browser.newPage({ viewport: { width, height }, colorScheme, ...device })
+    // A string, not a function: tsx's keepNames injects a helper that throws in-page.
+    // try/catch because localStorage throws on opaque origins such as about:blank.
+    if (storage) await page.addInitScript(`try { for (const [k, v] of Object.entries(${JSON.stringify(storage)})) localStorage.setItem(k, v) } catch {}`)
     return await fn(page)
   }
   finally {

@@ -19,6 +19,8 @@ layout bug, or asserting a style took effect.
   layer utils or CSS, time out on a cold start, or never hydrate in headless
   Chromium: when a shot looks stale or unhydrated, `pnpm build` and shoot the
   build instead. A `#anchor` in `<route>` scrolls to an element.
+- **Seed browser state:** `--storage KEY=VALUE` (repeatable; `shot` and
+  `review`) sets a `localStorage` entry before the page loads.
 - **A page review:** `scripts/ui/preview.ts review` writes four full-page shots (desktop and mobile, light and dark) from one server (`USAGE` has the names and sizes).
 - **A server that stays up:** `scripts/ui/preview.ts start [--dev]` prints `PID=`
   and `URL=`; `scripts/ui/preview.ts stop <pid>` stops it (always exits 0).
