@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_013zxzeS5rcf8VwnGmjcpphq
 startedAt: 2026-11-12T16:19:47Z
-endedAt: 2026-11-12T16:45:03Z
+endedAt: 2026-11-12T17:00:44Z
 kind: autonomous
 goal: Improve the Glass Box Verification pages
-status: completed
-outcome: "PR 3179 merged: glossary terms lowercased and wording clarified on eight Verification pages"
-summary: "An autonomous glassbox-curate run, started by the chained routine (no human prompt in this session). I chose the focus myself: the Verification Subject, because no PR touched the guide, it still capitalised glossary terms against the owner's rule, and no fresh reader had read it. The Scout found no new topic. Two fresh readers read the pages, an opus writer fixed them, a claim checker found one false jiti sentence, two overstated ones and a loose clause, and code-review found two motive clauses and one temporal word; all were corrected. One unsourced speed claim on Linting was cut. The memory page lost four items to stay under its word cap and gained the Verification leads and a question about the capitalised term definitions. Gate passed and PR 3179 merged. Still open: the terms files and the next Subject for the following run."
+status: in-review
+outcome: PR 3179 merged (Verification pages); PR 3180 open (Nuxt Content pages), waiting for CI
+summary: "An autonomous glassbox-curate run, started by the chained routine (no human prompt in this session). I chose the focus myself: the Verification Subject, because no PR touched the guide, it still capitalised glossary terms against the owner's rule, and no fresh reader had read it. The Scout found no new topic. Two fresh readers read the pages, an opus writer fixed them, a claim checker found one false jiti sentence, two overstated ones and a loose clause, and code-review found two motive clauses and one temporal word; all were corrected. One unsourced speed claim on Linting was cut. The memory page lost four items to stay under its word cap and gained the Verification leads and a question about the capitalised term definitions. Gate passed and PR 3179 merged. A second run in the same session did the Nuxt Content Subject the same way (PR 3180, still open); it found one wrong claim on prefix in the source and confirmed a search sentence true. Still open: the terms files and the next Subject for the following run."
 prs:
   - "3179"
+  - "3180"
 docsRead:
   - path: layers/glassbox/GLOSSARY.md
     reason: (no reason given)
@@ -56,6 +57,10 @@ docsRead:
     reason: (no reason given)
   - path: docs/agents/verifying-ui-changes.md
     reason: (no reason given)
+  - path: docs/adr/0019-content-load-error-recovery.md
+    reason: (no reason given)
+  - path: docs/adr/0028-navigation-reads-server-payloads.md
+    reason: (no reason given)
 skillsUsed:
   - name: code-review
     reason: reviewed the diff before the PR
@@ -72,31 +77,37 @@ frictions:
   - description: orient.ts --subject output was 72 KB, so it needed two paged reads and consumed context the page text duplicates
     solution: Have --subject print only pagesRead and page paths when the pages were already read from the index files
     severity: minor
-durationSec: 1516
+durationSec: 2457
 models:
-  claude-sonnet-5-5: 125
+  claude-sonnet-5-5: 166
 toolCounts:
   Read: 16
-  Bash: 35
+  Bash: 48
   Write: 1
-  Agent: 10
+  Agent: 15
   Grep: 2
-  mcp__claude-code-remote__get_session: 1
+  mcp__claude-code-remote__get_session: 2
   Skill: 4
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
-  ReadNotifications: 2
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  ReadNotifications: 3
   mcp__github__pull_request_read: 1
   mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/glassbox/content/workshop/runs/2026-11-12T1620.yml
+  - layers/glassbox/content/guide/pages/nuxt-content/30.content-database.md
+  - layers/glassbox/content/guide/pages/nuxt-content/50.mdc-components.md
   - layers/glassbox/content/workshop/runs/2026-11-12T1644.yml
+  - layers/glassbox/content/workshop/pages/index.md
+  - layers/glassbox/content/guide/pages/nuxt-content/10.content-collections.md
+  - layers/glassbox/content/guide/pages/nuxt-content/20.multi-tenant-isolation.md
+  - layers/glassbox/content/guide/pages/nuxt-content/40.query-collection.md
+  - layers/glassbox/content/guide/pages/nuxt-content/60.mermaid-pre-rendering.md
   - layers/glassbox/content/guide/pages/verification/10.gate.md
   - layers/glassbox/content/guide/pages/verification/40.testing.md
   - layers/glassbox/content/guide/pages/verification/70.schema-evolution.md
   - layers/glassbox/content/guide/pages/verification/30.content-validation.md
   - layers/glassbox/content/guide/pages/verification/60.zod-refinements.md
-  - layers/glassbox/content/workshop/pages/index.md
   - layers/glassbox/content/guide/pages/verification/20.type-checking.md
   - layers/glassbox/content/guide/pages/verification/50.linting.md
   - layers/glassbox/content/guide/pages/verification/80.headless-browser-checks.md
@@ -112,6 +123,8 @@ docsReadBySubagents:
   - .agents/skills/blog-post/SKILL.md
   - docs/adr/0009-session-logs-commit-directly-to-main.md
   - docs/agents/verifying-ui-changes.md
+  - docs/adr/0019-content-load-error-recovery.md
+  - docs/adr/0028-navigation-reads-server-payloads.md
 ruleUse:
   - by: main
     answered: true
@@ -389,67 +402,255 @@ ruleUse:
     reported:
       - path: .claude/rules/adr-0004.md
         value: backed
+  - by: general-purpose
+    subagent: 10
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+    reported:
+      - path: .claude/rules/glassbox-content.md
+        value: steered
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: backed
+      - path: .claude/rules/tenant-glossary.md
+        value: backed
+      - path: .agents/skills/glassbox-lesson/writing-pages.md
+      - path: .agents/skills/glassbox-lesson/owner-decisions.md
+      - path: layers/glassbox/GLOSSARY.md
+      - path: docs/agents/git-conventions.md
+  - by: general-purpose
+    subagent: 11
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: general-purpose
+    subagent: 12
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: general-purpose
+    subagent: 13
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/writing-pages.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/writing-pages.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+    reported:
+      - path: .claude/rules/glassbox-content.md
+        value: steered
+  - by: general-purpose
+    subagent: 14
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/glassbox-content.md
+        via: native
+        trigger: layers/glassbox/content/workshop/runs/2026-11-12T1644.yml
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/content/workshop/runs/2026-11-12T1644.yml
+      - rule: .claude/rules/adr-0001.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0007.md
+        via: hint
+      - rule: .claude/rules/adr-0011.md
+        via: hint
+      - rule: .claude/rules/adr-0013.md
+        via: hint
+      - rule: .claude/rules/adr-0019.md
+        via: hint
+      - rule: .claude/rules/adr-0024.md
+        via: hint
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/adr-0006.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
 subagents:
   - task: Scout new topics
     model: sonnet
     durationSec: 17
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 2.5
+    tokenShare: 1.6
   - task: "Fresh reader: pages 1-4"
     model: sonnet
     durationSec: 30
     toolCalls: 7
     modelCalls: 3
-    tokenShare: 1.3
+    tokenShare: 0.8
   - task: "Fresh reader: pages 5-8"
     model: sonnet
     durationSec: 22
     toolCalls: 7
     modelCalls: 3
-    tokenShare: 1.3
+    tokenShare: 0.8
   - task: "Opus writer: Verification pages"
     model: opus
     durationSec: 435
     toolCalls: 58
     modelCalls: 50
-    tokenShare: 22
+    tokenShare: 13.6
   - task: Claim check changed sentences
     model: sonnet
     durationSec: 168
     toolCalls: 30
     modelCalls: 29
-    tokenShare: 12
+    tokenShare: 7.5
   - task: "Fresh reader: re-read all eight"
     model: sonnet
     durationSec: 28
     toolCalls: 11
     modelCalls: 3
-    tokenShare: 1.8
+    tokenShare: 1.1
   - task: Standards review
     model: sonnet
     durationSec: 45
     toolCalls: 13
     modelCalls: 6
-    tokenShare: 4.4
+    tokenShare: 2.7
   - task: Spec review
     model: sonnet
     durationSec: 67
     toolCalls: 15
     modelCalls: 12
-    tokenShare: 5.4
+    tokenShare: 3.3
   - task: "Fresh reader: Nuxt Content 1-3"
     model: sonnet
-    durationSec: 6
-    toolCalls: 5
-    modelCalls: 2
-    tokenShare: 2.3
+    durationSec: 18
+    toolCalls: 6
+    modelCalls: 3
+    tokenShare: 1.5
   - task: "Fresh reader: Nuxt Content 4-6"
     model: sonnet
-    durationSec: 5
-    toolCalls: 5
-    modelCalls: 2
-    tokenShare: 2.4
+    durationSec: 23
+    toolCalls: 6
+    modelCalls: 3
+    tokenShare: 1.6
+  - task: "Opus writer: Nuxt Content pages"
+    model: opus
+    durationSec: 412
+    toolCalls: 58
+    modelCalls: 56
+    tokenShare: 14.8
+  - task: Claim check Nuxt Content edits
+    model: sonnet
+    durationSec: 115
+    toolCalls: 20
+    modelCalls: 13
+    tokenShare: 4.1
+  - task: "Fresh reader: re-read Nuxt Content"
+    model: sonnet
+    durationSec: 22
+    toolCalls: 9
+    modelCalls: 3
+    tokenShare: 0.9
+  - task: Standards review
+    model: sonnet
+    durationSec: 38
+    toolCalls: 13
+    modelCalls: 7
+    tokenShare: 2.6
+  - task: Spec review
+    model: sonnet
+    durationSec: 58
+    toolCalls: 13
+    modelCalls: 7
+    tokenShare: 2.8
 gitBranch: HEAD
 entrypoint: remote
 cliVersion: 2.1.322
