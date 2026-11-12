@@ -8,9 +8,9 @@ disable-model-invocation: true
 
 Write **one Walkthrough** for Glass Box. Read `layers/glassbox/GLOSSARY.md`
 first: it holds the Walkthrough contract. The steps every page shares are in
-[`../glassbox-lesson/EVERY-PAGE.md`](../glassbox-lesson/EVERY-PAGE.md); the owner's
-hard rules for titles and wording are in
-[`../glassbox-lesson/OWNER-DECISIONS.md`](../glassbox-lesson/OWNER-DECISIONS.md).
+[`../glassbox-lesson/EVERY-PAGE.md`](../glassbox-lesson/EVERY-PAGE.md). Then read
+[`../glassbox-lesson/OWNER-DECISIONS.md`](../glassbox-lesson/OWNER-DECISIONS.md)
+in full: the owner's hard rules for titles and wording.
 
 1. **Place it.** Take the story from the
    [topic inventory](https://github.com/feffef/terrarium/issues/1966#issuecomment-6176385964)'s

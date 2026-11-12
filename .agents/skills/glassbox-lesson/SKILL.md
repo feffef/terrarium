@@ -8,8 +8,9 @@ disable-model-invocation: true
 
 Write **one Lesson** for Glass Box. Read `layers/glassbox/GLOSSARY.md` first:
 it holds the Lesson contract and the Subject, Excerpt and Term rules. The steps
-every page shares are in [`EVERY-PAGE.md`](EVERY-PAGE.md); the owner's hard rules
-for titles and wording are in [`OWNER-DECISIONS.md`](OWNER-DECISIONS.md).
+every page shares are in [`EVERY-PAGE.md`](EVERY-PAGE.md). Then read
+[`OWNER-DECISIONS.md`](OWNER-DECISIONS.md) in full: the owner's hard rules for
+titles and wording.
 
 1. **Place it.** Take the topic's concept, Terrarium files and official docs
    from the [topic inventory](https://github.com/feffef/terrarium/issues/1966#issuecomment-6176385964),

@@ -34,7 +34,7 @@ a move between Subjects, and a change to this Skill, the `glassbox-lesson` docs
 or the page checks. A PR holding any of these waits for the owner's merge: its
 body says so, and you don't merge it.
 
-**Read first.** `layers/glassbox/GLOSSARY.md`,
+**Read first, in full.** `layers/glassbox/GLOSSARY.md`,
 [`../glassbox-lesson/EVERY-PAGE.md`](../glassbox-lesson/EVERY-PAGE.md),
 [`../glassbox-lesson/OWNER-DECISIONS.md`](../glassbox-lesson/OWNER-DECISIONS.md),
 `.claude/rules/glassbox-content.md`,
