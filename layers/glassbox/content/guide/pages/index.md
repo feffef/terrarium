@@ -1,9 +1,9 @@
 ---
 title: Glass Box guide
 description: How Terrarium works as a whole, in plain words, with links to the Lessons that explain each part in depth.
-teaches: "Who's involved: Trusted and Public users, sessions, Routines; a change: read, branch, gate, PR, session log, merge, attribution; who decides: approval, triage labels, clear-backlog, Human-only merges, owner waiver; improving: Frictions, fixes, prune trials, Journal; the repo: CLAUDE.md, rules, ADRs, Skills, hooks, glossaries, Tenants, Spaces, Collections, manifests; shipping: deploy, hydration; why Nuxt."
-revision: 'c922a2cb843ae88030276b88cf51ae71b33f3e9d'
-revisionDate: '2026-11-11'
+teaches: "Who's involved: Trusted and Public users, sessions, Routines; a change: read, branch, gate, PR, session log, merge, attribution; who decides: approval, triage labels, clear-backlog, Human-only merges, owner waiver; improving: Frictions, fixes, prune trials, ideas filed as issues for a Trusted user, Journal; the repo: CLAUDE.md, rules, ADRs, Skills, hooks, glossaries, Tenants, Spaces, Collections, manifests; shipping: deploy, hydration; why Nuxt."
+revision: '145cc119d8d1064fab2dc6ef674cae9d60e3c7f2'
+revisionDate: '2026-11-12'
 ---
 
 Terrarium is an experiment in a website that grows itself: AI agents write almost all of its code and content, and people steer. It is also built to be watched, so every step of that work is on show. Glass Box documents the technology and practices it runs on, and how each one is used here, kept up to date as the code changes. Read this page first: in a few minutes it explains how Terrarium works as a whole, from who steers it to how a change goes live. Each Lesson then covers one tool or practice in depth, with Terrarium's real files as the worked example; open one from the chips on this page or from the menu.
@@ -49,7 +49,7 @@ Agents change a system that includes their own tools, and the gate's automatic c
 
 > work → session log with Frictions → fixes → better guidance → fewer Frictions next time
 
-Routines turn the logs into fixes. One files each recent Friction under its root cause, then fixes the safe causes and files the rest as issues. Others look for problems no session reports: documents that no longer match the code, Skills that don't do their job, and rules nobody needs, which are cut on trial to see whether anything breaks. When a written rule keeps failing, a Trusted user has a hook built that enforces it. One Lesson shows every Skill in the loop, another lists every Routine.
+Routines turn the logs into fixes. One files each recent Friction under its root cause, then fixes the safe causes and files the rest as issues. Others look for problems no session reports: documents that no longer match the code, Skills that don't do their job, and rules nobody needs, which are cut on trial to see whether anything breaks. One more turns the ideas sessions logged into issues for a Trusted user to green-light. When a written rule keeps failing, a Trusted user has a hook built that enforces it. One Lesson shows every Skill in the loop, another lists every Routine.
 
 ::lessons
 [Self-improvement loop](/t/glassbox/guide/terrarium-practice/self-improvement-loop) · [Scheduled tasks](/t/glassbox/guide/agents/scheduled-tasks)

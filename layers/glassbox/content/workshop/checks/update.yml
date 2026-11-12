@@ -59,3 +59,13 @@ pages:
     checked: '2026-11-11'
   - page: nuxt-content/60.mermaid-pre-rendering
     checked: '2026-11-11'
+  - page: nuxt-vue/10.layers
+    checked: '2026-11-12'
+  - page: nuxt-vue/20.auto-imports
+    checked: '2026-11-12'
+  - page: nuxt-vue/30.file-routing
+    checked: '2026-11-12'
+  - page: nuxt-vue/40.virtual-modules
+    checked: '2026-11-12'
+  - page: nuxt-vue/50.vue-components
+    checked: '2026-11-12'

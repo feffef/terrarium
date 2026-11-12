@@ -2,8 +2,8 @@
 title: From file to browser
 description: How a Markdown file becomes a page on a visitor's screen, by way of a database table, a server render and data the browser reuses.
 teaches: "Story: a Blog post's Markdown file reaching a visitor's screen. Start: layers/blog/content/david/pages/. End: the browser navigates by _payload.json, or queries its own SQLite built from the dump. Code: content.config.ts, expand(), key blog_david_pages, pnpm build, nuxt build, SQL dumps, Caddy, Nitro page cache, useSpace, useAsyncData, queryCollection, checksum restore, hydration. No A real case."
-revision: 'c922a2cb843ae88030276b88cf51ae71b33f3e9d'
-revisionDate: '2026-11-11'
+revision: '145cc119d8d1064fab2dc6ef674cae9d60e3c7f2'
+revisionDate: '2026-11-12'
 ---
 
 A Markdown file is committed, and later a visitor reads it as a page. This Walkthrough follows one file from its folder to the visitor's screen: through the manifest that names its table, the build that packs the table into a dump, the server that loads the dump and renders the page, and the payload the browser reuses on the next click. Only a query no payload answers (on a route the server doesn't cache, or outside `useAsyncData`) makes the browser load the dump into a database of its own.
