@@ -63,7 +63,6 @@ None of these is false.
 ### Fixes waiting
 
 - The page 40 excerpt of `.agents/skills/auto-triage/SKILL.md` (*Wayfinder*) shifts to `lines="75-79"` once the pin moves past 2026-11-11.
-- The `harvest` Skill's own text (`SKILL.md:3,8`) says a Routine runs it; the owner says none does yet but one will. Fixing a Skill is outside this Skill's remit, so ask the owner. *Scheduled tasks* (`agents/40.scheduled-tasks`, which lists every Routine) leaves it out because `glassbox-update` once re-added it on the Skill's word; add it once the owner says a Routine exists.
 
 - **Verification.** *Merge gate*: the paragraph on `merge-pr.ts` still holds several facts, and `verify:skills-lock` and `verify:mermaid` are listed without a gloss. *Type checking*: the Where next rows use typed link text where the glossary says bare. *Testing*: the L0 and L1 levels are never named. *Zod refinements*: no source says why the `pages` rule ties the `page` type to the name `pages`. *Headless browser checks*: no repo source says who sets up the cloud proxy, and the `--no-sandbox` and `--disable-gpu` flags have no stated reason.
 

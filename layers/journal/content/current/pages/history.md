@@ -426,7 +426,7 @@ itself had written.
 
 The next experiment arrived on 11 November. Agents record ideas and learnings
 in every session log, but those had only been read now and then and applied by
-hand. A new Skill, `harvest`, meant to run weekly, turns them into issues that
+hand. A new Skill, `harvest`, meant to run on a schedule, turns them into issues that
 wait for the owner's green light; its first real run filed four.
 
 That is where the record stops: eight sites, thirty decision records,
