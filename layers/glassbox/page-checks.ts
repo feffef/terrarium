@@ -360,9 +360,9 @@ export const glassboxTermCaseWarning = 'glossary term is capitalised mid-sentenc
 // Tool names that keep their capital; an all-caps word (ADR) is an acronym and is never listed.
 const properNouns = new Set(['Biome', 'Nitro'])
 
-/** The words the lowercase rule covers: the root glossary's headings and every `terms` entry's name. */
+/** The words the lowercase rule covers: the headings of the root and Glass Box glossaries (where agents copy the capital from) and every `terms` entry's name. */
 export function glassboxGlossaryWords(projectRoot = root): string[] {
-  const headings = [...readFileSync(join(projectRoot, 'GLOSSARY.md'), 'utf8').matchAll(/^### (.+)$/gm)].map((m) => m[1]!.replace(/\s*\(.*\)$/, ''))
+  const headings = ['GLOSSARY.md', 'layers/glassbox/GLOSSARY.md'].flatMap((f) => [...readFileSync(join(projectRoot, f), 'utf8').matchAll(/^### (.+)$/gm)].map((m) => m[1]!.replace(/\s*\(.*\)$/, '')))
   const names = Object.values(glassboxTerms(projectRoot)).map((t) => t.term ?? '')
   return [...new Set([...headings, ...names])].filter((w) => w && w !== w.toUpperCase() && !properNouns.has(w))
 }

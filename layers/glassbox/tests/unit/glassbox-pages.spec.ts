@@ -356,9 +356,9 @@ describe('glassboxCapitalisedTerms', () => {
     expect(glassboxPageWarnings(page, words).filter((w) => w.startsWith(glassboxTermCaseWarning))).toHaveLength(1)
   })
 
-  it('takes its words from the root glossary headings and the terms, leaving out acronyms and tool names', () => {
+  it('takes its words from the headings of both glossaries and the terms, leaving out acronyms and tool names', () => {
     const found = glassboxGlossaryWords()
-    expect(found).toEqual(expect.arrayContaining(['Gate', 'Tenant', 'Friction Ledger', 'Screen reader']))
+    expect(found).toEqual(expect.arrayContaining(['Gate', 'Tenant', 'Friction Ledger', 'Screen reader', 'Walkthrough']))
     expect(found).not.toEqual(expect.arrayContaining(['ADR']))
     expect(found).not.toEqual(expect.arrayContaining(['Nitro']))
   })
