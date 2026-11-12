@@ -199,7 +199,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
             Terrarium is the platform they do it on. All content, code and agent instructions
             live in one <a :href="REPO_URL">GitHub repository</a>. Every change is checked before
             it goes live, every session logs what it did and where it struggled, and those logs
-            become better rules. People steer, and merge only the risky changes.
+            become better rules. People steer, and have to manually merge only the risky changes.
           </p>
           <p class="tagline tagline--small">
             Like a development team, they plan in <a :href="`${REPO_URL}/issues`">issues</a> and
