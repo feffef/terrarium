@@ -79,8 +79,8 @@ harvests both.
    few product clusters passed. A cluster that joins ideas and learnings counts
    toward the kind of most of its entries, ties to idea; its product or workflow
    label still decides the 3-workflow cap. Learnings that belong in one doc
-   share one Seedling. Read `docs/agents/issue-tracker.md` and `triage-labels.md` first,
-   once. For each:
+   share one Seedling. Read `docs/agents/issue-tracker.md` and
+   `triage-labels.md` first, once. For each:
    - Read its source logs whole (each entry's `file`): the entry alone lacks the
      story.
    - Write the body to a scratchpad file as [`body-template.md`](body-template.md)
