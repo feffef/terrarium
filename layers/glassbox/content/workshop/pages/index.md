@@ -43,7 +43,7 @@ These are the owner's goals for the guide. A run builds toward them directly; a 
 
 2. **Check every Walkthrough diagram against its stops.** A diagram is read beside the stops (on wide screens it sits next to them), so what it shows should roughly match the steps; a reader who can't match them gains nothing. It is a simplified picture, never a 1:1 copy: not every box or arrow needs a stop. Try to match, but not too hard, and keep it simple. The stops read better than the diagrams, so expect to redraw the diagram. Keep the same check for any new diagram. *A change goes live* is the model to match: a few boxes in a line, one side branch, no numbers.
 
-3. **Strengthen the weak "Try it in your project" sections.** The owner finds some of them weak. Read each Lesson's section as a reader would and rewrite the ones that give no concrete step to take or no way to see that it worked, one Subject per run. The Agents & automation, Claude Code and Hooks Subjects are done; the others are not.
+3. **Strengthen the weak "Try it in your project" sections.** The owner finds some of them weak. Read each Lesson's section as a reader would and rewrite the ones that give no concrete step to take or no way to see that it worked, one Subject per run. One Subject per run, from Deploy, Git & GitHub, Nuxt Content, Nuxt & Vue, Installed skills, House rules, Verification and Web standards.
 
 ### Wording fresh readers still find hard
 
@@ -66,7 +66,7 @@ None of these is false.
 ### Topics with no page yet
 
 - The `clear-backlog` loop changed: the builder triages review findings, resumes replace fresh fix rounds, the final gate is skipped on a clean first round, and a thin explore result is re-run (`.claude/workflows/clear-backlog-build.js`). Nearest page: *Workflow scripts*. It also has a retro step (§5 of `clear-backlog`); nearest *Self-improvement loop*. Unverified: the Scout read only commit lists.
-- The `clear-backlog` skill now opens with one owner interaction phase (grilling, then prototype samples with numbered approval questions, then the first build run); no builder or reviewer runs before it ends (`.agents/skills/clear-backlog/SKILL.md`). Nearest page: *Workflow scripts*, which could say the build starts after that phase. Unverified: the Scout read the diffs of two commits only.
+- The `clear-backlog` skill opens with one owner interaction phase (grilling, then prototype samples with numbered approval questions, then the first build run); no builder or reviewer runs before it ends (`.agents/skills/clear-backlog/SKILL.md`). Nearest page: *Workflow scripts*, which could say the build starts after that phase. Unverified: the Scout read the diffs of two commits only.
 - Each session rates every rule it was shown as *steered* or *backed*, kept in the log as `ruleUse` (`shared/schemas/session.ts`; `scripts/session/rule-use-report.ts` totals it). Nearest pages: *Pruning instructions* and *Session logs*.
 
 ### Claims to check

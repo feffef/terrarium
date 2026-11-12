@@ -16,7 +16,15 @@ focus: "Hooks Subject (its four pages): strengthen the Try-it sections that give
   taken from the Claude Code docs, not observed. To stay under the memory page's
   word cap it lost three whole items: the Terms-glossed-late note, the House
   rules leftovers and the pending line shift of one Wayfinder excerpt (the pin
-  move handles it), plus the Atlas stylesheet comment remark."
+  move handles it), plus the Atlas stylesheet comment remark. The code review's
+  Spec reviewer named outside pages (Subagents, Inspecting past sessions,
+  Scheduled tasks, Cloud sessions, Claude Code permissions, MCP servers,
+  Path-specific rules, Protected paths, Session logs, Commit and PR
+  attribution and others); the guard definition was grepped across the guide,
+  Subagents keeps its PreToolUse-only wording, which stays true there, and none
+  was read in full, so none is in pagesRead. Its other findings were fixed (the
+  hooks page's tool-call paragraph and a Fail open bullet now say which guards,
+  and the memory page's wording)."
 changes:
   - hooks/10.hooks | a guard is any hook that can block (a PreToolUse deny or a
     Stop block), a hint one that only adds advice; the fail-closed rule is said
