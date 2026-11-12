@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSdKDZBdqz6vRp3xW1
 startedAt: 2026-11-12T20:23:31Z
-endedAt: 2026-11-12T20:43:27Z
+endedAt: 2026-11-12T20:48:12Z
 kind: autonomous
 goal: "Curate the Glass Box guide: Hooks pages"
-status: in-review
-outcome: PR 3209 open with a green gate, two code-review rounds and a claim check; not merged yet
-summary: "The user invoked glassbox-curate autonomously (human-instructed: run it repeatedly, with a new session at a high context size, which was not reached). The agent chose the Hooks Subject itself, from the memory page's third good focus (strengthen Try-it sections). A scout found no new topic; two fresh readers listed where newcomers get lost; an opus writer rewrote the four Try-it sections with copyable steps and a visible result, and one guard definition (any hook that can block, a Stop block included) replaced three phrasings. A claim checker found nothing false, and two code-review rounds produced small fixes. The agent first parked many cheap reader findings on the memory page and cut three still-open items to meet its word cap; the user asked why, the agent agreed this broke the skill's own rule, fixed those findings in the same PR and restored the cut items (human-prompted correction of an agent-initiated choice). Open: PR 3209 is unmerged; the live-session outcomes of the Try-it steps are taken from the Claude Code docs, not observed."
+status: completed
+outcome: PR 3209 merged after a green gate, two code-review rounds and a claim check
+summary: "The user invoked glassbox-curate autonomously (human-instructed: run it repeatedly, with a new session at a high context size, which was not reached). The agent chose the Hooks Subject itself, from the memory page's third good focus (strengthen Try-it sections). A scout found no new topic; two fresh readers listed where newcomers get lost; an opus writer rewrote the four Try-it sections with copyable steps and a visible result, and one guard definition (any hook that can block, a Stop block included) replaced three phrasings. A claim checker found nothing false, and two code-review rounds produced small fixes. The agent first parked many cheap reader findings on the memory page and cut three still-open items to meet its word cap; the user asked why, the agent agreed this broke the skill's own rule, fixed those findings in the same PR and restored the cut items (human-prompted correction of an agent-initiated choice). Open: the live-session outcomes of the Try-it steps are taken from the Claude Code docs, not observed. The agent posted its verdict and merged PR 3209 with merge-pr.ts."
 prs:
   - "3209"
 docsRead:
@@ -72,22 +72,26 @@ frictions:
   - description: A foreground sleep was blocked, and a python replace silently never matched because the run-entry YAML is line-wrapped.
     solution: Wait with the completion notification; match wrapped text by line or regex.
     severity: nit
-durationSec: 1196
+durationSec: 1481
 models:
-  claude-sonnet-5-5: 151
+  claude-sonnet-5-5: 172
 toolCounts:
-  Bash: 53
+  Bash: 58
   Read: 15
   Agent: 9
   Write: 3
   Edit: 1
   SendMessage: 1
-  Skill: 4
+  Skill: 5
   mcp__claude-code-remote__get_session: 1
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 2
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/workshop/runs/2026-11-12T2023.yml
   - layers/glassbox/content/guide/pages/hooks/10.hooks.md
@@ -435,55 +439,55 @@ subagents:
     durationSec: 19
     toolCalls: 11
     modelCalls: 4
-    tokenShare: 3.9
+    tokenShare: 3.5
   - task: "Fresh reader: new to hooks"
     model: sonnet
     durationSec: 62
     toolCalls: 7
     modelCalls: 3
-    tokenShare: 1.4
+    tokenShare: 1.3
   - task: "Fresh reader: knows hooks"
     model: sonnet
     durationSec: 58
     toolCalls: 7
     modelCalls: 3
-    tokenShare: 1.4
+    tokenShare: 1.3
   - task: "Opus writer: Hooks Try-it fixes"
     model: opus
     durationSec: 288
     toolCalls: 52
     modelCalls: 35
-    tokenShare: 15.7
+    tokenShare: 14.1
   - task: Claim-check Hooks changes
     model: sonnet
     durationSec: 63
     toolCalls: 15
     modelCalls: 11
-    tokenShare: 5.1
+    tokenShare: 4.6
   - task: "Code review: Standards axis"
     model: sonnet
     durationSec: 53
     toolCalls: 11
     modelCalls: 5
-    tokenShare: 4
+    tokenShare: 3.6
   - task: "Code review: Spec axis"
     model: sonnet
     durationSec: 39
     toolCalls: 11
     modelCalls: 7
-    tokenShare: 4.5
+    tokenShare: 4.1
   - task: "Review follow-up: Standards"
     model: sonnet
     durationSec: 38
     toolCalls: 8
     modelCalls: 3
-    tokenShare: 3.4
+    tokenShare: 3
   - task: "Review follow-up: Spec"
     model: sonnet
     durationSec: 29
     toolCalls: 9
     modelCalls: 5
-    tokenShare: 3.6
+    tokenShare: 3.3
 gitBranch: HEAD
 entrypoint: remote
 cliVersion: 2.1.322
