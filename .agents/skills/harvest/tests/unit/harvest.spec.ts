@@ -8,6 +8,7 @@ import {
   BODY_LIMIT,
   NOTE,
   REQUIRED_HEADINGS,
+  blockOutput,
   buildEntries,
   checkBody,
   checkClusters,
@@ -18,7 +19,6 @@ import {
   parseKeys,
   renderBlock,
   renderList,
-  renderSummaries,
   summaryOf,
   type Entry,
 } from '../../scripts/harvest.ts'
@@ -273,11 +273,12 @@ describe('checkBody() and comparePosted()', () => {
   })
 })
 
-describe('renderSummaries() and summaryOf()', () => {
-  it('prints each session summary once and skips a session without one', () => {
-    const e = (session: string) => ({ session }) as Entry
-    const out = renderSummaries([e('session_a'), e('session_a'), e('session_b')], new Map([['session_a', 'Did A.']]))
-    expect(out).toBe('Summary of session_a:\nDid A.')
+describe('blockOutput() and summaryOf()', () => {
+  it('keeps stdout the pasteable block and sends each session summary, once, to stderr', () => {
+    const e = (session: string, n: number) => ({ session, file: `${session}.yml`, line: `Harvested: ${session} idea 0000000${n}` }) as Entry
+    const read = (file: string) => (file === 'session_a.yml' ? 'summary: Did A.\n' : 'goal: g\n')
+    const entries = [e('session_a', 1), e('session_a', 2), e('session_b', 3)]
+    expect(blockOutput(entries, read)).toEqual({ out: renderBlock(entries), err: 'Summary of session_a:\nDid A.' })
   })
 
   it('reads the summary of a log, and nothing when it is missing or not text', () => {
@@ -299,6 +300,11 @@ describe('retro key', () => {
   it('rejects a retro key beside an entry key', () => {
     const key = entryKey(SESSION, 'idea', 'x')
     expect(checkBody(body([`Harvested: ${key}`, retro]), new Set([key]))).toContain('a retro Seedling carries its retro key alone')
+  })
+
+  it('rejects a retro key under a title that is not a retro title', () => {
+    expect(checkBody(body([retro]), new Set(), 'Seedling: retro on harvest')).toEqual([])
+    expect(checkBody(body([retro]), new Set(), 'Seedling: a new idea').join()).toContain('"Seedling: retro"')
   })
 })
 

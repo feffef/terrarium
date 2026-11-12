@@ -193,10 +193,16 @@ export function renderBlock(entries: Entry[]): string {
   return [NOTE, ...entries.map((e) => e.line)].join('\n')
 }
 
-/** Each source session's summary, once, for reading. Kept apart from `renderBlock`
- *  so that the block's output stays exactly what a body pastes. */
-export function renderSummaries(entries: Entry[], summaries: Map<string, string>): string {
-  return [...new Set(entries.map((e) => e.session))].flatMap((s) => (summaries.get(s) ? [`Summary of ${s}:\n${summaries.get(s)}`] : [])).join('\n\n')
+/** What `block` prints: the pasteable block on stdout, and on stderr each source
+ *  session's summary, once, for reading. Kept apart so stdout stays exactly what a
+ *  body pastes. */
+export function blockOutput(entries: Entry[], readLog: (file: string) => string): { out: string; err: string } {
+  const firstOfSession = new Map(entries.map((e) => [e.session, e] as const).reverse())
+  const err = [...firstOfSession.values()].flatMap((e) => {
+    const summary = summaryOf(readLog(e.file))
+    return summary ? [`Summary of ${e.session}:\n${summary}`] : []
+  })
+  return { out: renderBlock(entries), err: err.join('\n\n') }
 }
 
 /** The `summary` of a session log's YAML; empty when absent or not text. */
@@ -206,7 +212,7 @@ export function summaryOf(yamlText: string): string {
 }
 
 /** The tests of step 3, and the fields a cluster record carries. */
-export const TESTS = ['unbuilt', 'unfiled', 'unrejected', 'ledger', 'simplifying', 'unacted'] as const
+const TESTS = ['unbuilt', 'unfiled', 'unrejected', 'ledger', 'simplifying', 'unacted'] as const
 
 /** What is wrong with the per-cluster record (empty: fine). A cluster is a `## ` block of
  *  `field: value` lines. An open one holds evidence for every test (`simplifying` only
@@ -275,6 +281,7 @@ export function checkBody(body: string, emitted: Set<string>, title?: string): s
   const keys = parseKeys(body)
   const retro = keys.filter((k) => k.endsWith(' retro'))
   if (retro.length && keys.length > 1) problems.push('a retro Seedling carries its retro key alone')
+  if (retro.length && title !== undefined && !title.startsWith('Seedling: retro')) problems.push('a retro Seedling\'s title must start with "Seedling: retro"')
   for (const key of keys) if (!emitted.has(key) && !retro.includes(key)) problems.push(`key not emitted by this run's extract: ${key}`)
   const note = ls.indexOf(NOTE)
   if (note < 0) problems.push(`missing the line "${NOTE}"`)
@@ -356,10 +363,9 @@ function main(): void {
     if (!path || !ns.length) fail('usage: block <extract.json> <n> [n...]')
     const entries = readExtract(path).entries
     const picked = ns.map((n) => entries.find((e) => e.n === Number(n)) ?? fail(`no entry ${n} in ${path}`))
-    const summaries = new Map(picked.map((e) => [e.session, summaryOf(readFileSync(join(root, e.file), 'utf8'))] as const))
-    const read = renderSummaries(picked, summaries)
-    if (read) console.error(read)
-    return console.log(renderBlock(picked))
+    const { out, err } = blockOutput(picked, (file) => readFileSync(join(root, file), 'utf8'))
+    if (err) console.error(err)
+    return console.log(out)
   }
   if (cmd === 'check-clusters') {
     const [file] = argv

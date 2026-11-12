@@ -61,7 +61,7 @@ harvests both.
    - **Unrejected.** Not in `.out-of-scope/`, not under an open Prune Trial
      (`.agents/prune-trials.yml`), no `wontfix` issue, not ruled out by a
      Tenant's `GLOSSARY.md` or `.agents/skills/visitor-loop/decisions.md`.
-   - **Beyond the Ledger.** Read all the Ledger's summaries, unfiltered:
+   - **Beyond the Ledger.** Read every summary line it prints:
      `grep -H '^summary:' layers/journal/content/current/frictions/*.yml`. An entry
      that names the cluster's problem, whatever its status, means
      `frictions-to-fixes` owns it. A cluster the Ledger covers in part stays,
@@ -102,7 +102,7 @@ harvests both.
    helper; problems elsewhere stay Frictions in the session log. Skip a candidate
    an open issue or open Ledger entry holds, naming it. Its final step, to
    present candidates, becomes one more Seedling in the retro's order of
-   severity, outside step 4's caps, keyed `Harvested: <your session id> retro`
+   severity, outside step 4's caps, titled `Seedling: retro ...` and keyed `Harvested: <your session id> retro`
    (`check-body` accepts that key alone). Write, check, post and verify it as
    step 4's bullets say. Nothing to file: say so.
 6. **Close.** Invoke `close-session` once; done when it has run. Its summary
