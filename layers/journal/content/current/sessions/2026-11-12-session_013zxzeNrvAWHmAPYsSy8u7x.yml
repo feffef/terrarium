@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeNrvAWHmAPYsSy8u7x
 startedAt: 2026-11-12T18:00:56Z
-endedAt: 2026-11-12T18:13:18Z
-kind: delegated
+endedAt: 2026-11-12T18:33:35Z
+kind: interactive
 goal: Harvest recent session ideas and learnings into Seedlings
 status: completed
-outcome: Five Seedlings filed (3186-3190) plus one retro Seedling (3191); 17 clusters checked, 12 dropped; no repo changes
-summary: "Human-instructed: the owner ran the harvest Skill (the one kickoff prompt); every step below is that Skill's own. Extract gave 381 entries (171 ideas, 210 learnings) from the last 28 days; the list was 561 lines and took three Read calls. I clustered, then checked 17 clusters (product first): four product clusters passed (an agent-readable Glass Box guide, a confusing-section link, guided Lesson exercises, a token-share bar on the Journal session card) and one workflow learning cluster (two harness facts for environment-caveats.md). Twelve were dropped with evidence: reading path and prerequisites (ruled out by the Glass Box glossary and visitor-loop decisions), code-block fade and Routine cost panel (already built), the detached-HEAD push (a Ledger entry holds it, which issue 3105 had also said), gate-abort, spawn-depth, resume-by-id and link-text facts (built or in the Ledger), and four clusters that add checks or facts without retiring or recurring (harvest tooling, page checks, screenshot diffs, CSS gotchas). Agent-initiated, within the Skill: which clusters to check and drop, and how to word each Seedling; the retro step (also the Skill's) filed one more Seedling about step 1's whole-list read and step 3's merge evidence. I caught and corrected three claims of my own before posting (a truncated merge list read as \"none about it\", an unread claim about CI fonts and a claim that no Prune Trial covered environment-caveats.md; one does, on a different bullet). Still open: the owner decides the six Seedlings; two of the product ones may meet the same \"too complicated\" answer the owner gave to two earlier ideas of the same source session."
+outcome: Five Seedlings (3186-3190), a retro Seedling (3191), then at the owner's ask a trial-territory Seedling (3193) and a hint-skip-list issue (3194); no repo changes
+summary: "Human-instructed: the owner ran the harvest Skill, whose steps drove the first half. Extract gave 381 entries; 17 clusters were checked, 5 passed (four Glass Box and Journal product ideas, one environment-caveats learning) and 12 were dropped with evidence. Agent-initiated within the Skill: which clusters to check and drop, the wording of each Seedling, and the retro Seedling 3191. I caught three of my own unverified claims before posting (a truncated merge list, an unread CI-fonts remark, a missed Prune Trial on environment-caveats.md). Then the owner ran /retro on the session (human-instructed); it produced three candidates. After it the owner steered: they leaned toward a 7-day harvest window and more frequent runs instead of 3191's text cut (not yet edited into 3191), asked for a Seedling for a trial-territory lookup script (3193) and an issue listing git commands to add to the read-first-hint skip list (3194); I filed both. Still open: all eight issues await the owner or triage, and 3191 still describes the text-cut proposal, not the 7-day window."
 prs: []
 docsRead:
   - path: docs/agents/git-conventions.md
@@ -24,6 +24,10 @@ docsRead:
   - path: layers/journal/content/current/sessions/2026-11-12-session_013zxzePDpmX3Lq9AEQGGTTW.yml
     reason: (no reason given)
   - path: layers/journal/content/current/sessions/2026-11-12-session_013zxzeRvdzBc3xXGo24TkVf.yml
+    reason: (no reason given)
+  - path: scripts/hooks/read-first-hint.ts
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/scripts/find-trial-window.ts
     reason: (no reason given)
   - path: .agents/skills/harvest/body-template.md
     reason: (no reason given)
@@ -56,6 +60,8 @@ skillsUsed:
     reason: closure
   - name: log-session
     reason: (no reason given)
+  - name: retro
+    reason: (invoked as a slash command)
 frictions:
   - description: Filtered list-merges-since output with head and grep, though step 3 says not to filter script output, and nearly wrote "none about it" from six visible merges.
     solution: Redirect the script to a file and read it whole, or use git log --name-only as the retro Seedling proposes; caught before posting.
@@ -75,18 +81,19 @@ frictions:
   - description: Found issue 3105 had already said the detached-HEAD push is in the Ledger only after drafting it as a candidate; my summary-line check had missed the covering entry.
     solution: Read a closed Seedling on the same doc before drafting a learning for it.
     severity: nit
-durationSec: 742
+durationSec: 1959
 models:
-  claude-sonnet-5-5: 146
+  claude-sonnet-5-5: 171
 toolCounts:
-  Bash: 49
-  Read: 11
+  Bash: 52
+  Read: 13
   ToolSearch: 1
   mcp__github__issue_read: 10
-  Write: 2
+  Write: 3
   mcp__claude-code-remote__get_session: 1
-  mcp__github__issue_write: 6
-  Skill: 3
+  mcp__github__issue_write: 8
+  Skill: 4
+  Grep: 3
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -136,7 +143,8 @@ ruleUse:
       - rule: .claude/rules/adr-0002.md
         via: hint
       - rule: .claude/rules/adr-0004-human-merge.md
-        via: hint
+        via: native
+        trigger: scripts/hooks/read-first-hint.ts
       - rule: .claude/rules/adr-0018.md
         via: hint
       - rule: .claude/rules/data-shapes.md
@@ -147,6 +155,12 @@ ruleUse:
         via: hint
       - rule: .claude/rules/mermaid-lanes.md
         via: hint
+      - rule: .claude/rules/guards.md
+        via: native
+        trigger: scripts/hooks/read-first-hint.ts
+      - rule: .claude/rules/adr-0030.md
+        via: native
+        trigger: .agents/skills/prune-trial/scripts/find-trial-window.ts
     reported:
       - path: .claude/rules/adr-0017.md
         value: steered
