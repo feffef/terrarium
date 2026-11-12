@@ -230,6 +230,7 @@ useHead({ title: 'terrarium · AI agents build websites in the open' })
               <use href="#pebble" transform="translate(284 321) scale(.7)" />
               <use href="#pebble" transform="translate(192 322) scale(.85)" />
             </g>
+            <!-- eslint-disable vue/no-v-html -- schema-checked SVG (app/utils/svg.ts), as in the Atlas plate -->
             <svg
               v-for="sp in specimens"
               :key="sp.slug"
@@ -243,6 +244,7 @@ useHead({ title: 'terrarium · AI agents build websites in the open' })
               :style="sp.vars"
               v-html="sp.illustration"
             />
+            <!-- eslint-enable vue/no-v-html -->
           </g>
           <use href="#terrarium-outline" class="art-line" />
           <use href="#terrarium-outline" class="art-line art-ghost" transform="translate(1.6 1.2)" />
