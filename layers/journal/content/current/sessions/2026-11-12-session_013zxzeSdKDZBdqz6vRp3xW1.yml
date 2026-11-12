@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_013zxzeSdKDZBdqz6vRp3xW1
 startedAt: 2026-11-12T20:23:31Z
-endedAt: 2026-11-12T20:48:12Z
+endedAt: 2026-11-12T21:07:38Z
 kind: autonomous
 goal: "Curate the Glass Box guide: Hooks pages"
-status: completed
-outcome: PR 3209 merged after a green gate, two code-review rounds and a claim check
-summary: "The user invoked glassbox-curate autonomously (human-instructed: run it repeatedly, with a new session at a high context size, which was not reached). The agent chose the Hooks Subject itself, from the memory page's third good focus (strengthen Try-it sections). A scout found no new topic; two fresh readers listed where newcomers get lost; an opus writer rewrote the four Try-it sections with copyable steps and a visible result, and one guard definition (any hook that can block, a Stop block included) replaced three phrasings. A claim checker found nothing false, and two code-review rounds produced small fixes. The agent first parked many cheap reader findings on the memory page and cut three still-open items to meet its word cap; the user asked why, the agent agreed this broke the skill's own rule, fixed those findings in the same PR and restored the cut items (human-prompted correction of an agent-initiated choice). Open: the live-session outcomes of the Try-it steps are taken from the Claude Code docs, not observed. The agent posted its verdict and merged PR 3209 with merge-pr.ts."
+status: in-review
+outcome: PR 3209 (Hooks pages) merged; PR 3210 (Skill change to shrink the memory page) open and waiting for the owner
+summary: "The user invoked glassbox-curate autonomously (human-instructed: run it repeatedly, with a new session at a high context size, which was not reached). The agent chose the Hooks Subject itself, from the memory page's third good focus (strengthen Try-it sections). A scout found no new topic; two fresh readers listed where newcomers get lost; an opus writer rewrote the four Try-it sections with copyable steps and a visible result, and one guard definition (any hook that can block, a Stop block included) replaced three phrasings. A claim checker found nothing false, and two code-review rounds produced small fixes. The agent first parked many cheap reader findings on the memory page and cut three still-open items to meet its word cap; the user asked why, the agent agreed this broke the skill's own rule, fixed those findings in the same PR and restored the cut items (human-prompted correction of an agent-initiated choice). Open: the live-session outcomes of the Try-it steps are taken from the Claude Code docs, not observed. The agent posted its verdict and merged PR 3209 with merge-pr.ts. Then the owner asked, in-session, to change the glassbox-curate Skill so every run shrinks the memory page and solves items instead of parking them; the agent made that change, reviewed it (two reviewers; they found the rule repeated and the steps disagreeing, fixed with one allowlist) and opened PR 3210, which waits for the owner's merge because it changes a Skill."
 prs:
   - "3209"
+  - "3210"
 docsRead:
   - path: layers/glassbox/GLOSSARY.md
     reason: (no reason given)
@@ -32,6 +33,10 @@ docsRead:
     reason: (no reason given)
   - path: layers/glassbox/content/workshop/pages/index.md
     reason: (read before editing)
+  - path: .agents/skills/glassbox-curate/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: (no reason given)
   - path: layers/glassbox/content/guide/pages/hooks/10.hooks.md
     reason: (read before editing)
   - path: layers/glassbox/content/guide/pages/hooks/20.blocking-hooks.md
@@ -72,32 +77,34 @@ frictions:
   - description: A foreground sleep was blocked, and a python replace silently never matched because the run-entry YAML is line-wrapped.
     solution: Wait with the completion notification; match wrapped text by line or regex.
     severity: nit
-durationSec: 1481
+durationSec: 2647
 models:
-  claude-sonnet-5-5: 172
+  claude-sonnet-5-5: 209
 toolCounts:
-  Bash: 58
-  Read: 15
-  Agent: 9
+  Bash: 71
+  Read: 16
+  Agent: 11
   Write: 3
   Edit: 1
   SendMessage: 1
-  Skill: 5
-  mcp__claude-code-remote__get_session: 1
-  ToolSearch: 2
+  Skill: 7
+  mcp__claude-code-remote__get_session: 2
+  ToolSearch: 3
   mcp__github__list_pull_requests: 1
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
-  ReadNotifications: 2
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  ReadNotifications: 3
   mcp__github__pull_request_read: 1
   mcp__github__add_issue_comment: 2
   mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  mcp__github__update_pull_request: 1
 filesEdited:
   - layers/glassbox/content/workshop/runs/2026-11-12T2023.yml
   - layers/glassbox/content/guide/pages/hooks/10.hooks.md
   - layers/glassbox/content/guide/pages/hooks/20.blocking-hooks.md
   - layers/glassbox/content/guide/pages/hooks/30.hook-added-context.md
   - layers/glassbox/content/guide/pages/hooks/40.session-transcripts.md
+  - .agents/skills/glassbox-curate/SKILL.md
   - layers/glassbox/content/workshop/pages/index.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
@@ -105,6 +112,7 @@ rulesGlobal:
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0017.md
 docsReadBySubagents:
+  - .agents/skills/writing-for-agents/SKILL.md
   - .agents/skills/clear-backlog/SKILL.md
   - .agents/skills/close-session/SKILL.md
 ruleUse:
@@ -146,6 +154,8 @@ ruleUse:
       - rule: .claude/rules/glassbox-content.md
         via: hint
       - rule: .claude/rules/guards.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
         via: hint
     reported:
       - path: .claude/rules/adr-0004.md
@@ -433,61 +443,114 @@ ruleUse:
       - path: .claude/rules/adr-0004-human-merge.md
         value: backed
       - path: docs/agents/guards.md
+  - by: general-purpose
+    subagent: 9
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/writing-for-agents/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/writing-for-agents/SKILL.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: .agents/skills/writing-for-agents/SKILL.md
+    reported:
+      - path: .claude/rules/adr-0027.md
+        value: backed
+  - by: general-purpose
+    subagent: 10
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
 subagents:
   - task: Scout new topics since last run
     model: sonnet
     durationSec: 19
     toolCalls: 11
     modelCalls: 4
-    tokenShare: 3.5
+    tokenShare: 2.9
   - task: "Fresh reader: new to hooks"
     model: sonnet
     durationSec: 62
     toolCalls: 7
     modelCalls: 3
-    tokenShare: 1.3
+    tokenShare: 1.1
   - task: "Fresh reader: knows hooks"
     model: sonnet
     durationSec: 58
     toolCalls: 7
     modelCalls: 3
-    tokenShare: 1.3
+    tokenShare: 1.1
   - task: "Opus writer: Hooks Try-it fixes"
     model: opus
     durationSec: 288
     toolCalls: 52
     modelCalls: 35
-    tokenShare: 14.1
+    tokenShare: 11.5
   - task: Claim-check Hooks changes
     model: sonnet
     durationSec: 63
     toolCalls: 15
     modelCalls: 11
-    tokenShare: 4.6
+    tokenShare: 3.7
   - task: "Code review: Standards axis"
     model: sonnet
     durationSec: 53
     toolCalls: 11
     modelCalls: 5
-    tokenShare: 3.6
+    tokenShare: 2.9
   - task: "Code review: Spec axis"
     model: sonnet
     durationSec: 39
     toolCalls: 11
     modelCalls: 7
-    tokenShare: 4.1
+    tokenShare: 3.3
   - task: "Review follow-up: Standards"
     model: sonnet
     durationSec: 38
     toolCalls: 8
     modelCalls: 3
-    tokenShare: 3
+    tokenShare: 2.5
   - task: "Review follow-up: Spec"
     model: sonnet
     durationSec: 29
     toolCalls: 9
     modelCalls: 5
-    tokenShare: 3.3
+    tokenShare: 2.7
+  - task: "Review Skill edit: Standards"
+    model: sonnet
+    durationSec: 12
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 2
+  - task: "Review Skill edit: Spec"
+    model: sonnet
+    durationSec: 14
+    toolCalls: 6
+    modelCalls: 3
+    tokenShare: 2.1
 gitBranch: HEAD
 entrypoint: remote
 cliVersion: 2.1.322
