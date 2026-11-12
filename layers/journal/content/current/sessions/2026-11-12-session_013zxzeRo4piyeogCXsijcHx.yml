@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRo4piyeogCXsijcHx
 startedAt: 2026-11-12T17:22:42Z
-endedAt: 2026-11-12T17:44:40Z
+endedAt: 2026-11-12T17:49:54Z
 kind: autonomous
 goal: "Curate the Glass Box guide: Nuxt & Vue pages"
-status: in-review
-outcome: PR 3183 open with lowercase terms and clearer wording on eight pages; gate passed, CI and merge pending
-summary: "Started by the glassbox-curate routine (autonomous, handed over from an earlier session in the same chain), so every decision was agent-made; the only human words were a mid-run \"Fix leftovers on this session\" (followed: two small fixes made here instead of parked) and a reply that the overview idea I cut did not matter. I oriented, chose the Nuxt & Vue Subject (next one still capitalising glossary terms, last read 2026-11-10), had two fresh sonnet readers read the plain text, and an opus writer fix the findings with a source per fact. A sonnet claim checker found one overstated sentence (Nuxt's automatic key has no line number), corrected. Code review's Spec reviewer named outside pages; I read two in full, the rest were grepped by the reviewer. The memory page went over its word cap and lost three whole items; one swap (the version-1 lock hash note for a restored Terms glossed late note) was a judgement call on two same-day items. Scout was skipped and disclosed. Open: CI, verdict comment and merge via merge-pr.ts."
+status: completed
+outcome: "PR 3183 merged: lowercase terms and clearer wording on eight Nuxt & Vue pages"
+summary: "Started by the glassbox-curate routine (autonomous, handed over from an earlier session in the same chain), so every decision was agent-made; the only human words were a mid-run \"Fix leftovers on this session\" (followed: two small fixes made here instead of parked) and a reply that the overview idea I cut did not matter. I oriented, chose the Nuxt & Vue Subject (next one still capitalising glossary terms, last read 2026-11-10), had two fresh sonnet readers read the plain text, and an opus writer fix the findings with a source per fact. A sonnet claim checker found one overstated sentence (Nuxt's automatic key has no line number), corrected. Code review's Spec reviewer named outside pages; I read two in full, the rest were grepped by the reviewer. The memory page went over its word cap and lost three whole items; one swap (the version-1 lock hash note for a restored Terms glossed late note) was a judgement call on two same-day items. Scout was skipped and disclosed. CI was green, I posted the verdict and merged with merge-pr.ts."
 prs:
   - "3183"
 docsRead:
@@ -79,22 +79,25 @@ frictions:
   - description: The memory page hit its word cap again and two same-day items had to be swapped for each other; the reviewer then called one cut premature.
     solution: Make the cap check part of orient.ts output so a run budgets its additions before writing them.
     severity: minor
-durationSec: 1318
+durationSec: 1632
 models:
-  claude-sonnet-5-5: 136
+  claude-sonnet-5-5: 171
 toolCounts:
-  Bash: 32
-  Read: 15
+  Bash: 40
+  Read: 19
   Write: 3
-  Agent: 7
+  Agent: 9
   Grep: 2
   Edit: 8
-  Skill: 3
+  Skill: 4
   mcp__claude-code-remote__get_session: 1
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/glassbox/content/workshop/runs/2026-11-12T1722.yml
   - layers/glassbox/content/guide/pages/nuxt-vue/10.layers.md
@@ -106,6 +109,7 @@ filesEdited:
   - layers/glassbox/content/guide/pages/nuxt-vue/50.vue-components.md
   - layers/glassbox/content/guide/pages/nuxt-vue/60.nitro.md
   - layers/glassbox/content/guide/pages/nuxt-vue/80.hydration.md
+  - layers/glassbox/content/workshop/runs/2026-11-12T1749.yml
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -379,49 +383,83 @@ ruleUse:
         value: backed
       - path: .claude/rules/adr-0003.md
         value: backed
+  - by: general-purpose
+    subagent: 7
+    answered: false
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported: []
+  - by: general-purpose
+    subagent: 8
+    answered: false
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported: []
 subagents:
   - task: Fresh reader, Nuxt pages A
     model: sonnet
     durationSec: 35
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 2.7
+    tokenShare: 2.3
   - task: Fresh reader, Nuxt pages B
     model: sonnet
     durationSec: 33
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 2.7
+    tokenShare: 2.3
   - task: Opus writer, Nuxt & Vue fixes
     model: opus
     durationSec: 502
     toolCalls: 125
     modelCalls: 75
-    tokenShare: 30.2
+    tokenShare: 26
   - task: Claim check, Nuxt & Vue changes
     model: sonnet
     durationSec: 205
     toolCalls: 39
     modelCalls: 35
-    tokenShare: 12.8
+    tokenShare: 11.1
   - task: Fresh re-read, Nuxt pages
     model: sonnet
     durationSec: 32
     toolCalls: 11
     modelCalls: 3
-    tokenShare: 2.9
+    tokenShare: 2.5
   - task: Standards review of Nuxt & Vue diff
     model: sonnet
     durationSec: 47
     toolCalls: 13
     modelCalls: 7
-    tokenShare: 4.4
+    tokenShare: 3.8
   - task: Spec review of Nuxt & Vue diff
     model: sonnet
     durationSec: 56
     toolCalls: 14
     modelCalls: 11
-    tokenShare: 5
+    tokenShare: 4.3
+  - task: Fresh reader, house rules A
+    model: sonnet
+    durationSec: 0
+    toolCalls: 0
+  - task: Fresh reader, house rules B
+    model: sonnet
+    durationSec: 0
+    toolCalls: 0
 gitBranch: HEAD
 entrypoint: remote
 cliVersion: 2.1.322
