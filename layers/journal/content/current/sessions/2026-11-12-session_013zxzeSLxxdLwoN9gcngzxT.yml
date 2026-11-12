@@ -1,0 +1,269 @@
+schemaVersion: 1
+session: session_013zxzeSLxxdLwoN9gcngzxT
+startedAt: 2026-11-12T22:41:20Z
+endedAt: 2026-11-12T23:39:35Z
+kind: interactive
+goal: Fix Glass Box sidebar Subject links and make its link rows consistent
+status: in-review
+outcome: PR 3218 open with the gate green; waiting on CI and merge
+summary: "The owner reported that clicking a Subject in the Glass Box sidebar sometimes only expanded it without opening the page. Cause: only the name text was a link. I asked which behaviour they wanted and they chose whole-row navigation (human-instructed). They then added, mid-turn, a series of direct asks that I implemented: book and tick icons and whole-teaser links on Subject pages, descriptions in Lessons already read, Subject names as Where next labels, whole-row links for both lists, one accent-colour title hover everywhere, and later the Surround card hover and a shared book class (the last two after I proposed them and they said yes). Agent-initiated: the glossary updates, a hoisted helper call and CSS tidy-ups from my own code review, and the e2e assertion fix. Checked in a real browser; code review by two subagents and one follow-up reviewer; first gate run aborted because I edited the tree via Bash, second failed on an e2e test I had not run, third passed. A screenshot the user sent without text was the old deployed page. Open: the glossary wording for the cards is slightly awkward (left on purpose to keep the gated head); PR activity not yet subscribed at log time."
+prs:
+  - "3218"
+docsRead:
+  - path: layers/glassbox/app/components/glassbox/Sidebar.vue
+    reason: (read before editing)
+  - path: layers/glassbox/app/composables/useGlassboxMenu.ts
+    reason: (no reason given)
+  - path: layers/glassbox/app/pages/t/glassbox/[space]/[...slug].vue
+    reason: (no reason given)
+  - path: layers/glassbox/GLOSSARY.md
+    reason: (read before editing)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: layers/glassbox/app/components/glassbox/Subject.vue
+    reason: (read before editing)
+  - path: layers/glassbox/app/components/glassbox/Article.vue
+    reason: (read before editing)
+  - path: .throwaway/sidebar/hooks.png
+    reason: (no reason given)
+  - path: .throwaway/sidebar/subject.png
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: layers/glassbox/app/utils/lesson.ts
+    reason: (read before editing)
+  - path: .throwaway/sidebar/read.png
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: Standards and Spec review before the PR
+  - name: dispatch-subagents
+    reason: briefs for the review agents
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Started gate:scoped before code-review, then edited the tree through a Bash python script while it ran; the gate-edit guard blocks Edit only, so the run aborted.
+    solution: Run code-review first as pr-workflow says; have the guard cover Bash writes, or mention it in the Edit block message.
+    severity: moderate
+  - description: Changed Where next and Lessons already read row text and ran only unit tests; an e2e assertion on the old text failed in the gate, costing a second full gate run.
+    solution: Grep tests/e2e for the changed text and run the touched e2e before the gate, per One home per fact.
+    severity: moderate
+  - description: Browser check scripts passed arrow functions as strings to evaluate, which returned undefined and cost three retries.
+    solution: docs/agents/verifying-ui-changes.md could say a string arrow is not called; pass a real function or a plain expression.
+    severity: minor
+durationSec: 3494
+models:
+  claude-sonnet-5-5: 203
+toolCounts:
+  Grep: 9
+  Read: 17
+  AskUserQuestion: 2
+  Edit: 26
+  Bash: 59
+  Skill: 4
+  Agent: 3
+  Monitor: 1
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - layers/glassbox/app/components/glassbox/Sidebar.vue
+  - layers/glassbox/app/components/glassbox/Subject.vue
+  - layers/glassbox/app/components/glassbox/Article.vue
+  - layers/glassbox/app/utils/lesson.ts
+  - layers/glassbox/GLOSSARY.md
+  - layers/glassbox/tests/e2e/glassbox.spec.ts
+  - layers/glassbox/app/assets/theme.css
+  - layers/glassbox/app/components/glassbox/Surround.vue
+  - layers/glassbox/tests/unit/lesson.spec.ts
+  - layers/glassbox/tests/unit/walkthrough.spec.ts
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0021.md
+adrHints:
+  - adr: 21
+    via: path
+    readAfter: true
+    by: main
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/app/components/glassbox/Sidebar.vue
+      - rule: .claude/rules/tenant-layers.md
+        via: native
+        trigger: layers/glassbox/app/components/glassbox/Sidebar.vue
+      - rule: .claude/rules/ui-verification.md
+        via: native
+        trigger: layers/glassbox/app/components/glassbox/Sidebar.vue
+      - rule: .claude/rules/adr-0006.md
+        via: native
+        trigger: layers/glassbox/app/pages/t/glassbox/[space]/[...slug].vue
+      - rule: .claude/rules/adr-0016.md
+        via: native
+        trigger: layers/glassbox/app/pages/t/glassbox/[space]/[...slug].vue
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/verifying-ui-changes.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/verifying-ui-changes.md
+      - rule: .claude/rules/adr-0030.md
+        via: native
+        trigger: docs/adr/0021-multi-context-domain-docs.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: docs/adr/0021-multi-context-domain-docs.md
+    reported:
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: opened the PR myself after review
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: gate and review before PR
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: provenance header on the PR
+      - path: .claude/rules/adr-0009.md
+        value: backed
+      - path: .claude/rules/tenant-glossary.md
+        value: steered
+        why: read and updated Glass Box glossary
+      - path: .claude/rules/tenant-layers.md
+        value: backed
+      - path: .claude/rules/ui-verification.md
+        value: steered
+        why: verified in browser, asked first
+      - path: layers/glassbox/GLOSSARY.md
+      - path: docs/agents/verifying-ui-changes.md
+      - path: docs/agents/git-conventions.md
+      - path: docs/agents/pr-workflow.md
+      - path: docs/agents/github-integration.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: layers/glassbox/GLOSSARY.md
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .claude/rules/tenant-glossary.md
+        value: backed
+subagents:
+  - type: general-purpose
+    task: Standards review of glassbox diff
+    durationSec: 21
+    toolCalls: 7
+    modelCalls: 4
+    tokenShare: 5.6
+  - type: general-purpose
+    task: Spec review of glassbox diff
+    durationSec: 28
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 5.7
+  - type: general-purpose
+    task: Review final follow-up commit
+    durationSec: 20
+    toolCalls: 5
+    modelCalls: 5
+    tokenShare: 5.7
+gitBranch: claude/adoring-pasteur-vzc7cx
+entrypoint: remote
+cliVersion: 2.1.323
+learnings:
+  - gate-edit guard blocks Edit and Write but a Bash write still changes the tree and aborts gate:scoped
+landedBy: Stop
