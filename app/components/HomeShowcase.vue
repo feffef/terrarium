@@ -18,6 +18,8 @@ const props = defineProps<{
   teaserLabel: string
   /** Spans a whole row: the teaser sits beside the header and entries. */
   wide?: boolean
+  /** A primary tile's button, linking to `path`; the other tiles have none. */
+  cta?: string
 }>()
 
 const dress = props.path.split('/')[2]
@@ -72,6 +74,10 @@ const overflow = props.entries.length - listed.length
       <p class="teaser-label">{{ teaserLabel }}</p>
       <slot />
     </div>
+
+    <NuxtLink v-if="cta" :to="path" class="cta">
+      {{ cta }} <span class="cta-arrow" aria-hidden="true">→</span>
+    </NuxtLink>
   </article>
 </template>
 
@@ -251,6 +257,31 @@ const overflow = props.entries.length - listed.length
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--tile-accent);
+}
+
+.cta {
+  margin: 0 0.8rem 0.9rem;
+  padding: 0.8rem 1.25rem;
+  border-radius: 999px;
+  background: var(--tile-accent);
+  color: var(--root-accent-ink);
+  font-size: 1.05rem;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  box-shadow: 0 6px 20px -8px rgba(0, 0, 0, 0.35);
+  transition: filter 0.15s ease, transform 0.15s ease;
+}
+.cta:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+.cta-arrow {
+  display: inline-block;
+  transition: transform 0.15s ease;
+}
+.cta:hover .cta-arrow {
+  transform: translateX(3px);
 }
 
 @media (min-width: 56.01rem) {
