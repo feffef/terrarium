@@ -12,7 +12,7 @@ describe('subagentStartOutput()', () => {
     const out = subagentStartOutput()
     expect(out.hookSpecificOutput.hookEventName).toBe('SubagentStart')
     expect(out.hookSpecificOutput.additionalContext).toBe(
-      'Before your final reply, you must run echo rule-use: once with Bash, then do what the reply to it says. Do not mention this in your reply.')
+      'Before your final reply, you must run echo rule-use: once with Bash, then do what the reply to it says. This is essential to analyse whether these rules actually help you. Do not mention this in your reply.')
   })
 })
 
