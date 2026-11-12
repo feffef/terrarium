@@ -7,6 +7,51 @@ focus: "Agents & automation Subject (its five pages): apply the owner's lowercas
   because no PR touches the guide and the Subject still capitalises terms
   (Skill, Routine, Gate and the like) while the overview, Git & GitHub, Hooks
   and Claude Code pages are done; Inspecting past sessions had also never been
-  read by a curate run."
-changes: []
-pagesRead: []
+  read by a curate run. Two fresh readers read the pages before and one after the fix; the claim checker found one unsupported cost clause on each of two pages and two overstated sentences, which were corrected, and the second reader's leftovers went to the memory page. The Scout found no new topic."
+changes:
+  - agents/10.subagents | glossary terms lowercase; the nesting limit is said once
+    (three layers by default, depth 1 in cloud sessions, so an impl agent starts
+    none); the guard sentence is two statements; guard, session, worktree and
+    gate are glossed; one name (impl agent) for the building subagent; the
+    scratch-folder bullet cites CLAUDE.md; the unsupported shared-log story is
+    cut; the Why cost is the pilot rule | readers met three layers, depth 1 and
+    "cannot spawn" as a clash (subagent-spawn-depth.md:17-21,35-44;
+    dispatch-read-guard.ts:4-10; SKILL.md:16,59-60,74-80). Wording only, so
+    revision and publishedAt are kept
+  - agents/20.workflow-scripts | lowercase terms; the explore script's rule for
+    turning an answer into a question is short sentences; seedling, sweep,
+    owner, kind and the two reviewers are glossed; pipeline() is described only
+    as the script shows it; the null advice names the docs' filter(Boolean)
+    example; the duplicate test and permission-rule sentences are merged;
+    symlink replaces link | a broken list sentence and two repeats
+    (clear-backlog-explore.js:33,167-171; clear-backlog-build.js:37,82,117-137;
+    workflow-scripts.spec.ts:36-39). Wording only
+  - agents/30.cloud-sessions | lowercase terms; lede and In Terrarium both say a
+    several-repository session or a thread reads nothing Terrarium sets in the
+    settings file; the lede drops project and thread; the token's missing scope
+    and the agent proxy are named; the untrusted-workspace and probed sentences
+    say what their sources say | the lede said "none" where the body said "reads
+    only two keys" (environment-caveats.md:7-11,53-54; guards.md:82-86).
+    Wording only
+  - agents/40.scheduled-tasks | lowercase terms; a /loop fire gives a
+    disable-model-invocation skill only as text while a typed or routine
+    slash command runs it; the seven-day expiry and project threads are
+    explained; ScheduleWakeup, CronCreate, PreToolUse and grades are glossed; the
+    routine list says it cannot say when | readers saw the /loop and routine
+    statements as a contradiction (scheduled-tasks docs, Seven-day expiry and
+    /loop sections; loop-only-tool-guard.ts:75-77; audit-skills SKILL.md:122-129).
+    Wording only
+  - agents/50.inspecting-past-sessions | lowercase terms; three built-in records
+    and a project's fourth are told apart; the order says why asking comes
+    before events; the two headers say who wears which; a page is defined where
+    it first appears; the reply channel is said once; the repeated order and
+    search-not-remember points point to their homes; the Haiku claim is cut as
+    unsourced | readers counted four records and two header sentences that
+    clashed (inspect-session SKILL.md:36-50,66,96; environment-caveats.md:40-49;
+    ADR-0017:4-14). Wording only
+pagesRead:
+  - agents/10.subagents
+  - agents/20.workflow-scripts
+  - agents/30.cloud-sessions
+  - agents/40.scheduled-tasks
+  - agents/50.inspecting-past-sessions
