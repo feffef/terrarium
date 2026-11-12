@@ -41,7 +41,8 @@ Terrarium applies them without reading the source.
   named a starting point while they are still being worked out.
 - **Two Spaces.** `guide`, at `/t/glassbox/guide`, holds the pages central to
   Terrarium that the work focuses on; `/t/glassbox` redirects there. A guide
-  page never links outside the guide. Walkthroughs sit in `walkthroughs/`. A
+  page never links to another Glass Box Space; it may link out to GitHub's live
+  pages (Actions, the `layers/` folder), plainly, never with a fetched value. Walkthroughs sit in `walkthroughs/`. A
   two-digit filename prefix steers the order of Lessons inside a folder,
   prerequisites first: pages link each other in loops, so the broader concept
   comes first and a page may link a later one in its body. Prefixes go up in
@@ -120,6 +121,11 @@ with the Lessons on its checks, whatever the tool. Terrarium's own patterns
 with no official doc form the **House rules** Subject, in the folder
 `terrarium-practice/`.
 
+A Subject has a generated page at `/t/glassbox/guide/<subject>`: its name, its
+Lesson count, then its Lessons in file-prefix order, each with its own
+`description`, as a plain list. It names no starting point. A Lesson's Subject
+chip links to it.
+
 ### Excerpt
 Real Terrarium code copied into a page inside an `::excerpt` block, and checked
 word for word against the file at the page's `revision`. A code fence outside
@@ -131,7 +137,8 @@ more than one gap, `lines` gives one range per run, comma-separated
 each run from its own.
 
 A page cites code only this way or through `:file`, never with a hand-written
-`github.com/…/blob/…` or `/tree/…` link, and every `ADR-NNNN` it names exists
+`github.com/…/blob/…` or `/tree/<commit>/…` link (a live `/tree/main/…` folder
+link is not a citation), and every `ADR-NNNN` it names exists
 at its `revision`. `page-checks.ts` checks every page in `pnpm test`.
 
 ### Term

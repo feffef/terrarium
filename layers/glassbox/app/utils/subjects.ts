@@ -24,6 +24,11 @@ export function glassboxSubjectOf(path: string) {
   return glassboxSubjects.find((subject) => path.startsWith(`/${subject.slug}/`))
 }
 
+/** The Subject whose bare folder path this is (`/nuxt-vue`), which has a page of its own. */
+export function glassboxSubjectAt(path: string) {
+  return glassboxSubjects.find((subject) => path === `/${subject.slug}`)
+}
+
 /** Whether `path` is a Walkthrough. */
 export function glassboxWalkthroughOf(path: string) {
   return path.startsWith('/walkthroughs/')
