@@ -45,6 +45,14 @@ const { menuOpen, openMenu, closeMenu } = useGlassboxMenu()
 // edition date (GLOSSARY.md, A curated textbook and Two Spaces).
 const live = space === 'workshop'
 
+// Read state is browser-only, so it is set after mount (GLOSSARY.md, Reading progress).
+const reading = useGlassboxRead()
+onMounted(() => {
+  // Every page shows sidebar ticks, so load always; only a Lesson page then marks itself read.
+  reading.load()
+  if (page.value && glassboxSubjectOf(path)) reading.mark(path)
+})
+
 useHead(() => ({ title: `${page.value?.title ?? 'Not found'} · glassbox` }))
 useSeoMeta({ description: () => page.value?.description })
 </script>

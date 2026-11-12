@@ -13,14 +13,24 @@ const props = defineProps<{
   source?: string
 }>()
 
+const { read, reset } = useGlassboxRead()
+
+// Only Lessons with a known title can be listed below, so only they leave Where next.
+const readable = computed(() => read.value.filter((path) => props.titles[path]))
 const subject = computed(() => glassboxSubjectOf(props.page.path))
 const walkthrough = computed(() => glassboxWalkthroughOf(props.page.path))
+// The hand-written Where next links already read move into their own section below it.
+const readNext = computed(() => subject.value
+  ? glassboxNextLessons(props.page.body.value, props.base)
+    .filter((path) => readable.value.includes(path))
+    .map((path) => ({ path, title: props.titles[path]!, subject: glassboxSubjectOf(path)!.name }))
+  : [])
 const current = ref<string>()
 // Frames first, then separate renders so the table of contents sits between the
 // lede and the first section, and each Walkthrough stop can show it is current.
 const parts = computed(() => {
   const { body } = props.page
-  const framed = subject.value ? glassboxLessonSections(body.value, props.base, props.titles) : body.value
+  const framed = subject.value ? glassboxLessonSections(body.value, props.base, props.titles, readable.value) : body.value
   const [intro, rest] = glassboxSplitBeforeBody(framed)
   const sections = glassboxFrameDiagrams(rest)
   const withBody = (nodes: typeof intro) => ({ ...props.page, body: { ...body, value: nodes } })
@@ -28,7 +38,7 @@ const parts = computed(() => {
     intro: withBody(walkthrough.value ? intro : intro.map((node) => glassboxLessonChipsDeep(node, props.base))),
     sections: (walkthrough.value ? glassboxWalkthroughParts(sections, props.base, props.titles) : [{ nodes: sections.map((node) => glassboxLessonChipsDeep(node, props.base)) }])
       .map((part) => ({ ...part, value: withBody(part.nodes) })),
-    toc: body.toc?.links ?? [],
+    toc: subject.value ? glassboxLessonToc(body.toc?.links ?? [], body.value, props.base, readable.value) : body.toc?.links ?? [],
   }
 })
 </script>
@@ -47,6 +57,13 @@ const parts = computed(() => {
       </div>
       <ContentRenderer v-else class="gb-prose" :value="part.value" />
     </template>
+    <section v-if="readNext.length" class="read">
+      <h2>Lessons already read</h2>
+      <ul>
+        <li v-for="lesson in readNext" :key="lesson.path"><span>{{ lesson.subject }}</span><NuxtLink :to="`${base}${lesson.path}`">{{ lesson.title }}</NuxtLink><span class="tick" role="img" aria-label="Read">✓</span></li>
+      </ul>
+      <button type="button" class="reset" @click="reset">Reset reading progress</button>
+    </section>
     <template v-if="through.length">
       <h2>Walkthroughs through this Lesson</h2>
       <ul class="gb-next">
@@ -72,6 +89,16 @@ const parts = computed(() => {
   color: var(--gb-ink);
 }
 .article h1.lesson { margin-top: 16px; }
+
+.read { margin-top: 40px; }
+.read h2 { margin: 0 0 12px; font-size: 22px; }
+.read ul { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--gb-line); font-size: 16px; }
+.read li { display: grid; grid-template-columns: 120px minmax(0, 1fr) auto; align-items: center; min-height: 48px; border-bottom: 1px solid var(--gb-line); }
+.read li span:first-child { font: 11px var(--gb-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--gb-muted); }
+.read a { color: var(--gb-ink); font-weight: 500; text-decoration: none; }
+.read a:hover { color: var(--gb-accent); }
+.tick { color: var(--gb-accent); }
+.reset { margin-top: 14px; padding: 0; border: 0; background: none; font: 12.5px var(--gb-mono); color: var(--gb-muted); text-decoration: underline; cursor: pointer; }
 
 .article :deep(.gb-skip) { font-size: 15px; color: var(--gb-muted); }
 .article :deep(.gb-skip strong) { color: var(--gb-ink); font-weight: 600; }
@@ -217,7 +244,7 @@ const parts = computed(() => {
 .article :deep(.gb-lessons li > a:not(.file)) { color: var(--gb-ink); text-decoration: none; }
 /* A book marks a link to another Glass Box page, as "?" marks a term. Navigation (the
    subject chip, Surround cards, Where next rows) is already read as a link, and a file link has its ↗. */
-.article :deep(a[href^="/t/glassbox/"]:not(.file, .chip, .card, .gb-next a))::after {
+.article :deep(a[href^="/t/glassbox/"]:not(.file, .chip, .card, .gb-next a, .read a))::after {
   content: '';
   display: inline-block;
   inline-size: 0.85em;
@@ -267,5 +294,6 @@ const parts = computed(() => {
   .article :deep(.gb-cards) { grid-template-columns: 1fr; }
   .article :deep(.gb-try) { --gb-try-pad: 18px; padding: var(--gb-try-pad); font-size: 16px; }
   .article :deep(.gb-next li) { grid-template-columns: 100px minmax(0, 1fr) auto; }
+  .read li { grid-template-columns: 112px minmax(0, 1fr) auto; }
 }
 </style>
