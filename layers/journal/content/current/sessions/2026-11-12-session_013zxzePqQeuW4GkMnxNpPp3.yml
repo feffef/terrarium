@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzePqQeuW4GkMnxNpPp3
 startedAt: 2026-11-12T19:16:22Z
-endedAt: 2026-11-12T19:36:51Z
+endedAt: 2026-11-12T19:42:22Z
 kind: delegated
 goal: Autonomous Glass Box curate run on the Hooks pages
-status: in-review
-outcome: Hooks wording fixes passed the gate, PR open, waiting for CI and the merge
-summary: "The owner started /glassbox-curate with one prompt asking for autonomous runs repeated until context reaches 500k, then a hand-over to a new sonnet session. This is the first run. Everything below was agent-chosen under that instruction; the owner approved no individual page change. I oriented, started a Scout (no new topic), took the Hooks Subject as focus (oldest read, no open PR on it), had two fresh readers report, an opus writer fix the real findings with sources, a sonnet claim checker (corrected four overstated or misleading sentences), a third reader and the code-review skill. The memory page lost the fixed leftovers and gained what the after-reader still found. PR 3200 is open with a green scoped gate; merging via merge-pr.ts waits for CI. Still open: more runs (next focuses are on the memory page) and the 500k hand-over."
+status: partial
+outcome: First curate run merged (Hooks pages); further runs and the hand-over still to do
+summary: "The owner started /glassbox-curate with one prompt asking for autonomous runs repeated until context reaches 500k, then a hand-over to a new sonnet session. This is the first run. Everything below was agent-chosen under that instruction; the owner approved no individual page change. I oriented, started a Scout (no new topic), took the Hooks Subject as focus (oldest read, no open PR on it), had two fresh readers report, an opus writer fix the real findings with sources, a sonnet claim checker (corrected four overstated or misleading sentences), a third reader and the code-review skill. The memory page lost the fixed leftovers and gained what the after-reader still found. PR 3200 was merged with merge-pr.ts after a green CI. Still open: more runs (next focuses are on the memory page) and the 500k hand-over to a new sonnet session."
 prs:
   - "3200"
 docsRead:
@@ -62,24 +62,30 @@ frictions:
   - description: Orientation output plus two 40 KB index files read whole used a large share of context before any edit.
     solution: Print the index entries only for the chosen Subject plus titles for the rest.
     severity: minor
-durationSec: 1229
+durationSec: 1560
 models:
-  claude-sonnet-5-5: 128
+  claude-sonnet-5-5: 160
 toolCounts:
-  Read: 12
-  Bash: 37
+  Read: 13
+  Bash: 46
   mcp__claude-code-remote__get_session: 2
-  Agent: 8
+  Agent: 10
   Edit: 8
   Skill: 3
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__claude-code-remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__delete_trigger: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/hooks/10.hooks.md
   - layers/glassbox/content/guide/pages/hooks/20.blocking-hooks.md
   - layers/glassbox/content/guide/pages/hooks/40.session-transcripts.md
   - layers/glassbox/content/guide/pages/hooks/30.hook-added-context.md
+  - layers/glassbox/content/workshop/runs/2026-11-12T1941.yml
   - layers/glassbox/content/workshop/pages/index.md
   - layers/glassbox/content/workshop/runs/2026-11-12T1916.yml
 rulesGlobal:
@@ -347,6 +353,32 @@ ruleUse:
     reported:
       - path: .claude/rules/adr-0004.md
         value: backed
+  - by: general-purpose
+    subagent: 8
+    answered: false
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported: []
+  - by: general-purpose
+    subagent: 9
+    answered: false
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported: []
 subagents:
   - type: general-purpose
     task: Scout new topics since last run
@@ -354,56 +386,70 @@ subagents:
     durationSec: 26
     toolCalls: 10
     modelCalls: 5
-    tokenShare: 5.2
+    tokenShare: 4.2
   - type: general-purpose
     task: "Fresh reader: newcomer to hooks"
     model: sonnet
     durationSec: 79
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 2.1
+    tokenShare: 1.7
   - type: general-purpose
     task: "Fresh reader: knows hooks, not Terrarium"
     model: sonnet
     durationSec: 42
     toolCalls: 7
     modelCalls: 3
-    tokenShare: 1.7
+    tokenShare: 1.4
   - type: general-purpose
     task: "Opus writer: fix Hooks pages"
     model: opus
     durationSec: 359
     toolCalls: 85
     modelCalls: 48
-    tokenShare: 23.8
+    tokenShare: 19.4
   - type: general-purpose
     task: Claim-check changed Hooks sentences
     model: sonnet
     durationSec: 75
     toolCalls: 19
     modelCalls: 10
-    tokenShare: 6.3
+    tokenShare: 5.1
   - type: general-purpose
     task: Fresh reader after fixes
     model: sonnet
     durationSec: 24
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 1.9
+    tokenShare: 1.6
   - type: general-purpose
     task: "Code review: Standards axis"
     model: sonnet
     durationSec: 49
     toolCalls: 11
     modelCalls: 5
-    tokenShare: 4.7
+    tokenShare: 3.8
   - type: general-purpose
     task: "Code review: Spec axis"
     model: sonnet
     durationSec: 53
     toolCalls: 12
     modelCalls: 8
-    tokenShare: 5.3
+    tokenShare: 4.3
+  - type: general-purpose
+    task: "Fresh reader: newcomer, agents pages"
+    model: sonnet
+    durationSec: 4
+    toolCalls: 3
+    modelCalls: 3
+    tokenShare: 2.4
+  - type: general-purpose
+    task: "Fresh reader: knows Claude Code, agents pages"
+    model: sonnet
+    durationSec: 3
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 2.2
 gitBranch: ccr-e91cfb1f-8e7iqq
 entrypoint: remote_mobile
 cliVersion: 2.1.322
