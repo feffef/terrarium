@@ -66,13 +66,13 @@ describe('orientation', () => {
   afterAll(() => rmSync(base, { recursive: true, force: true }))
 
   const run = (log = (_since: string | undefined) => 'abc1234 a guide commit') =>
-    orientation(base, { log, prs: () => '- #1 a PR: layers/glassbox/x.md', now: new Date('2026-11-07T10:05:30Z') })
+    orientation(base, { log, prs: () => '- #1 a PR: layers/glassbox/x.md', words: () => ['Hook'], now: new Date('2026-11-07T10:05:30Z') })
 
   it('prints every section in order, runs newest first, pages as one line each, and no terms', () => {
     const seen: (string | undefined)[] = []
     const out = run((since) => (seen.push(since), 'abc1234 a guide commit'))
     expect(out.split('\n').filter((l) => l.startsWith('# '))).toEqual([
-      '# Run entry', '# Open PRs that touch Glass Box', '# Memory page', '# Last 5 curate runs, newest first', '# Page-check warnings', '# Guide changes since the last curate run', '# Guide pages',
+      '# Run entry', '# Open PRs that touch Glass Box', '# Memory page (4 of 2,500 words)', '# Last 5 curate runs, newest first', '# Page-check warnings', '# Guide changes since the last curate run', '# Guide pages',
     ])
     for (const text of ['workshop/runs/2026-11-07T1005.yml', 'focus: "<', '- #1 a PR', 'A lead.', 'focus: first', 'focus: second', 'abc1234 a guide commit', 'Read each whole', 'This output: ']) expect(out).toContain(text)
     expect(out.indexOf('focus: second')).toBeLessThan(out.indexOf('focus: first'))

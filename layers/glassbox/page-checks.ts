@@ -353,6 +353,42 @@ export function glassboxPageProblems(file: string, source: string, site: Glassbo
 // orientation reads these warnings.
 export const glassboxMotiveWarning = 'In Terrarium may give a motive ("so"); check it states mechanism'
 
+// The owner's rule (owner-decisions.md): a glossary term is lowercase mid-sentence in body text.
+// A reviewer's call (a proper noun in running prose is fine), so it warns.
+export const glassboxTermCaseWarning = 'glossary term is capitalised mid-sentence; owner-decisions.md says lowercase'
+
+// Tool names that keep their capital; an all-caps word (ADR) is an acronym and is never listed.
+const properNouns = new Set(['Biome', 'Nitro'])
+
+/** The words the lowercase rule covers: the root glossary's headings and every `terms` entry's name. */
+export function glassboxGlossaryWords(projectRoot = root): string[] {
+  const headings = [...readFileSync(join(projectRoot, 'GLOSSARY.md'), 'utf8').matchAll(/^### (.+)$/gm)].map((m) => m[1]!.replace(/\s*\(.*\)$/, ''))
+  const names = Object.values(glassboxTerms(projectRoot)).map((t) => t.term ?? '')
+  return [...new Set([...headings, ...names])].filter((w) => w && w !== w.toUpperCase() && !properNouns.has(w))
+}
+
+/** Each glossary word written capitalised in a body line's running prose: not at a sentence or bullet start, nor in a heading, component block,
+ *  code, link text, a quotation, an italic title or a `:file`. A `:term[…]` shows its text, so it is checked. */
+export function glassboxCapitalisedTerms(body: string, words: string[]): string[] {
+  const found: string[] = []
+  const patterns = words.map((w) => new RegExp(`(?<![\\w-])${w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?:s|es)?(?![\\w-])`, 'gi'))
+  let inBlock = false
+  for (const line of readBody(body).prose.split('\n')) {
+    if (line.startsWith('::')) inBlock = line.trim() !== '::'
+    if (inBlock || line.startsWith('::') || !line.trim() || /^#{1,6} /.test(line)) continue
+    const text = line.replace(/:file\[[^\]]*\](\{[^}]*\})?/g, '').replace(/:term\[([^\]]*)\](\{[^}]*\})?/g, '$1').replace(/\[[^\]]*\]\([^)]*\)/g, '').replace(/"[^"\n]*"/g, '').replace(/(?<![*\w])\*(?!\*)[^*\n]+\*(?![*\w])/g, '')
+    for (const re of patterns) {
+      for (const m of text.matchAll(re)) {
+        if (m[0][0] === m[0][0]!.toLowerCase()) continue
+        const before = text.slice(0, m.index).replace(/^[\s>*\-\d.)]+|\*+|_/g, '').trim()
+        if (!before || /[.!?:]["')\]]*$/.test(before)) continue
+        found.push(`${glassboxTermCaseWarning}: "${m[0]}" in: ${line.trim().slice(0, 100)}`)
+      }
+    }
+  }
+  return found
+}
+
 const excerptMaxLines = 15
 const stopMaxWords = 80
 const linkOnlyMaxWords = 3
@@ -360,10 +396,11 @@ const commentLine = /^\s*(?:\/\/|#|--|\/?\*|\*\/|<!--)/
 const wordCount = (text: string) => text.split(/\s+/).filter((w) => /\w/.test(w)).length
 
 /** What a reviewer should look at on a page: a "so" clause in In Terrarium, long or
- *  comment-only Excerpts, long Walkthrough stops and Why bullets that are only a link. */
-export function glassboxPageWarnings(source: string): string[] {
+ *  comment-only Excerpts, long Walkthrough stops, Why bullets that are only a link and,
+ *  given `glossaryWords`, a capitalised glossary term. */
+export function glassboxPageWarnings(source: string, glossaryWords: string[] = []): string[] {
   const { body } = splitFrontmatter(source)
-  const warnings = motiveLines(body, 'so').map((l) => `${glassboxMotiveWarning}: ${l}`)
+  const warnings = [...motiveLines(body, 'so').map((l) => `${glassboxMotiveWarning}: ${l}`), ...glassboxCapitalisedTerms(body, glossaryWords)]
   for (const ref of glassboxPageRefs(body).files) {
     const lines = ref.excerpt?.split('\n') ?? []
     if (lines.length > excerptMaxLines) warnings.push(`the Excerpt of ${ref.path} renders ${lines.length} lines, more than ${excerptMaxLines}: cut it to the code that makes the decision`)
@@ -432,8 +469,9 @@ runIfMain(import.meta.url, () => {
     for (const p of problems) console.error(p)
     process.exit(problems.length ? 1 : 0)
   }
+  const words = glassboxGlossaryWords()
   for (const file of globSync('*/pages/**/*.md', { cwd: content }).sort()) {
-    for (const warning of glassboxPageWarnings(readFileSync(join(content, file), 'utf8'))) console.log(`${file}: ${warning}`)
+    for (const warning of glassboxPageWarnings(readFileSync(join(content, file), 'utf8'), file.startsWith('guide/') ? words : [])) console.log(`${file}: ${warning}`)
   }
   const guide = join(content, 'guide/pages')
   const sources = Object.fromEntries(globSync('**/*.md', { cwd: guide }).map((f) => [f, readFileSync(join(guide, f), 'utf8')]))
@@ -441,7 +479,7 @@ runIfMain(import.meta.url, () => {
   for (const { file, count } of glassboxFewNextLinks(sources)) console.log(`guide/pages/${file}: ${glassboxFewNextText(count)}`)
 })
 
-interface GlassboxTermEntry { source?: string, lesson?: string }
+interface GlassboxTermEntry { term?: string, source?: string, lesson?: string }
 
 /** Every entry in the `terms` Collection, by id. */
 export function glassboxTerms(projectRoot = root): Record<string, GlassboxTermEntry> {

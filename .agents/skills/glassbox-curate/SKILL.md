@@ -18,6 +18,16 @@ comes first. Read both from `get_session` called with no session id:
 `external_metadata.context_usage.used_tokens`. Stop at the budget. Several runs
 a day must work.
 
+**Loop.** When a run has landed, pick another focus and run again while the
+budget leaves room to land it and a focus remains (memory leads, page-check
+warnings, Scout topics, pages no fresh reader has seen lately). Each loop is a
+full run: its own focus, run entry, branch from a fresh `origin/main` and PR.
+Orient again; re-read the guide index only when "Guide changes since the last
+curate run" lists commits, and Scout only the commits since the last Scout.
+When the budget or the foci run out, stop. Hand over to a new session only when
+the invocation says so: create it with `source_url:
+https://github.com/feffef/terrarium` and the same prompt.
+
 **Modes.** *Autonomous*: your first message carries a system-reminder
 `Fired by routine "/glassbox-curate"`; decide everything, ask nothing, and say
 in the run entry why you chose the focus. *Interactive*: a person typed the
@@ -123,7 +133,8 @@ keeps them so).
   small the change, and quotes the `path:line` behind each one. Give it the
   caps and link rules `layers/glassbox/page-checks.ts` enforces: title,
   description and Why bullet lengths, and a capitalised link's text
-  being its target's title. Each `The cost:` clause needs a source that states that
+  being its target's title, and a glossary term lowercase mid-sentence (the check
+  warns). Each `The cost:` clause needs a source that states that
   cost, and the writer runs a command sequence before it says what it does.
   A page read in full whose `teaches`, `description` or bold lead-ins fall
   short of writing-pages.md's Pin rule gets a rewrite in the same Fix, which
@@ -147,8 +158,8 @@ keeps them so).
   `checks/update.yml` and keep its date.
 - **Land.** Merge `origin/main` and keep the newer pin. Two runs on one day can
   both rewrite the memory page: the later one keeps both runs' leads. Rewrite
-  the memory page so it is shorter than you found it (count its words before
-  and after, Scout lines included), complete the run entry, read `cost_usd` again for the PR
+  the memory page so it is shorter than you found it (the orientation prints its
+  word count against the cap; Scout lines count), complete the run entry, read `cost_usd` again for the PR
   body, and open one PR
   (`docs/agents/pr-workflow.md`), self-merged unless the Remit says it waits.
   Wait for the Scout now; a topic of its that this run does not write goes on the

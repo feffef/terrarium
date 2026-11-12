@@ -5,7 +5,7 @@ import { parse } from 'yaml'
 import { splitFrontmatter } from '../../../../scripts/lib/frontmatter.ts'
 import { root } from '../../../../shared/expand.ts'
 import { glassboxSitePath } from '../../page-checks.ts'
-import { glassboxGuidePath, glassboxLatelyChanges, glassboxRunChange, glassboxRunStart } from '../../app/utils/workshop.ts'
+import { glassboxGuidePath, glassboxLatelyChanges, glassboxRunChange, glassboxRunStart, glassboxWorkshopWordCap, glassboxWorkshopWords } from '../../app/utils/workshop.ts'
 
 describe('glassboxRunStart', () => {
   it('reads the UTC start time off the run entry\'s filename', () => {
@@ -62,9 +62,8 @@ describe('glassboxGuidePath', () => {
 describe('the workshop memory page', () => {
   const { body } = splitFrontmatter(readFileSync(join(root, 'layers/glassbox/content/workshop/pages/index.md'), 'utf8'))
 
-  it('stays within 2,500 words, not counting its component lines', () => {
-    const words = body.split('\n').filter((line) => !line.startsWith('::')).join(' ').split(/\s+/).filter(Boolean)
-    expect(words.length).toBeLessThanOrEqual(2500)
+  it('stays within its word cap, not counting its component lines', () => {
+    expect(glassboxWorkshopWords(body)).toBeLessThanOrEqual(glassboxWorkshopWordCap)
   })
 
   it('puts the Lately list before the memory text', () => {
