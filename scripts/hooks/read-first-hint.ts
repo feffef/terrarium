@@ -43,12 +43,19 @@ const runs = (segs: string[][], name: string, ok = (_w: string[]) => true) => se
 const issueWrite = (tool: string, segs: string[][]) => tool === 'mcp__github__issue_write'
   || runs(segs, 'gh', (w) => w[1] === 'issue' && ['create', 'edit', 'close', 'reopen'].includes(w[2]!))
 
+const LIST_FLAGS = ['--show-current', '--list', '-a', '--all', '-r', '--remotes', '-v']
+
 export const READ_FIRST: ReadFirst[] = [
   {
     doc: 'docs/agents/git-conventions.md',
     source: 'CLAUDE.md',
     trigger: 'Before your first git command',
-    matches: (_t, segs) => runs(segs, 'git', (w) => !['status', 'diff', 'show', 'ls-tree', 'cat-file', 'grep', 'ls-files', undefined].includes(w[gitSubcommandAt(w)])),
+    matches: (_t, segs) => runs(segs, 'git', (w) => {
+      const at = gitSubcommandAt(w)
+      const sub = w[at]
+      if (sub === 'branch') return !w.slice(at + 1).every((a) => LIST_FLAGS.includes(a))
+      return !['status', 'diff', 'show', 'ls-tree', 'cat-file', 'grep', 'ls-files', 'rev-parse', undefined].includes(sub)
+    }),
   },
   {
     doc: 'docs/agents/github-integration.md',
