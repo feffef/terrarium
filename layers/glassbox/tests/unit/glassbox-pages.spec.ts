@@ -177,6 +177,7 @@ describe('glassboxPageProblems on fixture pages', () => {
     ['a :term with no entry', (s: string) => s.replace(':term[Collection]', ':term[Space]'), ':term space has no entry'],
     ['a hand-written blob link', (s: string) => `${s}\n[x](https://github.com/feffef/terrarium/blob/${rev}/shared/expand.ts)\n`, 'hand-written link'],
     ['a Why bullet citing an ADR file without its number', (s: string) => s.replace(':file[shared/expand.ts].', ':file[docs/adr/0004-objective-safety-gate.md].'), 'cites an ADR not as'],
+    ['a hand-written tree/main link to a file', (s: string) => `${s}\nhttps://github.com/feffef/terrarium/tree/main/shared/expand.ts\n`, 'hand-written link'],
     ['a hand-written tree link at a commit', (s: string) => `${s}\nhttps://github.com/feffef/terrarium/tree/${rev}/layers\n`, 'hand-written link'],
     ['a Where next over 5 pages', (s: string) => `${s}${gateItem.repeat(5)}`, 'Where next lists 6 pages, more than 5'],
     ['a Journal page before a Lesson in Where next', (s: string) => s.replace(gateItem, `${journalItem}${gateItem}`), 'Where next lists a Journal page before its end'],
