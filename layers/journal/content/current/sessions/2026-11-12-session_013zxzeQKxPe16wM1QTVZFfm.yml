@@ -1,0 +1,85 @@
+schemaVersion: 1
+session: session_013zxzeQKxPe16wM1QTVZFfm
+startedAt: 2026-11-12T15:41:24Z
+endedAt: 2026-11-12T15:49:04Z
+kind: interactive
+goal: Day-1 check of rule-use answer rates (issue 3021)
+status: completed
+outcome: Check confirmed, main vs subagent steered/backed split posted, issue closed
+summary: "The prompt 'Read 3021' was ambiguous, so I asked once; the user answered 'Act on it' (human-instructed). The day-1 check was already posted today; I reran rule-use-report over the same window and the numbers matched (49/49 logs, no agent type under 70%). At the user's request I then split steered/backed by main vs subagents with a throwaway script (the report has no such flag): main sessions are steered often by the always-loaded rules (adr-0004 71%), subagents almost never (0-2%). At the user's explicit instruction I posted these findings as a comment on the issue and closed it as completed. Agent-initiated: none beyond reading docs and choosing the split method. Open: a possible prune trial or a --by flag on the report, left for the owner."
+prs: []
+docsRead:
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran git fetch origin main before reading git-conventions.md, which CLAUDE.md requires before the first non-read-only git command; a hook reminded me after.
+    solution: Surface the doc trigger when the fetch runs, or list fetch among read-only commands.
+    severity: nit
+  - description: Closed the issue before reading triage-labels.md, which CLAUDE.md requires before triaging or labelling an issue; the doc needed no change.
+    solution: Fold the close-an-issue case into the issue-tracker.md trigger so one read covers it.
+    severity: nit
+durationSec: 460
+models:
+  claude-sonnet-5-5: 45
+toolCounts:
+  Read: 4
+  ToolSearch: 2
+  mcp__github__issue_read: 2
+  Bash: 9
+  Skill: 3
+  mcp__github__add_issue_comment: 1
+  mcp__github__issue_write: 1
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/github-integration.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/github-integration.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0025.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: native
+        trigger: docs/agents/triage-labels.md
+    reported:
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: provenance header on the comment
+      - path: docs/agents/github-integration.md
+      - path: docs/agents/git-conventions.md
+      - path: docs/agents/issue-tracker.md
+gitBranch: ccr-f5860fe9-clvigu
+entrypoint: remote_mobile
+cliVersion: 2.1.322
+landedBy: Stop
