@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { glassboxCountLabel, glassboxReadKey, markGlassboxRead, readGlassboxProgress, resetGlassboxProgress, type GlassboxStorage } from '../../app/utils/reading.ts'
+import { glassboxCountLabel, glassboxReadKey, glassboxSubjectCount, markGlassboxRead, readGlassboxProgress, resetGlassboxProgress, type GlassboxStorage } from '../../app/utils/reading.ts'
 
 const memory = (initial: Record<string, string> = {}): GlassboxStorage & { data: Record<string, string> } => {
   const data = { ...initial }
@@ -49,5 +49,13 @@ describe('glassbox reading progress', () => {
     expect(glassboxCountLabel(3, 8)).toEqual({ text: '3/8', done: false })
     expect(glassboxCountLabel(8, 8)).toEqual({ text: '8/8', done: true })
     expect(glassboxCountLabel(0, 0).done).toBe(false)
+  })
+
+  it("words a Subject page's count: Lesson total until one is read, then `N of M read`", () => {
+    expect(glassboxSubjectCount(0, 8)).toBe('8 Lessons')
+    expect(glassboxSubjectCount(3, 8)).toBe('3 of 8 read')
+    expect(glassboxSubjectCount(8, 8)).toBe('8 of 8 read')
+    expect(glassboxSubjectCount(0, 1)).toBe('1 Lesson')
+    expect(glassboxSubjectCount(1, 1)).toBe('1 of 1 read')
   })
 })
