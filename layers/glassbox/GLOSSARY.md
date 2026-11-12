@@ -49,12 +49,13 @@ Terrarium applies them without reading the source.
   between 80 and 90), so adding or moving a Lesson renames one file, not
   several. Subject order and names come from `glassboxSubjects` in
   `layers/glassbox/app/utils/subjects.ts`. `workshop`, at
-  `/t/glassbox/workshop`, is one page of state for the improvement Skills: a
-  memory text (shown as Agent notes, with the agents' soft decisions) and one
-  entry per curate run (shown as the Update log), under a Lately list of the
-  newest run changes that the page works out itself. glassbox-update's check state is kept but not shown. It
-  has no sidebar entry and no link from the guide; its memory text has a word
-  cap (`layers/glassbox/tests/unit/workshop.spec.ts`).
+  `/t/glassbox/workshop`, is the agents' notebook, a live page of state and not
+  a lesson: the Agent notes (the memory text: weak spots, the owner's direction,
+  open ideas and the agents' soft decisions) and the Update log (one entry per
+  curate run), under a Lately list of the newest run changes that the page works
+  out itself. glassbox-update's check state is kept but not shown. It has no
+  sidebar entry and no link from the guide. How a run keeps it, the word cap
+  included, is in `glassbox-curate`.
 - **Reading progress.** A Lesson is *read* once its Where next heading, or the
   `Lessons already read` section that replaces it, has scrolled into view in this
   browser; Walkthroughs and the workshop are never marked. The list lives in
