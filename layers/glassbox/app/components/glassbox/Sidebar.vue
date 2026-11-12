@@ -11,7 +11,8 @@ defineEmits<{ close: [] }>()
 
 const currentSubject = computed(() => props.path.split('/')[1])
 const { read } = useGlassboxRead()
-const readIn = (subject: ReturnType<typeof glassboxDirectory>[number]) => subject.lessons.filter((lesson) => read.value.includes(lesson.path)).length
+const countOf = (subject: ReturnType<typeof glassboxDirectory>[number]) =>
+  glassboxCountLabel(subject.lessons.filter((lesson) => read.value.includes(lesson.path)).length, subject.lessons.length)
 </script>
 
 <template>
@@ -26,7 +27,7 @@ const readIn = (subject: ReturnType<typeof glassboxDirectory>[number]) => subjec
       <details v-for="subject in subjects" :key="subject.slug" :open="subject.slug === currentSubject">
         <summary>
           <span>{{ subject.name }}</span>
-          <span class="count" :class="{ done: readIn(subject) === subject.lessons.length }">{{ readIn(subject) ? `${readIn(subject)}/${subject.lessons.length}` : subject.lessons.length }}</span>
+          <span class="count" :class="{ done: countOf(subject).done }">{{ countOf(subject).text }}</span>
         </summary>
         <ul>
           <li v-for="lesson in subject.lessons" :key="lesson.path">

@@ -31,3 +31,8 @@ export function resetGlassboxProgress(storage: GlassboxStorage | undefined = bro
   try { storage?.removeItem(glassboxReadKey) } catch { /* nothing stored to forget */ }
   return []
 }
+
+/** A Subject's count in the sidebar: the total until a Lesson is read, then `read/total`. */
+export function glassboxCountLabel(readCount: number, total: number) {
+  return { text: readCount ? `${readCount}/${total}` : String(total), done: total > 0 && readCount === total }
+}

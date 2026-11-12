@@ -46,12 +46,17 @@ export function glassboxNextLessons(nodes: MinimarkNode[], base: string) {
   return nextRows(nodes).map((row) => rowLesson(row, base)).filter(Boolean)
 }
 
+/** Whether every Where next row links a Lesson the visitor has read, so the section can go. */
+export function glassboxNextAllRead(nodes: MinimarkNode[], base: string, read: string[]) {
+  const rows = nextRows(nodes)
+  return rows.length > 0 && rows.every((row) => read.includes(rowLesson(row, base)))
+}
+
 /** A Lesson body with design 1b's section frames added; other nodes unchanged.
  *  Where next drops the links in `read` (a visitor's own state) and, once all are read, its heading. */
 export function glassboxLessonSections(nodes: MinimarkNode[], base: string, titles: GlassboxTitles = {}, read: string[] = []): MinimarkNode[] {
   const out: MinimarkNode[] = []
-  const rows = nextRows(nodes)
-  const allRead = rows.length > 0 && rows.every((row) => read.includes(rowLesson(row, base)))
+  const allRead = glassboxNextAllRead(nodes, base, read)
   let section = ''
   let box: MinimarkElement | undefined
   let cards: MinimarkElement | undefined

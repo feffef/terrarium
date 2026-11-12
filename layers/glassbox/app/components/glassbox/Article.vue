@@ -36,7 +36,7 @@ const parts = computed(() => {
     intro: withBody(walkthrough.value ? intro : intro.map((node) => glassboxLessonChipsDeep(node, props.base))),
     sections: (walkthrough.value ? glassboxWalkthroughParts(sections, props.base, props.titles) : [{ nodes: sections.map((node) => glassboxLessonChipsDeep(node, props.base)) }])
       .map((part) => ({ ...part, value: withBody(part.nodes) })),
-    toc: body.toc?.links ?? [],
+    toc: (body.toc?.links ?? []).filter((link) => !(subject.value && link.id === glassboxLessonIds.whereNext && glassboxNextAllRead(body.value, props.base, read.value))),
   }
 })
 </script>
