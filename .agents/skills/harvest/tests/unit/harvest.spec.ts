@@ -18,6 +18,8 @@ import {
   parseKeys,
   renderBlock,
   renderList,
+  renderSummaries,
+  summaryOf,
   type Entry,
 } from '../../scripts/harvest.ts'
 
@@ -271,11 +273,17 @@ describe('checkBody() and comparePosted()', () => {
   })
 })
 
-describe('renderBlock() summaries', () => {
-  it('prints each session summary once, after the key lines', () => {
-    const e = (n: number, session: string) => ({ n, session, line: `Harvested: ${session} idea 0000000${n}` }) as Entry
-    const out = renderBlock([e(1, 'session_a'), e(2, 'session_a'), e(3, 'session_b')], new Map([['session_a', 'Did A.']]))
-    expect(out.split('\n')).toEqual([NOTE, 'Harvested: session_a idea 00000001', 'Harvested: session_a idea 00000002', 'Harvested: session_b idea 00000003', '', 'Summary of session_a:', 'Did A.'])
+describe('renderSummaries() and summaryOf()', () => {
+  it('prints each session summary once and skips a session without one', () => {
+    const e = (session: string) => ({ session }) as Entry
+    const out = renderSummaries([e('session_a'), e('session_a'), e('session_b')], new Map([['session_a', 'Did A.']]))
+    expect(out).toBe('Summary of session_a:\nDid A.')
+  })
+
+  it('reads the summary of a log, and nothing when it is missing or not text', () => {
+    expect(summaryOf('goal: g\nsummary: >\n  Did\n  it.\n')).toBe('Did it.')
+    expect(summaryOf('goal: g\n')).toBe('')
+    expect(summaryOf('summary: [a]\n')).toBe('')
   })
 })
 
@@ -311,8 +319,7 @@ describe('checkClusters()', () => {
     expect(checkClusters('nothing', ns)).toEqual(['no "## " cluster blocks'])
   })
 
-  it('refuses a product cluster after a workflow one and a simplifying drop of a product cluster', () => {
+  it('refuses a product cluster after a workflow one', () => {
     expect(checkClusters(open('workflow', 'simplifying: r\n') + open('product'), ns).join()).toContain('check every product cluster first')
-    expect(checkClusters('## d\nlabel: product\nentries: 1\nsessions: 1\nsimplifying: s\nverdict: dropped simplifying\n', ns).join()).toContain('for workflow clusters')
   })
 })

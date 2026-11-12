@@ -97,14 +97,14 @@ harvests both.
    Done when every filed issue's stored keys equal its file's keys and you have
    listed every number.
 5. **Retro.** Read and follow `.agents/skills/retro/SKILL.md` (it is installed and
-   never edited; read the file, since the Skill tool may refuse it), applied to
+   never edited; read the file, the Skill tool refuses a model call of it), applied to
    this run and limited to this Skill's steps, `body-template.md` and the
    helper; problems elsewhere stay Frictions in the session log. Skip a candidate
    an open issue or open Ledger entry holds, naming it. Its final step, to
    present candidates, becomes one more Seedling in the retro's order of
    severity, outside step 4's caps, keyed `Harvested: <your session id> retro`
-   (`harvest check-body` accepts that key alone, with no extract entry). Nothing
-   to file: say so.
+   (`check-body` accepts that key alone). Write, check, post and verify it as
+   step 4's bullets say. Nothing to file: say so.
 6. **Close.** Invoke `close-session` once; done when it has run. Its summary
    counts the clusters checked, passed and dropped. A run where nothing passed
    says so and files no issue.

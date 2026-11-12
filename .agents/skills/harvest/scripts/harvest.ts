@@ -33,8 +33,7 @@ export const SKIPPED_TRIGGERS = new Set(['harvest', 'visitor-loop', 'audit-skill
 
 /** The whole key line. Its alphabet holds none of `& < > " '`, so HTML-entity
  *  decoding cannot change it. A session id is `session_...` or a raw UUID. The
- *  `retro` form marks the Seedling a run files about the Skill itself: no entry
- *  of the extract backs it, so check-body accepts it without one. */
+ *  `retro` form is the run's Seedling about the Skill itself (SKILL.md step 5). */
 export const KEY_RE = /^Harvested: (\S+ (?:(?:idea|learning) [0-9a-f]{8}|retro))$/
 
 /** A session id in either form (`session_...` or a raw UUID): the owner cannot open one. */
@@ -189,12 +188,21 @@ export function renderList(entries: Entry[]): string {
   return out.join('\n')
 }
 
-/** The note plus the key lines of the given entries: what a Seedling body pastes.
- *  Each entry's session summary follows once per session, so the story arrives
- *  with the key; the summary is not part of the pasted block, so it sits after it. */
-export function renderBlock(entries: Entry[], summaries: Map<string, string> = new Map()): string {
-  const read = [...new Set(entries.map((e) => e.session))].flatMap((s) => (summaries.has(s) ? [`\nSummary of ${s}:\n${summaries.get(s)}`] : []))
-  return [NOTE, ...entries.map((e) => e.line), ...read].join('\n')
+/** The note plus the key lines of the given entries: what a Seedling body pastes. */
+export function renderBlock(entries: Entry[]): string {
+  return [NOTE, ...entries.map((e) => e.line)].join('\n')
+}
+
+/** Each source session's summary, once, for reading. Kept apart from `renderBlock`
+ *  so that the block's output stays exactly what a body pastes. */
+export function renderSummaries(entries: Entry[], summaries: Map<string, string>): string {
+  return [...new Set(entries.map((e) => e.session))].flatMap((s) => (summaries.get(s) ? [`Summary of ${s}:\n${summaries.get(s)}`] : [])).join('\n\n')
+}
+
+/** The `summary` of a session log's YAML; empty when absent or not text. */
+export function summaryOf(yamlText: string): string {
+  const summary = (parseYaml(yamlText) as { summary?: unknown } | null)?.summary
+  return typeof summary === 'string' ? flattenText(summary) : ''
 }
 
 /** The tests of step 3, and the fields a cluster record carries. */
@@ -227,7 +235,6 @@ export function checkClusters(text: string, entryNumbers: Set<number>): string[]
     const dropped = /^dropped (\w+)$/.exec(verdict)?.[1]
     if (verdict !== 'open' && !dropped) problems.push(`${at}: verdict must be "open" or "dropped <test>"`)
     else if (dropped && !(TESTS as readonly string[]).includes(dropped)) problems.push(`${at}: "${dropped}" is not a test (${TESTS.join(', ')})`)
-    if (dropped === 'simplifying' && label === 'product') problems.push(`${at}: the simplifying test is for workflow clusters`)
     const need = verdict === 'open' ? TESTS.filter((t) => t !== 'simplifying' || label === 'workflow') : dropped ? [dropped] : []
     for (const t of need) if (!f.has(t)) problems.push(`${at}: no "${t}:" evidence`)
   })
@@ -332,11 +339,6 @@ function readExtract(path: string): { entries: Entry[] } {
   return JSON.parse(readFileSync(path, 'utf8')) as { entries: Entry[] }
 }
 
-function sessionSummary(file: string): string {
-  const summary = (parseYaml(readFileSync(join(root, file), 'utf8')) as { summary?: unknown } | null)?.summary
-  return typeof summary === 'string' ? flattenText(summary) : ''
-}
-
 function main(): void {
   const [cmd, ...argv] = process.argv.slice(2)
   if (cmd === 'extract') return cmdExtract(argv)
@@ -353,8 +355,9 @@ function main(): void {
     if (!path || !ns.length) fail('usage: block <extract.json> <n> [n...]')
     const entries = readExtract(path).entries
     const picked = ns.map((n) => entries.find((e) => e.n === Number(n)) ?? fail(`no entry ${n} in ${path}`))
-    const summaries = new Map(picked.map((e) => [e.session, sessionSummary(e.file)] as const).filter(([, t]) => t))
-    return console.log(renderBlock(picked, summaries))
+    const summaries = new Map(picked.map((e) => [e.session, summaryOf(readFileSync(join(root, e.file), 'utf8'))] as const))
+    console.error(renderSummaries(picked, summaries))
+    return console.log(renderBlock(picked))
   }
   if (cmd === 'check-clusters') {
     const [file] = argv
