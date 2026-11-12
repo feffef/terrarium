@@ -10,6 +10,8 @@ const props = defineProps<{
 defineEmits<{ close: [] }>()
 
 const currentSubject = computed(() => props.path.split('/')[1])
+const { read } = useGlassboxRead()
+const readIn = (subject: ReturnType<typeof glassboxDirectory>[number]) => subject.lessons.filter((lesson) => read.value.includes(lesson.path)).length
 </script>
 
 <template>
@@ -24,11 +26,11 @@ const currentSubject = computed(() => props.path.split('/')[1])
       <details v-for="subject in subjects" :key="subject.slug" :open="subject.slug === currentSubject">
         <summary>
           <span>{{ subject.name }}</span>
-          <span class="count">{{ subject.lessons.length }}</span>
+          <span class="count" :class="{ done: readIn(subject) === subject.lessons.length }">{{ readIn(subject) ? `${readIn(subject)}/${subject.lessons.length}` : subject.lessons.length }}</span>
         </summary>
         <ul>
           <li v-for="lesson in subject.lessons" :key="lesson.path">
-            <NuxtLink :to="`${base}${lesson.path}`" :aria-current="lesson.path === path ? 'page' : undefined">{{ lesson.title }}</NuxtLink>
+            <NuxtLink :to="`${base}${lesson.path}`" :aria-current="lesson.path === path ? 'page' : undefined">{{ lesson.title }}<span v-if="read.includes(lesson.path)" class="tick" role="img" aria-label="Read">✓</span></NuxtLink>
           </li>
         </ul>
       </details>
@@ -87,6 +89,9 @@ li a {
   color: var(--gb-ink-2);
 }
 li a[aria-current='page'] { background: var(--gb-solid); color: var(--gb-solid-ink); }
+.count.done { color: var(--gb-accent); }
+.tick { margin-left: 6px; font-size: 12px; color: var(--gb-accent); }
+li a[aria-current='page'] .tick { color: inherit; }
 
 /* Below 1024px the sidebar is a panel the menu button opens (.gb-doc in theme.css). */
 @media (max-width: 1023.98px) {
