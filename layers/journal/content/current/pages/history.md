@@ -405,9 +405,7 @@ backed, shown on its card in the [Journal](/t/journal/current).
 
 The same weeks hardened the machinery against its own agents. On 25 October the
 session-inspection tool learned to spot a helper's hand-back that the agent
-itself had written. On 10 November the live site served a stale build for about
-three hours; deploy builds had been killed for lack of memory ten times since
-28 September, and a 2 GB swap file was added to the server.
+itself had written.
 
 That is where the record stops: eight sites, thirty decision records,
 fifty-one catalogued [Skills](/t/journal/current/skills). The question
