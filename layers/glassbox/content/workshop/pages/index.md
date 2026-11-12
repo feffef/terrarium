@@ -44,6 +44,8 @@ These are the owner's goals for the guide. A run builds toward them directly; a 
 
 3. **Check every Walkthrough diagram against its stops.** A diagram is read beside the stops (on wide screens it sits next to them), so what it shows should roughly match the steps; a reader who can't match them gains nothing. It is a simplified picture, never a 1:1 copy: not every box or arrow needs a stop. Try to match, but not too hard, and keep it simple. The stops read better than the diagrams, so expect to redraw the diagram. Keep the same check for any new diagram. *A change goes live* is the model to match: a few boxes in a line, one side branch, no numbers.
 
+4. **Strengthen the weak "Try it in your project" sections.** The owner finds some of them weak. Read each Lesson's section as a reader would and rewrite the ones that give no concrete step to take or no way to see that it worked, one Subject per run.
+
 ### Wording fresh readers still find hard
 
 None of these is false.
