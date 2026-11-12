@@ -9,6 +9,14 @@ focus: "Installed skills Subject (its four pages): apply the owner's lowercase r
   Wayfinder's missing reason). Deviations for the budget: the guide index was not
   re-read whole (it was read whole an hour earlier in this session, and only the
   Agents pages changed since) and the Scout was not run again (the first run's
-  Scout found no new topic in the same window)."
-changes: []
-pagesRead: []
+  Scout found no new topic in the same window). Two fresh readers read the pages before and one after; the claim checker found one unsupported sentence, one omission and two loose phrases, which were corrected, and the second reader's leftovers went to the memory page."
+changes:
+  - skill-pack/10.skill-packs | glossary terms lowercase; the stored hash is called the pin; the lock's computedHash and why it differs are said once; the setup skill is shortened; the update command is named; the gate sentence is split and the excerpt's variables are glossed; the unsourced plugin and link claims are cut; What to watch says when the gate cannot catch an edit | readers could not follow pin, hash and fingerprint, and an unsupported sentence (validate-skills-lock.ts:15-30,48-105; ADR-0015:13-17,58-60; skills CLI README). Wording only, so revision and publishedAt are kept
+  - skill-pack/20.planning-with-the-pack | lowercase terms; the triage labels and agent brief are short sentences; who may start each skill is said plainly; ask-matt, the wayfinder map, domain-modeling and the sweep are glossed; examples for tracer bullets and wide refactors; the excerpt lead-in says what it shows | readers read the invocation facts and the ready-for-agent override as contradictions (skill frontmatter; to-spec:19; to-tickets:31,40,63; issue-tracker.md:57-73; auto-triage SKILL.md:7,126-132). Wording only
+  - skill-pack/30.engineering-skills | lowercase terms; who calls what is said plainly (implement calls tdd and code-review; the workflow follows implement with tdd and its reviewers apply code-review); disable-model-invocation, seams, code smells and clear-backlog's sweep are glossed; diagnosing-bugs is a fourth skill | the lede and the workflow paragraph seemed to disagree (implement SKILL.md:9-15; clear-backlog-build.js:93,111; tdd SKILL.md:20-38; code-review SKILL.md:38-48). Wording only
+  - skill-pack/40.wayfinder | lowercase terms; claim, frontier and fog are glossed from the skill; ticket types are listed where first used; the packed Fog and context-pointer sentence is split; the auto-triage excerpt is shortened to lines 82-85 and its words glossed; the label Why bullet says what the installed skill gives and what the sweep adds; the dependency-id and kept-branch items have setup | readers could not follow the vocabulary list or the label bullet (wayfinder SKILL.md:4,65-86,104-115; auto-triage SKILL.md:78-85; ADR-0003:13-14; issue-tracker.md:107-113). Wording only
+pagesRead:
+  - skill-pack/10.skill-packs
+  - skill-pack/20.planning-with-the-pack
+  - skill-pack/30.engineering-skills
+  - skill-pack/40.wayfinder
