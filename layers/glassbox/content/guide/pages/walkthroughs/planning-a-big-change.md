@@ -65,6 +65,6 @@ On 14 October 2026 a session charted a map with the owner, issue #1965, for a ne
 
 - [Wayfinder](/t/glassbox/guide/skill-pack/wayfinder)
 - [Planning skills](/t/glassbox/guide/skill-pack/planning-with-the-pack)
-- [Issue triage labels](/t/glassbox/guide/git-github/issue-triage-labels)
+- [](/t/glassbox/guide/terrarium-practice/ubiquitous-language)
 - [Engineering skills](/t/glassbox/guide/skill-pack/engineering-skills)
 - [A bug report becomes work](/t/glassbox/guide/walkthroughs/a-bug-report-becomes-work)

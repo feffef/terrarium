@@ -9,7 +9,7 @@ import { fail, flagValue, root, runIfMain } from '../../../../scripts/lib/cli.ts
 import { tryGit } from '../../../../scripts/lib/git.ts'
 import { splitFrontmatter } from '../../../../scripts/lib/frontmatter.ts'
 import { listAll, resolveAccess } from '../../../../scripts/lib/github-client.ts'
-import { glassboxMotiveWarning, glassboxOrphans, glassboxOrphanText, glassboxPageWarnings } from '../../../../layers/glassbox/page-checks.ts'
+import { glassboxFewNextLinks, glassboxFewNextText, glassboxMotiveWarning, glassboxOrphans, glassboxOrphanText, glassboxPageWarnings } from '../../../../layers/glassbox/page-checks.ts'
 
 const content = 'layers/glassbox/content'
 // The churn guard looks back this many runs (SKILL.md).
@@ -99,7 +99,7 @@ const runStart = (stem: string) => `${stem.slice(0, 13)}:${stem.slice(13, 15)}:0
 /** `now` as a run entry's file stem. */
 export const runStem = (now: Date) => now.toISOString().slice(0, 16).replace(':', '')
 
-/** "In Terrarium may give a motive" warnings, which are mostly fine (EVERY-PAGE.md), as one count per page; the rest in full. */
+/** "In Terrarium may give a motive" warnings, which are mostly fine (writing-pages.md), as one count per page; the rest in full. */
 export function warningLines(byFile: [string, string[]][]): string[] {
   const motives = byFile.map(([f, ws]) => [f, ws.filter((w) => w.startsWith(glassboxMotiveWarning)).length] as const).filter(([, n]) => n)
   return [
@@ -178,6 +178,7 @@ export function orientation(base = join(root, content), { log = guideLog, prs = 
   const warnings = [
     ...warningLines(guide.map(([f, text]) => [f, glassboxPageWarnings(text)])),
     ...glassboxOrphans(Object.fromEntries(guide)).map((f) => `- ${f}: ${glassboxOrphanText}`),
+    ...glassboxFewNextLinks(Object.fromEntries(guide)).map(({ file, count }) => `- ${file}: ${glassboxFewNextText(count)}`),
   ]
   const skeleton = ['session: <this session id>', 'mode: <autonomous or interactive>', 'focus: "<what you take on, and why>"', 'changes: []', 'pagesRead: []']
   const out = [

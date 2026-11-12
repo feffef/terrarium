@@ -3,12 +3,12 @@
 // every session id is already public in the logs, and claude.ai gates the page.
 //
 // `?maintainer` turns it on and `?maintainer=0` off; the flag is then kept in
-// sessionStorage so later pages need no URL. Pure over `search`/`storage` so a
+// localStorage so later pages and visits need no URL. Pure over `search`/`storage` so a
 // unit test can drive it outside the browser.
 const PARAM = 'maintainer'
 const KEY = 'terrarium:maintainer'
 
-// `storage` is a getter because merely reading `sessionStorage` can throw when it
+// `storage` is a getter because merely reading `localStorage` can throw when it
 // is blocked, and that read must sit inside the try below. The interface is
 // structural so `Storage` fits without pulling the DOM lib into the node typecheck.
 interface MaintainerStorage {

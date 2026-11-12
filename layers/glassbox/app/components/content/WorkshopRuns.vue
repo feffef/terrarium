@@ -1,14 +1,17 @@
 <script setup lang="ts">
-import { sessionUrl } from '#shared/session-url'
-
 const { collections } = useSpace('glassbox')
 
 // Only the mapped fields below travel in the payload (ADR-0028).
 const { data } = await useAsyncData('glassbox-workshop-runs', async () => {
-  const runs = await queryCollection(collections.runs).order('stem', 'DESC').all()
+  const [runs, logs] = await Promise.all([
+    queryCollection(collections.runs).order('stem', 'DESC').all(),
+    queryAcrossTenants('session', (item) => ({ session: item.session as string })),
+  ])
+  // A Journal session card's anchor is `session-<id>` (the Journal's sessionAnchor); the catalog gives the Space it sits in.
+  const logUrl = new Map(logs.filter((log) => log.tenant === 'journal').map((log) => [log.session, `/t/journal/${log.space}#session-${log.session}`]))
   return runs.map(({ stem, session, mode, focus, changes }) => ({
     stem,
-    session,
+    logUrl: logUrl.get(session),
     mode,
     focus,
     changes: changes.map(glassboxRunChange),
@@ -29,7 +32,7 @@ const { data } = await useAsyncData('glassbox-workshop-runs', async () => {
           </span>
           <span class="focus">{{ run.focus }}</span>
         </summary>
-        <p class="session"><a :href="sessionUrl(run.session)">session ↗</a></p>
+        <p v-if="run.logUrl" class="session"><NuxtLink :to="run.logUrl">session log</NuxtLink></p>
         <ul v-if="run.changes.length" class="changes">
           <li v-for="(change, j) in run.changes" :key="j">
             <template v-if="'raw' in change">{{ change.raw }}</template>

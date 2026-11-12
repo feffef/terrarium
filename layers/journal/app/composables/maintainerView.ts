@@ -8,7 +8,7 @@ import { resolveMaintainerView } from '../utils/maintainerView'
 export function useMaintainerView() {
   const on = useState<boolean | null>('journal-maintainer-view', () => null)
   onMounted(() => {
-    if (on.value === null) on.value = resolveMaintainerView(location.search, () => sessionStorage)
+    if (on.value === null) on.value = resolveMaintainerView(location.search, () => localStorage)
   })
   return on
 }

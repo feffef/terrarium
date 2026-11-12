@@ -11,20 +11,15 @@ A commit lands on `main`, and with no one running a deploy, the live site change
 
 ```mermaid
 flowchart TD
-  main["A commit on main"] --> fetch["Fetch main<br>after a pause"]
-  fetch -- "new commit" --> lock{"Lockfile<br>changed?"}
-  lock -- "yes" --> install["Install<br>packages"]
-  lock -- "no" --> build["Build beside<br>the live site"]
-  install --> build
-  install -. "fails" .-> keep["Old build<br>stays live"]
-  build -. "fails" .-> keep
-  keep -.-> fetch
-  build --> swap["Copy build,<br>restart server"]
-  swap --> visitor["Next visitor"]
-  classDef checkout stroke-dasharray:5 4
+  main["A commit<br>lands on main"] --> notice["The container<br>notices it"]
+  notice --> build["It builds beside<br>the live site"]
+  build -- "build works" --> swap["It swaps the build<br>in and restarts"]
+  build -. "build fails" .-> old["The old site<br>stays live"]
+  swap --> visitor["The next visitor<br>sees the change"]
+  classDef beside stroke-dasharray:5 4
   classDef live stroke-width:2.5px
-  class fetch,lock,install,build checkout
-  class swap,visitor,keep live
+  class notice,build beside
+  class swap,visitor,old live
 ```
 
 ## 1. A commit lands on `main`

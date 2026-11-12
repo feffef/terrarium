@@ -49,18 +49,23 @@ Terrarium applies them without reading the source.
   between 80 and 90), so adding or moving a Lesson renames one file, not
   several. Subject order and names come from `glassboxSubjects` in
   `layers/glassbox/app/utils/subjects.ts`. `workshop`, at
-  `/t/glassbox/workshop`, is one page of state for the improvement Skills: a
-  memory text, one entry per curate run and glassbox-update's check state, under a
-  Lately list of the newest run changes that the page works out itself. It
-  has no sidebar entry and no link from the guide; its memory text has a word
-  cap (`layers/glassbox/tests/unit/workshop.spec.ts`).
-- **Reading progress.** A Lesson is *read* once its page is opened in this
+  `/t/glassbox/workshop`, is the agents' notebook, a live page of state and not
+  a lesson: the Agent notes (the memory text: weak spots, the owner's direction,
+  open ideas and the agents' soft decisions) and the Update log (one entry per
+  curate run), under a Lately list of the newest run changes that the page works
+  out itself. glassbox-update's check state is kept but not shown. It has no
+  sidebar entry and no link from the guide. How a run keeps it, the word cap
+  included, is in `glassbox-curate`.
+- **Reading progress.** A Lesson is *read* once its Where next heading, or the
+  `Lessons already read` section that replaces it, has scrolled into view in this
   browser; Walkthroughs and the workshop are never marked. The list lives in
   `localStorage` under `glassbox:read` and is applied only after the page mounts,
   so the cached server render is the same for every visitor (ADR-0028). Read
-  Lessons get a ✓ after their title in the sidebar, where a Subject's count
-  reads `3/8` once any is read. A Subject page ticks them the same way and its
-  count line reads `3 of 8 read` once any is read; it has no reset. A Lesson's
+  Lessons get a ✓ (one shared SVG) after their title in the sidebar, where a
+  Subject's count reads `3/8` once any is read. A Subject page ticks them the
+  same way and its count line reads `3 of 8 read` once any is read; it has no
+  reset. In a Lesson or Walkthrough, an inline link or chip to a read Lesson
+  shows that ✓ in place of the book. A Lesson's
   hand-written Where next links that are read move out of Where next into a
   `Lessons already read` section right below it (Subject, title, ✓); Where
   next, heading included, vanishes once all are read, and the section is hidden
@@ -70,7 +75,7 @@ Terrarium applies them without reading the source.
   under the hero, labelled the newest experiment and work in progress, with
   links to the guide and the workshop and a guide Lesson of the day; when it's finished, the label
   changes and the band stays. Its `pages` are in the Catalog, and reach the Commons Timeline only when they
-  teach something new (`publishedAt`: EVERY-PAGE.md's Pin).
+  teach something new (`publishedAt`: writing-pages.md's Pin).
 
 ## Glossary
 
@@ -95,7 +100,9 @@ Its body follows one contract, which the page frames like design 1b
   about consequences for the reader, and links an ADR rather than restating
   its Scope or Consequences;
 - `## Try it in your project`;
-- `## Where next`, a list of at most the 5 closest pages. Links within this
+- `## Where next`, a list of 1 to 5 closest pages (a Lesson is marked read when
+  it scrolls into view, so it is never empty; two other pages should list each
+  Lesson, and fewer is a page-check warning). Links within this
   Space are bare, `[](/t/glassbox/guide/…)`, and show the target's current
   title; a Journal link keeps typed text:
   related Lessons first, then optionally one Journal page as evidence. A
@@ -108,7 +115,9 @@ of repeating them.
 Its body, in `walkthroughs/`, follows one contract, which the page draws like
 design 1b (`layers/glassbox/app/utils/walkthrough.ts`):
 
-- a lede paragraph, then at most one diagram;
+- a lede paragraph, then at most one diagram (the page shows it beside the
+  stops on wide screens, held in view while they scroll, and after the last
+  stop elsewhere);
 - at least one numbered **stop**, each `## 1. Title`: 2–4 sentences of this
   story's part, ending in exactly one `::lessons` block of chips separated
   by `·`. A chip is a link (a Lesson where one exists, a Journal page), a
@@ -165,9 +174,10 @@ turned into hyphens: `:term[Nuxt & Vue]` reads `nuxt-vue.yml`,
 ## What lives where
 
 - **`.agents/skills/glassbox-lesson/`** — how a Lesson gets written;
-  `EVERY-PAGE.md` there settles a page's title and the steps a Lesson and a
-  Walkthrough share, `QUALITY.md` how a page is graded and raised, and
-  `DECISIONS.md` the closed rulings.
+  `writing-pages.md` there settles a page's title and the steps a Lesson and a
+  Walkthrough share, and `owner-decisions.md` the owner's hard rules. Decisions
+  agents make themselves are soft: they sit on the workshop page and can be
+  overruled with evidence.
 - **`.agents/skills/glassbox-walkthrough/SKILL.md`** — how a Walkthrough gets
   written.
 - **`.agents/skills/glassbox-update/SKILL.md`** — how the guide pages are

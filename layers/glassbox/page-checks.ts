@@ -222,7 +222,7 @@ const subsections: string[] = [glassboxLessonIds.why, glassboxLessonIds.watch]
 const adrCite = /ADR-(\d{4}) \(:file\[docs\/adr\/(\d{4})-[^\]\s]+\.md\]\)/g
 const ownWords = { min: 12, max: 65 }
 
-// EVERY-PAGE.md, Mechanism, not motive: In Terrarium's own lines, before its two h3 subsections.
+// writing-pages.md, Mechanism, not motive: In Terrarium's own lines, before its two h3 subsections.
 // Matches outside code but quotes the raw line; readBody keeps one prose line per body line.
 function motiveLines(body: string, word: string) {
   const lines = readBody(body).prose.split('\n')
@@ -276,12 +276,14 @@ const nextItems = (prose: string) => {
 function nextProblems(prose: string, lesson: boolean): string[] {
   const next = nextItems(prose)
   const problems = next.length > cap ? [`Where next lists ${next.length} pages, more than ${cap}`] : []
+  // A Lesson counts as read once Where next scrolls into view (GLOSSARY.md, Reading progress), so every one needs it.
+  if (lesson && !next.length) problems.push('Where next has no links')
   if (next.slice(0, -1).some((l) => l.includes('](/t/journal'))) problems.push('Where next lists a Journal page before its end')
   if (lesson && next.some((l) => l.includes('](/t/glassbox/guide/walkthroughs/'))) problems.push('Where next on a Lesson lists a Walkthrough')
   return problems
 }
 
-// Caps keep each `title` and `description` short wherever pages are listed (EVERY-PAGE.md, Pin).
+// Caps keep each `title` and `description` short wherever pages are listed (writing-pages.md, Pin).
 const lengths = { lesson: { title: 28, description: 120 }, walkthrough: { title: 36, description: 140 } }
 const lessonTitleWords = 4
 
@@ -335,7 +337,7 @@ export function glassboxPageProblems(file: string, source: string, site: Glassbo
     if (ref.lines && !ref.runs && gaps > 1) problems.push(`the Excerpt of ${ref.path} has ${gaps} gaps: give lines one range per run`)
     // Excerpt.vue counts runs from the gap lines, so none may be empty but the last.
     if (ref.runs && ref.excerpt !== undefined && excerptRuns(ref.excerpt).slice(0, -1).some((r) => !r.length)) problems.push(`the Excerpt of ${ref.path} opens with a gap or has two in a row`)
-    // EVERY-PAGE.md, Excerpts teach: end on a whole statement.
+    // writing-pages.md, Excerpts teach: end on a whole statement.
     const last = ref.excerpt === undefined ? undefined : excerptRuns(ref.excerpt).flat().filter((l) => l.trim()).at(-1)
     if (last && /[{[(]\s*$/.test(last)) problems.push(`the Excerpt of ${ref.path} ends on an open bracket: end it on a whole statement`)
   }
@@ -392,6 +394,29 @@ export function glassboxOrphans(sources: Record<string, string>): string[] {
   return Object.keys(sources).filter((f) => f !== 'index.md' && !linked.has(glassboxSitePath('guide', f))).sort()
 }
 
+/** A Lesson that few other pages list in Where next is hard to reach from the page a reader is on;
+ *  a reviewer's call like the other warnings, so it never fails. */
+const glassboxFewNextMin = 2
+
+export function glassboxFewNextLinks(sources: Record<string, string>): { file: string, count: number }[] {
+  const listedBy = new Map<string, Set<string>>()
+  for (const [file, source] of Object.entries(sources)) {
+    for (const item of nextItems(readBody(splitFrontmatter(source).body).prose)) {
+      for (const [, path] of item.matchAll(/\]\((\/t\/glassbox\/guide\/[^)\s#?]*)/g)) {
+        const target = path!.replace(/\/$/, '')
+        if (target !== glassboxSitePath('guide', file)) listedBy.set(target, (listedBy.get(target) ?? new Set()).add(file))
+      }
+    }
+  }
+  return Object.keys(sources)
+    .filter((file) => glassboxSubjectOf(`/${contentRoute(file)}`))
+    .map((file) => ({ file, count: listedBy.get(glassboxSitePath('guide', file))?.size ?? 0 }))
+    .filter(({ count }) => count < glassboxFewNextMin)
+    .sort((a, b) => a.file.localeCompare(b.file))
+}
+
+export const glassboxFewNextText = (count: number) => `only ${count} other ${count === 1 ? 'page lists' : 'pages list'} it in Where next, fewer than ${glassboxFewNextMin}`
+
 /** Each guide page's title, title-word and description cap problems, and a missing teaches, by file under `pages/`. */
 export function glassboxLengthProblems(sources: Record<string, string>): string[] {
   return Object.entries(sources).flatMap(([file, source]) => lengthProblems(`/${contentRoute(file)}`, splitFrontmatter(source).frontmatter).map((p) => `guide/pages/${file}: ${p}`)).sort()
@@ -413,6 +438,7 @@ runIfMain(import.meta.url, () => {
   const guide = join(content, 'guide/pages')
   const sources = Object.fromEntries(globSync('**/*.md', { cwd: guide }).map((f) => [f, readFileSync(join(guide, f), 'utf8')]))
   for (const file of glassboxOrphans(sources)) console.log(`guide/pages/${file}: ${glassboxOrphanText}`)
+  for (const { file, count } of glassboxFewNextLinks(sources)) console.log(`guide/pages/${file}: ${glassboxFewNextText(count)}`)
 })
 
 interface GlassboxTermEntry { source?: string, lesson?: string }

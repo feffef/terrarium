@@ -100,5 +100,5 @@ On 8 July 2026 a scheduled session waited about two hours on a PR's CI. It had c
 - [Self-improvement loop](/t/glassbox/guide/terrarium-practice/self-improvement-loop)
 - [Session logs](/t/glassbox/guide/terrarium-practice/session-logs)
 - [Scheduled tasks](/t/glassbox/guide/agents/scheduled-tasks)
-- [Asking an agent for a change](/t/glassbox/guide/walkthroughs/asking-for-a-change)
+- [](/t/glassbox/guide/terrarium-practice/pruning-instructions)
 - [Friction Ledger](/t/journal/current/frictions)

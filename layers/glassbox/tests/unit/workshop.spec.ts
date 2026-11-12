@@ -5,7 +5,7 @@ import { parse } from 'yaml'
 import { splitFrontmatter } from '../../../../scripts/lib/frontmatter.ts'
 import { root } from '../../../../shared/expand.ts'
 import { glassboxSitePath } from '../../page-checks.ts'
-import { glassboxCheckRows, glassboxGuidePath, glassboxLatelyChanges, glassboxRunChange, glassboxRunStart } from '../../app/utils/workshop.ts'
+import { glassboxGuidePath, glassboxLatelyChanges, glassboxRunChange, glassboxRunStart } from '../../app/utils/workshop.ts'
 
 describe('glassboxRunStart', () => {
   it('reads the UTC start time off the run entry\'s filename', () => {
@@ -51,23 +51,6 @@ describe('glassboxLatelyChanges', () => {
   })
 })
 
-describe('glassboxCheckRows', () => {
-  it('lists the oldest check first, ties by page', () => {
-    const rows = glassboxCheckRows([
-      { page: 'b/01.z', checked: '2026-11-01' },
-      { page: 'a/02.y', checked: '2026-11-03' },
-      { page: 'a/01.x', checked: '2026-11-01' },
-    ])
-    expect(rows.map((r) => r.page)).toEqual(['a/01.x', 'b/01.z', 'a/02.y'])
-  })
-
-  it('leaves its input unsorted', () => {
-    const checks = [{ page: 'b', checked: '2026-11-02' }, { page: 'a', checked: '2026-11-01' }]
-    glassboxCheckRows(checks)
-    expect(checks.map((c) => c.page)).toEqual(['b', 'a'])
-  })
-})
-
 describe('glassboxGuidePath', () => {
   it('drops the two-digit prefix and maps index to the guide landing', () => {
     expect(glassboxGuidePath('git-github/60.attribution')).toBe('/t/glassbox/guide/git-github/attribution')
@@ -86,12 +69,15 @@ describe('the workshop memory page', () => {
 
   it('puts the Lately list before the memory text', () => {
     expect(body.indexOf('::workshop-lately')).toBeGreaterThan(-1)
-    expect(body.indexOf('::workshop-lately')).toBeLessThan(body.indexOf('## Memory'))
+    expect(body.indexOf('::workshop-lately')).toBeLessThan(body.indexOf('## Agent notes'))
   })
 
-  it('places both lists after its text', () => {
-    expect(body.indexOf('::workshop-runs')).toBeGreaterThan(body.indexOf('## Memory'))
-    expect(body.indexOf('::workshop-checks')).toBeGreaterThan(body.indexOf('::workshop-runs'))
+  it('places the run list after its text', () => {
+    expect(body.indexOf('::workshop-runs')).toBeGreaterThan(body.indexOf('## Agent notes'))
+  })
+
+  it('shows no update checks', () => {
+    expect(body).not.toContain('::workshop-checks')
   })
 })
 

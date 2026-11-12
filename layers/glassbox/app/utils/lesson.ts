@@ -43,6 +43,11 @@ function rowLesson(row: MinimarkNode, base: string) {
   return glassboxSubjectOf(path) ? path : ''
 }
 
+/** The pages of this Space that a Where next list links, whatever their kind. */
+export function glassboxNextTargets(nodes: MinimarkNode[], base: string) {
+  return nextRows(nodes).map((row) => typeof row === 'string' ? '' : spacePath(String(rowLink(row)?.[1].href ?? ''), base)).filter(Boolean)
+}
+
 /** The Lessons a Where next list links, in the order the writer gave them. */
 export function glassboxNextLessons(nodes: MinimarkNode[], base: string) {
   return nextRows(nodes).map((row) => rowLesson(row, base)).filter(Boolean)
@@ -61,7 +66,7 @@ export function glassboxLessonToc<T extends { id: string }>(links: T[], nodes: M
 
 /** A Lesson body with design 1b's section frames added; other nodes unchanged.
  *  Where next drops the links in `read` (a visitor's own state) and, once all are read, its heading. */
-export function glassboxLessonSections(nodes: MinimarkNode[], base: string, titles: GlassboxTitles = {}, read: string[] = []): MinimarkNode[] {
+export function glassboxLessonSections(nodes: MinimarkNode[], base: string, titles: GlassboxTitles = {}, read: string[] = [], descriptions: GlassboxTitles = {}): MinimarkNode[] {
   const out: MinimarkNode[] = []
   const allRead = glassboxNextAllRead(nodes, base, read)
   let section = ''
@@ -85,7 +90,7 @@ export function glassboxLessonSections(nodes: MinimarkNode[], base: string, titl
     const inConcept = section === ids.concept
     const isNextList = section === ids.whereNext && tag === 'ul'
     if (allRead && (isNextList || id === ids.whereNext && tag === 'h2')) continue
-    ;(box ?? out).push(inConcept ? fullReference(node) : isNextList ? glassboxNextList(node, base, titles, read) : skipLine(node))
+    ;(box ?? out).push(inConcept ? fullReference(node) : isNextList ? glassboxNextList(node, base, titles, read, descriptions) : skipLine(node))
   }
   return out
 }
@@ -121,8 +126,9 @@ export function glassboxLinkLabel(href: string, base: string) {
 
 /** A Where next list drawn as rows, each labelled by what its link leads to;
  *  a bare link `[](/…)` to a page in this Space shows that page's current title.
+ *  Any link to a page of this Space also shows that page's description under its text.
  *  Rows whose Lesson is in `read` are left out; the Lessons already read section shows them. */
-export function glassboxNextList(node: MinimarkNode, base: string, titles: GlassboxTitles = {}, read: string[] = []): MinimarkNode {
+export function glassboxNextList(node: MinimarkNode, base: string, titles: GlassboxTitles = {}, read: string[] = [], descriptions: GlassboxTitles = {}): MinimarkNode {
   if (typeof node === 'string') return node
   const [, props, ...items] = node
   return ['ul', { ...props, class: 'gb-next' }, ...(items as MinimarkNode[]).filter((item) => !read.includes(rowLesson(item, base))).map((item) => {
@@ -132,6 +138,9 @@ export function glassboxNextList(node: MinimarkNode, base: string, titles: Glass
     const isBare = link?.length === 2
     const title = isBare ? titles[spacePath(href, base)] : undefined
     const filled = title ? [...link!, title] : link
-    return [item[0], item[1], ['span', {}, glassboxLinkLabel(href, base)], ...item.slice(2).map((child) => child === link ? filled : child)] as MinimarkNode
+    const description = descriptions[spacePath(href, base)]
+    // The text sits in one cell with the title, so the row stays label | text | arrow.
+    const text = description ? ['div', {}, filled, ['small', {}, description]] : filled
+    return [item[0], item[1], ['span', {}, glassboxLinkLabel(href, base)], ...item.slice(2).map((child) => child === link ? text : child)] as MinimarkNode
   })]
 }

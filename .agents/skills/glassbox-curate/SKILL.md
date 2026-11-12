@@ -23,8 +23,8 @@ settle every decision with them via `grilling`. If they answer "autonomous",
 the run is autonomous from then on and its entry says so.
 
 **Hard rules.** Never make a page false. Never undo an earlier change without
-new evidence. `DECISIONS.md` rulings are closed. One PR per run, within the
-remit.
+new evidence. `owner-decisions.md` lines are hard rules: never go against one.
+One PR per run, within the remit.
 
 **Remit.** Edit `layers/glassbox/content/guide/`, the diagram SVGs you
 re-render, your own workshop files, and a moved page's name in
@@ -34,10 +34,9 @@ a move between Subjects, and a change to this Skill, the `glassbox-lesson` docs
 or the page checks. A PR holding any of these waits for the owner's merge: its
 body says so, and you don't merge it.
 
-**Read first.** `layers/glassbox/GLOSSARY.md`,
-[`../glassbox-lesson/EVERY-PAGE.md`](../glassbox-lesson/EVERY-PAGE.md),
-[`../glassbox-lesson/QUALITY.md`](../glassbox-lesson/QUALITY.md) (Lenses only),
-[`../glassbox-lesson/DECISIONS.md`](../glassbox-lesson/DECISIONS.md),
+**Read first, in full.** `layers/glassbox/GLOSSARY.md`,
+[`../glassbox-lesson/writing-pages.md`](../glassbox-lesson/writing-pages.md),
+[`../glassbox-lesson/owner-decisions.md`](../glassbox-lesson/owner-decisions.md),
 `.claude/rules/glassbox-content.md`,
 `.agents/skills/dispatch-subagents/SKILL.md`, and, since every run fetches and
 opens a PR, `docs/agents/git-conventions.md`, `docs/agents/github-integration.md`
@@ -122,13 +121,13 @@ keeps them so).
   being its target's title. Each `The cost:` clause needs a source that states that
   cost, and the writer runs a command sequence before it says what it does.
   A page read in full whose `teaches`, `description` or bold lead-ins fall
-  short of EVERY-PAGE.md's Pin rule gets a rewrite in the same Fix, which
+  short of writing-pages.md's Pin rule gets a rewrite in the same Fix, which
   doesn't count as a second focus.
   A new Lesson follows `.agents/skills/glassbox-lesson/SKILL.md` step by step:
   give the writer its path and have it report each step's Done.
 - **Check.** A separate sonnet claim checker checks the changed sentences;
   `glassbox-update` owns the claim check of unchanged text, so leave that to
-  it. Run EVERY-PAGE.md's Check on the changed pages, and a fresh reader
+  it. Run writing-pages.md's Check on the changed pages, and a fresh reader
   re-reads them. One retry, then drop the change.
 - **Removal.** A change that only removes text or a page skips the writer, the
   claim checker and the fresh reader. Still run the page checks, grep for
@@ -146,7 +145,7 @@ keeps them so).
   (`docs/agents/pr-workflow.md`), self-merged unless the Remit says it waits.
   Wait for the Scout now and add each of its topics not already there to the
   memory page's open ideas, as a possible future task. Give `code-review`
-  the Lesson contract, EVERY-PAGE.md, DECISIONS.md and the glassbox-content
+  the Lesson contract, writing-pages.md, owner-decisions.md and the glassbox-content
   rule as its standards, without the code-smell baseline, and say the page
   checks already ran. Its Spec reviewer also judges which pages the change
   needed read (the ones it edits, links or overlaps), and names each one missing
@@ -154,6 +153,30 @@ keeps them so).
   to `pagesRead` before you land. Done when the PR is open, its body gives the
   run's cost ("unreported" only when `cost_usd` is still missing), and the
   memory page and run entry are current.
+
+## Lenses
+
+What to read a page for, as two readers: a developer new to the tool, and one
+who knows the tool but not Terrarium. A page's rules are in writing-pages.md and
+its shape in the glossary; an `owner-decisions.md` line is never a deficit.
+
+- **Clarity.** The order, plain words, each term introduced before use, a title
+  that passes the title rule.
+- **Reasoning.** Each Why gives a reason, its cost and the alternative, and
+  traces to the ADR or file it cites. `n/a` on a Walkthrough.
+- **Placement.** One concept per page, no fact taught on another page too (an
+  overlap counts on both), the right Subject, useful Where next links.
+- **Evidence.** The In Terrarium examples and Excerpts are the best place in the
+  repo to see the concept, and each teaches. Name a better Excerpt by file and
+  line.
+- **Transfer.** The page teaches the general concept beyond Terrarium and says
+  when it is the wrong choice. `n/a` on a Walkthrough.
+- **Relevance.** The concept deserves its own page. A low result leads to a
+  merge, section or cut, never a rewrite.
+
+Correctness is not a lens: a claim the source contradicts at the page's
+`revision` is a false claim, fixed with the smallest correction once confirmed
+in the source.
 
 ## State
 
@@ -168,7 +191,21 @@ All in `layers/glassbox/content/workshop/`:
   never mark it done. A fact the next run still needs stays as a plain current
   fact under a heading that fits. What a run did goes in its run entry, not
   here. The word cap in
-  `layers/glassbox/tests/unit/workshop.spec.ts` is a ceiling, not a target.
+  `layers/glassbox/tests/unit/workshop.spec.ts` is a ceiling, not a target. When
+  it is reached, never shorten what is there: squeezed wording makes passages
+  hard to read. Cut whole items instead, the ones not worth pursuing. Judge by
+  what you know of the rest of the guide and by git history (`git log -S` or
+  `git blame` on the item): one that has stood a long time and that no run ever
+  took up is a candidate.
+  **Soft decisions** (its heading) are decisions you, a reviewer or a claim
+  checker made: write each there as it is made, with what decided it. They are
+  not rules. Overrule or delete one when you have evidence against it or when
+  changed content makes it obsolete. Never put one in `owner-decisions.md`.
+- `../glassbox-lesson/owner-decisions.md` holds the owner's hard rules. Add a
+  line only when the owner says to, in an interactive session, never in a
+  scheduled run. If your change would go against a line, don't make it: log a
+  Friction if that seriously hurts the quality or outcome of your task, or an
+  idea if you have a good content proposal that clashes with it.
 - `runs/<YYYY-MM-DDTHHMM>.yml`: one entry per run, named by the UTC time the
   orientation printed.
   Its shape is the `runs` Collection in `layers/glassbox/tenant.config.ts`. A
