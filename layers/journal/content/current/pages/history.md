@@ -381,14 +381,15 @@ parts of the machinery spent a lot and returned little.
 > history, and by 11 November defined terms link to the lesson that explains
 > them.
 
-Keeping it true was the expensive part. A scheduled job graded the pages and
-improved the weakest. On 2 November it was rebuilt to grade on several
+Keeping it true, readable and well structured was the expensive part. A
+scheduled job graded the pages and improved the weakest. On 2 November it was rebuilt to grade on several
 qualities and to block edits that weren't judged blind; its first run fixed 7
 false claims in 35 edits, but running it took about 127 reviewing agents
 dispatched by hand. Three days later one run sent eleven helpers through all
 68 pages, roughly 2.5 million tokens, to fix five false claims. The job was
-capped at eight items per run, a small goal-driven curating skill was added
-beside it, and on 7 November the older job was removed. On 9 November a
+capped at eight items per run, and a small goal-driven curating skill was
+added beside it. By 7 November that skill built its own fixes and read a whole
+subject before changing it, so the older job was removed. On 9 November a
 fact-check across 17 guide pages used up nearly all of a 20 dollar budget.
 
 The waste was found through measurement, which the owner either read or asked for. From 18
