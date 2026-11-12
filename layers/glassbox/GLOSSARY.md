@@ -50,9 +50,9 @@ Terrarium applies them without reading the source.
   several. Subject order and names come from `glassboxSubjects` in
   `layers/glassbox/app/utils/subjects.ts`. `workshop`, at
   `/t/glassbox/workshop`, is one page of state for the improvement Skills: a
-  memory text (shown as Agent notes) and one entry per curate run (shown as the
-  Update log), under a Lately list of the newest run changes that the page works
-  out itself. glassbox-update's check state is kept but not shown. It
+  memory text (shown as Agent notes, with the agents' soft decisions) and one
+  entry per curate run (shown as the Update log), under a Lately list of the
+  newest run changes that the page works out itself. glassbox-update's check state is kept but not shown. It
   has no sidebar entry and no link from the guide; its memory text has a word
   cap (`layers/glassbox/tests/unit/workshop.spec.ts`).
 - **Reading progress.** A Lesson is *read* once its Where next heading, or the
@@ -174,7 +174,9 @@ turned into hyphens: `:term[Nuxt & Vue]` reads `nuxt-vue.yml`,
 
 - **`.agents/skills/glassbox-lesson/`** — how a Lesson gets written;
   `EVERY-PAGE.md` there settles a page's title and the steps a Lesson and a
-  Walkthrough share, and `DECISIONS.md` the closed rulings.
+  Walkthrough share, and `OWNER-DECISIONS.md` the owner's hard rules. Decisions
+  agents make themselves are soft: they sit on the workshop page and can be
+  overruled with evidence.
 - **`.agents/skills/glassbox-walkthrough/SKILL.md`** — how a Walkthrough gets
   written.
 - **`.agents/skills/glassbox-update/SKILL.md`** — how the guide pages are

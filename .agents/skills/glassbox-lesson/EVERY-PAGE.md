@@ -3,7 +3,8 @@
 The steps a Lesson and a Walkthrough share. Each page's shape, and the Excerpt
 and Term rules, are in `layers/glassbox/GLOSSARY.md`; the drift rule
 (`.claude/rules/glassbox-content.md`) loads when you edit a page. Rulings in
-[`DECISIONS.md`](DECISIONS.md) are closed.
+[`OWNER-DECISIONS.md`](OWNER-DECISIONS.md) are hard rules; the workshop page's soft
+decisions are agents' own and can be overruled.
 
 ## Pin
 
@@ -18,7 +19,7 @@ integration tip).
 Set `publishedAt` to now (`date -u +%Y-%m-%dT%H:%M:%SZ`) when you write a page,
 move it to the guide, or change what it teaches; it puts the page on the
 Commons Timeline. Leave it as it is for a re-pin, a typo, a moved `lines` range
-or an edit that `DECISIONS.md` says keeps it.
+or an edit that `OWNER-DECISIONS.md` says keeps it.
 
 Frontmatter holds `title`, `description`, `teaches`, `revision`,
 `revisionDate` and `publishedAt` only; the page draws `title` as its heading,
