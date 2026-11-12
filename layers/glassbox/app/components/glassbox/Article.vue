@@ -13,6 +13,21 @@ const props = defineProps<{
   source?: string
 }>()
 
+// PROTOTYPE (#3130): Where next ticks and a "Lessons already read" section, three looks by ?variant=.
+const { read, variant, reset } = useGlassboxRead()
+const articleEl = ref<HTMLElement>()
+const readGroups = computed(() => glassboxSubjects
+  .map((s) => ({ ...s, lessons: Object.keys(props.titles).filter((p) => p.startsWith(`/${s.slug}/`) && read.value.includes(p)).map((p) => ({ path: p, title: props.titles[p] })) }))
+  .filter((s) => s.lessons.length))
+const readTotal = computed(() => readGroups.value.reduce((n, s) => n + s.lessons.length, 0))
+const lessonTotal = computed(() => Object.keys(props.titles).filter((p) => glassboxSubjectOf(p)).length)
+const markNext = () => articleEl.value?.querySelectorAll<HTMLAnchorElement>('.gb-next a').forEach((a) => {
+  const p = (a.getAttribute('href') ?? '').slice(props.base.length)
+  a.toggleAttribute('data-read', read.value.includes(p))
+})
+onMounted(markNext)
+watch([read, variant], () => nextTick(markNext))
+
 const subject = computed(() => glassboxSubjectOf(props.page.path))
 const walkthrough = computed(() => glassboxWalkthroughOf(props.page.path))
 const current = ref<string>()
@@ -34,7 +49,7 @@ const parts = computed(() => {
 </script>
 
 <template>
-  <article class="article">
+  <article ref="articleEl" class="article" :class="`v-${variant}`">
     <p v-if="subject" class="chips"><NuxtLink class="chip" :to="`${base}#${subject.slug}`">{{ subject.name }}</NuxtLink><span>Lesson</span></p>
     <p v-else-if="walkthrough" class="chips"><span class="chip">Walkthrough</span></p>
     <h1 :class="{ lesson: subject || walkthrough }">{{ page.title }}</h1>
@@ -47,6 +62,23 @@ const parts = computed(() => {
       </div>
       <ContentRenderer v-else class="gb-prose" :value="part.value" />
     </template>
+    <section v-if="subject && readTotal" class="read-section">
+      <details v-if="variant === 'C'">
+        <summary><h2>Lessons already read</h2><span class="n">{{ readTotal }} of {{ lessonTotal }}</span></summary>
+        <div v-for="s in readGroups" :key="s.slug" class="grp"><h3>{{ s.name }}</h3>
+          <ul><li v-for="l in s.lessons" :key="l.path"><NuxtLink :to="`${base}${l.path}`">{{ l.title }}</NuxtLink></li></ul></div>
+        <button type="button" class="reset" @click="reset">Reset reading progress</button>
+      </details>
+      <template v-else>
+        <div class="read-head"><h2>Lessons already read</h2><button v-if="variant === 'B'" type="button" class="reset" @click="reset">Reset</button></div>
+        <ul v-if="variant === 'B'" class="pills"><template v-for="s in readGroups" :key="s.slug"><li v-for="l in s.lessons" :key="l.path"><NuxtLink :to="`${base}${l.path}`"><b>{{ s.name }}</b>{{ l.title }}</NuxtLink></li></template></ul>
+        <template v-else>
+          <div v-for="s in readGroups" :key="s.slug" class="grp"><h3>{{ s.name }}</h3>
+            <ul><li v-for="l in s.lessons" :key="l.path"><NuxtLink :to="`${base}${l.path}`"><span class="tick">✓</span>{{ l.title }}</NuxtLink></li></ul></div>
+          <button type="button" class="reset" @click="reset">Reset reading progress</button>
+        </template>
+      </template>
+    </section>
     <template v-if="through.length">
       <h2>Walkthroughs through this Lesson</h2>
       <ul class="gb-next">
@@ -72,6 +104,31 @@ const parts = computed(() => {
   color: var(--gb-ink);
 }
 .article h1.lesson { margin-top: 16px; }
+
+/* PROTOTYPE (#3130) */
+.read-section { margin-top: 36px; }
+.read-section h2 { margin: 0; }
+.read-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.read-section h3 { margin: 14px 0 4px; font: 11px var(--gb-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--gb-muted); }
+.read-section ul { list-style: none; margin: 0; padding: 0; }
+.read-section li a { display: block; padding: 4px 0; font-size: 15px; text-decoration: none; }
+.read-section li a:hover { color: var(--gb-accent); }
+.tick { margin-right: 8px; font-size: 12px; color: var(--gb-accent); }
+.reset { margin-top: 14px; padding: 0; border: 0; background: none; font: 12.5px var(--gb-mono); color: var(--gb-muted); text-decoration: underline; cursor: pointer; }
+.read-head .reset { margin: 0; }
+.pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px !important; }
+.pills a { display: flex !important; gap: 8px; padding: 6px 12px !important; border: 1px solid var(--gb-pane-edge); border-radius: 99px; background: var(--gb-pane); font-size: 13.5px !important; }
+.pills b { font: normal 10.5px var(--gb-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--gb-muted); align-self: center; }
+.read-section summary { display: flex; align-items: baseline; justify-content: space-between; cursor: pointer; list-style: none; padding: 14px 18px; border: 1px solid var(--gb-pane-edge); border-radius: 14px; background: var(--gb-pane); }
+.read-section summary::-webkit-details-marker { display: none; }
+.read-section summary h2 { font-size: 17px; }
+.read-section .n { font: 12px var(--gb-mono); color: var(--gb-muted); }
+.read-section details[open] summary { margin-bottom: 8px; }
+.article :deep(.gb-next a[data-read])::before { content: '✓ '; color: var(--gb-accent); }
+.v-B :deep(.gb-next a[data-read]) { color: var(--gb-muted); }
+.v-B :deep(.gb-next a[data-read])::before { content: '● '; font-size: 9px; vertical-align: 2px; }
+.v-C :deep(.gb-next a[data-read])::before { content: none; }
+.v-C :deep(.gb-next a[data-read])::after { content: ' · read'; font: 11px var(--gb-mono); color: var(--gb-muted); text-transform: uppercase; letter-spacing: 0.06em; }
 
 .article :deep(.gb-skip) { font-size: 15px; color: var(--gb-muted); }
 .article :deep(.gb-skip strong) { color: var(--gb-ink); font-weight: 600; }

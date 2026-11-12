@@ -45,6 +45,10 @@ const { menuOpen, openMenu, closeMenu } = useGlassboxMenu()
 // edition date (GLOSSARY.md, A curated textbook and Two Spaces).
 const live = space === 'workshop'
 
+// PROTOTYPE (#3130): fake reads, client only.
+const reading = useGlassboxRead()
+onMounted(() => reading.seed(data.value?.subjects ?? [], path))
+
 useHead(() => ({ title: `${page.value?.title ?? 'Not found'} · glassbox` }))
 useSeoMeta({ description: () => page.value?.description })
 </script>
@@ -89,5 +93,6 @@ useSeoMeta({ description: () => page.value?.description })
       <ContentLoadErrorDialog :status="status" :error="error" />
       <SiteFooter class="gb-column" />
     </div>
+    <GlassboxPrototypeBar />
   </main>
 </template>
