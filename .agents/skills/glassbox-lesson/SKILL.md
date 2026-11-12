@@ -27,7 +27,8 @@ titles and wording.
    issues that made or changed the design. Done when every claim about
    Terrarium is checked against its file at `revision`, and each reason traces
    to a source you read.
-4. **Join the other pages.** Add the Lesson as a chip to the `::lessons` of
+4. **Join the other pages.** Find them as writing-pages.md says (*Find related
+   Lessons*). Add the Lesson as a chip to the `::lessons` of
    every Walkthrough stop whose mechanism it explains, and to the Where next of
    every existing Lesson it relates to, above any Journal page. Both are
    capped (the contracts): a full list takes it only in place of its weakest

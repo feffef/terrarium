@@ -73,6 +73,13 @@ page is written; a retitle keeps the URL.
 - **Don't paraphrase an ADR** in In Terrarium or What to watch for: show the
   files and link the ADR.
 - **Link only pages that exist**, and promise none.
+- **Find related Lessons with `orient.ts`.** Run
+  `pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts` and read the
+  guide index files it names, one Read each: every page's bold lead-ins and the
+  pages they link. Where a sibling covers the same point, end the bullet or
+  paragraph with a link to its section (`#why-its-built-this-way`,
+  `#what-to-watch-for` or `#in-terrarium`), the link text its exact title.
+  Check *Don't repeat a sibling page* (below) against the same index.
 - **Mechanism, not motive.** *In Terrarium* says what the code does, with no
   "so …" or "for …" clause; every design "because" goes in *Why it's built
   this way*.
