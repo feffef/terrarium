@@ -1,11 +1,17 @@
 // Prints a saved clear-backlog Workflow run's `.output` as compact blocks, so
-// the orchestrator reads results without paging raw JSON (#2334).
+// the orchestrator reads results without paging raw JSON (#2334). --build also
+// files each review's findings in its branch's folder for the builder to read,
+// and names the agent ids the orchestrator resumes (#3110).
 //
 // Usage:
 //   pnpm exec tsx .agents/skills/clear-backlog/scripts/run-summary.ts
-//     <run .output> --triage | --build
-import { readFileSync } from 'node:fs'
-import { fail, runIfMain } from '../../../../scripts/lib/cli.ts'
+//     <run .output> --triage
+//     <run .output> --build [--run <workflow run id>]
+//     <findings .json> --findings
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { homedir } from 'node:os'
+import { join } from 'node:path'
+import { extractFlag, fail, runIfMain } from '../../../../scripts/lib/cli.ts'
 
 type Question = { choice: string; options: string[]; pick: string; why: string; wouldChange?: string }
 type OptionCheck = { option: string; holds: string; settledBy?: string }
@@ -27,17 +33,18 @@ type Triage = {
   optionChecks?: OptionCheck[]
   sourcesRead?: unknown[]
 }
-type Finding = { title: string; detail: string; file?: string }
+type Finding = { kind: string; title: string; detail: string; file?: string }
+type Review = { findings: Finding[]; summary: string }
 type Branch = {
   branch: string
   status: string
+  round?: number
+  dir?: string
   worktree?: string
   commits?: string[]
-  decisions?: string[]
-  judgementCalls?: Finding[]
   question?: string
   reason?: string
-  openFindings?: Finding[]
+  reviews?: Record<string, Review>
 }
 type Explore = { results: Record<string, Triage>; missing: number[]; grouping: { issues: number[]; sharedFiles: string[] }[] }
 
@@ -83,34 +90,70 @@ function triage(r: Explore): string[] {
   ]
 }
 
-const finding = (f: Finding) => `${f.title}${f.file ? ` (${f.file})` : ''}: ${f.detail}`
+const finding = (f: Finding, i: number) => `${i + 1} ${f.kind}: ${f.title}${f.file ? ` (${f.file})` : ''}`
 
-function build(r: Branch[]): string[] {
-  return r.map((b) => [
-    `${b.branch} ${b.status}`,
-    ...field('worktree', b.worktree),
-    ...field('commits', b.commits?.join(', ')),
-    ...list('decisions', b.decisions),
-    ...list('judgementCalls', b.judgementCalls?.map(finding)),
-    ...field('question', b.question),
-    ...field('reason', b.reason),
-    ...list('openFindings', b.openFindings?.map(finding)),
-  ].join('\n'))
+/** The run journal's `started` lines map each agent's label to the id `SendMessage` resumes it by (docs/research/subagent-spawn-depth.md, test 6). */
+export function agentIds(runId: string, home = homedir()): Map<string, string> {
+  const projects = join(home, '.claude/projects')
+  const dirs = (path: string) => (existsSync(path) ? readdirSync(path, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => join(path, d.name)) : [])
+  const journals = dirs(projects)
+    .flatMap(dirs)
+    .map((session) => join(session, 'subagents/workflows', runId, 'journal.jsonl'))
+    .filter((p) => existsSync(p))
+  if (journals.length !== 1) fail(`found ${journals.length} journals for run ${runId} under ${projects}`)
+  const ids = new Map<string, string>()
+  for (const line of readFileSync(journals[0]!, 'utf8').split('\n')) {
+    if (!line.trim()) continue
+    const e = JSON.parse(line) as { type?: string; agentId?: string; label?: string }
+    if (e.type === 'started' && e.agentId && e.label) ids.set(e.label, e.agentId)
+  }
+  return ids
 }
 
-const MODES = {
-  '--triage': (r: unknown) => triage(r as Explore).join('\n\n'),
-  '--build': (r: unknown) => build(r as Branch[]).join('\n\n'),
+function build(r: Branch[], ids?: Map<string, string>): string[] {
+  return r.map((b) => {
+    const labels = [`build ${b.branch}`, ...Object.keys(b.reviews ?? {}).map((axis) => `${axis} ${b.branch} r${b.round}`)]
+    const agents = ids && labels.flatMap((l) => (ids.has(l) ? [`${l.split(' ')[0]} ${ids.get(l)}`] : []))
+    return [
+      `${b.branch} ${b.status}${b.reviews ? ` r${b.round}` : ''}`,
+      ...field('dir', b.dir),
+      ...field('worktree', b.worktree),
+      ...field('commits', b.commits?.join(', ')),
+      ...field('agents', agents?.join(', ')),
+      ...field('question', b.question),
+      ...field('reason', b.reason),
+      ...Object.entries(b.reviews ?? {}).flatMap(([axis, review]) => {
+        const file = join(b.dir!, `${axis}-r${b.round}.json`)
+        mkdirSync(b.dir!, { recursive: true })
+        writeFileSync(file, JSON.stringify(review, null, 2))
+        return [`  ${axis}: ${file}`, ...review.findings.map((f, i) => `    ${finding(f, i)}`)]
+      }),
+    ].join('\n')
+  })
 }
 
 // The logs carry harness warnings and workflow notes that no result does, so always show them.
-export function runSummary(path: string, mode: keyof typeof MODES): string {
+function withLogs(path: string, print: (result: unknown) => string): string {
   const { result, logs } = saved(path)
-  return [MODES[mode](result), ...(logs.length ? [['logs:', ...logs.map((l) => `  - ${l}`)].join('\n')] : [])].join('\n\n')
+  return [print(result), ...(logs.length ? [['logs:', ...logs.map((l) => `  - ${l}`)].join('\n')] : [])].join('\n\n')
 }
 
+export const triageSummary = (path: string) => withLogs(path, (r) => triage(r as Explore).join('\n\n'))
+export const buildSummary = (path: string, runId?: string, home?: string) =>
+  withLogs(path, (r) => build(r as Branch[], runId ? agentIds(runId, home) : undefined).join('\n\n'))
+
+/** A review's findings file as numbered `kind: title` lines. */
+export const findingsSummary = (path: string) => (JSON.parse(readFileSync(path, 'utf8')) as Review).findings.map(finding).join('\n') || 'no findings'
+
+const USAGE = 'usage: run-summary.ts <run .output> --triage | <run .output> --build [--run <run id>] | <findings .json> --findings'
+
 runIfMain(import.meta.url, () => {
-  const [path, mode, ...rest] = process.argv.slice(2)
-  if (!path || !mode || rest.length || !Object.hasOwn(MODES, mode)) fail('usage: run-summary.ts <run .output> --triage | --build')
-  console.log(runSummary(path, mode as keyof typeof MODES))
+  const run = extractFlag(process.argv.slice(2), '--run')
+  const [path, mode, ...rest] = run.rest
+  if (!path || rest.length) fail(USAGE)
+  if (mode === '--build') return console.log(buildSummary(path, run.value))
+  if (run.value) fail(USAGE)
+  if (mode === '--triage') return console.log(triageSummary(path))
+  if (mode === '--findings') return console.log(findingsSummary(path))
+  fail(USAGE)
 })
