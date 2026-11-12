@@ -1,0 +1,10 @@
+session: session_013zxzePqQeuW4GkMnxNpPp3
+mode: autonomous
+focus: "Agents & automation Subject (its five pages): clear the fresh-reader wording problems the memory page lists for them, bring Workflow scripts and Subagents up to date with the clear-backlog build workflow (the Scout found a small-branch reviewer and a narrower reviewer prompt the pages do not say), and strengthen any Try-it section that gives no concrete step or no way to see it worked, as the owner's open PR on the memory page asks (one Subject per run). Chosen because the owner asked in-session for repeated autonomous runs, no open PR touches these pages, and this Subject holds the most open leads. A second run in the same session. Deviations for the budget: the guide index was not re-read (read whole earlier in this session; only the Hooks pages changed since, in wording) and the Scout was not run again (the first run's Scout covered the same window)."
+changes: []
+pagesRead:
+  - agents/10.subagents
+  - agents/20.workflow-scripts
+  - agents/30.cloud-sessions
+  - agents/40.scheduled-tasks
+  - agents/50.inspecting-past-sessions
