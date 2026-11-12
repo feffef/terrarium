@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeS5rcf8VwnGmjcpphq
 startedAt: 2026-11-12T16:19:47Z
-endedAt: 2026-11-12T17:17:46Z
+endedAt: 2026-11-12T17:22:40Z
 kind: autonomous
 goal: Improve the Glass Box guide pages, one Subject per run
-status: in-review
-outcome: PRs 3179 and 3180 merged; PR 3181 open (Web standards pages), waiting for CI
-summary: "An autonomous glassbox-curate run, started by the chained routine (no human prompt in this session). I chose the focus myself: the Verification Subject, because no PR touched the guide, it still capitalised glossary terms against the owner's rule, and no fresh reader had read it. The Scout found no new topic. Two fresh readers read the pages, an opus writer fixed them, a claim checker found one false jiti sentence, two overstated ones and a loose clause, and code-review found two motive clauses and one temporal word; all were corrected. One unsourced speed claim on Linting was cut. The memory page lost four items to stay under its word cap and gained the Verification leads and a question about the capitalised term definitions. Gate passed and PR 3179 merged. A second run in the same session did the Nuxt Content Subject the same way (PR 3180, merged); a third run did the Web standards Subject (PR 3181, open); it found one wrong claim on prefix in the source and confirmed a search sentence true. Still open: the terms files and the next Subject for the following run."
+status: completed
+outcome: "PRs 3179, 3180 and 3181 merged: glossary terms lowercased and wording clarified on the Verification, Nuxt Content and Web standards pages"
+summary: "An autonomous glassbox-curate run, started by the chained routine (no human prompt in this session). I chose the focus myself: the Verification Subject, because no PR touched the guide, it still capitalised glossary terms against the owner's rule, and no fresh reader had read it. The Scout found no new topic. Two fresh readers read the pages, an opus writer fixed them, a claim checker found one false jiti sentence, two overstated ones and a loose clause, and code-review found two motive clauses and one temporal word; all were corrected. One unsourced speed claim on Linting was cut. The memory page lost four items to stay under its word cap and gained the Verification leads and a question about the capitalised term definitions. Gate passed and PR 3179 merged. A second run in the same session did the Nuxt Content Subject the same way (PR 3180, merged); a third run did the Web standards Subject (PR 3181, merged); it found one wrong claim on prefix in the source and confirmed a search sentence true. Still open: the terms files and the next Subject for the following run."
 prs:
   - "3179"
   - "3180"
@@ -88,22 +88,24 @@ frictions:
   - description: orient.ts --subject output was 72 KB, so it needed two paged reads and consumed context the page text duplicates
     solution: Have --subject print only pagesRead and page paths when the pages were already read from the index files
     severity: minor
-durationSec: 3478
+durationSec: 3772
 models:
-  claude-sonnet-5-5: 219
+  claude-sonnet-5-5: 236
 toolCounts:
   Read: 20
-  Bash: 63
+  Bash: 66
   Write: 1
   Agent: 22
   Grep: 2
   mcp__claude-code-remote__get_session: 3
-  Skill: 5
+  Skill: 6
   mcp__github__create_pull_request: 3
   mcp__claude-code-remote__subscribe_pr_activity: 3
-  ReadNotifications: 6
+  ReadNotifications: 8
   mcp__github__pull_request_read: 1
-  mcp__github__add_issue_comment: 2
+  mcp__github__add_issue_comment: 3
+  mcp__claude-code-remote__create_session: 2
+  mcp__claude-code-remote__archive_session: 1
 filesEdited:
   - layers/glassbox/content/workshop/runs/2026-11-12T1620.yml
   - layers/glassbox/content/workshop/runs/2026-11-12T1705.yml
@@ -774,37 +776,37 @@ subagents:
     durationSec: 435
     toolCalls: 58
     modelCalls: 50
-    tokenShare: 9.7
+    tokenShare: 9.3
   - task: Claim check changed sentences
     model: sonnet
     durationSec: 168
     toolCalls: 30
     modelCalls: 29
-    tokenShare: 5.3
+    tokenShare: 5.1
   - task: "Fresh reader: re-read all eight"
     model: sonnet
     durationSec: 28
     toolCalls: 11
     modelCalls: 3
-    tokenShare: 0.8
+    tokenShare: 0.7
   - task: Standards review
     model: sonnet
     durationSec: 45
     toolCalls: 13
     modelCalls: 6
-    tokenShare: 2
+    tokenShare: 1.9
   - task: Spec review
     model: sonnet
     durationSec: 67
     toolCalls: 15
     modelCalls: 12
-    tokenShare: 2.4
+    tokenShare: 2.3
   - task: "Fresh reader: Nuxt Content 1-3"
     model: sonnet
     durationSec: 18
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 1.1
+    tokenShare: 1
   - task: "Fresh reader: Nuxt Content 4-6"
     model: sonnet
     durationSec: 23
@@ -816,55 +818,55 @@ subagents:
     durationSec: 412
     toolCalls: 58
     modelCalls: 56
-    tokenShare: 10.6
+    tokenShare: 10.1
   - task: Claim check Nuxt Content edits
     model: sonnet
     durationSec: 115
     toolCalls: 20
     modelCalls: 13
-    tokenShare: 2.9
+    tokenShare: 2.8
   - task: "Fresh reader: re-read Nuxt Content"
     model: sonnet
     durationSec: 22
     toolCalls: 9
     modelCalls: 3
-    tokenShare: 0.7
+    tokenShare: 0.6
   - task: Standards review
     model: sonnet
     durationSec: 38
     toolCalls: 13
     modelCalls: 7
-    tokenShare: 1.8
+    tokenShare: 1.7
   - task: Spec review
     model: sonnet
     durationSec: 58
     toolCalls: 13
     modelCalls: 7
-    tokenShare: 2
+    tokenShare: 1.9
   - task: "Fresh reader: web standards 1-2"
     model: sonnet
     durationSec: 19
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 1.1
+    tokenShare: 1
   - task: "Fresh reader: web standards 3-4"
     model: sonnet
     durationSec: 16
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 1.1
+    tokenShare: 1
   - task: "Opus writer: Web standards pages"
     model: opus
     durationSec: 275
     toolCalls: 34
     modelCalls: 30
-    tokenShare: 5.3
+    tokenShare: 5
   - task: Claim check Web standards edits
     model: sonnet
     durationSec: 96
     toolCalls: 22
     modelCalls: 18
-    tokenShare: 2.9
+    tokenShare: 2.8
   - task: "Fresh reader: re-read Web standards"
     model: sonnet
     durationSec: 16
@@ -882,7 +884,7 @@ subagents:
     durationSec: 38
     toolCalls: 12
     modelCalls: 9
-    tokenShare: 1.9
+    tokenShare: 1.8
 gitBranch: HEAD
 entrypoint: remote
 cliVersion: 2.1.322
