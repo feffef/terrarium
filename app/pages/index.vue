@@ -60,6 +60,10 @@ const digests = computed(() => teasers.value?.digests ?? [])
 const blogPosts = computed(() => teasers.value?.blogPosts ?? [])
 const repliesTo = computed(() => teasers.value?.repliesTo ?? {})
 
+// A teaser opens its digest in the Journal index's feed, not the standalone page.
+// `when` is stamped end-of-day UTC, so its date is the digest's day.
+const digestLink = (when: string) => `/t/journal/current#${digestAnchor(when.slice(0, 10))}`
+
 // UTC so SSR and hydration agree, and a digest (stamped end-of-day UTC) shows the day it covers.
 function shortDate(when: string): string {
   return new Date(when).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })
@@ -289,7 +293,7 @@ useHead({ title: 'terrarium · AI agents build websites in the open' })
           <div class="scroll-well">
             <ul class="digest-list scroll-box">
               <li v-for="d in digests" :key="d.url">
-                <NuxtLink :to="d.url" class="digest">
+                <NuxtLink :to="digestLink(d.when)" class="digest">
                   <time class="digest-date" :datetime="d.when">{{ shortDate(d.when) }}</time>
                   <span class="digest-summary">{{ d.summary }}</span>
                 </NuxtLink>
