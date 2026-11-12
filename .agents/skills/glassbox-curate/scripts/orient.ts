@@ -1,7 +1,8 @@
 // The orientation step of glassbox-curate. It prints the run's state and writes every guide
 // page's entry to a file the run reads whole: the run reads its own Subject in full
 // (`--subject`), so an entry need only say what every other page teaches.
-// Usage: pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts [--subject <folder>]
+// Usage: pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts [--subject <folder> | --index]
+// `--index` is for a new Lesson (glassbox-lesson): the open PRs and the guide index files, without the run's state.
 import { existsSync, globSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { parse as parseYaml, stringify as stringifyYaml } from 'yaml'
@@ -171,6 +172,14 @@ const runSummary = (text: string) => {
   return stringifyYaml(entry).trim()
 }
 
+const guideIndexSection = (index: { path: string; bytes: number }[]) =>
+  section('Guide pages', [`Every page's entry is in these files. Read each whole, one Read per file, never through head:`, ...index.map((f) => `- ${f.path} (${Math.round(f.bytes / 1000)} KB)`)].join('\n'))
+
+/** What a new Lesson needs from the orientation: the open Glass Box PRs and the guide index files. */
+export function indexOrientation(index: { path: string; bytes: number }[], prs = openGlassboxPrs): string {
+  return [section('Open PRs that touch Glass Box', prs()), guideIndexSection(index)].join('\n\n')
+}
+
 export function orientation(base = join(root, content), { log = guideLog, prs = openGlassboxPrs, now = new Date(), index = [] as { path: string; bytes: number }[] } = {}): string {
   const guide = files(join(base, 'guide/pages'), '**/*.md')
   const runs = files(join(base, 'workshop/runs'), '*.yml').reverse()
@@ -188,7 +197,7 @@ export function orientation(base = join(root, content), { log = guideLog, prs = 
     section(`Last ${recentRuns} curate runs, newest first`, runs.slice(0, recentRuns).map(([f, t]) => `## ${f}\n\n${runSummary(t)}`).join('\n\n')),
     section('Page-check warnings', warnings.join('\n')),
     section(runs.length ? 'Guide changes since the last curate run' : 'Last 30 guide changes (no curate run yet)', log(runs[0] ? runStart(runs[0][0]) : undefined)),
-    section('Guide pages', [`Every page's entry is in these files. Read each whole, one Read per file, never through head:`, ...index.map((f) => `- ${f.path} (${Math.round(f.bytes / 1000)} KB)`)].join('\n')),
+    guideIndexSection(index),
   ].join('\n\n')
   const bytes = Buffer.byteLength(out)
   return `${out}\n\n(This output: ${Math.round(bytes / 1000)} KB.${bytes > inlineCap ? ` Over ${inlineCap / 1000} KB: a tool may cut it, so shorten a section before it grows further.` : ''})`
@@ -218,7 +227,7 @@ runIfMain(import.meta.url, () => {
       writeFileSync(join(root, path), `${text}\n`)
       return { path, bytes: Buffer.byteLength(text) }
     })
-    process.stdout.write(`${orientation(undefined, { index })}\n`)
+    process.stdout.write(`${process.argv.includes('--index') ? indexOrientation(index) : orientation(undefined, { index })}\n`)
   } catch (err) {
     fail(err instanceof Error ? err.message : String(err))
   }

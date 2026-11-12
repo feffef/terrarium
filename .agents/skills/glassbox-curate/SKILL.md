@@ -61,7 +61,8 @@ only as good as each page's `teaches` and bold lead-ins (Fix says how a run
 keeps them so).
 
 - **Orient.** This is the orientation step: run
-  `pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts` and read its
+  `pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts`, with no flag
+  (`--index` is for `glassbox-lesson`), and read its
   output whole, never through `head`; if the tool saves it to a file, read that
   file whole. It gives where to write the run entry, open PRs, memory, recent
   runs and warnings, and names the guide index files it wrote: read each
@@ -124,7 +125,8 @@ keeps them so).
   short of writing-pages.md's Pin rule gets a rewrite in the same Fix, which
   doesn't count as a second focus.
   A new Lesson follows `.agents/skills/glassbox-lesson/SKILL.md` step by step:
-  give the writer its path and have it report each step's Done.
+  give the writer its path and the guide index files the orientation wrote,
+  and have it report each step's Done.
 - **Check.** A separate sonnet claim checker checks the changed sentences;
   `glassbox-update` owns the claim check of unchanged text, so leave that to
   it. Run writing-pages.md's Check on the changed pages, and a fresh reader
