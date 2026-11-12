@@ -1,0 +1,179 @@
+schemaVersion: 1
+session: session_013zxzeNrvAWHmAPYsSy8u7x
+startedAt: 2026-11-12T18:00:56Z
+endedAt: 2026-11-12T18:13:18Z
+kind: delegated
+goal: Harvest recent session ideas and learnings into Seedlings
+status: completed
+outcome: Five Seedlings filed (3186-3190) plus one retro Seedling (3191); 17 clusters checked, 12 dropped; no repo changes
+summary: "Human-instructed: the owner ran the harvest Skill (the one kickoff prompt); every step below is that Skill's own. Extract gave 381 entries (171 ideas, 210 learnings) from the last 28 days; the list was 561 lines and took three Read calls. I clustered, then checked 17 clusters (product first): four product clusters passed (an agent-readable Glass Box guide, a confusing-section link, guided Lesson exercises, a token-share bar on the Journal session card) and one workflow learning cluster (two harness facts for environment-caveats.md). Twelve were dropped with evidence: reading path and prerequisites (ruled out by the Glass Box glossary and visitor-loop decisions), code-block fade and Routine cost panel (already built), the detached-HEAD push (a Ledger entry holds it, which issue 3105 had also said), gate-abort, spawn-depth, resume-by-id and link-text facts (built or in the Ledger), and four clusters that add checks or facts without retiring or recurring (harvest tooling, page checks, screenshot diffs, CSS gotchas). Agent-initiated, within the Skill: which clusters to check and drop, and how to word each Seedling; the retro step (also the Skill's) filed one more Seedling about step 1's whole-list read and step 3's merge evidence. I caught and corrected three claims of my own before posting (a truncated merge list read as \"none about it\", an unread claim about CI fonts and a claim that no Prune Trial covered environment-caveats.md; one does, on a different bullet). Still open: the owner decides the six Seedlings; two of the product ones may meet the same \"too complicated\" answer the owner gave to two earlier ideas of the same source session."
+prs: []
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: .agents/skills/harvest/scripts/harvest.ts
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-11-12-session_013zxzeP1EixGDy96kmktFi2.yml
+    reason: (no reason given)
+  - path: layers/journal/content/archived/sessions/2026-10-21-session_01Y8rMxQ5cH3oLqzHegyQnFx.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-11-12-session_013zxzePDpmX3Lq9AEQGGTTW.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-11-12-session_013zxzeRvdzBc3xXGo24TkVf.yml
+    reason: (no reason given)
+  - path: .agents/skills/harvest/body-template.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-lesson/owner-decisions.md
+    reason: (no reason given)
+  - path: layers/glassbox/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/retro/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/harvest/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: harvest
+    reason: the whole run
+  - name: writing-for-agents
+    reason: loaded by the retro step
+  - name: close-session
+    reason: closure
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Filtered list-merges-since output with head and grep, though step 3 says not to filter script output, and nearly wrote "none about it" from six visible merges.
+    solution: Redirect the script to a file and read it whole, or use git log --name-only as the retro Seedling proposes; caught before posting.
+    severity: minor
+  - description: Read only the first 40 lines of the prune trials file, so missed that an open trial covers environment-caveats.md; found it when I grepped for it before filing.
+    solution: Grep the trials file for the target doc before drafting, as ADR-0027 asks.
+    severity: minor
+  - description: Read the whole 561-line harvest list in three Read calls of about 62,000 tokens, then checked only 17 clusters.
+    solution: Cut each list entry's text, as the retro Seedling proposes.
+    severity: moderate
+  - description: Wrote three claims into the checks file that I had not verified (a log-outcome grep I never ran, a CI-fonts remark, a session count); check-clusters caught the count, I fixed the others before posting.
+    solution: Verify each claim against its source when writing it, as CLAUDE.md's verify-before-you-state says.
+    severity: nit
+  - description: Ran git branch and the first MCP issue read before reading git-conventions.md and github-integration.md; hooks pointed to them and the calls were right.
+    solution: Read both with the first doc read of a session that will use git and GitHub.
+    severity: nit
+  - description: Found issue 3105 had already said the detached-HEAD push is in the Ledger only after drafting it as a candidate; my summary-line check had missed the covering entry.
+    solution: Read a closed Seedling on the same doc before drafting a learning for it.
+    severity: nit
+durationSec: 742
+models:
+  claude-sonnet-5-5: 146
+toolCounts:
+  Bash: 49
+  Read: 11
+  ToolSearch: 1
+  mcp__github__issue_read: 10
+  Write: 2
+  mcp__claude-code-remote__get_session: 1
+  mcp__github__issue_write: 6
+  Skill: 3
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/harvest/scripts/harvest.ts
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/journal/content/current/sessions/2026-11-12-session_013zxzeP1EixGDy96kmktFi2.yml
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: native
+        trigger: docs/agents/triage-labels.md
+      - rule: .claude/rules/adr-0001.md
+        via: hint
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0018.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: session header on every issue
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: filed Seedlings, built nothing
+      - path: .claude/rules/adr-0027.md
+        value: steered
+        why: checked open trials before filing
+      - path: .claude/rules/adr-0001.md
+        value: steered
+        why: shaped two Seedlings' constraints
+      - path: .claude/rules/adr-0009.md
+        value: backed
+      - path: docs/agents/issue-tracker.md
+      - path: docs/agents/triage-labels.md
+      - path: .agents/skills/harvest/body-template.md
+      - path: .agents/skills/visitor-loop/decisions.md
+      - path: .agents/skills/glassbox-lesson/owner-decisions.md
+      - path: layers/glassbox/GLOSSARY.md
+      - path: .agents/skills/clear-backlog/SKILL.md
+      - path: .agents/skills/retro/SKILL.md
+gitBranch: ccr-961e972f-yq0gd3
+entrypoint: remote_mobile
+cliVersion: 2.1.322
+learnings:
+  - list-merges-since.ts prints merge subjects that name only a branch, so file-level evidence for whether an idea is built needs git log origin/main --since=START --name-only.
+  - "A closed-completed Seedling can leave part of its body unbuilt: issue 3178 was closed by PR 3182, which changed only step 4's wording; read the PR's file list before treating a completed close as settling a cluster."
+landedBy: Stop
