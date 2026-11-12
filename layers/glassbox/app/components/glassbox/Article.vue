@@ -207,7 +207,15 @@ const parts = computed(() => {
   margin: 0;
   border-bottom: 1px solid var(--gb-line);
 }
-.article :deep(.gb-next li)::after { content: '→'; color: var(--gb-accent); }
+/* The row's end mark: a book for a Glass Box page, as inline links have, an arrow for anywhere else (the Journal). */
+.article :deep(.gb-next li)::after { content: '→'; color: var(--gb-accent); margin-inline-start: 12px; }
+.article :deep(.gb-next li:has(a[href^="/t/glassbox/"]))::after {
+  content: '';
+  inline-size: 1em;
+  block-size: 1em;
+  background: currentColor;
+  mask: var(--gb-book) center / contain no-repeat;
+}
 .article :deep(.gb-next a) { color: var(--gb-ink); font-weight: 500; text-decoration: none; }
 .article :deep(.gb-next a)::after { content: ''; position: absolute; inset: 0; }
 .article :deep(.gb-next li) { padding-block: 8px; }
@@ -285,7 +293,7 @@ const parts = computed(() => {
   margin-inline-start: 0.3em;
   vertical-align: -0.08em;
   background: currentColor;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 3.5C6.5 2.5 4 2.3 1.5 2.8v9.7c2.5-.5 5-.3 6.5.7 1.5-1 4-1.2 6.5-.7V2.8C12 2.3 9.5 2.5 8 3.5zM8 3.5v9.7' fill='none' stroke='black' stroke-width='1.4' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: var(--gb-book) center / contain no-repeat;
 }
 /* A read Lesson's link shows the same tick as the sidebar, in the book's place. */
 .article :deep(a.seen:not(.file, .chip, .card, .gb-next a, .read a))::after { mask: var(--gb-check) center / contain no-repeat; }

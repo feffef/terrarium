@@ -55,6 +55,23 @@ describe('glassbox Tenant', async () => {
     })
   })
 
+  // The row mark is a CSS pseudo-element no unit test sees: a book for a Glass Box page, → for the Journal.
+  // This Lesson's Where next lists both kinds.
+  it('ends a Where next row in a book for a Glass Box page and in an arrow for another place', async () => {
+    await withRendered('/t/glassbox/guide/agents/cloud-sessions', async (page) => {
+      const rows = (await page.evaluate(`[...document.querySelectorAll('.gb-next li')].map((li) => {
+        const after = getComputedStyle(li, '::after')
+        return { guide: !!li.querySelector('a[href^="/t/glassbox/"]'), content: after.content, mask: after.maskImage }
+      })`)) as { guide: boolean, content: string, mask: string }[]
+      const guide = rows.filter((row) => row.guide)
+      const other = rows.filter((row) => !row.guide)
+      expect(guide.length).toBeGreaterThan(0)
+      expect(other.length).toBeGreaterThan(0)
+      for (const row of guide) expect(row).toMatchObject({ content: '""', mask: expect.stringContaining('url(') })
+      for (const row of other) expect(row).toMatchObject({ content: '"→"', mask: 'none' })
+    })
+  })
+
   it('ticks an opened Lesson on its Subject page and counts it read', async () => {
     const subject = '/t/glassbox/guide/nuxt-vue'
     const layers = `${subject}/layers`
