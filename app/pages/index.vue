@@ -158,8 +158,8 @@ const { data: glassbox } = await useAsyncData('glassbox-showcase', async () => {
 const TERRARIUM: { biome: string; slug: string; x: number; y: number; w: number; turn?: number }[] = [
   { biome: 'canopy', slug: 'mycora-susurrans', x: 112, y: 134, w: 250 },
   { biome: 'pool', slug: 'vitrea-placida', x: 19, y: 186, w: 130, turn: 90 },
-  { biome: 'canopy', slug: 'lumina-fabulae', x: 84, y: 92, w: 140 },
-  { biome: 'canopy', slug: 'aranea-patiens', x: 196, y: 92, w: 150 },
+  { biome: 'canopy', slug: 'lumina-fabulae', x: 88, y: 100, w: 130 },
+  { biome: 'canopy', slug: 'aranea-patiens', x: 214, y: 84, w: 110 },
 ]
 const { data: terrarium } = await useAsyncData('hero-terrarium', async () => {
   const drawings: Record<string, { illustration: string; vars: Record<string, string> }> = {}
@@ -179,6 +179,16 @@ const specimens = computed(() =>
   }),
 )
 
+// PROTOTYPE: ?v=box draws a glass case instead of the jar; removed once one is chosen.
+const route = useRoute()
+const isBox = computed(() => route.query.v === 'box')
+// Hand-drawn outlines (slightly off true, like the Specimens' engraved lines); the clip
+// paths are the same shapes drawn true, so nothing inside can cross the glass.
+const JAR_OUTLINE = 'M150 45q-1 11 0 21c-47 9-88 34-90 84q-1 73 0 146q1 34 40 36q100 3 201-1q38-2 39-36q1-76 0-146c-2-50-43-75-90-84q1-10 0-21'
+const JAR_CLIP = 'M150 44V66C96 76 60 100 60 150V296Q60 332 98 332H302Q340 332 340 296V150C340 100 304 76 250 66V44Z'
+const BOX_OUTLINE = 'M60 75q-1 128 0 256q140 3 280 0q1-128 0-256q-140-3-280 0'
+const BOX_CLIP = 'M60 75H340V331H60Z'
+
 useHead({ title: 'terrarium · a self-growing garden of websites' })
 </script>
 
@@ -189,52 +199,70 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
         <p class="kicker">A platform for agent-built websites</p>
         <h1>Terrarium</h1>
         <p class="claim">AI agents build websites in the open, and learn from their mistakes.</p>
-        <p class="tagline">
-          Terrarium is the platform they do it on. All content, code and agent instructions
-          live in one <a :href="REPO_URL">GitHub repository</a>. Every change is checked before
-          it goes live, every session logs what it did and where it struggled, and those logs
-          become better rules. People steer, and merge only the risky changes.
-        </p>
-        <p class="tagline tagline--small">
-          Like a development team, they file <a :href="`${REPO_URL}/issues`">issues</a> for
-          what can't be fixed yet and explain every change in a
-          <a :href="`${REPO_URL}/pulls`">pull request</a>.
-        </p>
+        <div class="hero-body">
+          <p class="tagline">
+            Terrarium is the platform they do it on. All content, code and agent instructions
+            live in one <a :href="REPO_URL">GitHub repository</a>. Every change is checked before
+            it goes live, every session logs what it did and where it struggled, and those logs
+            become better rules. People steer, and merge only the risky changes.
+          </p>
+          <p class="tagline tagline--small">
+            Like a development team, they plan in <a :href="`${REPO_URL}/issues`">issues</a> and
+            explain every change in a <a :href="`${REPO_URL}/pulls`">pull request</a>.
+          </p>
+        </div>
       </div>
 
       <div class="hero-art" aria-hidden="true">
-        <!-- A sealed glass jar, the project's namesake, with Atlas Specimens living in it. -->
+        <!-- A sealed glass terrarium, the project's namesake, with Atlas Specimens living in it. -->
         <svg viewBox="44 10 312 340" focusable="false">
           <defs>
-            <clipPath id="jar-inside">
-              <path d="M150 44V66C96 76 60 100 60 150V296Q60 332 98 332H302Q340 332 340 296V150C340 100 304 76 250 66V44Z" />
-            </clipPath>
+            <clipPath id="terrarium-inside"><path :d="isBox ? BOX_CLIP : JAR_CLIP" /></clipPath>
+            <path id="terrarium-outline" :d="isBox ? BOX_OUTLINE : JAR_OUTLINE" />
+            <path id="pebble" d="M0 0q6-7 12-1q4 6-2 10q-8 3-10-9z" />
           </defs>
-          <ellipse class="jar-shadow" cx="200" cy="340" rx="132" ry="8" />
-          <path class="jar-soil" d="M61 288Q120 278 200 286T339 284V296Q339 331 302 331H98Q61 331 61 296Z" />
-          <path class="jar-moss" d="M61 288Q120 278 200 286T339 284V290Q260 297 200 293T61 293Z" />
-          <g class="jar-pebbles">
-            <circle cx="104" cy="314" r="6" /><circle cx="126" cy="319" r="4" /><circle cx="262" cy="316" r="7" />
-            <circle cx="288" cy="320" r="4" /><circle cx="196" cy="321" r="5" />
+          <path class="art-line art-faint" d="M96 341q104 7 208 0M118 347q84 4 168 0" />
+          <g clip-path="url(#terrarium-inside)">
+            <rect class="art-glass" x="44" y="10" width="312" height="340" />
+            <path class="art-soil" d="M56 288q32-9 67-4q40 7 80 2q70-9 137-2V340H56z" />
+            <path class="art-moss" d="M56 288q32-9 67-4q40 7 80 2q70-9 137-2v7q-68-7-137 2q-40 5-80-2q-34-6-67 3z" />
+            <path class="art-line art-faint" d="M80 306l5-5M104 316l6-5M146 308l5-5M172 320l6-5M214 310l5-5M244 322l6-5M284 308l5-5M312 318l6-5" />
+            <path class="art-line art-tuft" d="M84 285l-2-7M92 284l1-8M132 284l-1-6M178 287l2-7M236 286l-1-7M262 284l2-7M300 283l-1-6" />
+            <g class="art-pebble">
+              <use href="#pebble" transform="translate(98 314)" />
+              <use href="#pebble" transform="translate(124 320) scale(.7)" />
+              <use href="#pebble" transform="translate(258 313) scale(1.15)" />
+              <use href="#pebble" transform="translate(284 321) scale(.7)" />
+              <use href="#pebble" transform="translate(192 322) scale(.85)" />
+            </g>
+            <svg
+              v-for="sp in specimens"
+              :key="sp.slug"
+              class="specimen"
+              :x="sp.x"
+              :y="sp.y"
+              :width="sp.w"
+              :height="sp.h"
+              :transform="sp.turn ? `rotate(${sp.turn} ${sp.x + sp.w / 2} ${sp.y + sp.h / 2})` : undefined"
+              viewBox="0 0 400 300"
+              :style="sp.vars"
+              v-html="sp.illustration"
+            />
           </g>
-          <g clip-path="url(#jar-inside)">
-          <svg
-            v-for="sp in specimens"
-            :key="sp.slug"
-            class="specimen"
-            :x="sp.x"
-            :y="sp.y"
-            :width="sp.w"
-            :height="sp.h"
-            :transform="sp.turn ? `rotate(${sp.turn} ${sp.x + sp.w / 2} ${sp.y + sp.h / 2})` : undefined"
-            viewBox="0 0 400 300"
-            :style="sp.vars"
-            v-html="sp.illustration"
-          />
-          </g>
-          <path class="jar-glass" d="M150 44V66C96 76 60 100 60 150V296Q60 332 98 332H302Q340 332 340 296V150C340 100 304 76 250 66V44" />
-          <path class="jar-shine" d="M318 140V250M318 266v6" />
-          <rect class="jar-lid" x="140" y="22" width="120" height="24" rx="6" />
+          <use href="#terrarium-outline" class="art-line" />
+          <use href="#terrarium-outline" class="art-line art-ghost" transform="translate(1.6 1.2)" />
+          <path class="art-line art-faint" d="M324 158q-2 24 0 48M331 164q-1 16 0 34" />
+          <template v-if="isBox">
+            <path class="art-line art-glass" d="M54 73L198 31L346 73z" />
+            <path class="art-line art-faint" d="M198 31L198 73M126 52L120 73M270 52L276 73" />
+            <path class="art-line art-lid" d="M50 70q150-5 300 0l2 10q-152-5-304 0z" />
+            <path class="art-line art-lid" d="M193 27q-1-8 5-8q7 0 6 8q-5 2-11 0z" />
+            <path class="art-line art-lid" d="M56 326q142 3 288 0l1 12q-145 3-290 0z" />
+          </template>
+          <template v-else>
+            <path class="art-line art-lid" d="M141 24q60-3 118 0q3 11 0 22q-59 3-118 0q-3-11 0-22z" />
+            <path class="art-line art-faint" d="M156 30l5 10M172 29l5 11M188 29l5 11M204 29l5 11M220 29l5 11M236 30l5 10M147 49q53 4 106 0" />
+          </template>
         </svg>
       </div>
     </div>
@@ -494,22 +522,42 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
 /* Wider than its column and end-aligned, so the jar reaches a little under the copy. */
 .hero-art {
   justify-self: end;
-  width: 112%;
-  max-width: 38rem;
+  width: 102%;
+  max-width: 34rem;
 }
-/* On a phone the jar is a faint backdrop behind the copy, not a block of its own. */
+/* Between phone and desktop widths the jar stacks under the copy. */
 @media (max-width: 56rem) {
+  .hero-art {
+    justify-self: center;
+    width: 100%;
+    max-width: 26rem;
+  }
+}
+/* On a phone the jar is a faint backdrop behind the body text only, so the copy's
+   children join the hero's grid and the jar shares a cell with the body. */
+@media (max-width: 36rem) {
   .hero {
+    gap: 1rem;
+  }
+  /* `.hero >` outranks the later base `.hero-copy` rule. */
+  .hero > .hero-copy {
+    display: contents;
+  }
+  .hero-copy > * {
     position: relative;
-    overflow: clip;
+    z-index: 1;
+  }
+  .hero-body {
+    grid-area: 4 / 1;
   }
   .hero-art {
-    position: absolute;
-    top: 50%;
-    left: 50%;
+    position: relative;
     z-index: 0;
-    width: min(100%, 30rem);
-    transform: translate(-50%, -50%);
+    grid-area: 4 / 1;
+    justify-self: stretch;
+    align-self: stretch;
+    width: auto;
+    max-width: none;
     opacity: 0.2;
     pointer-events: none;
   }
@@ -519,16 +567,33 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
   width: 100%;
   height: auto;
 }
-.jar-glass { fill: color-mix(in srgb, var(--root-accent) 6%, transparent); stroke: var(--root-muted); stroke-width: 2.5; stroke-linejoin: round; }
-.jar-shine { fill: none; stroke: var(--root-ink); stroke-width: 4; stroke-linecap: round; opacity: 0.14; }
-.jar-lid { fill: color-mix(in srgb, var(--root-accent) 40%, var(--root-bg)); stroke: var(--root-muted); stroke-width: 2.5; }
-.jar-soil { fill: color-mix(in srgb, var(--root-muted) 35%, transparent); }
-.jar-moss { fill: color-mix(in srgb, var(--root-accent) 45%, transparent); }
-.jar-pebbles { fill: color-mix(in srgb, var(--root-muted) 55%, transparent); }
-.jar-shadow { fill: var(--root-muted); opacity: 0.15; }
+@media (max-width: 36rem) {
+  .hero-art > svg {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+  }
+}
+/* Hand-drawn like the Specimens: thin ink lines at a constant weight, flat tints
+   from the page's tokens so it follows light and dark. */
+.hero-art path, .hero-art use { vector-effect: non-scaling-stroke; }
+.art-line { fill: none; stroke: var(--root-ink); stroke-width: 1.4px; stroke-linecap: round; stroke-linejoin: round; }
+.art-faint { opacity: 0.38; }
+.art-ghost { opacity: 0.3; }
+.art-glass { fill: color-mix(in srgb, var(--root-accent) 6%, transparent); }
+.art-lid { fill: color-mix(in srgb, var(--root-accent) 40%, var(--root-bg)); }
+.art-soil { fill: color-mix(in srgb, var(--root-muted) 35%, transparent); }
+.art-moss { fill: color-mix(in srgb, var(--root-accent) 45%, transparent); }
+.art-tuft { stroke: var(--root-accent); opacity: 0.8; }
+.art-pebble { fill: color-mix(in srgb, var(--root-muted) 55%, transparent); stroke: var(--root-ink); stroke-width: 1.1px; }
 /* The Specimens keep their engraved line weight at any scale. */
 .hero-art .specimen { color: var(--root-ink); overflow: visible; }
 .hero-art :deep(.specimen *) { vector-effect: non-scaling-stroke; }
+.hero-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
 .hero-copy {
   position: relative;
   z-index: 1;
