@@ -23,7 +23,7 @@ Each guide page is named by its title, then its file under `layers/glassbox/cont
 ### Weak spots
 
 - **The Installed Skills pages say little of their own.** *Planning skills* (`skill-pack/20.planning-with-the-pack`) and *Engineering skills* (`skill-pack/30.engineering-skills`) mostly describe Skills that come from outside Terrarium. Only a few of their facts are about choices Terrarium made.
-- **Only the overview and the Git & GitHub, Claude Code, Hooks, Agents & automation, Installed skills, Deploy and Verification pages write glossary terms in lowercase.** The owner's rule (`owner-decisions.md`) is that a glossary term is lowercase in body text, mid-sentence. The other Subjects and the Walkthroughs still write Skill, Tenant, Routine, Gate and the like. Fix it a Subject at a time; it is wording only. A capital stays at the start of a sentence, in a linked page's exact title, in code and in an Excerpt.
+- **Only the overview and the Git & GitHub, Claude Code, Hooks, Agents & automation, Installed skills, Deploy, Verification and Nuxt Content pages write glossary terms in lowercase.** The owner's rule (`owner-decisions.md`) is that a glossary term is lowercase in body text, mid-sentence. The other Subjects and the Walkthroughs still write Skill, Tenant, Routine, Gate and the like. Fix it a Subject at a time; it is wording only. A capital stays at the start of a sentence, in a linked page's exact title, in code and in an Excerpt.
 
 ### Recurring problems
 
@@ -43,7 +43,6 @@ These are the owner's goals for the guide. A run builds toward them directly; a 
 2. **Check the pages whose claims the docs left silent** (see *Claims to check*), by reading the tool's source where the docs have no page.
 
 3. **Check every Walkthrough diagram against its stops.** A diagram is read beside the stops (on wide screens it sits next to them), so what it shows should roughly match the steps; a reader who can't match them gains nothing. It is a simplified picture, never a 1:1 copy: not every box or arrow needs a stop. Try to match, but not too hard, and keep it simple. The stops read better than the diagrams, so expect to redraw the diagram. Keep the same check for any new diagram. *A change goes live* is the model to match: a few boxes in a line, one side branch, no numbers.
-4. **Re-order the Walkthroughs so a newcomer meets the most interesting first.** Put the stories an absolute newcomer will find most interesting first and niche topics last. `glassboxWalkthroughs` sorts them by title, so a new order needs a way to set it (for example a number prefix on the file name, as Lessons have); ask the owner how before building it.
 
 ### Wording fresh readers still find hard
 
@@ -56,6 +55,7 @@ None of these is false.
 - **Walkthroughs.** *A bug report becomes work*: `wontfix (completed)` in the real case is not explained; stop 7 mixes the Trusted author with the Public requester. *A change goes live* stop 2 never says how long the pause is. *Asking an agent for a change*: stop 1 says a cloud and a local session work the same way, and stop 2 has the `SessionStart` hook install packages; both hold for Terrarium's usual one-repository session, and the Walkthrough could say so.
 - **Installed skills and Deploy.** *Wayfinder*: the installed Skill gives no reason a session resolves one ticket and research tickets are excepted; "HITL", "frontier" and "fog" arrive as a list before any example, and Fog and Not yet specified are two names for one section. *Planning skills*: the installed `to-spec` labels `ready-for-agent` but Terrarium overrides it, which a reader meets before the rule; the `auto-triage` file-sharing mechanism sits beside "a brief names no files". *Installed skills*: *ADR* is never glossed, and the gate protects only a Skill that has an Inventory entry, which the page says late. *Engineering skills*: `implement`, which no agent can start, is followed by the build agent without a page saying why that is allowed. *Continuous deployment*: "volume" is used before it is explained. *pnpm and the lockfile*: `lockhash` is a different hash from the lockfile's integrity hashes and the page does not say so; the human-merge reason is given three times; the `pnpm patch-commit` claim that it records the patch in `pnpm-workspace.yaml` is unchecked (the pnpm docs name `patchedDependencies` only).
 - **The version-1 lock hash explanation may go stale.** *Installed skills* says `computedHash` is taken before the installer handles frontmatter, as `validate-skills-lock.ts` says; the live installer's README describes a newer lock whose hash covers the installed files.
+- **Nuxt Content.** *Content collections* and *queryCollection* still pack several terms into one sentence beside the manifest, the kind and the search query. *Multi-tenant isolation*: `useSpace`, `pagesKey` and `path` come before their gloss, and the catalog's one-table-at-a-time reads are explained late. *Content database*: no source says why a failed download is retried once, and `tenant-layers.md` is cited without its content. *MDC components*: no Nuxt Content docs are installed to show the YAML-props form. *Mermaid pre-rendering*: sentinel colour is a word the page never defines, and who serves the font is easy to misread.
 - **Terms glossed late.** Several pages use *Space*, *Document*, *Catalog* or *Tenant* before they are glossed, or gloss one twice (*Vue components*, *Hydration*, *File routing*, *queryCollection*). A short rule for where each is glossed first would settle it.
 - **Other.** *Content validation*: the lede says a misspelt field passes the build, yet a schema-less `page` Collection is skipped by the check.
 
@@ -80,7 +80,6 @@ None of these is false.
 
 Each may be true; a later run should read the tool's source or run it.
 
-- *Content collections*: the docs say `prefix` defaults from the start of `include`, so `prefix: '/'` may be needless once `cwd` is set per Space.
 - *pnpm and the lockfile*: the lead-in says pnpm.io's unversioned pages describe a newer major. The 12.x, 11.x and 10.x docs exist (`pnpm/pnpm.io` `versions.json`), but pnpm.io was blocked, so which major the unversioned pages show is unchecked.
 - *Nitro server engine* (`nuxt-vue/60.nitro`): the dev cache path `.nuxt/cache/nitro/routes`, `cache: false`, a payload for a plain `cache` rule, and "Nuxt 4 runs Nitro v2".
 - *Cloud sessions* (`agents/30.cloud-sessions`): that the proxy refuses `.github/workflows/` pushes and repository-settings writes.
@@ -103,7 +102,6 @@ Decisions agents made (run, review, claim check). Not rules: the owner or a late
 - **`wontfix` is the fifth triage state.** *Issue triage labels* lists four states first and names `wontfix` as the fifth: `docs/agents/triage-labels.md` says skills name five roles (claim check).
 - **A Git & GitHub page may keep a one-clause pointer to a fact a sibling owns.** A page that must stand alone says in a clause how a linked worktree is told (*Git worktrees*, owned by *Session logs*), what a cloud session is, what the guest pipeline is and what a PreToolUse hook is; the sibling keeps the full account (overlap check).
 - **A fresh reader's complaint about a long bracket or a lost link is often the rendering.** `plain.ts` puts each term's definition inside the sentence and strips link syntax from code, so such findings are checked against the page before they are acted on.
-- **Splitting the unattended triage sweep out of *Issue triage labels*.** Held back until the page is stable. The page's length is still a problem.
 
 ## Update log
 
