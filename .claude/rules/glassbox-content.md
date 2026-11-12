@@ -1,6 +1,6 @@
 ---
 paths:
-  - "layers/glassbox/content/**"
+  - "layers/glassbox/**"
 ---
 # Glass Box content
 
@@ -8,6 +8,11 @@ The owner's hard rules for pages, `.agents/skills/glassbox-lesson/owner-decision
 are never gone against. Where the rest lives (page-writing steps, the workshop
 notes and their soft decisions) is in `layers/glassbox/GLOSSARY.md`, What lives
 where.
+
+**No diary style.** Don't write dated narrative ("on 2026-11-10 a run found…",
+"recently", "earlier") anywhere in Glass Box, the workshop notes included: state
+what is true now. What happened when belongs in a run entry or the Journal. The
+exceptions are a Walkthrough's *A real case* and the run entries themselves.
 
 **Keep facts that change out of the prose.** A Glass Box page is pinned to its
 `revision` but read long after it. Its prose, and every diagram label, never
