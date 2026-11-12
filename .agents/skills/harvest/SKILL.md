@@ -1,6 +1,6 @@
 ---
 name: harvest
-description: File up to 10 Seedlings (plus a retro on this Skill), self-contained issues that turn the last 28 days of Session logs' ideas and learnings (both, or one kind) into proposals for a Trusted user to green-light, preferring Tenant, content and UI ideas and leaving Frictions to frictions-to-fixes. User-invoked.
+description: File up to 10 Seedlings (plus a retro on this Skill), self-contained issues that turn the last 7 days of Session logs' ideas and learnings (both, or one kind) into proposals for a Trusted user to green-light, preferring Tenant, content and UI ideas and leaving Frictions to frictions-to-fixes. User-invoked.
 argument-hint: "[ideas|learnings] (default: both)"
 disable-model-invocation: true
 ---
@@ -13,7 +13,7 @@ those for Tenants, content and the UI; `frictions-to-fixes` owns the pains. A
 Seedling (GLOSSARY.md) is labelled
 `ready-for-human` and waits for a Trusted user's green light. State lives in the
 Seedlings themselves: a `Harvested:` key line on any issue marks its entry as
-taken, so a rerun or a missed week files each entry once. The helper is
+taken, so a rerun or a missed run files each entry once. The helper is
 `pnpm exec tsx .agents/skills/harvest/scripts/harvest.ts`; below it is `harvest`.
 
 The argument `ideas` or `learnings` harvests that kind alone; with none, the run
@@ -21,7 +21,7 @@ harvests both.
 
 1. **Extract.** `harvest extract --out <scratchpad>/harvest-extract.json`, plus
    `--kind ideas` or `--kind learnings` when the run has that argument.
-   It lists unharvested entries from the last 28 days (archived logs
+   It lists unharvested entries from the last 7 days (archived logs
    included). Within a kind the newest come first and the kinds alternate, idea
    first; recency is the only ranking, so an idea from a smooth session ranks like
    any other. Then redirect `harvest list <scratchpad>/harvest-extract.json` to
