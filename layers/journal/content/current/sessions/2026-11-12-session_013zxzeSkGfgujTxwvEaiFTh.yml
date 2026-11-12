@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSkGfgujTxwvEaiFTh
 startedAt: 2026-11-12T22:40:22Z
-endedAt: 2026-11-12T23:37:06Z
+endedAt: 2026-11-12T23:37:35Z
 kind: interactive
 goal: Survey what the Platform discarded since the last Midden survey, then catalogue the finds the owner chose
 status: in-review
 outcome: Survey issue 3213 filed; the owner accepted six finds; PR 3217 catalogues them and waits for the owner's review
-summary: "Human-instructed throughout. The owner ran /midden-survey; I swept deleted files, closed-unmerged PRs and dormant branches since the last report, judged each candidate against both gates by checking origin/main for successors, and filed issue 3213 with 12 candidates, three flagged weak. The owner then chose candidates 1, 2, 3, 4 and 10 and asked to add glassbox-improve, which I had excluded at Gate B; I recorded that on the issue. The owner ran /midden-catalogue next. I re-read each find at its commits, issues and session logs, wrote five trench records, one stores record and a new dig report (Short Lives), and folded finds into two existing reports. Two subagents (an adversarial fact-check and a voice review) found real defects: lifetimes rounded up, a unit error (10 refusals vs 10 sessions), a library confusion in the scripts record, and jargon; all were fixed, and a second fact-check found four more minor wording points, also fixed. The owner asked whether to close the open dig season; I proposed a 9 and 2 split (\"the Swept Floor\"), the owner agreed, I began editing, then the owner said to leave it open and I reverted my uncommitted edits. Agent-initiated: which borderline survey items to include or exclude, the placement of the rulebook table and scripts, and the causes and grades, all flagged in the PR for the owner's review. The PR passed pnpm typecheck, validate:content and gate:scoped on 08725e8c8 and waits for a Trusted user to merge it (I will not merge it). Skipped step: I did not subscribe to PR activity; I asked the owner instead."
+summary: "Human-instructed throughout. The owner ran /midden-survey; I swept deleted files, closed-unmerged PRs and dormant branches since the last report, judged each candidate against both gates by checking origin/main for successors, and filed issue 3213 with 12 candidates, three flagged weak. The owner then chose candidates 1, 2, 3, 4 and 10 and asked to add glassbox-improve, which I had excluded at Gate B; I recorded that on the issue. The owner ran /midden-catalogue next. I re-read each find at its commits, issues and session logs, wrote five trench records, one stores record and a new dig report (Short Lives), and folded finds into two existing reports. Two subagents (an adversarial fact-check and a voice review) found real defects: lifetimes rounded up, a unit error (10 refusals vs 10 sessions), a library confusion in the scripts record, and jargon; all were fixed, and a second fact-check found four more minor wording points, also fixed. The owner asked whether to close the open dig season; I proposed a 9 and 2 split (\"the Swept Floor\"), the owner agreed, I began editing, then the owner said to leave it open and I reverted my uncommitted edits. Agent-initiated: which borderline survey items to include or exclude, the placement of the rulebook table and scripts, and the causes and grades, all flagged in the PR for the owner's review. The PR passed pnpm typecheck, validate:content and gate:scoped on 08725e8c8 and waits for a Trusted user to merge it (I will not merge it). I subscribed to the PR's activity only after the Stop hook flagged it; ADR-0003 requires subscribing on open."
 prs:
   - "3217"
 docsRead:
@@ -71,12 +71,15 @@ frictions:
   - description: I began editing the season list after the owner's 9 and 2 answer, then reverted when they changed their mind.
     solution: Confirm a structural change such as closing a season once more before editing.
     severity: nit
-durationSec: 3405
+  - description: I opened the PR and told the owner I had not subscribed, following the system prompt's 'ask first' line over ADR-0003, until the Stop hook flagged it.
+    solution: Subscribe in the same turn as opening the PR, as ADR-0003 says; the rule already overrides the generic prompt.
+    severity: nit
+durationSec: 3433
 models:
-  claude-sonnet-5-5: 264
+  claude-sonnet-5-5: 269
 toolCounts:
   Read: 14
-  Bash: 84
+  Bash: 85
   ToolSearch: 3
   mcp__github__issue_read: 1
   Write: 22
@@ -88,6 +91,7 @@ toolCounts:
   Grep: 1
   mcp__github__create_pull_request: 1
   mcp__github__update_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
 filesEdited:
   - layers/midden/content/trench/artifacts/the-tail-pipe-guard.yml
   - layers/midden/content/trench/artifacts/the-atlas-plates-and-random-pages.yml
@@ -246,7 +250,7 @@ subagents:
     durationSec: 430
     toolCalls: 61
     modelCalls: 54
-    tokenShare: 18.4
+    tokenShare: 18
   - type: general-purpose
     task: Voice and domain review
     durationSec: 98
@@ -258,7 +262,7 @@ subagents:
     durationSec: 258
     toolCalls: 49
     modelCalls: 36
-    tokenShare: 10.8
+    tokenShare: 10.6
 gitBranch: claude/ecstatic-bardeen-708ieg
 entrypoint: remote
 cliVersion: 2.1.323
