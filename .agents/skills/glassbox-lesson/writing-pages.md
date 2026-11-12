@@ -73,6 +73,11 @@ page is written; a retitle keeps the URL.
 - **Don't paraphrase an ADR** in In Terrarium or What to watch for: show the
   files and link the ADR.
 - **Link only pages that exist**, and promise none.
+- **Link a sibling at its section.** Where a Lesson covers the same point, end
+  the bullet or paragraph with a link to its section (`#why-its-built-this-way`,
+  `#what-to-watch-for` or `#in-terrarium`). A link's text is the page's exact
+  title, or lowercase running prose; only a Where next row to a guide page is
+  bare, `[](path)`, since it shows the title itself.
 - **Mechanism, not motive.** *In Terrarium* says what the code does, with no
   "so …" or "for …" clause; every design "because" goes in *Why it's built
   this way*.
@@ -95,7 +100,7 @@ page is written; a retitle keeps the URL.
 - **A second tool gets its own link** at its first mention, even though *The
   concept* ends on one Full reference.
 - **Don't repeat a sibling page.** Check a Lesson's *Why it's built this way*
-  and *What to watch for* against the other Lessons; give a reason another
+  and *What to watch for* against the other Lessons in the guide index; give a reason another
   Lesson owns one sentence and link that Lesson.
 - **Name the command.** A watch item about a stale `.nuxt/`, the type check or
   a restart names the command it applies to, after checking what the repo's

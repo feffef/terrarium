@@ -2,7 +2,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
-import { guideIndex, guidePath, subjectPages, orientation, pageOverview, runStem, shortPath, warningLines } from '../../scripts/orient.ts'
+import { guideIndex, guidePath, indexOrientation, subjectPages, orientation, pageOverview, runStem, shortPath, warningLines } from '../../scripts/orient.ts'
 
 const page = `---
 title: Blocking hooks
@@ -115,6 +115,16 @@ describe('orientation', () => {
     rmSync(empty, { recursive: true, force: true })
     expect(seen).toEqual([undefined])
     expect(out).toContain('# Last 30 guide changes (no curate run yet)')
+  })
+})
+
+describe('indexOrientation', () => {
+  it('prints only the open PRs and the guide index files', () => {
+    const out = indexOrientation([{ path: '.throwaway/glassbox-curate/guide-pages-1.md', bytes: 12_345 }], () => '- #1 a PR: layers/glassbox/x.md')
+    expect(out).toBe([
+      '# Open PRs that touch Glass Box\n\n- #1 a PR: layers/glassbox/x.md',
+      "# Guide pages\n\nEvery page's entry is in these files. Read each whole, one Read per file, never through head:\n- .throwaway/glassbox-curate/guide-pages-1.md (12 KB)",
+    ].join('\n\n'))
   })
 })
 
