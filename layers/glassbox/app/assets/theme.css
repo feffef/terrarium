@@ -182,6 +182,11 @@ body:has(.gb) { margin: 0; }
 /* ── Lesson and Walkthrough frame: sidebar column from 1024px, menu panel below ── */
 .gb.gb-doc .gb-main { min-width: 0; padding: 0 40px 64px; }
 .gb.gb-doc .gb-column { max-width: 760px; margin-inline: auto; }
+/* A Walkthrough with a diagram gives it a column beside the stops (Article.vue); all else keeps the reading width. */
+@media (min-width: 1360px) {
+  .gb.gb-doc .gb-column.gb-wide { max-width: 1120px; }
+  .gb.gb-doc .gb-column.gb-wide > :not(.walk) { max-width: 760px; }
+}
 .gb.gb-doc h1 {
   margin: 56px 0 18px;
   font-size: 54px;

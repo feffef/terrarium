@@ -114,7 +114,9 @@ of repeating them.
 Its body, in `walkthroughs/`, follows one contract, which the page draws like
 design 1b (`layers/glassbox/app/utils/walkthrough.ts`):
 
-- a lede paragraph, then at most one diagram;
+- a lede paragraph, then at most one diagram (the page shows it beside the
+  stops on wide screens, held in view while they scroll, and after the last
+  stop elsewhere);
 - at least one numbered **stop**, each `## 1. Title`: 2–4 sentences of this
   story's part, ending in exactly one `::lessons` block of chips separated
   by `·`. A chip is a link (a Lesson where one exists, a Journal page), a

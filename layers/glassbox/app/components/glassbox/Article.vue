@@ -34,30 +34,42 @@ const parts = computed(() => {
   const framed = subject.value ? glassboxLessonSections(body.value, props.base, props.titles, readable.value, props.descriptions) : body.value
   const [intro, rest] = glassboxSplitBeforeBody(framed)
   const sections = glassboxFrameDiagrams(rest)
+  // A Walkthrough's diagram only makes sense beside its steps, so it leaves the flow and is placed after the last stop.
+  const isPane = (node: typeof intro[number]) => Array.isArray(node) && node[0] === 'div' && node[1]?.class === 'gb-diagram'
+  const panes = walkthrough.value ? sections.filter(isPane) : []
+  const flow = walkthrough.value ? sections.filter((node) => !isPane(node)) : sections
   const withBody = (nodes: typeof intro) => ({ ...props.page, body: { ...body, value: nodes.map((node) => glassboxMarkSeen(node, props.base, readable.value)) } })
+  const sectionParts = (walkthrough.value ? glassboxWalkthroughParts(flow, props.base, props.titles, props.descriptions) : [{ nodes: flow.map((node) => glassboxLessonChipsDeep(node, props.base)) }])
+    .map((part) => ({ ...part, value: withBody(part.nodes) }))
   return {
     intro: withBody(walkthrough.value ? intro : intro.map((node) => glassboxLessonChipsDeep(node, props.base))),
-    sections: (walkthrough.value ? glassboxWalkthroughParts(sections, props.base, props.titles, props.descriptions) : [{ nodes: sections.map((node) => glassboxLessonChipsDeep(node, props.base)) }])
-      .map((part) => ({ ...part, value: withBody(part.nodes) })),
+    sections: sectionParts,
+    diagram: panes.length ? withBody(panes) : undefined,
+    diagramAfter: sectionParts.findLastIndex((part) => 'stop' in part && part.stop),
     toc: subject.value ? glassboxLessonToc(body.toc?.links ?? [], body.value, props.base, readable.value) : body.toc?.links ?? [],
   }
 })
 </script>
 
 <template>
-  <article class="article">
+  <article class="article" :class="{ 'gb-wide': parts.diagram }">
     <p v-if="subject" class="chips"><NuxtLink class="chip" :to="`${base}/${subject.slug}`">{{ subject.name }}</NuxtLink><span>Lesson</span></p>
     <p v-else-if="walkthrough" class="chips"><span class="chip">Walkthrough</span></p>
     <h1 :class="{ lesson: subject || walkthrough }">{{ page.title }}</h1>
     <ContentRenderer class="gb-prose" :value="parts.intro" />
     <GlassboxToc v-if="parts.toc.length" v-model:current="current" :links="parts.toc" />
-    <template v-for="(part, i) in parts.sections" :key="i">
-      <div v-if="part.stop" class="stop" :class="{ current: part.id === current }">
-        <span class="stop-n">{{ part.stop }}</span>
-        <ContentRenderer class="gb-prose stop-pane" :value="part.value" />
-      </div>
-      <ContentRenderer v-else class="gb-prose" :value="part.value" />
-    </template>
+    <div :class="walkthrough ? ['walk', { 'has-diagram': parts.diagram }] : 'flat'">
+      <template v-for="(part, i) in parts.sections" :key="i">
+        <div v-if="part.stop" class="stop" :class="{ current: part.id === current }">
+          <span class="stop-n">{{ part.stop }}</span>
+          <ContentRenderer class="gb-prose stop-pane" :value="part.value" />
+        </div>
+        <ContentRenderer v-else class="gb-prose" :value="part.value" />
+        <aside v-if="parts.diagram && i === parts.diagramAfter" class="walk-diagram" aria-label="The whole story as a diagram">
+          <ContentRenderer class="gb-prose" :value="parts.diagram" />
+        </aside>
+      </template>
+    </div>
     <section v-if="readNext.length" class="read">
       <h2>Lessons already read</h2>
       <ul>
@@ -200,6 +212,24 @@ const parts = computed(() => {
 .article :deep(.gb-next a)::after { content: ''; position: absolute; inset: 0; }
 .article :deep(.gb-next li) { padding-block: 8px; }
 .article :deep(.gb-next small) { display: block; margin-top: 2px; font-size: 14px; line-height: 1.45; color: var(--gb-muted); }
+
+.flat { display: contents; }
+/* Wide screens: the stops left, the whole story's diagram right, held in view while the stops scroll.
+   Below that the diagram follows the last stop. */
+@media (min-width: 1360px) {
+  .walk.has-diagram { display: grid; grid-template-columns: minmax(0, 1fr) 420px; column-gap: 32px; }
+  .walk.has-diagram > :not(.walk-diagram) { grid-column: 1; }
+  .walk-diagram {
+    grid-column: 2;
+    grid-row: 1 / 40;
+    align-self: start;
+    position: sticky;
+    top: var(--gb-heading-clear);
+    max-height: calc(100dvh - var(--gb-heading-clear) - 16px);
+    overflow-y: auto;
+  }
+  .walk-diagram :deep(.gb-diagram) { margin: 16px 0 0; }
+}
 
 /* Walkthrough stops: numbered circles on a thread, each stop its own pane. */
 .stop { position: relative; display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 16px; margin-top: 16px; }
