@@ -1,0 +1,13 @@
+session: session_013zxzeQKydDYQaAEhBMqoW3
+mode: interactive
+focus: "Overview additions (guide/index): add the topics that Lessons added or retaught since the overview's last large rewrite (2026-11-02) cover and the overview never names. The owner chose the rewrite as the baseline, then chose three gaps: planning big work, Skill inventory with logged ideas, and what the gate checks. They allowed a new section, and asked that any new Lesson or Subject go to the memory page instead. They left out web standards, how agents reach things and dependencies. Midway the owner said the page should not capitalise glossary terms, so the whole page was lowercased and the owner's rule added to owner-decisions.md. The Scout was skipped: the focus was given and the orientation's list of guide changes showed no new topic. The memory page lost five long-standing soft decisions (two page moves already judged to gain nothing, a Lesson on git hooks, the trust-rules move and merging Engineering skills into Planning skills) to stay under its word cap, and gained the lowercase sweep and the gaps left out. The code-review Spec reviewer named linked and overlapping pages missing from pagesRead; the three that overlap the new text were read in full (Wayfinder, Self-improvement loop, Scheduled tasks) and the leads of Ideas and lessons learned, Headless browser checks, Testing, Type checking and Planning skills were read, with no change needed."
+changes:
+  - index | The Check step says what the gate runs and that a visual change is checked in screenshots; Who decides has a paragraph on planning big work; How it improves itself says the skill audit grades the skill inventory by need and that harvest turns logged ideas and lessons into seedlings a trusted user decides on; the sentence that a routine turns ideas into issues is replaced, since no routine runs harvest; every glossary term is lowercase in body text; re-pinned, teaches rewritten, publishedAt set | the Lessons for these topics were added after the 2026-11-02 rewrite and the page never named them (scripts/gate/gate.ts:17-19; wayfinder SKILL.md:7-11,75-85,116; to-spec SKILL.md:7; audit-skills SKILL.md:120-148; harvest SKILL.md:3,19-21; ui-verification.md; the owner's lowercase ruling)
+pagesRead:
+  - index
+  - walkthroughs/planning-a-big-change
+  - terrarium-practice/85.skill-inventory
+  - verification/10.gate
+  - skill-pack/40.wayfinder
+  - terrarium-practice/80.self-improvement-loop
+  - agents/40.scheduled-tasks
