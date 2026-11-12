@@ -1,6 +1,6 @@
 ---
 paths:
-  - "layers/glassbox/**"
+  - "layers/glassbox/content/**"
 ---
 # Glass Box content
 
@@ -10,7 +10,7 @@ notes and their soft decisions) is in `layers/glassbox/GLOSSARY.md`, What lives
 where.
 
 **No diary style.** Don't write dated narrative ("on 2026-11-10 a run found…",
-"recently", "earlier") anywhere in Glass Box, the workshop notes included: state
+"recently", "earlier") anywhere in Glass Box content, the workshop notes included: state
 what is true now. What happened when belongs in a run entry or the Journal. The
 exceptions are a Walkthrough's *A real case* and the run entries themselves.
 
