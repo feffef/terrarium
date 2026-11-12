@@ -40,8 +40,7 @@ follow it and don't route around it. If it is wrong, say so on the guard's issue
 | `rule-use-ask.ts` | nothing: a hint, not a guard. After an agent's first bare `echo rule-use:` call it lists the rules that loaded for that agent, start-loaded ones included, and says what `steered` and `backed` mean; after a call naming a rule without a valid value it says which were not recorded | its script header; `scripts/session/rule-use.ts` | #3020 |
 | `network-start.ts` | nothing: a `SessionStart` hint. Probes the hosts in `PROBED_HOSTS` through the proxy and prints which are readable or blocked; prints nothing without `HTTPS_PROXY` | its script header; `environment-caveats.md` (what blocked means) | #2959 |
 
-`.claude/settings.json` wires the guards under `hooks.PreToolUse`, and the hints
-under `PostToolUse`, `PostToolUseFailure` and `UserPromptSubmit`; `harness-tag-stop.ts`, `merge-close-stop.ts` and `pr-subscribe-stop.ts` run under `Stop`; `network-start.ts` runs under `SessionStart`; `rule-load-ledger.ts` under `InstructionsLoaded` and `subagent-note.ts` under `SubagentStart`.
+`.claude/settings.json` holds each guard's hook event and matcher.
 
 ## Conventions every guard follows
 
