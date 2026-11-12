@@ -20,6 +20,8 @@ More than 3 agents from one brief you improvised this session: start one first a
 - **A dispatched subagent that touches git:** pass `isolation: 'worktree'` on the
   Agent call. Without it, parallel agents share one checkout and race on
   branches.
+- **Edit-only writers sharing your checkout:** each commits only its own files by
+  path, never `git add -A`.
 - **`EnterWorktree`/`ExitWorktree`** moves your whole session. Use only when the
   user says "worktree".
 - **Your own one-off inspection** may use `git worktree add` under
