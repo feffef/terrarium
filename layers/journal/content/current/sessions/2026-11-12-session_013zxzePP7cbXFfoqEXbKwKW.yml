@@ -1,0 +1,472 @@
+schemaVersion: 1
+session: session_013zxzePP7cbXFfoqEXbKwKW
+startedAt: 2026-11-12T10:53:03Z
+endedAt: 2026-11-12T11:07:00Z
+kind: delegated
+goal: Keep the Glass Box guide in step with main
+status: in-review
+outcome: "PR 3152 opened: 74 pages re-pinned, 5 pages corrected, 5 pages fully checked; gate green"
+summary: "The owner invoked /glassbox-update, a scheduled-style run, so the whole run is human-instructed by that one command; the Skill's steps were followed and nothing beyond them was added except two agent judgement calls: moving publishedAt on the hydration and harvest pages, and leaving one diary-style sentence on the Nitro page for a human. The report flagged 15 pages and no terms. The script left the two pages with an edited range unpinned, so I re-lined the harvest Excerpts and pinned both by hand. Three sonnet readers checked 17 pages (14 flagged plus 3 more from the oldest-checked rotation of 5, two of which were already flagged). They found no outright false claims; I confirmed and corrected four imprecise ones (hydration storage, two harvest lines, one dark-mode colour sentence) plus a stale EVERY-PAGE.md link. Official docs hosts were blocked, so readers used raw GitHub sources and node_modules, and some docs-only claims stay unverified, which the PR says. I read the 11 re-pin-only flagged pages only through the readers' scoped reports, not whole. PR 3152 is open and subscribed; merge waits on CI."
+prs:
+  - "3152"
+docsRead:
+  - path: layers/glassbox/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-lesson/writing-pages.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-lesson/owner-decisions.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: guide/pages/skill-pack/20.planning-with-the-pack.md
+    reason: (no reason given)
+  - path: guide/pages/skill-pack/10.skill-packs.md
+    reason: (no reason given)
+  - path: guide/pages/nuxt-vue/60.nitro.md
+    reason: (no reason given)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-lesson/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/harvest/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/grilling/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/to-spec/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/to-tickets/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/triage/AGENT-BRIEF.md
+    reason: (no reason given)
+  - path: .agents/skills/ask-matt/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/setup-matt-pocock-skills/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0028-navigation-reads-server-payloads.md
+    reason: (no reason given)
+  - path: .agents/skills/harvest/body-template.md
+    reason: (no reason given)
+  - path: GLOSSARY.md
+    reason: (no reason given)
+skillsUsed:
+  - name: glassbox-update
+    reason: the run's own steps
+  - name: dispatch-subagents
+    reason: briefs for three claim-check readers
+  - name: code-review
+    reason: Standards and Spec review before the PR
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran git rev-parse --is-shallow-repository before reading git-conventions.md; the hook hint arrived only after, though CLAUDE.md says read first.
+    solution: The glassbox-update Skill's step 1 could name git-conventions.md, or the read-only list could include rev-parse.
+    severity: nit
+  - description: glassbox-update.ts --write left the two pages with an edited range wholly unpinned, so I hand-pinned them and used a grep for the old revision to confirm none remained.
+    solution: Have the script print the unpinned pages by name after --write.
+    severity: minor
+  - description: Docs hosts (nuxt.com, vuejs.org, nitro docs) were blocked, so each reader spent many calls on raw GitHub fallbacks, and some docs-only claims stayed unverified.
+    solution: Add nuxt.com and vuejs.org to the environment's allowed hosts, or list the npm docs packages in writing-pages.md's fallback.
+    severity: minor
+  - description: The Skill says re-check each flagged page as a whole, but 11 re-pin-only pages were checked through scoped reader reports only, not read whole by me.
+    solution: Say in step 4 that a flagged page with no changed claim needs only the scoped reader, or require a whole read.
+    severity: nit
+durationSec: 838
+models:
+  claude-sonnet-5-5: 128
+toolCounts:
+  Read: 4
+  Bash: 48
+  Skill: 4
+  Agent: 5
+  ReadNotifications: 1
+  Write: 5
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Edit: 1
+filesEdited:
+  - layers/glassbox/content/guide/pages/nuxt-vue/80.hydration.md
+  - layers/glassbox/content/guide/pages/web-standards/40.colour-and-motion-settings.md
+  - layers/glassbox/content/workshop/checks/update.yml
+  - layers/glassbox/content/guide/pages/terrarium-practice/45.ideas-and-lessons-learned.md
+  - layers/glassbox/content/guide/pages/agents/10.subagents.md
+  - layers/glassbox/content/guide/pages/agents/20.workflow-scripts.md
+  - layers/glassbox/content/guide/pages/agents/30.cloud-sessions.md
+  - layers/glassbox/content/guide/pages/agents/40.scheduled-tasks.md
+  - layers/glassbox/content/guide/pages/claude-code/10.claude-md.md
+  - layers/glassbox/content/guide/pages/claude-code/20.path-scoped-rules.md
+  - layers/glassbox/content/guide/pages/claude-code/30.skills.md
+  - layers/glassbox/content/guide/pages/claude-code/40.permissions.md
+  - layers/glassbox/content/guide/pages/claude-code/50.mcp-servers.md
+  - layers/glassbox/content/guide/pages/deploy/10.continuous-deployment.md
+  - layers/glassbox/content/guide/pages/deploy/20.pnpm-lockfile.md
+  - layers/glassbox/content/guide/pages/git-github/10.pull-requests.md
+  - layers/glassbox/content/guide/pages/git-github/20.author-trust.md
+  - layers/glassbox/content/guide/pages/git-github/30.composite-actions.md
+  - layers/glassbox/content/guide/pages/git-github/40.dependabot-grouping.md
+  - layers/glassbox/content/guide/pages/git-github/50.git-worktrees.md
+  - layers/glassbox/content/guide/pages/git-github/60.attribution.md
+  - layers/glassbox/content/guide/pages/git-github/70.issue-triage-labels.md
+  - layers/glassbox/content/guide/pages/git-github/80.git-plumbing.md
+  - layers/glassbox/content/guide/pages/hooks/10.hooks.md
+  - layers/glassbox/content/guide/pages/hooks/20.blocking-hooks.md
+  - layers/glassbox/content/guide/pages/hooks/30.hook-added-context.md
+  - layers/glassbox/content/guide/pages/hooks/40.session-transcripts.md
+  - layers/glassbox/content/guide/pages/index.md
+  - layers/glassbox/content/guide/pages/nuxt-content/10.content-collections.md
+  - layers/glassbox/content/guide/pages/nuxt-content/20.multi-tenant-isolation.md
+  - layers/glassbox/content/guide/pages/nuxt-content/30.content-database.md
+  - layers/glassbox/content/guide/pages/nuxt-content/40.query-collection.md
+  - layers/glassbox/content/guide/pages/nuxt-content/50.mdc-components.md
+  - layers/glassbox/content/guide/pages/nuxt-content/60.mermaid-pre-rendering.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/10.layers.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/20.auto-imports.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/30.file-routing.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/40.virtual-modules.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/50.vue-components.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/60.nitro.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/70.data-fetching.md
+  - layers/glassbox/content/guide/pages/skill-pack/10.skill-packs.md
+  - layers/glassbox/content/guide/pages/skill-pack/20.planning-with-the-pack.md
+  - layers/glassbox/content/guide/pages/skill-pack/30.engineering-skills.md
+  - layers/glassbox/content/guide/pages/skill-pack/40.wayfinder.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/10.human-in-the-loop.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/20.decision-records.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/30.ubiquitous-language.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/40.session-logs.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/50.pruning-instructions.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/60.protected-paths.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/70.cross-tenant-reads.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/80.self-improvement-loop.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/85.skill-inventory.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/90.outside-contributions.md
+  - layers/glassbox/content/guide/pages/verification/10.gate.md
+  - layers/glassbox/content/guide/pages/verification/20.type-checking.md
+  - layers/glassbox/content/guide/pages/verification/30.content-validation.md
+  - layers/glassbox/content/guide/pages/verification/40.testing.md
+  - layers/glassbox/content/guide/pages/verification/50.linting.md
+  - layers/glassbox/content/guide/pages/verification/60.zod-refinements.md
+  - layers/glassbox/content/guide/pages/verification/70.schema-evolution.md
+  - layers/glassbox/content/guide/pages/verification/80.headless-browser-checks.md
+  - layers/glassbox/content/guide/pages/walkthroughs/a-bug-report-becomes-work.md
+  - layers/glassbox/content/guide/pages/walkthroughs/a-change-goes-live.md
+  - layers/glassbox/content/guide/pages/walkthroughs/a-friction-becomes-a-fix.md
+  - layers/glassbox/content/guide/pages/walkthroughs/adding-a-site.md
+  - layers/glassbox/content/guide/pages/walkthroughs/asking-for-a-change.md
+  - layers/glassbox/content/guide/pages/walkthroughs/from-file-to-browser.md
+  - layers/glassbox/content/guide/pages/walkthroughs/planning-a-big-change.md
+  - layers/glassbox/content/guide/pages/walkthroughs/reading-across-tenants.md
+  - layers/glassbox/content/guide/pages/walkthroughs/session-log-lands-on-main.md
+  - layers/glassbox/content/guide/pages/web-standards/10.css-custom-properties.md
+  - layers/glassbox/content/guide/pages/web-standards/20.svg.md
+  - layers/glassbox/content/guide/pages/web-standards/30.aria.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+docsReadBySubagents:
+  - .agents/skills/glassbox-update/SKILL.md
+  - .agents/skills/grilling/SKILL.md
+  - .agents/skills/to-spec/SKILL.md
+  - .agents/skills/to-tickets/SKILL.md
+  - .agents/skills/triage/AGENT-BRIEF.md
+  - .agents/skills/ask-matt/SKILL.md
+  - .agents/skills/triage/SKILL.md
+  - .agents/skills/auto-triage/SKILL.md
+  - .agents/skills/setup-matt-pocock-skills/SKILL.md
+  - docs/adr/0028-navigation-reads-server-payloads.md
+  - .agents/skills/harvest/body-template.md
+  - GLOSSARY.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/writing-pages.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/writing-pages.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0003.md
+        value: backed
+        why: opened PR after review and gate
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: code-review then gate:scoped
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: agent header and trailers
+      - path: .claude/rules/adr-0009.md
+        value: backed
+      - path: .claude/rules/glassbox-content.md
+        value: steered
+        why: spotted diary-style sentence
+      - path: layers/glassbox/GLOSSARY.md
+      - path: .agents/skills/glassbox-lesson/writing-pages.md
+      - path: .agents/skills/glassbox-lesson/owner-decisions.md
+      - path: docs/agents/pr-workflow.md
+      - path: docs/agents/github-integration.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/glassbox-content.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/skill-pack/20.planning-with-the-pack.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/skill-pack/20.planning-with-the-pack.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/skill-pack/20.planning-with-the-pack.md
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0020.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0001.md
+        via: hint
+      - rule: .claude/rules/adr-0018.md
+        via: hint
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0005.md
+        value: backed
+      - path: .claude/rules/adr-0015.md
+        value: backed
+      - path: .claude/rules/adr-0028.md
+        value: backed
+      - path: .claude/rules/glassbox-content.md
+        value: steered
+      - path: .claude/rules/adr-0022.md
+        value: backed
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/glassbox-content.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/nuxt-vue/80.hydration.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/nuxt-vue/80.hydration.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/nuxt-vue/80.hydration.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/writing-pages.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/writing-pages.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+    reported:
+      - path: .claude/rules/glassbox-content.md
+        value: backed
+      - path: .claude/rules/tenant-glossary.md
+        value: backed
+      - path: layers/glassbox/content/guide/pages/nuxt-vue/70.data-fetching.md
+      - path: docs/adr/0028-navigation-reads-server-payloads.md
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .claude/rules/adr-0017.md
+        value: backed
+      - path: .claude/rules/glassbox-content.md
+        value: backed
+      - path: .agents/skills/glassbox-lesson/writing-pages.md
+  - by: general-purpose
+    subagent: 3
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .claude/rules/adr-0003.md
+        value: backed
+  - by: general-purpose
+    subagent: 4
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .claude/rules/adr-0005.md
+        value: backed
+subagents:
+  - task: Claim check group A
+    model: sonnet
+    durationSec: 130
+    toolCalls: 32
+    modelCalls: 21
+    tokenShare: 12.4
+  - task: Claim check group B
+    model: sonnet
+    durationSec: 224
+    toolCalls: 51
+    modelCalls: 28
+    tokenShare: 15.1
+  - task: Claim check group C
+    model: sonnet
+    durationSec: 121
+    toolCalls: 25
+    modelCalls: 17
+    tokenShare: 11
+  - task: "Code review: Standards axis"
+    model: sonnet
+    durationSec: 30
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 4.2
+  - task: "Code review: Spec axis"
+    model: sonnet
+    durationSec: 66
+    toolCalls: 14
+    modelCalls: 11
+    tokenShare: 6.9
+gitBranch: claude/modest-goodall-caz9az
+entrypoint: remote
+cliVersion: 2.1.322
+learnings:
+  - glassbox-update.ts --write pins every page except one with an edited range, and a pinned page's revisionDate comes from the commit date, so check for leftover old revisions with grep after the write.
+ideas:
+  - Have glassbox-update.ts print, after --write, each page it left unpinned and why, plus the new line ranges for shifted Excerpts, so a run re-lines edited ranges without re-reading git show.
+landedBy: Stop
