@@ -276,6 +276,8 @@ const nextItems = (prose: string) => {
 function nextProblems(prose: string, lesson: boolean): string[] {
   const next = nextItems(prose)
   const problems = next.length > cap ? [`Where next lists ${next.length} pages, more than ${cap}`] : []
+  // A Lesson counts as read once Where next scrolls into view (GLOSSARY.md, Reading progress), so every one needs it.
+  if (lesson && !next.length) problems.push('Where next has no links')
   if (next.slice(0, -1).some((l) => l.includes('](/t/journal'))) problems.push('Where next lists a Journal page before its end')
   if (lesson && next.some((l) => l.includes('](/t/glassbox/guide/walkthroughs/'))) problems.push('Where next on a Lesson lists a Walkthrough')
   return problems

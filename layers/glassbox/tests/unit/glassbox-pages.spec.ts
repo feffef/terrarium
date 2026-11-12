@@ -180,6 +180,7 @@ describe('glassboxPageProblems on fixture pages', () => {
     ['a hand-written tree/main link to a file', (s: string) => `${s}\nhttps://github.com/feffef/terrarium/tree/main/shared/expand.ts\n`, 'hand-written link'],
     ['a hand-written tree link at a commit', (s: string) => `${s}\nhttps://github.com/feffef/terrarium/tree/${rev}/layers\n`, 'hand-written link'],
     ['a Where next over 5 pages', (s: string) => `${s}${gateItem.repeat(5)}`, 'Where next lists 6 pages, more than 5'],
+    ['a Lesson with an empty Where next', (s: string) => s.replace(gateItem, ''), 'Where next has no links'],
     ['a Journal page before a Lesson in Where next', (s: string) => s.replace(gateItem, `${journalItem}${gateItem}`), 'Where next lists a Journal page before its end'],
     ['two Journal pages in Where next', (s: string) => `${s}${journalItem}${journalItem}`, 'Where next lists a Journal page before its end'],
     ['a Walkthrough in Where next', (s: string) => s.replace(gateItem, `- [A request](/t/glassbox/guide/walkthroughs/a-request)\n${gateItem}`), 'Where next on a Lesson lists a Walkthrough'],
