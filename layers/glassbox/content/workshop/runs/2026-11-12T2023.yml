@@ -1,10 +1,58 @@
 session: session_013zxzeSdKDZBdqz6vRp3xW1
 mode: autonomous
 focus: "Hooks Subject (its four pages): strengthen the Try-it sections that give
-  no way to see the step worked and clear what fresh readers still find hard, as
-  the memory page's third good focus asks (one Subject per run). Chosen because
-  the user asked in-session for repeated autonomous runs, no open PR touches
-  these pages, and Hooks is the smallest Subject whose Try-it sections have not
-  been reworked (Agents & automation and Claude Code are done)."
-changes: []
-pagesRead: []
+  no concrete step or no way to see the step worked, and clear what fresh
+  readers found hard, as the memory page's third good focus asks (one Subject
+  per run). Chosen because the user asked in-session for repeated autonomous
+  runs, no open PR touches these pages, and Hooks is the smallest Subject whose
+  Try-it sections had not been reworked (Agents & automation and Claude Code
+  are done). Deviations for the budget: the guide index was read once at the
+  start of the run and the Scout ran once (it found no new topic worth a page;
+  the clear-backlog interaction phase went to the memory page). Two fresh
+  readers read the pages before the fix and none after. The claim checker found
+  every changed sentence supported or unverifiable without a live Claude Code
+  run, and suggested one wording (applied). The Try-it outcomes that need a live
+  session (the hook-error notice texts, the /hooks label, the file watcher) are
+  taken from the Claude Code docs, not observed. To stay under the memory page's
+  word cap it lost three whole items: the Terms-glossed-late note, the House
+  rules leftovers and the pending line shift of one Wayfinder excerpt (the pin
+  move handles it), plus the Atlas stylesheet comment remark."
+changes:
+  - hooks/10.hooks | a guard is any hook that can block (a PreToolUse deny or a
+    Stop block), a hint one that only adds advice; the fail-closed rule is said
+    once in the same words as on Hook-added context; Try-it gives the settings
+    JSON, says to create the file, how a running session picks the change up
+    (/hooks, restart) and how to tell it ran (an unformatted file comes out
+    formatted) | readers could not tell which blocking hooks are guards, read
+    three phrasings of one fact, and could not see the Try-it worked
+    (docs/agents/guards.md roster and Conventions; tests/unit/guards-wiring.spec.ts:8,19-22;
+    Claude Code hooks docs and hooks guide). Wording and Try-it only, so
+    revision and publishedAt are kept
+  - hooks/20.blocking-hooks | Try-it gives one copyable guard that exits 1,
+    the required Claude Code version, the warning that || true defeats
+    onFailure, and the notice shown when the call is blocked and when it is not |
+    the old Try-it named no command or visible result (Claude Code hooks docs,
+    Block the action when a hook fails; guards-wiring.spec.ts:22). Try-it only
+  - hooks/30.hook-added-context | the guard sentence matches the other pages;
+    Try-it gives a script that reads the error field, how to test it by hand,
+    how to wire it, how to trigger the failure and how to see the context
+    arrive, and says to leave || true off while debugging | the old Try-it had
+    no skeleton and recommended hiding the notice a debugger needs
+    (scripts/hooks/stale-push-hint.ts:36-38; Claude Code hooks docs). Try-it and
+    wording only
+  - hooks/40.session-transcripts | agent_type is said to appear under --agent
+    too; Try-it says how the project folder is named and gives jq commands that
+    list tool_use ids and find the matching tool_result (run against a real
+    transcript) | the old Try-it gave no command for its second step and the
+    page disagreed with the hooks page on agent_type (Claude Code hooks and
+    directory docs). Wording and Try-it only
+  - workshop/pages/index | the Hooks leftovers rewritten to what the readers
+    still found; the Try-it focus notes Hooks is done; a soft decision on what
+    a guard is; a Scout topic (the clear-backlog interaction phase) added; four
+    low-value items cut for the word cap | the memory page keeps what a later
+    run inherits
+pagesRead:
+  - hooks/10.hooks
+  - hooks/20.blocking-hooks
+  - hooks/30.hook-added-context
+  - hooks/40.session-transcripts
