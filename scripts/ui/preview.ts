@@ -43,12 +43,13 @@ import { createServer } from 'node:net'
 import { existsSync, mkdirSync, openSync, closeSync, readFileSync, rmSync } from 'node:fs'
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
-import { extractFlag, extractSwitch, runIfMain } from '../lib/cli.ts'
+import { extractFlag, extractFlags, extractSwitch, runIfMain } from '../lib/cli.ts'
 import {
   captureScreenshot,
   captureScreenshotWaitingFor,
   parseScheme,
   parseSize,
+  parseStorage,
   type CaptureOptions,
   type ColorScheme,
 } from './screenshot.ts'
@@ -61,8 +62,8 @@ const SERVER_ENTRY = '.output/server/index.mjs'
 
 const USAGE =
   'Usage:\n' +
-  '  pnpm exec tsx scripts/ui/preview.ts shot <route> <out.png> [WxH] [--wait <ms>] [--wait-for <selector>] [--scheme light|dark] [--full] [--mobile] [--dev]\n' +
-  '  pnpm exec tsx scripts/ui/preview.ts review <route> <out-dir> [--wait <ms>] [--wait-for <selector>] [--dev]\n' +
+  '  pnpm exec tsx scripts/ui/preview.ts shot <route> <out.png> [WxH] [--wait <ms>] [--wait-for <selector>] [--scheme light|dark] [--full] [--mobile] [--storage KEY=VALUE]... [--dev]\n' +
+  '  pnpm exec tsx scripts/ui/preview.ts review <route> <out-dir> [--wait <ms>] [--wait-for <selector>] [--storage KEY=VALUE]... [--dev]\n' +
   '  pnpm exec tsx scripts/ui/preview.ts start [--dev]\n' +
   '  pnpm exec tsx scripts/ui/preview.ts stop <pid>\n' +
   '  <route>            a path on the site, e.g. /t/journal/current\n' +
@@ -74,6 +75,8 @@ const USAGE =
   "  --scheme <s>       light or dark: emulate the visitor's colour scheme\n" +
   '  --full             capture the whole scrollable page, not just the viewport\n' +
   '  --mobile           emulate a touch phone at 2x pixel density (pair with e.g. 390x844)\n' +
+  '  --storage K=V      set a localStorage entry before the page loads (repeatable; split at the\n' +
+  '                     first =), e.g. --storage \'glassbox:read=["/a"]\'\n' +
   '  review             one server, four full-page shots in <out-dir>: desktop-light.png,\n' +
   '                     desktop-dark.png (1280x900), mobile-light.png, mobile-dark.png (390x844)\n' +
   '  --dev              use `nuxt dev` instead of a built `preview` server (fast, but\n' +
@@ -272,6 +275,7 @@ interface ShotOptions {
   scheme?: ColorScheme
   fullPage: boolean
   mobile: boolean
+  storage?: Record<string, string>
 }
 
 function parseWaitMs(value: string | undefined): number {
@@ -344,8 +348,8 @@ async function doShot(args: string[], dev: boolean, opts: ShotOptions): Promise<
     console.error(`Invalid size "${sizeArg}" — expected <width>x<height>, e.g. 1280x1600.`)
     return 1
   }
-  const { waitMs, waitForSelector, scheme: colorScheme, fullPage, mobile } = opts
-  return withServer(route, dev, (url) => capture(url, out, waitMs, waitForSelector, { windowSize, colorScheme, fullPage, mobile }))
+  const { waitMs, waitForSelector, scheme: colorScheme, fullPage, mobile, storage } = opts
+  return withServer(route, dev, (url) => capture(url, out, waitMs, waitForSelector, { windowSize, colorScheme, fullPage, mobile, storage }))
 }
 
 async function doReview(args: string[], dev: boolean, opts: ShotOptions): Promise<number> {
@@ -362,6 +366,7 @@ async function doReview(args: string[], dev: boolean, opts: ShotOptions): Promis
         colorScheme: shot.scheme,
         fullPage: true,
         mobile: shot.mobile,
+        storage: opts.storage,
       })
     }
   })
@@ -402,11 +407,12 @@ async function main(): Promise<number> {
   const waitFor = extractFlag(mobile.rest, '--wait-for')
   const waitMs = extractFlag(waitFor.rest, '--wait')
   const scheme = extractFlag(waitMs.rest, '--scheme')
-  const args = scheme.rest
+  const storage = extractFlags(scheme.rest, '--storage')
+  const args = storage.rest
   if (verb === 'stop') return doStop(args)
   let opts: ShotOptions
   try {
-    opts = { waitMs: parseWaitMs(waitMs.value), waitForSelector: waitFor.value, scheme: parseScheme(scheme.value), fullPage: full.on, mobile: mobile.on }
+    opts = { waitMs: parseWaitMs(waitMs.value), waitForSelector: waitFor.value, scheme: parseScheme(scheme.value), fullPage: full.on, mobile: mobile.on, storage: parseStorage(storage.values) }
   } catch (err) {
     console.error((err as Error).message)
     return 1
