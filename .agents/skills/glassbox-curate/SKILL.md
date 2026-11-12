@@ -191,7 +191,12 @@ All in `layers/glassbox/content/workshop/`:
   never mark it done. A fact the next run still needs stays as a plain current
   fact under a heading that fits. What a run did goes in its run entry, not
   here. The word cap in
-  `layers/glassbox/tests/unit/workshop.spec.ts` is a ceiling, not a target.
+  `layers/glassbox/tests/unit/workshop.spec.ts` is a ceiling, not a target. When
+  it is reached, never shorten what is there: squeezed wording makes passages
+  hard to read. Cut whole items instead, the ones not worth pursuing. Judge by
+  what you know of the rest of the guide and by git history (`git log -S` or
+  `git blame` on the item): one that has stood a long time and that no run ever
+  took up is a candidate.
   **Soft decisions** (its heading) are decisions you, a reviewer or a claim
   checker made: write each there as it is made, with what decided it. They are
   not rules. Overrule or delete one when you have evidence against it or when

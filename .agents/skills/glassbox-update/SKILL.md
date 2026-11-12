@@ -11,7 +11,9 @@ the page's fault. This run edits only `layers/glassbox/content/` and the
 diagram SVGs it re-renders in `app/assets/mermaid/`. Read
 `layers/glassbox/GLOSSARY.md` (page shapes) and
 [`../glassbox-lesson/EVERY-PAGE.md`](../glassbox-lesson/EVERY-PAGE.md) (Pin,
-Write, Diagrams, Check) first.
+Write, Diagrams, Check) first, and note
+[`../glassbox-lesson/OWNER-DECISIONS.md`](../glassbox-lesson/OWNER-DECISIONS.md):
+the owner's hard rules, never to be gone against.
 
 The script is `.agents/skills/glassbox-update/scripts/glassbox-update.ts`, run
 with `pnpm exec tsx`. Its report's `main` is **the commit**: this run reviews and
