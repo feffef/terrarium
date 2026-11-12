@@ -3,8 +3,7 @@
 The steps a Lesson and a Walkthrough share. Each page's shape, and the Excerpt
 and Term rules, are in `layers/glassbox/GLOSSARY.md`; the drift rule
 (`.claude/rules/glassbox-content.md`) loads when you edit a page. Rulings in
-[`DECISIONS.md`](DECISIONS.md) are closed; [`QUALITY.md`](QUALITY.md) grades a
-page.
+[`DECISIONS.md`](DECISIONS.md) are closed.
 
 ## Pin
 

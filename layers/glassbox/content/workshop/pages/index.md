@@ -95,12 +95,12 @@ Each may be true; a later run should read the tool's source or run it.
 ### Ideas still open
 
 - *Engineering skills* could become part of *Installed skills* (`skill-pack/10.skill-packs`).
-- Moving the timestamp rule and its warnings from *Content validation* (`verification/30.content-validation`) to *Zod refinements* (`verification/60.zod-refinements`) was rejected by an earlier run; re-check the reasons for and against before acting.
-- Moving the warning to return only what a page reads from *Data fetching* (`nuxt-vue/70.data-fetching`) to *queryCollection* (`nuxt-content/40.query-collection`) was rejected too; a related move the other way is under Already decided.
 
-### Already decided
+### Turned down by earlier runs
 
-Earlier runs turned these down. Each stays turned down until something in the repository changes the reason.
+These are runs' own judgements, not rulings: each stays turned down until something in the repository changes the reason. Only what the owner or a review settled belongs in `DECISIONS.md`; when the owner confirms one of these, add a line there and delete it here.
+- **Moving the timestamp rule and its warnings from *Content validation* (`verification/30.content-validation`) to *Zod refinements* (`verification/60.zod-refinements`).** Re-check the reasons for and against before acting.
+- **Moving the warning to return only what a page reads from *Data fetching* (`nuxt-vue/70.data-fetching`) to *queryCollection* (`nuxt-content/40.query-collection`).** The related move the other way (from *queryCollection* to *Data fetching*) is also in this list.
 - **Moving the MCP tool-name matcher from *MCP servers* to *Blocking hooks*.** The `mcp__<server>__.*` form is about how MCP names tools, and the page's Why bullet on it is one sentence that links *Claude Code hooks*.
 - **Guide titles.** Every Lesson, Walkthrough and the overview has been weighed against 2 to 4 alternatives; the owner's rulings are in DECISIONS.md. Closest rivals that lost: *Required status checks* for *Merge gate*, *Claude Code workflows* for *Workflow scripts*, *Adding a Tenant* for *Adding a site*.
 - **Folding *Planning skills* into *Installed skills*.** *Planning skills* holds facts about Terrarium's own choices that would lose their page.

@@ -36,7 +36,6 @@ body says so, and you don't merge it.
 
 **Read first.** `layers/glassbox/GLOSSARY.md`,
 [`../glassbox-lesson/EVERY-PAGE.md`](../glassbox-lesson/EVERY-PAGE.md),
-[`../glassbox-lesson/QUALITY.md`](../glassbox-lesson/QUALITY.md) (Lenses only),
 [`../glassbox-lesson/DECISIONS.md`](../glassbox-lesson/DECISIONS.md),
 `.claude/rules/glassbox-content.md`,
 `.agents/skills/dispatch-subagents/SKILL.md`, and, since every run fetches and
@@ -154,6 +153,30 @@ keeps them so).
   to `pagesRead` before you land. Done when the PR is open, its body gives the
   run's cost ("unreported" only when `cost_usd` is still missing), and the
   memory page and run entry are current.
+
+## Lenses
+
+What to read a page for, as two readers: a developer new to the tool, and one
+who knows the tool but not Terrarium. A page's rules are in EVERY-PAGE.md and
+its shape in the glossary; a `DECISIONS.md` ruling is never a deficit.
+
+- **Clarity.** The order, plain words, each term introduced before use, a title
+  that passes the title rule.
+- **Reasoning.** Each Why gives a reason, its cost and the alternative, and
+  traces to the ADR or file it cites. `n/a` on a Walkthrough.
+- **Placement.** One concept per page, no fact taught on another page too (an
+  overlap counts on both), the right Subject, useful Where next links.
+- **Evidence.** The In Terrarium examples and Excerpts are the best place in the
+  repo to see the concept, and each teaches. Name a better Excerpt by file and
+  line.
+- **Transfer.** The page teaches the general concept beyond Terrarium and says
+  when it is the wrong choice. `n/a` on a Walkthrough.
+- **Relevance.** The concept deserves its own page. A low result leads to a
+  merge, section or cut, never a rewrite.
+
+Correctness is not a lens: a claim the source contradicts at the page's
+`revision` is a false claim, fixed with the smallest correction once confirmed
+in the source.
 
 ## State
 
