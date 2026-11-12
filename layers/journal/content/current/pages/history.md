@@ -363,8 +363,8 @@ sessions, about half of them autonomous, with as many frictions per session as
 the fortnight before. The work went into two things. [Glass Box](/t/glassbox),
 the textbook merged as a first draft on 15 October, had to become a site a
 reader could rely on, with the agents themselves keeping it in sync as the
-code changes and new concepts arrive. And the instruments added in October began to show which
-parts of the machinery spent a lot and returned little.
+code changes and new concepts arrive. And the measurements added in October
+began to show which parts of the machinery spent a lot and returned little.
 
 > **From first draft to a maintained textbook.** On 18 October Glass Box joined
 > the regular visitor-style review rotation the other sites get. On 24 October
@@ -377,61 +377,63 @@ parts of the machinery spent a lot and returned little.
 > page that works as an overview of the whole project, and the agents'
 > instruction file now points to it. Within a week its large Claude Code subject
 > was split into three, a web-standards subject arrived, and subjects and lessons
-> were put in prerequisite order. A "workshop" page holds its notes and run
-> history, and by 11 November defined terms link to the lesson that explains
-> them.
+> were put in the order a newcomer should read them. A "workshop" page holds its
+> notes and run history, and by 11 November defined terms link to the lesson
+> that explains them.
 
 Keeping it true, readable and well structured was the expensive part. On 27
-October a scheduled job was designed to grade the pages and improve the
-weakest unattended. Its first run fixed two false claims for far more reviewing
-effort than that was worth, and a later run used about 35 helpers against
-guidance of under ten. A rebuild on 2 November, to grade on several qualities
-and block edits that weren't judged blind, still took about 127 reviewing
-agents dispatched by hand for 35 edits. The trouble was the grading itself:
-of 390 grades, 389 were the same one (a B), and the blind check passed 109 of 110
-edits because it judged each edit against the criterion the edit was written to
-meet. Every run read the whole guide. The run of 5 November cost about 35 dollars,
-more than half of it on ratings that produced 75 findings, 73 of which were
-never looked at. It fixed five false claims, of which by its own reading about
-two mattered. The owner asked whether those were real errors or nits. The
-rethink that followed concluded that models don't give useful absolute grades,
-and that most of the machinery existed to make an agent's judgement countable.
+October a scheduled Skill, `glassbox-improve`, was designed to grade the pages
+and improve the weakest without anyone watching. Its first run fixed two false
+claims for far more reviewing effort than that was worth, and a later run used
+about 35 helpers against guidance of under ten. A rebuild on 2 November, to
+grade on several qualities and block edits that weren't judged blind, still
+took about 127 reviewing agents dispatched by hand for 35 edits. The trouble
+was the grading itself: of 390 grades, 389 were the same one (a B), and the
+blind check passed 109 of 110 edits because it judged each edit against the
+criterion the edit was written to meet. Every run read the whole guide. The run
+of 5 November cost about $35, more than half of it on ratings that produced 75
+findings, 73 of which were never looked at. It fixed five false claims, of
+which by its own reading about two mattered. The owner asked whether those were
+real errors or nits. The rethink that followed concluded that models don't give
+useful absolute grades, and that most of the machinery existed to make an
+agent's judgement something that could be counted.
 
-So on 6 November a small, goal-driven curating skill was added beside the old
-job: no grades, fresh readers who report where a newcomer gets lost, and a
-separate check of every sentence it changes, aimed at about 20 dollars a run. The
-daily update job took over keeping existing pages true. By 7 November the
-curator built its own fixes and read a whole subject before changing it, and the
-old job was removed. On 9 November a fact-check across 17 guide pages still used
-up nearly all of a 20 dollar budget.
+So on 6 November a small Skill with one goal, `glassbox-curate`, was added
+beside the old one: no grades, fresh readers who report where a newcomer gets
+lost, and a separate check of every sentence it changes, budgeted at about $20
+a run. The daily `glassbox-update` Skill took over keeping existing pages true.
+By 7 November the curator built its own fixes and read a whole subject before
+changing it, and `glassbox-improve` was removed. On 9 November a fact-check
+across 17 guide pages still used up nearly all of a $20 budget.
 
-The waste was found through measurement, which the owner either read or asked for. From 18
-October the weekly Skills check reported the tokens and price of every
-scheduled run, the first of these instruments, and the costs page charts them. A review a week later found that about 19 of 25 recent
-wording-trim edits from the daily documentation audit changed nothing a reader
-would do, so that part of the audit was dropped; working it out cost about
-270,000 helper tokens, because runs didn't record how many findings each part
-produced. On 10 November rule use started being captured outside the agent's
-own report, replacing the grades each session gave its rules, and every rule a
-session loaded now gets a rating, steered or backed, shown on its card in the
+The waste was found through measurement, which the owner either read or asked
+for. From 18 October the weekly Skills check reported the tokens and price of
+every scheduled run, the first of these measurements, and the costs page charts
+them. A review a week later found that about 19 of 25 recent wording-trim edits
+from the daily documentation audit changed nothing a reader would do, so that
+part of the audit was dropped; working it out cost about 270,000 helper tokens,
+because runs didn't record how many findings each part produced. On 10 November
+rule use started being captured outside the agent's own report, replacing the
+grades each session gave its rules, and every rule a session loaded now gets a
+rating, steered or backed, shown on its card in the
 [Journal](/t/journal/current).
 
-The same weeks hardened the machinery against its own agents. On 25 October the
-session-inspection tool learned to spot a helper's hand-back that the agent
+The same weeks made the machinery safer against its own agents. On 25 October
+the session-inspection tool learned to spot a helper's hand-back that the agent
 itself had written.
 
 The next experiment arrived on 11 November. Agents record ideas and learnings
 in every session log, but those had only been read now and then and applied by
-hand. A new skill, meant to run weekly, harvests them and turns them into
-issues; its first real run filed four.
+hand. A new Skill, `harvest`, meant to run weekly, turns them into issues that
+wait for the owner's green light; its first real run filed four.
 
 That is where the record stops: eight sites, thirty decision records,
 fifty-one catalogued [Skills](/t/journal/current/skills). The question
 from September has a partial answer. The platform did grow a new site in a
 day and now merges its own routine work, and its own measurements now show
 where work spends a lot and returns little; each fix so far was a cut, a
-cap or a simpler replacement, not more machinery. The owner still chose what to build and made the
-structural calls.
+cap or a simpler replacement, not more machinery. The owner still chose what to
+build and made the structural calls.
 
 For how all of this works today, see the [Glass Box
 guide](/t/glassbox/guide). The
