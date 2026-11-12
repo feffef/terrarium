@@ -1,0 +1,110 @@
+schemaVersion: 1
+session: session_013zxzeSkGfgujTxwvEaiFTh
+startedAt: 2026-11-12T22:40:22Z
+endedAt: 2026-11-12T22:47:59Z
+kind: delegated
+goal: Survey what the Platform discarded since the last Midden survey
+status: completed
+outcome: Survey report filed as issue 3213 with 12 candidates (3 flagged weak) and a Gate-A/B exclusion table
+summary: "The owner invoked /midden-survey (human-instructed; no other ask). I ran the Skill as written: confirmed the checkout was not shallow, bounded the sweep at the previous report's date (2026-10-10, issue 1739), ran the mechanical script (118 deleted-file candidates), then swept closed-unmerged PRs and the 39 branches newly past the 30-day floor, deduped against the trench and stores, and judged each cluster against both gates by checking origin/main for successors. Most of the window's deletions failed Gate B (promoted or folded Glass Box drafts, in-place Blog rewrites, replaced scripts, a clear-backlog dry run whose issues were closed by real PRs), so those went into the exclusions table. I filed one survey-report issue (3213) labelled needs-triage, and flagged three weak candidates and several borderline exclusions for the curator rather than deciding them. Agent-initiated: the choice of which borderline items to include or exclude (the curator should revisit). Not verified: eslint caching on the gate experiments, whether later Karen posts repeat the withdrawn reply, and the late commit on claude/visitor-fixes-mobile. Suggested next step: /midden-catalogue on the issue."
+prs: []
+docsRead:
+  - path: layers/midden/GLOSSARY.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+skillsUsed:
+  - name: midden-survey
+    reason: the task itself
+  - name: close-session
+    reason: single end-of-session close
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: gh api --paginate fails in this cloud proxy (numeric-ID repository paths blocked); I paged by hand with a page parameter.
+    solution: Have midden-survey say to page closed PRs manually in cloud sessions, with a loop that stops at the window start.
+    severity: minor
+  - description: My first manual PR page loop stopped at 8 pages and silently missed PRs 1827-1830 and 1804; I caught it only by spot-checking a branch's PR.
+    solution: Have midden-survey give one tested command that pages until created_at falls before the window.
+    severity: moderate
+  - description: I passed -f query params to gh api on the issues endpoint, which turned a GET into a POST; GitHub rejected it with 422, so nothing was created.
+    solution: Document in github-integration.md that gh api -f makes a POST; use -X GET or put parameters in the URL.
+    severity: minor
+  - description: The sweep window held 118 deleted files and 39 branches; judging them one by one took many batched checks, since the script's noise screen misses generated mermaid SVGs.
+    solution: Add generated mermaid SVG paths and blog in-place retitles to the survey script's noise or relocation screens.
+    severity: minor
+durationSec: 457
+models:
+  claude-sonnet-5-5: 82
+toolCounts:
+  Read: 5
+  Bash: 30
+  ToolSearch: 1
+  mcp__github__issue_read: 1
+  Write: 2
+  Edit: 2
+  mcp__github__issue_write: 1
+  Skill: 2
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/midden/GLOSSARY.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/midden/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/midden/GLOSSARY.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/github-integration.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/github-integration.md
+      - rule: .claude/rules/adr-0022.md
+        via: native
+        trigger: docs/agents/triage-labels.md
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0003.md
+        value: backed
+        why: discovery only; no building
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: provenance header on the issue
+      - path: layers/midden/GLOSSARY.md
+      - path: docs/agents/github-integration.md
+      - path: docs/agents/issue-tracker.md
+      - path: docs/agents/triage-labels.md
+      - path: docs/agents/git-conventions.md
+gitBranch: claude/ecstatic-bardeen-708ieg
+entrypoint: remote
+cliVersion: 2.1.323
+learnings:
+  - gh api treats any -f flag as a POST even with a GET-style path; a 422 on a read means this happened.
+ideas:
+  - Make midden-survey's script also list closed-unmerged PRs and dormant branches with their unmerged-commit counts and merged-PR links, so the GitHub-side half needs no hand-written paging and branch squash-merges are screened mechanically.
+landedBy: Stop

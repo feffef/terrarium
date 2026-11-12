@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQAc52ZMCkhtp4ihGY
 startedAt: 2026-11-12T22:15:17Z
-endedAt: 2026-11-12T22:42:24Z
+endedAt: 2026-11-12T22:47:14Z
 kind: delegated
 goal: "Curate the Glass Box guide: Verification Subject Try-it sections"
 status: in-review
-outcome: PR 3211 merged; PR 3212 (Web standards) open with gate green
-summary: "The owner invoked the glassbox-curate skill and, when asked, chose autonomous mode, several focuses in sequence until 500k context, and a Sonnet handoff session with unrestricted network at the end (human-instructed). I took the Verification Subject as the focus (agent-chosen from the memory page's open leads). Two fresh readers found weak Try-it sections and wording problems; an opus writer edited seven pages; a claim checker found every changed sentence supported; code-review's two reviewers led to a pagesRead fix and a teaches update; pnpm gate:scoped passed; PR 3211 merged after CI went green. A second run on the Web standards Subject opened PR 3212 (gate green, code-review done). Still open: CI and merge of 3212, further focuses and the handoff session."
+outcome: PRs 3211 and 3212 merged; a third focus and the handoff session are next
+summary: "The owner invoked the glassbox-curate skill and, when asked, chose autonomous mode, several focuses in sequence until 500k context, and a Sonnet handoff session with unrestricted network at the end (human-instructed). I took the Verification Subject as the focus (agent-chosen from the memory page's open leads). Two fresh readers found weak Try-it sections and wording problems; an opus writer edited seven pages; a claim checker found every changed sentence supported; code-review's two reviewers led to a pagesRead fix and a teaches update; pnpm gate:scoped passed; PR 3211 merged after CI went green. A second run on the Web standards Subject merged as PR 3212. Still open: further focuses and the handoff session."
 prs:
   - "3211"
   - "3212"
@@ -84,22 +84,22 @@ frictions:
   - description: Read docs/agents/git-conventions.md only after my first git command, as the hook reminded.
     solution: Read the listed docs before any git command.
     severity: nit
-durationSec: 1628
+durationSec: 1917
 models:
-  claude-sonnet-5-5: 160
+  claude-sonnet-5-5: 174
 toolCounts:
   AskUserQuestion: 1
-  Bash: 48
-  Read: 15
-  Agent: 11
+  Bash: 52
+  Read: 16
+  Agent: 12
   Write: 3
   mcp__claude-code-remote__get_session: 3
   Skill: 4
   mcp__github__create_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 2
-  ReadNotifications: 3
+  ReadNotifications: 5
   mcp__github__pull_request_read: 1
-  mcp__github__add_issue_comment: 1
+  mcp__github__add_issue_comment: 2
 filesEdited:
   - layers/glassbox/content/workshop/runs/2026-11-12T2216.yml
   - layers/glassbox/content/workshop/runs/2026-11-12T2232.yml
@@ -114,6 +114,7 @@ filesEdited:
   - layers/glassbox/content/guide/pages/verification/50.linting.md
   - layers/glassbox/content/guide/pages/verification/60.zod-refinements.md
   - layers/glassbox/content/guide/pages/verification/80.headless-browser-checks.md
+  - layers/glassbox/content/workshop/runs/2026-11-12T2246.yml
   - layers/glassbox/content/workshop/pages/index.md
   - layers/glassbox/content/guide/pages/verification/70.schema-evolution.md
 rulesGlobal:
@@ -572,73 +573,92 @@ ruleUse:
     reported:
       - path: .claude/rules/adr-0004.md
         value: backed
+  - by: general-purpose
+    subagent: 11
+    answered: false
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported: []
 subagents:
   - task: Scout new topics
     model: sonnet
     durationSec: 20
     toolCalls: 9
     modelCalls: 5
-    tokenShare: 3.3
+    tokenShare: 3
   - task: "Fresh reader: gate pages A"
     model: sonnet
     durationSec: 20
     toolCalls: 7
     modelCalls: 3
-    tokenShare: 1.1
+    tokenShare: 1
   - task: "Fresh reader: pages B"
     model: sonnet
     durationSec: 19
     toolCalls: 7
     modelCalls: 3
-    tokenShare: 1.1
+    tokenShare: 1
   - task: Write Verification page fixes
     model: opus
     durationSec: 223
     toolCalls: 54
     modelCalls: 33
-    tokenShare: 12.5
+    tokenShare: 11.5
   - task: Claim-check changed sentences
     model: sonnet
     durationSec: 44
     toolCalls: 11
     modelCalls: 7
-    tokenShare: 2
+    tokenShare: 1.8
   - task: Standards review
     model: sonnet
     durationSec: 28
     toolCalls: 8
     modelCalls: 4
-    tokenShare: 2.8
+    tokenShare: 2.6
   - task: Spec review
     model: sonnet
     durationSec: 40
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 3.6
+    tokenShare: 3.3
   - task: Write Web standards fixes
     model: opus
     durationSec: 247
     toolCalls: 60
     modelCalls: 42
-    tokenShare: 13.7
+    tokenShare: 12.6
   - task: Claim-check Web standards diff
     model: sonnet
     durationSec: 44
     toolCalls: 12
     modelCalls: 9
-    tokenShare: 3.3
+    tokenShare: 3.1
   - task: Standards review web std
     model: sonnet
     durationSec: 32
     toolCalls: 10
     modelCalls: 4
-    tokenShare: 2.8
+    tokenShare: 2.6
   - task: Spec review web std
     model: sonnet
     durationSec: 36
     toolCalls: 10
     modelCalls: 6
-    tokenShare: 3.2
+    tokenShare: 3
+  - task: Write Deploy page fixes
+    model: opus
+    durationSec: 3
+    toolCalls: 2
+    modelCalls: 1
+    tokenShare: 1.5
 gitBranch: HEAD
 entrypoint: remote
 cliVersion: 2.1.322
