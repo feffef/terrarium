@@ -157,15 +157,15 @@ For each `reviewed` branch, in round N:
 
 1. **Findings?** If neither review has a finding, go to step 5.
 2. **Fix.** Resume the builder: "Triage and fix the findings in `<files>` by
-   your rules. Run the fast checks, commit, and reply with one line:
-   `FIXED <sha before> <sha after>`" (the same sha twice if nothing changed).
-   The builder decides what to fix, by kind, and records each finding in its
-   folder's `triage.md`. It may instead reply `NEEDS-OWNER` with a question,
-   an owner-call's included: ask it, and resume the builder with the answer
-   as a fix.
-3. **Re-check.** Resume each reviewer that has a finding the builder fixed or
-   refused, every time: "Read only `git -C <worktree> diff <before>..<after>`
-   and your findings' lines in `<dir>/triage.md`. Check each fix is right and
+   your rules, run the fast checks, commit, and reply by your rules." The
+   builder decides what to fix, by kind, records each finding in its branch
+   folder's `triage.md`, and replies `FIXED <sha before> <sha after> recheck
+   <Standards, Spec or none>`, followed by `NEEDS-OWNER` and a question when
+   one needs the owner, an owner-call's included. Ask it, and resume the
+   builder with the answer as a fix.
+3. **Re-check.** Resume each reviewer the builder's `recheck` names, every
+   time: "Read only `git -C <worktree> diff <before>..<after>` and your
+   findings' lines in `<branch dir>/triage.md`. Check each fix is right and
    the change adds no new problem, and judge each refusal's proof; leave
    skipped nits alone, they go to the owner. With Bash, write your findings in
    your review's shape to `<your review's file, with -c<k> before .json>`,

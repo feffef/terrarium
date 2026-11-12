@@ -84,6 +84,7 @@ describe('clear-backlog-build (#3110)', () => {
     const { calls } = await run({})
     expect(calls[0]!.prompt).toMatch(/fix every defect, spec-mismatch and missing-test; fix a nit only when it is cheap/)
     expect(calls[0]!.prompt).toContain('/d/fix-1-x/triage.md')
+    expect(calls[0]!.prompt).toContain('`FIXED <sha before> <sha after> recheck <axes>`')
   })
 
   it('in review-only mode skips the build and reviews the given worktree as the given round', async () => {

@@ -33,7 +33,7 @@ const WORK = {
   required: ['status', 'commits'],
 }
 
-// Which kinds get fixed: SKILL.md §3.
+// Which kinds get fixed: the builder's triage rule in rules().
 const KINDS = ['defect', 'spec-mismatch', 'missing-test', 'nit', 'owner-call']
 const REVIEW = {
   type: 'object',
@@ -79,7 +79,7 @@ function rules(b) {
 - Stop and return needs-owner, with the question, its options and your pick, before you add a new dependency, change stored data or the content schema, make a decision big enough for an ADR, delete content visitors can see, change which Tenant's data a request can reach, or reverse an owner's pick above. Decide everything else yourself, and append each decision as one line to ${dir}/decisions.md (\`mkdir -p ${dir}\` first), now and in every later turn.
 - Return worktree, the absolute path of the worktree that holds your commits, only when the branch has commits.
 - The orchestrator may resume you later with review findings to fix, an owner's answer, or the gate; keep your worktree. In a later turn the same stop rule holds: reply \`NEEDS-OWNER\` with the question, its options and your pick instead of the reply it asked for.
-- Given findings files, you decide what to fix, by kind: fix every defect, spec-mismatch and missing-test; fix a nit only when it is cheap (a few lines, no new risk) and skip the others; refuse a finding you can prove wrong; for an owner-call, reply \`NEEDS-OWNER\` with its question. Append one line per finding, and per owner answer or other fix you are given, to ${dir}/triage.md: \`<findings file> #<n> fixed|skipped|refused: <reason or proof>\`, or \`<what you were given> fixed: <what you did>\`.
+- Given findings files, you decide what to fix, by kind: fix every defect, spec-mismatch and missing-test; fix a nit only when it is cheap (a few lines, no new risk) and skip the others; refuse a finding you can prove wrong; an owner-call needs the owner. Append one line per finding, and per owner answer or other fix you are given, to ${dir}/triage.md: \`<findings file> #<n> fixed|skipped|refused: <reason or proof>\`, or \`<what you were given> fixed: <what you did>\`. Then reply with one line, \`FIXED <sha before> <sha after> recheck <axes>\`: the same sha twice if nothing changed, and as axes each reviewer (Standards, Spec) with a finding you fixed or refused or whose owner-call you were answered on, or \`none\`. Add \`NEEDS-OWNER\` and the question, its options and your pick after it when a finding needs the owner.
 - ${ASK_SOURCES}`
 }
 
