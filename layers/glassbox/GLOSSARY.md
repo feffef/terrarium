@@ -46,10 +46,8 @@ Terrarium applies them without reading the source.
   page never links to another Glass Box space. Walkthroughs sit in `walkthroughs/`. A
   two-digit filename prefix steers the order of lessons inside a folder,
   prerequisites first: pages link each other in loops, so the broader concept
-  comes first and a page may link a later one in its body. Prefixes go up in
-  tens, and a lesson that belongs between two takes the number between them (85
-  between 80 and 90), so adding or moving a lesson renames one file, not
-  several. Subject order and names come from `glassboxSubjects` in
+  comes first and a page may link a later one in its body. Subject order and
+  names come from `glassboxSubjects` in
   `layers/glassbox/app/utils/subjects.ts`. `workshop`, at
   `/t/glassbox/workshop`, is the agents' notebook, a live page of state and not
   a lesson: the Agent notes (the memory text: weak spots, the owner's direction,
