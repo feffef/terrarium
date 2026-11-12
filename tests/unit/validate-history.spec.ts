@@ -14,10 +14,18 @@ describe('computeStats', () => {
   })
 })
 
+describe('computeStats edge cases', () => {
+  it('gives zeros for a period with no logs and rounds sessions per week', () => {
+    const s = computeStats([log('2026-07-04', false, 0)], 1, [], '2026-11-11')
+    expect(s.rows[1]).toEqual({ sessionsPerWeek: 0, agentShare: 0, frictionsPerSession: 0, newSites: 0 })
+    expect(s.rows[0]).toMatchObject({ sessionsPerWeek: 1, agentShare: 0 })
+  })
+})
+
 describe('parseSiteDates', () => {
   it('counts a plain add, skips a fold commit and a delete', () => {
-    const log = 'D 2026-07-14\nA\tlayers/a/tenant.config.ts\nD 2026-07-22\nA\tlayers/b/tenant.config.ts\nD\tlayers/a/tenant.config.ts\nD 2026-08-13\nD\tlayers/c/tenant.config.ts\n'
-    expect(parseSiteDates(log)).toEqual(['2026-07-14'])
+    const gitLog = 'D 2026-07-14\nA\tlayers/a/tenant.config.ts\nD 2026-07-22\nA\tlayers/b/tenant.config.ts\nD\tlayers/a/tenant.config.ts\nD 2026-08-13\nD\tlayers/c/tenant.config.ts\n'
+    expect(parseSiteDates(gitLog)).toEqual(['2026-07-14'])
   })
 })
 
