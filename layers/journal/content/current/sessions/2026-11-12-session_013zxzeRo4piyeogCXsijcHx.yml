@@ -1,15 +1,16 @@
 schemaVersion: 1
 session: session_013zxzeRo4piyeogCXsijcHx
 startedAt: 2026-11-12T17:22:42Z
-endedAt: 2026-11-12T18:17:08Z
+endedAt: 2026-11-12T18:20:13Z
 kind: interactive
 goal: "Curate the Glass Box guide: Nuxt & Vue and House rules pages"
-status: completed
-outcome: "PRs 3183 (Nuxt & Vue) and 3185 (House rules) merged: lowercase terms and clearer wording on nineteen pages"
-summary: 'Started by the glassbox-curate routine (autonomous, handed over from an earlier session in the same chain), so every focus choice was agent-made. Human-instructed: a mid-run "Fix leftovers on this session" (followed), and later a request to record in index.md that the remaining capitalised glossary terms (Walkthroughs, stray Lesson hits, and the terms/*.yml definitions) be lowercased in one mechanical, script-driven run with no writers or claim checkers; the owner said to include the definitions. Run 1 (Nuxt & Vue, eight pages) merged as PR 3183. Run 2 (House rules, eleven pages) is PR 3185: two fresh readers before and one after, an opus writer, a claim checker (all added sentences supported), code review with no blocking finding, gate:scoped green. The memory page hit its word cap in both runs and lost old items. Scout skipped in both runs and disclosed. Both PRs passed CI, got a verdict comment and merged with merge-pr.ts; the next focus is recorded on the memory page for a later run.'
+status: in-review
+outcome: PRs 3183 and 3185 merged; PR 3192 (mechanical lowercase pass, Walkthroughs and term definitions) open, CI and merge pending
+summary: 'Started by the glassbox-curate routine (autonomous, handed over from an earlier session in the same chain), so every focus choice was agent-made. Human-instructed: a mid-run "Fix leftovers on this session" (followed), and later a request to record in index.md that the remaining capitalised glossary terms (Walkthroughs, stray Lesson hits, and the terms/*.yml definitions) be lowercased in one mechanical, script-driven run with no writers or claim checkers; the owner said to include the definitions. Run 1 (Nuxt & Vue, eight pages) merged as PR 3183. Run 2 (House rules, eleven pages) is PR 3185: two fresh readers before and one after, an opus writer, a claim checker (all added sentences supported), code review with no blocking finding, gate:scoped green. The memory page hit its word cap in both runs and lost old items. Scout skipped in both runs and disclosed. Both PRs passed CI, got a verdict comment and merged with merge-pr.ts. Run 3 (PR 3192) was the owner-requested mechanical pass: a script lowercased the remaining terms in the Walkthroughs, six stray Lessons and the 23 term definitions, one reviewer read the word diff for false positives (I reverted my changes to the overview, which the owner was editing); no writers or claim checkers. Open: CI, verdict comment and merge of PR 3192.'
 prs:
   - "3183"
   - "3185"
+  - "3192"
 docsRead:
   - path: layers/glassbox/GLOSSARY.md
     reason: (no reason given)
@@ -98,23 +99,23 @@ frictions:
   - description: The memory page hit its word cap again and two same-day items had to be swapped for each other; the reviewer then called one cut premature.
     solution: Make the cap check part of orient.ts output so a run budgets its additions before writing them.
     severity: minor
-durationSec: 3266
+durationSec: 3451
 models:
-  claude-sonnet-5-5: 317
+  claude-sonnet-5-5: 338
 toolCounts:
-  Bash: 84
+  Bash: 91
   Read: 21
   Write: 4
   Agent: 16
   Grep: 3
   Edit: 12
-  Skill: 6
-  mcp__claude-code-remote__get_session: 2
+  Skill: 7
+  mcp__claude-code-remote__get_session: 3
   ToolSearch: 2
   mcp__github__list_pull_requests: 1
-  mcp__github__create_pull_request: 2
-  mcp__claude-code-remote__subscribe_pr_activity: 2
-  ReadNotifications: 5
+  mcp__github__create_pull_request: 3
+  mcp__claude-code-remote__subscribe_pr_activity: 3
+  ReadNotifications: 6
   mcp__github__pull_request_read: 1
   mcp__github__add_issue_comment: 2
 filesEdited:
@@ -724,19 +725,19 @@ subagents:
     durationSec: 502
     toolCalls: 125
     modelCalls: 75
-    tokenShare: 12.5
+    tokenShare: 11.9
   - task: Claim check, Nuxt & Vue changes
     model: sonnet
     durationSec: 205
     toolCalls: 39
     modelCalls: 35
-    tokenShare: 5.3
+    tokenShare: 5.1
   - task: Fresh re-read, Nuxt pages
     model: sonnet
     durationSec: 32
     toolCalls: 11
     modelCalls: 3
-    tokenShare: 1.2
+    tokenShare: 1.1
   - task: Standards review of Nuxt & Vue diff
     model: sonnet
     durationSec: 47
@@ -748,7 +749,7 @@ subagents:
     durationSec: 56
     toolCalls: 14
     modelCalls: 11
-    tokenShare: 2.1
+    tokenShare: 2
   - task: Fresh reader, house rules A
     model: sonnet
     durationSec: 34
@@ -760,19 +761,19 @@ subagents:
     durationSec: 35
     toolCalls: 8
     modelCalls: 4
-    tokenShare: 1.2
+    tokenShare: 1.1
   - task: Opus writer, House rules fixes
     model: opus
     durationSec: 462
     toolCalls: 162
     modelCalls: 44
-    tokenShare: 8.8
+    tokenShare: 8.4
   - task: Claim check, House rules changes
     model: sonnet
     durationSec: 138
     toolCalls: 32
     modelCalls: 27
-    tokenShare: 4.7
+    tokenShare: 4.5
   - task: Fresh re-read, House rules pages
     model: sonnet
     durationSec: 54
@@ -784,19 +785,19 @@ subagents:
     durationSec: 94
     toolCalls: 19
     modelCalls: 15
-    tokenShare: 2.7
+    tokenShare: 2.5
   - task: Spec review of House rules diff
     model: sonnet
     durationSec: 74
     toolCalls: 16
     modelCalls: 14
-    tokenShare: 2.5
+    tokenShare: 2.4
   - task: Review lowercase replacements for false positives
     model: sonnet
     durationSec: 30
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1.3
+    tokenShare: 1.2
   - task: Standards and Spec review, lowercase pass
     model: sonnet
     durationSec: 25
