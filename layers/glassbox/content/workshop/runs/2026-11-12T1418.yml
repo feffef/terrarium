@@ -1,0 +1,34 @@
+session: session_013zxzeNhTtnWyYs2Mh6hn26
+mode: autonomous
+focus: "Git & GitHub Subject (its eight pages): apply the owner's lowercase rule for glossary terms in body text, and clear the wording leftovers the memory page listed for these pages. A person typed the first message and answered autonomous, so the run is autonomous from the start, with no ask. Chosen because open PR 3160 holds the agents, hooks and session-log pages, the Scout found no new topic (it judged most commits from their subjects), and the memory page's lowercase sweep and its Git & GitHub wording leads were the oldest unaddressed items. Four fresh readers read the pages, four opus writers fixed them, a claim checker found three claims not fully true and six overstated, and a second writer pass corrected them; a second round of fresh readers found only wording the rendering caused or small leftovers, which went to the memory page. The memory page's Fixes waiting item to re-pin Issue triage labels was already done (the page shows the harvest exception and the doc is unchanged), so it was cut. The memory page lost three soft decisions that had stood since its first version and that no run took up (the timestamp-rule move, the return-only-what-a-page-reads move and the URL-resolver move), and later the MCP matcher move, the idea of folding Engineering skills into Installed skills and the recurring-problem note on undone changes, to stay under its word cap."
+changes:
+  - git-github/10.pull-requests | glossary terms lowercase; the opening sentence on the steps is split; the verdictRefusal sentence is three sentences with trusted author and ADR glossed; the authorship mark is the header or one of two footers; the passing-check lead-in says the session gets no notice | readers could not follow the long sentences, and the claim check found the mark described too narrowly (merge-pr.ts:166-188; provenance-header.ts:70-75; pr-workflow.md:9-20). Wording only, so revision and publishedAt are kept
+  - git-github/20.author-trust | lowercase terms; MEMBER is said to mean an organisation's member and so not to occur in a personal repository, with the docs link; the label only shows author_association and a PR without it is treated as public; the OWNER bullet says agents post as the owner; the guest pipeline is glossed where first named; the cost clause says a change needs a person's merge or in-session approval; the Try it names the permissions endpoint | readers saw MEMBER trusted against the concept, two label bullets that seemed to clash, and an endpoint they could not find (merge-pr.ts:207-237; pr-authorassociation-label.yml:3-4,46,51; pr-workflow.md:70-71; GitHub docs enum CommentAuthorAssociation). Wording only
+  - git-github/30.composite-actions | lowercase terms; the lede glosses composite action and cloud session; the push fence is defined at first use; the two Why bullets say how steering CI and the copy-YAML wait fit together, and which half of the steps sat past the fence; the doorbell sentence says a subscribed session hears about comments but not a pass; the steps are said to be written in three places that a test keeps equal; fetch-depth 0 is glossed | readers read the Why bullets as contradicting each other and met undefined terms (ADR-0026:18-40; action.yml:151-153; environment-caveats.md:53-55; claude-code-on-the-web docs). Wording only
+  - git-github/40.dependabot-grouping | lowercase terms; the Actions directory rule moves into The concept; a 0.x minor is said to count as a major with the Semantic Versioning rule beside it; both entries are said to set the cooldown; the sweep is glossed and the long paragraph split; the lede and Try it say what to expect | readers could not tell where a 0.x minor goes or why, and the cooldown claim read as unsupported (dependabot.yml:10-25; ADR-0004:33-35; dependabot options reference; semver.md item 4). The reason for the 0.x rule has no source and is on the memory page. Wording only
+  - git-github/50.git-worktrees | lowercase terms; the Session logs pointer says how the script tells a linked worktree; the close sweep says what is removed and what is kept and what a first-parent line is; leftover changes are defined; isolation worktree and brief are glossed; the subagent worktree case is told apart from the project-folder bullet; the Try it says the worktree alone shows the change | readers could not tell the removed from the kept worktrees (log-session.ts:188-216,558-579; check-worktrees.ts:159-166; worktrees docs). Wording only
+  - git-github/60.attribution | lowercase terms; the guard paragraph is three short ones; PreToolUse and slot are glossed; an edit to a posted comment passes unchecked; the owner-approved merge commit has its own sentence; the linked worktree is glossed; what counts as a mark is a list; the Try it adds chmod and git log -2 | readers found the guard paragraph too dense (github-provenance-guard.ts:44-70; settings.json:105-112; merge-pr.ts:143-148,207-215; provenance-header.ts:49-75; commit-msg:8-23). Wording only
+  - git-github/70.issue-triage-labels | lowercase terms; one sentence says which skills set the ready labels (triage, the sweep, clear-backlog, the guest pipeline; harvest files ready-for-human; every other skill needs-triage); harvest and the guest pipeline are glossed; wontfix is named the fifth state where the four are listed; the wontfix paragraph is three sentences; the cost of keeping the installed names is said plainly | the old sentence said only triage sets the labels and the claim check found it overstated (triage-labels.md:8-27; triage SKILL.md:31-37; ADR-0003:27-30). Wording only
+  - git-github/80.git-plumbing | lowercase terms; env and idxEnv and base are explained; the push is said to send the commit's objects and the rebuild to make the push a fast-forward again; objects are said to go inside .git; the Try it says unset GIT_INDEX_FILE points git back at the real index; bare commit id is glossed; gated script is replaced by a PR that passes the gate | readers could not see why two environments are used (log-session.ts:234-237,270-294,334-337; git-push docs; ADR-0009:10-11). Wording only, and the Try it was run
+pagesRead:
+  - git-github/10.pull-requests
+  - git-github/20.author-trust
+  - git-github/30.composite-actions
+  - git-github/40.dependabot-grouping
+  - git-github/50.git-worktrees
+  - git-github/60.attribution
+  - git-github/70.issue-triage-labels
+  - git-github/80.git-plumbing
+  - agents/30.cloud-sessions
+  - agents/10.subagents
+  - terrarium-practice/40.session-logs
+  - verification/10.gate
+  - terrarium-practice/60.protected-paths
+  - terrarium-practice/10.human-in-the-loop
+  - terrarium-practice/90.outside-contributions
+  - skill-pack/20.planning-with-the-pack
+  - skill-pack/10.skill-packs
+  - terrarium-practice/85.skill-inventory
+  - terrarium-practice/80.self-improvement-loop
+  - hooks/10.hooks
+  - hooks/20.blocking-hooks

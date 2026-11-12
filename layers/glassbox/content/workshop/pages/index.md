@@ -23,14 +23,13 @@ Each guide page is named by its title, then its file under `layers/glassbox/cont
 ### Weak spots
 
 - **The Installed Skills pages say little of their own.** *Planning skills* (`skill-pack/20.planning-with-the-pack`) and *Engineering skills* (`skill-pack/30.engineering-skills`) mostly describe Skills that come from outside Terrarium. Only a few of their facts are about choices Terrarium made.
-- **Only the overview writes glossary terms in lowercase.** The owner's rule (`owner-decisions.md`) is that a glossary term is lowercase in body text, mid-sentence. The other pages still write Skill, Tenant, Routine, Gate and the like. Fix it a Subject at a time; it is wording only.
+- **Only the overview and the Git & GitHub pages write glossary terms in lowercase.** The owner's rule (`owner-decisions.md`) is that a glossary term is lowercase in body text, mid-sentence. The other Subjects and the Walkthroughs still write Skill, Tenant, Routine, Gate and the like. Fix it a Subject at a time; it is wording only. A capital stays at the start of a sentence, in a linked page's exact title, in code and in an Excerpt.
 - **Two Git & GitHub Lessons are long.** *Commit and PR attribution* (`git-github/60.attribution`) and *Issue triage labels* (`git-github/70.issue-triage-labels`) are each about 1,400 to 1,600 words. Both have been trimmed; look for a split only after a fresh reader finds them hard to follow.
 
 ### Recurring problems
 
 - **New text has contained false claims.** Twice, a newly written page or fix said something its source contradicted, and it was only noticed a day later. Older text can be false too: a claim check found *Mermaid pre-rendering* saying unmapped colours fall back to Mermaid's own defaults, when they are fixed light colours.
 - **Neighbouring pages repeat each other.** Most structural changes took a reason that two pages both explained and left it on just one of them.
-- **Changes have been undone soon after.** *Prose overrides* and *Invariant tests* were kept by one run, then folded into another page runs later.
 
 ### The owner's direction
 
@@ -42,7 +41,7 @@ These are the owner's goals for the guide. A run builds toward them directly; a 
 
 ### Good next focuses
 
-1. **Decide how pages say "a person merges" a Human-only file.** Since the owner waiver (ADR-0004), an agent may merge one when the owner says so in the session. *Protected paths*, *Human-only* and the overview say so. These still state it flatly, each true as the default: *Path-specific rules*, *Decision records*, *Merge gate*, *Claude Code hooks* (twice), *Composite actions*, *Author trust*, *Cross-tenant reads* and *Asking an agent for a change*. Ask the owner whether to name the waiver there or keep one home.
+1. **Decide how pages say "a person merges" a Human-only file.** Since the owner waiver (ADR-0004), an agent may merge one when the owner says so in the session. *Protected paths*, *Human-only* and the overview say so. These still state it flatly, each true as the default: *Path-specific rules*, *Decision records*, *Merge gate*, *Claude Code hooks* (twice), *Composite actions*, *Cross-tenant reads* and *Asking an agent for a change*. Ask the owner whether to name the waiver there or keep one home.
 2. **Check the pages whose claims the docs left silent** (see *Claims to check*), by reading the tool's source where the docs have no page.
 
 3. **Check every Walkthrough diagram against its stops.** A diagram is read beside the stops (on wide screens it sits next to them), so what it shows should roughly match the steps; a reader who can't match them gains nothing. It is a simplified picture, never a 1:1 copy: not every box or arrow needs a stop. Try to match, but not too hard, and keep it simple. The stops read better than the diagrams, so expect to redraw the diagram. Keep the same check for any new diagram. *A change goes live* is the model to match: a few boxes in a line, one side branch, no numbers.
@@ -55,7 +54,7 @@ None of these is false.
 - **Claude Code.** *MCP servers*: one hint matches the whole server while the guards list tools, with no reason given (the sources give none; ask the owner or leave it a plain fact); "the `.sh` filter" and the hint's trigger words are hard to follow. *CLAUDE.md* uses *hint* and *guard* before defining them. *Path-specific rules*: the Human-only sentence is long and nested. *Claude Code permissions* says the untrusted-workspace fact in three places. *Claude Code skills*: "importance and role are the Inventory's own judgement" is unclear.
 - **Hooks.** *Claude Code hooks*: the Human-only wiring is in both a Why and a What to watch bullet; *guard* and *hint* come before their definition; "every matching call starts the command" is also on *Hook-added context*; `agent_id` is also on *Session transcripts*. *Blocking hooks*: "hints and recorders", "pure check" and "shell pre-filters" come before they are glossed.
 - **Agents.** *Subagents*: the background guard is named in both In Terrarium and Why; the page can't say what depth 1 means (no docs text in the repo). The spawn-depth paragraph is long, and the commit and own-folder points appear three times. *Workflow scripts*: the seedling sentence is a nested list, and "can't ask" sits beside the explore script turning an answer into a question. *Cloud sessions*: two bullets say nearly the same thing. *Scheduled tasks*: `/loop` driving a `disable-model-invocation` Skill is unexplained.
-- **Git & GitHub.** *Pull requests*: one sentence ("from the review and the local Gate run before the PR opens to the merge") reads hard; *Trusted author* comes before its gloss. *Author trust*: the `trusted` label is "a display, not the check", yet a missing label means Public; the *OWNER isn't proof of a person* bullet is terse. *Issue triage labels* says only triage sets `ready-for-agent`, and later that a Trusted user's label is an approval; a reader can't tell whether a person sets it by hand. *Dependabot grouping*: why a 0.x minor counts as a major is not explained, and "the merge line" is jargon. *Git worktrees* says Session logs shows how the script tells a linked worktree, without saying how. *Git plumbing* never says why `commit-tree` takes `env` and the other calls `idxEnv`.
+- **Git & GitHub.** *Dependabot grouping*: no source says why Terrarium counts a 0.x minor as a major (the page gives the Semantic Versioning rule only), nor why `merge-pr.ts` refuses a Dependabot pull request that touches any file besides `package.json` and the lockfile. *Issue triage labels* and *Commit and PR attribution* are still dense in In Terrarium, with many Skill and function names in a row. The Excerpt that first shows `harvest`, `auto-triage` and the guest pipeline on *Issue triage labels* sits before their glosses; a shorter excerpt would fix it. *Pull requests* leans on a bare "Session logs follows it there" pointer.
 - **Walkthroughs.** *A bug report becomes work*: `wontfix (completed)` in the real case is not explained; stop 7 mixes the Trusted author with the Public requester. *A change goes live* stop 2 never says how long the pause is. *Asking an agent for a change*: stop 1 says a cloud and a local session work the same way, and stop 2 has the `SessionStart` hook install packages; both hold for Terrarium's usual one-repository session, and the Walkthrough could say so.
 - **Installed skills and Deploy.** *Wayfinder* and *Planning a big change*: the installed Skill gives no reason research tickets may resolve more than one per session. *Planning skills*: `ready-for-agent`, `needs-triage` and *Agent Brief* are glossed only briefly. *Continuous deployment* and *pnpm and the lockfile* use *ADR*, *Merge gate* and *Content database* as bare pointers; *Continuous deployment* has no excerpt for the failed-install and Node-restart claims.
 - **Terms glossed late.** Several pages use *Space*, *Document*, *Catalog* or *Tenant* before they are glossed, or gloss one twice (*Vue components*, *Hydration*, *File routing*, *queryCollection*). A short rule for where each is glossed first would settle it.
@@ -63,7 +62,6 @@ None of these is false.
 
 ### Fixes waiting
 
-- *Issue triage labels* is pinned before `docs/agents/triage-labels.md` gained its `harvest` exception (it says only triage sets the two ready labels, and its Excerpt lacks the exception). Re-pin it and show the exception.
 - *Skill inventory*, *Scheduled tasks* and *Schema evolution* were only searched, not re-read, against the *Ideas and lessons learned* Lesson.
 - *Hook-added context* and *Session transcripts* have not been re-read by a fresh reader since a pass whose reader never reported.
 - The Corepack link on *pnpm and the lockfile* (`nodejs.org/api/corepack.html`) redirects to GitHub; `nodejs.org/docs/latest-v22.x/api/corepack.html` is a candidate, and Corepack stops shipping with Node 25.
@@ -95,8 +93,8 @@ Each may be true; a later run should read the tool's source or run it.
 
 ### Ideas still open
 
-- *Engineering skills* could become part of *Installed skills* (`skill-pack/10.skill-packs`).
 - The overview names neither web standards, how agents reach things (cloud sessions, permissions, MCP, worktrees) nor dependencies (lockfile, Dependabot). The owner chose other gaps for it; add one only with a reason.
+- `plain.ts` (the fresh readers' view of a page) could keep link syntax in code and show each term's definition after its sentence, not inside it; a change to a Skill's script waits for the owner.
 - The overview uses *CI* and *ADR-0004* without saying what they are, and "spec" and "stories" are glossed only in a clause.
 
 ### Soft decisions
@@ -106,12 +104,11 @@ Decisions agents made (run, review, claim check). Not rules: the owner or a late
 - **A missing `publishedAt` on a page whose teaching hasn't changed is not a deficit.** Adding one shows an old page on the Commons Timeline as new (review).
 - **Continuous deployment's Full reference stays Wikipedia.** A practice has no official docs (review).
 - **Agent tooling comes first in the guide's order, and Web standards never sits between the two Nuxt Subjects**.
-- **Moving the timestamp rule and its warnings from *Content validation* (`verification/30.content-validation`) to *Zod refinements* (`verification/60.zod-refinements`).** Re-check the reasons for and against before acting.
-- **Moving the warning to return only what a page reads from *Data fetching* (`nuxt-vue/70.data-fetching`) to *queryCollection* (`nuxt-content/40.query-collection`).** The related move the other way (from *queryCollection* to *Data fetching*) is also in this list.
-- **Moving the MCP tool-name matcher from *MCP servers* to *Blocking hooks*.** The `mcp__<server>__.*` form is about how MCP names tools, and the page's Why bullet on it is one sentence that links *Claude Code hooks*.
 - **Guide titles.** Every title has been weighed against 2 to 4 alternatives; owner rulings are in owner-decisions.md. Closest rivals that lost: *Required status checks* for *Merge gate*, *Claude Code workflows* for *Workflow scripts*.
 - **Folding *Planning skills* into *Installed skills*.** *Planning skills* holds facts about Terrarium's own choices that would lose their page.
-- **Moving the URL-resolver facts from *Multi-tenant isolation* to *File routing*.** They belong with isolation, because that is where their testability matters.
+- **`wontfix` is the fifth triage state.** *Issue triage labels* lists four states first and names `wontfix` as the fifth: `docs/agents/triage-labels.md` says skills name five roles (claim check).
+- **A Git & GitHub page may keep a one-clause pointer to a fact a sibling owns.** A page that must stand alone says in a clause how a linked worktree is told (*Git worktrees*, owned by *Session logs*), what a cloud session is, what the guest pipeline is and what a PreToolUse hook is; the sibling keeps the full account (overlap check).
+- **A fresh reader's complaint about a long bracket or a lost link is often the rendering.** `plain.ts` puts each term's definition inside the sentence and strips link syntax from code, so such findings are checked against the page before they are acted on.
 - **Splitting the unattended triage sweep out of *Issue triage labels*.** Held back until the page is stable. The page's length is still a problem.
 
 ## Update log
