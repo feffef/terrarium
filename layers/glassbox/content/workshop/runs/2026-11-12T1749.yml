@@ -1,0 +1,27 @@
+session: session_013zxzeRo4piyeogCXsijcHx
+mode: autonomous
+focus: "House rules Subject (its eleven pages): apply the owner's lowercase rule for glossary terms in body text (skill, tenant, routine, gate, friction, rule and the like were still capitalised) and clear fresh-reader wording problems. A second run in the same session, started because the routine says to choose focuses repeatedly. Chosen because no PR touches the guide and this was the last Subject, besides the Walkthroughs, that still capitalised terms. Deviations for the budget: the Scout was not run and the guide index was not re-read (read earlier in this session; only wording on the Nuxt & Vue pages changed since). Two fresh readers read the pages before and one after; an opus writer fixed them with a source per changed fact; the claim checker found every added sentence supported and noted that the Skill inventory page wrongly said the site shows no gist (it shows it), which the writer had already corrected. The code review found no blocking defect. Its Spec reviewer named outside pages (Author trust, Merge gate, Path-specific rules, Scheduled tasks, Issue triage labels, Commit and PR attribution, Installed skills, A session log lands on main); it grepped each and found no contradiction, and none was read in full, so none is in pagesRead. The memory page lost two whole items to stay under its word cap (the oldest note, on the UI-verification doc, and the Nuxt build memory note for Continuous deployment), lost the open question on capitalised term definitions (the owner then said to include them), and gained the House rules leftovers and a first focus: lowercase the remaining glossary terms in one mechanical run, definitions included, with no writers or claim checkers."
+changes:
+  - terrarium-practice/10.human-in-the-loop | glossary terms lowercase; public user and human-only PR are glossed where first used; the digest lead-in says what the quoted text limits | readers met undefined words in the first paragraphs (GLOSSARY.md:141-174). Wording only, so revision and publishedAt are kept
+  - terrarium-practice/20.decision-records | glossary terms lowercase | owner's rule. Wording only
+  - terrarium-practice/30.ubiquitous-language | lowercase terms; the map lead-in says it lists the platform glossary then one per tenant, and platform is glossed; persona and biome are worded as their glossaries define them; the colon before the map excerpt says what the excerpt shows | readers read the lead-in as wrong for the first entry (GLOSSARY-MAP.md:3-10; layers/blog/GLOSSARY.md:40; layers/atlas/GLOSSARY.md:35-36). Wording only
+  - terrarium-practice/40.session-logs | lowercase terms; only the same session re-logs and no other edits its log | readers read replace and never-edited as in tension (adr-0009.md). Wording only
+  - terrarium-practice/45.ideas-and-lessons-learned | lowercase terms; the retro entry's key form sits beside the key excerpt | the lead-in omitted the retro form (harvest.ts:36-37,64-67). Wording only
+  - terrarium-practice/50.pruning-instructions | lowercase terms; the window lead-in matches its excerpt (landing commit found with git log -S, isJudgeable decides); the Try-it says a window you set, not a few weeks | the code window is three days (find-trial-window.ts:39,101-109). Wording only
+  - terrarium-practice/60.protected-paths | glossary terms lowercase | owner's rule. Wording only
+  - terrarium-practice/70.cross-tenant-reads | lowercase terms; space and document are glossed where first used | readers met them undefined. Wording only
+  - terrarium-practice/80.self-improvement-loop | lowercase terms; the loop list has a proper lead-in sentence; on-trial is said to show as on trial; a dropped candidate is told from a regression | the lead-in was broken and the two sentences overlapped (ledger.ts:13,142; survey-brief.md:182-189). Wording only
+  - terrarium-practice/85.skill-inventory | lowercase terms; gist is said to be shown on the skills page and observations not; the three steps are named; the triage entry lead-in is a sentence | the old text said the site shows neither (tenant.config.ts:23-43; SkillInventory.vue:28). One corrected claim, so revision and publishedAt are kept
+  - terrarium-practice/90.outside-contributions | lowercase terms; what intake reads is told apart from what classifyActivity does; a routine or loop the owner set up counts as the owner starting each run | the lead-in mixed the two (guest-intake-scan.ts:88,122-157; ADR-0023:14-16). Wording only
+pagesRead:
+  - terrarium-practice/10.human-in-the-loop
+  - terrarium-practice/20.decision-records
+  - terrarium-practice/30.ubiquitous-language
+  - terrarium-practice/40.session-logs
+  - terrarium-practice/45.ideas-and-lessons-learned
+  - terrarium-practice/50.pruning-instructions
+  - terrarium-practice/60.protected-paths
+  - terrarium-practice/70.cross-tenant-reads
+  - terrarium-practice/80.self-improvement-loop
+  - terrarium-practice/85.skill-inventory
+  - terrarium-practice/90.outside-contributions
