@@ -1,0 +1,132 @@
+schemaVersion: 1
+session: session_013zxzeS6gV5rfHembHQYP6K
+startedAt: 2026-11-12T16:05:08Z
+endedAt: 2026-11-12T16:13:52Z
+kind: autonomous
+goal: Harvest recent session ideas and learnings into Seedlings
+status: completed
+outcome: Six Seedlings filed (3172-3177) plus one retro Seedling (3178); stored keys checked; no repo changes
+summary: "Fired as the harvest Skill with no human prompt, so every step was agent-initiated. Extracted 391 unharvested entries (177 ideas, 214 learnings), read the whole list, and checked clusters against the tracker (88 open, 1013 closed), the Friction Ledger, owner decisions and the code. Dropped four product clusters (a reading path and concept map ruled out by the owner's no Start-here decision, three already built: token share bar, code fade, Routine cost panel) and an explore-writes idea held by two Ledger entries. Filed five product Seedlings (changed-since-read dot, sources-changed badge, diagram box highlight, homepage placement in the manifest, History table script) and one workflow Seedling (a Skill's Routine claim is intent, not fact; eight sessions). Two passing workflow clusters (glassbox-update leftovers report, merge-pr squash message) stayed unfiled because the 5-per-kind cap is unclear for mixed clusters; the retro Seedling says so, with a cheaper whole read. check-clusters, check-body and check-posted all passed."
+prs: []
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: .agents/skills/harvest/body-template.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-11-12-session_013zxzeP1EixGDy96kmktFi2.yml
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: (no reason given)
+  - path: layers/glassbox/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-lesson/owner-decisions.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: .agents/skills/retro/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: harvest
+    reason: (invoked as a slash command)
+frictions:
+  - description: Ran git log (to draw a conclusion) and the GitHub listing scripts before reading git-conventions.md and github-integration.md; hooks sent me to them afterwards.
+    solution: Read the docs CLAUDE.md names at the first git or GitHub call; the harvest Skill could name them in step 1.
+    severity: nit
+  - description: Step 1 whole read of 577 lines took about 90,000 tokens and two Reads, one needing allow_large, though step 2 stops at 30 clusters.
+    solution: Let harvest list cut entry text, as Seedling 3178 proposes.
+    severity: minor
+  - description: Step 4's 5-per-kind cap does not say which kind a mixed cluster uses, so two passing workflow clusters went unfiled by my guess.
+    solution: Say a cluster counts for the kind of most of its entries (Seedling 3178).
+    severity: minor
+  - description: My first Seedling drafts said I read a script and a source I had only grepped; I caught it before posting and reworded them.
+    solution: Describe a grep as a grep in What I checked.
+    severity: nit
+durationSec: 524
+models:
+  claude-sonnet-5-5: 86
+toolCounts:
+  Bash: 34
+  Read: 6
+  mcp__claude-code-remote__get_session: 1
+  ToolSearch: 1
+  mcp__github__issue_write: 7
+  Skill: 2
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/owner-decisions.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/owner-decisions.md
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: agent header on every issue
+      - path: .claude/rules/adr-0003.md
+        value: backed
+      - path: .claude/rules/adr-0021.md
+        value: backed
+      - path: .claude/rules/tenant-glossary.md
+        value: backed
+      - path: .claude/rules/adr-0005.md
+        value: steered
+        why: cut over check for Routine claims
+      - path: docs/agents/issue-tracker.md
+      - path: docs/agents/triage-labels.md
+      - path: .agents/skills/harvest/body-template.md
+      - path: .agents/skills/visitor-loop/decisions.md
+      - path: .agents/skills/glassbox-lesson/owner-decisions.md
+gitBranch: ccr-c31f21c8-nkovdt
+entrypoint: remote_mobile
+cliVersion: 2.1.322
+landedBy: Stop
