@@ -1,0 +1,91 @@
+schemaVersion: 1
+session: session_013zxzeP4WS4kX4LSBrVszT6
+startedAt: 2026-11-12T06:12:57Z
+endedAt: 2026-11-12T06:15:53Z
+kind: autonomous
+goal: Harvest recent session ideas into Seedlings
+status: completed
+outcome: 162 ideas extracted, 14 clusters checked, none passed, no Seedlings filed, no repo changes
+summary: Scheduled harvest run for ideas, started by the Routine, not a human. Extracted 162 unharvested ideas and read the list whole. Checked product clusters first (Glass Box code fade already built, reading progress and subject index and result chips add without retiring anything, session card token bar, History stats script, tile note single source, stale preview server covered by a Ledger entry, Routine cost panel already built) then workflow clusters (code-review inline already in ADR-0004, ADR split moot, empty-glob check, worktree patch-id, non-UTC CI). Each failed unbuilt, unfiled, Ledger or simplifying test, so nothing was filed. Some drops rest on a quick grep, not a full relevance record.
+prs: []
+docsRead: []
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: harvest
+    reason: (invoked as a slash command)
+frictions:
+  - description: The idea list ran to 162 entries over 270 lines, needing a paged read; most are old glassbox-improve ideas for a Skill that no longer exists.
+    solution: Have harvest extract drop entries whose named Skill or file is gone before listing.
+    severity: minor
+durationSec: 177
+models:
+  claude-sonnet-5-5: 32
+toolCounts:
+  Bash: 12
+  Read: 2
+  mcp__github__issue_read: 2
+  Skill: 2
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/adr-0025.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0006.md
+        via: hint
+      - rule: .claude/rules/adr-0016.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/guards.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0003.md
+        value: backed
+        why: no new work built
+gitBranch: ccr-6cb0115b-0sk150
+entrypoint: remote_mobile
+cliVersion: 2.1.322
+ideas:
+  - Make harvest extract skip entries naming files or Skills that no longer exist, so moot ideas stop consuming the read and the 30-cluster budget.
+landedBy: Stop
