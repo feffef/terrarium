@@ -1,15 +1,16 @@
 schemaVersion: 1
 session: session_013zxzeQAc52ZMCkhtp4ihGY
 startedAt: 2026-11-12T22:15:17Z
-endedAt: 2026-11-12T22:47:14Z
+endedAt: 2026-11-12T22:56:18Z
 kind: delegated
 goal: "Curate the Glass Box guide: Verification Subject Try-it sections"
 status: in-review
-outcome: PRs 3211 and 3212 merged; a third focus and the handoff session are next
-summary: "The owner invoked the glassbox-curate skill and, when asked, chose autonomous mode, several focuses in sequence until 500k context, and a Sonnet handoff session with unrestricted network at the end (human-instructed). I took the Verification Subject as the focus (agent-chosen from the memory page's open leads). Two fresh readers found weak Try-it sections and wording problems; an opus writer edited seven pages; a claim checker found every changed sentence supported; code-review's two reviewers led to a pagesRead fix and a teaches update; pnpm gate:scoped passed; PR 3211 merged after CI went green. A second run on the Web standards Subject merged as PR 3212. Still open: further focuses and the handoff session."
+outcome: PRs 3211 and 3212 merged; PR 3214 (Deploy) open with gate green
+summary: "The owner invoked the glassbox-curate skill and, when asked, chose autonomous mode, several focuses in sequence until 500k context, and a Sonnet handoff session with unrestricted network at the end (human-instructed). I took the Verification Subject as the focus (agent-chosen from the memory page's open leads). Two fresh readers found weak Try-it sections and wording problems; an opus writer edited seven pages; a claim checker found every changed sentence supported; code-review's two reviewers led to a pagesRead fix and a teaches update; pnpm gate:scoped passed; PR 3211 merged after CI went green. A second run on the Web standards Subject merged as PR 3212; a third on Deploy is open as PR 3214 (gate green). Mid-run the owner asked to add the Walkthrough order as a weak spot, which I added to the memory page (human-instructed). Still open: merge of 3214 and the handoff session."
 prs:
   - "3211"
   - "3212"
+  - "3214"
 docsRead:
   - path: docs/agents/git-conventions.md
     reason: (no reason given)
@@ -34,6 +35,18 @@ docsRead:
   - path: .agents/skills/glassbox-curate/SKILL.md
     reason: (no reason given)
   - path: layers/glassbox/page-checks.ts
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/deploy/10.continuous-deployment.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/deploy/20.pnpm-lockfile.md
+    reason: (read before editing)
+  - path: deploy/entrypoint.sh
+    reason: (no reason given)
+  - path: deploy/docker-compose.yml
+    reason: (no reason given)
+  - path: deploy/README.md
+    reason: (no reason given)
+  - path: deploy/Dockerfile
     reason: (no reason given)
   - path: layers/glassbox/content/guide/pages/web-standards/10.css-custom-properties.md
     reason: (read before editing)
@@ -84,25 +97,30 @@ frictions:
   - description: Read docs/agents/git-conventions.md only after my first git command, as the hook reminded.
     solution: Read the listed docs before any git command.
     severity: nit
-durationSec: 1917
+durationSec: 2461
 models:
-  claude-sonnet-5-5: 174
+  claude-sonnet-5-5: 219
 toolCounts:
   AskUserQuestion: 1
-  Bash: 52
+  Bash: 67
   Read: 16
-  Agent: 12
-  Write: 3
-  mcp__claude-code-remote__get_session: 3
-  Skill: 4
-  mcp__github__create_pull_request: 2
-  mcp__claude-code-remote__subscribe_pr_activity: 2
-  ReadNotifications: 5
+  Agent: 14
+  Write: 4
+  mcp__claude-code-remote__get_session: 4
+  Skill: 5
+  mcp__github__create_pull_request: 3
+  mcp__claude-code-remote__subscribe_pr_activity: 3
+  ReadNotifications: 6
   mcp__github__pull_request_read: 1
   mcp__github__add_issue_comment: 2
+  Edit: 2
 filesEdited:
   - layers/glassbox/content/workshop/runs/2026-11-12T2216.yml
   - layers/glassbox/content/workshop/runs/2026-11-12T2232.yml
+  - layers/glassbox/content/workshop/pages/index.md
+  - layers/glassbox/content/workshop/runs/2026-11-12T2246.yml
+  - layers/glassbox/content/guide/pages/deploy/10.continuous-deployment.md
+  - layers/glassbox/content/guide/pages/deploy/20.pnpm-lockfile.md
   - layers/glassbox/content/guide/pages/web-standards/10.css-custom-properties.md
   - layers/glassbox/content/guide/pages/web-standards/20.svg.md
   - layers/glassbox/content/guide/pages/web-standards/30.aria.md
@@ -114,8 +132,6 @@ filesEdited:
   - layers/glassbox/content/guide/pages/verification/50.linting.md
   - layers/glassbox/content/guide/pages/verification/60.zod-refinements.md
   - layers/glassbox/content/guide/pages/verification/80.headless-browser-checks.md
-  - layers/glassbox/content/workshop/runs/2026-11-12T2246.yml
-  - layers/glassbox/content/workshop/pages/index.md
   - layers/glassbox/content/guide/pages/verification/70.schema-evolution.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
@@ -164,6 +180,15 @@ ruleUse:
       - rule: .claude/rules/mermaid-lanes.md
         via: native
         trigger: layers/glassbox/content/workshop/pages/index.md
+      - rule: .claude/rules/tenant-layers.md
+        via: native
+        trigger: layers/glassbox/app/utils/subjects.ts
+      - rule: .claude/rules/adr-0001.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/deploy/10.continuous-deployment.md
+      - rule: .claude/rules/adr-0011.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/deploy/10.continuous-deployment.md
     reported:
       - path: .claude/rules/adr-0004.md
         value: steered
@@ -575,7 +600,7 @@ ruleUse:
         value: backed
   - by: general-purpose
     subagent: 11
-    answered: false
+    answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
         via: start
@@ -585,80 +610,212 @@ ruleUse:
         via: start
       - rule: .claude/rules/adr-0017.md
         via: start
-    reported: []
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/page-checks.ts
+      - rule: .claude/rules/glassbox-content.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/deploy/10.continuous-deployment.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/deploy/10.continuous-deployment.md
+      - rule: .claude/rules/adr-0001.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/deploy/10.continuous-deployment.md
+      - rule: .claude/rules/adr-0011.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/deploy/10.continuous-deployment.md
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+    reported:
+      - path: .claude/rules/glassbox-content.md
+        value: steered
+      - path: .claude/rules/tenant-glossary.md
+        value: backed
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: steered
+      - path: .claude/rules/adr-0011.md
+        value: backed
+      - path: layers/glassbox/GLOSSARY.md
+      - path: .agents/skills/glassbox-lesson/writing-pages.md
+      - path: layers/glassbox/page-checks.ts
+  - by: general-purpose
+    subagent: 12
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0001.md
+        via: native
+        trigger: deploy/entrypoint.sh
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0011.md
+        via: native
+        trigger: deploy/entrypoint.sh
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: general-purpose
+    subagent: 13
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0001.md
+        via: hint
+      - rule: .claude/rules/adr-0011.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .claude/rules/tenant-glossary.md
+        value: backed
+      - path: layers/glassbox/GLOSSARY.md
 subagents:
   - task: Scout new topics
     model: sonnet
     durationSec: 20
     toolCalls: 9
     modelCalls: 5
-    tokenShare: 3
+    tokenShare: 2.3
   - task: "Fresh reader: gate pages A"
     model: sonnet
     durationSec: 20
     toolCalls: 7
     modelCalls: 3
-    tokenShare: 1
+    tokenShare: 0.8
   - task: "Fresh reader: pages B"
     model: sonnet
     durationSec: 19
     toolCalls: 7
     modelCalls: 3
-    tokenShare: 1
+    tokenShare: 0.8
   - task: Write Verification page fixes
     model: opus
     durationSec: 223
     toolCalls: 54
     modelCalls: 33
-    tokenShare: 11.5
+    tokenShare: 8.7
   - task: Claim-check changed sentences
     model: sonnet
     durationSec: 44
     toolCalls: 11
     modelCalls: 7
-    tokenShare: 1.8
+    tokenShare: 1.4
   - task: Standards review
     model: sonnet
     durationSec: 28
     toolCalls: 8
     modelCalls: 4
-    tokenShare: 2.6
+    tokenShare: 1.9
   - task: Spec review
     model: sonnet
     durationSec: 40
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 3.3
+    tokenShare: 2.5
   - task: Write Web standards fixes
     model: opus
     durationSec: 247
     toolCalls: 60
     modelCalls: 42
-    tokenShare: 12.6
+    tokenShare: 9.5
   - task: Claim-check Web standards diff
     model: sonnet
     durationSec: 44
     toolCalls: 12
     modelCalls: 9
-    tokenShare: 3.1
+    tokenShare: 2.3
   - task: Standards review web std
     model: sonnet
     durationSec: 32
     toolCalls: 10
     modelCalls: 4
-    tokenShare: 2.6
+    tokenShare: 2
   - task: Spec review web std
     model: sonnet
     durationSec: 36
     toolCalls: 10
     modelCalls: 6
-    tokenShare: 3
+    tokenShare: 2.2
   - task: Write Deploy page fixes
     model: opus
-    durationSec: 3
-    toolCalls: 2
-    modelCalls: 1
-    tokenShare: 1.5
+    durationSec: 227
+    toolCalls: 43
+    modelCalls: 31
+    tokenShare: 6.9
+  - task: Claim-check Deploy diff
+    model: sonnet
+    durationSec: 36
+    toolCalls: 9
+    modelCalls: 6
+    tokenShare: 2
+  - task: Combined review Deploy diff
+    model: sonnet
+    durationSec: 59
+    toolCalls: 12
+    modelCalls: 9
+    tokenShare: 2.8
 gitBranch: HEAD
 entrypoint: remote
 cliVersion: 2.1.322
