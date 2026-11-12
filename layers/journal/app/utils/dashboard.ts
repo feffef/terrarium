@@ -69,12 +69,33 @@ export function sessionToolEntries(counts?: Record<string, number>): { name: str
     .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
 }
 
+const tokenSharePct = (share: number) => (share < 1 ? '<1%' : `${Math.round(share)}%`)
+
 // Empty ⇒ an older log that stored neither.
 export function subagentUsageLabel(a: Pick<Subagent, 'tokenShare' | 'durationSec'>): string {
   const parts: string[] = []
-  if (a.tokenShare !== undefined) parts.push(a.tokenShare < 1 ? '<1%' : `${Math.round(a.tokenShare)}%`)
+  if (a.tokenShare !== undefined) parts.push(tokenSharePct(a.tokenShare))
   if (a.durationSec !== undefined) parts.push(formatJournalDuration(a.durationSec))
   return parts.join(' · ')
+}
+
+export type TokenBarSegment = { key: string; label: string; title: string; grow: number; main: boolean; shade: number }
+
+// The session's token bar: main first, then each subagent that stored a share.
+// Main is the remainder (clamped at 0); `grow` is a fraction of the bar, scaled
+// down when the shares sum past 100. Empty ⇒ no share stored, so no bar.
+export function sessionTokenBar(subagents: Pick<Subagent, 'type' | 'task' | 'tokenShare'>[]): TokenBarSegment[] {
+  const shared = subagents.flatMap((a, i) => (a.tokenShare === undefined ? [] : [{ a, share: a.tokenShare, i }]))
+  if (!shared.length) return []
+  const sum = shared.reduce((n, s) => n + s.share, 0)
+  const whole = Math.max(100, sum)
+  const seg = (key: string, label: string, share: number, main: boolean, shade: number) =>
+    ({ key, label, title: `${label} · ${tokenSharePct(share)}`, grow: share / whole, main, shade })
+  return [
+    seg('main', 'main', Math.max(0, 100 - sum), true, 0),
+    // Four alternating steps so neighbouring segments differ.
+    ...shared.map(({ a, share, i }, k) => seg(`s${i}`, a.task || a.type || 'agent', share, false, 45 + (k % 4) * 18)),
+  ]
 }
 
 // ── Aggregations (scoped to one Space) ───────────────────
