@@ -18,8 +18,8 @@ catalogNote: >-
   bug, built to test a patch to a software library that the project later
   removed; a list of who had commented last on each open issue; a list of pull
   requests merged in a date range; a check that a quotation matches its source;
-  a one-time repair of session records whose summaries had been cut short at a
-  hash mark; and a query over the session records. On 16 October 2026 an agent
+  a one-time repair of session records whose one-line outcomes had been cut
+  short at a hash mark; and a query over the session records. On 16 October 2026 an agent
   searched the whole project and found no caller for any of them, only the
   script's own test, a comment or a documentation entry. The owner approved a
   cleanup of the scripts folder in chat that day, and deleting these was its
