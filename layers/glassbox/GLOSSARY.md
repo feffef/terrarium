@@ -100,7 +100,8 @@ Its body follows one contract, which the page frames like design 1b
   its Scope or Consequences;
 - `## Try it in your project`;
 - `## Where next`, a list of 1 to 5 closest pages (a Lesson is marked read when
-  it scrolls into view, so it is never empty). Links within this
+  it scrolls into view, so it is never empty; two other pages should list each
+  Lesson, and fewer is a page-check warning). Links within this
   Space are bare, `[](/t/glassbox/guide/…)`, and show the target's current
   title; a Journal link keeps typed text:
   related Lessons first, then optionally one Journal page as evidence. A

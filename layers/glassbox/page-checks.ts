@@ -394,6 +394,29 @@ export function glassboxOrphans(sources: Record<string, string>): string[] {
   return Object.keys(sources).filter((f) => f !== 'index.md' && !linked.has(glassboxSitePath('guide', f))).sort()
 }
 
+/** A Lesson that few other pages list in Where next is hard to reach from the page a reader is on;
+ *  a reviewer's call like the other warnings, so it never fails. */
+export const glassboxFewNextMin = 2
+
+export function glassboxFewNextLinks(sources: Record<string, string>): { file: string, count: number }[] {
+  const listedBy = new Map<string, Set<string>>()
+  for (const [file, source] of Object.entries(sources)) {
+    for (const item of nextItems(readBody(splitFrontmatter(source).body).prose)) {
+      for (const [, path] of item.matchAll(/\]\((\/t\/glassbox\/guide\/[^)\s#?]*)/g)) {
+        const target = path!.replace(/\/$/, '')
+        if (target !== glassboxSitePath('guide', file)) listedBy.set(target, (listedBy.get(target) ?? new Set()).add(file))
+      }
+    }
+  }
+  return Object.keys(sources)
+    .filter((file) => glassboxSubjectOf(`/${contentRoute(file)}`))
+    .map((file) => ({ file, count: listedBy.get(glassboxSitePath('guide', file))?.size ?? 0 }))
+    .filter(({ count }) => count < glassboxFewNextMin)
+    .sort((a, b) => a.file.localeCompare(b.file))
+}
+
+export const glassboxFewNextText = (count: number) => `only ${count} other ${count === 1 ? 'page lists' : 'pages list'} it in Where next, fewer than ${glassboxFewNextMin}`
+
 /** Each guide page's title, title-word and description cap problems, and a missing teaches, by file under `pages/`. */
 export function glassboxLengthProblems(sources: Record<string, string>): string[] {
   return Object.entries(sources).flatMap(([file, source]) => lengthProblems(`/${contentRoute(file)}`, splitFrontmatter(source).frontmatter).map((p) => `guide/pages/${file}: ${p}`)).sort()
@@ -415,6 +438,7 @@ runIfMain(import.meta.url, () => {
   const guide = join(content, 'guide/pages')
   const sources = Object.fromEntries(globSync('**/*.md', { cwd: guide }).map((f) => [f, readFileSync(join(guide, f), 'utf8')]))
   for (const file of glassboxOrphans(sources)) console.log(`guide/pages/${file}: ${glassboxOrphanText}`)
+  for (const { file, count } of glassboxFewNextLinks(sources)) console.log(`guide/pages/${file}: ${glassboxFewNextText(count)}`)
 })
 
 interface GlassboxTermEntry { source?: string, lesson?: string }

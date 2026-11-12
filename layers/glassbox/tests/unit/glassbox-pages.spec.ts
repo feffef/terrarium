@@ -3,7 +3,7 @@ import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { splitFrontmatter } from '../../../../scripts/lib/frontmatter.ts'
 import { root } from '../../../../shared/expand.ts'
-import { glassboxCites, glassboxLengthProblems, glassboxJournalRoutes, glassboxOrphans, glassboxPageProblems, glassboxPageWarnings, glassboxSitePath, glassboxTermProblems, glassboxTerms, repoGit, type GlassboxGit, type GlassboxSite } from '../../page-checks.ts'
+import { glassboxCites, glassboxFewNextLinks, glassboxLengthProblems, glassboxJournalRoutes, glassboxOrphans, glassboxPageProblems, glassboxPageWarnings, glassboxSitePath, glassboxTermProblems, glassboxTerms, repoGit, type GlassboxGit, type GlassboxSite } from '../../page-checks.ts'
 
 const rev = 'a'.repeat(40)
 const expandTs = [
@@ -342,6 +342,28 @@ describe('glassboxOrphans', () => {
       'a/03.c.md': linking('a/a#in-terrarium'),
     }
     expect(glassboxOrphans(sources)).toEqual(['a/03.c.md'])
+  })
+})
+
+describe('glassboxFewNextLinks', () => {
+  const withNext = (...to: string[]) => `${frontmatter}\n## Where next\n\n${to.map((t) => `- [](/t/glassbox/guide/${t})`).join('\n')}\n`
+  it('lists a Lesson that fewer than two other pages list in Where next, with its count', () => {
+    const sources = {
+      'verification/10.a.md': withNext('verification/b', 'verification/c'),
+      'verification/20.b.md': withNext('verification/a', 'verification/c'),
+      'verification/30.c.md': withNext('verification/a', 'verification/a'),
+      'walkthroughs/w.md': withNext('verification/c'),
+    }
+    expect(glassboxFewNextLinks(sources)).toEqual([{ file: 'verification/20.b.md', count: 1 }])
+  })
+
+  it('counts a page once, ignores itself and links outside Where next, and skips Walkthroughs', () => {
+    const sources = {
+      'verification/10.a.md': withNext('verification/a', 'verification/b'),
+      'verification/20.b.md': `${frontmatter}\nSee [it](/t/glassbox/guide/verification/a).\n\n${withNext('verification/a', 'verification/a')}`,
+      'walkthroughs/w.md': withNext('verification/b'),
+    }
+    expect(glassboxFewNextLinks(sources)).toEqual([{ file: 'verification/10.a.md', count: 1 }])
   })
 })
 
