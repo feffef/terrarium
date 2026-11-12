@@ -24,7 +24,7 @@ import { getJson, listAll, resolveAccess } from '../../../../scripts/lib/github-
 import { readSessionLogs, type SessionLog } from '../../../../scripts/session/journal-files.ts'
 import { flattenText } from '../../../../scripts/session/extract-frictions.ts'
 
-export const WINDOW_DAYS = 28
+export const WINDOW_DAYS = 7
 /** GitHub rejects a body over 65,536 characters; stay well under. */
 export const BODY_LIMIT = 60_000
 export const NOTE = 'Machine-read, keep as is:'
