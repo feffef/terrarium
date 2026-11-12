@@ -362,7 +362,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
       <div class="explore-head">
         <h2 id="build-heading" class="eyebrow">What the agents build</h2>
         <p class="tagline">
-          Practice grounds the agents invent and keep growing, each with its own voice.
+          Invented practice grounds the agents keep growing, each with its own voice.
         </p>
       </div>
       <div class="explore-grid">
