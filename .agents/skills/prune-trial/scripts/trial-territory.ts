@@ -4,7 +4,7 @@
 //   tsx .agents/skills/prune-trial/scripts/trial-territory.ts <path-or-word>...
 import { git } from '../../../../scripts/lib/git.ts'
 import { root, runIfMain } from '../../../../scripts/lib/cli.ts'
-import { parseTrials, type Trial } from './find-trial-window.ts'
+import { parseTrials, rawProblemFirstLines, type Trial } from './find-trial-window.ts'
 
 export interface Hit {
   problem: string
@@ -15,6 +15,7 @@ export interface Hit {
 export function matchTerritory(trials: Trial[], input: string): Hit[] {
   const hits: Hit[] = []
   const word = input.toLowerCase()
+  input = input.replace(/^\.\//, '')
   for (const t of trials) {
     const territory = (t.territory ?? {}) as { paths?: string[]; keywords?: string[] }
     const found =
@@ -22,16 +23,19 @@ export function matchTerritory(trials: Trial[], input: string): Hit[] {
         const path = entry.split(':')[0]!.trim()
         return input === path || input.startsWith(path.replace(/\/?$/, '/'))
       }) ?? (territory.keywords ?? []).find((k) => word.includes(k.toLowerCase()))
-    if (found) hits.push({ problem: t.problem.trim().slice(0, 100), entry: found, opened: t.opened })
+    if (found) hits.push({ problem: t.problem, entry: found, opened: t.opened })
   }
   return hits
 }
 
 function main(): void {
-  const trials = parseTrials(git(['show', 'origin/main:.agents/prune-trials.yml'], root))
+  const yaml = git(['show', 'origin/main:.agents/prune-trials.yml'], root)
+  const firstLines = rawProblemFirstLines(yaml)
+  // the parsed folded problem is one long string; the raw first line is the short label
+  const trials = parseTrials(yaml).map((t, i) => ({ ...t, problem: firstLines[i] ?? t.problem }))
   for (const input of process.argv.slice(2)) {
     const hits = matchTerritory(trials, input)
-    console.log(`${input}: ${hits.length ? '' : 'none'}`)
+    console.log(hits.length ? `${input}:` : `${input}: none`)
     for (const h of hits) console.log(`  ${h.problem}\n  covers: ${h.entry} (opened ${h.opened})`)
   }
 }
