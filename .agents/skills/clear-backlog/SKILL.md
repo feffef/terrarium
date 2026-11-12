@@ -160,9 +160,10 @@ For each `reviewed` branch, in round N:
    your rules, run the fast checks, commit, and reply by your rules." The
    builder decides what to fix, by kind, records each finding in its branch
    folder's `triage.md`, and replies `FIXED <sha before> <sha after> recheck
-   <Standards, Spec or none>`, followed by `NEEDS-OWNER` and a question when
-   one needs the owner, an owner-call's included. Ask it, and resume the
-   builder with the answer as a fix.
+   <axes>` (form in its `rules()`), with `NEEDS-OWNER` and a question after it
+   when one needs the owner, an owner-call's included. Run the named
+   re-checks now; ask the question, and resume the builder with the answer as
+   a fix, which gets its own re-check.
 3. **Re-check.** Resume each reviewer the builder's `recheck` names, every
    time: "Read only `git -C <worktree> diff <before>..<after>` and your
    findings' lines in `<branch dir>/triage.md`. Check each fix is right and
