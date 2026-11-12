@@ -15,12 +15,14 @@ const props = defineProps<{
 
 const { read, reset } = useGlassboxRead()
 
+// Only Lessons with a known title can be listed below, so only they leave Where next.
+const readable = computed(() => read.value.filter((path) => props.titles[path]))
 const subject = computed(() => glassboxSubjectOf(props.page.path))
 const walkthrough = computed(() => glassboxWalkthroughOf(props.page.path))
 // The hand-written Where next links already read move into their own section below it.
 const readNext = computed(() => subject.value
   ? glassboxNextLessons(props.page.body.value, props.base)
-    .filter((path) => read.value.includes(path) && props.titles[path])
+    .filter((path) => readable.value.includes(path))
     .map((path) => ({ path, title: props.titles[path]!, subject: glassboxSubjectOf(path)!.name }))
   : [])
 const current = ref<string>()
@@ -28,7 +30,7 @@ const current = ref<string>()
 // lede and the first section, and each Walkthrough stop can show it is current.
 const parts = computed(() => {
   const { body } = props.page
-  const framed = subject.value ? glassboxLessonSections(body.value, props.base, props.titles, read.value) : body.value
+  const framed = subject.value ? glassboxLessonSections(body.value, props.base, props.titles, readable.value) : body.value
   const [intro, rest] = glassboxSplitBeforeBody(framed)
   const sections = glassboxFrameDiagrams(rest)
   const withBody = (nodes: typeof intro) => ({ ...props.page, body: { ...body, value: nodes } })
@@ -36,7 +38,7 @@ const parts = computed(() => {
     intro: withBody(walkthrough.value ? intro : intro.map((node) => glassboxLessonChipsDeep(node, props.base))),
     sections: (walkthrough.value ? glassboxWalkthroughParts(sections, props.base, props.titles) : [{ nodes: sections.map((node) => glassboxLessonChipsDeep(node, props.base)) }])
       .map((part) => ({ ...part, value: withBody(part.nodes) })),
-    toc: (body.toc?.links ?? []).filter((link) => !(subject.value && link.id === glassboxLessonIds.whereNext && glassboxNextAllRead(body.value, props.base, read.value))),
+    toc: subject.value ? glassboxLessonToc(body.toc?.links ?? [], body.value, props.base, readable.value) : body.toc?.links ?? [],
   }
 })
 </script>

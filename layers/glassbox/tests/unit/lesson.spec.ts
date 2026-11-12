@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { MinimarkNode } from '@nuxt/content'
-import { glassboxLessonSections, glassboxNextLessons, glassboxNextList } from '../../app/utils/lesson.ts'
+import { glassboxLessonSections, glassboxLessonToc, glassboxNextLessons, glassboxNextList } from '../../app/utils/lesson.ts'
 
 const h2 = (id: string, text: string): MinimarkNode => ['h2', { id }, text]
 const h3 = (id: string, text: string): MinimarkNode => ['h3', { id }, text]
@@ -106,5 +106,11 @@ describe('Where next and read Lessons', () => {
   it('keeps Where next whole when a link is not a Lesson, however much is read', () => {
     const out = glassboxLessonSections(body(a, '/t/journal/current/history'), base, {}, ['/verification/schemas'])
     expect(out[0]).toEqual(h2('where-next', 'Where next'))
+  })
+
+  it('drops the Where next entry from the table of contents only once every link is read', () => {
+    const toc = [{ id: 'the-concept' }, { id: 'where-next' }]
+    expect(glassboxLessonToc(toc, body(a, b), base, ['/verification/schemas'])).toEqual(toc)
+    expect(glassboxLessonToc(toc, body(a, b), base, ['/verification/schemas', '/hooks/gate'])).toEqual([{ id: 'the-concept' }])
   })
 })
