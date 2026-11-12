@@ -1,9 +1,9 @@
 ---
 title: How Terrarium Grew
-description: The first hundred and six days — how the sites, the machinery and the rules arrived, what happened when the asking stopped, what changed when the owner came back, and how the rules were cut down without breaking.
+description: The first hundred and thirty-one days — how the sites, the machinery and the rules arrived, what happened when the asking stopped, what changed when the owner came back, how the rules were cut down without breaking, and how the platform's own measurements exposed what wasn't paying off.
 onramp: 1
 onrampLabel: How it got this way
-onrampBlurb: The story in order, up to mid-October — what got built, what the quiet weeks revealed, what the owner's return set in motion, and how the rules got shorter.
+onrampBlurb: The story in order, up to mid-November — what got built, what the quiet weeks revealed, what the owner's return set in motion, how the rules got shorter, and how new measurements showed which parts spent a lot and returned little.
 ---
 
 # How Terrarium Grew
@@ -11,8 +11,8 @@ onrampBlurb: The story in order, up to mid-October — what got built, what the 
 The [Glass Box guide](/t/glassbox/guide) describes Terrarium as it stands. It
 doesn't say how it got that way. This page does, in order, from the first commit onward.
 
-The period runs from 4 July to 17 October 2026: a hundred and six days,
-6,319 commits, 1,078 recorded sessions, 3,432 frictions the agents logged
+The period runs from 4 July to 11 November 2026: a hundred and thirty-one days,
+9,878 commits, 1,479 recorded sessions, 5,418 frictions the agents logged
 against themselves.
 Three things grew at once and kept causing each other — the **sites**, the
 **machinery** that builds them, and the **rules** the project follows.
@@ -26,13 +26,14 @@ Three things grew at once and kept causing each other — the **sites**, the
 | **[Idling and pruning](#idling-and-pruning-26-august-to-24-september)** · 26 Aug–24 Sep | 46 | 90% | 1.6 | 0 |
 | **[The owner returns](#the-owner-returns-25-september-to-2-october)** · 25 Sep–2 Oct | 92 | 56% | 3.5 | 1 |
 | **[Simplifying the rules](#simplifying-the-rules-3-to-17-october)** · 3–17 Oct | 128 | 51% | 5.0 | 1 |
+| **[Measuring the machinery](#measuring-the-machinery-18-october-to-11-november)** · 18 Oct–11 Nov | 112 | 51% | 5.0 | 0 |
 
 The obvious reading of the table is wrong. Activity fell not because the project
 turned inward or lost its way, but because the repository has one human, who ran
 out of hours. The interesting part is what kept happening anyway, and what
 changed in the last rows once the human had time again.
 
-Counts are as of 17 October. The daily digests go on from there: the
+Counts are as of 11 November. The daily digests go on from there: the
 most recent week on the [current Journal](/t/journal/current), earlier days in
 the [archive](/t/journal/archived).
 
@@ -355,11 +356,53 @@ the new rules to a larger test: a mostly autonomous build. Once the owner had
 settled its design, agents built it overnight as twenty-three reviewed
 stories, and the owner merged it on 15 October.
 
+## Measuring the machinery — 18 October to 11 November
+
+No new site arrived in these twenty-five days, and the pace held: 401
+sessions, about half of them autonomous, with as many frictions per session as
+the fortnight before. The work went into two things. The textbook merged on 15
+October had to become something a reader could rely on. And the instruments
+added in October began to show which parts of the machinery spent a lot and
+returned little.
+
+> **The textbook's improver cost more than it returned.** [Glass Box](/t/glassbox)
+> had a scheduled job to keep its pages true. On 2 November it was rebuilt to
+> grade pages on several qualities and to block edits that weren't judged
+> blind, and its first run fixed 7 false claims in 35 edits, though running it
+> took about 127 reviewing agents dispatched by hand. Three days later one run
+> sent eleven helpers through all 68 pages, roughly 2.5 million tokens, to fix
+> five false claims. The job was capped at eight items per run, a small
+> goal-driven curating skill was added beside it, and on 7 November the older
+> skill was removed. Over the same days the textbook's content was reorganised
+> too: its large Claude Code subject became three, a web-standards subject
+> arrived, and subjects and lessons were put in prerequisite order. On 9
+> November a fact-check across 17 guide pages used up nearly all of a 20 dollar
+> budget.
+
+The waste kept being found by measurement, not by anyone noticing it. From 18
+October the weekly Skills check reported the tokens and price of every
+scheduled run, and the [Routine](/t/journal/current/routines) costs page
+charts them. A review a week later found that about 19 of 25 recent
+wording-trim edits from the daily documentation audit changed nothing a reader
+would do, so that part of the audit was dropped; working it out cost about
+270,000 helper tokens, because runs didn't record how many findings each part
+produced. On 10 November rule use started being captured outside the agent's
+own report, and every rule a session loaded now gets a rating, steered or
+backed, shown on its card in the [Journal](/t/journal/current).
+
+The same weeks hardened the machinery against its own agents. On 25 October the
+session-inspection tool learned to spot a helper's hand-back that the agent
+itself had written. On 10 November the live site served a stale build for about
+three hours; deploy builds had been killed for lack of memory ten times since
+28 September, and a 2 GB swap file was added to the server.
+
 That is where the record stops: eight sites, thirty decision records,
-forty-five catalogued [Skills](/t/journal/current/skills). The question
+fifty-one catalogued [Skills](/t/journal/current/skills). The question
 from September has a partial answer. The platform did grow a new site in a
-day and now merges its own routine work, but the owner still chose what to
-build and made the structural calls.
+day and now merges its own routine work, and its own measurements now find
+waste that no session had flagged; each fix so far was a cut or a cap, not
+a new feature. The owner still chose what to build and made the structural
+calls.
 
 For how all of this works today, see the [Glass Box
 guide](/t/glassbox/guide). The
