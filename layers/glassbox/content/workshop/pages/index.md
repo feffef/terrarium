@@ -23,7 +23,7 @@ Each guide page is named by its title, then its file under `layers/glassbox/cont
 ### Weak spots
 
 - **The Installed Skills pages say little of their own.** *Planning skills* (`skill-pack/20.planning-with-the-pack`) and *Engineering skills* (`skill-pack/30.engineering-skills`) mostly describe Skills that come from outside Terrarium. Only a few of their facts are about choices Terrarium made.
-- **Only the overview and the Git & GitHub, Claude Code, Hooks, Agents & automation, Installed skills, Deploy, Verification, Nuxt Content and Web standards pages write glossary terms in lowercase.** The owner's rule (`owner-decisions.md`) is that a glossary term is lowercase in body text, mid-sentence. The other Subjects and the Walkthroughs still write Skill, Tenant, Routine, Gate and the like. Fix it a Subject at a time; it is wording only. A capital stays at the start of a sentence, in a linked page's exact title, in code and in an Excerpt.
+- **Only the overview and the Git & GitHub, Claude Code, Hooks, Agents & automation, Installed skills, Deploy, Verification, Nuxt Content, Nuxt & Vue and Web standards pages write glossary terms in lowercase.** The owner's rule (`owner-decisions.md`) is that a glossary term is lowercase in body text, mid-sentence. The House rules Subject and the Walkthroughs still write Skill, Tenant, Routine, Gate and the like. Fix it a Subject at a time; it is wording only. A capital stays at the start of a sentence, in a linked page's exact title, in code and in an Excerpt.
 
 ### Recurring problems
 
@@ -57,8 +57,7 @@ None of these is false.
 - **The version-1 lock hash explanation may go stale.** *Installed skills* says `computedHash` is taken before the installer handles frontmatter, as `validate-skills-lock.ts` says; the live installer's README describes a newer lock whose hash covers the installed files.
 - **Nuxt Content.** *Content collections* and *queryCollection* still pack several terms into one sentence beside the manifest, the kind and the search query. *Multi-tenant isolation*: `useSpace`, `pagesKey` and `path` come before their gloss, and the catalog's one-table-at-a-time reads are explained late. *Content database*: no source says why a failed download is retried once, and `tenant-layers.md` is cited without its content. *MDC components*: no Nuxt Content docs are installed to show the YAML-props form. *Mermaid pre-rendering*: sentinel colour is a word the page never defines, and who serves the font is easy to misread.
 - **Web standards.** *CSS custom properties*: biome, room, tile and Document page are used without a gloss, and the Tinkerfund wrapper-class paragraph is dense. *SVG*: the byte budget has no figure or reason, and `svgHazard`'s two steps are described before their code. *ARIA*: ADR is never glossed, and no source says why the Journal's row is a `div` and not a `button`. *Colour and motion settings*: `:has()` and `onMounted` are used without a gloss. The Atlas stylesheet's header comment says the base tokens are on `.atlas` while the code sets them on `:root` (a code comment, outside this Skill's remit).
-- **Terms glossed late.** Several pages use *Space*, *Document*, *Catalog* or *Tenant* before they are glossed, or gloss one twice (*Vue components*, *Hydration*, *File routing*, *queryCollection*). A short rule for where each is glossed first would settle it.
-- **Other.** *Content validation*: the lede says a misspelt field passes the build, yet a schema-less `page` Collection is skipped by the check.
+- **Nuxt & Vue.** *Auto-imports*: the `imports.scan` Try-it paragraph packs four options. *Virtual modules*: it is unchecked whether `modules/routing` is registered twice (listed in `nuxt.config.ts` and found in `modules/`); the first Excerpt does not show the `expand(loadManifests())` call it names. *Vue components*: the clock Excerpt does not show where `ticking` is set. *Nitro*: mount, driver and LRU come before any gloss, and "a request is split three ways" lists roles. *Data fetching*: onramp and its tour are unexplained. *Hydration*: the Friction Ledger page "does the same" with no code shown.
 
 ### Fixes waiting
 
@@ -82,10 +81,6 @@ Each may be true; a later run should read the tool's source or run it.
 - *pnpm and the lockfile*: the lead-in says pnpm.io's unversioned pages describe a newer major. The 12.x, 11.x and 10.x docs exist (`pnpm/pnpm.io` `versions.json`), but pnpm.io was blocked, so which major the unversioned pages show is unchecked.
 - *Session transcripts* (`hooks/40.session-transcripts`): the record types and fields, the 2 KB preview, and a subagent's `transcript_path` inside tool hooks. *A session log lands on main* says "the `Stop` hook" in the singular, though four are wired.
 - *Author trust* (`git-github/20.author-trust`): what each `author_association` value means, and that `pull_request_target` ignores the approval setting. *Dependabot grouping*: that `/` doesn't reach a nested action.
-
-### Ideas still open
-
-- The overview names neither web standards, how agents reach things (cloud sessions, permissions, MCP, worktrees) nor dependencies (lockfile, Dependabot). The owner chose other gaps for it; add one only with a reason.
 
 ### Soft decisions
 
