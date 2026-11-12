@@ -4,12 +4,10 @@ paths:
 ---
 # Glass Box content
 
-Pages follow `.agents/skills/glassbox-lesson/writing-pages.md`. The owner's hard
-rules for them are in `.agents/skills/glassbox-lesson/owner-decisions.md`: never
-go against one. The workshop notes,
-`layers/glassbox/content/workshop/pages/index.md`, hold the guide's weak spots,
-the owner's direction and the agents' soft decisions, which evidence may
-overrule.
+The owner's hard rules for pages, `.agents/skills/glassbox-lesson/owner-decisions.md`,
+are never gone against. Where the rest lives (page-writing steps, the workshop
+notes and their soft decisions) is in `layers/glassbox/GLOSSARY.md`, What lives
+where.
 
 **Keep facts that change out of the prose.** A Glass Box page is pinned to its
 `revision` but read long after it. Its prose, and every diagram label, never
