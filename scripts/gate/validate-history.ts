@@ -29,10 +29,9 @@ export function historyErrors(md: string, s: Stats): string[] {
     compare('frictions', num(h[3]!), s.frictions)
   }
   const rows = [...md.matchAll(/^\| \*\*\[([^\]]+)\].*?\| (\d+) \| (\d+)% \| ([\d.]+) \| (\d+) \|$/gm)]
-  if (rows.length !== PERIODS.length) errors.push(`expected ${PERIODS.length} table rows, found ${rows.length}`)
+  if (rows.length !== PERIODS.length) return [...errors, `expected ${PERIODS.length} table rows, found ${rows.length}`]
   rows.forEach((m, i) => {
-    const r = s.rows[i]
-    if (!r) return
+    const r = s.rows[i]!
     const at = m[1]!
     if (at !== PERIODS[i]!.name) errors.push(`row ${i + 1}: page says "${at}", expected "${PERIODS[i]!.name}"`)
     compare(`${at}, sessions per week`, num(m[2]!), r.sessionsPerWeek)

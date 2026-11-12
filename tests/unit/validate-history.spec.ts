@@ -38,10 +38,12 @@ describe('history page check', () => {
 
   it('fails a doctored header total and a missing header', () => {
     expect(historyErrors(page(50).replace('1,234', '1,235'), stats)).toEqual(['commits: page says 1235, computed 1234'])
-    expect(historyErrors('| nothing |', stats)).toHaveLength(2)
+    expect(historyErrors('| nothing |', stats)).toEqual([expect.stringContaining('header totals'), 'expected 8 table rows, found 0'])
   })
   it('reads the as-of date', () => {
     expect(pageAsOf(page(50))).toBe('2026-11-11')
+    expect(pageAsOf('as of 11 Smarch 2026')).toBeUndefined()
+    expect(pageAsOf('no date')).toBeUndefined()
   })
   it('passes the matching page and fails a doctored number', () => {
     expect(historyErrors(page(50), stats)).toEqual([])
