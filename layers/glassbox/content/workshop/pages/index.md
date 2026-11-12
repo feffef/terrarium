@@ -29,7 +29,7 @@ Each guide page is named by its title, then its file under `layers/glassbox/cont
 
 - **New text has contained false claims.** Twice, a newly written page or fix said something its source contradicted, and it was only noticed a day later. Older text can be false too: a claim check found *Mermaid pre-rendering* saying unmapped colours fall back to Mermaid's own defaults, when they are fixed light colours.
 - **Neighbouring pages repeat each other.** Most structural changes so far took a reason that two pages both explained and left it on just one of them.
-- **Changes have been undone soon after.** *Prose overrides* and *Invariant tests* were added or kept by one run, then folded into another page a few runs later.
+- **Changes have been undone soon after.** *Prose overrides* and *Invariant tests* were kept by one run, then folded into another page runs later.
 
 ### The owner's direction
 
@@ -102,10 +102,11 @@ Decisions agents made (run, review, claim check). Not rules: the owner or a late
 - **Author trust keeps its title.** It is clearer than the field name, and its lede names `author_association` (review).
 - **A missing `publishedAt` on a page whose teaching hasn't changed is not a deficit.** Adding one shows an old page on the Commons Timeline as new (review).
 - **Continuous deployment's Full reference stays Wikipedia.** A practice has no official docs (review).
+- **Agent tooling comes first in the guide's order, and Web standards never sits between the two Nuxt Subjects**.
 - **Moving the timestamp rule and its warnings from *Content validation* (`verification/30.content-validation`) to *Zod refinements* (`verification/60.zod-refinements`).** Re-check the reasons for and against before acting.
 - **Moving the warning to return only what a page reads from *Data fetching* (`nuxt-vue/70.data-fetching`) to *queryCollection* (`nuxt-content/40.query-collection`).** The related move the other way (from *queryCollection* to *Data fetching*) is also in this list.
 - **Moving the MCP tool-name matcher from *MCP servers* to *Blocking hooks*.** The `mcp__<server>__.*` form is about how MCP names tools, and the page's Why bullet on it is one sentence that links *Claude Code hooks*.
-- **Guide titles.** Every Lesson, Walkthrough and the overview has been weighed against 2 to 4 alternatives; the owner's rulings are in OWNER-DECISIONS.md. Closest rivals that lost: *Required status checks* for *Merge gate*, *Claude Code workflows* for *Workflow scripts*, *Adding a Tenant* for *Adding a site*.
+- **Guide titles.** Every title has been weighed against 2 to 4 alternatives; owner rulings are in OWNER-DECISIONS.md. Closest rivals that lost: *Required status checks* for *Merge gate*, *Claude Code workflows* for *Workflow scripts*.
 - **Folding *Planning skills* into *Installed skills*.** *Planning skills* holds facts about Terrarium's own choices that would lose their page.
 - **Moving the trust rules from *Human-in-the-loop agents* to *Author trust*.** The first page already links to the second.
 - **Moving the rule about the `ready-for-agent` label into *Issue triage labels*.** That page already shows it.

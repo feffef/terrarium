@@ -19,7 +19,7 @@ integration tip).
 Set `publishedAt` to now (`date -u +%Y-%m-%dT%H:%M:%SZ`) when you write a page,
 move it to the guide, or change what it teaches; it puts the page on the
 Commons Timeline. Leave it as it is for a re-pin, a typo, a moved `lines` range
-or an edit that `OWNER-DECISIONS.md` says keeps it.
+or a wording-only edit to `description`, `teaches` or a bold lead-in (below).
 
 Frontmatter holds `title`, `description`, `teaches`, `revision`,
 `revisionDate` and `publishedAt` only; the page draws `title` as its heading,
@@ -44,6 +44,9 @@ and what *A real case* tells, if any. Write it dense, separated by `;`, from
 the page as it now reads; it has no cap. Give each bold lead-in a claim that
 stands alone, since the index shows only the lead-in.
 Quote a `description` or `teaches` that holds a colon, or YAML misreads it.
+`description` serves visitors and `teaches` serves agents: an edit to either, or
+rewording a bold lead-in and its sentence to match, that changes no claim keeps
+`revision` and `publishedAt`.
 A `title` and `description` stay within their caps in `lengths` in
 `layers/glassbox/page-checks.ts`,
 which also checks a Lesson title's word count and each Why bullet's length
