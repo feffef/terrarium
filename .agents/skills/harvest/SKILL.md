@@ -1,6 +1,6 @@
 ---
 name: harvest
-description: File up to 10 Seedlings, self-contained issues that turn the last 28 days of Session logs' ideas and learnings (both, or one kind) into proposals for a Trusted user to green-light, preferring Tenant, content and UI ideas and leaving Frictions to frictions-to-fixes. User-invoked; a Routine runs it.
+description: File up to 10 Seedlings (plus a retro on this Skill), self-contained issues that turn the last 28 days of Session logs' ideas and learnings (both, or one kind) into proposals for a Trusted user to green-light, preferring Tenant, content and UI ideas and leaving Frictions to frictions-to-fixes. User-invoked; a Routine runs it.
 argument-hint: "[ideas|learnings] (default: both)"
 disable-model-invocation: true
 ---
@@ -37,10 +37,17 @@ harvests both.
    **workflow** (how agents are instructed, fenced or equipped: `CLAUDE.md`,
    rules, ADRs, Skills, guards, hooks, the gate, scripts agents run). The label
    outranks recency: check every product cluster before the first workflow one.
-   Stop when step 4's quota is filled or 30 clusters have been checked. Done when
-   each checked cluster lists its entry numbers, its label and the count of
-   distinct sessions behind it.
-3. **Check relevance.** A cluster is still open when all of these hold:
+   Stop when step 4's quota is filled or 30 clusters have been checked.
+3. **Check relevance.** Write `<scratchpad>/harvest-checks.md`, one block per
+   cluster, product clusters first: a `## <name>` line, then `label:`
+   (product or workflow), `entries:` (their numbers), `sessions:` (a count), one
+   `field: evidence` line per test below (`unbuilt`, `unfiled`, `unrejected`,
+   `ledger`, `simplifying`, `unacted`) and `verdict:` `open` or `dropped <test>`.
+   A dropped cluster needs only the failed test's evidence. Evidence is what you
+   read or ran, and a search that printed nothing is not evidence until you know
+   its pattern can match. Do not filter script output with `head` or `tail`.
+   Step 4 starts only when `harvest check-clusters <that file> --extract
+   <extract.json>` prints `ok`. A cluster is open when all of these hold:
    - **Unbuilt.** Name the file or symbol it would change and read it now. Run
      `pnpm exec tsx scripts/git/list-merges-since.ts` from its session's start
      (`started` in the list). For a learning, grep `CLAUDE.md`, `.claude/rules/`, `docs/agents/`
@@ -52,23 +59,21 @@ harvests both.
      `completed` settles the cluster, `not_planned` rejects it. Any other
      closed issue goes in the Seedling as the reason to reopen.
    - **Unrejected.** Not in `.out-of-scope/`, not under an open Prune Trial
-     (`.agents/prune-trials.yml`), no `wontfix` issue.
-   - **Beyond the Ledger.** Read the Ledger's summaries with
+     (`.agents/prune-trials.yml`), no `wontfix` issue, not ruled out by a
+     Tenant's `GLOSSARY.md` or `.agents/skills/visitor-loop/decisions.md`.
+   - **Beyond the Ledger.** Read all the Ledger's summaries, unfiltered:
      `grep -H '^summary:' layers/journal/content/current/frictions/*.yml`. An entry
      that names the cluster's problem, whatever its status, means
      `frictions-to-fixes` owns it. A cluster the Ledger covers in part stays,
      narrowed to the part it misses.
-   - **Simplifying.** An idea gives the Platform a capability it lacks or
+   - **Simplifying** (workflow clusters only; a product cluster that adds files
+     is welcome). An idea gives the Platform a capability it lacks or
      makes it simpler, and retires as much as it adds: a new flag, file, check or
      concept names the one it replaces. A learning is a fact for its home doc:
      it passes when the doc lacks it and two sessions raised it or it cost one a
      wrong turn.
    - **Unacted.** Its source log's `prs` and outcome do not show the session
      already did it.
-   Done when each checked cluster records the file read or merge list checked,
-   the issue number matched or "no match" with the filter used, the Ledger entry
-   that covers it or "none", and what the change retires or simplifies. A
-   dropped cluster names the test it failed.
 4. **File one Seedling per passing cluster,** at most 10 in total and, when
    harvesting both kinds, 5 per kind, unless the other kind has fewer passing
    (then it fills the rest). At most 3 of them are workflow clusters, however
@@ -91,6 +96,15 @@ harvests both.
      stop the run naming the issue if it still fails.
    Done when every filed issue's stored keys equal its file's keys and you have
    listed every number.
-5. **Close.** Invoke `close-session` once; done when it has run. Its summary
+5. **Retro.** Read and follow `.agents/skills/retro/SKILL.md` (it is installed and
+   never edited; read the file, since the Skill tool may refuse it), applied to
+   this run and limited to this Skill's steps, `body-template.md` and the
+   helper; problems elsewhere stay Frictions in the session log. Skip a candidate
+   an open issue or open Ledger entry holds, naming it. Its final step, to
+   present candidates, becomes one more Seedling in the retro's order of
+   severity, outside step 4's caps, keyed `Harvested: <your session id> retro`
+   (`harvest check-body` accepts that key alone, with no extract entry). Nothing
+   to file: say so.
+6. **Close.** Invoke `close-session` once; done when it has run. Its summary
    counts the clusters checked, passed and dropped. A run where nothing passed
    says so and files no issue.

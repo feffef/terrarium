@@ -10,6 +10,7 @@ import {
   REQUIRED_HEADINGS,
   buildEntries,
   checkBody,
+  checkClusters,
   comparePosted,
   entryKey,
   harvestedState,
@@ -267,5 +268,51 @@ describe('checkBody() and comparePosted()', () => {
     expect(comparePosted(good, good)).toEqual([])
     expect(comparePosted(good.replace(key, ''), good)).toEqual([`stored body lacks key: ${key}`])
     expect(comparePosted(good + `\nHarvested: ${entryKey(UUID, 'idea', 'z')}`, good)).toHaveLength(1)
+  })
+})
+
+describe('renderBlock() summaries', () => {
+  it('prints each session summary once, after the key lines', () => {
+    const e = (n: number, session: string) => ({ n, session, line: `Harvested: ${session} idea 0000000${n}` }) as Entry
+    const out = renderBlock([e(1, 'session_a'), e(2, 'session_a'), e(3, 'session_b')], new Map([['session_a', 'Did A.']]))
+    expect(out.split('\n')).toEqual([NOTE, 'Harvested: session_a idea 00000001', 'Harvested: session_a idea 00000002', 'Harvested: session_b idea 00000003', '', 'Summary of session_a:', 'Did A.'])
+  })
+})
+
+describe('retro key', () => {
+  const retro = `Harvested: ${SESSION} retro`
+  const body = (keys: string[]) => ['🤖 x', 'Agent seedling from harvest.', NOTE, ...keys, '', ...REQUIRED_HEADINGS.flatMap((h) => [h, 'T.', ''])].join('\n')
+
+  it('parses and passes check-body without an extract entry, when alone', () => {
+    expect(parseKeys(retro)).toEqual([`${SESSION} retro`])
+    expect(checkBody(body([retro]), new Set())).toEqual([])
+  })
+
+  it('rejects a retro key beside an entry key', () => {
+    const key = entryKey(SESSION, 'idea', 'x')
+    expect(checkBody(body([`Harvested: ${key}`, retro]), new Set([key]))).toContain('a retro Seedling carries its retro key alone')
+  })
+})
+
+describe('checkClusters()', () => {
+  const ns = new Set([1, 2, 3])
+  const open = (label: string, extra = '') =>
+    `## c\nlabel: ${label}\nentries: 1, 2\nsessions: 2\nunbuilt: read x.ts\nunfiled: no match, title filter\nunrejected: none\nledger: none\nunacted: prs empty\n${extra}verdict: open\n`
+
+  it('accepts open product and workflow clusters, and a drop naming its failed test', () => {
+    const text = open('product') + open('workflow', 'simplifying: retires y\n') + '## d\nlabel: workflow\nentries: 3\nsessions: 1\nledger: entry z\nverdict: dropped ledger\n'
+    expect(checkClusters(text, ns)).toEqual([])
+  })
+
+  it('refuses a missing field, a drop with no test, an unknown entry and an empty record', () => {
+    expect(checkClusters(open('workflow'), ns)).toEqual(['cluster 1: no "simplifying:" evidence'])
+    expect(checkClusters('## d\nlabel: product\nentries: 1\nsessions: 1\nverdict: dropped\n', ns).join()).toContain('verdict must be')
+    expect(checkClusters(open('product').replace('1, 2', '9'), ns).join()).toContain('entry numbers')
+    expect(checkClusters('nothing', ns)).toEqual(['no "## " cluster blocks'])
+  })
+
+  it('refuses a product cluster after a workflow one and a simplifying drop of a product cluster', () => {
+    expect(checkClusters(open('workflow', 'simplifying: r\n') + open('product'), ns).join()).toContain('check every product cluster first')
+    expect(checkClusters('## d\nlabel: product\nentries: 1\nsessions: 1\nsimplifying: s\nverdict: dropped simplifying\n', ns).join()).toContain('for workflow clusters')
   })
 })
