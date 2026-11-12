@@ -172,15 +172,18 @@ const runSummary = (text: string) => {
   return stringifyYaml(entry).trim()
 }
 
-const guideIndexSection = (index: { path: string; bytes: number }[]) =>
+/** A guide index file the orientation wrote. */
+type IndexFile = { path: string; bytes: number }
+
+const guideIndexSection = (index: IndexFile[]) =>
   section('Guide pages', [`Every page's entry is in these files. Read each whole, one Read per file, never through head:`, ...index.map((f) => `- ${f.path} (${Math.round(f.bytes / 1000)} KB)`)].join('\n'))
 
 /** What a new Lesson needs from the orientation: the open Glass Box PRs and the guide index files. */
-export function indexOrientation(index: { path: string; bytes: number }[], prs = openGlassboxPrs): string {
+export function indexOrientation(index: IndexFile[], prs = openGlassboxPrs): string {
   return [section('Open PRs that touch Glass Box', prs()), guideIndexSection(index)].join('\n\n')
 }
 
-export function orientation(base = join(root, content), { log = guideLog, prs = openGlassboxPrs, now = new Date(), index = [] as { path: string; bytes: number }[] } = {}): string {
+export function orientation(base = join(root, content), { log = guideLog, prs = openGlassboxPrs, now = new Date(), index = [] as IndexFile[] } = {}): string {
   const guide = files(join(base, 'guide/pages'), '**/*.md')
   const runs = files(join(base, 'workshop/runs'), '*.yml').reverse()
   const memory = files(join(base, 'workshop/pages'), 'index.md')[0]?.[1] ?? ''
