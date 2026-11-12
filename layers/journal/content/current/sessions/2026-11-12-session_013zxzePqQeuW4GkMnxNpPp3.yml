@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_013zxzePqQeuW4GkMnxNpPp3
 startedAt: 2026-11-12T19:16:22Z
-endedAt: 2026-11-12T19:42:43Z
+endedAt: 2026-11-12T20:08:01Z
 kind: delegated
 goal: Autonomous Glass Box curate run on the Hooks pages
 status: partial
-outcome: First curate run merged (Hooks pages); further runs and the hand-over still to do
-summary: The owner started /glassbox-curate with one prompt asking for autonomous runs repeated until context reaches 500k, then a hand-over to a new sonnet session. This is the first run. Everything below was agent-chosen under that instruction; the owner approved no individual page change. I oriented, started a Scout (no new topic), took the Hooks Subject as focus (oldest read, no open PR on it), had two fresh readers report, an opus writer fix the real findings with sources, a sonnet claim checker (corrected four overstated or misleading sentences), a third reader and the code-review skill. The memory page lost the fixed leftovers and gained what the after-reader still found. PR 3200 was merged with merge-pr.ts after a green CI. A second run (Agents & automation pages, run entry pushed, readers started) is in progress; the 500k hand-over to a new sonnet session is still to do.
+outcome: Runs 1 and 2 merged (Hooks, Agents pages); a third run and the hand-over still to do
+summary: The owner started /glassbox-curate with one prompt asking for autonomous runs repeated until context reaches 500k, then a hand-over to a new sonnet session. This is the first run. Everything below was agent-chosen under that instruction; the owner approved no individual page change. I oriented, started a Scout (no new topic), took the Hooks Subject as focus (oldest read, no open PR on it), had two fresh readers report, an opus writer fix the real findings with sources, a sonnet claim checker (corrected four overstated or misleading sentences), a third reader and the code-review skill. The memory page lost the fixed leftovers and gained what the after-reader still found. PR 3200 was merged with merge-pr.ts after a green CI. A second run on the Agents & automation pages (also strengthening Try-it sections, as an open owner PR asked) was merged as PR 3203 after a green CI; the 500k hand-over to a new sonnet session is still to do.
 prs:
   - "3200"
+  - "3203"
 docsRead:
   - path: layers/glassbox/GLOSSARY.md
     reason: (no reason given)
@@ -36,6 +37,14 @@ docsRead:
     reason: (read before editing)
   - path: layers/glassbox/content/guide/pages/hooks/40.session-transcripts.md
     reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/agents/20.workflow-scripts.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/agents/30.cloud-sessions.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/agents/40.scheduled-tasks.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/agents/50.inspecting-past-sessions.md
+    reason: (read before editing)
   - path: docs/agents/guards.md
     reason: (no reason given)
   - path: .agents/skills/clear-backlog/SKILL.md
@@ -43,6 +52,10 @@ docsRead:
   - path: .agents/skills/harvest/SKILL.md
     reason: (no reason given)
   - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: .agents/skills/inspect-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/code-review/SKILL.md
     reason: (no reason given)
 skillsUsed:
   - name: glassbox-curate
@@ -62,29 +75,37 @@ frictions:
   - description: Orientation output plus two 40 KB index files read whole used a large share of context before any edit.
     solution: Print the index entries only for the chosen Subject plus titles for the rest.
     severity: minor
-durationSec: 1580
+durationSec: 3099
 models:
-  claude-sonnet-5-5: 165
+  claude-sonnet-5-5: 238
 toolCounts:
-  Read: 13
-  Bash: 47
-  mcp__claude-code-remote__get_session: 2
-  Agent: 10
+  Read: 14
+  Bash: 71
+  mcp__claude-code-remote__get_session: 3
+  Agent: 16
   Edit: 8
-  Skill: 4
+  Skill: 6
   ToolSearch: 1
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
-  ReadNotifications: 2
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  ReadNotifications: 5
   mcp__github__pull_request_read: 2
   mcp__claude-code-remote__send_later: 1
-  mcp__github__add_issue_comment: 1
+  mcp__github__add_issue_comment: 2
   mcp__claude-code-remote__delete_trigger: 1
+  SendMessage: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/hooks/10.hooks.md
   - layers/glassbox/content/guide/pages/hooks/20.blocking-hooks.md
   - layers/glassbox/content/guide/pages/hooks/40.session-transcripts.md
   - layers/glassbox/content/guide/pages/hooks/30.hook-added-context.md
+  - layers/glassbox/content/guide/pages/agents/20.workflow-scripts.md
+  - layers/glassbox/content/guide/pages/agents/10.subagents.md
+  - layers/glassbox/content/guide/pages/agents/30.cloud-sessions.md
+  - layers/glassbox/content/guide/pages/agents/40.scheduled-tasks.md
+  - layers/glassbox/content/guide/pages/agents/50.inspecting-past-sessions.md
+  - layers/glassbox/content/workshop/runs/2026-11-12T2006.yml
+  - layers/glassbox/content/guide/pages/skill-pack/30.engineering-skills.md
   - layers/glassbox/content/workshop/runs/2026-11-12T1941.yml
   - layers/glassbox/content/workshop/pages/index.md
   - layers/glassbox/content/workshop/runs/2026-11-12T1916.yml
@@ -98,6 +119,8 @@ docsReadBySubagents:
   - .agents/skills/clear-backlog/SKILL.md
   - .agents/skills/harvest/SKILL.md
   - docs/agents/environment-caveats.md
+  - .agents/skills/inspect-session/SKILL.md
+  - .agents/skills/code-review/SKILL.md
 ruleUse:
   - by: main
     answered: true
@@ -379,6 +402,188 @@ ruleUse:
       - rule: .claude/rules/adr-0017.md
         via: start
     reported: []
+  - by: general-purpose
+    subagent: 10
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/writing-pages.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/writing-pages.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/glassbox-content.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/agents/20.workflow-scripts.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/agents/20.workflow-scripts.md
+    reported:
+      - path: .claude/rules/glassbox-content.md
+        value: steered
+      - path: .claude/rules/adr-0005.md
+        value: backed
+      - path: .agents/skills/glassbox-lesson/writing-pages.md
+      - path: layers/glassbox/GLOSSARY.md
+      - path: .agents/skills/glassbox-lesson/owner-decisions.md
+  - by: general-purpose
+    subagent: 11
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: general-purpose
+    subagent: 12
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/writing-pages.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/writing-pages.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+    reported:
+      - path: .claude/rules/glassbox-content.md
+        value: backed
+  - by: general-purpose
+    subagent: 13
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+    reported: []
+  - by: general-purpose
+    subagent: 14
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported: []
+  - by: general-purpose
+    subagent: 15
+    answered: false
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/writing-pages.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/writing-pages.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/glassbox-content.md
+        via: read
+    reported: []
 subagents:
   - type: general-purpose
     task: Scout new topics since last run
@@ -386,70 +591,112 @@ subagents:
     durationSec: 26
     toolCalls: 10
     modelCalls: 5
-    tokenShare: 4.1
+    tokenShare: 2.1
   - type: general-purpose
     task: "Fresh reader: newcomer to hooks"
     model: sonnet
     durationSec: 79
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 1.6
+    tokenShare: 0.9
   - type: general-purpose
     task: "Fresh reader: knows hooks, not Terrarium"
     model: sonnet
     durationSec: 42
     toolCalls: 7
     modelCalls: 3
-    tokenShare: 1.3
+    tokenShare: 0.7
   - type: general-purpose
     task: "Opus writer: fix Hooks pages"
     model: opus
     durationSec: 359
     toolCalls: 85
     modelCalls: 48
-    tokenShare: 18.6
+    tokenShare: 9.7
   - type: general-purpose
     task: Claim-check changed Hooks sentences
     model: sonnet
     durationSec: 75
     toolCalls: 19
     modelCalls: 10
-    tokenShare: 4.9
+    tokenShare: 2.6
   - type: general-purpose
     task: Fresh reader after fixes
     model: sonnet
     durationSec: 24
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 1.5
+    tokenShare: 0.8
   - type: general-purpose
     task: "Code review: Standards axis"
     model: sonnet
     durationSec: 49
     toolCalls: 11
     modelCalls: 5
-    tokenShare: 3.7
+    tokenShare: 1.9
   - type: general-purpose
     task: "Code review: Spec axis"
     model: sonnet
     durationSec: 53
     toolCalls: 12
     modelCalls: 8
-    tokenShare: 4.1
+    tokenShare: 2.2
   - type: general-purpose
     task: "Fresh reader: newcomer, agents pages"
     model: sonnet
-    durationSec: 9
-    toolCalls: 7
-    modelCalls: 6
-    tokenShare: 3.1
+    durationSec: 35
+    toolCalls: 8
+    modelCalls: 7
+    tokenShare: 1.7
   - type: general-purpose
     task: "Fresh reader: knows Claude Code, agents pages"
     model: sonnet
-    durationSec: 9
-    toolCalls: 7
-    modelCalls: 6
-    tokenShare: 3.1
+    durationSec: 36
+    toolCalls: 8
+    modelCalls: 7
+    tokenShare: 1.7
+  - type: general-purpose
+    task: "Opus writer: fix Agents pages"
+    model: opus
+    durationSec: 714
+    toolCalls: 104
+    modelCalls: 56
+    tokenShare: 13.6
+  - type: general-purpose
+    task: Claim-check Agents page changes
+    model: sonnet
+    durationSec: 166
+    toolCalls: 30
+    modelCalls: 20
+    tokenShare: 5.6
+  - type: general-purpose
+    task: "Code review: Standards axis, run 2"
+    model: sonnet
+    durationSec: 47
+    toolCalls: 14
+    modelCalls: 7
+    tokenShare: 2.1
+  - type: general-purpose
+    task: "Code review: Spec axis, run 2"
+    model: sonnet
+    durationSec: 55
+    toolCalls: 15
+    modelCalls: 10
+    tokenShare: 2.4
+  - type: general-purpose
+    task: "Fresh reader: Claude Code pages"
+    model: sonnet
+    durationSec: 32
+    toolCalls: 8
+    modelCalls: 8
+    tokenShare: 1.9
+  - type: general-purpose
+    task: "Opus writer: fix Claude Code pages"
+    model: opus
+    durationSec: 3
+    toolCalls: 4
+    modelCalls: 1
+    tokenShare: 1
 gitBranch: ccr-e91cfb1f-8e7iqq
 entrypoint: remote_mobile
 cliVersion: 2.1.322
