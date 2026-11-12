@@ -11,5 +11,9 @@ focus: "Deploy Subject (its two pages): apply the owner's lowercase rule for
   earlier in this session; only the Agents and Installed skills pages changed
   since) and the Scout was not run again (the first run's Scout found no new
   topic in the same window)."
-changes: []
-pagesRead: []
+changes:
+  - deploy/10.continuous-deployment | the lede says a new build replaces the live copy only after it succeeds and names the checkout and serve folders; image, Corepack, fetch and reset --hard are glossed; the image paragraph says first which image Terrarium uses; a failed build sending the loop to its else branch is one plain sentence; the compose paragraph is split and host is glossed; the operator is the person who runs the host; the Merging is deploying item says what the container still checks after a merge | readers could not tell what is swapped for what or what the container checks (entrypoint.sh:12-15,25-27,134-159; Dockerfile:3-29; docker-compose.yml:11-13,27-35; ADR-0011:14-47). Wording only, so revision is kept
+  - deploy/20.pnpm-lockfile | glossary terms lowercase; the three installs are told apart (two frozen, a contributor's plain); the human-merge and gate sentences keep their verbs near their subjects; Corepack, pnpm/action-setup, integrity hash and the install-script default are glossed; the claim that the gate vets packages is cut to what the gate says | readers lost the verb in two pasted definitions and the frozen-install story (action.yml:17-26; entrypoint.sh:57-62; gate.ts:150-177,340; adr-0004-human-merge.md:3-24; pnpm docs on frozen installs and supply-chain security). Wording only, so revision and publishedAt are kept
+pagesRead:
+  - deploy/10.continuous-deployment
+  - deploy/20.pnpm-lockfile
