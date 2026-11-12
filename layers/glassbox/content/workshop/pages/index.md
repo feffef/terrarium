@@ -23,7 +23,7 @@ Each guide page is named by its title, then its file under `layers/glassbox/cont
 ### Weak spots
 
 - **The Installed Skills pages say little of their own.** *Planning skills* (`skill-pack/20.planning-with-the-pack`) and *Engineering skills* (`skill-pack/30.engineering-skills`) mostly describe Skills that come from outside Terrarium. Only a few of their facts are about choices Terrarium made.
-- **Only the overview and the Git & GitHub, Claude Code, Hooks, Agents & automation, Installed skills and Deploy pages write glossary terms in lowercase.** The owner's rule (`owner-decisions.md`) is that a glossary term is lowercase in body text, mid-sentence. The other Subjects and the Walkthroughs still write Skill, Tenant, Routine, Gate and the like. Fix it a Subject at a time; it is wording only. A capital stays at the start of a sentence, in a linked page's exact title, in code and in an Excerpt.
+- **Only the overview and the Git & GitHub, Claude Code, Hooks, Agents & automation, Installed skills, Deploy and Verification pages write glossary terms in lowercase.** The owner's rule (`owner-decisions.md`) is that a glossary term is lowercase in body text, mid-sentence. The other Subjects and the Walkthroughs still write Skill, Tenant, Routine, Gate and the like. Fix it a Subject at a time; it is wording only. A capital stays at the start of a sentence, in a linked page's exact title, in code and in an Excerpt.
 
 ### Recurring problems
 
@@ -63,10 +63,11 @@ None of these is false.
 
 - *Skill inventory*, *Scheduled tasks* and *Schema evolution* were only searched, not re-read, against the *Ideas and lessons learned* Lesson.
 - *Hook-added context* and *Session transcripts* have not been re-read by a fresh reader since a pass whose reader never reported.
-- The Corepack link on *pnpm and the lockfile* (`nodejs.org/api/corepack.html`) redirects to GitHub; `nodejs.org/docs/latest-v22.x/api/corepack.html` is a candidate, and Corepack stops shipping with Node 25.
 - The page 40 excerpt of `.agents/skills/auto-triage/SKILL.md` (*Wayfinder*) shifts to `lines="75-79"` once the pin moves past 2026-11-11.
-- The comment above `DIAGRAM_TOKEN_FALLBACKS` in `app/utils/mermaid.ts` still says the fallbacks are Mermaid's base-theme defaults, which they are not (a code comment, outside this Skill's remit).
 - The `harvest` Skill's own text (`SKILL.md:3,8`) says a Routine runs it; the owner says none does yet but one will. Fixing a Skill is outside this Skill's remit, so ask the owner. *Scheduled tasks* (`agents/40.scheduled-tasks`, which lists every Routine) leaves it out because `glassbox-update` once re-added it on the Skill's word; add it once the owner says a Routine exists.
+
+- **Verification.** *Merge gate*: the paragraph on `merge-pr.ts` still holds several facts, and `verify:skills-lock` and `verify:mermaid` are listed without a gloss. *Type checking*: the Where next rows use typed link text where the glossary says bare. *Testing*: the L0 and L1 levels are never named. *Zod refinements*: no source says why the `pages` rule ties the `page` type to the name `pages`. *Headless browser checks*: no repo source says who sets up the cloud proxy, and the `--no-sandbox` and `--disable-gpu` flags have no stated reason.
+- **The term definitions capitalise glossary words.** The `terms/*.yml` files (for example `gate.yml`, `inert.yml`, `trusted.yml`) write Gate, Inert, Trusted and Tenant mid-sentence, and a reader meets them inside the page text. The owner's rule is about body text; ask whether it covers a definition, then fix them together.
 
 ### Topics with no page yet
 
@@ -85,12 +86,10 @@ Each may be true; a later run should read the tool's source or run it.
 - *Cloud sessions* (`agents/30.cloud-sessions`): that the proxy refuses `.github/workflows/` pushes and repository-settings writes.
 - *Session transcripts* (`hooks/40.session-transcripts`): the record types and fields, the 2 KB preview, and a subagent's `transcript_path` inside tool hooks. *A session log lands on main* says "the `Stop` hook" in the singular, though four are wired.
 - *Author trust* (`git-github/20.author-trust`): what each `author_association` value means, and that `pull_request_target` ignores the approval setting. *Dependabot grouping*: that `/` doesn't reach a nested action.
-- *Linting* (`verification/50.linting`): the sentence on the rules `@nuxt/eslint` turns on and the absence of formatting rules.
 
 ### Ideas still open
 
 - The overview names neither web standards, how agents reach things (cloud sessions, permissions, MCP, worktrees) nor dependencies (lockfile, Dependabot). The owner chose other gaps for it; add one only with a reason.
-- `plain.ts` (the fresh readers' view of a page) could keep link syntax in code and show each term's definition after its sentence, not inside it; a change to a Skill's script waits for the owner.
 
 ### Soft decisions
 
