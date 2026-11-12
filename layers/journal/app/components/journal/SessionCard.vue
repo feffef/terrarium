@@ -36,7 +36,26 @@ const ruleUseCount = computed(() => {
   const u = card.ruleUse
   return u ? new Set([...u.main.rules, ...u.subagents.rules].map((r) => r.path)).size : 0
 })
-const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conjunction' }).format(
+// PROTOTYPE (#3189): one bar for the whole session. Subagents follow their stored
+// tokenShare; main is the remainder. No bar when no subagent has a share.
+const shareSegments = computed(() => {
+  const subs = card.subagents.map((a, i) => ({ a, i })).filter(({ a }) => a.tokenShare !== undefined)
+  if (!subs.length) return []
+  const sum = subs.reduce((n, { a }) => n + a.tokenShare!, 0)
+  const scale = Math.max(100, sum)
+  const segs = subs.map(({ a, i }, k) => ({
+    label: a.task || a.type || 'agent',
+    pct: a.tokenShare!,
+    grow: a.tokenShare! / scale,
+    main: false,
+    shade: 45 + (k % 4) * 18,
+    key: `s${i}`,
+  }))
+  const mainPct = Math.max(0, 100 - sum)
+  return [{ label: 'main', pct: mainPct, grow: mainPct / scale, main: true, shade: 0, key: 'main' }, ...segs]
+})
+const sharePct = (p: number) => (p < 1 ? '<1%' : `${Math.round(p)}%`)
+const foldedFieldLabels =new Intl.ListFormat('en', { style: 'long', type: 'conjunction' }).format(
   FOLDED_TRACE_FIELDS.map((f) => f.label),
 )
 </script>
@@ -75,6 +94,16 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
 
           <div v-if="card.subagents.length" class="block">
             <h4>Subagents</h4>
+            <div v-if="shareSegments.length" class="sharebar" role="img" aria-label="How the session's tokens are shared between the main session and its subagents">
+              <span
+                v-for="s in shareSegments"
+                :key="s.key"
+                class="seg"
+                :class="{ main: s.main }"
+                :style="{ flexGrow: s.grow, '--shade': s.shade + '%' }"
+                :title="`${s.label} · ${sharePct(s.pct)}`"
+              />
+            </div>
             <ul>
               <li v-for="(a, i) in card.subagents" :key="i">
                 <span class="mono">{{ a.type || 'agent' }}</span
@@ -387,6 +416,9 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
 .sev[data-sev='blocker'] { color: var(--jd-sev-blocker); }
 .fsol { color: var(--jd-faint); }
 .amodel { font-family: var(--jd-mono); color: var(--jd-accent); font-size: 0.82em; }
+.sharebar { display: flex; gap: 1px; height: 0.55rem; margin: 0.15rem 0 0.7rem; border-radius: 999px; overflow: hidden; background: var(--jd-line); }
+.seg { flex-basis: 0; min-width: 2px; background: color-mix(in oklab, var(--jd-accent) var(--shade), var(--jd-surface)); }
+.seg.main { background: var(--jd-line); }
 .subnote { margin: 0.55rem 0 0; font-size: 0.8rem; font-style: italic; color: var(--jd-faint); line-height: 1.5; }
 
 /* Mechanical-trace disclosures — native <details>, one per verbose list. */
