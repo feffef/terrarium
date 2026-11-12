@@ -159,7 +159,8 @@ describe('L2 smoke render', async () => {
         expect(await tile.locator('a.room').count()).toBe(0)
         const digests = await attrs(tile.locator('a.digest'), 'href')
         expect(digests.length).toBeGreaterThan(0)
-        for (const href of digests) expect(href).toMatch(/^\/t\/journal\/current/)
+        // Opens in the Journal index's feed, not the standalone digest page.
+        for (const href of digests) expect(href).toMatch(/^\/t\/journal\/current#digest-\d{4}-\d{2}-\d{2}$/)
       } finally {
         await page.close()
       }
