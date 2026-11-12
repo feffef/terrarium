@@ -96,18 +96,7 @@ describe('L2 smoke render', async () => {
       try {
         await page.goto(url('/'), { waitUntil: 'hydration' })
         const hrefs = await attrs(page.locator('.explore-grid a.title-link'), 'href')
-        expect(hrefs).toEqual(['/t/blog', '/t/midden', '/t/atlas', '/t/tinkerfund'])
-      } finally {
-        await page.close()
-      }
-    })
-
-    it('tags each showcase card real or invented', async () => {
-      const page = await createPage()
-      try {
-        await page.goto(url('/'), { waitUntil: 'hydration' })
-        const tags = await page.locator('.tile .reality').allTextContents()
-        expect(tags).toEqual(['real', 'real, in character', 'real', 'invented', 'invented'])
+        expect(hrefs).toEqual(['/t/glassbox', '/t/journal/current', '/t/blog', '/t/midden', '/t/tinkerfund', '/t/atlas'])
       } finally {
         await page.close()
       }
@@ -142,12 +131,12 @@ describe('L2 smoke render', async () => {
       }
     })
 
-    it('features Glass Box as the newest experiment: the guide and the workshop, and a guide Lesson of the day', async () => {
+    it('features Glass Box first: the guide and the workshop, a guide Lesson of the day, and a button in', async () => {
       const page = await createPage()
       try {
         await page.goto(url('/'), { waitUntil: 'hydration' })
-        expect(await page.locator('#newest-heading').textContent()).toContain('work in progress')
         const tile = page.locator('.tile--glassbox')
+        expect(await tile.locator('a.cta').getAttribute('href')).toBe('/t/glassbox')
         expect(await attrs(tile.locator('a.room'), 'href')).toEqual(['/t/glassbox/guide', '/t/glassbox/workshop'])
         expect(await tile.locator('a.room').allTextContents()).toEqual([
           expect.stringMatching(/short lessons and walkthroughs/),
@@ -156,6 +145,21 @@ describe('L2 smoke render', async () => {
         // A Lesson, never a Walkthrough: Walkthroughs aren't ready to lead with (layers/glassbox/GLOSSARY.md).
         expect(await tile.locator('a.lesson').getAttribute('href')).toMatch(/^\/t\/glassbox\/guide\/(?!walkthroughs\/)[a-z-]+\/[a-z0-9-]+$/)
         expect(await tile.evaluate((el) => getComputedStyle(el).getPropertyValue('--gb-accent'))).not.toBe('')
+      } finally {
+        await page.close()
+      }
+    })
+
+    it('features the Journal beside it: its latest digests, no room links, and a button in', async () => {
+      const page = await createPage()
+      try {
+        await page.goto(url('/'), { waitUntil: 'hydration' })
+        const tile = page.locator('.tile--journal')
+        expect(await tile.locator('a.cta').getAttribute('href')).toBe('/t/journal/current')
+        expect(await tile.locator('a.room').count()).toBe(0)
+        const digests = await attrs(tile.locator('a.digest'), 'href')
+        expect(digests.length).toBeGreaterThan(0)
+        for (const href of digests) expect(href).toMatch(/^\/t\/journal\/current/)
       } finally {
         await page.close()
       }

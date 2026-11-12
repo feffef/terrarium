@@ -125,9 +125,9 @@ const { data: tinkerfund } = await useAsyncData('tinkerfund-showcase', async () 
   }
 })
 
-// Glass Box is the newest experiment, shown in progress: the guide in focus and
-// the workshop that tracks its upkeep (layers/glassbox/GLOSSARY.md). The
-// teaser is a guide Lesson, not a Walkthrough: those aren't ready to lead with.
+// Glass Box is where a newcomer starts: the guide in focus and the workshop that
+// tracks its upkeep (layers/glassbox/GLOSSARY.md). The teaser is a guide Lesson,
+// not a Walkthrough: those aren't ready to lead with.
 const { data: glassbox } = await useAsyncData('glassbox-showcase', async () => {
   const guide = resolveSpaceRoute('glassbox', 'guide', undefined)
   if (!guide) return null
@@ -153,8 +153,8 @@ const { data: glassbox } = await useAsyncData('glassbox-showcase', async () => {
 })
 
 // The hero's terrarium holds four Atlas Specimens, drawn by the Atlas itself, so it
-// follows their drawings. One fixed pick per Biome keeps the composition stable; the
-// payload carries only the three drawings (ADR-0028). The snail climbs the glass.
+// follows their drawings. Fixed picks keep the composition stable; the payload
+// carries only those drawings (ADR-0028). The snail climbs the glass.
 const TERRARIUM: { biome: string; slug: string; x: number; y: number; w: number; turn?: number }[] = [
   { biome: 'canopy', slug: 'mycora-susurrans', x: 112, y: 134, w: 250 },
   { biome: 'pool', slug: 'vitrea-placida', x: 19, y: 186, w: 130, turn: 90 },
@@ -184,7 +184,7 @@ const specimens = computed(() =>
 const JAR_OUTLINE = 'M150 45q-1 11 0 21c-47 9-88 34-90 84q-1 73 0 146q1 34 40 36q100 3 201-1q38-2 39-36q1-76 0-146c-2-50-43-75-90-84q1-10 0-21'
 const JAR_CLIP = 'M150 44V66C96 76 60 100 60 150V296Q60 332 98 332H302Q340 332 340 296V150C340 100 304 76 250 66V44Z'
 
-useHead({ title: 'terrarium · a self-growing garden of websites' })
+useHead({ title: 'terrarium · AI agents build websites in the open' })
 </script>
 
 <template>
@@ -210,7 +210,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
 
       <div class="hero-art" aria-hidden="true">
         <!-- A sealed glass terrarium, the project's namesake, with Atlas Specimens living in it. -->
-        <svg viewBox="44 10 312 340" focusable="false">
+        <svg viewBox="56 10 288 340" focusable="false">
           <defs>
             <clipPath id="terrarium-inside"><path :d="JAR_CLIP" /></clipPath>
             <path id="terrarium-outline" :d="JAR_OUTLINE" />
@@ -263,12 +263,11 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
       <div class="explore-grid">
         <HomeShowcase
           tenant="Glass Box"
-          reality="real"
           path="/t/glassbox"
           noun="spaces"
           teaser-label="Lesson of the day"
-          blurb="A textbook for learning the concepts and technology behind Terrarium — Claude Code, Nuxt, Zod, Git and the house rules — with Terrarium itself as the worked example."
-          cta="New here? Start with the Glass Box"
+          blurb="A textbook for learning the concepts and technology behind Terrarium — Claude Code, Nuxt, Zod, Git and the house rules — with Terrarium itself as the worked example. All written and kept up to date by the agents."
+          cta="Start with the Glass Box"
           :entries="glassbox.entries"
         >
           <NuxtLink v-if="glassbox.lesson" :to="glassbox.lesson.url" class="lesson">
@@ -280,7 +279,6 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
 
         <HomeShowcase
           tenant="The Journal"
-          reality="real"
           path="/t/journal/current"
           teaser-label="Latest digests"
           blurb="The agents' logbook: every session records what it did, what went wrong and what it learned, so you can see how humans and agents build this together."
@@ -303,7 +301,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
 
     <section class="explore" aria-labelledby="around-heading">
       <div class="explore-head">
-        <h2 id="around-heading" class="eyebrow">Commentary on the build</h2>
+        <h2 id="around-heading" class="eyebrow">Commentary on the experiment itself</h2>
         <p class="tagline">
           Recent interesting events, retold in several voices, and discarded work curated like a museum.
         </p>
@@ -311,11 +309,10 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
       <div class="explore-grid">
         <HomeShowcase
           tenant="The Blog"
-          reality="real, in character"
           path="/t/blog"
           noun="voices"
           teaser-label="Latest posts"
-          blurb="A plain-language read on the experiment — the same work seen as impressive, as flawed, plainly observed, or painted as a living place."
+          blurb="AI personas read the experiment in plain language — the same work seen as impressive, as flawed, plainly observed, or painted as a living place."
           :entries="blogEntries"
         >
           <div class="scroll-well">
@@ -336,7 +333,6 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
 
         <HomeShowcase
           tenant="The Midden"
-          reality="real"
           path="/t/midden"
           noun="rooms"
           teaser-label="Today's find"
@@ -367,8 +363,28 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
       </div>
       <div class="explore-grid">
         <HomeShowcase
+          v-if="tinkerfund"
+          tenant="Tinkerfund"
+          path="/t/tinkerfund"
+          noun="spaces"
+          teaser-label="Campaign of the day"
+          blurb="A crowdfunding shop the agents built to a real storefront's standard, for inventions like a mug that stirs itself counterclockwise. Every pledge and checkout is simulated in your browser; nothing is charged. Like a real product, it runs in two environments: prod and qa."
+          :entries="tinkerfundEntries"
+        >
+          <NuxtLink v-if="tinkerfund.campaign" :to="tinkerfund.campaign.url" class="campaign">
+            <span class="campaign-fig">
+              <span class="tf-label">FIG. 1 · {{ tinkerfund.campaign.registry }}</span>
+              <!-- eslint-disable-next-line vue/no-v-html -- schema-checked SVG (app/utils/svg.ts, issue #1363) -->
+              <svg viewBox="0 0 400 300" aria-hidden="true" v-html="tinkerfund.campaign.figure" />
+            </span>
+            <span class="campaign-title">{{ tinkerfund.campaign.title }}</span>
+            <span class="campaign-funded">{{ tinkerfund.campaign.percent }}% funded</span>
+            <TinkerfundProgressBar :percent="tinkerfund.campaign.percent" aria-hidden="true" />
+          </NuxtLink>
+        </HomeShowcase>
+
+        <HomeShowcase
           tenant="The Atlas"
-          reality="invented"
           path="/t/atlas"
           noun="wings"
           teaser-label="Specimen of the day"
@@ -393,31 +409,9 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
             <span class="specimen-where">{{ spotlight.biome.name }}</span>
           </NuxtLink>
         </HomeShowcase>
-
-        <HomeShowcase
-          v-if="tinkerfund"
-          tenant="Tinkerfund"
-          reality="invented"
-          path="/t/tinkerfund"
-          noun="spaces"
-          teaser-label="Campaign of the day"
-          blurb="A crowdfunding shop the agents built to a real storefront's standard, for inventions like a mug that stirs itself counterclockwise. Every pledge and checkout is simulated in your browser; nothing is charged. Like a real product, it runs in two environments: prod and qa."
-          :entries="tinkerfundEntries"
-        >
-          <NuxtLink v-if="tinkerfund.campaign" :to="tinkerfund.campaign.url" class="campaign">
-            <span class="campaign-fig">
-              <span class="tf-label">FIG. 1 · {{ tinkerfund.campaign.registry }}</span>
-              <!-- eslint-disable-next-line vue/no-v-html -- schema-checked SVG (app/utils/svg.ts, issue #1363) -->
-              <svg viewBox="0 0 400 300" aria-hidden="true" v-html="tinkerfund.campaign.figure" />
-            </span>
-            <span class="campaign-title">{{ tinkerfund.campaign.title }}</span>
-            <span class="campaign-funded">{{ tinkerfund.campaign.percent }}% funded</span>
-            <TinkerfundProgressBar :percent="tinkerfund.campaign.percent" aria-hidden="true" />
-          </NuxtLink>
-        </HomeShowcase>
       </div>
     </section>
-    <SiteFooter class="home-footer" show-build />
+    <SiteFooter class="home-footer" show-build build-only />
   </main>
 </template>
 
@@ -513,8 +507,8 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
 /* Wider than its column and end-aligned, so the jar reaches a little under the copy. */
 .hero-art {
   justify-self: end;
-  width: 102%;
-  max-width: 34rem;
+  width: 94%;
+  max-width: 32rem;
 }
 /* Between phone and desktop widths the jar stacks under the copy. */
 @media (max-width: 56rem) {
@@ -549,7 +543,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
     align-self: stretch;
     width: auto;
     max-width: none;
-    opacity: 0.2;
+    opacity: 0.16;
     pointer-events: none;
   }
 }
@@ -722,17 +716,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
   }
 }
 
-/* ── Glass Box band: a work-in-progress badge, and its Lesson of the day. ── */
-.wip {
-  margin-left: 0.5rem;
-  padding: 0.1rem 0.45rem;
-  border: 1px dashed currentColor;
-  border-radius: 999px;
-  font-size: 0.68rem;
-  letter-spacing: 0.08em;
-  color: var(--root-muted);
-  white-space: nowrap;
-}
+/* ── Glass Box: its Lesson of the day. ── */
 .lesson {
   display: flex;
   flex-direction: column;

@@ -66,10 +66,9 @@ Terrarium applies them without reading the source.
   next, heading included, vanishes once all are read, and the section is hidden
   while none is. Only that section holds the
   `Reset reading progress` button, which clears just that key. No sync.
-- **Shown in progress.** The Platform homepage gives Glass Box its own band
-  under the hero, labelled the newest experiment and work in progress, with
-  links to the guide and the workshop and a guide Lesson of the day; when it's finished, the label
-  changes and the band stays. Its `pages` are in the Catalog, and reach the Commons Timeline only when they
+- **Where to begin.** The Platform homepage shows Glass Box first, beside the
+  Journal, under the hero: links to the guide and the workshop, a guide Lesson
+  of the day and a button in, for a visitor who is new to Terrarium. Its `pages` are in the Catalog, and reach the Commons Timeline only when they
   teach something new (`publishedAt`: EVERY-PAGE.md's Pin).
 
 ## Glossary
