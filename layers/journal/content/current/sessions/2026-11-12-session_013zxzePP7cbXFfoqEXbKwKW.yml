@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzePP7cbXFfoqEXbKwKW
 startedAt: 2026-11-12T10:53:03Z
-endedAt: 2026-11-12T11:07:00Z
+endedAt: 2026-11-12T11:11:04Z
 kind: delegated
 goal: Keep the Glass Box guide in step with main
-status: in-review
-outcome: "PR 3152 opened: 74 pages re-pinned, 5 pages corrected, 5 pages fully checked; gate green"
-summary: "The owner invoked /glassbox-update, a scheduled-style run, so the whole run is human-instructed by that one command; the Skill's steps were followed and nothing beyond them was added except two agent judgement calls: moving publishedAt on the hydration and harvest pages, and leaving one diary-style sentence on the Nitro page for a human. The report flagged 15 pages and no terms. The script left the two pages with an edited range unpinned, so I re-lined the harvest Excerpts and pinned both by hand. Three sonnet readers checked 17 pages (14 flagged plus 3 more from the oldest-checked rotation of 5, two of which were already flagged). They found no outright false claims; I confirmed and corrected four imprecise ones (hydration storage, two harvest lines, one dark-mode colour sentence) plus a stale EVERY-PAGE.md link. Official docs hosts were blocked, so readers used raw GitHub sources and node_modules, and some docs-only claims stay unverified, which the PR says. I read the 11 re-pin-only flagged pages only through the readers' scoped reports, not whole. PR 3152 is open and subscribed; merge waits on CI."
+status: completed
+outcome: "PR 3152 merged: 74 pages re-pinned, 5 pages corrected, 5 pages fully checked"
+summary: "The owner invoked /glassbox-update, a scheduled-style run, so the whole run is human-instructed by that one command; the Skill's steps were followed and nothing beyond them was added except two agent judgement calls: moving publishedAt on the hydration and harvest pages, and leaving one diary-style sentence on the Nitro page for a human. The report flagged 15 pages and no terms. The script left the two pages with an edited range unpinned, so I re-lined the harvest Excerpts and pinned both by hand. Three sonnet readers checked 17 pages (14 flagged plus 3 more from the oldest-checked rotation of 5, two of which were already flagged). They found no outright false claims; I confirmed and corrected four imprecise ones (hydration storage, two harvest lines, one dark-mode colour sentence) plus a stale EVERY-PAGE.md link. Official docs hosts were blocked, so readers used raw GitHub sources and node_modules, and some docs-only claims stay unverified, which the PR says. I read the 11 re-pin-only flagged pages only through the readers' scoped reports, not whole. PR 3152 passed CI's gate and I merged it with merge-pr.ts after posting my verdict."
 prs:
   - "3152"
 docsRead:
@@ -82,21 +82,24 @@ frictions:
   - description: The Skill says re-check each flagged page as a whole, but 11 re-pin-only pages were checked through scoped reader reports only, not read whole by me.
     solution: Say in step 4 that a flagged page with no changed claim needs only the scoped reader, or require a whole read.
     severity: nit
-durationSec: 838
+durationSec: 1082
 models:
-  claude-sonnet-5-5: 128
+  claude-sonnet-5-5: 148
 toolCounts:
   Read: 4
-  Bash: 48
-  Skill: 4
+  Bash: 52
+  Skill: 5
   Agent: 5
-  ReadNotifications: 1
+  ReadNotifications: 3
   Write: 5
-  ToolSearch: 1
+  ToolSearch: 3
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   Edit: 1
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/nuxt-vue/80.hydration.md
   - layers/glassbox/content/guide/pages/web-standards/40.colour-and-motion-settings.md
@@ -437,31 +440,31 @@ subagents:
     durationSec: 130
     toolCalls: 32
     modelCalls: 21
-    tokenShare: 12.4
+    tokenShare: 11.2
   - task: Claim check group B
     model: sonnet
     durationSec: 224
     toolCalls: 51
     modelCalls: 28
-    tokenShare: 15.1
+    tokenShare: 13.6
   - task: Claim check group C
     model: sonnet
     durationSec: 121
     toolCalls: 25
     modelCalls: 17
-    tokenShare: 11
+    tokenShare: 9.9
   - task: "Code review: Standards axis"
     model: sonnet
     durationSec: 30
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 4.2
+    tokenShare: 3.8
   - task: "Code review: Spec axis"
     model: sonnet
     durationSec: 66
     toolCalls: 14
     modelCalls: 11
-    tokenShare: 6.9
+    tokenShare: 6.2
 gitBranch: claude/modest-goodall-caz9az
 entrypoint: remote
 cliVersion: 2.1.322
