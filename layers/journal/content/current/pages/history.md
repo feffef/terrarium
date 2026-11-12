@@ -1,9 +1,9 @@
 ---
 title: How Terrarium Grew
-description: The first hundred and six days — how the sites, the machinery and the rules arrived, what happened when the asking stopped, what changed when the owner came back, and how the rules were cut down without breaking.
+description: The first hundred and thirty-one days — how the sites, the machinery and the rules arrived, what happened when the asking stopped, what changed when the owner came back, how the rules were cut down without breaking, and how the platform's own measurements exposed what wasn't paying off.
 onramp: 1
 onrampLabel: How it got this way
-onrampBlurb: The story in order, up to mid-October — what got built, what the quiet weeks revealed, what the owner's return set in motion, and how the rules got shorter.
+onrampBlurb: The story in order, up to mid-November — what got built, what the quiet weeks revealed, what the owner's return set in motion, how the rules got shorter, and how new measurements showed which parts spent a lot and returned little.
 ---
 
 # How Terrarium Grew
@@ -11,8 +11,8 @@ onrampBlurb: The story in order, up to mid-October — what got built, what the 
 The [Glass Box guide](/t/glassbox/guide) describes Terrarium as it stands. It
 doesn't say how it got that way. This page does, in order, from the first commit onward.
 
-The period runs from 4 July to 17 October 2026: a hundred and six days,
-6,319 commits, 1,078 recorded sessions, 3,432 frictions the agents logged
+The period runs from 4 July to 11 November 2026: a hundred and thirty-one days,
+9,878 commits, 1,479 recorded sessions, 5,418 frictions the agents logged
 against themselves.
 Three things grew at once and kept causing each other — the **sites**, the
 **machinery** that builds them, and the **rules** the project follows.
@@ -26,13 +26,14 @@ Three things grew at once and kept causing each other — the **sites**, the
 | **[Idling and pruning](#idling-and-pruning-26-august-to-24-september)** · 26 Aug–24 Sep | 46 | 90% | 1.6 | 0 |
 | **[The owner returns](#the-owner-returns-25-september-to-2-october)** · 25 Sep–2 Oct | 92 | 56% | 3.5 | 1 |
 | **[Simplifying the rules](#simplifying-the-rules-3-to-17-october)** · 3–17 Oct | 128 | 51% | 5.0 | 1 |
+| **[Measuring and explaining](#measuring-and-explaining-18-october-to-11-november)** · 18 Oct–11 Nov | 112 | 51% | 5.0 | 0 |
 
 The obvious reading of the table is wrong. Activity fell not because the project
 turned inward or lost its way, but because the repository has one human, who ran
 out of hours. The interesting part is what kept happening anyway, and what
 changed in the last rows once the human had time again.
 
-Counts are as of 17 October. The daily digests go on from there: the
+Counts are as of 11 November. The daily digests go on from there: the
 most recent week on the [current Journal](/t/journal/current), earlier days in
 the [archive](/t/journal/archived).
 
@@ -355,10 +356,83 @@ the new rules to a larger test: a mostly autonomous build. Once the owner had
 settled its design, agents built it overnight as twenty-three reviewed
 stories, and the owner merged it on 15 October.
 
+## Measuring and explaining — 18 October to 11 November
+
+No new site arrived in these twenty-five days, and the pace held: 401
+sessions, about half of them autonomous, with as many frictions per session as
+the fortnight before. The work went into two things. [Glass Box](/t/glassbox),
+the textbook merged as a first draft on 15 October, had to become a site a
+reader could rely on, with the agents themselves keeping it in sync as the
+code changes and new concepts arrive. And the measurements added in October
+began to show which parts of the machinery spent a lot and returned little.
+
+> **From first draft to a maintained textbook.** On 18 October Glass Box joined
+> the regular visitor-style review rotation the other sites get. On 24 October
+> one session reviewed all twenty guide lessons, promoted five drafts and wrote
+> a new lesson on how the platform improves itself; another ran four rounds of
+> review and fixes until its ratings put all 26 lessons at the top mark, up from
+> 15. The next days added a "Find a Lesson" box and teasers that no longer clip
+> on phones, a written definition of what "good" means for the textbook, and a
+> review of the whole guide by three AI models. On 2 November it got a new front
+> page that works as an overview of the whole project, and the agents'
+> instruction file now points to it. Within a week its large Claude Code subject
+> was split into three, a web-standards subject arrived, and subjects and lessons
+> were put in the order a newcomer should read them. A "workshop" page holds its
+> notes and run history, and by 11 November defined terms link to the lesson
+> that explains them.
+
+Keeping it true, readable and well structured was the expensive part. On 27
+October a scheduled Skill, `glassbox-improve`, was designed to grade the pages
+and improve the weakest without anyone watching. Its first run fixed two false
+claims for far more reviewing effort than that was worth, and a later run used
+about 35 helpers against guidance of under ten. A rebuild on 2 November, to
+grade on several qualities and block edits that weren't judged blind, still
+took about 127 reviewing agents dispatched by hand for 35 edits. The trouble
+was the grading itself: of 390 grades, 389 were the same one (a B), and the
+blind check passed 109 of 110 edits because it judged each edit against the
+criterion the edit was written to meet. Every run read the whole guide. The run
+of 5 November cost about $35, more than half of it on ratings that produced 75
+findings, 73 of which were never looked at. It fixed five false claims, of
+which by its own reading about two mattered. The owner asked whether those were
+real errors or nits. The rethink that followed concluded that models don't give
+useful absolute grades, and that most of the machinery existed to make an
+agent's judgement something that could be counted.
+
+So on 6 November a small Skill with one goal, `glassbox-curate`, was added
+beside the old one: no grades, fresh readers who report where a newcomer gets
+lost, and a separate check of every sentence it changes, budgeted at about $20
+a run. The daily `glassbox-update` Skill took over keeping existing pages true.
+By 7 November the curator built its own fixes and read a whole subject before
+changing it, and `glassbox-improve` was removed. On 9 November a fact-check
+across 17 guide pages still used up nearly all of a $20 budget.
+
+The waste was found through measurement, which the owner either read or asked
+for. From 18 October the weekly Skills check reported the tokens and price of
+every scheduled run, the first of these measurements, and the costs page charts
+them. A review a week later found that about 19 of 25 recent wording-trim edits
+from the daily documentation audit changed nothing a reader would do, so that
+part of the audit was dropped; working it out cost about 270,000 helper tokens,
+because runs didn't record how many findings each part produced. On 10 November
+rule use started being captured outside the agent's own report, replacing the
+grades each session gave its rules, and every rule a session loaded now gets a
+rating, steered or backed, shown on its card in the
+[Journal](/t/journal/current).
+
+The same weeks made the machinery safer against its own agents. On 25 October
+the session-inspection tool learned to spot a helper's hand-back that the agent
+itself had written.
+
+The next experiment arrived on 11 November. Agents record ideas and learnings
+in every session log, but those had only been read now and then and applied by
+hand. A new Skill, `harvest`, meant to run weekly, turns them into issues that
+wait for the owner's green light; its first real run filed four.
+
 That is where the record stops: eight sites, thirty decision records,
-forty-five catalogued [Skills](/t/journal/current/skills). The question
+fifty-one catalogued [Skills](/t/journal/current/skills). The question
 from September has a partial answer. The platform did grow a new site in a
-day and now merges its own routine work, but the owner still chose what to
+day and now merges its own routine work, and its own measurements now show
+where work spends a lot and returns little; each fix so far was a cut, a
+cap or a simpler replacement, not more machinery. The owner still chose what to
 build and made the structural calls.
 
 For how all of this works today, see the [Glass Box
