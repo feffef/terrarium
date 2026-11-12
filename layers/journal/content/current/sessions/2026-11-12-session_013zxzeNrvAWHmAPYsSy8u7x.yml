@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_013zxzeNrvAWHmAPYsSy8u7x
 startedAt: 2026-11-12T18:00:56Z
-endedAt: 2026-11-12T18:45:08Z
+endedAt: 2026-11-12T19:15:41Z
 kind: interactive
 goal: Harvest recent session ideas and learnings into Seedlings
-status: completed
-outcome: "Five Seedlings (3186-3190), retro Seedling 3191 (closed), trial-territory Seedling 3193, hint issue 3194; PR 3195 merged: harvest looks back 7 days"
-summary: "Human-instructed: the owner ran the harvest Skill, whose steps drove the first half. Extract gave 381 entries; 17 clusters were checked, 5 passed (four Glass Box and Journal product ideas, one environment-caveats learning) and 12 were dropped with evidence. Agent-initiated within the Skill: which clusters to check and drop, the wording of each Seedling, and the retro Seedling 3191. I caught three of my own unverified claims before posting. The owner then ran /retro (human-instructed), leaned toward a 7-day window and more frequent runs, and asked for a Seedling for a trial-territory lookup script (3193) and an issue listing git commands for the read-first-hint skip list (3194); I filed both. Last, the owner asked me to close 3191 and just change the window to 7 days in this session (human-instructed): I changed WINDOW_DAYS and three statements in harvest SKILL.md, ran code-review (two subagents) and the scoped gate, opened PR 3195, posted a verdict and merged it with merge-pr.ts once CI was green, then closed 3191 as not planned with a comment. Both reviewers called a 28-day test fixture cosmetic; I tested that and it breaks the ranking test at 7 days, so it stays. After the merge the owner said the Routine is now scheduled and asked what in the repo still says otherwise (human-instructed); I searched and reported four stale places without editing. Still open: running harvest more often is a Routine setting outside the repo; 3186-3190, 3193 and 3194 await the owner or triage."
+status: in-review
+outcome: Seedlings 3186-3190 and 3193, issue 3194, PR 3195 merged (7-day window); PR 3197 (show harvest as a scheduled Routine) awaits CI
+summary: "Human-instructed: the owner ran the harvest Skill, whose steps drove the first half. Extract gave 381 entries; 17 clusters were checked, 5 passed and 12 were dropped with evidence. Agent-initiated within the Skill: which clusters to check and drop, the wording of each Seedling, and retro Seedling 3191. The owner then ran /retro (human-instructed), leaned toward a 7-day window, and asked for a trial-territory Seedling (3193) and an issue for the read-first-hint skip list (3194); I filed both. The owner asked me to close 3191 and change the window to 7 days: PR 3195 merged, 3191 closed. Then the owner said the Routine is scheduled and asked what in the repo still said otherwise; I listed four places, and when asked I updated them all plus history.md but not the run entries (human-instructed): PR 3197. My list missed a fifth place, a guide sentence saying only a person starts harvest; both code-review reviewers caught it, and I fixed it as a follow-up commit and said so in the PR. The new harvest chart on the Routine costs page renders empty until audit-skills records a run (dev-server screenshot only, no production build). Still open: PR 3197 awaits CI, then merge through merge-pr.ts; Seedlings 3186-3190 and 3193 and issue 3194 await the owner or triage; the Routine's cadence is set outside the repo and stated nowhere in it."
 prs:
   - "3195"
+  - "3197"
 docsRead:
   - path: docs/agents/git-conventions.md
     reason: (no reason given)
@@ -38,6 +39,12 @@ docsRead:
     reason: (no reason given)
   - path: .agents/skills/harvest/tests/unit/harvest.spec.ts
     reason: (read before editing)
+  - path: layers/journal/tenant.config.ts
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: (no reason given)
   - path: .agents/prune-trials.yml
     reason: (no reason given)
   - path: .agents/skills/harvest/body-template.md
@@ -106,25 +113,32 @@ frictions:
   - description: Put a stray git checkout --detach into a read-only grep command, which detached HEAD; I noticed from git status and re-attached the session branch in the next call, with nothing lost.
     solution: Keep read-only searches free of git commands that change state, and check git status after any git call in a compound command.
     severity: nit
-durationSec: 2652
+  - description: Told the owner everything else only described the Skill, after a harvest grep cut off by head; a guide sentence saying only a person starts harvest was missed and found by both reviewers.
+    solution: Read the whole grep output, or write it to a file, before saying nothing else matches, as verify-before-you-state asks.
+    severity: minor
+  - description: Ran two more code-review subagents (about 180,000 tokens) on a six-file content change, because the simple-change test excludes any added file.
+    solution: Let the simple-change test pass a prose-only diff with one new data file, or run both review axes inline for a diff this small.
+    severity: nit
+durationSec: 4485
 models:
-  claude-sonnet-5-5: 272
+  claude-sonnet-5-5: 336
+  <synthetic>: 2
 toolCounts:
-  Bash: 78
-  Read: 17
+  Bash: 103
+  Read: 21
   ToolSearch: 2
   mcp__github__issue_read: 11
   Write: 5
   mcp__claude-code-remote__get_session: 1
   mcp__github__issue_write: 9
-  Skill: 8
+  Skill: 9
   Grep: 3
   Edit: 8
-  Agent: 2
-  mcp__github__list_pull_requests: 1
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
-  mcp__github__add_issue_comment: 2
+  Agent: 4
+  mcp__github__list_pull_requests: 2
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  mcp__github__add_issue_comment: 3
   ReadNotifications: 3
   mcp__github__pull_request_read: 2
   mcp__claude-code-remote__unsubscribe_pr_activity: 1
@@ -132,6 +146,12 @@ filesEdited:
   - .agents/skills/harvest/scripts/harvest.ts
   - .agents/skills/harvest/SKILL.md
   - .agents/skills/harvest/tests/unit/harvest.spec.ts
+  - layers/glassbox/content/guide/pages/terrarium-practice/45.ideas-and-lessons-learned.md
+  - layers/glassbox/content/guide/pages/agents/40.scheduled-tasks.md
+  - layers/glassbox/content/workshop/pages/index.md
+  - layers/journal/content/current/pages/history.md
+  - layers/journal/content/current/pages/routines.md
+  - layers/journal/content/current/routines/harvest.yml
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -140,12 +160,17 @@ rulesGlobal:
 rulesFollowedUp:
   - .claude/rules/adr-0027.md
   - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
 adrHints:
   - adr: 5
     via: path
     readAfter: true
     by: main
   - adr: 27
+    via: path
+    readAfter: true
+    by: main
+  - adr: 15
     via: path
     readAfter: true
     by: main
@@ -180,9 +205,11 @@ ruleUse:
         via: native
         trigger: layers/journal/content/current/sessions/2026-11-12-session_013zxzeP1EixGDy96kmktFi2.yml
       - rule: .claude/rules/adr-0008.md
-        via: hint
+        via: native
+        trigger: layers/journal/tenant.config.ts
       - rule: .claude/rules/tenant-layers.md
-        via: hint
+        via: native
+        trigger: layers/journal/tenant.config.ts
       - rule: .claude/rules/ui-verification.md
         via: hint
       - rule: .claude/rules/adr-0022.md
@@ -191,16 +218,19 @@ ruleUse:
       - rule: .claude/rules/adr-0001.md
         via: hint
       - rule: .claude/rules/adr-0002.md
-        via: hint
+        via: native
+        trigger: layers/journal/tenant.config.ts
       - rule: .claude/rules/adr-0004-human-merge.md
         via: native
         trigger: scripts/hooks/read-first-hint.ts
       - rule: .claude/rules/adr-0018.md
         via: hint
       - rule: .claude/rules/data-shapes.md
-        via: hint
+        via: native
+        trigger: layers/journal/tenant.config.ts
       - rule: .claude/rules/mdc-when-to-use.md
-        via: hint
+        via: native
+        trigger: layers/journal/tenant.config.ts
       - rule: .claude/rules/glassbox-content.md
         via: hint
       - rule: .claude/rules/mermaid-lanes.md
@@ -211,6 +241,10 @@ ruleUse:
       - rule: .claude/rules/adr-0030.md
         via: native
         trigger: .agents/skills/prune-trial/scripts/find-trial-window.ts
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/adr-0025.md
+        via: hint
     reported:
       - path: .claude/rules/adr-0017.md
         value: steered
@@ -292,19 +326,122 @@ ruleUse:
     reported:
       - path: .claude/rules/adr-0004.md
         value: backed
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0020.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .claude/rules/adr-0005.md
+        value: backed
+  - by: general-purpose
+    subagent: 3
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/adr-0020.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/adr-0006.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/adr-0016.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: none
 subagents:
   - type: general-purpose
     task: Standards review of window change
     durationSec: 21
     toolCalls: 10
     modelCalls: 5
-    tokenShare: 2.6
+    tokenShare: 1.8
   - type: general-purpose
     task: Spec review of window change
     durationSec: 28
     toolCalls: 9
     modelCalls: 7
-    tokenShare: 3
+    tokenShare: 2.1
+  - type: general-purpose
+    task: Standards review of Routine edits
+    durationSec: 32
+    toolCalls: 10
+    modelCalls: 8
+    tokenShare: 2.2
+  - type: general-purpose
+    task: Spec review of Routine edits
+    durationSec: 47
+    toolCalls: 13
+    modelCalls: 11
+    tokenShare: 2.9
 gitBranch: ccr-961e972f-yq0gd3
 entrypoint: remote_mobile
 cliVersion: 2.1.322
