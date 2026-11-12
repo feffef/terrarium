@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQAc52ZMCkhtp4ihGY
 startedAt: 2026-11-12T22:15:17Z
-endedAt: 2026-11-12T22:56:18Z
+endedAt: 2026-11-12T23:01:02Z
 kind: delegated
 goal: "Curate the Glass Box guide: Verification Subject Try-it sections"
-status: in-review
-outcome: PRs 3211 and 3212 merged; PR 3214 (Deploy) open with gate green
-summary: "The owner invoked the glassbox-curate skill and, when asked, chose autonomous mode, several focuses in sequence until 500k context, and a Sonnet handoff session with unrestricted network at the end (human-instructed). I took the Verification Subject as the focus (agent-chosen from the memory page's open leads). Two fresh readers found weak Try-it sections and wording problems; an opus writer edited seven pages; a claim checker found every changed sentence supported; code-review's two reviewers led to a pagesRead fix and a teaches update; pnpm gate:scoped passed; PR 3211 merged after CI went green. A second run on the Web standards Subject merged as PR 3212; a third on Deploy is open as PR 3214 (gate green). Mid-run the owner asked to add the Walkthrough order as a weak spot, which I added to the memory page (human-instructed). Still open: merge of 3214 and the handoff session."
+status: completed
+outcome: PRs 3211, 3212 and 3214 merged; a Sonnet handoff session was started for the next focus
+summary: "The owner invoked the glassbox-curate skill and, when asked, chose autonomous mode, several focuses in sequence until 500k context, and a Sonnet handoff session with unrestricted network at the end (human-instructed). I took the Verification Subject as the focus (agent-chosen from the memory page's open leads). Two fresh readers found weak Try-it sections and wording problems; an opus writer edited seven pages; a claim checker found every changed sentence supported; code-review's two reviewers led to a pagesRead fix and a teaches update; pnpm gate:scoped passed; PR 3211 merged after CI went green. A second run on the Web standards Subject merged as PR 3212; a third on Deploy merged as PR 3214. Mid-run the owner asked to add the Walkthrough order as a weak spot, which I added to the memory page (human-instructed). I handed off to a new Sonnet session on the same unrestricted environment at about 375k context, short of 500k, to leave room for the handoff (human-instructed at the start; the timing was my judgement). Open: Try-it work on the remaining Subjects."
 prs:
   - "3211"
   - "3212"
@@ -97,23 +97,25 @@ frictions:
   - description: Read docs/agents/git-conventions.md only after my first git command, as the hook reminded.
     solution: Read the listed docs before any git command.
     severity: nit
-durationSec: 2461
+durationSec: 2745
 models:
-  claude-sonnet-5-5: 219
+  claude-sonnet-5-5: 233
 toolCounts:
   AskUserQuestion: 1
-  Bash: 67
+  Bash: 71
   Read: 16
   Agent: 14
   Write: 4
   mcp__claude-code-remote__get_session: 4
-  Skill: 5
+  Skill: 6
   mcp__github__create_pull_request: 3
   mcp__claude-code-remote__subscribe_pr_activity: 3
-  ReadNotifications: 6
+  ReadNotifications: 8
   mcp__github__pull_request_read: 1
-  mcp__github__add_issue_comment: 2
+  mcp__github__add_issue_comment: 3
   Edit: 2
+  mcp__claude-code-remote__get_environment: 1
+  mcp__claude-code-remote__create_session: 1
 filesEdited:
   - layers/glassbox/content/workshop/runs/2026-11-12T2216.yml
   - layers/glassbox/content/workshop/runs/2026-11-12T2232.yml
@@ -737,85 +739,85 @@ subagents:
     durationSec: 20
     toolCalls: 9
     modelCalls: 5
-    tokenShare: 2.3
+    tokenShare: 2.2
   - task: "Fresh reader: gate pages A"
     model: sonnet
     durationSec: 20
     toolCalls: 7
     modelCalls: 3
-    tokenShare: 0.8
+    tokenShare: 0.7
   - task: "Fresh reader: pages B"
     model: sonnet
     durationSec: 19
     toolCalls: 7
     modelCalls: 3
-    tokenShare: 0.8
+    tokenShare: 0.7
   - task: Write Verification page fixes
     model: opus
     durationSec: 223
     toolCalls: 54
     modelCalls: 33
-    tokenShare: 8.7
+    tokenShare: 8.2
   - task: Claim-check changed sentences
     model: sonnet
     durationSec: 44
     toolCalls: 11
     modelCalls: 7
-    tokenShare: 1.4
+    tokenShare: 1.3
   - task: Standards review
     model: sonnet
     durationSec: 28
     toolCalls: 8
     modelCalls: 4
-    tokenShare: 1.9
+    tokenShare: 1.8
   - task: Spec review
     model: sonnet
     durationSec: 40
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 2.5
+    tokenShare: 2.4
   - task: Write Web standards fixes
     model: opus
     durationSec: 247
     toolCalls: 60
     modelCalls: 42
-    tokenShare: 9.5
+    tokenShare: 8.9
   - task: Claim-check Web standards diff
     model: sonnet
     durationSec: 44
     toolCalls: 12
     modelCalls: 9
-    tokenShare: 2.3
+    tokenShare: 2.2
   - task: Standards review web std
     model: sonnet
     durationSec: 32
     toolCalls: 10
     modelCalls: 4
-    tokenShare: 2
+    tokenShare: 1.8
   - task: Spec review web std
     model: sonnet
     durationSec: 36
     toolCalls: 10
     modelCalls: 6
-    tokenShare: 2.2
+    tokenShare: 2.1
   - task: Write Deploy page fixes
     model: opus
     durationSec: 227
     toolCalls: 43
     modelCalls: 31
-    tokenShare: 6.9
+    tokenShare: 6.5
   - task: Claim-check Deploy diff
     model: sonnet
     durationSec: 36
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 2
+    tokenShare: 1.9
   - task: Combined review Deploy diff
     model: sonnet
     durationSec: 59
     toolCalls: 12
     modelCalls: 9
-    tokenShare: 2.8
+    tokenShare: 2.6
 gitBranch: HEAD
 entrypoint: remote
 cliVersion: 2.1.322
