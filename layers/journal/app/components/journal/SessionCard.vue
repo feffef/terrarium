@@ -36,6 +36,7 @@ const ruleUseCount = computed(() => {
   const u = card.ruleUse
   return u ? new Set([...u.main.rules, ...u.subagents.rules].map((r) => r.path)).size : 0
 })
+const tokenBar = computed(() => sessionTokenBar(card.subagents))
 const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conjunction' }).format(
   FOLDED_TRACE_FIELDS.map((f) => f.label),
 )
@@ -75,6 +76,16 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
 
           <div v-if="card.subagents.length" class="block">
             <h4>Subagents</h4>
+            <div v-if="tokenBar.length" class="tokenbar" role="img" aria-label="How the session's tokens are shared between the main session and its subagents">
+              <span
+                v-for="s in tokenBar"
+                :key="s.key"
+                class="seg"
+                :class="{ main: s.main }"
+                :style="{ flexGrow: s.grow, '--shade': s.shade + '%' }"
+                :title="s.title"
+              />
+            </div>
             <ul>
               <li v-for="(a, i) in card.subagents" :key="i">
                 <span class="mono">{{ a.type || 'agent' }}</span
@@ -387,6 +398,9 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
 .sev[data-sev='blocker'] { color: var(--jd-sev-blocker); }
 .fsol { color: var(--jd-faint); }
 .amodel { font-family: var(--jd-mono); color: var(--jd-accent); font-size: 0.82em; }
+.tokenbar { display: flex; gap: 1px; height: 0.55rem; margin: 0.15rem 0 0.7rem; border-radius: 999px; overflow: hidden; background: var(--jd-line); }
+.seg { flex-basis: 0; min-width: 2px; background: color-mix(in oklab, var(--jd-accent) var(--shade), var(--jd-surface)); }
+.seg.main { background: var(--jd-line); }
 .subnote { margin: 0.55rem 0 0; font-size: 0.8rem; font-style: italic; color: var(--jd-faint); line-height: 1.5; }
 
 /* Mechanical-trace disclosures — native <details>, one per verbose list. */

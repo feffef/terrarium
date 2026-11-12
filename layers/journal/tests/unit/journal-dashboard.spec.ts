@@ -28,6 +28,7 @@ import {
   sessionWhen,
   sessionModelsLabel,
   subagentUsageLabel,
+  sessionTokenBar,
   frictionCount,
   frictionTotals,
   kindCounts,
@@ -331,6 +332,44 @@ describe('subagentUsageLabel', () => {
     expect(subagentUsageLabel({ durationSec: 60 })).toBe('1m 0s')
     expect(subagentUsageLabel({ tokenShare: 10 })).toBe('10%')
     expect(subagentUsageLabel({})).toBe('')
+  })
+})
+
+describe('sessionTokenBar', () => {
+  const widths = (segs: { grow: number }[]) => segs.map((s) => s.grow)
+  it('makes main the remainder after the subagent shares', () => {
+    const segs = sessionTokenBar([{ type: 'Explore', task: 'find it', tokenShare: 30 }, { tokenShare: 20 }])
+    expect(segs.map((s) => s.title)).toEqual(['main · 50%', 'find it · 30%', 'agent · 20%'])
+    expect(widths(segs)).toEqual([0.5, 0.3, 0.2])
+    expect(segs[0]!.main).toBe(true)
+  })
+  it('names a subagent by task, else type, else agent', () => {
+    const segs = sessionTokenBar([{ type: 'Plan', tokenShare: 10 }, { tokenShare: 10 }])
+    expect(segs.map((s) => s.title)).toEqual(['main · 80%', 'Plan · 10%', 'agent · 10%'])
+  })
+  it('scales down to fit when the shares sum above 100', () => {
+    const segs = sessionTokenBar([{ tokenShare: 80 }, { tokenShare: 40 }])
+    expect(widths(segs)).toEqual([0, 80 / 120, 40 / 120])
+    expect(segs[1]!.title).toBe('agent · 80%')
+  })
+  it('skips a subagent without a share', () => {
+    const segs = sessionTokenBar([{ type: 'a' }, { type: 'b', tokenShare: 25 }])
+    expect(segs.map((s) => s.title)).toEqual(['main · 75%', 'b · 25%'])
+  })
+  it('draws no bar when no subagent stored a share', () => {
+    expect(sessionTokenBar([{ type: 'a' }])).toEqual([])
+    expect(sessionTokenBar([])).toEqual([])
+  })
+  it('alternates four accent steps so neighbours differ', () => {
+    const segs = sessionTokenBar([1, 2, 3, 4, 5].map(() => ({ tokenShare: 10 })))
+    const shades = segs.slice(1).map((s) => s.shade)
+    expect(new Set(shades.slice(0, 4)).size).toBe(4)
+    expect(shades[4]).toBe(shades[0])
+  })
+  it('keeps a tiny share, labelled <1%', () => {
+    const segs = sessionTokenBar([{ tokenShare: 0.4 }])
+    expect(segs).toHaveLength(2)
+    expect(segs[1]!.title).toBe('agent · <1%')
   })
 })
 
