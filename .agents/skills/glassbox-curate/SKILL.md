@@ -1,6 +1,6 @@
 ---
 name: glassbox-curate
-description: Make the Glass Box guide easier to learn from, then fill gaps; one focus per run, one PR (its Remit says which wait for the owner's merge). A Routine fires it autonomously; a person can start it and tell it to act autonomously, or work with it interactively.
+description: Make the Glass Box guide easier to learn from, then fill gaps; one focus per run, one PR (its Remit says which wait for the owner's merge). It runs autonomously, or interactively with a person.
 disable-model-invocation: true
 ---
 
@@ -93,9 +93,9 @@ keeps them so).
   full every page outside the Subject that a change would edit, link or
   overlap. Done when every page of the Subject is read in full, plus every
   outside page a change would edit, link or overlap.
-- **Choose.** Pick this run's focus from what you read. Put every other weak
-  spot or proposal you found on the memory page, so later runs inherit the
-  reading. The run entry says why you chose the focus.
+- **Choose.** Pick this run's focus from what you read. Fix a reader finding
+  that takes one clause within the budget; park only what Check allows, so
+  later runs inherit the reading. The run entry says why you chose the focus.
 - **Owner's questions.** Build the option you'd recommend. A question only the
   owner can answer (where a topic belongs, whether a practice is recorded)
   goes in the PR body, with each move or retitle and its effect on URLs and
@@ -130,7 +130,8 @@ keeps them so).
 - **Check.** A separate sonnet claim checker checks the changed sentences;
   `glassbox-update` owns the claim check of unchanged text, so leave that to
   it. Run writing-pages.md's Check on the changed pages, and a fresh reader
-  re-reads them. One retry, then drop the change.
+  re-reads them. One retry, then drop the change. The memory page takes a reader finding only
+  if it is an owner question, outside the Remit or sourceless.
 - **Removal.** A change that only removes text or a page skips the writer, the
   claim checker and the fresh reader. Still run the page checks, grep for
   links, slugs and terms that pointed at what you removed, and re-read each
@@ -198,7 +199,7 @@ All in `layers/glassbox/content/workshop/`:
   hard to read. Cut whole items instead, the ones not worth pursuing. Judge by
   what you know of the rest of the guide and by git history (`git log -S` or
   `git blame` on the item): one that has stood a long time and that no run ever
-  took up is a candidate.
+  took up is a candidate; items parked in the last few runs go last.
   **Soft decisions** (its heading) are decisions you, a reviewer or a claim
   checker made: write each there as it is made, with what decided it. They are
   not rules. Overrule or delete one when you have evidence against it or when

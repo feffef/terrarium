@@ -1,12 +1,11 @@
 ---
 name: harvest
-description: File up to 10 Seedlings (plus a retro on this Skill), self-contained issues that turn the last 28 days of Session logs' ideas and learnings (both, or one kind) into proposals for a Trusted user to green-light, preferring Tenant, content and UI ideas and leaving Frictions to frictions-to-fixes. User-invoked; a Routine runs it.
+description: File up to 10 Seedlings (plus a retro on this Skill), self-contained issues that turn the last 28 days of Session logs' ideas and learnings (both, or one kind) into proposals for a Trusted user to green-light, preferring Tenant, content and UI ideas and leaving Frictions to frictions-to-fixes. User-invoked.
 argument-hint: "[ideas|learnings] (default: both)"
 disable-model-invocation: true
 ---
 
-A Routine runs this Skill; its schedule lives there, not here (ADR-0005). Its
-approval covers only the steps below (ADR-0003): it files issues and changes
+This Skill's approval covers only the steps below (ADR-0003): it files issues and changes
 nothing in the repo but its own session log.
 
 `harvest` files positive ideas the Friction Ledger does not carry, preferring
@@ -77,7 +76,9 @@ harvests both.
 4. **File one Seedling per passing cluster,** at most 10 in total and, when
    harvesting both kinds, 5 per kind, unless the other kind has fewer passing
    (then it fills the rest). At most 3 of them are workflow clusters, however
-   few product clusters passed. Learnings that belong in one doc share one
+   few product clusters passed. A cluster that joins ideas and learnings counts
+   toward the kind of most of its entries, ties to idea; its product or workflow
+   label still decides the 3-workflow cap. Learnings that belong in one doc share one
    Seedling. Read `docs/agents/issue-tracker.md` and `triage-labels.md` first,
    once. For each:
    - Read its source logs whole (each entry's `file`): the entry alone lacks the
