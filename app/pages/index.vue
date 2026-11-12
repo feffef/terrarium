@@ -179,15 +179,10 @@ const specimens = computed(() =>
   }),
 )
 
-// PROTOTYPE: ?v=box draws a glass case instead of the jar; removed once one is chosen.
-const route = useRoute()
-const isBox = computed(() => route.query.v === 'box')
-// Hand-drawn outlines (slightly off true, like the Specimens' engraved lines); the clip
-// paths are the same shapes drawn true, so nothing inside can cross the glass.
+// Hand-drawn outline (slightly off true, like the Specimens' engraved lines); the clip
+// path is the same shape drawn true, so nothing inside can cross the glass.
 const JAR_OUTLINE = 'M150 45q-1 11 0 21c-47 9-88 34-90 84q-1 73 0 146q1 34 40 36q100 3 201-1q38-2 39-36q1-76 0-146c-2-50-43-75-90-84q1-10 0-21'
 const JAR_CLIP = 'M150 44V66C96 76 60 100 60 150V296Q60 332 98 332H302Q340 332 340 296V150C340 100 304 76 250 66V44Z'
-const BOX_OUTLINE = 'M60 75q-1 128 0 256q140 3 280 0q1-128 0-256q-140-3-280 0'
-const BOX_CLIP = 'M60 75H340V331H60Z'
 
 useHead({ title: 'terrarium · a self-growing garden of websites' })
 </script>
@@ -217,8 +212,8 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
         <!-- A sealed glass terrarium, the project's namesake, with Atlas Specimens living in it. -->
         <svg viewBox="44 10 312 340" focusable="false">
           <defs>
-            <clipPath id="terrarium-inside"><path :d="isBox ? BOX_CLIP : JAR_CLIP" /></clipPath>
-            <path id="terrarium-outline" :d="isBox ? BOX_OUTLINE : JAR_OUTLINE" />
+            <clipPath id="terrarium-inside"><path :d="JAR_CLIP" /></clipPath>
+            <path id="terrarium-outline" :d="JAR_OUTLINE" />
             <path id="pebble" d="M0 0q6-7 12-1q4 6-2 10q-8 3-10-9z" />
           </defs>
           <path class="art-line art-faint" d="M96 341q104 7 208 0M118 347q84 4 168 0" />
@@ -252,17 +247,8 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
           <use href="#terrarium-outline" class="art-line" />
           <use href="#terrarium-outline" class="art-line art-ghost" transform="translate(1.6 1.2)" />
           <path class="art-line art-faint" d="M324 158q-2 24 0 48M331 164q-1 16 0 34" />
-          <template v-if="isBox">
-            <path class="art-line art-glass" d="M54 73L198 31L346 73z" />
-            <path class="art-line art-faint" d="M198 31L198 73M126 52L120 73M270 52L276 73" />
-            <path class="art-line art-lid" d="M50 70q150-5 300 0l2 10q-152-5-304 0z" />
-            <path class="art-line art-lid" d="M193 27q-1-8 5-8q7 0 6 8q-5 2-11 0z" />
-            <path class="art-line art-lid" d="M56 326q142 3 288 0l1 12q-145 3-290 0z" />
-          </template>
-          <template v-else>
-            <path class="art-line art-lid" d="M141 24q60-3 118 0q3 11 0 22q-59 3-118 0q-3-11 0-22z" />
-            <path class="art-line art-faint" d="M156 30l5 10M172 29l5 11M188 29l5 11M204 29l5 11M220 29l5 11M236 30l5 10M147 49q53 4 106 0" />
-          </template>
+          <path class="art-line art-lid" d="M141 24q60-3 118 0q3 11 0 22q-59 3-118 0q-3-11 0-22z" />
+          <path class="art-line art-faint" d="M156 30l5 10M172 29l5 11M188 29l5 11M204 29l5 11M220 29l5 11M236 30l5 10M147 49q53 4 106 0" />
         </svg>
       </div>
     </div>
