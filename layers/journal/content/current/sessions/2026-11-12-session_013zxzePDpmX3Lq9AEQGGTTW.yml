@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzePDpmX3Lq9AEQGGTTW
 startedAt: 2026-11-12T15:14:51Z
-endedAt: 2026-11-12T15:39:21Z
+endedAt: 2026-11-12T15:39:47Z
 kind: delegated
 goal: "Curate the Glass Box guide: Agents & automation pages"
-status: completed
-outcome: "PR 3165 merged: lowercase sweep and wording fixes on five Agents & automation guide pages"
-summary: The person invoked /glassbox-curate with the instruction to pick focuses autonomously until the context reached 500k, then hand over to a new sonnet session; that one prompt and the Skill's own steps were the human instruction. Everything else was agent-chosen. I oriented, read the whole guide index, picked the Agents & automation Subject (no open PR touched the guide, it still capitalised glossary terms and one page had never been read by a run), ran a Scout (no new topic), two fresh readers, two opus writers, a claim checker, a second reader and a code-review round. The claim checker found two unsupported cost clauses and two overstated sentences, which I corrected by hand. The pages keep revision and publishedAt (wording only). I opened PR 3165, waited for the green gate, posted a verdict and merged it with merge-pr.ts; a second focus follows. The thirteen outside pages the Spec reviewer named were grep-checked for the changed claims, not read in full, and the run entry says so.
+status: partial
+outcome: PR 3165 merged (Agents & automation pages); the goal of repeated focuses until the context budget is spent is still running, a second focus is under way
+summary: The person invoked /glassbox-curate with the instruction to pick focuses autonomously until the context reached 500k, then hand over to a new sonnet session; that one prompt and the Skill's own steps were the human instruction. Everything else was agent-chosen. I oriented, read the whole guide index, picked the Agents & automation Subject (no open PR touched the guide, it still capitalised glossary terms and one page had never been read by a run), ran a Scout (no new topic), two fresh readers, two opus writers, a claim checker, a second reader and a code-review round. The claim checker found two unsupported cost clauses and two overstated sentences, which I corrected by hand. The pages keep revision and publishedAt (wording only). I opened PR 3165, waited for the green gate, posted a verdict and merged it with merge-pr.ts; a second focus (Installed skills pages) was then started because the person asked for repeated focuses until the budget is spent. The thirteen outside pages the Spec reviewer named were grep-checked for the changed claims, not read in full, and the run entry says so.
 prs:
   - "3165"
 docsRead:
@@ -74,17 +74,20 @@ frictions:
   - description: Sent a Bash call with run_in_background and a trailing & together; the double-background guard denied it, so the gate start was redone.
     solution: Pass run_in_background alone; the Skill text for long runs could say so once.
     severity: nit
-durationSec: 1470
+  - description: Logged the session completed after one PR merged though the person asked for repeated focuses; the person corrected it to partial.
+    solution: "Judge status against the whole instruction, not the last PR: repeated-focus sessions stay partial until the budget stops them."
+    severity: minor
+durationSec: 1496
 models:
-  claude-sonnet-5-5: 146
+  claude-sonnet-5-5: 153
 toolCounts:
   Read: 13
-  Bash: 39
+  Bash: 40
   Write: 1
   Agent: 11
-  ReadNotifications: 4
+  ReadNotifications: 5
   Edit: 5
-  Skill: 4
+  Skill: 5
   mcp__claude-code-remote__get_session: 1
   ToolSearch: 2
   mcp__github__create_pull_request: 1
@@ -432,77 +435,77 @@ subagents:
     durationSec: 21
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 3.1
+    tokenShare: 3
   - type: general-purpose
     task: Fresh reader A
     model: sonnet
     durationSec: 45
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 2.1
+    tokenShare: 2
   - type: general-purpose
     task: Fresh reader B
     model: sonnet
     durationSec: 41
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 2
+    tokenShare: 1.9
   - type: general-purpose
     task: "Writer: agents pages 10-30"
     model: opus
     durationSec: 400
     toolCalls: 78
     modelCalls: 44
-    tokenShare: 18.2
+    tokenShare: 17.5
   - type: general-purpose
     task: "Writer: agents pages 40-50"
     model: opus
     durationSec: 345
     toolCalls: 42
     modelCalls: 40
-    tokenShare: 14
+    tokenShare: 13.5
   - type: general-purpose
     task: Claim check changed sentences
     model: sonnet
     durationSec: 126
     toolCalls: 28
     modelCalls: 18
-    tokenShare: 7
+    tokenShare: 6.8
   - type: general-purpose
     task: Fresh reader re-read
     model: sonnet
     durationSec: 32
     toolCalls: 8
     modelCalls: 3
-    tokenShare: 2.3
+    tokenShare: 2.2
   - type: general-purpose
     task: Standards review
     model: sonnet
     durationSec: 36
     toolCalls: 12
     modelCalls: 6
-    tokenShare: 3.2
+    tokenShare: 3.1
   - type: general-purpose
     task: Spec review
     model: sonnet
     durationSec: 36
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 2.9
+    tokenShare: 2.8
   - type: general-purpose
     task: Fresh reader skill-pack 1
     model: sonnet
-    durationSec: 3
-    toolCalls: 3
-    modelCalls: 1
-    tokenShare: 1.6
+    durationSec: 27
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 1.9
   - type: general-purpose
     task: Fresh reader skill-pack 2
     model: sonnet
-    durationSec: 3
-    toolCalls: 3
-    modelCalls: 1
-    tokenShare: 1.6
+    durationSec: 21
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 1.9
 gitBranch: HEAD
 entrypoint: remote
 cliVersion: 2.1.322
