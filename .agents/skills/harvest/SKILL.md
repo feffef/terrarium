@@ -5,8 +5,8 @@ argument-hint: "[ideas|learnings] (default: both)"
 disable-model-invocation: true
 ---
 
-This Skill's approval covers only the steps below (ADR-0003): it files issues and changes
-nothing in the repo but its own session log.
+Its approval covers only the steps below (ADR-0003): it files issues and
+changes nothing in the repo but its own session log.
 
 `harvest` files positive ideas the Friction Ledger does not carry, preferring
 those for Tenants, content and the UI; `frictions-to-fixes` owns the pains. A
