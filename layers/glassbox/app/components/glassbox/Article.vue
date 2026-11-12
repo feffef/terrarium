@@ -35,7 +35,7 @@ const parts = computed(() => {
   const [intro, rest] = glassboxSplitBeforeBody(framed)
   const sections = glassboxFrameDiagrams(rest)
   // A Walkthrough's diagram only makes sense beside its steps: it leaves the flow and sits after the last stop,
-  // or beside the stops from 1360px (the `.walk` rules below).
+  // or beside the stops on wide screens (the `.walk` rules below).
   const panes = walkthrough.value ? sections.filter(glassboxIsDiagramPane) : []
   const flow = walkthrough.value ? sections.filter((node) => !glassboxIsDiagramPane(node)) : sections
   const withBody = (nodes: typeof intro) => ({ ...props.page, body: { ...body, value: nodes.map((node) => glassboxMarkSeen(node, props.base, readable.value)) } })
