@@ -381,16 +381,29 @@ parts of the machinery spent a lot and returned little.
 > history, and by 11 November defined terms link to the lesson that explains
 > them.
 
-Keeping it true, readable and well structured was the expensive part. A
-scheduled job graded the pages and improved the weakest. On 2 November it was rebuilt to grade on several
-qualities and to block edits that weren't judged blind; its first run fixed 7
-false claims in 35 edits, but running it took about 127 reviewing agents
-dispatched by hand. Three days later one run sent eleven helpers through all
-68 pages, roughly 2.5 million tokens, to fix five false claims. The job was
-capped at eight items per run, and a small goal-driven curating skill was
-added beside it. By 7 November that skill built its own fixes and read a whole
-subject before changing it, so the older job was removed. On 9 November a
-fact-check across 17 guide pages used up nearly all of a 20 dollar budget.
+Keeping it true, readable and well structured was the expensive part. On 27
+October a scheduled job was designed to grade the pages and improve the
+weakest unattended. Its first run fixed two false claims for far more reviewing
+effort than that was worth, and a later run used about 35 helpers against
+guidance of under ten. A rebuild on 2 November, to grade on several qualities
+and block edits that weren't judged blind, still took about 127 reviewing
+agents dispatched by hand for 35 edits. The trouble was the grading itself:
+of 390 grades, 389 were the same one (a B), and the blind check passed 109 of 110
+edits because it judged each edit against the criterion the edit was written to
+meet. Every run read all 68 pages. The run of 5 November cost about 35 dollars,
+more than half of it on ratings that produced 75 findings, 73 of which were
+never looked at. It fixed five false claims, of which by its own reading about
+two mattered. The owner asked whether those were real errors or nits. The
+rethink that followed concluded that models don't give useful absolute grades,
+and that most of the machinery existed to make an agent's judgement countable.
+
+So on 6 November a small, goal-driven curating skill was added beside the old
+job: no grades, fresh readers who report where a newcomer gets lost, and a
+separate check of every sentence it changes, for about 20 dollars a run. The
+daily update job took over keeping existing pages true. By 7 November the
+curator built its own fixes and read a whole subject before changing it, and the
+old job was removed. On 9 November a fact-check across 17 guide pages still used
+up nearly all of a 20 dollar budget.
 
 The waste was found through measurement, which the owner either read or asked for. From 18
 October the weekly Skills check reported the tokens and price of every
