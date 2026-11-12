@@ -79,6 +79,7 @@ function rules(b) {
 - Stop and return needs-owner, with the question, its options and your pick, before you add a new dependency, change stored data or the content schema, make a decision big enough for an ADR, delete content visitors can see, change which Tenant's data a request can reach, or reverse an owner's pick above. Decide everything else yourself, and append each decision as one line to ${dir}/decisions.md (\`mkdir -p ${dir}\` first), now and in every later turn.
 - Return worktree, the absolute path of the worktree that holds your commits, only when the branch has commits.
 - The orchestrator may resume you later with review findings to fix, an owner's answer, or the gate; keep your worktree. In a later turn the same stop rule holds: reply \`NEEDS-OWNER\` with the question, its options and your pick instead of the reply it asked for.
+- Given findings files, you decide what to fix, by kind: fix every defect, spec-mismatch and missing-test; fix a nit only when it is cheap (a few lines, no new risk) and skip the others; refuse a finding you can prove wrong; for an owner-call, reply \`NEEDS-OWNER\` with its question. Append one line per finding, and per owner answer or other fix you are given, to ${dir}/triage.md: \`<findings file> #<n> fixed|skipped|refused: <reason or proof>\`, or \`<what you were given> fixed: <what you did>\`.
 - ${ASK_SOURCES}`
 }
 
@@ -108,8 +109,8 @@ function reviewPrompt(b, axis, wt, round) {
   return `You are the ${axis.toUpperCase()} reviewer, round ${round}. ${common(b)}
 ## Task
 Review read-only in ${wt} (\`cd ${wt} && …\`): the diff \`git diff origin/main...HEAD\`, and the builder's decisions in ${folder(b)}/decisions.md if it exists. Read .agents/skills/code-review/SKILL.md with Read and apply ${what} yourself; you can't spawn subagents. Focus on simplicity: what could be smaller, plainer or deleted. Edit no file except a findings file the orchestrator names later, and run no git command that changes state.
-Give each finding one kind: defect (wrong behaviour or a false statement), spec-mismatch (differs from the brief, the picks or a 'never' clause), missing-test (logic without a test that would catch its bug), nit (wording, layout, style, anything else cosmetic) or owner-call (needs the owner's choice). Make each title state the problem and its effect in one line: the orchestrator decides which get fixed from the titles alone. ${ASK_SOURCES}
-The orchestrator may resume you later to re-check the fix of your findings or the builder's refusal of one; keep this review in mind.`
+Give each finding one kind: defect (wrong behaviour or a false statement), spec-mismatch (differs from the brief, the picks or a 'never' clause), missing-test (logic without a test that would catch its bug), nit (wording, layout, style, anything else cosmetic) or owner-call (needs the owner's choice). The builder fixes by kind, so pick the kind honestly: a cosmetic point is a nit, never a defect. Make each title state the problem in one line; titles reach the PR. ${ASK_SOURCES}
+The orchestrator may resume you later to re-check the builder's fixes and refusals of your findings; keep this review in mind.`
 }
 
 async function buildBranch(b) {

@@ -7,7 +7,7 @@
 //   pnpm exec tsx .agents/skills/clear-backlog/scripts/run-summary.ts
 //     <run .output> --triage
 //     <run .output> --build [--run <workflow run id>]
-//     <findings .json> --findings [--detail <n>]
+//     <findings .json> --findings
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
@@ -142,27 +142,18 @@ export const triageSummary = (path: string) => withLogs(path, (r) => triage(r as
 export const buildSummary = (path: string, runId?: string, home?: string) =>
   withLogs(path, (r) => build(r as Branch[], runId ? agentIds(runId, home) : undefined).join('\n\n'))
 
-/** A review's findings file as numbered `kind: title` lines; with `detail`, that one finding and its detail. */
-export function findingsSummary(path: string, detail?: number): string {
-  const { findings } = JSON.parse(readFileSync(path, 'utf8')) as Review
-  if (detail === undefined) return findings.map(finding).join('\n') || 'no findings'
-  const f = findings[detail - 1]
-  if (!f) fail(`no finding ${detail} in ${path}`)
-  return `${finding(f, detail - 1)}\n${f.detail}`
-}
+/** A review's findings file as numbered `kind: title` lines. */
+export const findingsSummary = (path: string) => (JSON.parse(readFileSync(path, 'utf8')) as Review).findings.map(finding).join('\n') || 'no findings'
 
-const USAGE = 'usage: run-summary.ts <run .output> --triage | <run .output> --build [--run <run id>] | <findings .json> --findings [--detail <n>]'
+const USAGE = 'usage: run-summary.ts <run .output> --triage | <run .output> --build [--run <run id>] | <findings .json> --findings'
 
 runIfMain(import.meta.url, () => {
   const run = extractFlag(process.argv.slice(2), '--run')
-  const detail = extractFlag(run.rest, '--detail')
-  const [path, mode, ...rest] = detail.rest
+  const [path, mode, ...rest] = run.rest
   if (!path || rest.length) fail(USAGE)
-  if (mode === '--build' && !detail.value) return console.log(buildSummary(path, run.value))
-  if (mode === '--findings' && !run.value) {
-    if (detail.value !== undefined && !/^[1-9]\d*$/.test(detail.value)) fail(USAGE)
-    return console.log(findingsSummary(path, detail.value === undefined ? undefined : Number(detail.value)))
-  }
-  if (mode === '--triage' && !run.value && !detail.value) return console.log(triageSummary(path))
+  if (mode === '--build') return console.log(buildSummary(path, run.value))
+  if (run.value) fail(USAGE)
+  if (mode === '--triage') return console.log(triageSummary(path))
+  if (mode === '--findings') return console.log(findingsSummary(path))
   fail(USAGE)
 })

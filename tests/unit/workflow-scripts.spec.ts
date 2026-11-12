@@ -80,6 +80,12 @@ describe('clear-backlog-build (#3110)', () => {
     for (const c of calls) expect(c.prompt, c.label).toContain('/d/fix-1-x/decisions.md')
   })
 
+  it('gives the builder the triage rule and its triage file, since the builder decides what to fix', async () => {
+    const { calls } = await run({})
+    expect(calls[0]!.prompt).toMatch(/fix every defect, spec-mismatch and missing-test; fix a nit only when it is cheap/)
+    expect(calls[0]!.prompt).toContain('/d/fix-1-x/triage.md')
+  })
+
   it('in review-only mode skips the build and reviews the given worktree as the given round', async () => {
     const { r, calls } = await run({ review: true, round: 2, worktree: '/wt/b' })
     expect(calls.map((c) => c.label)).toEqual(['Standards fix/1-x r2', 'Spec fix/1-x r2'])

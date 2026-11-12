@@ -151,10 +151,6 @@ describe('--findings', () => {
     expect(findingsSummary(file)).toBe('1 defect: Still wrong (a.ts)\n2 owner-call: Rename?')
   })
 
-  it('with a number, prints that finding and its detail', () => {
-    expect(findingsSummary(file, 2)).toBe('2 owner-call: Rename?\na) yes b) no; pick a')
-  })
-
   it('says so when a re-check found nothing', () => {
     const empty = join(tmp(), 'Spec-r1-c2.json')
     writeFileSync(empty, JSON.stringify({ findings: [], summary: 'resolved' }))
@@ -169,8 +165,7 @@ describe('the command line', () => {
   it.each([
     ['several outputs', [fixture('explore.output'), fixture('build.output'), '--triage']],
     ['--run outside --build', [fixture('explore.output'), '--triage', '--run', 'wf_1']],
-    ['--detail outside --findings', [fixture('build.output'), '--build', '--detail', '1']],
-    ['a --detail that is no number', [fixture('build.output'), '--findings', '--detail', 'x']],
+    ['--run outside --build with --findings', [fixture('build.output'), '--findings', '--run', 'wf_1']],
     ['an unknown mode', [fixture('build.output'), '--verdict']],
   ])('rejects %s with the usage line, not a stack trace', (_name, args) => {
     const run = cli(args)

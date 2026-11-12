@@ -127,7 +127,7 @@ from the Workflow result. Per branch it prints the status, the builder's and
 each reviewer's agent id, and each review's findings file with one numbered
 `kind: title` line per finding. Keep each builder's id: a later round's run
 prints only its reviewers. Read nothing more (no findings file, diff, agent
-report or decisions file) until §4: the builder and reviewers read those, and
+report, `decisions.md` or `triage.md`) until §4: the builder and reviewers read those, and
 every turn of yours re-reads your whole context.
 
 Resume an agent with `SendMessage` to its id. Send the resumes of all
@@ -155,29 +155,28 @@ Act on each branch's `status`:
 
 For each `reviewed` branch, in round N:
 
-1. **Triage.** Pick the findings to fix: every `defect`, `spec-mismatch` and
-   `missing-test` you accept (the round's majors), and the nits worth their
-   cost. Each other nit goes to the PR as a judgement call. An `owner-call` is
-   an interrupt: `run-summary.ts <file> --findings --detail <n>` prints its
-   detail, the one finding you read in full; its answer is a fix, through
-   steps 2 and 3. Nothing picked: go to step 5.
-2. **Fix.** Resume the builder: "Fix findings `<numbers>` in `<file>`. You may
-   refuse one you can prove wrong. Run the fast checks, commit, and reply with
-   one line: `FIXED <sha before> <sha after>`, plus `refused <number>:
-   <proof>` per refusal." Pass an owner's answer the same way, as what to do
-   in place of a finding. A builder may instead reply `NEEDS-OWNER` with a
-   question: ask it, and pass the answer back as a fix.
-3. **Re-check.** Resume each reviewer whose findings were fixed or refused,
-   every time: "The builder fixed your findings `<numbers>` and refused
-   `<numbers>: <proof>`. Read only `git -C <worktree> diff <before>..<after>`.
-   Check each fix is right and the change adds no new problem, and judge each
-   refusal's proof. With Bash, write your findings in your review's shape to
-   `<your review's file, with -c<k> before .json>`, and reply with one line:
-   `CLEAN` or `FINDINGS <file>`." `run-summary.ts <file> --findings` prints a
-   findings file's lines; triage and fix them from step 1. After 2 re-checks
-   in a round, what is still open is that round's result.
-4. **Next round.** If round N had a major, or you judge the branch hard or
-   large, and N is below 3, run the workflow on that branch with `review:
+1. **Findings?** If neither review has a finding, go to step 5.
+2. **Fix.** Resume the builder: "Triage and fix the findings in `<files>` by
+   your rules. Run the fast checks, commit, and reply with one line:
+   `FIXED <sha before> <sha after>`" (the same sha twice if nothing changed).
+   The builder decides what to fix, by kind, and records each finding in its
+   folder's `triage.md`. It may instead reply `NEEDS-OWNER` with a question,
+   an owner-call's included: ask it, and resume the builder with the answer
+   as a fix.
+3. **Re-check.** Resume each reviewer that has a finding the builder fixed or
+   refused, every time: "Read only `git -C <worktree> diff <before>..<after>`
+   and your findings' lines in `<dir>/triage.md`. Check each fix is right and
+   the change adds no new problem, and judge each refusal's proof; leave
+   skipped nits alone, they go to the owner. With Bash, write your findings in
+   your review's shape to `<your review's file, with -c<k> before .json>`,
+   and reply with one line: `CLEAN` or `FINDINGS <file>`." An owner's answer
+   goes to the reviewer whose finding asked it. `run-summary.ts <file>
+   --findings` prints a findings file's lines; send them to the builder from
+   step 2. After 2 re-checks in a round, what is still open is that round's
+   result.
+4. **Next round.** If round N had a major (a `defect`, `spec-mismatch` or
+   `missing-test` line in its summary or a re-check's), or you judge the
+   branch hard or large, and N is below 3, run the workflow on that branch with `review:
    true`, `round: N+1` and its `worktree`: a fresh pair reads the whole diff,
    and the builder stays. Start a branch's round as soon as it is due; if a
    second run is refused while one runs, batch the branches due. A major in
@@ -208,17 +207,17 @@ Push each gated branch from its worktree with
 branch the main checkout holds commits on a `worktree-wf_…` branch). The fetch
 matters: `check:worktrees` counts commits on no remote-tracking ref as
 unpushed. Open its PR with the branch's decisions (its folder's
-`decisions.md`), its remaining judgement
-calls, any cherry-picked PR, and the Human-only paths that `pnpm exec tsx .agents/skills/clear-backlog/scripts/list-human-only-paths.ts
+`decisions.md`), its judgement calls (the `skipped` lines of its
+`triage.md`), any cherry-picked PR, and the Human-only paths that `pnpm exec tsx .agents/skills/clear-backlog/scripts/list-human-only-paths.ts
 <worktree>` prints (a non-zero exit means the list couldn't be read: stop
 and report it). Land it with `docs/agents/pr-workflow.md`. For a later
-fix (CI, a PR comment), resume the branch's builder with it, re-check a code
-change as in §3 step 3, and gate it as in §3 step 5 unless `pr-workflow.md`
+fix (CI, a PR comment), resume the branch's builder with it (it records the
+fix in `triage.md`), re-check a code change as in §3 step 3, and gate it as in §3 step 5 unless `pr-workflow.md`
 lets the push rely on CI. A PR built from a Public issue waits for a human merge
 (ADR-0020), even though `scripts/github/merge-pr.ts` would accept it. So does a
 branch with a major in round 3: its PR says why it waits and lists, under
-`Remaining findings`, each finding not resolved by a clean re-check, with its
-kind, file and title. Merge
+`Remaining findings`, from `triage.md` and the last re-check files, each
+finding not resolved by a clean re-check, with its kind, file and title. Merge
 the rest unless ADR-0004 reserves it for a human; `merge-pr.ts` checks only
 some of its exceptions. Once a PR merges or waits for a human, run
 `git worktree remove <worktree>` for its branch.
