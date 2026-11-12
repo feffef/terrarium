@@ -1,0 +1,260 @@
+schemaVersion: 1
+session: session_013zxzeRvdzBc3xXGo24TkVf
+startedAt: 2026-11-12T13:12:31Z
+endedAt: 2026-11-12T14:16:58Z
+kind: interactive
+goal: Add a Glass Box Lesson on inspecting past sessions
+status: in-review
+outcome: PR 3160 open with the Lesson, an orient.ts --index flag and glassbox-lesson changes; CI pending, owner asked me to merge it myself
+summary: "Human-instructed throughout. The owner asked for a Lesson on inspect-session and on asking an earlier session to search its own transcript, and to explore recent session logs first. I read the Glass Box contracts, the Skill and about two dozen session logs (every log that used inspect-session, current and archived), then asked three scoping questions (Subject, one Lesson or two, which gotchas) per their preference. They chose Agents & automation, one Lesson, all four gotchas. The owner directed every later change: built-in records versus Terrarium's session log, a Haiku subagent doing the reading, search-not-recall as the key to getting facts from an old session, section-anchored links at bullet ends, bare Where next links, dropping the own-id gotcha, and the lede wording. They also pointed out twice that I had not used orient.ts, which led to a new orient.ts --index flag (their choice), a first Orient step in glassbox-lesson (moved out of writing-pages.md at their request) and a curate note. Agent-initiated: fixing a YAML quoting error, an e2e test that needed a Journal row in Cloud sessions' Where next, page-check failures, and the code-review findings (changing counts and history in prose against glassbox-content.md, an unanchored link, a repeated type in orient.ts). Code-review ran on the whole branch as the owner chose; the last commit (one clause in glassbox-lesson) got my own read. Gate green on the final head, PR opened and subscribed; the owner told me to merge it myself, and the Skill and Lesson files likely make it Human-only, so merge-pr.ts will need their quoted instruction. Open: whether the title is general enough, and scheduled-tasks losing its Journal evidence row."
+prs:
+  - "3160"
+docsRead:
+  - path: layers/glassbox/content/guide/pages/index.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/agents/50.inspecting-past-sessions.md
+    reason: (read before editing)
+  - path: .throwaway/glassbox-curate/guide-pages-1.md
+    reason: (no reason given)
+  - path: .throwaway/glassbox-curate/guide-pages-2.md
+    reason: (no reason given)
+  - path: .agents/skills/inspect-session/SKILL.md
+    reason: (no reason given)
+  - path: layers/glassbox/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-lesson/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/glassbox-lesson/owner-decisions.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-lesson/writing-pages.md
+    reason: (read before editing)
+  - path: .agents/skills/glassbox-curate/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0005-skill-model.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+skillsUsed:
+  - name: glassbox-lesson
+    reason: owner invoked it as a slash command; I extended it
+  - name: inspect-session
+    reason: the Lesson's subject; read it and its logs
+  - name: code-review
+    reason: two-axis review of the whole branch
+  - name: dispatch-subagents
+    reason: read before briefing the two reviewers
+  - name: close-session
+    reason: PR opened
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Chose the new Lesson's Where next and inline links from memory and titles without running orient.ts or reading how sibling Lessons end bullets; the owner had to point this out twice and links were reworked in three rounds.
+    solution: glassbox-lesson now starts with an Orient step (orient.ts --index, read the index whole); writing-pages.md holds the link form.
+    severity: moderate
+  - description: Wrote changing counts and history in Lesson prose ("has cost over a hundred thousand subagent tokens", "two sessions were wrong") although glassbox-content.md was loaded; only code-review caught it, and the claims were unsourced.
+    solution: Check new prose against glassbox-content.md and each claim against its source before the first commit.
+    severity: moderate
+  - description: Replaced Cloud sessions' Journal Where next row without checking that an e2e test needs a non-Glass-Box row there, and dropped three pages below the two-incoming-links check; the gate failed once and page checks flagged the rest.
+    solution: Before swapping a Where next entry, run the page checks and grep the e2e spec for the page.
+    severity: minor
+  - description: Chose lowercase and typed link text for Where next rows of guide pages, then had to learn from a failing page test and the glossary that guide rows are bare links and inline text must be the exact title.
+    solution: Read the glossary's Where next rule and page-checks link rules before writing links; the writing-pages.md bullet now states them.
+    severity: minor
+  - description: Tried to start the user-invoked glassbox-lesson Skill through the Skill tool; it was refused, so I had written the owner's request off until they typed the command themselves.
+    solution: For a disable-model-invocation Skill, tell the owner to send the slash command as its own message right away, as I did, and do not draft its steps first.
+    severity: nit
+  - description: Ran git log on a doc before reading git-conventions.md; the hook pointed to it afterwards and the call was already right.
+    solution: Read git-conventions.md with the first doc read of a session that will commit.
+    severity: nit
+  - description: Edited Skill files before reading ADR-0027 and ADR-0015 in full; the post-edit hook demanded them and the edits were right.
+    solution: Read the ADRs a Skill's rules name before the first edit to a SKILL.md.
+    severity: nit
+  - description: The gate-edit guard denied my edits four times while pnpm gate:scoped ran, so each owner correction waited a full gate run; I also reran the gate after every small text edit.
+    solution: Batch pending edits and start the gate once, or stop the gate before editing.
+    severity: minor
+  - description: AskUserQuestion failed twice with invalid JSON because I put escaped quotes inside option text.
+    solution: Keep question and option text free of nested quotes and backslashes.
+    severity: nit
+  - description: First count of sessions that used inspect-session (6) came from current logs only; the archive held many more, and I corrected it only after counting both folders.
+    solution: Count every log folder (current and archived) before stating how many sessions did something.
+    severity: nit
+durationSec: 3868
+models:
+  claude-sonnet-5-5: 247
+toolCounts:
+  Bash: 107
+  Read: 5
+  AskUserQuestion: 5
+  Skill: 3
+  Write: 3
+  mcp__claude-code-remote__get_session: 1
+  Edit: 7
+  Agent: 2
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - layers/glassbox/content/guide/pages/agents/50.inspecting-past-sessions.md
+  - .agents/skills/glassbox-lesson/SKILL.md
+  - .agents/skills/glassbox-curate/scripts/orient.ts
+  - layers/glassbox/content/guide/pages/agents/10.subagents.md
+  - .agents/skills/glassbox-curate/SKILL.md
+  - .agents/skills/glassbox-curate/tests/unit/orient.spec.ts
+  - .agents/skills/glassbox-lesson/writing-pages.md
+  - layers/glassbox/content/guide/pages/agents/30.cloud-sessions.md
+  - layers/glassbox/content/guide/pages/agents/40.scheduled-tasks.md
+  - layers/glassbox/content/guide/pages/hooks/40.session-transcripts.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/40.session-logs.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0027.md
+adrHints:
+  - adr: 27
+    via: path
+    readAfter: true
+    by: main
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/glassbox-curate/SKILL.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/glassbox-content.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/index.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/index.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/index.md
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: gate before PR, owner asked to merge
+      - path: .claude/rules/adr-0003.md
+        value: backed
+      - path: .claude/rules/adr-0017.md
+        value: backed
+      - path: .claude/rules/adr-0009.md
+        value: backed
+      - path: .claude/rules/adr-0005.md
+        value: backed
+      - path: .claude/rules/adr-0027.md
+        value: backed
+      - path: .claude/rules/glassbox-content.md
+        value: steered
+        why: review fixes removed counts and history
+      - path: .claude/rules/tenant-glossary.md
+        value: backed
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: steered
+        why: PR says it waits for owner merge
+      - path: docs/agents/git-conventions.md
+      - path: .agents/skills/inspect-session/SKILL.md
+      - path: layers/glassbox/GLOSSARY.md
+      - path: .agents/skills/glassbox-lesson/SKILL.md
+      - path: .agents/skills/glassbox-lesson/owner-decisions.md
+      - path: .agents/skills/glassbox-lesson/writing-pages.md
+      - path: .agents/skills/glassbox-curate/SKILL.md
+      - path: docs/agents/environment-caveats.md
+      - path: docs/agents/pr-workflow.md
+      - path: docs/agents/github-integration.md
+      - path: .agents/skills/dispatch-subagents/SKILL.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: layers/glassbox/GLOSSARY.md
+      - path: .agents/skills/glassbox-lesson/writing-pages.md
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+subagents:
+  - type: general-purpose
+    task: Review standards axis
+    durationSec: 63
+    toolCalls: 13
+    modelCalls: 6
+    tokenShare: 4.9
+  - type: general-purpose
+    task: Review spec axis
+    durationSec: 38
+    toolCalls: 9
+    modelCalls: 4
+    tokenShare: 2.1
+gitBranch: claude/affectionate-bell-pzkg3j
+entrypoint: remote
+cliVersion: 2.1.322
+learnings:
+  - The Skill tool refuses a disable-model-invocation Skill even when the user typed its slash command mid-turn; the command works only as the user's own new message.
+  - "Link text rule: only a Where next row to a guide page may be a bare [](path); an inline link needs the target's exact title unless it starts lowercase."
+ideas:
+  - Add a Glass Box page check that warns on changing facts in Lesson prose (digits followed by units such as tokens or sessions, 'has cost', 'sessions have'), since glassbox-content.md forbids them and only a late code-review caught them in this session's new Lesson.
+landedBy: Stop
