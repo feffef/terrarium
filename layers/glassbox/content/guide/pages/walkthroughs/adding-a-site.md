@@ -2,7 +2,7 @@
 title: Adding a site
 description: "How an agent adds a site to Terrarium: one folder, a manifest, tables of its own, a glossary entry and tests that find it."
 teaches: "Story: an agent adding a Tenant, Marquee as the example. Start: a Trusted user's or guest's approval. End: tests find it; Commons Search via kind 'page'; home page by hand. Code: nuxt.config.ts, tenant.config.ts, validateManifest(), expand(), content.config.ts, modules/routing.ts (#routing), app/pages/t/, theme.css, GLOSSARY-MAP.md, marquee.spec.ts. A real case: issue #551 to PR #552, 67 minutes."
-revision: '145cc119d8d1064fab2dc6ef674cae9d60e3c7f2'
+revision: '7ae232ae79144439d1b30cb974e9e14f7ae6163c'
 revisionDate: '2026-11-12'
 publishedAt: '2026-10-27T18:52:48Z'
 ---
