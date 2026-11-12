@@ -6,8 +6,7 @@ paths:
 
 Pages follow `.agents/skills/glassbox-lesson/writing-pages.md`. The owner's hard
 rules for them are in `.agents/skills/glassbox-lesson/owner-decisions.md`: never
-go against one; if one seriously hurts your task log a Friction, and if you have
-a good content proposal that clashes with one log an idea. The workshop notes,
+go against one. The workshop notes,
 `layers/glassbox/content/workshop/pages/index.md`, hold the guide's weak spots,
 the owner's direction and the agents' soft decisions, which evidence may
 overrule.

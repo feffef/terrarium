@@ -9,10 +9,8 @@ here; they record their own decisions as soft decisions on the workshop page
 (`layers/glassbox/content/workshop/pages/index.md`), which anyone may overrule
 with evidence.
 
-**Conflicts.** If your work would go against a line here, don't do it. If that
-seriously hurts the quality or outcome of your task, log a Friction. If you have
-a good content proposal that clashes with a line, log an idea. Either way the
-owner decides whether the line changes.
+**Conflicts.** If your work would go against a line here, don't do it; the owner
+decides whether a line changes. `glassbox-curate` says what to log.
 
 - Field names replace project jargon in titles: *Blocking hooks*, not guards that fail closed; *Commit and PR attribution*, not provenance (owner, #2598).
 - A glossary term is lowercase in a title like any common noun (*Installed skills*, *Reading across tenants*); only proper nouns and acronyms keep capitals (owner, curate run of 2026-11-07).
