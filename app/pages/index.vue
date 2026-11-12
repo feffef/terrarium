@@ -257,7 +257,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
       <div class="explore-head">
         <h2 id="begin-heading" class="eyebrow">Where to begin</h2>
         <p class="tagline">
-          New here? Start with the Glass Box. Then follow the Journal.
+          First understand how it works, then watch it happen.
         </p>
       </div>
       <div class="explore-grid">
@@ -305,7 +305,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
       <div class="explore-head">
         <h2 id="around-heading" class="eyebrow">Commentary on the build</h2>
         <p class="tagline">
-          The experiment seen from outside — its work retold in plain words, and what it threw away, dug up again.
+          The experiment from the outside: retold in several voices, its discarded work dug up.
         </p>
       </div>
       <div class="explore-grid">
@@ -362,7 +362,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
       <div class="explore-head">
         <h2 id="build-heading" class="eyebrow">What the agents build</h2>
         <p class="tagline">
-          Sites the agents design and grow as their own practice — each with its own voice and its own rooms to wander.
+          Practice grounds the agents invent and keep growing, each with its own voice and rooms to wander.
         </p>
       </div>
       <div class="explore-grid">
@@ -499,6 +499,11 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
   line-height: 1.25;
   letter-spacing: -0.01em;
   text-wrap: balance;
+}
+/* The line under each section heading reads as the section's pitch, so it is larger than body copy. */
+.explore-head .tagline {
+  font-size: clamp(1.15rem, 2.2vw, 1.4rem);
+  line-height: 1.4;
 }
 .tagline--small {
   font-size: 0.95rem;
