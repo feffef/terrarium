@@ -102,17 +102,6 @@ const stampOpen = ref(false)
 // Tinkerfund's rooms are its two Spaces: the shop, and the edge-case data its own
 // e2e tests run against (layers/tinkerfund/GLOSSARY.md) — the one Tenant that
 // dedicates a Space to testing, which is worth showing off.
-// The Journal's rooms: the pages its glossary lists (layers/journal/GLOSSARY.md).
-// Its palette is scoped to a full-page `.jd` wrapper, so the tile takes the home
-// page's own accent, which is the same fern green in both colour schemes.
-const journalEntries = [
-  { name: 'Sessions and digests', path: '/t/journal/current', note: 'the daily catch-up and the session feed', accent: 'var(--root-accent)' },
-  { name: 'Skill Inventory', path: '/t/journal/current/skills', note: 'the Skills the agents work with', accent: 'var(--root-accent)' },
-  { name: 'Friction Ledger', path: '/t/journal/current/frictions', note: 'what went wrong, and how often', accent: 'var(--root-accent)' },
-  { name: 'Ideas', path: '/t/journal/current/ideas', note: 'ideas and learnings', accent: 'var(--root-accent)' },
-  { name: 'Routines', path: '/t/journal/current/routines', note: 'what each Routine run costs', accent: 'var(--root-accent)' },
-]
-
 const tinkerfundEntries = [
   { name: 'prod', path: tinkerfundPath('prod'), note: 'realistic campaigns, as a visitor sees them', accent: 'var(--tf-accent)' },
   { name: 'qa', path: tinkerfundPath('qa'), note: 'edge-case data the e2e tests run against, plus a component gallery', accent: 'var(--tf-ink)' },
@@ -163,9 +152,28 @@ const { data: glassbox } = await useAsyncData('glassbox-showcase', async () => {
   }
 })
 
-// PROTOTYPE: ?v=a|b picks the lead-in width (full / two thirds); deleted once one is chosen.
+// PROTOTYPE: ?v=a|b|c picks the hero's wording and illustration; deleted once one is chosen.
 const route = useRoute()
 const variant = computed(() => String(route.query.v ?? 'a'))
+const heroes: Record<string, { claim: string; body: string }> = {
+  a: {
+    claim: 'A platform that builds and improves itself, with people steering.',
+    body: 'AI agents write the code and the content, log every mistake they hit, and turn those logs into better rules. Every step is on public record.',
+  },
+  b: {
+    claim: 'AI agents do the engineering. A gate decides what ships. People merge the risky few.',
+    body: 'Every change clears the same objective gate, and every session logs what it did and where it struggled.',
+  },
+  c: {
+    claim: 'One platform where AI agents grow whole websites, and the platform itself.',
+    body: 'A single codebase hosts every site, and agents write and maintain all of it. People approve what is new and merge what is risky; routine upkeep ships on its own.',
+  },
+}
+const hero = computed(() => heroes[variant.value] ?? heroes.a!)
+
+// The building's windows (variant c) are the Tenants' own accents, so they track
+// those lists; the Journal and Glass Box palettes are scoped to their own pages.
+const windowAccents = [...blogEntries, ...atlasEntries, ...middenEntries].slice(0, 9).map((e) => e.accent)
 
 useHead({ title: 'terrarium · a self-growing garden of websites' })
 </script>
@@ -173,20 +181,111 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
 <template>
   <main class="root">
     <div class="hero">
-      <div class="hero-copy" :class="{ 'hero-copy--narrow': variant === 'b' }">
-        <p class="kicker">A self-growing garden of websites</p>
+      <div class="hero-copy">
+        <p class="kicker">Built by AI agents, in the open</p>
         <h1>Terrarium</h1>
-        <p class="tagline">
-          A handful of small websites built and run by AI coding agents, in the
-          open. They write the code, the pages, and an honest log of their own
-          work, mistakes included — a human signs off on anything new or risky;
-          routine upkeep ships on its own.
-        </p>
-        <p class="tagline">
+        <p class="claim">{{ hero.claim }}</p>
+        <p class="tagline">{{ hero.body }}</p>
+        <p class="tagline tagline--small">
           Like a development team, they file <a :href="`${REPO_URL}/issues`">issues</a> for
           what can't be fixed yet and explain every change in a
           <a :href="`${REPO_URL}/pulls`">pull request</a>.
         </p>
+      </div>
+
+      <div class="hero-art" aria-hidden="true">
+        <!-- a: the self-improvement loop -->
+        <svg v-if="variant === 'a'" viewBox="0 0 360 300" focusable="false">
+          <defs>
+            <marker id="hero-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+              <path d="M0 0L10 5L0 10z" class="art-accent-fill" />
+            </marker>
+          </defs>
+          <g class="art-accent-line" fill="none" stroke-width="2.5" marker-end="url(#hero-arrow)">
+            <path d="M230.3 69.4A95 95 0 0 1 270.4 120.6" />
+            <path d="M270.4 179.4A95 95 0 0 1 230.3 230.6" />
+            <path d="M129.7 230.6A95 95 0 0 1 89.6 179.4" />
+            <path d="M89.6 120.6A95 95 0 0 1 129.7 69.4" />
+          </g>
+          <g class="art-pill">
+            <rect x="132" y="38" width="96" height="34" rx="17" />
+            <rect x="227" y="133" width="96" height="34" rx="17" />
+            <rect x="132" y="228" width="96" height="34" rx="17" />
+            <rect x="37" y="133" width="96" height="34" rx="17" />
+          </g>
+          <g class="art-label" text-anchor="middle">
+            <text x="180" y="55" dy=".35em">work</text>
+            <text x="275" y="150" dy=".35em">session log</text>
+            <text x="180" y="245" dy=".35em">fixes</text>
+            <text x="85" y="150" dy=".35em">better rules</text>
+          </g>
+          <g class="art-note" text-anchor="middle">
+            <text x="180" y="143">mistakes</text>
+            <text x="180" y="164">become fixes</text>
+          </g>
+        </svg>
+
+        <!-- b: two lanes through the gate; the risky one stops at a person -->
+        <svg v-else-if="variant === 'b'" viewBox="0 0 420 236" focusable="false">
+          <defs>
+            <marker id="hero-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+              <path d="M0 0L10 5L0 10z" class="art-muted-fill" />
+            </marker>
+          </defs>
+          <g class="art-muted-line" fill="none" stroke-width="2" marker-end="url(#hero-arrow)">
+            <path d="M16 80H376" />
+            <path d="M16 170H376" />
+          </g>
+          <path class="art-muted-line" d="M396 52V188" fill="none" stroke-width="2" stroke-dasharray="4 4" />
+          <g class="art-accent-fill">
+            <circle cx="44" cy="80" r="8" /><circle cx="84" cy="80" r="8" /><circle cx="124" cy="80" r="8" />
+            <circle cx="260" cy="80" r="8" /><circle cx="300" cy="80" r="8" /><circle cx="340" cy="80" r="8" />
+            <circle cx="300" cy="170" r="8" /><circle cx="340" cy="170" r="8" />
+          </g>
+          <g class="art-accent-line art-hollow" stroke-width="2.5">
+            <circle cx="44" cy="170" r="8" /><circle cx="84" cy="170" r="8" />
+          </g>
+          <g class="art-accent-fill">
+            <rect x="172" y="46" width="8" height="68" rx="3" /><rect x="208" y="46" width="8" height="68" rx="3" />
+            <rect x="172" y="46" width="44" height="8" rx="3" />
+            <circle cx="224" cy="150" r="10" /><path d="M204 192a20 18 0 0 1 40 0z" />
+          </g>
+          <path class="art-accent-line" d="M184 84l8 8l16-18" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+          <g class="art-label" text-anchor="middle">
+            <text x="194" y="134">gate</text>
+            <text x="396" y="214">live</text>
+          </g>
+          <g class="art-note">
+            <text x="16" y="30">agents merge on a green gate</text>
+            <text x="16" y="226">people merge the risky few</text>
+          </g>
+        </svg>
+
+        <!-- c: the Platform as a building, its Tenants as the windows -->
+        <svg v-else viewBox="0 0 360 300" focusable="false">
+          <path class="art-muted-line" d="M20 270H340" fill="none" stroke-width="2" />
+          <rect class="art-building" x="60" y="70" width="210" height="200" rx="6" />
+          <rect class="art-accent-fill" x="52" y="56" width="226" height="16" rx="3" />
+          <rect
+            v-for="(accent, i) in windowAccents"
+            :key="i"
+            :x="78 + (i % 3) * 62"
+            :y="88 + Math.floor(i / 3) * 48"
+            width="46"
+            height="38"
+            rx="3"
+            :style="{ fill: accent }"
+          />
+          <rect class="art-muted-fill" x="152" y="234" width="36" height="36" rx="4" />
+          <g class="art-muted-line" fill="none" stroke-width="3">
+            <path d="M300 270V34M308 270V34" />
+            <path d="M300 270L308 250L300 230L308 210L300 190L308 170L300 150L308 130L300 110L308 90L300 70L308 50" stroke-width="2" />
+            <path d="M190 34H334" stroke-width="4" />
+            <path d="M214 34V44" stroke-width="2" />
+          </g>
+          <rect class="art-muted-fill" x="322" y="34" width="14" height="14" />
+          <rect class="art-accent-fill" x="203" y="44" width="22" height="10" rx="2" />
+        </svg>
       </div>
     </div>
 
@@ -194,8 +293,8 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
       <div class="explore-head">
         <h2 id="begin-heading" class="eyebrow">Where to begin</h2>
         <p class="tagline">
-          New here? Start with the Glass Box, which explains the ideas behind it all.
-          Then follow the Journal to see what is happening now.
+          New here? The Glass Box explains the ideas and technology behind it all.
+          The Journal shows what is happening now.
         </p>
       </div>
       <div class="explore-grid">
@@ -220,11 +319,10 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
           tenant="The Journal"
           reality="real"
           path="/t/journal/current"
-          noun="rooms"
           teaser-label="Latest digests"
           blurb="The agents' logbook: every session records what it did, what went wrong and what it learned, so you can see how humans and agents build this together."
           cta="Follow along in the Journal"
-          :entries="journalEntries"
+          :entries="[]"
         >
           <div class="scroll-well">
             <ul class="digest-list scroll-box">
@@ -236,7 +334,6 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
               </li>
             </ul>
           </div>
-          <NuxtLink to="/t/journal/current#digests" class="all-digests">All daily digests <span aria-hidden="true">→</span></NuxtLink>
         </HomeShowcase>
       </div>
     </section>
@@ -421,9 +518,55 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
   text-wrap: balance;
 }
 
-.hero-copy--narrow {
-  max-width: 46rem;
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 2rem 3rem;
 }
+@media (max-width: 56rem) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.claim {
+  margin: 0;
+  font-size: clamp(1.45rem, 3.2vw, 2rem);
+  font-weight: 650;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+.tagline--small {
+  font-size: 0.95rem;
+}
+
+/* The illustration takes the page's own tokens, so it follows light and dark. */
+.hero-art {
+  justify-self: center;
+  width: 100%;
+  max-width: 28rem;
+  padding: 1.25rem;
+  border: 1px solid var(--root-line);
+  border-radius: 14px;
+  background:
+    radial-gradient(18rem 10rem at 100% 0%, color-mix(in srgb, var(--root-accent) 10%, transparent), transparent 70%),
+    var(--root-bg);
+}
+.hero-art svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.art-accent-fill { fill: var(--root-accent); }
+.art-accent-line { stroke: var(--root-accent); }
+.art-muted-fill { fill: var(--root-muted); }
+.art-muted-line { stroke: var(--root-muted); }
+.art-hollow { fill: var(--root-bg); }
+.art-building { fill: var(--root-bg); stroke: var(--root-muted); stroke-width: 2; }
+.art-pill rect { fill: var(--root-bg); stroke: var(--root-accent); stroke-width: 1.5; }
+.art-label text { font: 600 13px system-ui, sans-serif; fill: var(--root-ink); }
+.art-note text { font: 13px system-ui, sans-serif; fill: var(--root-muted); }
 .hero-copy {
   display: flex;
   flex-direction: column;
@@ -482,14 +625,6 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
   }
 }
 
-.all-digests {
-  align-self: flex-start;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--root-accent);
-  text-underline-offset: 2px;
-}
-.all-digests:hover { color: var(--root-ink); }
 .digest-list {
   list-style: none;
   margin: 0;

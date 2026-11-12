@@ -9,7 +9,7 @@ const props = defineProps<{
   tenant: string
   path: string
   /** Plural noun for the entry count, e.g. "voices" — the number is derived. */
-  noun: string
+  noun?: string
   blurb: string
   /** Short label for how the Tenant relates to reality, worded as the Journal's real-and-invented page groups the sites. */
   reality?: string
@@ -38,6 +38,7 @@ const overflow = props.entries.length - listed.length
   >
     <span class="rail" aria-hidden="true">
       <span v-for="e in entries" :key="e.path" class="rail-seg" :style="{ background: e.accent }" />
+      <span v-if="!entries.length" class="rail-seg" :style="{ background: 'var(--tile-accent)' }" />
     </span>
 
     <header class="head">
@@ -56,7 +57,7 @@ const overflow = props.entries.length - listed.length
       <p class="blurb">{{ blurb }}</p>
     </header>
 
-    <nav class="rooms" :aria-label="`${tenant}: ${entries.length} ${noun}`">
+    <nav v-if="entries.length" class="rooms" :aria-label="`${tenant}: ${entries.length} ${noun}`">
       <ul class="room-list">
         <li v-for="e in listed" :key="e.path">
           <NuxtLink :to="e.path" class="room" :style="{ '--ea': e.accent }">
