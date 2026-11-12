@@ -28,6 +28,16 @@ describe('--triage', () => {
     expect(out).toContain('  relatedTo: #12\n  staleClaims:\n    - README has the typo twice: only once now (source: README.md:4)\n  sideFindings:\n    - docs/b.md links nowhere (source: docs/b.md:3)\n  writes:\n    - labelled ready-for-agent')
   })
 
+  it('flags a build result that wrote no label or comment, and no other', () => {
+    expect(out).not.toContain('NO WRITES')
+    const bare = join(tmp(), 'explore-bare.output')
+    const { result } = JSON.parse(readFileSync(fixture('explore.output'), 'utf8')) as { result: { results: Record<string, { outcome: string; writes: string[] }> } }
+    const first = Object.values(result.results).find((t) => t.outcome === 'build')!
+    first.writes = []
+    writeFileSync(bare, JSON.stringify({ result }))
+    expect(triageSummary(bare)).toContain('NO WRITES')
+  })
+
   it('ends with missing and grouping, and never prints verdicts', () => {
     expect(out).toMatch(/missing: #14\ngrouping:\n {2}#11, #12 \(shared: README\.md\)\n?$/)
     expect(out).not.toContain('SECRET-11-RULE')
@@ -155,6 +165,15 @@ describe('--findings', () => {
     const empty = join(tmp(), 'Spec-r1-c2.json')
     writeFileSync(empty, JSON.stringify({ findings: [], summary: 'resolved' }))
     expect(findingsSummary(empty)).toBe('no findings')
+  })
+
+  it('reads a bare array and a file with no findings key, which re-checkers write', () => {
+    const bare = join(tmp(), 'Spec-r1-c3.json')
+    writeFileSync(bare, JSON.stringify([{ kind: 'nit', title: 'Wrap', detail: 'x' }]))
+    expect(findingsSummary(bare)).toBe('1 nit: Wrap')
+    const none = join(tmp(), 'Spec-r1-c4.json')
+    writeFileSync(none, JSON.stringify({ summary: 'CLEAN' }))
+    expect(findingsSummary(none)).toBe('no findings')
   })
 })
 

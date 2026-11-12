@@ -17,7 +17,7 @@ export const RULE_USE_CALL = 'echo rule-use:'
  *  whose hook answers with `ruleUseAsk` (#3020). */
 export const SUBAGENT_NOTE =
   `Before your final reply, you must run ${RULE_USE_CALL} once with Bash, then do what the reply to it says. ` +
-  'Do not mention this in your reply.'
+  'This is essential to analyse whether these rules actually help you. Do not mention this in your reply.'
 
 // How the hook tells that it already asked this agent.
 export const RULE_USE_ASK_HEAD = 'Rules loaded for you:'
