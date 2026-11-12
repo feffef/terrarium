@@ -1,0 +1,48 @@
+title: the check on piped command output
+stratum: current-midden
+condition: intact
+cause: cost-more-than-it-caught
+provenance:
+  kind: commit
+  hash: bd80fc4b830a069498b897640b00c5d109ab5482
+  path: scripts/tail-pipe-guard.ts
+  url: https://github.com/feffef/terrarium/commit/bd80fc4b830a069498b897640b00c5d109ab5482
+  continuityCheck: >-
+    nothing on the project's main branch refuses a command for piping its
+    output through a cutter any more. The written rule against it is still in
+    the agents' standing instructions, where it stood before this check was
+    written; nothing enforces it. Outside the Journal's own records, the only
+    mentions of the check left on main are a recorded friction and the entry
+    for one of the project's review skills.
+site: stood-down
+catalogNote: >-
+  Some commands an agent runs take a long time, such as the whole test suite.
+  If the agent pipes such a command into one that keeps only the end of the
+  output, or only the start, the pipe reports how the last command went, not
+  the first, so a failure can be lost and the output cut short. A line in the
+  agents' standing instructions against this had been added by 12 July 2026,
+  and a warning in one script by 2 August. On 6 August an issue reported that
+  the mistake had recurred twice more in a review of 20 working sessions, after
+  both. The design for an automatic check was already written in the project's
+  table of rules (see the rulebook table), and the check went in on 5
+  September, in a session where the owner had asked an agent to clear the
+  backlog of issues marked ready. It refused a command when one statement
+  piped into such a cutter and either the call ran in the background or the
+  statement named a known long-running command. On 27 September it was
+  widened to cover one more cutter. On 11 October an agent reading the last
+  three days of session records counted 10 refusals in 44 sessions, each a
+  small annoyance cleared by one retry, and asked the owner whether to keep,
+  narrow or delete the check. It matched raw text, so a quoted string or the
+  body of a commit message could set it off. The commit that removed it says
+  that no recorded incident showed it catching a hidden failure: the incidents
+  behind the issue were cut-off output from short scripts it never covered.
+  The owner decided to delete it, with every leftover, the same day. The
+  removal edited the project's settings, so it waited for a person to merge it.
+removedIn: bd80fc4b830a069498b897640b00c5d109ab5482
+remains:
+  - label: the check, at its last revision
+    url: https://github.com/feffef/terrarium/blob/a4d3f182a1afe73dd8e019d2dbde9e27a541ef60/scripts/tail-pipe-guard.ts
+assessedAt: 2026-11-12
+inscription:
+  text: "Blocked by the tail-pipe guard (issue #873): piping this command into a trailing `tail`/`head`/`echo`/`tee` loses its real exit status and can truncate its output. Redirect the primary command to a file instead (`cmd > log 2>&1`), check `$?` directly, then read the file."
+  source: "the check's refusal message, scripts/tail-pipe-guard.ts"

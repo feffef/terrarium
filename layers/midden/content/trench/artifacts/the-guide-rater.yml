@@ -1,0 +1,45 @@
+title: the instructions for rating the textbook's pages
+stratum: current-midden
+condition: intact
+cause: outlived-its-need
+provenance:
+  kind: commit
+  hash: 2607cc5383fe17d9ba272843b6c4e4b02067fb7b
+  path: .agents/skills/glassbox-improve/SKILL.md
+  url: https://github.com/feffef/terrarium/commit/2607cc5383fe17d9ba272843b6c4e4b02067fb7b
+  continuityCheck: >-
+    the folder, its link and its entry in the project's list of skills are gone
+    from the main branch. Its aim, raising the textbook's quality, was handed on
+    on purpose to two later sets of instructions, one for curating the guide and
+    one for updating it, and the rating criteria were later folded into the
+    first (12 November). What stopped is the machinery: three-agent grading of
+    every page, a blind check on every edit, a ledger of grades, and one
+    self-merged pull request per run. The curator counts that machinery, not
+    the aim, as what was discarded. This is a close call, catalogued at the
+    owner's request.
+site: short-lives
+catalogNote: >-
+  A set of written instructions for an agent, called a skill, that raised the
+  quality of the Glass Box, the project's own textbook of the ideas it is built
+  on. In each run three agents on different models graded every page. It
+  raised at most the three weakest pages where two raters agreed, and took at
+  most one larger step: promote a draft, fill a gap, or split or merge pages.
+  A separate agent reviewed the result, and the run merged one pull request
+  itself. Rules against churn kept recently edited pages alone and barred
+  undoing a change without a proven error. The owner designed it in a series
+  of questions with an agent, and an agent reviewed the draft; it was added on
+  27 October 2026. Its ledger, as last kept, lists five runs from 2 to 5
+  November that recorded $311.17 between them; earlier runs are not in that
+  file. On 7 November, in a session reworking its successor, the owner said
+  that it would be removed, in the words the removal issue quotes: "improve
+  skill will be removed!" Two other skills, one for curating the guide and one
+  for updating it, had been planned to take over its work. It was removed
+  eleven days after it was added.
+removedIn: 2607cc5383fe17d9ba272843b6c4e4b02067fb7b
+remains:
+  - label: the instructions, at their last revision
+    url: https://github.com/feffef/terrarium/blob/29d9dde647e33531f5ef96779d257a1dcb446e9c/.agents/skills/glassbox-improve/SKILL.md
+assessedAt: 2026-11-12
+inscription:
+  text: "Raise the Glass Box guide lens by lens: scripted checks, sonnet lens raters on the pages that changed, a researcher who confirms every finding, and a blind gate on every edit; elects A per lens and self-merges one PR."
+  source: "the skill's description, .agents/skills/glassbox-improve/SKILL.md"
