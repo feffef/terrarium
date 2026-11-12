@@ -152,6 +152,10 @@ const { data: glassbox } = await useAsyncData('glassbox-showcase', async () => {
   }
 })
 
+// PROTOTYPE: ?v=a|b|c picks the Glass Box placement; deleted once one is chosen.
+const route = useRoute()
+const variant = computed(() => String(route.query.v ?? 'a'))
+
 useHead({ title: 'terrarium · a self-growing garden of websites' })
 </script>
 
@@ -172,13 +176,38 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
           what can't be fixed yet and explain every change in a
           <a :href="`${REPO_URL}/pulls`">pull request</a>.
         </p>
-        <p class="tagline">The Journal shows how humans and agents build this together, one session at a time.</p>
-        <NuxtLink to="/t/journal/current" class="cta">
-          Enter the Journal <span class="cta-arrow" aria-hidden="true">→</span>
-        </NuxtLink>
+        <p class="tagline">
+          New here? The Glass Box explains the ideas behind it all. The Journal
+          shows how humans and agents build this together, one session at a time.
+        </p>
+        <div class="ctas">
+          <NuxtLink to="/t/glassbox" class="cta">
+            New here? Start with the Glass Box <span class="cta-arrow" aria-hidden="true">→</span>
+          </NuxtLink>
+          <NuxtLink to="/t/journal/current" class="cta">
+            Follow along in the Journal <span class="cta-arrow" aria-hidden="true">→</span>
+          </NuxtLink>
+        </div>
       </div>
 
-      <section v-if="digests.length" class="digests" aria-labelledby="digests-heading">
+      <HomeShowcase
+        v-if="variant === 'b' && glassbox"
+        tenant="Glass Box"
+        reality="real"
+        path="/t/glassbox"
+        noun="spaces"
+        teaser-label="Lesson of the day"
+        blurb="A textbook for learning the concepts and technology behind Terrarium, with Terrarium itself as the worked example."
+        :entries="glassbox.entries"
+      >
+        <NuxtLink v-if="glassbox.lesson" :to="glassbox.lesson.url" class="lesson">
+          <span class="lesson-subject">{{ glassbox.lesson.subject }}</span>
+          <span class="lesson-title">{{ glassbox.lesson.title }}</span>
+          <span class="lesson-description">{{ glassbox.lesson.description }}</span>
+        </NuxtLink>
+      </HomeShowcase>
+
+      <section v-else-if="digests.length" class="digests" aria-labelledby="digests-heading">
         <h2 id="digests-heading" class="eyebrow">Latest from the Journal</h2>
         <div class="scroll-well">
           <ul class="digest-list scroll-box">
@@ -194,9 +223,27 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
       </section>
     </div>
 
-    <section v-if="glassbox" class="explore" aria-labelledby="newest-heading">
+    <section v-if="variant === 'b' && digests.length" class="explore" aria-labelledby="follow-heading">
       <div class="explore-head">
-        <h2 id="newest-heading" class="eyebrow">Newest experiment <span class="wip">work in progress</span></h2>
+        <h2 id="follow-heading" class="eyebrow">Follow along</h2>
+        <p class="tagline">What the agents and humans did lately, one daily digest at a time.</p>
+      </div>
+      <ul class="digest-list digest-list--band">
+        <li v-for="d in digests.slice(0, 6)" :key="d.url">
+          <NuxtLink :to="d.url" class="digest">
+            <time class="digest-date" :datetime="d.when">{{ shortDate(d.when) }}</time>
+            <span class="digest-summary">{{ d.summary }}</span>
+          </NuxtLink>
+        </li>
+      </ul>
+      <NuxtLink to="/t/journal/current#digests" class="all-digests">All daily digests <span aria-hidden="true">→</span></NuxtLink>
+    </section>
+
+    <section v-if="variant !== 'b' && glassbox" class="explore" aria-labelledby="newest-heading">
+      <div class="explore-head">
+        <h2 id="newest-heading" class="eyebrow">
+          Start here<span v-if="variant === 'c'" class="wip">still growing</span>
+        </h2>
       </div>
       <HomeShowcase
         tenant="Glass Box"
@@ -428,8 +475,13 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
 .tagline a { color: inherit; text-underline-offset: 2px; }
 .tagline a:hover { color: var(--root-ink); }
 
-.cta {
+.ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
   margin-top: 0.5rem;
+}
+.cta {
   display: inline-block;
   padding: 0.85rem 1.75rem;
   border-radius: 999px;
@@ -518,6 +570,11 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
 }
 .digest-list > li {
   display: flex;
+}
+@media (min-width: 56.01rem) {
+  .digest-list--band {
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  }
 }
 .digest {
   flex: 1;
