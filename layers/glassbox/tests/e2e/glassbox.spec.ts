@@ -44,7 +44,8 @@ describe('glassbox Tenant', async () => {
       // File routing lists Nuxt layers in Where next; once read, it moves below.
       await page.locator(`#gb-nav a[href="${routing}"]`).click()
       await page.locator('.read').waitFor()
-      expect(await page.locator('.read li').allTextContents()).toEqual(['Nuxt & VueNuxt layers'])
+      // Subject, title, then the Lesson's description.
+      expect(await page.locator('.read li').allTextContents()).toEqual([expect.stringMatching(/^Nuxt & VueNuxt layers\S.+/)])
       expect(await page.locator('.read li .gb-tick').count()).toBe(1)
       expect(await page.locator(`.gb-next a[href="${layers}"]`).count()).toBe(0)
 

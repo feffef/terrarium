@@ -63,11 +63,14 @@ Terrarium applies them without reading the source.
   so the cached server render is the same for every visitor (ADR-0028). Read
   Lessons get a ✓ (one shared SVG) after their title in the sidebar, where a
   Subject's count reads `3/8` once any is read. A Subject page ticks them the
-  same way and its count line reads `3 of 8 read` once any is read; it has no
-  reset. In a Lesson or Walkthrough, an inline link or chip to a read Lesson
+  same way, shows a book after each unread title, and its count line reads
+  `3 of 8 read` once any is read; it has no reset. Every row of a Subject's
+  list, the sidebar's Subject rows, Where next and Lessons already read is one
+  link across its whole width, and hovering it, or a previous or next card,
+  turns the title accent-coloured. In a Lesson or Walkthrough, an inline link or chip to a read Lesson
   shows that ✓ in place of the book. A Lesson's
   hand-written Where next links that are read move out of Where next into a
-  `Lessons already read` section right below it (Subject, title, ✓); Where
+  `Lessons already read` section right below it (Subject, title, description, ✓); Where
   next, heading included, vanishes once all are read, and the section is hidden
   while none is. Only that section holds the
   `Reset reading progress` button, which clears just that key. No sync.
@@ -103,7 +106,8 @@ Its body follows one contract, which the page frames like design 1b
 - `## Where next`, a list of 1 to 5 closest pages (a Lesson is marked read when
   it scrolls into view, so it is never empty; two other pages should list each
   Lesson, and fewer is a page-check warning). A row ends in the book for a
-  Glass Box page and in → for any other place, the Journal included. Links within this
+  Glass Box page and in → for any other place, the Journal included. A row's
+  left label is the Lesson's Subject name, or Walkthrough, Journal or Page. Links within this
   Space are bare, `[](/t/glassbox/guide/…)`, and show the target's current
   title; a Journal link keeps typed text:
   related Lessons first, then optionally one Journal page as evidence. A
