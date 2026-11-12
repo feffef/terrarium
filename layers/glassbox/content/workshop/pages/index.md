@@ -39,10 +39,11 @@ These are the owner's goals for the guide. A run builds toward them directly; a 
 
 ### Good next focuses
 
-1. **Decide how pages say "a person merges" a Human-only file.** Since the owner waiver (ADR-0004), an agent may merge one when the owner says so in the session. *Protected paths*, *Human-only* and the overview say so. These still state it flatly, each true as the default: *Path-specific rules*, *Decision records*, *Merge gate*, *Claude Code hooks* (twice), *Composite actions*, *Cross-tenant reads* and *Asking an agent for a change*. Ask the owner whether to name the waiver there or keep one home.
-2. **Check the pages whose claims the docs left silent** (see *Claims to check*), by reading the tool's source where the docs have no page.
+1. **Lowercase the remaining glossary terms in one mechanical run.** Still capitalised mid-sentence: the nine Walkthroughs, a few stray places on other Lessons and the definitions in `terms/*.yml`; the owner said to include the definitions. Use no writers and no claim checkers. List the terms from the root and tenant glossaries, replace them with a script that skips excerpts, code, link text that is a page title, `teaches` and sentence starts, then have one review read the changed lines for false positives. Wording only, so keep `revision` and `publishedAt`.
+2. **Decide how pages say "a person merges" a Human-only file.** Since the owner waiver (ADR-0004), an agent may merge one when the owner says so in the session. *Protected paths*, *Human-only* and the overview say so. These still state it flatly, each true as the default: *Path-specific rules*, *Decision records*, *Merge gate*, *Claude Code hooks* (twice), *Composite actions*, *Cross-tenant reads* and *Asking an agent for a change*. Ask the owner whether to name the waiver there or keep one home.
+3. **Check the pages whose claims the docs left silent** (see *Claims to check*), by reading the tool's source where the docs have no page.
 
-3. **Check every Walkthrough diagram against its stops.** A diagram is read beside the stops (on wide screens it sits next to them), so what it shows should roughly match the steps; a reader who can't match them gains nothing. It is a simplified picture, never a 1:1 copy: not every box or arrow needs a stop. Try to match, but not too hard, and keep it simple. The stops read better than the diagrams, so expect to redraw the diagram. Keep the same check for any new diagram. *A change goes live* is the model to match: a few boxes in a line, one side branch, no numbers.
+4. **Check every Walkthrough diagram against its stops.** A diagram is read beside the stops (on wide screens it sits next to them), so what it shows should roughly match the steps; a reader who can't match them gains nothing. It is a simplified picture, never a 1:1 copy: not every box or arrow needs a stop. Try to match, but not too hard, and keep it simple. The stops read better than the diagrams, so expect to redraw the diagram. Keep the same check for any new diagram. *A change goes live* is the model to match: a few boxes in a line, one side branch, no numbers.
 
 ### Wording fresh readers still find hard
 
@@ -66,12 +67,10 @@ None of these is false.
 - The `harvest` Skill's own text (`SKILL.md:3,8`) says a Routine runs it; the owner says none does yet but one will. Fixing a Skill is outside this Skill's remit, so ask the owner. *Scheduled tasks* (`agents/40.scheduled-tasks`, which lists every Routine) leaves it out because `glassbox-update` once re-added it on the Skill's word; add it once the owner says a Routine exists.
 
 - **Verification.** *Merge gate*: the paragraph on `merge-pr.ts` still holds several facts, and `verify:skills-lock` and `verify:mermaid` are listed without a gloss. *Type checking*: the Where next rows use typed link text where the glossary says bare. *Testing*: the L0 and L1 levels are never named. *Zod refinements*: no source says why the `pages` rule ties the `page` type to the name `pages`. *Headless browser checks*: no repo source says who sets up the cloud proxy, and the `--no-sandbox` and `--disable-gpu` flags have no stated reason.
-- **The term definitions capitalise glossary words.** The `terms/*.yml` files (for example `gate.yml`, `inert.yml`, `trusted.yml`) write Gate, Inert, Trusted and Tenant mid-sentence, and a reader meets them inside the page text. The owner's rule is about body text; ask whether it covers a definition, then fix them together.
 
 ### Topics with no page yet
 
 - The `clear-backlog` loop changed: the builder triages review findings, resumes replace fresh fix rounds, the final gate is skipped on a clean first round, and a thin explore result is re-run (`.claude/workflows/clear-backlog-build.js`). Nearest page: *Workflow scripts*. It also has a retro step (§5 of `clear-backlog`); nearest *Self-improvement loop*. Unverified: the Scout read only commit lists.
-- A Nuxt build peaks near 2.1 GB, and the live host has a 2 GB swapfile added after builds were killed (`deploy/README.md`): a sentence for *Continuous deployment* (`deploy/10.continuous-deployment`), not a page. The build line in the page footer (`shared/build-info.ts`, the commit and time of the build, on the home page and the Journal landing) is also a sentence for it.
 - Each session rates every rule it was shown as *steered* or *backed*, kept in the log as `ruleUse` (`shared/schemas/session.ts`; `scripts/session/rule-use-report.ts` totals it). Nearest pages: *Pruning instructions* and *Session logs*.
 
 ### Claims to check
