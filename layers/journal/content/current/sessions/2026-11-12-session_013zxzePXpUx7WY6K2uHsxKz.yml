@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzePXpUx7WY6K2uHsxKz
 startedAt: 2026-11-12T10:33:30Z
-endedAt: 2026-11-12T12:20:37Z
+endedAt: 2026-11-12T12:23:48Z
 kind: interactive
 goal: Redesign the Terrarium homepage around Glass Box and the Journal
-status: in-review
-outcome: PR 3157 open, gate green, verdict posted; merge-pr.ts is polling CI to squash-merge on the owner's word
-summary: "The owner asked, over many turns, to rework the Platform homepage: Glass Box becomes the first stop for newcomers and the Journal the main entry for what is happening now, shown as two primary tiles side by side with prominent buttons (no deep links, no digest link, more digests visible), under a new hero with a bolder claim about agents, process and websites, and a terrarium illustration built from existing Atlas specimen drawings. I asked first (one question round), then iterated on dev-preview screenshots: three placements, three hero wordings with three illustrations, then the owner's picks (a mix of two wordings, the hand-drawn jar over a box, the Tinkerfund and Atlas swap, no real/invented tags, a build-stamp-only footer, \"AI personas\" on the Blog tile, the experiment mentioned in the body, many copy edits in the owner's words). Agent-initiated, not asked for: the final consistency pass (page title, stale comments, two broken smoke tests and a glossary entry, unused `wide`/`.wip` code), shortening the Glass Box button label, jar alignment and phone-backdrop opacity tuning, a Glass Box entry in the footer site list (reverted after review because an owner ruling fixes that list), and two code-review rounds whose findings I fixed. The owner's last instruction was to run the gate, open the PR and merge it myself, which I read as the owner's word for a Human-only merge. Done: merged main into the branch (one glossary conflict resolved), ran two reviews, ran the gate, which failed once on a Journal e2e test that still expected the removed home-page digests link (my earlier search had matched the link's text and class, not its href), fixed that assertion, reran the full gate green on head 67428a307, opened PR 3157, subscribed, checked for conflicting issues (none), posted my verdict naming the head, and started merge-pr.ts with a squash and the owner's quote, which polls CI. At this closure the PR is not merged and merge.log is still empty; a Stop hook twice claimed a PR had merged when none had. When the merge lands I close again as completed. Open and flagged to the owner: the hero's \"every change\" lines overstate slightly because session logs skip the gate (ADR-0009), and the visitor-loop decision notes still name the old \"Enter the Journal\" button and the five-site footer."
+status: completed
+outcome: Homepage redesign merged as PR 3157 (squash a96ba1991) on the owner's in-session word, gate and two reviews green
+summary: "The owner asked, over many turns, to rework the Platform homepage: Glass Box becomes the first stop for newcomers and the Journal the main entry for what is happening now, shown as two primary tiles side by side with prominent buttons (no deep links, no digest link, more digests visible), under a new hero with a bolder claim about agents, process and websites, and a terrarium illustration built from existing Atlas specimen drawings. I asked first (one question round), then iterated on dev-preview screenshots: three placements, three hero wordings with three illustrations, then the owner's picks (a mix of two wordings, the hand-drawn jar over a box, the Tinkerfund and Atlas swap, no real/invented tags, a build-stamp-only footer, \"AI personas\" on the Blog tile, the experiment mentioned in the body, many copy edits in the owner's words). Agent-initiated, not asked for: the final consistency pass (page title, stale comments, two broken smoke tests and a glossary entry, unused `wide`/`.wip` code), shortening the Glass Box button label, jar alignment and phone-backdrop opacity tuning, a Glass Box entry in the footer site list (reverted after review because an owner ruling fixes that list), and two code-review rounds whose findings I fixed. The owner's last instruction was to run the gate, open the PR and merge it myself, which I read as the owner's word for a Human-only merge (app/pages/index.vue is on the list). Landing: merged main into the branch (one glossary conflict resolved), ran the reviews, ran the gate, which failed once on a Journal e2e test that still expected the removed home-page digests link (my earlier search had matched the link's text and class, not its href), fixed that assertion, reran the full gate green on head 67428a307, opened the PR, posted my verdict, and merge-pr.ts squash-merged it once CI went green. The waiver quote I passed did not land in the squash commit message (GitHub's default body listing all 17 WIP commits replaced it), so I recorded the owner's exact words in a PR comment. Still open for the owner: the hero's \"every change\" lines overstate slightly because session logs skip the gate (ADR-0009), and the visitor-loop decision notes still name the old \"Enter the Journal\" button and the five-site footer."
 prs:
   - "3157"
 docsRead:
@@ -104,33 +104,42 @@ frictions:
   - description: Piped log-session.ts output through head against close-session's rule never to filter it; I re-ran it unfiltered and nothing had been hidden.
     solution: Run the helper bare, or redirect to a file and read all of it.
     severity: nit
-durationSec: 6426
+  - description: merge-pr.ts --merge-method squash with --owner-approved left the owner's quote out of the squash commit; the body was GitHub's list of all 17 WIP commits, so the waiver record was missing.
+    solution: Have merge-pr.ts compose the squash title and body from the PR title and description plus the waiver text, then check the quote is in the landed commit and say so loudly if not.
+    severity: minor
+  - description: Pushed 17 WIP commits to satisfy Stop-hook push demands; the squash body inherited all of them as bullet lines, cluttering main's history even with a squash merge.
+    solution: Keep WIP commits local until review, or pass a clean commit message for the squash instead of GitHub's default.
+    severity: nit
+durationSec: 6617
 models:
-  claude-sonnet-5-5: 602
+  claude-sonnet-5-5: 630
 toolCounts:
   Grep: 1
   Glob: 3
-  Read: 96
+  Read: 97
   AskUserQuestion: 1
-  Bash: 164
+  Bash: 169
   Edit: 18
   SendUserFile: 11
-  Write: 8
+  Write: 9
   ToolSearch: 2
-  Skill: 7
+  Skill: 8
   Agent: 4
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  mcp__github__add_issue_comment: 1
+  mcp__github__add_issue_comment: 2
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - app/pages/index.vue
   - app/components/HomeShowcase.vue
   - layers/journal/tests/e2e/journal.spec.ts
   - app/components/SiteFooter.vue
-  - app/utils/sites.ts
   - layers/glassbox/GLOSSARY.md
   - tests/e2e/smoke.spec.ts
+  - app/utils/sites.ts
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -326,13 +335,13 @@ subagents:
     durationSec: 62
     toolCalls: 13
     modelCalls: 8
-    tokenShare: 2
+    tokenShare: 1.9
   - type: general-purpose
     task: Spec review of homepage diff
     durationSec: 62
     toolCalls: 18
     modelCalls: 7
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: general-purpose
     task: Standards review of fix-up commit
     durationSec: 21
@@ -344,14 +353,16 @@ subagents:
     durationSec: 31
     toolCalls: 10
     modelCalls: 6
-    tokenShare: 0.8
+    tokenShare: 0.7
 gitBranch: claude/vigilant-allen-m65xu2
 entrypoint: remote
 cliVersion: 2.1.322
 learnings:
   - In a scoped Vue SFC, `.hero-art svg` also matches inline SVGs you nest inside it, since scoped attributes sit on every template element; use `>` for the outer one.
   - "`vector-effect` is not inherited, so an SVG `<use>` needs it on the referenced path or the shadow copy scales its stroke."
+  - GitHub's squash merge fills the commit body with a bullet list of every branch commit; the commit_message that merge-pr.ts passes for an owner waiver did not replace it in this merge.
 ideas:
   - Declare each Tenant's homepage placement (tile order, group, footer entry, 404 mapping) in its manifest and derive the home tiles, SITES and the map's relationships from it, so a reorder or new Tenant is one edit and lists like the footer's five sites cannot drift.
   - Add a screenshot-diff step for the Platform homepage at three widths to the browser tier of the gate, so layout regressions such as a display:contents rule losing to a later base rule fail a PR instead of reaching a screenshot review.
+  - "Make merge-pr.ts write the squash commit itself: PR title, a body taken from the PR description, the Claude-Session trailer and any owner-waiver quote, then verify the landed commit with git and fail loudly if the quote is missing, so a WIP-commit list never becomes the history."
 landedBy: Stop
