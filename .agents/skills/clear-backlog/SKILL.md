@@ -10,8 +10,10 @@ and for one **interaction phase** in the middle (the grilling, then any UI
 samples). Everything else runs unattended.
 
 **Hard rule: no builder or reviewer runs until that phase is over.** After the
-explore run the session only grills, then prototypes, then starts one §3 run
-with every branch together. An issue that needs no grilling waits too.
+explore run the session only grills, then prototypes, then starts the first §3
+run with every branch together. An issue that needs no grilling waits too. After
+that, the owner is asked only a §3 `needs-owner` question, and those go out
+together.
 
 Whenever you wait on an answer (the grilling, a follow-up round, a §3 interrupt),
 send the push notification first, then only the questions, with no tool calls.
@@ -57,17 +59,18 @@ with the issue's events or `journal.jsonl` before telling the owner nothing was 
 `pnpm exec tsx .agents/skills/clear-backlog/scripts/run-summary.ts <output>
 --triage` prints each issue's result, the `missing` ones and a `grouping`: one
 branch per group of issues in which every pair shares a file or is clearly
-related. Adjust the grouping where you know better; a grouping you are unsure of is a grilling question. Start no build yet,
-not even for a `build` result: go to §2. The summary runs several thousand characters per issue and ends with the
-workflow's `logs`, which carry harness warnings about an agent's output: write
-it to a file and `Read` it in parts, and relay each warning to the owner.
+related. Adjust the grouping where you know better; a grouping you are unsure of is a grilling question. The summary runs several thousand
+characters per issue and ends with the workflow's `logs`, which carry harness
+warnings about an agent's output: write it to a file and `Read` it in parts, and
+relay each warning to the owner. Start no build yet, not even for a `build`
+result: go to §2.
 
 **Done:** every issue has a result, or is in `missing` and goes to the
 report with that word.
 
 ## 2. Grill, then prototype, in one sitting
 
-With no `grill` results, skip this section.
+With no `grill` results and no sample to show, go to §3.
 
 Send a push notification with the `PushNotification` tool:
 `grilling ready: N questions`. Then run the `grilling` Skill on one list,
@@ -107,17 +110,17 @@ only when it changes the issue's state or scope, and set the label it
 implies (`docs/agents/triage-labels.md`, `docs/agents/issue-tracker.md`).
 
 **Prototypes.** Once every question is answered, build a sample (`prototype`
-Skill, `.claude/rules/ui-verification.md`) for each issue whose look needs a
-picture, in this session, and show all the screenshots in one message with one
-approval question per sample. A change request gets a revised sample and a new
-round. Start no builder, reviewer or other workflow meanwhile.
+Skill, `.claude/rules/ui-verification.md`) in this session for each issue whose
+look the owner asked to see or the answers leave open, and show all the
+screenshots in one message with one numbered approval question per sample. A
+change request gets a revised sample and a new round.
 
 **Done:** every question is answered, every needed sample is approved, and
 every issue in §1's set is `ready-for-agent`, closed, or parked by the owner.
 
 ## 3. Build and review
 
-Run `clear-backlog-build` once, only after §2 is done, with
+Start the first `clear-backlog-build` run only after §2 is done, with
 `{ session, dir, branches: [...] }` holding every branch; `dir` is
 `<scratchpad>/clear-backlog`, where each branch keeps its decisions, gate log
 and findings in a folder of its own. One entry per branch: `name`, `issues`,
