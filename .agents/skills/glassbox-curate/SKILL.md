@@ -38,10 +38,10 @@ body says so, and you don't merge it.
 [`../glassbox-lesson/EVERY-PAGE.md`](../glassbox-lesson/EVERY-PAGE.md),
 [`../glassbox-lesson/QUALITY.md`](../glassbox-lesson/QUALITY.md) (Lenses only),
 [`../glassbox-lesson/DECISIONS.md`](../glassbox-lesson/DECISIONS.md),
-`.claude/rules/glassbox-content.md`, `.agents/skills/dispatch-subagents/SKILL.md`
-(its guard blocks the first subagent call until you read it), and, since every run fetches and opens a
-PR, `docs/agents/git-conventions.md`, `docs/agents/github-integration.md` and
-`docs/agents/pr-workflow.md`.
+`.claude/rules/glassbox-content.md`,
+`.agents/skills/dispatch-subagents/SKILL.md`, and, since every run fetches and
+opens a PR, `docs/agents/git-conventions.md`, `docs/agents/github-integration.md`
+and `docs/agents/pr-workflow.md`.
 Subagents read committed files at the base with `git show <base>:<path>`,
 which can't follow the `.claude/skills/<name>` link, so write every Skill path
 in a brief as `.agents/skills/...`.
