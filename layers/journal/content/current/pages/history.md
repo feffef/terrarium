@@ -35,8 +35,9 @@ changed in the last rows once the human had time again.
 
 Counts are as of 11 November 2026, computed from the session logs and git by
 `scripts/history/history-stats.ts`; Agent-initiated counts only autonomous
-sessions. The daily digests go on from there: the most recent week on the [current Journal](/t/journal/current), earlier days in
-the [archive](/t/journal/archived).
+sessions. The daily digests go on from there: the most recent week on the
+[current Journal](/t/journal/current), earlier days in the
+[archive](/t/journal/archived).
 
 ## Founding — 4 to 10 July
 
