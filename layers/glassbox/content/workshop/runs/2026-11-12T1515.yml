@@ -7,7 +7,7 @@ focus: "Agents & automation Subject (its five pages): apply the owner's lowercas
   because no PR touches the guide and the Subject still capitalises terms
   (Skill, Routine, Gate and the like) while the overview, Git & GitHub, Hooks
   and Claude Code pages are done; Inspecting past sessions had also never been
-  read by a curate run. Two fresh readers read the pages before and one after the fix; the claim checker found one unsupported cost clause on each of two pages and two overstated sentences, which were corrected, and the second reader's leftovers went to the memory page. The Scout found no new topic."
+  read by a curate run. Two fresh readers read the pages before and one after the fix; the claim checker found one unsupported cost clause on each of two pages and two overstated sentences, which were corrected, and the second reader's leftovers went to the memory page. The Scout found no new topic. The code-review Spec reviewer named thirteen linked outside pages (Claude Code skills, permissions, CLAUDE.md and MCP servers; Blocking hooks and Session transcripts; Composite actions, attribution and Git worktrees; Session logs, Human-in-the-loop agents, Merge gate, Linting and Schema evolution); a grep of the skills, permissions, blocking hooks and composite actions pages for the changed claims found no contradiction, and none was read in full, so none is in pagesRead."
 changes:
   - agents/10.subagents | glossary terms lowercase; the nesting limit is said once
     (three layers by default, depth 1 in cloud sessions, so an impl agent starts
