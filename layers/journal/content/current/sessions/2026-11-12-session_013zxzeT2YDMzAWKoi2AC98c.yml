@@ -1,15 +1,16 @@
 schemaVersion: 1
 session: session_013zxzeT2YDMzAWKoi2AC98c
 startedAt: 2026-11-12T23:00:51Z
-endedAt: 2026-11-12T23:39:50Z
+endedAt: 2026-11-12T23:46:39Z
 kind: delegated
 goal: "Curate the Glass Box guide: Git & GitHub and Nuxt Content Try-it sections"
-status: partial
-outcome: PRs 3215 and 3216 (Git & GitHub and Nuxt Content Try-it sections) merged; a third run on Nuxt & Vue is next
-summary: "The kickoff (a routine-style notification carrying the owner's handoff) asked for repeated autonomous glassbox-curate runs until about 500k context, then a Sonnet handoff; I asked once to confirm mode and handoff, and the owner answered autonomous, several focuses, handoff yes. Run 1, agent-initiated within that ask: I chose the Git and GitHub Subject from the memory page's Try-it lead, had an opus writer rewrite five Try-it sections with commands run, a sonnet claim check, then code-review; fixed two review points, left the publishedAt point as earlier runs decided, ran gate:scoped, merged PR 3215 through merge-pr.ts. Run 2 (Nuxt Content Try-its): writer, claim check (one false watch sentence corrected), review fixes, gate:scoped, PR 3216, merged. Deviations for the budget (no Scout, no fresh readers, wording leads left open) are in the run entry. Still open: finish run 2, further Subjects, and the Sonnet handoff session at 500k context (about 300k used)."
+status: in-review
+outcome: PRs 3215 and 3216 merged; PR 3219 (Installed skills, Nuxt layers and House rules Try-it sections) open
+summary: "The kickoff (a routine-style notification carrying the owner's handoff) asked for repeated autonomous glassbox-curate runs until about 500k context, then a Sonnet handoff; I asked once to confirm mode and handoff, and the owner answered autonomous, several focuses, handoff yes. Run 1, agent-initiated within that ask: I chose the Git and GitHub Subject from the memory page's Try-it lead, had an opus writer rewrite five Try-it sections with commands run, a sonnet claim check, then code-review; fixed two review points, left the publishedAt point as earlier runs decided, ran gate:scoped, merged PR 3215 through merge-pr.ts. Run 2 (Nuxt Content Try-its): writer, claim check (one false watch sentence corrected), review fixes, gate:scoped, PR 3216, merged. Deviations for the budget (no Scout, no fresh readers, wording leads left open) are in the run entry. Run 3 (Installed skills, Nuxt layers, House rules Try-its) is PR 3219, open. Still open: its merge, remaining advice-only Try-its, and the Sonnet handoff session at 500k context (about 340k used)."
 prs:
   - "3215"
   - "3216"
+  - "3219"
 docsRead:
   - path: layers/glassbox/GLOSSARY.md
     reason: (no reason given)
@@ -67,6 +68,8 @@ docsRead:
     reason: (no reason given)
   - path: .agents/skills/code-review/SKILL.md
     reason: (no reason given)
+  - path: .agents/skills/glassbox-curate/SKILL.md
+    reason: (no reason given)
 skillsUsed:
   - name: code-review
     reason: (no reason given)
@@ -80,20 +83,20 @@ frictions:
   - description: The orientation output is over 25 KB and the Subject output over 70 KB, so reading them cost several paged reads and many tokens.
     solution: Print only the Subject's pages' Try-it and Where next on request, or split the output into files up front.
     severity: minor
-durationSec: 2339
+durationSec: 2747
 models:
-  claude-sonnet-5-5: 139
+  claude-sonnet-5-5: 162
 toolCounts:
   AskUserQuestion: 1
-  Bash: 37
+  Bash: 44
   Read: 16
-  Agent: 9
-  Skill: 4
+  Agent: 11
+  Skill: 6
   ToolSearch: 3
   mcp__claude-code-remote__get_session: 1
-  mcp__github__create_pull_request: 2
-  mcp__claude-code-remote__subscribe_pr_activity: 2
-  ReadNotifications: 5
+  mcp__github__create_pull_request: 3
+  mcp__claude-code-remote__subscribe_pr_activity: 3
+  ReadNotifications: 6
   mcp__github__pull_request_read: 1
   mcp__github__add_issue_comment: 2
 filesEdited:
@@ -106,12 +109,23 @@ filesEdited:
   - 40.query-collection.md
   - 50.mdc-components.md
   - 60.mermaid-pre-rendering.md
+  - skill-pack/10.skill-packs.md
+  - skill-pack/30.engineering-skills.md
+  - nuxt-vue/10.layers.md
+  - terrarium-practice/60.protected-paths.md
+  - terrarium-practice/40.session-logs.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/10.layers.md
+  - layers/glassbox/content/guide/pages/skill-pack/10.skill-packs.md
+  - layers/glassbox/content/guide/pages/skill-pack/30.engineering-skills.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/40.session-logs.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/60.protected-paths.md
+  - layers/glassbox/content/workshop/pages/index.md
+  - layers/glassbox/content/workshop/runs/2026-11-12T2337.yml
   - layers/glassbox/content/guide/pages/nuxt-content/40.query-collection.md
   - layers/glassbox/content/guide/pages/nuxt-content/50.mdc-components.md
   - layers/glassbox/content/guide/pages/nuxt-content/60.mermaid-pre-rendering.md
   - layers/glassbox/content/workshop/runs/2026-11-12T2322.yml
   - layers/glassbox/content/guide/pages/nuxt-content/10.content-collections.md
-  - layers/glassbox/content/workshop/pages/index.md
   - layers/glassbox/content/workshop/runs/2026-11-12T2306.yml
 rulesGlobal:
   - .claude/rules/adr-0004.md
@@ -125,6 +139,7 @@ docsReadBySubagents:
   - docs/adr/0004-objective-safety-gate.md
   - docs/agents/triage-labels.md
   - .agents/skills/code-review/SKILL.md
+  - .agents/skills/glassbox-curate/SKILL.md
 ruleUse:
   - by: main
     answered: true
@@ -445,7 +460,7 @@ ruleUse:
         value: backed
   - by: general-purpose
     subagent: 8
-    answered: false
+    answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
         via: start
@@ -468,65 +483,159 @@ ruleUse:
       - rule: .claude/rules/glossary-terms.md
         via: hint
       - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/skill-pack/10.skill-packs.md
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/skill-pack/10.skill-packs.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/skill-pack/10.skill-packs.md
+    reported:
+      - path: .claude/rules/glassbox-content.md
+        value: steered
+      - path: .claude/rules/tenant-glossary.md
+        value: backed
+      - path: .claude/rules/adr-0015.md
+        value: backed
+      - path: .agents/skills/glassbox-lesson/writing-pages.md
+      - path: layers/glassbox/GLOSSARY.md
+      - path: docs/agents/git-conventions.md
+  - by: general-purpose
+    subagent: 9
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
         via: hint
       - rule: .claude/rules/adr-0015.md
         via: hint
-    reported: []
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: docs/agents/git-conventions.md
+  - by: general-purpose
+    subagent: 10
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/writing-pages.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/writing-pages.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .claude/rules/glassbox-content.md
+        value: steered
+      - path: .agents/skills/glassbox-lesson/owner-decisions.md
 subagents:
   - task: Write Git & GitHub Try-it fixes
     model: opus
     durationSec: 347
     toolCalls: 60
     modelCalls: 47
-    tokenShare: 15.9
+    tokenShare: 13.2
   - task: Claim-check changed Try-it text
     model: sonnet
     durationSec: 39
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 3.2
+    tokenShare: 2.7
   - task: Standards review of Try-it edits
     model: sonnet
     durationSec: 28
     toolCalls: 10
     modelCalls: 4
-    tokenShare: 1.8
+    tokenShare: 1.5
   - task: Spec review of Try-it edits
     model: sonnet
     durationSec: 19
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1.5
+    tokenShare: 1.3
   - task: Write Nuxt Content Try-it fixes
     model: opus
     durationSec: 314
     toolCalls: 50
     modelCalls: 37
-    tokenShare: 12.9
+    tokenShare: 10.8
   - task: Claim-check Nuxt Content Try-it text
     model: sonnet
     durationSec: 45
     toolCalls: 14
     modelCalls: 10
-    tokenShare: 4.1
+    tokenShare: 3.4
   - task: Standards review of Nuxt Content edits
     model: sonnet
     durationSec: 24
     toolCalls: 8
     modelCalls: 3
-    tokenShare: 1.5
+    tokenShare: 1.3
   - task: Spec review of Nuxt Content edits
     model: sonnet
     durationSec: 16
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 1.4
+    tokenShare: 1.2
   - task: Write Try-it fixes batch three
     model: opus
-    durationSec: 106
-    toolCalls: 19
-    modelCalls: 19
-    tokenShare: 7.5
+    durationSec: 250
+    toolCalls: 37
+    modelCalls: 29
+    tokenShare: 8.9
+  - task: Claim-check batch three Try-it text
+    model: sonnet
+    durationSec: 36
+    toolCalls: 7
+    modelCalls: 6
+    tokenShare: 2.8
+  - task: Standards+spec review batch three
+    model: sonnet
+    durationSec: 26
+    toolCalls: 10
+    modelCalls: 5
+    tokenShare: 2.8
 gitBranch: HEAD
 entrypoint: remote
 cliVersion: 2.1.323
