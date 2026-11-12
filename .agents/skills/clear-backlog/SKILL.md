@@ -124,7 +124,8 @@ now), the picked option's `optionChecks` (premises already settled, and the
 `unverified` ones the agent settles first), its `files`, and a trimmed
 `background` of what was tried and dropped. Add a `sideFinding` only when it
 touches the branch's files. Take the decision from the owner's pick, not from
-the triage agent's `pick` and `why`.
+the triage agent's `pick` and `why`. A brief's file list never names a Skill
+listed in `skills-lock.json`: installed Skills are never edited (ADR-0015).
 
 Then run `run-summary.ts <output> --build --run <run id>`, with the run id
 from the Workflow result. Per branch it prints the status, the builder's and
