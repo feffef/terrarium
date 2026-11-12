@@ -1,10 +1,10 @@
-# Every Glass Box page
+# Writing a Glass Box page
 
 The steps a Lesson and a Walkthrough share. Each page's shape, and the Excerpt
 and Term rules, are in `layers/glassbox/GLOSSARY.md`; the drift rule
 (`.claude/rules/glassbox-content.md`) loads when you edit a page. Rulings in
-[`DECISIONS.md`](DECISIONS.md) are closed; [`QUALITY.md`](QUALITY.md) grades a
-page.
+[`owner-decisions.md`](owner-decisions.md) are hard rules; the workshop page's soft
+decisions are agents' own and can be overruled.
 
 ## Pin
 
@@ -19,7 +19,7 @@ integration tip).
 Set `publishedAt` to now (`date -u +%Y-%m-%dT%H:%M:%SZ`) when you write a page,
 move it to the guide, or change what it teaches; it puts the page on the
 Commons Timeline. Leave it as it is for a re-pin, a typo, a moved `lines` range
-or an edit that `DECISIONS.md` says keeps it.
+or a wording-only edit to `description`, `teaches` or a bold lead-in (below).
 
 Frontmatter holds `title`, `description`, `teaches`, `revision`,
 `revisionDate` and `publishedAt` only; the page draws `title` as its heading,
@@ -44,6 +44,9 @@ and what *A real case* tells, if any. Write it dense, separated by `;`, from
 the page as it now reads; it has no cap. Give each bold lead-in a claim that
 stands alone, since the index shows only the lead-in.
 Quote a `description` or `teaches` that holds a colon, or YAML misreads it.
+`description` serves visitors and `teaches` serves agents: an edit to either, or
+rewording a bold lead-in and its sentence to match, that changes no claim keeps
+`revision` and `publishedAt`.
 A `title` and `description` stay within their caps in `lengths` in
 `layers/glassbox/page-checks.ts`,
 which also checks a Lesson title's word count and each Why bullet's length
@@ -115,6 +118,16 @@ commits the fence with its SVGs. With no subagent available, run that loop
 yourself and say so in the PR. Done when its label text reads at about 12px or
 larger in the 390px screenshot; if it doesn't, redraw it narrower (fewer nodes
 side by side, shorter labels) or drop it.
+
+A diagram is a simplified picture, read beside the steps (a Walkthrough shows it
+next to them on wide screens, after them elsewhere). Draw about 5 to 7 boxes in
+one mostly straight line, in the order of the steps and in their words, with at
+most one side branch for the case that matters, and a loop only where it is the
+point. Don't number the boxes after the steps: that promises a 1:1 match the
+picture can't keep. Not every step needs a box, nor every box a step: match
+them roughly, not hard. The model is
+`walkthroughs/a-change-goes-live`: six boxes, one branch (a failed build keeps
+the old site), and the lockfile and install detail left to the steps.
 
 ## Check
 

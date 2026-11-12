@@ -8,7 +8,9 @@ disable-model-invocation: true
 
 Write **one Lesson** for Glass Box. Read `layers/glassbox/GLOSSARY.md` first:
 it holds the Lesson contract and the Subject, Excerpt and Term rules. The steps
-every page shares are in [`EVERY-PAGE.md`](EVERY-PAGE.md).
+every page shares are in [`writing-pages.md`](writing-pages.md). Then read
+[`owner-decisions.md`](owner-decisions.md) in full: the owner's hard rules for
+titles and wording.
 
 1. **Place it.** Take the topic's concept, Terrarium files and official docs
    from the [topic inventory](https://github.com/feffef/terrarium/issues/1966#issuecomment-6176385964),
@@ -18,7 +20,7 @@ every page shares are in [`EVERY-PAGE.md`](EVERY-PAGE.md).
    a free two-digit prefix that puts it after the Lessons it builds on and
    before those that build on it (`layers/glassbox/GLOSSARY.md`, Two Spaces,
    says how to number). Done when the path and docs URLs are chosen.
-2. **Pin** it (EVERY-PAGE.md).
+2. **Pin** it (writing-pages.md).
 3. **Write** it to the contract, in plain words. *The concept* is true of any
    project; *In Terrarium* is what this repo does. For *Why it's built this
    way*, find the real reasons in the ADRs, the code, and the PRs, commits and
@@ -31,4 +33,4 @@ every page shares are in [`EVERY-PAGE.md`](EVERY-PAGE.md).
    capped (the contracts): a full list takes it only in place of its weakest
    entry. Done when each stop and Where next links the Lesson wherever it is closer than
    one of the list's current entries.
-5. **Check** it (EVERY-PAGE.md).
+5. **Check** it (writing-pages.md).

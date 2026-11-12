@@ -30,11 +30,12 @@ describe('glassbox Tenant', async () => {
   })
 
   // Reading progress lives in the visitor's browser, applied after mount (GLOSSARY.md, Reading progress).
-  it('ticks an opened Lesson in the sidebar and moves its Where next link into Lessons already read', async () => {
+  it('ticks a Lesson once Where next is scrolled into view and moves its link into Lessons already read', async () => {
     const layers = '/t/glassbox/guide/nuxt-vue/layers'
     const routing = '/t/glassbox/guide/nuxt-vue/file-routing'
     expect(await $fetch<string>(layers)).not.toContain('Lessons already read')
     await withRendered(layers, async (page) => {
+      await page.locator('#where-next').scrollIntoViewIfNeeded()
       await page.locator(`#gb-nav a[href="${layers}"] .tick`).waitFor()
       expect(await page.locator('#gb-nav summary:has-text("Nuxt") .count').first().textContent()).toMatch(/^1\/\d+$/)
       expect(await page.locator('.read').count()).toBe(0)
@@ -43,7 +44,8 @@ describe('glassbox Tenant', async () => {
       // File routing lists Nuxt layers in Where next; once read, it moves below.
       await page.locator(`#gb-nav a[href="${routing}"]`).click()
       await page.locator('.read').waitFor()
-      expect(await page.locator('.read li').allTextContents()).toEqual(['Nuxt & VueNuxt layers✓'])
+      expect(await page.locator('.read li').allTextContents()).toEqual(['Nuxt & VueNuxt layers'])
+      expect(await page.locator('.read li .gb-tick').count()).toBe(1)
       expect(await page.locator(`.gb-next a[href="${layers}"]`).count()).toBe(0)
 
       await page.locator('.read .reset').click()
@@ -53,10 +55,28 @@ describe('glassbox Tenant', async () => {
     })
   })
 
+  // The row mark is a CSS pseudo-element no unit test sees: a book for a Glass Box page, → for the Journal.
+  // This Lesson's Where next lists both kinds.
+  it('ends a Where next row in a book for a Glass Box page and in an arrow for another place', async () => {
+    await withRendered('/t/glassbox/guide/agents/cloud-sessions', async (page) => {
+      const rows = (await page.evaluate(`[...document.querySelectorAll('.gb-next li')].map((li) => {
+        const after = getComputedStyle(li, '::after')
+        return { guide: !!li.querySelector('a[href^="/t/glassbox/"]'), content: after.content, mask: after.maskImage }
+      })`)) as { guide: boolean, content: string, mask: string }[]
+      const guide = rows.filter((row) => row.guide)
+      const other = rows.filter((row) => !row.guide)
+      expect(guide.length).toBeGreaterThan(0)
+      expect(other.length).toBeGreaterThan(0)
+      for (const row of guide) expect(row).toMatchObject({ content: '""', mask: expect.stringContaining('url(') })
+      for (const row of other) expect(row).toMatchObject({ content: '"→"', mask: 'none' })
+    })
+  })
+
   it('ticks an opened Lesson on its Subject page and counts it read', async () => {
     const subject = '/t/glassbox/guide/nuxt-vue'
     const layers = `${subject}/layers`
     await withRendered(layers, async (page) => {
+      await page.locator('#where-next').scrollIntoViewIfNeeded()
       await page.locator(`#gb-nav a[href="${layers}"] .tick`).waitFor()
       await page.goto(new URL(subject, page.url()).href)
       await page.locator(`.list a[href="${layers}"] .tick`).waitFor()

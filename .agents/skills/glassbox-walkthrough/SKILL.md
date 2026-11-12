@@ -8,7 +8,9 @@ disable-model-invocation: true
 
 Write **one Walkthrough** for Glass Box. Read `layers/glassbox/GLOSSARY.md`
 first: it holds the Walkthrough contract. The steps every page shares are in
-[`../glassbox-lesson/EVERY-PAGE.md`](../glassbox-lesson/EVERY-PAGE.md).
+[`../glassbox-lesson/writing-pages.md`](../glassbox-lesson/writing-pages.md). Then read
+[`../glassbox-lesson/owner-decisions.md`](../glassbox-lesson/owner-decisions.md)
+in full: the owner's hard rules for titles and wording.
 
 1. **Place it.** Take the story from the
    [topic inventory](https://github.com/feffef/terrarium/issues/1966#issuecomment-6176385964)'s
@@ -16,7 +18,7 @@ first: it holds the Walkthrough contract. The steps every page shares are in
    `docs/diagrams/interactive-map/spec.md` tell many of them step
    by step. Check that story against the code: the code wins. The file is
    `layers/glassbox/content/guide/pages/walkthroughs/<slug>.md`.
-2. **Pin** it (EVERY-PAGE.md).
+2. **Pin** it (writing-pages.md).
 3. **Write** it to the contract, in plain words. The lede says what happens,
    from whose side, and where it ends. A stop keeps to the glossary's stop
    length; detail a `SKILL.md` or a Lesson holds stays there. Stop text gives no 'so'/'since'/
@@ -25,5 +27,5 @@ first: it holds the Walkthrough contract. The steps every page shares are in
    how the mechanism works stays in what its chips link (a Lesson where one
    exists), per the glossary's chip rule. Done when every stop
    is checked against its files at `revision`.
-4. **Diagram** it if one earns its place (EVERY-PAGE.md).
-5. **Check** it (EVERY-PAGE.md).
+4. **Diagram** it if one earns its place (writing-pages.md).
+5. **Check** it (writing-pages.md).

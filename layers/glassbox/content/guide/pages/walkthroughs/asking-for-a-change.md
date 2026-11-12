@@ -2,7 +2,7 @@
 title: Asking an agent for a change
 description: How a request to an agent session becomes a merged PR, and the log the session leaves on main.
 teaches: "Story: a Trusted user's request becoming a merged PR, from the session's side. Start: the request. End: close-session marks the log completed. Code: SessionStart hook, .claude/settings.json, CLAUDE.md, Rules, guard hooks, worktrees, pnpm gate:scoped, code-review, commit-msg hook, PR subscription, Stop hook, merge-pr.ts. A real case: PR #2089 added the retro Skill, skipping code-review."
-revision: '145cc119d8d1064fab2dc6ef674cae9d60e3c7f2'
+revision: '7ae232ae79144439d1b30cb974e9e14f7ae6163c'
 revisionDate: '2026-11-12'
 ---
 

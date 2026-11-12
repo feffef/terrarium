@@ -2,7 +2,7 @@
 title: A change goes live
 description: How a commit on main reaches visitors, through one container that notices it, builds it beside the live site and swaps only a good build.
 teaches: "Story: a commit on main reaching visitors, from the container's side. Start: a merged PR or session log. End: the restarted server; a Collection's first query restores its table from the dump. Code: reset to origin/main, pnpm-lock.yaml hash, install, build to .output/, copy, restart; Gate result unread. A real case: issue #1701, deploy/entrypoint.sh skipped installs after a failed one; PR #1717."
-revision: '145cc119d8d1064fab2dc6ef674cae9d60e3c7f2'
+revision: '7ae232ae79144439d1b30cb974e9e14f7ae6163c'
 revisionDate: '2026-11-12'
 publishedAt: '2026-10-27T18:52:18Z'
 ---
@@ -11,20 +11,15 @@ A commit lands on `main`, and with no one running a deploy, the live site change
 
 ```mermaid
 flowchart TD
-  main["A commit on main"] --> fetch["Fetch main<br>after a pause"]
-  fetch -- "new commit" --> lock{"Lockfile<br>changed?"}
-  lock -- "yes" --> install["Install<br>packages"]
-  lock -- "no" --> build["Build beside<br>the live site"]
-  install --> build
-  install -. "fails" .-> keep["Old build<br>stays live"]
-  build -. "fails" .-> keep
-  keep -.-> fetch
-  build --> swap["Copy build,<br>restart server"]
-  swap --> visitor["Next visitor"]
-  classDef checkout stroke-dasharray:5 4
+  main["A commit<br>lands on main"] --> notice["The container<br>notices it"]
+  notice --> build["It builds beside<br>the live site"]
+  build -- "build works" --> swap["It swaps the build<br>in and restarts"]
+  build -. "build fails" .-> old["The old site<br>stays live"]
+  swap --> visitor["The next visitor<br>sees the change"]
+  classDef beside stroke-dasharray:5 4
   classDef live stroke-width:2.5px
-  class fetch,lock,install,build checkout
-  class swap,visitor,keep live
+  class notice,build beside
+  class swap,visitor,old live
 ```
 
 ## 1. A commit lands on `main`

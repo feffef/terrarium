@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { MinimarkNode } from '@nuxt/content'
-import { glassboxLessonSections, glassboxLessonToc, glassboxNextLessons, glassboxNextList } from '../../app/utils/lesson.ts'
+import { glassboxLessonSections, glassboxLessonToc, glassboxNextLessons, glassboxNextList, glassboxNextTargets } from '../../app/utils/lesson.ts'
 
 const h2 = (id: string, text: string): MinimarkNode => ['h2', { id }, text]
 const h3 = (id: string, text: string): MinimarkNode => ['h3', { id }, text]
@@ -73,6 +73,14 @@ describe('glassboxNextList', () => {
     ])
   })
 
+  it('shows a page\'s description under any in-Space link, typed or bare, and none under other targets', () => {
+    const link = `${base}/verification/schemas`
+    expect(glassboxNextList(['ul', {}, ['li', {}, ['a', { href: link }, 'Typed']], bare('/t/journal/current/history')], base, {}, [], { '/verification/schemas': 'What it does' })).toEqual(['ul', { class: 'gb-next' },
+      ['li', {}, ['span', {}, 'Lesson'], ['div', {}, ['a', { href: link }, 'Typed'], ['small', {}, 'What it does']]],
+      ['li', {}, ['span', {}, 'Journal'], ['a', { href: '/t/journal/current/history' }]],
+    ])
+  })
+
   it('leaves out the rows whose Lesson was read, and keeps the other targets', () => {
     expect(glassboxNextList(['ul', {}, bare(`${base}/verification/schemas`), bare(`${base}/hooks/gate`), bare('/t/journal/current/history')], base, {}, ['/verification/schemas'])).toEqual(['ul', { class: 'gb-next' },
       ['li', {}, ['span', {}, 'Lesson'], ['a', { href: `${base}/hooks/gate` }]],
@@ -93,6 +101,12 @@ describe('Where next and read Lessons', () => {
   it('lists the Lessons a Where next list links, in order, skipping other targets', () => {
     expect(glassboxNextLessons(body(a, '/t/journal/current/history', b), base)).toEqual(['/verification/schemas', '/hooks/gate'])
     expect(glassboxNextLessons([['p', {}, 'No list.']], base)).toEqual([])
+  })
+
+  it('lists every page of the Space a Where next list links, Walkthroughs included, for their descriptions', () => {
+    const walk = `${base}/walkthroughs/a-story`
+    expect(glassboxNextTargets(body(a, walk, '/t/journal/current/history'), base)).toEqual(['/verification/schemas', '/walkthroughs/a-story'])
+    expect(glassboxNextTargets([['p', {}, 'No list.']], base)).toEqual([])
   })
 
   it('keeps the heading while an unread link remains, and drops it once every link is read', () => {

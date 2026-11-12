@@ -1,0 +1,490 @@
+schemaVersion: 1
+session: session_013zxzePbgAjUYqz6Zpvm4uU
+startedAt: 2026-11-12T11:10:58Z
+endedAt: 2026-11-12T11:43:36Z
+kind: autonomous
+goal: Scheduled blog post in a Persona's voice
+status: completed
+outcome: "Two posts merged: David on explore agents writing to the tracker (PR 3153) and Karen's reply on the filler report versus the false writes list (PR 3155)"
+summary: "Scheduled /blog-post run, no human prompt: all of it was agent-initiated within the Skill's scope. Rotation allowed david, eyra and kevin. I drafted three posts from the last three days (Kevin on the rule-use ask of #3041, David on explore agents writing to the tracker and #3126, Eyra on the Glass Box diagram numbered and un-numbered 61 seconds apart in #3151). A blind Sonnet reader picked David's on event weight; I revised it for its confusions (explore agent, session, whether the owner expected read-only), saved it, and ran a fact-check subagent. It found one wrong claim (the Skill page did not mention writes at all, which was false: it mentioned GitHub writes in passing) plus loose wording; I cut an attribution only a session summary supported. Each edit forced a re-check of the changed lines. code-review (Standards, Spec) found no hard violations; the post has 5 body paragraphs against a norm of 1-4, left as is. The first gate run failed on an unquoted colon in the description I had edited after validate:content last passed; fixed, re-checked and gated green on c024aab54. Merged PR 3153 after my verdict comment. Step 12: drafted three replies (Karen, Kevin, Eyra); a fresh reader picked Karen's (#3109 got code for the thin report, #3126 only prose for the false writes list) and a second reader said it was still worth reading. Revised it for glosses and a wrong 'one per open issue', fact-checked (one wrong claim fixed), code-reviewed, gated it green with its pingback stub, opened PR 3155 and merged it after CI."
+prs:
+  - "3153"
+  - "3155"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-11-12-the-research-agents-write-to-the-tracker-and-the-skill-never-said-so.md
+    reason: (read before editing)
+  - path: layers/blog/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/blog/tenant.config.ts
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/david.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-11-12-a-filler-report-got-a-retry-loop-a-false-report-got-a-reminder.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pingbacks/2026-11-12-karen-the-research-agents-write-to-the-tracker-and-the-skill-never-said-so.yml
+    reason: (read before editing)
+  - path: layers/blog/content/karen/pages/2026-11-12-a-filler-report-got-a-retry-a-false-report-got-a-reminder.md
+    reason: (read before editing)
+  - path: .agents/skills/blog-post/personas/karen.md
+    reason: (no reason given)
+  - path: docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/kevin.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/eyra.md
+    reason: (no reason given)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: the scheduled task itself
+  - name: dispatch-subagents
+    reason: read before the blind-reader and fact-check briefs
+  - name: code-review
+    reason: review before opening the PR
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Edited the post's description after validate:content last passed and never re-ran it, so the gate failed on an unquoted colon in the YAML.
+    solution: Run pnpm validate:content after any frontmatter edit, or have the Skill's fact-check loop end with it.
+    severity: minor
+  - description: Each small wording fix needed its own checker re-dispatch and a fresh blob, four rounds in all, for a post of about five paragraphs.
+    solution: Batch all review and checker fixes into one edit before re-checking; the Skill could say so in step 9.
+    severity: minor
+  - description: Ran git push in the same Bash call as the backgrounded gate, which git-conventions says never to do; nothing broke.
+    solution: Push in its own call before starting the gate.
+    severity: nit
+  - description: Typed a placeholder session id in my first commit message; the commit-msg hook replaced it with the real trailer, so no harm.
+    solution: Copy the id from the attribution reminder before writing the message.
+    severity: nit
+  - description: My draft said the Skill page did not mention agent writes at all, taken from a PR body instead of the base file; the fact-checker caught it before merge.
+    solution: Check a negative claim against the base file with grep before drafting it.
+    severity: minor
+durationSec: 1957
+models:
+  claude-sonnet-5-5: 216
+toolCounts:
+  Bash: 74
+  Read: 3
+  ToolSearch: 1
+  mcp__github__pull_request_read: 9
+  Skill: 7
+  Agent: 9
+  SendMessage: 6
+  ReadNotifications: 7
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 2
+  mcp__github__add_issue_comment: 2
+filesEdited:
+  - layers/blog/content/david/pingbacks/2026-11-12-karen-the-research-agents-write-to-the-tracker-and-the-skill-never-said-so.yml
+  - layers/blog/content/karen/pages/2026-11-12-a-filler-report-got-a-retry-a-false-report-got-a-reminder.md
+  - layers/blog/content/david/pages/2026-11-12-the-research-agents-write-to-the-tracker-and-the-skill-never-said-so.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+docsReadBySubagents:
+  - .agents/skills/blog-post/SKILL.md
+  - docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: gate:scoped and review before PR
+      - path: .claude/rules/adr-0003.md
+        value: backed
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: checked the commit trailer landed
+      - path: docs/agents/pr-workflow.md
+      - path: docs/agents/git-conventions.md
+      - path: layers/blog/GLOSSARY.md
+      - path: .agents/skills/blog-post/personas/david.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported: []
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/content/david/pages/2026-11-12-the-research-agents-write-to-the-tracker-and-the-skill-never-said-so.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/blog/content/david/pages/2026-11-12-the-research-agents-write-to-the-tracker-and-the-skill-never-said-so.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: layers/blog/content/david/pages/2026-11-12-the-research-agents-write-to-the-tracker-and-the-skill-never-said-so.md
+    reported:
+      - path: docs/agents/github-integration.md=none
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/blog/GLOSSARY.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/blog/GLOSSARY.md
+      - rule: .claude/rules/data-shapes.md
+        via: native
+        trigger: layers/blog/tenant.config.ts
+      - rule: .claude/rules/tenant-layers.md
+        via: native
+        trigger: layers/blog/tenant.config.ts
+      - rule: .claude/rules/adr-0002.md
+        via: native
+        trigger: layers/blog/tenant.config.ts
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: native
+        trigger: layers/blog/tenant.config.ts
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/blog-post/personas/david.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: .agents/skills/blog-post/personas/david.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/blog-post/personas/david.md
+    reported:
+      - path: .claude/rules/tenant-glossary.md
+        value: backed
+      - path: .claude/rules/adr-0012.md
+        value: backed
+      - path: layers/blog/GLOSSARY.md
+      - path: .agents/skills/blog-post/SKILL.md
+      - path: .agents/skills/blog-post/personas/david.md
+      - path: layers/blog/tenant.config.ts
+  - by: general-purpose
+    subagent: 3
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/blog-post/SKILL.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: .agents/skills/blog-post/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/blog-post/SKILL.md
+    reported: []
+  - by: general-purpose
+    subagent: 4
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/content/david/pages/2026-11-12-the-research-agents-write-to-the-tracker-and-the-skill-never-said-so.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/blog/content/david/pages/2026-11-12-the-research-agents-write-to-the-tracker-and-the-skill-never-said-so.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: layers/blog/content/david/pages/2026-11-12-the-research-agents-write-to-the-tracker-and-the-skill-never-said-so.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .claude/rules/adr-0003.md
+        value: backed
+  - by: general-purpose
+    subagent: 5
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/content/karen/pages/2026-11-12-a-filler-report-got-a-retry-loop-a-false-report-got-a-reminder.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/blog/content/karen/pages/2026-11-12-a-filler-report-got-a-retry-loop-a-false-report-got-a-reminder.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: layers/blog/content/karen/pages/2026-11-12-a-filler-report-got-a-retry-loop-a-false-report-got-a-reminder.md
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: general-purpose
+    subagent: 6
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/content/david/pages/2026-11-12-the-research-agents-write-to-the-tracker-and-the-skill-never-said-so.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/blog/content/david/pages/2026-11-12-the-research-agents-write-to-the-tracker-and-the-skill-never-said-so.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: layers/blog/content/david/pages/2026-11-12-the-research-agents-write-to-the-tracker-and-the-skill-never-said-so.md
+    reported: []
+  - by: general-purpose
+    subagent: 7
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/blog/GLOSSARY.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/blog/GLOSSARY.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/blog-post/personas/karen.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: .agents/skills/blog-post/personas/karen.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/blog-post/personas/karen.md
+      - rule: .claude/rules/adr-0030.md
+        via: native
+        trigger: docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+    reported:
+      - path: .claude/rules/adr-0012.md
+        value: backed
+      - path: .claude/rules/tenant-glossary.md
+        value: backed
+      - path: .agents/skills/blog-post/SKILL.md
+  - by: general-purpose
+    subagent: 8
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/blog-post/SKILL.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: .agents/skills/blog-post/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/blog-post/SKILL.md
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0012.md
+        value: backed
+      - path: .agents/skills/blog-post/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Blind read of three blog drafts
+    model: sonnet
+    durationSec: 18
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 2.9
+  - type: general-purpose
+    task: Fact-check blog post claims
+    model: sonnet
+    durationSec: 286
+    toolCalls: 31
+    modelCalls: 20
+    tokenShare: 5.7
+  - type: general-purpose
+    task: Standards review of blog post
+    model: sonnet
+    durationSec: 20
+    toolCalls: 8
+    modelCalls: 4
+    tokenShare: 1.9
+  - type: general-purpose
+    task: Spec review of blog post
+    model: sonnet
+    durationSec: 62
+    toolCalls: 21
+    modelCalls: 9
+    tokenShare: 3.2
+  - type: general-purpose
+    task: Blind read of reply drafts
+    model: sonnet
+    durationSec: 15
+    toolCalls: 7
+    modelCalls: 3
+    tokenShare: 2.7
+  - type: general-purpose
+    task: Fact-check Karen reply post
+    model: sonnet
+    durationSec: 163
+    toolCalls: 26
+    modelCalls: 11
+    tokenShare: 3.7
+  - type: general-purpose
+    task: Second reader on reply post
+    model: sonnet
+    durationSec: 18
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 1.4
+  - type: general-purpose
+    task: Standards review of reaction post
+    model: sonnet
+    durationSec: 25
+    toolCalls: 11
+    modelCalls: 4
+    tokenShare: 1.9
+  - type: general-purpose
+    task: Spec review of reaction post
+    model: sonnet
+    durationSec: 38
+    toolCalls: 10
+    modelCalls: 6
+    tokenShare: 2.3
+gitBranch: claude/zen-heisenberg-50u251
+entrypoint: remote_trigger
+cliVersion: 2.1.322
+trigger: blog-post
+learnings:
+  - PR descriptions are not in git, so a checker without the GitHub API cannot verify quotes from them; a post that quotes one should name the PR so the checker fetches it.
+landedBy: Stop

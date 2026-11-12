@@ -9,6 +9,7 @@ const props = defineProps<{
   surround: ReturnType<typeof glassboxSurround>
   through: GlassboxPageLink[]
   titles: GlassboxTitles
+  descriptions: GlassboxTitles
   dated: boolean
   source?: string
 }>()
@@ -30,42 +31,54 @@ const current = ref<string>()
 // lede and the first section, and each Walkthrough stop can show it is current.
 const parts = computed(() => {
   const { body } = props.page
-  const framed = subject.value ? glassboxLessonSections(body.value, props.base, props.titles, readable.value) : body.value
+  const framed = subject.value ? glassboxLessonSections(body.value, props.base, props.titles, readable.value, props.descriptions) : body.value
   const [intro, rest] = glassboxSplitBeforeBody(framed)
   const sections = glassboxFrameDiagrams(rest)
-  const withBody = (nodes: typeof intro) => ({ ...props.page, body: { ...body, value: nodes } })
+  // A Walkthrough's diagram only makes sense beside its steps: it leaves the flow and sits after the last stop,
+  // or beside the stops on wide screens (the `.walk` rules below).
+  const panes = walkthrough.value ? sections.filter(glassboxIsDiagramPane) : []
+  const flow = walkthrough.value ? sections.filter((node) => !glassboxIsDiagramPane(node)) : sections
+  const withBody = (nodes: typeof intro) => ({ ...props.page, body: { ...body, value: nodes.map((node) => glassboxMarkSeen(node, props.base, readable.value)) } })
+  const sectionParts = (walkthrough.value ? glassboxWalkthroughParts(flow, props.base, props.titles, props.descriptions) : [{ nodes: flow.map((node) => glassboxLessonChipsDeep(node, props.base)) }])
+    .map((part) => ({ ...part, value: withBody(part.nodes) }))
   return {
     intro: withBody(walkthrough.value ? intro : intro.map((node) => glassboxLessonChipsDeep(node, props.base))),
-    sections: (walkthrough.value ? glassboxWalkthroughParts(sections, props.base, props.titles) : [{ nodes: sections.map((node) => glassboxLessonChipsDeep(node, props.base)) }])
-      .map((part) => ({ ...part, value: withBody(part.nodes) })),
+    sections: sectionParts,
+    diagram: panes.length ? withBody(panes) : undefined,
+    diagramAfter: sectionParts.findLastIndex((part) => 'stop' in part && part.stop),
     toc: subject.value ? glassboxLessonToc(body.toc?.links ?? [], body.value, props.base, readable.value) : body.toc?.links ?? [],
   }
 })
 </script>
 
 <template>
-  <article class="article">
+  <article class="article" :class="{ 'gb-wide': parts.diagram }">
     <p v-if="subject" class="chips"><NuxtLink class="chip" :to="`${base}/${subject.slug}`">{{ subject.name }}</NuxtLink><span>Lesson</span></p>
     <p v-else-if="walkthrough" class="chips"><span class="chip">Walkthrough</span></p>
     <h1 :class="{ lesson: subject || walkthrough }">{{ page.title }}</h1>
     <ContentRenderer class="gb-prose" :value="parts.intro" />
     <GlassboxToc v-if="parts.toc.length" v-model:current="current" :links="parts.toc" />
-    <template v-for="(part, i) in parts.sections" :key="i">
-      <div v-if="part.stop" class="stop" :class="{ current: part.id === current }">
-        <span class="stop-n">{{ part.stop }}</span>
-        <ContentRenderer class="gb-prose stop-pane" :value="part.value" />
-      </div>
-      <ContentRenderer v-else class="gb-prose" :value="part.value" />
-    </template>
+    <div :class="walkthrough ? ['walk', { 'has-diagram': parts.diagram }] : 'flat'">
+      <template v-for="(part, i) in parts.sections" :key="i">
+        <div v-if="part.stop" class="stop" :class="{ current: part.id === current }">
+          <span class="stop-n">{{ part.stop }}</span>
+          <ContentRenderer class="gb-prose stop-pane" :value="part.value" />
+        </div>
+        <ContentRenderer v-else class="gb-prose" :value="part.value" />
+        <aside v-if="parts.diagram && i === parts.diagramAfter" class="walk-diagram" aria-label="The whole story as a diagram">
+          <ContentRenderer class="gb-prose" :value="parts.diagram" />
+        </aside>
+      </template>
+    </div>
     <section v-if="readNext.length" class="read">
       <h2>Lessons already read</h2>
       <ul>
-        <li v-for="lesson in readNext" :key="lesson.path"><span>{{ lesson.subject }}</span><NuxtLink :to="`${base}${lesson.path}`">{{ lesson.title }}</NuxtLink><span class="tick" role="img" aria-label="Read">✓</span></li>
+        <li v-for="lesson in readNext" :key="lesson.path"><span>{{ lesson.subject }}</span><NuxtLink :to="`${base}${lesson.path}`">{{ lesson.title }}</NuxtLink><span class="tick gb-tick" role="img" aria-label="Read"></span></li>
       </ul>
       <button type="button" class="reset" @click="reset">Reset reading progress</button>
     </section>
     <template v-if="through.length">
-      <h2>Walkthroughs through this Lesson</h2>
+      <h2>Walkthroughs related to this Lesson</h2>
       <ul class="gb-next">
         <li v-for="w in through" :key="w.path"><span>{{ glassboxLessonLabels.walkthrough }}</span><NuxtLink :to="`${base}${w.path}`">{{ w.title }}</NuxtLink></li>
       </ul>
@@ -194,9 +207,37 @@ const parts = computed(() => {
   margin: 0;
   border-bottom: 1px solid var(--gb-line);
 }
-.article :deep(.gb-next li)::after { content: '→'; color: var(--gb-accent); }
+/* The row's end mark: a book for a Glass Box page, as inline links have, an arrow for anywhere else (the Journal). */
+.article :deep(.gb-next li)::after { content: '→'; color: var(--gb-accent); margin-inline-start: 12px; }
+.article :deep(.gb-next li:has(a[href^="/t/glassbox/"]))::after {
+  content: '';
+  inline-size: 1em;
+  block-size: 1em;
+  background: currentColor;
+  mask: var(--gb-book) center / contain no-repeat;
+}
 .article :deep(.gb-next a) { color: var(--gb-ink); font-weight: 500; text-decoration: none; }
 .article :deep(.gb-next a)::after { content: ''; position: absolute; inset: 0; }
+.article :deep(.gb-next li) { padding-block: 8px; }
+.article :deep(.gb-next small) { display: block; margin-top: 2px; font-size: 14px; line-height: 1.45; color: var(--gb-muted); }
+
+.flat { display: contents; }
+/* Wide screens: the stops left, the whole story's diagram right, held in view while the stops scroll.
+   Below that the diagram follows the last stop. */
+@media (min-width: 1360px) {
+  .walk.has-diagram { display: grid; grid-template-columns: minmax(0, 1fr) 420px; column-gap: 32px; }
+  .walk.has-diagram > :not(.walk-diagram) { grid-column: 1; }
+  .walk-diagram {
+    grid-column: 2;
+    grid-row: 1 / 40;
+    align-self: start;
+    position: sticky;
+    top: var(--gb-heading-clear);
+    max-height: calc(100dvh - var(--gb-heading-clear) - 16px);
+    overflow-y: auto;
+  }
+  .walk-diagram :deep(.gb-diagram) { margin: 16px 0 0; }
+}
 
 /* Walkthrough stops: numbered circles on a thread, each stop its own pane. */
 .stop { position: relative; display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 16px; margin-top: 16px; }
@@ -252,8 +293,10 @@ const parts = computed(() => {
   margin-inline-start: 0.3em;
   vertical-align: -0.08em;
   background: currentColor;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 3.5C6.5 2.5 4 2.3 1.5 2.8v9.7c2.5-.5 5-.3 6.5.7 1.5-1 4-1.2 6.5-.7V2.8C12 2.3 9.5 2.5 8 3.5zM8 3.5v9.7' fill='none' stroke='black' stroke-width='1.4' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: var(--gb-book) center / contain no-repeat;
 }
+/* A read Lesson's link shows the same tick as the sidebar, in the book's place. */
+.article :deep(a.seen:not(.file, .chip, .card, .gb-next a, .read a))::after { mask: var(--gb-check) center / contain no-repeat; }
 .article :deep(:is(.gb-lessons li, .lesson) > a:not(.file))::after { background: var(--gb-accent); }
 .article :deep(li > .gb-lessons), .article :deep(li > p > .gb-lessons) { display: inline; margin: 0; }
 .article :deep(li > .gb-lessons li), .article :deep(li > p > .gb-lessons li) { display: inline-block; margin: 3px 6px 3px 0; padding: 0 8px; font-size: 13px; }

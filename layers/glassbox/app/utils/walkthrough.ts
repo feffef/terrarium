@@ -22,7 +22,7 @@ export interface GlassboxWalkthroughPart {
  *  h2) on its own, its number moved out of the heading and its `::lessons`
  *  drawn as chips; whatever lies between stops in plain parts, with A real case
  *  framed and Where next drawn as rows. */
-export function glassboxWalkthroughParts(nodes: MinimarkNode[], base: string, titles: GlassboxTitles = {}): GlassboxWalkthroughPart[] {
+export function glassboxWalkthroughParts(nodes: MinimarkNode[], base: string, titles: GlassboxTitles = {}, descriptions: GlassboxTitles = {}): GlassboxWalkthroughPart[] {
   const parts: GlassboxWalkthroughPart[] = []
   let section = ''
   let box: MinimarkElement | undefined
@@ -42,7 +42,7 @@ export function glassboxWalkthroughParts(nodes: MinimarkNode[], base: string, ti
     if (!parts.length) parts.push({ nodes: [] })
     const part = parts.at(-1)!
     const isNextList = section === glassboxLessonIds.whereNext && tag === 'ul'
-    ;(box ?? part.nodes).push(part.stop ? glassboxLessonChips(node, base) : isNextList ? glassboxNextList(node, base, titles) : node)
+    ;(box ?? part.nodes).push(part.stop ? glassboxLessonChips(node, base) : isNextList ? glassboxNextList(node, base, titles, [], descriptions) : node)
   }
   return parts
 }
