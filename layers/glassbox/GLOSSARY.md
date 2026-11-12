@@ -65,11 +65,14 @@ Terrarium applies them without reading the source.
   so the cached server render is the same for every visitor (ADR-0028). Read
   lessons get a ✓ (one shared SVG) after their title in the sidebar, where a
   subject's count reads `3/8` once any is read. A subject page ticks them the
-  same way and its count line reads `3 of 8 read` once any is read; it has no
-  reset. In a lesson or walkthrough, an inline link or chip to a read lesson
+  same way, shows a book after each unread title, and its count line reads
+  `3 of 8 read` once any is read; it has no reset. Every row of a subject's
+  list, the sidebar's subject rows, Where next and `Lessons already read` is one
+  link across its whole width, and hovering it, or a previous or next card,
+  turns the title accent-coloured. In a lesson or walkthrough, an inline link or chip to a read lesson
   shows that ✓ in place of the book. A lesson's
   hand-written Where next links that are read move out of Where next into a
-  `Lessons already read` section right below it (subject, title, ✓); Where
+  `Lessons already read` section right below it (subject, title, description, ✓); Where
   next, heading included, vanishes once all are read, and the section is hidden
   while none is. Only that section holds the
   `Reset reading progress` button, which clears just that key. No sync.
@@ -105,7 +108,8 @@ Its body follows one contract, which the page frames like design 1b
 - `## Where next`, a list of 1 to 5 closest pages (a lesson is marked read when
   it scrolls into view, so it is never empty; two other pages should list each
   lesson, and fewer is a page-check warning). A row ends in the book for a
-  Glass Box page and in → for any other place, the Journal included. Links within this
+  Glass Box page and in → for any other place, the Journal included. A row's
+  left label is the lesson's subject name, or `Walkthrough`, `Journal` or `Page`. Links within this
   space are bare, `[](/t/glassbox/guide/…)`, and show the target's current
   title; a Journal link keeps typed text:
   related lessons first, then optionally one Journal page as evidence. A

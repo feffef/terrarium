@@ -26,12 +26,14 @@ const countOf = (subject: ReturnType<typeof glassboxDirectory>[number]) =>
       <h2 class="gb-label">Subjects</h2>
       <details v-for="subject in subjects" :key="subject.slug" :open="subject.slug === currentSubject">
         <summary>
-          <NuxtLink :to="`${base}/${subject.slug}`" :aria-current="path === `/${subject.slug}` ? 'page' : undefined">{{ subject.name }}</NuxtLink>
-          <span class="count" :class="{ done: countOf(subject).done }">{{ countOf(subject).text }}</span>
+          <NuxtLink :to="`${base}/${subject.slug}`" :aria-current="path === `/${subject.slug}` ? 'page' : undefined">
+            <span class="name">{{ subject.name }}</span>
+            <span class="count" :class="{ done: countOf(subject).done }">{{ countOf(subject).text }}</span>
+          </NuxtLink>
         </summary>
         <ul>
           <li v-for="lesson in subject.lessons" :key="lesson.path">
-            <NuxtLink :to="`${base}${lesson.path}`" :aria-current="lesson.path === path ? 'page' : undefined">{{ lesson.title }}<span v-if="read.includes(lesson.path)" class="tick gb-tick" role="img" aria-label="Read"></span></NuxtLink>
+            <NuxtLink :to="`${base}${lesson.path}`" :aria-current="lesson.path === path ? 'page' : undefined">{{ lesson.title }}<span v-if="read.includes(lesson.path)" class="tick gb-tick" role="img" aria-label="Read"/></NuxtLink>
           </li>
         </ul>
       </details>
@@ -64,16 +66,20 @@ h2 { margin: 0; padding: 0 10px 8px; }
 ul { list-style: none; margin: 0; padding: 0; }
 summary {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 7px 10px;
   border-radius: 10px;
   cursor: pointer;
   list-style: none;
 }
 summary::-webkit-details-marker { display: none; }
-/* The name opens the Subject page (its Lessons expand with it); the rest of the row only folds the list. */
-summary a { color: inherit; }
+/* The link fills the whole row, so any click opens the Subject page and its Lessons expand with it. */
+summary a {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 10px;
+  color: inherit;
+}
 summary a[aria-current='page'] { font-weight: 600; }
 summary:hover { background: var(--gb-tint); }
 .count { font: 11.5px var(--gb-mono); color: var(--gb-muted); }
@@ -127,7 +133,8 @@ li a[aria-current='page'] .tick { color: inherit; }
   }
   section > h2 { display: none; }
   section + section > h2 { display: block; padding-top: 16px; }
-  summary { min-height: 44px; padding: 0 4px; border-radius: 0; border-bottom: 1px solid var(--gb-line); font-size: 16px; }
+  summary { min-height: 44px; border-radius: 0; border-bottom: 1px solid var(--gb-line); font-size: 16px; }
+  summary a { padding: 0 4px; }
   li a { min-height: 40px; display: flex; align-items: center; padding: 0 12px; font-size: 15px; }
 }
 </style>

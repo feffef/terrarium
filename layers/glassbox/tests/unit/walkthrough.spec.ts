@@ -73,7 +73,7 @@ describe('glassboxWalkthroughParts', () => {
       ['div', { class: 'gb-case' }, ['h2', { id: 'a-real-case' }, 'A real case'], ['p', {}, 'Story.']],
       ['h2', { id: 'where-next' }, 'Where next'],
       ['ul', { class: 'gb-next' },
-        ['li', {}, ['span', {}, 'Lesson'], link(`${base}/nuxt-vue/layers`)],
+        ['li', {}, ['span', {}, 'Nuxt & Vue'], link(`${base}/nuxt-vue/layers`)],
         ['li', {}, ['span', {}, 'Walkthrough'], link(`${base}/walkthroughs/other`)],
         ['li', {}, ['span', {}, 'Journal'], link('/t/journal/current')],
       ],

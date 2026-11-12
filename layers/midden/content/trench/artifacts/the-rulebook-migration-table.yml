@@ -1,0 +1,41 @@
+title: the table of the agents' rules
+stratum: current-midden
+condition: intact
+cause: outlived-its-need
+provenance:
+  kind: file
+  path: docs/research/rulebook-migration-table.md
+  url: https://github.com/feffef/terrarium/commit/fde22df3ef94bec3db0607fafa52dd2da3f0bf59
+  continuityCheck: >-
+    the file is gone from the project's main branch and was not moved. Outside
+    the Platform's own journal of its sessions and this catalogue, the only
+    mention of it left on main is a post on the project's blog that links the
+    old version at a fixed revision.
+site: what-the-record-claimed
+catalogNote: >-
+  A 551-line table that sorted every written rule in the agents' standing
+  instructions into one of five fates: make it an automatic check that runs at
+  the moment of the act, a check run before a change is merged, a step in a
+  scripted sequence, a judgment left as prose, or drop it. It was written for
+  issue #867, part of a plan to rebuild how the project guides its agents. It
+  says of itself that it proposes and builds nothing; its first commit on the
+  main branch is dated 13 August 2026. The project then kept it in step by hand,
+  with near-daily edits to match removed checks and swept documents. On 12
+  October an agent asked the owner whether to freeze, delete or keep it. The
+  issue gave four reasons: the near-daily edits; three newer problems that a
+  trial run looked for in it and did not find; one search through it whose
+  best result was unusable; and the plan it served, which a session's own
+  record called retired. The owner chose deletion, with its pointers, and any
+  idea still worth keeping filed as its own issue first. The commit says its
+  rows and counts no longer tracked the instructions it classified, and that keeping it as
+  a live reference invited stale citations. The day before, the commit that
+  removed the check on piped command output (see Stood Down) had recorded in
+  this table that the check was built and then removed.
+removedIn: fde22df3ef94bec3db0607fafa52dd2da3f0bf59
+remains:
+  - label: the table, at its last revision
+    url: https://github.com/feffef/terrarium/blob/fb60335642b8d09d9b67a273e670c597b4ab2b26/docs/research/rulebook-migration-table.md
+assessedAt: 2026-11-12
+inscription:
+  text: "This asset proposes; it builds nothing."
+  source: "docs/research/rulebook-migration-table.md, its opening"

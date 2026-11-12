@@ -1,13 +1,14 @@
 schemaVersion: 1
 session: session_013zxzeSkGfgujTxwvEaiFTh
 startedAt: 2026-11-12T22:40:22Z
-endedAt: 2026-11-12T22:58:50Z
+endedAt: 2026-11-12T23:45:22Z
 kind: interactive
-goal: Survey what the Platform discarded since the last Midden survey
+goal: Survey what the Platform discarded since the last Midden survey, then catalogue the finds the owner chose
 status: completed
-outcome: Survey issue 3213 filed with 12 candidates; the owner accepted six for cataloguing, recorded in a comment
-summary: "The owner invoked /midden-survey (human-instructed). I ran the Skill as written: bounded the sweep at the previous report (2026-10-10, issue 1739), ran the mechanical script (118 deleted-file candidates), swept closed-unmerged PRs and the 39 branches newly past the 30-day floor, deduped against the trench and stores, and judged each cluster against both gates by checking origin/main for successors. Most of the window failed Gate B (promoted or folded Glass Box drafts, in-place Blog rewrites, replaced scripts, a clear-backlog dry run whose issues real PRs closed), so those went into the exclusions table. I filed issue 3213 with 12 candidates, three flagged weak. The owner then chose candidates 1, 2, 3, 4 and 10, and asked to add glassbox-improve, which I had excluded at Gate B because glassbox-curate carries its purpose. I recorded that human decision in a comment on 3213 with a draft provenance block for glassbox-improve and the accepted list. Nothing was catalogued; that stays a separate, green-lit run. Not verified: eslint caching on the gate experiments, whether later Karen posts repeat the withdrawn reply, and the late commit on claude/visitor-fixes-mobile."
-prs: []
+outcome: Survey issue 3213 filed and the owner accepted six finds; PR 3217 catalogued them and the owner merged it
+summary: "Human-instructed throughout. The owner ran /midden-survey; I swept deleted files, closed-unmerged PRs and dormant branches since the last report, judged each candidate against both gates by checking origin/main for successors, and filed issue 3213 with 12 candidates, three flagged weak. The owner then chose candidates 1, 2, 3, 4 and 10 and asked to add glassbox-improve, which I had excluded at Gate B; I recorded that on the issue. The owner ran /midden-catalogue next. I re-read each find at its commits, issues and session logs, wrote five trench records, one stores record and a new dig report (Short Lives), and folded finds into two existing reports. Two subagents (an adversarial fact-check and a voice review) found real defects: lifetimes rounded up, a unit error (10 refusals vs 10 sessions), a library confusion in the scripts record, and jargon; all were fixed, and a second fact-check found four more minor wording points, also fixed. The owner asked whether to close the open dig season; I proposed a 9 and 2 split (\"the Swept Floor\"), the owner agreed, I began editing, then the owner said to leave it open and I reverted my uncommitted edits. Agent-initiated: which borderline survey items to include or exclude, the placement of the rulebook table and scripts, and the causes and grades, all flagged in the PR for the owner's review. The PR passed pnpm typecheck, validate:content and gate:scoped, CI was green, and the owner merged it on 12 November (issue 3213 closed). I subscribed to the PR's activity only after the Stop hook flagged it."
+prs:
+  - "3217"
 docsRead:
   - path: layers/midden/GLOSSARY.md
     reason: (no reason given)
@@ -19,6 +20,24 @@ docsRead:
     reason: (no reason given)
   - path: docs/agents/triage-labels.md
     reason: (no reason given)
+  - path: layers/midden/app/utils/condition.ts
+    reason: (no reason given)
+  - path: layers/midden/app/utils/cause.ts
+    reason: (no reason given)
+  - path: layers/midden/app/utils/strata.ts
+    reason: (read before editing)
+  - path: layers/midden/tenant.config.ts
+    reason: (no reason given)
+  - path: layers/midden/content/trench/pages/stood-down.md
+    reason: (read before editing)
+  - path: layers/midden/content/trench/pages/what-the-record-claimed.md
+    reason: (read before editing)
+  - path: layers/midden/tests/e2e/midden.spec.ts
+    reason: (read before editing)
+  - path: layers/midden/content/trench/artifacts/the-tail-pipe-guard.yml
+    reason: (read before editing)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
 skillsUsed:
   - name: midden-survey
     reason: the task itself
@@ -26,6 +45,10 @@ skillsUsed:
     reason: single end-of-session close
   - name: log-session
     reason: (no reason given)
+  - name: dispatch-subagents
+    reason: (no reason given)
+  - name: midden-catalogue
+    reason: (invoked as a slash command)
 frictions:
   - description: gh api --paginate fails in this cloud proxy (numeric-ID repository paths blocked); I paged by hand with a page parameter.
     solution: Have midden-survey say to page closed PRs manually in cloud sessions, with a loop that stops at the window start.
@@ -39,19 +62,50 @@ frictions:
   - description: The sweep window held 118 deleted files and 39 branches; judging them one by one took many batched checks, since the script's noise screen misses generated mermaid SVGs.
     solution: Add generated mermaid SVG paths and blog in-place retitles to the survey script's noise or relocation screens.
     severity: minor
-durationSec: 1108
+  - description: "First drafts of the six records carried overstated numbers: lifetimes rounded up from calendar dates, 10 refusals instead of 10 sessions, and a library said to be dropped when only a patch was removed."
+    solution: midden-catalogue should say to compute each lifetime from merged_at timestamps and to copy counts with their unit from the source line before writing.
+    severity: minor
+  - description: The guide-rater record first described the Skill's first version, while the revision it links is a later one that works differently.
+    solution: midden-catalogue step 2 should say to read the thing at the revision the remains link names, not at its birth commit.
+    severity: nit
+  - description: I began editing the season list after the owner's 9 and 2 answer, then reverted when they changed their mind.
+    solution: Confirm a structural change such as closing a season once more before editing.
+    severity: nit
+  - description: I opened the PR and told the owner I had not subscribed, following the system prompt's 'ask first' line over ADR-0003, until the Stop hook flagged it.
+    solution: Subscribe in the same turn as opening the PR, as ADR-0003 says; the rule already overrides the generic prompt.
+    severity: nit
+durationSec: 3900
 models:
-  claude-sonnet-5-5: 89
+  claude-sonnet-5-5: 285
 toolCounts:
-  Read: 5
-  Bash: 32
-  ToolSearch: 1
+  Read: 14
+  Bash: 87
+  ToolSearch: 3
   mcp__github__issue_read: 1
-  Write: 3
-  Edit: 2
+  Write: 23
+  Edit: 19
   mcp__github__issue_write: 1
-  Skill: 2
+  Skill: 4
   mcp__github__add_issue_comment: 1
+  Agent: 3
+  Grep: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__update_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 4
+  mcp__github__pull_request_read: 2
+filesEdited:
+  - layers/midden/content/trench/artifacts/the-tail-pipe-guard.yml
+  - layers/midden/content/trench/artifacts/the-atlas-plates-and-random-pages.yml
+  - layers/midden/content/stores/artifacts/the-unused-scripts.yml
+  - layers/midden/content/trench/artifacts/the-rulebook-migration-table.yml
+  - layers/midden/content/trench/artifacts/the-adr-check.yml
+  - layers/midden/content/trench/artifacts/the-guide-rater.yml
+  - layers/midden/content/trench/pages/short-lives.md
+  - layers/midden/content/trench/pages/stood-down.md
+  - layers/midden/content/trench/pages/what-the-record-claimed.md
+  - layers/midden/tests/e2e/midden.spec.ts
+  - layers/midden/app/utils/strata.ts
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -89,23 +143,136 @@ ruleUse:
         trigger: docs/agents/triage-labels.md
       - rule: .claude/rules/adr-0005.md
         via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: native
+        trigger: layers/midden/app/utils/condition.ts
+      - rule: .claude/rules/data-shapes.md
+        via: native
+        trigger: layers/midden/tenant.config.ts
+      - rule: .claude/rules/adr-0002.md
+        via: native
+        trigger: layers/midden/tenant.config.ts
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: native
+        trigger: layers/midden/tenant.config.ts
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/midden/content/trench/pages/short-lives.md
     reported:
       - path: .claude/rules/adr-0003.md
         value: backed
-        why: discovery only; no building
+        why: built only after owner approval
       - path: .claude/rules/adr-0017.md
         value: steered
-        why: provenance header on the issue
+        why: provenance header on every post
       - path: layers/midden/GLOSSARY.md
       - path: docs/agents/github-integration.md
       - path: docs/agents/issue-tracker.md
       - path: docs/agents/triage-labels.md
       - path: docs/agents/git-conventions.md
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: gate then PR; human merge
+      - path: .claude/rules/tenant-glossary.md
+        value: steered
+        why: read Midden glossary first
+      - path: docs/agents/pr-workflow.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+    reported: []
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/midden/GLOSSARY.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/midden/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/midden/GLOSSARY.md
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+    reported:
+      - path: .claude/rules/tenant-glossary.md
+        value: steered
+      - path: layers/midden/GLOSSARY.md
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+    reported: []
+subagents:
+  - type: general-purpose
+    task: Fact-check Midden finds
+    durationSec: 430
+    toolCalls: 61
+    modelCalls: 54
+    tokenShare: 16.5
+  - type: general-purpose
+    task: Voice and domain review
+    durationSec: 98
+    toolCalls: 12
+    modelCalls: 8
+    tokenShare: 3
+  - type: general-purpose
+    task: Re-check fixed Midden claims
+    durationSec: 258
+    toolCalls: 49
+    modelCalls: 36
+    tokenShare: 9.7
 gitBranch: claude/ecstatic-bardeen-708ieg
 entrypoint: remote
 cliVersion: 2.1.323
 learnings:
   - gh api treats any -f flag as a POST even with a GET-style path; a 422 on a read means this happened.
+  - Merge timestamps of the PRs, not commit dates, give a thing's real lifetime; a squash or integration PR can land a commit a day later than its date.
+  - A Skill's description and behaviour change between versions within days, so a record that links the last revision must not describe the first.
 ideas:
   - Make midden-survey's script also list closed-unmerged PRs and dormant branches with their unmerged-commit counts and merged-PR links, so the GitHub-side half needs no hand-written paging and branch squash-merges are screened mechanically.
+  - Have midden-catalogue ship a small script that, given a removal commit and the PRs that added and removed a thing, prints its lifetime from merged_at times, so no record rounds a lifetime by hand.
 landedBy: Stop
