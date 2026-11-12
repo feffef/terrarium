@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSiYFQ3mgaCyMXicwp
 startedAt: 2026-11-12T06:45:45Z
-endedAt: 2026-11-12T08:09:57Z
+endedAt: 2026-11-12T08:32:20Z
 kind: interactive
 goal: Clear the open backlog, Seedlings included
-status: completed
-outcome: "Nine issues cleared with seven PRs merged, plus the owner-requested Subject page ticks; #3124 left for the owner to reconfigure Routines; a retro of the run was presented"
-summary: "The owner ran /clear-backlog and said to include Seedlings, which is the human direction auto-triage needs to pick them up. Explore ran one agent per eligible issue (nine uncommented ones: #3133, #3132, #3131, #3130, #3129, #3124, #3123, #3121, #2992); the other nine open issues were skipped because an agent comment was already latest. All nine came back as grill, so the owner answered Q1 to Q12 in rounds. Human-instructed: every decision below (all six harvest items, only the clear-backlog fix for #3123, one line in dispatch-subagents, one Read-first item in glassbox-curate, Subject pages and plain evidence links for Glass Box, closing #3131, naming the Routines that need unrestricted network for #3124, and the look plus a refinement for #3130 after a prototype). Agent-initiated: the explore comments and labels on the nine issues, the grouping into five branches, the briefs, the prototype itself and its throwaway branch, the question wording, the PRs, their verdicts and the merges of #3134 (#3123) and #3135 (#3121), both small Skill prose edits that ADR-0004 lets an agent merge. Where I differed from the explore agent's pick (#3133 all six, #3130 build) the owner chose. Landed: #3134 (#3123) and #3135 (#3121), both small Skill prose edits that ADR-0004 let me merge; #3136 (#2992), which the owner merged because the glassbox-curate Remit reserves it; #3137 (#3133, harvest), which the owner merged after a round-3 defect was fixed; and #3138 (#3130, reading progress) and #3139 (#3129 and #3132, Subject pages and plain evidence links), which I merged on the owner's word \"merge 3138 and 3139\" after posting verdicts. #3139 conflicted with #3138 in one file; I merged main into its branch, kept both sides, ran typecheck, the Glass Box unit tests and the scoped gate, and CI was green before the merge. The owner also asked for read ticks on the Subject pages; at Q15 they chose a follow-up PR after both merge, filed as #3140; once both had merged the owner told me to build it and to merge it when ready, so I built it through the same workflow (round 1 found only nits), sent the screenshots, gated it, opened PR #3142 and merged it on the owner's word to merge when ready. The owner then asked for a retro of the run: I read the recently closed clear-backlog issues and PR #3119, read the retro Skill's file (the Skill tool refuses it) and presented the candidates in chat. #3124 got a comment naming the Routines that need an unrestricted network and is ready-for-human for the owner to reconfigure; #3131 was closed as not planned on the owner's answer. I resumed a workflow build agent while its run was live, so two writers briefly shared the #3130 worktree."
+status: in-review
+outcome: Nine issues cleared and the Subject page ticks built; a retro of the run was posted on a new standing issue and a PR adds that retro step to the Skill
+summary: "The owner ran /clear-backlog and said to include Seedlings, which is the human direction auto-triage needs to pick them up. Explore ran one agent per eligible issue (nine uncommented ones: #3133, #3132, #3131, #3130, #3129, #3124, #3123, #3121, #2992); the other nine open issues were skipped because an agent comment was already latest. All nine came back as grill, so the owner answered Q1 to Q12 in rounds. Human-instructed: every decision below (all six harvest items, only the clear-backlog fix for #3123, one line in dispatch-subagents, one Read-first item in glassbox-curate, Subject pages and plain evidence links for Glass Box, closing #3131, naming the Routines that need unrestricted network for #3124, and the look plus a refinement for #3130 after a prototype). Agent-initiated: the explore comments and labels on the nine issues, the grouping into five branches, the briefs, the prototype itself and its throwaway branch, the question wording, the PRs, their verdicts and the merges of #3134 (#3123) and #3135 (#3121), both small Skill prose edits that ADR-0004 lets an agent merge. Where I differed from the explore agent's pick (#3133 all six, #3130 build) the owner chose. Landed: #3134 (#3123) and #3135 (#3121), both small Skill prose edits that ADR-0004 let me merge; #3136 (#2992), which the owner merged because the glassbox-curate Remit reserves it; #3137 (#3133, harvest), which the owner merged after a round-3 defect was fixed; and #3138 (#3130, reading progress) and #3139 (#3129 and #3132, Subject pages and plain evidence links), which I merged on the owner's word \"merge 3138 and 3139\" after posting verdicts. #3139 conflicted with #3138 in one file; I merged main into its branch, kept both sides, ran typecheck, the Glass Box unit tests and the scoped gate, and CI was green before the merge. The owner also asked for read ticks on the Subject pages; at Q15 they chose a follow-up PR after both merge, filed as #3140; once both had merged the owner told me to build it and to merge it when ready, so I built it through the same workflow (round 1 found only nits), sent the screenshots, gated it, opened PR #3142 and merged it on the owner's word to merge when ready. The owner then asked for a retro of the run: I read the recently closed clear-backlog issues and PR #3119, read the retro Skill's file (the Skill tool refuses it) and presented the candidates in chat. At the owner's request I then asked all 31 build and review agents for their retro, created the standing issue #3143 with a posting template, and posted the run's first report there (token costs from the 40 agent transcripts, change sizes, findings by kind, candidates about the workflow only). I first filed five separate issues (#3144 to #3148) for problems in other tools and Skills; the owner said such findings belong in Frictions, so they stay open for now and are logged below, and the standing issue's rules now say so. At the owner's request I opened PR #3149, which adds §5 Retro to the clear-backlog Skill (reviewed with the code-review Skill, gate passed); it is open and I will merge it when CI is green. #3124 got a comment naming the Routines that need an unrestricted network and is ready-for-human for the owner to reconfigure; #3131 was closed as not planned on the owner's answer. I resumed a workflow build agent while its run was live, so two writers briefly shared the #3130 worktree."
 prs:
   - "3134"
   - "3135"
@@ -15,6 +15,7 @@ prs:
   - "3138"
   - "3139"
   - "3142"
+  - "3149"
 docsRead:
   - path: .agents/skills/auto-triage/SKILL.md
     reason: (no reason given)
@@ -44,7 +45,17 @@ docsRead:
     reason: (no reason given)
   - path: .agents/skills/retro/SKILL.md
     reason: (no reason given)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (read before editing)
+  - path: docs/adr/0005-skill-model.md
+    reason: (no reason given)
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
   - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: (no reason given)
+  - path: .agents/skills/code-review/SKILL.md
     reason: (no reason given)
   - path: wf_ecc8c921-b7b-5/.agents/skills/code-review/SKILL.md
     reason: (no reason given)
@@ -52,19 +63,11 @@ docsRead:
     reason: (no reason given)
   - path: .agents/skills/glassbox-curate/SKILL.md
     reason: (read before editing)
-  - path: .agents/skills/code-review/SKILL.md
-    reason: (no reason given)
   - path: layers/glassbox/app/utils/reading.ts
     reason: (read before editing)
   - path: layers/glassbox/tests/unit/reading.spec.ts
     reason: (read before editing)
   - path: /home/user/terrarium/.claude/worktrees/wf_ecc8c921-b7b-4/.agents/skills/code-review/SKILL.md
-    reason: (no reason given)
-  - path: .agents/skills/clear-backlog/SKILL.md
-    reason: (read before editing)
-  - path: docs/adr/0005-skill-model.md
-    reason: (no reason given)
-  - path: docs/adr/0027-prune-trials.md
     reason: (no reason given)
   - path: layers/glassbox/GLOSSARY.md
     reason: (read before editing)
@@ -98,9 +101,9 @@ docsRead:
     reason: (read before editing)
   - path: .agents/skills/harvest/body-template.md
     reason: (read before editing)
-  - path: .agents/skills/visitor-loop/decisions.md
-    reason: (no reason given)
   - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/decisions.md
     reason: (no reason given)
 skillsUsed:
   - name: clear-backlog
@@ -114,6 +117,8 @@ skillsUsed:
   - name: log-session
     reason: (no reason given)
   - name: writing-for-agents
+    reason: (no reason given)
+  - name: code-review
     reason: (no reason given)
   - name: tdd
     reason: (no reason given)
@@ -160,37 +165,56 @@ frictions:
   - description: Round 2 on a two-line Skill edit and round 3 on low-risk test gaps each cost about 150000 to 170000 tokens and found only nits.
     solution: Apply pr-workflow's simple-change test and a risk bar to clear-backlog §3 step 4 before it forces another fresh round.
     severity: moderate
-durationSec: 5052
+  - description: preview.ts shot and review cannot seed localStorage, so the orchestrator and two builders each wrote a throwaway Playwright script to screenshot a page in a read state.
+    solution: "Add a repeatable --storage KEY=VALUE option to the shot and review verbs, applied before navigation (also filed as #3144)."
+    severity: minor
+  - description: verdict-line.ts prints HEAD of the current directory, but clear-backlog removes the worktree holding the PR head, so I had to recreate a detached worktree and borrow another checkout's tsx.
+    solution: "Let verdict-line take the head sha, or document the recipe in pr-workflow.md step 4 (also filed as #3145)."
+    severity: nit
+  - description: Hook reminders to read a doc or ADR reached 6 of 7 builder subagents after their first edit or git call, so each paid tokens for a read that changed nothing.
+    solution: "Name the docs in the build brief or fire the reminder earlier for subagents (also filed as #3146)."
+    severity: minor
+  - description: The rule-use hooks made 15 of 31 build and review agents run two extra echo rule-use Bash calls, a large share of a read-only reviewer's 3 to 7 calls.
+    solution: "Answer the rule-use note in the reply text or limit it to agents that edit (also filed as #3147)."
+    severity: minor
+  - description: The code-review Skill describes an orchestrator spawning two sub-agents, so all 24 workflow reviewers skipped it or applied half of it.
+    solution: "Say in the reviewer brief which Skill steps to ignore and apply only the agent's own axis, or add a single-agent path to the Skill (also filed as #3148)."
+    severity: minor
+durationSec: 6395
 models:
-  claude-sonnet-5-5: 599
+  claude-sonnet-5-5: 759
 toolCounts:
-  Skill: 12
-  Read: 23
-  Bash: 128
+  Skill: 14
+  Read: 27
+  Bash: 156
   Workflow: 11
   ToolSearch: 5
   PushNotification: 6
   Grep: 1
-  mcp__github__issue_read: 4
-  mcp__github__add_issue_comment: 12
-  mcp__github__issue_write: 10
-  Write: 7
-  Edit: 10
+  mcp__github__issue_read: 5
+  mcp__github__add_issue_comment: 15
+  mcp__github__issue_write: 20
+  Write: 8
+  Edit: 13
   SendUserFile: 3
-  SendMessage: 40
+  SendMessage: 71
   ListAgents: 1
-  mcp__github__create_pull_request: 7
-  mcp__claude-code-remote__subscribe_pr_activity: 7
-  ReadNotifications: 19
+  mcp__github__create_pull_request: 8
+  mcp__claude-code-remote__subscribe_pr_activity: 8
+  ReadNotifications: 20
   mcp__github__list_issues: 2
   mcp__github__update_pull_request: 1
   mcp__github__pull_request_read: 3
+  ls: 1
+  mcp__claude-code-remote__get_session: 1
+  Agent: 2
 filesEdited:
   - layers/glassbox/app/composables/useGlassboxRead.ts
   - layers/glassbox/app/components/glassbox/PrototypeBar.vue
   - layers/glassbox/app/components/glassbox/Sidebar.vue
   - layers/glassbox/app/components/glassbox/Article.vue
   - layers/glassbox/app/pages/t/glassbox/[space]/[...slug].vue
+  - .agents/skills/clear-backlog/SKILL.md
   - layers/glassbox/tests/unit/reading.spec.ts
   - layers/glassbox/app/utils/reading.ts
   - layers/glassbox/app/components/glassbox/Subject.vue
@@ -199,7 +223,6 @@ filesEdited:
   - .throwaway/subj/shot.ts
   - .agents/skills/glassbox-curate/SKILL.md
   - .throwaway/gb-read/shoot.ts
-  - .agents/skills/clear-backlog/SKILL.md
   - .agents/skills/dispatch-subagents/SKILL.md
   - layers/glassbox/tests/unit/lesson.spec.ts
   - layers/glassbox/app/utils/lesson.ts
@@ -221,19 +244,32 @@ rulesGlobal:
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0017.md
 rulesFollowedUp:
+  - .claude/rules/adr-0022.md
   - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0005.md
   - .claude/rules/adr-0004-human-merge.md
   - .claude/rules/adr-0006.md
   - .claude/rules/adr-0016.md
   - .claude/rules/adr-0021.md
-  - .claude/rules/adr-0027.md
-  - .claude/rules/adr-0005.md
 adrHints:
   - adr: 6
     via: path
     readAfter: true
     by: main
   - adr: 16
+    via: path
+    readAfter: true
+    by: main
+  - adr: 5
+    via: path
+    readAfter: true
+    by: main
+  - adr: 22
+    via: path
+    readAfter: true
+    by: main
+  - adr: 27
     via: path
     readAfter: true
     by: main
@@ -272,20 +308,17 @@ adrHints:
 docsReadBySubagents:
   - docs/adr/0021-multi-context-domain-docs.md
   - .agents/skills/implement/SKILL.md
+  - .agents/skills/code-review/SKILL.md
   - .agents/skills/glassbox-lesson/EVERY-PAGE.md
   - .agents/skills/glassbox-lesson/SKILL.md
-  - .agents/skills/code-review/SKILL.md
   - .agents/skills/harvest/SKILL.md
   - .agents/skills/harvest/body-template.md
-  - .agents/skills/clear-backlog/SKILL.md
-  - docs/adr/0005-skill-model.md
-  - docs/adr/0027-prune-trials.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
   - docs/agents/domain.md
   - docs/adr/0028-navigation-reads-server-payloads.md
   - .agents/skills/triage/SKILL.md
   - docs/agents/environment-caveats.md
   - .agents/skills/visitor-loop/decisions.md
-  - docs/adr/0015-audit-skills-and-conditional-importance.md
 ruleUse:
   - by: main
     answered: true
@@ -346,6 +379,8 @@ ruleUse:
         trigger: docs/adr/0006-runtime-routing-path-prefix.md
       - rule: .claude/rules/adr-0026.md
         via: hint
+      - rule: .claude/rules/guards.md
+        via: hint
     reported:
       - path: .claude/rules/adr-0022.md
         value: backed
@@ -378,6 +413,67 @@ ruleUse:
       - path: docs/adr/0004-objective-safety-gate.md
   - by: general-purpose
     subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .claude/rules/adr-0005.md
+        value: backed
+      - path: .claude/rules/adr-0027.md
+        value: backed
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: general-purpose
+    subagent: 3
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -429,7 +525,30 @@ ruleUse:
       - path: docs/agents/verifying-ui-changes.md
       - path: docs/agents/git-conventions.md
   - by: general-purpose
-    subagent: 1
+    subagent: 4
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/code-review/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/code-review/SKILL.md
+    reported:
+      - path: .claude/rules/adr-0005.md
+        value: backed
+      - path: .claude/rules/adr-0027.md
+        value: backed
+  - by: general-purpose
+    subagent: 5
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -485,64 +604,6 @@ ruleUse:
       - path: docs/agents/git-conventions.md
       - path: docs/agents/verifying-ui-changes.md
   - by: general-purpose
-    subagent: 2
-    answered: true
-    loads:
-      - rule: .claude/rules/adr-0004.md
-        via: start
-      - rule: .claude/rules/adr-0009.md
-        via: start
-      - rule: .claude/rules/adr-0003.md
-        via: start
-      - rule: .claude/rules/adr-0017.md
-        via: start
-    reported:
-      - path: .claude/rules/adr-0004.md
-        value: backed
-  - by: general-purpose
-    subagent: 3
-    answered: true
-    loads:
-      - rule: .claude/rules/adr-0004.md
-        via: start
-      - rule: .claude/rules/adr-0009.md
-        via: start
-      - rule: .claude/rules/adr-0003.md
-        via: start
-      - rule: .claude/rules/adr-0017.md
-        via: start
-    reported:
-      - path: .claude/rules/adr-0004.md
-        value: backed
-  - by: general-purpose
-    subagent: 4
-    answered: true
-    loads:
-      - rule: .claude/rules/adr-0004.md
-        via: start
-      - rule: .claude/rules/adr-0009.md
-        via: start
-      - rule: .claude/rules/adr-0003.md
-        via: start
-      - rule: .claude/rules/adr-0017.md
-        via: start
-    reported: []
-  - by: general-purpose
-    subagent: 5
-    answered: true
-    loads:
-      - rule: .claude/rules/adr-0004.md
-        via: start
-      - rule: .claude/rules/adr-0009.md
-        via: start
-      - rule: .claude/rules/adr-0003.md
-        via: start
-      - rule: .claude/rules/adr-0017.md
-        via: start
-    reported:
-      - path: .claude/rules/adr-0004.md
-        value: backed
-  - by: general-purpose
     subagent: 6
     answered: true
     loads:
@@ -554,18 +615,9 @@ ruleUse:
         via: start
       - rule: .claude/rules/adr-0017.md
         via: start
-      - rule: .claude/rules/adr-0027.md
-        via: native
-        trigger: .agents/skills/code-review/SKILL.md
-      - rule: .claude/rules/adr-0005.md
-        via: native
-        trigger: .agents/skills/code-review/SKILL.md
     reported:
       - path: .claude/rules/adr-0004.md
         value: backed
-      - path: .claude/rules/adr-0003.md
-        value: backed
-      - path: .agents/skills/code-review/SKILL.md
   - by: general-purpose
     subagent: 7
     answered: true
@@ -578,16 +630,9 @@ ruleUse:
         via: start
       - rule: .claude/rules/adr-0017.md
         via: start
-      - rule: .claude/rules/adr-0027.md
-        via: native
-        trigger: docs/agents/git-conventions.md
-      - rule: .claude/rules/adr-0029.md
-        via: native
-        trigger: docs/agents/git-conventions.md
-      - rule: .claude/rules/adr-0005.md
-        via: native
-        trigger: .agents/skills/implement/SKILL.md
-    reported: []
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
   - by: general-purpose
     subagent: 8
     answered: true
@@ -609,10 +654,8 @@ ruleUse:
     reported:
       - path: .claude/rules/adr-0004.md
         value: backed
-      - path: .claude/rules/adr-0005.md
+      - path: .claude/rules/adr-0003.md
         value: backed
-      - path: .claude/rules/adr-0027.md
-        value: steered
   - by: general-purpose
     subagent: 9
     answered: true
@@ -625,12 +668,6 @@ ruleUse:
         via: start
       - rule: .claude/rules/adr-0017.md
         via: start
-      - rule: .claude/rules/tenant-glossary.md
-        via: hint
-      - rule: .claude/rules/tenant-layers.md
-        via: hint
-      - rule: .claude/rules/ui-verification.md
-        via: hint
     reported:
       - path: .claude/rules/adr-0004.md
         value: backed
@@ -646,9 +683,7 @@ ruleUse:
         via: start
       - rule: .claude/rules/adr-0017.md
         via: start
-    reported:
-      - path: .claude/rules/adr-0004.md
-        value: backed
+    reported: []
   - by: general-purpose
     subagent: 11
     answered: true
@@ -661,7 +696,9 @@ ruleUse:
         via: start
       - rule: .claude/rules/adr-0017.md
         via: start
-    reported: []
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
   - by: general-purpose
     subagent: 12
     answered: true
@@ -698,11 +735,144 @@ ruleUse:
         via: start
       - rule: .claude/rules/adr-0017.md
         via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/implement/SKILL.md
+    reported: []
+  - by: general-purpose
+    subagent: 14
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
     reported:
       - path: .claude/rules/adr-0004.md
         value: backed
   - by: general-purpose
-    subagent: 14
+    subagent: 15
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/code-review/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/code-review/SKILL.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .claude/rules/adr-0005.md
+        value: backed
+      - path: .claude/rules/adr-0027.md
+        value: steered
+  - by: general-purpose
+    subagent: 16
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+    reported: []
+  - by: general-purpose
+    subagent: 17
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: general-purpose
+    subagent: 18
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported: []
+  - by: general-purpose
+    subagent: 19
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/code-review/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/code-review/SKILL.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .claude/rules/adr-0003.md
+        value: backed
+      - path: .agents/skills/code-review/SKILL.md
+  - by: general-purpose
+    subagent: 20
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: general-purpose
+    subagent: 21
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -745,7 +915,7 @@ ruleUse:
         value: backed
       - path: docs/agents/git-conventions.md
   - by: general-purpose
-    subagent: 15
+    subagent: 22
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -760,7 +930,45 @@ ruleUse:
       - path: .claude/rules/adr-0004.md
         value: backed
   - by: general-purpose
-    subagent: 16
+    subagent: 23
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: general-purpose
+    subagent: 24
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/code-review/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/code-review/SKILL.md
+    reported:
+      - path: .claude/rules/adr-0027.md
+        value: backed
+      - path: .claude/rules/adr-0005.md
+        value: backed
+  - by: general-purpose
+    subagent: 25
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -773,7 +981,7 @@ ruleUse:
         via: start
     reported: []
   - by: general-purpose
-    subagent: 17
+    subagent: 26
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -803,7 +1011,7 @@ ruleUse:
         value: backed
       - path: docs/agents/git-conventions.md
   - by: general-purpose
-    subagent: 18
+    subagent: 27
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -818,7 +1026,7 @@ ruleUse:
       - path: .claude/rules/adr-0004.md
         value: backed
   - by: general-purpose
-    subagent: 19
+    subagent: 28
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -852,7 +1060,7 @@ ruleUse:
       - path: docs/adr/0005-skill-model.md
       - path: docs/adr/0027-prune-trials.md
   - by: general-purpose
-    subagent: 20
+    subagent: 29
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -869,7 +1077,7 @@ ruleUse:
       - path: .claude/rules/adr-0017.md
         value: backed
   - by: general-purpose
-    subagent: 21
+    subagent: 30
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -890,7 +1098,7 @@ ruleUse:
       - path: .claude/rules/adr-0004.md
         value: backed
   - by: general-purpose
-    subagent: 22
+    subagent: 31
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -905,7 +1113,29 @@ ruleUse:
       - path: .claude/rules/adr-0004.md
         value: backed
   - by: general-purpose
-    subagent: 23
+    subagent: 32
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/code-review/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/code-review/SKILL.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .agents/skills/code-review/SKILL.md
+  - by: general-purpose
+    subagent: 33
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -959,7 +1189,7 @@ ruleUse:
     reported:
       - path: docs/adr/0021-multi-context-domain-docs.md
   - by: workflow-subagent
-    subagent: 24
+    subagent: 34
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -974,7 +1204,7 @@ ruleUse:
       - path: .claude/rules/adr-0004.md
         value: backed
   - by: workflow-subagent
-    subagent: 25
+    subagent: 35
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -997,7 +1227,7 @@ ruleUse:
       - path: .claude/rules/adr-0005.md
         value: backed
   - by: workflow-subagent
-    subagent: 26
+    subagent: 36
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -1071,7 +1301,7 @@ ruleUse:
       - path: docs/agents/github-integration.md
       - path: docs/agents/git-conventions.md
   - by: workflow-subagent
-    subagent: 27
+    subagent: 37
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -1136,7 +1366,7 @@ ruleUse:
         value: steered
       - path: docs/agents/github-integration.md
   - by: workflow-subagent
-    subagent: 28
+    subagent: 38
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -1176,7 +1406,7 @@ ruleUse:
       - path: .claude/rules/adr-0017.md
         value: backed
   - by: workflow-subagent
-    subagent: 29
+    subagent: 39
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -1220,7 +1450,7 @@ ruleUse:
       - path: docs/agents/github-integration.md
       - path: docs/agents/git-conventions.md
   - by: workflow-subagent
-    subagent: 30
+    subagent: 40
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -1276,7 +1506,7 @@ ruleUse:
         value: backed
       - path: docs/agents/github-integration.md
   - by: workflow-subagent
-    subagent: 31
+    subagent: 41
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -1335,7 +1565,7 @@ ruleUse:
       - path: docs/agents/github-integration.md
       - path: docs/agents/git-conventions.md
   - by: workflow-subagent
-    subagent: 32
+    subagent: 42
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -1374,7 +1604,7 @@ ruleUse:
       - path: .claude/rules/adr-0017.md
         value: backed
   - by: workflow-subagent
-    subagent: 33
+    subagent: 43
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -1421,7 +1651,7 @@ ruleUse:
         value: steered
       - path: docs/agents/github-integration.md
   - by: workflow-subagent
-    subagent: 34
+    subagent: 44
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -1475,7 +1705,7 @@ ruleUse:
         value: backed
       - path: docs/agents/github-integration.md
   - by: workflow-subagent
-    subagent: 35
+    subagent: 45
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -1490,7 +1720,7 @@ ruleUse:
       - path: .claude/rules/adr-0004.md
         value: backed
   - by: workflow-subagent
-    subagent: 36
+    subagent: 46
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -1511,7 +1741,7 @@ ruleUse:
       - path: .claude/rules/adr-0004.md
         value: backed
   - by: workflow-subagent
-    subagent: 37
+    subagent: 47
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -1528,7 +1758,7 @@ ruleUse:
       - path: .claude/rules/adr-0017.md
         value: backed
   - by: workflow-subagent
-    subagent: 38
+    subagent: 48
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -1541,7 +1771,7 @@ ruleUse:
         via: start
     reported: []
   - by: workflow-subagent
-    subagent: 39
+    subagent: 49
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -1556,7 +1786,7 @@ ruleUse:
       - path: .claude/rules/adr-0004.md
         value: backed
   - by: workflow-subagent
-    subagent: 40
+    subagent: 50
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -1608,7 +1838,7 @@ ruleUse:
       - path: docs/agents/verifying-ui-changes.md
       - path: docs/agents/git-conventions.md
   - by: workflow-subagent
-    subagent: 41
+    subagent: 51
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -1630,7 +1860,7 @@ ruleUse:
         value: backed
       - path: .agents/skills/code-review/SKILL.md
   - by: workflow-subagent
-    subagent: 42
+    subagent: 52
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -1655,7 +1885,7 @@ ruleUse:
       - path: .claude/rules/adr-0027.md
         value: steered
   - by: workflow-subagent
-    subagent: 43
+    subagent: 53
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -1669,7 +1899,7 @@ ruleUse:
     reported:
       - path: docs/agents/github-integration.md=none
   - by: workflow-subagent
-    subagent: 44
+    subagent: 54
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -1692,7 +1922,7 @@ ruleUse:
       - path: .claude/rules/adr-0027.md
         value: backed
   - by: workflow-subagent
-    subagent: 45
+    subagent: 55
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -1748,7 +1978,7 @@ ruleUse:
       - path: docs/agents/git-conventions.md
       - path: docs/agents/verifying-ui-changes.md
   - by: workflow-subagent
-    subagent: 46
+    subagent: 56
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -1763,7 +1993,7 @@ ruleUse:
       - path: .claude/rules/adr-0004.md
         value: backed
   - by: workflow-subagent
-    subagent: 47
+    subagent: 57
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -1778,7 +2008,7 @@ ruleUse:
       - path: .claude/rules/adr-0004.md
         value: backed
   - by: workflow-subagent
-    subagent: 48
+    subagent: 58
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -1793,7 +2023,7 @@ ruleUse:
       - path: .claude/rules/adr-0004.md
         value: backed
   - by: workflow-subagent
-    subagent: 49
+    subagent: 59
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -1817,7 +2047,7 @@ ruleUse:
         value: backed
       - path: .agents/skills/code-review/SKILL.md
   - by: workflow-subagent
-    subagent: 50
+    subagent: 60
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -1844,7 +2074,7 @@ ruleUse:
         value: backed
       - path: docs/agents/git-conventions.md
   - by: workflow-subagent
-    subagent: 51
+    subagent: 61
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -1868,7 +2098,7 @@ ruleUse:
         value: backed
       - path: .agents/skills/code-review/SKILL.md
   - by: workflow-subagent
-    subagent: 52
+    subagent: 62
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -1883,7 +2113,7 @@ ruleUse:
       - path: .claude/rules/adr-0004.md
         value: backed
   - by: workflow-subagent
-    subagent: 53
+    subagent: 63
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -1926,7 +2156,7 @@ ruleUse:
         value: backed
       - path: docs/agents/git-conventions.md
   - by: workflow-subagent
-    subagent: 54
+    subagent: 64
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -1941,7 +2171,7 @@ ruleUse:
       - path: .claude/rules/adr-0004.md
         value: backed
   - by: workflow-subagent
-    subagent: 55
+    subagent: 65
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -1956,7 +2186,7 @@ ruleUse:
       - path: .claude/rules/adr-0004.md
         value: backed
   - by: workflow-subagent
-    subagent: 56
+    subagent: 66
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -1986,7 +2216,7 @@ ruleUse:
         value: backed
       - path: docs/agents/git-conventions.md
   - by: workflow-subagent
-    subagent: 57
+    subagent: 67
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -2020,7 +2250,7 @@ ruleUse:
       - path: docs/adr/0005-skill-model.md
       - path: docs/adr/0027-prune-trials.md
   - by: workflow-subagent
-    subagent: 58
+    subagent: 68
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -2035,7 +2265,7 @@ ruleUse:
       - path: .claude/rules/adr-0004.md
         value: backed
   - by: workflow-subagent
-    subagent: 59
+    subagent: 69
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -2058,7 +2288,7 @@ ruleUse:
       - path: .claude/rules/adr-0003.md
         value: backed
   - by: workflow-subagent
-    subagent: 60
+    subagent: 70
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -2073,7 +2303,7 @@ ruleUse:
       - path: .claude/rules/adr-0004.md
         value: backed
   - by: workflow-subagent
-    subagent: 61
+    subagent: 71
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -2088,7 +2318,7 @@ ruleUse:
       - path: .claude/rules/adr-0004.md
         value: backed
   - by: workflow-subagent
-    subagent: 62
+    subagent: 72
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -2106,165 +2336,233 @@ ruleUse:
         value: backed
 subagents:
   - type: general-purpose
+    task: Standards review of retro step
+    durationSec: 17
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 0.4
+  - type: general-purpose
+    task: Spec review of retro step
+    durationSec: 17
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 0.4
+  - type: general-purpose
+    task: a028a7535399c2060
+    model: claude-sonnet-5-5
+    durationSec: 1172
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 0.3
+  - type: general-purpose
     task: a0b240f1f6027b976
     model: claude-sonnet-5-5
-    durationSec: 407
-    toolCalls: 44
-    modelCalls: 31
-    tokenShare: 2.4
+    durationSec: 1308
+    toolCalls: 45
+    modelCalls: 32
+    tokenShare: 2.2
+  - type: general-purpose
+    task: a0b8f2015668fc50f
+    model: claude-sonnet-5-5
+    durationSec: 4181
+    toolCalls: 7
+    modelCalls: 6
+    tokenShare: 0.5
   - type: general-purpose
     task: a0f51073c66f93a20
     model: claude-sonnet-5-5
-    durationSec: 1580
-    toolCalls: 57
-    modelCalls: 50
-    tokenShare: 4
+    durationSec: 4207
+    toolCalls: 58
+    modelCalls: 51
+    tokenShare: 3.6
+  - type: general-purpose
+    task: a163f7cfdd3fa110b
+    model: claude-sonnet-5-5
+    durationSec: 4140
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 0.3
   - type: general-purpose
     task: a19630ec73d9a36ab
     model: claude-sonnet-5-5
-    durationSec: 335
-    toolCalls: 8
-    modelCalls: 6
+    durationSec: 4135
+    toolCalls: 9
+    modelCalls: 7
+    tokenShare: 0.4
+  - type: general-purpose
+    task: a1b2c0baa72e83454
+    model: claude-sonnet-5-5
+    durationSec: 3292
+    toolCalls: 6
+    modelCalls: 5
     tokenShare: 0.4
   - type: general-purpose
     task: a20e1d84ce0a85195
     model: claude-sonnet-5-5
-    durationSec: 153
-    toolCalls: 10
-    modelCalls: 8
-    tokenShare: 0.6
+    durationSec: 3605
+    toolCalls: 12
+    modelCalls: 10
+    tokenShare: 0.7
   - type: general-purpose
     task: a27a206fe66751578
     model: claude-sonnet-5-5
-    durationSec: 166
-    toolCalls: 8
-    modelCalls: 6
-    tokenShare: 0.5
+    durationSec: 3759
+    toolCalls: 9
+    modelCalls: 7
+    tokenShare: 0.6
   - type: general-purpose
     task: a39163b4ccd72186f
     model: claude-sonnet-5-5
-    durationSec: 156
-    toolCalls: 9
-    modelCalls: 6
-    tokenShare: 0.5
+    durationSec: 3933
+    toolCalls: 10
+    modelCalls: 7
+    tokenShare: 0.6
   - type: general-purpose
     task: a59051d1ce31dd154
     model: claude-sonnet-5-5
-    durationSec: 1294
-    toolCalls: 10
-    modelCalls: 7
+    durationSec: 3934
+    toolCalls: 11
+    modelCalls: 8
     tokenShare: 0.8
   - type: general-purpose
     task: a5c87f58d5cc9ea8b
     model: claude-sonnet-5-5
-    durationSec: 509
-    toolCalls: 22
-    modelCalls: 19
-    tokenShare: 1.2
+    durationSec: 4206
+    toolCalls: 23
+    modelCalls: 20
+    tokenShare: 1.1
+  - type: general-purpose
+    task: a651b06815a0439f5
+    model: claude-sonnet-5-5
+    durationSec: 3786
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 0.3
   - type: general-purpose
     task: a66adc46f9897f84c
     model: claude-sonnet-5-5
-    durationSec: 228
-    toolCalls: 9
-    modelCalls: 8
+    durationSec: 3584
+    toolCalls: 10
+    modelCalls: 9
     tokenShare: 0.7
   - type: general-purpose
     task: a6b397b77ffd71c77
     model: claude-sonnet-5-5
-    durationSec: 887
-    toolCalls: 51
-    modelCalls: 44
-    tokenShare: 3.5
+    durationSec: 3819
+    toolCalls: 53
+    modelCalls: 46
+    tokenShare: 3.3
   - type: general-purpose
     task: a6c3f6712216df47d
     model: claude-sonnet-5-5
-    durationSec: 112
-    toolCalls: 9
-    modelCalls: 7
+    durationSec: 3292
+    toolCalls: 10
+    modelCalls: 8
     tokenShare: 0.6
   - type: general-purpose
     task: a75f6a5272c9d609f
     model: claude-sonnet-5-5
-    durationSec: 168
-    toolCalls: 9
-    modelCalls: 7
-    tokenShare: 0.6
+    durationSec: 3761
+    toolCalls: 10
+    modelCalls: 8
+    tokenShare: 0.7
   - type: general-purpose
     task: a85c6725e2b526a24
     model: claude-sonnet-5-5
-    durationSec: 351
-    toolCalls: 8
-    modelCalls: 7
+    durationSec: 4139
+    toolCalls: 9
+    modelCalls: 8
     tokenShare: 0.5
   - type: general-purpose
     task: a8bdb9f77001d0b05
     model: claude-sonnet-5-5
-    durationSec: 269
-    toolCalls: 11
-    modelCalls: 7
-    tokenShare: 0.6
+    durationSec: 4018
+    toolCalls: 12
+    modelCalls: 8
+    tokenShare: 0.7
   - type: general-purpose
     task: a926d7f46d5dde55c
     model: claude-sonnet-5-5
-    durationSec: 995
-    toolCalls: 52
-    modelCalls: 45
-    tokenShare: 3.6
+    durationSec: 4206
+    toolCalls: 53
+    modelCalls: 46
+    tokenShare: 3.5
   - type: general-purpose
     task: aa07db44c6f000e10
     model: claude-sonnet-5-5
-    durationSec: 354
-    toolCalls: 8
-    modelCalls: 6
-    tokenShare: 0.4
+    durationSec: 4139
+    toolCalls: 9
+    modelCalls: 7
+    tokenShare: 0.5
+  - type: general-purpose
+    task: aa7c1ca3203827bf6
+    model: claude-sonnet-5-5
+    durationSec: 4180
+    toolCalls: 6
+    modelCalls: 5
+    tokenShare: 0.3
+  - type: general-purpose
+    task: aac31ed8646e69a9d
+    model: claude-sonnet-5-5
+    durationSec: 3786
+    toolCalls: 7
+    modelCalls: 5
+    tokenShare: 0.3
   - type: general-purpose
     task: aaf446b55096815e8
     model: claude-sonnet-5-5
-    durationSec: 231
-    toolCalls: 17
-    modelCalls: 12
-    tokenShare: 0.8
+    durationSec: 3583
+    toolCalls: 18
+    modelCalls: 13
+    tokenShare: 0.9
   - type: general-purpose
     task: ab2ceff2b18e8bef1
     model: claude-sonnet-5-5
-    durationSec: 444
-    toolCalls: 14
-    modelCalls: 12
-    tokenShare: 1
+    durationSec: 4205
+    toolCalls: 15
+    modelCalls: 13
+    tokenShare: 1.1
   - type: general-purpose
     task: ac19f28f215c14b07
     model: claude-sonnet-5-5
-    durationSec: 133
-    toolCalls: 8
-    modelCalls: 7
-    tokenShare: 0.6
+    durationSec: 3437
+    toolCalls: 9
+    modelCalls: 8
+    tokenShare: 0.7
   - type: general-purpose
     task: ac612be973645b4bc
     model: claude-sonnet-5-5
-    durationSec: 546
-    toolCalls: 28
-    modelCalls: 22
-    tokenShare: 1.3
+    durationSec: 4206
+    toolCalls: 29
+    modelCalls: 23
+    tokenShare: 1.2
   - type: general-purpose
     task: acc60654f8ea94550
     model: claude-sonnet-5-5
-    durationSec: 133
-    toolCalls: 8
-    modelCalls: 7
+    durationSec: 3437
+    toolCalls: 9
+    modelCalls: 8
     tokenShare: 0.6
   - type: general-purpose
     task: ace535a0c01845ab0
     model: claude-sonnet-5-5
-    durationSec: 155
-    toolCalls: 10
-    modelCalls: 7
-    tokenShare: 0.6
+    durationSec: 3603
+    toolCalls: 11
+    modelCalls: 8
+    tokenShare: 0.7
   - type: general-purpose
     task: ad791b33b618b3a41
     model: claude-sonnet-5-5
-    durationSec: 266
-    toolCalls: 8
-    modelCalls: 5
+    durationSec: 4018
+    toolCalls: 9
+    modelCalls: 6
+    tokenShare: 0.6
+  - type: general-purpose
+    task: aea525ffafc9edbc2
+    model: claude-sonnet-5-5
+    durationSec: 1173
+    toolCalls: 5
+    modelCalls: 4
     tokenShare: 0.5
   - type: general-purpose
     task: build glassbox-reading-progress
@@ -2272,14 +2570,14 @@ subagents:
     durationSec: 282
     toolCalls: 101
     modelCalls: 61
-    tokenShare: 5.1
+    tokenShare: 4
   - type: workflow-subagent
     task: Standards dispatch-subagents-commit-own-files r2
     model: claude-sonnet-5-5
     durationSec: 14
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.2
+    tokenShare: 0.1
   - type: workflow-subagent
     task: Spec dispatch-subagents-commit-own-files r2
     model: claude-sonnet-5-5
@@ -2293,63 +2591,63 @@ subagents:
     durationSec: 85
     toolCalls: 18
     modelCalls: 9
-    tokenShare: 0.7
+    tokenShare: 0.5
   - type: workflow-subagent
     task: "triage #3131"
     model: claude-sonnet-5-5
     durationSec: 67
     toolCalls: 14
     modelCalls: 7
-    tokenShare: 0.5
+    tokenShare: 0.4
   - type: workflow-subagent
     task: "triage #3123"
     model: claude-sonnet-5-5
     durationSec: 98
     toolCalls: 21
     modelCalls: 11
-    tokenShare: 0.8
+    tokenShare: 0.6
   - type: workflow-subagent
     task: "triage #3121"
     model: claude-sonnet-5-5
     durationSec: 89
     toolCalls: 22
     modelCalls: 10
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: "triage #3130"
     model: claude-sonnet-5-5
     durationSec: 68
     toolCalls: 17
     modelCalls: 7
-    tokenShare: 0.8
+    tokenShare: 0.7
   - type: workflow-subagent
     task: "triage #3129"
     model: claude-sonnet-5-5
     durationSec: 84
     toolCalls: 22
     modelCalls: 12
-    tokenShare: 0.9
+    tokenShare: 0.7
   - type: workflow-subagent
     task: "triage #2992"
     model: claude-sonnet-5-5
     durationSec: 85
     toolCalls: 21
     modelCalls: 12
-    tokenShare: 0.8
+    tokenShare: 0.6
   - type: workflow-subagent
     task: "triage #3133"
     model: claude-sonnet-5-5
     durationSec: 98
     toolCalls: 19
     modelCalls: 9
-    tokenShare: 0.7
+    tokenShare: 0.5
   - type: workflow-subagent
     task: "triage #3124"
     model: claude-sonnet-5-5
     durationSec: 77
     toolCalls: 23
     modelCalls: 9
-    tokenShare: 0.7
+    tokenShare: 0.5
   - type: workflow-subagent
     task: Spec glassbox-reading-progress r1
     model: claude-sonnet-5-5
@@ -2363,7 +2661,7 @@ subagents:
     durationSec: 32
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 0.3
+    tokenShare: 0.2
   - type: workflow-subagent
     task: Standards harvest-checked-clusters-and-retro r2
     model: claude-sonnet-5-5
@@ -2377,7 +2675,7 @@ subagents:
     durationSec: 27
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 0.3
+    tokenShare: 0.2
   - type: workflow-subagent
     task: Spec glassbox-subject-page-read-ticks r1
     model: claude-sonnet-5-5
@@ -2391,21 +2689,21 @@ subagents:
     durationSec: 175
     toolCalls: 35
     modelCalls: 22
-    tokenShare: 1.4
+    tokenShare: 1.1
   - type: workflow-subagent
     task: Standards glassbox-subject-page-read-ticks r1
     model: claude-sonnet-5-5
     durationSec: 11
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.5
+    tokenShare: 0.4
   - type: workflow-subagent
     task: Standards harvest-checked-clusters-and-retro r3
     model: claude-sonnet-5-5
     durationSec: 26
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.3
+    tokenShare: 0.2
   - type: workflow-subagent
     task: Spec harvest-checked-clusters-and-retro r3
     model: claude-sonnet-5-5
@@ -2419,21 +2717,21 @@ subagents:
     durationSec: 17
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 0.5
+    tokenShare: 0.4
   - type: workflow-subagent
     task: build glassbox-subject-pages-and-evidence-links
     model: claude-sonnet-5-5
     durationSec: 306
     toolCalls: 45
     modelCalls: 39
-    tokenShare: 2.4
+    tokenShare: 1.9
   - type: workflow-subagent
     task: Standards dispatch-subagents-commit-own-files r1
     model: claude-sonnet-5-5
     durationSec: 11
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 0.2
+    tokenShare: 0.1
   - type: workflow-subagent
     task: Spec dispatch-subagents-commit-own-files r1
     model: claude-sonnet-5-5
@@ -2447,21 +2745,21 @@ subagents:
     durationSec: 21
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 0.3
+    tokenShare: 0.2
   - type: workflow-subagent
     task: Standards glassbox-subject-pages-and-evidence-links r1
     model: claude-sonnet-5-5
     durationSec: 19
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.3
+    tokenShare: 0.2
   - type: workflow-subagent
     task: build glassbox-curate-read-dispatch-subagents
     model: claude-sonnet-5-5
     durationSec: 70
     toolCalls: 14
     modelCalls: 11
-    tokenShare: 0.8
+    tokenShare: 0.6
   - type: workflow-subagent
     task: Standards glassbox-curate-read-dispatch-subagents r1
     model: claude-sonnet-5-5
@@ -2475,14 +2773,14 @@ subagents:
     durationSec: 28
     toolCalls: 8
     modelCalls: 4
-    tokenShare: 0.3
+    tokenShare: 0.2
   - type: workflow-subagent
     task: build harvest-checked-clusters-and-retro
     model: claude-sonnet-5-5
     durationSec: 194
     toolCalls: 29
     modelCalls: 22
-    tokenShare: 1.6
+    tokenShare: 1.2
   - type: workflow-subagent
     task: Spec glassbox-curate-read-dispatch-subagents r1
     model: claude-sonnet-5-5
@@ -2503,14 +2801,14 @@ subagents:
     durationSec: 27
     toolCalls: 10
     modelCalls: 8
-    tokenShare: 0.7
+    tokenShare: 0.5
   - type: workflow-subagent
     task: build dispatch-subagents-commit-own-files
     model: claude-sonnet-5-5
     durationSec: 75
     toolCalls: 20
     modelCalls: 14
-    tokenShare: 0.9
+    tokenShare: 0.7
   - type: workflow-subagent
     task: Standards harvest-checked-clusters-and-retro r1
     model: claude-sonnet-5-5
@@ -2524,7 +2822,7 @@ subagents:
     durationSec: 25
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 0.3
+    tokenShare: 0.2
   - type: workflow-subagent
     task: Spec glassbox-reading-progress r3
     model: claude-sonnet-5-5
@@ -2538,14 +2836,14 @@ subagents:
     durationSec: 32
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 0.3
+    tokenShare: 0.2
   - type: workflow-subagent
     task: Spec glassbox-reading-progress r2
     model: claude-sonnet-5-5
     durationSec: 24
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 0.3
+    tokenShare: 0.2
 gitBranch: ccr-728d4297-dsmj1s
 entrypoint: remote_mobile
 cliVersion: 2.1.322
