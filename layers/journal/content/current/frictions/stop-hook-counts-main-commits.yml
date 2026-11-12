@@ -13,11 +13,6 @@ fixes:
     date: "2026-10-16"
     summary: "git-conventions.md now says to push a branch whose only unpushed commits are main's, ending the per-turn Stop hook nag."
 occurrences:
-  - session: session_013zxzeQvE9RNYoZRiZEEKBG
-    date: "2026-10-28"
-    severity: nit
-    description: "Restarting the merged session branch for the closing ledger PR left the Stop hook counting five unpushed commits against the stale remote branch, nagging until the push."
-    solution: "Have the Stop hook count against origin/main when the branch's PR is already merged."
   - session: session_013zxzeRuz3fA1RMj6ygrT9d
     date: "2026-10-31"
     severity: nit

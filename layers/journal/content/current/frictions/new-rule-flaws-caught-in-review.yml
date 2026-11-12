@@ -11,11 +11,6 @@ fixes:
     date: "2026-11-03"
     summary: "CLAUDE.md Question the premise: a new ordering, split or selection rule is also run across consecutive runs if it rotates or carries state."
 occurrences:
-  - session: session_013zxzeR86n7CjfWXZh4HXyc
-    date: "2026-10-28"
-    severity: moderate
-    description: "My first split rule (split only a different friction, keep a fix-caught slip) let me split one cluster and keep two of the same shape; both reviewers flagged it and the user had to settle it."
-    solution: "Ask the deciding question with a worked pair of examples before applying a rule to data."
   - session: session_013zxzeRkQabGaMQ8gphe4Ra
     date: "2026-11-02"
     severity: moderate

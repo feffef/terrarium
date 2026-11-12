@@ -19,36 +19,6 @@ fixes:
     date: "2026-11-04"
     summary: "ADR-0003/0004 and pr-workflow.md: agents may push early and often, the PR opens only after review and the gate; git-conventions says to push when the Stop hook asks."
 occurrences:
-  - session: session_013zxzeR94ZpyH5mhKXDH22Y
-    date: "2026-10-28"
-    severity: nit
-    description: "Stop hook asked to push twice while the review and gate were still running, against the push-after-gate rule."
-    solution: "Stop hook could skip its nag when a gate run is in flight."
-  - session: session_013zxzeQRYzCbfkXYbHKwcPv
-    date: "2026-10-28"
-    severity: nit
-    description: "The Stop hook asked me to push six times while raters, writers and the gate were still running; each turn I had to restate why not."
-    solution: "stop-hook-git-check could stay quiet while a dispatched agent or a backgrounded gate is still running in the session."
-  - session: session_013zxzeR86n7CjfWXZh4HXyc
-    date: "2026-10-28"
-    severity: nit
-    description: "The Stop hook asked to push about eight times while reviews, audits and the gate were still running; each needed a reply."
-    solution: "Harness-side hook, already tracked as stop-hook-nag (accepted)."
-  - session: session_013zxzeQmVnqMqDkRgFRWx5T
-    date: "2026-10-28"
-    severity: nit
-    description: "The Stop hook asked me five times to push while the required gate was still running, which would have pushed before it passed; I declined each time."
-    solution: "The Stop hook could skip its nag while a gate:scoped log is open or a gate run is in progress."
-  - session: session_013zxzeSXsJSnGEYu9VQYXFH
-    date: "2026-10-28"
-    severity: nit
-    description: "The Stop hook demanded a push five times while review and gate were still running, which ADR-0004 puts before the first push."
-    solution: "Stop hook could skip the nag while a background gate is running."
-  - session: session_013zxzeSxgYzYmeAuCzvJdhY
-    date: "2026-10-28"
-    severity: nit
-    description: "Stop hook repeatedly asked to push uncommitted/unreviewed work, conflicting with ADR-0004's review-then-gate-then-push order."
-    solution: "Hook could skip the nag while a scheduled run is mid-review."
   - session: session_013zxzeQ5JaiqQgggGaNSagD
     date: "2026-10-29"
     severity: minor

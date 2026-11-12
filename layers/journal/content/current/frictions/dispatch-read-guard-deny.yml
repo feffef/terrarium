@@ -11,21 +11,6 @@ fixes:
     date: "2026-11-02"
     summary: "visitor-loop and blog-post now say to read dispatch-subagents before their first brief, so the guard does not block it."
 occurrences:
-  - session: session_013zxzeTK9c2HVcabwCx3b18
-    date: "2026-10-28"
-    severity: minor
-    description: "The first Workflow call was blocked by the dispatch-read guard because I had not read dispatch-subagents first, although a saved workflow writes its own briefs."
-    solution: "Exempt a named saved-workflow run from the dispatch-read guard, or make clear-backlog say to read dispatch-subagents before section 1."
-  - session: session_013zxzeRin6kPuaDZ27jyuUk
-    date: "2026-10-28"
-    severity: nit
-    description: "dispatch-read guard rejected the Agent call because I read the .claude/skills symlink path, not .agents/skills; one extra read and retry."
-    solution: "Have the guard accept either path of the same Skill file."
-  - session: session_013zxzeSxgYzYmeAuCzvJdhY
-    date: "2026-10-28"
-    severity: nit
-    description: "Dispatched the three visitors before reading dispatch-subagents; the dispatch-read guard blocked all three calls and they were resent unchanged."
-    solution: "CLAUDE.md names the trigger; visitor-loop step 2 could say to read dispatch-subagents first."
   - session: session_013zxzeRejGhGCyE3SttX9AL
     date: "2026-10-29"
     severity: minor

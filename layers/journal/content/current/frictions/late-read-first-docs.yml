@@ -14,46 +14,6 @@ fixes:
     date: "2026-10-15"
     summary: "Hint now says a late read that clears the call is not a Friction."
 occurrences:
-  - session: session_013zxzePhRwXqYLtsycYUhqv
-    date: "2026-10-28"
-    severity: nit
-    description: "Read git-conventions.md and github-integration.md only after the first git/GitHub operation, not before, as CLAUDE.md requires."
-    solution: "Read the triggered docs before the first git or GitHub command."
-  - session: session_013zxzeRpJV1qxKtqhnjBVTy
-    date: "2026-10-28"
-    severity: nit
-    description: "Read git-conventions.md and github-integration.md only after hooks fired post first git and GitHub calls, although CLAUDE.md requires them before."
-    solution: "Load both when the audit Skill is invoked so a scheduled run reads them up front."
-  - session: session_013zxzeQvE9RNYoZRiZEEKBG
-    date: "2026-10-28"
-    severity: nit
-    description: "Ran git branch --show-current alongside git status before reading git-conventions.md; the hook flagged the late read."
-    solution: "Read git-conventions.md before any git command beyond a bare status."
-  - session: session_013zxzeR94ZpyH5mhKXDH22Y
-    date: "2026-10-28"
-    severity: nit
-    description: "Ran git fetch in the same batch as reading git-conventions.md, so the required read came after the first git command."
-    solution: "Read required docs in their own call before any git command."
-  - session: session_013zxzeTGYbEWeFyEywFafxw
-    date: "2026-10-28"
-    severity: nit
-    description: "Ran git fetch in the same parallel batch as reading git-conventions.md, so the read wasn't strictly first"
-    solution: "Read the CLAUDE.md trigger doc in its own call before any non-status git command"
-  - session: session_013zxzeQxsePnJds2jEpgirL
-    date: "2026-10-28"
-    severity: nit
-    description: "Read git-conventions.md after the first git log command, not before as CLAUDE.md requires."
-    solution: "Read the triggered doc before the first git command beyond status and diff."
-  - session: session_013zxzeQmVnqMqDkRgFRWx5T
-    date: "2026-10-28"
-    severity: nit
-    description: "Ran git rev-parse and branch --show-current before reading git-conventions.md; a PostToolUse hook reminded me. No harm, the doc did not change my calls."
-    solution: "Fine as is; the hint worked. Reading the doc first costs nothing but is not needed for read-only rev-parse."
-  - session: session_013zxzeSXsJSnGEYu9VQYXFH
-    date: "2026-10-28"
-    severity: nit
-    description: "Ran git log and a fetch-bearing script before reading git-conventions.md; a hook reminded me afterwards."
-    solution: "Read the doc when the task starts with git; the hook already catches it."
   - session: session_013zxzeRejGhGCyE3SttX9AL
     date: "2026-10-29"
     severity: minor

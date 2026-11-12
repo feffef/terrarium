@@ -20,11 +20,6 @@ fixes:
     date: "2026-10-25"
     summary: "Cut the Verify-before-you-state family to one plain home in CLAUDE.md and dropped its restatements in four Skills and the build reviewer."
 occurrences:
-  - session: session_013zxzeR94ZpyH5mhKXDH22Y
-    date: "2026-10-28"
-    severity: nit
-    description: "First PR body miscounted fact-check verdicts; I caught it and corrected the body before CI."
-    solution: "Tally verdicts from the checker reply before writing the body."
   - session: session_013zxzeSgD6cuF2mawqY6jWM
     date: "2026-10-29"
     severity: moderate

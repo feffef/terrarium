@@ -14,11 +14,6 @@ fixes:
     date: "2026-10-30"
     summary: "CLAUDE.md: in the main session end your turn and let the completion notification wake you; never wait with pgrep -f"
 occurrences:
-  - session: session_013zxzeRpJV1qxKtqhnjBVTy
-    date: "2026-10-28"
-    severity: nit
-    description: "ScheduleWakeup is blocked outside /loop, and I armed two monitors on the same gate log, wasting a call."
-    solution: "End the turn and wait for the background task notification once; do not arm duplicate monitors."
   - session: session_013zxzePtHJNqS19fEy1yRGv
     date: "2026-10-29"
     severity: nit

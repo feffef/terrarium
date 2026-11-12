@@ -14,11 +14,6 @@ fixes:
     date: "2026-10-22"
     summary: "git-conventions.md's chaining rule now forbids a push or other state-changing git only when it comes later in the same command as a gate or test run."
 occurrences:
-  - session: session_013zxzePhRwXqYLtsycYUhqv
-    date: "2026-10-28"
-    severity: nit
-    description: "Mistook the exit code of a backgrounded gate command (ending in tail) for the gate's own exit; nearly read a failed gate as passing."
-    solution: "Write the gate's exit status to the log on its own line, as the later runs did."
   - session: session_013zxzeNqa4MUJF5DT5wQ1zf
     date: "2026-11-01"
     severity: nit

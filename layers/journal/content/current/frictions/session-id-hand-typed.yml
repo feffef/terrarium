@@ -6,11 +6,6 @@ status: open
 notes: |-
   2026-10-28 design: a guard or prose line dropped: .githooks/commit-msg corrects a wrong trailer and github-provenance-guard.ts denies a wrong id on a post and hands back the right one, so a slip costs one retry, and a guard edit is Human-only.
 occurrences:
-  - session: session_013zxzeRpJV1qxKtqhnjBVTy
-    date: "2026-10-28"
-    severity: minor
-    description: "Guessed this session's id from the system reminder and got it wrong by one letter; caught only by calling get_session before any post used it."
-    solution: "The Skill should say to copy the id from get_session or the commit template, not retype it."
   - session: session_013zxzeNZn2iJjZrQj2ortVS
     date: "2026-10-31"
     severity: nit

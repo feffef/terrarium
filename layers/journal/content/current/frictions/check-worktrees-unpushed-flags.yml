@@ -14,11 +14,6 @@ fixes:
     date: "2026-11-11"
     summary: "clear-backlog SKILL.md section 4 pushes with a following git fetch so check:worktrees finds a remote-tracking ref, and removes each worktree once its PR merges or waits for a human."
 occurrences:
-  - session: session_013zxzeQDh7MCP7HpYBYBTeh
-    date: "2026-10-28"
-    severity: nit
-    description: "pnpm check:worktrees failed on the writer's merged worktree until I pushed the run branch, then passed; the skill does not say push first."
-    solution: "Note in glassbox-improve step 8 that check:worktrees needs the run branch pushed when a writer worktree was merged."
   - session: session_013zxzeRDagsHLSNJ939gcWK
     date: "2026-10-30"
     severity: minor

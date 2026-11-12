@@ -25,11 +25,6 @@ fixes:
     date: "2026-10-31"
     summary: "CLAUDE.md and the clear-backlog workflows' shared brief line ask each subagent to give every count, id or attribution with its source (command or file:line) or mark it unverified."
 occurrences:
-  - session: session_013zxzeQmVnqMqDkRgFRWx5T
-    date: "2026-10-28"
-    severity: minor
-    description: "My verdict comment on #2634 said the subagents' claims were checked, including issue and PR numbers; I had checked only the commit and some entry statuses. An overclaim, corrected with an edit."
-    solution: "Verdict lines should list exactly what was checked and nothing broader."
   - session: session_013zxzeRejGhGCyE3SttX9AL
     date: "2026-10-29"
     severity: nit

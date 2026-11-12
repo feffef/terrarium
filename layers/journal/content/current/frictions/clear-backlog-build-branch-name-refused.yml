@@ -5,11 +5,6 @@ surface: safe
 status: open
 ref: "Comes from worktree-guard-false-positive and PR #2377, whose refusal now catches the slip; the original harm (commit under another branch name) is not recurring."
 occurrences:
-  - session: session_013zxzeTK9c2HVcabwCx3b18
-    date: "2026-10-28"
-    severity: nit
-    description: "The build workflow refused branch name fix/2611-docs-github-raw-fetch because it contains git (in github); one wasted launch."
-    solution: "Make the branch-name guard match git as a word, not a substring, or say so in clear-backlog section 3."
   - session: session_013zxzeSgD6cuF2mawqY6jWM
     date: "2026-10-29"
     severity: nit

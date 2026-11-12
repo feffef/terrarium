@@ -22,26 +22,6 @@ fixes:
     date: "2026-10-28"
     summary: "glassbox-improve's lead proposes only facts and wording found in the source (an absence claim most of all), and its researcher checks an absence claim against every code location."
 occurrences:
-  - session: session_013zxzeTGYbEWeFyEywFafxw
-    date: "2026-10-28"
-    severity: moderate
-    description: "My fix brief to the HITL writer proposed 'None looks for the approval label before a build', which was false (guest-build's poll-guest-tickets.ts)"
-    solution: "A researcher brief for an absence claim names every code location, including .agents/skills/*/scripts/, and I propose no wording I haven't grepped"
-  - session: session_013zxzeR86n7CjfWXZh4HXyc
-    date: "2026-10-28"
-    severity: nit
-    description: "An audit agent quoted 'the hint loaded the rules anyway' from occurrences whose description lacks it; the text sat in their solution field, so I re-checked every quote."
-    solution: "Have audit briefs name which field a quote comes from."
-  - session: session_013zxzeQRYzCbfkXYbHKwcPv
-    date: "2026-10-28"
-    severity: minor
-    description: "Checking fable's Nuxt layers false claim took five reads through @nuxt/kit and c12 dist code before it proved a misreading."
-    solution: "None needed; a false claim needs a source check. The learning below saves the next run the walk."
-  - session: session_013zxzeTK9c2HVcabwCx3b18
-    date: "2026-10-28"
-    severity: minor
-    description: "I assumed a missing ruleVerdicts field meant a log predated the field and wrote an exemption on that; the writer omits it for any zero-verdict session, which the Spec review caught before push."
-    solution: "Check how a field is written (transcript-trace.ts) before reading its absence as a log-age marker."
   - session: session_013zxzeSgD6cuF2mawqY6jWM
     date: "2026-10-29"
     severity: minor
