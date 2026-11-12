@@ -14,8 +14,9 @@ titles and wording.
 
 1. **Orient.** Run
    `pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts --index`,
-   never through `head`. It prints the open Glass Box PRs and names the guide
-   index files: read each whole, one Read per file. Inside a `glassbox-curate`
+   never through `head`; if the tool saves its output to a file, read that file
+   whole. It prints the open Glass Box PRs and names the guide index files: read
+   each whole, one Read per file. Inside a `glassbox-curate`
    run, skip the script, which rewrites the files that run's Scout reads, and
    read the files its orientation named. Done when every index file is read
    whole.
