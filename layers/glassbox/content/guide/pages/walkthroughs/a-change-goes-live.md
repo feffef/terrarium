@@ -32,7 +32,7 @@ The commit is a merged PR, or a :term[session log], which lands without one. Bot
 
 ## 2. The container notices it
 
-The script that runs the container fetches `main` again after each pause. When `origin/main` differs from its checkout, it resets the checkout to the new commit. It doesn't wait for CI: the Gate also runs on every push to `main`, but nothing in the container reads the result.
+The script that runs the container fetches `main` again after each pause. When `origin/main` differs from its checkout, it resets the checkout to the new commit. It doesn't wait for CI: the gate also runs on every push to `main`, but nothing in the container reads the result.
 
 ::lessons
 [Continuous deployment](/t/glassbox/guide/deploy/continuous-deployment) · [Merge gate](/t/glassbox/guide/verification/gate) · :file[.github/workflows/gate.yml]
@@ -64,7 +64,7 @@ The script copies the new `.output/` over the folder the server runs from, stops
 
 ## 6. The next visitor gets the new content
 
-The restarted server serves the new build. The first query for each Collection compares its table's checksum with the build's and, where they differ, restores the table from the new dump.
+The restarted server serves the new build. The first query for each collection compares its table's checksum with the build's and, where they differ, restores the table from the new dump.
 
 ::lessons
 [Content database](/t/glassbox/guide/nuxt-content/content-database)
@@ -72,7 +72,7 @@ The restarted server serves the new build. The first query for each Collection c
 
 ## A real case
 
-On 9 October 2026 an agent checking story 4 of the Terrarium overview's diagram against :file[deploy/entrypoint.sh] found a gap in the step stop 3 covers: the script moved its checkout to the new commit before installing, so after a failed install the next commit's lockfile hash already matched, the install was skipped, and the build ran on the old packages. It filed [issue #1701](https://github.com/feffef/terrarium/issues/1701); the case had not happened on the live server yet. [PR #1717](https://github.com/feffef/terrarium/pull/1717) made the script keep the hash of its last good install outside the checkout, leaving the script stop 3 describes. Its description said no test covers the script's behaviour, so a human had to merge it, and a Trusted user did at 05:53 UTC on 10 October.
+On 9 October 2026 an agent checking story 4 of the Terrarium overview's diagram against :file[deploy/entrypoint.sh] found a gap in the step stop 3 covers: the script moved its checkout to the new commit before installing, so after a failed install the next commit's lockfile hash already matched, the install was skipped, and the build ran on the old packages. It filed [issue #1701](https://github.com/feffef/terrarium/issues/1701); the case had not happened on the live server yet. [PR #1717](https://github.com/feffef/terrarium/pull/1717) made the script keep the hash of its last good install outside the checkout, leaving the script stop 3 describes. Its description said no test covers the script's behaviour, so a human had to merge it, and a trusted user did at 05:53 UTC on 10 October.
 
 ## Where next
 

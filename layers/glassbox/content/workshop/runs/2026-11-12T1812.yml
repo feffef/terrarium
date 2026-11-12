@@ -1,0 +1,21 @@
+session: session_013zxzeRo4piyeogCXsijcHx
+mode: interactive
+focus: "Lowercase the remaining glossary terms in body text across the guide in one mechanical pass, as the owner asked in-session (including the definitions in terms/*.yml), with no writers and no claim checkers: a script lists the terms from the glossaries, replaces them outside excerpts, code, link text, quoted words, sentence starts and the teaches field, then one review reads the word-level diff for false positives. Chosen because the owner asked for it after the second run of this session left the Walkthroughs and the term definitions capitalised. The overview (guide/pages/index.md) was not changed: the owner said they had just updated it."
+changes:
+  - walkthroughs/a-bug-report-becomes-work | glossary terms lowercase in body text | owner's rule, applied by script. Wording only, so revision and publishedAt are kept
+  - walkthroughs/a-change-goes-live | glossary terms lowercase in body text | same
+  - walkthroughs/a-friction-becomes-a-fix | glossary terms lowercase in body text | same
+  - walkthroughs/adding-a-site | glossary terms lowercase in body text | same
+  - walkthroughs/asking-for-a-change | glossary terms lowercase in body text | same
+  - walkthroughs/from-file-to-browser | glossary terms lowercase in body text | same
+  - walkthroughs/planning-a-big-change | glossary terms lowercase in body text | same
+  - walkthroughs/reading-across-tenants | glossary terms lowercase in body text | same
+  - walkthroughs/session-log-lands-on-main | glossary terms lowercase in body text | same
+  - claude-code/30.skills | stray capitalised terms lowercased in body text | same
+  - hooks/10.hooks | stray capitalised terms lowercased in body text | same
+  - hooks/20.blocking-hooks | stray capitalised terms lowercased in body text | same
+  - hooks/30.hook-added-context | stray capitalised terms lowercased in body text | same
+  - nuxt-content/50.mdc-components | stray capitalised terms lowercased in body text | same
+  - web-standards/10.css-custom-properties | stray capitalised terms lowercased in body text | same
+  - terms/* (23 files) | capitalised glossary terms lowercased mid-sentence in the definitions; the term and id fields untouched | the owner said to include the definitions
+pagesRead: []

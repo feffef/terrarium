@@ -22,8 +22,8 @@ Each guide page is named by its title, then its file under `layers/glassbox/cont
 
 ### Weak spots
 
+- **A mechanical lowercase pass left the overview alone.** The owner was editing it; check its glossary terms by hand once that lands. New text tends to capitalise terms again, so a run that adds text checks its own lines for them.
 - **The Installed Skills pages say little of their own.** *Planning skills* (`skill-pack/20.planning-with-the-pack`) and *Engineering skills* (`skill-pack/30.engineering-skills`) mostly describe Skills that come from outside Terrarium. Only a few of their facts are about choices Terrarium made.
-- **Only the overview and the Git & GitHub, Claude Code, Hooks, Agents & automation, Installed skills, Deploy, Verification, Nuxt Content, Nuxt & Vue, Web standards and House rules pages write glossary terms in lowercase.** The owner's rule (`owner-decisions.md`) is that a glossary term is lowercase in body text, mid-sentence. The Walkthroughs still write Skill, Tenant, Routine, Gate and the like. Fix it a Subject at a time; it is wording only. A capital stays at the start of a sentence, in a linked page's exact title, in code and in an Excerpt.
 
 ### Recurring problems
 
@@ -39,11 +39,10 @@ These are the owner's goals for the guide. A run builds toward them directly; a 
 
 ### Good next focuses
 
-1. **Lowercase the remaining glossary terms in one mechanical run.** Still capitalised mid-sentence: the nine Walkthroughs, a few stray places on other Lessons and the definitions in `terms/*.yml`; the owner said to include the definitions. Use no writers and no claim checkers. List the terms from the root and tenant glossaries, replace them with a script that skips excerpts, code, link text that is a page title, `teaches` and sentence starts, then have one review read the changed lines for false positives. Wording only, so keep `revision` and `publishedAt`.
-2. **Decide how pages say "a person merges" a Human-only file.** Since the owner waiver (ADR-0004), an agent may merge one when the owner says so in the session. *Protected paths*, *Human-only* and the overview say so. These still state it flatly, each true as the default: *Path-specific rules*, *Decision records*, *Merge gate*, *Claude Code hooks* (twice), *Composite actions*, *Cross-tenant reads* and *Asking an agent for a change*. Ask the owner whether to name the waiver there or keep one home.
-3. **Check the pages whose claims the docs left silent** (see *Claims to check*), by reading the tool's source where the docs have no page.
+1. **Decide how pages say "a person merges" a Human-only file.** Since the owner waiver (ADR-0004), an agent may merge one when the owner says so in the session. *Protected paths*, *Human-only* and the overview say so. These still state it flatly, each true as the default: *Path-specific rules*, *Decision records*, *Merge gate*, *Claude Code hooks* (twice), *Composite actions*, *Cross-tenant reads* and *Asking an agent for a change*. Ask the owner whether to name the waiver there or keep one home.
+2. **Check the pages whose claims the docs left silent** (see *Claims to check*), by reading the tool's source where the docs have no page.
 
-4. **Check every Walkthrough diagram against its stops.** A diagram is read beside the stops (on wide screens it sits next to them), so what it shows should roughly match the steps; a reader who can't match them gains nothing. It is a simplified picture, never a 1:1 copy: not every box or arrow needs a stop. Try to match, but not too hard, and keep it simple. The stops read better than the diagrams, so expect to redraw the diagram. Keep the same check for any new diagram. *A change goes live* is the model to match: a few boxes in a line, one side branch, no numbers.
+3. **Check every Walkthrough diagram against its stops.** A diagram is read beside the stops (on wide screens it sits next to them), so what it shows should roughly match the steps; a reader who can't match them gains nothing. It is a simplified picture, never a 1:1 copy: not every box or arrow needs a stop. Try to match, but not too hard, and keep it simple. The stops read better than the diagrams, so expect to redraw the diagram. Keep the same check for any new diagram. *A change goes live* is the model to match: a few boxes in a line, one side branch, no numbers.
 
 ### Wording fresh readers still find hard
 
