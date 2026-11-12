@@ -73,7 +73,7 @@ const parts = computed(() => {
     <section v-if="readNext.length" class="read">
       <h2>Lessons already read</h2>
       <ul>
-        <li v-for="lesson in readNext" :key="lesson.path"><span>{{ lesson.subject }}</span><NuxtLink :to="`${base}${lesson.path}`">{{ lesson.title }}</NuxtLink><span class="tick gb-tick" role="img" aria-label="Read"></span></li>
+        <li v-for="lesson in readNext" :key="lesson.path"><span>{{ lesson.subject }}</span><div><NuxtLink :to="`${base}${lesson.path}`">{{ lesson.title }}</NuxtLink><small v-if="descriptions[lesson.path]">{{ descriptions[lesson.path] }}</small></div><span class="tick gb-tick" role="img" aria-label="Read"/></li>
       </ul>
       <button type="button" class="reset" @click="reset">Reset reading progress</button>
     </section>
@@ -106,7 +106,8 @@ const parts = computed(() => {
 .read { margin-top: 40px; }
 .read h2 { margin: 0 0 12px; font-size: 22px; }
 .read ul { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--gb-line); font-size: 16px; }
-.read li { display: grid; grid-template-columns: 120px minmax(0, 1fr) auto; align-items: center; min-height: 48px; border-bottom: 1px solid var(--gb-line); }
+.read li { display: grid; grid-template-columns: 120px minmax(0, 1fr) auto; align-items: center; min-height: 48px; padding-block: 8px; border-bottom: 1px solid var(--gb-line); }
+.read small { display: block; margin-top: 2px; font-size: 14px; line-height: 1.45; color: var(--gb-muted); }
 .read li span:first-child { font: 11px var(--gb-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--gb-muted); }
 .read a { color: var(--gb-ink); font-weight: 500; text-decoration: none; }
 .read a:hover { color: var(--gb-accent); }
