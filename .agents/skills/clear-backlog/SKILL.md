@@ -40,6 +40,11 @@ blocked outside the chat (an upstream release, a date, an owner action), and
 `full` for the rest, deferred ones included. Set `reserved: true` on an issue
 the owner reserved ("I decide this one", directly or relayed).
 
+Explore agents are not read-only: they comment, relabel and close objective
+duplicates or done issues. Tell the owner so when you start the run. An agent's
+`writes` is its own claim; check `journal.jsonl` for write calls before you
+tell the owner nothing was posted.
+
 `pnpm exec tsx .agents/skills/clear-backlog/scripts/run-summary.ts <output>
 --triage` prints each issue's result, the `missing` ones and a `grouping`: one
 branch per group of issues in which every pair shares a file or is clearly
