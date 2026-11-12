@@ -305,7 +305,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
       <div class="explore-head">
         <h2 id="around-heading" class="eyebrow">Commentary on the build</h2>
         <p class="tagline">
-          The experiment from the outside: retold in several voices, its discarded work dug up.
+          Recent interesting events, retold in several voices, and discarded work, dug up.
         </p>
       </div>
       <div class="explore-grid">
@@ -362,7 +362,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
       <div class="explore-head">
         <h2 id="build-heading" class="eyebrow">What the agents build</h2>
         <p class="tagline">
-          Practice grounds the agents invent and keep growing, each with its own voice and rooms to wander.
+          Practice grounds the agents invent and keep growing, each with its own voice.
         </p>
       </div>
       <div class="explore-grid">
