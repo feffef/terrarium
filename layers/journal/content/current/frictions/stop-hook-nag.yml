@@ -359,3 +359,18 @@ occurrences:
     severity: nit
     description: "The Stop hook asked me to commit while a writer was still editing, forcing a partial commit of one writer's files."
     solution: "Brief writers to commit their own pages in a worktree, or have the hook skip while a subagent runs."
+  - session: session_013zxzeS6w7fCCAw12ds3rtt
+    date: "2026-11-11"
+    severity: nit
+    description: "Ended a turn with the review-fix commit unpushed while the gate ran, so the Stop hook asked me to push; costing one extra turn."
+    solution: "Push the review-fix commit right after committing; a push does not disturb a running gate."
+  - session: session_013zxzeQuYEfmPngc6xxNTn1
+    date: "2026-11-11"
+    severity: nit
+    description: "The Stop hook demanded commits mid-run several times, so intermediate states were committed and pushed before the claim checks had finished."
+    solution: "Accepted: a branch push opens no PR; no change needed beyond noting that WIP commits are expected during a curate run."
+  - session: session_013zxzeSgDqRuwZif7Rgt2MW
+    date: "2026-11-11"
+    severity: nit
+    description: "The Stop hook asked me to commit and push uncommitted writer output three times mid-run, so text not yet claim-checked was pushed to the branch before review."
+    solution: "Commit writer output to the run branch as work in progress right away, since a push opens nothing, and say so in the commit title."

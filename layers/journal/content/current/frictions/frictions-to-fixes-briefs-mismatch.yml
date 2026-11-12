@@ -2,7 +2,7 @@ name: frictions-to-fixes-briefs-mismatch
 summary: >-
   The frictions-to-fixes survey and design briefs disagreed with the repo or left steps out, so their helper agents lost rounds or worked by hand.
 cause: >-
-  survey-brief.md and design-brief.md (not SKILL.md) carry broken or outdated instructions: a dangling fragment and a glob that matches nothing, mixed window dates, no status for closed-not-planned or on-trial entries, no named way to find merged PRs missing from the ledger, an impossible 'read every full log' ask, no owner/repo slug, and a design-brief wanting only docReadCounts from a 40 KB audit-skills JSON with no filter. PR #2733 (2026-10-31) gave the survey brief {SCRATCH_DIR} output paths and an all-or-nothing note for --append and redirected the design brief's audit-skills output; PR #2891 (2026-11-06) replaced its closed-issue MCP paging, which contradicted github-integration.md, with list-open-issues.ts --closed. Signals: a survey or design subagent reporting the brief 'says ... but', a glob matching nothing, work done by hand that the brief should have pointed to.
+  survey-brief.md and design-brief.md (not SKILL.md) carry broken or outdated instructions: a dangling fragment and a glob that matches nothing, mixed window dates, no status for closed-not-planned or on-trial entries, no named way to find merged PRs missing from the ledger, an impossible 'read every full log' ask, no owner/repo slug, and a design-brief wanting only docReadCounts from a 40 KB audit-skills JSON with no filter. PR #2733 (2026-10-31) gave the survey brief {SCRATCH_DIR} output paths and an all-or-nothing note for --append and redirected the design brief's audit-skills output; PR #2891 (2026-11-06) replaced its closed-issue MCP paging, which contradicted github-integration.md, with list-open-issues.ts --closed. Signals: a survey or design subagent reporting the brief 'says ... but', a glob matching nothing, work done by hand that the brief should have pointed to. PR #3091 (2026-11-11) added the closed_by_pull_requests read for closed regressions to the survey brief.
 surface: safe
 status: open
 ref: "issue #2877 (regression of #2733)"
@@ -27,6 +27,9 @@ fixes:
   - pr: 2891
     date: "2026-11-06"
     summary: "list-open-issues.ts gets a --closed flag and the survey brief §3 lists closed issues with it, not with MCP list_issues paging."
+  - pr: 3091
+    date: "2026-11-11"
+    summary: "survey-brief.md: for a closed regression issue, read closed_by_pull_requests (issue_read) and cite any PR that closed it."
 occurrences:
   - session: session_013zxzeRnPtjPsVQM71SzX63
     date: "2026-10-29"

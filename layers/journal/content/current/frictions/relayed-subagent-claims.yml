@@ -160,3 +160,18 @@ occurrences:
     severity: nit
     description: "My own Edit dropped a space in const fmt, and a review subagent reported 9 Routines when there are 10; both were caught only by checking."
     solution: "Check a subagent's counts and reread an edit's diff before relying on them."
+  - session: session_013zxzeShqaQAEUkXf1Hwnd6
+    date: "2026-11-11"
+    severity: minor
+    description: "Sent the grilling list built on shallow explore results with picks I had not verified against source, though clear-backlog section 2 says to verify first; I disclosed it."
+    solution: "Verify each pick, or run the explore deeper, before the list goes out."
+  - session: session_013zxzeTEBhUnvwNNBASiFDg
+    date: "2026-11-11"
+    severity: minor
+    description: "clear-backlog section 2 says verify each pick against its source before asking; I relayed the triage agents' picks unchecked and only said so to the owner."
+    solution: "Have the explore workflow return a verified flag per pick, or let a cheap agent check the picks while the grilling is drafted."
+  - session: session_013zxzeSPxncNsUJXwnc2DvG
+    date: "2026-11-11"
+    severity: minor
+    description: "Survey subagent labelled preview-dev-server-stale-or-unhydrated never-fixed and said no issue found, but open issue 3070 covered it; I caught it only by reading 3070."
+    solution: "Have the survey brief list issues filed that same day and match them on the Friction's own words, not just titles."

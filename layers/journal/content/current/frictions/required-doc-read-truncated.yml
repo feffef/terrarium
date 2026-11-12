@@ -29,3 +29,13 @@ occurrences:
     severity: nit
     description: "Labelled 2975 after only grepping issue-tracker.md; the hook asked for the whole doc, which I read afterwards and which held the supersession and trial checks I then ran."
     solution: "Read issue-tracker.md whole before the first label call, as CLAUDE.md says; the late read cost nothing here."
+  - session: session_013zxzeRVjHExXhciv5BwiTB
+    date: "2026-11-11"
+    severity: nit
+    description: "Relabelled issues #3068-#3076 after only a partial read of triage-labels.md and issue-tracker.md; the full read came later, when filing #3084."
+    solution: "Read both docs whole before the first label write, as CLAUDE.md says."
+  - session: fd29c728-8222-4915-94ab-25776442397b
+    date: "2026-11-10"
+    severity: nit
+    description: "Before commenting on and closing #3029 I only grepped issue-tracker.md and triage-labels.md instead of reading them whole, as CLAUDE.md asks before triage."
+    solution: "Read both docs in full before closing an issue; here the grep happened to cover the closing rules."

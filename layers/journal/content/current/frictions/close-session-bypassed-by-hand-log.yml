@@ -38,3 +38,8 @@ occurrences:
     severity: major
     description: "HUMAN-PROMPTED-CLOSURE: after the merges I ignored three hook hints to re-invoke close-session (ADR-0009) and sent a completed log that was refused; the owner had to prompt me to log again."
     solution: "Re-invoke close-session right after each merge-pr.ts run, as the hook hint says, then author and read the full output."
+  - session: session_013zxzeS6uNt5yvnz5LyUCCe
+    date: "2026-11-11"
+    severity: nit
+    description: "After PR 3108 merged I refreshed the log by running log-session.ts --author by hand instead of invoking close-session; the Stop hook flagged it."
+    solution: "Invoke close-session whenever a PR merges, as its Skill says, before touching the scratch."

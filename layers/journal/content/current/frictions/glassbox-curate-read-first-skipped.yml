@@ -39,3 +39,8 @@ occurrences:
     severity: nit
     description: "The glassbox-curate Skill lists QUALITY.md (Lenses only) as read-first; I never opened it and chose the checks without the Lenses. No page problem traced to the skip."
     solution: "Mark which read-first files a run may skip, or have orient.ts print the Lenses with the skeleton."
+  - session: session_013zxzeSgDqRuwZif7Rgt2MW
+    date: "2026-11-11"
+    severity: minor
+    description: "Skipped QUALITY.md Lenses from the curate Skill's Read first list until the owner asked whether I used glassbox-lesson. Never opened it for four passes."
+    solution: "Make the curate Skill's Read first list load QUALITY.md, or have orient.ts print a reminder when it was not read."

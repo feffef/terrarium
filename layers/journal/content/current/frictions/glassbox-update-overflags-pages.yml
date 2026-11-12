@@ -1,6 +1,6 @@
 name: glassbox-update-overflags-pages
 summary: "The glassbox-update script flags most guide pages whenever a directory they cite changes, so reviewers sweep pages that need no edit."
-cause: ".agents/skills/glassbox-update/scripts/glassbox-update.ts matches a page whose cited path ends in \"/\" against any changed file under it (line ~77), and pins pages with changed paths but no edited range. Signals: \"directory-level paths\", \"flagged pages look done before they are reviewed\"."
+cause: ".agents/skills/glassbox-update/scripts/glassbox-update.ts matches a page whose cited path ends in \"/\" against any changed file under it (line ~77), and pins pages with changed paths but no edited range. Signals: \"directory-level paths\", \"flagged pages look done before they are reviewed\". Since PR #3092 (2026-11-11) a page whose changed paths are all covered by shifted ranges gets no reader unless it is in the rotation."
 surface: safe
 status: open
 ref: "issue #2193 closed by PR #2207"
@@ -10,6 +10,9 @@ fixes:
   - pr: 2207
     date: "2026-10-17"
     summary: "A cited directory now flags a page only when its listing changes between the page's pinned revision and main."
+  - pr: 3092
+    date: "2026-11-11"
+    summary: "glassbox-update.ts reports needsReader per page; SKILL.md step 5 sends no claim-check reader to a flagged page whose changed paths are all covered by shifted ranges, except the rotation page."
 occurrences:
   - session: session_013zxzeNsjXNYsepq7RSwxjV
     date: "2026-11-04"
@@ -21,3 +24,8 @@ occurrences:
     severity: minor
     description: "glassbox-update step 3 asks that every commit since the oldest revision be read against every page; with 123 commits and 72 pages that was not reachable, so I grepped renamed identifiers and leaned on subagents."
     solution: "Have the script list non-content commit subjects and the identifiers they rename, then grep page prose for them, so the criterion is checkable."
+  - session: session_013zxzeR9nyx91atfAKEs7c3
+    date: "2026-11-11"
+    severity: minor
+    description: "Subagents reported excerpt line ranges as stale though the advance script had already shifted them; I had to recheck each."
+    solution: "Tell claim-check briefs that the advance step already shifted lines ranges, so only report ranges that mismatch the current page."

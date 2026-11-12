@@ -61,3 +61,8 @@ occurrences:
     severity: minor
     description: "A repo-wide grep (28KB) and a dump of whole Routine run files flooded context for little value."
     solution: "Use count mode or head limits on Journal Routine records."
+  - session: session_013zxzeQRndZ5iHweDq8ceMP
+    date: "2026-11-11"
+    severity: minor
+    description: "The Skill says to read the extract whole, but the JSON is 150 KB, mostly repeated fields; I printed a compact one-line-per-entry view instead."
+    solution: "Have extract also print or write that compact list and say to read it."

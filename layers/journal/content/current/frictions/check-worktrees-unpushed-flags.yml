@@ -69,3 +69,18 @@ occurrences:
     severity: minor
     description: "log-session refused a completed log because of another session's linked worktree (terrarium-2175, 11 unpushed commits) that this session never touched."
     solution: "The owner chose to remove it (branch kept locally); the sweep in scripts/session/log-session.ts could warn rather than refuse for worktrees the session did not create."
+  - session: session_013zxzeRVjHExXhciv5BwiTB
+    date: "2026-11-11"
+    severity: minor
+    description: "Linked worktree(s) left with uncommitted or unpushed work at close: /home/user/terrarium/.claude/worktrees/wf_88501dcf-89a-3, /home/user/terrarium/.claude/worktrees/wf_88501dcf-89a-6"
+    solution: "Push each, or remove it if its work is meant to be dropped."
+  - session: session_013zxzeTEBhUnvwNNBASiFDg
+    date: "2026-11-11"
+    severity: minor
+    description: "Linked worktree(s) left with uncommitted or unpushed work at close: /home/user/terrarium/.claude/worktrees/wf_74d91baf-df4-3"
+    solution: "Push each, or remove it if its work is meant to be dropped."
+  - session: session_013zxzeNhTeF9B47tZ5Egyhx
+    date: "2026-11-11"
+    severity: nit
+    description: "Rebuild was given the old worktree to continue, but the workflow made fresh worktrees and copied the drafts, so the old one lingered and tripped the Stop hook."
+    solution: "After a killed build, remove the old worktree or tell the agent to use it explicitly."

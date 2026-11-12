@@ -192,3 +192,28 @@ occurrences:
     severity: minor
     description: "Told the owner PR 2938's rewrite sample-first clause was in CLAUDE.md; I only saw a grep hit on a UI sentence. PR 3032 had replaced it; the deep pass caught it."
     solution: "Run git log -S on the file before stating a clause exists (CLAUDE.md Verify before you state)."
+  - session: session_013zxzeS6uNt5yvnz5LyUCCe
+    date: "2026-11-11"
+    severity: minor
+    description: "Stated that the web sessions had no messaging tool, inferred from get_session turn_handoff.tools, before checking; one of them then replied by send_message."
+    solution: "Verify a tool's availability from the session's own events before explaining a missing reply."
+  - session: session_013zxzeTEBhUnvwNNBASiFDg
+    date: "2026-11-11"
+    severity: minor
+    description: "I put unverified details (binary line numbers, an unchecked tool count, a hedged mechanism) into the research note; the owner had it fully rewritten as findings only."
+    solution: "Write research notes findings-only from the start and cut anything not checked by a command."
+  - session: session_013zxzeQgXPpoTcwuDuvvDtE
+    date: "2026-11-11"
+    severity: minor
+    description: "I explained the explore and grilling flow from a partial read of the workflow; only the owner's question exposed the one-question schema limit."
+    solution: "Read the explore workflow's schema and prompt before designing changes to what the grilling asks."
+  - session: session_013zxzeRVjHExXhciv5BwiTB
+    date: "2026-11-11"
+    severity: minor
+    description: "Explained why the build workflow re-gates after a clean review from its meta line, not the code; the owner had to correct me twice."
+    solution: "Read the lines that decide a behaviour before explaining why it exists."
+  - session: session_013zxzeSgDqRuwZif7Rgt2MW
+    date: "2026-11-11"
+    severity: moderate
+    description: "Wrote a harvest Routine bullet into Scheduled tasks from the Skill's own text; the owner said no Routine exists, so it was written, checked and reverted."
+    solution: "Check whether a Routine exists before listing a Skill as one, since SKILL.md wording (A Routine runs this Skill) states intent not fact."

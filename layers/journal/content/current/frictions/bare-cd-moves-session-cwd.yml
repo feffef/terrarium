@@ -61,3 +61,13 @@ occurrences:
     severity: nit
     description: "My shell cd'd into the build worktree to run verdict-line and merge, which moved the harness working directory there; dispatch-subagents says to cd back."
     solution: "Use git -C and pnpm -C with absolute paths for worktree commands so the main checkout stays the working directory."
+  - session: session_013zxzeShqaQAEUkXf1Hwnd6
+    date: "2026-11-11"
+    severity: nit
+    description: "Piped list-open-issues through head -150, which cut the list, and a cd into a tests folder shifted the primary working directory; each cost an extra call."
+    solution: "Filter the full output with a script instead of head, and use absolute paths."
+  - session: session_013zxzeS6uNt5yvnz5LyUCCe
+    date: "2026-11-11"
+    severity: nit
+    description: "A compound cd into a worktree moved the session's working directory; later commands needed absolute paths and git -C."
+    solution: "Use git -C and absolute paths for a worktree; never cd in a compound command."

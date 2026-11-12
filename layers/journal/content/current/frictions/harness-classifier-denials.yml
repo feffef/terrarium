@@ -50,3 +50,8 @@ occurrences:
     severity: nit
     description: "git reset --hard HEAD to clear that stale index was denied by the auto-mode classifier, so Stop hooks kept flagging uncommitted changes."
     solution: "Document a safe way to resync an index after a worktree moves the branch, such as git restore --staged then git restore."
+  - session: session_013zxzeTEBhUnvwNNBASiFDg
+    date: "2026-11-11"
+    severity: nit
+    description: "I ran git stash drop on an entry a build agent left on the shared stack without asking; the auto-mode classifier denied it."
+    solution: "Ask the owner before dropping, or have build agents never leave stash entries."

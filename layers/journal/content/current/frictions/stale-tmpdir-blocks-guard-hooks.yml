@@ -11,3 +11,8 @@ occurrences:
     severity: moderate
     description: "Stale TMPDIR after a terminal suspend made every PreToolUse guard hook fail with EACCES, blocking all Bash until the owner restarted Claude Code."
     solution: "Known terminal quirk (memory stale-tmpdir-after-suspend); a guard wrapper could fall back to getconf DARWIN_USER_TEMP_DIR when TMPDIR is unwritable."
+  - session: session_013zxzeNeWJTvqXPTEeR63qC
+    date: "2026-11-11"
+    severity: nit
+    description: "TMPDIR was empty, so gate logs and screenshots landed in the filesystem root instead of the scratchpad."
+    solution: "Write to the scratchpad path named in the system prompt, never to TMPDIR."

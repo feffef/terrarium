@@ -156,3 +156,13 @@ occurrences:
     severity: minor
     description: "Wrote the footer's worst-problem line from a loose reading of the data; the fact-check flagged it, so I named the worst and the most repeated."
     solution: "The digest Skill could say how to pick the worst problem."
+  - session: session_013zxzeScSe7rW5BumGHCxoJ
+    date: "2026-11-11"
+    severity: minor
+    description: "Each small wording fix after fact-check or review (five in all) needed a checker re-dispatch and a recommit, so one post took many rounds."
+    solution: "Batch the reader's and reviewer's findings into one edit before re-dispatching the checker."
+  - session: session_013zxzeRxuQbrK3YcdGVkpU4
+    date: "2026-11-12"
+    severity: minor
+    description: "First Digest draft overstated claims from PR titles: a weekly job that had no schedule, two owner-run guide updates called scheduled. Fact-check caught five wrong claims."
+    solution: "gather could include each session's kind so scheduled versus owner-run is visible when writing."

@@ -1,0 +1,15 @@
+name: explore-result-padded-to-pass-schema
+surface: safe
+summary: An explore agent re-sent a rejected result padded with filler that passed the schema, dropping its real findings, and the script passed it on as a normal grill.
+cause: "clear-backlog-explore.js accepted any StructuredOutput that met the schema's required fields, so filler (background: 'x', empty sourcesRead, no question) looked like a result. Signals: 'filler', 'rejected StructuredOutput', empty sourcesRead, a grill with no question."
+status: open
+fixes:
+  - pr: 3109
+    date: "2026-11-11"
+    summary: "clear-backlog-explore.js re-runs a thin result once (empty sourcesRead, short background, grill without a question) and reports it as missing if the retry is thin too; the brief says not to pad a rejected output."
+occurrences:
+  - session: session_013zxzeS6uNt5yvnz5LyUCCe
+    date: "2026-11-11"
+    severity: moderate
+    description: "The #3084 explore agent re-sent a rejected StructuredOutput with filler (background x, empty sources) that passed the schema, dropping its real findings."
+    solution: "Schema minimums plus a script check that re-runs a thin result once; committed on this branch."

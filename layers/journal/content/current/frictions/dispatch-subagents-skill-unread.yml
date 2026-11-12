@@ -21,3 +21,13 @@ occurrences:
     severity: nit
     description: "Subagent briefs and the dispatch-subagents Skill were read after the first Agent call was already written in my head; I invoked the Skill just before dispatching, so no guard fired."
     solution: "None needed."
+  - session: session_013zxzeQfaLWV38YeNLH6Ezs
+    date: "2026-11-11"
+    severity: nit
+    description: "Read dispatch-subagents only after planning the brief; no guard hit, but the order was wrong."
+    solution: "Read the Skill before drafting any subagent brief."
+  - session: session_013zxzePXTf8YZ6THtADS4yY
+    date: "2026-11-10"
+    severity: nit
+    description: "audit-skills step 1 does not name the dispatch-subagents read that CLAUDE.md requires before a brief, so I read it only when about to write briefs."
+    solution: "Name dispatch-subagents in audit-skills step 1 where the usage subagent is dispatched."

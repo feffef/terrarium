@@ -158,3 +158,28 @@ occurrences:
     severity: nit
     description: "Edited the workflow and run-summary.ts before reading ADR-0005, 0022 and 0027; a hook asked for the reads afterwards."
     solution: "Read the governing ADRs of the files before the first edit, as CLAUDE.md says."
+  - session: session_013zxzeShqaQAEUkXf1Hwnd6
+    date: "2026-11-11"
+    severity: nit
+    description: "Edited .claude/workflows/clear-backlog-explore.js and run-summary.ts before reading ADR-0005, ADR-0017, ADR-0020, ADR-0022 and ADR-0027; the post-edit hooks prompted each read."
+    solution: "Load the ADR summary rule when the file is read, not only after the first edit."
+  - session: session_013zxzeRVjHExXhciv5BwiTB
+    date: "2026-11-11"
+    severity: nit
+    description: "Chose not to read the ADRs two edit hooks asked for (0006, 0008, 0016, 0025) on a one-prop footer change, judging them irrelevant."
+    solution: "Have the adr-read-hint skip a change that touches no routing or data-reading line."
+  - session: session_013zxzeQQzVdav2Lzx9D5WBr
+    date: "2026-11-11"
+    severity: nit
+    description: "Wrote the workflow script and run-summary.ts before reading ADR-0005, ADR-0022 and ADR-0027 in full; hooks prompted the late reads, none changed the edit."
+    solution: "Read the governing ADRs when the rule loads on first Read, before the first Edit."
+  - session: session_013zxzeQRndZ5iHweDq8ceMP
+    date: "2026-11-11"
+    severity: minor
+    description: "Edit hooks asked me to read about ten ADRs in full after each write; each is correct to read but together they cost many tokens for edits of a few lines."
+    solution: "Read an ADR only when its rule says a change conflicts with it, or let the hook name just the clause that applies."
+  - session: session_013zxzeQgXPpoTcwuDuvvDtE
+    date: "2026-11-11"
+    severity: minor
+    description: "Edit hooks demanded a full read of ADR-0027; I read the other three ADRs but never 0027, and skipped the grilling Skill."
+    solution: "Cat each hook-named ADR in its own call and check the output, or read the rule summary only when the ADR cannot change the edit."

@@ -123,3 +123,18 @@ occurrences:
     severity: nit
     description: "ADR-0004 asks for code-review on a diff over ten lines; I read the 72-file content diff myself instead, since it held no code."
     solution: "Let pr-workflow's simple-change test exempt pure re-pin diffs, or state that scheduled content syncs need only the own-read."
+  - session: session_013zxzeTKpnXCQm75L92QGhL
+    date: "2026-11-12"
+    severity: minor
+    description: "Used my own diff read instead of code-review for a 22-file data-only PR; disclosed in the verdict."
+    solution: "pr-workflow could say whether data-only Inventory PRs count as simple despite exceeding 10 lines."
+  - session: session_013zxzeRVjHExXhciv5BwiTB
+    date: "2026-11-11"
+    severity: nit
+    description: "Skipped code-review on my hand fixes to #3069 (four files, a lock revert), though pr-workflow.md says a larger follow-up gets it; I read the diff myself instead."
+    solution: "Run code-review on any follow-up above the simple-change limit, or state why it was skipped in the PR."
+  - session: session_013zxzeQgXPpoTcwuDuvvDtE
+    date: "2026-11-11"
+    severity: nit
+    description: "My follow-up commit touched 3 files, over the simple-change limit, and got only my own diff read, not code-review; I also did not check its commit trailer."
+    solution: "Run code-review on the follow-up diff, or keep follow-ups to two files."

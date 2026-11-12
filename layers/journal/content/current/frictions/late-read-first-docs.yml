@@ -474,3 +474,48 @@ occurrences:
     severity: nit
     description: "First git command (rev-parse --is-shallow-repository) was not on CLAUDE.md's read-only list and ran before docs/agents/git-conventions.md; the hook asked for the read."
     solution: "Put the shallow check on the read-only list, or read git-conventions first."
+  - session: session_013zxzeSPxncNsUJXwnc2DvG
+    date: "2026-11-11"
+    severity: nit
+    description: "Ran git rev-parse HEAD before reading git-conventions.md; a hook reminded me. rev-parse is not on CLAUDE.md's read-only list."
+    solution: "Add rev-parse to the read-only list, or read the doc when a Skill says it dispatches git-touching agents."
+  - session: session_013zxzeShqaQAEUkXf1Hwnd6
+    date: "2026-11-11"
+    severity: nit
+    description: "Relabelled #3076 and reopened #2996 before reading triage-labels.md, and never read issue-tracker.md; both calls only restored earlier state."
+    solution: "Read both docs before the first issue write; the post-write hook reminder arrives too late."
+  - session: session_013zxzeRVjHExXhciv5BwiTB
+    date: "2026-11-11"
+    severity: nit
+    description: "Ran git rev-parse --is-shallow-repository before reading git-conventions.md; the read-first hint fired only after the call."
+    solution: "Add rev-parse to the read-only list in CLAUDE.md, or let the hint fire on it."
+  - session: session_013zxzeQfaLWV38YeNLH6Ezs
+    date: "2026-11-11"
+    severity: nit
+    description: "Ran a gh api call before reading github-integration.md; the read-first hint fired after the call."
+    solution: "Read the doc before the first GitHub operation, as CLAUDE.md says."
+  - session: session_013zxzeQQzVdav2Lzx9D5WBr
+    date: "2026-11-11"
+    severity: nit
+    description: "Ran git fetch before reading docs/agents/git-conventions.md, which CLAUDE.md requires before the first non-read-only git command; a hook flagged it."
+    solution: "Read git-conventions.md at session start when the task will touch git; the hook hint worked as designed."
+  - session: session_013zxzeTKpnXCQm75L92QGhL
+    date: "2026-11-12"
+    severity: minor
+    description: "Read git-conventions, github-integration and pr-workflow only after my first git/gh calls, when hooks flagged them."
+    solution: "Read the CLAUDE.md-named docs before the first git or GitHub command."
+  - session: session_013zxzeP6PH92ubTps39j3HD
+    date: "2026-11-11"
+    severity: nit
+    description: "Filed Seedlings through issue_write before reading issue-tracker.md and triage-labels.md, which CLAUDE.md requires before filing; the label turned out right."
+    solution: "harvest step 4 could name those two docs, since the hook only hints after the call."
+  - session: session_013zxzeQRndZ5iHweDq8ceMP
+    date: "2026-11-11"
+    severity: nit
+    description: "I ran git log in an early Bash call before reading git-conventions.md; the hook flagged it, though it was read-only and I only counted commits."
+    solution: "None needed beyond the existing read-only allowance; the hook could skip a bare count."
+  - session: session_013zxzeTEBhUnvwNNBASiFDg
+    date: "2026-11-11"
+    severity: nit
+    description: "CLAUDE.md says read git-conventions.md and github-integration.md before the first git or GitHub operation; I ran both first and hooks reminded me."
+    solution: "The skill that dispatches work could name both docs up front, or the hooks could block the first call."

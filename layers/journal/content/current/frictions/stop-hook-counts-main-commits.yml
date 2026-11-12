@@ -28,3 +28,8 @@ occurrences:
     severity: nit
     description: "After PR 2948 merged and GitHub deleted its branch, the stop hook kept reporting 5 unpushed commits against a stale remote-tracking ref, which cost a fetch and ancestry check before a plain push."
     solution: "The hook could compare against origin/main when the remote branch no longer exists, or git-conventions could name this case."
+  - session: session_013zxzeQRndZ5iHweDq8ceMP
+    date: "2026-11-11"
+    severity: nit
+    description: "The Stop hook counted 46 unpushed commits against a remote branch deleted after the merge, though almost all were main's own commits."
+    solution: "Count commits against origin/main, or skip the nag when the remote branch no longer exists."

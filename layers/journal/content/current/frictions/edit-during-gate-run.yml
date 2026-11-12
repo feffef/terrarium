@@ -168,3 +168,13 @@ occurrences:
     severity: minor
     description: "I started gate:scoped in the background and then edited the file, so that gate run was wasted."
     solution: "Edit nothing while the gate runs, or confirm the design with the owner before starting it."
+  - session: session_013zxzeQRndZ5iHweDq8ceMP
+    date: "2026-11-11"
+    severity: minor
+    description: "I started gate:scoped before running code-review, against pr-workflow's order; review fixes then forced a second full gate run."
+    solution: "Run the review first and start the gate only on the final head; pr-workflow already says so, I jumped ahead to save time."
+  - session: session_013zxzeP6PH92ubTps39j3HD
+    date: "2026-11-11"
+    severity: nit
+    description: "Started pnpm gate:scoped before committing and running code-review, against pr-workflow.md's order; stopped it and restarted, costing a few minutes."
+    solution: "The pre-PR checklist in the harvest-style build flow could be one numbered list: commit, review, fix, gate."

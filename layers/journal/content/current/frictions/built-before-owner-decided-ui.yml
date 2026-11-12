@@ -1,9 +1,8 @@
 name: built-before-owner-decided-ui
 surface: safe
 summary: Agents built user-facing UI from a spec or a one-line ask before the owner settled its labels or saw a sample, so it was redesigned or the owner was asked afterwards.
-cause: "CLAUDE.md 'Ask before building' (the grilling Skill: settle what each displayed value shows) and, since PR #3032 (2026-11-10), 'before any UI build, agree it on a short sample shown with preview.ts start --dev' are not applied: a build brief leaves a label open, a tile is built whole from a spec, or a screenshot request is built without confirming. Signals: 'built user-facing UI before the owner decided', 'before showing the owner a sample', 'triggered a full redesign', 'ask-first preference not applied'."
-status: tracked
-ref: "#3076"
+cause: "CLAUDE.md 'Ask before building' (the grilling Skill: settle what each displayed value shows) and, since PR #3032 (2026-11-10), 'before any UI build, agree it on a short sample shown with preview.ts start --dev' are not applied: a build brief leaves a label open, a tile is built whole from a spec, or a screenshot request is built without confirming. Signals: 'built user-facing UI before the owner decided', 'before showing the owner a sample', 'triggered a full redesign', 'ask-first preference not applied'. Since PR #3094 (2026-11-11) the sample-first rule lives in .claude/rules/ui-verification.md (CLAUDE.md keeps a pointer), and since PR #3107 clear-backlog explore asks the visible-UI questions in its grilling round."
+status: open
 notes: |-
   2026-11-11 survey: issue #3026 closed by PR #3032 (recorded in fixes); status reset to open.
   2026-11-11 survey: two sessions after PR #3032 (R7qQ3HKo built UI without asking the owner to confirm the first screenshot; NeWJTvqX built a Term.vue link without agreeing a sample) show the sample-first rule did not hold.
@@ -11,6 +10,12 @@ fixes:
   - pr: 3032
     date: "2026-11-10"
     summary: "CLAUDE.md 'Ask before building': any UI build is agreed on a short sample, shown with scripts/ui/preview.ts start --dev, before the full build."
+  - pr: 3094
+    date: "2026-11-11"
+    summary: "The sample-first UI rule moves from CLAUDE.md to .claude/rules/ui-verification.md: grep for an existing element, agree a short preview.ts --dev sample, confirm each screenshot with the owner."
+  - pr: 3107
+    date: "2026-11-11"
+    summary: "clear-backlog explore returns a visible-UI change as grill with follow-up questions: which pages show it, what each value follows, the look in words."
 occurrences:
   - session: session_013zxzeSy38XR1wPjCGFUExY
     date: "2026-11-07"
@@ -37,3 +42,8 @@ occurrences:
     severity: moderate
     description: "Built a new Term.vue link with the plain text Lesson without agreeing a sample first; the owner then pointed to the existing titled Lesson chip."
     solution: "Before a UI change, grep the tenant for an existing component for the same element and show a sample with preview, as CLAUDE.md says."
+  - session: session_013zxzeRVjHExXhciv5BwiTB
+    date: "2026-11-11"
+    severity: moderate
+    description: "Grilled the #3075 footer SHA as one vague question; it never said which pages show it, so the line shipped on every page and the owner had to correct it."
+    solution: "Ask where it shows, what it displays and a sample before the pick, as CLAUDE.md says for user-facing UI; filed as #3098."
