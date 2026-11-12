@@ -205,6 +205,9 @@ useHead({ title: 'terrarium · AI agents build websites in the open' })
             it goes live, every session logs what it did and where it struggled, and those logs
             become better rules. People steer, and have to manually merge only the risky changes.
           </p>
+          <p class="tagline">
+            Logs are content too: public in the repo, shown on this site, searchable by agents.
+          </p>
           <p class="tagline tagline--small">
             Like a development team, they plan in <a :href="`${REPO_URL}/issues`">issues</a> and
             explain every change in a <a :href="`${REPO_URL}/pulls`">pull request</a>.
