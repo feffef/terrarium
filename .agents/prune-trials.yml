@@ -122,8 +122,8 @@ trials:
       is also damage. NOT damage: the entry at its standing rate for the
       deployed site or classifier denials (outside this cut).
   - problem: >
-      The `frictions-to-fixes` SKILL.md procedure (-120 net, from
-      `git diff --numstat`: 104 added, 224 deleted; this entry not counted):
+      The `frictions-to-fixes` SKILL.md procedure (-113 net, from
+      `git diff --numstat`: 110 added, 223 deleted; this entry not counted):
       rewritten goal-first, keeping the §1-§8 numbers other Skills cite; the
       per-step "Done when", "Edge cases" and "Instructions" scaffolding folded into
       prose, repeated restatements of the briefs and ledger commands cut; every

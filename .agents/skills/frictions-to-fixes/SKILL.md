@@ -31,19 +31,23 @@ dropped list, **(c)** its own frictions, **(d)** ledger changes and their commit
 
 ## 2. Act on the screen
 
-Each candidate is **never-fixed** (go to §3), **drop** (nothing), **open-already**
-(file nothing; if flagged idle, pick it up in §3 or escalate; idle = no commit
-or comment within `LEDGER_HORIZON_DAYS`, `layers/journal/app/utils/ledger.ts`)
-or **regression** (its fix merged, then the friction came back).
+Check the survey has all six parts before you go on. Each candidate is one of:
 
-Never pick a regression: a change that failed once needs human eyes. File an
-issue saying the earlier fix did not work, linking it and quoting the original
-and new friction, for the top three still-recurring entries (status not
-`accepted`, `on-trial` or `tracked`) whose highest severity since the latest fix
-(`since:` in the survey's `--summary`) is `moderate` or above, ranked by it. List
-the rest in the ledger PR's description. A regression with an open issue needs
-none and takes no slot. A `blocker` dropped only for an open Prune Trial's
-territory still gets an issue naming the trial.
+- **never-fixed:** go to §3.
+- **drop:** nothing. A `blocker` dropped only for an open Prune Trial's
+  territory still gets an issue naming the trial (search the tracker first).
+- **open-already:** file nothing. If flagged idle (no commit or comment within
+  `LEDGER_HORIZON_DAYS`, `layers/journal/app/utils/ledger.ts`), pick it up in
+  §3 or escalate.
+- **regression** (its fix merged, then the friction came back): never pick it,
+  since a change that failed once needs human eyes. File an issue saying the
+  earlier fix did not work, linking it and quoting the original and new
+  friction, for the top three (fewer if fewer qualify) still-recurring entries
+  (status not `accepted`, `on-trial` or `tracked`) whose highest severity since
+  the latest fix (`since:` in the survey's `--summary`) is `moderate` or above,
+  ranked by it. List every other regression, lower severity included, in the
+  ledger PR's description. A regression with an open issue needs none and takes
+  no slot.
 
 ## 3. Pick up to 10
 
@@ -103,7 +107,7 @@ Doc-only fixes (Markdown: CLAUDE.md, one of our Skills, a Skill Inventory entry)
 all go to **one** agent and branch; each code or config fix gets its own. Use
 `model: sonnet` and [`impl-brief.md`](impl-brief.md) with the fixes (problem,
 evidence, design) and `{SCRATCH_DIR}` filled, plus `dispatch-subagents` §3's
-lines. At most **two** agents run full gates at once.
+lines. At most **two** agents run full gates at once; dispatch the next as one finishes.
 
 ## 7. Review and merge
 
@@ -125,7 +129,7 @@ just pushed (ADR-0003). For each branch handed back:
    exception (the *Scope* list in `docs/adr/0004-objective-safety-gate.md`). To
    escalate, after the ledger PR merges have the agent merge `origin/main` and
    commit the PR's own `fixes` ledger entry (dated today, via `ledger-set.ts`),
-   leave the PR open and say why in a comment. The next survey corrects the date.
+   leave the PR open and say exactly why in a comment. The entry lets the ledger update when a human merges it; the next survey corrects the date.
 
 ## 8. Close the ledger and log
 
@@ -133,12 +137,15 @@ Goal: the ledger shows what became of every fix PR, and the log is honest.
 
 Once the ledger PR has merged and every fix PR is merged, escalated or
 abandoned, land **one** status-only PR from a fresh branch off `origin/main`,
-the same way as the ledger PR, through `ledger-set.ts`: **merged** fix → a
-`fixes` entry (`pr`, UTC merge date, one-line summary) and `status: open`;
-**abandoned** → `status: open`; **escalated** → its PR number in `ref`, still
-`tracked`. `status: open` on a merged fix is right: whether it worked is
-derived from later occurrences (`survey-brief.md`). With no fix PR, skip this PR
-and still log.
+the same way as the ledger PR, through `ledger-set.ts`:
+
+- **merged** fix: a `fixes` entry (`pr`, UTC merge date, a one-line summary from
+  its description) and `status: open`. That is right: whether it worked is
+  derived from later occurrences (`survey-brief.md`).
+- **abandoned:** `status: open`.
+- **escalated:** its PR number in `ref`; it stays `tracked`.
+
+With no fix PR, skip this PR and still log.
 
 Then invoke `close-session`. Among the frictions, include the subagents' own, and
 name each place this Skill or its briefs were confusing or contradicted
