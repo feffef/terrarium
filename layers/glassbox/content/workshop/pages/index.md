@@ -23,13 +23,12 @@ Each guide page is named by its title, then its file under `layers/glassbox/cont
 ### Weak spots
 
 - **The Installed Skills pages say little of their own.** *Planning skills* (`skill-pack/20.planning-with-the-pack`) and *Engineering skills* (`skill-pack/30.engineering-skills`) mostly describe Skills that come from outside Terrarium. Only a few of their facts are about choices Terrarium made.
-- **Only the overview and the Git & GitHub, Claude Code, Hooks and Agents & automation pages write glossary terms in lowercase.** The owner's rule (`owner-decisions.md`) is that a glossary term is lowercase in body text, mid-sentence. The other Subjects and the Walkthroughs still write Skill, Tenant, Routine, Gate and the like. Fix it a Subject at a time; it is wording only. A capital stays at the start of a sentence, in a linked page's exact title, in code and in an Excerpt.
+- **Only the overview and the Git & GitHub, Claude Code, Hooks, Agents & automation and Installed skills pages write glossary terms in lowercase.** The owner's rule (`owner-decisions.md`) is that a glossary term is lowercase in body text, mid-sentence. The other Subjects and the Walkthroughs still write Skill, Tenant, Routine, Gate and the like. Fix it a Subject at a time; it is wording only. A capital stays at the start of a sentence, in a linked page's exact title, in code and in an Excerpt.
 - **Two Git & GitHub Lessons are long.** *Commit and PR attribution* (`git-github/60.attribution`) and *Issue triage labels* (`git-github/70.issue-triage-labels`) are each about 1,400 to 1,600 words. Both have been trimmed; look for a split only after a fresh reader finds them hard to follow.
 
 ### Recurring problems
 
 - **New text has contained false claims.** Twice, a newly written page or fix said something its source contradicted, and it was only noticed a day later. Older text can be false too: a claim check found *Mermaid pre-rendering* saying unmapped colours fall back to Mermaid's own defaults, when they are fixed light colours.
-- **Neighbouring pages repeat each other.** Most structural changes took a reason that two pages both explained and left it on just one of them.
 
 ### The owner's direction
 
@@ -56,7 +55,8 @@ None of these is false.
 - **Agents.** *Subagents*: the Skill excerpt says impl agents cannot spawn subagents before the depth-1 explanation, so it reads as clashing with the three-layer default; "the cloud launcher" is unexplained. *Workflow scripts*: the first sentence on the clear-backlog Skill is long, and the `pipeline()` multi-stage form has no source beyond the script. *Cloud sessions*: "untrusted workspace" is unexplained, and no source says whether the agent proxy and the GitHub proxy are one. *Scheduled tasks*: the `disable-model-invocation` fact is told in the concept and again in In Terrarium. *Inspecting past sessions*: "header" is not glossed outside the excerpt.
 - **Git & GitHub.** *Dependabot grouping*: no source says why Terrarium counts a 0.x minor as a major (the page gives the Semantic Versioning rule only), nor why `merge-pr.ts` refuses a Dependabot pull request that touches any file besides `package.json` and the lockfile. *Issue triage labels* and *Commit and PR attribution* are still dense in In Terrarium, with many Skill and function names in a row. The Excerpt that first shows `harvest`, `auto-triage` and the guest pipeline on *Issue triage labels* sits before their glosses; a shorter excerpt would fix it. *Pull requests* leans on a bare "Session logs follows it there" pointer.
 - **Walkthroughs.** *A bug report becomes work*: `wontfix (completed)` in the real case is not explained; stop 7 mixes the Trusted author with the Public requester. *A change goes live* stop 2 never says how long the pause is. *Asking an agent for a change*: stop 1 says a cloud and a local session work the same way, and stop 2 has the `SessionStart` hook install packages; both hold for Terrarium's usual one-repository session, and the Walkthrough could say so.
-- **Installed skills and Deploy.** *Wayfinder* and *Planning a big change*: the installed Skill gives no reason research tickets may resolve more than one per session. *Planning skills*: `ready-for-agent`, `needs-triage` and *Agent Brief* are glossed only briefly. *Continuous deployment* and *pnpm and the lockfile* use *ADR*, *Merge gate* and *Content database* as bare pointers; *Continuous deployment* has no excerpt for the failed-install and Node-restart claims.
+- **Installed skills and Deploy.** *Wayfinder*: the installed Skill gives no reason a session resolves one ticket and research tickets are excepted; "HITL", "frontier" and "fog" arrive as a list before any example, and Fog and Not yet specified are two names for one section. *Planning skills*: the installed `to-spec` labels `ready-for-agent` but Terrarium overrides it, which a reader meets before the rule; the `auto-triage` file-sharing mechanism sits beside "a brief names no files". *Installed skills*: *ADR* is never glossed, and the gate protects only a Skill that has an Inventory entry, which the page says late. *Engineering skills*: `implement`, which no agent can start, is followed by the build agent without a page saying why that is allowed. *Continuous deployment* and *pnpm and the lockfile* use *ADR*, *Merge gate* and *Content database* as bare pointers; *Continuous deployment* has no excerpt for the failed-install and Node-restart claims.
+- **The version-1 lock hash explanation may go stale.** *Installed skills* says `computedHash` is taken before the installer handles frontmatter, as `validate-skills-lock.ts` says; the live installer's README describes a newer lock whose hash covers the installed files.
 - **Terms glossed late.** Several pages use *Space*, *Document*, *Catalog* or *Tenant* before they are glossed, or gloss one twice (*Vue components*, *Hydration*, *File routing*, *queryCollection*). A short rule for where each is glossed first would settle it.
 - **Other.** *Content validation*: the lede says a misspelt field passes the build, yet a schema-less `page` Collection is skipped by the check.
 
@@ -75,27 +75,23 @@ None of these is false.
 - A Nuxt build peaks near 2.1 GB, and the live host has a 2 GB swapfile added after builds were killed (`deploy/README.md`): a sentence for *Continuous deployment* (`deploy/10.continuous-deployment`), not a page. The build line in the page footer (`shared/build-info.ts`, the commit and time of the build, on the home page and the Journal landing) is also a sentence for it.
 - Each session rates every rule it was shown as *steered* or *backed*, kept in the log as `ruleUse` (`shared/schemas/session.ts`; `scripts/session/rule-use-report.ts` totals it). Nearest pages: *Pruning instructions* and *Session logs*.
 - `docs/agents/verifying-ui-changes.md` says Linux screenshots can't confirm fixed-width text fit, and `scripts/ui/screenshot.ts` scrolls `--wait-for` captures to an `#anchor`: sentences for *Headless browser checks* (`verification/80.headless-browser-checks`). The browser quirks and CSS traps in that doc are only partly taught there.
-- More web standards pages, looked at and left out: *View Transitions* (mostly a Nuxt hook, so it fits Nuxt & Vue), page metadata for link previews, container queries and a scroll-watching helper.
 
 ### Claims to check
 
 Each may be true; a later run should read the tool's source or run it.
 
 - *Content collections*: the docs say `prefix` defaults from the start of `include`, so `prefix: '/'` may be needless once `cwd` is set per Space.
-- *Hydration*: Vue's `data-allow-mismatch` and Nuxt's `<ClientOnly>` are not taught.
 - *pnpm and the lockfile*: the lead-in says pnpm.io's unversioned pages describe a newer major. The 12.x, 11.x and 10.x docs exist (`pnpm/pnpm.io` `versions.json`), but pnpm.io was blocked, so which major the unversioned pages show is unchecked.
 - *Nitro server engine* (`nuxt-vue/60.nitro`): the dev cache path `.nuxt/cache/nitro/routes`, `cache: false`, a payload for a plain `cache` rule, and "Nuxt 4 runs Nitro v2".
 - *Cloud sessions* (`agents/30.cloud-sessions`): that the proxy refuses `.github/workflows/` pushes and repository-settings writes.
 - *Session transcripts* (`hooks/40.session-transcripts`): the record types and fields, the 2 KB preview, and a subagent's `transcript_path` inside tool hooks. *A session log lands on main* says "the `Stop` hook" in the singular, though four are wired.
 - *Author trust* (`git-github/20.author-trust`): what each `author_association` value means, and that `pull_request_target` ignores the approval setting. *Dependabot grouping*: that `/` doesn't reach a nested action.
 - *Linting* (`verification/50.linting`): the sentence on the rules `@nuxt/eslint` turns on and the absence of formatting rules.
-- *Content validation* (`verification/30.content-validation`): the `?id=safeparse` anchor on v3.zod.dev, which loads only in a browser.
 
 ### Ideas still open
 
 - The overview names neither web standards, how agents reach things (cloud sessions, permissions, MCP, worktrees) nor dependencies (lockfile, Dependabot). The owner chose other gaps for it; add one only with a reason.
 - `plain.ts` (the fresh readers' view of a page) could keep link syntax in code and show each term's definition after its sentence, not inside it; a change to a Skill's script waits for the owner.
-- The overview uses *CI* and *ADR-0004* without saying what they are, and "spec" and "stories" are glossed only in a clause.
 
 ### Soft decisions
 
