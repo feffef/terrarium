@@ -18,11 +18,6 @@ fixes:
     date: "2026-11-07"
     summary: "Closes #2913: merge-close-stop.ts, a Stop hook, blocks the end of a turn once when this session merged a PR and close-session has not run since."
 occurrences:
-  - session: session_013zxzeTK9c2HVcabwCx3b18
-    date: "2026-10-28"
-    severity: nit
-    description: "After opening PRs 2642-2647 I re-authored the log with log-session directly instead of invoking close-session, against the CLAUDE.md rule to invoke close-session before a PR-opening turn ends."
-    solution: "Follow the PR-open hook literally and invoke close-session, which then calls log-session."
   - session: session_013zxzeSgD6cuF2mawqY6jWM
     date: "2026-10-29"
     severity: minor
@@ -38,3 +33,8 @@ occurrences:
     severity: major
     description: "HUMAN-PROMPTED-CLOSURE: after the merges I ignored three hook hints to re-invoke close-session (ADR-0009) and sent a completed log that was refused; the owner had to prompt me to log again."
     solution: "Re-invoke close-session right after each merge-pr.ts run, as the hook hint says, then author and read the full output."
+  - session: session_013zxzeS6uNt5yvnz5LyUCCe
+    date: "2026-11-11"
+    severity: nit
+    description: "After PR 3108 merged I refreshed the log by running log-session.ts --author by hand instead of invoking close-session; the Stop hook flagged it."
+    solution: "Invoke close-session whenever a PR merges, as its Skill says, before touching the scratch."

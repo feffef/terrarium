@@ -17,11 +17,6 @@ fixes:
     date: "2026-10-29"
     summary: "The tenant-glossary rule says a Tenant's terms apply to everything written under its layer, code comments included."
 occurrences:
-  - session: session_013zxzeQDh7MCP7HpYBYBTeh
-    date: "2026-10-28"
-    severity: minor
-    description: "Chose the work-queue draft without checking its title against EVERY-PAGE's title rule; two raters then flagged five words, costing a retitle round and link-text edits on five pages."
-    solution: "Have step 3 check a candidate draft's title against the rule before it is chosen, or add the word count to page-checks (issue 2651)."
   - session: session_013zxzeRkQabGaMQ8gphe4Ra
     date: "2026-11-02"
     severity: nit

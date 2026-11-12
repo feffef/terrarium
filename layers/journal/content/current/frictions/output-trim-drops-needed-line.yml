@@ -38,3 +38,13 @@ occurrences:
     severity: nit
     description: "I piped one log-session.ts --author run through head, which the log-session Skill forbids because refusals and warnings print there; nothing was hidden that time, but a refusal could have been."
     solution: "Run log-session.ts unfiltered; the Skill's step-1 line already says so, so this is a read-and-follow slip."
+  - session: session_013zxzeShqaQAEUkXf1Hwnd6
+    date: "2026-11-11"
+    severity: nit
+    description: "Piped log-session.ts --author output through head, against the close-session rule never to filter it; its warnings could have been cut, so I re-ran it unfiltered."
+    solution: "Run the command bare and read all its output."
+  - session: session_013zxzeP6PH92ubTps39j3HD
+    date: "2026-11-11"
+    severity: minor
+    description: "Piped harvest list through head -300, truncating it at entry 175 of 204; I read a partial list and had to rerun to a file."
+    solution: "The Skill's step 1 could say to write list output to a file and read it whole."

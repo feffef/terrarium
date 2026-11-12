@@ -67,3 +67,13 @@ occurrences:
     severity: minor
     description: "Owner decisions reached me relayed through another session, several messages apart; I built while one question was still open and proceeded on my default."
     solution: "Collect every open design question before building and send them in one message to the deciding session."
+  - session: session_013zxzeQgXPpoTcwuDuvvDtE
+    date: "2026-11-11"
+    severity: moderate
+    description: "I read the owner's 'let's discuss this later' too narrowly, kept building, and posted a 'merging as-is' verdict before the owner objected."
+    solution: "After a deferral answer, stop and ask what waits before building or merging; hold any merge verdict until the deferred point is settled."
+  - session: session_013zxzeQRndZ5iHweDq8ceMP
+    date: "2026-11-11"
+    severity: minor
+    description: "I ranked harvest entries by the session's Friction severity without asking what best meant; the owner then said creative ideas must not be buried, costing a code, test and Skill-text change."
+    solution: "Ask the owner what the selection criterion should favour before building the ranking, not after a review comment."

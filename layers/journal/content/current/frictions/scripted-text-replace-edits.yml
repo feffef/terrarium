@@ -49,3 +49,13 @@ occurrences:
     severity: minor
     description: "I wiped tests/unit/rule-use.spec.ts with a Python open-for-write that read the same file afterwards; restored it from git, but it cost a redo of that file's edits."
     solution: "Read a file into a variable before opening it for write; prefer the Edit tool for in-place changes."
+  - session: session_013zxzeRxuQbrK3YcdGVkpU4
+    date: "2026-11-12"
+    severity: nit
+    description: "Ran a Python replace script that asserted on a string I had retyped wrongly, costing a retry; the wording differed in case from the file."
+    solution: "Use Edit with exact text instead of a retyped Python replace."
+  - session: session_013zxzeQQzVdav2Lzx9D5WBr
+    date: "2026-11-11"
+    severity: nit
+    description: "A python string-replace script failed on a slice boundary (substring not found), and save-handback failed once because its output folder didn't exist."
+    solution: "Edit with the Edit tool for multi-hunk changes; mkdir -p the scratch subfolder before save-handback."

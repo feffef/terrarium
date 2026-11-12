@@ -12,16 +12,6 @@ fixes:
     date: "2026-11-04"
     summary: "clear-backlog-build reviewPrompt and the REVIEW schema say worthFixing is false only for a call that needs the owner's choice, so a cheap spec mismatch is fixed, not left as a judgement call."
 occurrences:
-  - session: session_013zxzeTK9c2HVcabwCx3b18
-    date: "2026-10-28"
-    severity: minor
-    description: "The build reviewer flagged as a mere judgement call a real gap where the #2472 rule covered only one clause of the bar, which I fixed by hand."
-    solution: "The build workflow's review should treat a gap against the brief's 'never' wording as a finding, not a judgement call."
-  - session: session_013zxzeTGYbEWeFyEywFafxw
-    date: "2026-10-28"
-    severity: minor
-    description: "A first-round Zod fix ('type and schema overlap on one rule') was false and passed code-review; only the last re-grade caught it"
-    solution: "Have the review's Spec agent re-check every sentence a fix round rewrote against its source, not only the targeted deficit"
   - session: session_013zxzeRkQabGaMQ8gphe4Ra
     date: "2026-11-02"
     severity: moderate

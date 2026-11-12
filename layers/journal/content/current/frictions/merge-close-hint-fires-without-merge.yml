@@ -48,3 +48,8 @@ occurrences:
     severity: minor
     description: "Stop hook demanded close-session claiming a PR merged, while this run opened none, forcing an early log mid-run."
     solution: "Make the merged-PR check ignore sessions that opened no PR."
+  - session: session_013zxzeSPxncNsUJXwnc2DvG
+    date: "2026-11-11"
+    severity: nit
+    description: "The Stop hook claimed a PR had merged and demanded close-session, though no PR had merged or opened this run."
+    solution: "Make the merge-close hint check the session's own PRs before firing."

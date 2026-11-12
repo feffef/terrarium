@@ -1,0 +1,16 @@
+name: explore-agent-writes-to-tracker
+surface: safe
+summary: A clear-backlog explore run posted comments, relabelled and closed issues before the owner knew it writes, and the agents' own 'writes' report was trusted unchecked.
+cause: "Explore agents write to the tracker by design (clear-backlog-explore.js 'GitHub writes:': one comment, labels, objective duplicate or done closes), but clear-backlog SKILL.md §1 never says so to the orchestrator or owner, and an agent's 'writes' field is its own claim, unverified against journal.jsonl. Signals: 'explore commented on ten tickets', 'writes: []' with a comment posted."
+status: tracked
+occurrences:
+  - session: session_013zxzeShqaQAEUkXf1Hwnd6
+    date: "2026-11-11"
+    severity: moderate
+    description: "First explore run commented on ten tickets and closed one before the owner could say read-only; I had not warned that explore writes. Needed relabel, reopen, and comment deletion."
+    solution: "Say before the explore run that its agents post comments and may close issues, or have clear-backlog confirm that once."
+  - session: session_013zxzeS6uNt5yvnz5LyUCCe
+    date: "2026-11-11"
+    severity: minor
+    description: "Accepted an explore agent's writes: [] as true; the agent had posted a comment and relabelled the issue, found only later in the transcript."
+    solution: "The explore script could compare the writes list with the issue's events, or the orchestrator check events before trusting an empty writes."

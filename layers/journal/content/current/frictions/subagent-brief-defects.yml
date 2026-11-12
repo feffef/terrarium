@@ -4,8 +4,7 @@ summary: >-
 cause: >-
   Orchestrators write briefs from memory instead of copying from the source, and send them without re-reading: an unfilled {PAGES} placeholder, paths relative to a Skill folder or missing the Collection folder, a status value, ADR level or scope claim restated wrongly. The agent runs on the bad brief before anyone notices. PR #2643 fixed two sources (the inspect-session Selector placeholder, layer-relative paths in the Glass Box GLOSSARY) and added no general rule. PR #3064 (2026-11-11) makes dispatch-read-guard.ts deny an Agent prompt or SendMessage message that still holds an unfilled @@NAME@@ or {UPPER_CASE} placeholder (a Workflow script is not inspected), and PR #3063 (2026-11-11) has clear-backlog-explore's brief name the sources its triage agents must learn (ledger, Skill Inventory, open prune trials, older file history). Signals: 'brief', 'placeholder', 'path did not exist', a value in a brief that differs from its source. A brief that relays another agent's unchecked claim belongs in relayed-subagent-claims; a missing CLAUDE.md brief line in subagent-brief-omits-verdict-ask.
 surface: safe
-status: tracked
-ref: "issue #2996"
+status: open
 fixes:
   - pr: 2150
     date: "2026-10-16"
@@ -73,3 +72,18 @@ occurrences:
     severity: minor
     description: "The saved clear-backlog-explore first pass was superficial: three of four picks changed or rested on stale facts after a deeper pass; its brief lacks the ledger, Skill Inventory and prune-trial sources."
     solution: "Issue 3061: name those sources in the brief and allow a background-understanding pass."
+  - session: session_013zxzeQuYEfmPngc6xxNTn1
+    date: "2026-11-11"
+    severity: moderate
+    description: "The writer brief named EVERY-PAGE but not its rules on ADR paraphrase, motive clauses and publishedAt; code-review then found them and a second writer round was needed."
+    solution: "Give writers a short checklist in the glassbox-curate Fix step: no ADR paraphrase in watch bullets, no ids in excerpts, bump publishedAt when a claim is added."
+  - session: session_013zxzeShqaQAEUkXf1Hwnd6
+    date: "2026-11-11"
+    severity: minor
+    description: "Gave the Standards reviewer a full tip SHA I had not looked up; it did not exist. The agent fell back to rev-parse HEAD as my brief allowed."
+    solution: "Paste the SHA from git rev-parse output; dispatch-subagents says to copy every value from its source."
+  - session: session_013zxzeRVjHExXhciv5BwiTB
+    date: "2026-11-11"
+    severity: minor
+    description: "My #3069 brief listed grilling/SKILL.md as a file to edit; the builder edited the installed Skill and re-pinned its lock hash, breaking ADR-0015 until I reverted it by hand."
+    solution: "Check each brief's file list against skills-lock.json, and have explore flag installed Skills in a result's files."

@@ -14,11 +14,6 @@ fixes:
     date: "2026-10-22"
     summary: "git-conventions.md's chaining rule now forbids a push or other state-changing git only when it comes later in the same command as a gate or test run."
 occurrences:
-  - session: session_013zxzePhRwXqYLtsycYUhqv
-    date: "2026-10-28"
-    severity: nit
-    description: "Mistook the exit code of a backgrounded gate command (ending in tail) for the gate's own exit; nearly read a failed gate as passing."
-    solution: "Write the gate's exit status to the log on its own line, as the later runs did."
   - session: session_013zxzeNqa4MUJF5DT5wQ1zf
     date: "2026-11-01"
     severity: nit
@@ -54,3 +49,13 @@ occurrences:
     severity: nit
     description: "I ran git log and status in the same Bash command as the backgrounded gate, against git-conventions."
     solution: "Run the git check in its own call before starting the gate."
+  - session: session_013zxzeShqaQAEUkXf1Hwnd6
+    date: "2026-11-11"
+    severity: nit
+    description: "Chained git add, git commit or git push with other commands in several Bash calls, against the Keep git apart rule in git-conventions.md; open prune trial covers that text, so I left it."
+    solution: "One state-changing git command per Bash call, checked before the next."
+  - session: session_013zxzeSgDqRuwZif7Rgt2MW
+    date: "2026-11-11"
+    severity: nit
+    description: "Ran a throwaway git checkout -b, checkout and branch -D chain in one Bash call, against git-conventions' one state-changing command per call; it did nothing useful."
+    solution: "Do not touch branches at all after orient; run each git command alone."

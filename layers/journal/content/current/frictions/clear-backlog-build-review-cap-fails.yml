@@ -1,8 +1,9 @@
 name: clear-backlog-build-review-cap-fails
 summary: The backlog build script reports a branch as failed when review hits its three-round limit with only small findings left, so the main agent fixes them by hand.
-cause: "reviewBranch in .claude/workflows/clear-backlog-build.js returns status 'failed' with openFindings when round 3 still has worthFixing findings; clear-backlog SKILL.md section 3 says only 'failed: fix the brief and re-run'. Signals: 'review capped at 3 rounds', 'came back failed at the 3-round cap'."
+cause: "reviewBranch in .claude/workflows/clear-backlog-build.js returns status 'failed' with openFindings when round 3 still has worthFixing findings; clear-backlog SKILL.md section 3 says only 'failed: fix the brief and re-run'. Signals: 'review capped at 3 rounds', 'came back failed at the 3-round cap'. A 2026-11-11 run also spent 4.4M tokens over 52 agents when five of six small branches hit the cap on cosmetic findings; issue #3110 tracks a redesign of the review and fix steps."
 surface: safe
-status: open
+status: tracked
+ref: "issue #3110"
 fixes:
   - pr: 2140
     date: "2026-10-16"
@@ -23,3 +24,8 @@ occurrences:
     severity: minor
     description: "Both build runs hit the 3-round review cap on cosmetic findings (wrap, a null default, one doc clause), then I fixed them by hand; many agent tokens for nits."
     solution: "Let the build workflow stop at cosmetic-only findings, or give the builder the 80-column wrap rule up front."
+  - session: session_013zxzeTEBhUnvwNNBASiFDg
+    date: "2026-11-11"
+    severity: moderate
+    description: "clear-backlog-build used 52 agents and 4.4M tokens on six small branches; five hit the 3-round cap on cosmetic findings, and the cost showed only after the run."
+    solution: "Skip reviewers for simple diffs, one round for the rest, nits reported not fixed; filed as issue 3110."

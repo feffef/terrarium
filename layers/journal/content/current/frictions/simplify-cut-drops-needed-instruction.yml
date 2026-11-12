@@ -1,0 +1,11 @@
+name: simplify-cut-drops-needed-instruction
+surface: safe
+summary: A simplifying edit cut a line the text still needed, and review caught it, costing a fix round.
+cause: "A rewrite that trims a rule or brief to its goal removes a recipe step (a gate log, a timeout recipe) that was the only statement of it; the author does not diff the removed lines against the kept goal. Signals: 'cut ... while simplifying', 'all three reviewers caught it', a fallback missing the workflow's rules."
+status: open
+occurrences:
+  - session: session_013zxzeQQzVdav2Lzx9D5WBr
+    date: "2026-11-11"
+    severity: moderate
+    description: "In the first build I cut the builder's gate:scoped log and Bash-timeout recipe while simplifying rules(); all three reviewers caught it, costing a fix round."
+    solution: "When rewriting a prompt, diff the removed lines and give each a reason to drop; a removed timeout is load-bearing."

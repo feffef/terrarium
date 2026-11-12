@@ -28,31 +28,6 @@ fixes:
     date: "2026-11-11"
     summary: "gate-edit-guard.ts hook denies Edit, Write, NotebookEdit and git commit while a gate:scoped run holds its run lock in the checkout."
 occurrences:
-  - session: session_013zxzeR86n7CjfWXZh4HXyc
-    date: "2026-10-28"
-    severity: minor
-    description: "Started pnpm gate:scoped and then committed while it ran, so it aborted; pr-workflow says commit and review first, gate last."
-    solution: "Commit and review before starting the gate, as pr-workflow.md orders it."
-  - session: session_013zxzeQRYzCbfkXYbHKwcPv
-    date: "2026-10-28"
-    severity: minor
-    description: "The last re-grade surfaced a pre-existing false claim on MCP servers after I had started gate:scoped on the 'final' head; I stopped and reran the gate."
-    solution: "Start gate:scoped only after the last re-grade's hand-backs are tallied, as step 8 already implies; I jumped ahead."
-  - session: session_013zxzeTGYbEWeFyEywFafxw
-    date: "2026-10-28"
-    severity: minor
-    description: "Ran pnpm gate:scoped three times (one early run before review fixes landed), each a few minutes of container time"
-    solution: "Run the gate once on the final head after the last re-grade; rely on the page spec and validate:content between rounds"
-  - session: session_013zxzeQxsePnJds2jEpgirL
-    date: "2026-10-28"
-    severity: minor
-    description: "Started gate:scoped before noticing ADR-0004 needs a test for observable behaviour; stopped it and reran after adding the cap test."
-    solution: "Check ADR-0004's untested-behaviour exception before the first gate run, when the change adds behaviour."
-  - session: session_013zxzeSxgYzYmeAuCzvJdhY
-    date: "2026-10-28"
-    severity: nit
-    description: "Started gate:scoped before code-review, against pr-workflow order (review, then gate last); stopped it and reran, wasting a few minutes."
-    solution: "visitor-loop step 5 says commit, review, then push; add that the gate runs after review."
   - session: session_013zxzePQM2TjRCTtcKaV61o
     date: "2026-10-29"
     severity: minor
@@ -168,3 +143,13 @@ occurrences:
     severity: minor
     description: "I started gate:scoped in the background and then edited the file, so that gate run was wasted."
     solution: "Edit nothing while the gate runs, or confirm the design with the owner before starting it."
+  - session: session_013zxzeQRndZ5iHweDq8ceMP
+    date: "2026-11-11"
+    severity: minor
+    description: "I started gate:scoped before running code-review, against pr-workflow's order; review fixes then forced a second full gate run."
+    solution: "Run the review first and start the gate only on the final head; pr-workflow already says so, I jumped ahead to save time."
+  - session: session_013zxzeP6PH92ubTps39j3HD
+    date: "2026-11-11"
+    severity: nit
+    description: "Started pnpm gate:scoped before committing and running code-review, against pr-workflow.md's order; stopped it and restarted, costing a few minutes."
+    solution: "The pre-PR checklist in the harvest-style build flow could be one numbered list: commit, review, fix, gate."

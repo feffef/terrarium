@@ -28,16 +28,6 @@ fixes:
     date: "2026-10-28"
     summary: "ledger-set.ts sets summary, cause and surface on an existing entry; prune-friction-ledger.ts --move writes block style into an entry created with empty occurrences."
 occurrences:
-  - session: session_013zxzeR86n7CjfWXZh4HXyc
-    date: "2026-10-28"
-    severity: minor
-    description: "ledger-set.ts could set summary and cause only on --create, so the rewrite-on-append rule had no tool; the script needed a change first."
-    solution: "Fixed in PR #2630: --summary, --cause and --surface now edit an existing entry."
-  - session: session_013zxzeSJQfnNdJHrSWjVT2x
-    date: "2026-10-28"
-    severity: nit
-    description: "Appended pass-two log entries to the end of the YAML file, under the wrong key, so --author rejected it and I rewrote the file."
-    solution: "log-session could say to insert new entries under their own key."
   - session: session_013zxzeStBRUtsbccz5kMYNU
     date: "2026-10-31"
     severity: nit

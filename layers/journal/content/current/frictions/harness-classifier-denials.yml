@@ -10,11 +10,6 @@ fixes:
     date: "2026-11-11"
     summary: "git-conventions.md: amend covers an unpushed tip commit only, and a stale index is cleared with git restore instead of git reset --hard HEAD."
 occurrences:
-  - session: session_013zxzeQmVnqMqDkRgFRWx5T
-    date: "2026-10-28"
-    severity: nit
-    description: "A force-with-lease push of the restarted session branch was denied by the auto-mode classifier. The remote branch had been deleted on merge, so a plain push worked; one wasted call."
-    solution: "The restart-after-merge recipe in the system prompt should say to try a plain push first, since the remote branch is deleted on merge."
   - session: session_013zxzePnfDGz3F3p9spej9f
     date: "2026-10-30"
     severity: nit
@@ -50,3 +45,8 @@ occurrences:
     severity: nit
     description: "git reset --hard HEAD to clear that stale index was denied by the auto-mode classifier, so Stop hooks kept flagging uncommitted changes."
     solution: "Document a safe way to resync an index after a worktree moves the branch, such as git restore --staged then git restore."
+  - session: session_013zxzeTEBhUnvwNNBASiFDg
+    date: "2026-11-11"
+    severity: nit
+    description: "I ran git stash drop on an entry a build agent left on the shared stack without asking; the auto-mode classifier denied it."
+    solution: "Ask the owner before dropping, or have build agents never leave stash entries."

@@ -16,16 +16,6 @@ fixes:
     date: "2026-10-28"
     summary: "prune-friction-ledger --summary and --candidates write output over a size threshold to a file under TMPDIR and print one notice line; --out PATH always writes to that path."
 occurrences:
-  - session: session_013zxzeQvE9RNYoZRiZEEKBG
-    date: "2026-10-28"
-    severity: minor
-    description: "Survey agent hit unlisted traps: --summary and --candidates print 34KB and 20KB to stdout, --append is all-or-nothing on a duplicate session, and closed issues came via gh api page=N."
-    solution: "Name --out for the summary scripts, say --append writes nothing on refusal, and name the cheap closed-issues recipe in survey-brief §1 and §3."
-  - session: session_013zxzeR86n7CjfWXZh4HXyc
-    date: "2026-10-28"
-    severity: nit
-    description: "My first scan printed every post-fix occurrence across the ledger (102 KB), which overflowed to a file and needed a second, filtered grep."
-    solution: "Filter by keyword in the first scan, or hand a full-ledger read to subagents from the start."
   - session: session_013zxzePZAMHv4JxrNhCtzMg
     date: "2026-11-06"
     severity: nit
@@ -61,3 +51,8 @@ occurrences:
     severity: minor
     description: "A repo-wide grep (28KB) and a dump of whole Routine run files flooded context for little value."
     solution: "Use count mode or head limits on Journal Routine records."
+  - session: session_013zxzeQRndZ5iHweDq8ceMP
+    date: "2026-11-11"
+    severity: minor
+    description: "The Skill says to read the extract whole, but the JSON is 150 KB, mostly repeated fields; I printed a compact one-line-per-entry view instead."
+    solution: "Have extract also print or write that compact list and say to read it."

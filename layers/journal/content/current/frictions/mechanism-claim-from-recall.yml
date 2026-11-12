@@ -22,26 +22,6 @@ fixes:
     date: "2026-10-28"
     summary: "glassbox-improve's lead proposes only facts and wording found in the source (an absence claim most of all), and its researcher checks an absence claim against every code location."
 occurrences:
-  - session: session_013zxzeTGYbEWeFyEywFafxw
-    date: "2026-10-28"
-    severity: moderate
-    description: "My fix brief to the HITL writer proposed 'None looks for the approval label before a build', which was false (guest-build's poll-guest-tickets.ts)"
-    solution: "A researcher brief for an absence claim names every code location, including .agents/skills/*/scripts/, and I propose no wording I haven't grepped"
-  - session: session_013zxzeR86n7CjfWXZh4HXyc
-    date: "2026-10-28"
-    severity: nit
-    description: "An audit agent quoted 'the hint loaded the rules anyway' from occurrences whose description lacks it; the text sat in their solution field, so I re-checked every quote."
-    solution: "Have audit briefs name which field a quote comes from."
-  - session: session_013zxzeQRYzCbfkXYbHKwcPv
-    date: "2026-10-28"
-    severity: minor
-    description: "Checking fable's Nuxt layers false claim took five reads through @nuxt/kit and c12 dist code before it proved a misreading."
-    solution: "None needed; a false claim needs a source check. The learning below saves the next run the walk."
-  - session: session_013zxzeTK9c2HVcabwCx3b18
-    date: "2026-10-28"
-    severity: minor
-    description: "I assumed a missing ruleVerdicts field meant a log predated the field and wrote an exemption on that; the writer omits it for any zero-verdict session, which the Spec review caught before push."
-    solution: "Check how a field is written (transcript-trace.ts) before reading its absence as a log-age marker."
   - session: session_013zxzeSgD6cuF2mawqY6jWM
     date: "2026-10-29"
     severity: minor
@@ -192,3 +172,28 @@ occurrences:
     severity: minor
     description: "Told the owner PR 2938's rewrite sample-first clause was in CLAUDE.md; I only saw a grep hit on a UI sentence. PR 3032 had replaced it; the deep pass caught it."
     solution: "Run git log -S on the file before stating a clause exists (CLAUDE.md Verify before you state)."
+  - session: session_013zxzeS6uNt5yvnz5LyUCCe
+    date: "2026-11-11"
+    severity: minor
+    description: "Stated that the web sessions had no messaging tool, inferred from get_session turn_handoff.tools, before checking; one of them then replied by send_message."
+    solution: "Verify a tool's availability from the session's own events before explaining a missing reply."
+  - session: session_013zxzeTEBhUnvwNNBASiFDg
+    date: "2026-11-11"
+    severity: minor
+    description: "I put unverified details (binary line numbers, an unchecked tool count, a hedged mechanism) into the research note; the owner had it fully rewritten as findings only."
+    solution: "Write research notes findings-only from the start and cut anything not checked by a command."
+  - session: session_013zxzeQgXPpoTcwuDuvvDtE
+    date: "2026-11-11"
+    severity: minor
+    description: "I explained the explore and grilling flow from a partial read of the workflow; only the owner's question exposed the one-question schema limit."
+    solution: "Read the explore workflow's schema and prompt before designing changes to what the grilling asks."
+  - session: session_013zxzeRVjHExXhciv5BwiTB
+    date: "2026-11-11"
+    severity: minor
+    description: "Explained why the build workflow re-gates after a clean review from its meta line, not the code; the owner had to correct me twice."
+    solution: "Read the lines that decide a behaviour before explaining why it exists."
+  - session: session_013zxzeSgDqRuwZif7Rgt2MW
+    date: "2026-11-11"
+    severity: moderate
+    description: "Wrote a harvest Routine bullet into Scheduled tasks from the Skill's own text; the owner said no Routine exists, so it was written, checked and reverted."
+    solution: "Check whether a Routine exists before listing a Skill as one, since SKILL.md wording (A Routine runs this Skill) states intent not fact."

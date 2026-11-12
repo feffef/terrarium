@@ -22,3 +22,8 @@ occurrences:
     severity: minor
     description: "Foreground merge-pr.ts hit the 600s tool limit while polling a slow CI gate; I had to relaunch it in the background."
     solution: "Run merge-pr.ts with run_in_background from the start, as CLAUDE.md says for long commands."
+  - session: session_013zxzeTEBhUnvwNNBASiFDg
+    date: "2026-11-11"
+    severity: nit
+    description: "CLAUDE.md says run anything over 2 minutes with run_in_background; I ran the research branch's gate:scoped in the foreground, though it finished."
+    solution: "Default every gate:scoped call to a background log."
