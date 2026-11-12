@@ -145,3 +145,6 @@ observations:
   - date: "2026-11-11"
     note: >-
       Behaviour check, 5 runs delivered. Unfixed gap, second window: events omit hook-injected rule context, so session_013zxzeNd2Ethpd3anqbmpkr spent about 774k subagent tokens; SKILL.md has no probe-one-first line. n=1. Grade unchanged.
+  - date: "2026-11-12"
+    note: >-
+      Behaviour check, 6 runs. The 11-10 and 11-11 'unfixed gap' is fixed: commit 1f03fe748 (#3069) added the probe-one-session-first line (SKILL.md lines 64-65). New, n=2, unverified cause: session_013zxzeRumtXDY7MVhKUgVT7 and session_013zxzeS6uNt5yvnz5LyUCCe wrongly inferred a target had no send_message from get_session's tool list; step 3 does not say the list is unreliable. Grade unchanged.
