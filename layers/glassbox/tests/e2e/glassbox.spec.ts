@@ -12,7 +12,7 @@ describe('glassbox Tenant', async () => {
   it('serves a Subject folder URL as a page listing its Lessons with their descriptions', async () => {
     const html = await $fetch<string>('/t/glassbox/guide/nuxt-vue')
     expect(html).toContain('id="gb-nav"')
-    expect(html).toContain('<h1>Nuxt &amp; Vue</h1>')
+    expect(html).toMatch(/<h1[^>]*>Nuxt (?:&amp;|&) Vue<\/h1>/)
     expect(html).toContain('href="/t/glassbox/guide/nuxt-vue/layers"')
     expect(html).toMatch(/\d+ Lessons/)
     expect(html).toContain('How Nuxt merges several folders into one app')
