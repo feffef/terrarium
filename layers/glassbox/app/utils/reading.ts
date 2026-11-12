@@ -32,6 +32,11 @@ export function resetGlassboxProgress(storage: GlassboxStorage | undefined = bro
   return []
 }
 
+/** A Subject page's count line: the Lesson total until one is read, then `3 of 8 read`. */
+export function glassboxSubjectCount(readCount: number, total: number) {
+  return readCount ? `${readCount} of ${total} read` : `${total} ${total === 1 ? 'Lesson' : 'Lessons'}`
+}
+
 /** A Subject's count in the sidebar: the total until a Lesson is read, then `read/total`. */
 export function glassboxCountLabel(readCount: number, total: number) {
   return { text: readCount ? `${readCount}/${total}` : String(total), done: total > 0 && readCount === total }

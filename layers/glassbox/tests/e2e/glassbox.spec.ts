@@ -53,6 +53,17 @@ describe('glassbox Tenant', async () => {
     })
   })
 
+  it('ticks an opened Lesson on its Subject page and counts it read', async () => {
+    const subject = '/t/glassbox/guide/nuxt-vue'
+    const layers = `${subject}/layers`
+    await withRendered(layers, async (page) => {
+      await page.locator(`#gb-nav a[href="${layers}"] .tick`).waitFor()
+      await page.goto(new URL(subject, page.url()).href)
+      await page.locator(`.list a[href="${layers}"] .tick`).waitFor()
+      expect(await page.locator('.count').textContent()).toMatch(/^1 of \d+ read$/)
+    })
+  })
+
   // The workshop is a live record of one page: no Subject menu, no edition date, and a way back to the guide.
   it('serves the workshop without a sidebar or edition date, linking back to the guide', async () => {
     const html = await $fetch<string>('/t/glassbox/workshop')

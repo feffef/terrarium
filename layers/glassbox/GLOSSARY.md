@@ -59,7 +59,8 @@ Terrarium applies them without reading the source.
   `localStorage` under `glassbox:read` and is applied only after the page mounts,
   so the cached server render is the same for every visitor (ADR-0028). Read
   Lessons get a ✓ after their title in the sidebar, where a Subject's count
-  reads `3/8` once any is read. A Lesson's hand-written Where next links that
+  reads `3/8` once any is read. A Subject page ticks them the same way and its
+  count line reads `3 of 8 read` once any is read; it has no reset. A Lesson's hand-written Where next links that
   are read move out of Where next into a `Lessons already read` section right
   below it (Subject, title, ✓); Where next, heading included, vanishes once all
   are read, and the section is hidden while none is. Only that section holds the
