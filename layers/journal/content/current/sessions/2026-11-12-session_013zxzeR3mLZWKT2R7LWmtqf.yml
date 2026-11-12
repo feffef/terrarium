@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_013zxzeR3mLZWKT2R7LWmtqf
 startedAt: 2026-11-12T16:22:26Z
-endedAt: 2026-11-12T17:38:28Z
+endedAt: 2026-11-12T17:38:49Z
 kind: interactive
 goal: Clear the open issue backlog, Seedlings included
 status: in-review
@@ -96,11 +96,14 @@ frictions:
   - description: "Linked worktree(s) left with uncommitted or unpushed work at close: /home/user/terrarium/.claude/worktrees/wf_610db963-f72-2"
     solution: Push each, or remove it if its work is meant to be dropped.
     severity: minor
-durationSec: 4562
+  - description: After the PR merged I updated the log with log-session directly and skipped close-session; the Stop hook had to block the turn to make me invoke it.
+    solution: The merge-pr.ts output or the PostToolUse hint already says to invoke close-session; follow it before any other write.
+    severity: nit
+durationSec: 4582
 models:
-  claude-sonnet-5-5: 147
+  claude-sonnet-5-5: 152
 toolCounts:
-  Bash: 27
+  Bash: 28
   Read: 11
   Workflow: 5
   ToolSearch: 5
@@ -110,7 +113,7 @@ toolCounts:
   SendMessage: 11
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  Skill: 2
+  Skill: 3
   ReadNotifications: 2
   mcp__github__pull_request_read: 2
   mcp__claude-code-remote__unsubscribe_pr_activity: 1
@@ -937,7 +940,7 @@ subagents:
     durationSec: 547
     toolCalls: 42
     modelCalls: 34
-    tokenShare: 9.5
+    tokenShare: 9.4
   - type: general-purpose
     task: a2104121f55a4ecc2
     model: claude-sonnet-5-5
@@ -951,7 +954,7 @@ subagents:
     durationSec: 776
     toolCalls: 53
     modelCalls: 47
-    tokenShare: 11.1
+    tokenShare: 11
   - type: general-purpose
     task: aefd3f0fb08132e1e
     model: claude-sonnet-5-5
@@ -965,7 +968,7 @@ subagents:
     durationSec: 96
     toolCalls: 22
     modelCalls: 14
-    tokenShare: 4.5
+    tokenShare: 4.4
   - type: workflow-subagent
     task: "triage #3176"
     model: claude-sonnet-5-5
@@ -986,7 +989,7 @@ subagents:
     durationSec: 74
     toolCalls: 16
     modelCalls: 7
-    tokenShare: 2.2
+    tokenShare: 2.1
   - type: workflow-subagent
     task: "triage #3175"
     model: claude-sonnet-5-5
@@ -1007,14 +1010,14 @@ subagents:
     durationSec: 96
     toolCalls: 19
     modelCalls: 8
-    tokenShare: 2.7
+    tokenShare: 2.6
   - type: workflow-subagent
     task: "triage #3170"
     model: claude-sonnet-5-5
     durationSec: 96
     toolCalls: 22
     modelCalls: 10
-    tokenShare: 3.3
+    tokenShare: 3.2
   - type: workflow-subagent
     task: "triage #3017"
     model: claude-sonnet-5-5
@@ -1028,7 +1031,7 @@ subagents:
     durationSec: 15
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 1.9
+    tokenShare: 1.8
   - type: workflow-subagent
     task: build skills-routine-claims-curate-harvest
     model: claude-sonnet-5-5
@@ -1056,14 +1059,14 @@ subagents:
     durationSec: 28
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: workflow-subagent
     task: Standards journal-history-script r2
     model: claude-sonnet-5-5
     durationSec: 32
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: Standards journal-history-script r1
     model: claude-sonnet-5-5
