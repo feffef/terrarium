@@ -305,7 +305,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
       <div class="explore-head">
         <h2 id="around-heading" class="eyebrow">Commentary on the build</h2>
         <p class="tagline">
-          Recent interesting events, retold in several voices, and discarded work.
+          Recent interesting events, retold in several voices, and discarded work curated like a museum.
         </p>
       </div>
       <div class="explore-grid">
