@@ -232,8 +232,20 @@ some of its exceptions. Once a PR merges or waits for a human, run
 `pnpm check:worktrees` exits 0.
 
 Report one line per issue: `#N | outcome | PR or "no PR: why" | merged / waits
-for you (why)`. Then re-invoke `close-session`. Its log's
+for you (why)`. Then do §5 and re-invoke `close-session`. Its log's
 `summary` carries one line per merged or opened branch: what it changed (from
 that branch's `decisions.md`) and any judgement calls left open. In a workflow
 run the orchestrator's log is the Journal's only record of what its agents
 built.
+
+## 5. Retro
+
+Once every PR has merged or waits for the owner, run the retro in issue #3143:
+ask each builder and reviewer for its retro, and post the run's report there
+as one comment, following that issue's rules and template. Its focus is the
+workflow's efficiency with the reviews kept as a valid safety net: a cut needs
+evidence that the step caught nothing that mattered. Log everything unrelated
+to clear-backlog itself as a Friction, never as an issue; `frictions-to-fixes`
+picks it up.
+
+**Done:** the report comment is posted and those Frictions are in the log.
