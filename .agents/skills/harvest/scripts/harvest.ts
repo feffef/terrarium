@@ -9,12 +9,14 @@
 //   tsx .agents/skills/harvest/scripts/harvest.ts extract [--kind ideas|learnings] [--out PATH]
 //   tsx .agents/skills/harvest/scripts/harvest.ts list <extract.json>
 //   tsx .agents/skills/harvest/scripts/harvest.ts block <extract.json> <n> [n...]
+//   tsx .agents/skills/harvest/scripts/harvest.ts check-clusters <harvest-checks.md> --extract <extract.json>
 //   tsx .agents/skills/harvest/scripts/harvest.ts check-body <body-file> --extract <extract.json> [--title T]
 //   tsx .agents/skills/harvest/scripts/harvest.ts check-posted <issue-number> <body-file>
 import { createHash } from 'node:crypto'
 import { readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import { parse as parseYaml } from 'yaml'
 import { isExternalSession } from '../../../../shared/schemas/session.ts'
 import { fail, flagValue, root, runIfMain } from '../../../../scripts/lib/cli.ts'
 import { bareAngleBracketSpan } from '../../../../scripts/hooks/github-provenance-guard.ts'
@@ -30,8 +32,9 @@ export const NOTE = 'Machine-read, keep as is:'
 export const SKIPPED_TRIGGERS = new Set(['harvest', 'visitor-loop', 'audit-skills'])
 
 /** The whole key line. Its alphabet holds none of `& < > " '`, so HTML-entity
- *  decoding cannot change it. A session id is `session_...` or a raw UUID. */
-export const KEY_RE = /^Harvested: (\S+) (idea|learning) ([0-9a-f]{8})$/
+ *  decoding cannot change it. A session id is `session_...` or a raw UUID. The
+ *  `retro` form is the run's Seedling about the Skill itself (SKILL.md step 5). */
+export const KEY_RE = /^Harvested: (\S+ (?:(?:idea|learning) [0-9a-f]{8}|retro))$/
 
 /** A session id in either form (`session_...` or a raw UUID): the owner cannot open one. */
 const SESSION_ID_RE = /session_[A-Za-z0-9]{6,}|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/
@@ -69,7 +72,7 @@ const lines = (body: string): string[] => body.split(/\r?\n/).map((l) => l.trimE
 export function parseKeys(body: string): string[] {
   return lines(body).flatMap((l) => {
     const m = KEY_RE.exec(l)
-    return m ? [`${m[1]} ${m[2]} ${m[3]}`] : []
+    return m ? [m[1]!] : []
   })
 }
 
@@ -190,6 +193,62 @@ export function renderBlock(entries: Entry[]): string {
   return [NOTE, ...entries.map((e) => e.line)].join('\n')
 }
 
+/** What `block` prints: the pasteable block on stdout, and on stderr each source
+ *  session's summary, once, for reading. Kept apart so stdout stays exactly what a
+ *  body pastes. */
+export function blockOutput(entries: Entry[], readLog: (file: string) => string): { out: string; err: string } {
+  const firstOfSession = new Map<string, Entry>()
+  for (const e of entries) if (!firstOfSession.has(e.session)) firstOfSession.set(e.session, e)
+  const err = [...firstOfSession.values()].flatMap((e) => {
+    const summary = summaryOf(readLog(e.file))
+    return summary ? [`Summary of ${e.session}:\n${summary}`] : []
+  })
+  return { out: renderBlock(entries), err: err.join('\n\n') }
+}
+
+/** The `summary` of a session log's YAML; empty when absent or not text. */
+export function summaryOf(yamlText: string): string {
+  const summary = (parseYaml(yamlText) as { summary?: unknown } | null)?.summary
+  return typeof summary === 'string' ? flattenText(summary) : ''
+}
+
+/** The tests of step 3, and the fields a cluster record carries. */
+const TESTS = ['unbuilt', 'unfiled', 'unrejected', 'ledger', 'simplifying', 'unacted'] as const
+
+/** What is wrong with the per-cluster record (empty: fine). A cluster is a `## ` block of
+ *  `field: value` lines. An open one holds evidence for every test (`simplifying` only
+ *  when workflow); a dropped one holds the evidence of the test it failed. Product
+ *  clusters come before the first workflow one. */
+export function checkClusters(text: string, sessionOf: Map<number, string>): string[] {
+  const problems: string[] = []
+  const blocks = text.split(/^## /m).slice(1)
+  if (!blocks.length) return ['no "## " cluster blocks']
+  let workflowSeen = false
+  blocks.forEach((block, i) => {
+    const f = new Map<string, string>()
+    for (const l of block.split(/\r?\n/).slice(1)) {
+      const m = /^([a-z]+):\s*(.*\S)\s*$/.exec(l)
+      if (m) f.set(m[1]!, m[2]!)
+    }
+    const at = `cluster ${i + 1}`
+    const label = f.get('label')
+    if (label !== 'product' && label !== 'workflow') problems.push(`${at}: label must be product or workflow`)
+    if (label === 'workflow') workflowSeen = true
+    else if (label === 'product' && workflowSeen) problems.push(`${at}: a product cluster after a workflow one; check every product cluster first`)
+    const ns = (f.get('entries') ?? '').split(',').map((n) => Number(n.trim()))
+    if (!f.has('entries') || ns.some((n) => !sessionOf.has(n))) problems.push(`${at}: entries must list entry numbers of the extract`)
+    else if (Number(f.get('sessions')) !== new Set(ns.map((n) => sessionOf.get(n))).size) problems.push(`${at}: sessions must be the count of distinct sessions behind the entries`)
+    const verdict = f.get('verdict') ?? ''
+    const dropped = /^dropped (\w+)$/.exec(verdict)?.[1]
+    if (verdict !== 'open' && !dropped) problems.push(`${at}: verdict must be "open" or "dropped <test>"`)
+    else if (dropped && !(TESTS as readonly string[]).includes(dropped)) problems.push(`${at}: "${dropped}" is not a test (${TESTS.join(', ')})`)
+    if (dropped === 'simplifying' && label === 'product') problems.push(`${at}: the simplifying test is for workflow clusters`)
+    const need = verdict === 'open' ? TESTS.filter((t) => t !== 'simplifying' || label === 'workflow') : dropped ? [dropped] : []
+    for (const t of need) if (!f.has(t)) problems.push(`${at}: no "${t}:" evidence`)
+  })
+  return problems
+}
+
 /** The sections `body-template.md` asks for: a body without them sends the owner into the repo. */
 export const REQUIRED_HEADINGS = [
   '## The idea',
@@ -220,7 +279,11 @@ export function checkBody(body: string, emitted: Set<string>, title?: string): s
   for (const l of ls) if (l.startsWith('Harvested:') && !KEY_RE.test(l)) problems.push(`malformed key line: ${l}`)
   const keyIdx = ls.flatMap((l, i) => (KEY_RE.test(l) ? [i] : []))
   if (!keyIdx.length) problems.push('no Harvested: key line')
-  for (const key of parseKeys(body)) if (!emitted.has(key)) problems.push(`key not emitted by this run's extract: ${key}`)
+  const keys = parseKeys(body)
+  const retro = keys.filter((k) => k.endsWith(' retro'))
+  if (retro.length && keys.length > 1) problems.push('a retro Seedling carries its retro key alone')
+  if (retro.length && !/^Seedling: retro\b/.test(title ?? '')) problems.push('a retro Seedling needs --title starting "Seedling: retro"')
+  for (const key of keys) if (!emitted.has(key) && !retro.includes(key)) problems.push(`key not emitted by this run's extract: ${key}`)
   const note = ls.indexOf(NOTE)
   if (note < 0) problems.push(`missing the line "${NOTE}"`)
   else {
@@ -301,7 +364,17 @@ function main(): void {
     if (!path || !ns.length) fail('usage: block <extract.json> <n> [n...]')
     const entries = readExtract(path).entries
     const picked = ns.map((n) => entries.find((e) => e.n === Number(n)) ?? fail(`no entry ${n} in ${path}`))
-    return console.log(renderBlock(picked))
+    const { out, err } = blockOutput(picked, (file) => readFileSync(join(root, file), 'utf8'))
+    if (err) console.error(err)
+    return console.log(out)
+  }
+  if (cmd === 'check-clusters') {
+    const [file] = argv
+    const extract = flagValue(argv, '--extract')
+    if (!file || !extract) fail('usage: check-clusters <harvest-checks.md> --extract <extract.json>')
+    const problems = checkClusters(readFileSync(file, 'utf8'), new Map(readExtract(extract).entries.map((e) => [e.n, e.session] as const)))
+    if (problems.length) fail(problems.join('\n'))
+    return console.log('check-clusters: ok')
   }
   if (cmd === 'check-body') {
     const [file] = argv
@@ -319,7 +392,7 @@ function main(): void {
     if (problems.length) fail(problems.join('\n'))
     return console.log(`check-posted: #${number} stores the checked keys`)
   }
-  fail('unknown command; expected extract | list | block | check-body | check-posted')
+  fail('unknown command; expected extract | list | block | check-clusters | check-body | check-posted')
 }
 
 runIfMain(import.meta.url, main)
