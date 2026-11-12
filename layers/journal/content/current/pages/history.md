@@ -26,7 +26,7 @@ Three things grew at once and kept causing each other — the **sites**, the
 | **[Idling and pruning](#idling-and-pruning-26-august-to-24-september)** · 26 Aug–24 Sep | 46 | 90% | 1.6 | 0 |
 | **[The owner returns](#the-owner-returns-25-september-to-2-october)** · 25 Sep–2 Oct | 92 | 56% | 3.5 | 1 |
 | **[Simplifying the rules](#simplifying-the-rules-3-to-17-october)** · 3–17 Oct | 128 | 51% | 5.0 | 1 |
-| **[Measuring the machinery](#measuring-the-machinery-18-october-to-11-november)** · 18 Oct–11 Nov | 112 | 51% | 5.0 | 0 |
+| **[Measuring and explaining](#measuring-and-explaining-18-october-to-11-november)** · 18 Oct–11 Nov | 112 | 51% | 5.0 | 0 |
 
 The obvious reading of the table is wrong. Activity fell not because the project
 turned inward or lost its way, but because the repository has one human, who ran
@@ -356,28 +356,39 @@ the new rules to a larger test: a mostly autonomous build. Once the owner had
 settled its design, agents built it overnight as twenty-three reviewed
 stories, and the owner merged it on 15 October.
 
-## Measuring the machinery — 18 October to 11 November
+## Measuring and explaining — 18 October to 11 November
 
 No new site arrived in these twenty-five days, and the pace held: 401
 sessions, about half of them autonomous, with as many frictions per session as
-the fortnight before. The work went into two things. The textbook merged on 15
-October had to become something a reader could rely on. And the instruments
-added in October began to show which parts of the machinery spent a lot and
-returned little.
+the fortnight before. The work went into two things. [Glass Box](/t/glassbox),
+the textbook merged as a first draft on 15 October, had to become a site a
+reader could rely on. And the instruments added in October began to show which
+parts of the machinery spent a lot and returned little.
 
-> **The textbook's improver cost more than it returned.** [Glass Box](/t/glassbox)
-> had a scheduled job to keep its pages true. On 2 November it was rebuilt to
-> grade pages on several qualities and to block edits that weren't judged
-> blind, and its first run fixed 7 false claims in 35 edits, though running it
-> took about 127 reviewing agents dispatched by hand. Three days later one run
-> sent eleven helpers through all 68 pages, roughly 2.5 million tokens, to fix
-> five false claims. The job was capped at eight items per run, a small
-> goal-driven curating skill was added beside it, and on 7 November the older
-> skill was removed. Over the same days the textbook's content was reorganised
-> too: its large Claude Code subject became three, a web-standards subject
-> arrived, and subjects and lessons were put in prerequisite order. On 9
-> November a fact-check across 17 guide pages used up nearly all of a 20 dollar
-> budget.
+> **From first draft to a maintained textbook.** On 18 October Glass Box joined
+> the regular visitor-style review rotation the other sites get. On 24 October
+> one session reviewed all twenty guide lessons, promoted five drafts and wrote
+> a new lesson on how the platform improves itself; another ran four rounds of
+> review and fixes until all 26 lessons earned the highest grade, up from 15.
+> The next days added a "Find a Lesson" box and teasers that no longer clip on
+> phones, a written definition of what "good" means for the textbook, and a
+> review of the whole guide by three AI models. On 2 November it got a new front
+> page that works as an overview of the whole project, and the agents'
+> instruction file now points to it. Within a week its large Claude Code subject
+> was split into three, a web-standards subject arrived, and subjects and lessons
+> were put in prerequisite order. A "workshop" page holds its notes and run
+> history, and by 11 November defined terms link to the lesson that explains
+> them.
+
+Keeping it true was the expensive part. A scheduled job graded the pages and
+improved the weakest. On 2 November it was rebuilt to grade on several
+qualities and to block edits that weren't judged blind; its first run fixed 7
+false claims in 35 edits, but running it took about 127 reviewing agents
+dispatched by hand. Three days later one run sent eleven helpers through all
+68 pages, roughly 2.5 million tokens, to fix five false claims. The job was
+capped at eight items per run, a small goal-driven curating skill was added
+beside it, and on 7 November the older job was removed. On 9 November a
+fact-check across 17 guide pages used up nearly all of a 20 dollar budget.
 
 The waste was found through measurement, which the owner either read or asked for. From 18
 October the weekly Skills check reported the tokens and price of every
