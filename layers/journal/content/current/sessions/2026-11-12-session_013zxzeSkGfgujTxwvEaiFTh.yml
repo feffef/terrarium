@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSkGfgujTxwvEaiFTh
 startedAt: 2026-11-12T22:40:22Z
-endedAt: 2026-11-12T22:47:59Z
-kind: delegated
+endedAt: 2026-11-12T22:58:50Z
+kind: interactive
 goal: Survey what the Platform discarded since the last Midden survey
 status: completed
-outcome: Survey report filed as issue 3213 with 12 candidates (3 flagged weak) and a Gate-A/B exclusion table
-summary: "The owner invoked /midden-survey (human-instructed; no other ask). I ran the Skill as written: confirmed the checkout was not shallow, bounded the sweep at the previous report's date (2026-10-10, issue 1739), ran the mechanical script (118 deleted-file candidates), then swept closed-unmerged PRs and the 39 branches newly past the 30-day floor, deduped against the trench and stores, and judged each cluster against both gates by checking origin/main for successors. Most of the window's deletions failed Gate B (promoted or folded Glass Box drafts, in-place Blog rewrites, replaced scripts, a clear-backlog dry run whose issues were closed by real PRs), so those went into the exclusions table. I filed one survey-report issue (3213) labelled needs-triage, and flagged three weak candidates and several borderline exclusions for the curator rather than deciding them. Agent-initiated: the choice of which borderline items to include or exclude (the curator should revisit). Not verified: eslint caching on the gate experiments, whether later Karen posts repeat the withdrawn reply, and the late commit on claude/visitor-fixes-mobile. Suggested next step: /midden-catalogue on the issue."
+outcome: Survey issue 3213 filed with 12 candidates; the owner accepted six for cataloguing, recorded in a comment
+summary: "The owner invoked /midden-survey (human-instructed). I ran the Skill as written: bounded the sweep at the previous report (2026-10-10, issue 1739), ran the mechanical script (118 deleted-file candidates), swept closed-unmerged PRs and the 39 branches newly past the 30-day floor, deduped against the trench and stores, and judged each cluster against both gates by checking origin/main for successors. Most of the window failed Gate B (promoted or folded Glass Box drafts, in-place Blog rewrites, replaced scripts, a clear-backlog dry run whose issues real PRs closed), so those went into the exclusions table. I filed issue 3213 with 12 candidates, three flagged weak. The owner then chose candidates 1, 2, 3, 4 and 10, and asked to add glassbox-improve, which I had excluded at Gate B because glassbox-curate carries its purpose. I recorded that human decision in a comment on 3213 with a draft provenance block for glassbox-improve and the accepted list. Nothing was catalogued; that stays a separate, green-lit run. Not verified: eslint caching on the gate experiments, whether later Karen posts repeat the withdrawn reply, and the late commit on claude/visitor-fixes-mobile."
 prs: []
 docsRead:
   - path: layers/midden/GLOSSARY.md
@@ -39,18 +39,19 @@ frictions:
   - description: The sweep window held 118 deleted files and 39 branches; judging them one by one took many batched checks, since the script's noise screen misses generated mermaid SVGs.
     solution: Add generated mermaid SVG paths and blog in-place retitles to the survey script's noise or relocation screens.
     severity: minor
-durationSec: 457
+durationSec: 1108
 models:
-  claude-sonnet-5-5: 82
+  claude-sonnet-5-5: 89
 toolCounts:
   Read: 5
-  Bash: 30
+  Bash: 32
   ToolSearch: 1
   mcp__github__issue_read: 1
-  Write: 2
+  Write: 3
   Edit: 2
   mcp__github__issue_write: 1
   Skill: 2
+  mcp__github__add_issue_comment: 1
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
