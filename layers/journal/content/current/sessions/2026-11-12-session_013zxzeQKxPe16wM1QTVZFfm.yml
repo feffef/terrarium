@@ -1,0 +1,66 @@
+schemaVersion: 1
+session: session_013zxzeQKxPe16wM1QTVZFfm
+startedAt: 2026-11-12T15:41:24Z
+endedAt: 2026-11-12T15:43:56Z
+kind: interactive
+goal: Day-1 check of rule-use answer rates (issue 3021)
+status: completed
+outcome: Reran the report; matches the existing comment, no agent type under 70%, nothing to change
+summary: "The prompt 'Read 3021' was ambiguous, so I asked once (human-instructed); the user answered 'Act on it'. I read issue 3021 and its comments, found the day-1 check already posted today, and reran rule-use-report over the same window to verify: 49/49 logs, main 100%, general-purpose 98%, Explore 100%, workflow-subagent 99%. All numbers matched, so I posted no duplicate comment and changed nothing. The issue stays open for the owner to close; I did not close it unasked."
+prs: []
+docsRead:
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran git fetch origin main before reading git-conventions.md, which CLAUDE.md requires before the first non-read-only git command; a hook reminded me after.
+    solution: Surface the doc trigger when the fetch runs, or list fetch among read-only commands.
+    severity: nit
+durationSec: 152
+models:
+  claude-sonnet-5-5: 20
+toolCounts:
+  Read: 2
+  ToolSearch: 1
+  mcp__github__issue_read: 2
+  Bash: 4
+  Skill: 2
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/github-integration.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/github-integration.md
+    reported:
+      - path: .claude/rules/adr-0017.md
+        value: backed
+        why: no GitHub write made
+      - path: docs/agents/github-integration.md
+      - path: docs/agents/git-conventions.md
+gitBranch: ccr-f5860fe9-clvigu
+entrypoint: remote_mobile
+cliVersion: 2.1.322
+landedBy: Stop
