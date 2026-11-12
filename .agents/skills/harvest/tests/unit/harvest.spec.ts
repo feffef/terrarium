@@ -8,8 +8,10 @@ import {
   BODY_LIMIT,
   NOTE,
   REQUIRED_HEADINGS,
+  blockOutput,
   buildEntries,
   checkBody,
+  checkClusters,
   comparePosted,
   entryKey,
   harvestedState,
@@ -17,6 +19,7 @@ import {
   parseKeys,
   renderBlock,
   renderList,
+  summaryOf,
   type Entry,
 } from '../../scripts/harvest.ts'
 
@@ -267,5 +270,67 @@ describe('checkBody() and comparePosted()', () => {
     expect(comparePosted(good, good)).toEqual([])
     expect(comparePosted(good.replace(key, ''), good)).toEqual([`stored body lacks key: ${key}`])
     expect(comparePosted(good + `\nHarvested: ${entryKey(UUID, 'idea', 'z')}`, good)).toHaveLength(1)
+  })
+})
+
+describe('blockOutput() and summaryOf()', () => {
+  it('keeps stdout the pasteable block and sends each session summary, once, to stderr', () => {
+    const e = (session: string, n: number) => ({ session, file: `${session}.yml`, line: `Harvested: ${session} idea 0000000${n}` }) as Entry
+    const read = (file: string) => `summary: Did ${file[8]!.toUpperCase()}.\n`
+    const entries = [e('session_a', 1), e('session_a', 2), e('session_b', 3)]
+    expect(blockOutput(entries, read)).toEqual({ out: renderBlock(entries), err: 'Summary of session_a:\nDid A.\n\nSummary of session_b:\nDid B.' })
+  })
+
+  it('reads the summary of a log, and nothing when it is missing or not text', () => {
+    expect(summaryOf('goal: g\nsummary: >\n  Did\n  it.\n')).toBe('Did it.')
+    expect(summaryOf('goal: g\n')).toBe('')
+    expect(summaryOf('summary: [a]\n')).toBe('')
+  })
+})
+
+describe('retro key', () => {
+  const retro = `Harvested: ${SESSION} retro`
+  const body = (keys: string[]) => ['🤖 x', 'Agent seedling from harvest.', NOTE, ...keys, '', ...REQUIRED_HEADINGS.flatMap((h) => [h, 'T.', ''])].join('\n')
+
+  it('parses and passes check-body without an extract entry, when alone', () => {
+    expect(parseKeys(retro)).toEqual([`${SESSION} retro`])
+    expect(checkBody(body([retro]), new Set(), 'Seedling: retro on harvest')).toEqual([])
+  })
+
+  it('rejects a retro key beside an entry key', () => {
+    const key = entryKey(SESSION, 'idea', 'x')
+    expect(checkBody(body([`Harvested: ${key}`, retro]), new Set([key]))).toContain('a retro Seedling carries its retro key alone')
+  })
+
+  it('rejects a retro key under a title that is not a retro title', () => {
+    expect(checkBody(body([retro]), new Set(), 'Seedling: retro on harvest')).toEqual([])
+    for (const title of ['Seedling: a new idea', 'Seedling: retrofit it', undefined]) expect(checkBody(body([retro]), new Set(), title).join()).toContain('"Seedling: retro"')
+  })
+})
+
+describe('checkClusters()', () => {
+  const ns = new Map([[1, 'a'], [2, 'b'], [3, 'b']])
+  const open = (label: string, extra = '') =>
+    `## c\nlabel: ${label}\nentries: 1, 2\nsessions: 2\nunbuilt: read x.ts\nunfiled: no match, title filter\nunrejected: none\nledger: none\nunacted: prs empty\n${extra}verdict: open\n`
+
+  it('accepts open product and workflow clusters, and a drop naming its failed test', () => {
+    const text = open('product') + open('workflow', 'simplifying: retires y\n') + '## d\nlabel: workflow\nentries: 3\nsessions: 1\nledger: entry z\nverdict: dropped ledger\n'
+    expect(checkClusters(text, ns)).toEqual([])
+  })
+
+  it('refuses a missing field, a drop with no test, an unknown entry and an empty record', () => {
+    expect(checkClusters(open('workflow'), ns)).toEqual(['cluster 1: no "simplifying:" evidence'])
+    expect(checkClusters('## d\nlabel: product\nentries: 1\nsessions: 1\nverdict: dropped\n', ns).join()).toContain('verdict must be')
+    expect(checkClusters(open('product').replace('1, 2', '9'), ns).join()).toContain('entry numbers')
+    expect(checkClusters(open('product').replace('sessions: 2', 'sessions: 5'), ns).join()).toContain('distinct sessions')
+    expect(checkClusters('nothing', ns)).toEqual(['no "## " cluster blocks'])
+  })
+
+  it('refuses a simplifying drop of a product cluster', () => {
+    expect(checkClusters('## d\nlabel: product\nentries: 1\nsessions: 1\nsimplifying: s\nverdict: dropped simplifying\n', ns).join()).toContain('for workflow clusters')
+  })
+
+  it('refuses a product cluster after a workflow one', () => {
+    expect(checkClusters(open('workflow', 'simplifying: r\n') + open('product'), ns).join()).toContain('check every product cluster first')
   })
 })

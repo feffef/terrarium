@@ -54,6 +54,16 @@ Terrarium applies them without reading the source.
   Lately list of the newest run changes that the page works out itself. It
   has no sidebar entry and no link from the guide; its memory text has a word
   cap (`layers/glassbox/tests/unit/workshop.spec.ts`).
+- **Reading progress.** A Lesson is *read* once its page is opened in this
+  browser; Walkthroughs and the workshop are never marked. The list lives in
+  `localStorage` under `glassbox:read` and is applied only after the page mounts,
+  so the cached server render is the same for every visitor (ADR-0028). Read
+  Lessons get a ✓ after their title in the sidebar, where a Subject's count
+  reads `3/8` once any is read. A Lesson's hand-written Where next links that
+  are read move out of Where next into a `Lessons already read` section right
+  below it (Subject, title, ✓); Where next, heading included, vanishes once all
+  are read, and the section is hidden while none is. Only that section holds the
+  `Reset reading progress` button, which clears just that key. No sync.
 - **Shown in progress.** The Platform homepage gives Glass Box its own band
   under the hero, labelled the newest experiment and work in progress, with
   links to the guide and the workshop and a guide Lesson of the day; when it's finished, the label

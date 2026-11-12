@@ -12,7 +12,9 @@ Write these parts in order:
 1. The ADR-0017 header, then the banner line
    `Agent seedling from harvest, not approved. It waits for a Trusted user's green light before anyone builds it.`
 2. The output of `harvest block <extract.json> <n> [n...]` for the cluster's
-   entries, pasted unchanged; `harvest block` renders the key lines.
+   entries, pasted unchanged; `harvest block` renders the key lines (and prints
+   each source session's summary to stderr, to read). A retro Seedling's block is
+   the note plus its retro key line (step 5).
 3. `## The idea`: two or three plain sentences on what would be built or
    changed.
 4. `## Why it matters`: who benefits (a visitor, the owner, agents) and what is

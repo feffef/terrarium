@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { MinimarkNode } from '@nuxt/content'
-import { glassboxLessonSections, glassboxNextList } from '../../app/utils/lesson.ts'
+import { glassboxLessonSections, glassboxLessonToc, glassboxNextLessons, glassboxNextList } from '../../app/utils/lesson.ts'
 
 const h2 = (id: string, text: string): MinimarkNode => ['h2', { id }, text]
 const h3 = (id: string, text: string): MinimarkNode => ['h3', { id }, text]
@@ -71,5 +71,46 @@ describe('glassboxNextList', () => {
       ['li', {}, ['span', {}, 'Page'], ['a', { href: `${base}/missing` }]],
       ['li', {}, ['span', {}, 'Lesson'], ['a', { href: `${base}/verification/schemas` }, 'Typed']],
     ])
+  })
+
+  it('leaves out the rows whose Lesson was read, and keeps the other targets', () => {
+    expect(glassboxNextList(['ul', {}, bare(`${base}/verification/schemas`), bare(`${base}/hooks/gate`), bare('/t/journal/current/history')], base, {}, ['/verification/schemas'])).toEqual(['ul', { class: 'gb-next' },
+      ['li', {}, ['span', {}, 'Lesson'], ['a', { href: `${base}/hooks/gate` }]],
+      ['li', {}, ['span', {}, 'Journal'], ['a', { href: '/t/journal/current/history' }]],
+    ])
+  })
+})
+
+describe('Where next and read Lessons', () => {
+  const base = '/t/glassbox/guide'
+  const body = (...hrefs: string[]): MinimarkNode[] => [
+    h2('where-next', 'Where next'),
+    ['ul', {}, ...hrefs.map((href): MinimarkNode => ['li', {}, ['a', { href }]])],
+  ]
+  const a = `${base}/verification/schemas`
+  const b = `${base}/hooks/gate`
+
+  it('lists the Lessons a Where next list links, in order, skipping other targets', () => {
+    expect(glassboxNextLessons(body(a, '/t/journal/current/history', b), base)).toEqual(['/verification/schemas', '/hooks/gate'])
+    expect(glassboxNextLessons([['p', {}, 'No list.']], base)).toEqual([])
+  })
+
+  it('keeps the heading while an unread link remains, and drops it once every link is read', () => {
+    expect(glassboxLessonSections(body(a, b), base, {}, ['/verification/schemas'])).toEqual([
+      h2('where-next', 'Where next'),
+      ['ul', { class: 'gb-next' }, ['li', {}, ['span', {}, 'Lesson'], ['a', { href: b }]]],
+    ])
+    expect(glassboxLessonSections(body(a, b), base, {}, ['/verification/schemas', '/hooks/gate'])).toEqual([])
+  })
+
+  it('keeps Where next whole when a link is not a Lesson, however much is read', () => {
+    const out = glassboxLessonSections(body(a, '/t/journal/current/history'), base, {}, ['/verification/schemas'])
+    expect(out[0]).toEqual(h2('where-next', 'Where next'))
+  })
+
+  it('drops the Where next entry from the table of contents only once every link is read', () => {
+    const toc = [{ id: 'the-concept' }, { id: 'where-next' }]
+    expect(glassboxLessonToc(toc, body(a, b), base, ['/verification/schemas'])).toEqual(toc)
+    expect(glassboxLessonToc(toc, body(a, b), base, ['/verification/schemas', '/hooks/gate'])).toEqual([{ id: 'the-concept' }])
   })
 })
