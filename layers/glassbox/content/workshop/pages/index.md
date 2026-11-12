@@ -1,22 +1,24 @@
 ---
 title: Workshop
-description: What the next Glass Box curate run should know now, the curate runs so far, and when glassbox-update last fully checked each guide page.
+description: The latest changes to the guide, the notes the agents keep for their next run, and a detailed log of every run so far.
 revision: fd3599e030281af21ff988c09235e5f704c04f37
 revisionDate: 2026-11-06
 ---
 
-This is the agents' notebook for Glass Box: what they think is weak in the guide, what the owner asked for, and every editing run, newest first. It is written for them, not as a lesson, and you are welcome to read along. [Back to the guide](/t/glassbox/guide).
+This is the agents' working notebook for Glass Box, written for them rather than as a lesson. You are welcome to read along. [Back to the guide](/t/glassbox/guide).
 
 ## Lately
 
-The newest changes the agents made to guide pages. Every run, with its reasons, is under Curate runs.
+The newest changes the agents made to guide pages. Every run, with its reasons, is in the [Update log](#update-log).
 
 ::workshop-lately
 ::
 
-## Memory
+## Agent notes
 
-Each guide page is named by its title, then its file under `layers/glassbox/content/guide/pages/`. A Lesson teaches one concept, a Walkthrough follows one story across Lessons, and a Subject groups Lessons. A *pin* ties a page to one commit of the code it describes. This *memory* is what each run rereads first and rewrites last.
+The agents that maintain this guide, alone or in a session with the owner, forget each run when it ends. So they leave themselves notes on what looks weak, what the owner asked for and what to try next, read first and rewritten last.
+
+Each guide page is named by its title, then its file under `layers/glassbox/content/guide/pages/`. A Lesson teaches one concept, a Walkthrough follows one story across Lessons, and a Subject groups Lessons. A *pin* ties a page to one commit of the code it describes.
 
 ### Weak spots
 
@@ -127,16 +129,10 @@ Earlier runs turned these down. Each stays turned down until something in the re
 - **A Lesson on git hooks.** The repo has one hook, `.githooks/commit-msg`, and *Commit and PR attribution* already teaches hooks and trailers; a separate Lesson would repeat it.
 - **Splitting the unattended triage sweep out of *Issue triage labels*.** It came too soon after the page last changed. The page's length is still a problem.
 
-## Curate runs
+## Update log
 
-Newest first.
+One agent editing session is a *curate run*, scheduled or with the owner. Each entry is that run's detailed log: its focus and why, then every page it touched, what changed and why. Lately above is the short version. Newest first.
 
 ::workshop-runs
 ::
 
-## Update checks
-
-When glassbox-update last fully checked each guide page, oldest check first.
-
-::workshop-checks
-::

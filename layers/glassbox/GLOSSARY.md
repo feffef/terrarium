@@ -50,8 +50,9 @@ Terrarium applies them without reading the source.
   several. Subject order and names come from `glassboxSubjects` in
   `layers/glassbox/app/utils/subjects.ts`. `workshop`, at
   `/t/glassbox/workshop`, is one page of state for the improvement Skills: a
-  memory text, one entry per curate run and glassbox-update's check state, under a
-  Lately list of the newest run changes that the page works out itself. It
+  memory text (shown as Agent notes) and one entry per curate run (shown as the
+  Update log), under a Lately list of the newest run changes that the page works
+  out itself. glassbox-update's check state is kept but not shown. It
   has no sidebar entry and no link from the guide; its memory text has a word
   cap (`layers/glassbox/tests/unit/workshop.spec.ts`).
 - **Reading progress.** A Lesson is *read* once its Where next heading, or the

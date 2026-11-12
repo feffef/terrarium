@@ -17,11 +17,6 @@ export function glassboxRunChange(entry: string): GlassboxRunChange {
   return { page, what, why: why.join(' | ') }
 }
 
-/** glassbox-update's checks, oldest first, ties by page. */
-export function glassboxCheckRows(checks: Array<{ page: string, checked: string }>) {
-  return [...checks].sort((a, b) => a.checked.localeCompare(b.checked) || a.page.localeCompare(b.page))
-}
-
 /** Nuxt Content's route for a content stem (`git-github/60.attribution` → `git-github/attribution`):
  *  two-digit prefixes and `index` dropped. One home, shared with page-checks.ts. */
 export function glassboxStemRoute(stem: string) {
