@@ -1,0 +1,28 @@
+session: session_013zxzePDpmX3Lq9AEQGGTTW
+mode: autonomous
+focus: "Deploy Subject (its two pages): apply the owner's lowercase rule for
+  glossary terms in body text and clear the wording leftovers the memory page
+  lists for these pages (ADR, Merge gate and Content database used as bare
+  pointers; no excerpt for the failed-install and Node-restart claims). A third
+  run in the same session, started because the person asked for focuses to be
+  chosen repeatedly until the context budget is spent. Chosen because no PR
+  touches the guide and this is the smallest Subject still capitalising terms.
+  Deviations for the budget: the guide index was not re-read whole (read an hour
+  earlier in this session; only the Agents and Installed skills pages changed
+  since) and the Scout was not run again (the first run's Scout found no new
+  topic in the same window). Two fresh readers read the pages before and after;
+  the claim checker found five overstated sentences and one unsupported gloss,
+  which were corrected, and the second reader's leftovers went to the memory
+  page. The pnpm patch-commit claim stayed unchecked, and teaches was updated on
+  both pages. The failed-install and Node-restart claims got no excerpt. The
+  memory page lost its note that two Git & GitHub Lessons are long, since no
+  reader found them hard to follow. The Spec reviewer named six outside pages
+  (Merge gate, Protected paths, Dependabot grouping, Content database, Nitro
+  server engine and the Walkthrough A change goes live); none was read in full,
+  so none is in pagesRead."
+changes:
+  - deploy/10.continuous-deployment | the lede says a new build replaces the live copy only after it succeeds and names the checkout and serve folders; image, Corepack, fetch and reset --hard are glossed; the image paragraph says first which image Terrarium uses; a failed build sending the loop to its else branch is one plain sentence; the compose paragraph is split and host is glossed; the operator is the person who runs the host; the Merging is deploying item says what the container still checks after a merge | readers could not tell what is swapped for what or what the container checks (entrypoint.sh:12-15,25-27,134-159; Dockerfile:3-29; docker-compose.yml:11-13,27-35; ADR-0011:14-47). Wording only, so revision is kept
+  - deploy/20.pnpm-lockfile | glossary terms lowercase; the three installs are told apart (two frozen, a contributor's plain); the human-merge and gate sentences keep their verbs near their subjects; Corepack, pnpm/action-setup, integrity hash and the install-script default are glossed; the claim that the gate vets packages is cut to what the gate says; the Import-only-what-you-declare bullet shortens the jiti sentence and cites pnpm's direct-dependency layout; the pnpm-workspace.yaml bullet says the merge script checks only the human-only paths (merge-pr.ts:192-203) | readers lost the verb in two pasted definitions and the frozen-install story (action.yml:17-26; entrypoint.sh:57-62; gate.ts:150-177,340; adr-0004-human-merge.md:3-24; pnpm docs on frozen installs and supply-chain security). Wording only, so revision and publishedAt are kept
+pagesRead:
+  - deploy/10.continuous-deployment
+  - deploy/20.pnpm-lockfile
