@@ -407,6 +407,11 @@ The same weeks hardened the machinery against its own agents. On 25 October the
 session-inspection tool learned to spot a helper's hand-back that the agent
 itself had written.
 
+The next experiment arrived on 11 November. Agents record ideas and learnings
+in every session log, but those had only been read now and then and applied by
+hand. A new skill, meant to run weekly, harvests them and turns them into
+issues; its first real run filed four.
+
 That is where the record stops: eight sites, thirty decision records,
 fifty-one catalogued [Skills](/t/journal/current/skills). The question
 from September has a partial answer. The platform did grow a new site in a
