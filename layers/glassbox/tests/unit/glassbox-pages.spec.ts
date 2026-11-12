@@ -341,8 +341,8 @@ describe('glassboxCapitalisedTerms', () => {
     expect(found[0]).toContain(glassboxTermCaseWarning)
   })
 
-  it('passes lowercase terms, sentence and bullet starts, and a :term showing lowercase', () => {
-    expect(glassboxCapitalisedTerms('The gate runs. Gate checks come first: Tenant data stays apart.\n\n- **Gate.** A tenant waits.\n- Tenant pages load.\nSee :term[gate] and :term[Tenants]{id="tenant"}.\n', words)).toHaveLength(1)
+  it('passes lowercase terms, sentence and bullet starts, and a :term showing lowercase; a capital after a colon is mid-sentence', () => {
+    expect(glassboxCapitalisedTerms('The gate runs. Gate checks come first: Tenant data stays apart.\n\n- **Gate.** A tenant waits.\n- Tenant pages load.\nSee :term[gate] and :term[Tenants]{id="tenant"}.\n', words)).toHaveLength(2)
   })
 
   it('skips code, headings, link text, quotations, italic titles, :file and component lines', () => {

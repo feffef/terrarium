@@ -22,8 +22,6 @@ a day must work.
 budget leaves room to land it and a focus remains (memory leads, page-check
 warnings, Scout topics, pages no fresh reader has seen lately). Each loop is a
 full run: its own focus, run entry, branch from a fresh `origin/main` and PR.
-Orient again; re-read the guide index only when "Guide changes since the last
-curate run" lists commits, and Scout only the commits since the last Scout.
 When the budget or the foci run out, stop. Hand over to a new session only when
 the invocation says so: create it with `source_url:
 https://github.com/feffef/terrarium` and the same prompt.

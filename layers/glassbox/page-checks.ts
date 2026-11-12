@@ -367,8 +367,8 @@ export function glassboxGlossaryWords(projectRoot = root): string[] {
   return [...new Set([...headings, ...names])].filter((w) => w && w !== w.toUpperCase() && !properNouns.has(w))
 }
 
-/** Each glossary word written capitalised in a body line's running prose: not at a sentence or bullet start, nor in a heading, component block,
- *  code, link text, a quotation, an italic title or a `:file`. A `:term[…]` shows its text, so it is checked. */
+/** Each glossary word written capitalised mid-sentence in a body line's prose. Code, links, quotes and italic titles are skipped
+ *  so a name that must keep its capital can wear one (writing-pages.md, Check). A `:term[…]` shows its text, so it is checked. */
 export function glassboxCapitalisedTerms(body: string, words: string[]): string[] {
   const found: string[] = []
   const patterns = words.map((w) => new RegExp(`(?<![\\w-])${w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?:s|es)?(?![\\w-])`, 'gi'))
@@ -381,7 +381,7 @@ export function glassboxCapitalisedTerms(body: string, words: string[]): string[
       for (const m of text.matchAll(re)) {
         if (m[0][0] === m[0][0]!.toLowerCase()) continue
         const before = text.slice(0, m.index).replace(/^[\s>*\-\d.)]+|\*+|_/g, '').trim()
-        if (!before || /[.!?:]["')\]]*$/.test(before)) continue
+        if (!before || /[.!?]["')\]]*$/.test(before)) continue
         found.push(`${glassboxTermCaseWarning}: "${m[0]}" in: ${line.trim().slice(0, 100)}`)
       }
     }

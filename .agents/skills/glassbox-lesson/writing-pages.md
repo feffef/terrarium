@@ -144,7 +144,9 @@ warnings that never fail (`glassboxPageWarnings` and `glassboxOrphans` list
 them): fix each, or keep what the page needs, such as a "so" clause that
 states mechanism or an Excerpt the decision needs. A capitalised-term warning
 skips code, a "quoted" word and an *italic* title, so a name that must keep its
-capital gets one of those marks: a key as `Space`, a page title in quotes. After `pnpm build`, for a page whose layout, feature
+capital gets one of those marks: a key as `Space`, a page title in quotes.
+
+After `pnpm build`, for a page whose layout, feature
 or diagram changed, shoot it with `scripts/ui/preview.ts review <route>
 <out-dir>` and look at all four shots (`docs/agents/verifying-ui-changes.md`).
 Retake them after the last content edit. Done when both are green and, for a
