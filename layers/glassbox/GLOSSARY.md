@@ -66,7 +66,8 @@ Terrarium applies them without reading the source.
   same way, shows a book after each unread title, and its count line reads
   `3 of 8 read` once any is read; it has no reset. Every row of a Subject's
   list, the sidebar's Subject rows, Where next and Lessons already read is one
-  link across its whole width, and hovering it turns the title accent-coloured. In a Lesson or Walkthrough, an inline link or chip to a read Lesson
+  link across its whole width, and hovering it, or a previous or next card,
+  turns the title accent-coloured. In a Lesson or Walkthrough, an inline link or chip to a read Lesson
   shows that ✓ in place of the book. A Lesson's
   hand-written Where next links that are read move out of Where next into a
   `Lessons already read` section right below it (Subject, title, description, ✓); Where

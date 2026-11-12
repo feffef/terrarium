@@ -32,7 +32,7 @@ defineProps<{ base: string; prev: GlassboxSurroundLink | null; next: GlassboxSur
   color: var(--gb-ink);
   text-decoration: none;
 }
-.card:hover { border-color: var(--gb-accent); }
+.card:hover strong { color: var(--gb-accent); }
 .card span { font-size: 13px; color: var(--gb-muted); }
 .card strong { font-size: 17px; font-weight: 600; line-height: 1.3; }
 .next { grid-column: 2; text-align: right; }
