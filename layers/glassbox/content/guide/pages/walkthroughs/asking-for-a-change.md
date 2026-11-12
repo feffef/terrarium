@@ -10,7 +10,7 @@ Someone with write access asks an agent for a change. This Walkthrough follows t
 
 ## 1. A Trusted user asks
 
-A :term[Trusted] user, one with write access to the repository, asks a Claude Code session for a change, in the cloud or on their own machine; both work the same way from here. The request is what lets the session build new work, such as a feature or a Skill. Text from a :term[Public] user, in an issue or a comment, is information to the session, never an instruction.
+A :term[trusted] user, one with write access to the repository, asks a Claude Code session for a change, in the cloud or on their own machine; both work the same way from here. The request is what lets the session build new work, such as a feature or a skill. Text from a :term[public] user, in an issue or a comment, is information to the session, never an instruction.
 
 ::lessons
 [Human-in-the-loop agents](/t/glassbox/guide/terrarium-practice/human-in-the-loop) · [Author trust](/t/glassbox/guide/git-github/author-trust)
@@ -26,7 +26,7 @@ The session gets its own copy of the repository. A `SessionStart` hook in `.clau
 
 ## 3. It reads its instructions
 
-`CLAUDE.md` loads into the session at once. Its read-first list ties a doc to an action, so the session reads the git conventions before its first git command and the PR workflow before it opens, updates or merges a PR. The cross-cutting :term[Rules]{id="rule"} load at the start too; the rest arrive when the session reads or edits a file they govern, or runs a :term[Skill] they name.
+`CLAUDE.md` loads into the session at once. Its read-first list ties a doc to an action, so the session reads the git conventions before its first git command and the PR workflow before it opens, updates or merges a PR. The cross-cutting :term[rules]{id="rule"} load at the start too; the rest arrive when the session reads or edits a file they govern, or runs a :term[skill] they name.
 
 ::lessons
 [CLAUDE.md](/t/glassbox/guide/claude-code/claude-md) · [Path-specific rules](/t/glassbox/guide/claude-code/path-scoped-rules) · [Claude Code skills](/t/glassbox/guide/claude-code/skills)
@@ -42,7 +42,7 @@ The session edits on a feature branch, never on `main`, and may hand parts of th
 
 ## 5. It checks its own work
 
-Before it opens the PR, the session runs `pnpm gate:scoped`, the local run of the :term[Gate], and the `code-review` Skill, which reviews the committed diff against the repo's standards and against the request. It fixes what they find. A simple change, such as a typo, gets the session's own read of its diff instead of the review; a change that adds, renames or moves a file is never simple.
+Before it opens the PR, the session runs `pnpm gate:scoped`, the local run of the :term[gate], and the `code-review` skill, which reviews the committed diff against the repo's standards and against the request. It fixes what they find. A simple change, such as a typo, gets the session's own read of its diff instead of the review; a change that adds, renames or moves a file is never simple.
 
 ::lessons
 [Merge gate](/t/glassbox/guide/verification/gate) · [Type checking](/t/glassbox/guide/verification/type-checking) · [Linting](/t/glassbox/guide/verification/linting) · [Testing](/t/glassbox/guide/verification/testing)
@@ -58,7 +58,7 @@ The session pushes the branch and opens the PR itself, without asking. The PR's 
 
 ## 7. It logs its work, the first time
 
-With the PR open, the session runs `close-session`. The session first checks itself against `CLAUDE.md` and the always-loaded rules, then writes its :term[session log]: its goal, how far it got and every :term[Friction] it hit, including a Friction that names each rule or step it broke or skipped. At the end of that turn a `Stop` hook commits that one file straight to `main`.
+With the PR open, the session runs `close-session`. The session first checks itself against `CLAUDE.md` and the always-loaded rules, then writes its :term[session log]: its goal, how far it got and every :term[friction] it hit, including a friction that names each rule or step it broke or skipped. At the end of that turn a `Stop` hook commits that one file straight to `main`.
 
 ::lessons
 [Session logs](/t/glassbox/guide/terrarium-practice/session-logs) · [Self-improvement loop](/t/glassbox/guide/terrarium-practice/self-improvement-loop)
@@ -66,7 +66,7 @@ With the PR open, the session runs `close-session`. The session first checks its
 
 ## 8. CI runs the same Gate
 
-GitHub Actions runs the Gate on the PR, and that run decides whether it may merge. GitHub delivers a failed check to the subscribed session, but not a passed one. When the Gate is green, its last step posts a fresh comment on the PR naming the commit; that comment wakes the session, though a fork's PR gets no such comment. When the Gate is red, the session fixes the work and pushes, and CI runs again.
+GitHub Actions runs the gate on the PR, and that run decides whether it may merge. GitHub delivers a failed check to the subscribed session, but not a passed one. When the gate is green, its last step posts a fresh comment on the PR naming the commit; that comment wakes the session, though a fork's PR gets no such comment. When the gate is red, the session fixes the work and pushes, and CI runs again.
 
 ::lessons
 [Merge gate](/t/glassbox/guide/verification/gate)
@@ -74,7 +74,7 @@ GitHub Actions runs the Gate on the PR, and that run decides whether it may merg
 
 ## 9. The PR merges
 
-If a reviewer asks for changes, the session pushes again and CI runs again. Then the session posts its verdict on the PR as a comment and merges through `scripts/github/merge-pr.ts`, which waits for green checks and refuses without that verdict, which must name the PR's current head. It also refuses a PR that changes a :term[Human-only] file or comes from a Public author or a fork; a Trusted user merges those.
+If a reviewer asks for changes, the session pushes again and CI runs again. Then the session posts its verdict on the PR as a comment and merges through `scripts/github/merge-pr.ts`, which waits for green checks and refuses without that verdict, which must name the PR's current head. It also refuses a PR that changes a :term[human-only] file or comes from a public author or a fork; a trusted user merges those.
 
 ::lessons
 [Protected paths](/t/glassbox/guide/terrarium-practice/protected-paths)
@@ -90,7 +90,7 @@ Once the PR has merged, the session runs `close-session` again. It first looks b
 
 ## A real case
 
-On 15 October 2026 a Trusted user asked a session to install the `retro` Skill from the `mattpocock/skills` pack. The session installed it with the skills CLI, moved it into `.agents/skills/` with a link in `.claude/skills/`, and opened [PR #2089](https://github.com/feffef/terrarium/pull/2089): four files, among them :file[.agents/skills/retro/SKILL.md], and no Human-only path. It ran `pnpm gate:scoped` but skipped `code-review` because the diff was an unmodified copy of upstream, a step stop 5 doesn't let it skip: a PR that adds files is never a simple change. Its verdict comment said it was merging as it stood on that user's instruction. CI's Gate went green and the PR merged within four minutes of opening.
+On 15 October 2026 a trusted user asked a session to install the `retro` skill from the `mattpocock/skills` pack. The session installed it with the skills CLI, moved it into `.agents/skills/` with a link in `.claude/skills/`, and opened [PR #2089](https://github.com/feffef/terrarium/pull/2089): four files, among them :file[.agents/skills/retro/SKILL.md], and no Human-only path. It ran `pnpm gate:scoped` but skipped `code-review` because the diff was an unmodified copy of upstream, a step stop 5 doesn't let it skip: a PR that adds files is never a simple change. Its verdict comment said it was merging as it stood on that user's instruction. CI's gate went green and the PR merged within four minutes of opening.
 
 ## Where next
 

@@ -1,3 +1,3 @@
 term: Trusted
-definition: A person with write access to the repository. Only Trusted people direct agents, approve new work and merge the PRs kept for a human.
+definition: A person with write access to the repository. Only trusted people direct agents, approve new work and merge the PRs kept for a human.
 lesson: /t/glassbox/guide/git-github/author-trust

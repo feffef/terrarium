@@ -7,11 +7,11 @@ revisionDate: '2026-11-12'
 publishedAt: '2026-11-04T23:07:44Z'
 ---
 
-Terrarium keeps each Tenant's content in tables of its own, yet the Commons Search lists pages from several Tenants at once. This Walkthrough follows a Blog post from the side of the code that reads it: from one field in the Blog's manifest, through a list built with the site, to a result in the search box. It ends where the reading stops, at the Collections that never opted in.
+Terrarium keeps each tenant's content in tables of its own, yet the Commons Search lists pages from several tenants at once. This Walkthrough follows a Blog post from the side of the code that reads it: from one field in the Blog's manifest, through a list built with the site, to a result in the search box. It ends where the reading stops, at the collections that never opted in.
 
 ## 1. A Collection opts in
 
-The Blog's :term[manifest] gives its `pages` :term[Collection] one extra field, `kind: 'page'`. That field is the whole opt-in: a Collection with no `kind` stays off every list below. The :term[Collection kinds]{id="collection-kind"} and their contracts live in :file[shared/kinds.ts], and the manifest check refuses a kind that isn't there or one meant for the other Collection type.
+The Blog's :term[manifest] gives its `pages` :term[collection] one extra field, `kind: 'page'`. That field is the whole opt-in: a collection with no `kind` stays off every list below. The :term[collection kinds]{id="collection-kind"} and their contracts live in :file[shared/kinds.ts], and the manifest check refuses a kind that isn't there or one meant for the other collection type.
 
 ::lessons
 [Cross-tenant reads](/t/glassbox/guide/terrarium-practice/cross-tenant-reads) · [Zod refinements](/t/glassbox/guide/verification/zod-refinements) · :file[layers/blog/tenant.config.ts]
@@ -27,7 +27,7 @@ When `expand()` builds the Blog's collections, it adds to the Blog's own page sc
 
 ## 3. The build lists it in the Catalog
 
-`catalogFrom()` walks the same expansion and lists every Collection that named a kind, grouped by kind. :file[modules/catalog.ts] writes that list into the `#catalog` module each time Nuxt starts or builds. So the :term[Catalog] holds one entry for each Blog Space's `pages`, beside the other Tenants' opted-in Collections, and no one keeps that list by hand.
+`catalogFrom()` walks the same expansion and lists every collection that named a kind, grouped by kind. :file[modules/catalog.ts] writes that list into the `#catalog` module each time Nuxt starts or builds. So the :term[catalog] holds one entry for each Blog space's `pages`, beside the other tenants' opted-in collections, and no one keeps that list by hand.
 
 ::lessons
 [Virtual modules](/t/glassbox/guide/nuxt-vue/virtual-modules) · [Cross-tenant reads](/t/glassbox/guide/terrarium-practice/cross-tenant-reads)
@@ -35,7 +35,7 @@ When `expand()` builds the Blog's collections, it adds to the Blog's own page sc
 
 ## 4. The Search asks for every page
 
-A visitor opens `/t/commons/search`. The Commons layer's Space page renders its `CommonsSearch` component, which calls `queryPages()` inside `useAsyncData`. That calls `queryAcrossTenants('page', …)`: one `queryCollection` for each key the Catalog lists under `page`, each row cut down to the page fields and tagged with its Tenant, Space and Collection. `queryPages()` then gives each row its own address with `documentUrl()`.
+A visitor opens `/t/commons/search`. The Commons layer's space page renders its `CommonsSearch` component, which calls `queryPages()` inside `useAsyncData`. That calls `queryAcrossTenants('page', …)`: one `queryCollection` for each key the catalog lists under `page`, each row cut down to the page fields and tagged with its tenant, space and collection. `queryPages()` then gives each row its own address with `documentUrl()`.
 
 ::lessons
 [queryCollection](/t/glassbox/guide/nuxt-content/query-collection) · [Cross-tenant reads](/t/glassbox/guide/terrarium-practice/cross-tenant-reads)
@@ -43,7 +43,7 @@ A visitor opens `/t/commons/search`. The Commons layer's Space page renders its 
 
 ## 5. The browser filters the list
 
-The server renders only the list's first rows, with a button that shows more, but every row travels in the page's data. Typing in the box filters that list in the browser, by title, description, Tenant and Space, with no new query. The filter and the sort order are code in the Commons layer, not in the shared read functions. A click on a result goes to the post's own address under `/t/blog/`, where the Blog's own pages render it.
+The server renders only the list's first rows, with a button that shows more, but every row travels in the page's data. Typing in the box filters that list in the browser, by title, description, tenant and space, with no new query. The filter and the sort order are code in the Commons layer, not in the shared read functions. A click on a result goes to the post's own address under `/t/blog/`, where the Blog's own pages render it.
 
 ::lessons
 [Data fetching](/t/glassbox/guide/nuxt-vue/data-fetching) · [File routing](/t/glassbox/guide/nuxt-vue/file-routing) · :file[layers/commons/app/components/commons/Search.vue] · :file[layers/commons/app/pages/t/commons/]
@@ -51,7 +51,7 @@ The server renders only the list's first rows, with a button that shows more, bu
 
 ## 6. Where the reading stops
 
-The Commons's own `pages` name no kind, so its Search never lists itself. A Collection with no `kind`, such as the Blog's `pingbacks`, is on no list, though no test stops a layer that passes another Tenant's key to `queryCollection` directly. The one exception to the Catalog is the Platform home page, which reads the Tenants it features directly.
+The Commons's own `pages` name no kind, so its Search never lists itself. A collection with no `kind`, such as the Blog's `pingbacks`, is on no list, though no test stops a layer that passes another tenant's key to `queryCollection` directly. The one exception to the catalog is the platform home page, which reads the tenants it features directly.
 
 ::lessons
 [Multi-tenant isolation](/t/glassbox/guide/nuxt-content/multi-tenant-isolation) · :file[layers/commons/tenant.config.ts] · :file[app/pages/index.vue]

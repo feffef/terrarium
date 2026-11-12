@@ -11,7 +11,7 @@ An agent session finishes a piece of work and writes down what happened. This Wa
 
 ## 1. The session decides it is done
 
-When its work reaches a coherent state, such as a PR opened or a question answered, the agent runs the `close-session` Skill. The agent judges the moment itself, from the Skill's description; a hint after it opens or merges a PR reminds it, unless it has already run the Skill since. Once the agent has written its part, hooks do the rest, but a session that never gets here leaves no :term[session log].
+When its work reaches a coherent state, such as a PR opened or a question answered, the agent runs the `close-session` skill. The agent judges the moment itself, from the skill's description; a hint after it opens or merges a PR reminds it, unless it has already run the skill since. Once the agent has written its part, hooks do the rest, but a session that never gets here leaves no :term[session log].
 
 ::lessons
 [Session logs](/t/glassbox/guide/terrarium-practice/session-logs) · [Claude Code skills](/t/glassbox/guide/claude-code/skills) · [Hook-added context](/t/glassbox/guide/hooks/hook-added-context)
@@ -19,7 +19,7 @@ When its work reaches a coherent state, such as a PR opened or a question answer
 
 ## 2. The agent writes only its judgement
 
-`close-session` calls `log-session`, and the agent writes a small YAML file with the fields only it can know: its goal, a status, an outcome, a summary, the rules that steered or backed its work and the docs that helped, and every :term[Friction]. `scripts/session/log-session.ts --author` checks and saves them to `.session-logs/pending.scratch.json`, a scratch file git ignores. It refuses to run from a linked git worktree, a second working folder of one repository, where a subagent shares its parent's scratch path.
+`close-session` calls `log-session`, and the agent writes a small YAML file with the fields only it can know: its goal, a status, an outcome, a summary, the rules that steered or backed its work and the docs that helped, and every :term[friction]. `scripts/session/log-session.ts --author` checks and saves them to `.session-logs/pending.scratch.json`, a scratch file git ignores. It refuses to run from a linked git worktree, a second working folder of one repository, where a subagent shares its parent's scratch path.
 
 ::lessons
 [Session logs](/t/glassbox/guide/terrarium-practice/session-logs) · [Git worktrees](/t/glassbox/guide/git-github/git-worktrees) · [Subagents](/t/glassbox/guide/agents/subagents)
@@ -35,7 +35,7 @@ When Claude finishes responding, Claude Code fires the `Stop` hook wired in `.cl
 
 ## 4. The transcript supplies the facts
 
-Nobody writes the rest of the log: `scripts/session/transcript-trace.ts` reads the transcript, Claude Code's record of every message and tool call, and each subagent's own transcript beside it. It derives the timings, models, tool counts, files read and edited, subagents, Skills used and rules loaded; shell edits come from the session's own commits. A doc read through the shell counts only when the output shows enough of its distinctive lines. The trace and the scratch are then stitched into one entry.
+Nobody writes the rest of the log: `scripts/session/transcript-trace.ts` reads the transcript, Claude Code's record of every message and tool call, and each subagent's own transcript beside it. It derives the timings, models, tool counts, files read and edited, subagents, skills used and rules loaded; shell edits come from the session's own commits. A doc read through the shell counts only when the output shows enough of its distinctive lines. The trace and the scratch are then stitched into one entry.
 
 ::lessons
 [Session logs](/t/glassbox/guide/terrarium-practice/session-logs) · [Subagents](/t/glassbox/guide/agents/subagents)
@@ -78,7 +78,7 @@ Before pushing, the lander diffs the new commit against `main` and refuses unles
 
 ## 8. The log is read, and the session may log again
 
-The log shows on the Journal's dashboard. Each run of `pnpm validate:content`, a step of the :term[Gate], checks it along with every other log. If the session's work goes on, say its PR merges, it runs `close-session` again: the scratch changes, and the next `Stop` lands the new version over the old file. No other session edits it.
+The log shows on the Journal's dashboard. Each run of `pnpm validate:content`, a step of the :term[gate], checks it along with every other log. If the session's work goes on, say its PR merges, it runs `close-session` again: the scratch changes, and the next `Stop` lands the new version over the old file. No other session edits it.
 
 ::lessons
 [Session logs](/t/glassbox/guide/terrarium-practice/session-logs) · [Merge gate](/t/glassbox/guide/verification/gate)

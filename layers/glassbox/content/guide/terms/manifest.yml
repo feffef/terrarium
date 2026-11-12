@@ -1,3 +1,3 @@
 term: Manifest
-definition: The one small file, tenant.config.ts, in which a Tenant states what it holds. It names the Tenant, its Spaces, and its Collections with their types and schemas, and code builds everything else from it.
+definition: The one small file, tenant.config.ts, in which a tenant states what it holds. It names the tenant, its spaces, and its collections with their types and schemas, and code builds everything else from it.
 lesson: /t/glassbox/guide/nuxt-content/content-collections
