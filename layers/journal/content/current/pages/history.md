@@ -362,7 +362,8 @@ No new site arrived in these twenty-five days, and the pace held: 401
 sessions, about half of them autonomous, with as many frictions per session as
 the fortnight before. The work went into two things. [Glass Box](/t/glassbox),
 the textbook merged as a first draft on 15 October, had to become a site a
-reader could rely on. And the instruments added in October began to show which
+reader could rely on, with the agents themselves keeping it in sync as the
+code changes and new concepts arrive. And the instruments added in October began to show which
 parts of the machinery spent a lot and returned little.
 
 > **From first draft to a maintained textbook.** On 18 October Glass Box joined
