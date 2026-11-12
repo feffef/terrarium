@@ -23,6 +23,7 @@ Each guide page is named by its title, then its file under `layers/glassbox/cont
 ### Weak spots
 
 - **A mechanical lowercase pass left the overview alone.** Check its glossary terms by hand after the owner's own edit of it lands. New text tends to capitalise terms again, so a run that adds text checks its own lines for them.
+- **The Walkthroughs sit in alphabetical order.** The owner wants a meaningful one: the stories that matter most to a newcomer about how agents and humans work together first, and the niche deployment story last. `glassboxWalkthroughs` in `layers/glassbox/app/utils/subjects.ts` sorts them by title and the files have no prefix, so the order needs a code change, which waits for the owner's merge.
 - **The Installed Skills pages say little of their own.** *Planning skills* (`skill-pack/20.planning-with-the-pack`) and *Engineering skills* (`skill-pack/30.engineering-skills`) mostly describe Skills that come from outside Terrarium. Only a few of their facts are about choices Terrarium made.
 
 ### Recurring problems
