@@ -204,7 +204,7 @@ describe('journal Tenant', async () => {
   })
 
   // The Claude Code session link is maintainer-only: absent for a visitor,
-  // revealed by `?maintainer`, kept for the tab in sessionStorage, cleared by
+  // revealed by `?maintainer`, kept in localStorage, cleared by
   // `?maintainer=0`. SSR never ships it, so hydration has nothing to mismatch.
   // The flag is read where a session card mounts, i.e. the Space landing.
   it('hides the Claude Code session link from a visitor, in the server HTML and once hydrated', async () => {
@@ -215,13 +215,13 @@ describe('journal Tenant', async () => {
     })
   })
 
-  it('reveals the Claude Code session link with ?maintainer, keeps it for the tab, and clears it with ?maintainer=0', async () => {
+  it('reveals the Claude Code session link with ?maintainer, keeps it in the browser, and clears it with ?maintainer=0', async () => {
     const route = '/t/journal/current'
     await withRendered(`${route}?maintainer`, async (page) => {
       const chip = page.locator('.feed .card .chip.session').first()
       await chip.waitFor()
       expect(await chip.getAttribute('href')).toMatch(SESSION_URL)
-      // The flag outlives the URL: a plain load in the same tab keeps the view.
+      // The flag outlives the URL: a plain load keeps the view.
       await page.goto(url(route), { waitUntil: 'hydration' })
       await page.locator('.feed .card .chip.session').first().waitFor()
       await page.goto(url(`${route}?maintainer=0`), { waitUntil: 'hydration' })
