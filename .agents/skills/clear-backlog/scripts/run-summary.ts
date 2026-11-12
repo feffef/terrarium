@@ -61,6 +61,7 @@ const list = (key: string, items: string[] | undefined) => (items?.length ? [`  
 function triage(r: Explore): string[] {
   const blocks = Object.entries(r.results).map(([n, t]) => [
     `#${n} ${t.outcome} publicAuthor=${t.publicAuthor}`,
+    ...(t.outcome === 'build' && !t.writes.length ? ['  NO WRITES: check the issue carries its label and comment before you rely on this result'] : []),
     ...field('summary', t.summary),
     ...field('canonical', t.canonical ? `#${t.canonical}` : undefined),
     ...field('brief', t.brief),
@@ -143,7 +144,11 @@ export const buildSummary = (path: string, runId?: string, home?: string) =>
   withLogs(path, (r) => build(r as Branch[], runId ? agentIds(runId, home) : undefined).join('\n\n'))
 
 /** A review's findings file as numbered `kind: title` lines. */
-export const findingsSummary = (path: string) => (JSON.parse(readFileSync(path, 'utf8')) as Review).findings.map(finding).join('\n') || 'no findings'
+export function findingsSummary(path: string): string {
+  const raw = JSON.parse(readFileSync(path, 'utf8')) as Finding[] | Partial<Review>
+  const found = Array.isArray(raw) ? raw : (raw.findings ?? [])
+  return found.map(finding).join('\n') || 'no findings'
+}
 
 const USAGE = 'usage: run-summary.ts <run .output> --triage | <run .output> --build [--run <run id>] | <findings .json> --findings'
 

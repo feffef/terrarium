@@ -19,7 +19,8 @@ every question of theirs still unanswered.
 
 Two saved workflows do the agent work, so their steps can't be skipped:
 `clear-backlog-explore` (§1) and `clear-backlog-build` (§3). Invoking this
-Skill is the opt-in: run each by name with the Workflow tool, pass `args` as
+Skill is the opt-in: read `dispatch-subagents` once (its guard blocks the first
+Workflow call otherwise), then run each by name with the Workflow tool, pass `args` as
 a JSON value, and act on the structured result. Pass `session` (this
 session's id, `session_…`) in both: every GitHub write carries it as the
 ADR-0017 header. A workflow can't ask the owner, wait on CI or merge, so you
@@ -112,7 +113,10 @@ Run `clear-backlog-build` with `{ session, dir, branches: [...] }`: `dir` is
 and findings in a folder of its own. One entry per branch: `name`, `issues`,
 `brief`, the agreed `picks` (only that branch's own, never the whole owner
 reply), and `cherryPick` when a closed, unmerged PR already implements the
-agreed pick. It builds each branch in its own worktree off `origin/main`, with
+agreed pick. Set `small: true` on a branch whose whole change meets
+`pr-workflow.md`'s simple-change test (at most 10 lines in 2 files; no logic,
+hooks, workflow scripts or Skill meaning): it gets one fresh reviewer, `Both`,
+in place of the pair. It builds each branch in its own worktree off `origin/main`, with
 fast checks and no gate, then runs one fresh review round: a Standards and a
 Spec reviewer, each giving every finding a `kind`. This loop's rounds and
 re-checks are the review before opening the PR (`pr-workflow.md`).
@@ -128,14 +132,16 @@ the triage agent's `pick` and `why`. A brief's file list never names a Skill
 listed in `skills-lock.json`: installed Skills are never edited (ADR-0015).
 
 Then run `run-summary.ts <output> --build --run <run id>`, with the run id
-from the Workflow result. Per branch it prints the status, the builder's and
+from the Workflow result, before you resume anyone: it writes the findings
+files the builder reads. Per branch it prints the status, the builder's and
 each reviewer's agent id, and each review's findings file with one numbered
 `kind: title` line per finding. Keep each builder's id: a later round's run
 prints only its reviewers. Read nothing more (no findings file, diff, agent
 report, `decisions.md` or `triage.md`) until §4: the builder and reviewers read those, and
 every turn of yours re-reads your whole context.
 
-Resume an agent with `SendMessage` to its id. Send the resumes of all
+Resume an agent with `SendMessage` to its id, only once its run has ended: a
+resume during the run puts two writers in one worktree. Send the resumes of all
 branches in one message, except gates: at most 2 at once. Each agent replies
 with one line; check what it claims with `git -C <worktree> log --oneline -3`
 before you go on. If an agent can't be resumed (a session restart may lose
@@ -168,23 +174,31 @@ For each `reviewed` branch, in round N:
    <axes>` (form in its `rules()`), with `NEEDS-OWNER` and a question after it
    when one needs the owner, an owner-call's included. Run the named
    re-checks now; ask the question, and resume the builder with the answer as
-   a fix, which gets its own re-check.
+   a fix, which gets its own re-check. Check an owner-call against the owner's
+   picks and answers so far before you ask it: what an earlier pick already
+   decides is a judgement call for the PR (a `skipped` line).
 3. **Re-check.** Resume each reviewer the builder's `recheck` names, every
    time: "Read only `git -C <worktree> diff <before>..<after>` and your
    findings' lines in `<branch dir>/triage.md`. Check each fix is right and
    the change adds no new problem, and judge each refusal's proof; leave
    skipped nits alone, they go to the owner. With Bash, write your findings in
-   your review's shape to `<your review's file, with -c<k> before .json>`,
-   and reply with one line: `CLEAN` or `FINDINGS <file>`." An owner's answer
+   `{ findings: [{ kind, title, detail, file? }], summary }` (`findings: []` when
+   clean) to `<your review's file, with -c<k> before .json>`; a wrapped-line or
+   column overrun is no finding. Reply with one line: `CLEAN` or `FINDINGS <file>`." An owner's answer
    goes to the reviewer whose finding asked it. `run-summary.ts <file>
    --findings` prints a findings file's lines; send them to the builder from
    step 2. After 2 re-checks in a round, what is still open is that round's
    result.
-4. **Next round.** If round N had a major (a `defect`, `spec-mismatch` or
-   `missing-test` line in its summary or a re-check's), or you judge the
-   branch hard or large, and N is below 3, run the workflow on that branch with `review:
-   true`, `round: N+1` and its `worktree`: a fresh pair reads the whole diff,
-   and the builder stays. Start a branch's round as soon as it is due; if a
+4. **Next round.** If round N had a `defect` or `spec-mismatch` line in its
+   summary or a re-check's, or a `missing-test` line on a branch above 50
+   changed lines (`git -C <worktree> diff --shortstat origin/main...HEAD`), or
+   you judge the branch hard or large, and N is below 3, run the workflow on
+   that branch with `review: true`, `round: N+1` and its `worktree`: a fresh pair
+   reads the whole diff, and the builder stays. A smaller branch's
+   `missing-test` is fixed and re-checked in its round, and a `small` branch gets
+   no further round, unless its `Both` reviewer reports the diff above the
+   simple-change bar: then run `review: true`, `round: 1` without `small`.
+   Start a branch's round as soon as it is due; if a
    second run is refused while one runs, batch the branches due. A major in
    round 3 still gets its fix and re-check, and the branch's PR waits for the
    owner's merge (§4).
@@ -225,8 +239,8 @@ branch with a major in round 3: its PR says why it waits and lists, under
 `Remaining findings`, from `triage.md` and the last re-check files, each
 finding not resolved by a clean re-check, with its kind, file and title. Merge
 the rest unless ADR-0004 reserves it for a human; `merge-pr.ts` checks only
-some of its exceptions. Once a PR merges or waits for a human, run
-`git worktree remove <worktree>` for its branch.
+some of its exceptions. Once a PR merges or waits for a human, or its
+branch ends with no PR, run `git worktree remove <worktree>` for its branch.
 
 **Done:** every PR is merged or waiting for a human merge, and
 `pnpm check:worktrees` exits 0.

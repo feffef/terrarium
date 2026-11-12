@@ -9,7 +9,8 @@ export const meta = {
 }
 
 // args: { session: 'session_…', dir: absolute path, branches: [{ name, issues: [n], brief, picks?: [string] | string,
-//   cherryPick?: prNumber, worktree?: path, question?: string, answer?: string, review?: true, round?: n }] }
+//   cherryPick?: prNumber, worktree?: path, question?: string, answer?: string, review?: true, round?: n, small?: true }] }
+// A small branch (the simple-change bar of pr-workflow.md) gets one reviewer, `Both`, in place of Standards and Spec.
 // A branch with review: true skips the build and gets review round `round` on its `worktree`.
 // Each branch keeps its files (decisions, gate log, findings) in `<dir>/<slug>/`, so none pass through the orchestrator.
 if (!args || !args.session) throw new Error('args.session (this session id, session_…) is required for the provenance header')
@@ -59,6 +60,7 @@ const REVIEW = {
 // The builder runs on Sonnet; every reviewer keeps the default model, since a later fresh round runs only to catch what round 1 missed (#3110).
 const SONNET = { model: 'sonnet' }
 const AXES = ['Standards', 'Spec']
+const axesOf = b => (b.small ? ['Both'] : AXES)
 
 function common(b) {
   const picks = [].concat(b.picks || [])
@@ -72,14 +74,15 @@ ${picks.length ? `\n## Owner's agreed picks (binding)\n${picks.map(p => `- ${p}`
 function rules(b) {
   const dir = folder(b)
   return `## Rules
-- Run git as \`git -C <worktree> ...\`, never \`cd\`: Bash keeps its cwd between calls and parallel calls share it. One git command per Bash call.
+- Run git as \`git -C <worktree> ...\`, never \`cd\`: Bash keeps its cwd between calls and parallel calls share it. One git command per Bash call, and no \`&&\`, \`;\` or \`$(...)\` in a worktree: the guard refuses them, and a refused chain can drop an edit silently.
 - Run checks in the foreground. Run \`pnpm gate:scoped\` only when the orchestrator asks, as \`cd <worktree> && pnpm gate:scoped > ${dir}/gate.log 2>&1; echo EXIT=$? >> ${dir}/gate.log\` with Bash timeout 600000.
+- Before each commit, check the lines you added against the wrap width the file keeps (\`git -C <worktree> diff -U0 | awk 'length>81'\` for 80 columns); a rewrap that only moves an overrun is not a fix.
 - Commit before you stop, even mid-work. Never push, open a PR, merge, or run close-session/log-session: the orchestrator does those.
 - Every GitHub body you post starts with this exact first line: ${HEADER}
 - Stop and return needs-owner, with the question, its options and your pick, before you add a new dependency, change stored data or the content schema, make a decision big enough for an ADR, delete content visitors can see, change which Tenant's data a request can reach, or reverse an owner's pick above. Decide everything else yourself, and append each decision as one line to ${dir}/decisions.md (\`mkdir -p ${dir}\` first), now and in every later turn.
 - Return worktree, the absolute path of the worktree that holds your commits, only when the branch has commits.
 - The orchestrator may resume you later with review findings to fix, an owner's answer, or the gate; keep your worktree. In a later turn the same stop rule holds: add \`NEEDS-OWNER\` with the question, its options and your pick after the reply it asked for, or send it alone if you changed nothing.
-- Given findings files, you decide what to fix, by kind: fix every defect, spec-mismatch and missing-test; fix a nit only when it is cheap (a few lines, no new risk) and skip the others; refuse a finding you can prove wrong; an owner-call needs the owner. Append one line per finding, and per owner answer or other fix you are given, to ${dir}/triage.md: \`<findings file> #<n> fixed|skipped|refused: <reason or proof>\`, or \`<what you were given> fixed: <what you did>\`. Then reply with one line, \`FIXED <sha before> <sha after> recheck <axes>\`: the same sha twice if nothing changed, and as axes each reviewer (Standards, Spec) with a finding you fixed or refused or whose owner-call you were answered on, or \`none\`. Add \`NEEDS-OWNER\` and the question, its options and your pick after it when a finding needs the owner.
+- Given findings files, you decide what to fix, by kind: fix every defect, spec-mismatch and missing-test; fix a nit only when it is cheap (a few lines, no new risk) and skip the others; refuse a finding you can prove wrong; an owner-call needs the owner. Append one line per finding, and per owner answer or other fix you are given, to ${dir}/triage.md: \`<findings file> #<n> fixed|skipped|refused: <reason or proof>\`, or \`<what you were given> fixed: <what you did>\`. Then reply with one line, \`FIXED <sha before> <sha after> recheck <axes>\`: the same sha twice if nothing changed, and as axes each reviewer (Standards, Spec, or Both) with a finding you fixed or refused or whose owner-call you were answered on, or \`none\`. Add \`NEEDS-OWNER\` and the question, its options and your pick after it when a finding needs the owner.
 - ${ASK_SOURCES}`
 }
 
@@ -103,12 +106,14 @@ function fresh(b) {
 }
 
 function reviewPrompt(b, axis, wt, round) {
-  const what = axis === 'Standards'
-    ? `the Standards axis: the repo's documented standards plus the smell baseline in that Skill`
-    : `the Spec axis, with the brief and picks above as the spec, plus the issues themselves (read them with mcp__github__issue_read via ToolSearch)`
+  const standards = `the Standards axis: the repo's documented standards plus the smell baseline (read §3 of .agents/skills/code-review/SKILL.md with Read, and nothing else of that Skill)`
+  const spec = `the Spec axis, with the brief and picks above as the spec`
+  const what = axis === 'Standards' ? standards : axis === 'Spec' ? spec : `${standards}, and ${spec}`
+  const lines = axis === 'Both' ? ' Say in the summary if the diff passes 10 changed lines or 2 files: the orchestrator then runs the full two-reviewer round.' : ''
+  const again = round > 1 ? ` Earlier rounds' findings are in ${folder(b)}/triage.md: raise a skipped or refused one again only with new evidence.` : ''
   return `You are the ${axis.toUpperCase()} reviewer, round ${round}. ${common(b)}
 ## Task
-Review read-only in ${wt} (\`cd ${wt} && …\`): the diff \`git diff origin/main...HEAD\`, and the builder's decisions in ${folder(b)}/decisions.md if it exists. Read .agents/skills/code-review/SKILL.md with Read. This workflow already runs the two axes as two agents, so skip the Skill's steps for spawning sub-agents, pinning a fixed point and finding the spec; follow only ${what}, applied to the diff given. Focus on simplicity: what could be smaller, plainer or deleted. Edit no file except a findings file the orchestrator names later, and run no git command that changes state.
+Review read-only in ${wt} (\`cd ${wt} && …\`): the diff \`git diff origin/main...HEAD\`, and the builder's decisions in ${folder(b)}/decisions.md if it exists. This workflow runs the axes as separate agents, so follow only ${what}, applied to the diff given. Focus on simplicity: what could be smaller, plainer or deleted. Edit no file except a findings file the orchestrator names later, and run no git command that changes state.${lines}${again}
 Give each finding one kind: defect (wrong behaviour or a false statement), spec-mismatch (differs from the brief, the picks or a 'never' clause), missing-test (logic without a test that would catch its bug), nit (wording, layout, style, anything else cosmetic) or owner-call (needs the owner's choice). The builder fixes by kind, so pick the kind honestly: a cosmetic point is a nit, never a defect. Make each title state the problem in one line; titles reach the PR. ${ASK_SOURCES}
 The orchestrator may resume you later to re-check the builder's fixes and refusals of your findings; keep this review in mind.`
 }
@@ -127,10 +132,11 @@ async function reviewBranch(built, b) {
   if (built.status !== 'done') return { ...out, status: built.status, question: built.question, reason: built.reason }
   if (!built.worktree) return { ...out, status: 'failed', reason: 'no worktree with commits to review' }
   // Labels are how the orchestrator finds each agent's id in the run journal to resume it (run-summary.ts --run).
-  const reviews = await parallel(AXES.map(axis => () =>
+  const axes = axesOf(b)
+  const reviews = await parallel(axes.map(axis => () =>
     agent(reviewPrompt(b, axis, out.worktree, round), { label: `${axis} ${b.name} r${round}`, phase: 'Review', schema: REVIEW })))
   if (reviews.some(r => !r)) return { ...out, status: 'failed', reason: `round ${round}: a reviewer returned nothing` }
-  return { ...out, status: 'reviewed', reviews: Object.fromEntries(AXES.map((axis, i) => [axis, reviews[i]])) }
+  return { ...out, status: 'reviewed', reviews: Object.fromEntries(axes.map((axis, i) => [axis, reviews[i]])) }
 }
 
 const results = await pipeline(args.branches, buildBranch, reviewBranch)

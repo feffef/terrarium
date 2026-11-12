@@ -100,6 +100,23 @@ describe('clear-backlog-build (#3110)', () => {
     expect(r).toMatchObject({ status: 'reviewed', round: 2, worktree: '/wt/b' })
   })
 
+  it('gives a small branch one reviewer, Both, that reads the smell baseline and no issue text', async () => {
+    const { r, calls } = await run({ small: true }, built, { Both: review('nit') })
+    expect(calls.map((c) => c.label)).toEqual(['build fix/1-x', 'Both fix/1-x r1'])
+    expect(calls[1]!.prompt).toMatch(/Standards axis[^]*Spec axis/)
+    expect(r).toMatchObject({ status: 'reviewed', reviews: { Both: review('nit') } })
+  })
+
+  it('has no reviewer read the whole code-review Skill or the issue, and has a later round carry the declined findings', async () => {
+    const { calls } = await run({ review: true, round: 2, worktree: '/wt/b' })
+    for (const c of calls) {
+      expect(c.prompt, c.label).not.toContain('issue_read')
+      expect(c.prompt, c.label).toContain('raise a skipped or refused one again only with new evidence')
+    }
+    expect(calls[0]!.prompt).toContain('§3 of .agents/skills/code-review/SKILL.md')
+    expect(calls[1]!.prompt).not.toContain('code-review/SKILL.md')
+  })
+
   it('fails a review-only branch given no round, without running a reviewer', async () => {
     const { r, calls } = await run({ review: true, worktree: '/wt/b' })
     expect(calls).toHaveLength(0)
