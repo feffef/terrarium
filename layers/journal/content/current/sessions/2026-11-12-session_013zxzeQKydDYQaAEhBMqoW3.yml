@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQKydDYQaAEhBMqoW3
 startedAt: 2026-11-12T11:15:57Z
-endedAt: 2026-11-12T11:38:02Z
+endedAt: 2026-11-12T11:41:47Z
 kind: interactive
 goal: Add missing topics to the Glass Box guide overview
-status: in-review
-outcome: "PR open, waiting for the owner's merge: overview names planning, skill inventory, ideas and gate checks, in lowercase terms"
-summary: "The owner ran /glassbox-curate with a focus (check whether the guide overview needs additions for Lessons added or changed since its last large rewrite). That focus, the 2026-11-02 baseline, the three gaps (planning big work, skill inventory and logged ideas, what the gate checks), allowing a new section, parking new Lessons on the memory page and the owner-decisions line on lowercase terms were all human decisions, answered through questions. The owner also interrupted midway to say the overview should not capitalise glossary terms; I then lowercased every term across the page and, on their answer, added a line to owner-decisions.md (a Human-only file, so the PR waits for their merge). Agent-initiated: skipping the Scout subagent, the memory-page cuts to stay under the word cap (five long-standing soft decisions), the wording of the new paragraphs (opus writer subagent), and the choice to read three overlapping Lessons in full after the review named them. A sonnet claim checker found the planning sentence needed the research-ticket exception; a fresh reader found spec, stories and grade needed a gloss; both were fixed. Both code-review axes ran, scoped gate passed, PR 3154 is open and subscribed. Left open: the other guide pages still capitalise glossary terms (recorded on the memory page), and the harvest Skill's own text still says a Routine runs it."
+status: completed
+outcome: "Merged: the overview names planning, skill inventory, ideas and gate checks, in lowercase terms"
+summary: "The owner ran /glassbox-curate with a focus (check whether the guide overview needs additions for Lessons added or changed since its last large rewrite). That focus, the 2026-11-02 baseline, the three gaps (planning big work, skill inventory and logged ideas, what the gate checks), allowing a new section, parking new Lessons on the memory page and the owner-decisions line on lowercase terms were all human decisions, answered through questions. The owner also interrupted midway to say the overview should not capitalise glossary terms; I then lowercased every term across the page and, on their answer, added a line to owner-decisions.md (a Human-only file). Agent-initiated: skipping the Scout subagent, the memory-page cuts to stay under the word cap (five long-standing soft decisions), the wording of the new paragraphs (opus writer subagent), and reading three overlapping Lessons in full after the review named them. A sonnet claim checker found the planning sentence needed the research-ticket exception; a fresh reader found spec, stories and grade needed a gloss; both were fixed. Both code-review axes ran and the scoped gate passed. PR 3154 was merged by the owner, who turned on auto-merge after CI went green. Left open: the other guide pages still capitalise glossary terms (recorded on the memory page), and the harvest Skill's own text still says a Routine runs it."
 prs:
   - "3154"
 docsRead:
@@ -67,22 +67,24 @@ frictions:
   - description: The memory page was already near its 2,500-word cap, so two added notes failed workshop.spec.ts until I cut five soft decisions.
     solution: Plan the cut first when a run must add memory notes, and judge by history which items to drop.
     severity: nit
-durationSec: 1325
+durationSec: 1549
 models:
-  claude-sonnet-5-5: 132
+  claude-sonnet-5-5: 151
 toolCounts:
-  Bash: 35
+  Bash: 37
   Read: 13
   AskUserQuestion: 3
-  Write: 7
+  Write: 8
   Grep: 1
   Agent: 5
   Edit: 8
-  Skill: 3
-  ToolSearch: 1
+  Skill: 4
+  ToolSearch: 2
   mcp__claude-code-remote__get_session: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 4
+  mcp__github__pull_request_read: 2
 filesEdited:
   - layers/glassbox/content/workshop/runs/2026-11-12T1116.yml
   - .agents/skills/glassbox-lesson/owner-decisions.md
@@ -311,31 +313,31 @@ subagents:
     durationSec: 204
     toolCalls: 24
     modelCalls: 23
-    tokenShare: 15.2
+    tokenShare: 13.3
   - task: Claim-check overview changes
     model: sonnet
     durationSec: 48
     toolCalls: 10
     modelCalls: 7
-    tokenShare: 6.6
+    tokenShare: 5.7
   - task: Fresh reader of overview
     model: sonnet
     durationSec: 16
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 3.8
+    tokenShare: 3.4
   - task: Standards review of overview change
     model: sonnet
     durationSec: 38
     toolCalls: 9
     modelCalls: 5
-    tokenShare: 5.7
+    tokenShare: 5
   - task: Spec review of overview change
     model: sonnet
     durationSec: 32
     toolCalls: 6
     modelCalls: 6
-    tokenShare: 5.7
+    tokenShare: 5
 gitBranch: claude/gracious-clarke-k57esa
 entrypoint: remote
 cliVersion: 2.1.322
