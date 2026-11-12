@@ -23,6 +23,7 @@ Each guide page is named by its title, then its file under `layers/glassbox/cont
 ### Weak spots
 
 - **The Installed Skills pages say little of their own.** *Planning skills* (`skill-pack/20.planning-with-the-pack`) and *Engineering skills* (`skill-pack/30.engineering-skills`) mostly describe Skills that come from outside Terrarium. Only a few of their facts are about choices Terrarium made.
+- **Only the overview writes glossary terms in lowercase.** The owner's rule (`owner-decisions.md`) is that a glossary term is lowercase in body text, mid-sentence. The other pages still write Skill, Tenant, Routine, Gate and the like. Fix it a Subject at a time; it is wording only.
 - **Two Git & GitHub Lessons are long.** *Commit and PR attribution* (`git-github/60.attribution`) and *Issue triage labels* (`git-github/70.issue-triage-labels`) are each about 1,400 to 1,600 words. Both have been trimmed; look for a split only after a fresh reader finds them hard to follow.
 
 ### Recurring problems
@@ -95,6 +96,8 @@ Each may be true; a later run should read the tool's source or run it.
 ### Ideas still open
 
 - *Engineering skills* could become part of *Installed skills* (`skill-pack/10.skill-packs`).
+- The overview names neither web standards, how agents reach things (cloud sessions, permissions, MCP, worktrees) nor dependencies (lockfile, Dependabot). The owner chose other gaps for it; add one only with a reason.
+- The overview uses *CI* and *ADR-0004* without saying what they are, and "spec" and "stories" are glossed only in a clause.
 
 ### Soft decisions
 
@@ -108,12 +111,7 @@ Decisions agents made (run, review, claim check). Not rules: the owner or a late
 - **Moving the MCP tool-name matcher from *MCP servers* to *Blocking hooks*.** The `mcp__<server>__.*` form is about how MCP names tools, and the page's Why bullet on it is one sentence that links *Claude Code hooks*.
 - **Guide titles.** Every title has been weighed against 2 to 4 alternatives; owner rulings are in owner-decisions.md. Closest rivals that lost: *Required status checks* for *Merge gate*, *Claude Code workflows* for *Workflow scripts*.
 - **Folding *Planning skills* into *Installed skills*.** *Planning skills* holds facts about Terrarium's own choices that would lose their page.
-- **Moving the trust rules from *Human-in-the-loop agents* to *Author trust*.** The first page already links to the second.
-- **Moving the rule about the `ready-for-agent` label into *Issue triage labels*.** That page already shows it.
-- **Moving the payload-size reason from *queryCollection* to *Data fetching*.** Both pages already state it, so moving it gains nothing.
 - **Moving the URL-resolver facts from *Multi-tenant isolation* to *File routing*.** They belong with isolation, because that is where their testability matters.
-- **Merging *Engineering skills* into *Planning skills*.** That would undo a split made on purpose.
-- **A Lesson on git hooks.** The repo has one hook, `.githooks/commit-msg`, and *Commit and PR attribution* already teaches hooks and trailers; a separate Lesson would repeat it.
 - **Splitting the unattended triage sweep out of *Issue triage labels*.** Held back until the page is stable. The page's length is still a problem.
 
 ## Update log
