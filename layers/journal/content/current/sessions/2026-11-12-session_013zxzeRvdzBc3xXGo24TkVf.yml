@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRvdzBc3xXGo24TkVf
 startedAt: 2026-11-12T13:12:31Z
-endedAt: 2026-11-12T14:16:58Z
+endedAt: 2026-11-12T14:20:10Z
 kind: interactive
 goal: Add a Glass Box Lesson on inspecting past sessions
-status: in-review
-outcome: PR 3160 open with the Lesson, an orient.ts --index flag and glassbox-lesson changes; CI pending, owner asked me to merge it myself
-summary: "Human-instructed throughout. The owner asked for a Lesson on inspect-session and on asking an earlier session to search its own transcript, and to explore recent session logs first. I read the Glass Box contracts, the Skill and about two dozen session logs (every log that used inspect-session, current and archived), then asked three scoping questions (Subject, one Lesson or two, which gotchas) per their preference. They chose Agents & automation, one Lesson, all four gotchas. The owner directed every later change: built-in records versus Terrarium's session log, a Haiku subagent doing the reading, search-not-recall as the key to getting facts from an old session, section-anchored links at bullet ends, bare Where next links, dropping the own-id gotcha, and the lede wording. They also pointed out twice that I had not used orient.ts, which led to a new orient.ts --index flag (their choice), a first Orient step in glassbox-lesson (moved out of writing-pages.md at their request) and a curate note. Agent-initiated: fixing a YAML quoting error, an e2e test that needed a Journal row in Cloud sessions' Where next, page-check failures, and the code-review findings (changing counts and history in prose against glassbox-content.md, an unanchored link, a repeated type in orient.ts). Code-review ran on the whole branch as the owner chose; the last commit (one clause in glassbox-lesson) got my own read. Gate green on the final head, PR opened and subscribed; the owner told me to merge it myself, and the Skill and Lesson files likely make it Human-only, so merge-pr.ts will need their quoted instruction. Open: whether the title is general enough, and scheduled-tasks losing its Journal evidence row."
+status: completed
+outcome: "PR 3160 merged: the Lesson, an orient.ts --index flag, and glassbox-lesson, writing-pages and glassbox-curate changes"
+summary: "Human-instructed throughout. The owner asked for a Lesson on inspect-session and on asking an earlier session to search its own transcript, and to explore recent session logs first. I read the Glass Box contracts, the Skill and about two dozen session logs (every log that used inspect-session, current and archived), then asked three scoping questions (Subject, one Lesson or two, which gotchas) per their preference. They chose Agents & automation, one Lesson, all four gotchas. The owner directed every later change: built-in records versus Terrarium's session log, a Haiku subagent doing the reading, search-not-recall as the key to getting facts from an old session, section-anchored links at bullet ends, bare Where next links, dropping the own-id gotcha, and the lede wording. They also pointed out twice that I had not used orient.ts, which led to a new orient.ts --index flag (their choice), a first Orient step in glassbox-lesson (moved out of writing-pages.md at their request) and a curate note. Agent-initiated: fixing a YAML quoting error, an e2e test that needed a Journal row in Cloud sessions' Where next, page-check failures, and the code-review findings (changing counts and history in prose against glassbox-content.md, an unanchored link, a repeated type in orient.ts). Code-review ran on the whole branch as the owner chose; the last commit (one clause in glassbox-lesson) got my own read. Gate green locally and in CI on the final head. The owner told me to open the PR and merge it myself; the Skill and Lesson files made it Human-only, so I posted my verdict and landed it with merge-pr.ts using their quoted instruction as --owner-approved. Left open for the owner: whether the title is general enough, and scheduled-tasks losing its Journal evidence row."
 prs:
   - "3160"
 docsRead:
@@ -92,15 +92,15 @@ frictions:
   - description: First count of sessions that used inspect-session (6) came from current logs only; the archive held many more, and I corrected it only after counting both folders.
     solution: Count every log folder (current and archived) before stating how many sessions did something.
     severity: nit
-durationSec: 3868
+durationSec: 4060
 models:
-  claude-sonnet-5-5: 247
+  claude-sonnet-5-5: 266
 toolCounts:
-  Bash: 107
+  Bash: 111
   Read: 5
   AskUserQuestion: 5
-  Skill: 3
-  Write: 3
+  Skill: 4
+  Write: 4
   mcp__claude-code-remote__get_session: 1
   Edit: 7
   Agent: 2
@@ -108,6 +108,10 @@ toolCounts:
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/agents/50.inspecting-past-sessions.md
   - .agents/skills/glassbox-lesson/SKILL.md
@@ -242,13 +246,13 @@ subagents:
     durationSec: 63
     toolCalls: 13
     modelCalls: 6
-    tokenShare: 4.9
+    tokenShare: 4.4
   - type: general-purpose
     task: Review spec axis
     durationSec: 38
     toolCalls: 9
     modelCalls: 4
-    tokenShare: 2.1
+    tokenShare: 1.9
 gitBranch: claude/affectionate-bell-pzkg3j
 entrypoint: remote
 cliVersion: 2.1.322
