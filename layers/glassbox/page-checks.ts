@@ -459,8 +459,8 @@ export function glassboxLengthProblems(sources: Record<string, string>): string[
   return Object.entries(sources).flatMap(([file, source]) => lengthProblems(`/${contentRoute(file)}`, splitFrontmatter(source).frontmatter).map((p) => `guide/pages/${file}: ${p}`)).sort()
 }
 
-// Usage: pnpm exec tsx layers/glassbox/page-checks.ts [--lengths]: prints every page's warnings and the guide's
-// orphans; with --lengths, fails on a title or description over its cap or a missing teaches, so `pnpm validate:content` catches it.
+// Usage: pnpm exec tsx layers/glassbox/page-checks.ts [--lengths]: prints every page's warnings, the guide's
+// orphans and the Glass Box glossary's capitalised terms; with --lengths, fails on a title or description over its cap or a missing teaches, so `pnpm validate:content` catches it.
 runIfMain(import.meta.url, () => {
   const content = join(root, 'layers/glassbox/content')
   if (process.argv.includes('--lengths')) {
@@ -470,6 +470,8 @@ runIfMain(import.meta.url, () => {
     process.exit(problems.length ? 1 : 0)
   }
   const words = glassboxGlossaryWords()
+  // The glossary's capitalised headings are where agents copy a term's capital from, so its prose is scanned too.
+  for (const warning of glassboxCapitalisedTerms(readFileSync(join(root, 'layers/glassbox/GLOSSARY.md'), 'utf8'), words)) console.log(`layers/glassbox/GLOSSARY.md: ${warning}`)
   for (const file of globSync('*/pages/**/*.md', { cwd: content }).sort()) {
     for (const warning of glassboxPageWarnings(readFileSync(join(content, file), 'utf8'), file.startsWith('guide/') ? words : [])) console.log(`${file}: ${warning}`)
   }
