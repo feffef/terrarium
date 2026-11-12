@@ -63,7 +63,6 @@ These are the owner's goals for the guide. A run builds toward them directly; a 
 **Left over from the 2026-11-10 Nuxt Content, Web standards, Verification and Nuxt & Vue passes.** Fresh readers found these; none is false.
 - Several pages use *Space*, *Document*, *Catalog* or *Tenant* before they are glossed, or gloss one twice (*Vue components*, *Hydration*, *File routing*, *queryCollection*). A short rule for where each is glossed first would settle it.
 - *Mermaid pre-rendering*: the comment above `DIAGRAM_TOKEN_FALLBACKS` in `app/utils/mermaid.ts` still says the fallbacks are Mermaid's base-theme defaults, which they are not (outside this run's remit; a code comment).
-
 - *Content validation*: the lede says a misspelt field passes the build, yet a schema-less `page` Collection is skipped by the check.
 
 **Left over from the 2026-11-11 Git & GitHub pass.** A fresh reader still found these; none is false.
@@ -90,9 +89,9 @@ These are the owner's goals for the guide. A run builds toward them directly; a 
 
 **Topics the Scout found with no page (2026-11-12).** The `clear-backlog` loop changed: the builder triages review findings, resumes replace fresh fix rounds, the final gate is skipped on a clean first round, and a thin explore result is re-run (`.claude/workflows/clear-backlog-build.js`). Nearest page: *Workflow scripts*. Also a retro step (§5 of `clear-backlog`); nearest *Self-improvement loop*. Unverified: the Scout read only commit lists.
 
-**The `harvest` Routine.** `glassbox-update` re-added it to *Scheduled tasks* because the Skill's text says a Routine runs it; the owner said on 2026-11-11 none does yet, so it was removed again. Add it once the owner says one exists.
+**The `harvest` Routine.** The owner said on 2026-11-11 that no Routine runs it yet but one will. `glassbox-update` re-added it to *Scheduled tasks* because the Skill's text says a Routine runs it, and this run removed it again. Add it (`agents/40.scheduled-tasks` lists every Routine) once the owner says one exists.
 
-**Topics the Scout found with no page (2026-11-11).** The owner said on 2026-11-11 that no Routine runs `harvest` yet but one will. Once it does, add it to *Scheduled tasks* (`agents/40.scheduled-tasks`, which lists every Routine). The build line in the page footer (`shared/build-info.ts`, shows the commit and time of the build on the home page and the Journal landing): a sentence for *Continuous deployment*. `scripts/ui/screenshot.ts` scrolls `--wait-for` captures to an `#anchor`: a sentence for *Headless browser checks* (`verification/80.headless-browser-checks`).
+**Topics the Scout found with no page (2026-11-11).** The build line in the page footer (`shared/build-info.ts`, shows the commit and time of the build on the home page and the Journal landing): a sentence for *Continuous deployment*. `scripts/ui/screenshot.ts` scrolls `--wait-for` captures to an `#anchor`: a sentence for *Headless browser checks* (`verification/80.headless-browser-checks`).
 
 **Doc findings not acted on.**
 - *Content collections*: the docs say `prefix` defaults from the start of `include`, so `prefix: '/'` may be needless once `cwd` is set per Space. Not checked in code.
@@ -100,6 +99,7 @@ These are the owner's goals for the guide. A run builds toward them directly; a 
 - *pnpm and the lockfile*: the lead-in says pnpm.io's unversioned pages describe a newer major. The 12.x, 11.x and 10.x docs exist (`pnpm/pnpm.io` `versions.json`), but pnpm.io was blocked, so which major the unversioned pages show is unchecked.
 
 **Doc checks of 2026-11-09, claims the docs were silent on.** Each may be true; a later run should read the tool's source or run it.
+- *Cloud sessions* (`agents/30.cloud-sessions`): that the proxy refuses `.github/workflows/` pushes and repository-settings writes.
 - *Nitro server engine* (`nuxt-vue/60.nitro`): the dev cache path `.nuxt/cache/nitro/routes`, `cache: false`, a payload for a plain `cache` rule, and "Nuxt 4 runs Nitro v2".
 - *Session transcripts* (`hooks/40.session-transcripts`): the record types and fields, the 2 KB preview, and a subagent's `transcript_path` inside tool hooks.
 - *Author trust* (`git-github/20.author-trust`): what each `author_association` value means, and that `pull_request_target` ignores the approval setting. *Dependabot grouping*: that `/` doesn't reach a nested action.
