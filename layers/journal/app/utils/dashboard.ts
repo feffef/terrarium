@@ -79,7 +79,7 @@ export function subagentUsageLabel(a: Pick<Subagent, 'tokenShare' | 'durationSec
   return parts.join(' · ')
 }
 
-export type TokenBarSegment = { key: string; label: string; title: string; grow: number; main: boolean; shade: number }
+export type TokenBarSegment = { key: string; title: string; grow: number; main: boolean; shade: number }
 
 // The session's token bar: main first, then each subagent that stored a share.
 // Main is the remainder (clamped at 0); `grow` is a fraction of the bar, scaled
@@ -90,7 +90,7 @@ export function sessionTokenBar(subagents: Pick<Subagent, 'type' | 'task' | 'tok
   const sum = shared.reduce((n, s) => n + s.share, 0)
   const whole = Math.max(100, sum)
   const seg = (key: string, label: string, share: number, main: boolean, shade: number) =>
-    ({ key, label, title: `${label} · ${tokenSharePct(share)}`, grow: share / whole, main, shade })
+    ({ key, title: `${label} · ${tokenSharePct(share)}`, grow: share / whole, main, shade })
   return [
     seg('main', 'main', Math.max(0, 100 - sum), true, 0),
     // Four alternating steps so neighbouring segments differ.
