@@ -1,0 +1,14 @@
+session: session_013zxzeT2YDMzAWKoi2AC98c
+mode: autonomous
+focus: "Nuxt Content Subject: give the Try-it sections that name no command or visible result (Content collections, queryCollection, MDC components, Mermaid pre-rendering) a concrete step and a way to see it worked, as the owner's direction on the memory page asks (one Subject per run). Chosen because the owner asked in-session for several autonomous runs, the Git & GitHub run merged just before, no open PR touches these pages, and Nuxt Content is the next Subject on the Try-it list. Deviations for the budget: the guide index and Scout were not run again, and no new fresh readers read the pages. The claim checker found one contradiction, an existing watch item on MDC components that said a missing closing block turns into plain text while a test showed it swallows the text after it; that sentence was corrected. Not run here: the rendered HTML of the callout and the dev server log (no dev server could be left running), and the first bytes of an mmdc SVG (no Chromium for the checker). The wording problems the memory page lists for these pages stay open."
+changes:
+  - nuxt-content/10.content-collections | Try-it shows how to see each locale become a collection (nuxt prepare and the generated types file) | the old Try-it had no way to see it worked (demo project run with nuxt 4 and @nuxt/content 3). Try-it only, so revision and publishedAt are kept
+  - nuxt-content/40.query-collection | Try-it gives a curl command that measures the payload script with and without select, and says a generated site keeps it in _payload.json | the old step named no command (demo run; nuxt payload.js). Try-it only
+  - nuxt-content/50.mdc-components | Try-it says what the page source shows for the block and for a mistyped prop; the watch item says a missing closing block swallows the text after it | the old Try-it had no visible result and the watch item was contradicted by a test. Try-it and one corrected sentence
+  - nuxt-content/60.mermaid-pre-rendering | Try-it shows how to see the SVG and gives a shell check that fails when a committed .mmd has no SVG | the old Try-it named no command for its CI check (mermaid-cli README; the check run in a scratch repo). Try-it only
+  - workshop/pages/index | Nuxt Content dropped from the Try-it list of Subjects still to do | the memory page keeps what a later run inherits
+pagesRead:
+  - nuxt-content/10.content-collections
+  - nuxt-content/20.multi-tenant-isolation
+  - nuxt-content/30.content-database
+  - nuxt-content/40.query-collection
