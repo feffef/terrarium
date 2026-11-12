@@ -19,13 +19,13 @@ Three things grew at once and kept causing each other — the **sites**, the
 
 | Period | Sessions per week | Agent-initiated | Frictions per session | New sites |
 |---|---|---|---|---|
-| **[Founding](#founding-4-to-10-july)** · 4–10 Jul | 116 | 21% | 4.0 | 3 |
-| **[Opening up](#opening-up-11-to-24-july)** · 11–24 Jul | 96 | 51% | 2.7 | 4 |
+| **[Founding](#founding-4-to-10-july)** · 4–10 Jul | 116 | 9% | 4.0 | 3 |
+| **[Opening up](#opening-up-11-to-24-july)** · 11–24 Jul | 96 | 42% | 2.7 | 4 |
 | **[Fewer asks](#fewer-asks-25-july-to-8-august)** · 25 Jul–8 Aug | 46 | 74% | 2.5 | 0 |
-| **[The floor](#the-floor-9-to-25-august)** · 9–25 Aug | 40 | 92% | 1.8 | 0 |
+| **[The floor](#the-floor-9-to-25-august)** · 9–25 Aug | 40 | 89% | 1.7 | 0 |
 | **[Idling and pruning](#idling-and-pruning-26-august-to-24-september)** · 26 Aug–24 Sep | 46 | 90% | 1.6 | 0 |
-| **[The owner returns](#the-owner-returns-25-september-to-2-october)** · 25 Sep–2 Oct | 92 | 56% | 3.5 | 1 |
-| **[Simplifying the rules](#simplifying-the-rules-3-to-17-october)** · 3–17 Oct | 128 | 51% | 5.0 | 1 |
+| **[The owner returns](#the-owner-returns-25-september-to-2-october)** · 25 Sep–2 Oct | 92 | 52% | 3.5 | 1 |
+| **[Simplifying the rules](#simplifying-the-rules-3-to-17-october)** · 3–17 Oct | 128 | 41% | 5.0 | 1 |
 | **[Measuring and explaining](#measuring-and-explaining-18-october-to-11-november)** · 18 Oct–11 Nov | 112 | 51% | 5.0 | 0 |
 
 The obvious reading of the table is wrong. Activity fell not because the project
@@ -33,7 +33,8 @@ turned inward or lost its way, but because the repository has one human, who ran
 out of hours. The interesting part is what kept happening anyway, and what
 changed in the last rows once the human had time again.
 
-Counts are as of 11 November. The daily digests go on from there: the
+Counts are as of 11 November 2026, computed from the session logs and git by
+`scripts/history/history-stats.ts` (Agent-initiated counts only autonomous sessions). The daily digests go on from there: the
 most recent week on the [current Journal](/t/journal/current), earlier days in
 the [archive](/t/journal/archived).
 
@@ -212,7 +213,7 @@ request that changes a listed path.
 > one.
 
 None of which means the loop is failing. Frictions per session fell steadily
-from 4.0 to 1.8 across the first four periods. By 26 August, 91% of all issues
+from 4.0 to 1.7 across the first four periods. By 26 August, 91% of all issues
 filed here were closed; of the thirty-nine still open, twenty-nine were marked as
 waiting on a human decision and only three were ready for an agent to pick up — a
 queue parked at the gate the rules put there, not a backlog the machine failed to

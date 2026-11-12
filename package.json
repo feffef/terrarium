@@ -16,7 +16,7 @@
     "lint": "eslint . --cache --cache-strategy content --cache-location node_modules/.cache/eslint/",
     "test": "nuxt prepare && vitest run tests/unit",
     "test:e2e": "vitest run tests/e2e",
-    "validate:content": "tsx scripts/gate/validate-content-schema.ts && tsx scripts/gate/validate-content-refs.ts && tsx scripts/gate/validate-skill-cadence.ts && tsx scripts/gate/validate-prune-trials.ts && tsx scripts/gate/validate-adr-rules.ts && tsx layers/glassbox/page-checks.ts --lengths",
+    "validate:content": "tsx scripts/gate/validate-content-schema.ts && tsx scripts/gate/validate-content-refs.ts && tsx scripts/gate/validate-skill-cadence.ts && tsx scripts/gate/validate-prune-trials.ts && tsx scripts/gate/validate-history.ts && tsx scripts/gate/validate-adr-rules.ts && tsx layers/glassbox/page-checks.ts --lengths",
     "verify:skills-lock": "tsx scripts/gate/validate-skills-lock.ts",
     "verify:mermaid": "tsx scripts/gate/validate-mermaid-svgs.ts",
     "render:mermaid": "tsx scripts/gate/render-mermaid.ts",
