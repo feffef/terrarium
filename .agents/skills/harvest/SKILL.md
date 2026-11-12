@@ -102,7 +102,8 @@ harvests both.
    helper; problems elsewhere stay Frictions in the session log. Skip a candidate
    an open issue or open Ledger entry holds, naming it. Its final step, to
    present candidates, becomes one more Seedling in the retro's order of
-   severity, outside step 4's caps, titled `Seedling: retro ...` and keyed `Harvested: <your session id> retro`
+   severity, outside step 4's caps, titled `Seedling: retro ...` and keyed
+   `Harvested: <your session id> retro`
    (`check-body` accepts that key alone). Write, check, post and verify it as
    step 4's bullets say. Nothing to file: say so.
 6. **Close.** Invoke `close-session` once; done when it has run. Its summary

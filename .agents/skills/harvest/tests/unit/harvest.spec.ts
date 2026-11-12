@@ -276,9 +276,9 @@ describe('checkBody() and comparePosted()', () => {
 describe('blockOutput() and summaryOf()', () => {
   it('keeps stdout the pasteable block and sends each session summary, once, to stderr', () => {
     const e = (session: string, n: number) => ({ session, file: `${session}.yml`, line: `Harvested: ${session} idea 0000000${n}` }) as Entry
-    const read = (file: string) => (file === 'session_a.yml' ? 'summary: Did A.\n' : 'goal: g\n')
+    const read = (file: string) => `summary: Did ${file[8]!.toUpperCase()}.\n`
     const entries = [e('session_a', 1), e('session_a', 2), e('session_b', 3)]
-    expect(blockOutput(entries, read)).toEqual({ out: renderBlock(entries), err: 'Summary of session_a:\nDid A.' })
+    expect(blockOutput(entries, read)).toEqual({ out: renderBlock(entries), err: 'Summary of session_a:\nDid A.\n\nSummary of session_b:\nDid B.' })
   })
 
   it('reads the summary of a log, and nothing when it is missing or not text', () => {
@@ -294,7 +294,7 @@ describe('retro key', () => {
 
   it('parses and passes check-body without an extract entry, when alone', () => {
     expect(parseKeys(retro)).toEqual([`${SESSION} retro`])
-    expect(checkBody(body([retro]), new Set())).toEqual([])
+    expect(checkBody(body([retro]), new Set(), 'Seedling: retro on harvest')).toEqual([])
   })
 
   it('rejects a retro key beside an entry key', () => {
@@ -304,7 +304,7 @@ describe('retro key', () => {
 
   it('rejects a retro key under a title that is not a retro title', () => {
     expect(checkBody(body([retro]), new Set(), 'Seedling: retro on harvest')).toEqual([])
-    expect(checkBody(body([retro]), new Set(), 'Seedling: a new idea').join()).toContain('"Seedling: retro"')
+    for (const title of ['Seedling: a new idea', 'Seedling: retrofit it', undefined]) expect(checkBody(body([retro]), new Set(), title).join()).toContain('"Seedling: retro"')
   })
 })
 

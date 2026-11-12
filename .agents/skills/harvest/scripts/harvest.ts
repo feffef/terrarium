@@ -197,7 +197,8 @@ export function renderBlock(entries: Entry[]): string {
  *  session's summary, once, for reading. Kept apart so stdout stays exactly what a
  *  body pastes. */
 export function blockOutput(entries: Entry[], readLog: (file: string) => string): { out: string; err: string } {
-  const firstOfSession = new Map(entries.map((e) => [e.session, e] as const).reverse())
+  const firstOfSession = new Map<string, Entry>()
+  for (const e of entries) if (!firstOfSession.has(e.session)) firstOfSession.set(e.session, e)
   const err = [...firstOfSession.values()].flatMap((e) => {
     const summary = summaryOf(readLog(e.file))
     return summary ? [`Summary of ${e.session}:\n${summary}`] : []
@@ -281,7 +282,7 @@ export function checkBody(body: string, emitted: Set<string>, title?: string): s
   const keys = parseKeys(body)
   const retro = keys.filter((k) => k.endsWith(' retro'))
   if (retro.length && keys.length > 1) problems.push('a retro Seedling carries its retro key alone')
-  if (retro.length && title !== undefined && !title.startsWith('Seedling: retro')) problems.push('a retro Seedling\'s title must start with "Seedling: retro"')
+  if (retro.length && !/^Seedling: retro\b/.test(title ?? '')) problems.push('a retro Seedling needs --title starting "Seedling: retro"')
   for (const key of keys) if (!emitted.has(key) && !retro.includes(key)) problems.push(`key not emitted by this run's extract: ${key}`)
   const note = ls.indexOf(NOTE)
   if (note < 0) problems.push(`missing the line "${NOTE}"`)
