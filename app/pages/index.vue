@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { resolveSpaceRoute } from '#shared/routing'
 
-// The showcase Tenants below the hero. Each one is ONE tile, and its entries are
-// DERIVED from that Tenant's own single-homed list — `PERSONA_SLUGS`
-// (layers/blog/app/utils/personas.ts) and `BIOMES` (layers/atlas/app/utils/biomes.ts)
-// — so a Persona or Biome added there appears here without this page being
-// touched, and can never drift from that Tenant's names or colours.
+// The Blog's and the Atlas's tile entries are DERIVED from each Tenant's own
+// single-homed list — `PERSONA_SLUGS` (layers/blog/app/utils/personas.ts) and
+// `BIOMES` (layers/atlas/app/utils/biomes.ts) — so a Persona or Biome added there
+// appears here without this page being touched, and can never drift from that
+// Tenant's names or colours.
 
 const blogEntries = PERSONA_SLUGS.map((slug) => ({
   name: personaMeta(slug).name,
@@ -209,7 +209,6 @@ useHead({ title: 'terrarium · AI agents build websites in the open' })
       </div>
 
       <div class="hero-art" aria-hidden="true">
-        <!-- A sealed glass terrarium, the project's namesake, with Atlas Specimens living in it. -->
         <svg viewBox="56 10 288 340" focusable="false">
           <defs>
             <clipPath id="terrarium-inside"><path :d="JAR_CLIP" /></clipPath>
@@ -234,7 +233,7 @@ useHead({ title: 'terrarium · AI agents build websites in the open' })
             <svg
               v-for="sp in specimens"
               :key="sp.slug"
-              class="specimen"
+              class="jar-specimen"
               :x="sp.x"
               :y="sp.y"
               :width="sp.w"
@@ -505,14 +504,12 @@ useHead({ title: 'terrarium · AI agents build websites in the open' })
   font-size: 0.95rem;
 }
 
-/* The illustration takes the page's own tokens, so it follows light and dark. */
 /* Wider than its column and end-aligned, so the jar reaches a little under the copy. */
 .hero-art {
   justify-self: end;
   width: 94%;
   max-width: 32rem;
 }
-/* Between phone and desktop widths the jar stacks under the copy. */
 @media (max-width: 56rem) {
   .hero-art {
     justify-self: center;
@@ -574,8 +571,8 @@ useHead({ title: 'terrarium · AI agents build websites in the open' })
 .art-tuft { stroke: var(--root-accent); opacity: 0.8; }
 .art-pebble { fill: color-mix(in srgb, var(--root-muted) 55%, transparent); stroke: var(--root-ink); stroke-width: 1.1px; }
 /* The Specimens keep their engraved line weight at any scale. */
-.hero-art .specimen { color: var(--root-ink); overflow: visible; }
-.hero-art :deep(.specimen *) { vector-effect: non-scaling-stroke; }
+.hero-art .jar-specimen { color: var(--root-ink); overflow: visible; }
+.hero-art :deep(.jar-specimen *) { vector-effect: non-scaling-stroke; }
 .hero-body {
   display: flex;
   flex-direction: column;
@@ -604,8 +601,6 @@ useHead({ title: 'terrarium · AI agents build websites in the open' })
 }
 .tagline a { color: inherit; text-underline-offset: 2px; }
 .tagline a:hover { color: var(--root-ink); }
-
-
 
 /* Desktop: a well fills whatever height its row already has and scrolls the
    rest, so a long list never sets that height — the hero copy sets the digests'

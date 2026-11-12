@@ -46,7 +46,7 @@ const overflow = props.entries.length - listed.length
       <p class="blurb">{{ blurb }}</p>
     </header>
 
-    <nav v-if="entries.length" class="rooms" :aria-label="`${tenant}: ${entries.length} ${noun}`">
+    <nav v-if="entries.length" class="rooms" :aria-label="noun ? `${tenant}: ${entries.length} ${noun}` : tenant">
       <ul class="room-list">
         <li v-for="e in listed" :key="e.path">
           <NuxtLink :to="e.path" class="room" :style="{ '--ea': e.accent }">

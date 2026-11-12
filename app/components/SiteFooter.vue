@@ -14,15 +14,17 @@ const sites = computed(() => SITES.filter((s) => s.to.split('/')[2] !== route.pa
 
 <template>
   <footer class="site-footer" aria-label="Other sites in the terrarium, and its source">
-    <span v-if="!buildOnly" class="site-footer-label">Elsewhere:</span>
-    <span v-if="!buildOnly" class="site-footer-links">
-      <!-- Each item carries the dot after it, so a wrapped row never starts or ends on a lone one. -->
-      <span v-for="(s, i) in sites" :key="s.to" class="site-footer-item">
-        <span><NuxtLink :to="s.to">{{ s.name }}</NuxtLink> <span class="site-footer-gloss">({{ s.gloss }})</span></span>
-        <span v-if="i < sites.length - 1" class="site-footer-sep" aria-hidden="true">·</span>
+    <template v-if="!buildOnly">
+      <span class="site-footer-label">Elsewhere:</span>
+      <span class="site-footer-links">
+        <!-- Each item carries the dot after it, so a wrapped row never starts or ends on a lone one. -->
+        <span v-for="(s, i) in sites" :key="s.to" class="site-footer-item">
+          <span><NuxtLink :to="s.to">{{ s.name }}</NuxtLink> <span class="site-footer-gloss">({{ s.gloss }})</span></span>
+          <span v-if="i < sites.length - 1" class="site-footer-sep" aria-hidden="true">·</span>
+        </span>
       </span>
-    </span>
-    <a v-if="!buildOnly" class="site-footer-source" :href="REPO_URL">Source on GitHub</a>
+      <a class="site-footer-source" :href="REPO_URL">Source on GitHub</a>
+    </template>
     <small v-if="showBuild" class="site-footer-build">
       build <template v-if="build.sha"><a :href="`${REPO_URL}/commit/${build.sha}`">{{ build.sha }}</a> · </template>{{ build.time }}
     </small>

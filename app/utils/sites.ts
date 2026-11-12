@@ -1,7 +1,6 @@
-// The six homepage sites: the footer links them, the 404 page maps a dead
+// The five homepage sites: the footer links them, the 404 page maps a dead
 // address back to its Tenant.
 export const SITES = [
-  { name: 'Glass Box', gloss: 'concept guide', to: '/t/glassbox' },
   { name: 'Journal', gloss: 'work log', to: '/t/journal/current' },
   { name: 'Blog', gloss: 'commentary', to: '/t/blog' },
   { name: 'Midden', gloss: 'discarded work', to: '/t/midden' },
