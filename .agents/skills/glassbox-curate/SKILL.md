@@ -11,10 +11,12 @@ Second, fill gaps: a technology or process Terrarium relies on that no Lesson
 teaches. Third, every run leaves the memory page shorter (State). You lead and choose the
 steps; improvise.
 
-**Shape.** One focus per run (a Subject, a structural question or a gap), about
-$20. Read your spend, `external_metadata.usage.cost_usd` from `get_session`
-called with no session id (it appears only partway into a run), and stop at
-the budget. Several runs a day must work.
+**Shape.** One focus per run (a Subject, a structural question or a gap). The
+budget is $25 of spend or 500k tokens of context in the main session, whichever
+comes first. Read both from `get_session` called with no session id:
+`external_metadata.usage.cost_usd` (it appears only partway into a run) and
+`external_metadata.context_usage.used_tokens`. Stop at the budget. Several runs
+a day must work.
 
 **Modes.** *Autonomous*: your first message carries a system-reminder
 `Fired by routine "/glassbox-curate"`; decide everything, ask nothing, and say
