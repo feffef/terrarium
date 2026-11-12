@@ -9,36 +9,37 @@ provenance:
   url: https://github.com/feffef/terrarium/commit/46886f5a7f26310f9076335ebeca0408751598f9
   continuityCheck: >-
     the instructions, their script and the line that named them are gone from
-    the project's main branch. Their aim was not dropped: the pull request that
-    removed them (#2431) added a hook that tells an agent, as it edits a file,
-    which decision records tied to that file it has not yet read in full. That
-    is a different mechanism, a reminder at the moment of writing instead of a
-    lookup before planning, and the curator counts the lookup, not the aim of
-    reading the decisions, as what stopped. This is the closest call in the
-    run, since a thing replaced in place is normally out of scope. It is
-    catalogued at the owner's request.
+    the project's main branch. The pull request that removed them (#2431) added
+    an automatic reminder that tells an agent, as it edits a file, which
+    decision records tied to that file it has not yet read in full. That serves
+    the same aim by a different means: a reminder while writing, in place of a
+    lookup before planning. What was discarded is the lookup. Whether that makes
+    this a find or a replacement in place is a close call; it is catalogued
+    because the lookup itself ended, and the owner asked.
 site: short-lives
 catalogNote: >-
   A set of written instructions for an agent, called a skill, that sent it to
   the project's recorded decisions before it planned, recommended or built a
   change. It was added on 19 October 2026, closing an issue that reported
   agents kept skipping the decision records they are bound by. The owner chose
-  it in a session clearing the backlog, in place of a line in the standing
+  it while working through the open issues, in place of a line in the standing
   instructions that told agents to search the records; the owner had
   questioned that search, and an agent showed that it missed. A script printed
-  a summary of every decision, then the area each open trial of a rule covers.
-  The agent was to read in full any decision even slightly related, leave the
-  text of a trial alone, and give each part of its change a reason. On 23
-  October a review the owner had asked for compared 86 session records from
-  before it with 61 after. The agent that counted found a modest gain in how
-  often interactive sessions read decisions in full, no fall in the recorded
-  mistakes about decisions, and a run that printed 447 lines. On average 12.7 of
-  the 30 summaries were already loaded for the agent. The counts were small and
-  mostly self-reported, as the review itself said. Of three mistakes it
-  traced, none came from the skill being run as written. The owner chose to
+  a summary of every decision, then which written instructions were being
+  tried out for removal. The agent was to read in full any decision even
+  slightly related, leave those instructions alone, and give each part of its
+  change a reason. On 23 October a review the owner had asked for compared 86
+  session records from before it with 61 after. The agent that counted found
+  some gain in how often sessions with a person present read decisions in
+  full, though the review and the later pull request counted it differently;
+  little change in the recorded mistakes about decisions, 4 before and 3
+  after; and a run that printed 447 lines. On average 12.7 of the 30 summaries
+  were already in the agent's view. The counts were small and mostly
+  self-reported, as the review itself said. It traced three mistakes and found
+  none that came from the skill being run as written. The owner chose to
   retire the skill, and the prompt that named it, in one change that put the
-  editing-time hook in their place. It was merged that day, four days after
-  the skill was added.
+  automatic reminder in their place. That change was merged less than four days
+  after the skill was added.
 removedIn: 46886f5a7f26310f9076335ebeca0408751598f9
 remains:
   - label: the instructions, at their last revision

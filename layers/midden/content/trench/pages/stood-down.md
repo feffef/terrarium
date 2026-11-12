@@ -6,8 +6,8 @@ description: Four automatic checks removed between 9 and 11 October 2026, each a
 Four automatic checks, each written to stop an agent repeating a recorded
 mistake, and each removed within three days of the others. In every case a count
 settled it: how often the check had stopped something real, against how often
-it had stopped work that was fine. None of the four came
-out ahead.
+it had stopped work that was fine. None of the four showed
+a gain worth its cost.
 
 ::midden-artifact{slug="the-session-id-check"}
 ::

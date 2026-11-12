@@ -9,11 +9,11 @@ provenance:
   url: https://github.com/feffef/terrarium/commit/bd80fc4b830a069498b897640b00c5d109ab5482
   continuityCheck: >-
     nothing on the project's main branch refuses a command for piping its
-    output through a cutter any more. The written rule against it is still in
-    the agents' standing instructions, where it stood before this check was
-    written; nothing enforces it. Outside the Journal's own records, the only
-    mentions of the check left on main are a recorded friction and the entry
-    for one of the project's review skills.
+    output into a command that keeps only the end or the start of it. The
+    agents' standing instructions still tell them to redirect the output of
+    long commands to a log file, but no line forbids the pipe, and nothing
+    enforces the advice. Outside the Platform's own journal of its sessions and
+    this catalogue, nothing on main mentions the check.
 site: stood-down
 catalogNote: >-
   Some commands an agent runs take a long time, such as the whole test suite.
@@ -21,23 +21,24 @@ catalogNote: >-
   output, or only the start, the pipe reports how the last command went, not
   the first, so a failure can be lost and the output cut short. A line in the
   agents' standing instructions against this had been added by 12 July 2026,
-  and a warning in one script by 2 August. On 6 August an issue reported that
-  the mistake had recurred twice more in a review of 20 working sessions, after
+  and on 2 August a note in one script warned against a related trap, mixing
+  a command's two output streams. On 6 August an issue reported that the
+  mistake had recurred twice more in a review of 20 working sessions, after
   both. The design for an automatic check was already written in the project's
-  table of rules (see the rulebook table), and the check went in on 5
-  September, in a session where the owner had asked an agent to clear the
-  backlog of issues marked ready. It refused a command when one statement
-  piped into such a cutter and either the call ran in the background or the
-  statement named a known long-running command. On 27 September it was
-  widened to cover one more cutter. On 11 October an agent reading the last
-  three days of session records counted 10 refusals in 44 sessions, each a
-  small annoyance cleared by one retry, and asked the owner whether to keep,
-  narrow or delete the check. It matched raw text, so a quoted string or the
-  body of a commit message could set it off. The commit that removed it says
-  that no recorded incident showed it catching a hidden failure: the incidents
-  behind the issue were cut-off output from short scripts it never covered.
-  The owner decided to delete it, with every leftover, the same day. The
-  removal edited the project's settings, so it waited for a person to merge it.
+  table of its agents' rules, and the check went in on 5 September, in a
+  session where the owner had asked an agent to clear a backlog of issues. It
+  refused a command when one command piped into such a cutting command and
+  either the command was set to run in the background or it named a known
+  long-running job. On 27 September it was widened to cover one more such
+  command. On 11 October an agent reading the last three days of session
+  records counted refusals in 10 of 44 sessions, each a small annoyance
+  cleared by one retry, and asked the owner whether to keep, narrow or delete
+  the check. It matched raw text, so a quoted string or a block of text passed
+  to a command could set it off. The commit that removed it says that no
+  recorded incident showed it catching a hidden failure: the incidents behind
+  the issue were cut-off output from short scripts it never covered. The owner
+  decided to delete it, with every leftover, the same day. The removal edited
+  the project's settings, so it waited for a person to merge it.
 removedIn: bd80fc4b830a069498b897640b00c5d109ab5482
 remains:
   - label: the check, at its last revision

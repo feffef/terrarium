@@ -9,32 +9,34 @@ provenance:
   url: https://github.com/feffef/terrarium/commit/2607cc5383fe17d9ba272843b6c4e4b02067fb7b
   continuityCheck: >-
     the folder, its link and its entry in the project's list of skills are gone
-    from the main branch. Its aim, raising the textbook's quality, was handed on
-    on purpose to two later sets of instructions, one for curating the guide and
-    one for updating it, and the rating criteria were later folded into the
-    first (12 November). What stopped is the machinery: three-agent grading of
-    every page, a blind check on every edit, a ledger of grades, and one
-    self-merged pull request per run. The curator counts that machinery, not
-    the aim, as what was discarded. This is a close call, catalogued at the
-    owner's request.
+    from the main branch. Its aim, raising the textbook's quality, was taken
+    over by two later sets of instructions, one for curating the guide and one
+    for updating it, and the rating criteria were later folded into the first
+    (12 November). What stopped is the machinery: the rating agents, an
+    independent check of every edit, a record of grades, and one self-merged
+    pull request per run. Its aim lives on in other instructions, so this is a
+    close call; it is catalogued because the machinery ended, and the owner
+    asked.
 site: short-lives
 catalogNote: >-
   A set of written instructions for an agent, called a skill, that raised the
   quality of the Glass Box, the project's own textbook of the ideas it is built
-  on. In each run three agents on different models graded every page. It
-  raised at most the three weakest pages where two raters agreed, and took at
-  most one larger step: promote a draft, fill a gap, or split or merge pages.
-  A separate agent reviewed the result, and the run merged one pull request
-  itself. Rules against churn kept recently edited pages alone and barred
-  undoing a change without a proven error. The owner designed it in a series
-  of questions with an agent, and an agent reviewed the draft; it was added on
-  27 October 2026. Its ledger, as last kept, lists five runs from 2 to 5
-  November that recorded $311.17 between them; earlier runs are not in that
-  file. On 7 November, in a session reworking its successor, the owner said
-  that it would be removed, in the words the removal issue quotes: "improve
-  skill will be removed!" Two other skills, one for curating the guide and one
-  for updating it, had been planned to take over its work. It was removed
-  eleven days after it was added.
+  on. As first written on 27 October 2026, three agents on different models
+  graded every page; at most the three weakest pages were raised where two
+  raters agreed, with at most one larger step: promote a draft, fill a gap, or
+  split or merge pages. Rules that kept recently edited pages alone barred
+  undoing a change without a proven error. By its last revision it used
+  scripted checks, rating agents on the pages that had changed, a researcher
+  who confirmed every finding and an independent check of every edit. A
+  separate agent reviewed the result, and each run merged one pull request
+  itself. The owner designed it in a series of questions with an agent, and an
+  agent reviewed the draft. Its record of runs, as last kept, lists five runs
+  from 2 to 5 November that recorded $311.17 between them; earlier runs are not
+  in that file. On 7 November, in a session reworking one of the two skills
+  meant to replace it, the owner said that it would be removed, in the words
+  the removal issue quotes: "improve skill will be removed!" The two other
+  skills had been planned to take over its work. It was removed about ten days
+  after it was added.
 removedIn: 2607cc5383fe17d9ba272843b6c4e4b02067fb7b
 remains:
   - label: the instructions, at their last revision

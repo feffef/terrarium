@@ -11,29 +11,29 @@ provenance:
     neither page is on the project's main branch, and the folder that held them
     now holds only the Atlas's front page and its sections. No other page there
     shows all the engravings together or opens an entry at random. The Atlas's
-    own notes record both pages as removed, and the front door no longer links
-    to either.
+    own written notes record both pages as removed, and its front page no
+    longer links to either.
 site: short-lives
 catalogNote: >-
   Two pages added to the Atlas, the project's invented field guide, and taken
   out again in under two days. On 13 October 2026 a review run that works on a
   schedule, with no person asking for it, sent three first-time visitors
   (agents) through the guide, counted what they agreed on and built from it.
-  The visitors agreed that opening the guide at a random entry should have an
-  address of its own that can be shared; the front door already offered a link
-  that did this in the browser. So the run added a page at that address. From
-  the visitors' separate ideas it then built a second page, showing all 15 of
-  the guide's engravings by section, each linking to its entry. Both were
-  merged within 13 minutes of each other. The next day a review of the
-  project's documents noticed that a written design rule allows a site one
-  page at its own top address, and that these two sat beside it. It guessed
-  the rule should be widened, and said that no source settled which should
-  give way. On 15 October the owner took a third course in a session clearing
-  the backlog: remove both and keep the rule as it was. The commit gives the
-  owner's reason as both being ideas from the visitor review that did not
-  work well. The record does not say what did not work, or whether anyone
+  Two of the three asked that opening the guide at a random entry have an
+  address of its own that can be shared; the guide's front page already
+  offered a link that did this in the browser. So the run added a page at that
+  address. From the visitors' separate ideas it then built a second page,
+  showing all 15 of the guide's engravings by section, each linking to its
+  entry. Both were merged within 13 minutes of each other. The next day a
+  review of the project's documents noticed that a written design rule limits
+  a site to one page at its own top address, and that these two sat beside it.
+  It guessed the rule should be widened, and said that no source settled which
+  should give way. On 15 October the owner took a third course while working
+  through the open issues: remove both and keep the rule as it was. The commit
+  gives the owner's reason as both being ideas from the visitor review that did
+  not work well. The record does not say what did not work, or whether anyone
   measured it. The pages went with their tests and the links to them, and the
-  decision was written into the Atlas's notes.
+  decision was written into the Atlas's own notes.
 removedIn: 7c6c349a14f3b186d2cbdc47b247bb0afc8462de
 remains:
   - label: the plates page, as last alive
@@ -43,4 +43,4 @@ remains:
 assessedAt: 2026-11-12
 inscription:
   text: "or open the guide at random →"
-  source: "the Atlas front door's link to the random page, layers/atlas/app/pages/t/atlas/index.vue"
+  source: "the Atlas front page's link to the random page, layers/atlas/app/pages/t/atlas/index.vue"

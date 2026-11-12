@@ -1,7 +1,7 @@
 title: seven scripts nothing called
 stratum: current-midden
 condition: intact
-cause: cut-as-excess
+cause: outlived-its-need
 provenance:
   kind: commit
   hash: f835390028f59c1bc1c2ad88811941555cff26a0
@@ -9,23 +9,23 @@ provenance:
   url: https://github.com/feffef/terrarium/commit/f835390028f59c1bc1c2ad88811941555cff26a0
   continuityCheck: >-
     none of the seven files is on the project's main branch, and none was
-    moved. The only mentions of their names I found are in archived session
-    records. Nothing took over their jobs.
+    moved. The only mentions of their names left on main are in archived
+    session records. No later file took over their jobs.
 catalogNote: >-
   Seven small command-line tools in the project's scripts folder, written
   between 8 July and 25 September 2026, each for one job: a sheet that laid the
-  Atlas's engravings side by side; a harness that reproduced a bug in a patch
-  to a software library the project later dropped; a list of who had commented
-  last on each open issue; a list of pull requests merged in a date range; a
-  check that a quotation matches its source; a one-time repair of session
-  records whose summaries had been cut short at a hash mark; and a query over
-  the session records. On 16 October 2026 an agent searched the whole
-  repository and found no caller for any of them, only the script's own test
-  or a comment. The owner approved a cleanup of the scripts folder in chat that
-  day, and deleting these was its first step. Five of the seven were deleted
-  with a test; the repair script's trial run found nothing to repair. The
-  record does not say whether anyone ran any of them by hand after their last
-  change.
+  Atlas's engravings side by side; a harness that reproduced a page-loading
+  bug, built to test a patch to a software library that the project later
+  removed; a list of who had commented last on each open issue; a list of pull
+  requests merged in a date range; a check that a quotation matches its source;
+  a one-time repair of session records whose summaries had been cut short at a
+  hash mark; and a query over the session records. On 16 October 2026 an agent
+  searched the whole project and found no caller for any of them, only the
+  script's own test, a comment or a documentation entry. The owner approved a
+  cleanup of the scripts folder in chat that day, and deleting these was its
+  first step. Five of the seven came with their own tests, which were deleted
+  too; the repair script's trial run found nothing to repair. The record does
+  not say whether anyone ran any of them by hand after their last change.
 removedIn: f835390028f59c1bc1c2ad88811941555cff26a0
 remains:
   - label: the one-time repair script, as last alive

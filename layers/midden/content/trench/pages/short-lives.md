@@ -1,15 +1,13 @@
 ---
 title: Short Lives
-description: Three things built by or with the agents and taken down by the owner within weeks — two Atlas pages in under two days, and two sets of agent instructions after four days and eleven.
+description: Three finds, built by or with the agents and taken down by the owner within weeks — two Atlas pages in under two days, and two sets of agent instructions after under four days and about ten.
 ---
 
-Each of these was built, put to use and taken down within a few weeks, and each
-time the owner made the call to take it down. The first came from a scheduled
-agent run that no person had prompted; the other two were designed with the
-owner. Their lives were two days, four days and eleven.
-
-The last two are in the Midden on a different footing from most of its finds:
-something was put in their place, which would normally keep them out. What
+Each of these was built, put to use and taken down within a few weeks, each time
+on the owner's decision. The first came from a scheduled agent run that no person
+had prompted; the other two were built on the owner's own decisions. They lasted
+under two days, under four and about ten. The last two sit uneasily in the
+Midden, which normally leaves out things that were replaced in place: what
 stopped in each was the method, not the aim, and the owner asked for them to be
 catalogued.
 
