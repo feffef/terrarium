@@ -44,7 +44,7 @@ These are the owner's goals for the guide. A run builds toward them directly; a 
 
 2. **Check every Walkthrough diagram against its stops.** A diagram is read beside the stops (on wide screens it sits next to them), so what it shows should roughly match the steps; a reader who can't match them gains nothing. It is a simplified picture, never a 1:1 copy: not every box or arrow needs a stop. Try to match, but not too hard, and keep it simple. The stops read better than the diagrams, so expect to redraw the diagram. Keep the same check for any new diagram. *A change goes live* is the model to match: a few boxes in a line, one side branch, no numbers.
 
-3. **Strengthen the weak "Try it in your project" sections.** The owner finds some of them weak. Rewrite the ones that give no concrete step or no way to see it worked, one Subject per run. From Git & GitHub, Nuxt Content, Nuxt & Vue, Installed skills and House rules.
+3. **Strengthen the weak "Try it in your project" sections.** The owner finds some of them weak. Rewrite the ones that give no concrete step or no way to see it worked, one Subject per run, from Git & GitHub, Nuxt Content, Nuxt & Vue, Installed skills and House rules.
 
 ### Wording fresh readers still find hard
 
