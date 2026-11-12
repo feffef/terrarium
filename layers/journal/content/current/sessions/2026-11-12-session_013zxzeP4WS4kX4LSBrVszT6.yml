@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_013zxzeP4WS4kX4LSBrVszT6
 startedAt: 2026-11-12T06:12:57Z
-endedAt: 2026-11-12T06:25:05Z
+endedAt: 2026-11-12T06:28:32Z
 kind: autonomous
 goal: Harvest recent session ideas into Seedlings
 status: completed
@@ -9,6 +9,14 @@ outcome: 162 ideas extracted; 3 Seedlings filed (3129-3131) after a second look 
 summary: "Scheduled harvest run for ideas, started by the Routine. The first pass checked 14 clusters and filed none, because I read the simplify test as banning any visitor-facing addition. The owner then asked for a closer look at the product and content ideas I had dropped. The test only names new flags, files, checks and concepts, so a UI feature that fits an existing component and replaces nothing named still passes. Re-checked against the code, three passed and were filed as Seedlings for the owner to approve: a landing page per Glass Box Subject replacing the redirect (3129), sidebar reading-progress ticks kept in local storage (3130), and one source for the homepage tile notes and page descriptions (3131). Still dropped: the code-block edge fade (already built for excerpts), the session-card token bar (the percent already shows), the History stats script, the result chips and the screenshot-diff test (each adds a check or concept and retires none), and the Lesson-link and guest-pipeline ideas (already built). The filing of the three Seedlings was the owner's direct ask; the first pass was agent-initiated."
 prs: []
 docsRead:
+  - path: layers/journal/content/archived/sessions/2026-10-15-session_013LwpcexAe7t3Qck4CKtj9Y.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-11-09-session_013zxzeS36fzX6FB2vAr7yRR.yml
+    reason: (no reason given)
+  - path: layers/glassbox/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: (no reason given)
   - path: .agents/skills/clear-backlog/SKILL.md
     reason: (no reason given)
   - path: .agents/skills/harvest/body-template.md
@@ -37,15 +45,18 @@ frictions:
   - description: Ran git log -S for conclusions and used GitHub tools without first reading git-conventions.md and github-integration.md, which CLAUDE.md requires and the hooks named.
     solution: Read both docs at the first such call, as CLAUDE.md says.
     severity: minor
-durationSec: 729
+  - description: Filed three Seedlings without reading their source session logs whole (step 4) or the Glass Box glossary; one body misdescribed the 2026-11-09 session until the owner asked and I corrected it.
+    solution: Read each source log and the Tenant glossary before writing the body, as step 4 and the tenant-glossary rule say.
+    severity: moderate
+durationSec: 935
 models:
-  claude-sonnet-5-5: 81
+  claude-sonnet-5-5: 98
 toolCounts:
-  Bash: 32
-  Read: 2
+  Bash: 34
+  Read: 6
   mcp__github__issue_read: 2
   Skill: 2
-  mcp__github__issue_write: 3
+  mcp__github__issue_write: 6
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -72,7 +83,8 @@ ruleUse:
       - rule: .claude/rules/data-shapes.md
         via: hint
       - rule: .claude/rules/tenant-glossary.md
-        via: hint
+        via: native
+        trigger: layers/journal/content/archived/sessions/2026-10-15-session_013LwpcexAe7t3Qck4CKtj9Y.yml
       - rule: .claude/rules/tenant-layers.md
         via: hint
       - rule: .claude/rules/ui-verification.md
@@ -92,19 +104,26 @@ ruleUse:
       - rule: .claude/rules/glassbox-content.md
         via: hint
       - rule: .claude/rules/adr-0005.md
-        via: hint
+        via: native
+        trigger: .agents/skills/visitor-loop/decisions.md
       - rule: .claude/rules/adr-0027.md
-        via: hint
+        via: native
+        trigger: .agents/skills/visitor-loop/decisions.md
       - rule: .claude/rules/guards.md
         via: hint
       - rule: .claude/rules/adr-0021.md
-        via: hint
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
       - rule: .claude/rules/adr-0030.md
         via: hint
       - rule: .claude/rules/glossary-terms.md
-        via: hint
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
       - rule: .claude/rules/adr-0022.md
         via: hint
+      - rule: .claude/rules/adr-0028.md
+        via: native
+        trigger: .agents/skills/visitor-loop/decisions.md
     reported:
       - path: .claude/rules/adr-0003.md
         value: backed
