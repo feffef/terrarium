@@ -9,20 +9,6 @@ role: >-
   PR, except a trial changing an ADR or its summary rule starts only with a
   Trusted user and a human merges it.
 observations:
-  - date: "2026-10-02"
-    note: >-
-      Re-checked (audit-skills behaviour check), 8 usedIn sessions: all
-      clean, verdict reasoning genuinely searched rather than copy-pasted
-      (spot-checked two commits' citations against `prune-trial-window.ts`'s
-      actual output). Independently re-ran `prune-trial-window.ts` and
-      confirmed 3 of 7 open trials are judgeable-but-unjudged as of now
-      (closure-invocation rule, session-log word-cap trial, prune-trial §1
-      verbatim-quote trial — all opened 2026-09-28, floors 2026-10-01). No
-      `/prune-trial` run has fired since 2026-10-01T18:24:44Z. SKILL.md
-      treats the floor as "not a deadline," so this reads as pending the
-      next scheduled fire, consistent with the twice-already-observed
-      narrow-margin pattern (ADR-0017 trial, domain.md trial) rather than a
-      new failure — not escalated. No reverts found. Grade/role unchanged.
   - date: "2026-10-03"
     note: >-
       Re-checked (audit-skills behaviour check), 8 usedIn sessions: no new
@@ -384,3 +370,6 @@ observations:
   - date: "2026-11-11"
     note: >-
       Behaviour check, 7 runs delivered. Verified minor: session_013zxzePvPobQ2Cfg3UyUHSt left an unverified tracker claim in the ledger (#2472 and #2748 closed); the search brief names no tracker command. ADR-0027 read after the first edit in 3 of 7 logs. Grade unchanged.
+  - date: "2026-11-12"
+    note: >-
+      Behaviour check, 7 runs delivered, deltas match git. Repeat: session_013zxzePvPobQ2Cfg3UyUHSt's unverified #2472 claim still sits in the ledger; ADR-0027 read after the first edit in 3 of 7 logs (3099 shows none). The 2939 close-session trial judged hold, rates re-run 0/57 after. Grade unchanged.

@@ -158,3 +158,6 @@ observations:
   - date: "2026-11-11"
     note: >-
       Behaviour check, 8 PRs merged. Partial silent failure: session_013zxzePSj9Rpf6qCGowU7gi stamped checked on hooks/40 and index pages its own log says were not fully re-verified. Not issued (no damage, single). Grade unchanged.
+  - date: "2026-11-12"
+    note: >-
+      Behaviour check, 8 PRs merged. Repeat of 11-11: session_013zxzePSj9Rpf6qCGowU7gi (PR #3030) stamped hooks/40 and index although its summary says they were not fully re-verified; update.yml holds only a date, so no partial check can be recorded (unverified cause). session_013zxzeS85pNBsS4oQSVQntp (PR #2922) skipped tool-doc fetches and was owner-merged; later runs self-merged. code-review replaced by own read in 3 large re-pins (#2472 family). Not issued (no damage). Grade unchanged.

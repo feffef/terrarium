@@ -9,18 +9,6 @@ role: >-
   impl agents build the rest, and merges those PRs itself, escalating only
   high-risk ones. Use when frictions pile up.
 observations:
-  - date: "2026-10-02"
-    note: >-
-      Re-checked (audit-skills behaviour check), 7 usedIn sessions, all 18
-      merged PRs (#1330-1333/#1353-1354/#1423-1425/#1456-1460/#1483-1485/
-      #1500) and 11 filed issues independently re-verified against live
-      GitHub state. Every PR carries a posted pre-merge audit-trace verdict
-      (exact timestamps sampled), none touches a guard-roster file (PR
-      #1424's `.githooks/commit-msg` fix confirmed not on
-      docs/agents/guards.md's roster), guard-adjacent candidates (#1422,
-      #1329, #1455) correctly filed-only and later closed by separate,
-      human-attended PRs — never dispatched by this Skill itself. No
-      reverts found. Grade/role unchanged.
   - date: "2026-10-03"
     note: >-
       Re-checked (audit-skills behaviour check), 7 usedIn sessions: 0 silent
@@ -344,3 +332,6 @@ observations:
   - date: "2026-11-08"
     note: >-
       Behaviour check, 7 runs delivered. Regression issues #2852 and #2876 were filed for the same accepted-cost entry and both closed not planned by the owner; section 2 has no exclusion for owner-declined entries (idea, not acted on). Grade unchanged.
+  - date: "2026-11-12"
+    note: >-
+      Behaviour check, 9 runs delivered. Verified: session_013zxzeNa1RNcdysLXBJAD5N filed #3047 'recurs after #2766' with occurrences dated before fix #3032 (merged 11-10, closed #3025); the ledger entry's fixes lacked #3032. Owner closed #3047 not planned. Section 2 still has no exclusion for owner-declined entries (also #2852, #2876, #2997). Not issued (single, no damage). Grade unchanged.

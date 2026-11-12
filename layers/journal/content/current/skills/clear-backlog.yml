@@ -224,3 +224,6 @@ observations:
   - date: "2026-11-11"
     note: >-
       Behaviour check, 8 runs, 31 PRs merged. Repeat of the 11-06 and 11-07 stranded wf_* worktrees (session_013zxzeSiQ4jom3vFu8GreLw, session_013zxzeQwU4eYGrEvV8x42ts, session_013zxzePVGCU1ARYitEsVKoy): filed #3043. Unverified: grilling Skill skipped in session_013zxzeSy38XR1wPjCGFUExY. Dispatch-read guard blocked the first Workflow call in 7 of 8 runs. Grade unchanged.
+  - date: "2026-11-12"
+    note: >-
+      Behaviour check, 10 runs, 38 PRs merged. Repeat, now filed as #3043: stranded wf_* worktrees at close (session_013zxzeRVjHExXhciv5BwiTB claims check:worktrees passes yet logs two; session_013zxzeTEBhUnvwNNBASiFDg, session_013zxzeSiQ4jom3vFu8GreLw, session_013zxzeQwU4eYGrEvV8x42ts the same). Review cap hit on cosmetic findings in 4 sessions (#3110, redesign PR #3119). Close-session re-invocation after merge skipped in session_013zxzeNhTeF9B47tZ5Egyhx and session_013zxzeS6uNt5yvnz5LyUCCe (#2654 family; Stop hook caught). Picks relayed unverified in session_013zxzeTEBhUnvwNNBASiFDg. Grade unchanged.

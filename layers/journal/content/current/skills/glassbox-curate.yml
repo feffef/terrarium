@@ -24,3 +24,6 @@ observations:
   - date: "2026-11-11"
     note: >-
       Behaviour check, 10 runs, 11 PRs merged. Verified: cost_usd still unreported in Routine runs after the #2987 fix (session_013zxzeRSMtPAREKXCce9GT6, session_013zxzeNvpKDRhFYp216ti6n); commented on #2987, set needs-triage. Unverified: get_session absent from Routine sessions. Spec-review pages left unread in session_013zxzeNvpKDRhFYp216ti6n (disclosed). Grade unchanged.
+  - date: "2026-11-12"
+    note: >-
+      Behaviour check, 10 runs. Verified: cost_usd unreported in scheduled runs since 11-09 (session_013zxzeQ2wC57fFKCB2ZNBZb, session_013zxzeNvpKDRhFYp216ti6n, session_013zxzeRSMtPAREKXCce9GT6); human-started runs read it fine, so get_session is likely absent from Routine sessions (tool-availability cause, unverified). Already on #2987 (closed), no new fact. session_013zxzeSgDqRuwZif7Rgt2MW skipped QUALITY.md for four passes; one Hooks reader never reported. Owner-directed multi-focus runs conflict with 'one focus per run'. Grade unchanged.
