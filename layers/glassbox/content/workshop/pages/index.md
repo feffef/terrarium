@@ -39,7 +39,7 @@ These are the owner's goals for the guide. A run builds toward them directly; a 
 
 ### Good next focuses
 
-1. **Re-read the Subjects not yet de-duplicated.** Git & GitHub, Installed skills, Deploy, the Walkthroughs and Claude Code have had this pass (2026-11-11). Last read on 2026-11-10 and not since: Agents, half of Hooks (*Hook-added context* and *Session transcripts*), Nuxt Content, Web standards, Verification, Nuxt & Vue. In House rules only *Protected paths* and *Ubiquitous language* changed; the other seven pages were read and left alone.
+1. **Re-read the Subjects not yet de-duplicated.** Git & GitHub, Installed skills, Deploy, the Walkthroughs and Claude Code have had this pass (2026-11-11), and Agents on 2026-11-12. Last read on 2026-11-10 and not since: half of Hooks (*Hook-added context* and *Session transcripts*), Nuxt Content, Web standards, Verification, Nuxt & Vue. In House rules only *Protected paths* and *Ubiquitous language* changed; the other seven pages were read and left alone.
 2. **Decide how pages say "a person merges" a Human-only file.** Since the owner waiver (ADR-0004), an agent may merge one when the owner says so in the session. *Protected paths*, *Human-only* and the overview say so. These still state it flatly, each true as the default: *Path-specific rules*, *Decision records*, *Merge gate*, *Claude Code hooks* (twice), *Composite actions*, *Author trust*, *Cross-tenant reads* and *Asking an agent for a change*. Ask the owner whether to name the waiver there or keep one home.
 3. **Check the docs again for the pages whose claims the docs left silent** (the list under *Doc findings not acted on*), by reading the tool's source where the docs have no page.
 
@@ -50,23 +50,21 @@ These are the owner's goals for the guide. A run builds toward them directly; a 
 **Left over from the 2026-11-10 Claude Code pass.** A fresh reader still found these; none is false.
 - *MCP servers* says one hint matches the whole server while the guards list tools, and gives no reason for the difference (the sources give none; ask the owner or leave it as a plain fact).
 - *CLAUDE.md* uses *hint* and *guard* before defining them; the hooks Subject defines both.
-- *Path-specific rules* and *CLAUDE.md* both say a rule can't order a step, and the *Short ADR summaries* and "Every ADR also has a summary rule" passages overlap a little.
-- The Claude Code permission-modes docs say a mod, not only a `PreToolUse` hook, can approve a `dontAsk` call; the page names the hook only.
+
+**Left over from the 2026-11-12 Agents pass.** None is false.
+- *Subagents*: the spawn-depth paragraph is long; the commit and own-folder points appear three times. *Workflow scripts*: the seedling sentence is a nested list, and "can't ask" sits beside the explore script turning an answer into a question. *Cloud sessions*: two bullets say nearly the same thing. *Scheduled tasks*: `/loop` driving a `disable-model-invocation` Skill is unexplained.
 
 **Left over from the 2026-11-10 Agents and Hooks passes.** Fresh readers still found these; none is false.
 - *Claude Code hooks*: the Human-only wiring is in both a Why and a What to watch bullet; the page uses *guard* and *hint* before saying what they are; "every matching call starts the command" is also on *Hook-added context*; `agent_id` is also on *Session transcripts*.
-- *Hook-added context*: the stale-push hint adds its fix every time while the page says a hint says things once; the page says so itself.
 - *Subagents*: the background guard is named in both In Terrarium and Why; the page can't say what depth 1 means (no docs text in the repo).
-- *Cloud sessions*: the lede says the other cases get "less", the list says "nothing".
-- *Scheduled tasks*: the cadence rule is still stated in three places.
 
 **Topics the Scout found with no page (2026-11-10).** A Nuxt build peaks near 2.1 GB, and the live host has a 2 GB swapfile added after builds were killed (`deploy/README.md`); a sentence for *Continuous deployment* (`deploy/10.continuous-deployment`), not a page. Also: each session rates every rule it was shown as *steered* or *backed*, kept in the log as `ruleUse` (`shared/schemas/session.ts`, `scripts/session/rule-use-report.ts` totals it). Nearest pages: *Pruning instructions* and *Session logs*. Also: `docs/agents/verifying-ui-changes.md` now says Linux screenshots can't confirm fixed-width text fit; nearest page *Headless browser checks* (`verification/80.headless-browser-checks`).
 
 **Left over from the 2026-11-10 Nuxt Content, Web standards, Verification and Nuxt & Vue passes.** Fresh readers found these; none is false.
 - Several pages use *Space*, *Document*, *Catalog* or *Tenant* before they are glossed, or gloss one twice (*Vue components*, *Hydration*, *File routing*, *queryCollection*). A short rule for where each is glossed first would settle it.
 - *Mermaid pre-rendering*: the comment above `DIAGRAM_TOKEN_FALLBACKS` in `app/utils/mermaid.ts` still says the fallbacks are Mermaid's base-theme defaults, which they are not (outside this run's remit; a code comment).
-- *Content validation*: the lede says the build passes with a misspelt field, yet a `page` Collection with no schema is skipped by the check.
-- *Testing* never says what the `L2` in `setupL2()` means beyond `tests/README.md`; *Headless browser checks* gives no reason for `--no-sandbox` (the sources give none).
+
+- *Content validation*: the lede says a misspelt field passes the build, yet a schema-less `page` Collection is skipped by the check.
 
 **Left over from the 2026-11-11 Git & GitHub pass.** A fresh reader still found these; none is false.
 - *Pull requests*: one sentence runs "from the review and the local Gate run before the PR opens to the merge" and reads hard; *Trusted author* is used before it is glossed.
@@ -90,6 +88,10 @@ These are the owner's goals for the guide. A run builds toward them directly; a 
 - The Corepack link on *pnpm and the lockfile* (`nodejs.org/api/corepack.html`) now redirects to GitHub; Node 22's docs page `nodejs.org/docs/latest-v22.x/api/corepack.html` is a candidate, and Corepack stops shipping with Node 25.
 - The page 40 excerpt of `.agents/skills/auto-triage/SKILL.md` (*Wayfinder*) shifts to `lines="75-79"` once the pin moves past 2026-11-11.
 
+**Topics the Scout found with no page (2026-11-12).** The `clear-backlog` loop changed: the builder triages review findings, resumes replace fresh fix rounds, the final gate is skipped on a clean first round, and a thin explore result is re-run (`.claude/workflows/clear-backlog-build.js`). Nearest page: *Workflow scripts*. Also a retro step (§5 of `clear-backlog`); nearest *Self-improvement loop*. Unverified: the Scout read only commit lists.
+
+**The `harvest` Routine.** `glassbox-update` re-added it to *Scheduled tasks* because the Skill's text says a Routine runs it; the owner said on 2026-11-11 none does yet, so it was removed again. Add it once the owner says one exists.
+
 **Topics the Scout found with no page (2026-11-11).** The owner said on 2026-11-11 that no Routine runs `harvest` yet but one will. Once it does, add it to *Scheduled tasks* (`agents/40.scheduled-tasks`, which lists every Routine). The build line in the page footer (`shared/build-info.ts`, shows the commit and time of the build on the home page and the Journal landing): a sentence for *Continuous deployment*. `scripts/ui/screenshot.ts` scrolls `--wait-for` captures to an `#anchor`: a sentence for *Headless browser checks* (`verification/80.headless-browser-checks`).
 
 **Doc findings not acted on.**
@@ -99,8 +101,6 @@ These are the owner's goals for the guide. A run builds toward them directly; a 
 
 **Doc checks of 2026-11-09, claims the docs were silent on.** Each may be true; a later run should read the tool's source or run it.
 - *Nitro server engine* (`nuxt-vue/60.nitro`): the dev cache path `.nuxt/cache/nitro/routes`, `cache: false`, a payload for a plain `cache` rule, and "Nuxt 4 runs Nitro v2".
-- *Cloud sessions* (`agents/30.cloud-sessions`): that the proxy refuses `.github/workflows/` pushes and repository-settings writes.
-- *Scheduled tasks* (`agents/40.scheduled-tasks`): that a Routine's prompt arrives as the first turn, and that a `disable-model-invocation` Skill runs from it.
 - *Session transcripts* (`hooks/40.session-transcripts`): the record types and fields, the 2 KB preview, and a subagent's `transcript_path` inside tool hooks.
 - *Author trust* (`git-github/20.author-trust`): what each `author_association` value means, and that `pull_request_target` ignores the approval setting. *Dependabot grouping*: that `/` doesn't reach a nested action.
 - *Linting* (`verification/50.linting`): the sentence on the rules `@nuxt/eslint` turns on and the absence of formatting rules.

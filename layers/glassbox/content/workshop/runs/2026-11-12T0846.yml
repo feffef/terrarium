@@ -1,5 +1,13 @@
 session: session_013zxzeNk79ER2isup9ZscRm
 mode: autonomous
-focus: "Agents & automation Subject (its four pages), the one Subject on the memory page's de-duplication list that had open leftovers named for it, plus one false claim: the Scheduled tasks page lists harvest as a Routine, which the owner said on 2026-11-11 is not yet true. Chosen because no open PR touches the guide, the Scout found only clear-backlog loop changes (noted as open ideas), and the memory page lists these pages' leftovers (lede 'less' against list 'nothing', cadence rule stated in three places)."
-changes: []
-pagesRead: []
+focus: "Agents & automation Subject (its four pages) plus one false claim: Scheduled tasks listed harvest as a Routine, which the owner said on 2026-11-11 is not yet true (glassbox-update had re-added it from the Skill's own text). Chosen because no open PR touches the guide, the Scout found only clear-backlog loop changes (kept as open ideas), and the memory page named these pages' leftovers. Two fresh readers read the four pages; only wording findings were fixed, the rest went to the memory page."
+changes:
+  - agents/40.scheduled-tasks | The harvest bullet is removed; the lede says three timers; the Skill's cadence rule is one sentence | the bullet contradicted the owner's word that no Routine runs harvest yet, and the lede's count was vague (owner, 2026-11-11 run entry; concept section lists three). Wording and one removal, so revision and publishedAt are kept
+  - agents/30.cloud-sessions | The lede says a several-repository session or a project thread gets none of what Terrarium sets in the settings file | the lede said "less" while the list said nothing (the page's own bullets; .claude/settings.json sets neither enabledPlugins nor extraKnownMarketplaces). Wording only
+  - agents/10.subagents | The spawn-depth paragraph says Claude Code's default would allow nesting | a reader saw it clash with the earlier three-layer default (docs/research/subagent-spawn-depth.md:17-21). Wording only
+  - agents/20.workflow-scripts | The permission-rule sentence says each script is approved by name, the rule The concept shows | a dangling back-reference (.claude/settings.json:9-10). Wording only
+pagesRead:
+  - agents/10.subagents
+  - agents/20.workflow-scripts
+  - agents/30.cloud-sessions
+  - agents/40.scheduled-tasks
