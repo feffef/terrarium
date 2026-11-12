@@ -43,7 +43,7 @@ These are the owner's goals for the guide. A run builds toward them directly; a 
 
 2. **Check every Walkthrough diagram against its stops.** A diagram is read beside the stops (on wide screens it sits next to them), so what it shows should roughly match the steps; a reader who can't match them gains nothing. It is a simplified picture, never a 1:1 copy: not every box or arrow needs a stop. Try to match, but not too hard, and keep it simple. The stops read better than the diagrams, so expect to redraw the diagram. Keep the same check for any new diagram. *A change goes live* is the model to match: a few boxes in a line, one side branch, no numbers.
 
-3. **Strengthen the weak "Try it in your project" sections.** The owner finds some of them weak. Read each Lesson's section as a reader would and rewrite the ones that give no concrete step to take or no way to see that it worked, one Subject per run. One Subject per run, from Deploy, Git & GitHub, Nuxt Content, Nuxt & Vue, Installed skills, House rules, Verification and Web standards.
+3. **Strengthen the weak "Try it in your project" sections.** The owner finds some of them weak. Read each Lesson's section as a reader would and rewrite the ones that give no concrete step to take or no way to see that it worked, one Subject per run. One Subject per run, from Deploy, Git & GitHub, Nuxt Content, Nuxt & Vue, Installed skills, House rules and Web standards.
 
 ### Wording fresh readers still find hard
 
@@ -65,7 +65,7 @@ None of these is false.
 
 - The page 40 excerpt of `.agents/skills/auto-triage/SKILL.md` (*Wayfinder*) shifts to `lines="75-79"` once the pin moves past 2026-11-11.
 
-- **Verification.** *Merge gate*: the paragraph on `merge-pr.ts` still holds several facts, and `verify:skills-lock` and `verify:mermaid` are listed without a gloss. *Type checking*: the Where next rows use typed link text where the glossary says bare. *Testing*: the L0 and L1 levels are never named. *Zod refinements*: no source says why the `pages` rule ties the `page` type to the name `pages`. *Headless browser checks*: no repo source says who sets up the cloud proxy, and the `--no-sandbox` and `--disable-gpu` flags have no stated reason.
+- **Verification.** *Zod refinements*: no source says why the `pages` rule ties the `page` type to the name `pages`. *Headless browser checks*: no repo source says who sets up the cloud proxy; the `--no-sandbox` and `--disable-gpu` flags have only the code comment "the flags every launch needs in this sandbox".
 
 ### Topics with no page yet
 

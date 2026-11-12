@@ -1,0 +1,23 @@
+session: session_013zxzeQAc52ZMCkhtp4ihGY
+mode: autonomous
+focus: "Verification Subject (its eight pages): strengthen the Try-it sections that give no concrete step or no way to see it worked, and clear the fresh-reader wording problems the memory page lists for them, as the owner's direction on the memory page asks (one Subject per run). Chosen because the owner asked in-session for repeated autonomous runs, no open PR touches these pages, and Hooks, Claude Code and Agents & automation are done, so Verification is the next Subject with open leads. Deviations for the budget: the guide index was read once; one pair of fresh readers read the pages before the fix and none after. The Scout found no new topic. The claim checker found every changed sentence supported, four unverifiable without a live run (the @nuxt/eslint flat-config creation, the npm install line, the CI red-then-green walkthrough and the tsc file listing). The code review's Spec reviewer named Protected paths (it teaches the facts cut from Merge gate's merge-pr.ts paragraph), which was read in full and is in pagesRead, and Installed skills, Mermaid pre-rendering, Pull requests and Human-in-the-loop agents, whose gate lines were grepped and agree with the new floor sentence; those were not read in full, so they are not in pagesRead. The Standards reviewer's point that new Try-it steps might count as teaching was left: the steps are practice, so revision and publishedAt are kept, and Testing's teaches field now names the levels and the list command."
+changes:
+  - verification/10.gate | Try-it gives a package.json gate script, the CI step that runs it, and a deliberate type error that turns the check red then green; the floor sentence says what verify:skills-lock and verify:mermaid check; the merge-pr.ts paragraph is one sentence that points to Protected paths for the list and the waiver | the old Try-it named no command or visible result and readers met two unglossed steps (scripts/gate/gate.ts:17; scripts/gate/validate-skills-lock.ts; scripts/gate/validate-mermaid-svgs.ts:1-9; scripts/github/merge-pr.ts). Wording and Try-it only, so revision and publishedAt are kept
+  - verification/20.type-checking | Where next rows are bare; Try-it says what a good and a bad listing looks like and how to confirm a fix | the glossary says a guide row is bare, and the old Try-it gave no pass signal (tsc --listFilesOnly run). Wording and Try-it only
+  - verification/30.content-validation | Try-it says to make the schema strict, shows the script's core lines and the exit codes, and replaces the vague date step with a same-day check; Where next rows are bare | the old second step was one sentence with no code (zod 3.25.76 run; @nuxt/content module.mjs date formatting). Wording and Try-it only
+  - verification/40.testing | the test levels are named where L2 first appears; Try-it gives a vitest include snippet, vitest list --filesOnly and a grep that proves a removed folder is not named | readers met L2 before any level was named and had no check (tests/README.md:9-11). Wording and Try-it only
+  - verification/50.linting | Try-it names vue/no-v-html and says a flat config is needed; Where next rows are bare | the old step named no rule (eslint --print-config run). Wording and Try-it only
+  - verification/60.zod-refinements | Try-it says to install Zod 3, gives a bad input and the two lines it prints; the manifest error block says the collection has no schema | readers had to invent an input and the schema path was unexplained (snippet run with zod 3.25.76; shared/manifest.ts:97-131). Wording and Try-it only
+  - verification/70.schema-evolution | Where next rows are bare | the glossary says so. Wording only
+  - verification/80.headless-browser-checks | --wait-for is said to wait for both, in order; the launch flags are quoted from their comment; the clumsy trade-off sentence is plain; Where next rows are bare | readers read two waits as separate paths (scripts/ui/screenshot.ts:153-154; scripts/lib/chromium.ts:96-98). Wording only
+  - workshop/pages/index | the Verification leftovers cut to what stays open (the Zod pages-rule reason and the cloud proxy; the flags have only a code comment); Verification dropped from the Try-it list of Subjects still to do | the memory page keeps what a later run inherits
+pagesRead:
+  - terrarium-practice/60.protected-paths
+  - verification/10.gate
+  - verification/20.type-checking
+  - verification/30.content-validation
+  - verification/40.testing
+  - verification/50.linting
+  - verification/60.zod-refinements
+  - verification/70.schema-evolution
+  - verification/80.headless-browser-checks
