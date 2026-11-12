@@ -1,0 +1,10 @@
+session: session_013zxzePqQeuW4GkMnxNpPp3
+mode: autonomous
+focus: "Claude Code Subject (its five pages): clear the fresh-reader wording problems the memory page lists for them (gate, ADR and journal used without a gloss on the skills and permissions pages; the MCP servers read-first-hint matcher) and strengthen the Try-it sections that give no way to see the step worked, as the owner's direction on the memory page asks (one Subject per run). Chosen because the owner asked in-session for repeated autonomous runs, no open PR touches these pages, and they hold the next most open leads. A third run in the same session. Deviations for the budget: the guide index was not re-read and the Scout was not run again (the first run's Scout covered the window; no Glass Box change since except the pages the earlier runs edited), and one fresh reader reads the pages before and none after."
+changes: []
+pagesRead:
+  - claude-code/10.claude-md
+  - claude-code/20.path-scoped-rules
+  - claude-code/30.skills
+  - claude-code/40.permissions
+  - claude-code/50.mcp-servers
