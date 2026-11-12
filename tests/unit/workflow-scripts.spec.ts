@@ -87,6 +87,23 @@ describe('clear-backlog-build (#3110)', () => {
     expect(calls[0]!.prompt).toContain('`FIXED <sha before> <sha after> recheck <axes>`')
   })
 
+  it('runs the builder on Sonnet and every reviewer, in any round, on the default model', async () => {
+    const models: Record<string, unknown> = {}
+    const globals: Record<string, unknown> = {
+      agent: async (_p: string, o: { label: string; model?: string }) => {
+        models[o.label] = o.model
+        return o.label.startsWith('build') ? built : review('nit')
+      },
+      pipeline: (items: unknown[], ...stages: ((x: unknown, i: unknown) => unknown)[]) =>
+        Promise.all(items.map(async (i) => { let x = i; for (const s of stages) x = await s(x, i); return x })),
+      parallel: (fns: (() => unknown)[]) => Promise.all(fns.map((f) => f())),
+      log: () => {},
+      args: { session: 'session_x', dir: '/d', branches: [{ name: 'a', issues: [1], brief: 'b' }, { name: 'c', issues: [2], brief: 'b', review: true, round: 3, worktree: '/wt' }] },
+    }
+    await new AsyncFunction(...GLOBALS, source)(...GLOBALS.map((g) => globals[g]))
+    expect(models).toEqual({ 'build a': 'sonnet', 'Standards a r1': undefined, 'Spec a r1': undefined, 'Standards c r3': undefined, 'Spec c r3': undefined })
+  })
+
   it('in review-only mode skips the build and reviews the given worktree as the given round', async () => {
     const { r, calls } = await run({ review: true, round: 2, worktree: '/wt/b' })
     expect(calls.map((c) => c.label)).toEqual(['Standards fix/1-x r2', 'Spec fix/1-x r2'])

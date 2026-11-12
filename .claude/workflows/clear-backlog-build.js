@@ -56,7 +56,7 @@ const REVIEW = {
   required: ['findings', 'summary'],
 }
 
-// Sonnet everywhere except the round-1 reviewers, whose findings steer every later round.
+// The builder runs on Sonnet; every reviewer keeps the default model, since a later fresh round runs only to catch what round 1 missed (#3110).
 const SONNET = { model: 'sonnet' }
 const AXES = ['Standards', 'Spec']
 
@@ -128,7 +128,7 @@ async function reviewBranch(built, b) {
   if (!built.worktree) return { ...out, status: 'failed', reason: 'no worktree with commits to review' }
   // Labels are how the orchestrator finds each agent's id in the run journal to resume it (run-summary.ts --run).
   const reviews = await parallel(AXES.map(axis => () =>
-    agent(reviewPrompt(b, axis, out.worktree, round), { label: `${axis} ${b.name} r${round}`, phase: 'Review', schema: REVIEW, ...(round > 1 ? SONNET : {}) })))
+    agent(reviewPrompt(b, axis, out.worktree, round), { label: `${axis} ${b.name} r${round}`, phase: 'Review', schema: REVIEW })))
   if (reviews.some(r => !r)) return { ...out, status: 'failed', reason: `round ${round}: a reviewer returned nothing` }
   return { ...out, status: 'reviewed', reviews: Object.fromEntries(AXES.map((axis, i) => [axis, reviews[i]])) }
 }
