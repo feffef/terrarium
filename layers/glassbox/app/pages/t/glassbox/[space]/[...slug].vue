@@ -9,7 +9,10 @@ const base = `/t/glassbox/${space}`
 const { data, status, error } = await useAsyncData(route.path, async () => {
   const [page, pages, walkthroughs] = await Promise.all([
     queryCollection(pagesKey).path(path).first(),
-    queryCollection(pagesKey).order('stem', 'ASC').select('path', 'title').all(),
+    // A Subject page also lists each Lesson's description; no other page carries it.
+    glassboxSubjectAt(path)
+      ? queryCollection(pagesKey).order('stem', 'ASC').select('path', 'title', 'description').all()
+      : queryCollection(pagesKey).order('stem', 'ASC').select('path', 'title').all(),
     // The prefix glassboxWalkthroughOf tests, as SQL.
     glassboxSubjectOf(path)
       ? queryCollection(pagesKey).where('path', 'LIKE', '/walkthroughs/%').select('path', 'title', 'body').all()
@@ -31,10 +34,9 @@ const { data, status, error } = await useAsyncData(route.path, async () => {
 })
 
 const page = computed(() => data.value?.page ?? null)
-// A Subject has no page of its own: send its bare folder URL to its first Lesson.
-const subjectStart = data.value?.subjects.find((subject) => path === `/${subject.slug}`)?.lessons[0]
-if (!page.value && subjectStart) await navigateTo(`${base}${subjectStart.path}`, { replace: true })
-else if (!page.value && !error.value) setResponseStatus(404)
+// A Subject has no content file: its page lists its Lessons.
+const subject = computed(() => data.value?.subjects.find((s) => path === `/${s.slug}`))
+if (!page.value && !subject.value && !error.value) setResponseStatus(404)
 provide(glassboxRevisionKey, computed(() => page.value ?? undefined))
 // On main, not at `revision`: a page is pinned before it is written, so its own file there is older or missing.
 const source = computed(() => page.value ? glassboxFileUrl(`layers/glassbox/content/${space}/pages/${page.value.stem}.md`, 'main') : undefined)
@@ -53,7 +55,7 @@ onMounted(() => {
   if (page.value && glassboxSubjectOf(path)) reading.mark(path)
 })
 
-useHead(() => ({ title: `${page.value?.title ?? 'Not found'} · glassbox` }))
+useHead(() => ({ title: `${page.value?.title ?? subject.value?.name ?? 'Not found'} · glassbox` }))
 useSeoMeta({ description: () => page.value?.description })
 </script>
 
@@ -87,6 +89,8 @@ useSeoMeta({ description: () => page.value?.description })
       </header>
 
       <GlassboxArticle v-if="page" class="gb-column" :page="page" :base="base" :surround="data?.surround ?? null" :through="data?.through ?? []" :titles="data?.titles ?? {}" :dated="!live" :source="source" />
+
+      <GlassboxSubject v-else-if="subject" class="gb-column" :name="subject.name" :lessons="subject.lessons" :base="base" />
 
       <div v-else class="gb-column">
         <h1>Not found</h1>

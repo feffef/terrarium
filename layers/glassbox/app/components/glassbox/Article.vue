@@ -45,7 +45,7 @@ const parts = computed(() => {
 
 <template>
   <article class="article">
-    <p v-if="subject" class="chips"><NuxtLink class="chip" :to="`${base}#${subject.slug}`">{{ subject.name }}</NuxtLink><span>Lesson</span></p>
+    <p v-if="subject" class="chips"><NuxtLink class="chip" :to="`${base}/${subject.slug}`">{{ subject.name }}</NuxtLink><span>Lesson</span></p>
     <p v-else-if="walkthrough" class="chips"><span class="chip">Walkthrough</span></p>
     <h1 :class="{ lesson: subject || walkthrough }">{{ page.title }}</h1>
     <ContentRenderer class="gb-prose" :value="parts.intro" />
