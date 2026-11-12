@@ -136,12 +136,13 @@ export function glassboxNextList(node: MinimarkNode, base: string, titles: Glass
     const link = rowLink(item)
     const href = String(link?.[1].href ?? '')
     const isBare = link?.length === 2
-    const title = isBare ? titles[spacePath(href, base)] : undefined
+    const target = spacePath(href, base)
+    const title = isBare ? titles[target] : undefined
     const filled = title ? [...link!, title] : link
-    const description = descriptions[spacePath(href, base)]
+    const description = descriptions[target]
     // The text sits in one cell with the title, so the row stays label | text | arrow.
     const text = description ? ['div', {}, filled, ['small', {}, description]] : filled
-    const label = glassboxSubjectOf(spacePath(href, base))?.name ?? glassboxLinkLabel(href, base)
+    const label = glassboxSubjectOf(target)?.name ?? glassboxLinkLabel(href, base)
     return [item[0], item[1], ['span', {}, label], ...item.slice(2).map((child) => child === link ? text : child)] as MinimarkNode
   })]
 }
