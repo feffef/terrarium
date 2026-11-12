@@ -8,7 +8,9 @@ disable-model-invocation: true
 
 **Goals.** Make the guide easier to learn from, page by page and as a whole.
 Second, fill gaps: a technology or process Terrarium relies on that no Lesson
-teaches. You lead and choose the steps; improvise.
+teaches. Third, every run leaves the memory page shorter: it takes concrete
+items from it, solves each completely and deletes it. You lead and choose the
+steps; improvise.
 
 **Shape.** One focus per run (a Subject, a structural question or a gap), about
 $20. Read your spend, `external_metadata.usage.cost_usd` from `get_session`
@@ -93,9 +95,11 @@ keeps them so).
   full every page outside the Subject that a change would edit, link or
   overlap. Done when every page of the Subject is read in full, plus every
   outside page a change would edit, link or overlap.
-- **Choose.** Pick this run's focus from what you read. Fix a reader finding
-  that takes one clause within the budget; park only what Check allows, so
-  later runs inherit the reading. The run entry says why you chose the focus.
+- **Choose.** Pick this run's focus from what you read: concrete memory items
+  you can solve completely within the budget, each fixed and then deleted from
+  the memory page. Fix every reader finding the run can fix, however small;
+  never park one as a note. Park only what Check allows. The run entry says
+  why you chose the focus.
 - **Owner's questions.** Build the option you'd recommend. A question only the
   owner can answer (where a topic belongs, whether a practice is recorded)
   goes in the PR body, with each move or retitle and its effect on URLs and
@@ -144,11 +148,12 @@ keeps them so).
   `checks/update.yml` and keep its date.
 - **Land.** Merge `origin/main` and keep the newer pin. Two runs on one day can
   both rewrite the memory page: the later one keeps both runs' leads. Rewrite
-  the memory page, complete the run entry, read `cost_usd` again for the PR
+  the memory page so it is shorter than you found it (count its words before
+  and after), complete the run entry, read `cost_usd` again for the PR
   body, and open one PR
   (`docs/agents/pr-workflow.md`), self-merged unless the Remit says it waits.
   Wait for the Scout now and add each of its topics not already there to the
-  memory page's open ideas, as a possible future task. Give `code-review`
+  memory page's open ideas, one line each. Give `code-review`
   the Lesson contract, writing-pages.md, owner-decisions.md and the glassbox-content
   rule as its standards, without the code-smell baseline, and say the page
   checks already ran. Its Spec reviewer also judges which pages the change
@@ -190,19 +195,22 @@ All in `layers/glassbox/content/workshop/`:
   owner's direction and the open ideas. Write it in simple, plain words, so a
   person reads it easily and later runs don't copy needlessly complex wording.
   State a count only after counting its items in their source.
-  Each run rewrites it and **cuts** whatever its work addressed and whatever it
-  judges no longer needed, so the page stays short. Delete a finished item;
-  never mark it done. A fact the next run still needs stays as a plain current
-  fact under a heading that fits. What a run did goes in its run entry, not
-  here. The word cap in
-  `layers/glassbox/tests/unit/workshop.spec.ts` is a ceiling, not a target. When
-  it is reached, never shorten what is there: squeezed wording makes passages
-  hard to read. Cut whole items instead, the ones not worth pursuing. Judge by
-  what you know of the rest of the guide and by git history (`git log -S` or
-  `git blame` on the item): one that has stood a long time and that no run ever
-  took up is a candidate; items parked in the last few runs go last.
+  Each run must leave it shorter. It solves concrete items completely and
+  deletes them; it never marks one done and never adds a long leftover note for
+  something it could have solved. It adds only what a later run cannot do
+  itself: an owner question, a gap left uncovered on purpose, or a decision a
+  later run would otherwise redo or reverse. A fact the next run still needs
+  stays as a plain current fact under a heading that fits. What a run did goes in
+  its run entry, not here. The word cap in
+  `layers/glassbox/tests/unit/workshop.spec.ts` is a ceiling, not a target. If
+  the run still hits it, never shorten what is there: squeezed wording makes
+  passages hard to read. Cut whole items instead, the ones not worth pursuing,
+  judged by what you know of the rest of the guide and by git history (`git log
+  -S` or `git blame` on the item): one that has stood a long time and that no
+  run ever took up goes first; items parked in the last few runs go last.
   **Soft decisions** (its heading) are decisions you, a reviewer or a claim
-  checker made: write each there as it is made, with what decided it. They are
+  checker made that a later run would otherwise redo or reverse: write each there
+  as it is made, with what decided it, and skip the rest. They are
   not rules. Overrule or delete one when you have evidence against it or when
   changed content makes it obsolete. Never put one in `owner-decisions.md`.
 - `../glassbox-lesson/owner-decisions.md` holds the owner's hard rules. Add a
