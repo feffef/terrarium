@@ -22,7 +22,8 @@ const { data, status, error } = await useAsyncData(route.path, async () => {
   const terms = termIds.length
     ? await queryCollection(collections.terms).where('stem', 'IN', termIds).select('stem', 'definition', 'source', 'lesson').all()
     : []
-  // Only a Subject page's list reads descriptions off these; a Where next row reads them from `descriptions`.
+  // A Subject page's list reads descriptions off `pages`; a Where next row reads its target's from `descriptions`, so only those travel.
+  const nextTargets = page ? glassboxNextTargets(page.body.value, base) : []
   const links = glassboxSubjectAt(path) ? pages : pages.map(({ path, title }) => ({ path, title }))
   return {
     page,
@@ -32,7 +33,7 @@ const { data, status, error } = await useAsyncData(route.path, async () => {
     walkthroughs: glassboxWalkthroughs(links),
     surround: glassboxSurround(links, path),
     titles: Object.fromEntries(pages.map((p) => [p.path, p.title])),
-    descriptions: Object.fromEntries(pages.flatMap((p): [string, string][] => 'description' in p && p.description ? [[p.path, String(p.description)]] : [])),
+    descriptions: Object.fromEntries(pages.flatMap((p): [string, string][] => nextTargets.includes(p.path) && 'description' in p && p.description ? [[p.path, String(p.description)]] : [])),
   }
 })
 

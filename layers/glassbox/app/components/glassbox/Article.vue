@@ -34,10 +34,10 @@ const parts = computed(() => {
   const framed = subject.value ? glassboxLessonSections(body.value, props.base, props.titles, readable.value, props.descriptions) : body.value
   const [intro, rest] = glassboxSplitBeforeBody(framed)
   const sections = glassboxFrameDiagrams(rest)
-  // A Walkthrough's diagram only makes sense beside its steps, so it leaves the flow and is placed after the last stop.
-  const isPane = (node: typeof intro[number]) => Array.isArray(node) && node[0] === 'div' && node[1]?.class === 'gb-diagram'
-  const panes = walkthrough.value ? sections.filter(isPane) : []
-  const flow = walkthrough.value ? sections.filter((node) => !isPane(node)) : sections
+  // A Walkthrough's diagram only makes sense beside its steps: it leaves the flow and sits after the last stop,
+  // or beside the stops from 1360px (the `.walk` rules below).
+  const panes = walkthrough.value ? sections.filter(glassboxIsDiagramPane) : []
+  const flow = walkthrough.value ? sections.filter((node) => !glassboxIsDiagramPane(node)) : sections
   const withBody = (nodes: typeof intro) => ({ ...props.page, body: { ...body, value: nodes.map((node) => glassboxMarkSeen(node, props.base, readable.value)) } })
   const sectionParts = (walkthrough.value ? glassboxWalkthroughParts(flow, props.base, props.titles, props.descriptions) : [{ nodes: flow.map((node) => glassboxLessonChipsDeep(node, props.base)) }])
     .map((part) => ({ ...part, value: withBody(part.nodes) }))

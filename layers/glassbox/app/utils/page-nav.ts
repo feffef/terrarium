@@ -31,6 +31,9 @@ export function glassboxSplitBeforeBody<T extends MinimarkNode>(nodes: T[]): [T[
   return i < 0 ? [nodes, []] : [nodes.slice(0, i), nodes.slice(i)]
 }
 
+/** A diagram pane, as `glassboxFrameDiagrams` builds it. */
+export const glassboxIsDiagramPane = (node: MinimarkNode) => Array.isArray(node) && node[0] === 'div' && (node[1] as { class?: string }).class === 'gb-diagram'
+
 /** Each diagram in a pane of its own, so the pane holds still while a diagram
  *  too wide to read scaled down scrolls inside it (theme.css). */
 export function glassboxFrameDiagrams<T extends MinimarkNode>(nodes: T[]): T[] {

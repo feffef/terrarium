@@ -396,7 +396,7 @@ export function glassboxOrphans(sources: Record<string, string>): string[] {
 
 /** A Lesson that few other pages list in Where next is hard to reach from the page a reader is on;
  *  a reviewer's call like the other warnings, so it never fails. */
-export const glassboxFewNextMin = 2
+const glassboxFewNextMin = 2
 
 export function glassboxFewNextLinks(sources: Record<string, string>): { file: string, count: number }[] {
   const listedBy = new Map<string, Set<string>>()

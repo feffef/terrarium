@@ -1,6 +1,6 @@
 ---
 title: Workshop
-description: The latest changes to the guide, the notes the agents keep for their next run, and a detailed log of every run so far.
+description: The latest changes to the guide, the notes the agents keep for their next run, and a detailed log of every run.
 revision: fd3599e030281af21ff988c09235e5f704c04f37
 revisionDate: 2026-11-06
 ---
@@ -28,14 +28,14 @@ Each guide page is named by its title, then its file under `layers/glassbox/cont
 ### Recurring problems
 
 - **New text has contained false claims.** Twice, a newly written page or fix said something its source contradicted, and it was only noticed a day later. Older text can be false too: a claim check found *Mermaid pre-rendering* saying unmapped colours fall back to Mermaid's own defaults, when they are fixed light colours.
-- **Neighbouring pages repeat each other.** Most structural changes so far took a reason that two pages both explained and left it on just one of them.
+- **Neighbouring pages repeat each other.** Most structural changes took a reason that two pages both explained and left it on just one of them.
 - **Changes have been undone soon after.** *Prose overrides* and *Invariant tests* were kept by one run, then folded into another page runs later.
 
 ### The owner's direction
 
 These are the owner's goals for the guide. A run builds toward them directly; a PR that adds a Lesson, changes a Subject or changes a Skill, the glassbox-lesson docs or the page checks waits for the owner's merge.
 
-1. **Finish the web standards Subject.** It now holds *CSS custom properties*, *SVG*, *ARIA* and *Colour and motion settings*. Still open: no ADR or rule says binary images are kept out of the repository (the repo just holds none), so no page teaches that; and *ARIA* cites components and tests only, because no accessibility practice is recorded. Ask the owner whether to record one.
+1. **Finish the web standards Subject.** It holds *CSS custom properties*, *SVG*, *ARIA* and *Colour and motion settings*. Still open: no ADR or rule says binary images are kept out of the repository (the repo just holds none), so no page teaches that; and *ARIA* cites components and tests only, because no accessibility practice is recorded. Ask the owner whether to record one.
 2. **Make structure and titles consistent.** Titles should name the general concept and follow one pattern within a Subject, and file names should match their titles.
 3. **Fill what is missing entirely.** This covers a Lesson, or a whole Subject, for something Terrarium relies on that no page teaches yet.
 
@@ -44,8 +44,8 @@ These are the owner's goals for the guide. A run builds toward them directly; a 
 1. **Decide how pages say "a person merges" a Human-only file.** Since the owner waiver (ADR-0004), an agent may merge one when the owner says so in the session. *Protected paths*, *Human-only* and the overview say so. These still state it flatly, each true as the default: *Path-specific rules*, *Decision records*, *Merge gate*, *Claude Code hooks* (twice), *Composite actions*, *Author trust*, *Cross-tenant reads* and *Asking an agent for a change*. Ask the owner whether to name the waiver there or keep one home.
 2. **Check the pages whose claims the docs left silent** (see *Claims to check*), by reading the tool's source where the docs have no page.
 
-3. **Check every Walkthrough diagram against its stops.** A diagram is read beside the stops (it now sits next to them on wide screens), so what it shows should roughly match the steps; a reader who can't match them gains nothing. It is a simplified picture, never a 1:1 copy: not every box or arrow needs a stop. Try to match, but not too hard, and keep it simple. So far the stops read better than the diagrams, so expect to redraw the diagram. Keep the same check for any new diagram. *A change goes live* is the model to match: a few boxes in a line, one side branch, no numbers.
-4. **Re-order the Walkthroughs so a newcomer meets the most interesting first.** Put the stories an absolute newcomer will find most interesting first and niche topics last. Today `glassboxWalkthroughs` sorts them by title, so a new order needs a way to set it (for example a number prefix on the file name, as Lessons have); ask the owner how before building it.
+3. **Check every Walkthrough diagram against its stops.** A diagram is read beside the stops (on wide screens it sits next to them), so what it shows should roughly match the steps; a reader who can't match them gains nothing. It is a simplified picture, never a 1:1 copy: not every box or arrow needs a stop. Try to match, but not too hard, and keep it simple. The stops read better than the diagrams, so expect to redraw the diagram. Keep the same check for any new diagram. *A change goes live* is the model to match: a few boxes in a line, one side branch, no numbers.
+4. **Re-order the Walkthroughs so a newcomer meets the most interesting first.** Put the stories an absolute newcomer will find most interesting first and niche topics last. `glassboxWalkthroughs` sorts them by title, so a new order needs a way to set it (for example a number prefix on the file name, as Lessons have); ask the owner how before building it.
 
 ### Wording fresh readers still find hard
 
@@ -65,7 +65,7 @@ None of these is false.
 - *Issue triage labels* is pinned before `docs/agents/triage-labels.md` gained its `harvest` exception (it says only triage sets the two ready labels, and its Excerpt lacks the exception). Re-pin it and show the exception.
 - *Skill inventory*, *Scheduled tasks* and *Schema evolution* were only searched, not re-read, against the *Ideas and lessons learned* Lesson.
 - *Hook-added context* and *Session transcripts* have not been re-read by a fresh reader since a pass whose reader never reported.
-- The Corepack link on *pnpm and the lockfile* (`nodejs.org/api/corepack.html`) now redirects to GitHub; `nodejs.org/docs/latest-v22.x/api/corepack.html` is a candidate, and Corepack stops shipping with Node 25.
+- The Corepack link on *pnpm and the lockfile* (`nodejs.org/api/corepack.html`) redirects to GitHub; `nodejs.org/docs/latest-v22.x/api/corepack.html` is a candidate, and Corepack stops shipping with Node 25.
 - The page 40 excerpt of `.agents/skills/auto-triage/SKILL.md` (*Wayfinder*) shifts to `lines="75-79"` once the pin moves past 2026-11-11.
 - The comment above `DIAGRAM_TOKEN_FALLBACKS` in `app/utils/mermaid.ts` still says the fallbacks are Mermaid's base-theme defaults, which they are not (a code comment, outside this Skill's remit).
 - The `harvest` Skill's own text (`SKILL.md:3,8`) says a Routine runs it; the owner says none does yet but one will. Fixing a Skill is outside this Skill's remit, so ask the owner. *Scheduled tasks* (`agents/40.scheduled-tasks`, which lists every Routine) leaves it out because `glassbox-update` once re-added it on the Skill's word; add it once the owner says a Routine exists.
@@ -112,9 +112,9 @@ Decisions agents made (run, review, claim check). Not rules: the owner or a late
 - **Moving the rule about the `ready-for-agent` label into *Issue triage labels*.** That page already shows it.
 - **Moving the payload-size reason from *queryCollection* to *Data fetching*.** Both pages already state it, so moving it gains nothing.
 - **Moving the URL-resolver facts from *Multi-tenant isolation* to *File routing*.** They belong with isolation, because that is where their testability matters.
-- **Merging *Engineering skills* into *Planning skills*.** That would undo a recent split.
+- **Merging *Engineering skills* into *Planning skills*.** That would undo a split made on purpose.
 - **A Lesson on git hooks.** The repo has one hook, `.githooks/commit-msg`, and *Commit and PR attribution* already teaches hooks and trailers; a separate Lesson would repeat it.
-- **Splitting the unattended triage sweep out of *Issue triage labels*.** It came too soon after the page last changed. The page's length is still a problem.
+- **Splitting the unattended triage sweep out of *Issue triage labels*.** Held back until the page is stable. The page's length is still a problem.
 
 ## Update log
 
