@@ -132,7 +132,7 @@ useHead({ title: props.front ? 'The Midden' : 'The Trench · The Midden' })
 
       <section v-if="front" class="midden-landing__section" aria-labelledby="midden-start-head">
         <div class="midden-sechead">
-          <span id="midden-start-head" class="hand midden-sechead__title">New here? Start with these</span>
+          <h2 id="midden-start-head" class="hand midden-sechead__title">New here? Start with these</h2>
           <span class="midden-sechead__rule" />
         </div>
         <ol class="midden-sites">
@@ -151,7 +151,7 @@ useHead({ title: props.front ? 'The Midden' : 'The Trench · The Midden' })
 
       <section class="midden-landing__section" aria-labelledby="midden-sites-head">
         <div class="midden-sechead">
-          <span id="midden-sites-head" class="hand midden-sechead__title">{{ front ? 'The excavation' : 'The dig reports' }}</span>
+          <h2 id="midden-sites-head" class="hand midden-sechead__title">{{ front ? 'The excavation' : 'The dig reports' }}</h2>
           <span class="midden-sechead__rule" />
           <span v-if="!front" class="mono midden-sechead__aside">{{ activeCause ? `${rows.length} of ` : '' }}{{ count }} site{{ count === 1 ? '' : 's' }} · newest stratum first</span>
         </div>
@@ -183,7 +183,7 @@ useHead({ title: props.front ? 'The Midden' : 'The Trench · The Midden' })
 
         <template v-if="front && data?.latest.length">
           <div class="midden-sechead midden-landing__latest-head">
-            <span id="midden-latest-head" class="hand midden-sechead__title">Latest finds</span>
+            <h2 id="midden-latest-head" class="hand midden-sechead__title">Latest finds</h2>
             <span class="midden-sechead__rule" />
           </div>
           <ul class="midden-latest" aria-labelledby="midden-latest-head">
@@ -199,7 +199,7 @@ useHead({ title: props.front ? 'The Midden' : 'The Trench · The Midden' })
 
         <section v-if="!front" id="seasons" class="midden-seasons" aria-labelledby="midden-seasons-head">
           <div class="midden-sechead">
-            <span id="midden-seasons-head" class="hand midden-sechead__title">The dig seasons</span>
+            <h2 id="midden-seasons-head" class="hand midden-sechead__title">The dig seasons</h2>
             <span class="midden-sechead__rule" />
           </div>
           <dl class="midden-seasons__list">

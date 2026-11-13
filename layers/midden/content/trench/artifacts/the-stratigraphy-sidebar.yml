@@ -17,8 +17,8 @@ catalogNote: >-
   The Midden's two instruments for showing depth, removed in one commit. Two
   hundred and fifty-seven lines of margin made the gauge: bands grown by flexGrow
   set to that season's find count, an IntersectionObserver that held the last
-  active season rather than blank the highlight through a prose gap, and a hand-
-  lettered "you're here" — server-rendered anchors first, the observer only
+  active season rather than blank the highlight through a prose gap, and a
+  hand-lettered "you're here" — server-rendered anchors first, the observer only
   enhancement. The legend was 121 lines and worked the other way round: a row per
   season, newest at the surface, each bar sized by the finds it held, the open one
   in terracotta because it was still accruing, and scrupulous enough to draw rows

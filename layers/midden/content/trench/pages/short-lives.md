@@ -1,6 +1,6 @@
 ---
 title: Short Lives
-description: Three finds, built by or with the agents and taken down by the owner within weeks — two Atlas pages in under two days, and two sets of agent instructions after under four days and about ten.
+description: Three finds, built by or with the agents and taken down by the owner within weeks — two Atlas pages in under two days, and two sets of agent instructions after under four days and about ten days.
 ---
 
 Each of these was built, put to use and taken down within a few weeks, each time
