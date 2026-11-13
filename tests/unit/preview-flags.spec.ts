@@ -3,10 +3,68 @@
 // `--full`, `--mobile` and the `review` verb's shots, issue #2112).
 // Keeps the positional `<route> <out> [WxH]` parsing unaware of the flags, so
 // this is where the extraction contract is pinned.
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
+import type { ChildProcess } from 'node:child_process'
 import { extractFlag, extractFlags, extractSwitch } from '../../scripts/lib/cli.ts'
 import { parseScheme, parseStorage } from '../../scripts/ui/screenshot.ts'
-import { reviewShots } from '../../scripts/ui/preview.ts'
+import { isServing, reviewShots, waitReady } from '../../scripts/ui/preview.ts'
+
+describe('waitReady()', () => {
+  const child = { exitCode: null } as ChildProcess
+  const answer = (status: number, body: string) => vi.stubGlobal('fetch', vi.fn(async () => new Response(body, { status })))
+  afterEach(() => {
+    vi.unstubAllGlobals()
+    vi.useRealTimers()
+  })
+
+  it('accepts any answer from a built server', async () => {
+    answer(503, 'down')
+    expect(await waitReady(1, child, false)).toBe(true)
+  })
+
+  it('accepts a real 200 from a dev server', async () => {
+    answer(200, '<title>Terrarium</title>')
+    expect(await waitReady(1, child, true)).toBe(true)
+  })
+
+  it('keeps a dev server waiting past the built limit on a 503 or a 200 loading page, then gives up', async () => {
+    vi.useFakeTimers()
+    answer(503, 'Starting Nuxt...')
+    let result: boolean | undefined
+    void waitReady(1, child, true).then((r) => (result = r))
+    await vi.advanceTimersByTimeAsync(60_000)
+    expect(result).toBeUndefined()
+    answer(200, 'Starting Nuxt...')
+    await vi.advanceTimersByTimeAsync(30_000)
+    expect(result).toBeUndefined()
+    await vi.advanceTimersByTimeAsync(40_000)
+    expect(result).toBe(false)
+  })
+
+  it('gives up on a built server that never answers after 45s', async () => {
+    vi.useFakeTimers()
+    vi.stubGlobal('fetch', vi.fn(async () => { throw new Error('refused') }))
+    let result: boolean | undefined
+    void waitReady(1, child, false).then((r) => (result = r))
+    await vi.advanceTimersByTimeAsync(46_000)
+    expect(result).toBe(false)
+  })
+})
+
+describe('isServing()', () => {
+  it('accepts a 200 page', () => {
+    expect(isServing(200, '<title>Terrarium</title>')).toBe(true)
+  })
+
+  it('rejects the dev loading screen, a 503 or a 200 carrying its title', () => {
+    expect(isServing(503, '<title data-app-name="Nuxt">Starting Nuxt... | Nuxt</title>')).toBe(false)
+    expect(isServing(200, '<title data-app-name="Nuxt">Starting Nuxt... | Nuxt</title>')).toBe(false)
+  })
+
+  it('rejects an error status', () => {
+    expect(isServing(500, '<title>Terrarium</title>')).toBe(false)
+  })
+})
 
 describe('extractFlag()', () => {
   it('pulls a flag and its value out, leaving the positionals', () => {

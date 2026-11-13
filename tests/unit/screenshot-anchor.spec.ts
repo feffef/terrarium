@@ -5,6 +5,7 @@ const scrollIntoViewIfNeeded = vi.fn(async () => {})
 const page = {
   goto: vi.fn(async () => {}),
   waitForTimeout: vi.fn(async () => {}),
+  waitForFunction: vi.fn(async () => {}),
   locator: vi.fn(() => ({ first: () => ({ waitFor: async () => {} }), scrollIntoViewIfNeeded })),
   screenshot: vi.fn(async () => {}),
 }
@@ -33,5 +34,21 @@ describe('screenshot anchor scroll', () => {
     scrollIntoViewIfNeeded.mockClear()
     await shots.captureScreenshotWaitingFor('http://x/p#sec', 'o.png', '.ready')
     expect(scrollIntoViewIfNeeded).toHaveBeenCalledTimes(1)
+  })
+})
+
+// The hydration wait: Playwright polls this predicate string and enforces the timeout, so the
+// stub runs the string against fake windows; a never-hydrating page is the false case plus the
+// 60s timeout (waiting that out needs a real browser).
+describe('screenshot hydration wait', () => {
+  it('waits on a predicate that is true without Nuxt or once hydrated, false while hydrating', async () => {
+    page.waitForFunction.mockClear()
+    await shots.captureScreenshot('http://x/p', 'o.png', { waitMs: 0 })
+    const [predicate, , options] = page.waitForFunction.mock.calls[0] as unknown as [string, unknown, { timeout: number }]
+    const ready = (win: object) => new Function('window', `return ${predicate}`)(win)
+    expect(ready({})).toBe(true)
+    expect(ready({ useNuxtApp: () => ({ isHydrating: true }) })).toBe(false)
+    expect(ready({ useNuxtApp: () => ({ isHydrating: false }) })).toBe(true)
+    expect(options.timeout).toBe(60_000)
   })
 })
