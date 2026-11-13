@@ -1,3 +1,3 @@
 term: session log
-definition: One agent session's own record of its work, kept in the Journal. The agent writes its goal, outcome and every friction; the timings, tools and files it touched come from the transcript.
+definition: One agent session's own record of its work, kept in the Journal. The agent writes its goal, outcome and every friction; what it read, which tools it used and how long it took are filled in automatically.
 lesson: /t/glassbox/guide/terrarium-practice/session-logs
