@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeNiyBNZD3Zn5dUm9Bq
 startedAt: 2026-11-13T06:28:17Z
-endedAt: 2026-11-13T06:43:32Z
+endedAt: 2026-11-13T06:46:35Z
 kind: interactive
 goal: Revive visitor-loop as a cheap run that logs for harvest
-status: in-review
-outcome: "PR #3242 open: three Sonnet lenses, no fixes, ideas and learnings for harvest, bugs as Frictions"
-summary: "Human-instructed throughout: the owner asked to revive the paused visitor-loop Routine without expensive models or autonomous fixes (they cost a lot and were often reverted), keeping the daily focus, using two or three Sonnet lenses, logging ideas and hard-won learnings for harvest and raising real bugs as Frictions. Before building I asked four questions; the owner chose the lenses (first-time visitor, content editor, UI tester), a light filter (decisions.md and last week's ideas, no refiner), deleting owner-corrections.ts while keeping decisions.md, and re-enabling the daily scheduled task after merge. Mid-session the owner added that the first-time visitor stays blind while the other two get recent context on the focus (owner chose: merged changes, logged ideas, open issues, 7 days) and may read the repo. Agent-initiated: removing visitor-loop from harvest's SKIPPED_TRIGGERS (found while reading; without it harvest would silently drop every idea the run logs), updating the stale interactive-map spec story, and the review fixes. Three code-review rounds (Sonnet subagents) caught the blind brief leaking repo and other-visitor hints twice. Left as-is on purpose: Glass Box pages describing the old run, which glassbox-update refreshes, and the ADR-0028 rule's path entry for visitor-loop (Human-only file). The owner also asked whether a repo-wide area-tag convention would help; I advised against a prose convention and suggested area labels on issues applied by auto-triage, pending the owner's answer."
+status: completed
+outcome: "PR #3242 merged and the daily Visitor Loop re-enabled: three Sonnet lenses, no fixes, notes for harvest, bugs as Frictions"
+summary: "Human-instructed throughout: the owner asked to revive the paused visitor-loop Routine without expensive models or autonomous fixes (they cost a lot and were often reverted), keeping the daily focus, using two or three Sonnet lenses, logging ideas and hard-won learnings for harvest and raising real bugs as Frictions. Before building I asked four questions; the owner chose the lenses (first-time visitor, content editor, UI tester), a light filter (decisions.md and last week's ideas, no refiner), deleting owner-corrections.ts while keeping decisions.md, and re-enabling the daily scheduled task after merge. Mid-session the owner added that the first-time visitor stays blind while the other two get recent context on the focus (owner chose: merged changes, logged ideas, open issues, 7 days) and may read the repo. Agent-initiated: removing visitor-loop from harvest's SKIPPED_TRIGGERS (found while reading; without it harvest would silently drop every idea the run logs), updating the stale interactive-map spec story, and the review fixes. Three code-review rounds (Sonnet subagents) caught the blind brief leaking repo and other-visitor hints twice. PR #3242 merged on a green gate and the Visitor Loop scheduled task was re-enabled (daily, Sonnet). The owner also asked whether a repo-wide area-tag convention would help; I advised against a prose convention and, at the owner's request, filed issue #3243 proposing per-Tenant area labels on issues applied by auto-triage. Left as-is on purpose: Glass Box pages describing the old run, which glassbox-update refreshes, and the ADR-0028 rule's path entry for visitor-loop (a Human-only file)."
 prs:
   - "3242"
 docsRead:
@@ -37,6 +37,10 @@ docsRead:
   - path: docs/diagrams/interactive-map/spec.md
     reason: (read before editing)
   - path: docs/diagrams/interactive-map/README.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
     reason: (no reason given)
   - path: docs/agents/github-integration.md
     reason: (no reason given)
@@ -71,21 +75,32 @@ frictions:
   - description: A combined printf-and-commit Bash call was blocked whole by the gate-edit guard, so the message file was never written and the retry failed.
     solution: Write commit messages with the Write tool, separate from the git call (git-conventions.md already says keep git apart).
     severity: nit
-durationSec: 915
+  - description: Authored the completed log straight after the merge, though the hook said to invoke close-session first; log-session refused it and I reran.
+    solution: After a merge, invoke close-session before writing any log scratch, as the merge hook says.
+    severity: nit
+durationSec: 1097
 models:
-  claude-opus-5-5: 153
+  claude-opus-5-5: 191
 toolCounts:
-  Bash: 46
+  Bash: 53
   mcp__claude-code-remote__list_triggers: 1
   AskUserQuestion: 2
-  Skill: 5
-  Write: 5
+  Skill: 6
+  Write: 6
   Edit: 5
   Agent: 6
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__claude-code-remote__send_later: 1
+  mcp__github__issue_write: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__update_trigger: 1
+  mcp__claude-code-remote__delete_trigger: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/skills/visitor-loop/SKILL.md
   - .agents/skills/visitor-loop/visitor-brief.md
@@ -184,6 +199,8 @@ ruleUse:
         via: hint
       - rule: .claude/rules/ui-verification.md
         via: hint
+      - rule: .claude/rules/adr-0020.md
+        via: hint
     reported:
       - path: .claude/rules/adr-0004.md
         value: steered
@@ -210,6 +227,8 @@ ruleUse:
       - path: docs/agents/git-conventions.md
       - path: docs/agents/pr-workflow.md
       - path: docs/agents/github-integration.md
+      - path: docs/agents/issue-tracker.md
+      - path: docs/agents/triage-labels.md
   - by: general-purpose
     subagent: 0
     answered: true
@@ -338,21 +357,21 @@ subagents:
     durationSec: 34
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 7.4
+    tokenShare: 6
   - type: general-purpose
     task: Spec review of visitor-loop diff
     model: sonnet
     durationSec: 25
     toolCalls: 6
     modelCalls: 6
-    tokenShare: 7
+    tokenShare: 5.7
   - type: general-purpose
     task: Standards review of follow-up
     model: sonnet
     durationSec: 39
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 3.8
+    tokenShare: 3.1
   - type: general-purpose
     task: Spec review of follow-up
     model: sonnet
@@ -362,14 +381,14 @@ subagents:
     durationSec: 25
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 2.9
+    tokenShare: 2.3
   - type: general-purpose
     task: Two-axis review of fix commit
     model: sonnet
     durationSec: 18
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 2.8
+    tokenShare: 2.3
 gitBranch: ccr-db4c0136-2h2mph
 entrypoint: remote_mobile
 cliVersion: 2.1.323
