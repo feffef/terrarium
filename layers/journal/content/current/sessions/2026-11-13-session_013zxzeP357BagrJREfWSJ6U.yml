@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeP357BagrJREfWSJ6U
 startedAt: 2026-11-13T15:54:33Z
-endedAt: 2026-11-13T18:18:00Z
+endedAt: 2026-11-13T22:25:55Z
 kind: interactive
 goal: Converge two designs for a single-site template with the session that wrote the outsider draft
 status: in-review
-outcome: Converged decision list agreed; PR 3281 files it with the numbered design notes and a README, open and unmerged at the owner's word
-summary: "Human-instructed throughout: the owner asked me to read the insider design draft and the neutral requirements, to find where an outsider's draft (written from the requirements alone) has a better or simpler solution, to exchange messages with the session that wrote that draft and answer its questions about Terrarium from the repo using Sonnet Explore agents, and to keep going while digging into how the old system's complicated scripts behave. Agent-initiated: the choice of research questions and briefs, and my positions in the exchange. Fifteen read-only Explore agents covered the merge script, session logging, the gate, preview and deploy loop, guards and hints, backlog steering, the five scheduled jobs, git, cost reading and the site's runtime. Midway the other session said the owner had given it the role of arguing for the simplest design; from then I supplied the recorded problem behind each mechanism, with counts, and conceded where the record did not defend the insider design: one app with owner pages by folder, one shorter protected list, no stored PR state, one check command, no logging hooks, a script-only watcher. The other session wrote the converged list (six commands, four hooks, ten Skills, thirteen experiments, sixteen owner questions, a list of departures from the requirements); I checked it line by line and sent three sets of amendments, among them turning the ship command round because the harness's own stop reminder (67 occurrences) would fire while checks run. The owner then showed me the written file; I found seven small corrections, which the other session applied. Then, also human-instructed, the owner asked me to save the file in the repo, to number the design notes in creation order confirmed from git, and to add a README saying how each was made. I renamed the six notes 01 to 06, added the outsider draft as 07 (my own addition, flagged to the owner) and the converged list as 08, and wrote the README from first-commit trailers and session logs. The owner interrupted twice: once before a push and PR, asking for the README fix only, and later said to commit and open a PR but not merge. PR 3281 is open, reviewed and gated, and waits for the owner. Findings worth keeping: nothing mechanical stops a direct merge today; a failed deploy build is retried only on the next commit; the Friction Ledger covers only 2026-10-30 to 2026-11-13; three of its four most frequent causes are costs of the repo's own hints and guards."
+outcome: PR 3281 holds the numbered design notes, the revised decision list and a standalone design draft; open and unmerged at the owner's word
+summary: "Human-instructed throughout: the owner asked me to read the insider design draft and the neutral requirements, to find where an outsider's draft (written from the requirements alone) has a better or simpler solution, to exchange messages with the session that wrote that draft and answer its questions about Terrarium from the repo using Sonnet Explore agents, and to keep digging into how the old system's scripts behave. Agent-initiated: the research questions and briefs, and my positions in the exchange. About twenty read-only Explore agents covered the merge script, session logging, the gate, preview and deploy loop, guards and hints, backlog steering, the scheduled jobs, git, cost reading, the site's runtime, what Tenant separation protected, framework coupling and what the owner asked of the Journal. Midway the other session said the owner had given it the role of arguing for the simplest design; from then I supplied the recorded problem behind each mechanism, with counts, and conceded where the record did not defend the insider design. The other session wrote a converged decision list; I checked it line by line and sent amendments. The owner then asked me to save it in the repo, number the design notes in creation order from git, and add a README on how each was made; after two interrupts narrowing the task, to commit and open a PR without merging. The owner objected to the list's owner-area decision (it argued from absence, partly my wording) and asked for freedom of framework for the site; research showed about 25 incidents where one build and one check run let the Journal fail unrelated work, which backs a separate owner app. The owner stated what the owner app must do and that simplest means least own code, not hand-written HTML and script; at the owner's word I revised note 08 and pushed it without a review. The owner then told me to stop relaying to the other session, so later messages from it were reported to the owner first. Last, the owner uploaded the other session's standalone draft; I checked its counts and paths, reported seven differences (among them that the Dependabot config and the watch lists are not protected) and committed it as note 09 unchanged but for one file name. PR 3281 is green and waits for the owner."
 prs:
   - "3281"
 docsRead:
@@ -24,11 +24,11 @@ docsRead:
     reason: (no reason given)
   - path: docs/adr/0027-prune-trials.md
     reason: (no reason given)
+  - path: docs/design/08-converged-decisions.md
+    reason: (read before editing)
   - path: docs/design/README.md
     reason: (read before editing)
   - path: docs/design/01-single-site-template-breakdown.md
-    reason: (read before editing)
-  - path: docs/design/08-converged-decisions.md
     reason: (read before editing)
   - path: scripts/github/merge-pr.ts
     reason: (no reason given)
@@ -41,6 +41,16 @@ docsRead:
   - path: scripts/lib/provenance-header.ts
     reason: (no reason given)
   - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: scripts/gate/gate.ts
+    reason: (no reason given)
+  - path: scripts/gate/validate-content-schema.ts
+    reason: (no reason given)
+  - path: scripts/gate/render-mermaid.ts
+    reason: (no reason given)
+  - path: scripts/ui/preview.ts
+    reason: (no reason given)
+  - path: tests/e2e/smoke.spec.ts
     reason: (no reason given)
   - path: scripts/session/log-session.ts
     reason: (no reason given)
@@ -59,8 +69,6 @@ docsRead:
   - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
     reason: (no reason given)
   - path: GLOSSARY-MAP.md
-    reason: (no reason given)
-  - path: scripts/gate/gate.ts
     reason: (no reason given)
   - path: .github/actions/gate/action.yml
     reason: (no reason given)
@@ -86,15 +94,21 @@ docsRead:
     reason: (no reason given)
   - path: /home/user/terrarium/.agents/skills/grilling/SKILL.md
     reason: (no reason given)
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: (no reason given)
   - path: docs/design/02-single-site-template-requirements.md
     reason: (read before editing)
   - path: docs/design/03-single-site-template-design-draft.md
     reason: (read before editing)
   - path: docs/design/04-single-site-template-design-second-draft.md
     reason: (read before editing)
-  - path: docs/adr/0019-content-load-error-recovery.md
+  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+    reason: (no reason given)
+  - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
     reason: (no reason given)
   - path: docs/adr/0028-navigation-reads-server-payloads.md
+    reason: (no reason given)
+  - path: docs/adr/0019-content-load-error-recovery.md
     reason: (no reason given)
   - path: docs/adr/0001-single-container-baked-multitenancy.md
     reason: (no reason given)
@@ -130,6 +144,22 @@ docsRead:
     reason: (no reason given)
   - path: docs/adr/0003-agent-operating-model-and-governance.md
     reason: (no reason given)
+  - path: .agents/skills/dependabot-sweep/SKILL.md
+    reason: (no reason given)
+  - path: docs/design/07-platform-design-draft.md
+    reason: (read before editing)
+  - path: docs/design/06-single-site-template-design-combined-draft.md
+    reason: (read before editing)
+  - path: docs/design/05-platform-requirements-neutral.md
+    reason: (read before editing)
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: (no reason given)
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: (no reason given)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (no reason given)
+  - path: layers/tinkerfund/GLOSSARY.md
+    reason: (no reason given)
   - path: .agents/skills/inspect-session/SKILL.md
     reason: (no reason given)
   - path: .agents/skills/audit-skills/SKILL.md
@@ -137,12 +167,6 @@ docsRead:
   - path: docs/research/subagent-spawn-depth.md
     reason: (no reason given)
   - path: .agents/skills/glassbox-curate/SKILL.md
-    reason: (no reason given)
-  - path: docs/design/06-single-site-template-design-combined-draft.md
-    reason: (read before editing)
-  - path: docs/design/05-platform-requirements-neutral.md
-    reason: (read before editing)
-  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
     reason: (no reason given)
   - path: .agents/skills/close-session/SKILL.md
     reason: (no reason given)
@@ -168,13 +192,9 @@ docsRead:
     reason: (no reason given)
   - path: docs/adr/0020-requester-trust-tiers.md
     reason: (no reason given)
-  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
-    reason: (no reason given)
   - path: docs/adr/0011-poc-self-updating-deploy-container.md
     reason: (no reason given)
   - path: docs/adr/0002-manifest-driven-config-generation.md
-    reason: (no reason given)
-  - path: .agents/skills/visitor-loop/decisions.md
     reason: (no reason given)
   - path: docs/proposals/README.md
     reason: (no reason given)
@@ -184,7 +204,7 @@ skillsUsed:
   - name: dispatch-subagents
     reason: read before writing the first research brief
   - name: close-session
-    reason: first forced early by a false Stop-hook block; re-run at the PR
+    reason: twice forced by a false Stop-hook block; run at the PR too
   - name: code-review
     reason: run on the docs commit and again on the README follow-up
   - name: log-session
@@ -223,27 +243,43 @@ frictions:
   - description: The adr-read hint fired five times in a row for five Edit calls to one new docs/design file, each asking for ADR-0027, which did not bear on the edits.
     solution: Fire the hint once per ADR per session; ADR-0027's rule matches docs/** too broadly for a design note.
     severity: nit
-durationSec: 8608
+  - description: The merge-close Stop hook blocked a third time with no merge, after a Bash call printed lines of scripts/github/merge-pr.ts to check a Dependabot rule.
+    solution: "Same cause as the first two (merge-close-hint-fires-without-merge): test a merge result, not command text."
+    severity: nit
+  - description: The converged list said nothing recorded defends a second app; that argued from absence and the owner objected. Research then found about 25 incidents the other way.
+    solution: Before writing that a record does not support something, ask what the record would look like if it did, and search for that.
+    severity: moderate
+  - description: I relayed each owner statement to the other session and each of its replies back until the owner told me to stop relaying everything.
+    solution: Ask once, when an exchange with another session starts, which side talks to the owner and what gets passed on.
+    severity: minor
+  - description: Two follow-up pushes to the PR (the note 08 revision and note 09) went without the code-review Skill that pr-workflow.md asks for on a larger follow-up; the owner said no review for the first and asked for my own check on the second.
+    solution: None needed; the owner's word. The PR body says which commits had which check.
+    severity: nit
+durationSec: 23482
 models:
-  claude-fable-5-2: 266
+  claude-fable-5-2: 419
+  <synthetic>: 5
 toolCounts:
   Glob: 2
-  Read: 7
+  Read: 8
   Grep: 3
-  Bash: 48
-  mcp__claude-code-remote__send_message: 20
-  ReadNotifications: 18
-  Skill: 5
-  Agent: 18
-  Write: 5
-  Edit: 17
-  ToolSearch: 1
+  Bash: 67
+  mcp__claude-code-remote__send_message: 31
+  ReadNotifications: 40
+  Skill: 6
+  Agent: 21
+  Write: 7
+  Edit: 43
+  ToolSearch: 3
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+  mcp__github__update_pull_request: 2
 filesEdited:
   - docs/design/08-converged-decisions.md
   - docs/design/README.md
+  - docs/design/09-final-design-draft.md
   - docs/design/01-single-site-template-breakdown.md
   - docs/design/02-single-site-template-requirements.md
   - docs/design/03-single-site-template-design-draft.md
@@ -264,6 +300,8 @@ rulesGlobal:
   - .claude/rules/adr-0017.md
 rulesFollowedUp:
   - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0008.md
   - .claude/rules/adr-0004-human-merge.md
   - .claude/rules/adr-0013.md
   - .claude/rules/adr-0025.md
@@ -280,8 +318,10 @@ docsReadBySubagents:
   - docs/design/02-single-site-template-requirements.md
   - docs/design/03-single-site-template-design-draft.md
   - docs/design/04-single-site-template-design-second-draft.md
-  - docs/adr/0019-content-load-error-recovery.md
+  - docs/adr/0008-self-documentation-tenant-is-a-journal.md
+  - docs/adr/0010-digests-derived-append-only-journal-pages.md
   - docs/adr/0028-navigation-reads-server-payloads.md
+  - docs/adr/0019-content-load-error-recovery.md
   - docs/adr/0001-single-container-baked-multitenancy.md
   - docs/adr/0006-runtime-routing-path-prefix.md
   - docs/adr/0016-tenant-root-layer-routes.md
@@ -300,13 +340,19 @@ docsReadBySubagents:
   - docs/agents/guards.md
   - docs/research/github-branch-protection-vs-autonomous-log-commits.md
   - docs/adr/0003-agent-operating-model-and-governance.md
+  - .agents/skills/dependabot-sweep/SKILL.md
+  - docs/design/07-platform-design-draft.md
+  - docs/design/06-single-site-template-design-combined-draft.md
+  - docs/design/05-platform-requirements-neutral.md
+  - docs/adr/0018-tenant-layers-under-layers-directory.md
+  - docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - GLOSSARY-MAP.md
+  - layers/tinkerfund/GLOSSARY.md
   - .agents/skills/inspect-session/SKILL.md
   - .agents/skills/audit-skills/SKILL.md
   - docs/research/subagent-spawn-depth.md
   - .agents/skills/glassbox-curate/SKILL.md
-  - docs/design/06-single-site-template-design-combined-draft.md
-  - docs/design/05-platform-requirements-neutral.md
-  - docs/adr/0009-session-logs-commit-directly-to-main.md
   - .agents/skills/close-session/SKILL.md
   - GLOSSARY.md
   - .agents/skills/writing-for-agents/SKILL.md
@@ -322,15 +368,12 @@ docsReadBySubagents:
   - docs/agents/triage-labels.md
   - .agents/skills/writing-for-agents/SKILL-MECHANICS.md
   - docs/adr/0020-requester-trust-tiers.md
-  - docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
   - docs/adr/0026-gate-workflow-thin-shell.md
   - docs/adr/0011-poc-self-updating-deploy-container.md
   - docs/adr/0002-manifest-driven-config-generation.md
-  - .agents/skills/visitor-loop/decisions.md
   - docs/proposals/README.md
   - .agents/skills/digest/SKILL.md
   - docs/design/single-site-template-breakdown.md
-  - GLOSSARY-MAP.md
 ruleUse:
   - by: main
     answered: true
@@ -383,6 +426,12 @@ ruleUse:
         via: hint
       - rule: .claude/rules/ui-verification.md
         via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
     reported:
       - path: .claude/rules/adr-0009.md
         value: backed
@@ -400,6 +449,7 @@ ruleUse:
         value: backed
       - path: docs/agents/git-conventions.md
       - path: docs/agents/pr-workflow.md
+      - path: docs/design/08-converged-decisions.md
   - by: Explore
     subagent: 0
     answered: true
@@ -1000,6 +1050,177 @@ ruleUse:
         via: native
         trigger: docs/agents/git-conventions.md
     reported: []
+  - by: Explore
+    subagent: 18
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/tenant-layers.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/tenant-layers.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: .claude/rules/tenant-layers.md
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/adr-0001.md
+        via: hint
+      - rule: .claude/rules/adr-0018.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: native
+        trigger: app/error.vue
+      - rule: .claude/rules/adr-0026.md
+        via: native
+        trigger: scripts/gate/gate.ts
+      - rule: .claude/rules/adr-0011.md
+        via: hint
+      - rule: .claude/rules/adr-0006.md
+        via: native
+        trigger: app/pages/t/[tenant]/[space]/[...slug].vue
+      - rule: .claude/rules/adr-0016.md
+        via: native
+        trigger: app/pages/t/[tenant]/[space]/[...slug].vue
+    reported:
+      - path: .claude/rules/tenant-layers.md
+        value: backed
+      - path: .claude/rules/adr-0001.md
+        value: backed
+      - path: .claude/rules/adr-0018.md
+        value: backed
+      - path: .claude/rules/adr-0011.md
+        value: backed
+      - path: docs/agents/tenant-layers.md
+      - path: docs/adr/0001-single-container-baked-multitenancy.md
+      - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+  - by: Explore
+    subagent: 19
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: scripts/gate/gate.ts
+      - rule: .claude/rules/adr-0026.md
+        via: native
+        trigger: scripts/gate/gate.ts
+      - rule: .claude/rules/adr-0007.md
+        via: native
+        trigger: scripts/gate/render-mermaid.ts
+      - rule: .claude/rules/adr-0024.md
+        via: native
+        trigger: scripts/gate/render-mermaid.ts
+      - rule: .claude/rules/ui-verification.md
+        via: native
+        trigger: scripts/ui/preview.ts
+      - rule: .claude/rules/adr-0001.md
+        via: hint
+      - rule: .claude/rules/adr-0011.md
+        via: hint
+      - rule: .claude/rules/adr-0013.md
+        via: hint
+      - rule: .claude/rules/adr-0014.md
+        via: hint
+      - rule: .claude/rules/adr-0018.md
+        via: hint
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/guards.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/adr-0025.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/adr-0010.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+    reported:
+      - path: docs/design/01-single-site-template-breakdown.md
+      - path: docs/design/08-converged-decisions.md
+      - path: docs/design/06-single-site-template-design-combined-draft.md
+      - path: docs/design/04-single-site-template-design-second-draft.md
+      - path: docs/agents/environment-caveats.md
+      - path: docs/research/nuxt-content-review-grounding.md
+  - by: Explore
+    subagent: 20
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/visitor-loop/decisions.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/visitor-loop/decisions.md
+      - rule: .claude/rules/adr-0028.md
+        via: native
+        trigger: .agents/skills/visitor-loop/decisions.md
+      - rule: .claude/rules/adr-0006.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/adr-0016.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/adr-0010.md
+        via: hint
+    reported: []
 subagents:
   - type: Explore
     task: Direct merges and run signal
@@ -1007,128 +1228,150 @@ subagents:
     durationSec: 178
     toolCalls: 42
     modelCalls: 28
-    tokenShare: 2.8
+    tokenShare: 1.7
   - type: Explore
     task: Workspace dependency evidence
     model: sonnet
     durationSec: 47
     toolCalls: 9
     modelCalls: 7
-    tokenShare: 0.7
+    tokenShare: 0.4
   - type: Explore
     task: Markdoc versus MDX evidence
     model: sonnet
     durationSec: 65
     toolCalls: 19
     modelCalls: 9
-    tokenShare: 0.9
+    tokenShare: 0.6
   - type: Explore
     task: How Skills call user-invoked Skills
     model: sonnet
     durationSec: 134
     toolCalls: 31
     modelCalls: 17
-    tokenShare: 1.3
+    tokenShare: 0.8
   - type: Explore
     task: Merge script edge cases
     model: sonnet
     durationSec: 119
     toolCalls: 22
     modelCalls: 12
-    tokenShare: 1
+    tokenShare: 0.6
   - type: Explore
     task: Session log edge cases
     model: sonnet
     durationSec: 239
     toolCalls: 32
     modelCalls: 22
-    tokenShare: 3
+    tokenShare: 1.9
   - type: Explore
     task: Gate and preview edge cases
     model: sonnet
     durationSec: 187
     toolCalls: 33
     modelCalls: 20
-    tokenShare: 1.9
+    tokenShare: 1.2
   - type: Explore
     task: Problems behind three mechanisms
     model: sonnet
     durationSec: 421
     toolCalls: 110
     modelCalls: 68
-    tokenShare: 7.3
+    tokenShare: 4.5
   - type: Explore
     task: Problems behind the sweeps
     model: sonnet
     durationSec: 626
     toolCalls: 68
     modelCalls: 64
-    tokenShare: 6.9
+    tokenShare: 4.3
   - type: Explore
     task: Problems behind guards and hints
     model: sonnet
     durationSec: 205
     toolCalls: 33
     modelCalls: 25
-    tokenShare: 2
+    tokenShare: 1.2
   - type: Explore
     task: Problems in backlog steering and dispatch
     model: sonnet
     durationSec: 291
     toolCalls: 57
     modelCalls: 44
-    tokenShare: 4.1
+    tokenShare: 2.6
   - type: Explore
     task: Git and commit hook problems
     model: sonnet
     durationSec: 237
     toolCalls: 45
     modelCalls: 39
-    tokenShare: 3.6
+    tokenShare: 2.3
   - type: Explore
     task: Cost and transcript facts
     model: sonnet
     durationSec: 299
     toolCalls: 64
     modelCalls: 41
-    tokenShare: 4.7
+    tokenShare: 2.9
   - type: Explore
     task: Site runtime and content problems
     model: sonnet
     durationSec: 376
     toolCalls: 86
     modelCalls: 75
-    tokenShare: 9.6
+    tokenShare: 6
   - type: Explore
     task: Standards review of docs diff
     durationSec: 81
     toolCalls: 28
     modelCalls: 14
-    tokenShare: 1.3
+    tokenShare: 0.8
   - type: Explore
     task: Spec review of docs diff
     durationSec: 125
     toolCalls: 47
     modelCalls: 22
-    tokenShare: 1.6
+    tokenShare: 1
   - type: Explore
     task: Standards review of README fix
     durationSec: 40
     toolCalls: 16
     modelCalls: 7
-    tokenShare: 0.8
+    tokenShare: 0.5
   - type: Explore
     task: Spec review of README fix
     durationSec: 29
     toolCalls: 11
     modelCalls: 5
-    tokenShare: 0.6
+    tokenShare: 0.4
+  - type: Explore
+    task: What Tenant separation protected
+    model: sonnet
+    durationSec: 367
+    toolCalls: 87
+    modelCalls: 57
+    tokenShare: 3.7
+  - type: Explore
+    task: Framework coupling in platform scripts
+    model: sonnet
+    durationSec: 274
+    toolCalls: 68
+    modelCalls: 39
+    tokenShare: 2.8
+  - type: Explore
+    task: What the owner values in the Journal
+    model: sonnet
+    durationSec: 335
+    toolCalls: 43
+    modelCalls: 36
+    tokenShare: 1.9
 gitBranch: claude/blissful-gates-j4hnbl
 entrypoint: remote
 cliVersion: 2.1.323
 learnings:
   - A Routine-fired session is told apart only by the transcript's entrypoint value remote_trigger; no environment variable or hook payload field carries it
   - Asking for the recorded problem behind a mechanism, with its count, settled design disagreements faster than describing how the mechanism works
+  - With one build and one check run, separate styles and folders per part did nothing to stop one part's content or tests failing another's change; only a separate check scope does
 ideas:
   - "Give the Friction Ledger a stated window: a line at the top of the dashboard and in extract-frictions output saying which dates the counts cover, because two agents and I each quoted its counts as if they were full history"
 landedBy: Stop
