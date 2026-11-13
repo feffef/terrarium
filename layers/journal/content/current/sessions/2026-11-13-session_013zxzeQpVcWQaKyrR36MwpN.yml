@@ -1,17 +1,21 @@
 schemaVersion: 1
 session: session_013zxzeQpVcWQaKyrR36MwpN
 startedAt: 2026-11-13T06:59:01Z
-endedAt: 2026-11-13T07:05:06Z
+endedAt: 2026-11-13T07:10:41Z
 kind: delegated
 goal: "Visitor-loop run on the Midden: three visitors browse it and report"
 status: completed
-outcome: "Three visitors reported; bugs, ideas and learnings logged here, retro posted on #3244"
-summary: "Human-instructed: the owner ran the visitor-loop Skill, whose procedure I followed as written. Focus came from the rotation (row 3, midden). I built and served the production preview on a fresh origin/main, wrote a context file, dispatched blind, content-editor and UI-tester visitors on sonnet, then verified each reported bug against the rendered page (one script at 390px) and the source. Eight bugs survived; two blind-visitor findings did not reproduce (a \"mangled\" card link, a \"duplicated\" season strip) and one was ruled out by decisions.md (footer lacks Marquee and Commons). The retro report is posted on #3244. The visitors' stray screenshots in the repo root tripped the Stop hook; I moved them into the git-ignored scratch folder. Nothing outside the session log and the retro comment changed."
+outcome: Three visitors reported; 8 bugs filed as issues 3246-3248, ideas and learnings logged, retro posted on 3244
+summary: "Human-instructed: the owner ran the visitor-loop Skill, whose procedure I followed as written. Focus came from the rotation (row 3, midden). I built and served the production preview on a fresh origin/main, wrote a context file, dispatched blind, content-editor and UI-tester visitors on sonnet, then verified each reported bug against the rendered page (one script at 390px) and the source. Eight bugs survived and, on the owner's correction, went into three grouped issues (#3246, #3247, #3248), not Frictions; two blind-visitor findings did not reproduce (a \"mangled\" card link, a \"duplicated\" season strip) and one was ruled out by decisions.md (footer lacks Marquee and Commons). The retro report is posted on #3244. The visitors' stray screenshots in the repo root tripped the Stop hook; I moved them into the git-ignored scratch folder. Outside the session log, the run wrote the #3244 retro comment and, after the owner said site bugs should be filed, three issues; the Skill text says no issues, so that text needs fixing."
 prs: []
 docsRead:
   - path: docs/agents/git-conventions.md
     reason: (no reason given)
   - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
     reason: (no reason given)
   - path: scripts/lib/chromium.ts
     reason: (no reason given)
@@ -53,47 +57,28 @@ frictions:
   - description: Context file lacked a route list, so both informed visitors found the Stores page and filter routes by crawling
     solution: Add a route list to the context file in SKILL.md step 2
     severity: nit
+  - description: visitor-loop SKILL.md says bugs go in as Frictions and no issues; the owner wanted issues, so I had to redo the log and file three issues
+    solution: Change the Skill's remit and step 4 to file grouped issues for site bugs and keep Frictions to the run's own trouble
+    severity: moderate
   - description: Monitor tool schema was not loaded, so my first call failed validation until a ToolSearch
     solution: Load deferred tools with ToolSearch before first use
     severity: nit
-  - description: "midden site: html lang is empty on every page, including the home page"
-    solution: Set lang en on the app shell
-    severity: moderate
-  - description: "/t/midden/trench: cause chips are 26px tall, all carry router-link-exact-active, and the selected one lacks aria-current"
-    solution: Raise chip height toward 44px and mark only the selected chip current
-    severity: moderate
-  - description: "/t/midden/stores: headings jump from H1 to H3 with no H2 for the season sections"
-    solution: Make season headings H2 and finds H3
-    severity: minor
-  - description: /t/midden/trench?cause=bogus silently shows all 16 sites and drops the N of 16 count line
-    solution: Say the cause is unknown, or redirect to the plain trench
-    severity: minor
-  - description: Breadcrumb, footer and all dig reports links on dig-report pages are 15-17px tall at 390px
-    solution: Pad these links to at least 24px, ideally 44px
-    severity: minor
-  - description: /t/midden/trench/the-simpler-verdict shows the typo hand- lettered (YAML wrap in the-stratigraphy-sidebar.yml lines 20-21)
-    solution: Write hand-lettered
-    severity: nit
-  - description: /t/midden/trench/unpublished-dispatches reads lain quiet for forty-nine. with no unit (david-spoke-too-soon.yml line 20)
-    solution: Write forty-nine days as of the assessed date
-    severity: nit
-  - description: "/t/midden/trench standfirst for Short Lives is garbled: two sets of agent instructions after under four days and about ten."
-    solution: "Rewrite as: and two sets of agent instructions, after under four days and about ten days"
-    severity: nit
-durationSec: 365
+durationSec: 700
 models:
-  claude-sonnet-5-5: 66
+  claude-sonnet-5-5: 85
 toolCounts:
   Skill: 2
-  Read: 2
-  Bash: 18
+  Read: 4
+  Bash: 21
   Monitor: 1
   Agent: 3
-  ToolSearch: 1
+  ToolSearch: 3
   mcp__github__issue_read: 2
   SendMessage: 3
   mcp__claude-code-remote__get_session: 1
   mcp__github__add_issue_comment: 1
+  mcp__github__issue_write: 3
+  mcp__github__update_issue_comment: 1
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -135,6 +120,9 @@ ruleUse:
         via: hint
       - rule: .claude/rules/tenant-layers.md
         via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: native
+        trigger: docs/agents/triage-labels.md
     reported:
       - path: .claude/rules/adr-0003.md
         value: backed
@@ -211,21 +199,21 @@ subagents:
     durationSec: 163
     toolCalls: 13
     modelCalls: 11
-    tokenShare: 15.1
+    tokenShare: 13.1
   - type: general-purpose
     task: Content editor, Midden
     model: sonnet
     durationSec: 162
     toolCalls: 14
     modelCalls: 11
-    tokenShare: 19.5
+    tokenShare: 16.8
   - type: general-purpose
     task: UI tester, Midden
     model: sonnet
     durationSec: 164
     toolCalls: 15
     modelCalls: 13
-    tokenShare: 16.4
+    tokenShare: 14.2
 gitBranch: ccr-023e94f4-08uual
 entrypoint: remote_mobile
 cliVersion: 2.1.323
@@ -240,4 +228,5 @@ ideas:
   - "Midden dig reports: trim the Nov 2026 finds from 250-400 words toward the 60-120 of the older ones, moving counts into one short sentence, so the curator's voice stays one"
   - "Midden Trench: add a condition-grade filter or counts beside the cause chips so a visitor can find the Intact finds"
   - "Midden: a Founding collapse dig report about the earliest stand-in entries in What the Record Claimed, with a timeline strip"
+  - Rework visitor-loop SKILL.md remit and step 4 so bugs are filed as issues, grouped when closely related, and Frictions stay only for the run's own trouble; the owner corrected this after the first run followed the old text
 landedBy: Stop
