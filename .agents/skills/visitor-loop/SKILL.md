@@ -62,7 +62,7 @@ Then dispatch three read-only subagents **in one message**, all with
 |------|--------|-----------|
 | first-time visitor | blind | What this place is, whether its paths lead somewhere, and whether you would come back. |
 | content editor | informed | Wording that is unclear, wrong or out of voice; thin or missing pages; entries the area should have. |
-| UI tester | informed | Broken links and controls, errors, empty or stuck states, layout faults, the 390px view, keyboard and screen-reader access. |
+| UI tester | informed | Broken links and controls, errors, empty or stuck states, layout faults, keyboard and screen-reader access; one screenshot of each kind of page at 390px. |
 
 Each gets [`visitor-brief.md`](visitor-brief.md) verbatim, keeping only its
 access block, with the URL, the focus's entry path and note (blank if none),
@@ -96,7 +96,8 @@ rendered page.
 
 ## 4. Draft the log
 
-Write the log's entries in a draft in your scratchpad:
+Write the log's entries in a draft YAML in your scratchpad, in `log-session`'s
+authored format:
 
 - each **bug** is a Friction: `description` names the URL and what breaks,
   `solution` the fix, `severity` how badly it hurts a visitor, on
