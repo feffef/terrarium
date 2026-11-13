@@ -32,7 +32,7 @@ jobs:
               layers/journal/*|layers/blog/*|layers/atlas/*|layers/midden/*|layers/marquee/*|layers/tinkerfund/*|layers/glassbox/*|layers/commons/*)
                 echo "${f#layers/}" | cut -d/ -f1 ;;
               app/pages/index.vue|app/components/HomeShowcase.vue) echo homepage ;;
-              app/*|shared/*|modules/*|scripts/*|nuxt.config.ts) echo platform ;;
+              *) echo platform ;;
             esac
           done | sort -u | while read -r area; do
             gh pr edit "$PR" -R "$REPO" --add-label "area:$area"

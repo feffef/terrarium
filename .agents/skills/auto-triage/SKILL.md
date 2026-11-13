@@ -21,8 +21,7 @@ live in `triage`'s Skill Inventory entry.
 
 Scan every **open** issue and in-scope external PR (external-PR scoping is
 `/triage`'s own filter — a collaborator's in-flight PR is never triage work).
-Never triage a `wayfinder:map` (an index, not work), whoever last commented on
-it; only add area labels to one that has none.
+Never triage a `wayfinder:map` (an index, not work), whoever last commented on it.
 
 For everything else, fetch the **most recent comment** and check who wrote it:
 
@@ -69,10 +68,11 @@ confirm (see `OUT-OF-SCOPE.md`).
 ## Area labels
 
 Add `area:<tenant>` (`journal`, `blog`, `atlas`, `midden`, `marquee`,
-`tinkerfund`, `glassbox`, `commons`), `area:homepage` or `area:platform` for
-each the issue cites by name or path (`platform`: `app/`, `shared/`,
-`modules/`, `scripts/`, `nuxt.config.ts`; `homepage`: the home page); none
-cited, none added.
+`tinkerfund`, `glassbox`, `commons`) for each Tenant the issue's work touches,
+`area:homepage` for the home page (`app/pages/index.vue`,
+`app/components/HomeShowcase.vue`), and `area:platform` for anything else, so
+every issue gets at least one. A place named only as background or a source
+link doesn't count.
 `.github/workflows/pr-area-label.yml` copies these paths for PRs; change both.
 
 ## Approval
@@ -120,7 +120,9 @@ a human directs a brave re-triage; an agent never picks it on its own.
    `list_issues`/`search_issues`) plus in-scope external PRs (`issue-tracker.md`'s
    "List external PRs"); for each, check its most recent comment
    against the human-authorship rule above — skip that check entirely in
-   full-sweep mode; keep the eligible set; apply the wayfinder skips.
+   full-sweep mode; keep the eligible set; apply the wayfinder skips. Give
+   each `wayfinder:map` that has no area label its area labels yourself,
+   passing its full label set.
 2. **One subagent per issue** (parallel — the eligible set is usually small).
    Brief each with `/triage`'s per-issue rules plus
    the read-only rule, the brave/uncertainty line, and the wayfinder overlay above. Each subagent

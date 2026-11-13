@@ -91,8 +91,7 @@ harvests both.
    - `harvest check-body <file> --extract <extract.json> --title "Seedling: ..."`
      must print `ok`.
    - Post it through MCP `issue_write` with that title, the label
-     `ready-for-human` and its area labels (`auto-triage`'s "Area labels"; its
-     source-log paths don't count), which `visitor-loop` reads.
+     `ready-for-human` and its area labels (`auto-triage`'s "Area labels").
    - `harvest check-posted <number> <file>` must print that the issue stores the
      checked keys. On a mismatch repair once with `issue_write` update and the
      file's full body (an update replaces the description), check again, and
