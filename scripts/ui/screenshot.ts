@@ -77,13 +77,13 @@ export interface CaptureOptions {
   mobile?: boolean
   /** localStorage entries set before the page's own scripts run. */
   storage?: Record<string, string>
-  /** Wait for Nuxt to finish hydrating (`--dev` serves SSR HTML long before). */
-  waitForHydration?: boolean
 }
 
-async function hydrated(page: Page, { waitForHydration }: CaptureOptions): Promise<void> {
-  if (waitForHydration) await page.waitForFunction('window.useNuxtApp?.().isHydrating === false', undefined, { timeout: 60_000 })
-}
+// `nuxt dev` serves SSR HTML long before the client hydrates; a page without
+// `useNuxtApp` (non-Nuxt) passes at once. Every capture path waits, so a
+// standalone `screenshot.ts` run against a dev server is covered too.
+const hydrated = (page: Page): Promise<unknown> =>
+  page.waitForFunction('!window.useNuxtApp || window.useNuxtApp().isHydrating === false', undefined, { timeout: 60_000 })
 
 /**
  * Launch the pre-installed Chromium via playwright-core, open a page sized to
@@ -134,7 +134,7 @@ export async function captureScreenshot(
   const anchor = new URL(url).hash.slice(1)
   await withPage(width, height, opts, async (page) => {
     await page.goto(url)
-    await hydrated(page, opts)
+    await hydrated(page)
     if (waitMs > 0) await page.waitForTimeout(waitMs)
     await scrollToAnchor(page, anchor, waitMs > 0 ? waitMs : 5000)
     await page.screenshot({ path: out, fullPage: opts.fullPage })
@@ -158,7 +158,7 @@ export async function captureScreenshotWaitingFor(
   const anchor = new URL(url).hash.slice(1)
   await withPage(width, height, opts, async (page) => {
     await page.goto(url, { waitUntil: 'networkidle' })
-    await hydrated(page, opts)
+    await hydrated(page)
     await page.locator(selector).first().waitFor({ state: 'attached', timeout: timeoutMs })
     await scrollToAnchor(page, anchor, timeoutMs)
     await page.screenshot({ path: out, fullPage: opts.fullPage })

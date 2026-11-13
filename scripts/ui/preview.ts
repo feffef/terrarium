@@ -55,7 +55,8 @@ import {
 } from './screenshot.ts'
 
 const HOST = '127.0.0.1'
-const READY_TIMEOUT_MS = 120_000 // a cold `nuxt dev` compile alone takes ~45s
+const READY_TIMEOUT_MS = 45_000
+const DEV_READY_TIMEOUT_MS = 120_000 // a cold `nuxt dev` compile outlasts the built server's limit
 const POLL_INTERVAL_MS = 300
 const KILL_GRACE_MS = 5_000
 const SERVER_ENTRY = '.output/server/index.mjs'
@@ -130,22 +131,23 @@ function spawnServer(port: number, dev: boolean, logPath: string): ChildProcess 
   return child
 }
 
-/** `nuxt dev` answers 503 with a "Starting Nuxt..." page while it compiles
- *  (~35s cold), so only a 200 that isn't that page is a served route. */
+/** `nuxt dev` answers 503 with a "Starting Nuxt..." page while it compiles,
+ *  so only a 200 that isn't that page is a served route. */
 export function isServing(status: number, body: string): boolean {
   return status === 200 && !body.includes('Starting Nuxt...')
 }
 
-/** Poll `GET /` until it is really served, the child exits, or the timeout
- *  elapses. Returns whether it came up. */
-async function waitReady(port: number, child: ChildProcess): Promise<boolean> {
+/** Poll `GET /` until the child exits or the timeout elapses. A built server is
+ *  up on any answer; `--dev` needs a real {@link isServing} page. Returns
+ *  whether it came up. */
+async function waitReady(port: number, child: ChildProcess, dev: boolean): Promise<boolean> {
   const url = `http://${HOST}:${port}/`
-  const deadline = Date.now() + READY_TIMEOUT_MS
+  const deadline = Date.now() + (dev ? DEV_READY_TIMEOUT_MS : READY_TIMEOUT_MS)
   while (Date.now() < deadline) {
     if (child.exitCode !== null) return false // server died during startup
     try {
       const res = await fetch(url)
-      if (isServing(res.status, await res.text())) return true
+      if (!dev || isServing(res.status, await res.text())) return true
     } catch {
       // connection refused / reset — not up yet, keep polling
     }
@@ -254,7 +256,7 @@ export async function startPreview(opts: { dev?: boolean } = {}): Promise<Previe
   const logPath = logPathFor(port)
   const child = spawnServer(port, dev, logPath)
   const pid = child.pid
-  if (!(await waitReady(port, child)) || pid === undefined) {
+  if (!(await waitReady(port, child, dev)) || pid === undefined) {
     diagnose(port, child, dev, logPath)
     if (pid !== undefined) await killGroup(pid)
     try {
@@ -355,7 +357,7 @@ async function doShot(args: string[], dev: boolean, opts: ShotOptions): Promise<
     return 1
   }
   const { waitMs, waitForSelector, scheme: colorScheme, fullPage, mobile, storage } = opts
-  return withServer(route, dev, (url) => capture(url, out, waitMs, waitForSelector, { windowSize, colorScheme, fullPage, mobile, storage, waitForHydration: dev }))
+  return withServer(route, dev, (url) => capture(url, out, waitMs, waitForSelector, { windowSize, colorScheme, fullPage, mobile, storage }))
 }
 
 async function doReview(args: string[], dev: boolean, opts: ShotOptions): Promise<number> {
@@ -373,7 +375,6 @@ async function doReview(args: string[], dev: boolean, opts: ShotOptions): Promis
         fullPage: true,
         mobile: shot.mobile,
         storage: opts.storage,
-        waitForHydration: dev,
       })
     }
   })
