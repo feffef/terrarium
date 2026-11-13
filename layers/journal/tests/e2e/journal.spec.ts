@@ -310,7 +310,7 @@ describe('journal Tenant', async () => {
       const chart = page.locator('.rc').first()
       const hit = chart.locator('.rc-hit').nth(3)
       const bar = chart.locator('.rc-bar').nth(3)
-      const tip = chart.locator('.rc-tip')
+      const tip = chart.getByRole('tooltip')
       await page.getByRole('button', { name: 'Cost (USD)' }).click()
       await hit.hover()
       expect(await tip.textContent()).toMatch(/^\$\d+\.\d\d$/)

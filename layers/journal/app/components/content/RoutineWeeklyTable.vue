@@ -22,7 +22,7 @@ const fmt = (v: number) => formatRoutineMetric(metric.value, v)
       </thead>
       <tbody>
         <tr v-for="row in table.rows" :key="row.name">
-          <th scope="row" :title="gistOf(row.name)">{{ row.name }}</th>
+          <th scope="row"><JournalHint :text="gistOf(row.name)">{{ row.name }}</JournalHint></th>
           <td v-for="(c, i) in row.cells" :key="table.weeks[i]" class="num">{{ c > 0 ? fmt(c) : '–' }}</td>
           <td class="num">{{ fmt(row.total) }}</td>
         </tr>
