@@ -1,7 +1,7 @@
-# Labels a PR with the `area:*` labels of the paths it touches (issue #3243;
-# the labels: docs/agents/triage-labels.md). Adds only, never removes. Each
-# Tenant is listed by name: a label missing for a new layer would fail the run.
-# Renames count both paths (#1443).
+# Issue #3243. The areas and their paths copy `auto-triage`'s "Area labels"
+# (.agents/skills/auto-triage/SKILL.md); change both. Tenants are named, not
+# `layers/*`: adding a label that doesn't exist fails the run, so a new Tenant
+# needs its label and a line here. Renames count both paths (#1443).
 
 name: pr-area-label
 
@@ -20,7 +20,8 @@ jobs:
     if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     steps:
-      - env:
+      - name: 'Label areas by touched paths'
+        env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR: ${{ github.event.pull_request.number }}
           REPO: ${{ github.repository }}

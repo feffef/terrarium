@@ -72,6 +72,7 @@ Add `area:<tenant>` (`journal`, `blog`, `atlas`, `midden`, `marquee`,
 each the issue cites by name or path (`platform`: `app/`, `shared/`,
 `modules/`, `scripts/`, `nuxt.config.ts`; `homepage`: the home page); none
 cited, none added. Never on a Seedling or a `wayfinder:map`.
+`.github/workflows/pr-area-label.yml` copies these paths for PRs; change both.
 
 ## Approval
 
