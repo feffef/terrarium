@@ -6,7 +6,22 @@
 import { describe, expect, it } from 'vitest'
 import { extractFlag, extractFlags, extractSwitch } from '../../scripts/lib/cli.ts'
 import { parseScheme, parseStorage } from '../../scripts/ui/screenshot.ts'
-import { reviewShots } from '../../scripts/ui/preview.ts'
+import { isServing, reviewShots } from '../../scripts/ui/preview.ts'
+
+describe('isServing()', () => {
+  it('accepts a 200 page', () => {
+    expect(isServing(200, '<title>Terrarium</title>')).toBe(true)
+  })
+
+  it('rejects the dev loading screen, a 503 or a 200 carrying its title', () => {
+    expect(isServing(503, '<title data-app-name="Nuxt">Starting Nuxt... | Nuxt</title>')).toBe(false)
+    expect(isServing(200, '<title data-app-name="Nuxt">Starting Nuxt... | Nuxt</title>')).toBe(false)
+  })
+
+  it('rejects an error status', () => {
+    expect(isServing(500, '<title>Terrarium</title>')).toBe(false)
+  })
+})
 
 describe('extractFlag()', () => {
   it('pulls a flag and its value out, leaving the positionals', () => {

@@ -55,7 +55,7 @@ import {
 } from './screenshot.ts'
 
 const HOST = '127.0.0.1'
-const READY_TIMEOUT_MS = 45_000
+const READY_TIMEOUT_MS = 120_000 // a cold `nuxt dev` compile alone takes ~45s
 const POLL_INTERVAL_MS = 300
 const KILL_GRACE_MS = 5_000
 const SERVER_ENTRY = '.output/server/index.mjs'
@@ -130,16 +130,22 @@ function spawnServer(port: number, dev: boolean, logPath: string): ChildProcess 
   return child
 }
 
-/** Poll the server until it answers HTTP (any status = "up"), the child exits,
- *  or the timeout elapses. Returns whether it came up. */
+/** `nuxt dev` answers 503 with a "Starting Nuxt..." page while it compiles
+ *  (~35s cold), so only a 200 that isn't that page is a served route. */
+export function isServing(status: number, body: string): boolean {
+  return status === 200 && !body.includes('Starting Nuxt...')
+}
+
+/** Poll `GET /` until it is really served, the child exits, or the timeout
+ *  elapses. Returns whether it came up. */
 async function waitReady(port: number, child: ChildProcess): Promise<boolean> {
   const url = `http://${HOST}:${port}/`
   const deadline = Date.now() + READY_TIMEOUT_MS
   while (Date.now() < deadline) {
     if (child.exitCode !== null) return false // server died during startup
     try {
-      await fetch(url, { method: 'HEAD' })
-      return true
+      const res = await fetch(url)
+      if (isServing(res.status, await res.text())) return true
     } catch {
       // connection refused / reset — not up yet, keep polling
     }
@@ -349,7 +355,7 @@ async function doShot(args: string[], dev: boolean, opts: ShotOptions): Promise<
     return 1
   }
   const { waitMs, waitForSelector, scheme: colorScheme, fullPage, mobile, storage } = opts
-  return withServer(route, dev, (url) => capture(url, out, waitMs, waitForSelector, { windowSize, colorScheme, fullPage, mobile, storage }))
+  return withServer(route, dev, (url) => capture(url, out, waitMs, waitForSelector, { windowSize, colorScheme, fullPage, mobile, storage, waitForHydration: dev }))
 }
 
 async function doReview(args: string[], dev: boolean, opts: ShotOptions): Promise<number> {
@@ -367,6 +373,7 @@ async function doReview(args: string[], dev: boolean, opts: ShotOptions): Promis
         fullPage: true,
         mobile: shot.mobile,
         storage: opts.storage,
+        waitForHydration: dev,
       })
     }
   })

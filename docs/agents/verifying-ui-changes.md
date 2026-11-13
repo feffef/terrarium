@@ -14,11 +14,16 @@ layout bug, or asserting a style took effect.
 - **One screenshot:** `scripts/ui/preview.ts shot` (flags: its `USAGE`).
   It starts a server on its own port and stops it, so
   there is nothing to `pkill` (issue #240). By default it serves the production
-  build (run `pnpm build` first). `--dev` is faster, but its DevTools overlay
-  badge can cover real content and look like a UI bug. It can also serve stale
-  layer utils or CSS, time out on a cold start, or never hydrate in headless
-  Chromium: when a shot looks stale or unhydrated, `pnpm build` and shoot the
-  build instead. A `#anchor` in `<route>` scrolls to an element.
+  build (run `pnpm build` first). `--dev` needs no build and suits samples
+  shown to the owner, but its DevTools overlay badge can cover real content and
+  look like a UI bug, and it can serve stale layer utils or CSS: for a
+  diagnosis or a trusted shot, `pnpm build` and shoot the build. `--dev`
+  readiness waits for a 200 page (a cold compile answers 503 for ~45s) and its
+  captures wait for hydration. A `#anchor` in `<route>` scrolls to an element.
+- **Several shots of one task:** `start --dev` once (one server per task), then
+  `scripts/ui/screenshot.ts <url> <out.png>` per shot; `shot` starts and stops
+  a server each call. After an edit, curl the URL until 200 and wait for HMR
+  before reshooting.
 - **Seed browser state:** `--storage KEY=VALUE` (repeatable; `shot` and
   `review`) sets a `localStorage` entry before the page loads.
 - **A page review:** `scripts/ui/preview.ts review` writes four full-page shots (desktop and mobile, light and dark) from one server (`USAGE` has the names and sizes).
@@ -135,7 +140,7 @@ A screenshot captures whatever frame exists *now*. Two ways the frame is empty:
   know the element you're waiting on.
 - **A cold `--dev` server** compiles routes on demand, so the first shot of a
   route can catch a half-built page and read as a false-positive layout bug.
-  Prefer built `preview` mode (or a selector wait) before trusting a `--dev`
+  Use a selector wait, or built `preview` mode, before trusting a `--dev`
   screenshot for diagnosis. (Sessions `…pm7Vkb`, `…Bhu3Y1`.)
 
 ### A green production `preview` probe doesn't prove a dev-warning fix
