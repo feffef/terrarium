@@ -24,6 +24,7 @@ export interface SessionCardView {
   when: string
   duration: string
   goal: string
+  kind: SessionDoc['kind']
   status: Status
   outcome: string
   // `in-review` although every listed PR merged per a completed log; shown beside the status pill.

@@ -36,7 +36,7 @@ const ruleUseCount = computed(() => {
   const u = card.ruleUse
   return u ? new Set([...u.main.rules, ...u.subagents.rules].map((r) => r.path)).size : 0
 })
-const tokenBar = computed(() => sessionTokenBar(card.subagents))
+const tokenBar = computed(() => sessionTokenBar(card.subagents, card.kind))
 const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conjunction' }).format(
   FOLDED_TRACE_FIELDS.map((f) => f.label),
 )
