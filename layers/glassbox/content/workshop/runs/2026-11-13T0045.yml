@@ -1,0 +1,14 @@
+session: session_013zxzeRxyNcwt53TXLHjTsg
+mode: autonomous
+focus: "Hooks Subject: give the repeated hook facts one home each (the || true mechanics are taught on three pages, a subagent's hook calls on three) and make the Blocking hooks wiring excerpt show the variables it uses, from the memory page's fresh-reader list for these pages. Chosen because it is concrete, solvable in one run and no open PR touches these pages. The owner-directed Walkthrough diagram check was not taken because PR #3223 renames all nine Walkthrough files and waits for the owner, and the handoff said to leave pages that PR touches alone; it is the next focus once that PR merges. A seventh run of the owner's several-focus request, in the Sonnet handoff session, after the run of 2026-11-13T0026 merged."
+changes:
+  - hooks/20.blocking-hooks | the guards-wiring Excerpt now shows the entries and guards variables and a sentence says what each holds; the deferred-tool guard sentence no longer repeats that its hook ends in || true | a fresh reader could not tell where the names came from; the || true mechanics have one home on hooks/10.hooks (tests/unit/guards-wiring.spec.ts:10-13). Excerpt range only, so revision and publishedAt are kept
+  - hooks/30.hook-added-context | the hint paragraph no longer repeats the guard sentence and what || true does | both are taught on hooks/10.hooks and hooks/20.blocking-hooks. Removal only
+  - hooks/40.session-transcripts | a subagent's hook payload names agent_id only | agent_type and --agent are taught on hooks/10.hooks; hook-added-context keeps its own point that a hint dedupes per subagent, and agents/10.subagents applies the payload fields to its guard. Removal only
+  - workshop/pages/index | the Hooks wording lead trimmed to what is still open | the Excerpt variables, the repeated || true and subagent facts are fixed, and "ground truth" appears on no page
+pagesRead:
+  - hooks/10.hooks
+  - hooks/20.blocking-hooks
+  - hooks/30.hook-added-context
+  - hooks/40.session-transcripts
+  - agents/10.subagents
