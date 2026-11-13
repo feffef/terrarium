@@ -21,9 +21,16 @@ and `diff`.
 Rules:
 - Drive the browser with a small `playwright-core` script, run from your working
   directory with `pnpm exec tsx <script>`, launched with
-  `executablePath: resolveChromiumPath()` from `scripts/lib/chromium.ts`. On
-  every page you visit, read the visible text and links, and screenshot it
-  and look at the screenshot. Check at least two pages at 390px width.
+  `executablePath: resolveChromiumPath()` from `scripts/lib/chromium.ts`.
+- Use the cheapest tool that answers each question:
+  - **Words and links:** read them as text. One script that walks several
+    pages and saves each page's visible text and links to a file beats a
+    screenshot per page.
+  - **What can be measured** (overflow, sizes, positions): measure it in the
+    page at the width in question, 390px included. Pass `page.evaluate` its
+    body as a string, since `tsx` breaks a function passed to it.
+  - **What must be seen** (overlap, clipping, contrast, awkward wrapping,
+    images, a first impression): screenshot it and look at the screenshot.
 - Create {SCRATCH_DIR} first and write scripts and screenshots only there.
   Modify nothing else; never `checkout`, `switch` or `reset`. Run every
   command in the foreground. Never stop or restart the server.
