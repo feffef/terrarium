@@ -1,0 +1,193 @@
+schemaVersion: 1
+session: session_013zxzeSBqHVEFogR6M3SoDX
+startedAt: 2026-11-13T10:54:05Z
+endedAt: 2026-11-13T11:00:35Z
+kind: delegated
+goal: "Visitor loop on the Midden: three visitors, bugs filed, ideas logged"
+status: completed
+outcome: Four Midden bugs added to open issues 3248 and 3247, eight ideas and three learnings logged, retro posted on 3244
+summary: "Ran the visitor-loop Skill (owner's one /visitor-loop kickoff; everything after was the Skill's own steps). The rotation picked the Midden. Built and served the production preview, wrote a context file, and sent blind, content-editor and UI-tester Sonnet visitors in one message. Verified their findings against source and the rendered pages: four bugs survived (heading structure on the landing, dig reports and Stores; the What the Record Claimed standfirst; small block-link targets; no skip link), all of which fit open issues, so no new issue was filed and each was added as one comment on 3248 or 3247. Dropped as not reproduced: a claimed duplicate season list on the Stores (it is SVG label text in a text dump) and a claimed raw error on the 404. Six items repeated logged ideas or open issues. A Midden-focus run had already filed 3246-3248 earlier today, so this run mostly re-found known ground. Retro answers from all three visitors went into the report comment on 3244."
+prs: []
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: .claude/skills/visitor-loop/visitor-brief.md
+    reason: (no reason given)
+  - path: .claude/skills/visitor-loop/decisions.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: scripts/lib/chromium.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: brief rules for the three read-only visitors
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: visitor-loop
+    reason: (invoked as a slash command)
+frictions:
+  - description: Only grepped layers/midden/GLOSSARY.md; the Tenant-glossary rule says to read it before working on a Tenant, though this run wrote no Tenant content.
+    solution: Skill step 3 could name the focus Tenant's glossary as a read, since the sort step judges wording and terms.
+    severity: nit
+  - description: Ran git fetch and the first GitHub call before reading the pointer docs; hooks flagged both late. The docs showed both calls were right.
+    solution: Visitor-loop step 1 could list the two pointer reads up front.
+    severity: nit
+  - description: Skill step 2 stops the preview server before step 3 asks for a rendered-page check of each bug, so I kept it running and stopped it after verifying.
+    solution: Move the stop to the end of step 3 in visitor-loop SKILL.md.
+    severity: nit
+  - description: Combined run_in_background with a trailing ampersand and later tried a foreground sleep; both were blocked by hooks and cost two calls.
+    solution: Use run_in_background alone and Monitor for waits, as CLAUDE.md already says.
+    severity: nit
+durationSec: 389
+models:
+  claude-sonnet-5-5: 102
+toolCounts:
+  Bash: 27
+  Skill: 3
+  Read: 6
+  Agent: 3
+  Monitor: 2
+  ToolSearch: 2
+  mcp__github__issue_read: 4
+  Write: 2
+  mcp__github__add_issue_comment: 3
+  mcp__claude-code-remote__get_session: 1
+  SendMessage: 3
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .claude/skills/visitor-loop/visitor-brief.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: provenance header on every GitHub body
+      - path: .claude/rules/adr-0003.md
+        value: backed
+      - path: .claude/rules/adr-0009.md
+        value: backed
+      - path: docs/agents/git-conventions.md
+      - path: docs/agents/github-integration.md
+      - path: docs/agents/issue-tracker.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .claude/rules/adr-0003.md
+        value: backed
+subagents:
+  - type: general-purpose
+    task: Blind first-time visitor
+    model: sonnet
+    durationSec: 205
+    toolCalls: 11
+    modelCalls: 9
+    tokenShare: 12.5
+  - type: general-purpose
+    task: Informed content editor
+    model: sonnet
+    durationSec: 218
+    toolCalls: 11
+    modelCalls: 10
+    tokenShare: 13.9
+  - type: general-purpose
+    task: Informed UI tester
+    model: sonnet
+    durationSec: 211
+    toolCalls: 12
+    modelCalls: 8
+    tokenShare: 12.4
+gitBranch: claude/blissful-lamport-zzeds3
+entrypoint: remote
+cliVersion: 2.1.323
+learnings:
+  - pnpm exec tsx run from a cwd outside the repo (for example after cd /tmp) fails with ERR_PNPM_RECURSIVE_EXEC_NO_PACKAGE; run it from the repo root with absolute script paths. Three visitors hit it.
+  - A text dump of /t/midden/stores lists the season labels three times because the SVG ruler's labels are text nodes; the page renders one ruler, so judge it by screenshot.
+  - scripts/lib/chromium.ts launchChromium() already adds --no-sandbox and --disable-gpu, so visitors need not pass args themselves.
+ideas:
+  - "Midden cause key: gloss 'owner' as the repo owner, a human, so chips like closed by owner read plainly to a newcomer."
+  - "Midden landing and Short Lives: add one sentence on the few entry-bar exceptions, since Short Lives calls itself out of scope twice against the landing's stated bar."
+  - Midden toward-the-defaults says the smaller instances are held in the stores but links none; link the Stores cards or fold the page into The Generated Map.
+  - "Midden wording slips: the-simpler-verdict standfirst says This site where it means This report, and the-fault-that-went-quiet says the same change without naming the security release."
+  - "Midden Trench: a By lifetime sort using the lifetimes reports already state, since how briefly things lived is the strongest hook and sits in prose."
+  - "Midden finds: a why-it-matters-now line linking each find to the live thing that replaced it, turning the catalogue from an elegy into a map."
+  - "Midden Stores: end the page with a next step (the Trench cause filters) instead of only the back link to the trench."
+  - "Midden finds: a per-find copy-link control, since each find already has an artifact anchor."
+landedBy: Stop
