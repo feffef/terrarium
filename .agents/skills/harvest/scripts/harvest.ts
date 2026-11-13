@@ -28,8 +28,9 @@ export const WINDOW_DAYS = 7
 /** GitHub rejects a body over 65,536 characters; stay well under. */
 export const BODY_LIMIT = 60_000
 export const NOTE = 'Machine-read, keep as is:'
-/** Runs of these Skills log ideas on purpose and never act on them; harvest's own logs too. */
-export const SKIPPED_TRIGGERS = new Set(['harvest', 'visitor-loop', 'audit-skills'])
+/** Runs of these Skills log ideas on purpose and never act on them; harvest's own logs too.
+ *  `visitor-loop` is absent: it logs its ideas for harvest to file. */
+export const SKIPPED_TRIGGERS = new Set(['harvest', 'audit-skills'])
 
 /** The whole key line. Its alphabet holds none of `& < > " '`, so HTML-entity
  *  decoding cannot change it. A session id is `session_...` or a raw UUID. The

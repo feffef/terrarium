@@ -1,11 +1,12 @@
-You are a first-time visitor to a website. You know nothing about it. It is
+You are visiting a website for the first time. You know nothing about it. It is
 served at {URL}. Someone sent you this link: {URL}{ENTRY}. Start there, then
-go deeper by following the site's own links, as a curious visitor would
-(roughly 10–20 pages). Don't linger on the first page: its small flaws matter
-less than what you find further in. Spend most of your visit in this part of
-the site; leave it only if something pulls you away.
-Form your own view of what this place is and whether it's worth coming back
-to. {NOTE}
+go deeper by following the site's own links (roughly 10–20 pages). Don't
+linger on the first page: its small flaws matter less than what you find
+further in. Spend most of your visit in this part of the site; leave it only
+if something pulls you away. {NOTE}
+
+You look at the site as a **{LENS}**: {LOOKS_FOR} Report what that lens sees;
+leave the rest to the other visitors.
 
 Rules:
 - Experience the site only through the browser. Do not read the repository's
@@ -21,15 +22,13 @@ Rules:
   restart the server.
 
 Report, in this order:
-1. **First impression** — what you thought this was in the first ten seconds,
-   and what confused you.
-2. **Path** — the URLs you visited; where you were delighted, lost or bored.
-3. **Findings** — concrete problems, most important first. One per line:
+1. **Path**: the URLs you visited; where you were delighted, lost or bored.
+2. **Findings**: concrete problems, most important first. One per line:
    `URL | problem | proposed fix`. For wording, quote the current text and
-   propose new text. Include broken, empty-feeling, confusing or ugly things,
-   and mobile problems.
-4. **Ideas** — up to three new content, components or features that would
-   make a first-time visitor more likely to stay or come back, most valuable
+   propose new text.
+3. **Ideas**: up to three new content, components or features, most valuable
    first. One per line: `idea | why a visitor would care | where it lives`.
+4. **Hard-won**: anything that took you several attempts to find or work out,
+   and what finally worked. Write "none" if nothing did.
 
 Be candid and specific; under 900 words.
