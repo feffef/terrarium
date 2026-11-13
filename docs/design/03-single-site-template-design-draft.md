@@ -2,11 +2,11 @@
 
 **Status: proposal by the writing agent; decides nothing.** It drafts one design
 that meets
-[`single-site-template-requirements.md`](./single-site-template-requirements.md)
+[`02-single-site-template-requirements.md`](./02-single-site-template-requirements.md)
 (cited as **REQ §n**). Read the requirements first: this draft argues for a
 shape, and the requirements say what any shape must guarantee. Where the
 breakdown is cited, it is
-[`single-site-template-breakdown.md`](./single-site-template-breakdown.md)
+[`01-single-site-template-breakdown.md`](./01-single-site-template-breakdown.md)
 (**BD §n**). Written on 2026-11-13.
 
 Every choice below is a proposal. A choice that rests on an untested fact is

@@ -3,11 +3,11 @@
 **Status: a proposal by the writing agent; decides nothing.** Written on
 2026-11-13 from the repo at `c425261e1`, by the agent that wrote the breakdown,
 without reading the first draft
-([`single-site-template-design-draft.md`](./single-site-template-design-draft.md)),
+([`03-single-site-template-design-draft.md`](./03-single-site-template-design-draft.md)),
 so the two can be compared. It answers
-[`single-site-template-requirements.md`](./single-site-template-requirements.md)
+[`02-single-site-template-requirements.md`](./02-single-site-template-requirements.md)
 (cited as **REQ §n**, or **R0.n** for its four numbered requirements) and
-[`single-site-template-breakdown.md`](./single-site-template-breakdown.md)
+[`01-single-site-template-breakdown.md`](./01-single-site-template-breakdown.md)
 (cited as **BD §n**). Each choice cites the requirement it meets; the evidence
 stays in the requirements. A choice that rests on a fact nobody has tested is
 marked **[untested]** where it appears, and section 13 collects every one.
