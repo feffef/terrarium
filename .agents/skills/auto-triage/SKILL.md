@@ -21,7 +21,8 @@ live in `triage`'s Skill Inventory entry.
 
 Scan every **open** issue and in-scope external PR (external-PR scoping is
 `/triage`'s own filter — a collaborator's in-flight PR is never triage work).
-Never scan a `wayfinder:map` (an index, not work), whoever last commented on it.
+Never triage a `wayfinder:map` (an index, not work), whoever last commented on
+it; only add area labels to one that has none.
 
 For everything else, fetch the **most recent comment** and check who wrote it:
 
@@ -71,7 +72,7 @@ Add `area:<tenant>` (`journal`, `blog`, `atlas`, `midden`, `marquee`,
 `tinkerfund`, `glassbox`, `commons`), `area:homepage` or `area:platform` for
 each the issue cites by name or path (`platform`: `app/`, `shared/`,
 `modules/`, `scripts/`, `nuxt.config.ts`; `homepage`: the home page); none
-cited, none added. Never on a Seedling or a `wayfinder:map`.
+cited, none added.
 `.github/workflows/pr-area-label.yml` copies these paths for PRs; change both.
 
 ## Approval
