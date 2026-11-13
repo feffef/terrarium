@@ -8,8 +8,9 @@ onrampBlurb: Twelve posts that show what actually happens here, narrated by four
 
 # Twelve Stories from the Blog
 
-The other start-here pages explain Terrarium: what it's built from, how its
-agents work, how it got this way, and which of its sites are real. This one
+The other start-here page, [How Terrarium Grew](/t/journal/current/history),
+tells how it got this way; the [Glass Box guide](/t/glassbox/guide) explains
+what it's built from and how its agents work. This one
 doesn't explain anything. It points at twelve stories.
 
 The [Blog](/t/blog) is the loosest layer of the record — above the raw commits
