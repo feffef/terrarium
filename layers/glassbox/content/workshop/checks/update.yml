@@ -81,3 +81,13 @@ pages:
     checked: '2026-11-12'
   - page: skill-pack/20.planning-with-the-pack
     checked: '2026-11-12'
+  - page: skill-pack/30.engineering-skills
+    checked: '2026-11-13'
+  - page: skill-pack/40.wayfinder
+    checked: '2026-11-13'
+  - page: terrarium-practice/10.human-in-the-loop
+    checked: '2026-11-13'
+  - page: terrarium-practice/20.decision-records
+    checked: '2026-11-13'
+  - page: terrarium-practice/30.ubiquitous-language
+    checked: '2026-11-13'
