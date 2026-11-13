@@ -21,7 +21,7 @@ const readable = computed(() => read.value.filter((path) => props.titles[path]))
 const subject = computed(() => glassboxSubjectOf(props.page.path))
 const walkthrough = computed(() => glassboxWalkthroughOf(props.page.path))
 // The hand-written Where next links already read move into their own section below it.
-const readNext = computed(() => subject.value
+const readNext = computed(() => subject.value || walkthrough.value
   ? glassboxNextLessons(props.page.body.value, props.base)
     .filter((path) => readable.value.includes(path))
     .map((path) => ({ path, title: props.titles[path]!, subject: glassboxSubjectOf(path)!.name }))
@@ -39,14 +39,14 @@ const parts = computed(() => {
   const panes = walkthrough.value ? sections.filter(glassboxIsDiagramPane) : []
   const flow = walkthrough.value ? sections.filter((node) => !glassboxIsDiagramPane(node)) : sections
   const withBody = (nodes: typeof intro) => ({ ...props.page, body: { ...body, value: nodes.map((node) => glassboxMarkSeen(node, props.base, readable.value)) } })
-  const sectionParts = (walkthrough.value ? glassboxWalkthroughParts(flow, props.base, props.titles, props.descriptions) : [{ nodes: flow.map((node) => glassboxLessonChipsDeep(node, props.base)) }])
+  const sectionParts = (walkthrough.value ? glassboxWalkthroughParts(flow, props.base, props.titles, props.descriptions, readable.value) : [{ nodes: flow.map((node) => glassboxLessonChipsDeep(node, props.base)) }])
     .map((part) => ({ ...part, value: withBody(part.nodes) }))
   return {
     intro: withBody(walkthrough.value ? intro : intro.map((node) => glassboxLessonChipsDeep(node, props.base))),
     sections: sectionParts,
     diagram: panes.length ? withBody(panes) : undefined,
     diagramAfter: sectionParts.findLastIndex((part) => 'stop' in part && part.stop),
-    toc: subject.value ? glassboxLessonToc(body.toc?.links ?? [], body.value, props.base, readable.value) : body.toc?.links ?? [],
+    toc: subject.value || walkthrough.value ? glassboxLessonToc(body.toc?.links ?? [], body.value, props.base, readable.value) : body.toc?.links ?? [],
   }
 })
 </script>

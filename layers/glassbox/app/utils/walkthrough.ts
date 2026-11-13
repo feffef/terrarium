@@ -1,5 +1,5 @@
 import type { MinimarkElement, MinimarkNode } from '@nuxt/content'
-import { glassboxLessonIds, glassboxLessonLabels, glassboxLinkLabel, glassboxNextList, type GlassboxTitles } from './lesson'
+import { glassboxLessonIds, glassboxLessonLabels, glassboxLinkLabel, glassboxNextAllRead, glassboxNextList, type GlassboxTitles } from './lesson'
 import { glassboxWalkthroughs, type GlassboxPageLink } from './subjects'
 
 // Design 1b's stops, keyed on the headings writers already write (#1993). The
@@ -21,9 +21,11 @@ export interface GlassboxWalkthroughPart {
 /** A Walkthrough body cut into parts: each stop (`## 1. Title` up to the next
  *  h2) on its own, its number moved out of the heading and its `::lessons`
  *  drawn as chips; whatever lies between stops in plain parts, with A real case
- *  framed and Where next drawn as rows. */
-export function glassboxWalkthroughParts(nodes: MinimarkNode[], base: string, titles: GlassboxTitles = {}, descriptions: GlassboxTitles = {}): GlassboxWalkthroughPart[] {
+ *  framed and Where next drawn as rows. Where next drops the links in `read`
+ *  and, once all are read, its heading, as on a Lesson. */
+export function glassboxWalkthroughParts(nodes: MinimarkNode[], base: string, titles: GlassboxTitles = {}, descriptions: GlassboxTitles = {}, read: string[] = []): GlassboxWalkthroughPart[] {
   const parts: GlassboxWalkthroughPart[] = []
+  const allRead = glassboxNextAllRead(nodes, base, read)
   let section = ''
   let box: MinimarkElement | undefined
   for (const node of nodes) {
@@ -31,6 +33,7 @@ export function glassboxWalkthroughParts(nodes: MinimarkNode[], base: string, ti
     if (tag === 'h2') {
       section = String(props!.id)
       box = undefined
+      if (allRead && section === glassboxLessonIds.whereNext) continue
       const stop = typeof first === 'string' ? glassboxStopNumber(first) : undefined
       if (stop) {
         parts.push({ stop: stop.n, id: section, nodes: [['h2', props!, stop.title, ...rest] as MinimarkNode] })
@@ -42,7 +45,8 @@ export function glassboxWalkthroughParts(nodes: MinimarkNode[], base: string, ti
     if (!parts.length) parts.push({ nodes: [] })
     const part = parts.at(-1)!
     const isNextList = section === glassboxLessonIds.whereNext && tag === 'ul'
-    ;(box ?? part.nodes).push(part.stop ? glassboxLessonChips(node, base) : isNextList ? glassboxNextList(node, base, titles, [], descriptions) : node)
+    if (allRead && isNextList) continue
+    ;(box ?? part.nodes).push(part.stop ? glassboxLessonChips(node, base) : isNextList ? glassboxNextList(node, base, titles, read, descriptions) : node)
   }
   return parts
 }
