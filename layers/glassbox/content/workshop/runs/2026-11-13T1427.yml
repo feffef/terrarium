@@ -8,7 +8,10 @@ focus: "The gate walkthrough example. The owner pointed out that the merged
   because the owner asked for it. Deviations for the budget are the same as the
   run of 2026-11-13T1124 (no Scout, chip targets judged from the guide index); the
   writer ran each check on a throwaway copy of the helper with an injected mistake
-  and the sonnet claim checker and the code review ran on the final text."
+  the sonnet claim checker and the Spec reviewer ran on the final text, and the
+  Standards reviewer did not run (the 5-hour rate limit stopped it). The page
+  checks cover most of the contract. The lessons the stops link were not read in
+  full by the lead; the writer read them per its brief, which was not verified."
 changes:
   - walkthroughs/15.a-change-meets-the-gate | Rewritten around a one-line change to
     the Journal's duration helper. Each check now says what it would catch in that
@@ -21,4 +24,5 @@ changes:
     first example gave lint and the type check nothing to flag, so the page showed
     the gate as overhead
 pagesRead:
+  - verification/10.gate
   - walkthroughs/15.a-change-meets-the-gate
