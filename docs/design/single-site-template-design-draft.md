@@ -264,6 +264,8 @@ write findings in one shape:
   evidence: <command, measurement, screenshot, or source line>
   verified: yes | no
   commit: <commit it was seen at>
+  lens: <visitor or check that saw it, optional>
+  match: <issue or earlier finding it repeats, if any>
   proposal: <smallest fix, optional>
 ```
 
@@ -391,7 +393,8 @@ request time. Its parts:
 **Access** goes through a server middleware check of one owner secret, set at
 setup. A demo site can turn the check off.
 
-**Why request time:** writing a log then never needs a deploy. The running
+**Why request time** (a proposal for where logs live, which REQ §2.2 leaves
+open): writing a log then never needs a deploy. The running
 server reads `.dashboard/` from a checkout it updates on a timer
 **(spike: how the host gets new logs without a rebuild)**. If the host can't,
 the dashboard reads the log files through the GitHub API with a short cache.

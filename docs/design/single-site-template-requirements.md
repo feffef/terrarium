@@ -39,8 +39,9 @@ These revise the breakdown's starting point (BD "What the owner settled first"):
   BD §2 "Journal: Drop from the core" and BD §4 "digest: Drop".
 - **A watcher must catch what sessions don't notice about themselves.** This
   reverses BD §4 "audit-skills: Drop".
-- **Docs upkeep runs autonomously and the owner can steer it.** Audit-docs is
-  core, because it keeps finding what review missed. A productive site gets a
+- **Docs upkeep runs autonomously and the owner can steer it.** Checking docs
+  against the code is core, because Terrarium's audit-docs kept finding what
+  review missed. A productive site gets a
   guide that explains the platform, seeded from the template and grown with the
   site. This reverses BD §4 "audit-docs: Later" and BD §2 "Glass Box: Drop".
 - **The visitor sweep stays, improved:** good signal and coverage, and it reports
@@ -79,7 +80,7 @@ These revise the breakdown's starting point (BD "What the owner settled first"):
 ## The finding behind most of this
 
 Cheap mechanisms hold better than prose, but not by much, and a mechanism can
-cost more than it saves. Across 220 recorded fixes to Friction causes:
+cost more than it saves. Across 220 recorded fixes to recurring problems (Terrarium's Friction causes):
 
 | Kind of fix | Held |
 |---|---|
@@ -104,8 +105,8 @@ The history shows the same pattern one topic at a time:
 - **Closure:** a dozen rounds before a refusal and a stop hook (#1801 to
   #2956).
 
-Mechanisms failed too. Three of Terrarium's top Friction causes came from its
-own guards and hints:
+Mechanisms failed too. Three of Terrarium's top recurring problems came from
+its own guards and hints:
 
 - a guard that denied a first call until a doc was read (66 in 14 days);
 - a stop hook that nagged mid-run (67);
@@ -137,7 +138,7 @@ Read with BD §1. The breakdown's gate row is right; what it misses is what
 verification, the check that decides whether a change may merge, must
 guarantee.
 
-### 1.1 Verify
+### 1.1 Verification
 
 | Requirement | Evidence | Revises |
 |---|---|---|
@@ -319,7 +320,7 @@ of these came from agent-only failures, not from outside contributors:
 | The verdict's commit id is machine-produced, never typed. | #2833: 16 wrong before the fix, 5 after |
 | The merge is pinned to the reviewed head, so a late push fails the merge instead of landing unreviewed. | merge-pr body; #1761 |
 | No platform auto-merge: it cannot pin the head, and the owner's own pushes don't disarm it. | #385, #667, #1761 |
-| Protected paths are read from the shared branch, so a PR can't shrink its own list. The check counts both sides of a rename and fails closed. | Protected-paths lesson; rename fix `6794317d5` |
+| A PR cannot shrink its own protected-path list, a rename cannot move a file out of it unseen, and an unreadable list refuses the merge. | Protected-paths lesson: the list is read from `main`; rename fix `6794317d5` |
 | Closing keywords are parsed the way GitHub does: any tense, colon, quotes, negation. A merge never closes an issue the owner reserved. | #983, #2104, #2691 |
 | Issues GitHub left open after the merge are closed, with a retry. | #983, #1181 |
 | An owner waiver is quoted in the merge record and covers only the protected-path refusal. | #3022 |
@@ -355,8 +356,8 @@ to $34 and takes 1 to 3 hours. Minimal first version:
 | Ask the owner once: numbered questions, lettered options, a pick and why, count checked. | `CkH3TE`, `NjAbK…` |
 | No builder starts until every answer is in. | Owner asked for this rule (PR #3207) |
 | One isolated branch per group of issues that share files. | #603: two green branches broke `main` together |
-| One fresh review round (standards and spec) per non-simple branch. Nits never block. A simple diff gets one reviewer or a self-read. | Real catches came in round 1 and sometimes round 2; round 3 found only nits; the two reviewers duplicated each other on small diffs |
-| Fixes go back to the builder. Re-check only what was touched, with a hard stop. | After #3119 every re-check was clean |
+| Each non-simple branch is reviewed by fresh eyes before its PR; nits never block, and a simple diff gets a lighter review. | Terrarium ran one fresh standards-and-spec round. Real catches came in round 1 and sometimes round 2; round 3 found only nits; the two reviewers duplicated each other on small diffs |
+| A review finding is fixed by the branch's builder and re-checked, and the review loop has a hard stop. | Fixes went back to the builder, re-checking only what was touched. | After #3119 every re-check was clean |
 | A missing test is a defect only where the code is risky. | `R3mLZ…` ran rounds 2 and 3 on low-risk gaps |
 | A clean review does not replace the owner's design choice. | #3253 passed review and was rejected on design |
 | Report one line per issue. Report cost before the owner's final step, not after. | `TEBhU…`: 4.4M tokens on 6 small branches |
@@ -486,9 +487,9 @@ it (#1913).
 | A rewrite of a decision record must not change the decision; humans merge decision changes. | #1913, PR #1932 |
 | A conflict no source settles becomes an issue; naming it without filing it is a failure. | #2395, #2553 |
 | Coverage rotates by the last run's record, not the calendar, and logs what was actually read. | #1914, #2726 |
-| The owner steers through a hard-rules file that only the owner edits and every run reads whole. Agent-made decisions live separately and can be overruled with evidence. | `owner-decisions.md`; split in `4f233ce8d` |
-| The agent's memory of open leads has a hard size cap enforced by a test. "Leave it shorter" alone did not hold. | Grew about 2.7× in 4 days before the cap |
-| Pages that cite code are pinned to a commit, and a test fails on a stale pin or excerpt. | `glassbox-pages.spec.ts` |
+| The owner steers through standing rules only the owner changes, which every run obeys. Agent-made decisions live separately and can be overruled with evidence. | Terrarium's `owner-decisions.md`, read whole by every run; split in `4f233ce8d` |
+| The agent's memory of open leads has a hard size limit that cannot be skipped. "Leave it shorter" alone did not hold. | Grew about 2.7× in 4 days until a test enforced a cap |
+| A page that cites code never silently drifts from it: a stale citation fails verification. | Terrarium pins pages to a commit and checks them in `glassbox-pages.spec.ts` |
 | Large mechanical diffs still get review, by an explicit threshold. | #2472, #2748 |
 | Autonomous runs don't ask the owner for a focus. | 4 of 4 early runs asked |
 | The guide explains the platform and grows with the site (owner). | Owner |
@@ -512,7 +513,7 @@ Evidence:
 | Visitors get the real route list, including pages a link crawl can't reach. | Journal digests behind expanders |
 | Personas include task-directed, keyboard-only and returning visitors. | Gap |
 | Each run has a page and screenshot budget and records its cost. | New runs' cost unrecorded |
-| Findings hand off to the self-improvement sweep with a fixed set of fields: url, lens, evidence, preview commit, verified, match. Ideas go to the idea input. | Owner |
+| Findings hand off to the self-improvement sweep in the one shape every sweep uses, carrying where, what, evidence, the commit seen and whether it was verified. Ideas go to the idea input. | Owner; visitor runs carried url, lens, evidence, preview commit, verified, match |
 | It builds nothing. | Owner; #2369 |
 
 ### 4.5 Digest
