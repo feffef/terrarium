@@ -451,7 +451,7 @@ Close-up: `prune-trial`.
    repository.
 4. It writes their ideas and its hard-won learnings into its log, for
    `harvest`, and files the bugs it confirms as issues, closely related ones
-   together. It changes nothing else.
+   together, or adds them to an open issue they fit. It changes nothing else.
 
 Close-up: `visitor-loop`.
 
@@ -591,7 +591,7 @@ it.
 | preview | a production build of the site |
 | three visitors | one blind, two that know the focus's recent changes, ideas and issues |
 | tally | each report item becomes a bug, an idea or a learning, or is dropped |
-| log | ideas and learnings for `harvest`; confirmed bugs as issues |
+| log | ideas and learnings for `harvest`; confirmed bugs as new or amended issues |
 
 **`container`** (stories 1 and 4)
 

@@ -14,8 +14,9 @@ learnings into Seedlings, and its bugs become issues for triage.
 
 ## Remit
 
-The run changes nothing but its own session log, one issue per group of
-confirmed bugs, and its retro comment on #3244: no branch or PR (ADR-0003).
+The run changes nothing but its own session log, its confirmed bugs (one new
+issue per group, or a comment on an open issue they fit) and its retro comment
+on #3244: no branch or PR (ADR-0003).
 Its Frictions are only where the run itself was bumpy, never site bugs.
 
 ## Today's focus
@@ -88,8 +89,11 @@ once, then mark each item:
 - **bug**: the site breaks its own intent: a broken link or control, an error,
   a layout fault, a mobile or accessibility failure, a false statement. Check
   it yourself against the source and the rendered page before you mark it; a
-  visitor can misread. Mark one you can't reproduce *dropped (not reproduced)*,
-  and one an open issue already covers *dropped (#N)*.
+  visitor can misread. Mark one you can't reproduce *dropped (not reproduced)*.
+  Then match it against every open issue
+  (`pnpm exec tsx scripts/github/list-open-issues.ts`): mark it *dropped (#N)*
+  if an issue already states it, or *amend #N* if it fits one and adds a new
+  page, symptom or evidence.
 - **idea**: anything else worth doing, wording and taste included.
 - **learning**: a fact this run spent real effort to establish (a visitor's
   hard-won note or your own checking) that a later session would otherwise
@@ -104,10 +108,12 @@ rendered page.
 
 ## 4. File bugs, draft the log
 
-Group closely related bugs (one page or component, or one fault across
-pages) and file one issue per group, labelled `needs-triage`, with a body per
-`docs/agents/issue-tracker.md`'s "Filing an issue": each bug's URL, what
-breaks, how you confirmed it, and a proposed fix.
+For each bug, give its URL, what breaks, how you confirmed it, and a
+proposed fix. Add the *amend #N* bugs to their issue as one comment per issue
+(`add_issue_comment`; never edit the issue body). Group the other bugs that
+are closely related (one page or component, or one fault across pages) and
+file one issue per group, labelled `needs-triage`, with a body per
+`docs/agents/issue-tracker.md`'s "Filing an issue".
 
 Then write the log's entries in a draft YAML in your scratchpad, in
 `log-session`'s authored format:
@@ -117,8 +123,8 @@ Then write the log's entries in a draft YAML in your scratchpad, in
 - each **learning** is one `learnings` line;
 - the run's own Frictions, as in any session.
 
-Done when every bug is in a filed issue and every idea and learning in the
-draft.
+Done when every bug is in a filed issue or an amending comment, and every
+idea and learning in the draft.
 
 ## 5. Retro, then close
 
