@@ -11,11 +11,13 @@ Second, fill gaps: a technology or process Terrarium relies on that no Lesson
 teaches. Third, every run leaves the memory page shorter (State). You lead and choose the
 steps; improvise.
 
-**Shape.** A session is a series of runs. Each run has one focus (a Subject, a
-structural question or a gap) and one PR. The budget, for the whole session, is
-$25 of spend or 500k tokens of context in the main session, whichever comes
-first; Loop, the last step, says how to read it and what it decides. Stop at
-the budget. Several runs a day must work.
+**Shape.** A session works through foci, one run each: a run takes one focus (a
+Subject, a structural question or a gap), from the instructions you were given
+or the memory page, and opens one PR; then the next run takes the next focus.
+There is always another, so only the budget ends a session. The budget, for the
+whole session, is $25 of spend or 500k tokens of context in the main session,
+whichever comes first; Loop, the last step, says how to read it and what it
+decides. Several runs a day must work.
 
 **Modes.** *Autonomous*: your first message carries a system-reminder
 `Fired by routine "/glassbox-curate"`; decide everything, ask nothing, and say
@@ -95,9 +97,9 @@ keeps them so).
   full every page outside the Subject that a change would edit, link or
   overlap. Done when every page of the Subject is read in full, plus every
   outside page a change would edit, link or overlap.
-- **Choose.** Pick this run's focus from what you read, preferring concrete
-  memory items you can solve completely within the budget that is left. Fix every reader
-  finding the run can fix; only what State allows goes on the memory page. The
+- **Choose.** Pick this run's focus from the instructions you were given, else
+  from what you read, preferring concrete memory items you can solve completely
+  within the budget that is left. Fix every reader finding the run can fix; only what State allows goes on the memory page. The
   run entry says why you chose the focus.
 - **Owner's questions.** Build the option you'd recommend. A question only the
   owner can answer (where a topic belongs, whether a practice is recorded)
@@ -162,23 +164,24 @@ keeps them so).
   run's cost (without `get_session`: "unreported" and the token estimate), and the
   memory page and run entry are current. Then Loop.
 - **Loop.** Every run that opened a PR ends here, whether it merged or waits for
-  the owner; closing the session straight after Land skips this step. First read the
-  budget. Call `get_session` with no session id: `external_metadata.usage.cost_usd`
-  (it appears only partway into a run) and
+  the owner; finishing a focus is not the end of the session, and closing it
+  straight after Land skips this step. First read the budget. Call
+  `get_session` with no session id: `external_metadata.usage.cost_usd` (it
+  appears only partway into a run) and
   `external_metadata.context_usage.used_tokens`. If `get_session` is not among
   your tools, estimate the context instead: every tool result, subagent report
   and turn so far (about 4 characters a token, rounding up when unsure) plus
   about 25k for the system prompt and tools. Past runs reached $25 at about 450k
   tokens, so the estimate decides, and every figure you report says it is an
-  estimate. Then look for another focus: memory leads,
-  page-check warnings, Scout topics, pages no fresh reader has seen lately. A
-  run adds up to about 100k tokens of context. When the budget leaves room for
-  that and a focus remains, start the next run as a full one: orient again, its
-  own focus, run entry, branch from a fresh `origin/main` and PR; in an
-  interactive session, settle that focus with the person first. Otherwise stop.
-  Say which in your last message and the session log, with the figure or
-  estimate and the focus you saw or found none. Hand over to a new session only
-  when the invocation says so: create it with `source_url:
+  estimate. A run adds up to about 100k tokens of context. When the budget leaves
+  room for that, start the next run as a full one: orient again, its own focus,
+  run entry, branch from a fresh `origin/main` and PR; in an interactive session,
+  settle that focus with the person first. Take the next focus from the
+  instructions you were given, then the memory page's leads, page-check
+  warnings, Scout topics and gaps, and last pages no fresh reader has seen
+  lately. Stop only when the budget is spent, and say in your last message and
+  the session log what it was, measured or estimated. Hand over to a new session
+  only when the invocation says so: create it with `source_url:
   https://github.com/feffef/terrarium` and the same prompt.
 
 ## Lenses
