@@ -1,0 +1,198 @@
+schemaVersion: 1
+session: session_013zxzeR9vRBRGWAa4ScJTRD
+startedAt: 2026-11-13T22:38:37Z
+endedAt: 2026-11-13T22:56:53Z
+kind: interactive
+goal: Read the final design draft and make it stand without its evidence file
+status: in-review
+outcome: "PR 3287 open: 09 no longer cites 08, README says to read 09 with 05; gate green"
+summary: "The owner asked me to read the final draft in docs/design (09, \"Samara\"), then asked, over several turns, how to turn it into a spec for agents with the engineering skills. I read to-spec, to-tickets, implement-spec and wayfinder first and recommended one wayfinder map for the open decisions and experiments, then one to-spec per phase; the owner added that the work goes in a new repo with 05 and an oracle session for Terrarium questions. Human-instructed: the read, the advice questions, folding 08's references into 09, a PR, and the README note about 05. Agent-initiated: removing the stale standalone and 08 wording the two review agents found, and the gate run. Open: the owner has not yet answered which framing for the new repo or where 05 and 08 go."
+prs:
+  - "3287"
+docsRead:
+  - path: docs/design/09-final-design-draft.md
+    reason: (read before editing)
+  - path: docs/design/README.md
+    reason: (read before editing)
+  - path: .agents/skills/to-spec/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/to-tickets/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/implement-spec/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/wayfinder/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (no reason given)
+  - path: GLOSSARY.md
+    reason: (no reason given)
+  - path: GLOSSARY-MAP.md
+    reason: (no reason given)
+  - path: docs/adr/0030-adrs-document-a-decision-not-its-history.md
+    reason: (no reason given)
+  - path: docs/design/08-converged-decisions.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: Standards and Spec review of the docs diff before the PR
+  - name: dispatch-subagents
+    reason: wrote the two read-only reviewer briefs
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: ask-matt
+    reason: (invoked as a slash command)
+frictions:
+  - description: Typed this session's id from memory into the commit message file; it was another session's id. Caught before committing via get_session.
+    solution: Copy the id from the attribution lines in context, never recall it; the commit template should be pasted whole.
+    severity: nit
+  - description: First Glob used docs/designs/** (the user's wording) and found nothing; had to list docs to find docs/design.
+    solution: List the parent directory before globbing a path taken from the prompt.
+    severity: nit
+  - description: First edit left stale 'standalone' and 'two earlier drafts' wording that both reviewers caught; needed a second commit.
+    solution: After removing a reference, grep the README and sibling docs for other statements of the same fact before committing.
+    severity: minor
+durationSec: 1096
+models:
+  claude-sonnet-5-5: 115
+toolCounts:
+  Glob: 1
+  Bash: 31
+  Read: 9
+  Edit: 15
+  mcp__claude-code-remote__get_session: 1
+  Skill: 3
+  Agent: 2
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Write: 1
+filesEdited:
+  - docs/design/09-final-design-draft.md
+  - docs/design/README.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+adrHints:
+  - adr: 27
+    via: path
+    readAfter: true
+    by: main
+docsReadBySubagents:
+  - GLOSSARY.md
+  - GLOSSARY-MAP.md
+  - docs/adr/0030-adrs-document-a-decision-not-its-history.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/design/09-final-design-draft.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/to-spec/SKILL.md
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: .agents/skills/wayfinder/SKILL.md
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: native
+        trigger: docs/adr/0027-prune-trials.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: docs/adr/0027-prune-trials.md
+    reported:
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: opened PR myself, subscribed
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: ran code-review and gate:scoped
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: header line and trailer checked
+      - path: .claude/rules/adr-0009.md
+        value: backed
+      - path: docs/agents/git-conventions.md
+      - path: docs/agents/github-integration.md
+      - path: docs/agents/pr-workflow.md
+      - path: .agents/skills/dispatch-subagents/SKILL.md
+      - path: .agents/skills/wayfinder/SKILL.md
+  - by: Explore
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: CLAUDE.md
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: GLOSSARY.md
+      - rule: .claude/rules/adr-0030.md
+        via: native
+        trigger: docs/adr/0027-prune-trials.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/adr/0027-prune-trials.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: docs/adr/0027-prune-trials.md
+    reported:
+      - path: .claude/rules/adr-0030.md
+        value: backed
+      - path: .claude/rules/adr-0027.md
+        value: backed
+      - path: CLAUDE.md
+      - path: GLOSSARY.md
+  - by: Explore
+    subagent: 1
+    answered: true
+    loads: []
+    reported: []
+subagents:
+  - type: Explore
+    task: Standards review of docs diff
+    durationSec: 35
+    toolCalls: 16
+    modelCalls: 6
+    tokenShare: 9.3
+  - type: Explore
+    task: Spec review of docs diff
+    durationSec: 29
+    toolCalls: 8
+    modelCalls: 5
+    tokenShare: 7
+gitBranch: claude/intelligent-gates-bmkjw3
+entrypoint: remote
+cliVersion: 2.1.325
+learnings:
+  - The Terrarium session tools can message another session by id, but a sent message returns on delivery, not on answer, so an oracle session needs an explicit reply convention.
+landedBy: Stop
