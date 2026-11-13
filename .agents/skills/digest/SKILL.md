@@ -78,7 +78,7 @@ project**: they should understand what actually happened without the glossary.
 Name things by what they do ("the docs check"). A cadence word (weekly, daily,
 "scheduled", "runs every…") needs a source in the day's material (a PR body, a
 doc, a session's kind), else omit it; PR titles and session goals are not
-sources. Use no project names
+sources. Avoid project names
 (`audit-docs`, Tenant, prune trial, Friction); leave out file, script and ADR
 names and git commands. The `summary` headline matters most — it must read
 clearly on its own. Lead with narrative, not a changelog; keep it to 100–250
