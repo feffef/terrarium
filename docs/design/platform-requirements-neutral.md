@@ -68,9 +68,8 @@ No outside contributors to a site.
 started by the owner, by another session, or by a schedule; sweeps look after
 the site and the platform without a human present.
 
-**Stranger.** Someone who creates their own site from the template. They are
-not a contributor to the owner's sites. The owner's own sites come first; the
-template should be usable by a stranger.
+**Stranger** (section 3). The owner's own sites come first; the template should
+be usable by a stranger.
 
 ### 2.1 Use cases the platform must support
 
@@ -117,7 +116,15 @@ words used in this document:
 | problem | Anything that cost a session time or went wrong, graded by what it cost. |
 | finding | One item handed from a session or sweep to the improvement process: a problem, an idea or a learning, with evidence. |
 | cause | The root cause of one or more problems, with its fixes and a state derived from later occurrences. |
-| sweep | A skill run on a schedule or on demand that looks after the site or the platform. |
+| sweep | A skill run on a schedule or on demand that looks after the site or the platform. Five ship: the watcher, the improvement sweep, docs upkeep, the visitor and the digest. |
+| improvement sweep | The one sweep that turns every finding into fixes or issues (11.3). |
+| builder | The agent that implements a change. |
+| head | The latest version of a change request's branch; reviews and merges name it exactly. |
+| safe surface | Files outside the protected paths that a sweep's own skill allows it to change. |
+| memory file | A size-capped file where a sweep keeps its own open leads and decisions (DOC-7). |
+| taken mark | The mark on a finding saying which improvement run consumed it. |
+| run row | One record per sweep run: time, cost, coverage. |
+| merge row | One record per merge made by the merge step (MRG-11). |
 | verification | The fixed set of checks a change must pass before it may merge. |
 | verdict | The posted outcome of a code review, naming the exact reviewed version. |
 | protected path | A file or area whose changes only the owner may merge. |
@@ -127,7 +134,6 @@ words used in this document:
 | guide | Pages explaining how this site and its platform work. |
 | stranger | Someone who creates their own site from the template and is not a contributor to the owner's sites. |
 | change request | A proposed change to the site on its source host, reviewed and then merged (a pull request or merge request). |
-| skill pack | A third-party, installable collection of skills (section 4). |
 | map | A plan for work bigger than one session: the destination and the tickets that lead to it. |
 | ticket | One decision, research, prototype or task item on a map, done in its own session. |
 | hand-over | The note one session writes so the next session can continue. |
@@ -190,7 +196,7 @@ work *within* them, and must not rely on a feature that hits one.
 | ENV-11 | Some operations (creating labels, changing branch protection or repository settings, installing the workflow definition, setting secrets, editing the environment's setup script) are not available to a remote session and need a human or a laptop. |
 | ENV-12 | The agent tool's own permission classifier may still refuse an action the owner authorised (for example a merge). |
 | ENV-13 | Parallel full verification runs are limited by memory; too many at once fail with out-of-memory kills. |
-| ENV-14 | A session's own id is available to hooks, not reliably to the agent (see ID-2). |
+| ENV-14 | A session's own id is available to hooks; the agent must not transcribe it (see ID-2). |
 
 ## 5. How mechanisms are chosen (applies to every section)
 
@@ -355,7 +361,7 @@ enforce one, PRIN-1 applies.
 
 | Behaviour | Failure it prevents |
 |---|---|
-| **Verify before you state.** Ids, counts, causes and any helper agent's claim are checked against the source this turn before being stated. | Facts stated from memory or relayed unchecked; counts not tallied. |
+| **Verify before you state.** Ids, counts, causes and any sub-agent's claim are checked against the source this turn before being stated. | Facts stated from memory or relayed unchecked; counts not tallied. |
 | **Question the premise.** Give each part of a plan a reason from the current goal; drop parts without one; add nothing beyond the ask. Run a new ordering or selection rule on two concrete cases before showing it. | Over-building; changes the owner reverts. |
 | **Ask before building** anything the owner will see; settle in the first round what each displayed value follows; show a sample first. A stored field's shape is settled with the owner first. | Rework after the owner sees the result. |
 | **Open the change request yourself** once the change is reviewed and verified, even if the tool's default says not to; subscribe to its activity and keep working until merged, closed or taken over. | Reviewed work left unmerged. |
@@ -367,11 +373,12 @@ enforce one, PRIN-1 applies.
 | **Stay on the branch the session started on;** if that is the default branch, cut a new one. | Work on the wrong branch. |
 | **Every agent write to an outside system names the session that made it** (see 8.8). | Unattributable posts. |
 
-**GUIDE-2** The platform deliberately **excludes** four mechanisms, each of which
-became a top source of problems (PRIN-2): a guard that denies a first tool call
-until a document is read; hints that point to a document after each edit; a
-reminder that interrupts mid-run; generated summary rules mirroring every
-decision record together with tracking of which rules loaded.
+**GUIDE-2** The platform deliberately **excludes** four mechanisms. The first
+three became top sources of problems (PRIN-2): a guard that denies a first tool
+call until a document is read; a reminder that interrupts mid-run; hints that
+point to a document after each edit. The fourth is machinery with no use here:
+generated summary rules mirroring every decision record, together with tracking
+of which rules loaded.
 
 **GUIDE-3** A handful of **path-scoped rules**, written by hand, only where a
 rule concerns certain files (for example protected paths).
@@ -561,7 +568,7 @@ the automation service.
 | VER-3 | Any decision drawn from source-control history **fails closed** on a shallow or unknown base. |
 | VER-4 | In automation, the run summary **names the failing step**; a single opaque step that hides which check failed is not acceptable. |
 | VER-5 | A **fast** local subset (seconds) exists for iterating: content against schema, data-format traps (see 13.1), references between content files, skill-name clashes. It never replaces full verification. |
-| VER-6 | The whole run stays short enough to run in full every time (no skipping by changed path at first). A fail-closed skip may be added if it ever hurts; skipping review for prose that steers sessions never is allowed. |
+| VER-6 | The whole run stays short enough to run in full every time (no skipping by changed path at first). A fail-closed skip may be added if it ever hurts, but never a skip of review (WM-4). |
 | VER-7 | On green, the automation posts a signal that **wakes** a session waiting for it (ENV-3). |
 | VER-8 | The automation workflow definition is **minimal and stable**; its logic lives where a remote session may push, so changing verification never means editing the workflow (ENV-2). |
 | VER-9 | A **drop zone** exists for changes only a human or laptop session can apply (workflow definitions etc.), with a rule that both halves of a change land in one sitting. |
@@ -589,8 +596,7 @@ contributors.
 ### 9.3 Autonomy and protected paths
 
 - **AUT-1** One value, chosen at setup, decides what agents may merge. At least
-  **three presets** exist, and the least permissive lets nothing merge without
-  the owner. Exact definitions are open (section 15). Candidate axes: who merges
+  **three presets** exist. Exact definitions are open (section 15). Candidate axes: who merges
   agent changes; whether scheduled runs may self-merge; whether the
   improvement sweep may change its own skills; how large the protected list is.
 - **AUT-2** The presets vary by **who acts and what kind of change**, not by a
@@ -603,11 +609,10 @@ contributors.
   and protected lists themselves, the workflow definition, decision records,
   the owner's rulings, the place for server routes. The owner confirms the
   list.
-- **AUT-5** By default the owner merges a change that adds a dependency, moves
-  one to a new major version, patches its code, changes behaviour no test or
-  check can observe, or adds a server route. Whether a preset relaxes this for
-  low-risk dependency updates is open.
-- **AUT-6** Whether a security review of such changes is wanted is open.
+- **AUT-5** By default the owner merges a change that adds a dependency or a
+  server route. Which other kinds of change also need the owner (new major
+  versions, low-risk dependency updates, behaviour no check can observe) is open,
+  as is whether such changes get a security review.
 
 ## 10. Session records
 
@@ -617,7 +622,7 @@ showable on a dashboard, and quick and painless to write**.
 | Id | Requirement |
 |---|---|
 | REC-1 | Every substantive session lands a record **without the owner asking**. |
-| REC-2 | The agent writes **only the judgement half**: goal, outcome, problems, ideas, who asked. Machine facts (timings, models, tokens, tools used, helper agents, files changed, change requests, source-control state) come from the machine. The platform keeps only the machine facts it uses; tracking which instructions or documents a session read is not one of them. The session id comes from the machine too (ID-2). |
+| REC-2 | The agent writes **only the judgement half**: goal, outcome, problems, ideas, who asked. Machine facts (timings, models, tokens, tools used, sub-agents, files changed, change requests, source-control state) come from the machine. The platform keeps only the machine facts it uses; tracking which instructions or documents a session read is not one of them. The session id comes from the machine too (ID-2). |
 | REC-4 | Landing is **idempotent**: a second landing replaces the machine half and merges the authored half; it never clobbers the authored half. |
 | REC-5 | A record's **status follows its change requests**, so no view shows "in review" for merged work. Status is derived (PRIN-8). |
 | REC-6 | A failed landing is **loud**, never hidden by filtered output. An agent must never tell the owner a refused record had landed. |
@@ -660,6 +665,7 @@ a command, never typed by an agent:
 Classes of thing it caught: steps a skill skipped while reporting success;
 missed invocations; reverted or regressed changes; verification bypassed by accident;
 orphaned records; humans nudging a closure; a scheduled sweep that stopped.
+
 | Id | Requirement |
 |---|---|
 | WAT-1 | Runs on a schedule, independent of any session noticing. |
@@ -686,7 +692,7 @@ schedule.
 | IMP-3 | The input window starts at the previous run, with a margin and a per-item "taken" mark, so missed runs lose nothing. |
 | IMP-4 | It fixes only on a **safe surface**, through a reviewed and verified change; it **prefers a deletion**; a fix removes as much as it adds (PRIN-1, PRIN-10). |
 | IMP-5 | It **never edits installed skills, decision records, guards or settings**; those become issues. |
-| IMP-6 | A cause that **regressed** after its fix goes to the owner naming that fix (PRIN-3); an **accepted** cause is never proposed again (PRIN-4). |
+| IMP-6 | Regressed and accepted causes follow PRIN-3 and PRIN-4. |
 | IMP-7 | Its work per run is **capped** (items, issues, fixes); large inputs stay out of its context. |
 | IMP-9 | One **report** per run: every number sourced or marked unverified; every dropped item with its reason. |
 | IMP-10 | Its own briefs are a problem source it watches. |
@@ -753,8 +759,8 @@ every run; dark mode was never covered; two same-day runs duplicated each other.
   itself** (ENV-7).
 - **COST-2** A cost that could not be read is shown as **"unreported"**, never
   guessed.
-- **COST-3** Every scheduled run has a **per-run bound**. No hard budget cap
-  exists for scheduled runs, so each sweep bounds its **work** (items, agents,
+- **COST-3** Every scheduled run has a **per-run bound**. Because no hard
+  budget cap exists (ENV-7), each sweep bounds its **work** (items, agents,
   pages) and records an overrun.
 - **COST-4** Every cost figure is labelled a **list-price estimate**. For a
   subscription, the real limit is a usage window; the view shows that pressure
@@ -874,9 +880,9 @@ an experiment to run before building.
    never deploys or fails on a site schema; the dashboard can read them without
    a rebuild; no bypass on protected branches; the cost is that records are not
    in the main tree.
-3. **Records in a public repository** (REC-15). Owner-only logs vs public
+3. **Records in a public repository** (REC-15). Owner-only records vs public
    repository.
-4. **Autonomy presets: exact definitions** (AUT-1 to AUT-6) and the first
+4. **Autonomy presets: exact definitions** (AUT-1 to AUT-5) and the first
    protected paths.
 5. **Dashboard access control** (OBS-3) and what the dashboard is on a site not
    yet deployed.
