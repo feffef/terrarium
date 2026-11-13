@@ -49,12 +49,12 @@ Read first: the `dispatch-subagents` Skill (every brief below follows it).
 Write a **context file** in your scratchpad for the informed lenses, four
 sections on today's focus, each "none" when empty:
 
-- pages: each of the focus's Spaces (its keys in `.nuxt/routing.mjs`) at
-  `/t/<tenant>/<space>`, then each file from
-  `find <files> -path '*/content/*/pages/*' -name '*.md'` as its URL:
-  `/t/<tenant>/<space>/<path>`, with any `NN.` prefix and `.md` dropped and
-  `index.md` as its folder's root. Keep to the focus's note; the homepage has
-  only `/`;
+- pages: the focus's Spaces (its keys in `.nuxt/routing.mjs`), each at
+  `/t/<tenant>/<space>`, then the URL of each file from
+  `find <files> -path '*/content/*/pages/*' -name '*.md'`. Leave out Spaces
+  the focus's note excludes; the homepage has only `/`.
+  A file's URL is `/t/<tenant>/<space>/<path>`, with any `NN.` prefix and
+  `.md` dropped and `index.md` as its folder's root;
 - merged changes: `git log origin/main --since=7.days --format='%h %ad %s' --date=short -- <files>`;
 - ideas already logged: the notes in `pnpm exec tsx .agents/skills/visitor-loop/scripts/ideas.ts gather --days 7`
   that name the focus or its pages;
@@ -73,8 +73,8 @@ Then dispatch three read-only subagents **in one message**, all with
 Each gets [`visitor-brief.md`](visitor-brief.md) verbatim, keeping only its
 access block, with the URL, the focus's entry path and note (blank if none),
 its lens row, the context file's path (informed only), a scratch directory
-and a script directory `.throwaway/visitor-<lens>/` (absolute paths) unique to
-that visitor filled in. The blind visitor gets nothing else: no
+and a script directory (`.throwaway/visitor-blind/`, `visitor-editor/` or
+`visitor-ui/`, as absolute paths) unique to that visitor filled in. The blind visitor gets nothing else: no
 context file, no hints, no past findings. Note each visitor's agent id for
 step 5. Done when all three reports are in; resume a
 stalled visitor with `SendMessage`, never by re-dispatching. Then

@@ -21,9 +21,9 @@ and `diff`.
 Rules:
 - Drive the browser with a small `playwright-core` script launched with
   `executablePath: resolveChromiumPath()` from `scripts/lib/chromium.ts`.
-  Save each script under {SCRIPT_DIR}, where `playwright-core` resolves, and
-  run it without changing directory, as `pnpm exec tsx {SCRIPT_DIR}/<script>`;
-  give every file it writes an absolute path under {SCRATCH_DIR}.
+  Save each script under {SCRIPT_DIR} and run it without changing directory,
+  as `pnpm exec tsx {SCRIPT_DIR}/<script>`; give every file it writes an
+  absolute path under {SCRATCH_DIR}.
 - Use the cheapest tool that answers each question:
   - **Words and links:** read them as text. One script that walks several
     pages and saves each page's visible text and links to its own file, plus
