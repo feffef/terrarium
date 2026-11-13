@@ -13,10 +13,17 @@ Each requirement says what a replacement must guarantee. It never says how
 Terrarium does it today, which is often more complicated than needed. The
 evidence column names the incident that made the requirement necessary.
 
-Requirements use the design draft's plain lowercase terms: **problem** (Terrarium's
-Friction), **sweep** (a scheduled or on-demand Skill; Terrarium's Routine or
-loop), **dashboard** (Terrarium's Journal). Evidence keeps Terrarium's own names,
-because it points at Terrarium's records. The draft's section 2 says why.
+Requirements use the design draft's plain lowercase terms:
+
+| Term here | Terrarium's name |
+|---|---|
+| **problem** | Friction |
+| **sweep** (a scheduled or on-demand Skill) | Routine or loop |
+| **dashboard** | Journal |
+| **verification** (run by the `verify` command) | gate |
+
+Evidence keeps Terrarium's own names, because it points at Terrarium's records.
+The draft's section 2 says why.
 
 ## Owner decisions taken while this was written
 
@@ -126,18 +133,19 @@ Requirements for the template:
 
 ## 1. Build time
 
-Read with BD §1. The breakdown's gate row is right; what it misses is what the
-gate must guarantee.
+Read with BD §1. The breakdown's gate row is right; what it misses is what
+verification, the check that decides whether a change may merge, must
+guarantee.
 
-### 1.1 The gate
+### 1.1 Verify
 
 | Requirement | Evidence | Revises |
 |---|---|---|
-| A pass must vouch for the exact tree that is pushed. If the tree or HEAD changes during a run, the run aborts or warns. This holds for a full gate too, not only a scoped one. | `edit-during-gate-run`, 31 occurrences in 14 days, about 10 minutes lost per slip (#3046) | BD §1 "gate:scoped … Drop" |
-| One definition of the gate, run the same way locally and in CI. CI installs from the frozen lockfile and names the failing step. | ADR-0026: a check landed in the package script while CI waited. A single opaque CI step hid which check failed. | BD §1 "one workflow … no parity test" |
+| A pass must vouch for the exact tree that is pushed. If the tree or HEAD changes during a run, the run aborts or warns. This holds for a full run too, not only a scoped one. | `edit-during-gate-run`, 31 occurrences in 14 days, about 10 minutes lost per slip (#3046) | BD §1 "gate:scoped … Drop" |
+| One definition of verification, run the same way locally and in CI. CI installs from the frozen lockfile and names the failing step. | ADR-0026: a check landed in the package script while CI waited. A single opaque CI step hid which check failed. | BD §1 "one workflow … no parity test" |
 | Any decision drawn from git history fails closed on a shallow or unknown base. A session starts with full history. | #849: a shallow merge-base hid changed files; four prose rounds (#413 to #772) | BD §3 hooks "Keep the install" |
-| Stale dependencies are detected and reinstalled before the gate trusts a failure. | Stale installs read exactly like real breaks (#445, #923) | none |
-| Review runs before the gate; nothing is edited while the gate runs. | `prepush-gate-review-skipped`, 21 occurrences | none |
+| Stale dependencies are detected and reinstalled before verification trusts a failure. | Stale installs read exactly like real breaks (#445, #923) | none |
+| Review runs before verification; nothing is edited while it runs. | `prepush-gate-review-skipped`, 21 occurrences | none |
 
 ### 1.2 Content validation
 
@@ -150,14 +158,14 @@ comes built in.
 | Silent truncation in YAML (an unquoted `#`) and silently degraded component blocks are caught. | #367, #446 |
 | A folded line ending in a hyphen is caught, because it turns one word into two. | Commit `bec068280` |
 | References between content files are checked. | #446 |
-| A fast local check (seconds) exists beside the full gate. | Owner, #133 |
+| A fast local check (seconds) exists beside the full verification. | Owner, #133 |
 
 ### 1.3 CI under cloud limits
 
 | Requirement | Evidence |
 |---|---|
 | A cloud session must never put a workflow-file change in a push, because the whole push is rejected and every commit in it is stranded. | #897, #1955; sessions `01FnZ4zF…` (major), `011xN2Zi…` |
-| The workflow file stays minimal and stable, so changing the gate never means editing it. Its logic lives where a cloud session may push. | ADR-0026. The composite action waited 8 weeks for a human to apply the shell. |
+| The workflow file stays minimal and stable, so changing verification never means editing it. Its logic lives where a cloud session may push. | ADR-0026. The composite action waited 8 weeks for a human to apply the shell. |
 | A drop zone exists for changes only a human or laptop session can apply, with a rule that both halves land in one sitting. | `docs/proposals/README.md`; PR 90 could never go green |
 | A green CI run must wake the session that waits on it. Success is not delivered natively; only comments and failures are. | #278. A Routine stalled for about 2 hours before this existed (session `01DN8mXo…`). |
 
@@ -165,7 +173,7 @@ comes built in.
 
 | Requirement | Evidence |
 |---|---|
-| Every installed Skill is pinned at install time, and the gate fails on drift. Not only once a Skill is first used. | PR #304 patched an installed Skill unnoticed. A Skill with no record went unchecked (ADR-0015). |
+| Every installed Skill is pinned at install time, and verification fails on drift. Not only once a Skill is first used. | PR #304 patched an installed Skill unnoticed. A Skill with no record went unchecked (ADR-0015). |
 | A pack update lists the changed Skills, re-reads every repo doc and rule that adapts them, and says so in its PR. | 2026-11-12: the owner had to ask whether the update overrode local docs. 2026-10-14: 9 affected Skills were reported as 1. |
 | Renames upstream and Skills deleted upstream are handled explicitly. | `CONTEXT.md` became `GLOSSARY.md`, about 90 files; `resolving-merge-conflicts` was deleted |
 
@@ -307,7 +315,7 @@ of these came from agent-only failures, not from outside contributors:
 
 | Requirement | Evidence |
 |---|---|
-| Merge only after the gate is green and a review verdict names this exact head. | #1113 to #1276; #1840 merged unreviewed 3 minutes after opening |
+| Merge only after verification passes and a review verdict names this exact head. | #1113 to #1276; #1840 merged unreviewed 3 minutes after opening |
 | The verdict's commit id is machine-produced, never typed. | #2833: 16 wrong before the fix, 5 after |
 | The merge is pinned to the reviewed head, so a late push fails the merge instead of landing unreviewed. | merge-pr body; #1761 |
 | No platform auto-merge: it cannot pin the head, and the owner's own pushes don't disarm it. | #385, #667, #1761 |
@@ -364,7 +372,7 @@ Dispatch requirements, each paid for by lost work:
 | A stopped agent is resumed, never re-dispatched. | dispatch-subagents |
 | No resume while its run is still live. | Two writers in one worktree, `SiYFQ…` |
 | Before finishing, every branch is pushed or dropped. The sweep finds stranded work from git, not from memory. | #427, #3043, #3229 |
-| Parallel heavy gates are capped by memory. | Exit 137 above two (#1800) |
+| Parallel full verification runs are capped by memory. | Exit 137 above two (#1800) |
 
 Still open in Terrarium: the agent still forgets to log again after a merge (18
 sessions), and stranded worktrees at close were fixed only on 2026-11-13. A
@@ -565,7 +573,7 @@ Read with BD §5. These requirements were missing or shallow there.
 | Requirement | Evidence |
 |---|---|
 | Sync records the template commit last taken. A repo made from a template has no shared history, so no PR or merge works between the two. | GitHub template docs |
-| Taking updates opens a PR on the site that passes the site's gate. A partial sync fails the gate. | Owner |
+| Taking updates opens a PR on the site that passes the site's verification. A partial sync fails verification. | Owner |
 | Offering changes opens a PR on the template with only platform files. | Owner |
 | Sync does its own checks, because a session with two repos attached runs without the repo's hooks. | Claude Code docs |
 | Workflow-file changes in either direction go to a laptop or a human. | Section 1.3 |
@@ -664,7 +672,7 @@ probably lies:
    vocabulary. **Owner.**
 5. **Expected volume.** Terrarium logged 576 sessions in a month. Several
    requirements exist because of that volume: bounded reads, output caps, a
-   window anchored to the last run, capped parallel gates. A single site may
+   window anchored to the last run, capped parallel verification runs. A single site may
    see a tenth of it. Should those requirements hold from the start, or arrive
    when volume demands? **Owner.** Volume per site can then be measured from
    the first pilot's logs.
@@ -711,7 +719,7 @@ probably lies:
     and whether the protected-path list is empty, small or large. **Owner.**
     ADR-0004's human-merge cases are a starting list (`.claude/rules/adr-0004-human-merge.md`).
 14. **The first protected paths.** "Very few at first", but which? Likely the
-    gate definition, the merge rule, hook wiring and the autonomy value
+    verification definition, the merge rule, hook wiring and the autonomy value
     itself. **Repo:** the 21 globs in `.claude/rules/adr-0004-human-merge.md`
     minus the multi-Tenant ones give a candidate list. **Owner:** to confirm.
 15. **Who may declare a cause "accepted".** Accepted is a terminal state
@@ -770,7 +778,7 @@ probably lies:
     perhaps for server routes, which the owner merges (BD §2)? **Owner.**
 28. **What "merge is deploy" means without a container.** The requirement
     (1.5) is host-neutral, but some hosts build from a push and some from a
-    tag. Is a merge always a deploy, or may a site gate deploys separately?
+    tag. Is a merge always a deploy, or may a site hold deploys back separately?
     **Owner.**
 
 ### Evidence quality

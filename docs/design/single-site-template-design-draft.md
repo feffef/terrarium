@@ -56,7 +56,7 @@ in a heading.
 | **cause** | A root cause that groups problems and findings. It carries fixes and a status: open, fixing, accepted. |
 | **sweep** | A Skill that runs on a schedule or on demand to check or maintain the site and how it is built: watch, improve, docs, visit, digest. |
 | **dashboard** | The owner's page of sessions, causes, sweep runs and costs, and digests. |
-| **verify** | The one command that decides whether a change may merge. |
+| **verification** | The check that decides whether a change may merge, run by the `verify` command. |
 | **verdict** | The posted review result naming the reviewed commit. |
 | **protected path** | A path whose changes the owner merges. |
 | **autonomy preset** | One of three settings that decide what agents may merge. |
@@ -88,7 +88,7 @@ Terrarium terms that go:
 - Skill Inventory, replaced by Skill state on the watch page.
 - Prune Trial, kept only as a principle.
 - Seedling, an idea issue that is simply labelled.
-- Gate, the old name of `verify`; Floor, Heavy and Inert, its scope classes.
+- Gate, the old name for verification; Floor, Heavy and Inert, its scope classes.
 
 ## 3. Repo shape
 
@@ -99,7 +99,7 @@ platform/                     everything that flows back to the template
   GLOSSARY.platform.md        the concepts above
   bin/                        the few commands (section 5), run with tsx
   hooks/                      hook scripts; settings.json only points here
-  checks/                     verify checks and content-rule helpers
+  checks/                     verification checks and content-rule helpers
   docs/                       how-tos for agents (git, PRs, issues, caveats)
   adr/                        platform decisions (about 6)
 .claude/
@@ -146,7 +146,7 @@ Two caveats:
   our own script.
 - Astro's fast check misses broken cross-file references, and MDX breaks on
   `{}` in prose. So use Markdoc, not MDX, and keep a reference check in
-  `verify`.
+  verification.
 
 ## 5. The commands
 
@@ -162,7 +162,7 @@ its current Terrarium shape.
 | `merge` | Waits for green, requires a verdict naming the head, pins the head, reads protected paths and the autonomy preset from the shared branch, parses closing keywords, merges, closes issues GitHub missed, never reports a failed merge as merged. Prints the verdict line it needs (`merge --verdict-line`). | REQ §3.4 |
 | `look` | Preview and screenshots: builds production, starts by process group on a free port, waits for readiness and hydration, shoots desktop and phone in light and dark, always stops cleanly. | REQ §3.5 |
 
-The lint step of `verify` carries the repo's mechanical rules as custom lint rules
+The lint step of verification carries the repo's mechanical rules as custom lint rules
 (code, Markdown and YAML content), so a new convention is usually a new lint
 rule, not a new line of instructions.
 
@@ -190,7 +190,7 @@ Not carried over:
 - read-first denies;
 - rule hints;
 - rule-use ledgers;
-- edit-during-verify guards (its own snapshot covers them);
+- edit-during-verification guards (its own snapshot covers them);
 - the subagent-note hook.
 
 ## 7. Skills
@@ -320,7 +320,7 @@ goes to the owner.
 **The guide:**
 - `docs/guide/` starts with platform chapters from the template. Site chapters
   are added as the site grows.
-- Pages that cite code pin a commit, and `verify` checks the pins.
+- Pages that cite code pin a commit, and verification checks the pins.
 
 ### 8.5 `NAME-visit`
 
@@ -411,7 +411,7 @@ the dashboard reads the log files through the GitHub API with a short cache.
   (an unchanged site file is simply overwritten);
 - merges the two JSON files by key;
 - updates the recorded commit;
-- opens a site PR that must pass `verify`.
+- opens a site PR that must pass verification.
 
 **`NAME-sync offer`:**
 - diffs manifest paths against the recorded commit;
@@ -426,7 +426,7 @@ own sites only. It runs in a single-repo or laptop session. It never touches
 | Preset | Agents may merge | Sweeps may self-merge | Protected paths |
 |---|---|---|---|
 | **Supervised** | nothing; the owner merges every PR | no | everything |
-| **Standard** (default) | their own PRs after a verdict and a passing `verify` | docs, digest and improve PRs on safe surfaces | `verify`, `merge`, hooks, settings, the preset itself, workflows, `.dashboard/owner-rules.md` |
+| **Standard** (default) | their own PRs after a verdict and a passing verification | docs, digest and improve PRs on safe surfaces | `verify`, `merge`, hooks, settings, the preset itself, workflows, `.dashboard/owner-rules.md` |
 | **Autonomous** | as Standard, plus dependency minors and patches | all sweeps | the same short list |
 
 The preset is one line in `platform/manifest.yml` that `merge` reads from the
@@ -581,7 +581,7 @@ Each item names where the answer probably lies:
     **Repo:** none; **Spike** in the pilot.
 21. **Who reviews a site's offered change on the template?** The template has
     no sessions of its own. Does the owner review it by hand, or does an agent
-    session on the template run `code-review` and the template's `verify`?
+    session on the template run `code-review` and the template's verification?
     **Owner.**
 22. **Several sites offering conflicting changes.** The first merged wins,
     and the second must rebase. Is that enough, or should `offer` refuse while
@@ -590,7 +590,7 @@ Each item names where the answer probably lies:
     with the template, while the site's own stack deps don't. A lockfile
     conflict follows every sync that changes them. **Spike** in the pilot.
 24. **Whether the template itself runs the platform.** The template repo needs
-    its own `verify` and perhaps its own logs to be improved by agents. Is it a
+    its own verification and perhaps its own logs to be improved by agents. Is it a
     site with an empty starter, or a plain repo? **Owner.**
 25. **The machine-user token's lifetime and rotation.** A fine-grained token
     expires, and someone must rotate it in the cloud environment and on the
