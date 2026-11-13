@@ -12,8 +12,9 @@ Read `08` for where the work stands; read the others for how it got there.
 
 Times are UTC. For `01` to `06` they come from the commit that first added the
 file. `07` and `08` were first committed together with this README, so their
-times come from the last session's own record of when it received `07` and
-when the two sessions exchanged the list; git cannot confirm them. Each
+times come from the session that wrote it (the last one in the table): when
+it received `07`, and when it exchanged `08` with the session that wrote
+`07`. Git cannot confirm them. Each
 session's log is in the Journal under
 `layers/journal/content/current/sessions/`, named by its id, except for the
 session that wrote `07`, which had none when this README was written.
@@ -26,7 +27,7 @@ session that wrote `07`, which had none when this README was written.
 | [`04-single-site-template-design-second-draft.md`](./04-single-site-template-design-second-draft.md) | A second design draft, written without reading `03`. | 13:11 | [session_013zxzeNmq54AMia53quaCHn](https://claude.ai/code/session_013zxzeNmq54AMia53quaCHn) | #3270 |
 | [`05-platform-requirements-neutral.md`](./05-platform-requirements-neutral.md) | The requirements with every technology, file name and Terrarium term removed, so an outside designer can work from them. | 13:54 | [session_013zxzeSvCUWdcpBdHi4sdX2](https://claude.ai/code/session_013zxzeSvCUWdcpBdHi4sdX2) | #3272 |
 | [`06-single-site-template-design-combined-draft.md`](./06-single-site-template-design-combined-draft.md) | One draft that takes the best of `03` and `04`: the **insider draft**. | 13:56 | [session_013zxzeQ9FTpQjBywTHWkdXF](https://claude.ai/code/session_013zxzeQ9FTpQjBywTHWkdXF) | #3271 |
-| [`07-platform-design-draft.md`](./07-platform-design-draft.md) | A design written from `05` alone, with no access to Terrarium: the **outsider draft**. | after `05`, before 16:10 | [session_013zxzePjcu3uX5URNR4fiue](https://claude.ai/code/session_013zxzePjcu3uX5URNR4fiue) | with this README |
+| [`07-platform-design-draft.md`](./07-platform-design-draft.md) | A design written from `05` alone, with no access to Terrarium: the **outsider draft**. | after `05`, by about 16:10 | [session_013zxzePjcu3uX5URNR4fiue](https://claude.ai/code/session_013zxzePjcu3uX5URNR4fiue) | with this README |
 | [`08-converged-decisions.md`](./08-converged-decisions.md) | Where `06` and `07` now agree, each decision with the recorded problem behind it, and what is left for the owner. | 16:36 to 18:00 | the session above and [session_013zxzeP357BagrJREfWSJ6U](https://claude.ai/code/session_013zxzeP357BagrJREfWSJ6U) | with this README |
 
 ## How each note came about
