@@ -5,6 +5,7 @@ const scrollIntoViewIfNeeded = vi.fn(async () => {})
 const page = {
   goto: vi.fn(async () => {}),
   waitForTimeout: vi.fn(async () => {}),
+  waitForFunction: vi.fn(async () => {}),
   locator: vi.fn(() => ({ first: () => ({ waitFor: async () => {} }), scrollIntoViewIfNeeded })),
   screenshot: vi.fn(async () => {}),
 }
