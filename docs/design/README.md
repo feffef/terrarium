@@ -1,12 +1,13 @@
 # Design notes: a single-site template
 
-Eight notes on one idea: a GitHub template for one content website that agents
+Nine notes on one idea: a GitHub template for one content website that agents
 build and one owner steers, taking from Terrarium only what earned its place.
 **None of them decides anything.** Each is a proposal or a reference, written
 by an agent session at the owner's request on 2026-11-13.
 
 The number in a file name is the order in which the note was first written.
-Read `08` for where the work stands; read the others for how it got there.
+Read `09` for the design as it stands and `08` for the evidence and reasons
+behind it; read the others for how the work got there.
 
 ## The notes, in order
 
@@ -29,6 +30,7 @@ session that wrote `07`, which had none when this README was written.
 | [`06-single-site-template-design-combined-draft.md`](./06-single-site-template-design-combined-draft.md) | One draft that takes the best of `03` and `04`: the **insider draft**. | 13:56 | [session_013zxzeQ9FTpQjBywTHWkdXF](https://claude.ai/code/session_013zxzeQ9FTpQjBywTHWkdXF) | #3271 |
 | [`07-platform-design-draft.md`](./07-platform-design-draft.md) | A design written from `05` alone, with no access to Terrarium: the **outsider draft**. | after `05`, by about 16:10 | [session_013zxzePjcu3uX5URNR4fiue](https://claude.ai/code/session_013zxzePjcu3uX5URNR4fiue) | with this README |
 | [`08-converged-decisions.md`](./08-converged-decisions.md) | Where `06` and `07` now agree, each decision with the recorded problem behind it, and what is left for the owner. | 16:36 to 18:00 | the session above and [session_013zxzeP357BagrJREfWSJ6U](https://claude.ai/code/session_013zxzeP357BagrJREfWSJ6U) | with this README |
+| [`09-final-design-draft.md`](./09-final-design-draft.md) | One standalone design in the 14-section shape, meant as the baseline; working title "Samara". It cites `05` for requirements and `08` for evidence. | about 22:20 | [session_013zxzePjcu3uX5URNR4fiue](https://claude.ai/code/session_013zxzePjcu3uX5URNR4fiue) | added after the README |
 
 ## How each note came about
 
@@ -92,6 +94,19 @@ and asked that a site be free to choose its framework; the two sessions
 worked that through with the owner, and the session with repo access revised
 the note: a separate owner app, a contract between platform and site, content
 checks owned by the site, and the stack chosen for least own code.
+
+**09, the final design draft.** The owner found that `08` summarises the
+discussion well but names no baseline: it leans on `06` for the glossary,
+dashboard and setup, and `06` is now wrong in many places. The owner asked
+the outsider session for one standalone draft and settled more points with
+it first. That session reports these as the owner's decisions: the watcher
+uses a model again, guided by a short watch list in each skill; a sixth
+sweep merges Dependabot's minor and patch updates; the working name is
+"Samara"; the container is the default deploy. The owner uploaded the file
+to the session with repo access at about 22:20, which checked its counts
+against `08` and its paths against this repo, reported the differences to the
+owner, and committed it. The only change to the text is the file name it
+cites for `05`. Its time, like those of `07` and `08`, is not a commit time.
 
 ## Names used across the notes
 
