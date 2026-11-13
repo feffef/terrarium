@@ -54,16 +54,19 @@ None of these is false.
 - **Walkthroughs.** *A bug report becomes work*: `wontfix (completed)` in the real case is not explained; stop 7 mixes the Trusted author with the Public requester. *A change goes live* stop 2 never says how long the pause is. *Asking an agent for a change*: stop 1 says a cloud and a local session work the same way, and stop 2 has the `SessionStart` hook install packages; both hold for Terrarium's usual one-repository session, and the Walkthrough could say so.
 - **Installed skills.** *Wayfinder*: the installed Skill gives no reason a session resolves one ticket and research tickets are excepted; "HITL", "frontier" and "fog" arrive as a list before any example, and Fog and Not yet specified are two names for one section. *Planning skills*: the installed `to-spec` labels `ready-for-agent` but Terrarium overrides it, which a reader meets before the rule; the `auto-triage` file-sharing mechanism sits beside "a brief names no files". *Installed skills*: *ADR* is never glossed, and the gate protects only a Skill that has an Inventory entry, which the page says late. *Engineering skills*: `implement`, which no agent can start, is followed by the build agent without a page saying why that is allowed.
 - **Nuxt Content.** *Content collections* and *queryCollection* still pack several terms into one sentence beside the manifest, the kind and the search query. *Multi-tenant isolation*: `useSpace`, `pagesKey` and `path` come before their gloss, and the catalog's one-table-at-a-time reads are explained late. *Content database*: no source says why a failed download is retried once, and `tenant-layers.md` is cited without its content. *MDC components*: no Nuxt Content docs are installed to show the YAML-props form. *Mermaid pre-rendering*: sentinel colour is a word the page never defines, and who serves the font is easy to misread.
-- **Web standards.** *SVG*: the Tinkerfund byte budget (4096 for a figure, 1024 for an icon) has no stated reason; the code comment only names a story. *ARIA*: no source says why the Journal's row is a `div` and not a `button`. The Atlas stylesheet's header comment says the base tokens are on `.atlas` while the code sets them on `:root` (a code comment, outside this Skill's remit).
-- **Terms glossed late.** Several pages use *space*, *document*, *catalog* or *tenant* before they gloss them, or gloss one twice. A rule for where each is glossed first would settle it.
+- **Web standards.** *SVG*: the Tinkerfund byte budget (4096 for a figure, 1024 for an icon) has no stated reason; the code comment only names a story. *ARIA*: no source says why the Journal's row is a `div` and not a `button`.
 - **House rules.** *Session logs*: the log "skips the gate" but a gated script limits it, which reads as a contradiction until the Why bullet. *Protected paths*: `humanMergeWaiver`'s lead-in does not say it can return nothing. *Skill inventory*: it is unclear which script deletes observations.
 - **Nuxt & Vue.** *Auto-imports*: the `imports.scan` Try-it paragraph packs four options. *Virtual modules*: it is unchecked whether `modules/routing` is registered twice (listed in `nuxt.config.ts` and found in `modules/`); the first Excerpt does not show the `expand(loadManifests())` call it names. *Vue components*: the clock Excerpt does not show where `ticking` is set. *Nitro*: mount, driver and LRU come before any gloss, and "a request is split three ways" lists roles. *Data fetching*: onramp and its tour are unexplained. *Hydration*: the Friction Ledger page "does the same" with no code shown.
 
 ### Fixes waiting
 
-- The page 40 excerpt of `.agents/skills/auto-triage/SKILL.md` (*Wayfinder*) shifts to `lines="75-79"` once the pin moves past 2026-11-11.
 
 - **Verification.** *Zod refinements*: no source says why the `pages` rule ties the `page` type to the name `pages`. *Headless browser checks*: no repo source says who sets up the cloud proxy; the `--no-sandbox` and `--disable-gpu` flags have only the code comment "the flags every launch needs in this sandbox".
+
+### Stale or missing
+
+- *Headless browser checks* does not say `--dev` now waits for a real 200 page and for hydration (`scripts/ui/preview.ts`, `screenshot.ts`, commit 0fe188963).
+- No page teaches the `visitor-loop` Skill (blind and informed visitors, report-only); it is still changing fast, so teach only the stable idea. Nearest page: *Ideas and lessons learned*.
 
 ### Claims to check
 
