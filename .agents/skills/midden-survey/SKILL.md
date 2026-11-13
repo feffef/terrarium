@@ -48,16 +48,15 @@ firing one).
   is. Bound the sweep with `--since` (e.g. the previous survey's date, from the
   last survey-report issue) rather than re-walking all history every run.
 
-## 2. Sweep what git can't see — PRs and branches, via the GitHub MCP tools
+## 2. Sweep what git can't see — PRs and branches
 
-Load schemas via `ToolSearch` before the first call (fully-qualified
+Closed-unmerged PRs come from a script; for dormant branches load the GitHub
+MCP schemas via `ToolSearch` before the first call (fully-qualified
 `mcp__github__*` names; see `docs/agents/github-integration.md` for
 pagination/overflow guidance).
 
 - **Closed-unmerged PRs**: `pnpm exec tsx .agents/skills/midden-survey/scripts/closed-unmerged-prs.ts --since YYYY-MM-DD`
-  lists every PR closed without a merge since that date (number, title, head
-  branch, closed time), paged to the window's start; never page `gh api` by
-  hand. A PR **superseded by
+  lists every PR closed without a merge since that date. A PR **superseded by
   another PR that carried the same change in** fails Gate B — note the
   successor and drop it. These PRs' head refs are also the only place a
   **deleted branch** still surfaces — `list_branches` sees live refs only —
@@ -73,7 +72,7 @@ pagination/overflow guidance).
   `layers/midden/content/stores/artifacts/` for the PR number or branch name,
   and count only a hit inside an artifact's `provenance` block (a bare
   `name:`/number match elsewhere — an inscription, a catalog note — is not
-  prior cataloguing). The script's dedupe covers only the file/dep candidates
+  prior cataloguing). The survey script's dedupe covers only the file/dep candidates
   it generates.
 
 ## 3. Judge the candidates — both gates, curatorial signal over bulk
@@ -84,10 +83,10 @@ passes **both** gates:
 
 - **Gate A** — a file deleted mid-refactor whose purpose obviously moved
   elsewhere is not terminal.
-- **Gate B** — the script rules out same-path regrowth, same-name re-adds,
+- **Gate B** — the survey script rules out same-path regrowth, same-name re-adds,
   and files that merely moved mechanically; **successor-under-a-new-shape is
   your judgment call** — a file rewritten into a successor git never paired as
-  a rename is invisible to the script by design, so check where the deleting
+  a rename is invisible to the survey script by design, so check where the deleting
   commit's siblings moved the behavior before concluding nothing did. A
   candidate that *fails* Gate B because something renamed or superseded it in
   place is out of the Midden's scope — record it as a Gate-B exclusion rather
@@ -109,7 +108,7 @@ survey gets a comment, not a duplicate). For each surviving candidate:
 - a **draft `provenance` block** in the artifact schema's shape
   (`layers/midden/tenant.config.ts`), including a `continuityCheck` line saying
   exactly which Gate-B check ran and what it found and, where the terminal event
-  is a commit, a draft `removedIn` (the script reports each deleting/dropping
+  is a commit, a draft `removedIn` (the survey script reports each deleting/dropping
   hash). Leave `remains` out: the curator picks it (`layers/midden/GLOSSARY.md`,
   Artifact);
 - one line on why it passes both gates.

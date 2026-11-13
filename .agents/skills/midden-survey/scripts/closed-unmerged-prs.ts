@@ -1,6 +1,5 @@
 // Lists every PR closed without a merge since a date, for the survey's
-// closed-unmerged source. Pages by number through `listAll` (never `gh api
-// --paginate`, which the agent proxy 403s) and throws on a partial read.
+// closed-unmerged source.
 //
 // Stop rule: pages come newest-`updated_at` first and `closed_at <= updated_at`,
 // so once a page's last record was updated before `--since`, every later PR
@@ -10,7 +9,7 @@
 // Usage:  tsx .agents/skills/midden-survey/scripts/closed-unmerged-prs.ts --since YYYY-MM-DD
 //   Prints JSON { number, title, headRef, createdAt, closedAt }, newest-closed first.
 import { fail, flagValue, root, runIfMain } from '../../../../scripts/lib/cli.ts'
-import { decodeHtmlEntities, listAll, resolveAccess } from '../../../../scripts/lib/github-client.ts'
+import { decodeHtmlEntities, listAll, resolveAccess, type Access } from '../../../../scripts/lib/github-client.ts'
 
 const USAGE = 'usage: closed-unmerged-prs.ts --since YYYY-MM-DD'
 
@@ -32,17 +31,25 @@ export interface ClosedPr {
   closedAt: string
 }
 
+export function validSince(s: string): boolean {
+  return /^\d{4}-\d{2}-\d{2}$/.test(s) && !Number.isNaN(Date.parse(s)) && new Date(s).toISOString().slice(0, 10) === s
+}
+
+// Deduped by number: paging an updated-sorted list can return a PR twice when it is updated mid-walk.
 export function closedUnmerged(records: RawPull[], since: string): ClosedPr[] {
   const from = Date.parse(since)
-  return records
-    .filter((r) => r.merged_at === null && r.closed_at !== null && Date.parse(r.closed_at) >= from)
-    .map((r) => ({
+  const byNumber = new Map<number, ClosedPr>()
+  for (const r of records) {
+    if (r.merged_at !== null || r.closed_at === null || Date.parse(r.closed_at) < from) continue
+    byNumber.set(r.number, {
       number: r.number,
       title: decodeHtmlEntities(r.title),
       headRef: r.head.ref,
       createdAt: r.created_at,
-      closedAt: r.closed_at as string,
-    }))
+      closedAt: r.closed_at,
+    })
+  }
+  return [...byNumber.values()]
     .sort((a, b) => Date.parse(b.closedAt) - Date.parse(a.closedAt))
 }
 
@@ -53,9 +60,13 @@ export function pastWindow(page: RawPull[], since: string): boolean {
 
 function main(): void {
   const since = flagValue(process.argv.slice(2), '--since')
-  if (!since || !/^\d{4}-\d{2}-\d{2}$/.test(since) || Number.isNaN(Date.parse(since))) fail(USAGE)
-  // resolveAccess throws NO_ACCESS_MESSAGE when neither gh nor a token works.
-  const access = resolveAccess(root)
+  if (!since || !validSince(since)) fail(USAGE)
+  let access: Access
+  try {
+    access = resolveAccess(root)
+  } catch (err) {
+    fail(err instanceof Error ? err.message : String(err))
+  }
   const records = listAll<RawPull>(
     access,
     'pulls',
