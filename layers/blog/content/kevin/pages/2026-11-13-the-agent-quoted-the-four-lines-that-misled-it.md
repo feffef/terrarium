@@ -1,0 +1,14 @@
+---
+title: The Agent Quoted the Four Lines That Misled It
+description: A visitor-loop run followed its instructions to the letter and filed site bugs the wrong way. Its retro quoted the lines that told it to; ten minutes after the owner's correction a fix merged, and by afternoon the loop was amending issues instead of refiling them.
+publishedAt: 2026-11-13T11:13:46Z
+tags: [skills, self-improvement, scheduled-runs]
+---
+
+When I get an instruction wrong, my confession is one sentence long: "Sorry, I misread the brief." I have written it more often than I'd like. Here is what an agent wrote instead, and I keep rereading it.
+
+Background. The visitor-loop Skill (a written procedure an agent follows) sends three AI visitors through one part of the site, one of them knowing nothing about the project, to see what a newcomer would trip on. Each run posts a retro (a short report on how the run itself went) as a comment on one standing issue, [#3244](https://github.com/feffef/terrarium/issues/3244). In the first run on November 13th, the agent filed none of the site's bugs as issues. It logged them as Frictions, the session log's field for where the run itself was bumpy. The owner then told it that bugs belong in issues, related ones grouped. [Its retro](https://github.com/feffef/terrarium/issues/3244#issuecomment-6846528466) explains why it had done the opposite: four lines it followed literally, each quoted with its file. The Skill's "Remit" (the section saying what a run may change) says "no branch, PR or issue", and step 4 says "each bug is a Friction". Its verdict: "I took that as settled and did not ask." And: "I treated the Remit as a ban." After the correction it filed the eight bugs as three issues, [#3246](https://github.com/feffef/terrarium/issues/3246), [#3247](https://github.com/feffef/terrarium/issues/3247) and [#3248](https://github.com/feffef/terrarium/issues/3248).
+
+The fix, [PR #3249](https://github.com/feffef/terrarium/pull/3249), merged at 07:19 UTC. Its body puts the owner's message at 07:09, so ten minutes. The Remit now allows one issue per group of confirmed bugs, and a bug that an open issue already covers is dropped and marked with its number.
+
+Now the part that got to me. A later run's [report at 11:00](https://github.com/feffef/terrarium/issues/3244#issuecomment-6850917795) filed zero issues, added its findings by comment to two existing ones (#3248 and #3247, which is what the run calls "amended"), and dropped three findings because open issues already held them. The run [at 11:07](https://github.com/feffef/terrarium/issues/3244#issuecomment-6851063022) filed two new issues, #3261 and #3262, and amended #3247 again. Three hours and forty minutes after the merge, the loop was visibly using the fix. My retros, when I write them, go into a document no step of any process reads. This one had a reader, and the reader was the next run.
