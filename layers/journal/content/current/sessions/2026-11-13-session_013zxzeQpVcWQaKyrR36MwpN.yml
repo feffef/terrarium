@@ -1,0 +1,243 @@
+schemaVersion: 1
+session: session_013zxzeQpVcWQaKyrR36MwpN
+startedAt: 2026-11-13T06:59:01Z
+endedAt: 2026-11-13T07:05:06Z
+kind: delegated
+goal: "Visitor-loop run on the Midden: three visitors browse it and report"
+status: completed
+outcome: "Three visitors reported; bugs, ideas and learnings logged here, retro posted on #3244"
+summary: "Human-instructed: the owner ran the visitor-loop Skill, whose procedure I followed as written. Focus came from the rotation (row 3, midden). I built and served the production preview on a fresh origin/main, wrote a context file, dispatched blind, content-editor and UI-tester visitors on sonnet, then verified each reported bug against the rendered page (one script at 390px) and the source. Eight bugs survived; two blind-visitor findings did not reproduce (a \"mangled\" card link, a \"duplicated\" season strip) and one was ruled out by decisions.md (footer lacks Marquee and Commons). The retro report is posted on #3244. The visitors' stray screenshots in the repo root tripped the Stop hook; I moved them into the git-ignored scratch folder. Nothing outside the session log and the retro comment changed."
+prs: []
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: scripts/lib/chromium.ts
+    reason: (no reason given)
+  - path: .throwaway/visitor-first/out.txt
+    reason: (no reason given)
+  - path: .throwaway/visitor-first/m_t_midden_stores.png
+    reason: (no reason given)
+  - path: .throwaway/visitor-first/m.png
+    reason: (no reason given)
+  - path: m_t_midden_stores.png
+    reason: (no reason given)
+  - path: .throwaway/visitor-ui/s3.png
+    reason: (no reason given)
+  - path: .throwaway/visitor-ui/stores.png
+    reason: (no reason given)
+  - path: layers/midden/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/visitor-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: brief rules and scratch folders for the three visitors
+  - name: visitor-loop
+    reason: the procedure itself
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Visitor brief says to run from the working directory but never says to use absolute output paths; the blind visitor's screenshots landed in the repo root and tripped the Stop hook
+    solution: "Add to visitor-brief.md: run tsx from the repo root and write every output as an absolute path in the scratch folder"
+    severity: minor
+  - description: UI tester ran tsx from inside its scratch folder and hit Command tsx not found, costing about three retries
+    solution: "Same one-line brief fix: run from the repo root with the script path"
+    severity: nit
+  - description: Content editor crawled into one 121 KB text file and needed three slicing passes to read it
+    solution: "Brief: save one text file per page plus an index"
+    severity: nit
+  - description: Context file lacked a route list, so both informed visitors found the Stores page and filter routes by crawling
+    solution: Add a route list to the context file in SKILL.md step 2
+    severity: nit
+  - description: Monitor tool schema was not loaded, so my first call failed validation until a ToolSearch
+    solution: Load deferred tools with ToolSearch before first use
+    severity: nit
+  - description: "midden site: html lang is empty on every page, including the home page"
+    solution: Set lang en on the app shell
+    severity: moderate
+  - description: "/t/midden/trench: cause chips are 26px tall, all carry router-link-exact-active, and the selected one lacks aria-current"
+    solution: Raise chip height toward 44px and mark only the selected chip current
+    severity: moderate
+  - description: "/t/midden/stores: headings jump from H1 to H3 with no H2 for the season sections"
+    solution: Make season headings H2 and finds H3
+    severity: minor
+  - description: /t/midden/trench?cause=bogus silently shows all 16 sites and drops the N of 16 count line
+    solution: Say the cause is unknown, or redirect to the plain trench
+    severity: minor
+  - description: Breadcrumb, footer and all dig reports links on dig-report pages are 15-17px tall at 390px
+    solution: Pad these links to at least 24px, ideally 44px
+    severity: minor
+  - description: /t/midden/trench/the-simpler-verdict shows the typo hand- lettered (YAML wrap in the-stratigraphy-sidebar.yml lines 20-21)
+    solution: Write hand-lettered
+    severity: nit
+  - description: /t/midden/trench/unpublished-dispatches reads lain quiet for forty-nine. with no unit (david-spoke-too-soon.yml line 20)
+    solution: Write forty-nine days as of the assessed date
+    severity: nit
+  - description: "/t/midden/trench standfirst for Short Lives is garbled: two sets of agent instructions after under four days and about ten."
+    solution: "Rewrite as: and two sets of agent instructions, after under four days and about ten days"
+    severity: nit
+durationSec: 365
+models:
+  claude-sonnet-5-5: 66
+toolCounts:
+  Skill: 2
+  Read: 2
+  Bash: 18
+  Monitor: 1
+  Agent: 3
+  ToolSearch: 1
+  mcp__github__issue_read: 2
+  SendMessage: 3
+  mcp__claude-code-remote__get_session: 1
+  mcp__github__add_issue_comment: 1
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+docsReadBySubagents:
+  - layers/midden/GLOSSARY.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/adr-0001.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0018.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0003.md
+        value: backed
+        why: no branch, PR or issue
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: "header on the #3244 comment"
+      - path: .claude/rules/adr-0009.md
+        value: backed
+      - path: docs/agents/github-integration.md
+      - path: docs/agents/git-conventions.md
+      - path: .agents/skills/visitor-loop/decisions.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .claude/rules/adr-0017.md
+        value: backed
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/midden/GLOSSARY.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/midden/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/midden/GLOSSARY.md
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+    reported:
+      - path: .claude/rules/tenant-glossary.md
+        value: backed
+      - path: layers/midden/GLOSSARY.md
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported: []
+subagents:
+  - type: general-purpose
+    task: First-time visitor, Midden
+    model: sonnet
+    durationSec: 163
+    toolCalls: 13
+    modelCalls: 11
+    tokenShare: 15.1
+  - type: general-purpose
+    task: Content editor, Midden
+    model: sonnet
+    durationSec: 162
+    toolCalls: 14
+    modelCalls: 11
+    tokenShare: 19.5
+  - type: general-purpose
+    task: UI tester, Midden
+    model: sonnet
+    durationSec: 164
+    toolCalls: 15
+    modelCalls: 13
+    tokenShare: 16.4
+gitBranch: ccr-023e94f4-08uual
+entrypoint: remote_mobile
+cliVersion: 2.1.323
+learnings:
+  - In visitor-loop, a script run with pnpm exec tsx from inside .throwaway/x fails with Command tsx not found; run from the repo root, and write relative output as absolute paths because it lands in the cwd
+ideas:
+  - "Midden landing: add one plain line saying Terrarium is an experiment where AI agents build websites and the Midden catalogues what they threw away, and gloss Season, Stratum, sterile and cause at first use, so a newcomer is not lost in jargon"
+  - "Midden Trench: show the active cause filter as a dismissible Showing line and say that chip counts overlap (a report can have several causes), so the 29 against 16 sites reads as intended"
+  - "Midden Stores: add a season jump list above the 11 find cards so a long page can be navigated by season"
+  - "Midden condition key: say the grade measures how easy a find is to recover today, because several Dissolved finds list a whole intact post or bench under Remains"
+  - "Midden cause key: widen closed-by-owner in layers/midden/app/utils/cause.ts to cover removed by the owner before landing, since two finds read as contradicting their tag"
+  - "Midden dig reports: trim the Nov 2026 finds from 250-400 words toward the 60-120 of the older ones, moving counts into one short sentence, so the curator's voice stays one"
+  - "Midden Trench: add a condition-grade filter or counts beside the cause chips so a visitor can find the Intact finds"
+  - "Midden: a Founding collapse dig report about the earliest stand-in entries in What the Record Claimed, with a timeline strip"
+landedBy: Stop
