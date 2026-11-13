@@ -9,22 +9,6 @@ role: >-
   `code-review` on a green gate. A script lists owner corrections for
   `decisions.md`, so rejected ideas stay rejected.
 observations:
-  - date: "2026-10-03"
-    note: >-
-      Fourth chance, fourth failure (audit-skills behaviour check) —
-      commented the new evidence onto #1515 rather than filing a duplicate.
-      session_0162PRUV2S56tRQhAdPdPjhF (2026-10-02, midden focus, PRs
-      #1532/#1533 merged) self-caught the skip again ("the owner-memory
-      gathering step was skipped, so decisions.md got no new lines"),
-      proposing substantially the fix chance 3 already proposed.
-      decisions.md's git history independently re-confirmed still frozen at
-      its original 4 commits — nothing added by any of the four post-fix
-      runs. The owner-memory step's record since `886f26de` landed is now
-      0/4. Rest of the pipeline clean across all 9 usedIn sessions (3-model
-      dispatch, ≥2-visitor consensus, code-review before merge). Role's
-      "0/3" updated to "0/4" to match. Grade/importance unchanged (still
-      routine) — the failure is confined to one sub-step, not the Skill's
-      core delivery.
   - date: "2026-10-04"
     note: >-
       Fifth skip of the owner-memory step (audit-skills behaviour check):
@@ -410,3 +394,6 @@ observations:
   - date: "2026-11-07"
     note: >-
       Checker hand-counted the owner-memory tally again: PRs #2745, #2788 and #2824 list one number fewer than the stated count (16/15, 18/17, 18/17), confirming the 11-06 note. Still unexplained since --check passed in each log. A later run should compare the tally to the --check file. Grade unchanged.
+  - date: "2026-11-13"
+    note: >-
+      Possible stop (unverified): the Routine file's last run is 2026-11-03 and the window has no scheduled run. One owner-invoked run delivered (session_013zxzeS36fzX6FB2vAr7yRR, PRs #2994 and #2995, not re-checked). Grade kept at routine: one windowed session is below the two a change needs. A later run with still no scheduled run should regrade.

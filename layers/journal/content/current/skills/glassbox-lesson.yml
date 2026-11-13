@@ -21,3 +21,6 @@ observations:
       dispatched per topic from a fixed topic inventory rather than reached
       for — essential whenever a Lesson is being written, but that kind of
       work is itself rare, matching GLOSSARY.md's definition of the grade.
+  - date: "2026-11-13"
+    note: >-
+      Behaviour check, 4 runs, every Lesson still on main. Unverified weak signal: session_013zxzeRvdzBc3xXGo24TkVf needed follow-up PR #3162 after the owner found a missing antecedent and a bad excerpt post-merge, so step 6's check missed reading-order problems; its friction suggests rereading the section in order. Grade unchanged.
