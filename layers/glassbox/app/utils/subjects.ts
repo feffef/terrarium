@@ -45,9 +45,7 @@ export function glassboxDirectory<T extends GlassboxPageLink>(pages: T[]) {
     .filter((subject) => subject.lessons.length)
 }
 
-/** Walkthroughs, by title. */
+/** Walkthroughs, in the order they arrive: file-prefix order, the most useful to a newcomer first. */
 export function glassboxWalkthroughs<T extends GlassboxPageLink>(pages: T[]) {
-  return pages
-    .filter((page) => glassboxWalkthroughOf(page.path))
-    .sort((a, b) => a.title.localeCompare(b.title))
+  return pages.filter((page) => glassboxWalkthroughOf(page.path))
 }

@@ -15,7 +15,7 @@ const { data, status, error } = await useAsyncData(route.path, async () => {
       : queryCollection(pagesKey).order('stem', 'ASC').select('path', 'title').all(),
     // The prefix glassboxWalkthroughOf tests, as SQL.
     glassboxSubjectOf(path)
-      ? queryCollection(pagesKey).where('path', 'LIKE', '/walkthroughs/%').select('path', 'title', 'body').all()
+      ? queryCollection(pagesKey).where('path', 'LIKE', '/walkthroughs/%').order('stem', 'ASC').select('path', 'title', 'body').all()
       : [],
   ])
   const termIds = glassboxPageTerms(page?.body)

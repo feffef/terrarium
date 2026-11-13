@@ -13,14 +13,14 @@ describe('glassboxWalkthroughsThrough', () => {
   const realCase = ['h2', { id: 'a-real-case' }, 'A real case'] as MinimarkNode
   const whereNext = ['h2', { id: 'where-next' }, 'Where next'] as MinimarkNode
 
-  it('lists each Walkthrough whose stops or A real case link the Lesson, once however often', () => {
+  it('lists each Walkthrough whose stops or A real case link the Lesson, once however often, in the order they arrive', () => {
     expect(glassboxWalkthroughsThrough([
       walkthrough('/walkthroughs/b', 'B', stop, ['p', {}, link(layers)], ['lessons', {}, ['p', {}, link(`${layers}#in-terrarium`)]]),
       walkthrough('/walkthroughs/a', 'A', realCase, ['ul', {}, ['li', {}, link(`${layers}/`)]]),
       walkthrough('/walkthroughs/c', 'C', stop, ['p', {}, link(`${base}/nuxt-vue/layers-two`)]),
     ], layers)).toEqual([
-      { path: '/walkthroughs/a', title: 'A' },
       { path: '/walkthroughs/b', title: 'B' },
+      { path: '/walkthroughs/a', title: 'A' },
     ])
   })
 
