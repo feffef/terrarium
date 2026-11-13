@@ -75,8 +75,10 @@ PRs as [#22](https://github.com/feffef/terrarium/pull/22), issues as
 
 Write in **plain English for someone who knows software but not this
 project**: they should understand what actually happened without the glossary.
-Name things by what they do ("the scheduled docs check" — never how often it
-runs), not by project names
+Name things by what they do ("the docs check"). A cadence word (weekly, daily,
+"scheduled", "runs every…") needs a source in the day's material (a PR body, a
+doc, a session's kind), else omit it; PR titles and session goals are not
+sources. Avoid project names
 (`audit-docs`, Tenant, prune trial, Friction); leave out file, script and ADR
 names and git commands. The `summary` headline matters most — it must read
 clearly on its own. Lead with narrative, not a changelog; keep it to 100–250
@@ -103,7 +105,8 @@ against its primary source — the PR's diff (`git show --stat` of its merge
 commit), description and linked issues, and the day's commits; git alone when
 GitHub is unavailable. *Where* a change landed is settled by the files it
 touched, never by a label in a PR title or session goal (a "(homepage)" focus
-tag once became "the homepage gained…" for a Journal page). It returns one row
+tag once became "the homepage gained…" for a Journal page). A cadence word or
+"scheduled" with no source is `wrong`/`unverifiable`. It returns one row
 per claim: claim · source checked · verdict `ok` / `wrong` / `unverifiable`.
 It ends with the standard asks (CLAUDE.md, "Every subagent brief").
 Fix every `wrong` claim; keep an `unverifiable` one.
