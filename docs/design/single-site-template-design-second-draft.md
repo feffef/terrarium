@@ -89,8 +89,8 @@ Human-only, Persona.
 ## 3. Repo shape
 
 ```
-CLAUDE.md                       # site file; first line imports platform/guidance.md
-GLOSSARY.md                     # site file; imports platform/glossary.md
+CLAUDE.md                       # site file; imports platform/guidance.md and both glossaries
+GLOSSARY.md                     # site file; the site's own terms
 site.yml                        # site settings: preset, template commit, cadences, access
 package.json                    # mixed: platform scripts delegate to platform/commands/
 src/                            # the site's pages, layouts, components, server routes
@@ -102,17 +102,18 @@ content/                        # the site's Markdown and YAML, one folder per k
 content.config.ts               # typed schema per kind of content (seed)
 tests/                          # the site's own tests and content rules (seed)
 docs/decisions/                 # decision records; about five shipped (seed)
-docs/agents/                    # three how-to docs: git and PRs, issues, caveats (platform)
+docs/agents/                    # four how-to docs: git and PRs, issues, caveats, hooks (platform)
 docs/skill-notes/               # repo docs that adapt pack Skills (seed)
 docs/rulings.md                 # the owner's standing rulings (site, protected)
-docs/human-steps/               # changes only a human or laptop can apply
+docs/human-steps/               # changes only a human or laptop can apply, both halves in one sitting
 platform/
   guidance.md                   # the platform's always-loaded instructions
   glossary.md                   # the terms in section 2
   paths.txt                     # the list of platform paths, one home
   protected-paths.txt           # paths only the owner merges
+  package-keys.json             # the package.json scripts and dev dependencies sync owns
   commands/                     # verify, check, log, merge, preview, sync
-  hooks/                        # the hook scripts in section 6
+  hooks/                        # the hook scripts in section 6, and the hooks block for settings
   lib/                          # helpers shared by commands and hooks
   schemas/                      # log, finding, cause, run and site.yml schemas
   tests/                        # tests of commands and hooks
@@ -121,13 +122,15 @@ platform/
 .claude/settings.json           # mixed: platform hooks, site permissions
 skills-lock.json                # pins every installed Skill (platform)
 .github/workflows/verify.yml    # checkout, setup, one run step (platform, human-applied)
+.github/dependabot.yml          # grouped dependency updates (seed)
 deploy/                         # the deploy mechanism setup picked (seed)
 
-# on the `records` branch, checked out at .records/ in every session
+# on the `records` branch, checked out at .records/ in every session [untested]
 logs/<year>/<month>/            # one file per session
 findings/                       # one file per finding
 causes/                         # one file per cause
 runs/<sweep>.yml                # one row per sweep run: time, cost, coverage
+merges/                         # one row per merge the merge command made
 digests/                        # one page per finished day
 memory/<sweep>.md               # a sweep's size-capped notes
 ```
@@ -135,14 +138,16 @@ memory/<sweep>.md               # a sweep's size-capped notes
 Kinds of file (REQ §5.2):
 
 - **platform:** `platform/`, `docs/agents/`, platform Skills, the pack and its
-  lock, `src/pages/owner/`, `src/pages/guide/`, the workflow file.
+  lock, `.claude/rules/`, `src/pages/owner/`, `src/pages/guide/`, the workflow
+  file.
 - **seed:** `content.config.ts`, `content/` including `content/guide/`,
   `src/` apart from the two platform folders, `tests/`, `docs/decisions/`,
-  `docs/skill-notes/`, `deploy/`.
-- **site:** `CLAUDE.md`, `GLOSSARY.md`, `site.yml`, `docs/rulings.md`, and
-  everything on the `records` branch.
-- **mixed:** `package.json` and `.claude/settings.json` only; section 10 says
-  how each is handled.
+  `docs/skill-notes/`, `deploy/`, `.github/dependabot.yml`.
+- **site:** `CLAUDE.md`, `GLOSSARY.md`, `site.yml`, `docs/rulings.md`,
+  `docs/human-steps/`, and everything on the `records` branch.
+- **mixed:** `package.json` and `.claude/settings.json` only. Section 10 says
+  how sync handles them, and four more files that have one kind but need
+  care.
 
 ## 4. Stack
 
@@ -162,7 +167,7 @@ so the rest of the draft can be concrete.
 - **Content pages are prerendered and ship no JavaScript.** Browser-side
   navigation is one opt-in setting, Astro's client router (REQ §2.1).
 - **The whole verification ran in about 11 seconds** in the study, so a full
-  run every time is affordable and no step-skipping is needed (BD §1).
+  run every time is affordable and no step-skipping is needed (BD §6).
 - **Nothing is loaded into the browser as a database,** so the recovery-path
   and cache-bound requirements have nothing to apply to (REQ §2.1).
 
@@ -176,6 +181,11 @@ Caveats:
 - The study did not build a container image or measure build memory
   **[untested]** (REQ §1.5).
 
+Whatever deploy setup picks keeps four rules (REQ §1.5, BD §1): a merge is a
+deploy; a failed install or build never replaces the live site and the next
+cycle retries; the live commit and build time show in the footer and at
+`/version`; the deploy credential never enters the repo's git config.
+
 ## 5. Commands
 
 Each command is a package script that runs one file in `platform/commands/`.
@@ -183,25 +193,31 @@ An agent and a person type the same thing.
 
 | Command | What it does | Meets |
 |---|---|---|
-| `verify` | Runs one step list: dependency freshness, lint, types, content, unit tests, build, browser smoke test. It reinstalls stale dependencies before it trusts a failure. It records HEAD and the tree at the start and aborts if either changed by the end. It refuses a shallow checkout. With `--ci` it installs from the frozen lockfile, names the failing step in the run summary, and posts a comment on green so a waiting session wakes. | REQ §1.1, §1.3 |
+| `verify` | Runs one step list: dependency freshness, lint, types, content, unit tests, build, browser smoke test, plus the platform's own checks named in later sections (commit trailers, pinned Skills, guide excerpts, the copies sync owns). It reinstalls stale dependencies before it trusts a failure. It records HEAD and the tree at the start and aborts if either changed by the end. It refuses a shallow checkout. With `--ci` it installs from the frozen lockfile, names the failing step in the run summary, and posts a comment on green so a waiting session wakes. | REQ §1.1, §1.3 |
 | `check` | The seconds-fast subset for iterating: content against its schema, YAML traps (an unquoted `#`, a folded line ending in a hyphen), references between content files, and that no platform Skill shares a name with a pack Skill. It never replaces `verify`. | REQ §1.2, §3.8 |
-| `log` | Takes the agent's judgement file and lands the session's log on `records`. The session id comes from the hook payload, never from the agent. The machine half comes from the transcript and git. A second run replaces the machine half and merges the authored half. A failure prints one loud line and exits non-zero. A log in an unknown schema version is held, not dropped. The authored half is pushed when written, so it survives a reclaimed container. | REQ §2.2 |
-| `merge` | `merge verdict <pr>` posts a review verdict whose commit id the command reads from the PR head. `merge <pr>` waits for CI on that head in the background-friendly way, then merges pinned to it, so a late push fails the merge. It reads protected paths from `main`, follows renames, and refuses when the list is unreadable. It applies the preset. It parses closing keywords as GitHub does and refuses one that names an issue not approved. It closes issues GitHub left open, and reports "merged" only after GitHub confirms. An owner waiver is quoted in the merge record and lifts only the protected-path refusal. | REQ §3.4, §5.4 |
+| `log` | Takes the agent's judgement file and lands the session's log on `records`. The session id comes from the hook payload **[untested]**, never from the agent. Times are UTC, and a log is filed under the day its session ended. The machine half comes from the transcript and git. A second run replaces the machine half and merges the authored half. A failure prints one loud line and exits non-zero. A log in an unknown schema version is held, not dropped. The authored half is pushed when written, so it survives a reclaimed container. | REQ §2.2 |
+| `merge` | `merge verdict <pr>` posts a review verdict whose commit id the command reads from the PR head. `merge <pr>` waits for CI on that head in the background-friendly way, then merges pinned to it, so a late push fails the merge. It reads protected paths from `main`, follows renames, and refuses when the list is unreadable. It applies the preset. It parses closing keywords as GitHub does and refuses one that names an issue not approved. It closes issues GitHub left open, and reports "merged" only after GitHub confirms. It writes one merge row to `records`. It never turns on GitHub's auto-merge. An owner waiver is quoted in the merge record and lifts only the protected-path refusal. | REQ §3.4, §5.4 |
 | `preview` | `start`, `stop` and `shot`. It owns its server by process id and its stop always succeeds. Each preview gets its own port. `shot` builds for production, waits for a real page, and captures light and dark at desktop and phone size in one call, at the pixel size asked for. It can also assert on the rendered DOM. | REQ §3.5 |
-| `sync` | `sync take` and `sync offer`; section 10. It runs its own checks, because a session with two repos attached loads no hooks. | REQ §5.3 |
+| `sync` | `sync take` and `sync offer`; section 10. It runs its own checks, because a session with two repos attached loads no hooks **[untested]**. | REQ §5.3 |
 
 **Shared helpers** live in `platform/lib/`: reading `site.yml`, finding the
 session id, writing to the `records` checkout with a rebase-and-retry push,
 talking to GitHub, and one bounded reader for records (newest first, a cap, a
-total count) that every dashboard view and sweep uses (REQ §2.3). File names on
-`records` are unique per session or per finding, so two writers never touch
-the same file and a retry never conflicts.
+total count) that every dashboard view and sweep uses (REQ §2.3). Logs and
+findings have a file name unique to their session, so sessions never write the
+same file. Only sweeps write causes, run rows and the `taken` mark, and a push
+that loses a race rebases and retries.
 
 **A new rule** follows R0.1. If a lint rule, a type, a test or a step in
 `verify` can enforce it, the same PR adds that check and no prose. Only a
 judgement call becomes a line in `platform/guidance.md`. A tool-call guard is
 added only after a problem recurs despite a cheaper check, and the PR that
 adds it names what it replaces (R0.2).
+
+**`platform/guidance.md`** starts as the eleven lines REQ §3.1 lists and the
+order "review, then `verify`, then push" (REQ §1.1), and nothing else. Two of
+those lines are also enforced: `verify` aborts on an edit during its run, and
+`merge` runs its wait in a way that suits the background.
 
 No step is skipped by changed paths at first. A proven, fail-closed skip stays
 possible later if a full run ever gets slow; skipping review for prose that
@@ -223,8 +239,9 @@ steers later sessions does not (REQ §3.2).
    `docs/human-steps/`. **Fails closed**, because one such commit strands the
    whole push (REQ §1.3).
 4. **Stop.** If a log was authored, refreshes its machine half. If the session
-   opened or merged a PR and authored no log, blocks the stop once, with one
-   message; it never speaks mid-run. **Fails open** (REQ §2.2, §3.1).
+   made a commit or opened or merged a PR and authored no log, blocks the
+   stop once, with one message; it never speaks mid-run. **Fails open**
+   (REQ §2.2, "The finding behind most of this").
 5. **Session end.** A fallback that pushes an authored log that has not
    landed. **Fails open**; the watcher finds what it missed (REQ §4.1).
 
@@ -293,7 +310,7 @@ laptop the command prints the prompt to paste **[untested]** (REQ §3.7).
 ## 8. Sweeps
 
 Five sweeps ship. Each is a Skill plus one schedule entry, and each can also
-be run by hand (REQ §4.2 last row).
+be run by hand (BD "The loop runs on demand or from a Routine").
 
 ### 8.1 The finding record
 
@@ -303,7 +320,7 @@ command writes it; no agent types the id or the commit.
 ```yaml
 id: 2026-11-13-visit-0007     # made by the command: date, source, counter
 source: visit                 # session | watch | tend-docs | visit | retro
-kind: problem                 # problem | idea
+kind: problem                 # problem | idea | learning
 where: /blog/hello-world      # a route, a file path or a Skill name
 what: The footer link to the feed returns 404.
 evidence: preview at phone size; link target /feed.xml   # quote, path or screenshot
@@ -376,11 +393,12 @@ ships no separate trial machinery (REQ §8 item 16).
   shorter or plainer, is rejected.
 - **A decision record's decision never changes in this sweep.** A PR that
   touches one is protected and the owner merges it.
-- **A conflict no source settles becomes a finding** of kind problem with
-  `verified: false`, which `improve` files as an issue.
+- **A conflict no source settles becomes an issue** the sweep files itself,
+  with a finding that carries the issue's number, so it never waits on
+  `improve`'s thresholds.
 - **Steering:** every run reads `docs/rulings.md` whole. Only the owner changes
-  it. The sweep's own decisions live in `memory/tend-docs.md`, which a test
-  caps in size.
+  it. The sweep's own decisions live in `memory/tend-docs.md`; the
+  command that writes it refuses a file over its size cap.
 - **The guide:** a guide page that cites code names the commit it was checked
   at, and `verify` fails when a cited excerpt no longer matches (REQ §4.3).
 - **Bounds (proposal):** one area and ten applied findings a run. A diff over
@@ -409,8 +427,8 @@ ships no separate trial machinery (REQ §8 item 16).
   merged diffs; a cadence word needs a source.
 - The page lands once on `records` and is never rewritten. It is data the
   dashboard renders, so it needs no PR; the checker stands in for the review
-  REQ §4.5 asks for. This departs from Terrarium, where a digest is a site
-  page; section 14 item 18 asks the owner.
+  REQ §4.5 asks for. A run writes at most three missing days. This departs
+  from Terrarium, where a digest is a site page; section 14 item 18 asks the owner.
 
 ### 8.7 Cadence, cost and bounds
 
@@ -434,7 +452,8 @@ ships no separate trial machinery (REQ §8 item 16).
 - **No hard budget cap exists** for a scheduled cloud run, so each sweep is
   bounded by work (the limits above) and its run row records an overrun
   (REQ §4.6).
-- Every cost is labelled a list-price estimate.
+- Every cost is labelled a list-price estimate. On a subscription the view
+  also shows usage-window pressure, if a run can read it **[untested]**.
 
 ## 9. Observability
 
@@ -473,8 +492,9 @@ writes to `records`; a PR the owner merged by hand is caught by `watch`.
 
 ## 10. Mixed files and sync
 
-Two imports remove most mixing: `CLAUDE.md` and `GLOSSARY.md` are site files
-whose first line imports the platform's file, so sync never edits them.
+Two imports remove most mixing: `CLAUDE.md` is a site file that
+imports `platform/guidance.md`, `platform/glossary.md` and the site's
+`GLOSSARY.md`, so sync never edits a file the site writes in.
 
 | File | Approach |
 |---|---|
@@ -516,8 +536,8 @@ tiers (REQ §5.4). The protected list is the same under every preset.
 | Preset | Agents in an owner-started session may merge | Sweeps may merge | Protected areas |
 |---|---|---|---|
 | `review-all` | Nothing. Every PR waits for the owner. | Nothing. | The list still applies; a waiver is never needed. |
-| `standard` (default) | Their own PR on green CI with a verdict on its head, unless it touches a protected path, adds a dependency or adds a server route. | Only a PR inside their Skill's stated surface: a docs or guide fix from `tend-docs`, a guidance fix from `improve`. | Verification's step list, `merge`, hooks and their wiring, `site.yml`, both protected lists, the workflow, decision records, `docs/rulings.md`, `src/pages/api/`. |
-| `hands-off` | As `standard`. | As `standard`, plus dependency updates within a major version. | As `standard`. |
+| `standard` (default) | Their own PR on green CI with a verdict on its head, unless it touches a protected path, adds a dependency or adds a server route. | Only a PR inside their Skill's stated surface: a docs or guide fix from `tend-docs`. A fix from `improve` waits for the owner. | Verification's step list, `merge`, hooks and their wiring, `site.yml`, both protected lists, the workflow, decision records, `docs/rulings.md`, `src/pages/api/`. |
+| `hands-off` | As `standard`. | As `standard`, plus `improve`'s fixes to platform Skill text. | As `standard`. |
 
 The preset is one value in `site.yml`, which is itself protected, and `merge`
 reads it from `main`. Every preset keeps the verdict, the pinned head and the
@@ -584,7 +604,8 @@ Steps that need a human or a laptop session:
 5. **Client-router navigation against Terrarium's,** on the same three pages,
    timed on a phone. Section 4.
 6. **The container:** build memory for an Astro site, and the dashboard
-   reading a `records` checkout the deploy refreshes. Sections 4 and 9.
+   reading a `records` checkout the deploy refreshes, or rebuilt on a schedule
+   where the host has no file system at request time. Sections 4 and 9.
 7. **Starting a session from a session** in the cloud and on a laptop, with a
    hand-over as its prompt. Section 7.
 8. **Sync across two repos** in one session, which loads no hooks. Section 10.
@@ -628,9 +649,9 @@ Each question ends with where its answer probably lies:
 7. **Markdoc or MDX** for components in Markdown. Markdoc fails the build on a
    mistake; MDX is more widely known and breaks on `{}` in prose (BD §6).
    **[owner]**
-8. **Which deploy ships as the seed.** Terrarium's self-updating container met
-   every deploy requirement. A static host with an adapter is simpler for a
-   stranger but needs the dashboard fallback in section 9. **[owner]**
+8. **Which deploy ships as the seed.** Terrarium's self-updating container
+   is where the deploy requirements were learned. A static host with an
+   adapter is simpler for a stranger but needs the dashboard fallback in section 9. **[owner]**
 9. **Whether a container build of an Astro site needs the memory care**
    Terrarium's needed. **[spike]** **[repo]** `deploy/entrypoint.sh` shows
    what the current cycle guards against.
@@ -638,7 +659,8 @@ Each question ends with where its answer probably lies:
 ### Commands and hooks
 
 10. **Can `verify --ci` name its failing step well enough?** Terrarium
-    dropped one CI step because the run summary lost the step's name. The draft writes
+    rejected a single CI step because the run summary lost the step's name.
+    The draft writes
     the name to the job summary instead. Whether that reads as clearly as
     separate steps is a judgement. **[spike]** **[owner]**
 11. **Is the provenance guard still wanted with a machine account?** The login
@@ -666,15 +688,14 @@ Each question ends with where its answer probably lies:
     `next-session` degrades to printing a prompt there. **[spike]**
     (section 13 item 7)
 17. **Which pack Skills are truly used.** The default list is the
-    requirements' list plus `handoff` and `to-tickets`. **[repo]** Use counts
-    per installed Skill are in
-    `layers/journal/content/current/skills/audit-skills.yml`.
+    requirements' list plus `handoff` and `to-tickets`. **[repo]**
+    `scripts/session/audit-skills.ts --skill <name>` reports each Skill's use.
 18. **Is a digest a record or a site page?** The draft makes it a record with
     a checker and no PR. Terrarium's ADR-0010 chose a gated page, and
     REQ §4.5 asks for a review. **[owner]**
 19. **Who may mark a cause accepted.** The draft leaves it to the owner, by
     closing the issue `improve` filed with a fixed label. **[owner]**
-    **[repo]** (REQ §8 item 15)
+    (REQ §8 item 15)
 
 ### Sweeps and cost
 
@@ -687,12 +708,16 @@ Each question ends with where its answer probably lies:
     which causes it would have routed, and when.
 22. **What `watch` checks with an agent.** The draft caps agent checks at five
     Skills a run and only for changed Skills. Which findings a mechanical
-    check would have caught is unknown. **[repo]** Classify the findings in
-    `layers/journal/content/current/skills/audit-skills.yml` by whether a
-    script could have produced them (REQ §8 item 10).
+    check would have caught is unknown. **[repo]** Classify the
+    observations in the per-Skill files in
+    `layers/journal/content/current/skills/` by whether a script could have
+    produced them (REQ §8 item 10). The draft's Skill view shows use count and
+    open findings only; whether `watch` also grades each Skill's importance,
+    as REQ §2.3 lists, is the owner's call. **[owner]**
 23. **Whether nit-level problems become findings.** One file per nit may be
     more than half of all findings (REQ §8 item 9). They could stay in the
-    log only. **[repo]** **[owner]**
+    log only. **[repo]** Count problems by severity in
+    `layers/journal/content/current/sessions/`. **[owner]**
 
 ### Sync, autonomy and setup
 
