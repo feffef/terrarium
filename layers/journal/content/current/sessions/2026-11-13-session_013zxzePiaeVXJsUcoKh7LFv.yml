@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzePiaeVXJsUcoKh7LFv
 startedAt: 2026-11-13T06:43:14Z
-endedAt: 2026-11-13T07:23:29Z
+endedAt: 2026-11-13T07:24:42Z
 kind: interactive
 goal: "Clear the open issue backlog: triage, ask the owner, build and land fixes"
 status: in-review
-outcome: Five gated PRs open (2 await a human merge); one issue closed as done, one as not planned
-summary: "The owner started /clear-backlog (human-instructed) and later answered the grilling round with \"1a 2a 3a 4a 5a 6a 7a 8a 9a\", i.e. every pick I recommended (human-instructed). Everything else was agent-initiated within that skill. I resolved the sweep set (7 uncommented needs-triage issues plus ready-for-agent #3194; Seedlings and #3017 skipped as their last comment was an agent's) and ran the explore workflow, which closed #3194 as already implemented (commits 1b98f5681 and 7c213220b), set #3227 and #3228 ready-for-agent, and sent five issues to the owner. After the answers I recorded them on the issues: #3229, #3233, #3234 and #3235 became ready-for-agent and #3226 was closed as not planned. No UI sample was needed. I built five branches with the build workflow (guards #3227+#3233, digest #3228, log-session #3229, tenant-glossary #3234, preview #3235); every round-1 review had findings, each fixed or refused with proof and re-checked, then gated. The preview gate moved HEAD once (a test stub) so it got a re-check and a second gate. PRs 3250 to 3254 are open and subscribed; 3250 (guards) and 3252-3254 are not yet merged. Human-only files are in 3250 (scripts/hooks) and 3253 (tenant-glossary rule), which wait for the owner's merge. Open judgement calls are listed in each PR: git stash list is denied during a gate run, a stale path can stay in a Friction when a later sweep is still stranded on a different list, and ui-verification.md was left untouched. Still to do: verdict comments, merging the PRs an agent may merge, worktree cleanup, and the issue 3143 retro comment."
+outcome: One PR merged, four open (3 await a human merge or CI); one issue closed as done, one as not planned
+summary: "The owner started /clear-backlog (human-instructed) and later answered the grilling round with \"1a 2a 3a 4a 5a 6a 7a 8a 9a\", i.e. every pick I recommended (human-instructed). Everything else was agent-initiated within that skill. I resolved the sweep set (7 uncommented needs-triage issues plus ready-for-agent #3194; Seedlings and #3017 skipped as their last comment was an agent's) and ran the explore workflow, which closed #3194 as already implemented (commits 1b98f5681 and 7c213220b), set #3227 and #3228 ready-for-agent, and sent five issues to the owner. After the answers I recorded them on the issues: #3229, #3233, #3234 and #3235 became ready-for-agent and #3226 was closed as not planned. No UI sample was needed. I built five branches with the build workflow (guards #3227+#3233, digest #3228, log-session #3229, tenant-glossary #3234, preview #3235); every round-1 review had findings, each fixed or refused with proof and re-checked, then gated. The preview gate moved HEAD once (a test stub) so it got a re-check and a second gate. PRs 3250 to 3254 were opened and subscribed. #3251 (digest) merged after a verdict comment and green CI, closing #3228; its worktree is removed. #3250 (guards, Human-only scripts/hooks) and #3253 (tenant-glossary rule, Human-only) wait for the owner's merge. I plan to leave #3254 (preview) for the owner too, since its hydration wait is timing-dependent and untested (ADR-0004); #3252 (log-session) I will merge once CI is green. Open judgement calls are listed in each PR: git stash list is denied during a gate run, a stale path can stay in a Friction when a later sweep is still stranded on a different list, and ui-verification.md was left untouched. Still to do: CI on the open PRs, the #3252 verdict and merge, worktree cleanup, and the issue 3143 retro comment."
 prs:
   - "3250"
   - "3251"
@@ -78,6 +78,8 @@ docsRead:
     reason: (no reason given)
   - path: scripts/hooks/dispatch-read-guard.ts
     reason: (read before editing)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
   - path: .agents/skills/frictions-to-fixes/SKILL.md
     reason: (no reason given)
   - path: docs/agents/guards.md
@@ -114,22 +116,24 @@ frictions:
   - description: Passed --help to list-open-issues.ts, which only takes a number, and got a parse error.
     solution: Have the script print usage on an unknown argument.
     severity: nit
-durationSec: 2415
+durationSec: 2488
 models:
-  claude-sonnet-5-5: 157
+  claude-sonnet-5-5: 175
 toolCounts:
-  Bash: 38
+  Bash: 43
   Read: 8
-  Skill: 4
+  Skill: 5
   Workflow: 2
   ToolSearch: 4
   PushNotification: 1
-  mcp__github__add_issue_comment: 5
+  mcp__github__add_issue_comment: 6
   mcp__github__issue_write: 5
   SendMessage: 20
   mcp__github__create_pull_request: 5
   mcp__claude-code-remote__subscribe_pr_activity: 5
-  Write: 1
+  Write: 2
+  ReadNotifications: 1
+  mcp__github__issue_read: 1
 filesEdited:
   - .throwaway/build/probe.ts
   - tests/unit/preview-flags.spec.ts
@@ -154,6 +158,8 @@ rulesGlobal:
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0017.md
 rulesFollowedUp:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0004-human-merge.md
   - .claude/rules/adr-0010.md
   - .claude/rules/adr-0015.md
 adrHints:
@@ -226,6 +232,8 @@ ruleUse:
       - rule: .claude/rules/guards.md
         via: hint
       - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
         via: hint
     reported:
       - path: .claude/rules/adr-0003.md
@@ -1286,7 +1294,7 @@ subagents:
     durationSec: 1318
     toolCalls: 76
     modelCalls: 48
-    tokenShare: 9
+    tokenShare: 8.7
   - type: general-purpose
     task: a05bb3aa4613da21b
     model: claude-sonnet-5-5
@@ -1307,7 +1315,7 @@ subagents:
     durationSec: 941
     toolCalls: 51
     modelCalls: 27
-    tokenShare: 5.2
+    tokenShare: 5
   - type: general-purpose
     task: a4f0b8a85682bf58e
     model: claude-sonnet-5-5
@@ -1321,21 +1329,21 @@ subagents:
     durationSec: 244
     toolCalls: 6
     modelCalls: 6
-    tokenShare: 1.1
+    tokenShare: 1
   - type: general-purpose
     task: a9b027dfedd426f7f
     model: claude-sonnet-5-5
     durationSec: 886
     toolCalls: 11
     modelCalls: 9
-    tokenShare: 2.1
+    tokenShare: 2
   - type: general-purpose
     task: aa6e2b2b09943acce
     model: claude-sonnet-5-5
     durationSec: 390
     toolCalls: 29
     modelCalls: 20
-    tokenShare: 3.6
+    tokenShare: 3.4
   - type: general-purpose
     task: ab06a2b878f17fa7c
     model: claude-sonnet-5-5
@@ -1349,14 +1357,14 @@ subagents:
     durationSec: 180
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 1.1
+    tokenShare: 1
   - type: general-purpose
     task: ace17884d5ce7b9d8
     model: claude-sonnet-5-5
     durationSec: 607
     toolCalls: 36
     modelCalls: 22
-    tokenShare: 3.5
+    tokenShare: 3.4
   - type: general-purpose
     task: ad60d0b236d7bdbbf
     model: claude-sonnet-5-5
@@ -1370,14 +1378,14 @@ subagents:
     durationSec: 705
     toolCalls: 29
     modelCalls: 23
-    tokenShare: 5.4
+    tokenShare: 5.2
   - type: workflow-subagent
     task: build preview-dev-readiness
     model: claude-sonnet-5-5
     durationSec: 224
     toolCalls: 37
     modelCalls: 24
-    tokenShare: 3.6
+    tokenShare: 3.5
   - type: workflow-subagent
     task: Spec preview-dev-readiness r1
     model: claude-sonnet-5-5
@@ -1398,7 +1406,7 @@ subagents:
     durationSec: 180
     toolCalls: 41
     modelCalls: 19
-    tokenShare: 2.7
+    tokenShare: 2.6
   - type: workflow-subagent
     task: Standards digest-cadence r1
     model: claude-sonnet-5-5
@@ -1440,7 +1448,7 @@ subagents:
     durationSec: 55
     toolCalls: 19
     modelCalls: 13
-    tokenShare: 2.4
+    tokenShare: 2.3
   - type: workflow-subagent
     task: Standards tenant-glossary-narrow r1
     model: claude-sonnet-5-5
@@ -1454,14 +1462,14 @@ subagents:
     durationSec: 15
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: workflow-subagent
     task: build tenant-glossary-narrow
     model: claude-sonnet-5-5
     durationSec: 134
     toolCalls: 28
     modelCalls: 15
-    tokenShare: 2.1
+    tokenShare: 2
   - type: workflow-subagent
     task: Standards log-session-retract-worktree-friction r1
     model: claude-sonnet-5-5
@@ -1475,63 +1483,63 @@ subagents:
     durationSec: 157
     toolCalls: 22
     modelCalls: 16
-    tokenShare: 3.1
+    tokenShare: 3
   - type: workflow-subagent
     task: "triage #3226"
     model: claude-sonnet-5-5
     durationSec: 114
     toolCalls: 24
     modelCalls: 12
-    tokenShare: 2.8
+    tokenShare: 2.7
   - type: workflow-subagent
     task: "triage #3229"
     model: claude-sonnet-5-5
     durationSec: 142
     toolCalls: 27
     modelCalls: 17
-    tokenShare: 3.5
+    tokenShare: 3.3
   - type: workflow-subagent
     task: "triage #3228"
     model: claude-sonnet-5-5
     durationSec: 104
     toolCalls: 28
     modelCalls: 14
-    tokenShare: 2.9
+    tokenShare: 2.8
   - type: workflow-subagent
     task: "triage #3233"
     model: claude-sonnet-5-5
     durationSec: 77
     toolCalls: 17
     modelCalls: 8
-    tokenShare: 1.8
+    tokenShare: 1.7
   - type: workflow-subagent
     task: "triage #3194"
     model: claude-sonnet-5-5
     durationSec: 62
     toolCalls: 21
     modelCalls: 8
-    tokenShare: 1.9
+    tokenShare: 1.8
   - type: workflow-subagent
     task: "triage #3227"
     model: claude-sonnet-5-5
     durationSec: 131
     toolCalls: 25
     modelCalls: 12
-    tokenShare: 3.3
+    tokenShare: 3.2
   - type: workflow-subagent
     task: "triage #3235"
     model: claude-sonnet-5-5
     durationSec: 102
     toolCalls: 21
     modelCalls: 11
-    tokenShare: 2.4
+    tokenShare: 2.3
   - type: workflow-subagent
     task: "triage #3234"
     model: claude-sonnet-5-5
     durationSec: 136
     toolCalls: 28
     modelCalls: 12
-    tokenShare: 3.5
+    tokenShare: 3.4
 gitBranch: ccr-348b755c-e7qim4
 entrypoint: remote_mobile
 cliVersion: 2.1.323
