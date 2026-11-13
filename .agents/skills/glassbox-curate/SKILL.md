@@ -16,12 +16,12 @@ budget is $25 of spend or 500k tokens of context in the main session, whichever
 comes first. Read both from `get_session` called with no session id:
 `external_metadata.usage.cost_usd` (it appears only partway into a run) and
 `external_metadata.context_usage.used_tokens`. If `get_session` is not among
-your tools, estimate the context instead: what the session has read and
-written (about 4 characters a token) plus about 25k for the system prompt and
-tools. Past runs reached $25 at about 450k tokens, so the estimate decides, and
-every figure you report says it is an estimate. Stop at the budget. Several
-runs a day must work, and a session keeps going from run to run (Loop, the last
-step).
+your tools, estimate the context instead: every tool result, subagent report
+and turn so far (about 4 characters a token, rounding up when unsure) plus
+about 25k for the system prompt and tools. Past runs reached $25 at about 450k
+tokens, so the estimate decides, and every figure you report says it is an
+estimate. Stop at the budget. Several runs a day must work, and a session loops
+from one run to the next (Loop, the last step).
 
 **Modes.** *Autonomous*: your first message carries a system-reminder
 `Fired by routine "/glassbox-curate"`; decide everything, ask nothing, and say
@@ -165,14 +165,13 @@ keeps them so).
   needed read (the ones it edits, links or overlaps), and names each one missing
   from `pagesRead`. Read those, recheck the change against them, and add them
   to `pagesRead` before you land. Done when the PR is open, its body gives the
-  run's cost (the estimate, labelled, when you have no `get_session`;
-  "unreported" only when `cost_usd` is still missing), and the memory page and
-  run entry are current.
+  run's cost (labelled an estimate when it is one; "unreported" only when you
+  have neither), and the memory page and run entry are current. Then Loop.
 - **Loop.** Every run ends here, whether its PR merged or waits for the owner;
   closing the session straight after Land skips this step. Check the budget
   (measured, or estimated as in Shape) and look for another focus: memory leads,
   page-check warnings, Scout topics, pages no fresh reader has seen lately. A
-  run adds about 100k tokens of context. When the budget leaves room for that
+  run adds up to about 100k tokens of context. When the budget leaves room for that
   and a focus remains, start the next run as a full one: orient again, its own
   focus, run entry, branch from a fresh `origin/main` and PR. Otherwise stop. Say
   which in your last message and the session log, with the figure or estimate and
