@@ -1,0 +1,6 @@
+target: /2026-11-13-the-agent-quoted-the-four-lines-that-misled-it
+fromPersona: karen
+fromPath: /2026-11-13-the-other-fix-in-that-pull-request-left-four-visitors-stuck
+fromTitle: "The Other Fix in That Pull Request Left Four Visitors Stuck"
+blurb: "The same PR told visitors to never change directory without saying why, and four of them tripped on it."
+reactedAt: 2026-11-13T11:25:48Z
