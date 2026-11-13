@@ -78,7 +78,8 @@ Friction causes:
 - A first fix held about two times in three.
 - A second or later fix on the same cause usually failed: 13 of 24 and 15 of
   31 causes kept recurring.
-- Causes that no fix retires end as *accepted*. 12 did, including the
+- Causes that no fix retires end as *accepted*. 12 of the causes with fixes
+  did (14 Ledger entries are accepted in all), including the
   103-occurrence late reading of docs.
 
 The history shows the same pattern one topic at a time:
@@ -185,9 +186,9 @@ Under those three, these must hold:
 | The agent writes only the judgement half: goal, outcome, Frictions, ideas, who asked. Machine facts come from the machine. | Agents misreport facts the transcript records exactly (ADR-0009) |
 | The session id is never typed by the agent. | `session-id-hand-typed`, 18 occurrences |
 | Landing is idempotent. A second landing never clobbers the authored half. | #688 |
-| A log is updated at merge, so no view shows "in review" for merged work. | 11 sessions authored `completed` before re-closing. The stale `in-review` view, #2884. |
+| A log's status follows its PRs, so no view shows "in review" for merged work. | 11 sessions authored `completed` before re-closing. The stale `in-review` view, #2884. |
 | A failed landing is loud, never hidden by filtered output. | An agent told the owner a refused log had landed |
-| A log written by a branch whose schema is newer than the shared one is still valid or held, never lost. | #3073 |
+| A log written while the log format is changing is still accepted or held, never lost. | #3073 |
 | A log's text survives the container being reclaimed. | #449 |
 | Timestamps are UTC, and a day is cut by the session's end. | #1478 |
 | Each Friction carries a severity graded by what it cost, and the agent reports every one, however small. | session-logs lesson; severity scale |
@@ -212,7 +213,7 @@ Requirements:
 | Requirement | Evidence |
 |---|---|
 | Views derive from the logs; logs are never regenerated from repo state. | ADR-0008 |
-| Every read is bounded: newest first, a cap, and a total count. A view that grows with history is a defect. | The landing passed 10 MB uncapped. `skills.vue` still reads every session. |
+| Every read is bounded: newest first, a cap, and a total count. A view that grows with history is a defect. | The Journal landing passed 10 MB uncapped; one view still reads every session. |
 | Fix state, "stale in review" and Routine silence are derived, never stored. | `ledger.ts`, `dashboard.ts` |
 | A cost that could not be read is shown as "unreported", never guessed. | `get-session-cost-unreported`, 7 occurrences |
 | A Routine with no run in two cadences shows as possibly stopped. | visitor-loop: no scheduled run since 2026-11-03, noticed 10 days later |
@@ -400,7 +401,7 @@ visitor findings, and a single-session retro.
 | One store keyed by root cause, with fixes and status. "Worked" is derived from later occurrences, never recorded by hand. | 93 of 133 Ledger entries carry fixes |
 | One dedupe step for every input: open and closed issues, settled decisions, accepted causes, open trials. A title match is only a hint. | The open-issue check is repeated in four loops; "settled decisions" live in three places |
 | The input window starts from the last run, with a margin and a per-entry "taken" mark. | Missed runs lost no logs |
-| It fixes only on a safe surface, through a reviewed and gated PR, and prefers a deletion. | ADR-0027; prose fixes fail (section 0) |
+| It fixes only on a safe surface, through a reviewed and gated PR, and prefers a deletion. | ADR-0027; prose fixes fail ("The finding behind most of this") |
 | It never edits installed Skills, ADRs, guards or settings itself; those become issues. | frictions-to-fixes §7 |
 | A regression goes to the owner, naming the earlier fix. | R0.2 |
 | Its work per run is capped, and large inputs stay out of its context. | harvest read 62k tokens and checked only 17 clusters |
@@ -556,7 +557,7 @@ its "In the template" text needs the requirements in the named section.
 | visitor-loop (BD §4) | Later, optional | Keep, report only | 4.4 |
 | digest (BD §4) | Drop | Core | 2.3 |
 | glassbox-update and curate (BD §4) | Drop | Their job moves to docs upkeep | 4.3 |
-| "Logs on their own branch" (BD §3, §7) | Owner's choice | Replaced by the requirement in 2.2 | 2.2 |
+| Where logs live (BD §3, §7) | Owner's choice | Replaced by the requirement in 2.2 | 2.2 |
 
 ## 7. Open items
 
@@ -662,7 +663,7 @@ probably lies:
     minus the multi-Tenant ones give a candidate list. **Owner:** to confirm.
 15. **Who may declare a cause "accepted".** Accepted is a terminal state
     (R0.3), but the requirement does not say who decides it. **Repo:** read
-    the PRs that set `status: accepted` on the 12 accepted Ledger entries and
+    the PRs that set `status: accepted` on the 14 accepted Ledger entries and
     see whether each cites an owner decision.
 16. **Whether prune trials survive in any form.** No trial verdict ever
     restored text, and silence is a weak signal (4.2). Keep "cut before you

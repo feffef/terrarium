@@ -34,13 +34,13 @@ marked **(spike)**, and section 13 lists those spikes.
 
 | Term | Meaning |
 |---|---|
-| **Owner** | The one person who steers the site and merges what agents may not. |
+| **Owner** | The one person who steers the site and merges what agents may not. Replaces Terrarium's "Trusted user". |
 | **Session** | One Claude Code conversation that does work on the repo. |
 | **Session log** | The record a session leaves: goal, outcome, Frictions, ideas, plus machine facts. |
 | **Friction** | Anything that cost the session time or went wrong, graded nit to blocker. |
 | **Finding** | Anything a loop reports for follow-up: a bug, a stale doc, a skipped step. It uses one shape for every loop. |
 | **Cause** | A root cause that groups Frictions and Findings. It carries fixes and a status: open, fixing, accepted. |
-| **Loop** | A Skill that runs on a schedule or on demand: watch, improve, docs, visit, digest. |
+| **Loop** | A Skill that runs on a schedule or on demand: watch, improve, docs, visit, digest. Replaces Terrarium's "Routine", which named only the scheduled run. |
 | **Gate** | The one command that decides whether a change may merge. |
 | **Verdict** | The posted review result naming the reviewed commit. |
 | **Protected path** | A path whose changes the owner merges. |
