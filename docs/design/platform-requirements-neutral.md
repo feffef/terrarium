@@ -9,7 +9,8 @@ technologies they are given, and produces a technical design.
 traded against cost with a stated reason. *May* is allowed, not needed. Each
 requirement has an id (for example **WM-4**) so a design can answer it one by
 one. Rationale lines ("Seen:") describe failures that were observed in earlier
-practice, in general terms, so the designer can weigh trade-offs.
+practice, in general terms, so the designer can weigh trade-offs. Ids are
+stable labels, not a count: a gap means the requirement was merged into another.
 
 ## 1. Goal
 
@@ -63,12 +64,9 @@ reads issues, merges what agents may not merge, decides direction. Works from a
 web interface and from a laptop; both must work. Usually one owner per site.
 No outside contributors to a site.
 
-**Agent session.** One conversation of an AI coding agent working on the
-repository, started by the owner, by another session, or by a schedule.
-
-**Sweep.** An unattended, scheduled (or on-demand) agent run that looks after
-the site and the platform: watching, improving, tending docs, visiting the site
-as a user, summarising.
+**Sessions and sweeps** (defined in section 3) do the work: sessions are
+started by the owner, by another session, or by a schedule; sweeps look after
+the site and the platform without a human present.
 
 **Stranger.** Someone who creates their own site from the template. They are
 not a contributor to the owner's sites. The owner's own sites come first; the
@@ -102,7 +100,7 @@ template should be usable by a stranger.
 ## 3. Vocabulary
 
 The platform ships a **short glossary** of plain words. A term enters the
-glossary only when an agent must act on it, and is coined on its second use.
+glossary only when an agent must act on it (GUIDE-1 has the naming rule).
 Plain lowercase words are preferred over project jargon and over words that
 already name a feature of the agent tooling or the source host. These are the
 words used in this document:
@@ -127,6 +125,21 @@ words used in this document:
 | ruling | A standing owner instruction that every sweep obeys and only the owner changes. |
 | dashboard | The owner's view of sessions, causes, sweeps, costs and summaries. |
 | guide | Pages explaining how this site and its platform work. |
+| stranger | Someone who creates their own site from the template and is not a contributor to the owner's sites. |
+| change request | A proposed change to the site on its source host, reviewed and then merged (a pull request or merge request). |
+| skill pack | A third-party, installable collection of skills (section 4). |
+| map | A plan for work bigger than one session: the destination and the tickets that lead to it. |
+| ticket | One decision, research, prototype or task item on a map, done in its own session. |
+| hand-over | The note one session writes so the next session can continue. |
+| drop zone | A place for changes only a human or a laptop session can apply (VER-9). |
+| waiver | The owner's in-session permission to merge a change the protected-path rule would refuse. |
+| watcher | The sweep that catches what sessions did not notice about themselves (11.2). |
+| visitor | The sweep that browses the site as a user would and reports what it finds (11.5). |
+| persona | The kind of user a visitor run plays: first-time, task-directed, keyboard-only or returning. |
+| digest | The owner's summary of one finished day (11.6). |
+| learning | A finding that records something worth knowing, not something that went wrong. |
+| trial | A cut to an instruction that stays in place and is judged by later problems (IMP-11). |
+| preview | A locally built copy of the site that agents look at and screenshot (8.7). |
 
 ## 4. The agent tooling the platform builds on
 
@@ -140,12 +153,18 @@ mapped one-to-one onto the tool's own features:
 | **Path-scoped rules** | Instruction files that load only when the session touches matching files. |
 | **Skill** | A named, on-demand instruction package (a description plus steps and files) that a session loads when its description matches the task, or that the owner calls by name (a slash command). |
 | **Skill pack** | A third-party, installable collection of skills (for engineering practice: review, test-first, grilling the owner with questions, triage, research, prototyping, hand-over, mapping work). |
-| **Hook** | A script the tool runs at a lifecycle event: session start, before a tool call (able to block it), after one, when the agent tries to stop, at session end. Receives a payload (including the session id). |
+| **Hook** | A script the tool runs at a lifecycle event: session start, before or after a tool call (can block the call), when the agent tries to stop (can block the stop), at session end. Receives a payload (including the session id). |
 | **Sub-agent** | A helper agent a session dispatches with a written brief; it returns a result. |
 | **Scheduled run** | An unattended session started on a timetable, with its own prompt and no human present. |
 | **Session start from another session** | A session creating or messaging another session. |
 | **Permissions and settings** | A settings file that allows or denies tools and wires hooks. |
-| **Event subscription** | A way for a session to be woken by activity on a pull request (comments, failures). |
+| **Event subscription** | A way for a session to be woken by activity on a change request (comments, failures). |
+| **Isolated checkout** | A separate working copy of the repository for one agent (a worktree), so parallel agents do not share branches. |
+| **Session transcript** | The recorded conversation of a session, which the platform reads for machine facts (timings, models, tokens, tools, sub-agents). |
+| **Background task and one-shot wake-up** | Work that continues beyond one call, and a way to schedule a later message to a session. |
+| **Permission modes and classifier** | The tool's rules and automatic checks that allow, ask about or refuse an action (ENV-12). |
+| **Environment setup** | The remote environment's setup script and network allowlist, configured outside the repository (ENV-11). |
+| **Telemetry export** | Cost and token metrics exported from sessions, configured outside the repository (ENV-7). |
 
 Hooks, skills and settings must be plain files in the site's repository so
 that they work in every execution environment, because installed plugins or
@@ -169,63 +188,64 @@ work *within* them, and must not rely on a feature that hits one.
 | ENV-9 | The host's own auto-merge cannot pin the reviewed version and is not disarmed by later pushes. |
 | ENV-10 | The deployed site and the server's logs are not reachable from remote sessions; the live state is learned only by what the site itself exposes. |
 | ENV-11 | Some operations (creating labels, changing branch protection or repository settings, installing the workflow definition, setting secrets, editing the environment's setup script) are not available to a remote session and need a human or a laptop. |
-| ENV-12 | The agent tool's own permission classifier may still refuse an action the owner authorised (for example a merge). Setup must warn about this. |
+| ENV-12 | The agent tool's own permission classifier may still refuse an action the owner authorised (for example a merge). |
 | ENV-13 | Parallel full verification runs are limited by memory; too many at once fail with out-of-memory kills. |
-| ENV-14 | A session's own id is available to hooks but must not be transcribed by the agent. |
+| ENV-14 | A session's own id is available to hooks, not reliably to the agent (see ID-2). |
 
 ## 5. How mechanisms are chosen (applies to every section)
 
-- **PR-1** A rule that a cheap check can enforce (a lint rule, a type, a test,
+- **PRIN-1** A rule that a cheap check can enforce (a lint rule, a type, a test,
   a verification step, a command that refuses) gets that check at the moment the
   rule is written, not after it fails. Only judgement calls become prose.
   *Seen:* fixes held noticeably better as scripts or refusals than as
   instruction lines, but not perfectly; repeat fixes on the same cause usually
-  failed.
-- **PR-2** A mechanism must cost less than the problem it prevents. A guard,
+  failed. A prose fix may be tried more than once; a second failure of the same
+  prose fix is a reason to look for a cheaper check.
+- **PRIN-2** A mechanism must cost less than the problem it prevents. A guard,
   hint or reminder that becomes a top source of problems is itself a cause to
   fix or remove. A new guard names what it replaces.
   *Seen:* a guard that denied a first call until a document was read, a
   reminder that nagged mid-run, and hints pointing to documents after every
   edit were each among the top recurring problems; almost every hint led to no
   change.
-- **PR-3** A cause that regressed after its fix goes to the owner, naming that
+- **PRIN-3** A cause that regressed after its fix goes to the owner, naming that
   fix, before another fix is tried.
-- **PR-4** "Accepted cost" is a legitimate end state for a cause and is never
+- **PRIN-4** "Accepted cost" is a legitimate end state for a cause and is never
   proposed again.
-- **PR-5** Guards fail **closed** (an unreadable condition refuses). Reminders
+- **PRIN-5** Guards fail **closed** (an unreadable condition refuses). Reminders
   and convenience hooks fail **open** with a loud message. Every hook has a
   documented failure mode and a test; how to add a hook is described on one
   page. This is an extension point.
-- **PR-6** One definition of each thing, run the same way everywhere. A check
-  must not exist twice (for example once locally and once in CI) in a way that
+- **PRIN-6** One definition of each thing, run the same way everywhere. A check
+  must not exist twice (for example once locally and once in automation) in a way that
   needs a parity test.
-- **PR-7** The machine records machine facts (ids, commit ids, timings, tokens,
+- **PRIN-7** The machine records machine facts (ids, commit ids, timings, tokens,
   states); the agent writes only judgement. Text is copied by command, never
   retyped.
-- **PR-8** Anything derivable is derived at read time, not stored (a log's
+- **PRIN-8** Anything derivable is derived at read time, not stored (a record's
   status, a cause's fix state, a sweep's silence).
-- **PR-9** Everything is bounded: reads have a cap and a total count, runs have
+- **PRIN-9** Everything is bounded: reads have a cap and a total count, runs have
   a work limit, outputs a size limit. A view or run that grows with history is
   a defect. Whether limits apply from day one or when volume appears is open
   (section 15).
-- **PR-10** Every document an agent reads follows one writing standard: each
-  fact has one home, rules are stated as what to do, each step ends in a
+- **PRIN-10** Every document an agent reads follows one writing standard: each
+  fact has one home (when a fact changes, every other statement of it and every
+  consumer is updated in the same change), rules are stated as what to do, each step ends in a
   checkable criterion, each skill description starts with a leading word and one
   trigger per case, plain words are used, and a document is kept short. When a
   problem comes from one of the platform's own instructions, cut or simplify
   that instruction before adding another.
-- **PR-11** Every sweep is **removable**: deleting a sweep's skill and its
+- **PRIN-11** Every sweep is **removable**: deleting a sweep's skill and its
   schedule leaves verification passing and the other sweeps working. Sweeps
   talk to each other only through one record format.
-- **PR-12** A fact is documented once; elsewhere it is pointed to. When a fact
-  changes, every other statement of it and every consumer is found and updated
-  in the same change.
 
 ## 6. Organisation of the repository
 
 ### 6.1 Three kinds of file
 
-- **REPO-1** Every file has exactly one kind:
+- **REPO-1** Every file has exactly one kind. Three kinds (platform, seed, site)
+  is an acceptable split and other splits are open, but whatever the split, no
+  file is ambiguous:
   - **platform**: owned by the template, updated from it, may be changed in a
     site and offered back;
   - **seed**: given once by the template, then owned by the site;
@@ -250,7 +270,7 @@ work *within* them, and must not rely on a feature that hits one.
 A hello-world site; the platform; a short project instructions file and a short
 glossary; about a handful of decision records (operating model, verification
 and merging, session records, platform/site separation, stack); a small set of
-how-to documents for agents (source control and pull requests, issues and
+how-to documents for agents (source control and change requests, issues and
 labels, environment caveats, how hooks are added); a seed guide; one smoke test
 that loads every page and fails on a console error; a dependency-update
 configuration; a deploy mechanism picked at setup; a design-token file. No
@@ -265,11 +285,11 @@ merging between them does not work.
 - **SYNC-2** **Taking updates:** compute the template's changes to platform
   paths since the recorded version, apply them (three-way where the site
   changed a file), resolve conflicts, record the new version in the same
-  change, and open a change on the site that passes the site's own
+  change, and open a change request on the site that passes the site's own
   verification. A partial sync fails verification. Because it touches protected
   paths, the owner merges it.
 - **SYNC-3** **Offering changes:** when a session changed a platform file, open a
-  change on the template containing only that platform change. The template's
+  change request on the template containing only that platform change. The template's
   own automation builds a fresh site from it and runs the site's verification.
   Each site also verifies what it takes, so a bad change is caught twice.
 - **SYNC-4** Only the *trigger* is manual: the owner asks for a take or an
@@ -331,14 +351,14 @@ file the site writes into.
 
 **GUIDE-1** The guidance must contain these standing behaviours, each of which
 answers a recurring failure. They are judgement calls; where a check could
-enforce one, PR-1 applies.
+enforce one, PRIN-1 applies.
 
 | Behaviour | Failure it prevents |
 |---|---|
 | **Verify before you state.** Ids, counts, causes and any helper agent's claim are checked against the source this turn before being stated. | Facts stated from memory or relayed unchecked; counts not tallied. |
 | **Question the premise.** Give each part of a plan a reason from the current goal; drop parts without one; add nothing beyond the ask. Run a new ordering or selection rule on two concrete cases before showing it. | Over-building; changes the owner reverts. |
 | **Ask before building** anything the owner will see; settle in the first round what each displayed value follows; show a sample first. A stored field's shape is settled with the owner first. | Rework after the owner sees the result. |
-| **Open the pull request yourself** once the change is reviewed and verified, even if the tool's default says not to; subscribe to its activity and keep working until merged, closed or taken over. | Reviewed work left unmerged. |
+| **Open the change request yourself** once the change is reviewed and verified, even if the tool's default says not to; subscribe to its activity and keep working until merged, closed or taken over. | Reviewed work left unmerged. |
 | **An empty task prompt means stop and ask.** Never guess the task from a branch name or history. | Wrong work started. |
 | **Read a required document whole.** Keep such "read X before Y" lines few; expect them to be read late. | Rules missed because a document was skimmed. |
 | **Never chain a commit or push with a check** in one command. | A failing step silently skipped. |
@@ -347,9 +367,10 @@ enforce one, PR-1 applies.
 | **Stay on the branch the session started on;** if that is the default branch, cut a new one. | Work on the wrong branch. |
 | **Every agent write to an outside system names the session that made it** (see 8.8). | Unattributable posts. |
 
-**GUIDE-2** The platform must **not** include: a guard that denies a first tool
-call until a document is read; hints that point to a document after each edit;
-a reminder that interrupts mid-run; generated summary rules mirroring every
+**GUIDE-2** The platform deliberately **excludes** four mechanisms, each of which
+became a top source of problems (PRIN-2): a guard that denies a first tool call
+until a document is read; hints that point to a document after each edit; a
+reminder that interrupts mid-run; generated summary rules mirroring every
 decision record together with tracking of which rules loaded.
 
 **GUIDE-3** A handful of **path-scoped rules**, written by hand, only where a
@@ -361,9 +382,9 @@ change the decision (see 11.4).
 
 ### 8.2 Session lifecycle (start)
 
-- **LIFE-1** At session start: install dependencies from the frozen lockfile,
-  fetch full history if the checkout is shallow, make the record store
-  available, remember the session id for commands, print what loaded.
+- **LIFE-1** At session start: install dependencies (VER-10),
+  fetch full history if the checkout is shallow, make records available to the
+  session, remember the session id for commands, print what loaded.
 - **LIFE-2** The start hook fails **open** with a loud line; verification and
   merging fail closed later on whatever it left undone.
 - **LIFE-3** Stale dependencies are detected and reinstalled before a failing
@@ -466,16 +487,15 @@ The owner judges visible changes by screenshots, so this must be reliable:
   It owns its server **by process**, never by name pattern; its stop always
   succeeds; killing by pattern corrupted unrelated work.
 - **UI-2** Concurrent previews never collide on a port.
-- **UI-3** A capture waits for a real page and for hydration; a development
-  server's loading page is not the page.
+- **UI-3** A capture waits for a real page and for it to become interactive; a
+  development server's loading page is not the page.
 - **UI-4** A trusted screenshot comes from a **production build** at the
   requested pixel size.
 - **UI-5** Light and dark, desktop and phone are one invocation.
-- **UI-6** Rendering is checked in the DOM; a text search of server output
-  proves nothing and a filtered test run is not proof.
+- **UI-6** Rendering is checked by assertions on the rendered DOM; a text search
+  of server output proves nothing and a filtered test run is not proof.
 - **UI-7** The deployed site is unreachable from remote sessions, so a local
   production build is what is reviewed (ENV-10).
-- **UI-8** It can assert on the rendered DOM.
 
 ### 8.8 Identity and provenance
 
@@ -483,8 +503,8 @@ The owner judges visible changes by screenshots, so this must be reliable:
   system names the session that made it, on **every** write path (tool API,
   raw HTTP, command-line, commits): issues, change requests, comments, reviews,
   commit trailers.
-- **ID-2** The agent never transcribes its own session id; a mechanism supplies
-  it (and prints the exact line to paste when refusing).
+- **ID-2** The agent never transcribes its own session id (ENV-14); a mechanism
+  supplies it (and prints the exact line to paste when refusing).
 - **ID-3** A write without provenance is **refused**, not repaired afterwards on
   a public post.
 - **ID-4** Cloud sessions commit without the attribution trailer by default; it
@@ -539,13 +559,13 @@ the automation service.
 | VER-1 | Steps, in order: dependency freshness, lint (including the repository's mechanical rules as lint rules for code, prose and data), type check, content validation, unit tests, build, browser smoke test, plus the platform's own checks (commit attribution trailers, pinned skills, copies that sync owns, guide excerpts). |
 | VER-2 | A pass vouches for the **exact tree that is pushed**: verification records the source-control head and tree at the start and aborts (or warns) if either changed by the end. This holds for a full run, not only a partial one. |
 | VER-3 | Any decision drawn from source-control history **fails closed** on a shallow or unknown base. |
-| VER-4 | In automation, dependencies install from a frozen lockfile and the run summary **names the failing step**; a single opaque step that hides which check failed is not acceptable. |
+| VER-4 | In automation, the run summary **names the failing step**; a single opaque step that hides which check failed is not acceptable. |
 | VER-5 | A **fast** local subset (seconds) exists for iterating: content against schema, data-format traps (see 13.1), references between content files, skill-name clashes. It never replaces full verification. |
 | VER-6 | The whole run stays short enough to run in full every time (no skipping by changed path at first). A fail-closed skip may be added if it ever hurts; skipping review for prose that steers sessions never is allowed. |
 | VER-7 | On green, the automation posts a signal that **wakes** a session waiting for it (ENV-3). |
 | VER-8 | The automation workflow definition is **minimal and stable**; its logic lives where a remote session may push, so changing verification never means editing the workflow (ENV-2). |
 | VER-9 | A **drop zone** exists for changes only a human or laptop session can apply (workflow definitions etc.), with a rule that both halves of a change land in one sitting. |
-| VER-10 | Dependency updates are grouped and automated; new dependencies and new major versions need the owner; a pinned package manager and frozen lockfile are used. |
+| VER-10 | Dependency updates are grouped and automated; new dependencies and new major versions need the owner (AUT-5). Dependencies install from a frozen lockfile everywhere (sessions and automation) and the package manager is pinned. |
 
 ### 9.2 Merging
 
@@ -565,16 +585,14 @@ contributors.
 | MRG-9 | A merge that failed (for example a service error) is never reported as merged; "merged" is reported only after the host confirms. |
 | MRG-10 | Long waiting for green runs in the background (ENV-6). |
 | MRG-11 | Each merge writes a record row (who, what, preset, waiver, verdict). |
-| MRG-12 | Merging is deploying (see 13.3). A site may hold deploys back separately only if that is chosen at setup (open). |
 
 ### 9.3 Autonomy and protected paths
 
 - **AUT-1** One value, chosen at setup, decides what agents may merge. At least
-  **three presets** exist, covering at least: *nothing merges without the
-  owner*; a *standard* where agents merge their own reviewed and verified
-  changes unless protected or adding a dependency or server route; and a more
-  *autonomous* level that also allows low-risk dependency updates and lets
-  more sweeps self-merge. Exact definitions are open (section 15).
+  **three presets** exist, and the least permissive lets nothing merge without
+  the owner. Exact definitions are open (section 15). Candidate axes: who merges
+  agent changes; whether scheduled runs may self-merge; whether the
+  improvement sweep may change its own skills; how large the protected list is.
 - **AUT-2** The presets vary by **who acts and what kind of change**, not by a
   hierarchy of path risk tiers. Every preset still requires a verdict and the
   pinned head, and still refuses protected paths.
@@ -585,10 +603,10 @@ contributors.
   and protected lists themselves, the workflow definition, decision records,
   the owner's rulings, the place for server routes. The owner confirms the
   list.
-- **AUT-5** A change that adds a dependency, moves one to a new major version,
-  patches its code, changes behaviour no test or check can observe, or adds a
-  server route is merged by the owner under every preset except where the
-  preset explicitly says otherwise.
+- **AUT-5** By default the owner merges a change that adds a dependency, moves
+  one to a new major version, patches its code, changes behaviour no test or
+  check can observe, or adds a server route. Whether a preset relaxes this for
+  low-risk dependency updates is open.
 - **AUT-6** Whether a security review of such changes is wanted is open.
 
 ## 10. Session records
@@ -599,10 +617,9 @@ showable on a dashboard, and quick and painless to write**.
 | Id | Requirement |
 |---|---|
 | REC-1 | Every substantive session lands a record **without the owner asking**. |
-| REC-2 | The agent writes **only the judgement half**: goal, outcome, problems, ideas, who asked. Machine facts (timings, models, tokens, tools used, helper agents, files changed, change requests, source-control state) come from the machine. The platform keeps only the machine facts it uses. |
-| REC-3 | The session id is never typed by the agent (ENV-14). |
+| REC-2 | The agent writes **only the judgement half**: goal, outcome, problems, ideas, who asked. Machine facts (timings, models, tokens, tools used, helper agents, files changed, change requests, source-control state) come from the machine. The platform keeps only the machine facts it uses; tracking which instructions or documents a session read is not one of them. The session id comes from the machine too (ID-2). |
 | REC-4 | Landing is **idempotent**: a second landing replaces the machine half and merges the authored half; it never clobbers the authored half. |
-| REC-5 | A record's **status follows its change requests**, so no view shows "in review" for merged work. Status is derived (PR-8). |
+| REC-5 | A record's **status follows its change requests**, so no view shows "in review" for merged work. Status is derived (PRIN-8). |
 | REC-6 | A failed landing is **loud**, never hidden by filtered output. An agent must never tell the owner a refused record had landed. |
 | REC-7 | A record written while the format is changing is accepted or **held**, never lost. New fields are optional; format changes add a new version beside the old. |
 | REC-8 | A record's authored text **survives the container being reclaimed** (it is pushed when written). |
@@ -619,7 +636,7 @@ showable on a dashboard, and quick and painless to write**.
 ## 11. Sweeps (scheduled upkeep)
 
 Five sweeps ship by default. Each is a skill plus a schedule entry, can also be
-run by hand, and can be removed (PR-11). **Setup chooses their cadences;
+run by hand, and can be removed (PRIN-11). **Setup chooses their cadences;
 "off" is valid.** Costs of earlier equivalents were meaningful (a run each costs
 dollars; a daily watcher was the most expensive of all), so cadence and bounds
 are deliberate, not default-to-daily.
@@ -641,9 +658,8 @@ a command, never typed by an agent:
 ### 11.2 Watcher: catches what sessions don't notice about themselves
 
 Classes of thing it caught: steps a skill skipped while reporting success;
-missed invocations; reverted or regressed changes; gates bypassed by accident;
+missed invocations; reverted or regressed changes; verification bypassed by accident;
 orphaned records; humans nudging a closure; a scheduled sweep that stopped.
-
 | Id | Requirement |
 |---|---|
 | WAT-1 | Runs on a schedule, independent of any session noticing. |
@@ -668,11 +684,10 @@ schedule.
 | IMP-1 | One store **keyed by root cause**, with fixes and status. "Worked" is derived from later occurrences, never hand-recorded. |
 | IMP-2 | **One dedupe step** for every input: open and closed issues, settled decisions, rulings, accepted causes, open trials. A title match is only a hint. |
 | IMP-3 | The input window starts at the previous run, with a margin and a per-item "taken" mark, so missed runs lose nothing. |
-| IMP-4 | It fixes only on a **safe surface**, through a reviewed and verified change; it **prefers a deletion**; a fix removes as much as it adds (PR-1, PR-10). |
+| IMP-4 | It fixes only on a **safe surface**, through a reviewed and verified change; it **prefers a deletion**; a fix removes as much as it adds (PRIN-1, PRIN-10). |
 | IMP-5 | It **never edits installed skills, decision records, guards or settings**; those become issues. |
-| IMP-6 | A cause that **regressed** after its fix goes to the owner naming that fix (PR-3); an **accepted** cause is never proposed again (PR-4). |
+| IMP-6 | A cause that **regressed** after its fix goes to the owner naming that fix (PRIN-3); an **accepted** cause is never proposed again (PRIN-4). |
 | IMP-7 | Its work per run is **capped** (items, issues, fixes); large inputs stay out of its context. |
-| IMP-8 | Text is copied by command, never retyped. |
 | IMP-9 | One **report** per run: every number sourced or marked unverified; every dropped item with its reason. |
 | IMP-10 | Its own briefs are a problem source it watches. |
 | IMP-11 | A cut instruction may stand as a **trial** judged later by the share of sessions reporting the problem; silence is a weak signal. Whether trials exist as a step or only as a principle ("cut before you add") is open. |
@@ -696,9 +711,9 @@ review.
 | DOC-4 | A rewrite of a decision record **must not change the decision**; changes to decisions are protected and the owner merges them. |
 | DOC-5 | A conflict that no source settles becomes an **issue the sweep files itself**, never merely named in a report. |
 | DOC-6 | **Coverage rotates by the previous run's record** (what was actually read), not the calendar. |
-| DOC-7 | The owner steers through **standing rulings** that every run reads whole and only the owner edits. The sweep's own decisions live apart in a **size-capped memory file** whose cap is enforced by a test (a request to "leave it shorter" did not hold). |
+| DOC-7 | The owner steers through **standing rulings** that every run reads whole and only the owner edits. The sweep's own decisions live apart, can be overruled with evidence, and are kept in a **size-capped memory file** whose cap is enforced by a test (a request to "leave it shorter" did not hold). |
 | DOC-8 | A page that cites code **names the version it was checked at**, and **verification fails when a cited excerpt no longer matches**. |
-| DOC-9 | Large mechanical diffs still get review above an explicit size threshold. |
+| DOC-9 | Large mechanical diffs still get review (WM-4). |
 | DOC-10 | Scheduled runs **never ask the owner for a focus**. |
 | DOC-11 | **The guide:** a set of pages that explains how this site and its platform work. It starts with platform chapters seeded from the template and grows site chapters as the site grows. The intended reader (the owner, agents, or an adopter) and depth are open. |
 | DOC-12 | The cap on the memory file is a number to choose (open). |
@@ -747,31 +762,27 @@ every run; dark mode was never covered; two same-day runs duplicated each other.
   both is open.
 - **COST-5** Cost recording works by each sweep's **first step** recording costs
   for finished runs that lack them.
-- **COST-6** A sweep with **no run in two cadences** shows as possibly stopped.
 - **COST-7** Default cadences are proposals the owner changes at setup; weekly
   sweeps on a quiet site may find nothing, daily ones cost real money.
 
 ## 12. Observability: the dashboard
 
 Observability is a **must-have**. It is **owner-only by default**; a demo site
-may make it public. Every read is bounded (PR-9). Views derive from records;
-a new record shows with **no page edit** because every view is a query over a
-folder or store.
+may make it public. Every read is bounded (PRIN-9). Views derive from records;
+a new record shows with **no page edit** because every view is a query over the
+records.
 
 | View | Contents |
 |---|---|
 | Sessions | Newest first, a page at a time with the total: goal, derived status, outcome, kind, change requests, problem counts by severity, duration, models, sub-agent share of tokens and run time. |
 | Causes | One row per cause over a time window (default seven days): occurrences, fixes, fix state **derived** from later occurrences. |
-| Sweeps | Last run, cost per run and per week (labelled estimate), coverage, "possibly stopped" after two missed cadences, memory size. |
+| Sweeps | Last run, cost per run and per week (labelled estimate), coverage, a "possibly stopped" flag (WAT-2), memory size. |
 | Skills | Per skill: role, use count, graded importance, open findings against it (whether importance is graded is open). |
 | Headline tiles | Sessions by kind, problems by severity, sweep spend, open ideas, skills. |
 | Digests | One per day, newest first. |
 | Ideas and learnings | Open idea findings and the issues they became. |
 | Live | The deployed version and build time. |
 
-- **OBS-1** A cost shown that could not be read is "unreported" (COST-2).
-- **OBS-2** A log's status, a cause's state, a sweep's silence are derived,
-  not stored (PR-8).
 - **OBS-3** Access control is a choice: a login, a shared secret, a network
   restriction, or none because the repository is private. It must be settled
   with the owner, including what "owner-only" means when the repository's own
@@ -808,7 +819,7 @@ chosen, built in or checked by the platform's own step.
 |---|---|
 | WEB-1 | Content pages may be **prerendered**; anything that needs the server renders on demand. |
 | WEB-2 | **Browser-side navigation** (fast in-app transitions without full page reloads) must be **available as an opt-in**; the owner values how fast navigation feels. The bar and how to measure it ("as fast as the previous system, timed on a phone") is open. |
-| WEB-3 | **Server-side routes** (APIs) must be possible, with **a named place** for them, and a rule that adding one is the owner's merge. |
+| WEB-3 | **Server-side routes** (APIs) must be possible, with **a named place** for them, and a rule that adding one is the owner's merge (AUT-5). |
 | WEB-4 | Any data the browser loads has a **recovery path**, or is avoided. Any page cache has a **size bound**. |
 | WEB-5 | An **owner-only area** is possible behind access control; owner-only content must not be reachable by a content API or build artefact that bypasses the control. |
 | WEB-6 | Design tokens as standard CSS custom properties, dark mode, reduced motion; **no wrapper classes or name prefixes**. Accessibility practice (roles, keyboard, tested through roles in browser tests). Whether an automated accessibility check is required is open. |
@@ -822,19 +833,19 @@ Whatever the design picks must keep these:
 
 | Id | Requirement |
 |---|---|
-| DEP-1 | **A merge is a deploy** (unless chosen otherwise at setup). |
+| DEP-1 | **A merge is a deploy.** A site may hold deploys back separately only if that is chosen at setup (open). |
 | DEP-2 | A **failed install or build never replaces the live site**, and the next cycle retries rather than staying stale. |
 | DEP-3 | The **live version and build time** are visible from outside the server (footer and a version endpoint), because neither the owner nor a remote session can read server logs. A site once stayed hours stale until a screenshot showed it. |
 | DEP-4 | A build's **memory need** is known and provided for. |
 | DEP-5 | A deploy credential **never lands in the repository's source-control config**. |
-| DEP-6 | A frozen lockfile and a pinned package manager are used. |
 
 ### 13.4 Seed site
 
 A hello-world site with one page, a typed content schema, one component in
-content, one API route in its named place, one on-demand page, an owner-only
-path, design tokens, a smoke test, the verification, and a deploy. The seed is
-the minimal example of every extension point.
+content, one API route in its named place, one on-demand page, design tokens, a
+smoke test, the verification, and a deploy; plus an owner-only path if the owner
+area belongs in the first version (open, section 15). The seed is the minimal
+example of every extension point.
 
 ## 14. Non-goals
 
@@ -845,8 +856,8 @@ the minimal example of every extension point.
   guide's pinned-citation mechanism is meant to be reusable for it).
 - Locks, slots and path-based skipping around verification at first.
 - A guard for every environment quirk at first: each begins as a line in the
-  environment-caveats document and becomes a guard only if it recurs (PR-1,
-  PR-2).
+  environment-caveats document and becomes a guard only if it recurs (PRIN-1,
+  PRIN-2).
 - Reproducing any particular earlier tool or file layout.
 
 ## 15. Open design questions
@@ -863,13 +874,14 @@ an experiment to run before building.
    never deploys or fails on a site schema; the dashboard can read them without
    a rebuild; no bypass on protected branches; the cost is that records are not
    in the main tree.
-3. **Records in a public repository.** Owner-only logs vs public repository.
+3. **Records in a public repository** (REC-15). Owner-only logs vs public
+   repository.
 4. **Autonomy presets: exact definitions** (AUT-1 to AUT-6) and the first
    protected paths.
 5. **Dashboard access control** (OBS-3) and what the dashboard is on a site not
    yet deployed.
 6. **Deploy model** (DEP-*), including whether a merge is always a deploy.
-7. **Whether a red change request is acceptable** if the agent waits for CI,
+7. **Whether a red change request is acceptable** if the agent waits for automation,
    instead of running the full verification before every push.
 8. **Waiting for green outside the remote environment:** a laptop session has
    no event subscription. Does it wait in the foreground, hand back to the
@@ -886,22 +898,27 @@ an experiment to run before building.
 14. **What a "site" is:** whether one repository may hold a site with distinct
     parts (a blog and a shop), or a second part is a second repository.
 15. **Who the guide is for** (DOC-11) and its depth.
-16. **Volume:** whether bounded reads, output caps and parallelism limits apply
+16. **Volume** (PRIN-9): whether bounded reads, output caps and parallelism limits apply
     from the start or when volume demands.
 17. **Dependency updates:** rule for minors and patches; whether an update sweep
     exists from day one; whether a security review of server routes exists.
 18. **Agent identity** (ID-6): shared account, separate account, or app; token
     lifetime and rotation.
-19. **Whether nit-level problems become findings**, and whether the session
+19. **Whether nit-level problems become findings** (REC-10), and whether the session
     retrospective is an input to the improvement sweep.
 20. **Whether cost views show money, usage-window share or both** (COST-4).
-21. **Model choice per role.**
+21. **Model choice per role** (DSP-10).
 22. **Laptop parity:** which requirements must hold identically on a laptop and
     which may degrade.
 23. **Whether review covers owner-written commits**, and whether a waiver is per
     commit or a standing rule for kinds of change.
 24. **How the platform's own mechanisms are decided to be worth keeping:**
-    whether prune-style trials survive as a step or only as a principle.
+    whether prune-style trials survive as a step or only as a principle (IMP-11).
+25. **Owner area:** whether an owner-only area is in the first version or comes
+    later (WEB-5, OBS-3).
+26. **Content-writing skills:** whether a site wants any (for example
+    fact-checked posts, in-character writing, curated catalogues); a
+    claim-by-claim fact check is the transferable part.
 
 ### Experiments the designer must plan before relying on them
 
@@ -924,8 +941,10 @@ an experiment to run before building.
 - How much of the session transcript must be parsed for the machine half of the
   record, and whether compacted or resumed sessions keep timings and tool counts
   right.
-- A throwaway pilot site, to exercise two-way sync end to end, since that is the
-  newest and least-tested part.
+- How two-way sync will be exercised end to end, since it is the newest and
+  least-tested part. The owner plans no pilot site; the authors of the earlier
+  analysis recommended one throwaway site, and the designer should say whether
+  and how to test sync without it.
 
 ## 16. What the designer should produce
 
