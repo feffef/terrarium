@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_013zxzeRd1qkgnadmWbZLoZu
 startedAt: 2026-11-13T00:15:51Z
-endedAt: 2026-11-13T00:28:01Z
+endedAt: 2026-11-13T00:28:28Z
 kind: autonomous
 goal: Write the 2026-11-12 Journal Digest and archive old content
 status: in-review
@@ -62,11 +62,14 @@ frictions:
   - description: The Digest prose was 264 words against the Skill's 250 cap; code-review caught it and it cost one more commit before the gate.
     solution: Count the prose words before committing the draft.
     severity: nit
-durationSec: 731
+  - description: The Stop hook reported that a PR merged and demanded close-session right after I started merge-pr.ts in the background; PR 3224 was still open and waiting on CI.
+    solution: Have the hook check the PR's merged state, not that a merge-pr.ts command ran.
+    severity: nit
+durationSec: 758
 models:
-  claude-fable-5-2: 70
+  claude-fable-5-2: 79
 toolCounts:
-  Bash: 31
+  Bash: 34
   Write: 1
   Agent: 3
   Skill: 3
@@ -74,6 +77,8 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   mcp__github__add_issue_comment: 1
+  ReadNotifications: 1
+  mcp__github__pull_request_read: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-11-12.md
   - layers/journal/content/archived/pages/digests/2026-11-05.md
@@ -279,19 +284,19 @@ subagents:
     durationSec: 209
     toolCalls: 53
     modelCalls: 39
-    tokenShare: 34
+    tokenShare: 31.9
   - type: general-purpose
     task: Standards review of digest diff
     durationSec: 33
     toolCalls: 11
     modelCalls: 4
-    tokenShare: 7.6
+    tokenShare: 7.1
   - type: general-purpose
     task: Spec review of digest diff
     durationSec: 58
     toolCalls: 13
     modelCalls: 7
-    tokenShare: 9.4
+    tokenShare: 8.8
 gitBranch: claude/compassionate-lovelace-j7k6li
 entrypoint: remote_trigger
 cliVersion: 2.1.323
