@@ -28,8 +28,8 @@ the AFK-ready triage label"), use that string.
 
 > **Area labels.** `area:<tenant>`, `area:homepage` and `area:platform` say
 > which part an issue or PR is about. The `auto-triage` sweep sets them on
-> issues; `.github/workflows/pr-area-label.yml` sets them on PRs from the paths
-> they touch.
+> issues and wayfinder maps, `harvest` on its Seedlings, and
+> `.github/workflows/pr-area-label.yml` on PRs from the paths they touch.
 
 > **Requester-trust gate.** A Public issue reaches `ready-for-agent` only
 > after a Trusted user approves it (ADR-0020), except in the guest pipeline
