@@ -1,8 +1,8 @@
-// Denies an edit or a tree-changing `git` command (commit, add, stash, checkout,
-// reset) while a `pnpm gate:scoped` run is live in that
-// checkout: gate.ts `stepAbort` aborts on any tree change (issue #3046). Signal:
-// the run lock (`takeRunLock`, a pid file in the git dir). Ignored and outside
-// paths pass, as `snapshotTree` skips them; other Bash (read-only git, scripted
+// Denies an edit or a tree-changing `git` command (commit, add, stash,
+// checkout, reset) while a `pnpm gate:scoped` run is live in that checkout:
+// gate.ts `stepAbort` aborts on any tree change (issue #3046). Signal: the run
+// lock (`takeRunLock`, a pid file in the git dir). Ignored and outside paths
+// pass, as `snapshotTree` skips them; other Bash (read-only git, scripted
 // writes) passes.
 //
 // Usage:
