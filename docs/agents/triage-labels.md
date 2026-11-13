@@ -27,8 +27,7 @@ the AFK-ready triage label"), use that string.
 > label (`issue-tracker.md`, Specs).
 
 > **Area labels.** `area:<tenant>`, `area:homepage` and `area:platform` say
-> which part an issue is about; the `auto-triage` sweep sets them, and a
-> workflow sets them on PRs.
+> which part an issue is about; the `auto-triage` sweep sets them.
 
 > **Requester-trust gate.** A Public issue reaches `ready-for-agent` only
 > after a Trusted user approves it (ADR-0020), except in the guest pipeline
