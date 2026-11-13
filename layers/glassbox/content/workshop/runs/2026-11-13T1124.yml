@@ -1,0 +1,49 @@
+session: session_013zxzeS6AE1WUN124PHnm4b
+mode: interactive
+focus: "The merge gate as a walkthrough. The owner proposed that the gate, a
+  sequence across many lessons, becomes a walkthrough, with the lesson keeping
+  the concept; they chose one page edit that needs every check, with the docs-only
+  shortcut shown as a side branch, and one stop per check. They then proposed
+  that the CI step points at a GitHub Actions lesson, and chose to retitle
+  Composite actions rather than add a lesson. Chosen because the owner asked for
+  it. Deviations for the budget: no Scout; the pages the new chips link were
+  judged from the guide index, and only the gate, Composite actions, protected
+  paths, session logs and the touched pages were read in full. The page checks, a
+  sonnet claim checker and a sonnet fresh reader ran. The claim checker found no
+  wrong sentence; its two soft points (the merge script's order, the scope step's
+  home) were tightened, and the fresh reader's findings were fixed where a source
+  allowed. The code review also named Linting, Type checking, Content validation,
+  Pull requests, Author trust and the overview as read only in part or not at
+  all; the writer subagents read the check lessons per their brief, which the
+  lead did not verify."
+changes:
+  - walkthroughs/15.a-change-meets-the-gate | New walkthrough of ten stops that
+    follows one fix to a page under layers/ through the local run, the path-based
+    choice of steps, lint, the type check, content validation, the unit tests, the
+    build, the browser tests, CI and the merge script, with a diagram whose side
+    branch shows the docs-only shortcut | the gate's checks are taught on separate
+    lessons and the Merge gate lesson only links them. Prefix 15 puts it after
+    Asking an agent for a change (an owner question in the PR)
+  - git-github/30.composite-actions | Retitled GitHub Actions; the lede and the
+    first concept paragraphs now teach workflows, jobs, triggers and permissions
+    before composite actions; the two workflows' triggers named; re-pinned to main
+    and publishedAt moved. File name and URL kept | the old title named one
+    feature and a reader looking for how CI works would not find it
+  - verification/10.gate, agents/30.cloud-sessions, git-github/40.dependabot-grouping
+    | link text now GitHub Actions | a link's text is its target's exact title.
+    Wording only
+  - index | A change meets the gate added to the human-only paragraph's chips |
+    the walkthrough needed a link from another page. Chips only
+  - workshop/pages/index | the retitled lesson's name in a lead; an owner question
+    on chips per row added; the House rules wording note cut | keeps the note
+    true; the page stays shorter than found, so the oldest minor wording note went
+pagesRead:
+  - verification/80.headless-browser-checks
+  - verification/40.testing
+  - nuxt-content/30.content-database
+  - nuxt-vue/60.nitro
+  - verification/10.gate
+  - git-github/30.composite-actions
+  - terrarium-practice/60.protected-paths
+  - terrarium-practice/40.session-logs
+  - walkthroughs/15.a-change-meets-the-gate
