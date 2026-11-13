@@ -16,7 +16,7 @@ learnings into Seedlings, and `frictions-to-fixes` takes up its bugs.
 
 The run changes nothing but its own session log and its retro comment on
 #3244: no branch, PR or issue (ADR-0003). Everything it finds goes into that
-log (step 4).
+log (steps 4 and 5).
 
 ## Today's focus
 
@@ -68,7 +68,8 @@ Each gets [`visitor-brief.md`](visitor-brief.md) verbatim, keeping only its
 access block, with the URL, the focus's entry path and note (blank if none),
 its lens row, the context file's path (informed only) and a scratch directory
 unique to that visitor filled in. The blind visitor gets nothing else: no
-context file, no hints, no past findings. Done when all three reports are in; resume a
+context file, no hints, no past findings. Note each visitor's agent id for
+step 5. Done when all three reports are in; resume a
 stalled visitor with `SendMessage`, never by re-dispatching. Then
 `scripts/ui/preview.ts stop <pid>`.
 
@@ -93,9 +94,9 @@ Leave other checks to `harvest`. Done when every reported item is in the
 tally with one mark, and every bug was checked against both its source and its
 rendered page.
 
-## 4. Log
+## 4. Draft the log
 
-Invoke `close-session`. In the log:
+Write the log's entries in a draft in your scratchpad:
 
 - each **bug** is a Friction: `description` names the URL and what breaks,
   `solution` the fix, `severity` how badly it hurts a visitor, on
@@ -105,13 +106,15 @@ Invoke `close-session`. In the log:
 - each **learning** is one `learnings` line;
 - the run's own Frictions follow, as in any session.
 
-Done when every bug, idea and learning in the tally is in the authored log.
+Done when every bug, idea and learning in the tally is in the draft.
 
-## 5. Retro
+## 5. Retro, then close
 
-Run the retro in issue #3244: send each visitor its retro message, then post
-the run's report there as one comment, following that issue's rules and
-template. Log everything unrelated to visitor-loop itself as a Friction, never
-as an issue. Then invoke `close-session` again.
+Run the retro in issue #3244: send each visitor its retro message by agent id,
+then post the run's report there as one comment, following that issue's rules
+and template. Add everything unrelated to visitor-loop itself to the draft as
+a Friction, never as an issue. Then invoke `close-session`, writing the log
+from the draft.
 
-Done when the report comment is posted and those Frictions are in the log.
+Done when the report comment is posted and the authored log holds every entry
+in the draft.
