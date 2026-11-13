@@ -65,6 +65,15 @@ Auto-close as `wontfix` only the two **objective, repo-verifiable** kinds:
 judgment call → `ready-for-human`; write `.out-of-scope/` only on a Trusted user's
 confirm (see `OUT-OF-SCOPE.md`).
 
+## Area labels
+
+Add `area:<tenant>` (`journal`, `blog`, `atlas`, `midden`, `marquee`,
+`tinkerfund`, `glassbox`, `commons`), `area:homepage` or `area:platform` for
+each the issue cites by name or path (`platform`: `app/`, `shared/`,
+`modules/`, `scripts/`, `nuxt.config.ts`; `homepage`: the home page); none
+cited, none added. Never on a Seedling or a `wayfinder:map`.
+`.github/workflows/pr-area-label.yml` copies these paths for PRs; change both.
+
 ## Approval
 
 What a run may label `ready-for-agent`, and what goes to `ready-for-human`:

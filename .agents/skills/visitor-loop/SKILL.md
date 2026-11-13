@@ -60,8 +60,8 @@ sections on today's focus, each "none" when empty:
 - ideas already logged: `pnpm exec tsx .agents/skills/visitor-loop/scripts/ideas.ts list --days 7 --match <words>`,
   the words being the focus and its Space names, comma-separated
   (`--match midden,trench,stores`);
-- open issues: the titles in `pnpm exec tsx scripts/github/list-open-issues.ts`
-  that name the focus or its pages, with their numbers.
+- open issues: those labelled `area:<focus>` (the focus's name in the table) in
+  `pnpm exec tsx scripts/github/list-open-issues.ts`, with their numbers.
 
 Then dispatch three read-only subagents **in one message**, all with
 `model: sonnet`, one per lens:
