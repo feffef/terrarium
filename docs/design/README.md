@@ -10,9 +10,13 @@ Read `08` for where the work stands; read the others for how it got there.
 
 ## The notes, in order
 
-Times are UTC, from the commit that first added each file. Each session's log
-is in the Journal under `layers/journal/content/current/sessions/`, named by
-its id.
+Times are UTC. For `01` to `06` they come from the commit that first added the
+file. `07` and `08` were first committed together with this README, so their
+times come from the last session's own record of when it received `07` and
+when the two sessions exchanged the list; git cannot confirm them. Each
+session's log is in the Journal under
+`layers/journal/content/current/sessions/`, named by its id, except for the
+session that wrote `07`, which had none when this README was written.
 
 | File | What it is | First written | Session | PR |
 |---|---|---|---|---|
@@ -22,7 +26,7 @@ its id.
 | [`04-single-site-template-design-second-draft.md`](./04-single-site-template-design-second-draft.md) | A second design draft, written without reading `03`. | 13:11 | [session_013zxzeNmq54AMia53quaCHn](https://claude.ai/code/session_013zxzeNmq54AMia53quaCHn) | #3270 |
 | [`05-platform-requirements-neutral.md`](./05-platform-requirements-neutral.md) | The requirements with every technology, file name and Terrarium term removed, so an outside designer can work from them. | 13:54 | [session_013zxzeSvCUWdcpBdHi4sdX2](https://claude.ai/code/session_013zxzeSvCUWdcpBdHi4sdX2) | #3272 |
 | [`06-single-site-template-design-combined-draft.md`](./06-single-site-template-design-combined-draft.md) | One draft that takes the best of `03` and `04`: the **insider draft**. | 13:56 | [session_013zxzeQ9FTpQjBywTHWkdXF](https://claude.ai/code/session_013zxzeQ9FTpQjBywTHWkdXF) | #3271 |
-| [`07-platform-design-draft.md`](./07-platform-design-draft.md) | A design written from `05` alone, with no access to Terrarium: the **outsider draft**. | after `05` | [session_013zxzePjcu3uX5URNR4fiue](https://claude.ai/code/session_013zxzePjcu3uX5URNR4fiue) | with this README |
+| [`07-platform-design-draft.md`](./07-platform-design-draft.md) | A design written from `05` alone, with no access to Terrarium: the **outsider draft**. | after `05`, before 16:10 | [session_013zxzePjcu3uX5URNR4fiue](https://claude.ai/code/session_013zxzePjcu3uX5URNR4fiue) | with this README |
 | [`08-converged-decisions.md`](./08-converged-decisions.md) | Where `06` and `07` now agree, each decision with the recorded problem behind it, and what is left for the owner. | 16:36 to 18:00 | the session above and [session_013zxzeP357BagrJREfWSJ6U](https://claude.ai/code/session_013zxzeP357BagrJREfWSJ6U) | with this README |
 
 ## How each note came about
@@ -33,8 +37,8 @@ questions the owner set the task: break down everything Terrarium does and
 recommend, per part, what to take. The session read Glass Box lessons and sent
 agents through the source, the Routines and the session logs. Two agents
 studied the stack, one of them by building the same small site in Astro and in
-Nuxt Content; those test projects were not kept. The note was first committed
-under `docs/research/`.
+Nuxt Content; the note itself says those test projects were not kept. It was
+first committed under `docs/research/`.
 
 **02, the requirements, and 03, the first design draft.** The owner asked for
 a deeper dig into Skills, scripts, session logs and issue history to find
@@ -47,8 +51,8 @@ commands, cheap checks before a mechanism per failure. That session also moved
 **04, the second design draft.** The owner asked a fresh session to read `01`
 and `02`, to leave `03` unread, and to write its own draft in a given
 14-section structure. The owner told it that every sweep ships, that a
-separate agent identity is only an option, and that Terrarium's decision
-records do not bind the template.
+separate agent identity is only an option, and that Terrarium's ADRs do not
+bind the template.
 
 **05, the neutral requirements.** The owner asked a session to read every file
 in this folder and distil the requirements into one technology-neutral file
@@ -74,21 +78,20 @@ for `05`.
 **08, the converged decisions.** The owner asked the session with repo access
 to find where `07` beats `06`, then had the two sessions exchange messages
 until the designs converged. The outsider session said the owner had given it
-the role of arguing for the simplest design that meets the requirements. The
-session with
-repo access sent read-only agents through the merge script, session logging,
-the gate, preview and deploy loop, the guards and hints, backlog steering, the
-scheduled jobs, git, cost reading and the site's runtime, and answered each
-question with the recorded problem and its count. The outsider session wrote
-the list; the other checked it line by line, sent three sets of amendments,
-and then seven last corrections, which are applied in this copy. Counts marked
-"(sub)" in the note come from an agent and were not re-checked.
+the role of arguing for the simplest design. The session with repo access
+sent read-only agents through the merge script, session logging, the gate,
+preview and deploy loop, the guards and hints, backlog steering, the Routines,
+git, cost reading and the site's runtime, and answered each question with the
+recorded problem and its count. The outsider session wrote the list; the other
+checked it line by line and sent three sets of amendments. It then proposed
+seven last corrections, which the owner confirmed and which are applied in
+this copy. Counts marked "(sub)" in the note come from an agent and were not
+re-checked.
 
 ## Names used across the notes
 
-- **Insider draft:** `06`. **Outsider draft:** `07`.
-- `08` cites sections of "the insider draft" for the dashboard views, setup,
-  identity and the glossary; those stand as written in `06`.
+- `08` cites sections of "the insider draft" (`06`) for the dashboard views,
+  setup, identity and the glossary; those stand as written there.
 - Requirement ids such as `MRG-3` or `REC-11` are defined in `05`.
 
 The files had no number in their names before this README was added; older
