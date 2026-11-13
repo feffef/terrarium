@@ -43,14 +43,19 @@ describe('checkGateEdit()', () => {
     ])('denies %s of a tree path, even in a new directory', (tool, key, rel) => {
       expect(checkGateEdit(tool, { [key]: join(repo, rel) }, repo)).toContain('gate:scoped')
     })
-    it('denies git commit, including via -C', () => {
-      expect(checkGateEdit('Bash', { command: 'git commit -m x' }, repo)).toContain('gate:scoped')
-      expect(checkGateEdit('Bash', { command: `git -C ${repo} commit -m x` }, outside)).toContain('gate:scoped')
-    })
-    it('allows git-ignored files, paths outside the checkout and other Bash', () => {
+    it.each(['commit -m x', 'add -A', 'stash push -u', 'checkout other', 'reset --hard'])(
+      'denies git %s, including via -C',
+      (args) => {
+        expect(checkGateEdit('Bash', { command: `git ${args}` }, repo)).toContain('gate:scoped')
+        expect(checkGateEdit('Bash', { command: `git -C ${repo} ${args}` }, outside)).toContain('gate:scoped')
+      },
+    )
+    it('allows git-ignored files, paths outside the checkout, read-only git and other Bash', () => {
       expect(edit(join(repo, 'ignored/x.log'))).toBeNull()
       expect(edit(join(outside, 'scratch.md'))).toBeNull()
       expect(checkGateEdit('Bash', { command: 'git status' }, repo)).toBeNull()
+      expect(checkGateEdit('Bash', { command: 'git diff --stat' }, repo)).toBeNull()
+      expect(checkGateEdit('Bash', { command: `git -C ${outside} add -A` }, repo)).toBeNull()
       expect(checkGateEdit('Read', { file_path: join(repo, 'a.ts') }, repo)).toBeNull()
     })
   })
