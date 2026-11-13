@@ -16,6 +16,12 @@ session logs. The ledger covers a 15-day window only (2026-10-30 to
 2026-11-13), so every count is "in 15 days". They were counted by the other
 session; "(sub)" marks a sub-agent's count it did not re-check.
 
+**Revised the same evening.** After reading the first version the owner
+objected to its owner-area decision and added a requirement: the platform
+must leave the site free to choose its framework. The owner area, the stack,
+the content checks and the deploy recipe changed as a result. The owner's
+statements are quoted where they decide something.
+
 **Tags.** `[untested]` rests on a fact nobody has tested (section 9).
 `[owner]` is the owner's call (section 10). *(guess)* is a number with no
 evidence. "Departs from X" marks a requirement not met as worded.
@@ -25,9 +31,11 @@ evidence. "Departs from X" marks a requirement not met as worded.
 1. **Watcher without agent grading.** Of 20 old watcher notes checked, 16
    repeated what the session had reported itself (sub), and the old watcher
    was the most expensive job.
-2. **Owner area as pages in the one app,** not a second app on its own
-   port. Nothing recorded defends the second app; the port stays a later
-   option.
+2. **The platform ships no content checks and no site framework.** The
+   owner asked for "full freedom over which framework to use for the app", so
+   the site meets a small contract (section 2a) and owns its content checks.
+   The requirements' content and page guarantees become the seed's starting
+   state, not platform rules.
 3. **No enforced "every session logs".** The machinery that forced it
    produced 31 recorded problems in 15 days. `ship` refuses without a log;
    the sessions that never ship (19 of 166) rest on one guidance line.
@@ -36,25 +44,26 @@ evidence. "Departs from X" marks a requirement not met as worded.
 
 | Decision | Why |
 |---|---|
-| One repo per site; three kinds of file (platform, seed, site); `package.json` is not mixed. | Platform dependencies sit in `platform/package.json`, a workspace package; the root keeps one script entry. `[untested]` |
+| One repo per site; three kinds of file (platform, seed, site); `package.json` is not mixed. | The platform tool and the owner app are workspace packages under `platform/`; the root keeps one script entry. JavaScript only, with one package manager and one lockfile for site, tool and owner app; anything else is outside the contract. `[untested]`, and it carries the design (experiment 4). |
 | `.claude/settings.json` is the only mixed file. Sync owns the `hooks` key and a named list of `permissions.deny` entries; `verify` checks the file contains them. | A generated file would overwrite rules the tool or the site adds. |
 | Records live on a `records` branch. No checkout of it. A writer builds a commit from the remote tip and pushes it by id; readers use the fetched ref. | Records on `main` rebuilt the site on every log: builds killed for memory 10 times (sub), about 755 of 2401 commits since 2026-11-01 were logs (sub). This push shape landed all 166 current logs. |
 | Records are JSON, written only by commands. YAML only where a person edits (`site.yml`, `sweep.yaml`, content). | An unquoted `#` in authored YAML silently lost text. |
-| One app. The owner area is `/owner/` pages rendered on demand behind middleware, reading records at request time. | Terrarium has no access-controlled page (sub), so nothing recorded defends a second app. A port stays a later option `[owner]`. The owner pages are platform files inside the site's source tree; the sync test covers that case. |
+| Two apps. The owner area is its own small app, wholly under `platform/owner-app/`, reading records when a page is requested (section 6a). For the owner's sites it is deployed at its own address; not deploying it is an option at setup. | The owner's reasons: the worries are code, especially sync, and access; two apps allow not deploying the owner part. No platform file sits in the site's source tree. The record backs it: with one build and one check run, Terrarium's own Journal and guide failed unrelated work about 25 times (sub), and separate styles per layer did nothing against that. Terrarium never deployed anything separately and has no access-controlled page (sub), so both are `[untested]`. |
+| The site is free to use any JavaScript framework. It tells the platform how to check, test, build and serve itself (section 2a). | The owner: "I'd really like if you can use the platform but have full freedom over which framework to use for the app". All six recorded upgrade breaks sat in the framework or the content library (sub); a platform that knows neither would not have broken. |
 | The installed skill pack is platform (synced from the template); the notes that adapt it are site files. | One update per template, not per site. |
 | The template commit last taken is in `site.yml`; the list of platform paths is a platform file. | A platform file must not hold site state. Departs from REPO-2 ("one file"). |
-| Stack: Astro, Node adapter, content collections, Markdoc as working pick. | `[untested]`: the Markdoc-over-MDX evidence is one unkept test build. |
-| Deploy: two recipes in `deploy/` (managed host, self-updating container); setup deletes the unused one. | The owner said both work. The managed recipe is `[untested]` end to end. |
+| Stack: the owner app uses "the simplest thing that works", meaning the least own code: a framework and libraries, not hand-written HTML and browser script (section 6a). The seed is a minimum hello world on the same stack; a site may replace the seed. | The owner: "I wouldn't mind two different, platform should use the simplest thing that works, user site is free to choose, but seed will be a minimum hello world using the same stack". Content collections, Markdoc or MDX and browser-side navigation are questions for a site that wants them, not for the template. |
+| Deploy: two recipes in `deploy/` (managed host, self-updating container); setup deletes the unused one. | The owner said both work. The managed recipe is `[untested]` end to end, and its framework-specific parts belong to the site. |
 
 ## 2. Commands (six)
 
 | Command | Rules it keeps | Recorded problem behind it |
 |---|---|---|
-| `verify` | One step list. First step is always the frozen install (a few seconds when up to date). Records head and tree at the start; aborts before the next step if either moved. Builds, then runs the browser test against that build. Writes the failing step to the job summary and an error annotation when run in automation; no separate automation mode. No skipping by path, no lock, no edit guard. `--fast` is the seconds-long subset (schemas, two data-format traps, references, formatting) and never installs. | Pass vouched for another tree: 31. Stale install read as breakage: 10+ logs (sub). Reused build hid a regression: 1. Three copies of the step list needed a parity test. |
+| `verify` | One step list. First step is always the frozen install (a few seconds when up to date). Records head and tree at the start; aborts before the next step if either moved. Then the site's own `check`, `test` and `build` (section 2a), the platform's framework-free checks (trailers, pins, the copies sync owns, guide excerpts), and the platform's smoke test against that build. Writes the failing step to the job summary and an error annotation when run in automation; no separate automation mode. No lock, no edit guard, no skipping by path, with one exception of scope: the owner app's own check runs only when `platform/owner-app/` changes, because the two apps share nothing. `--fast` runs the site's `check` and never installs. | Pass vouched for another tree: 31. Stale install read as breakage: 10+ logs (sub). Reused build hid a regression: 1. Three copies of the step list needed a parity test. |
 | `log` | The only writer of a session's record. The agent passes judgement as JSON on stdin or a file; the command adds machine facts and the session id and pushes at once. A second run replaces the machine half and merges the authored half. A failure is one line and a non-zero exit. Prints the severity scale when a problem has none. | Session id typed wrongly: 18. Refusal line lost in trimmed output: 14. Old lander exited 0 after failed pushes. |
 | `ship` | Refuses when this session has no log. Pushes the branch and checks the remote ref equals the local commit; runs `verify` on that pushed commit; only if it passed, opens the change request naming that commit, with the session mark and closing lines written from an explicit list of issue numbers. A plain push is allowed at any time, because a push opens nothing. For UI paths it takes screenshots, commits them to `records` and links them. Prints "subscribe to this change request". | Push chained to a check: 11. The tool's own end-of-turn "commit and push" reminder: 67, so nothing may sit unpushed while `verify` runs. Push reported up to date while the remote was behind (sub). Change request opened without subscribing: 4. No API attaches an image. |
 | `merge` | Ten rules: read preset and protected list from `main`, refuse if unreadable; refuse protected paths without a waiver; require a verdict naming the head (`merge verdict` reads the head and posts it); refuse on a merge conflict; wait for checks (zero runs = pending, one failure = red), fit for a background run; refuse a closing keyword anywhere outside the one block `ship` writes, and refuse if a listed issue is reserved for the owner; merge pinned to the head; report "merged" only from the host's reply; write the merge row, waiver quote included; refresh the log. File list comes from git with rename detection off, so both names of a rename are checked. | Verdict id typed wrongly: 8. Keyword closed a wrong issue: 2 in the ledger, two earlier incidents. "Merged" reported after a failed call. Auto-merge could not pin a commit. A conflicted change gets no check runs. |
-| `preview` | Owns its server by process id; stop always succeeds; own port per preview. `shot` builds for production, waits for a hydrated page, captures light and dark at desktop and phone size, and can assert on the rendered DOM. | Kill by name pattern hit other work: 3 incidents. Shots of a loading or stale page: 6. |
+| `preview` | Owns its server by process id; stop always succeeds; own port per preview. Works the same for the site and the owner app, through each one's `build`, `serve`, `ready` and `page-ready`; it knows neither framework. `shot` builds for production, waits for `page-ready`, captures light and dark at desktop and phone size, and can assert on the rendered DOM. | Kill by name pattern hit other work: 3 incidents. Shots of a loading or stale page: 6. |
 | `sync` | `take`: three-way apply of the template's changes to platform paths; new template commit written in the same change. `offer`: allow-list selection, refuses anything else, an ordinary change request on the template or a fork; a patch file only when neither is attached. Runs its own checks. | No Terrarium evidence; newest part. `[untested]` |
 
 Cut from `merge`, with reasons:
@@ -70,6 +79,38 @@ Cut from `merge`, with reasons:
   merged; otherwise the reader asks the host once per page, and shows
   "unknown" if it cannot.
 
+## 2a. The contract between platform and site
+
+The platform knows no framework. `site.yml` holds what it needs to know, and
+the owner app declares the same entries in the platform package.
+
+| Entry | What it is |
+|---|---|
+| `check`, `test`, `build`, `serve` | Package script names. `check` is the seconds-fast one. `serve` starts the built site on the port it is given, so the platform never knows the output layout. |
+| `ready` | A path that answers 200 only once the site can serve pages. Default `/version`, which the site must serve anyway with its commit and build time. |
+| `page-ready` | Optional: an expression or attribute that says a page is ready to look at. Default: the load event plus network idle. |
+| `routes` | A command or file that prints every route, for the smoke test and the visitor. |
+| paths | Content, UI and server routes, for the protected list and the sweeps. |
+
+- **First rule:** the platform's checks on the owner app and on records can
+  never fail a site change, and the site's checks can never fail a platform
+  change, except through these entries. This is what the 25 incidents ask
+  for.
+- **The platform's smoke test** asserts, for every listed route: it answers
+  2xx, has a top heading, and loads with no console or page error; and
+  `/version` is not empty. Everything else is the site's `test`.
+- **Content checks are the site's.** The owner: each site maintains its own.
+  In Terrarium they never were platform code: the schema and reference
+  checks import the site's own schemas and code (sub). The two data-format
+  traps ship as a small framework-free helper that the seed's `check` calls
+  and a site may stop calling `[owner]`; schemas and reference checks are
+  seed code, copied once.
+- **Platform dependencies** are few and pinned in the platform package
+  (browser driver, test runner, tool runner). Two of six recorded upgrade
+  breaks stayed green on every check (sub).
+- Without "page ready" a screenshot either guesses with a delay or knows the
+  framework; shots of a loading or stale page were recorded 6 times.
+
 **Automation.** The workflow file is one `uses:` line. Setup and the
 `verify` call live in an action a cloud session can push; on green it posts a
 comment naming the change's head, which wakes a waiting session. The workflow
@@ -83,9 +124,15 @@ live commit and build time, and the browser test asserts it is not empty.
 Where a build stamp is shown on pages is the owner's UI choice; default the
 home page only (a stamp on every page was one the owner had to correct). A
 change under `deploy/` is a by-hand step. The container loop keeps one state
-variable, the last commit that built and went live; a failed build changes
-nothing and the next tick tries again. If the server process is dead, the
-loop restarts it from the last good build.
+variable, the last commit that built and went live; a failed install or build
+changes nothing and the next tick tries again. If the server process is dead,
+the loop restarts it from the last good build. With only `build` and `serve`
+to go by, the loop builds in a full second checkout and swaps whole
+directories, then runs `serve` in the live one. That costs two checkouts with
+installed packages on disk, or a shared package store. The owner app is
+built and served the same way at its own address; access is checked in front
+of it, by the proxy's or the host's own access feature, so the app carries no
+access code `[untested]`.
 
 **Preview caveats lines:** a screenshot cannot confirm a colour (read the
 computed style); narrow fallback fonts in the test browser hide overflow.
@@ -192,7 +239,7 @@ was dropped because its file was protected, and no incident for these three.
 | Preset | Sessions merge | Sweeps merge | Added to the list |
 |---|---|---|---|
 | `review-all` | nothing | nothing | none |
-| `standard` (default) | changes outside the list | changes inside their `sweep.yaml` surface `[owner]` | UI paths (layouts, components, styles) |
+| `standard` (default) | changes outside the list | changes inside their `sweep.yaml` surface `[owner]` | the UI paths `site.yml` names |
 | `hands-off` | changes outside the list | the same | none |
 
 - **Sweeps under `standard`** `[owner]`. Default: they merge inside their
@@ -241,19 +288,89 @@ sweeps. No close skill.
   Owner-started sessions only. No recorded hand-over problem exists, so no
   command and no context threshold.
 
-## 6a. Dashboard, setup, identity, glossary
+## 6a. The owner app, the seed, setup, identity, glossary
 
-- **Dashboard:** the views of the insider draft's section 9, as `/owner/`
-  pages, with these changes: a skill is "used" when its file was read or its
-  slash command expanded; no graded importance; status is derived (a merge
-  row, else one host query per page, else "unknown"); "ran, nothing to do" is
-  a normal sweep row.
-- **Setup and identity** stand as in the insider draft's section 12, with
-  these changes: no second app to deploy; no records checkout, but the
-  `records` branch is created at setup; the deny line is installed; one
-  protected list.
-- **Glossary** stands as in the insider draft's section 2, without "owner
-  area" as a separate app.
+**The owner app.** The owner's requirement, in their words: "The journal is
+can contain any code that turns the raw data into brows able content. Reading
+digests first, session summaries to get an overview and only drill down as
+required with accordion ui and tool tips. Friction ledger becomes readable
+and drill down able, graphs for cost development over time".
+
+1. **Landing page:** digests first, then recent session summaries. Number
+   tiles `[owner]`: until decided, a compact row below the two, each naming
+   the window it covers and linking to its detail page.
+2. **Drill-down by accordion and tooltips.** Digests and session cards open
+   in place, one at a time, with the open item's anchor in the URL so a link
+   lands on it. A card's detail is fetched when it opens; the page never
+   ships every log up front (Terrarium's passed 10 MB uncapped).
+3. **Detail pages:** the problem ledger (causes as readable rows that open to
+   their occurrences and fixes; most severe and most frequent; a "last N
+   days" filter), and cost (charts of cost development over time per sweep,
+   with the weekly table beneath). A chart shows unreported runs as gaps and
+   never fills them in. Then ideas and learnings, skills, and the guide.
+4. **Session card:** summary, problems with severity, sub-agent token share,
+   skills used, and a link to the agent session. The whole app is behind the
+   access check, so the link always shows.
+5. **Derived views** (grouping, trends) are computed when a page is read;
+   nothing derived is written back to the records `[owner]`. A skill is
+   "used" when its file was read or its slash command expanded; status is
+   derived (a merge row, else one host query per page, else "unknown"); "ran,
+   nothing to do" is a normal sweep row.
+6. **Works on a phone and in dark mode** by the system setting; tables
+   readable on a phone; text pages as a centred column of about 82
+   characters, never a narrow card. The owner app's own browser test asserts
+   both at phone size and in dark mode.
+7. **Not built unless asked:** explainer pages, feeds, a "worst problems"
+   panel, a tile for change-request counts, tiles on the archive, graded
+   importance.
+
+Points 1 to 3 follow the owner's sentence. Points 4, 6 and 7 are drawn from
+what the record shows the owner asked for, corrected or removed in
+Terrarium's Journal (sub); the record holds no statement of what the owner
+likes.
+
+Two limits hold whatever the stack: reads stay bounded, and the owner app's
+code and checks can never fail a site change.
+
+**The owner app's stack.** The owner settled the test: "Simplest to do the
+job with minimal own [code], not vanilla js and plain html", and earlier: "we
+can use any client framework we want for the owner area if we separate the
+app. The site itself is free to opt out or in whatever it's requirement is".
+So "simplest" means the least code the platform writes and maintains itself,
+not the fewest dependencies.
+
+- **Decided:** a framework does routing, rendering and escaping, and a
+  library is used wherever it saves own code (charts, for one). The platform
+  does not hand-write a server, templates or DOM code.
+- **Working pick** `[untested]`: a server-rendered framework that renders on
+  request and adds client code only where a component asks for it; Astro with
+  its Node adapter is the candidate, on the evidence of one unkept test
+  build. A client framework inside it is allowed where it saves code.
+- **Considered and dropped:** a plain server with hand-written templates and
+  browser script. Both sessions had leaned to it for having nothing to
+  upgrade; the owner ruled it out. It would have meant own code for routing,
+  static files, the error page, the accordion and the charts, and escaping
+  that holds only where the author remembers.
+- **For scale:** Terrarium's Journal is about 3,800 lines of pages and
+  helpers with no chart library and no UI kit; its accordion, expand
+  animation, copy-link control and charts are hand-written (about 430 lines
+  together). Those are the pieces a library should replace.
+- **What the choice costs:** every site starts with one framework's
+  upgrades, and upgrades are where Terrarium's framework coupling cost most
+  (six recorded breaks, sub). The contract keeps that cost inside the owner
+  app and the seed.
+
+**The seed** is a minimum hello world on the owner app's stack: one page, one
+server route, one page rendered on demand, `/version`, a `check` that calls
+the data-format helper, and one browser test. Typed content, components in
+content and design tokens are a documented path, not seed files `[owner]`.
+
+**Setup and identity** stand as in the insider draft's section 12, with
+these changes: no records checkout, but the `records` branch is created at
+setup; the deny line is installed; one protected list; setup asks whether
+the owner app is deployed and which framework the site uses.
+
+**Glossary** stands as in the insider draft's section 2.
 
 ## 7. Sweeps (five)
 
@@ -309,6 +426,9 @@ No cheap check is known for these; each is one guidance line.
 - The owner's answer misread (16).
 - Problems after `ship` missing from the log.
 - Brief defects (13).
+- A dependency update that changes output without failing a check: two of
+  six recorded upgrade breaks (a diagram library that redrew every diagram,
+  a browser driver that silently ran another browser) (sub).
 
 ## 8a. Caveats lines from the record
 
@@ -326,15 +446,19 @@ Each is one line in the caveats document; none has a check.
 - No rule depends on verified commit signatures; a cloud session's signing
   key can be empty.
 - If a site adds a page cache, it varies on every request input and has a
-  size bound. Content pages are prerendered and load no data in the browser,
-  so WEB-4 is met by avoiding both.
+  size bound. The seed loads no data in the browser and caches no pages, so
+  it meets WEB-4 by avoiding both; a site that adds either owns the
+  recovery.
 - Check dark mode on the built site, not the dev server.
 - A browser test waits for the state it needs, never for time.
-- The reference check is generic (an id in one file must exist in another),
-  not one per kind of content.
+- A site's reference check is best kept generic (an id in one file must
+  exist in another), not one per kind of content.
 - No site-wide check for broken links or missing images ships (no recorded
   incident); a site may add one as a test. No accessibility checker ships;
   the seed's browser test selects by role.
+- "Keep the clicked row in place while it opens" is the accordion behaviour
+  that needs its own browser test; Terrarium's flaky tests came from clicks
+  landing while something was still opening.
 - Container recipe: dependency build scripts stay off; a merge is code
   execution on the server, because the container builds what was merged.
 - Diagrams and inlined graphics are not in the first version.
@@ -360,17 +484,23 @@ Each is one line in the caveats document; none has a check.
 3. **Host helper:** a script opens a change request, posts a verdict and
    merges from a cloud session and from a scheduled run, where the host
    tools were once found unauthenticated.
-4. **Workspace package:** one root install puts the platform's binaries
-   where hooks call them, in a fresh worktree too.
-5. **Stack:** a fixed list of content mistakes (unknown tag, missing or
-   wrongly typed attribute, unclosed block, braces and an HTML comment in
-   prose, out-of-range value, extra key, broken reference, a file that cannot be
-   parsed, a violated refinement rule) under Markdoc and
-   MDX, output kept; schemas loaded outside a build for `--fast`;
-   with the opt-in router on: does in-page state survive a navigation, do
-   view transitions run, and what happens when the fetch for the next page
-   fails (an old tab after a deploy); timing on a phone second; build
-   memory.
+4. **One install for three packages. This one carries the design.** A root
+   install serves the site, the platform tool and the owner app; the
+   platform's binaries are where hooks call them, in a fresh worktree too;
+   build memory for two apps. Terrarium never built two apps or used a
+   workspace, and the earlier test build was one site.
+5. **Stack.** For the template: the owner app on the working pick, built far
+   enough to show a digest list, one session card opening in place and one
+   cost chart, counting the lines the platform had to write itself; a record
+   holding markup comes out as text. For a site
+   that wants content features, and not for the template: a fixed list of
+   content mistakes (unknown tag, missing or wrongly typed attribute,
+   unclosed block, braces and an HTML comment in prose, out-of-range value,
+   extra key, broken reference, a file that cannot be parsed, a violated
+   refinement rule) under Markdoc and MDX, output kept; with a browser-side
+   router on, does in-page state survive a navigation, do view transitions
+   run, and what happens when the fetch for the next page fails (an old tab
+   after a deploy).
 6. **Verification in automation:** does one step's summary and annotation
    name the failing check clearly; does the green comment wake a session?
 7. **Cost and transcript:** first, which scheduled runs have the session
@@ -380,12 +510,13 @@ Each is one line in the caveats document; none has a check.
    right timings and tool counts; the end day. A nested headless run must
    unset the two session variables or it writes into its parent's
    transcript.
-8. **Owner area:** reading records at request time on a container and on a
-   managed host; "not found" without the secret.
+8. **Owner app:** reading records at request time on a container and on a
+   managed host; the access check in front of the app; the deploy loop
+   swapping whole checkouts for two apps.
 9. **Sync:** the test in the template's automation (a site from an older
-   template tag, one platform file edited, take and offer), including the
-   owner pages inside the site's source tree; fetching the template without
-   attaching it.
+   template tag, one platform file edited, take and offer); a site that
+   replaced the seed with another framework still takes an update cleanly;
+   fetching the template without attaching it.
 10. **Agent definitions:** does a sub-agent honour a tool list from a repo
     file in a cloud session?
 11. **Screenshots:** does a link to an image on the `records` branch render
@@ -393,22 +524,25 @@ Each is one line in the caveats document; none has a check.
 12. **Identity:** a separate account's token in a cloud session.
 13. **Starting a session from a session** with a hand-over as its prompt.
 
-**Least evidence.** After sync, the seed's server pieces (the API route, the
-on-demand page, the `/owner/` middleware) have the least behind them:
-Terrarium has no server route or access-controlled page at all.
+**Least evidence.** After sync, the owner app and the seed's server pieces
+have the least behind them: Terrarium has no server route, no
+access-controlled page, no second app and no separate deploy.
 
 ## 10. For the owner
 
 1. **Watcher without agent grading**, given 16 of 20 notes repeated what the
    session had reported itself.
-2. **Owner area by folder now**, by port later if wanted.
+2. **Which framework for the owner app and the seed.** The test is settled
+   (least own code, not hand-written HTML and script); the working pick is
+   Astro with its Node adapter, untested.
 3. **Docs sweep: rewrites for brevity off by default.**
 4. **May agents merge minor and patch dependency updates?** Default: no.
 5. **Under `standard`, may a sweep merge inside its own surface?** Default
    here: yes. The alternative: sweeps only open changes.
 6. **Records on a branch of the site's repo.** In a public repo they are
    public.
-7. **Stack and deploy default.**
+7. **Deploy default,** and whether the access check in front of the owner
+   app is the proxy's or the host's.
 8. **The departures in section 11.**
 9. **Every number marked a guess.**
 10. **The platform's name** (the `NAME-` prefix), and the preset names.
@@ -424,6 +558,15 @@ Terrarium has no server route or access-controlled page at all.
     page only by default (DEP-3 says the footer).
 16. **Laptop sessions waiting for green:** poll in the background, or hand
     back to the owner.
+17. **Number tiles on the owner app's landing page:** keep them or not, and
+    where. Default: a compact row below digests and sessions.
+18. **May the owner app compute views of its own** (grouping, trends) from
+    the records? Default: yes, when a page is read, nothing written back.
+19. **How minimal is the seed?** Default: one page, one server route, one
+    page rendered on demand, `/version`, a `check` and one browser test.
+    The requirements ask for an example of every extension point (REQ 13.4).
+20. **The two data-format checks:** a platform helper the seed's `check`
+    calls, so fixes reach other sites (default), or seed code copied once.
 
 ## 11. Departures from the requirements as worded
 
@@ -441,6 +584,10 @@ Terrarium has no server route or access-controlled page at all.
 | ID-1, ID-3 (every write path refused without a mark) | Only the direct write tools are guarded; platform commands add the mark themselves; a raw shell write is not guarded. | The shell half of the old guard was 424 lines with no recorded catch. |
 | DEP-3 (version in the footer) | `/version` always; a visible stamp on the home page only by default. | The owner corrected a stamp on every page. |
 | COST-5 (each sweep's first step records costs) | One sweep, the digest, has the cost step. | The session tool is not reliably present in scheduled runs. |
+| CON-1 to CON-4, VER-5 (the platform checks content) | The site's `check` does; the seed's meets them; the platform ships only a helper for the two data-format traps. | The owner: each site maintains its own content checks. |
+| WEB-2, WEB-7 (opt-in browser-side navigation; little client code) | The seed's starting state, not platform rules; a site chooses. | The owner: the site is free to opt in or out as it requires. |
+| REQ 13.4 (the seed shows every extension point) | A minimum hello world; the rest is a documented path. | The owner's "minimum hello world". |
+| VER-6 (no skipping by changed path) | The owner app's own check runs only when its folder changes. | The two apps share nothing; it is scope, not skipping. |
 | PRIN-5 (guards fail closed) | The commit-message hook fails open; `verify` checks trailers afterwards. | A fail-closed trailer hook that cannot run stops every commit. |
 | VER-4 (summary names the failing step) | Conditional: met only if experiment 6 passes. | One step is otherwise what VER-4 rules out. |
 | IMP-11 (trials) | No trial state; "prefer a deletion" is a rule of the improvement sweep. | No mechanism without a recorded need. |

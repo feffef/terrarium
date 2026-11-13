@@ -87,7 +87,11 @@ recorded problem and its count. The outsider session wrote the list; the other
 checked it line by line and sent three sets of amendments. It then proposed
 seven last corrections, which the owner confirmed and which are applied in
 this copy. Counts marked "(sub)" in the note come from an agent and were not
-re-checked.
+re-checked. The same evening the owner objected to its owner-area decision
+and asked that a site be free to choose its framework; the two sessions
+worked that through with the owner, and the session with repo access revised
+the note: a separate owner app, a contract between platform and site, content
+checks owned by the site, and the stack chosen for least own code.
 
 ## Names used across the notes
 
