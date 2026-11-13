@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_013zxzeRxyNcwt53TXLHjTsg
 startedAt: 2026-11-13T00:25:39Z
-endedAt: 2026-11-13T00:45:36Z
+endedAt: 2026-11-13T00:53:15Z
 kind: autonomous
 goal: "Glass Box curate: teach clear-backlog phases and the rule-use record"
-status: completed
-outcome: "PR 3225 merged: two lessons extended, three warnings fixed, memory page shorter"
-summary: "Sixth autonomous glassbox-curate run, started as a Sonnet handoff from the owner's earlier in-session request for several focuses in sequence; the owner chose the autonomous mode and the handoff, and the focus itself was my own choice from the memory page. I oriented, ran a Scout (found nothing new), and took the memory page's Topics with no page yet plus three page-check capitalisation warnings. An opus writer edited Workflow scripts (interaction phase, thin-result retry, retro) and Session logs (the ruleUse record), a sonnet claim checker found three imprecise claims that were reworded, two fresh readers found undefined terms that were glossed where a source allowed, and a Why bullet whose key term no source defines was cut. The memory page's first topic item claimed the final gate is skipped on a clean first round; the Skill still runs it, so I dropped that claim. Deviations, stated in the run entry: the Subject's other pages were not all read in full and the pages the review named were only grepped. PR 3225 merged and green; PR 3223 and 3220 wait for the owner and were not touched. I self-merged it after CI went green and posted the verdict first."
+status: in-review
+outcome: PR 3225 merged; PR 3230 (Hooks pages, one home per fact) open with a green gate
+summary: "Sixth autonomous glassbox-curate run, started as a Sonnet handoff from the owner's earlier in-session request for several focuses in sequence; the owner chose the autonomous mode and the handoff, and the focus itself was my own choice from the memory page. I oriented, ran a Scout (found nothing new), and took the memory page's Topics with no page yet plus three page-check capitalisation warnings. An opus writer edited Workflow scripts (interaction phase, thin-result retry, retro) and Session logs (the ruleUse record), a sonnet claim checker found three imprecise claims that were reworded, two fresh readers found undefined terms that were glossed where a source allowed, and a Why bullet whose key term no source defines was cut. The memory page's first topic item claimed the final gate is skipped on a clean first round; the Skill still runs it, so I dropped that claim. Deviations, stated in the run entry: the Subject's other pages were not all read in full and the pages the review named were only grepped. PR 3225 merged and green; PR 3223 and 3220 wait for the owner and were not touched. I self-merged it after CI went green and posted the verdict first. A second focus, the Hooks Subject, then gave the repeated `|| true` and subagent-hook facts one home each and made the Blocking hooks wiring excerpt show its variables (PR 3230, open, gate green). The owner asked mid-turn why I took Hooks and not the owner-directed Walkthrough diagram check; the reason is that PR 3223 renames all nine Walkthrough files and the handoff said to leave pages it touches alone, which I had not written in the run entry and now have."
 prs:
   - "3225"
+  - "3230"
 docsRead:
   - path: docs/agents/git-conventions.md
     reason: (no reason given)
@@ -34,12 +35,22 @@ docsRead:
     reason: (no reason given)
   - path: .agents/skills/clear-backlog/SKILL.md
     reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/agents/10.subagents.md
+    reason: (no reason given)
   - path: layers/glassbox/content/guide/pages/agents/20.workflow-scripts.md
     reason: (read before editing)
   - path: layers/glassbox/content/guide/pages/terrarium-practice/40.session-logs.md
     reason: (read before editing)
   - path: .agents/skills/glassbox-curate/SKILL.md
     reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/hooks/10.hooks.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/hooks/20.blocking-hooks.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/hooks/30.hook-added-context.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/hooks/40.session-transcripts.md
+    reason: (read before editing)
   - path: .agents/skills/log-session/SKILL.md
     reason: (no reason given)
 skillsUsed:
@@ -61,31 +72,37 @@ frictions:
   - description: The Skill asks for every Subject page in full, but with the budget I read only the pages I edited; the run entry states it.
     solution: Let the Skill say which pages count as the Subject when the focus is a topic list, not a Subject.
     severity: minor
-durationSec: 1197
+  - description: Picked the Hooks focus without saying in the run entry why the owner-directed diagram check was passed over, so the owner had to ask.
+    solution: Write the reason an owner-listed lead is skipped into the run entry at the moment of choosing.
+    severity: minor
+durationSec: 1656
 models:
-  claude-sonnet-5-5: 127
+  claude-sonnet-5-5: 160
 toolCounts:
-  Bash: 38
-  Read: 15
-  Agent: 8
+  Bash: 48
+  Read: 16
+  Agent: 9
   mcp__claude-code-remote__get_session: 3
   Write: 2
   SendMessage: 2
-  Skill: 4
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
-  ReadNotifications: 2
-  mcp__github__pull_request_read: 1
+  Skill: 5
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  ReadNotifications: 3
+  mcp__github__pull_request_read: 2
   mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/glassbox/content/workshop/runs/2026-11-13T0026.yml
   - layers/glassbox/content/guide/pages/agents/20.workflow-scripts.md
   - layers/glassbox/content/guide/pages/terrarium-practice/40.session-logs.md
+  - layers/glassbox/content/guide/pages/hooks/20.blocking-hooks.md
+  - layers/glassbox/content/guide/pages/hooks/30.hook-added-context.md
+  - layers/glassbox/content/guide/pages/hooks/40.session-transcripts.md
   - layers/glassbox/content/workshop/runs/2026-11-13T0045.yml
+  - layers/glassbox/content/workshop/pages/index.md
   - layers/glassbox/content/guide/pages/hooks/10.hooks.md
   - layers/glassbox/content/guide/pages/terrarium-practice/45.ideas-and-lessons-learned.md
   - layers/glassbox/content/guide/pages/web-standards/30.aria.md
-  - layers/glassbox/content/workshop/pages/index.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -345,7 +362,7 @@ ruleUse:
         value: backed
   - by: general-purpose
     subagent: 7
-    answered: false
+    answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
         via: start
@@ -355,56 +372,125 @@ ruleUse:
         via: start
       - rule: .claude/rules/adr-0017.md
         via: start
-    reported: []
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/writing-pages.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/hooks/10.hooks.md
+      - rule: .claude/rules/glassbox-content.md
+        via: read
+    reported:
+      - path: .claude/rules/glassbox-content.md
+        value: steered
+      - path: .claude/rules/tenant-glossary.md
+        value: backed
+      - path: .agents/skills/glassbox-lesson/writing-pages.md
+      - path: layers/glassbox/GLOSSARY.md
+  - by: general-purpose
+    subagent: 8
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+    reported:
+      - path: .claude/rules/glassbox-content.md
+        value: backed
+      - path: layers/glassbox/GLOSSARY.md
+      - path: .agents/skills/glassbox-lesson/writing-pages.md
 subagents:
   - task: Scout new topics
     model: sonnet
     durationSec: 18
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 3.9
+    tokenShare: 2.9
   - task: Write glassbox page edits
     model: opus
     durationSec: 331
     toolCalls: 41
     modelCalls: 31
-    tokenShare: 18.5
+    tokenShare: 14
   - task: Claim-check changed sentences
     model: sonnet
     durationSec: 21
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 2.6
+    tokenShare: 2
   - task: "Fresh reader: workflow scripts"
     model: sonnet
     durationSec: 11
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.4
+    tokenShare: 1.1
   - task: "Fresh reader: session logs"
     model: sonnet
     durationSec: 11
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.4
+    tokenShare: 1.1
   - task: Standards review of Glass Box diff
     model: sonnet
     durationSec: 31
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 2.8
+    tokenShare: 2.1
   - task: Spec review of Glass Box diff
     model: sonnet
     durationSec: 30
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 3.1
+    tokenShare: 2.3
   - task: Write hooks subject edits
     model: opus
-    durationSec: 3
-    toolCalls: 1
-    modelCalls: 1
-    tokenShare: 2.7
+    durationSec: 97
+    toolCalls: 23
+    modelCalls: 10
+    tokenShare: 5.6
+  - task: Review hooks diff (Standards and Spec)
+    model: sonnet
+    durationSec: 47
+    toolCalls: 13
+    modelCalls: 10
+    tokenShare: 4.5
 gitBranch: HEAD
 entrypoint: remote
 cliVersion: 2.1.323
