@@ -1,0 +1,248 @@
+schemaVersion: 1
+session: session_013zxzeSNs4gkwrpqc36B7yP
+startedAt: 2026-11-13T15:00:50Z
+endedAt: 2026-11-13T16:01:15Z
+kind: autonomous
+goal: Scheduled prune trial of the Platform's agent instructions
+status: in-review
+outcome: Judged two trials (both hold), opened one new small prune, PR 3274 awaits a human merge
+summary: Scheduled /prune-trial run with no human prompt; the worker restarted mid-run and I resumed from the repo state. Two trials were judgeable (review-then-gate, git chaining). No major or blocker Friction in either window. edit-during-gate-run rose 10.3% to 16.7%, but its moderate hits trace to a guard gap that PR 3250 closed (or to sessions ignoring the kept order), so the cut stands; I commented on the closed issue 3233 and deleted both entries. A search subagent ranked failed-prose candidates; I chose the dispatch-subagents "Git and checkout" block (three restated checkout bullets merged into one, -1 net). A pinned Sonnet probe answered correctly; Standards and Spec reviews led to restoring "never in yours" and naming the search coverage; gate green on d1070be13; PR 3274 opened. It needs a human merge (untestable instruction change). Everything was agent-initiated under the scheduled prompt.
+prs:
+  - "3274"
+docsRead:
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (read before editing)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-curate/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: prune-trial
+    reason: the scheduled task itself
+  - name: dispatch-subagents
+    reason: briefs for search, probe and review agents
+  - name: code-review
+    reason: review before the PR
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran git status and log before reading git-conventions.md; a hook reminded me afterwards (the commands were read-only, so no harm).
+    solution: Nothing; the hook caught it and the doc showed the calls were fine.
+    severity: nit
+  - description: The worker restarted mid-run and my earlier context was gone, so I re-derived trial state from the repo and spent extra reads.
+    solution: Nothing in the repo; the scheduler resumed correctly.
+    severity: minor
+durationSec: 3624
+models:
+  <synthetic>: 1
+  claude-sonnet-5-5: 75
+toolCounts:
+  Bash: 24
+  ToolSearch: 2
+  mcp__github__issue_read: 1
+  mcp__github__add_issue_comment: 1
+  Skill: 4
+  Agent: 4
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  PushNotification: 1
+filesEdited:
+  - .agents/prune-trials.yml
+  - .agents/skills/dispatch-subagents/SKILL.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+docsReadBySubagents:
+  - .agents/skills/prune-trial/SKILL.md
+  - docs/agents/guards.md
+  - .agents/skills/glassbox-curate/SKILL.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/pr-workflow.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/pr-workflow.md
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0027.md
+        value: steered
+        why: kept new prune out of open territory
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: review then gate before PR
+      - path: .claude/rules/adr-0003.md
+        value: backed
+      - path: .claude/rules/adr-0017.md
+        value: backed
+      - path: .claude/rules/adr-0009.md
+        value: backed
+      - path: docs/agents/pr-workflow.md
+      - path: docs/agents/github-integration.md
+      - path: docs/agents/git-conventions.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/guards.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: docs/agents/guards.md
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0027.md
+        value: backed
+      - path: .agents/prune-trials.yml
+  - by: general-purpose
+    subagent: 3
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0030.md
+        via: native
+        trigger: .agents/skills/prune-trial/SKILL.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/prune-trial/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/prune-trial/SKILL.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: .agents/skills/prune-trial/SKILL.md
+    reported:
+      - path: .claude/rules/adr-0027.md
+        value: backed
+      - path: .claude/rules/adr-0005.md
+        value: backed
+subagents:
+  - type: general-purpose
+    task: Find failed-prose prune candidates
+    model: sonnet
+    durationSec: 75
+    toolCalls: 16
+    modelCalls: 14
+    tokenShare: 17.3
+  - type: general-purpose
+    task: Probe pruned dispatch text
+    model: sonnet
+    durationSec: 14
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 3.5
+  - type: general-purpose
+    task: Standards review of prune diff
+    model: sonnet
+    durationSec: 26
+    toolCalls: 5
+    modelCalls: 5
+    tokenShare: 8.4
+  - type: general-purpose
+    task: Spec review of prune diff
+    model: sonnet
+    durationSec: 27
+    toolCalls: 7
+    modelCalls: 4
+    tokenShare: 8.8
+gitBranch: claude/practical-rubin-s1f3no
+entrypoint: remote_trigger
+cliVersion: 2.1.323
+trigger: prune-trial
+learnings:
+  - The search subagent read only the first page of open issues, so a claim of covering the tracker must say so in the ledger entry.
+landedBy: Stop
