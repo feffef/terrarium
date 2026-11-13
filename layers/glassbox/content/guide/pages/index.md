@@ -49,7 +49,7 @@ An idea too big for one session is planned before it is built. The `wayfinder` s
 Agents change a system that includes their own tools, and the gate's automatic checks are what make that safe. So an agent merges its own work on a green gate, and a person merges what a machine can't judge, such as a change to a :term[human-only] file like the rules themselves, a new dependency, or work that came from a public user. The :term[decision record]{id="adr"} ADR-0004 (:file[docs/adr/0004-objective-safety-gate.md]) gives the full list, and lets the owner tell an agent to merge a human-only change it wrote; a lesson shows how those files are kept.
 
 ::lessons
-[Merge gate](/t/glassbox/guide/verification/gate) · [Protected paths](/t/glassbox/guide/terrarium-practice/protected-paths)
+[Merge gate](/t/glassbox/guide/verification/gate) · [A change meets the gate](/t/glassbox/guide/walkthroughs/a-change-meets-the-gate) · [Protected paths](/t/glassbox/guide/terrarium-practice/protected-paths)
 ::
 
 ## How it improves itself
