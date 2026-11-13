@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSYMKya1mzpFJhAcSk
 startedAt: 2026-11-13T08:46:49Z
-endedAt: 2026-11-13T08:55:53Z
+endedAt: 2026-11-13T09:00:40Z
 kind: autonomous
 goal: Scheduled curation run of the Glass Box guide
-status: in-review
-outcome: PR 3257 lowercases glossary terms in nine Walkthroughs; gate green, awaiting CI and merge
-summary: "Scheduled glassbox-curate run (agent-initiated, no human prompt). Orientation showed page-check warnings: the nine Walkthroughs capitalised walkthrough, human-only and tenant, against the owner's lowercase rule. Fixed them wording-only, trimmed the memory page (shorter than found) and added two Scout leads. Code-review's two reviewers found the run entry misreported a deletion and pagesRead under-listed; I read all nine pages in full and corrected both. Cost unreported: get_session was not available. Open: PR 3257 awaits CI and a self-merge."
+status: completed
+outcome: "PR 3257 merged: glossary terms lowercased in nine Walkthroughs"
+summary: "Scheduled glassbox-curate run (agent-initiated, no human prompt). Orientation showed page-check warnings: the nine Walkthroughs capitalised walkthrough, human-only and tenant, against the owner's lowercase rule. Fixed them wording-only, trimmed the memory page (shorter than found) and added two Scout leads. Code-review's two reviewers found the run entry misreported a deletion and pagesRead under-listed; I read all nine pages in full and corrected both. Cost unreported: get_session was not available. PR 3257 merged after green CI and my verdict comment."
 prs:
   - "3257"
 docsRead:
@@ -57,18 +57,22 @@ frictions:
   - description: "Cost could not be read: get_session was not available as a tool, so the PR says unreported."
     solution: Make get_session reachable in scheduled runs, or let the Skill accept unreported.
     severity: minor
-durationSec: 544
+durationSec: 831
 models:
-  claude-sonnet-5-5: 73
+  claude-sonnet-5-5: 88
 toolCounts:
-  Bash: 24
+  Bash: 28
   Read: 12
   Agent: 3
   ToolSearch: 1
-  Skill: 3
+  Skill: 4
   ScheduleWakeup: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/workshop/pages/index.md
   - layers/glassbox/content/workshop/runs/2026-11-13T0847.yml
@@ -233,19 +237,19 @@ subagents:
     durationSec: 37
     toolCalls: 12
     modelCalls: 7
-    tokenShare: 13.4
+    tokenShare: 11.2
   - type: general-purpose
     task: Standards review of diff
     durationSec: 33
     toolCalls: 11
     modelCalls: 5
-    tokenShare: 6.4
+    tokenShare: 5.3
   - type: general-purpose
     task: Spec review of diff
     durationSec: 40
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 5.4
+    tokenShare: 4.5
 gitBranch: claude/compassionate-bardeen-r4va2n
 entrypoint: remote_trigger
 cliVersion: 2.1.323
