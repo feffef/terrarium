@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRd1qkgnadmWbZLoZu
 startedAt: 2026-11-13T00:15:51Z
-endedAt: 2026-11-13T00:28:28Z
+endedAt: 2026-11-13T00:31:52Z
 kind: autonomous
 goal: Write the 2026-11-12 Journal Digest and archive old content
-status: in-review
-outcome: PR 3224 open with the 2026-11-12 Digest and the archive sweep (1 Digest, 26 session logs); waiting for CI
-summary: "A scheduled run of the digest Skill; no human prompted anything, and every step followed the Skill. One closed day, 2026-11-12, lacked a Digest: 69 merged PRs, 37 sessions and 215 logged Frictions, most of it Glass Box work. I wrote the Digest from the gathered data and my own reads of about 20 merge diffs. The fact-check subagent then found five wrong or misleading claims, all fixed: I had credited the read-at-Where-next rule to the wrong PR, wrote three Atlas Specimens in the homepage hero where the merged code has four (I took the number from a WIP commit message), described the Journal token bar loosely, and filed PR 3151 and PR 3199 under groups their diffs don't fit. The gather data titled PR 3151 by its merge commit subject, an owner-approval note, not its real title, which hid that it was mostly Glass Box app work. Code review found only prose over the 250-word cap, since trimmed. The retention sweep moved 1 Digest and 26 session logs to archived. The scoped gate passed; the PR is open with a verdict and merges on green CI."
+status: completed
+outcome: "PR 3224 merged on a green gate: the 2026-11-12 Digest plus the archive sweep (1 Digest, 26 session logs)"
+summary: "A scheduled run of the digest Skill; no human prompted anything, and every step followed the Skill. One closed day, 2026-11-12, lacked a Digest: 69 merged PRs, 37 sessions and 215 logged Frictions, most of it Glass Box work. I wrote the Digest from the gathered data and my own reads of about 20 merge diffs. The fact-check subagent then found five wrong or misleading claims, all fixed: I had credited the read-at-Where-next rule to the wrong PR, wrote three Atlas Specimens in the homepage hero where the merged code has four (I took the number from a WIP commit message), described the Journal token bar loosely, and filed PR 3151 and PR 3199 under groups their diffs don't fit. The gather data titled PR 3151 by its merge commit subject, an owner-approval note, not its real title, which hid that it was mostly Glass Box app work. Code review found only prose over the 250-word cap, since trimmed. The retention sweep moved 1 Digest and 26 session logs to archived. The scoped gate and CI's gate passed, and the repo's merge script landed the PR after my verdict comment."
 prs:
   - "3224"
 docsRead:
@@ -65,20 +65,21 @@ frictions:
   - description: The Stop hook reported that a PR merged and demanded close-session right after I started merge-pr.ts in the background; PR 3224 was still open and waiting on CI.
     solution: Have the hook check the PR's merged state, not that a merge-pr.ts command ran.
     severity: nit
-durationSec: 758
+durationSec: 962
 models:
-  claude-fable-5-2: 79
+  claude-fable-5-2: 96
 toolCounts:
-  Bash: 34
+  Bash: 40
   Write: 1
   Agent: 3
-  Skill: 3
+  Skill: 4
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   mcp__github__add_issue_comment: 1
-  ReadNotifications: 1
-  mcp__github__pull_request_read: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-11-12.md
   - layers/journal/content/archived/pages/digests/2026-11-05.md
@@ -284,19 +285,19 @@ subagents:
     durationSec: 209
     toolCalls: 53
     modelCalls: 39
-    tokenShare: 31.9
+    tokenShare: 28.9
   - type: general-purpose
     task: Standards review of digest diff
     durationSec: 33
     toolCalls: 11
     modelCalls: 4
-    tokenShare: 7.1
+    tokenShare: 6.4
   - type: general-purpose
     task: Spec review of digest diff
     durationSec: 58
     toolCalls: 13
     modelCalls: 7
-    tokenShare: 8.8
+    tokenShare: 7.9
 gitBranch: claude/compassionate-lovelace-j7k6li
 entrypoint: remote_trigger
 cliVersion: 2.1.323
