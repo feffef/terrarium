@@ -149,8 +149,8 @@ names.
 | ruling | A standing owner instruction every sweep run obeys. |
 
 Why these words: each is an ordinary word whose everyday meaning is its
-meaning here, and none names a Claude Code or GitHub feature. "Sweep" is used
-because loop, routine and task each do.
+meaning here, and none takes a word that Claude Code or GitHub uses for
+something else. "Sweep" is used because loop, routine and task are each taken.
 
 Names still open, with the working pick first and alternatives after it:
 
@@ -764,10 +764,12 @@ Steps that need a person or a laptop session:
    clearly enough?
 5. **`ship` from a cloud session:** opening the PR from a script, and making
    screenshots reachable from a PR, since no API attaches an image.
-6. **Client-router navigation against Terrarium's,** on the same three pages,
-   timed on a phone.
-7. **Cost:** OpenTelemetry from a scheduled run, and whether a nested run
-   with a budget flag gives a hard cap.
+6. **The stack:** client-router navigation against Terrarium's on the same
+   three pages, timed on a phone; and the other points of section 4, re-run in
+   the same build.
+7. **Cost:** reading a finished run's cost from a later run, OpenTelemetry
+   from a scheduled run, and whether a nested run with a budget flag gives a
+   hard cap.
 8. **A machine account's token in a cloud session:** do pushes and posts show
    that identity?
 9. **Starting a session from a session,** in the cloud and on a laptop, and
