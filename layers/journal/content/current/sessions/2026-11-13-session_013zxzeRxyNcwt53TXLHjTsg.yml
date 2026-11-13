@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRxyNcwt53TXLHjTsg
 startedAt: 2026-11-13T00:25:39Z
-endedAt: 2026-11-13T00:53:15Z
+endedAt: 2026-11-13T00:56:49Z
 kind: autonomous
 goal: "Glass Box curate: teach clear-backlog phases and the rule-use record"
-status: in-review
-outcome: PR 3225 merged; PR 3230 (Hooks pages, one home per fact) open with a green gate
-summary: "Sixth autonomous glassbox-curate run, started as a Sonnet handoff from the owner's earlier in-session request for several focuses in sequence; the owner chose the autonomous mode and the handoff, and the focus itself was my own choice from the memory page. I oriented, ran a Scout (found nothing new), and took the memory page's Topics with no page yet plus three page-check capitalisation warnings. An opus writer edited Workflow scripts (interaction phase, thin-result retry, retro) and Session logs (the ruleUse record), a sonnet claim checker found three imprecise claims that were reworded, two fresh readers found undefined terms that were glossed where a source allowed, and a Why bullet whose key term no source defines was cut. The memory page's first topic item claimed the final gate is skipped on a clean first round; the Skill still runs it, so I dropped that claim. Deviations, stated in the run entry: the Subject's other pages were not all read in full and the pages the review named were only grepped. PR 3225 merged and green; PR 3223 and 3220 wait for the owner and were not touched. I self-merged it after CI went green and posted the verdict first. A second focus, the Hooks Subject, then gave the repeated `|| true` and subagent-hook facts one home each and made the Blocking hooks wiring excerpt show its variables (PR 3230, open, gate green). The owner asked mid-turn why I took Hooks and not the owner-directed Walkthrough diagram check; the reason is that PR 3223 renames all nine Walkthrough files and the handoff said to leave pages it touches alone, which I had not written in the run entry and now have."
+status: completed
+outcome: "PRs 3225 and 3230 merged: two lessons extended, hooks facts deduplicated, memory page shorter"
+summary: "Sixth autonomous glassbox-curate run, started as a Sonnet handoff from the owner's earlier in-session request for several focuses in sequence; the owner chose the autonomous mode and the handoff, and the focus itself was my own choice from the memory page. I oriented, ran a Scout (found nothing new), and took the memory page's Topics with no page yet plus three page-check capitalisation warnings. An opus writer edited Workflow scripts (interaction phase, thin-result retry, retro) and Session logs (the ruleUse record), a sonnet claim checker found three imprecise claims that were reworded, two fresh readers found undefined terms that were glossed where a source allowed, and a Why bullet whose key term no source defines was cut. The memory page's first topic item claimed the final gate is skipped on a clean first round; the Skill still runs it, so I dropped that claim. Deviations, stated in the run entry: the Subject's other pages were not all read in full and the pages the review named were only grepped. PR 3225 merged and green; PR 3223 and 3220 wait for the owner and were not touched. I self-merged it after CI went green and posted the verdict first. A second focus, the Hooks Subject, then gave the repeated `|| true` and subagent-hook facts one home each and made the Blocking hooks wiring excerpt show its variables (PR 3230, merged after a green gate and a posted verdict). The owner asked mid-turn why I took Hooks and not the owner-directed Walkthrough diagram check; the reason is that PR 3223 renames all nine Walkthrough files and the handoff said to leave pages it touches alone, which I had not written in the run entry and now have."
 prs:
   - "3225"
   - "3230"
@@ -75,22 +75,22 @@ frictions:
   - description: Picked the Hooks focus without saying in the run entry why the owner-directed diagram check was passed over, so the owner had to ask.
     solution: Write the reason an owner-listed lead is skipped into the run entry at the moment of choosing.
     severity: minor
-durationSec: 1656
+durationSec: 1869
 models:
-  claude-sonnet-5-5: 160
+  claude-sonnet-5-5: 176
 toolCounts:
-  Bash: 48
+  Bash: 51
   Read: 16
   Agent: 9
-  mcp__claude-code-remote__get_session: 3
+  mcp__claude-code-remote__get_session: 4
   Write: 2
   SendMessage: 2
-  Skill: 5
+  Skill: 6
   mcp__github__create_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 2
-  ReadNotifications: 3
-  mcp__github__pull_request_read: 2
-  mcp__github__add_issue_comment: 1
+  ReadNotifications: 5
+  mcp__github__pull_request_read: 3
+  mcp__github__add_issue_comment: 2
 filesEdited:
   - layers/glassbox/content/workshop/runs/2026-11-13T0026.yml
   - layers/glassbox/content/guide/pages/agents/20.workflow-scripts.md
@@ -442,55 +442,55 @@ subagents:
     durationSec: 18
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 2.9
+    tokenShare: 2.7
   - task: Write glassbox page edits
     model: opus
     durationSec: 331
     toolCalls: 41
     modelCalls: 31
-    tokenShare: 14
+    tokenShare: 13
   - task: Claim-check changed sentences
     model: sonnet
     durationSec: 21
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 2
+    tokenShare: 1.8
   - task: "Fresh reader: workflow scripts"
     model: sonnet
     durationSec: 11
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.1
+    tokenShare: 1
   - task: "Fresh reader: session logs"
     model: sonnet
     durationSec: 11
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.1
+    tokenShare: 1
   - task: Standards review of Glass Box diff
     model: sonnet
     durationSec: 31
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 2.1
+    tokenShare: 2
   - task: Spec review of Glass Box diff
     model: sonnet
     durationSec: 30
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 2.3
+    tokenShare: 2.2
   - task: Write hooks subject edits
     model: opus
     durationSec: 97
     toolCalls: 23
     modelCalls: 10
-    tokenShare: 5.6
+    tokenShare: 5.2
   - task: Review hooks diff (Standards and Spec)
     model: sonnet
     durationSec: 47
     toolCalls: 13
     modelCalls: 10
-    tokenShare: 4.5
+    tokenShare: 4.2
 gitBranch: HEAD
 entrypoint: remote
 cliVersion: 2.1.323
