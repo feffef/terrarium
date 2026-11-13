@@ -55,7 +55,8 @@ follow it and don't route around it. If it is wrong, say so on the guard's issue
   the SessionStart `pnpm install` stays.
 - **Matcher-scoped, never `"*"`.** Each `tsx` start (~0.3s) would hit every
   Read/Edit/Bash call. The `Bash`, `Edit` and `Write` guards add an `sh`
-  pre-filter so only a payload that could match pays it.
+  pre-filter so only a payload that could match pays it
+  (`gate-edit-guard.ts` has none).
 - **Pure core, `--dry-run`, and a unit test** in `tests/unit/<guard>.spec.ts`.
   Run the `--dry-run` in a script's `Usage:` header to exercise a branch by hand.
 - **Human-only to merge** (ADR-0004): unit tests can't observe live interception.

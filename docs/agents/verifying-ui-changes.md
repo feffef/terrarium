@@ -33,6 +33,7 @@ cite it.
 
 ## The methodology
 
+- **Drive the affected flow and observe it before committing.**
 - **A grep of SSR HTML does not prove a change renders.** The HTML includes a
   serialized `useAsyncData` payload, so a string match can succeed even when the
   DOM never picks up the change (or errors trying). Check the **rendered DOM**:
@@ -176,7 +177,6 @@ because its container ref was null in `onMounted`.)
 
 ## See also
 
-- Drive the affected flow and observe it before committing.
 - `docs/agents/tenant-layers.md` — Nuxt-layer render gotchas (Platform-wide
   component overrides, scoped-CSS token inheritance); auto-imports and alias
   resolution are in `.claude/rules/tenant-layers.md`.
