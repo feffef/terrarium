@@ -140,7 +140,7 @@ export function isServing(status: number, body: string): boolean {
 /** Poll `GET /` until the child exits or the timeout elapses. A built server is
  *  up on any answer; `--dev` needs a real {@link isServing} page. Returns
  *  whether it came up. */
-async function waitReady(port: number, child: ChildProcess, dev: boolean): Promise<boolean> {
+export async function waitReady(port: number, child: ChildProcess, dev: boolean): Promise<boolean> {
   const url = `http://${HOST}:${port}/`
   const deadline = Date.now() + (dev ? DEV_READY_TIMEOUT_MS : READY_TIMEOUT_MS)
   while (Date.now() < deadline) {
