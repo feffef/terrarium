@@ -105,8 +105,13 @@ sweep merges Dependabot's minor and patch updates; the working name is
 "Samara"; the container is the default deploy. The owner uploaded the file
 to the session with repo access at about 22:20, which checked its counts
 against `08` and its paths against this repo, reported the differences to the
-owner, and committed it. The only change to the text is the file name it
-cites for `05`. Its time, like those of `07` and `08`, is not a commit time.
+owner, and committed it with the file name it cites for `05` corrected. The
+owner then ruled on those differences and that session applied them: the
+repo shape is marked provisional, the Dependabot config and the watch lists
+are protected, the question of public or private is dropped, how `merge`
+recognises a Dependabot pull request is left to an experiment, and four
+smaller points became open questions. Its time, like those of `07` and `08`,
+is not a commit time.
 
 ## Names used across the notes
 

@@ -111,6 +111,12 @@ watcher, visitor, digest. Each is a field, a file or a skill below.
 
 ## 3. Repo shape
 
+**Provisional.** Every folder and file name in this section is a first
+sketch and will be fine-tuned when the template is built. What is meant to
+hold is the split into kinds of file and the rules below the listings, not
+the names. No compatibility with the skill pack installer's own layout is
+sought: skills and agent definitions live under `.claude/`.
+
 ```
 CLAUDE.md                       site; imports platform/guidance.md and both glossaries
 GLOSSARY.md                     site; the site's own terms (skill pack convention)
@@ -150,7 +156,7 @@ platform/
 skills-lock.json                pins every installed skill (protected)
 .github/workflows/verify.yml    one `uses:` line; applied by a person
 .github/actions/verify/         setup, the `verify` call, the comment on green
-.github/dependabot.yml          two groups: minor-and-patch, and majors one by one
+.github/dependabot.yml          two groups: minor-and-patch, and majors one by one (protected)
 ```
 
 Branch `records` (no shared history with `main`, never checked out):
@@ -329,9 +335,9 @@ In `platform/lib/`, each used by more than one command and unit-tested:
 2. Refuse a change to a protected path without the owner's waiver. The file
    list comes from git with rename detection off, so both names of a rename
    are checked.
-3. One exception to rule 2: a pull request that GitHub shows as authored by
-   Dependabot, in the minor-and-patch group, touching only package manifests
-   and the lockfile, merged by the dependency sweep `[untested E14]`.
+3. One exception to rule 2: Dependabot's pull request for minor and patch
+   updates, merged by the dependency sweep. How `merge` recognises one is
+   left to experiment 14 `[untested E14]`.
 4. Require a verdict that names the head.
 5. Refuse on a merge conflict; a conflicted pull request gets no check runs.
 6. Wait for checks in a way fit for a background run: zero runs is pending,
@@ -450,7 +456,8 @@ a log.
 **Each platform skill folder holds a `watch.md`:** at most five *(guess)*
 specific things the watcher looks for in that skill's runs, for example "the
 question round was asked before any builder started". It is written with
-the skill and the owner may edit it (owner's ruling).
+the skill and the owner may edit it (owner's ruling). Watch lists are
+protected: a sweep that could edit one could weaken what it is judged by.
 
 **Pack skills shipped by default** (`mattpocock/skills`, copied in, pinned
 in `skills-lock.json`, synced from the template): `setup-matt-pocock-skills`,
@@ -594,8 +601,8 @@ lost), blocker (the session could not finish).
    reason (IMP-9).
 
 Its safe surface is whatever is off the protected list and inside its
-`sweep.yaml`: platform skills, their watch lists, `platform/docs/`, briefs,
-path-scoped rules. Bounds: five causes and three pull requests a run
+`sweep.yaml`: platform skills, `platform/docs/`, briefs, path-scoped rules.
+Watch lists are not in it; a change to one becomes an issue. Bounds: five causes and three pull requests a run
 *(guess)*. Most runs end in a short report and no change. No trial state is
 kept.
 
@@ -664,9 +671,10 @@ schedule lacks the session tool, every cost shows as unreported
   one pull request per major update (VER-10).
 - The sweep's first-step script lists open Dependabot pull requests and
   exits if there are none.
-- For a pull request in the minor-and-patch group that touches only package
-  manifests and the lockfile, with verification green: the sweep posts a
-  verdict and merges it under rule 3 of `merge`.
+- For Dependabot's minor-and-patch pull request with verification green:
+  the sweep posts a verdict and merges it under rule 3 of `merge`.
+- `.github/dependabot.yml` defines what counts as minor and patch, so it is
+  protected: widening its group would widen what the sweep merges.
 - Major updates and new dependencies stay with the owner (AUT-5).
 - It runs under `standard` and `hands-off`. Accepted risk (owner): a minor
   update of a package below version 1.0 can break.
@@ -781,7 +789,7 @@ Every preset keeps the verdict, the pinned head and green checks (AUT-2).
 
 - the `merge` command, the list itself and `site.yml`;
 - hooks and tool settings; `skills-lock.json`; the agent definitions; each
-  sweep's `sweep.yaml`;
+  sweep's `sweep.yaml`; each skill's `watch.md`; `.github/dependabot.yml`;
 - the workflow file and its action; the verification step list;
 - deploy files; server routes; dependency entries (except rule 3 of
   `merge`);
@@ -822,8 +830,10 @@ laptop (SET-1 to SET-11):
 
 1. Print the by-hand steps as one runnable checklist, before anything else.
 2. Ask: preset, each sweep's schedule, whether the owner app is deployed,
-   which framework the site uses (keep the seed or replace it), public or
-   private, deploy recipe, identity.
+   which framework the site uses (keep the seed or replace it), deploy
+   recipe, identity. Whether the repository is public or private is the
+   repo owner's own business; the platform does not ask and does not depend
+   on it.
 3. Write `site.yml`.
 4. Install the pack and pin it in one step; run the pack's setup skill.
 5. Create the `records` branch, the empty rulings file and the guide's
@@ -879,7 +889,8 @@ the unused one.
 5. **Stack.** The owner app on Astro, built far enough to show a digest
    list, one session card opening in place and one cost chart, counting the
    lines the platform had to write itself; a record holding markup comes out
-   as text. Section 4.1.
+   as text. For the seed: a content file that breaks its schema fails the
+   seed's `check`, naming the file and the field. Sections 4.1, 4.3.
 6. **Verification in automation.** Does one step's summary and annotation
    name the failing check clearly; does the comment on green wake a session?
    Section 5.
@@ -902,9 +913,9 @@ the unused one.
 12. **Identity.** A separate account's token in a cloud session. Section 12.
 13. **Starting a session from a session** with a hand-over as its prompt.
     Section 7.3.
-14. **Dependabot.** Can `merge` read a pull request's author and group
-    reliably from GitHub, and does verification run on a Dependabot pull
-    request with what it needs? Sections 5.2, 8.7.
+14. **Dependabot.** How `merge` can tell Dependabot's minor-and-patch pull
+    request from any other, reliably, and whether verification runs on a
+    Dependabot pull request with what it needs. Sections 5.2, 8.7.
 
 **Least evidence.** After sync, the owner app and the seed's server pieces
 have the least behind them: Terrarium has no server route, no
@@ -939,6 +950,16 @@ access-controlled page, no second app and no separate deploy.
 13. **Managed host:** whether its recipe ships in the first version at all,
     given it is untested.
 14. **The departures in 14.2.**
+15. **May a sub-agent run `log`?** The decisions file says never: it shares
+    its parent's session id, so it would write into its parent's log.
+16. **Must the comment on green name the pull request's head commit?** In
+    Terrarium it once named the merge commit instead (3 problems).
+17. **A merge is code execution on the server,** because the container
+    builds what was merged. Is the protected list enough, or does the deploy
+    need a rule of its own?
+18. **The watcher files no issues.** WAT-6 asks it to file one when a
+    finding is significant or repeated; here the improvement sweep decides.
+    Keep that, or let the watcher file?
 
 ### 14.2 Departures from the requirements as worded (all to be confirmed)
 
