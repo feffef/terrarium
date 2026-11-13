@@ -1,0 +1,276 @@
+schemaVersion: 1
+session: session_013zxzeSTLT98vFMqWFKbjqG
+startedAt: 2026-11-13T11:10:28Z
+endedAt: 2026-11-13T11:21:09Z
+kind: autonomous
+goal: Write one Kevin blog post from the last three days of Terrarium activity
+status: in-review
+outcome: Kevin post on the visitor-loop self-correction passed fact-check, review and gate; PR 3265 open, merge and the reply decision still to do
+summary: "Scheduled blog-post run, no human prompt. Rotation allowed only Eyra and Kevin. I drafted three candidates from the Nov 10-13 window (Eyra on preview --dev screenshotting a loading screen, Kevin on the visitor-loop run quoting the instructions that misled it, Kevin on log-session retracting an interim Friction); a blind Sonnet reader picked the visitor-loop post, I revised it for its gaps, a fact-checker found four claims to fix or cut (all fixed, a re-check came back clean), code-review found no hard violation, and pnpm gate:scoped passed. PR 3265 is open and subscribed. Everything was agent-initiated under the Skill's own steps; the owner's correction the post describes comes from PR 3249's body, not from this session. Still open: merge once CI is green, then the step 12 reply decision."
+prs:
+  - "3265"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-11-13-the-agent-quoted-the-four-lines-that-misled-it.md
+    reason: (read before editing)
+  - path: layers/blog/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/kevin.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/eyra.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: the scheduled task's own procedure
+  - name: dispatch-subagents
+    reason: briefs for the blind reader and fact-checkers
+  - name: code-review
+    reason: review before opening the PR
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: A compound Bash call ended in cd layers/blog/content, so later commands ran from the wrong directory until I cd'd back; two calls were wasted.
+    solution: Use absolute paths or a subshell for one-off directory reads.
+    severity: nit
+durationSec: 641
+models:
+  claude-sonnet-5-5: 77
+toolCounts:
+  Bash: 25
+  Read: 3
+  ToolSearch: 2
+  mcp__github__pull_request_read: 6
+  mcp__github__issue_read: 3
+  Skill: 4
+  Agent: 4
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+filesEdited:
+  - layers/blog/content/kevin/pages/2026-11-13-the-agent-quoted-the-four-lines-that-misled-it.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+docsReadBySubagents:
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/pr-workflow.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/pr-workflow.md
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0003.md
+        value: backed
+        why: opened the PR myself, scope limited
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: ran gate:scoped before the PR
+      - path: .claude/rules/adr-0012.md
+        value: backed
+      - path: .claude/rules/tenant-glossary.md
+        value: steered
+        why: read the Blog glossary before drafting
+      - path: docs/agents/pr-workflow.md
+      - path: docs/agents/git-conventions.md
+      - path: layers/blog/GLOSSARY.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/content/kevin/pages/2026-11-13-the-agent-quoted-the-four-lines-that-misled-it.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/blog/content/kevin/pages/2026-11-13-the-agent-quoted-the-four-lines-that-misled-it.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: layers/blog/content/kevin/pages/2026-11-13-the-agent-quoted-the-four-lines-that-misled-it.md
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0017.md
+        value: backed
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: docs/agents/git-conventions.md
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/content/kevin/pages/2026-11-13-the-agent-quoted-the-four-lines-that-misled-it.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/blog/content/kevin/pages/2026-11-13-the-agent-quoted-the-four-lines-that-misled-it.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: layers/blog/content/kevin/pages/2026-11-13-the-agent-quoted-the-four-lines-that-misled-it.md
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0017.md
+        value: backed
+  - by: general-purpose
+    subagent: 3
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/blog/GLOSSARY.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/blog/GLOSSARY.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/blog-post/personas/kevin.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: .agents/skills/blog-post/personas/kevin.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/blog-post/personas/kevin.md
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+subagents:
+  - task: Blind read of three drafts
+    model: sonnet
+    durationSec: 15
+    toolCalls: 6
+    modelCalls: 3
+    tokenShare: 8.5
+  - task: Fact-check blog post claims
+    model: sonnet
+    durationSec: 62
+    toolCalls: 13
+    modelCalls: 6
+    tokenShare: 9.2
+  - task: Re-check changed post lines
+    model: sonnet
+    durationSec: 38
+    toolCalls: 10
+    modelCalls: 6
+    tokenShare: 8
+  - task: Standards review of blog post
+    model: sonnet
+    durationSec: 21
+    toolCalls: 10
+    modelCalls: 4
+    tokenShare: 5
+gitBranch: claude/zen-heisenberg-7n4fi4
+entrypoint: remote_trigger
+cliVersion: 2.1.323
+trigger: blog-post
+landedBy: Stop
