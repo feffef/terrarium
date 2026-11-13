@@ -1,0 +1,56 @@
+name: glassbox-memory-page-word-cap
+summary: The Glass Box curate memory page sits at its 2,500-word cap, so each run that adds notes fails a test and cuts older items, once dropping items still open, and two merges together pushed main over the cap.
+cause: "glassbox-curate runs park leftovers on the memory (workshop) page, which workshop.spec.ts caps at 2,500 words; the page is kept near the cap, so adding a run's notes fails the test until older items are cut (once three still-open items, until the user asked), and two PRs that each passed their own gate merged to 2,503 words on main, failing later sessions' gates. Signals: 'memory page', 'word cap', '2,500', 'workshop.spec.ts', '2503 words', 'cut ... items to fit'."
+surface: safe
+status: open
+fixes:
+  - pr: 3182
+    date: "2026-11-12"
+    summary: "glassbox-curate: a run fixes one-clause reader findings instead of parking them, and the memory page keeps only owner questions, items outside the Remit and sourced decisions."
+  - pr: 3210
+    date: "2026-11-12"
+    summary: "glassbox-curate: every run shrinks the memory page and solves items instead of adding leftover notes."
+  - pr: 3220
+    date: "2026-11-13"
+    summary: "glassbox-curate gains a memory word count for the run."
+occurrences:
+  - session: session_013zxzeNk79ER2isup9ZscRm
+    date: "2026-11-12"
+    severity: minor
+    description: "The memory page was already near its word cap, so adding this run's leftovers forced cutting older items and several test reruns."
+    solution: "Cut finished items earlier in each run, or raise the ceiling."
+  - session: session_013zxzeNhTtnWyYs2Mh6hn26
+    date: "2026-11-12"
+    severity: nit
+    description: "I committed a memory page that broke the 2,500-word cap test twice, and fixed it only after running the glassbox unit tests after the commit."
+    solution: "Run workshop.spec.ts before each commit that touches the memory page, not after."
+  - session: session_013zxzePDpmX3Lq9AEQGGTTW
+    date: "2026-11-12"
+    severity: nit
+    description: "Edited the memory page twice past its 2,500-word cap; workshop.spec.ts caught it each time and I cut items to fit."
+    solution: "orient.ts could print the memory page's current word count against the cap so a run budgets before editing."
+  - session: session_013zxzeQKydDYQaAEhBMqoW3
+    date: "2026-11-12"
+    severity: nit
+    description: "The memory page was already near its 2,500-word cap, so two added notes failed workshop.spec.ts until I cut five soft decisions."
+    solution: "Plan the cut first when a run must add memory notes, and judge by history which items to drop."
+  - session: session_013zxzeRo4piyeogCXsijcHx
+    date: "2026-11-12"
+    severity: minor
+    description: "The memory page hit its word cap again and two same-day items had to be swapped for each other; the reviewer then called one cut premature."
+    solution: "Make the cap check part of orient.ts output so a run budgets its additions before writing them."
+  - session: session_013zxzeSdKDZBdqz6vRp3xW1
+    date: "2026-11-12"
+    severity: moderate
+    description: "Parked cheap reader findings on the memory page, hit its word cap and cut three still-open items, until the user asked why."
+    solution: "Read the skill's Choose step (fix one-clause findings) before rewriting the memory page; fix in the same Fix step instead of parking."
+  - session: session_013zxzeNjAbKXTy5zKs2fg8r
+    date: "2026-11-12"
+    severity: minor
+    description: "Merged PR 3201 (workshop page, 2382 words) after its own gate passed, without re-checking the capped page against a concurrent PR; main hit 2503 words, and a later #3189 gate failed on it."
+    solution: "Before merging an edit to a size-capped page, fetch main and re-run its spec on the merge result, or have gate:scoped test the merge ref."
+  - session: session_013zxzeSKomYVTsF4Xw4PeC9
+    date: "2026-11-12"
+    severity: minor
+    description: "First gate:scoped failed on main drift: two concurrent merges (3200 and 3201) pushed the workshop page to 2503 words; cost an extra gate run plus a merge of origin/main."
+    solution: "Fetch and merge main before the first gate run, and have the workshop word cap checked on the merge result, not only per branch."

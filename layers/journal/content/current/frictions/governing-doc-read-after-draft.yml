@@ -52,3 +52,23 @@ occurrences:
     severity: nit
     description: "Worked on the Journal Tenant but only grepped its GLOSSARY.md instead of reading it, against the tenant-glossary rule."
     solution: "Read layers/journal/GLOSSARY.md whole before editing under that layer; the rule loaded only after I had already edited."
+  - session: session_013zxzePXpUx7WY6K2uHsxKz
+    date: "2026-11-12"
+    severity: nit
+    description: "Edited homepage tiles for the Blog, Midden and Tinkerfund without reading their Tenant glossaries in full, only grepping the Blog's persona lines (tenant-glossary rule)."
+    solution: "Read each Tenant glossary whose tile text changes, or restrict the wording edits to what the owner supplied."
+  - session: session_013zxzeRvdzBc3xXGo24TkVf
+    date: "2026-11-12"
+    severity: moderate
+    description: "Chose the new Lesson's Where next and inline links from memory and titles without running orient.ts or reading how sibling Lessons end bullets; the owner had to point this out twice and links were reworked in three rounds."
+    solution: "glassbox-lesson now starts with an Orient step (orient.ts --index, read the index whole); writing-pages.md holds the link form."
+  - session: session_013zxzeS7WM4TBNbgtufBjAT
+    date: "2026-11-12"
+    severity: minor
+    description: "Added an instruction-like note to the root GLOSSARY.md before reading ADR-0021, whose loaded rule says keep that file to definitions; the reviewer called it borderline."
+    solution: "Read the ADR a loaded rule names before editing a file it governs; the rule summary said so already."
+  - session: session_013zxzeRd1qkgnadmWbZLoZu
+    date: "2026-11-13"
+    severity: nit
+    description: "Wrote under layers/journal without reading layers/journal/GLOSSARY.md (tenant-glossary rule); the Digest avoids glossary terms by design, so nothing came of it."
+    solution: "Read the Tenant glossary before the first write; the rule loaded only after the gather step."

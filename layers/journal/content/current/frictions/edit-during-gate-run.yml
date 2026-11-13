@@ -153,3 +153,43 @@ occurrences:
     severity: nit
     description: "Started pnpm gate:scoped before committing and running code-review, against pr-workflow.md's order; stopped it and restarted, costing a few minutes."
     solution: "The pre-PR checklist in the harvest-style build flow could be one numbered list: commit, review, fix, gate."
+  - session: session_013zxzeP1EixGDy96kmktFi2
+    date: "2026-11-12"
+    severity: nit
+    description: "A late comment edit during the gate run aborted it (the gate aborts when the tree changes), so the gate ran twice."
+    solution: "Finish review-driven edits before starting gate:scoped."
+  - session: session_013zxzeTDaVmVLQ94B5sfpZB
+    date: "2026-11-12"
+    severity: minor
+    description: "Staged files with git add -A while gate:scoped was running, which aborted the gate; the guard only fired later, at commit, so one gate run was wasted."
+    solution: "State in the gate doc that any tree change, staging included, aborts a run, or have the guard also refuse git add while a gate runs."
+  - session: session_013zxzeRvdzBc3xXGo24TkVf
+    date: "2026-11-12"
+    severity: minor
+    description: "The gate-edit guard denied my edits four times while pnpm gate:scoped ran, so each owner correction waited a full gate run; I also reran the gate after every small text edit."
+    solution: "Batch pending edits and start the gate once, or stop the gate before editing."
+  - session: session_013zxzeSU9KQDVW6b2DUYQt4
+    date: "2026-11-12"
+    severity: minor
+    description: "Started gate:scoped before running code-review, against the pr-workflow.md order; a review fix would have aborted the gate."
+    solution: "Read pr-workflow.md before starting the gate, then review, fix, then gate the final head."
+  - session: session_013zxzeNhTtnWyYs2Mh6hn26
+    date: "2026-11-12"
+    severity: minor
+    description: "I started pnpm gate:scoped in the background and then kept editing pages and running review, so the gate had to be stopped and rerun on the final head."
+    solution: "pr-workflow.md says edit nothing until the gate ends; start the gate only after review fixes are in."
+  - session: session_013zxzeSdKDZBdqz6vRp3xW1
+    date: "2026-11-12"
+    severity: minor
+    description: "Edited page files while gate:scoped ran, so it aborted and had to be rerun."
+    solution: "Finish every edit before starting the gate; pr-workflow says to edit nothing until it ends."
+  - session: session_013zxzeSLxxdLwoN9gcngzxT
+    date: "2026-11-12"
+    severity: moderate
+    description: "Started gate:scoped before code-review, then edited the tree through a Bash python script while it ran; the gate-edit guard blocks Edit only, so the run aborted."
+    solution: "Run code-review first as pr-workflow says; have the guard cover Bash writes, or mention it in the Edit block message."
+  - session: session_013zxzeS7WM4TBNbgtufBjAT
+    date: "2026-11-12"
+    severity: nit
+    description: "Ran the five-minute gate:scoped three times because follow-up edits kept landing after each green run, and the last two commits went to CI without a local gate."
+    solution: "Batch the review fixes and the owner's follow-ups, then run the gate once on the final head before the PR opens."

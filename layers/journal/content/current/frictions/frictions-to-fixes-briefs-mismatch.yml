@@ -91,3 +91,8 @@ occurrences:
     severity: minor
     description: "Design subagent: my picks named the wrong Skills (digest, glassbox-update, not blog or curate), and the design brief has no shape for a no-change recommendation; it spent about 137k tokens to drop all four picks."
     solution: "Name each session's Skill in a pick; give the design brief a no-change form and an early drop path for guard-only fixes."
+  - session: session_013zxzeP3xBUNvHd5kGFihuo
+    date: "2026-11-12"
+    severity: minor
+    description: "Survey subagent: list-merges-since output lacks dates and subjects for merge commits, so it made about 60 per-PR gh api calls to date fixes."
+    solution: "Add merged_at and title to list-merges-since --merges-only output."

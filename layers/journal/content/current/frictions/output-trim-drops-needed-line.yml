@@ -48,3 +48,38 @@ occurrences:
     severity: minor
     description: "Piped harvest list through head -300, truncating it at entry 175 of 204; I read a partial list and had to rerun to a file."
     solution: "The Skill's step 1 could say to write list output to a file and read it whole."
+  - session: session_013zxzeQQzVdav2Lzx9D5WBr
+    date: "2026-11-11"
+    severity: minor
+    description: "Piped log-session.ts --author output through head twice, against the close-session and log-session rule never to filter it; a refusal or warning could have been cut off."
+    solution: "Run log-session.ts bare; the rule is in both Skills, so read their last line before the command."
+  - session: session_013zxzeP4WS4kX4LSBrVszT6
+    date: "2026-11-12"
+    severity: minor
+    description: "Piped log-session.ts output through tail and head, though close-session says never to filter it; a refusal or warning could have been cut."
+    solution: "Run the script bare; a hook could flag a filtered log-session.ts call."
+  - session: session_013zxzePXpUx7WY6K2uHsxKz
+    date: "2026-11-12"
+    severity: nit
+    description: "Piped log-session.ts output through head against close-session's rule never to filter it; I re-ran it unfiltered and nothing had been hidden."
+    solution: "Run the helper bare, or redirect to a file and read all of it."
+  - session: session_013zxzeNrvAWHmAPYsSy8u7x
+    date: "2026-11-12"
+    severity: minor
+    description: "Filtered list-merges-since output with head and grep, though step 3 says not to filter script output, and nearly wrote \"none about it\" from six visible merges."
+    solution: "Redirect the script to a file and read it whole, or use git log --name-only as the retro Seedling proposes; caught before posting."
+  - session: session_013zxzeS57UamaBVVLjwvKFq
+    date: "2026-11-12"
+    severity: nit
+    description: "Piped --author output through head once, against the skill's never-filter rule."
+    solution: "Run it unfiltered."
+  - session: session_013zxzeQ4cuLLoFfdaf5sE2d
+    date: "2026-11-13"
+    severity: nit
+    description: "I piped log-session.ts --author through sed to shorten its output, though log-session says never to filter it because refusals and warnings print there."
+    solution: "Have log-session.ts print its verdict lines first and offer a --quiet flag for the long rules list."
+  - session: session_013zxzeRqf691rc3SdLaPbvP
+    date: "2026-11-13"
+    severity: nit
+    description: "Piped log-session.ts --author output through sed on one re-author, against close-session's rule never to filter it; the full output had printed on the first pass."
+    solution: "A guard on piping log-session.ts output would catch it."

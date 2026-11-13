@@ -1,0 +1,28 @@
+name: harvest-list-read-cost
+summary: A harvest run read its whole list of ideas and learnings, 60,000 to 90,000 tokens over several reads, and then checked only a small part of it.
+cause: "Comes from harvest-first-pass-shallow and PR #3106: the harvest Skill has the run read the whole list (270 to 577 lines, needing paged reads or allow_large) before it stops at a capped number of clusters, and many entries are old ideas for a removed Skill (glassbox-improve). The harm is read cost, not a shallow pass. Signals: 'whole read of 577 lines took about 90,000 tokens', 'read the whole 561-line harvest list', 'needing a paged read', 'then checked only 17 clusters'."
+surface: safe
+status: open
+ref: "harvest-first-pass-shallow, fix PR #3106"
+notes: |-
+  2026-11-13 survey: Seedling #3191 (cheaper whole read and file-based merge check) closed not planned 2026-11-12; #3178 closed by PR #3182.
+fixes:
+  - pr: 3195
+    date: "2026-11-12"
+    summary: "harvest reads the session logs of the last 7 days instead of 28, shortening the list a run reads whole."
+occurrences:
+  - session: session_013zxzeP4WS4kX4LSBrVszT6
+    date: "2026-11-12"
+    severity: minor
+    description: "The idea list ran to 162 entries over 270 lines, needing a paged read; most are old glassbox-improve ideas for a Skill that no longer exists."
+    solution: "Have harvest extract drop entries whose named Skill or file is gone before listing."
+  - session: session_013zxzeS6gV5rfHembHQYP6K
+    date: "2026-11-12"
+    severity: minor
+    description: "Step 1 whole read of 577 lines took about 90,000 tokens and two Reads, one needing allow_large, though step 2 stops at 30 clusters."
+    solution: "Let harvest list cut entry text, as Seedling 3178 proposes."
+  - session: session_013zxzeNrvAWHmAPYsSy8u7x
+    date: "2026-11-12"
+    severity: moderate
+    description: "Read the whole 561-line harvest list in three Read calls of about 62,000 tokens, then checked only 17 clusters."
+    solution: "Cut each list entry's text, as the retro Seedling proposes."

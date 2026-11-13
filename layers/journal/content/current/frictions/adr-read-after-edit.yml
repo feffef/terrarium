@@ -183,3 +183,28 @@ occurrences:
     severity: minor
     description: "Edit hooks demanded a full read of ADR-0027; I read the other three ADRs but never 0027, and skipped the grilling Skill."
     solution: "Cat each hook-named ADR in its own call and check the output, or read the rule summary only when the ADR cannot change the edit."
+  - session: session_013zxzeNq8X5Pc3Xwjpv6Wxe
+    date: "2026-11-12"
+    severity: nit
+    description: "Hooks asked for full reads of ADR-0015, 0027 and 0029 after two small edits; read them after the fact."
+    solution: "Nothing to change; reads confirmed the edits."
+  - session: session_013zxzeRvdzBc3xXGo24TkVf
+    date: "2026-11-12"
+    severity: nit
+    description: "Edited Skill files before reading ADR-0027 and ADR-0015 in full; the post-edit hook demanded them and the edits were right."
+    solution: "Read the ADRs a Skill's rules name before the first edit to a SKILL.md."
+  - session: session_013zxzeSU9KQDVW6b2DUYQt4
+    date: "2026-11-12"
+    severity: nit
+    description: "Read ADR-0025 in full only after the edit, when a hook prompted, not before planning; the edit was right, so no impact."
+    solution: "Read the full ADR of each decision a plan touches before editing, as CLAUDE.md says."
+  - session: session_013zxzeNrvAWHmAPYsSy8u7x
+    date: "2026-11-12"
+    severity: nit
+    description: "The post-edit hook asked for ADR-0005 and ADR-0027 reads after I edited harvest files; I read them then and the edits were right."
+    solution: "Read the ADRs a Skill's rules name before the first edit to a Skill file."
+  - session: session_013zxzeS57UamaBVVLjwvKFq
+    date: "2026-11-12"
+    severity: nit
+    description: "ADR-0025 and the UI doc were read only after the edit, prompted by the PostToolUse hook."
+    solution: "A rule on app/pages/index.vue loading at first read, not only after the edit."

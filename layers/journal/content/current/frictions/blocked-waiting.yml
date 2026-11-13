@@ -59,3 +59,13 @@ occurrences:
     severity: nit
     description: "ScheduleWakeup was blocked outside /loop; I tried it to wait for a subagent that self-notifies."
     solution: "The skill text could say subagents self-notify, so never schedule a wakeup."
+  - session: session_013zxzeSdKDZBdqz6vRp3xW1
+    date: "2026-11-12"
+    severity: nit
+    description: "A foreground sleep was blocked, and a python replace silently never matched because the run-entry YAML is line-wrapped."
+    solution: "Wait with the completion notification; match wrapped text by line or regex."
+  - session: session_013zxzeRxyNcwt53TXLHjTsg
+    date: "2026-11-13"
+    severity: nit
+    description: "Tried a foreground sleep to wait for subagents; the harness blocks it and I had to end the turn instead."
+    solution: "The curate Skill could say to end the turn and wait for notifications."

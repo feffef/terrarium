@@ -39,3 +39,13 @@ occurrences:
     severity: minor
     description: "A retitle to Colour and motion preferences was one character over the 28-character title cap; validate:content passed and only the vitest page spec failed, though the Skill names validate:content as the fast loop."
     solution: "Run the title and description length check inside validate:content, or say in the Skill that it does not; page checks are outside a curate run's remit, so file an issue."
+  - session: session_013zxzeP1EixGDy96kmktFi2
+    date: "2026-11-12"
+    severity: minor
+    description: "Counted Where next room using only guide links, not the Journal link that also counts toward the cap of five; the link-edit script aborted partway and had to be redone."
+    solution: "Count list items, not matching links, before editing a capped list."
+  - session: session_013zxzeRvdzBc3xXGo24TkVf
+    date: "2026-11-12"
+    severity: minor
+    description: "Replaced Cloud sessions' Journal Where next row without checking that an e2e test needs a non-Glass-Box row there, and dropped three pages below the two-incoming-links check; the gate failed once and page checks flagged the rest."
+    solution: "Before swapping a Where next entry, run the page checks and grep the e2e spec for the page."

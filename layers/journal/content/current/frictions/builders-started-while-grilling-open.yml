@@ -1,0 +1,15 @@
+name: builders-started-while-grilling-open
+summary: A clear-backlog run started builders while its questions to the owner were still open, so builder news interleaved with the questions and the owner asked for a rule against it.
+cause: "The orchestrator launched build workflows for two issues while grilling questions on others were unanswered; builder and reviewer results and sample screenshots arrived between the owner's questions. Signals: 'started builders ... while grilling questions were still open', 'interleaved', 'the owner asked for the rule that this never happens'. One occurrence."
+surface: safe
+status: open
+fixes:
+  - pr: 3207
+    date: "2026-11-12"
+    summary: "clear-backlog SKILL.md: no builder or reviewer runs until the owner-interaction phase (grilling and UI samples) is over."
+occurrences:
+  - session: session_013zxzeNjAbKXTy5zKs2fg8r
+    date: "2026-11-12"
+    severity: moderate
+    description: "Started builders for #3194 and #3193 while grilling questions were still open, so builder and reviewer news interleaved with the owner's questions and sample screenshots; the owner asked for the rule that this never happens."
+    solution: "PR 3207 makes it a hard rule in clear-backlog: no builder runs before grilling and UI samples are done."

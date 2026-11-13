@@ -141,3 +141,13 @@ occurrences:
     severity: nit
     description: "A background typecheck call stacked run_in_background with a trailing ampersand and was denied by the double-background guard."
     solution: "Pass run_in_background alone with a plain foreground command, as the guard message says."
+  - session: session_013zxzeRAAoP9CzJpQyWDDh6
+    date: "2026-11-12"
+    severity: nit
+    description: "Combined run_in_background with a trailing & in one Bash call; the double-background guard denied it and nothing ran."
+    solution: "Pass run_in_background alone with a plain command, as the guard says."
+  - session: session_013zxzePDpmX3Lq9AEQGGTTW
+    date: "2026-11-12"
+    severity: nit
+    description: "Sent a Bash call with run_in_background and a trailing & together; the double-background guard denied it, so the gate start was redone."
+    solution: "Pass run_in_background alone; the Skill text for long runs could say so once."

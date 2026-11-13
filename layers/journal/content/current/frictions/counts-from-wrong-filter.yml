@@ -50,3 +50,13 @@ occurrences:
     severity: nit
     description: "Keyed sessions by a 10-character id prefix; three of 390 collided and skewed the edit-versus-read table until I reran on full ids. Caught before publishing."
     solution: "Key by full session id and assert uniqueness in throwaway aggregation scripts."
+  - session: session_013zxzeRvdzBc3xXGo24TkVf
+    date: "2026-11-12"
+    severity: nit
+    description: "First count of sessions that used inspect-session (6) came from current logs only; the archive held many more, and I corrected it only after counting both folders."
+    solution: "Count every log folder (current and archived) before stating how many sessions did something."
+  - session: session_013zxzeSkGfgujTxwvEaiFTh
+    date: "2026-11-12"
+    severity: moderate
+    description: "My first manual PR page loop stopped at 8 pages and silently missed PRs 1827-1830 and 1804; I caught it only by spot-checking a branch's PR."
+    solution: "Have midden-survey give one tested command that pages until created_at falls before the window."

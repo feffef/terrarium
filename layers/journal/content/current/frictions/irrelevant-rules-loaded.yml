@@ -108,3 +108,8 @@ occurrences:
     severity: minor
     description: "The Human-only rule (adr-0004-human-merge) loaded though none of my edited files is on its paths list, so I told the user the PR needed a human merge for the wrong reason until I checked the list."
     solution: "Have the rule-loaded notice name the path that matched; unverified why it loaded for these files."
+  - session: session_013zxzeQ4cuLLoFfdaf5sE2d
+    date: "2026-11-13"
+    severity: nit
+    description: "Writing docs/research/single-site-template-breakdown.md loaded .claude/rules/adr-0027.md and a hint to read the full ADR; neither bears on adding a research note."
+    solution: "Narrow that rule's paths from docs/** so docs/research/** is left out."

@@ -1,0 +1,15 @@
+name: workflow-agent-resumed-while-live
+summary: An orchestrator messaged a workflow's build agent while the workflow run was still live, so two writers edited one worktree and the workflow reported failed.
+cause: "In a clear-backlog run the orchestrator SendMessage-resumed a build agent of a clear-backlog-build workflow that had not finished; the resumed copy and the workflow's own agent both wrote the same worktree. The same session twice resumed a builder before run-summary.ts had written the findings files, getting 'nothing to fix'. Signals: 'SendMessage-resumed a workflow's build agent while its run was live', 'two writers', 'the workflow reported failed'. One occurrence."
+surface: safe
+status: open
+fixes:
+  - pr: 3196
+    date: "2026-11-12"
+    summary: "clear-backlog SKILL.md: resume an agent only after its run ends, and run run-summary --build before any resume because it writes the findings files."
+occurrences:
+  - session: session_013zxzeSiYFQ3mgaCyMXicwp
+    date: "2026-11-12"
+    severity: moderate
+    description: "I SendMessage-resumed a workflow's build agent while its run was live, so two writers edited the #3130 worktree and the workflow reported failed."
+    solution: "Say in clear-backlog §3 never to resume a workflow agent until its run ends; send owner design changes after the run result."

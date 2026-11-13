@@ -77,3 +77,18 @@ occurrences:
     severity: minor
     description: "I ranked harvest entries by the session's Friction severity without asking what best meant; the owner then said creative ideas must not be buried, costing a code, test and Skill-text change."
     solution: "Ask the owner what the selection criterion should favour before building the ranking, not after a review comment."
+  - session: session_013zxzeP1EixGDy96kmktFi2
+    date: "2026-11-12"
+    severity: moderate
+    description: "Read the ambiguous 'here the numbers could make sense' as all three remaining diagrams and redrew them; the owner interrupted to say just the one."
+    solution: "When a request names a target with 'here' or 'that one', ask which before building; the owner had asked to be asked first."
+  - session: session_013zxzeR3mLZWKT2R7LWmtqf
+    date: "2026-11-12"
+    severity: minor
+    description: "The owner's one-word reply 'Three columns' was ambiguous, and my own question tables may have prompted it, so one round was spent clarifying."
+    solution: "Keep grilling answers to lettered options and avoid tables inside the question text."
+  - session: session_013zxzeQ4cuLLoFfdaf5sE2d
+    date: "2026-11-13"
+    severity: moderate
+    description: "Took 'read them all' literally and read 22 lessons (about 30k words) into the main context before the owner redirected me to explore agents."
+    solution: "Size the reading first and propose delegation when it exceeds a few thousand words, before starting."

@@ -18,3 +18,8 @@ occurrences:
     severity: minor
     description: "Skipped inspect-session for the three regression reports (#2751, #2752, #2753) that clear-backlog §2 asks to verify; checked ledger counts and trials only and marked session details unverified."
     solution: "Run inspect-session on one cited session per regression report before grilling, or have the explore workflow do it."
+  - session: session_013zxzeSdKDZBdqz6vRp3xW1
+    date: "2026-11-12"
+    severity: nit
+    description: "Wrote 'unreported' as the cost in a PR body while get_session already gave cost_usd; corrected it after rereading the skill."
+    solution: "Read get_session before writing the PR body, as Land says."

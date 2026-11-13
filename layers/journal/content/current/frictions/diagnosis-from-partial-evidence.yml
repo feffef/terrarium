@@ -28,3 +28,8 @@ occurrences:
     severity: minor
     description: "Compared rules across a 24-day window without checking path history; the user's question showed four rules were created mid-window, so load counts are not comparable."
     solution: "Run git log on .claude/rules for path changes before comparing rules over a window."
+  - session: session_013zxzeTDaVmVLQ94B5sfpZB
+    date: "2026-11-12"
+    severity: minor
+    description: "Explained why the improver Skill was rebuilt from Digests alone; issue 2896 held the details and surfaced only when the owner said a ticket existed, costing one rewrite."
+    solution: "Search issues for the subject before drafting a why, since Digests omit the owner's reasoning."

@@ -1,0 +1,27 @@
+name: close-session-reminded-by-stop-hook
+summary: A session merged a PR and went on without invoking close-session again, and the Stop hook for it reminded the session, costing a prompt.
+cause: "Comes from close-session-bypassed-by-hand-log and PR #2937 (the Stop hook merge-close-stop.ts, which blocks the end of a turn once after a merge without close-session): the hook now catches the slip, so the original harm (the owner having to ask for the log) is not recurring here; that entry keeps the hand-written-log occurrences. Signals: 'the Stop hook had to remind me', 'did not re-invoke close-session until the Stop hook flagged it', 'prompted by the Stop hook after the first merge'."
+surface: guard-or-hook
+status: open
+ref: "close-session-bypassed-by-hand-log, fix PR #2937"
+occurrences:
+  - session: session_013zxzeNhTeF9B47tZ5Egyhx
+    date: "2026-11-11"
+    severity: nit
+    description: "Merged PR 3053 and moved on without re-invoking close-session; the Stop hook had to remind me."
+    solution: "Re-invoke close-session in the same turn as the merge-pr.ts call."
+  - session: session_013zxzeP3xBUNvHd5kGFihuo
+    date: "2026-11-12"
+    severity: minor
+    description: "close-session was prompted by the Stop hook after the first merge, not run by me when #3125 opened."
+    solution: "Run close-session in the same turn that opens a PR, before ending the turn."
+  - session: session_013zxzeNhTtnWyYs2Mh6hn26
+    date: "2026-11-12"
+    severity: nit
+    description: "After PR 3163 merged I went on with the next focus and did not re-invoke close-session until the Stop hook flagged it, against CLAUDE.md's rule to invoke it again when the work merges."
+    solution: "Invoke close-session in the same turn as the merge-pr.ts call, before starting any further work."
+  - session: session_013zxzeR3mLZWKT2R7LWmtqf
+    date: "2026-11-12"
+    severity: nit
+    description: "After the PR merged I updated the log with log-session directly and skipped close-session; the Stop hook had to block the turn to make me invoke it."
+    solution: "The merge-pr.ts output or the PostToolUse hint already says to invoke close-session; follow it before any other write."

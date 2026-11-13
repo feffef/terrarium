@@ -16,3 +16,8 @@ occurrences:
     severity: nit
     description: "A page description I edited came back over its 120-character cap twice, and an unquoted # in the run entry broke validate:content; both only showed after a commit."
     solution: "Run glassbox-pages.spec.ts and validate:content after each edit to a description or run entry, and note the cap in the writer brief."
+  - session: session_013zxzePbgAjUYqz6Zpvm4uU
+    date: "2026-11-12"
+    severity: minor
+    description: "Edited the post's description after validate:content last passed and never re-ran it, so the gate failed on an unquoted colon in the YAML."
+    solution: "Run pnpm validate:content after any frontmatter edit, or have the Skill's fact-check loop end with it."

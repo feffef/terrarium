@@ -344,3 +344,43 @@ occurrences:
     severity: nit
     description: "The Stop hook asked me to commit and push uncommitted writer output three times mid-run, so text not yet claim-checked was pushed to the branch before review."
     solution: "Commit writer output to the run branch as work in progress right away, since a push opens nothing, and say so in the commit title."
+  - session: session_013zxzeP3xBUNvHd5kGFihuo
+    date: "2026-11-12"
+    severity: nit
+    description: "The Stop hook asked me to push twice while the gate was still running on the head, so I had to explain and wait."
+    solution: "The hook could stay quiet while a gate log exists without an exit marker."
+  - session: session_013zxzeSiYFQ3mgaCyMXicwp
+    date: "2026-11-12"
+    severity: nit
+    description: "A Stop hook demanded a commit of the prototype edits mid-session, forcing a branch switch away from the session branch."
+    solution: "Start a prototype in a prototype/ branch worktree so the session checkout stays clean."
+  - session: session_013zxzeNbirdJSVYjNLe6nsJ
+    date: "2026-11-12"
+    severity: minor
+    description: "The Stop hook demanded commit and push eight times while subagents were still editing pages, forcing repeated explanations."
+    solution: "Let the Stop hook skip while background subagents run."
+  - session: session_013zxzePXpUx7WY6K2uHsxKz
+    date: "2026-11-12"
+    severity: nit
+    description: "Pushed 17 WIP commits to satisfy Stop-hook push demands; the squash body inherited all of them as bullet lines, cluttering main's history even with a squash merge."
+    solution: "Keep WIP commits local until review, or pass a clean commit message for the squash instead of GitHub's default."
+  - session: session_013zxzeTDaVmVLQ94B5sfpZB
+    date: "2026-11-12"
+    severity: nit
+    description: "The Stop hook demanded a commit while the gate-edit guard blocked commits during a gate run, so the two hooks conflicted for several turns."
+    solution: "Have the Stop hook skip its commit demand while a gate run is active."
+  - session: session_013zxzeRo4piyeogCXsijcHx
+    date: "2026-11-12"
+    severity: nit
+    description: "The Stop hook demanded commits and pushes while subagents were still running; two extra commit and push turns resulted."
+    solution: "Commit page edits right after the writer returns, before launching checkers."
+  - session: session_013zxzeQTY3RfDbuhXBkvo8B
+    date: "2026-11-12"
+    severity: nit
+    description: "The system prompt says commit and push only when asked while CLAUDE.md says push early and often, so I left edits uncommitted until the Stop hook demanded a commit."
+    solution: "State once in CLAUDE.md that a Stop-hook request to commit and push is enough, or drop the conflicting system line."
+  - session: session_013zxzeRd1qkgnadmWbZLoZu
+    date: "2026-11-13"
+    severity: nit
+    description: "The Stop hook demanded a commit and push while the fact-check was still running, so the draft was pushed before its corrections and the fixes became two follow-up commits."
+    solution: "Harmless here, since a push opens no PR; a hook that tolerates a running background agent would keep the history to one commit."

@@ -2,7 +2,10 @@ name: check-worktrees-unpushed-flags
 summary: check:worktrees reported a worktree or checkout as unpushed or detached after a push or build that the Skill had not told the session to follow up.
 cause: "A worktree pushed with 'git push origin HEAD:branch' has no upstream, or the main checkout was left on a detached HEAD by a build workflow; check:worktrees fails until the session pushes the run branch or sets upstreams by hand. PR #2811 (2026-11-03) has the orchestrator push reviewed branches; PR #3053 (2026-11-11) makes clear-backlog push with a following fetch (so a remote-tracking ref exists) and remove the worktree once its PR lands; issue #2831 closed 2026-11-04 as most likely fixed, unproven (no later session tested it). Since PR #2739, log-session --author also runs the sweep at close and lists linked worktrees left with uncommitted or unpushed work as a Friction or a refusal. Signals: 'pnpm check:worktrees failed', 'reported them unpushed', 'no upstream', 'detached HEAD'."
 surface: safe
-status: open
+status: tracked
+ref: "issue #3229"
+notes: |-
+  2026-11-13 survey: five clear-backlog sessions after PR #3053 still log the hook-written stranded wf_* worktree Friction, some at every close-session call; issue #3229 (audit-skills, opened 2026-11-13) tracks it.
 fixes:
   - pr: 2728
     date: "2026-10-31"
@@ -79,3 +82,28 @@ occurrences:
     severity: nit
     description: "Rebuild was given the old worktree to continue, but the workflow made fresh worktrees and copied the drafts, so the old one lingered and tripped the Stop hook."
     solution: "After a killed build, remove the old worktree or tell the agent to use it explicitly."
+  - session: session_013zxzeSiYFQ3mgaCyMXicwp
+    date: "2026-11-12"
+    severity: minor
+    description: "Linked worktree(s) left with uncommitted or unpushed work at close: /home/user/terrarium/.claude/worktrees/wf_ecc8c921-b7b-1, /home/user/terrarium/.claude/worktrees/wf_ecc8c921-b7b-3, /home/user/terrarium/.claude/worktrees/wf_ecc8c921-b7b-4, /home/user/terrarium/.claude/worktrees/wf_ecc8c921-b7b-5"
+    solution: "Push each, or remove it if its work is meant to be dropped."
+  - session: session_013zxzeNWbHYVE9UDhB1zNHD
+    date: "2026-11-12"
+    severity: minor
+    description: "Linked worktree(s) left with uncommitted or unpushed work at close: /home/user/terrarium/.claude/worktrees/wf_82c3cea8-008-2"
+    solution: "Push each, or remove it if its work is meant to be dropped."
+  - session: session_013zxzeR3mLZWKT2R7LWmtqf
+    date: "2026-11-12"
+    severity: minor
+    description: "Linked worktree(s) left with uncommitted or unpushed work at close: /home/user/terrarium/.claude/worktrees/wf_610db963-f72-2"
+    solution: "Push each, or remove it if its work is meant to be dropped."
+  - session: session_013zxzeNjAbKXTy5zKs2fg8r
+    date: "2026-11-12"
+    severity: minor
+    description: "Linked worktree(s) left with uncommitted or unpushed work at close: /home/user/terrarium/.claude/worktrees/wf_2a497b56-b98-1"
+    solution: "Push each, or remove it if its work is meant to be dropped."
+  - session: session_013zxzeRqf691rc3SdLaPbvP
+    date: "2026-11-13"
+    severity: minor
+    description: "The clear-backlog stranded-worktree friction is hook-written at every close-session call, so a log cannot show whether the final close was clean."
+    solution: "Have the stranding check record the time or the close count, or write the friction only at the final close."

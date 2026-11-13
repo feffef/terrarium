@@ -21,3 +21,8 @@ occurrences:
     severity: minor
     description: "Proposed changes to the Bash read hint and mermaid-lanes without checking the Friction Ledger and closed issues; the owner had already decided both, found only after the user's frictions question."
     solution: "Search the ledger and closed issues for an existing decision before proposing a change to a mechanism."
+  - session: session_013zxzePXpUx7WY6K2uHsxKz
+    date: "2026-11-12"
+    severity: nit
+    description: "Added Glass Box to the footer site list as a consistency fix, against an owner ruling in visitor-loop decisions.md that fixes that list; review caught it and I reverted."
+    solution: "Grep .agents/skills/*/decisions.md for a list before extending it, or point app/utils/sites.ts at its ruling in a comment."

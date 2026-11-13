@@ -59,3 +59,23 @@ occurrences:
     severity: nit
     description: "A python string-replace script failed on a slice boundary (substring not found), and save-handback failed once because its output folder didn't exist."
     solution: "Edit with the Edit tool for multi-hunk changes; mkdir -p the scratch subfolder before save-handback."
+  - session: session_013zxzeS6w7fCCAw12ds3rtt
+    date: "2026-11-11"
+    severity: nit
+    description: "A global sed rename also changed an unrelated use of the imported type, which I only spotted from the file-changed notice and then fixed."
+    solution: "Use targeted Edits for renames in a file that imports a same-named type."
+  - session: session_013zxzePDpmX3Lq9AEQGGTTW
+    date: "2026-11-12"
+    severity: nit
+    description: "A Python str.replace on a wrapped YAML line silently did nothing, so run-entry sentences were missing until a later assert failed."
+    solution: "Assert each replacement in the same script, as I did later, or edit with Edit."
+  - session: session_013zxzeSdKDZBdqz6vRp3xW1
+    date: "2026-11-12"
+    severity: nit
+    description: "A foreground sleep was blocked, and a python replace silently never matched because the run-entry YAML is line-wrapped."
+    solution: "Wait with the completion notification; match wrapped text by line or regex."
+  - session: session_013zxzeT2YDMzAWKoi2AC98c
+    date: "2026-11-12"
+    severity: minor
+    description: "My multi-edit Python helper wrote each file as it went and then failed an assertion, so two edits applied only in part (a test and the memory note), costing extra fix commits and a re-run."
+    solution: "Check every replacement before writing any file, or use the Edit tool per change."

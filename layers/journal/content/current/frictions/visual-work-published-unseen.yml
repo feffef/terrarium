@@ -21,3 +21,13 @@ occurrences:
     severity: minor
     description: "Took no screenshot of the rendered page; the UI was checked only through the e2e test and counts from SSR HTML."
     solution: "Run scripts/ui/preview.ts shot on the built page before the PR."
+  - session: session_013zxzeSU9KQDVW6b2DUYQt4
+    date: "2026-11-12"
+    severity: nit
+    description: "Agreed no UI sample and took no screenshot, against the ui-verification rule; the change only alters a link target, verified by DOM click."
+    solution: "For a link-only change, say so in the PR; otherwise show a sample first."
+  - session: session_013zxzeS57UamaBVVLjwvKFq
+    date: "2026-11-12"
+    severity: minor
+    description: "Did not render or screenshot the homepage change, nor get owner confirmation, despite the ui-verification rule."
+    solution: "Run scripts/ui/preview.ts shot on the home page and show it before calling it done."

@@ -5,6 +5,10 @@ cause: "A fix to line wrapping or phrasing is made piecemeal after the first com
 status: open
 notes: |-
   2026-11-08 design: a gate line-length check dropped: it needs a Human-only file (scripts/gate/gate.ts) to enforce an 80-column convention nobody has written down, for one nit and one minor that each cost a gate rerun.
+fixes:
+  - pr: 3196
+    date: "2026-11-12"
+    summary: "clear-backlog-build: wrap width is the builder's check (a length check before committing), not a review finding."
 occurrences:
   - session: session_013zxzeRCJHe4rmKN5i2CQ16
     date: "2026-11-06"
@@ -21,3 +25,8 @@ occurrences:
     severity: minor
     description: "The first gate:scoped run failed at lint on an unused import I left after removing authored docsRead; I had run typecheck and specs but not eslint before the multi-minute gate."
     solution: "Run eslint on touched files alongside typecheck before gate:scoped when removing code; CLAUDE.md's pre-gate step names only typecheck and the spec."
+  - session: session_013zxzeR3mLZWKT2R7LWmtqf
+    date: "2026-11-12"
+    severity: minor
+    description: "Two Standards re-checks and a builder fix ping-ponged on line-wrap nits, because each rewrap moved the overrun to the next line."
+    solution: "Have the builder run awk length>80 on touched lines before the first commit; the builder rules() could say so."

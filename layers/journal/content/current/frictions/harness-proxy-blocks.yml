@@ -75,3 +75,18 @@ occurrences:
     severity: moderate
     description: "Cloud sessions cannot reach the deployed site or its container logs, so the cause on the server stays unconfirmed."
     solution: "Expose the deployed build's commit (for example a /version endpoint or footer) so a session can compare it with main"
+  - session: session_013zxzePP7cbXFfoqEXbKwKW
+    date: "2026-11-12"
+    severity: minor
+    description: "Docs hosts (nuxt.com, vuejs.org, nitro docs) were blocked, so each reader spent many calls on raw GitHub fallbacks, and some docs-only claims stayed unverified."
+    solution: "Add nuxt.com and vuejs.org to the environment's allowed hosts, or list the npm docs packages in writing-pages.md's fallback."
+  - session: session_013zxzeQTY3RfDbuhXBkvo8B
+    date: "2026-11-12"
+    severity: nit
+    description: "A gh api search call used a since filter and --paginate and the proxy answered 403 for numeric repo paths, so the listing had to be redone with other calls."
+    solution: "Say in github-integration.md that a paginated gh api issues call can 403 through the proxy and list_issues with since is the way."
+  - session: session_013zxzeSkGfgujTxwvEaiFTh
+    date: "2026-11-12"
+    severity: minor
+    description: "gh api --paginate fails in this cloud proxy (numeric-ID repository paths blocked); I paged by hand with a page parameter."
+    solution: "Have midden-survey say to page closed PRs manually in cloud sessions, with a loop that stops at the window start."

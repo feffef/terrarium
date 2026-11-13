@@ -1,0 +1,16 @@
+name: workflow-brief-backticks-break-script
+summary: An edit put backticks inside a workflow script's template-literal brief, which broke the whole script until a syntax check or a test showed it.
+cause: "The briefs in .claude/workflows/*.js (clear-backlog-explore.js brief(), rules()) are JavaScript template literals; Markdown backticks typed into them unescaped end the literal, so the file no longer parses. Found by node --check or a failing test, before any run. Signals: 'backticks inside the template-literal brief', 'unescaped backticks', 'syntax error', clear-backlog-explore.js."
+surface: safe
+status: open
+occurrences:
+  - session: session_013zxzeShqaQAEUkXf1Hwnd6
+    date: "2026-11-11"
+    severity: nit
+    description: "Put backticks inside the template-literal brief in clear-backlog-explore.js, which broke the file's syntax until node --check showed it; fixed before any run."
+    solution: "Avoid backticks in text inside a JS template literal, or check the script compiles after each brief edit."
+  - session: session_013zxzeQTY3RfDbuhXBkvo8B
+    date: "2026-11-12"
+    severity: nit
+    description: "Edited rules() with unescaped backticks inside the workflow's template literal, which broke the whole script until tests failed with a syntax error."
+    solution: "The workflow-scripts spec caught it; a one-line note at the top of rules() that its text sits in a template literal would have spared the slip."

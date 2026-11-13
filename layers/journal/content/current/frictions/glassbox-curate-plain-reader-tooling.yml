@@ -1,12 +1,15 @@
 name: glassbox-curate-plain-reader-tooling
 surface: safe
-summary: Glass Box curate runs built the plain-text pages for fresh readers by hand, and the shipped plain.ts printed glosses inline so readers reported noise.
-cause: "The curate fresh-reader step needs the MDC stripped, terms defined and excerpts as code: one run hand-built a throwaway converter, another used .agents/skills/glassbox-curate plain.ts, which prints every term gloss inline so reader findings were mostly noise. Signals: 'throwaway converter', 'plain.ts prints every term gloss inline', 'crowded sentences'. Since PR #2944 (2026-11-07) plain.ts does the conversion; its inline glosses are what the later reader found noisy."
+summary: Glass Box curate runs built the plain-text pages for fresh readers by hand, and the shipped plain.ts printed glosses inline, so readers reported noise, and refused a bare page stem.
+cause: "The curate fresh-reader step needs the MDC stripped, terms defined and excerpts as code: one run hand-built a throwaway converter; since PR #2944 (2026-11-07) .agents/skills/glassbox-curate plain.ts does the conversion, but it printed every term gloss inline, so reader findings were mostly noise (repeated Term parentheticals flagged as duplicated page text), and it rejected a bare page stem with only 'no guide page <stem>', needing the folder-qualified, number-prefixed form (verification/10.gate) its usage line did not show. PR #3220 (2026-11-13) makes plain.ts take a bare stem and print plainer pages. Signals: 'throwaway converter', 'plain.ts prints every term gloss inline', 'crowded sentences', 'no guide page', 'bare stem'."
 status: open
 fixes:
   - pr: 2944
     date: "2026-11-07"
     summary: "Adds plain.ts, which turns a page into plain text for fresh readers (MDC stripped, terms defined, Excerpts as code)."
+  - pr: 3220
+    date: "2026-11-13"
+    summary: "plain.ts takes a bare stem and lists near matches, and prints plainer fresh-reader pages."
 occurrences:
   - session: session_013zxzeRGhhzxkXgfdpEX9js
     date: "2026-11-07"
@@ -33,3 +36,43 @@ occurrences:
     severity: minor
     description: "plain.ts pastes term definitions inline and strips link text, so fresh readers kept reporting those artifacts as confusion and I had to filter them out."
     solution: "Have plain.ts keep terms as a short gloss outside the sentence, and keep link labels, or tell readers about both artifacts in the brief."
+  - session: session_013zxzeQuYEfmPngc6xxNTn1
+    date: "2026-11-11"
+    severity: minor
+    description: "Fresh readers flagged repeated Term parentheticals as duplicated page text, though they render from Term entries; I had to tell the writer to ignore them."
+    solution: "Have plain.ts mark rendered Term glosses, or tell readers in the brief that parenthesised glosses are generated."
+  - session: session_013zxzeSgDqRuwZif7Rgt2MW
+    date: "2026-11-11"
+    severity: nit
+    description: "plain.ts rejected bare walkthrough stems; I redirected output to files, so the error hid in nine five-word files until I read one."
+    solution: "Show a stem example with its folder in plain.ts usage, and print the error to the terminal."
+  - session: session_013zxzeNk79ER2isup9ZscRm
+    date: "2026-11-12"
+    severity: nit
+    description: "plain.ts printed 'no guide page subagents' for a bare stem; it needs the folder path, and the Skill text does not say so."
+    solution: "Have plain.ts accept a bare stem, or its error name the expected form folder/NN.stem."
+  - session: session_013zxzeNhTtnWyYs2Mh6hn26
+    date: "2026-11-12"
+    severity: nit
+    description: "I guessed plain.ts's page stem form twice (without the number prefix) and rendered all pages three times before using the stem its usage line shows."
+    solution: "Give the orientation output an example stem such as git-github/10.pull-requests for plain.ts."
+  - session: session_013zxzePDpmX3Lq9AEQGGTTW
+    date: "2026-11-12"
+    severity: nit
+    description: "Ran plain.ts with a stem lacking the number prefix (agents/subagents) and got 'no guide page'; had to retry with the prefixed stems."
+    solution: "The orientation's run-entry stems carry no prefix; the Skill should say plain.ts wants the file name without .md, prefix included."
+  - session: session_013zxzeS5rcf8VwnGmjcpphq
+    date: "2026-11-12"
+    severity: nit
+    description: "plain.ts rejected a bare stem like gate and printed only 'no guide page gate'; it needs the folder (verification/10.gate), costing one retry"
+    solution: "Have the SKILL.md Diagnose step show the stem form, or let plain.ts match a bare name"
+  - session: session_013zxzePqQeuW4GkMnxNpPp3
+    date: "2026-11-12"
+    severity: nit
+    description: "plain.ts failed on the bare stem hooks and needed the full folder form; its usage line names only page stem."
+    solution: "Usage line in plain.ts should show the example hooks/10.hooks."
+  - session: session_013zxzeQAc52ZMCkhtp4ihGY
+    date: "2026-11-12"
+    severity: nit
+    description: "plain.ts failed with a bare page stem; it needs the folder-qualified stem such as verification/10.gate."
+    solution: "Name the stem form in the glassbox-curate Diagnose step."

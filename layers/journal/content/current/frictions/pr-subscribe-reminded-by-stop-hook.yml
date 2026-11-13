@@ -15,3 +15,13 @@ occurrences:
     severity: nit
     description: "Stop hooks demanded subscribe_pr_activity after I opened the test PR, though the task said not to subscribe."
     solution: "Let the hook skip PRs whose title carries a test marker, or let a session mark a PR as not to watch."
+  - session: session_013zxzeP1EixGDy96kmktFi2
+    date: "2026-11-12"
+    severity: minor
+    description: "Opened the PR and ended the turn without subscribing to its activity; the Stop hook had to remind me, though the ADR-0003 rule says to subscribe after opening."
+    solution: "Treat subscribe_pr_activity as part of opening the PR, in the same turn, before asking the user anything about watching it."
+  - session: session_013zxzeSkGfgujTxwvEaiFTh
+    date: "2026-11-12"
+    severity: nit
+    description: "I opened the PR and told the owner I had not subscribed, following the system prompt's 'ask first' line over ADR-0003, until the Stop hook flagged it."
+    solution: "Subscribe in the same turn as opening the PR, as ADR-0003 says; the rule already overrides the generic prompt."

@@ -26,3 +26,13 @@ occurrences:
     severity: nit
     description: "Wrote the first draft's opening 'The way I would have done it', which replayed Kevin's previous post; step 8 re-read caught it and I rewrote it."
     solution: "Step 4's overlap grep should include opening phrases of the Persona's last three posts, not only topic terms."
+  - session: session_013zxzeRvdzBc3xXGo24TkVf
+    date: "2026-11-12"
+    severity: moderate
+    description: "Wrote changing counts and history in Lesson prose (\"has cost over a hundred thousand subagent tokens\", \"two sessions were wrong\") although glassbox-content.md was loaded; only code-review caught it, and the claims were unsourced."
+    solution: "Check new prose against glassbox-content.md and each claim against its source before the first commit."
+  - session: session_013zxzeRd1qkgnadmWbZLoZu
+    date: "2026-11-13"
+    severity: nit
+    description: "The Digest prose was 264 words against the Skill's 250 cap; code-review caught it and it cost one more commit before the gate."
+    solution: "Count the prose words before committing the draft."

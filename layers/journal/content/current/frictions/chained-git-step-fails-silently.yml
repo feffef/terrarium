@@ -40,3 +40,8 @@ occurrences:
     severity: nit
     description: "I chained git add, a heredoc and git commit in one Bash call, against git-conventions one-state-changing-command-per-call; no harm."
     solution: "Run add, commit and push each in their own Bash call and check each landed."
+  - session: session_013zxzeNhTtnWyYs2Mh6hn26
+    date: "2026-11-12"
+    severity: nit
+    description: "I ran git add and git commit together with printf in one Bash call several times, against git-conventions.md's rule of one state-changing git command per call."
+    solution: "Read the rule again before the first commit, or commit through a small helper script that checks each step."

@@ -2,7 +2,8 @@ name: glassbox-curate-read-first-skipped
 surface: safe
 summary: Glass Box curate runs edited or dispatched before reading the Skill's required first reads (glossary, QUALITY.md, the Subject's pages), and the Spec reviewer found the gap.
 cause: "The glassbox-curate Skill lists the Glass Box GLOSSARY, QUALITY.md (Lenses) and the Subject's pages to read first; runs skip or truncate them, leave pagesRead short, and a reviewer names the unread pages. Signals: 'never opened QUALITY.md', 'pagesRead was short', 'skipped the curate Read step', 'short of the Skill's read-the-Subject step'. Since PRs #2929 and #2944 (2026-11-07) the Skill reads the Subject first, in full, with orient.ts --subject printing its pages and the pagesRead lines. Since PR #3001 (2026-11-09) SKILL.md states the Subject read as a Done-when."
-status: open
+status: tracked
+ref: "issue #3226"
 fixes:
   - pr: 2929
     date: "2026-11-07"
@@ -44,3 +45,23 @@ occurrences:
     severity: minor
     description: "Skipped QUALITY.md Lenses from the curate Skill's Read first list until the owner asked whether I used glassbox-lesson. Never opened it for four passes."
     solution: "Make the curate Skill's Read first list load QUALITY.md, or have orient.ts print a reminder when it was not read."
+  - session: session_013zxzeQKydDYQaAEhBMqoW3
+    date: "2026-11-12"
+    severity: minor
+    description: "Skipped the Skill's Scout subagent and the full-subject read; the Spec reviewer later named linked pages missing from pagesRead, so three Lessons were read after the review."
+    solution: "Read the pages the new text links before editing, or write the skip and its reason into the run entry when the plan is made."
+  - session: session_013zxzeNhTtnWyYs2Mh6hn26
+    date: "2026-11-12"
+    severity: minor
+    description: "In the second run I skipped re-reading the whole guide index and the Scout, both steps the Skill requires, to save context, and the code-review Spec reviewer named outside pages I had not read."
+    solution: "Budget a whole-index re-read per run, or let the Skill say a second run in one session may reuse the first run's index read."
+  - session: session_013zxzePDpmX3Lq9AEQGGTTW
+    date: "2026-11-12"
+    severity: minor
+    description: "Skipped re-reading the whole guide index and the Scout in the second and third runs of this session to save budget, against the Skill's every-run rule; the run entries say so."
+    solution: "The Skill could say whether a same-session repeat run may reuse the index read, so the deviation is not a judgement call."
+  - session: session_013zxzeRxyNcwt53TXLHjTsg
+    date: "2026-11-13"
+    severity: minor
+    description: "The Skill asks for every Subject page in full, but with the budget I read only the pages I edited; the run entry states it."
+    solution: "Let the Skill say which pages count as the Subject when the focus is a topic list, not a Subject."

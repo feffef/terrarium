@@ -78,3 +78,8 @@ occurrences:
     severity: nit
     description: "Skill §2 says top-three regression issues 'since the latest fix', but subagent-brief-defects' own note calls its occurrences separate strays; I filed anyway, as the rule says."
     solution: "Let the Skill skip a cluster whose newest note says its occurrences need separate fixes."
+  - session: session_013zxzeP3xBUNvHd5kGFihuo
+    date: "2026-11-12"
+    severity: minor
+    description: "Survey-brief says a tracked entry must point at something open, but SKILL §5 says a dispatched fix gets no ref until §8; the Standards reviewer flagged the empty ref."
+    solution: "Say in survey-brief §2 that an entry tracked for a dispatched fix has no ref until the closing PR."

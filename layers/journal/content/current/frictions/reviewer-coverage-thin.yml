@@ -13,3 +13,13 @@ occurrences:
     severity: minor
     description: "Reviewers reported thin coverage (Skills, journal pages, glossaries unread) because three agents cannot read the whole repo."
     solution: "Split reviewers by directory as well as lens, or rotate the covered directories across runs."
+  - session: session_013zxzeQRndZ5iHweDq8ceMP
+    date: "2026-11-11"
+    severity: minor
+    description: "The explore agent read summaries and traces of only 1 of 57 logs though I asked for full reads; I had to disclose that gap in my reply."
+    solution: "Brief should say a partial read is not acceptable, or split the logs across several agents."
+  - session: session_013zxzeNq8X5Pc3Xwjpv6Wxe
+    date: "2026-11-12"
+    severity: minor
+    description: "Reviewer agents B and C read only about eight docs/agents files; most Live files went unread, so coverage is thin."
+    solution: "Split each lens over narrower file sets so each agent can finish."

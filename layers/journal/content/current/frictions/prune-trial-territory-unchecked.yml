@@ -10,6 +10,9 @@ fixes:
   - pr: 2572
     date: "2026-10-26"
     summary: "audit-docs step 1 tells reviewer agents to skip text under an open Prune Trial (partial)."
+  - pr: 3199
+    date: "2026-11-12"
+    summary: "New trial-territory.ts prints each open Prune Trial that covers given paths or words."
 occurrences:
   - session: session_013zxzeSgD6cuF2mawqY6jWM
     date: "2026-10-29"
@@ -21,3 +24,8 @@ occurrences:
     severity: minor
     description: "Did not check .agents/prune-trials.yml territory before dispatching reviewers; the checker had to catch the environment-caveats finding as trial-covered."
     solution: "Tell the audit-docs reviewers the trial territory paths directly, not just 'skip text covered by an open trial'."
+  - session: session_013zxzeNrvAWHmAPYsSy8u7x
+    date: "2026-11-12"
+    severity: minor
+    description: "Read only the first 40 lines of the prune trials file, so missed that an open trial covers environment-caveats.md; found it when I grepped for it before filing."
+    solution: "Grep the trials file for the target doc before drafting, as ADR-0027 asks."

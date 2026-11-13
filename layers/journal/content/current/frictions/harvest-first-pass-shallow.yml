@@ -18,3 +18,8 @@ occurrences:
     severity: minor
     description: "On the first real run I skipped the Skill's list-merges-since step and wrote no per-cluster record, using greps of the current repo instead; I only noticed when the owner asked what the compact view had hidden."
     solution: "Follow the Skill's steps as written or say which I replaced; the new harvest list carries the start time and outcome the checks need."
+  - session: session_013zxzeP4WS4kX4LSBrVszT6
+    date: "2026-11-12"
+    severity: moderate
+    description: "Filed three Seedlings without reading their source session logs whole (step 4) or the Glass Box glossary; one body misdescribed the 2026-11-09 session until the owner asked and I corrected it."
+    solution: "Read each source log and the Tenant glossary before writing the body, as step 4 and the tenant-glossary rule say."

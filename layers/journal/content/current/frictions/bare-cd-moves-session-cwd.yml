@@ -66,3 +66,8 @@ occurrences:
     severity: nit
     description: "A compound cd into a worktree moved the session's working directory; later commands needed absolute paths and git -C."
     solution: "Use git -C and absolute paths for a worktree; never cd in a compound command."
+  - session: session_013zxzeNWbHYVE9UDhB1zNHD
+    date: "2026-11-12"
+    severity: nit
+    description: "Ran verdict-line.ts after a bare cd into a worktree, so the shell's working directory stayed there and I had to cd back before merge-pr.ts."
+    solution: "Run a worktree command in a subshell; pr-workflow step 4 could show the subshell form."

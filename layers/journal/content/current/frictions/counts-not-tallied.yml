@@ -95,3 +95,28 @@ occurrences:
     severity: minor
     description: "My first PR verdict comment gave verdict counts I had not tallied; I corrected it after counting the checker replies."
     solution: "Tally verdicts before writing the comment."
+  - session: session_013zxzeQKydDYQaAEhBMqoW3
+    date: "2026-11-12"
+    severity: minor
+    description: "Told the user the overview was about 1,000 words without counting; it is about 1,550, so a question option rested on a wrong figure until I corrected it."
+    solution: "Count with wc before quoting a size, as CLAUDE.md's verify-before-you-state rule says."
+  - session: session_013zxzePDpmX3Lq9AEQGGTTW
+    date: "2026-11-12"
+    severity: minor
+    description: "Wrote a session cost of about $17 in a PR body from memory; the real session total read $19.28 and I corrected the body."
+    solution: "Read cost_usd from get_session before writing any figure, as CLAUDE.md's verify-before-you-state rule says."
+  - session: session_013zxzeNjAbKXTy5zKs2fg8r
+    date: "2026-11-12"
+    severity: nit
+    description: "Push notification said 6 questions but the list had 7 Seedlings; I did not count before sending."
+    solution: "Count the list's items before writing the notification text."
+  - session: session_013zxzeSkGfgujTxwvEaiFTh
+    date: "2026-11-12"
+    severity: minor
+    description: "First drafts of the six records carried overstated numbers: lifetimes rounded up from calendar dates, 10 refusals instead of 10 sessions, and a library said to be dropped when only a patch was removed."
+    solution: "midden-catalogue should say to compute each lifetime from merged_at timestamps and to copy counts with their unit from the source line before writing."
+  - session: session_013zxzeS7WM4TBNbgtufBjAT
+    date: "2026-11-12"
+    severity: nit
+    description: "Said three sessions hit the missing source_url when only two retros and one log did; corrected a few turns later."
+    solution: "Count each item from the source before summarising across retros."

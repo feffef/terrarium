@@ -128,3 +128,18 @@ occurrences:
     severity: nit
     description: "My follow-up commit touched 3 files, over the simple-change limit, and got only my own diff read, not code-review; I also did not check its commit trailer."
     solution: "Run code-review on the follow-up diff, or keep follow-ups to two files."
+  - session: session_013zxzeSLrkzfApGBDhjgFqB
+    date: "2026-11-12"
+    severity: nit
+    description: "Pushed the 17-line e2e follow-up without code-review on its own diff, which pr-workflow.md asks for beyond 10 lines; CI's gate ran, but the review step was skipped."
+    solution: "Count the follow-up's lines before pushing and run code-review when over 10, or log the skip up front."
+  - session: session_013zxzeSKomYVTsF4Xw4PeC9
+    date: "2026-11-12"
+    severity: nit
+    description: "Ran an own consistency check instead of the two code-review sub-agents on a non-simple 18-file diff, contrary to ADR-0004's code-review step."
+    solution: "Vendor-only diffs have no spec or standards to judge; pr-workflow.md could name installed-skill updates as a review exemption."
+  - session: session_013zxzeQ4cuLLoFfdaf5sE2d
+    date: "2026-11-13"
+    severity: minor
+    description: "ADR-0004 and pr-workflow.md ask for code-review and gate:scoped before a PR that adds a file; the owner stopped the review and said to just commit and push, so both were skipped."
+    solution: "Let pr-workflow.md say that the owner's in-session word waives the pre-PR review, as it already does for a Human-only merge."
