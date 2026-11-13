@@ -14,8 +14,9 @@ learnings into Seedlings, and `frictions-to-fixes` takes up its bugs.
 
 ## Remit
 
-The run changes nothing but its own session log: no branch, PR or issue
-(ADR-0003). Everything it keeps goes into that log (step 4).
+The run changes nothing but its own session log and its retro comment on
+#3244: no branch, PR or issue (ADR-0003). Everything it finds goes into that
+log (step 4).
 
 ## Today's focus
 
@@ -92,7 +93,7 @@ Leave other checks to `harvest`. Done when every reported item is in the
 tally with one mark, and every bug was checked against both its source and its
 rendered page.
 
-## 4. Log and close
+## 4. Log
 
 Invoke `close-session`. In the log:
 
@@ -104,4 +105,13 @@ Invoke `close-session`. In the log:
 - each **learning** is one `learnings` line;
 - the run's own Frictions follow, as in any session.
 
-Done when every bug, idea and learning in the tally is in the committed log.
+Done when every bug, idea and learning in the tally is in the authored log.
+
+## 5. Retro
+
+Run the retro in issue #3244: send each visitor its retro message, then post
+the run's report there as one comment, following that issue's rules and
+template. Log everything unrelated to visitor-loop itself as a Friction, never
+as an issue. Then invoke `close-session` again.
+
+Done when the report comment is posted and those Frictions are in the log.
