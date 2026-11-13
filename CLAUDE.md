@@ -23,7 +23,7 @@ once per session; read it whole if you can, since a rule can sit anywhere in it.
 - **Before you plan or design:** the full ADR of each decision the plan touches.
 - **Before your first git command** beyond the read-only `status`, `diff`,
   `show`, `ls-tree`, `cat-file`, `grep`, `ls-files`, `rev-parse` and `branch`
-  listing, or `log`/`blame` used to draw a conclusion: `docs/agents/git-conventions.md`.
+  listing; `log`/`blame` used to draw a conclusion is not exempt: `docs/agents/git-conventions.md`.
 - **Before your first GitHub operation** (`mcp__github__*` tool or `gh`):
   `docs/agents/github-integration.md`.
 - **Before you open, update or merge a PR:**
@@ -92,7 +92,7 @@ docs/research/            dated reference notes
 scripts/                  repo tooling by area: gate/ (the gate and its checks), hooks/ (tool-call
                           guards and hints), session/ (session logs; Skill usage: audit-skills.ts --skill;
                           Frictions since a date: extract-frictions.ts --since; rule use: rule-use-report.ts --since),
-                          github/, git/, ui/, lib/ (shared). Not executable: run
+                          github/, git/, ui/, history/, lib/ (shared). Not executable: run
                           `pnpm exec tsx scripts/<area>/<file>.ts`, even where a doc shows it bare
 tests/                    Platform tests; each Tenant keeps its own in its layer
 ```

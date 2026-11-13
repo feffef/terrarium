@@ -297,9 +297,8 @@ remains on the branch.
 
 ## Reference: the post
 
-Path: `layers/blog/content/<persona>/pages/<today-UTC>-<slug>.md`. The `pages`
-schema is in `layers/blog/tenant.config.ts`; the `page` type supplies
-`title`/`description`/`body`, so add only:
+The `pages` schema is in `layers/blog/tenant.config.ts`; the `page` type
+supplies `title`/`description`/`body`, so add only:
 
 ```markdown
 ---
@@ -328,7 +327,6 @@ reverse-chron feed; the Persona's `index.md` has none and stays its masthead.
 
 ## Reference: the pingback stub
 
-Path: `layers/blog/content/<target>/pingbacks/<today-UTC>-<persona>-<target-slug>.yml`.
 The schema is strict — match it exactly:
 
 ```yaml

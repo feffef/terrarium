@@ -106,11 +106,6 @@ origin/main` and its diff.
 
 Done when every agent has reported and every reply is in the pool.
 
-### Edge cases
-
-- Moving a journal `pages/*.md` changes its route (ADR-0006), so that move
-  escalates.
-
 ## 2. Merge overlapping findings
 
 Goal: one finding per stretch of text, so two fixes never fight over the
@@ -200,9 +195,9 @@ human.
    Merge it yourself on green (ADR-0004).
 2. Put the fixes a human must merge into **one** separate escalation PR:
    any change to a Human-only path (`.claude/rules/adr-0004-human-merge.md`),
-   which includes every ADR edit, and any journal `pages/*.md` move that
-   changes its route. Subscribe to it and follow it until it merges or
-   closes.
+   which includes every ADR edit, and any journal `pages/*.md` move (it
+   changes the page's route, ADR-0006). Subscribe to it and follow it until
+   it merges or closes.
 3. Log the session (ADR-0009). Its summary gives the verdict counts
    (CONFIRMED / CONFIRMED-BUT / WRONG) and ends with the areas Agents B and
    C read in full, e.g. `Covered: docs/agents/*, GLOSSARY.md, Skills a-f`,
