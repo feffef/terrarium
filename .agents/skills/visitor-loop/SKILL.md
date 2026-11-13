@@ -118,8 +118,10 @@ file one issue per group, labelled `needs-triage`, with a body per
 Then write the log's entries in a draft YAML in your scratchpad, in
 `log-session`'s authored format:
 
-- each **idea** is one `ideas` line naming the page, readable without this
-  run's context;
+- each **idea** is one `ideas` entry that a reader with no other context
+  can act on. It opens with the lens or lenses that raised it and the full
+  page URL path (`[content editor] /t/midden/stores: …`), then says what the
+  page shows now, what to add or change, and why a visitor would care;
 - each **learning** is one `learnings` line;
 - the run's own Frictions, as in any session.
 

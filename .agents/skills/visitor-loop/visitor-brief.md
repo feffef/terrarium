@@ -44,7 +44,8 @@ Report, in this order:
    text and propose new text. Evidence is what you saw or checked (a
    screenshot, file:line, a command); write "unverified" if you have none.
 3. **Ideas**: up to three new content, components or features, most valuable
-   first. One per line: `idea | why a visitor would care | where it lives`.
+   first. One per line: `page URL | what it shows now | idea | why a visitor
+   would care`.
 4. **Hard-won**: anything that took you several attempts to find or work out,
    and what finally worked. Write "none" if nothing did.
 
