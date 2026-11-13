@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_013zxzeRqf691rc3SdLaPbvP
 startedAt: 2026-11-13T00:46:07Z
-endedAt: 2026-11-13T00:59:21Z
+endedAt: 2026-11-13T00:59:40Z
 kind: autonomous
 goal: Daily check of the Platform's own Skills
 status: in-review
@@ -79,11 +79,14 @@ frictions:
   - description: The clear-backlog stranded-worktree friction is hook-written at every close-session call, so a log cannot show whether the final close was clean.
     solution: Have the stranding check record the time or the close count, or write the friction only at the final close.
     severity: minor
-durationSec: 794
+  - description: The Stop hook said a PR merged and demanded close-session while PR 3231 was still open (merge-pr.ts was only polling CI in the background).
+    solution: Have the hook check the PR's merged state, not that merge-pr.ts was started.
+    severity: nit
+durationSec: 813
 models:
-  claude-fable-5-2: 124
+  claude-fable-5-2: 129
 toolCounts:
-  Bash: 34
+  Bash: 36
   Read: 4
   Skill: 4
   Agent: 18
@@ -603,13 +606,13 @@ subagents:
     durationSec: 113
     toolCalls: 31
     modelCalls: 19
-    tokenShare: 6.3
+    tokenShare: 6.2
   - task: Check clear-backlog behaviour
     model: sonnet
     durationSec: 102
     toolCalls: 23
     modelCalls: 19
-    tokenShare: 5.7
+    tokenShare: 5.6
   - task: Check close-session behaviour
     model: sonnet
     durationSec: 80
@@ -621,19 +624,19 @@ subagents:
     durationSec: 91
     toolCalls: 20
     modelCalls: 16
-    tokenShare: 4.6
+    tokenShare: 4.5
   - task: Check dispatch-subagents behaviour
     model: sonnet
     durationSec: 88
     toolCalls: 16
     modelCalls: 10
-    tokenShare: 4.3
+    tokenShare: 4.2
   - task: Check frictions-to-fixes behaviour
     model: sonnet
     durationSec: 84
     toolCalls: 21
     modelCalls: 12
-    tokenShare: 4.1
+    tokenShare: 4
   - task: Check glassbox-curate behaviour
     model: sonnet
     durationSec: 74
@@ -645,7 +648,7 @@ subagents:
     durationSec: 74
     toolCalls: 14
     modelCalls: 9
-    tokenShare: 2.5
+    tokenShare: 2.4
   - task: Check glassbox-update behaviour
     model: sonnet
     durationSec: 77
@@ -663,25 +666,25 @@ subagents:
     durationSec: 78
     toolCalls: 17
     modelCalls: 11
-    tokenShare: 4.6
+    tokenShare: 4.5
   - task: Check log-session behaviour
     model: sonnet
     durationSec: 83
     toolCalls: 19
     modelCalls: 11
-    tokenShare: 4.1
+    tokenShare: 4
   - task: Check prune-trial behaviour
     model: sonnet
     durationSec: 74
     toolCalls: 16
     modelCalls: 9
-    tokenShare: 3.1
+    tokenShare: 3
   - task: Standards review of Inventory diff
     model: sonnet
     durationSec: 26
     toolCalls: 10
     modelCalls: 6
-    tokenShare: 3.2
+    tokenShare: 3.1
   - task: Spec review of Inventory diff
     model: sonnet
     durationSec: 37
