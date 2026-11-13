@@ -22,8 +22,7 @@ paths:
 - **New Tenant:** add a `nuxt.config.ts` (`defineNuxtConfig({})`), then
   `nuxt prepare` before `pnpm lint`. Check a new Collection against ADR-0006
   (only `pages` gets URLs, #573). Create its `area:<tenant>` label and name it
-  in `.github/workflows/pr-area-label.yml` and `auto-triage`'s "Area labels"
-  (`tests/unit/area-labels.spec.ts` checks both).
+  in `.github/workflows/pr-area-label.yml` and `auto-triage`'s "Area labels".
 - **A layer is not a sandbox.** Its `css:` loads on every page (scope it under
   the wrapper class), its plugins and `nuxt.config` flags apply app-wide (keep
   them inert outside the Tenant's opt-in), its `package.json` can't scope a

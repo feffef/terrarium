@@ -1,5 +1,4 @@
-// The PR labeler and `auto-triage` each name every Tenant (#3243): the labeler
-// can't use `layers/*`, since adding a label that doesn't exist fails its run.
+// Why both lists name each Tenant: the header of pr-area-label.yml (#3243).
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
