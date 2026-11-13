@@ -1,0 +1,219 @@
+schemaVersion: 1
+session: session_013zxzeRifuq1jTn2WseeBhP
+startedAt: 2026-11-13T11:01:08Z
+endedAt: 2026-11-13T11:09:11Z
+kind: delegated
+goal: Visitor loop on the Journal
+status: completed
+outcome: "Three visitors toured the Journal; 3 bugs filed or amended, 14 ideas and 2 learnings logged, retro posted on #3244."
+summary: "Human-instructed: the owner started /visitor-loop with the argument 'journal focus'; everything after that followed the Skill's steps (agent-initiated only in the sense of executing them). I fast-forwarded the session branch to origin/main, built and served a production preview, wrote a context file, and sent a blind first-time visitor, a content editor and a UI tester through /t/journal/current. I checked each reported bug against source and the rendered page: filed #3261 (Highlights intro names a removed page) and #3262 (stat buttons and kind chips have near-identical names), and amended #3247 with the Journal tap-target evidence (777 small anchors on the Friction Ledger). I dropped 8 items (not reproduced, already built, or ruled out by decisions.md), then ran the retro with all three visitors and posted the report on #3244. No branch or PR; the branch only mirrors origin/main. Open: the visitors' workflow remarks (cwd rule, launchChromium, how to reach sessions and digests) are candidates C1 to C4 in the #3244 report, not applied."
+prs: []
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: .claude/skills/visitor-loop/visitor-brief.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: scripts/lib/chromium.ts
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: brief and isolation rules for the three visitors
+  - name: close-session
+    reason: closing the run
+  - name: log-session
+    reason: authoring this log
+  - name: visitor-loop
+    reason: (invoked as a slash command)
+frictions:
+  - description: "My first GitHub call (issue_read on #3247) came before I read github-integration.md, which CLAUDE.md says to read first; a hook then asked for it."
+    solution: Read the doc in the same early batch as the other pre-reads, or let the Skill's own step name it.
+    severity: nit
+  - description: I read decisions.md only after filing the bugs, so one idea (a session-log tour strip) was checked against it late.
+    solution: Have step 3 of the visitor-loop Skill name decisions.md as a file to read before marking anything.
+    severity: nit
+  - description: The brief's 'without changing directory' rule has no reason, so two visitors hit ERR_PNPM_RECURSIVE_EXEC_NO_PACKAGE after a cd; the brief also names resolveChromiumPath where launchChromium adds the sandbox flags.
+    solution: In visitor-brief.md say pnpm needs the repo as cwd, and point to launchChromium.
+    severity: minor
+  - description: The brief says to follow the site's links, but Journal sessions and digests open in place, so the UI tester's first crawl stopped at 8 pages.
+    solution: Add a line to the context file saying sessions and digests open in place and where digests live.
+    severity: minor
+  - description: The Stop hook reported one unpushed commit after I fast-forwarded the session branch to origin/main; no commit of mine existed.
+    solution: The hook could count commits not on origin/main; git-conventions.md already gave the push fix.
+    severity: nit
+  - description: One of my own verification scripts had a syntax error in a page.evaluate string and needed a second run.
+    solution: Pass evaluate a plain string built once, as the brief says, and test it on one page first.
+    severity: nit
+durationSec: 482
+models:
+  claude-sonnet-5-5: 96
+toolCounts:
+  Skill: 3
+  Read: 5
+  Bash: 28
+  Agent: 3
+  ToolSearch: 3
+  mcp__github__issue_read: 2
+  mcp__github__issue_write: 2
+  mcp__github__add_issue_comment: 2
+  SendMessage: 3
+  mcp__claude-code-remote__get_session: 1
+  Write: 1
+  mcp__github__update_issue_comment: 1
+filesEdited:
+  - .throwaway/visitor-blind/crawl.ts
+  - .throwaway/visitor-blind/deep.ts
+  - .throwaway/visitor-ui/crawl.ts
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .claude/skills/visitor-loop/visitor-brief.md
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0010.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: native
+        trigger: docs/agents/triage-labels.md
+    reported:
+      - path: .claude/rules/adr-0003.md
+        value: backed
+        why: no branch or PR on this run
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: header on every issue and comment
+      - path: .claude/rules/adr-0009.md
+        value: backed
+      - path: docs/agents/git-conventions.md
+      - path: docs/agents/github-integration.md
+      - path: docs/agents/issue-tracker.md
+      - path: docs/agents/triage-labels.md
+      - path: .agents/skills/visitor-loop/decisions.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .claude/rules/adr-0003.md
+        value: backed
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported: []
+subagents:
+  - type: general-purpose
+    task: Blind first-time visitor
+    model: sonnet
+    durationSec: 210
+    toolCalls: 13
+    modelCalls: 11
+    tokenShare: 10.3
+  - type: general-purpose
+    task: Informed content editor visitor
+    model: sonnet
+    durationSec: 212
+    toolCalls: 13
+    modelCalls: 11
+    tokenShare: 11.4
+  - type: general-purpose
+    task: Informed UI tester visitor
+    model: sonnet
+    durationSec: 214
+    toolCalls: 18
+    modelCalls: 14
+    tokenShare: 12.7
+gitBranch: claude/kind-edison-7yi9dl
+entrypoint: remote
+cliVersion: 2.1.323
+learnings:
+  - Journal sessions and digests are in-page expanders, not links; a link-following crawl stops after about 8 pages, and digests are reachable directly at /t/journal/<space>/digests/<date>.
+  - pnpm exec tsx fails with ERR_PNPM_RECURSIVE_EXEC_NO_PACKAGE when the shell's cwd is outside the repo, so a visitor must not cd into its scratch directory.
+ideas:
+  - "Digest Also-shipped lines: name every PR (a bare number like #2919 on 2026-11-07 tells a reader nothing) and group the long runs, about 25 items on 2026-11-12, into a few themed items."
+  - "Journal Skills and Routines pages: make 'runs on a schedule' one fact, since Skills groups only 7 as ROUTINE while Routines lists 11, with harvest and glassbox under SPECIALIST."
+  - "Journal Routines page: mark a Routine that has not run (harvest shows $0.00 over 0 runs) and say which window each total covers (audit-skills $380 over 30 runs against a four-week table)."
+  - "Journal landing, digests and Ideas page: gloss repeated jargon (Routine, Walkthrough, re-pinned) where it first appears, for example from GLOSSARY.md."
+  - "Journal Ideas page: group the 95 ideas by Tenant and say they are unreviewed; a status mark overlaps an already logged idea."
+  - "Journal landing: open with one plain sentence on what the place is, and show the latest digest news, before the nine stat tiles."
+  - "Journal Friction Ledger: split the 150 to 170 word intro, move the fix-state definitions into a legend below the chart."
+  - "Journal landing KPI tiles: the Frictions tile wraps its severity row so 447 nit sits alone; let the row wrap evenly."
+  - "Journal landing: a worst friction of the week card carrying the agent's own quote, since the most human content is buried in the ledger."
+  - "Journal session feed: filter by outcome, PR or no PR, and friction count, so the archived wall of rows has a way in."
+  - "Journal Friction Ledger: a strip of the three most severe open clusters above the long list."
+  - "Journal digests: a new-since-your-last-visit badge kept in the browser's localStorage."
+  - "Journal Highlights page: a filter by persona or month for the twelve stories."
+  - "Journal landing footer: one descriptive line beside the Midden, Atlas and Tinkerfund links."
+landedBy: Stop
