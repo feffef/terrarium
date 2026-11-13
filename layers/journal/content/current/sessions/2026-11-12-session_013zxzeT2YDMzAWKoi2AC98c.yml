@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeT2YDMzAWKoi2AC98c
 startedAt: 2026-11-12T23:00:51Z
-endedAt: 2026-11-13T00:25:50Z
+endedAt: 2026-11-13T01:01:31Z
 kind: delegated
 goal: "Curate the Glass Box guide: Try-it sections across the guide and Walkthrough order"
-status: in-review
-outcome: Five Try-it PRs merged; PR 3223 (Walkthrough order, owner merge) open; a Sonnet handoff session started
-summary: "The kickoff (a routine-style notification carrying the owner's handoff) asked for repeated autonomous glassbox-curate runs until about 500k context, then a Sonnet handoff; I asked once to confirm mode and handoff, and the owner answered autonomous, several focuses, handoff yes. Everything after was agent-initiated within that ask, each run chosen from the memory page. Runs 1 to 5 rewrote the Try-it sections that gave no step or result, a Subject or batch at a time, each with an opus writer that ran its commands, a sonnet claim check, a review, gate:scoped and a self-merge (PRs 3215, 3216, 3219, 3221, 3222); the claim check caught one false watch sentence on MDC components, fixed. Run 6 built the owner's requested Walkthrough order by file prefix (PR 3223, waits for the owner's merge; no URL changes). Deviations (no Scout, no fresh readers, wording leads left open) are in each run entry. At about 430k context I stopped and created a Sonnet session with unrestricted network and the same instructions (session_013zxzeRxyNcwt53TXLHjTsg). Open: PR 3223 merge, PR 3220 (owner), and the memory page leads."
+status: completed
+outcome: "Six PRs merged: Try-it sections across the guide and the Walkthrough order; a Sonnet handoff session started"
+summary: "The kickoff (a routine-style notification carrying the owner's handoff) asked for repeated autonomous glassbox-curate runs until about 500k context, then a Sonnet handoff; I asked once to confirm mode and handoff, and the owner answered autonomous, several focuses, handoff yes. Everything after was agent-initiated within that ask, each run chosen from the memory page. Runs 1 to 5 rewrote the Try-it sections that gave no step or result, a Subject or batch at a time, each with an opus writer that ran its commands, a sonnet claim check, a review, gate:scoped and a self-merge (PRs 3215, 3216, 3219, 3221, 3222); the claim check caught one false watch sentence on MDC components, fixed. Run 6 built the owner's requested Walkthrough order by file prefix (PR 3223, no URL changes; the owner reviewed it, asked for two reorderings, and then told me in-session to merge it, which I did). Deviations (no Scout, no fresh readers, wording leads left open) are in each run entry. At about 430k context I stopped and created a Sonnet session with unrestricted network and the same instructions (session_013zxzeRxyNcwt53TXLHjTsg). Open: PR 3220 (owner) and the memory page leads."
 prs:
   - "3215"
   - "3216"
@@ -111,25 +111,33 @@ frictions:
   - description: I took a screenshot of the Walkthrough sidebar before reading docs/agents/verifying-ui-changes.md; the hook pointed to it only afterwards. The shot was right anyway.
     solution: Have the read-first hint fire on scripts/ui/preview.ts in a Bash call, not after it.
     severity: nit
-durationSec: 5099
+  - description: My multi-edit Python helper wrote each file as it went and then failed an assertion, so two edits applied only in part (a test and the memory note), costing extra fix commits and a re-run.
+    solution: Check every replacement before writing any file, or use the Edit tool per change.
+    severity: minor
+  - description: I named a run entry with a trailing letter, 2026-11-13T0005b, which the run-start parser may not read; I renamed it before the PR merged.
+    solution: The orientation could print the next free run-entry name when two runs start in the same minute.
+    severity: nit
+durationSec: 7240
 models:
-  claude-sonnet-5-5: 277
+  claude-sonnet-5-5: 333
 toolCounts:
   AskUserQuestion: 1
-  Bash: 78
+  Bash: 93
   Read: 18
   Agent: 15
-  Skill: 9
-  ToolSearch: 3
+  Skill: 10
+  ToolSearch: 4
   mcp__claude-code-remote__get_session: 4
   mcp__github__create_pull_request: 6
   mcp__claude-code-remote__subscribe_pr_activity: 6
-  ReadNotifications: 14
-  mcp__github__pull_request_read: 2
-  mcp__github__add_issue_comment: 5
+  ReadNotifications: 21
+  mcp__github__pull_request_read: 4
+  mcp__github__add_issue_comment: 6
   mcp__claude-code-remote__list_environments: 1
   mcp__claude-code-remote__get_environment: 1
   mcp__claude-code-remote__create_session: 1
+  mcp__github__add_reply_to_pull_request_comment: 1
+  mcp__github__update_pull_request: 1
 filesEdited:
   - 20.decision-records.md
   - 30.ubiquitous-language.md
@@ -154,19 +162,24 @@ filesEdited:
   - nuxt-vue/10.layers.md
   - terrarium-practice/60.protected-paths.md
   - terrarium-practice/40.session-logs.md
-  - layers/glassbox/content/workshop/runs/2026-11-13T0005b.yml
+  - layers/glassbox/content/workshop/pages/index.md
+  - layers/glassbox/content/guide/pages/walkthroughs/80.a-change-goes-live.md
+  - layers/glassbox/content/guide/pages/walkthroughs/80.from-file-to-browser.md
+  - layers/glassbox/content/guide/pages/walkthroughs/90.a-change-goes-live.md
+  - layers/glassbox/content/guide/pages/walkthroughs/90.from-file-to-browser.md
   - layers/glassbox/content/workshop/runs/2026-11-13T0030.yml
+  - layers/glassbox/content/guide/pages/walkthroughs/40.a-friction-becomes-a-fix.md
+  - layers/glassbox/content/guide/pages/walkthroughs/40.session-log-lands-on-main.md
+  - layers/glassbox/content/guide/pages/walkthroughs/50.a-friction-becomes-a-fix.md
+  - layers/glassbox/content/guide/pages/walkthroughs/50.session-log-lands-on-main.md
+  - layers/glassbox/content/workshop/runs/2026-11-13T0005b.yml
   - layers/glassbox/app/pages/t/glassbox/[space]/[...slug].vue
   - layers/glassbox/app/utils/subjects.ts
   - layers/glassbox/content/guide/pages/walkthroughs/10.asking-for-a-change.md
   - layers/glassbox/content/guide/pages/walkthroughs/20.a-bug-report-becomes-work.md
   - layers/glassbox/content/guide/pages/walkthroughs/30.planning-a-big-change.md
-  - layers/glassbox/content/guide/pages/walkthroughs/40.a-friction-becomes-a-fix.md
-  - layers/glassbox/content/guide/pages/walkthroughs/50.session-log-lands-on-main.md
   - layers/glassbox/content/guide/pages/walkthroughs/60.adding-a-site.md
   - layers/glassbox/content/guide/pages/walkthroughs/70.reading-across-tenants.md
-  - layers/glassbox/content/guide/pages/walkthroughs/80.from-file-to-browser.md
-  - layers/glassbox/content/guide/pages/walkthroughs/90.a-change-goes-live.md
   - layers/glassbox/content/guide/pages/walkthroughs/a-bug-report-becomes-work.md
   - layers/glassbox/content/guide/pages/walkthroughs/a-change-goes-live.md
   - layers/glassbox/content/guide/pages/walkthroughs/a-friction-becomes-a-fix.md
@@ -176,7 +189,6 @@ filesEdited:
   - layers/glassbox/content/guide/pages/walkthroughs/planning-a-big-change.md
   - layers/glassbox/content/guide/pages/walkthroughs/reading-across-tenants.md
   - layers/glassbox/content/guide/pages/walkthroughs/session-log-lands-on-main.md
-  - layers/glassbox/content/workshop/pages/index.md
   - layers/glassbox/tests/unit/subjects.spec.ts
   - layers/glassbox/tests/unit/walkthrough.spec.ts
   - layers/glassbox/content/guide/pages/terrarium-practice/70.cross-tenant-reads.md
@@ -852,91 +864,91 @@ subagents:
     durationSec: 347
     toolCalls: 60
     modelCalls: 47
-    tokenShare: 7
+    tokenShare: 5.9
   - task: Claim-check changed Try-it text
     model: sonnet
     durationSec: 39
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 1.4
+    tokenShare: 1.2
   - task: Standards review of Try-it edits
     model: sonnet
     durationSec: 28
     toolCalls: 10
     modelCalls: 4
-    tokenShare: 0.8
+    tokenShare: 0.7
   - task: Spec review of Try-it edits
     model: sonnet
     durationSec: 19
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 0.7
+    tokenShare: 0.6
   - task: Write Nuxt Content Try-it fixes
     model: opus
     durationSec: 314
     toolCalls: 50
     modelCalls: 37
-    tokenShare: 5.7
+    tokenShare: 4.8
   - task: Claim-check Nuxt Content Try-it text
     model: sonnet
     durationSec: 45
     toolCalls: 14
     modelCalls: 10
-    tokenShare: 1.8
+    tokenShare: 1.5
   - task: Standards review of Nuxt Content edits
     model: sonnet
     durationSec: 24
     toolCalls: 8
     modelCalls: 3
-    tokenShare: 0.7
+    tokenShare: 0.6
   - task: Spec review of Nuxt Content edits
     model: sonnet
     durationSec: 16
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 0.6
+    tokenShare: 0.5
   - task: Write Try-it fixes batch three
     model: opus
     durationSec: 250
     toolCalls: 37
     modelCalls: 29
-    tokenShare: 4.7
+    tokenShare: 3.9
   - task: Claim-check batch three Try-it text
     model: sonnet
     durationSec: 36
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 1.5
+    tokenShare: 1.2
   - task: Standards+spec review batch three
     model: sonnet
     durationSec: 26
     toolCalls: 10
     modelCalls: 5
-    tokenShare: 1.5
+    tokenShare: 1.3
   - task: Write Try-it fixes batch four
     model: opus
     durationSec: 239
     toolCalls: 50
     modelCalls: 36
-    tokenShare: 5.6
+    tokenShare: 4.7
   - task: Claim-check and review batch four
     model: sonnet
     durationSec: 63
     toolCalls: 14
     modelCalls: 10
-    tokenShare: 2
+    tokenShare: 1.7
   - task: Write Try-it fixes batch five
     model: opus
     durationSec: 207
     toolCalls: 34
     modelCalls: 23
-    tokenShare: 4.3
+    tokenShare: 3.6
   - task: Review and claim-check batch five
     model: sonnet
     durationSec: 40
     toolCalls: 12
     modelCalls: 7
-    tokenShare: 1.7
+    tokenShare: 1.5
 gitBranch: HEAD
 entrypoint: remote
 cliVersion: 2.1.323
