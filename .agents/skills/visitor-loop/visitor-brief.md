@@ -21,9 +21,9 @@ and `diff`.
 Rules:
 - Drive the browser with a small `playwright-core` script launched with
   `executablePath: resolveChromiumPath()` from `scripts/lib/chromium.ts`.
-  Save each script under {SCRATCH_DIR} and run it without changing directory,
-  as `pnpm exec tsx {SCRATCH_DIR}/<script>`; give every file it writes an
-  absolute path under {SCRATCH_DIR}.
+  Save each script under {SCRIPT_DIR}, where `playwright-core` resolves, and
+  run it without changing directory, as `pnpm exec tsx {SCRIPT_DIR}/<script>`;
+  give every file it writes an absolute path under {SCRATCH_DIR}.
 - Use the cheapest tool that answers each question:
   - **Words and links:** read them as text. One script that walks several
     pages and saves each page's visible text and links to its own file, plus
@@ -33,7 +33,7 @@ Rules:
     body as a string, since `tsx` breaks a function passed to it.
   - **What must be seen** (overlap, clipping, contrast, awkward wrapping,
     images, a first impression): screenshot it and look at the screenshot.
-- Create {SCRATCH_DIR} first and write nothing outside it.
+- Create {SCRATCH_DIR} and {SCRIPT_DIR} first and write nothing outside them.
   Modify nothing else; never `checkout`, `switch` or `reset`. Run every
   command in the foreground. Never stop or restart the server.
 
