@@ -102,13 +102,14 @@ describe('buildEntries()', () => {
       [
         log({ session: 'session_in', ideas: ['in'] }),
         log({ session: 'session_old', endedAt: '2026-09-01T00:00:00Z', ideas: ['old'] }),
-        ...['harvest', 'visitor-loop', 'audit-skills'].map((trigger) => log({ session: `session_${trigger}`, trigger, ideas: ['x'] })),
+        ...['harvest', 'audit-skills'].map((trigger) => log({ session: `session_${trigger}`, trigger, ideas: ['x'] })),
         log({ session: 'session_other', trigger: 'digest', ideas: ['kept'] }),
+        log({ session: 'session_visit', trigger: 'visitor-loop', ideas: ['visited'] }),
       ],
       noState,
       since,
     )
-    expect(entries.map((e) => e.session).sort()).toEqual(['session_in', 'session_other'])
+    expect(entries.map((e) => e.session).sort()).toEqual(['session_in', 'session_other', 'session_visit'])
   })
 
   it('carries the session start, falling back to its end when the log has none', () => {

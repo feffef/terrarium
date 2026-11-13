@@ -446,16 +446,12 @@ Close-up: `prune-trial`.
 1. `visitor-loop` starts on its timer and picks today's focus: one tenant or
    the home page.
 2. It builds a preview of the site.
-3. Three visitor agents in `helper-agents`, each on a different AI model,
-   use the preview without any other context.
-4. It keeps the problems at least two of them hit. A problem only one saw
-   becomes an idea in its log; one outside what it may change becomes an
-   issue.
-5. It opens a fix pull request in `prs`, touching `content` or `code`.
-6. `ci` runs the checks. `visitor-loop` may merge itself.
-7. It opens a feature pull request in `prs` for the one best idea. Scheduling
-   this routine is the maintainer's approval for one feature per run.
-8. `ci` runs the checks. `visitor-loop` may merge itself.
+3. Three visitor agents in `helper-agents` use the preview, each through its
+   own lens: one blind, two that know the focus's last week and may read the
+   repository.
+4. It writes their ideas and its hard-won learnings into its log, for
+   `harvest`, and each bug it confirms as a friction, for
+   `frictions-to-fixes`. It changes nothing else.
 
 Close-up: `visitor-loop`.
 
@@ -593,11 +589,9 @@ it.
 |---|---|
 | focus | today's tenant or the home page |
 | preview | a production build of the site |
-| three visitors | each on a different AI model, with no other context |
-| tally | a problem counts when two of three hit it |
-| fix | one pull request for the agreed problems |
-| feature | one pull request for the best idea |
-| leftovers | ideas into the log; out-of-scope problems into issues |
+| three visitors | one blind, two that know the focus's recent changes, ideas and issues |
+| tally | each report item becomes a bug, an idea or a learning, or is dropped |
+| log | ideas and learnings for `harvest`; confirmed bugs as frictions |
 
 **`container`** (stories 1 and 4)
 
@@ -677,7 +671,7 @@ merges comes from ADR-0004; what each routine may change, from its `SKILL.md`
 | `audit-docs` | the docs, our own skills, the Journal's explainer pages, the last two days of changes, the open trials | fixes to docs and skills; rarely an issue | the fixes touch current docs and our own skills; any change to a file only the maintainer may merge (every decision record included), or a journal page move that changes its address, goes in a second pull request |
 | `audit-skills` | seven days of session logs, the inventory, our skills' text, git history, GitHub | inventory entries; what each routine run cost; issues for serious or repeated failures | only inventory entries and routine run costs change, and every grade change cites at least two sessions |
 | `prune-trial` | the open trials, frictions since each cut, how often the friction ledger's entries recurred, the issue tracker, all agent guidance | one cut per run, its trial entry, restored lines, issues that propose a guard or report moderate damage | the change is prose that can be undone; a decision record changes only in a trial the maintainer started |
-| `visitor-loop` | a preview of the site, the visitors' reports, the maintainer's past corrections, its `decisions.md`, a week of logged ideas | one fix and one feature pull request, `decisions.md`, issues | the changes stay inside existing tenants, or app files a routine may merge |
+| `visitor-loop` | a preview of the site, the visitors' reports, a week of the focus's changes, logged ideas and open issues, its `decisions.md` | its own session log: ideas, learnings, frictions | it changes nothing else |
 | `digest` | each finished day's merged pull requests, commits and session logs | one digest per day; moves older logs and digests to `archived` | the change is digests and the move |
 | `blog-post` | whose turn it is, three days of commits and logs (wider if too quiet), every writer's newest posts | one post; for a reply, also a short backlink note | the change is that post and at most one note, and every claim survived the fact-check |
 | `glassbox-update` | the Glass Box guide pages, the history of `main`, the code the pages cite | the pages that fell behind, and their diagrams | only Glass Box pages and their diagrams change |

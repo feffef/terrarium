@@ -1,7 +1,8 @@
 # Owner decisions
 
-Standing rulings from the owner's corrections. A tally item that contradicts a line
-here is dropped. One line each, in the order added, citing the PR where it was made.
+Standing rulings from the owner's corrections. A visitor-loop idea that contradicts a
+line here is dropped, and `harvest` files no Seedling for one. When the owner rejects
+such an idea or Seedling, add one line, in the order added, citing where it was made.
 
 - Marquee stays unlisted on the homepage (#1316 planning).
 - The Commons is not a homepage card — "not interesting enough for the homepage" (#1316).
