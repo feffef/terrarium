@@ -4,12 +4,15 @@ summary: >-
 cause: >-
   A number is taken from a throwaway script, a measurement window or an eligibility set whose filter was not checked against its source (a dropped outlier, a window start not taken from the issue, an eligibility rule not applied), so the count is wrong even though it was computed. Signals: "throwaway script", "window", "would skip", "eligible".
 surface: safe
-status: tracked
+status: open
 notes: |-
   2026-10-24 design: a CLAUDE.md or doc line dropped: CLAUDE.md already says a count is a fact only after you read every item, it was in context for all 5, and the five causes (eligibility rule, outlier drop, window start, ls headers) share no mechanism a helper could check.
   2026-11-13 design: a midden-survey script that lists closed-unmerged PRs completely is dispatched for the aiFTh occurrence only; the entry's other causes stay as the 2026-10-24 note says.
   2026-11-13: ref cleared; it named issue #2435 (closed 2026-10-23), which split this entry from counts-not-tallied.
-fixes: []
+fixes:
+  - pr: 3238
+    date: "2026-11-13"
+    summary: "midden-survey lists closed-unmerged PRs with a script that pages completely, replacing the search call and hand paging."
 occurrences:
   - session: session_013zxzeRynjgY3G22uZYaKCk
     date: "2026-11-02"

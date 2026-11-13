@@ -2,7 +2,11 @@ name: page-insert-not-reread-in-order
 summary: A paragraph was added to a Glass Box Lesson without rereading the section in order, so the owner found broken flow after merge and a follow-up PR was needed.
 cause: "A point was appended to the nearest paragraph of a Lesson's In Terrarium section and the section was never reread top to bottom: a sentence lost its antecedent, a step sat after the wrong one and one excerpt mixed two approaches; no check or reviewer caught it before merge. Signals: 'never reread ... in order', 'a sentence with no antecedent', 'the owner found, after merge', 'a follow-up PR'."
 surface: safe
-status: tracked
+status: open
+fixes:
+  - pr: 3236
+    date: "2026-11-13"
+    summary: "glassbox-lesson writing-pages.md Check starts with rereading each changed section in order."
 occurrences:
   - session: session_013zxzeRvdzBc3xXGo24TkVf
     date: "2026-11-12"
