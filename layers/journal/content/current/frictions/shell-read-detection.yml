@@ -20,11 +20,6 @@ fixes:
     date: "2026-10-16"
     summary: "Made the shell-read advisory's text neutral: it no longer calls a disputed credit a false positive and tells the agent to check the transcript for the earlier reader."
 occurrences:
-  - session: session_013zxzeQn5ksJrQasTk95LKb
-    date: "2026-10-29"
-    severity: moderate
-    description: "SHELL-READ-DETECTION: for f in SKILL.md rater-brief.md researcher-brief.md writer-brief.md; do echo \"=== $f\"; cat $f; done read all four glassbox-improve files but was not credited."
-    solution: "shell-reads.ts could expand a for-loop over literal names into reads of each path (.agents/skills/glassbox-improve/SKILL.md and the three briefs)."
   - session: session_013zxzePh7qKycsJT9g2eqU1
     date: "2026-11-03"
     severity: moderate

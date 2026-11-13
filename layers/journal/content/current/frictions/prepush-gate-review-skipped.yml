@@ -33,11 +33,6 @@ fixes:
     date: "2026-10-28"
     summary: "pr-workflow.md's simple-change bar now says a simple change adds, renames or moves no file, so a rename sweep gets code-review before its first push."
 occurrences:
-  - session: session_013zxzeT84bc5MXpkCAApyxA
-    date: "2026-10-29"
-    severity: minor
-    description: "I told the Journal agent to push its branch before running code-review on it, breaking ADR-0004's review-before-first-push rule; the review ran after the push, before the PR"
-    solution: "Always run code-review on a subagent's branch before telling it to push, as the dispatch-subagents Skill's Scope-and-trust section says"
   - session: session_013zxzeNZn2iJjZrQj2ortVS
     date: "2026-10-31"
     severity: minor

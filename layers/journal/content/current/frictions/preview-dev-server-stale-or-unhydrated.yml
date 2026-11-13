@@ -2,7 +2,8 @@ name: preview-dev-server-stale-or-unhydrated
 surface: safe
 summary: A UI check against the nuxt dev server showed old code, old CSS or no hydrated page, so a screenshot or DOM probe misled or timed out and was redone.
 cause: "The long-lived dev server (preview.ts start --dev or a cold shot --dev) misses edits to utils or CSS, serves a stale content database after a fast-forward, times out on a cold start, or never hydrates in headless Chromium, so a screenshot or probe reflects old or unhydrated code. Signals: 'stale CSS', 'did not reload', 'content database was stale', 'never hydrated', 'timed out three times', 'probe ran before hydration'. Since PR #3096 (2026-11-11) verifying-ui-changes.md says to build first when a --dev shot looks stale or unhydrated."
-status: open
+status: tracked
+ref: "issue #3235"
 fixes:
   - pr: 3096
     date: "2026-11-11"

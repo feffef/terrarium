@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   A doc that governs new text (a Tenant Skill's voice or title rule, the Tenant's own GLOSSARY.md or ADR, docs/agents/domain.md for a glossary term) is read after the agent drafted or added the text, or not at all, and a reviewer, a hint or the rule's late load finds the miss. Signals: 'without first reading', 'plain-words voice rule', 'domain.md', a Tenant GLOSSARY.md read after the draft, a reviewer correcting wording or a term the doc already settles.
 surface: safe
-status: open
-ref: "Issue #2505 closed by PR #2514."
+status: tracked
+ref: "issue #3234"
 fixes:
   - pr: 2469
     date: "2026-10-23"

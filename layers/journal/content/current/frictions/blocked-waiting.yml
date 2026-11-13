@@ -14,16 +14,6 @@ fixes:
     date: "2026-10-30"
     summary: "CLAUDE.md: in the main session end your turn and let the completion notification wake you; never wait with pgrep -f"
 occurrences:
-  - session: session_013zxzePtHJNqS19fEy1yRGv
-    date: "2026-10-29"
-    severity: nit
-    description: "A Monitor whose until-loop used pgrep -f gate matched its own command line and would never end."
-    solution: "Wait on the gate's background-task notification instead of polling for process names."
-  - session: session_013zxzeQZ6Qwu5TMAKNcgDtH
-    date: "2026-10-29"
-    severity: minor
-    description: "Waited with a pgrep -f loop that matched itself and hung ten minutes; also two other wait loops timed out and had to be stopped."
-    solution: "Use the harness background-completion notification instead of polling loops."
   - session: session_013zxzeQFGrFi821yVm6n746
     date: "2026-11-01"
     severity: nit

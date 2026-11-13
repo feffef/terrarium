@@ -2,7 +2,7 @@ name: gh-api-field-flag-turns-get-into-post
 summary: A gh api call that passed query values with -f became a POST, which GitHub rejected with a 422; nothing was created.
 cause: "gh api switches to POST when given -f or -F fields unless --method GET (or -X GET) is set; sessions listing issues with -f state=open hit the issues endpoint as a create and got 422. Nothing was written only because the body was invalid. Signals: 'gh api', '-f state=open', 'became a POST', '422'."
 surface: safe
-status: open
+status: tracked
 occurrences:
   - session: session_013zxzeR3mLZWKT2R7LWmtqf
     date: "2026-11-12"

@@ -14,11 +14,6 @@ fixes:
     date: "2026-10-31"
     summary: "Redirected the design brief's audit-skills output to a file with a narrow extraction."
 occurrences:
-  - session: session_013zxzeRnPtjPsVQM71SzX63
-    date: "2026-10-29"
-    severity: nit
-    description: "Design subagent had no short path for nit picks where the right design is no change; sections 1 to 5 apply in full, and audit-skills output was 505 KB."
-    solution: "Let the design brief say a pick may stop at section 2 with no change when its cause is a read-past rule, and print docReadCounts alone."
   - session: session_013zxzeSiq7TZmfmF5D5Rbwt
     date: "2026-10-31"
     severity: nit

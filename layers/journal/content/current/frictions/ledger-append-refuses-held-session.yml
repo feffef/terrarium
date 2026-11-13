@@ -11,11 +11,6 @@ fixes:
     date: "2026-11-01"
     summary: "print-ledger-occurrence --append now names every failing entry in one error, still writing nothing on any failure."
 occurrences:
-  - session: session_013zxzeRnPtjPsVQM71SzX63
-    date: "2026-10-29"
-    severity: minor
-    description: "Survey subagent: print-ledger-occurrence --append aborts the whole call on one held session, forcing grep pre-checks; gh api --paginate failed through the proxy."
-    solution: "Let --append skip held sessions and report them; note the proxy pagination workaround in github-integration.md."
   - session: session_013zxzeSiq7TZmfmF5D5Rbwt
     date: "2026-10-31"
     severity: minor

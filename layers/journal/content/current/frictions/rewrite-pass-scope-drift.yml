@@ -8,11 +8,6 @@ status: open
 notes: |-
   2026-10-23 design: a rewrite-discipline line dropped: the two newer sessions were caught by code-review before merge, no session shipped the drift, and the candidate homes sit in open Prune Trial territory.
 occurrences:
-  - session: session_013zxzePQM2TjRCTtcKaV61o
-    date: "2026-10-29"
-    severity: nit
-    description: "First prune dropped four rules and the ledger claimed every rule was kept; code-review caught it before the push."
-    solution: "List every rule in the section before trimming and check each against the new text."
   - session: session_013zxzeRUFEQvJ2mE6PXbv3w
     date: "2026-11-03"
     severity: minor

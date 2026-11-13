@@ -3,6 +3,8 @@ summary: An edit put backticks inside a workflow script's template-literal brief
 cause: "The briefs in .claude/workflows/*.js (clear-backlog-explore.js brief(), rules()) are JavaScript template literals; Markdown backticks typed into them unescaped end the literal, so the file no longer parses. Found by node --check or a failing test, before any run. Signals: 'backticks inside the template-literal brief', 'unescaped backticks', 'syntax error', clear-backlog-explore.js."
 surface: safe
 status: open
+notes: |-
+  2026-11-13 design: comment or edit hook dropped: tests/unit/workflow-scripts.spec.ts already fails on it, both occurrences are nits caught before any run, and an edit hook is Human-only.
 occurrences:
   - session: session_013zxzeShqaQAEUkXf1Hwnd6
     date: "2026-11-11"

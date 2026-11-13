@@ -1,6 +1,6 @@
 name: harvest-step-4-unstated-cases
-summary: The harvest Skill's filing step names no rule for some cases a run meets, so the run guesses.
-cause: "harvest SKILL.md step 4 does not say which kind a mixed cluster counts under for its 5-per-kind cap, nor what to do with a repeat whose earlier issue is closed; one run left two passing clusters unfiled and another filed new issues pointing at the closed ones. Signals: 'Step 4', '5-per-kind cap', 'gives no rule for', 'earlier issue is closed'."
+summary: The harvest Skill's filing step did not say which kind a mixed cluster counts under for its cap, so a run guessed.
+cause: "harvest SKILL.md step 4 did not say which kind a mixed cluster counts under for its 5-per-kind cap; one run left two passing clusters unfiled. PR #3182 added the rule. Signals: 'Step 4', '5-per-kind cap', 'mixed cluster'."
 surface: safe
 status: open
 fixes:
@@ -13,8 +13,3 @@ occurrences:
     severity: minor
     description: "Step 4's 5-per-kind cap does not say which kind a mixed cluster uses, so two passing workflow clusters went unfiled by my guess."
     solution: "Say a cluster counts for the kind of most of its entries (Seedling 3178)."
-  - session: session_013zxzeRqf691rc3SdLaPbvP
-    date: "2026-11-13"
-    severity: minor
-    description: "Step 4 gives no rule for a repeat whose earlier issue is closed (3043, 2987); I filed new issues that point to the closed ones."
-    solution: "audit-skills step 4: say that a repeat after a closed fix gets a new issue naming the old one."

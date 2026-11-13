@@ -7,6 +7,9 @@ fixes:
   - pr: 3106
     date: "2026-11-11"
     summary: "harvest step 3 judges a learning by its doc home, a dropped cluster names the failed test and the summary counts clusters, step 1 reads the list whole from a file, step 4 names the triage docs."
+  - pr: 3137
+    date: "2026-11-12"
+    summary: "harvest checks a per-cluster record and the source read, and limits the simplify test to Platform machinery."
 occurrences:
   - session: session_013zxzeP6PH92ubTps39j3HD
     date: "2026-11-11"

@@ -5,6 +5,7 @@ cause: "A Skill that drafts first and reviews after: the drafter ignores its pla
 status: open
 notes: |-
   2026-11-11 design: lint check or more style prose dropped: the Skill rules were in the drafter's prompt, the review and step-8 catches worked each time, and the breaks share no rule a check could hold.
+  2026-11-13 design: page-check for volatile counts dropped: the counts were written as words, which no check can separate from ordinary prose; the rule was loaded, review caught it before merge, and the rule file is Human-only.
 occurrences:
   - session: session_013zxzeRwYp54RD4CM5MiabZ
     date: "2026-11-09"

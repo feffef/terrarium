@@ -20,11 +20,6 @@ fixes:
     date: "2026-10-25"
     summary: "Cut the Verify-before-you-state family to one plain home in CLAUDE.md and dropped its restatements in four Skills and the build reviewer."
 occurrences:
-  - session: session_013zxzeSgD6cuF2mawqY6jWM
-    date: "2026-10-29"
-    severity: moderate
-    description: "The Q2/Q3 picks to accept two Friction clusters rested on 'every recurrence is minor' without a per-session rate; the owner's question exposed a doubled rate for one"
-    solution: "Triage briefs for regression issues should compare per-session rates before and after the fix, not severities alone"
   - session: session_013zxzeNqa4MUJF5DT5wQ1zf
     date: "2026-11-01"
     severity: nit
