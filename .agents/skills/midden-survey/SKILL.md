@@ -54,10 +54,10 @@ Load schemas via `ToolSearch` before the first call (fully-qualified
 `mcp__github__*` names; see `docs/agents/github-integration.md` for
 pagination/overflow guidance).
 
-- **Closed-unmerged PRs**: `mcp__github__search_pull_requests` with
-  `repo:feffef/terrarium is:pr is:closed is:unmerged`, unqualified by date —
-  a `closed:>=` bound silently under-reports (#1043). Filter to the survey
-  window locally, on each result's own `closed_at`. A PR **superseded by
+- **Closed-unmerged PRs**: `pnpm exec tsx .agents/skills/midden-survey/scripts/closed-unmerged-prs.ts --since YYYY-MM-DD`
+  lists every PR closed without a merge since that date (number, title, head
+  branch, closed time), paged to the window's start; never page `gh api` by
+  hand. A PR **superseded by
   another PR that carried the same change in** fails Gate B — note the
   successor and drop it. These PRs' head refs are also the only place a
   **deleted branch** still surfaces — `list_branches` sees live refs only —
