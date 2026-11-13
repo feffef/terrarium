@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeS7WM4TBNbgtufBjAT
 startedAt: 2026-11-12T23:06:51Z
-endedAt: 2026-11-12T23:53:37Z
+endedAt: 2026-11-13T00:01:48Z
 kind: interactive
 goal: Cost of glassbox-curate runs, then improve its helper tools
-status: in-review
-outcome: Costs reported; PR 3220 open with plain.ts, a term-case page warning, a memory word count and a run loop; waits for the owner's merge
-summary: "Human-instructed: the person asked for the costs of the glassbox-curate runs in the last 6, then 12 hours; later for \"check their session logs as well if the frictions overlap\", for which fixes were worth it, then \"do 1, 2\" plus a loop in the Skill, a better plain.ts output and the page check; they answered my questions (loop ends on budget only and hands over only when told; page check warns on terms collection plus glossary headings; definitions as a note after the paragraph), asked for a note on working around false positives, ran /code-review, said to leave the page fixes to the curate run, said \"yes, add the note and open the PR\", and asked that the scan cover the Glass Box glossary and that the glossary be fixed. Agent-initiated: choosing which retro points to recommend, the shape of the check (skipped spans, word list, proper-noun list), the bare-stem matching, the colon rule, which glossary sentences to lowercase, and subscribing to the PR. Eight costs came from get_session (about $148 for eight sessions in 12 hours); seven retros arrived as messages from other sessions and I took no action on them, only compared them with the session logs. Built plain.ts (bare stems, notes after paragraphs, link titles, code kept as written), the warn-only capitalised-term check, the memory-page word count in orient.ts and a Loop paragraph in SKILL.md; two code-review rounds, three scoped gates green. I told the person the Glass Box words are capitalised on purpose; they asked \"are they?\" and the guide showed they are not, so the glossary headings were added to the word list. They also explained the cause (agents copy capitals from glossary headings), which led to the heading-style note in both glossaries and the sweep of the Glass Box glossary (57 hits). The PR was opened conflicted with main (the glossary was edited upstream); I merged main in and re-applied the sweep. Open: CI on the merged head, the owner's merge, ADR-0021 (the root glossary note is borderline), and the curate run that fixes the 15 guide hits as the first real test of the warning."
+status: completed
+outcome: Costs reported; PR 3220 merged with plain.ts, a term-case page warning, a memory word count and a run loop
+summary: 'Human-instructed: the person asked for the costs of the glassbox-curate runs in the last 6, then 12 hours; later for "check their session logs as well if the frictions overlap", for which fixes were worth it, then "do 1, 2" plus a loop in the Skill, a better plain.ts output and the page check; they answered my questions (loop ends on budget only and hands over only when told; page check warns on terms collection plus glossary headings; definitions as a note after the paragraph), asked for a note on working around false positives, ran /code-review, said to leave the page fixes to the curate run, said "yes, add the note and open the PR", asked that the scan cover the Glass Box glossary, that the glossary be fixed, and that the numbering fact come out of its Two spaces bullet; they merged the PR. Agent-initiated: choosing which retro points to recommend, the shape of the check (skipped spans, word list, proper-noun list), the bare-stem matching, the colon rule, which glossary sentences to lowercase, moving the Lesson numbering rule into the glassbox-lesson Skill so its pointer did not dangle, and subscribing to the PR. Eight costs came from get_session (about $148 for eight sessions in 12 hours); seven retros arrived as messages from other sessions and I took no action on them, only compared them with the session logs. Built plain.ts (bare stems, notes after paragraphs, link titles, code kept as written), the warn-only capitalised-term check, the memory-page word count in orient.ts and a Loop paragraph in SKILL.md; two code-review rounds, three scoped gates green. I told the person the Glass Box words are capitalised on purpose; they asked "are they?" and the guide showed they are not, so the glossary headings were added to the word list. They also explained the cause (agents copy capitals from glossary headings), which led to the heading-style note in both glossaries and the sweep of the Glass Box glossary (57 hits). The PR was opened conflicted with main (the glossary was edited upstream); I merged main in and re-applied the sweep. Still open: the curate run that fixes the 15 guide hits as the first real test of the warning, and whether the root glossary note (borderline under ADR-0021) stays.'
 prs:
   - "3220"
 docsRead:
@@ -21,7 +21,7 @@ docsRead:
   - path: layers/glassbox/page-checks.ts
     reason: (read before editing)
   - path: .agents/skills/glassbox-lesson/owner-decisions.md
-    reason: (no reason given)
+    reason: (read before editing)
   - path: layers/glassbox/GLOSSARY.md
     reason: (read before editing)
   - path: docs/adr/0005-skill-model.md
@@ -38,6 +38,8 @@ docsRead:
     reason: (no reason given)
   - path: docs/adr/0021-multi-context-domain-docs.md
     reason: (no reason given)
+  - path: .agents/skills/glassbox-lesson/SKILL.md
+    reason: (read before editing)
 skillsUsed:
   - name: inspect-session
     reason: ran its cheap-sources route before reading costs
@@ -74,28 +76,33 @@ frictions:
   - description: Several new code comments restated the code; the reviewer flagged them against CLAUDE.md's why-not-what rule and I trimmed one.
     solution: Default to no comment and write only the reason, pointing to the doc that holds it.
     severity: nit
-durationSec: 2805
+  - description: Ran the five-minute gate:scoped three times because follow-up edits kept landing after each green run, and the last two commits went to CI without a local gate.
+    solution: Batch the review fixes and the owner's follow-ups, then run the gate once on the final head before the PR opens.
+    severity: nit
+durationSec: 3297
 models:
-  claude-sonnet-5-5: 276
+  claude-sonnet-5-5: 311
 toolCounts:
   Skill: 4
-  Bash: 91
+  Bash: 98
   ToolSearch: 3
   mcp__claude-code-remote__get_session: 8
-  ReadNotifications: 7
+  ReadNotifications: 13
   AskUserQuestion: 1
   Read: 14
-  Write: 3
+  Write: 4
   Edit: 1
   Agent: 4
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__update_pull_request: 3
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 5
+  mcp__github__pull_request_read: 7
 filesEdited:
   - .agents/skills/glassbox-curate/scripts/plain.ts
   - .agents/skills/glassbox-lesson/writing-pages.md
+  - .agents/skills/glassbox-lesson/SKILL.md
+  - .agents/skills/glassbox-lesson/owner-decisions.md
   - layers/glassbox/GLOSSARY.md
   - layers/glassbox/page-checks.ts
   - GLOSSARY.md
@@ -201,6 +208,7 @@ ruleUse:
       - path: .agents/skills/glassbox-lesson/owner-decisions.md
       - path: .agents/skills/glassbox-lesson/writing-pages.md
       - path: layers/glassbox/GLOSSARY.md
+      - path: .agents/skills/glassbox-lesson/SKILL.md
   - by: general-purpose
     subagent: 0
     answered: true
@@ -280,28 +288,28 @@ subagents:
     durationSec: 19
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 2.7
+    tokenShare: 2.2
   - type: general-purpose
     task: Spec review of branch diff
     model: sonnet
     durationSec: 36
     toolCalls: 10
     modelCalls: 6
-    tokenShare: 3.3
+    tokenShare: 2.8
   - type: general-purpose
     task: Standards review of follow-up diff
     model: sonnet
     durationSec: 12
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 2.5
+    tokenShare: 2.1
   - type: general-purpose
     task: Spec review of follow-up diff
     model: sonnet
     durationSec: 20
     toolCalls: 9
     modelCalls: 5
-    tokenShare: 2.9
+    tokenShare: 2.4
 gitBranch: claude/loving-dijkstra-6ygl94
 entrypoint: remote
 cliVersion: 2.1.323
