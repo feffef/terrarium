@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRbcVWW7Upv1bSok39
 startedAt: 2026-11-13T11:37:32Z
-endedAt: 2026-11-13T12:55:25Z
+endedAt: 2026-11-13T12:58:30Z
 kind: interactive
 goal: Requirements and design draft for a single-site template
-status: in-review
-outcome: "PR 3269: requirements and design draft in docs/design, merge pending green CI"
-summary: "The owner asked (human-instructed) for a deep dig into Terrarium's Skills, scripts, session logs, state files, instructions and issue history to find where the earlier single-site template breakdown was shallow, and for a requirements-only document plus, later, a separate design draft, each ending with a long unclear-points section. The session orchestrated three rounds of Sonnet subagents and kept its own context for writing. After the PR opened, the owner steered many follow-ups (all human-instructed): move the three docs to docs/design; lowercase plain glossary terms avoiding jargon and clashes with Claude Code, GitHub, the stack and Matt Pocock's Skills (problem, sweep, dashboard, verification, a NAME- prefix placeholder, verb commands verify and log); apply the terms to the requirements; add wayfinder-style planning with a session hand-over helper and a rule to extend the pack; prefer cheap checks (lint, types, tests) from the start over a mechanism per failure. A full code-review against main ran and its five agreed fixes landed. The owner then asked to merge once CI is green; merge-pr.ts is polling. Design choices in the draft remain the agent's proposal."
+status: completed
+outcome: "PR 3269 merged: single-site template requirements and design draft in docs/design"
+summary: "The owner asked (human-instructed) for a deep dig into Terrarium's Skills, scripts, session logs, state files, instructions and issue history to find where the earlier single-site template breakdown was shallow, and for a requirements-only document plus, later, a separate design draft, each ending with a long unclear-points section. The session orchestrated three rounds of Sonnet subagents and kept its own context for writing. After the PR opened, the owner steered many follow-ups (all human-instructed): move the three docs to docs/design; lowercase plain glossary terms avoiding jargon and clashes with Claude Code, GitHub, the stack and Matt Pocock's Skills (problem, sweep, dashboard, verification, a NAME- prefix placeholder, verb commands verify and log); apply the terms to the requirements; add wayfinder-style planning with a session hand-over helper and a rule to extend the pack; prefer cheap checks (lint, types, tests) from the start over a mechanism per failure. A full code-review against main ran and its five agreed fixes landed. The owner then asked to merge once CI is green; it merged as 539595a50. Design choices in the draft remain the agent's proposal."
 prs:
   - "3269"
 docsRead:
@@ -245,17 +245,17 @@ frictions:
   - description: Piped log-session.ts --author output through head, which the close-session Skill forbids because refusals print there
     solution: Run log-session.ts unfiltered; it succeeded this time
     severity: nit
-durationSec: 4673
+durationSec: 4858
 models:
   claude-sonnet-5-5: 4
-  claude-opus-5-5: 430
+  claude-opus-5-5: 441
 toolCounts:
   Glob: 2
   Read: 6
-  Skill: 7
+  Skill: 8
   Agent: 23
   AskUserQuestion: 2
-  Bash: 112
+  Bash: 113
   SendMessage: 12
   Grep: 4
   Write: 3
@@ -264,10 +264,11 @@ toolCounts:
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  ReadNotifications: 16
+  ReadNotifications: 19
   mcp__github__pull_request_read: 3
   mcp__github__update_pull_request: 2
   mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - docs/research/single-site-template-requirements.md
   - docs/research/single-site-template-design-draft.md
@@ -1109,14 +1110,14 @@ subagents:
     durationSec: 130
     toolCalls: 21
     modelCalls: 16
-    tokenShare: 1.8
+    tokenShare: 1.7
   - type: Explore
     task: "Own Skills: requirements"
     model: sonnet
     durationSec: 369
     toolCalls: 39
     modelCalls: 32
-    tokenShare: 4.1
+    tokenShare: 3.9
   - type: Explore
     task: "Installed Skills: requirements"
     model: sonnet
@@ -1144,7 +1145,7 @@ subagents:
     durationSec: 446
     toolCalls: 37
     modelCalls: 36
-    tokenShare: 3.6
+    tokenShare: 3.5
   - type: Explore
     task: Instructions, ADRs, Glass Box
     model: sonnet
@@ -1165,7 +1166,7 @@ subagents:
     durationSec: 146
     toolCalls: 18
     modelCalls: 13
-    tokenShare: 1.1
+    tokenShare: 1
   - type: Explore
     task: "R2: unified self-improvement loop"
     model: sonnet
@@ -1200,7 +1201,7 @@ subagents:
     durationSec: 250
     toolCalls: 39
     modelCalls: 27
-    tokenShare: 3.1
+    tokenShare: 3
   - type: claude-code-guide
     task: "Research: Routine cost capture"
     model: sonnet
@@ -1214,7 +1215,7 @@ subagents:
     durationSec: 145
     toolCalls: 27
     modelCalls: 9
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: general-purpose
     task: "R3: stack vs new requirements"
     model: sonnet
@@ -1235,7 +1236,7 @@ subagents:
     durationSec: 121
     toolCalls: 24
     modelCalls: 16
-    tokenShare: 1.9
+    tokenShare: 1.8
   - type: general-purpose
     task: "Review: Standards axis"
     model: sonnet
@@ -1249,14 +1250,14 @@ subagents:
     durationSec: 37
     toolCalls: 9
     modelCalls: 5
-    tokenShare: 1
+    tokenShare: 0.9
   - type: general-purpose
     task: "Full review: Standards axis"
     model: sonnet
     durationSec: 52
     toolCalls: 10
     modelCalls: 6
-    tokenShare: 1.1
+    tokenShare: 1
   - type: general-purpose
     task: "Full review: Spec axis"
     model: sonnet
