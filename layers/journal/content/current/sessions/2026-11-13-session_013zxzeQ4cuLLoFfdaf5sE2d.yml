@@ -1,13 +1,14 @@
 schemaVersion: 1
 session: session_013zxzeQ4cuLLoFfdaf5sE2d
 startedAt: 2026-11-13T00:01:32Z
-endedAt: 2026-11-13T00:48:42Z
+endedAt: 2026-11-13T01:01:13Z
 kind: interactive
 goal: Break down what Terrarium does and what a single-site template should take from it
-status: partial
-outcome: Breakdown drafted and sent to the owner; the stack section waits for a hands-on Astro versus Nuxt Content comparison
-summary: "The owner asked for an overview of the repo, then for proposals on which parts to keep, adapt or redesign for a spin-off: a GitHub template for one small content website per repo with a reduced version of the working model. All of the work was human-instructed: the owner asked to be grilled first (three rounds with the grilling Skill), then set the deliverable himself: read every Glass Box lesson, use explore agents on the source and the recorded state, and break down what Terrarium does at build time, at runtime, in interactive sessions and in Routines, each with a recommendation. I read 22 lessons in full before the owner said the lessons were large and to use explore agents; three agents digested the other 52. Five more agents inventoried build, gate, CI and deploy; Journal and Glass Box at runtime; session guidance, hooks and Skills; Routines and the loop; and recorded usage from the session logs. Two agents researched the stack, one from docs with one-page tests and one building the same site in Astro and in Nuxt Content, which had not reported when this log was written. Agent-initiated parts: checking the plugin claim against the docs myself, proposing session logs on their own branch, and recommending a throwaway pilot site against the owner's \"no\". Nothing was changed in the repo and no PR was opened. The breakdown is a Markdown file in the scratchpad; the earlier research note is not yet saved to docs/research. Still open: the stack section, the owner's six decisions, and whether the result is recorded as an issue."
-prs: []
+status: in-review
+outcome: Breakdown committed as a research note; its PR is open and waits for CI before the merge the owner asked for
+summary: "The owner asked for an overview of the repo, then for proposals on which parts to keep, adapt or redesign for a spin-off: a GitHub template for one small content website per repo with a reduced version of the working model. All of the work was human-instructed: the owner asked to be grilled first (three rounds with the grilling Skill), then set the deliverable himself: read every Glass Box lesson, use explore agents on the source and the recorded state, and break down what Terrarium does at build time, at runtime, in interactive sessions and in Routines, each with a recommendation. I read 22 lessons in full before the owner said the lessons were large and to use explore agents; three agents digested the other 52. Five more agents inventoried build, gate, CI and deploy; Journal and Glass Box at runtime; session guidance, hooks and Skills; Routines and the loop; and recorded usage from the session logs. Two agents studied the stack, one from docs with one-page tests and one building the same site in Astro and in Nuxt Content. The owner then said no stack decision was needed, told me to stop the comparison (it had just finished), and asked for the breakdown to be committed under docs/research with a header giving the date and the task, and merged to main. When I started the code-review Skill he stopped it and said to just commit and push, so the PR was opened without a review or a local gate run, at his word. Agent-initiated parts: checking the plugin claim against the docs myself, proposing session logs on their own branch, and recommending a throwaway pilot site against the owner's \"no\". Still open: CI on the PR, the merge, and the owner's six decisions listed in the note."
+prs:
+  - "3232"
 docsRead:
   - path: README.md
     reason: (no reason given)
@@ -56,6 +57,14 @@ docsRead:
   - path: layers/glassbox/content/guide/pages/agents/10.subagents.md
     reason: (no reason given)
   - path: layers/glassbox/content/guide/pages/agents/20.workflow-scripts.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
     reason: (no reason given)
   - path: /home/user/terrarium/layers/glassbox/content/guide/pages/index.md
     reason: (no reason given)
@@ -185,8 +194,6 @@ docsRead:
     reason: (no reason given)
   - path: layers/glassbox/GLOSSARY.md
     reason: (no reason given)
-  - path: docs/agents/git-conventions.md
-    reason: (no reason given)
   - path: .agents/skills/close-session/SKILL.md
     reason: (no reason given)
   - path: .agents/skills/log-session/SKILL.md
@@ -228,6 +235,8 @@ skillsUsed:
     reason: (no reason given)
   - name: log-session
     reason: (no reason given)
+  - name: code-review
+    reason: (no reason given)
 frictions:
   - description: The Stop hook said a PR merged and demanded close-session, but this session opened and merged no PR; work was still running.
     solution: merge-close-stop should match only this session's own merge-pr.ts run, not the word merged in tool output.
@@ -253,31 +262,53 @@ frictions:
   - description: A usage-analysis agent ran rule-use-report.ts, which writes its report to /tmp outside the agent's scratchpad subfolder.
     solution: Give rule-use-report.ts an --out option, or have it print to stdout.
     severity: nit
-durationSec: 2830
+  - description: ADR-0004 and pr-workflow.md ask for code-review and gate:scoped before a PR that adds a file; the owner stopped the review and said to just commit and push, so both were skipped.
+    solution: Let pr-workflow.md say that the owner's in-session word waives the pre-PR review, as it already does for a Human-only merge.
+    severity: minor
+  - description: My stop message to the stack-comparison agent crossed its finished report, so the note first said the study was stopped early and had to be corrected.
+    solution: Before telling an agent to stop, check whether its hand-back is already queued.
+    severity: nit
+  - description: Writing docs/research/single-site-template-breakdown.md loaded .claude/rules/adr-0027.md and a hint to read the full ADR; neither bears on adding a research note.
+    solution: Narrow that rule's paths from docs/** so docs/research/** is left out.
+    severity: nit
+  - description: The system prompt says never put a model identifier in a commit message, while the attribution reminder and commit-trailer.ts require a Co-Authored-By line that names the model.
+    solution: Say in git-conventions.md that the trailer's model name is the one allowed exception.
+    severity: nit
+durationSec: 3581
 models:
-  claude-fable-5-2: 114
+  claude-fable-5-2: 154
 toolCounts:
-  Read: 24
-  Skill: 5
-  Agent: 12
-  ToolSearch: 1
+  Read: 28
+  Skill: 6
+  Agent: 13
+  ToolSearch: 3
   WebFetch: 2
-  Bash: 14
-  Write: 3
-  Edit: 3
+  Bash: 24
+  Write: 5
+  Edit: 5
   SendUserFile: 1
+  SendMessage: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - docs/research/single-site-template-breakdown.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0017.md
 rulesFollowedUp:
+  - .claude/rules/adr-0027.md
   - .claude/rules/adr-0028.md
+adrHints:
+  - adr: 27
+    via: path
+    readAfter: true
+    by: main
 docsReadBySubagents:
   - GLOSSARY.md
   - layers/journal/GLOSSARY.md
   - layers/glassbox/GLOSSARY.md
-  - docs/agents/git-conventions.md
   - .agents/skills/close-session/SKILL.md
   - .agents/skills/log-session/SKILL.md
   - docs/agents/environment-caveats.md
@@ -319,14 +350,31 @@ ruleUse:
         via: hint
       - rule: .claude/rules/tenant-layers.md
         via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0030.md
+        via: native
+        trigger: docs/adr/0027-prune-trials.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: docs/adr/0027-prune-trials.md
     reported:
       - path: .claude/rules/adr-0009.md
         value: steered
         why: invoked close-session before the session ended
       - path: .claude/rules/adr-0003.md
-        value: backed
-        why: proposed only; built nothing
+        value: steered
+        why: opened the PR myself and subscribed
       - path: layers/glassbox/content/guide/pages/index.md
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: session header on the PR body
+      - path: docs/agents/pr-workflow.md
+      - path: docs/agents/git-conventions.md
   - by: claude-code-guide
     subagent: 0
     answered: false
@@ -740,7 +788,7 @@ ruleUse:
         value: backed
   - by: general-purpose
     subagent: 11
-    answered: false
+    answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
         via: start
@@ -768,50 +816,51 @@ ruleUse:
         via: hint
       - rule: .claude/rules/adr-0013.md
         via: hint
-    reported: []
+    reported:
+      - path: layers/glassbox/content/guide/pages/index.md
 subagents:
   - type: claude-code-guide
     task: Plugin facts for cloud sessions
     durationSec: 47
     toolCalls: 11
     modelCalls: 4
-    tokenShare: 2.5
+    tokenShare: 2.1
   - type: general-purpose
     task: Research stack for site template
     durationSec: 505
     toolCalls: 84
     modelCalls: 28
-    tokenShare: 8
+    tokenShare: 6.6
   - type: Explore
     task: Inventory build, gate, CI, deploy
     durationSec: 191
     toolCalls: 30
     modelCalls: 29
-    tokenShare: 8.3
+    tokenShare: 6.9
   - type: Explore
     task: Inventory Journal and Glass Box runtime
     durationSec: 181
     toolCalls: 31
     modelCalls: 26
-    tokenShare: 7.9
+    tokenShare: 6.5
   - type: Explore
     task: Inventory session guidance and hooks
     durationSec: 168
     toolCalls: 28
     modelCalls: 26
-    tokenShare: 6.6
+    tokenShare: 5.4
   - type: Explore
     task: Inventory Routines and loop Skills
     durationSec: 239
     toolCalls: 49
     modelCalls: 45
-    tokenShare: 10.5
+    tokenShare: 8.7
   - type: Explore
     task: Analyse session logs and Frictions
     durationSec: 588
     toolCalls: 37
     modelCalls: 36
-    tokenShare: 8.9
+    tokenShare: 7.3
   - type: general-purpose
     task: Compare Astro and Nuxt Content hands-on
   - type: Explore
@@ -819,25 +868,27 @@ subagents:
     durationSec: 165
     toolCalls: 22
     modelCalls: 10
-    tokenShare: 3
+    tokenShare: 2.5
   - type: Explore
     task: Digest verification, deploy, walkthrough lessons
     durationSec: 169
     toolCalls: 24
     modelCalls: 7
-    tokenShare: 2.6
+    tokenShare: 2.1
   - type: Explore
     task: Digest stack and web lessons
     durationSec: 168
     toolCalls: 23
     modelCalls: 6
-    tokenShare: 2.7
+    tokenShare: 2.2
   - type: general-purpose
     task: Compare Astro and Nuxt Content hands-on
-    durationSec: 734
-    toolCalls: 46
-    modelCalls: 45
-    tokenShare: 11.2
+    durationSec: 1318
+    toolCalls: 69
+    modelCalls: 68
+    tokenShare: 15.5
+  - type: general-purpose
+    task: Standards review of research note
 gitBranch: claude/trusting-ramanujan-smvji1
 entrypoint: remote
 cliVersion: 2.1.323
