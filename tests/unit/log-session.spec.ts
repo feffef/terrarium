@@ -444,7 +444,8 @@ describe('reportReads (the names reported is picked from)', () => {
     // `exit` throws so a refusal is catchable; `log` lines are what the agent sees.
     function author(
       fixture: { home: string; root: string },
-      { mainSchemaFn = () => null, scratchAbs = join(fixture.root, 'scratch.json'), extra = '', status = 'completed', worktrees }: {
+      { mainSchemaFn = () => null, scratchAbs = join(fixture.root, 'scratch.json'), extra = '', status = 'completed', worktrees, frictions }: {
+        frictions?: object[]
         mainSchemaFn?: (entry: unknown) => { errors: string; unknownKeys: string[] | null } | null
         worktrees?: WorktreeSeam
         scratchAbs?: string
@@ -453,7 +454,8 @@ describe('reportReads (the names reported is picked from)', () => {
       } = {},
     ) {
       const yml = join(fixture.root, 'authored.yml')
-      writeFileSync(yml, authored.replace('completed', status) + extra)
+      const body = authored.replace('completed', status).replace('frictions: []', `frictions: ${JSON.stringify(frictions ?? [])}`)
+      writeFileSync(yml, body + extra)
       const logs: string[] = []
       const errors: string[] = []
       vi.spyOn(console, 'log').mockImplementation((l: string) => void logs.push(l))
@@ -516,6 +518,42 @@ describe('reportReads (the names reported is picked from)', () => {
         expect(frictions).toHaveLength(1)
         expect(frictions[0]).toMatchObject({ severity: 'minor' })
         expect(frictions[0].description).toContain('/r/.claude/worktrees/wt-a')
+      })
+
+      describe('a later author call (#3229)', () => {
+        const clean = seam([finding({})])
+        const run = (...calls: Array<{ worktrees: WorktreeSeam; frictions?: object[] }>) => {
+          const fixture = store(['ls'])
+          const scratchAbs = join(fixture.root, 'scratch.json')
+          for (const c of calls) author(fixture, { status: 'abandoned', scratchAbs, ...c })
+          return JSON.parse(readFileSync(scratchAbs, 'utf8')).frictions as Array<{ description: string }>
+        }
+
+        it('retracts the stranded-worktree Friction when its sweep finds none', () => {
+          expect(run({ worktrees: seam([stranded]) }, { worktrees: clean })).toEqual([])
+        })
+
+        it('keeps it while the worktree is still stranded', () => {
+          const frictions = run({ worktrees: seam([stranded]) }, { worktrees: seam([stranded]) })
+          expect(frictions).toHaveLength(1)
+          expect(frictions[0]?.description).toContain('/r/.claude/worktrees/wt-a')
+        })
+
+        it('never drops an author-written Friction', () => {
+          const own = [{ description: 'my own', solution: 's', severity: 'minor' }]
+          const frictions = run({ worktrees: seam([stranded]), frictions: own }, { worktrees: clean })
+          expect(frictions).toEqual(own)
+        })
+
+        it('retracts nothing when the sweep is skipped', () => {
+          const unreadable: WorktreeSeam = {
+            read: () => {
+              throw new Error('not a repo')
+            },
+            remove: () => [],
+          }
+          expect(run({ worktrees: seam([stranded]) }, { worktrees: unreadable })).toHaveLength(1)
+        })
       })
 
       it('passes cleanly and removes nothing when every linked worktree is clean and unmerged', () => {

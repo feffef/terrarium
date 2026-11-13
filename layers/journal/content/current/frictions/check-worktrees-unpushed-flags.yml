@@ -5,7 +5,7 @@ surface: safe
 status: tracked
 ref: "issue #3229"
 notes: |-
-  2026-11-13 survey: five clear-backlog sessions after PR #3053 still log the hook-written stranded wf_* worktree Friction, some at every close-session call; issue #3229 (audit-skills, opened 2026-11-13) tracks it.
+  2026-11-13 survey: five clear-backlog sessions after PR #3053 still log the hook-written stranded wf_* worktree Friction, some at every close-session call; issue #3229 (audit-skills, opened 2026-11-13) tracks it. The five post-#3053 Frictions were interim-call artifacts: a later log-session call never retracted the hook-written Friction, and those sessions' final calls passed (a completed log is refused while a worktree is stranded). Keep tracked until the retraction fix for #3229 lands.
 fixes:
   - pr: 2728
     date: "2026-10-31"
