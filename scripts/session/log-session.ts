@@ -579,9 +579,13 @@ export function mergedWorktreesToRemove(findings: Finding[], current: string, on
     .map((f) => f.path)
 }
 
+/** Marks the hook-written Friction, so a later clean sweep can retract it. */
+const STRANDED_WORKTREE_FRICTION = 'Linked worktree(s) left with uncommitted or unpushed work at close: '
+
 /** #2721: remove merged worktrees, then refuse a completed or partial log while a
  *  linked worktree holds unrescued work; other statuses may leave work unpushed
- *  on purpose, so they get a Friction instead. */
+ *  on purpose, so they get a Friction instead. A clean sweep retracts an earlier
+ *  call's hook-written Friction (#3229). */
 function sweepWorktreesAtClose(merged: AuthoredScratch, cwd: string, seam: WorktreeSeam): void {
   let swept: ReturnType<WorktreeSeam['read']>
   try {
@@ -593,7 +597,11 @@ function sweepWorktreesAtClose(merged: AuthoredScratch, cwd: string, seam: Workt
   const doomed = mergedWorktreesToRemove(swept.result.findings, swept.current, swept.onMainLine)
   for (const p of doomed.length ? seam.remove(doomed, cwd) : []) console.log(`  removed merged worktree ${p}`)
   const paths = swept.result.failures.map((f) => f.path).sort()
-  if (!paths.length) return
+  if (!paths.length) {
+    // The final call decides (#3229): an earlier call's hook-written Friction no longer holds.
+    merged.frictions = merged.frictions.filter((f) => !f.description.startsWith(STRANDED_WORKTREE_FRICTION))
+    return
+  }
   if (merged.status === 'completed' || merged.status === 'partial') {
     fail(
       `refusing a ${merged.status} log: linked worktree(s) hold uncommitted or unpushed work:\n` +
@@ -601,7 +609,7 @@ function sweepWorktreesAtClose(merged: AuthoredScratch, cwd: string, seam: Workt
     )
   }
   const friction = {
-    description: `Linked worktree(s) left with uncommitted or unpushed work at close: ${paths.join(', ')}`,
+    description: `${STRANDED_WORKTREE_FRICTION}${paths.join(', ')}`,
     solution: 'Push each, or remove it if its work is meant to be dropped.',
     severity: 'minor' as const,
   }
