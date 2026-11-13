@@ -78,7 +78,7 @@ Checked by the writing agent on the day of writing, unless marked.
    (accepted), `edit-during-gate-run` 31, `push-chained-to-gate-run` 11,
    `pr-opened-without-subscribe` 4, `pr-asked-before-opening` 2.
 7. The merge script never touches the session log. The Stop hook that asks for
-   a second log after a merge was needed 4 times
+   a second log after a merge had to prompt a session 4 times
    (`close-session-reminded-by-stop-hook`) and fired with no merge 13 times
    (`merge-close-hint-fires-without-merge`), because it matches a command's
    text, not a merge.
@@ -122,8 +122,8 @@ Checked by the writing agent on the day of writing, unless marked.
 7. **Everything is bounded from the start.** Each read has a cap and a total
    count, each run a work limit, each output a size limit.
 8. **Few concepts, plain words, one home per fact.** The glossary fits on one
-   screen. A standard tool comes before our own code, and the Skill pack does
-   the pack's jobs.
+   screen. A standard tool comes before our own code, and an installed Skill
+   does the job it was installed for.
 
 ## 2. Concepts
 
@@ -141,16 +141,25 @@ names.
 | cause | The root of one or more problems and findings, with its fixes. |
 | sweep | A Skill run on a schedule or on demand that looks after the site and how it is built. |
 | records | Logs, findings, causes, run rows, digests and sweep notes: data, not site content. |
-| owner area | The pages for the owner: dashboard, digests and guide. |
+| owner area | The pages for the owner: the dashboard (sessions, causes, sweeps, cost), the digests and the guide. |
 | verification | The fixed checks a change passes before it may merge; `verify` runs them. |
 | verdict | The posted review result that names the reviewed commit. |
 | protected path | A path whose changes the owner merges. |
 | preset | The one setting that says what agents may merge. |
 | ruling | A standing owner instruction every sweep run obeys. |
 
-Names still open, with the working pick first: the Skill prefix (`NAME-`);
-seed (starter); ruling (owner rule); owner area (console, back office); the
-preset names in section 11.
+Why these words: each is an ordinary word whose everyday meaning is its
+meaning here, and none names a Claude Code or GitHub feature. "Sweep" is used
+because loop, routine and task each do.
+
+Names still open, with the working pick first and alternatives after it:
+
+- the Skill prefix: `NAME-`, until the platform has a name;
+- seed: starter;
+- ruling: owner rule, standing order;
+- owner area: console, back office;
+- the presets `review-all`, `standard`, `hands-off`: supervised, standard,
+  autonomous; or low, medium, high.
 
 Terrarium terms that are not needed: Tenant, Space, Collection, manifest,
 Catalog, Aggregator, Trusted and Public, Friction and Friction Ledger (problem,
@@ -173,7 +182,7 @@ content.config.ts             a typed schema per kind of content
 tests/                        the site's own tests and content rules
 guide/                        guide pages; shown in the owner area, never by the site
 docs/decisions/               decision records; about five shipped
-docs/skill-notes/             repo docs that adapt pack Skills
+docs/skill-notes/             repo docs that adapt installed Skills
 docs/rulings.md               the owner's standing rulings (protected)
 docs/human-steps/             changes only a person or a laptop session can apply
 deploy/                       the deploy setup picked
@@ -190,7 +199,7 @@ platform/
   docs/                       how-tos for agents: git and PRs, issues, caveats, hooks, dispatch
   owner-app/                  the owner area (section 9)
   tests/                      tests of commands and hooks
-.claude/skills/               NAME-* platform Skills and the installed pack
+.claude/skills/               NAME-* platform Skills and the installed Skills
 .claude/rules/                a few hand-written path-scoped rules
 .claude/settings.json         mixed (section 10)
 skills-lock.json              pins every installed Skill
@@ -202,8 +211,8 @@ skills-lock.json              pins every installed Skill
 Kinds of file:
 
 - **platform** (the template owns and updates it): `platform/`, the `NAME-*`
-  Skills, the pack and its lock, `.claude/rules/`, `.github/actions/verify/`,
-  the workflow file.
+  Skills, the installed Skills and their lock, `.claude/rules/`,
+  `.github/actions/verify/`, the workflow file.
 - **seed** (the template provides it once, then the site owns it): `src/`,
   `content/`, `content.config.ts`, `tests/`, `guide/`, `docs/decisions/`,
   `docs/skill-notes/`, `deploy/`, `.github/dependabot.yml`.
@@ -229,7 +238,7 @@ memory/<sweep>.md                         a sweep's size-capped notes
 | | A: a `records` branch, checked out at `.records/` | B: a `records/` folder on `main` |
 |---|---|---|
 | Deploy | A record never touches `main`, so it never rebuilds the site. | Every record is a `main` commit; the deploy must skip commits that touch only `records/`. |
-| Protecting `main` | The ruleset needs no bypass: every `main` commit comes through a PR that passed verification. | The owner's credential needs an "Always" bypass to push records, and that bypass covers every agent session. Only the `log` command narrows it. |
+| Protecting `main` | The ruleset needs no bypass: every `main` commit comes through a PR that passed verification. | The owner's credential needs an "Always" bypass to push records, and that bypass covers every agent session. Nothing on GitHub narrows it; only the commands that write records keep to their own files. |
 | Sync | Nothing to filter; a record can never ride in a PR. | The allow-list must keep `records/` out. |
 | History | `main`'s history is the site's history. | Record commits sit between work commits. |
 | Setup | Every session needs a second checkout, made by the session-start hook **[untested]**. | One tree; a fresh clone has everything. |
@@ -237,8 +246,8 @@ memory/<sweep>.md                         a sweep's size-capped notes
 | Reading | Docs upkeep and the owner area read two trees. | One tree. |
 | Guarding the store | Nothing reviews a push to `records`; a ruleset there can only block deletion and force pushes. | The same, plus the wide bypass on `main`. |
 
-Under both, a public repo makes its records public: the owner chose one repo,
-so owner-only records need a private repo. The writing agent leans to A if
+Under both, a public repo makes its records public. The owner chose one repo,
+so owner-only records mean making the site's repo private. The writing agent leans to A if
 experiment 1 passes.
 
 Writers never collide: a session writes only files named for itself. Only
@@ -249,8 +258,8 @@ sweeps write `causes/` and `memory/`, and only `merge` and `NAME-watch` write
 
 **Proposal: Astro with its Node adapter, content collections and Markdoc.** The
 owner has not decided the stack; this pick makes the rest concrete. The points
-below come from two stack studies run for this work, whose test projects were
-not kept; they were not re-run for this draft.
+below were seen in throwaway test builds and not re-run for this draft, so
+treat each as **[untested]**.
 
 - A content file that breaks its schema fails the build and names the file and
   field, so content validation is the framework's own.
@@ -365,15 +374,16 @@ Deliberately not carried over:
 - a guard that denies a first call until a doc is read;
 - hints that point to a doc after an edit, and tracking of which rules loaded;
 - generated summary rules for decision records;
-- guards against cloud and tool quirks: each starts as a line in the caveats
-  doc and becomes a guard only when it recurs;
+- every other guard against a cloud or tool quirk (the workflow-file guard is
+  the one that ships): each starts as a line in the caveats doc and becomes a
+  guard only when it recurs;
 - locks, slots, step-skipping and an edit guard around verification, whose
   own snapshot covers a changed tree.
 
 ## 7. Skills
 
-Platform Skills carry the `NAME-` prefix, so they never clash with the pack or
-any other installed Skill.
+Platform Skills carry the `NAME-` prefix, so they never clash with an installed
+Skill.
 
 | Skill | Purpose | Replaces in Terrarium |
 |---|---|---|
@@ -386,26 +396,26 @@ any other installed Skill.
 | `NAME-visit` | Sends visitor agents through a preview and reports what they find (section 8.5). | `visitor-loop` |
 | `NAME-digest` | Writes one page per finished day (section 8.6). | `digest` |
 | `NAME-sync` | Runs `sync take` or `sync offer` and resolves conflicts. | new |
-| `NAME-pack` | Updates the installed pack, lists the changed Skills and re-reads every skill note. | by-hand updates |
+| `NAME-skills` | Updates the installed Skills, lists the ones that changed and re-reads every skill note. | by-hand updates |
 | `NAME-next` | Hands the work to a fresh session. | by-hand session creation |
 
-**Pack Skills shipped by default:** `grilling`, `code-review`, `tdd`,
-`diagnosing-bugs`, `domain-modeling`, `triage`, `to-spec`, `to-tickets`,
-`prototype`, `research`, `wizard`, `writing-for-agents`, `retro`, `wayfinder`,
-`handoff` and the pack's setup Skill. **Optional:** `implement`,
-`grill-with-docs`. Every installed Skill is pinned at install, and `verify`
-fails on drift.
+**Installed Skills shipped by default** (from `mattpocock/skills`):
+`grilling`, `code-review`, `tdd`, `diagnosing-bugs`, `domain-modeling`,
+`triage`, `to-spec`, `to-tickets`, `prototype`, `research`, `wizard`,
+`writing-for-agents`, `retro`, `wayfinder`, `handoff` and
+`setup-matt-pocock-skills`. **Optional:** `implement`, `grill-with-docs`.
+Every installed Skill is pinned at install, and `verify` fails on drift.
 
-**Platform Skills wrap the pack and never replace it:**
+**Platform Skills wrap installed Skills and never replace them:**
 
-- A platform Skill calls a pack Skill by name for the pack's job and adds only
-  its own step. `NAME-steer` runs `triage` per issue and `code-review` per
+- A platform Skill calls an installed Skill by name for that Skill's job and
+  adds only its own step. `NAME-steer` runs `triage` per issue and `code-review` per
   branch. `NAME-next` runs `handoff`, then starts the session. `NAME-setup`
-  runs the pack's setup Skill and hands over through `wizard`.
+  runs `setup-matt-pocock-skills` and hands over through `wizard`.
 - Where the platform needs different behaviour, the difference is a file in
-  `docs/skill-notes/` that the pack Skill reads. One ships filled in: only
+  `docs/skill-notes/` that the installed Skill reads. One ships filled in: only
   triage sets a ready label.
-- An installed Skill is never edited. `NAME-pack` treats an upstream rename or
+- An installed Skill is never edited. `NAME-skills` treats an upstream rename or
   deletion as its own listed step and says in its PR which notes it re-read.
 
 **Dispatch rules** for any Skill that briefs other agents live in one file,
@@ -437,7 +447,7 @@ commit:
 
 ```yaml
 id: 2026-11-13-visit-0007     # made by the command
-source: visit                 # watch | docs | visit | retro
+source: visit                 # watch | docs | visit
 session: session_01...        # the run that wrote it
 kind: problem                 # problem | idea | learning
 severity: minor               # nit | minor | moderate | major | blocker; problems only
@@ -463,10 +473,11 @@ covered. Its work per run is bounded, so a run after a day and a run after a
 month are both correct. A sweep is shown as possibly stopped when its last run
 is older than twice the usual gap between its earlier runs.
 
-**Cost is read after the run.** Terrarium's scheduled runs are recorded as
-failing to read their own cost while a later session could read it (not
-re-checked). So any sweep's first step records cost and tokens for finished
-runs that lack them. A figure that cannot be read is stored as "unreported".
+**Cost is read after the run.** Any sweep's first step records cost and tokens
+for finished runs that lack them, on the assumption that a finished run's cost
+is easier to read than a running one's **[untested]**. A figure that cannot be
+read is stored as "unreported", never guessed (Terrarium's
+`get-session-cost-unreported` has 7 occurrences).
 
 ### 8.2 `NAME-watch`
 
@@ -566,20 +577,18 @@ problems reach it.
 ### 8.7 Schedules and cost
 
 - **Default:** every sweep daily. Setup asks, and "off" is a valid answer.
-- **Schedules live in Claude Code, not in the repo** (evidence 13), so the
-  repo stores no cadence and no Skill names one.
+- **Schedules live in Claude Code, not in the repo** (evidence 13).
 - **A reference figure:** at Terrarium's mean cost per run (evidence 11), five
   daily sweeps come to about $33 a day at list price. A small site should
   cost less: the watcher checks at most five Skills, and the visitor sweep no
   longer builds.
-- **No hard budget cap is known** for a scheduled cloud run (earlier docs
-  research, not re-checked), so each sweep is bounded by work, and its run row
-  records an overrun.
+- **No hard budget cap is known** for a scheduled cloud run **[untested]**, so
+  each sweep is bounded by work, and its run row records an overrun.
 - **Cost per subagent** needs OpenTelemetry export **[untested]**; until then
   a run row carries the session's total.
 - Every cost is labelled a list-price estimate.
 
-## 9. The owner area
+## 9. Observability: the owner area
 
 The owner area is a small second app, `platform/owner-app/`, on its own port.
 The site knows nothing of it. Its pages:
@@ -603,7 +612,8 @@ new record shows with no page edit.
 
 **A log's status is derived:** it joins the log's PR numbers with the `prs/`
 rows. `merge` writes a row when it merges; `NAME-watch` writes one for a PR
-the owner merged by hand.
+the owner merged by hand. These rows are the one stored copy of an outside
+fact, kept so the owner area needs no GitHub token.
 
 **Reading records.** The app reads a checkout of the records that the deploy
 refreshes on its cycle, so a new record shows within one cycle with no build.
@@ -611,14 +621,14 @@ On a host with no file system at request time, the fallback is a scheduled
 rebuild of this app **[untested]**.
 
 **Access.** `site.yml` holds one setting each for the guide and the dashboard
-(digests included): owner-only or public. The app's middleware checks an
-owner secret held in the host's environment. Because the app has its own
-port, a host or proxy can also close the whole area. On a host that offers
+(digests included): owner-only, the default, or public. The app's middleware
+checks an owner secret held in the host's environment. Because the app has its
+own port, a host or proxy can also close the whole area. On a host that offers
 one port, the app is mounted under one path prefix instead.
 
 **The guide** starts with the template's pages on how the platform works and
-grows with the site. Its pages are seed files: `NAME-docs` keeps them true to
-the code, and sync never overwrites one the site changed.
+grows with the site. Its pages are seed files, and `NAME-docs` keeps them true
+to the code.
 
 ## 10. Mixed files and sync
 
@@ -630,7 +640,7 @@ glossaries, so sync never edits a file the site writes in.
 | `package.json` | Sync owns the scripts and dev dependencies named in `platform/package-keys.json` and touches nothing else. `verify` fails when a platform script differs from that file. |
 | `.claude/settings.json` | Sync owns the `hooks` key, copied from a file in `platform/hooks/`. Permissions and the rest are the site's. `verify` checks the copy. |
 | `skills-lock.json` | Platform. A site that installs an extra Skill lists it in `site.yml`, and sync keeps that entry. |
-| `platform/protected-paths.yml` | Platform. A site adds its own paths in `site.yml`; `merge` reads both from `main`. |
+| `platform/protected-paths.yml` | Platform. A site adds its own paths in `site.yml`. |
 | `.github/workflows/verify.yml` | Platform, but never applied by a cloud session: sync writes the new file to `docs/human-steps/` with the command to apply it. |
 | `guide/` | Seed. Sync offers new template pages as additions and never overwrites a page the site changed. |
 
@@ -698,8 +708,7 @@ These are two lists and one rule, not a risk tier per path: each preset still
 merges on green by default and names its exceptions.
 
 An owner's word in the session to merge a protected PR is quoted in the merge
-commit and lifts only that refusal. Setup warns that the harness's own
-classifier can still refuse a merge the owner allowed.
+commit and lifts only that refusal.
 
 ## 12. Identity and setup
 
@@ -723,8 +732,8 @@ classifier can still refuse a merge the owner allowed.
    the dashboard, public or private, deploy target.
 3. Write `site.yml`.
 4. Create the issue labels and read them back.
-5. Install the pack and pin it in one step; run the pack's setup Skill to
-   write `docs/skill-notes/`.
+5. Install the Skills and pin them in one step; run
+   `setup-matt-pocock-skills` to write `docs/skill-notes/`.
 6. Set up the records.
 7. Wait for the owner to confirm the ruleset on `main`, with verification as
    a required check, before the first agent PR.
@@ -732,6 +741,8 @@ classifier can still refuse a merge the owner allowed.
 9. Create the sweep schedules.
 10. Deploy the site and the owner area, and confirm the live commit is
     visible from outside the server.
+11. Warn that the harness's own classifier can still refuse a merge the owner
+    allowed.
 
 Steps that need a person or a laptop session:
 
@@ -802,7 +813,7 @@ owner can choose; **[repo]** an agent can settle it from Terrarium's records;
 13. **Which closing-keyword cases `merge` must parse.** **[repo]** The tests
     beside Terrarium's merge script list the cases a real PR hit.
 14. **Which of Terrarium's quirk guards ship on day one.** The draft ships
-    none. **[repo]** Count occurrences per guard-related cause in the Friction
+    only the workflow-file guard. **[repo]** Count occurrences per guard-related cause in the Friction
     Ledger.
 
 ### Sweeps
@@ -821,7 +832,7 @@ owner can choose; **[repo]** an agent can settle it from Terrarium's records;
 
 19. **How much of parallel steering ships first.** The draft ships
     `NAME-steer` serial. **[owner]**
-20. **Which pack Skills earn a place by default.** **[repo]**
+20. **Which installed Skills earn a place by default.** **[repo]**
     `scripts/session/audit-skills.ts --skill <name>` reports each Skill's use.
 21. **Who reviews an offered change on the template:** the owner by hand, or
     a session on the template. **[owner]**
