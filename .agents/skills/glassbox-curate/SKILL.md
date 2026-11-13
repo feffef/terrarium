@@ -1,6 +1,6 @@
 ---
 name: glassbox-curate
-description: Make the Glass Box guide easier to learn from, then fill gaps; one focus per run, one PR (its Remit says which wait for the owner's merge). It runs autonomously, or interactively with a person.
+description: Make the Glass Box guide easier to learn from, then fill gaps; one focus and one PR per run, and another run while the budget lasts (its Remit says which PRs wait for the owner's merge). It runs autonomously, or interactively with a person.
 disable-model-invocation: true
 ---
 
@@ -11,11 +11,11 @@ Second, fill gaps: a technology or process Terrarium relies on that no Lesson
 teaches. Third, every run leaves the memory page shorter (State). You lead and choose the
 steps; improvise.
 
-**Shape.** One focus per run (a Subject, a structural question or a gap). The
-budget is $25 of spend or 500k tokens of context in the main session, whichever
-comes first; Loop, the last step, says how to read it and what it decides. Stop
-at the budget. Several runs a day must work, and a session loops from one run
-to the next.
+**Shape.** A session is a series of runs. Each run has one focus (a Subject, a
+structural question or a gap) and one PR. The budget, for the whole session, is
+$25 of spend or 500k tokens of context in the main session, whichever comes
+first; Loop, the last step, says how to read it and what it decides. Stop at
+the budget. Several runs a day must work.
 
 **Modes.** *Autonomous*: your first message carries a system-reminder
 `Fired by routine "/glassbox-curate"`; decide everything, ask nothing, and say
@@ -96,7 +96,7 @@ keeps them so).
   overlap. Done when every page of the Subject is read in full, plus every
   outside page a change would edit, link or overlap.
 - **Choose.** Pick this run's focus from what you read, preferring concrete
-  memory items you can solve completely within the budget. Fix every reader
+  memory items you can solve completely within the budget that is left. Fix every reader
   finding the run can fix; only what State allows goes on the memory page. The
   run entry says why you chose the focus.
 - **Owner's questions.** Build the option you'd recommend. A question only the
@@ -161,8 +161,8 @@ keeps them so).
   to `pagesRead` before you land. Done when the PR is open, its body gives the
   run's cost (without `get_session`: "unreported" and the token estimate), and the
   memory page and run entry are current. Then Loop.
-- **Loop.** Every run ends here, whether its PR merged or waits for the owner;
-  closing the session straight after Land skips this step. First read the
+- **Loop.** Every run that opened a PR ends here, whether it merged or waits for
+  the owner; closing the session straight after Land skips this step. First read the
   budget. Call `get_session` with no session id: `external_metadata.usage.cost_usd`
   (it appears only partway into a run) and
   `external_metadata.context_usage.used_tokens`. If `get_session` is not among
@@ -174,7 +174,8 @@ keeps them so).
   page-check warnings, Scout topics, pages no fresh reader has seen lately. A
   run adds up to about 100k tokens of context. When the budget leaves room for
   that and a focus remains, start the next run as a full one: orient again, its
-  own focus, run entry, branch from a fresh `origin/main` and PR. Otherwise stop.
+  own focus, run entry, branch from a fresh `origin/main` and PR; in an
+  interactive session, settle that focus with the person first. Otherwise stop.
   Say which in your last message and the session log, with the figure or
   estimate and the focus you saw or found none. Hand over to a new session only
   when the invocation says so: create it with `source_url:
@@ -214,7 +215,7 @@ All in `layers/glassbox/content/workshop/`:
   State a count only after counting its items in their source.
   Each run leaves it shorter: it solves concrete items completely and deletes
   them, never marking one done. It adds only what a later run cannot do itself:
-  an owner question, a one-line gap this run could not fill within its budget
+  an owner question, a one-line gap you could not fill within the budget
   (a gap left uncovered on purpose too), or a decision a later run would
   otherwise redo or reverse. A fact the next run still needs stays as a plain
   current fact under a heading that fits. What a run did goes in its run entry,
