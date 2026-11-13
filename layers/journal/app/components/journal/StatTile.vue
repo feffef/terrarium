@@ -31,6 +31,7 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', closeOnTapOff)
           type="button"
           class="stat"
           :class="{ open: openTip === tipId(s.key) }"
+          :aria-label="`${s.label}: ${s.value}`"
           :aria-describedby="tipId(s.key)"
           @click="toggleTip(tipId(s.key))"
           @keydown.escape="openTip = null"

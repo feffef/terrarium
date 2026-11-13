@@ -492,6 +492,15 @@ describe('journal Tenant', async () => {
     })
   })
 
+  it('names each KPI stat "label: value" and each kind chip for the filter it applies', async () => {
+    await withRendered('/t/journal/current', async (page) => {
+      await page.locator('.tiles .stat').first().waitFor()
+      const stat = page.getByRole('button', { name: /^interactive: \d+$/ })
+      expect(await stat.count()).toBe(1)
+      expect(await page.getByRole('button', { name: /^Show interactive sessions \(\d+\)$/ }).count()).toBe(1)
+    })
+  })
+
   it('shows no KPI tiles or Frictions chart on archived', async () => {
     const html = await $fetch<string>('/t/journal/archived')
     expect(html).not.toContain('class="tiles')
@@ -543,7 +552,7 @@ describe('journal Tenant', async () => {
       await chips.last().click()
       const n = Number((await page.locator('.kind-chip[aria-pressed="true"]').textContent())!.match(/\d+/)![0])
       expect(await shown()).toBe(Math.min(10, n))
-      await page.getByRole('button', { name: /^All \d+$/ }).click()
+      await page.getByRole('button', { name: /^Show every session \(\d+\)$/ }).click()
       expect(await page.locator('.kind-chip[aria-pressed="true"]').textContent()).toMatch(/^\s*All/)
     })
   })
