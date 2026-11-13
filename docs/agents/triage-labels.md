@@ -26,6 +26,10 @@ the AFK-ready triage label"), use that string.
 > `ready-for-agent`; don't apply it), except a spec on hold, which carries no
 > label (`issue-tracker.md`, Specs).
 
+> **Area labels.** `area:<tenant>`, `area:homepage` and `area:platform` say
+> which part an issue is about; the `auto-triage` sweep sets them, and a
+> workflow sets them on PRs.
+
 > **Requester-trust gate.** A Public issue reaches `ready-for-agent` only
 > after a Trusted user approves it (ADR-0020), except in the guest pipeline
 > (ADR-0023). What the `auto-triage` sweep may label: ADR-0022.
