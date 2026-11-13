@@ -27,26 +27,34 @@ marked **(spike)**, and section 13 lists those spikes.
    never rebuilt into the site, so landing a log never triggers a deploy.
 5. **Mechanical first, agent second.** A check that a script can do never
    costs an agent. Agents only judge.
-6. **Every loop reports in the same shape and through the same intake.** One
+6. **Every sweep reports in the same shape and through the same intake.** One
    finding format, one dedupe, one place the owner looks.
 
 ## 2. Concepts (the template's whole glossary)
 
+Terms are written in lowercase, here and in prose. The glossary is a list of
+plain words with a fixed meaning, not proper names. Capitalising them is how
+project jargon spread through Terrarium's prose, so a term is capitalised only
+where an ordinary word would be: at the start of a sentence or in a heading.
+Each term was picked to avoid a clash with Claude Code, GitHub or the stack:
+not "Friction" (project jargon), not "loop" (a Claude Code command), not
+"routine" or "task" (Claude Code features), not "seed" (database seeding).
+
 | Term | Meaning |
 |---|---|
-| **Owner** | The one person who steers the site and merges what agents may not. Replaces Terrarium's "Trusted user". |
-| **Session** | One Claude Code conversation that does work on the repo. |
-| **Session log** | The record a session leaves: goal, outcome, Frictions, ideas, plus machine facts. |
-| **Friction** | Anything that cost the session time or went wrong, graded nit to blocker. |
-| **Finding** | Anything a loop reports for follow-up: a bug, a stale doc, a skipped step. It uses one shape for every loop. |
-| **Cause** | A root cause that groups Frictions and Findings. It carries fixes and a status: open, fixing, accepted. |
-| **Loop** | A Skill that runs on a schedule or on demand: watch, improve, docs, visit, digest. Replaces Terrarium's "Routine", which named only the scheduled run. |
-| **Gate** | The one command that decides whether a change may merge. |
-| **Verdict** | The posted review result naming the reviewed commit. |
-| **Protected path** | A path whose changes the owner merges. |
-| **Autonomy preset** | One of three settings that decide what agents may merge. |
-| **Owner rules** | A short file of the owner's standing decisions that every loop obeys. |
-| **Platform / seed / site** | The three kinds of file (section 3). |
+| **owner** | The one person who steers the site and merges what agents may not. Replaces Terrarium's "Trusted user". |
+| **session** | One Claude Code conversation that does work on the repo. |
+| **session log** | The record a session leaves: goal, outcome, problems, ideas, plus machine facts. |
+| **problem** | Anything that cost a session time or went wrong, graded nit to blocker. Replaces Terrarium's "Friction". |
+| **finding** | Anything a sweep reports for follow-up: a bug, a stale doc, a skipped step. It uses one shape for every sweep. |
+| **cause** | A root cause that groups problems and findings. It carries fixes and a status: open, fixing, accepted. |
+| **sweep** | A Skill that runs on a schedule or on demand to check or maintain the site: watch, improve, docs, visit, digest. Replaces Terrarium's "Routine". |
+| **gate** | The one command that decides whether a change may merge. |
+| **verdict** | The posted review result naming the reviewed commit. |
+| **protected path** | A path whose changes the owner merges. |
+| **autonomy preset** | One of three settings that decide what agents may merge. |
+| **owner rules** | A short file of the owner's standing decisions that every sweep obeys. |
+| **platform, starter, site** | The three kinds of file (section 3). "Starter" replaces the breakdown's "seed". |
 
 Terrarium terms that go:
 - Tenant, Space, Collection kind, Catalog and Aggregator, which existed only
@@ -75,18 +83,18 @@ platform/                     everything that flows back to the template
 .github/
   workflows/gate.yml          thin shell; human/laptop only (REQ §1.3)
   actions/gate/               the steps, agent-pushable
-CLAUDE.md                     seed: site notes + `@platform/CLAUDE.platform.md`
-GLOSSARY.md                   seed: site terms, links to the platform glossary
+CLAUDE.md                     starter: site notes + `@platform/CLAUDE.platform.md`
+GLOSSARY.md                   starter: site terms, links to the platform glossary
 docs/adr/                     site decisions
 docs/guide/                   the site guide (seeded with platform chapters)
-.journal/                     site data: logs, causes, loop memory, run costs
+.journal/                     site data: logs, causes, sweep memory, run costs
 src/ or app/                  the site itself (stack-dependent)
 ```
 
 - **Platform:** everything under `platform/`, `.claude/skills/p-*`,
   `.claude/rules/` and `.github/actions/gate/`, plus the guide's platform
   chapters.
-- **Seed:** `CLAUDE.md`, `GLOSSARY.md`, the guide's site chapters, the
+- **Starter:** `CLAUDE.md`, `GLOSSARY.md`, the guide's site chapters, the
   hello-world site and `docs/adr/`.
 - **Site:** `.journal/`, content and the site's code.
 
@@ -130,7 +138,7 @@ its current Terrarium shape.
 
 Shared helpers (GitHub REST with paging that throws on gaps, full-history
 check, provenance header) sit in `platform/bin/lib/`. Nothing else is a script
-until a recurring Friction asks for one.
+until a recurring problem asks for one.
 
 ## 6. Hooks
 
@@ -164,10 +172,10 @@ Platform Skills, all prefixed `p-`:
 | `p-setup` | First-run setup and the human/laptop checklist (via `wizard`) | new |
 | `p-close` | Write the judgement half of the log; call `land` | close-session, log-session |
 | `p-steer` | Triage the open issues, ask once, build in parallel, review, ship, report one line per issue (later version: parallel; v1: serial) | clear-backlog, auto-triage, dispatch-subagents |
-| `p-improve` | The one self-improvement loop | frictions-to-fixes, harvest, prune-trial |
+| `p-improve` | The one self-improvement sweep | frictions-to-fixes, harvest, prune-trial |
 | `p-watch` | The watcher | audit-skills |
 | `p-docs` | Docs upkeep and the guide | audit-docs, glassbox-update, glassbox-curate |
-| `p-visit` | The visitor loop, report only | visitor-loop |
+| `p-visit` | The visitor sweep, report only | visitor-loop |
 | `p-digest` | Daily owner digest | digest |
 | `p-sync` | Take template updates, offer platform changes back | new |
 
@@ -179,23 +187,23 @@ The installed pack ships:
 
 All are pinned at install (REQ §1.4).
 
-**Brief contract for every loop that dispatches agents.** These are the
-dispatch rules of REQ §3.6. They live in one reference file that each loop's
+**Brief contract for every sweep that dispatches agents.** These are the
+dispatch rules of REQ §3.6. They live in one reference file that each sweep's
 Skill reads as its first step. There is no guard that denies the first call
 (REQ §3.1).
 
-## 8. Loops
+## 8. Sweeps
 
 ### 8.1 One finding shape and one intake
 
-Every loop (watch, docs, visit, improve's own review, and a session's retro)
+Every sweep (watch, docs, visit, improve's own review, and a session's retro)
 writes findings in one shape:
 
 ```yaml
-- id: <loop>-<date>-<n>
-  loop: visit            # watch | docs | visit | session | retro
+- id: <sweep>-<date>-<n>
+  sweep: visit            # watch | docs | visit | session | retro
   run: <session id>
-  kind: bug | stale-doc | skipped-step | idea | friction
+  kind: bug | stale-doc | skipped-step | idea | problem
   severity: nit | minor | moderate | major | blocker
   where: <url path or file:line>
   what: <what is wrong now, quoting it>
@@ -205,12 +213,12 @@ writes findings in one shape:
   proposal: <smallest fix, optional>
 ```
 
-Findings go to `.journal/findings/<date>.yml`. Session Frictions stay in the
+findings go to `.journal/findings/<date>.yml`. Session problems stay in the
 log, and `p-improve` reads both.
 
 ### 8.2 `p-improve`
 
-1. **Collect** findings and Frictions since its last run, from the run record.
+1. **Collect** findings and problems since its last run, from the run record.
 2. **Dedupe** against open and closed issues, the cause store, owner rules,
    accepted causes and recent findings. Attach repeats to their earlier item.
 3. **Group** into causes. A cause that came back after a fix goes to the owner
@@ -224,14 +232,14 @@ log, and `p-improve` reads both.
 Rules:
 - It never edits installed Skills, ADRs, hooks or settings.
 - It may propose a cut and record it as a trial in the cause's notes, judged by
-  later Friction share. There is no trial ledger.
+  later problem share. There is no trial ledger.
 
 ### 8.3 `p-watch`
 
 **Daily and mechanical,** no agent:
 - orphan logs (PRs and commits that name a session with no log);
 - logs left "in review" after their PR merged;
-- loops with no run in two cadences;
+- sweeps with no run in two cadences;
 - the review verdict missing before a merge;
 - issue and PR states that comments claim;
 - installed-Skill drift;
@@ -299,12 +307,12 @@ The owner changes these at setup.
 
 **Cost recording:**
 - **Default:** `p-watch` reads each finished run's total from the platform and
-  appends it to `.journal/runs/<loop>.yml`. This works after a run ends: 8 of 8
+  appends it to `.journal/runs/<sweep>.yml`. This works after a run ends: 8 of 8
   in #2987.
 - **Option:** OpenTelemetry from the cloud environment, configured outside the
   repo, to attribute cost to subagents and models **(spike)**.
 
-**Budget:** each loop bounds its own work (items, agents, pages) rather than
+**Budget:** each sweep bounds its own work (items, agents, pages) rather than
 reading its spend mid-run. A hard cap via a nested `claude -p --max-budget-usd`
 is a **(spike)** (REQ §4.6).
 
@@ -314,11 +322,11 @@ One owner-only route, `/journal`, rendered on demand and reading `.journal/` at
 request time. Its parts:
 
 - **Sessions:** newest 100 with a total count. Each card shows goal, status,
-  outcome, PRs, Frictions by severity, duration, models, and subagent share of
+  outcome, PRs, problems by severity, duration, models, and subagent share of
   tokens.
 - **Causes:** the Ledger, with a 7-day window and fix state derived from later
   occurrences.
-- **Loops:** each loop's last runs, its cost per run and per week (labelled
+- **Sweeps:** each sweep's last runs, its cost per run and per week (labelled
   estimate), whether it is possibly stopped, its open memory size, and Skill
   state.
 - **Digests:** newest first.
@@ -332,13 +340,13 @@ setup. A demo site can turn the check off.
 **Why request time:** a log landing then never needs a deploy. The running
 server reads `.journal/` from a checkout it updates on a timer
 **(spike: how the host gets new logs without a rebuild)**. If the host can't,
-the Journal reads the log files through the GitHub API with a short cache.
+the journal page reads the log files through the GitHub API with a short cache.
 
 ## 10. Mixed files and sync
 
 | File | Approach |
 |---|---|
-| `CLAUDE.md` | Seed. It imports `@platform/CLAUDE.platform.md`, so the platform text syncs as a file. |
+| `CLAUDE.md` | Starter. It imports `@platform/CLAUDE.platform.md`, so the platform text syncs as a file. |
 | Glossary | Two files: `GLOSSARY.md` (site) links to `platform/GLOSSARY.platform.md`. |
 | `.claude/settings.json` | Mixed; it cannot be split for cloud sessions. Keep platform entries as one-line calls to `platform/hooks/*`, so they rarely change. Sync merges keys: the platform owns `hooks`, the site owns the rest. |
 | `package.json` | Mixed. Platform scripts are one-line aliases (`"gate": "tsx platform/bin/gate.ts"`). Sync merges the `scripts` keys it lists and adds platform devDependencies. A lockfile change follows. |
@@ -361,11 +369,11 @@ own sites only. It runs in a single-repo or laptop session. It never touches
 
 ## 11. Autonomy presets
 
-| Preset | Agents may merge | Loops may self-merge | Protected paths |
+| Preset | Agents may merge | Sweeps may self-merge | Protected paths |
 |---|---|---|---|
 | **Supervised** | nothing; the owner merges every PR | no | everything |
 | **Standard** (default) | their own PRs after verdict and green gate | docs, digest and improve PRs on safe surfaces | gate, `merge`, hooks, settings, the preset itself, workflows, `.journal/owner-rules.md` |
-| **Autonomous** | as Standard, plus dependency minors and patches | all loops | the same short list |
+| **Autonomous** | as Standard, plus dependency minors and patches | all sweeps | the same short list |
 
 The preset is one line in `platform/manifest.yml` that `merge` reads from the
 shared branch. Changing it is itself a protected-path change.
@@ -436,7 +444,7 @@ Each item names where the answer probably lies:
 3. **One manifest or two?** The manifest holds both the path list and the
    recorded template commit. Sync writes the second every time, which may
    conflict when two syncs overlap. **Owner** on simplicity; **Repo:** none.
-4. **Where `.journal/` lives** if the repo is public but the Journal is
+4. **Where `.journal/` lives** if the repo is public but the journal page is
    owner-only. Files in a public repo are public whatever the site's access
    check does. A private data branch, a private second repo, or accepting
    public logs? **Owner.**
@@ -460,7 +468,7 @@ Each item names where the answer probably lies:
 8. **Whether a Stop reminder is enough for re-logging after a merge.** In
    Terrarium 18 sessions still forgot it despite a hook. An alternative is
    for `merge` itself to call `land` with status completed. **Repo:** check
-   why the existing stop hook didn't prevent those 18; the friction texts
+   why the existing stop hook didn't prevent those 18; the problem texts
    name the cause.
 9. **The provenance guard's write paths.** Cloud sessions write through MCP,
    REST and git. Laptop sessions may use `gh` with GraphQL, which the guard
@@ -470,7 +478,7 @@ Each item names where the answer probably lies:
     subscription. Does `ship` wait in the foreground, hand back to the owner,
     or schedule a check? **Owner.**
 
-### Loops
+### Sweeps
 
 11. **The cap per run for `p-improve`.** Terrarium used at most 10 picks and 3
     issues per run. Is that right for a site with far fewer sessions?
@@ -483,25 +491,25 @@ Each item names where the answer probably lies:
     fields) or needed judgement.
 13. **The memory cap for docs upkeep.** 800 words is a guess, a third of
     Terrarium's 2,500 for a much larger guide. **Owner.**
-14. **What the visit loop's personas and tasks are for a site with no
+14. **What the visit sweep's personas and tasks are for a site with no
     shop.** Task-directed visitors need a task. Who writes the tasks: the
-    owner at setup, or the loop from the site's pages? **Owner.**
+    owner at setup, or the sweep from the site's pages? **Owner.**
 15. **How findings stay small.** One file per day under `.journal/findings/`
     grows without end. Does `p-improve` delete findings it has processed, move
     them into causes, or archive them? **Owner** on retention; **Repo:**
-    the Ledger's 14-day horizon is the existing answer for Frictions.
-16. **Whether the session retro is a loop input.** The installed `retro`
+    the Ledger's 14-day horizon is the existing answer for problems.
+16. **Whether the session retro is a sweep input.** The installed `retro`
     Skill writes a session's own retrospective. Should every session run it,
-    only long ones, or none (Frictions already cover it)? **Repo:** the 26
-    sessions that used `retro` show what it added beyond their Frictions.
+    only long ones, or none (problems already cover it)? **Repo:** the 26
+    sessions that used `retro` show what it added beyond their problems.
 
 ### Observability
 
 17. **How the owner secret works with the cloud preview.** Agents verify the
-    Journal page with screenshots of a local build. The check must be off or
+    journal page with screenshots of a local build. The check must be off or
     known locally. **Owner** on the mechanism.
-18. **What the Journal shows on a laptop-only site.** If there is no deploy
-    yet, is the Journal a local page, or a script printing a summary?
+18. **What the journal page shows on a laptop-only site.** If there is no deploy
+    yet, is the journal page a local page, or a script printing a summary?
     **Owner.**
 19. **Per-subagent cost without telemetry.** The default records a run's total
     only. Subagent share of tokens comes from the transcript, which counts
@@ -525,7 +533,7 @@ Each item names where the answer probably lies:
     conflict follows every sync that changes them. **Spike** in the pilot.
 24. **Whether the template itself runs the platform.** The template repo needs
     its own gate and perhaps its own logs to be improved by agents. Is it a
-    site with an empty seed, or a plain repo? **Owner.**
+    site with an empty starter, or a plain repo? **Owner.**
 25. **The machine-user token's lifetime and rotation.** A fine-grained token
     expires, and someone must rotate it in the cloud environment and on the
     laptop. **Owner** on whether the identity option is worth that.
