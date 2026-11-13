@@ -221,6 +221,10 @@ describe('ideaLines()', () => {
     ])
   })
 
+  it('ignores blank match words, so an empty --match filters nothing', () => {
+    expect(ideaLines(records, ['', ' '])).toHaveLength(3)
+  })
+
   it('folds a multi-line note onto one line', () => {
     expect(ideaLines([idea('first\n  second', '2026-11-13T00:00:00.000Z')])).toEqual(['2026-11-13 first second'])
   })

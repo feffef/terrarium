@@ -58,7 +58,8 @@ sections on today's focus, each "none" when empty:
   `.md` dropped and `index.md` as its folder's root;
 - merged PRs: `git log origin/main --first-parent --merges --since=7.days --date=short --format='%ad %s: %b' -- <files>`;
 - ideas already logged: `pnpm exec tsx .agents/skills/visitor-loop/scripts/ideas.ts list --days 7 --match <words>`,
-  with the focus and its Space names as the words;
+  the words being the focus and its Space names, comma-separated
+  (`--match midden,trench,stores`);
 - open issues: the titles in `pnpm exec tsx scripts/github/list-open-issues.ts`
   that name the focus or its pages, with their numbers.
 

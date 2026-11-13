@@ -138,7 +138,7 @@ export function recentIdeas(records: NoteRecord[], days: number, now = new Date(
 /** Ideas as plain dated lines, newest first, for a visitor to read; with
  *  `match`, only ideas whose text holds one of the words (case-insensitive). */
 export function ideaLines(records: NoteRecord[], match: string[] = []): string[] {
-  const words = match.map((w) => w.toLowerCase()).filter(Boolean)
+  const words = match.map((w) => w.trim().toLowerCase()).filter(Boolean)
   return records
     .filter((r) => !words.length || words.some((w) => r.note.toLowerCase().includes(w)))
     .sort((a, b) => b.date.localeCompare(a.date))
@@ -194,7 +194,7 @@ export function cmdGather(cwd = root, threshold = CLUSTER_THRESHOLD, days?: numb
   return { total: records.length, clusters: buildNoteClusters(records, threshold) }
 }
 
-export function cmdList(cwd = root, days: number, match: string[]): string[] {
+export function cmdList(days: number, match: string[], cwd = root): string[] {
   return ideaLines(recentIdeas(gatherNoteRecords(readSessionNoteMaterials(cwd)), days), match)
 }
 
@@ -212,8 +212,7 @@ function main(): void {
     process.stdout.write(JSON.stringify(cmdGather(root, threshold, days), null, 2) + '\n')
   } else if (cmd === 'list') {
     if (days === undefined) fail('list needs --days <n>')
-    const match = (flagValue(argv, '--match') ?? '').split(',').map((w) => w.trim())
-    const lines = cmdList(root, days, match)
+    const lines = cmdList(days, (flagValue(argv, '--match') ?? '').split(','))
     process.stdout.write(lines.length ? lines.join('\n') + '\n' : 'none\n')
   } else {
     fail(`unknown command "${cmd ?? ''}" — expected: gather [--threshold <n>] [--days <n>] | list --days <n> [--match <word,word>]`)
