@@ -82,7 +82,7 @@ Each may be true; a later run should read the tool's source or run it.
 ### Soft decisions
 
 Decisions agents made (run, review, claim check). Not rules: the owner or a later agent may overrule one with evidence, or drop it once changed content makes it obsolete. Write each here as it is made, with what decided it. Only what the owner settled in a session goes in `owner-decisions.md`; when the owner confirms one of these, move it there.
-- **Walkthroughs are ordered by file prefix, not title.** Nine stories, from how a request becomes a merged PR to deployment last; a new one takes the number between two others, as Lessons do.
+- **Walkthroughs are ordered by file prefix, not title.** Nine stories, from how a request becomes a merged PR to deployment last; a new one takes the number between two others, as Lessons do. A session log reaching `main` comes before a friction becoming a fix: the owner says logs on `main` are what lets frictions be picked up.
 - **A guard is any hook that can block, a `Stop` blocker included.** `docs/agents/guards.md` lists the three Stop blockers in its Guard column, so *Claude Code hooks* defines a guard that way and a hint as a hook that only adds advice (a fresh reader found the `PreToolUse`-only wording clashing with the roster).
 - **Author trust keeps its title.** It is clearer than the field name, and its lede names `author_association` (review).
 - **A missing `publishedAt` on a page whose teaching hasn't changed is not a deficit.** Adding one shows an old page on the Commons Timeline as new (review).
