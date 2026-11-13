@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeS7WM4TBNbgtufBjAT
 startedAt: 2026-11-12T23:06:51Z
-endedAt: 2026-11-13T09:43:35Z
+endedAt: 2026-11-13T12:58:46Z
 kind: interactive
 goal: Cost of glassbox-curate runs, then improve its helper tools and loop
-status: in-review
-outcome: Costs reported; PR 3220 merged (plain.ts, term-case warning, word count, run loop); PR 3258 open to make the loop the last step
-summary: "Human-instructed: the person asked for the costs of the glassbox-curate runs in the last 6, then 12 hours; later for \"check their session logs as well if the frictions overlap\", for which fixes were worth it, then \"do 1, 2\" plus a loop in the Skill, a better plain.ts output and the page check; they answered my questions (loop ends on budget only and hands over only when told; page check warns on terms collection plus glossary headings; definitions as a note after the paragraph), asked for a note on working around false positives, ran /code-review, said to leave the page fixes to the curate run, said \"yes, add the note and open the PR\", asked that the scan cover the Glass Box glossary, that the glossary be fixed, and that the numbering fact come out of its Two spaces bullet; they merged PR 3220. After that they pasted a snippet from the first scheduled run with the new loop, which did not loop, and asked for clearer instructions and an estimate rule for a session without get_session. Agent-initiated: choosing which retro points to recommend, the shape of the check (skipped spans, word list, proper-noun list), the bare-stem matching, the colon rule, which glossary sentences to lowercase, moving the Lesson numbering rule into the glassbox-lesson Skill so its pointer did not dangle, moving the Loop paragraph to a last step after Land and linking it from Land's Done-when, the 450k-per-$25 and 100k-per-run figures (read from get_session costs and the retros), and subscribing to both PRs. Eight costs came from get_session (about $148 for eight sessions in 12 hours); seven retros arrived as messages from other sessions and I took no action on them, only compared them with the session logs. I told the person the Glass Box words are capitalised on purpose; they asked \"are they?\" and the guide showed they are not, so the glossary headings were added to the word list; they explained the cause (agents copy capitals from glossary headings). PR 3220 was opened conflicted with main (the glossary was edited upstream); I merged main in and re-applied the sweep. PR 3258 (Skill only) passed two code-review agents on its first commit and a scoped gate on its final head; it waits for the owner's merge. Still open: the owner's merge of 3258, the curate run that fixes the 15 guide hits, and whether the root glossary note (borderline under ADR-0021) stays."
+status: completed
+outcome: Costs reported; PR 3220 (plain.ts, term-case warning, word count, run loop) and PR 3258 (loop as the last step, usage estimate, foci never run out) merged
+summary: "Human-instructed: the person asked for the costs of the glassbox-curate runs in the last 6, then 12 hours; later for \"check their session logs as well if the frictions overlap\", for which fixes were worth it, then \"do 1, 2\" plus a loop in the Skill, a better plain.ts output and the page check; they answered my questions (loop ends on budget only and hands over only when told; page check warns on terms collection plus glossary headings; definitions as a note after the paragraph), asked for a note on working around false positives, ran /code-review, said to leave the page fixes to the curate run, said \"yes, add the note and open the PR\", asked that the scan cover the Glass Box glossary, that the glossary be fixed, and that the numbering fact come out of its Two spaces bullet; they merged PR 3220. After that they pasted a snippet from the first scheduled run with the new loop, which did not loop, and asked for clearer instructions, an estimate rule for a session without get_session, the whole usage topic at the end where it is used, a re-read of the Skill for other one-focus wording, and that foci never run out so only the budget ends a session; then \"merge it\" for PR 3258. Agent-initiated: choosing which retro points to recommend, the shape of the check (skipped spans, word list, proper-noun list), the bare-stem matching, the colon rule, which glossary sentences to lowercase, moving the Lesson numbering rule into the glassbox-lesson Skill so its pointer did not dangle, the loop edge cases (only a run that opened a PR reaches Loop; interactive sessions settle the next focus with the person), the 450k-per-$25 and 100k-per-run figures (read from get_session costs and the retros), and subscribing to both PRs. Eight costs came from get_session (about $148 for eight sessions in 12 hours); seven retros arrived as messages from other sessions and I took no action on them, only compared them with the session logs. I told the person the Glass Box words are capitalised on purpose; they asked \"are they?\" and the guide showed they are not. PR 3220 was opened conflicted with main (the glossary was edited upstream); I merged main in and re-applied the sweep. PR 3258 needed four rewrites of the Skill text because I fixed only the parts I thought of; the person's follow-ups (one-focus wording, foci never run out) found the rest. After the owner's word I posted a verdict and merged 3258 with scripts/github/merge-pr.ts, which did not ask for the owner-approved flag. Still open: the curate run that fixes the 15 guide hits as the first real test of the warning, whether the next scheduled run now loops, and whether the root glossary note (borderline under ADR-0021) stays."
 prs:
   - "3220"
   - "3258"
@@ -80,25 +80,32 @@ frictions:
   - description: Ran the five-minute gate:scoped three times because follow-up edits kept landing after each green run, and the last two commits went to CI without a local gate.
     solution: Batch the review fixes and the owner's follow-ups, then run the gate once on the final head before the PR opens.
     severity: nit
-durationSec: 38204
+  - description: Rewrote the Skill's loop text four times; each pass fixed only the sentences I thought of, and the person's follow-ups found the leftover one-focus-per-run wording and an if-a-focus-remains stop that contradicted their budget-only answer.
+    solution: When changing a rule, re-read the whole Skill and grep its other statements in the same edit (CLAUDE.md, one home per fact), and check the new text against the person's earlier answers.
+    severity: minor
+  - description: Retyped the full PR description five times for small edits, each costing a long body of tokens.
+    solution: Write the description once after the last commit, or keep it short enough that a rewrite is cheap.
+    severity: nit
+durationSec: 49915
 models:
-  claude-sonnet-5-5: 343
+  claude-sonnet-5-5: 417
 toolCounts:
-  Skill: 4
-  Bash: 111
-  ToolSearch: 3
+  Skill: 5
+  Bash: 132
+  ToolSearch: 4
   mcp__claude-code-remote__get_session: 8
-  ReadNotifications: 13
+  ReadNotifications: 21
   AskUserQuestion: 1
-  Read: 15
-  Write: 5
+  Read: 17
+  Write: 6
   Edit: 1
   Agent: 6
   mcp__github__list_pull_requests: 2
   mcp__github__create_pull_request: 2
-  mcp__github__update_pull_request: 3
+  mcp__github__update_pull_request: 6
   mcp__claude-code-remote__subscribe_pr_activity: 2
-  mcp__github__pull_request_read: 7
+  mcp__github__pull_request_read: 10
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - .agents/skills/glassbox-curate/scripts/plain.ts
   - .agents/skills/glassbox-lesson/writing-pages.md
@@ -176,6 +183,10 @@ ruleUse:
       - rule: .claude/rules/adr-0030.md
         via: native
         trigger: docs/adr/0005-skill-model.md
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
     reported:
       - path: .claude/rules/adr-0004.md
         value: steered
@@ -319,42 +330,42 @@ subagents:
     durationSec: 19
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 1.7
+    tokenShare: 1.2
   - type: general-purpose
     task: Spec review of branch diff
     model: sonnet
     durationSec: 36
     toolCalls: 10
     modelCalls: 6
-    tokenShare: 2.1
+    tokenShare: 1.5
   - type: general-purpose
     task: Standards review of follow-up diff
     model: sonnet
     durationSec: 12
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 1.6
+    tokenShare: 1.1
   - type: general-purpose
     task: Spec review of follow-up diff
     model: sonnet
     durationSec: 20
     toolCalls: 9
     modelCalls: 5
-    tokenShare: 1.9
+    tokenShare: 1.3
   - type: general-purpose
     task: Standards review of Skill edit
     model: sonnet
     durationSec: 15
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 1.7
+    tokenShare: 1.2
   - type: general-purpose
     task: Spec review of Skill edit
     model: sonnet
     durationSec: 15
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 1.7
+    tokenShare: 1.2
 gitBranch: claude/loving-dijkstra-6ygl94
 entrypoint: remote
 cliVersion: 2.1.323
