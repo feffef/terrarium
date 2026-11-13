@@ -22,7 +22,6 @@ Each guide page is named by its title, then its file under `layers/glassbox/cont
 
 ### Weak spots
 
-- **A mechanical lowercase pass left the overview alone.** Check its glossary terms by hand after the owner's own edit of it lands. New text tends to capitalise terms again, so a run that adds text checks its own lines for them.
 - **The Installed Skills pages say little of their own.** *Planning skills* (`skill-pack/20.planning-with-the-pack`) and *Engineering skills* (`skill-pack/30.engineering-skills`) mostly describe Skills that come from outside Terrarium. Only a few of their facts are about choices Terrarium made.
 
 ### Recurring problems
@@ -46,6 +45,8 @@ These are the owner's goals for the guide. A run builds toward them directly; a 
 ### Wording fresh readers still find hard
 
 None of these is false.
+
+- **Term definitions.** `heavy`, `inert`, `nitro`, `catalog`, `collection-kind`, `aggregator`, `ecosystem`, `workflow` and `seedling` still lean on jargon a newcomer may not know (inert path, route rules, contract, Dependabot, the harvest skill).
 
 - **Claude Code.** *Claude Code skills* and *Claude Code permissions* still use *gate*, *ADR* and *journal* without a gloss. *MCP servers*: no source says why the read-first hint matches the whole server while the guards list tools; ask the owner or leave it a plain fact. The "Matched by name, or by server" section puts prose between its two Excerpts, so the first reads as the only example. *Claude Code skills*: the close-session Excerpt shows mostly one dense step, not "a goal and numbered steps".
 - **Hooks.** *Session transcripts*: `isMeta` and the 2 KB preview have no source in the docs, only in the scripts.

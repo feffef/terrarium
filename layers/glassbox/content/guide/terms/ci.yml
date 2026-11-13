@@ -1,0 +1,3 @@
+term: CI
+definition: Continuous integration, here GitHub running the gate on its own server for every pull request. Its result decides whether the change may merge.
+lesson: /t/glassbox/guide/verification/gate

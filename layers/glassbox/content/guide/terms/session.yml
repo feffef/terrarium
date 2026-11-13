@@ -1,3 +1,3 @@
 term: session
-definition: One continuous Claude Code working session on the repository, known by its Claude session id. It writes a session log of its work when it closes.
+definition: One conversation with Claude Code, the AI coding agent, working on its own copy of the repository, started by a person or by a timer. When it closes, it writes a session log of its work.
 lesson: /t/glassbox/guide/terrarium-practice/session-logs

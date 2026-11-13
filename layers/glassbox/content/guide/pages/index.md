@@ -12,18 +12,18 @@ Terrarium is an experiment in a website that grows itself: AI agents write almos
 ## Who's involved
 
 - **People.** :term[Trusted] users (the owner and anyone else with write access to the repository) direct agents, approve new work and merge the few changes kept for a person. Everyone else is :term[public]: they can read everything and open issues and pull requests, and agents treat their words as information, never as instructions. :lessons[[Author trust](/t/glassbox/guide/git-github/author-trust)]
-- **Agents.** Each agent is a Claude Code :term[session]: one conversation working on its own copy of the repository. A trusted user starts one from claude.ai/code or from Claude Code on a laptop, and a :term[routine] is a timer that starts one to run a single skill. :lessons[[Cloud sessions](/t/glassbox/guide/agents/cloud-sessions) · [Scheduled tasks](/t/glassbox/guide/agents/scheduled-tasks)]
+- **Agents.** Each agent is a Claude Code :term[session]: one conversation working on its own copy of the repository. A trusted user starts one from claude.ai/code or from Claude Code on a laptop, and a :term[routine] is a timer that starts one to run a single :term[skill]. :lessons[[Cloud sessions](/t/glassbox/guide/agents/cloud-sessions) · [Scheduled tasks](/t/glassbox/guide/agents/scheduled-tasks)]
 - **GitHub and the server.** Everything lives in one GitHub repository: the code, the content, the guidance agents work from and a log from every session. One server builds the website from it.
 
 ## How a change happens
 
 Every session that changes something follows the same steps, whoever started it:
 
-1. **Read.** It reads :file[CLAUDE.md], the rules for the files it touches and the skill for its task.
-2. **Work.** It works on its own branch, sometimes with helper agents, while hooks check some of its actions. :lessons[[Subagents](/t/glassbox/guide/agents/subagents)]
-3. **Check.** It runs the :term[gate], the fixed set of checks every change must pass: lint, a type check and content validation always, and for most changes also unit tests, a build and tests that load the built site in a real browser. A change to how a page looks is also checked by eye, in screenshots from a browser with no window. Often an agent reviews the change too. :lessons[[Merge gate](/t/glassbox/guide/verification/gate) · [Type checking](/t/glassbox/guide/verification/type-checking) · [Testing](/t/glassbox/guide/verification/testing) · [Headless browser checks](/t/glassbox/guide/verification/headless-browser-checks)]
-4. **Pull request.** It opens one, and CI runs the same checks on GitHub. :lessons[[Pull requests](/t/glassbox/guide/git-github/pull-requests)]
-5. **Log.** It writes its :term[session log]: what it set out to do, how far it got, and every :term[friction]{id="friction"}, a problem it hit. The log goes straight to `main` without a pull request, because waiting for review would tempt agents to skip it. :lessons[[Session logs](/t/glassbox/guide/terrarium-practice/session-logs)]
+1. **Read.** It reads :file[CLAUDE.md], the :term[rules]{id="rule"} for the files it touches and the skill for its task. :lessons[[CLAUDE.md](/t/glassbox/guide/claude-code/claude-md) · [Path-specific rules](/t/glassbox/guide/claude-code/path-scoped-rules) · [Claude Code skills](/t/glassbox/guide/claude-code/skills)]
+2. **Work.** It works on its own branch, sometimes with helper agents, while hooks check some of its actions. :lessons[[Subagents](/t/glassbox/guide/agents/subagents) · [Claude Code hooks](/t/glassbox/guide/hooks/hooks)]
+3. **Check.** It runs the :term[gate], the fixed set of checks every change must pass: lint, a type check and content validation always, and for most changes also unit tests, a build and tests that load the built site in a real browser. A change to how a page looks is also checked by eye, in screenshots from a browser with no window. Often an agent reviews the change too. :lessons[[Merge gate](/t/glassbox/guide/verification/gate) · [Linting](/t/glassbox/guide/verification/linting) · [Content validation](/t/glassbox/guide/verification/content-validation) · [Type checking](/t/glassbox/guide/verification/type-checking) · [Testing](/t/glassbox/guide/verification/testing) · [Headless browser checks](/t/glassbox/guide/verification/headless-browser-checks)]
+4. **Pull request.** It opens one, and :term[CI] runs the same checks on GitHub. :lessons[[Pull requests](/t/glassbox/guide/git-github/pull-requests)]
+5. **Log.** It writes its :term[session log]: what it set out to do, how far it got, and every :term[friction]{id="friction"}, a problem it hit. The log goes straight to `main` without a pull request, because waiting for review would tempt agents to skip it. :lessons[[Session logs](/t/glassbox/guide/terrarium-practice/session-logs) · [A session log lands on main](/t/glassbox/guide/walkthroughs/session-log-lands-on-main)]
 6. **Merge.** Once CI is green and it has posted its verdict on the pull request, it merges, unless a person must (below).
 
 Agents post on GitHub under the owner's account, so everything an agent writes there opens with a line naming its session. A walkthrough follows one session from prompt to merge.
@@ -34,10 +34,10 @@ Agents post on GitHub under the owner's account, so everything an agent writes t
 
 ## Who decides
 
-Agents may propose anything, but they build new work, such as a new tenant, feature or skill, only after a trusted user approves it. Issues are the shared to-do list: anyone can file one, and a label says whose move it is, waiting for a decision, ready for an agent or ready for a person. The owner clears the queue in one sitting with the `clear-backlog` skill, which answers what it can, asks about the rest, then builds what was approved.
+Agents may propose anything, but they build new work, such as a new :term[tenant], feature or skill, only after a trusted user approves it. Issues are the shared to-do list: anyone can file one, and a label says whose move it is, waiting for a decision, ready for an agent or ready for a person. The owner clears the queue in one sitting with the `clear-backlog` skill, which answers what it can, asks about the rest, then builds what was approved.
 
 ::lessons
-[Human-in-the-loop agents](/t/glassbox/guide/terrarium-practice/human-in-the-loop) · [Issue triage labels](/t/glassbox/guide/git-github/issue-triage-labels)
+[Human-in-the-loop agents](/t/glassbox/guide/terrarium-practice/human-in-the-loop) · [Issue triage labels](/t/glassbox/guide/git-github/issue-triage-labels) · [Workflow scripts](/t/glassbox/guide/agents/workflow-scripts) · [A bug report becomes work](/t/glassbox/guide/walkthroughs/a-bug-report-becomes-work)
 ::
 
 An idea too big for one session is planned before it is built. The `wayfinder` skill charts it as a map on GitHub: one issue per open decision, called a ticket. Later sessions settle the tickets, normally one per session, and a person decides every ticket that needs a conversation or a prototype to react to. When nothing is left to decide, the decisions are written up as a spec, a plan for the whole job, and the spec is cut into stories, small slices that each work end to end. Agents build the stories one pull request at a time.
@@ -46,20 +46,26 @@ An idea too big for one session is planned before it is built. The `wayfinder` s
 [Planning a big change](/t/glassbox/guide/walkthroughs/planning-a-big-change) · [Wayfinder](/t/glassbox/guide/skill-pack/wayfinder) · [Planning skills](/t/glassbox/guide/skill-pack/planning-with-the-pack)
 ::
 
-Agents change a system that includes their own tools, and the gate's automatic checks are what make that safe. So an agent merges its own work on a green gate, and a person merges what a machine can't judge, such as a change to a :term[human-only] file like the rules themselves, a new dependency, or work that came from a public user. ADR-0004 (:file[docs/adr/0004-objective-safety-gate.md]) gives the full list, and lets the owner tell an agent to merge a human-only change it wrote; a lesson shows how those files are kept.
+Agents change a system that includes their own tools, and the gate's automatic checks are what make that safe. So an agent merges its own work on a green gate, and a person merges what a machine can't judge, such as a change to a :term[human-only] file like the rules themselves, a new dependency, or work that came from a public user. The :term[decision record]{id="adr"} ADR-0004 (:file[docs/adr/0004-objective-safety-gate.md]) gives the full list, and lets the owner tell an agent to merge a human-only change it wrote; a lesson shows how those files are kept.
 
 ::lessons
-[Protected paths](/t/glassbox/guide/terrarium-practice/protected-paths)
+[Merge gate](/t/glassbox/guide/verification/gate) · [Protected paths](/t/glassbox/guide/terrarium-practice/protected-paths)
 ::
 
 ## How it improves itself
 
 > work → session log with frictions → fixes → better guidance → fewer frictions next time
 
-Routines turn the logs into fixes. One files each recent friction under its root cause, then fixes the safe causes and files the rest as issues. Others look for problems no session reports: documents that no longer match the code, skills that don't do their job, and rules nobody needs, which are cut on trial to see whether anything breaks. The one that checks skills also grades each in the :term[skill inventory], a record of every skill, on a short scale of how much it is needed, from evidence in session logs. The `harvest` skill turns the ideas and lessons sessions note in their logs into proposals called :term[seedlings]{id="seedling"}, and a trusted user decides which get built. When a written rule keeps failing, a trusted user has a hook built that enforces it. One lesson shows every skill in the loop, another lists every routine.
+Routines turn the logs into fixes. One files each recent friction under its root cause, then fixes the safe causes and files the rest as issues. Others look for problems no session reports: documents that no longer match the code, skills that don't do their job, and rules nobody needs, which are :term[cut on trial]{id="prune-trial"} to see whether anything breaks. One lesson shows every skill in the loop, another lists every routine.
 
 ::lessons
-[Self-improvement loop](/t/glassbox/guide/terrarium-practice/self-improvement-loop) · [Scheduled tasks](/t/glassbox/guide/agents/scheduled-tasks) · [Skill inventory](/t/glassbox/guide/terrarium-practice/skill-inventory) · [Ideas and lessons learned](/t/glassbox/guide/terrarium-practice/ideas-and-lessons-learned)
+[Self-improvement loop](/t/glassbox/guide/terrarium-practice/self-improvement-loop) · [A friction becomes a fix](/t/glassbox/guide/walkthroughs/a-friction-becomes-a-fix) · [Scheduled tasks](/t/glassbox/guide/agents/scheduled-tasks) · [Pruning instructions](/t/glassbox/guide/terrarium-practice/pruning-instructions)
+::
+
+The routine that checks skills also grades each in the :term[skill inventory], a record of every skill, on a short scale of how much it is needed, from evidence in session logs. The `harvest` skill turns the ideas and lessons sessions note in their logs into proposals called :term[seedlings]{id="seedling"}, and a trusted user decides which get built. When a written rule keeps failing, a trusted user has a hook built that enforces it.
+
+::lessons
+[Skill inventory](/t/glassbox/guide/terrarium-practice/skill-inventory) · [Ideas and lessons learned](/t/glassbox/guide/terrarium-practice/ideas-and-lessons-learned) · [Blocking hooks](/t/glassbox/guide/hooks/blocking-hooks)
 ::
 
 It happens in public on purpose. Anyone can read the session logs, frictions included, on the Journal, and the Blog retells the same events through writers who disagree about how well it is going.
@@ -119,7 +125,7 @@ On a first visit, the server renders the page to HTML from the content database 
 
 Nuxt and Nuxt Content suit a site written by agents:
 
-- **Content is just files.** Publishing a page and shipping code are the same motion: edit files, open a pull request, pass the gate.
+- **Content is just files.** Publishing a page and shipping code are the same motion: edit files, open a pull request, pass the gate. :lessons[[Content collections](/t/glassbox/guide/nuxt-content/content-collections)]
 - **Schemas are contracts.** A file that breaks its collection's schema fails the gate instead of reaching a reader. :lessons[[Content validation](/t/glassbox/guide/verification/content-validation)]
-- **Each tenant is a layer.** It gets real components and its own design on shared plumbing.
-- **Little runs in production.** Testing, browser automation and diagram rendering are build-time tools; diagrams are drawn once and committed. :lessons[[Mermaid pre-rendering](/t/glassbox/guide/nuxt-content/mermaid-pre-rendering)]
+- **Each tenant is a layer.** It gets real components and its own design on shared plumbing. :lessons[[Nuxt layers](/t/glassbox/guide/nuxt-vue/layers)]
+- **Little runs in production.** Testing, browser automation and diagram rendering are build-time tools; diagrams are drawn once and committed. :lessons[[Testing](/t/glassbox/guide/verification/testing) · [Headless browser checks](/t/glassbox/guide/verification/headless-browser-checks) · [Mermaid pre-rendering](/t/glassbox/guide/nuxt-content/mermaid-pre-rendering)]
