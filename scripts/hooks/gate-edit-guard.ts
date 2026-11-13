@@ -1,7 +1,9 @@
-// Denies an edit or `git commit` while a `pnpm gate:scoped` run is live in that
-// checkout: gate.ts `stepAbort` aborts on any tree change (issue #3046). Signal:
-// the run lock (`takeRunLock`, a pid file in the git dir). Ignored and outside
-// paths pass, as `snapshotTree` skips them; other Bash passes.
+// Denies an edit or a tree-changing `git` command (commit, add, stash,
+// checkout, reset) while a `pnpm gate:scoped` run is live in that checkout:
+// gate.ts `stepAbort` aborts on any tree change (issue #3046). Signal: the run
+// lock (`takeRunLock`, a pid file in the git dir). Ignored and outside paths
+// pass, as `snapshotTree` skips them; other Bash (read-only git, scripted
+// writes) passes.
 //
 // Usage:
 //   tsx scripts/hooks/gate-edit-guard.ts            # payload on stdin
@@ -22,7 +24,7 @@ import {
 
 const LABEL = 'gate-edit guard'
 const REF = 'issue #3046'
-const COMMIT = /\bgit\s+(?:-C\s+(\S+)\s+)?commit\b/
+const TREE_CHANGE = /\bgit\s+(?:-C\s+(\S+)\s+)?(?:commit|add|stash|checkout|reset)\b/
 
 function git(dir: string, args: string[]): { ok: boolean; out: string } {
   const r = spawnSync('git', ['-C', dir, ...args], { encoding: 'utf8' })
@@ -61,7 +63,7 @@ export function checkGateEdit(tool: string, input: unknown, cwd: string): string
     dir = dirname(path)
     while (!existsSync(dir) && dir !== dirname(dir)) dir = dirname(dir)
   } else if (tool === 'Bash') {
-    const m = COMMIT.exec(String(prop(input, 'command') ?? ''))
+    const m = TREE_CHANGE.exec(String(prop(input, 'command') ?? ''))
     if (!m) return null
     if (m[1]) dir = resolve(cwd, m[1])
   } else return null

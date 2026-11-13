@@ -38,14 +38,16 @@ describe('shouldDeny()', () => {
 })
 
 describe('unfilledPlaceholder()', () => {
-  it('finds @@NAME@@ and {UPPER_CASE} in an Agent prompt or a SendMessage message', () => {
+  it('finds @@NAME@@, {UPPER_CASE} and NAME_PLACEHOLDER in an Agent prompt or a SendMessage message', () => {
     expect(unfilledPlaceholder('Agent', { prompt: 'work on @@ISSUE_NUMBER@@' })).toBe('@@ISSUE_NUMBER@@')
     expect(unfilledPlaceholder('Agent', { prompt: 'line one\nbranch {BRANCH_NAME} here' })).toBe('{BRANCH_NAME}')
     expect(unfilledPlaceholder('SendMessage', { to: 'a', message: 'see {SHA}' })).toBe('{SHA}')
+    expect(unfilledPlaceholder('Agent', { prompt: 'read PAGES_PLACEHOLDER now' })).toBe('PAGES_PLACEHOLDER')
+    expect(unfilledPlaceholder('Agent', { prompt: 'read PAGES_LIST_PLACEHOLDER' })).toBe('PAGES_LIST_PLACEHOLDER')
   })
 
   it('ignores JSON, code, template literals, lower case and other tools', () => {
-    for (const prompt of ['{"a":1}', 'if (x) { FOO }', 'use ${BRANCH} in a template', '{lower_case}'])
+    for (const prompt of ['{"a":1}', 'if (x) { FOO }', 'use ${BRANCH} in a template', '{lower_case}', 'fill pages_placeholder', 'use ${PAGES_PLACEHOLDER}'])
       expect(unfilledPlaceholder('Agent', { prompt }), prompt).toBeNull()
     expect(unfilledPlaceholder('Workflow', { prompt: '@@X@@' })).toBeNull()
     expect(unfilledPlaceholder('Agent', {})).toBeNull()

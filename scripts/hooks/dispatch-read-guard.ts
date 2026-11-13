@@ -35,8 +35,10 @@ export const formatGuardMessage = () =>
   'a stopped subagent"), then retry this call unchanged if the Skill shows it was right.'
 
 // A Workflow brief is filled inside its script at run time, so only these two
-// tools are checked. `{NAME}` is narrow to skip JSON, code and template literals.
-const PLACEHOLDER = /@@\w+@@|(?<!\$)\{[A-Z_]+\}/
+// tools are checked. `{NAME}` is narrow to skip JSON, code and template literals;
+// `NAME_PLACEHOLDER` is the bare form briefs have shipped with (issue #3227);
+// `${NAME_PLACEHOLDER}` templates stay exempt.
+const PLACEHOLDER = /@@\w+@@|(?<!\$)\{[A-Z_]+\}|(?<!\$\{)\b[A-Z][A-Z0-9_]*_PLACEHOLDER\b/
 const BRIEF_FIELD: Record<string, string> = { Agent: 'prompt', SendMessage: 'message' }
 
 export function unfilledPlaceholder(toolName: unknown, toolInput: unknown): string | null {
