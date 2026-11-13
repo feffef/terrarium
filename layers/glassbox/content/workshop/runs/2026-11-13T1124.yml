@@ -12,7 +12,10 @@ focus: "The merge gate as a walkthrough. The owner proposed that the gate, a
   sonnet claim checker and a sonnet fresh reader ran. The claim checker found no
   wrong sentence; its two soft points (the merge script's order, the scope step's
   home) were tightened, and the fresh reader's findings were fixed where a source
-  allowed."
+  allowed. The code review also named Linting, Type checking, Content validation,
+  Pull requests, Author trust and the overview as read only in part or not at
+  all; the writer subagents read the check lessons per their brief, which the
+  lead did not verify."
 changes:
   - walkthroughs/15.a-change-meets-the-gate | New walkthrough of ten stops that
     follows one fix to a page under layers/ through the local run, the path-based
@@ -31,9 +34,14 @@ changes:
     Wording only
   - index | A change meets the gate added to the human-only paragraph's chips |
     the walkthrough needed a link from another page. Chips only
-  - workshop/pages/index | the retitled lesson's name in a lead | keeps the note
-    true
+  - workshop/pages/index | the retitled lesson's name in a lead; an owner question
+    on chips per row added; the House rules wording note cut | keeps the note
+    true; the page stays shorter than found, so the oldest minor wording note went
 pagesRead:
+  - verification/80.headless-browser-checks
+  - verification/40.testing
+  - nuxt-content/30.content-database
+  - nuxt-vue/60.nitro
   - verification/10.gate
   - git-github/30.composite-actions
   - terrarium-practice/60.protected-paths
