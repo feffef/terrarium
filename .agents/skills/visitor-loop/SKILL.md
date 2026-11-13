@@ -19,8 +19,7 @@ The run changes nothing but its own session log: no branch, PR or issue
 
 ## Today's focus
 
-All three visitors see the same part of the Platform, whose files the
-informed lenses read. A focus given as the
+All three visitors see the same part of the Platform. A focus given as the
 Skill's argument wins. Otherwise take row
 `$(( ($(date -u +%s)/86400 - $(date -u -d 2026-09-29 +%s)/86400) % 7 ))`:
 
@@ -32,7 +31,7 @@ Skill's argument wins. Otherwise take row
 | 3 | midden | `/t/midden` | `layers/midden/` | |
 | 4 | tinkerfund | `/t/tinkerfund` | `layers/tinkerfund/` | |
 | 5 | glassbox | `/t/glassbox/guide` | `layers/glassbox/` | Stay inside /t/glassbox/guide. |
-| 6 | homepage | `/` | `app/pages/index.vue`, `app/components/` | |
+| 6 | homepage | `/` | `app/pages/index.vue`, `app/components/HomeShowcase.vue` | |
 
 The focus goes in the session log's summary.
 
@@ -68,7 +67,7 @@ Each gets [`visitor-brief.md`](visitor-brief.md) verbatim, keeping only its
 access block, with the URL, the focus's entry path and note (blank if none),
 its lens row, the context file's path (informed only) and a scratch directory
 unique to that visitor filled in. The blind visitor gets nothing else: no
-repo, no hints, no past findings. Done when all three reports are in; resume a
+context file, no hints, no past findings. Done when all three reports are in; resume a
 stalled visitor with `SendMessage`, never by re-dispatching. Then
 `scripts/ui/preview.ts stop <pid>`.
 

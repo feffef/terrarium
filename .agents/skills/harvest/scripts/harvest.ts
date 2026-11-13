@@ -28,7 +28,8 @@ export const WINDOW_DAYS = 7
 /** GitHub rejects a body over 65,536 characters; stay well under. */
 export const BODY_LIMIT = 60_000
 export const NOTE = 'Machine-read, keep as is:'
-/** Runs of these Skills log notes that are not for Seedlings; harvest's own logs too. */
+/** Runs of these Skills log ideas on purpose and never act on them; harvest's own logs too.
+ *  visitor-loop logs its ideas for harvest to file, so it is not listed. */
 export const SKIPPED_TRIGGERS = new Set(['harvest', 'audit-skills'])
 
 /** The whole key line. Its alphabet holds none of `& < > " '`, so HTML-entity
