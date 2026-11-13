@@ -1,17 +1,17 @@
 # Samara: design draft for a single-site template
 
 **Status:** a proposal by the writing agent; it decides nothing. "Samara" is a
-working title. This document stands alone and is meant as the one baseline:
-where it differs from the two earlier drafts or from the decisions file, this
-document is the newer statement.
+working title. This document is meant as the one baseline for the design:
+where it differs from earlier drafts or notes, this document is the newer
+statement.
 
 **Sources.** "REQ §n" cites a section of the requirements document
 (`05-platform-requirements-neutral.md`); ids such as VER-2 cite one requirement.
-"DEC" is the decisions file (`docs/design/08-converged-decisions.md`), which
-holds the evidence and the reasoning behind each choice. Counts quoted here
-come from DEC: they are from Terrarium's problem ledger over 15 days
-(2026-10-30 to 2026-11-13) and its 166 session logs, and some were counted by
-a sub-agent and not re-checked.
+Read that document alongside this one: it defines every id. Counts quoted
+here come from the problem ledger over 15 days (2026-10-30 to 2026-11-13) and
+the 166 session logs of Terrarium, the project this design draws on. They
+show why a rule exists, not what to build. Some were counted by a sub-agent
+and not re-checked.
 
 **Tags.** `[untested En]` rests on a fact nobody has tested; section 13 lists
 the experiments. `[owner]` awaits the owner's word; section 14.1 lists them.
@@ -34,17 +34,17 @@ sweeps may merge inside their own surface under the default preset.
 1. **The platform knows no site framework.** The site tells the platform how
    to check, test, build and serve itself through a small contract (4.2).
    All six recorded upgrade breaks in Terrarium sat in the framework or the
-   content library (DEC 2a).
+   content library.
 2. **Two apps that cannot fail each other.** The owner app lives wholly under
    `platform/`. Its checks never fail a site change and the site's checks
    never fail a platform change, except through the contract. With one build
    and one check run, Terrarium's own journal failed unrelated work about 25
-   times (DEC 1).
+   times.
 3. **Commands refuse; prose is for judgement.** A rule a command can enforce
    is enforced there, in the change that states the rule (PRIN-1). Hooks are
    the last resort: four ship, against 33 wired in Terrarium, where three and
    a half of the ten most frequent problems were costs of its own hints and
-   guards (DEC 3).
+   guards.
 4. **The machine records facts; the agent writes judgement.** Session ids,
    commit ids, timings, tokens and costs are never typed (PRIN-7). Ids typed
    by agents were wrong 18 and 8 times.
@@ -65,9 +65,8 @@ sweeps may merge inside their own surface under the default preset.
 ## 2. Concepts
 
 Terms are plain lowercase words, written the same in prose, commands and file
-names. The first column is the working word. Where the two earlier drafts
-used different words and no choice was clearly agreed, the second column
-shows the other option `[owner]`.
+names. The first column is the working word. Where no choice was clearly
+agreed, the second column shows the other option `[owner]`.
 
 | Term | Other option | Meaning |
 |---|---|---|
@@ -418,7 +417,7 @@ Four hooks. Each has a test and a documented failure mode;
   the hook. When a hook causes more problems than it prevents, the
   improvement sweep files an owner issue proposing removal.
 
-Deliberately not built (GUIDE-2 and DEC 3):
+Deliberately not built (GUIDE-2):
 
 - a guard that denies a first call until a document is read (66 denials
   against 3 occurrences of its problem);
@@ -950,8 +949,8 @@ access-controlled page, no second app and no separate deploy.
 13. **Managed host:** whether its recipe ships in the first version at all,
     given it is untested.
 14. **The departures in 14.2.**
-15. **May a sub-agent run `log`?** The decisions file says never: it shares
-    its parent's session id, so it would write into its parent's log.
+15. **May a sub-agent run `log`?** Proposed: never. It shares its
+    parent's session id, so it would write into its parent's log.
 16. **Must the comment on green name the pull request's head commit?** In
     Terrarium it once named the merge commit instead (3 problems).
 17. **A merge is code execution on the server,** because the container

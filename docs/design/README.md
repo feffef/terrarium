@@ -6,8 +6,9 @@ build and one owner steers, taking from Terrarium only what earned its place.
 by an agent session at the owner's request on 2026-11-13.
 
 The number in a file name is the order in which the note was first written.
-Read `09` for the design as it stands and `08` for the evidence and reasons
-behind it; read the others for how the work got there.
+Read `09` (with `05`) for the design as it stands; `08` holds the longer
+evidence and reasons, which `09` no longer needs. Read the others for how the
+work got there.
 
 ## The notes, in order
 
@@ -30,7 +31,7 @@ session that wrote `07`, which had none when this README was written.
 | [`06-single-site-template-design-combined-draft.md`](./06-single-site-template-design-combined-draft.md) | One draft that takes the best of `03` and `04`: the **insider draft**. | 13:56 | [session_013zxzeQ9FTpQjBywTHWkdXF](https://claude.ai/code/session_013zxzeQ9FTpQjBywTHWkdXF) | #3271 |
 | [`07-platform-design-draft.md`](./07-platform-design-draft.md) | A design written from `05` alone, with no access to Terrarium: the **outsider draft**. | after `05`, by about 16:10 | [session_013zxzePjcu3uX5URNR4fiue](https://claude.ai/code/session_013zxzePjcu3uX5URNR4fiue) | with this README |
 | [`08-converged-decisions.md`](./08-converged-decisions.md) | Where `06` and `07` now agree, each decision with the recorded problem behind it, and what is left for the owner. | 16:36 to 18:00 | the session above and [session_013zxzeP357BagrJREfWSJ6U](https://claude.ai/code/session_013zxzeP357BagrJREfWSJ6U) | with this README |
-| [`09-final-design-draft.md`](./09-final-design-draft.md) | One standalone design in the 14-section shape, meant as the baseline; working title "Samara". It cites `05` for requirements and `08` for evidence. | about 22:20 | [session_013zxzePjcu3uX5URNR4fiue](https://claude.ai/code/session_013zxzePjcu3uX5URNR4fiue) | added after the README |
+| [`09-final-design-draft.md`](./09-final-design-draft.md) | One almost standalone design (read with `05`) in the 14-section shape, meant as the baseline; working title "Samara". It cites `05` for requirements; its evidence is inline. | about 22:20 | [session_013zxzePjcu3uX5URNR4fiue](https://claude.ai/code/session_013zxzePjcu3uX5URNR4fiue) | added after the README |
 
 ## How each note came about
 
@@ -112,6 +113,11 @@ are protected, the question of public or private is dropped, how `merge`
 recognises a Dependabot pull request is left to an experiment, and four
 smaller points became open questions. Its time, like those of `07` and `08`,
 is not a commit time.
+
+**`09` is almost standalone.** It no longer needs `08`: its counts and
+reasons are inline. Read it together with `05`, though: `05` holds the
+abstract requirements and defines the ids (`VER-2`, `REC-11`) and `REQ §n`
+sections that `09` cites throughout.
 
 ## Names used across the notes
 
