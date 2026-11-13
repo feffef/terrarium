@@ -1,7 +1,7 @@
 name: harvest-first-pass-shallow
 surface: safe
 summary: A first harvest run stopped after a few clusters, or skipped a step of its Skill, so the owner had to challenge it before a real pass.
-cause: "The harvest Skill's steps are read and then compressed: the list is read in part, a learning is judged by the idea test, or the list-merges step is skipped, so a run files nothing or records no per-cluster result. Signals: 'first pass stopped after about ten clusters', 'filed nothing', 'skipped the Skill's list-merges-since step', 'head -300'."
+cause: "The harvest Skill's steps are read and then compressed: the list is read in part, a learning is judged by the idea test, or the list-merges step is skipped, so a run files nothing or records no per-cluster result. PR #3106 made step 1 read the list whole and step 3 name the failed test; PR #3137 made the per-cluster record and the source read checked. Signals: 'first pass stopped after about ten clusters', 'filed nothing', 'skipped the Skill's list-merges-since step', 'head -300'."
 status: open
 fixes:
   - pr: 3106

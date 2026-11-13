@@ -2,10 +2,10 @@ name: read-first-hint-repeats-in-subagents
 summary: >-
   The hint that points to a required doc fires again in subagents that were told to read nothing else, or had already read it.
 cause: >-
-  read-first-hint.ts (PostToolUse) points to git-conventions.md or github-integration.md on a matching call in every session, including dispatched subagents whose brief limits what they read, and repeats on each call even after the doc was read; since PR #2669 it no longer fires for read-only git show, ls-tree and cat-file, though log, blame and other git calls still hint. Signals: 'hint repeated on every call', 'hint to read git-conventions.md after a detached checkout', a subagent explaining why it ignored the hint, a subagent skipping the doc because its calls were read-only.
+  read-first-hint.ts (PostToolUse) points to git-conventions.md or github-integration.md on a matching call in every session, including dispatched subagents whose brief limits what they read, and repeats on each call even after the doc was read; since PR #2669 it no longer fires for read-only git show, ls-tree and cat-file, and since PR #3198 not for git rev-parse or a list-only git branch; log, blame and other git calls still hint. Signals: 'hint repeated on every call', 'hint to read git-conventions.md after a detached checkout', a subagent explaining why it ignored the hint, a subagent skipping the doc because its calls were read-only.
 surface: guard-or-hook
-status: accepted
-ref: ""
+status: tracked
+ref: "issue #3194"
 notes: |-
   2026-11-13 survey: issue #3146 (reminders reach subagents after their first edit or git call) closed not planned 2026-11-12: the owner accepts the cost; PR #3198 narrowed the hint the same day; issue #3194 stays open for it.
 fixes:

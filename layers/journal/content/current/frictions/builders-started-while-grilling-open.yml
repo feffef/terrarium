@@ -1,6 +1,6 @@
 name: builders-started-while-grilling-open
 summary: A clear-backlog run started builders while its questions to the owner were still open, so builder news interleaved with the questions and the owner asked for a rule against it.
-cause: "The orchestrator launched build workflows for two issues while grilling questions on others were unanswered; builder and reviewer results and sample screenshots arrived between the owner's questions. Signals: 'started builders ... while grilling questions were still open', 'interleaved', 'the owner asked for the rule that this never happens'. One occurrence."
+cause: "The orchestrator launched build workflows for two issues while grilling questions on others were unanswered; builder and reviewer results and sample screenshots arrived between the owner's questions. Signals: 'started builders ... while grilling questions were still open', 'interleaved', 'the owner asked for the rule that this never happens'."
 surface: safe
 status: open
 fixes:

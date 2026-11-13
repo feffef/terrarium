@@ -1,6 +1,6 @@
 name: glassbox-memory-page-word-cap
 summary: The Glass Box curate memory page sits at its 2,500-word cap, so each run that adds notes fails a test and cuts older items, once dropping items still open, and two merges together pushed main over the cap.
-cause: "glassbox-curate runs park leftovers on the memory (workshop) page, which workshop.spec.ts caps at 2,500 words; the page is kept near the cap, so adding a run's notes fails the test until older items are cut (once three still-open items, until the user asked), and two PRs that each passed their own gate merged to 2,503 words on main, failing later sessions' gates. Signals: 'memory page', 'word cap', '2,500', 'workshop.spec.ts', '2503 words', 'cut ... items to fit'."
+cause: "glassbox-curate runs park leftovers on the memory (workshop) page, which workshop.spec.ts caps at 2,500 words; the page is kept near the cap, so adding a run's notes fails the test until older items are cut (once three still-open items, until the owner asked), and two PRs that each passed their own gate merged to 2,503 words on main, failing later sessions' gates. Signals: 'memory page', 'word cap', '2,500', 'workshop.spec.ts', '2503 words', 'cut ... items to fit'."
 surface: safe
 status: open
 fixes:
