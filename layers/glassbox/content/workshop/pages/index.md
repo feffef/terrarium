@@ -66,12 +66,6 @@ None of these is false.
 
 - **Verification.** *Zod refinements*: no source says why the `pages` rule ties the `page` type to the name `pages`. *Headless browser checks*: no repo source says who sets up the cloud proxy; the `--no-sandbox` and `--disable-gpu` flags have only the code comment "the flags every launch needs in this sandbox".
 
-### Topics with no page yet
-
-- The `clear-backlog` loop changed: the builder triages review findings, resumes replace fresh fix rounds, the final gate is skipped on a clean first round, and a thin explore result is re-run (`.claude/workflows/clear-backlog-build.js`). Nearest page: *Workflow scripts*. It also has a retro step (§5 of `clear-backlog`); nearest *Self-improvement loop*. Unverified: the Scout read only commit lists.
-- The `clear-backlog` skill opens with one owner interaction phase (grilling, then prototype samples with numbered approval questions, then the first build run); no builder or reviewer runs before it ends (`.agents/skills/clear-backlog/SKILL.md`). Nearest page: *Workflow scripts*, which could say the build starts after that phase. Unverified: the Scout read the diffs of two commits only.
-- Each session rates every rule it was shown as *steered* or *backed*, kept in the log as `ruleUse` (`shared/schemas/session.ts`; `scripts/session/rule-use-report.ts` totals it). Nearest pages: *Pruning instructions* and *Session logs*.
-
 ### Claims to check
 
 Each may be true; a later run should read the tool's source or run it.
