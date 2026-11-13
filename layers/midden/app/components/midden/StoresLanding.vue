@@ -101,7 +101,7 @@ useHead({ title: 'The Stores · The Midden' })
           :aria-labelledby="`shelf-${shelf.season.slug}`"
         >
           <div class="midden-sechead">
-            <span :id="`shelf-${shelf.season.slug}`" class="hand midden-sechead__title">{{ shelf.season.label }}</span>
+            <h2 :id="`shelf-${shelf.season.slug}`" class="hand midden-sechead__title">{{ shelf.season.label }}</h2>
             <span class="midden-sechead__rule" />
             <span class="mono midden-sechead__aside">{{ shelf.finds.length }} {{ shelf.finds.length === 1 ? 'find' : 'finds' }}</span>
           </div>

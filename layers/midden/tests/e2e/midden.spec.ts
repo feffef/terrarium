@@ -24,6 +24,18 @@ describe('midden Tenant', async () => {
     expect(html.toLowerCase()).toContain('midden')
   })
 
+  // Section titles and finds are h2, so the outline never skips a level (#3248).
+  it('keeps heading levels in order', async () => {
+    const levels = async (path: string) =>
+      [...(await $fetch<string>(path)).matchAll(/<h([1-6])[ >]/g)].map(m => Number(m[1]))
+    for (const path of ['/t/midden', '/t/midden/trench', '/t/midden/stores', '/t/midden/trench/built-never-fired']) {
+      const l = await levels(path)
+      expect(l[0]).toBe(1)
+      expect(l).toContain(2)
+      l.forEach((n, i) => expect(n - (l[i - 1] ?? 0)).toBeLessThanOrEqual(1))
+    }
+  })
+
   // `/t/midden` is the front door (foreword + a doorway per Space) and
   // `/t/midden/trench` the trench landing (its own intro + the dig reports) —
   // distinct pages, like the Atlas front door and its wings. Neither carries

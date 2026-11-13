@@ -62,7 +62,7 @@ const stampStyle = computed(() => {
     <header class="midden-find__head">
       <p v-if="season" class="midden-find__season"><NuxtLink to="/t/midden/trench#seasons" class="midden-find__season-link">{{ season.label }}</NuxtLink> <span class="midden-find__span">· {{ middenSeasonSpan(season) }}</span></p>
 
-      <h3 class="mono midden-find__title"><MiddenTicks :text="artifact.title" /></h3>
+      <h2 class="mono midden-find__title"><MiddenTicks :text="artifact.title" /></h2>
 
       <p class="tech midden-find__prov">
         <a
