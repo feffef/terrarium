@@ -61,7 +61,7 @@ names and Skill names. A term enters the glossary on its second use (REQ §3.1).
 | session | One Claude Code conversation working on the site. |
 | log | A session's record: the agent's judgement plus machine facts. |
 | problem | Something that cost a session time or went wrong, graded by what it cost. |
-| finding | One record a session or sweep hands on: a problem or an idea, with evidence. |
+| finding | One record a session or sweep hands on: a problem, an idea or a learning, with evidence. |
 | cause | The root of one or more problems, with its fixes and derived state. |
 | sweep | A Skill run on a schedule or on demand that looks after the site. |
 | verification | The fixed checks a change passes before it may merge; `verify` runs them. |
@@ -115,7 +115,7 @@ platform/
   commands/                     # verify, check, log, merge, preview, sync
   hooks/                        # the hook scripts in section 6, and the hooks block for settings
   lib/                          # helpers shared by commands and hooks
-  schemas/                      # log, finding, cause, run and site.yml schemas
+  schemas/                      # log, finding, cause, run, merge and site.yml schemas
   tests/                        # tests of commands and hooks
 .claude/skills/                 # platform Skills and the installed pack
 .claude/rules/                  # a few hand-written path-scoped rules
@@ -205,8 +205,8 @@ session id, writing to the `records` checkout with a rebase-and-retry push,
 talking to GitHub, and one bounded reader for records (newest first, a cap, a
 total count) that every dashboard view and sweep uses (REQ §2.3). Logs and
 findings have a file name unique to their session, so sessions never write the
-same file. Only sweeps write causes, run rows and the `taken` mark, and a push
-that loses a race rebases and retries.
+same file. Only sweeps write causes, run rows and the `taken` mark; `merge` writes one
+new file per merge. A push that loses a race rebases and retries.
 
 **A new rule** follows R0.1. If a lint rule, a type, a test or a step in
 `verify` can enforce it, the same PR adds that check and no prose. Only a
@@ -215,9 +215,7 @@ added only after a problem recurs despite a cheaper check, and the PR that
 adds it names what it replaces (R0.2).
 
 **`platform/guidance.md`** starts as the eleven lines REQ §3.1 lists and the
-order "review, then `verify`, then push" (REQ §1.1), and nothing else. Two of
-those lines are also enforced: `verify` aborts on an edit during its run, and
-`merge` runs its wait in a way that suits the background.
+order "review, then `verify`, then push" (REQ §1.1), and nothing else.
 
 No step is skipped by changed paths at first. A proven, fail-closed skip stays
 possible later if a full run ever gets slow; skipping review for prose that
@@ -371,7 +369,7 @@ A session's problems are findings too: `log` writes one per problem, so
      follows R0.1;
    - anything touching an installed Skill, a decision record, a hook or
      settings becomes an issue.
-5. **Ideas** become issues labelled for triage.
+5. **Ideas and learnings** become issues labelled for triage.
 6. **Report** once: every number with its source, every dropped item with its
    reason.
 
@@ -428,7 +426,8 @@ ships no separate trial machinery (REQ §8 item 16).
 - The page lands once on `records` and is never rewritten. It is data the
   dashboard renders, so it needs no PR; the checker stands in for the review
   REQ §4.5 asks for. A run writes at most three missing days. This departs
-  from Terrarium, where a digest is a site page; section 14 item 18 asks the owner.
+  from Terrarium, where a digest is a site page; section 14 item 18 asks the
+  owner.
 
 ### 8.7 Cadence, cost and bounds
 
@@ -453,7 +452,7 @@ ships no separate trial machinery (REQ §8 item 16).
   bounded by work (the limits above) and its run row records an overrun
   (REQ §4.6).
 - Every cost is labelled a list-price estimate. On a subscription the view
-  also shows usage-window pressure, if a run can read it **[untested]**.
+  also shows usage-window pressure, if a run can read it **[untested]** (section 13 item 3).
 
 ## 9. Observability
 
@@ -492,7 +491,7 @@ writes to `records`; a PR the owner merged by hand is caught by `watch`.
 
 ## 10. Mixed files and sync
 
-Two imports remove most mixing: `CLAUDE.md` is a site file that
+Imports remove most mixing: `CLAUDE.md` is a site file that
 imports `platform/guidance.md`, `platform/glossary.md` and the site's
 `GLOSSARY.md`, so sync never edits a file the site writes in.
 
@@ -598,7 +597,8 @@ Steps that need a human or a laptop session:
 2. **The session id in hook payloads** for cloud, laptop and scheduled runs,
    and whether a subagent sees its parent's. Sections 5, 6 and 8.1.
 3. **OpenTelemetry from a scheduled run:** cost per subagent, and whether the
-   last interval is flushed before a short run ends. Section 8.7.
+   last interval is flushed before a short run ends; and whether a run can
+   read its subscription's usage window. Section 8.7.
 4. **A machine account's token in a cloud session:** whether pushes and posts
    show that identity. Section 12.
 5. **Client-router navigation against Terrarium's,** on the same three pages,
@@ -651,7 +651,8 @@ Each question ends with where its answer probably lies:
    **[owner]**
 8. **Which deploy ships as the seed.** Terrarium's self-updating container
    is where the deploy requirements were learned. A static host with an
-   adapter is simpler for a stranger but needs the dashboard fallback in section 9. **[owner]**
+   adapter is simpler for a stranger but needs the dashboard fallback in
+   section 9. **[owner]**
 9. **Whether a container build of an Astro site needs the memory care**
    Terrarium's needed. **[spike]** **[repo]** `deploy/entrypoint.sh` shows
    what the current cycle guards against.
@@ -670,7 +671,7 @@ Each question ends with where its answer probably lies:
     tense, colon, quotes and negation. **[repo]** The cases are in the tests
     beside `scripts/github/merge-pr.ts`; count which ones a real PR ever hit.
 13. **What the stop hook may block on.** The draft blocks once, only after a
-    PR opened or merged with no log. Eighteen sessions still forgot to log
+    commit or a PR with no log. Eighteen sessions still forgot to log
     after a merge (REQ §3.6). Should `merge` itself refresh the log, making
     the block unnecessary? **[repo]** Read how `scripts/session/log-session.ts`
     is called after a merge today.
