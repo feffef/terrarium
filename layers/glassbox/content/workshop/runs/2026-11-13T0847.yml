@@ -1,10 +1,16 @@
 session: session_013zxzeSYMKya1mzpFJhAcSk
 mode: autonomous
-focus: "Walkthroughs: the page checks warned that the nine Walkthroughs capitalise walkthrough, human-only and tenant mid-sentence, against the owner's lowercase rule. Chosen because it is concrete and fully solvable in one run, and no open PR touches these pages. Deviations for the budget: wording-only case changes, so no writer, claim checker or fresh reader; the Walkthroughs were read in full (the last six by grep and the passages around each hit); cost unreported because get_session was unavailable. Scout found two leads (stale headless-browser page, no visitor-loop page), both put on the memory page."
+focus: "Walkthroughs: the page checks warned that the nine Walkthroughs capitalise walkthrough, human-only and tenant mid-sentence, against the owner's lowercase rule. Chosen because it is concrete and fully solvable in one run, and no open PR touches these pages. Deviations for the budget: wording-only case changes, so no writer, claim checker or fresh reader; the nine Walkthroughs were read in full after review found the first read was partial; cost unreported because get_session was unavailable. Scout found two leads (stale headless-browser page, no visitor-loop page), both put on the memory page. Capitals left in the Walkthroughs' teaches lines and one diagram label are not covered by the page check and were left."
 changes:
   - walkthroughs/10.asking-for-a-change, 20.a-bug-report-becomes-work, 30.planning-a-big-change, 40.session-log-lands-on-main, 50.a-friction-becomes-a-fix, 60.adding-a-site, 70.reading-across-tenants, 80.a-change-goes-live, 90.from-file-to-browser | "This Walkthrough follows" now reads "This walkthrough follows"; Human-only and Tenant lowercase in 10 and 60 | owner decision on lowercase glossary terms in body text. Wording only, so revision and publishedAt are kept
-  - workshop/pages/index | two stale items deleted (Atlas comment, auto-triage excerpt shift); the Scout's two leads added | the memory page keeps what a later run inherits
+  - workshop/pages/index | three items deleted (the Atlas comment and the auto-triage excerpt shift, both stale, and the Terms glossed late rule question, cut whole as the least actionable); the Scout's two leads added | the memory page keeps what a later run inherits
 pagesRead:
   - walkthroughs/10.asking-for-a-change
   - walkthroughs/20.a-bug-report-becomes-work
   - walkthroughs/30.planning-a-big-change
+  - walkthroughs/40.session-log-lands-on-main
+  - walkthroughs/50.a-friction-becomes-a-fix
+  - walkthroughs/60.adding-a-site
+  - walkthroughs/70.reading-across-tenants
+  - walkthroughs/80.a-change-goes-live
+  - walkthroughs/90.from-file-to-browser

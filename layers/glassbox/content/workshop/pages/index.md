@@ -67,7 +67,6 @@ None of these is false.
 
 - *Headless browser checks* does not say `--dev` now waits for a real 200 page and for hydration (`scripts/ui/preview.ts`, `screenshot.ts`, commit 0fe188963).
 - No page teaches the `visitor-loop` Skill (blind and informed visitors, report-only); it is still changing fast, so teach only the stable idea. Nearest page: *Ideas and lessons learned*.
-
 ### Claims to check
 
 Each may be true; a later run should read the tool's source or run it.
