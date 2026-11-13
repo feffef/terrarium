@@ -1,0 +1,19 @@
+name: rule-use-echo-calls-in-subagents
+summary: The rule-use hooks made subagents run extra 'echo rule-use:' Bash calls, a large share of a read-only reviewer's few calls, with no effect on the review.
+cause: "The SubagentStart note (scripts/hooks/subagent-note.ts, #3009) tells every subagent to run a bare echo rule-use: before its final reply, and rule-use-ask.ts (#3020) answers that call with the per-rule questions, so each subagent pays two or three extra Bash calls; in clear-backlog runs 15 of 31 and 8 of 8 agents did. Signals: 'echo rule-use', 'rule-use hooks', 'SubagentStart hook demanded', 'extra Bash calls'."
+surface: guard-or-hook
+status: accepted
+ref: "readonly-brief-vs-helped-hint (the earlier helped.sh form of the same ask); issue #3020"
+notes: |-
+  2026-11-13 survey: issue #3147 closed not planned 2026-11-12: the owner keeps the calls for the rule-use data trial (#3017 reviews it from 2026-11-18); PR #3196 only reworded the note to say why the call matters.
+occurrences:
+  - session: session_013zxzeSiYFQ3mgaCyMXicwp
+    date: "2026-11-12"
+    severity: minor
+    description: "The rule-use hooks made 15 of 31 build and review agents run two extra echo rule-use Bash calls, a large share of a read-only reviewer's 3 to 7 calls."
+    solution: "Answer the rule-use note in the reply text or limit it to agents that edit (also filed as #3147)."
+  - session: session_013zxzeR3mLZWKT2R7LWmtqf
+    date: "2026-11-12"
+    severity: minor
+    description: "The SubagentStart hook demanded repeated echo rule-use: Bash calls from every read-only reviewer (8 of 8, two or three each) with no effect on the review."
+    solution: "Give read-only reviewers one rule-use report call at the end, or drop the start-of-run demand for them."

@@ -2,7 +2,8 @@ name: preview-dev-server-stale-or-unhydrated
 surface: safe
 summary: A UI check against the nuxt dev server showed old code, old CSS or no hydrated page, so a screenshot or DOM probe misled or timed out and was redone.
 cause: "The long-lived dev server (preview.ts start --dev or a cold shot --dev) misses edits to utils or CSS, serves a stale content database after a fast-forward, times out on a cold start, or never hydrates in headless Chromium, so a screenshot or probe reflects old or unhydrated code. Signals: 'stale CSS', 'did not reload', 'content database was stale', 'never hydrated', 'timed out three times', 'probe ran before hydration'. Since PR #3096 (2026-11-11) verifying-ui-changes.md says to build first when a --dev shot looks stale or unhydrated."
-status: open
+status: tracked
+ref: "issue #3235"
 fixes:
   - pr: 3096
     date: "2026-11-11"
@@ -23,3 +24,18 @@ occurrences:
     severity: minor
     description: "The dev preview server never hydrated in headless Chromium, so two checks returned empty before I rebuilt production, which cost a few minutes."
     solution: "verifying-ui-changes.md could say dev preview may not hydrate in the headless check, so build first."
+  - session: session_013zxzeSiYFQ3mgaCyMXicwp
+    date: "2026-11-12"
+    severity: minor
+    description: "The dev server answered 503 for several minutes on cold start and a wrong Lesson slug (10.gate vs gate) cost two failed screenshot rounds."
+    solution: "Say in verifying-ui-changes.md that dev answers 503 until Ready and that the route drops the numeric prefix."
+  - session: session_013zxzePXpUx7WY6K2uHsxKz
+    date: "2026-11-12"
+    severity: moderate
+    description: "Restarted the dev server about a dozen times, 1-2 minutes each, for single tweaks instead of keeping one running; HMR lag also gave stale screenshots I misread twice."
+    solution: "Start one preview server per UI task, wait for HMR (poll the rendered text) and reshoot, restarting only after a config change."
+  - session: session_013zxzeSLrkzfApGBDhjgFqB
+    date: "2026-11-12"
+    severity: minor
+    description: "First dev-preview screenshots caught the Nuxt loading screen on a cold --dev start; three retries before a warm server gave a real shot."
+    solution: "Start the dev server, curl until 200, then shoot; verifying-ui-changes.md says cold dev compiles on demand."

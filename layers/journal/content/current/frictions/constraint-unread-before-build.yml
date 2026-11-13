@@ -40,3 +40,18 @@ occurrences:
     severity: nit
     description: "I only noticed ADR-0004's 'behaviour no test can observe' exception after the fix PR's gate was green, then had to add e2e assertions and a second verdict."
     solution: "Ask which test would fail if this regressed when planning each fix, before opening the PR."
+  - session: session_013zxzeP1EixGDy96kmktFi2
+    date: "2026-11-12"
+    severity: minor
+    description: "CLAUDE.md says read the full ADR before planning; most ADRs were read only after an edit hook told me, so my first glassbox-content rule ordered a read, against ADR-0029."
+    solution: "Read the ADR summary rules that load at a first edit before drafting a rule or payload; the hook text arrives only after the write."
+  - session: session_013zxzePXpUx7WY6K2uHsxKz
+    date: "2026-11-12"
+    severity: minor
+    description: "Designed the homepage and the hero's Atlas payload before reading ADR-0025 and ADR-0028 in full; the path-scoped rules only loaded after the first edit (CLAUDE.md: read the ADRs a plan touches)."
+    solution: "List the ADRs the home page and its payload touch in CLAUDE.md's plan trigger, or load the ADR-0025/0028 rules when index.vue is merely read."
+  - session: session_013zxzeQ4cuLLoFfdaf5sE2d
+    date: "2026-11-13"
+    severity: minor
+    description: "CLAUDE.md says read the full ADR of each decision a plan touches; I recommended changes around ADR-0004, 0009, 0017 and 0027 from lessons and rule summaries only."
+    solution: "For a repo-wide assessment, have the lesson-digest agents also read the cited ADRs, or say in the output that reasons come from lessons."

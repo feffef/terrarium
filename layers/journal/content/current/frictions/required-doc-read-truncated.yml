@@ -39,3 +39,8 @@ occurrences:
     severity: nit
     description: "Before commenting on and closing #3029 I only grepped issue-tracker.md and triage-labels.md instead of reading them whole, as CLAUDE.md asks before triage."
     solution: "Read both docs in full before closing an issue; here the grep happened to cover the closing rules."
+  - session: session_013zxzeSKomYVTsF4Xw4PeC9
+    date: "2026-11-12"
+    severity: nit
+    description: "Read only the first lines of github-integration.md and pr-workflow.md before the first GitHub operation, though CLAUDE.md says read each whole."
+    solution: "Read both docs whole before the first GitHub call; a head cut-off hides rules lower in the file."

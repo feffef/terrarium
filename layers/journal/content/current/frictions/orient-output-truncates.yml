@@ -31,3 +31,23 @@ occurrences:
     severity: minor
     description: "orient.ts output for a Subject is 50 to 70 KB, so I read it in two pages three times; plain.ts for readers duplicated it."
     solution: "Let orient --subject skip the frontmatter and Excerpt blocks, or print plain text only."
+  - session: session_013zxzeS5rcf8VwnGmjcpphq
+    date: "2026-11-12"
+    severity: minor
+    description: "orient.ts --subject output was 72 KB, so it needed two paged reads and consumed context the page text duplicates"
+    solution: "Have --subject print only pagesRead and page paths when the pages were already read from the index files"
+  - session: session_013zxzeRo4piyeogCXsijcHx
+    date: "2026-11-12"
+    severity: minor
+    description: "Orientation output was 69 KB for one Subject, so reading it took paging; the guide index files were another 80 KB read whole."
+    solution: "orient.ts --subject could print only the Subject's page bodies once; the index files are already read from the first run."
+  - session: session_013zxzePqQeuW4GkMnxNpPp3
+    date: "2026-11-12"
+    severity: minor
+    description: "Orientation output plus two 40 KB index files read whole used a large share of context before any edit."
+    solution: "Print the index entries only for the chosen Subject plus titles for the rest."
+  - session: session_013zxzeT2YDMzAWKoi2AC98c
+    date: "2026-11-12"
+    severity: minor
+    description: "The orientation output is over 25 KB and the Subject output over 70 KB, so reading them cost several paged reads and many tokens."
+    solution: "Print only the Subject's pages' Try-it and Where next on request, or split the output into files up front."

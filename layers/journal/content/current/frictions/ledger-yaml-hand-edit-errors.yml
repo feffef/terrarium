@@ -48,3 +48,8 @@ occurrences:
     severity: nit
     description: "Two content files failed validation on a colon in an unquoted YAML scalar, found only when the full validator or page test ran."
     solution: "Quote any description or changes entry that holds a colon; the glassbox-curate run-entry skeleton could show them quoted."
+  - session: session_013zxzeSgDqRuwZif7Rgt2MW
+    date: "2026-11-11"
+    severity: nit
+    description: "Run entry failed validate:content twice because plain YAML scalars held colon-space inside changes rows, parsed as objects; also the memory page exceeded its word cap once."
+    solution: "Have the orient skeleton warn to avoid colon-space in changes rows, and run workshop.spec before the first commit."

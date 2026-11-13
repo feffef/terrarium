@@ -31,3 +31,8 @@ occurrences:
     severity: minor
     description: "Picked a diff-based gate check for #3047 without running it on the three recorded occurrences; it catches 1 of 3 and audit-docs already covers it. The owner's question exposed this, costing one round."
     solution: "Run a proposed check on the issue's own concrete cases before presenting it as a pick."
+  - session: session_013zxzeQQzVdav2Lzx9D5WBr
+    date: "2026-11-11"
+    severity: minor
+    description: "My triage-change proposal hid the builder's decisions in triage.md, which the orchestrator may not read, so it could not tell which reviewers to resume; two reviewers caught it."
+    solution: "When an orchestrator may read only replies, check every decision it must make has its input in a reply."

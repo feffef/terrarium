@@ -1,0 +1,16 @@
+name: gh-api-field-flag-turns-get-into-post
+summary: A gh api call that passed query values with -f became a POST, which GitHub rejected with a 422; nothing was created.
+cause: "gh api switches to POST when given -f or -F fields unless --method GET (or -X GET) is set; sessions listing issues with -f state=open hit the issues endpoint as a create and got 422. Nothing was written only because the body was invalid. Signals: 'gh api', '-f state=open', 'became a POST', '422'."
+surface: safe
+status: tracked
+occurrences:
+  - session: session_013zxzeR3mLZWKT2R7LWmtqf
+    date: "2026-11-12"
+    severity: nit
+    description: "A gh api call with -f state=open became a POST to the issues endpoint and failed with a 422; nothing was created."
+    solution: "Use -X GET explicitly with -f on gh api reads; github-integration.md could say so."
+  - session: session_013zxzeSkGfgujTxwvEaiFTh
+    date: "2026-11-12"
+    severity: minor
+    description: "I passed -f query params to gh api on the issues endpoint, which turned a GET into a POST; GitHub rejected it with 422, so nothing was created."
+    solution: "Document in github-integration.md that gh api -f makes a POST; use -X GET or put parameters in the URL."

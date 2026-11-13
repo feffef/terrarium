@@ -6,11 +6,6 @@ status: open
 notes: |-
   2026-10-21 design: a rule on parallel branches dropped: the five occurrences have different causes, one is already fixed by a cap in the contract, and the cost is one merge step.
 occurrences:
-  - session: session_013zxzeT84bc5MXpkCAApyxA
-    date: "2026-10-29"
-    severity: minor
-    description: "PR #2677 got no CI checks because the branch conflicted with main. A glassbox-improve run had re-pinned four of the same pages while the branch sat unpushed."
-    solution: "Before opening a PR from a branch that waited a while, run git merge-tree against origin/main; GitHub runs no pull_request workflow on an unmergeable PR"
   - session: session_013zxzeT8tDd5GPJiRNZRA4J
     date: "2026-11-04"
     severity: minor

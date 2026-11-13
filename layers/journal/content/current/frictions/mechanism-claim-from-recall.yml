@@ -22,21 +22,6 @@ fixes:
     date: "2026-10-28"
     summary: "glassbox-improve's lead proposes only facts and wording found in the source (an absence claim most of all), and its researcher checks an absence claim against every code location."
 occurrences:
-  - session: session_013zxzeSgD6cuF2mawqY6jWM
-    date: "2026-10-29"
-    severity: minor
-    description: "Told the owner the 'hearsay' line was cut from dispatch-subagents; it was cut from audit-skills, and dispatch-subagents lost a different line. Caught before building"
-    solution: "Quote a cut line only from the diff, with its path, before naming it in a question"
-  - session: session_013zxzeQBZ87ypp2V7zZVW9v
-    date: "2026-10-29"
-    severity: minor
-    description: "Wrote friction-rates.ts reading an `id` field from session logs from recall; the field is `session`, so the first run counted 0 hits"
-    solution: "Check a data file's field names (head one log) before coding against it; running the script caught it"
-  - session: session_013zxzeQUV6c2tzkFzv3WgiY
-    date: "2026-10-29"
-    severity: nit
-    description: "I stated in a status line that the hints and auto-imports writers had no findings; the hints writer had been sent findings. Caught and corrected in my next message."
-    solution: "Check the sent-message list before summarising who got findings (CLAUDE.md: verify before you state)."
   - session: session_013zxzeRYnqNveUu5w9oJd9q
     date: "2026-10-30"
     severity: minor
@@ -197,3 +182,23 @@ occurrences:
     severity: moderate
     description: "Wrote a harvest Routine bullet into Scheduled tasks from the Skill's own text; the owner said no Routine exists, so it was written, checked and reverted."
     solution: "Check whether a Routine exists before listing a Skill as one, since SKILL.md wording (A Routine runs this Skill) states intent not fact."
+  - session: session_013zxzeSjaFuTmBXbfN2o5AH
+    date: "2026-11-10"
+    severity: nit
+    description: "Claim checkers twice flagged a removed sentence as the only statement of a fact when it was still on the page, so I re-grepped each one."
+    solution: "Brief checkers to grep the same page for the fact before calling a removal a loss."
+  - session: session_013zxzePXpUx7WY6K2uHsxKz
+    date: "2026-11-12"
+    severity: minor
+    description: "Wrote hero lines saying every change is checked and goes through a pull request, though session logs skip the gate (ADR-0009, glossary Observability); both reviews flagged it and it is still open with the owner."
+    solution: "Check ADR-0009's exception before writing any 'every change' claim, or phrase it as 'every code and content change'."
+  - session: session_013zxzeTDaVmVLQ94B5sfpZB
+    date: "2026-11-12"
+    severity: moderate
+    description: "New history prose overclaimed beyond its evidence: cost framed as pressure, a claim nobody noticed the waste, lessons earning the highest grade against a later grading finding, all 68 pages read."
+    solution: "Check each drafted claim against its source before showing it, and read the whole page once before the first review."
+  - session: session_013zxzeS7WM4TBNbgtufBjAT
+    date: "2026-11-12"
+    severity: minor
+    description: "Told the person the Glass Box words are capitalised on purpose throughout the guide without counting; the guide uses them lowercase, and they caught it."
+    solution: "Count a claim in its source before stating it (CLAUDE.md, verify before you state); a one-line grep would have shown 127 lowercase lessons."

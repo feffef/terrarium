@@ -59,3 +59,13 @@ occurrences:
     severity: nit
     description: "Ran a throwaway git checkout -b, checkout and branch -D chain in one Bash call, against git-conventions' one state-changing command per call; it did nothing useful."
     solution: "Do not touch branches at all after orient; run each git command alone."
+  - session: session_013zxzePbgAjUYqz6Zpvm4uU
+    date: "2026-11-12"
+    severity: nit
+    description: "Ran git push in the same Bash call as the backgrounded gate, which git-conventions says never to do; nothing broke."
+    solution: "Push in its own call before starting the gate."
+  - session: session_013zxzeSdKDZBdqz6vRp3xW1
+    date: "2026-11-12"
+    severity: nit
+    description: "Ran git push and pnpm gate:scoped in one Bash command, against git-conventions."
+    solution: "Push in its own call, then start the gate in a separate call."

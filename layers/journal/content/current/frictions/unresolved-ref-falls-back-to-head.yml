@@ -1,0 +1,18 @@
+name: unresolved-ref-falls-back-to-head
+summary: A git lookup whose ref or pattern matched nothing printed the branch tip instead, which looked like a result at first.
+cause: "A git log call built from a grep that matched nothing (an empty revision argument), or given a hash that does not resolve, showed HEAD, so the same tip commit printed for each lookup (19 times in one loop) and read as a match. Signals: 'fell through to HEAD', 'printed the branch tip', 'the same ... commit 19 times', 'could not resolve'."
+surface: safe
+status: tracked
+notes: |-
+  2026-11-13 design: only the Digest half (an empty revision prints HEAD) gets a fix; a git-conventions.md bullet for the unknown-hash half dropped: git errors on an unknown hash, both cited hashes resolve, and Fetch before you trust history already covers a stale origin/main.
+occurrences:
+  - session: session_013zxzeRd1qkgnadmWbZLoZu
+    date: "2026-11-13"
+    severity: minor
+    description: "My first lookup of 20 PR merge commits used a grep that matched nothing and fell through to HEAD, printing the same session-log commit 19 times."
+    solution: "scripts/git/list-recent-prs.ts --diff, which github-integration.md names, would have given the touched files directly; I read that doc only later."
+  - session: session_013zxzeRqf691rc3SdLaPbvP
+    date: "2026-11-13"
+    severity: nit
+    description: "Checker subagents cited commit hashes I could not resolve (42d8d760b, 28cfa01); git log -1 with an unknown hash printed the branch tip, which looked like a match at first."
+    solution: "Verify a cited hash with git cat-file -e before reading its date; brief.md could ask checkers to cite full hashes."

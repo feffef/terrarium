@@ -1,0 +1,17 @@
+name: placeholder-guard-denies-quoted-placeholder
+summary: The guard against unfilled brief placeholders denied a dispatch whose prompt only named the placeholder while explaining it, costing a retry.
+cause: "Comes from subagent-brief-defects and PR #3064: dispatch-read-guard.ts denies an Agent prompt or SendMessage message matching /@@\\w+@@|{UPPER_CASE}/ (scripts/hooks/dispatch-read-guard.ts:39), so an orchestrator's wrapper text that quotes the brief's literal scratch-dir placeholder to say how to fill it is denied as unfilled. Signals: 'my own wrapper text contained the literal placeholder', 'mentioned the literal curly-braced scratch placeholder while explaining it', a retry with the prompt reworded."
+surface: guard-or-hook
+status: open
+ref: "subagent-brief-defects, fix PR #3064"
+occurrences:
+  - session: session_013zxzeSPxncNsUJXwnc2DvG
+    date: "2026-11-11"
+    severity: nit
+    description: "The dispatch-read guard blocked my first survey brief because my own wrapper text contained the literal placeholder, costing one retry and a filled copy of the brief."
+    solution: "Have the Skill say to write the filled brief to a scratchpad file and hand that path, since pasting verbatim trips the guard."
+  - session: session_013zxzeP3xBUNvHd5kGFihuo
+    date: "2026-11-12"
+    severity: nit
+    description: "The retry was denied again because my own prompt mentioned the literal curly-braced scratch placeholder while explaining it; I reworded it."
+    solution: "The guard could ignore a placeholder named inside backticks, or the briefs could say to hand them by path without naming it."

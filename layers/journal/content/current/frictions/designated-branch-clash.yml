@@ -14,3 +14,8 @@ occurrences:
     severity: minor
     description: "System prompt says push only to the designated branch and open no PR unless asked, while clear-backlog and ADR-0003 say to push per-issue branches and open PRs; I followed the Skill."
     solution: "State in the clear-backlog Skill that invoking it authorises pushing its named branches and opening PRs despite a session branch pin."
+  - session: session_013zxzeScSe7rW5BumGHCxoJ
+    date: "2026-11-11"
+    severity: nit
+    description: "Cut a local branch for the post, then had to delete it and return to the session branch, against the start-on-your-branch rule."
+    solution: "The blog-post step 7 wording 'cut a working branch' reads against CLAUDE.md; say 'stay on the session branch'."

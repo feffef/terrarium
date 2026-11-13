@@ -1,12 +1,15 @@
 name: harvest-first-pass-shallow
 surface: safe
 summary: A first harvest run stopped after a few clusters, or skipped a step of its Skill, so the owner had to challenge it before a real pass.
-cause: "The harvest Skill's steps are read and then compressed: the list is read in part, a learning is judged by the idea test, or the list-merges step is skipped, so a run files nothing or records no per-cluster result. Signals: 'first pass stopped after about ten clusters', 'filed nothing', 'skipped the Skill's list-merges-since step', 'head -300'."
+cause: "The harvest Skill's steps are read and then compressed: the list is read in part, a learning is judged by the idea test, or the list-merges step is skipped, so a run files nothing or records no per-cluster result. PR #3106 made step 1 read the list whole and step 3 name the failed test; PR #3137 made the per-cluster record and the source read checked. Signals: 'first pass stopped after about ten clusters', 'filed nothing', 'skipped the Skill's list-merges-since step', 'head -300'."
 status: open
 fixes:
   - pr: 3106
     date: "2026-11-11"
     summary: "harvest step 3 judges a learning by its doc home, a dropped cluster names the failed test and the summary counts clusters, step 1 reads the list whole from a file, step 4 names the triage docs."
+  - pr: 3137
+    date: "2026-11-12"
+    summary: "harvest checks a per-cluster record and the source read, and limits the simplify test to Platform machinery."
 occurrences:
   - session: session_013zxzeP6PH92ubTps39j3HD
     date: "2026-11-11"
@@ -18,3 +21,8 @@ occurrences:
     severity: minor
     description: "On the first real run I skipped the Skill's list-merges-since step and wrote no per-cluster record, using greps of the current repo instead; I only noticed when the owner asked what the compact view had hidden."
     solution: "Follow the Skill's steps as written or say which I replaced; the new harvest list carries the start time and outcome the checks need."
+  - session: session_013zxzeP4WS4kX4LSBrVszT6
+    date: "2026-11-12"
+    severity: moderate
+    description: "Filed three Seedlings without reading their source session logs whole (step 4) or the Glass Box glossary; one body misdescribed the 2026-11-09 session until the owner asked and I corrected it."
+    solution: "Read each source log and the Tenant glossary before writing the body, as step 4 and the tenant-glossary rule say."

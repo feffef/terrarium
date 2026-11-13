@@ -86,3 +86,13 @@ occurrences:
     severity: nit
     description: "I typed this session's id from memory in the first commit message; the commit-msg hook added the right trailer, but I had to strip my line."
     solution: "Leave the trailer to the hook, as the commit-msg hook is meant to."
+  - session: session_013zxzePbgAjUYqz6Zpvm4uU
+    date: "2026-11-12"
+    severity: nit
+    description: "Typed a placeholder session id in my first commit message; the commit-msg hook replaced it with the real trailer, so no harm."
+    solution: "Copy the id from the attribution reminder before writing the message."
+  - session: session_013zxzeS7WM4TBNbgtufBjAT
+    date: "2026-11-12"
+    severity: nit
+    description: "Wrote another session's id into a commit-message file from memory; caught before committing, and the hook added the right trailer."
+    solution: "Never type a session id; leave the trailer to .githooks/commit-msg (ADR-0017) and check it landed."

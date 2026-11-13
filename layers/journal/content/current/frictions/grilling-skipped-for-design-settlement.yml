@@ -36,3 +36,8 @@ occurrences:
     severity: minor
     description: "Trimmed the tile intro instead of asking what it should say, so the user had to flag it as meaningless; one extra round and commit."
     solution: "Settle every displayed string, intro lines included, in the first question round, as CLAUDE.md says for user-facing UI."
+  - session: session_013zxzePXpUx7WY6K2uHsxKz
+    date: "2026-11-12"
+    severity: minor
+    description: "Did not invoke the grilling Skill for owner-facing UI (CLAUDE.md asks it); one question round, then about twenty owner corrections to layout and copy arrived as redo rounds."
+    solution: "Grill the claim, each tile's content, section lines and mobile behaviour in the first round, before building a prototype."

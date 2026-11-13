@@ -9,11 +9,6 @@ fixes:
     date: "2026-10-16"
     summary: "clear-backlog §3 now says a restart kills running workflows and a resumeFromRunId resume must pass the original args."
 occurrences:
-  - session: session_013zxzeQn5ksJrQasTk95LKb
-    date: "2026-10-29"
-    severity: nit
-    description: "The worker process restarted mid code-review; state survived but the review dispatch had to be redone."
-    solution: "None needed beyond committing before long steps, which held."
   - session: session_013zxzeTLLY3FmiXzuBKgc2o
     date: "2026-11-01"
     severity: moderate

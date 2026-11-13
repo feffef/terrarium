@@ -17,11 +17,6 @@ fixes:
     date: "2026-11-04"
     summary: "New scripts/github/verdict-line.ts prints the Reviewed line from git rev-parse HEAD (warns when HEAD is not the PR head) and pr-workflow step 4 says to paste its output."
 occurrences:
-  - session: session_013zxzeQPnKXDNxriCwJfZnz
-    date: "2026-10-29"
-    severity: minor
-    description: "Wrote the Reviewed SHA in the PR 2680 verdict comment from memory instead of git output, then caught it before merging and corrected the comment to the real head."
-    solution: "Paste the SHA from git rev-parse HEAD into the verdict, never type it."
   - session: session_013zxzeSiq7TZmfmF5D5Rbwt
     date: "2026-10-31"
     severity: nit

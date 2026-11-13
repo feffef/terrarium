@@ -1,0 +1,15 @@
+name: harvest-step-4-unstated-cases
+summary: The harvest Skill's filing step did not say which kind a mixed cluster counts under for its cap, so a run guessed.
+cause: "harvest SKILL.md step 4 did not say which kind a mixed cluster counts under for its 5-per-kind cap; one run left two passing clusters unfiled. PR #3182 added the rule. Signals: 'Step 4', '5-per-kind cap', 'mixed cluster'."
+surface: safe
+status: open
+fixes:
+  - pr: 3182
+    date: "2026-11-12"
+    summary: "harvest SKILL.md says how a mixed cluster counts under step 4's caps."
+occurrences:
+  - session: session_013zxzeS6gV5rfHembHQYP6K
+    date: "2026-11-12"
+    severity: minor
+    description: "Step 4's 5-per-kind cap does not say which kind a mixed cluster uses, so two passing workflow clusters went unfiled by my guess."
+    solution: "Say a cluster counts for the kind of most of its entries (Seedling 3178)."

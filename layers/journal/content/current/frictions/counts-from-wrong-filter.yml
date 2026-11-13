@@ -4,10 +4,11 @@ summary: >-
 cause: >-
   A number is taken from a throwaway script, a measurement window or an eligibility set whose filter was not checked against its source (a dropped outlier, a window start not taken from the issue, an eligibility rule not applied), so the count is wrong even though it was computed. Signals: "throwaway script", "window", "would skip", "eligible".
 surface: safe
-status: open
-ref: "issue #2435 (split from counts-not-tallied)"
+status: tracked
 notes: |-
   2026-10-24 design: a CLAUDE.md or doc line dropped: CLAUDE.md already says a count is a fact only after you read every item, it was in context for all 5, and the five causes (eligibility rule, outlier drop, window start, ls headers) share no mechanism a helper could check.
+  2026-11-13 design: a midden-survey script that lists closed-unmerged PRs completely is dispatched for the aiFTh occurrence only; the entry's other causes stay as the 2026-10-24 note says.
+  2026-11-13: ref cleared; it named issue #2435 (closed 2026-10-23), which split this entry from counts-not-tallied.
 fixes: []
 occurrences:
   - session: session_013zxzeRynjgY3G22uZYaKCk
@@ -50,3 +51,13 @@ occurrences:
     severity: nit
     description: "Keyed sessions by a 10-character id prefix; three of 390 collided and skewed the edit-versus-read table until I reran on full ids. Caught before publishing."
     solution: "Key by full session id and assert uniqueness in throwaway aggregation scripts."
+  - session: session_013zxzeRvdzBc3xXGo24TkVf
+    date: "2026-11-12"
+    severity: nit
+    description: "First count of sessions that used inspect-session (6) came from current logs only; the archive held many more, and I corrected it only after counting both folders."
+    solution: "Count every log folder (current and archived) before stating how many sessions did something."
+  - session: session_013zxzeSkGfgujTxwvEaiFTh
+    date: "2026-11-12"
+    severity: moderate
+    description: "My first manual PR page loop stopped at 8 pages and silently missed PRs 1827-1830 and 1804; I caught it only by spot-checking a branch's PR."
+    solution: "Have midden-survey give one tested command that pages until created_at falls before the window."

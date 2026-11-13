@@ -1,0 +1,20 @@
+name: run-summary-findings-crash-on-recheck
+summary: run-summary.ts --findings crashed on a reviewer's re-check file that did not have the review's shape.
+cause: ".agents/skills/clear-backlog run-summary.ts --findings reads each findings file as the review's object; a re-check reviewer wrote a bare array, or an object with no findings key, and the script threw instead of reporting the file. Signals: 'run-summary --findings crashed', 're-check file', 'no findings key', 'a bare array'."
+surface: safe
+status: open
+fixes:
+  - pr: 3196
+    date: "2026-11-12"
+    summary: "run-summary.ts --findings reads a bare array or a file with no findings key, and the re-check message states the findings shape."
+occurrences:
+  - session: session_013zxzeSiYFQ3mgaCyMXicwp
+    date: "2026-11-12"
+    severity: nit
+    description: "run-summary --findings crashed on a reviewer's re-check file that had no findings key, and verdict-line.ts failed in a fresh worktree without node_modules."
+    solution: "Parse a re-check file tolerantly, and let verdict-line take the head sha so a plain worktree is not needed."
+  - session: session_013zxzeR3mLZWKT2R7LWmtqf
+    date: "2026-11-12"
+    severity: minor
+    description: "run-summary.ts --findings crashed on a re-check findings file because the reviewer wrote a bare array, not the review's shape."
+    solution: "Make findingsSummary accept a bare array, or the re-check prompt in clear-backlog §3 should state the shape."

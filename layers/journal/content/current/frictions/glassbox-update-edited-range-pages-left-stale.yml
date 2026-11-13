@@ -28,3 +28,8 @@ occurrences:
     severity: minor
     description: "The update script leaves pages with edited ranges unpinned, so subagents could not pass their tests until I pinned by hand."
     solution: "Brief agents to pin edited pages themselves, or have the script pin them after re-lining."
+  - session: session_013zxzePP7cbXFfoqEXbKwKW
+    date: "2026-11-12"
+    severity: minor
+    description: "glassbox-update.ts --write left the two pages with an edited range wholly unpinned, so I hand-pinned them and used a grep for the old revision to confirm none remained."
+    solution: "Have the script print the unpinned pages by name after --write."

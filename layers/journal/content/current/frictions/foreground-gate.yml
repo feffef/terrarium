@@ -27,3 +27,8 @@ occurrences:
     severity: nit
     description: "CLAUDE.md says run anything over 2 minutes with run_in_background; I ran the research branch's gate:scoped in the foreground, though it finished."
     solution: "Default every gate:scoped call to a background log."
+  - session: session_013zxzePXpUx7WY6K2uHsxKz
+    date: "2026-11-12"
+    severity: minor
+    description: "Ran a server start plus wait loop in the foreground past the 590s limit while typecheck ran alongside; it was moved to background and left a dev server running (CLAUDE.md self-verification: run long jobs in background)."
+    solution: "Start the server with run_in_background and a log file, never alongside typecheck, and stop it by pid when done."

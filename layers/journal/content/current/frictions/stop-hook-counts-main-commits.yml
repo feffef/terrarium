@@ -28,3 +28,8 @@ occurrences:
     severity: nit
     description: "The Stop hook counted 46 unpushed commits against a remote branch deleted after the merge, though almost all were main's own commits."
     solution: "Count commits against origin/main, or skip the nag when the remote branch no longer exists."
+  - session: session_013zxzeNjAbKXTy5zKs2fg8r
+    date: "2026-11-12"
+    severity: nit
+    description: "Merged origin/main into the session branch to run a lookup script, so the Stop hook counted 40 unpushed commits (merged main history on a remote branch deleted by an earlier merge) and asked for a push."
+    solution: "Use a detached checkout of origin/main for a read-only check instead of merging it into the session branch."

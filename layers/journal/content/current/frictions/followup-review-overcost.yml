@@ -11,3 +11,13 @@ occurrences:
     severity: minor
     description: "Review of a one-file post cost two extra subagents; the only real catch was length, and each text edit forced a new fact-check round because the Fact-checked blob must match."
     solution: "Check paragraph count and description hook before step 9, so edits land before the first fact-check."
+  - session: session_013zxzeP3xBUNvHd5kGFihuo
+    date: "2026-11-12"
+    severity: minor
+    description: "SKILL §5 says review the ledger PR by the simple-change test, but a 58-file data-only diff fails the count, so I ran full code-review on machine-written YAML."
+    solution: "Say what a ledger PR needs: its content spec and gate, or one reviewer on occurrences."
+  - session: session_013zxzeNrvAWHmAPYsSy8u7x
+    date: "2026-11-12"
+    severity: minor
+    description: "Ran two code-review subagents (about 164,000 tokens) on a 4-line, 2-file change because pr-workflow's simple-change test excludes any code-logic change, even a constant."
+    solution: "Let the simple-change test treat a single constant or number change as simple, or let code-review run both axes inline for a diff this small."

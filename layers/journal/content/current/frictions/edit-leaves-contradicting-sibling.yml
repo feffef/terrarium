@@ -7,6 +7,7 @@ surface: safe
 status: accepted
 notes: |-
   2026-11-11 survey: issue #3047 closed not planned 2026-11-11: the owner leaves the Friction logged as accepted noise; a diff-based gate check would have caught 1 of 3 recent occurrences and audit-docs already greps the nouns the last 48 hours removed. Reopen if it turns moderate or recurs at a higher rate.
+  2026-11-13 survey: gzxT (2026-11-12, moderate: row text changed with only unit tests run, an e2e assertion on the old text failed the gate) and sxKz (minor) appended; the 2026-11-11 note's reopen condition (turns moderate) is met, left accepted for the owner to decide.
 fixes:
   - pr: 2336
     date: "2026-10-20"
@@ -45,3 +46,13 @@ occurrences:
     severity: moderate
     description: "My first pass missed six Skill briefs that also asked for verdict tables, and several parser cases; the design author's review and later review rounds caught them, costing five review rounds."
     solution: "Before removing a flow, git grep for every phrasing of the ask (\"why it loaded\", \"yes/partly/no\"), and probe a shell-command parser with adversarial inputs before the first review."
+  - session: session_013zxzePXpUx7WY6K2uHsxKz
+    date: "2026-11-12"
+    severity: minor
+    description: "Found stale references (page title, comments, two smoke tests, glossary entry, dead wide/.wip code) only in a final pass, not in the same edit as each change (CLAUDE.md one home per fact)."
+    solution: "Grep a changed string's other statements and the tests that count tiles right after each structural or copy edit."
+  - session: session_013zxzeSLxxdLwoN9gcngzxT
+    date: "2026-11-12"
+    severity: moderate
+    description: "Changed Where next and Lessons already read row text and ran only unit tests; an e2e assertion on the old text failed in the gate, costing a second full gate run."
+    solution: "Grep tests/e2e for the changed text and run the touched e2e before the gate, per One home per fact."

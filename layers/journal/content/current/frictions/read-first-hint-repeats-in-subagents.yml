@@ -2,10 +2,12 @@ name: read-first-hint-repeats-in-subagents
 summary: >-
   The hint that points to a required doc fires again in subagents that were told to read nothing else, or had already read it.
 cause: >-
-  read-first-hint.ts (PostToolUse) points to git-conventions.md or github-integration.md on a matching call in every session, including dispatched subagents whose brief limits what they read, and repeats on each call even after the doc was read; since PR #2669 it no longer fires for read-only git show, ls-tree and cat-file, though log, blame and other git calls still hint. Signals: 'hint repeated on every call', 'hint to read git-conventions.md after a detached checkout', a subagent explaining why it ignored the hint, a subagent skipping the doc because its calls were read-only.
+  read-first-hint.ts (PostToolUse) points to git-conventions.md or github-integration.md on a matching call in every session, including dispatched subagents whose brief limits what they read, and repeats on each call even after the doc was read; since PR #2669 it no longer fires for read-only git show, ls-tree and cat-file, and since PR #3198 not for git rev-parse or a list-only git branch; log, blame and other git calls still hint. Signals: 'hint repeated on every call', 'hint to read git-conventions.md after a detached checkout', a subagent explaining why it ignored the hint, a subagent skipping the doc because its calls were read-only.
 surface: guard-or-hook
-status: open
-ref: ""
+status: tracked
+ref: "issue #3194"
+notes: |-
+  2026-11-13 survey: issue #3146 (reminders reach subagents after their first edit or git call) closed not planned 2026-11-12: the owner accepts the cost; PR #3198 narrowed the hint the same day; issue #3194 stays open for it.
 fixes:
   - pr: 2550
     date: "2026-10-25"
@@ -13,14 +15,22 @@ fixes:
   - pr: 2669
     date: "2026-10-29"
     summary: "The git-conventions read-first hint now skips read-only git show, ls-tree and cat-file, and CLAUDE.md names the skipped subcommands."
+  - pr: 3198
+    date: "2026-11-12"
+    summary: "read-first-hint.ts no longer fires the git-conventions hint for git rev-parse or a list-only git branch."
 occurrences:
-  - session: session_013zxzeQ5JaiqQgggGaNSagD
-    date: "2026-10-29"
-    severity: nit
-    description: "Subagents broke brief lines or hook-requested reads: the sonnet rater used cd with git, and several never read git-conventions.md after the hook asked, because their calls were read-only."
-    solution: "The hook's wording could say read-only show, diff and ls-tree calls need no read, so agents stop reporting it as a miss."
   - session: session_013zxzeSkTLmRxa2PWgt3kPw
     date: "2026-11-02"
     severity: nit
     description: "Several subagents ran git log/show before reading docs/agents/git-conventions.md, which CLAUDE.md requires first"
     solution: "Name git-conventions.md in the rater, researcher and writer briefs' read-first lists"
+  - session: session_013zxzeSiYFQ3mgaCyMXicwp
+    date: "2026-11-12"
+    severity: minor
+    description: "Hook reminders to read a doc or ADR reached 6 of 7 builder subagents after their first edit or git call, so each paid tokens for a read that changed nothing."
+    solution: "Name the docs in the build brief or fire the reminder earlier for subagents (also filed as #3146)."
+  - session: session_013zxzeR3mLZWKT2R7LWmtqf
+    date: "2026-11-12"
+    severity: nit
+    description: "The git-conventions hint fired after read-only or first git commands for three clear-backlog agents, though CLAUDE.md already exempts read-only git."
+    solution: "Narrow the hint in scripts/hooks/ to skip diff, log, show and rev-parse."

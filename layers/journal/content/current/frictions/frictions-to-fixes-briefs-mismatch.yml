@@ -31,11 +31,6 @@ fixes:
     date: "2026-11-11"
     summary: "survey-brief.md: for a closed regression issue, read closed_by_pull_requests (issue_read) and cite any PR that closed it."
 occurrences:
-  - session: session_013zxzeRnPtjPsVQM71SzX63
-    date: "2026-10-29"
-    severity: nit
-    description: "Design subagent had no short path for nit picks where the right design is no change; sections 1 to 5 apply in full, and audit-skills output was 505 KB."
-    solution: "Let the design brief say a pick may stop at section 2 with no change when its cause is a read-past rule, and print docReadCounts alone."
   - session: session_013zxzePnfDGz3F3p9spej9f
     date: "2026-10-30"
     severity: nit
@@ -91,3 +86,8 @@ occurrences:
     severity: minor
     description: "Design subagent: my picks named the wrong Skills (digest, glassbox-update, not blog or curate), and the design brief has no shape for a no-change recommendation; it spent about 137k tokens to drop all four picks."
     solution: "Name each session's Skill in a pick; give the design brief a no-change form and an early drop path for guard-only fixes."
+  - session: session_013zxzeP3xBUNvHd5kGFihuo
+    date: "2026-11-12"
+    severity: minor
+    description: "Survey subagent: list-merges-since output lacks dates and subjects for merge commits, so it made about 60 per-PR gh api calls to date fixes."
+    solution: "Add merged_at and title to list-merges-since --merges-only output."

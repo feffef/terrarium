@@ -7,6 +7,9 @@ fixes:
   - pr: 3126
     date: "2026-11-12"
     summary: "clear-backlog SKILL.md §1 now says explore agents write to GitHub, to tell the owner, and that writes is an unchecked claim."
+  - pr: 3196
+    date: "2026-11-12"
+    summary: "run-summary.ts flags a build explore result with no writes as NO WRITES."
 occurrences:
   - session: session_013zxzeShqaQAEUkXf1Hwnd6
     date: "2026-11-11"
@@ -18,3 +21,8 @@ occurrences:
     severity: minor
     description: "Accepted an explore agent's writes: [] as true; the agent had posted a comment and relabelled the issue, found only later in the transcript."
     solution: "The explore script could compare the writes list with the issue's events, or the orchestrator check events before trusting an empty writes."
+  - session: session_013zxzeNWbHYVE9UDhB1zNHD
+    date: "2026-11-12"
+    severity: minor
+    description: "The #3145 explore agent reported build but wrote no label or comment; I started its build before checking, so the approval label was missing for a few minutes."
+    solution: "After explore, verify each build issue carries ready-for-agent before section 3, or have run-summary flag a build result with no writes."

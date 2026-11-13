@@ -21,3 +21,8 @@ occurrences:
     severity: moderate
     description: "Checked tile text fit only with this Linux build's narrow fallback fonts; on macOS it wrapped, which took a follow-up PR"
     solution: "When text must fit a fixed width, check it with a wider font forced (DejaVu Serif and Sans Mono) before calling the layout done"
+  - session: session_013zxzePXpUx7WY6K2uHsxKz
+    date: "2026-11-12"
+    severity: nit
+    description: "Skipped the wide-font width check from verifying-ui-changes.md for the new buttons and section lines; the button label wrapping on a phone was caught only by eye."
+    solution: "Add a scrollWidth versus clientWidth check with DejaVu fonts to the UI review step, or an e2e assert for primary tile buttons."

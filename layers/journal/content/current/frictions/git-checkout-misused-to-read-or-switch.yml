@@ -27,3 +27,8 @@ occurrences:
     severity: nit
     description: "A stray git checkout -b tmp-check in a compound command moved me off the session branch briefly; fixed with checkout and branch -d."
     solution: "Keep exploratory git read-only (git show) per git-conventions."
+  - session: session_013zxzeNrvAWHmAPYsSy8u7x
+    date: "2026-11-12"
+    severity: nit
+    description: "Put a stray git checkout --detach into a read-only grep command, which detached HEAD; I noticed from git status and re-attached the session branch in the next call, with nothing lost."
+    solution: "Keep read-only searches free of git commands that change state, and check git status after any git call in a compound command."

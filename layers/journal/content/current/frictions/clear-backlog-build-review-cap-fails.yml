@@ -1,13 +1,20 @@
 name: clear-backlog-build-review-cap-fails
 summary: The backlog build script reports a branch as failed when review hits its three-round limit with only small findings left, so the main agent fixes them by hand.
-cause: "reviewBranch in .claude/workflows/clear-backlog-build.js returns status 'failed' with openFindings when round 3 still has worthFixing findings; clear-backlog SKILL.md section 3 says only 'failed: fix the brief and re-run'. Signals: 'review capped at 3 rounds', 'came back failed at the 3-round cap'. A 2026-11-11 run also spent 4.4M tokens over 52 agents when five of six small branches hit the cap on cosmetic findings; issue #3110 tracks a redesign of the review and fix steps."
+cause: "reviewBranch in .claude/workflows/clear-backlog-build.js returns status 'failed' with openFindings when round 3 still has worthFixing findings; clear-backlog SKILL.md section 3 says only 'failed: fix the brief and re-run'. Signals: 'review capped at 3 rounds', 'came back failed at the 3-round cap'. A 2026-11-11 run also spent 4.4M tokens over 52 agents when five of six small branches hit the cap on cosmetic findings; PR #3119 then redesigned the review and fix steps (one fresh review round, builders resumed for fixes) and PR #3196 narrowed which findings force another round."
 surface: safe
-status: tracked
-ref: "issue #3110"
+status: open
+notes: |-
+  2026-11-13 survey: issue #3110 closed completed 2026-11-12T08:50Z (no closing PR in its timeline; PRs #3119 and #3196 relate to it and are recorded in fixes); status reset from tracked.
 fixes:
   - pr: 2140
     date: "2026-10-16"
     summary: "clear-backlog §3 now says what to do when a branch fails at the review cap with open findings."
+  - pr: 3119
+    date: "2026-11-12"
+    summary: "clear-backlog section 3 redesigned: branches build with fast checks only, get one fresh Standards and Spec review round, and builders and reviewers are resumed for fixes instead of fresh fix rounds."
+  - pr: 3196
+    date: "2026-11-12"
+    summary: "clear-backlog: a missing-test finding forces a fresh round only above 50 changed lines, a branch meeting the simple-change test gets one reviewer and no further round, and wrap width is the builder's check, not a finding."
 occurrences:
   - session: session_013zxzeStBRUtsbccz5kMYNU
     date: "2026-10-31"
@@ -29,3 +36,8 @@ occurrences:
     severity: moderate
     description: "clear-backlog-build used 52 agents and 4.4M tokens on six small branches; five hit the 3-round cap on cosmetic findings, and the cost showed only after the run."
     solution: "Skip reviewers for simple diffs, one round for the rest, nits reported not fixed; filed as issue 3110."
+  - session: session_013zxzeSiYFQ3mgaCyMXicwp
+    date: "2026-11-12"
+    severity: moderate
+    description: "Round 2 on a two-line Skill edit and round 3 on low-risk test gaps each cost about 150000 to 170000 tokens and found only nits."
+    solution: "Apply pr-workflow's simple-change test and a risk bar to clear-backlog §3 step 4 before it forces another fresh round."
