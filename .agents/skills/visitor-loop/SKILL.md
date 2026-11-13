@@ -84,7 +84,7 @@ stalled visitor with `SendMessage`, never by re-dispatching. Then
 ## 3. Sort the reports
 
 Write one tally in your scratchpad. Merge items the visitors reported more than
-once, then mark each item:
+once, keeping every lens that raised each item, then mark each item:
 
 - **bug**: the site breaks its own intent: a broken link or control, an error,
   a layout fault, a mobile or accessibility failure, a false statement. Check
@@ -119,8 +119,8 @@ Then write the log's entries in a draft YAML in your scratchpad, in
 `log-session`'s authored format:
 
 - each **idea** is one `ideas` entry that a reader with no other context
-  can act on. It opens with the lens or lenses that raised it and the full
-  page URL path (`[content editor] /t/midden/stores: …`), then says what the
+  can act on. It opens with the lens or lenses that raised it and the page
+  path, never a host (`[content editor] /t/midden/stores: …`), then says what the
   page shows now, what to add or change, and why a visitor would care;
 - each **learning** is one `learnings` line;
 - the run's own Frictions, as in any session.
