@@ -68,7 +68,7 @@ Terrarium applies them without reading the source.
   list, the sidebar's subject rows, Where next and `Lessons already read` is one
   link across its whole width, and hovering it, or a previous or next card,
   turns the title accent-coloured. In a lesson or walkthrough, an inline link or chip to a read lesson
-  shows that ✓ in place of the book. A lesson's
+  shows that ✓ in place of the book. A lesson's or walkthrough's
   hand-written Where next links that are read move out of Where next into a
   `Lessons already read` section right below it (subject, title, description, ✓); Where
   next, heading included, vanishes once all are read, and the section is hidden

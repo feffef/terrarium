@@ -81,6 +81,26 @@ describe('glassboxWalkthroughParts', () => {
   })
 })
 
+describe('glassboxWalkthroughParts — read Lessons', () => {
+  const layers = '/nuxt-vue/layers'
+  const routing = '/nuxt-vue/file-routing'
+  const nodes = [
+    ['h2', { id: 'where-next' }, 'Where next'],
+    ['ul', {}, ['li', {}, link(`${base}${layers}`)], ['li', {}, link(`${base}${routing}`)]],
+  ] as MinimarkNode[]
+
+  it('drops a read Lesson from Where next and keeps the rest', () => {
+    const json = JSON.stringify(glassboxWalkthroughParts(nodes, base, {}, {}, [layers]))
+    expect(json).toContain('Where next')
+    expect(json).toContain(routing)
+    expect(json).not.toContain(`${base}${layers}"`)
+  })
+
+  it('drops Where next, heading included, once every row is read', () => {
+    expect(glassboxWalkthroughParts(nodes, base, {}, {}, [layers, routing]).flatMap((part) => part.nodes)).toEqual([])
+  })
+})
+
 describe('glassboxLessonChipsDeep', () => {
   it('draws a bullet\'s own :lessons row as chips, labelling a Walkthrough as one', () => {
     expect(glassboxLessonChipsDeep(['ul', {}, ['li', {}, 'A bullet. ', ['lessons', {},
