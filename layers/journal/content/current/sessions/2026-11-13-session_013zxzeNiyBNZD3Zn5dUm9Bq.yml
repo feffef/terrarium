@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_013zxzeNiyBNZD3Zn5dUm9Bq
 startedAt: 2026-11-13T06:28:17Z
-endedAt: 2026-11-13T06:46:35Z
+endedAt: 2026-11-13T06:53:58Z
 kind: interactive
 goal: Revive visitor-loop as a cheap run that logs for harvest
-status: completed
-outcome: "PR #3242 merged and the daily Visitor Loop re-enabled: three Sonnet lenses, no fixes, notes for harvest, bugs as Frictions"
-summary: "Human-instructed throughout: the owner asked to revive the paused visitor-loop Routine without expensive models or autonomous fixes (they cost a lot and were often reverted), keeping the daily focus, using two or three Sonnet lenses, logging ideas and hard-won learnings for harvest and raising real bugs as Frictions. Before building I asked four questions; the owner chose the lenses (first-time visitor, content editor, UI tester), a light filter (decisions.md and last week's ideas, no refiner), deleting owner-corrections.ts while keeping decisions.md, and re-enabling the daily scheduled task after merge. Mid-session the owner added that the first-time visitor stays blind while the other two get recent context on the focus (owner chose: merged changes, logged ideas, open issues, 7 days) and may read the repo. Agent-initiated: removing visitor-loop from harvest's SKIPPED_TRIGGERS (found while reading; without it harvest would silently drop every idea the run logs), updating the stale interactive-map spec story, and the review fixes. Three code-review rounds (Sonnet subagents) caught the blind brief leaking repo and other-visitor hints twice. PR #3242 merged on a green gate and the Visitor Loop scheduled task was re-enabled (daily, Sonnet). The owner also asked whether a repo-wide area-tag convention would help; I advised against a prose convention and, at the owner's request, filed issue #3243 proposing per-Tenant area labels on issues applied by auto-triage. Left as-is on purpose: Glass Box pages describing the old run, which glassbox-update refreshes, and the ADR-0028 rule's path entry for visitor-loop (a Human-only file)."
+status: in-review
+outcome: "PR #3242 merged and the Visitor Loop re-enabled; follow-up PR #3245 (retro thread #3244, cheaper browsing) open"
+summary: "Human-instructed throughout: the owner asked to revive the paused visitor-loop Routine without expensive models or autonomous fixes, keeping the daily focus, using Sonnet lenses, logging ideas and hard-won learnings for harvest and raising real bugs as Frictions. After clarifying questions the owner chose three lenses (blind first-time visitor; content editor and UI tester informed by the focus's last 7 days of merged changes, logged ideas and open issues), a light filter, deleting owner-corrections.ts, and re-enabling the daily task. PR #3242 merged and the task was re-enabled. Agent-initiated within it: removing visitor-loop from harvest's SKIPPED_TRIGGERS, updating the interactive-map spec, and review fixes. At the owner's request I filed #3243 (per-Tenant area labels on issues) and created the standing retro thread #3244 modelled on clear-backlog's #3143 (owner chose: cost, yield and filter/brief friction per lens; ask visitors; full template). The owner then asked that visitors use the cheapest tool rather than screenshot every page. PR #3245 wires step 5 to #3244 (draft log, retro, single close) and rewrites the brief's browsing rule (text as text, measure in page, screenshot only what must be seen; UI tester keeps one 390px shot per kind of page). Two review rounds on #3245 caught a double close-session, missing agent ids and an ambiguous layout rule, all fixed."
 prs:
   - "3242"
+  - "3245"
 docsRead:
   - path: .agents/skills/visitor-loop/SKILL.md
     reason: (read before editing)
@@ -44,6 +45,10 @@ docsRead:
     reason: (no reason given)
   - path: docs/agents/github-integration.md
     reason: (no reason given)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
   - path: .agents/skills/dispatch-subagents/SKILL.md
     reason: (no reason given)
   - path: .agents/skills/frictions-to-fixes/SKILL.md
@@ -78,29 +83,33 @@ frictions:
   - description: Authored the completed log straight after the merge, though the hook said to invoke close-session first; log-session refused it and I reran.
     solution: After a merge, invoke close-session before writing any log scratch, as the merge hook says.
     severity: nit
-durationSec: 1097
+  - description: "The first retro-step commit invoked close-session in both step 4 and step 5, contradicting the #3244 timing I had just written; review caught it."
+    solution: When a Skill step and its standing issue state the same order, write the order once in the issue and check the Skill against it before committing.
+    severity: minor
+durationSec: 1541
 models:
-  claude-opus-5-5: 191
+  claude-opus-5-5: 272
 toolCounts:
-  Bash: 53
+  Bash: 77
   mcp__claude-code-remote__list_triggers: 1
-  AskUserQuestion: 2
-  Skill: 6
-  Write: 6
-  Edit: 5
-  Agent: 6
+  AskUserQuestion: 3
+  Skill: 7
+  Write: 10
+  Edit: 8
+  Agent: 9
   ToolSearch: 2
   mcp__github__list_pull_requests: 1
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
-  ReadNotifications: 2
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  ReadNotifications: 3
   mcp__github__pull_request_read: 1
   mcp__claude-code-remote__send_later: 1
-  mcp__github__issue_write: 1
+  mcp__github__issue_write: 3
   mcp__github__add_issue_comment: 1
   mcp__claude-code-remote__update_trigger: 1
   mcp__claude-code-remote__delete_trigger: 1
   mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  Read: 1
 filesEdited:
   - .agents/skills/visitor-loop/SKILL.md
   - .agents/skills/visitor-loop/visitor-brief.md
@@ -229,6 +238,7 @@ ruleUse:
       - path: docs/agents/github-integration.md
       - path: docs/agents/issue-tracker.md
       - path: docs/agents/triage-labels.md
+      - path: docs/agents/verifying-ui-changes.md
   - by: general-purpose
     subagent: 0
     answered: true
@@ -350,6 +360,74 @@ ruleUse:
     reported:
       - path: .claude/rules/adr-0004.md
         value: backed
+  - by: general-purpose
+    subagent: 6
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0003.md
+        value: backed
+      - path: .claude/rules/adr-0009.md
+        value: backed
+  - by: general-purpose
+    subagent: 7
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0003.md
+        value: backed
+      - path: .claude/rules/adr-0017.md
+        value: backed
+      - path: docs/agents/github-integration.md=none
+  - by: general-purpose
+    subagent: 8
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0017.md
+        value: backed
+      - path: .claude/rules/adr-0004.md
+        value: backed
 subagents:
   - type: general-purpose
     task: Standards review of visitor-loop diff
@@ -357,21 +435,21 @@ subagents:
     durationSec: 34
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 6
+    tokenShare: 3.8
   - type: general-purpose
     task: Spec review of visitor-loop diff
     model: sonnet
     durationSec: 25
     toolCalls: 6
     modelCalls: 6
-    tokenShare: 5.7
+    tokenShare: 3.6
   - type: general-purpose
     task: Standards review of follow-up
     model: sonnet
     durationSec: 39
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 3.1
+    tokenShare: 1.9
   - type: general-purpose
     task: Spec review of follow-up
     model: sonnet
@@ -381,14 +459,35 @@ subagents:
     durationSec: 25
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 2.3
+    tokenShare: 1.5
   - type: general-purpose
     task: Two-axis review of fix commit
     model: sonnet
     durationSec: 18
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 2.3
+    tokenShare: 1.4
+  - type: general-purpose
+    task: Standards review of retro step
+    model: sonnet
+    durationSec: 15
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 2.9
+  - type: general-purpose
+    task: Spec review of retro step
+    model: sonnet
+    durationSec: 15
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 2.9
+  - type: general-purpose
+    task: Two-axis review of efficiency commit
+    model: sonnet
+    durationSec: 30
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 1.6
 gitBranch: ccr-db4c0136-2h2mph
 entrypoint: remote_mobile
 cliVersion: 2.1.323
