@@ -584,7 +584,8 @@ const STRANDED_WORKTREE_FRICTION = 'Linked worktree(s) left with uncommitted or 
 
 /** #2721: remove merged worktrees, then refuse a completed or partial log while a
  *  linked worktree holds unrescued work; other statuses may leave work unpushed
- *  on purpose, so they get a Friction instead. */
+ *  on purpose, so they get a Friction instead. A clean sweep retracts an earlier
+ *  call's hook-written Friction (#3229). */
 function sweepWorktreesAtClose(merged: AuthoredScratch, cwd: string, seam: WorktreeSeam): void {
   let swept: ReturnType<WorktreeSeam['read']>
   try {
