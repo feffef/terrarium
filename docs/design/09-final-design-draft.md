@@ -1,18 +1,17 @@
 # Samara: design draft for a single-site template
 
 **Status:** a proposal by the writing agent; it decides nothing. "Samara" is a
-working title. This document stands alone and is meant as the one baseline:
+working title. This document is meant as the one baseline for the design:
 where it differs from earlier drafts or notes, this document is the newer
 statement.
 
 **Sources.** "REQ §n" cites a section of the requirements document
 (`05-platform-requirements-neutral.md`); ids such as VER-2 cite one requirement.
-Read that document alongside this one: this one stands alone for the design,
-but not for what each id requires. Counts quoted here, and every mention of
-"Terrarium", come from the problem ledger and session logs of an earlier
-project, Terrarium, over 15 days (2026-10-30 to 2026-11-13) and its 166
-session logs. They show why a rule exists, not what to build. Some were
-counted by a sub-agent and not re-checked.
+Read that document alongside this one: it defines every id. Counts quoted
+here come from the problem ledger over 15 days (2026-10-30 to 2026-11-13) and
+the 166 session logs of Terrarium, the project this design draws on. They
+show why a rule exists, not what to build. Some were counted by a sub-agent
+and not re-checked.
 
 **Tags.** `[untested En]` rests on a fact nobody has tested; section 13 lists
 the experiments. `[owner]` awaits the owner's word; section 14.1 lists them.
@@ -66,9 +65,8 @@ sweeps may merge inside their own surface under the default preset.
 ## 2. Concepts
 
 Terms are plain lowercase words, written the same in prose, commands and file
-names. The first column is the working word. Where the two earlier drafts
-used different words and no choice was clearly agreed, the second column
-shows the other option `[owner]`.
+names. The first column is the working word. Where no choice was clearly
+agreed, the second column shows the other option `[owner]`.
 
 | Term | Other option | Meaning |
 |---|---|---|
@@ -951,8 +949,8 @@ access-controlled page, no second app and no separate deploy.
 13. **Managed host:** whether its recipe ships in the first version at all,
     given it is untested.
 14. **The departures in 14.2.**
-15. **May a sub-agent run `log`?** An earlier note says never: it shares
-    its parent's session id, so it would write into its parent's log.
+15. **May a sub-agent run `log`?** Proposed: never. It shares its
+    parent's session id, so it would write into its parent's log.
 16. **Must the comment on green name the pull request's head commit?** In
     Terrarium it once named the merge commit instead (3 problems).
 17. **A merge is code execution on the server,** because the container
