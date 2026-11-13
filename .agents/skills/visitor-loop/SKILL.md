@@ -56,9 +56,10 @@ sections on today's focus, each "none" when empty:
   the focus's note excludes; the homepage has only `/`.
   A file's URL is `/t/<tenant>/<space>/<path>`, with any `NN.` prefix and
   `.md` dropped and `index.md` as its folder's root;
-- merged changes: `git log origin/main --since=7.days --format='%h %ad %s' --date=short -- <files>`;
-- ideas already logged: the notes in `pnpm exec tsx .agents/skills/visitor-loop/scripts/ideas.ts gather --days 7`
-  that name the focus or its pages;
+- merged PRs: `git log origin/main --first-parent --merges --since=7.days --date=short --format='%ad %s: %b' -- <files>`;
+- ideas already logged: `pnpm exec tsx .agents/skills/visitor-loop/scripts/ideas.ts list --days 7 --match <words>`,
+  the words being the focus and its Space names, comma-separated
+  (`--match midden,trench,stores`);
 - open issues: the titles in `pnpm exec tsx scripts/github/list-open-issues.ts`
   that name the focus or its pages, with their numbers.
 
@@ -78,13 +79,12 @@ and a script directory (`.throwaway/visitor-blind/`, `visitor-editor/` or
 `visitor-ui/`, as absolute paths) unique to that visitor filled in. The blind visitor gets nothing else: no
 context file, no hints, no past findings. Note each visitor's agent id for
 step 5. Done when all three reports are in; resume a
-stalled visitor with `SendMessage`, never by re-dispatching. Then
-`scripts/ui/preview.ts stop <pid>`.
+stalled visitor with `SendMessage`, never by re-dispatching.
 
 ## 3. Sort the reports
 
 Write one tally in your scratchpad. Merge items the visitors reported more than
-once, then mark each item:
+once, keeping every lens that raised each item, then mark each item:
 
 - **bug**: the site breaks its own intent: a broken link or control, an error,
   a layout fault, a mobile or accessibility failure, a false statement. Check
@@ -100,11 +100,11 @@ once, then mark each item:
   find again the same way.
 - **dropped (why)**: ruled out by a line in [`decisions.md`](decisions.md) or
   its family, or already logged in the last week
-  (`pnpm exec tsx .agents/skills/visitor-loop/scripts/ideas.ts gather --days 7`).
+  (`pnpm exec tsx .agents/skills/visitor-loop/scripts/ideas.ts list --days 7`).
 
 Leave other checks to `harvest`. Done when every reported item is in the
 tally with one mark, and every bug was checked against both its source and its
-rendered page.
+rendered page. Then `scripts/ui/preview.ts stop <pid>`.
 
 ## 4. File bugs, draft the log
 
@@ -118,8 +118,10 @@ file one issue per group, labelled `needs-triage`, with a body per
 Then write the log's entries in a draft YAML in your scratchpad, in
 `log-session`'s authored format:
 
-- each **idea** is one `ideas` line naming the page, readable without this
-  run's context;
+- each **idea** is one `ideas` entry that a reader with no other context
+  can act on. It opens with the lens or lenses that raised it and the page
+  path, never a host (`[content editor] /t/midden/stores: …`), then says what the
+  page shows now, what to add or change, and why a visitor would care;
 - each **learning** is one `learnings` line;
 - the run's own Frictions, as in any session.
 
