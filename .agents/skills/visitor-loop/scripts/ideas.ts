@@ -9,6 +9,7 @@
 // extraction, overlap scoring, clustering) behind a thin FS/CLI shell.
 //
 // Usage:  tsx .agents/skills/visitor-loop/scripts/ideas.ts gather [--threshold <n>] [--days <n>]
+//         tsx .agents/skills/visitor-loop/scripts/ideas.ts list --days <n> [--match <word,word>]
 import { isExternalSession } from '../../../../shared/schemas/session.ts'
 import { readSessionLogs } from '../../../../scripts/session/journal-files.ts'
 import { fail, flagValue, root, runIfMain } from '../../../../scripts/lib/cli.ts'
@@ -134,6 +135,16 @@ export function recentIdeas(records: NoteRecord[], days: number, now = new Date(
   return records.filter((r) => r.kind === 'idea' && Date.parse(r.date) >= cutoff)
 }
 
+/** Ideas as plain dated lines, newest first, for a visitor to read; with
+ *  `match`, only ideas whose text holds one of the words (case-insensitive). */
+export function ideaLines(records: NoteRecord[], match: string[] = []): string[] {
+  const words = match.map((w) => w.toLowerCase()).filter(Boolean)
+  return records
+    .filter((r) => !words.length || words.some((w) => r.note.toLowerCase().includes(w)))
+    .sort((a, b) => b.date.localeCompare(a.date))
+    .map((r) => `${r.date.slice(0, 10)} ${r.note.replace(/\s+/g, ' ').trim()}`)
+}
+
 /** Notes folded into clusters, biggest (most-recurring) first — the "what
  *  recurs" ordering (#440). Ties broken by label. */
 export function buildNoteClusters(records: NoteRecord[], threshold = CLUSTER_THRESHOLD): NoteCluster[] {
@@ -183,6 +194,10 @@ export function cmdGather(cwd = root, threshold = CLUSTER_THRESHOLD, days?: numb
   return { total: records.length, clusters: buildNoteClusters(records, threshold) }
 }
 
+export function cmdList(cwd = root, days: number, match: string[]): string[] {
+  return ideaLines(recentIdeas(gatherNoteRecords(readSessionNoteMaterials(cwd)), days), match)
+}
+
 // ── CLI ───────────────────────────────────────────────────────────────────────
 
 function main(): void {
@@ -195,8 +210,13 @@ function main(): void {
 
   if (cmd === 'gather') {
     process.stdout.write(JSON.stringify(cmdGather(root, threshold, days), null, 2) + '\n')
+  } else if (cmd === 'list') {
+    if (days === undefined) fail('list needs --days <n>')
+    const match = (flagValue(argv, '--match') ?? '').split(',').map((w) => w.trim())
+    const lines = cmdList(root, days, match)
+    process.stdout.write(lines.length ? lines.join('\n') + '\n' : 'none\n')
   } else {
-    fail(`unknown command "${cmd ?? ''}" — expected: gather [--threshold <n>] [--days <n>]`)
+    fail(`unknown command "${cmd ?? ''}" — expected: gather [--threshold <n>] [--days <n>] | list --days <n> [--match <word,word>]`)
   }
 }
 

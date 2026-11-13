@@ -57,8 +57,8 @@ sections on today's focus, each "none" when empty:
   A file's URL is `/t/<tenant>/<space>/<path>`, with any `NN.` prefix and
   `.md` dropped and `index.md` as its folder's root;
 - merged PRs: `git log origin/main --first-parent --merges --since=7.days --date=short --format='%ad %s: %b' -- <files>`;
-- ideas already logged: the notes in `pnpm exec tsx .agents/skills/visitor-loop/scripts/ideas.ts gather --days 7`
-  that name the focus or its pages, one plain bullet each with its date;
+- ideas already logged: `pnpm exec tsx .agents/skills/visitor-loop/scripts/ideas.ts list --days 7 --match <words>`,
+  with the focus and its Space names as the words;
 - open issues: the titles in `pnpm exec tsx scripts/github/list-open-issues.ts`
   that name the focus or its pages, with their numbers.
 
@@ -99,7 +99,7 @@ once, keeping every lens that raised each item, then mark each item:
   find again the same way.
 - **dropped (why)**: ruled out by a line in [`decisions.md`](decisions.md) or
   its family, or already logged in the last week
-  (`pnpm exec tsx .agents/skills/visitor-loop/scripts/ideas.ts gather --days 7`).
+  (`pnpm exec tsx .agents/skills/visitor-loop/scripts/ideas.ts list --days 7`).
 
 Leave other checks to `harvest`. Done when every reported item is in the
 tally with one mark, and every bug was checked against both its source and its
