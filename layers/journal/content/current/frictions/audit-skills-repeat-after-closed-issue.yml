@@ -2,7 +2,11 @@ name: audit-skills-repeat-after-closed-issue
 surface: safe
 summary: The audit-skills filing step gave no rule for a repeated finding whose earlier issue is closed, so the run guessed.
 cause: "audit-skills SKILL.md step 4 searches open issues and offers only Match found or No match; a finding that repeats after its issue closed fits neither, and a run filed new issues naming the closed ones. Signals: 'Step 4 gives no rule for a repeat', 'earlier issue is closed', audit-skills."
-status: tracked
+status: open
+fixes:
+  - pr: 3236
+    date: "2026-11-13"
+    summary: "audit-skills step 4 says a closed issue on the same finding is no match and the new issue names it."
 occurrences:
   - session: session_013zxzeRqf691rc3SdLaPbvP
     date: "2026-11-13"
