@@ -13,15 +13,9 @@ steps; improvise.
 
 **Shape.** One focus per run (a Subject, a structural question or a gap). The
 budget is $25 of spend or 500k tokens of context in the main session, whichever
-comes first. Read both from `get_session` called with no session id:
-`external_metadata.usage.cost_usd` (it appears only partway into a run) and
-`external_metadata.context_usage.used_tokens`. If `get_session` is not among
-your tools, estimate the context instead: every tool result, subagent report
-and turn so far (about 4 characters a token, rounding up when unsure) plus
-about 25k for the system prompt and tools. Past runs reached $25 at about 450k
-tokens, so the estimate decides, and every figure you report says it is an
-estimate. Stop at the budget. Several runs a day must work, and a session loops
-from one run to the next (Loop, the last step).
+comes first; Loop, the last step, says how to read it and what it decides. Stop
+at the budget. Several runs a day must work, and a session loops from one run
+to the next.
 
 **Modes.** *Autonomous*: your first message carries a system-reminder
 `Fired by routine "/glassbox-curate"`; decide everything, ask nothing, and say
@@ -154,7 +148,7 @@ keeps them so).
 - **Land.** Merge `origin/main` and keep the newer pin. Two runs on one day can
   both rewrite the memory page: the later one keeps both runs' leads. Rewrite
   the memory page so it is shorter than you found it (the orientation prints its
-  word count against the cap; Scout lines count), complete the run entry, read `cost_usd` again for the PR
+  word count against the cap; Scout lines count), complete the run entry, get the run's cost (Loop says how) for the PR
   body, and open one PR
   (`docs/agents/pr-workflow.md`), self-merged unless the Remit says it waits.
   Wait for the Scout now; a topic of its that this run does not write goes on the
@@ -165,18 +159,25 @@ keeps them so).
   needed read (the ones it edits, links or overlaps), and names each one missing
   from `pagesRead`. Read those, recheck the change against them, and add them
   to `pagesRead` before you land. Done when the PR is open, its body gives the
-  run's cost (labelled an estimate when it is one; "unreported" only when you
-  have neither), and the memory page and run entry are current. Then Loop.
+  run's cost (without `get_session`: "unreported" and the token estimate), and the
+  memory page and run entry are current. Then Loop.
 - **Loop.** Every run ends here, whether its PR merged or waits for the owner;
-  closing the session straight after Land skips this step. Check the budget
-  (measured, or estimated as in Shape) and look for another focus: memory leads,
+  closing the session straight after Land skips this step. First read the
+  budget. Call `get_session` with no session id: `external_metadata.usage.cost_usd`
+  (it appears only partway into a run) and
+  `external_metadata.context_usage.used_tokens`. If `get_session` is not among
+  your tools, estimate the context instead: every tool result, subagent report
+  and turn so far (about 4 characters a token, rounding up when unsure) plus
+  about 25k for the system prompt and tools. Past runs reached $25 at about 450k
+  tokens, so the estimate decides, and every figure you report says it is an
+  estimate. Then look for another focus: memory leads,
   page-check warnings, Scout topics, pages no fresh reader has seen lately. A
-  run adds up to about 100k tokens of context. When the budget leaves room for that
-  and a focus remains, start the next run as a full one: orient again, its own
-  focus, run entry, branch from a fresh `origin/main` and PR. Otherwise stop. Say
-  which in your last message and the session log, with the figure or estimate and
-  the focus you saw or found none. Hand over to a new session only when the
-  invocation says so: create it with `source_url:
+  run adds up to about 100k tokens of context. When the budget leaves room for
+  that and a focus remains, start the next run as a full one: orient again, its
+  own focus, run entry, branch from a fresh `origin/main` and PR. Otherwise stop.
+  Say which in your last message and the session log, with the figure or
+  estimate and the focus you saw or found none. Hand over to a new session only
+  when the invocation says so: create it with `source_url:
   https://github.com/feffef/terrarium` and the same prompt.
 
 ## Lenses
