@@ -99,8 +99,9 @@ trials:
       net, from `git diff --numstat`: 5 added, 6 deleted; this entry not
       counted): three bullets that each said a review or read-only agent must not
       move a checkout merged into one goal-first bullet; every rule kept.
-      Chosen after the search subagent covered the ledger (133 files), guards.md
-      and hook headers (not session logs): `worktree-subagent-moves-branch`
+      Chosen after the search subagent covered the ledger (133 files), guards.md,
+      hook headers and the first page of open issues (not session logs, not the
+      whole tracker): `worktree-subagent-moves-branch`
       (5 occurrences, #2874) failed as prose and was narrowed in #2856 and #2888;
       nothing wired holds it, so the cut is deliberately small. Runners-up:
       CLAUDE.md dispatch-read bullet (`dispatch-read-guard.ts` already holds it)

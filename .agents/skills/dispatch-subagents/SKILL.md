@@ -44,7 +44,7 @@ applies.
   (issue #1420). Agents sharing one checkout each get an explicit SHA.
 - **Never move a checkout someone else is on.** A review or read-only agent
   reads code with `git show <sha>:<path>` or `git diff` (never the branch name),
-  or checks the PR's SHA out detached in its own worktree. Outside that worktree
+  or checks the PR's SHA out detached in its own worktree, never in yours. Outside that worktree
   it never runs `checkout`, `switch` or `reset`; its brief says so. To
   experiment, it copies a file aside.
 - Impl agents on the branch you have checked out: detach your checkout first and
