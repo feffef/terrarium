@@ -23,7 +23,6 @@ Each guide page is named by its title, then its file under `layers/glassbox/cont
 ### Weak spots
 
 - **A mechanical lowercase pass left the overview alone.** Check its glossary terms by hand after the owner's own edit of it lands. New text tends to capitalise terms again, so a run that adds text checks its own lines for them.
-- **The Walkthroughs sit in alphabetical order.** The owner wants a meaningful one: the stories that matter most to a newcomer about how agents and humans work together first, and the niche deployment story last. `glassboxWalkthroughs` in `layers/glassbox/app/utils/subjects.ts` sorts them by title and the files have no prefix, so the order needs a code change, which waits for the owner's merge.
 - **The Installed Skills pages say little of their own.** *Planning skills* (`skill-pack/20.planning-with-the-pack`) and *Engineering skills* (`skill-pack/30.engineering-skills`) mostly describe Skills that come from outside Terrarium. Only a few of their facts are about choices Terrarium made.
 
 ### Recurring problems
@@ -83,6 +82,7 @@ Each may be true; a later run should read the tool's source or run it.
 ### Soft decisions
 
 Decisions agents made (run, review, claim check). Not rules: the owner or a later agent may overrule one with evidence, or drop it once changed content makes it obsolete. Write each here as it is made, with what decided it. Only what the owner settled in a session goes in `owner-decisions.md`; when the owner confirms one of these, move it there.
+- **Walkthroughs are ordered by file prefix, not title.** Nine stories, from how a request becomes a merged PR to deployment last; a new one takes the number between two others, as Lessons do.
 - **A guard is any hook that can block, a `Stop` blocker included.** `docs/agents/guards.md` lists the three Stop blockers in its Guard column, so *Claude Code hooks* defines a guard that way and a hint as a hook that only adds advice (a fresh reader found the `PreToolUse`-only wording clashing with the roster).
 - **Author trust keeps its title.** It is clearer than the field name, and its lede names `author_association` (review).
 - **A missing `publishedAt` on a page whose teaching hasn't changed is not a deficit.** Adding one shows an old page on the Commons Timeline as new (review).
