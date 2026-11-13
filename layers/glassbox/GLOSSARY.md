@@ -1,20 +1,22 @@
 # Glossary — Glass Box Tenant
 
-> The Glass Box glossary: its own vocabulary (Lesson, Walkthrough, Subject,
-> Excerpt, Term) and its reason to exist. Platform terms it leans on (Tenant,
-> Space, Collection, …) live in the root `GLOSSARY.md`; see `GLOSSARY-MAP.md`.
+> The Glass Box glossary: its own vocabulary (lesson, walkthrough, subject,
+> excerpt, term) and its reason to exist. Platform terms it leans on (tenant,
+> space, collection, …) live in the root `GLOSSARY.md`; see `GLOSSARY-MAP.md`.
+> Its headings are capitalised as headings only; in prose the words are
+> lowercase (root `GLOSSARY.md`).
 > The spec, with its history, is
 > [issue #1985](https://github.com/feffef/terrarium/issues/1985).
 
 Glass Box teaches the concepts Terrarium is built on: Claude Code, installed
-Skills, Nuxt and Vue, Nuxt Content, Zod, TypeScript, testing, deploy, Git
+skills, Nuxt and Vue, Nuxt Content, Zod, TypeScript, testing, deploy, Git
 and GitHub, and Terrarium's own practices, with Terrarium as the worked example
 throughout. The name is the opposite of a black box: the terrarium is a glass
 box, and the site shows its inside.
 
 ## Why it exists
 
-To explain how Terrarium works, from a one-page overview down to one Lesson
+To explain how Terrarium works, from a one-page overview down to one lesson
 per tool or practice, and to teach the general concepts so readers can apply
 them to their own projects.
 
@@ -29,25 +31,23 @@ Terrarium applies them without reading the source.
   Journal's job. Glass Box links to Journal pages and ADRs as evidence and never
   repeats them. Each page is pinned to one `main` commit (`revision`, with its
   date in `revisionDate`), so it reads like a dated edition. The `workshop`
-  Space is the one exception: it is a live record of the improvement Skills'
+  space is the one exception: it is a live record of the improvement skills'
   state, not part of the textbook.
 - **An overview, then a reference.** The guide's landing page,
   `guide/pages/index.md`, is the overview of how Terrarium works, in plain
-  words, linking the Lessons for depth. It links pages only through chips, a
+  words, linking the lessons for depth. It links pages only through chips, a
   `::lessons` block after a paragraph or `:lessons[…]` ending a bullet, so a
   link in a sentence is always a `:term` or a `:file`. Past it there is no
   reading order: readers use the sidebar, where
-  Lessons lead and Walkthroughs follow the Subjects, plainly listed, none
+  lessons lead and walkthroughs follow the subjects, plainly listed, none
   named a starting point while they are still being worked out.
-- **Two Spaces.** `guide`, at `/t/glassbox/guide`, holds the pages central to
+- **Two spaces.** `guide`, at `/t/glassbox/guide`, holds the pages central to
   Terrarium that the work focuses on; `/t/glassbox` redirects there. A guide
-  page never links to another Glass Box Space. Walkthroughs sit in `walkthroughs/`. A
-  two-digit filename prefix steers the order of Lessons inside a folder,
+  page never links to another Glass Box space. Walkthroughs sit in `walkthroughs/`. A
+  two-digit filename prefix steers the order of lessons inside a folder,
   prerequisites first: pages link each other in loops, so the broader concept
-  comes first and a page may link a later one in its body. Prefixes go up in
-  tens, and a Lesson that belongs between two takes the number between them (85
-  between 80 and 90), so adding or moving a Lesson renames one file, not
-  several. Subject order and names come from `glassboxSubjects` in
+  comes first and a page may link a later one in its body. Subject order and
+  names come from `glassboxSubjects` in
   `layers/glassbox/app/utils/subjects.ts`. `workshop`, at
   `/t/glassbox/workshop`, is the agents' notebook, a live page of state and not
   a lesson: the Agent notes (the memory text: weak spots, the owner's direction,
@@ -56,28 +56,28 @@ Terrarium applies them without reading the source.
   out itself. glassbox-update's check state is kept but not shown. It has no
   sidebar entry and no link from the guide. How a run keeps it, the word cap
   included, is in `glassbox-curate`.
-- **Reading progress.** A Lesson is *read* once its Where next heading, or the
+- **Reading progress.** A lesson is *read* once its Where next heading, or the
   `Lessons already read` section that replaces it, has scrolled into view in this
-  browser; Walkthroughs and the workshop are never marked. The list lives in
+  browser; walkthroughs and the workshop are never marked. The list lives in
   `localStorage` under `glassbox:read` and is applied only after the page mounts,
   so the cached server render is the same for every visitor (ADR-0028). Read
-  Lessons get a ✓ (one shared SVG) after their title in the sidebar, where a
-  Subject's count reads `3/8` once any is read. A Subject page ticks them the
+  lessons get a ✓ (one shared SVG) after their title in the sidebar, where a
+  subject's count reads `3/8` once any is read. A subject page ticks them the
   same way, shows a book after each unread title, and its count line reads
-  `3 of 8 read` once any is read; it has no reset. Every row of a Subject's
-  list, the sidebar's Subject rows, Where next and Lessons already read is one
+  `3 of 8 read` once any is read; it has no reset. Every row of a subject's
+  list, the sidebar's subject rows, Where next and `Lessons already read` is one
   link across its whole width, and hovering it, or a previous or next card,
-  turns the title accent-coloured. In a Lesson or Walkthrough, an inline link or chip to a read Lesson
-  shows that ✓ in place of the book. A Lesson's
+  turns the title accent-coloured. In a lesson or walkthrough, an inline link or chip to a read lesson
+  shows that ✓ in place of the book. A lesson's
   hand-written Where next links that are read move out of Where next into a
-  `Lessons already read` section right below it (Subject, title, description, ✓); Where
+  `Lessons already read` section right below it (subject, title, description, ✓); Where
   next, heading included, vanishes once all are read, and the section is hidden
   while none is. Only that section holds the
   `Reset reading progress` button, which clears just that key. No sync.
-- **Where to begin.** The Platform homepage shows Glass Box first, beside the
-  Journal, under the hero: links to the guide and the workshop, a guide Lesson
+- **Where to begin.** The platform homepage shows Glass Box first, beside the
+  Journal, under the hero: links to the guide and the workshop, a guide lesson
   of the day and a button in, for a visitor who is new to Terrarium. Its `pages`
-  are in the Catalog, and reach the Commons Timeline only when they teach
+  are in the catalog, and reach the Commons Timeline only when they teach
   something new (`publishedAt`: writing-pages.md's Pin).
 
 ## Glossary
@@ -91,7 +91,7 @@ Its body follows one contract, which the page frames like design 1b
 
 - a lede paragraph, then a skip line that links `[In Terrarium](#in-terrarium)`;
 - `## The concept`, whose last paragraph is `Full reference: [label](url)`
-  (House rules Lessons have none);
+  (House rules lessons have none);
 - `## In Terrarium`, with `### Why it's built this way` and
   `### What to watch for`. Why it's built this way gives each reason one
   short bullet a newcomer can follow, with no unexplained jargon. The bullet
@@ -103,18 +103,18 @@ Its body follows one contract, which the page frames like design 1b
   about consequences for the reader, and links an ADR rather than restating
   its Scope or Consequences;
 - `## Try it in your project`;
-- `## Where next`, a list of 1 to 5 closest pages (a Lesson is marked read when
+- `## Where next`, a list of 1 to 5 closest pages (a lesson is marked read when
   it scrolls into view, so it is never empty; two other pages should list each
-  Lesson, and fewer is a page-check warning). A row ends in the book for a
+  lesson, and fewer is a page-check warning). A row ends in the book for a
   Glass Box page and in → for any other place, the Journal included. A row's
-  left label is the Lesson's Subject name, or Walkthrough, Journal or Page. Links within this
-  Space are bare, `[](/t/glassbox/guide/…)`, and show the target's current
+  left label is the lesson's subject name, or `Walkthrough`, `Journal` or `Page`. Links within this
+  space are bare, `[](/t/glassbox/guide/…)`, and show the target's current
   title; a Journal link keeps typed text:
-  related Lessons first, then optionally one Journal page as evidence. A
-  Lesson with no related Lesson yet lists only that Journal page.
+  related lessons first, then optionally one Journal page as evidence. A
+  lesson with no related lesson yet lists only that Journal page.
 
 ### Walkthrough
-A page that follows one story across several Lessons and links to them instead
+A page that follows one story across several lessons and links to them instead
 of repeating them.
 
 Its body, in `walkthroughs/`, follows one contract, which the page draws like
@@ -125,38 +125,38 @@ design 1b (`layers/glassbox/app/utils/walkthrough.ts`):
   stop elsewhere);
 - at least one numbered **stop**, each `## 1. Title`: 2–4 sentences of this
   story's part, ending in exactly one `::lessons` block of chips separated
-  by `·`. A chip is a link (a Lesson where one exists, a Journal page), a
+  by `·`. A chip is a link (a lesson where one exists, a Journal page), a
   `:file` or a `:term`; each block holds at least one link or `:file`, since a
-  `:term` alone doesn't count. A stop holds at most 5 chips, Lessons first;
-  drop a `:file` or ADR a linked Lesson already cites;
+  `:term` alone doesn't count. A stop holds at most 5 chips, lessons first;
+  drop a `:file` or ADR a linked lesson already cites;
 - optionally `## A real case`: one dated story;
-- `## Where next`, a list of at most the 5 closest pages (links as in Lesson):
-  Lessons first, then Walkthroughs, then optionally one Journal page as
+- `## Where next`, a list of at most the 5 closest pages (links as in lesson):
+  lessons first, then walkthroughs, then optionally one Journal page as
   evidence.
 
-Link a Lesson by its full `/t/glassbox/guide/…` path. A Lesson lists, after
-its Where next, every Walkthrough whose stops or A real case link it that way;
+Link a lesson by its full `/t/glassbox/guide/…` path. A lesson lists, after
+its Where next, every walkthrough whose stops or A real case link it that way;
 nobody writes that list.
 
 ### Subject
-The folder a Lesson is grouped under, usually the tool whose official docs its
-*The concept* section links. A large tool may split into several Subjects by
+The folder a lesson is grouped under, usually the tool whose official docs its
+*The concept* section links. A large tool may split into several subjects by
 topic, as Claude Code does (**Claude Code**, **Hooks**, **Agents & automation**). **Verification** instead groups the merge gate
-with the Lessons on its checks, whatever the tool. Terrarium's own patterns
-with no official doc form the **House rules** Subject, in the folder
+with the lessons on its checks, whatever the tool. Terrarium's own patterns
+with no official doc form the **House rules** subject, in the folder
 `terrarium-practice/`.
 
-A Subject has a generated page at `/t/glassbox/guide/<subject>`: its name, its
-Lesson count, then its Lessons in file-prefix order, each with its own
-`description`, as a plain list. It names no starting point. A Lesson's Subject
+A subject has a generated page at `/t/glassbox/guide/<subject>`: its name, its
+lesson count, then its lessons in file-prefix order, each with its own
+`description`, as a plain list. It names no starting point. A lesson's subject
 chip links to it.
 
 ### Excerpt
 Real Terrarium code copied into a page inside an `::excerpt` block, and checked
 word for word against the file at the page's `revision`. A code fence outside
-`::excerpt` is an example, not an Excerpt. A line that is only a comment
+`::excerpt` is an example, not an excerpt. A line that is only a comment
 holding `…` (`// …`) marks code left out; the check allows a gap there.
-Its `lines` range starts on the Excerpt's first line and ends on its last. With
+Its `lines` range starts on the excerpt's first line and ends on its last. With
 more than one gap, `lines` gives one range per run, comma-separated
 (`lines="3,5-6,9"`), and each run must be exactly its range; the page numbers
 each run from its own.
@@ -168,8 +168,8 @@ at its `revision`. `page-checks.ts` checks every page in `pnpm test`.
 
 ### Term
 A word a page expands inline, defined in Glass Box's own words. Definitions live
-in the `terms` Collection, each with an optional `lesson` (the guide Lesson that teaches it) or, for a
-term no Lesson teaches, a `source` glossary, never both. A
+in the `terms` collection, each with an optional `lesson` (the guide lesson that teaches it) or, for a
+term no lesson teaches, a `source` glossary, never both. A
 `:term[…]` finds its entry by its `id` attribute, else by its text lowercased,
 stripped of everything but letters, digits, hyphens and spaces, with spaces
 turned into hyphens: `:term[Nuxt & Vue]` reads `nuxt-vue.yml`,
@@ -178,15 +178,15 @@ turned into hyphens: `:term[Nuxt & Vue]` reads `nuxt-vue.yml`,
 
 ## What lives where
 
-- **`.agents/skills/glassbox-lesson/`** — how a Lesson gets written;
-  `writing-pages.md` there settles a page's title and the steps a Lesson and a
-  Walkthrough share, and `owner-decisions.md` the owner's hard rules. Decisions
+- **`.agents/skills/glassbox-lesson/`** — how a lesson gets written;
+  `writing-pages.md` there settles a page's title and the steps a lesson and a
+  walkthrough share, and `owner-decisions.md` the owner's hard rules. Decisions
   agents make themselves are soft: they sit on the workshop page and can be
   overruled with evidence.
-- **`.agents/skills/glassbox-walkthrough/SKILL.md`** — how a Walkthrough gets
+- **`.agents/skills/glassbox-walkthrough/SKILL.md`** — how a walkthrough gets
   written.
 - **`.agents/skills/glassbox-update/SKILL.md`** — how the guide pages are
   brought up to date with `main`.
 - **`.agents/skills/glassbox-curate/SKILL.md`** — how a run makes the guide
   easier to learn from and fills gaps, one focus at a time; its state lives in
-  the `workshop` Space.
+  the `workshop` space.

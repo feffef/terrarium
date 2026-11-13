@@ -37,3 +37,9 @@ export function glassboxLatelyChanges(runs: Array<{ stem: string, changes: Glass
       'page' in change && !/^no change/i.test(change.what) ? [{ stem: run.stem, page: change.page, what: change.what }] : []))
     .slice(0, limit)
 }
+
+/** The most words the workshop memory page may hold (`workshop.spec.ts`; glassbox-curate's orientation prints the count). */
+export const glassboxWorkshopWordCap = 2500
+
+/** The memory page's words, component lines (`::…`) not counted. */
+export const glassboxWorkshopWords = (body: string) => body.split('\n').filter((line) => !line.startsWith('::')).join(' ').split(/\s+/).filter(Boolean).length

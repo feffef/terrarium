@@ -16,4 +16,4 @@ decides whether a line changes. `glassbox-curate` says what to log.
 - A glossary term is lowercase in a title like any common noun (*Installed skills*, *Reading across tenants*); only proper nouns and acronyms keep capitals (owner, curate run of 2026-11-07).
 - *Adding a site* keeps its plain word: the overview introduces "site" before "Tenant" (owner, curate run of 2026-11-07).
 - A glossary term is lowercase in body text too, mid-sentence, like any common noun (trusted users, routine, gate, friction, skills, tenant, space, collection); only proper nouns and acronyms keep capitals (owner, interactive curate run of 2026-11-12, on the overview).
-- Gaps in the Lesson numbers are intended, not a deficit: they make reordering cheap (GLOSSARY.md, Two Spaces; owner, #3066).
+- Gaps in the Lesson numbers are intended, not a deficit: they make reordering cheap (owner, #3066).

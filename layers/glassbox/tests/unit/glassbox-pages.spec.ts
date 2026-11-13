@@ -3,7 +3,7 @@ import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { splitFrontmatter } from '../../../../scripts/lib/frontmatter.ts'
 import { root } from '../../../../shared/expand.ts'
-import { glassboxCites, glassboxFewNextLinks, glassboxLengthProblems, glassboxJournalRoutes, glassboxOrphans, glassboxPageProblems, glassboxPageWarnings, glassboxSitePath, glassboxTermProblems, glassboxTerms, repoGit, type GlassboxGit, type GlassboxSite } from '../../page-checks.ts'
+import { glassboxCapitalisedTerms, glassboxCites, glassboxFewNextLinks, glassboxGlossaryWords, glassboxLengthProblems, glassboxJournalRoutes, glassboxOrphans, glassboxPageProblems, glassboxPageWarnings, glassboxSitePath, glassboxTermCaseWarning, glassboxTermProblems, glassboxTerms, repoGit, type GlassboxGit, type GlassboxSite } from '../../page-checks.ts'
 
 const rev = 'a'.repeat(40)
 const expandTs = [
@@ -329,6 +329,38 @@ describe('mechanical page warnings', () => {
   it('warns on a Why bullet that is only a link', () => {
     const linkOnly = lesson.replace('One expansion step turns a manifest into Collections, so a Tenant never writes them by hand. :file[shared/expand.ts].', 'See [how the manifest expands into Collections for every Tenant layer](/t/journal/current/history).')
     expect(glassboxPageWarnings(linkOnly)).toEqual(['Why it\'s built this way bullet "One expansion step." is only a link: give the reason in its own words'])
+  })
+})
+
+describe('glassboxCapitalisedTerms', () => {
+  const words = ['Gate', 'Tenant', 'Session log', 'Human-only']
+
+  it('warns on a glossary term capitalised mid-sentence, plural or multi-word, and names it', () => {
+    const found = glassboxCapitalisedTerms('The Gate runs. Every Tenants keeps a Session log.\n', words)
+    expect(found.map((w) => w.match(/"([^"]+)"/)![1])).toEqual(['Gate', 'Tenants', 'Session log'])
+    expect(found[0]).toContain(glassboxTermCaseWarning)
+  })
+
+  it('passes lowercase terms, sentence and bullet starts, and a :term showing lowercase; a capital after a colon is mid-sentence', () => {
+    expect(glassboxCapitalisedTerms('The gate runs. Gate checks come first: Tenant data stays apart.\n\n- **Gate.** A tenant waits.\n- Tenant pages load.\nSee :term[gate] and :term[Tenants]{id="tenant"}.\n', words)).toHaveLength(2)
+  })
+
+  it('skips code, headings, link text, quotations, italic titles, :file and component lines', () => {
+    const body = ['## The Gate', '', 'Run `the Gate` or :file[Gate.ts] or [the Gate](/t/glassbox/guide/x) or the "Gate" or *Tenant Guide*.', '', '```ts', 'a Gate here', '```', '::lessons', 'a Gate here', '::', ''].join('\n')
+    expect(glassboxCapitalisedTerms(body, words)).toEqual([])
+  })
+
+  it('reaches glassboxPageWarnings only when given the words', () => {
+    const page = `${frontmatter}\nThe rule is that a Gate decides.\n`
+    expect(glassboxPageWarnings(page).filter((w) => w.startsWith(glassboxTermCaseWarning))).toEqual([])
+    expect(glassboxPageWarnings(page, words).filter((w) => w.startsWith(glassboxTermCaseWarning))).toHaveLength(1)
+  })
+
+  it('takes its words from the headings of both glossaries and the terms, leaving out acronyms and tool names', () => {
+    const found = glassboxGlossaryWords()
+    expect(found).toEqual(expect.arrayContaining(['Gate', 'Tenant', 'Friction Ledger', 'Screen reader', 'Walkthrough']))
+    expect(found).not.toEqual(expect.arrayContaining(['ADR']))
+    expect(found).not.toEqual(expect.arrayContaining(['Nitro']))
   })
 })
 

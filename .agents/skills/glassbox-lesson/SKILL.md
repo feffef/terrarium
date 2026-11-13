@@ -27,8 +27,9 @@ titles and wording.
    `layers/glassbox/content/guide/pages/<subject>/NN.<slug>.md`: `<subject>` a
    slug in `glassboxSubjects` (`layers/glassbox/app/utils/subjects.ts`), `NN`
    a free two-digit prefix that puts it after the Lessons it builds on and
-   before those that build on it (`layers/glassbox/GLOSSARY.md`, Two Spaces,
-   says how to number). Done when the path and docs URLs are chosen.
+   before those that build on it. Prefixes go up in tens, and a Lesson that
+   belongs between two takes the number between them (85 between 80 and 90),
+   so adding or moving one renames one file. Done when the path and docs URLs are chosen.
 3. **Pin** it (writing-pages.md).
 4. **Write** it to the contract, in plain words. *The concept* is true of any
    project; *In Terrarium* is what this repo does. For *Why it's built this

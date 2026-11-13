@@ -10,7 +10,8 @@ import { fail, flagValue, root, runIfMain } from '../../../../scripts/lib/cli.ts
 import { tryGit } from '../../../../scripts/lib/git.ts'
 import { splitFrontmatter } from '../../../../scripts/lib/frontmatter.ts'
 import { listAll, resolveAccess } from '../../../../scripts/lib/github-client.ts'
-import { glassboxFewNextLinks, glassboxFewNextText, glassboxMotiveWarning, glassboxOrphans, glassboxOrphanText, glassboxPageWarnings } from '../../../../layers/glassbox/page-checks.ts'
+import { glassboxWorkshopWordCap, glassboxWorkshopWords } from '../../../../layers/glassbox/app/utils/workshop.ts'
+import { glassboxFewNextLinks, glassboxFewNextText, glassboxMotiveWarning, glassboxOrphans, glassboxGlossaryWords, glassboxOrphanText, glassboxPageWarnings } from '../../../../layers/glassbox/page-checks.ts'
 
 const content = 'layers/glassbox/content'
 // The churn guard looks back this many runs (SKILL.md).
@@ -183,12 +184,14 @@ export function indexOrientation(index: IndexFile[], prs = openGlassboxPrs): str
   return [section('Open PRs that touch Glass Box', prs()), guideIndexSection(index)].join('\n\n')
 }
 
-export function orientation(base = join(root, content), { log = guideLog, prs = openGlassboxPrs, now = new Date(), index = [] as IndexFile[] } = {}): string {
+export function orientation(base = join(root, content), { log = guideLog, prs = openGlassboxPrs, now = new Date(), index = [] as IndexFile[], words = glassboxGlossaryWords } = {}): string {
   const guide = files(join(base, 'guide/pages'), '**/*.md')
   const runs = files(join(base, 'workshop/runs'), '*.yml').reverse()
   const memory = files(join(base, 'workshop/pages'), 'index.md')[0]?.[1] ?? ''
+  const memoryBody = splitFrontmatter(memory).body
+  const glossary = words()
   const warnings = [
-    ...warningLines(guide.map(([f, text]) => [f, glassboxPageWarnings(text)])),
+    ...warningLines(guide.map(([f, text]) => [f, glassboxPageWarnings(text, glossary)])),
     ...glassboxOrphans(Object.fromEntries(guide)).map((f) => `- ${f}: ${glassboxOrphanText}`),
     ...glassboxFewNextLinks(Object.fromEntries(guide)).map(({ file, count }) => `- ${file}: ${glassboxFewNextText(count)}`),
   ]
@@ -196,7 +199,7 @@ export function orientation(base = join(root, content), { log = guideLog, prs = 
   const out = [
     section('Run entry', [`Write it to ${content}/workshop/runs/${runStem(now)}.yml when you claim the focus:`, '', ...skeleton.map((l) => `    ${l}`)].join('\n')),
     section('Open PRs that touch Glass Box', prs()),
-    section('Memory page', splitFrontmatter(memory).body),
+    section(`Memory page (${glassboxWorkshopWords(memoryBody)} of ${glassboxWorkshopWordCap.toLocaleString('en-US')} words)`, memoryBody),
     section(`Last ${recentRuns} curate runs, newest first`, runs.slice(0, recentRuns).map(([f, t]) => `## ${f}\n\n${runSummary(t)}`).join('\n\n')),
     section('Page-check warnings', warnings.join('\n')),
     section(runs.length ? 'Guide changes since the last curate run' : 'Last 30 guide changes (no curate run yet)', log(runs[0] ? runStart(runs[0][0]) : undefined)),
