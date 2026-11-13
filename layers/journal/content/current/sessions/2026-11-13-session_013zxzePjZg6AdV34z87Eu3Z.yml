@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_013zxzePjZg6AdV34z87Eu3Z
 startedAt: 2026-11-13T04:03:09Z
-endedAt: 2026-11-13T06:11:33Z
+endedAt: 2026-11-13T06:13:17Z
 kind: autonomous
 goal: Daily check that the docs match the code
 status: in-review
-outcome: Six doc fixes in sweep PR 3239, waiting on CI; one ADR fix still to escalate
-summary: "Scheduled audit-docs run; no human prompted any step (all agent-initiated; a bare \"Continue\" arrived after a worker restart at the start, with nothing yet done). Three read-only reviewers returned 7 findings (Freshness 1, Single-home 3, Coherence 3). One checker gave 9 verdicts counting sub-parts, then a tenth on a re-check: 8 CONFIRMED, 2 CONFIRMED-BUT, 0 WRONG. Sweep PR 3239 lists scripts/history/ in CLAUDE.md, makes the log/blame clause of the git read-first trigger unambiguous, states audit-docs' page-move escalation once, drops blog-post's second copies of its post and pingback paths, moves a stray instruction in verifying-ui-changes.md into the methodology, and notes in guards.md that gate-edit-guard.ts has no sh pre-filter. code-review: Spec clean; Standards found the checker's own rewording of the log/blame clause still ambiguous, so I sent it back to the checker and committed its confirmed wording as a follow-up (the PR has two commits, not one). gate:scoped green, verdict posted, merge-pr.ts started. Still open: the ADR-0009 fix (it describes marking a read \"not read\", removed by PR 3009) goes to an escalation PR after the sweep merges. No issue filed. Reviewer C also found that create-session-repo-guard matches only the lowercase-hyphen tool name and allows a blank source_url under this session's mcp__Claude_Code_Remote__create_session spelling (checker reproduced it by dry run); a code fix on a Human-only path, not made here. Covered: GLOSSARY.md, GLOSSARY-MAP.md, journal glassbox commons GLOSSARY.md, CLAUDE.md, docs/agents/{domain,guest-contributions,mdc-when-to-use,tenant-layers,guards,pr-workflow,verifying-ui-changes}.md, docs/research/*, docs/proposals/README.md, tests/README.md, journal pages highlights history index routines, ADRs 0001 0003 0004 0005 0008 0009 0010 0011 0012 0015 0017 0019 0024 0025 0026 0027 0028 0029 0030, Skills atlas-specimen audit-docs blog-post clear-backlog close-session dependabot-sweep dispatch-subagents glassbox-curate glassbox-lesson glassbox-update glassbox-walkthrough guest-build guest-intake harvest inspect-session log-session midden-catalogue midden-survey tinkerfund-campaign digest."
+outcome: Six doc fixes merged in PR 3239; an ADR-0009 fix waits for a human merge in PR 3241
+summary: "Scheduled audit-docs run; no human prompted any step (all agent-initiated; a bare \"Continue\" arrived after a worker restart at the start, with nothing yet done). Three read-only reviewers returned 7 findings (Freshness 1, Single-home 3, Coherence 3). One checker gave 9 verdicts counting sub-parts, then a tenth on a re-check: 8 CONFIRMED, 2 CONFIRMED-BUT, 0 WRONG. Sweep PR 3239 (merged via merge-pr.ts on green, merge commit 4c52cba7f) lists scripts/history/ in CLAUDE.md, makes the log/blame clause of the git read-first trigger unambiguous, states audit-docs' page-move escalation once, drops blog-post's second copies of its post and pingback paths, moves a stray instruction in verifying-ui-changes.md into the methodology, and notes in guards.md that gate-edit-guard.ts has no sh pre-filter. code-review: Spec clean; Standards found the checker's own rewording of the log/blame clause still ambiguous, so I sent it back to the checker and committed its confirmed wording as a follow-up (that PR has two commits, not one). Escalation PR 3241 (code-review clean, gate:scoped green, subscribed, verdict posted) fixes ADR-0009, which still described marking a read \"not read\", removed by PR 3009; it waits for a human merge and asks the merger to confirm the dropped permission. No issue filed. Reviewer C also found that create-session-repo-guard matches only the lowercase-hyphen tool name and allows a blank source_url under this session's mcp__Claude_Code_Remote__create_session spelling (checker reproduced it by dry run; I read the code); reported in a comment on issue 3190 as guards.md asks, not fixed (Human-only code). The owner was notified of both. Covered: GLOSSARY.md, GLOSSARY-MAP.md, journal glassbox commons GLOSSARY.md, CLAUDE.md, docs/agents/{domain,guest-contributions,mdc-when-to-use,tenant-layers,guards,pr-workflow,verifying-ui-changes}.md, docs/research/*, docs/proposals/README.md, tests/README.md, journal pages highlights history index routines, ADRs 0001 0003 0004 0005 0008 0009 0010 0011 0012 0015 0017 0019 0024 0025 0026 0027 0028 0029 0030, Skills atlas-specimen audit-docs blog-post clear-backlog close-session dependabot-sweep dispatch-subagents glassbox-curate glassbox-lesson glassbox-update glassbox-walkthrough guest-build guest-intake harvest inspect-session log-session midden-catalogue midden-survey tinkerfund-campaign digest."
 prs:
   - "3239"
+  - "3241"
 docsRead:
   - path: docs/agents/git-conventions.md
     reason: (no reason given)
@@ -154,22 +155,25 @@ frictions:
   - description: The worker restarted at session start; I had to re-derive from git and the empty scratchpad that no step had run.
     solution: Nothing lost this time; a progress marker in the scratchpad after each audit-docs step would make a restart cheap.
     severity: nit
-durationSec: 7704
+durationSec: 7808
 models:
   <synthetic>: 1
-  claude-fable-5-2: 111
+  claude-fable-5-2: 132
 toolCounts:
-  Bash: 41
+  Bash: 45
   Read: 3
   Skill: 4
   Agent: 7
   ToolSearch: 3
   SendMessage: 1
   mcp__github__list_pull_requests: 1
-  mcp__github__create_pull_request: 1
-  mcp__github__subscribe_pr_activity: 1
-  mcp__github__issue_read: 1
-  mcp__github__add_issue_comment: 1
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 2
+  mcp__github__issue_read: 3
+  mcp__github__add_issue_comment: 3
+  ReadNotifications: 1
+  PushNotification: 1
+  mcp__Claude_Code_Remote__send_later: 1
 filesEdited:
   - .claude/rules/adr-0009.md
   - docs/adr/0009-session-logs-commit-directly-to-main.md
@@ -276,6 +280,8 @@ ruleUse:
       - rule: .claude/rules/adr-0004-human-merge.md
         via: hint
       - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/guards.md
         via: hint
     reported:
       - path: .claude/rules/adr-0004.md
@@ -611,43 +617,43 @@ subagents:
     durationSec: 162
     toolCalls: 24
     modelCalls: 20
-    tokenShare: 6.7
+    tokenShare: 6.3
   - type: general-purpose
     task: Audit-docs Agent B Single-home
     durationSec: 275
     toolCalls: 31
     modelCalls: 28
-    tokenShare: 19.4
+    tokenShare: 18.4
   - type: general-purpose
     task: Audit-docs Agent C Coherence
     durationSec: 323
     toolCalls: 48
     modelCalls: 43
-    tokenShare: 23.7
+    tokenShare: 22.5
   - type: general-purpose
     task: Audit-docs fact checker
     durationSec: 458
     toolCalls: 44
     modelCalls: 41
-    tokenShare: 15.2
+    tokenShare: 14.4
   - type: general-purpose
     task: "Code review: Standards axis"
     durationSec: 42
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 3.3
+    tokenShare: 3.1
   - type: general-purpose
     task: "Code review: Spec axis"
     durationSec: 37
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 3.4
+    tokenShare: 3.3
   - type: general-purpose
     task: "Code review: ADR-0009 fix"
     durationSec: 45
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 1.7
+    tokenShare: 1.6
 gitBranch: claude/festive-mayer-cst1iy
 entrypoint: remote_trigger
 cliVersion: 2.1.323
