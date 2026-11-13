@@ -36,6 +36,7 @@ changes:
   - workshop/pages/index | The overview lowercase check deleted, and one lead
     added on term definitions still heavy with jargon | the check was done by
     hand on the whole overview this run
+  - index | Every chip row cut to at most three, keeping the lessons the text names most directly. Check keeps Merge gate, Testing and Headless browser checks; Linting, Type checking and Content validation stay reachable from Merge gate. The issues paragraph drops Workflow scripts, the improving paragraph drops Pruning instructions (its term links it) and the last row drops Content database, with its sentence reworded | the owner asked for at most three pills at once in this session. Chips only, so revision and publishedAt are kept
 pagesRead:
   - index
   - verification/10.gate
