@@ -1,23 +1,27 @@
 schemaVersion: 1
 session: session_013zxzeRbcVWW7Upv1bSok39
 startedAt: 2026-11-13T11:37:32Z
-endedAt: 2026-11-13T12:22:14Z
+endedAt: 2026-11-13T12:55:25Z
 kind: interactive
 goal: Requirements and design draft for a single-site template
 status: in-review
-outcome: "Two research docs in PR 3269: requirements with evidence, and a proposal-only design draft"
-summary: "The owner asked (human-instructed) for a deep dig into Terrarium's Skills, scripts, session logs, state files, instructions and issue history to find where the earlier single-site template breakdown was shallow or called hard-won things simple, and to write a requirements-only document that complements it. The session orchestrated three rounds of Sonnet subagents (6, 7 and 4, plus a docs-research agent) and kept its own context for writing. Mid-session the owner corrected several premises: parallel steering stays, observability and the Digest are must-have, a watcher stays, audit-docs is core, docs upkeep is autonomous and owner-steerable, the visitor loop stays but report-only, one unified self-improvement loop, browser navigation opt-in, logs stated only as a requirement, three autonomy presets. Agents were re-briefed with each correction and told to ground every claim in live session logs. A grilling round settled background questions. The owner then asked for a separate design-draft document and for long unclear-points sections in both; both are human-instructed. The design choices in the draft (Astro, five commands, nine p- Skills, one finding shape, request-time Journal) are the agent's proposal. code-review ran on both docs and its findings were fixed; gate:scoped passed. Open: the owner's review of PR 3269."
+outcome: "PR 3269: requirements and design draft in docs/design, merge pending green CI"
+summary: "The owner asked (human-instructed) for a deep dig into Terrarium's Skills, scripts, session logs, state files, instructions and issue history to find where the earlier single-site template breakdown was shallow, and for a requirements-only document plus, later, a separate design draft, each ending with a long unclear-points section. The session orchestrated three rounds of Sonnet subagents and kept its own context for writing. After the PR opened, the owner steered many follow-ups (all human-instructed): move the three docs to docs/design; lowercase plain glossary terms avoiding jargon and clashes with Claude Code, GitHub, the stack and Matt Pocock's Skills (problem, sweep, dashboard, verification, a NAME- prefix placeholder, verb commands verify and log); apply the terms to the requirements; add wayfinder-style planning with a session hand-over helper and a rule to extend the pack; prefer cheap checks (lint, types, tests) from the start over a mechanism per failure. A full code-review against main ran and its five agreed fixes landed. The owner then asked to merge once CI is green; merge-pr.ts is polling. Design choices in the draft remain the agent's proposal."
 prs:
   - "3269"
 docsRead:
   - path: docs/research/single-site-template-breakdown.md
-    reason: (no reason given)
+    reason: (read before editing)
   - path: docs/agents/git-conventions.md
     reason: (no reason given)
   - path: docs/agents/pr-workflow.md
     reason: (no reason given)
   - path: docs/agents/github-integration.md
     reason: (no reason given)
+  - path: docs/design/single-site-template-design-draft.md
+    reason: (read before editing)
+  - path: docs/design/single-site-template-requirements.md
+    reason: (read before editing)
   - path: docs/research/single-site-template-requirements.md
     reason: (read before editing)
   - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
@@ -25,6 +29,10 @@ docsRead:
   - path: docs/agents/environment-caveats.md
     reason: (no reason given)
   - path: docs/research/single-site-template-design-draft.md
+    reason: (read before editing)
+  - path: .agents/skills/wayfinder/SKILL.md
+    reason: (no reason given)
+  - path: docs/design/single-site-template-breakdown.md
     reason: (read before editing)
   - path: docs/adr/0026-gate-workflow-thin-shell.md
     reason: (no reason given)
@@ -193,6 +201,8 @@ skillsUsed:
     reason: one round of background questions the repo could not answer
   - name: code-review
     reason: two-axis review of both research docs before the PR
+  - name: writing-for-agents
+    reason: owner invoked it to guide glossary term choices
   - name: close-session
     reason: (no reason given)
   - name: log-session
@@ -223,28 +233,48 @@ frictions:
   - description: Only three figures in the requirements doc were re-checked by me; most counts are relayed from subagents and marked so
     solution: Have a dedicated fact-check subagent verify every count in a long research doc before review
     severity: minor
-durationSec: 2682
+  - description: Follow-up edits after the first review (terminology passes) got only a self-read of the diff, though pr-workflow asks code-review for non-simple follow-ups
+    solution: Batch owner-requested wording passes and run one code-review over them, as the owner's later full review did
+    severity: minor
+  - description: A bulk regex rename turned Terrarium evidence (Frictions, visitor-loop) into the new template terms; caught on a re-read and restored by hand
+    solution: Scope term renames to requirement statements and list each hit before replacing
+    severity: minor
+  - description: The merge-close Stop hook fired while merge-pr.ts was still polling for green CI, before any merge happened
+    solution: Have the hook check the PR's merged state rather than the merge command being run
+    severity: nit
+  - description: Piped log-session.ts --author output through head, which the close-session Skill forbids because refusals print there
+    solution: Run log-session.ts unfiltered; it succeeded this time
+    severity: nit
+durationSec: 4673
 models:
   claude-sonnet-5-5: 4
-  claude-opus-5-5: 202
+  claude-opus-5-5: 430
 toolCounts:
   Glob: 2
-  Read: 4
-  Skill: 5
-  Agent: 21
+  Read: 6
+  Skill: 7
+  Agent: 23
   AskUserQuestion: 2
-  Bash: 40
+  Bash: 112
   SendMessage: 12
-  Grep: 3
+  Grep: 4
   Write: 3
-  Edit: 13
-  ToolSearch: 1
+  Edit: 17
+  ToolSearch: 4
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 16
+  mcp__github__pull_request_read: 3
+  mcp__github__update_pull_request: 2
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - docs/research/single-site-template-requirements.md
   - docs/research/single-site-template-design-draft.md
+  - docs/design/single-site-template-requirements.md
+  - docs/design/single-site-template-design-draft.md
+  - docs/design/single-site-template-breakdown.md
+  - docs/research/single-site-template-breakdown.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -312,6 +342,7 @@ adrHints:
     readAfter: false
     by: main
 docsReadBySubagents:
+  - docs/design/single-site-template-breakdown.md
   - docs/adr/0026-gate-workflow-thin-shell.md
   - docs/research/github-branch-protection-vs-autonomous-log-commits.md
   - docs/agents/issue-tracker.md
@@ -414,6 +445,14 @@ ruleUse:
       - rule: .claude/rules/adr-0029.md
         via: native
         trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
     reported:
       - path: .claude/rules/adr-0004.md
         value: steered
@@ -1014,6 +1053,55 @@ ruleUse:
     reported:
       - path: .claude/rules/adr-0004.md
         value: backed
+  - by: general-purpose
+    subagent: 21
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/design/single-site-template-requirements.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: docs/agents/domain.md=none
+  - by: general-purpose
+    subagent: 22
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/design/single-site-template-requirements.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .claude/rules/adr-0003.md
+        value: backed
 subagents:
   - type: Explore
     task: "Orientation: docs, Glass Box, scripts"
@@ -1021,153 +1109,168 @@ subagents:
     durationSec: 130
     toolCalls: 21
     modelCalls: 16
-    tokenShare: 3
+    tokenShare: 1.8
   - type: Explore
     task: "Own Skills: requirements"
     model: sonnet
     durationSec: 369
     toolCalls: 39
     modelCalls: 32
-    tokenShare: 6.9
+    tokenShare: 4.1
   - type: Explore
     task: "Installed Skills: requirements"
     model: sonnet
     durationSec: 288
     toolCalls: 25
     modelCalls: 15
-    tokenShare: 1.9
+    tokenShare: 1.1
   - type: Explore
     task: Recent logs and Frictions
     model: sonnet
     durationSec: 310
     toolCalls: 32
     modelCalls: 30
-    tokenShare: 3.6
+    tokenShare: 2.1
   - type: Explore
     task: "Scripts deep-dive: requirements"
     model: sonnet
     durationSec: 229
     toolCalls: 35
     modelCalls: 25
-    tokenShare: 4.6
+    tokenShare: 2.7
   - type: general-purpose
     task: Issue/PR and git history
     model: sonnet
     durationSec: 446
     toolCalls: 37
     modelCalls: 36
-    tokenShare: 6.1
+    tokenShare: 3.6
   - type: Explore
     task: Instructions, ADRs, Glass Box
     model: sonnet
     durationSec: 282
     toolCalls: 27
     modelCalls: 24
-    tokenShare: 4.1
+    tokenShare: 2.4
   - type: Explore
     task: "R2: docs upkeep loop"
     model: sonnet
     durationSec: 218
     toolCalls: 27
     modelCalls: 25
-    tokenShare: 2.9
+    tokenShare: 1.7
   - type: Explore
     task: "R2: visitor-loop signal/coverage"
     model: sonnet
     durationSec: 146
     toolCalls: 18
     modelCalls: 13
-    tokenShare: 1.8
+    tokenShare: 1.1
   - type: Explore
     task: "R2: unified self-improvement loop"
     model: sonnet
     durationSec: 281
     toolCalls: 37
     modelCalls: 31
-    tokenShare: 3.6
+    tokenShare: 2.1
   - type: Explore
     task: "R2: watcher and observability"
     model: sonnet
     durationSec: 223
     toolCalls: 34
     modelCalls: 22
-    tokenShare: 3.5
+    tokenShare: 2
   - type: general-purpose
     task: "R2: merge chain under cloud limits"
     model: sonnet
     durationSec: 279
     toolCalls: 27
     modelCalls: 19
-    tokenShare: 2.9
+    tokenShare: 1.7
   - type: Explore
     task: "R2: parallel steering in practice"
     model: sonnet
     durationSec: 266
     toolCalls: 30
     modelCalls: 24
-    tokenShare: 3.1
+    tokenShare: 1.8
   - type: general-purpose
     task: "R2: setup and template sync"
     model: sonnet
     durationSec: 250
     toolCalls: 39
     modelCalls: 27
-    tokenShare: 5.3
+    tokenShare: 3.1
   - type: claude-code-guide
     task: "Research: Routine cost capture"
     model: sonnet
     durationSec: 76
     toolCalls: 18
     modelCalls: 6
-    tokenShare: 2.1
+    tokenShare: 1.2
   - type: general-purpose
     task: "R3: agent identity options"
     model: sonnet
     durationSec: 145
     toolCalls: 27
     modelCalls: 9
-    tokenShare: 2.2
+    tokenShare: 1.3
   - type: general-purpose
     task: "R3: stack vs new requirements"
     model: sonnet
     durationSec: 51
     toolCalls: 13
     modelCalls: 5
-    tokenShare: 1.2
+    tokenShare: 0.7
   - type: general-purpose
     task: "R3: template sync prior art"
     model: sonnet
     durationSec: 68
     toolCalls: 15
     modelCalls: 4
-    tokenShare: 1.3
+    tokenShare: 0.8
   - type: general-purpose
     task: "R3: Routine cost and scheduling"
     model: sonnet
     durationSec: 121
     toolCalls: 24
     modelCalls: 16
-    tokenShare: 3.2
+    tokenShare: 1.9
   - type: general-purpose
     task: "Review: Standards axis"
     model: sonnet
     durationSec: 28
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 1.5
+    tokenShare: 0.9
   - type: general-purpose
     task: "Review: Spec axis"
     model: sonnet
     durationSec: 37
     toolCalls: 9
     modelCalls: 5
-    tokenShare: 1.6
+    tokenShare: 1
+  - type: general-purpose
+    task: "Full review: Standards axis"
+    model: sonnet
+    durationSec: 52
+    toolCalls: 10
+    modelCalls: 6
+    tokenShare: 1.1
+  - type: general-purpose
+    task: "Full review: Spec axis"
+    model: sonnet
+    durationSec: 24
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 0.8
 gitBranch: claude/epic-franklin-youik0
 entrypoint: remote
 cliVersion: 2.1.323
 learnings:
   - save-handback.ts captures only the last assistant record, so a resumed subagent's earlier report is lost unless saved first
   - A scheduled run reading its own cost fails, but reading a finished run's cost from another session works
+  - The installed retro Skill already says mechanical rules get a lint rule or CI check and only judgement calls go in CODING_STANDARDS.md, which code-review reads
 ideas:
   - "Give research subagents a shared fact-check phase: before writing, one agent re-runs every count the final doc quotes and returns a table of verified or wrong, so the writer never relays an unverified number"
   - Let save-handback.ts save every assistant reply of an agent as numbered files, so reports that predate a resume are never lost
