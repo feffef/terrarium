@@ -1,0 +1,61 @@
+schemaVersion: 1
+session: session_013zxzePoeF13AApZUpBRv9p
+startedAt: 2026-11-13T06:11:42Z
+endedAt: 2026-11-13T06:21:37Z
+kind: delegated
+goal: Find out why the last Journal digest run cost so much
+status: completed
+outcome: Answered from the digest session's log and get_session; no PR needed
+summary: "The human invoked inspect-session asking what made the last digest run expensive (human-instructed), then asked a follow-up on which model it ran on. I found the run via Journal session logs, read its log and get_session usage, and answered without paging events: $8.73, 12.97M cache-read tokens, long single context on Fable 5.2, a 29%-token fact-check subagent, a first draft with five wrong claims, and wasted exploration. I assumed the 2026-11-13 run was \"the last\" and said so; picking it was agent-initiated, not asked. I did not verify the subagents' models or per-model pricing and flagged that."
+prs: []
+docsRead: []
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: inspect-session
+    reason: (invoked as a slash command)
+frictions:
+  - description: Picked which digest run was meant without asking, despite the user's ask-questions-first preference; the user did not object, but the choice was an assumption.
+    solution: Ask which run when several match, or state the assumption before reading logs.
+    severity: nit
+  - description: Read Journal session logs under layers/journal without first reading layers/journal/GLOSSARY.md, which the tenant-glossary rule asks for.
+    solution: Skip the rule for read-only log lookups, or narrow its paths to writes.
+    severity: nit
+durationSec: 595
+models:
+  claude-sonnet-5-5: 21
+toolCounts:
+  Bash: 6
+  mcp__claude-code-remote__get_session: 1
+  Skill: 2
+  Write: 1
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/tenant-glossary.md
+        value: backed
+gitBranch: ccr-d2afc8dd-h51kv0
+entrypoint: remote_mobile
+cliVersion: 2.1.323
+learnings:
+  - Session logs' subagents[].tokenShare has no stated basis, so splitting cost by model or dollars from it needs the per-model rates.
+landedBy: Stop
