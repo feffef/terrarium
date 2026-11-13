@@ -7,7 +7,7 @@ surface: safe
 status: tracked
 ref: "issue #3234"
 notes: |-
-  2026-11-13: the session_013zxzeRvdzBc3xXGo24TkVf occurrence (2026-11-12 Lesson links) is not a tenant-glossary miss and is fixed by PR 3160; exclude it from the open cause and regression count.
+  2026-11-13: exclude the session_013zxzeRvdzBc3xXGo24TkVf (Lesson links) occurrence from the regression count; PR 3160 fixed it.
 fixes:
   - pr: 2469
     date: "2026-10-23"
