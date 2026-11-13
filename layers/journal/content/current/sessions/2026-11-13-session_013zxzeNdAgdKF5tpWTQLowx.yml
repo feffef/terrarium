@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_013zxzeNdAgdKF5tpWTQLowx
 startedAt: 2026-11-13T02:07:16Z
-endedAt: 2026-11-13T06:00:05Z
+endedAt: 2026-11-13T06:01:45Z
 kind: autonomous
 goal: Daily run that turns logged Frictions into fixes
 status: in-review
-outcome: Ledger updated, three regression issues filed, one doc-fix PR open; the ledger PR and a code-fix PR are still to open
-summary: "A scheduled frictions-to-fixes run; no human prompted any part of it, and every choice below is the agent's under the Skill. The survey subagent read 68 sessions, appended 165 Frictions to the Friction Ledger and opened 13 entries. Three regressions got issues (3233 edit-during-gate-run, 3234 governing-doc-read-after-draft, 3235 preview dev server); harness-proxy-blocks also met the rule but its regression issue 3124 closed the day before with nothing moderate since, so it was only listed. Eight never-fixed entries went to the design subagent: five came back as fixes (four one-sentence doc fixes, one script that lists closed-unmerged PRs for midden-survey) and three as no change, each noted in the ledger. The account's usage limit stopped the run for about 90 minutes with four subagents mid-flight; all were resumed or re-dispatched afterwards. The doc fixes are PR 3236, reviewed and waiting on CI. Still open at this log: the ledger PR (its gate is running), the code fix (sent back to its builder with review findings) and the closing ledger PR. The accepted entry edit-leaves-contradicting-sibling met its own reopen condition (a moderate occurrence); it was left accepted with a note for the owner."
+outcome: Ledger updated, three regression issues filed, doc fixes merged; the ledger PR is open and a code-fix PR is still to open
+summary: "A scheduled frictions-to-fixes run; no human prompted any part of it, and every choice below is the agent's under the Skill. The survey subagent read 68 sessions, appended 165 Frictions to the Friction Ledger and opened 13 entries. Three regressions got issues (3233 edit-during-gate-run, 3234 governing-doc-read-after-draft, 3235 preview dev server); harness-proxy-blocks also met the rule but its regression issue 3124 closed the day before with nothing moderate since, so it was only listed. Eight never-fixed entries went to the design subagent: five came back as fixes (four one-sentence doc fixes, one script that lists closed-unmerged PRs for midden-survey) and three as no change, each noted in the ledger. The account's usage limit stopped the run for about 90 minutes with four subagents mid-flight; all were resumed or re-dispatched afterwards. The doc fixes are PR 3236, merged. Still open at this log: the ledger PR 3237 (waiting on CI), the code fix (sent back to its builder with review findings) and the closing ledger PR. The accepted entry edit-leaves-contradicting-sibling met its own reopen condition (a moderate occurrence); it was left accepted with a note for the owner."
 prs:
   - "3236"
+  - "3237"
 docsRead:
   - path: .agents/skills/frictions-to-fixes/survey-brief.md
     reason: (no reason given)
@@ -123,22 +124,22 @@ frictions:
   - description: "Linked worktree(s) left with uncommitted or unpushed work at close: /home/user/terrarium/.claude/worktrees/agent-a59e61b30abd2cbf0"
     solution: Push each, or remove it if its work is meant to be dropped.
     severity: minor
-durationSec: 13969
+durationSec: 14069
 models:
-  claude-fable-5-2: 123
+  claude-fable-5-2: 136
   <synthetic>: 1
 toolCounts:
-  Bash: 38
+  Bash: 42
   Read: 1
   Agent: 13
   ToolSearch: 2
   mcp__github__issue_write: 3
   Skill: 3
   SendMessage: 4
-  mcp__github__create_pull_request: 1
-  mcp__github__subscribe_pr_activity: 1
-  mcp__github__add_issue_comment: 1
-  ReadNotifications: 1
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 2
+  mcp__github__add_issue_comment: 2
+  ReadNotifications: 2
   Write: 1
 filesEdited:
   - docs/agents/github-integration.md
@@ -534,14 +535,9 @@ ruleUse:
     reported:
       - path: .claude/rules/adr-0005.md
         value: backed
-      - path: .claude/rules/adr-0004.md
-        value: backed
       - path: .claude/rules/adr-0017.md
         value: backed
-      - path: .claude/rules/adr-0027.md
-        value: backed
       - path: docs/agents/git-conventions.md
-      - path: docs/adr/0005-skill-model.md
   - by: general-purpose
     subagent: 5
     answered: false
@@ -741,33 +737,33 @@ subagents:
     durationSec: 725
     toolCalls: 36
     modelCalls: 30
-    tokenShare: 16.4
+    tokenShare: 15.5
   - type: general-purpose
     task: Design friction fixes
     durationSec: 331
     toolCalls: 33
     modelCalls: 30
-    tokenShare: 11.4
+    tokenShare: 10.8
   - type: general-purpose
     task: Build doc fixes
     model: sonnet
     durationSec: 12549
     toolCalls: 30
     modelCalls: 24
-    tokenShare: 7.2
+    tokenShare: 6.8
   - type: general-purpose
     task: Build closed-unmerged PR lister
     model: sonnet
-    durationSec: 12694
-    toolCalls: 35
-    modelCalls: 24
-    tokenShare: 7.1
+    durationSec: 12793
+    toolCalls: 37
+    modelCalls: 26
+    tokenShare: 7.2
   - type: general-purpose
     task: Standards review of ledger diff
     durationSec: 6
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 1.6
+    tokenShare: 1.5
   - type: general-purpose
     task: Spec review of ledger diff
     durationSec: 3
@@ -779,37 +775,37 @@ subagents:
     durationSec: 83
     toolCalls: 11
     modelCalls: 6
-    tokenShare: 3.4
+    tokenShare: 3.3
   - type: general-purpose
     task: Spec review of ledger diff
     durationSec: 158
     toolCalls: 13
     modelCalls: 11
-    tokenShare: 4.9
+    tokenShare: 4.7
   - type: general-purpose
     task: Standards review of doc fixes
     durationSec: 54
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 2.2
+    tokenShare: 2.1
   - type: general-purpose
     task: Spec review of doc fixes
     durationSec: 43
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: general-purpose
     task: Standards review of PR lister
     durationSec: 63
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 1.9
+    tokenShare: 1.8
   - type: general-purpose
     task: Spec review of PR lister
     durationSec: 106
     toolCalls: 9
     modelCalls: 7
-    tokenShare: 2
+    tokenShare: 1.9
 gitBranch: claude/eager-ptolemy-ymmw6u
 entrypoint: remote_trigger
 cliVersion: 2.1.323
