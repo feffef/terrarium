@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRqf691rc3SdLaPbvP
 startedAt: 2026-11-13T00:46:07Z
-endedAt: 2026-11-13T01:00:06Z
+endedAt: 2026-11-13T01:02:25Z
 kind: autonomous
 goal: Daily check of the Platform's own Skills
-status: in-review
-outcome: Four repeat findings filed as issues 3226 to 3229; Inventory PR 3231 open, waiting for CI
-summary: "A schedule started this run of audit-skills; no human prompted it, and every step was agent-initiated within the Skill. The scorecard covered 159 logs from 2026-11-06. One Sonnet subagent fetched usage for 8 Routine runs and 15 Sonnet subagents each checked one Skill's runs; I checked every finding I used against the cited session log. Closure signals: orphanScan scanned true (244 merged PRs, 108 issues, 351 with a session), 0 orphaned sessions, orphanSuppressionLog empty, 0 manually rescued closures, 2 human-prompted closures (session_013zxzeQDfNNTXpQYQtt9saY, session_013zxzeQyHhutDMJtzGF5UQU), both already cited on the open standing thread 2956, so no new comment. Four findings repeated an earlier observation and became needs-triage issues: 3226 (glassbox-curate skips the Subject-wide read again after PR 3001), 3227 (dispatch-subagents briefs sent with unfilled placeholders), 3228 (digest drafts invent how often a job runs), 3229 (clear-backlog runs still log stranded wf_ worktrees after PR 3053; the issue says the logs cannot tell a final close from an interim one). Single-instance findings went into observations: audit-skills' own 11-12 run skipped code-review on a 22-file PR, glassbox-update's whole-page re-check, clear-backlog's unchecked explore writes, a resume of a live workflow agent. The prune-trial ledger's wrong state for issue 2472 and inspect-session's get_session tool-list inference were re-seen with nothing new, so I added no note. New Inventory entry for harvest, graded specialist; no other grade or role changed. visitor-loop has had no scheduled run since 11-03: noted as a possible stop, grade kept because one windowed session is below the two a change needs. code-review found nothing, gate:scoped passed, PR 3231 opened, subscribed and given its verdict; the merge waits for CI."
+status: completed
+outcome: Four repeat findings filed as issues 3226 to 3229; Inventory PR 3231 merged
+summary: "A schedule started this run of audit-skills; no human prompted it, and every step was agent-initiated within the Skill. The scorecard covered 159 logs from 2026-11-06. One Sonnet subagent fetched usage for 8 Routine runs and 15 Sonnet subagents each checked one Skill's runs; I checked every finding I used against the cited session log. Closure signals: orphanScan scanned true (244 merged PRs, 108 issues, 351 with a session), 0 orphaned sessions, orphanSuppressionLog empty, 0 manually rescued closures, 2 human-prompted closures (session_013zxzeQDfNNTXpQYQtt9saY, session_013zxzeQyHhutDMJtzGF5UQU), both already cited on the open standing thread 2956, so no new comment. Four findings repeated an earlier observation and became needs-triage issues: 3226 (glassbox-curate skips the Subject-wide read again after PR 3001), 3227 (dispatch-subagents briefs sent with unfilled placeholders), 3228 (digest drafts invent how often a job runs), 3229 (clear-backlog runs still log stranded wf_ worktrees after PR 3053; the issue says the logs cannot tell a final close from an interim one). Single-instance findings went into observations: audit-skills' own 11-12 run skipped code-review on a 22-file PR, glassbox-update's whole-page re-check, clear-backlog's unchecked explore writes, a resume of a live workflow agent. The prune-trial ledger's wrong state for issue 2472 and inspect-session's get_session tool-list inference were re-seen with nothing new, so I added no note. New Inventory entry for harvest, graded specialist; no other grade or role changed. visitor-loop has had no scheduled run since 11-03: noted as a possible stop, grade kept because one windowed session is below the two a change needs. code-review found nothing, gate:scoped passed, PR 3231 opened, subscribed, given its verdict and merged by merge-pr.ts as b9a0716d0 once CI's gate was green."
 prs:
   - "3231"
 docsRead:
@@ -85,12 +85,12 @@ frictions:
   - description: Piped log-session.ts --author output through sed on one re-author, against close-session's rule never to filter it; the full output had printed on the first pass.
     solution: A guard on piping log-session.ts output would catch it.
     severity: nit
-durationSec: 839
+durationSec: 978
 models:
-  claude-fable-5-2: 139
+  claude-fable-5-2: 148
 toolCounts:
-  Bash: 38
-  Read: 5
+  Bash: 40
+  Read: 6
   Skill: 5
   Agent: 18
   ToolSearch: 1
@@ -99,7 +99,9 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   mcp__github__add_issue_comment: 1
-  ReadNotifications: 1
+  ReadNotifications: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  PushNotification: 1
 filesEdited:
   - layers/journal/content/current/routines/audit-docs.yml
   - layers/journal/content/current/routines/audit-skills.yml
@@ -592,55 +594,55 @@ subagents:
     durationSec: 23
     toolCalls: 12
     modelCalls: 4
-    tokenShare: 2.6
+    tokenShare: 2.5
   - task: Check audit-docs behaviour
     model: sonnet
     durationSec: 79
     toolCalls: 16
     modelCalls: 9
-    tokenShare: 3.2
+    tokenShare: 3.1
   - task: Check audit-skills behaviour
     model: sonnet
     durationSec: 68
     toolCalls: 17
     modelCalls: 10
-    tokenShare: 3.5
+    tokenShare: 3.4
   - task: Check blog-post behaviour
     model: sonnet
     durationSec: 113
     toolCalls: 31
     modelCalls: 19
-    tokenShare: 6
+    tokenShare: 5.8
   - task: Check clear-backlog behaviour
     model: sonnet
     durationSec: 102
     toolCalls: 23
     modelCalls: 19
-    tokenShare: 5.4
+    tokenShare: 5.2
   - task: Check close-session behaviour
     model: sonnet
     durationSec: 80
     toolCalls: 22
     modelCalls: 9
-    tokenShare: 3.5
+    tokenShare: 3.4
   - task: Check digest behaviour
     model: sonnet
     durationSec: 91
     toolCalls: 20
     modelCalls: 16
-    tokenShare: 4.4
+    tokenShare: 4.3
   - task: Check dispatch-subagents behaviour
     model: sonnet
     durationSec: 88
     toolCalls: 16
     modelCalls: 10
-    tokenShare: 4.1
+    tokenShare: 4
   - task: Check frictions-to-fixes behaviour
     model: sonnet
     durationSec: 84
     toolCalls: 21
     modelCalls: 12
-    tokenShare: 3.8
+    tokenShare: 3.7
   - task: Check glassbox-curate behaviour
     model: sonnet
     durationSec: 74
@@ -658,43 +660,43 @@ subagents:
     durationSec: 77
     toolCalls: 20
     modelCalls: 9
-    tokenShare: 3
+    tokenShare: 2.9
   - task: Check harvest behaviour
     model: sonnet
     durationSec: 62
     toolCalls: 16
     modelCalls: 7
-    tokenShare: 2.5
+    tokenShare: 2.4
   - task: Check inspect-session behaviour
     model: sonnet
     durationSec: 78
     toolCalls: 17
     modelCalls: 11
-    tokenShare: 4.4
+    tokenShare: 4.3
   - task: Check log-session behaviour
     model: sonnet
     durationSec: 83
     toolCalls: 19
     modelCalls: 11
-    tokenShare: 3.9
+    tokenShare: 3.8
   - task: Check prune-trial behaviour
     model: sonnet
     durationSec: 74
     toolCalls: 16
     modelCalls: 9
-    tokenShare: 2.9
+    tokenShare: 2.8
   - task: Standards review of Inventory diff
     model: sonnet
     durationSec: 26
     toolCalls: 10
     modelCalls: 6
-    tokenShare: 3
+    tokenShare: 2.9
   - task: Spec review of Inventory diff
     model: sonnet
     durationSec: 37
     toolCalls: 13
     modelCalls: 6
-    tokenShare: 3.6
+    tokenShare: 3.5
 gitBranch: claude/loving-tesla-p83lx3
 entrypoint: remote_trigger
 cliVersion: 2.1.323
