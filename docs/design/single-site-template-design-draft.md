@@ -51,7 +51,7 @@ in a heading.
 | **problem** | Anything that cost a session time or went wrong, graded nit to blocker. |
 | **finding** | Anything a sweep reports for follow-up: a bug, a stale doc, a skipped step. Every sweep uses one shape. A code review's findings stay on their PR. |
 | **cause** | A root cause that groups problems and findings. It carries fixes and a status: open, fixing, accepted. |
-| **sweep** | A Skill that runs on a schedule or on demand to check or maintain the site: watch, improve, docs, visit, digest. |
+| **sweep** | A Skill that runs on a schedule or on demand to check or maintain the site and how it is built: watch, improve, docs, visit, digest. |
 | **dashboard** | The owner's page of sessions, causes, sweep runs and costs, and digests. |
 | **gate** | The one command that decides whether a change may merge. |
 | **verdict** | The posted review result naming the reviewed commit. |
@@ -108,8 +108,8 @@ platform/                     everything that flows back to the template
 CLAUDE.md                     starter: site notes + `@platform/CLAUDE.platform.md`
 GLOSSARY.md                   starter: site terms, links to the platform glossary
 docs/adr/                     site decisions
-docs/guide/                   the site guide (seeded with platform chapters)
-.dashboard/                     site data: logs, causes, sweep memory, run costs
+docs/guide/                   the site guide (starts with platform chapters)
+.dashboard/                   site data: logs, causes, sweep memory, run costs
 src/ or app/                  the site itself (stack-dependent)
 ```
 
@@ -197,7 +197,7 @@ yet; `NAME-` stands in for it. The rest of each name is one plain word.
 | `NAME-log` | Write the judgement half of the log; call `land` | close-session, log-session |
 | `NAME-steer` | Triage the open issues, ask once, build in parallel, review, ship, report one line per issue (later version: parallel; v1: serial) | clear-backlog, auto-triage, dispatch-subagents |
 | `NAME-improve` | The one self-improvement sweep | frictions-to-fixes, harvest, prune-trial |
-| `NAME-watch` | The watcher | audit-skills |
+| `NAME-watch` | Checks what sessions miss about themselves | audit-skills |
 | `NAME-docs` | Docs upkeep and the guide | audit-docs, glassbox-update, glassbox-curate |
 | `NAME-visit` | The visitor sweep, report only | visitor-loop |
 | `NAME-digest` | Daily owner digest | digest |
@@ -220,14 +220,14 @@ Skill reads as its first step. There is no guard that denies the first call
 
 ### 8.1 One finding shape and one intake
 
-Every sweep (watch, docs, visit, improve's own review, and a session's retro)
-writes findings in one shape:
+Every sweep (watch, docs, visit, improve's own review) and a session's retro
+write findings in one shape:
 
 ```yaml
-- id: <sweep>-<date>-<n>
-  sweep: visit            # watch | docs | visit | session | retro
+- id: <source>-<date>-<n>
+  source: visit           # watch | docs | visit | improve | retro
   run: <session id>
-  kind: bug | stale-doc | skipped-step | idea | problem
+  kind: bug | stale-doc | skipped-step | idea
   severity: nit | minor | moderate | major | blocker
   where: <url path or file:line>
   what: <what is wrong now, quoting it>
@@ -237,7 +237,7 @@ writes findings in one shape:
   proposal: <smallest fix, optional>
 ```
 
-findings go to `.dashboard/findings/<date>.yml`. Session problems stay in the
+Findings go to `.dashboard/findings/<date>.yml`. Session problems stay in the
 log, and `NAME-improve` reads both.
 
 ### 8.2 `NAME-improve`
@@ -256,7 +256,7 @@ log, and `NAME-improve` reads both.
 Rules:
 - It never edits installed Skills, ADRs, hooks or settings.
 - It may propose a cut and record it as a trial in the cause's notes, judged by
-  later problem share. There is no trial ledger.
+  the later share of sessions that report the problem. There is no trial ledger.
 
 ### 8.3 `NAME-watch`
 
@@ -348,8 +348,8 @@ request time. Its parts:
 - **Sessions:** newest 100 with a total count. Each card shows goal, status,
   outcome, PRs, problems by severity, duration, models, and subagent share of
   tokens.
-- **Causes:** the Ledger, with a 7-day window and fix state derived from later
-  occurrences.
+- **Causes:** one entry per cause, with a 7-day window and fix state derived
+  from later occurrences.
 - **Sweeps:** each sweep's last runs, its cost per run and per week (labelled
   estimate), whether it is possibly stopped, its open memory size, and Skill
   state.
@@ -420,7 +420,7 @@ shared branch. Changing it is itself a protected-path change.
 2. Create the issue labels and verify them.
 3. Install and pin the Skill pack.
 4. Write the adapter docs, including the triage-label override.
-5. Seed the owner rules (empty) and the guide.
+5. Create the owner rules (empty) and the guide's platform chapters.
 
 Then the `wizard` checklist for the human or laptop steps:
 - the workflow shell;
@@ -492,8 +492,8 @@ Each item names where the answer probably lies:
 8. **Whether a Stop reminder is enough for re-logging after a merge.** In
    Terrarium 18 sessions still forgot it despite a hook. An alternative is
    for `merge` itself to call `land` with status completed. **Repo:** check
-   why the existing stop hook didn't prevent those 18; the problem texts
-   name the cause.
+   why the existing stop hook didn't prevent those 18; the Friction texts in
+   their logs name the cause.
 9. **The provenance guard's write paths.** Cloud sessions write through MCP,
    REST and git. Laptop sessions may use `gh` with GraphQL, which the guard
    must also see. **Repo:** `scripts/hooks/github-provenance-guard.ts` lists
@@ -521,11 +521,12 @@ Each item names where the answer probably lies:
 15. **How findings stay small.** One file per day under `.dashboard/findings/`
     grows without end. Does `NAME-improve` delete findings it has processed, move
     them into causes, or archive them? **Owner** on retention; **Repo:**
-    the Ledger's 14-day horizon is the existing answer for problems.
+    Terrarium's Friction Ledger keeps a 14-day horizon, an existing answer.
 16. **Whether the session retro is a sweep input.** The installed `retro`
     Skill writes a session's own retrospective. Should every session run it,
-    only long ones, or none (problems already cover it)? **Repo:** the 26
-    sessions that used `retro` show what it added beyond their problems.
+    only long ones, or none (logged problems already cover it)? **Repo:** the
+    26 Terrarium sessions that used `retro` show what it added beyond their
+    Frictions.
 
 ### Observability
 
