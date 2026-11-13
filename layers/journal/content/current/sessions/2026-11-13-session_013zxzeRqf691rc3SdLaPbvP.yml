@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_013zxzeRqf691rc3SdLaPbvP
 startedAt: 2026-11-13T00:46:07Z
-endedAt: 2026-11-13T00:59:40Z
+endedAt: 2026-11-13T01:00:06Z
 kind: autonomous
 goal: Daily check of the Platform's own Skills
 status: in-review
@@ -82,13 +82,16 @@ frictions:
   - description: The Stop hook said a PR merged and demanded close-session while PR 3231 was still open (merge-pr.ts was only polling CI in the background).
     solution: Have the hook check the PR's merged state, not that merge-pr.ts was started.
     severity: nit
-durationSec: 813
+  - description: Piped log-session.ts --author output through sed on one re-author, against close-session's rule never to filter it; the full output had printed on the first pass.
+    solution: A guard on piping log-session.ts output would catch it.
+    severity: nit
+durationSec: 839
 models:
-  claude-fable-5-2: 129
+  claude-fable-5-2: 139
 toolCounts:
-  Bash: 36
-  Read: 4
-  Skill: 4
+  Bash: 38
+  Read: 5
+  Skill: 5
   Agent: 18
   ToolSearch: 1
   mcp__github__issue_read: 2
@@ -96,6 +99,7 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   mcp__github__add_issue_comment: 1
+  ReadNotifications: 1
 filesEdited:
   - layers/journal/content/current/routines/audit-docs.yml
   - layers/journal/content/current/routines/audit-skills.yml
@@ -588,109 +592,109 @@ subagents:
     durationSec: 23
     toolCalls: 12
     modelCalls: 4
-    tokenShare: 2.7
+    tokenShare: 2.6
   - task: Check audit-docs behaviour
     model: sonnet
     durationSec: 79
     toolCalls: 16
     modelCalls: 9
-    tokenShare: 3.4
+    tokenShare: 3.2
   - task: Check audit-skills behaviour
     model: sonnet
     durationSec: 68
     toolCalls: 17
     modelCalls: 10
-    tokenShare: 3.7
+    tokenShare: 3.5
   - task: Check blog-post behaviour
     model: sonnet
     durationSec: 113
     toolCalls: 31
     modelCalls: 19
-    tokenShare: 6.2
+    tokenShare: 6
   - task: Check clear-backlog behaviour
     model: sonnet
     durationSec: 102
     toolCalls: 23
     modelCalls: 19
-    tokenShare: 5.6
+    tokenShare: 5.4
   - task: Check close-session behaviour
     model: sonnet
     durationSec: 80
     toolCalls: 22
     modelCalls: 9
-    tokenShare: 3.7
+    tokenShare: 3.5
   - task: Check digest behaviour
     model: sonnet
     durationSec: 91
     toolCalls: 20
     modelCalls: 16
-    tokenShare: 4.5
+    tokenShare: 4.4
   - task: Check dispatch-subagents behaviour
     model: sonnet
     durationSec: 88
     toolCalls: 16
     modelCalls: 10
-    tokenShare: 4.2
+    tokenShare: 4.1
   - task: Check frictions-to-fixes behaviour
     model: sonnet
     durationSec: 84
     toolCalls: 21
     modelCalls: 12
-    tokenShare: 4
+    tokenShare: 3.8
   - task: Check glassbox-curate behaviour
     model: sonnet
     durationSec: 74
     toolCalls: 16
     modelCalls: 11
-    tokenShare: 3.2
+    tokenShare: 3
   - task: Check glassbox-lesson behaviour
     model: sonnet
     durationSec: 74
     toolCalls: 14
     modelCalls: 9
-    tokenShare: 2.4
+    tokenShare: 2.3
   - task: Check glassbox-update behaviour
     model: sonnet
     durationSec: 77
     toolCalls: 20
     modelCalls: 9
-    tokenShare: 3.1
+    tokenShare: 3
   - task: Check harvest behaviour
     model: sonnet
     durationSec: 62
     toolCalls: 16
     modelCalls: 7
-    tokenShare: 2.6
+    tokenShare: 2.5
   - task: Check inspect-session behaviour
     model: sonnet
     durationSec: 78
     toolCalls: 17
     modelCalls: 11
-    tokenShare: 4.5
+    tokenShare: 4.4
   - task: Check log-session behaviour
     model: sonnet
     durationSec: 83
     toolCalls: 19
     modelCalls: 11
-    tokenShare: 4
+    tokenShare: 3.9
   - task: Check prune-trial behaviour
     model: sonnet
     durationSec: 74
     toolCalls: 16
     modelCalls: 9
-    tokenShare: 3
+    tokenShare: 2.9
   - task: Standards review of Inventory diff
     model: sonnet
     durationSec: 26
     toolCalls: 10
     modelCalls: 6
-    tokenShare: 3.1
+    tokenShare: 3
   - task: Spec review of Inventory diff
     model: sonnet
     durationSec: 37
     toolCalls: 13
     modelCalls: 6
-    tokenShare: 3.8
+    tokenShare: 3.6
 gitBranch: claude/loving-tesla-p83lx3
 entrypoint: remote_trigger
 cliVersion: 2.1.323
