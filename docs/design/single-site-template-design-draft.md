@@ -27,7 +27,7 @@ marked **(spike)**, and section 13 lists those spikes.
    the template and its sites lives under a few paths listed in one file. Sync
    then becomes mostly copying files (REQ §5.2).
 4. **Logs are data, not content.** Session logs are read at request time and
-   never rebuilt into the site, so landing a log never triggers a deploy.
+   never rebuilt into the site, so writing a log never triggers a deploy.
 5. **Mechanical first, agent second.** A check that a script can do never
    costs an agent. Agents only judge.
 6. **Every sweep reports in the same shape and through the same intake.** One
@@ -56,7 +56,7 @@ in a heading.
 | **cause** | A root cause that groups problems and findings. It carries fixes and a status: open, fixing, accepted. |
 | **sweep** | A Skill that runs on a schedule or on demand to check or maintain the site and how it is built: watch, improve, docs, visit, digest. |
 | **dashboard** | The owner's page of sessions, causes, sweep runs and costs, and digests. |
-| **gate** | The one command that decides whether a change may merge. |
+| **verify** | The one command that decides whether a change may merge. |
 | **verdict** | The posted review result naming the reviewed commit. |
 | **protected path** | A path whose changes the owner merges. |
 | **autonomy preset** | One of three settings that decide what agents may merge. |
@@ -77,6 +77,7 @@ in a heading.
   - **dashboard** replaces "Journal", the name of a public Tenant.
   - **starter** replaces the breakdown's "seed", which usually means seeding a
     database.
+- Commands are verbs: `verify`, `log`, `ship`, `merge`, `look`.
 - Capitalised terms are how jargon spread through Terrarium's prose. The
   shipped glossary states only the positive rule, so the rejected names never
   reach an agent's context.
@@ -87,7 +88,7 @@ Terrarium terms that go:
 - Skill Inventory, replaced by Skill state on the watch page.
 - Prune Trial, kept only as a principle.
 - Seedling, an idea issue that is simply labelled.
-- Floor, Heavy and Inert, the gate's scope classes.
+- Gate, the old name of `verify`; Floor, Heavy and Inert, its scope classes.
 
 ## 3. Repo shape
 
@@ -98,7 +99,7 @@ platform/                     everything that flows back to the template
   GLOSSARY.platform.md        the concepts above
   bin/                        the few commands (section 5), run with tsx
   hooks/                      hook scripts; settings.json only points here
-  checks/                     gate checks and content-rule helpers
+  checks/                     verify checks and content-rule helpers
   docs/                       how-tos for agents (git, PRs, issues, caveats)
   adr/                        platform decisions (about 6)
 .claude/
@@ -106,8 +107,8 @@ platform/                     everything that flows back to the template
   rules/                      a handful of path-scoped rules, platform-owned
   settings.json               thin hook entries -> platform/hooks/*  (mixed, see 10)
 .github/
-  workflows/gate.yml          thin shell; human/laptop only (REQ §1.3)
-  actions/gate/               the steps, agent-pushable
+  workflows/verify.yml        thin shell; human/laptop only (REQ §1.3)
+  actions/verify/             the steps, agent-pushable
 CLAUDE.md                     starter: site notes + `@platform/CLAUDE.platform.md`
 GLOSSARY.md                   starter: site terms, links to the platform glossary
 docs/adr/                     site decisions
@@ -117,7 +118,7 @@ src/ or app/                  the site itself (stack-dependent)
 ```
 
 - **Platform:** everything under `platform/`, `.claude/skills/NAME-*`,
-  `.claude/rules/` and `.github/actions/gate/`, plus the guide's platform
+  `.claude/rules/` and `.github/actions/verify/`, plus the guide's platform
   chapters.
 - **Starter:** `CLAUDE.md`, `GLOSSARY.md`, the guide's site chapters, the
   hello-world site and `docs/adr/`.
@@ -144,8 +145,8 @@ Two caveats:
   clearly, choose Nuxt and keep the content-validation check of REQ §1.2 as
   our own script.
 - Astro's fast check misses broken cross-file references, and MDX breaks on
-  `{}` in prose. So use Markdoc, not MDX, and keep a reference check in the
-  gate.
+  `{}` in prose. So use Markdoc, not MDX, and keep a reference check in
+  `verify`.
 
 ## 5. The commands
 
@@ -155,13 +156,13 @@ its current Terrarium shape.
 
 | Command | Does | Meets |
 |---|---|---|
-| `gate` | install if stale → lint → typecheck → content check → unit → build → browser smoke. Snapshots HEAD and tree first, aborts between steps if they change, names the failing step. No scoping. | REQ §1.1, §1.2 |
-| `land` | Writes or updates this session's log: stitches the authored half with machine facts (timings, models, tokens, subagents from the transcript; files and PRs from git), validates, commits only that file to the log store, retries. Idempotent; reads the session id from the environment; loud on failure. | REQ §2.2 |
-| `ship` | For the current branch: checks review ran, runs `gate`, pushes, opens the PR with the provenance header, subscribes. | REQ §3.1, §3.3 |
+| `verify` | install if stale → lint → typecheck → content check → unit → build → browser smoke. Snapshots HEAD and tree first, aborts between steps if they change, names the failing step. No scoping. | REQ §1.1, §1.2 |
+| `log` | Writes or updates this session's log: stitches the authored half with machine facts (timings, models, tokens, subagents from the transcript; files and PRs from git), validates, commits only that file to the log store, retries. Idempotent; reads the session id from the environment; loud on failure. | REQ §2.2 |
+| `ship` | For the current branch: checks review ran, runs `verify`, pushes, opens the PR with the provenance header, subscribes. | REQ §3.1, §3.3 |
 | `merge` | Waits for green, requires a verdict naming the head, pins the head, reads protected paths and the autonomy preset from the shared branch, parses closing keywords, merges, closes issues GitHub missed, never reports a failed merge as merged. Prints the verdict line it needs (`merge --verdict-line`). | REQ §3.4 |
 | `look` | Preview and screenshots: builds production, starts by process group on a free port, waits for readiness and hydration, shoots desktop and phone in light and dark, always stops cleanly. | REQ §3.5 |
 
-The gate's lint step carries the repo's mechanical rules as custom lint rules
+The lint step of `verify` carries the repo's mechanical rules as custom lint rules
 (code, Markdown and YAML content), so a new convention is usually a new lint
 rule, not a new line of instructions.
 
@@ -181,15 +182,15 @@ and a dry-run test.
    `.github/workflows/`.
 4. **Stop reminders:**
    - once per opened PR that isn't subscribed;
-   - once per merge after which `land` hasn't run;
+   - once per merge after which `log` hasn't run;
    - once if a log was refused.
-5. **Land on stop:** runs `land` when the authored half changed.
+5. **Log on stop:** runs `log` when the authored half changed.
 
 Not carried over:
 - read-first denies;
 - rule hints;
 - rule-use ledgers;
-- edit-during-gate guards (the gate's own snapshot covers them);
+- edit-during-verify guards (its own snapshot covers them);
 - the subagent-note hook.
 
 ## 7. Skills
@@ -201,7 +202,7 @@ yet; `NAME-` stands in for it. The rest of each name is one plain word.
 | Skill | Purpose | Replaces in Terrarium |
 |---|---|---|
 | `NAME-setup` | First-run setup and the human/laptop checklist (via `wizard`) | new |
-| `NAME-log` | Write the judgement half of the log; call `land` | close-session, log-session |
+| `NAME-log` | Write the judgement half of the log; call the `log` command | close-session, log-session |
 | `NAME-steer` | Triage the open issues, ask once, build in parallel, review, ship, report one line per issue (later version: parallel; v1: serial) | clear-backlog, auto-triage, dispatch-subagents |
 | `NAME-improve` | The one self-improvement sweep | frictions-to-fixes, harvest, prune-trial |
 | `NAME-watch` | Checks what sessions miss about themselves | audit-skills |
@@ -319,7 +320,7 @@ goes to the owner.
 **The guide:**
 - `docs/guide/` starts with platform chapters from the template. Site chapters
   are added as the site grows.
-- Pages that cite code pin a commit, and the gate checks the pins.
+- Pages that cite code pin a commit, and `verify` checks the pins.
 
 ### 8.5 `NAME-visit`
 
@@ -390,7 +391,7 @@ request time. Its parts:
 **Access** goes through a server middleware check of one owner secret, set at
 setup. A demo site can turn the check off.
 
-**Why request time:** a log landing then never needs a deploy. The running
+**Why request time:** writing a log then never needs a deploy. The running
 server reads `.dashboard/` from a checkout it updates on a timer
 **(spike: how the host gets new logs without a rebuild)**. If the host can't,
 the dashboard reads the log files through the GitHub API with a short cache.
@@ -402,7 +403,7 @@ the dashboard reads the log files through the GitHub API with a short cache.
 | `CLAUDE.md` | Starter. It imports `@platform/CLAUDE.platform.md`, so the platform text syncs as a file. |
 | Glossary | Two files: `GLOSSARY.md` (site) links to `platform/GLOSSARY.platform.md`. |
 | `.claude/settings.json` | Mixed; it cannot be split for cloud sessions. Keep platform entries as one-line calls to `platform/hooks/*`, so they rarely change. Sync merges keys: the platform owns `hooks`, the site owns the rest. |
-| `package.json` | Mixed. Platform scripts are one-line aliases (`"gate": "tsx platform/bin/gate.ts"`). Sync merges the `scripts` keys it lists and adds platform devDependencies. A lockfile change follows. |
+| `package.json` | Mixed. Platform scripts are one-line aliases (`"verify": "tsx platform/bin/verify.ts"`). Sync merges the `scripts` keys it lists and adds platform devDependencies. A lockfile change follows. |
 
 **`NAME-sync take`:**
 - fetches the template;
@@ -410,7 +411,7 @@ the dashboard reads the log files through the GitHub API with a short cache.
   (an unchanged site file is simply overwritten);
 - merges the two JSON files by key;
 - updates the recorded commit;
-- opens a site PR that must pass `gate`.
+- opens a site PR that must pass `verify`.
 
 **`NAME-sync offer`:**
 - diffs manifest paths against the recorded commit;
@@ -425,7 +426,7 @@ own sites only. It runs in a single-repo or laptop session. It never touches
 | Preset | Agents may merge | Sweeps may self-merge | Protected paths |
 |---|---|---|---|
 | **Supervised** | nothing; the owner merges every PR | no | everything |
-| **Standard** (default) | their own PRs after verdict and green gate | docs, digest and improve PRs on safe surfaces | gate, `merge`, hooks, settings, the preset itself, workflows, `.dashboard/owner-rules.md` |
+| **Standard** (default) | their own PRs after a verdict and a passing `verify` | docs, digest and improve PRs on safe surfaces | `verify`, `merge`, hooks, settings, the preset itself, workflows, `.dashboard/owner-rules.md` |
 | **Autonomous** | as Standard, plus dependency minors and patches | all sweeps | the same short list |
 
 The preset is one line in `platform/manifest.yml` that `merge` reads from the
@@ -507,7 +508,7 @@ Each item names where the answer probably lies:
 
 ### Commands and hooks
 
-5. **How much of the transcript to parse.** `land` keeps timings, models,
+5. **How much of the transcript to parse.** `log` keeps timings, models,
    tokens and subagents. Terrarium's parser grew to about 1,000 lines over 100
    commits, mostly for rule and doc-read accounting, which is now dropped. The
    surviving part's size is estimated, not measured. **Repo:** in
@@ -517,13 +518,13 @@ Each item names where the answer probably lies:
    parser for a compacted or resumed transcript. Do timings and tool counts
    stay right across one? **Spike:** a long session forced to compact, then
    resumed.
-7. **Whether `ship` should run the gate or trust CI.** Running the gate before
+7. **Whether `ship` should run `verify` or trust CI.** Running `verify` before
    every push costs minutes. CI runs it anyway. Terrarium's rule exists so
    that a red PR is never opened, and so that an agent can't move on before
    its result. **Owner:** is a red PR acceptable if the agent waits for CI?
 8. **Whether a Stop reminder is enough for re-logging after a merge.** In
    Terrarium 18 sessions still forgot it despite a hook. An alternative is
-   for `merge` itself to call `land` with status completed. **Repo:** check
+   for `merge` itself to call `log` with status completed. **Repo:** check
    why the existing stop hook didn't prevent those 18; the Friction texts in
    their logs name the cause.
 9. **The provenance guard's write paths.** Cloud sessions write through MCP,
@@ -580,7 +581,7 @@ Each item names where the answer probably lies:
     **Repo:** none; **Spike** in the pilot.
 21. **Who reviews a site's offered change on the template?** The template has
     no sessions of its own. Does the owner review it by hand, or does an agent
-    session on the template run `code-review` and the template's gate?
+    session on the template run `code-review` and the template's `verify`?
     **Owner.**
 22. **Several sites offering conflicting changes.** The first merged wins,
     and the second must rebase. Is that enough, or should `offer` refuse while
@@ -589,7 +590,7 @@ Each item names where the answer probably lies:
     with the template, while the site's own stack deps don't. A lockfile
     conflict follows every sync that changes them. **Spike** in the pilot.
 24. **Whether the template itself runs the platform.** The template repo needs
-    its own gate and perhaps its own logs to be improved by agents. Is it a
+    its own `verify` and perhaps its own logs to be improved by agents. Is it a
     site with an empty starter, or a plain repo? **Owner.**
 25. **The machine-user token's lifetime and rotation.** A fine-grained token
     expires, and someone must rotate it in the cloud environment and on the
