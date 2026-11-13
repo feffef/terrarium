@@ -1,6 +1,6 @@
 ---
 name: visitor-loop
-description: Daily visit run — three Sonnet visitors, one blind and two informed, each with its own lens, browse one focus area of a live Terrarium; the run logs their ideas and its hard-won learnings for harvest and raises verified bugs as Frictions. It changes no code.
+description: Daily visit run — three Sonnet visitors, one blind and two informed, each with its own lens, browse one focus area of a live Terrarium; the run logs their ideas and its hard-won learnings for harvest and files verified bugs as issues. It changes no code.
 disable-model-invocation: true
 ---
 
@@ -10,13 +10,13 @@ The Terrarium grows by being **visited**. Each run serves the site and sends
 three visitors through one part of it, each looking through a different
 **lens**: one sees the site blind, two know its recent history and may read
 the repo. The run only reports what they saw: `harvest` turns its ideas and
-learnings into Seedlings, and `frictions-to-fixes` takes up its bugs.
+learnings into Seedlings, and its bugs become issues for triage.
 
 ## Remit
 
-The run changes nothing but its own session log and its retro comment on
-#3244: no branch, PR or issue (ADR-0003). Everything it finds goes into that
-log (steps 4 and 5).
+The run changes nothing but its own session log, one issue per group of
+confirmed bugs, and its retro comment on #3244: no branch or PR (ADR-0003).
+Its Frictions are only where the run itself was bumpy, never site bugs.
 
 ## Today's focus
 
@@ -46,9 +46,11 @@ printed `URL=` returns 200 for `/`.
 
 Read first: the `dispatch-subagents` Skill (every brief below follows it).
 
-Write a **context file** in your scratchpad for the informed lenses, three
+Write a **context file** in your scratchpad for the informed lenses, four
 sections on today's focus, each "none" when empty:
 
+- pages: `find <files> -path '*/content/*/pages/*' -name '*.md'`; each file is
+  a page at `/t/<tenant>/<space>/<path>` (the homepage has only `/`);
 - merged changes: `git log origin/main --since=7.days --format='%h %ad %s' --date=short -- <files>`;
 - ideas already logged: the notes in `pnpm exec tsx .agents/skills/visitor-loop/scripts/ideas.ts gather --days 7`
   that name the focus or its pages;
@@ -81,7 +83,8 @@ once, then mark each item:
 - **bug**: the site breaks its own intent: a broken link or control, an error,
   a layout fault, a mobile or accessibility failure, a false statement. Check
   it yourself against the source and the rendered page before you mark it; a
-  visitor can misread. Mark one you can't reproduce *dropped (not reproduced)*.
+  visitor can misread. Mark one you can't reproduce *dropped (not reproduced)*,
+  and one an open issue already covers *dropped (#N)*.
 - **idea**: anything else worth doing, wording and taste included.
 - **learning**: a fact this run spent real effort to establish (a visitor's
   hard-won note or your own checking) that a later session would otherwise
@@ -94,28 +97,31 @@ Leave other checks to `harvest`. Done when every reported item is in the
 tally with one mark, and every bug was checked against both its source and its
 rendered page.
 
-## 4. Draft the log
+## 4. File bugs, draft the log
 
-Write the log's entries in a draft YAML in your scratchpad, in `log-session`'s
-authored format:
+Group closely related bugs (one page or component, or one fault across
+pages) and file one issue per group, labelled `needs-triage`, with a body per
+`docs/agents/issue-tracker.md`'s "Filing an issue": each bug's URL, what
+breaks, how you confirmed it, and a proposed fix.
 
-- each **bug** is a Friction: `description` names the URL and what breaks,
-  `solution` the fix, `severity` how badly it hurts a visitor, on
-  `log-session`'s scale;
+Then write the log's entries in a draft YAML in your scratchpad, in
+`log-session`'s authored format:
+
 - each **idea** is one `ideas` line naming the page, readable without this
   run's context;
 - each **learning** is one `learnings` line;
-- the run's own Frictions follow, as in any session.
+- the run's own Frictions, as in any session.
 
-Done when every bug, idea and learning in the tally is in the draft.
+Done when every bug is in a filed issue and every idea and learning in the
+draft.
 
 ## 5. Retro, then close
 
 Run the retro in issue #3244: send each visitor its retro message by agent id,
 then post the run's report there as one comment, following that issue's rules
-and template. Add everything unrelated to visitor-loop itself to the draft as
-a Friction, never as an issue. Then invoke `close-session`, writing the log
-from the draft.
+and template. Log each problem the run hit outside visitor-loop itself
+(another Skill, tool, hook or doc) as a Friction in the draft. Then invoke
+`close-session`, writing the log from the draft.
 
 Done when the report comment is posted and the authored log holds every entry
 in the draft.

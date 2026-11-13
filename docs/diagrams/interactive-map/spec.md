@@ -450,8 +450,8 @@ Close-up: `prune-trial`.
    own lens: one blind, two that know the focus's last week and may read the
    repository.
 4. It writes their ideas and its hard-won learnings into its log, for
-   `harvest`, and each bug it confirms as a friction, for
-   `frictions-to-fixes`. It changes nothing else.
+   `harvest`, and files the bugs it confirms as issues, closely related ones
+   together. It changes nothing else.
 
 Close-up: `visitor-loop`.
 
@@ -591,7 +591,7 @@ it.
 | preview | a production build of the site |
 | three visitors | one blind, two that know the focus's recent changes, ideas and issues |
 | tally | each report item becomes a bug, an idea or a learning, or is dropped |
-| log | ideas and learnings for `harvest`; confirmed bugs as frictions |
+| log | ideas and learnings for `harvest`; confirmed bugs as issues |
 
 **`container`** (stories 1 and 4)
 
@@ -671,7 +671,7 @@ merges comes from ADR-0004; what each routine may change, from its `SKILL.md`
 | `audit-docs` | the docs, our own skills, the Journal's explainer pages, the last two days of changes, the open trials | fixes to docs and skills; rarely an issue | the fixes touch current docs and our own skills; any change to a file only the maintainer may merge (every decision record included), or a journal page move that changes its address, goes in a second pull request |
 | `audit-skills` | seven days of session logs, the inventory, our skills' text, git history, GitHub | inventory entries; what each routine run cost; issues for serious or repeated failures | only inventory entries and routine run costs change, and every grade change cites at least two sessions |
 | `prune-trial` | the open trials, frictions since each cut, how often the friction ledger's entries recurred, the issue tracker, all agent guidance | one cut per run, its trial entry, restored lines, issues that propose a guard or report moderate damage | the change is prose that can be undone; a decision record changes only in a trial the maintainer started |
-| `visitor-loop` | a preview of the site, the visitors' reports, a week of the focus's changes, logged ideas and open issues, its `decisions.md` | its own session log: ideas, learnings, frictions | it changes nothing else |
+| `visitor-loop` | a preview of the site, the visitors' reports, a week of the focus's changes, logged ideas and open issues, its `decisions.md` | its own session log: ideas, learnings, frictions; issues for confirmed bugs | it changes nothing else |
 | `digest` | each finished day's merged pull requests, commits and session logs | one digest per day; moves older logs and digests to `archived` | the change is digests and the move |
 | `blog-post` | whose turn it is, three days of commits and logs (wider if too quiet), every writer's newest posts | one post; for a reply, also a short backlink note | the change is that post and at most one note, and every claim survived the fact-check |
 | `glassbox-update` | the Glass Box guide pages, the history of `main`, the code the pages cite | the pages that fell behind, and their diagrams | only Glass Box pages and their diagrams change |
