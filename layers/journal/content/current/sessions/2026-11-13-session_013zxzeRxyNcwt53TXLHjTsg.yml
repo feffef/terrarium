@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRxyNcwt53TXLHjTsg
 startedAt: 2026-11-13T00:25:39Z
-endedAt: 2026-11-13T00:40:24Z
+endedAt: 2026-11-13T00:45:36Z
 kind: autonomous
 goal: "Glass Box curate: teach clear-backlog phases and the rule-use record"
-status: in-review
-outcome: "PR 3225 open, gate green: two lessons extended, three warnings fixed, memory page shorter"
-summary: "Sixth autonomous glassbox-curate run, started as a Sonnet handoff from the owner's earlier in-session request for several focuses in sequence; the owner chose the autonomous mode and the handoff, and the focus itself was my own choice from the memory page. I oriented, ran a Scout (found nothing new), and took the memory page's Topics with no page yet plus three page-check capitalisation warnings. An opus writer edited Workflow scripts (interaction phase, thin-result retry, retro) and Session logs (the ruleUse record), a sonnet claim checker found three imprecise claims that were reworded, two fresh readers found undefined terms that were glossed where a source allowed, and a Why bullet whose key term no source defines was cut. The memory page's first topic item claimed the final gate is skipped on a clean first round; the Skill still runs it, so I dropped that claim. Deviations, stated in the run entry: the Subject's other pages were not all read in full and the pages the review named were only grepped. PR 3225 is open and subscribed; PR 3223 and 3220 wait for the owner and were not touched. Still open: self-merge once CI is green, then a second focus if budget allows."
+status: completed
+outcome: "PR 3225 merged: two lessons extended, three warnings fixed, memory page shorter"
+summary: "Sixth autonomous glassbox-curate run, started as a Sonnet handoff from the owner's earlier in-session request for several focuses in sequence; the owner chose the autonomous mode and the handoff, and the focus itself was my own choice from the memory page. I oriented, ran a Scout (found nothing new), and took the memory page's Topics with no page yet plus three page-check capitalisation warnings. An opus writer edited Workflow scripts (interaction phase, thin-result retry, retro) and Session logs (the ruleUse record), a sonnet claim checker found three imprecise claims that were reworded, two fresh readers found undefined terms that were glossed where a source allowed, and a Why bullet whose key term no source defines was cut. The memory page's first topic item claimed the final gate is skipped on a clean first round; the Skill still runs it, so I dropped that claim. Deviations, stated in the run entry: the Subject's other pages were not all read in full and the pages the review named were only grepped. PR 3225 merged and green; PR 3223 and 3220 wait for the owner and were not touched. I self-merged it after CI went green and posted the verdict first."
 prs:
   - "3225"
 docsRead:
@@ -61,23 +61,27 @@ frictions:
   - description: The Skill asks for every Subject page in full, but with the budget I read only the pages I edited; the run entry states it.
     solution: Let the Skill say which pages count as the Subject when the focus is a topic list, not a Subject.
     severity: minor
-durationSec: 885
+durationSec: 1197
 models:
-  claude-sonnet-5-5: 100
+  claude-sonnet-5-5: 127
 toolCounts:
-  Bash: 31
-  Read: 14
-  Agent: 7
-  mcp__claude-code-remote__get_session: 2
+  Bash: 38
+  Read: 15
+  Agent: 8
+  mcp__claude-code-remote__get_session: 3
   Write: 2
   SendMessage: 2
-  Skill: 3
+  Skill: 4
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/glassbox/content/workshop/runs/2026-11-13T0026.yml
   - layers/glassbox/content/guide/pages/agents/20.workflow-scripts.md
   - layers/glassbox/content/guide/pages/terrarium-practice/40.session-logs.md
+  - layers/glassbox/content/workshop/runs/2026-11-13T0045.yml
   - layers/glassbox/content/guide/pages/hooks/10.hooks.md
   - layers/glassbox/content/guide/pages/terrarium-practice/45.ideas-and-lessons-learned.md
   - layers/glassbox/content/guide/pages/web-standards/30.aria.md
@@ -339,49 +343,68 @@ ruleUse:
     reported:
       - path: .claude/rules/glassbox-content.md
         value: backed
+  - by: general-purpose
+    subagent: 7
+    answered: false
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported: []
 subagents:
   - task: Scout new topics
     model: sonnet
     durationSec: 18
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 4.8
+    tokenShare: 3.9
   - task: Write glassbox page edits
     model: opus
     durationSec: 331
     toolCalls: 41
     modelCalls: 31
-    tokenShare: 22.9
+    tokenShare: 18.5
   - task: Claim-check changed sentences
     model: sonnet
     durationSec: 21
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 3.2
+    tokenShare: 2.6
   - task: "Fresh reader: workflow scripts"
     model: sonnet
     durationSec: 11
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.8
+    tokenShare: 1.4
   - task: "Fresh reader: session logs"
     model: sonnet
     durationSec: 11
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.8
+    tokenShare: 1.4
   - task: Standards review of Glass Box diff
     model: sonnet
     durationSec: 31
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 3.4
+    tokenShare: 2.8
   - task: Spec review of Glass Box diff
     model: sonnet
     durationSec: 30
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 3.8
+    tokenShare: 3.1
+  - task: Write hooks subject edits
+    model: opus
+    durationSec: 3
+    toolCalls: 1
+    modelCalls: 1
+    tokenShare: 2.7
 gitBranch: HEAD
 entrypoint: remote
 cliVersion: 2.1.323
