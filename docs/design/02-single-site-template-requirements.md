@@ -1,13 +1,13 @@
 # Requirements a single-site template must keep
 
 A companion to
-[`single-site-template-breakdown.md`](./single-site-template-breakdown.md)
+[`01-single-site-template-breakdown.md`](./01-single-site-template-breakdown.md)
 (cited below as **BD §n**). It is read together with that breakdown and does not
 repeat it. It covers only the places where the breakdown was shallow, or called
 something simple that cost many iterations to get right. Written on 2026-11-13
 from the repo at `acd07c56a`. **Status: reference; decides nothing.** It states
 requirements only; a proposed design is kept apart in
-[`single-site-template-design-draft.md`](./single-site-template-design-draft.md).
+[`03-single-site-template-design-draft.md`](./03-single-site-template-design-draft.md).
 
 Each requirement says what a replacement must guarantee. It never says how
 Terrarium does it today, which is often more complicated than needed. The
