@@ -42,15 +42,14 @@ applies.
 - Pin the SHA to work from (`origin/<default-branch>` if none); the agent checks
   HEAD matches and re-branches if not, since worktrees sometimes start stale
   (issue #1420). Agents sharing one checkout each get an explicit SHA.
-- A review agent for a PR whose branch is checked out elsewhere reads the PR's
-  commit (`git show <sha>:<path>`) or checks that SHA out detached in its own
-  worktree, never the branch name and never in your checkout.
+- **Never move a checkout someone else is on.** A review or read-only agent
+  reads code with `git show <sha>:<path>` or `git diff` (never the branch name),
+  or checks the PR's SHA out detached in its own worktree, never in yours. Outside that worktree
+  it never runs `checkout`, `switch` or `reset`; its brief says so. To
+  experiment, it copies a file aside.
 - Impl agents on the branch you have checked out: detach your checkout first and
   re-sync after hand-back. Each agent bases on a fresh `origin/<branch>`, with no
   same-named local branch.
-- A read-only or review agent outside its own worktree never runs `checkout`,
-  `switch` or `reset`; its brief says so. It reads with `git show` or
-  `git diff`, and copies a file aside to experiment.
 
 **Stranding**
 - Commit before stopping, even mid-gate: an agent can end at any time. Bank
