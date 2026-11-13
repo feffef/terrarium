@@ -478,7 +478,7 @@ Requirements:
 
 | Requirement | Evidence |
 |---|---|
-| Every scheduled run records its cost and tokens, attributed to subagents, from a source the run does not have to query itself. | `get_session` unavailable in scheduled runs (#2987) |
+| Every scheduled run records its cost and tokens, attributed to subagents, from a source the run does not have to query itself. | A run reading its own cost failed in 6 of 6 scheduled glassbox-curate runs, cause unverified. Reading a finished run's cost from another session worked 8 of 8 (#2987). Neither splits cost by subagent. |
 | Every scheduled run has a per-run bound. Until a hard cap exists, bound work (items per run, agents, pages) and record overruns. | Curate's $25 cap was unenforceable |
 | Cost views label the figure an estimate and show usage-window pressure for a subscription. | costs.md |
 
@@ -564,10 +564,167 @@ its "In the template" text needs the requirements in the named section.
    validation guarantees (1.2) are new inputs to that decision.
 2. **Cost capture and budget for scheduled runs** (4.6): needs a test of
    OpenTelemetry from a cloud Routine.
-3. **Agent identity** (3.3): a GitHub App or a second account; needs a probe of
-   what the cloud proxy allows.
+3. **Agent identity** (3.3): a GitHub App or a second account. Research found
+   two limits:
+   - The cloud proxy blocks the endpoint that mints an App's token, so an App
+     needs its token minted outside the session.
+   - A machine user's token set as `GH_TOKEN` passes into the container. Whether
+     pushes then show that identity is untested.
+
+   GitHub's terms allow one free machine account per person (agent research,
+   2026-11-13).
 4. **The three autonomy presets**: their exact definitions.
 5. **What the watcher checks mechanically and what it checks with an agent**
    (4.1).
 6. **A pilot site** (BD §7 item 3). Sync is still the newest and least-tested
    part.
+
+## 8. What is still unclear about the requirements
+
+Ambiguities the writing agent could not settle. Each item says where an answer
+probably lies:
+
+- **Repo:** an agent can settle it from what is already recorded, and the item
+  says what to look for.
+- **Owner:** it is a choice only the owner can make.
+- **Spike:** it needs a small experiment.
+
+### Scope and audience
+
+1. **What counts as one site.** Can one repo hold a site with distinct parts (a
+   blog and a shop), or is a second part a second repo? This decides whether
+   any of Terrarium's multi-part machinery returns in a smaller form.
+   **Owner.**
+2. **Who the stranger is.** "Usable by a stranger" (BD) and "no outside
+   contributors" fit together only if a stranger runs their own site from the
+   template and never contributes to the owner's. Is a stranger's improvement
+   ever meant to reach the template (BD §7 item 5)? If not, back-flow (5.3) is
+   for the owner's sites only. **Owner.**
+3. **Public repos and strangers' issues.** A public site repo receives issues
+   and comments from anyone, even with no contributors. Does the template need
+   the "text from non-writers is data" rule (ADR-0020) from day one, or only
+   when a site goes public? **Owner.**
+4. **Who reads the guide.** The owner wants a Glass Box-like guide for a
+   productive site. Is it written for the owner, for agents, or for a stranger
+   adopting the template? Each reader needs a different depth and
+   vocabulary. **Owner.**
+5. **Expected volume.** Terrarium logged 576 sessions in a month. Several
+   requirements exist because of that volume: bounded reads, output caps, a
+   window anchored to the last run, capped parallel gates. A single site may
+   see a tenth of it. Should those requirements hold from the start, or arrive
+   when volume demands? **Owner.** Volume per site can then be measured from
+   the first pilot's logs.
+
+### Observability
+
+6. **Which Journal views the owner actually reads.** The logs show which views
+   the owner asked for and changed (2.3), but nothing shows how often each is
+   read. A view asked for once may not be worth carrying. **Owner.** No usage
+   analytics exist in the repo.
+7. **What "owner-only" must keep out.** Is it a login, a shared secret, a
+   network restriction, or no access control because the repo is private
+   anyway? And does "owner-only" also cover the logs in the repo itself, if the
+   repo is public? **Owner.**
+8. **Digest for a reader of one.** Terrarium's Digest was written for a public
+   reader who "knows software but not this project". For an owner-only site,
+   is a daily page still the right form, or would a summary the owner asks for
+   be enough? The owner called the Digest a must-have; its cadence and
+   audience are not settled. **Owner.**
+9. **Whether nit-level Frictions pay off.** 1,560 of 2,887 Frictions in the
+   month were nits (54%). The requirement says to report every Friction, but
+   the cost of writing and processing nits is real. **Repo:** check whether any
+   Ledger cause that got a fix that held was first seen through nit-level
+   occurrences. Look at the occurrence severities of the 41 entries that went
+   quiet after their latest fix.
+10. **What counts as "the session didn't notice".** The watcher's classes
+    (4.1) come from a multi-Skill Platform. For a site with fewer Skills,
+    which classes still occur is a guess. **Repo:** count the watcher's
+    findings by class and by Skill in `layers/journal/content/current/skills/audit-skills.yml`,
+    and see which Skills a template would keep.
+11. **Cost as a measure.** Every in-client figure is a list-price estimate. On
+    a subscription, usage windows are the real limit. Should the owner's cost
+    views show dollars, share of the usage window, or both? **Owner.**
+
+### Working model
+
+12. **What the first version of parallel steering includes.** The owner wants
+    it "at least in a later version". The 3.6 table splits it into a minimal
+    version and later parts, but whether the template's first release ships
+    any of it is open. **Owner.**
+13. **What the three autonomy presets allow.** Only "three, picked at setup"
+    is settled. Candidate axes: who merges agent PRs, whether scheduled runs
+    may self-merge, whether the self-improvement loop may fix its own Skills,
+    and whether the protected-path list is empty, small or large. **Owner.**
+    ADR-0004's human-merge cases are a starting list (`.claude/rules/adr-0004-human-merge.md`).
+14. **The first protected paths.** "Very few at first", but which? Likely the
+    gate definition, the merge rule, hook wiring and the autonomy value
+    itself. **Repo:** the 21 globs in `.claude/rules/adr-0004-human-merge.md`
+    minus the multi-Tenant ones give a candidate list. **Owner:** to confirm.
+15. **Who may declare a cause "accepted".** Accepted is a terminal state
+    (R0.3), but the requirement does not say who decides it. **Repo:** read
+    the PRs that set `status: accepted` on the 12 accepted Ledger entries and
+    see whether each cites an owner decision.
+16. **Whether prune trials survive in any form.** No trial verdict ever
+    restored text, and silence is a weak signal (4.2). Keep "cut before you
+    add" as a principle only, or keep trials as a step? **Owner**, informed by
+    a repo check: did any trial's cut text get re-added later by an ordinary
+    PR? Search `git log -S` on cut phrases.
+17. **Does review cover owner-written commits?** The owner waived review for
+    a docs-only commit in this research's own predecessor session. Is the
+    waiver per commit, or a standing rule for some kinds of change? **Owner.**
+18. **Laptop parity.** A laptop session has no PR-activity subscription, a
+    different identity path and full hook support. Which requirements must
+    hold identically on a laptop, and which may degrade (e.g. the owner
+    watches CI)? **Owner.** **Repo:** local sessions' logs (raw UUID ids)
+    show what broke there.
+19. **Model choice.** Clear-backlog builders run on a cheaper model while
+    reviewers keep the default (#3110). Is model choice per role a template
+    requirement, or a per-site setting? **Owner.**
+
+### Content and runtime
+
+20. **What "snappy" means.** The owner wants browser-side navigation for its
+    feel. No benchmark exists, and Astro's router swaps fetched HTML where a
+    single-page app fetches less. Is "as fast as Terrarium today" the bar?
+    **Spike:** the same three-page site in both stacks, timed on a phone.
+21. **Which content rules a site needs.** Terrarium's cross-reference checks
+    were per Tenant. A site's own rules are unknown until it has content. Is
+    "a site adds its rules as unit tests" (BD §1) enough, or should the
+    template ship a few common ones (broken internal links, missing images)?
+    **Owner.**
+22. **Diagrams.** Mermaid is "Later", and ADR-0024 rejected the standard CLI.
+    Does an owner's site need diagrams at all? **Owner.**
+23. **Accessibility.** The breakdown notes that no automated accessibility
+    check exists. Is one a requirement for the template, or a later item?
+    **Owner.**
+24. **In-character content Skills.** Blog Personas, fact-checked posts and
+    curated catalogues were Tenant features. Does a productive site want any
+    of them (e.g. a fact-checked blog post Skill)? **Owner.** **Repo:**
+    blog-post's fact-check rules are the transferable part.
+
+### Data, deploy and security
+
+25. **How long logs live.** Logs only grow, and Terrarium splits them into
+    current and archived. Is there a retention limit, or does the archive
+    keep everything? **Owner.** **Repo:** the archive size and the read caps
+    show what history costs.
+26. **Dependency updates.** Terrarium lets agents merge minor and patch bumps
+    and leaves majors to a person (ADR-0004). Does a site keep that rule, and
+    does it want an update sweep from day one? **Owner.**
+27. **Secrets and security review.** Deploy credentials and API keys exist,
+    but no requirement covers a security review of changes. Is that wanted,
+    perhaps for server routes, which the owner merges (BD §2)? **Owner.**
+28. **What "merge is deploy" means without a container.** The requirement
+    (1.5) is host-neutral, but some hosts build from a push and some from a
+    tag. Is a merge always a deploy, or may a site gate deploys separately?
+    **Owner.**
+
+### Evidence quality
+
+29. **How solid the fix-durability figures are.** They count any later
+    occurrence as a failure, nits included, at day granularity, and recent
+    fixes have had little time to be tested. **Repo:** re-run the analysis
+    excluding nits and fixes younger than 7 days.
+30. **Counts this document did not re-run.** Only the Routine costs, the
+    Ledger size and the audit-docs run count were re-checked. **Repo:** any
+    count used in a later decision should be re-run from its cited command.
