@@ -13,6 +13,11 @@ Each requirement says what a replacement must guarantee. It never says how
 Terrarium does it today, which is often more complicated than needed. The
 evidence column names the incident that made the requirement necessary.
 
+Requirements use the design draft's plain lowercase terms: **problem** (Terrarium's
+Friction), **sweep** (a scheduled or on-demand Skill; Terrarium's Routine or
+loop), **dashboard** (Terrarium's Journal). Evidence keeps Terrarium's own names,
+because it points at Terrarium's records. The draft's section 2 says why.
+
 ## Owner decisions taken while this was written
 
 These revise the breakdown's starting point (BD "What the owner settled first"):
@@ -21,8 +26,8 @@ These revise the breakdown's starting point (BD "What the owner settled first"):
   branches, steered by one round of owner questions. It may come after a first
   version, but the design must allow it. This reverses BD §3 "one session at a
   time".
-- **Observability is a must-have.** That covers a Journal-style view of
-  sessions, Frictions, Skill and Routine state and cost, plus a Digest. It is
+- **Observability is a must-have.** That covers a dashboard of
+  sessions, problems, Skill and sweep state and cost, plus a daily digest. It is
   owner-only by default, and a demo site may make it public. This reverses
   BD §2 "Journal: Drop from the core" and BD §4 "digest: Drop".
 - **A watcher must catch what sessions don't notice about themselves.** This
@@ -31,11 +36,11 @@ These revise the breakdown's starting point (BD "What the owner settled first"):
   core, because it keeps finding what review missed. A productive site gets a
   guide that explains the platform, seeded from the template and grown with the
   site. This reverses BD §4 "audit-docs: Later" and BD §2 "Glass Box: Drop".
-- **The visitor loop stays, improved:** good signal and coverage, and it reports
+- **The visitor sweep stays, improved:** good signal and coverage, and it reports
   findings rather than building fixes. The owner found its autonomous fixes
   uncontrolled and often reverted them (#2369).
-- **One self-improvement loop** takes every finding source and turns it into
-  issues or fixes. Today several separate loops do this.
+- **One self-improvement sweep** takes every finding source and turns it into
+  issues or fixes. Today several separate Terrarium loops do this.
 - **Browser-side navigation must be available as an opt-in.** The owner values
   how fast in-app navigation feels (ADR-0028, #1444). This revises BD §2
   "Prerender content pages".
@@ -55,7 +60,7 @@ These revise the breakdown's starting point (BD "What the owner settled first"):
   - script bodies, specs and commit history;
   - issue and PR history on ten topics;
   - the full ADRs, `docs/agents/` and the Glass Box practice pages.
-- **Second round (seven agents):** docs upkeep, the visitor loop, the
+- **Second round (seven agents):** docs upkeep, the visitor sweep, the
   self-improvement loops, the watcher and observability, the merge chain under
   cloud limits, parallel steering in practice, setup and template sync.
 - **One docs-research agent:** cost capture for scheduled runs.
@@ -96,7 +101,7 @@ Requirements for the template:
 
 - **R0.1** The template must expect each recurring failure to come back after a
   prose fix, and must have a place to put a mechanism instead.
-- **R0.2** The self-improvement loop must send a cause that regressed after its
+- **R0.2** The self-improvement sweep must send a cause that regressed after its
   fix to the owner. It must not add more prose.
 - **R0.3** "Accepted cost" must be a legitimate end state that is never
   re-proposed.
@@ -175,7 +180,7 @@ Read with BD §2.
 The owner's requirement:
 
 - Logs are easy for agents to read at any time.
-- They can be shown on a Journal-style page.
+- They can be shown on a dashboard page.
 - Writing one is quick and painless.
 
 Under those three, these must hold:
@@ -183,7 +188,7 @@ Under those three, these must hold:
 | Requirement | Evidence |
 |---|---|
 | Every substantive session lands a log without the owner asking. | 4 `HUMAN-PROMPTED-CLOSURE` cases in a month; owner-filed #2956 |
-| The agent writes only the judgement half: goal, outcome, Frictions, ideas, who asked. Machine facts come from the machine. | Agents misreport facts the transcript records exactly (ADR-0009) |
+| The agent writes only the judgement half: goal, outcome, problems, ideas, who asked. Machine facts come from the machine. | Agents misreport facts the transcript records exactly (ADR-0009) |
 | The session id is never typed by the agent. | `session-id-hand-typed`, 18 occurrences |
 | Landing is idempotent. A second landing never clobbers the authored half. | #688 |
 | A log's status follows its PRs, so no view shows "in review" for merged work. | 11 sessions authored `completed` before re-closing. The stale `in-review` view, #2884. |
@@ -191,7 +196,7 @@ Under those three, these must hold:
 | A log written while the log format is changing is still accepted or held, never lost. | #3073 |
 | A log's text survives the container being reclaimed. | #449 |
 | Timestamps are UTC, and a day is cut by the session's end. | #1478 |
-| Each Friction carries a severity graded by what it cost, and the agent reports every one, however small. | session-logs lesson; severity scale |
+| Each problem carries a severity graded by what it cost, and the agent reports every one, however small. | session-logs lesson; severity scale |
 
 ### 2.3 What the owner must see
 
@@ -199,13 +204,13 @@ Owner-requested views, from session logs:
 
 | View | Evidence |
 |---|---|
-| Session feed: goal, status, outcome, kind, PRs, Friction counts, time, models | `SessionCard` |
-| Friction Ledger: one entry per cause, a time window (default 7 days), fix state derived from later occurrences | `01RDtAc5…`, `011W3gVN…`, `013zxzeSai…` |
-| Routine cost per run and per week, labelled as a list-price estimate | `01TwTc2v…`, `013zxzeQ93…` |
+| Session feed: goal, status, outcome, kind, PRs, problem counts, time, models | `SessionCard` |
+| Causes: one entry per cause, a time window (default 7 days), fix state derived from later occurrences | `01RDtAc5…`, `011W3gVN…`, `013zxzeSai…` |
+| Sweep cost per run and per week, labelled as a list-price estimate | `01TwTc2v…`, `013zxzeQ93…` |
 | Subagent share of tokens and run time on each session | `012rLVzS…`, `013zxzeSB…` |
-| KPI tiles: sessions by kind, Frictions by severity, Routine spend, suggestions, Skills | `013zxzeR2k…` (ten acceptance criteria) |
+| Headline tiles: sessions by kind, problems by severity, sweep spend, suggestions, Skills | `013zxzeR2k…` (ten acceptance criteria) |
 | Skill state: role, graded importance, use count | ADR-0015 |
-| A daily Digest | `013zxzeNC…`, `013zxzeQ697…` |
+| A daily digest | `013zxzeNC…`, `013zxzeQ697…` |
 | Ideas and learnings | `harvest` input |
 
 Requirements:
@@ -214,11 +219,11 @@ Requirements:
 |---|---|
 | Views derive from the logs; logs are never regenerated from repo state. | ADR-0008 |
 | Every read is bounded: newest first, a cap, and a total count. A view that grows with history is a defect. | The Journal landing passed 10 MB uncapped; one view still reads every session. |
-| Fix state, "stale in review" and Routine silence are derived, never stored. | `ledger.ts`, `dashboard.ts` |
+| Fix state, "stale in review" and sweep silence are derived, never stored. | `ledger.ts`, `dashboard.ts` |
 | A cost that could not be read is shown as "unreported", never guessed. | `get-session-cost-unreported`, 7 occurrences |
-| A Routine with no run in two cadences shows as possibly stopped. | visitor-loop: no scheduled run since 2026-11-03, noticed 10 days later |
-| The Digest is fact-checked against the merged diffs, and a cadence word ("weekly") needs a source. | The checker caught wrong claims in every first draft; invented "weekly" in the 2026-11-08 Digest |
-| The Digest is landed once and never rewritten. | ADR-0010 |
+| A sweep with no run in two cadences shows as possibly stopped. | visitor-loop: no scheduled run since 2026-11-03, noticed 10 days later |
+| The digest is fact-checked against the merged diffs, and a cadence word ("weekly") needs a source. | The checker caught wrong claims in every first draft; invented "weekly" in the 2026-11-08 Digest |
+| The digest is landed once and never rewritten. | ADR-0010 |
 | A new log or run row shows with no page edit. | ADR-0008 |
 
 ## 3. Interactive sessions
@@ -228,7 +233,7 @@ Read with BD §3.
 ### 3.1 Guidance that must survive the cut
 
 The breakdown shrinks CLAUDE.md to "a fraction" without naming what stays. Each
-of these lines answers a recurring Friction:
+of these lines answers a recurring problem:
 
 | Line | Evidence |
 |---|---|
@@ -347,10 +352,40 @@ Still open in Terrarium: the agent still forgets to log again after a merge (18
 sessions), and stranded worktrees at close were fixed only on 2026-11-13. A
 template must treat both as unsolved, not copy them as working.
 
-## 4. Routines and loops
+### 3.7 Planning work bigger than one session
 
-Read with BD §4. Re-checked cost of the newest 30 runs per Routine, about one
-month:
+The owner reports that the installed `wayfinder` Skill worked well:
+- start from a map of the destination;
+- grow it with grilling, research, prototype and task tickets;
+- let the agent steer through them one ticket per session.
+
+What was awkward was creating each next session by hand. It was used in 24
+interactive sessions (audit-skills count).
+
+| Requirement | Evidence |
+|---|---|
+| Work too big for one session is planned as a map with decision tickets, the way `wayfinder` does it. | Owner |
+| Moving to the next session is one command. It writes the hand-over, starts the next session with it, and works in cloud and laptop sessions. | Owner: manual session creation was the awkward part |
+| A session hands over before its context fills, not after it degrades. | Owner |
+| The hand-over names the map, the ticket claimed and the Skills to load, and points to artifacts (issues, branches, docs) instead of copying them. | The pack's `handoff` Skill rules |
+
+### 3.8 Working with the installed Skill pack
+
+The platform extends the installed pack (Matt Pocock's Skills) rather than
+competing with it.
+
+| Requirement | Evidence |
+|---|---|
+| A platform Skill calls a pack Skill by name for the pack's job (grilling, review, tickets, research, prototypes, hand-overs). It never reimplements that job. | Workflow reviewers skipped or half-followed `code-review`'s own steps (#3148) |
+| Platform terms and Skill names don't clash with the pack's. | Owner; pack names checked |
+| Where the platform needs different behaviour, the change lives in a repo doc the pack Skill reads, written by the pack's setup Skill and kept as the site's own. Installed Skills are never edited. | ADR-0015; the triage-label override |
+| A pack update is checked against those repo docs. | 1.4 |
+| A platform Skill that needs more than a pack Skill offers wraps it: run the pack Skill, then add the platform's step (e.g. hand-over, then start the session). | Owner |
+
+## 4. Sweeps
+
+Read with BD §4. Re-checked cost of the newest 30 runs of each Terrarium
+Routine, about one month:
 
 | Routine | Runs | Total | Mean |
 |---|---|---|---|
@@ -377,7 +412,7 @@ What it caught that sessions did not notice:
 - gates bypassed by accident (#2104, #1913);
 - orphaned logs (#736, #1063);
 - human-nudged closures;
-- a Routine that stopped.
+- a scheduled sweep that stopped.
 
 | Requirement | Evidence |
 |---|---|
@@ -387,13 +422,13 @@ What it caught that sessions did not notice:
 | It verifies each subagent finding against its source. | An invented quote; unresolvable commit ids |
 | It files an issue only when a finding is significant or repeated. It comments on an open thread, and knows what to do when that thread is closed. | `audit-skills-repeat-after-closed-issue` |
 | An inconclusive scan reports as inconclusive, not as zero. | Orphan scan blocked by a 403 (#1514) |
-| A possible Routine stop is an observation, not a failure, but it is surfaced. | visitor-loop 2026-11-13 |
+| A possible sweep stop is an observation, not a failure, but it is surfaced. | visitor-loop 2026-11-13 |
 | Its output is bounded. | A 56 to 478 KB scorecard |
 | It shows its own cost. Agent checks run only for Skills whose text or runs changed; mechanical checks need no agent. | About two thirds of its tokens go to per-Skill agents |
 
-### 4.2 One self-improvement loop
+### 4.2 One self-improvement sweep
 
-Inputs: Frictions, ideas and learnings, watcher findings, audit-docs findings,
+Inputs: problems, ideas and learnings, watcher findings, audit-docs findings,
 visitor findings, and a single-session retro.
 
 | Requirement | Evidence |
@@ -407,9 +442,9 @@ visitor findings, and a single-session retro.
 | Its work per run is capped, and large inputs stay out of its context. | harvest read 62k tokens and checked only 17 clusters |
 | Text is copied by script, never retyped. | `ledger-yaml-hand-edit-errors`: 7 fixes |
 | One report per run, every number sourced or marked unverified, and every dropped item with its reason. | #3143 rules |
-| Its own briefs are a Friction source to watch. | Five of the seven 7-fix Ledger entries are its own briefs |
+| Its own briefs are a problem source to watch. | Five of the seven 7-fix Ledger entries are its own briefs |
 | A cut instruction may stand as a trial judged later. Silence is a weak signal. | No trial verdict ever restored text; one rate-based issue (#2784) |
-| Model and Routine can both invoke it. | #1018 |
+| A session and a schedule can both invoke it. | #1018 |
 
 ### 4.3 Docs upkeep
 
@@ -432,7 +467,7 @@ it (#1913).
 | Autonomous runs don't ask the owner for a focus. | 4 of 4 early runs asked |
 | The guide explains the platform and grows with the site (owner). | Owner |
 
-### 4.4 Visitor loop
+### 4.4 Visitor sweep
 
 Evidence:
 
@@ -451,7 +486,7 @@ Evidence:
 | Visitors get the real route list, including pages a link crawl can't reach. | Journal digests behind expanders |
 | Personas include task-directed, keyboard-only and returning visitors. | Gap |
 | Each run has a page and screenshot budget and records its cost. | New runs' cost unrecorded |
-| Findings hand off to the self-improvement loop with a fixed set of fields: url, lens, evidence, preview commit, verified, match. Ideas go to the idea input. | Owner |
+| Findings hand off to the self-improvement sweep with a fixed set of fields: url, lens, evidence, preview commit, verified, match. Ideas go to the idea input. | Owner |
 | It builds nothing. | Owner; #2369 |
 
 ### 4.5 Digest
@@ -505,7 +540,7 @@ Read with BD §5. These requirements were missing or shallow there.
 |---|---|
 | Every file has exactly one kind: platform, seed or site. Files that mix kinds are split, or the sync knows their sections. | Mixed: CLAUDE.md, settings, package scripts, glossary, pins next to site data |
 | The list of platform paths is one file. | BD §5 |
-| Site data (logs, Frictions, observations, content) never flows back. Back-flow selects by an allow-list, not a deny-list. | Owner |
+| Site data (logs, problems, observations, content) never flows back. Back-flow selects by an allow-list, not a deny-list. | Owner |
 
 ### 5.3 Sync
 
@@ -540,7 +575,7 @@ its "In the template" text needs the requirements in the named section.
 | Mermaid (BD §1) | Later, via the Mermaid CLI | Later; the CLI is a rejected alternative | 3.2 |
 | Self-updating container (BD §1) | Adapt | Kept from BD, plus retry and live-commit visibility | 1.5 |
 | Render per request / prerender (BD §2) | Replace | Prerender, with browser-side navigation as an opt-in | 2.1 |
-| Journal (BD §2) | Drop from core | Core | 2.3 |
+| Journal (BD §2) | Drop from core | Core, as the dashboard | 2.3 |
 | Glass Box (BD §2) | Drop | A site guide, seeded and grown | 4.3 |
 | Session-start hooks (BD §3) | Keep the install | Install and full history | 1.1 |
 | Provenance guard (BD §3) | Simplify to one instruction | Keep a mechanism | 3.3 |
@@ -550,8 +585,8 @@ its "In the template" text needs the requirements in the named section.
 | `clear-backlog` (BD §3) | One serial command | Parallel, later version | 3.6 |
 | Subagent dispatch, worktrees (BD §3) | Drop at first | Needed with parallel steering | 3.6 |
 | Preview and screenshot (BD §3) | Simplify | Kept from BD, with section 3.5 | 3.5 |
-| Installed Skill list (BD §3) | 11 named | Add `retro` and the pack's setup Skill; `wayfinder`, `implement`, `grill-with-docs` optional | 1.4 |
-| frictions-to-fixes, harvest, prune-trial (BD §4) | One retro / Drop / Drop | One self-improvement loop | 4.2 |
+| Installed Skill list (BD §3) | 11 named | Add `retro`, `wayfinder` and the pack's setup Skill; `implement`, `grill-with-docs` optional | 3.7, 3.8 |
+| frictions-to-fixes, harvest, prune-trial (BD §4) | One retro / Drop / Drop | One self-improvement sweep | 4.2 |
 | audit-skills (BD §4) | Drop | Watcher, core | 4.1 |
 | audit-docs (BD §4) | Later | Core | 4.3 |
 | visitor-loop (BD §4) | Later, optional | Keep, report only | 4.4 |
@@ -564,7 +599,7 @@ its "In the template" text needs the requirements in the named section.
 1. **Stack** (BD §6). The browser-side navigation opt-in (2.1) and the content
    validation guarantees (1.2) are new inputs to that decision.
 2. **Cost capture and budget for scheduled runs** (4.6): needs a test of
-   OpenTelemetry from a cloud Routine.
+   OpenTelemetry from a scheduled cloud run.
 3. **Agent identity** (3.3): a GitHub App or a second account. Research found
    two limits:
    - The cloud proxy blocks the endpoint that mints an App's token, so an App
@@ -618,7 +653,7 @@ probably lies:
 
 ### Observability
 
-6. **Which Journal views the owner actually reads.** The logs show which views
+6. **Which dashboard views the owner actually reads.** The logs show which views
    the owner asked for and changed (2.3), but nothing shows how often each is
    read. A view asked for once may not be worth carrying. **Owner.** No usage
    analytics exist in the repo.
@@ -626,13 +661,13 @@ probably lies:
    network restriction, or no access control because the repo is private
    anyway? And does "owner-only" also cover the logs in the repo itself, if the
    repo is public? **Owner.**
-8. **Digest for a reader of one.** Terrarium's Digest was written for a public
+8. **A digest for a reader of one.** Terrarium's Digest was written for a public
    reader who "knows software but not this project". For an owner-only site,
    is a daily page still the right form, or would a summary the owner asks for
-   be enough? The owner called the Digest a must-have; its cadence and
+   be enough? The owner called the digest a must-have; its cadence and
    audience are not settled. **Owner.**
-9. **Whether nit-level Frictions pay off.** 1,560 of 2,887 Frictions in the
-   month were nits (54%). The requirement says to report every Friction, but
+9. **Whether nit-level problems pay off.** 1,560 of 2,887 Terrarium Frictions in
+   the month were nits (54%). The requirement says to report every problem, but
    the cost of writing and processing nits is real. **Repo:** check whether any
    Ledger cause that got a fix that held was first seen through nit-level
    occurrences. Look at the occurrence severities of the 41 entries that went
@@ -654,7 +689,7 @@ probably lies:
     any of it is open. **Owner.**
 13. **What the three autonomy presets allow.** Only "three, picked at setup"
     is settled. Candidate axes: who merges agent PRs, whether scheduled runs
-    may self-merge, whether the self-improvement loop may fix its own Skills,
+    may self-merge, whether the self-improvement sweep may fix its own Skills,
     and whether the protected-path list is empty, small or large. **Owner.**
     ADR-0004's human-merge cases are a starting list (`.claude/rules/adr-0004-human-merge.md`).
 14. **The first protected paths.** "Very few at first", but which? Likely the

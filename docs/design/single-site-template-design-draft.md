@@ -202,12 +202,34 @@ yet; `NAME-` stands in for it. The rest of each name is one plain word.
 | `NAME-visit` | The visitor sweep, report only | visitor-loop |
 | `NAME-digest` | Daily owner digest | digest |
 | `NAME-sync` | Take template updates, offer platform changes back | new |
+| `NAME-next` | Hand the work to a fresh session: run the pack's `handoff`, then start the next session with it | new |
 
 The installed pack ships:
 - `code-review`, `grilling`, `tdd`, `domain-modeling`, `triage`,
-  `prototype`, `research`, `wizard`, `writing-for-agents`, `retro`, and the
-  pack's setup Skill;
-- optional: `to-spec`, `wayfinder`, `implement`, `diagnosing-bugs`.
+  `prototype`, `research`, `wizard`, `writing-for-agents`, `retro`,
+  `wayfinder`, `handoff`, and the pack's setup Skill;
+- optional: `to-spec`, `implement`, `diagnosing-bugs`.
+
+**Platform Skills wrap the pack, never replace it** (REQ §3.8):
+- `NAME-steer` uses `triage` and `code-review`.
+- `NAME-improve` files tickets the way `triage` expects.
+- `NAME-setup` runs the pack's setup Skill.
+- `NAME-next` runs `handoff`.
+
+Where the platform needs other behaviour, it goes in the repo docs the pack
+reads.
+
+**Bigger work** (REQ §3.7) uses `wayfinder` as it is: a map, then grilling,
+research, prototype and task tickets, one per session. `NAME-next` removes the
+manual step between sessions:
+- In a cloud session it starts the next cloud session on the same repo with
+  the hand-over as its prompt.
+- On a laptop it starts a background session, as the pack's `claude-handoff`
+  does.
+
+It is offered when a session's context passes about two thirds full.
+**(spike: can a cloud session start another with its branch and environment,
+and is context use visible to the session?)**
 
 All are pinned at install (REQ §1.4).
 
@@ -444,6 +466,9 @@ Then the `wizard` checklist for the human or laptop steps:
    push and an API write show the new actor (section 12).
 5. **Sync:** one throwaway site taken from the template, then `take` and
    `offer` across one platform change in each direction (BD §7 item 3).
+6. **Hand-over:** `NAME-next` starting a cloud session on the same branch with
+   the hand-over as its prompt, and how a session sees its own context use
+   (section 7).
 
 ## 14. What is still unclear about the implementation
 
