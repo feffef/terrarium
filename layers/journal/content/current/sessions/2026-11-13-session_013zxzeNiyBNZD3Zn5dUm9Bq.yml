@@ -1,0 +1,380 @@
+schemaVersion: 1
+session: session_013zxzeNiyBNZD3Zn5dUm9Bq
+startedAt: 2026-11-13T06:28:17Z
+endedAt: 2026-11-13T06:43:32Z
+kind: interactive
+goal: Revive visitor-loop as a cheap run that logs for harvest
+status: in-review
+outcome: "PR #3242 open: three Sonnet lenses, no fixes, ideas and learnings for harvest, bugs as Frictions"
+summary: "Human-instructed throughout: the owner asked to revive the paused visitor-loop Routine without expensive models or autonomous fixes (they cost a lot and were often reverted), keeping the daily focus, using two or three Sonnet lenses, logging ideas and hard-won learnings for harvest and raising real bugs as Frictions. Before building I asked four questions; the owner chose the lenses (first-time visitor, content editor, UI tester), a light filter (decisions.md and last week's ideas, no refiner), deleting owner-corrections.ts while keeping decisions.md, and re-enabling the daily scheduled task after merge. Mid-session the owner added that the first-time visitor stays blind while the other two get recent context on the focus (owner chose: merged changes, logged ideas, open issues, 7 days) and may read the repo. Agent-initiated: removing visitor-loop from harvest's SKIPPED_TRIGGERS (found while reading; without it harvest would silently drop every idea the run logs), updating the stale interactive-map spec story, and the review fixes. Three code-review rounds (Sonnet subagents) caught the blind brief leaking repo and other-visitor hints twice. Left as-is on purpose: Glass Box pages describing the old run, which glassbox-update refreshes, and the ADR-0028 rule's path entry for visitor-loop (Human-only file). The owner also asked whether a repo-wide area-tag convention would help; I advised against a prose convention and suggested area labels on issues applied by auto-triage, pending the owner's answer."
+prs:
+  - "3242"
+docsRead:
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/visitor-loop/visitor-brief.md
+    reason: (read before editing)
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: (read before editing)
+  - path: .agents/skills/harvest/SKILL.md
+    reason: (no reason given)
+  - path: GLOSSARY.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/adr/0028-navigation-reads-server-payloads.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0005-skill-model.md
+    reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: docs/diagrams/interactive-map/spec.md
+    reason: (read before editing)
+  - path: docs/diagrams/interactive-map/README.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: three Standards+Spec rounds on the skill rewrite
+  - name: writing-for-agents
+    reason: rewriting a Skill and its subagent brief
+  - name: dispatch-subagents
+    reason: review briefs; the visitor brief itself
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: First brief rewrite still leaked repo-root and other-visitor hints to the blind visitor; two extra review rounds and commits to remove them.
+    solution: When a brief serves both blind and informed agents, write the blind variant first and grep it for repo, git and peer mentions before committing.
+    severity: moderate
+  - description: Edited visitor-brief.md via a shell script while pnpm gate:scoped ran, aborting the gate; a full rerun followed.
+    solution: Wait for the gate's completion before applying review fixes, or let reviews finish before starting the gate.
+    severity: minor
+  - description: The dispatch-read guard blocked a review brief that quoted the literal placeholder name from the brief under review.
+    solution: Refer to placeholders by description in briefs; the guard is working as designed.
+    severity: nit
+  - description: Commit 030d1852e changed the visitor brief's meaning yet got only my own read, though pr-workflow.md says a Skill-meaning change is never simple.
+    solution: Run code-review on every Skill-meaning follow-up, or batch review fixes so the last review covers them.
+    severity: minor
+  - description: A combined printf-and-commit Bash call was blocked whole by the gate-edit guard, so the message file was never written and the retry failed.
+    solution: Write commit messages with the Write tool, separate from the git call (git-conventions.md already says keep git apart).
+    severity: nit
+durationSec: 915
+models:
+  claude-opus-5-5: 153
+toolCounts:
+  Bash: 46
+  mcp__claude-code-remote__list_triggers: 1
+  AskUserQuestion: 2
+  Skill: 5
+  Write: 5
+  Edit: 5
+  Agent: 6
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/visitor-loop/visitor-brief.md
+  - .agents/skills/harvest/scripts/harvest.ts
+  - .agents/skills/harvest/tests/unit/harvest.spec.ts
+  - .agents/skills/visitor-loop/decisions.md
+  - docs/diagrams/interactive-map/spec.md
+  - .agents/skills/visitor-loop/refiner-brief.md
+  - .agents/skills/visitor-loop/scripts/owner-corrections.ts
+  - .agents/skills/visitor-loop/tests/unit/owner-corrections.spec.ts
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0028.md
+adrHints:
+  - adr: 5
+    via: path
+    readAfter: true
+    by: main
+  - adr: 27
+    via: path
+    readAfter: true
+    by: main
+  - adr: 28
+    via: path
+    readAfter: true
+    by: main
+  - adr: 3
+    via: text
+    readAfter: true
+    by: main
+docsReadBySubagents:
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/visitor-loop/SKILL.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0028.md
+        via: native
+        trigger: .agents/skills/visitor-loop/SKILL.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0025.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/guards.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: gate and code-review before the PR
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: "Remit: run changes only its log"
+      - path: .claude/rules/adr-0009.md
+        value: backed
+      - path: .claude/rules/adr-0017.md
+        value: backed
+      - path: .claude/rules/adr-0005.md
+        value: backed
+      - path: .claude/rules/adr-0027.md
+        value: steered
+        why: checked no open trial covered the Skill
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: steered
+        why: left the ADR-0028 rule path untouched
+      - path: .claude/rules/data-shapes.md
+        value: steered
+        why: advised against tagging ideas via schema
+      - path: .agents/skills/harvest/SKILL.md
+      - path: docs/agents/git-conventions.md
+      - path: docs/agents/pr-workflow.md
+      - path: docs/agents/github-integration.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/adr-0025.md
+        via: hint
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .claude/rules/adr-0003.md
+        value: backed
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0025.md
+        via: hint
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+    reported: []
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0029.md
+        value: backed
+  - by: general-purpose
+    subagent: 4
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: general-purpose
+    subagent: 5
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+subagents:
+  - type: general-purpose
+    task: Standards review of visitor-loop diff
+    model: sonnet
+    durationSec: 34
+    toolCalls: 8
+    modelCalls: 6
+    tokenShare: 7.4
+  - type: general-purpose
+    task: Spec review of visitor-loop diff
+    model: sonnet
+    durationSec: 25
+    toolCalls: 6
+    modelCalls: 6
+    tokenShare: 7
+  - type: general-purpose
+    task: Standards review of follow-up
+    model: sonnet
+    durationSec: 39
+    toolCalls: 8
+    modelCalls: 5
+    tokenShare: 3.8
+  - type: general-purpose
+    task: Spec review of follow-up
+    model: sonnet
+  - type: general-purpose
+    task: Spec review of follow-up
+    model: sonnet
+    durationSec: 25
+    toolCalls: 4
+    modelCalls: 4
+    tokenShare: 2.9
+  - type: general-purpose
+    task: Two-axis review of fix commit
+    model: sonnet
+    durationSec: 18
+    toolCalls: 4
+    modelCalls: 4
+    tokenShare: 2.8
+gitBranch: ccr-db4c0136-2h2mph
+entrypoint: remote_mobile
+cliVersion: 2.1.323
+learnings:
+  - harvest's SKIPPED_TRIGGERS listed visitor-loop since harvest was added, so every idea visitor-loop logged was silently skipped by harvest.
+ideas:
+  - Add per-Tenant area labels (e.g. area:atlas) to issues, applied mechanically by the auto-triage sweep from the paths or Tenant an issue names, so visitor-loop, harvest and people can filter the tracker by focus area without a prose tagging convention.
+landedBy: Stop
