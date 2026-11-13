@@ -4,4 +4,4 @@ paths:
 ---
 # Tenant glossary
 
-Before you work on a Tenant, read its terms in `layers/<tenant>/GLOSSARY.md`; they apply to everything you write under the layer, code comments included.
+Before you write prose or comments under a Tenant's layer, read its terms in `layers/<tenant>/GLOSSARY.md`; edits that add neither are exempt.

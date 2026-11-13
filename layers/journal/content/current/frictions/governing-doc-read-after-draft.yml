@@ -6,6 +6,8 @@ cause: >-
 surface: safe
 status: tracked
 ref: "issue #3234"
+notes: |-
+  2026-11-13: the session_013zxzeRvdzBc3xXGo24TkVf occurrence (2026-11-12 Lesson links) is not a tenant-glossary miss and is fixed by PR 3160; exclude it from the open cause and regression count.
 fixes:
   - pr: 2469
     date: "2026-10-23"
@@ -16,6 +18,9 @@ fixes:
   - pr: 2667
     date: "2026-10-29"
     summary: "The tenant-glossary rule says a Tenant's terms apply to everything written under its layer, code comments included."
+  - pr: 3160
+    date: "2026-11-12"
+    summary: "glassbox-lesson's Orient step (SKILL.md step 1) reads the guide index whole before a Lesson's links are chosen (commits d87ec97c2, 6082e3053)."
 occurrences:
   - session: session_013zxzeRkQabGaMQ8gphe4Ra
     date: "2026-11-02"
