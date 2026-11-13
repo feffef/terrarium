@@ -44,6 +44,9 @@ pnpm exec tsx .agents/skills/digest/scripts/digest.ts gather <date>
 
 The JSON gives you `prs` (merged/referenced), `otherCommits` (direct-to-main
 work), `sessions` (goal/outcome/status, frictions, learnings, ideas), and a `rollup`.
+`prs` holds only number and title: for what a PR changed, run
+`pnpm exec tsx scripts/git/list-recent-prs.ts --since <date> --diff` (touched
+files and first diff lines).
 Above ~20,000 characters `gather` writes the JSON to a file instead (default
 `digest-gather-output.json` in the temp dir; `--out PATH` overrides) and prints
 its path; Read that file.

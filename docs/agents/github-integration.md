@@ -26,9 +26,10 @@ twice before calling it a failure. If `issue_read` keeps flaking,
 | **Default** | `gh`; MCP for writes if configured | the MCP tools; `gh api` for REST a tool lacks |
 
 Write through MCP in the cloud (ADR-0017); `gh api` suits bulk reads in scripts,
-where the MCP list tools overflow. Some cloud sessions lack `gh`; check with
-`which gh`. In a cloud session, map the workflow docs' `gh` recipes
-like this:
+where the MCP list tools overflow. A `-f` or `-F` field turns `gh api` into a
+POST: on a read, put the parameters in the URL's query string. Some cloud
+sessions lack `gh`; check with `which gh`. In a cloud session, map the workflow
+docs' `gh` recipes like this:
 
 - **Create / edit / label / close an issue** → `issue_write`.
   - Labeling a *PR* also goes through `issue_write` (issues and PRs share one

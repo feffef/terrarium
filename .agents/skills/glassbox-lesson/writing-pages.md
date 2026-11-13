@@ -136,6 +136,10 @@ the old site), and the lockfile and install detail left to the steps.
 
 ## Check
 
+Read each section you changed from its first line to its last, as a reader
+would: every sentence has its antecedent, steps come in the concept's order, and
+each Excerpt follows the text that explains it.
+
 `git fetch origin main` first: the layer test skips its git checks when the
 clone lacks `revision`. Then run
 `pnpm exec vitest run layers/glassbox/tests/unit/glassbox-pages.spec.ts` and

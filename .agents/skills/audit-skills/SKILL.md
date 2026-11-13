@@ -105,7 +105,8 @@ For each other finding that clears that bar:
 - **No match**: file one `needs-triage` issue (`docs/agents/issue-tracker.md`'s
   "Filing an issue") naming the Skill (or session), whether it is a silent
   failure or a missed invocation, the session ids, the quoted evidence,
-  promised against delivered, and your hypothesis.
+  promised against delivered, and your hypothesis. A closed issue on the same
+  finding is no match: name it in the new issue.
 - **Human-nudged closures** go on one standing thread per trend, never one
   issue per session.
 
