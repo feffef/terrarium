@@ -1,16 +1,17 @@
 schemaVersion: 1
 session: session_013zxzeS6AE1WUN124PHnm4b
 startedAt: 2026-11-13T10:42:15Z
-endedAt: 2026-11-13T12:58:47Z
+endedAt: 2026-11-13T16:00:07Z
 kind: interactive
 goal: Improve lesson chips and term definitions on the Glass Box overview
-status: completed
-outcome: "PRs 3260, 3264 and 3268 merged: overview chips and terms, the gate walkthrough, and the GitHub Actions retitle"
-summary: "The owner ran glassbox-curate with a focus on the overview page and asked whether expandable terms, inline lesson links and lesson chips are used well. I asked one round of questions (their answers were human-instructed: the first \"session\" was already a term, step 1 Read needed a CLAUDE.md lesson link, and fix all findings). A mid-turn owner message added a second ask, to review all term definitions for a newcomer, with the session id example. Everything I changed followed from those asks; splitting the improving paragraph in two was my own call to make chip rows fit, and I said so in the PR. Two sonnet reviewers ran under code-review; I took the findings that held up (dropped weak chips, added Content validation, Headless browser checks and the bug-report walkthrough) and left the long list of other jargon-heavy definitions as a memory-page lead. I skipped the skill's Scout, fresh readers and claim checker and read only three of the pages the definitions depend on; the run entry says so. The PR was content only, so I merged it myself once CI was green, after posting my verdict. I forgot to subscribe to its activity until the Stop hook asked. After the merge the owner asked for at most three chips per row (human-instructed), so I cut four rows and opened PR 3264, which merged. The owner then agreed (human-instructed) that the merge gate should become a walkthrough, keeping the lesson as the concept page, following one page edit through the full checks with the docs-only shortcut shown as a side branch; two opus writers drafted it and the retitle of Composite actions to GitHub Actions (also the owner's call, human-instructed); I added the review loop (claim checker, fresh reader, code review), fixed findings, and opened PR 3268, which the owner then told me to merge in this session (human-instructed); I posted my verdict and merged it with merge-pr.ts. The chip cap for other walkthroughs is left as an owner question. The owner also asked whether the merge gate deserves a walkthrough; I answered from what I had read (mostly overlaps the lesson, a two-change story could help) and built nothing."
+status: in-review
+outcome: PRs 3260, 3264 and 3268 merged; PR 3273 open to rewrite the gate walkthrough around a code change
+summary: "The owner ran glassbox-curate with a focus on the overview page and asked whether expandable terms, inline lesson links and lesson chips are used well. I asked one round of questions (their answers were human-instructed: the first \"session\" was already a term, step 1 Read needed a CLAUDE.md lesson link, and fix all findings). A mid-turn owner message added a second ask, to review all term definitions for a newcomer, with the session id example. Everything I changed followed from those asks; splitting the improving paragraph in two was my own call to make chip rows fit, and I said so in the PR. Two sonnet reviewers ran under code-review; I took the findings that held up (dropped weak chips, added Content validation, Headless browser checks and the bug-report walkthrough) and left the long list of other jargon-heavy definitions as a memory-page lead. I skipped the skill's Scout, fresh readers and claim checker and read only three of the pages the definitions depend on; the run entry says so. The PR was content only, so I merged it myself once CI was green, after posting my verdict. I forgot to subscribe to its activity until the Stop hook asked. After the merge the owner asked for at most three chips per row (human-instructed), so I cut four rows and opened PR 3264, which merged. The owner then agreed (human-instructed) that the merge gate should become a walkthrough, keeping the lesson as the concept page, following one page edit through the full checks with the docs-only shortcut shown as a side branch; two opus writers drafted it and the retitle of Composite actions to GitHub Actions (also the owner's call, human-instructed); I added the review loop (claim checker, fresh reader, code review), fixed findings, and opened PR 3268, which the owner then told me to merge in this session (human-instructed); I posted my verdict and merged it with merge-pr.ts. After the merge the owner pointed out (human-instructed) that the Markdown-page example made the gate look like overhead and wanted a code change; I chose a TypeScript helper with them, had a writer rewrite the page, ran claim check, Spec and Standards review, and opened PR 3273, which only edits one page and is mine to self-merge once CI is green. The chip cap for other walkthroughs is left as an owner question. The owner also asked whether the merge gate deserves a walkthrough; I answered from what I had read (mostly overlaps the lesson, a two-change story could help) and built nothing."
 prs:
   - "3260"
   - "3264"
   - "3268"
+  - "3273"
 docsRead:
   - path: layers/glassbox/GLOSSARY.md
     reason: (no reason given)
@@ -74,23 +75,33 @@ frictions:
   - description: The first merge of PR 3268 failed with 'Base branch was modified' because session logs land on main; one retry of merge-pr.ts worked.
     solution: merge-pr.ts could retry once itself on this specific HTTP 405 message.
     severity: nit
-durationSec: 8192
+  - description: I misread the owner's 'one page edit that needs the full checks' as a Markdown guide page, though I had flagged that lint and the type check would have nothing to flag; the page had to be rewritten around a code change.
+    solution: When an option's cost is that a check has nothing to do, ask whether a different example teaches more before building.
+    severity: moderate
+  - description: I edited files while pnpm gate:scoped was running, so it aborted and I reran it, costing a few minutes.
+    solution: Touch nothing until the gate ends, as pr-workflow.md says; commit review fixes first, then start the gate.
+    severity: nit
+  - description: A Standards reviewer subagent died on the 5-hour rate limit, so the first code-review round had only one axis until I reran it.
+    solution: Check rate_limit_info in get_session before launching parallel reviewers late in a long session.
+    severity: nit
+durationSec: 19072
 models:
-  claude-sonnet-5-5: 315
+  claude-sonnet-5-5: 374
+  <synthetic>: 2
 toolCounts:
-  Read: 20
-  Bash: 81
-  AskUserQuestion: 3
+  Read: 22
+  Bash: 96
+  AskUserQuestion: 4
   Write: 5
   Edit: 9
-  Skill: 9
-  Agent: 8
+  Skill: 11
+  Agent: 13
   ToolSearch: 5
-  mcp__github__list_pull_requests: 3
-  mcp__claude-code-remote__get_session: 2
-  mcp__github__create_pull_request: 3
-  mcp__claude-code-remote__subscribe_pr_activity: 4
-  ReadNotifications: 9
+  mcp__github__list_pull_requests: 4
+  mcp__claude-code-remote__get_session: 3
+  mcp__github__create_pull_request: 4
+  mcp__claude-code-remote__subscribe_pr_activity: 5
+  ReadNotifications: 10
   mcp__github__pull_request_read: 3
   mcp__github__add_issue_comment: 3
   mcp__claude-code-remote__unsubscribe_pr_activity: 3
@@ -102,10 +113,12 @@ filesEdited:
   - layers/glassbox/content/guide/pages/index.md
   - layers/glassbox/content/workshop/pages/index.md
   - layers/glassbox/content/workshop/runs/2026-11-13T1124.yml
-  - pages/git-github/30.composite-actions.md
   - layers/glassbox/content/guide/pages/walkthroughs/15.a-change-meets-the-gate.md
-  - app/assets/mermaid/8d5a6e6bd8b5fa9b.svg
+  - pages/git-github/30.composite-actions.md
+  - layers/glassbox/content/workshop/runs/2026-11-13T1427.yml
   - app/assets/mermaid/91f27cd0dce8d69a.svg
+  - app/assets/mermaid/e0f5c18483f9739a.svg
+  - app/assets/mermaid/8d5a6e6bd8b5fa9b.svg
   - layers/glassbox/content/guide/pages/git-github/30.composite-actions.md
   - layers/glassbox/content/guide/pages/agents/30.cloud-sessions.md
   - layers/glassbox/content/guide/pages/git-github/40.dependabot-grouping.md
@@ -457,6 +470,224 @@ ruleUse:
         value: backed
       - path: .claude/rules/adr-0003.md
         value: backed
+  - by: general-purpose
+    subagent: 8
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/glassbox-content.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/walkthroughs/15.a-change-meets-the-gate.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/walkthroughs/15.a-change-meets-the-gate.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/walkthroughs/15.a-change-meets-the-gate.md
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0026.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/adr-0006.md
+        via: hint
+      - rule: .claude/rules/adr-0016.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/adr-0001.md
+        via: hint
+      - rule: .claude/rules/adr-0018.md
+        via: hint
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/adr-0024.md
+        via: hint
+    reported:
+      - path: .claude/rules/glassbox-content.md
+        value: steered
+      - path: .claude/rules/mermaid-lanes.md
+        value: backed
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: backed
+      - path: .claude/rules/adr-0024.md
+        value: backed
+      - path: .claude/rules/ui-verification.md
+        value: backed
+      - path: docs/agents/pr-workflow.md
+      - path: .agents/skills/glassbox-lesson/writing-pages.md
+      - path: layers/glassbox/GLOSSARY.md
+      - path: docs/agents/git-conventions.md
+  - by: general-purpose
+    subagent: 9
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: general-purpose
+    subagent: 10
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/glassbox-walkthrough/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/glassbox-walkthrough/SKILL.md
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .claude/rules/glassbox-content.md
+        value: steered
+      - path: .agents/skills/glassbox-lesson/writing-pages.md
+  - by: general-purpose
+    subagent: 11
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0026.md
+        via: hint
+      - rule: .claude/rules/adr-0001.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/adr-0018.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .claude/rules/glassbox-content.md
+        value: steered
+      - path: layers/glassbox/content/guide/pages/verification/10.gate.md
+  - by: general-purpose
+    subagent: 12
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
 subagents:
   - type: general-purpose
     task: Standards review of overview diff
@@ -464,56 +695,91 @@ subagents:
     durationSec: 26
     toolCalls: 9
     modelCalls: 5
-    tokenShare: 1.9
+    tokenShare: 1.2
   - type: general-purpose
     task: Spec review of overview diff
     model: sonnet
     durationSec: 60
     toolCalls: 7
     modelCalls: 7
-    tokenShare: 2.2
+    tokenShare: 1.4
   - type: general-purpose
     task: Write gate walkthrough page
     model: opus
     durationSec: 455
     toolCalls: 45
     modelCalls: 41
-    tokenShare: 10.7
+    tokenShare: 6.9
   - type: general-purpose
     task: Retitle composite actions lesson
     model: opus
     durationSec: 187
     toolCalls: 26
     modelCalls: 22
-    tokenShare: 4.7
+    tokenShare: 3
   - type: general-purpose
     task: Claim-check changed gate pages
     model: sonnet
     durationSec: 69
     toolCalls: 15
     modelCalls: 10
-    tokenShare: 2.4
+    tokenShare: 1.6
   - type: general-purpose
     task: Fresh-reader pass on gate pages
     model: sonnet
     durationSec: 18
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 1.3
+    tokenShare: 0.8
   - type: general-purpose
     task: Standards review of gate walkthrough diff
     model: sonnet
     durationSec: 60
     toolCalls: 9
     modelCalls: 7
-    tokenShare: 2.3
+    tokenShare: 1.5
   - type: general-purpose
     task: Spec review of gate walkthrough diff
     model: sonnet
     durationSec: 32
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 1.7
+    tokenShare: 1.1
+  - type: general-purpose
+    task: Rewrite gate walkthrough around a code change
+    model: opus
+    durationSec: 347
+    toolCalls: 54
+    modelCalls: 51
+    tokenShare: 8.4
+  - type: general-purpose
+    task: Claim-check rewritten gate walkthrough
+    model: sonnet
+    durationSec: 65
+    toolCalls: 14
+    modelCalls: 8
+    tokenShare: 1.4
+  - type: general-purpose
+    task: Standards review of rewritten walkthrough
+    model: sonnet
+    durationSec: 32
+    toolCalls: 9
+    modelCalls: 6
+    tokenShare: 1.2
+  - type: general-purpose
+    task: Spec review of rewritten walkthrough
+    model: sonnet
+    durationSec: 36
+    toolCalls: 10
+    modelCalls: 8
+    tokenShare: 1.4
+  - type: general-purpose
+    task: Standards review of rewritten walkthrough
+    model: sonnet
+    durationSec: 45
+    toolCalls: 8
+    modelCalls: 5
+    tokenShare: 1.3
 gitBranch: claude/modest-davinci-bgz63l
 entrypoint: remote
 cliVersion: 2.1.323
