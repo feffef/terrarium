@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeT2YDMzAWKoi2AC98c
 startedAt: 2026-11-12T23:00:51Z
-endedAt: 2026-11-13T00:00:23Z
+endedAt: 2026-11-13T00:07:23Z
 kind: delegated
 goal: "Curate the Glass Box guide: Git & GitHub and Nuxt Content Try-it sections"
-status: in-review
-outcome: PRs 3215, 3216 and 3219 merged; PR 3221 (House rules and Wayfinder Try-it sections) open
-summary: "The kickoff (a routine-style notification carrying the owner's handoff) asked for repeated autonomous glassbox-curate runs until about 500k context, then a Sonnet handoff; I asked once to confirm mode and handoff, and the owner answered autonomous, several focuses, handoff yes. Run 1, agent-initiated within that ask: I chose the Git and GitHub Subject from the memory page's Try-it lead, had an opus writer rewrite five Try-it sections with commands run, a sonnet claim check, then code-review; fixed two review points, left the publishedAt point as earlier runs decided, ran gate:scoped, merged PR 3215 through merge-pr.ts. Run 2 (Nuxt Content Try-its): writer, claim check (one false watch sentence corrected), review fixes, gate:scoped, PR 3216, merged. Deviations for the budget (no Scout, no fresh readers, wording leads left open) are in the run entry. Run 3 (Installed skills, Nuxt layers, House rules Try-its) is PR 3219, merged. Run 4 (House rules and Wayfinder Try-its) is PR 3221, open. Still open: its merge, remaining advice-only Try-its, and the Sonnet handoff session at 500k context (about 400k used)."
+status: partial
+outcome: PRs 3215, 3216, 3219 and 3221 (Try-it sections of Git & GitHub, Nuxt Content, Installed skills, Nuxt layers and House rules) merged; a fifth run is next
+summary: "The kickoff (a routine-style notification carrying the owner's handoff) asked for repeated autonomous glassbox-curate runs until about 500k context, then a Sonnet handoff; I asked once to confirm mode and handoff, and the owner answered autonomous, several focuses, handoff yes. Run 1, agent-initiated within that ask: I chose the Git and GitHub Subject from the memory page's Try-it lead, had an opus writer rewrite five Try-it sections with commands run, a sonnet claim check, then code-review; fixed two review points, left the publishedAt point as earlier runs decided, ran gate:scoped, merged PR 3215 through merge-pr.ts. Run 2 (Nuxt Content Try-its): writer, claim check (one false watch sentence corrected), review fixes, gate:scoped, PR 3216, merged. Deviations for the budget (no Scout, no fresh readers, wording leads left open) are in the run entry. Run 3 (Installed skills, Nuxt layers, House rules Try-its) is PR 3219, merged. Run 4 (House rules and Wayfinder Try-its) is PR 3221, merged. Still open: its merge, remaining advice-only Try-its, and the Sonnet handoff session at 500k context (about 370k used)."
 prs:
   - "3215"
   - "3216"
@@ -83,6 +83,12 @@ docsRead:
     reason: (no reason given)
   - path: .agents/skills/code-review/SKILL.md
     reason: (no reason given)
+  - path: .agents/skills/grilling/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/to-spec/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
   - path: .agents/skills/glassbox-curate/SKILL.md
     reason: (no reason given)
 skillsUsed:
@@ -98,22 +104,22 @@ frictions:
   - description: The orientation output is over 25 KB and the Subject output over 70 KB, so reading them cost several paged reads and many tokens.
     solution: Print only the Subject's pages' Try-it and Where next on request, or split the output into files up front.
     severity: minor
-durationSec: 3572
+durationSec: 3991
 models:
-  claude-sonnet-5-5: 201
+  claude-sonnet-5-5: 213
 toolCounts:
   AskUserQuestion: 1
-  Bash: 53
+  Bash: 56
   Read: 16
-  Agent: 13
+  Agent: 14
   Skill: 8
   ToolSearch: 3
-  mcp__claude-code-remote__get_session: 2
+  mcp__claude-code-remote__get_session: 3
   mcp__github__create_pull_request: 4
   mcp__claude-code-remote__subscribe_pr_activity: 4
-  ReadNotifications: 9
+  ReadNotifications: 11
   mcp__github__pull_request_read: 2
-  mcp__github__add_issue_comment: 3
+  mcp__github__add_issue_comment: 4
 filesEdited:
   - 20.decision-records.md
   - 30.ubiquitous-language.md
@@ -166,6 +172,9 @@ docsReadBySubagents:
   - docs/adr/0004-objective-safety-gate.md
   - docs/agents/triage-labels.md
   - .agents/skills/code-review/SKILL.md
+  - .agents/skills/grilling/SKILL.md
+  - .agents/skills/to-spec/SKILL.md
+  - docs/agents/guest-contributions.md
   - .agents/skills/glassbox-curate/SKILL.md
 ruleUse:
   - by: main
@@ -684,85 +693,138 @@ ruleUse:
     reported:
       - path: .claude/rules/adr-0004.md
         value: backed
+  - by: general-purpose
+    subagent: 13
+    answered: false
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/adr-0001.md
+        via: hint
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/adr-0007.md
+        via: hint
+      - rule: .claude/rules/adr-0013.md
+        via: hint
+      - rule: .claude/rules/adr-0025.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/adr-0020.md
+        via: hint
+      - rule: .claude/rules/adr-0023.md
+        via: hint
+    reported: []
 subagents:
   - task: Write Git & GitHub Try-it fixes
     model: opus
     durationSec: 347
     toolCalls: 60
     modelCalls: 47
-    tokenShare: 10
+    tokenShare: 8.5
   - task: Claim-check changed Try-it text
     model: sonnet
     durationSec: 39
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 2
+    tokenShare: 1.7
   - task: Standards review of Try-it edits
     model: sonnet
     durationSec: 28
     toolCalls: 10
     modelCalls: 4
-    tokenShare: 1.1
+    tokenShare: 0.9
   - task: Spec review of Try-it edits
     model: sonnet
     durationSec: 19
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1
+    tokenShare: 0.8
   - task: Write Nuxt Content Try-it fixes
     model: opus
     durationSec: 314
     toolCalls: 50
     modelCalls: 37
-    tokenShare: 8.1
+    tokenShare: 6.9
   - task: Claim-check Nuxt Content Try-it text
     model: sonnet
     durationSec: 45
     toolCalls: 14
     modelCalls: 10
-    tokenShare: 2.6
+    tokenShare: 2.2
   - task: Standards review of Nuxt Content edits
     model: sonnet
     durationSec: 24
     toolCalls: 8
     modelCalls: 3
-    tokenShare: 1
+    tokenShare: 0.8
   - task: Spec review of Nuxt Content edits
     model: sonnet
     durationSec: 16
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 0.9
+    tokenShare: 0.8
   - task: Write Try-it fixes batch three
     model: opus
     durationSec: 250
     toolCalls: 37
     modelCalls: 29
-    tokenShare: 6.7
+    tokenShare: 5.7
   - task: Claim-check batch three Try-it text
     model: sonnet
     durationSec: 36
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 2.1
+    tokenShare: 1.8
   - task: Standards+spec review batch three
     model: sonnet
     durationSec: 26
     toolCalls: 10
     modelCalls: 5
-    tokenShare: 2.2
+    tokenShare: 1.8
   - task: Write Try-it fixes batch four
     model: opus
     durationSec: 239
     toolCalls: 50
     modelCalls: 36
-    tokenShare: 8.1
+    tokenShare: 6.9
   - task: Claim-check and review batch four
     model: sonnet
     durationSec: 63
     toolCalls: 14
     modelCalls: 10
-    tokenShare: 2.8
+    tokenShare: 2.4
+  - task: Write Try-it fixes batch five
+    model: opus
+    durationSec: 95
+    toolCalls: 20
+    modelCalls: 16
+    tokenShare: 3.9
 gitBranch: HEAD
 entrypoint: remote
 cliVersion: 2.1.323
