@@ -68,11 +68,12 @@ confirm (see `OUT-OF-SCOPE.md`).
 ## Area labels
 
 Add `area:<tenant>` (`journal`, `blog`, `atlas`, `midden`, `marquee`,
-`tinkerfund`, `glassbox`, `commons`) for each Tenant the issue's work touches,
-`area:homepage` for the home page (`app/pages/index.vue`,
-`app/components/HomeShowcase.vue`), and `area:platform` for anything else, so
-every issue gets at least one. A place named only as background or a source
-link doesn't count.
+`tinkerfund`, `glassbox`, `commons`) for each Tenant where the issue's problem
+happens or its fix lands, `area:homepage` for the home page
+(`app/pages/index.vue`, `app/components/HomeShowcase.vue`), and `area:platform`
+for each other place, so every issue gets at least one. For an issue built on
+Frictions or session logs, read where each occurrence happened; a path cited
+only as a source doesn't count.
 `.github/workflows/pr-area-label.yml` copies these paths for PRs; change both.
 
 ## Approval
@@ -121,8 +122,8 @@ a human directs a brave re-triage; an agent never picks it on its own.
    "List external PRs"); for each, check its most recent comment
    against the human-authorship rule above — skip that check entirely in
    full-sweep mode; keep the eligible set; apply the wayfinder skips. Give
-   each `wayfinder:map` that has no area label its area labels yourself,
-   passing its full label set.
+   each listed `wayfinder:map` that has no area label its area labels
+   yourself (a label update replaces the set: `github-integration.md`).
 2. **One subagent per issue** (parallel — the eligible set is usually small).
    Brief each with `/triage`'s per-issue rules plus
    the read-only rule, the brave/uncertainty line, and the wayfinder overlay above. Each subagent
