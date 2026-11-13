@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSNs4gkwrpqc36B7yP
 startedAt: 2026-11-13T15:00:50Z
-endedAt: 2026-11-13T16:01:15Z
+endedAt: 2026-11-13T16:27:26Z
 kind: autonomous
 goal: Scheduled prune trial of the Platform's agent instructions
-status: in-review
-outcome: Judged two trials (both hold), opened one new small prune, PR 3274 awaits a human merge
-summary: Scheduled /prune-trial run with no human prompt; the worker restarted mid-run and I resumed from the repo state. Two trials were judgeable (review-then-gate, git chaining). No major or blocker Friction in either window. edit-during-gate-run rose 10.3% to 16.7%, but its moderate hits trace to a guard gap that PR 3250 closed (or to sessions ignoring the kept order), so the cut stands; I commented on the closed issue 3233 and deleted both entries. A search subagent ranked failed-prose candidates; I chose the dispatch-subagents "Git and checkout" block (three restated checkout bullets merged into one, -1 net). A pinned Sonnet probe answered correctly; Standards and Spec reviews led to restoring "never in yours" and naming the search coverage; gate green on d1070be13; PR 3274 opened. It needs a human merge (untestable instruction change). Everything was agent-initiated under the scheduled prompt.
+status: completed
+outcome: Judged two trials (both hold), opened one new small prune, PR 3274 merged by a human
+summary: Scheduled /prune-trial run with no human prompt; the worker restarted mid-run and I resumed from the repo state. Two trials were judgeable (review-then-gate, git chaining). No major or blocker Friction in either window. edit-during-gate-run rose 10.3% to 16.7%, but its moderate hits trace to a guard gap that PR 3250 closed (or to sessions ignoring the kept order), so the cut stands; I commented on the closed issue 3233 and deleted both entries. A search subagent ranked failed-prose candidates; I chose the dispatch-subagents "Git and checkout" block (three restated checkout bullets merged into one, -1 net). A pinned Sonnet probe answered correctly; Standards and Spec reviews led to restoring "never in yours" and naming the search coverage; gate green on d1070be13; PR 3274 opened and later merged by a human. Everything was agent-initiated under the scheduled prompt.
 prs:
   - "3274"
 docsRead:
@@ -44,12 +44,12 @@ frictions:
   - description: The worker restarted mid-run and my earlier context was gone, so I re-derived trial state from the repo and spent extra reads.
     solution: Nothing in the repo; the scheduler resumed correctly.
     severity: minor
-durationSec: 3624
+durationSec: 5196
 models:
   <synthetic>: 1
-  claude-sonnet-5-5: 75
+  claude-sonnet-5-5: 86
 toolCounts:
-  Bash: 24
+  Bash: 25
   ToolSearch: 2
   mcp__github__issue_read: 1
   mcp__github__add_issue_comment: 1
@@ -58,6 +58,7 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   PushNotification: 1
+  ReadNotifications: 4
 filesEdited:
   - .agents/prune-trials.yml
   - .agents/skills/dispatch-subagents/SKILL.md
@@ -217,28 +218,28 @@ subagents:
     durationSec: 75
     toolCalls: 16
     modelCalls: 14
-    tokenShare: 17.3
+    tokenShare: 15.2
   - type: general-purpose
     task: Probe pruned dispatch text
     model: sonnet
     durationSec: 14
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 3.5
+    tokenShare: 3.1
   - type: general-purpose
     task: Standards review of prune diff
     model: sonnet
     durationSec: 26
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 8.4
+    tokenShare: 7.4
   - type: general-purpose
     task: Spec review of prune diff
     model: sonnet
     durationSec: 27
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 8.8
+    tokenShare: 7.7
 gitBranch: claude/practical-rubin-s1f3no
 entrypoint: remote_trigger
 cliVersion: 2.1.323
