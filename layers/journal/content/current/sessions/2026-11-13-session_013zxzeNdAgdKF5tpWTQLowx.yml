@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeNdAgdKF5tpWTQLowx
 startedAt: 2026-11-13T02:07:16Z
-endedAt: 2026-11-13T06:09:54Z
+endedAt: 2026-11-13T06:12:48Z
 kind: autonomous
 goal: Daily run that turns logged Frictions into fixes
-status: in-review
-outcome: Five Frictions fixed in two merged PRs, three regression issues filed, ledger updated; the closing ledger PR waits on CI
-summary: "A scheduled frictions-to-fixes run; no human prompted any part of it, and every choice below is the agent's under the Skill. The survey subagent read 68 sessions, appended 165 Frictions to the Friction Ledger and opened 13 entries. Three regressions got issues (3233 edit-during-gate-run, 3234 governing-doc-read-after-draft, 3235 preview dev server); harness-proxy-blocks also met the rule but its regression issue 3124 closed the day before with nothing moderate since, so it was only listed. Eight never-fixed entries went to the design subagent: five came back as fixes (four one-sentence doc fixes, one script that lists closed-unmerged PRs for midden-survey) and three as no change, each noted in the ledger. The account's usage limit stopped the run for about 90 minutes with four subagents mid-flight; all were resumed or re-dispatched afterwards. The doc fixes merged as PR 3236 and the script as PR 3238 after two review rounds; the ledger PR 3237 merged too. Still open at this log: the closing ledger PR 3240, which records both fix PRs on their entries and waits on CI. The accepted entry edit-leaves-contradicting-sibling met its own reopen condition (a moderate occurrence); it was left accepted with a note for the owner."
+status: completed
+outcome: Five Frictions fixed in two merged PRs, three regression issues filed, Friction Ledger updated and closed
+summary: "A scheduled frictions-to-fixes run; no human prompted any part of it, and every choice below is the agent's under the Skill. The survey subagent read 68 sessions, appended 165 Frictions to the Friction Ledger and opened 13 entries. Three regressions got issues (3233 edit-during-gate-run, 3234 governing-doc-read-after-draft, 3235 preview dev server); harness-proxy-blocks also met the rule but its regression issue 3124 closed the day before with nothing moderate since, so it was only listed. Eight never-fixed entries went to the design subagent: five came back as fixes (four one-sentence doc fixes, one script that lists closed-unmerged PRs for midden-survey) and three as no change, each noted in the ledger. The account's usage limit stopped the run for about 90 minutes with four subagents mid-flight; all were resumed or re-dispatched afterwards. The doc fixes merged as PR 3236 and the script as PR 3238 after two review rounds; the ledger PR 3237 merged too. The closing ledger PR 3240 recorded both fix PRs on their entries and merged; nothing is left open. The accepted entry edit-leaves-contradicting-sibling met its own reopen condition (a moderate occurrence); it was left accepted with a note for the owner."
 prs:
   - "3236"
   - "3237"
@@ -138,23 +138,24 @@ frictions:
   - description: "Each fix PR took a full code-review round on its follow-up commit too: six reviewer subagents in all for 13 doc lines and one 80-line script."
     solution: Known entry followup-review-overcost; the second round on the script found nothing required.
     severity: minor
-durationSec: 14558
+durationSec: 14732
 models:
-  claude-fable-5-2: 188
+  claude-fable-5-2: 199
   <synthetic>: 1
 toolCounts:
-  Bash: 58
+  Bash: 60
   Read: 1
   Agent: 15
   ToolSearch: 2
   mcp__github__issue_write: 3
-  Skill: 6
+  Skill: 7
   SendMessage: 4
   mcp__github__create_pull_request: 4
   mcp__github__subscribe_pr_activity: 4
   mcp__github__add_issue_comment: 4
-  ReadNotifications: 7
+  ReadNotifications: 9
   Write: 1
+  PushNotification: 1
 filesEdited:
   - docs/agents/github-integration.md
   - .agents/skills/digest/SKILL.md
@@ -777,27 +778,27 @@ subagents:
     durationSec: 725
     toolCalls: 36
     modelCalls: 30
-    tokenShare: 12.3
+    tokenShare: 11.7
   - type: general-purpose
     task: Design friction fixes
     durationSec: 331
     toolCalls: 33
     modelCalls: 30
-    tokenShare: 8.5
+    tokenShare: 8.1
   - type: general-purpose
     task: Build doc fixes
     model: sonnet
     durationSec: 12549
     toolCalls: 30
     modelCalls: 24
-    tokenShare: 5.4
+    tokenShare: 5.2
   - type: general-purpose
     task: Build closed-unmerged PR lister
     model: sonnet
     durationSec: 12803
     toolCalls: 38
     modelCalls: 27
-    tokenShare: 5.8
+    tokenShare: 5.6
   - type: general-purpose
     task: Standards review of ledger diff
     durationSec: 6
@@ -815,19 +816,19 @@ subagents:
     durationSec: 83
     toolCalls: 11
     modelCalls: 6
-    tokenShare: 2.6
+    tokenShare: 2.5
   - type: general-purpose
     task: Spec review of ledger diff
     durationSec: 158
     toolCalls: 13
     modelCalls: 11
-    tokenShare: 3.7
+    tokenShare: 3.5
   - type: general-purpose
     task: Standards review of doc fixes
     durationSec: 54
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 1.7
+    tokenShare: 1.6
   - type: general-purpose
     task: Spec review of doc fixes
     durationSec: 43
@@ -839,7 +840,7 @@ subagents:
     durationSec: 63
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: general-purpose
     task: Spec review of PR lister
     durationSec: 106
@@ -851,7 +852,7 @@ subagents:
     durationSec: 32
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: general-purpose
     task: Spec review of lister follow-up
     durationSec: 41
@@ -862,4 +863,6 @@ gitBranch: claude/eager-ptolemy-ymmw6u
 entrypoint: remote_trigger
 cliVersion: 2.1.323
 trigger: frictions-to-fixes
+ideas:
+  - "Give frictions-to-fixes a token budget per stage: this run spent about 255k tokens on the survey and ran ten reviewer subagents, then hit the account's usage limit. A survey that confirms only entries touched this window, and one reviewer for a script-written ledger diff, would cut most of it."
 landedBy: Stop
