@@ -14,9 +14,12 @@ marked **(spike)**, and section 13 lists those spikes.
 
 ## 1. Design principles
 
-1. **A mechanism for every rule that has failed once as prose.** Prose is for
-   judgement; scripts and refusals are for rules (REQ "The finding behind most
-   of this").
+1. **A cheap check first, prose for judgement.** A rule a lint rule, a type, a
+   test or a CI step can enforce gets that check when it is written, as the
+   pack's `retro` Skill advises. Judgement calls go in `CODING_STANDARDS.md`,
+   which the pack's `code-review` reads. A prose fix may be retried. A
+   mechanism that turns noisy or costly is removed like any other cause (REQ
+   "The finding behind most of this").
 2. **Few concepts, each with one home.** The template's glossary should fit on
    one screen. A term earns an entry only when it names something an agent
    must act on.
@@ -158,6 +161,10 @@ its current Terrarium shape.
 | `merge` | Waits for green, requires a verdict naming the head, pins the head, reads protected paths and the autonomy preset from the shared branch, parses closing keywords, merges, closes issues GitHub missed, never reports a failed merge as merged. Prints the verdict line it needs (`merge --verdict-line`). | REQ §3.4 |
 | `look` | Preview and screenshots: builds production, starts by process group on a free port, waits for readiness and hydration, shoots desktop and phone in light and dark, always stops cleanly. | REQ §3.5 |
 
+The gate's lint step carries the repo's mechanical rules as custom lint rules
+(code, Markdown and YAML content), so a new convention is usually a new lint
+rule, not a new line of instructions.
+
 Shared helpers (GitHub REST with paging that throws on gaps, full-history
 check, provenance header) sit in `platform/bin/lib/`. Nothing else is a script
 until a recurring problem asks for one.
@@ -268,7 +275,7 @@ log, and `NAME-improve` reads both.
 2. **Dedupe** against open and closed issues, the cause store, owner rules,
    accepted causes and recent findings. Attach repeats to their earlier item.
 3. **Group** into causes. A cause that came back after a fix goes to the owner
-   as an issue naming that fix (REQ R0.2).
+   as an issue naming that fix (REQ R0.3).
 4. **Act**, within a cap per run:
    - fix on a safe surface by deleting or adding a mechanism;
    - file an issue for anything that needs design or a protected path;

@@ -71,8 +71,8 @@ These revise the breakdown's starting point (BD "What the owner settled first"):
 
 ## The finding behind most of this
 
-Prose fixes fail; mechanisms and refusals hold. Across 220 recorded fixes to
-Friction causes:
+Cheap mechanisms hold better than prose, but not by much, and a mechanism can
+cost more than it saves. Across 220 recorded fixes to Friction causes:
 
 | Kind of fix | Held |
 |---|---|
@@ -97,13 +97,31 @@ The history shows the same pattern one topic at a time:
 - **Closure:** a dozen rounds before a refusal and a stop hook (#1801 to
   #2956).
 
+Mechanisms failed too. Three of Terrarium's top Friction causes came from its
+own guards and hints:
+
+- a guard that denied a first call until a doc was read (66 in 14 days);
+- a stop hook that nagged mid-run (67);
+- hints that pointed to ADRs after edits (38, with 85 of 86 late reads changing
+  nothing).
+
+Terrarium also rarely used the cheapest mechanism, a lint rule. The installed
+`retro` Skill makes that the default: a mechanical violation (a fixed pattern,
+a banned call, a file-location rule) gets a deterministic check in the repo's
+linter, a pre-commit hook or CI, and the coding-standards doc keeps only
+judgement calls.
+
 Requirements for the template:
 
-- **R0.1** The template must expect each recurring failure to come back after a
-  prose fix, and must have a place to put a mechanism instead.
-- **R0.2** The self-improvement sweep must send a cause that regressed after its
-  fix to the owner. It must not add more prose.
-- **R0.3** "Accepted cost" must be a legitimate end state that is never
+- **R0.1** A rule that a cheap check can enforce (a lint rule, a type, a test,
+  a CI step) gets that check when the rule is written, not after it fails.
+  Judgement stays in prose, and a prose fix may be tried more than once.
+- **R0.2** A mechanism must cost less than the problem it prevents. A guard
+  or hint that becomes a top source of problems is itself a cause to fix or
+  remove.
+- **R0.3** The self-improvement sweep must send a cause that regressed after its
+  fix to the owner, naming that fix, before it tries another one.
+- **R0.4** "Accepted cost" must be a legitimate end state that is never
   re-proposed.
 
 ## 1. Build time
@@ -436,9 +454,9 @@ visitor findings, and a single-session retro.
 | One store keyed by root cause, with fixes and status. "Worked" is derived from later occurrences, never recorded by hand. | 93 of 133 Ledger entries carry fixes |
 | One dedupe step for every input: open and closed issues, settled decisions, accepted causes, open trials. A title match is only a hint. | The open-issue check is repeated in four loops; "settled decisions" live in three places |
 | The input window starts from the last run, with a margin and a per-entry "taken" mark. | Missed runs lost no logs |
-| It fixes only on a safe surface, through a reviewed and gated PR, and prefers a deletion. | ADR-0027; prose fixes fail ("The finding behind most of this") |
+| It fixes only on a safe surface, through a reviewed and gated PR, and prefers a deletion. | ADR-0027; R0.1, R0.2 |
 | It never edits installed Skills, ADRs, guards or settings itself; those become issues. | frictions-to-fixes §7 |
-| A regression goes to the owner, naming the earlier fix. | R0.2 |
+| A regression goes to the owner, naming the earlier fix. | R0.3 |
 | Its work per run is capped, and large inputs stay out of its context. | harvest read 62k tokens and checked only 17 clusters |
 | Text is copied by script, never retyped. | `ledger-yaml-hand-edit-errors`: 7 fixes |
 | One report per run, every number sourced or marked unverified, and every dropped item with its reason. | #3143 rules |
@@ -697,7 +715,7 @@ probably lies:
     itself. **Repo:** the 21 globs in `.claude/rules/adr-0004-human-merge.md`
     minus the multi-Tenant ones give a candidate list. **Owner:** to confirm.
 15. **Who may declare a cause "accepted".** Accepted is a terminal state
-    (R0.3), but the requirement does not say who decides it. **Repo:** read
+    (R0.4), but the requirement does not say who decides it. **Repo:** read
     the PRs that set `status: accepted` on the 14 accepted Ledger entries and
     see whether each cites an owner decision.
 16. **Whether prune trials survive in any form.** No trial verdict ever
