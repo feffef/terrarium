@@ -8,10 +8,4 @@ role: >-
   single home for what the schema can't check: the deadpan voice, consistent
   crowd numbers, the figure style and refinement loop, and the e2e Home
   assertions a new Campaign disturbs. Essential whenever the catalog grows.
-observations:
-  - date: "2026-10-03"
-    note: >-
-      First audit-skills behaviour check: 3/3 usedIn sessions clean. PR #1528
-      (3 Campaigns), PRs #1491/#1496 (2) and PR #1429 (17 + 5 categories) all
-      confirmed merged; campaign files and e2e slugs present on main; no
-      reverts in the 2-week git-log sweep. Grade/role unchanged.
+observations: []

@@ -9,25 +9,6 @@ role: >-
   Inventory's grades in line with usage as a by-product, self-merging those
   edits (ADR-0015).
 observations:
-  - date: "2026-10-03"
-    note: >-
-      Self-check: dispatched 11 behaviour-check subagents this run, verified
-      each report's central claims against primary sources. Two new silent
-      failures found and filed (#1541 audit-docs dropped a found Friction;
-      #1542 a new SHELL-READ-DETECTION glob-loop-variable false-negative
-      shape, 2 sessions), one 4th-occurrence confirmation commented onto the
-      already-open #1515 (visitor-loop owner-memory, now 0/4). The rest —
-      blog-post, close-session, digest, dispatch-subagents,
-      frictions-to-fixes, prune-trial, tinkerfund-campaign — came back
-      clean. One minor n=1 compliance miss found in audit-skills' own prior
-      delivery (session_01QTgziVnprUPTrzJgfMWmBr, PR #1453, omitted step-3
-      results from the log summary) — below the escalation bar, just noted
-      here for a future run to watch. Closure completeness (step 3): orphan
-      scan failed again for the
-      same reason as #1514 (`gh api --paginate` 403 against the pulls
-      endpoint) — independently confirmed still open/unfixed via a dedicated
-      search before relying on it, not re-filed; humanPromptedClosures and
-      manuallyRescuedClosures both empty. Grade/role unchanged.
   - date: "2026-10-04"
     note: >-
       Self-check: dispatched 12 behaviour-check subagents this run (one per
@@ -586,3 +567,6 @@ observations:
   - date: "2026-11-12"
     note: >-
       Behaviour check, 7 runs delivered, all PRs merged. Verified: the 11-10 run recorded a repeat as an observation only (cost_usd on #2987); comment landed 11-11 (closed-thread gap, see 11-09). orphanScan counts missing from the 11-08 and 11-09 summaries (repeat of earlier notes). check-states --text skipped before #2987 (known). Orphan scan this run: 188 PRs, 80 issues, 0 orphans. Grade unchanged.
+  - date: "2026-11-13"
+    note: >-
+      Behaviour check, 7 runs delivered, all PRs merged. Verified, n=1: session_013zxzeTKpnXCQm75L92QGhL read its own 22-file Inventory diff (PR #3122) in place of code-review and disclosed it; its friction says pr-workflow does not say whether a data-only Inventory PR counts as simple. Runs of 11-06 to 11-11 ran code-review. Unverified: check-states --text before #3121. Grade unchanged.

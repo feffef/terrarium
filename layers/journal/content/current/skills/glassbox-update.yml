@@ -161,3 +161,6 @@ observations:
   - date: "2026-11-12"
     note: >-
       Behaviour check, 8 PRs merged. Repeat of 11-11: session_013zxzePSj9Rpf6qCGowU7gi (PR #3030) stamped hooks/40 and index although its summary says they were not fully re-verified; update.yml holds only a date, so no partial check can be recorded (unverified cause). session_013zxzeS85pNBsS4oQSVQntp (PR #2922) skipped tool-doc fetches and was owner-merged; later runs self-merged. code-review replaced by own read in 3 large re-pins (#2472 family). Not issued (no damage). Grade unchanged.
+  - date: "2026-11-13"
+    note: >-
+      Behaviour check, 9 runs (7 read), PRs merged, no revert. New, verified n=1: session_013zxzePP7cbXFfoqEXbKwKW (PR #3152) read 11 re-pin-only flagged pages only through readers' scoped reports, against step 4's whole-page re-check; session_013zxzeNbirdJSVYjNLe6nsJ logged that step 4 has no scoping for 53 flagged pages. Steps 4 and 5 may disagree on scope (unverified). Grade unchanged.

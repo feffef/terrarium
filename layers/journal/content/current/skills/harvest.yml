@@ -1,0 +1,14 @@
+name: harvest
+category: platform-operation
+importance: specialist
+gist: Turns recent sessions' ideas and learnings into proposals to green-light.
+role: >-
+  Reads the last week of session logs' ideas and learnings and files up to ten
+  Seedlings: self-contained issues that wait for a Trusted user's green
+  light, preferring Tenant, content and UI ideas and leaving Frictions to
+  `frictions-to-fixes`. Files issues only; user-invoked
+  (disable-model-invocation: true), alone or with a person.
+observations:
+  - date: "2026-11-13"
+    note: >-
+      Coverage gap: new Skill, 5 uses in the window, no entry until now. Behaviour check, 5 runs delivered: Seedlings #3086, #3103, #3129 and #3178 were built and closed by merged PRs; #3172 and #3186 wait. Graded specialist: only this Skill files Seedlings (session_013zxzeS6gV5rfHembHQYP6K, session_013zxzeNrvAWHmAPYsSy8u7x), and no scheduled session runs it yet. Minor: 2 runs filtered script output against step 3 (self-caught).

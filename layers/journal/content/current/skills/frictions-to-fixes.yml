@@ -9,15 +9,6 @@ role: >-
   impl agents build the rest, and merges those PRs itself, escalating only
   high-risk ones. Use when frictions pile up.
 observations:
-  - date: "2026-10-03"
-    note: >-
-      Re-checked (audit-skills behaviour check), 7 usedIn sessions: 0 silent
-      failures. session_01Mf1j87mVu3AjKJZSGSqpYa (PR #1525, 2026-10-02)
-      freshly verified end-to-end (diff matches log, posted audit-trace
-      verdict precedes gate-green and merge). The one guard-touching merge
-      in the window (#1439, "tail-pipe guard" fix) was explicitly
-      human-attended, not dispatched by this Skill — no recurrence of
-      #1449. No reverts in the 2-week git-log sweep. Grade/role unchanged.
   - date: "2026-10-04"
     note: >-
       Re-checked (audit-skills behaviour check), 7 usedIn sessions: 0 silent
