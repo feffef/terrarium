@@ -41,8 +41,7 @@ body says so, and you don't merge it.
 **Read first, in full.** `layers/glassbox/GLOSSARY.md`,
 [`../glassbox-lesson/writing-pages.md`](../glassbox-lesson/writing-pages.md),
 [`../glassbox-lesson/owner-decisions.md`](../glassbox-lesson/owner-decisions.md),
-`.claude/rules/glassbox-content.md`,
-`.agents/skills/dispatch-subagents/SKILL.md`, and, since every run fetches and
+`.claude/rules/glassbox-content.md` and, since every run fetches and
 opens a PR, `docs/agents/git-conventions.md`, `docs/agents/github-integration.md`
 and `docs/agents/pr-workflow.md`.
 Subagents read committed files at the base with `git show <base>:<path>`,

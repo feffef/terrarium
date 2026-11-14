@@ -23,43 +23,6 @@
 #            topic's tools correctly.
 trials:
   - problem: >
-      The proxy-blocked-hosts bullets in `environment-caveats.md` (-3 net, from
-      `git diff --numstat`: 6 added, 9 deleted; this entry not counted): three
-      bullets that listed blocked hosts and fallbacks merged into one that points
-      at the SessionStart "Network reach" line (`network-start.ts`, which now
-      reports which hosts are blocked) and keeps the raw.githubusercontent.com
-      fallback, the no-retry rule and the Unrestricted-environment suggestion.
-      Chosen after the search subagent covered CLAUDE.md, `docs/agents/`, rules,
-      Skills, guard headers, the tracker and the ledger: `harness-proxy-blocks`
-      (10 occurrences, 6 fixes, 4 Regression issues, #3045 the latest) failed as
-      prose, each fix adding hosts to the list; the hook now holds the list, so
-      the prose is the safest cut. Runners-up: CLAUDE.md "Verify before you
-      state" and "Question the premise" (accepted ledger entries, nothing wired)
-      and the fact-check steps (caught by design). Same run judged and deleted
-      two trials: close-session (landed b9e6bdc4): 57 sessions since,
-      `close-session-bypassed-by-hand-log` 3/131 -> 0/57 and
-      `closure-not-invoked-on-answers` 2/131 -> 0/57; the one major Friction
-      (tzGF5UQU) started before the landing and traces to ADR-0003, not the cut;
-      no issue. dispatch-subagents §2-§3 (landed f1635bde): `dispatch-read-guard-deny`
-      28.9% -> 26.1% (41/142 -> 12/46), `dispatch-subagents-skill-unread`
-      0.7% -> 0%; moderate brief Frictions (UxNHTJw1, FFfcQhv7, anqbmpkr) concern
-      fan-out cost and untried briefs, not the cut worktree, stranding or scope
-      lines; no issue.
-    territory:
-      paths:
-        - "docs/agents/environment-caveats.md: the blocked-hosts bullet (was three)"
-      keywords:
-        - blocked host
-        - Network reach
-    opened: 2026-11-11
-    proven: true
-    check: >
-      Damage is a major or blocker Friction where a session lost real time on a
-      blocked host, or retried one, because a cut line no longer said what to do.
-      Compare `harness-proxy-blocks` share with `friction-rates.ts`; a clear rise
-      is also damage. NOT damage: the entry at its standing rate for the
-      deployed site or classifier denials (outside this cut).
-  - problem: >
       The `frictions-to-fixes` SKILL.md procedure (-113 net, from
       `git diff --numstat`: 110 added, 223 deleted; this entry not counted):
       rewritten goal-first, keeping the §1-§8 numbers other Skills cite; the
@@ -127,3 +90,39 @@ trials:
       agent's branch collided with the lead's, because a cut line no longer said
       so. Compare `worktree-subagent-moves-branch` share with `friction-rates.ts`;
       a clear rise is also damage. NOT damage: that entry at its standing rate.
+  - problem: >
+      The "read `dispatch-subagents` first" lines in four Skills (-5 net, from
+      `git diff --numstat`: 2 added, 7 deleted; this entry not counted): the
+      "Read first" line in `blog-post` §6 and `visitor-loop` §2, the "(the
+      Workflow guard asks for it)" read in `clear-backlog`, and the
+      `dispatch-subagents` entry in `glassbox-curate`'s read-first list.
+      `dispatch-read-guard.ts` denies a main-session dispatch until the Skill is
+      read and names it, so the lines only restated it; CLAUDE.md's trigger stays,
+      since the guard's message cites it. Chosen after the search subagent covered
+      CLAUDE.md, GLOSSARY.md, `docs/agents/`, rules, Skills, hook headers, the
+      ledger and the tracker (guard mechanism records read by the subagent only
+      in part): `dispatch-read-guard-deny` (62 occurrences; fixes #2768, #3136,
+      #3196 each added a read-first line) failed as prose and the guard holds it.
+      Runners-up: `edit-during-gate-run` (guard 3 days old, about 20 words) and
+      CLAUDE.md "Docs you must read first" (hint-only, so unsafe). Same run
+      judged and deleted the blocked-hosts trial (landed ddb21638):
+      `harness-proxy-blocks` 4.0% -> 3.9% (7/175 -> 3/76); the post-landing
+      Frictions are nit or minor and none concern a blocked host; no issue.
+    territory:
+      paths:
+        - ".agents/skills/blog-post/SKILL.md: §6 'Read first' line"
+        - ".agents/skills/visitor-loop/SKILL.md: §2 'Read first' line"
+        - ".agents/skills/clear-backlog/SKILL.md: the dispatch-subagents read"
+        - ".agents/skills/glassbox-curate/SKILL.md: read-first list"
+      keywords:
+        - dispatch-read guard
+        - Read first dispatch-subagents
+    opened: 2026-11-14
+    proven: true
+    check: >
+      Damage is a major or blocker Friction where a session dispatched a brief
+      from one of these four Skills and broke a `dispatch-subagents` rule (stranded
+      work, a moved checkout, an unfilled brief) because it never read the Skill.
+      Compare `dispatch-read-guard-deny` share with `friction-rates.ts`; a clear
+      rise is also damage. NOT damage: one guard denial followed by a read, the
+      standing cost the owner accepted (#2580).
