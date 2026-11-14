@@ -1,0 +1,8 @@
+session: session_013zxzeP4m4R15EP9UBBmzfR
+mode: autonomous
+focus: "Term definitions: nine definitions the memory page listed as leaning on jargon (heavy, inert, nitro, catalog, collection-kind, aggregator, ecosystem, workflow, seedling). Chosen because it is concrete, solvable whole in one run, and no open PR touches the terms. The other lead taken from the memory page, a stale Headless browser checks page, was already fixed by the glassbox-update re-pin, so it was only deleted. Deviations for the budget: wording-only changes with no new claim, so no writer and no fresh reader; a sonnet claim checker ran on the changed definitions; the Verification pages were not read in full, only the Headless page. The review was my own read of the diff (nine definition lines). Cost unreported: get_session was not among the tools. Scout found one gap (area labels), put on the memory page."
+changes:
+  - terms/heavy, inert, nitro, catalog, collection-kind, aggregator, ecosystem, workflow, seedling | Plainer wording; the gate's slow checks named, "tenant" and "route rules" replaced by site and caching rules, inert gets an example, seedling and workflow say who files or runs them | a newcomer meeting these words had to know the jargon inside the gloss. Definitions only, so revision and publishedAt are kept
+  - workshop/pages/index | the term-definitions lead and the stale Headless lead deleted; the Scout's area-labels gap added | the first is done, the second was already fixed in the page
+pagesRead:
+  - verification/80.headless-browser-checks

@@ -48,7 +48,6 @@ These are the owner's goals for the guide. A run builds toward them directly; a 
 
 None of these is false.
 
-- **Term definitions.** `heavy`, `inert`, `nitro`, `catalog`, `collection-kind`, `aggregator`, `ecosystem`, `workflow` and `seedling` still lean on jargon a newcomer may not know (inert path, route rules, contract, Dependabot, the harvest skill).
 
 - **Claude Code.** *Claude Code skills* and *Claude Code permissions* still use *gate*, *ADR* and *journal* without a gloss. *MCP servers*: no source says why the read-first hint matches the whole server while the guards list tools; ask the owner or leave it a plain fact. The "Matched by name, or by server" section puts prose between its two Excerpts, so the first reads as the only example. *Claude Code skills*: the close-session Excerpt shows mostly one dense step, not "a goal and numbered steps".
 - **Hooks.** *Session transcripts*: `isMeta` and the 2 KB preview have no source in the docs, only in the scripts.
@@ -67,7 +66,7 @@ None of these is false.
 
 ### Stale or missing
 
-- *Headless browser checks* does not say `--dev` now waits for a real 200 page and for hydration (`scripts/ui/preview.ts`, `screenshot.ts`, commit 0fe188963).
+- No page teaches area labels (`area:<tenant>`, `area:platform`; a workflow labels PRs by their files, `.github/workflows/pr-area-label.yml`; `auto-triage` labels issues). Nearest page: *Issue triage labels*.
 - No page teaches the `visitor-loop` Skill (blind and informed visitors, report-only); it is still changing fast, so teach only the stable idea. Nearest page: *Ideas and lessons learned*.
 ### Claims to check
 
