@@ -32,7 +32,7 @@ onMounted(() => {
         <dd class="midden-key__def">{{ c.definition }}</dd>
       </div>
     </dl>
-    <p class="tech midden-key__aside">curator-graded, never computed</p>
+    <p class="tech midden-key__aside">curator-graded, never computed · a Dissolved find’s Remains links may still show an intact original</p>
     </details>
   </aside>
 </template>

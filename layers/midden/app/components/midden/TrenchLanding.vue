@@ -153,7 +153,7 @@ useHead({ title: props.front ? 'The Midden' : 'The Trench · The Midden' })
         <div class="midden-sechead">
           <h2 id="midden-sites-head" class="hand midden-sechead__title">{{ front ? 'The excavation' : 'The dig reports' }}</h2>
           <span class="midden-sechead__rule" />
-          <span v-if="!front" class="mono midden-sechead__aside">{{ activeCause ? `${rows.length} of ` : '' }}{{ count }} site{{ count === 1 ? '' : 's' }} · newest stratum first</span>
+          <span v-if="!front" class="mono midden-sechead__aside">{{ activeCause ? `${rows.length} of ` : '' }}{{ count }} site{{ count === 1 ? '' : 's' }} · newest stratum (dig layer) first</span>
         </div>
         <p v-if="!front && causeChips.length" class="tech midden-causes__label">Filter by cause of death · number of sites (a site can have several causes)</p>
         <nav v-if="!front && causeChips.length" class="tech midden-causes" aria-label="Filter by cause of death">
