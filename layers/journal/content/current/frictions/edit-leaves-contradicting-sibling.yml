@@ -16,11 +16,6 @@ fixes:
     date: "2026-11-01"
     summary: "CLAUDE.md Self-verification: after changing a type or a test, run pnpm typecheck and the touched spec before gate:scoped."
 occurrences:
-  - session: session_013zxzeP5MnAU2v4XFBZHSdY
-    date: "2026-10-30"
-    severity: minor
-    description: "Adding a required DigSeason field broke a typecheck in find.spec.ts that I did not grep for; first gate run failed after about 10 minutes."
-    solution: "Grep consumers of a changed type before the gate, as CLAUDE.md says for facts."
   - session: session_013zxzeRuz3fA1RMj6ygrT9d
     date: "2026-10-31"
     severity: minor

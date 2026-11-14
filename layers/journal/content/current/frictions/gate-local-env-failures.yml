@@ -3,6 +3,8 @@ surface: outside
 summary: pnpm gate:scoped failed for environment reasons on a local machine (a browser build missing after an install, a run stretched by a sleep) rather than for the change.
 cause: "A local session's session-start install bumped a dependency (playwright-core) without fetching its Chromium build, or the machine slept mid-run so unrelated tests timed out; the gate fails with no pointer to the environment. Signals: 'playwright ... headless shell', 'gate ran 95 min', 'unrelated tests timed out'."
 status: open
+notes: |-
+  2026-11-14 design: no change: a Chromium install in the session-start command dropped: it is Human-only hook wiring and one owner-local occurrence.
 occurrences:
   - session: fd29c728-8222-4915-94ab-25776442397b
     date: "2026-11-10"

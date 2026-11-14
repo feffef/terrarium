@@ -25,16 +25,6 @@ fixes:
     date: "2026-10-31"
     summary: "CLAUDE.md and the clear-backlog workflows' shared brief line ask each subagent to give every count, id or attribution with its source (command or file:line) or mark it unverified."
 occurrences:
-  - session: session_013zxzeT9k3tYULehBpNwFpj
-    date: "2026-10-30"
-    severity: minor
-    description: "Checker findings such as prune-trial's 6 of 9 and inspect-session's 98-page read went into Inventory notes from the checker's tally, not re-derived by me."
-    solution: "Label such counts unverified in the note, or spot-check one session per Skill."
-  - session: session_013zxzeRDagsHLSNJ939gcWK
-    date: "2026-10-30"
-    severity: minor
-    description: "The triage agent's #2701 counts (19 pages, 1 because) could not be reproduced without knowing its section scope; three greps spent"
-    solution: "Have the explore schema's question cite the exact command behind each count"
   - session: session_013zxzeScPetuchKVyaP1PDZ
     date: "2026-10-31"
     severity: minor

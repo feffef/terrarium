@@ -8,11 +8,6 @@ fixes:
     date: "2026-10-31"
     summary: "audit-docs rotates coverage: reviewers B and C skip areas the last two runs' Covered line names, end replies with unread Live files, and are never resumed."
 occurrences:
-  - session: session_013zxzeS5X2KXN7xVdXxNmdN
-    date: "2026-10-30"
-    severity: minor
-    description: "Reviewers reported thin coverage (Skills, journal pages, glossaries unread) because three agents cannot read the whole repo."
-    solution: "Split reviewers by directory as well as lens, or rotate the covered directories across runs."
   - session: session_013zxzeQRndZ5iHweDq8ceMP
     date: "2026-11-11"
     severity: minor

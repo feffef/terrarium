@@ -19,21 +19,6 @@ fixes:
     date: "2026-11-04"
     summary: "ADR-0003/0004 and pr-workflow.md: agents may push early and often, the PR opens only after review and the gate; git-conventions says to push when the Stop hook asks."
 occurrences:
-  - session: session_013zxzeQifdm2ANF46Z2pQ5w
-    date: "2026-10-30"
-    severity: nit
-    description: "The Stop hook asked to push five times while the fact-check, review and gate were pending, each costing a turn."
-    solution: "Have the hook stay quiet while a background agent or gate is running."
-  - session: session_013zxzeSZEedzkmmCqWvKDjC
-    date: "2026-10-30"
-    severity: nit
-    description: "The Stop hook asked to push five times while the review, fact-check and gate were pending, repeating text that cost turns and risked an early push."
-    solution: "Let the Stop hook stay quiet when a blog-post run's gate has not yet run."
-  - session: session_013zxzeQmQLYRYBUN1FkDfN6
-    date: "2026-10-30"
-    severity: nit
-    description: "Stop hook asked to push four times while the probe, reviews and gate were pending; ADR-0004 says to ignore it, so each was a wasted turn."
-    solution: "Have the Stop hook stay quiet on a branch whose gate and review have not yet run."
   - session: session_013zxzeSRDhsoSRs2a2bGVgW
     date: "2026-10-31"
     severity: nit
