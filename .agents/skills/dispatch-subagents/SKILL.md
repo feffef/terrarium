@@ -77,9 +77,9 @@ applies.
   (`git -C <worktree> push origin HEAD:<branch>`), open and land the PR. They do
   not run `close-session` and cannot spawn subagents: run any nested dispatch
   yourself.
-- Keep a subagent's final reply with
-  `pnpm exec tsx scripts/session/save-handback.ts <agent-id> <out>`, never by
-  retyping it.
+- A reply that must outlive your context (a pool, or a review others read):
+  `pnpm exec tsx scripts/session/save-handback.ts <agent-id> <out>`, never
+  retyped. A read-only reply already in context needs no file.
 - Give a size ceiling for a "simple" fix ("under ~50 lines, one new test") and
   tell the agent to report back rather than exceed it.
 - Name the relevant ADR when the work touches routing or architecture (an agent
@@ -113,7 +113,7 @@ Use `SendMessage` to its agent id. A fresh `Agent` call gets a brand-new checkou
 with no memory, risking a duplicate branch or lost local commits.
 
 - A resumed agent keeps its branch and scratchpad but sees only the new message:
-  spell out the check it must run. Keep its later replies with `save-handback.ts` too.
+  spell out the check it must run. Its later replies follow the §3 save rule.
 - A hand-back after a resume may be the earlier report delivered late: wait for
   the next notification before re-sending the instruction, and verify the work
   against git.
