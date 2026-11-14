@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQrRhhVjja2AkCLcyV
 startedAt: 2026-11-13T10:48:25Z
-endedAt: 2026-11-14T08:41:10Z
+endedAt: 2026-11-14T08:45:07Z
 kind: interactive
 goal: "Journal session card: token bar lists subagents first, main last, instant tooltips"
-status: in-review
-outcome: "PR 3310 open: bar reordered with a kind-aware main label, instant tooltips on the bar and six detail hovers; gate green, review done"
-summary: "The owner asked to reorder the Journal session card's subagent token bar: subagent shares first, the main session last with a fuller label than \"main\". I asked three questions first, as the owner prefers. Human-instructed: the reorder, the label wording (they dictated \"the session that directed the subagents and that users interact with directly\", mentioned only for interactive, and \"the session users created to trigger the work\" for delegated), order of appearance, then reversing their own hover-title-only choice once they saw the native tooltip is slow and undiscoverable, reuse of the Routine chart's hand-drawn tooltip but not its CSS 1:1 (two looks accepted), applying the tooltip to other native titles that relay detail, a merge of main, and \"go ahead until merge\". Agent-initiated: threading `kind` through the card view, choosing which titles count as detail (converted the rule and value hovers, Friction status and strip, the Routine description; kept action labels, one-word repeats and the ribbon and chips native), the dark serif pill for prose tips, and dropping an unused centre option after review. I committed and pushed before rendering, which the owner flagged and had me log as a friction; the render and their \"ok\" followed. The gate and code-review (Standards and Spec subagents) passed; the Spec review flagged three more native titles that carry detail (Friction bar severity counts, \"merged since\", the \"external\" ribbon), left for the owner to decide because converting them changes owner-visible UI. Open: CI, the verdict comment and the merge of PR 3310."
+status: completed
+outcome: "PR 3310 merged: bar reordered with a kind-aware main label, instant tooltips on the bar and six detail hovers"
+summary: "The owner asked to reorder the Journal session card's subagent token bar: subagent shares first, the main session last with a fuller label than \"main\". I asked three questions first, as the owner prefers. Human-instructed: the reorder, the label wording (they dictated \"the session that directed the subagents and that users interact with directly\", mentioned only for interactive, and \"the session users created to trigger the work\" for delegated), order of appearance, then reversing their own hover-title-only choice once they saw the native tooltip is slow and undiscoverable, reuse of the Routine chart's hand-drawn tooltip but not its CSS 1:1 (two looks accepted), applying the tooltip to other native titles that relay detail, a merge of main, and \"go ahead until merge\". Agent-initiated: threading `kind` through the card view, choosing which titles count as detail (converted the rule and value hovers, Friction status and strip, the Routine description; kept action labels, one-word repeats and the ribbon and chips native), the dark serif pill for prose tips, and dropping an unused centre option after review. I committed and pushed before rendering, which the owner flagged and had me log as a friction; the render and their \"ok\" followed. The gate and code-review (Standards and Spec subagents) passed; the Spec review flagged three more native titles that carry detail (Friction bar severity counts, \"merged since\", the \"external\" ribbon), left for the owner to decide because converting them changes owner-visible UI. CI went green on the reviewed head, I posted my verdict and merged PR 3310 with merge-pr.ts."
 prs:
   - "3310"
 docsRead:
@@ -74,23 +74,29 @@ frictions:
   - description: The dev server kept serving a stale layer component after an edit (tooltips stayed centred), costing two screenshot rounds before a restart.
     solution: Restart the dev server when a layer component edit does not show, as verifying-ui-changes.md warns.
     severity: nit
-durationSec: 78765
+durationSec: 79002
 models:
-  claude-sonnet-5-5: 249
+  claude-sonnet-5-5: 278
 toolCounts:
   Grep: 13
   Read: 42
   AskUserQuestion: 2
   Edit: 12
-  Bash: 52
+  Bash: 57
   Write: 4
-  Skill: 4
+  Skill: 5
   ToolSearch: 2
   TaskStop: 1
   mcp__github__list_pull_requests: 1
   Agent: 2
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__claude-code-remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  mcp__claude-code-remote__delete_trigger: 1
 filesEdited:
   - layers/journal/app/utils/dashboard.ts
   - layers/journal/app/types/journal.ts
@@ -240,13 +246,13 @@ subagents:
     durationSec: 21
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 4.7
+    tokenShare: 4.1
   - type: general-purpose
     task: Spec review of diff
     durationSec: 25
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 4.7
+    tokenShare: 4.1
 gitBranch: claude/nifty-heisenberg-l4lrfn
 entrypoint: remote
 cliVersion: 2.1.323
