@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQnCCyBdXZDEv9qTNh
 startedAt: 2026-11-14T12:22:31Z
-endedAt: 2026-11-14T12:35:53Z
+endedAt: 2026-11-14T12:39:54Z
 kind: interactive
 goal: "Karen blog post: daily Routines log themselves as Weekly"
-status: in-review
-outcome: "Karen post written, fact-checked, reviewed and gated; PR #3314 open and awaiting CI"
-summary: "The owner invoked /blog-post with a topic (direct ask): Karen rants that sessions on a daily schedule, audit-skills included, log \"Weekly\" in their goal line. Per their preference I asked four questions first (owner-decided: single topic and no three-candidate blind read; the problem is the goal line; rant only, no fix or issue status; reaction only if a hook exists, none did, so standalone). I counted from the session logs: audit-skills started 00:46 UTC on eight days (2026-11-07 to 2026-11-14), seven goals say Weekly, one Daily, and its Skill Inventory entry says \"daily audits\". Agent-initiated: choosing the Glass Box sync as the second example, the fact-check and code-review rounds, opening PR #3314 and subscribing (ADR-0003). A fresh Sonnet checker verified every claim three times; code-review's Spec axis noted my first draft's paragraphs on the 2026-11-09 Digest fix and PR #2993 broke the owner's \"rant only\", and the Standards axis noted seven paragraphs against a norm of four, so I cut both (406 to 264 words) and re-checked. Skipped by owner choice: the three-draft blind read and step 12's reply decision. Open: CI, then the verdict comment and merge-pr.ts."
+status: completed
+outcome: "Karen post merged in PR #3314 after fact-check, review and a green gate"
+summary: "The owner invoked /blog-post with a topic (direct ask): Karen rants that sessions on a daily schedule, audit-skills included, log \"Weekly\" in their goal line. Per their preference I asked four questions first (owner-decided: single topic and no three-candidate blind read; the problem is the goal line; rant only, no fix or issue status; reaction only if a hook exists, none did, so standalone). I counted from the session logs: audit-skills started 00:46 UTC on eight days (2026-11-07 to 2026-11-14), seven goals say Weekly, one Daily, and its Skill Inventory entry says \"daily audits\". Agent-initiated: choosing the Glass Box sync as the second example, the fact-check and code-review rounds, opening PR #3314 and subscribing (ADR-0003). A fresh Sonnet checker verified every claim three times; code-review's Spec axis noted my first draft's paragraphs on the 2026-11-09 Digest fix and PR #2993 broke the owner's \"rant only\", and the Standards axis noted seven paragraphs against a norm of four, so I cut both (406 to 264 words) and re-checked. Skipped by owner choice: the three-draft blind read and step 12's reply decision. CI went green on the head; I posted the verdict and merged with merge-pr.ts (merge commit cc273acab). Nothing open."
 prs:
   - "3314"
 docsRead:
@@ -49,23 +49,27 @@ frictions:
   - description: I ran git commit with both -m and -F; git refused, wasting one call. git-conventions already says never to give both.
     solution: Reuse a message file only with -F and no other message flag.
     severity: nit
-durationSec: 802
+durationSec: 1043
 models:
-  claude-sonnet-5-5: 118
+  claude-sonnet-5-5: 136
 toolCounts:
   AskUserQuestion: 1
-  Bash: 37
+  Bash: 41
   Read: 5
   Write: 3
   Edit: 2
-  Skill: 4
+  Skill: 5
   mcp__claude-code-remote__get_session: 1
   Agent: 3
-  ToolSearch: 2
+  ToolSearch: 3
   SendMessage: 2
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/blog/content/karen/pages/2026-11-14-eight-daily-runs-seven-called-weekly.md
 rulesGlobal:
@@ -236,19 +240,19 @@ subagents:
     durationSec: 230
     toolCalls: 21
     modelCalls: 15
-    tokenShare: 17.6
+    tokenShare: 14.9
   - task: Standards review of blog post
     model: sonnet
     durationSec: 19
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 3.9
+    tokenShare: 3.3
   - task: Spec review of blog post
     model: sonnet
     durationSec: 21
     toolCalls: 7
     modelCalls: 3
-    tokenShare: 3.3
+    tokenShare: 2.8
 gitBranch: ccr-39663d28-tshf9w
 entrypoint: remote_mobile
 cliVersion: 2.1.325
