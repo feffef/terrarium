@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQb8CcK1KnPAhju2GY
 startedAt: 2026-11-14T13:08:55Z
-endedAt: 2026-11-14T13:21:21Z
+endedAt: 2026-11-14T13:25:51Z
 kind: autonomous
 goal: "Scheduled prune trial: judge open trials and cut one failed instruction"
-status: in-review
-outcome: "Judged one trial (holds), opened a new one, PR #3315 awaiting CI"
-summary: "Scheduled /prune-trial run, nothing human-instructed. Only the blocked-hosts trial was judgeable; its Friction rate was flat (4.0% to 3.9%) and no post-landing Friction concerned a blocked host, so it was deleted with no issue. A search subagent ranked failed prose; I chose the read-first dispatch-subagents lines in four Skills, which dispatch-read-guard.ts already enforces (three fixes had each added one), and left CLAUDE.md's trigger alone since the guard cites it. Sonnet probe pinned to the SHA answered correctly from CLAUDE.md alone. Gate green, Standards and Spec review clean, PR #3315 opened. The stray gate run from my own glob mistake cost one wait and a rerun."
+status: completed
+outcome: "Judged one trial (holds), opened a new one, PR #3315 merged"
+summary: "Scheduled /prune-trial run, nothing human-instructed. Only the blocked-hosts trial was judgeable; its Friction rate was flat (4.0% to 3.9%) and no post-landing Friction concerned a blocked host, so it was deleted with no issue. A search subagent ranked failed prose; I chose the read-first dispatch-subagents lines in four Skills, which dispatch-read-guard.ts already enforces (three fixes had each added one), and left CLAUDE.md's trigger alone since the guard cites it. Sonnet probe pinned to the SHA answered correctly from CLAUDE.md alone. Gate green, Standards and Spec review clean, PR #3315 opened and merged after green CI. The stray gate run from my own glob mistake cost one wait and a rerun."
 prs:
   - "3315"
 docsRead:
@@ -46,18 +46,21 @@ frictions:
   - description: ADR reads demanded by hooks arrived after my edits, and I tried a blocked foreground sleep twice to wait on agents.
     solution: Read the ADRs the rule summaries name before editing; wait with the completion notification.
     severity: nit
-durationSec: 746
+durationSec: 1016
 models:
-  claude-sonnet-5-5: 73
+  claude-sonnet-5-5: 87
 toolCounts:
-  Bash: 27
+  Bash: 31
   Read: 3
   Agent: 4
-  Skill: 3
+  Skill: 4
   ToolSearch: 1
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/prune-trials.yml
   - .agents/skills/blog-post/SKILL.md
@@ -266,28 +269,28 @@ subagents:
     durationSec: 74
     toolCalls: 16
     modelCalls: 14
-    tokenShare: 15.9
+    tokenShare: 13.8
   - type: general-purpose
     task: Sonnet probe of pruned Skills
     model: sonnet
     durationSec: 29
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 5.8
+    tokenShare: 5.1
   - type: general-purpose
     task: Standards review of prune diff
     model: sonnet
     durationSec: 20
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 8.5
+    tokenShare: 7.4
   - type: general-purpose
     task: Spec review of prune diff
     model: sonnet
     durationSec: 19
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 8.8
+    tokenShare: 7.7
 gitBranch: claude/practical-rubin-rfwhui
 entrypoint: remote_trigger
 cliVersion: 2.1.325
