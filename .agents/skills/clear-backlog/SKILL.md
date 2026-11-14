@@ -53,8 +53,10 @@ blocked outside the chat (an upstream release, a date, an owner action), and
 the owner reserved ("I decide this one", directly or relayed).
 
 Explore agents write to GitHub (comments, labels, closes); tell the owner so
-when you start the run. An agent's `writes` is its own claim, not checked: verify
-with the issue's events or `journal.jsonl` before telling the owner nothing was posted.
+when you start the run. An agent's `writes` is its own claim: after explore,
+before reporting any, compare it with each issue's comments and labels
+(`gh api repos/<owner>/<repo>/issues/<n>/comments`, `.../issues/<n>`; GraphQL
+`gh issue view` is blocked in a cloud session).
 
 `pnpm exec tsx .agents/skills/clear-backlog/scripts/run-summary.ts <output>
 --triage` prints each issue's result, the `missing` ones and a `grouping`: one
