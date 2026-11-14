@@ -1,0 +1,109 @@
+schemaVersion: 1
+session: session_013zxzeNxZVrKu9whNTs4pnR
+startedAt: 2026-11-14T17:06:05Z
+endedAt: 2026-11-14T17:11:04Z
+kind: autonomous
+goal: Weekly harvest of session ideas into Seedlings
+status: completed
+outcome: Three Seedlings filed (3318-3320); retro candidate already held by the Friction Ledger, so none filed
+summary: "Scheduled harvest run, agent-initiated by the schedule with no human prompt. Extracted 220 entries (101 ideas, 119 learnings) from the last 7 days. Checked 8 clusters, 3 passed and 5 dropped. Passed (product): Midden report wording, Midden report phone navigation, Tinkerfund first-visit reading. Dropped as already built: Tinkerfund empty cart and deals, pledge receipt, the Midden stood-down paragraph; dropped as rejected: Midden cause filters (3246 not planned); dropped workflow learning on gate aborting, already in pr-workflow.md. Many Midden entries were already filed in 3276-3278. Stopped at 8 clusters because the three product Seedlings were verified; Journal and Glass Box product ideas were not checked, so they roll to the next run. Retro: the one candidate (list longer than the Read cap) is held by an open Ledger entry, so nothing filed."
+prs: []
+docsRead:
+  - path: .agents/skills/harvest/body-template.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/retro/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: harvest
+    reason: the run's own Skill
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: The harvest list was about 32,700 tokens, over the Read cap, so reading it whole needed two calls.
+    solution: Make harvest list print in under 25,000 tokens or say to read it in pages.
+    severity: nit
+durationSec: 299
+models:
+  claude-sonnet-5-5: 58
+toolCounts:
+  Bash: 24
+  Read: 2
+  ToolSearch: 1
+  mcp__github__issue_read: 3
+  mcp__github__issue_write: 3
+  Skill: 2
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0020.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/adr-0006.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/adr-0016.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: filed issues only, no repo change
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: session header on each issue
+      - path: docs/agents/issue-tracker.md
+      - path: .agents/skills/harvest/body-template.md
+gitBranch: claude/eager-cerf-jre1s2
+entrypoint: remote_trigger
+cliVersion: 2.1.325
+trigger: harvest
+landedBy: Stop
