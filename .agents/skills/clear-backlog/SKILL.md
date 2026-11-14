@@ -26,7 +26,7 @@ every question of theirs still unanswered.
 
 Two saved workflows do the agent work, so their steps can't be skipped:
 `clear-backlog-explore` (§1) and `clear-backlog-build` (§3). Invoking this
-Skill is the opt-in: read `dispatch-subagents` once (the Workflow guard asks for it), then run each by name with the Workflow tool, pass `args` as
+Skill is the opt-in: run each by name with the Workflow tool, pass `args` as
 a JSON value, and act on the structured result. Pass `session` (this
 session's id, `session_…`) in both: every GitHub write carries it as the
 ADR-0017 header. A workflow can't ask the owner, wait on CI or merge, so you

@@ -138,8 +138,6 @@ Done when: three finished drafts in the scratchpad.
 
 ### 6. Blind outside read, then revise the winner
 
-Read first: the `dispatch-subagents` Skill (every brief below follows it).
-
 Spawn one subagent (Agent tool, `model: "sonnet"`, no `run_in_background`
 flag; its report arrives as a notification — see `dispatch-subagents`). Brief
 it as a reader who arrived
