@@ -69,7 +69,7 @@ if (import.meta.dev && !series.value) {
           <rect class="rc-hit" :x="b.x" y="0" :width="b.w" :height="H" @pointerenter="hovered = i" />
         </g>
       </svg>
-      <span v-if="tip" class="rc-tip" :style="{ left: tip.left, bottom: tip.bottom }">{{ tip.text }}</span>
+      <JournalTip v-if="tip" mono :style="{ left: tip.left, bottom: tip.bottom }">{{ tip.text }}</JournalTip>
     </div>
     <div class="rc-axis">
       <span>{{ runs[0]?.startedAt.slice(0, 10) }}</span>
@@ -100,19 +100,6 @@ if (import.meta.dev && !series.value) {
 .rc-bar.on { fill: var(--jd-accent-bright); }
 .rc-hit { fill: transparent; }
 .rc-plot { position: relative; margin-top: 1.2rem; }
-.rc-tip {
-  position: absolute;
-  transform: translate(-50%, -0.2rem);
-  padding: 0 0.3rem;
-  font-family: var(--jd-mono);
-  font-size: 0.72rem;
-  line-height: 1.2;
-  white-space: nowrap;
-  color: var(--jd-ink);
-  background: var(--jd-surface);
-  border-radius: 3px;
-  pointer-events: none;
-}
 .rc-cut { fill: var(--jd-sev-major); }
 .rc-axis {
   display: flex;

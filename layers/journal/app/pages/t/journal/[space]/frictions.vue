@@ -140,7 +140,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
                 <span class="summary">{{ e.summary }}</span>
                 <span class="pills">
                   <span class="pill sev" :class="e.worst" :title="`Worst severity: ${e.worst}`">{{ e.worst }}</span>
-                  <span class="pill status" :class="e.state.replace(' ', '-')" :title="stateHint(e)">
+                  <JournalHint class="pill status" :class="e.state.replace(' ', '-')" :text="stateHint(e)">
                     {{ e.state }}
                     <template v-if="e.state === 'still recurring'"> · {{ e.since }} since last fix</template>
                     <template v-else-if="e.fixes.length"> {{ e.fixes[0]!.date.slice(5) }}</template>
@@ -148,15 +148,15 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
                       · {{ e.fixes.length === 1 ? 'PR' : 'PRs' }}
                       <template v-for="(f, i) in e.fixes" :key="f.pr"><a :href="f.url" @click.stop>#{{ f.pr }}</a>{{ i < e.fixes.length - 1 ? ', ' : '' }}</template>
                     </template>
-                  </span>
-                  <span v-for="st in [dayStrip(e)]" :key="st.label" class="strip" :title="st.label">
+                  </JournalHint>
+                  <JournalHint v-for="st in [dayStrip(e)]" :key="st.label" class="strip" align="end" :text="st.label">
                     <span class="cells" aria-hidden="true">
                       <span v-for="c in st.cells" :key="c.date" class="day" :class="{ fix: c.fix }">
                         <span v-if="c.count" class="bar" :style="{ height: `${c.height}%` }" />
                       </span>
                     </span>
                     <span class="vh">{{ st.label }}</span>
-                  </span>
+                  </JournalHint>
                 </span>
               </summary>
               <p class="cause">{{ e.cause }}</p>

@@ -81,10 +81,21 @@ export function subagentUsageLabel(a: Pick<Subagent, 'tokenShare' | 'durationSec
 
 export type TokenBarSegment = { key: string; title: string; grow: number; main: boolean; shade: number }
 
-// The session's token bar: main first, then each subagent that stored a share.
-// Main is the remainder (clamped at 0); `grow` is a fraction of the bar, scaled
-// down when the shares sum past 100. Empty ⇒ no share stored, so no bar.
-export function sessionTokenBar(subagents: Pick<Subagent, 'type' | 'task' | 'tokenShare'>[]): TokenBarSegment[] {
+// What the main session is, by how the session was started: only a prompted
+// session has someone interacting with it.
+const MAIN_ROLE: Record<SessionDoc['kind'], string> = {
+  interactive: 'Main session: directed the subagents and is the one users interact with directly',
+  delegated: 'Main session: directed the subagents and is the one a user created to trigger the work',
+  autonomous: 'Main session: directed the subagents',
+}
+
+// The session's token bar: each subagent that stored a share, in log order, then
+// main. Main is the remainder (clamped at 0); `grow` is a fraction of the bar,
+// scaled down when the shares sum past 100. Empty ⇒ no share stored, so no bar.
+export function sessionTokenBar(
+  subagents: Pick<Subagent, 'type' | 'task' | 'tokenShare'>[],
+  kind: SessionDoc['kind'],
+): TokenBarSegment[] {
   const shared = subagents.flatMap((a, i) => (a.tokenShare === undefined ? [] : [{ a, share: a.tokenShare, i }]))
   if (!shared.length) return []
   const sum = shared.reduce((n, s) => n + s.share, 0)
@@ -92,9 +103,9 @@ export function sessionTokenBar(subagents: Pick<Subagent, 'type' | 'task' | 'tok
   const seg = (key: string, label: string, share: number, main: boolean, shade: number) =>
     ({ key, title: `${label} · ${tokenSharePct(share)}`, grow: share / whole, main, shade })
   return [
-    seg('main', 'main', Math.max(0, 100 - sum), true, 0),
     // Four alternating steps so neighbouring segments differ.
     ...shared.map(({ a, share, i }, k) => seg(`s${i}`, a.task || a.type || 'agent', share, false, 45 + (k % 4) * 18)),
+    seg('main', MAIN_ROLE[kind], Math.max(0, 100 - sum), true, 0),
   ]
 }
 
@@ -234,6 +245,7 @@ export function sessionCardViews(
       when: sessionWhen(s.endedAt),
       duration: formatJournalDuration(sessionDurationSec(s.startedAt, s.endedAt)),
       goal: s.goal,
+      kind: s.kind,
       status: s.status,
       outcome: s.outcome,
       staleInReview: stale.has(s.session),

@@ -336,40 +336,48 @@ describe('subagentUsageLabel', () => {
 })
 
 describe('sessionTokenBar', () => {
+  const MAIN = 'Main session: directed the subagents'
   const widths = (segs: { grow: number }[]) => segs.map((s) => s.grow)
   it('makes main the remainder after the subagent shares', () => {
-    const segs = sessionTokenBar([{ type: 'Explore', task: 'find it', tokenShare: 30 }, { tokenShare: 20 }])
-    expect(segs.map((s) => s.title)).toEqual(['main · 50%', 'find it · 30%', 'agent · 20%'])
-    expect(widths(segs)).toEqual([0.5, 0.3, 0.2])
-    expect(segs[0]!.main).toBe(true)
+    const segs = sessionTokenBar([{ type: 'Explore', task: 'find it', tokenShare: 30 }, { tokenShare: 20 }], 'autonomous')
+    expect(segs.map((s) => s.title)).toEqual(['find it · 30%', 'agent · 20%', `${MAIN} · 50%`])
+    expect(widths(segs)).toEqual([0.3, 0.2, 0.5])
+    expect(segs.map((s) => s.main)).toEqual([false, false, true])
   })
   it('names a subagent by task, else type, else agent', () => {
-    const segs = sessionTokenBar([{ type: 'Plan', tokenShare: 10 }, { tokenShare: 10 }])
-    expect(segs.map((s) => s.title)).toEqual(['main · 80%', 'Plan · 10%', 'agent · 10%'])
+    const segs = sessionTokenBar([{ type: 'Plan', tokenShare: 10 }, { tokenShare: 10 }], 'autonomous')
+    expect(segs.map((s) => s.title)).toEqual(['Plan · 10%', 'agent · 10%', `${MAIN} · 80%`])
   })
   it('scales down to fit when the shares sum above 100', () => {
-    const segs = sessionTokenBar([{ tokenShare: 80 }, { tokenShare: 40 }])
-    expect(widths(segs)).toEqual([0, 80 / 120, 40 / 120])
-    expect(segs[1]!.title).toBe('agent · 80%')
+    const segs = sessionTokenBar([{ tokenShare: 80 }, { tokenShare: 40 }], 'autonomous')
+    expect(widths(segs)).toEqual([80 / 120, 40 / 120, 0])
+    expect(segs[0]!.title).toBe('agent · 80%')
   })
   it('skips a subagent without a share', () => {
-    const segs = sessionTokenBar([{ type: 'a' }, { type: 'b', tokenShare: 25 }])
-    expect(segs.map((s) => s.title)).toEqual(['main · 75%', 'b · 25%'])
+    const segs = sessionTokenBar([{ type: 'a' }, { type: 'b', tokenShare: 25 }], 'autonomous')
+    expect(segs.map((s) => s.title)).toEqual(['b · 25%', `${MAIN} · 75%`])
   })
   it('draws no bar when no subagent stored a share', () => {
-    expect(sessionTokenBar([{ type: 'a' }])).toEqual([])
-    expect(sessionTokenBar([])).toEqual([])
+    expect(sessionTokenBar([{ type: 'a' }], 'autonomous')).toEqual([])
+    expect(sessionTokenBar([], 'autonomous')).toEqual([])
   })
   it('alternates four accent steps so neighbours differ', () => {
-    const segs = sessionTokenBar([1, 2, 3, 4, 5].map(() => ({ tokenShare: 10 })))
-    const shades = segs.slice(1).map((s) => s.shade)
+    const segs = sessionTokenBar([1, 2, 3, 4, 5].map(() => ({ tokenShare: 10 })), 'autonomous')
+    const shades = segs.slice(0, -1).map((s) => s.shade)
     expect(new Set(shades.slice(0, 4)).size).toBe(4)
     expect(shades[4]).toBe(shades[0])
   })
   it('keeps a tiny share, labelled <1%', () => {
-    const segs = sessionTokenBar([{ tokenShare: 0.4 }])
+    const segs = sessionTokenBar([{ tokenShare: 0.4 }], 'autonomous')
     expect(segs).toHaveLength(2)
-    expect(segs[1]!.title).toBe('agent · <1%')
+    expect(segs[0]!.title).toBe('agent · <1%')
+  })
+  it('mentions interaction only for an interactive session, and the triggering prompt for a delegated one', () => {
+    const main = (k: 'interactive' | 'delegated' | 'autonomous') => sessionTokenBar([{ tokenShare: 10 }], k).at(-1)!.title
+    expect(main('interactive')).toContain('interact with directly')
+    expect(main('delegated')).toContain('created to trigger the work')
+    expect(main('delegated')).not.toContain('interact')
+    expect(main('autonomous')).not.toMatch(/interact|trigger/)
   })
 })
 

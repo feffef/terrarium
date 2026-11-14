@@ -36,7 +36,17 @@ const ruleUseCount = computed(() => {
   const u = card.ruleUse
   return u ? new Set([...u.main.rules, ...u.subagents.rules].map((r) => r.path)).size : 0
 })
-const tokenBar = computed(() => sessionTokenBar(card.subagents))
+const tokenBar = computed(() => sessionTokenBar(card.subagents, card.kind))
+const hoveredSeg = ref<string | null>(null)
+const barTip = computed(() => {
+  let x = 0
+  for (const s of tokenBar.value) {
+    const mid = x + s.grow / 2
+    x += s.grow
+    if (s.key === hoveredSeg.value) return { text: s.title, align: s.main ? ('end' as const) : ('center' as const), left: `${(s.main ? 1 : mid) * 100}%` }
+  }
+  return null
+})
 const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conjunction' }).format(
   FOLDED_TRACE_FIELDS.map((f) => f.label),
 )
@@ -76,15 +86,23 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
 
           <div v-if="card.subagents.length" class="block">
             <h4>Subagents</h4>
-            <div v-if="tokenBar.length" class="tokenbar" role="img" aria-label="How the session's tokens are shared between the main session and its subagents">
-              <span
-                v-for="s in tokenBar"
-                :key="s.key"
-                class="seg"
-                :class="{ main: s.main }"
-                :style="{ flexGrow: s.grow, '--shade': s.shade + '%' }"
-                :title="s.title"
-              />
+            <div v-if="tokenBar.length" class="tokenwrap">
+              <div
+                class="tokenbar"
+                role="img"
+                aria-label="How the session's tokens are shared between the main session and its subagents"
+                @pointerleave="hoveredSeg = null"
+              >
+                <span
+                  v-for="s in tokenBar"
+                  :key="s.key"
+                  class="seg"
+                  :class="{ main: s.main }"
+                  :style="{ flexGrow: s.grow, '--shade': s.shade + '%' }"
+                  @pointerenter="hoveredSeg = s.key"
+                />
+              </div>
+              <JournalTip v-if="barTip" :align="barTip.align" :style="{ left: barTip.left, bottom: '100%' }">{{ barTip.text }}</JournalTip>
             </div>
             <ul>
               <li v-for="(a, i) in card.subagents" :key="i">
@@ -177,7 +195,7 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
               <ul>
                 <li v-for="r in card.ruleUse.main.rules" :key="r.path">
                   <div class="entry-head">
-                    <span :title="r.hover">{{ r.title ?? r.path }}</span
+                    <JournalHint :text="r.hover">{{ r.title ?? r.path }}</JournalHint
                     ><span v-if="r.value" class="useful" :data-value="r.value">{{ r.value }}</span
                     ><span v-if="r.alwaysLoaded" class="always">always loaded</span
                     ><span v-if="r.followedUp" class="followed"> — full ADR read</span>
@@ -195,11 +213,11 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
                 <ul>
                   <li v-for="r in card.ruleUse.subagents.rules" :key="r.path">
                     <div class="entry-head">
-                      <span :title="r.hover">{{ r.title ?? r.path }}</span
+                      <JournalHint :text="r.hover">{{ r.title ?? r.path }}</JournalHint
                       ><span v-if="r.alwaysLoaded" class="always">always loaded</span
                       ><span v-if="!r.alwaysLoaded" class="via">{{ r.loadedBy ? `loaded by ${r.loadedBy}` : 'no load recorded' }}</span
-                      ><span v-for="v in r.values" :key="v.value" class="useful" :data-value="v.value" :title="v.hover"
-                        >{{ v.value }} {{ v.n }} · {{ v.percent }}%</span
+                      ><JournalHint v-for="v in r.values" :key="v.value" class="useful" :data-value="v.value" :text="v.hover"
+                        >{{ v.value }} {{ v.n }} · {{ v.percent }}%</JournalHint
                       >
                     </div>
                     <div v-for="w in r.whys" :key="w" class="entry-reason">{{ w }}</div>
@@ -212,7 +230,7 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
               <ul>
                 <li v-for="(r, i) in card.rules" :key="i">
                   <div class="entry-head">
-                    <span v-if="r.title" :title="r.path">{{ r.title }}</span><code v-else>{{ r.path }}</code
+                    <JournalHint v-if="r.title" :text="r.path">{{ r.title }}</JournalHint><code v-else>{{ r.path }}</code
                     ><span v-if="r.useful" class="useful" :data-useful="r.useful">useful: {{ r.useful }}</span
                     ><span v-if="r.alwaysLoaded" class="always">always loaded</span
                     ><span v-if="r.viaSubagent || r.unknown" class="via"
@@ -398,7 +416,8 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
 .sev[data-sev='blocker'] { color: var(--jd-sev-blocker); }
 .fsol { color: var(--jd-faint); }
 .amodel { font-family: var(--jd-mono); color: var(--jd-accent); font-size: 0.82em; }
-.tokenbar { display: flex; gap: 1px; height: 0.55rem; margin: 0.15rem 0 0.7rem; border-radius: 999px; overflow: hidden; background: var(--jd-line); }
+.tokenwrap { position: relative; margin: 0.15rem 0 0.7rem; }
+.tokenbar { display: flex; gap: 1px; height: 0.55rem; border-radius: 999px; overflow: hidden; background: var(--jd-line); }
 .seg { flex-basis: 0; min-width: 2px; background: color-mix(in oklab, var(--jd-accent) var(--shade), var(--jd-surface)); }
 .seg.main { background: var(--jd-line); }
 .subnote { margin: 0.55rem 0 0; font-size: 0.8rem; font-style: italic; color: var(--jd-faint); line-height: 1.5; }
