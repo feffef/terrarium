@@ -68,13 +68,14 @@ const stampStyle = computed(() => {
         <a
           v-if="artifact.provenance.url"
           :href="artifact.provenance.url"
+          :aria-label="`${middenProvenanceLine(artifact.provenance, artifact.removedIn)} (opens GitHub in a new tab)`"
           target="_blank"
           rel="noopener noreferrer"
         >{{ middenProvenanceLine(artifact.provenance, artifact.removedIn) }}</a>
         <span v-else>{{ middenProvenanceLine(artifact.provenance, artifact.removedIn) }}</span>
         <template v-if="artifact.removedIn && !middenRemovedInProvenance(artifact.provenance, artifact.removedIn)">
           <span class="midden-find__dot" aria-hidden="true">·</span>
-          <a :href="`${REPO_URL}/commit/${artifact.removedIn}`" target="_blank" rel="noopener noreferrer">removed in {{ artifact.removedIn.slice(0, 7) }}</a>
+          <a :href="`${REPO_URL}/commit/${artifact.removedIn}`" :aria-label="`removed in ${artifact.removedIn.slice(0, 7)} (opens GitHub in a new tab)`" target="_blank" rel="noopener noreferrer">removed in {{ artifact.removedIn.slice(0, 7) }}</a>
         </template>
         <span class="midden-find__dot" aria-hidden="true">·</span>
         <span class="midden-find__cause">{{ middenCauseMeta(artifact.cause).label }}</span>
@@ -101,6 +102,7 @@ const stampStyle = computed(() => {
         v-for="remain in artifact.remains"
         :key="remain.url"
         :href="remain.url"
+        :aria-label="`${remain.label} (opens GitHub in a new tab)`"
         target="_blank"
         rel="noopener noreferrer"
       >{{ remain.label }}</a>

@@ -102,7 +102,7 @@ useHead({ title: () => `${site.value?.title.replaceAll('`', '') ?? 'Not found'} 
     <article v-if="site" class="midden-page midden-report">
       <header class="midden-report__head">
         <nav class="tech midden-crumb" aria-label="Breadcrumb">
-          <NuxtLink to="/">terrarium</NuxtLink><span class="sep">/</span><NuxtLink to="/t/midden">the midden</NuxtLink><span class="sep">/</span><NuxtLink :to="`/t/midden/${space}`">{{ space }}</NuxtLink><span class="sep">/</span><span class="here">{{ siteSlug }}</span>
+          <NuxtLink to="/">terrarium</NuxtLink><span class="sep">/</span><NuxtLink to="/t/midden">the midden</NuxtLink><span class="sep">/</span><NuxtLink :to="`/t/midden/${space}`">{{ space }}</NuxtLink><span class="sep">/</span><span class="here">{{ site.title.replaceAll('`', '') }}</span>
         </nav>
 
         <p class="sc midden-eyebrow">Dig report</p>
@@ -115,6 +115,7 @@ useHead({ title: () => `${site.value?.title.replaceAll('`', '') ?? 'Not found'} 
           <span>assessed {{ assessedSpan }}</span>
         </div>
 
+        <a v-if="findList.length >= 2" :href="`#artifact-${findList[0]!.stem}`" class="tech midden-report__jump">Jump to finds ↓</a>
         <details v-if="findList.length >= 2" ref="findsBox" open class="midden-report__finds">
           <summary class="tech">In this report · {{ findList.length }} finds</summary>
           <ol>
@@ -228,6 +229,7 @@ useHead({ title: () => `${site.value?.title.replaceAll('`', '') ?? 'Not found'} 
 }
 .midden-report__dot { opacity: 0.55; }
 
+.midden-report__jump { display: inline-block; margin: 0.6rem 0 0.2rem; }
 .midden-report__finds { margin: 0.9rem 0 0; color: var(--midden-muted); }
 .midden-report__finds summary { cursor: pointer; color: var(--midden-faint); }
 .midden-report__finds ol { margin: 0.5rem 0 0; padding-left: 1.4rem; font-family: var(--midden-serif); }
