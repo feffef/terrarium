@@ -1,0 +1,295 @@
+schemaVersion: 1
+session: session_013zxzeQb8CcK1KnPAhju2GY
+startedAt: 2026-11-14T13:08:55Z
+endedAt: 2026-11-14T13:21:21Z
+kind: autonomous
+goal: "Scheduled prune trial: judge open trials and cut one failed instruction"
+status: in-review
+outcome: "Judged one trial (holds), opened a new one, PR #3315 awaiting CI"
+summary: "Scheduled /prune-trial run, nothing human-instructed. Only the blocked-hosts trial was judgeable; its Friction rate was flat (4.0% to 3.9%) and no post-landing Friction concerned a blocked host, so it was deleted with no issue. A search subagent ranked failed prose; I chose the read-first dispatch-subagents lines in four Skills, which dispatch-read-guard.ts already enforces (three fixes had each added one), and left CLAUDE.md's trigger alone since the guard cites it. Sonnet probe pinned to the SHA answered correctly from CLAUDE.md alone. Gate green, Standards and Spec review clean, PR #3315 opened. The stray gate run from my own glob mistake cost one wait and a rerun."
+prs:
+  - "3315"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (read before editing)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: briefs for the search and probe agents
+  - name: code-review
+    reason: reviewed the committed diff before the PR
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: prune-trial
+    reason: (invoked as a slash command)
+frictions:
+  - description: A shell glob (scripts/gate/*.ts --help) I ran to list gate files launched a real gate run, which then blocked my gate:scoped as already running.
+    solution: List with ls, never run a glob of scripts; a gate script could refuse unknown args like --help.
+    severity: minor
+  - description: ADR reads demanded by hooks arrived after my edits, and I tried a blocked foreground sleep twice to wait on agents.
+    solution: Read the ADRs the rule summaries name before editing; wait with the completion notification.
+    severity: nit
+durationSec: 746
+models:
+  claude-sonnet-5-5: 73
+toolCounts:
+  Bash: 27
+  Read: 3
+  Agent: 4
+  Skill: 3
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - .agents/prune-trials.yml
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/clear-backlog/SKILL.md
+  - .agents/skills/glassbox-curate/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+adrHints:
+  - adr: 27
+    via: path
+    readAfter: true
+    by: main
+  - adr: 3
+    via: text
+    readAfter: false
+    by: main
+  - adr: 5
+    via: path
+    readAfter: false
+    by: main
+  - adr: 12
+    via: path
+    readAfter: false
+    by: main
+  - adr: 22
+    via: path
+    readAfter: false
+    by: main
+  - adr: 28
+    via: path
+    readAfter: false
+    by: main
+docsReadBySubagents:
+  - .agents/skills/prune-trial/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/clear-backlog/SKILL.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/dispatch-subagents/SKILL.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+      - rule: .claude/rules/guards.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0027.md
+        value: steered
+        why: trial scope and territory
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: gate and review before PR
+      - path: .claude/rules/adr-0003.md
+        value: backed
+      - path: .claude/rules/adr-0009.md
+        value: backed
+      - path: .claude/rules/adr-0017.md
+        value: backed
+      - path: docs/agents/pr-workflow.md
+      - path: .agents/skills/dispatch-subagents/SKILL.md
+      - path: docs/agents/git-conventions.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/guards.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0005.md
+        value: backed
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .claude/rules/adr-0027.md
+        value: backed
+      - path: docs/agents/git-conventions.md
+  - by: general-purpose
+    subagent: 3
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0027.md
+        value: backed
+subagents:
+  - type: general-purpose
+    task: Search for failed prose rule
+    model: sonnet
+    durationSec: 74
+    toolCalls: 16
+    modelCalls: 14
+    tokenShare: 15.9
+  - type: general-purpose
+    task: Sonnet probe of pruned Skills
+    model: sonnet
+    durationSec: 29
+    toolCalls: 5
+    modelCalls: 5
+    tokenShare: 5.8
+  - type: general-purpose
+    task: Standards review of prune diff
+    model: sonnet
+    durationSec: 20
+    toolCalls: 5
+    modelCalls: 5
+    tokenShare: 8.5
+  - type: general-purpose
+    task: Spec review of prune diff
+    model: sonnet
+    durationSec: 19
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 8.8
+gitBranch: claude/practical-rubin-rfwhui
+entrypoint: remote_trigger
+cliVersion: 2.1.325
+trigger: prune-trial
+landedBy: Stop
