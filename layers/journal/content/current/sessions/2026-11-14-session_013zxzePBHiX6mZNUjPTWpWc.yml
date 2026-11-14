@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzePBHiX6mZNUjPTWpWc
 startedAt: 2026-11-14T04:02:43Z
-endedAt: 2026-11-14T04:18:10Z
+endedAt: 2026-11-14T06:38:24Z
 kind: autonomous
 goal: "Scheduled docs audit: keep the repo's prose true to the code"
-status: in-review
-outcome: Sweep PR 3301 merged on green; escalation PR 3302 waits for a human merge
-summary: "Scheduled audit-docs run; no human prompted any step (all agent-initiated). Three read-only reviewers (Freshness, Single-home, Coherence) returned 15 findings, merged to 14 (B3 and C4 overlapped). Two checkers gave 2 CONFIRMED (C2, C5), 4 CONFIRMED-BUT (B1, B3+C4, B4, C1) and 8 WRONG (A1 out of scope, B2, B5, B6, B7, B8, C3's replacement, C6). Sweep PR 3301 (two commits; code-review clean, gate:scoped green; merged via merge-pr.ts once CI was green) lists unshallow-on-start.ts in guards.md, rewrites the visitor-loop Inventory gist and role to match its SKILL.md with an observation note, and cuts second copies of the Persona-stance path and Tag pointers in the blog GLOSSARY. Escalation PR 3302 (Human-only .claude/rules/tenant-layers.md; code-review clean, gate green, subscribed, verdict posted) gives a cloud session the docs/proposals fallback for the workflow edit it cannot write. Left for the owner: glassbox-curate budget wording is ambiguous (C3, a rule change); glassbox-curate is graded specialist though a Routine runs it (C2, next audit-skills run); two frictions-to-fixes brief edits (B1) skipped because an open prune trial may cover them. No issue filed. Covered: README.md, SECURITY.md, deploy/README.md, layers/{blog,atlas,midden,marquee,tinkerfund}/GLOSSARY.md, CLAUDE.md, docs/agents/{github-integration,guards,triage-labels,verifying-ui-changes,issue-tracker,environment-caveats}.md, .claude/rules/*, Skills audit-skills auto-triage claude-handoff code-review codebase-design diagnosing-bugs domain-modeling frictions-to-fixes grilling handoff implement prune-trial research retro visitor-loop wayfinder wizard writing-for-agents blog-post digest dispatch-subagents glassbox-curate harvest midden-survey, ADRs 0002 0006 0007 0013 0014 0016 0018 0020-0023."
+status: completed
+outcome: Sweep PR 3301 merged on green; escalation PR 3302 merged by a human
+summary: "Scheduled audit-docs run; no human prompted any step (all agent-initiated). Three read-only reviewers (Freshness, Single-home, Coherence) returned 15 findings, merged to 14 (B3 and C4 overlapped). Two checkers gave 2 CONFIRMED (C2, C5), 4 CONFIRMED-BUT (B1, B3+C4, B4, C1) and 8 WRONG (A1 out of scope, B2, B5, B6, B7, B8, C3's replacement, C6). Sweep PR 3301 (two commits; code-review clean, gate:scoped green; merged via merge-pr.ts once CI was green) lists unshallow-on-start.ts in guards.md, rewrites the visitor-loop Inventory gist and role to match its SKILL.md with an observation note, and cuts second copies of the Persona-stance path and Tag pointers in the blog GLOSSARY. Escalation PR 3302 (merged by a human; Human-only .claude/rules/tenant-layers.md; code-review clean, gate green, subscribed, verdict posted) gives a cloud session the docs/proposals fallback for the workflow edit it cannot write. Left for the owner: glassbox-curate budget wording is ambiguous (C3, a rule change); glassbox-curate is graded specialist though a Routine runs it (C2, next audit-skills run); two frictions-to-fixes brief edits (B1) skipped because an open prune trial may cover them. No issue filed. Covered: README.md, SECURITY.md, deploy/README.md, layers/{blog,atlas,midden,marquee,tinkerfund}/GLOSSARY.md, CLAUDE.md, docs/agents/{github-integration,guards,triage-labels,verifying-ui-changes,issue-tracker,environment-caveats}.md, .claude/rules/*, Skills audit-skills auto-triage claude-handoff code-review codebase-design diagnosing-bugs domain-modeling frictions-to-fixes grilling handoff implement prune-trial research retro visitor-loop wayfinder wizard writing-for-agents blog-post digest dispatch-subagents glassbox-curate harvest midden-survey, ADRs 0002 0006 0007 0013 0014 0016 0018 0020-0023."
 prs:
   - "3301"
   - "3302"
@@ -123,20 +123,20 @@ frictions:
   - description: My first verdict comment on PR 3301 gave a tally (17 findings, 5 applied) not counted against the verdict files; corrected in a later comment and the PR body.
     solution: Count verdicts from the saved files before writing the verdict.
     severity: minor
-durationSec: 927
+durationSec: 9341
 models:
-  claude-sonnet-5-5: 124
+  claude-sonnet-5-5: 132
 toolCounts:
   Read: 3
   Skill: 5
-  Bash: 34
+  Bash: 35
   Agent: 8
   ToolSearch: 1
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 2
   mcp__github__add_issue_comment: 3
   mcp__github__update_pull_request: 1
-  ReadNotifications: 4
+  ReadNotifications: 7
   mcp__github__pull_request_read: 5
   PushNotification: 1
 filesEdited:
@@ -580,49 +580,49 @@ subagents:
     durationSec: 112
     toolCalls: 39
     modelCalls: 28
-    tokenShare: 13.7
+    tokenShare: 12.2
   - type: general-purpose
     task: "Audit B: Single-home"
     durationSec: 97
     toolCalls: 17
     modelCalls: 14
-    tokenShare: 9
+    tokenShare: 8
   - type: general-purpose
     task: "Audit C: Coherence"
     durationSec: 175
     toolCalls: 27
     modelCalls: 25
-    tokenShare: 15.2
+    tokenShare: 13.6
   - type: general-purpose
     task: Checker 1 of docs findings
     durationSec: 83
     toolCalls: 19
     modelCalls: 15
-    tokenShare: 5.4
+    tokenShare: 4.8
   - type: general-purpose
     task: Checker 2 of docs findings
     durationSec: 126
     toolCalls: 31
     modelCalls: 27
-    tokenShare: 9.9
+    tokenShare: 8.8
   - type: general-purpose
     task: Review standards of sweep diff
     durationSec: 22
     toolCalls: 10
     modelCalls: 5
-    tokenShare: 1.9
+    tokenShare: 1.7
   - type: general-purpose
     task: Review spec of sweep diff
     durationSec: 16
     toolCalls: 7
     modelCalls: 3
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: general-purpose
     task: Review escalation diff
     durationSec: 14
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 1.4
+    tokenShare: 1.3
 gitBranch: claude/festive-mayer-yimldw
 entrypoint: remote_trigger
 cliVersion: 2.1.325
