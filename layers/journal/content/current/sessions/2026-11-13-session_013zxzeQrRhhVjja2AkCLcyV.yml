@@ -1,13 +1,14 @@
 schemaVersion: 1
 session: session_013zxzeQrRhhVjja2AkCLcyV
 startedAt: 2026-11-13T10:48:25Z
-endedAt: 2026-11-13T10:56:44Z
+endedAt: 2026-11-14T08:41:10Z
 kind: interactive
-goal: "Journal session card: token bar lists subagents first, main last"
-status: partial
-outcome: Change built, tested, committed, pushed and rendered; no PR, gate or code review yet
-summary: "The owner asked to reorder the Journal session card's subagent token bar: subagent shares first, the main session last with a fuller label than \"main\". I located the bar (SessionCard.vue, sessionTokenBar in dashboard.ts) and, per the owner's preference, asked three questions first. Human-instructed: the reorder, hover-title-only placement, order of appearance (alphabetical considered, not chosen), and the label wording (the owner dictated \"the session that directed the subagents and that users interact with directly\", mentioned only for interactive, and \"the session users created to trigger the work\" for delegated). Agent-initiated: threading `kind` through the card view, the autonomous label, and updating the unit tests. I then committed and pushed because the Stop hook asked, without rendering the change. The owner next asked me to render and show it, and then told me to log that omission as a friction. I rendered an interactive, a delegated and an autonomous session with a throwaway Playwright script. The bar and hover titles came out as intended. Open: gate:scoped, code-review, whether any touched file is Human-only, and the owner's sign-off on the render before any PR."
-prs: []
+goal: "Journal session card: token bar lists subagents first, main last, instant tooltips"
+status: in-review
+outcome: "PR 3310 open: bar reordered with a kind-aware main label, instant tooltips on the bar and six detail hovers; gate green, review done"
+summary: "The owner asked to reorder the Journal session card's subagent token bar: subagent shares first, the main session last with a fuller label than \"main\". I asked three questions first, as the owner prefers. Human-instructed: the reorder, the label wording (they dictated \"the session that directed the subagents and that users interact with directly\", mentioned only for interactive, and \"the session users created to trigger the work\" for delegated), order of appearance, then reversing their own hover-title-only choice once they saw the native tooltip is slow and undiscoverable, reuse of the Routine chart's hand-drawn tooltip but not its CSS 1:1 (two looks accepted), applying the tooltip to other native titles that relay detail, a merge of main, and \"go ahead until merge\". Agent-initiated: threading `kind` through the card view, choosing which titles count as detail (converted the rule and value hovers, Friction status and strip, the Routine description; kept action labels, one-word repeats and the ribbon and chips native), the dark serif pill for prose tips, and dropping an unused centre option after review. I committed and pushed before rendering, which the owner flagged and had me log as a friction; the render and their \"ok\" followed. The gate and code-review (Standards and Spec subagents) passed; the Spec review flagged three more native titles that carry detail (Friction bar severity counts, \"merged since\", the \"external\" ribbon), left for the owner to decide because converting them changes owner-visible UI. Open: CI, the verdict comment and the merge of PR 3310."
+prs:
+  - "3310"
 docsRead:
   - path: layers/journal/app/components/journal/SessionCard.vue
     reason: (read before editing)
@@ -23,9 +24,35 @@ docsRead:
     reason: (no reason given)
   - path: docs/agents/verifying-ui-changes.md
     reason: (no reason given)
+  - path: layers/journal/app/components/content/RoutineChart.vue
+    reason: (read before editing)
+  - path: layers/journal/app/components/journal/StatTile.vue
+    reason: (no reason given)
+  - path: layers/journal/app/pages/t/journal/[space]/frictions.vue
+    reason: (read before editing)
+  - path: layers/journal/app/components/content/RoutineWeeklyTable.vue
+    reason: (read before editing)
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: (no reason given)
+  - path: docs/adr/0016-tenant-root-layer-routes.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/app/components/journal/FrictionStrata.vue
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
 skillsUsed:
   - name: close-session
     reason: log the owner-requested UI-verification friction
+  - name: code-review
+    reason: Standards and Spec review before opening the PR
+  - name: dispatch-subagents
+    reason: brief the two read-only review agents
   - name: log-session
     reason: (no reason given)
 frictions:
@@ -38,21 +65,42 @@ frictions:
   - description: preview.ts shot only captures whole pages; a 6000px full-page shot was unreadable, so I wrote a throwaway Playwright script to clip one element.
     solution: Add a --selector option to preview.ts shot and screenshot.ts.
     severity: minor
-durationSec: 499
+  - description: Started pnpm gate:scoped before running code-review, against pr-workflow.md's review-then-gate order, and had to stop it so review fixes would not abort it.
+    solution: Read pr-workflow.md before the first PR step; it was opened only after the gate had started.
+    severity: nit
+  - description: Recommended a hover-only title for the main segment's explanation; the owner then found native tooltips too slow to discover, so the first build was reworked into instant tooltips.
+    solution: Before recommending a hover-only design, ask whether a reader would find it, and show a real hover first.
+    severity: minor
+  - description: The dev server kept serving a stale layer component after an edit (tooltips stayed centred), costing two screenshot rounds before a restart.
+    solution: Restart the dev server when a layer component edit does not show, as verifying-ui-changes.md warns.
+    severity: nit
+durationSec: 78765
 models:
-  claude-sonnet-5-5: 78
+  claude-sonnet-5-5: 249
 toolCounts:
-  Grep: 11
-  Read: 12
-  AskUserQuestion: 1
-  Edit: 5
-  Bash: 15
-  Write: 1
-  Skill: 2
+  Grep: 13
+  Read: 42
+  AskUserQuestion: 2
+  Edit: 12
+  Bash: 52
+  Write: 4
+  Skill: 4
+  ToolSearch: 2
+  TaskStop: 1
+  mcp__github__list_pull_requests: 1
+  Agent: 2
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
 filesEdited:
   - layers/journal/app/utils/dashboard.ts
   - layers/journal/app/types/journal.ts
   - layers/journal/app/components/journal/SessionCard.vue
+  - layers/journal/app/components/journal/Tip.vue
+  - layers/journal/app/components/content/RoutineChart.vue
+  - layers/journal/tests/e2e/journal.spec.ts
+  - layers/journal/app/components/journal/Hint.vue
+  - layers/journal/app/components/content/RoutineWeeklyTable.vue
+  - layers/journal/app/pages/t/journal/[space]/frictions.vue
   - layers/journal/tests/unit/journal-dashboard.spec.ts
 rulesGlobal:
   - .claude/rules/adr-0004.md
@@ -60,9 +108,21 @@ rulesGlobal:
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0017.md
 rulesFollowedUp:
+  - .claude/rules/adr-0004.md
   - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0006.md
+  - .claude/rules/adr-0016.md
 adrHints:
   - adr: 8
+    via: path
+    readAfter: true
+    by: main
+  - adr: 6
+    via: path
+    readAfter: true
+    by: main
+  - adr: 16
     via: path
     readAfter: true
     by: main
@@ -103,15 +163,21 @@ ruleUse:
         via: native
         trigger: docs/agents/git-conventions.md
       - rule: .claude/rules/adr-0006.md
-        via: hint
+        via: native
+        trigger: layers/journal/app/pages/t/journal/[space]/frictions.vue
       - rule: .claude/rules/adr-0016.md
-        via: hint
+        via: native
+        trigger: layers/journal/app/pages/t/journal/[space]/frictions.vue
       - rule: .claude/rules/adr-0002.md
         via: hint
       - rule: .claude/rules/data-shapes.md
         via: hint
       - rule: .claude/rules/mdc-when-to-use.md
-        via: hint
+        via: native
+        trigger: layers/journal/app/components/content/RoutineChart.vue
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/dispatch-subagents/SKILL.md
     reported:
       - path: .claude/rules/ui-verification.md
         value: steered
@@ -122,6 +188,65 @@ ruleUse:
         value: backed
       - path: docs/agents/verifying-ui-changes.md
       - path: docs/agents/git-conventions.md
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: review then gate before the PR
+      - path: .claude/rules/adr-0003.md
+        value: backed
+      - path: docs/agents/pr-workflow.md
+      - path: docs/agents/github-integration.md
+      - path: .agents/skills/dispatch-subagents/SKILL.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+subagents:
+  - type: general-purpose
+    task: Standards review of diff
+    durationSec: 21
+    toolCalls: 7
+    modelCalls: 4
+    tokenShare: 4.7
+  - type: general-purpose
+    task: Spec review of diff
+    durationSec: 25
+    toolCalls: 7
+    modelCalls: 4
+    tokenShare: 4.7
 gitBranch: claude/nifty-heisenberg-l4lrfn
 entrypoint: remote
 cliVersion: 2.1.323
