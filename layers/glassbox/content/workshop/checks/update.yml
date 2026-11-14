@@ -91,3 +91,13 @@ pages:
     checked: '2026-11-13'
   - page: terrarium-practice/30.ubiquitous-language
     checked: '2026-11-13'
+  - page: terrarium-practice/40.session-logs
+    checked: '2026-11-14'
+  - page: terrarium-practice/45.ideas-and-lessons-learned
+    checked: '2026-11-14'
+  - page: terrarium-practice/50.pruning-instructions
+    checked: '2026-11-14'
+  - page: terrarium-practice/60.protected-paths
+    checked: '2026-11-14'
+  - page: terrarium-practice/70.cross-tenant-reads
+    checked: '2026-11-14'
