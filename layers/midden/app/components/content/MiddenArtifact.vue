@@ -19,6 +19,7 @@
 // `scripts/gate/validate-content-refs.ts` (its `midden-artifact` check, run by
 // `validate:content` in the gate) catches a broken `slug`; the `v-else`
 // fallback below stays as a runtime backstop.
+const NEW_TAB = '(opens GitHub in a new tab)'
 const props = defineProps<{ slug: string }>()
 
 // The dig report's page-wide first-use split for this find's note (issue #1463).
@@ -68,13 +69,14 @@ const stampStyle = computed(() => {
         <a
           v-if="artifact.provenance.url"
           :href="artifact.provenance.url"
+          :aria-label="`${middenProvenanceLine(artifact.provenance, artifact.removedIn)} ${NEW_TAB}`"
           target="_blank"
           rel="noopener noreferrer"
         >{{ middenProvenanceLine(artifact.provenance, artifact.removedIn) }}</a>
         <span v-else>{{ middenProvenanceLine(artifact.provenance, artifact.removedIn) }}</span>
         <template v-if="artifact.removedIn && !middenRemovedInProvenance(artifact.provenance, artifact.removedIn)">
           <span class="midden-find__dot" aria-hidden="true">·</span>
-          <a :href="`${REPO_URL}/commit/${artifact.removedIn}`" target="_blank" rel="noopener noreferrer">removed in {{ artifact.removedIn.slice(0, 7) }}</a>
+          <a :href="`${REPO_URL}/commit/${artifact.removedIn}`" :aria-label="`removed in ${artifact.removedIn.slice(0, 7)} ${NEW_TAB}`" target="_blank" rel="noopener noreferrer">removed in {{ artifact.removedIn.slice(0, 7) }}</a>
         </template>
         <span class="midden-find__dot" aria-hidden="true">·</span>
         <span class="midden-find__cause">{{ middenCauseMeta(artifact.cause).label }}</span>
@@ -101,6 +103,7 @@ const stampStyle = computed(() => {
         v-for="remain in artifact.remains"
         :key="remain.url"
         :href="remain.url"
+        :aria-label="`${remain.label} ${NEW_TAB}`"
         target="_blank"
         rel="noopener noreferrer"
       >{{ remain.label }}</a>

@@ -28,7 +28,7 @@ const { data } = await useAsyncData(`midden-landing-${props.front ? 'front' : 't
       .all()
     const latest = newest.map((a) => ({
       href: `/t/midden/trench/${a.site}#artifact-${a.stem}`,
-      title: a.title.replaceAll('`', ''),
+      title: middenFindTitle(a.title.replaceAll('`', '')),
       report: (reports.find((r) => r.path === `/${a.site}`)?.title ?? '').replaceAll('`', ''),
       grade: conditionMeta(a.condition).label,
       assessed: formatMiddenDate(a.assessedAt),

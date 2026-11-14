@@ -155,6 +155,7 @@
 }
 .midden a { color: var(--midden-accent); text-decoration: none; }
 .midden a:hover { color: var(--midden-accent-2); }
+.midden :focus-visible { outline: 2px solid var(--midden-accent); outline-offset: 2px; }
 
 /* The catalogue leaf — one dig report, centred. */
 .midden-page {
