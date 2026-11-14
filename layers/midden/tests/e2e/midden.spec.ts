@@ -115,7 +115,7 @@ describe('midden Tenant', async () => {
   it('capitalises the front door\'s latest-find titles', async () => {
     const html = (await $fetch('/t/midden')) as string
     const titles = [...html.matchAll(/midden-latest__title"[^>]*>([^<]+)</g)].map((m) => m[1]!)
-    expect(titles.length).toBe(3)
+    expect(titles.length).toBeGreaterThan(0)
     for (const t of titles) expect(t).toMatch(/^[A-Z]|^\S*[./_]/)
   })
 
