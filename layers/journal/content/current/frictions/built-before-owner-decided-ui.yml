@@ -18,6 +18,9 @@ fixes:
   - pr: 3107
     date: "2026-11-11"
     summary: "clear-backlog explore returns a visible-UI change as grill with follow-up questions: which pages show it, what each value follows, the look in words."
+  - pr: 3305
+    date: "2026-11-14"
+    summary: "ui-verification.md: for owner-facing UI, review, gate and PR wait until the owner confirms the screenshot, including a change asked for directly."
 occurrences:
   - session: session_013zxzeSy38XR1wPjCGFUExY
     date: "2026-11-07"
