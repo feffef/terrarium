@@ -200,5 +200,6 @@
 .tf-prose h1 { margin-bottom: 12px; }
 .tf-prose h2 { font: 800 24px/1.15 var(--tf-font); font-stretch: 80%; margin: 32px 0 8px; }
 .tf-prose p, .tf-prose li { color: var(--tf-ink); }
-.tf-prose :is(h2, h3) a { color: inherit; text-decoration: none; }
+/* Padding makes a 24px tap target; the negative margin keeps the layout. */
+.tf-prose :is(h2, h3) a { display: inline-block; padding-block: 4px; margin-block: -4px; color: inherit; text-decoration: none; }
 .tf-prose code { font: 500 0.9em var(--tf-mono); }

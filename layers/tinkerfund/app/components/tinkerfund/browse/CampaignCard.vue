@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const props = defineProps<{ card: TinkerfundCard; clock: TinkerfundClock }>()
+const props = defineProps<{ card: TinkerfundCard; clock: TinkerfundClock; reply?: boolean }>()
 const { link, inventorLink } = useTinkerfundSpace()
 const route = useRoute()
 const inventorPath = computed(() => inventorLink(props.card.inventor))
@@ -14,7 +14,7 @@ const backedBy = computed(() => props.card.status.state === 'live' ? formatTinke
   <article class="card tf-panel">
     <div class="fig">
       <div class="top">
-        <span class="tf-label">FIG. 1 · {{ card.registry }}</span>
+        <span class="tf-label">{{ card.registry }}</span>
         <TinkerfundStateChips :status="card.status" :promoted="card.promoted" />
       </div>
       <TinkerfundFigure :svg="card.figure" />
@@ -23,6 +23,7 @@ const backedBy = computed(() => props.card.status.state === 'live' ? formatTinke
       <div>
         <h3><NuxtLink :to="link(card.path)">{{ card.title }}</NuxtLink></h3>
         <p class="by">{{ card.categoryName }} · <NuxtLink v-if="inventorPath !== route.path" class="inventor" :to="inventorPath">{{ card.inventorName }}</NuxtLink><template v-else>{{ card.inventorName }}</template></p>
+        <p v-if="reply && card.lastReply" class="reply">“{{ card.lastReply }}”</p>
         <p v-if="backedBy" class="by">{{ backedBy }}</p>
       </div>
       <TinkerfundProgressBar v-if="!upcoming" :percent="card.status.percent" />
@@ -66,8 +67,10 @@ h3 a::after { content: ''; position: absolute; inset: 0; }
 h3 a:focus-visible { outline: none; }
 .card:has(h3 a:focus-visible) { outline: 2px solid var(--tf-link); outline-offset: 2px; }
 .by { margin: 4px 0 0; color: var(--tf-muted); font-size: 14px; }
-/* Sits above the card-wide link's hit area. */
-.inventor { position: relative; z-index: 1; }
+.reply { display: -webkit-box; margin: 6px 0 0; overflow: hidden; color: var(--tf-muted); font: italic 13px/1.3 var(--tf-font); -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+/* Sits above the card-wide link's hit area; the padding is a 24px tap target
+   and the negative margin keeps the layout. */
+.inventor { position: relative; z-index: 1; display: inline-block; padding-block: 4px; margin-block: -4px; }
 .tiles {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

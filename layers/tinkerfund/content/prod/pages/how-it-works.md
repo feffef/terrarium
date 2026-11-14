@@ -14,6 +14,13 @@ Campaign is **Upcoming** until it launches, **Live** while it takes Pledges,
 and **Ended** once the deadline passes. An Ended Campaign is **Funded** if it
 reached its goal, and **Unfunded** if it did not.
 
+## Reading a Campaign page
+
+**FIG.** numbers count the figures in a Campaign's gallery, and appear only
+there. A **TF** number, such as TF-0028, is the Campaign's registry number.
+**Ending soon** marks a Live Campaign that closes within 48 hours, and
+**Upcoming** one that has not launched yet.
+
 ## Rewards
 
 You back a Campaign by choosing a **Reward**: a tier with a price, sometimes

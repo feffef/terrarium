@@ -28,6 +28,13 @@ describe('tinkerfund Tenant', async () => {
       expect(res.headers.get('location')).toBe('/t/tinkerfund/prod')
     })
 
+    it('quotes the last Inventor reply on Recently ended cards only', async () => {
+      const html = await $fetch<string>('/t/tinkerfund/prod')
+      const [before, ended = ''] = html.split('id="tf-ended"')
+      expect(before).not.toMatch(/class="reply"/)
+      expect(ended).toMatch(/class="reply"[^>]*>“[^”]+”</)
+    })
+
     // The page cache (ADR-0028) must not hand one visitor's locale to the next (#1365).
     it('renders each visitor in their own locale', async () => {
       const as = (locale: string) => $fetch<string>('/t/tinkerfund/prod/discover', { headers: { 'accept-language': locale } })

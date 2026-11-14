@@ -75,6 +75,8 @@ const backedBy = computed(() => formatTinkerfundBackedBy(
 .lead { color: var(--tf-muted); }
 .date { color: var(--tf-muted); font: 500 12px/1.4 var(--tf-mono); }
 .by, .backed-by { font-size: 14px; }
+/* 24px tap target; the negative margin keeps the layout. */
+.by a { display: inline-block; padding-block: 4px; margin-block: -4px; }
 .tiles { margin: 0; }
 .backed-by { margin: 8px 0 0; color: var(--tf-muted); }
 .backed { padding: 10px 12px; border-radius: var(--tf-radius); background: var(--tf-accent-soft); font-size: 14px; font-weight: 600; }

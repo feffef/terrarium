@@ -16,6 +16,7 @@ import {
   tinkerfundTimeLeft,
   tinkerfundRecommendations,
   tinkerfundCartRecommendations,
+  tinkerfundLastInventorReply,
 } from '../../app/utils/browse.ts'
 import { tinkerfundCount } from '../../app/utils/shop.ts'
 import { HOUR, NOW } from './support.ts'
@@ -180,6 +181,32 @@ describe('Home', () => {
     expect(quiet.endingSoon).toEqual([])
     expect(quiet.justLaunched).toEqual([])
     expect(tinkerfundHomeSections([], NOW)).toEqual({ featured: undefined, endingSoon: [], popular: [], justLaunched: [], recentlyEnded: [] })
+  })
+})
+
+describe('a card\'s last Inventor reply', () => {
+  const backer = { posted: '-9d', text: 'Is it loud?' }
+  const reply = (posted: string, text: string) => ({ posted, text, inventor: true })
+
+  it('is the latest Inventor comment, replies included', () => {
+    expect(tinkerfundLastInventorReply([
+      { ...backer, replies: [reply('-8d', 'No.')] },
+      { posted: '-5d', text: 'And now?', replies: [reply('-4d', 'Still no.')] },
+      { posted: '-3d', text: 'Quiet, then.' },
+    ])).toBe('Still no.')
+  })
+
+  it('is the latest by date, not by order in the file', () => {
+    expect(tinkerfundLastInventorReply([reply('-2d', 'newer'), reply('-6d', 'older')])).toBe('newer')
+  })
+
+  it('goes to the later entry on a tie', () => {
+    expect(tinkerfundLastInventorReply([reply('-2d', 'first'), reply('-2d', 'second')])).toBe('second')
+  })
+
+  it('is absent when the Inventor has not replied', () => {
+    expect(tinkerfundLastInventorReply([backer])).toBeUndefined()
+    expect(tinkerfundLastInventorReply([])).toBeUndefined()
   })
 })
 
