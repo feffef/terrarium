@@ -373,3 +373,6 @@ observations:
   - date: "2026-11-14"
     note: >-
       Behaviour check, 5 runs, no missed invocation. Evidence against the 11-13 possible-stop note: session_013zxzeQkoNR2Xn8JcaSEbxY ran scheduled on 11-13 with no owner message; Routine file not checked. Minor: its retro says no frictions while its log lists 2; session_013zxzeQpVcWQaKyrR36MwpN retro says 8 ideas, log has 9. 76a1172d6 removed the Update checks list #2994 delivered; owner instruction unverified. Grade unchanged.
+  - date: "2026-11-14"
+    note: >-
+      audit-docs rewrote gist and role to match SKILL.md (Remit: files bugs as issues, logs ideas for harvest, no branch or PR; one blind and two informed Sonnet visitors). The old text described building and self-merging and a removed owner-corrections script (only ideas.ts remains in scripts/). Grade unchanged.
