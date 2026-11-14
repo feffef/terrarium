@@ -38,8 +38,8 @@ pins to that one commit, never a later fetch.
    flagged it by prose alone, or it is a step 5 rotation page; pin it there
    (writing-pages.md's Pin, with the commit in place of `origin/main`) and
    re-line each `edited` range by hand as you pin. Any other flagged page
-   (`needsReader` false) needs only a quick look: step 2's pin took and its
-   shifted excerpts still match. A flagged term: re-read its `source` entry and rewrite the
+   (`needsReader` false) needs only a quick look at its pin and shifted
+   excerpts. A flagged term: re-read its `source` entry and rewrite the
    `definition` in Glass Box's words where the meaning moved. Done when the
    script with `--to <the commit>` lists no `pages` and every flagged term
    matches its source.
