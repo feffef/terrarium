@@ -1,0 +1,196 @@
+schemaVersion: 1
+session: session_013zxzeQWcqG69ABe1v6X1WD
+startedAt: 2026-11-14T16:02:55Z
+endedAt: 2026-11-14T16:09:52Z
+kind: autonomous
+goal: Visitor-loop run on the Tinkerfund shop
+status: completed
+outcome: "Three visitors reviewed Tinkerfund; one bug filed as #3316, 9 ideas and 2 learnings logged, retro posted on #3244"
+summary: "Scheduled visitor-loop run (agent-initiated by the schedule; no human prompt). Focus tinkerfund (rotation row 4). Built and served the production preview, wrote a context file, dispatched blind, content-editor and UI-tester Sonnet visitors, then checked their 24 findings and 9 ideas against source and the rendered page. Most accessibility and content findings did not reproduce (tab bar is deliberate anchors per #1375, cart and gallery buttons are already labelled, delivery dates are relative offsets, QA pins its clock, a cm/mm misread). One bug held: Tinkerfund links 13-22px tall at 390px, filed as #3316. Retro messages went to all three visitors and the report was posted on #3244. Changed nothing but the log, the issue and the retro comment."
+prs: []
+docsRead:
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: scripts/lib/chromium.ts
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/visitor-brief.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: dispatch guard required it before the visitor briefs
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: visitor-loop
+    reason: (invoked as a slash command)
+frictions:
+  - description: The dispatch-read guard blocked the first three-agent dispatch until dispatch-subagents was read, costing a retry of three long briefs.
+    solution: The visitor-loop Skill should name dispatch-subagents in step 2 so it is read before the briefs are written.
+    severity: nit
+  - description: ideas.ts list --match printed eight unrelated Journal and Glass Box ideas for Tinkerfund words, so the context file needed manual judgement.
+    solution: Check that --match filters in .agents/skills/visitor-loop/scripts/ideas.ts.
+    severity: minor
+  - description: A foreground sleep wait was blocked by a hook, wasting one call.
+    solution: Wait for subagent notifications by ending the turn.
+    severity: nit
+durationSec: 417
+models:
+  claude-sonnet-5-5: 73
+toolCounts:
+  Bash: 22
+  Agent: 6
+  Read: 1
+  ToolSearch: 2
+  mcp__github__issue_write: 2
+  mcp__github__issue_read: 1
+  SendMessage: 3
+  mcp__github__add_issue_comment: 1
+  Skill: 2
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/dispatch-subagents/SKILL.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/dispatch-subagents/SKILL.md
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0003.md
+        value: backed
+        why: no branch or PR
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: provenance header on issue and comment
+      - path: .claude/rules/adr-0009.md
+        value: backed
+      - path: .agents/skills/dispatch-subagents/SKILL.md
+      - path: .agents/skills/visitor-loop/decisions.md
+      - path: docs/agents/issue-tracker.md
+  - by: general-purpose
+    subagent: 3
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: general-purpose
+    subagent: 4
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: general-purpose
+    subagent: 5
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported: []
+subagents:
+  - type: general-purpose
+    task: Blind first-time visitor
+    model: sonnet
+  - type: general-purpose
+    task: Informed content editor
+    model: sonnet
+  - type: general-purpose
+    task: Informed UI tester
+    model: sonnet
+  - type: general-purpose
+    task: Blind first-time visitor
+    model: sonnet
+    durationSec: 147
+    toolCalls: 10
+    modelCalls: 7
+    tokenShare: 11.2
+  - type: general-purpose
+    task: Informed content editor
+    model: sonnet
+    durationSec: 154
+    toolCalls: 10
+    modelCalls: 8
+    tokenShare: 13.4
+  - type: general-purpose
+    task: Informed UI tester
+    model: sonnet
+    durationSec: 154
+    toolCalls: 10
+    modelCalls: 8
+    tokenShare: 10.8
+gitBranch: claude/lucid-heisenberg-vyzrau
+entrypoint: remote_trigger
+cliVersion: 2.1.325
+trigger: visitor-loop
+learnings:
+  - "Tinkerfund prod delivery dates are relative offsets (+45d) and QA pins its clock, so visitors read both as stale-date bugs; the campaign tab bar is deliberately anchor links (SectionNav.vue, #1375)."
+  - Visitors misreading cm as mm, or a filtered Popular list's count as the shop total, produced false content findings; check units and list scope before marking a bug.
+ideas:
+  - "[first-time visitor] /t/tinkerfund/prod: only a thin top bar says the shop is a demo; add one line under the hero saying it is a crowdfunding site for inventions nobody needs, so a newcomer reads the deadpan as parody."
+  - "[content editor] /t/tinkerfund/prod/how-it-works: generic rules only; add a short 'reading a Campaign page' glossary (FIG. numbers, TF ids, Ending soon, Upcoming) so visitors understand the drawings and badges."
+  - "[blind + content editor] /t/tinkerfund/prod: Recently ended cards show only numbers; add each Inventor's last comment or a hall of spectacular failures, since the post-mortem jokes are buried in comments."
+  - "[blind] /t/tinkerfund/prod: every card corner reads FIG. 1 with its TF id; show only the TF id on cards and keep FIG numbers for the campaign gallery."
+  - "[blind] /t/tinkerfund/prod/deals: site-wide and single-Campaign deals sit in one list; group them as site-wide and single Campaign so visitors see which apply."
+  - "[blind] /t/tinkerfund/prod/cart: the empty cart gives no hint how to add; suggest a Campaign next to the Discover link."
+  - "[blind] /t/tinkerfund/prod/account: demo purchase has no ending; add a pledge receipt page that jokes about shipping."
+  - "[UI tester] /t/tinkerfund/prod/campaigns/*: gallery has no position cue; add an n of 5 counter and swipe on phones."
+  - "[content editor] /t/tinkerfund/prod/campaigns/canned-silence: a comment places the library in Aarhus, but the story names Aarhus only for the chamber; name the library's city in the story."
+landedBy: Stop
