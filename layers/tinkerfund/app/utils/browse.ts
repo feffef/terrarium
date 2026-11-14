@@ -97,6 +97,25 @@ interface TinkerfundCampaignDoc {
 
 type PromotionTiming = Pick<TinkerfundPromotionTerms, 'campaign' | 'bundle' | 'start' | 'end'>
 
+interface TinkerfundThreadComment {
+  posted: string
+  text: string
+  inventor?: boolean
+  replies?: Omit<TinkerfundThreadComment, 'replies'>[]
+}
+
+/** The Inventor's latest comment or reply on a Campaign, for its card. */
+export function tinkerfundLastInventorReply(comments: TinkerfundThreadComment[]): string | undefined {
+  let last: { at: number; text: string } | undefined
+  for (const { replies, ...c } of comments) {
+    for (const x of [c, ...(replies ?? [])]) {
+      const at = resolveTinkerfundOffset(x.posted, 0)
+      if (x.inventor && (!last || at >= last.at)) last = { at, text: x.text }
+    }
+  }
+  return last?.text
+}
+
 /** What a Campaign card or an index-table row shows. */
 export interface TinkerfundListing {
   path: string

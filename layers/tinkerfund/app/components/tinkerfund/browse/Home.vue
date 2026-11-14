@@ -15,7 +15,7 @@ const money = useTinkerfundMoney()
   <div class="home">
     <section v-if="home.featured" class="hero tf-panel" aria-labelledby="tf-featured">
       <div class="fig">
-        <span class="tf-label">FIG. 1 · {{ home.featured.registry }}</span>
+        <span class="tf-label">{{ home.featured.registry }}</span>
         <TinkerfundFigure :svg="home.featured.figure" />
       </div>
       <div class="read">
@@ -90,7 +90,7 @@ const money = useTinkerfundMoney()
         <NuxtLink :to="link('/discover?state=ended&sort=ending')">See all</NuxtLink>
       </div>
       <ul class="grid">
-        <li v-for="c in home.recentlyEnded" :key="c.path"><TinkerfundBrowseCampaignCard :card="c" :clock="clock" /></li>
+        <li v-for="c in home.recentlyEnded" :key="c.path"><TinkerfundBrowseCampaignCard :card="c" :clock="clock" reply /></li>
       </ul>
     </section>
   </div>
@@ -100,7 +100,9 @@ const money = useTinkerfundMoney()
 .home { display: grid; grid-template-columns: minmax(0, 1fr); gap: 44px; }
 h2 { margin: 0; font: 800 24px/1.1 var(--tf-font); font-stretch: 80%; }
 .head { display: flex; gap: 12px; align-items: baseline; justify-content: space-between; margin-bottom: 14px; }
-.head a { font: 500 13px/1 var(--tf-mono); }
+/* Padding makes a 24px tap target; the negative margin keeps the layout. */
+.head a { display: inline-block; padding-block: 5px; margin-block: -5px; font: 500 13px/1 var(--tf-mono); }
+.read .tf-label a { display: inline-block; padding-block: 5px; margin-block: -5px; }
 
 .hero { display: grid; overflow: hidden; box-shadow: var(--tf-shadow); }
 @media (min-width: 860px) { .hero { grid-template-columns: 1.15fr 1fr; } }

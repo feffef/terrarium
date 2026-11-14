@@ -1,4 +1,4 @@
-export type TinkerfundCard = TinkerfundListing & { categoryName: string; inventorName: string }
+export type TinkerfundCard = TinkerfundListing & { categoryName: string; inventorName: string; lastReply?: string }
 
 /**
  * Every Campaign in the Space as a card or table row, plus the categories and
@@ -11,16 +11,21 @@ export async function useTinkerfundCatalog() {
   const categories = useTinkerfundCategories()
   const cartReady = useTinkerfundCart()
   const catalog = useAsyncData(`tinkerfund-catalog-${space}`, async () => {
-    const [docs, inventors] = await Promise.all([
+    const [docs, inventors, threads] = await Promise.all([
       queryCollection(pagesKey).where('campaign', 'IS NOT NULL').select('path', 'title', 'description', 'campaign').all(),
       queryCollection(collections.inventors).select('stem', 'name').all(),
+      queryCollection(collections.comments).select('campaign', 'comments').all(),
     ])
-    return { docs, inventors }
+    return { docs, inventors, threads }
   }, {
     // Most pages' payloads carry this, so it keeps what a card reads (ADR-0028).
-    transform: ({ docs, inventors }) => ({
+    transform: ({ docs, inventors, threads }) => ({
       docs: docs.flatMap(({ campaign, ...doc }) => campaign ? [{ ...doc, campaign: tinkerfundBrowseCampaign(campaign) }] : []),
       inventors,
+      replies: threads.flatMap((t) => {
+        const text = tinkerfundLastInventorReply(t.comments)
+        return text ? [[t.campaign, text] as const] : []
+      }),
     }),
   })
   const [{ data }, { clock, pledges, baked, promotions }] = await Promise.all([catalog, cartReady])
@@ -30,8 +35,10 @@ export async function useTinkerfundCatalog() {
       ({ ...d, campaign: withTinkerfundPledges(tinkerfundSlug(d.path), d.campaign, pledges.value, baked.value) }))
     const inventors = new Map((data.value?.inventors ?? []).map((i) => [i.stem, i.name]))
     const categoryNames = new Map(categories.value.map((c) => [c.slug, c.name]))
+    const replies = new Map(data.value?.replies)
     return tinkerfundListings(withPledges, promotions.value, clock.value.now).map((l) => ({
       ...l,
+      lastReply: replies.get(tinkerfundSlug(l.path)),
       categoryName: categoryNames.get(l.category) ?? l.category,
       inventorName: inventors.get(l.inventor) ?? l.inventor,
     }))
