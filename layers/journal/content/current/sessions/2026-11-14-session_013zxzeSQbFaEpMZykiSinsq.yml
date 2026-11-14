@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSQbFaEpMZykiSinsq
 startedAt: 2026-11-14T00:16:25Z
-endedAt: 2026-11-14T00:24:50Z
+endedAt: 2026-11-14T00:28:37Z
 kind: autonomous
 goal: Write the 2026-11-13 Journal Digest and archive old content
-status: in-review
-outcome: PR 3293 open with the Digest and one archive move; gate green, awaiting CI and merge
-summary: Scheduled digest run (agent-initiated by the schedule, no human prompt). Found one missing day, 2026-11-13 (32 sessions, 47 PRs), wrote the Digest from gather output and PR diffs, fact-checked it with a subagent (4 claims fixed, among them an unsupported claim that the stack was left open and a blanket label on five PRs), ran the archive sweep (moved one old Digest), ran code-review (Standards and Spec, no findings), dropped an unsourced cadence word, passed gate:scoped, pushed and opened PR 3293. Merge is still to do once CI is green.
+status: completed
+outcome: "PR 3293 merged on a green gate: the 2026-11-13 Digest plus one archived Digest"
+summary: Scheduled digest run (agent-initiated by the schedule, no human prompt). Found one missing day, 2026-11-13 (32 sessions, 47 PRs), wrote the Digest from gather output and PR diffs, fact-checked it with a subagent (4 claims fixed, among them an unsupported claim that the stack was left open and a blanket label on five PRs), ran the archive sweep (moved one old Digest), ran code-review (Standards and Spec, no findings), dropped an unsourced cadence word, passed gate:scoped, pushed and opened PR 3293. Merged on green CI after a self-posted verdict.
 prs:
   - "3293"
 docsRead:
@@ -51,16 +51,19 @@ frictions:
   - description: Did not run the archive sweep before the first commit and committed an unreviewed draft early to satisfy the Stop hook, adding extra commits.
     solution: Finish fact-check first, or let the hook accept a draft push.
     severity: nit
-durationSec: 505
+durationSec: 732
 models:
-  claude-sonnet-5-5: 56
+  claude-sonnet-5-5: 69
 toolCounts:
-  Bash: 20
+  Bash: 24
   Read: 4
   Agent: 4
-  Skill: 3
+  Skill: 4
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-11-13.md
   - layers/journal/content/archived/pages/digests/2026-11-06.md
@@ -229,19 +232,19 @@ subagents:
     durationSec: 123
     toolCalls: 30
     modelCalls: 23
-    tokenShare: 32.1
+    tokenShare: 27.4
   - task: "Review digest: standards axis"
     model: sonnet
     durationSec: 20
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 5.7
+    tokenShare: 4.9
   - task: "Review digest: spec axis"
     model: sonnet
     durationSec: 26
     toolCalls: 9
     modelCalls: 4
-    tokenShare: 5.4
+    tokenShare: 4.6
 gitBranch: claude/compassionate-lovelace-5tewgi
 entrypoint: remote_trigger
 cliVersion: 2.1.325
