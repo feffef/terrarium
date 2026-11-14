@@ -200,6 +200,10 @@ describe('a card\'s last Inventor reply', () => {
     expect(tinkerfundLastInventorReply([reply('-2d', 'newer'), reply('-6d', 'older')])).toBe('newer')
   })
 
+  it('goes to the later entry on a tie', () => {
+    expect(tinkerfundLastInventorReply([reply('-2d', 'first'), reply('-2d', 'second')])).toBe('second')
+  })
+
   it('is absent when the Inventor has not replied', () => {
     expect(tinkerfundLastInventorReply([backer])).toBeUndefined()
     expect(tinkerfundLastInventorReply([])).toBeUndefined()
