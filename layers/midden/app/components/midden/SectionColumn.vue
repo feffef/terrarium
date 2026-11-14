@@ -210,7 +210,7 @@ const legend = computed(() => [...bands.value].reverse())
           <line v-for="band in bands" :key="`tick-${band.season.slug}`" x1="78" :y1="band.bottom" x2="86" :y2="band.bottom" />
         </g>
         <g class="svg-tech f-muted" font-size="8" text-anchor="end">
-          <text v-for="band in bands" :key="`date-${band.season.slug}`" x="74" :y="band.bottom + 2.5">{{ band.season.start }}</text>
+          <text v-for="band in bands" :key="`date-${band.season.slug}`" x="74" :y="band.bottom + 2.5">{{ formatMiddenDate(band.season.start) }}</text>
         </g>
 
         <g class="s-slateline" stroke-width="1">
@@ -228,8 +228,11 @@ const legend = computed(() => [...bands.value].reverse())
          variant, and the accessible reading of both. -->
     <ul class="midden-section__legend">
       <li v-for="band in legend" :key="band.season.slug" class="midden-section__season">
-        <span class="sc midden-section__label">{{ band.season.label }}</span>
-        <span class="tech midden-section__from">from {{ band.season.start }}</span>
+        <span class="sc midden-section__label">
+          <a v-if="band.count > 0" :href="`#shelf-${band.season.slug}`">{{ band.season.label }}</a>
+          <template v-else>{{ band.season.label }}</template>
+        </span>
+        <span class="tech midden-section__from">from {{ formatMiddenDate(band.season.start) }}</span>
         <span class="tech midden-section__count">{{ countLabel(band.count) }}</span>
       </li>
     </ul>
@@ -296,6 +299,11 @@ const legend = computed(() => [...bands.value].reverse())
     font-size: 0.72rem;
     color: var(--midden-slate);
   }
+  .midden-section__label a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .midden-section__label a:hover { text-decoration: underline; }
   .midden-section__from { color: var(--midden-faint); }
   .midden-section__count { color: var(--midden-muted); }
 }

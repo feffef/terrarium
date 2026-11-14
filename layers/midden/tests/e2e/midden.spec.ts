@@ -141,6 +141,22 @@ describe('midden Tenant', async () => {
     expect(html).not.toContain('midden-find__stamp')
   })
 
+  // The section drawing's legend (#3278): dates in report style like the rest
+  // of the page, and each season that has a shelf links to it. A sterile season
+  // has no shelf, so its name stays plain text.
+  it('links the stores legend to the season shelves, in report-style dates', async () => {
+    const html = await $fetch<string>('/t/midden/stores')
+    const legend = html.match(/<ul class="midden-section__legend"[\s\S]*?<\/ul>/)?.[0] ?? ''
+    expect(legend).toContain('from 4 Jul 2026')
+    expect(legend).not.toMatch(/\d{4}-\d{2}-\d{2}/)
+    expect(html).not.toMatch(/<text[^>]*>\d{4}-\d{2}-\d{2}<\/text>/)
+    expect(legend).toContain('href="#shelf-routing-excavation"')
+    expect(html).toContain('id="shelf-routing-excavation"')
+    // The Spike Ashfall holds nothing in store (content/stores/artifacts).
+    expect(legend).toContain('the Spike Ashfall')
+    expect(legend).not.toContain('#shelf-spike-ashfall')
+  })
+
   // Jargon glosses (issue #1463): first use only, shared across the prose and
   // the finds' notes, opened by a real click in the rendered DOM.
   it('glosses first uses of Platform jargon on a dig report', async () => {
