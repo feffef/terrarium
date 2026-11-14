@@ -1,13 +1,13 @@
 name: visitor-loop
 category: platform-operation
 importance: routine
-gist: Sends test visitors through the site and fixes what they flag.
+gist: Sends test visitors through the site and files what they find.
 role: >-
-  The self-growth loop: three blind first-time visitors, each a different
-  model, browse one rotating part of a live build; the run fixes what two or
-  more flag, builds their best feature idea, and self-merges both PRs after
-  `code-review` on a green gate. A script lists owner corrections for
-  `decisions.md`, so rejected ideas stay rejected.
+  The daily visit run: three Sonnet visitors (one blind, two informed) each
+  browse one rotating part of a live build through a different lens. It files
+  verified bugs as issues and logs ideas and learnings for `harvest`; it
+  changes no code and opens no PR. An idea that contradicts a line in
+  `decisions.md` is dropped, so rejected ideas stay rejected.
 observations:
   - date: "2026-10-05"
     note: >-
