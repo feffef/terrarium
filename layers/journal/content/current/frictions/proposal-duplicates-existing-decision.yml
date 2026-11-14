@@ -5,6 +5,7 @@ surface: safe
 status: open
 notes: |-
   2026-11-04 design: no change dropped: the retro half is an installed Skill (ADR-0015) and the visitor-loop half was closed by PR #2824 (decisions.md line) with the step 4 refiner as backstop; revisit on a third occurrence.
+  2026-11-14 design: no change: the newest occurrence is a nit that review caught, and the earlier mechanism drop stands. dropped: a CLAUDE.md 'Question the premise' phrase; revisit on a moderate recurrence.
 occurrences:
   - session: session_013zxzeSvdGhiM7SLEUgzvmF
     date: "2026-11-01"

@@ -1,0 +1,16 @@
+name: page-evaluate-string-errors
+surface: safe
+summary: Browser check scripts passed code to page.evaluate in a form that returned nothing or failed.
+cause: "A verification script hands page.evaluate an arrow function as a string or a malformed string, so it returns undefined or a syntax error and costs retries. Signals: page.evaluate, 'passed arrow functions as strings', 'syntax error in a page.evaluate string'."
+status: open
+occurrences:
+  - session: session_013zxzeSLxxdLwoN9gcngzxT
+    date: "2026-11-12"
+    severity: minor
+    description: "Browser check scripts passed arrow functions as strings to evaluate, which returned undefined and cost three retries."
+    solution: "docs/agents/verifying-ui-changes.md could say a string arrow is not called; pass a real function or a plain expression."
+  - session: session_013zxzeRifuq1jTn2WseeBhP
+    date: "2026-11-13"
+    severity: nit
+    description: "One of my own verification scripts had a syntax error in a page.evaluate string and needed a second run."
+    solution: "Pass evaluate a plain string built once, as the brief says, and test it on one page first."

@@ -15,3 +15,13 @@ occurrences:
     severity: nit
     description: "The retry was denied again because my own prompt mentioned the literal curly-braced scratch placeholder while explaining it; I reworded it."
     solution: "The guard could ignore a placeholder named inside backticks, or the briefs could say to hand them by path without naming it."
+  - session: session_013zxzeNdAgdKF5tpWTQLowx
+    date: "2026-11-13"
+    severity: nit
+    description: "The dispatch-read guard blocked my first survey dispatch because my wrapper text quoted the brief's literal placeholder to say how it was filled."
+    solution: "Known entry placeholder-guard-denies-quoted-placeholder; I reworded to 'the braces around SCRATCH_DIR'."
+  - session: session_013zxzeNiyBNZD3Zn5dUm9Bq
+    date: "2026-11-13"
+    severity: nit
+    description: "The dispatch-read guard blocked a review brief that quoted the literal placeholder name from the brief under review."
+    solution: "Refer to placeholders by description in briefs; the guard is working as designed."

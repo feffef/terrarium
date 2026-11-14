@@ -5,6 +5,7 @@ cause: "glassbox-curate dispatches writers, checkers and fresh readers per page,
 status: open
 notes: |-
   2026-11-11 design: shared boilerplate file dropped: SKTB stayed inside its budget after the owner widened it, boilerplate is not the main cost, and #2992 holds the check of the Scout step.
+  2026-11-14 design: no change: a script flag for pages whose cited file changed only outside the cited lines. dropped: no second occurrence behind it; #2987, #2992, #3170 closed.
 occurrences:
   - session: session_013zxzeSKTBjSfYnUxNHTJw1
     date: "2026-11-09"

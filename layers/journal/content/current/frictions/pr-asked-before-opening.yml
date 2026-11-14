@@ -2,9 +2,11 @@ name: pr-asked-before-opening
 surface: safe
 summary: Sessions stopped after pushing and asked the owner whether to run the gate or open the PR, though ADR-0003 says to open it without asking.
 cause: "ADR-0003 says to open the PR yourself once the branch passed review and the gate, without asking, even if the harness says not to; sessions ask instead and the owner has to tell them. Signals: 'asked about a PR', 'why do you even ask', 'the owner had to tell me', stopped after push."
-status: open
+status: tracked
+ref: "issue #3299"
 notes: |-
   2026-11-11 design: no change: ADR-0003 (loaded at session start, Human-only) already says to open the PR without asking, even against the system prompt; both sessions read pr-workflow.md, so more prose is the wrong mechanism, and the only mechanism (a Stop hook for a pushed branch with no PR) cannot tell a passed gate from an unfinished one. dropped: two same-day occurrences, one minor. Revisit on a third; then consider the hook as an issue.
+  2026-11-14 design: one CLAUDE.md clause (ask covers what to build, not the PR); filed as issue #3299 for the owner's wording choice on owner-facing UI.
 occurrences:
   - session: session_013zxzeQjCNYD6UbYX7LTjkR
     date: "2026-11-11"
@@ -16,3 +18,8 @@ occurrences:
     severity: minor
     description: "I asked whether to run the gate and open the PR; ADR-0003 says open it without asking, and the owner replied why do you even ask."
     solution: "ADR-0003 rule text could say a user preference to ask first does not waive opening the PR."
+  - session: session_013zxzePKLPsiqSXCrEd1QCE
+    date: "2026-11-13"
+    severity: minor
+    description: "After pushing I asked the user whether to run the gate and review and open the PR, though ADR-0003 says to open it without asking; the user pushed back."
+    solution: "Act on the loaded ADR-0003 rule directly; the Stop hook's commit and push prompt was not a reason to pause."

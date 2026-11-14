@@ -23,11 +23,6 @@ fixes:
     date: "2026-11-08"
     summary: "SKILL.md §2 files regression issues only for still-recurring entries at moderate or worse (top three of those); the ledger PR gets the simple-change review."
 occurrences:
-  - session: session_013zxzePnfDGz3F3p9spej9f
-    date: "2026-10-30"
-    severity: minor
-    description: "frictions-to-fixes step 2 ranks regressions by highest severity since the fix, which put local-gate-green-ci-red first although the owner closed that issue not planned; the Skill has no rule for it."
-    solution: "Skip an entry whose ref records an owner decision not to fix, and list it in the PR description."
   - session: session_013zxzeSiq7TZmfmF5D5Rbwt
     date: "2026-10-31"
     severity: minor
@@ -78,3 +73,8 @@ occurrences:
     severity: minor
     description: "Survey-brief says a tracked entry must point at something open, but SKILL §5 says a dispatched fix gets no ref until §8; the Standards reviewer flagged the empty ref."
     solution: "Say in survey-brief §2 that an entry tracked for a dispatched fix has no ref until the closing PR."
+  - session: session_013zxzeNdAgdKF5tpWTQLowx
+    date: "2026-11-13"
+    severity: minor
+    description: "SKILL section 2's top-three regression rule picked harness-proxy-blocks, whose regression issue for the same fix closed the day before with nothing moderate since; the Skill gives no rule, so I skipped it by judgement."
+    solution: "Count severity since the latest closed regression issue, not only since the latest fix. SKILL.md is in an open Prune Trial, so not changed."

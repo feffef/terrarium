@@ -19,11 +19,6 @@ fixes:
     date: "2026-11-06"
     summary: "dispatch-subagents §3: a read-only or review agent outside its own isolation worktree reads with git show or git diff, never checkout, switch or reset, and its brief says so."
 occurrences:
-  - session: session_013zxzeRDagsHLSNJ939gcWK
-    date: "2026-10-30"
-    severity: nit
-    description: "The build workflow left the main checkout detached HEAD; check:worktrees reported it and I re-checked out the session branch"
-    solution: "clear-backlog-build should restore the main checkout's branch after it detaches"
   - session: session_013zxzeRYbgUKxiRJrndpHae
     date: "2026-10-31"
     severity: minor

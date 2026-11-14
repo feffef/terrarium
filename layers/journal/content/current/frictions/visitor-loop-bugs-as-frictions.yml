@@ -1,0 +1,20 @@
+name: visitor-loop-bugs-as-frictions
+surface: safe
+summary: The visitor-loop Skill had bugs logged as Frictions, not filed as issues.
+cause: "visitor-loop SKILL.md said bugs go in as Frictions and no issues, but log-session defines a Friction as the session's own pain and the owner wants issues, so the log was redone and the issues filed late. Since PR #3249 (2026-11-13) the Skill files bugs as issues, grouped, and logs only the run's own problems as Frictions. Signals: visitor-loop, 'bugs as Frictions', 'filed 8 bugs as Frictions'."
+status: open
+fixes:
+  - pr: 3249
+    date: "2026-11-13"
+    summary: "visitor-loop remit and steps: confirmed site bugs are filed as one needs-triage issue per group; Frictions are only for where the run itself was bumpy."
+occurrences:
+  - session: session_013zxzeNiyBNZD3Zn5dUm9Bq
+    date: "2026-11-13"
+    severity: moderate
+    description: "I wrote bugs-as-Frictions into the Skill without flagging that log-session defines a Friction as the session's own pain; the first run filed 8 bugs as Frictions and the owner had to correct it."
+    solution: "When a request repurposes a defined term's field (Friction), name the conflict with its GLOSSARY or log-session definition and ask before building."
+  - session: session_013zxzeQpVcWQaKyrR36MwpN
+    date: "2026-11-13"
+    severity: moderate
+    description: "visitor-loop SKILL.md says bugs go in as Frictions and no issues; the owner wanted issues, so I had to redo the log and file three issues"
+    solution: "Change the Skill's remit and step 4 to file grouped issues for site bugs and keep Frictions to the run's own trouble"

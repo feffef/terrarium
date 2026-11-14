@@ -69,3 +69,8 @@ occurrences:
     severity: nit
     description: "Ran git push and pnpm gate:scoped in one Bash command, against git-conventions."
     solution: "Push in its own call, then start the gate in a separate call."
+  - session: session_013zxzeSYMKya1mzpFJhAcSk
+    date: "2026-11-13"
+    severity: nit
+    description: "Committed and started the gate in one Bash command, against git-conventions; the commit landed, so no harm."
+    solution: "Run the commit alone, check it, then start the gate."

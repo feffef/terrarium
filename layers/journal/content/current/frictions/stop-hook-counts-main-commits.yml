@@ -33,3 +33,13 @@ occurrences:
     severity: nit
     description: "Merged origin/main into the session branch to run a lookup script, so the Stop hook counted 40 unpushed commits (merged main history on a remote branch deleted by an earlier merge) and asked for a push."
     solution: "Use a detached checkout of origin/main for a read-only check instead of merging it into the session branch."
+  - session: session_013zxzeRifuq1jTn2WseeBhP
+    date: "2026-11-13"
+    severity: nit
+    description: "The Stop hook reported one unpushed commit after I fast-forwarded the session branch to origin/main; no commit of mine existed."
+    solution: "The hook could count commits not on origin/main; git-conventions.md already gave the push fix."
+  - session: session_013zxzeSTLT98vFMqWFKbjqG
+    date: "2026-11-13"
+    severity: nit
+    description: "The Stop hook counted 14 unpushed commits after I restarted the merged branch from main, though all but one were already on main."
+    solution: "Have the hook count against origin/main, as git-conventions.md says to, when the remote branch is gone."

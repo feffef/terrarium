@@ -1,9 +1,8 @@
 name: edit-during-gate-run
 summary: "The gate passed on a different tree than the one pushed, because files were edited during its run or committed after it."
-cause: "Agents start gate:scoped before the final head exists: they keep editing while it runs, so the e2e step builds the old tree then runs new tests, or they run it before code-review or commit, amend or fix wording after it and push without rerunning it; or the e2e step reuses an .output built before the last commit, so the final head is never exercised. glassbox-improve now runs the gate once on the final head (PRs #2626, #2629), and since PR #3058 (2026-11-11) gate-edit-guard.ts denies Edit, Write, NotebookEdit and git commit while a gate:scoped run holds its run lock in that checkout, so the edit-while-running half is refused and only a run before code-review or commit can still pass on an older tree. Signals: \"edited files while gate:scoped was building\", \"had to run a second time on the final head\", gate run before code-review, an amend or follow-up commit pushed after the gate, \"reused an .output\", \"L2 reuse\"."
+cause: "Agents start gate:scoped before the final head exists: they keep editing while it runs, so the e2e step builds the old tree then runs new tests, or they run it before code-review or commit, amend or fix wording after it and push without rerunning it; or the e2e step reuses an .output built before the last commit, so the final head is never exercised. glassbox-improve now runs the gate once on the final head (PRs #2626, #2629); since PR #3058 (2026-11-11) gate-edit-guard.ts denies Edit, Write, NotebookEdit and git commit while a gate:scoped run holds its run lock in that checkout, and since PR #3250 (2026-11-13) also git add, stash, checkout and reset (per worktree); a scripted Bash write (sed, a shell script) is still not caught, and a run before code-review or commit can still pass on an older tree. Signals: \"edited files while gate:scoped was building\", \"had to run a second time on the final head\", gate run before code-review, an amend or follow-up commit pushed after the gate, \"reused an .output\", \"L2 reuse\", an edit by shell script while the gate ran."
 surface: safe
-status: tracked
-ref: "issue #3233"
+status: open
 notes: |-
   2026-11-04 reopened: fixes #2626 and #2629 (2026-10-28) merged after the owner accepted it on 2026-10-27.
 fixes:
@@ -28,6 +27,9 @@ fixes:
   - pr: 3058
     date: "2026-11-11"
     summary: "gate-edit-guard.ts hook denies Edit, Write, NotebookEdit and git commit while a gate:scoped run holds its run lock in the checkout."
+  - pr: 3250
+    date: "2026-11-13"
+    summary: "gate-edit-guard.ts also denies git add, stash, checkout and reset (not only commit) while a gate runs, per worktree; scripted Bash writes are left alone."
 occurrences:
   - session: session_013zxzeSRDhsoSRs2a2bGVgW
     date: "2026-10-31"
@@ -184,3 +186,13 @@ occurrences:
     severity: nit
     description: "Ran the five-minute gate:scoped three times because follow-up edits kept landing after each green run, and the last two commits went to CI without a local gate."
     solution: "Batch the review fixes and the owner's follow-ups, then run the gate once on the final head before the PR opens."
+  - session: session_013zxzeNiyBNZD3Zn5dUm9Bq
+    date: "2026-11-13"
+    severity: minor
+    description: "Edited visitor-brief.md via a shell script while pnpm gate:scoped ran, aborting the gate; a full rerun followed."
+    solution: "Wait for the gate's completion before applying review fixes, or let reviews finish before starting the gate."
+  - session: session_013zxzeS6AE1WUN124PHnm4b
+    date: "2026-11-13"
+    severity: nit
+    description: "I edited files while pnpm gate:scoped was running, so it aborted and I reran it, costing a few minutes."
+    solution: "Touch nothing until the gate ends, as pr-workflow.md says; commit review fixes first, then start the gate."

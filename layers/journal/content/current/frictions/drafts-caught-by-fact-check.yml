@@ -21,16 +21,6 @@ fixes:
     date: "2026-11-07"
     summary: "glassbox-curate's memory-page bullet says to state a count only after counting its items in their source (the shipped 'eight stops' miss, closes #2915)."
 occurrences:
-  - session: session_013zxzeQifdm2ANF46Z2pQ5w
-    date: "2026-10-30"
-    severity: minor
-    description: "First draft repeated session-logged figures (15 pages re-pinned, friction scale explained, two runs) without checking diffs; the fact-check found four wrong claims."
-    solution: "Gather could print per-PR changed-file counts so figures are checkable at write time."
-  - session: session_013zxzeSZEedzkmmCqWvKDjC
-    date: "2026-10-30"
-    severity: minor
-    description: "Replies drafted, reviewed twice, fact-checked and redrafted cost many subagent calls, then the second reader said no; the first reader's yes had been given on the misread version."
-    solution: "Fact-check a reply's load-bearing claim before the first reader sees it, as step 12 already implies."
   - session: session_013zxzeRaFPYidUVPvEBA6NU
     date: "2026-10-31"
     severity: minor
@@ -181,3 +171,8 @@ occurrences:
     severity: minor
     description: "The first Digest draft had five wrong or misleading claims; I wrote three Specimens from a WIP commit message and misattributed a rule to PR 3138 without reading the merged code (CLAUDE.md, Verify before you state)."
     solution: "Read the merged file or diff for every number and attribution before drafting; the fact-check subagent caught all five before the PR."
+  - session: session_013zxzeP357BagrJREfWSJ6U
+    date: "2026-11-13"
+    severity: minor
+    description: "The first README stated times as coming from first commits for two files that had none, and credited the owner-confirmed corrections to me; code-review caught both."
+    solution: "Mark, while writing, each fact whose source is the conversation and not git or a log."

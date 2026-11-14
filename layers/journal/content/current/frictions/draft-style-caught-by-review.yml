@@ -37,3 +37,13 @@ occurrences:
     severity: nit
     description: "The Digest prose was 264 words against the Skill's 250 cap; code-review caught it and it cost one more commit before the gate."
     solution: "Count the prose words before committing the draft."
+  - session: session_013zxzeQ9FTpQjBywTHWkdXF
+    date: "2026-11-13"
+    severity: minor
+    description: "The first version of the draft used the retired term 'Skill pack' fifteen times though GLOSSARY.md is loaded at start and says to write 'installed Skill'; the standards reviewer caught it."
+    solution: "Grep a new doc for the glossary's retired terms before committing; a lint rule over docs/ for the retired-term list would catch it without a reviewer."
+  - session: session_013zxzeSvCUWdcpBdHi4sdX2
+    date: "2026-11-13"
+    severity: nit
+    description: "Neutral doc first draft named GitHub-like hosts and multi-tenant machinery despite the no-repo-names brief; found only by a grep after writing."
+    solution: "Grep the draft for repo and product terms before reporting it done."

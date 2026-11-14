@@ -1,0 +1,28 @@
+name: visitor-loop-brief-gaps
+surface: safe
+summary: The visitor-loop brief left out details its visitors needed, so they wandered or tripped.
+cause: "The visitor brief and its context file leak hints to the blind visitor (repo root, other visitors), omit that screenshots need absolute output paths, give no reason for 'do not change directory', name the wrong chromium helper or say to follow links that open in place. Signals: visitor-loop, visitor brief, blind visitor, screenshots in the repo root, ERR_PNPM_RECURSIVE_EXEC_NO_PACKAGE."
+status: open
+fixes:
+  - pr: 3249
+    date: "2026-11-13"
+    summary: "visitor brief: scripts run without changing directory with absolute output paths in the visitor's scratch folder; context file gains a pages section."
+  - pr: 3263
+    date: "2026-11-13"
+    summary: "visitor brief says why not to cd (pnpm fails elsewhere) and to open Chromium with launchChromium(); the server stops after the rendered-page checks; the context file lists merged PRs, not every commit."
+occurrences:
+  - session: session_013zxzeNiyBNZD3Zn5dUm9Bq
+    date: "2026-11-13"
+    severity: moderate
+    description: "First brief rewrite still leaked repo-root and other-visitor hints to the blind visitor; two extra review rounds and commits to remove them."
+    solution: "When a brief serves both blind and informed agents, write the blind variant first and grep it for repo, git and peer mentions before committing."
+  - session: session_013zxzeQpVcWQaKyrR36MwpN
+    date: "2026-11-13"
+    severity: minor
+    description: "Visitor brief says to run from the working directory but never says to use absolute output paths; the blind visitor's screenshots landed in the repo root and tripped the Stop hook"
+    solution: "Add to visitor-brief.md: run tsx from the repo root and write every output as an absolute path in the scratch folder"
+  - session: session_013zxzeRifuq1jTn2WseeBhP
+    date: "2026-11-13"
+    severity: minor
+    description: "The brief's 'without changing directory' rule has no reason, so two visitors hit ERR_PNPM_RECURSIVE_EXEC_NO_PACKAGE after a cd; the brief also names resolveChromiumPath where launchChromium adds the sandbox flags."
+    solution: "In visitor-brief.md say pnpm needs the repo as cwd, and point to launchChromium."

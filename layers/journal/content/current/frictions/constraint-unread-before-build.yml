@@ -55,3 +55,8 @@ occurrences:
     severity: minor
     description: "CLAUDE.md says read the full ADR of each decision a plan touches; I recommended changes around ADR-0004, 0009, 0017 and 0027 from lessons and rule summaries only."
     solution: "For a repo-wide assessment, have the lesson-digest agents also read the cited ADRs, or say in the output that reasons come from lessons."
+  - session: session_013zxzeSLrkzfApGBDhjgFqB
+    date: "2026-11-12"
+    severity: minor
+    description: "Opened the PR before checking ADR-0004's untested-behaviour exception; the CSS mark had no test, so the merge stalled until I added one, which cost a rebuild and a second CI run."
+    solution: "At review time ask whether a test observes the change; add the test before the first gate run when none does."

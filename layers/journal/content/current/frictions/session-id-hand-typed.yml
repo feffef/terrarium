@@ -96,3 +96,8 @@ occurrences:
     severity: nit
     description: "Wrote another session's id into a commit-message file from memory; caught before committing, and the hook added the right trailer."
     solution: "Never type a session id; leave the trailer to .githooks/commit-msg (ADR-0017) and check it landed."
+  - session: session_013zxzeR9vRBRGWAa4ScJTRD
+    date: "2026-11-13"
+    severity: nit
+    description: "Typed this session's id from memory into the commit message file; it was another session's id. Caught before committing via get_session."
+    solution: "Copy the id from the attribution lines in context, never recall it; the commit template should be pasted whole."

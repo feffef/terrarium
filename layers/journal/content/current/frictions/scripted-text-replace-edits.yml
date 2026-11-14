@@ -9,6 +9,7 @@ notes: |-
   2026-10-21 design: a guard on Bash python replaces dropped: it is Human-only, would flag legitimate migration scripts, and every slip was caught or restored.
   2026-11-10 design: a CLAUDE.md line or Bash guard dropped again: 3 new occurrences, none above minor, all caught by diff or restored from git; the guard is Human-only. The cause's 'Read-tool rule' pointer was not found in CLAUDE.md.
   2026-11-13 design: run-entry writer script or Skill line dropped: only 2 of the 4 new occurrences hit run-entry YAML (both nits, caught in-run), the wrapping is the session's own and no script owns the entry.
+  2026-11-14 design: no change: a guard or prose line dropped: every slip was caught by an assertion, diff or git, a guard is Human-only and would flag legitimate migration scripts. Cause text cites a CLAUDE.md Read-tool rule that is not in CLAUDE.md.
 occurrences:
   - session: session_013zxzeSaEvHWNU8EdNqcqGG
     date: "2026-11-02"
@@ -80,3 +81,8 @@ occurrences:
     severity: minor
     description: "My multi-edit Python helper wrote each file as it went and then failed an assertion, so two edits applied only in part (a test and the memory note), costing extra fix commits and a re-run."
     solution: "Check every replacement before writing any file, or use the Edit tool per change."
+  - session: session_013zxzeRbcVWW7Upv1bSok39
+    date: "2026-11-13"
+    severity: minor
+    description: "A bulk regex rename turned Terrarium evidence (Frictions, visitor-loop) into the new template terms; caught on a re-read and restored by hand"
+    solution: "Scope term renames to requirement statements and list each hit before replacing"

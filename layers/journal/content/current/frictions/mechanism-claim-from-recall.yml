@@ -22,21 +22,6 @@ fixes:
     date: "2026-10-28"
     summary: "glassbox-improve's lead proposes only facts and wording found in the source (an absence claim most of all), and its researcher checks an absence claim against every code location."
 occurrences:
-  - session: session_013zxzeRYnqNveUu5w9oJd9q
-    date: "2026-10-30"
-    severity: minor
-    description: "I first wrote that the new page-checks rule fails on any motive, from memory of the diff; the standards reviewer caught it (only because fails, so warns)."
-    solution: "Read the problems vs warnings split in page-checks.ts before describing it."
-  - session: session_013zxzeP5MnAU2v4XFBZHSdY
-    date: "2026-10-30"
-    severity: minor
-    description: "Season notes I wrote overclaimed their source comments (derived durations, 'unmerged'); caught only by code-review."
-    solution: "Write notes by quoting the source comment first."
-  - session: session_013zxzeSZEedzkmmCqWvKDjC
-    date: "2026-10-30"
-    severity: minor
-    description: "Misread the 28th triage option (a), an agent-run git diff step, as a check enforced by code, and built Karen's whole reply thesis on it until the fact-checker caught it."
-    solution: "Quote an option's own sentence next to my paraphrase before drafting a thesis on it; the checker step worked as designed."
   - session: session_013zxzeRkv6UCWJtPmJ68h32
     date: "2026-11-01"
     severity: moderate
@@ -202,3 +187,28 @@ occurrences:
     severity: minor
     description: "Told the person the Glass Box words are capitalised on purpose throughout the guide without counting; the guide uses them lowercase, and they caught it."
     solution: "Count a claim in its source before stating it (CLAUDE.md, verify before you state); a one-line grep would have shown 127 lowercase lessons."
+  - session: session_013zxzeP357BagrJREfWSJ6U
+    date: "2026-11-13"
+    severity: moderate
+    description: "The converged list said nothing recorded defends a second app; that argued from absence and the owner objected. Research then found about 25 incidents the other way."
+    solution: "Before writing that a record does not support something, ask what the record would look like if it did, and search for that."
+  - session: session_013zxzeRbcVWW7Upv1bSok39
+    date: "2026-11-13"
+    severity: minor
+    description: "Wrote a made-up commit hash (5f1c1d1a8) into the requirements doc header, breaking CLAUDE.md 'Verify before you state'"
+    solution: "Run git rev-parse before writing any id; caught before the first commit"
+  - session: session_013zxzeNrvAWHmAPYsSy8u7x
+    date: "2026-11-12"
+    severity: nit
+    description: "Wrote three claims into the checks file that I had not verified (a log-outcome grep I never ran, a CI-fonts remark, a session count); check-clusters caught the count, I fixed the others before posting."
+    solution: "Verify each claim against its source when writing it, as CLAUDE.md's verify-before-you-state says."
+  - session: session_013zxzeS6gV5rfHembHQYP6K
+    date: "2026-11-12"
+    severity: nit
+    description: "My first Seedling drafts said I read a script and a source I had only grepped; I caught it before posting and reworded them."
+    solution: "Describe a grep as a grep in What I checked."
+  - session: e5f88467-c386-4b88-8c16-b9786c748d41
+    date: "2026-11-13"
+    severity: moderate
+    description: "Labelled #2916 and other Friction-cluster issues from title and body only, without reading their ledger occurrences; the owner asked whether #2916 was really Platform, and two of three occurrences were Glass Box"
+    solution: "auto-triage's Area labels now says to open each occurrence's session log; CLAUDE.md 'Verify before you state' already covered it"

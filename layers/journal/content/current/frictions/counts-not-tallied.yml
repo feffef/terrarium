@@ -115,3 +115,13 @@ occurrences:
     severity: nit
     description: "Said three sessions hit the missing source_url when only two retros and one log did; corrected a few turns later."
     solution: "Count each item from the source before summarising across retros."
+  - session: session_013zxzePiaeVXJsUcoKh7LFv
+    date: "2026-11-13"
+    severity: nit
+    description: "The retro theme counts in the #3143 report (10 of 15 and so on) were tallied by reading the replies, not by a command, against CLAUDE.md's count-every-item rule."
+    solution: "Paste the 15 replies into a file and grep each theme so the counts name their command."
+  - session: session_013zxzeQ9FTpQjBywTHWkdXF
+    date: "2026-11-13"
+    severity: nit
+    description: "I told a reviewer that four of five duplicated facts were trimmed when the diff trimmed three; I stated the count from memory instead of counting it."
+    solution: "Count from the diff before stating a number in a brief, as 'Verify before you state' asks."

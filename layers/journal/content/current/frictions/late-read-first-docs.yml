@@ -14,26 +14,6 @@ fixes:
     date: "2026-10-15"
     summary: "Hint now says a late read that clears the call is not a Friction."
 occurrences:
-  - session: session_013zxzeT9k3tYULehBpNwFpj
-    date: "2026-10-30"
-    severity: nit
-    description: "Ran git log with --grep on origin/main to read a merge time before reading git-conventions.md, which the hook then asked for; the read changed nothing."
-    solution: "None needed; the hook's own text says a late read is no Friction when the call was right."
-  - session: session_013zxzePnfDGz3F3p9spej9f
-    date: "2026-10-30"
-    severity: nit
-    description: "Chained git status, git log and the git-conventions read in one call, so the first git commands ran before the required doc was read."
-    solution: "Read the doc in its own call before any git command."
-  - session: session_013zxzeSZEedzkmmCqWvKDjC
-    date: "2026-10-30"
-    severity: nit
-    description: "Ran several GitHub reads before reading docs/agents/github-integration.md, which CLAUDE.md requires first; a hook reminded me afterwards."
-    solution: "Read the doc at the first GitHub step of a scheduled run."
-  - session: session_013zxzeP5MnAU2v4XFBZHSdY
-    date: "2026-10-30"
-    severity: nit
-    description: "Ran a read-only git log/diff in a refiner subagent without git-conventions; also I forgot the read-before-first-git rule was satisfied only via a cat in a combined command."
-    solution: "Brief refiner to read docs/agents/git-conventions.md."
   - session: session_013zxzeRYbgUKxiRJrndpHae
     date: "2026-10-31"
     severity: nit
@@ -529,3 +509,58 @@ occurrences:
     severity: nit
     description: "Ran git status and fetch before reading git-conventions.md, which CLAUDE.md requires before the first non-read-only git command; a hook flagged it after."
     solution: "Read the doc in the same first batch as the other required reads."
+  - session: session_013zxzePiaeVXJsUcoKh7LFv
+    date: "2026-11-13"
+    severity: nit
+    description: "Ran git log --grep to verify a closure before reading git-conventions.md; the read-first hint fired after the call."
+    solution: "Read git-conventions.md at session start when the skill will run git beyond status, or use git show."
+  - session: session_013zxzeSBqHVEFogR6M3SoDX
+    date: "2026-11-13"
+    severity: nit
+    description: "Ran git fetch and the first GitHub call before reading the pointer docs; hooks flagged both late. The docs showed both calls were right."
+    solution: "Visitor-loop step 1 could list the two pointer reads up front."
+  - session: session_013zxzeRifuq1jTn2WseeBhP
+    date: "2026-11-13"
+    severity: nit
+    description: "My first GitHub call (issue_read on #3247) came before I read github-integration.md, which CLAUDE.md says to read first; a hook then asked for it."
+    solution: "Read the doc in the same early batch as the other pre-reads, or let the Skill's own step name it."
+  - session: session_013zxzeSNs4gkwrpqc36B7yP
+    date: "2026-11-13"
+    severity: nit
+    description: "Ran git status and log before reading git-conventions.md; a hook reminded me afterwards (the commands were read-only, so no harm)."
+    solution: "Nothing; the hook caught it and the doc showed the calls were fine."
+  - session: session_013zxzeQkoNR2Xn8JcaSEbxY
+    date: "2026-11-13"
+    severity: nit
+    description: "Ran git fetch and later gh api before reading git-conventions.md and github-integration.md, which CLAUDE.md orders first; hooks reminded me afterwards."
+    solution: "Read the two docs at session start whenever a Skill's first steps use git or GitHub."
+  - session: session_013zxzeSAxx2RTJ89sW91w2b
+    date: "2026-11-13"
+    severity: minor
+    description: "Ran git log --name-only and the first GitHub MCP read before reading git-conventions.md and github-integration.md; a hook pointed it out afterwards."
+    solution: "A read-first line in harvest step 3 and 4 for those two docs would have prompted the reads."
+  - session: session_013zxzeP5Vhec86YSiybqM8g
+    date: "2026-11-13"
+    severity: nit
+    description: "Relabelled six issues before reading docs/agents/triage-labels.md, which CLAUDE.md requires before labelling; a hook reminded me after the writes."
+    solution: "Read triage-labels.md together with issue-tracker.md at the start of any run that labels issues."
+  - session: session_013zxzePfDFCA2whsn1WaK5j
+    date: "2026-11-13"
+    severity: minor
+    description: "Ran git checkout and push before reading git-conventions.md, which CLAUDE.md requires before any non-read-only git command."
+    solution: "Read git-conventions.md at the first sample revert; a rule or hook on first git write would surface it."
+  - session: session_013zxzeSQbFaEpMZykiSinsq
+    date: "2026-11-14"
+    severity: nit
+    description: "Ran git status and branch before reading git-conventions.md, and dispatched the first subagent before reading dispatch-subagents; the guard blocked it and I retried."
+    solution: "Read both docs at session start for a digest run; the Skill could name them."
+  - session: session_013zxzeT8MiA3ZbpACZhayfL
+    date: "2026-11-14"
+    severity: nit
+    description: "Ran gh api issue searches before reading github-integration.md; a hook pointed it out afterwards."
+    solution: "Name the two read-first docs in audit-skills step 4, where issues are searched."
+  - session: session_013zxzeNmq54AMia53quaCHn
+    date: "2026-11-13"
+    severity: nit
+    description: "Ran git log on docs/design before reading git-conventions.md; the hint prompted a late read that changed nothing."
+    solution: "None needed; the call was a plain listing."

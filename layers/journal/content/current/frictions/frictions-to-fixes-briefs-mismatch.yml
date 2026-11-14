@@ -31,11 +31,6 @@ fixes:
     date: "2026-11-11"
     summary: "survey-brief.md: for a closed regression issue, read closed_by_pull_requests (issue_read) and cite any PR that closed it."
 occurrences:
-  - session: session_013zxzePnfDGz3F3p9spej9f
-    date: "2026-10-30"
-    severity: nit
-    description: "survey-brief says to pass --out, but gives no scratchpad path; the survey agent used an unset TMPDIR and wrote a stray file at the filesystem root."
-    solution: "Tell the survey agent to pass --out under its scratch directory."
   - session: session_013zxzeSiq7TZmfmF5D5Rbwt
     date: "2026-10-31"
     severity: nit
@@ -91,3 +86,8 @@ occurrences:
     severity: minor
     description: "Survey subagent: list-merges-since output lacks dates and subjects for merge commits, so it made about 60 per-PR gh api calls to date fixes."
     solution: "Add merged_at and title to list-merges-since --merges-only output."
+  - session: session_013zxzeNdAgdKF5tpWTQLowx
+    date: "2026-11-13"
+    severity: minor
+    description: "Survey subagent: brief section 3 asks it to confirm every candidate entry against tracker and main (138 entries), which did not fit one pass, so about 60 labels came back unconfirmed."
+    solution: "Limit the confirm step to entries that gained occurrences this window or are ranked for picking."
