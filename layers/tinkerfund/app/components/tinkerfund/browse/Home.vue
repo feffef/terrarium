@@ -101,9 +101,8 @@ const money = useTinkerfundMoney()
 h2 { margin: 0; font: 800 24px/1.1 var(--tf-font); font-stretch: 80%; }
 .head { display: flex; gap: 12px; align-items: baseline; justify-content: space-between; margin-bottom: 14px; }
 /* Padding makes a 24px tap target; the negative margin keeps the layout. */
-.head a { display: inline-block; padding-block: 5px; margin-block: -5px; font: 500 13px/1 var(--tf-mono); }
-/* The hero's inventor link. */
-.read .tf-label a { display: inline-block; padding-block: 5px; margin-block: -5px; }
+.head a, .read .tf-label a { display: inline-block; padding-block: 5px; margin-block: -5px; }
+.head a { font: 500 13px/1 var(--tf-mono); }
 
 .hero { display: grid; overflow: hidden; box-shadow: var(--tf-shadow); }
 @media (min-width: 860px) { .hero { grid-template-columns: 1.15fr 1fr; } }
