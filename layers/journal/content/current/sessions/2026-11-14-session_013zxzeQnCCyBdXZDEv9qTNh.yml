@@ -1,0 +1,255 @@
+schemaVersion: 1
+session: session_013zxzeQnCCyBdXZDEv9qTNh
+startedAt: 2026-11-14T12:22:31Z
+endedAt: 2026-11-14T12:35:53Z
+kind: interactive
+goal: "Karen blog post: daily Routines log themselves as Weekly"
+status: in-review
+outcome: "Karen post written, fact-checked, reviewed and gated; PR #3314 open and awaiting CI"
+summary: "The owner invoked /blog-post with a topic (direct ask): Karen rants that sessions on a daily schedule, audit-skills included, log \"Weekly\" in their goal line. Per their preference I asked four questions first (owner-decided: single topic and no three-candidate blind read; the problem is the goal line; rant only, no fix or issue status; reaction only if a hook exists, none did, so standalone). I counted from the session logs: audit-skills started 00:46 UTC on eight days (2026-11-07 to 2026-11-14), seven goals say Weekly, one Daily, and its Skill Inventory entry says \"daily audits\". Agent-initiated: choosing the Glass Box sync as the second example, the fact-check and code-review rounds, opening PR #3314 and subscribing (ADR-0003). A fresh Sonnet checker verified every claim three times; code-review's Spec axis noted my first draft's paragraphs on the 2026-11-09 Digest fix and PR #2993 broke the owner's \"rant only\", and the Standards axis noted seven paragraphs against a norm of four, so I cut both (406 to 264 words) and re-checked. Skipped by owner choice: the three-draft blind read and step 12's reply decision. Open: CI, then the verdict comment and merge-pr.ts."
+prs:
+  - "3314"
+docsRead:
+  - path: .agents/skills/blog-post/personas/karen.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-11-14-eight-daily-runs-seven-called-weekly.md
+    reason: (read before editing)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: layers/blog/GLOSSARY.md
+    reason: (no reason given)
+  - path: docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: owner invoked it with a Persona and topic
+  - name: code-review
+    reason: Standards and Spec read before the PR
+  - name: dispatch-subagents
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: I typed a wrong session id from memory into the first commit-message file; I caught it only by calling get_session before committing.
+    solution: Copy the id from the Claude-Session line in the system-prompt template, as log-session says, or read it once with get_session.
+    severity: nit
+  - description: "My first draft kept the Digest-fix and PR #2993 history although the owner said rant only; code-review's Spec axis caught it, costing one extra fact-check round."
+    solution: Before drafting, restate the owner's scope answers as a don't list and check each paragraph against it.
+    severity: minor
+  - description: I ran git commit with both -m and -F; git refused, wasting one call. git-conventions already says never to give both.
+    solution: Reuse a message file only with -F and no other message flag.
+    severity: nit
+durationSec: 802
+models:
+  claude-sonnet-5-5: 118
+toolCounts:
+  AskUserQuestion: 1
+  Bash: 37
+  Read: 5
+  Write: 3
+  Edit: 2
+  Skill: 4
+  mcp__claude-code-remote__get_session: 1
+  Agent: 3
+  ToolSearch: 2
+  SendMessage: 2
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - layers/blog/content/karen/pages/2026-11-14-eight-daily-runs-seven-called-weekly.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0012.md
+adrHints:
+  - adr: 12
+    via: path
+    readAfter: true
+    by: main
+docsReadBySubagents:
+  - .agents/skills/blog-post/SKILL.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: .agents/skills/blog-post/personas/karen.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/blog-post/personas/karen.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/content/karen/pages/2026-11-14-eight-daily-runs-seven-called-weekly.md
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/blog/content/karen/pages/2026-11-14-eight-daily-runs-seven-called-weekly.md
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: opened the PR without asking after gate
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: ran gate:scoped and code-review first
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: provenance header and commit trailer
+      - path: .claude/rules/adr-0012.md
+        value: backed
+      - path: .claude/rules/adr-0009.md
+        value: backed
+      - path: .agents/skills/blog-post/personas/karen.md
+      - path: docs/agents/pr-workflow.md
+      - path: docs/agents/git-conventions.md
+      - path: docs/agents/github-integration.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/content/karen/pages/2026-11-14-eight-daily-runs-seven-called-weekly.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/blog/content/karen/pages/2026-11-14-eight-daily-runs-seven-called-weekly.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: layers/blog/content/karen/pages/2026-11-14-eight-daily-runs-seven-called-weekly.md
+    reported:
+      - path: .claude/rules/adr-0009.md
+        value: backed
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: layers/blog/content/karen/pages/2026-11-14-eight-daily-runs-seven-called-weekly.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/blog/content/karen/pages/2026-11-14-eight-daily-runs-seven-called-weekly.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/content/karen/pages/2026-11-14-eight-daily-runs-seven-called-weekly.md
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0017.md
+        value: backed
+      - path: layers/blog/GLOSSARY.md=none
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0009.md
+        value: backed
+      - path: .claude/rules/adr-0004.md
+        value: backed
+subagents:
+  - task: Fact-check Karen blog post
+    model: sonnet
+    durationSec: 230
+    toolCalls: 21
+    modelCalls: 15
+    tokenShare: 17.6
+  - task: Standards review of blog post
+    model: sonnet
+    durationSec: 19
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 3.9
+  - task: Spec review of blog post
+    model: sonnet
+    durationSec: 21
+    toolCalls: 7
+    modelCalls: 3
+    tokenShare: 3.3
+gitBranch: ccr-39663d28-tshf9w
+entrypoint: remote_mobile
+cliVersion: 2.1.325
+landedBy: Stop
