@@ -354,3 +354,13 @@ occurrences:
     severity: nit
     description: "The Stop hook demanded a commit and push while the fact-check was still running, so the draft was pushed before its corrections and the fixes became two follow-up commits."
     solution: "Harmless here, since a push opens no PR; a hook that tolerates a running background agent would keep the history to one commit."
+  - session: session_013zxzePjZg6AdV34z87Eu3Z
+    date: "2026-11-13"
+    severity: minor
+    description: "The sweep PR has two commits though audit-docs asks for one: the Stop hook had me push the first commit while a code-review finding was still with the checker, and a pushed commit can't be amended."
+    solution: "Resolve every code-review finding in the same turn before ending it, or let audit-docs accept a review follow-up commit."
+  - session: session_013zxzeSQbFaEpMZykiSinsq
+    date: "2026-11-14"
+    severity: nit
+    description: "Did not run the archive sweep before the first commit and committed an unreviewed draft early to satisfy the Stop hook, adding extra commits."
+    solution: "Finish fact-check first, or let the hook accept a draft push."

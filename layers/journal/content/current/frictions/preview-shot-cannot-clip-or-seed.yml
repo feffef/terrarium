@@ -1,0 +1,20 @@
+name: preview-shot-cannot-clip-or-seed
+surface: safe
+summary: The preview screenshot tool cannot clip one element or set page state, so agents wrote throwaway Playwright scripts.
+cause: "preview.ts shot captures only whole pages, so one element needs a throwaway Playwright script written by each agent again. Since PR #3166 (2026-11-12) it takes --storage KEY=VALUE to seed localStorage, so the seeding half is covered. Signals: 'preview.ts shot', 'throwaway Playwright script', 'clip one element', 'unreadable full-page shot'."
+status: open
+fixes:
+  - pr: 3166
+    date: "2026-11-12"
+    summary: "preview.ts shot and review take a repeatable --storage KEY=VALUE that seeds localStorage before the page loads; clipping one element is not covered."
+occurrences:
+  - session: session_013zxzeSiYFQ3mgaCyMXicwp
+    date: "2026-11-12"
+    severity: minor
+    description: "preview.ts shot and review cannot seed localStorage, so the orchestrator and two builders each wrote a throwaway Playwright script to screenshot a page in a read state."
+    solution: "Add a repeatable --storage KEY=VALUE option to the shot and review verbs, applied before navigation (also filed as #3144)."
+  - session: session_013zxzeQrRhhVjja2AkCLcyV
+    date: "2026-11-13"
+    severity: minor
+    description: "preview.ts shot only captures whole pages; a 6000px full-page shot was unreadable, so I wrote a throwaway Playwright script to clip one element."
+    solution: "Add a --selector option to preview.ts shot and screenshot.ts."

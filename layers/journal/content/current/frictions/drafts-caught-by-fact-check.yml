@@ -181,3 +181,8 @@ occurrences:
     severity: minor
     description: "The first Digest draft had five wrong or misleading claims; I wrote three Specimens from a WIP commit message and misattributed a rule to PR 3138 without reading the merged code (CLAUDE.md, Verify before you state)."
     solution: "Read the merged file or diff for every number and attribution before drafting; the fact-check subagent caught all five before the PR."
+  - session: session_013zxzeP357BagrJREfWSJ6U
+    date: "2026-11-13"
+    severity: minor
+    description: "The first README stated times as coming from first commits for two files that had none, and credited the owner-confirmed corrections to me; code-review caught both."
+    solution: "Mark, while writing, each fact whose source is the conversation and not git or a log."

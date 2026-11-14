@@ -80,3 +80,8 @@ occurrences:
     severity: minor
     description: "My multi-edit Python helper wrote each file as it went and then failed an assertion, so two edits applied only in part (a test and the memory note), costing extra fix commits and a re-run."
     solution: "Check every replacement before writing any file, or use the Edit tool per change."
+  - session: session_013zxzeRbcVWW7Upv1bSok39
+    date: "2026-11-13"
+    severity: minor
+    description: "A bulk regex rename turned Terrarium evidence (Frictions, visitor-loop) into the new template terms; caught on a re-read and restored by hand"
+    solution: "Scope term renames to requirement statements and list each hit before replacing"

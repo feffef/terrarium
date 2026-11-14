@@ -347,3 +347,8 @@ occurrences:
     severity: nit
     description: "Called the explore Workflow before reading dispatch-subagents; the dispatch-read guard blocked it and I retried the same call after reading."
     solution: "The CLAUDE.md trigger names briefs, but a saved repo workflow needs none; the clear-backlog Skill could say the read is not needed, or the guard could exempt saved workflows."
+  - session: session_013zxzeSQbFaEpMZykiSinsq
+    date: "2026-11-14"
+    severity: nit
+    description: "Ran git status and branch before reading git-conventions.md, and dispatched the first subagent before reading dispatch-subagents; the guard blocked it and I retried."
+    solution: "Read both docs at session start for a digest run; the Skill could name them."

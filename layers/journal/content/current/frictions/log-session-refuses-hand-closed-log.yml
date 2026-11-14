@@ -63,3 +63,8 @@ occurrences:
     severity: nit
     description: "log-session refused a completed log right after merge until close-session was re-invoked; I authored first, then invoked the Skill, one wasted call."
     solution: "Invoke close-session when the merge notice arrives, before editing the scratch."
+  - session: session_013zxzeNiyBNZD3Zn5dUm9Bq
+    date: "2026-11-13"
+    severity: nit
+    description: "Authored the completed log straight after the merge, though the hook said to invoke close-session first; log-session refused it and I reran."
+    solution: "After a merge, invoke close-session before writing any log scratch, as the merge hook says."

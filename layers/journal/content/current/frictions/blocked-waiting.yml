@@ -59,3 +59,18 @@ occurrences:
     severity: nit
     description: "Tried a foreground sleep to wait for subagents; the harness blocks it and I had to end the turn instead."
     solution: "The curate Skill could say to end the turn and wait for notifications."
+  - session: session_013zxzeSBqHVEFogR6M3SoDX
+    date: "2026-11-13"
+    severity: nit
+    description: "Combined run_in_background with a trailing ampersand and later tried a foreground sleep; both were blocked by hooks and cost two calls."
+    solution: "Use run_in_background alone and Monitor for waits, as CLAUDE.md already says."
+  - session: session_013zxzeNa49hKkUcRCkBsh6h
+    date: "2026-11-13"
+    severity: minor
+    description: "Four GitHub issue searches were fuzzy and returned nothing relevant; one command chained sleeps and was blocked, costing a retry."
+    solution: "Search git history first for the origin of a mechanism, then issues by number from the commit message."
+  - session: session_013zxzeSvCUWdcpBdHi4sdX2
+    date: "2026-11-13"
+    severity: nit
+    description: "Chained a sleep before merge-pr.ts and a guard blocked it, costing one call."
+    solution: "Retry the script plainly, or use Monitor to wait."

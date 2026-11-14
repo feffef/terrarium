@@ -64,3 +64,8 @@ occurrences:
     severity: moderate
     description: "My first manual PR page loop stopped at 8 pages and silently missed PRs 1827-1830 and 1804; I caught it only by spot-checking a branch's PR."
     solution: "Have midden-survey give one tested command that pages until created_at falls before the window."
+  - session: session_013zxzeRbcVWW7Upv1bSok39
+    date: "2026-11-13"
+    severity: minor
+    description: "Stated '12 accepted Ledger causes' from a subagent's filtered count without re-checking; repo has 14; code-review caught it"
+    solution: "Re-run every count I quote from a subagent, per CLAUDE.md, before writing it"

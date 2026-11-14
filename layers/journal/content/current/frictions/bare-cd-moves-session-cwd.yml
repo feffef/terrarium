@@ -71,3 +71,23 @@ occurrences:
     severity: nit
     description: "Ran verdict-line.ts after a bare cd into a worktree, so the shell's working directory stayed there and I had to cd back before merge-pr.ts."
     solution: "Run a worktree command in a subshell; pr-workflow step 4 could show the subshell form."
+  - session: session_013zxzeNdAgdKF5tpWTQLowx
+    date: "2026-11-13"
+    severity: nit
+    description: "I left the working directory inside layers/journal/content/current/frictions and a worktree after cd calls, and had to cd back in later commands."
+    solution: "Use absolute paths or subshells; known entry bare-cd-moves-session-cwd."
+  - session: session_013zxzeSTLT98vFMqWFKbjqG
+    date: "2026-11-13"
+    severity: nit
+    description: "A compound Bash call ended in cd layers/blog/content, so later commands ran from the wrong directory until I cd'd back; two calls were wasted."
+    solution: "Use absolute paths or a subshell for one-off directory reads."
+  - session: session_013zxzeSvCUWdcpBdHi4sdX2
+    date: "2026-11-13"
+    severity: nit
+    description: "Bash cd in compound commands moved the session's primary working directory to docs/design twice."
+    solution: "Use git -C and absolute paths; no cd."
+  - session: session_013zxzeP357BagrJREfWSJ6U
+    date: "2026-11-13"
+    severity: nit
+    description: "A Bash call with a bare cd into layers/journal/content moved the session's working directory for the following calls."
+    solution: "Use absolute paths or git -C; cause bare-cd-moves-session-cwd."

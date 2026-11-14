@@ -26,3 +26,8 @@ occurrences:
     severity: nit
     description: "Impl agent's combined mkdir && git && pnpm call was refused by the worktree-isolation guard; it split the call."
     solution: "dispatch-subagents already says one git command per Bash call; repeat it in impl-brief."
+  - session: session_013zxzeNiyBNZD3Zn5dUm9Bq
+    date: "2026-11-13"
+    severity: nit
+    description: "A combined printf-and-commit Bash call was blocked whole by the gate-edit guard, so the message file was never written and the retry failed."
+    solution: "Write commit messages with the Write tool, separate from the git call (git-conventions.md already says keep git apart)."

@@ -25,3 +25,13 @@ occurrences:
     severity: nit
     description: "After the PR merged I updated the log with log-session directly and skipped close-session; the Stop hook had to block the turn to make me invoke it."
     solution: "The merge-pr.ts output or the PostToolUse hint already says to invoke close-session; follow it before any other write."
+  - session: session_013zxzePiaeVXJsUcoKh7LFv
+    date: "2026-11-13"
+    severity: nit
+    description: "Ended turns after two merges without re-invoking close-session; the Stop hook had to remind me (CLAUDE.md: invoke it again when the work merges)."
+    solution: "Re-invoke close-session in the same turn as each merge-pr.ts call."
+  - session: session_013zxzeNdAgdKF5tpWTQLowx
+    date: "2026-11-13"
+    severity: nit
+    description: "The Stop hook demanded close-session after PR 3236 merged although I had re-authored the log with log-session after that merge; it counts only the Skill call."
+    solution: "Known entry close-session-reminded-by-stop-hook; I should have invoked close-session, not log-session.ts, for the re-author."

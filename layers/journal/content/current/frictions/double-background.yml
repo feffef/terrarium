@@ -141,3 +141,8 @@ occurrences:
     severity: nit
     description: "Sent a Bash call with run_in_background and a trailing & together; the double-background guard denied it, so the gate start was redone."
     solution: "Pass run_in_background alone; the Skill text for long runs could say so once."
+  - session: session_013zxzeSBqHVEFogR6M3SoDX
+    date: "2026-11-13"
+    severity: nit
+    description: "Combined run_in_background with a trailing ampersand and later tried a foreground sleep; both were blocked by hooks and cost two calls."
+    solution: "Use run_in_background alone and Monitor for waits, as CLAUDE.md already says."

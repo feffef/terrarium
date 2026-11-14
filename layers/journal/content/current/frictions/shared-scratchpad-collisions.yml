@@ -16,3 +16,13 @@ occurrences:
     severity: nit
     description: "Did not create per-agent scratchpad subfolders first (dispatch-subagents section 3); several writers dropped logs flat in improve/, two of them both called install.log."
     solution: "Have the writer brief generator create the named subfolder before the agent starts."
+  - session: session_013zxzeSvCUWdcpBdHi4sdX2
+    date: "2026-11-13"
+    severity: nit
+    description: "Second review round reused the first round's agent scratch folder names, against the one-folder-per-agent rule; no collision resulted."
+    solution: "Name a fresh scratch folder per dispatched agent."
+  - session: session_013zxzeQ4cuLLoFfdaf5sE2d
+    date: "2026-11-13"
+    severity: nit
+    description: "A usage-analysis agent ran rule-use-report.ts, which writes its report to /tmp outside the agent's scratchpad subfolder."
+    solution: "Give rule-use-report.ts an --out option, or have it print to stdout."

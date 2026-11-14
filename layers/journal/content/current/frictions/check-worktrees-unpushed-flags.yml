@@ -1,9 +1,8 @@
 name: check-worktrees-unpushed-flags
 summary: check:worktrees reported a worktree or checkout as unpushed or detached after a push or build that the Skill had not told the session to follow up.
-cause: "A worktree pushed with 'git push origin HEAD:branch' has no upstream, or the main checkout was left on a detached HEAD by a build workflow; check:worktrees fails until the session pushes the run branch or sets upstreams by hand. PR #2811 (2026-11-03) has the orchestrator push reviewed branches; PR #3053 (2026-11-11) makes clear-backlog push with a following fetch (so a remote-tracking ref exists) and remove the worktree once its PR lands; issue #2831 closed 2026-11-04 as most likely fixed, unproven (no later session tested it). Since PR #2739, log-session --author also runs the sweep at close and lists linked worktrees left with uncommitted or unpushed work as a Friction or a refusal. Signals: 'pnpm check:worktrees failed', 'reported them unpushed', 'no upstream', 'detached HEAD'."
+cause: "A worktree pushed with 'git push origin HEAD:branch' has no upstream, or the main checkout was left on a detached HEAD by a build workflow; check:worktrees fails until the session pushes the run branch or sets upstreams by hand. PR #2811 (2026-11-03) has the orchestrator push reviewed branches; PR #3053 (2026-11-11) makes clear-backlog push with a following fetch (so a remote-tracking ref exists) and remove the worktree once its PR lands; issue #2831 closed 2026-11-04 as most likely fixed, unproven (no later session tested it). Since PR #2739, log-session --author also runs the sweep at close and lists linked worktrees left with uncommitted or unpushed work as a Friction or a refusal; since PR #3252 (2026-11-13) a later author call whose sweep finds nothing stranded retracts that hook-written Friction, so only interim-call artifacts are gone and a worktree still stranded at the final call is still logged. Signals: 'pnpm check:worktrees failed', 'reported them unpushed', 'no upstream', 'detached HEAD', 'Linked worktree(s) left with uncommitted or unpushed work at close'."
 surface: safe
-status: tracked
-ref: "issue #3229"
+status: open
 notes: |-
   2026-11-13 survey: five clear-backlog sessions after PR #3053 still log the hook-written stranded wf_* worktree Friction, some at every close-session call; issue #3229 (audit-skills, opened 2026-11-13) tracks it. The five post-#3053 Frictions were interim-call artifacts: a later log-session call never retracted the hook-written Friction, and those sessions' final calls passed (a completed log is refused while a worktree is stranded). Keep tracked until the retraction fix for #3229 lands.
 fixes:
@@ -16,6 +15,9 @@ fixes:
   - pr: 3053
     date: "2026-11-11"
     summary: "clear-backlog SKILL.md section 4 pushes with a following git fetch so check:worktrees finds a remote-tracking ref, and removes each worktree once its PR merges or waits for a human."
+  - pr: 3252
+    date: "2026-11-13"
+    summary: "log-session --author: a later author call whose worktree sweep finds nothing stranded drops the earlier hook-written stranded-worktree Friction, so the final state decides."
 occurrences:
   - session: session_013zxzeRDagsHLSNJ939gcWK
     date: "2026-10-30"
@@ -107,3 +109,8 @@ occurrences:
     severity: minor
     description: "The clear-backlog stranded-worktree friction is hook-written at every close-session call, so a log cannot show whether the final close was clean."
     solution: "Have the stranding check record the time or the close count, or write the friction only at the final close."
+  - session: session_013zxzeNdAgdKF5tpWTQLowx
+    date: "2026-11-13"
+    severity: minor
+    description: "Linked worktree(s) left with uncommitted or unpushed work at close: /home/user/terrarium/.claude/worktrees/agent-a59e61b30abd2cbf0"
+    solution: "Push each, or remove it if its work is meant to be dropped."

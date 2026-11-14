@@ -4,10 +4,10 @@ summary: >-
 cause: >-
   read-first-hint.ts (PostToolUse) points to git-conventions.md or github-integration.md on a matching call in every session, including dispatched subagents whose brief limits what they read, and repeats on each call even after the doc was read; since PR #2669 it no longer fires for read-only git show, ls-tree and cat-file, and since PR #3198 not for git rev-parse or a list-only git branch; log, blame and other git calls still hint. Signals: 'hint repeated on every call', 'hint to read git-conventions.md after a detached checkout', a subagent explaining why it ignored the hint, a subagent skipping the doc because its calls were read-only.
 surface: guard-or-hook
-status: tracked
-ref: "issue #3194"
+status: open
 notes: |-
   2026-11-13 survey: issue #3146 (reminders reach subagents after their first edit or git call) closed not planned 2026-11-12: the owner accepts the cost; PR #3198 narrowed the hint the same day; issue #3194 stays open for it.
+  2026-11-14 survey: issue #3194 closed completed 2026-11-13 as already done by PR #3198 (recorded in fixes); status reset from tracked.
 fixes:
   - pr: 2550
     date: "2026-10-25"
@@ -34,3 +34,13 @@ occurrences:
     severity: nit
     description: "The git-conventions hint fired after read-only or first git commands for three clear-backlog agents, though CLAUDE.md already exempts read-only git."
     solution: "Narrow the hint in scripts/hooks/ to skip diff, log, show and rev-parse."
+  - session: session_013zxzePiaeVXJsUcoKh7LFv
+    date: "2026-11-13"
+    severity: minor
+    description: "PostToolUse hints asked for git-conventions, github-integration and ADR reads after the first git or edit call; 8 of 15 retros reported late reads."
+    solution: "Point agents at the docs in the brief before the first git or GitHub call, or drop hints a brief already covers."
+  - session: session_013zxzePfDFCA2whsn1WaK5j
+    date: "2026-11-13"
+    severity: minor
+    description: "SubagentStart and PostToolUse hooks made 8 of 11 retro agents run echo rule-use: twice for no decision, and 4 of 11 got late doc reads after their first edit or git command."
+    solution: "Fold rule-use reporting into one call (or skip it for short read-only agents) and say up front which docs to read before the first git command, in the hook text."

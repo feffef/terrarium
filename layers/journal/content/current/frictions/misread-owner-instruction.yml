@@ -92,3 +92,28 @@ occurrences:
     severity: moderate
     description: "Took 'read them all' literally and read 22 lessons (about 30k words) into the main context before the owner redirected me to explore agents."
     solution: "Size the reading first and propose delegation when it exceeds a few thousand words, before starting."
+  - session: session_013zxzeP4WS4kX4LSBrVszT6
+    date: "2026-11-12"
+    severity: moderate
+    description: "Read step 3's simplifying test as barring any visitor-facing addition and dropped three passing product ideas; the owner had to ask for a second look."
+    solution: "Word the test so it says a feature in an existing component with nothing named replaced still passes, or give a worked example."
+  - session: session_013zxzeS6AE1WUN124PHnm4b
+    date: "2026-11-13"
+    severity: moderate
+    description: "I misread the owner's 'one page edit that needs the full checks' as a Markdown guide page, though I had flagged that lint and the type check would have nothing to flag; the page had to be rewritten around a code change."
+    solution: "When an option's cost is that a check has nothing to do, ask whether a different example teaches more before building."
+  - session: session_013zxzeP357BagrJREfWSJ6U
+    date: "2026-11-13"
+    severity: moderate
+    description: "Asked to save one file and renumber the notes, I went on towards review, push and a PR; the owner interrupted twice, once mid-push, and narrowed the task to the README fix."
+    solution: "After the owner's first interrupt, stop at the asked step and name the next ones instead of following the Stop hook's push request."
+  - session: session_013zxzePoeF13AApZUpBRv9p
+    date: "2026-11-13"
+    severity: nit
+    description: "Picked which digest run was meant without asking, despite the user's ask-questions-first preference; the user did not object, but the choice was an assumption."
+    solution: "Ask which run when several match, or state the assumption before reading logs."
+  - session: session_013zxzeP5Vhec86YSiybqM8g
+    date: "2026-11-13"
+    severity: minor
+    description: "The owner answered most grilling questions but not Q4 (scope) and Q12 (accept the rest); I proceeded on my recommended picks, a guess the owner never confirmed."
+    solution: "Ask only the unanswered questions again, or state plainly that silence is read as a yes, before relying on it."

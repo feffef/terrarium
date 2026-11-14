@@ -1,0 +1,22 @@
+name: scratch-script-cant-resolve-repo-packages
+surface: safe
+summary: A script run from the scratchpad could not find tsx or repo packages.
+cause: "An agent runs tsx or a Playwright script from inside its scratch folder, where node_modules does not resolve (CLAUDE.md says scripts that import repo packages go in .throwaway/). Signals: 'Command tsx not found', 'playwright-core does not resolve in the scratchpad'."
+status: open
+notes: |-
+  2026-11-14 survey: issue #3279 (a Seedling to note in environment-caveats that tsx fails outside the repo root) closed not planned 2026-11-14: agents would not read it before the error and the error is clear; visitor-brief.md covers the visitor case.
+fixes:
+  - pr: 3249
+    date: "2026-11-13"
+    summary: "visitor-loop: scripts live in a git-ignored .throwaway/visitor-<name>/ folder where playwright-core resolves, run without changing directory."
+occurrences:
+  - session: session_013zxzeNiyBNZD3Zn5dUm9Bq
+    date: "2026-11-13"
+    severity: minor
+    description: "My first fix for the retro's stray-file candidate put scripts in the scratchpad without running one; review showed playwright-core does not resolve there (CLAUDE.md already says use .throwaway/)."
+    solution: "Run a one-line import test before writing a script-location rule into a brief; CLAUDE.md's .throwaway rule covers it."
+  - session: session_013zxzeQpVcWQaKyrR36MwpN
+    date: "2026-11-13"
+    severity: nit
+    description: "UI tester ran tsx from inside its scratch folder and hit Command tsx not found, costing about three retries"
+    solution: "Same one-line brief fix: run from the repo root with the script path"

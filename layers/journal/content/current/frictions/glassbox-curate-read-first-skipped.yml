@@ -2,8 +2,9 @@ name: glassbox-curate-read-first-skipped
 surface: safe
 summary: Glass Box curate runs edited or dispatched before reading the Skill's required first reads (glossary, QUALITY.md, the Subject's pages), and the Spec reviewer found the gap.
 cause: "The glassbox-curate Skill lists the Glass Box GLOSSARY, QUALITY.md (Lenses) and the Subject's pages to read first; runs skip or truncate them, leave pagesRead short, and a reviewer names the unread pages. Signals: 'never opened QUALITY.md', 'pagesRead was short', 'skipped the curate Read step', 'short of the Skill's read-the-Subject step'. Since PRs #2929 and #2944 (2026-11-07) the Skill reads the Subject first, in full, with orient.ts --subject printing its pages and the pagesRead lines. Since PR #3001 (2026-11-09) SKILL.md states the Subject read as a Done-when."
-status: tracked
-ref: "issue #3226"
+status: accepted
+notes: |-
+  2026-11-14 survey: issue #3226 closed not planned 2026-11-13: owner decision (clear-backlog): leave the Skill as is; one post-#3001 skip, caught by the Spec review; no mechanical pagesRead check. Reopen on another skip with a single-Subject focus.
 fixes:
   - pr: 2929
     date: "2026-11-07"
@@ -65,3 +66,13 @@ occurrences:
     severity: minor
     description: "The Skill asks for every Subject page in full, but with the budget I read only the pages I edited; the run entry states it."
     solution: "Let the Skill say which pages count as the Subject when the focus is a topic list, not a Subject."
+  - session: session_013zxzeSYMKya1mzpFJhAcSk
+    date: "2026-11-13"
+    severity: minor
+    description: "Skill said to read the Subject in full before editing; I edited after grepping most pages, and review caught it, forcing a late full read."
+    solution: "Read the Subject's pages in full right after the orientation, before any edit."
+  - session: session_013zxzeS6AE1WUN124PHnm4b
+    date: "2026-11-13"
+    severity: minor
+    description: "glassbox-curate asks for a Scout, fresh readers, a claim checker and a full read of every linked page; with an interactive ask I skipped most of that and read only three pages, so the review had to flag it."
+    solution: "Say in the Skill which steps an interactive, chips-and-terms-only run may skip, so the choice is not an improvised deviation."

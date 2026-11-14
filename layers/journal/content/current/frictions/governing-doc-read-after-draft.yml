@@ -72,3 +72,63 @@ occurrences:
     severity: nit
     description: "Wrote under layers/journal without reading layers/journal/GLOSSARY.md (tenant-glossary rule); the Digest avoids glossary terms by design, so nothing came of it."
     solution: "Read the Tenant glossary before the first write; the rule loaded only after the gather step."
+  - session: session_013zxzePjZg6AdV34z87Eu3Z
+    date: "2026-11-13"
+    severity: nit
+    description: "Skipped CLAUDE.md's read-first trigger for a cross-cutting review: never read the overview layers/glassbox/content/guide/pages/index.md before dispatching reviewers."
+    solution: "No harm seen (reviewers and checker worked from primary sources); a line in audit-docs §1 naming the overview would have made me read it."
+  - session: session_013zxzeNa49hKkUcRCkBsh6h
+    date: "2026-11-13"
+    severity: nit
+    description: "Explained how hooks work without reading the Glass Box overview index.md or layers/glassbox/GLOSSARY.md, which CLAUDE.md and the tenant-glossary rule call for."
+    solution: "Read both before answering a question about how the Platform works, even a read-only lookup."
+  - session: session_013zxzeRbcVWW7Upv1bSok39
+    date: "2026-11-13"
+    severity: nit
+    description: "Did not read the Glass Box overview CLAUDE.md requires before prose that tells readers how the Platform works; relied on the orientation agent"
+    solution: "Read layers/glassbox/content/guide/pages/index.md myself before writing such a doc"
+  - session: session_013zxzeNmq54AMia53quaCHn
+    date: "2026-11-13"
+    severity: nit
+    description: "Skipped CLAUDE.md's read-first trigger for the Platform overview before reviewing two documents that span the Platform's parts; judged the two documents and six ADRs enough."
+    solution: "The trigger could say whether reviewing a design document about the Platform counts."
+  - session: session_013zxzeP357BagrJREfWSJ6U
+    date: "2026-11-13"
+    severity: nit
+    description: "CLAUDE.md asks for the overview page and the full ADRs before reviewing work that spans the Platform's parts; I compared two cross-cutting designs without reading either."
+    solution: "I judged a design comparison of a new system as outside the trigger; the trigger could say whether reviewing a design note about a successor system counts."
+  - session: session_013zxzePoeF13AApZUpBRv9p
+    date: "2026-11-13"
+    severity: nit
+    description: "Read Journal session logs under layers/journal without first reading layers/journal/GLOSSARY.md, which the tenant-glossary rule asks for."
+    solution: "Skip the rule for read-only log lookups, or narrow its paths to writes."
+  - session: session_013zxzeQrRhhVjja2AkCLcyV
+    date: "2026-11-13"
+    severity: nit
+    description: "Read the Journal GLOSSARY only by grep, and read ui-verification.md's linked doc only after the owner asked for a render."
+    solution: "Read the Tenant glossary whole and the UI doc before the first edit; the rule load did not force it."
+  - session: session_013zxzeSBqHVEFogR6M3SoDX
+    date: "2026-11-13"
+    severity: nit
+    description: "Only grepped layers/midden/GLOSSARY.md; the Tenant-glossary rule says to read it before working on a Tenant, though this run wrote no Tenant content."
+    solution: "Skill step 3 could name the focus Tenant's glossary as a read, since the sort step judges wording and terms."
+  - session: session_013zxzePKLPsiqSXCrEd1QCE
+    date: "2026-11-13"
+    severity: nit
+    description: "I changed a Reading progress entry in layers/glassbox/GLOSSARY.md without first reading docs/agents/domain.md, which the glossary-terms rule asks for before a term change."
+    solution: "Read domain.md before any glossary edit, even a wording change to an existing entry."
+  - session: e5f88467-c386-4b88-8c16-b9786c748d41
+    date: "2026-11-13"
+    severity: nit
+    description: "Broke tenant-glossary.md: edited layers/journal/content/current/skills/wayfinder.yml without reading layers/journal/GLOSSARY.md (a cat piped to /dev/null showed nothing); the edit was reverted, so no cost"
+    solution: "Read the Tenant glossary before any write under its layer, even a one-entry Inventory note"
+  - session: session_013zxzeRifuq1jTn2WseeBhP
+    date: "2026-11-13"
+    severity: nit
+    description: "I read decisions.md only after filing the bugs, so one idea (a session-log tour strip) was checked against it late."
+    solution: "Have step 3 of the visitor-loop Skill name decisions.md as a file to read before marking anything."
+  - session: session_013zxzeQ9FTpQjBywTHWkdXF
+    date: "2026-11-13"
+    severity: nit
+    description: "CLAUDE.md asks for the full ADR of each decision a plan touches; I read four of the many the design docs cite and relied on the requirements doc for the rest."
+    solution: "Read the remaining cited ADRs before writing the draft; the trigger would be clearer if it said whether ADRs cited only as evidence count."
