@@ -103,7 +103,12 @@ body:has(.jd) { margin: 0; }
   font-size: 0.8rem;
 }
 .jd .breadcrumb .sep { color: var(--jd-line); }
-.jd .breadcrumb a { color: var(--jd-muted); text-decoration: none; }
+.jd .breadcrumb a {
+  padding-block: 0.35rem;
+  margin-block: -0.35rem;
+  color: var(--jd-muted);
+  text-decoration: none;
+}
 .jd .breadcrumb a:hover { color: var(--jd-accent); }
 .jd .breadcrumb .here { color: var(--jd-ink); }
 
