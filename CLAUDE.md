@@ -63,8 +63,8 @@ once per session; read it whole if you can, since a rule can sit anywhere in it.
   each displayed value (label, hover, metric) follows. Data shapes:
   `.claude/rules/data-shapes.md`. Asking covers what to build, not whether to
   open the PR: once the branch has passed review and the gate, open it without
-  asking, except for owner-facing UI screenshots and open questions the owner
-  has not yet answered.
+  asking, except while the owner has not yet confirmed owner-facing UI
+  screenshots or answered an open question.
 - **Question the premise.** Before you recommend, build or harden a change,
   give each part a reason from the current goal; drop the parts you can't, and
   add nothing beyond the ask. Before you show a new ordering, split or
