@@ -3,7 +3,7 @@ title: Built and Never Fired
 description: Complete, finished things — a placeholder, a spike, a smoke test, a whole tested gate — that were never once put to use.
 ---
 
-Not everything in a midden is broken. This site gathers four finds that reached
+Not everything in a midden is broken. This report gathers four finds that reached
 completion and then never fired — the *never-activated* grade, a grade apart from
 wear and decay, because these things did not decay so much as never begin. They come
 from three different seasons, and read in order they are a thin, honest record of

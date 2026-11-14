@@ -5,8 +5,9 @@ description: The two finds freshest when they were dug — a complete feature PR
 
 These two are graded *fresh*: not because they are unfinished, but because they
 had been discarded so recently when they were dug that they read as if they
-might yet be picked back up. A grade is never re-derived once set, so
-read them as they were: barely cold.
+might yet be picked back up. Fresh finds are graded while still open, and the
+grade is the curator's call, never re-derived, so read them as they were:
+barely cold.
 
 ::midden-artifact{slug="the-copy-link-button"}
 ::

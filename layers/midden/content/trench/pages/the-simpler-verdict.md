@@ -3,7 +3,7 @@ title: The Simpler Verdict
 description: A self-referential cut — the Midden's own reading instruments, cleared when a plainer design won, beside a sibling tenant's throwaway decision bench.
 ---
 
-This site catalogues the dig itself: the Midden's own instruments, built to make
+This report catalogues the dig itself: the Midden's own instruments, built to make
 its finds legible and dug back out when the curator decided a plainer presentation
 read better, beside a throwaway bench another part of the site built that season
 to pick one of three designs.
