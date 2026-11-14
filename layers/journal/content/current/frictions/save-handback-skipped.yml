@@ -4,6 +4,10 @@ summary: Agents skipped save-handback.ts for subagent replies and worked from th
 cause: "dispatch-subagents section 3 asks to keep each subagent's final reply with save-handback.ts; orchestrators skip it for all replies, and a resumed agent's first report is lost since it keeps only the latest. Signals: 'save-handback.ts', 'kept none of the hand-backs'."
 status: tracked
 ref: "issue #3295"
+fixes:
+  - pr: 3304
+    date: "2026-11-14"
+    summary: "dispatch-subagents saves a hand-back with save-handback.ts only when the reply must outlive the context."
 occurrences:
   - session: session_013zxzeRqf691rc3SdLaPbvP
     date: "2026-11-13"

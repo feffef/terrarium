@@ -7,6 +7,10 @@ ref: "issue #3299"
 notes: |-
   2026-11-11 design: no change: ADR-0003 (loaded at session start, Human-only) already says to open the PR without asking, even against the system prompt; both sessions read pr-workflow.md, so more prose is the wrong mechanism, and the only mechanism (a Stop hook for a pushed branch with no PR) cannot tell a passed gate from an unfinished one. dropped: two same-day occurrences, one minor. Revisit on a third; then consider the hook as an issue.
   2026-11-14 design: one CLAUDE.md clause (ask covers what to build, not the PR); filed as issue #3299 for the owner's wording choice on owner-facing UI.
+fixes:
+  - pr: 3305
+    date: "2026-11-14"
+    summary: "CLAUDE.md: asking first covers what to build, not whether to open the PR, except while owner-facing UI screenshots or open questions are unconfirmed."
 occurrences:
   - session: session_013zxzeQjCNYD6UbYX7LTjkR
     date: "2026-11-11"
