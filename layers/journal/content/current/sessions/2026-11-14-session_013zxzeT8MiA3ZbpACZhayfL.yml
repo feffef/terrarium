@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_013zxzeT8MiA3ZbpACZhayfL
 startedAt: 2026-11-14T00:46:18Z
-endedAt: 2026-11-14T00:58:12Z
+endedAt: 2026-11-14T00:58:38Z
 kind: autonomous
 goal: Weekly check of the Platform's own Skills
 status: in-review
@@ -77,12 +77,12 @@ frictions:
   - description: Subagents often graded against HEAD SKILL.md and said so, though step 2 asks for the text at each run's start; repeats forced me to weigh findings as unverified.
     solution: Have the data files include the SKILL.md text at the start of each run, not only a changes list.
     severity: minor
-durationSec: 714
+durationSec: 740
 models:
-  claude-sonnet-5-5: 100
+  claude-sonnet-5-5: 112
 toolCounts:
-  Bash: 24
-  Skill: 4
+  Bash: 27
+  Skill: 5
   Agent: 19
   mcp__Claude_Code_Remote__get_session: 1
   ToolSearch: 1
@@ -90,6 +90,8 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   mcp__github__add_issue_comment: 1
+  ReadNotifications: 1
+  mcp__github__pull_request_read: 1
 filesEdited:
   - layers/journal/content/current/routines/audit-docs.yml
   - layers/journal/content/current/routines/audit-skills.yml
@@ -663,97 +665,97 @@ subagents:
     durationSec: 81
     toolCalls: 12
     modelCalls: 9
-    tokenShare: 2.8
+    tokenShare: 2.7
   - task: Check audit-skills Skill
     model: sonnet
     durationSec: 145
     toolCalls: 20
     modelCalls: 19
-    tokenShare: 6.1
+    tokenShare: 5.8
   - task: Check blog-post Skill
     model: sonnet
     durationSec: 102
     toolCalls: 19
     modelCalls: 13
-    tokenShare: 4.3
+    tokenShare: 4.1
   - task: Check clear-backlog Skill
     model: sonnet
     durationSec: 110
     toolCalls: 15
     modelCalls: 12
-    tokenShare: 5
+    tokenShare: 4.8
   - task: Check close-session Skill
     model: sonnet
     durationSec: 101
     toolCalls: 13
     modelCalls: 11
-    tokenShare: 3.1
+    tokenShare: 2.9
   - task: Check digest Skill
     model: sonnet
     durationSec: 80
     toolCalls: 13
     modelCalls: 9
-    tokenShare: 4.2
+    tokenShare: 4
   - task: Check dispatch-subagents Skill
     model: sonnet
     durationSec: 175
     toolCalls: 26
     modelCalls: 20
-    tokenShare: 8.1
+    tokenShare: 7.7
   - task: Check frictions-to-fixes Skill
     model: sonnet
     durationSec: 107
     toolCalls: 13
     modelCalls: 11
-    tokenShare: 3.3
+    tokenShare: 3.1
   - task: Check glassbox-curate Skill
     model: sonnet
     durationSec: 91
     toolCalls: 12
     modelCalls: 9
-    tokenShare: 2.8
+    tokenShare: 2.6
   - task: Check glassbox-lesson Skill
     model: sonnet
     durationSec: 55
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 2
+    tokenShare: 1.9
   - task: Check glassbox-update Skill
     model: sonnet
     durationSec: 78
     toolCalls: 11
     modelCalls: 8
-    tokenShare: 2.6
+    tokenShare: 2.5
   - task: Check harvest Skill
     model: sonnet
     durationSec: 104
     toolCalls: 14
     modelCalls: 12
-    tokenShare: 3.1
+    tokenShare: 3
   - task: Check inspect-session Skill
     model: sonnet
     durationSec: 129
     toolCalls: 17
     modelCalls: 14
-    tokenShare: 5.5
+    tokenShare: 5.3
   - task: Check log-session Skill
     model: sonnet
     durationSec: 121
     toolCalls: 20
     modelCalls: 16
-    tokenShare: 4.7
+    tokenShare: 4.5
   - task: Check prune-trial Skill
     model: sonnet
     durationSec: 130
     toolCalls: 17
     modelCalls: 15
-    tokenShare: 5
+    tokenShare: 4.8
   - task: Check visitor-loop Skill
     model: sonnet
     durationSec: 114
     toolCalls: 21
     modelCalls: 15
-    tokenShare: 5.3
+    tokenShare: 5.1
   - task: Standards review of Inventory commit
     model: sonnet
     durationSec: 49
@@ -765,7 +767,7 @@ subagents:
     durationSec: 32
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 1.9
+    tokenShare: 1.8
 gitBranch: claude/loving-tesla-la9a4r
 entrypoint: remote_trigger
 cliVersion: 2.1.325
