@@ -141,8 +141,15 @@
   margin: 0 0 2.2rem;
   text-transform: none;
 }
-.atlas-crumb a { color: var(--atlas-faint); text-decoration: none; border-bottom: 1px solid transparent; }
-.atlas-crumb a:hover { color: var(--biome-accent); border-bottom-color: currentColor; }
+.atlas-crumb a {
+  display: inline-block;
+  padding: 0.3rem 0;
+  margin: -0.3rem 0;
+  color: var(--atlas-faint);
+  text-decoration: underline transparent;
+  text-underline-offset: 0.2em;
+}
+.atlas-crumb a:hover { color: var(--biome-accent); text-decoration-color: currentColor; }
 .atlas-crumb .sep { margin: 0 0.5ch; opacity: 0.55; }
 .atlas-crumb .here { color: var(--atlas-muted); }
 
