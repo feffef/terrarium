@@ -1,0 +1,629 @@
+schemaVersion: 1
+session: session_013zxzePBHiX6mZNUjPTWpWc
+startedAt: 2026-11-14T04:02:43Z
+endedAt: 2026-11-14T04:15:58Z
+kind: autonomous
+goal: "Scheduled docs audit: keep the repo's prose true to the code"
+status: in-review
+outcome: Sweep PR 3301 open for self-merge on green CI; escalation PR 3302 waits for a human merge
+summary: "Scheduled audit-docs run; no human prompted any step (all agent-initiated). Three read-only reviewers (Freshness, Single-home, Coherence) returned 15 findings, merged to 14 (B3 and C4 overlapped). Two checkers gave 2 CONFIRMED (C2, C5), 4 CONFIRMED-BUT (B1, B3+C4, B4, C1) and 8 WRONG (A1 out of scope, B2, B5, B6, B7, B8, C3's replacement, C6). Sweep PR 3301 (two commits; code-review clean, gate:scoped green) lists unshallow-on-start.ts in guards.md, rewrites the visitor-loop Inventory gist and role to match its SKILL.md with an observation note, and cuts second copies of the Persona-stance path and Tag pointers in the blog GLOSSARY. Escalation PR 3302 (Human-only .claude/rules/tenant-layers.md; code-review clean, gate green, subscribed, verdict posted) gives a cloud session the docs/proposals fallback for the workflow edit it cannot write. Left for the owner: glassbox-curate budget wording is ambiguous (C3, a rule change); glassbox-curate is graded specialist though a Routine runs it (C2, next audit-skills run); two frictions-to-fixes brief edits (B1) skipped because an open prune trial may cover them. No issue filed. Covered: README.md, SECURITY.md, deploy/README.md, layers/{blog,atlas,midden,marquee,tinkerfund}/GLOSSARY.md, CLAUDE.md, docs/agents/{github-integration,guards,triage-labels,verifying-ui-changes,issue-tracker,environment-caveats}.md, .claude/rules/*, Skills audit-skills auto-triage claude-handoff code-review codebase-design diagnosing-bugs domain-modeling frictions-to-fixes grilling handoff implement prune-trial research retro visitor-loop wayfinder wizard writing-for-agents blog-post digest dispatch-subagents glassbox-curate harvest midden-survey, ADRs 0002 0006 0007 0013 0014 0016 0018 0020-0023."
+prs:
+  - "3301"
+  - "3302"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (no reason given)
+  - path: layers/blog/GLOSSARY.md
+    reason: (read before editing)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (read before editing)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/harvest/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/midden-survey/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-curate/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0002-manifest-driven-config-generation.md
+    reason: (no reason given)
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: (no reason given)
+  - path: docs/adr/0007-derived-files-built-not-committed.md
+    reason: (no reason given)
+  - path: docs/adr/0013-content-config-built-from-manifests.md
+    reason: (no reason given)
+  - path: docs/adr/0014-build-time-virtual-routing-module.md
+    reason: (no reason given)
+  - path: docs/adr/0016-tenant-root-layer-routes.md
+    reason: (no reason given)
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: (no reason given)
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: (no reason given)
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: (no reason given)
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: (no reason given)
+  - path: docs/adr/0023-guest-driven-demo-pipeline.md
+    reason: (no reason given)
+  - path: layers/atlas/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/marquee/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/midden/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/tinkerfund/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/brief.md
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/design-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/impl-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/visitor-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
+    reason: (no reason given)
+  - path: GLOSSARY.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (no reason given)
+  - path: docs/diagrams/interactive-map/spec.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: (no reason given)
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: audit-docs
+    reason: (invoked as a slash command)
+frictions:
+  - description: Pushed the branch and started gate:scoped in one Bash call, against git-conventions' rule to keep git apart from gate runs; nothing broke.
+    solution: Push in its own call, then start the gate.
+    severity: nit
+  - description: My first verdict comment on PR 3301 gave a tally (17 findings, 5 applied) not counted against the verdict files; corrected in a later comment and the PR body.
+    solution: Count verdicts from the saved files before writing the verdict.
+    severity: minor
+durationSec: 795
+models:
+  claude-sonnet-5-5: 99
+toolCounts:
+  Read: 3
+  Skill: 4
+  Bash: 30
+  Agent: 8
+  ToolSearch: 1
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 2
+  mcp__github__add_issue_comment: 3
+  mcp__github__update_pull_request: 1
+  ReadNotifications: 1
+  mcp__github__pull_request_read: 1
+filesEdited:
+  - .claude/rules/tenant-layers.md
+  - layers/journal/content/current/skills/visitor-loop.yml
+  - docs/agents/guards.md
+  - layers/blog/GLOSSARY.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+docsReadBySubagents:
+  - docs/agents/triage-labels.md
+  - docs/agents/guards.md
+  - docs/agents/issue-tracker.md
+  - .agents/skills/auto-triage/SKILL.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/harvest/SKILL.md
+  - .agents/skills/midden-survey/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/glassbox-curate/SKILL.md
+  - docs/adr/0002-manifest-driven-config-generation.md
+  - docs/adr/0006-runtime-routing-path-prefix.md
+  - docs/adr/0007-derived-files-built-not-committed.md
+  - docs/adr/0013-content-config-built-from-manifests.md
+  - docs/adr/0014-build-time-virtual-routing-module.md
+  - docs/adr/0016-tenant-root-layer-routes.md
+  - docs/adr/0018-tenant-layers-under-layers-directory.md
+  - docs/adr/0020-requester-trust-tiers.md
+  - docs/adr/0021-multi-context-domain-docs.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+  - docs/adr/0023-guest-driven-demo-pipeline.md
+  - layers/atlas/GLOSSARY.md
+  - layers/marquee/GLOSSARY.md
+  - layers/midden/GLOSSARY.md
+  - layers/tinkerfund/GLOSSARY.md
+  - .agents/skills/audit-skills/brief.md
+  - .agents/skills/prune-trial/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/visitor-loop/decisions.md
+  - .agents/skills/frictions-to-fixes/design-brief.md
+  - .agents/skills/frictions-to-fixes/impl-brief.md
+  - .agents/skills/visitor-loop/visitor-brief.md
+  - .agents/skills/frictions-to-fixes/survey-brief.md
+  - GLOSSARY.md
+  - docs/agents/verifying-ui-changes.md
+  - .agents/skills/clear-backlog/SKILL.md
+  - docs/diagrams/interactive-map/spec.md
+  - .agents/skills/audit-docs/SKILL.md
+  - docs/proposals/README.md
+  - docs/adr/0027-prune-trials.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/audit-skills/SKILL.md
+      - rule: .claude/rules/adr-0015.md
+        via: native
+        trigger: .agents/skills/audit-skills/SKILL.md
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/journal/content/current/skills/visitor-loop.yml
+      - rule: .claude/rules/adr-0026.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: gate and code-review before PRs
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: steered
+        why: split rule edit into escalation PR
+      - path: .claude/rules/adr-0027.md
+        value: steered
+        why: skipped trial-covered edits
+      - path: .claude/rules/adr-0003.md
+        value: backed
+      - path: .claude/rules/adr-0017.md
+        value: backed
+      - path: docs/agents/pr-workflow.md
+      - path: docs/agents/git-conventions.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0020.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+      - rule: .claude/rules/adr-0026.md
+        via: hint
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+      - rule: .claude/rules/guards.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0001.md
+        via: hint
+      - rule: .claude/rules/adr-0011.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: docs/agents/git-conventions.md
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: CLAUDE.md
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/adr-0020.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0026.md
+        via: hint
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0003.md
+        value: backed
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/adr-0020.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+      - rule: .claude/rules/adr-0010.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+      - rule: .claude/rules/adr-0026.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/guards.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0027.md
+        value: backed
+      - path: .claude/rules/adr-0029.md
+        value: backed
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: backed
+      - path: .claude/rules/ui-verification.md
+        value: backed
+      - path: .claude/rules/guards.md
+        value: backed
+      - path: docs/agents/guards.md
+      - path: docs/agents/triage-labels.md
+  - by: general-purpose
+    subagent: 3
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0020.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+      - rule: .claude/rules/adr-0026.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: general-purpose
+    subagent: 4
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0020.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+      - rule: .claude/rules/guards.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0027.md
+        value: steered
+      - path: .claude/rules/adr-0015.md
+        value: backed
+      - path: .claude/rules/adr-0021.md
+        value: backed
+      - path: .claude/rules/adr-0022.md
+        value: backed
+      - path: docs/agents/git-conventions.md
+  - by: general-purpose
+    subagent: 5
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/guards.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .claude/rules/guards.md
+        value: backed
+      - path: docs/agents/guards.md
+  - by: general-purpose
+    subagent: 6
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: general-purpose
+    subagent: 7
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0026.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+subagents:
+  - type: general-purpose
+    task: "Audit A: Freshness"
+    durationSec: 112
+    toolCalls: 39
+    modelCalls: 28
+    tokenShare: 15.3
+  - type: general-purpose
+    task: "Audit B: Single-home"
+    durationSec: 97
+    toolCalls: 17
+    modelCalls: 14
+    tokenShare: 10.1
+  - type: general-purpose
+    task: "Audit C: Coherence"
+    durationSec: 175
+    toolCalls: 27
+    modelCalls: 25
+    tokenShare: 17
+  - type: general-purpose
+    task: Checker 1 of docs findings
+    durationSec: 83
+    toolCalls: 19
+    modelCalls: 15
+    tokenShare: 6.1
+  - type: general-purpose
+    task: Checker 2 of docs findings
+    durationSec: 126
+    toolCalls: 31
+    modelCalls: 27
+    tokenShare: 11.1
+  - type: general-purpose
+    task: Review standards of sweep diff
+    durationSec: 22
+    toolCalls: 10
+    modelCalls: 5
+    tokenShare: 2.1
+  - type: general-purpose
+    task: Review spec of sweep diff
+    durationSec: 16
+    toolCalls: 7
+    modelCalls: 3
+    tokenShare: 1.6
+  - type: general-purpose
+    task: Review escalation diff
+    durationSec: 14
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 1.6
+gitBranch: claude/festive-mayer-yimldw
+entrypoint: remote_trigger
+cliVersion: 2.1.325
+trigger: audit-docs
+landedBy: Stop
