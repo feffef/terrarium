@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeP4m4R15EP9UBBmzfR
 startedAt: 2026-11-14T08:45:44Z
-endedAt: 2026-11-14T08:53:33Z
+endedAt: 2026-11-14T08:58:25Z
 kind: autonomous
 goal: Weekly curate run on the Glass Box guide
-status: in-review
-outcome: PR 3311 rewords nine jargon-heavy term definitions; waiting on CI before self-merge
-summary: "Scheduled glassbox-curate run, no human prompt (agent-initiated focus). Oriented, read the guide index in full and started a Scout. The memory page's stale Headless browser lead was already fixed by a glassbox-update re-pin, so I only deleted it. I took the term-definitions lead instead and reworded nine definitions in plainer words. A sonnet claim checker found three over-narrow phrases (pages vs code, caching rules), which I fixed. The Scout found one gap, area labels, which went on the memory page. The gate passed. PR 3311 is open and subscribed; merge and the final log come next turn. Shortcuts: no opus writer or fresh reader (wording only), the Verification Subject was not read in full, and I did my own diff read instead of code-review although the change touches 11 files."
+status: completed
+outcome: "PR 3311 merged: nine jargon-heavy term definitions reworded"
+summary: "Scheduled glassbox-curate run, no human prompt (agent-initiated focus). Oriented, read the guide index in full and started a Scout. The memory page's stale Headless browser lead was already fixed by a glassbox-update re-pin, so I only deleted it. I took the term-definitions lead instead and reworded nine definitions in plainer words. A sonnet claim checker found three over-narrow phrases (pages vs code, caching rules), which I fixed. The Scout found one gap, area labels, which went on the memory page. The gate passed. PR 3311 passed CI and was merged by merge-pr.ts after a verdict comment. I stopped after one run with budget left (about 150k tokens estimated, get_session unavailable), which the Skill's Loop step does not allow. Shortcuts: no opus writer or fresh reader (wording only), the Verification Subject was not read in full, and I did my own diff read instead of code-review although the change touches 11 files."
 prs:
   - "3311"
 docsRead:
@@ -49,17 +49,20 @@ frictions:
   - description: The orientation's first memory lead (stale Headless page) was already fixed, so I spent a page read and a source check confirming it.
     solution: Have orient.ts or the memory page note leads against the page's current revision.
     severity: nit
-durationSec: 469
+durationSec: 761
 models:
-  claude-sonnet-5-5: 65
+  claude-sonnet-5-5: 83
 toolCounts:
-  Bash: 21
+  Bash: 25
   Read: 12
   Agent: 2
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  Skill: 2
+  Skill: 4
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/glassbox/content/guide/terms/aggregator.yml
   - layers/glassbox/content/guide/terms/catalog.yml
@@ -184,13 +187,13 @@ subagents:
     durationSec: 27
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 9.5
+    tokenShare: 7.3
   - task: Claim-check term definitions
     model: sonnet
     durationSec: 36
     toolCalls: 8
     modelCalls: 8
-    tokenShare: 9.3
+    tokenShare: 7.1
 gitBranch: claude/compassionate-bardeen-0jnwc6
 entrypoint: remote_trigger
 cliVersion: 2.1.325
