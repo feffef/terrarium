@@ -9,32 +9,6 @@ role: >-
   gated PR on green (ADR-0003/0004), filing an issue only for a factual conflict
   it can't resolve. Use it when docs and code drift apart.
 observations:
-  - date: "2026-10-04"
-    note: >-
-      Re-checked (audit-skills behaviour check), 7 usedIn sessions. Two
-      freshly-checked, previously-unverified sessions both clean:
-      session_01BEQMve6mV2yNDTMmjiCAYL (PR #1527, 13 fixes across 13 docs,
-      matching the log) correctly filed issue #1526 for a genuine
-      unresolved conflict (prune-trial vs. guards.md on unattended
-      hook-writing); session_01CbWrei9SvmrH9vjNx2MB2f (PR #1544, 17 fixes
-      across 14 docs) correctly left Prune-Trial territory untouched, no
-      issue needed. Both the 2026-10-03 dropped-Friction finding (#1541) and
-      #1526 are now resolved: #1541 fixed via merged PR #1566
-      (github-integration.md:20-34 now correctly distinguishes local-CLI vs.
-      cloud-session `gh`), #1526 fixed via merged PR #1565 (prune-trial now
-      files a hook issue instead of writing one unattended). No reverts in
-      the 2-week git-log sweep. Grade unchanged.
-  - date: "2026-10-04"
-    note: >-
-      Verified, minor (second audit-skills check today): (1) the concision lens is
-      thinly covered — session_01JrdPvboL7hEVfdfvTyfSCb (10-04) logged "Concision
-      reviewer only covered a few docs; Skills and journal pages unreviewed" and
-      session_01CbWrei9SvmrH9vjNx2MB2f (10-03) logged the same shape, so every
-      fix still lands but "every live doc and Skill" is not read by that lens.
-      (2) session_01RA14XShYErE96EXs3TMX3c (#1501, 09-30) logged that it
-      "fact-checked findings myself ... rather than dispatching a separate
-      checker"; later runs dispatched one. No damage seen. Both below the
-      escalation bar. Grade unchanged.
   - date: "2026-10-05"
     note: >-
       New silent failure, escalated as issue #1608: PR #1501
@@ -371,3 +345,6 @@ observations:
   - date: "2026-11-12"
     note: >-
       Behaviour check, 7 runs delivered, no revert. Minor repeat: verdict counts miscounted in a PR comment or checker preamble in 11-08, 11-09, 11-11 runs, each self-corrected. Unverified: whether the 11-11 Covered line is accurate. Grade unchanged.
+  - date: "2026-11-14"
+    note: >-
+      Behaviour check, 7 runs delivered, no revert. Repeats: verdict counts miscounted in 11-08, 11-09, 11-11 runs (self-corrected); thin reviewer coverage of Live files on 11-12 (step 1 has no coverage test). session_013zxzeRYiNjyrjrq8JVWSuu in-review log explained by the later stale-log hook. Unverified: the 11-13 run against its post-4c52cba7f text. Grade unchanged.

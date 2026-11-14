@@ -9,23 +9,6 @@ role: >-
   Inventory's grades in line with usage as a by-product, self-merging those
   edits (ADR-0015).
 observations:
-  - date: "2026-10-04"
-    note: >-
-      Self-check: dispatched 12 behaviour-check subagents this run (one per
-      behaviourChecks entry), all 12 reports verified against primary
-      sources. Confirmed issue #1514 (the recurring gh-pagination 403
-      cited above) is now genuinely fixed: commit 550b32c1/86695376, merged
-      via PR #1567. Two new findings from dispatch-subagents escalated as
-      fresh issues (#1585, a repeat branch-collision shape; #1586, a
-      missed-invocation regression against the just-closed #1248) rather
-      than comments, since neither had a standing open-issue home. One
-      visitor-loop finding (owner-memory's 5th consecutive skip, the first
-      under its own stronger #1515 fix) led to reopening #1515 and
-      commenting the new evidence. Step 3 closure completeness: orphan scan
-      ran clean this time (`scanned: true`, 1002 merged PRs, 852 with a
-      session — the #1514 403 that dogged prior runs is fixed), both
-      orphan candidates already carry `resolvedBy`, humanPromptedClosures
-      and manuallyRescuedClosures both empty. Grade/role unchanged.
   - date: "2026-10-05"
     note: >-
       Self-check: dispatched 10 behaviour-check subagents this run,
@@ -570,3 +553,6 @@ observations:
   - date: "2026-11-13"
     note: >-
       Behaviour check, 7 runs delivered, all PRs merged. Verified, n=1: session_013zxzeTKpnXCQm75L92QGhL read its own 22-file Inventory diff (PR #3122) in place of code-review and disclosed it; its friction says pr-workflow does not say whether a data-only Inventory PR counts as simple. Runs of 11-06 to 11-11 ran code-review. Unverified: check-states --text before #3121. Grade unchanged.
+  - date: "2026-11-14"
+    note: >-
+      Behaviour check, 7 runs delivered, all PRs merged, no revert. Verified: the 11-10 run (session_013zxzePXTf8YZ6THtADS4yY) left a repeat as an observation because no open issue matched; b09dd4702 now covers closed issues. Repeat n=2: session_013zxzeTKpnXCQm75L92QGhL read its own diff instead of code-review for a data-only Inventory PR; pr-workflow is unclear whether that counts as simple. Unverified: check-states --text before several issues. Grade unchanged.
