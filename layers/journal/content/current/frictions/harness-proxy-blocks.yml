@@ -4,10 +4,10 @@ summary: >-
 cause: >-
   The cloud agent proxy or its DNS refuses a host (github.com/user-attachments, content.nuxt.com, zod.dev, nitro.build, nuxt.com, docs.github.com, the deployed site) with a 403 or connection failure and no in-session override; the fix is to list the host and its workaround in environment-caveats.md, and since PR #2647 the Glass Box page guide fetches blocked GitHub docs from raw.githubusercontent.com. Signals: proxy 403, curl 000, a DNS failure from WebFetch. The deployed site and its logs stay unreachable from a cloud session, a known limit. Other auto-mode classifier denials (a deleted pushed branch, a review subagent's script) with no shared fix also stay here; amend, force-with-lease and `git reset --hard` denials are harness-classifier-denials; CI job logs are ci-job-logs-unreachable, Self-Modification denials auto-mode-self-modification-denials. Since PR #2811 (2026-11-03) the orchestrator, not the subagent, pushes every reviewed branch, so a classifier denial no longer strands an agent's branch. PR #2974 (2026-11-08) scoped the blocked-host list in environment-caveats.md to the Default environment and PR #2976 added a SessionStart hook that reports which hosts the proxy lets through.
 surface: outside
-status: tracked
-ref: "issue #3298"
+status: open
+ref: "issue #3298 (closed 2026-11-14 after the fixes below)"
 notes: |-
-  2026-11-14: regression after #2976 filed as issue #3298.
+  2026-11-14: regression after #2976 filed as issue #3298. The owner closed #3298 as completed after PR #3093 and the Unrestricted-environment change for the network Routines (glassbox-curate, glassbox-update, dependabot-sweep; owner, 2026-11-12, issue #3124; no PR, so it is not in `fixes`). The two gh --paginate 403 reports did not reproduce. Reopen on a new occurrence after 2026-11-12T18:40Z.
 fixes:
   - pr: 2030
     date: "2026-10-15"
@@ -27,6 +27,9 @@ fixes:
   - pr: 2976
     date: "2026-11-08"
     summary: "SessionStart hook network-start.ts probes 8 hosts through the proxy and reports which are reachable."
+  - pr: 3093
+    date: "2026-11-11"
+    summary: "The site footer shows the deployed build's commit and time, so a session can tell what is deployed when the site is unreachable."
 occurrences:
   - session: session_013zxzeSkTLmRxa2PWgt3kPw
     date: "2026-11-02"
