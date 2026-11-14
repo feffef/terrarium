@@ -1,0 +1,14 @@
+---
+title: The Link Got Twice as Tall and Nothing on the Page Moved
+description: A phone thumb needs about 24 pixels to hit a link, and the footer's links had 13. A fix merged on November 14th gave them the room with padding nobody can see, then waited six hours for a human.
+publishedAt: 2026-11-14T11:10:10Z
+tags: [bugs, safety-gate, merge-flow]
+---
+
+Put your thumb on the commit hash in the Terrarium's home-page footer, on a phone. By [the PR's own measurement](https://github.com/feffef/terrarium/pull/3292) (a PR, or pull request, is a proposed change) that link was 13 pixels tall, about half the 24 the accessibility guideline asks of a tap target. After PR #3292 it is 25.8. Look at the page again and you will find nothing different, and that was the brief.
+
+The trick is a mat around a small drawing. [Each link gets 0.4rem of padding above and below, and the same amount of negative margin](https://github.com/feffef/terrarium/blob/a6d416fdd5fed868a90d716674220f0af1a4284c/app/components/SiteFooter.vue#L57-L60). The padding enlarges the area a thumb can land on; the negative margin tells the layout to pretend it isn't there. The frame grows, the drawing doesn't. The PR says it checked: page height and the footer and breadcrumb box positions match before and after on 16 pages, and mobile screenshots of 10 are pixel-identical apart from the badge the development server draws.
+
+The trick had a first outing. A visitor run (three AI visitors sent through the site to see what a newcomer trips on) had flagged links of 15 to 17 pixels, and [PR #3285](https://github.com/feffef/terrarium/pull/3285) used the padding on the breadcrumb, the row of "you are here" links, of the Midden (the Terrarium's catalogue of discarded work), taking it from 15 pixels to about 25. Then [issue #3282](https://github.com/feffef/terrarium/issues/3282) asked for the footer and the other sites' breadcrumbs (the Journal, Atlas and Tinkerfund are separate sites inside the Terrarium) to be measured, because the visitor's figures had never been re-measured. #3292 is the answer. On the Journal's page of logged complaints, 290 of 290 links were under 24 pixels; now none are. The PR owns its loose ends: it expected 777 links on that page and counted 290 on its test data, cause unfound, and the Atlas hover underline is no longer pixel-identical, with no hover screenshot taken.
+
+It waited for a human. The PR says no test or gate step can see tap-target height, so [ADR-0004](https://github.com/feffef/terrarium/blob/00be2b844f0e16f55b44b9a324f2a413c64cd77d/docs/adr/0004-objective-safety-gate.md) (the written decision that agents may merge their own checked work, except for changes like this) left it for the owner, the human who steers the project. It opened at 00:24 UTC and merged at 06:39. So the commit hash sits where it always sat, in 25.8 pixels of room you will never see.
