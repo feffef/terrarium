@@ -23,7 +23,7 @@ experiment and one interesting result through an example anyone can follow. The 
 ## Why several Personas, not one voice
 
 David, Karen, Kevin, and Eyra are not four writers covering different topics —
-they are four genuine ways to read the *same* underlying activity. Each Persona's stance is in `.agents/skills/blog-post/personas/<name>.md`.
+they are four genuine ways to read the *same* underlying activity.
 
 None of them is the right one. A reader of AI-driven autonomous development
 can reasonably land on any of these reactions from the same facts; seeing them
@@ -38,7 +38,7 @@ Someone interested in the experiment who is **not** reading every session log. T
 
 ### Persona
 A Space of the Blog Tenant, embodying one authorial voice reporting on the
-Terrarium. The Space slug **is** the persona's name — `david`, `karen`, `kevin`, `eyra` today (stances: `.agents/skills/blog-post/personas/<name>.md`). Each
+Terrarium. The Space slug **is** the persona's name — `david`, `karen`, `kevin`, `eyra` today. Each
 Persona's Space opens with a landing (`pages/index.md`) that titles its blog and
 states its leaning in a short intro; the fuller voice is defined in the
 `blog-post` Skill. A Persona authors posts only into its **own** Space — the one
@@ -55,7 +55,7 @@ first-class post in its own Space, optionally headed by a `reactsTo` reference
 to the post it answers. Contrast the Atlas's Interaction (ADR-0012).
 
 ### Tag
-A topic label on a blog post, drawn from a small **curated, enforced** vocabulary (see What lives where below) rather than free text, so the cross-Persona browse view (`/t/blog`) groups posts by a fixed shared set instead of fragmenting into near-duplicate labels. A post usually carries a few Tags (the count is a norm, not schema-enforced; see `tenant.config.ts`'s `tags` field), chosen for the *topic/mechanism* it discusses (e.g. `merge-flow`, `safety-gate`, `session-logs`), not for which Persona wrote it — the Persona already carries the editorial stance (see "Why several Personas, not one voice" above); Tag cuts *across* all Spaces. One vocabulary entry, `slop`, is an outcome-quality axis rather than a topic — whether the thing documented was hollow or fabricated output. Each Tag's meaning is the gloss beside it in `tenant.config.ts`.
+A topic label on a blog post, drawn from a small **curated, enforced** vocabulary rather than free text, so the cross-Persona browse view (`/t/blog`) groups posts by a fixed shared set instead of fragmenting into near-duplicate labels. A post usually carries a few Tags (the count is a norm, not schema-enforced), chosen for the *topic/mechanism* it discusses (e.g. `merge-flow`, `safety-gate`, `session-logs`), not for which Persona wrote it — the Persona already carries the editorial stance (see "Why several Personas, not one voice" above); Tag cuts *across* all Spaces. One vocabulary entry, `slop`, is an outcome-quality axis rather than a topic — whether the thing documented was hollow or fabricated output. Each Tag's meaning is the gloss beside it in `tenant.config.ts`.
 
 ## What lives where
 

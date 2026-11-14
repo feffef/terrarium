@@ -1,13 +1,13 @@
 name: visitor-loop
 category: platform-operation
 importance: routine
-gist: Sends test visitors through the site and fixes what they flag.
+gist: Sends test visitors through the site and files what they find.
 role: >-
-  The self-growth loop: three blind first-time visitors, each a different
-  model, browse one rotating part of a live build; the run fixes what two or
-  more flag, builds their best feature idea, and self-merges both PRs after
-  `code-review` on a green gate. A script lists owner corrections for
-  `decisions.md`, so rejected ideas stay rejected.
+  The daily visit run: three Sonnet visitors (one blind, two informed) each
+  browse one rotating part of a live build through a different lens. It files
+  verified bugs as issues and logs ideas and learnings for `harvest`; it
+  changes no code and opens no PR. An idea that contradicts a line in
+  `decisions.md` is dropped, so rejected ideas stay rejected.
 observations:
   - date: "2026-10-05"
     note: >-
@@ -373,3 +373,6 @@ observations:
   - date: "2026-11-14"
     note: >-
       Behaviour check, 5 runs, no missed invocation. Evidence against the 11-13 possible-stop note: session_013zxzeQkoNR2Xn8JcaSEbxY ran scheduled on 11-13 with no owner message; Routine file not checked. Minor: its retro says no frictions while its log lists 2; session_013zxzeQpVcWQaKyrR36MwpN retro says 8 ideas, log has 9. 76a1172d6 removed the Update checks list #2994 delivered; owner instruction unverified. Grade unchanged.
+  - date: "2026-11-14"
+    note: >-
+      audit-docs rewrote gist and role to match SKILL.md (Remit: files bugs as issues, logs ideas for harvest, no branch or PR; one blind and two informed Sonnet visitors). The old text described building and self-merging and a removed owner-corrections script (only ideas.ts remains in scripts/). Grade unchanged.
