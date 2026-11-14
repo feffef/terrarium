@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRDWicEfcb8rCWFepr
 startedAt: 2026-11-14T07:33:17Z
-endedAt: 2026-11-14T07:46:14Z
+endedAt: 2026-11-14T07:50:38Z
 kind: autonomous
 goal: Weekly sync of the Glass Box guide pages with main
-status: in-review
-outcome: "PR #3308 open: 35 pages pinned to main, excerpts re-lined, one false claim fixed, five pages fully checked; gate green"
-summary: "Scheduled glassbox-update run, no human prompt. Pinned every guide page to a6749d6 with the script, re-lined five pages whose edited excerpt ranges the script leaves alone, and fixed headless-browser prose for the new hydration and dev-readiness waits. Five sonnet claim checkers (one pilot, then four) covered 34 pages: five rotation pages in full, the rest scoped. One confirmed false claim (visitor-loop ideas on the ideas page) was fixed. Gate passed; I opened PR #3308 and subscribed. I read the diff myself instead of running code-review. Merge is still to do after CI is green."
+status: completed
+outcome: "PR #3308 merged: 35 pages pinned to main, excerpts re-lined, one false claim fixed, five pages fully checked; gate green"
+summary: "Scheduled glassbox-update run, no human prompt. Pinned every guide page to a6749d6 with the script, re-lined five pages whose edited excerpt ranges the script leaves alone, and fixed headless-browser prose for the new hydration and dev-readiness waits. Five sonnet claim checkers (one pilot, then four) covered 34 pages: five rotation pages in full, the rest scoped. One confirmed false claim (visitor-loop ideas on the ideas page) was fixed. Gate passed; I opened PR #3308, posted my verdict once CI was green and merged it with merge-pr.ts. I read the diff myself instead of running code-review."
 prs:
   - "3308"
 docsRead:
@@ -69,19 +69,23 @@ frictions:
   - description: Claim checkers flagged excerpt ranges I had already re-lined, because the stale-range findings predate the edits; I re-verified each by hand.
     solution: Tell checkers in the brief that excerpt line ranges are already advanced and not to report them.
     severity: nit
-durationSec: 778
+durationSec: 1042
 models:
-  claude-sonnet-5-5: 121
+  claude-sonnet-5-5: 139
 toolCounts:
-  Bash: 46
+  Bash: 50
   Read: 4
   Write: 3
   Agent: 5
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  Skill: 2
+  Skill: 3
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/workshop/checks/update.yml
   - layers/glassbox/content/guide/pages/verification/80.headless-browser-checks.md
@@ -330,31 +334,31 @@ subagents:
     durationSec: 122
     toolCalls: 21
     modelCalls: 20
-    tokenShare: 11.6
+    tokenShare: 10.5
   - task: Claim check group 2
     model: sonnet
     durationSec: 143
     toolCalls: 25
     modelCalls: 17
-    tokenShare: 9.2
+    tokenShare: 8.3
   - task: Claim check group 3
     model: sonnet
     durationSec: 171
     toolCalls: 35
     modelCalls: 29
-    tokenShare: 12.8
+    tokenShare: 11.6
   - task: Claim check group 4
     model: sonnet
     durationSec: 159
     toolCalls: 29
     modelCalls: 23
-    tokenShare: 12.2
+    tokenShare: 11
   - task: Claim check group 5
     model: sonnet
     durationSec: 77
     toolCalls: 16
     modelCalls: 12
-    tokenShare: 5.9
+    tokenShare: 5.3
 gitBranch: claude/relaxed-einstein-qjfsqe
 entrypoint: remote_trigger
 cliVersion: 2.1.325
