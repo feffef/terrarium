@@ -8,16 +8,6 @@ notes: |-
   2026-10-28 design: another digest Skill line dropped: it already says to read ADR-0010 before the first Digest; the hint is the designed backstop and the late read changed nothing. dropped: a guard would be Human-only.
   2026-10-30 design: change the hint or its rules' paths (issue #2575's candidates) dropped: all Human-only files; 85 of 86 late reads changed nothing, 0 'no' verdicts, so the cost is one call
 occurrences:
-  - session: session_013zxzeS5X2KXN7xVdXxNmdN
-    date: "2026-10-30"
-    severity: nit
-    description: "Edited docs covered by ADR-0029, 0009 and 0017 without reading those ADRs in full, though the post-edit hook asked; only read ADR-0027."
-    solution: "The summary rules were enough for pointer-only edits; the hook could skip ADRs the edit merely cites."
-  - session: session_013zxzeQmQLYRYBUN1FkDfN6
-    date: "2026-10-30"
-    severity: nit
-    description: "Post-edit hook asked me to read ADR-0027, 0005 and 0012 only after I had already committed the prune; none changed it."
-    solution: "Load the ADR rules for prune-trials.yml and Skills at session start of a prune-trial run."
   - session: session_013zxzeScPetuchKVyaP1PDZ
     date: "2026-10-31"
     severity: nit
@@ -198,3 +188,28 @@ occurrences:
     severity: nit
     description: "ADR-0025 and the UI doc were read only after the edit, prompted by the PostToolUse hook."
     solution: "A rule on app/pages/index.vue loading at first read, not only after the edit."
+  - session: session_013zxzeNdAgdKF5tpWTQLowx
+    date: "2026-11-13"
+    severity: nit
+    description: "Both builders were asked by a post-edit hook to read up to six ADRs in full after one-sentence edits; one skipped them and said so, the other read them after writing the script."
+    solution: "Known entry adr-read-after-edit; no change proposed."
+  - session: session_013zxzePKLPsiqSXCrEd1QCE
+    date: "2026-11-13"
+    severity: nit
+    description: "The ADR-0021 read that the PostToolUse hook asked for came after I had edited layers/glassbox/GLOSSARY.md; the edit was already right."
+    solution: "Read the glossary rules before editing a glossary, not after the hook fires."
+  - session: session_013zxzeRbcVWW7Upv1bSok39
+    date: "2026-11-13"
+    severity: nit
+    description: "Skipped the ADR reads the post-edit hint asked for after writing the docs; the ADR agent had read them in full"
+    solution: "None needed; late-read hint fired on a docs-only research note"
+  - session: session_013zxzeNmq54AMia53quaCHn
+    date: "2026-11-13"
+    severity: nit
+    description: "The Write hook pointed to ADR-0027 as governing a new file in docs/design; the read changed nothing."
+    solution: "Narrow the adr-0027 rule's paths so docs/design proposals do not match."
+  - session: session_013zxzeP357BagrJREfWSJ6U
+    date: "2026-11-13"
+    severity: nit
+    description: "The adr-read hint fired five times in a row for five Edit calls to one new docs/design file, each asking for ADR-0027, which did not bear on the edits."
+    solution: "Fire the hint once per ADR per session; ADR-0027's rule matches docs/** too broadly for a design note."

@@ -5,6 +5,8 @@ import { resolveBuildInfo } from './shared/build-info'
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-04',
 
+  app: { head: { htmlAttrs: { lang: 'en' } } },
+
   // Tenants are Nuxt layers (GLOSSARY.md). They live under Nuxt's conventional
   // `layers/` directory (ADR-0018), so Nuxt auto-extends every `layers/*` — no
   // hand-curated `extends` list. A Tenant without its own fit-out simply has no

@@ -172,8 +172,15 @@
   margin: 0 0 2rem;
   text-transform: none;
 }
-.midden-crumb a { color: var(--midden-faint); border-bottom: 1px solid transparent; }
-.midden-crumb a:hover { color: var(--midden-accent); border-bottom-color: currentColor; }
+.midden-crumb a {
+  display: inline-block;
+  padding: 0.25rem 0;
+  margin: -0.25rem 0;
+  color: var(--midden-faint);
+  text-decoration: underline transparent;
+  text-underline-offset: 0.2em;
+}
+.midden-crumb a:hover { color: var(--midden-accent); text-decoration-color: currentColor; }
 .midden-crumb .sep { margin: 0 0.5ch; opacity: 0.55; }
 .midden-crumb .here { color: var(--midden-muted); }
 
@@ -198,6 +205,8 @@
 .midden-sechead__title {
   font-family: var(--midden-hand);
   font-size: 1.35rem;
+  font-weight: normal;
+  margin: 0;
   color: var(--midden-accent);
 }
 .midden-sechead__rule {

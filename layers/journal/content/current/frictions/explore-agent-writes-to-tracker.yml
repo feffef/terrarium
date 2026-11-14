@@ -10,6 +10,9 @@ fixes:
   - pr: 3196
     date: "2026-11-12"
     summary: "run-summary.ts flags a build explore result with no writes as NO WRITES."
+  - pr: 3304
+    date: "2026-11-14"
+    summary: "clear-backlog section 1: after explore, the orchestrator compares each issue's comments and labels with the agent's reported writes before reporting them."
 occurrences:
   - session: session_013zxzeShqaQAEUkXf1Hwnd6
     date: "2026-11-11"

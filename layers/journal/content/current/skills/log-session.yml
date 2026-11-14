@@ -9,23 +9,6 @@ role: >-
   bounded exception). Usually invoked by `close-session`; call it directly only
   to amend a written log.
 observations:
-  - date: "2026-10-04"
-    note: >-
-      Re-checked (audit-skills behaviour check), 10 newest usedIn sessions
-      (PRs #1563-1584, windowSessionsNotUsing empty — every windowed session
-      used it): all 10 confirmed committed to origin/main with a correct
-      field split (authored vs. derived), honest frictions including two
-      self-reported major ones (a main-red regression, a shipped visible
-      bug), and `landedBy: Stop` on every one. No reverts or regressions
-      touching this Skill's authoring/field-split/commit mechanics in the
-      2-week git-log sweep. Grade/role unchanged.
-  - date: "2026-10-04"
-    note: >-
-      Watch-only (second audit-skills check today): session a1af4e46-8293-4f33-bf41-c956bd7f6306
-      logged a SHELL-READ-DETECTION miss after the output-matching rewrite (a doc
-      "named but output shows no line"; its own guess: the file was deleted from the
-      tree later). n=1 among ~25 later sessions, no filed issue. Grade/role
-      unchanged.
   - date: "2026-10-05"
     note: >-
       Re-checked, 10 newest usedIn sessions: clean field-split, genuine
@@ -366,3 +349,6 @@ observations:
   - date: "2026-11-10"
     note: >-
       Behaviour check, 10 runs, all logs landed, PRs merged. ruleVerdicts incomplete in 4 of 10 (tenth window; rates now 3,1,1,3,3,1,2,4,1,2,4): session_013zxzeQyUMxeD3fYivwaeLU 21 of 33 missing, session_013zxzeQMfaaC4C4CNuFY3EH 15 of 29 (both subagent-loaded, no friction logged), session_013zxzeNd2Ethpd3anqbmpkr 1, session_013zxzePitVv4rX66ZhZa4kw 1. Tracked by #2607 and #2645, no new comment. Grade unchanged.
+  - date: "2026-11-14"
+    note: >-
+      Behaviour check, 10 runs, all logs landed, no silent failure. The ruleVerdicts-incomplete pattern (#2607, #2645) did not recur: ruleUse (#3009, #3020) replaced it and all 10 logs have answered: true. Two Skill-less sessions (session_013zxzeRumtXDY7MVhKUgVT7, session_013zxzeR9Usddfqi4gQ697DR) read the SKILL.md and logged through close-session. Grade unchanged.

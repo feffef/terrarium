@@ -13,6 +13,9 @@ fixes:
   - pr: 3092
     date: "2026-11-11"
     summary: "glassbox-update.ts reports needsReader per page; SKILL.md step 5 sends no claim-check reader to a flagged page whose changed paths are all covered by shifted ranges, except the rotation page."
+  - pr: 3303
+    date: "2026-11-14"
+    summary: "glassbox-update step 4 re-checks a flagged page as a whole only for needsReader true, prose-only flags and rotation pages; other flagged pages get a quick look."
 occurrences:
   - session: session_013zxzeNsjXNYsepq7RSwxjV
     date: "2026-11-04"

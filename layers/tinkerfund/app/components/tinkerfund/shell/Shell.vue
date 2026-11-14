@@ -35,6 +35,7 @@ useHead({
   .demo .tf-wrap span[aria-hidden] { display: none; }
   .demo .tf-wrap > span:first-child { flex-basis: 100%; text-align: center; }
 }
+.demo .tf-link { padding-block: 3px; margin-block: -3px; }
 .skip {
   position: absolute;
   left: 8px;

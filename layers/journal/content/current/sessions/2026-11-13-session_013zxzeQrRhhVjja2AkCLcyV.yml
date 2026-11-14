@@ -1,0 +1,132 @@
+schemaVersion: 1
+session: session_013zxzeQrRhhVjja2AkCLcyV
+startedAt: 2026-11-13T10:48:25Z
+endedAt: 2026-11-13T10:56:44Z
+kind: interactive
+goal: "Journal session card: token bar lists subagents first, main last"
+status: partial
+outcome: Change built, tested, committed, pushed and rendered; no PR, gate or code review yet
+summary: "The owner asked to reorder the Journal session card's subagent token bar: subagent shares first, the main session last with a fuller label than \"main\". I located the bar (SessionCard.vue, sessionTokenBar in dashboard.ts) and, per the owner's preference, asked three questions first. Human-instructed: the reorder, hover-title-only placement, order of appearance (alphabetical considered, not chosen), and the label wording (the owner dictated \"the session that directed the subagents and that users interact with directly\", mentioned only for interactive, and \"the session users created to trigger the work\" for delegated). Agent-initiated: threading `kind` through the card view, the autonomous label, and updating the unit tests. I then committed and pushed because the Stop hook asked, without rendering the change. The owner next asked me to render and show it, and then told me to log that omission as a friction. I rendered an interactive, a delegated and an autonomous session with a throwaway Playwright script. The bar and hover titles came out as intended. Open: gate:scoped, code-review, whether any touched file is Human-only, and the owner's sign-off on the render before any PR."
+prs: []
+docsRead:
+  - path: layers/journal/app/components/journal/SessionCard.vue
+    reason: (read before editing)
+  - path: layers/journal/app/utils/dashboard.ts
+    reason: (read before editing)
+  - path: layers/journal/tests/unit/journal-dashboard.spec.ts
+    reason: (read before editing)
+  - path: layers/journal/app/types/journal.ts
+    reason: (read before editing)
+  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: log the owner-requested UI-verification friction
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Committed and pushed an owner-facing UI change without rendering it or showing the owner; they had to ask for the render.
+    solution: "Rule: a session or issue that only adds or changes UI must render and show it, and the owner signs off before code review. Make that a CLAUDE.md or ui-verification.md must-have, and have the Stop hook's commit nudge defer to it."
+    severity: moderate
+  - description: Read the Journal GLOSSARY only by grep, and read ui-verification.md's linked doc only after the owner asked for a render.
+    solution: Read the Tenant glossary whole and the UI doc before the first edit; the rule load did not force it.
+    severity: nit
+  - description: preview.ts shot only captures whole pages; a 6000px full-page shot was unreadable, so I wrote a throwaway Playwright script to clip one element.
+    solution: Add a --selector option to preview.ts shot and screenshot.ts.
+    severity: minor
+durationSec: 499
+models:
+  claude-sonnet-5-5: 78
+toolCounts:
+  Grep: 11
+  Read: 12
+  AskUserQuestion: 1
+  Edit: 5
+  Bash: 15
+  Write: 1
+  Skill: 2
+filesEdited:
+  - layers/journal/app/utils/dashboard.ts
+  - layers/journal/app/types/journal.ts
+  - layers/journal/app/components/journal/SessionCard.vue
+  - layers/journal/tests/unit/journal-dashboard.spec.ts
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0008.md
+adrHints:
+  - adr: 8
+    via: path
+    readAfter: true
+    by: main
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/journal/app/components/journal/SessionCard.vue
+      - rule: .claude/rules/tenant-layers.md
+        via: native
+        trigger: layers/journal/app/components/journal/SessionCard.vue
+      - rule: .claude/rules/ui-verification.md
+        via: native
+        trigger: layers/journal/app/components/journal/SessionCard.vue
+      - rule: .claude/rules/adr-0008.md
+        via: native
+        trigger: layers/journal/app/components/journal/SessionCard.vue
+      - rule: .claude/rules/adr-0030.md
+        via: native
+        trigger: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0006.md
+        via: hint
+      - rule: .claude/rules/adr-0016.md
+        via: hint
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+    reported:
+      - path: .claude/rules/ui-verification.md
+        value: steered
+        why: owner pushed render; used preview --dev
+      - path: .claude/rules/tenant-layers.md
+        value: backed
+      - path: .claude/rules/adr-0017.md
+        value: backed
+      - path: docs/agents/verifying-ui-changes.md
+      - path: docs/agents/git-conventions.md
+gitBranch: claude/nifty-heisenberg-l4lrfn
+entrypoint: remote
+cliVersion: 2.1.323
+learnings:
+  - A hover title is invisible in a screenshot; read the title attributes in the page instead, as the render script did.
+ideas:
+  - Add --selector to scripts/ui/preview.ts shot to clip one element at 2x, so a component check needs no throwaway Playwright script and reviewers get a readable close-up.
+landedBy: Stop

@@ -1,0 +1,21 @@
+name: github-transient-errors-on-push-subscribe-merge
+surface: outside
+summary: Pushes, merges and PR subscriptions failed with GitHub 5xx or access-verification errors until retried.
+cause: "The cloud git credential service and GitHub reads return 500, 502 or 503, or subscribe_pr_activity says 'Unable to verify repository access', for minutes at a time; retries work later, and a retried push can print 'Everything up-to-date' with a non-zero exit while the remote is behind. Signals: 'Internal Server Error', 'credential service temporarily unavailable', 'HTTP 502' from merge-pr.ts, 'Failed to subscribe to PR activity'."
+status: open
+occurrences:
+  - session: session_013zxzeQAc52ZMCkhtp4ihGY
+    date: "2026-11-12"
+    severity: nit
+    description: "git push of the local branch name returned Internal Server Error twice; worked around by renaming the branch to the already-pushed remote name."
+    solution: "Retry later or push to a distinct remote name from the start."
+  - session: session_013zxzeQ9FTpQjBywTHWkdXF
+    date: "2026-11-13"
+    severity: minor
+    description: "git push of a follow-up commit failed three times with 503 'credential service temporarily unavailable', and one retry printed 'Everything up-to-date' with a non-zero exit while the remote was still behind."
+    solution: "Compare git ls-remote with HEAD after any failed push, then retry in the background with growing waits; a caveats line on this 503 would save the diagnosis."
+  - session: session_013zxzeSvCUWdcpBdHi4sdX2
+    date: "2026-11-13"
+    severity: moderate
+    description: "subscribe_pr_activity for the new PR failed twice with 'Unable to verify repository access', so no wake on green CI and the merge needs manual polling."
+    solution: "Fall back to a send_later check-in when subscription fails; check repository access for the tool."

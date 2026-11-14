@@ -23,68 +23,6 @@
 #            topic's tools correctly.
 trials:
   - problem: >
-      The review-then-gate rule before a PR opens (-2 net, from
-      `git diff --numstat`: 8 added, 10 deleted; this entry not counted):
-      `pr-workflow.md` "Review before opening the PR" reworded to state the goal
-      first, recipe step 1 and "Closing a scheduled run's PR" step 1 cut to
-      pointers at it (their restated gate command and "done when" dropped),
-      `audit-docs` §Gate's restated sequence cut to the pointer; every rule kept.
-      Chosen after the search subagent covered CLAUDE.md, `docs/agents/`, rules,
-      Skills, workflows, guard headers and the 126 ledger files (not the
-      tracker): `prepush-gate-review-skipped` (20 occurrences; #2472, #2748
-      closed not planned) and `edit-during-gate-run` (22; #2579) failed as prose
-      and were narrowed repeatedly; nothing holds the first-push review, so the
-      cut is deliberately small and keeps every rule. Runners-up: CLAUDE.md
-      read-first triggers (hints wired, owner-accepted #2066) and the stop-hook
-      nag text (harness-side, #2233). No open trial was judgeable this run
-      (`find-trial-window.ts`: all three before `judgeable from:`).
-    territory:
-      paths:
-        - "docs/agents/pr-workflow.md: 'Review before opening the PR', recipe step 1, 'Closing a scheduled run's PR' step 1"
-        - ".agents/skills/audit-docs/SKILL.md: Gate section"
-      keywords:
-        - gate:scoped
-        - code-review before the PR
-    opened: 2026-11-09
-    proven: true
-    check: >
-      Damage is a major or blocker Friction where a PR opened without
-      `code-review` or without `gate:scoped` on its final head, or a session
-      edited during a gate run, because a cut line no longer said so. Compare
-      `prepush-gate-review-skipped` and `edit-during-gate-run` shares with
-      `friction-rates.ts`. NOT damage: those entries at their standing rates.
-  - problem: >
-      The git-conventions.md chaining rules (+3 net, from
-      `git diff --numstat`: 12 added, 9 deleted; this entry not counted):
-      "Don't chain git past a step that can fail silently" reworded to the goal
-      (a failed step never lets a later git command run on the wrong state)
-      plus two bullets; every rule kept, widened to add and amend, and the
-      `tail` exit-code trap added. Chosen after the search subagent covered
-      CLAUDE.md, `docs/agents/`, rules, Skills, guard headers, the tracker and
-      the ledger: the rule failed as prose twice (#2359, #2407, both doc-only
-      narrowings; ledger `push-chained-to-gate-run`, 7 occurrences, #2752 open;
-      `chained-git-step-fails-silently`, 4 occurrences) and nothing wired holds
-      it, so the cut is deliberately small. Runners-up: CLAUDE.md "Question the
-      premise" (63 words; owner closed #2997 with no change) and "One home per
-      fact" (#2753, #3025). Same run judged and deleted the provenance-guard
-      comments trial (landed e21985af): 74 sessions ended since, no major or
-      blocker Friction traces to it, the guard file is unchanged, and
-      `session-id-hand-typed` 9/121 -> 5/63 (7.4% -> 7.9%); no issue.
-    territory:
-      paths:
-        - "docs/agents/git-conventions.md: 'Keep git apart from steps that can fail'"
-      keywords:
-        - chained git
-        - gate exit status
-    opened: 2026-11-10
-    proven: true
-    check: >
-      Damage is a major or blocker Friction where a push or commit ran on a
-      wrong or failed state because the cut wording no longer said so. Compare
-      `push-chained-to-gate-run` and `chained-git-step-fails-silently` shares
-      with `friction-rates.ts`; a clear rise in either is also damage. NOT
-      damage: those entries at their standing rates (nits already recur).
-  - problem: >
       The proxy-blocked-hosts bullets in `environment-caveats.md` (-3 net, from
       `git diff --numstat`: 6 added, 9 deleted; this entry not counted): three
       bullets that listed blocked hosts and fallbacks merged into one that points
@@ -156,3 +94,36 @@ trials:
       `frictions-to-fixes-briefs-mismatch` shares with `friction-rates.ts`; a
       clear rise is also damage. NOT damage: those entries at their standing
       rates.
+  - problem: >
+      The checkout-moving rule in `dispatch-subagents` §3 "Git and checkout" (-1
+      net, from `git diff --numstat`: 5 added, 6 deleted; this entry not
+      counted): three bullets that each said a review or read-only agent must not
+      move a checkout merged into one goal-first bullet; every rule kept.
+      Chosen after the search subagent covered the ledger (133 files), guards.md,
+      hook headers and the first page of open issues (not session logs, not the
+      whole tracker): `worktree-subagent-moves-branch`
+      (5 occurrences, #2874) failed as prose and was narrowed in #2856 and #2888;
+      nothing wired holds it, so the cut is deliberately small. Runners-up:
+      CLAUDE.md dispatch-read bullet (`dispatch-read-guard.ts` already holds it)
+      and `glassbox-curate` "Read first, in full" (33 words, #3226). Same run
+      judged and deleted two trials: the review-then-gate rule (landed 298c69af):
+      `prepush-gate-review-skipped` 10.3% -> 7.3% (14/136 -> 7/96),
+      `edit-during-gate-run` 10.3% -> 16.7% (14/136 -> 16/96), the rise traced to
+      the guard gap #3250 closed, comment on #3233; and the git chaining rules
+      (landed fe75f908): `push-chained-to-gate-run` 3.9% -> 6.5% (6/155 -> 5/77),
+      `chained-git-step-fails-silently` 3.2% -> 2.6% (5/155 -> 2/77), no major or
+      blocker Friction; no issue.
+    territory:
+      paths:
+        - ".agents/skills/dispatch-subagents/SKILL.md: §3 'Git and checkout'"
+      keywords:
+        - never moves a checkout
+        - detached worktree
+    opened: 2026-11-13
+    proven: true
+    check: >
+      Damage is a major or blocker Friction where a review or read-only subagent
+      ran `checkout`, `switch` or `reset` in the lead's checkout, or an impl
+      agent's branch collided with the lead's, because a cut line no longer said
+      so. Compare `worktree-subagent-moves-branch` share with `friction-rates.ts`;
+      a clear rise is also damage. NOT damage: that entry at its standing rate.

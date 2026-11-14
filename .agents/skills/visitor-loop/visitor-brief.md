@@ -19,11 +19,12 @@ broken, already built, or decided against? Read git only with `log`, `show`
 and `diff`.
 
 Rules:
-- Drive the browser with a small `playwright-core` script launched with
-  `executablePath: resolveChromiumPath()` from `scripts/lib/chromium.ts`.
-  Save each script under {SCRIPT_DIR} and run it without changing directory,
-  as `pnpm exec tsx {SCRIPT_DIR}/<script>`; give every file it writes an
-  absolute path under {SCRATCH_DIR}.
+- Drive the browser with a small `playwright-core` script that opens it with
+  `launchChromium()` from `scripts/lib/chromium.ts` (it adds the flags this
+  sandbox needs). Save each script under {SCRIPT_DIR} and run every command
+  from the directory you start in, since `pnpm` fails anywhere else: never
+  `cd`. Run scripts as `pnpm exec tsx {SCRIPT_DIR}/<script>` and give every
+  file they write an absolute path under {SCRATCH_DIR}.
 - Use the cheapest tool that answers each question:
   - **Words and links:** read them as text. One script that walks several
     pages and saves each page's visible text and links to its own file, plus
@@ -44,7 +45,8 @@ Report, in this order:
    text and propose new text. Evidence is what you saw or checked (a
    screenshot, file:line, a command); write "unverified" if you have none.
 3. **Ideas**: up to three new content, components or features, most valuable
-   first. One per line: `idea | why a visitor would care | where it lives`.
+   first. One per line: `page path | what it shows now | idea | why a visitor
+   would care`.
 4. **Hard-won**: anything that took you several attempts to find or work out,
    and what finally worked. Write "none" if nothing did.
 

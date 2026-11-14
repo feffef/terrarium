@@ -53,3 +53,8 @@ occurrences:
     severity: nit
     description: "Run entry failed validate:content twice because plain YAML scalars held colon-space inside changes rows, parsed as objects; also the memory page exceeded its word cap once."
     solution: "Have the orient skeleton warn to avoid colon-space in changes rows, and run workshop.spec before the first commit."
+  - session: session_013zxzeS6AE1WUN124PHnm4b
+    date: "2026-11-13"
+    severity: minor
+    description: "My run entry's changes text had colons followed by spaces or line ends, which YAML read as mappings; the workshop page returned a 500 and validate-content failed until I reworded it."
+    solution: "The orientation skeleton or glassbox-curate should say a changes entry is one plain string and must not hold a colon plus space."

@@ -45,3 +45,8 @@ occurrences:
     severity: nit
     description: "I ran git add and git commit together with printf in one Bash call several times, against git-conventions.md's rule of one state-changing git command per call."
     solution: "Read the rule again before the first commit, or commit through a small helper script that checks each step."
+  - session: session_013zxzeQ9FTpQjBywTHWkdXF
+    date: "2026-11-13"
+    severity: nit
+    description: "I chained a git log check and a git push in one Bash call, against git-conventions' rule that a state-changing git command runs alone; the push then failed and its exit code was read through a pipe."
+    solution: "Run the push in its own call, as the doc says."

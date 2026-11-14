@@ -325,7 +325,13 @@ details[open] .summary::before { content: '▾'; }
 .pill.status { white-space: normal; border-radius: 0.9rem; }
 .jd-prose .pill.status a { color: inherit; text-decoration: underline; }
 .fix-date { color: var(--jd-faint); font-family: var(--jd-mono); font-size: 0.7rem; }
-.jd-prose .occ a { color: var(--jd-ink); text-decoration: none; }
+.jd-prose .occ a {
+  display: inline-block;
+  padding-block: 0.3rem;
+  margin-block: -0.3rem;
+  color: var(--jd-ink);
+  text-decoration: none;
+}
 .jd-prose .occ a:hover { color: var(--jd-accent); text-decoration: underline; }
 .occ-goal { margin-left: 0.5rem; font-family: var(--jd-serif); font-size: 0.8rem; color: var(--jd-muted); }
 .occ-sev { color: var(--jd-faint); margin-left: 0.4rem; }

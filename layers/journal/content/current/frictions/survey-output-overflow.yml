@@ -56,3 +56,23 @@ occurrences:
     severity: minor
     description: "The Skill says to read the extract whole, but the JSON is 150 KB, mostly repeated fields; I printed a compact one-line-per-entry view instead."
     solution: "Have extract also print or write that compact list and say to read it."
+  - session: session_013zxzeS6uNt5yvnz5LyUCCe
+    date: "2026-11-11"
+    severity: minor
+    description: "list_triggers with include_completed returned about 40k characters of one-shot reminders to find the latest routine run."
+    solution: "Pass recurring: true and enabled: true, or read the Journal session logs for the latest scheduled run."
+  - session: session_013zxzeQ4cuLLoFfdaf5sE2d
+    date: "2026-11-13"
+    severity: nit
+    description: "A Bash cat of five lessons overflowed the output limit and returned only a preview; had to redo it with Read calls."
+    solution: "Use Read for whole files; check combined size before a shell cat."
+  - session: session_013zxzeSAxx2RTJ89sW91w2b
+    date: "2026-11-13"
+    severity: nit
+    description: "The compact entry list is about 33k tokens, over the Read cap of 25k, so it took two reads."
+    solution: "Let harvest list print in pages or split by kind."
+  - session: session_013zxzeT8MiA3ZbpACZhayfL
+    date: "2026-11-14"
+    severity: minor
+    description: "Scorecard and 16 data files total about 900 KB; I had to script a summary of observations to decide escalations, since subagents' 'known repeat' claims need the full observation history."
+    solution: "Have audit-skills.ts print each Skill's matching open or closed issues beside its observations."

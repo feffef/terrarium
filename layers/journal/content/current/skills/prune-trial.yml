@@ -9,25 +9,6 @@ role: >-
   PR, except a trial changing an ADR or its summary rule starts only with a
   Trusted user and a human merges it.
 observations:
-  - date: "2026-10-04"
-    note: >-
-      Re-checked (audit-skills behaviour check), 8 usedIn sessions. Newest,
-      session_01Kwyax1gVAi9qEByVfSoMUR (PR #1558, 2026-10-03): judged the
-      github-integration.md whole-file-rewrite trial "holds" and deleted it
-      (no major/blocker friction traced to it), opened a new trial
-      (workflow-file edit rule, #897, already held by workflow-edit-guard.ts)
-      with `proven: true` after a genuine Sonnet probe — two search
-      subagents dispatched, not an inherited verdict. Ledger diff matches
-      both the log and PR #1558's body. No silent reversal of any judged
-      trial found in the 2-week git-log sweep. Grade/role unchanged.
-  - date: "2026-10-04"
-    note: >-
-      Verified, minor (second audit-skills check today):
-      session_01Wq2y2VeAoAECMxpBwReDEt (10-01) logged cutting the prune onto its
-      own branch name though the session designated one, and a reset/delete
-      command was denied. origin/prune/backgrounding-cluster still exists on the
-      remote (git ls-remote), so a stray branch awaits a human. The Skill gives no
-      instruction on the session branch. Not escalated; one run. Grade unchanged.
   - date: "2026-10-05"
     note: >-
       Re-checked: `validate-prune-trials.ts` passes, ledger clean. The
@@ -358,3 +339,6 @@ observations:
   - date: "2026-11-12"
     note: >-
       Behaviour check, 7 runs delivered, deltas match git. Repeat: session_013zxzePvPobQ2Cfg3UyUHSt's unverified #2472 claim still sits in the ledger; ADR-0027 read after the first edit in 3 of 7 logs (3099 shows none). The 2939 close-session trial judged hold, rates re-run 0/57 after. Grade unchanged.
+  - date: "2026-11-14"
+    note: >-
+      Behaviour check, 7 runs delivered, deltas match git except session_013zxzePvPobQ2Cfg3UyUHSt (ledger -2, merged diff -1: a review follow-up restored a line). Its #2472 tracker claim is still in the ledger. ADR-0027 read after the first edit in several logs. Session_013zxzeQfaLWV38YeNLH6Ezs judged a trial about 6 minutes before the 3-day floor, within the one-hour grace in find-trial-window.ts. Grade unchanged.

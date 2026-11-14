@@ -1,0 +1,254 @@
+schemaVersion: 1
+session: session_013zxzeSQbFaEpMZykiSinsq
+startedAt: 2026-11-14T00:16:25Z
+endedAt: 2026-11-14T00:28:37Z
+kind: autonomous
+goal: Write the 2026-11-13 Journal Digest and archive old content
+status: completed
+outcome: "PR 3293 merged on a green gate: the 2026-11-13 Digest plus one archived Digest"
+summary: Scheduled digest run (agent-initiated by the schedule, no human prompt). Found one missing day, 2026-11-13 (32 sessions, 47 PRs), wrote the Digest from gather output and PR diffs, fact-checked it with a subagent (4 claims fixed, among them an unsupported claim that the stack was left open and a blanket label on five PRs), ran the archive sweep (moved one old Digest), ran code-review (Standards and Spec, no findings), dropped an unsourced cadence word, passed gate:scoped, pushed and opened PR 3293. Merged on green CI after a self-posted verdict.
+prs:
+  - "3293"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/digests/2026-11-13.md
+    reason: (read before editing)
+  - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (no reason given)
+  - path: docs/design/README.md
+    reason: (no reason given)
+  - path: docs/design/09-final-design-draft.md
+    reason: (no reason given)
+  - path: docs/design/08-converged-decisions.md
+    reason: (no reason given)
+skillsUsed:
+  - name: digest
+    reason: the scheduled task itself
+  - name: code-review
+    reason: required before opening the Digest PR
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran git status and branch before reading git-conventions.md, and dispatched the first subagent before reading dispatch-subagents; the guard blocked it and I retried.
+    solution: Read both docs at session start for a digest run; the Skill could name them.
+    severity: nit
+  - description: The fact-check subagent flagged 'stack and five other decisions left open' as wrong; I had copied it from a session outcome without checking the design docs.
+    solution: Verify claims against primary sources before writing, not only afterwards.
+    severity: minor
+  - description: Did not run the archive sweep before the first commit and committed an unreviewed draft early to satisfy the Stop hook, adding extra commits.
+    solution: Finish fact-check first, or let the hook accept a draft push.
+    severity: nit
+durationSec: 732
+models:
+  claude-sonnet-5-5: 69
+toolCounts:
+  Bash: 24
+  Read: 4
+  Agent: 4
+  Skill: 4
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-11-13.md
+  - layers/journal/content/archived/pages/digests/2026-11-06.md
+  - layers/journal/content/current/pages/digests/2026-11-06.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0010.md
+docsReadBySubagents:
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - docs/design/README.md
+  - docs/design/09-final-design-draft.md
+  - docs/design/08-converged-decisions.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0010.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/dispatch-subagents/SKILL.md
+    reported:
+      - path: .claude/rules/adr-0010.md
+        value: steered
+        why: read the ADR before saving a Digest
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: gate and review before the PR
+      - path: .claude/rules/adr-0003.md
+        value: backed
+      - path: .claude/rules/adr-0017.md
+        value: backed
+      - path: docs/agents/pr-workflow.md
+      - path: docs/agents/git-conventions.md
+      - path: .agents/skills/dispatch-subagents/SKILL.md
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/journal/content/current/pages/digests/2026-11-13.md
+      - rule: .claude/rules/adr-0010.md
+        via: native
+        trigger: layers/journal/content/current/pages/digests/2026-11-13.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/journal/content/current/pages/digests/2026-11-13.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .claude/rules/adr-0017.md
+        value: backed
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/digest/SKILL.md
+      - rule: .claude/rules/adr-0010.md
+        via: native
+        trigger: .agents/skills/digest/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/digest/SKILL.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/journal/content/current/pages/digests/2026-11-13.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/journal/content/current/pages/digests/2026-11-13.md
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0010.md
+        value: backed
+      - path: .agents/skills/digest/SKILL.md
+  - by: general-purpose
+    subagent: 3
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/digest/SKILL.md
+      - rule: .claude/rules/adr-0010.md
+        via: native
+        trigger: .agents/skills/digest/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/digest/SKILL.md
+    reported:
+      - path: .claude/rules/adr-0010.md
+        value: backed
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .agents/skills/digest/SKILL.md
+subagents:
+  - task: Fact-check 2026-11-13 Digest
+    model: sonnet
+  - task: Fact-check 2026-11-13 Digest
+    model: sonnet
+    durationSec: 123
+    toolCalls: 30
+    modelCalls: 23
+    tokenShare: 27.4
+  - task: "Review digest: standards axis"
+    model: sonnet
+    durationSec: 20
+    toolCalls: 7
+    modelCalls: 4
+    tokenShare: 4.9
+  - task: "Review digest: spec axis"
+    model: sonnet
+    durationSec: 26
+    toolCalls: 9
+    modelCalls: 4
+    tokenShare: 4.6
+gitBranch: claude/compassionate-lovelace-5tewgi
+entrypoint: remote_trigger
+cliVersion: 2.1.325
+trigger: digest
+learnings:
+  - The gate's gather output cuts days by endedAt, so session counts differ from a filename-date count (32 versus 30).
+landedBy: Stop

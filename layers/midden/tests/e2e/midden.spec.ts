@@ -24,6 +24,18 @@ describe('midden Tenant', async () => {
     expect(html.toLowerCase()).toContain('midden')
   })
 
+  // Section titles and finds are h2, so the outline never skips a level (#3248).
+  it('keeps heading levels in order', async () => {
+    const levels = async (path: string) =>
+      [...(await $fetch<string>(path)).matchAll(/<h([1-6])[ >]/g)].map(m => Number(m[1]))
+    for (const path of ['/t/midden', '/t/midden/trench', '/t/midden/stores', '/t/midden/trench/built-never-fired']) {
+      const l = await levels(path)
+      expect(l[0]).toBe(1)
+      expect(l).toContain(2)
+      l.forEach((n, i) => expect(n - (l[i - 1] ?? 0)).toBeLessThanOrEqual(1))
+    }
+  })
+
   // `/t/midden` is the front door (foreword + a doorway per Space) and
   // `/t/midden/trench` the trench landing (its own intro + the dig reports) —
   // distinct pages, like the Atlas front door and its wings. Neither carries
@@ -127,6 +139,22 @@ describe('midden Tenant', async () => {
     expect(html).toContain('pnpm gen')
     expect(html).toContain('Condition key')
     expect(html).not.toContain('midden-find__stamp')
+  })
+
+  // The section drawing's legend (#3278): dates in report style like the rest
+  // of the page, and each season that has a shelf links to it. A sterile season
+  // has no shelf, so its name stays plain text.
+  it('links the stores legend to the season shelves, in report-style dates', async () => {
+    const html = await $fetch<string>('/t/midden/stores')
+    const legend = html.match(/<ul class="midden-section__legend"[\s\S]*?<\/ul>/)?.[0] ?? ''
+    expect(legend).toContain('from 4 Jul 2026')
+    expect(legend).not.toMatch(/\d{4}-\d{2}-\d{2}/)
+    expect(html).not.toMatch(/<text[^>]*>\d{4}-\d{2}-\d{2}<\/text>/)
+    expect(legend).toContain('href="#shelf-routing-excavation"')
+    expect(html).toContain('id="shelf-routing-excavation"')
+    // The Spike Ashfall holds nothing in store (content/stores/artifacts).
+    expect(legend).toContain('the Spike Ashfall')
+    expect(legend).not.toContain('#shelf-spike-ashfall')
   })
 
   // Jargon glosses (issue #1463): first use only, shared across the prose and

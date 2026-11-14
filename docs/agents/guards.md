@@ -40,6 +40,7 @@ follow it and don't route around it. If it is wrong, say so on the guard's issue
 | `subagent-note.ts` | nothing: a `SubagentStart` hint. Tells every subagent it must run `echo rule-use:` before its final reply, then do what the reply to it says | its script header; `scripts/session/rule-use.ts` | #3009, #3020 |
 | `rule-use-ask.ts` | nothing: a hint, not a guard. After an agent's first bare `echo rule-use:` call it lists the rules that loaded for that agent, start-loaded ones included, and says what `steered` and `backed` mean; after a call naming a rule without a valid value it says which were not recorded | its script header; `scripts/session/rule-use.ts` | #3020 |
 | `network-start.ts` | nothing: a `SessionStart` hint. Probes the hosts in `PROBED_HOSTS` through the proxy and prints which are readable or blocked; prints nothing without `HTTPS_PROXY` | its script header; `environment-caveats.md` (what blocked means) | #2959 |
+| `unshallow-on-start.ts` | nothing: a `SessionStart` hook, not a guard. Unshallows the clone and sets `origin/HEAD` when unset; a failure is swallowed | its script header; `git-conventions.md` | #772, #930 |
 
 `.claude/settings.json` holds each guard's hook event and matcher.
 

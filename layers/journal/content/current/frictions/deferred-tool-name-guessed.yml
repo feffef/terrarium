@@ -14,3 +14,8 @@ occurrences:
     severity: nit
     description: "I called a non-existent mcp__github__subscribe_pr_activity and invoked Monitor without loading its schema; both cost a wasted call."
     solution: "Name subscribe_pr_activity under mcp__claude-code-remote__ in github-integration.md."
+  - session: session_013zxzeQpVcWQaKyrR36MwpN
+    date: "2026-11-13"
+    severity: nit
+    description: "Monitor tool schema was not loaded, so my first call failed validation until a ToolSearch"
+    solution: "Load deferred tools with ToolSearch before first use"

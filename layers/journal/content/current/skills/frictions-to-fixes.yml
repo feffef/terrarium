@@ -9,16 +9,6 @@ role: >-
   impl agents build the rest, and merges those PRs itself, escalating only
   high-risk ones. Use when frictions pile up.
 observations:
-  - date: "2026-10-04"
-    note: >-
-      Re-checked (audit-skills behaviour check), 7 usedIn sessions: 0 silent
-      failures. Newest, session_0136FKZXeV7YZggeK5ScVmkP (2026-10-03),
-      correctly claimed nothing cleared the dispatch bar (0 PRs) — no
-      claims to falsify. Issue #1304 (loop-only-tool-guard.ts stale deny
-      text, filed-only per the never-dispatch-a-guard-edit rule) confirmed
-      still open, labeled bug/ready-for-human, awaiting a human — not
-      silently dropped. No reverts in the 2-week git-log sweep. Grade/role
-      unchanged.
   - date: "2026-10-05"
     note: >-
       Freshly verified session_01RW5WnnVvnyuUbrqVZvdZNc (PR #1588) and
@@ -326,3 +316,6 @@ observations:
   - date: "2026-11-12"
     note: >-
       Behaviour check, 9 runs delivered. Verified: session_013zxzeNa1RNcdysLXBJAD5N filed #3047 'recurs after #2766' with occurrences dated before fix #3032 (merged 11-10, closed #3025); the ledger entry's fixes lacked #3032. Owner closed #3047 not planned. Section 2 still has no exclusion for owner-declined entries (also #2852, #2876, #2997). Not issued (single, no damage). Grade unchanged.
+  - date: "2026-11-14"
+    note: >-
+      Behaviour check, 9 runs delivered (5 newest verified on GitHub), no revert. Repeat: section 2 top-three rule overridden by judgement again (session_013zxzeNdAgdKF5tpWTQLowx skipped an entry whose issue #3124 had closed). Section 5.4 simple-change review cannot work for the 92-file ledger PR; section 5.3 sets tracked with no ref against the schema comment. SKILL.md was rewritten 4 times this week, so briefs may have drifted. Grade unchanged.

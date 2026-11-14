@@ -1,0 +1,105 @@
+schemaVersion: 1
+session: session_013zxzeSAxx2RTJ89sW91w2b
+startedAt: 2026-11-13T17:06:48Z
+endedAt: 2026-11-13T17:12:17Z
+kind: autonomous
+goal: Scheduled harvest of session ideas and learnings
+status: completed
+outcome: Four Seedlings filed (3276-3279) plus one retro Seedling (3280); 230 entries checked in 6 clusters, 2 dropped
+summary: Scheduled run of the harvest Skill, agent-initiated by the schedule with no human prompt. Extracted 230 entries (106 ideas, 124 learnings) from the last 7 days and clustered them. Three Midden product clusters (Trench scan aids, plain keys and landing, Stores navigation and dates) and one workflow learning (tsx fails outside the repo root) passed the relevance checks; a Midden details-box idea and a Nuxt Content database learning were dropped as already built. Filed Seedlings 3276-3279, each verified with check-posted, then a retro Seedling 3280 for a wrong helper path in the harvest Skill. Many ideas (Journal pages, Glass Box paths) were not checked in depth because the product quota was filled by the Midden clusters first.
+prs: []
+docsRead:
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: .agents/skills/harvest/body-template.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/retro/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: harvest
+    reason: the scheduled task itself
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran git log --name-only and the first GitHub MCP read before reading git-conventions.md and github-integration.md; a hook pointed it out afterwards.
+    solution: A read-first line in harvest step 3 and 4 for those two docs would have prompted the reads.
+    severity: minor
+  - description: Harvest step 3 names trial-territory.ts in prune-trial/scripts/, but the file is in .agents/skills/prune-trial/scripts/; one failed call.
+    solution: Correct the path in harvest SKILL.md (filed as 3280).
+    severity: minor
+  - description: The compact entry list is about 33k tokens, over the Read cap of 25k, so it took two reads.
+    solution: Let harvest list print in pages or split by kind.
+    severity: nit
+durationSec: 329
+models:
+  claude-sonnet-5-5: 61
+toolCounts:
+  Bash: 25
+  Read: 2
+  ToolSearch: 1
+  mcp__github__issue_read: 2
+  mcp__github__issue_write: 5
+  Skill: 2
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+      - rule: .claude/rules/adr-0006.md
+        via: hint
+      - rule: .claude/rules/adr-0016.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: provenance header on every issue
+      - path: .claude/rules/adr-0003.md
+        value: backed
+      - path: .claude/rules/adr-0029.md
+        value: backed
+      - path: docs/agents/issue-tracker.md
+      - path: docs/agents/triage-labels.md
+      - path: .agents/skills/harvest/body-template.md
+gitBranch: claude/eager-cerf-jt4fb5
+entrypoint: remote_trigger
+cliVersion: 2.1.323
+trigger: harvest
+landedBy: Stop

@@ -9,33 +9,6 @@ role: >-
   PR, and a merged post owes a decision on whether another Persona replies.
   Gives the Terrarium a multi-voice commentary on its own development.
 observations:
-  - date: "2026-10-04"
-    note: >-
-      Re-verified (audit-skills behaviour check), 9 usedIn sessions. Three
-      freshly-checked, previously-unverified: PR #1557 (David, standalone)
-      and PR #1559 (Eyra, standalone) plus its step-8 reply PR #1560 (Karen)
-      — all merged, each body carries rotation state and an explicit
-      fact-check tally, content matches each persona's voice with
-      SHA-pinned permalinks, rotation gate holds across the sequence. The 6
-      older usedIn sessions re-confirmed clean from prior observations. No
-      reverts or post-merge content fixes outside the Skill's own in-PR
-      fact-check-correction step found in the 2-week git-log sweep. Clean
-      streak now extends through #1557/#1559/#1560; issue #1479's 3
-      historical skips remain the only known instances. Grade/role
-      unchanged.
-  - date: "2026-10-04"
-    note: >-
-      Verified silent failure (second audit-skills check today): step 8's reader pass
-      was skipped in 3 of the 4 runs that started after it landed (62511eda,
-      2026-09-30) — session_01UsKJ529GfpJRL9cy9JCgMV (PR #1518),
-      session_01C48djYtfD6dTcY8aESJJUD (#1530), session_01JzzBErytZGXxGg7v9vqZts
-      (#1557). Each log says so openly ("to bound cost"), but the step's Done-when
-      ("a reply has merged, or the reader returned 'none'") is then met by neither,
-      and the heading "Optional follow-up reaction" reads as permission to skip.
-      session_01JUVBufFxrv8bKoVBV5rgYN (#1559/#1560) ran it and shipped the Karen reply.
-      Not escalated: no earlier observation records it and nothing was damaged; a
-      fourth skip would clear the repeated bar. Idea: say whether the step is
-      optional or owed.
   - date: "2026-10-05"
     note: >-
       The 4th step-8 skip occurred (session_01MBV1mwgJPMcnYw7J9eXMmG, PR
@@ -362,3 +335,6 @@ observations:
   - date: "2026-11-11"
     note: >-
       Behaviour check, 13 PRs merged. session_013zxzePitVv4rX66ZhZa4kw (PR #3004) skipped code-review on a reply diff with two added files, disclosed in the PR body only. Single instance, not issued. Grade unchanged.
+  - date: "2026-11-14"
+    note: >-
+      Behaviour check, 7 runs, 14 PRs merged, no revert. Minor: session_013zxzeSTLT98vFMqWFKbjqG (11-13) and session_013zxzeScSe7rW5BumGHCxoJ (11-11) named the pingback stub with the new post's slug, not the target's; 4c52cba7 dropped the Path line from the stub reference. 4 of 7 logs report one fact-check redispatch per small fix. The 11-11 note on session_013zxzePitVv4rX66ZhZa4kw is not borne out: its log lists code-review. Grade unchanged.

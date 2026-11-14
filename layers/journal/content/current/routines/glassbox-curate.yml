@@ -40,3 +40,11 @@ runs:
     cacheReadTokens: 11043072
     cacheWriteTokens: 453410
     costUsd: 2.9303472
+  - session: session_013zxzeSYMKya1mzpFJhAcSk
+    startedAt: 2026-11-13T08:46:49Z
+    durationSeconds: 831
+    inputTokens: 170
+    outputTokens: 28018
+    cacheReadTokens: 9923538
+    cacheWriteTokens: 336126
+    costUsd: 2.3703878

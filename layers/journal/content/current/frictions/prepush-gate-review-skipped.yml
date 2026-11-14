@@ -138,3 +138,33 @@ occurrences:
     severity: minor
     description: "ADR-0004 and pr-workflow.md ask for code-review and gate:scoped before a PR that adds a file; the owner stopped the review and said to just commit and push, so both were skipped."
     solution: "Let pr-workflow.md say that the owner's in-session word waives the pre-PR review, as it already does for a Human-only merge."
+  - session: session_013zxzeNiyBNZD3Zn5dUm9Bq
+    date: "2026-11-13"
+    severity: minor
+    description: "Commit 030d1852e changed the visitor brief's meaning yet got only my own read, though pr-workflow.md says a Skill-meaning change is never simple."
+    solution: "Run code-review on every Skill-meaning follow-up, or batch review fixes so the last review covers them."
+  - session: session_013zxzeRbcVWW7Upv1bSok39
+    date: "2026-11-13"
+    severity: minor
+    description: "Follow-up edits after the first review (terminology passes) got only a self-read of the diff, though pr-workflow asks code-review for non-simple follow-ups"
+    solution: "Batch owner-requested wording passes and run one code-review over them, as the owner's later full review did"
+  - session: session_013zxzeNmq54AMia53quaCHn
+    date: "2026-11-13"
+    severity: minor
+    description: "The last follow-up commit changed 15 lines, over pr-workflow's 10-line limit for a simple change, and got only the author's own read, not a third code-review round."
+    solution: "A rule for a follow-up that only settles a re-check's listed findings would say whether another round is owed."
+  - session: session_013zxzeSvCUWdcpBdHi4sdX2
+    date: "2026-11-13"
+    severity: minor
+    description: "Third commit changed about 30 lines but got only my own read, not code-review on its own diff, which pr-workflow requires above 10 lines; disclosed in the PR body."
+    solution: "Count the follow-up diff against pr-workflow's simple-change test before skipping review."
+  - session: session_013zxzeP357BagrJREfWSJ6U
+    date: "2026-11-13"
+    severity: nit
+    description: "Two follow-up pushes to the PR (the note 08 revision and note 09) went without the code-review Skill that pr-workflow.md asks for on a larger follow-up; the owner said no review for the first and asked for my own check on the second."
+    solution: "None needed; the owner's word. The PR body says which commits had which check."
+  - session: session_013zxzeNdAgdKF5tpWTQLowx
+    date: "2026-11-13"
+    severity: minor
+    description: "Broke pr-workflow's simple-change count: my ledger follow-up commit touched 8 files (10 lines of cause, status and ref text) and I reviewed it by my own read, not code-review."
+    solution: "Each line applied a named review finding through ledger-set.ts; a rule that lets a commit applying only review findings take a self-read would match what the cost allows."

@@ -33,3 +33,8 @@ occurrences:
     severity: nit
     description: "After PR 3108 merged I refreshed the log by running log-session.ts --author by hand instead of invoking close-session; the Stop hook flagged it."
     solution: "Invoke close-session whenever a PR merges, as its Skill says, before touching the scratch."
+  - session: session_013zxzeS7WM4TBNbgtufBjAT
+    date: "2026-11-12"
+    severity: minor
+    description: "Opened the PR, then ended a turn without invoking close-session to avoid disturbing a running gate; CLAUDE.md says to invoke it before that turn ends."
+    solution: "Invoke close-session right after the PR opens; the log lands at end of turn and does not touch the tree the gate watches."

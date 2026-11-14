@@ -59,11 +59,10 @@ cite it.
   a bounding rect, any `page.evaluate` result), use `scripts/ui/eval-in-page.ts` (usage in its header) before an
   ad-hoc script; it handles the gotchas below.
 - **To verify a click/interaction, not just a static render**, write a small
-  ad-hoc `playwright-core` script and launch the pre-installed Chromium
-  `scripts/ui/screenshot.ts` uses with
-  `chromium.launch({ executablePath: resolveChromiumPath() })`, importing
-  `resolveChromiumPath()` from `scripts/lib/chromium.ts` (don't re-derive the
-  `PLAYWRIGHT_BROWSERS_PATH` lookup). Write it in `.throwaway/` (CLAUDE.md).
+  ad-hoc `playwright-core` script and launch the pre-installed Chromium with
+  `launchChromium()` from `scripts/lib/chromium.ts`, as `scripts/ui/screenshot.ts`
+  does: it finds the browser and adds the flags this sandbox needs (don't
+  re-derive either). Write it in `.throwaway/` (CLAUDE.md).
   Pass `page.evaluate(...)` its body as a **string**: `tsx`/esbuild's
   `keepNames` injects a `__name` helper that exists only in Node, so a
   function reference throws `__name is not defined` in the page.

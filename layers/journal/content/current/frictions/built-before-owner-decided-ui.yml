@@ -2,10 +2,12 @@ name: built-before-owner-decided-ui
 surface: safe
 summary: Agents built user-facing UI from a spec or a one-line ask before the owner settled its labels or saw a sample, so it was redesigned or the owner was asked afterwards.
 cause: "CLAUDE.md 'Ask before building' (the grilling Skill: settle what each displayed value shows) and, since PR #3032 (2026-11-10), 'before any UI build, agree it on a short sample shown with preview.ts start --dev' are not applied: a build brief leaves a label open, a tile is built whole from a spec, or a screenshot request is built without confirming. Signals: 'built user-facing UI before the owner decided', 'before showing the owner a sample', 'triggered a full redesign', 'ask-first preference not applied'. Since PR #3094 (2026-11-11) the sample-first rule lives in .claude/rules/ui-verification.md (CLAUDE.md keeps a pointer), and since PR #3107 clear-backlog explore asks the visible-UI questions in its grilling round."
-status: open
+status: tracked
+ref: "issue #3297"
 notes: |-
   2026-11-11 survey: issue #3026 closed by PR #3032 (recorded in fixes); status reset to open.
   2026-11-11 survey: two sessions after PR #3032 (R7qQ3HKo built UI without asking the owner to confirm the first screenshot; NeWJTvqX built a Term.vue link without agreeing a sample) show the sample-first rule did not hold.
+  2026-11-14: regression of #3032/#3094/#3107 filed as issue #3297.
 fixes:
   - pr: 3032
     date: "2026-11-10"
@@ -16,6 +18,9 @@ fixes:
   - pr: 3107
     date: "2026-11-11"
     summary: "clear-backlog explore returns a visible-UI change as grill with follow-up questions: which pages show it, what each value follows, the look in words."
+  - pr: 3305
+    date: "2026-11-14"
+    summary: "ui-verification.md: for owner-facing UI, review, gate and PR wait until the owner confirms the screenshot, including a change asked for directly."
 occurrences:
   - session: session_013zxzeSy38XR1wPjCGFUExY
     date: "2026-11-07"
@@ -47,3 +52,13 @@ occurrences:
     severity: moderate
     description: "Grilled the #3075 footer SHA as one vague question; it never said which pages show it, so the line shipped on every page and the owner had to correct it."
     solution: "Ask where it shows, what it displays and a sample before the pick, as CLAUDE.md says for user-facing UI; filed as #3098."
+  - session: session_013zxzePKLPsiqSXCrEd1QCE
+    date: "2026-11-13"
+    severity: moderate
+    description: "I merged a visitor-facing Walkthrough page change without reading docs/agents/verifying-ui-changes.md, taking screenshots or confirming them with the owner, as ui-verification.md requires; the user said so afterwards."
+    solution: "Before any owner-facing UI change, read verifying-ui-changes.md, preview with scripts/ui/preview.ts, show screenshots and hold the PR for the owner's confirmation; a green gate and unit tests do not replace that."
+  - session: session_013zxzeQrRhhVjja2AkCLcyV
+    date: "2026-11-13"
+    severity: moderate
+    description: "Committed and pushed an owner-facing UI change without rendering it or showing the owner; they had to ask for the render."
+    solution: "Rule: a session or issue that only adds or changes UI must render and show it, and the owner signs off before code review. Make that a CLAUDE.md or ui-verification.md must-have, and have the Stop hook's commit nudge defer to it."

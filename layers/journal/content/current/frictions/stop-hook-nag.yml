@@ -19,21 +19,6 @@ fixes:
     date: "2026-11-04"
     summary: "ADR-0003/0004 and pr-workflow.md: agents may push early and often, the PR opens only after review and the gate; git-conventions says to push when the Stop hook asks."
 occurrences:
-  - session: session_013zxzeQifdm2ANF46Z2pQ5w
-    date: "2026-10-30"
-    severity: nit
-    description: "The Stop hook asked to push five times while the fact-check, review and gate were pending, each costing a turn."
-    solution: "Have the hook stay quiet while a background agent or gate is running."
-  - session: session_013zxzeSZEedzkmmCqWvKDjC
-    date: "2026-10-30"
-    severity: nit
-    description: "The Stop hook asked to push five times while the review, fact-check and gate were pending, repeating text that cost turns and risked an early push."
-    solution: "Let the Stop hook stay quiet when a blog-post run's gate has not yet run."
-  - session: session_013zxzeQmQLYRYBUN1FkDfN6
-    date: "2026-10-30"
-    severity: nit
-    description: "Stop hook asked to push four times while the probe, reviews and gate were pending; ADR-0004 says to ignore it, so each was a wasted turn."
-    solution: "Have the Stop hook stay quiet on a branch whose gate and review have not yet run."
   - session: session_013zxzeSRDhsoSRs2a2bGVgW
     date: "2026-10-31"
     severity: nit
@@ -354,3 +339,13 @@ occurrences:
     severity: nit
     description: "The Stop hook demanded a commit and push while the fact-check was still running, so the draft was pushed before its corrections and the fixes became two follow-up commits."
     solution: "Harmless here, since a push opens no PR; a hook that tolerates a running background agent would keep the history to one commit."
+  - session: session_013zxzePjZg6AdV34z87Eu3Z
+    date: "2026-11-13"
+    severity: minor
+    description: "The sweep PR has two commits though audit-docs asks for one: the Stop hook had me push the first commit while a code-review finding was still with the checker, and a pushed commit can't be amended."
+    solution: "Resolve every code-review finding in the same turn before ending it, or let audit-docs accept a review follow-up commit."
+  - session: session_013zxzeSQbFaEpMZykiSinsq
+    date: "2026-11-14"
+    severity: nit
+    description: "Did not run the archive sweep before the first commit and committed an unreviewed draft early to satisfy the Stop hook, adding extra commits."
+    solution: "Finish fact-check first, or let the hook accept a draft push."

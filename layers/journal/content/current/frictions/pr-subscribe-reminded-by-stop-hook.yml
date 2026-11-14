@@ -25,3 +25,8 @@ occurrences:
     severity: nit
     description: "I opened the PR and told the owner I had not subscribed, following the system prompt's 'ask first' line over ADR-0003, until the Stop hook flagged it."
     solution: "Subscribe in the same turn as opening the PR, as ADR-0003 says; the rule already overrides the generic prompt."
+  - session: session_013zxzeS6AE1WUN124PHnm4b
+    date: "2026-11-13"
+    severity: nit
+    description: "I opened the PR without calling subscribe_pr_activity, which ADR-0003 requires; the Stop hook had to remind me."
+    solution: "Subscribe in the same step as opening the PR; the create-PR hint could name it."

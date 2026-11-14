@@ -14,11 +14,6 @@ fixes:
     date: "2026-11-12"
     summary: "New trial-territory.ts prints each open Prune Trial that covers given paths or words."
 occurrences:
-  - session: session_013zxzeS5X2KXN7xVdXxNmdN
-    date: "2026-10-30"
-    severity: minor
-    description: "Did not check .agents/prune-trials.yml territory before dispatching reviewers; the checker had to catch the environment-caveats finding as trial-covered."
-    solution: "Tell the audit-docs reviewers the trial territory paths directly, not just 'skip text covered by an open trial'."
   - session: session_013zxzeNrvAWHmAPYsSy8u7x
     date: "2026-11-12"
     severity: minor

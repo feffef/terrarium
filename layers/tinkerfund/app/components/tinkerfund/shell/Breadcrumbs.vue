@@ -17,7 +17,7 @@ defineProps<{ items: { label: string; to?: string }[] }>()
 ol { display: flex; flex-wrap: wrap; gap: 4px 0; margin: 0 0 16px; padding: 0; list-style: none; font: 500 12px/1.4 var(--tf-mono); color: var(--tf-muted); }
 li { overflow-wrap: anywhere; }
 li + li::before { content: '›'; margin-inline: 8px; }
-.crumbs a { color: var(--tf-muted); }
+.crumbs a { display: inline-block; padding-block: 4px; margin-block: -4px; color: var(--tf-muted); }
 .crumbs a:hover { color: var(--tf-ink); }
 [aria-current] { color: var(--tf-ink); }
 </style>

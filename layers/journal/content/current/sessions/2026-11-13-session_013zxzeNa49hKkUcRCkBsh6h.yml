@@ -1,0 +1,87 @@
+schemaVersion: 1
+session: session_013zxzeNa49hKkUcRCkBsh6h
+startedAt: 2026-11-13T10:29:07Z
+endedAt: 2026-11-13T14:29:19Z
+kind: interactive
+goal: Find where Glass Box explains the hook pre-filters
+status: completed
+outcome: Answered from Glass Box and guards.md; no files changed, no PR.
+summary: The owner asked whether Glass Box covers the shell pre-filters that keep tsx from starting on every tool call, and why they exist. I found the coverage in the hooks chapter (10.hooks.md, 20.blocking-hooks.md), then read docs/agents/guards.md at the owner's request for the fuller rationale (~0.3s per tsx start, matcher scoping, known gap). The owner suspected an issue or PR about long e2e times as the origin; four fuzzy issue searches found nothing, and git history showed the first .sh filter arrived with the subagent-background guard (#694), motivated by Bash being the hottest tool, not by e2e. All of this was human-asked reading. I asked whether to expand the Glass Box page; the owner declined the question dialog, then asked if the topic merits its own lesson, and I gave an opinion (expand the existing bullet first). Nothing was edited; the owner ended the session.
+prs: []
+docsRead:
+  - path: layers/glassbox/content/guide/pages/hooks/10.hooks.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Explained how hooks work without reading the Glass Box overview index.md or layers/glassbox/GLOSSARY.md, which CLAUDE.md and the tenant-glossary rule call for.
+    solution: Read both before answering a question about how the Platform works, even a read-only lookup.
+    severity: nit
+  - description: Four GitHub issue searches were fuzzy and returned nothing relevant; one command chained sleeps and was blocked, costing a retry.
+    solution: Search git history first for the origin of a mechanism, then issues by number from the commit message.
+    severity: minor
+durationSec: 14412
+models:
+  claude-sonnet-5-5: 40
+toolCounts:
+  Grep: 2
+  Glob: 1
+  Read: 4
+  Bash: 9
+  AskUserQuestion: 1
+  Skill: 2
+  Write: 1
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/glassbox-content.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/hooks/10.hooks.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/hooks/10.hooks.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/hooks/10.hooks.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/guards.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/guards.md
+    reported:
+      - path: .claude/rules/glassbox-content.md
+        value: steered
+        why: kept timings out of proposed page prose
+      - path: docs/agents/guards.md
+      - path: docs/agents/github-integration.md
+      - path: docs/agents/git-conventions.md
+gitBranch: claude/focused-hypatia-mpin7q
+entrypoint: remote
+cliVersion: 2.1.323
+learnings:
+  - The first shell pre-filter (subagent-background-guard.sh, commit c2f2ea3fc) was added because Bash is the highest-frequency tool, not because of e2e run time.
+landedBy: Stop

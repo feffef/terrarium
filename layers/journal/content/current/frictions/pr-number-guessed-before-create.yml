@@ -29,3 +29,13 @@ occurrences:
     severity: minor
     description: "Subscribed to PR activity on a guessed PR number (1) before any PR existed, then had to unsubscribe and ignore a stale wake event."
     solution: "Subscribe only with the number returned by create_pull_request; the PR-open hint could say so."
+  - session: session_013zxzeS6AE1WUN124PHnm4b
+    date: "2026-11-13"
+    severity: nit
+    description: "I subscribed to a guessed PR number in the same parallel call that created the PR, so I briefly watched someone else's PR 3261 until I noticed and corrected it."
+    solution: "Subscribe only after the create call returns the PR number."
+  - session: session_013zxzeQ9FTpQjBywTHWkdXF
+    date: "2026-11-13"
+    severity: minor
+    description: "subscribe_pr_activity failed twice with 'Failed to subscribe to PR activity' right after the PR opened, so the PR-open step is not done yet; a first call also went out with pull number 0 because I sent it in the same block as the create call."
+    solution: "Retry later in the session and poll check runs meanwhile; never send a call that depends on another call's result in the same block."

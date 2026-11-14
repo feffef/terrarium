@@ -12,3 +12,6 @@ observations:
   - date: "2026-11-13"
     note: >-
       Coverage gap: new Skill, 5 uses in the window, no entry until now. Behaviour check, 5 runs delivered: Seedlings #3086, #3103, #3129 and #3178 were built and closed by merged PRs; #3172 and #3186 wait. Graded specialist: only this Skill files Seedlings (session_013zxzeS6gV5rfHembHQYP6K, session_013zxzeNrvAWHmAPYsSy8u7x), and no scheduled session runs it yet. Minor: 2 runs filtered script output against step 3 (self-caught).
+  - date: "2026-11-14"
+    note: >-
+      Behaviour check, 6 runs delivered; Seedlings exist on GitHub. Repeat n=5 of 6, minor: git and GitHub read before git-conventions.md and github-integration.md; step 3 names neither. 9 of the fetched Seedlings were closed not planned (the share is unverified). Whole-list read costs 33k to 90k tokens in 3 runs. Grade unchanged.

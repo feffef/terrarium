@@ -1,0 +1,44 @@
+session: session_013zxzeS6AE1WUN124PHnm4b
+mode: interactive
+focus: "The overview (index): check that expandable terms, inline lesson links and
+  the lesson chips after paragraphs and bullets are used as well as they can be,
+  and, on the owner's second ask, that every term definition reads for a newcomer.
+  Chosen because the owner asked for it. Deviations for the budget: no Scout, no
+  fresh readers and no separate claim checker (the new definitions restate the
+  Merge gate, Protected paths and Session logs lessons, which were read in full,
+  the Nuxt layers description and the overview itself). Not read in full, though
+  the review named them: Nuxt layers, Multi-tenant isolation, Author trust and
+  Scheduled tasks. The pages the new chips link were judged from the guide index.
+  The code review's two sonnet reviewers found no standards breach; its fixes
+  dropped the Git worktrees, Blocking hooks (on Work) and Engineering skills chips
+  as weak fits and added Content validation, Headless browser checks and the
+  bug-report walkthrough."
+changes:
+  - index | Chips added where a step or bullet named a taught concept with none.
+    CLAUDE.md, Path-specific rules and Claude Code skills on Read; Claude Code
+    hooks on Work; Linting and Content validation on Check; the session-log
+    walkthrough on Log; Workflow scripts and the bug-report walkthrough on the
+    clear-backlog paragraph; Merge gate on the human-only paragraph; Content
+    collections, Nuxt layers and Headless browser checks on Why this stack. The
+    improving paragraph is split in two so each chip row fits its text (Pruning
+    instructions and the friction walkthrough on the first, Blocking hooks on
+    the second). First uses of skill, rules, tenant, CI, ADR and cut on trial are
+    now expandable | a reader met these words before the page glossed them, and a
+    step that named CLAUDE.md linked no Lesson. Chips and terms only, so
+    revision and publishedAt are kept
+  - terms/session, session-log, gate, tenant, space, floor, public, trusted,
+    human-only, friction-ledger | Plainer wording. Session no longer mentions a
+    session id; session log drops transcript; gate names CI; tenant and space
+    drop the jargon; floor gives examples; pull request and Dependabot spelled
+    out | a newcomer who doesn't know what a session is cannot use a session id
+  - terms/ci | New term | CI was used in the gate definition and step 4 with no
+    gloss (verification/10.gate, line 18)
+  - workshop/pages/index | The overview lowercase check deleted, and one lead
+    added on term definitions still heavy with jargon | the check was done by
+    hand on the whole overview this run
+  - index | Every chip row cut to at most three, keeping the lessons the text names most directly. Check keeps Merge gate, Testing and Headless browser checks; Linting, Type checking and Content validation stay reachable from Merge gate. The issues paragraph drops Workflow scripts, the improving paragraph drops Pruning instructions (its term links it) and the last row drops Content database, with its sentence reworded | the owner asked for at most three pills at once in this session. Chips only, so revision and publishedAt are kept
+pagesRead:
+  - index
+  - verification/10.gate
+  - terrarium-practice/60.protected-paths
+  - terrarium-practice/40.session-logs

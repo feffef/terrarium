@@ -2,10 +2,9 @@ name: subagent-brief-defects
 summary: >-
   Briefs for helper agents carried a wrong path, value or unfilled placeholder that the orchestrator wrote from memory, which cost a wasted run or a review catch.
 cause: >-
-  Orchestrators write briefs from memory instead of copying from the source, and send them without re-reading: an unfilled {PAGES} placeholder, paths relative to a Skill folder or missing the Collection folder, a status value, ADR level or scope claim restated wrongly. The agent runs on the bad brief before anyone notices. PR #2643 fixed two sources (the inspect-session Selector placeholder, layer-relative paths in the Glass Box GLOSSARY) and added no general rule. PR #3064 (2026-11-11) makes dispatch-read-guard.ts deny an Agent prompt or SendMessage message that still holds an unfilled @@NAME@@ or {UPPER_CASE} placeholder (a Workflow script is not inspected), and PR #3063 (2026-11-11) has clear-backlog-explore's brief name the sources its triage agents must learn (ledger, Skill Inventory, open prune trials, older file history). Signals: 'brief', 'placeholder', 'path did not exist', a value in a brief that differs from its source. A brief that relays another agent's unchecked claim belongs in relayed-subagent-claims; a missing CLAUDE.md brief line in subagent-brief-omits-verdict-ask.
+  Orchestrators write briefs from memory instead of copying from the source, and send them without re-reading: an unfilled {PAGES} placeholder, paths relative to a Skill folder or missing the Collection folder, a status value, ADR level or scope claim restated wrongly. The agent runs on the bad brief before anyone notices. PR #2643 fixed two sources (the inspect-session Selector placeholder, layer-relative paths in the Glass Box GLOSSARY) and added no general rule. PR #3064 (2026-11-11) makes dispatch-read-guard.ts deny an Agent prompt or SendMessage message that still holds an unfilled @@NAME@@ or {UPPER_CASE} placeholder (a Workflow script is not inspected), and since PR #3250 (2026-11-13) also a bare all-caps NAME_PLACEHOLDER token; PR #3063 (2026-11-11) has clear-backlog-explore's brief name the sources its triage agents must learn (ledger, Skill Inventory, open prune trials, older file history). Signals: 'brief', 'placeholder', 'path did not exist', a value in a brief that differs from its source, a builder told no path for a script. A brief that relays another agent's unchecked claim belongs in relayed-subagent-claims; a missing CLAUDE.md brief line in subagent-brief-omits-verdict-ask.
 surface: safe
-status: tracked
-ref: "issue #3227"
+status: open
 fixes:
   - pr: 2150
     date: "2026-10-16"
@@ -28,6 +27,9 @@ fixes:
   - pr: 3134
     date: "2026-11-12"
     summary: "clear-backlog section 3: a brief's file list never names an installed Skill."
+  - pr: 3250
+    date: "2026-11-13"
+    summary: "dispatch-read-guard.ts also denies a bare all-caps token ending in _PLACEHOLDER (multi-word names too) in an Agent prompt or SendMessage message; a ${X_PLACEHOLDER} template literal stays allowed."
 notes: |-
   2026-10-23 re-cluster: 01Fay2Gi (a check grepping failure-only output), 013RCsUF (dated content not excluded), 011RZgGT (explore triage schema lacks the ADR-0004 exception), 011xvPjJ (audit-skills ids, PR 2318), 01XWMuHG (auth research boundary), 01WxHaU2 (workflow agent asked to dispatch), 0135hcUf and 01VH74k3 (frictions-to-fixes Skill briefs) each need their own fix; left here as single low-severity strays.
   2026-11-13 survey: Le6nsJ (2026-11-12) dispatched PAGES_PLACEHOLDER and FULL_PLACEHOLDER unfilled; the #3064 guard pattern (@@NAME@@ or braces) does not match that form. Issue #3227 (audit-skills, opened 2026-11-13) tracks unfilled placeholders.
@@ -97,3 +99,8 @@ occurrences:
     severity: minor
     description: "Dispatched the pilot subagent with unfilled PAGES_PLACEHOLDER and FULL_PLACEHOLDER; had to correct it by message."
     solution: "Fill the template per batch from a script before dispatch, as the dispatch-subagents re-read step says."
+  - session: session_013zxzePfDFCA2whsn1WaK5j
+    date: "2026-11-13"
+    severity: nit
+    description: "The builder looked for list-human-only-paths.ts in the wrong place and reported it missing; the brief named no path."
+    solution: "Give the full script path in builder briefs."

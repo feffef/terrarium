@@ -7,6 +7,7 @@ import {
   clusterByKeywords,
   clusterLabel,
   gatherNoteRecords,
+  ideaLines,
   keywordOverlap,
   readNoteMaterial,
   recentIdeas,
@@ -194,5 +195,37 @@ describe('buildNoteClusters()', () => {
 
   it('is empty for an empty input', () => {
     expect(buildNoteClusters([])).toEqual([])
+  })
+})
+
+describe('ideaLines()', () => {
+  const idea = (note: string, date: string): NoteRecord => ({ note, kind: 'idea', session: 's', date })
+  const records = [
+    idea('[content editor] /t/midden/stores: add a back link', '2026-11-13T10:00:00.000Z'),
+    idea('[blind] /t/atlas: gloss the biome names', '2026-11-12T09:00:00.000Z'),
+    idea('Stores page needs a sort', '2026-11-11T08:00:00.000Z'),
+  ]
+
+  it('prints one dated line per idea, newest first', () => {
+    expect(ideaLines(records)).toEqual([
+      '2026-11-13 [content editor] /t/midden/stores: add a back link',
+      '2026-11-12 [blind] /t/atlas: gloss the biome names',
+      '2026-11-11 Stores page needs a sort',
+    ])
+  })
+
+  it('keeps only ideas containing any match word, ignoring case', () => {
+    expect(ideaLines(records, ['midden', 'STORES'])).toEqual([
+      '2026-11-13 [content editor] /t/midden/stores: add a back link',
+      '2026-11-11 Stores page needs a sort',
+    ])
+  })
+
+  it('ignores blank match words, so an empty --match filters nothing', () => {
+    expect(ideaLines(records, ['', ' '])).toHaveLength(3)
+  })
+
+  it('folds a multi-line note onto one line', () => {
+    expect(ideaLines([idea('first\n  second', '2026-11-13T00:00:00.000Z')])).toEqual(['2026-11-13 first second'])
   })
 })

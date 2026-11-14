@@ -9,11 +9,6 @@ notes: |-
   2026-10-25 design: moving the page checks into validate:content, or a doc line on the 65-word cap, dropped: both sessions read EVERY-PAGE.md, which points to the cap's one home (#2114); the failure messages already name the limit; a gate-wiring change (Human-only) costs more than the two test runs it saves.
   2026-11-04 design: no change dropped: the page spec is the check working as designed, the writer-brief rule SAtj asked for landed in ec77d4bad, and the ADR-chip case was an installed code-review reviewer's proposal.
 occurrences:
-  - session: session_013zxzeRYnqNveUu5w9oJd9q
-    date: "2026-10-30"
-    severity: nit
-    description: "My new sentence about the because check itself contained the word and failed the page test, costing one rerun."
-    solution: "Run the glassbox page test after each prose edit."
   - session: session_013zxzePhrV1oZiDPfSuW2Hm
     date: "2026-11-03"
     severity: nit

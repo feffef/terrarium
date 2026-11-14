@@ -1,6 +1,6 @@
 ---
 title: What the Record Claimed
-description: Four finds where the Platform's own record held something that was not so, or no longer was — an entry on the list of recommended skills for a skill that was never there, a page recommended, delivered as a plan, and killed in one word, a stand-in entry for a skill that said outright it did not exist, and a table of rules that stopped matching the project.
+description: Four finds where the Platform's own record held something that was not so, or no longer was — an entry on the list of recommended skills for a skill that was never there; a page recommended, delivered as a plan, and killed in one word; a stand-in entry for a skill that said outright it did not exist; and a table of rules that stopped matching the project.
 ---
 
 Three of the four finds here are entries in the Platform's own record that were,

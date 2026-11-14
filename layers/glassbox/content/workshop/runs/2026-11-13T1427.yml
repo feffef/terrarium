@@ -1,0 +1,28 @@
+session: session_013zxzeS6AE1WUN124PHnm4b
+mode: interactive
+focus: "The gate walkthrough example. The owner pointed out that the merged
+  walkthrough followed a one-character fix to a Markdown page, where lint and the
+  type check have nothing to look at and the gate reads as overhead, and asked for
+  a code change as the example, with the shortcut for instruction files and
+  content only mentioned. They chose a small edit to a TypeScript helper. Chosen
+  because the owner asked for it. Deviations for the budget are the same as the
+  run of 2026-11-13T1124 (no Scout, chip targets judged from the guide index); the
+  writer ran each check on a throwaway copy of the helper with an injected
+  mistake; the sonnet claim checker, the Spec reviewer and the Standards reviewer
+  (on its second try, after the 5-hour rate limit stopped the first) ran on the
+  text. The lessons the stops link were not read in full by the lead; the writer
+  read them per its brief, which was not verified."
+changes:
+  - walkthroughs/15.a-change-meets-the-gate | Rewritten around a one-line change to
+    the Journal's duration helper. Each check now says what it would catch in that
+    change; content validation says plainly it passes without looking at it. Stop
+    1 now has the code-review skill, since a change to code logic is never simple.
+    Stop 2 names which paths skip the slow tier (a Markdown file outside layers/
+    such as an instruction file, anything in .claude/skills/), the narrower skip for
+    skill files, and that a Markdown page under layers/ skips nothing. The
+    diagram's side branch is relabelled. Re-pinned to main, publishedAt moved | the
+    first example gave lint and the type check nothing to flag, so the page showed
+    the gate as overhead
+pagesRead:
+  - verification/10.gate
+  - walkthroughs/15.a-change-meets-the-gate

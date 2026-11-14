@@ -19,3 +19,13 @@ occurrences:
     severity: moderate
     description: "A container restart killed both build workflows and the opus agent; I twice said they were probably running until the owner asked if they were stuck, costing about an hour."
     solution: "After any gap, compare journal mtimes and process start times before reporting a background run as live; the clear-backlog Skill already says to check the journal's mtime."
+  - session: session_013zxzePjZg6AdV34z87Eu3Z
+    date: "2026-11-13"
+    severity: nit
+    description: "The worker restarted at session start; I had to re-derive from git and the empty scratchpad that no step had run."
+    solution: "Nothing lost this time; a progress marker in the scratchpad after each audit-docs step would make a restart cheap."
+  - session: session_013zxzeSNs4gkwrpqc36B7yP
+    date: "2026-11-13"
+    severity: minor
+    description: "The worker restarted mid-run and my earlier context was gone, so I re-derived trial state from the repo and spent extra reads."
+    solution: "Nothing in the repo; the scheduler resumed correctly."

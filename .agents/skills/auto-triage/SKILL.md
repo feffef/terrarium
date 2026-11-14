@@ -21,7 +21,7 @@ live in `triage`'s Skill Inventory entry.
 
 Scan every **open** issue and in-scope external PR (external-PR scoping is
 `/triage`'s own filter — a collaborator's in-flight PR is never triage work).
-Never scan a `wayfinder:map` (an index, not work), whoever last commented on it.
+Never triage a `wayfinder:map` (an index, not work), whoever last commented on it.
 
 For everything else, fetch the **most recent comment** and check who wrote it:
 
@@ -64,6 +64,18 @@ Auto-close as `wontfix` only the two **objective, repo-verifiable** kinds:
 **duplicate** (point to the canonical issue). A reject-as-out-of-scope is a
 judgment call → `ready-for-human`; write `.out-of-scope/` only on a Trusted user's
 confirm (see `OUT-OF-SCOPE.md`).
+
+## Area labels
+
+Add `area:<tenant>` (`journal`, `blog`, `atlas`, `midden`, `marquee`,
+`tinkerfund`, `glassbox`, `commons`) for each Tenant where the issue's problem
+shows up or its fix lands, `area:homepage` for the home page
+(`app/pages/index.vue`, `app/components/HomeShowcase.vue`), and `area:platform`
+if any part lies elsewhere; every issue gets at least one. For an issue built on
+the Friction Ledger, open each occurrence's session log (goal, files edited) and
+take where its problem showed up, not what the session was working on. Count
+only those places, not the files an issue cites as evidence.
+`.github/workflows/pr-area-label.yml` copies these paths for PRs; change both.
 
 ## Approval
 
@@ -110,7 +122,9 @@ a human directs a brave re-triage; an agent never picks it on its own.
    `list_issues`/`search_issues`) plus in-scope external PRs (`issue-tracker.md`'s
    "List external PRs"); for each, check its most recent comment
    against the human-authorship rule above — skip that check entirely in
-   full-sweep mode; keep the eligible set; apply the wayfinder skips.
+   full-sweep mode; keep the eligible set; apply the wayfinder skips. Give
+   each listed `wayfinder:map` that has no area label its area labels
+   yourself, keeping its other labels.
 2. **One subagent per issue** (parallel — the eligible set is usually small).
    Brief each with `/triage`'s per-issue rules plus
    the read-only rule, the brave/uncertainty line, and the wayfinder overlay above. Each subagent

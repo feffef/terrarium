@@ -19,3 +19,8 @@ occurrences:
     severity: nit
     description: "Design brief wants only docReadCounts, but audit-skills.ts prints 40 KB JSON with no filter flag; the agent wrote a snippet. It also lacks a check for a fix that landed after the session."
     solution: "Add a docReadCounts-only option to audit-skills.ts, and a git-log check step in design-brief.md."
+  - session: session_013zxzeNdAgdKF5tpWTQLowx
+    date: "2026-11-13"
+    severity: minor
+    description: "Design subagent: design-brief section 3 says to read only docReadCounts, but printing the audit-skills JSON put 75 KB (a 160-entry window array) into its context first."
+    solution: "Give the one-liner that prints only docReadCounts in the brief."

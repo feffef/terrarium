@@ -42,15 +42,14 @@ applies.
 - Pin the SHA to work from (`origin/<default-branch>` if none); the agent checks
   HEAD matches and re-branches if not, since worktrees sometimes start stale
   (issue #1420). Agents sharing one checkout each get an explicit SHA.
-- A review agent for a PR whose branch is checked out elsewhere reads the PR's
-  commit (`git show <sha>:<path>`) or checks that SHA out detached in its own
-  worktree, never the branch name and never in your checkout.
+- **Never move a checkout someone else is on.** A review or read-only agent
+  reads code with `git show <sha>:<path>` or `git diff` (never the branch name),
+  or checks the PR's SHA out detached in its own worktree, never in yours. Outside that worktree
+  it never runs `checkout`, `switch` or `reset`; its brief says so. To
+  experiment, it copies a file aside.
 - Impl agents on the branch you have checked out: detach your checkout first and
   re-sync after hand-back. Each agent bases on a fresh `origin/<branch>`, with no
   same-named local branch.
-- A read-only or review agent outside its own worktree never runs `checkout`,
-  `switch` or `reset`; its brief says so. It reads with `git show` or
-  `git diff`, and copies a file aside to experiment.
 
 **Stranding**
 - Commit before stopping, even mid-gate: an agent can end at any time. Bank
@@ -78,9 +77,9 @@ applies.
   (`git -C <worktree> push origin HEAD:<branch>`), open and land the PR. They do
   not run `close-session` and cannot spawn subagents: run any nested dispatch
   yourself.
-- Keep a subagent's final reply with
-  `pnpm exec tsx scripts/session/save-handback.ts <agent-id> <out>`, never by
-  retyping it.
+- A reply that must outlive your context (a pool, or a review others read):
+  `pnpm exec tsx scripts/session/save-handback.ts <agent-id> <out>`, never
+  retyped. A read-only reply already in context needs no file.
 - Give a size ceiling for a "simple" fix ("under ~50 lines, one new test") and
   tell the agent to report back rather than exceed it.
 - Name the relevant ADR when the work touches routing or architecture (an agent
@@ -114,7 +113,7 @@ Use `SendMessage` to its agent id. A fresh `Agent` call gets a brand-new checkou
 with no memory, risking a duplicate branch or lost local commits.
 
 - A resumed agent keeps its branch and scratchpad but sees only the new message:
-  spell out the check it must run. Keep its later replies with `save-handback.ts` too.
+  spell out the check it must run. Its later replies follow the §3 save rule.
 - A hand-back after a resume may be the earlier report delivered late: wait for
   the next notification before re-sending the instruction, and verify the work
   against git.

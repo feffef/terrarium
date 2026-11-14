@@ -9,18 +9,6 @@ role: >-
   against the PRs' diffs, and merges its own gated PR on green. Scheduled; run
   by hand to catch up.
 observations:
-  - date: "2026-10-04"
-    note: >-
-      Re-verified (audit-skills behaviour check), 7 usedIn sessions. Newest,
-      previously-unverified: session_01XMzcTEcNXy3sKiUWtEKGLW (PR #1584,
-      the 2026-10-03 digest) — content cross-checked against primary
-      sources (PR #1581/#1582 Tinkerfund work, PR #1575 main-red fix) all
-      accurate; PR body states "26 claims checked, 2 reworded, 0
-      unverifiable," matching an explicit fact-check subagent in the
-      mechanical trace; retention sweep moved exactly 1 digest + 16 session
-      logs per `RETAIN_DATES = 7`. 6 older usedIn sessions re-confirmed
-      clean from prior observations. No reverts in the 2-week git-log
-      sweep. Grade/role unchanged.
   - date: "2026-10-05"
     note: >-
       Re-verified, newest session_011L5Vf6kXGJ1jQTwrKjFTTL (PR #1607, the
@@ -312,3 +300,6 @@ observations:
   - date: "2026-11-13"
     note: >-
       Behaviour check, 7 runs delivered, no revert. Cadence-word repeat: session_013zxzeRxuQbrK3YcdGVkpU4 drafted a weekly job that had no schedule; its fact-check caught it. Fourth note on this, so filed #3228. Unverified: 'weekly' in the 11-09 and 11-11 Digests. Dispatch-read guard blocked the first Agent call in 5 of 6 logs. Grade unchanged.
+  - date: "2026-11-14"
+    note: >-
+      Behaviour check, 7 runs delivered, no revert. Cadence words: 8bb55ab8c (#3251) now requires a source and the 11-14 run dropped an unsourced one; #3228 tracks it. Unverified: 'meant to run weekly' in the 11-11 Digest (line 8). Dispatch-read guard blocked the first Agent call in 5 of 7 logs; step 3 still does not name dispatch-subagents. Grade unchanged.

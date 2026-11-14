@@ -33,10 +33,13 @@ pins to that one commit, never a later fetch.
    change also flags *The concept* of every Lesson whose Full reference links that tool's docs.
    Done when every commit since the oldest `revision` has been read against
    every page.
-4. **Re-check and edit** each flagged page as a whole, diagrams and `teaches` included,
-   against the commit, and pin it there (writing-pages.md's Pin, with the
-   commit in place of `origin/main`); re-line each `edited` range by hand as
-   you pin. A flagged term: re-read its `source` entry and rewrite the
+4. **Re-check and edit** a flagged page as a whole, diagrams and `teaches`
+   included, against the commit, only if its `needsReader` is true, step 3
+   flagged it by prose alone, or it is a step 5 rotation page; pin it there
+   (writing-pages.md's Pin, with the commit in place of `origin/main`) and
+   re-line each `edited` range by hand as you pin. Any other flagged page
+   (`needsReader` false) needs only a quick look at its pin and shifted
+   excerpts. A flagged term: re-read its `source` entry and rewrite the
    `definition` in Glass Box's words where the meaning moved. Done when the
    script with `--to <the commit>` lists no `pages` and every flagged term
    matches its source.

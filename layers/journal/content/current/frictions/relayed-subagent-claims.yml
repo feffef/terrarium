@@ -25,16 +25,6 @@ fixes:
     date: "2026-10-31"
     summary: "CLAUDE.md and the clear-backlog workflows' shared brief line ask each subagent to give every count, id or attribution with its source (command or file:line) or mark it unverified."
 occurrences:
-  - session: session_013zxzeT9k3tYULehBpNwFpj
-    date: "2026-10-30"
-    severity: minor
-    description: "Checker findings such as prune-trial's 6 of 9 and inspect-session's 98-page read went into Inventory notes from the checker's tally, not re-derived by me."
-    solution: "Label such counts unverified in the note, or spot-check one session per Skill."
-  - session: session_013zxzeRDagsHLSNJ939gcWK
-    date: "2026-10-30"
-    severity: minor
-    description: "The triage agent's #2701 counts (19 pages, 1 because) could not be reproduced without knowing its section scope; three greps spent"
-    solution: "Have the explore schema's question cite the exact command behind each count"
   - session: session_013zxzeScPetuchKVyaP1PDZ
     date: "2026-10-31"
     severity: minor
@@ -145,3 +135,28 @@ occurrences:
     severity: minor
     description: "Survey subagent labelled preview-dev-server-stale-or-unhydrated never-fixed and said no issue found, but open issue 3070 covered it; I caught it only by reading 3070."
     solution: "Have the survey brief list issues filed that same day and match them on the Friction's own words, not just titles."
+  - session: session_013zxzeRbcVWW7Upv1bSok39
+    date: "2026-11-13"
+    severity: minor
+    description: "Only three figures in the requirements doc were re-checked by me; most counts are relayed from subagents and marked so"
+    solution: "Have a dedicated fact-check subagent verify every count in a long research doc before review"
+  - session: session_013zxzeP357BagrJREfWSJ6U
+    date: "2026-11-13"
+    severity: minor
+    description: "I told the other session the Friction Ledger starts 2026-09-29, a date two subagents gave; my own count later showed 2026-10-30. I had spot-checked their counts but not that date."
+    solution: "Check a window or date that scopes every later count the same turn it is first relayed; I sent a correction."
+  - session: session_013zxzeSQbFaEpMZykiSinsq
+    date: "2026-11-14"
+    severity: minor
+    description: "The fact-check subagent flagged 'stack and five other decisions left open' as wrong; I had copied it from a session outcome without checking the design docs."
+    solution: "Verify claims against primary sources before writing, not only afterwards."
+  - session: session_013zxzeP5Vhec86YSiybqM8g
+    date: "2026-11-13"
+    severity: nit
+    description: "Explore agents' own 'writes' claims were not verified against issue events before I reported them."
+    solution: "Check each issue's events or the run journal before telling the owner what was posted."
+  - session: session_013zxzeNdAgdKF5tpWTQLowx
+    date: "2026-11-13"
+    severity: nit
+    description: "The survey said three of four new scripted-replace occurrences shared one target; the design agent re-derived two of four from the entry text."
+    solution: "Survey should quote the occurrences behind a count like that."

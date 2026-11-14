@@ -280,7 +280,7 @@ useSeoMeta({
         </span>
       </div>
       <div v-if="kindChips.length > 1" class="kind-filter" role="group" aria-label="Filter sessions by who prompted them">
-        <button type="button" class="kind-chip" :aria-pressed="!kindFilter" @click="kindFilter = null">
+        <button type="button" class="kind-chip" :aria-label="`Show every session (${sessions.length})`" :aria-pressed="!kindFilter" @click="kindFilter = null">
           All {{ sessions.length }}
         </button>
         <button
@@ -288,6 +288,7 @@ useSeoMeta({
           :key="k"
           type="button"
           class="kind-chip"
+          :aria-label="`Show ${k} sessions (${n})`"
           :aria-pressed="kindFilter === k"
           @click="kindFilter = k"
         >

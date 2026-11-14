@@ -54,6 +54,10 @@ const sites = computed(() => SITES.filter((s) => s.to.split('/')[2] !== route.pa
   text-decoration: underline;
   text-decoration-color: color-mix(in srgb, currentColor 30%, transparent);
   text-underline-offset: 2px;
+  /* 24px tap target (WCAG 2.5.8); the negative margin keeps the layout. */
+  display: inline-block;
+  padding-block: 0.4rem;
+  margin-block: -0.4rem;
 }
 .site-footer-source { margin-left: auto; }
 .site-footer-build { flex-basis: 100%; color: color-mix(in srgb, currentColor 55%, transparent); }
