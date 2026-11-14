@@ -1,0 +1,1204 @@
+schemaVersion: 1
+session: session_013zxzePfDFCA2whsn1WaK5j
+startedAt: 2026-11-13T23:40:05Z
+endedAt: 2026-11-14T00:24:46Z
+kind: interactive
+goal: Clear the issue backlog, Seedlings included
+status: in-review
+outcome: "Four PRs open (#3289, #3290, #3291, #3292); #3279 closed; #3276, #3172 parked; #3017 blocked until 2026-11-18"
+summary: "The owner invoked clear-backlog with 'include seedlings', so I added the six uncommented Seedlings (#3172, #3276-#3280) to the two default-eligible issues (#3017, #3282); #3186 was skipped because an agent comment was already latest. Explore ran on all eight (agent-initiated writes to GitHub: four triage comments). The owner answered the grilling (human-instructed: close #3279, fix #3280, #3278 option c, #3277 option a, #3282 go, #3276 all three aids, #3172 deferred). #3276's first sample (tick strip plus tabs) was rejected as confusing; the owner asked for a sidebar reusing the Stores season drawing, then parked #3276 before approving the revised sample. Four branches were built, reviewed (nits and owner-calls only, all skipped with reasons), gated, pushed and opened as PRs. #3282 (PR 3292) waits for a human merge by my judgement: it changes nine surfaces and no test or gate step observes tap-target height. Still open: CI, verdicts and merge-pr.ts for 3289-3291, then the retro in #3143."
+prs:
+  - "3289"
+  - "3290"
+  - "3291"
+  - "3292"
+docsRead:
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: .agents/skills/implement/SKILL.md
+    reason: (no reason given)
+  - path: layers/midden/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/midden/app/components/midden/SectionColumn.vue
+    reason: (read before editing)
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: (no reason given)
+  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+    reason: (no reason given)
+  - path: docs/adr/0016-tenant-root-layer-routes.md
+    reason: (no reason given)
+  - path: .agents/skills/code-review/SKILL.md
+    reason: (no reason given)
+  - path: /home/user/terrarium/.agents/skills/implement/SKILL.md
+    reason: (no reason given)
+  - path: /home/user/terrarium/docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: .agents/skills/triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (no reason given)
+  - path: layers/midden/app/components/midden/TrenchLanding.vue
+    reason: (read before editing)
+  - path: layers/glassbox/app/utils/reading.ts
+    reason: (no reason given)
+  - path: layers/glassbox/app/utils/revision.ts
+    reason: (no reason given)
+  - path: layers/glassbox/GLOSSARY.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: .agents/skills/prototype/UI.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: .agents/skills/harvest/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/visitor-brief.md
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: (no reason given)
+  - name: prototype
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: clear-backlog
+    reason: (invoked as a slash command)
+  - name: tdd
+    reason: (no reason given)
+frictions:
+  - description: Ran git checkout and push before reading git-conventions.md, which CLAUDE.md requires before any non-read-only git command.
+    solution: Read git-conventions.md at the first sample revert; a rule or hook on first git write would surface it.
+    severity: minor
+  - description: Labelled issues before reading triage-labels.md, which CLAUDE.md requires before labelling; the hook reminded me afterwards.
+    solution: Read it when the first issue_write with labels is planned.
+    severity: nit
+  - description: "First Q16 (report lifetime rule) and the first #3276 sample were confusing to the owner and each cost a round."
+    solution: State a question with a concrete example, and check the premise at the data level before offering a pick.
+    severity: minor
+  - description: The builder looked for list-human-only-paths.ts in the wrong place and reported it missing; the brief named no path.
+    solution: Give the full script path in builder briefs.
+    severity: nit
+durationSec: 2681
+models:
+  claude-sonnet-5-5: 157
+toolCounts:
+  Bash: 31
+  Read: 16
+  Skill: 4
+  Workflow: 2
+  ToolSearch: 4
+  PushNotification: 6
+  mcp__github__add_issue_comment: 3
+  mcp__github__issue_write: 5
+  SendUserFile: 2
+  SendMessage: 8
+  mcp__github__create_pull_request: 4
+  mcp__claude-code-remote__subscribe_pr_activity: 4
+filesEdited:
+  - layers/midden/app/utils/cause.ts
+  - layers/midden/app/components/midden/TrenchLanding.vue
+  - layers/midden/app/components/midden/ConditionKey.vue
+  - layers/midden/tests/e2e/midden.spec.ts
+  - .agents/skills/harvest/SKILL.md
+  - .throwaway/tap/measure.ts
+  - .throwaway/tap/shot.ts
+  - layers/journal/app/pages/t/journal/[space]/frictions.vue
+  - app/components/SiteFooter.vue
+  - layers/atlas/app/assets/theme.css
+  - layers/journal/app/assets/theme.css
+  - layers/tinkerfund/app/components/tinkerfund/shell/Breadcrumbs.vue
+  - layers/tinkerfund/app/components/tinkerfund/shell/Shell.vue
+  - layers/midden/app/components/midden/SectionColumn.vue
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0006.md
+  - .claude/rules/adr-0016.md
+adrHints:
+  - adr: 5
+    via: path
+    readAfter: false
+    by: subagent
+  - adr: 27
+    via: path
+    readAfter: false
+    by: subagent
+  - adr: 6
+    via: path
+    readAfter: true
+    by: subagent
+  - adr: 8
+    via: path
+    readAfter: true
+    by: subagent
+  - adr: 16
+    via: path
+    readAfter: true
+    by: subagent
+docsReadBySubagents:
+  - .agents/skills/implement/SKILL.md
+  - layers/midden/GLOSSARY.md
+  - .agents/skills/harvest/SKILL.md
+  - docs/adr/0006-runtime-routing-path-prefix.md
+  - docs/adr/0008-self-documentation-tenant-is-a-journal.md
+  - docs/adr/0016-tenant-root-layer-routes.md
+  - .agents/skills/code-review/SKILL.md
+  - .agents/skills/triage/SKILL.md
+  - .agents/skills/clear-backlog/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+  - layers/glassbox/GLOSSARY.md
+  - docs/agents/environment-caveats.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/visitor-loop/visitor-brief.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0022.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/adr-0020.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/github-integration.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: .claude/rules/ui-verification.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0022.md
+        value: backed
+      - path: .claude/rules/adr-0020.md
+        value: backed
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: held tap-target PR for a human
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: provenance header on every post
+      - path: .claude/rules/ui-verification.md
+        value: steered
+        why: samples before building UI
+      - path: .claude/rules/adr-0003.md
+        value: backed
+      - path: docs/agents/pr-workflow.md
+      - path: docs/agents/verifying-ui-changes.md
+      - path: .agents/skills/auto-triage/SKILL.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/implement/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/implement/SKILL.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/midden/app/utils/cause.ts
+      - rule: .claude/rules/tenant-layers.md
+        via: native
+        trigger: layers/midden/app/utils/cause.ts
+      - rule: .claude/rules/ui-verification.md
+        via: native
+        trigger: layers/midden/app/components/midden/TrenchLanding.vue
+    reported:
+      - path: .claude/rules/adr-0029.md
+        value: backed
+      - path: docs/agents/git-conventions.md
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/midden/GLOSSARY.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/midden/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/midden/GLOSSARY.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/implement/SKILL.md
+      - rule: .claude/rules/tenant-layers.md
+        via: native
+        trigger: layers/midden/app/components/midden/SectionColumn.vue
+      - rule: .claude/rules/ui-verification.md
+        via: native
+        trigger: layers/midden/app/components/midden/SectionColumn.vue
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0003.md
+        value: backed
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .claude/rules/adr-0017.md
+        value: backed
+      - path: .claude/rules/tenant-glossary.md
+        value: backed
+      - path: .claude/rules/ui-verification.md
+        value: steered
+      - path: docs/agents/git-conventions.md
+      - path: docs/agents/verifying-ui-changes.md
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/implement/SKILL.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .claude/rules/adr-0005.md
+        value: backed
+      - path: .claude/rules/adr-0027.md
+        value: backed
+      - path: docs/agents/git-conventions.md
+  - by: general-purpose
+    subagent: 3
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/implement/SKILL.md
+      - rule: .claude/rules/adr-0008.md
+        via: native
+        trigger: layers/journal/app/pages/t/journal/[space]/frictions.vue
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/journal/app/pages/t/journal/[space]/frictions.vue
+      - rule: .claude/rules/tenant-layers.md
+        via: native
+        trigger: layers/journal/app/pages/t/journal/[space]/frictions.vue
+      - rule: .claude/rules/ui-verification.md
+        via: native
+        trigger: layers/journal/app/pages/t/journal/[space]/frictions.vue
+      - rule: .claude/rules/adr-0006.md
+        via: native
+        trigger: layers/journal/app/pages/t/journal/[space]/frictions.vue
+      - rule: .claude/rules/adr-0016.md
+        via: native
+        trigger: layers/journal/app/pages/t/journal/[space]/frictions.vue
+      - rule: .claude/rules/adr-0030.md
+        via: native
+        trigger: docs/adr/0006-runtime-routing-path-prefix.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: docs/adr/0006-runtime-routing-path-prefix.md
+    reported:
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: backed
+      - path: .claude/rules/ui-verification.md
+        value: steered
+      - path: .claude/rules/adr-0003.md
+        value: backed
+      - path: docs/agents/verifying-ui-changes.md
+      - path: docs/agents/git-conventions.md
+  - by: workflow-subagent
+    subagent: 4
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/code-review/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/code-review/SKILL.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: workflow-subagent
+    subagent: 5
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: workflow-subagent
+    subagent: 6
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: workflow-subagent
+    subagent: 7
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: workflow-subagent
+    subagent: 8
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: workflow-subagent
+    subagent: 9
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/implement/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/implement/SKILL.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/midden/app/utils/cause.ts
+      - rule: .claude/rules/tenant-layers.md
+        via: native
+        trigger: layers/midden/app/utils/cause.ts
+      - rule: .claude/rules/ui-verification.md
+        via: native
+        trigger: layers/midden/app/components/midden/TrenchLanding.vue
+    reported:
+      - path: .claude/rules/adr-0029.md
+        value: backed
+      - path: docs/agents/git-conventions.md
+  - by: workflow-subagent
+    subagent: 10
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/midden/GLOSSARY.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/midden/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/midden/GLOSSARY.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/implement/SKILL.md
+      - rule: .claude/rules/tenant-layers.md
+        via: native
+        trigger: layers/midden/app/components/midden/SectionColumn.vue
+      - rule: .claude/rules/ui-verification.md
+        via: native
+        trigger: layers/midden/app/components/midden/SectionColumn.vue
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0003.md
+        value: backed
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .claude/rules/adr-0017.md
+        value: backed
+      - path: .claude/rules/tenant-glossary.md
+        value: backed
+      - path: .claude/rules/ui-verification.md
+        value: steered
+      - path: docs/agents/git-conventions.md
+      - path: docs/agents/verifying-ui-changes.md
+  - by: workflow-subagent
+    subagent: 11
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported: []
+  - by: workflow-subagent
+    subagent: 12
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: workflow-subagent
+    subagent: 13
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/implement/SKILL.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .claude/rules/adr-0005.md
+        value: backed
+      - path: .claude/rules/adr-0027.md
+        value: backed
+      - path: docs/agents/git-conventions.md
+  - by: workflow-subagent
+    subagent: 14
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/implement/SKILL.md
+      - rule: .claude/rules/adr-0008.md
+        via: native
+        trigger: layers/journal/app/pages/t/journal/[space]/frictions.vue
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/journal/app/pages/t/journal/[space]/frictions.vue
+      - rule: .claude/rules/tenant-layers.md
+        via: native
+        trigger: layers/journal/app/pages/t/journal/[space]/frictions.vue
+      - rule: .claude/rules/ui-verification.md
+        via: native
+        trigger: layers/journal/app/pages/t/journal/[space]/frictions.vue
+      - rule: .claude/rules/adr-0006.md
+        via: native
+        trigger: layers/journal/app/pages/t/journal/[space]/frictions.vue
+      - rule: .claude/rules/adr-0016.md
+        via: native
+        trigger: layers/journal/app/pages/t/journal/[space]/frictions.vue
+      - rule: .claude/rules/adr-0030.md
+        via: native
+        trigger: docs/adr/0006-runtime-routing-path-prefix.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: docs/adr/0006-runtime-routing-path-prefix.md
+    reported:
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: backed
+      - path: .claude/rules/ui-verification.md
+        value: steered
+      - path: .claude/rules/adr-0003.md
+        value: backed
+      - path: docs/agents/verifying-ui-changes.md
+      - path: docs/agents/git-conventions.md
+  - by: workflow-subagent
+    subagent: 15
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0022.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/adr-0020.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/github-integration.md
+    reported:
+      - path: .claude/rules/adr-0017.md
+        value: backed
+  - by: workflow-subagent
+    subagent: 16
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0022.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/adr-0020.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/github-integration.md
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0022.md
+        value: steered
+      - path: .claude/rules/adr-0027.md
+        value: steered
+      - path: .claude/rules/adr-0020.md
+        value: backed
+      - path: .claude/rules/adr-0017.md
+        value: backed
+      - path: docs/agents/github-integration.md
+  - by: workflow-subagent
+    subagent: 17
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0022.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/adr-0020.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/github-integration.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/midden/app/components/midden/TrenchLanding.vue
+      - rule: .claude/rules/tenant-layers.md
+        via: native
+        trigger: layers/midden/app/components/midden/TrenchLanding.vue
+      - rule: .claude/rules/ui-verification.md
+        via: native
+        trigger: layers/midden/app/components/midden/TrenchLanding.vue
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/midden/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/midden/GLOSSARY.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0017.md
+        value: steered
+      - path: .claude/rules/adr-0020.md
+        value: backed
+      - path: .claude/rules/data-shapes.md
+        value: steered
+      - path: .claude/rules/adr-0003.md
+        value: backed
+      - path: docs/agents/github-integration.md
+      - path: .agents/skills/clear-backlog/SKILL.md
+  - by: workflow-subagent
+    subagent: 18
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0022.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/adr-0020.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0017.md
+        value: backed
+      - path: .claude/rules/adr-0020.md
+        value: backed
+      - path: .claude/rules/adr-0022.md
+        value: backed
+      - path: .agents/skills/clear-backlog/SKILL.md
+  - by: workflow-subagent
+    subagent: 19
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/github-integration.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/github-integration.md
+      - rule: .claude/rules/adr-0022.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/adr-0020.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/app/utils/reading.ts
+      - rule: .claude/rules/tenant-layers.md
+        via: native
+        trigger: layers/glassbox/app/utils/reading.ts
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+    reported:
+      - path: .claude/rules/adr-0017.md
+        value: backed
+  - by: workflow-subagent
+    subagent: 20
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0022.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/adr-0020.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/github-integration.md
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .claude/rules/adr-0017.md
+        value: backed
+  - by: workflow-subagent
+    subagent: 21
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0022.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/adr-0020.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/github-integration.md
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/adr-0006.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/adr-0016.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .claude/rules/adr-0022.md
+        value: backed
+      - path: .claude/rules/adr-0020.md
+        value: backed
+      - path: docs/agents/github-integration.md
+  - by: workflow-subagent
+    subagent: 22
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0022.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/adr-0020.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/auto-triage/SKILL.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/environment-caveats.md
+      - rule: .claude/rules/adr-0028.md
+        via: native
+        trigger: .agents/skills/visitor-loop/visitor-brief.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0017.md
+        value: backed
+      - path: docs/agents/environment-caveats.md
+subagents:
+  - type: general-purpose
+    task: abd1816814d9ef1b7
+    model: claude-sonnet-5-5
+    durationSec: 739
+    toolCalls: 31
+    modelCalls: 20
+    tokenShare: 5.5
+  - type: general-purpose
+    task: acc6be89d04e4ef49
+    model: claude-sonnet-5-5
+    durationSec: 953
+    toolCalls: 36
+    modelCalls: 22
+    tokenShare: 7.2
+  - type: general-purpose
+    task: ae03c166cfe64efaa
+    model: claude-sonnet-5-5
+    durationSec: 534
+    toolCalls: 27
+    modelCalls: 20
+    tokenShare: 5.2
+  - type: general-purpose
+    task: afaa46c06bece52e2
+    model: claude-sonnet-5-5
+    durationSec: 793
+    toolCalls: 63
+    modelCalls: 51
+    tokenShare: 11.5
+  - type: workflow-subagent
+    task: Standards midden-stores-legend r1
+    model: claude-sonnet-5-5
+    durationSec: 20
+    toolCalls: 8
+    modelCalls: 5
+    tokenShare: 1
+  - type: workflow-subagent
+    task: Spec midden-plain-words r1
+    model: claude-sonnet-5-5
+    durationSec: 16
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 0.7
+  - type: workflow-subagent
+    task: Both harvest-trial-territory-path r1
+    model: claude-sonnet-5-5
+    durationSec: 15
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 1.6
+  - type: workflow-subagent
+    task: Spec midden-stores-legend r1
+    model: claude-sonnet-5-5
+    durationSec: 17
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 0.8
+  - type: workflow-subagent
+    task: Standards tap-targets-footer-crumbs r1
+    model: claude-sonnet-5-5
+    durationSec: 20
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 0.8
+  - type: workflow-subagent
+    task: build midden-plain-words
+    model: claude-sonnet-5-5
+    durationSec: 87
+    toolCalls: 24
+    modelCalls: 14
+    tokenShare: 3.2
+  - type: workflow-subagent
+    task: build midden-stores-legend
+    model: claude-sonnet-5-5
+    durationSec: 179
+    toolCalls: 29
+    modelCalls: 16
+    tokenShare: 4.3
+  - type: workflow-subagent
+    task: Spec tap-targets-footer-crumbs r1
+    model: claude-sonnet-5-5
+    durationSec: 23
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 0.8
+  - type: workflow-subagent
+    task: Standards midden-plain-words r1
+    model: claude-sonnet-5-5
+    durationSec: 21
+    toolCalls: 9
+    modelCalls: 5
+    tokenShare: 1
+  - type: workflow-subagent
+    task: build harvest-trial-territory-path
+    model: claude-sonnet-5-5
+    durationSec: 65
+    toolCalls: 21
+    modelCalls: 14
+    tokenShare: 3.1
+  - type: workflow-subagent
+    task: build tap-targets-footer-crumbs
+    model: claude-sonnet-5-5
+    durationSec: 422
+    toolCalls: 52
+    modelCalls: 41
+    tokenShare: 8.4
+  - type: workflow-subagent
+    task: "triage #3017"
+    model: claude-sonnet-5-5
+    durationSec: 43
+    toolCalls: 12
+    modelCalls: 5
+    tokenShare: 1.4
+  - type: workflow-subagent
+    task: "triage #3280"
+    model: claude-sonnet-5-5
+    durationSec: 71
+    toolCalls: 19
+    modelCalls: 11
+    tokenShare: 2.6
+  - type: workflow-subagent
+    task: "triage #3276"
+    model: claude-sonnet-5-5
+    durationSec: 94
+    toolCalls: 23
+    modelCalls: 9
+    tokenShare: 2.8
+  - type: workflow-subagent
+    task: "triage #3278"
+    model: claude-sonnet-5-5
+    durationSec: 86
+    toolCalls: 20
+    modelCalls: 9
+    tokenShare: 2.5
+  - type: workflow-subagent
+    task: "triage #3172"
+    model: claude-sonnet-5-5
+    durationSec: 76
+    toolCalls: 19
+    modelCalls: 7
+    tokenShare: 3
+  - type: workflow-subagent
+    task: "triage #3277"
+    model: claude-sonnet-5-5
+    durationSec: 111
+    toolCalls: 23
+    modelCalls: 9
+    tokenShare: 2.7
+  - type: workflow-subagent
+    task: "triage #3282"
+    model: claude-sonnet-5-5
+    durationSec: 216
+    toolCalls: 22
+    modelCalls: 13
+    tokenShare: 3.2
+  - type: workflow-subagent
+    task: "triage #3279"
+    model: claude-sonnet-5-5
+    durationSec: 57
+    toolCalls: 16
+    modelCalls: 8
+    tokenShare: 2
+gitBranch: claude/youthful-bardeen-7dftnc
+entrypoint: remote
+cliVersion: 2.1.325
+landedBy: Stop
