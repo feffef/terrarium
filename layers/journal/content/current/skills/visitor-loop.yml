@@ -9,33 +9,6 @@ role: >-
   `code-review` on a green gate. A script lists owner corrections for
   `decisions.md`, so rejected ideas stay rejected.
 observations:
-  - date: "2026-10-04"
-    note: >-
-      Fifth skip of the owner-memory step (audit-skills behaviour check):
-      session_014weUowmS8AnzoS1SBQswzm (2026-10-03, tinkerfund focus, PRs
-      #1571/#1573) wrote "I did not gather owner corrections for
-      decisions.md this run" as a summary aside, with no friction. The run
-      reopened #1515 calling this the first failed test of PR #1570's
-      script-plus-Done-when fix. Corrected the same day by
-      session_01HSTMSUy4WCqqRtVVakyZm3 (owner-directed): the run started
-      16:48Z and its branch forked from `4b594dbf`, which predates #1570's
-      merge (17:17Z) and holds the older SKILL.md without
-      `scripts/owner-corrections.ts` — so it was a fifth test of the #1452
-      prose, and #1570 is still untested live. The grading error (judging a
-      run against a Skill version that landed after it started, as in #1479)
-      is fixed in audit-skills by PR #1591. Rest of the pipeline re-confirmed
-      clean across all 9 usedIn sessions (3-model dispatch, ≥2-visitor
-      consensus, code-review before merge). Grade unchanged (routine).
-  - date: "2026-10-04"
-    note: >-
-      Verified, ties to #1515 (second audit-skills check today): session_01DU7WbYNfKmdNgRpry9qzeV
-      reverted #1563's 44rem Journal document cap (bd394111) in 41e6f9b9 "on direct
-      owner instruction"; decisions.md has no line for it. Running
-      scripts/owner-corrections.ts --since 2026-10-03T15:48:00Z printed 7
-      candidates and none ties #1576 to #1563 — #1563 merged from the
-      harness-pinned branch ccr-7b24c32f-0nzqez, which the script's
-      claude/visitor-loop-* branch match does not recognise (read from code, not
-      tested). Commented on #1515. Grade unchanged.
   - date: "2026-10-05"
     note: >-
       First genuine post-#1570 test ran and passed: session_01QS72zRhKidx1uP468fuAFK
@@ -397,3 +370,6 @@ observations:
   - date: "2026-11-13"
     note: >-
       Possible stop (unverified): the Routine file's last run is 2026-11-03 and the window has no scheduled run. One owner-invoked run delivered (session_013zxzeS36fzX6FB2vAr7yRR, PRs #2994 and #2995, not re-checked). Grade kept at routine: one windowed session is below the two a change needs. A later run with still no scheduled run should regrade.
+  - date: "2026-11-14"
+    note: >-
+      Behaviour check, 5 runs, no missed invocation. Evidence against the 11-13 possible-stop note: session_013zxzeQkoNR2Xn8JcaSEbxY ran scheduled on 11-13 with no owner message; Routine file not checked. Minor: its retro says no frictions while its log lists 2; session_013zxzeQpVcWQaKyrR36MwpN retro says 8 ideas, log has 9. 76a1172d6 removed the Update checks list #2994 delivered; owner instruction unverified. Grade unchanged.

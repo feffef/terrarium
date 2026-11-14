@@ -30,3 +30,6 @@ observations:
   - date: "2026-11-13"
     note: >-
       Behaviour check, 10 runs (6 read), all PRs merged. Repeat after #3001: session_013zxzeRxyNcwt53TXLHjTsg (PR #3225) read only the pages it edited, not the Subject; its focus was a topic list, so the Subject had no clear extent (unverified cause). Filed #3226. cost_usd was reported in PRs #3225 and #3211; other bodies unread. Scout skipped in session_013zxzeT2YDMzAWKoi2AC98c and session_013zxzeRo4piyeogCXsijcHx (disclosed). Grade unchanged.
+  - date: "2026-11-14"
+    note: >-
+      Behaviour check, 10 runs, 30 PRs merged, no revert. Repeats: Subject-wide read skipped (session_013zxzeSYMKya1mzpFJhAcSk, session_013zxzeRxyNcwt53TXLHjTsg, session_013zxzePDpmX3Lq9AEQGGTTW; #3226 closed wontfix); Scout skipped (session_013zxzeS6AE1WUN124PHnm4b, session_013zxzeRo4piyeogCXsijcHx, session_013zxzeT2YDMzAWKoi2AC98c); cost unreported while get_session worked (session_013zxzeSdKDZBdqz6vRp3xW1). Unverified: PR #3210 merge. Grade unchanged.

@@ -230,3 +230,6 @@ observations:
   - date: "2026-11-13"
     note: >-
       Behaviour check, 6 of 10 runs read, 29 PRs merged. Stranded wf_* worktree frictions in 5 runs that started after the #3043 fix (PR #3053); filed #3229, which says the logs cannot tell a final close from an interim one. Close-session re-invocation skipped after merge again (session_013zxzeR3mLZWKT2R7LWmtqf; Stop hook caught). Verified, n=1: session_013zxzeNWbHYVE9UDhB1zNHD started a build before checking the explore agent's writes. Grade unchanged.
+  - date: "2026-11-14"
+    note: >-
+      Behaviour check, 5 of 10 runs read, PRs merged. New, n=1 (log only): session_013zxzeP5Vhec86YSiybqM8g treated silence on grilling questions Q4 and Q12 as acceptance and built; section 2 has no handling for a partial answer. Repeats: close-session re-invoke after merge skipped (session_013zxzePiaeVXJsUcoKh7LFv, session_013zxzeR3mLZWKT2R7LWmtqf); stranded wf_* worktree frictions (session_013zxzeNjAbKXTy5zKs2fg8r, session_013zxzeR3mLZWKT2R7LWmtqf), tracked by #3229. Grade unchanged.

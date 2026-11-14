@@ -9,17 +9,4 @@ role: >-
   working around the restriction, it produces a script the human runs, and the
   agent does every surrounding step. Essential when a guard rightly blocks an
   agent action.
-observations:
-  - date: "2026-10-04"
-    note: >-
-      Coverage gap (audit-skills scorecard): used once this window, not yet
-      inventoried. session_a1af4e46-8293-4f33-bf41-c956bd7f6306 (2026-10-03,
-      gate.yml thin-shell apply for issue #445) hit the workflow-edit guard
-      on `.github/workflows/gate.yml`, correctly stopped rather than routing
-      around it, and the user invoked `/wizard` for the human-run apply step
-      while the agent did every other step itself (prose companion edits,
-      PR, review). Worked as intended; first use, so no grade-change
-      evidence yet. The session's own idea — ship a ready-for-human CI
-      hand-apply as a committed one-shot wizard script next to its proposal,
-      instead of re-deriving the steps live — is worth a future run's
-      attention.
+observations: []

@@ -9,27 +9,6 @@ role: >-
   the self-judged "invoke at closure" rule fire reliably; its invocation rate is the evidence for ADR-0009's choice
   of a Skill over a reminder hook.
 observations:
-  - date: "2026-10-04"
-    note: >-
-      Re-checked (audit-skills behaviour check), 10 newest invocations (PRs
-      #1563-1584, plus #1569 closed-not-merged and #1583 honestly left
-      in-review): 0/10 new stale logs, every status/outcome matches live
-      GitHub state. session_01TMgZyrN42pwudxkUdHLKwP re-checked a 6th
-      consecutive time — still frozen at `in-review`/"#1344 in review"
-      despite #1344 merging 2026-09-25T18:01Z, now archived in that stale
-      state; remains n=1 across 50+ sessions checked over six consecutive
-      audits. Structural gap unchanged: nothing re-verifies a log's status
-      after the authoring turn ends. Window's own 98 sessions all used
-      close-session (0 missed invocations). Grade/role unchanged.
-  - date: "2026-10-04"
-    note: >-
-      Verified quotes (second audit-skills check today): two runs after the closure-rule prune
-      (178da739) logged closing late — session_01P7a2zqJxuariDNfYqWQRHs ("Didn't
-      log the session at PR-open ... only closed after the final user-requested
-      tune") and session a1af4e46-8293-4f33-bf41-c956bd7f6306 ("authored after CI
-      finished rather than at PR-open"). Both closed with a correct final status,
-      neither is a HUMAN-PROMPTED-CLOSURE, so no finding; recorded as evidence for
-      the closure-rule trial. Grade/role unchanged.
   - date: "2026-10-05"
     note: >-
       Re-checked, 10 newest invocations (PRs #1594-#1607): 0/10 stale,
@@ -304,3 +283,6 @@ observations:
   - date: "2026-11-11"
     note: >-
       Behaviour check, 10 runs, 0 missed. Four no-PR test sessions had their logs rescued by SessionStart about an hour late (Stop hook did not land them; held-log mechanism, unverified cause). Not issued. Grade unchanged.
+  - date: "2026-11-14"
+    note: >-
+      Behaviour check, 10 runs delivered, all logs landed, 0 missed. Stale in-review log: session e5f88467-c386-4b88-8c16-b9786c748d41 (PR #3288 merged after its last commit); the structural gap noted since 09-28, nothing re-closes a log after the session ends. Human-prompted closure listed by the scorecard: session_013zxzeQyHhutDMJtzGF5UQU (11-07, already on #2956). Orphan scan: 267 merged PRs, 124 issues, 0 orphans. Grade unchanged.
