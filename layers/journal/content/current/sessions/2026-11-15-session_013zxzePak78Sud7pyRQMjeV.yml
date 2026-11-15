@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_013zxzePak78Sud7pyRQMjeV
 startedAt: 2026-11-15T15:33:52Z
-endedAt: 2026-11-15T16:08:55Z
+endedAt: 2026-11-15T16:12:26Z
 kind: delegated
 goal: "Glass Box curate runs: teach auditSummary and the uncommented flag"
 status: in-review
 outcome: First PR merged; second run's page fix pushed and under gate, PR not yet open
-summary: "The owner invoked /glassbox-curate, gave no focus, then said \"you pick, repeat until budget is hit\" (human-instructed: run curate, pick the focus and repeat; agent-chosen: each focus, the Subject reads, the writer and reviewer split). Run 1 taught the auditSummary field on Skill inventory (PR 3345, gate and code-review passed, merged with merge-pr.ts after posting a verdict). Run 2 restarts the branch from main and teaches the explore script's uncommented flag on Workflow scripts, a gap the Scout of run 1 left on the memory page; its page edit, memory page and run entry are committed and pushed and the scoped gate is running. Skipped for the budget: claim checkers and fresh readers (the lead re-checked each added claim against its source), and full reads of overlapping pages. Budget by get_session at run 2's start: 271k context tokens of 500k, cost 4.22 of 25 dollars. The PR 1 body gave a stale cost of 0.12 dollars, which I did not correct on the merged PR. Open: open PR 2, merge it, then decide whether budget remains for a third run (about 100k tokens each)."
+summary: "The owner invoked /glassbox-curate, gave no focus, then said \"you pick, repeat until budget is hit\" (human-instructed: run curate, pick the focus and repeat; agent-chosen: each focus, the Subject reads, the writer and reviewer split). Run 1 taught the auditSummary field on Skill inventory (PR 3345, gate and code-review passed, merged with merge-pr.ts after posting a verdict). Run 2 restarts the branch from main and teaches the explore script's uncommented flag on Workflow scripts, a gap the Scout of run 1 left on the memory page; opened as PR 3348 after the scoped gate passed (its first run failed on an unquoted YAML colon in my run entry, which the unit tests had not caught). Skipped for the budget: claim checkers and fresh readers (the lead re-checked each added claim against its source), and full reads of overlapping pages. Budget by get_session at run 2's start: 271k context tokens of 500k, cost 4.22 of 25 dollars. The PR 1 body gave a stale cost of 0.12 dollars, which I did not correct on the merged PR. Open: open PR 2, merge it, then decide whether budget remains for a third run (about 100k tokens each)."
 prs:
   - "3345"
+  - "3348"
 docsRead:
   - path: layers/glassbox/GLOSSARY.md
     reason: (no reason given)
@@ -68,21 +69,24 @@ frictions:
   - description: After the first PR merged its remote branch was gone, so --force-with-lease failed with stale info and cost two extra commands to diagnose.
     solution: Skill Land step could say to push a restarted branch plainly once the PR merged, as pr-workflow.md already allows.
     severity: nit
-durationSec: 2103
+  - description: A colon-space inside an unquoted run-entry YAML item broke validate:content; glassbox unit tests passed, so the gate was the first to see it.
+    solution: Have workshop.spec.ts parse run entries, or tell the Skill to quote each changes item.
+    severity: minor
+durationSec: 2314
 models:
-  claude-sonnet-5-5: 150
+  claude-sonnet-5-5: 163
 toolCounts:
   Read: 15
-  Bash: 44
+  Bash: 47
   Skill: 5
   Agent: 6
   Write: 6
-  Edit: 6
+  Edit: 9
   mcp__claude-code-remote__get_session: 2
   ToolSearch: 2
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
-  ReadNotifications: 2
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  ReadNotifications: 3
   mcp__github__pull_request_read: 1
   mcp__github__add_issue_comment: 1
 filesEdited:
@@ -459,37 +463,37 @@ subagents:
     durationSec: 40
     toolCalls: 14
     modelCalls: 6
-    tokenShare: 5.4
+    tokenShare: 5
   - task: Write auditSummary paragraph
     model: opus
     durationSec: 105
     toolCalls: 28
     modelCalls: 15
-    tokenShare: 7.5
+    tokenShare: 6.9
   - task: Standards review of diff
     model: sonnet
     durationSec: 36
     toolCalls: 13
     modelCalls: 6
-    tokenShare: 4.3
+    tokenShare: 4
   - task: Spec review of diff
     model: sonnet
     durationSec: 50
     toolCalls: 14
     modelCalls: 11
-    tokenShare: 5.3
+    tokenShare: 4.9
   - task: Write uncommented flag paragraph
     model: opus
     durationSec: 96
     toolCalls: 28
     modelCalls: 14
-    tokenShare: 7.1
+    tokenShare: 6.5
   - task: Combined review of second run
     model: sonnet
     durationSec: 32
     toolCalls: 16
     modelCalls: 6
-    tokenShare: 4.3
+    tokenShare: 4
 gitBranch: claude/happy-johnson-fvc11q
 entrypoint: remote
 cliVersion: 2.1.325
