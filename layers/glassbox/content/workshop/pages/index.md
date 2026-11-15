@@ -66,7 +66,7 @@ None of these is false.
 
 ### Stale or missing
 
-- *Skill inventory* does not mention the `auditSummary` line that `audit-skills` writes on an entry (Scout: commits 1a3329228, 289b5613d).
+- *Workflow scripts* does not mention the `uncommented` flag of `clear-backlog-explore.js` (Scout: commit f9146e4f).
 - No page teaches the `visitor-loop` Skill (blind and informed visitors, report-only); it is still changing fast, so teach only the stable idea. Nearest page: *Ideas and lessons learned*.
 ### Claims to check
 
