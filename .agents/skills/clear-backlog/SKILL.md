@@ -50,8 +50,9 @@ Run `clear-backlog-explore` with
 `mode` is `ready-recheck` for a `ready-for-agent` issue, `blocked-check` for one
 blocked outside the chat (an upstream release, a date, an owner action), and
 `full` for the rest, deferred ones included. Set `reserved: true` on an issue
-the owner reserved ("I decide this one", directly or relayed). Set `uncommented: true` on each issue with no comments
-(the sweep fetched them) and say so in the args line; its agent must post one.
+the owner reserved ("I decide this one", directly or relayed). Set
+`uncommented: true` on each issue with no comments (the sweep fetched them) and
+say so in the args line; its agent must post one.
 
 Explore agents write to GitHub (comments, labels, closes); tell the owner so
 when you start the run. An agent's `writes` is its own claim, and `--triage`

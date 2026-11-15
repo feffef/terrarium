@@ -42,8 +42,8 @@ describe('--triage', () => {
     const flagged = (patch: Record<string, unknown>, outcome = 'grill') => {
       const file = join(tmp(), 'explore-uncommented.output')
       const { result } = JSON.parse(readFileSync(fixture('explore.output'), 'utf8')) as { result: { results: Record<string, Record<string, unknown>> } }
-      const grill = Object.values(result.results).find((t) => t.outcome === outcome)!
-      Object.assign(grill, patch)
+      const target = Object.values(result.results).find((t) => t.outcome === outcome)!
+      Object.assign(target, patch)
       writeFileSync(file, JSON.stringify({ result }))
       return triageSummary(file).includes('NO WRITES')
     }
