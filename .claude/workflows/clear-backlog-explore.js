@@ -171,9 +171,10 @@ for (const [i, issue] of input.entries()) {
     r.question ||= { choice: 'Go ahead as the summary says?', options: ['yes', 'no'], pick: 'yes', why: 'Reserved, seedling, Public-authored or ready-for-human: the owner decides.' }
   }
   for (const q of [r?.question, ...(r?.followUps || [])]) if (q && !q.options.includes(q.pick)) log(`#${issue.number}: pick is not one of its options`)
-  if (r) results[issue.number] = r
-  if (r && issue.uncommented) r.uncommented = true
-  else missing.push(issue.number)
+  if (r) {
+    results[issue.number] = r
+    if (issue.uncommented) r.uncommented = true
+  } else missing.push(issue.number)
 }
 if (missing.length) log(`MISSING after retry: #${missing.join(', #')}`)
 

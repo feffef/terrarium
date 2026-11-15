@@ -39,10 +39,10 @@ describe('--triage', () => {
   })
 
   it('flags an uncommented issue whose agent wrote nothing, whatever its outcome', () => {
-    const flagged = (patch: Record<string, unknown>) => {
+    const flagged = (patch: Record<string, unknown>, outcome = 'grill') => {
       const file = join(tmp(), 'explore-uncommented.output')
       const { result } = JSON.parse(readFileSync(fixture('explore.output'), 'utf8')) as { result: { results: Record<string, Record<string, unknown>> } }
-      const grill = Object.values(result.results).find((t) => t.outcome === 'grill')!
+      const grill = Object.values(result.results).find((t) => t.outcome === outcome)!
       Object.assign(grill, patch)
       writeFileSync(file, JSON.stringify({ result }))
       return triageSummary(file).includes('NO WRITES')
@@ -50,6 +50,7 @@ describe('--triage', () => {
     expect(flagged({ uncommented: true, writes: [] })).toBe(true)
     expect(flagged({ uncommented: true, writes: ['commented'] })).toBe(false)
     expect(flagged({ writes: [] })).toBe(false)
+    expect(flagged({ uncommented: true, writes: [] }, 'close-duplicate')).toBe(true)
   })
 
   it('ends with missing and grouping, and never prints verdicts', () => {
