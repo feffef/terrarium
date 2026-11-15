@@ -94,9 +94,11 @@ trials:
   - problem: >
       The gate-run edit and git-chaining restatements in `pr-workflow.md`
       "Review before opening the PR" and `git-conventions.md` "Keep git apart
-      from steps that can fail" (-3 net, from `git diff --numstat`: 5 added, 8
+      from steps that can fail" (-3 net, from `git diff --numstat`: 7 added, 10
       deleted; this entry not counted): "edit nothing until it ends (it aborts if
-      HEAD or the tree changes)" cut, since `gate-edit-guard.ts` denies the edit
+      HEAD or the tree changes)" cut to "edit nothing while it runs" (the probe
+      found the bare cut left it unsaid), the abort clause dropped since
+      `gate-edit-guard.ts` denies the edit
       and `gate.ts` `stepAbort` aborts; the two chaining bullets tightened, every
       rule kept. Chosen after the search subagent covered CLAUDE.md,
       `docs/agents/`, rules, `guards.md`, 143 ledger files and git-log counts (not
