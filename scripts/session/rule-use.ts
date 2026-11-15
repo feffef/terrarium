@@ -7,7 +7,7 @@
 // not a script, so a permission classifier sees a call that does nothing (#3020).
 import { appendFileSync, mkdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { isRulePath, ruleValue, valueWords, type ReportedEntry, type RuleLoad } from '../../shared/schemas/session.ts'
+import { isRulePath, ruleValue, wordsFor, type ReportedEntry, type RuleLoad } from '../../shared/schemas/session.ts'
 import { root } from '../lib/cli.ts'
 import { commandWords } from './shell-reads.ts'
 import { SCRATCH_DIR } from './transcript-trace.ts'
@@ -40,7 +40,7 @@ export const GOVERNS: Record<string, string> = {
   'tenant-layers': 'writing Tenant layer code: sharing code, naming exports, imports and aliases',
 }
 
-/** The `paths` a rule file lists, `[]` when it has none or cannot be read. */
+// Read from the rule file, not copied, so the line cannot drift from its `paths`.
 function rulePaths(rule: string): string[] {
   try {
     const text = readFileSync(join(root, rule), 'utf8')
@@ -66,7 +66,7 @@ export function governsLine(rule: string): string | undefined {
 export function ruleUseAsk(loads: RuleLoad[], how: string, example: string, describe: (rule: string) => string | undefined = () => undefined): string[] {
   return [
     RULE_USE_ASK_HEAD,
-    ...(loads.length ? loads.map((l) => `  ${l.rule}${VIA_NOTES[l.via]}${describe(l.rule) ? `  [${describe(l.rule)}]` : ''}`) : ['  (none)']),
+    ...(loads.length ? loads.map((l) => { const what = describe(l.rule); return `  ${l.rule}${VIA_NOTES[l.via]}${what ? `  [${what}]` : ''}` }) : ['  (none)']),
     '',
     `${how} and give each of these rules that loaded during your task ONE value, the first that fits.`,
     'A rule governs what its own text tells you to do and the thing it describes; its paths only explain why it loaded. A mention in a brief, note or summary does not count.',
@@ -192,7 +192,7 @@ export function ruleUseCall(commands: string[], rel: (p: string) => string): { e
     const [raw = '', rawWord = '', ...detail] = (eq === -1 ? '' : t.slice(eq + 1)).toLowerCase().split(':')
     const value = OFFERED.find((v) => v === raw)
     if (!value) continue
-    const words: readonly string[] | undefined = value in valueWords ? valueWords[value as keyof typeof valueWords] : undefined
+    const words = wordsFor(value)
     if (!words) entries.set(key, { path: key, value })
     else if (words.includes(rawWord)) entries.set(key, { path: key, value, why: `${rawWord}:${detail.length ? ` ${detail.join(':')}` : ''}` })
   }

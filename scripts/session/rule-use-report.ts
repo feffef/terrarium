@@ -119,7 +119,7 @@ export function renderReport(r: RuleUseReport): string {
   return `${lines.join('\n')}\n`
 }
 
-/** The same logs twice, keeping only the main agents' entries, then only the subagents'. */
+// Their shares differ a lot, so one combined table hides which side a rule steers (#3017).
 export function splitByAgent(logs: SessionLog[]): { main: SessionLog[]; subagents: SessionLog[] } {
   const keep = (wantMain: boolean) =>
     logs.map((l) => ({ ...l, data: { ...l.data, ruleUse: ((l.data.ruleUse ?? []) as RuleUseEntry[]).filter((e) => (e.by === 'main') === wantMain) } }))

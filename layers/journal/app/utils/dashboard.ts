@@ -298,7 +298,7 @@ export function sessionCardViews(
 }
 
 // ── Rule use (#3020) ─────────────────────────────────────
-// A loaded rule an agent left out neither steered nor backed what it did.
+// A loaded rule an agent left out has no value, which counts against the rule.
 const taskOf = (e: RuleUseEntry, subagents: Subagent[]) => (e.subagent === undefined ? undefined : subagents[e.subagent]?.task)
 const withTask = (why: string, task?: string) => (task ? `${task}: ${why}` : why)
 const percent = (n: number, of: number) => (of ? Math.round((100 * n) / of) : 0)

@@ -58,13 +58,18 @@ export const isRulePath = (path: string) => path.includes('.claude/rules/')
 export const reportedEntryHasItsValue = (e: ReportedEntry) => isRulePath(e.path) === (e.value !== undefined)
 /** The first word of `why`, past the not-loaded mark, when `value` needs one. */
 export const whyWord = (why = '') => /^([^:\s]+):/.exec(why.startsWith(`${NO_LOAD_WHY} `) ? why.slice(NO_LOAD_WHY.length + 1) : why)?.[1]
+/** The fixed words `value` needs in its `why`, `undefined` when it needs none. */
+export const wordsFor = (value?: string): readonly string[] | undefined => (value && value in valueWords ? valueWords[value as keyof typeof valueWords] : undefined)
 export const reportedEntryHasItsWord = (e: ReportedEntry) => {
-  const words: readonly string[] | undefined = e.value && e.value in valueWords ? valueWords[e.value as keyof typeof valueWords] : undefined
+  const words = wordsFor(e.value)
   return !words || words.includes(whyWord(e.why) ?? '')
 }
 export const REPORTED_MESSAGE =
   'a rule takes a value (steered | confirmed | unrelated | missed | duplicate | in-scope), a doc none; ' +
   'confirmed, missed and duplicate need a why that starts with their word and a colon (agreed|n/a, late|skipped, brief|claude-md|skill|hook|habit|other)'
+/** The two checks every reported entry passes, wherever it is validated. */
+export const withReportedChecks = <T extends z.ZodType<ReportedEntry>>(entry: T) =>
+  entry.refine(reportedEntryHasItsValue, { message: REPORTED_MESSAGE }).refine(reportedEntryHasItsWord, { message: REPORTED_MESSAGE })
 // Per agent: what loaded, whether it answered the rule-use ask, and the
 // rules and docs it reported. A loaded rule it left out has no value, which
 // counts against it. A subagent has an entry when it was asked, answered
@@ -76,7 +81,7 @@ export const ruleUseEntry = z.object({
   subagent: z.number().int().nonnegative().optional(),
   answered: z.boolean(),
   loads: z.array(ruleLoad),
-  reported: z.array(reportedEntry.refine(reportedEntryHasItsValue, { message: REPORTED_MESSAGE }).refine(reportedEntryHasItsWord, { message: REPORTED_MESSAGE })),
+  reported: z.array(withReportedChecks(reportedEntry)),
 })
 export type RuleUseEntry = z.infer<typeof ruleUseEntry>
 

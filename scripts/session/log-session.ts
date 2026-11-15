@@ -33,7 +33,7 @@ import { tmpdir } from 'node:os'
 import { basename, dirname, join, resolve } from 'node:path'
 import { parse as parseYaml, stringify as stringifyYaml } from 'yaml'
 import { z } from 'zod'
-import { REPORTED_MESSAGE, reportedEntry, reportedEntryHasItsValue, reportedEntryHasItsWord } from '../../shared/schemas/session.ts'
+import { reportedEntry, withReportedChecks } from '../../shared/schemas/session.ts'
 import { sessionUrl } from '../../shared/session-url.ts'
 import { fetchOriginMain, git, SESSION_TRAILER, tryGit } from '../lib/git.ts'
 import { parseWorktreeList, runSweep, type Finding, type SweepResult } from '../git/check-worktrees.ts'
@@ -94,11 +94,7 @@ const authoredScratchSchema = z
     skillsUsed: z.array(z.object({ name: z.string(), reason: z.string() })).optional(),
     // Required like `frictions`: [] means nothing to report, absent means skipped (#3009).
     reported: z.array(
-      reportedEntry
-        .strict()
-        .refine(reportedEntryHasItsValue, { message: REPORTED_MESSAGE })
-        .refine(reportedEntryHasItsWord, { message: REPORTED_MESSAGE })
-        .refine((e) => e.value !== 'backed', { message: 'backed is the old value; use one of the six (see log-session --pending)' }),
+      withReportedChecks(reportedEntry.strict()).refine((e) => e.value !== 'backed', { message: 'backed is the old value; use one of the six (see log-session --pending)' }),
     ),
     frictions: z.array(
       z.object({
