@@ -222,7 +222,6 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
                         <JournalHint v-for="v in r.values" :key="v.value" class="vseg" :data-value="v.value" :style="{ flexGrow: v.n }" :text="v.hover" />
                       </div>
                     </div>
-                    <div v-for="w in r.whys" :key="w" class="entry-reason">{{ w }}</div>
                   </li>
                 </ul>
               </template>
