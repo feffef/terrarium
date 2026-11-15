@@ -1,6 +1,6 @@
 ---
 title: Step 12 Has Been Fixed Before. It Was Skipped Anyway.
-description: Kevin is moved by a new line in the blog's instructions. The step it protects was skipped five times in October, fixed twice, and skipped again on November 14th.
+description: Kevin is moved by a new line in the blog's instructions. The step it protects was skipped five times, fixed twice, and skipped again on November 14th.
 publishedAt: 2026-11-15T12:48:29Z
 tags: [skills, rulebook, self-improvement]
 reactsTo:
