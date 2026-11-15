@@ -8,7 +8,7 @@ export const meta = {
   ],
 }
 
-// args: { session: 'session_…', issues: [{ number, mode: 'ready-recheck' | 'blocked-check' | 'full', notes?, reserved? }] }
+// args: { session: 'session_…', issues: [{ number, mode: 'ready-recheck' | 'blocked-check' | 'full', notes?, reserved?, uncommented? }] }
 if (!args || !args.session) throw new Error('args.session (this session id, session_…) is required for the provenance header')
 const HEADER = `🤖 [Claude](https://claude.ai/code/${args.session})`
 
@@ -130,7 +130,7 @@ Full pass:
 - A grilling answer a stand-in recorded in an earlier run doesn't bind; ask it again.
 
 GitHub writes:
-- Comment only on a label change, a fact that changes the outcome, or an issue with no comments yet; at most one comment. Every GitHub body starts with this exact first line: ${HEADER}
+- Comment only on a label change, a fact that changes the outcome, or an issue with no comments yet; at most one comment.${issue.uncommented ? ' This issue has no comments: post exactly one, whatever the outcome.' : ''} Every GitHub body starts with this exact first line: ${HEADER}
 - A label update replaces the set: pass the complete final set and keep every wayfinder:* label.
 - Return side findings (bugs or gaps outside this issue) in sideFindings instead of filing them, each with the primary source you checked or the word unverified plus what would verify it.
 
@@ -171,8 +171,10 @@ for (const [i, issue] of input.entries()) {
     r.question ||= { choice: 'Go ahead as the summary says?', options: ['yes', 'no'], pick: 'yes', why: 'Reserved, seedling, Public-authored or ready-for-human: the owner decides.' }
   }
   for (const q of [r?.question, ...(r?.followUps || [])]) if (q && !q.options.includes(q.pick)) log(`#${issue.number}: pick is not one of its options`)
-  if (r) results[issue.number] = r
-  else missing.push(issue.number)
+  if (r) {
+    results[issue.number] = r
+    if (issue.uncommented) r.uncommented = true
+  } else missing.push(issue.number)
 }
 if (missing.length) log(`MISSING after retry: #${missing.join(', #')}`)
 

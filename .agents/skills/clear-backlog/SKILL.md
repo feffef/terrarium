@@ -46,15 +46,18 @@ that mode needs. Either way, leave out every issue with a `wayfinder:*` label;
 the `wayfinder` Skill drives those with the owner.
 
 Run `clear-backlog-explore` with
-`{ session, issues: [{ number, mode, notes?, reserved? }] }`. `mode` is
-`ready-recheck` for a `ready-for-agent` issue, `blocked-check` for one
+`{ session, issues: [{ number, mode, notes?, reserved?, uncommented? }] }`.
+`mode` is `ready-recheck` for a `ready-for-agent` issue, `blocked-check` for one
 blocked outside the chat (an upstream release, a date, an owner action), and
 `full` for the rest, deferred ones included. Set `reserved: true` on an issue
-the owner reserved ("I decide this one", directly or relayed).
+the owner reserved ("I decide this one", directly or relayed). Set
+`uncommented: true` on each issue with no comments (the sweep fetched them) and
+say so in the args line; its agent must post one.
 
 Explore agents write to GitHub (comments, labels, closes); tell the owner so
-when you start the run. An agent's `writes` is its own claim: after explore,
-before reporting any, compare it with each issue's comments and labels
+when you start the run. An agent's `writes` is its own claim, and `--triage`
+flags `NO WRITES` for a build or an `uncommented` result with none: after
+explore, before reporting any, compare it with each issue's comments and labels
 (`gh api repos/<owner>/<repo>/issues/<n>/comments`, `.../issues/<n>`; GraphQL
 `gh issue view` is blocked in a cloud session).
 
