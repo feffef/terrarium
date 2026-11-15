@@ -90,8 +90,23 @@ export interface SubagentRef extends Partial<Usage> {
   task?: string
   model?: string
   toolUseId?: string
+  /** Set when the dispatch's tool result was an error and no transcript matches it. */
+  outcome?: 'denied'
   durationSec?: number
   toolCalls?: number
+}
+
+/** Ids of tool calls whose `tool_result` is an error (a denied dispatch is one). */
+function failedToolUseIds(records: Record<string, unknown>[]): Set<string> {
+  const failed = new Set<string>()
+  for (const rec of records) {
+    const content = (rec.message as { content?: unknown } | undefined)?.content
+    if (!Array.isArray(content)) continue
+    for (const b of content as { type?: string; tool_use_id?: string; is_error?: boolean }[]) {
+      if (b?.type === 'tool_result' && b.is_error && typeof b.tool_use_id === 'string') failed.add(b.tool_use_id)
+    }
+  }
+  return failed
 }
 
 /** The mechanical trace — every field derived, none self-reported. Shapes match
@@ -602,6 +617,7 @@ export function extractTrace(
   const skills: (string | undefined)[] = []
   const commandSkills: string[] = []
   const subagents: SubagentRef[] = []
+  const failedIds = failedToolUseIds(records)
   const prSignals: string[] = []
   let mergedWithoutClose = false
   const rules: string[] = []
@@ -662,6 +678,7 @@ export function extractTrace(
           task: input.description as string,
           model: input.model as string | undefined,
           toolUseId: (b as { id?: string }).id,
+          ...(failedIds.has((b as { id?: string }).id ?? '') ? { outcome: 'denied' as const } : {}),
         })
       } else if (name.includes('create_pull_request')) {
         prSignals.push((input.title as string) ?? '(pr)')
@@ -872,7 +889,11 @@ export function foldSubagentTrace(
   const transcriptOf = (id?: string) => (id ? subagents.findIndex((a) => a.toolUseId === id) : -1)
   const dispatched = new Set(trace.subagents.map((s) => transcriptOf(s.toolUseId)))
   folded.subagents = [
-    ...trace.subagents.map((s) => ({ ...s, ...stats[transcriptOf(s.toolUseId)] })),
+    // A transcript proves the subagent ran, whatever its dispatch result said.
+    ...trace.subagents.map(({ outcome, ...s }) => {
+      const i = transcriptOf(s.toolUseId)
+      return { ...s, ...(i === -1 ? { outcome } : stats[i]) }
+    }),
     ...subagents.flatMap(({ agent }, i) =>
       agent && !dispatched.has(i) ? [{ ...agent, model: busiestModelId(subs[i]!.models), ...stats[i] }] : []),
   ]

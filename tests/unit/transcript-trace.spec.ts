@@ -191,6 +191,31 @@ describe('usage — tokens, duration and tool calls per agent', () => {
     expect(folded.subagents[1]).toEqual({ task: 'fix r1', model: 'claude-sonnet-5', ...stats })
   })
 
+  describe('a denied dispatch', () => {
+    const denied = { type: 'user', message: { content: [{ type: 'tool_result', tool_use_id: 'toolu_1', is_error: true, content: 'blocked by guard' }] } }
+
+    it('is tagged when its result is an error and no transcript matches', () => {
+      expect(extractTrace([dispatch, denied], NO_ENV).subagents).toEqual([
+        { type: 'Explore', task: 'find X', toolUseId: 'toolu_1', outcome: 'denied' },
+      ])
+    })
+
+    it('is not tagged once a transcript proves the agent ran', () => {
+      const folded = foldSubagentTrace(extractTrace([dispatch, denied], NO_ENV), [{ records: sub, agent: { task: 'find X' }, toolUseId: 'toolu_1' }], NO_ENV)
+      expect(folded.subagents).toEqual([{ type: 'Explore', task: 'find X', toolUseId: 'toolu_1', ...stats }])
+    })
+
+    it('is written to a valid entry, without the id', () => {
+      const folded = foldSubagentTrace(extractTrace([...sub, dispatch, denied], NO_ENV), [{ records: sub, agent: { task: 'other' }, toolUseId: 'toolu_9' }], NO_ENV)
+      const entry = stitch({ session: 'session_01ABC', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }, folded)
+      expect(entry.subagents).toEqual([
+        { type: 'Explore', task: 'find X', outcome: 'denied' },
+        { task: 'other', model: 'claude-sonnet-5', durationSec: 90, toolCalls: 3, modelCalls: 2, tokenShare: 50 },
+      ])
+      expect(validateEntry(entry).ok).toBe(true)
+    })
+  })
+
   it('stitches each agent\'s share of the session\'s tokens into a valid entry, without the id', () => {
     const folded = foldSubagentTrace(extractTrace([...sub, dispatch], NO_ENV), [{ records: sub, toolUseId: 'toolu_1' }], NO_ENV)
     const entry = stitch({ session: 'session_01ABC', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }, folded)

@@ -259,7 +259,9 @@ export function sessionCardViews(
       url: external || !s.session.startsWith('session_') ? null : sessionUrl(s.session),
       // Expanded detail — the full log, revealed on click (no route of its own).
       summary: s.summary,
-      subagents: (s.subagents ?? []).map((a) => ({ ...a, usage: subagentUsageLabel(a) })),
+      // Denied dispatches never ran; `ruleUse.subagent` indexes the unfiltered
+      // list, so only this display copy drops them.
+      subagents: (s.subagents ?? []).filter((a) => a.outcome !== 'denied').map((a) => ({ ...a, usage: subagentUsageLabel(a) })),
       docsRead: (s.docsRead ?? []).map((d) => {
         const viaSubagent = !!s.docsReadBySubagents?.includes(d.path)
         if (!s.ruleUse) return { ...d, viaSubagent, unknown: viaSubagent && !d.useful }

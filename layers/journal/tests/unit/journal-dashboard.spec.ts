@@ -436,6 +436,11 @@ describe('sessionCardViews', () => {
     expect(c!.tools).toEqual([{ name: 'Bash', count: 9 }, { name: 'Read', count: 2 }])
   })
 
+  it('hides denied dispatches from the subagent list', () => {
+    const s = session({ subagents: [{ type: 'general-purpose', task: 'survey', outcome: 'denied' }, { type: 'general-purpose', task: 'survey', durationSec: 60 }] })
+    expect(sessionCardViews([s])[0]!.subagents.map((a) => a.usage)).toEqual(['1m 0s'])
+  })
+
   it('lists triggered rules, marking the ones whose ADR was read after', () => {
     const s = session({
       rulesLoaded: ['.claude/rules/adr-0004.md', '.claude/rules/adr-0008.md'],
