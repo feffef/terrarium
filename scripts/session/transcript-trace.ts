@@ -90,8 +90,23 @@ export interface SubagentRef extends Partial<Usage> {
   task?: string
   model?: string
   toolUseId?: string
+  /** Meaning: `denied` in shared/schemas/session.ts. */
+  denied?: true
   durationSec?: number
   toolCalls?: number
+}
+
+/** Ids of tool calls whose `tool_result` is an error. */
+function failedToolUseIds(records: Record<string, unknown>[]): Set<string> {
+  const failed = new Set<string>()
+  for (const rec of records) {
+    const content = (rec.message as { content?: unknown } | undefined)?.content
+    if (!Array.isArray(content)) continue
+    for (const b of content as { type?: string; tool_use_id?: string; is_error?: boolean }[]) {
+      if (b?.type === 'tool_result' && b.is_error && typeof b.tool_use_id === 'string') failed.add(b.tool_use_id)
+    }
+  }
+  return failed
 }
 
 /** The mechanical trace — every field derived, none self-reported. Shapes match
@@ -602,6 +617,7 @@ export function extractTrace(
   const skills: (string | undefined)[] = []
   const commandSkills: string[] = []
   const subagents: SubagentRef[] = []
+  const failedIds = failedToolUseIds(records)
   const prSignals: string[] = []
   let mergedWithoutClose = false
   const rules: string[] = []
@@ -657,11 +673,13 @@ export function extractTrace(
         skills.push(skill)
         if (skill === 'close-session') mergedWithoutClose = false
       } else if (name === 'Agent' || name === 'Task') {
+        const toolUseId = (b as { id?: string }).id
         subagents.push({
           type: input.subagent_type as string,
           task: input.description as string,
           model: input.model as string | undefined,
-          toolUseId: (b as { id?: string }).id,
+          toolUseId,
+          ...(failedIds.has(toolUseId ?? '') ? { denied: true as const } : {}),
         })
       } else if (name.includes('create_pull_request')) {
         prSignals.push((input.title as string) ?? '(pr)')
@@ -872,7 +890,11 @@ export function foldSubagentTrace(
   const transcriptOf = (id?: string) => (id ? subagents.findIndex((a) => a.toolUseId === id) : -1)
   const dispatched = new Set(trace.subagents.map((s) => transcriptOf(s.toolUseId)))
   folded.subagents = [
-    ...trace.subagents.map((s) => ({ ...s, ...stats[transcriptOf(s.toolUseId)] })),
+    // A transcript proves the subagent ran, whatever its dispatch result said.
+    ...trace.subagents.map(({ denied, ...s }) => {
+      const i = transcriptOf(s.toolUseId)
+      return i === -1 ? { ...s, ...(denied && { denied }) } : { ...s, ...stats[i] }
+    }),
     ...subagents.flatMap(({ agent }, i) =>
       agent && !dispatched.has(i) ? [{ ...agent, model: busiestModelId(subs[i]!.models), ...stats[i] }] : []),
   ]
