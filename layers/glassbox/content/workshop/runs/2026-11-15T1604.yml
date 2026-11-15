@@ -16,7 +16,7 @@ focus: "Workflow scripts: the explore script's new optional uncommented flag
   paragraph. Cost per get_session at the start of
   this run: 271k context tokens, cost_usd 4.22."
 changes:
-  - agents/20.workflow-scripts | One paragraph after the explore excerpt: the
+  - agents/20.workflow-scripts | One paragraph after the explore excerpt, where the
     clear-backlog skill sets uncommented on an issue with no comments, the
     explore script has its triage agent post exactly one comment and copies the
     flag onto the result, and run-summary.ts flags NO WRITES on a build or
