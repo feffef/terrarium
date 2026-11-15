@@ -1,0 +1,239 @@
+schemaVersion: 1
+session: session_013zxzeNd2Fg2jp3GvNmr9mb
+startedAt: 2026-11-15T13:25:15Z
+endedAt: 2026-11-15T14:23:23Z
+kind: interactive
+goal: Show rule-use values on the Journal session card as a strip
+status: in-review
+outcome: Strip with hover detail built; PR 3344 opened, gate green, waiting for CI before the merge
+summary: "The owner asked me to read the latest issue (#3343, a UI proposal for the six rule-use values) and make a UI proposal. Human-instructed: the proposal itself, the choice of proposal A, a bar-only form with no value/count pills, why-text in the segment hover, and \"push and merge\". Agent-initiated: the standalone mockup, reading the card code to match the token-bar style, the two review subagents and their fixes. I asked questions first (share basis, emphasis, fixed word, deliverable); the owner left share basis undecided, picked a strip coloured like the token bar, the fixed word in the hover, and a rendered mockup. I built it in the real card after A was chosen, showed screenshots of the live dev Journal, and iterated twice on owner feedback. code-review (Standards and Spec) found dead subagent whys and a redundant wrapper, fixed; one finding (dead CSS) was wrong because main pills still use it. Left open: whys of a subagent report with no value show nowhere now; keyboard and touch users can't open the hover; the Glass Box page prose was left alone because it describes the values, not the card. The owner's \"push and merge\" is taken as the confirmation of the screenshots; merging waits for CI."
+prs:
+  - "3344"
+docsRead:
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: layers/journal/app/components/journal/SessionCard.vue
+    reason: (read before editing)
+  - path: layers/journal/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/journal/app/utils/dashboard.ts
+    reason: (read before editing)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: layers/journal/app/components/journal/Hint.vue
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+    reason: (no reason given)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: Standards and Spec review before the PR
+  - name: dispatch-subagents
+    reason: brief the two review agents
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: My mockup CSS filled the pills too, so their text vanished; only the screenshot showed it.
+    solution: Scope colour rules to the strip from the start.
+    severity: nit
+  - description: The first strip clipped hover tips with overflow hidden; I caught it by reading Hint.vue before shipping.
+    solution: Note in the card's CSS that tips need no clipping ancestor.
+    severity: nit
+  - description: Finding a log with the new values took three screenshot-script runs; the feed holds 180 cards and a card id lookup timed out.
+    solution: A preview flag or script that opens a card by session id.
+    severity: minor
+  - description: A hook asked me to read ADR-0008 and ADR-0009 after I had already committed SessionCard.vue.
+    solution: Load the ADR-0008 rule when the first Journal file is read.
+    severity: minor
+  - description: The Standards subagent reported dead CSS that was live (main pills still use it) and skipped the glossary docs.
+    solution: Tell reviewers to grep consumers before reporting dead code.
+    severity: nit
+  - description: I used pgrep -f to find a preview PID for stopping it, against CLAUDE.md's pgrep -f warning; the server was already gone.
+    solution: Capture the PID printed by preview start.
+    severity: nit
+durationSec: 3488
+models:
+  claude-sonnet-5-5: 138
+toolCounts:
+  Read: 18
+  ToolSearch: 1
+  mcp__github__list_issues: 1
+  mcp__github__issue_read: 2
+  AskUserQuestion: 2
+  Grep: 4
+  Bash: 42
+  SendUserFile: 4
+  Edit: 1
+  mcp__github__list_pull_requests: 1
+  Skill: 4
+  Agent: 2
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - layers/journal/tests/unit/journal-dashboard.spec.ts
+  - layers/journal/app/components/journal/SessionCard.vue
+  - layers/journal/app/types/journal.ts
+  - layers/journal/app/utils/dashboard.ts
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0008.md
+adrHints:
+  - adr: 8
+    via: path
+    readAfter: true
+    by: main
+  - adr: 9
+    via: text
+    readAfter: true
+    by: main
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/github-integration.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/github-integration.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: .claude/rules/ui-verification.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/journal/app/components/journal/SessionCard.vue
+      - rule: .claude/rules/tenant-layers.md
+        via: native
+        trigger: layers/journal/app/components/journal/SessionCard.vue
+      - rule: .claude/rules/adr-0008.md
+        via: native
+        trigger: layers/journal/app/components/journal/SessionCard.vue
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/journal/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/journal/GLOSSARY.md
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: ran code-review and gate:scoped before the PR
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: waited for owner confirmation before the PR
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: session header on the PR body
+      - path: .claude/rules/adr-0009.md
+        value: steered
+        why: invoked close-session after opening the PR
+      - path: .claude/rules/adr-0008.md
+        value: missed
+        why: "late: nudged after I committed SessionCard.vue"
+      - path: .claude/rules/ui-verification.md
+        value: steered
+        why: read the UI doc, showed owner dev screenshots
+      - path: .claude/rules/tenant-glossary.md
+        value: steered
+        why: read the Journal glossary first
+      - path: .claude/rules/tenant-layers.md
+        value: in-scope
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: unrelated
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/glossary-terms.md
+        value: unrelated
+      - path: .claude/rules/glassbox-content.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: .claude/rules/adr-0030.md
+        value: unrelated
+      - path: docs/agents/github-integration.md
+      - path: docs/agents/verifying-ui-changes.md
+      - path: docs/agents/pr-workflow.md
+      - path: layers/journal/GLOSSARY.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported: []
+subagents:
+  - type: general-purpose
+    task: Standards review of card diff
+    durationSec: 16
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 6.4
+  - type: general-purpose
+    task: Spec review of card diff
+    durationSec: 29
+    toolCalls: 11
+    modelCalls: 5
+    tokenShare: 7.9
+gitBranch: ccr-848ae8e6-6wezjg
+entrypoint: remote_mobile
+cliVersion: 2.1.325
+landedBy: Stop
