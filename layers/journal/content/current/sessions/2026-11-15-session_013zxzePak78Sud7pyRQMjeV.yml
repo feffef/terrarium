@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzePak78Sud7pyRQMjeV
 startedAt: 2026-11-15T15:33:52Z
-endedAt: 2026-11-15T16:44:19Z
+endedAt: 2026-11-15T16:47:51Z
 kind: delegated
 goal: "Glass Box curate runs: teach auditSummary and the uncommented flag"
-status: in-review
-outcome: First PR merged; second run's page fix pushed and under gate, PR not yet open
-summary: "The owner invoked /glassbox-curate, gave no focus, then said \"you pick, repeat until budget is hit\" (human-instructed: run curate, pick the focus and repeat; agent-chosen: each focus, the Subject reads, the writer and reviewer split). Run 1 taught the auditSummary field on Skill inventory (PR 3345, gate and code-review passed, merged with merge-pr.ts after posting a verdict). Run 2 restarts the branch from main and teaches the explore script's uncommented flag on Workflow scripts, a gap the Scout of run 1 left on the memory page; PR 3348 merged after the scoped gate passed (its first run failed on an unquoted YAML colon in my run entry, which the unit tests had not caught). Run 3 is a wording fix on Claude Code skills (gate and Journal glossed; the memory lead's permissions half was stale), pushed and merged as PR 3349. Run 4 corrects one sentence of A session log lands on main (four Stop hooks are wired, not one), pushed and under the scoped gate, merged as PR 3350. Run 5 says what the Session logs page covers at the pointer on Pull requests (PR 3351, merged). Run 6 adds a three-line excerpt to the Hydration page's Friction Ledger sentence, pushed and under the scoped gate, opened as PR 3352 after the gate passed. Skipped for the budget: claim checkers and fresh readers (the lead re-checked each added claim against its source), and full reads of overlapping pages. Budget by get_session at run 2's start: 271k context tokens of 500k, cost 4.22 of 25 dollars. The PR 1 body gave a stale cost of 0.12 dollars, which I did not correct on the merged PR. Open: open PR 2, merge it, then decide whether budget remains: context was 368k of 500k and cost 10.18 dollars when run 6 began. Runs cost 20-40k each, not the Skill's 100k estimate, so I wrongly said earlier that no run would fit."
+status: completed
+outcome: Six curate runs, six PRs merged (3345, 3348-3352); stopped at 388k of 500k tokens
+summary: "The owner invoked /glassbox-curate, gave no focus, then said \"you pick, repeat until budget is hit\" (human-instructed: run curate, pick the focus and repeat; agent-chosen: each focus, the Subject reads, the writer and reviewer split). Run 1 taught the auditSummary field on Skill inventory (PR 3345, gate and code-review passed, merged with merge-pr.ts after posting a verdict). Run 2 restarts the branch from main and teaches the explore script's uncommented flag on Workflow scripts, a gap the Scout of run 1 left on the memory page; PR 3348 merged after the scoped gate passed (its first run failed on an unquoted YAML colon in my run entry, which the unit tests had not caught). Run 3 is a wording fix on Claude Code skills (gate and Journal glossed; the memory lead's permissions half was stale), pushed and merged as PR 3349. Run 4 corrects one sentence of A session log lands on main (four Stop hooks are wired, not one), pushed and under the scoped gate, merged as PR 3350. Run 5 says what the Session logs page covers at the pointer on Pull requests (PR 3351, merged). Run 6 adds a three-line excerpt to the Hydration page's Friction Ledger sentence, pushed and under the scoped gate (PR 3352, merged). Skipped for the budget: claim checkers and fresh readers (the lead re-checked each added claim against its source), and full reads of overlapping pages. Budget by get_session at run 2's start: 271k context tokens of 500k, cost 4.22 of 25 dollars. The PR 1 body gave a stale cost of 0.12 dollars, which I did not correct on the merged PR. Budget at the end, per get_session: 388k of 500k context tokens and 11.40 of 25 dollars. I stopped because the Skill sizes a run at about 100k tokens, which would leave almost no margin; runs 2 to 6 actually cost 20-40k each, and earlier I wrongly said once that no run would fit. Nothing is open: every PR merged and every lead I took is deleted from the memory page."
 prs:
   - "3345"
   - "3348"
@@ -76,23 +76,23 @@ frictions:
   - description: A colon-space inside an unquoted run-entry YAML item broke validate:content; glassbox unit tests passed, so the gate was the first to see it.
     solution: Have workshop.spec.ts parse run entries, or tell the Skill to quote each changes item.
     severity: minor
-durationSec: 4227
+durationSec: 4439
 models:
-  claude-sonnet-5-5: 326
+  claude-sonnet-5-5: 346
 toolCounts:
   Read: 15
-  Bash: 100
-  Skill: 9
+  Bash: 106
+  Skill: 10
   Agent: 6
   Write: 10
-  Edit: 36
-  mcp__claude-code-remote__get_session: 6
+  Edit: 39
+  mcp__claude-code-remote__get_session: 7
   ToolSearch: 2
   mcp__github__create_pull_request: 6
   mcp__claude-code-remote__subscribe_pr_activity: 6
-  ReadNotifications: 15
+  ReadNotifications: 17
   mcp__github__pull_request_read: 1
-  mcp__github__add_issue_comment: 5
+  mcp__github__add_issue_comment: 6
 filesEdited:
   - layers/glassbox/content/workshop/runs/2026-11-15T1550.yml
   - layers/glassbox/content/workshop/pages/index.md
@@ -485,37 +485,37 @@ subagents:
     durationSec: 40
     toolCalls: 14
     modelCalls: 6
-    tokenShare: 2.6
+    tokenShare: 2.4
   - task: Write auditSummary paragraph
     model: opus
     durationSec: 105
     toolCalls: 28
     modelCalls: 15
-    tokenShare: 3.6
+    tokenShare: 3.3
   - task: Standards review of diff
     model: sonnet
     durationSec: 36
     toolCalls: 13
     modelCalls: 6
-    tokenShare: 2
+    tokenShare: 1.9
   - task: Spec review of diff
     model: sonnet
     durationSec: 50
     toolCalls: 14
     modelCalls: 11
-    tokenShare: 2.5
+    tokenShare: 2.4
   - task: Write uncommented flag paragraph
     model: opus
     durationSec: 96
     toolCalls: 28
     modelCalls: 14
-    tokenShare: 3.3
+    tokenShare: 3.1
   - task: Combined review of second run
     model: sonnet
     durationSec: 32
     toolCalls: 16
     modelCalls: 6
-    tokenShare: 2
+    tokenShare: 1.9
 gitBranch: claude/happy-johnson-fvc11q
 entrypoint: remote
 cliVersion: 2.1.325
