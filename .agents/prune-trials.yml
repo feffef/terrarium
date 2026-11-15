@@ -23,41 +23,6 @@
 #            topic's tools correctly.
 trials:
   - problem: >
-      The `frictions-to-fixes` SKILL.md procedure (-113 net, from
-      `git diff --numstat`: 110 added, 223 deleted; this entry not counted):
-      rewritten goal-first, keeping the §1-§8 numbers other Skills cite; the
-      per-step "Done when", "Edge cases" and "Instructions" scaffolding folded into
-      prose, repeated restatements of the briefs and ledger commands cut; every
-      rule kept (regression cap, 3-issue cap, Human-only and guard surfaces, doc
-      batching, two gates at once, review comment before merge, escalation,
-      closing ledger PR). Briefs untouched. Chosen after the search subagent
-      covered CLAUDE.md, `docs/agents/`, rules, Skills and the 125 ledger files
-      plus the tracker (not guard records or workflows): ledger
-      `frictions-to-fixes-skill-gaps` (11 occurrences; #2333, #2545, #2724, #2960)
-      and `frictions-to-fixes-briefs-mismatch` (12; #2436, #2725, #2877) failed as
-      prose, 92 commits narrowed the file, nothing wired holds the steps.
-      Runners-up: dispatch-subagents §3 (already cut once, #3123) and
-      close-session/log-session (small, log-session.ts refuses a hand log).
-      No open trial was judgeable this run (`find-trial-window.ts`: all three
-      before `judgeable from:`).
-    territory:
-      paths:
-        - ".agents/skills/frictions-to-fixes/SKILL.md"
-      keywords:
-        - frictions-to-fixes
-        - ledger PR
-    opened: 2026-11-12
-    proven: true
-    check: >
-      Damage is a major or blocker Friction where a `frictions-to-fixes` run
-      skipped a rule the old text had (opened no ledger PR, picked a regression,
-      filed over the cap, dispatched a Human-only or guard fix, merged without a
-      posted review, skipped the closing ledger PR) or could not follow a step.
-      Compare `frictions-to-fixes-skill-gaps` and
-      `frictions-to-fixes-briefs-mismatch` shares with `friction-rates.ts`; a
-      clear rise is also damage. NOT damage: those entries at their standing
-      rates.
-  - problem: >
       The checkout-moving rule in `dispatch-subagents` §3 "Git and checkout" (-1
       net, from `git diff --numstat`: 5 added, 6 deleted; this entry not
       counted): three bullets that each said a review or read-only agent must not
@@ -126,3 +91,37 @@ trials:
       Compare `dispatch-read-guard-deny` share with `friction-rates.ts`; a clear
       rise is also damage. NOT damage: one guard denial followed by a read, the
       standing cost the owner accepted (#2580).
+  - problem: >
+      The gate-run edit and git-chaining restatements in `pr-workflow.md`
+      "Review before opening the PR" and `git-conventions.md` "Keep git apart
+      from steps that can fail" (-3 net, from `git diff --numstat`: 5 added, 8
+      deleted; this entry not counted): "edit nothing until it ends (it aborts if
+      HEAD or the tree changes)" cut, since `gate-edit-guard.ts` denies the edit
+      and `gate.ts` `stepAbort` aborts; the two chaining bullets tightened, every
+      rule kept. Chosen after the search subagent covered CLAUDE.md,
+      `docs/agents/`, rules, `guards.md`, 143 ledger files and git-log counts (not
+      the tracker, which `gh` blocked, nor Skills): `edit-during-gate-run` (33
+      occurrences; PRs #2314, #2450) failed as prose and the guard (#3046, #3233)
+      holds it. Runners-up: CLAUDE.md "Docs you must read first" (hint-only; the
+      owner accepts late reads, #2066) and `guards.md` roster. Same run judged and
+      deleted the `frictions-to-fixes` trial (landed 0d4501da):
+      `frictions-to-fixes-skill-gaps` 4.7% -> 2.9% (9/190 -> 2/69),
+      `frictions-to-fixes-briefs-mismatch` 4.7% -> 2.9% (9/190 -> 2/69); only
+      minor Frictions, the repeated one being step 5.4's simple-change test on a
+      script-written ledger diff; no issue.
+    territory:
+      paths:
+        - "docs/agents/pr-workflow.md: 'Review before opening the PR'"
+        - "docs/agents/git-conventions.md: 'Keep git apart from steps that can fail'"
+      keywords:
+        - edit nothing until it ends
+        - own Bash call
+    opened: 2026-11-15
+    proven: true
+    check: >
+      Damage is a major or blocker Friction where a session edited or committed
+      during `gate:scoped`, or chained a push or commit to a gate run, and lost
+      work or pushed an unreviewed head, because a cut line no longer said so.
+      Compare `edit-during-gate-run` and `push-chained-to-gate-run` shares with
+      `friction-rates.ts`; a clear rise is also damage. NOT damage: those entries
+      at their standing rates, or a guard denial followed by a retry.

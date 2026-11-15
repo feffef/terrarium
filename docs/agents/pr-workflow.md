@@ -14,8 +14,7 @@ reviewed and has passed the gate: the PR is where an agent can merge. Check no
 PR exists for the branch, commit, run the
 [`code-review`](../../.agents/skills/code-review/SKILL.md) Skill on the
 committed diff against `origin/main` in the checkout that holds it, fix the
-findings, then run `pnpm gate:scoped` on the final head and edit nothing until
-it ends (it aborts if HEAD or the tree changes). Push that head, then open the
+findings, then run `pnpm gate:scoped` on the final head. Push that head, then open the
 PR. Exempt: a session-log commit, and a Skill whose own steps review the diff
 before the PR (`midden-catalogue` §4).
 

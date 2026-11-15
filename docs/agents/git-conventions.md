@@ -69,12 +69,10 @@ A failed step must never let a later git command run on the wrong state. So:
 
 - Run each state-changing git command (add, commit, amend, branch create or
   rename, push) in its own Bash call, then check it landed (`git log -1
-  --oneline`, `git rev-parse --verify <branch>`) before the next step. Silent
-  failures: `git add` of an ignored path (prefer `git add -A` or `-u`), a commit
-  given both `-m` and `-F`.
-- Never put one in the same command as a gate or test run, foreground or
-  backgrounded. Read that run's own exit status (not `tail`'s) in a separate
-  step first.
+  --oneline`, `git rev-parse --verify <branch>`) before the next. `git add` of an
+  ignored path and a commit given both `-m` and `-F` fail silently.
+- Never chain one with a gate or test run, foreground or backgrounded: read that
+  run's own exit status (not `tail`'s) in a separate step first.
 
 ## Before a destructive command
 
