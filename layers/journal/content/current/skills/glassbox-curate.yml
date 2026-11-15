@@ -8,6 +8,10 @@ role: >-
   Terrarium relies on has none. Runs three ways: fired by a Routine, started
   by hand and told to act autonomously, or interactive with the owner via
   `grilling`.
+auditSummary:
+  date: "2026-11-15"
+  text: >-
+    Ran 10 times and all PRs merged. Runs skipped its whole-subject read and scouting step, and one merged without the code review.
 observations:
   - date: "2026-11-07"
     note: >-

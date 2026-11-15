@@ -151,8 +151,11 @@ Grade each Skill's importance by the definitions below, after reading its
 - **A missed invocation of an own Skill is a trigger problem**: step 4's
   issue, not a demotion. For an installed Skill, whose trigger we cannot fix, the
   grade is the lever.
-- **`role`** stays ≤ ~50 words and free of PR, issue or session ids. The
-  scorecard prints it; rewrite any claim this run's evidence contradicts.
+- **`gist` and `role`** describe the Skill as it works today. Reread the
+  `SKILL.md` when `changes` lists an edit to it, and rewrite whatever the edit
+  made stale. Do the same when the runs show a regular behaviour the text
+  doesn't state, or contradict a claim in it. `role` stays ≤ ~50 words and free of PR, issue or
+  session ids; the scorecard prints it.
 - **`observations`** hold a 40-day window of history. Append
   `{ date: <today, UTC>, note }` for a grade or role change, a finding
   (verified or unverified, say which) or an idea; a clean check appends
@@ -162,6 +165,11 @@ Grade each Skill's importance by the definitions below, after reading its
   `pnpm exec tsx .agents/skills/audit-skills/scripts/prune-observations.ts`,
   which removes entries past that window (git keeps the history) and prints
   what it removed.
+- **`auditSummary`** `{ date: <today, UTC>, text }` is the line the Skills page
+  shows for each Skill: one plain sentence of about 25 words, no ids or jargon, on what this
+  window's runs showed, clean runs included. Replace it for every Skill that
+  had runs in the window. Leave it for a Skill with none, so its `date` ages
+  and the page dims it.
 - **Routine runs**: run
   `pnpm exec tsx scripts/session/prune-routine-runs.ts --append <dir>/usage.jsonl --scorecard <dir>/scorecard.json`.
   It appends each step 1 run to its Routine's file, prunes old rows and

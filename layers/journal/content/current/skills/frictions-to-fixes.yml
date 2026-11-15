@@ -8,6 +8,10 @@ role: >-
   design agent design and risk-rate each fix, files risky ones as issues, has
   impl agents build the rest, and merges those PRs itself, escalating only
   high-risk ones. Use when frictions pile up.
+auditSummary:
+  date: "2026-11-15"
+  text: >-
+    Ran 9 times and 16 PRs merged. Runs sometimes ignore its limit of three entries and review large PRs inconsistently.
 observations:
   - date: "2026-10-06"
     note: >-

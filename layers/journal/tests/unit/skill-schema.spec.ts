@@ -1,6 +1,7 @@
 // A Skill Inventory note must cite a full session id, not a truncated one (issue #2582).
 import { describe, expect, it } from 'vitest'
 import { skillSchema } from '../../tenant.config'
+import { auditIsStale, formatAuditDate } from '../../app/utils/dashboard'
 
 const skill = (note: string) => ({
   name: 'blog-post',
@@ -21,5 +22,27 @@ describe('skillSchema observation notes', () => {
 
   it('rejects a truncated session id', () => {
     expect(skillSchema.safeParse(skill('Checked session_01Xw7ZN8.. here.')).success).toBe(false)
+  })
+})
+
+describe('auditIsStale', () => {
+  const now = new Date('2026-11-15T12:00:00Z')
+  it('dims a line older than 14 days', () => {
+    expect(auditIsStale('2026-11-01', now)).toBe(true)
+    expect(auditIsStale('2026-11-02', now)).toBe(false)
+  })
+})
+
+describe('auditSummary', () => {
+  const base = skill('x')
+  it('is optional and takes a date and text', () => {
+    expect(skillSchema.safeParse({ ...base, auditSummary: { date: '2026-11-15', text: 'Ran 7 times.' } }).success).toBe(true)
+    expect(skillSchema.safeParse({ ...base, auditSummary: undefined }).success).toBe(true)
+  })
+  it('rejects a malformed date', () => {
+    expect(skillSchema.safeParse({ ...base, auditSummary: { date: 'Nov 15', text: 'x' } }).success).toBe(false)
+  })
+  it('formats the date without a year', () => {
+    expect(formatAuditDate('2026-11-05')).toBe('Nov 5')
   })
 })

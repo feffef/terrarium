@@ -9,6 +9,10 @@ role: >-
   then builds, reviews and lands the PRs unattended. For a deliberate "clear
   everything now" pass, not a substitute for the smaller on-interval Skills it
   composes.
+auditSummary:
+  date: "2026-11-15"
+  text: >-
+    Ran 10 times and 40 of 41 PRs landed. Leftover helper checkouts and a skipped wrap-up after merging keep recurring.
 observations:
   - date: "2026-10-13"
     note: >-

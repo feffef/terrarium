@@ -36,6 +36,7 @@ defineProps<{
                 <template v-else>{{ p.text }}</template>
               </template>
             </p>
+            <JournalSkillAuditLine v-if="s.auditSummary" :audit="s.auditSummary" />
           </details>
           <p v-else class="role">
             <template v-for="(p, i) in skillRoleParts(s.role)" :key="i">
@@ -45,6 +46,7 @@ defineProps<{
               <template v-else>{{ p.text }}</template>
             </template>
           </p>
+          <JournalSkillAuditLine v-if="s.auditSummary && !s.gist" :audit="s.auditSummary" />
         </div>
       </template>
 

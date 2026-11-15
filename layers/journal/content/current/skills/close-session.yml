@@ -8,6 +8,10 @@ role: >-
   for each rule broken and writes the session log via `log-session`. It makes
   the self-judged "invoke at closure" rule fire reliably; its invocation rate is the evidence for ADR-0009's choice
   of a Skill over a reminder hook.
+auditSummary:
+  date: "2026-11-14"
+  text: >-
+    All 10 runs wrote their log. One log stayed marked in-review after its PR merged, since nothing re-closes it.
 observations:
   - date: "2026-10-06"
     note: >-

@@ -8,6 +8,10 @@ role: >-
   under ADR-0022 (a Trusted user starting the run is the approval).
   User-invoked, by hand or on an interval, to keep the Trusted-authored backlog
   moving. Escalates judgment calls and design uncertainty to a human.
+auditSummary:
+  date: "2026-10-18"
+  text: >-
+    Checked 16 of its decisions and all matched what it promised. Not checked since.
 observations:
   - date: "2026-10-08"
     note: >-

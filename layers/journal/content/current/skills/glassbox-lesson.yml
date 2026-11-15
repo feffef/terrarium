@@ -8,6 +8,10 @@ role: >-
   then links it into the surrounding Walkthroughs and Lessons. Dispatched
   per-topic from the topic inventory, not model-invoked
   (disable-model-invocation: true).
+auditSummary:
+  date: "2026-11-14"
+  text: >-
+    Four runs, every lesson still published. Lessons sometimes carry stale counts or read out of order; reviewers caught them.
 observations:
   - date: "2026-10-17"
     note: >-

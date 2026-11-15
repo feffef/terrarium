@@ -8,6 +8,10 @@ role: >-
   repeated findings as issues, never editing a Skill. Keeps the Skill
   Inventory's grades in line with usage as a by-product, self-merging those
   edits (ADR-0015).
+auditSummary:
+  date: "2026-11-14"
+  text: >-
+    Ran 7 times, all PRs merged. One run reviewed its own change instead of running the code review, because the rules were unclear.
 observations:
   - date: "2026-10-06"
     note: >-

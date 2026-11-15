@@ -8,6 +8,10 @@ role: >-
   frictions decide whether the prose was load-bearing. Merges like any agent's
   PR, except a trial changing an ADR or its summary rule starts only with a
   Trusted user and a human merges it.
+auditSummary:
+  date: "2026-11-14"
+  text: >-
+    Seven runs delivered, and their changes match git. A wrong claim from an earlier run is still on file.
 observations:
   - date: "2026-10-06"
     note: >-
