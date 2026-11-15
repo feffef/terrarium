@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_013zxzePNLUgD6AbfEmXykEJ
 startedAt: 2026-11-15T07:55:41Z
-endedAt: 2026-11-15T08:38:41Z
+endedAt: 2026-11-15T09:01:59Z
 kind: interactive
 goal: Show a plain-language audit line per Skill on the Journal Skills page
-status: completed
-outcome: "PR 3335 merged by the owner: audit line on the Skills page, 17-Skill backfill and audit-skills changes"
-summary: "The owner asked whether recent Skill observations were worth surfacing on the Platform Skills page or too hard to read. I read the raw observations, showed examples and said they were too jargon-heavy raw. The owner then directed (human-instructed): one short auditSummary line per audited Skill in plain language, a stored date so old findings read as history, a backfill in the same PR, placement inside Details, and an audit-skills change so it also updates gist and role when a Skill changes. They confirmed the layout and the stored shape from a screenshot (a direct answer to my questions) before I backfilled. Agent-initiated: the 14-day dimming threshold was my proposal that they accepted, the component extraction and the extra tests came from code-review findings, and the choice to skip coverage-gap and chip-only Skills in the backfill was mine, accepted by the owner. I dropped my hand-written sample lines before committing because one contained an unchecked count. Code-review (two parallel read-only subagents) found overlong, jargon-filled lines, duplicated markup and missing tests; all were fixed and the gate was re-run on the final head. The owner merged PR 3335 (verified merged on GitHub) with CI green. Left open: ADR-0015 does not mention the new line; dimming uses render time, so a prerendered page may only update on rebuild (unverified)."
+status: in-review
+outcome: PR 3335 merged (audit line, backfill, audit-skills changes); follow-up PR 3337 open (overall verdict lines, idea step), gate green, waits for a human merge
+summary: "The owner asked whether recent Skill observations were worth surfacing on the Platform Skills page or too hard to read. I read the raw observations, showed examples and said they were too jargon-heavy raw. The owner then directed (human-instructed): one short auditSummary line per audited Skill in plain language, a stored date so old findings read as history, a backfill in the same PR, placement inside Details, and an audit-skills change so it also updates gist and role when a Skill changes. They confirmed the layout and the stored shape from a screenshot before I backfilled. PR 3335 merged. After the merge the owner pointed out (human-instructed) that the lines only summarised the newest note; they asked for an overall verdict across all recent observations, with no counts, and then for audit subagents to each raise one idea that the main session filters for feasibility and simplicity. I read every Skill's full observation history, rewrote the 17 lines, and changed audit-skills step 5, its brief and one ADR-0015 sentence; two review rounds with parallel read-only subagents trimmed unsupported claims and jargon. Follow-up PR 3337 is open with a green gate. Agent-initiated: the 14-day dimming threshold (accepted by the owner), the component extraction and tests from review, and the ADR-0015 sentence widening to cover ideas that improve a Skill. Open: the owner has not yet seen PR 3337; line dates still equal each Skill's latest observation date until an audit run rewrites them."
 prs:
   - "3335"
+  - "3337"
 docsRead:
   - path: layers/journal/content/current/skills/code-review.yml
     reason: (no reason given)
@@ -19,8 +20,14 @@ docsRead:
   - path: docs/adr/0002-manifest-driven-config-generation.md
     reason: (no reason given)
   - path: docs/adr/0015-audit-skills-and-conditional-importance.md
-    reason: (no reason given)
+    reason: (read before editing)
   - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: docs/adr/0030-adrs-document-a-decision-not-its-history.md
+    reason: (no reason given)
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
     reason: (no reason given)
   - path: layers/journal/GLOSSARY.md
     reason: (no reason given)
@@ -36,6 +43,8 @@ docsRead:
     reason: (no reason given)
   - path: docs/agents/github-integration.md
     reason: (no reason given)
+  - path: .agents/skills/audit-skills/brief.md
+    reason: (read before editing)
 skillsUsed:
   - name: dispatch-subagents
     reason: brief for the two read-only review agents
@@ -67,60 +76,73 @@ frictions:
   - description: My screenshot script imported playwright, which is not a repo dependency, and failed before I switched to playwright-core.
     solution: The verifying-ui doc could name playwright-core with the executablePath for throwaway scripts.
     severity: nit
-durationSec: 2580
+  - description: My first backfill lines drew only on each Skill's latest notes, so the owner had to ask for an overall verdict and I redid all 17 lines in a second PR.
+    solution: Read a Skill's whole observation history before summarising it; the owner's wording "last week's runs" invited a short window, so ask what span the summary covers.
+    severity: moderate
+  - description: Reading all observations dumped 41 KB in one call, then I re-read them in trimmed batches.
+    solution: Trim and batch note output from the start with a small script, as I did on the second attempt.
+    severity: nit
+durationSec: 3978
 models:
-  claude-sonnet-5-5: 168
+  claude-sonnet-5-5: 244
 toolCounts:
   Grep: 2
   Glob: 2
-  Read: 7
-  Bash: 55
+  Read: 10
+  Bash: 84
   AskUserQuestion: 1
   SendUserFile: 1
   Monitor: 1
-  Skill: 5
-  Agent: 2
+  Skill: 6
+  Agent: 5
   ToolSearch: 2
-  mcp__github__list_pull_requests: 1
-  mcp__github__create_pull_request: 1
-  Write: 2
-  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__list_pull_requests: 2
+  mcp__github__create_pull_request: 2
+  Write: 3
+  mcp__claude-code-remote__subscribe_pr_activity: 2
   ReadNotifications: 4
   mcp__github__pull_request_read: 3
 filesEdited:
   - .agents/skills/audit-skills/SKILL.md
-  - layers/journal/app/components/journal/SkillAuditLine.vue
-  - layers/journal/app/components/journal/SkillInventory.vue
-  - layers/journal/app/utils/dashboard.ts
-  - layers/journal/content/current/skills/audit-docs.yml
+  - .agents/skills/audit-skills/brief.md
+  - .claude/rules/adr-0015.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
   - layers/journal/content/current/skills/audit-skills.yml
   - layers/journal/content/current/skills/auto-triage.yml
   - layers/journal/content/current/skills/blog-post.yml
   - layers/journal/content/current/skills/clear-backlog.yml
-  - layers/journal/content/current/skills/close-session.yml
   - layers/journal/content/current/skills/digest.yml
   - layers/journal/content/current/skills/frictions-to-fixes.yml
-  - layers/journal/content/current/skills/glassbox-curate.yml
   - layers/journal/content/current/skills/glassbox-lesson.yml
   - layers/journal/content/current/skills/glassbox-update.yml
   - layers/journal/content/current/skills/harvest.yml
+  - layers/journal/content/current/skills/inspect-session.yml
   - layers/journal/content/current/skills/log-session.yml
   - layers/journal/content/current/skills/prune-trial.yml
   - layers/journal/content/current/skills/visitor-loop.yml
   - layers/journal/tenant.config.ts
-  - layers/journal/tests/unit/skill-schema.spec.ts
+  - layers/journal/content/current/skills/audit-docs.yml
+  - layers/journal/content/current/skills/close-session.yml
   - layers/journal/content/current/skills/dispatch-subagents.yml
-  - layers/journal/content/current/skills/inspect-session.yml
+  - layers/journal/content/current/skills/glassbox-curate.yml
+  - layers/journal/app/components/journal/SkillAuditLine.vue
+  - layers/journal/app/components/journal/SkillInventory.vue
+  - layers/journal/app/utils/dashboard.ts
+  - layers/journal/tests/unit/skill-schema.spec.ts
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0017.md
 rulesFollowedUp:
+  - .claude/rules/adr-0004.md
   - .claude/rules/adr-0015.md
   - .claude/rules/adr-0008.md
   - .claude/rules/adr-0027.md
   - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
 adrHints:
   - adr: 8
     via: path
@@ -139,6 +161,18 @@ adrHints:
     readAfter: true
     by: main
   - adr: 27
+    via: path
+    readAfter: true
+    by: main
+  - adr: 4
+    via: path
+    readAfter: true
+    by: main
+  - adr: 29
+    via: path
+    readAfter: true
+    by: main
+  - adr: 30
     via: path
     readAfter: true
     by: main
@@ -226,6 +260,8 @@ ruleUse:
       - path: docs/agents/pr-workflow.md
       - path: docs/agents/github-integration.md
       - path: docs/agents/verifying-ui-changes.md
+      - path: .claude/rules/adr-0030.md
+        value: backed
   - by: general-purpose
     subagent: 0
     answered: true
@@ -265,24 +301,119 @@ ruleUse:
     reported:
       - path: .claude/rules/adr-0004.md
         value: backed
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+  - by: general-purpose
+    subagent: 3
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .claude/rules/adr-0009.md
+        value: backed
+  - by: general-purpose
+    subagent: 4
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0030.md
+        via: native
+        trigger: .claude/rules/adr-0015.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: .claude/rules/adr-0015.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: .claude/rules/adr-0015.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
+      - path: .claude/rules/adr-0030.md
+        value: backed
 subagents:
   - type: general-purpose
     task: Standards review of branch diff
     durationSec: 30
     toolCalls: 10
     modelCalls: 5
-    tokenShare: 3.8
+    tokenShare: 2.1
   - type: general-purpose
     task: Spec review of branch diff
     durationSec: 56
     toolCalls: 17
     modelCalls: 11
-    tokenShare: 8.3
+    tokenShare: 4.5
+  - type: general-purpose
+    task: Standards review of follow-up diff
+    durationSec: 20
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 3.5
+  - type: general-purpose
+    task: Spec review of follow-up diff
+    durationSec: 74
+    toolCalls: 16
+    modelCalls: 14
+    tokenShare: 8.8
+  - type: general-purpose
+    task: Review audit-skills idea change
+    durationSec: 17
+    toolCalls: 10
+    modelCalls: 4
+    tokenShare: 3.4
 gitBranch: claude/quirky-cerf-1hbx9n
 entrypoint: remote
 cliVersion: 2.1.325
 learnings:
   - gate:scoped exits 1 with an ABORTED line when the tree changes mid-run, and the background-task notification still reports exit 0 for a compound command that echoes afterwards, so read the log's own status.
+  - After a PR merges with a merge commit, the branch can fast-forward to origin/main and be reused for follow-up work without a force-push.
 ideas:
   - Have audit-skills compute auditSummary from a fixed template of counts (runs, PRs merged, open issues) plus one agent-written sentence, so lines stay comparable week to week and a script can check their length and jargon.
 landedBy: Stop
