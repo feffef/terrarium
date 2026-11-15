@@ -543,10 +543,26 @@ describe('sessionCardViews', () => {
           alwaysLoaded: false,
           hover: '.claude/rules/adr-0004.md\nnative 2 · hint 1\ntriggered by a.ts ×2',
           loadedBy: 3,
-          values: [{ value: 'backed', n: 1, percent: 50, hover: "1 of 2 answering subagents that loaded it named it backed; 1 didn't name it" }],
+          values: [{ value: 'backed', n: 1, percent: 50, hover: '1 of 2 answering subagents that loaded it rated it backed; 1 gave no value' }],
           whys: ['scan: x'],
         }],
       })
+    })
+
+    it('puts the fixed word of confirmed, missed and duplicate in the hover', () => {
+      const rep = (value: 'missed' | 'steered', why: string) => [{ path: '.claude/rules/adr-0004.md', value, why }]
+      const c = view({
+        subagents: [{ type: 'Explore', task: 'a' }, { type: 'Explore', task: 'b' }, { type: 'Explore', task: 'c' }],
+        ruleUse: [
+          { by: 'Explore', subagent: 0, answered: true, loads: [load('adr-0004.md', 'native')], reported: rep('missed', 'late: header added after the guard') },
+          { by: 'Explore', subagent: 1, answered: true, loads: [load('adr-0004.md', 'native')], reported: rep('missed', 'skipped: never ran it') },
+          { by: 'Explore', subagent: 2, answered: true, loads: [load('adr-0004.md', 'native')], reported: rep('steered', 'ran the gate') },
+        ],
+      })
+      expect(c.ruleUse!.subagents.rules[0]!.values.map((v) => v.hover)).toEqual([
+        '1 of 3 answering subagents that loaded it rated it steered',
+        '2 of 3 answering subagents that loaded it rated it missed (late, skipped)',
+      ])
     })
 
     it('shows the session-wide always-loaded rules under main on a log with no start loads', () => {

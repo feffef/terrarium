@@ -309,6 +309,7 @@ function tally(items: string[]): string {
   return [...counts].map(([k, n]) => (n > 1 ? `${k} ×${n}` : k)).join(', ')
 }
 
+const FIXED_WORD_VALUES = new Set<string>(['confirmed', 'missed', 'duplicate'])
 const VIA_LABELS: Record<RuleLoad['via'], string> = { start: 'loaded at start', native: 'loaded natively', hint: 'loaded by a hint hook', read: 'read as a file' }
 
 function mainLoadLine(l: RuleLoad): string {
@@ -374,11 +375,15 @@ export function sessionRuleUseView(s: SessionDoc, ruleTitles: Record<string, str
           loadedBy: loaders.length,
           values: ruleValue.options.map((value) => {
             const n = answering.filter((e) => valueOf(e) === value).length
+            // Only these three values start `why` with a fixed word (ADR-0009 log schema).
+            const words = FIXED_WORD_VALUES.has(value)
+              ? reports.filter(({ r }) => r.value === value).flatMap(({ r }) => r.why?.match(/^[\w-]+/)?.[0] ?? [])
+              : []
             return {
               value,
               n,
               percent: percent(n, answering.length),
-              hover: `${n} of ${answering.length} answering subagents that loaded${namedUnloaded.length ? ' or named' : ''} it named it ${value}; ${unnamed} didn't name it`,
+              hover: `${n} of ${answering.length} answering subagents that loaded${namedUnloaded.length ? ' or named' : ''} it rated it ${value}${words.length ? ` (${tally(words)})` : ''}${unnamed ? `; ${unnamed} gave no value` : ''}`,
             }
           }).filter((v) => v.n > 0),
           whys: [...new Set(reports.flatMap(({ r, task }) => (r.why ? [withTask(r.why, task)] : [])))],

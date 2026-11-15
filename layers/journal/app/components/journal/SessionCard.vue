@@ -216,9 +216,12 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
                       <JournalHint :text="r.hover">{{ r.title ?? r.path }}</JournalHint
                       ><span v-if="r.alwaysLoaded" class="always">always loaded</span
                       ><span v-if="!r.alwaysLoaded" class="via">{{ r.loadedBy ? `loaded by ${r.loadedBy}` : 'no load recorded' }}</span
-                      ><JournalHint v-for="v in r.values" :key="v.value" class="useful" :data-value="v.value" :text="v.hover"
-                        >{{ v.value }} {{ v.n }} · {{ v.percent }}%</JournalHint
-                      >
+                    ></div>
+                    <div v-if="r.values.length" class="rulestrip">
+                      <div class="strip" role="img" :aria-label="r.values.map((v) => `${v.value} ${v.n}`).join(', ')">
+                        <JournalHint v-for="v in r.values" :key="v.value" class="vseg" :data-value="v.value" :style="{ flexGrow: v.n }" :text="v.hover" />
+                      </div>
+                      <span class="via">{{ r.values.map((v) => `${v.value} ${v.n}`).join(' · ') }}</span>
                     </div>
                     <div v-for="w in r.whys" :key="w" class="entry-reason">{{ w }}</div>
                   </li>
@@ -477,7 +480,21 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
 .trace .useful[data-useful='partly'] { color: var(--jd-sev-minor); }
 .trace .useful[data-useful='no'] { color: var(--jd-sev-major); }
 .trace .useful[data-value='steered'] { color: var(--jd-accent); }
-.trace .useful[data-value='backed'] { color: var(--jd-ink); }
+.trace .useful[data-value='confirmed'] { color: var(--jd-accent); }
+.trace .useful[data-value='missed'] { color: var(--jd-sev-minor); }
+.trace .rulestrip { display: flex; align-items: center; gap: 0.6rem; margin-top: 0.25rem; }
+.trace .strip { flex: 1; max-width: 20rem; display: flex; gap: 1px; height: 0.55rem; }
+.trace .vseg:first-child { border-radius: 999px 0 0 999px; }
+.trace .vseg:last-child { border-radius: 0 999px 999px 0; }
+.trace .vseg:only-child { border-radius: 999px; }
+.trace .vseg { flex-basis: 0; min-width: 2px; }
+.trace .vseg[data-value='steered'] { background: var(--jd-accent); }
+.trace .vseg[data-value='confirmed'] { background: color-mix(in oklab, var(--jd-accent) 60%, var(--jd-surface)); }
+.trace .vseg[data-value='in-scope'] { background: color-mix(in oklab, var(--jd-accent) 30%, var(--jd-surface)); }
+.trace .vseg[data-value='unrelated'] { background: color-mix(in oklab, var(--jd-faint) 55%, var(--jd-surface)); }
+.trace .vseg[data-value='duplicate'] { background: color-mix(in oklab, var(--jd-faint) 30%, var(--jd-surface)); }
+.trace .vseg[data-value='missed'] { background: var(--jd-sev-minor); }
+.trace .vseg[data-value='backed'] { background: repeating-linear-gradient(45deg, var(--jd-ink) 0 2px, transparent 2px 4px); }
 .trace .rule-group { margin: 0.5rem 0.75rem 0.2rem; font-family: var(--jd-mono); font-size: 0.68rem; font-weight: 400; letter-spacing: 0.07em; text-transform: uppercase; color: var(--jd-faint); }
 .trace .rule-group + .subnote { margin: 0 0.75rem 0.3rem; }
 .tools { display: flex; flex-wrap: wrap; gap: 0.35rem; padding: 0 0.7rem 0.6rem; }
