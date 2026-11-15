@@ -154,7 +154,8 @@ export function toTriageSession(raw: Record<string, unknown>, file: string): Tri
   const frictions = Array.isArray(raw.frictions) ? raw.frictions : []
   const prs = Array.isArray(raw.prs) ? raw.prs : []
   const docsRead = Array.isArray(raw.docsRead) ? raw.docsRead : []
-  const subagents = Array.isArray(raw.subagents) ? raw.subagents : []
+  // A denied dispatch never ran: counting it would overstate the subagents.
+  const subagents = (Array.isArray(raw.subagents) ? raw.subagents : []).filter((s: Record<string, unknown>) => s.denied !== true)
   return {
     id: String(raw.session ?? ''),
     file,
@@ -166,8 +167,7 @@ export function toTriageSession(raw: Record<string, unknown>, file: string): Tri
     trigger: String(raw.trigger ?? ''),
     prs: prs.map((p) => String(p)),
     docsRead: collapseSessionLogReads(docsRead),
-    // A denied dispatch never ran: counting it would overstate the subagents.
-    subagents: subagents.filter((s: Record<string, unknown>) => s.denied !== true).map((s: Record<string, unknown>) => {
+    subagents: subagents.map((s: Record<string, unknown>) => {
       const ref: SubagentRef = {}
       if (typeof s.type === 'string') ref.type = s.type
       if (typeof s.task === 'string') ref.task = s.task
