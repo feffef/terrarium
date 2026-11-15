@@ -8,7 +8,13 @@ focus: "Skill inventory: the page never mentioned the auditSummary line that
   Deviations for the budget: an opus writer wrote the sentences and quoted
   sources; no separate claim checker and no fresh reader (three added claims,
   each re-checked by the lead against SkillInventory.vue and the audit-skills
-  Skill); the other ten House rules pages were read in full. The Scout found no
+  Skill); the other ten House rules pages were read in full. The code review named four
+  more pages as overlapping (Claude Code skills, Installed skills, Scheduled
+  tasks, the overview); only their inventory lines were read, and none is made
+  false (Claude Code skills says the audit writes importance and role, which
+  still holds). Its wording point, a fixed count of fields, was fixed. Cost
+  per get_session at the end of this run: 90k context tokens, cost_usd 0.12
+  (the figure may lag the work). The Scout found no
   new topic; it named one more gap (the uncommented flag), put on the memory page."
 changes:
   - terrarium-practice/85.skill-inventory | auditSummary named as the third field
