@@ -90,13 +90,13 @@ export interface SubagentRef extends Partial<Usage> {
   task?: string
   model?: string
   toolUseId?: string
-  /** Set when the dispatch's tool result was an error and no transcript matches it. */
+  /** Meaning: `denied` in shared/schemas/session.ts. */
   denied?: true
   durationSec?: number
   toolCalls?: number
 }
 
-/** Ids of tool calls whose `tool_result` is an error (a denied dispatch is one). */
+/** Ids of tool calls whose `tool_result` is an error. */
 function failedToolUseIds(records: Record<string, unknown>[]): Set<string> {
   const failed = new Set<string>()
   for (const rec of records) {
@@ -673,12 +673,13 @@ export function extractTrace(
         skills.push(skill)
         if (skill === 'close-session') mergedWithoutClose = false
       } else if (name === 'Agent' || name === 'Task') {
+        const toolUseId = (b as { id?: string }).id
         subagents.push({
           type: input.subagent_type as string,
           task: input.description as string,
           model: input.model as string | undefined,
-          toolUseId: (b as { id?: string }).id,
-          ...(failedIds.has((b as { id?: string }).id ?? '') ? { denied: true as const } : {}),
+          toolUseId,
+          ...(failedIds.has(toolUseId ?? '') ? { denied: true as const } : {}),
         })
       } else if (name.includes('create_pull_request')) {
         prSignals.push((input.title as string) ?? '(pr)')
@@ -892,7 +893,7 @@ export function foldSubagentTrace(
     // A transcript proves the subagent ran, whatever its dispatch result said.
     ...trace.subagents.map(({ denied, ...s }) => {
       const i = transcriptOf(s.toolUseId)
-      return { ...s, ...(i === -1 ? (denied ? { denied } : {}) : stats[i]) }
+      return i === -1 ? { ...s, ...(denied && { denied }) } : { ...s, ...stats[i] }
     }),
     ...subagents.flatMap(({ agent }, i) =>
       agent && !dispatched.has(i) ? [{ ...agent, model: busiestModelId(subs[i]!.models), ...stats[i] }] : []),

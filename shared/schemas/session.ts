@@ -133,8 +133,8 @@ export const sessionSchema = z
           toolCalls: z.number().int().nonnegative().optional(),
           modelCalls: z.number().int().nonnegative().optional(),
           tokenShare: tokenShare.optional(),
-          // The dispatch was refused (a guard) and no subagent ran, so it has
-          // no stats. Written only then; absent on older logs.
+          // The dispatch's tool result was an error and no subagent ran (in
+          // practice a guard denial), so it has no stats. The Journal card hides it.
           denied: z.literal(true).optional(),
         }),
       )
