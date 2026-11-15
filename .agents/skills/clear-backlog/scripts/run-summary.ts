@@ -29,6 +29,7 @@ type Triage = {
   staleClaims?: { claim: string; why: string; source: string }[]
   sideFindings: { finding: string; source: string }[]
   writes: string[]
+  uncommented?: boolean
   background?: string
   optionChecks?: OptionCheck[]
   sourcesRead?: unknown[]
@@ -61,7 +62,7 @@ const list = (key: string, items: string[] | undefined) => (items?.length ? [`  
 function triage(r: Explore): string[] {
   const blocks = Object.entries(r.results).map(([n, t]) => [
     `#${n} ${t.outcome} publicAuthor=${t.publicAuthor}`,
-    ...(t.outcome === 'build' && !t.writes.length ? ['  NO WRITES: check the issue carries its label and comment before you rely on this result'] : []),
+    ...((t.outcome === 'build' || t.uncommented) && !t.writes.length ? ['  NO WRITES: check the issue carries its label and comment before you rely on this result'] : []),
     ...field('summary', t.summary),
     ...field('canonical', t.canonical ? `#${t.canonical}` : undefined),
     ...field('brief', t.brief),

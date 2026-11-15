@@ -38,6 +38,20 @@ describe('--triage', () => {
     expect(triageSummary(bare)).toContain('NO WRITES')
   })
 
+  it('flags an uncommented issue whose agent wrote nothing, whatever its outcome', () => {
+    const flagged = (patch: Record<string, unknown>) => {
+      const file = join(tmp(), 'explore-uncommented.output')
+      const { result } = JSON.parse(readFileSync(fixture('explore.output'), 'utf8')) as { result: { results: Record<string, Record<string, unknown>> } }
+      const grill = Object.values(result.results).find((t) => t.outcome === 'grill')!
+      Object.assign(grill, patch)
+      writeFileSync(file, JSON.stringify({ result }))
+      return triageSummary(file).includes('NO WRITES')
+    }
+    expect(flagged({ uncommented: true, writes: [] })).toBe(true)
+    expect(flagged({ uncommented: true, writes: ['commented'] })).toBe(false)
+    expect(flagged({ writes: [] })).toBe(false)
+  })
+
   it('ends with missing and grouping, and never prints verdicts', () => {
     expect(out).toMatch(/missing: #14\ngrouping:\n {2}#11, #12 \(shared: README\.md\)\n?$/)
     expect(out).not.toContain('SECRET-11-RULE')
