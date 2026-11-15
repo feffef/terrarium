@@ -62,7 +62,7 @@ Skill's `observations` (step 5), so a later run can build on it.
 Check each subagent's idea for **feasibility** (can it be built with what
 exists, and does the evidence justify it) and **simplicity** (it removes or
 replaces more than it adds, and needs no new moving part). Drop one that fails
-with a one-line reason; keep the rest for step 5's ideas.
+with a one-line reason; keep the rest, each tagged with its Skill, for step 5's ideas.
 
 Done when every subagent has reported, each finding is verified, unverified
 or dropped, and each idea is kept or dropped.
