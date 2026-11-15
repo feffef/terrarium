@@ -1,6 +1,6 @@
 // The rule-use report (#3019): aggregates over committed session logs' `ruleUse`.
 import { describe, expect, it } from 'vitest'
-import { renderReport, ruleUseReport } from '../../scripts/session/rule-use-report.ts'
+import { renderReport, ruleUseReport, splitByAgent } from '../../scripts/session/rule-use-report.ts'
 
 const A = '.claude/rules/adr-0004.md'
 const B = '.claude/rules/adr-0027.md'
@@ -10,8 +10,8 @@ const logs = [
   log('2026-11-09T00:00:00Z'),
   log('2026-11-09T12:00:00Z', {
     ruleUse: [
-      { by: 'main', answered: true, loads: [{ rule: B, via: 'start' }, { rule: A, via: 'native', trigger: 'CLAUDE.md' }], reported: [{ path: A, value: 'backed' }, { path: 'docs/x.md' }] },
-      { by: 'Explore', subagent: 0, answered: true, loads: [{ rule: A, via: 'native' }], reported: [{ path: A, value: 'steered' }, { path: '.claude/rules/adr-0099.md', value: 'backed', why: '(no load recorded)' }] },
+      { by: 'main', answered: true, loads: [{ rule: B, via: 'start' }, { rule: A, via: 'native', trigger: 'CLAUDE.md' }], reported: [{ path: A, value: 'confirmed', why: 'agreed: checked the path list' }, { path: 'docs/x.md' }] },
+      { by: 'Explore', subagent: 0, answered: true, loads: [{ rule: A, via: 'native' }], reported: [{ path: A, value: 'steered' }, { path: '.claude/rules/adr-0099.md', value: 'unrelated', why: '(no load recorded)' }] },
       { by: 'Explore', subagent: 1, answered: false, loads: [{ rule: A, via: 'native', trigger: 'CLAUDE.md' }], reported: [] },
     ],
   }),
@@ -31,9 +31,9 @@ describe('ruleUseReport', () => {
 
   it('rates each rule over the answering agents that loaded it, flagging thin data', () => {
     expect(report.rules).toEqual([
-      { rule: A, loads: 3, answeringLoads: 2, steered: 0.5, backed: 0.5, enoughData: false,
+      { rule: A, loads: 3, answeringLoads: 2, shares: { steered: 0.5, confirmed: 0.5 }, words: { 'confirmed:agreed': 1 }, enoughData: false,
         start: 0, native: 3, hint: 0, read: 0, triggers: { 'CLAUDE.md': 2, '(none)': 1 } },
-      { rule: B, loads: 1, answeringLoads: 1, steered: 0, backed: 0, enoughData: false,
+      { rule: B, loads: 1, answeringLoads: 1, shares: {}, words: {}, enoughData: false,
         start: 1, native: 0, hint: 0, read: 0, triggers: {} },
     ])
   })
@@ -43,9 +43,27 @@ describe('ruleUseReport', () => {
     expect(report.quality).toEqual({ noLoadRecorded: 1, unansweredSubagents: 1 })
   })
 
+  it('splits the main agents from the subagents', () => {
+    const since = Date.parse('2026-11-08T00:00:00Z')
+    const parts = splitByAgent(logs)
+    const main = ruleUseReport(parts.main, since)
+    const subs = ruleUseReport(parts.subagents, since)
+    expect(Object.keys(main.answered)).toEqual(['main'])
+    expect(Object.keys(subs.answered)).toEqual(['Explore'])
+    expect(main.rules.find((r) => r.rule === A)).toMatchObject({ loads: 1, shares: { confirmed: 1 } })
+    expect(subs.rules.find((r) => r.rule === A)).toMatchObject({ loads: 2, answeringLoads: 1, shares: { steered: 1 } })
+  })
+
   it('renders text that names each rule and says when data is thin', () => {
     const text = renderReport(report)
     expect(text).toContain(A)
     expect(text).toContain('not enough data')
+  })
+
+  it('shows each value share and counts the fixed words once a rule has enough data', () => {
+    const many = (n: number) => Array.from({ length: n }, () => ({ by: 'main', answered: true, loads: [{ rule: A, via: 'native' }], reported: [{ path: A, value: 'duplicate', why: 'hook: guard' }] }))
+    const text = renderReport(ruleUseReport([log('2026-11-09T00:00:00Z', { ruleUse: many(20) })], Date.parse('2026-11-08T00:00:00Z')))
+    expect(text).toContain('duplicate 100%')
+    expect(text).toContain('duplicate:hook 20')
   })
 })

@@ -20,7 +20,8 @@ export function askFor(payload: unknown): string | null {
   const call = ruleUseCall([command], (p) => p)
   if (!call) return null
   if (call.unvalued.length) {
-    return `Not recorded, since a rule needs =steered or =backed: ${call.unvalued.join(' ')}. ` +
+    return `Not recorded, since a rule needs a value (steered, confirmed, unrelated, missed, duplicate or in-scope), ` +
+      `and confirmed, missed and duplicate need their word after a colon, as in =missed:late: ${call.unvalued.join(' ')}. ` +
       `Only the last call counts, so run ${RULE_USE_CALL} again naming every rule and doc you mean, each rule with its value.`
   }
   if (call.entries.length) return null

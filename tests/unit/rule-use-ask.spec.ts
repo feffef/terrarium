@@ -25,9 +25,12 @@ describe('askFor()', () => {
 
   it("lists a subagent's own rules, start-loaded ones marked, with what each value means", () => {
     const ask = askFor(payload('echo rule-use:', path, 'a1'))!
-    expect(ask).toContain('  .claude/rules/adr-0003.md (loaded at start)\n  .claude/rules/adr-0027.md\n')
+    expect(ask).toContain('  .claude/rules/adr-0003.md (loaded at start)  [governs ')
+    expect(ask).toContain('  .claude/rules/adr-0027.md  [loads on ')
     expect(ask).not.toContain('adr-0012')
-    expect(ask).toContain('steered  you did, avoided or decided something differently because of it.')
+    expect(ask).toContain('steered    it changed what you did, avoided or decided.')
+    for (const value of ['confirmed', 'unrelated', 'missed', 'duplicate', 'in-scope']) expect(ask).toContain(`  ${value} `)
+    expect(ask).not.toContain('backed')
     expect(ask).toContain('lowers its share')
   })
 
@@ -36,7 +39,7 @@ describe('askFor()', () => {
   })
 
   it('stays silent on a call that names something, and on other commands', () => {
-    expect(askFor(payload('echo rule-use: rule:adr-0027.md=backed', path, 'a1'))).toBeNull()
+    expect(askFor(payload('echo rule-use: rule:adr-0027.md=steered', path, 'a1'))).toBeNull()
     expect(askFor(payload('grep -rn rule-use: scripts', path, 'a1'))).toBeNull()
   })
 })
@@ -50,8 +53,14 @@ describe('askFor() after the first ask', () => {
   })
 
   it('names the rules a call gave no valid value, whatever came before', () => {
-    const reply = askFor(payload('echo rule-use: rule:adr-0027.md=changed rule:adr-0004 doc:docs/a.md rule:adr-0005.md=backed', path, 'a1'))
-    expect(reply).toContain('Not recorded, since a rule needs =steered or =backed: .claude/rules/adr-0027.md .claude/rules/adr-0004.md.')
+    const reply = askFor(payload('echo rule-use: rule:adr-0027.md=changed rule:adr-0004 doc:docs/a.md rule:adr-0005.md=steered', path, 'a1'))
+    expect(reply).toContain('as in =missed:late: .claude/rules/adr-0027.md .claude/rules/adr-0004.md.')
+    expect(reply).not.toContain('adr-0005')
+  })
+
+  it('names a value that needs its word and has none, and the retired backed', () => {
+    const reply = askFor(payload('echo rule-use: rule:adr-0027.md=missed rule:adr-0004.md=backed rule:adr-0005.md=missed:skipped', path, 'a1'))
+    expect(reply).toContain('.claude/rules/adr-0027.md .claude/rules/adr-0004.md.')
     expect(reply).not.toContain('adr-0005')
   })
 })

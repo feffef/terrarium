@@ -20,8 +20,8 @@ and its own commits.
   blocked, the session logs again and replaces its earlier log. A session
   with no PR logs too.
 - **Who writes what.** The agent writes the goal, status, outcome, summary,
-  every Friction, why the docs and Skills it names mattered, and whether each
-  loaded rule steered or backed its work. Timings, models, tools, files read,
+  every Friction, why the docs and Skills it names mattered, and how each
+  loaded rule bore on its work, as one value from a fixed set. Timings, models, tools, files read,
   subagents, which rules loaded and the ADRs a hint pointed to come from the
   transcript. Files edited come from the transcript and
   from the session's own commits, found by their `Claude-Session:` trailer, so
