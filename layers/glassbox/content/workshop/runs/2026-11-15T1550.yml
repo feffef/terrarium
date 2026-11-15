@@ -1,0 +1,9 @@
+session: session_013zxzePak78Sud7pyRQMjeV
+mode: interactive
+focus: "Skill inventory: the page never mentions the auditSummary line that
+  audit-skills writes on each entry and the Skills page shows (Scout gap on the
+  memory page, commits 1a3329228 and 289b5613d). Chosen by the owner's word 'you
+  pick, repeat until budget is hit'; it is concrete, fits an existing page (no
+  new Lesson, so no owner merge) and no open PR touches the House rules pages."
+changes: []
+pagesRead: []
