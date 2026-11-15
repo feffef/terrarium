@@ -217,10 +217,8 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
                       ><span v-if="r.alwaysLoaded" class="always">always loaded</span
                       ><span v-if="!r.alwaysLoaded" class="via">{{ r.loadedBy ? `loaded by ${r.loadedBy}` : 'no load recorded' }}</span
                     ></div>
-                    <div v-if="r.values.length" class="rulestrip">
-                      <div class="strip" role="img" :aria-label="r.values.map((v) => `${v.value} ${v.n}`).join(', ')">
-                        <JournalHint v-for="v in r.values" :key="v.value" class="vseg" :data-value="v.value" :style="{ flexGrow: v.n }" :text="v.hover" />
-                      </div>
+                    <div v-if="r.values.length" class="strip" role="img" :aria-label="r.values.map((v) => `${v.value} ${v.n}`).join(', ')">
+                      <JournalHint v-for="v in r.values" :key="v.value" class="vseg" :data-value="v.value" :style="{ flexGrow: v.n }" :text="v.hover" />
                     </div>
                   </li>
                 </ul>
@@ -480,8 +478,7 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
 .trace .useful[data-value='steered'] { color: var(--jd-accent); }
 .trace .useful[data-value='confirmed'] { color: var(--jd-accent); }
 .trace .useful[data-value='missed'] { color: var(--jd-sev-minor); }
-.trace .rulestrip { display: flex; align-items: center; gap: 0.6rem; margin-top: 0.25rem; }
-.trace .strip { flex: 1; max-width: 20rem; display: flex; gap: 1px; height: 0.55rem; }
+.trace .strip { max-width: 20rem; margin-top: 0.25rem; display: flex; gap: 1px; height: 0.55rem; }
 .trace .vseg:first-child { border-radius: 999px 0 0 999px; }
 .trace .vseg:last-child { border-radius: 0 999px 999px 0; }
 .trace .vseg:only-child { border-radius: 999px; }

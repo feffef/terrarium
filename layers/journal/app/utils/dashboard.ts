@@ -374,7 +374,7 @@ export function sessionRuleUseView(s: SessionDoc, ruleTitles: Record<string, str
           loadedBy: loaders.length,
           values: ruleValue.options.map((value) => {
             const n = answering.filter((e) => valueOf(e) === value).length
-            const whys = [...new Set(reports.filter(({ r }) => r.value === value && r.why).map(({ r, task }) => withTask(r.why!, task)))]
+            const whys = [...new Set(reports.filter(({ r }) => r.value === value).flatMap(({ r, task }) => (r.why ? [withTask(r.why, task)] : [])))]
             return {
               value,
               n,
@@ -382,7 +382,6 @@ export function sessionRuleUseView(s: SessionDoc, ruleTitles: Record<string, str
               hover: [`${n} of ${answering.length} answering subagents that loaded${namedUnloaded.length ? ' or named' : ''} it rated it ${value}${unnamed ? `; ${unnamed} gave no value` : ''}`, ...whys].join('\n'),
             }
           }).filter((v) => v.n > 0),
-          whys: [...new Set(reports.flatMap(({ r, task }) => (r.why ? [withTask(r.why, task)] : [])))],
         }
       })),
     },

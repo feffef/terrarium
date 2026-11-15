@@ -544,7 +544,6 @@ describe('sessionCardViews', () => {
           hover: '.claude/rules/adr-0004.md\nnative 2 · hint 1\ntriggered by a.ts ×2',
           loadedBy: 3,
           values: [{ value: 'backed', n: 1, percent: 50, hover: '1 of 2 answering subagents that loaded it rated it backed; 1 gave no value\nscan: x' }],
-          whys: ['scan: x'],
         }],
       })
     })
@@ -580,7 +579,7 @@ describe('sessionCardViews', () => {
         ],
       })
       expect(c.ruleUse!.main.rules.map((r) => [r.path, r.value, r.hover])).toEqual([['.claude/rules/adr-0012.md', 'steered', '.claude/rules/adr-0012.md\nno load recorded']])
-      expect(c.ruleUse!.subagents.rules.map((r) => [r.path, r.loadedBy, r.values.map((v) => v.percent), r.whys])).toEqual([['.claude/rules/adr-0012.md', 0, [100], [`scan: ${why}`]]])
+      expect(c.ruleUse!.subagents.rules.map((r) => [r.path, r.loadedBy, r.values.map((v) => v.percent)])).toEqual([['.claude/rules/adr-0012.md', 0, [100]]])
     })
 
     it('says who reported a doc instead of "no verdict"', () => {
