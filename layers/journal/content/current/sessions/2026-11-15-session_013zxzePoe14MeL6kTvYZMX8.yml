@@ -1,0 +1,242 @@
+schemaVersion: 1
+session: session_013zxzePoe14MeL6kTvYZMX8
+startedAt: 2026-11-15T16:02:18Z
+endedAt: 2026-11-15T16:08:34Z
+kind: autonomous
+goal: Scheduled visitor-loop run on the Glass Box guide
+status: completed
+outcome: "Three visitors reported; 2 bug issues filed, retro posted on #3244, ideas and one learning logged"
+summary: "Scheduled visitor-loop run, no human prompts; everything was agent-initiated within the Skill's remit. Focus by rotation was glassbox (row 5), guide Space only. Built and served a production preview, wrote a context file (69 pages, merged PRs, logged ideas, 4 open issues), and dispatched blind, content-editor and UI-tester Sonnet visitors. I verified the candidate bugs myself at 390px and in source: filed #3346 (session-transcripts sideways scroll, clipped excerpt path) and #3347 (no skip link, sidebar h2s before h1). Dropped the UI tester's claim that the menu button has no name (it has aria-label) and the start-here strips (decisions.md). The walkthroughs index and wording items were kept as ideas. Retro asked of all three visitors and posted on #3244 with many token and timing fields marked unknown, since transcripts were not read."
+prs: []
+docsRead:
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: scripts/lib/chromium.ts
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/visitor-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: visitor-loop
+    reason: (invoked as a slash command)
+frictions:
+  - description: First three-visitor Agent dispatch was blocked by the dispatch-read guard because I had not read dispatch-subagents; I had to resend all three long briefs.
+    solution: Read dispatch-subagents before writing the briefs; the visitor-loop Skill could name it in step 2.
+    severity: minor
+  - description: Filed two issues with labels before reading docs/agents/triage-labels.md; only a hook hint afterward made me grep it, and it confirmed the labels.
+    solution: Read triage-labels.md before the first issue_write; the visitor-loop step 4 could name it.
+    severity: nit
+  - description: SubagentStart rule-use step made read-only visitors spend two Bash echo calls each, reported by the blind visitor's retro (unverified at the hook source).
+    solution: Exempt read-only visitor subagents from the rule-use step in the SubagentStart hook.
+    severity: nit
+durationSec: 376
+models:
+  claude-sonnet-5-5: 59
+toolCounts:
+  Bash: 16
+  Agent: 6
+  Read: 3
+  mcp__github__issue_write: 2
+  mcp__github__issue_read: 1
+  SendMessage: 3
+  mcp__github__add_issue_comment: 1
+  Skill: 2
+filesEdited:
+  - .throwaway/visitor-blind/crawl.ts
+  - .throwaway/visitor-blind/probe.ts
+  - .throwaway/visitor-blind/walk.ts
+  - .throwaway/visitor-ui/walk.ts
+  - .throwaway/visitor-ui/probe.ts
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/dispatch-subagents/SKILL.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/dispatch-subagents/SKILL.md
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0003.md
+        value: confirmed
+        why: "agreed: no branch or PR, only issues"
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: steered
+        why: closed via close-session log
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: session header on issues and comment
+      - path: .claude/rules/adr-0028.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/rules/tenant-layers.md
+        value: unrelated
+      - path: .claude/rules/ui-verification.md
+        value: unrelated
+      - path: .claude/rules/glassbox-content.md
+        value: in-scope
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: .claude/rules/adr-0022.md
+        value: unrelated
+      - path: .agents/skills/dispatch-subagents/SKILL.md
+      - path: docs/agents/git-conventions.md
+      - path: docs/agents/github-integration.md
+      - path: docs/agents/issue-tracker.md
+  - by: general-purpose
+    subagent: 3
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 4
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 5
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+subagents:
+  - task: Blind first-time visitor
+    model: sonnet
+    denied: true
+  - task: Informed content editor
+    model: sonnet
+    denied: true
+  - task: Informed UI tester
+    model: sonnet
+    denied: true
+  - task: Blind first-time visitor
+    model: sonnet
+    durationSec: 160
+    toolCalls: 15
+    modelCalls: 13
+    tokenShare: 14.9
+  - task: Informed content editor
+    model: sonnet
+    durationSec: 157
+    toolCalls: 10
+    modelCalls: 8
+    tokenShare: 14.6
+  - task: Informed UI tester
+    model: sonnet
+    durationSec: 157
+    toolCalls: 13
+    modelCalls: 10
+    tokenShare: 13.7
+gitBranch: claude/lucid-heisenberg-3zbs1h
+entrypoint: remote_trigger
+cliVersion: 2.1.325
+trigger: visitor-loop
+learnings:
+  - On the Glass Box guide, excerpt-header paths are clipped inside their figure, so document scrollWidth stays 390 and misses them; a per-element getBoundingClientRect scan finds them.
+ideas:
+  - "[blind, content editor] /t/glassbox/guide/walkthroughs: the bare path 404s while the sidebar lists ten Walkthroughs and the other Subject indexes exist. Add a plain Walkthroughs index with one sentence per story, so a visitor who trims the URL lands somewhere."
+  - "[content editor] /t/glassbox/guide/skill-pack/wayfinder: to-spec, ask-matt, HITL, AFK and Fog appear in one paragraph with no gloss. Add a short words-you-will-meet list saying which are Terrarium's and which come from the upstream skill."
+  - "[content editor] /t/glassbox/guide/terrarium-practice/skill-inventory: says a script deletes observations after a fixed window without naming it. Say where the window is set, without a changing number in prose."
+  - "[content editor] /t/glassbox/guide/deploy/pnpm-lockfile: says Terrarium installs in three places, then that each agent session runs pnpm install. Fold sessions into the contributor-checkout place so the count is not contradicted."
+  - "[content editor] /t/glassbox/guide/walkthroughs/asking-for-a-change step 9 restates the merge refusals as a partial list that differs from the guide home page. Point step 9 to the one full list in the gate and human-in-the-loop lessons."
+  - "[content editor] /t/glassbox/guide/verification/gate: uses FLOOR, HEAVY and inert as prose words. Bold each at first use with a one-line meaning so readers can scan for them."
+  - "[content editor] /t/glassbox/guide: no A to Z term list exists for words such as friction, seedling, routine and fog. Check the guide's terms Space first, then offer a one-screen list linking each term to its lesson."
+  - "[blind, UI tester] /t/glassbox/guide at 390px: the lead paragraph fills the first screen before any navigation. Shorten or shrink it on phones, not as a Start here strip, which the owner ruled out."
+landedBy: Stop
