@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzePH9gQTPAHjR7vCj71
 startedAt: 2026-11-15T07:36:19Z
-endedAt: 2026-11-15T08:47:30Z
+endedAt: 2026-11-15T12:44:41Z
 kind: interactive
 goal: Hide denied subagent dispatches from the session card
 status: completed
-outcome: "PR 3334 merged: denied dispatches are tagged in the log and hidden on the card"
-summary: "The owner asked why a session log listed several \"Frictions survey\" subagents; I traced it, on their request, to a guard denying the first Agent calls, which the trace still logged as stat-less entries. Human-instructed: the explanation, finding a smaller example session, confirming the cause with /inspect-session on its events (first call blocked by the dispatch-read guard, second ran), tagging with an optional schema flag, hiding tagged rows, naming the flag (an enum outcome was dropped for a boolean denied because outcome already means something else on every log), no backfill, the preview, \"yes\" to open the PR, and \"you may merge it yourself\" (the owner waiver for a Human-only schema file). Agent-initiated: the review-fix commit (one home for the flag's meaning, hoisted id, flatter fold), opening and subscribing to the PR under ADR-0003, and the verdict comment and merge once CI was green; the merge used merge-pr.ts with the owner's quoted word. Dropped on the way: hiding via the token bar, since denied entries have no share anyway. I proposed filtering denied entries out of the frictions survey too and the owner said yes, so I built and gated it (extract-frictions toTriageSession), but when the owner asked why it helps I found the benefit marginal (the survey only reads subagents in two edge cases, and old logs are not backfilled), and on their word to close I dropped it without a PR; the two commits stay pushed on the session branch. The preview used a temporary copy of a real log with the flag set, deleted afterwards."
+outcome: PR 3334 merged (denied dispatches tagged in the log and hidden on the card); later answered another session's rule-rating review
+summary: "The owner asked why a session log listed several \"Frictions survey\" subagents; I traced it, on their request, to a guard denying the first Agent calls, which the trace still logged as stat-less entries. Human-instructed: the explanation, finding a smaller example session, confirming the cause with /inspect-session on its events (first call blocked by the dispatch-read guard, second ran), tagging with an optional schema flag, hiding tagged rows, naming the flag (an enum outcome was dropped for a boolean denied because outcome already means something else on every log), no backfill, the preview, \"yes\" to open the PR, and \"you may merge it yourself\" (the owner waiver for a Human-only schema file). Agent-initiated: the review-fix commit (one home for the flag's meaning, hoisted id, flatter fold), opening and subscribing to the PR under ADR-0003, and the verdict comment and merge once CI was green; the merge used merge-pr.ts with the owner's quoted word. Dropped on the way: hiding via the token bar, since denied entries have no share anyway. I proposed filtering denied entries out of the frictions survey too and the owner said yes, so I built and gated it (extract-frictions toTriageSession), but when the owner asked why it helps I found the benefit marginal (the survey only reads subagents in two edge cases, and old logs are not backfilled), and on their word to close I dropped it without a PR; the two commits stay pushed on the session branch. The preview used a temporary copy of a real log with the flag set, deleted afterwards. After closing, another Claude session working on issue 3017 sent messages asking how I and my five finished subagents would rate the rules we loaded; I held off until the owner said to answer and act for that session, then ran eight rounds (four comments on the issue, then four by message only) resuming the subagents each time, as the owner instructed. I changed no rule, code or log in that work."
 prs:
   - "3334"
 docsRead:
@@ -71,28 +71,42 @@ frictions:
   - description: Proposed and then built a survey follow-up whose benefit I could not state when asked; the premise check CLAUDE.md asks for came only after the gate and review.
     solution: Before offering a follow-up, name the reader it helps and what decision changes; drop it if none.
     severity: minor
-durationSec: 4271
+  - description: Told subagents to run no command while also asking them to read each rule's paths, so four could not verify their path-based labels.
+    solution: Paste each rule's paths into the brief, or allow reading the rule files.
+    severity: minor
+  - description: Posted the issue 3017 comments with miscounts and one wrong claim about which agents said what, and fixed them by editing the comments three times.
+    solution: Recompute every count from the log with a command, and re-read each claim against the replies, before posting.
+    severity: minor
+  - description: Answered eight rounds of another session's open-ended rule-rating iteration, resuming five subagents each time, with no stop point agreed until I raised the cost.
+    solution: Agree a round limit up front, ask the subagents once and reuse their labels where the wording change cannot affect them.
+    severity: moderate
+durationSec: 18503
 models:
-  claude-sonnet-5-5: 267
+  claude-sonnet-5-5: 420
+  <synthetic>: 1
 toolCounts:
   Grep: 14
-  Read: 25
-  Bash: 60
+  Read: 26
+  Bash: 64
   Skill: 6
   mcp__claude-code-remote__get_session: 1
   Agent: 5
   AskUserQuestion: 1
   Edit: 35
-  Write: 8
-  ToolSearch: 2
+  Write: 9
+  ToolSearch: 4
   TaskStop: 1
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  ReadNotifications: 3
+  ReadNotifications: 12
   mcp__github__pull_request_read: 1
-  mcp__github__add_issue_comment: 1
+  mcp__github__add_issue_comment: 5
   mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  mcp__github__issue_read: 1
+  SendMessage: 39
+  mcp__claude-code-remote__send_message: 8
+  mcp__github__update_issue_comment: 3
 filesEdited:
   - shared/schemas/session.ts
   - scripts/session/transcript-trace.ts
@@ -179,24 +193,18 @@ ruleUse:
         via: native
         trigger: .agents/skills/frictions-to-fixes/survey-brief.md
     reported:
-      - path: .claude/rules/data-shapes.md
-        value: steered
-        why: asked the flag's shape before building
       - path: .claude/rules/ui-verification.md
         value: steered
         why: previewed and confirmed before the PR
-      - path: .claude/rules/adr-0004.md
-        value: backed
       - path: .claude/rules/adr-0004-human-merge.md
         value: steered
         why: PR names the human-merge need
-      - path: .claude/rules/adr-0009.md
-        value: steered
-        why: added the field as optional
-      - path: .claude/rules/adr-0017.md
-        value: backed
       - path: .claude/rules/adr-0003.md
-        value: backed
+        value: steered
+        why: subscribed without asking
+      - path: .claude/rules/tenant-glossary.md
+        value: steered
+        why: read the Journal glossary when it loaded
       - path: docs/agents/git-conventions.md
       - path: docs/agents/pr-workflow.md
       - path: docs/agents/github-integration.md
@@ -291,39 +299,41 @@ ruleUse:
 subagents:
   - type: general-purpose
     task: Inspect first Agent call outcome
-    durationSec: 35
-    toolCalls: 10
-    modelCalls: 10
-    tokenShare: 5.1
+    durationSec: 12753
+    toolCalls: 17
+    modelCalls: 22
+    tokenShare: 6.8
   - type: general-purpose
     task: Review standards axis
-    durationSec: 16
-    toolCalls: 4
-    modelCalls: 3
-    tokenShare: 3.2
+    durationSec: 10985
+    toolCalls: 12
+    modelCalls: 12
+    tokenShare: 4.4
   - type: general-purpose
     task: Review spec axis
-    durationSec: 21
-    toolCalls: 6
-    modelCalls: 4
-    tokenShare: 3.6
+    durationSec: 10983
+    toolCalls: 14
+    modelCalls: 14
+    tokenShare: 4.1
   - type: general-purpose
     task: Review standards axis
-    durationSec: 12
-    toolCalls: 6
-    modelCalls: 3
-    tokenShare: 3.1
+    durationSec: 9370
+    toolCalls: 14
+    modelCalls: 17
+    tokenShare: 4
   - type: general-purpose
     task: Review spec axis
-    durationSec: 13
-    toolCalls: 6
-    modelCalls: 3
-    tokenShare: 3.1
+    durationSec: 9369
+    toolCalls: 14
+    modelCalls: 17
+    tokenShare: 3.9
 gitBranch: claude/sharp-goldberg-xqsh3i
 entrypoint: remote
 cliVersion: 2.1.325
 learnings:
   - A guard-denied Agent call is still logged as a subagent entry with no stats, so duplicate same-task entries in a session log usually mean a denied first attempt, not parallel agents.
+  - A subagent resumed with SendMessage may re-deliver its earlier report before answering the new question, so ask for a reply that starts with a fixed word and re-ask once if it is missing.
+  - Sibling reviewers of the same diff gave different labels for the same rule depending on whether they had checked it against the rule, so a rating scheme needs the check stated in its definition.
 ideas:
   - Let `scripts/ui/preview.ts` take a fixture session log and a card id, so a Journal card change can be previewed and screenshotted without copying a real log into the content folder and hand-writing a Playwright script.
 landedBy: Stop
