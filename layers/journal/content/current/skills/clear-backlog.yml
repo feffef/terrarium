@@ -12,7 +12,7 @@ role: >-
 auditSummary:
   date: "2026-11-15"
   text: >-
-    Ran 10 times and 40 of 41 PRs landed; the owner closed the other on design grounds. Leftover helper worktrees and a skipped re-close after merging keep recurring.
+    Ran 10 times and 40 of 41 PRs landed. Leftover helper checkouts and a skipped wrap-up after merging keep recurring.
 observations:
   - date: "2026-10-13"
     note: >-

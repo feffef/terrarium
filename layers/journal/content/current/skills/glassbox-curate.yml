@@ -11,7 +11,7 @@ role: >-
 auditSummary:
   date: "2026-11-15"
   text: >-
-    Ran 10 times and all PRs merged. Runs skipped its whole-subject read and its scouting step. One merged a change without the code review and said so.
+    Ran 10 times and all PRs merged. Runs skipped its whole-subject read and scouting step, and one merged without the code review.
 observations:
   - date: "2026-11-07"
     note: >-

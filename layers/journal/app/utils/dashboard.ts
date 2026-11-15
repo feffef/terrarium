@@ -428,7 +428,7 @@ export function digestNeighbours(dates: string[], date: string): { older: string
 
 const AUDIT_STALE_DAYS = 14
 
-/** An audit line older than two weeks reads as history, not as a current problem. */
+/** Past the threshold, an audit line reads as history, not as a current problem. */
 export function auditIsStale(date: string, now = new Date()): boolean {
   return (now.getTime() - new Date(`${date}T00:00:00Z`).getTime()) / 86_400_000 > AUDIT_STALE_DAYS
 }

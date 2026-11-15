@@ -11,7 +11,7 @@ role: >-
 auditSummary:
   date: "2026-10-18"
   text: >-
-    Checked 16 issues it handled; every label, closure and escalation matched what it promised. Nothing broke. The Skill has not been checked since.
+    Checked 16 of its decisions and all matched what it promised. Not checked since.
 observations:
   - date: "2026-10-08"
     note: >-

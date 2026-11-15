@@ -166,7 +166,7 @@ Grade each Skill's importance by the definitions below, after reading its
   which removes entries past that window (git keeps the history) and prints
   what it removed.
 - **`auditSummary`** `{ date: <today, UTC>, text }` is the line the Skills page
-  shows for each Skill: one plain sentence, no ids or jargon, on what this
+  shows for each Skill: one plain sentence of about 25 words, no ids or jargon, on what this
   window's runs showed, clean runs included. Replace it for every Skill that
   had runs in the window. Leave it for a Skill with none, so its `date` ages
   and the page dims it.

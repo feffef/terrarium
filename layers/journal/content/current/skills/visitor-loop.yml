@@ -11,7 +11,7 @@ role: >-
 auditSummary:
   date: "2026-11-15"
   text: >-
-    Six runs delivered. A recent instruction cut was followed by a first run that hit a read-first block; one run, so no verdict yet.
+    Six runs delivered. A recent instruction change was followed by one blocked first step; too early for a verdict.
 observations:
   - date: "2026-10-06"
     note: >-

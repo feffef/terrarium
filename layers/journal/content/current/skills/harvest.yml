@@ -11,7 +11,7 @@ role: >-
 auditSummary:
   date: "2026-11-15"
   text: >-
-    Seven runs delivered. It reads the whole issue list each time, costing up to about 90k tokens, and reads the git and GitHub docs late. Only one run was scheduled.
+    Seven runs delivered. It reads the whole issue list each time, costing up to about 90k tokens.
 observations:
   - date: "2026-11-13"
     note: >-

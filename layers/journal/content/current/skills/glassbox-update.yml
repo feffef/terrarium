@@ -10,7 +10,7 @@ role: >-
 auditSummary:
   date: "2026-11-15"
   text: >-
-    Ran 8 times and 8 PRs merged. Some pages were marked checked after only a partial check. A conflict between two of its steps was fixed and has not run since.
+    Ran 8 times and 8 PRs merged. Some pages were marked checked after only a partial check.
 observations:
   - date: "2026-10-16"
     note: >-

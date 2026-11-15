@@ -36,10 +36,7 @@ defineProps<{
                 <template v-else>{{ p.text }}</template>
               </template>
             </p>
-            <p v-if="s.auditSummary" class="audit" :class="{ stale: auditIsStale(s.auditSummary.date) }">
-              <span class="audit-date">last audited {{ formatAuditDate(s.auditSummary.date) }}</span>
-              {{ s.auditSummary.text }}
-            </p>
+            <JournalSkillAuditLine v-if="s.auditSummary" :audit="s.auditSummary" />
           </details>
           <p v-else class="role">
             <template v-for="(p, i) in skillRoleParts(s.role)" :key="i">
@@ -49,10 +46,7 @@ defineProps<{
               <template v-else>{{ p.text }}</template>
             </template>
           </p>
-          <p v-if="s.auditSummary && !s.gist" class="audit" :class="{ stale: auditIsStale(s.auditSummary.date) }">
-            <span class="audit-date">last audited {{ formatAuditDate(s.auditSummary.date) }}</span>
-            {{ s.auditSummary.text }}
-          </p>
+          <JournalSkillAuditLine v-if="s.auditSummary && !s.gist" :audit="s.auditSummary" />
         </div>
       </template>
 
@@ -91,9 +85,6 @@ defineProps<{
 .uses { margin-left: auto; font-size: 0.7rem; color: var(--jd-faint); }
 .chip-uses { color: var(--jd-faint); }
 .gist { margin: 0.25rem 0 0; font-size: 0.83rem; color: var(--jd-ink); font-family: var(--jd-serif); }
-.audit { margin: 0.25rem 0 0; font-size: 0.8rem; color: var(--jd-muted); font-family: var(--jd-serif); }
-.audit-date { font-family: var(--jd-mono); font-size: 0.68rem; color: var(--jd-faint); margin-right: 0.4rem; }
-.audit.stale { opacity: 0.55; }
 .role { margin: 0.25rem 0 0; font-size: 0.83rem; color: var(--jd-muted); font-family: var(--jd-serif); }
 .role code {
   font-family: var(--jd-mono);

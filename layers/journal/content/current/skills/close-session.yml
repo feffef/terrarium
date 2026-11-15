@@ -11,7 +11,7 @@ role: >-
 auditSummary:
   date: "2026-11-14"
   text: >-
-    All 10 runs wrote their log and no session was left open. One log stayed marked in-review after its PR merged, because nothing re-closes a log after the session ends.
+    All 10 runs wrote their log. One log stayed marked in-review after its PR merged, since nothing re-closes it.
 observations:
   - date: "2026-10-06"
     note: >-

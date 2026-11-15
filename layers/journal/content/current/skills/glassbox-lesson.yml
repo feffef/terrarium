@@ -11,7 +11,7 @@ role: >-
 auditSummary:
   date: "2026-11-14"
   text: >-
-    Four runs, every lesson still published. Lessons sometimes carry counts that go stale or read out of order; a reviewer or the owner caught them after the Skill's own check missed them.
+    Four runs, every lesson still published. Lessons sometimes carry stale counts or read out of order; reviewers caught them.
 observations:
   - date: "2026-10-17"
     note: >-
