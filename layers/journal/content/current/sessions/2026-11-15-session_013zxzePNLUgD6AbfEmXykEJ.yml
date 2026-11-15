@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzePNLUgD6AbfEmXykEJ
 startedAt: 2026-11-15T07:55:41Z
-endedAt: 2026-11-15T11:04:57Z
+endedAt: 2026-11-15T11:09:57Z
 kind: interactive
 goal: Show a plain-language audit line per Skill on the Journal Skills page
 status: completed
 outcome: "PRs 3335 and 3337 merged by the owner: audit lines, overall verdicts, audit subagents that raise ideas; also answered another session's two rule-classification requests"
-summary: "The owner asked whether recent Skill observations were worth surfacing on the Platform Skills page or too hard to read. I read the raw observations, showed examples and said they were too jargon-heavy raw. The owner then directed (human-instructed): one short auditSummary line per audited Skill in plain language, a stored date so old findings read as history, a backfill in the same PR, placement inside Details, and an audit-skills change so it also updates gist and role when a Skill changes. They confirmed the layout and the stored shape from a screenshot before I backfilled; PR 3335 merged. The owner then pointed out (human-instructed) that the lines only summarised the newest note and asked for an overall verdict across all recent observations with no counts, and then for each audit subagent to raise one idea that the main session filters for feasibility and simplicity. I read every Skill's full observation history, rewrote the 17 lines and changed audit-skills step 5, its brief and one ADR-0015 sentence; PR 3337 merged after two review rounds with read-only subagents and a green gate. Afterwards another session (working on issue 3017) asked via a cross-session message for my classification of loaded rules I had not rated. I held it until the owner said, in session, to answer and act on it (human-instructed); I then asked my five review subagents, posted a comment to issue 3017 and replied to that session; a second request from it, to review seven proposed rule values, got a relabel of my 22 rules and the subagents' rules, a second comment and a reply, then a third request (a revised seven-value order) got another relabel, comment and reply, and a fourth (what checked and backed mean in my own words) got a comment and reply, and a fifth (draft-3 values, message-only reply) got a relabel and reply (all human-authorised by the same instruction). Two subagents only redelivered old reports both times, so I claimed nothing for them. Agent-initiated: the 14-day dimming threshold (accepted by the owner), the component extraction and tests from review, and widening the ADR-0015 sentence to cover ideas that improve a Skill. Left open: line dates equal each Skill's latest observation date until an audit run rewrites them, the idea step has not run in an audit yet, and dimming uses render time so a prerendered page may only update on rebuild (unverified)."
+summary: "The owner asked whether recent Skill observations were worth surfacing on the Platform Skills page or too hard to read. I read the raw observations, showed examples and said they were too jargon-heavy raw. The owner then directed (human-instructed): one short auditSummary line per audited Skill in plain language, a stored date so old findings read as history, a backfill in the same PR, placement inside Details, and an audit-skills change so it also updates gist and role when a Skill changes. They confirmed the layout and the stored shape from a screenshot before I backfilled; PR 3335 merged. The owner then pointed out (human-instructed) that the lines only summarised the newest note and asked for an overall verdict across all recent observations with no counts, and then for each audit subagent to raise one idea that the main session filters for feasibility and simplicity. I read every Skill's full observation history, rewrote the 17 lines and changed audit-skills step 5, its brief and one ADR-0015 sentence; PR 3337 merged after two review rounds with read-only subagents and a green gate. Afterwards another session (working on issue 3017) asked via a cross-session message for my classification of loaded rules I had not rated. I held it until the owner said, in session, to answer and act on it (human-instructed); I then asked my five review subagents, posted a comment to issue 3017 and replied to that session; a second request from it, to review seven proposed rule values, got a relabel of my 22 rules and the subagents' rules, a second comment and a reply, then a third request (a revised seven-value order) got another relabel, comment and reply, and a fourth (what checked and backed mean in my own words) got a comment and reply, and a fifth (draft-3 values, message-only reply) got a relabel and reply, and a sixth (draft-4 values, at most six) got another relabel and reply (all human-authorised by the same instruction). Two subagents only redelivered old reports both times, so I claimed nothing for them. Agent-initiated: the 14-day dimming threshold (accepted by the owner), the component extraction and tests from review, and widening the ADR-0015 sentence to cover ideas that improve a Skill. Left open: line dates equal each Skill's latest observation date until an audit run rewrites them, the idea step has not run in an audit yet, and dimming uses render time so a prerendered page may only update on rebuild (unverified)."
 prs:
   - "3335"
   - "3337"
@@ -85,14 +85,17 @@ frictions:
   - description: Two resumed subagents answered a new question by redelivering their old reports, so I spent a round trip and got no answer from them.
     solution: After a resume, wait for the next notification and check it answers the new question before counting the agent as having replied.
     severity: nit
-durationSec: 11356
+  - description: A hook asked me to read three ADRs in full after I edited audit-skills; I read two and skipped ADR-0005, which governs the Skill edit.
+    solution: Treat each hook read-in-full demand as a checklist and read every named ADR, or say why one is not needed.
+    severity: nit
+durationSec: 11656
 models:
-  claude-sonnet-5-5: 349
+  claude-sonnet-5-5: 366
 toolCounts:
   Grep: 2
   Glob: 2
   Read: 10
-  Bash: 91
+  Bash: 93
   AskUserQuestion: 1
   SendUserFile: 1
   Monitor: 1
@@ -103,12 +106,12 @@ toolCounts:
   mcp__github__create_pull_request: 2
   Write: 5
   mcp__claude-code-remote__subscribe_pr_activity: 2
-  ReadNotifications: 14
+  ReadNotifications: 15
   mcp__github__pull_request_read: 6
-  SendMessage: 19
+  SendMessage: 22
   mcp__github__issue_read: 1
   mcp__github__add_issue_comment: 4
-  mcp__claude-code-remote__send_message: 5
+  mcp__claude-code-remote__send_message: 6
 filesEdited:
   - .agents/skills/audit-skills/SKILL.md
   - .agents/skills/audit-skills/brief.md
@@ -353,6 +356,12 @@ ruleUse:
         via: start
       - rule: .claude/rules/adr-0017.md
         via: start
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
     reported:
       - path: .claude/rules/adr-0004.md
         value: backed
@@ -390,31 +399,31 @@ subagents:
     durationSec: 9412
     toolCalls: 12
     modelCalls: 9
-    tokenShare: 2.5
+    tokenShare: 2.4
   - type: general-purpose
     task: Spec review of branch diff
     durationSec: 9411
     toolCalls: 19
     modelCalls: 15
-    tokenShare: 4.5
+    tokenShare: 4.3
   - type: general-purpose
     task: Standards review of follow-up diff
-    durationSec: 7973
-    toolCalls: 11
-    modelCalls: 11
-    tokenShare: 6.3
+    durationSec: 8267
+    toolCalls: 13
+    modelCalls: 13
+    tokenShare: 6.2
   - type: general-purpose
     task: Spec review of follow-up diff
-    durationSec: 7974
-    toolCalls: 21
-    modelCalls: 20
-    tokenShare: 11.9
+    durationSec: 8269
+    toolCalls: 23
+    modelCalls: 22
+    tokenShare: 11.8
   - type: general-purpose
     task: Review audit-skills idea change
-    durationSec: 7589
-    toolCalls: 15
-    modelCalls: 10
-    tokenShare: 4
+    durationSec: 7878
+    toolCalls: 17
+    modelCalls: 12
+    tokenShare: 4.1
 gitBranch: claude/quirky-cerf-1hbx9n
 entrypoint: remote
 cliVersion: 2.1.325
