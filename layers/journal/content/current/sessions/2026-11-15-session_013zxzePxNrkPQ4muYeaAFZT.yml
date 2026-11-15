@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzePxNrkPQ4muYeaAFZT
 startedAt: 2026-11-15T08:46:00Z
-endedAt: 2026-11-15T08:56:16Z
+endedAt: 2026-11-15T08:59:43Z
 kind: autonomous
 goal: "Scheduled Glass Box curate run: teach area labels"
-status: in-review
-outcome: PR 3336 adds area labels to Issue triage labels; gate passed, awaiting CI to self-merge
-summary: "Scheduled glassbox-curate run, no human prompt. Agent-chosen focus: area labels, a gap on the memory page, taught on the existing Issue triage labels page (no new Lesson). An opus writer wrote the text, a sonnet claim checker found every sentence true, code-review ran, and gate:scoped passed. The memory page got shorter (2108 to 2078 words). Scout found no strong new topic. PR 3336 is open; merging waits for CI. No fresh reader ran (budget). A second run is still open to the budget."
+status: completed
+outcome: "PR 3336 merged: area labels taught on Issue triage labels"
+summary: "Scheduled glassbox-curate run, no human prompt. Agent-chosen focus: area labels, a gap on the memory page, taught on the existing Issue triage labels page (no new Lesson). An opus writer wrote the text, a sonnet claim checker found every sentence true, code-review ran, and gate:scoped passed. The memory page got shorter (2108 to 2078 words). Scout found no strong new topic. PR 3336 merged after green CI. No fresh reader ran (budget). A second run is still open to the budget."
 prs:
   - "3336"
 docsRead:
@@ -57,18 +57,20 @@ frictions:
   - description: A background gate command sent with run_in_background and a trailing ampersand was blocked by the double-background guard.
     solution: Send run_in_background alone.
     severity: nit
-durationSec: 616
+durationSec: 823
 models:
-  claude-sonnet-5-5: 72
+  claude-sonnet-5-5: 88
 toolCounts:
-  Bash: 22
+  Bash: 26
   Read: 8
   Agent: 6
   Edit: 1
-  Skill: 3
+  Skill: 4
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__add_issue_comment: 2
 filesEdited:
   - layers/glassbox/content/guide/pages/git-github/70.issue-triage-labels.md
   - layers/glassbox/content/workshop/runs/2026-11-15T0846.yml
@@ -301,31 +303,31 @@ subagents:
     durationSec: 22
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 5.7
+    tokenShare: 4.9
   - task: Write area-labels section
     model: opus
     durationSec: 186
     toolCalls: 26
     modelCalls: 20
-    tokenShare: 15.4
+    tokenShare: 13.2
   - task: Claim-check area-labels text
     model: sonnet
     durationSec: 17
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 3
+    tokenShare: 2.6
   - task: Standards review of guide diff
     model: sonnet
     durationSec: 27
     toolCalls: 10
     modelCalls: 4
-    tokenShare: 6.1
+    tokenShare: 5.3
   - task: Spec review of guide diff
     model: sonnet
     durationSec: 24
     toolCalls: 6
     modelCalls: 6
-    tokenShare: 6.4
+    tokenShare: 5.5
 gitBranch: claude/compassionate-bardeen-lkluzn
 entrypoint: remote_trigger
 cliVersion: 2.1.325
