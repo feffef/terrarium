@@ -29,6 +29,9 @@ before drafting.
 
 ## Steps, in order
 
+Run every step. Skip one only when the owner names it; if unsure, ask before
+skipping, and never state an owner limit they did not give.
+
 Steps 1–6 work in the scratchpad only. The repo is first touched at step 7.
 
 ### 1. Rotation gate
