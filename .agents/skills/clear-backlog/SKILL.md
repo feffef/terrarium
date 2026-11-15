@@ -156,10 +156,10 @@ every turn of yours re-reads your whole context.
 
 Resume an agent with `SendMessage` to its id, only once its run has ended: a
 resume during the run puts two writers in one worktree. Send the resumes of all
-branches in one message, except gates (`dispatch-subagents` §3 caps them). Each agent replies
-with one line; check what it claims with `git -C <worktree> log --oneline -3`
-before you go on. If an agent can't be resumed (a session restart may lose
-it), dispatch a plain `Agent` with the same message, the branch's entry as you
+branches in one message, except gates (`dispatch-subagents` §3 caps them). Each
+agent replies with one line; check what it claims with
+`git -C <worktree> log --oneline -3` before you go on. If an agent can't be
+resumed (a session restart may lose it), dispatch a plain `Agent` with the same message, the branch's entry as you
 passed it to the workflow (with its `picks` and any `answer`), its `worktree`,
 the run's `dir`, this session's id, and, for a reviewer, its findings file.
 Tell it to read `.claude/workflows/clear-backlog-build.js` and follow `rules()`

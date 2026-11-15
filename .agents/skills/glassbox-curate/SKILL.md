@@ -171,11 +171,11 @@ keeps them so).
   your tools, estimate the context instead: every tool result, subagent report
   and turn so far (about 4 characters a token, rounding up when unsure) plus
   about 25k for the system prompt and tools. Past runs reached $25 at about 450k
-  tokens, so without `get_session` the budget is 450k estimated tokens, and every
-  figure you report says it is an estimate. A run adds up to about 100k tokens of context. When the budget leaves
-  room for that, start the next run as a full one: orient again, its own focus,
-  run entry, branch from a fresh `origin/main` and PR; in an interactive session,
-  settle that focus with the person first. Take the next focus from the
+  tokens, so without `get_session` the budget is 450k estimated tokens, and
+  every figure you report says it is an estimate. A run adds up to about 100k
+  tokens of context. When the budget leaves room for that, start the next run as
+  a full one: orient again, its own focus, run entry, branch from a fresh
+  `origin/main` and PR; in an interactive session, settle that focus with the person first. Take the next focus from the
   instructions you were given, then the memory page's leads, page-check
   warnings, Scout topics and gaps, and last pages no fresh reader has seen
   lately. Stop only when the budget is spent, and say in your last message and
