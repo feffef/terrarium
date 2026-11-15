@@ -1,0 +1,22 @@
+session: session_013zxzePak78Sud7pyRQMjeV
+mode: interactive
+focus: "Claude Code skills: the memory page's wording lead that Claude Code skills
+  and Claude Code permissions use gate, ADR and journal without a gloss. Chosen on
+  the owner's word 'you pick, repeat until budget is hit'; it is a wording-only
+  fix with no new claim, and no open PR touches the page. A grep showed the
+  permissions page uses none of the three words, so that half of the lead was
+  stale. Deviations for the budget: only the changed page was read around the two
+  edits, no writer, claim checker, fresh reader or code-review (wording-only, 2
+  small lines in 3 files; the lead read the full diff). The added gloss of
+  Journal restates the guide's own wording (GLOSSARY-MAP.md: the Platform's
+  self-documentation). The ADR mention stays: it is the contract's
+  ADR-NNNN (file) form, which has no word to wrap. Cost per get_session at the
+  start of this run: 311k context tokens, cost_usd 7.06."
+changes:
+  - claude-code/30.skills | The first mention of the gate is now an expandable term
+    and the Journal is glossed as the site where Terrarium documents itself |
+    a newcomer met both words without a gloss. Wording only, so revision and
+    publishedAt are kept
+  - workshop/pages/index | the lead now names only ADR on Claude Code skills | the
+    rest was done or stale
+pagesRead: []
