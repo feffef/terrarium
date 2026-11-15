@@ -1,0 +1,449 @@
+schemaVersion: 1
+session: session_013zxzeQESWGW1qj9P1Egphc
+startedAt: 2026-11-15T10:03:35Z
+endedAt: 2026-11-15T13:21:27Z
+kind: interactive
+goal: Review rule-use data and replace steered | backed with a six-value scale
+status: completed
+outcome: "PR #3341 merged on 2026-11-15; issue #3340 says what to check one week later, on or after 2026-11-22"
+summary: "The owner asked me to read issue #3017 and its comment, then run its report as a preview over four days. That showed about 79% of loaded rules were rated neither steered nor backed, and the owner asked for the main session and subagents to be reported apart, then for the split script to be committed and the findings posted (agent: commit dd5aa5b0c, comment on #3017). The owner then asked what agents thought of the 79%, so I messaged nine recent sessions, and they re-rated their own loaded rules and their subagents' over six drafts of a new value scale. The owner chose the candidate values and the fixed first word in why for three of them, ruled that material read counts as being in the work, and later asked for a lean version and a maximum of six values. Agent-initiated: merging late and skipped into missed, putting confirmed above unrelated, letting the rule's text (not its paths) decide what it governs, and keeping steered ahead of missed when one session objected. The owner answered the stored-shape questions (the word lives in the existing why; backed stays valid in old logs; the Journal card waits for a design round). I built it: schema widened, parser, ask text with a governs line per rule, report script, tests, ADR-0009 text and its restamped summary rule, the log-session Skill, a guards line and a Glass Box page. The gate passed twice and code-review ran on the diff and on the follow-up commit. Opening PR #3341 was agent-initiated under ADR-0003 after the gate and reviews; the owner had said to commit. The owner asked for the follow-up issue #3340 and for #3017 to be closed; both done. The owner merged #3341 at 13:20 UTC; I cancelled the PR check-in and put the merge date on #3340. Still open: the Journal card for six values, the eleven hand-kept governs lines, and the one-week check due on or after 2026-11-22. All survey counts are self-reported by the sessions and unverified."
+prs:
+  - "3341"
+docsRead:
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (read before editing)
+  - path: scripts/session/rule-use.ts
+    reason: (read before editing)
+  - path: scripts/hooks/rule-use-ask.ts
+    reason: (read before editing)
+  - path: shared/schemas/session.ts
+    reason: (read before editing)
+  - path: scripts/session/transcript-trace.ts
+    reason: (read before editing)
+  - path: scripts/session/log-session.ts
+    reason: (read before editing)
+  - path: tests/unit/rule-use.spec.ts
+    reason: (read before editing)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: (no reason given)
+  - path: tests/unit/rule-use-ask.spec.ts
+    reason: (read before editing)
+  - path: scripts/session/rule-use-report.ts
+    reason: (read before editing)
+  - path: tests/unit/log-session.spec.ts
+    reason: (read before editing)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (read before editing)
+  - path: docs/agents/guards.md
+    reason: (read before editing)
+  - path: docs/adr/0030-adrs-document-a-decision-not-its-history.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: docs/adr/0005-skill-model.md
+    reason: (no reason given)
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: layers/journal/GLOSSARY.md
+    reason: (no reason given)
+  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: reviewed the whole diff and the follow-up commit on two axes
+  - name: dispatch-subagents
+    reason: briefed four read-only reviewers
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran git fetch origin main before reading docs/agents/git-conventions.md, which CLAUDE.md requires before the first non-read-only git command; the doc said to fetch, so no harm.
+    solution: Fire the git-conventions hint before the first fetch, not after it.
+    severity: nit
+  - description: The ADRs governing files I edited (session schema, ADR-0009 text, the log-session Skill, a Journal comment) were read only after each edit, when the hook asked; the edits stood.
+    solution: Show the read-first hint on the first read of a governed file, so the ADR is read before the first edit.
+    severity: minor
+  - description: Ran pnpm typecheck in the foreground twice instead of in the background, though CLAUDE.md says to background anything that can take over two minutes.
+    solution: List pnpm typecheck beside the gate and build in CLAUDE.md's background-run line.
+    severity: nit
+  - description: "My first split analysis read each log twice, since readSessionLogs with archived: true already includes the current logs, which doubled every count; I noticed when coverage read 244 against 122."
+    solution: Rename the option includeArchived and say in its doc comment that it adds to current logs, not replaces them.
+    severity: minor
+  - description: "Asking nine sessions through send_message cost extra rounds: each rightly treated my message as peer data and asked the owner before posting to GitHub or messaging its subagents."
+    solution: Let the owner pre-authorise a survey in one message the receiving sessions can verify, or broadcast it to them directly.
+    severity: minor
+  - description: I tallied and relayed about fifteen sets of self-reported counts by hand; each was marked unverified, but one figure (sessions with a passing backed) was wrong and had to be corrected.
+    solution: Have sessions post structured counts and sum them with a script, not by hand in the reply.
+    severity: minor
+  - description: Did not check that the commit trailer landed on my third commit, which ADR-0017 asks for; the first two were checked and my message carried the trailer.
+    solution: Have the commit-msg hook or a Stop check report a missing Claude-Session trailer.
+    severity: nit
+  - description: After fast-forwarding to origin/main the Stop hook counted five session-log commits from main as unpushed; pushing my branch cleared it though none of the work was mine.
+    solution: Count only commits in origin/main..HEAD, as git-conventions.md already says to do by hand.
+    severity: nit
+  - description: A worker restart delayed nine queued session notifications by about an hour and a half, so replies to draft 6 arrived long after I had moved on to draft 7.
+    solution: Deliver or flag queued notifications on resume so a restart does not reorder a multi-round survey.
+    severity: minor
+  - description: "The first session to rate with the new values cannot land its own log: main's schema rejects them until a human merges the schema PR, and this session may end first."
+    solution: Land a schema widening ahead of the prompt that offers its values, or let the landing script hold the log across sessions.
+    severity: minor
+  - description: My drafts 4 and 5 listed unrelated ahead of late, and I first agreed with a session that late could never win; the owner pointed out that late is not unrelated, which cost a round.
+    solution: Test a draft value order on two concrete rules before sending it, and check that each pair of values is disjoint, not only listed in order.
+    severity: minor
+durationSec: 11872
+models:
+  claude-sonnet-5-5: 582
+  <synthetic>: 3
+toolCounts:
+  Read: 32
+  ToolSearch: 3
+  mcp__github__issue_read: 8
+  Bash: 51
+  Edit: 48
+  Write: 5
+  mcp__github__add_issue_comment: 4
+  AskUserQuestion: 2
+  mcp__claude-code-remote__list_sessions: 2
+  mcp__claude-code-remote__send_message: 85
+  ReadNotifications: 45
+  Grep: 10
+  Skill: 6
+  Agent: 4
+  mcp__github__issue_write: 2
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 3
+  Glob: 1
+  mcp__claude-code-remote__send_later: 1
+  mcp__claude-code-remote__delete_trigger: 1
+filesEdited:
+  - scripts/session/rule-use-report.ts
+  - tests/unit/rule-use-report.spec.ts
+  - shared/schemas/session.ts
+  - scripts/session/transcript-trace.ts
+  - scripts/session/rule-use.ts
+  - scripts/hooks/rule-use-ask.ts
+  - scripts/session/log-session.ts
+  - tests/unit/rule-use.spec.ts
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - layers/journal/app/utils/dashboard.ts
+  - .agents/skills/log-session/SKILL.md
+  - .claude/rules/adr-0009.md
+  - docs/agents/guards.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/40.session-logs.md
+  - tests/unit/log-session.spec.ts
+  - tests/unit/rule-use-ask.spec.ts
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0008.md
+adrHints:
+  - adr: 4
+    via: path
+    readAfter: true
+    by: main
+  - adr: 25
+    via: path
+    readAfter: true
+    by: main
+  - adr: 27
+    via: path
+    readAfter: true
+    by: main
+  - adr: 30
+    via: path
+    readAfter: true
+    by: main
+  - adr: 5
+    via: path
+    readAfter: true
+    by: main
+  - adr: 29
+    via: path
+    readAfter: true
+    by: main
+  - adr: 8
+    via: path
+    readAfter: true
+    by: main
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/github-integration.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/github-integration.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: docs/adr/0009-session-logs-commit-directly-to-main.md
+      - rule: .claude/rules/adr-0030.md
+        via: native
+        trigger: docs/adr/0009-session-logs-commit-directly-to-main.md
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/journal/GLOSSARY.md
+      - rule: .claude/rules/guards.md
+        via: native
+        trigger: scripts/hooks/rule-use-ask.ts
+      - rule: .claude/rules/data-shapes.md
+        via: native
+        trigger: shared/schemas/session.ts
+      - rule: .claude/rules/adr-0025.md
+        via: native
+        trigger: shared/schemas/session.ts
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/log-session/SKILL.md
+      - rule: .claude/rules/adr-0022.md
+        via: native
+        trigger: docs/agents/triage-labels.md
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/journal/GLOSSARY.md
+      - rule: .claude/rules/adr-0008.md
+        via: native
+        trigger: layers/journal/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/journal/GLOSSARY.md
+      - rule: .claude/rules/tenant-layers.md
+        via: native
+        trigger: layers/journal/app/utils/dashboard.ts
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: second review on the follow-up commit
+      - path: .claude/rules/adr-0009.md
+        value: confirmed
+        why: "agreed: schema only widens, no log rewritten"
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: opened the PR unasked
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: header on every GitHub body
+      - path: .claude/rules/adr-0027.md
+        value: confirmed
+        why: "agreed: no open trial covers the edited files"
+      - path: .claude/rules/adr-0029.md
+        value: duplicate
+        why: "hook: gate validate-adr-rules stamp"
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: confirmed
+        why: "agreed: schema paths need a human merge"
+      - path: .claude/rules/adr-0030.md
+        value: confirmed
+        why: "agreed: rewrote one sentence in place, no history"
+      - path: .claude/rules/glassbox-content.md
+        value: in-scope
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: steered
+        why: read Journal glossary before the edit
+      - path: .claude/rules/guards.md
+        value: in-scope
+      - path: .claude/rules/data-shapes.md
+        value: steered
+        why: asked the shape question first
+      - path: .claude/rules/adr-0025.md
+        value: confirmed
+        why: "agreed: enum widening leaves Timeline reads alone"
+      - path: .claude/rules/adr-0005.md
+        value: missed
+        why: "late: its read demand came after the Skill edit"
+      - path: .claude/rules/adr-0022.md
+        value: unrelated
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/adr-0008.md
+        value: missed
+        why: "late: its read demand came after the Journal edit"
+      - path: .claude/rules/glossary-terms.md
+        value: unrelated
+      - path: .claude/rules/tenant-layers.md
+        value: in-scope
+      - path: docs/agents/github-integration.md
+      - path: docs/agents/git-conventions.md
+      - path: docs/agents/issue-tracker.md
+      - path: docs/agents/triage-labels.md
+      - path: docs/agents/pr-workflow.md
+      - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+      - path: layers/journal/GLOSSARY.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0009.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0030.md
+        value: steered
+      - path: .claude/rules/adr-0029.md
+        value: in-scope
+      - path: .claude/rules/data-shapes.md
+        value: steered
+        why: (no load recorded)
+      - path: .claude/rules/glassbox-content.md
+        value: steered
+        why: (no load recorded)
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: CLAUDE.md
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: in-scope
+      - path: .claude/rules/adr-0009.md
+        value: in-scope
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 3
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+subagents:
+  - type: general-purpose
+    task: Standards review of rule-use change
+    durationSec: 30
+    toolCalls: 8
+    modelCalls: 6
+    tokenShare: 1.2
+  - type: general-purpose
+    task: Spec review of rule-use change
+    durationSec: 51
+    toolCalls: 12
+    modelCalls: 7
+    tokenShare: 1.5
+  - type: general-purpose
+    task: Standards review of follow-up commit
+    durationSec: 15
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 0.9
+  - type: general-purpose
+    task: Spec review of follow-up commit
+    durationSec: 14
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 0.9
+gitBranch: ccr-1b27f968-t6xz6p
+entrypoint: remote_mobile
+cliVersion: 2.1.325
+learnings:
+  - A rule's paths say why it loaded, but only its text says what it governs; judged by paths, every path-matched load counts as in-scope and says nothing about whether the paths are too wide.
+  - Sessions re-rated their old backed entries as duplicate, checked or unrelated in 23 of 26 pairs in one session, which suggests the old value was inflated; re-rating from memory with the new definitions in view may bias that (unverified).
+ideas:
+  - Derive the late word mechanically by comparing each rule's ledger load time with the first edit of a file it governs, so agents never have to guess the order, which several could not.
+  - Print each rule's governs line from one derived source (title plus first sentence) instead of the hand-kept table of eleven lines in scripts/session/rule-use.ts, so it cannot drift from the rule.
+landedBy: Stop
