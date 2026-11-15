@@ -1,0 +1,19 @@
+session: session_013zxzePak78Sud7pyRQMjeV
+mode: interactive
+focus: "Pull requests: the memory page's wording lead that the page leans on a
+  bare 'Session logs follows it there' pointer. Chosen on the owner's word 'you
+  pick, repeat until budget is hit'; it is a one-clause fix with no new claim.
+  The new clause restates what the Session logs page teaches (its Why bullets
+  Straight to main and A script takes the facts; its In Terrarium on the Stop
+  hook landing). Deviations for the budget: only the one sentence and its page
+  were read, no writer, claim checker, fresh reader or code-review (the lead
+  read the full diff). Cost per get_session at the start of this run: 351k
+  context tokens, cost_usd 9.11. The budget (500k tokens) leaves room for no
+  further full run after this one."
+changes:
+  - git-github/10.pull-requests | The pointer to Session logs now says what that
+    page covers (why a log skips the PR and how it reaches main) and links its
+    Why section | the bare pointer told a reader nothing about why to follow
+    it. Wording only, so revision and publishedAt are kept
+  - workshop/pages/index | the bare-pointer lead deleted | done
+pagesRead: []
