@@ -33,7 +33,7 @@ import { tmpdir } from 'node:os'
 import { basename, dirname, join, resolve } from 'node:path'
 import { parse as parseYaml, stringify as stringifyYaml } from 'yaml'
 import { z } from 'zod'
-import { reportedEntry, reportedEntryHasItsValue } from '../../shared/schemas/session.ts'
+import { REPORTED_MESSAGE, reportedEntry, reportedEntryHasItsValue, reportedEntryHasItsWord } from '../../shared/schemas/session.ts'
 import { sessionUrl } from '../../shared/session-url.ts'
 import { fetchOriginMain, git, SESSION_TRAILER, tryGit } from '../lib/git.ts'
 import { parseWorktreeList, runSweep, type Finding, type SweepResult } from '../git/check-worktrees.ts'
@@ -63,7 +63,7 @@ import {
 } from './transcript-trace.ts'
 import { isInstructionDoc, type DocLineIndex } from './shell-reads.ts'
 import { fail, flagValue, root, runIfMain } from '../lib/cli.ts'
-import { readRuleLoads, ruleUseAsk, type RuleLoadRow } from './rule-use.ts'
+import { governsLine, readRuleLoads, ruleUseAsk, type RuleLoadRow } from './rule-use.ts'
 
 /** The `schemaVersion` newly authored logs should carry; evolution policy: ADR-0009. */
 export const CURRENT_SESSIONS_SCHEMA_VERSION = 1
@@ -94,9 +94,11 @@ const authoredScratchSchema = z
     skillsUsed: z.array(z.object({ name: z.string(), reason: z.string() })).optional(),
     // Required like `frictions`: [] means nothing to report, absent means skipped (#3009).
     reported: z.array(
-      reportedEntry.strict().refine(reportedEntryHasItsValue, {
-        message: 'a .claude/rules/ path needs a value (steered | backed); any other path takes none',
-      }),
+      reportedEntry
+        .strict()
+        .refine(reportedEntryHasItsValue, { message: REPORTED_MESSAGE })
+        .refine(reportedEntryHasItsWord, { message: REPORTED_MESSAGE })
+        .refine((e) => e.value !== 'backed', { message: 'backed is the old value; use one of the six (see log-session --pending)' }),
     ),
     frictions: z.array(
       z.object({
@@ -119,8 +121,8 @@ const DERIVED_ONLY_FIELDS: Record<string, string> = {
   adrHints: 'derived from the adr-read-hint pointers in the transcript.',
   docsReadViaShell: 'shell reads fold into docsRead, which is derived; list a doc that helped in reported.',
   docsRead: 'derived from the transcript; list a doc that helped in reported (#3009).',
-  helped: 'renamed to reported: give each rule a value, steered | backed (#3009).',
-  ruleVerdicts: 'replaced by reported: list the rules that steered or backed you and the docs that helped (#3009).',
+  helped: 'renamed to reported: give each rule a value (see log-session --pending) (#3009).',
+  ruleVerdicts: 'replaced by reported: give each loaded rule a value and list the docs that helped (#3009).',
 }
 
 export function validateAuthored(
@@ -837,7 +839,12 @@ export function reportReads(ctx: AuthorContext | undefined, log: (line: string) 
     .filter((p) => isInstructionDoc(p) && !p.startsWith('.claude/rules/') && !bySubagents.has(p))
   if (trace.ruleLoads.length || docs.length) {
     log('')
-    const ask = ruleUseAsk(trace.ruleLoads, 'Fill in `reported`', '{ path: .claude/rules/example-rule.md, value: backed }, { path: docs/example.md }')
+    const ask = ruleUseAsk(
+      trace.ruleLoads,
+      'Fill in `reported`',
+      '{ path: .claude/rules/example-rule.md, value: missed, why: "late: edited before it loaded" }, { path: .claude/rules/other-rule.md, value: steered }, { path: docs/example.md }',
+      governsLine,
+    )
     for (const line of ask) log(line ? `  ${line}` : '')
     if (docs.length) log('  Docs you read:')
     for (const d of docs) log(`    ${d}`)

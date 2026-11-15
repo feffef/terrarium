@@ -59,9 +59,9 @@ summary: >-                        # the fuller narrative — sized to the sessi
 prs: ["42"]                        # work-PR refs (in-review is fine); [] if none
 skillsUsed:                        # transcript-observed Skills you omit are folded in
   - { name: tdd, reason: "test-first the helper (see #99)" }  # (name cross-refs the Skill Inventory)
-reported:                          # REQUIRED (may be []) — the rules that steered or backed what you did, and docs that helped (step 3)
+reported:                          # REQUIRED (may be []) — one value per rule loaded for you, and docs that helped (step 3)
   - { path: .claude/rules/adr-0004.md, value: steered, why: "ran gate:scoped before the PR" }  # why: optional, up to 8 words
-  - { path: .claude/rules/adr-0003.md, value: backed }     # value: rules only, steered | backed
+  - { path: .claude/rules/adr-0003.md, value: duplicate, why: "claude-md: layout line" }  # confirmed, missed, duplicate: why starts with their word and a colon
   - { path: docs/agents/pr-workflow.md }                   # docs take no value
 frictions:                         # REQUIRED (may be []) — list EVERY friction
   - description: …                 # ~20 words, honest
@@ -152,12 +152,12 @@ It validates the interpretive fields and writes `.session-logs/pending.scratch.j
 (gitignored). The hook lands it only if the scratch exists, so authoring it *is*
 your "this session is done" signal.
 
-## 3. Report what steered or backed you
+## 3. Rate the rules loaded for you
 
 `--pending`, and `--author` again, list the rules that loaded for you, those
-loaded at start included, and the instruction docs you read, and say what
-`steered` and `backed` mean. Follow what they print; write `reported: []`
-when nothing applies. A subagent answers for
+loaded at start included, each with what it governs, and the instruction docs
+you read, and say what each value means. Follow what they print; write
+`reported: []` when nothing applies. A subagent answers for
 itself (the SubagentStart note), so don't collect its view.
 
 Every pass is a full scratch with every field the schema requires. Its lists

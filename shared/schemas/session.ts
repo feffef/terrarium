@@ -38,17 +38,36 @@ export type AdrHint = z.infer<typeof adrHint>
 export const ruleLoad = z.object({ rule: z.string(), via: z.enum(['start', 'native', 'hint', 'read']), trigger: z.string().optional() })
 export type RuleLoad = z.infer<typeof ruleLoad>
 // A rule or doc an agent reported. A rule always carries a value, a doc never;
-// what each value means: `ruleUseAsk` in scripts/session/rule-use.ts.
-export const ruleValue = z.enum(['steered', 'backed'])
+// what each value means: `ruleUseAsk` in scripts/session/rule-use.ts. `backed`
+// is the legacy value of logs before the six-value scale; no agent is offered it.
+export const ruleValue = z.enum(['steered', 'confirmed', 'unrelated', 'missed', 'duplicate', 'in-scope', 'backed'])
 export type RuleValue = z.infer<typeof ruleValue>
+/** The fixed first words of `why` for the values that need one, so reports can
+ *  count why a rule was confirmed, missed or a duplicate. */
+export const valueWords = {
+  confirmed: ['agreed', 'n/a'],
+  missed: ['late', 'skipped'],
+  duplicate: ['brief', 'claude-md', 'skill', 'hook', 'habit', 'other'],
+} as const satisfies Partial<Record<RuleValue, readonly string[]>>
+/** Set on a reported rule no agent loaded: it precedes the rest of the `why`. */
+export const NO_LOAD_WHY = '(no load recorded)'
 export const reportedEntry = z.object({ path: z.string(), value: ruleValue.optional(), why: z.string().optional() })
 export type ReportedEntry = z.infer<typeof reportedEntry>
 /** The one test of whether a reported path is a rule, which alone takes a value. */
 export const isRulePath = (path: string) => path.includes('.claude/rules/')
 export const reportedEntryHasItsValue = (e: ReportedEntry) => isRulePath(e.path) === (e.value !== undefined)
+/** The first word of `why`, past the not-loaded mark, when `value` needs one. */
+export const whyWord = (why = '') => /^([^:\s]+):/.exec(why.startsWith(`${NO_LOAD_WHY} `) ? why.slice(NO_LOAD_WHY.length + 1) : why)?.[1]
+export const reportedEntryHasItsWord = (e: ReportedEntry) => {
+  const words: readonly string[] | undefined = e.value && e.value in valueWords ? valueWords[e.value as keyof typeof valueWords] : undefined
+  return !words || words.includes(whyWord(e.why) ?? '')
+}
+export const REPORTED_MESSAGE =
+  'a rule takes a value (steered | confirmed | unrelated | missed | duplicate | in-scope), a doc none; ' +
+  'confirmed, missed and duplicate need a why that starts with their word and a colon (agreed|n/a, late|skipped, brief|claude-md|skill|hook|habit|other)'
 // Per agent: what loaded, whether it answered the rule-use ask, and the
-// rules and docs it reported. A loaded rule it left out neither steered nor
-// backed anything it did. A subagent has an entry when it was asked, answered
+// rules and docs it reported. A loaded rule it left out has no value, which
+// counts against it. A subagent has an entry when it was asked, answered
 // or loaded a rule; the main agent when it loaded a rule or named something.
 export const ruleUseEntry = z.object({
   by: z.string(), // `main`, or the subagent's agent type (`workflow` when it has none)
@@ -57,7 +76,7 @@ export const ruleUseEntry = z.object({
   subagent: z.number().int().nonnegative().optional(),
   answered: z.boolean(),
   loads: z.array(ruleLoad),
-  reported: z.array(reportedEntry.refine(reportedEntryHasItsValue, { message: 'a rule takes a value (steered | backed), a doc none' })),
+  reported: z.array(reportedEntry.refine(reportedEntryHasItsValue, { message: REPORTED_MESSAGE }).refine(reportedEntryHasItsWord, { message: REPORTED_MESSAGE })),
 })
 export type RuleUseEntry = z.infer<typeof ruleUseEntry>
 

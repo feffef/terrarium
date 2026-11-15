@@ -32,7 +32,7 @@
 //   Prints the derived trace as JSON.
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { basename, dirname, join } from 'node:path'
-import type { AdrHint, ReportedEntry, RuleLoad, RuleUseEntry } from '../../shared/schemas/session.ts'
+import { NO_LOAD_WHY, type AdrHint, type ReportedEntry, type RuleLoad, type RuleUseEntry } from '../../shared/schemas/session.ts'
 import { DERIVED_REASON, FOLDED_TRACE_FIELDS } from '../../shared/trace-fields.ts'
 import {
   buildDocLineIndex,
@@ -946,8 +946,6 @@ function markUnloaded(reported: ReportedEntry[], seen: string[]): ReportedEntry[
     return loaded ? { ...e, path } : { ...e, path, why: e.why ? `${NO_LOAD_WHY} ${e.why}` : NO_LOAD_WHY }
   })
 }
-
-export const NO_LOAD_WHY = '(no load recorded)'
 
 // ── Stitch ────────────────────────────────────────────────────────────────
 

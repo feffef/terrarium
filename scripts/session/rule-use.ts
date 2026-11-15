@@ -7,7 +7,8 @@
 // not a script, so a permission classifier sees a call that does nothing (#3020).
 import { appendFileSync, mkdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { isRulePath, ruleValue, type ReportedEntry, type RuleLoad } from '../../shared/schemas/session.ts'
+import { isRulePath, ruleValue, valueWords, type ReportedEntry, type RuleLoad } from '../../shared/schemas/session.ts'
+import { root } from '../lib/cli.ts'
 import { commandWords } from './shell-reads.ts'
 import { SCRATCH_DIR } from './transcript-trace.ts'
 
@@ -22,21 +23,61 @@ export const SUBAGENT_NOTE =
 // How the hook tells that it already asked this agent.
 export const RULE_USE_ASK_HEAD = 'Rules loaded for you:'
 
+/** What a rule governs, shown beside it where an agent rates, for the rules
+ *  whose `paths` don't say: those with none, and those whose text both
+ *  describes and instructs. Any other rule shows its `paths` (`governsLine`). */
+export const GOVERNS: Record<string, string> = {
+  'adr-0002': 'editing a Tenant manifest; never writing expanded collections by hand',
+  'adr-0003': 'opening, pushing and landing a change as a PR; proposing or building new work',
+  'adr-0004': 'running gate:scoped and code-review before a PR opens, and merging it',
+  'adr-0005': 'creating or changing a Skill, workflow script or Routine',
+  'adr-0009': 'writing and landing your own session log',
+  'adr-0015': 'editing installed Skills, Skill Inventory entries and importance grades',
+  'adr-0017': 'GitHub bodies, commits and other outside writes naming your session; checking the commit trailer landed',
+  'adr-0021': 'adding or editing glossary terms and the glossary map',
+  'adr-0030': 'writing or rewriting an ADR',
+  'mdc-when-to-use': 'putting a Vue component in a Document or adding a data Collection',
+  'tenant-layers': 'writing Tenant layer code: sharing code, naming exports, imports and aliases',
+}
+
+/** The `paths` a rule file lists, `[]` when it has none or cannot be read. */
+function rulePaths(rule: string): string[] {
+  try {
+    const text = readFileSync(join(root, rule), 'utf8')
+    return text.startsWith('---') ? [...(text.split(/^---$/m)[1] ?? '').matchAll(/^\s+- "?([^"\n]+)"?$/gm)].map((m) => m[1]!) : []
+  } catch {
+    return []
+  }
+}
+
+/** The line shown beside a loaded rule: what it governs, else where it loads. */
+export function governsLine(rule: string): string | undefined {
+  const known = GOVERNS[rule.replace(/^\.claude\/rules\//, '').replace(/\.md$/, '')]
+  if (known) return `governs ${known}`
+  const paths = rulePaths(rule)
+  return paths.length ? `loads on ${paths.slice(0, 3).join(', ')}${paths.length > 3 ? `, +${paths.length - 3} more` : ''}` : undefined
+}
+
 /** The one home of what each value means, shown where an agent picks one: the
  *  bare `echo rule-use:` call (subagents) and `log-session --pending` (main). Its
  *  example names must match no real file: a test could not tell an agent
- *  naming a file from one copying the example (#3009). */
-export function ruleUseAsk(loads: RuleLoad[], how: string, example: string): string[] {
+ *  naming a file from one copying the example (#3009). `describe` adds what a
+ *  rule governs beside its name. */
+export function ruleUseAsk(loads: RuleLoad[], how: string, example: string, describe: (rule: string) => string | undefined = () => undefined): string[] {
   return [
     RULE_USE_ASK_HEAD,
-    ...(loads.length ? loads.map((l) => `  ${l.rule}${VIA_NOTES[l.via]}`) : ['  (none)']),
+    ...(loads.length ? loads.map((l) => `  ${l.rule}${VIA_NOTES[l.via]}${describe(l.rule) ? `  [${describe(l.rule)}]` : ''}`) : ['  (none)']),
     '',
-    `${how} and name each of these rules that steered or backed what you did:`,
-    '  steered  you did, avoided or decided something differently because of it.',
-    '  backed   it matched what you were already doing, for whatever reason (your task or another instruction may have said the same).',
-    'A rule you leave out is recorded as neither: it did not steer or back anything you did, and that lowers its share.',
-    'So name only what was true, not to be polite.',
-    'Also name each doc you read that helped, without a value.',
+    `${how} and give each of these rules that loaded during your task ONE value, the first that fits.`,
+    'A rule governs what its own text tells you to do and the thing it describes; its paths only explain why it loaded. A mention in a brief, note or summary does not count.',
+    '  steered    it changed what you did, avoided or decided.',
+    '  confirmed  you checked a specific choice against the rule itself. Word: agreed (it matched your choice) or n/a (it does not apply to what you are doing).',
+    '  unrelated  nothing you did, read or reviewed is something it governs, however it loaded. This includes rules about actions you did not take (PRs, merges, logs, GitHub or git writes).',
+    '  missed     it governs something you changed, reviewed or ran and you did not follow it, or you skipped a step its own text requires. Word: late (it first reached you after that action, never the one that triggered its load) or skipped. Not missed if you were compliant anyway, or your brief waived it.',
+    '  duplicate  you did what it says, but another source or habit said the same, so you did not need it. Word: brief, claude-md, skill, hook, habit or other. Doing the activity your brief assigned counts; reading a file the brief named does not.',
+    '  in-scope   something it governs was in your work (done, read or reviewed), but none of the above applies.',
+    'A value with a word needs it: after a colon in the call, or at the start of `why` followed by a colon in `reported`. A rule you leave out has no value, which lowers its share.',
+    'So name only what was true, not to be polite. Also name each doc you read that helped, without a value.',
     `Example: ${example}`,
   ]
 }
@@ -45,7 +86,7 @@ const VIA_NOTES: Record<RuleLoad['via'], string> = { start: ' (loaded at start)'
 
 export function subagentAsk(loads: RuleLoad[]): string {
   return [
-    ...ruleUseAsk(loads, `Now run ${RULE_USE_CALL} once more`, `${RULE_USE_CALL} rule:example-rule.md=backed doc:docs/example.md`),
+    ...ruleUseAsk(loads, `Now run ${RULE_USE_CALL} once more`, `${RULE_USE_CALL} rule:example-rule.md=missed:late rule:other-rule.md=steered doc:docs/example.md`, governsLine),
     `If none applies, run ${RULE_USE_CALL} again with no names.`,
   ].join('\n')
 }
@@ -109,10 +150,15 @@ const isRedirect = (token = '') => /^\d*&?[<>]+&?$/.test(token)
 // A bare fd number is what an unspaced `2>err` or `2>&1` leaves.
 const isNoName = (token: string) => !token || /^\d+$/.test(token) || token.startsWith('-') || token.toLowerCase() === 'none' || /^(rule|doc):$/.test(token)
 
+/** The values an agent may still report: `backed` only reads in old logs. */
+const OFFERED = ruleValue.options.filter((v) => v !== 'backed')
+const DOC_VALUE = new RegExp(`=(${ruleValue.options.join('|')})(:\\S*)?$`, 'i')
+
 /** What the last `echo rule-use:` call among `commands` reported, normalised:
- *  `rule:x=backed` becomes `.claude/rules/x.md` with its value, `doc:x` the
- *  repo-relative path. A rule with no known value is left out, since a rule
- *  entry always has one (`unvalued` lists it); a doc's value is dropped.
+ *  `rule:x=missed:late` becomes `.claude/rules/x.md` with its value and a `why`
+ *  that starts with its word, `doc:x` the repo-relative path. A rule with no
+ *  offered value, or a value that needs a word and has none, is left out, since
+ *  a rule entry always has them (`unvalued` lists it); a doc's value is dropped.
  *  `undefined` when no call was made; `entries` is `[]` for a bare call. */
 export function ruleUseCall(commands: string[], rel: (p: string) => string): { entries: ReportedEntry[]; unvalued: string[] } | undefined {
   const callsIn = (command: string): string[][] => commandWords(command).flatMap((words) => {
@@ -134,17 +180,21 @@ export function ruleUseCall(commands: string[], rel: (p: string) => string): { e
   for (const t of names) {
     if (!t.startsWith('rule:') && !isRulePath(t)) {
       // A doc takes no value: drop one given anyway, but keep any other `=` as path.
-      const path = rel(t.replace(/^doc:/, '').replace(/=(steered|backed)$/i, ''))
+      const path = rel(t.replace(/^doc:/, '').replace(DOC_VALUE, ''))
       if (path) entries.set(path, { path })
       continue
     }
     const eq = t.lastIndexOf('=')
     const name = (eq === -1 ? t : t.slice(0, eq)).replace(/^rule:/, '').replace(/=+$/, '')
     if (!name) continue
-    named.add(ruleName(name))
-    const raw = eq === -1 ? '' : t.slice(eq + 1).toLowerCase()
-    const value = ruleValue.safeParse(raw).data ?? entries.get(ruleName(name))?.value
-    if (value) entries.set(ruleName(name), { path: ruleName(name), value })
+    const key = ruleName(name)
+    named.add(key)
+    const [raw = '', rawWord = '', ...detail] = (eq === -1 ? '' : t.slice(eq + 1)).toLowerCase().split(':')
+    const value = OFFERED.find((v) => v === raw)
+    if (!value) continue
+    const words: readonly string[] | undefined = value in valueWords ? valueWords[value as keyof typeof valueWords] : undefined
+    if (!words) entries.set(key, { path: key, value })
+    else if (words.includes(rawWord)) entries.set(key, { path: key, value, why: `${rawWord}:${detail.length ? ` ${detail.join(':')}` : ''}` })
   }
   return { entries: [...entries.values()], unvalued: [...named].filter((r) => !entries.has(r)) }
 }
