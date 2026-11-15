@@ -71,10 +71,10 @@ export interface SessionCardView {
 }
 
 // One rule row of a `ruleUse` log's card (#3020). `hover` holds the path and
-// how the rule loaded; `whys` are the agents' reasons, a subagent's prefixed
-// with its task.
-interface RuleUseRowBase { path: string; title?: string; alwaysLoaded: boolean; hover: string; whys: string[] }
-export interface RuleUseMainRow extends RuleUseRowBase { followedUp: boolean; value?: RuleValue }
+// how the rule loaded; `whys` are the main agent's reasons; a subagent's
+// reasons sit in the hover of the value segment it rated.
+interface RuleUseRowBase { path: string; title?: string; alwaysLoaded: boolean; hover: string }
+export interface RuleUseMainRow extends RuleUseRowBase { followedUp: boolean; value?: RuleValue; whys: string[] }
 // `percent` is over the subagents that loaded the rule and answered.
 export interface RuleUseSubagentRow extends RuleUseRowBase { loadedBy: number; values: { value: RuleValue; n: number; percent: number; hover: string }[] }
 export interface RuleUseView {

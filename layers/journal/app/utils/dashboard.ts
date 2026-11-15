@@ -374,14 +374,14 @@ export function sessionRuleUseView(s: SessionDoc, ruleTitles: Record<string, str
           loadedBy: loaders.length,
           values: ruleValue.options.map((value) => {
             const n = answering.filter((e) => valueOf(e) === value).length
+            const whys = [...new Set(reports.filter(({ r }) => r.value === value).flatMap(({ r, task }) => (r.why ? [withTask(r.why, task)] : [])))]
             return {
               value,
               n,
               percent: percent(n, answering.length),
-              hover: `${n} of ${answering.length} answering subagents that loaded${namedUnloaded.length ? ' or named' : ''} it named it ${value}; ${unnamed} didn't name it`,
+              hover: [`${n} of ${answering.length} answering subagents that loaded${namedUnloaded.length ? ' or named' : ''} it rated it ${value}${unnamed ? `; ${unnamed} gave no value` : ''}`, ...whys].join('\n'),
             }
           }).filter((v) => v.n > 0),
-          whys: [...new Set(reports.flatMap(({ r, task }) => (r.why ? [withTask(r.why, task)] : [])))],
         }
       })),
     },
