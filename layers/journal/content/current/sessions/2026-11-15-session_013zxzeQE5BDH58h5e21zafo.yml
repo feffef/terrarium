@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQE5BDH58h5e21zafo
 startedAt: 2026-11-15T04:02:45Z
-endedAt: 2026-11-15T04:09:36Z
+endedAt: 2026-11-15T04:10:22Z
 kind: autonomous
 goal: Scheduled audit of the repo's agent-facing docs
-status: in-review
-outcome: Sweep PR 3331 open with three confirmed fixes, gate green, awaiting CI then merge
-summary: "Scheduled audit-docs run; no human prompted any step (all agent-initiated). Three read-only reviewers returned 9 findings (Freshness 0, Single-home 5, Coherence 4). One checker gave 0 CONFIRMED, 3 CONFIRMED-BUT (B1, C1, C3) and 6 WRONG (B2 explicit area-label list is deliberate, B3 too large to move automatically, B4 inside an open prune trial, B5 names a real helper, C2 already settled by bullet order, C4 restates CLAUDE.md). The checker also caught that the reviewer's C1 replacement inverted the intent: history (commits 50fca7b02, 2be2c4622) shows clear-backlog once said \"combined set\". Sweep PR 3331 (two commits; code-review Spec clean, Standards only line wrap, fixed in the second commit; gate:scoped green) makes that fix, points clear-backlog's gate cap at dispatch-subagents section 3, and states glassbox-curate's token budget when get_session is missing. No escalation PR (no Human-only path touched), no issue filed. I did not yet merge: waiting on CI, then merge-pr.ts. Agent A read little (22s) and the other two were partial, so the next run should cover what they skipped. Covered (Agents B and C read in full): docs/agents/{guards,github-integration,triage-labels,verifying-ui-changes}.md, .claude/rules/{ui-verification,tenant-layers}.md, Skills visitor-loop auto-triage dispatch-subagents harvest digest midden-survey glassbox-update audit-docs audit-skills blog-post glassbox-lesson."
+status: completed
+outcome: Sweep PR 3331 merged with three confirmed doc fixes; no escalation needed
+summary: "Scheduled audit-docs run; no human prompted any step (all agent-initiated). Three read-only reviewers returned 9 findings (Freshness 0, Single-home 5, Coherence 4). One checker gave 0 CONFIRMED, 3 CONFIRMED-BUT (B1, C1, C3) and 6 WRONG (B2 explicit area-label list is deliberate, B3 too large to move automatically, B4 inside an open prune trial, B5 names a real helper, C2 already settled by bullet order, C4 restates CLAUDE.md). The checker also caught that the reviewer's C1 replacement inverted the intent: history (commits 50fca7b02, 2be2c4622) shows clear-backlog once said \"combined set\". Sweep PR 3331 (two commits; code-review Spec clean, Standards only line wrap, fixed in the second commit; gate:scoped green) makes that fix, points clear-backlog's gate cap at dispatch-subagents section 3, and states glassbox-curate's token budget when get_session is missing. No escalation PR (no Human-only path touched), no issue filed. Merged via merge-pr.ts on green (merge commit 4e82e85bd). Agent A read little (22s) and the other two were partial, so the next run should cover what they skipped. Covered (Agents B and C read in full): docs/agents/{guards,github-integration,triage-labels,verifying-ui-changes}.md, .claude/rules/{ui-verification,tenant-layers}.md, Skills visitor-loop auto-triage dispatch-subagents harvest digest midden-survey glassbox-update audit-docs audit-skills blog-post glassbox-lesson."
 prs:
   - "3331"
 docsRead:
@@ -82,12 +82,12 @@ frictions:
   - description: I first posted wrong finding counts (10 findings, 1 CONFIRMED) in the PR body and verdict comment, counted from memory; I recounted and corrected both.
     solution: Count verdicts from the checker's table before writing the body (CLAUDE.md Verify before you state).
     severity: minor
-durationSec: 411
+durationSec: 457
 models:
-  claude-sonnet-5-5: 82
+  claude-sonnet-5-5: 89
 toolCounts:
-  Bash: 26
-  Skill: 4
+  Bash: 29
+  Skill: 5
   Agent: 6
   Edit: 3
   mcp__github__create_pull_request: 1
@@ -95,6 +95,7 @@ toolCounts:
   mcp__github__add_issue_comment: 1
   mcp__github__update_pull_request: 1
   mcp__github__update_issue_comment: 1
+  ReadNotifications: 1
 filesEdited:
   - .agents/skills/clear-backlog/SKILL.md
   - .agents/skills/glassbox-curate/SKILL.md
@@ -418,37 +419,37 @@ subagents:
     durationSec: 22
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 7
+    tokenShare: 6.6
   - type: general-purpose
     task: "Audit docs: Single-home"
     durationSec: 103
     toolCalls: 26
     modelCalls: 25
-    tokenShare: 24.5
+    tokenShare: 23.2
   - type: general-purpose
     task: "Audit docs: Coherence"
     durationSec: 91
     toolCalls: 35
     modelCalls: 16
-    tokenShare: 16.5
+    tokenShare: 15.7
   - type: general-purpose
     task: Fact-check audit findings
     durationSec: 75
     toolCalls: 17
     modelCalls: 16
-    tokenShare: 8.8
+    tokenShare: 8.4
   - type: general-purpose
     task: "Review: Standards axis"
     durationSec: 18
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 2.6
+    tokenShare: 2.5
   - type: general-purpose
     task: "Review: Spec axis"
     durationSec: 10
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 2
+    tokenShare: 1.9
 gitBranch: claude/festive-mayer-gwqu7o
 entrypoint: remote_trigger
 cliVersion: 2.1.325
