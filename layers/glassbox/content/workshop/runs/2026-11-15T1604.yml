@@ -9,10 +9,11 @@ focus: "Workflow scripts: the explore script's new optional uncommented flag
   or the whole guide index again (nothing but the Skill inventory page changed
   since the last orientation); an opus writer wrote the paragraph with sources
   and the lead re-checked each claim against the Skill, the script and
-  run-summary.ts; no claim checker, no fresh reader, and no code-review (my own
-  read of a one-paragraph diff, though it touches three files, so it is over
-  the simple-change bar of pr-workflow.md by file count). The Scout of the
-  earlier run found nothing else here. Cost per get_session at the start of
+  run-summary.ts; no claim checker and no fresh reader; one sonnet reviewer did both
+  the Standards and Spec axes and found nothing to fix. It named the bug-report
+  walkthrough and Issue triage labels as overlapping; only their lines naming the
+  explore script and uncommented were read, and neither contradicts the new
+  paragraph. Cost per get_session at the start of
   this run: 271k context tokens, cost_usd 4.22."
 changes:
   - agents/20.workflow-scripts | One paragraph after the explore excerpt: the
