@@ -11,7 +11,7 @@ role: >-
 auditSummary:
   date: "2026-11-15"
   text: >-
-    Seven runs delivered. It reads the whole issue list each time, costing up to about 90k tokens.
+    Its Seedlings were built and closed, so it does its job. It is costly, reading the whole issue list every run, and reads git and GitHub docs late. Recently introduced.
 observations:
   - date: "2026-11-13"
     note: >-

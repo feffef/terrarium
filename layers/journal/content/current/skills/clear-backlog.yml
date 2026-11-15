@@ -12,7 +12,7 @@ role: >-
 auditSummary:
   date: "2026-11-15"
   text: >-
-    Ran 10 times and 40 of 41 PRs landed. Leftover helper checkouts and a skipped wrap-up after merging keep recurring.
+    Clears the backlog and lands PRs. Persistent gaps: it leaves helper worktrees behind, skips the wrap-up log step after merging, and hand-edits branches without re-running the checks.
 observations:
   - date: "2026-10-13"
     note: >-

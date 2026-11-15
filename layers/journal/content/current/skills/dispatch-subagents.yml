@@ -10,7 +10,7 @@ role: >-
 auditSummary:
   date: "2026-11-15"
   text: >-
-    Ran in 10 sessions and 15 PRs merged. Leads still sometimes accepted a helper agent's report without checking it.
+    Mostly keeps helper work from being lost, and early collisions were fixed. Recurring weak spots: leads accept helper reports unchecked, briefs omit required asks, and parallel git use can clash.
 observations:
   - date: "2026-10-06"
     note: >-

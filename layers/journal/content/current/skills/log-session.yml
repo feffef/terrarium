@@ -11,7 +11,7 @@ role: >-
 auditSummary:
   date: "2026-11-14"
   text: >-
-    All 10 runs landed their log. The old problem of incomplete rule answers has not come back.
+    Reliably produces honest, complete logs. A long-running gap in rule answers was fixed in mid-November by the rule-use field.
 observations:
   - date: "2026-10-06"
     note: >-

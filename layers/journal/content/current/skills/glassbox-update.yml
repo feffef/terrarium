@@ -10,7 +10,7 @@ role: >-
 auditSummary:
   date: "2026-11-15"
   text: >-
-    Ran 8 times and 8 PRs merged. Some pages were marked checked after only a partial check.
+    Keeps pages pinned to the code and its PRs merge, but its review is weak: it self-reads huge re-pin diffs, marks partly checked pages as checked, and its pin script leaves some excerpts stale.
 observations:
   - date: "2026-10-16"
     note: >-
