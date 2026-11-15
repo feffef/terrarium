@@ -9,15 +9,6 @@ role: >-
   against the PRs' diffs, and merges its own gated PR on green. Scheduled; run
   by hand to catch up.
 observations:
-  - date: "2026-10-05"
-    note: >-
-      Re-verified, newest session_011L5Vf6kXGJ1jQTwrKjFTTL (PR #1607, the
-      2026-10-04 Digest): genuine fact-check dispatch (17 claims checked,
-      3 fixed), every spot-checked claim (post-count, SKILL.md line-count
-      rewrite, several PR titles) confirmed accurate against primary
-      sources, retention sweep moved exactly 1 digest + 15 session logs
-      per `RETAIN_DATES = 7`. No reverts of digest content found. Grade
-      unchanged.
   - date: "2026-10-06"
     note: >-
       Re-verified, 7 usedIn sessions. The one digest.ts change this window
@@ -303,3 +294,6 @@ observations:
   - date: "2026-11-14"
     note: >-
       Behaviour check, 7 runs delivered, no revert. Cadence words: 8bb55ab8c (#3251) now requires a source and the 11-14 run dropped an unsourced one; #3228 tracks it. Unverified: 'meant to run weekly' in the 11-11 Digest (line 8). Dispatch-read guard blocked the first Agent call in 5 of 7 logs; step 3 still does not name dispatch-subagents. Grade unchanged.
+  - date: "2026-11-15"
+    note: >-
+      Behaviour check, 7 runs, 7 PRs merged. Cadence words still on main in digests 2026-11-09 and 2026-11-11 (the latter sourced only to a PR title); #3251 landed 11-13, so only the 11-14 and 11-15 runs ran under it (#3228 closed). Unverified for 2026-11-14. Grade unchanged.

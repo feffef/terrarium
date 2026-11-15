@@ -167,3 +167,6 @@ observations:
   - date: "2026-11-14"
     note: >-
       Behaviour check, 9 runs delivered, no revert. Issue #3294: step 4's whole-page re-check against step 5's needsReader scoping, now n=3 (session_013zxzePP7cbXFfoqEXbKwKW, session_013zxzeNbirdJSVYjNLe6nsJ, session_013zxzePSF8TMPrem83fkCmA). Repeat: session_013zxzePSj9Rpf6qCGowU7gi stamped two partly-checked pages. Step 3 'every commit read' still met by grep (session_013zxzeShUkKqUQT1kYCw5UK). Grade unchanged.
+  - date: "2026-11-15"
+    note: >-
+      Behaviour check, 8 runs, 8 PRs merged. Repeats, all tracked: pages stamped checked after a partial check (session_013zxzePSj9Rpf6qCGowU7gi, PR #3030); step 4 vs 5 scope fixed by 4767f3755, untested by a later run; code-review replaced by own read on large re-pin PRs (#2472). Grade unchanged.

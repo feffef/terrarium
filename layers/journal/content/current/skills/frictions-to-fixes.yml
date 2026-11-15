@@ -9,19 +9,6 @@ role: >-
   impl agents build the rest, and merges those PRs itself, escalating only
   high-risk ones. Use when frictions pile up.
 observations:
-  - date: "2026-10-05"
-    note: >-
-      Freshly verified session_01RW5WnnVvnyuUbrqVZvdZNc (PR #1588) and
-      session_01NRVHQoPm4cP1F7iVUvh9rJ (PR #1601) via `pull_request_read`
-      directly: both clean, audit-trace review verdict strictly precedes
-      gate-green and merge in each, no guard-roster file touched, one
-      guard-adjacent item correctly left filed-only in each. Side note,
-      out of this Skill's own scope: session_01NRVHQoPm4cP1F7iVUvh9rJ's own
-      log flags a blocker — three of its commits carry a Claude-Session
-      trailer naming a different session
-      (session_016RHjBGGBWx1EUSJbEjRR15) — a session-identity/commit-trailer
-      issue, not a frictions-to-fixes defect; left for that session's own
-      friction survey to pick up. Grade unchanged.
   - date: "2026-10-06"
     note: >-
       Re-checked (audit-skills behaviour check), 8 usedIn sessions
@@ -319,3 +306,6 @@ observations:
   - date: "2026-11-14"
     note: >-
       Behaviour check, 9 runs delivered (5 newest verified on GitHub), no revert. Repeat: section 2 top-three rule overridden by judgement again (session_013zxzeNdAgdKF5tpWTQLowx skipped an entry whose issue #3124 had closed). Section 5.4 simple-change review cannot work for the 92-file ledger PR; section 5.3 sets tracked with no ref against the schema comment. SKILL.md was rewritten 4 times this week, so briefs may have drifted. Grade unchanged.
+  - date: "2026-11-15"
+    note: >-
+      Behaviour check, 9 runs, 16 PRs merged. Repeat, filed #3326: §2 top-three rule overridden by judgement (session_013zxzeSPxncNsUJXwnc2DvG, session_013zxzeNdAgdKF5tpWTQLowx, session_013zxzeQDRyvj3Vc8GUWHvBv) and §5.3 tracked with no ref. §5.4 ledger PRs always exceed the simple-change bar; runs diverge (#3300 diffstat only, #3237 two reviewers). Grade unchanged.

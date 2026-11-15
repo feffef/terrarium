@@ -9,17 +9,6 @@ role: >-
   the self-judged "invoke at closure" rule fire reliably; its invocation rate is the evidence for ADR-0009's choice
   of a Skill over a reminder hook.
 observations:
-  - date: "2026-10-05"
-    note: >-
-      Re-checked, 10 newest invocations (PRs #1594-#1607): 0/10 stale,
-      every claimed status matched live PR state (`gh api .../pulls/<n>`),
-      all 10 carrying genuine `landedBy: Stop` with a real supporting
-      narrative, not a mislabeled tag. session_01TMgZyrN42pwudxkUdHLKwP
-      re-confirmed stale a 7th consecutive time — still frozen at
-      `in-review` despite #1344 merging back on 2026-09-25, now across
-      60+ sessions checked over seven audits. Remains n=1; structural gap
-      stays an observation per this Skill's own convention. Grade/role
-      unchanged.
   - date: "2026-10-06"
     note: >-
       Re-checked (audit-skills behaviour check), 10 newest invocations

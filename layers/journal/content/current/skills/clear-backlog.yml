@@ -233,3 +233,6 @@ observations:
   - date: "2026-11-14"
     note: >-
       Behaviour check, 5 of 10 runs read, PRs merged. New, n=1 (log only): session_013zxzeP5Vhec86YSiybqM8g treated silence on grilling questions Q4 and Q12 as acceptance and built; section 2 has no handling for a partial answer. Repeats: close-session re-invoke after merge skipped (session_013zxzePiaeVXJsUcoKh7LFv, session_013zxzeR3mLZWKT2R7LWmtqf); stranded wf_* worktree frictions (session_013zxzeNjAbKXTy5zKs2fg8r, session_013zxzeR3mLZWKT2R7LWmtqf), tracked by #3229. Grade unchanged.
+  - date: "2026-11-15"
+    note: >-
+      Behaviour check, 10 runs, 41 PRs named, 40 landed; owner closed #3253 on design grounds. Verified: §1 comment miss after #3304 (session_013zxzeT3bxsaccpcz9P65Ra, #3320 has no comment): filed #3325. Repeats: picks relayed unverified (session_013zxzeT6JgNuWiqXaqyMFpF, session_013zxzeT5pQrVtuNLAzUQRaP); relabel skipped until merge-pr refused; close-session after merge skipped (#2654 family); wf_* worktrees (#3229). Grade unchanged.

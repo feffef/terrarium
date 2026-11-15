@@ -15,3 +15,6 @@ observations:
   - date: "2026-11-14"
     note: >-
       Behaviour check, 6 runs delivered; Seedlings exist on GitHub. Repeat n=5 of 6, minor: git and GitHub read before git-conventions.md and github-integration.md; step 3 names neither. 9 of the fetched Seedlings were closed not planned (the share is unverified). Whole-list read costs 33k to 90k tokens in 3 runs. Grade unchanged.
+  - date: "2026-11-15"
+    note: >-
+      Behaviour check, 7 runs delivered (Seedlings exist on GitHub). Repeat n>=7: git and GitHub docs read late; whole-list read costs 33k to 90k tokens. One scheduled run so far (session_013zxzeNxZVrKu9whNTs4pnR, 11-14); not enough to regrade to routine. Grade unchanged.
