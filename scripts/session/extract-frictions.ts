@@ -166,7 +166,8 @@ export function toTriageSession(raw: Record<string, unknown>, file: string): Tri
     trigger: String(raw.trigger ?? ''),
     prs: prs.map((p) => String(p)),
     docsRead: collapseSessionLogReads(docsRead),
-    subagents: subagents.map((s: Record<string, unknown>) => {
+    // A denied dispatch never ran: counting it would overstate the subagents.
+    subagents: subagents.filter((s: Record<string, unknown>) => s.denied !== true).map((s: Record<string, unknown>) => {
       const ref: SubagentRef = {}
       if (typeof s.type === 'string') ref.type = s.type
       if (typeof s.task === 'string') ref.task = s.task

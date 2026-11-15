@@ -106,6 +106,10 @@ describe('toTriageSession()', () => {
       frictions: [{ index: 0, description: 'a stale claim', solution: 'fix it', severity: 'minor' }],
     })
   })
+  it('leaves denied dispatches out of the subagents', () => {
+    const raw = { subagents: [{ type: 'general-purpose', task: 'Survey', denied: true }, { type: 'general-purpose', task: 'Survey' }] }
+    expect(toTriageSession(raw, 'f.yml').subagents).toEqual([{ type: 'general-purpose', task: 'Survey' }])
+  })
   it('collapses session-log docsRead entries into one count', () => {
     const dir = 'layers/journal/content/current/sessions/'
     const raw = {
