@@ -8,6 +8,10 @@ role: >-
   blind reader picks the best of three drafts, the winner self-merges as a gated
   PR, and a merged post owes a decision on whether another Persona replies.
   Gives the Terrarium a multi-voice commentary on its own development.
+auditSummary:
+  date: "2026-11-15"
+  text: >-
+    Ran 8 times and 15 posts landed. One run skipped a closing step on an invented limit and fixed it when the owner asked. Several posts named the wrong target in their link-back stub.
 observations:
   - date: "2026-10-06"
     note: >-

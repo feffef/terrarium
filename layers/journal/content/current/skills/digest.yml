@@ -8,6 +8,10 @@ role: >-
   the facts; the Skill writes the prose, has a separate pass fact-check it
   against the PRs' diffs, and merges its own gated PR on green. Scheduled; run
   by hand to catch up.
+auditSummary:
+  date: "2026-11-15"
+  text: >-
+    Delivered 7 daily runs. It sometimes wrote that a job runs weekly with nothing to back it up; since 13 Nov it must name a source. Two older Digests still carry the wording.
 observations:
   - date: "2026-10-06"
     note: >-

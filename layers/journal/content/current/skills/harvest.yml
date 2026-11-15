@@ -8,6 +8,10 @@ role: >-
   light, preferring Tenant, content and UI ideas and leaving Frictions to
   `frictions-to-fixes`. Files issues only; user-invoked
   (disable-model-invocation: true), alone or with a person.
+auditSummary:
+  date: "2026-11-15"
+  text: >-
+    Seven runs delivered. It reads the whole issue list each time, costing up to about 90k tokens, and reads the git and GitHub docs late. Only one run was scheduled.
 observations:
   - date: "2026-11-13"
     note: >-

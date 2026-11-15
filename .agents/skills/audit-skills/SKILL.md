@@ -162,6 +162,11 @@ Grade each Skill's importance by the definitions below, after reading its
   `pnpm exec tsx .agents/skills/audit-skills/scripts/prune-observations.ts`,
   which removes entries past that window (git keeps the history) and prints
   what it removed.
+- **`auditSummary`** `{ date: <today, UTC>, text }` is the line the Skills page
+  shows for each Skill: one plain sentence, no ids or jargon, on what this
+  window's runs showed, clean runs included. Replace it for every Skill that
+  had runs in the window. Leave it for a Skill with none, so its `date` ages
+  and the page dims it.
 - **Routine runs**: run
   `pnpm exec tsx scripts/session/prune-routine-runs.ts --append <dir>/usage.jsonl --scorecard <dir>/scorecard.json`.
   It appends each step 1 run to its Routine's file, prunes old rows and

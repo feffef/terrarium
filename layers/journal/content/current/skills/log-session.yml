@@ -8,6 +8,10 @@ role: >-
   half; a hook derives the rest and lands the log live on `main` (ADR-0009's
   bounded exception). Usually invoked by `close-session`; call it directly only
   to amend a written log.
+auditSummary:
+  date: "2026-11-14"
+  text: >-
+    All 10 runs landed their log. The long-running problem of incomplete rule answers has not come back since the new rule-use field replaced it.
 observations:
   - date: "2026-10-06"
     note: >-

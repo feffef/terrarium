@@ -8,6 +8,10 @@ role: >-
   clarity. It fact-checks each finding, fixes it bravely, and self-merges its
   gated PR on green (ADR-0003/0004), filing an issue only for a factual conflict
   it can't resolve. Use it when docs and code drift apart.
+auditSummary:
+  date: "2026-11-15"
+  text: >-
+    Ran 7 times and 10 PRs merged. Its reviewers sometimes read only a few of the files they were meant to cover, and nothing in the Skill checks that. No damage found.
 observations:
   - date: "2026-10-06"
     note: >-

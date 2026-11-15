@@ -8,6 +8,10 @@ role: >-
   verified bugs as issues and logs ideas and learnings for `harvest`; it
   changes no code and opens no PR. An idea that contradicts a line in
   `decisions.md` is dropped, so rejected ideas stay rejected.
+auditSummary:
+  date: "2026-11-15"
+  text: >-
+    Six runs delivered. A recent instruction cut was followed by a first run that hit a read-first block; one run, so no verdict yet.
 observations:
   - date: "2026-10-06"
     note: >-

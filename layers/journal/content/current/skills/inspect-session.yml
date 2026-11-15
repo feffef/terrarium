@@ -8,6 +8,10 @@ role: >-
   first, then dispatches a subagent to search the raw events so they never
   enter the asking session's context. Essential whenever a session must
   inspect a sibling's history, rare otherwise.
+auditSummary:
+  date: "2026-11-14"
+  text: >-
+    Nine runs delivered. Two gaps found earlier are fixed and have not come back.
 observations:
   - date: "2026-10-20"
     note: >-

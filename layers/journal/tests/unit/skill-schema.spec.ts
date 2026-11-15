@@ -1,6 +1,7 @@
 // A Skill Inventory note must cite a full session id, not a truncated one (issue #2582).
 import { describe, expect, it } from 'vitest'
 import { skillSchema } from '../../tenant.config'
+import { auditIsStale } from '../../app/utils/dashboard'
 
 const skill = (note: string) => ({
   name: 'blog-post',
@@ -21,5 +22,13 @@ describe('skillSchema observation notes', () => {
 
   it('rejects a truncated session id', () => {
     expect(skillSchema.safeParse(skill('Checked session_01Xw7ZN8.. here.')).success).toBe(false)
+  })
+})
+
+describe('auditIsStale', () => {
+  const now = new Date('2026-11-15T12:00:00Z')
+  it('dims a line older than 14 days', () => {
+    expect(auditIsStale('2026-11-01', now)).toBe(true)
+    expect(auditIsStale('2026-11-02', now)).toBe(false)
   })
 })
