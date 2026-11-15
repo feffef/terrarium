@@ -1,7 +1,9 @@
 // Aggregates the session logs' `ruleUse` (#3009) over a window, for a review
 // of which rules earn their load (#3017, #3019).
 //
-// Usage:  tsx scripts/session/rule-use-report.ts --since ISO [--json] [--out PATH]
+// Usage:  tsx scripts/session/rule-use-report.ts --since ISO [--split] [--json] [--out PATH]
+//   --split reports the main session and the subagents separately: their
+//   shares differ a lot (#3017).
 //   Reads internal logs, current and archived, that ended since ISO. Prints a
 //   text report, or JSON with --json; output above OUTPUT_FILE_THRESHOLD goes
 //   to a file (resolveOutputTarget).
@@ -113,12 +115,28 @@ export function renderReport(r: RuleUseReport): string {
   return `${lines.join('\n')}\n`
 }
 
+/** The same logs twice, keeping only the main agents' entries, then only the subagents'. */
+export function splitByAgent(logs: SessionLog[]): { main: SessionLog[]; subagents: SessionLog[] } {
+  const keep = (wantMain: boolean) =>
+    logs.map((l) => ({ ...l, data: { ...l.data, ruleUse: ((l.data.ruleUse ?? []) as RuleUseEntry[]).filter((e) => (e.by === 'main') === wantMain) } }))
+  return { main: keep(true), subagents: keep(false) }
+}
+
 function main(): void {
-  const { on: json, rest: argv } = extractSwitch(process.argv.slice(2), '--json')
+  const { on: json, rest: rest1 } = extractSwitch(process.argv.slice(2), '--json')
+  const { on: split, rest: argv } = extractSwitch(rest1, '--split')
   const since = Date.parse(flagValue(argv, '--since') ?? '')
-  if (Number.isNaN(since)) fail('usage: rule-use-report.ts --since ISO [--json] [--out PATH]')
-  const report = ruleUseReport(readSessionLogs(root, { archived: true }), since)
-  const out = json ? `${JSON.stringify(report, null, 2)}\n` : renderReport(report)
+  if (Number.isNaN(since)) fail('usage: rule-use-report.ts --since ISO [--split] [--json] [--out PATH]')
+  const logs = readSessionLogs(root, { archived: true })
+  let out: string
+  if (split) {
+    const parts = splitByAgent(logs)
+    const [m, s] = [ruleUseReport(parts.main, since), ruleUseReport(parts.subagents, since)]
+    out = json ? `${JSON.stringify({ main: m, subagents: s }, null, 2)}\n` : `== Main session ==\n${renderReport(m)}\n== Subagents ==\n${renderReport(s)}`
+  } else {
+    const report = ruleUseReport(logs, since)
+    out = json ? `${JSON.stringify(report, null, 2)}\n` : renderReport(report)
+  }
   const target = resolveOutputTarget(argv, out.length, join(tmpdir(), `rule-use-report.${json ? 'json' : 'txt'}`))
   if (!target) return void process.stdout.write(out)
   writeFileSync(target, out)

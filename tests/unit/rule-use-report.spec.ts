@@ -1,6 +1,6 @@
 // The rule-use report (#3019): aggregates over committed session logs' `ruleUse`.
 import { describe, expect, it } from 'vitest'
-import { renderReport, ruleUseReport } from '../../scripts/session/rule-use-report.ts'
+import { renderReport, ruleUseReport, splitByAgent } from '../../scripts/session/rule-use-report.ts'
 
 const A = '.claude/rules/adr-0004.md'
 const B = '.claude/rules/adr-0027.md'
@@ -41,6 +41,17 @@ describe('ruleUseReport', () => {
   it('counts loads by via, and the data-quality gaps', () => {
     expect(report.via).toEqual({ start: 1, native: 3, hint: 0, read: 0 })
     expect(report.quality).toEqual({ noLoadRecorded: 1, unansweredSubagents: 1 })
+  })
+
+  it('splits the main agents from the subagents', () => {
+    const since = Date.parse('2026-11-08T00:00:00Z')
+    const parts = splitByAgent(logs)
+    const main = ruleUseReport(parts.main, since)
+    const subs = ruleUseReport(parts.subagents, since)
+    expect(Object.keys(main.answered)).toEqual(['main'])
+    expect(Object.keys(subs.answered)).toEqual(['Explore'])
+    expect(main.rules.find((r) => r.rule === A)).toMatchObject({ loads: 1, steered: 0, backed: 1 })
+    expect(subs.rules.find((r) => r.rule === A)).toMatchObject({ loads: 2, answeringLoads: 1, steered: 1 })
   })
 
   it('renders text that names each rule and says when data is thin', () => {
