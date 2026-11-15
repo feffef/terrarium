@@ -101,3 +101,13 @@ pages:
     checked: '2026-11-14'
   - page: terrarium-practice/70.cross-tenant-reads
     checked: '2026-11-14'
+  - page: terrarium-practice/80.self-improvement-loop
+    checked: '2026-11-15'
+  - page: terrarium-practice/85.skill-inventory
+    checked: '2026-11-15'
+  - page: terrarium-practice/90.outside-contributions
+    checked: '2026-11-15'
+  - page: verification/10.gate
+    checked: '2026-11-15'
+  - page: verification/20.type-checking
+    checked: '2026-11-15'
