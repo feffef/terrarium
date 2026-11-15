@@ -88,3 +88,8 @@ occurrences:
     severity: minor
     description: "The merge-close Stop hook blocked the turn twice saying a PR merged; none did. My Bash commands only named scripts/github/merge-pr.ts while reading it."
     solution: "Make merge-close-stop.ts test a merge result, not command text (cause merge-close-hint-fires-without-merge)."
+  - session: session_013zxzeQDRyvj3Vc8GUWHvBv
+    date: "2026-11-14"
+    severity: minor
+    description: "The Stop hook said a PR merged and demanded close-session while merge-pr.ts was still polling CI; nothing had merged."
+    solution: "Fire the merge hint only after a merged PR is observed."

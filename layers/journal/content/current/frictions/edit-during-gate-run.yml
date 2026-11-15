@@ -196,3 +196,8 @@ occurrences:
     severity: nit
     description: "I edited files while pnpm gate:scoped was running, so it aborted and I reran it, costing a few minutes."
     solution: "Touch nothing until the gate ends, as pr-workflow.md says; commit review fixes first, then start the gate."
+  - session: session_013zxzeQrRhhVjja2AkCLcyV
+    date: "2026-11-13"
+    severity: nit
+    description: "Started pnpm gate:scoped before running code-review, against pr-workflow.md's review-then-gate order, and had to stop it so review fixes would not abort it."
+    solution: "Read pr-workflow.md before the first PR step; it was opened only after the gate had started."

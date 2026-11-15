@@ -74,3 +74,18 @@ occurrences:
     severity: nit
     description: "Committed and started the gate in one Bash command, against git-conventions; the commit landed, so no harm."
     solution: "Run the commit alone, check it, then start the gate."
+  - session: session_013zxzePBHiX6mZNUjPTWpWc
+    date: "2026-11-14"
+    severity: nit
+    description: "Pushed the branch and started gate:scoped in one Bash call, against git-conventions' rule to keep git apart from gate runs; nothing broke."
+    solution: "Push in its own call, then start the gate."
+  - session: session_013zxzeRDWicEfcb8rCWFepr
+    date: "2026-11-14"
+    severity: nit
+    description: "Ran a git push in the same Bash command as the backgrounded gate run, against git-conventions' rule to keep git apart from gate steps."
+    solution: "Push in its own call after reading the gate's own exit status."
+  - session: session_013zxzeT6JgNuWiqXaqyMFpF
+    date: "2026-11-14"
+    severity: minor
+    description: "Ran git fetch and a chained git log in the same Bash command as the gate run, before reading git-conventions.md."
+    solution: "Run each git command in its own call and read the gate's exit status in a separate step."

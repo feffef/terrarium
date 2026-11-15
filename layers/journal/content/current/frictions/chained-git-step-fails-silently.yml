@@ -50,3 +50,8 @@ occurrences:
     severity: nit
     description: "I chained a git log check and a git push in one Bash call, against git-conventions' rule that a state-changing git command runs alone; the push then failed and its exit code was read through a pipe."
     solution: "Run the push in its own call, as the doc says."
+  - session: session_013zxzeQnCCyBdXZDEv9qTNh
+    date: "2026-11-14"
+    severity: nit
+    description: "I ran git commit with both -m and -F; git refused, wasting one call. git-conventions already says never to give both."
+    solution: "Reuse a message file only with -F and no other message flag."

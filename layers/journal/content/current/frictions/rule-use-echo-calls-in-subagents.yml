@@ -27,3 +27,13 @@ occurrences:
     severity: minor
     description: "SubagentStart and PostToolUse hooks made 8 of 11 retro agents run echo rule-use: twice for no decision, and 4 of 11 got late doc reads after their first edit or git command."
     solution: "Fold rule-use reporting into one call (or skip it for short read-only agents) and say up front which docs to read before the first git command, in the hook text."
+  - session: session_013zxzeT5pQrVtuNLAzUQRaP
+    date: "2026-11-14"
+    severity: minor
+    description: "The SubagentStart hook made every review subagent run two echo rule-use calls, which eight of eleven agents named as overhead on diffs of 9 to 14 lines."
+    solution: "Skip the rule-use echo for a subagent that reads no rules, or for a review of a prose-only diff."
+  - session: session_013zxzeT3bxsaccpcz9P65Ra
+    date: "2026-11-14"
+    severity: minor
+    description: "The rule-use echo hook asked every read-only subagent for two Bash calls, and read-first hook nudges fired after the action; 8 of 10 retros named it."
+    solution: "Run the rule-use echo once, and skip it for read-only reviewers."

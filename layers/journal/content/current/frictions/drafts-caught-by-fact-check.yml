@@ -176,3 +176,8 @@ occurrences:
     severity: minor
     description: "The first README stated times as coming from first commits for two files that had none, and credited the owner-confirmed corrections to me; code-review caught both."
     solution: "Mark, while writing, each fact whose source is the conversation and not git or a log."
+  - session: session_013zxzeQeBzhDzmSvD9thT22
+    date: "2026-11-15"
+    severity: minor
+    description: "Ran git status and the digest script before reading git-conventions.md, and wrote prose copying a session outcome's \"35 pages\" count without checking files; fact-check caught it."
+    solution: "Count from the merge commit's touched files, not the session outcome string."

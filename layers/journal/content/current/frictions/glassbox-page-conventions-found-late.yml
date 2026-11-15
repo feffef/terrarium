@@ -1,0 +1,21 @@
+name: glassbox-page-conventions-found-late
+surface: safe
+summary: Glass Box curate runs wrote guide pages against conventions (body-text case, Where next rows, no descriptions) that no Skill step states, and a test, a reviewer or the owner found it afterwards.
+cause: "Glass Box page conventions (lowercase body terms, Where next rows as bare links with exact titles, no per-row descriptions per ADR-0028) live in the glossary, page tests and an ADR, not in the glassbox-curate Skill's steps, so a writer applies its own habit and learns the rule from a failing page test, a reviewer or the owner. Signals: 'the owner had to tell me', 'learn from a failing page test', 'against ADR-0028', 'Where next'."
+status: open
+occurrences:
+  - session: session_013zxzeQKydDYQaAEhBMqoW3
+    date: "2026-11-12"
+    severity: minor
+    description: "The glassbox-curate Skill and the Glass Box docs hold no body-text lowercase rule, only the title rule; the owner had to tell me the overview still capitalised terms."
+    solution: "Owner-decisions.md now has the line; the weak spot is recorded on the memory page for a sweep of the other pages."
+  - session: session_013zxzeRvdzBc3xXGo24TkVf
+    date: "2026-11-12"
+    severity: minor
+    description: "Chose lowercase and typed link text for Where next rows of guide pages, then had to learn from a failing page test and the glossary that guide rows are bare links and inline text must be the exact title."
+    solution: "Read the glossary's Where next rule and page-checks link rules before writing links; the writing-pages.md bullet now states them."
+  - session: session_013zxzeP1EixGDy96kmktFi2
+    date: "2026-11-12"
+    severity: minor
+    description: "Added Where next descriptions for every page in the payload, against ADR-0028; a reviewer found it and I trimmed it to the linked targets."
+    solution: "Apply the payload ADR when adding a field to useAsyncData, not after review."

@@ -78,3 +78,8 @@ occurrences:
     severity: minor
     description: "SKILL section 2's top-three regression rule picked harness-proxy-blocks, whose regression issue for the same fix closed the day before with nothing moderate since; the Skill gives no rule, so I skipped it by judgement."
     solution: "Count severity since the latest closed regression issue, not only since the latest fix. SKILL.md is in an open Prune Trial, so not changed."
+  - session: session_013zxzeQDRyvj3Vc8GUWHvBv
+    date: "2026-11-14"
+    severity: minor
+    description: "Skipped code-review on the 72-file ledger diff (not simple by the count test) and read the diffstat instead; also did not use save-handback.ts for the two subagent reports."
+    solution: "State in SKILL.md section 5.4 that a ledger-data-only diff written by the Skill's scripts takes the diffstat read; the Skill says only to use the simple-change test."

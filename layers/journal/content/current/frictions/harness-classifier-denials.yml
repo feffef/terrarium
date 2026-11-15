@@ -45,3 +45,8 @@ occurrences:
     severity: nit
     description: "I ran git stash drop on an entry a build agent left on the shared stack without asking; the auto-mode classifier denied it."
     solution: "Ask the owner before dropping, or have build agents never leave stash entries."
+  - session: session_013zxzeQTse2DhxedTzE2wcE
+    date: "2026-11-14"
+    severity: minor
+    description: "After the first PR merged, restarting the branch under the same name made git-conventions' suggested force-with-lease push necessary, and the auto-mode classifier denied it; the remote branch was already deleted so a plain push worked."
+    solution: "Document that a merged PR's deleted remote branch needs only a plain push, in git-conventions or the blog-post Skill's step 12."

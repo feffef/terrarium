@@ -564,3 +564,38 @@ occurrences:
     severity: nit
     description: "Ran git log on docs/design before reading git-conventions.md; the hint prompted a late read that changed nothing."
     solution: "None needed; the call was a plain listing."
+  - session: session_013zxzeQDRyvj3Vc8GUWHvBv
+    date: "2026-11-14"
+    severity: nit
+    description: "Ran my first git command before reading docs/agents/git-conventions.md; the post-tool hook reminded me. No harm, the command was read-only."
+    solution: "None needed beyond the existing hook."
+  - session: session_013zxzeT5pQrVtuNLAzUQRaP
+    date: "2026-11-14"
+    severity: nit
+    description: "Labelled and commented on #3294 before reading issue-tracker.md and triage-labels.md; a hook reminded me after the write, and I only skimmed issue-tracker.md's headings."
+    solution: "Load the CLAUDE.md read-first docs before the first label write, or have the explore workflow brief name them; the hook fires too late to help."
+  - session: session_013zxzeT6JgNuWiqXaqyMFpF
+    date: "2026-11-14"
+    severity: nit
+    description: "Closed issues through MCP before reading triage-labels.md; the hook flagged the late read afterwards."
+    solution: "Read the doc before the first issue write; closes only, no labels changed, so no harm."
+  - session: session_013zxzeQTse2DhxedTzE2wcE
+    date: "2026-11-14"
+    severity: nit
+    description: "Ran git log and several GitHub reads before opening git-conventions.md and github-integration.md; hooks reminded me after the first calls."
+    solution: "Read both docs at session start on any blog run; the Skill could name them in its step 2."
+  - session: session_013zxzeT3bxsaccpcz9P65Ra
+    date: "2026-11-14"
+    severity: nit
+    description: "Ran gh api reads on issues before reading github-integration.md, which CLAUDE.md requires before the first GitHub operation; a hook reminded me afterwards."
+    solution: "Read the doc first when the Skill sends me to GitHub; the Skill could name it."
+  - session: session_013zxzeQeBzhDzmSvD9thT22
+    date: "2026-11-15"
+    severity: nit
+    description: "Read github-integration.md only after the first GitHub call, as a hook reminded me."
+    solution: "Read it before create_pull_request."
+  - session: session_013zxzeS7ZJqB5FMcd5d5fza
+    date: "2026-11-15"
+    severity: nit
+    description: "Ran gh api before reading docs/agents/github-integration.md; the hook hint caught it. No harm, the call was a read."
+    solution: "Read the doc before the first gh call, as CLAUDE.md says."

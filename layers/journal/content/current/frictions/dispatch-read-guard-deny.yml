@@ -327,3 +327,13 @@ occurrences:
     severity: nit
     description: "Ran git status and branch before reading git-conventions.md, and dispatched the first subagent before reading dispatch-subagents; the guard blocked it and I retried."
     solution: "Read both docs at session start for a digest run; the Skill could name them."
+  - session: session_013zxzeQWcqG69ABe1v6X1WD
+    date: "2026-11-14"
+    severity: nit
+    description: "The dispatch-read guard blocked the first three-agent dispatch until dispatch-subagents was read, costing a retry of three long briefs."
+    solution: "The visitor-loop Skill should name dispatch-subagents in step 2 so it is read before the briefs are written."
+  - session: session_013zxzeS7ZJqB5FMcd5d5fza
+    date: "2026-11-15"
+    severity: nit
+    description: "First Agent call was blocked by the dispatch-read guard until I read dispatch-subagents; one wasted call."
+    solution: "Name dispatch-subagents in audit-skills step 1 where it dispatches."

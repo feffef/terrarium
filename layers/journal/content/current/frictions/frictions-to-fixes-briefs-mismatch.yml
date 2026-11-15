@@ -91,3 +91,8 @@ occurrences:
     severity: minor
     description: "Survey subagent: brief section 3 asks it to confirm every candidate entry against tracker and main (138 entries), which did not fit one pass, so about 60 labels came back unconfirmed."
     solution: "Limit the confirm step to entries that gained occurrences this window or are ranked for picking."
+  - session: session_013zxzeQDRyvj3Vc8GUWHvBv
+    date: "2026-11-14"
+    severity: minor
+    description: "The survey report mixed verified and unverified claims, contradicted itself (major vs minor since the fix, a hash left unprinted, self-corrected session ids), so I re-checked against summary2.txt before acting."
+    solution: "Have the survey brief require an id and severity table from the script output rather than prose, and the commit hash."

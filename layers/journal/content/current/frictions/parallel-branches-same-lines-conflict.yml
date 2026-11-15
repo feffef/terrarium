@@ -16,3 +16,8 @@ occurrences:
     severity: minor
     description: "Started the SessionStart-hook build while the sibling Stop-hook PR was still open on the same files; the branch then needed a rebase with a guards.md conflict and a second gate run."
     solution: "Serialize builds that touch the same Human-only files, or tell the builder to base on the sibling's branch."
+  - session: session_013zxzeS7WM4TBNbgtufBjAT
+    date: "2026-11-12"
+    severity: minor
+    description: "The PR opened conflicted with main because the Glass Box glossary changed upstream after my last fetch; fixed with a merge and a re-run of the glossary sweep."
+    solution: "Fetch and test the merge (git merge-tree) right before opening a PR that edits a doc other sessions edit, as git-conventions says for long sessions."

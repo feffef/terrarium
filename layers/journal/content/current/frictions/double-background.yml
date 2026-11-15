@@ -141,3 +141,8 @@ occurrences:
     severity: nit
     description: "Combined run_in_background with a trailing ampersand and later tried a foreground sleep; both were blocked by hooks and cost two calls."
     solution: "Use run_in_background alone and Monitor for waits, as CLAUDE.md already says."
+  - session: session_013zxzeQeBzhDzmSvD9thT22
+    date: "2026-11-15"
+    severity: nit
+    description: "Tried to background the gate with both run_in_background and a trailing ampersand; the double-background guard blocked it, costing one call."
+    solution: "Pass run_in_background alone."

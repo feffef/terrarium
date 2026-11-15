@@ -74,3 +74,13 @@ occurrences:
     severity: nit
     description: "Chained a sleep before merge-pr.ts and a guard blocked it, costing one call."
     solution: "Retry the script plainly, or use Monitor to wait."
+  - session: session_013zxzeQTse2DhxedTzE2wcE
+    date: "2026-11-14"
+    severity: nit
+    description: "A foreground sleep to wait for the gate was blocked by the harness, costing one wasted call."
+    solution: "Start long gates in the background and end the turn, as CLAUDE.md says."
+  - session: session_013zxzeQWcqG69ABe1v6X1WD
+    date: "2026-11-14"
+    severity: nit
+    description: "A foreground sleep wait was blocked by a hook, wasting one call."
+    solution: "Wait for subagent notifications by ending the turn."

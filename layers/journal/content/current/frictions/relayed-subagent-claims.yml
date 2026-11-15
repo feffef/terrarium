@@ -160,3 +160,18 @@ occurrences:
     severity: nit
     description: "The survey said three of four new scripted-replace occurrences shared one target; the design agent re-derived two of four from the entry text."
     solution: "Survey should quote the occurrences behind a count like that."
+  - session: session_013zxzeRqf691rc3SdLaPbvP
+    date: "2026-11-13"
+    severity: nit
+    description: "The dispatch-subagents checker used git worktree list in this container as evidence that other sessions' worktrees were not stranded; I dropped that claim."
+    solution: "brief.md could say another session's worktrees are not visible from this checkout."
+  - session: session_013zxzeT5pQrVtuNLAzUQRaP
+    date: "2026-11-14"
+    severity: minor
+    description: "I relayed the explore agent's claim that no fix landed for #3297; the owner asked if I read their comment, and I only then verified it with git log."
+    solution: "Verify an explore agent's historical claims against git before putting them into a grilling question, as clear-backlog section 2 already says."
+  - session: session_013zxzeT6JgNuWiqXaqyMFpF
+    date: "2026-11-14"
+    severity: nit
+    description: "Asked the grilling questions without verifying the explore agents' picks against their sources, as the skill requires."
+    solution: "Spot-check each pick's cited source before asking; I told the owner which claims were unverified."

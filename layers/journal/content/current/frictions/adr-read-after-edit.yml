@@ -213,3 +213,8 @@ occurrences:
     severity: nit
     description: "The adr-read hint fired five times in a row for five Edit calls to one new docs/design file, each asking for ADR-0027, which did not bear on the edits."
     solution: "Fire the hint once per ADR per session; ADR-0027's rule matches docs/** too broadly for a design note."
+  - session: session_013zxzeQb8CcK1KnPAhju2GY
+    date: "2026-11-14"
+    severity: nit
+    description: "ADR reads demanded by hooks arrived after my edits, and I tried a blocked foreground sleep twice to wait on agents."
+    solution: "Read the ADRs the rule summaries name before editing; wait with the completion notification."
