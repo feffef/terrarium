@@ -1,0 +1,123 @@
+schemaVersion: 1
+session: session_013zxzeRGXYTuwyQrcDEwRpw
+startedAt: 2026-11-15T17:05:25Z
+endedAt: 2026-11-15T17:11:59Z
+kind: autonomous
+goal: Weekly harvest of agent ideas and learnings into Seedlings
+status: completed
+outcome: Six Seedlings filed (3353-3358); 11 clusters checked, 6 passed, 5 dropped; no retro Seedling
+summary: "Scheduled harvest run, no human prompts. Extracted 219 unharvested entries (96 ideas, 123 learnings) from the last 7 days and checked 11 clusters, product first. Six passed and were filed as ready-for-human Seedlings: a Walkthroughs index page, an A to Z term list for Glass Box, Midden what-replaced-it and copy-link, Journal Ideas grouped by Tenant, merge-pr 405 retry, and a git-conventions note on reusing a merged branch. Five were dropped as already built (empty-cart hint, ledger window, Journal lead, gate-abort guard doc) or owned by the Friction Ledger (preview clip). Most remaining entries were not checked because the quota of product clusters was reached first. No retro Seedling: the only cost, a list needing two reads, is closed in #3191. All work followed the Skill; nothing was human-instructed beyond the schedule."
+prs: []
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: .agents/skills/harvest/body-template.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: .agents/skills/retro/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: harvest
+    reason: (invoked as a slash command)
+frictions:
+  - description: Read triage-labels.md only after the first issue_write, though step 4 says read it and issue-tracker first; the labels were right anyway.
+    solution: Read the two docs right after check-clusters passes, before writing bodies.
+    severity: nit
+  - description: harvest list output was about 32k tokens, over the Read cap, so it took two reads.
+    solution: "Already tracked as closed #3191; a compact list option would avoid it."
+    severity: nit
+durationSec: 394
+models:
+  claude-sonnet-5-5: 71
+toolCounts:
+  Bash: 32
+  Read: 2
+  ToolSearch: 1
+  mcp__github__issue_write: 6
+  Skill: 2
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/adr-0006.md
+        via: hint
+      - rule: .claude/rules/adr-0016.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+      - rule: .claude/rules/adr-0020.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: filed Seedlings, built nothing
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: session header on every issue
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: docs/agents/triage-labels.md
+      - path: .agents/skills/harvest/body-template.md
+gitBranch: claude/eager-cerf-t2ucnb
+entrypoint: remote_trigger
+cliVersion: 2.1.325
+trigger: harvest
+landedBy: Stop
