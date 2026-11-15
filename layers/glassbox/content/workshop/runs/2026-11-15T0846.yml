@@ -1,0 +1,17 @@
+session: session_013zxzePxNrkPQ4muYeaAFZT
+mode: autonomous
+focus: "Issue triage labels: the page teaches only the state labels, while the Scout-listed gap on the memory page (area labels, set by auto-triage on issues and a workflow on PRs) has no page. Chosen because it is concrete, fits an existing page (no new Lesson, so no owner merge) and no open PR touches the Git & GitHub pages. The memory lead about an Excerpt sitting before its glosses is stale: the page glosses harvest, seedling and the guest pipeline before the excerpt. Deviations for the budget: no fresh reader; the opus writer and a sonnet claim checker ran. The code review named the last two pages as overlapping; only their label lines were read (no overlap with area labels). Its judgement calls (lede and description still cover only states; the bold lead-in of the Why bullet states a fact) were left as is. Cost unreported: get_session was not among the tools."
+changes:
+  - git-github/70.issue-triage-labels | New paragraph and Excerpt on area labels (auto-triage sets them on issues, pr-area-label.yml on PRs by touched paths), a Why bullet on the copied area lists, a watch item on an unlisted tenant; teaches, revision and publishedAt updated | no page taught area labels (Scout gap on the memory page)
+  - workshop/pages/index | The area-labels gap and the stale Excerpt-before-gloss lead deleted; one Scout gap (auditSummary on Skill inventory) added | the first two are done or stale; the page is shorter
+pagesRead:
+  - git-github/10.pull-requests
+  - git-github/20.author-trust
+  - git-github/30.composite-actions
+  - git-github/40.dependabot-grouping
+  - git-github/50.git-worktrees
+  - git-github/60.attribution
+  - git-github/70.issue-triage-labels
+  - git-github/80.git-plumbing
+  - terrarium-practice/10.human-in-the-loop
+  - walkthroughs/20.a-bug-report-becomes-work
