@@ -133,9 +133,9 @@ export const sessionSchema = z
           toolCalls: z.number().int().nonnegative().optional(),
           modelCalls: z.number().int().nonnegative().optional(),
           tokenShare: tokenShare.optional(),
-          // `denied`: the dispatch was refused (a guard) and no subagent ran,
-          // so it has no stats. Written only then; absent on older logs.
-          outcome: z.enum(['denied']).optional(),
+          // The dispatch was refused (a guard) and no subagent ran, so it has
+          // no stats. Written only then; absent on older logs.
+          denied: z.literal(true).optional(),
         }),
       )
       .optional(),

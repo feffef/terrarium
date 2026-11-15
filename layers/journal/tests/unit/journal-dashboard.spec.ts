@@ -437,7 +437,7 @@ describe('sessionCardViews', () => {
   })
 
   it('hides denied dispatches from the subagent list', () => {
-    const s = session({ subagents: [{ type: 'general-purpose', task: 'survey', outcome: 'denied' }, { type: 'general-purpose', task: 'survey', durationSec: 60 }] })
+    const s = session({ subagents: [{ type: 'general-purpose', task: 'survey', denied: true }, { type: 'general-purpose', task: 'survey', durationSec: 60 }] })
     expect(sessionCardViews([s])[0]!.subagents.map((a) => a.usage)).toEqual(['1m 0s'])
   })
 

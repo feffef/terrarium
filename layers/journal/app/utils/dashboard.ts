@@ -261,7 +261,7 @@ export function sessionCardViews(
       summary: s.summary,
       // Denied dispatches never ran; `ruleUse.subagent` indexes the unfiltered
       // list, so only this display copy drops them.
-      subagents: (s.subagents ?? []).filter((a) => a.outcome !== 'denied').map((a) => ({ ...a, usage: subagentUsageLabel(a) })),
+      subagents: (s.subagents ?? []).filter((a) => !a.denied).map((a) => ({ ...a, usage: subagentUsageLabel(a) })),
       docsRead: (s.docsRead ?? []).map((d) => {
         const viaSubagent = !!s.docsReadBySubagents?.includes(d.path)
         if (!s.ruleUse) return { ...d, viaSubagent, unknown: viaSubagent && !d.useful }
