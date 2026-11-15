@@ -426,6 +426,17 @@ export function digestNeighbours(dates: string[], date: string): { older: string
   return { older: sorted[i - 1] ?? null, newer: sorted[i + 1] ?? null }
 }
 
+const AUDIT_STALE_DAYS = 14
+
+/** An audit line older than two weeks reads as history, not as a current problem. */
+export function auditIsStale(date: string, now = new Date()): boolean {
+  return (now.getTime() - new Date(`${date}T00:00:00Z`).getTime()) / 86_400_000 > AUDIT_STALE_DAYS
+}
+
+export function formatAuditDate(date: string): string {
+  return new Date(`${date}T00:00:00Z`).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })
+}
+
 export function countOf(n: number, noun: string): string {
   return `${n} ${noun}${n === 1 ? '' : 's'}`
 }

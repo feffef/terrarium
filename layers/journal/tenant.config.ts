@@ -36,6 +36,10 @@ export const skillSchema = z
     // (ADR-0015). Machine-managed — do NOT hand-edit; regenerate with
     // `pnpm verify:skills-lock --write`. Absent on our own Skills.
     installedSha256: z.string().optional(),
+    // One plain sentence on what the last audit window saw, shown on the Skills
+    // page. `date` is when `audit-skills` last wrote it: the page dims a line
+    // older than 14 days so an old problem doesn't read as current.
+    auditSummary: z.object({ date: utcDate, text: z.string() }).optional(),
     // `audit-skills`' own record, not rendered on the site (ADR-0015). Each
     // entry is one run's citable finding; PR/issue/session ids go here, not
     // in `role`. How long entries stay: `audit-skills/SKILL.md` step 5.
