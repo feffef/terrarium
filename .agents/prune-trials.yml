@@ -94,7 +94,7 @@ trials:
   - problem: >
       The gate-run edit and git-chaining restatements in `pr-workflow.md`
       "Review before opening the PR" and `git-conventions.md` "Keep git apart
-      from steps that can fail" (-3 net, from `git diff --numstat`: 7 added, 10
+      from steps that can fail" (-2 net, from `git diff --numstat`: 8 added, 10
       deleted; this entry not counted): "edit nothing until it ends (it aborts if
       HEAD or the tree changes)" cut to "edit nothing while it runs" (the probe
       found the bare cut left it unsaid), the abort clause dropped since
@@ -116,7 +116,7 @@ trials:
         - "docs/agents/pr-workflow.md: 'Review before opening the PR'"
         - "docs/agents/git-conventions.md: 'Keep git apart from steps that can fail'"
       keywords:
-        - edit nothing until it ends
+        - edit nothing while it runs
         - own Bash call
     opened: 2026-11-15
     proven: true
