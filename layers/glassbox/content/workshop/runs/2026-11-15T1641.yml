@@ -1,0 +1,22 @@
+session: session_013zxzePak78Sud7pyRQMjeV
+mode: interactive
+focus: "Hydration: the memory page's wording lead that the Friction Ledger
+  sentence 'does the same' with no code shown. Chosen on the owner's word 'you
+  pick, repeat until budget is hit'; it is a small gap on one existing page and
+  no open PR touches it. The Excerpt lines 45-47 of frictions.vue are the same at
+  the page's pinned revision f92291fb and at main, so the page keeps its pin
+  (the glassbox page test checks the Excerpt word for word). Deviations for the
+  budget: only the one section and its page were read, no writer, claim
+  checker, fresh reader or code-review (the lead read the full diff; the
+  sentence's claim is unchanged and the Excerpt is the code it describes). Cost
+  per get_session at the start of this run: 368k context tokens, cost_usd 10.18.
+  The earlier run entry said no further run would fit; the runs cost far less
+  than the Skill's 100k estimate, so this one went ahead."
+changes:
+  - nuxt-vue/80.hydration | The Friction Ledger sentence now says it keeps
+    today's date the same way and is followed by a three-line Excerpt of
+    frictions.vue (useState, then onMounted) | the sentence said does the same
+    with no code shown. Excerpt added, no new claim, so revision and
+    publishedAt are kept
+  - workshop/pages/index | the Hydration no-code lead deleted | done
+pagesRead: []
