@@ -1,15 +1,16 @@
 schemaVersion: 1
 session: session_013zxzeRLqFejsZTowNzt1Lt
 startedAt: 2026-11-15T02:07:05Z
-endedAt: 2026-11-15T02:25:16Z
+endedAt: 2026-11-15T02:34:25Z
 kind: autonomous
 goal: Turn recurring session Frictions into fixes (scheduled run)
-status: in-review
-outcome: Ledger PR 3328 waits on CI; doc-fix PR 3329 merged; closing ledger PR still to land
-summary: "Scheduled frictions-to-fixes run, no human prompt. A survey subagent filed the 2026-11-12..15 window into the ledger (3 new entries, 28 appended, 2 stale statuses reset). Three picks were designed: a blog-post step-skipping rule and GitHub transient-failure notes were built as one doc PR (3329, reviewed by code-review, findings fixed, merged); the Glass Box conventions pick was dropped because later commits had already landed the rules and a page check (the survey had called it never-fixed). No regression issues were needed: the only moderate recurrence already has open issue 3234. Ledger PR 3328 was opened and its merge is polling CI; the closing status-only ledger PR (fixes entries for 3329) is still to do. All work was agent-initiated by the schedule's Skill."
+status: completed
+outcome: Ledger PRs 3328 and 3330 and doc-fix PR 3329 all merged
+summary: "Scheduled frictions-to-fixes run, no human prompt. A survey subagent filed the 2026-11-12..15 window into the ledger (3 new entries, 28 appended, 2 stale statuses reset). Three picks were designed: a blog-post step-skipping rule and GitHub transient-failure notes were built as one doc PR (3329, reviewed by code-review, findings fixed, merged); the Glass Box conventions pick was dropped because later commits had already landed the rules and a page check (the survey had called it never-fixed). No regression issues were needed: the only moderate recurrence already has open issue 3234. Ledger PR 3328 and the closing status-only ledger PR 3330 (fixes entries for 3329) merged after green gates. All work was agent-initiated by the schedule's Skill."
 prs:
   - "3328"
   - "3329"
+  - "3330"
 docsRead:
   - path: .claude/skills/dispatch-subagents/SKILL.md
     reason: (no reason given)
@@ -75,30 +76,31 @@ frictions:
   - description: Stacked run_in_background with a text-level ampersand once; the double-background guard blocked the call.
     solution: Use run_in_background alone.
     severity: nit
-durationSec: 1091
+durationSec: 1640
 models:
-  claude-sonnet-5-5: 103
+  claude-sonnet-5-5: 124
 toolCounts:
-  Bash: 29
+  Bash: 38
   Read: 2
   Agent: 7
-  Skill: 3
+  Skill: 4
   ToolSearch: 2
   SendMessage: 1
   mcp__github__github__create_pull_request: 1
-  mcp__github__create_pull_request: 2
-  mcp__github__subscribe_pr_activity: 2
-  mcp__github__add_issue_comment: 2
+  mcp__github__create_pull_request: 3
+  mcp__github__subscribe_pr_activity: 3
+  mcp__github__add_issue_comment: 3
   mcp__github__pull_request_read: 1
-  ReadNotifications: 1
+  ReadNotifications: 2
 filesEdited:
   - layers/journal/content/current/frictions/save-handback-skipped.yml
+  - layers/journal/content/current/frictions/blog-post-skill-steps-skipped.yml
+  - layers/journal/content/current/frictions/github-transient-errors-on-push-subscribe-merge.yml
   - docs/agents/github-integration.md
   - .agents/skills/blog-post/SKILL.md
   - layers/journal/content/current/frictions/adr-read-after-edit.yml
   - layers/journal/content/current/frictions/audit-skills-output-overflow.yml
   - layers/journal/content/current/frictions/bare-cd-moves-session-cwd.yml
-  - layers/journal/content/current/frictions/blog-post-skill-steps-skipped.yml
   - layers/journal/content/current/frictions/chained-git-step-fails-silently.yml
   - layers/journal/content/current/frictions/clear-backlog-build-review-cap-fails.yml
   - layers/journal/content/current/frictions/deferred-tool-name-guessed.yml
@@ -110,7 +112,6 @@ filesEdited:
   - layers/journal/content/current/frictions/frictions-to-fixes-briefs-mismatch.yml
   - layers/journal/content/current/frictions/frictions-to-fixes-skill-gaps.yml
   - layers/journal/content/current/frictions/github-body-unchecked-value.yml
-  - layers/journal/content/current/frictions/github-transient-errors-on-push-subscribe-merge.yml
   - layers/journal/content/current/frictions/glassbox-page-conventions-found-late.yml
   - layers/journal/content/current/frictions/harness-classifier-denials.yml
   - layers/journal/content/current/frictions/late-read-first-docs.yml
@@ -418,32 +419,32 @@ subagents:
     durationSec: 471
     toolCalls: 38
     modelCalls: 33
-    tokenShare: 32.7
+    tokenShare: 29.4
   - type: general-purpose
     task: Design friction fixes
     durationSec: 122
     toolCalls: 22
     modelCalls: 17
-    tokenShare: 9.9
+    tokenShare: 8.9
   - type: general-purpose
     task: Build doc fixes
     model: sonnet
     durationSec: 219
     toolCalls: 23
     modelCalls: 20
-    tokenShare: 9.5
+    tokenShare: 8.5
   - type: general-purpose
     task: Review standards axis
     durationSec: 33
     toolCalls: 9
     modelCalls: 8
-    tokenShare: 3.6
+    tokenShare: 3.3
   - type: general-purpose
     task: Review spec axis
     durationSec: 20
     toolCalls: 10
     modelCalls: 6
-    tokenShare: 2.8
+    tokenShare: 2.5
 gitBranch: claude/eager-ptolemy-6lufpc
 entrypoint: remote_trigger
 cliVersion: 2.1.325
