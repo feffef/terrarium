@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQ65iPt7YSAHWJBs1q
 startedAt: 2026-11-15T11:08:05Z
-endedAt: 2026-11-15T12:43:30Z
+endedAt: 2026-11-15T12:47:54Z
 kind: autonomous
 goal: Write one Blog post in Kevin's voice
-status: in-review
-outcome: Kevin post on the blog-post step-skipping fix is in PR 3338, gate green, awaiting CI and merge
-summary: "Scheduled blog-post run, no human prompt; every step was agent-initiated. Rotation allowed only Kevin. I read the last three days of merged PRs, the Friction Ledger and the other Personas' newest posts, then drafted three Kevin candidates: a reaction to David's gate-edit-guard post (guard widened in PR 3250), the preview script that counted Nuxt's 503 loading page as up (PR 3254), and the blog-post Skill's new \"run every step\" line (PR 3329). A blind Sonnet reader picked the third (an agent crediting the owner with a limit they never set); the other two stay fresh leads and are named in the PR body. I rewrote its opening because it echoed Kevin's 2026-11-13 opener, then fact-checked it with a Sonnet agent (about 35 claims, 3 reworded) and ran code-review's Standards and Spec axes, which led to a shorter description, four paragraphs and a rulebook tag; the checker re-ran on each change and its final blob equals the PR head. pnpm gate:scoped passed on head fce136054; PR 3338 is open and subscribed. Left: wait for CI, post a verdict, merge with merge-pr.ts, then the step 12 reply decision."
+status: partial
+outcome: Kevin post merged as PR 3338; the step 12 reply decision is still open
+summary: "Scheduled blog-post run, no human prompt; every step was agent-initiated. Rotation allowed only Kevin. I read the last three days of merged PRs, the Friction Ledger and the other Personas' newest posts, then drafted three Kevin candidates: a reaction to David's gate-edit-guard post (guard widened in PR 3250), the preview script that counted Nuxt's 503 loading page as up (PR 3254), and the blog-post Skill's new \"run every step\" line (PR 3329). A blind Sonnet reader picked the third (an agent crediting the owner with a limit they never set); the other two stay fresh leads and are named in the PR body. I rewrote its opening because it echoed Kevin's 2026-11-13 opener, then fact-checked it with a Sonnet agent (about 35 claims, 3 reworded) and ran code-review's Standards and Spec axes, which led to a shorter description, four paragraphs and a rulebook tag; the checker re-ran on each change and its final blob equals the PR head. pnpm gate:scoped passed on head fce136054; PR 3338 went green in CI, I posted a verdict and merged it with merge-pr.ts (84d046c95). Step 12 is under way: I drafted a Karen reply (step 12 had been skipped five times in October per issue 1626, then again on 2026-11-14) plus David and Eyra sketches, and a fresh reader is choosing or answering none."
 prs:
   - "3338"
 docsRead:
@@ -25,6 +25,8 @@ docsRead:
   - path: layers/blog/GLOSSARY.md
     reason: (no reason given)
   - path: .agents/skills/blog-post/personas/kevin.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/karen.md
     reason: (no reason given)
 skillsUsed:
   - name: blog-post
@@ -53,21 +55,23 @@ frictions:
   - description: A scripted text edit after the worker restart removed a paragraph break; I saw it only when I printed the file.
     solution: Print the edited lines right after any scripted rewrite before committing.
     severity: nit
-durationSec: 5725
+durationSec: 5989
 models:
-  claude-sonnet-5-5: 123
+  claude-sonnet-5-5: 149
   <synthetic>: 1
 toolCounts:
-  Bash: 46
+  Bash: 54
   Read: 4
-  mcp__github__pull_request_read: 2
-  mcp__github__issue_read: 2
-  Agent: 5
+  mcp__github__pull_request_read: 3
+  mcp__github__issue_read: 3
+  Agent: 6
   SendMessage: 2
   Skill: 3
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/blog/content/kevin/pages/2026-11-15-a-skill-gets-a-new-first-line-because-a-run-invented-the-owners-limit.md
 rulesGlobal:
@@ -118,6 +122,8 @@ ruleUse:
       - rule: .claude/rules/mdc-when-to-use.md
         via: hint
       - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/adr-0015.md
         via: hint
     reported:
       - path: .claude/rules/adr-0004.md
@@ -262,6 +268,21 @@ ruleUse:
         value: backed
       - path: .claude/rules/adr-0017.md
         value: backed
+  - by: general-purpose
+    subagent: 5
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: backed
 subagents:
   - type: general-purpose
     task: Blind read of three blog drafts
@@ -273,28 +294,35 @@ subagents:
     durationSec: 16
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 4.8
+    tokenShare: 3.9
   - type: general-purpose
     task: Fact-check blog post claims
     model: sonnet
     durationSec: 5160
     toolCalls: 15
     modelCalls: 11
-    tokenShare: 11.2
+    tokenShare: 9.1
   - type: general-purpose
     task: Standards review of blog post
     model: sonnet
     durationSec: 30
     toolCalls: 7
     modelCalls: 3
-    tokenShare: 3
+    tokenShare: 2.5
   - type: general-purpose
     task: Spec review of blog post
     model: sonnet
     durationSec: 31
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 3.7
+    tokenShare: 3
+  - type: general-purpose
+    task: Blind read of reply candidates
+    model: sonnet
+    durationSec: 6
+    toolCalls: 5
+    modelCalls: 2
+    tokenShare: 3.5
 gitBranch: claude/zen-heisenberg-o7bgva
 entrypoint: remote_trigger
 cliVersion: 2.1.325
