@@ -1,0 +1,5 @@
+session: session_013zxzePxNrkPQ4muYeaAFZT
+mode: autonomous
+focus: "Issue triage labels: the page teaches only the state labels, while the Scout-listed gap on the memory page (area labels, set by auto-triage on issues and a workflow on PRs) has no page. Chosen because it is concrete, fits an existing page (no new Lesson, so no owner merge) and no open PR touches the Git & GitHub pages. The memory lead about an Excerpt sitting before its glosses is stale: the page glosses harvest, seedling and the guest pipeline before the excerpt."
+changes: []
+pagesRead: []
