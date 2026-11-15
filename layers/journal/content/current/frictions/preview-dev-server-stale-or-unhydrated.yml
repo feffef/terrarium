@@ -41,3 +41,8 @@ occurrences:
     severity: minor
     description: "First dev-preview screenshots caught the Nuxt loading screen on a cold --dev start; three retries before a warm server gave a real shot."
     solution: "Start the dev server, curl until 200, then shoot; verifying-ui-changes.md says cold dev compiles on demand."
+  - session: session_013zxzeQrRhhVjja2AkCLcyV
+    date: "2026-11-13"
+    severity: nit
+    description: "The dev server kept serving a stale layer component after an edit (tooltips stayed centred), costing two screenshot rounds before a restart."
+    solution: "Restart the dev server when a layer component edit does not show, as verifying-ui-changes.md warns."

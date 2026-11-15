@@ -44,3 +44,8 @@ occurrences:
     severity: nit
     description: "Read only the first lines of github-integration.md and pr-workflow.md before the first GitHub operation, though CLAUDE.md says read each whole."
     solution: "Read both docs whole before the first GitHub call; a head cut-off hides rules lower in the file."
+  - session: session_013zxzeNdAgdKF5tpWTQLowx
+    date: "2026-11-13"
+    severity: nit
+    description: "I decided the ADR-0004 untested-behaviour exception for the new script from a grep of the ADR's Scope lines, not a full read as CLAUDE.md asks before reviewing work an ADR governs."
+    solution: "The Scope list was the part needed; reading it whole costs about 1300 tokens and I should have."

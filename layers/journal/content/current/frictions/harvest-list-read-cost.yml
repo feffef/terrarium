@@ -26,3 +26,8 @@ occurrences:
     severity: moderate
     description: "Read the whole 561-line harvest list in three Read calls of about 62,000 tokens, then checked only 17 clusters."
     solution: "Cut each list entry's text, as the retro Seedling proposes."
+  - session: session_013zxzeNxZVrKu9whNTs4pnR
+    date: "2026-11-14"
+    severity: nit
+    description: "The harvest list was about 32,700 tokens, over the Read cap, so reading it whole needed two calls."
+    solution: "Make harvest list print in under 25,000 tokens or say to read it in pages."

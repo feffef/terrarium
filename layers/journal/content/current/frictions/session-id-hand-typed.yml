@@ -6,16 +6,6 @@ status: open
 notes: |-
   2026-10-28 design: a guard or prose line dropped: .githooks/commit-msg corrects a wrong trailer and github-provenance-guard.ts denies a wrong id on a post and hands back the right one, so a slip costs one retry, and a guard edit is Human-only.
 occurrences:
-  - session: session_013zxzeNZn2iJjZrQj2ortVS
-    date: "2026-10-31"
-    severity: nit
-    description: "Started with an unauthorised-looking working-dir drift and mistyped the session id in a commit message draft; the commit-msg hook corrected the trailer."
-    solution: "Copy the session id from the attribution reminder instead of typing it."
-  - session: session_013zxzeRaFPYidUVPvEBA6NU
-    date: "2026-10-31"
-    severity: nit
-    description: "A commit message heredoc carried a placeholder Claude-Session id; the commit-msg hook replaced it, but I should have used the id from the attribution reminder."
-    solution: "Copy the trailer from the system reminder verbatim."
   - session: session_013zxzePh7qKycsJT9g2eqU1
     date: "2026-11-03"
     severity: nit
@@ -101,3 +91,13 @@ occurrences:
     severity: nit
     description: "Typed this session's id from memory into the commit message file; it was another session's id. Caught before committing via get_session."
     solution: "Copy the id from the attribution lines in context, never recall it; the commit template should be pasted whole."
+  - session: session_013zxzeQnCCyBdXZDEv9qTNh
+    date: "2026-11-14"
+    severity: nit
+    description: "I typed a wrong session id from memory into the first commit-message file; I caught it only by calling get_session before committing."
+    solution: "Copy the id from the Claude-Session line in the system-prompt template, as log-session says, or read it once with get_session."
+  - session: session_013zxzeS7ZJqB5FMcd5d5fza
+    date: "2026-11-15"
+    severity: nit
+    description: "Wrote a wrong session id in the first issue draft header; caught via get_session before filing."
+    solution: "Fetch the id with get_session at the start."

@@ -31,11 +31,6 @@ fixes:
     date: "2026-11-13"
     summary: "gate-edit-guard.ts also denies git add, stash, checkout and reset (not only commit) while a gate runs, per worktree; scripted Bash writes are left alone."
 occurrences:
-  - session: session_013zxzeSRDhsoSRs2a2bGVgW
-    date: "2026-10-31"
-    severity: nit
-    description: "Ran the scoped gate before the review and again after review edits, doubling gate time."
-    solution: "Review first, then run the gate once, as pr-workflow says; I ran it early out of habit."
   - session: session_013zxzeNqa4MUJF5DT5wQ1zf
     date: "2026-11-01"
     severity: minor
@@ -196,3 +191,8 @@ occurrences:
     severity: nit
     description: "I edited files while pnpm gate:scoped was running, so it aborted and I reran it, costing a few minutes."
     solution: "Touch nothing until the gate ends, as pr-workflow.md says; commit review fixes first, then start the gate."
+  - session: session_013zxzeQrRhhVjja2AkCLcyV
+    date: "2026-11-13"
+    severity: nit
+    description: "Started pnpm gate:scoped before running code-review, against pr-workflow.md's review-then-gate order, and had to stop it so review fixes would not abort it."
+    solution: "Read pr-workflow.md before the first PR step; it was opened only after the gate had started."

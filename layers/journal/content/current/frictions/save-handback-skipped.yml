@@ -2,8 +2,9 @@ name: save-handback-skipped
 surface: safe
 summary: Agents skipped save-handback.ts for subagent replies and worked from the messages in context.
 cause: "dispatch-subagents section 3 asks to keep each subagent's final reply with save-handback.ts; orchestrators skip it for all replies, and a resumed agent's first report is lost since it keeps only the latest. Signals: 'save-handback.ts', 'kept none of the hand-backs'."
-status: tracked
-ref: "issue #3295"
+status: open
+notes: |-
+  2026-11-15 survey: issue #3295 closed completed 2026-11-14 (PR #3304, recorded in fixes); status reset from tracked. Session_013zxzeRbcVWW7Upv1bSok39 (2026-11-13) lost two first reports because save-handback.ts keeps only a resumed agent's latest reply.
 fixes:
   - pr: 3304
     date: "2026-11-14"
@@ -19,3 +20,8 @@ occurrences:
     severity: nit
     description: "dispatch-subagents says to keep each subagent's final reply with save-handback.ts; I kept none of the six hand-backs that way."
     solution: "For read-only Explore agents whose reply arrives in context, the Skill could say the save is not needed, or a hint could fire on the hand-back."
+  - session: session_013zxzeRbcVWW7Upv1bSok39
+    date: "2026-11-13"
+    severity: minor
+    description: "save-handback.ts keeps only an agent's latest reply, so two first reports were lost as files once agents were resumed with corrections"
+    solution: "Save a report with save-handback before sending the agent a follow-up message"

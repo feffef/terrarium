@@ -125,3 +125,13 @@ occurrences:
     severity: nit
     description: "I told a reviewer that four of five duplicated facts were trimmed when the diff trimmed three; I stated the count from memory instead of counting it."
     solution: "Count from the diff before stating a number in a brief, as 'Verify before you state' asks."
+  - session: session_013zxzePBHiX6mZNUjPTWpWc
+    date: "2026-11-14"
+    severity: minor
+    description: "My first verdict comment on PR 3301 gave a tally (17 findings, 5 applied) not counted against the verdict files; corrected in a later comment and the PR body."
+    solution: "Count verdicts from the saved files before writing the verdict."
+  - session: session_013zxzeT5pQrVtuNLAzUQRaP
+    date: "2026-11-14"
+    severity: minor
+    description: "I set small:true on the glassbox branch without counting its diff; it was 11 lines, over the 10-line bar, so a full extra review round ran for nits only."
+    solution: "Count the diff in the worktree before setting small (git diff --shortstat) instead of judging from the brief."

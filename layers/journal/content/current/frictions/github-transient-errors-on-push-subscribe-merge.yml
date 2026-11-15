@@ -2,7 +2,7 @@ name: github-transient-errors-on-push-subscribe-merge
 surface: outside
 summary: Pushes, merges and PR subscriptions failed with GitHub 5xx or access-verification errors until retried.
 cause: "The cloud git credential service and GitHub reads return 500, 502 or 503, or subscribe_pr_activity says 'Unable to verify repository access', for minutes at a time; retries work later, and a retried push can print 'Everything up-to-date' with a non-zero exit while the remote is behind. Signals: 'Internal Server Error', 'credential service temporarily unavailable', 'HTTP 502' from merge-pr.ts, 'Failed to subscribe to PR activity'."
-status: open
+status: tracked
 occurrences:
   - session: session_013zxzeQAc52ZMCkhtp4ihGY
     date: "2026-11-12"

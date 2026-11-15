@@ -27,3 +27,8 @@ occurrences:
     severity: nit
     description: "Added Glass Box to the footer site list as a consistency fix, against an owner ruling in visitor-loop decisions.md that fixes that list; review caught it and I reverted."
     solution: "Grep .agents/skills/*/decisions.md for a list before extending it, or point app/utils/sites.ts at its ruling in a comment."
+  - session: session_013zxzeNrvAWHmAPYsSy8u7x
+    date: "2026-11-12"
+    severity: nit
+    description: "Found issue 3105 had already said the detached-HEAD push is in the Ledger only after drafting it as a candidate; my summary-line check had missed the covering entry."
+    solution: "Read a closed Seedling on the same doc before drafting a learning for it."

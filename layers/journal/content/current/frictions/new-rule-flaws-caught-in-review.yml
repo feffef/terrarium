@@ -36,3 +36,8 @@ occurrences:
     severity: minor
     description: "My triage-change proposal hid the builder's decisions in triage.md, which the orchestrator may not read, so it could not tell which reviewers to resume; two reviewers caught it."
     solution: "When an orchestrator may read only replies, check every decision it must make has its input in a reply."
+  - session: session_013zxzePjZg6AdV34z87Eu3Z
+    date: "2026-11-13"
+    severity: minor
+    description: "The checker's own CONFIRMED-BUT rewording of the CLAUDE.md log/blame clause was still ambiguous; only code-review's Standards axis caught it, costing a checker resume and a second commit."
+    solution: "Ask the checker to test each corrected text for a second reading before returning it."

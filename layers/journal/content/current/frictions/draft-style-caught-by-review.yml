@@ -47,3 +47,13 @@ occurrences:
     severity: nit
     description: "Neutral doc first draft named GitHub-like hosts and multi-tenant machinery despite the no-repo-names brief; found only by a grep after writing."
     solution: "Grep the draft for repo and product terms before reporting it done."
+  - session: session_013zxzeNmq54AMia53quaCHn
+    date: "2026-11-13"
+    severity: minor
+    description: "The draft was written at about 6900 words against the owner's \"about 4800\"; the size was only measured after writing."
+    solution: "Budget words per section before writing a document with a stated length."
+  - session: session_013zxzeQnCCyBdXZDEv9qTNh
+    date: "2026-11-14"
+    severity: minor
+    description: "My first draft kept the Digest-fix and PR #2993 history although the owner said rant only; code-review's Spec axis caught it, costing one extra fact-check round."
+    solution: "Before drafting, restate the owner's scope answers as a don't list and check each paragraph against it."

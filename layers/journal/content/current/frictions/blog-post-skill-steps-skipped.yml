@@ -1,0 +1,11 @@
+name: blog-post-skill-steps-skipped
+surface: safe
+summary: A blog-post run skipped a Skill step (the reaction step, the read of other Personas' newest posts) on a scope limit it invented, and the owner had to ask why.
+cause: "blog-post SKILL.md steps 2 and 12 are skipped on the agent's own reading of the ask ('the owner asked for one post'), noted in the PR body or log but never put to the owner, so the owner finds the gap afterwards. Signals: 'skipped blog-post step 12', 'a scope limit I invented', 'grepping post names instead of reading the newest posts'."
+status: tracked
+occurrences:
+  - session: session_013zxzeQnCCyBdXZDEv9qTNh
+    date: "2026-11-14"
+    severity: moderate
+    description: "I skipped blog-post step 12 on a scope limit I invented ('the owner asked for one post'), put it in the PR body and log, and the owner had to ask why there was no reaction."
+    solution: "Run step 12 on every merged post unless the owner says otherwise in their words; never state an owner limit they did not give."

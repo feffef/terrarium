@@ -25,16 +25,6 @@ fixes:
     date: "2026-10-31"
     summary: "CLAUDE.md and the clear-backlog workflows' shared brief line ask each subagent to give every count, id or attribution with its source (command or file:line) or mark it unverified."
 occurrences:
-  - session: session_013zxzeScPetuchKVyaP1PDZ
-    date: "2026-10-31"
-    severity: minor
-    description: "Subagent reports carried loose claims (a commit credited with a change it only merged; 1.1M tokens attributed to one session) that I had to fix after review."
-    solution: "Brief checkers to quote the source line for every number and commit they cite."
-  - session: session_013zxzeSRDhsoSRs2a2bGVgW
-    date: "2026-10-31"
-    severity: minor
-    description: "First draft repeated session-logged claims (unchecked boxes on blog posts, a blog post resting on a misread, \"blind visitors\") without checking diffs; fact-check and review found four wrong or jargon claims."
-    solution: "Make digest.ts gather print each PR's touched files and have the brief say session outcomes are candidates, not facts."
   - session: session_013zxzeRkv6UCWJtPmJ68h32
     date: "2026-11-01"
     severity: minor
@@ -160,3 +150,18 @@ occurrences:
     severity: nit
     description: "The survey said three of four new scripted-replace occurrences shared one target; the design agent re-derived two of four from the entry text."
     solution: "Survey should quote the occurrences behind a count like that."
+  - session: session_013zxzeRqf691rc3SdLaPbvP
+    date: "2026-11-13"
+    severity: nit
+    description: "The dispatch-subagents checker used git worktree list in this container as evidence that other sessions' worktrees were not stranded; I dropped that claim."
+    solution: "brief.md could say another session's worktrees are not visible from this checkout."
+  - session: session_013zxzeT5pQrVtuNLAzUQRaP
+    date: "2026-11-14"
+    severity: minor
+    description: "I relayed the explore agent's claim that no fix landed for #3297; the owner asked if I read their comment, and I only then verified it with git log."
+    solution: "Verify an explore agent's historical claims against git before putting them into a grilling question, as clear-backlog section 2 already says."
+  - session: session_013zxzeT6JgNuWiqXaqyMFpF
+    date: "2026-11-14"
+    severity: nit
+    description: "Asked the grilling questions without verifying the explore agents' picks against their sources, as the skill requires."
+    solution: "Spot-check each pick's cited source before asking; I told the owner which claims were unverified."

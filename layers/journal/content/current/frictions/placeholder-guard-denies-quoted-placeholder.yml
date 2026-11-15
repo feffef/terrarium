@@ -25,3 +25,8 @@ occurrences:
     severity: nit
     description: "The dispatch-read guard blocked a review brief that quoted the literal placeholder name from the brief under review."
     solution: "Refer to placeholders by description in briefs; the guard is working as designed."
+  - session: session_013zxzeQDRyvj3Vc8GUWHvBv
+    date: "2026-11-14"
+    severity: nit
+    description: "A literal braces placeholder in my own extra asks made the dispatch-read guard deny the survey agent's brief; I reworded and retried."
+    solution: "The guard could ignore text that names the placeholder inside a sentence."

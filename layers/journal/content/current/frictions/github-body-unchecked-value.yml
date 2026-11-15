@@ -9,11 +9,6 @@ notes: |-
   2026-10-23 design: a rule or guard on checking body values dropped: each of the four slips was fixed at once, Verify before you state already covers checking a value against its source, and none involves verdict SHAs or merge-pr.ts (the note copied from verdict-comment-hand-typed at the split did not apply).
 fixes: []
 occurrences:
-  - session: session_013zxzeQiYSGT82pZgGnxSVx
-    date: "2026-10-31"
-    severity: minor
-    description: "PR body first claimed pr-workflow.md was a Human-only path without checking the rule's paths; my earlier grep printed nothing and I misread it."
-    solution: "Read the paths list before stating a merge requirement; corrected the PR body."
   - session: session_013zxzeR4cgWA8MkV51fqC4t
     date: "2026-11-03"
     severity: nit
