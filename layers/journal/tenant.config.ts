@@ -36,8 +36,9 @@ export const skillSchema = z
     // (ADR-0015). Machine-managed — do NOT hand-edit; regenerate with
     // `pnpm verify:skills-lock --write`. Absent on our own Skills.
     installedSha256: z.string().optional(),
-    // One plain sentence on what the last audit window saw, shown on the Skills
-    // page. `date` is when `audit-skills` last wrote it; the page dims an old line
+    // The audit's overall verdict on how well the Skill does its job, shown on the
+    // Skills page (`audit-skills/SKILL.md` step 5 says how it is written).
+    // `date` is when it was last written; the page dims an old line
     // (`auditIsStale`) so a past problem doesn't read as current.
     auditSummary: z.object({ date: utcDate, text: z.string() }).optional(),
     // `audit-skills`' own record, not rendered on the site (ADR-0015). Each

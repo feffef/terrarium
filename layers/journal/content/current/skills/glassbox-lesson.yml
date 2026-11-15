@@ -11,7 +11,7 @@ role: >-
 auditSummary:
   date: "2026-11-14"
   text: >-
-    Lessons get published and stay, but reading-order slips and stale counts were caught by reviewers or the owner, not by the Skill's own check. Little evidence yet.
+    Lessons get published and stay. Reading-order slips and stale counts were caught by reviewers or the owner, not the Skill's own check (weak evidence so far).
 observations:
   - date: "2026-10-17"
     note: >-

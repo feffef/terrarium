@@ -11,7 +11,7 @@ role: >-
 auditSummary:
   date: "2026-11-15"
   text: >-
-    Its Seedlings were built and closed, so it does its job. It is costly, reading the whole issue list every run, and reads git and GitHub docs late. Recently introduced.
+    Produces proposals that get built, though many are closed unbuilt. It is costly, reading the whole issue list every run, and reads git and GitHub docs late.
 observations:
   - date: "2026-11-13"
     note: >-

@@ -11,7 +11,7 @@ role: >-
 auditSummary:
   date: "2026-11-14"
   text: >-
-    Does its job: its Inventory-only PRs merge and findings reach issues. Recurring weak spots: it skips code review on its own PRs and leaves orphan-check results out of its summaries.
+    Does its job: its PRs touch only the Skill list and merge, and findings reach issues. Recurring weak spots: it skips code review on its own PRs and leaves its check for forgotten sessions out of its summaries.
 observations:
   - date: "2026-10-06"
     note: >-

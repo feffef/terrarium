@@ -10,7 +10,7 @@ role: >-
 auditSummary:
   date: "2026-11-15"
   text: >-
-    Keeps pages pinned to the code and its PRs merge, but its review is weak: it self-reads huge re-pin diffs, marks partly checked pages as checked, and its pin script leaves some excerpts stale.
+    Keeps guide pages matching the code, and its PRs merge. Weak spots: pages get marked checked after only a partial check, and its update script leaves some excerpts stale.
 observations:
   - date: "2026-10-16"
     note: >-

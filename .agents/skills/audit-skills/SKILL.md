@@ -168,8 +168,9 @@ Grade each Skill's importance by the definitions below, after reading its
 - **`auditSummary`** `{ date: <today, UTC>, text }` is the line the Skills page
   shows for each Skill: two plain sentences (about 40 words, no ids or jargon)
   giving the overall picture from all its `observations` and this window's runs,
-  not only the latest: whether it does its job well, and where it falls short.
-  No counts unless one is the evidence. Replace it for every Skill with runs in
+  not only the latest: how well it does what its `role` says, and where it falls
+  short. Weigh repeated, verified findings above single or unverified ones. Use
+  words a site reader knows, and no counts unless one is the evidence. Replace it for every Skill with runs in
   the window; leave it for one with none, so its `date` ages and the page dims it.
 - **Routine runs**: run
   `pnpm exec tsx scripts/session/prune-routine-runs.ts --append <dir>/usage.jsonl --scorecard <dir>/scorecard.json`.

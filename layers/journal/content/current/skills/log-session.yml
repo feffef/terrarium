@@ -11,7 +11,7 @@ role: >-
 auditSummary:
   date: "2026-11-14"
   text: >-
-    Reliably produces honest, complete logs. A long-running gap in rule answers was fixed in mid-November by the rule-use field.
+    Reliably produces honest, complete logs. A long-running gap in rule answers was fixed in mid-November by a new record of which rules mattered.
 observations:
   - date: "2026-10-06"
     note: >-

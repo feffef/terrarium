@@ -11,7 +11,7 @@ role: >-
 auditSummary:
   date: "2026-11-14"
   text: >-
-    Answers what a session did at low cost when used. Gaps found along the way (page limits, a costly fan-out, script drift) were fixed; cost questions are sometimes answered without it.
+    Answers what a session did when used. Early cost blow-ups on very long sessions were fixed; cost questions are sometimes still answered without it.
 observations:
   - date: "2026-10-20"
     note: >-

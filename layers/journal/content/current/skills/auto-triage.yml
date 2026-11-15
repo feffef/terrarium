@@ -11,7 +11,7 @@ role: >-
 auditSummary:
   date: "2026-10-18"
   text: >-
-    Works well: its closures and escalations matched what the Skill promised, and early routing mistakes were fixed within days. Not checked since mid-October.
+    Works well: its closures and escalations matched what the Skill promised, and early routing mistakes were fixed within days.
 observations:
   - date: "2026-10-08"
     note: >-
