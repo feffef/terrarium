@@ -1,0 +1,359 @@
+schemaVersion: 1
+session: session_013zxzePak78Sud7pyRQMjeV
+startedAt: 2026-11-15T15:33:52Z
+endedAt: 2026-11-15T16:01:01Z
+kind: delegated
+goal: "Glass Box curate run: teach the auditSummary line on Skill inventory"
+status: in-review
+outcome: PR opened with the page fix, memory page and run entry; gate and review passed; waiting for CI and merge
+summary: "The owner invoked /glassbox-curate, gave no focus, then answered \"you pick, repeat until budget is hit\" (human-instructed: run curate and choose the focus; agent-chosen: the Skill inventory focus, the Subject read, the writer and reviewer split). I oriented, started a Scout, read all eleven House rules pages, and chose the memory page's open gap that Skill inventory never mentions auditSummary. An opus writer added it with sources; I re-checked the three claims against the component and the audit-skills Skill, ran the page checks, code-review and the scoped gate, and opened PR 3345 (self-merge allowed: no Lesson, Subject or Skill change). Skipped for the budget: separate claim checker and fresh reader, and full reads of four overlapping pages (only their inventory lines). The Scout found no new topic but one more gap (the uncommented flag), now on the memory page. Still open: wait for CI, post a verdict, merge with merge-pr.ts, then take the next focus (the owner asked for repeats until the budget is spent)."
+prs:
+  - "3345"
+docsRead:
+  - path: layers/glassbox/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-lesson/writing-pages.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-lesson/owner-decisions.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: .throwaway/glassbox-curate/guide-pages-1.md
+    reason: (no reason given)
+  - path: .throwaway/glassbox-curate/guide-pages-2.md
+    reason: (no reason given)
+  - path: .throwaway/glassbox-curate/guide-pages-3.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/85.skill-inventory.md
+    reason: (read before editing)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-curate/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: glassbox-curate
+    reason: the owner invoked it by name
+  - name: dispatch-subagents
+    reason: read before briefing the Scout and writer
+  - name: code-review
+    reason: required before the PR opens
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: orient.ts --subject printed 113 KB, about 45k tokens over three reads, for an 11-page Subject whose pages I mostly only needed to scan.
+    solution: Let orient.ts --subject print each page's headings and Why bullets by default, with full text on request.
+    severity: moderate
+  - description: A wide git show of close-session.yml to check one field dumped its whole 40-day observations list into context.
+    solution: Read only the lines needed (sed range or grep) when checking one field of a data file.
+    severity: nit
+  - description: I first wrote 'get_session was not among the tools' in the run entry without checking; it was available. Caught before landing.
+    solution: Check the tool list before stating a tool is missing; the Skill could say where the cost figure comes from.
+    severity: nit
+  - description: The Skill wants every page the review names read in full before landing; I read only the inventory lines of four overlapping pages, to save budget.
+    solution: Say in Land whether a grep of the overlap is enough when the added claim is narrow.
+    severity: minor
+durationSec: 1629
+models:
+  claude-sonnet-5-5: 93
+toolCounts:
+  Read: 14
+  Bash: 24
+  Skill: 4
+  Agent: 4
+  Write: 3
+  Edit: 4
+  mcp__claude-code-remote__get_session: 1
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - layers/glassbox/content/workshop/runs/2026-11-15T1550.yml
+  - layers/glassbox/content/workshop/pages/index.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/85.skill-inventory.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+docsReadBySubagents:
+  - .agents/skills/glassbox-curate/SKILL.md
+  - .agents/skills/clear-backlog/SKILL.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/writing-pages.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/writing-pages.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/glassbox/content/workshop/pages/index.md
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: ran code-review and gate:scoped before the PR
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: opened the PR myself after review and gate
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: session header on the PR body
+      - path: .claude/rules/adr-0009.md
+        value: in-scope
+      - path: .claude/rules/glassbox-content.md
+        value: steered
+        why: kept the field count out of prose
+      - path: .claude/rules/tenant-glossary.md
+        value: confirmed
+        why: "agreed: read the Glass Box glossary"
+      - path: .claude/rules/glossary-terms.md
+        value: unrelated
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: layers/glassbox/GLOSSARY.md
+      - path: .agents/skills/glassbox-lesson/writing-pages.md
+      - path: .agents/skills/glassbox-lesson/owner-decisions.md
+      - path: docs/agents/git-conventions.md
+      - path: docs/agents/github-integration.md
+      - path: docs/agents/pr-workflow.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/writing-pages.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/writing-pages.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/terrarium-practice/85.skill-inventory.md
+      - rule: .claude/rules/glassbox-content.md
+        via: read
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: duplicate
+        why: "brief:"
+      - path: .claude/rules/glossary-terms.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: .claude/rules/glassbox-content.md
+        value: steered
+      - path: .agents/skills/glassbox-lesson/writing-pages.md
+      - path: layers/glassbox/GLOSSARY.md
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/writing-pages.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/writing-pages.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 3
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/glassbox-content.md
+        value: in-scope
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+subagents:
+  - task: Scout new topics since last run
+    model: sonnet
+    durationSec: 40
+    toolCalls: 14
+    modelCalls: 6
+    tokenShare: 9
+  - task: Write auditSummary paragraph
+    model: opus
+    durationSec: 105
+    toolCalls: 28
+    modelCalls: 15
+    tokenShare: 12.5
+  - task: Standards review of diff
+    model: sonnet
+    durationSec: 36
+    toolCalls: 13
+    modelCalls: 6
+    tokenShare: 7.2
+  - task: Spec review of diff
+    model: sonnet
+    durationSec: 50
+    toolCalls: 14
+    modelCalls: 11
+    tokenShare: 8.9
+gitBranch: claude/happy-johnson-fvc11q
+entrypoint: remote
+cliVersion: 2.1.325
+learnings:
+  - The Scout only reads commits since the newest run entry, so a gap it reports and a run does not take must go on the memory page or it is lost.
+landedBy: Stop
