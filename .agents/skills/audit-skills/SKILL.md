@@ -59,8 +59,13 @@ Check each finding against the source it cites before you use it. One that
 holds up in part but not enough to act on is **unverified**: it goes into the
 Skill's `observations` (step 5), so a later run can build on it.
 
-Done when every subagent has reported and each finding is verified, unverified
-or dropped.
+Check each subagent's idea for **feasibility** (can it be built with what
+exists, and does the evidence justify it) and **simplicity** (it removes or
+replaces more than it adds, and needs no new moving part). Drop one that fails
+with a one-line reason; keep the rest, each tagged with its Skill, for step 5's ideas.
+
+Done when every subagent has reported, each finding is verified, unverified
+or dropped, and each idea is kept or dropped.
 
 ## 3. Check closure completeness
 
@@ -166,10 +171,12 @@ Grade each Skill's importance by the definitions below, after reading its
   which removes entries past that window (git keeps the history) and prints
   what it removed.
 - **`auditSummary`** `{ date: <today, UTC>, text }` is the line the Skills page
-  shows for each Skill: one plain sentence of about 25 words, no ids or jargon, on what this
-  window's runs showed, clean runs included. Replace it for every Skill that
-  had runs in the window. Leave it for a Skill with none, so its `date` ages
-  and the page dims it.
+  shows for each Skill: two plain sentences (about 40 words, no ids or jargon)
+  giving the overall picture from all its `observations` and this window's runs,
+  not only the latest: how well it does what its `role` says, and where it falls
+  short. Weigh repeated, verified findings above single or unverified ones. Use
+  words a site reader knows, and no counts unless one is the evidence. Replace it for every Skill with runs in
+  the window; leave it for one with none, so its `date` ages and the page dims it.
 - **Routine runs**: run
   `pnpm exec tsx scripts/session/prune-routine-runs.ts --append <dir>/usage.jsonl --scorecard <dir>/scorecard.json`.
   It appends each step 1 run to its Routine's file, prunes old rows and
@@ -178,9 +185,9 @@ Grade each Skill's importance by the definitions below, after reading its
   inventoried (`category` is `general-engineering` for an installed Skill,
   `platform-operation` for our own). Propose removing an entry whose Skill is
   gone from disk, unless it is a built-in CLI Skill, which you flag instead.
-- **Ideas**: when the evidence suggests a new Skill, a split or a
-  retirement, record it as this run's session-log `ideas` entry and never act
-  on it.
+- **Ideas**: record each idea that passed step 2's filter, and any new Skill,
+  split or retirement the evidence suggests, as this run's session-log `ideas`
+  entry, concrete enough to file as an issue, and never act on it.
 
 Done when every entry's grade and `role` match the evidence. Step 6 checks the
 issue and PR states your notes write.

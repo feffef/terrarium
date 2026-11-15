@@ -11,7 +11,7 @@ role: >-
 auditSummary:
   date: "2026-11-15"
   text: >-
-    Delivered 7 daily runs. It sometimes claimed a job runs weekly without a source; a source is now required, but two older Digests still say it.
+    Delivers a Digest daily and its fact-check catches wrong claims. Recurring flaws: invented 'weekly' schedules (a source is now required, but old ones remain) and code review before pushing often skipped.
 observations:
   - date: "2026-10-06"
     note: >-

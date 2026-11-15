@@ -11,7 +11,7 @@ role: >-
 auditSummary:
   date: "2026-11-15"
   text: >-
-    Seven runs delivered. It reads the whole issue list each time, costing up to about 90k tokens.
+    Produces proposals that get built, though many are closed unbuilt. It is costly, reading the whole issue list every run, and reads git and GitHub docs late.
 observations:
   - date: "2026-11-13"
     note: >-

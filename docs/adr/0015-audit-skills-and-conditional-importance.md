@@ -30,8 +30,8 @@ Routine run costs and issues.
   costs in the Journal's `routines` Collection, and issues it files or comments on. It never edits a Skill. A finding about one of our Skills
   becomes an issue when it matters enough, and otherwise an observation, so a
   later run sees it repeat. Such an issue goes through ordinary triage, and
-  its fix merges like any PR. Ideas for a new, split or retired Skill are only
-  recorded.
+  its fix merges like any PR. Ideas to improve, add, split or retire a Skill are
+  only recorded.
 - **A script gathers the facts; the session makes every judgement.**
 
 ## Why

@@ -11,7 +11,7 @@ role: >-
 auditSummary:
   date: "2026-11-15"
   text: >-
-    Ran 8 times and 15 posts landed. Some posts named the wrong target in their link-back, and one run skipped a step.
+    Posts land with real fact-checks, but discipline slips: edits after the fact-check shipped unchecked until a rule fixed it, link-backs name the wrong target, and the closing reply step is sometimes skipped.
 observations:
   - date: "2026-10-06"
     note: >-

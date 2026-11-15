@@ -32,4 +32,8 @@ Report every finding labelled silent failure or missed invocation, with its
 session ids, quoted evidence, what the Skill promised against what happened,
 and your best guess at why.
 
-Report in under 300 words plus 150 per finding.
+Then raise exactly one **idea**: a concrete change that would make this Skill
+do its job better or more simply (a wording fix, a script, a guard, a cut), with
+the evidence behind it, in under 60 words. Every Skill has one.
+
+Report in under 300 words plus 150 per finding, plus the idea.
