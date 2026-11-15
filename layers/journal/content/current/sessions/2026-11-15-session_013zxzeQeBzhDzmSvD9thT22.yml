@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQeBzhDzmSvD9thT22
 startedAt: 2026-11-15T00:15:22Z
-endedAt: 2026-11-15T00:24:19Z
+endedAt: 2026-11-15T00:28:45Z
 kind: autonomous
 goal: Write the 2026-11-14 Journal Digest and archive old content
-status: in-review
-outcome: PR 3324 open with the 2026-11-14 Digest and archive sweep; gate green, CI pending
-summary: "Scheduled digest run (no human prompt). One closed day (2026-11-14) lacked a Digest. Gathered its material, wrote the page, fact-checked it with a subagent (five claims fixed: guide page count, a rule described as new, Midden wording, one omitted PR, summary wording), ran the archive sweep (1 Digest and 21 session logs moved), ran the gate and code-review (clean), opened PR 3324 and subscribed. Everything was agent-initiated by the schedule. Merge pending CI."
+status: completed
+outcome: "PR 3324 merged on a green gate: the 2026-11-14 Digest plus 22 archived files"
+summary: "Scheduled digest run (no human prompt). One closed day (2026-11-14) lacked a Digest. Gathered its material, wrote the page, fact-checked it with a subagent (five claims fixed: guide page count, a rule described as new, Midden wording, one omitted PR, summary wording), ran the archive sweep (1 Digest and 21 session logs moved), ran the gate and code-review (clean), opened PR 3324 and subscribed. Everything was agent-initiated by the schedule. Merged on a green gate after posting a verdict."
 prs:
   - "3324"
 docsRead:
@@ -43,15 +43,19 @@ frictions:
   - description: Read github-integration.md only after the first GitHub call, as a hook reminded me.
     solution: Read it before create_pull_request.
     severity: nit
-durationSec: 537
+durationSec: 804
 models:
-  claude-sonnet-5-5: 53
+  claude-sonnet-5-5: 67
 toolCounts:
-  Bash: 22
-  Skill: 4
+  Bash: 26
+  Skill: 5
   Agent: 3
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-11-14.md
   - layers/journal/content/archived/pages/digests/2026-11-07.md
@@ -225,19 +229,19 @@ subagents:
     durationSec: 191
     toolCalls: 65
     modelCalls: 27
-    tokenShare: 42.4
+    tokenShare: 36.8
   - task: Review Digest standards
     model: sonnet
     durationSec: 16
     toolCalls: 7
     modelCalls: 3
-    tokenShare: 4.1
+    tokenShare: 3.6
   - task: Review Digest spec
     model: sonnet
     durationSec: 35
     toolCalls: 11
     modelCalls: 5
-    tokenShare: 5.6
+    tokenShare: 4.9
 gitBranch: claude/compassionate-lovelace-sqtkoz
 entrypoint: remote_trigger
 cliVersion: 2.1.325
