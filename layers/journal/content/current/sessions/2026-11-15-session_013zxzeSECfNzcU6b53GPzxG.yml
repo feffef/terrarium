@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSECfNzcU6b53GPzxG
 startedAt: 2026-11-15T07:34:41Z
-endedAt: 2026-11-15T07:51:04Z
+endedAt: 2026-11-15T07:54:04Z
 kind: interactive
 goal: "Clear the issue backlog: triage, grill the owner, build and land fixes"
 status: in-review
 outcome: "#3325 fix open as a gated PR; #3326 parked behind a Prune Trial; #3017 time-gated to 2026-11-18"
-summary: "Owner-invoked /clear-backlog. The sweep (agent-initiated, per the Skill) picked 3 issues out of 14 open: #3326 and #3325 (full) and #3017 (blocked-check, dated 2026-11-18). The rest were skipped as Seedlings, standing threads or last commented by an agent. Explore agents labelled and commented on #3325 and #3326; I checked those writes against GitHub. The owner (human-instructed answers 1b, 2b, 2a) chose a doc-plus-script fix for #3325 and to wait for the Prune Trial verdict before editing frictions-to-fixes SKILL.md for #3326. I then set #3325 ready-for-agent (agent action following the owner's answer) and ran one build branch with two review rounds. Round 1 caught a real dangling-else defect in the explore workflow; round 2 found only nits, one of which exposed a wrong \"already rewrapped\" claim by the builder. The gate passed, and I opened PR 3333 (agent-initiated, per ADR-0003) and subscribed. Still open: #3326 waits for the trial verdict, #3017 for its date, PR 3333 for CI and merge, and the #3143 retro (section 5) after it lands."
+summary: "Owner-invoked /clear-backlog. The sweep (agent-initiated, per the Skill) picked 3 issues out of 14 open: #3326 and #3325 (full) and #3017 (blocked-check, dated 2026-11-18). The rest were skipped as Seedlings, standing threads or last commented by an agent. Explore agents labelled and commented on #3325 and #3326; I checked those writes against GitHub. The owner (human-instructed answers 1b, 2b, 2a) chose a doc-plus-script fix for #3325 and to wait for the Prune Trial verdict before editing frictions-to-fixes SKILL.md for #3326. I then set #3325 ready-for-agent (agent action following the owner's answer) and ran one build branch with two review rounds. Round 1 caught a real dangling-else defect in the explore workflow; round 2 found only nits, one of which exposed a wrong \"already rewrapped\" claim by the builder. The gate passed, and I opened PR 3333 (agent-initiated, per ADR-0003) and subscribed. Still open: #3326 waits for the trial verdict, #3017 for its date, PR 3333 for the owner's merge. The #3143 retro report is posted as a comment there."
 prs:
   - "3333"
 docsRead:
@@ -58,21 +58,27 @@ frictions:
   - description: Builder claimed the SKILL.md line was already rewrapped; both round-2 reviewers found it still about 120 columns, costing an extra fix and re-check cycle.
     solution: Builder wrap check should print the measured columns in its reply, so the claim is checkable.
     severity: minor
-durationSec: 983
+  - description: The SubagentStart rule-use hook made all four reviewers run echo twice and judge steered or backed with no evidence; unrelated to the review task.
+    solution: Ask once, after the work, in the rule-use hook under scripts/hooks/ (exact file unverified).
+    severity: minor
+durationSec: 1163
 models:
-  claude-sonnet-5-5: 85
+  claude-sonnet-5-5: 109
 toolCounts:
-  Bash: 21
+  Bash: 25
   Read: 8
   mcp__claude-code-remote__get_session: 1
   Workflow: 4
   ToolSearch: 3
   PushNotification: 1
   mcp__github__issue_write: 1
-  SendMessage: 7
+  SendMessage: 12
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   Skill: 2
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 2
 filesEdited:
   - .agents/skills/clear-backlog/SKILL.md
   - .agents/skills/clear-backlog/scripts/run-summary.ts
@@ -458,94 +464,94 @@ subagents:
   - type: general-purpose
     task: a448a67846ac699f5
     model: claude-sonnet-5-5
-    durationSec: 349
-    toolCalls: 40
-    modelCalls: 27
-    tokenShare: 16.9
+    durationSec: 531
+    toolCalls: 41
+    modelCalls: 28
+    tokenShare: 15.1
   - type: general-purpose
     task: a9b28785b840f31bd
     model: claude-sonnet-5-5
-    durationSec: 81
-    toolCalls: 7
-    modelCalls: 6
-    tokenShare: 5.8
+    durationSec: 444
+    toolCalls: 8
+    modelCalls: 7
+    tokenShare: 6.2
   - type: general-purpose
     task: aa2ab1fa9ff9ef17d
     model: claude-sonnet-5-5
-    durationSec: 73
-    toolCalls: 9
-    modelCalls: 5
-    tokenShare: 3.5
+    durationSec: 354
+    toolCalls: 10
+    modelCalls: 6
+    tokenShare: 3.3
   - type: general-purpose
     task: abaa7a3089d29c8f9
     model: claude-sonnet-5-5
-    durationSec: 73
-    toolCalls: 7
-    modelCalls: 5
-    tokenShare: 3.2
+    durationSec: 354
+    toolCalls: 8
+    modelCalls: 6
+    tokenShare: 3
   - type: general-purpose
     task: ac1397bb6e69eb3e5
     model: claude-sonnet-5-5
-    durationSec: 79
-    toolCalls: 6
-    modelCalls: 5
-    tokenShare: 3.3
+    durationSec: 443
+    toolCalls: 7
+    modelCalls: 6
+    tokenShare: 4
   - type: workflow-subagent
     task: build explore-uncommented-comment-check
     model: claude-sonnet-5-5
     durationSec: 86
     toolCalls: 21
     modelCalls: 14
-    tokenShare: 8.2
+    tokenShare: 7.2
   - type: workflow-subagent
     task: Standards explore-uncommented-comment-check r1
     model: claude-sonnet-5-5
     durationSec: 16
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 3.9
+    tokenShare: 3.4
   - type: workflow-subagent
     task: Spec explore-uncommented-comment-check r1
     model: claude-sonnet-5-5
     durationSec: 18
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 1.7
+    tokenShare: 1.5
   - type: workflow-subagent
     task: "triage #3325"
     model: claude-sonnet-5-5
     durationSec: 99
     toolCalls: 26
     modelCalls: 10
-    tokenShare: 6.6
+    tokenShare: 5.8
   - type: workflow-subagent
     task: "triage #3017"
     model: claude-sonnet-5-5
     durationSec: 21
     toolCalls: 8
     modelCalls: 4
-    tokenShare: 4.5
+    tokenShare: 4
   - type: workflow-subagent
     task: "triage #3326"
     model: claude-sonnet-5-5
     durationSec: 94
     toolCalls: 27
     modelCalls: 9
-    tokenShare: 6.5
+    tokenShare: 5.7
   - type: workflow-subagent
     task: Standards explore-uncommented-comment-check r2
     model: claude-sonnet-5-5
     durationSec: 17
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 1.8
+    tokenShare: 1.6
   - type: workflow-subagent
     task: Spec explore-uncommented-comment-check r2
     model: claude-sonnet-5-5
     durationSec: 14
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.7
+    tokenShare: 1.5
 gitBranch: claude/vigilant-lamport-mk7rst
 entrypoint: remote
 cliVersion: 2.1.325
