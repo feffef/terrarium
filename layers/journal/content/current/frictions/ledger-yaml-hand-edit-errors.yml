@@ -28,11 +28,6 @@ fixes:
     date: "2026-10-28"
     summary: "ledger-set.ts sets summary, cause and surface on an existing entry; prune-friction-ledger.ts --move writes block style into an entry created with empty occurrences."
 occurrences:
-  - session: session_013zxzeStBRUtsbccz5kMYNU
-    date: "2026-10-31"
-    severity: nit
-    description: "Hand-edited a Friction Ledger entry although survey-brief.md says every ledger edit goes through ledger-set.ts; the Spec review caught it before push"
-    solution: "Grep frictions-to-fixes for the ledger edit path before touching layers/journal/content/current/frictions/"
   - session: session_013zxzeRJEE2ehNrQTL62nhX
     date: "2026-11-06"
     severity: minor

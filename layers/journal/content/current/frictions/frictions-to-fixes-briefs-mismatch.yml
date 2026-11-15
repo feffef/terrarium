@@ -31,11 +31,6 @@ fixes:
     date: "2026-11-11"
     summary: "survey-brief.md: for a closed regression issue, read closed_by_pull_requests (issue_read) and cite any PR that closed it."
 occurrences:
-  - session: session_013zxzeSiq7TZmfmF5D5Rbwt
-    date: "2026-10-31"
-    severity: nit
-    description: "Survey brief gives no scratch path for --out and its stale-status reset does not cover an issue closed not planned; the subagent followed it literally for #2694."
-    solution: "Say where --out goes and how to handle closed-not-planned in survey-brief.md (tracked in #2725)."
   - session: session_013zxzeNxm9jTD6DwkDXzzG8
     date: "2026-11-01"
     severity: nit

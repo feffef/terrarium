@@ -11,11 +11,6 @@ fixes:
     date: "2026-11-01"
     summary: "print-ledger-occurrence --append now names every failing entry in one error, still writing nothing on any failure."
 occurrences:
-  - session: session_013zxzeSiq7TZmfmF5D5Rbwt
-    date: "2026-10-31"
-    severity: minor
-    description: "Survey subagent's batched --append aborted wholly on one already-held session, writing nothing; it reran 36 triples one at a time, over two minutes."
-    solution: "Make print-ledger-occurrence.ts --append skip and report held sessions instead of aborting the batch."
   - session: session_013zxzeNxm9jTD6DwkDXzzG8
     date: "2026-11-01"
     severity: minor

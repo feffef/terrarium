@@ -21,16 +21,6 @@ fixes:
     date: "2026-11-07"
     summary: "glassbox-curate's memory-page bullet says to state a count only after counting its items in their source (the shipped 'eight stops' miss, closes #2915)."
 occurrences:
-  - session: session_013zxzeRaFPYidUVPvEBA6NU
-    date: "2026-10-31"
-    severity: minor
-    description: "My first Karen draft stated a one-second close and a two-day gap from a secondary source (an issue body); the fact-check found GitHub's events say two seconds and 28 hours."
-    solution: "Take timestamps from the events API or the PR's merged_at when drafting, not from another issue's prose."
-  - session: session_013zxzeRuz3fA1RMj6ygrT9d
-    date: "2026-10-31"
-    severity: minor
-    description: "I wrote five Updates with an invented figure (214 uses) and winks before reading each Campaign page in full; code-review caught it, costing a rewrite and a second gate run."
-    solution: "Read the Campaign page and the Voice section of tinkerfund-campaign before drafting content, as for any new Update."
   - session: session_013zxzeNqa4MUJF5DT5wQ1zf
     date: "2026-11-01"
     severity: minor

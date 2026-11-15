@@ -14,11 +14,6 @@ fixes:
     date: "2026-10-31"
     summary: "Redirected the design brief's audit-skills output to a file with a narrow extraction."
 occurrences:
-  - session: session_013zxzeSiq7TZmfmF5D5Rbwt
-    date: "2026-10-31"
-    severity: nit
-    description: "Design brief wants only docReadCounts, but audit-skills.ts prints 40 KB JSON with no filter flag; the agent wrote a snippet. It also lacks a check for a fix that landed after the session."
-    solution: "Add a docReadCounts-only option to audit-skills.ts, and a git-log check step in design-brief.md."
   - session: session_013zxzeNdAgdKF5tpWTQLowx
     date: "2026-11-13"
     severity: minor

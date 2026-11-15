@@ -33,11 +33,6 @@ fixes:
     date: "2026-10-28"
     summary: "pr-workflow.md's simple-change bar now says a simple change adds, renames or moves no file, so a rename sweep gets code-review before its first push."
 occurrences:
-  - session: session_013zxzeNZn2iJjZrQj2ortVS
-    date: "2026-10-31"
-    severity: minor
-    description: "The code-review Skill asks for two parallel sub-agents, but the diff was 113 mechanical pin lines; I self-read it, deviating from pr-workflow for a non-simple change."
-    solution: "Let pr-workflow's simple-change bar cover mechanical re-pins of frontmatter."
   - session: session_013zxzeSgWhesrfA7R1JBnhE
     date: "2026-11-01"
     severity: minor

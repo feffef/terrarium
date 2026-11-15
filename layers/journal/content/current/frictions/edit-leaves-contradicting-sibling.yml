@@ -16,11 +16,6 @@ fixes:
     date: "2026-11-01"
     summary: "CLAUDE.md Self-verification: after changing a type or a test, run pnpm typecheck and the touched spec before gate:scoped."
 occurrences:
-  - session: session_013zxzeRuz3fA1RMj6ygrT9d
-    date: "2026-10-31"
-    severity: minor
-    description: "gate:scoped failed twice (e2e assertion used a Playwright matcher the suite lacks; Popular order assertion broke under the cap) because I did not grep the tests first."
-    solution: "Grep tests for the behaviour before changing it, and run typecheck on test edits."
   - session: session_013zxzeSvdGhiM7SLEUgzvmF
     date: "2026-11-01"
     severity: minor
