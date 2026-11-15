@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeS7ZJqB5FMcd5d5fza
 startedAt: 2026-11-15T00:45:39Z
-endedAt: 2026-11-15T00:56:08Z
+endedAt: 2026-11-15T00:59:52Z
 kind: autonomous
 goal: Weekly check of the Platform's own Skills
-status: in-review
-outcome: "16 Skills checked, 2 issues filed, Inventory PR #3327 open"
-summary: "Scheduled audit-skills run, no human prompt. Gathered the scorecard, had one subagent fetch usage for 11 Routine runs, and dispatched 16 read-only subagents, one per Skill. Closure signals: orphanScan scanned (256 merged PRs, 117 issues, 372 with a session), 0 orphans, 0 suppressions, 0 human-prompted or rescued closures. Most checks found delivered work and known repeats. Two repeats cleared the issue bar and were filed by the agent on its own (Skill-allowed): #3325 (clear-backlog explore agent left #3320 without a triage comment after fix #3304; verified on GitHub) and #3326 (frictions-to-fixes top-three rule overridden, tracked with no ref). Other findings (glassbox-curate code-review skip in #3311, blog-post step 12 skip, glassbox-update repeats) became observations. Appended 10 Inventory observations, pruned entries past 40 days, appended 11 Routine run rows; no grade or role changes. Code-review (both axes) was clean, gate:scoped passed, PR #3327 opened and subscribed. Still open: PR CI and merge."
+status: completed
+outcome: "16 Skills checked, 2 issues filed, Inventory PR #3327 merged"
+summary: "Scheduled audit-skills run, no human prompt. Gathered the scorecard, had one subagent fetch usage for 11 Routine runs, and dispatched 16 read-only subagents, one per Skill. Closure signals: orphanScan scanned (256 merged PRs, 117 issues, 372 with a session), 0 orphans, 0 suppressions, 0 human-prompted or rescued closures. Most checks found delivered work and known repeats. Two repeats cleared the issue bar and were filed by the agent on its own (Skill-allowed): #3325 (clear-backlog explore agent left #3320 without a triage comment after fix #3304; verified on GitHub) and #3326 (frictions-to-fixes top-three rule overridden, tracked with no ref). Other findings (glassbox-curate code-review skip in #3311, blog-post step 12 skip, glassbox-update repeats) became observations. Appended 10 Inventory observations, pruned entries past 40 days, appended 11 Routine run rows; no grade or role changes. Code-review (both axes) was clean and gate:scoped passed. PR #3327 was opened, CI's gate went green, I posted a verdict comment and merged it with merge-pr.ts (511bd1c14). The 17 subagents cost roughly 1.7M subagent tokens, mostly to confirm known repeats."
 prs:
   - "3327"
 docsRead:
@@ -60,7 +60,7 @@ skillsUsed:
   - name: code-review
     reason: reviewed the Inventory diff before the PR
   - name: close-session
-    reason: closure at PR open
+    reason: closure at PR open and at merge
   - name: log-session
     reason: authored this log
 frictions:
@@ -76,19 +76,26 @@ frictions:
   - description: Ran git fetch and git commit before reading git-conventions.md; read it after the first git command.
     solution: Read git-conventions.md before the first state-changing git command.
     severity: nit
-durationSec: 629
+  - description: Subagent reports from 16 per-Skill checks cost about 1.7M subagent tokens and mostly re-confirmed known repeats; I verified only the two I escalated.
+    solution: Have the scorecard flag Skills whose logs show no new friction so those checks can be skipped or run at lower breadth.
+    severity: minor
+durationSec: 853
 models:
-  claude-sonnet-5-5: 107
+  claude-sonnet-5-5: 123
 toolCounts:
-  Bash: 23
+  Bash: 26
   Read: 5
   Agent: 20
   ToolSearch: 1
   mcp__Claude_Code_Remote__get_session: 1
   mcp__github__issue_write: 2
-  Skill: 3
+  Skill: 4
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/routines/audit-docs.yml
   - layers/journal/content/current/routines/audit-skills.yml
@@ -666,135 +673,137 @@ subagents:
     durationSec: 40
     toolCalls: 16
     modelCalls: 6
-    tokenShare: 2
+    tokenShare: 1.9
   - type: general-purpose
     task: Check audit-docs
     model: sonnet
     durationSec: 64
     toolCalls: 12
     modelCalls: 8
-    tokenShare: 4.6
+    tokenShare: 4.3
   - type: general-purpose
     task: Check audit-skills
     model: sonnet
     durationSec: 109
     toolCalls: 14
     modelCalls: 11
-    tokenShare: 4.1
+    tokenShare: 3.9
   - type: general-purpose
     task: Check blog-post
     model: sonnet
     durationSec: 94
     toolCalls: 14
     modelCalls: 11
-    tokenShare: 4.1
+    tokenShare: 3.8
   - type: general-purpose
     task: Check clear-backlog
     model: sonnet
     durationSec: 121
     toolCalls: 14
     modelCalls: 12
-    tokenShare: 4.6
+    tokenShare: 4.3
   - type: general-purpose
     task: Check close-session
     model: sonnet
     durationSec: 83
     toolCalls: 10
     modelCalls: 8
-    tokenShare: 2.6
+    tokenShare: 2.4
   - type: general-purpose
     task: Check digest
     model: sonnet
     durationSec: 83
     toolCalls: 12
     modelCalls: 11
-    tokenShare: 3.4
+    tokenShare: 3.2
   - type: general-purpose
     task: Check dispatch-subagents
     model: sonnet
     durationSec: 136
     toolCalls: 17
     modelCalls: 15
-    tokenShare: 6.1
+    tokenShare: 5.8
   - type: general-purpose
     task: Check frictions-to-fixes
     model: sonnet
     durationSec: 116
     toolCalls: 12
     modelCalls: 10
-    tokenShare: 5.3
+    tokenShare: 5
   - type: general-purpose
     task: Check glassbox-curate
     model: sonnet
     durationSec: 85
     toolCalls: 11
     modelCalls: 9
-    tokenShare: 3.1
+    tokenShare: 2.9
   - type: general-purpose
     task: Check glassbox-lesson
     model: sonnet
     durationSec: 50
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 1.7
+    tokenShare: 1.6
   - type: general-purpose
     task: Check glassbox-update
     model: sonnet
     durationSec: 72
     toolCalls: 11
     modelCalls: 8
-    tokenShare: 3.2
+    tokenShare: 3
   - type: general-purpose
     task: Check harvest
     model: sonnet
     durationSec: 99
     toolCalls: 11
     modelCalls: 9
-    tokenShare: 2.8
+    tokenShare: 2.6
   - type: general-purpose
     task: Check inspect-session
     model: sonnet
     durationSec: 114
     toolCalls: 18
     modelCalls: 15
-    tokenShare: 6.3
+    tokenShare: 5.9
   - type: general-purpose
     task: Check log-session
     model: sonnet
     durationSec: 77
     toolCalls: 12
     modelCalls: 9
-    tokenShare: 3.4
+    tokenShare: 3.2
   - type: general-purpose
     task: Check prune-trial
     model: sonnet
     durationSec: 95
     toolCalls: 15
     modelCalls: 13
-    tokenShare: 4.2
+    tokenShare: 4
   - type: general-purpose
     task: Check visitor-loop
     model: sonnet
     durationSec: 119
     toolCalls: 19
     modelCalls: 16
-    tokenShare: 5.6
+    tokenShare: 5.2
   - type: general-purpose
     task: Review standards axis
     model: sonnet
     durationSec: 34
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 2.3
+    tokenShare: 2.1
   - type: general-purpose
     task: Review spec axis
     model: sonnet
     durationSec: 33
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 2.1
+    tokenShare: 2
 gitBranch: claude/loving-tesla-1gvs63
 entrypoint: remote_trigger
 cliVersion: 2.1.325
 trigger: audit-skills
+ideas:
+  - Make audit-skills dispatch a per-Skill check only when the scorecard shows a new friction, changed Skill text or a missing outcome for that Skill; the other checks mostly re-confirm known repeats and cost about 1.7M subagent tokens a run.
 landedBy: Stop
