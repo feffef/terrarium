@@ -1,12 +1,27 @@
 session: session_013zxzePak78Sud7pyRQMjeV
 mode: interactive
 focus: "Workflow scripts: the explore script's new optional uncommented flag
-  (clear-backlog-explore.js, commit f9146e4f) is not taught (Scout gap left on
+  (clear-backlog-explore.js, commit f9146e4f) was not taught (Scout gap left on
   the memory page by the run before). Chosen on the owner's word 'you pick,
   repeat until budget is hit'; it is a small gap on one existing page (no new
   Lesson) and no open PR touches the Agents pages. Deviations for the budget:
   only the Workflow scripts page was read in full, not the other Agents pages
   or the whole guide index again (nothing but the Skill inventory page changed
-  since the last orientation)."
-changes: []
-pagesRead: []
+  since the last orientation); an opus writer wrote the paragraph with sources
+  and the lead re-checked each claim against the Skill, the script and
+  run-summary.ts; no claim checker, no fresh reader, and no code-review (my own
+  read of a one-paragraph diff, though it touches three files, so it is over
+  the simple-change bar of pr-workflow.md by file count). The Scout of the
+  earlier run found nothing else here. Cost per get_session at the start of
+  this run: 271k context tokens, cost_usd 4.22."
+changes:
+  - agents/20.workflow-scripts | One paragraph after the explore excerpt: the
+    clear-backlog skill sets uncommented on an issue with no comments, the
+    explore script has its triage agent post exactly one comment and copies the
+    flag onto the result, and run-summary.ts flags NO WRITES on a build or
+    uncommented result that wrote nothing; teaches updated, re-pinned to main,
+    publishedAt moved | no page taught the flag
+  - workshop/pages/index | the uncommented-flag gap deleted | done, so the page is
+    shorter
+pagesRead:
+  - agents/20.workflow-scripts
