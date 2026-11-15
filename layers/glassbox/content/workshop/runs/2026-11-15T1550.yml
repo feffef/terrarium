@@ -1,9 +1,32 @@
 session: session_013zxzePak78Sud7pyRQMjeV
 mode: interactive
-focus: "Skill inventory: the page never mentions the auditSummary line that
+focus: "Skill inventory: the page never mentioned the auditSummary line that
   audit-skills writes on each entry and the Skills page shows (Scout gap on the
-  memory page, commits 1a3329228 and 289b5613d). Chosen by the owner's word 'you
+  memory page, commits 1a3329228 and 289b5613d). Chosen on the owner's word 'you
   pick, repeat until budget is hit'; it is concrete, fits an existing page (no
-  new Lesson, so no owner merge) and no open PR touches the House rules pages."
-changes: []
-pagesRead: []
+  new Lesson, so no owner merge) and no open PR touches the House rules pages.
+  Deviations for the budget: an opus writer wrote the sentences and quoted
+  sources; no separate claim checker and no fresh reader (three added claims,
+  each re-checked by the lead against SkillInventory.vue and the audit-skills
+  Skill); the other ten House rules pages were read in full. The Scout found no
+  new topic; it named one more gap (the uncommented flag), put on the memory page."
+changes:
+  - terrarium-practice/85.skill-inventory | auditSummary named as the third field
+    beside gist and observations, with how it is written and replaced; the People
+    bullet says where the Skills page shows it and that an old one is dimmed;
+    teaches updated, re-pinned to main, publishedAt moved | no page taught the
+    field
+  - workshop/pages/index | the auditSummary gap deleted; one Scout gap (the
+    uncommented flag on Workflow scripts) added | the first is done
+pagesRead:
+  - terrarium-practice/10.human-in-the-loop
+  - terrarium-practice/20.decision-records
+  - terrarium-practice/30.ubiquitous-language
+  - terrarium-practice/40.session-logs
+  - terrarium-practice/45.ideas-and-lessons-learned
+  - terrarium-practice/50.pruning-instructions
+  - terrarium-practice/60.protected-paths
+  - terrarium-practice/70.cross-tenant-reads
+  - terrarium-practice/80.self-improvement-loop
+  - terrarium-practice/85.skill-inventory
+  - terrarium-practice/90.outside-contributions
