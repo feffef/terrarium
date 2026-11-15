@@ -1,0 +1,21 @@
+session: session_013zxzePak78Sud7pyRQMjeV
+mode: interactive
+focus: "A session log lands on main: the memory page's claim to check that the
+  walkthrough says 'the Stop hook' in the singular though four are wired. Chosen
+  on the owner's word 'you pick, repeat until budget is hit'; a false-claim lead
+  is the first priority of a run and it is a one-sentence fix. Checked at
+  origin/main fc66eae80: .claude/settings.json lines 234-252 wire four command
+  hooks under one Stop event (the --land hook first, then harness-tag-stop.ts,
+  merge-close-stop.ts and pr-subscribe-stop.ts). Deviations for the budget:
+  only the one sentence and its page were read, no writer, claim checker, fresh
+  reader or code-review (a one-line smallest correction the lead checked against
+  settings.json; no new claim). Cost per get_session at the start of this run:
+  333k context tokens, cost_usd 8.14."
+changes:
+  - walkthroughs/40.session-log-lands-on-main | The hook stage now says Claude
+    Code fires the Stop hooks and the first of them checks for the scratch file |
+    four hooks run on Stop, so the singular read as the only one. Wording
+    only, so revision and publishedAt are kept
+  - workshop/pages/index | the singular-Stop claim deleted from the claims to
+    check | done
+pagesRead: []
