@@ -7,9 +7,4 @@ role: >-
   a survey-report issue's candidates into catalogued Artifacts and dig
   reports, grading and fact-checking each against primary sources, then opens
   a PR for a human to review (`layers/midden/GLOSSARY.md`).
-observations:
-  - date: "2026-10-05"
-    note: >-
-      Coverage gap (audit-skills sweep): used once this window
-      (session_01EE8wFRkAWLtXgzdcoceCto; allTimeUses: 1), on disk, no
-      Inventory entry; added. Below the ≥3-session bar for a behaviour check.
+observations: []

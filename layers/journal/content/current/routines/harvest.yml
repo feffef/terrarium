@@ -1,2 +1,2 @@
 name: harvest
-runs: [ { session: session_013zxzeSAxx2RTJ89sW91w2b, startedAt: 2026-11-13T17:06:48Z, durationSeconds: 329, inputTokens: 58, outputTokens: 27071, cacheReadTokens: 3428725, cacheWriteTokens: 128454, costUsd: 1.1275145 } ]
+runs: [ { session: session_013zxzeSAxx2RTJ89sW91w2b, startedAt: 2026-11-13T17:06:48Z, durationSeconds: 329, inputTokens: 58, outputTokens: 27071, cacheReadTokens: 3428725, cacheWriteTokens: 128454, costUsd: 1.1275145 }, { session: session_013zxzeNxZVrKu9whNTs4pnR, startedAt: 2026-11-14T17:06:05Z, durationSeconds: 299, inputTokens: 64, outputTokens: 23483, cacheReadTokens: 3498973, cacheWriteTokens: 129445, costUsd: 1.1026353 } ]
