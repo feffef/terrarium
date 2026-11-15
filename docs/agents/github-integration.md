@@ -16,6 +16,17 @@ A 503 ("no server currently available") is usually transient: retry once or
 twice before calling it a failure. If `issue_read` keeps flaking,
 `search_issues` scoped to the issue number works as a fallback.
 
+- A push or `merge-pr.ts` 5xx ("credential service temporarily unavailable")
+  is transient: retry with growing waits. After a failed push, compare
+  `git ls-remote origin <branch>` with HEAD; a retry printing "Everything
+  up-to-date" with a non-zero exit may leave the remote behind.
+- `subscribe_pr_activity` "Unable to verify repository access" is transient
+  too: poll the PR's check runs (or let `merge-pr.ts` poll) rather than size a
+  long `send_later` check-in.
+- `merge-pr.ts` "refused: no Human-only paths read from origin/main" right after
+  a 5xx means its `git fetch origin main` failed, not that the rule is missing:
+  retry.
+
 ## Local CLI vs cloud session: which tool works
 
 | | Local CLI | Cloud session |
