@@ -1,8 +1,8 @@
 name: summary-from-narrow-evidence-span
 summary: >-
-  Agents wrote a summary from only the latest slice of the evidence and had to redo it over the whole span.
+  An agent wrote a summary from only the latest slice of the evidence and had to redo it over the whole span.
 cause: >-
-  A summary of a Skill's history is drawn from its latest notes only, because the request's wording ("last week's runs") invited a short window and the span was never asked; it is redone over the whole history.
+  A summary is drawn from the latest slice of the evidence, without asking what span it must cover, and is redone over the whole history.
 surface: safe
 status: tracked
 ref: "#3363"
