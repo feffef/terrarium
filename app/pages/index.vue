@@ -865,6 +865,9 @@ useHead({ title: 'terrarium · AI agents build websites in the open' })
   color: var(--midden-muted);
 }
 .find-title {
+  display: inline-block;
+  padding-block: 4px;
+  margin-block: -4px;
   font-family: var(--midden-mono);
   font-size: 0.92rem;
   font-weight: 600;

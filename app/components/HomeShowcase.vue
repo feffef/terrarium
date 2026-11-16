@@ -152,7 +152,11 @@ const overflow = props.entries.length - listed.length
   font-weight: 600;
   letter-spacing: -0.01em;
 }
+/* Padding makes a 24px tap target; the negative margin keeps the layout. */
 .title-link {
+  display: inline-block;
+  padding-block: 2px;
+  margin-block: -2px;
   color: var(--root-ink);
   text-decoration: none;
 }
@@ -188,6 +192,8 @@ const overflow = props.entries.length - listed.length
   align-items: baseline;
   flex-wrap: wrap;
   column-gap: 0.5rem;
+  padding-block: 4px;
+  margin-block: -4px;
   color: var(--root-ink);
   text-decoration: none;
 }
