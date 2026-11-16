@@ -14,7 +14,8 @@ steps; improvise.
 **Shape.** A session works through foci, one run each: a run takes one focus (a
 Subject, a structural question or a gap), from the instructions you were given
 or the memory page, and opens one PR; then the next run takes the next focus.
-There is always another, so only the budget ends a session. The budget, for the
+There is always another, so only the budget ends a session, and this holds for
+every run, scheduled autonomous ones included. The budget, for the
 whole session, is $25 of spend or 500k tokens of context in the main session,
 whichever comes first; Loop, the last step, says how to read it and what it
 decides. Several runs a day must work.
@@ -165,7 +166,10 @@ keeps them so).
   memory page and run entry are current. Then Loop.
 - **Loop.** Every run that opened a PR ends here, whether it merged or waits for
   the owner; finishing a focus is not the end of the session, and closing it
-  straight after Land skips this step. First read the budget. Call
+  straight after Land skips this step. When cost can't be read, the context
+  limit is the budget: keep starting full runs until the estimated context
+  reaches it, and never stop only because cost is unknown. First read the
+  budget. Call
   `get_session` with no session id: `external_metadata.usage.cost_usd` (it
   appears only partway into a run) and
   `external_metadata.context_usage.used_tokens`. If `get_session` is not among
