@@ -1,0 +1,123 @@
+schemaVersion: 1
+session: session_013zxzeRzd6VkoZYwUYQuzAn
+startedAt: 2026-11-16T01:41:35Z
+endedAt: 2026-11-16T01:47:53Z
+kind: interactive
+goal: Glass Box guide intro says agents write the guide itself
+status: in-review
+outcome: PR 3361 opened with the one-sentence edit; gate:scoped green
+summary: "The owner sent a terse prompt quoting the Glass Box guide's first sentence and the words to add. Per their stated preference I asked a clarification round (intent, wording, scope) before editing. Human-instructed: adding \"including its own guide that you are just reading\", making people steering its own sentence, scoping to this one sentence, and (mid-turn) adding \"automatically kept up to date daily or similar\". Agent-initiated: choosing \"automatically\" over \"daily\", because the glassbox-content rule keeps when-something-runs out of page prose (I confirmed the glassbox-update routine exists, so the claim is true); and opening the PR, which ADR-0003 requires once gate and review pass, though the owner picked \"just this one sentence\" rather than \"edit and open a PR\". The change is one line, so I read the diff myself instead of running code-review. Left open: the PR is subscribed and awaiting CI, then merge."
+prs:
+  - "3361"
+docsRead:
+  - path: layers/glassbox/content/guide/pages/index.md
+    reason: (read before editing)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: PR opened
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Edited Glass Box content without reading layers/glassbox/GLOSSARY.md or glassbox-lesson/owner-decisions.md, as the tenant-glossary and glassbox-content rules direct.
+    solution: Read the Tenant glossary and owner decisions before the first edit under layers/glassbox; the rule loaded only after the first read of the page.
+    severity: minor
+  - description: Tried to commit while gate:scoped ran in the background; the gate-edit guard blocked it and I had to wait a turn.
+    solution: Commit before starting the gate, or wait for the gate before staging.
+    severity: nit
+  - description: The owner's mid-turn request for 'daily' conflicts with the glassbox-content rule against when-something-runs in prose; resolved by using 'automatically'.
+    solution: None needed; the rule gave a clear answer, but the owner may want to be told the rule exists when asking.
+    severity: nit
+durationSec: 378
+models:
+  claude-sonnet-5-5: 52
+toolCounts:
+  Grep: 4
+  Read: 5
+  AskUserQuestion: 1
+  Edit: 2
+  Bash: 11
+  Write: 2
+  ToolSearch: 2
+  mcp__github__list_pull_requests: 1
+  Glob: 1
+  mcp__github__create_pull_request: 1
+  Skill: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - layers/glassbox/content/guide/pages/index.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/glassbox-content.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/index.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/index.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/index.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/glassbox-update/SKILL.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: ran gate:scoped, own-read for simple change
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: opened PR despite system prompt
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: provenance header, checked trailer
+      - path: .claude/rules/adr-0009.md
+        value: in-scope
+      - path: .claude/rules/glassbox-content.md
+        value: steered
+        why: dropped daily from prose
+      - path: .claude/rules/tenant-glossary.md
+        value: missed
+        why: "skipped: never read the Glass Box glossary"
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: docs/agents/git-conventions.md
+      - path: docs/agents/pr-workflow.md
+      - path: docs/agents/github-integration.md
+gitBranch: claude/loving-pascal-xqmylx
+entrypoint: remote
+cliVersion: 2.1.325
+landedBy: Stop
