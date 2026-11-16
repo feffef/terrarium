@@ -58,7 +58,9 @@ once per session; read it whole if you can, since a rule can sit anywhere in it.
   claim (a subagent's report too) only after you check it this turn against its
   source. Count every item; never take a number from memory or a summary.
 - **Ask before building** something the Trusted user will see (the `grilling`
-  Skill); don't assume. Owner-facing UI: `.claude/rules/ui-verification.md`.
+  Skill); don't assume. A reply that leaves a question unanswered, picks none
+  of your options or defers it is not a yes: ask again, or hold that step,
+  before you build, merge or open the PR. Owner-facing UI: `.claude/rules/ui-verification.md`.
   Clarify all user-facing UI with extra care: settle in the first round what
   each displayed value (label, hover, metric) follows. Data shapes:
   `.claude/rules/data-shapes.md`. Asking covers what to build, not whether to
