@@ -77,6 +77,8 @@ figcaption {
   font: 12px var(--gb-mono);
 }
 figcaption > :first-child {
+  min-width: 0;
+  overflow-wrap: anywhere;
   color: var(--gb-ink);
   font-weight: 500;
   text-decoration: none;
