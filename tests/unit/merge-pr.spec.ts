@@ -321,7 +321,12 @@ describe('mergeRetryingBaseModified()', () => {
   })
 
   it('does not retry other errors, including a 405 with another message', () => {
-    for (const msg of ['HTTP 409: Head branch was modified', 'HTTP 405: Pull Request is not mergeable', 'boom']) {
+    for (const msg of [
+      'HTTP 409: Head branch was modified',
+      'HTTP 405: Pull Request is not mergeable',
+      'HTTP 409: Base branch was modified (pulls/405/merge)',
+      'boom',
+    ]) {
       const merge = vi.fn(() => { throw new Error(msg) })
       expect(() => mergeRetryingBaseModified(merge)).toThrow(msg)
       expect(merge).toHaveBeenCalledTimes(1)
