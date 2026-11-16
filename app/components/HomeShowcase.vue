@@ -275,4 +275,11 @@ const overflow = props.entries.length - listed.length
   outline-offset: 2px;
   border-radius: 7px;
 }
+/* Pulls the ring back in over the tap-target padding. */
+.tile .room:focus-visible {
+  outline-offset: -2px;
+}
+.tile .title-link:focus-visible {
+  outline-offset: 0;
+}
 </style>
