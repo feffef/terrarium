@@ -91,8 +91,9 @@ keeps them so).
   Before you take any lead from the memory page, check it still stands and that
   no earlier step (settled titles, a pending Subject move) should come first;
   grep the guide for its key terms.
-- **Read.** The full depth above. Run `orient.ts --subject <folder>` and read
-  its output whole; it ends with the `pagesRead` lines to paste. Also read in
+- **Read.** The full depth above. Run `orient.ts --subject <folder>`; it
+  writes the Subject's pages to part files and names them: read each whole, one
+  Read per file. It ends with the `pagesRead` lines to paste. Also read in
   full every page outside the Subject that a change would edit, link or
   overlap. Done when every page of the Subject is read in full, plus every
   outside page a change would edit, link or overlap.
