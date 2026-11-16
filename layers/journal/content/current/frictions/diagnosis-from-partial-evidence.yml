@@ -9,7 +9,7 @@ ref: "#3363"
 fixes:
   - pr: 2336
     date: "2026-10-20"
-    summary: "CLAUDE.md \"Verify before you state\" now names subagent reports, script behaviour from recall, \"only\"/\"every\"/\"nothing\" claims and one-test causes; \"One home per fact\" says to grep for other statements when changing one."
+    summary: "Lengthened CLAUDE.md \"Verify before you state\" (reverted in PR 2378) and added a grep clause to \"One home per fact\"."
   - pr: 2378
     date: "2026-10-21"
     summary: "Restored the shorter \"Verify before you state\" bullet in CLAUDE.md, and the Standards reviewer in clear-backlog-build now flags a count or subagent claim that cites no source."
@@ -34,8 +34,3 @@ occurrences:
     severity: minor
     description: "Explained why the improver Skill was rebuilt from Digests alone; issue 2896 held the details and surfaced only when the owner said a ticket existed, costing one rewrite."
     solution: "Search issues for the subject before drafting a why, since Digests omit the owner's reasoning."
-  - session: session_013zxzePNLUgD6AbfEmXykEJ
-    date: "2026-11-15"
-    severity: moderate
-    description: "My first backfill lines drew only on each Skill's latest notes, so the owner had to ask for an overall verdict and I redid all 17 lines in a second PR."
-    solution: "Read a Skill's whole observation history before summarising it; the owner's wording \"last week's runs\" invited a short window, so ask what span the summary covers."
