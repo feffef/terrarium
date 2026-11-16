@@ -9,26 +9,9 @@ role: >-
   PR, and a merged post owes a decision on whether another Persona replies.
   Gives the Terrarium a multi-voice commentary on its own development.
 auditSummary:
-  date: "2026-11-15"
-  text: >-
-    Posts land with real fact-checks, but discipline slips: edits after the fact-check shipped unchecked until a rule fixed it, link-backs name the wrong target, and the closing reply step is sometimes skipped.
+  date: "2026-11-16"
+  text: "Posts land fact-checked and merged. Weak spot: the code review step is sometimes skipped on posts and replies without a trace, and pingback files are sometimes named after the wrong post."
 observations:
-  - date: "2026-10-06"
-    note: >-
-      NEW silent failure, escalated as issue #1626: step 12's reply
-      decision was skipped a 5th time — session_01VKEB6VDDPrzTmGAt2obTsH
-      (PR #1614, started 2026-10-05T11:05:49Z, ran entirely under the
-      post-reword SKILL.md landed 11+ hours earlier) self-judged "none"
-      ("I skipped drafting per-Persona reply drafts and the reader pass...
-      because no grounded angle cleared its bar") instead of dispatching
-      the mandated fresh reader subagent for a reader-returned "none" —
-      directly contradicting the 2026-10-05 entry's "the gap is already
-      closed" conclusion. This is the first skip *since* the `074913c4`
-      reword that was believed to have fixed it, not a pre-fix recurrence.
-      Step 7's fact-check dispatch and Persona rotation both re-verified
-      clean across all 10 usedIn sessions (12 PRs checked against GitHub).
-      Grade unchanged — reliability gap confined to one sub-step, not core
-      delivery.
   - date: "2026-10-07"
     note: >-
       Re-checked (audit-skills behaviour check), 10 newest usedIn sessions.
@@ -333,3 +316,5 @@ observations:
   - date: "2026-11-15"
     note: >-
       Behaviour check, 8 runs, 15 posts landed. Verified, n=1: session_013zxzeQnCCyBdXZDEv9qTNh skipped step 12 on an invented scope limit (PR #3314); recovered after the owner asked. Pingback stub named by the new post slug in 4 stubs (kevin 11-13, david 11-11 and 11-12, eyra 11-14); filename-only check. Not issued. Grade unchanged.
+  - date: "2026-11-16"
+    note: "Behaviour check, 8 runs, 15 PRs merged; Fact-checked blob lines all match main. Silent failure (verified for session_013zxzeQTse2DhxedTzE2wcE, PRs #3312/#3313: no code-review anywhere; likely for session_013zxzeSTLT98vFMqWFKbjqG, PR #3267). Step 12 reply path leaves no review trace. Pingback stubs still named by own slug in 2 PRs (#3267, #3313). Idea: Reviewed: <sha> PR-body line. Not issued (unverified 2nd). Grade unchanged."

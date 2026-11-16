@@ -9,22 +9,9 @@ role: >-
   gated PR on green (ADR-0003/0004), filing an issue only for a factual conflict
   it can't resolve. Use it when docs and code drift apart.
 auditSummary:
-  date: "2026-11-15"
-  text: >-
-    Does its job: it fixes doc drift and its PRs merge. Early gaps (a skipped independent checker, an ADR rewritten wrongly, unfiled conflicts) were fixed; reviewers still sometimes read only part of the files.
+  date: "2026-11-16"
+  text: "Reliably audits the docs and lands its sweep and escalation PRs. It still miscounts reviewer verdicts by hand, covers Live files thinly on some days, and sometimes pushes a second commit or condenses reviewer replies."
 observations:
-  - date: "2026-10-06"
-    note: >-
-      Re-checked (audit-skills behaviour check), 7 usedIn sessions
-      (2026-09-29 through 10-05): all clean against the SKILL.md text each
-      saw. Both #1541 (dropped Friction) and #1608 (second out-of-tier
-      self-merge) are now fixed and closed — #1608's root cause traced to
-      the SKILL.md diffs themselves: the tier list never classified
-      `layers/journal/content/current/skills/*.yml` at all until commit
-      `6a170199` (2026-10-05) added Inventory entries to the Live list
-      outright, with a carve-out never to touch the `importance` grade. No
-      reverts found (`git log --all -i --grep=revert` over "audit" returns
-      only unrelated commits). Grade unchanged.
   - date: "2026-10-07"
     note: >-
       Verified silent failure, escalated as issue #1647: the 2026-10-04
@@ -344,3 +331,5 @@ observations:
   - date: "2026-11-15"
     note: >-
       Behaviour check, 7 runs, 10 PRs merged. Repeat: thin reviewer coverage with no coverage test in step 1 (11-12 log: most Live files unread); no damage. Grade unchanged.
+  - date: "2026-11-16"
+    note: "Behaviour check, 7 runs, 10 PRs merged, no revert. Silent failures: sweep PR carries two commits in 11-13/11-14/11-15 (Stop hook pushes the first; §6.1 says one commit); 11-15 (session_013zxzeQE5BDH58h5e21zafo) saved two reviewer replies hand-condensed, not via save-handback.ts. Repeat: verdict counts miscounted in 4 of 7 runs; thin Live-file coverage 11-12, 11-15. Idea: tally-verdicts script. Not issued. Grade unchanged."

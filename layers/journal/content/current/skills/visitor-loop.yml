@@ -9,32 +9,9 @@ role: >-
   changes no code and opens no PR. An idea that contradicts a line in
   `decisions.md` is dropped, so rejected ideas stay rejected.
 auditSummary:
-  date: "2026-11-15"
-  text: >-
-    Finds bugs and ideas as intended, and its early dismissal problems were fixed. Its duplicate-issue check misses prior work, and a recent instruction cut may have caused one blocked first step (too early to tell).
+  date: "2026-11-16"
+  text: "Visitors run daily, file issues with labels and post retros reliably. After the read-first line was cut, the first dispatch is blocked every time, which is under trial and not yet judged."
 observations:
-  - date: "2026-10-06"
-    note: >-
-      #1515 is now closed (2026-10-05, via PR #1570 and PR #1623's title-matching
-      fix) — but a deeper check found the branch-matching blind
-      spot DID cause a real missed ruling before it was patched: PR #1563
-      (branch `ccr-7b24c32f-0nzqez`) was reverted by owner-requested PR
-      #1576, both merged after #1570 landed, but #1563's non-matching
-      branch name made it invisible to `visitorPrs` — so the very next
-      run (session_01QS72zRhKidx1uP468fuAFK, the run credited with
-      "passing its first live test") correctly processed its 8 real
-      candidates but never saw #1576/#1563 at all, because the script
-      structurally couldn't surface it. The decisions.md line for that
-      revert was only added two days later, by PR #1623's own commit
-      manually backfilling it — not caught live by any audited run.
-      Title-matching (landed in that same PR) now covers `ccr-*` and
-      `claude/<adj>-<noun>-*` branches, but none of the 8 sessions checked
-      this sweep ran against the fixed code — commented this onto #1515
-      (not reopened, since the fix's logic is sound) asking for a human
-      spot-check on the next real revert/rework to confirm the mechanism
-      actually catches it end-to-end. Rest of the pipeline (3-model
-      dispatch, consensus, code-review before merge) clean across all 8
-      sessions, all 16 PRs verified merged. Grade unchanged.
   - date: "2026-10-07"
     note: >-
       Re-checked (audit-skills behaviour check), 8 usedIn sessions, all 16
@@ -367,3 +344,5 @@ observations:
   - date: "2026-11-15"
     note: >-
       Behaviour check, 6 runs delivered. Evidence for the open prune trial: 184c36f06 removed the read-first dispatch-subagents line from step 2, and the first run after it (session_013zxzeQWcqG69ABe1v6X1WD) was blocked by the dispatch-read guard (1 run, no verdict). Grade unchanged.
+  - date: "2026-11-16"
+    note: "Behaviour check, 7 runs; every named issue exists, retro comments on #3244 for 6 runs. Evidence for open prune trial: after 184c36f06 removed the dispatch-subagents read from step 2, the guard blocked the first dispatch in 2 of 2 runs (session_013zxzePoe14MeL6kTvYZMX8, session_013zxzeQWcqG69ABe1v6X1WD), three resent briefs each; no verdict, ADR-0027 forbids restoring. Late doc reads 5 of 6. Grade unchanged."

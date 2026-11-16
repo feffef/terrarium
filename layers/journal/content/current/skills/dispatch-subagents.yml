@@ -8,23 +8,9 @@ role: >-
   and the post-dispatch check that no finished subagent work is stranded. Every
   rule in it was paid for by a session that lost work.
 auditSummary:
-  date: "2026-11-15"
-  text: >-
-    Mostly keeps helper work from being lost, and early collisions were fixed. Recurring weak spots: leads accept helper reports unchecked, briefs omit required asks, and parallel git use can clash.
+  date: "2026-11-16"
+  text: "Subagent work lands and nothing is stranded in recent runs. It is skipped in one respect: replies meant to outlive the session are sometimes retyped instead of saved verbatim."
 observations:
-  - date: "2026-10-06"
-    note: >-
-      Status update: issue #1585 (branch-collision) is now CLOSED, fixed
-      by PR #1620 (commit `4d275c3b`), which added a shared-branch
-      integration rule (orchestrator checkout detaches; impl agents push
-      `HEAD:<branch>` off a fresh `origin/<branch>` fetch, no local
-      `checkout -B`) now present in current SKILL.md, plus a
-      `check:worktrees` excusal for a worktree whose content already
-      matches a pushed remote commit. #1586 and #1480 confirmed still
-      open, unchanged, no remediation PR. 10 usedIn sessions re-checked
-      clean (no stranded work, no merge-pr.ts-to-subagent, no new
-      collision); 7 nonuser sessions opened by goal-risk, all dispatched
-      subagents strictly read-only. Grade unchanged.
   - date: "2026-10-07"
     note: >-
       Re-checked (audit-skills behaviour check), 10 newest usedIn sessions:
@@ -377,3 +363,5 @@ observations:
   - date: "2026-11-15"
     note: >-
       Behaviour check, 10 runs, 15 PRs merged, 51 non-users ruled out. Repeat: leads accepted subagent claims unchecked (session_013zxzeT5pQrVtuNLAzUQRaP, session_013zxzeT6JgNuWiqXaqyMFpF, session_013zxzeQeBzhDzmSvD9thT22, session_013zxzePBHiX6mZNUjPTWpWc). Unverified: whether the survey subagent in session_013zxzeQDRyvj3Vc8GUWHvBv used a worktree. Grade unchanged.
+  - date: "2026-11-16"
+    note: "Behaviour check, 10 runs, PRs merged, no stranded worktree. Repeat: session_013zxzeQE5BDH58h5e21zafo saved reviewer replies hand-condensed instead of save-handback.ts (same as audit-docs). Minor: session_013zxzePH9gQTPAHjR7vCj71 brief told agents to run no command yet asked label checks. 36 non-users with dispatches all read the SKILL.md. Idea: flag pool files not from save-handback. Not issued. Grade unchanged."

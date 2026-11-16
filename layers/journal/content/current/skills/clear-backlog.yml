@@ -10,9 +10,8 @@ role: >-
   everything now" pass, not a substitute for the smaller on-interval Skills it
   composes.
 auditSummary:
-  date: "2026-11-15"
-  text: >-
-    Clears the backlog and lands PRs. Persistent gaps: it leaves helper checkouts behind, skips its closing log step after merging, and hand-edits branches without re-running the checks.
+  date: "2026-11-16"
+  text: "Clears backlog batches into merged PRs. It sometimes passes on unverified claims or proceeds on partial answers to its questions, and forgets to close the session after merge; hooks and the owner catch these."
 observations:
   - date: "2026-10-13"
     note: >-
@@ -240,3 +239,5 @@ observations:
   - date: "2026-11-15"
     note: >-
       Behaviour check, 10 runs, 41 PRs named, 40 landed; owner closed #3253 on design grounds. Verified: §1 comment miss after #3304 (session_013zxzeT3bxsaccpcz9P65Ra, #3320 has no comment): filed #3325. Repeats: picks relayed unverified (session_013zxzeT6JgNuWiqXaqyMFpF, session_013zxzeT5pQrVtuNLAzUQRaP); relabel skipped until merge-pr refused; close-session after merge skipped (#2654 family); wf_* worktrees (#3229). Grade unchanged.
+  - date: "2026-11-16"
+    note: "Behaviour check, 10 runs; delivery confirmed for 3, spot-checked others. Repeats: picks relayed unverified (session_013zxzeT5pQrVtuNLAzUQRaP, owner caught); partial grilling answers proceeded on guesses (session_013zxzeP5Vhec86YSiybqM8g); close-session not re-invoked after merge in 2 runs (Stop hook caught); worktree left open (session_013zxzeR3mLZWKT2R7LWmtqf, tracked #3229). Idea: mechanical VERIFY/Q gate in run-summary.ts --triage. Not issued. Grade unchanged."

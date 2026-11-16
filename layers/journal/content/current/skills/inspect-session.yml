@@ -9,9 +9,8 @@ role: >-
   enter the asking session's context. Essential whenever a session must
   inspect a sibling's history, rare otherwise.
 auditSummary:
-  date: "2026-11-14"
-  text: >-
-    Answers what a session did when used. Early cost blow-ups on very long sessions were fixed; cost questions are sometimes still answered without it.
+  date: "2026-11-16"
+  text: "Answers questions about other sessions from logs and cheap reads first, with event reads kept in a subagent. Its known slips are fixed; it does not warn that a live session's cost figure lags."
 observations:
   - date: "2026-10-20"
     note: >-
@@ -155,3 +154,5 @@ observations:
   - date: "2026-11-14"
     note: >-
       Behaviour check, 9 runs delivered, 165 non-users ruled out. The 11-12 gaps are fixed: probe-one-first sits at SKILL.md lines 64-65, and 966cfc7af points step 3 at environment-caveats.md; no later run repeats the send_message inference. Unverified: whether session_013zxzeTEBhUnvwNNBASiFDg inspected another session. Grade unchanged.
+  - date: "2026-11-16"
+    note: "Behaviour check, 8 runs, no miss among 155 non-users, PRs #3160, #3162, #3334 merged. The send_message mis-inference was fixed by 966cfc7af (11-11); no later repeat. Idea: note cost_usd lags a live session (glassbox-curate misreported 0.12 vs 4.22). Not issued. Grade unchanged."

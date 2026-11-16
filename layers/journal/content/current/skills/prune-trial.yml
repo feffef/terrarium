@@ -9,26 +9,9 @@ role: >-
   PR, except a trial changing an ADR or its summary rule starts only with a
   Trusted user and a human merges it.
 auditSummary:
-  date: "2026-11-14"
-  text: >-
-    Runs its trials soundly, and early scheduling and reporting bugs were fixed. Ongoing: its ledger entries carry unchecked claims about issue states, and it reads the ADR late.
+  date: "2026-11-16"
+  text: "Runs daily and lands small, honest cuts with the ledger kept in step. The tracker half of its search is sometimes missing when GitHub GraphQL is blocked, and its required reading is often done late."
 observations:
-  - date: "2026-10-06"
-    note: >-
-      Re-checked: ledger passes `validate-prune-trials.ts`, 3 open trials,
-      none judgeable yet. The backgrounding-cluster trial (flagged unjudged
-      past floor on 2026-10-05) resolved itself the same day it was
-      flagged: judged "holds" in commit `e5f400f5` (~24h past floor,
-      consistent with "floor, not deadline"), evidence traced and
-      confirmed genuine (PR #1615's cited friction matches
-      session_015LBxMJwGsviZMj4ScFXD38's actual log). Not a 5th
-      narrow-margin instance warranting escalation — a closed instance.
-      `origin/prune/backgrounding-cluster` still exists unaddressed, now a
-      3rd consecutive observation with no action — escalated as issue
-      #1628 (minor, no damage, purely a repeated-cleanup loose end). The
-      one confirmed silent failure on record (session_01U95GU6a93i4N25ZLgwXCSu,
-      corpus-search skip) remains unchanged, self-fixed same session. Grade
-      unchanged.
   - date: "2026-10-07"
     note: >-
       Re-checked (audit-skills behaviour check), 8 usedIn sessions:
@@ -335,3 +318,5 @@ observations:
   - date: "2026-11-14"
     note: >-
       Behaviour check, 7 runs delivered, deltas match git except session_013zxzePvPobQ2Cfg3UyUHSt (ledger -2, merged diff -1: a review follow-up restored a line). Its #2472 tracker claim is still in the ledger. ADR-0027 read after the first edit in several logs. Session_013zxzeQfaLWV38YeNLH6Ezs judged a trial about 6 minutes before the 3-day floor, within the one-hour grace in find-trial-window.ts. Grade unchanged.
+  - date: "2026-11-16"
+    note: "Behaviour check, 7 runs, PRs #3005 to #3342 merged, ledger fits. SKILL.md changed once (96d2014df, #3199). Repeat: ADR-0027 and git-conventions read after first edit/command in 5 of 7 runs; criterion-1 tracker search missing in 2 (11-09, 11-15, gh GraphQL blocked). Cuts stay tiny. Idea: tracker-read command with MCP fallback. Not issued. Grade unchanged."
