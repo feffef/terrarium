@@ -72,6 +72,9 @@ export interface LedgerOccurrence {
   severity: Severity
   to: string
   goal?: string
+  /** What the session's agent logged and proposed. */
+  description: string
+  solution: string
 }
 
 export interface LedgerEntry {
@@ -91,8 +94,6 @@ export interface LedgerEntry {
   worstCount: number
   count: number
   occurrences: LedgerOccurrence[]
-  /** What the agents logged and proposed, newest first, one per distinct pair. */
-  reports: { description: string; solution: string; date: string; to: string }[]
 }
 
 
@@ -124,13 +125,11 @@ export function ledgerPanels(
         date: o.date,
         severity: o.severity,
         goal: goals[o.session],
-        report: { description: o.description, solution: o.solution },
+        description: o.description,
+        solution: o.solution,
         to: `/t/journal/${ownSessions.has(o.session) ? space : otherSpace}#${sessionAnchor(o.session)}`,
       }))
       .sort((a, b) => b.date.localeCompare(a.date))
-    const reports = occurrences
-      .map((o) => ({ ...o.report, date: o.date, to: o.to }))
-      .filter((r, i, all) => all.findIndex((x) => x.description === r.description && x.solution === r.solution) === i)
     const fixes = [...(c.fixes ?? [])]
       .sort((a, b) => b.date.localeCompare(a.date))
       .map((f) => ({ ...f, url: `${REPO_URL}/pull/${f.pr}` }))
@@ -147,8 +146,7 @@ export function ledgerPanels(
       worst,
       worstCount: inWindow.filter((o) => o.severity === worst).length,
       count: inWindow.length,
-      occurrences: occurrences.map(({ report: _report, ...o }) => o),
-      reports,
+      occurrences,
     }
   }).filter((e) => e.count)
   const bySeverity = (a: LedgerEntry, b: LedgerEntry) =>

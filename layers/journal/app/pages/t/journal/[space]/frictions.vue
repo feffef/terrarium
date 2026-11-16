@@ -172,7 +172,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
                 </ul>
               </template>
               <h3 class="occ-h">Occurrences</h3>
-              <p class="occ-intro">Newest first: date (links to the session log) → the session's goal.</p>
+              <p class="occ-intro">Newest first: date (links to the session log) → the session's goal, then the friction as its agent logged it and the solution it proposed.</p>
               <ul class="occ">
                 <li v-for="(o, i) in e.occurrences" :key="i">
                   <span class="dot" :class="o.severity" :title="o.severity" />
@@ -180,19 +180,12 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
                   <span v-if="o.goal" class="occ-goal">{{ o.goal }}</span>
                   <span v-else class="occ-goal">goal not available</span>
                   <span class="occ-sev">{{ o.severity }}</span>
+                  <span class="occ-text">
+                    {{ o.description }}
+                    <span class="proposed">→ {{ o.solution }}</span>
+                  </span>
                 </li>
               </ul>
-              <template v-if="e.reports.length">
-                <h3 class="occ-h">Logged frictions and proposed solution</h3>
-                <p class="occ-intro">As described by the agents that hit it.</p>
-                <ul class="sol">
-                  <li v-for="r in e.reports" :key="r.description + r.solution">
-                    {{ r.description }}
-                    <span class="proposed">→ {{ r.solution }}</span>
-                    <NuxtLink :to="r.to" :aria-label="`Session log, ${r.date}`">{{ r.date }}</NuxtLink>
-                  </li>
-                </ul>
-              </template>
             </details>
           </li>
         </ul>
@@ -320,6 +313,7 @@ details[open] .summary::before { content: '▾'; }
 .occ, .sol { max-height: 24rem; overflow-y: auto; overscroll-behavior: contain; }
 .sol { margin: 0 0 0.7rem 3.3rem; padding-left: 1.1rem; font-size: 0.78rem; color: var(--jd-muted); overflow-wrap: anywhere; }
 .sol li { margin-bottom: 0.35rem; }
+.occ-text { display: block; margin: 0.15rem 0 0.35rem 1.1rem; font-family: var(--jd-serif); font-size: 0.78rem; color: var(--jd-muted); overflow-wrap: anywhere; }
 .proposed { display: block; color: var(--jd-ink); }
 .jd-prose .sol a { color: var(--jd-faint); font-family: var(--jd-mono); font-size: 0.7rem; }
 .pill.status { white-space: normal; border-radius: 0.9rem; }
