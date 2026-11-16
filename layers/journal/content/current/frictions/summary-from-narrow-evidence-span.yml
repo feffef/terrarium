@@ -1,0 +1,14 @@
+name: summary-from-narrow-evidence-span
+summary: >-
+  Agents wrote a summary or attribution from only the latest or nearest slice of the evidence, and the owner asked for the whole span.
+cause: >-
+  A summary of a body of work (a Skill's history, a run of sessions) is drawn from the newest notes or a short window, because the request's wording ("last week's runs") invited one and the span was never asked. Signals: "only the latest notes", "redid", a second PR that redoes the first over the whole history.
+surface: safe
+status: tracked
+ref: "#3363"
+occurrences:
+  - session: session_013zxzePNLUgD6AbfEmXykEJ
+    date: "2026-11-15"
+    severity: moderate
+    description: "My first backfill lines drew only on each Skill's latest notes, so the owner had to ask for an overall verdict and I redid all 17 lines in a second PR."
+    solution: "Read a Skill's whole observation history before summarising it; the owner's wording \"last week's runs\" invited a short window, so ask what span the summary covers."
