@@ -464,8 +464,8 @@ export function buildBrief(row: SkillRow, window: readonly WindowSession[], now 
     for (const c of row.changes) lines.push(`- ${c.sha} · ${c.landedAt} · ${c.paths.join(', ')}`)
   } else lines.push('None: every run is graded against the files on disk.')
   lines.push('', `## Runs (last ${BRIEF_RUN_DAYS} days; log files to read)`)
-  const since = new Date(now - BRIEF_RUN_DAYS * 86_400_000).toISOString().replace('.000Z', 'Z')
-  const runs = newestFirst(row.usedIn).filter((w) => w.startedAt >= since)
+  const since = now - BRIEF_RUN_DAYS * 86_400_000
+  const runs = newestFirst(row.usedIn).filter((w) => Date.parse(w.startedAt) >= since)
   lines.push(...(runs.length ? runs.map(runLine) : ['None.']))
   if (row.modelInvoked) {
     const used = new Set(row.usedIn)
@@ -476,9 +476,15 @@ export function buildBrief(row: SkillRow, window: readonly WindowSession[], now 
   lines.push('', '## Observations (what is already known)')
   const obs = [...row.observations].sort((a, b) => b.date.localeCompare(a.date)).map((o) => `- ${o.date}: ${o.note.replace(/\s+/g, ' ').trim()}`)
   let used = 0
-  const kept = obs.filter((l) => (used += l.length + 1) <= OBSERVATIONS_BUDGET)
-  lines.push(...(kept.length ? kept : ['None.']))
-  if (kept.length < obs.length) lines.push(`(${obs.length - kept.length} older observations left out)`)
+  const kept: string[] = []
+  for (const l of obs) {
+    if (kept.length && used + l.length + 1 > OBSERVATIONS_BUDGET) break
+    kept.push(l)
+    used += l.length + 1
+  }
+  const n = kept.length
+  lines.push(...(n ? kept : ['None.']))
+  if (n < obs.length) lines.push(`(${obs.length - n} older observations left out)`)
   return lines.join('\n') + '\n'
 }
 
