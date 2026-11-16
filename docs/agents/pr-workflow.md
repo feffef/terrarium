@@ -84,8 +84,8 @@ the branch. A branch restarted after the merge, or a session branch reset onto
 `main` that fast-forwards the remote branch (`git merge-base --is-ancestor`),
 is fine: push plainly, without `--force-with-lease`. To reuse a merged session
 branch, check it out and `git merge --ff-only origin/main` (it works only when
-the branch tip is already in `main`). If the Stop hook then flags the merged
-history as unpushed, see `git-conventions.md` (Stop hook section).
+the branch tip is already in `main`). The Stop hook may then flag the merged
+history as unpushed: see `git-conventions.md`, "When the Stop hook flags".
 
 Reply on a review thread before calling `resolve_review_thread`: a resolved
 thread with no reply leaves no record.
