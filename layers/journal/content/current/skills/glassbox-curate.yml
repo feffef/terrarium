@@ -40,4 +40,6 @@ observations:
     note: >-
       Behaviour check, 10 runs, all PRs merged. New, verified from log (n=1): session_013zxzeP4m4R15EP9UBBmzfR self-merged #3311 without code-review (disclosed friction: 11 files, 18 lines). Repeats: Subject-wide read and Scout skipped (#3226 closed wontfix); cost misreported in session_013zxzeS6AE1WUN124PHnm4b. Grade unchanged.
   - date: "2026-11-16"
-    note: "Behaviour check, 10 runs, PRs merged (#3257 to #3352). Repeats: Subject-wide read skipped for budget in 4 runs (orient.ts --subject printed every page whole, uncapped, 70-113 KB: #3362); cost in PR body wrong because get_session lags (0.12 vs 4.22, 4 vs 12.68); code-review skipped on #3311 (disclosed); unquoted-colon YAML broke validation in 4 runs. Idea: shorter orient output. Not issued. Grade unchanged."
+    note: "Behaviour check, 10 runs, PRs merged (#3257 to #3352). Repeats: Subject-wide read skipped for budget in 4 runs (orient.ts --subject prints 70-113 KB); cost in PR body wrong because get_session lags (0.12 vs 4.22, 4 vs 12.68); code-review skipped on #3311 (disclosed); unquoted-colon YAML broke validation in 4 runs. Idea: shorter orient output. Not issued. Grade unchanged."
+  - date: "2026-11-16"
+    note: "Size cause of the skipped Subject-wide reads: orient.ts --subject printed every page of the Subject whole and uncapped (18 to about 114 KB), past the Read cap; #3362 makes it write parts of at most 40 KB to files."

@@ -59,8 +59,7 @@ place a fact was taught. Runs that read only the page they changed repeated a
 sibling page (#2943) and cut the only place a fact was taught (#2927). So
 every run reads at two depths before it edits: every page's entry in the
 guide index, to know what the whole guide teaches, and every page of its
-Subject in full (each part file), to know exactly what its neighbours say.
-The first depth is
+Subject in full, to know exactly what its neighbours say. The first depth is
 only as good as each page's `teaches` and bold lead-ins (Fix says how a run
 keeps them so).
 

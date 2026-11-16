@@ -118,8 +118,9 @@ const guideIndexDir = '.throwaway/glassbox-curate'
 // A tool result above about 30 KB is saved to a file and shown as a preview, and runs then worked
 // from a cut orientation (Journal Friction orient-output-truncates).
 const inlineCap = 25_000
-// Read stops at 25,000 tokens, and the index's code names run near 2.5 bytes a token, so one 66 KB file was cut off.
-const indexPartCap = 40_000
+// Read stops at 25,000 tokens, and code names run near 2.5 bytes a token, so one 66 KB index file was cut off.
+// The guide index and a Subject's pages are both written in parts of at most this many bytes.
+const partCapBytes = 40_000
 
 const guideKey = [
   'Each page: `- stem: Title. description [read <date> · checked <date>]`. `read` is the last curate run whose pagesRead lists it, `checked` the last glassbox-update full check.',
@@ -137,7 +138,7 @@ export function guideRenames(): [string, string][] {
 }
 
 /** Every guide page's entry, under the key that says how to read one, in parts of at most `partCap` bytes so each fits one Read. */
-export function guideIndex(base = join(root, content), renames = guideRenames, partCap = indexPartCap): string[] {
+export function guideIndex(base = join(root, content), renames = guideRenames, partCap = partCapBytes): string[] {
   const renamed = new Map<string, string>()
   for (const [from, to] of renames()) {
     for (const [old, now] of renamed) if (now === from) renamed.set(old, to)
@@ -210,7 +211,7 @@ export function orientation(base = join(root, content), { log = guideLog, prs = 
 }
 
 /** Every page of one Subject's folder (or `walkthroughs`) in full, packed in order into parts of at most `partCap` bytes (a larger page is a part alone), and the `pagesRead` lines they make. */
-export function subjectParts(subject: string, base = join(root, content), partCap = indexPartCap): { parts: string[]; pagesRead: string } {
+export function subjectParts(subject: string, base = join(root, content), partCap = partCapBytes): { parts: string[]; pagesRead: string } {
   const pages = files(join(base, 'guide/pages', subject), '*.md')
   if (!pages.length) throw new Error(`no guide pages under "${subject}"; a Subject is a folder of ${content}/guide/pages`)
   const stems = pages.map(([f]) => `${subject}/${f.replace(/\.md$/, '')}`)
@@ -232,23 +233,24 @@ export function subjectParts(subject: string, base = join(root, content), partCa
   }
 }
 
+/** Writes a Subject's parts to `dir` as subject-N.md, replacing the last run's (the index files beside them stay), and returns the text to print, paths shown under `shown`. */
+export function writeSubjectParts(subject: string, dir: string, shown: string, base = join(root, content)): string {
+  const { parts, pagesRead } = subjectParts(subject, base)
+  mkdirSync(dir, { recursive: true })
+  for (const f of globSync('subject-*.md', { cwd: dir })) rmSync(join(dir, f))
+  const written = parts.map((text, i) => {
+    writeFileSync(join(dir, `subject-${i + 1}.md`), `${text}\n`)
+    return `- ${shown}/subject-${i + 1}.md (${Math.round(Buffer.byteLength(text) / 1000)} KB)`
+  })
+  return `${section(`Subject pages, ${parts.length} part${parts.length === 1 ? '' : 's'}`, ['Every page of the Subject, whole, is in these files. Read each whole, one Read per file, never through head:', ...written].join('\n'))}\n\n${pagesRead}`
+}
+
 runIfMain(import.meta.url, () => {
   const subject = flagValue(process.argv, '--subject')
   if (process.argv.includes('--subject') && !subject) fail('--subject needs a Subject folder, such as git-github')
   try {
     const dir = join(root, guideIndexDir)
-    if (subject) {
-      // Only the old subject parts go: the run still reads the index files beside them.
-      for (const f of globSync('subject-*.md', { cwd: dir })) rmSync(join(dir, f))
-      const { parts, pagesRead } = subjectParts(subject)
-      mkdirSync(dir, { recursive: true })
-      const written = parts.map((text, i) => {
-        const path = `${guideIndexDir}/subject-${i + 1}.md`
-        writeFileSync(join(root, path), `${text}\n`)
-        return `- ${path} (${Math.round(Buffer.byteLength(text) / 1000)} KB)`
-      })
-      return void process.stdout.write(`${section(`Subject pages, ${parts.length} part${parts.length === 1 ? '' : 's'}`, ['Every page of the Subject, whole, is in these files. Read each whole, one Read per file, never through head:', ...written].join('\n'))}\n\n${pagesRead}\n`)
-    }
+    if (subject) return void process.stdout.write(`${writeSubjectParts(subject, dir, guideIndexDir)}\n`)
     rmSync(dir, { recursive: true, force: true })
     mkdirSync(dir, { recursive: true })
     const index = guideIndex().map((text, i) => {

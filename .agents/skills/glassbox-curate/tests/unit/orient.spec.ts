@@ -1,8 +1,8 @@
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
-import { guideIndex, guidePath, indexOrientation, subjectParts, orientation, pageOverview, runStem, shortPath, warningLines } from '../../scripts/orient.ts'
+import { guideIndex, guidePath, indexOrientation, subjectParts, orientation, writeSubjectParts, pageOverview, runStem, shortPath, warningLines } from '../../scripts/orient.ts'
 
 const page = `---
 title: Blocking hooks
@@ -120,6 +120,35 @@ describe('orientation', () => {
     expect(stems).toEqual([['01.a', '02.b'], ['03.big'], ['04.c', '05.d']])
     expect(parts[1]).toContain('x'.repeat(500))
     expect(pagesRead.indexOf('s/01.a')).toBeLessThan(pagesRead.indexOf('s/05.d'))
+  })
+
+  it('keeps pages that exactly fill the cap in one part', () => {
+    const sub = mkdtempSync(join(tmpdir(), 'orient-subject-'))
+    mkdirSync(join(sub, 'guide/pages/s'), { recursive: true })
+    for (const stem of ['01.a', '02.b']) writeFileSync(join(sub, `guide/pages/s/${stem}.md`), 'x'.repeat(10))
+    const size = 2 * ('# s/01.a\n\n'.length + 10 + 2)
+    const fits = subjectParts('s', sub, size).parts.length
+    const over = subjectParts('s', sub, size - 1).parts.length
+    rmSync(sub, { recursive: true, force: true })
+    expect([fits, over]).toEqual([1, 2])
+  })
+
+  it('writes the parts to files, replacing the last run\'s and leaving the index files', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'orient-out-'))
+    writeFileSync(join(dir, 'subject-3.md'), 'stale')
+    writeFileSync(join(dir, 'guide-pages-1.md'), 'index')
+    const out = writeSubjectParts('claude-code', dir, '.out', base)
+    const names = readdirSync(dir).sort()
+    const part = readFileSync(join(dir, 'subject-1.md'), 'utf8')
+    expect(() => writeSubjectParts('nope', dir, '.out', base)).toThrow(/no guide pages/)
+    const kept = readdirSync(dir).sort()
+    rmSync(dir, { recursive: true, force: true })
+    expect(names).toEqual(['guide-pages-1.md', 'subject-1.md'])
+    expect(kept).toEqual(names)
+    expect(part).toContain('# claude-code/05.blocking-hooks')
+    expect(out).toContain('# Subject pages, 1 part\n')
+    expect(out).toContain('- .out/subject-1.md (')
+    expect(out).toMatch(/pagesRead:\n {2}- claude-code\/05\.blocking-hooks$/)
   })
 
   it('falls back to the last commits before the first run', () => {
