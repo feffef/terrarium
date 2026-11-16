@@ -28,6 +28,9 @@ useHead({
     <p class="note">
       {{ notFound ? 'Nothing grows at this address — it may have moved, or never existed.' : 'Something broke on our side. Try again in a moment.' }}
     </p>
+    <nav v-if="notFound" class="sites" aria-label="The five sites">
+      <NuxtLink v-for="s in SITES" :key="s.to" :to="s.to">{{ s.name }}<span>{{ s.gloss }}</span></NuxtLink>
+    </nav>
     <NuxtLink v-if="notFound && tenant" :to="tenant.to" class="home">← Back to the {{ tenant.name }}</NuxtLink>
     <a href="/" class="home" @click.prevent="clearError({ redirect: '/' })">← Back to the terrarium</a>
   </main>
@@ -71,6 +74,10 @@ useHead({
 }
 h1 { margin: 0; font-size: clamp(1.6rem, 5vw, 2.2rem); }
 .note { margin: 0; max-width: 30rem; color: var(--muted); line-height: 1.55; }
+.sites { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.35rem 1.1rem; margin-top: 0.5rem; }
+.sites a { color: var(--accent); font-weight: 600; text-decoration: none; }
+.sites a span { margin-left: 0.35rem; font-weight: 400; color: var(--muted); font-size: 0.85rem; }
+.sites a:hover { text-decoration: underline; }
 .home { margin-top: 0.75rem; color: var(--accent); font-weight: 600; text-decoration: none; }
 .home:hover { text-decoration: underline; }
 </style>
