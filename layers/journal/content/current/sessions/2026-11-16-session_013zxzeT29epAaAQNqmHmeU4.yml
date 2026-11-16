@@ -1,0 +1,139 @@
+schemaVersion: 1
+session: session_013zxzeT29epAaAQNqmHmeU4
+startedAt: 2026-11-16T17:05:49Z
+endedAt: 2026-11-16T17:15:22Z
+kind: autonomous
+goal: Weekly harvest of session ideas and learnings into Seedlings
+status: completed
+outcome: Six Seedlings filed (#3382-#3387), four clusters dropped, no retro Seedling; no repo changes
+summary: "Scheduled harvest run, agent-initiated, no human prompt. Extracted 214 unharvested entries (100 ideas, 114 learnings), read the list whole, and checked clusters, product first. Six passed and were filed as ready-for-human Seedlings: Midden Trench condition filter and Showing line, homepage card copy, homepage skip link, 404 and /search next steps, Journal visible legend, and visitor-brief measuring traps (the one workflow cluster). Dropped: Tinkerfund more-like-this (already built), Atlas Journal bridge (contradicts the Atlas premise in GLOSSARY-MAP), harness facts (already documented), gate-abort facts (guard built). The Journal landing, Midden content and Glass Box wording ideas were not checked once the product quota was met. The retro found two candidates, a list too long for one Read and an unfiltered list-merges-since, both already rejected in closed not-planned #3191, so none was filed."
+prs: []
+docsRead:
+  - path: .agents/skills/harvest/body-template.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/visitor-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/retro/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: harvest
+    reason: the assigned scheduled task
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Harvest list is about 32k tokens, over the Read cap, so reading it whole took two calls; the same cost was raised and rejected earlier.
+    solution: "Already rejected in closed #3191; none."
+    severity: nit
+  - description: list-merges-since.ts prints about 3,700 lines for a 4-day window and shows only branch names; I used git log with name-only for file evidence instead.
+    solution: "Step 3 could name the merges-only flag or the name-only log; rejected earlier in #3191."
+    severity: nit
+  - description: check-body rejected bare angle brackets in quoted entries after the body was written; the template already warns, and I missed it.
+    solution: Fence entries containing angle brackets when first quoting them.
+    severity: nit
+durationSec: 573
+models:
+  claude-sonnet-5-5: 99
+toolCounts:
+  Bash: 39
+  Read: 2
+  mcp__github__issue_read: 6
+  mcp__github__issue_write: 6
+  Skill: 2
+  PushNotification: 1
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+      - rule: .claude/rules/adr-0001.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0018.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0025.md
+        via: hint
+      - rule: .claude/rules/adr-0006.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/adr-0016.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: header on every issue body
+      - path: .claude/rules/adr-0003.md
+        value: confirmed
+        why: "agreed: filed only Seedlings"
+      - path: .claude/rules/adr-0009.md
+        value: in-scope
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .agents/skills/harvest/body-template.md
+      - path: .agents/skills/visitor-loop/decisions.md
+gitBranch: claude/eager-cerf-cnvgxc
+entrypoint: remote_trigger
+cliVersion: 2.1.325
+trigger: harvest
+learnings:
+  - The harvest list's same-session-in-issues marker is per session, not per entry, so for a session with many entries it points at unrelated issues and each needs a read.
+landedBy: Stop
