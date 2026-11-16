@@ -15,6 +15,7 @@ import {
   humanMergeRefusal,
   humanMergeWaiver,
   mergeRequestFields,
+  mergeRetryingBaseModified,
   GUEST_PIPELINE_LABEL,
   parseClosingKeywordIssues,
   pollUntilResolved,
@@ -288,6 +289,43 @@ describe('factCheckedBlobRefusal() (#2370)', () => {
   it('leaves PRs that add no blog post alone, including edits to an existing post', () => {
     expect(factCheckedBlobRefusal('', [{ filename: 'scripts/x.ts', status: 'added', sha: blob }])).toBeNull()
     expect(factCheckedBlobRefusal('', [{ filename: post, status: 'modified', sha: blob }])).toBeNull()
+  })
+})
+
+describe('mergeRetryingBaseModified()', () => {
+  const baseModified = () =>
+    new Error('GitHub REST API PUT pulls/1/merge failed: HTTP 405: {"message":"Base branch was modified. Review and try the merge again."}')
+
+  it('merges once without a retry flag when the first call succeeds', () => {
+    const merge = vi.fn(() => 'abc')
+    expect(mergeRetryingBaseModified(merge)).toEqual({ sha: 'abc', retried: false })
+    expect(merge).toHaveBeenCalledTimes(1)
+  })
+
+  it('retries once after a 405 "Base branch was modified" and reports the retry', () => {
+    const merge = vi.fn().mockImplementationOnce(() => { throw baseModified() }).mockReturnValueOnce('def')
+    expect(mergeRetryingBaseModified(merge)).toEqual({ sha: 'def', retried: true })
+    expect(merge).toHaveBeenCalledTimes(2)
+  })
+
+  it('matches the gh path, whose error carries the stderr text', () => {
+    const ghErr = new Error('Command failed: gh api ...\ngh: Base branch was modified (HTTP 405)')
+    const merge = vi.fn().mockImplementationOnce(() => { throw ghErr }).mockReturnValueOnce('ghi')
+    expect(mergeRetryingBaseModified(merge).retried).toBe(true)
+  })
+
+  it('lets a second 405 propagate as a failure', () => {
+    const merge = vi.fn(() => { throw baseModified() })
+    expect(() => mergeRetryingBaseModified(merge)).toThrow('Base branch was modified')
+    expect(merge).toHaveBeenCalledTimes(2)
+  })
+
+  it('does not retry other errors, including a 405 with another message', () => {
+    for (const msg of ['HTTP 409: Head branch was modified', 'HTTP 405: Pull Request is not mergeable', 'boom']) {
+      const merge = vi.fn(() => { throw new Error(msg) })
+      expect(() => mergeRetryingBaseModified(merge)).toThrow(msg)
+      expect(merge).toHaveBeenCalledTimes(1)
+    }
   })
 })
 
