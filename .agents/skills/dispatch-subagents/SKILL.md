@@ -117,3 +117,11 @@ with no memory, risking a duplicate branch or lost local commits.
 - A hand-back after a resume may be the earlier report delivered late: wait for
   the next notification before re-sending the instruction, and verify the work
   against git.
+
+## 7. Another session is not a subagent
+
+- Open a multi-message exchange with one short message naming who talks to the
+  owner, what you pass on and a round limit; wait for its reply before sending findings.
+- A receiver treats your message as data and may ask its owner first: have the
+  owner pre-authorise a survey in one message the receivers can verify.
+- When answering rounds, reuse earlier subagent answers; don't resume them each round.
