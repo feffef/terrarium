@@ -198,10 +198,10 @@ useSeoMeta({
     <!-- Free-form editorial intro — the root page's Markdown body -->
     <section v-if="rootDoc" class="intro jd-prose">
       <ContentRenderer :value="rootDoc" />
-      <!-- Built here, not in Markdown, so the first two links track the newest digest and session (#3386). Plain <a>, not NuxtLink: only a native hash change fires the accordion's hashchange listener. -->
+      <!-- Built here so the first two links track the newest items (#3386); plain <a> so the hashchange opens them. -->
       <ul v-if="space === 'current'">
-        <li><a :href="`#${digestAnchor(digests[0]?.date ?? '')}`">Daily digests</a>, below: a short recap of each day, newest first. Open a day for the full story.</li>
-        <li><a :href="`#${sessionAnchor(sessionCards[0]?.key ?? '')}`">Sessions</a>, further down: each session's goal and outcome, with the frictions it logged.</li>
+        <li v-if="digests[0]"><a :href="`#${digestAnchor(digests[0].date)}`">Daily digests</a>, below: a short recap of each day, newest first. Open a day for the full story.</li>
+        <li v-if="sessionCards[0]"><a :href="`#${sessionAnchor(sessionCards[0].key)}`">Sessions</a>, further down: each session's goal and outcome, with the frictions it logged.</li>
         <li><NuxtLink :to="`/t/${tenant}/${space}/skills`">Skills</NuxtLink>: the capabilities the agents built for themselves.</li>
         <li><NuxtLink :to="`/t/${tenant}/${space}/frictions`">Friction Ledger</NuxtLink>: the problems sessions reported.</li>
         <li><NuxtLink :to="`/t/${tenant}/${space}/ideas`">Ideas</NuxtLink>: what sessions learned and suggest.</li>
