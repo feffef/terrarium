@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSFVZRywvYz2rGcRzP
 startedAt: 2026-11-16T13:09:14Z
-endedAt: 2026-11-16T13:16:40Z
+endedAt: 2026-11-16T21:39:59Z
 kind: autonomous
 goal: Scheduled prune of redundant agent instructions
-status: in-review
-outcome: "Judged no trials (all in window); opened PR #3380 trimming the owner-facing UI rule, probe passed, gate green, awaits human merge."
-summary: "Scheduled /prune-trial run; nothing was human-instructed, all work followed the Skill. No open trial was past its window, so §1 judged nothing. A search subagent ranked failed-as-prose rules; I picked the owner-facing UI ask-first rule (built-before-owner-decided-ui, no wired guard) and made a deliberately small cut: merged two CLAUDE.md sentences and tightened ui-verification.md, keeping every rule and not touching #3305's wording (landed two days earlier). Committed with a ledger entry, probed on Sonnet pinned to the post-prune SHA (passed), ran gate:scoped (green), read the doc-only diff myself, opened PR #3380. It edits a Human-only rule, so it waits for a human merge. Still open: the verdict, judgeable only after the window."
+status: completed
+outcome: "Judged no trials (all in window); PR #3380 trimming the owner-facing UI rule merged by a human."
+summary: "Scheduled /prune-trial run (PR #3380 since merged by a human); nothing was human-instructed, all work followed the Skill. No open trial was past its window, so §1 judged nothing. A search subagent ranked failed-as-prose rules; I picked the owner-facing UI ask-first rule (built-before-owner-decided-ui, no wired guard) and made a deliberately small cut: merged two CLAUDE.md sentences and tightened ui-verification.md, keeping every rule and not touching #3305's wording (landed two days earlier). Committed with a ledger entry, probed on Sonnet pinned to the post-prune SHA (passed), ran gate:scoped (green), read the doc-only diff myself, opened PR #3380. It edits a Human-only rule, so it waits for a human merge. Still open: the verdict, judgeable only after the window."
 prs:
   - "3380"
 docsRead:
@@ -42,15 +42,19 @@ frictions:
   - description: ADR-0027, 0029 and 0004 reads were requested by a hook only after I had committed the edit; the ADRs showed the edit was right.
     solution: Read the ADR for each governed file before editing it, as the rule summaries say.
     severity: nit
-durationSec: 446
+durationSec: 30645
 models:
-  claude-sonnet-5-5: 40
+  claude-sonnet-5-5: 56
 toolCounts:
-  Bash: 13
+  Bash: 14
   Read: 3
   Agent: 2
   mcp__github__create_pull_request: 1
   Skill: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 4
+  mcp__github__pull_request_read: 1
+  PushNotification: 1
 filesEdited:
   - .agents/prune-trials.yml
   - .claude/rules/ui-verification.md
@@ -218,14 +222,14 @@ subagents:
     durationSec: 63
     toolCalls: 15
     modelCalls: 9
-    tokenShare: 24.8
+    tokenShare: 15.1
   - type: general-purpose
     task: Sonnet probe of pruned UI rule
     model: sonnet
     durationSec: 18
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 7.3
+    tokenShare: 4.5
 gitBranch: claude/practical-rubin-k08t2g
 entrypoint: remote_trigger
 cliVersion: 2.1.325
