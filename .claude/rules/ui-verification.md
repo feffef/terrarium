@@ -16,8 +16,7 @@ paths:
 proof that a page renders as intended.
 
 **Before you build owner-facing UI:** grep the Tenant and Platform components
-for an existing one before you build a new element. Agree the UI on a short
-sample, shown with `scripts/ui/preview.ts start --dev` (no full build needed),
-and confirm each screenshot with the owner. Run review and the gate and open the
-PR only after they confirm; this holds for a UI change the owner asked for
-directly, with no grilling round.
+for an existing one. Agree the UI on a short sample
+(`scripts/ui/preview.ts start --dev`, no full build) and have the owner confirm
+each screenshot. Run review and the gate and open the PR only after they
+confirm, even for a UI change the owner asked for directly.
