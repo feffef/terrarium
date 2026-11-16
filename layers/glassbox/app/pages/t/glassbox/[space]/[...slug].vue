@@ -25,8 +25,9 @@ const { data, status, error } = await useAsyncData(route.path, async () => {
   // A Subject page's list reads descriptions off `pages`; a Where next row reads its target's from `descriptions`, so only those travel.
   const nextTargets = page ? glassboxNextTargets(page.body.value, base) : []
   // The Walkthroughs page lists only Walkthroughs' descriptions.
-  const keepDescription = (p: { path: string }) => glassboxSubjectAt(path) || (glassboxWalkthroughsAt(path) && glassboxWalkthroughOf(p.path))
-  const links = pages.map((p) => keepDescription(p) ? p : { path: p.path, title: p.title })
+  const wholeList = !!glassboxSubjectAt(path)
+  const walkthroughList = glassboxWalkthroughsAt(path)
+  const links = pages.map((p) => wholeList || (walkthroughList && glassboxWalkthroughOf(p.path)) ? p : { path: p.path, title: p.title })
   return {
     page,
     through: glassboxWalkthroughsThrough(walkthroughs, `${base}${path}`),
@@ -115,7 +116,7 @@ useSeoMeta({ description: () => page.value?.description })
 
       <GlassboxSubject v-else-if="walkthroughsIndex" id="gb-content" tabindex="-1" class="gb-column" name="Walkthroughs" intro="A walkthrough follows one story across several lessons, such as a request becoming a merged PR, and links to each lesson instead of repeating it." :lessons="data?.walkthroughs ?? []" :base="base" plain />
 
-      <div v-else class="gb-column">
+      <div v-else id="gb-content" tabindex="-1" class="gb-column">
         <h1>Not found</h1>
         <p>No page answers to <code>{{ path }}</code> in Glass Box.</p>
         <p><NuxtLink :to="base">Back to Glass Box</NuxtLink></p>

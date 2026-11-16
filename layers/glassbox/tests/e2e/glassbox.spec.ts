@@ -106,7 +106,7 @@ describe('glassbox Tenant', async () => {
   })
 
   it('puts no h2 before the h1', async () => {
-    for (const route of ['/t/glassbox/guide/nuxt-vue/layers', '/t/glassbox/guide/nuxt-vue']) {
+    for (const route of ['/t/glassbox/guide/nuxt-vue/layers', '/t/glassbox/guide/nuxt-vue', '/t/glassbox/guide/walkthroughs']) {
       const html = await $fetch<string>(route)
       expect(html.indexOf('<h1'), route).toBeGreaterThan(-1)
       const h2 = html.indexOf('<h2')

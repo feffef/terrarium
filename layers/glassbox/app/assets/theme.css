@@ -147,7 +147,7 @@ body:has(.gb) { margin: 0; }
   text-decoration: none;
 }
 .gb .gb-skip-link:focus { top: 12px; }
-.gb [tabindex='-1']:focus { outline: none; }
+.gb #gb-content:focus { outline: none; }
 .gb .gb-label {
   font: 11px var(--gb-mono);
   letter-spacing: 0.1em;
