@@ -330,6 +330,25 @@ describe('journal Tenant', async () => {
     })
   })
 
+  it('shows each Friction Ledger occurrence with its goal, friction and proposed solution', async () => {
+    await withRendered('/t/journal/current/frictions?days=90', async (page) => {
+      const cluster = page.locator('.ledger > li').first()
+      await cluster.locator('summary').click()
+      const row = cluster.locator('.occ li').first()
+      await row.waitFor({ state: 'visible' })
+      expect(await row.locator('.occ-goal').textContent()).toMatch(/^Goal: \S/)
+      const label = (await row.locator('.occ-text .occ-label').textContent())!
+      const severity = (await row.locator('.dot').getAttribute('title'))!
+      expect(label).toBe(`${severity[0]!.toUpperCase()}${severity.slice(1)} friction:`)
+      const solution = (await row.locator('.proposed').textContent())!.trim()
+      expect(solution).toMatch(/^→ \S/)
+      expect(solution).not.toContain('Proposal:')
+      const description = (await row.locator('.occ-text').textContent())!.replace(label, '').replace(solution, '').trim()
+      expect(description).not.toBe('')
+      expect(await page.getByText('Logged frictions and proposed solution').count()).toBe(0)
+    })
+  })
+
   it('lists ten Friction Ledger clusters per section until its button shows all', async () => {
     await withRendered('/t/journal/current/frictions?days=90', async (page) => {
       const rows = page.locator('h2#severe-h + .intro + .ledger > li')
