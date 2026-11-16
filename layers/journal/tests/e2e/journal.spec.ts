@@ -330,6 +330,19 @@ describe('journal Tenant', async () => {
     })
   })
 
+  it('shows each Friction Ledger occurrence with its goal, friction and proposed solution', async () => {
+    await withRendered('/t/journal/current/frictions?days=90', async (page) => {
+      const cluster = page.locator('.ledger > li').first()
+      await cluster.locator('summary').click()
+      const row = cluster.locator('.occ li').first()
+      expect(await row.locator('.occ-label').first().textContent()).toBe('Goal:')
+      expect(await row.locator('.occ-text .occ-label').textContent()).toMatch(/^(Nit|Minor|Moderate|Major|Blocker) friction:$/)
+      expect(await row.locator('.occ-text').textContent()).toMatch(/friction:\s+\S/)
+      expect((await row.locator('.proposed').textContent())?.trim()).toMatch(/^→ \S/)
+      expect(await page.getByText('Logged frictions and proposed solution').count()).toBe(0)
+    })
+  })
+
   it('lists ten Friction Ledger clusters per section until its button shows all', async () => {
     await withRendered('/t/journal/current/frictions?days=90', async (page) => {
       const rows = page.locator('h2#severe-h + .intro + .ledger > li')
