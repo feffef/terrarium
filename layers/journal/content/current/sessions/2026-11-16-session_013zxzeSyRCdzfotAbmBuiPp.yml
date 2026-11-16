@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_013zxzeSyRCdzfotAbmBuiPp
 startedAt: 2026-11-16T02:07:43Z
-endedAt: 2026-11-16T02:28:33Z
+endedAt: 2026-11-16T02:33:13Z
 kind: autonomous
 goal: Weekly retirement of recurring session Frictions
 status: in-review
-outcome: Survey and design done; doc-fix PR 3365 merged; ledger PR 3366 awaiting CI; closing ledger PR still to land
+outcome: Survey and design done; doc-fix PR 3365 merged; ledger PR 3366 merged; closing ledger PR in gate
 summary: "Scheduled frictions-to-fixes run (no human prompt; every step agent-initiated under the Skill). A survey subagent updated the ledger (69 occurrences appended, 4 new entries, 2 fixes recorded). A design agent assessed six never-fixed picks: three doc fixes were built by one Sonnet agent and merged as PR 3365 after code-review and a green gate; two designs were dropped as no-change (usage limit, resumed subagents) with notes; the audit-skills run cost went to issue 3364 as it is a coverage-versus-cost call. Two regressions with moderate severity since their fix got issues 3362 and 3363. The ledger PR 3366 is open and waits for CI; the closing status-only ledger PR (merged fix in fixes, tracked entries to open) is still to do after it merges. A fresh-checkout survey reported misleading window-start text and a 69-triple append that refused on 15 held sessions."
 prs:
   - "3365"
@@ -80,25 +80,28 @@ frictions:
   - description: Stop hook asked to push the ledger commit before the PR flow and to close the session mid-run while two PRs were still waiting on CI.
     solution: Have the hook treat a subscribed open PR as work in progress.
     severity: nit
-durationSec: 1249
+durationSec: 1530
 models:
-  claude-sonnet-5-5: 92
+  claude-sonnet-5-5: 109
 toolCounts:
-  Bash: 25
+  Bash: 32
   Agent: 7
   Read: 3
   ToolSearch: 1
   mcp__github__issue_write: 3
-  Skill: 3
+  Skill: 4
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 2
-  ReadNotifications: 3
+  ReadNotifications: 5
   mcp__github__pull_request_read: 2
-  mcp__github__add_issue_comment: 1
+  mcp__github__add_issue_comment: 2
 filesEdited:
   - CLAUDE.md
   - .agents/skills/dispatch-subagents/SKILL.md
   - .agents/skills/frictions-to-fixes/survey-brief.md
+  - layers/journal/content/current/frictions/misread-owner-instruction.yml
+  - layers/journal/content/current/frictions/peer-session-conversation-cost.yml
+  - layers/journal/content/current/frictions/survey-label-and-ledger-errors.yml
   - layers/journal/content/current/frictions/audit-skills-run-cost.yml
   - layers/journal/content/current/frictions/blocked-waiting.yml
   - layers/journal/content/current/frictions/check-worktrees-unpushed-flags.yml
@@ -120,9 +123,7 @@ filesEdited:
   - layers/journal/content/current/frictions/late-read-first-docs.yml
   - layers/journal/content/current/frictions/ledger-append-refuses-held-session.yml
   - layers/journal/content/current/frictions/mechanism-claim-from-recall.yml
-  - layers/journal/content/current/frictions/misread-owner-instruction.yml
   - layers/journal/content/current/frictions/orient-output-truncates.yml
-  - layers/journal/content/current/frictions/peer-session-conversation-cost.yml
   - layers/journal/content/current/frictions/prepush-gate-review-skipped.yml
   - layers/journal/content/current/frictions/proposal-duplicates-existing-decision.yml
   - layers/journal/content/current/frictions/push-chained-to-gate-run.yml
@@ -130,7 +131,6 @@ filesEdited:
   - layers/journal/content/current/frictions/restart-kills-background-work.yml
   - layers/journal/content/current/frictions/run-summary-verdict-paths.yml
   - layers/journal/content/current/frictions/stop-hook-nag.yml
-  - layers/journal/content/current/frictions/survey-label-and-ledger-errors.yml
   - layers/journal/content/current/frictions/usage-limit-kills-agents.yml
   - layers/journal/content/current/frictions/worktree-guard-blocks-compound-bash.yml
   - layers/journal/content/current/frictions/adr-read-after-edit.yml
@@ -522,31 +522,31 @@ subagents:
     durationSec: 452
     toolCalls: 39
     modelCalls: 33
-    tokenShare: 26.5
+    tokenShare: 24.2
   - type: general-purpose
     task: Design friction fixes
     durationSec: 343
     toolCalls: 42
     modelCalls: 40
-    tokenShare: 22.7
+    tokenShare: 20.7
   - task: Implement three doc fixes
     model: sonnet
     durationSec: 134
     toolCalls: 27
     modelCalls: 16
-    tokenShare: 8.5
+    tokenShare: 7.8
   - type: general-purpose
     task: Standards review of doc diff
     durationSec: 24
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 2.3
+    tokenShare: 2.1
   - type: general-purpose
     task: Spec review of doc diff
     durationSec: 15
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.5
+    tokenShare: 1.4
 gitBranch: claude/eager-ptolemy-iertds
 entrypoint: remote_trigger
 cliVersion: 2.1.325
