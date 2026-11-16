@@ -15,11 +15,6 @@ fixes:
     date: "2026-11-06"
     summary: "grades.ts gate also gates every guide page that differs from the base, on its confirmed items when no item or step names it; step 2 says what to do for a page with no grades."
 occurrences:
-  - session: session_013zxzeSvdGhiM7SLEUgzvmF
-    date: "2026-11-01"
-    severity: minor
-    description: "Tally rejected fable's report because one lone page had no grade; the Skill covers only parse errors, so I resumed fable and merged its addendum into a copy."
-    solution: "Say in glassbox-improve step 2 what to do for a missing grade, or let grades.ts tally accept an addendum file per rater."
   - session: session_013zxzeQH3GSc8uMpvhebnFr
     date: "2026-11-03"
     severity: minor

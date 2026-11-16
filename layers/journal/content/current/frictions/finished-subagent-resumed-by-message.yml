@@ -3,6 +3,8 @@ surface: safe
 summary: A message sent to a finished subagent resumed it, so it re-ran work or redelivered an old report instead of answering.
 cause: "SendMessage to a subagent that already handed back wakes it for a full resumed turn: a correction re-runs part of its work, a message meant for another agent id is spent on the wrong one, and a new question can get its old report back. Signals: 'resumed', 'finished reviewer', 'redelivering their old reports', 'corrections to agents that had already finished'."
 status: open
+notes: |-
+  2026-11-16 design: no change: #3068 (PR #3090) already added the dispatch-subagents §6 resume bullets; the three later occurrences are a typo-class slip, a nit and the already-covered redelivery. dropped: more prose has no sufficient reason.
 occurrences:
   - session: session_013zxzeRbcVWW7Upv1bSok39
     date: "2026-11-13"

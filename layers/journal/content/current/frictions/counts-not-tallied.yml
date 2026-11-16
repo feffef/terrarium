@@ -20,16 +20,6 @@ fixes:
     date: "2026-10-25"
     summary: "Cut the Verify-before-you-state family to one plain home in CLAUDE.md and dropped its restatements in four Skills and the build reviewer."
 occurrences:
-  - session: session_013zxzeNqa4MUJF5DT5wQ1zf
-    date: "2026-11-01"
-    severity: nit
-    description: "First PR body claimed 33 claims checked and 3 fixed without counting the report; I counted 32 rows and 1 wrong and edited the body."
-    solution: "Count the fact-check rows before writing the tally."
-  - session: session_013zxzeQFGrFi821yVm6n746
-    date: "2026-11-01"
-    severity: minor
-    description: "I wrote fact-check tallies (28 claims, 7 fixed; 53 claims, 12 fixed) into both PR bodies without counting them, breaching Verify before you state; caught when opening the second PR and corrected."
-    solution: "Have blog-post step 9 say to count the checker's rows (wc on the returned table) before writing the tally, or drop the number."
   - session: session_013zxzeQZYwzDuf4JEncnqAa
     date: "2026-11-02"
     severity: minor

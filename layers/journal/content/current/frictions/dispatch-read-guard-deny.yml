@@ -17,31 +17,6 @@ fixes:
     date: "2026-11-12"
     summary: "clear-backlog SKILL.md says to read dispatch-subagents first."
 occurrences:
-  - session: session_013zxzeNqa4MUJF5DT5wQ1zf
-    date: "2026-11-01"
-    severity: nit
-    description: "Called the first Agent call before reading dispatch-subagents, as CLAUDE.md requires before any subagent brief; the guard blocked it and the brief was resent."
-    solution: "Read dispatch-subagents right after the Skill's fact-check step names a subagent."
-  - session: session_013zxzeNxm9jTD6DwkDXzzG8
-    date: "2026-11-01"
-    severity: nit
-    description: "The dispatch-read guard blocked my first Agent call because I had not read dispatch-subagents SKILL.md; I read it and retried."
-    solution: "CLAUDE.md already names the trigger; read dispatch-subagents before writing the first brief."
-  - session: session_013zxzeRpGWPCotTQup1ui46
-    date: "2026-11-01"
-    severity: nit
-    description: "Agent call blocked by the dispatch-read guard because I wrote a brief before reading dispatch-subagents; CLAUDE.md names that trigger."
-    solution: "Read the dispatch-subagents Skill before drafting any subagent brief, as CLAUDE.md says."
-  - session: session_013zxzeQFGrFi821yVm6n746
-    date: "2026-11-01"
-    severity: nit
-    description: "The dispatch-read guard blocked my first blind-reader Agent call until I read dispatch-subagents SKILL.md; one wasted call and a 117-line read."
-    solution: "Have blog-post step 6 name dispatch-subagents as a read before the first Agent call, or let the guard accept the brief rules already inlined."
-  - session: session_013zxzeTLLY3FmiXzuBKgc2o
-    date: "2026-11-01"
-    severity: minor
-    description: "The dispatch-read guard blocked my first clear-backlog-explore Workflow call; the clear-backlog Skill never points to dispatch-subagents before §1."
-    solution: "Add a read-first pointer to dispatch-subagents in clear-backlog §1, as #2749 does for visitor-loop and blog-post."
   - session: session_013zxzeSuucewJSDd3eyaNnh
     date: "2026-11-02"
     severity: nit

@@ -4,7 +4,8 @@ summary: >-
 cause: >-
   A diagnosis or attribution (why something behaves as it does, which PR made a change) is generalised from partial evidence, a single test or a merge-commit list, without varying one factor per test or reading the diff. Signals: "from one test", "without checking its diff", a cause reversed by a controlled test or git show.
 surface: safe
-status: open
+status: tracked
+ref: "#3363"
 fixes:
   - pr: 2336
     date: "2026-10-20"

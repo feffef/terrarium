@@ -24,11 +24,6 @@ fixes:
     date: "2026-11-07"
     summary: "Removes the glassbox-improve Skill (issue #2930, owner decision), the source of this cluster's runs."
 occurrences:
-  - session: session_013zxzeSvdGhiM7SLEUgzvmF
-    date: "2026-11-01"
-    severity: moderate
-    description: "MCP create_pull_request takes the body only inline, so the 40KB tally had to be read back and retyped, roughly 25k tokens, in one call."
-    solution: "None wanted: the owner chose to keep the full inline PR body (issue 2700 option a) and rejected a body-file script because of ADR-0017; I proposed otherwise before checking."
   - session: session_013zxzeSkTLmRxa2PWgt3kPw
     date: "2026-11-02"
     severity: minor

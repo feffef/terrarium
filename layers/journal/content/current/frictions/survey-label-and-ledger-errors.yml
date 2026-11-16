@@ -2,7 +2,7 @@ name: survey-label-and-ledger-errors
 surface: safe
 summary: A frictions-to-fixes survey left wrong labels or unfinished ledger work that the design or main session had to catch.
 cause: "The survey subagent mislabels a candidate or leaves ledger work undone (a never-fixed label for a cause later commits fixed, a stored 'One occurrence.' cause, no cause rewrite after recorded fixes, a status set after a later fix merged), and the next agent finds it by checking. Signals: 'survey report labelled', 'the design agent found it', 'left work the ledger review had to catch'."
-status: open
+status: tracked
 occurrences:
   - session: session_013zxzeNdAgdKF5tpWTQLowx
     date: "2026-11-13"
