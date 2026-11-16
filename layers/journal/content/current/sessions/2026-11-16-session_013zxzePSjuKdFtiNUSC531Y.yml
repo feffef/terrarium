@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzePSjuKdFtiNUSC531Y
 startedAt: 2026-11-16T04:03:16Z
-endedAt: 2026-11-16T04:10:13Z
+endedAt: 2026-11-16T04:11:13Z
 kind: autonomous
 goal: Scheduled audit of the repo's docs for drift, duplication and contradictions
-status: in-review
-outcome: Sweep PR 3368 open with two Skill wording fixes; gate green, awaiting CI to merge
-summary: "Scheduled audit-docs run; no human prompted any step (all agent-initiated). Three read-only reviewers returned 6 findings (Freshness 2, Single-home 0, Coherence 4). One checker gave 4 CONFIRMED-BUT (C1 clear-backlog major, C2 dependabot 0.x, C3 guest-build marker order, C4 ADR-0030 template pointer) and 2 WRONG (history.md snapshot claims A1, A2). Fixed C1 using the checker's corrected wording (adds missing-test) and C3 by moving the claim before step 1. Left for the owner: C2 (deleting the clause would loosen what an agent may merge, a policy call) and C4 (ADR edit, low value; would need an escalation PR). No escalation PR, no issue filed. code-review Standards found only line-wrap defects, fixed; Spec clean; gate:scoped green. PR 3368 open, verdict posted, subscribed; merge on green CI. Covered (Agents B and C read in full): GLOSSARY.md, GLOSSARY-MAP.md, layers/{journal,glassbox,commons}/GLOSSARY.md, docs/agents/{domain,git-conventions,guest-contributions,mdc-when-to-use,pr-workflow,tenant-layers}.md, tests/README.md, layers/journal/content/current/pages/{highlights,history,index,routines}.md, Skills clear-backlog close-session dependabot-sweep glassbox-walkthrough guest-build guest-intake inspect-session log-session midden-catalogue tinkerfund-campaign atlas-specimen, ADRs 0001 0003 0004 0005 0008 0010 0011 0012 0017 0019 0024-0030."
+status: completed
+outcome: Sweep PR 3368 merged with two Skill wording fixes; no escalation PR
+summary: "Scheduled audit-docs run; no human prompted any step (all agent-initiated). Three read-only reviewers returned 6 findings (Freshness 2, Single-home 0, Coherence 4). One checker gave 4 CONFIRMED-BUT (C1 clear-backlog major, C2 dependabot 0.x, C3 guest-build marker order, C4 ADR-0030 template pointer) and 2 WRONG (history.md snapshot claims A1, A2). Fixed C1 using the checker's corrected wording (adds missing-test) and C3 by moving the claim before step 1. Left for the owner: C2 (deleting the clause would loosen what an agent may merge, a policy call) and C4 (ADR edit, low value; would need an escalation PR). No escalation PR, no issue filed. code-review Standards found only line-wrap defects, fixed; Spec clean; gate:scoped green. PR 3368 merged via merge-pr.ts on green CI (merge commit 412e494a0). Covered (Agents B and C read in full): GLOSSARY.md, GLOSSARY-MAP.md, layers/{journal,glassbox,commons}/GLOSSARY.md, docs/agents/{domain,git-conventions,guest-contributions,mdc-when-to-use,pr-workflow,tenant-layers}.md, tests/README.md, layers/journal/content/current/pages/{highlights,history,index,routines}.md, Skills clear-backlog close-session dependabot-sweep glassbox-walkthrough guest-build guest-intake inspect-session log-session midden-catalogue tinkerfund-campaign atlas-specimen, ADRs 0001 0003 0004 0005 0008 0010 0011 0012 0017 0019 0024-0030."
 prs:
   - "3368"
 docsRead:
@@ -129,18 +129,19 @@ frictions:
   - description: A cd into .agents/skills moved the primary working directory; the next call needed an environment fix-up.
     solution: Use absolute paths or git -C instead of cd.
     severity: nit
-durationSec: 417
+durationSec: 477
 models:
-  claude-sonnet-5-5: 72
+  claude-sonnet-5-5: 85
 toolCounts:
   Read: 3
-  Skill: 4
-  Bash: 23
+  Skill: 6
+  Bash: 26
   Agent: 6
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   mcp__github__add_issue_comment: 1
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 2
+  ReadNotifications: 2
 filesEdited:
   - .agents/skills/clear-backlog/SKILL.md
   - .agents/skills/guest-build/SKILL.md
@@ -624,37 +625,37 @@ subagents:
     durationSec: 78
     toolCalls: 27
     modelCalls: 18
-    tokenShare: 16.5
+    tokenShare: 15.1
   - type: general-purpose
     task: "Audit B: Single-home"
     durationSec: 50
     toolCalls: 26
     modelCalls: 12
-    tokenShare: 12.6
+    tokenShare: 11.6
   - type: general-purpose
     task: "Audit C: Coherence"
     durationSec: 117
     toolCalls: 26
     modelCalls: 26
-    tokenShare: 22.8
+    tokenShare: 20.9
   - type: general-purpose
     task: Fact-check audit findings
     durationSec: 75
     toolCalls: 20
     modelCalls: 14
-    tokenShare: 8.6
+    tokenShare: 7.9
   - type: general-purpose
     task: "Review: Standards"
     durationSec: 16
     toolCalls: 7
     modelCalls: 3
-    tokenShare: 2.6
+    tokenShare: 2.4
   - type: general-purpose
     task: "Review: Spec"
     durationSec: 11
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 2.2
+    tokenShare: 2
 gitBranch: claude/festive-mayer-w4ahx5
 entrypoint: remote_trigger
 cliVersion: 2.1.325
