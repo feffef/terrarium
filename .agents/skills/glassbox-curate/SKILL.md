@@ -166,10 +166,9 @@ keeps them so).
   memory page and run entry are current. Then Loop.
 - **Loop.** Every run that opened a PR ends here, whether it merged or waits for
   the owner; finishing a focus is not the end of the session, and closing it
-  straight after Land skips this step. When cost can't be read, the context
-  limit is the budget: keep starting full runs until the estimated context
-  reaches it, and never stop only because cost is unknown. First read the
-  budget. Call
+  straight after Land skips this step. This holds for scheduled runs too: when
+  cost can't be read, the 450k estimated-token context budget decides, and
+  never stop only because cost is unknown. First read the budget. Call
   `get_session` with no session id: `external_metadata.usage.cost_usd` (it
   appears only partway into a run) and
   `external_metadata.context_usage.used_tokens`. If `get_session` is not among
