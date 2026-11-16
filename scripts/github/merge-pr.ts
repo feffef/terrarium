@@ -107,6 +107,9 @@ export interface MergeResult {
    *  GitHub's own auto-close didn't (issue #983) — empty when the PR named no
    *  issues, or when every named issue was already closed by GitHub. */
   reconciledClosedIssues?: number[]
+  /** Set when the merge succeeded only on a retry after HTTP 405 "Base branch
+   *  was modified" (issue #3357). */
+  retriedBaseModified?: boolean
 }
 
 // ── Pure core (unit-tested) ──────────────────────────────────────────────────
@@ -523,6 +526,19 @@ export async function reconcileClosingKeywords(
   return { closed, failed }
 }
 
+/** One immediate retry when GitHub refuses a merge with 405 "Base branch was
+ *  modified" (issue #3357): the PUT pins the head sha, so the retry equals a
+ *  manual rerun. */
+export function mergeRetryingBaseModified(merge: () => string): { sha: string; retried: boolean } {
+  try {
+    return { sha: merge(), retried: false }
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err)
+    if (!msg.includes('HTTP 405') || !msg.includes('Base branch was modified')) throw err
+    return { sha: merge(), retried: true }
+  }
+}
+
 // ── Command ──────────────────────────────────────────────────────────────────
 
 export async function mergePrWhenGreen(
@@ -595,8 +611,11 @@ export async function mergePrWhenGreen(
   }
 
   let mergeCommitSha: string
+  let retriedBaseModified: boolean
   try {
-    mergeCommitSha = mergePr(access, prNumber, opts.mergeMethod, sha, waiver)
+    const merged = mergeRetryingBaseModified(() => mergePr(access, prNumber, opts.mergeMethod, sha, waiver))
+    mergeCommitSha = merged.sha
+    retriedBaseModified = merged.retried
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err)
     return {
@@ -619,14 +638,16 @@ export async function mergePrWhenGreen(
     closed.length > 0
       ? ` — closed ${closed.length} referenced issue(s) GitHub's own auto-close missed: ${closed.map((n) => `#${n}`).join(', ')}`
       : ''
+  const retryNote = retriedBaseModified ? ' after one retry (base branch was modified)' : ''
   const failNote = failed.length > 0 ? ` (failed to verify/close: ${failed.map((n) => `#${n}`).join(', ')})` : ''
   return {
     pr: prNumber,
     verdict,
     merged: true,
     mergeCommitSha,
-    message: `merged${reconcileNote}${failNote}`,
+    message: `merged${retryNote}${reconcileNote}${failNote}`,
     reconciledClosedIssues: closed,
+    ...(retriedBaseModified ? { retriedBaseModified } : {}),
   }
 }
 
