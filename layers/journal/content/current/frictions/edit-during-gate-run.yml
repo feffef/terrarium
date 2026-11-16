@@ -196,3 +196,18 @@ occurrences:
     severity: nit
     description: "Started pnpm gate:scoped before running code-review, against pr-workflow.md's review-then-gate order, and had to stop it so review fixes would not abort it."
     solution: "Read pr-workflow.md before the first PR step; it was opened only after the gate had started."
+  - session: session_013zxzePH9gQTPAHjR7vCj71
+    date: "2026-11-15"
+    severity: minor
+    description: "Started pnpm gate:scoped before running code-review, so the gate-edit guard blocked the review fixes and I had to stop the gate and rerun it."
+    solution: "Follow pr-workflow order, review first, then gate only on the final head; the doc already says it."
+  - session: session_013zxzePNLUgD6AbfEmXykEJ
+    date: "2026-11-15"
+    severity: minor
+    description: "I edited audit-skills SKILL.md while gate:scoped was running, which aborted it before e2e and cost a full re-run."
+    solution: "Read the pr-workflow rule that nothing may change during a gate before starting one; finish all edits first."
+  - session: session_013zxzeRzd6VkoZYwUYQuzAn
+    date: "2026-11-16"
+    severity: nit
+    description: "Tried to commit while gate:scoped ran in the background; the gate-edit guard blocked it and I had to wait a turn."
+    solution: "Commit before starting the gate, or wait for the gate before staging."

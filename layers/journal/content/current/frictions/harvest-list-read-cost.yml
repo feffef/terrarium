@@ -31,3 +31,8 @@ occurrences:
     severity: nit
     description: "The harvest list was about 32,700 tokens, over the Read cap, so reading it whole needed two calls."
     solution: "Make harvest list print in under 25,000 tokens or say to read it in pages."
+  - session: session_013zxzeRGXYTuwyQrcDEwRpw
+    date: "2026-11-15"
+    severity: nit
+    description: "harvest list output was about 32k tokens, over the Read cap, so it took two reads."
+    solution: "Already tracked as closed #3191; a compact list option would avoid it."

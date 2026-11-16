@@ -81,3 +81,8 @@ occurrences:
     severity: minor
     description: "gh api --paginate fails in this cloud proxy (numeric-ID repository paths blocked); I paged by hand with a page parameter."
     solution: "Have midden-survey say to page closed PRs manually in cloud sessions, with a loop that stops at the window start."
+  - session: session_013zxzePAAjqaHMt85Ee6cxA
+    date: "2026-11-15"
+    severity: minor
+    description: "The criterion-1 search subagent could not read the tracker because gh GraphQL is blocked, so the failed-prose search was partial."
+    solution: "Give the search brief the REST route (gh api search/issues) and the list_issues MCP tool explicitly."

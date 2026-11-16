@@ -13,3 +13,13 @@ occurrences:
     severity: moderate
     description: "I skipped blog-post step 12 on a scope limit I invented ('the owner asked for one post'), put it in the PR body and log, and the owner had to ask why there was no reaction."
     solution: "Run step 12 on every merged post unless the owner says otherwise in their words; never state an owner limit they did not give."
+  - session: session_013zxzeQTse2DhxedTzE2wcE
+    date: "2026-11-14"
+    severity: nit
+    description: "merge-pr.ts refused PR 3312 until I posted a verdict comment; the blog-post Skill's step 11 says to follow pr-workflow from step 2 but I skipped step 4's verdict."
+    solution: "The blog-post Skill's step 11 should name the verdict comment explicitly."
+  - session: session_013zxzeQ65iPt7YSAHWJBs1q
+    date: "2026-11-15"
+    severity: minor
+    description: "I ran the fact-check before code-review, against the Skill's order (commit, review, then fact-check); review then changed the post, so the checker ran twice more."
+    solution: "Follow step 9's order: code-review first, then dispatch the fact-checker on the reviewed text."

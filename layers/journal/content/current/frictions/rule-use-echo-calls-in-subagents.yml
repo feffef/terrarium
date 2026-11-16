@@ -37,3 +37,13 @@ occurrences:
     severity: minor
     description: "The rule-use echo hook asked every read-only subagent for two Bash calls, and read-first hook nudges fired after the action; 8 of 10 retros named it."
     solution: "Run the rule-use echo once, and skip it for read-only reviewers."
+  - session: session_013zxzeSECfNzcU6b53GPzxG
+    date: "2026-11-15"
+    severity: minor
+    description: "The SubagentStart rule-use hook made all four reviewers run echo twice and judge steered or backed with no evidence; unrelated to the review task."
+    solution: "Ask once, after the work, in the rule-use hook under scripts/hooks/ (exact file unverified)."
+  - session: session_013zxzePoe14MeL6kTvYZMX8
+    date: "2026-11-15"
+    severity: nit
+    description: "SubagentStart rule-use step made read-only visitors spend two Bash echo calls each, reported by the blind visitor's retro (unverified at the hook source)."
+    solution: "Exempt read-only visitor subagents from the rule-use step in the SubagentStart hook."

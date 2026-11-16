@@ -25,3 +25,8 @@ occurrences:
     severity: minor
     description: "save-handback.ts keeps only an agent's latest reply, so two first reports were lost as files once agents were resumed with corrections"
     solution: "Save a report with save-handback before sending the agent a follow-up message"
+  - session: session_013zxzeQE5BDH58h5e21zafo
+    date: "2026-11-15"
+    severity: minor
+    description: "I saved two reviewer replies as hand-condensed summaries instead of with save-handback.ts, so the pool is not verbatim as the Skill requires."
+    solution: "Run save-handback.ts for every reply; the brief's step 4 already says so, I skipped it for speed."

@@ -53,3 +53,13 @@ occurrences:
     severity: minor
     description: "My run entry's changes text had colons followed by spaces or line ends, which YAML read as mappings; the workshop page returned a 500 and validate-content failed until I reworded it."
     solution: "The orientation skeleton or glassbox-curate should say a changes entry is one plain string and must not hold a colon plus space."
+  - session: session_013zxzeP4m4R15EP9UBBmzfR
+    date: "2026-11-14"
+    severity: nit
+    description: "Two YAML edits (term definitions, run entry) failed validation because an unquoted colon starts a mapping; found only by running validate:content."
+    solution: "Glass Box term and run-entry docs could say to quote any scalar holding a colon."
+  - session: session_013zxzePak78Sud7pyRQMjeV
+    date: "2026-11-15"
+    severity: minor
+    description: "A colon-space inside an unquoted run-entry YAML item broke validate:content; glassbox unit tests passed, so the gate was the first to see it."
+    solution: "Have workshop.spec.ts parse run entries, or tell the Skill to quote each changes item."

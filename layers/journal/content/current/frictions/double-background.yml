@@ -136,3 +136,23 @@ occurrences:
     severity: nit
     description: "Tried to background the gate with both run_in_background and a trailing ampersand; the double-background guard blocked it, costing one call."
     solution: "Pass run_in_background alone."
+  - session: session_013zxzeRLqFejsZTowNzt1Lt
+    date: "2026-11-15"
+    severity: nit
+    description: "Stacked run_in_background with a text-level ampersand once; the double-background guard blocked the call."
+    solution: "Use run_in_background alone."
+  - session: session_013zxzePNLUgD6AbfEmXykEJ
+    date: "2026-11-15"
+    severity: nit
+    description: "A background gate call combined run_in_background with a trailing ampersand and was blocked by the double-background guard."
+    solution: "Pass run_in_background alone with a plain foreground command."
+  - session: session_013zxzePxNrkPQ4muYeaAFZT
+    date: "2026-11-15"
+    severity: nit
+    description: "A background gate command sent with run_in_background and a trailing ampersand was blocked by the double-background guard."
+    solution: "Send run_in_background alone."
+  - session: session_013zxzePnUYHpbwDsDER2swv
+    date: "2026-11-16"
+    severity: nit
+    description: "Combined run_in_background with a text-level ampersand and the double-background guard rejected the call."
+    solution: "Pass run_in_background alone with a plain foreground command."

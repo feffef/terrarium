@@ -135,3 +135,23 @@ occurrences:
     severity: minor
     description: "I set small:true on the glassbox branch without counting its diff; it was 11 lines, over the 10-line bar, so a full extra review round ran for nits only."
     solution: "Count the diff in the worktree before setting small (git diff --shortstat) instead of judging from the brief."
+  - session: session_013zxzeQE5BDH58h5e21zafo
+    date: "2026-11-15"
+    severity: minor
+    description: "I first posted wrong finding counts (10 findings, 1 CONFIRMED) in the PR body and verdict comment, counted from memory; I recounted and corrected both."
+    solution: "Count verdicts from the checker's table before writing the body (CLAUDE.md Verify before you state)."
+  - session: session_013zxzePH9gQTPAHjR7vCj71
+    date: "2026-11-15"
+    severity: minor
+    description: "Posted the issue 3017 comments with miscounts and one wrong claim about which agents said what, and fixed them by editing the comments three times."
+    solution: "Recompute every count from the log with a command, and re-read each claim against the replies, before posting."
+  - session: session_013zxzePNLUgD6AbfEmXykEJ
+    date: "2026-11-15"
+    severity: nit
+    description: "I told the owner 26 Skills had observations; the actual count was 23. Corrected the next message."
+    solution: "Count with a script before stating a number, as CLAUDE.md says."
+  - session: session_013zxzeQESWGW1qj9P1Egphc
+    date: "2026-11-15"
+    severity: minor
+    description: "I tallied and relayed about fifteen sets of self-reported counts by hand; each was marked unverified, but one figure (sessions with a passing backed) was wrong and had to be corrected."
+    solution: "Have sessions post structured counts and sum them with a script, not by hand in the reply."

@@ -51,3 +51,13 @@ occurrences:
     severity: minor
     description: "The orientation output is over 25 KB and the Subject output over 70 KB, so reading them cost several paged reads and many tokens."
     solution: "Print only the Subject's pages' Try-it and Where next on request, or split the output into files up front."
+  - session: session_013zxzePxNrkPQ4muYeaAFZT
+    date: "2026-11-15"
+    severity: nit
+    description: "The orient --subject output exceeded the Read cap and needed a second Read with an offset."
+    solution: "orient.ts could write one file per page for a subject."
+  - session: session_013zxzePak78Sud7pyRQMjeV
+    date: "2026-11-15"
+    severity: moderate
+    description: "orient.ts --subject printed 113 KB, about 45k tokens over three reads, for an 11-page Subject whose pages I mostly only needed to scan."
+    solution: "Let orient.ts --subject print each page's headings and Why bullets by default, with full text on request."

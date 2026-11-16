@@ -1,7 +1,7 @@
 name: get-session-cost-unreported
 surface: outside
 summary: A Skill or PR body needed the run's cost, but get_session showed none (or none yet), so the PR said the cost was unreported.
-cause: "get_session returns no cost_usd or usage field at some calls (once the field appeared only on a later call than the session's single early one), so a Skill step that requires the run cost in the PR body cannot be met. Signals: 'get_session returned no cost figure', 'no usage field', 'Run cost: unreported', 'cost_usd 2.85 on a later call'. Since PR #2944 (2026-11-07) glassbox-curate says to read the cost at landing, not early. Since PR #3001 (2026-11-09) glassbox-curate re-reads cost_usd just before the PR body."
+cause: "get_session returns no cost_usd or usage field at some calls (once the field appeared only on a later call than the session's single early one), or is not among a scheduled run's tools, so a Skill step that requires the run cost in the PR body cannot be met. Signals: 'get_session returned no cost figure', 'no usage field', 'Run cost: unreported', 'cost_usd 2.85 on a later call', 'cost_usd 0.12 early, 4.22 later'. Since PR #2944 (2026-11-07) glassbox-curate says to read the cost at landing, not early; since PR #3001 (2026-11-09) it re-reads cost_usd just before the PR body; since PR #3258 (2026-11-13) it estimates usage without get_session when the tool is missing."
 status: open
 fixes:
   - pr: 2944
@@ -10,6 +10,9 @@ fixes:
   - pr: 3001
     date: "2026-11-09"
     summary: "glassbox-curate SKILL.md reads cost_usd again just before the PR body and makes the run's cost a Done-when ('unreported' only when still missing)."
+  - pr: 3258
+    date: "2026-11-13"
+    summary: "glassbox-curate says a run whose session lacks get_session estimates usage without it and the loop is the last step."
 occurrences:
   - session: session_013zxzeRwjiiLkjj6sQ3u49g
     date: "2026-11-07"
@@ -56,3 +59,8 @@ occurrences:
     severity: nit
     description: "I wrote about 4 dollars as the run cost in the PR body without reading cost_usd; the session had cost 12.68 dollars, so I corrected the body."
     solution: "Read cost_usd with get_session before writing the cost line, as glassbox-curate says."
+  - session: session_013zxzePak78Sud7pyRQMjeV
+    date: "2026-11-15"
+    severity: minor
+    description: "get_session cost_usd read 0.12 early in run 1 and was put in the PR body; it was a lagging figure (4.22 later), so the PR body is wrong."
+    solution: "Have the Skill say to read the cost at the end of the run, or to omit it when the figure is under a minute old."

@@ -64,3 +64,13 @@ occurrences:
     severity: moderate
     description: "Broke CLAUDE.md 'Question the premise': applied and backfilled under the inherited Seedling/map exclusions and the narrow platform path list without giving each a reason; the owner caught all three by asking"
     solution: "Before backfilling under a rule, run it on two real issues and ask what an unlabelled result means for the label's reader (visitor-loop)"
+  - session: session_013zxzeNiyBNZD3Zn5dUm9Bq
+    date: "2026-11-13"
+    severity: minor
+    description: "For the context file's raw-JSON ideas I first committed a hand-conversion stopgap; the owner had to ask why before I proposed the plain-text ideas.ts list command."
+    solution: "When a report shows a tool's output format is the problem, propose fixing the tool before telling each run to reformat by hand."
+  - session: session_013zxzePH9gQTPAHjR7vCj71
+    date: "2026-11-15"
+    severity: minor
+    description: "Proposed and then built a survey follow-up whose benefit I could not state when asked; the premise check CLAUDE.md asks for came only after the gate and review."
+    solution: "Before offering a follow-up, name the reader it helps and what decision changes; drop it if none."

@@ -208,3 +208,18 @@ occurrences:
     severity: nit
     description: "ADR reads demanded by hooks arrived after my edits, and I tried a blocked foreground sleep twice to wait on agents."
     solution: "Read the ADRs the rule summaries name before editing; wait with the completion notification."
+  - session: session_013zxzePNLUgD6AbfEmXykEJ
+    date: "2026-11-15"
+    severity: nit
+    description: "A hook asked me to read three ADRs in full after I edited audit-skills; I read two and skipped ADR-0005, which governs the Skill edit."
+    solution: "Treat each hook read-in-full demand as a checklist and read every named ADR, or say why one is not needed."
+  - session: session_013zxzeQESWGW1qj9P1Egphc
+    date: "2026-11-15"
+    severity: minor
+    description: "The ADRs governing files I edited (session schema, ADR-0009 text, the log-session Skill, a Journal comment) were read only after each edit, when the hook asked; the edits stood."
+    solution: "Show the read-first hint on the first read of a governed file, so the ADR is read before the first edit."
+  - session: session_013zxzeNd2Fg2jp3GvNmr9mb
+    date: "2026-11-15"
+    severity: minor
+    description: "A hook asked me to read ADR-0008 and ADR-0009 after I had already committed SessionCard.vue."
+    solution: "Load the ADR-0008 rule when the first Journal file is read."

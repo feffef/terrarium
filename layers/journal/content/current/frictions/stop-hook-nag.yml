@@ -334,3 +334,8 @@ occurrences:
     severity: nit
     description: "Did not run the archive sweep before the first commit and committed an unreviewed draft early to satisfy the Stop hook, adding extra commits."
     solution: "Finish fact-check first, or let the hook accept a draft push."
+  - session: session_013zxzeRchVHk3fp9wS3yUgM
+    date: "2026-11-15"
+    severity: nit
+    description: "Stop hook asked to commit and push repeatedly while subagents were still running and the claim checks unfinished."
+    solution: "The hook could skip while background agents are live."

@@ -212,3 +212,8 @@ occurrences:
     severity: moderate
     description: "Labelled #2916 and other Friction-cluster issues from title and body only, without reading their ledger occurrences; the owner asked whether #2916 was really Platform, and two of three occurrences were Glass Box"
     solution: "auto-triage's Area labels now says to open each occurrence's session log; CLAUDE.md 'Verify before you state' already covered it"
+  - session: session_013zxzePak78Sud7pyRQMjeV
+    date: "2026-11-15"
+    severity: nit
+    description: "I first wrote 'get_session was not among the tools' in the run entry without checking; it was available. Caught before landing."
+    solution: "Check the tool list before stating a tool is missing; the Skill could say where the cost figure comes from."
