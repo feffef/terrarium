@@ -1,0 +1,235 @@
+schemaVersion: 1
+session: session_013zxzeQsCq5g9jeQpmsULPZ
+startedAt: 2026-11-16T16:02:30Z
+endedAt: 2026-11-16T16:09:15Z
+kind: autonomous
+goal: Scheduled visitor-loop run on the homepage
+status: completed
+outcome: "Three visitors reviewed the homepage; one bug filed (#3381), ideas and learnings logged, retro posted on #3244."
+summary: "Scheduled visitor-loop run (no human prompt). Focus was the homepage (rotation row 6). Built and served the production preview, wrote a context file, and sent a blind first-time visitor, an informed content editor and an informed UI tester (all Sonnet). Tallied their reports and checked each candidate bug against source and the rendered page at 390px. Confirmed one bug group (list-row links 17px tall at 390px) and filed it as #3381. Dropped: the Midden card clamp as a bug (a deliberate 7-line clamp with a title link), NUXT_E7002 (no console error on a plain load), Marquee/Commons links and the hero reorder (decisions.md). Everything else is an idea or learning. Retro comment posted on #3244. All work was agent-initiated by the schedule."
+prs: []
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: .claude/skills/visitor-loop/decisions.md
+    reason: (no reason given)
+  - path: scripts/lib/chromium.ts
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/visitor-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: visitor-loop
+    reason: the scheduled task itself
+  - name: dispatch-subagents
+    reason: brief the three visitors
+  - name: close-session
+    reason: (no reason given)
+frictions:
+  - description: Chained a background build with a text-level & and the double-background guard blocked it; resent as one plain background call.
+    solution: Nothing to fix; the guard worked.
+    severity: nit
+  - description: A Monitor loop using pgrep -f matched its own command line and ended at once, giving a false idle signal.
+    solution: CLAUDE.md already warns against pgrep -f; wait on the agent notification instead.
+    severity: nit
+  - description: Visitors' retros say the brief gives no page-spread guidance for a one-page focus (homepage) or a single big section; the blind crawl spent 16 pages in the Blog.
+    solution: "visitor-brief.md: cap pages per section and say whether a single-page focus needs browser visits or only status checks."
+    severity: minor
+  - description: Ran git fetch before reading git-conventions.md and filed the issue with labels before reading triage-labels.md (only grepped it), both CLAUDE.md read-first triggers; no harm came of it.
+    solution: Read the doc at the first trigger; the hooks flagged both late.
+    severity: nit
+durationSec: 405
+models:
+  claude-sonnet-5-5: 68
+toolCounts:
+  Bash: 24
+  Skill: 2
+  Read: 1
+  Agent: 3
+  Monitor: 1
+  ToolSearch: 2
+  mcp__github__issue_read: 1
+  mcp__github__issue_write: 1
+  SendMessage: 3
+  mcp__github__add_issue_comment: 1
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0025.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: provenance header on issue and comment
+      - path: .claude/rules/adr-0003.md
+        value: confirmed
+        why: "agreed: no branch or PR"
+      - path: .claude/rules/adr-0009.md
+        value: in-scope
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0028.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0025.md
+        value: unrelated
+      - path: .claude/rules/ui-verification.md
+        value: unrelated
+      - path: .claude/rules/adr-0022.md
+        value: unrelated
+      - path: docs/agents/git-conventions.md
+      - path: docs/agents/github-integration.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .claude/skills/visitor-loop/decisions.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .claude/skills/visitor-loop/decisions.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .claude/skills/visitor-loop/decisions.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .claude/skills/visitor-loop/decisions.md
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+    reported: []
+subagents:
+  - type: general-purpose
+    task: Blind first-time visitor
+    model: sonnet
+    durationSec: 166
+    toolCalls: 9
+    modelCalls: 9
+    tokenShare: 13.3
+  - type: general-purpose
+    task: Informed content editor
+    model: sonnet
+    durationSec: 178
+    toolCalls: 10
+    modelCalls: 8
+    tokenShare: 13.5
+  - type: general-purpose
+    task: Informed UI tester
+    model: sonnet
+    durationSec: 169
+    toolCalls: 11
+    modelCalls: 8
+    tokenShare: 12.4
+gitBranch: claude/lucid-heisenberg-wocvaa
+entrypoint: remote_trigger
+cliVersion: 2.1.325
+trigger: visitor-loop
+learnings:
+  - On the homepage the Midden find note is deliberately clamped to 7 lines under 56rem and scrolls above it (app/pages/index.vue .find-note); the title link opens the full find, so a clipped note on mobile is not a bug.
+  - NUXT_E7002 is raised only when a payload fetch fails (node_modules/nuxt/dist/app/composables/payload.js); a plain production load of / logs no console error, so a visitor seeing it needs a repro path.
+  - The homepage has no skip link; Tinkerfund and Glass Box have their own (layers/tinkerfund Shell.vue, glassbox [slug].vue). The Platform shell has none.
+ideas:
+  - "[UI tester, content editor] /: the Midden 'Today's find' card shows a ~190-word note, clipped to 7 lines on phones, while other cards teaser ~30 words. Show the find's first two sentences with a 'Read the find' link so the card looks finished; visitors get a quick teaser instead of a cut-off paragraph."
+  - "[UI tester] /: the Midden 'Condition' stamp is a button named only 'Fresh' (aria-expanded, no label). Name it e.g. 'Condition: Fresh, show definition' so screen-reader users know what it opens."
+  - "[UI tester] /: there is no skip link; tab order starts with three hero GitHub links, then each digest link on the Journal card. Add a 'Skip to content' link, or collapse older digest teasers behind 'Show earlier' to cut tab stops and the 4880px mobile page height."
+  - "[blind] /search: a natural guess 404s while cross-site search lives at /t/commons. Redirect /search to /t/commons so visitors who guess the URL find it (the footer stays five sites by decision)."
+  - "[blind] 404 page: 'Nothing grows at this address' links only back home. Add links to the five sites so a lost visitor has a next step."
+  - "[content editor] /: hero reads 'It is an experiment, and Terrarium is the platform they do it on.' where 'It' has no antecedent, and 'have to manually merge only the risky changes' is clumsy. Reword to 'The experiment runs on Terrarium, a platform where…' and 'personally merge only the risky changes'; the hero order and CTA stay as designed."
+  - "[content editor] /: the Glass Box 'Lesson of the day' block opens with the bare label 'INSTALLED SKILLS' and the Atlas specimen card has no teaser sentence under 'Umbra vacans'. Label the Subject ('Subject: Installed skills') and add the entry's one-line hook so the cards match the Midden and Tinkerfund ones."
+  - "[content editor] /t/midden/trench: finds can be filtered by cause of death but not by condition, though the grade appears on every find. Add a condition filter beside it."
+  - "[content editor] /t/atlas/canopy/umbra-vacans: add 'Seen in the Journal', one line linking the dated digest where the entry was built, to bridge from the story back to the experiment."
+  - "[content editor] /t/tinkerfund/prod/campaigns/<campaign>: add a 'More like this' strip of three campaigns from the same category to keep visitors browsing."
+  - "[blind] /t/journal/current: the stats (sessions, frictions, spend) and 'blk/maj/mod/nit' have no legend for a newcomer. Add a one-line legend defining friction and the severity abbreviations."
+  - "[blind] /t/blog: Eyra's post about a hidden skip link says 'You will not see it' and has no image. Add a short capture of the pill when focused."
+  - "[content editor] /t/midden/trench/tried-and-left-alone: breadcrumb reads 'Tried and Left Alone' beside lowercase slugs; use the slug or a lowercase title. Also state the grading date next to 'Fresh' (a six-week-old find is graded Fresh)."
+landedBy: Stop
