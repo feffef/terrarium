@@ -9,7 +9,7 @@ ref: "#3363"
 fixes:
   - pr: 2336
     date: "2026-10-20"
-    summary: "Lengthened CLAUDE.md \"Verify before you state\" and \"One home per fact\"; PR 2378 reverted that wording, and CLAUDE.md now has the short form."
+    summary: "Lengthened CLAUDE.md \"Verify before you state\" (PR 2378 reverted it) and added a grep clause to \"One home per fact\" (still there)."
   - pr: 2378
     date: "2026-10-21"
     summary: "Restored the shorter \"Verify before you state\" bullet in CLAUDE.md, and the Standards reviewer in clear-backlog-build now flags a count or subagent claim that cites no source."

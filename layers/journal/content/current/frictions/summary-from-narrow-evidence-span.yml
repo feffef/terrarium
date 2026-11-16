@@ -1,8 +1,8 @@
 name: summary-from-narrow-evidence-span
 summary: >-
-  Agents wrote a summary or attribution from only the latest or nearest slice of the evidence, and the owner asked for the whole span.
+  Agents wrote a summary from only the latest slice of the evidence and had to redo it over the whole span.
 cause: >-
-  A summary of a body of work (a Skill's history, a run of sessions) is drawn from the newest notes or a short window, because the request's wording ("last week's runs") invited one and the span was never asked. Signals: "only the latest notes", "redid", a second PR that redoes the first over the whole history.
+  A summary of a Skill's history is drawn from its latest notes only, because the request's wording ("last week's runs") invited a short window and the span was never asked; it is redone over the whole history.
 surface: safe
 status: tracked
 ref: "#3363"
