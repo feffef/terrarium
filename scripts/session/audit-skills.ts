@@ -474,13 +474,13 @@ export function buildBrief(row: SkillRow, window: readonly WindowSession[], now 
     lines.push(...others.map((w) => `${runLine(w)} · goal: ${w.goal} · skillsUsed: ${w.skillsUsed.join(', ') || 'none'}`))
   }
   lines.push('', '## Observations (what is already known)')
-  const obs = [...row.observations].sort((a, b) => b.date.localeCompare(a.date)).map((o) => `- ${o.date}: ${o.note.replace(/\s+/g, ' ').trim()}`)
-  let used = 0
+  const obs = [...row.observations].reverse().sort((a, b) => b.date.localeCompare(a.date)).map((o) => `- ${o.date}: ${o.note.replace(/\s+/g, ' ').trim()}`)
+  let chars = 0
   const kept: string[] = []
   for (const l of obs) {
-    if (kept.length && used + l.length + 1 > OBSERVATIONS_BUDGET) break
+    if (kept.length && chars + l.length + 1 > OBSERVATIONS_BUDGET) break
     kept.push(l)
-    used += l.length + 1
+    chars += l.length + 1
   }
   const n = kept.length
   lines.push(...(n ? kept : ['None.']))
