@@ -158,7 +158,9 @@ resolution.
 3. **Check the rest against the tracker and, where cheap, `main`** (a
    solution isn't ripe if `main` already has it). `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/prune-friction-ledger.ts --candidates --out {SCRATCH_DIR}/candidates.txt`
    labels each entry from the ledger alone, so read its four labels as
-   provisional and confirm each:
+   provisional. Confirm only candidates provisionally never-fixed or
+   regression and any you rank high enough to be picked; leave the rest as
+   ledger-derived and mark them unconfirmed:
    - `pnpm exec tsx scripts/git/list-merges-since.ts <Friction session's startedAt> > {SCRATCH_DIR}/merges.json 2> {SCRATCH_DIR}/merges.err`
      lists every `origin/main` commit after that instant (UTC, newest first,
      `isMerge`-flagged; `--merges-only` keeps PR merges alone, else a
@@ -168,7 +170,10 @@ resolution.
    - Before labelling a candidate never-fixed, list open and closed issues,
      then filter both locally by the Friction's tool name and error text.
      The closed listing holds only the 200 most recently updated, so an
-     older fix surfaces through `merges.json` instead. Commands:
+     older fix surfaces through `merges.json` instead. For a Friction that
+     names a doc or Skill, also run `git log --oneline --since=<earliest
+     occurrence date> origin/main -- <that path>`: a direct commit can fix a
+     cause with no issue or PR. Commands:
      - `pnpm exec tsx scripts/github/list-open-issues.ts > {SCRATCH_DIR}/open-issues.json`
      - `pnpm exec tsx scripts/github/list-open-issues.ts 200 --closed > {SCRATCH_DIR}/closed-issues.json`
 
