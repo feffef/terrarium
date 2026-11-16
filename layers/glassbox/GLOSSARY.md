@@ -151,6 +151,10 @@ lesson count, then its lessons in file-prefix order, each with its own
 `description`, as a plain list. It names no starting point. A lesson's subject
 chip links to it.
 
+`/t/glassbox/guide/walkthroughs` is the same page for the walkthroughs, without
+read ticks, books or a count, under a one-sentence introduction; the sidebar's
+Walkthroughs label links to it, and it answers 404 while there are none.
+
 ### Excerpt
 Real Terrarium code copied into a page inside an `::excerpt` block, and checked
 word for word against the file at the page's `revision`. A code fence outside

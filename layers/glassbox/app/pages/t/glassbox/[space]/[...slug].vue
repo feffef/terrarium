@@ -10,7 +10,7 @@ const { data, status, error } = await useAsyncData(route.path, async () => {
   const [page, pages, walkthroughs] = await Promise.all([
     queryCollection(pagesKey).path(path).first(),
     // A Subject page lists each Lesson's description and a Where next row shows its target's; no other page carries them.
-    glassboxSubjectAt(path) || glassboxSubjectOf(path) || glassboxWalkthroughOf(path)
+    glassboxSubjectAt(path) || glassboxWalkthroughsAt(path) || glassboxSubjectOf(path) || glassboxWalkthroughOf(path)
       ? queryCollection(pagesKey).order('stem', 'ASC').select('path', 'title', 'description').all()
       : queryCollection(pagesKey).order('stem', 'ASC').select('path', 'title').all(),
     // The prefix glassboxWalkthroughOf tests, as SQL.
@@ -24,7 +24,9 @@ const { data, status, error } = await useAsyncData(route.path, async () => {
     : []
   // A Subject page's list reads descriptions off `pages`; a Where next row reads its target's from `descriptions`, so only those travel.
   const nextTargets = page ? glassboxNextTargets(page.body.value, base) : []
-  const links = glassboxSubjectAt(path) ? pages : pages.map(({ path, title }) => ({ path, title }))
+  // The Walkthroughs page lists only Walkthroughs' descriptions.
+  const keepDescription = (p: { path: string }) => glassboxSubjectAt(path) || (glassboxWalkthroughsAt(path) && glassboxWalkthroughOf(p.path))
+  const links = pages.map((p) => keepDescription(p) ? p : { path: p.path, title: p.title })
   return {
     page,
     through: glassboxWalkthroughsThrough(walkthroughs, `${base}${path}`),
@@ -40,7 +42,9 @@ const { data, status, error } = await useAsyncData(route.path, async () => {
 const page = computed(() => data.value?.page ?? null)
 // A Subject has no content file: its page lists its Lessons.
 const subject = computed(() => data.value?.subjects.find((s) => path === `/${s.slug}`))
-if (!page.value && !subject.value && !error.value) setResponseStatus(404)
+// The bare `/walkthroughs` folder lists the Walkthroughs the same plain way.
+const walkthroughsIndex = computed(() => !page.value && glassboxWalkthroughsAt(path) && !!data.value?.walkthroughs.length)
+if (!page.value && !subject.value && !walkthroughsIndex.value && !error.value) setResponseStatus(404)
 provide(glassboxRevisionKey, computed(() => page.value ?? undefined))
 // On main, not at `revision`: a page is pinned before it is written, so its own file there is older or missing.
 const source = computed(() => page.value ? glassboxFileUrl(`layers/glassbox/content/${space}/pages/${page.value.stem}.md`, 'main') : undefined)
@@ -77,6 +81,7 @@ useSeoMeta({ description: () => page.value?.description })
 
 <template>
   <main class="gb gb-doc" :class="{ 'menu-open': menuOpen, 'gb-bare': live }" @keydown.esc="closeMenu">
+    <a v-if="!live" class="gb-skip-link" href="#gb-content">Skip to lesson</a>
     <GlassboxSidebar
       v-if="!live"
       id="gb-nav"
@@ -104,9 +109,11 @@ useSeoMeta({ description: () => page.value?.description })
         >≡</button>
       </header>
 
-      <GlassboxArticle v-if="page" class="gb-column" :page="page" :base="base" :surround="data?.surround ?? null" :through="data?.through ?? []" :titles="data?.titles ?? {}" :descriptions="data?.descriptions ?? {}" :dated="!live" :source="source" />
+      <GlassboxArticle v-if="page" id="gb-content" tabindex="-1" class="gb-column" :page="page" :base="base" :surround="data?.surround ?? null" :through="data?.through ?? []" :titles="data?.titles ?? {}" :descriptions="data?.descriptions ?? {}" :dated="!live" :source="source" />
 
-      <GlassboxSubject v-else-if="subject" class="gb-column" :name="subject.name" :lessons="subject.lessons" :base="base" />
+      <GlassboxSubject v-else-if="subject" id="gb-content" tabindex="-1" class="gb-column" :name="subject.name" :lessons="subject.lessons" :base="base" />
+
+      <GlassboxSubject v-else-if="walkthroughsIndex" id="gb-content" tabindex="-1" class="gb-column" name="Walkthroughs" intro="A walkthrough follows one story across several lessons, such as a request becoming a merged PR, and links to each lesson instead of repeating it." :lessons="data?.walkthroughs ?? []" :base="base" plain />
 
       <div v-else class="gb-column">
         <h1>Not found</h1>

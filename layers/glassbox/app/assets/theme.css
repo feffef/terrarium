@@ -132,7 +132,22 @@
 body:has(.gb) { margin: 0; }
 
 .gb a { color: var(--gb-accent); }
-.gb code { font: 0.86em var(--gb-mono); }
+.gb code { font: 0.86em var(--gb-mono); overflow-wrap: anywhere; }
+/* Hidden until a keyboard user focuses it, as Tinkerfund's skip link is. */
+.gb .gb-skip-link {
+  position: absolute;
+  left: 12px;
+  top: -64px;
+  z-index: 20;
+  padding: 8px 14px;
+  border-radius: 99px;
+  background: var(--gb-solid);
+  color: var(--gb-solid-ink);
+  font-size: 14px;
+  text-decoration: none;
+}
+.gb .gb-skip-link:focus { top: 12px; }
+.gb [tabindex='-1']:focus { outline: none; }
 .gb .gb-label {
   font: 11px var(--gb-mono);
   letter-spacing: 0.1em;

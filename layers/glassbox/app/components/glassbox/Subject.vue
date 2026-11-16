@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { GlassboxPageLink } from '../../utils/subjects'
 
-const props = defineProps<{ name: string, lessons: GlassboxPageLink[], base: string }>()
+const props = defineProps<{ name: string, lessons: GlassboxPageLink[], base: string, plain?: boolean, intro?: string }>()
 const { read } = useGlassboxRead()
 const readCount = computed(() => props.lessons.filter((lesson) => read.value.includes(lesson.path)).length)
 </script>
@@ -9,10 +9,11 @@ const readCount = computed(() => props.lessons.filter((lesson) => read.value.inc
 <template>
   <article class="article">
     <h1>{{ name }}</h1>
-    <p class="count">{{ glassboxSubjectCount(readCount, lessons.length) }}</p>
+    <p v-if="intro" class="intro">{{ intro }}</p>
+    <p v-if="!plain" class="count">{{ glassboxSubjectCount(readCount, lessons.length) }}</p>
     <ul class="list">
       <li v-for="lesson in lessons" :key="lesson.path">
-        <NuxtLink :to="`${base}${lesson.path}`">{{ lesson.title }}<span v-if="read.includes(lesson.path)" class="tick gb-tick" role="img" aria-label="Read"/><span v-else class="book gb-book" aria-hidden="true"/></NuxtLink>
+        <NuxtLink :to="`${base}${lesson.path}`">{{ lesson.title }}<template v-if="!plain"><span v-if="read.includes(lesson.path)" class="tick gb-tick" role="img" aria-label="Read"/><span v-else class="book gb-book" aria-hidden="true"/></template></NuxtLink>
         <p v-if="lesson.description">{{ lesson.description }}</p>
       </li>
     </ul>
@@ -21,6 +22,7 @@ const readCount = computed(() => props.lessons.filter((lesson) => read.value.inc
 
 <style scoped>
 .count { color: var(--gb-muted); font-size: 15px; }
+.intro { margin: 0 0 22px; color: var(--gb-ink-2); font-size: 18px; line-height: 1.5; }
 .list { padding: 0; list-style: none; border-top: 1px solid var(--gb-line); }
 .list li { position: relative; padding: 14px 0; border-bottom: 1px solid var(--gb-line); }
 .list a { color: var(--gb-ink); font-weight: 500; font-size: 17px; text-decoration: none; }

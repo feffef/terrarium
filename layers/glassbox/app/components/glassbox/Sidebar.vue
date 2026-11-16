@@ -23,7 +23,7 @@ const countOf = (subject: ReturnType<typeof glassboxDirectory>[number]) =>
     </div>
 
     <section v-if="subjects.length">
-      <h2 class="gb-label">Subjects</h2>
+      <p class="gb-label">Subjects</p>
       <details v-for="subject in subjects" :key="subject.slug" :open="subject.slug === currentSubject">
         <summary>
           <NuxtLink :to="`${base}/${subject.slug}`" :aria-current="path === `/${subject.slug}` ? 'page' : undefined">
@@ -40,7 +40,7 @@ const countOf = (subject: ReturnType<typeof glassboxDirectory>[number]) =>
     </section>
 
     <section v-if="walkthroughs.length">
-      <h2 class="gb-label">Walkthroughs</h2>
+      <p class="gb-label"><NuxtLink :to="`${base}/walkthroughs`" :aria-current="path === '/walkthroughs' ? 'page' : undefined">Walkthroughs</NuxtLink></p>
       <ul>
         <li v-for="page in walkthroughs" :key="page.path">
           <NuxtLink :to="`${base}${page.path}`" :aria-current="page.path === path ? 'page' : undefined">{{ page.title }}</NuxtLink>
@@ -62,7 +62,8 @@ const countOf = (subject: ReturnType<typeof glassboxDirectory>[number]) =>
 .panel-head { display: none; }
 a { text-decoration: none; }
 a:hover { color: var(--gb-accent); }
-h2 { margin: 0; padding: 0 10px 8px; }
+.gb-label { margin: 0; padding: 0 10px 8px; }
+.gb-label a { color: inherit; }
 ul { list-style: none; margin: 0; padding: 0; }
 summary {
   display: flex;
@@ -131,8 +132,8 @@ li a[aria-current='page'] .tick { color: inherit; }
     font-size: 16px;
     cursor: pointer;
   }
-  section > h2 { display: none; }
-  section + section > h2 { display: block; padding-top: 16px; }
+  section > .gb-label { display: none; }
+  section + section > .gb-label { display: block; padding-top: 16px; }
   summary { min-height: 44px; border-radius: 0; border-bottom: 1px solid var(--gb-line); font-size: 16px; }
   summary a { padding: 0 4px; }
   li a { min-height: 40px; display: flex; align-items: center; padding: 0 12px; font-size: 15px; }

@@ -29,6 +29,11 @@ export function glassboxSubjectAt(path: string) {
   return glassboxSubjects.find((subject) => path === `/${subject.slug}`)
 }
 
+/** Whether `path` is the bare `/walkthroughs` folder, which lists the Walkthroughs. */
+export function glassboxWalkthroughsAt(path: string) {
+  return path === '/walkthroughs'
+}
+
 /** Whether `path` is a Walkthrough. */
 export function glassboxWalkthroughOf(path: string) {
   return path.startsWith('/walkthroughs/')
