@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQwDvvHbis5TK1nUw5
 startedAt: 2026-11-16T00:15:42Z
-endedAt: 2026-11-16T00:23:38Z
+endedAt: 2026-11-16T00:27:37Z
 kind: autonomous
 goal: Write the 2026-11-15 Journal Digest and archive old content
-status: in-review
-outcome: PR 3359 opened with the Digest and archive sweep; gate green, awaiting CI to merge
-summary: Scheduled Digest run, no human prompts. One closed day (2026-11-15) was missing; wrote its Digest from the gather output, fact-checked it with a fresh subagent (3 wrong or loose claims fixed), ran the retention sweep (1 Digest and 13 session logs archived), ran code-review (standards and spec, no blockers), ran gate:scoped green, and opened PR 3359. Merge via merge-pr.ts is still to do once CI is green. All work was agent-initiated per the Skill.
+status: completed
+outcome: "PR 3359 merged on a green gate: the 2026-11-15 Digest plus 14 archived files"
+summary: Scheduled Digest run, no human prompts. One closed day (2026-11-15) was missing; wrote its Digest from the gather output, fact-checked it with a fresh subagent (3 wrong or loose claims fixed), ran the retention sweep (1 Digest and 13 session logs archived), ran code-review (standards and spec, no blockers), ran gate:scoped green, and opened PR 3359. Merged with merge-pr.ts after CI went green. All work was agent-initiated per the Skill.
 prs:
   - "3359"
 docsRead:
@@ -47,16 +47,19 @@ frictions:
   - description: Drafted prose from gather output before reading the ADR-0010 page text I had only cat'd alongside other output; no harm.
     solution: Read the ADR on its own before drafting.
     severity: nit
-durationSec: 476
+durationSec: 715
 models:
-  claude-sonnet-5-5: 42
+  claude-sonnet-5-5: 55
 toolCounts:
-  Bash: 14
+  Bash: 18
   Agent: 4
   Read: 3
-  Skill: 3
+  Skill: 4
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-11-15.md
   - layers/journal/content/archived/pages/digests/2026-11-08.md
@@ -277,19 +280,19 @@ subagents:
     durationSec: 97
     toolCalls: 22
     modelCalls: 17
-    tokenShare: 28.4
+    tokenShare: 24.1
   - type: general-purpose
     task: Standards review
     durationSec: 37
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 13.4
+    tokenShare: 11.4
   - type: general-purpose
     task: Spec review
     durationSec: 35
     toolCalls: 9
     modelCalls: 5
-    tokenShare: 13.9
+    tokenShare: 11.8
 gitBranch: claude/compassionate-lovelace-wxumjd
 entrypoint: remote_trigger
 cliVersion: 2.1.325
