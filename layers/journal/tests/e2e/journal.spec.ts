@@ -198,7 +198,7 @@ describe('journal Tenant', async () => {
     expect(html).toContain('Frictions surfaced')
     expect(html).toContain('href="/t/journal/current/skills"')
     expect(html).toContain('href="/t/journal/current/ideas"')
-    expect(html.split('href="/t/journal/current/frictions"').length - 1).toBe(1) // the KPI tile
+    expect(html.split('href="/t/journal/current/frictions"').length - 1).toBe(2) // the KPI tile and the landing list
     expect(html).toContain('aria-expanded="false"')
     expect(html).toMatch(/role="button"/)
   })
