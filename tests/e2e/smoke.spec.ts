@@ -88,10 +88,12 @@ describe('L2 smoke render', async () => {
       for (const route of ['/t/journal/current/nope', '/t/commons/search/nope', '/t/nope/nothing', '/t/nope', '/t/__proto__']) {
         expect((await fetch(route)).status, route).toBe(404)
       }
-      const html = await (await fetch('/t/nope/nothing', { headers: { accept: 'text/html' } })).text()
-      expect(html).toContain('Back to the terrarium')
-      const sites = html.match(/<nav[^>]*class="sites"[\s\S]*?<\/nav>/)?.[0] ?? ''
-      for (const { to } of SITES) expect(sites, to).toContain(`href="${to}"`)
+      for (const route of ['/t/nope/nothing', '/nope']) {
+        const html = await (await fetch(route, { headers: { accept: 'text/html' } })).text()
+        expect(html, route).toContain('Back to the terrarium')
+        const sites = html.match(/<nav[^>]*class="sites"[\s\S]*?<\/nav>/)?.[0] ?? ''
+        for (const { to } of SITES) expect(sites, `${route} ${to}`).toContain(`href="${to}"`)
+      }
     })
 
     it('links each showcase card to its Tenant front door, in order', async () => {

@@ -28,7 +28,7 @@ useHead({
     <p class="note">
       {{ notFound ? 'Nothing grows at this address — it may have moved, or never existed.' : 'Something broke on our side. Try again in a moment.' }}
     </p>
-    <nav v-if="notFound" class="sites" aria-label="The five sites">
+    <nav v-if="notFound" class="sites" aria-label="Sites">
       <NuxtLink v-for="s in SITES" :key="s.to" :to="s.to">{{ s.name }}<span>{{ s.gloss }}</span></NuxtLink>
     </nav>
     <NuxtLink v-if="notFound && tenant" :to="tenant.to" class="home">← Back to the {{ tenant.name }}</NuxtLink>
