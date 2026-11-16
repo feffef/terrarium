@@ -42,8 +42,7 @@ the candidates (JSON; `[]` when none) and already applies both skips.
 marker stops both acting on one issue at once (issue #570: contradictory PRs
 against #555 before a human stepped in).
 
-- **Claim it before dispatching.** Before step 2 below (dispatching the impl
-  agent), add `guest-in-flight` to the issue's label set via `issue_write`
+- **Claim it before dispatching.** Before step 1 below, add `guest-in-flight` to the issue's label set via `issue_write`
   (pass the full label set, `ready-for-agent` included: `docs/agents/github-integration.md`).
   If `poll-guest-tickets.ts` supplied the candidate list, the marker is
   already known absent-or-stale for every issue in it; if you're checking an
@@ -62,7 +61,7 @@ against #555 before a human stepped in).
    then run ADR-0023's checks on the actual work. If one hits, escalate to the
    owner (`ready-for-human` + a comment naming why; release the marker per
    Concurrency) and move on.
-2. **Claim the marker, then dispatch one Sonnet impl agent** (`model: sonnet`,
+2. **Dispatch one Sonnet impl agent** (`model: sonnet`,
    `isolation: 'worktree'`) with a self-contained brief per `dispatch-subagents` and
    `frictions-to-fixes` §6: read the issue, branch from `origin/main`,
    implement, clear the gate, and commit, unpushed — then stop and hand back
