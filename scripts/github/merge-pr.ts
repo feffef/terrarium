@@ -611,7 +611,7 @@ export async function mergePrWhenGreen(
   }
 
   let mergeCommitSha: string
-  let retriedBaseModified = false
+  let retriedBaseModified: boolean
   try {
     const merged = mergeRetryingBaseModified(() => mergePr(access, prNumber, opts.mergeMethod, sha, waiver))
     mergeCommitSha = merged.sha
