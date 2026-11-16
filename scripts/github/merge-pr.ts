@@ -528,14 +528,13 @@ export async function reconcileClosingKeywords(
 
 /** One immediate retry when GitHub refuses a merge with 405 "Base branch was
  *  modified" (issue #3357): the PUT pins the head sha, so the retry equals a
- *  manual rerun. The status is matched as "HTTP 405" (not a bare "405", which a
- *  PR number or sha in the message could satisfy) beside the phrase. */
+ *  manual rerun. */
 export function mergeRetryingBaseModified(merge: () => string): { sha: string; retried: boolean } {
   try {
     return { sha: merge(), retried: false }
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err)
-    if (!/HTTP 405/.test(msg) || !msg.includes('Base branch was modified')) throw err
+    if (!msg.includes('HTTP 405') || !msg.includes('Base branch was modified')) throw err
     return { sha: merge(), retried: true }
   }
 }
