@@ -9,22 +9,9 @@ role: >-
   against the PRs' diffs, and merges its own gated PR on green. Scheduled; run
   by hand to catch up.
 auditSummary:
-  date: "2026-11-15"
-  text: >-
-    Delivers a Digest daily and its fact-check catches wrong claims. Recurring flaws: invented 'weekly' schedules (a source is now required, but old ones remain) and code review before pushing often skipped.
+  date: "2026-11-16"
+  text: "Produces a daily digest that lands fact-checked and merged. The fact-check step is repeatedly blocked on its first attempt because the dispatch guide is not named, wasting a call."
 observations:
-  - date: "2026-10-06"
-    note: >-
-      Re-verified, 7 usedIn sessions. The one digest.ts change this window
-      (c6f8d8975f) is a comment-text-only fix, zero functional diff —
-      doesn't affect grading. Newest, previously-unchecked
-      session_015pcFLucxsdwj7nSLKtozGP (PR #1625, the 2026-10-05 Digest):
-      genuine fact-check dispatch (29 claims, 0 wrong, 2 reworded), 4
-      spot-checked claims all accurate against GitHub, retention sweep
-      moved exactly 1 digest + 13 session logs matching `RETAIN_DATES = 7`
-      (correctly bucketed by `endedAt`, not filename, for one log whose
-      filename date differs from its `endedAt`). No new silent failures.
-      Grade unchanged.
   - date: "2026-10-07"
     note: >-
       Re-checked (audit-skills behaviour check), 7 usedIn sessions; 6
@@ -301,3 +288,5 @@ observations:
   - date: "2026-11-15"
     note: >-
       Behaviour check, 7 runs, 7 PRs merged. Cadence words still on main in digests 2026-11-09 and 2026-11-11 (the latter sourced only to a PR title); #3251 landed 11-13, so only the 11-14 and 11-15 runs ran under it (#3228 closed). Unverified for 2026-11-14. Grade unchanged.
+  - date: "2026-11-16"
+    note: "Behaviour check, 7 runs, 7 PRs merged (#3014 to #3359), 7 consecutive digests on main, code-review and fact-check in every run. Repeat: dispatch-read guard blocked first fact-check Agent call in 4 of 7 (11-11, 11-12, 11-14, 11-16); step 3 does not name dispatch-subagents. Cadence-word rule landed 11-13 (c2abcf51f), 2 runs under it. Idea: name the Skill in step 3. Not issued. Grade unchanged."

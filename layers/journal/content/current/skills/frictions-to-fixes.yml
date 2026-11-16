@@ -9,22 +9,9 @@ role: >-
   impl agents build the rest, and merges those PRs itself, escalating only
   high-risk ones. Use when frictions pile up.
 auditSummary:
-  date: "2026-11-15"
-  text: >-
-    Turns Frictions into merged fixes, and early gaps were fixed. It keeps overriding its own limit of three entries, mishandles entries the owner declined, and big PRs get inconsistent review.
+  date: "2026-11-16"
+  text: "Turns recurring frictions into issues and fixes on schedule and lands its ledger PRs. It needs judgement to skip entries the owner already declined, which the text does not say."
 observations:
-  - date: "2026-10-06"
-    note: >-
-      Re-checked (audit-skills behaviour check), 8 usedIn sessions
-      (2026-09-29 through 10-05): all clean, every merge claim and
-      audit-trace verdict timestamp independently re-verified, no
-      guard-roster file touched. Both loose ends from the prior entry are
-      now resolved: issue #1304 (stale guard deny text) closed 2026-10-05
-      via PR #1621 (human-attended); the commit-trailer mismatch's root
-      cause (session-id-guard misjudging inherited unmerged commits from a
-      foreign branch) filed as #1611 and fixed via PR #1622
-      (human-attended) — correctly outside this Skill's own scope either
-      way. Grade unchanged.
   - date: "2026-10-07"
     note: >-
       Re-checked (audit-skills behaviour check), 8 usedIn sessions; 2
@@ -313,3 +300,5 @@ observations:
   - date: "2026-11-15"
     note: >-
       Behaviour check, 9 runs, 16 PRs merged. Repeat, filed #3326: §2 top-three rule overridden by judgement (session_013zxzeSPxncNsUJXwnc2DvG, session_013zxzeNdAgdKF5tpWTQLowx, session_013zxzeQDRyvj3Vc8GUWHvBv) and §5.3 tracked with no ref. §5.4 ledger PRs always exceed the simple-change bar; runs diverge (#3300 diffstat only, #3237 two reviewers). Grade unchanged.
+  - date: "2026-11-16"
+    note: "Behaviour check, 8 runs, PRs merged (#2998 to #3330), no revert, top-three rule followed 11-13 to 11-15. Idea: exclude entries whose regression issue the owner closed not planned (#2852, #2876, #2997, #3047); the override by judgement is noted 11-04, 11-08, 11-12, 11-14. Not issued. Grade unchanged."

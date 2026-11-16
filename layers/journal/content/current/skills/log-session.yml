@@ -9,32 +9,9 @@ role: >-
   bounded exception). Usually invoked by `close-session`; call it directly only
   to amend a written log.
 auditSummary:
-  date: "2026-11-14"
-  text: >-
-    Reliably produces honest, complete logs. A long-running gap in rule answers was fixed in mid-November by a new record of which rules mattered.
+  date: "2026-11-16"
+  text: "Reliably produces honest logs that land on main. Many loaded rules still go unrated even though each log is marked as answered; whether the rating prompt omits some of them is not yet checked."
 observations:
-  - date: "2026-10-06"
-    note: >-
-      CORRECTION to the two entries above: #1482 and #1542 are not "still
-      open" — both were closed 2026-10-03 (completed), mooted by the
-      ADR-0009 output-matching rewrite (#1545, commit `87257aa4`), which
-      made shell-read crediting depend only on a command's output, never
-      on parsing its text. `resolveAgainstCdDir` (the buggy function) is
-      now reachable only from the advisory "why wasn't this credited"
-      message, never from the path that produces the landed
-      `docsReadViaShell` field — confirmed by reading the current
-      `scripts/session-trace.ts` directly and independently re-verified
-      against `gh api` before writing this. The 2026-10-04/05 entries
-      evidently diffed the function's body for textual changes without
-      tracing its call sites or checking GitHub issue state — exactly the
-      "don't state anything as settled... unless verified fresh against a
-      primary source" failure CLAUDE.md warns about, filed as issue #1627
-      (a second instance of the same class as the already-fixed
-      version-grading bug on `audit-skills`). 10 newest sessions
-      re-checked: clean field-split, genuine `landedBy: Stop`, no new
-      SHELL-READ-DETECTION instance, no regression from the 2026-10-05
-      `scripts/log-session.ts` change (unrelated session-id-guard plumbing).
-      Grade unchanged.
   - date: "2026-10-07"
     note: >-
       Re-checked (audit-skills behaviour check), 10 newest usedIn sessions,
@@ -347,3 +324,5 @@ observations:
   - date: "2026-11-14"
     note: >-
       Behaviour check, 10 runs, all logs landed, no silent failure. The ruleVerdicts-incomplete pattern (#2607, #2645) did not recur: ruleUse (#3009, #3020) replaced it and all 10 logs have answered: true. Two Skill-less sessions (session_013zxzeRumtXDY7MVhKUgVT7, session_013zxzeR9Usddfqi4gQ697DR) read the SKILL.md and logged through close-session. Grade unchanged.
+  - date: "2026-11-16"
+    note: "Behaviour check, 10 logs landed, 17 PRs merged. Unverified defect: main-session loaded rules left unrated while every ruleUse says answered: true (RGXY 24 loaded/4 rated; PNLU 22/9; PxNr 16/4; PAAj 10/4; Q65i 17/4; Pak7 18/13); unrated were via hint in RGXY, Pak7; whether --pending lists hint loads unchecked. Earlier pattern #2607, #2645 (both closed). No friction logged. Idea: compute answered from coverage. Grade unchanged."
