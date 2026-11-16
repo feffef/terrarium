@@ -216,9 +216,9 @@ For each `reviewed` branch, in round N:
    no further round, unless its `Both` reviewer reports the diff above the
    simple-change bar: then run `review: true`, `round: 1` without `small`.
    Start a branch's round as soon as it is due; if a
-   second run is refused while one runs, batch the branches due. A major in
-   round 3 still gets its fix and re-check, and the branch's PR waits for the
-   owner's merge (§4).
+   second run is refused while one runs, batch the branches due. A `defect`,
+   `spec-mismatch` or `missing-test` in round 3 still gets its fix and re-check,
+   and the branch's PR waits for the owner's merge (§4).
 5. **Gate.** Resume the builder: "Run `pnpm gate:scoped` on HEAD with your
    rules' gate command and timeout. If it fails, fix the cause and run it
    again until it exits 0. Reply with one line: `GATE <log> <sha before>
@@ -252,11 +252,11 @@ fix (CI, a PR comment), resume the branch's builder with it (it records the
 fix in `triage.md`), re-check a code change as in §3 step 3, and gate it as in §3 step 5 unless `pr-workflow.md`
 lets the push rely on CI. A PR built from a Public issue waits for a human merge
 (ADR-0020), even though `scripts/github/merge-pr.ts` would accept it. So does a
-branch with a major in round 3: its PR says why it waits and lists, under
-`Remaining findings`, from `triage.md` and the last re-check files, each
-finding not resolved by a clean re-check, with its kind, file and title. Merge
-the rest unless ADR-0004 reserves it for a human; `merge-pr.ts` checks only
-some of its exceptions. Once a PR merges or waits for a human, or its
+branch with a `defect`, `spec-mismatch` or `missing-test` in round 3: its PR
+says why it waits and lists, under `Remaining findings`, from `triage.md`
+and the last re-check files, each finding not resolved by a clean re-check,
+with its kind, file and title. Merge the rest unless ADR-0004 reserves it for a
+human; `merge-pr.ts` checks only some of its exceptions. Once a PR merges or waits for a human, or its
 branch ends with no PR, run `git worktree remove <worktree>` for its branch.
 
 **Done:** every PR is merged or waiting for a human merge, and
