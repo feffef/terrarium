@@ -172,15 +172,14 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
                 </ul>
               </template>
               <h3 class="occ-h">Occurrences</h3>
-              <p class="occ-intro">Newest first: date (links to the session log), the session's goal, the friction as its agent logged it, and → the solution it proposed.</p>
+              <p class="occ-intro">Newest first: date (links to the session log), the session's goal, then the friction with its severity as its agent logged it, and → the solution it proposed.</p>
               <ul class="occ">
                 <li v-for="(o, i) in e.occurrences" :key="i">
                   <span class="dot" :class="o.severity" :title="o.severity" />
                   <NuxtLink :to="o.to" :aria-label="`Session log, ${o.date}, ${o.severity}`">{{ o.date }} →</NuxtLink>
                   <span class="occ-goal"><span class="occ-label">Goal:</span> {{ o.goal || 'not available' }}</span>
-                  <span class="occ-sev">{{ o.severity }}</span>
                   <span class="occ-text">
-                    <span class="occ-label">Friction:</span> {{ o.description }}
+                    <span class="occ-label">{{ o.severity.charAt(0).toUpperCase() + o.severity.slice(1) }} friction:</span> {{ o.description }}
                     <span class="proposed">→ {{ o.solution }}</span>
                   </span>
                 </li>
@@ -328,7 +327,6 @@ details[open] .summary::before { content: '▾'; }
 }
 .jd-prose .occ a:hover { color: var(--jd-accent); text-decoration: underline; }
 .occ-goal { margin-left: 0.5rem; font-family: var(--jd-serif); font-size: 0.8rem; color: var(--jd-muted); }
-.occ-sev { color: var(--jd-faint); margin-left: 0.4rem; }
 @media (max-width: 560px) {
   .cause, .ref-text, .occ, .sol, .jd-prose .occ-h, .occ-intro { margin-left: 0; }
 }
