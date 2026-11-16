@@ -441,13 +441,19 @@ export function pickSkillChanges(landings: readonly Landing[], name: string, scr
   })
 }
 
-/** How many of a Skill's newest runs its behaviour-check subagent reads. */
-export const BRIEF_RUNS = 10
+/** A behaviour-check subagent reads a run in full only for this many days: the
+ *  audit runs daily over a 7-day window, so older runs were read by earlier
+ *  audits and their findings sit in the observations (#3364). */
+export const BRIEF_RUN_DAYS = 3
+
+/** Observations listed in a brief stop at this many characters (about 8k
+ *  tokens), so they fit comfortably beside the runs a subagent reads. */
+export const OBSERVATIONS_BUDGET = 30_000
 
 /** The data half of a behaviour-check brief (step 2): what the parent would
  *  otherwise assemble by hand from the scorecard. The ask itself is the
  *  Skill's `brief.md`. */
-export function buildBrief(row: SkillRow, window: readonly WindowSession[]): string {
+export function buildBrief(row: SkillRow, window: readonly WindowSession[], now = Date.now()): string {
   const byId = new Map(window.map((w) => [w.session, w]))
   const newestFirst = (ids: readonly string[]) =>
     ids.map((id) => byId.get(id)).filter((w): w is WindowSession => Boolean(w)).sort((a, b) => b.startedAt.localeCompare(a.startedAt))
@@ -457,8 +463,9 @@ export function buildBrief(row: SkillRow, window: readonly WindowSession[]): str
     lines.push('A run whose `startedAt` precedes a landing is graded against the text before it (`git show <sha>^:<path>`).')
     for (const c of row.changes) lines.push(`- ${c.sha} · ${c.landedAt} · ${c.paths.join(', ')}`)
   } else lines.push('None: every run is graded against the files on disk.')
-  lines.push('', `## Runs (newest ${BRIEF_RUNS}; log files to read)`)
-  const runs = newestFirst(row.usedIn).slice(0, BRIEF_RUNS)
+  lines.push('', `## Runs (last ${BRIEF_RUN_DAYS} days; log files to read)`)
+  const since = now - BRIEF_RUN_DAYS * 86_400_000
+  const runs = newestFirst(row.usedIn).filter((w) => Date.parse(w.startedAt) >= since)
   lines.push(...(runs.length ? runs.map(runLine) : ['None.']))
   if (row.modelInvoked) {
     const used = new Set(row.usedIn)
@@ -467,7 +474,17 @@ export function buildBrief(row: SkillRow, window: readonly WindowSession[]): str
     lines.push(...others.map((w) => `${runLine(w)} · goal: ${w.goal} · skillsUsed: ${w.skillsUsed.join(', ') || 'none'}`))
   }
   lines.push('', '## Observations (what is already known)')
-  lines.push(...(row.observations.length ? row.observations.map((o) => `- ${o.date}: ${o.note.replace(/\s+/g, ' ').trim()}`) : ['None.']))
+  const obs = [...row.observations].reverse().sort((a, b) => b.date.localeCompare(a.date)).map((o) => `- ${o.date}: ${o.note.replace(/\s+/g, ' ').trim()}`)
+  let chars = 0
+  const kept: string[] = []
+  for (const l of obs) {
+    if (kept.length && chars + l.length + 1 > OBSERVATIONS_BUDGET) break
+    kept.push(l)
+    chars += l.length + 1
+  }
+  const n = kept.length
+  lines.push(...(n ? kept : ['None.']))
+  if (n < obs.length) lines.push(`(${obs.length - n} older observations left out)`)
   return lines.join('\n') + '\n'
 }
 

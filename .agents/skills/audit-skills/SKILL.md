@@ -163,8 +163,9 @@ Grade each Skill's importance by the definitions below, after reading its
   session ids; the scorecard prints it.
 - **`observations`** hold a 40-day window of history. Append
   `{ date: <today, UTC>, note }` for a grade or role change, a finding
-  (verified or unverified, say which) or an idea; a clean check appends
-  nothing. Write the note fresh, ≤ ~100 words: what this run found and the ids
+  (verified or unverified, say which) or an idea, or a clean check (name the
+  run ids covered).
+  Write the note fresh, ≤ ~100 words: what this run found and the ids
   (PRs, issues, sessions, commits) a later run needs to pick up the thread,
   nothing git or GitHub already shows. Then run
   `pnpm exec tsx .agents/skills/audit-skills/scripts/prune-observations.ts`,
