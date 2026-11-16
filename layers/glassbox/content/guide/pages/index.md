@@ -7,7 +7,7 @@ revisionDate: '2026-11-15'
 publishedAt: '2026-11-12T11:26:16Z'
 ---
 
-Terrarium is an experiment in a website that grows itself: AI agents write almost all of its code and content, and people steer. It is also built to be watched, so every step of that work is on show. Glass Box documents the technology and practices it runs on, and how each one is used here, kept up to date as the code changes. Read this page first: in a few minutes it explains how Terrarium works as a whole, from who steers it to how a change goes live. Each lesson then covers one tool or practice in depth, with Terrarium's real files as the worked example; open one from the chips on this page or from the menu.
+Terrarium is an experiment in a website that grows itself: AI agents write almost all of its code and content, including its own guide that you are just reading. People steer. It is also built to be watched, so every step of that work is on show. Glass Box documents the technology and practices it runs on, and how each one is used here, kept up to date automatically as the code changes. Read this page first: in a few minutes it explains how Terrarium works as a whole, from who steers it to how a change goes live. Each lesson then covers one tool or practice in depth, with Terrarium's real files as the worked example; open one from the chips on this page or from the menu.
 
 ## Who's involved
 
