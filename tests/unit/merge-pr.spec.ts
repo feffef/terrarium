@@ -308,7 +308,7 @@ describe('mergeRetryingBaseModified()', () => {
     expect(merge).toHaveBeenCalledTimes(2)
   })
 
-  it('matches the gh path, whose error carries the stderr text', () => {
+  it('matches the gh path, whose error carries the stderr text (illustrative wording, not captured from gh)', () => {
     const ghErr = new Error('Command failed: gh api ...\ngh: Base branch was modified (HTTP 405)')
     const merge = vi.fn().mockImplementationOnce(() => { throw ghErr }).mockReturnValueOnce('ghi')
     expect(mergeRetryingBaseModified(merge).retried).toBe(true)

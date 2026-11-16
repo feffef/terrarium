@@ -526,16 +526,17 @@ export async function reconcileClosingKeywords(
   return { closed, failed }
 }
 
-/** One immediate retry when GitHub answers 405 "Base branch was modified"
- *  (issue #3357): the PUT pins the head sha, so the retry equals a manual
- *  rerun. The text is matched on the error message, which carries the response
- *  body on the curl path and gh's stderr on the gh path. No wait, one retry. */
+/** One immediate retry when GitHub refuses a merge with 405 "Base branch was
+ *  modified" (issue #3357): the PUT pins the head sha, so the retry equals a
+ *  manual rerun. Only the phrase is matched, since the error message carries it
+ *  on both the curl (body) and gh (stderr) paths and a status match would also
+ *  hit a URL or sha. */
 export function mergeRetryingBaseModified(merge: () => string): { sha: string; retried: boolean } {
   try {
     return { sha: merge(), retried: false }
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err)
-    if (!msg.includes('405') || !msg.includes('Base branch was modified')) throw err
+    if (!msg.includes('Base branch was modified')) throw err
     return { sha: merge(), retried: true }
   }
 }
@@ -639,13 +640,14 @@ export async function mergePrWhenGreen(
     closed.length > 0
       ? ` — closed ${closed.length} referenced issue(s) GitHub's own auto-close missed: ${closed.map((n) => `#${n}`).join(', ')}`
       : ''
+  const retryNote = retriedBaseModified ? ' after one retry (base branch was modified)' : ''
   const failNote = failed.length > 0 ? ` (failed to verify/close: ${failed.map((n) => `#${n}`).join(', ')})` : ''
   return {
     pr: prNumber,
     verdict,
     merged: true,
     mergeCommitSha,
-    message: `merged${retriedBaseModified ? ' after one retry (base branch was modified)' : ''}${reconcileNote}${failNote}`,
+    message: `merged${retryNote}${reconcileNote}${failNote}`,
     reconciledClosedIssues: closed,
     ...(retriedBaseModified ? { retriedBaseModified } : {}),
   }
