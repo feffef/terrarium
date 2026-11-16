@@ -155,4 +155,4 @@ observations:
     note: >-
       Behaviour check, 9 runs delivered, 165 non-users ruled out. The 11-12 gaps are fixed: probe-one-first sits at SKILL.md lines 64-65, and 966cfc7af points step 3 at environment-caveats.md; no later run repeats the send_message inference. Unverified: whether session_013zxzeTEBhUnvwNNBASiFDg inspected another session. Grade unchanged.
   - date: "2026-11-16"
-    note: "Behaviour check, 8 runs, no miss among 155 non-users, PRs #3160, #3162, #3334 merged. The send_message mis-inference was fixed by 966cfc7af (11-11); no later repeat. Idea: note cost_usd lags a live session (glassbox-curate misreported 0.12 vs 4.22). Not issued. Grade unchanged."
+    note: "Behaviour check, 8 runs, no miss among the listed non-users (162 in the data file), PRs #3160, #3162, #3334 merged. The send_message mis-inference was fixed by 966cfc7af (11-11); no later repeat. Idea: note cost_usd lags a live session (glassbox-curate misreported 0.12 vs 4.22). Not issued. Grade unchanged."
