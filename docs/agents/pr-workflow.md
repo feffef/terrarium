@@ -82,7 +82,9 @@ Before pushing a follow-up to an existing PR branch, check with
 `pull_request_read` that it isn't already merged, or the push silently recreates
 the branch. A branch restarted after the merge, or a session branch reset onto
 `main` that fast-forwards the remote branch (`git merge-base --is-ancestor`),
-is fine: push plainly, without `--force-with-lease`.
+is fine: push plainly, without `--force-with-lease`. To reuse a merged session
+branch, `git merge --ff-only origin/main` onto it. The Stop hook has been seen
+counting the merged history as unpushed; `git push origin HEAD` clears it.
 
 Reply on a review thread before calling `resolve_review_thread`: a resolved
 thread with no reply leaves no record.
