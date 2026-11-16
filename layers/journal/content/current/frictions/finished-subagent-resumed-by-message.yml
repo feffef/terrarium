@@ -1,0 +1,23 @@
+name: finished-subagent-resumed-by-message
+surface: safe
+summary: A message sent to a finished subagent resumed it, so it re-ran work or redelivered an old report instead of answering.
+cause: "SendMessage to a subagent that already handed back wakes it for a full resumed turn: a correction re-runs part of its work, a message meant for another agent id is spent on the wrong one, and a new question can get its old report back. Signals: 'resumed', 'finished reviewer', 'redelivering their old reports', 'corrections to agents that had already finished'."
+status: open
+notes: |-
+  2026-11-16 design: no change: #3068 (PR #3090) already added the dispatch-subagents §6 resume bullets; the three later occurrences are a typo-class slip, a nit and the already-covered redelivery. dropped: more prose has no sufficient reason.
+occurrences:
+  - session: session_013zxzeRbcVWW7Upv1bSok39
+    date: "2026-11-13"
+    severity: minor
+    description: "Sent owner corrections to agents that had already finished, so each was resumed and re-ran part of its work"
+    solution: "Settle load-bearing premises with the owner before dispatch (dispatch-subagents step 1); grill earlier"
+  - session: session_013zxzeT3bxsaccpcz9P65Ra
+    date: "2026-11-14"
+    severity: nit
+    description: "Sent a retro-style message to the wrong finished reviewer by mistake, spending a resume on a message meant for a different agent id."
+    solution: "Take the agent id from the run-summary line of the current round before sending."
+  - session: session_013zxzePNLUgD6AbfEmXykEJ
+    date: "2026-11-15"
+    severity: nit
+    description: "Two resumed subagents answered a new question by redelivering their old reports, so I spent a round trip and got no answer from them."
+    solution: "After a resume, wait for the next notification and check it answers the new question before counting the agent as having replied."

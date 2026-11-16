@@ -1,0 +1,16 @@
+name: survey-label-and-ledger-errors
+surface: safe
+summary: A frictions-to-fixes survey left wrong labels or unfinished ledger work that the design or main session had to catch.
+cause: "The survey subagent mislabels a candidate or leaves ledger work undone (a never-fixed label for a cause later commits fixed, a stored 'One occurrence.' cause, no cause rewrite after recorded fixes, a status set after a later fix merged), and the next agent finds it by checking. Signals: 'survey report labelled', 'the design agent found it', 'left work the ledger review had to catch'."
+status: tracked
+occurrences:
+  - session: session_013zxzeNdAgdKF5tpWTQLowx
+    date: "2026-11-13"
+    severity: minor
+    description: "The survey left work the ledger review had to catch: three causes with a stored 'One occurrence.', no cause rewrite after nine recorded fixes (brief 2.4), and an entry set accepted after a later fix merged."
+    solution: "Fixed in a follow-up commit; the survey admitted the 2.4 gap in its report. Its workload (330 Frictions in one pass) is the root."
+  - session: session_013zxzeRLqFejsZTowNzt1Lt
+    date: "2026-11-15"
+    severity: minor
+    description: "Survey report labelled glassbox-page-conventions-found-late never-fixed though later commits had fixed it; the design agent found it, costing one extra check and a dropped design."
+    solution: "Survey brief step 3 should check git log on the doc's own territory since the earliest session before labelling never-fixed."

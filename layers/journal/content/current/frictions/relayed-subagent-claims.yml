@@ -25,16 +25,6 @@ fixes:
     date: "2026-10-31"
     summary: "CLAUDE.md and the clear-backlog workflows' shared brief line ask each subagent to give every count, id or attribution with its source (command or file:line) or mark it unverified."
 occurrences:
-  - session: session_013zxzeRkv6UCWJtPmJ68h32
-    date: "2026-11-01"
-    severity: minor
-    description: "Filed issue #2748 and an Inventory note saying a post-fix run ran code-review, trusting an earlier note; the run's log says it self-read. Caught by the Spec review and corrected."
-    solution: "Check each cited run's log before writing it into an issue, as step 2 already says."
-  - session: session_013zxzeNxm9jTD6DwkDXzzG8
-    date: "2026-11-01"
-    severity: nit
-    description: "Reviewed the design agent's no-change call on worktree-subagent-moves-branch from its report only; scoping picks took long because earlier drops hid new evidence."
-    solution: "Have the survey list, per never-fixed candidate, whether its notes record a drop and what is new since."
   - session: session_013zxzeSkTLmRxa2PWgt3kPw
     date: "2026-11-02"
     severity: nit
@@ -165,3 +155,8 @@ occurrences:
     severity: nit
     description: "Asked the grilling questions without verifying the explore agents' picks against their sources, as the skill requires."
     solution: "Spot-check each pick's cited source before asking; I told the owner which claims were unverified."
+  - session: session_013zxzeSECfNzcU6b53GPzxG
+    date: "2026-11-15"
+    severity: minor
+    description: "Builder claimed the SKILL.md line was already rewrapped; both round-2 reviewers found it still about 120 columns, costing an extra fix and re-check cycle."
+    solution: "Builder wrap check should print the measured columns in its reply, so the claim is checkable."

@@ -2,7 +2,8 @@ name: orient-output-truncates
 surface: safe
 summary: The glassbox-curate orientation script prints more than a tool result holds, so a section (the guide pages) was cut off and had to be re-fetched.
 cause: ".agents/skills/glassbox-curate/scripts/orient.ts prints about 73 KB unfiltered; the harness cuts it to a file or the agent pipes it through head -300, losing the guide-pages section at the end, so the curate run works from an incomplete orientation. Signals: 'orient.ts output', 'head -300 truncated the guide-pages section', 'cut to a file and one lost the guide-pages section'. Since PRs #2929 and #2944 (2026-11-07) orient.ts prints one line per page in a single output of about 27 KB and has a --subject read; issue #2906 closed completed."
-status: open
+status: tracked
+ref: "#3362"
 fixes:
   - pr: 2929
     date: "2026-11-07"
@@ -51,3 +52,13 @@ occurrences:
     severity: minor
     description: "The orientation output is over 25 KB and the Subject output over 70 KB, so reading them cost several paged reads and many tokens."
     solution: "Print only the Subject's pages' Try-it and Where next on request, or split the output into files up front."
+  - session: session_013zxzePxNrkPQ4muYeaAFZT
+    date: "2026-11-15"
+    severity: nit
+    description: "The orient --subject output exceeded the Read cap and needed a second Read with an offset."
+    solution: "orient.ts could write one file per page for a subject."
+  - session: session_013zxzePak78Sud7pyRQMjeV
+    date: "2026-11-15"
+    severity: moderate
+    description: "orient.ts --subject printed 113 KB, about 45k tokens over three reads, for an 11-page Subject whose pages I mostly only needed to scan."
+    solution: "Let orient.ts --subject print each page's headings and Why bullets by default, with full text on request."

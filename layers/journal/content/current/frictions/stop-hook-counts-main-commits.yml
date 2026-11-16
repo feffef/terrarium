@@ -38,3 +38,8 @@ occurrences:
     severity: nit
     description: "The Stop hook counted 14 unpushed commits after I restarted the merged branch from main, though all but one were already on main."
     solution: "Have the hook count against origin/main, as git-conventions.md says to, when the remote branch is gone."
+  - session: session_013zxzeQESWGW1qj9P1Egphc
+    date: "2026-11-15"
+    severity: nit
+    description: "After fast-forwarding to origin/main the Stop hook counted five session-log commits from main as unpushed; pushing my branch cleared it though none of the work was mine."
+    solution: "Count only commits in origin/main..HEAD, as git-conventions.md already says to do by hand."

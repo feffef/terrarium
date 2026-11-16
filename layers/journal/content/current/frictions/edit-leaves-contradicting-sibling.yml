@@ -16,11 +16,6 @@ fixes:
     date: "2026-11-01"
     summary: "CLAUDE.md Self-verification: after changing a type or a test, run pnpm typecheck and the touched spec before gate:scoped."
 occurrences:
-  - session: session_013zxzeSvdGhiM7SLEUgzvmF
-    date: "2026-11-01"
-    severity: minor
-    description: "The planning writer linked a work-queue anchor that the git-github writer removed in the same run; only code-review found it."
-    solution: "Add to writer-brief: link a section of a page another writer edits this run without an anchor, or ask the coordinator."
   - session: session_013zxzeRwjiiLkjj6sQ3u49g
     date: "2026-11-07"
     severity: minor

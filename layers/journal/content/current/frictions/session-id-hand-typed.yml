@@ -101,3 +101,18 @@ occurrences:
     severity: nit
     description: "Wrote a wrong session id in the first issue draft header; caught via get_session before filing."
     solution: "Fetch the id with get_session at the start."
+  - session: session_013zxzePH9gQTPAHjR7vCj71
+    date: "2026-11-15"
+    severity: nit
+    description: "Hand-typed the session id in the first commit message and got it wrong; caught it in the file before committing."
+    solution: "Copy the id from the system-prompt template, as ADR-0017 says, or generate the message file from it."
+  - session: session_013zxzePAAjqaHMt85Ee6cxA
+    date: "2026-11-15"
+    severity: nit
+    description: "Hand-typed a wrong session id in the first commit trailer; the commit-msg hook corrected it."
+    solution: "Copy the id from the attribution reminder, or leave the trailer to the hook."
+  - session: session_013zxzePnUYHpbwDsDER2swv
+    date: "2026-11-16"
+    severity: nit
+    description: "Wrote a commit-message draft with a session id I made up instead of the one in the attribution reminder; caught via get_session before committing."
+    solution: "Copy the id from the Claude-Session line, never retype it; the commit-msg hook adds the trailer anyway."

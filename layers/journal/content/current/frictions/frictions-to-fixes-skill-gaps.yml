@@ -78,3 +78,8 @@ occurrences:
     severity: minor
     description: "Skipped code-review on the 72-file ledger diff (not simple by the count test) and read the diffstat instead; also did not use save-handback.ts for the two subagent reports."
     solution: "State in SKILL.md section 5.4 that a ledger-data-only diff written by the Skill's scripts takes the diffstat read; the Skill says only to use the simple-change test."
+  - session: session_013zxzeRLqFejsZTowNzt1Lt
+    date: "2026-11-15"
+    severity: minor
+    description: "Skill step 5.4 says review the ledger PR by the simple-change test, which a 30-file generated diff fails; I read the diff stat and ran the gate instead of code-review, deviating from pr-workflow."
+    solution: "State in SKILL.md that script-written ledger diffs need only the gate and content test."

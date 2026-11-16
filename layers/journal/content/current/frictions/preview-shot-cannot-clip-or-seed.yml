@@ -18,3 +18,8 @@ occurrences:
     severity: minor
     description: "preview.ts shot only captures whole pages; a 6000px full-page shot was unreadable, so I wrote a throwaway Playwright script to clip one element."
     solution: "Add a --selector option to preview.ts shot and screenshot.ts."
+  - session: session_013zxzePH9gQTPAHjR7vCj71
+    date: "2026-11-15"
+    severity: minor
+    description: "Previewing needed a temporary copy of a real log in the content folder and a hand-written Playwright script, and the original card's head was not clickable, so no side-by-side shot."
+    solution: "A preview option that takes a fixture session log and expands a named card would spare the manual steps."

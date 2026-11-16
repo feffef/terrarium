@@ -104,3 +104,8 @@ occurrences:
     severity: nit
     description: "The builder looked for list-human-only-paths.ts in the wrong place and reported it missing; the brief named no path."
     solution: "Give the full script path in builder briefs."
+  - session: session_013zxzePH9gQTPAHjR7vCj71
+    date: "2026-11-15"
+    severity: minor
+    description: "Told subagents to run no command while also asking them to read each rule's paths, so four could not verify their path-based labels."
+    solution: "Paste each rule's paths into the brief, or allow reading the rule files."

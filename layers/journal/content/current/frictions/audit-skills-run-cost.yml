@@ -1,0 +1,17 @@
+name: audit-skills-run-cost
+surface: safe
+summary: The weekly audit-skills run spends many subagent tokens on per-Skill reports that mostly repeat known findings.
+cause: "audit-skills dispatches one read-only subagent per Skill (16-17 per run) and the main session cannot verify most reports, so a run costs about 1.7M subagent tokens for mostly-repeat results and reworded claims. Signals: '16 per-Skill checks', '17 subagent reports for a mostly-repeat result', 'unverifiable from my side'."
+status: tracked
+ref: "#3364"
+occurrences:
+  - session: session_013zxzeS7ZJqB5FMcd5d5fza
+    date: "2026-11-15"
+    severity: minor
+    description: "Subagent reports from 16 per-Skill checks cost about 1.7M subagent tokens and mostly re-confirmed known repeats; I verified only the two I escalated."
+    solution: "Have the scorecard flag Skills whose logs show no new friction so those checks can be skipped or run at lower breadth."
+  - session: session_013zxzePnUYHpbwDsDER2swv
+    date: "2026-11-16"
+    severity: minor
+    description: "Heavy run: 17 subagent reports for a mostly-repeat result; several claims (non-user counts, session ids) were unverifiable from my side and had to be reworded."
+    solution: "Have subagents return only deltas against the earlier observations, with counts checked against the data file."

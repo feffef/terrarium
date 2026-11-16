@@ -1,0 +1,21 @@
+name: peer-session-conversation-cost
+surface: safe
+summary: Talking with another session cost many rounds, crossed messages or relays until the owner or the agent set a limit.
+cause: "Two sessions exchange send_message turns with no agreed stop point: messages cross, each side relays the owner's words and replies back, an open-ended rating iteration resumes helpers every round, or the receiver treats the peer message as data and asks the owner first. Differs from peer-session-message-no-reply (the peer has no reply tool). Signals: 'relayed', 'messages crossed', 'eight rounds', 'peer data'."
+status: tracked
+occurrences:
+  - session: session_013zxzeP357BagrJREfWSJ6U
+    date: "2026-11-13"
+    severity: minor
+    description: "I relayed each owner statement to the other session and each of its replies back until the owner told me to stop relaying everything."
+    solution: "Ask once, when an exchange with another session starts, which side talks to the owner and what gets passed on."
+  - session: session_013zxzePH9gQTPAHjR7vCj71
+    date: "2026-11-15"
+    severity: moderate
+    description: "Answered eight rounds of another session's open-ended rule-rating iteration, resuming five subagents each time, with no stop point agreed until I raised the cost."
+    solution: "Agree a round limit up front, ask the subagents once and reuse their labels where the wording change cannot affect them."
+  - session: session_013zxzeQESWGW1qj9P1Egphc
+    date: "2026-11-15"
+    severity: minor
+    description: "Asking nine sessions through send_message cost extra rounds: each rightly treated my message as peer data and asked the owner before posting to GitHub or messaging its subagents."
+    solution: "Let the owner pre-authorise a survey in one message the receiving sessions can verify, or broadcast it to them directly."

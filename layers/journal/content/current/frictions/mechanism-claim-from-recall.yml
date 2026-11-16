@@ -22,11 +22,6 @@ fixes:
     date: "2026-10-28"
     summary: "glassbox-improve's lead proposes only facts and wording found in the source (an absence claim most of all), and its researcher checks an absence claim against every code location."
 occurrences:
-  - session: session_013zxzeRkv6UCWJtPmJ68h32
-    date: "2026-11-01"
-    severity: moderate
-    description: "Told the user the completed log was authored and would be committed, without checking the scratch or origin/main. It still said in-review and main held the in-review log."
-    solution: "Verify the scratch status and the origin/main log commit before saying the log landed (CLAUDE.md: verify before you state)."
   - session: session_013zxzeR2kopqGDtf5GQztz6
     date: "2026-11-02"
     severity: moderate
@@ -212,3 +207,8 @@ occurrences:
     severity: moderate
     description: "Labelled #2916 and other Friction-cluster issues from title and body only, without reading their ledger occurrences; the owner asked whether #2916 was really Platform, and two of three occurrences were Glass Box"
     solution: "auto-triage's Area labels now says to open each occurrence's session log; CLAUDE.md 'Verify before you state' already covered it"
+  - session: session_013zxzePak78Sud7pyRQMjeV
+    date: "2026-11-15"
+    severity: nit
+    description: "I first wrote 'get_session was not among the tools' in the run entry without checking; it was available. Caught before landing."
+    solution: "Check the tool list before stating a tool is missing; the Skill could say where the cost figure comes from."

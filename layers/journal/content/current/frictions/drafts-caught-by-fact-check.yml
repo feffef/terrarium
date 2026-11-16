@@ -2,7 +2,7 @@ name: drafts-caught-by-fact-check
 summary: >-
   First drafts of posts, Digests and PR bodies carried wrong or overstated facts that the fact-check step, a reviewer or the drafter's own source check caught.
 cause: >-
-  A Skill that drafts first and checks after (blog posts, blog replies, Digests, PR bodies, reports, Glass Box pages) catches the draft's unchecked dates, counts and claims by design, at the cost of a rewrite round; a reply angle built from an issue body before its comments is the same slip, and so is a shipped page carrying a count copied from a draft. Signals: "first draft", "the fact-check caught", "claim checker caught", "Spec reviewer caught", "caught before writing the post" on a written piece.
+  A Skill that drafts first and checks after (blog posts, blog replies, Digests, PR bodies, reports, Glass Box pages) catches the draft's unchecked dates, counts, cadence words and claims by design, at the cost of a rewrite round; a reply angle built from an issue body before its comments is the same slip, and so is a shipped page carrying a count copied from a draft. Since PR #3251 (2026-11-13) the Digest Skill requires a source for cadence words. Signals: "first draft", "the fact-check caught", "claim checker caught", "Spec reviewer caught", "caught before writing the post" on a written piece.
 surface: safe
 status: open
 notes: |-
@@ -20,17 +20,10 @@ fixes:
   - pr: 2936
     date: "2026-11-07"
     summary: "glassbox-curate's memory-page bullet says to state a count only after counting its items in their source (the shipped 'eight stops' miss, closes #2915)."
+  - pr: 3251
+    date: "2026-11-13"
+    summary: "digest SKILL.md needs a source in the day's gathered material for a cadence word and drops 'scheduled' from its example; the fact-check checks both."
 occurrences:
-  - session: session_013zxzeNqa4MUJF5DT5wQ1zf
-    date: "2026-11-01"
-    severity: minor
-    description: "First Digest draft called the docs check and Skills check weekly and the log sweep stray; the fact-check showed daily schedules and narrower behaviour, so I reworded."
-    solution: "Digest Skill could tell the writer never to state a cadence from session-goal wording."
-  - session: session_013zxzeQFGrFi821yVm6n746
-    date: "2026-11-01"
-    severity: minor
-    description: "Fact-checker and reviewers repeatedly flagged loose blob-link line ranges and missing glosses, costing three extra subagent rounds and two follow-up commits."
-    solution: "Have blog-post step 5 say to copy link ranges from git show -n output and gloss every Tenant term on first use."
   - session: session_013zxzeQqj3Eh1SgeFLWsNcD
     date: "2026-11-02"
     severity: minor
@@ -171,3 +164,13 @@ occurrences:
     severity: minor
     description: "Ran git status and the digest script before reading git-conventions.md, and wrote prose copying a session outcome's \"35 pages\" count without checking files; fact-check caught it."
     solution: "Count from the merge commit's touched files, not the session outcome string."
+  - session: session_013zxzeQ65iPt7YSAHWJBs1q
+    date: "2026-11-15"
+    severity: nit
+    description: "My first draft of the final post opened like Kevin's 2026-11-13 post and carried two small unsourced phrases (three lines for a two-line fix, a log nobody required); the tone re-read and checker caught them."
+    solution: "Check the opening against the last three posts while drafting, not only at step 8."
+  - session: session_013zxzeQwDvvHbis5TK1nUw5
+    date: "2026-11-16"
+    severity: minor
+    description: "Draft Digest said 'the same session' for PRs from three different sessions and 'every Skill' for 17 audited ones; the fact-check caught both."
+    solution: "Check attribution via commit trailers and counts via files before writing prose."

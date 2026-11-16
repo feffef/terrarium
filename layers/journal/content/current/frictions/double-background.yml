@@ -11,16 +11,6 @@ fixes:
     date: "2026-10-16"
     summary: "The double-background guard's deny message now says the whole call was denied and nothing in it ran."
 occurrences:
-  - session: session_013zxzeSgWhesrfA7R1JBnhE
-    date: "2026-11-01"
-    severity: nit
-    description: "Launched a gate run with a text-level & plus run_in_background; the double-background guard blocked the call and I resent it."
-    solution: "Write a plain foreground command when using run_in_background."
-  - session: session_013zxzeSvdGhiM7SLEUgzvmF
-    date: "2026-11-01"
-    severity: minor
-    description: "A claude-code writer's python heredoc containing an ampersand was denied by subagent-background-guard as a background operator; the writer switched to Edit."
-    solution: "Make the guard ignore heredoc and quoted text when looking for a bare ampersand."
   - session: session_013zxzeQqRBLg9tUfsbNCCz8
     date: "2026-11-02"
     severity: nit
@@ -136,3 +126,23 @@ occurrences:
     severity: nit
     description: "Tried to background the gate with both run_in_background and a trailing ampersand; the double-background guard blocked it, costing one call."
     solution: "Pass run_in_background alone."
+  - session: session_013zxzeRLqFejsZTowNzt1Lt
+    date: "2026-11-15"
+    severity: nit
+    description: "Stacked run_in_background with a text-level ampersand once; the double-background guard blocked the call."
+    solution: "Use run_in_background alone."
+  - session: session_013zxzePNLUgD6AbfEmXykEJ
+    date: "2026-11-15"
+    severity: nit
+    description: "A background gate call combined run_in_background with a trailing ampersand and was blocked by the double-background guard."
+    solution: "Pass run_in_background alone with a plain foreground command."
+  - session: session_013zxzePxNrkPQ4muYeaAFZT
+    date: "2026-11-15"
+    severity: nit
+    description: "A background gate command sent with run_in_background and a trailing ampersand was blocked by the double-background guard."
+    solution: "Send run_in_background alone."
+  - session: session_013zxzePnUYHpbwDsDER2swv
+    date: "2026-11-16"
+    severity: nit
+    description: "Combined run_in_background with a text-level ampersand and the double-background guard rejected the call."
+    solution: "Pass run_in_background alone with a plain foreground command."

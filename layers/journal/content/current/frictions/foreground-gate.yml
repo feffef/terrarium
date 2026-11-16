@@ -27,3 +27,8 @@ occurrences:
     severity: minor
     description: "Ran a server start plus wait loop in the foreground past the 590s limit while typecheck ran alongside; it was moved to background and left a dev server running (CLAUDE.md self-verification: run long jobs in background)."
     solution: "Start the server with run_in_background and a log file, never alongside typecheck, and stop it by pid when done."
+  - session: session_013zxzeQESWGW1qj9P1Egphc
+    date: "2026-11-15"
+    severity: nit
+    description: "Ran pnpm typecheck in the foreground twice instead of in the background, though CLAUDE.md says to background anything that can take over two minutes."
+    solution: "List pnpm typecheck beside the gate and build in CLAUDE.md's background-run line."

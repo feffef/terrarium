@@ -42,3 +42,8 @@ occurrences:
     severity: nit
     description: "The Skill says re-check each flagged page as a whole, but 11 re-pin-only pages were checked through scoped reader reports only, not read whole by me."
     solution: "Say in step 4 that a flagged page with no changed claim needs only the scoped reader, or require a whole read."
+  - session: session_013zxzePSF8TMPrem83fkCmA
+    date: "2026-11-13"
+    severity: minor
+    description: "The skill's one-line instruction implies about 50 page checks; it took seven agents and many turns, with a pilot rule slowing the fan-out."
+    solution: "State in the Skill that an all-pages-flagged run is expected and give a ready batch script."

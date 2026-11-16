@@ -69,3 +69,8 @@ occurrences:
     severity: minor
     description: "Stated '12 accepted Ledger causes' from a subagent's filtered count without re-checking; repo has 14; code-review caught it"
     solution: "Re-run every count I quote from a subagent, per CLAUDE.md, before writing it"
+  - session: session_013zxzeQESWGW1qj9P1Egphc
+    date: "2026-11-15"
+    severity: minor
+    description: "My first split analysis read each log twice, since readSessionLogs with archived: true already includes the current logs, which doubled every count; I noticed when coverage read 244 against 122."
+    solution: "Rename the option includeArchived and say in its doc comment that it adds to current logs, not replaces them."

@@ -14,21 +14,6 @@ fixes:
     date: "2026-10-15"
     summary: "Hint now says a late read that clears the call is not a Friction."
 occurrences:
-  - session: session_013zxzeRkv6UCWJtPmJ68h32
-    date: "2026-11-01"
-    severity: nit
-    description: "Filed issues without reading triage-labels.md first, as CLAUDE.md requires; I used the needs-triage label the Skill names. The hook reminded me afterwards."
-    solution: "Read issue-tracker.md and triage-labels.md whole before the first issue_write."
-  - session: session_013zxzeQFGrFi821yVm6n746
-    date: "2026-11-01"
-    severity: minor
-    description: "Post-write hooks demanded reading ADR-0012 and the Tinkerfund glossary after I had already written the post; both were late reads."
-    solution: "Read the Tenant glossary at step 4, before drafting; the ADR hook could skip standalone posts."
-  - session: session_013zxzeQhja1Bc1XguRdExuY
-    date: "2026-11-01"
-    severity: nit
-    description: "Read dispatch-subagents SKILL.md and git-conventions only at first use rather than before the first brief or git command."
-    solution: "Read the triggered doc before the first matching call."
   - session: session_013zxzeSaEvHWNU8EdNqcqGG
     date: "2026-11-02"
     severity: nit
@@ -594,3 +579,43 @@ occurrences:
     severity: nit
     description: "Ran gh api before reading docs/agents/github-integration.md; the hook hint caught it. No harm, the call was a read."
     solution: "Read the doc before the first gh call, as CLAUDE.md says."
+  - session: session_013zxzeRLqFejsZTowNzt1Lt
+    date: "2026-11-15"
+    severity: nit
+    description: "Ran git commands before reading docs/agents/git-conventions.md (hook reminded me afterwards)."
+    solution: "Read the doc before the first non-read-only git command."
+  - session: session_013zxzePNLUgD6AbfEmXykEJ
+    date: "2026-11-15"
+    severity: nit
+    description: "I explained how Skill observations and the Journal work without first reading the overview page CLAUDE.md requires."
+    solution: "Read layers/glassbox/content/guide/pages/index.md before explaining the Platform."
+  - session: session_013zxzeQESWGW1qj9P1Egphc
+    date: "2026-11-15"
+    severity: nit
+    description: "Ran git fetch origin main before reading docs/agents/git-conventions.md, which CLAUDE.md requires before the first non-read-only git command; the doc said to fetch, so no harm."
+    solution: "Fire the git-conventions hint before the first fetch, not after it."
+  - session: session_013zxzeQ65iPt7YSAHWJBs1q
+    date: "2026-11-15"
+    severity: nit
+    description: "I made my first GitHub call (pull_request_read) before reading docs/agents/github-integration.md, which CLAUDE.md requires first; the hook reminded me."
+    solution: "Read github-integration.md at the start of any run that will call mcp__github__ tools."
+  - session: session_013zxzePAAjqaHMt85Ee6cxA
+    date: "2026-11-15"
+    severity: minor
+    description: "Ran git fetch and commit before reading git-conventions.md and ADR-0027 in full; the hooks flagged the late reads after the fact."
+    solution: "Read the CLAUDE.md-triggered docs before the first non-read-only git command."
+  - session: session_013zxzePoe14MeL6kTvYZMX8
+    date: "2026-11-15"
+    severity: nit
+    description: "Filed two issues with labels before reading docs/agents/triage-labels.md; only a hook hint afterward made me grep it, and it confirmed the labels."
+    solution: "Read triage-labels.md before the first issue_write; the visitor-loop step 4 could name it."
+  - session: session_013zxzeRGXYTuwyQrcDEwRpw
+    date: "2026-11-15"
+    severity: nit
+    description: "Read triage-labels.md only after the first issue_write, though step 4 says read it and issue-tracker first; the labels were right anyway."
+    solution: "Read the two docs right after check-clusters passes, before writing bodies."
+  - session: session_013zxzePnUYHpbwDsDER2swv
+    date: "2026-11-16"
+    severity: nit
+    description: "Ran gh api issue reads and several git commands before reading github-integration.md and git-conventions.md; hooks flagged it. Reads only, no harm."
+    solution: "Name both read-first docs in audit-skills step 1 (already suggested by earlier runs)."

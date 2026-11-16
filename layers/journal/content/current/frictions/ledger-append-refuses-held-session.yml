@@ -11,11 +11,6 @@ fixes:
     date: "2026-11-01"
     summary: "print-ledger-occurrence --append now names every failing entry in one error, still writing nothing on any failure."
 occurrences:
-  - session: session_013zxzeNxm9jTD6DwkDXzzG8
-    date: "2026-11-01"
-    severity: minor
-    description: "The survey subagent's batched --append aborted on a held session and it reran after grepping; and it left never-fixed labels ledger-derived, skipping the tracker check."
-    solution: "The queued ledger-append-refuses-held-session fix (collect all entries' collisions in one error)."
   - session: session_013zxzeS7NuFmaoXJkxVfNby
     date: "2026-11-05"
     severity: minor

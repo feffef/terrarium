@@ -33,11 +33,6 @@ fixes:
     date: "2026-10-28"
     summary: "pr-workflow.md's simple-change bar now says a simple change adds, renames or moves no file, so a rename sweep gets code-review before its first push."
 occurrences:
-  - session: session_013zxzeSgWhesrfA7R1JBnhE
-    date: "2026-11-01"
-    severity: minor
-    description: "Skipped code-review on the escalation PR (one rule line) though a rule's meaning changes; I judged it a clarification and said so in the PR."
-    solution: "pr-workflow's 'simple change' test should say whether a rule wording clarification that matches its ADR counts."
   - session: session_013zxzeQBuD3C4A1V2DpoHYu
     date: "2026-11-02"
     severity: minor
@@ -173,3 +168,8 @@ occurrences:
     severity: minor
     description: "Skipped code-review before opening the PR; I judged the diff simple, but 11 files and 18 lines fail the simple-change count in pr-workflow.md."
     solution: "Count files and lines against the pr-workflow.md bar before choosing a self-read; the curate Skill could repeat the bar."
+  - session: session_013zxzeRchVHk3fp9wS3yUgM
+    date: "2026-11-15"
+    severity: minor
+    description: "Skipped code-review on a 76-file mechanical pin diff that exceeds the simple-change 10-line limit, reading the diff myself instead."
+    solution: "pr-workflow could name a scripted pin-only diff as simple, or the run runs code-review."

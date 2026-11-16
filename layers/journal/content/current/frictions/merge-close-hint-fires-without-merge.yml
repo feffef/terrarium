@@ -93,3 +93,8 @@ occurrences:
     severity: minor
     description: "The Stop hook said a PR merged and demanded close-session while merge-pr.ts was still polling CI; nothing had merged."
     solution: "Fire the merge hint only after a merged PR is observed."
+  - session: session_013zxzeRLqFejsZTowNzt1Lt
+    date: "2026-11-15"
+    severity: minor
+    description: "Stop hook twice demanded close-session claiming a PR merged while merge-pr.ts was still polling CI, and again after one PR merged with the other and the closing PR unfinished."
+    solution: "Fire the hint only after merge-pr.ts reports merged, and only when no run work remains."

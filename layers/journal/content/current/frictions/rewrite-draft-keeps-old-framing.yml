@@ -26,3 +26,8 @@ occurrences:
     severity: moderate
     description: "First drafts of the memory page went long and mixed levels; the owner needed three review rounds (retired concepts, derivable facts, plain language) to reach the shape they wanted"
     solution: "Before drafting a page an agent will read every run, agree its sections and tone with the owner on a short sample"
+  - session: session_013zxzeQ9FTpQjBywTHWkdXF
+    date: "2026-11-13"
+    severity: nit
+    description: "After the owner said the document must stand alone, two sentences still pointed to earlier studies the reader cannot see; the spec reviewer caught them."
+    solution: "After a late constraint arrives, grep the draft for every phrase the constraint rules out before review."
