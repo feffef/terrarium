@@ -2,7 +2,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
-import { guideIndex, guidePath, indexOrientation, subjectPages, orientation, pageOverview, runStem, shortPath, warningLines } from '../../scripts/orient.ts'
+import { guideIndex, guidePath, indexOrientation, subjectParts, orientation, pageOverview, runStem, shortPath, warningLines } from '../../scripts/orient.ts'
 
 const page = `---
 title: Blocking hooks
@@ -100,12 +100,26 @@ describe('orientation', () => {
     expect(parts[1]).toMatch(/^# Guide pages, part 2 of 2\n\nEach page: [\s\S]*- claude-code\/06\.b: Blocking hooks\./)
   })
 
-  it('prints a Subject\'s pages in full with the pagesRead lines they make', () => {
-    const out = subjectPages('claude-code', base)
-    expect(out).toContain('# claude-code/05.blocking-hooks\n\n---\ntitle: Blocking hooks')
-    expect(out).toContain('## The concept\n\nBody text.')
-    expect(out).toMatch(/pagesRead:\n {2}- claude-code\/05\.blocking-hooks$/)
-    expect(() => subjectPages('nope', base)).toThrow(/no guide pages under "nope"/)
+  it('packs a Subject\'s pages whole into one part with the pagesRead lines they make', () => {
+    const { parts, pagesRead } = subjectParts('claude-code', base)
+    expect(parts).toHaveLength(1)
+    expect(parts[0]).toContain('# claude-code/05.blocking-hooks\n\n---\ntitle: Blocking hooks')
+    expect(parts[0]).toContain('## The concept\n\nBody text.')
+    expect(pagesRead).toMatch(/pagesRead:\n {2}- claude-code\/05\.blocking-hooks$/)
+    expect(() => subjectParts('nope', base)).toThrow(/no guide pages under "nope"/)
+  })
+
+  it('splits a Subject into parts of whole pages in order, a page over the cap alone', () => {
+    const sub = mkdtempSync(join(tmpdir(), 'orient-subject-'))
+    mkdirSync(join(sub, 'guide/pages/s'), { recursive: true })
+    const pages: [string, number][] = [['01.a', 10], ['02.b', 10], ['03.big', 500], ['04.c', 10], ['05.d', 10]]
+    for (const [stem, n] of pages) writeFileSync(join(sub, `guide/pages/s/${stem}.md`), `${stem} ${'x'.repeat(n)}`)
+    const { parts, pagesRead } = subjectParts('s', sub, 100)
+    rmSync(sub, { recursive: true, force: true })
+    const stems = parts.map((p) => [...p.matchAll(/^# s\/(\S+)$/gm)].map((m) => m[1]))
+    expect(stems).toEqual([['01.a', '02.b'], ['03.big'], ['04.c', '05.d']])
+    expect(parts[1]).toContain('x'.repeat(500))
+    expect(pagesRead.indexOf('s/01.a')).toBeLessThan(pagesRead.indexOf('s/05.d'))
   })
 
   it('falls back to the last commits before the first run', () => {

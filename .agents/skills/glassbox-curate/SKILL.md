@@ -59,7 +59,8 @@ place a fact was taught. Runs that read only the page they changed repeated a
 sibling page (#2943) and cut the only place a fact was taught (#2927). So
 every run reads at two depths before it edits: every page's entry in the
 guide index, to know what the whole guide teaches, and every page of its
-Subject in full, to know exactly what its neighbours say. The first depth is
+Subject in full (each part file), to know exactly what its neighbours say.
+The first depth is
 only as good as each page's `teaches` and bold lead-ins (Fix says how a run
 keeps them so).
 
@@ -91,8 +92,9 @@ keeps them so).
   Before you take any lead from the memory page, check it still stands and that
   no earlier step (settled titles, a pending Subject move) should come first;
   grep the guide for its key terms.
-- **Read.** The full depth above. Run `orient.ts --subject <folder>` and read
-  its output whole; it ends with the `pagesRead` lines to paste. Also read in
+- **Read.** The full depth above. Run `orient.ts --subject <folder>`; it
+  writes the Subject's pages to part files and names them: read each whole, one
+  Read per file. It ends with the `pagesRead` lines to paste. Also read in
   full every page outside the Subject that a change would edit, link or
   overlap. Done when every page of the Subject is read in full, plus every
   outside page a change would edit, link or overlap.
