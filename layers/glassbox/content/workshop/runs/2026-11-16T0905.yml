@@ -1,0 +1,9 @@
+session: session_013zxzeSoqEeWqPDrCqDCcJn
+mode: autonomous
+focus: "Agents: the memory page's wording leads on Subagents and Scheduled tasks. Chosen because the first run of this session used about a third of the budget and the Skill says to loop until it is spent (I wrongly stopped after one PR until asked). Both are wording-only fixes with no new claim, and no open PR touches the pages. Deviations: only the two pages were read, no writer, claim checker, fresh reader or code-review; the lead read the full diff. The Scheduled tasks lead was stale: the page glosses digest and harvest in their list lines, never says seedling, and cites environment-caveats.md in two bullets, not three. Cost: unreported (no get_session); estimated context about 190k tokens."
+changes:
+  - agents/10.subagents | The impl-agent sentence now says it never runs merge-pr.ts, the script that merges a PR (pr-workflow.md step 5), and that the excerpt's cannot-spawn rule holds in a cloud session for the reason given just after it | the Excerpt said impl agents cannot spawn subagents before the depth-1 explanation, which read as clashing with the three-layer default, and merge-pr.ts had no gloss. Wording only, so revision and publishedAt are kept
+  - workshop/pages/index | the merge-pr and spawn-clash parts of the Subagents lead deleted, and the stale Scheduled tasks lead deleted | done or stale
+pagesRead:
+  - agents/10.subagents
+  - agents/40.scheduled-tasks
