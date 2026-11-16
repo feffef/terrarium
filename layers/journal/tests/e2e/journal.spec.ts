@@ -401,6 +401,20 @@ describe('journal Tenant', async () => {
     expect(digest).toMatch(/<h1[ >]/) // the standalone route still renders
   })
 
+  // The landing's guide list links the newest digest and newest session by anchor,
+  // so a new day or session moves the links with no content edit (#3386).
+  it('links the landing list to the newest digest and session cards', async () => {
+    const html = await $fetch<string>('/t/journal/current')
+    const list = /<section class="intro[^"]*"[^>]*>([\s\S]*?)<\/section>/.exec(html)![1]!
+    const hrefs = [...list.matchAll(/href="([^"]*)"/g)].map((m) => m[1]!)
+    const firstCard = /<article id="(session-[^"]*)"/.exec(html)![1]!
+    expect(hrefs).toEqual([
+      `#digest-${currentDigestDates().at(-1)!}`,
+      `#${firstCard}`,
+      ...['skills', 'frictions', 'ideas', 'routines'].map((p) => `/t/journal/current/${p}`),
+    ])
+  })
+
   // Standalone Document pages (#25) must render in the journal theme via the
   // Tenant's own `[space]/[...slug]` override, NOT fall through to the Platform's
   // unstyled catch-all. Assert the `.jd` wrapper + breadcrumb are present so it
