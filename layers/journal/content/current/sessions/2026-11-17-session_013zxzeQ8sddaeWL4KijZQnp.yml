@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQ8sddaeWL4KijZQnp
 startedAt: 2026-11-17T08:45:56Z
-endedAt: 2026-11-17T08:47:45Z
+endedAt: 2026-11-17T08:51:52Z
 kind: autonomous
 goal: Scheduled curate run on the Glass Box guide
-status: in-review
-outcome: One wording fix on A change goes live opened as PR 3411, awaiting CI
-summary: "A schedule started this glassbox-curate run; nothing was human-instructed. The agent chose the focus itself: a memory-page lead that stop 2 of the A change goes live Walkthrough never says how long the container pauses between polls. It read the required docs and the whole guide index, confirmed the 120-second default in deploy/entrypoint.sh at the page's revision, added one clause, deleted the lead, wrote the run entry, ran the glassbox page and workshop specs and validate:content, pushed and opened PR 3411 (subscribed). To spare the budget it skipped the Scout, writer, claim checker, fresh reader, code-review and gate:scoped; the run entry and PR body say so. It did not loop to a second focus. Open: CI and merge."
+status: completed
+outcome: One wording fix on A change goes live merged as PR 3411
+summary: "A schedule started this glassbox-curate run; nothing was human-instructed. The agent chose the focus itself: a memory-page lead that stop 2 of the A change goes live Walkthrough never says how long the container pauses between polls. It read the required docs and the whole guide index, confirmed the 120-second default in deploy/entrypoint.sh at the page's revision, added one clause, deleted the lead, wrote the run entry, ran the glassbox page and workshop specs and validate:content, pushed and opened PR 3411 (subscribed). To spare the budget it skipped the Scout, writer, claim checker, fresh reader, code-review and gate:scoped; the run entry and PR body say so. It did not loop to a second focus. CI went green and the agent merged it with merge-pr.ts after posting a verdict."
 prs:
   - "3411"
 docsRead:
@@ -42,15 +42,18 @@ frictions:
   - description: Reading the three guide index files whole cost about 40k tokens, though the run touched one Walkthrough.
     solution: Offer an index filtered to the chosen Subject or page, or a smaller default.
     severity: nit
-durationSec: 109
+durationSec: 356
 models:
-  claude-sonnet-5-5: 37
+  claude-sonnet-5-5: 52
 toolCounts:
-  Bash: 10
+  Bash: 14
   Read: 11
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  Skill: 2
+  Skill: 3
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/walkthroughs/80.a-change-goes-live.md
   - layers/glassbox/content/workshop/pages/index.md
