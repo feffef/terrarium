@@ -5,6 +5,9 @@ cause: >-
   A small text change is made with a `python` string or `re.sub` replace in Bash instead of Read plus Edit (CLAUDE.md's Read-tool rule); a DOTALL pattern over a stylesheet ate the rest of it, and the same habit lands silently when the pattern is right. Signals: "python replace", "re.sub", "DOTALL", file contents missing after a scripted edit.
 surface: safe
 status: open
+related:
+  - entry: ledger-yaml-hand-edit-errors
+    rule: A hand or scripted edit broke a YAML data file (ledger, trials, inventory, run entries, content).
 notes: |-
   2026-10-21 design: a guard on Bash python replaces dropped: it is Human-only, would flag legitimate migration scripts, and every slip was caught or restored.
   2026-11-10 design: a CLAUDE.md line or Bash guard dropped again: 3 new occurrences, none above minor, all caught by diff or restored from git; the guard is Human-only. The cause's 'Read-tool rule' pointer was not found in CLAUDE.md.

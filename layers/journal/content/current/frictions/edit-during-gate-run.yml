@@ -6,6 +6,8 @@ status: open
 related:
   - entry: prepush-gate-review-skipped
     rule: The review was skipped or the author's own read replaced it.
+  - entry: push-chained-to-gate-run
+    rule: A push or commit shared a command with a gate run, or a push went out before the gate passed.
 notes: |-
   2026-11-04 reopened: fixes #2626 and #2629 (2026-10-28) merged after the owner accepted it on 2026-10-27.
 fixes:

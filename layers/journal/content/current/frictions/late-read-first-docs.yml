@@ -12,6 +12,10 @@ related:
     rule: The doc is the dispatch-subagents Skill, read late or never before a dispatch.
   - entry: pr-workflow-unread-before-push
     rule: The doc is pr-workflow.md, unread before a push or PR.
+  - entry: adr-read-after-edit
+    rule: The hint named a governing ADR after an edit to a file it governs.
+  - entry: governing-doc-read-after-draft
+    rule: The doc governs the text just drafted (a Tenant GLOSSARY, a Skill voice rule, the overview).
 fixes:
   - pr: 1793
     date: "2026-10-11"
@@ -400,11 +404,6 @@ occurrences:
     severity: nit
     description: "Ran git rev-parse and status before reading docs/agents/git-conventions.md, which CLAUDE.md requires before the first git command."
     solution: "Put the git-conventions read in the glassbox-update Skill's step 1 or accept it as a late read."
-  - session: session_013zxzeP1EixGDy96kmktFi2
-    date: "2026-11-12"
-    severity: nit
-    description: "Planned and reviewed changes spanning the guide, Skills and rules without reading the Glass Box overview that CLAUDE.md names for cross-part work."
-    solution: "Name the overview in the read-first trigger the code-review Skill gives its reviewers."
   - session: session_013zxzePP7cbXFfoqEXbKwKW
     date: "2026-11-12"
     severity: nit
@@ -555,11 +554,6 @@ occurrences:
     severity: nit
     description: "Ran git commands before reading docs/agents/git-conventions.md (hook reminded me afterwards)."
     solution: "Read the doc before the first non-read-only git command."
-  - session: session_013zxzePNLUgD6AbfEmXykEJ
-    date: "2026-11-15"
-    severity: nit
-    description: "I explained how Skill observations and the Journal work without first reading the overview page CLAUDE.md requires."
-    solution: "Read layers/glassbox/content/guide/pages/index.md before explaining the Platform."
   - session: session_013zxzeQESWGW1qj9P1Egphc
     date: "2026-11-15"
     severity: nit

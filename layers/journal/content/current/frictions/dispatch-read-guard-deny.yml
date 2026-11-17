@@ -7,6 +7,8 @@ ref: "Comes from PR #2550, the fix for dispatch-subagents-skill-unread (briefs w
 related:
   - entry: dispatch-subagents-skill-unread
     rule: No guard refused the dispatch; the brief went out without the Skill read.
+  - entry: placeholder-guard-denies-quoted-placeholder
+    rule: The guard denied a prompt that only quoted a placeholder token.
 notes: |-
   2026-11-04 reopened: fix #2768 (2026-11-02) merged after the owner accepted it on 2026-10-27.
 fixes:

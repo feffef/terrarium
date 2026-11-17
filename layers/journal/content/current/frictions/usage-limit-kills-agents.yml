@@ -3,6 +3,9 @@ surface: outside
 summary: The account's usage limit ended subagents mid-run.
 cause: "The 5-hour account usage limit is reached while workflow or review subagents run: they die together, a review round has one axis, or the run idles until resumed. Signals: '5-hour usage limit', 'rate limit', reviewers or builders dying at once."
 status: open
+related:
+  - entry: restart-kills-background-work
+    rule: A container or worker restart killed the work (exit 137).
 notes: |-
   2026-11-16 design: no change: the cause is the account usage limit; get_session rate_limit_info shows no remaining quota, so a pre-check cannot predict it. dropped: nothing in the repo helps; the survey's lighter confirm step lowers load.
 occurrences:

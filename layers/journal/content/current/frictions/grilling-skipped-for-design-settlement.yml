@@ -3,6 +3,9 @@ surface: safe
 summary: Agents settled what to build with the owner (or a spec session) through ad hoc questions instead of the grilling Skill CLAUDE.md names.
 cause: "CLAUDE.md 'Ask before building (the grilling Skill)' is read as optional: an agent asks with AskUserQuestion, or settles shapes and looks with the spec session and not the owner, and never invokes grilling, so decisions are not stress-tested. Signals: 'AskUserQuestion instead of the grilling Skill', 'grilling Skill was not invoked', 'settled with the spec session, not the owner'."
 status: open
+related:
+  - entry: built-before-owner-decided-ui
+    rule: UI was built before the owner settled its labels or saw a sample.
 notes: |-
   2026-11-08 design: no change dropped: 3 of 5 sessions are not defects (T5vcQT owner said 'choose yourself', Sy38XR clear-backlog says its list wins); NpEgo already had 'settle every decision via grilling' in glassbox-curate, read and ignored, so more prose is the wrong mechanism; the delegation clause is in issue #2962
 occurrences:

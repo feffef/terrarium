@@ -6,6 +6,9 @@ cause: >-
 surface: safe
 status: accepted
 acceptedSeverity: moderate
+related:
+  - entry: proposal-duplicates-existing-decision
+    rule: A candidate duplicated an existing feature, issue or recorded decision.
 notes: |-
   2026-11-10 survey: issue #2997 closed not planned 2026-11-09 (owner decision in clear-backlog grilling): close with no change; one occurrence, CLAUDE.md 'Question the premise' already covers it and earlier added rules did not stop the cluster.
 fixes:

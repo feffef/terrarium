@@ -10,6 +10,8 @@ related:
     rule: log-session refused the completed log after a merge and it cost only a call.
   - entry: close-session-reminded-by-stop-hook
     rule: The Stop hook reminded the session after a merge and the cost was one prompt.
+  - entry: closure-not-invoked-on-answers
+    rule: A session that only answered a question did not close.
 fixes:
   - { pr: 2452, date: "2026-10-23", summary: "log-session --author now warns when a completed log follows a merge with no close-session call." }
   - { pr: 2536, date: "2026-10-25", summary: "log-session --author now refuses a completed log after a merge with no close-session call, and writes no scratch." }

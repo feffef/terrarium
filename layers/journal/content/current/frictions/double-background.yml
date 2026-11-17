@@ -10,6 +10,8 @@ ref: "issue #2310 closed not planned on 2026-10-20: the owner accepts the cost. 
 related:
   - entry: blocked-waiting
     rule: The session sleeps, polls or schedules a wake-up to wait for a background run.
+  - entry: foreground-gate
+    rule: A long command ran in the foreground, or was backgrounded with a shell & instead.
 fixes:
   - pr: 2172
     date: "2026-10-16"

@@ -7,6 +7,9 @@ surface: guard-or-hook
 status: accepted
 acceptedSeverity: minor
 ref: "issue #2426 closed not planned on 2026-10-26: the owner accepts the cost. The backgrounding Prune Trial (verdict f89929a37) found no major or blocker damage over 53 sessions, so no guard gets built."
+related:
+  - entry: double-background
+    rule: The call combined run_in_background with a trailing & or nohup.
 fixes:
   - pr: 1790
     date: "2026-10-11"

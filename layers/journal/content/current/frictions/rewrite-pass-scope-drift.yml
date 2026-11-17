@@ -2,11 +2,17 @@ name: rewrite-pass-scope-drift
 summary: >-
   A rewrite, reword or trim changed what the text meant, dropping or tightening a rule, and review had to catch it.
 cause: >-
-  An agent rewriting a Skill, doc or definition to a stated goal (plain rewrite, prune, compression) works from a mental checklist instead of diffing old against new rule by rule: it drops a rule, pointer, qualifier or why that was meant to stay, or adds a stricter rule. Signals: "lost a rule", "dropped ... exception", "a prune must not change meaning", "review caught both".
+  An agent rewriting a Skill, doc, definition or brief to a stated goal (plain rewrite, prune, simplify, compression) works from a mental checklist instead of diffing old against new rule by rule: it drops a rule, pointer, qualifier, why or recipe step (a gate log, a timeout recipe) that was the only statement of it, or adds a stricter rule. Signals: "lost a rule", "dropped ... exception", "a prune must not change meaning", "review caught both", "cut ... while simplifying", "all three reviewers caught it".
 surface: safe
 status: open
+related:
+  - entry: rewrite-draft-keeps-old-framing
+    rule: The rewrite kept the old structure and missed what its reader needs.
+  - entry: edit-leaves-contradicting-sibling
+    rule: An edit left another statement or reference contradicting it.
 notes: |-
   2026-10-23 design: a rewrite-discipline line dropped: the two newer sessions were caught by code-review before merge, no session shipped the drift, and the candidate homes sit in open Prune Trial territory.
+  2026-11-17: simplify-cut-drops-needed-instruction joined here: a trim that cuts a needed line is the same slip as a rewrite that drops a rule.
 occurrences:
   - session: session_013zxzeRUFEQvJ2mE6PXbv3w
     date: "2026-11-03"
@@ -18,3 +24,8 @@ occurrences:
     severity: minor
     description: "My prune of the dispatch-subagents Skill dropped three phrases that were rules; code-review caught them and I restored them before the gate."
     solution: "Diff the pruned section against the old text for imperative phrases before committing."
+  - session: session_013zxzeQQzVdav2Lzx9D5WBr
+    date: "2026-11-11"
+    severity: moderate
+    description: "In the first build I cut the builder's gate:scoped log and Bash-timeout recipe while simplifying rules(); all three reviewers caught it, costing a fix round."
+    solution: "When rewriting a prompt, diff the removed lines and give each a reason to drop; a removed timeout is load-bearing."

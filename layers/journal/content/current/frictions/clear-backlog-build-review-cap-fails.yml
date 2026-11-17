@@ -4,6 +4,9 @@ cause: "reviewBranch in .claude/workflows/clear-backlog-build.js returns status 
 surface: safe
 status: tracked
 ref: "#3400"
+related:
+  - entry: first-review-pass-misses-defect
+    rule: A defect passed the first review round.
 notes: |-
   2026-11-13 survey: issue #3110 closed completed 2026-11-12T08:50Z (no closing PR in its timeline; PRs #3119 and #3196 relate to it and are recorded in fixes); status reset from tracked.
   2026-11-17 regression issue #3400 filed (2 occurrences since #3196).

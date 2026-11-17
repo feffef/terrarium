@@ -7,6 +7,9 @@ surface: safe
 status: accepted
 acceptedSeverity: minor
 ref: "#2633: the owner accepted partial reads of required docs on 2026-10-28 (clear-backlog session_013zxzeTK9c2HVcabwCx3b18); an agent that has read enough to judge relevance may decide."
+related:
+  - entry: output-trim-drops-needed-line
+    rule: A command's output was piped through head, tail or grep and lost the line needed.
 fixes:
   - pr: 2448
     date: "2026-10-23"

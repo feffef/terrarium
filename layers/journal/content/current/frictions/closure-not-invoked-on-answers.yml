@@ -6,6 +6,9 @@ cause: >-
 surface: safe
 status: open
 ref: "Issue #2209 closed 2026-10-17: the owner left the answer-only half out of scope of PR #2217, and PR #2381 kept it out."
+related:
+  - entry: close-session-bypassed-by-hand-log
+    rule: The log was written by hand, or close-session was skipped around a PR.
 fixes:
   - pr: 1801
     date: "2026-10-12"

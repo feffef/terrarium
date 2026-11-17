@@ -5,6 +5,11 @@ cause: >-
   A diagnosis or attribution (why something behaves as it does, which PR made a change) is generalised from partial evidence, a single test or a merge-commit list, without varying one factor per test or reading the diff. Signals: "from one test", "without checking its diff", a cause reversed by a controlled test or git show.
 surface: safe
 status: open
+related:
+  - entry: mechanism-claim-from-recall
+    rule: A claim about how code or a rule behaves came from recall or one checked item.
+  - entry: summary-from-narrow-evidence-span
+    rule: A summary was drawn from only the latest slice of the evidence.
 fixes:
   - pr: 2336
     date: "2026-10-20"

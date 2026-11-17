@@ -7,6 +7,8 @@ ref: "subagent-brief-defects, fix PR #3064"
 related:
   - entry: subagent-brief-defects
     rule: The brief held a real unfilled placeholder, wrong path or wrong value.
+  - entry: dispatch-read-guard-deny
+    rule: The guard denied the first dispatch until the Skill was read.
 occurrences:
   - session: session_013zxzeSPxncNsUJXwnc2DvG
     date: "2026-11-11"

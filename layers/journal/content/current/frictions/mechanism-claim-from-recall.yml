@@ -10,6 +10,8 @@ ref: "Issue #2876: the owner accepted the cost again on 2026-11-06 after #2626 d
 related:
   - entry: relayed-subagent-claims
     rule: A helper's or another session's claim was passed on unchecked.
+  - entry: diagnosis-from-partial-evidence
+    rule: A cause or attribution was settled from one test or a commit list.
 notes: |-
   2026-11-04 reopened: fix #2626 (2026-10-28) merged after the owner accepted it on 2026-10-25.
 fixes:

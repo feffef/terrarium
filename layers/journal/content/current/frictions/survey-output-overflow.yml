@@ -10,6 +10,8 @@ related:
     rule: A bare audit-skills.ts run.
   - entry: orient-output-truncates
     rule: The glassbox-curate orientation script.
+  - entry: output-trim-drops-needed-line
+    rule: The agent trimmed output with head, tail or grep and lost the needed line.
 fixes:
   - pr: 1918
     date: "2026-10-14"

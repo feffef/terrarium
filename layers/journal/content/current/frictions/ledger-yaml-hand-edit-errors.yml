@@ -5,6 +5,11 @@ cause: >-
   YAML data is patched by string replacement, sed, a re-wrapping serializer or by hand: unquoted dates, hashes or colons, a hyphen-split folded scalar, a replaced ref, a match inside a comment, or a parse-and-restringify that rewraps every prose field broke the file or bloated the diff (gate cycle or repair needed). Where a helper lacked a flag or no helper placed blocks under a named entry, the agent hand-edited or scripted its own splitter; since PR #2630 ledger-set.ts sets summary, cause and surface on an existing entry and --move writes block style. Signals: validate-content-schema failure on a YAML file, 'split word', 'unquoted', 'no flag for', a several-thousand-line reformatting diff.
 surface: safe
 status: open
+related:
+  - entry: scripted-text-replace-edits
+    rule: A scripted replace broke a file that is not a YAML data file.
+  - entry: validate-content-skipped-before-gate
+    rule: The gate failed because validate:content was not run after an edit.
 fixes:
   - pr: 2154
     date: "2026-10-16"

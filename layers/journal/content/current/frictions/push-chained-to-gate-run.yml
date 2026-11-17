@@ -7,6 +7,11 @@ surface: guard-or-hook
 status: accepted
 acceptedSeverity: minor
 ref: "Issue #2752 closed not planned on 2026-11-14: the owner accepts the nit-level cost. The prune trial on git-conventions.md was judged and deleted on 2026-11-13: no major or blocker Friction."
+related:
+  - entry: chained-git-step-fails-silently
+    rule: A failed git step inside a chained command was missed.
+  - entry: edit-during-gate-run
+    rule: Files were edited or committed while gate:scoped ran.
 fixes:
   - pr: 2359
     date: "2026-10-21"

@@ -6,6 +6,8 @@ status: open
 related:
   - entry: pr-subscribe-reminded-by-stop-hook
     rule: The Stop hook caught the missing subscribe and the cost was one prompt.
+  - entry: pr-number-guessed-before-create
+    rule: A PR number was guessed before the PR existed, in a subscription or a ledger row.
 fixes:
   - pr: 2972
     date: "2026-11-08"

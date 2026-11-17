@@ -3,6 +3,9 @@ surface: safe
 summary: A build's first Standards and Spec review let a defect through that the session or a later review found.
 cause: "The Standards and Spec review of a clear-backlog-build branch passes a defect (a regex that rejects ordinary prose; a real gap in a rule's coverage flagged only as a judgement call) and the main session finds it reading the diff, or a later review round does. PR #2840 (2026-11-04) makes reviewPrompt and the REVIEW schema mark worthFixing false only for a call that needs the owner's choice, so a cheap spec mismatch is no longer waved through as a judgement call. Signals: 'review passed', 'I caught it reading the diff', 'flagged as a mere judgement call', a fix round after the build reported ready."
 status: open
+related:
+  - entry: clear-backlog-build-review-cap-fails
+    rule: The review hit its round cap or forced rounds on cosmetic findings.
 notes: |-
   2026-10-29 design: one line in clear-backlog-build's review brief for a gap against a 'never' clause dropped: two unrelated minors, both caught by the main session before the push; revisit if a defect reaches CI
   2026-11-03 design: no change: the newest miss came from the installed code-review Skill (ADR-0015, uneditable); the one editable surface, clear-backlog-build reviewPrompt, was not implicated since 2026-10-28; dropped: revisit if a defect reaches CI or recurs in a build workflow
