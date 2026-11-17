@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRCPF7mHwN6aT8t7RQ
 startedAt: 2026-11-16T21:46:28Z
-endedAt: 2026-11-16T22:49:33Z
+endedAt: 2026-11-17T06:19:36Z
 kind: interactive
 goal: Clear the open backlog issues through to pull requests
 status: in-review
-outcome: "Five PRs opened and gated; #3390 and #3392 merged, #3388, #3389 and #3391 wait for the owner; retro posted on #3143"
-summary: "Human-instructed: the owner started /clear-backlog, then answered one grilling round, one follow-up round on the Journal landing and two rounds of screenshot samples (the 404 links, the Journal landing text). Everything else (the sweep, labels, agent runs, PRs, merges, the retro) was the Skill's own routine, not extra initiative. Sweep: the explore workflow took six issues (#3385, #3386, #3387, #3381, #3370, #3340). #3340 is blocked until 2026-11-22 (a week after #3341 merged) and is only reported. #3381 came back ready-for-agent, a CSS-only tap-target fix. The other four went to the owner. Answers changed scope twice: #3385 lost its /search redirect, #3386 turned from a severity legend into a rewrite of the landing prose, with anchors to the newest digest and session. I built two throwaway samples, showed them as screenshots, and reverted them. Five branches were built, each reviewed and re-checked; four triggered a second review round because round 1 held a defect or spec-mismatch, and those second rounds found only nits (nine, all skipped). All five passed the gate; #3386 needed one extra commit when its first gate failed on an e2e link count. PRs: #3388 (#3370), #3389 (#3381), #3390 (#3386), #3391 (#3387), #3392 (#3385). #3390 and #3392 merged after CI went green, each with a verdict comment; #3386 and #3385 closed. #3388, #3389 and #3391 wait for the owner (Skill prose and CSS that no test observes). The retro (23 agent answers, numbers from the agent transcripts) is on #3143. Main finding: make the second review round conditional on what the first left open. Open: the owner's merges, and the two site-specific visitor traps as a follow-up."
+outcome: "Five PRs opened and gated; four merged (#3390, #3392 by me, #3389, #3391 by the owner); #3388 still waits for the owner; retro posted on #3143"
+summary: "Human-instructed: the owner started /clear-backlog, then answered one grilling round, one follow-up round on the Journal landing and two rounds of screenshot samples (the 404 links, the Journal landing text). Everything else (the sweep, labels, agent runs, PRs, merges, the retro) was the Skill's own routine, not extra initiative. Sweep: the explore workflow took six issues (#3385, #3386, #3387, #3381, #3370, #3340). #3340 is blocked until 2026-11-22 (a week after #3341 merged) and is only reported. #3381 came back ready-for-agent, a CSS-only tap-target fix. The other four went to the owner. Answers changed scope twice: #3385 lost its /search redirect, #3386 turned from a severity legend into a rewrite of the landing prose, with anchors to the newest digest and session. I built two throwaway samples, showed them as screenshots, and reverted them. Five branches were built, each reviewed and re-checked; four triggered a second review round because round 1 held a defect or spec-mismatch, and those second rounds found only nits (nine, all skipped). All five passed the gate; #3386 needed one extra commit when its first gate failed on an e2e link count. PRs: #3388 (#3370), #3389 (#3381), #3390 (#3386), #3391 (#3387), #3392 (#3385). #3390 and #3392 merged after CI went green, each with my verdict comment. The owner later merged #3389 and #3391 (Skill prose and CSS that no test observes); #3385, #3386, #3387 and #3381 are closed. #3388 (the glassbox-curate loop, an owner-merge under the Skill's Remit) is still open, and so is #3370. The retro (23 agent answers, numbers from the agent transcripts) is on #3143. Main finding: make the second review round conditional on what the first left open. Open: #3388, and the two site-specific visitor traps as a follow-up."
 prs:
   - "3388"
   - "3389"
@@ -109,25 +109,25 @@ frictions:
   - description: Hook notices to read git-conventions, github-integration or an ADR arrived after the action they governed in 6 agents and in me; the docs showed each call was right.
     solution: Suppress a late-read notice when the call was read-only, or load the doc with the Skill at session start.
     severity: nit
-durationSec: 3786
+durationSec: 30788
 models:
-  claude-sonnet-5-5: 336
+  claude-sonnet-5-5: 353
 toolCounts:
-  Bash: 66
+  Bash: 69
   Read: 23
   Grep: 2
   Workflow: 7
   ToolSearch: 4
   PushNotification: 4
-  Skill: 4
+  Skill: 6
   SendUserFile: 2
   SendMessage: 49
   mcp__github__issue_write: 4
   mcp__github__add_issue_comment: 7
   mcp__github__create_pull_request: 6
   mcp__claude-code-remote__subscribe_pr_activity: 5
-  Write: 3
-  ReadNotifications: 5
+  Write: 4
+  ReadNotifications: 7
   mcp__claude-code-remote__get_session: 1
 filesEdited:
   - .agents/skills/glassbox-curate/SKILL.md
@@ -1924,42 +1924,42 @@ subagents:
     durationSec: 1750
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 1
+    tokenShare: 0.9
   - type: general-purpose
     task: a230d51097ebd9182
     model: claude-sonnet-5-5
     durationSec: 1592
     toolCalls: 10
     modelCalls: 7
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: general-purpose
     task: a2e7e27cda8c90de6
     model: claude-sonnet-5-5
     durationSec: 1594
     toolCalls: 10
     modelCalls: 7
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: general-purpose
     task: a36aa035c331ce51a
     model: claude-sonnet-5-5
     durationSec: 1464
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 0.8
+    tokenShare: 0.7
   - type: general-purpose
     task: a36e35e9a150763df
     model: claude-sonnet-5-5
     durationSec: 1847
     toolCalls: 40
     modelCalls: 26
-    tokenShare: 4.3
+    tokenShare: 3.9
   - type: general-purpose
     task: a37edaf76916f610d
     model: claude-sonnet-5-5
     durationSec: 1849
     toolCalls: 36
     modelCalls: 29
-    tokenShare: 3.2
+    tokenShare: 2.9
   - type: general-purpose
     task: a39ead609b678ccd9
     model: claude-sonnet-5-5
@@ -1973,7 +1973,7 @@ subagents:
     durationSec: 1398
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: general-purpose
     task: a413ba9cd3a69f737
     model: claude-sonnet-5-5
@@ -1994,7 +1994,7 @@ subagents:
     durationSec: 1849
     toolCalls: 76
     modelCalls: 50
-    tokenShare: 6.9
+    tokenShare: 6.3
   - type: general-purpose
     task: a60fef104a404343e
     model: claude-sonnet-5-5
@@ -2008,14 +2008,14 @@ subagents:
     durationSec: 1595
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 1
+    tokenShare: 0.9
   - type: general-purpose
     task: a96869678319c2ef6
     model: claude-sonnet-5-5
     durationSec: 1591
     toolCalls: 11
     modelCalls: 10
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: general-purpose
     task: aabba6794cd222464
     model: claude-sonnet-5-5
@@ -2029,49 +2029,49 @@ subagents:
     durationSec: 1751
     toolCalls: 10
     modelCalls: 7
-    tokenShare: 1.7
+    tokenShare: 1.5
   - type: general-purpose
     task: acb21629a04823fe2
     model: claude-sonnet-5-5
     durationSec: 1453
     toolCalls: 13
     modelCalls: 10
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: general-purpose
     task: acdebbd9ec2d4c1c1
     model: claude-sonnet-5-5
     durationSec: 1848
     toolCalls: 33
     modelCalls: 25
-    tokenShare: 2.9
+    tokenShare: 2.7
   - type: general-purpose
     task: ad4814d58c7a6bff4
     model: claude-sonnet-5-5
     durationSec: 1744
     toolCalls: 11
     modelCalls: 6
-    tokenShare: 1.1
+    tokenShare: 1
   - type: general-purpose
     task: ae12c2d9c32cb05f1
     model: claude-sonnet-5-5
     durationSec: 1619
     toolCalls: 13
     modelCalls: 8
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: general-purpose
     task: aebe3b57162e7c713
     model: claude-sonnet-5-5
     durationSec: 1847
     toolCalls: 44
     modelCalls: 37
-    tokenShare: 5
+    tokenShare: 4.5
   - type: general-purpose
     task: af8d419cfebbdfd91
     model: claude-sonnet-5-5
     durationSec: 1619
     toolCalls: 9
     modelCalls: 7
-    tokenShare: 1
+    tokenShare: 0.9
   - type: workflow-subagent
     task: Standards cb-3387-visitor-brief-traps r2
     model: claude-sonnet-5-5
@@ -2092,21 +2092,21 @@ subagents:
     durationSec: 14
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 0.4
+    tokenShare: 0.3
   - type: workflow-subagent
     task: Spec cb-3370-glassbox-curate-loop r2
     model: claude-sonnet-5-5
     durationSec: 9
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 0.4
+    tokenShare: 0.3
   - type: workflow-subagent
     task: Spec cb-3386-journal-landing-text r2
     model: claude-sonnet-5-5
     durationSec: 33
     toolCalls: 9
     modelCalls: 7
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: Standards cb-3386-journal-landing-text r2
     model: claude-sonnet-5-5
@@ -2120,98 +2120,98 @@ subagents:
     durationSec: 86
     toolCalls: 19
     modelCalls: 8
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: workflow-subagent
     task: "triage #3381"
     model: claude-sonnet-5-5
     durationSec: 99
     toolCalls: 25
     modelCalls: 9
-    tokenShare: 1.7
+    tokenShare: 1.6
   - type: workflow-subagent
     task: "triage #3386"
     model: claude-sonnet-5-5
     durationSec: 83
     toolCalls: 17
     modelCalls: 8
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: workflow-subagent
     task: "triage #3387"
     model: claude-sonnet-5-5
     durationSec: 94
     toolCalls: 18
     modelCalls: 9
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: "triage #3370"
     model: claude-sonnet-5-5
     durationSec: 104
     toolCalls: 22
     modelCalls: 12
-    tokenShare: 2.2
+    tokenShare: 2
   - type: workflow-subagent
     task: "triage #3340"
     model: claude-sonnet-5-5
     durationSec: 31
     toolCalls: 10
     modelCalls: 6
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: Spec cb-3387-visitor-brief-traps r1
     model: claude-sonnet-5-5
     durationSec: 18
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.4
+    tokenShare: 0.3
   - type: workflow-subagent
     task: Standards cb-3386-journal-landing-text r1
     model: claude-sonnet-5-5
     durationSec: 22
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 0.5
+    tokenShare: 0.4
   - type: workflow-subagent
     task: Standards cb-3385-404-links r1
     model: claude-sonnet-5-5
     durationSec: 18
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 0.5
+    tokenShare: 0.4
   - type: workflow-subagent
     task: build cb-3370-glassbox-curate-loop
     model: claude-sonnet-5-5
     durationSec: 103
     toolCalls: 24
     modelCalls: 14
-    tokenShare: 1.7
+    tokenShare: 1.6
   - type: workflow-subagent
     task: build cb-3385-404-links
     model: claude-sonnet-5-5
     durationSec: 254
     toolCalls: 27
     modelCalls: 20
-    tokenShare: 1.7
+    tokenShare: 1.6
   - type: workflow-subagent
     task: Spec cb-3370-glassbox-curate-loop r1
     model: claude-sonnet-5-5
     durationSec: 21
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.4
+    tokenShare: 0.3
   - type: workflow-subagent
     task: build cb-3386-journal-landing-text
     model: claude-sonnet-5-5
     durationSec: 259
     toolCalls: 48
     modelCalls: 27
-    tokenShare: 3
+    tokenShare: 2.8
   - type: workflow-subagent
     task: Spec cb-3385-404-links r1
     model: claude-sonnet-5-5
     durationSec: 11
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.4
+    tokenShare: 0.3
   - type: workflow-subagent
     task: Spec cb-3386-journal-landing-text r1
     model: claude-sonnet-5-5
@@ -2225,14 +2225,14 @@ subagents:
     durationSec: 20
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 1
+    tokenShare: 0.9
   - type: workflow-subagent
     task: build cb-3387-visitor-brief-traps
     model: claude-sonnet-5-5
     durationSec: 98
     toolCalls: 21
     modelCalls: 14
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: Standards cb-3370-glassbox-curate-loop r1
     model: claude-sonnet-5-5
@@ -2246,21 +2246,21 @@ subagents:
     durationSec: 27
     toolCalls: 8
     modelCalls: 4
-    tokenShare: 0.5
+    tokenShare: 0.4
   - type: workflow-subagent
     task: build cb-3381-homepage-tap-targets
     model: claude-sonnet-5-5
     durationSec: 230
     toolCalls: 25
     modelCalls: 20
-    tokenShare: 2.2
+    tokenShare: 2
   - type: workflow-subagent
     task: Spec cb-3381-homepage-tap-targets r1
     model: claude-sonnet-5-5
     durationSec: 17
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.4
+    tokenShare: 0.3
   - type: workflow-subagent
     task: Standards cb-3381-homepage-tap-targets r2
     model: claude-sonnet-5-5
@@ -2274,7 +2274,7 @@ subagents:
     durationSec: 14
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.4
+    tokenShare: 0.3
 gitBranch: ccr-68836d97-r5ti8y
 entrypoint: remote_mobile
 cliVersion: 2.1.325
