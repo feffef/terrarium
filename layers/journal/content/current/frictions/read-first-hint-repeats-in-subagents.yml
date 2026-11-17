@@ -19,11 +19,6 @@ fixes:
     date: "2026-11-12"
     summary: "read-first-hint.ts no longer fires the git-conventions hint for git rev-parse or a list-only git branch."
 occurrences:
-  - session: session_013zxzeSkTLmRxa2PWgt3kPw
-    date: "2026-11-02"
-    severity: nit
-    description: "Several subagents ran git log/show before reading docs/agents/git-conventions.md, which CLAUDE.md requires first"
-    solution: "Name git-conventions.md in the rater, researcher and writer briefs' read-first lists"
   - session: session_013zxzeSiYFQ3mgaCyMXicwp
     date: "2026-11-12"
     severity: minor

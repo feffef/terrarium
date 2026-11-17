@@ -79,3 +79,18 @@ occurrences:
     severity: nit
     description: "A foreground sleep wait was blocked by a hook, wasting one call."
     solution: "Wait for subagent notifications by ending the turn."
+  - session: session_013zxzeQsCq5g9jeQpmsULPZ
+    date: "2026-11-16"
+    severity: nit
+    description: "A Monitor loop using pgrep -f matched its own command line and ended at once, giving a false idle signal."
+    solution: "CLAUDE.md already warns against pgrep -f; wait on the agent notification instead."
+  - session: session_013zxzeNd2Fg2jp3GvNmr9mb
+    date: "2026-11-15"
+    severity: nit
+    description: "I used pgrep -f to find a preview PID for stopping it, against CLAUDE.md's pgrep -f warning; the server was already gone."
+    solution: "Capture the PID printed by preview start."
+  - session: session_013zxzeP4NViUQL8i9LwF7Nj
+    date: "2026-11-16"
+    severity: nit
+    description: "Waited on a background capture with an until-loop over pgrep -f, which CLAUDE.md says never to do because it matches itself; it happened to finish."
+    solution: "Wait on the task's completion notification or a log-file marker, as CLAUDE.md says; a guard could deny pgrep -f in an until loop."

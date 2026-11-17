@@ -14,36 +14,6 @@ fixes:
     date: "2026-10-15"
     summary: "Hint now says a late read that clears the call is not a Friction."
 occurrences:
-  - session: session_013zxzeSaEvHWNU8EdNqcqGG
-    date: "2026-11-02"
-    severity: nit
-    description: "I ran gh search and git fetch-style calls before reading github-integration.md and git-conventions.md; hooks flagged each read late. Read-only, no harm."
-    solution: "Read the two docs as the first step of any scheduled run that touches git or GitHub."
-  - session: session_013zxzeR2kopqGDtf5GQztz6
-    date: "2026-11-02"
-    severity: nit
-    description: "Ran git fetch and git log before reading docs/agents/git-conventions.md, against CLAUDE.md's docs-first rule; no harm here as both were read-only lookups."
-    solution: "Read git-conventions.md before the first non-read-only git command, as the PostToolUse hint said."
-  - session: session_013zxzeRNoKQn8q3NtVRPDyk
-    date: "2026-11-02"
-    severity: minor
-    description: "Broke CLAUDE.md 'Before your first git command' by running fetch and rebase before reading git-conventions.md; harmless here, branch had no commits."
-    solution: "The read-first hint fired after the call; read git-conventions.md before any state-changing git command."
-  - session: session_013zxzeSkTLmRxa2PWgt3kPw
-    date: "2026-11-02"
-    severity: nit
-    description: "CLAUDE.md says read triage-labels.md before filing an issue; I only grepped it for needs-triage and filed #2786 first"
-    solution: "Read the doc whole before the first issue_write; the hook reminder arrived after the call"
-  - session: session_013zxzeQ61FGG5kRKhi89YE9
-    date: "2026-11-02"
-    severity: nit
-    description: "Ran git fetch and checkout before reading docs/agents/git-conventions.md, which CLAUDE.md requires before the first non-read-only git command."
-    solution: "Read the doc in the same turn before the first git command; the hook caught it after the fact."
-  - session: session_013zxzeQBuD3C4A1V2DpoHYu
-    date: "2026-11-02"
-    severity: nit
-    description: "Read docs/agents/git-conventions.md only after my first fetch; the hook reminded me afterwards."
-    solution: "Read the doc before the first non-read-only git command."
   - session: session_013zxzeR8CEiWCmTmvjhCZ1A
     date: "2026-11-03"
     severity: nit
@@ -54,11 +24,6 @@ occurrences:
     severity: minor
     description: "Ran git rev-parse HEAD before reading docs/agents/git-conventions.md, which CLAUDE.md orders before the first git command beyond read-only ones."
     solution: "Read the doc first; the hook caught it and the late read changed nothing."
-  - session: session_013zxzeQCoXnRxbyzhHyy3M1
-    date: "2026-11-02"
-    severity: minor
-    description: "Ran git log on README.md and git fetch to judge staleness before reading docs/agents/git-conventions.md, breaking CLAUDE.md's first-git-command rule"
-    solution: "Low impact here; a PreToolUse hint on the first log/fetch would catch it before the call rather than after"
   - session: session_013zxzeSrSkYPpnoS2ag6EbC
     date: "2026-11-03"
     severity: nit
@@ -619,3 +584,38 @@ occurrences:
     severity: nit
     description: "Ran gh api issue reads and several git commands before reading github-integration.md and git-conventions.md; hooks flagged it. Reads only, no harm."
     solution: "Name both read-first docs in audit-skills step 1 (already suggested by earlier runs)."
+  - session: session_013zxzeSyRCdzfotAbmBuiPp
+    date: "2026-11-16"
+    severity: nit
+    description: "Read git-conventions.md and github-integration.md only after my first git and GitHub operations (git log, push-adjacent calls and issue reads), as the hooks flagged."
+    solution: "Read the three required docs first when a Skill run starts; the Skill could list them."
+  - session: session_013zxzePSjuKdFtiNUSC531Y
+    date: "2026-11-16"
+    severity: nit
+    description: "Read docs/agents/github-integration.md only after create_pull_request, though CLAUDE.md says read it before the first GitHub operation."
+    solution: "Read it with the git and PR docs at start; a hook only reminds after the call."
+  - session: session_013zxzeQsCq5g9jeQpmsULPZ
+    date: "2026-11-16"
+    severity: nit
+    description: "Ran git fetch before reading git-conventions.md and filed the issue with labels before reading triage-labels.md (only grepped it), both CLAUDE.md read-first triggers; no harm came of it."
+    solution: "Read the doc at the first trigger; the hooks flagged both late."
+  - session: session_013zxzeRCPF7mHwN6aT8t7RQ
+    date: "2026-11-16"
+    severity: nit
+    description: "Ran git apply and git restore on the sample edits before reading git-conventions.md; the hook told me only afterwards. The restore was safe because I had saved the patch."
+    solution: "List docs/agents/git-conventions.md in the clear-backlog Skill's section 2 (samples), where it first runs git."
+  - session: session_013zxzeSgpoaGQ1bLrtX4DkU
+    date: "2026-11-17"
+    severity: nit
+    description: "First git commit came before reading git-conventions.md and I read dispatch-subagents only after the first Agent call; the guards had to nudge me."
+    solution: "Load these doc triggers with the digest Skill itself, so the reads precede the first git or Agent call."
+  - session: session_013zxzeTBn6kP1nZ2KA22n9i
+    date: "2026-11-17"
+    severity: nit
+    description: "Ran git fetch before reading git-conventions.md, which CLAUDE.md requires before the first non-read-only git command; the hook flagged it. The fetch was harmless."
+    solution: "Read git-conventions.md in the same first call as the scorecard step, or have the Skill's step 1 name it."
+  - session: session_013zxzeP4NViUQL8i9LwF7Nj
+    date: "2026-11-16"
+    severity: nit
+    description: "Worked on the Journal layer without reading layers/journal/GLOSSARY.md; the tenant-glossary rule only loaded after I had read the page, so label words like Friction and Goal went unchecked against it."
+    solution: "Load the tenant-glossary rule when a prompt names a Tenant URL such as /t/journal/, or have a path hook list the layer's GLOSSARY.md."

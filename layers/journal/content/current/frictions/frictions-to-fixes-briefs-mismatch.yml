@@ -31,11 +31,6 @@ fixes:
     date: "2026-11-11"
     summary: "survey-brief.md: for a closed regression issue, read closed_by_pull_requests (issue_read) and cite any PR that closed it."
 occurrences:
-  - session: session_013zxzeQqRBLg9tUfsbNCCz8
-    date: "2026-11-02"
-    severity: minor
-    description: "Survey and design briefs assume doc-based Frictions and a date field in list-merges-since output; both were moot or missing for a script fix."
-    solution: "Say which brief steps are skipped for a script fix, and add merge dates to list-merges-since."
   - session: session_013zxzeSrSkYPpnoS2ag6EbC
     date: "2026-11-03"
     severity: minor

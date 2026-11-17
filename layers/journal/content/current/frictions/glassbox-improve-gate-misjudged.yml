@@ -8,11 +8,6 @@ fixes:
     date: "2026-11-03"
     summary: "glassbox-improve v3 follow-up: grades.ts gate gives a move's or section's receiving page the question 'this page RECEIVES the facts, moved here', so judges no longer read it as taking facts off the page (#2816)."
 occurrences:
-  - session: session_013zxzeQZYwzDuf4JEncnqAa
-    date: "2026-11-02"
-    severity: minor
-    description: "A judge misread a move's direction on session-logs, read the target as the source, and voted against it"
-    solution: "judge-brief should name a move's source and target pages explicitly"
   - session: session_013zxzeSAtjCQiatdUuuFCRJ
     date: "2026-11-03"
     severity: moderate

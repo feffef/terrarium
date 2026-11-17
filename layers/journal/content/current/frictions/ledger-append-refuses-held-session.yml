@@ -46,3 +46,8 @@ occurrences:
     severity: minor
     description: "Survey subagent: brief 2.1's once-per-entry rule means a session's second Friction with the same cause is never stored, so --unledgered offers it again every run (about 25 this run)."
     solution: "Let extract-frictions --unledgered drop a Friction whose session already sits in the entry it would match, or accept the re-offer in the brief."
+  - session: session_013zxzeSyRCdzfotAbmBuiPp
+    date: "2026-11-16"
+    severity: minor
+    description: "Survey report's window start was ambiguous (extract-frictions prefix 2026-11-13T02:27 versus first session 2026-11-12T23:06) and its ledger append refused all 84 triples over 15 held sessions, needing a throwaway filter script."
+    solution: "Print one canonical window start; let print-ledger-occurrence --append skip held sessions with a flag."

@@ -8,21 +8,6 @@ ref: "issue #2167 closed 2026-10-23: owner kept bash-rules-hint.ts as is; no ope
 notes: |-
   2026-11-08 design: narrow mermaid-lanes.md paths to the Glass Box walkthroughs dropped: .claude/rules/** is Human-only, a nit, and the tenant.config.ts rules are right for editing (RCCqrx agreed); issue #2167 already closed with the loader kept
 occurrences:
-  - session: session_013zxzeRrC6V68k1QwREpWtf
-    date: "2026-11-02"
-    severity: minor
-    description: "Many unrelated ADR rules loaded into reviewer and checker subagents when they read ADRs, adding noise to their verdict reports."
-    solution: "Narrower rule paths, or tell read-only auditors that rule verdicts are unneeded."
-  - session: session_013zxzeRrK38XMhpkF7RSfp2
-    date: "2026-11-02"
-    severity: nit
-    description: "Path-scoped rules (tenant-layers, data-shapes, mdc, adr-0002) loaded by merely reading the blog tenant.config.ts for tags; none applied to a content post."
-    solution: "Narrow those rules' paths so a read-only look at a config for its tag list does not load them."
-  - session: session_013zxzeSbc2WJGVqnu6YVjXr
-    date: "2026-11-02"
-    severity: nit
-    description: "adr-0004-human-merge rule fired on merely reading ADR files, saying 'You just touched a Human-only file' when nothing was edited"
-    solution: "Fire that rule only on edits, or reword it for reads"
   - session: session_013zxzeShpLwnUmQEGZdog9F
     date: "2026-11-05"
     severity: nit

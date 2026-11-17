@@ -47,3 +47,13 @@ occurrences:
     severity: nit
     description: "SubagentStart rule-use step made read-only visitors spend two Bash echo calls each, reported by the blind visitor's retro (unverified at the hook source)."
     solution: "Exempt read-only visitor subagents from the rule-use step in the SubagentStart hook."
+  - session: session_013zxzeTChey8pdC2fuTTH7i
+    date: "2026-11-16"
+    severity: minor
+    description: "The rule-use echo hook ran twice for read-only builders and reviewers, reported by 18 of the 20 agents asked, with no use for the work."
+    solution: "Skip the SubagentStart rule-use echo for read-only agents, or make it one call (scripts/hooks)."
+  - session: session_013zxzeRCPF7mHwN6aT8t7RQ
+    date: "2026-11-16"
+    severity: minor
+    description: "The rule-use echo hook asked 18 of 23 small-task or read-only agents for two extra Bash calls each, for rules they judged unrelated; the overhead was reported by builders and reviewers."
+    solution: "Ask for rule-use once at the end, and skip it for read-only reviewers (hook scripts under scripts/hooks)."

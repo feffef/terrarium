@@ -8,11 +8,6 @@ fixes:
     date: "2026-11-04"
     summary: "owner-corrections.ts fetches with a 60 s timeout and visitor-loop step 3 says to run it alone in the background."
 occurrences:
-  - session: session_013zxzeQ61FGG5kRKhi89YE9
-    date: "2026-11-02"
-    severity: minor
-    description: "owner-corrections.ts takes over two minutes; its output got mixed with other commands in one call, so I reran it to a file."
-    solution: "Run it alone, to a file, in the background, as SKILL step 3 could say."
   - session: session_013zxzePCZc7PkwLBo6YoDJt
     date: "2026-11-03"
     severity: minor

@@ -76,3 +76,8 @@ occurrences:
     severity: minor
     description: "glassbox-curate asks for a Scout, fresh readers, a claim checker and a full read of every linked page; with an interactive ask I skipped most of that and read only three pages, so the review had to flag it."
     solution: "Say in the Skill which steps an interactive, chips-and-terms-only run may skip, so the choice is not an improvised deviation."
+  - session: session_013zxzePak78Sud7pyRQMjeV
+    date: "2026-11-15"
+    severity: minor
+    description: "The Skill wants every page the review names read in full before landing; I read only the inventory lines of four overlapping pages, to save budget."
+    solution: "Say in Land whether a grep of the overlap is enough when the added claim is narrow."

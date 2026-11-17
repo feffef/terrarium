@@ -23,3 +23,8 @@ occurrences:
     severity: minor
     description: "Previewing needed a temporary copy of a real log in the content folder and a hand-written Playwright script, and the original card's head was not clickable, so no side-by-side shot."
     solution: "A preview option that takes a fixture session log and expands a named card would spare the manual steps."
+  - session: session_013zxzeNd2Fg2jp3GvNmr9mb
+    date: "2026-11-15"
+    severity: minor
+    description: "Finding a log with the new values took three screenshot-script runs; the feed holds 180 cards and a card id lookup timed out."
+    solution: "A preview flag or script that opens a card by session id."

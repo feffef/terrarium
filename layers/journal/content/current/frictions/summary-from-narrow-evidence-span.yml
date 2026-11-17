@@ -4,8 +4,9 @@ summary: >-
 cause: >-
   A summary is drawn from the latest slice of the evidence, without asking what span it must cover, and is redone over the whole history.
 surface: safe
-status: tracked
-ref: "#3363"
+status: open
+notes: |-
+  2026-11-17 survey: issue #3363 closed completed 2026-11-16 by PR #3376, a ledger-only split (not a fix); status reset from tracked.
 occurrences:
   - session: session_013zxzePNLUgD6AbfEmXykEJ
     date: "2026-11-15"

@@ -86,3 +86,8 @@ occurrences:
     severity: nit
     description: "A wide git show of close-session.yml to check one field dumped its whole 40-day observations list into context."
     solution: "Read only the lines needed (sed range or grep) when checking one field of a data file."
+  - session: session_013zxzeT29epAaAQNqmHmeU4
+    date: "2026-11-16"
+    severity: nit
+    description: "list-merges-since.ts prints about 3,700 lines for a 4-day window and shows only branch names; I used git log with name-only for file evidence instead."
+    solution: "Step 3 could name the merges-only flag or the name-only log; rejected earlier in #3191."

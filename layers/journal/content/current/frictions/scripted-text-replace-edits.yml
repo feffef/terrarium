@@ -11,11 +11,6 @@ notes: |-
   2026-11-13 design: run-entry writer script or Skill line dropped: only 2 of the 4 new occurrences hit run-entry YAML (both nits, caught in-run), the wrapping is the session's own and no script owns the entry.
   2026-11-14 design: no change: a guard or prose line dropped: every slip was caught by an assertion, diff or git, a guard is Human-only and would flag legitimate migration scripts. Cause text cites a CLAUDE.md Read-tool rule that is not in CLAUDE.md.
 occurrences:
-  - session: session_013zxzeSaEvHWNU8EdNqcqGG
-    date: "2026-11-02"
-    severity: minor
-    description: "Round-tripping 11 Inventory files through the yaml package reformatted about 2,600 lines; I reverted and redid the edit as a text splice."
-    solution: "audit-skills step 5 could name a script that appends an observation without reparsing the file."
   - session: session_013zxzeSSjEgB5DvGmrLdxP9
     date: "2026-11-05"
     severity: minor
