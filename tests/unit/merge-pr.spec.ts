@@ -497,6 +497,37 @@ describe('verdictRefusal() (issues #1276, #1844)', () => {
       expect(refusal).toContain(`head is ${head}`)
     }
   })
+
+  describe('Own-read verdict (#3395)', () => {
+    const ownRead = `Own-read: ${head}`
+    const edit = [{ filename: 'a.ts', status: 'modified' }]
+
+    it('accepts it for a diff that only modifies or removes files', () => {
+      const files = [...edit, { filename: 'b.ts', status: 'removed' }]
+      expect(verdictRefusal(owner(header(me, ownRead)), me, head, files)).toBeNull()
+    })
+
+    it('refuses it when the PR adds a file, saying a Reviewed line is needed', () => {
+      const refusal = verdictRefusal(owner(header(me, ownRead)), me, head, [...edit, { filename: 'n.ts', status: 'added' }])
+      expect(refusal).toContain('n.ts')
+      expect(refusal).toMatch(/Reviewed: /)
+    })
+
+    it('refuses it when the PR renames a file', () => {
+      const renamed = { filename: 'new.ts', previousFilename: 'old.ts', status: 'renamed' }
+      expect(verdictRefusal(owner(header(me, ownRead)), me, head, [renamed])).toContain('new.ts')
+    })
+
+    it('still accepts a Reviewed line for a larger diff', () => {
+      const files = [{ filename: 'n.ts', status: 'added' }]
+      expect(verdictRefusal(owner(header(me)), me, head, files)).toBeNull()
+    })
+
+    it('refuses an Own-read line naming an older commit', () => {
+      const refusal = verdictRefusal(owner(header(me, 'Own-read: fedcba9')), me, head, edit)
+      expect(refusal).toContain('names fedcba9')
+    })
+  })
 })
 
 describe('humanMergeRefusal() — the Human-only paths (ADR-0004)', () => {
