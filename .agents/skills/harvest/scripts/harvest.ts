@@ -216,8 +216,7 @@ export function summaryOf(yamlText: string): string {
 /** The tests of step 3, and the fields a cluster record carries. */
 const TESTS = ['unbuilt', 'unfiled', 'unrejected', 'ledger', 'simplifying', 'unacted'] as const
 
-/** What is wrong with the per-cluster record (empty: fine). It opens with a `stopped:`
- *  line saying why clustering ended. A cluster is a `## ` block of
+/** What is wrong with the per-cluster record (empty: fine). A cluster is a `## ` block of
  *  `field: value` lines. An open one holds evidence for every test (`simplifying` only
  *  when workflow); a dropped one holds the evidence of the test it failed. Product
  *  clusters come before the first workflow one. */

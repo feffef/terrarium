@@ -37,7 +37,7 @@ harvests both.
    rules, ADRs, Skills, guards, hooks, the gate, scripts agents run). The label
    outranks recency: check every product cluster before the first workflow one.
    Stop when step 4's quota is filled or 30 clusters have been checked; write why
-   as a one-line `stopped:` before the first cluster in step 3's file.
+   as `stopped: <why>` atop step 3's file.
 3. **Check relevance.** Write `<scratchpad>/harvest-checks.md`, one block per
    cluster, product clusters first: a `## <name>` line, then `label:`
    (product or workflow), `entries:` (their numbers), `sessions:` (a count), one
