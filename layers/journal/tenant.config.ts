@@ -37,9 +37,8 @@ export const skillSchema = z
     // `pnpm verify:skills-lock --write`. Absent on our own Skills.
     installedSha256: z.string().optional(),
     // What to watch for in each run: plain, checkable sentences a behaviour
-    // check grades as held, failed or couldn't tell. Written by a person or
-    // the Skill's author, never by `audit-skills`; no PR/issue/session ids,
-    // like `role` (ADR-0015). Not rendered on the site.
+    // check grades as held, failed or couldn't tell. Owner-written (ADR-0015);
+    // no PR/issue/session ids, like `role`. Not rendered on the site.
     watchFor: z
       .array(z.string().refine((v) => !/#\d+|session_01/.test(v), 'cites a PR, issue or session id; those go in observations'))
       .optional(),

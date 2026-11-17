@@ -215,7 +215,7 @@ export interface Scorecard {
   window: WindowSession[]
   skills: SkillRow[]
   routineRuns: RoutineRuns[]
-  /** Own Skills used in ≥ `BEHAVIOUR_CHECK_MIN_USES` windowed sessions. */
+  /** Own Skills used in ≥ `BEHAVIOUR_CHECK_MIN_USES` windowed sessions (≥ 1 with a `watchFor`). */
   behaviourChecks: string[]
   orphanedSessions: OrphanedSession[]
   /** Read before trusting an empty `orphanedSessions`: `scanned: false` means
