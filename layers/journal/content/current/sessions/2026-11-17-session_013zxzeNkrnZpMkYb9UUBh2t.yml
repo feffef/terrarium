@@ -1,0 +1,271 @@
+schemaVersion: 1
+session: session_013zxzeNkrnZpMkYb9UUBh2t
+startedAt: 2026-11-17T16:02:57Z
+endedAt: 2026-11-17T16:09:32Z
+kind: autonomous
+goal: Scheduled visitor-loop run on the Atlas
+status: completed
+outcome: "Three visitors toured the Atlas; 1 bug filed as #3430, 10 ideas and 1 learning logged, report posted to #3244"
+summary: "Scheduled run (no human prompt) of the visitor-loop Skill, focus atlas (rotation row 0). Built and served the production preview, wrote a context file, and sent a blind first-time visitor, an informed content editor and an informed UI tester (all Sonnet) through the Atlas. Checked each reported item against source and the rendered page: one confirmed bug (Atlas muted text and small accent labels under 4.5:1 contrast, filed as #3430), five findings not reproduced (duplicate links, inline link size, breadcrumb wrap, an unlinked Plate I that is linked, duplicated relations text), three dropped by the Atlas ruling in its GLOSSARY (random page, cross-Biome relations graph and species index, #1984). Ran the retro with all three visitors and posted the report on #3244. Everything was agent-initiated under the Skill; no human instruction. No branch or PR."
+prs: []
+docsRead:
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: scripts/lib/chromium.ts
+    reason: (no reason given)
+  - path: layers/atlas/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/visitor-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: visitor-loop
+    reason: (invoked as a slash command)
+frictions:
+  - description: Dispatch-read guard denied the three visitor Agent calls until I read dispatch-subagents; visitor-loop step 2 does not mention it.
+    solution: Point visitor-loop step 2 at the dispatch-subagents Skill, or read it before composing the briefs.
+    severity: nit
+  - description: Ran git fetch before reading git-conventions.md, which CLAUDE.md requires before any non-read-only git command; the hook flagged it.
+    solution: Read the doc first when a Skill's step 1 starts with a git command.
+    severity: nit
+durationSec: 394
+models:
+  claude-sonnet-5-5: 76
+toolCounts:
+  Bash: 22
+  Read: 3
+  Agent: 6
+  ToolSearch: 2
+  mcp__github__issue_write: 1
+  mcp__github__issue_read: 2
+  SendMessage: 3
+  ReadNotifications: 1
+  mcp__github__add_issue_comment: 1
+  Skill: 1
+  PushNotification: 1
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/dispatch-subagents/SKILL.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/github-integration.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/github-integration.md
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: header on issue and comment
+      - path: .claude/rules/adr-0003.md
+        value: confirmed
+        why: "agreed: no branch or PR"
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0028.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/glossary-terms.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: .claude/rules/tenant-layers.md
+        value: unrelated
+      - path: .claude/rules/ui-verification.md
+        value: unrelated
+      - path: .claude/rules/adr-0022.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: steered
+        why: Atlas ruling dropped three ideas
+      - path: docs/agents/github-integration.md
+      - path: docs/agents/issue-tracker.md
+      - path: .agents/skills/visitor-loop/decisions.md
+  - by: general-purpose
+    subagent: 3
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 4
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/atlas/GLOSSARY.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/atlas/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/atlas/GLOSSARY.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+    reported:
+      - path: .claude/rules/tenant-glossary.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: layers/atlas/GLOSSARY.md
+  - by: general-purpose
+    subagent: 5
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+subagents:
+  - type: general-purpose
+    task: Blind first-time visitor
+    model: sonnet
+    denied: true
+  - type: general-purpose
+    task: Informed content editor
+    model: sonnet
+    denied: true
+  - type: general-purpose
+    task: Informed UI tester
+    model: sonnet
+    denied: true
+  - type: general-purpose
+    task: Blind first-time visitor
+    model: sonnet
+    durationSec: 147
+    toolCalls: 10
+    modelCalls: 10
+    tokenShare: 11
+  - type: general-purpose
+    task: Informed content editor
+    model: sonnet
+    durationSec: 144
+    toolCalls: 11
+    modelCalls: 10
+    tokenShare: 13.8
+  - type: general-purpose
+    task: Informed UI tester
+    model: sonnet
+    durationSec: 141
+    toolCalls: 10
+    modelCalls: 7
+    tokenShare: 9.5
+gitBranch: claude/lucid-heisenberg-nagsrk
+entrypoint: remote_trigger
+cliVersion: 2.1.326
+trigger: visitor-loop
+learnings:
+  - Chromium reports tinted backgrounds as `color(srgb r g b)`; a contrast script parsing only rgb() reads them wrong and gives bogus ratios, so convert or use a screenshot pixel.
+ideas:
+  - "[blind, content editor] /t/atlas and Specimen pages: the last Observation is dated 2026-10-19 and Aranea patiens' newest sighting is 2026-07-30 while the dial says Day 320. Add a few Observations dated up to today so the log reads as live (dates on or before today, per the Atlas ruling)."
+  - "[content editor] /t/atlas/pool/echo-cantans: the prose says nine reports but the ledger lists 3; 'never twice by the same observer' contradicts the 2026-06-20 and 2026-08-19 sightings; 'the plate overleaf' means nothing on a web page. Reconcile the count, change the 08-19 observer, say 'above'."
+  - "[blind, content editor] Specimen pages: Plate numbers run I to XXIV across 15 Specimens with gaps (V, X, XII, XIII, XV, XVI, XVIII to XX). One line on a Biome landing could say unfilled numbers are plates not yet drawn, so the gaps read as intended."
+  - "[blind, content editor] /t/atlas: the lede says 'Start with a wing' then 'Choose a wing, and go quietly', and a long essay precedes the seasonal dial. Drop the repeated sentence and consider putting the dial and Abroad-now list before the essay."
+  - "[blind] /t/atlas/<biome>/<unknown slug>: a 404 for a common name such as /lantern-moth dead-ends with only back links. Suggest the matching Specimen ('Did you mean Lumina fabulae, the lantern moth?') by matching common names within that Biome."
+  - "[content editor] Specimen pages: stock lines are reused ('never twice by the same observer' on the legend, Echo cantans and Lumina fabulae; the mended-galleries anecdote on Formica textrix and Textor absens; Aranea patiens' 2025-10-03 sighting repeats its phase gloss). Give each its own phrasing or turn the repeat into a callback."
+  - "[UI tester] /t/atlas/canopy/umbra-vacans: only a back link and 'all of The Canopy' exist. Add previous and next Specimen links within the Biome so a visitor can keep browsing in sequence."
+  - "[UI tester] /t/atlas/canopy and its sibling Biomes: on a 390px phone about 800px of prose comes before the first Specimen card. Put the cards first, or fold the prose under 'About this wing'; the cropped food web stays visible per the owner ruling."
+  - "[content editor] Biome landings: the food web is text-free on phones. Add a one-line caption naming the apex and one oddity (for example the beetle that fears the mender) so the story survives without reading arrows."
+  - "[content editor] /t/atlas: the landing shows four recent sightings, none newer than 2026-10-19. Add a 'this day in the glass' line showing the sighting nearest today's day number from any past year, within one Biome's data so no cross-Biome page is needed."
+landedBy: Stop
