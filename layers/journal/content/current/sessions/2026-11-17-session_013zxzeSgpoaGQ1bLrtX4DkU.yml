@@ -1,0 +1,312 @@
+schemaVersion: 1
+session: session_013zxzeSgpoaGQ1bLrtX4DkU
+startedAt: 2026-11-17T00:15:38Z
+endedAt: 2026-11-17T00:25:30Z
+kind: autonomous
+goal: Write the 2026-11-16 Journal Digest and archive old content
+status: in-review
+outcome: PR 3394 open with the 2026-11-16 Digest and 18 archived files; gate green, awaiting merge
+summary: "Scheduled digest run, no human input. One closed day (2026-11-16) was listed. I gathered its material (21 PRs, 13 sessions, 69 frictions), wrote the Digest, ran the archive sweep (1 Digest and 17 session logs moved), and had a sonnet subagent fact-check it: it found two unsourced weekly cadence words, a stale one-merged-one-opened claim and a mislabel, all fixed. code-review (Standards and Spec subagents) then flagged a third cadence word and a PR listed in both prose and Also shipped; both fixed and the gate rerun green. Opened PR 3394; merging waits on CI and my verdict comment, in a later turn."
+prs:
+  - "3394"
+docsRead:
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: digest
+    reason: (invoked as a slash command)
+frictions:
+  - description: First git commit came before reading git-conventions.md and I read dispatch-subagents only after the first Agent call; the guards had to nudge me.
+    solution: Load these doc triggers with the digest Skill itself, so the reads precede the first git or Agent call.
+    severity: nit
+  - description: I typed the session id by hand in a commit message trailer and got it wrong; I caught it with get_session before committing.
+    solution: Copy the id from the attribution reminder, never retype it.
+    severity: nit
+  - description: The first background gate call stacked run_in_background with a text-level ampersand and the double-background guard blocked it.
+    solution: Pass run_in_background alone with a plain command.
+    severity: nit
+  - description: "My first fact-check was too lenient: it let 'daily' through; the later review caught that cadence word, so I reran the gate once more."
+    solution: Brief the fact-checker to flag every cadence word the Skill lists, not just ones it can disprove.
+    severity: minor
+durationSec: 592
+models:
+  claude-sonnet-5-5: 65
+toolCounts:
+  Bash: 21
+  Read: 4
+  Agent: 3
+  mcp__Claude_Code_Remote__get_session: 1
+  Skill: 3
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-11-16.md
+  - layers/journal/content/archived/pages/digests/2026-11-09.md
+  - layers/journal/content/archived/sessions/2026-11-08-session_013zxzeQaeB8hhL2FFfcQhv7.yml
+  - layers/journal/content/archived/sessions/2026-11-09-session_013zxzeNjRy7tpoybG6YTUM6.yml
+  - layers/journal/content/archived/sessions/2026-11-09-session_013zxzePitVv4rX66ZhZa4kw.yml
+  - layers/journal/content/archived/sessions/2026-11-09-session_013zxzePvPobQ2Cfg3UyUHSt.yml
+  - layers/journal/content/archived/sessions/2026-11-09-session_013zxzeQ93oSKkX5CBEcFiXU.yml
+  - layers/journal/content/archived/sessions/2026-11-09-session_013zxzeQMfaaC4C4CNuFY3EH.yml
+  - layers/journal/content/archived/sessions/2026-11-09-session_013zxzeQyUMxeD3fYivwaeLU.yml
+  - layers/journal/content/archived/sessions/2026-11-09-session_013zxzeR2kKbsT81QWkXUrvK.yml
+  - layers/journal/content/archived/sessions/2026-11-09-session_013zxzeR9Usddfqi4gQ697DR.yml
+  - layers/journal/content/archived/sessions/2026-11-09-session_013zxzeRB6ciegpxcRDfedSF.yml
+  - layers/journal/content/archived/sessions/2026-11-09-session_013zxzeRSMtPAREKXCce9GT6.yml
+  - layers/journal/content/archived/sessions/2026-11-09-session_013zxzeRYFqNFGvBn4FsDkTk.yml
+  - layers/journal/content/archived/sessions/2026-11-09-session_013zxzeRwYp54RD4CM5MiabZ.yml
+  - layers/journal/content/archived/sessions/2026-11-09-session_013zxzeS36fzX6FB2vAr7yRR.yml
+  - layers/journal/content/archived/sessions/2026-11-09-session_013zxzeSKTBjSfYnUxNHTJw1.yml
+  - layers/journal/content/archived/sessions/2026-11-09-session_013zxzeSj1mJxbgdKHbwgK2s.yml
+  - layers/journal/content/archived/sessions/2026-11-09-session_013zxzeTCierbbAWbnFNcAE5.yml
+  - layers/journal/content/current/pages/digests/2026-11-09.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0010.md
+docsReadBySubagents:
+  - .agents/skills/digest/SKILL.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0010.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/dispatch-subagents/SKILL.md
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/dispatch-subagents/SKILL.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+    reported:
+      - path: .claude/rules/adr-0010.md
+        value: steered
+        why: read ADR, Digest never rewritten
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: gate:scoped and code-review before PR
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: provenance header and trailer
+      - path: .claude/rules/adr-0003.md
+        value: confirmed
+        why: "agreed: PR scoped to skill diff"
+      - path: .claude/rules/adr-0009.md
+        value: in-scope
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0030.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: docs/agents/pr-workflow.md
+      - path: docs/agents/git-conventions.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0010.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0010.md
+        value: in-scope
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0015.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/glossary-terms.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0010.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0010.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/tenant-glossary.md
+        value: confirmed
+        why: "n/a:"
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .agents/skills/digest/SKILL.md
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/digest/SKILL.md
+      - rule: .claude/rules/adr-0010.md
+        via: native
+        trigger: .agents/skills/digest/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/digest/SKILL.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0010.md
+        value: in-scope
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+subagents:
+  - type: general-purpose
+    task: Fact-check 2026-11-16 Digest
+    model: sonnet
+    durationSec: 95
+    toolCalls: 20
+    modelCalls: 16
+    tokenShare: 27.1
+  - type: general-purpose
+    task: Standards review of digest diff
+    model: sonnet
+    durationSec: 22
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 5.3
+  - type: general-purpose
+    task: Spec review of digest diff
+    model: sonnet
+    durationSec: 29
+    toolCalls: 7
+    modelCalls: 6
+    tokenShare: 7
+gitBranch: claude/compassionate-lovelace-9q635j
+entrypoint: remote_trigger
+cliVersion: 2.1.326
+trigger: digest
+learnings:
+  - Session goals like 'Weekly check' do not match the routine's real cadence (daily in audit-skills run history), which is why the Skill bars cadence words sourced only from goals.
+landedBy: Stop
