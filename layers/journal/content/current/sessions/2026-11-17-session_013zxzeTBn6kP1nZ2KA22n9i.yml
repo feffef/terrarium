@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeTBn6kP1nZ2KA22n9i
 startedAt: 2026-11-17T00:45:51Z
-endedAt: 2026-11-17T00:59:42Z
+endedAt: 2026-11-17T01:03:08Z
 kind: autonomous
 goal: Weekly check of the Platform's own Skills
-status: in-review
-outcome: Inventory PR 3399 open and green; 4 issues filed, 1 comment; closure signals clean
-summary: Scheduled audit-skills run, so every step was agent-initiated from the stored prompt; no human instruction. Gathered the 7-day scorecard, had a Sonnet subagent fetch usage for 9 unlisted Routine sessions, and ran 16 per-Skill behaviour checks in parallel. Closure signals were clean (0 orphans from 257 merged PRs and 129 issues scanned, no suppressions, no human-prompted closures). Filed 4 issues for repeated verified failures (glassbox-curate skipped review and gate, harvest stops early, simple-change test unsatisfiable for script-written diffs, audit-docs two-commit PR) and commented on 3340 with the unrated-rules evidence. Updated 16 Inventory entries, regraded harvest, glassbox-curate and glassbox-update to routine on scheduled-run evidence, and appended Routine run costs. code-review (Standards and Spec) found a three-sentence summary and a stale role and observation, fixed before the gate. PR 3399 opened after gate:scoped passed; merge still to do.
+status: completed
+outcome: Inventory PR 3399 merged; 4 issues filed, 1 comment; closure signals clean
+summary: Scheduled audit-skills run, so every step was agent-initiated from the stored prompt; no human instruction. Gathered the 7-day scorecard, had a Sonnet subagent fetch usage for 9 unlisted Routine sessions, and ran 16 per-Skill behaviour checks in parallel. Closure signals were clean (0 orphans from 257 merged PRs and 129 issues scanned, no suppressions, no human-prompted closures). Filed 4 issues for repeated verified failures (glassbox-curate skipped review and gate, harvest stops early, simple-change test unsatisfiable for script-written diffs, audit-docs two-commit PR) and commented on 3340 with the unrated-rules evidence. Updated 16 Inventory entries, regraded harvest, glassbox-curate and glassbox-update to routine on scheduled-run evidence, and appended Routine run costs. code-review (Standards and Spec) found a three-sentence summary and a stale role and observation, fixed before the gate. PR 3399 opened after gate:scoped passed, went green on CI and was merged by me (own verdict comment first).
 prs:
   - "3399"
 docsRead:
@@ -88,21 +88,26 @@ frictions:
   - description: The skill cadence validator rejected 'daily' in two new notes, and a truncated session id in another, only at validate:content time.
     solution: Mention in step 5 that validate:content checks cadence words and full ids, so write them right the first time.
     severity: nit
-durationSec: 831
+  - description: The 16 behaviour subagents plus usage lookup and two review agents cost roughly 1.7M subagent tokens, and most reports re-confirmed known repeats.
+    solution: Skip a Skill's check when its data file lists no runs and nothing changed; skip re-reading runs already audited clean.
+    severity: minor
+durationSec: 1037
 models:
-  claude-sonnet-5-5: 143
+  claude-sonnet-5-5: 158
 toolCounts:
-  Bash: 40
+  Bash: 44
   Read: 6
   Agent: 20
   mcp__Claude_Code_Remote__get_session: 1
   ToolSearch: 1
   mcp__github__issue_write: 4
-  mcp__github__add_issue_comment: 1
-  Skill: 3
+  mcp__github__add_issue_comment: 2
+  Skill: 4
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   mcp__github__pull_request_read: 1
+  ReadNotifications: 2
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/skills/glassbox-lesson.yml
   - layers/journal/content/current/skills/glassbox-update.yml
@@ -898,115 +903,115 @@ subagents:
     durationSec: 30
     toolCalls: 13
     modelCalls: 4
-    tokenShare: 2.4
+    tokenShare: 2.3
   - task: Audit skill audit-docs
     model: sonnet
     durationSec: 54
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 3.1
+    tokenShare: 3
   - task: Audit skill audit-skills
     model: sonnet
     durationSec: 75
     toolCalls: 12
     modelCalls: 8
-    tokenShare: 3.7
+    tokenShare: 3.5
   - task: Audit skill blog-post
     model: sonnet
     durationSec: 78
     toolCalls: 16
     modelCalls: 10
-    tokenShare: 4.7
+    tokenShare: 4.5
   - task: Audit skill clear-backlog
     model: sonnet
     durationSec: 89
     toolCalls: 13
     modelCalls: 10
-    tokenShare: 4.1
+    tokenShare: 3.9
   - task: Audit skill close-session
     model: sonnet
     durationSec: 134
     toolCalls: 12
     modelCalls: 10
-    tokenShare: 4
+    tokenShare: 3.9
   - task: Audit skill digest
     model: sonnet
     durationSec: 47
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 3
+    tokenShare: 2.8
   - task: Audit skill dispatch-subagents
     model: sonnet
     durationSec: 113
     toolCalls: 12
     modelCalls: 10
-    tokenShare: 5.3
+    tokenShare: 5
   - task: Audit skill frictions-to-fixes
     model: sonnet
     durationSec: 74
     toolCalls: 11
     modelCalls: 9
-    tokenShare: 4.3
+    tokenShare: 4
   - task: Audit skill glassbox-curate
     model: sonnet
     durationSec: 59
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 2.9
+    tokenShare: 2.8
   - task: Audit skill glassbox-lesson
     model: sonnet
     durationSec: 25
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 2
+    tokenShare: 1.9
   - task: Audit skill glassbox-update
     model: sonnet
     durationSec: 53
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 3.1
+    tokenShare: 3
   - task: Audit skill harvest
     model: sonnet
     durationSec: 68
     toolCalls: 12
     modelCalls: 9
-    tokenShare: 3.6
+    tokenShare: 3.5
   - task: Audit skill inspect-session
     model: sonnet
     durationSec: 61
     toolCalls: 11
     modelCalls: 8
-    tokenShare: 4.4
+    tokenShare: 4.2
   - task: Audit skill log-session
     model: sonnet
     durationSec: 98
     toolCalls: 17
     modelCalls: 10
-    tokenShare: 4.7
+    tokenShare: 4.4
   - task: Audit skill prune-trial
     model: sonnet
     durationSec: 57
     toolCalls: 10
     modelCalls: 7
-    tokenShare: 3.5
+    tokenShare: 3.4
   - task: Audit skill visitor-loop
     model: sonnet
     durationSec: 50
     toolCalls: 9
     modelCalls: 5
-    tokenShare: 3.2
+    tokenShare: 3
   - task: Standards review of inventory diff
     model: sonnet
     durationSec: 56
     toolCalls: 13
     modelCalls: 9
-    tokenShare: 2.2
+    tokenShare: 2.1
   - task: Spec review of inventory diff
     model: sonnet
     durationSec: 67
     toolCalls: 16
     modelCalls: 12
-    tokenShare: 3.2
+    tokenShare: 3
 gitBranch: claude/loving-tesla-7tb4hd
 entrypoint: remote_trigger
 cliVersion: 2.1.326
