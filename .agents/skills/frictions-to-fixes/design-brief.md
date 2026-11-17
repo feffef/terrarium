@@ -63,8 +63,9 @@ Goal: no prose fix goes to a doc nobody opens.
 
 1. Before recommending "add a line to doc X", run
    `pnpm exec tsx scripts/session/audit-skills.ts` with its output
-   redirected to `{SCRATCH_DIR}/audit-skills.json` and read only `docReadCounts` (path → how many of
-   the windowed sessions opened it).
+   redirected to `{SCRATCH_DIR}/audit-skills.json`, then look up the doc with
+   `jq '.docReadCounts | with_entries(select(.key|test("<doc>")))' {SCRATCH_DIR}/audit-skills.json`
+   (path → how many of the windowed sessions opened it).
 2. A doc at **0** is where a prose fix goes to die. Prune the instruction
    that caused the Friction first (CLAUDE.md, "Keep it short"); failing
    that, recommend a mechanism that reaches the session (a `PreToolUse`
