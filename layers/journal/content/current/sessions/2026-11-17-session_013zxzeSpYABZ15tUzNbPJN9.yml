@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSpYABZ15tUzNbPJN9
 startedAt: 2026-11-17T10:38:18Z
-endedAt: 2026-11-17T11:07:52Z
+endedAt: 2026-11-17T11:18:53Z
 kind: interactive
 goal: Give audit-skills an owner-written checklist per Skill
-status: in-review
-outcome: watchFor field, brief and docs built, gated and reviewed; PR 3421 waits for a human merge
-summary: "The owner asked for an optional Skill Inventory property that says what to watch for each run, so the audit stops inferring expected behaviour from the Skill text alone. After reading the audit helper, schema and brief, I ran the grilling Skill over four rounds. Human-instructed: the field's existence and purpose, every design answer (owner-written and never edited by the audit, added focus not replacement, per-item held/failed/couldn't tell verdicts, a check from the first use, retirement only as a suggestion), the pilot Skills, and the items picked in dialogs (including an owner-written frictions-to-fixes item and a split-out loop item for glassbox-curate). Agent-initiated: candidate lists, the ADR-0015 sentence, wording of the items, and applying review findings. I dropped the \"mode honoured\" item on the strength of the owner's agreement with my recommendation, which was ambiguous. Built in one commit plus a review-fix commit, both reviewed by subagents, gate green on the final head, PR opened without asking per the repo rule. Open: nothing tests that readInventory parses watchFor from a file, and the pilot items are untested until the next audit run grades them."
+status: completed
+outcome: watchFor field, brief, docs and three pilot checklists merged in PR 3421 by the owner
+summary: "The owner asked for an optional Skill Inventory property that says what to watch for each run, so the audit stops inferring expected behaviour from the Skill text alone. After reading the audit helper, schema and brief, I ran the grilling Skill over four rounds. Human-instructed: the field's existence and purpose, every design answer (owner-written and never edited by the audit, added focus not replacement, per-item held/failed/couldn't tell verdicts, a check from the first use, retirement only as a suggestion), the pilot Skills, and the items picked in dialogs (including an owner-written frictions-to-fixes item and a split-out loop item for glassbox-curate). Agent-initiated: candidate lists, the ADR-0015 sentence, wording of the items, and applying review findings. I dropped the \"mode honoured\" item on the strength of the owner's agreement with my recommendation, which was ambiguous. Built in one commit plus a review-fix commit, both reviewed by subagents, gate green on the final head, PR opened without asking per the repo rule. Open: nothing tests that readInventory parses watchFor from a file, and the pilot items are untested until the next audit run grades them. The owner merged PR 3421 (human merge, as the Human-only paths require) about 12 minutes after it opened; CI's gate was green on the merged head."
 prs:
   - "3421"
 docsRead:
@@ -58,20 +58,24 @@ frictions:
   - description: Tried subscribe_pr_activity and the GitHub tools under the wrong namespace first; they were deferred or in the claude-code-remote server, costing extra calls.
     solution: Load deferred GitHub tools by name up front and use the claude-code-remote namespace for subscribing.
     severity: nit
-durationSec: 1774
+durationSec: 2435
 models:
-  claude-sonnet-5-5: 101
+  claude-sonnet-5-5: 122
 toolCounts:
-  Skill: 5
+  Skill: 6
   Grep: 1
-  Bash: 39
+  Bash: 40
   AskUserQuestion: 2
   Agent: 3
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 4
+  mcp__github__pull_request_read: 3
+  mcp__claude-code-remote__send_later: 1
+  mcp__claude-code-remote__delete_trigger: 1
 filesEdited:
   - .agents/skills/audit-skills/SKILL.md
   - .claude/rules/adr-0015.md
@@ -281,21 +285,21 @@ subagents:
     durationSec: 18
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 8.7
+    tokenShare: 7
   - type: general-purpose
     task: Spec review of watchFor diff
     model: sonnet
     durationSec: 28
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 11.3
+    tokenShare: 9.1
   - type: general-purpose
     task: Review follow-up commit diff
     model: sonnet
     durationSec: 17
     toolCalls: 8
     modelCalls: 4
-    tokenShare: 4.4
+    tokenShare: 3.5
 gitBranch: ccr-eaf37a74-fj5k5q
 entrypoint: remote_mobile
 cliVersion: 2.1.326
