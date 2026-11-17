@@ -1,0 +1,515 @@
+schemaVersion: 1
+session: session_013zxzeQgh4aLo2xMP4FzXZJ
+startedAt: 2026-11-17T08:21:33Z
+endedAt: 2026-11-17T08:39:59Z
+kind: delegated
+goal: Turn recent session frictions into fixes
+status: in-review
+outcome: Ledger updated, 2 issues filed, 3 fixes built; PR 3408 open, others still in progress
+summary: "Ran the frictions-to-fixes Skill on the owner's /frictions-to-fixes invocation (the one human ask; every step after is agent-initiated under that Skill). A survey subagent read the 2026-11-15 to 2026-11-17 window (36 unledgered Frictions), appended 31 occurrences, opened two entries and committed the ledger. I picked eight never-fixed or recurring entries, and a design agent recommended dispatching three fixes, filing one issue and changing nothing for four. I filed issue 3406 (guard deny message wording, Human-only) and issue 3407 (regression of prepush-gate-review-skipped, moderate above the owner's accepted ceiling), then committed the decisions to the ledger and pushed. Built by Sonnet agents in worktrees: fix C (two brief edits, PR 3408 opened, own-read verdict posted) and fix B (--skip-held; code-review found skip lines printed before the all-or-nothing check, so the agent was resumed to fix it); fix A (Stop hook counts a merge only on merged:true) is still building. Still open: scoped gate on the ledger branch, the ledger PR, reviewing and landing B and A, the closing ledger PR. A design agent suggested moving one occurrence out of transform-untested-on-real-data; I did it and had to correct a note."
+prs:
+  - "3408"
+docsRead:
+  - path: .claude/skills/frictions-to-fixes/survey-brief.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/scripts/print-ledger-occurrence.ts
+    reason: (read before editing)
+  - path: /home/user/terrarium/docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/design-brief.md
+    reason: (read before editing)
+  - path: .agents/skills/frictions-to-fixes/impl-brief.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
+    reason: (read before editing)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: (no reason given)
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: frictions-to-fixes
+    reason: (invoked as a slash command)
+frictions:
+  - description: My first survey Agent dispatch was denied by the dispatch-read guard because my brief text named the unfilled placeholder token while explaining it.
+    solution: Reword the guard's deny message to say 'or reword if you only name it' (issue 3406).
+    severity: minor
+  - description: I typed a made-up session id into fix A's dispatch prompt inside a self-correcting NO line, before reading the real id from the commit trailer.
+    solution: Copy the id from the Claude-Session trailer; never type one into a brief.
+    severity: minor
+  - description: Ran git log -3 before reading git-conventions.md; the PostToolUse hint then told me to read it.
+    solution: Treat git log as non-exempt and read the doc first.
+    severity: nit
+  - description: Wrote a ledger note saying two occurrences remained after moving one when only one did, and had to append a correction, since ledger-set only appends notes.
+    solution: Count the file's occurrences before writing a note about them.
+    severity: nit
+  - description: The Stop hook said a PR merged and close-session had not run, twice, when no PR had merged in this session.
+    solution: Fix A makes the Stop hook count a merge only when merge-pr.ts reports merged.
+    severity: minor
+  - description: Skill section 5.4 asks the simple-change test on the ledger PR, whose diff spans dozens of generated files, so it cannot pass.
+    solution: "Tracked by issue 3397: gate plus a read of the decisions commit."
+    severity: minor
+  - description: My fix C spec carried a literal brace placeholder that my own fill step replaced; I caught it by re-reading the filled brief before dispatch.
+    solution: Describe a placeholder in words inside fix specs, or fill briefs in a single pass over the template only.
+    severity: nit
+  - description: The Skill gives no way to hand a filled brief to an agent other than by path, since the guard rejects any brace token in the prompt, so I wrote filled copies by hand.
+    solution: Say in dispatch-subagents or each brief that a filled copy file is the way to pass one.
+    severity: nit
+  - description: "Linked worktree(s) left with uncommitted or unpushed work at close: /home/user/terrarium/.claude/worktrees/agent-a0ac2eb7e0ee5c6f9"
+    solution: Push each, or remove it if its work is meant to be dropped.
+    severity: minor
+durationSec: 1106
+models:
+  claude-sonnet-5-5: 108
+toolCounts:
+  Skill: 4
+  Read: 2
+  Bash: 38
+  Agent: 8
+  ToolSearch: 1
+  mcp__github__issue_write: 2
+  SendMessage: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - .agents/skills/frictions-to-fixes/scripts/print-ledger-occurrence.ts
+  - .agents/skills/frictions-to-fixes/tests/unit/print-ledger-occurrence.spec.ts
+  - .agents/skills/frictions-to-fixes/survey-brief.md
+  - .agents/skills/frictions-to-fixes/design-brief.md
+  - layers/journal/content/current/frictions/audit-skills-output-overflow.yml
+  - layers/journal/content/current/frictions/frictions-to-fixes-briefs-mismatch.yml
+  - layers/journal/content/current/frictions/frictions-to-fixes-skill-gaps.yml
+  - layers/journal/content/current/frictions/ledger-append-refuses-held-session.yml
+  - layers/journal/content/current/frictions/merge-close-hint-fires-without-merge.yml
+  - layers/journal/content/current/frictions/new-rule-flaws-caught-in-review.yml
+  - layers/journal/content/current/frictions/placeholder-guard-denies-quoted-placeholder.yml
+  - layers/journal/content/current/frictions/prepush-gate-review-skipped.yml
+  - layers/journal/content/current/frictions/run-timing-words-in-prose.yml
+  - layers/journal/content/current/frictions/transform-untested-on-real-data.yml
+  - layers/journal/content/current/frictions/adr-read-after-edit.yml
+  - layers/journal/content/current/frictions/built-before-owner-decided-ui.yml
+  - layers/journal/content/current/frictions/classifier-no-verdict.yml
+  - layers/journal/content/current/frictions/commit-trailer-check-skipped.yml
+  - layers/journal/content/current/frictions/counts-not-tallied.yml
+  - layers/journal/content/current/frictions/dispatch-read-guard-deny.yml
+  - layers/journal/content/current/frictions/double-background.yml
+  - layers/journal/content/current/frictions/edit-during-gate-run.yml
+  - layers/journal/content/current/frictions/edit-leaves-contradicting-sibling.yml
+  - layers/journal/content/current/frictions/get-session-cost-unreported.yml
+  - layers/journal/content/current/frictions/github-body-unchecked-value.yml
+  - layers/journal/content/current/frictions/glassbox-page-check-edit-loops.yml
+  - layers/journal/content/current/frictions/governing-doc-read-after-draft.yml
+  - layers/journal/content/current/frictions/grilling-skipped-for-design-settlement.yml
+  - layers/journal/content/current/frictions/harness-classifier-denials.yml
+  - layers/journal/content/current/frictions/late-read-first-docs.yml
+  - layers/journal/content/current/frictions/misread-owner-instruction.yml
+  - layers/journal/content/current/frictions/pr-asked-before-opening.yml
+  - layers/journal/content/current/frictions/required-doc-read-truncated.yml
+  - layers/journal/content/current/frictions/reviewer-coverage-thin.yml
+  - layers/journal/content/current/frictions/scripted-text-replace-edits.yml
+  - layers/journal/content/current/frictions/session-id-hand-typed.yml
+  - layers/journal/content/current/frictions/stop-hook-nag.yml
+  - layers/journal/content/current/frictions/subagent-brief-defects.yml
+  - layers/journal/content/current/frictions/survey-label-and-ledger-errors.yml
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+adrHints:
+  - adr: 5
+    via: path
+    readAfter: false
+    by: subagent
+  - adr: 15
+    via: path
+    readAfter: false
+    by: subagent
+  - adr: 27
+    via: path
+    readAfter: false
+    by: subagent
+docsReadBySubagents:
+  - .agents/skills/frictions-to-fixes/SKILL.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .claude/skills/frictions-to-fixes/survey-brief.md
+      - rule: .claude/rules/adr-0015.md
+        via: native
+        trigger: .agents/skills/frictions-to-fixes/scripts/ledger-set.ts
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .claude/skills/frictions-to-fixes/survey-brief.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: gate and review before opening each PR
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: pushed early; opened PR after review and gate
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: provenance header; trailer id from commit
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: in-scope
+      - path: .claude/rules/adr-0015.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: in-scope
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0022.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: docs/agents/git-conventions.md
+      - path: docs/agents/github-integration.md
+      - path: docs/agents/pr-workflow.md
+      - path: docs/agents/issue-tracker.md
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0017.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0027.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: in-scope
+      - path: .claude/rules/adr-0008.md
+        value: in-scope
+      - path: docs/agents/git-conventions.md
+      - path: docs/agents/github-integration.md
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/guards.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0027.md
+        value: steered
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: steered
+      - path: .claude/rules/guards.md
+        value: in-scope
+      - path: .claude/rules/adr-0005.md
+        value: in-scope
+      - path: .claude/rules/adr-0015.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: docs/agents/github-integration.md
+  - by: general-purpose
+    subagent: 3
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 4
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/frictions-to-fixes/tests/unit/print-ledger-occurrence.spec.ts
+      - rule: .claude/rules/adr-0015.md
+        via: native
+        trigger: .agents/skills/frictions-to-fixes/tests/unit/print-ledger-occurrence.spec.ts
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/frictions-to-fixes/tests/unit/print-ledger-occurrence.spec.ts
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0005.md
+        value: missed
+        why: "late:"
+      - path: .claude/rules/adr-0015.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: docs/agents/git-conventions.md
+  - by: general-purpose
+    subagent: 5
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: confirmed
+        why: "n/a:"
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0005.md
+        value: in-scope
+      - path: .claude/rules/adr-0015.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: in-scope
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: docs/agents/git-conventions.md
+  - by: general-purpose
+    subagent: 6
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 7
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+subagents:
+  - type: general-purpose
+    task: Survey frictions ledger
+    denied: true
+  - type: general-purpose
+    task: Survey frictions ledger
+    durationSec: 319
+    toolCalls: 36
+    modelCalls: 32
+    tokenShare: 21.7
+  - type: general-purpose
+    task: Design fixes for picks
+    durationSec: 197
+    toolCalls: 32
+    modelCalls: 28
+    tokenShare: 13.5
+  - type: general-purpose
+    task: Build fix A (stop hook merge)
+    model: sonnet
+    durationSec: 206
+    toolCalls: 23
+    modelCalls: 18
+    tokenShare: 8.1
+  - type: general-purpose
+    task: Build fix B (--skip-held)
+    model: sonnet
+    durationSec: 330
+    toolCalls: 29
+    modelCalls: 20
+    tokenShare: 8.9
+  - type: general-purpose
+    task: Build fix C (brief edits)
+    model: sonnet
+    durationSec: 144
+    toolCalls: 13
+    modelCalls: 11
+    tokenShare: 3.6
+  - type: general-purpose
+    task: "Review B: standards axis"
+    model: sonnet
+    durationSec: 18
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 3.5
+  - type: general-purpose
+    task: "Review B: spec axis"
+    model: sonnet
+    durationSec: 20
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 3.5
+gitBranch: ccr-a6b576f8-d8rvvx
+entrypoint: remote_mobile
+cliVersion: 2.1.326
+landedBy: Stop
