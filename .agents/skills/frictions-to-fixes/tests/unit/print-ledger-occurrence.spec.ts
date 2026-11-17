@@ -58,13 +58,19 @@ describe('appendPlan()', () => {
   })
   it('with skipHeld drops held sessions, reports them and keeps the rest', () => {
     const skipped: string[] = []
-    const plan = appendPlan(groupTriples(['x', 'old', '0', 'x', 'session_abc', '0']), logs, entry, true, (e, s) => skipped.push(`${s}@${e}`))
+    const plan = appendPlan(groupTriples(['x', 'old', '0', 'x', 'session_abc', '0']), logs, entry, (e, s) => skipped.push(`${s}@${e}`))
     expect(plan.get('x')).toBe(entry('x') + occurrenceBlock(log, 0))
     expect(skipped).toEqual(['old@x'])
   })
   it('with skipHeld plans no entry left empty, yet still refuses a repeat', () => {
-    expect(appendPlan(groupTriples(['x', 'old', '0']), logs, entry, true).size).toBe(0)
-    expect(() => appendPlan(groupTriples(['x', 'session_abc', '0', 'x', 'session_abc', '1']), logs, entry, true)).toThrow('repeated in this call')
+    expect(appendPlan(groupTriples(['x', 'old', '0']), logs, entry, () => {}).size).toBe(0)
+    expect(() => appendPlan(groupTriples(['x', 'session_abc', '0', 'x', 'session_abc', '1']), logs, entry, () => {})).toThrow('repeated in this call')
+  })
+  it('with skipHeld drops a held session repeated in the call every time, reporting only via the callback', () => {
+    const skipped: string[] = []
+    const plan = appendPlan(groupTriples(['x', 'old', '0', 'x', 'old', '1', 'x', 'session_abc', '0']), logs, entry, (e, s) => skipped.push(`${s}@${e}`))
+    expect(plan.get('x')).toBe(entry('x') + occurrenceBlock(log, 0))
+    expect(skipped).toEqual(['old@x', 'old@x'])
   })
   it('names every failing entry in one error', () => {
     expect(() => appendPlan(groupTriples(['x', 'old', '0', 'y', 'old', '0', 'z', 'session_abc', '0']), logs, entry))

@@ -68,8 +68,8 @@ export function groupTriples(argv: string[]): Map<string, FrictionRef[]> {
   return groups
 }
 
-/** Throws naming every session the entry already holds or `refs` repeats (#2562); with `skipHeld`, held ones are dropped and passed to `onSkip`. */
-function refuseCollisions(text: string, refs: FrictionRef[], skipHeld: boolean, onSkip: (session: string) => void): FrictionRef[] {
+/** Throws naming every session the entry already holds or `refs` repeats (#2562); with `onSkip`, held ones are dropped and passed to it. */
+function refuseCollisions(text: string, refs: FrictionRef[], onSkip?: (session: string) => void): FrictionRef[] {
   const occurrences: unknown = parse(text)?.occurrences
   const held = new Set(Array.isArray(occurrences) ? occurrences.map((o) => String(o?.session)) : [])
   const seen = new Set<string>()
@@ -78,7 +78,7 @@ function refuseCollisions(text: string, refs: FrictionRef[], skipHeld: boolean, 
   for (const ref of refs) {
     const { session } = ref
     if (held.has(session)) {
-      if (skipHeld) onSkip(session)
+      if (onSkip) onSkip(session)
       else collisions.set(session, 'already in the entry')
     } else {
       if (seen.has(session)) collisions.set(session, 'repeated in this call')
@@ -91,13 +91,13 @@ function refuseCollisions(text: string, refs: FrictionRef[], skipHeld: boolean, 
 }
 
 /** Each entry's new text with its blocks appended; throws before any write, naming every entry that fails. */
-export function appendPlan(groups: Map<string, FrictionRef[]>, logs: Logs, readEntry: (entry: string) => string, skipHeld = false, onSkip: (entry: string, session: string) => void = () => {}): Map<string, string> {
+export function appendPlan(groups: Map<string, FrictionRef[]>, logs: Logs, readEntry: (entry: string) => string, onSkip?: (entry: string, session: string) => void): Map<string, string> {
   const plan = new Map<string, string>()
   const failures: string[] = []
   for (const [entry, refs] of groups) {
     try {
       const text = readEntry(entry)
-      const kept = refuseCollisions(text, refs, skipHeld, (session) => onSkip(entry, session))
+      const kept = refuseCollisions(text, refs, onSkip && ((session) => onSkip(entry, session)))
       if (kept.length) plan.set(entry, setEntry(text, { occurrences: kept.map((ref) => blockFor(logs, ref)).join('') }))
     } catch (err) {
       failures.push(`${entry}: ${err instanceof Error ? err.message : String(err)}`)
@@ -118,14 +118,12 @@ function main(): void {
       const skipHeld = argv[1] === '--skip-held'
       const groups = groupTriples(argv.slice(skipHeld ? 2 : 1))
       const entryPath = (entry: string) => join(root, LEDGER_DIR, `${entry}.yml`)
-      const skipped = new Map<string, number>()
-      const plan = appendPlan(groups, readLogs(), (entry) => readFileSync(entryPath(entry), 'utf8'), skipHeld, (entry, session) => {
-        skipped.set(entry, (skipped.get(entry) ?? 0) + 1)
-        console.log(`skipped ${session} (held by ${entry})`)
-      })
+      const skipped: [entry: string, session: string][] = []
+      const plan = appendPlan(groups, readLogs(), (entry) => readFileSync(entryPath(entry), 'utf8'), skipHeld ? (entry, session) => skipped.push([entry, session]) : undefined)
+      for (const [entry, session] of skipped) console.log(`skipped ${session} (held by ${entry})`)
       for (const [entry, text] of plan) {
         writeFileSync(entryPath(entry), text)
-        console.log(`print-ledger-occurrence: appended ${groups.get(entry)!.length - (skipped.get(entry) ?? 0)} to ${entry}`)
+        console.log(`print-ledger-occurrence: appended ${groups.get(entry)!.length - skipped.filter(([e]) => e === entry).length} to ${entry}`)
       }
       return
     }
