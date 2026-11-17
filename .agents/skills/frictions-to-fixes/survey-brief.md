@@ -128,6 +128,15 @@ no `tracked` or `on-trial` entry points at something closed.
   its own entry whose `ref` names the original entry and the fix: it is not
   a regression; only the original harm recurring is. An original left empty
   is deleted, so `ref` also says what the original covered.
+- After you split or join, bring every entry the change touched back to a
+  coherent state, and read each one again: `summary` and `cause` cover only
+  the occurrences it now holds; `fixes` sit on the entry whose cause the PR
+  tried to change; `status` and `ref` fit what is left (a `tracked` or
+  `accepted` source may no longer qualify, and an `accepted` target needs a
+  ceiling for what it received); `notes` carry the dated reason and what
+  moved; a deleted entry's `fixes`, `notes` and `ref` go to the survivor; and
+  every other entry's `cause`, `ref` and `related` that named the old one is
+  repointed (grep its name). Split halves link to each other with `related`.
 - `--unledgered` drops per Friction, not per session: a session's other
   Frictions stay listed, so skip one already in the target cluster.
 - This run's own PRs are recorded by the main session. A PR an earlier run
