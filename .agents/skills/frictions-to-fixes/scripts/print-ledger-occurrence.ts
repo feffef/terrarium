@@ -8,14 +8,15 @@
 //   tsx .agents/skills/frictions-to-fixes/scripts/print-ledger-occurrence.ts
 //     <session> <index> [<session> <index> ...]
 //   tsx .agents/skills/frictions-to-fixes/scripts/print-ledger-occurrence.ts
-//     --append <entry> <session> <index> [<entry> <session> <index> ...]
+//     --append [--skip-held] <entry> <session> <index> [<entry> <session> <index> ...]
 //   `index` is the friction's position in the log's `frictions` list, as
 //   `extract-frictions.ts --compact` prints it. Without `--append`, output is
 //   ready to paste under a cluster's `occurrences:`. With it, `<entry>` is the
 //   ledger file name without `.yml`; the blocks are appended through
 //   `ledger-set.ts`'s `setEntry`, so a result the schema rejects is refused
 //   and nothing is written; a session the entry already holds, or one the
-//   call repeats, is refused by name.
+//   call repeats, is refused by name; `--skip-held` instead drops the held
+//   ones and prints each skip.
 import { readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { Document, parse, Scalar } from 'yaml'
@@ -67,29 +68,37 @@ export function groupTriples(argv: string[]): Map<string, FrictionRef[]> {
   return groups
 }
 
-/** Throws naming every session the entry already holds or `refs` repeats (#2562). */
-function refuseCollisions(text: string, refs: FrictionRef[]): void {
+/** Throws naming every session the entry already holds or `refs` repeats (#2562); with `skipHeld`, held ones are dropped and passed to `onSkip`. */
+function refuseCollisions(text: string, refs: FrictionRef[], skipHeld: boolean, onSkip: (session: string) => void): FrictionRef[] {
   const occurrences: unknown = parse(text)?.occurrences
   const held = new Set(Array.isArray(occurrences) ? occurrences.map((o) => String(o?.session)) : [])
   const seen = new Set<string>()
   const collisions = new Map<string, string>()
-  for (const { session } of refs) {
-    if (held.has(session)) collisions.set(session, 'already in the entry')
-    else if (seen.has(session)) collisions.set(session, 'repeated in this call')
+  const kept: FrictionRef[] = []
+  for (const ref of refs) {
+    const { session } = ref
+    if (held.has(session)) {
+      if (skipHeld) onSkip(session)
+      else collisions.set(session, 'already in the entry')
+    } else {
+      if (seen.has(session)) collisions.set(session, 'repeated in this call')
+      kept.push(ref)
+    }
     seen.add(session)
   }
   if (collisions.size) throw new Error(`${[...collisions].map(([s, why]) => `${s} (${why})`).join(', ')}; nothing written`)
+  return kept
 }
 
 /** Each entry's new text with its blocks appended; throws before any write, naming every entry that fails. */
-export function appendPlan(groups: Map<string, FrictionRef[]>, logs: Logs, readEntry: (entry: string) => string): Map<string, string> {
+export function appendPlan(groups: Map<string, FrictionRef[]>, logs: Logs, readEntry: (entry: string) => string, skipHeld = false, onSkip: (entry: string, session: string) => void = () => {}): Map<string, string> {
   const plan = new Map<string, string>()
   const failures: string[] = []
   for (const [entry, refs] of groups) {
     try {
       const text = readEntry(entry)
-      refuseCollisions(text, refs)
-      plan.set(entry, setEntry(text, { occurrences: refs.map((ref) => blockFor(logs, ref)).join('') }))
+      const kept = refuseCollisions(text, refs, skipHeld, (session) => onSkip(entry, session))
+      if (kept.length) plan.set(entry, setEntry(text, { occurrences: kept.map((ref) => blockFor(logs, ref)).join('') }))
     } catch (err) {
       failures.push(`${entry}: ${err instanceof Error ? err.message : String(err)}`)
     }
@@ -106,12 +115,17 @@ function main(): void {
   const argv = process.argv.slice(2)
   try {
     if (argv[0] === '--append') {
-      const groups = groupTriples(argv.slice(1))
+      const skipHeld = argv[1] === '--skip-held'
+      const groups = groupTriples(argv.slice(skipHeld ? 2 : 1))
       const entryPath = (entry: string) => join(root, LEDGER_DIR, `${entry}.yml`)
-      const plan = appendPlan(groups, readLogs(), (entry) => readFileSync(entryPath(entry), 'utf8'))
+      const skipped = new Map<string, number>()
+      const plan = appendPlan(groups, readLogs(), (entry) => readFileSync(entryPath(entry), 'utf8'), skipHeld, (entry, session) => {
+        skipped.set(entry, (skipped.get(entry) ?? 0) + 1)
+        console.log(`skipped ${session} (held by ${entry})`)
+      })
       for (const [entry, text] of plan) {
         writeFileSync(entryPath(entry), text)
-        console.log(`print-ledger-occurrence: appended ${groups.get(entry)!.length} to ${entry}`)
+        console.log(`print-ledger-occurrence: appended ${groups.get(entry)!.length - (skipped.get(entry) ?? 0)} to ${entry}`)
       }
       return
     }

@@ -56,6 +56,16 @@ describe('appendPlan()', () => {
     expect(() => appendPlan(groupTriples(['x', 'old', '0', 'x', 'session_abc', '0', 'x', 'session_abc', '1', 'y', 'session_def', '0']), logs, entry))
       .toThrow('x: old (already in the entry), session_abc (repeated in this call)')
   })
+  it('with skipHeld drops held sessions, reports them and keeps the rest', () => {
+    const skipped: string[] = []
+    const plan = appendPlan(groupTriples(['x', 'old', '0', 'x', 'session_abc', '0']), logs, entry, true, (e, s) => skipped.push(`${s}@${e}`))
+    expect(plan.get('x')).toBe(entry('x') + occurrenceBlock(log, 0))
+    expect(skipped).toEqual(['old@x'])
+  })
+  it('with skipHeld plans no entry left empty, yet still refuses a repeat', () => {
+    expect(appendPlan(groupTriples(['x', 'old', '0']), logs, entry, true).size).toBe(0)
+    expect(() => appendPlan(groupTriples(['x', 'session_abc', '0', 'x', 'session_abc', '1']), logs, entry, true)).toThrow('repeated in this call')
+  })
   it('names every failing entry in one error', () => {
     expect(() => appendPlan(groupTriples(['x', 'old', '0', 'y', 'old', '0', 'z', 'session_abc', '0']), logs, entry))
       .toThrow('x: old (already in the entry); nothing written\ny: old (already in the entry); nothing written')
