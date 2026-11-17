@@ -1,0 +1,273 @@
+schemaVersion: 1
+session: session_013zxzePEh76m48UZNU4Ue1j
+startedAt: 2026-11-17T13:09:20Z
+endedAt: 2026-11-17T13:21:00Z
+kind: autonomous
+goal: "Scheduled prune trial: judge open trials and cut one instruction"
+status: in-review
+outcome: "Judged two trials, opened a new one on glassbox-curate, PR #3426 open"
+summary: "Scheduled /prune-trial run; nothing human-instructed. Two of four open trials were judgeable. The checkout-moving trial held (worktree-subagent-moves-branch 1.5% to 0.0%, no issue). The read-first-lines trial showed dispatch-read-guard-deny doubling (22.1% to 44.1%, 15/34) with only nit or minor Frictions, so the cut stayed and I filed #3425 for a person to decide. A search subagent ranked failed prose; I chose glassbox-curate's 'Know the guide before you change it' paragraph (13 recorded skips, nothing wired holds it), cut 270 words to about 85 keeping every rule, and left the read-first list alone since an open trial covers it. A Sonnet probe pinned to the commit answered correctly, code-review found no hard violations, gate:scoped passed, PR #3426 opened and subscribed."
+prs:
+  - "3426"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-curate/SKILL.md
+    reason: (read before editing)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: prune-trial
+    reason: (invoked as a slash command)
+frictions:
+  - description: Filed the needs-triage issue before reading triage-labels.md, which CLAUDE.md names for filing; the PostToolUse hint reached me after the call.
+    solution: Read triage-labels.md together with issue-tracker.md before the first issue write.
+    severity: nit
+  - description: The criterion-1 search subagent could read only issue titles, not bodies, so how each ledger entry relates to an issue is inferred.
+    solution: Give the search brief a per-issue body read for the shortlisted candidates.
+    severity: minor
+  - description: The stored prune-trials entry for read-first lines asks to compare rates but the window held only 34 sessions, so the doubled share is weak evidence.
+    solution: State a minimum session count before a rise counts in the Skill's section 1.
+    severity: nit
+durationSec: 700
+models:
+  claude-sonnet-5-5: 68
+toolCounts:
+  Bash: 21
+  Read: 2
+  ToolSearch: 1
+  mcp__github__issue_write: 1
+  Agent: 4
+  Skill: 3
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  PushNotification: 1
+filesEdited:
+  - .agents/prune-trials.yml
+  - .agents/skills/glassbox-curate/SKILL.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+docsReadBySubagents:
+  - docs/agents/environment-caveats.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/pr-workflow.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/pr-workflow.md
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/dispatch-subagents/SKILL.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0027.md
+        value: steered
+        why: territory check and trial rules
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: review and gate before PR
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: opened PR, subscribed
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: provenance header, trailer
+      - path: .claude/rules/adr-0009.md
+        value: in-scope
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0030.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: in-scope
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: docs/agents/pr-workflow.md
+      - path: docs/agents/issue-tracker.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/guards.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0027.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: in-scope
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0030.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 3
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+subagents:
+  - type: general-purpose
+    task: Search failed-prose candidates
+    model: sonnet
+    durationSec: 245
+    toolCalls: 23
+    modelCalls: 18
+    tokenShare: 20.4
+  - type: general-purpose
+    task: Probe pruned glassbox-curate text
+    model: sonnet
+    durationSec: 11
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 4.5
+  - type: general-purpose
+    task: Standards review of prune
+    model: sonnet
+    durationSec: 20
+    toolCalls: 6
+    modelCalls: 5
+    tokenShare: 5.6
+  - type: general-purpose
+    task: Spec review of prune
+    model: sonnet
+    durationSec: 12
+    toolCalls: 3
+    modelCalls: 3
+    tokenShare: 4.1
+gitBranch: claude/practical-rubin-ubg9ev
+entrypoint: remote_trigger
+cliVersion: 2.1.326
+trigger: prune-trial
+landedBy: Stop
