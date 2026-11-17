@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzePEh76m48UZNU4Ue1j
 startedAt: 2026-11-17T13:09:20Z
-endedAt: 2026-11-17T13:21:00Z
+endedAt: 2026-11-17T13:25:26Z
 kind: autonomous
 goal: "Scheduled prune trial: judge open trials and cut one instruction"
-status: in-review
-outcome: "Judged two trials, opened a new one on glassbox-curate, PR #3426 open"
-summary: "Scheduled /prune-trial run; nothing human-instructed. Two of four open trials were judgeable. The checkout-moving trial held (worktree-subagent-moves-branch 1.5% to 0.0%, no issue). The read-first-lines trial showed dispatch-read-guard-deny doubling (22.1% to 44.1%, 15/34) with only nit or minor Frictions, so the cut stayed and I filed #3425 for a person to decide. A search subagent ranked failed prose; I chose glassbox-curate's 'Know the guide before you change it' paragraph (13 recorded skips, nothing wired holds it), cut 270 words to about 85 keeping every rule, and left the read-first list alone since an open trial covers it. A Sonnet probe pinned to the commit answered correctly, code-review found no hard violations, gate:scoped passed, PR #3426 opened and subscribed."
+status: completed
+outcome: "Judged two trials, opened a new one on glassbox-curate, PR #3426 merged"
+summary: "Scheduled /prune-trial run; nothing human-instructed. Two of four open trials were judgeable. The checkout-moving trial held (worktree-subagent-moves-branch 1.5% to 0.0%, no issue). The read-first-lines trial showed dispatch-read-guard-deny doubling (22.1% to 44.1%, 15/34) with only nit or minor Frictions, so the cut stayed and I filed #3425 for a person to decide. A search subagent ranked failed prose; I chose glassbox-curate's 'Know the guide before you change it' paragraph (13 recorded skips, nothing wired holds it), cut 270 words to about 85 keeping every rule, and left the read-first list alone since an open trial covers it. A Sonnet probe pinned to the commit answered correctly, code-review found no hard violations, gate:scoped passed, PR #3426 opened, CI green, merged by me with a posted verdict."
 prs:
   - "3426"
 docsRead:
@@ -43,19 +43,24 @@ frictions:
   - description: The stored prune-trials entry for read-first lines asks to compare rates but the window held only 34 sessions, so the doubled share is weak evidence.
     solution: State a minimum session count before a rise counts in the Skill's section 1.
     severity: nit
-durationSec: 700
+durationSec: 966
 models:
-  claude-sonnet-5-5: 68
+  claude-sonnet-5-5: 85
 toolCounts:
-  Bash: 21
+  Bash: 25
   Read: 2
   ToolSearch: 1
   mcp__github__issue_write: 1
   Agent: 4
-  Skill: 3
+  Skill: 4
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   PushNotification: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 2
+  unsubscribe_placeholder_removed: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/prune-trials.yml
   - .agents/skills/glassbox-curate/SKILL.md
@@ -244,28 +249,28 @@ subagents:
     durationSec: 245
     toolCalls: 23
     modelCalls: 18
-    tokenShare: 20.4
+    tokenShare: 17
   - type: general-purpose
     task: Probe pruned glassbox-curate text
     model: sonnet
     durationSec: 11
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 4.5
+    tokenShare: 3.7
   - type: general-purpose
     task: Standards review of prune
     model: sonnet
     durationSec: 20
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 5.6
+    tokenShare: 4.7
   - type: general-purpose
     task: Spec review of prune
     model: sonnet
     durationSec: 12
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 4.1
+    tokenShare: 3.4
 gitBranch: claude/practical-rubin-ubg9ev
 entrypoint: remote_trigger
 cliVersion: 2.1.326
