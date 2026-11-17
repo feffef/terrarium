@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQgh4aLo2xMP4FzXZJ
 startedAt: 2026-11-17T08:21:33Z
-endedAt: 2026-11-17T08:55:38Z
+endedAt: 2026-11-17T09:00:00Z
 kind: delegated
 goal: Turn recent session frictions into fixes
-status: in-review
-outcome: Fix PRs 3408 and 3409 and the ledger PR 3410 merged; fix PR 3412 merged; closing ledger PR 3413 open
-summary: "Ran the frictions-to-fixes Skill on the owner's /frictions-to-fixes invocation (the one human ask; every step after is agent-initiated under that Skill). A survey subagent read the 2026-11-15 to 2026-11-17 window (36 unledgered Frictions), appended 31 occurrences, opened two entries and committed the ledger. I picked eight never-fixed or recurring entries, and a design agent recommended dispatching three fixes, filing one issue and changing nothing for four. I filed issue 3406 (guard deny message wording, Human-only) and issue 3407 (regression of prepush-gate-review-skipped, moderate above the owner's accepted ceiling), then committed the decisions to the ledger and pushed. Built by Sonnet agents in worktrees: fix C (two brief edits, PR 3408 opened, own-read verdict posted, merged via merge-pr.ts once CI was green) and fix B (--skip-held; code-review found skip lines printed before the all-or-nothing check, so the agent was resumed to fix it); fix A (Stop hook counts a merge only on merged:true) is still building. Still open: the scoped gate on the ledger branch (running), the ledger PR, reviewing and landing B and A, the closing ledger PR. A design agent suggested moving one occurrence out of transform-untested-on-real-data; I did it and had to correct a note."
+status: completed
+outcome: Survey, 2 issues, 3 fix PRs and both ledger PRs merged; 2 issues left for a human
+summary: "Ran the frictions-to-fixes Skill on the owner's /frictions-to-fixes invocation (the one human ask; every later step is agent-initiated under that Skill). A survey subagent read the 2026-11-15 to 2026-11-17 window (36 unledgered Frictions), appended 31 occurrences, opened two entries and committed the ledger. I picked eight entries; a design agent recommended dispatching three fixes, filing one issue and changing nothing for four. I filed issue 3406 (guard deny message wording, Human-only) and issue 3407 (regression of prepush-gate-review-skipped, moderate above the owner's accepted ceiling), and landed the decisions through ledger PR 3410. Sonnet agents built the fixes in worktrees: PR 3408 (two brief edits, own-read verdict), PR 3409 (--skip-held; a code-review round found skip lines printed before the all-or-nothing check, fixed in a second commit that I read myself rather than re-reviewing, disclosed in the verdict) and PR 3412 (Stop hook counts a merge only on its own merged result; the first version was rejected by both review axes as uncorrelated, reworked to pair by tool_use_id, and a fresh review found no hard defect). All merged after green CI via merge-pr.ts; the closing status-only ledger PR 3413 recorded the three fixes and reset their clusters to open. Left for a human: issues 3406 and 3407. Not picked: entries earlier runs had already designed away, and an infrastructure outage entry."
 prs:
   - "3408"
   - "3409"
@@ -80,13 +80,16 @@ frictions:
   - description: My first ledger PR verdict stated 44 changed files without counting; the real count was 35 and I had to edit the comment.
     solution: Count with git diff --no-renames --name-only before stating a number.
     severity: nit
-durationSec: 2045
+  - description: A cd inside one Bash call moved the shell's working directory into the ledger folder and a worktree, so later git and gate commands briefly ran from the wrong place.
+    solution: Use absolute paths or start every call with cd to the repo root.
+    severity: nit
+durationSec: 2308
 models:
-  claude-sonnet-5-5: 217
+  claude-sonnet-5-5: 228
 toolCounts:
-  Skill: 10
+  Skill: 11
   Read: 2
-  Bash: 67
+  Bash: 70
   Agent: 11
   ToolSearch: 1
   mcp__github__issue_write: 2
@@ -94,7 +97,7 @@ toolCounts:
   mcp__github__create_pull_request: 5
   mcp__claude-code-remote__subscribe_pr_activity: 5
   mcp__github__add_issue_comment: 5
-  ReadNotifications: 9
+  ReadNotifications: 11
   mcp__github__update_issue_comment: 1
 filesEdited:
   - .agents/skills/frictions-to-fixes/scripts/print-ledger-occurrence.ts
@@ -542,41 +545,41 @@ subagents:
     durationSec: 319
     toolCalls: 36
     modelCalls: 32
-    tokenShare: 12.6
+    tokenShare: 12.1
   - type: general-purpose
     task: Design fixes for picks
     durationSec: 197
     toolCalls: 32
     modelCalls: 28
-    tokenShare: 7.8
+    tokenShare: 7.6
   - type: general-purpose
     task: Build fix A (stop hook merge)
     model: sonnet
     durationSec: 924
     toolCalls: 36
     modelCalls: 31
-    tokenShare: 8.2
+    tokenShare: 7.9
   - type: general-purpose
     task: Build fix B (--skip-held)
     model: sonnet
     durationSec: 524
     toolCalls: 32
     modelCalls: 23
-    tokenShare: 5.7
+    tokenShare: 5.5
   - type: general-purpose
     task: Build fix C (brief edits)
     model: sonnet
     durationSec: 144
     toolCalls: 13
     modelCalls: 11
-    tokenShare: 2.1
+    tokenShare: 2
   - type: general-purpose
     task: "Review B: standards axis"
     model: sonnet
     durationSec: 18
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 2
+    tokenShare: 1.9
   - type: general-purpose
     task: "Review B: spec axis"
     model: sonnet
@@ -590,21 +593,21 @@ subagents:
     durationSec: 25
     toolCalls: 6
     modelCalls: 6
-    tokenShare: 2.5
+    tokenShare: 2.4
   - type: general-purpose
     task: "Review A: spec axis"
     model: sonnet
     durationSec: 33
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 2.3
+    tokenShare: 2.2
   - type: general-purpose
     task: "Review A: fresh full-diff review"
     model: sonnet
     durationSec: 22
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1.2
+    tokenShare: 1.1
 gitBranch: ccr-a6b576f8-d8rvvx
 entrypoint: remote_mobile
 cliVersion: 2.1.326
