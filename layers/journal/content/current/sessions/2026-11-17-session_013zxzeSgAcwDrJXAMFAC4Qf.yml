@@ -1,15 +1,16 @@
 schemaVersion: 1
 session: session_013zxzeSgAcwDrJXAMFAC4Qf
 startedAt: 2026-11-17T06:40:22Z
-endedAt: 2026-11-17T09:26:30Z
+endedAt: 2026-11-17T09:31:41Z
 kind: interactive
 goal: Stop accepted Friction Ledger clusters from hiding worse occurrences
-status: completed
-outcome: "Both PRs merged: the severity ceiling, related clusters and survey rules, then a follow-up brief line; the stale remote branch went with the second merge"
-summary: "The owner reported that a major no-gate merge sat in a Friction Ledger cluster still marked accepted, and asked for acceptance to be bound to a severity or for a new cluster. Human-instructed: the acceptedSeverity design (their answers to my questions), splitting the major into merged-without-gate-or-review, leaving prepush-gate-review-skipped open, a symmetric related field with a rule per pair shown beside each candidate, migrating the prose relations, reviewing candidate pairs and the clusters that had no relation, the survey-brief rules (new linked cluster for a partial moderate-or-worse match, severity as a hint, split on a clearly different cause or harm, extra care after a split or merge), the Ledger page ceiling text, dropping see: from --candidates, and two Opus code reviews. The owner opened PR 3405 themselves after I asked and merged it at 08:18 UTC after CI was green on the reviewed head; tenant.config.ts is Human-only, so the merge was theirs to make. Agent-initiated: which pairs to link and the wording of every rule, the one join (simplify-cut-drops-needed-instruction into rewrite-pass-scope-drift), moving misfiled occurrences, removing prose pointers to clusters that no longer exist, the dated breach note, and the fixes for review findings; the owner approved the lists in aggregate, not pair by pair. What surprised me: the first two rounds of related rules still held inverted or vague rules and misplaced occurrences that only the Opus reviewers found, and gate runs on an uncommitted tree kept blocking my own commits and edits. After the merge the owner started a frictions-to-fixes run and asked me to inspect it (human-instructed). From the session log, the PRs, issue 3407 and the ledger diff on main, without reading its events, it ran as the Skill intends: 31 occurrences appended into 30 clusters, two entries opened, five PRs merged, two issues left for a human, no occurrence lost, ledger tests green. My changes showed in one new entry linked both ways to its nearest cluster and in issue 3407 framed around the accepted ceiling; the severity hint and the breach reopen were not exercised. One side effect: the new entry carries routing prose in its summary and cause as well as in related. The owner then asked me to delete the stale remote branch and add one brief line for that side effect. The deletion failed: the proxy refuses it through git and through the REST API, and I did not try to get around that. The brief line went into survey-brief step 2; two Opus agents reviewed it, the gate passed, and I opened PR 3414 myself under ADR-0003 (the open was agent-initiated; the line was the owner's ask). After CI was green I posted a verdict and merged it with merge-pr.ts, under the standing CLAUDE.md rule to merge my own PR once ADR-0004 allows it; the owner had not asked for the merge itself. The merge deleted the head branch, which settled the deletion request. Still open: the existing classifier-no-verdict entry still carries its routing prose because the owner asked only for the line; a Glass Box guide page describes accepted without a ceiling and belongs to glassbox-update; and prepush-gate-review-skipped stays tracked under issue 3407 until the owner decides."
+status: in-review
+outcome: The ceiling, related clusters and survey rules are merged, and so is the brief line; a last data cleanup is in an open PR
+summary: "The owner reported that a major no-gate merge sat in a Friction Ledger cluster still marked accepted, and asked for acceptance to be bound to a severity or for a new cluster. Human-instructed: the acceptedSeverity design (their answers to my questions), splitting the major into merged-without-gate-or-review, leaving prepush-gate-review-skipped open, a symmetric related field with a rule per pair shown beside each candidate, migrating the prose relations, reviewing candidate pairs and the clusters that had no relation, the survey-brief rules (new linked cluster for a partial moderate-or-worse match, severity as a hint, split on a clearly different cause or harm, extra care after a split or merge), the Ledger page ceiling text, dropping see: from --candidates, and two Opus code reviews. The owner opened PR 3405 themselves after I asked and merged it at 08:18 UTC after CI was green on the reviewed head; tenant.config.ts is Human-only, so the merge was theirs to make. Agent-initiated: which pairs to link and the wording of every rule, the one join (simplify-cut-drops-needed-instruction into rewrite-pass-scope-drift), moving misfiled occurrences, removing prose pointers to clusters that no longer exist, the dated breach note, and the fixes for review findings; the owner approved the lists in aggregate, not pair by pair. What surprised me: the first two rounds of related rules still held inverted or vague rules and misplaced occurrences that only the Opus reviewers found, and gate runs on an uncommitted tree kept blocking my own commits and edits. After the merge the owner started a frictions-to-fixes run and asked me to inspect it (human-instructed). From the session log, the PRs, issue 3407 and the ledger diff on main, without reading its events, it ran as the Skill intends: 31 occurrences appended into 30 clusters, two entries opened, five PRs merged, two issues left for a human, no occurrence lost, ledger tests green. My changes showed in one new entry linked both ways to its nearest cluster and in issue 3407 framed around the accepted ceiling; the severity hint and the breach reopen were not exercised. One side effect: the new entry carries routing prose in its summary and cause as well as in related. The owner asked me to delete the stale remote branch and add one brief line for that. The deletion failed: the proxy refuses it through git and the REST API, and I did not try to get around that. The brief line went into survey-brief step 2; two Opus agents reviewed it, the gate passed, and I opened PR 3414 myself under ADR-0003, then posted a verdict and merged it with merge-pr.ts under the standing CLAUDE.md rule (the owner had asked for the line, not the merge). That merge deleted the head branch. The owner then said to clean up the classifier-no-verdict entry (human-instructed): I removed its routing prose with ledger-set, read the four-line diff myself as a simple change, gated it, and opened PR 3415 myself; I plan to merge it the same way once CI is green. Still open: PR 3415 awaits CI; a Glass Box guide page describes accepted without a ceiling and belongs to glassbox-update; and prepush-gate-review-skipped stays tracked under issue 3407 until the owner decides."
 prs:
   - "3405"
   - "3414"
+  - "3415"
 docsRead:
   - path: .agents/skills/frictions-to-fixes/scripts/ledger-set.ts
     reason: (read before editing)
@@ -146,29 +147,29 @@ frictions:
   - description: Grepped docs/agents/environment-caveats.md for keywords before debugging the failed branch delete, though CLAUDE.md says to read it for a push or network error; it held nothing on branch deletion.
     solution: Read the whole doc, or ask the owner, before debugging a push error; a grep cannot show that a caveat is absent.
     severity: nit
-durationSec: 9968
+durationSec: 10279
 models:
-  claude-sonnet-5-5: 604
+  claude-sonnet-5-5: 635
 toolCounts:
   Grep: 7
   Glob: 1
   Read: 33
   AskUserQuestion: 3
-  Bash: 143
+  Bash: 150
   Edit: 39
-  Write: 9
-  Skill: 8
+  Write: 10
+  Skill: 9
   Agent: 6
   SendUserFile: 1
   ToolSearch: 2
-  mcp__github__list_pull_requests: 3
+  mcp__github__list_pull_requests: 4
   mcp__github__pull_request_read: 13
-  mcp__claude-code-remote__subscribe_pr_activity: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 3
   mcp__github__update_pull_request: 1
-  ReadNotifications: 5
+  ReadNotifications: 6
   mcp__github__issue_read: 1
   mcp__claude-code-remote__read_documentation: 1
-  mcp__github__create_pull_request: 1
+  mcp__github__create_pull_request: 2
   mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/journal/tenant.config.ts
@@ -187,6 +188,7 @@ filesEdited:
   - .throwaway/ui-hover/shot.ts
   - layers/journal/content/current/frictions/constraint-unread-before-build.yml
   - .throwaway/related/fix2.ts
+  - layers/journal/content/current/frictions/classifier-no-verdict.yml
   - layers/journal/content/current/frictions/claim-of-fix-not-rendered.yml
   - layers/journal/content/current/frictions/get-session-cost-unreported.yml
   - layers/journal/content/current/frictions/human-merge-need-found-after-pr-opened.yml
@@ -839,37 +841,37 @@ subagents:
     durationSec: 101
     toolCalls: 15
     modelCalls: 14
-    tokenShare: 2.7
+    tokenShare: 2.5
   - task: Spec review of branch diff
     model: opus
     durationSec: 166
     toolCalls: 27
     modelCalls: 21
-    tokenShare: 3.6
+    tokenShare: 3.3
   - task: Second standards review of branch
     model: opus
     durationSec: 90
     toolCalls: 19
     modelCalls: 18
-    tokenShare: 3.3
+    tokenShare: 3
   - task: Second spec review of branch
     model: opus
     durationSec: 156
     toolCalls: 28
     modelCalls: 22
-    tokenShare: 3.7
+    tokenShare: 3.4
   - task: Standards review of brief line
     model: opus
     durationSec: 23
     toolCalls: 9
     modelCalls: 5
-    tokenShare: 1.3
+    tokenShare: 1.2
   - task: Spec review of brief line
     model: opus
     durationSec: 19
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1.1
+    tokenShare: 1
 gitBranch: ccr-2d6fda00-maifow
 entrypoint: remote_mobile
 cliVersion: 2.1.326
