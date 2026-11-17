@@ -620,6 +620,8 @@ export function extractTrace(
   const failedIds = failedToolUseIds(records)
   const prSignals: string[] = []
   let mergedWithoutClose = false
+  // merge-pr.ts only merges when its output says so; the result may arrive in a later record.
+  let pendingMerge = false
   const rules: string[] = []
   const alwaysLoadedRules: string[] = []
   const loads: RuleLoad[] = []
@@ -649,6 +651,10 @@ export function extractTrace(
     }
     for (const r of [...alwaysLoadedRules, ...rules]) if (!ruleLoadedAt.has(r)) ruleLoadedAt.set(r, i)
 
+    if (pendingMerge && JSON.stringify(rec).includes('merged\\": true')) {
+      mergedWithoutClose = true
+      pendingMerge = false
+    }
     const msg = rec.message as { content?: unknown; model?: string; id?: string; usage?: ApiUsage } | undefined
     if (rec.type === 'assistant' && msg?.model) {
       models[msg.model] = (models[msg.model] ?? 0) + 1
@@ -689,7 +695,7 @@ export function extractTrace(
 
       if (name === 'Bash') {
         const cmd = (input.command as string) ?? ''
-        if (cmd.includes('scripts/github/merge-pr.ts')) mergedWithoutClose = true
+        if (cmd.includes('scripts/github/merge-pr.ts')) pendingMerge = true
         if (cmd.includes('git push') || cmd.includes('pr create')) {
           prSignals.push(`(bash) ${cmd.slice(0, 60)}`)
         }

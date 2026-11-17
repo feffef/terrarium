@@ -14,10 +14,11 @@ const tool = (name: string, input: Record<string, unknown>) => ({
   message: { content: [{ type: 'tool_use', name, input }] },
 })
 const merge = tool('Bash', { command: 'pnpm tsx scripts/github/merge-pr.ts 12' })
+const merged = { type: 'user', message: { content: [{ type: 'tool_result', content: '{ "merged": true }' }] } }
 const close = tool('Skill', { skill: 'close-session' })
 
 describe('the Stop hook', () => {
-  const run = (stopHookActive: boolean, records: object[] = [merge]) => {
+  const run = (stopHookActive: boolean, records: object[] = [merge, merged]) => {
     const transcript = join(mkdtempSync(join(tmpdir(), 'merge-close-')), 't.jsonl')
     writeFileSync(transcript, records.map((r) => JSON.stringify(r)).join('\n'))
     return runTsx(SCRIPT, { input: JSON.stringify({ transcript_path: transcript, stop_hook_active: stopHookActive }) })
@@ -28,11 +29,11 @@ describe('the Stop hook', () => {
     expect(out.reason).toContain('close-session')
   })
   it('passes once close-session ran after the merge, or without a merge', () => {
-    expect(run(false, [merge, close])).toBe('')
+    expect(run(false, [merge, merged, close])).toBe('')
     expect(run(false, [tool('Bash', { command: 'ls' })])).toBe('')
   })
   it('blocks when close-session ran only before the merge', () => {
-    expect(JSON.parse(run(false, [close, merge])).decision).toBe('block')
+    expect(JSON.parse(run(false, [close, merge, merged])).decision).toBe('block')
   })
   it('passes a re-entered stop', () => {
     expect(run(true)).toBe('')
