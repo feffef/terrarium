@@ -187,7 +187,7 @@ human.
 ### Instructions
 
 1. Follow the rest of `docs/agents/pr-workflow.md`'s "Closing a scheduled
-   run's PR" for **one** sweep PR with one commit:
+   run's PR" for **one** sweep PR:
    - its subject is `audit-docs: <date> sweep`;
    - its body lists the fixes and any issue filed;
    - its verdict comment records the audit in one line plus
