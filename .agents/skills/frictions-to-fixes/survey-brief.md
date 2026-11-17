@@ -80,10 +80,11 @@ Every edit goes through
    `major` or `blocker`, and for any Friction whose root cause or harm clearly
    differs from every entry it nearly matched. Link it to
    each such entry (`ledger-set.ts --related <entry> <rule>`): the rule states
-   the distinction, when a Friction goes there instead. Its `summary` is one plain sentence a visitor can
-   read; its `cause` names the root mechanism and the signals that identify
-   a new occurrence (error text, file or tool, trigger), so a later run can
-   match it.
+   the distinction, when a Friction goes there instead. Put that distinction
+   in `related` only, never in `summary` or `cause`. Its `summary` is one
+   plain sentence a visitor can read; its `cause` names the root mechanism and
+   the signals that identify a new occurrence (error text, file or tool,
+   trigger), so a later run can match it.
 3. **Re-cluster when the ledger says so.** A cluster is a shared root cause:
    two Frictions days apart, on different tools, belong together when one
    change would retire both. When the stored texts show one broad entry
