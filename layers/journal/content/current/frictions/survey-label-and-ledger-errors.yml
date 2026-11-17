@@ -23,3 +23,8 @@ occurrences:
     severity: minor
     description: "Survey report labelled glassbox-page-conventions-found-late never-fixed though later commits had fixed it; the design agent found it, costing one extra check and a dropped design."
     solution: "Survey brief step 3 should check git log on the doc's own territory since the earliest session before labelling never-fixed."
+  - session: session_013zxzeSZQpKBLnM3DK1cPRQ
+    date: "2026-11-17"
+    severity: minor
+    description: "The survey labelled verdict-line-asserts-unchecked-review never-fixed though open issue #3395 covered it; I found it only by reading the open-issue titles myself."
+    solution: "Survey brief should match each new entry's session against open issue bodies, not only titles and a keyword scan."

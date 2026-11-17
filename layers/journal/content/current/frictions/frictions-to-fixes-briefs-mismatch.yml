@@ -86,3 +86,8 @@ occurrences:
     severity: minor
     description: "The survey report mixed verified and unverified claims, contradicted itself (major vs minor since the fix, a hash left unprinted, self-corrected session ids), so I re-checked against summary2.txt before acting."
     solution: "Have the survey brief require an id and severity table from the script output rather than prose, and the commit hash."
+  - session: session_013zxzeSZQpKBLnM3DK1cPRQ
+    date: "2026-11-17"
+    severity: minor
+    description: "Survey brief tells the agent to pass --merges-only to list-merges-since.ts, which rejects that flag; the survey agent filtered by hand."
+    solution: "Fix survey-brief.md section 3 to match the script, or add the flag."

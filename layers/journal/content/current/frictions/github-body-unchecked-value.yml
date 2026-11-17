@@ -24,3 +24,8 @@ occurrences:
     severity: minor
     description: "Filed regression issue #2853 with quotes and session ids written from memory (garbled suffixes); I had to rewrite it, despite 'Verify before you state'."
     solution: "Print the occurrence text with print-ledger-occurrence.ts and paste it, rather than retyping."
+  - session: session_013zxzeSZQpKBLnM3DK1cPRQ
+    date: "2026-11-17"
+    severity: nit
+    description: "I wrote an unverified session reference into regression issue #3401, then had to rewrite the body after reading the ledger."
+    solution: "Pull occurrence sessions from the entry file before drafting the issue."

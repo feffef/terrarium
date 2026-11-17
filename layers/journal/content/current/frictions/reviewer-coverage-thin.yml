@@ -21,3 +21,8 @@ occurrences:
     severity: minor
     description: "Reviewer agents B and C read only about eight docs/agents files; most Live files went unread, so coverage is thin."
     solution: "Split each lens over narrower file sets so each agent can finish."
+  - session: session_013zxzePiqmgzsVGM4zghBUs
+    date: "2026-11-17"
+    severity: minor
+    description: "Reviewers B and C read only part of their focus lists (B six files, C mostly rules and ADRs) and A mostly grepped, so this run's coverage is thin."
+    solution: "Split each lens's focus list across two agents, or cap each agent's list to what it can read in full."

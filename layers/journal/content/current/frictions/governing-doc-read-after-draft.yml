@@ -156,3 +156,8 @@ occurrences:
     severity: nit
     description: "I explained how Skill observations and the Journal work without first reading the overview page CLAUDE.md requires."
     solution: "Read layers/glassbox/content/guide/pages/index.md before explaining the Platform."
+  - session: session_013zxzeSgAcwDrJXAMFAC4Qf
+    date: "2026-11-17"
+    severity: nit
+    description: "Edited the Journal layer before reading layers/journal/GLOSSARY.md; the tenant-glossary rule loaded only on the first edit, and nothing in it changed my wording."
+    solution: "Read the Tenant's GLOSSARY.md when a plan names its layer, before the first edit."

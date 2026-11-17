@@ -67,3 +67,8 @@ occurrences:
     severity: moderate
     description: "Committed and pushed an owner-facing UI change without rendering it or showing the owner; they had to ask for the render."
     solution: "Rule: a session or issue that only adds or changes UI must render and show it, and the owner signs off before code review. Make that a CLAUDE.md or ui-verification.md must-have, and have the Stop hook's commit nudge defer to it."
+  - session: session_013zxzeSgAcwDrJXAMFAC4Qf
+    date: "2026-11-17"
+    severity: nit
+    description: "Built the accepted-ceiling text and its plumbing in frictions.vue before showing a sample, though ui-verification.md says to agree a sample before building owner-facing UI."
+    solution: "Show a rendered sample of the new hover and paragraph, and wait for the owner, before editing the page."

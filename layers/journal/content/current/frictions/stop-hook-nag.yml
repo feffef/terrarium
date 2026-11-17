@@ -282,3 +282,8 @@ occurrences:
     severity: nit
     description: "Stop hook asked to push the ledger commit before the PR flow and to close the session mid-run while two PRs were still waiting on CI."
     solution: "Have the hook treat a subscribed open PR as work in progress."
+  - session: session_013zxzeSZQpKBLnM3DK1cPRQ
+    date: "2026-11-17"
+    severity: nit
+    description: "The Stop hook flagged uncommitted ledger changes while the survey agent was still mid-run; I had to check status to see they were the agent's."
+    solution: "None needed beyond waiting; the hook can't see subagent work in progress."

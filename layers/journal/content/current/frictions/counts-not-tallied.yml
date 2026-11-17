@@ -146,3 +146,8 @@ occurrences:
     severity: minor
     description: "I tallied and relayed about fifteen sets of self-reported counts by hand; each was marked unverified, but one figure (sessions with a passing backed) was wrong and had to be corrected."
     solution: "Have sessions post structured counts and sum them with a script, not by hand in the reply."
+  - session: session_013zxzeSgAcwDrJXAMFAC4Qf
+    date: "2026-11-17"
+    severity: nit
+    description: "Briefed the first reviewers with 'about 130 of the 143 changed files are data' without counting; the file list I printed gave 135, and I never verified either."
+    solution: "Count with git diff --name-only and a filter before stating a number in a brief, or leave the number out."

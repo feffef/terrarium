@@ -49,3 +49,8 @@ occurrences:
     severity: nit
     description: "I asked design questions with AskUserQuestion without invoking the grilling Skill CLAUDE.md names for owner-facing UI."
     solution: "Invoke grilling first when asking before building owner-facing UI."
+  - session: session_013zxzeSgAcwDrJXAMFAC4Qf
+    date: "2026-11-17"
+    severity: nit
+    description: "Settled the ledger design with AskUserQuestion batches, not the grilling Skill that CLAUDE.md names for settling what to build with the owner."
+    solution: "Invoke grilling before the first design question on a new stored field or an owner-facing look."

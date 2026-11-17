@@ -19,3 +19,8 @@ occurrences:
     severity: nit
     description: "Checked the ADR-0017 commit trailer on the first commit only, not on the two follow-up commits, though git-conventions asks for the check after each."
     solution: "Have the commit-msg hook print a one-line trailer confirmation so each commit shows it landed."
+  - session: session_013zxzeSgAcwDrJXAMFAC4Qf
+    date: "2026-11-17"
+    severity: nit
+    description: "Checked the ADR-0017 commit trailer on some of the commits I made but not on every one, though the rule says to check that it landed each time."
+    solution: "Print git log -1 for the trailer after each commit, or have the hook report a missing one."

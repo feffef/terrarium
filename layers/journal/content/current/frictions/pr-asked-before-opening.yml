@@ -30,3 +30,8 @@ occurrences:
     severity: minor
     description: "After pushing I asked the user whether to run the gate and review and open the PR, though ADR-0003 says to open it without asking; the user pushed back."
     solution: "Act on the loaded ADR-0003 rule directly; the Stop hook's commit and push prompt was not a reason to pause."
+  - session: session_013zxzeSgAcwDrJXAMFAC4Qf
+    date: "2026-11-17"
+    severity: minor
+    description: "Asked the owner several times whether to open the PR, though ADR-0003 says to open it unasked; the session prompt said the opposite, so the owner opened it."
+    solution: "State in CLAUDE.md or the ADR that its open-without-asking rule wins over the harness prompt, so no session has to choose."

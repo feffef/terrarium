@@ -619,3 +619,13 @@ occurrences:
     severity: nit
     description: "Worked on the Journal layer without reading layers/journal/GLOSSARY.md; the tenant-glossary rule only loaded after I had read the page, so label words like Friction and Goal went unchecked against it."
     solution: "Load the tenant-glossary rule when a prompt names a Tenant URL such as /t/journal/, or have a path hook list the layer's GLOSSARY.md."
+  - session: session_013zxzeNzhyuFe3JhwD9usjS
+    date: "2026-11-16"
+    severity: nit
+    description: "Ran my first git command (fetch) before reading docs/agents/git-conventions.md, which CLAUDE.md requires; the read hint arrived after the call."
+    solution: "Read the CLAUDE.md-listed doc before the first non-read-only git command, as the instruction says."
+  - session: session_013zxzeQnWZGH17Bmo7pqtaf
+    date: "2026-11-17"
+    severity: nit
+    description: "Ran git fetch before reading git-conventions.md, which CLAUDE.md requires before the first non-read-only git command; a hook reminded me afterwards."
+    solution: "The doc matched what I did; no harm. Hook-at-first-git already exists."

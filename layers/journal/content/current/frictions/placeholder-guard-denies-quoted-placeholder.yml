@@ -40,3 +40,8 @@ occurrences:
     severity: minor
     description: "The dispatch-read guard denied my first survey Agent call until I read dispatch-subagents; a second call was denied because my brief text held the literal placeholder token, though I had filled the value."
     solution: "Have the guard test for an unfilled value, not the literal token, or name this in the Skill's dispatch lines."
+  - session: session_013zxzeSZQpKBLnM3DK1cPRQ
+    date: "2026-11-17"
+    severity: minor
+    description: "The dispatch-read guard blocked my first survey brief because it named the curly-brace scratch placeholder literally; I reworded and resent."
+    solution: "Have the Skill's briefs say how to fill the placeholder without quoting it, or let the guard ignore a quoted one."

@@ -54,3 +54,8 @@ occurrences:
     severity: minor
     description: "Survey report's window start was ambiguous (extract-frictions prefix 2026-11-13T02:27 versus first session 2026-11-12T23:06) and its ledger append refused all 84 triples over 15 held sessions, needing a throwaway filter script."
     solution: "Print one canonical window start; let print-ledger-occurrence --append skip held sessions with a flag."
+  - session: session_013zxzeSZQpKBLnM3DK1cPRQ
+    date: "2026-11-17"
+    severity: minor
+    description: "Survey agent: ledger append refused three already-held session triples after --unledgered, and it first typed the commit-trailer session id by hand; design agent: audit-skills output dumps 66KB, no path lookup for trial territory, no guidance when every pick is no change."
+    solution: "Add session-level pre-filtering to --unledgered, a doc-counts mode for audit-skills, and a no-change clause in design-brief section 6."

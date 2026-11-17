@@ -17,3 +17,8 @@ occurrences:
     severity: moderate
     description: "Trial of the split index used filler text, which fit one Read; real code-dense teaches hit Read's 25,000-token cap, found only in review"
     solution: "Size files meant for Read in tokens with real content, about 2.5 bytes per token for code names; orient now splits parts under 40 KB"
+  - session: session_013zxzeSgAcwDrJXAMFAC4Qf
+    date: "2026-11-17"
+    severity: minor
+    description: "Wrote related-pair rules in bulk without trying the format on two pairs first; the Opus Spec reviews then found four inverted, one wrong and two vague."
+    solution: "Try a new rule format on two concrete pairs and read both sides aloud before bulk-applying it, as CLAUDE.md's Question the premise asks."

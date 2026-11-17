@@ -133,3 +133,8 @@ occurrences:
     severity: nit
     description: "I typed the session id by hand in a commit message trailer and got it wrong; I caught it with get_session before committing."
     solution: "Copy the id from the attribution reminder, never retype it."
+  - session: session_013zxzeSZQpKBLnM3DK1cPRQ
+    date: "2026-11-17"
+    severity: minor
+    description: "Survey agent: ledger append refused three already-held session triples after --unledgered, and it first typed the commit-trailer session id by hand; design agent: audit-skills output dumps 66KB, no path lookup for trial territory, no guidance when every pick is no change."
+    solution: "Add session-level pre-filtering to --unledgered, a doc-counts mode for audit-skills, and a no-change clause in design-brief section 6."

@@ -124,3 +124,8 @@ occurrences:
     severity: nit
     description: "Guessed the meaning of the owner's 'or keep the arrow' and edited the page, against their ask-first preference; their next message corrected it, which wasted one edit and a started screenshot run."
     solution: "When a short mid-turn message has two plausible readings, ask the one-line question before editing."
+  - session: session_013zxzeSgAcwDrJXAMFAC4Qf
+    date: "2026-11-17"
+    severity: minor
+    description: "Treated the owner's answers on symmetry, display and migration as agreement on the related field's shape, which I had written in prose and never asked about directly."
+    solution: "Ask a new stored field's shape as its own question with options, as data-shapes.md says, and hold the build until answered."

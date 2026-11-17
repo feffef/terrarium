@@ -106,3 +106,8 @@ occurrences:
     severity: nit
     description: "Stop hook said a PR merged and demanded close-session, though this session opened and merged none; cost an extra closure pass."
     solution: "Have the hook check the session's own PRs, not any merge event, before demanding close-session."
+  - session: session_013zxzeNzhyuFe3JhwD9usjS
+    date: "2026-11-16"
+    severity: minor
+    description: "Stop hook repeatedly said a PR merged and demanded close-session while no PR existed yet and subagents were still running, costing several turns of redundant status replies."
+    solution: "Gate the merge-close Stop hook on a PR this session actually opened or merged."

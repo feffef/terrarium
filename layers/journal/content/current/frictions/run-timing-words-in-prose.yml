@@ -1,0 +1,16 @@
+name: run-timing-words-in-prose
+surface: safe
+summary: Prose that says when something runs (for example 'daily') broke a repo convention that the writer met only late.
+cause: Text names a cadence ('daily') where the Glass Box content rule or the skill-cadence validator (scripts/gate/validate-skill-cadence.ts, a Routine's schedule lives outside git) allows only 'automatically'; found at a rule conflict or at validate:content time, not on writing.
+status: open
+occurrences:
+  - session: session_013zxzeRzd6VkoZYwUYQuzAn
+    date: "2026-11-16"
+    severity: nit
+    description: "The owner's mid-turn request for 'daily' conflicts with the glassbox-content rule against when-something-runs in prose; resolved by using 'automatically'."
+    solution: "None needed; the rule gave a clear answer, but the owner may want to be told the rule exists when asking."
+  - session: session_013zxzeTBn6kP1nZ2KA22n9i
+    date: "2026-11-17"
+    severity: nit
+    description: "The skill cadence validator rejected 'daily' in two new notes, and a truncated session id in another, only at validate:content time."
+    solution: "Mention in step 5 that validate:content checks cadence words and full ids, so write them right the first time."

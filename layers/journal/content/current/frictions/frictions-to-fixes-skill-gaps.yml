@@ -86,3 +86,8 @@ occurrences:
     severity: minor
     description: "frictions-to-fixes §5.4 asks for the simple-change test on a ledger PR whose generated diff spans 57 files and 437 lines, so it can never pass; I checked paths only."
     solution: "Say a ledger-only diff counts as simple when it touches only frictions entries and the gate passes."
+  - session: session_013zxzeSZQpKBLnM3DK1cPRQ
+    date: "2026-11-17"
+    severity: minor
+    description: "SKILL section 5.4 asks the simple-change test on a ledger PR whose generated diff spans 58 files, so it can never pass (already tracked in #3397)."
+    solution: "Say a generated ledger diff gets the gate plus a read of the decisions commit."

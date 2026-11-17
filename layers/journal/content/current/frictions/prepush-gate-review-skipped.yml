@@ -173,3 +173,8 @@ occurrences:
     severity: minor
     description: "Skipped code-review on a 76-file mechanical pin diff that exceeds the simple-change 10-line limit, reading the diff myself instead."
     solution: "pr-workflow could name a scripted pin-only diff as simple, or the run runs code-review."
+  - session: session_013zxzeNzhyuFe3JhwD9usjS
+    date: "2026-11-16"
+    severity: minor
+    description: "Skipped the code-review Skill that ADR-0004 asks for on a larger diff, reading the mechanical diff myself instead."
+    solution: "Either run code-review or let pr-workflow's simple-change test cover pure re-pin diffs of any size."
