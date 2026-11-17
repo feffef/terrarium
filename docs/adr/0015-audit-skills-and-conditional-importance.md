@@ -32,6 +32,11 @@ Routine run costs and issues.
   later run sees it repeat. Such an issue goes through ordinary triage, and
   its fix merges like any PR. Ideas to improve, add, split or retire a Skill are
   only recorded.
+- **`watchFor` is the owner's, not the audit's.** An Inventory entry may list
+  what each run of its Skill must show. The behaviour check grades each item
+  first, and its notes report a verdict per item. A person or the Skill's author
+  writes and retires the items in a gated PR; the audit never edits them, so it
+  can't move its own goalposts, and only suggests a change.
 - **A script gathers the facts; the session makes every judgement.**
 
 ## Why

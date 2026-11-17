@@ -206,11 +206,16 @@ describe('scriptsNamedIn() / parseLandings() / pickSkillChanges() — a run answ
 
 describe('pickBehaviourChecks()', () => {
   const r = (name: string, useCount: number, over: Partial<SkillRow> = {}) =>
-    ({ name, useCount, installed: false, onDisk: true, ...over }) as SkillRow
+    ({ name, useCount, installed: false, onDisk: true, watchFor: [], ...over }) as SkillRow
 
   it('picks own, on-disk Skills at or above the threshold', () => {
     const rows = [r('often', 3), r('rare', 2), r('pack', 9, { installed: true }), r('gone', 9, { onDisk: false })]
     expect(pickBehaviourChecks(rows, 3)).toEqual(['often'])
+  })
+
+  it('checks a Skill with a watchFor list from its first use', () => {
+    const rows = [r('listed', 1, { watchFor: ['x'] }), r('unused', 0, { watchFor: ['x'] }), r('plain', 1)]
+    expect(pickBehaviourChecks(rows, 3)).toEqual(['listed'])
   })
 })
 
@@ -937,6 +942,7 @@ describe('buildBrief()', () => {
     category: null,
     importance: null,
     role: null,
+    watchFor: [],
     observations: [],
     description: null,
     useCount: 0,
@@ -968,6 +974,13 @@ describe('buildBrief()', () => {
     const w = Array.from({ length: 15 }, (_, i) => win(`s${i}`, `2026-10-20T${String(i).padStart(2, '0')}:00:00Z`, ['demo']))
     const out = buildBrief(row({ usedIn: w.map((x) => x.session) }), w, now)
     expect(out.split('\n').filter((l) => l.startsWith('- s'))).toHaveLength(15)
+  })
+
+  it('lists the watchFor items, numbered, before the observations, only when there are some', () => {
+    const out = buildBrief(row({ watchFor: ['first', 'second'] }), [])
+    expect(out).toContain('1. first\n2. second')
+    expect(out.indexOf('## Watch for')).toBeLessThan(out.indexOf('## Observations'))
+    expect(buildBrief(row(), [])).not.toContain('Watch for')
   })
 
   it('lists observations newest first and cuts them at the character budget, keeping the newest', () => {

@@ -118,6 +118,8 @@ export interface InventoryEntry {
   category: string
   importance: string
   role: string
+  /** Human-written acceptance checks for each run (ADR-0015). */
+  watchFor?: string[]
   observations: Observation[]
 }
 export interface SkillRow {
@@ -130,6 +132,7 @@ export interface SkillRow {
   category: string | null
   importance: string | null
   role: string | null
+  watchFor: string[]
   observations: Observation[]
   description: string | null
   /** Windowed sessions that used it, and their ids (resolve against `window`). */
@@ -390,6 +393,7 @@ export function buildSkillRows(
       category: entry?.category ?? null,
       importance: entry?.importance ?? null,
       role: entry?.role ?? null,
+      watchFor: entry?.watchFor ?? [],
       observations: entry?.observations ?? [],
       description: onDisk.get(name)?.description ?? null,
       useCount: usedIn.length,
@@ -473,6 +477,10 @@ export function buildBrief(row: SkillRow, window: readonly WindowSession[], now 
     const others = window.filter((w) => !used.has(w.session)).sort((a, b) => b.startedAt.localeCompare(a.startedAt))
     lines.push(...others.map((w) => `${runLine(w)} · goal: ${w.goal} · skillsUsed: ${w.skillsUsed.join(', ') || 'none'}`))
   }
+  if (row.watchFor.length) {
+    lines.push('', '## Watch for (the owner\'s checklist: grade each item held, failed or couldn\'t tell, with evidence)')
+    lines.push(...row.watchFor.map((w, i) => `${i + 1}. ${w}`))
+  }
   lines.push('', '## Observations (what is already known)')
   const obs = [...row.observations].reverse().sort((a, b) => b.date.localeCompare(a.date)).map((o) => `- ${o.date}: ${o.note.replace(/\s+/g, ' ').trim()}`)
   let chars = 0
@@ -488,9 +496,10 @@ export function buildBrief(row: SkillRow, window: readonly WindowSession[], now 
   return lines.join('\n') + '\n'
 }
 
-/** Own, on-disk Skills used often enough in the window to judge their behaviour. */
+/** Own, on-disk Skills used often enough in the window to judge their behaviour;
+ *  one with a `watchFor` checklist needs only a single use. */
 export function pickBehaviourChecks(rows: readonly SkillRow[], minUses = BEHAVIOUR_CHECK_MIN_USES): string[] {
-  return rows.filter((r) => r.onDisk && !r.installed && r.useCount >= minUses).map((r) => r.name)
+  return rows.filter((r) => r.onDisk && !r.installed && r.useCount >= (r.watchFor.length ? 1 : minUses)).map((r) => r.name)
 }
 
 /** Routine-fired sessions grouped by Routine, sorted by name, keeping input order within one. */
@@ -974,6 +983,7 @@ function readInventory(cwd = root): Map<string, InventoryEntry> {
       category: String(raw.category ?? ''),
       importance: String(raw.importance ?? ''),
       role: String(raw.role ?? '').replace(/\s+/g, ' ').trim(),
+      watchFor: Array.isArray(raw.watchFor) ? raw.watchFor.map((w) => String(w).replace(/\s+/g, ' ').trim()) : [],
       observations: observations.map((o: Record<string, unknown>) => ({
         date: String(o.date ?? ''),
         note: String(o.note ?? '').replace(/\s+/g, ' ').trim(),

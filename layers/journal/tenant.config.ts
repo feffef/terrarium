@@ -36,6 +36,13 @@ export const skillSchema = z
     // (ADR-0015). Machine-managed — do NOT hand-edit; regenerate with
     // `pnpm verify:skills-lock --write`. Absent on our own Skills.
     installedSha256: z.string().optional(),
+    // What to watch for in each run: plain, checkable sentences a behaviour
+    // check grades as held, failed or couldn't tell. Written by a person or
+    // the Skill's author, never by `audit-skills`; no PR/issue/session ids,
+    // like `role` (ADR-0015). Not rendered on the site.
+    watchFor: z
+      .array(z.string().refine((v) => !/#\d+|session_01/.test(v), 'cites a PR, issue or session id; those go in observations'))
+      .optional(),
     // The audit's overall verdict on how well the Skill does its job, shown on the
     // Skills page (`audit-skills/SKILL.md` step 5 says how it is written).
     // `date` is when it was last written; the page dims an old line

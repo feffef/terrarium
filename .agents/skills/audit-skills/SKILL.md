@@ -17,7 +17,7 @@ aims at two gaps that frictions never reveal:
 Keeping the **Skill Inventory** (`layers/journal/content/current/skills/`) in
 line with real usage is a by-product of the same evidence.
 
-This Skill writes only Inventory `.yml` entries, Routine run costs and GitHub
+This Skill writes only Inventory `.yml` entries (never their `watchFor`), Routine run costs and GitHub
 issues (ADR-0015).
 
 ## 1. Gather the scorecard
@@ -161,6 +161,11 @@ Grade each Skill's importance by the definitions below, after reading its
   made stale. Do the same when the runs show a regular behaviour the text
   doesn't state, or contradict a claim in it. `role` stays ≤ ~50 words and free of PR, issue or
   session ids; the scorecard prints it.
+- **`watchFor`** is the owner's checklist for a Skill; never edit it. When
+  the subagent graded its items, start that Skill's observation note with one
+  verdict per item (held, failed or couldn't tell). A failed item escalates
+  under step 4's usual bar. Suggest retiring an item, as the Skill's idea, when
+  it held in every run it was graded on across the window.
 - **`observations`** hold a 40-day window of history. Append
   `{ date: <today, UTC>, note }` for a grade or role change, a finding
   (verified or unverified, say which) or an idea, or a clean check (name the

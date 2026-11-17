@@ -25,6 +25,17 @@ describe('skillSchema observation notes', () => {
   })
 })
 
+describe('watchFor', () => {
+  const base = skill('x')
+  it('is optional and takes plain sentences', () => {
+    expect(skillSchema.safeParse({ ...base, watchFor: ['A merging run ran the gate first.'] }).success).toBe(true)
+    expect(skillSchema.safeParse(base).success).toBe(true)
+  })
+  it('rejects an item that cites an issue or session id', () => {
+    expect(skillSchema.safeParse({ ...base, watchFor: ['Fixed in #3395.'] }).success).toBe(false)
+  })
+})
+
 describe('auditIsStale', () => {
   const now = new Date('2026-11-15T12:00:00Z')
   it('dims a line older than 14 days', () => {

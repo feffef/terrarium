@@ -8,6 +8,9 @@ role: >-
   design agent design and risk-rate each fix, files risky ones as issues, has
   impl agents build the rest, and merges those PRs itself, escalating only
   high-risk ones. Use when frictions pile up.
+watchFor:
+  - "The top-three rule in section 2 is followed: an entry is skipped only for a reason the rule states, not by judgement."
+  - "Every Friction cluster the run designed a solution for ends the run fixed immediately, with an issue raised, or with a ledger update saying what design was dropped and why."
 auditSummary:
   date: "2026-11-17"
   text: "Turns recurring frictions into issues and fixes on schedule and lands its ledger PRs. Its simple-change test cannot pass for a ledger diff, so every run falls back to reading the diffstat."
