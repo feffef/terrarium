@@ -63,7 +63,6 @@ None of these is false.
 ### Stale or missing
 
 - No page teaches the `visitor-loop` Skill (blind and informed visitors, report-only); it is still changing fast, so teach only the stable idea. Nearest page: *Ideas and lessons learned*.
-- No page teaches the `--own-read` verdict: for a small PR, `verdict-line.ts` prints an `Own-read:` line that `merge-pr.ts` accepts in place of a review. Nearest page: *Pull requests*.
 - No page teaches `watchFor`, a checklist the owner writes on a Skill Inventory entry for `audit-skills` to grade. Nearest page: *Skill inventory*.
 ### Claims to check
 
