@@ -31,9 +31,13 @@ Rules:
     an index of URL to file, beats a screenshot per page.
   - **What can be measured** (overflow, sizes, positions): measure it in the
     page at the width in question, 390px included. Pass `page.evaluate` its
-    body as a string, since `tsx` breaks a function passed to it.
+    body as a string, since `tsx` breaks a function passed to it. Find
+    clipped content with a per-element `getBoundingClientRect` scan, not
+    `scrollWidth`; read a closed `<details>` with `textContent` and hover
+    text from `title` attributes.
   - **What must be seen** (overlap, clipping, contrast, awkward wrapping,
     images, a first impression): screenshot it and look at the screenshot.
+    Judge an SVG by screenshot, not a text dump.
 - Create {SCRATCH_DIR} and {SCRIPT_DIR} first and write nothing outside them.
   Modify nothing else; never `checkout`, `switch` or `reset`. Run every
   command in the foreground. Never stop or restart the server.
