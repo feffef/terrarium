@@ -208,8 +208,9 @@ For each `reviewed` branch, in round N:
    result.
 4. **Next round.** If a `defect` is still open after round N's re-checks, or
    its fixes changed more than about 10 lines (`git -C <worktree> diff
-   --shortstat <first before>..HEAD`), or a `missing-test` is still open on a
-   branch above 50 changed lines (`--shortstat origin/main...HEAD`), or you
+   --shortstat <sha before>..HEAD`, from round N's first fix), or a
+   `missing-test` line is in the summary or a re-check on a branch above 50
+   changed lines (`--shortstat origin/main...HEAD`), or you
    judge the branch hard or large, and N is below 3, run the workflow on
    that branch with `review: true`, `round: N+1` and its `worktree`: a fresh pair
    reads the whole diff, and the builder stays. A smaller branch's
