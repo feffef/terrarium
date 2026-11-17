@@ -74,3 +74,8 @@ occurrences:
     severity: minor
     description: "My first split analysis read each log twice, since readSessionLogs with archived: true already includes the current logs, which doubled every count; I noticed when coverage read 244 against 122."
     solution: "Rename the option includeArchived and say in its doc comment that it adds to current logs, not replaces them."
+  - session: session_013zxzeTBn6kP1nZ2KA22n9i
+    date: "2026-11-17"
+    severity: minor
+    description: "The data file for glassbox-lesson said no runs in 3 days while the scorecard counted 3 uses in the window; the spec review caught my observation overstating it."
+    solution: "Make the scorecard print the 3-day run list count next to useCount so the two are not confused."

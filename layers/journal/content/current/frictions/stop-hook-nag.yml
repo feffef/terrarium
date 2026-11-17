@@ -314,3 +314,8 @@ occurrences:
     severity: nit
     description: "Stop hook asked to commit and push repeatedly while subagents were still running and the claim checks unfinished."
     solution: "The hook could skip while background agents are live."
+  - session: session_013zxzeSyRCdzfotAbmBuiPp
+    date: "2026-11-16"
+    severity: nit
+    description: "Stop hook asked to push the ledger commit before the PR flow and to close the session mid-run while two PRs were still waiting on CI."
+    solution: "Have the hook treat a subscribed open PR as work in progress."

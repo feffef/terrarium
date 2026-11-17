@@ -146,3 +146,13 @@ occurrences:
     severity: nit
     description: "Combined run_in_background with a text-level ampersand and the double-background guard rejected the call."
     solution: "Pass run_in_background alone with a plain foreground command."
+  - session: session_013zxzeQsCq5g9jeQpmsULPZ
+    date: "2026-11-16"
+    severity: nit
+    description: "Chained a background build with a text-level & and the double-background guard blocked it; resent as one plain background call."
+    solution: "Nothing to fix; the guard worked."
+  - session: session_013zxzeSgpoaGQ1bLrtX4DkU
+    date: "2026-11-17"
+    severity: nit
+    description: "The first background gate call stacked run_in_background with a text-level ampersand and the double-background guard blocked it."
+    solution: "Pass run_in_background alone with a plain command."

@@ -201,3 +201,13 @@ occurrences:
     severity: nit
     description: "Tried to commit while gate:scoped ran in the background; the gate-edit guard blocked it and I had to wait a turn."
     solution: "Commit before starting the gate, or wait for the gate before staging."
+  - session: session_013zxzeP4NViUQL8i9LwF7Nj
+    date: "2026-11-16"
+    severity: nit
+    description: "Started pnpm gate:scoped before the code-review finished; pr-workflow orders review, fixes, then the gate on the final head, so a review fix would have wasted a full gate run."
+    solution: "State in pr-workflow that the gate starts only after review findings are fixed, or accept a concurrent start when the diff is under review."
+  - session: session_013zxzeRCPF7mHwN6aT8t7RQ
+    date: "2026-11-16"
+    severity: minor
+    description: "The #3386 builder ran the gate on an uncommitted test fix, so HEAD moved afterwards. That forced a reviewer re-check and a second full gate, about ten extra minutes."
+    solution: "Tell the builder in its rules to commit before it gates, or to gate only a clean tree."

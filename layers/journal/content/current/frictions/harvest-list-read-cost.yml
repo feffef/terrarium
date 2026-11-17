@@ -36,3 +36,8 @@ occurrences:
     severity: nit
     description: "harvest list output was about 32k tokens, over the Read cap, so it took two reads."
     solution: "Already tracked as closed #3191; a compact list option would avoid it."
+  - session: session_013zxzeT29epAaAQNqmHmeU4
+    date: "2026-11-16"
+    severity: nit
+    description: "Harvest list is about 32k tokens, over the Read cap, so reading it whole took two calls; the same cost was raised and rejected earlier."
+    solution: "Already rejected in closed #3191; none."

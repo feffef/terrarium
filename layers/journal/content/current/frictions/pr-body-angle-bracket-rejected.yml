@@ -1,0 +1,16 @@
+name: pr-body-angle-bracket-rejected
+summary: A PR body or ledger quote with a bare angle-bracket tag is rejected by a check only after the body is written, costing a retry.
+cause: "A body guard or check-body rejects bare angle brackets (read as markup or placeholders) in a PR body or quoted ledger entry; the template warns but agents miss it and the first create_pull_request or write fails, then is reworded. Signals: 'bare angle-bracket tag', 'check-body rejected bare angle brackets', 'create_pull_request failed', 'reworded and retried'."
+surface: guard-or-hook
+status: open
+occurrences:
+  - session: session_013zxzeT29epAaAQNqmHmeU4
+    date: "2026-11-16"
+    severity: nit
+    description: "check-body rejected bare angle brackets in quoted entries after the body was written; the template already warns, and I missed it."
+    solution: "Fence entries containing angle brackets when first quoting them."
+  - session: session_013zxzeRCPF7mHwN6aT8t7RQ
+    date: "2026-11-16"
+    severity: nit
+    description: "A PR body with a bare angle-bracket tag was blocked by the guard, so the first create_pull_request for #3385 failed and I reworded and retried."
+    solution: "The guard worked as designed; the PR-body recipe in pr-workflow.md could say to describe tags in words."

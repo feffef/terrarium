@@ -113,3 +113,8 @@ occurrences:
     severity: minor
     description: "Piped log-session.ts --author output through sed to three lines on a re-author, against the close-session and log-session rule never to filter it."
     solution: "The first pass had printed in full minutes before and I wanted to save context; a refusal would have been cut. Known entry output-trim-drops-needed-line."
+  - session: session_013zxzeTChey8pdC2fuTTH7i
+    date: "2026-11-16"
+    severity: nit
+    description: "Piped the first log-session --author output through head, which close-session forbids; I re-ran it unfiltered and found no warning."
+    solution: "Print the run's output through a tool that cannot truncate, or have log-session --author refuse a piped stdout."

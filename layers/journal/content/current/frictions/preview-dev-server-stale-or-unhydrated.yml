@@ -46,3 +46,13 @@ occurrences:
     severity: nit
     description: "The dev server kept serving a stale layer component after an edit (tooltips stayed centred), costing two screenshot rounds before a restart."
     solution: "Restart the dev server when a layer component edit does not show, as verifying-ui-changes.md warns."
+  - session: session_013zxzeTChey8pdC2fuTTH7i
+    date: "2026-11-16"
+    severity: nit
+    description: "Dev server returned 500 after git stash and pop under it; restarting it cost two retries."
+    solution: "docs/agents/verifying-ui-changes.md: restart the dev server after stashing or restoring files under it."
+  - session: session_013zxzeRCPF7mHwN6aT8t7RQ
+    date: "2026-11-16"
+    severity: minor
+    description: "The dev preview kept serving the old Journal Markdown after I edited it, so the first screenshot showed the old text. I found it by probing the DOM and restarted the server, about four extra calls."
+    solution: "Add to verifying-ui-changes.md: restart the dev server after editing a content file, since it serves cached content."

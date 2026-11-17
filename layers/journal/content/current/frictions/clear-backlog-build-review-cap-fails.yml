@@ -36,3 +36,13 @@ occurrences:
     severity: moderate
     description: "Round 2 on a two-line Skill edit and round 3 on low-risk test gaps each cost about 150000 to 170000 tokens and found only nits."
     solution: "Apply pr-workflow's simple-change test and a risk bar to clear-backlog §3 step 4 before it forces another fresh round."
+  - session: session_013zxzeTChey8pdC2fuTTH7i
+    date: "2026-11-16"
+    severity: minor
+    description: "Round 3 for merge-pr-retry ran four agents over a missing-test already refused with proof and accepted by the re-check."
+    solution: "clear-backlog §3 step 4: a missing-test the re-check accepted as refused-with-proof should not trigger a further round."
+  - session: session_013zxzeRCPF7mHwN6aT8t7RQ
+    date: "2026-11-16"
+    severity: moderate
+    description: "The second-round rule fired on four small branches because round 1 held a spec-mismatch, defect or both, though each fix was one line or one sentence. Round 2 found only nits, costing about 600k subagent tokens and four extra workflow runs."
+    solution: "Let a small branch stop after a clean re-check of its fix (extend the small flag), or limit round 2 to defects above a size."

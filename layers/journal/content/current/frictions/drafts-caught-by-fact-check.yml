@@ -174,3 +174,8 @@ occurrences:
     severity: minor
     description: "Draft Digest said 'the same session' for PRs from three different sessions and 'every Skill' for 17 audited ones; the fact-check caught both."
     solution: "Check attribution via commit trailers and counts via files before writing prose."
+  - session: session_013zxzeSgpoaGQ1bLrtX4DkU
+    date: "2026-11-17"
+    severity: minor
+    description: "My first fact-check was too lenient: it let 'daily' through; the later review caught that cadence word, so I reran the gate once more."
+    solution: "Brief the fact-checker to flag every cadence word the Skill lists, not just ones it can disprove."

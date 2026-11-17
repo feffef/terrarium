@@ -1,9 +1,12 @@
 name: audit-skills-run-cost
 surface: safe
-summary: The weekly audit-skills run spends many subagent tokens on per-Skill reports that mostly repeat known findings.
-cause: "audit-skills dispatches one read-only subagent per Skill (16-17 per run) and the main session cannot verify most reports, so a run costs about 1.7M subagent tokens for mostly-repeat results and reworded claims. Signals: '16 per-Skill checks', '17 subagent reports for a mostly-repeat result', 'unverifiable from my side'."
-status: tracked
-ref: "#3364"
+summary: Runs that fan out many subagents (the audit-skills per-Skill checks, a retro resuming 20 agents) spend 1.7M-1.9M tokens on short replies that mostly repeat known findings.
+cause: "A session launches or resumes many subagents whose replies are short or re-confirm known repeats: audit-skills dispatches one per Skill (16-17 per run, about 1.7M tokens; since PR #3377 each reads the last 3 days and reports a repeat in one line, but the count is unchanged, and a 2026-11-17 run still cost about 1.7M), and a retro resumed 20 agents at 75k-130k tokens each (about 1.9M) for six-line replies. Signals: '16 per-Skill checks', '17 subagent reports for a mostly-repeat result', 'about 1.9M tokens', 'resumed 20 agents', 'most reports re-confirmed known repeats'."
+status: open
+fixes:
+  - pr: 3377
+    date: "2026-11-16"
+    summary: "Each behaviour-check subagent reads the last 3 days of runs in full plus earlier observations to a budget, and reports a known repeat in one line; which Skills are checked is unchanged."
 occurrences:
   - session: session_013zxzeS7ZJqB5FMcd5d5fza
     date: "2026-11-15"
@@ -15,3 +18,13 @@ occurrences:
     severity: minor
     description: "Heavy run: 17 subagent reports for a mostly-repeat result; several claims (non-user counts, session ids) were unverifiable from my side and had to be reworded."
     solution: "Have subagents return only deltas against the earlier observations, with counts checked against the data file."
+  - session: session_013zxzeTBn6kP1nZ2KA22n9i
+    date: "2026-11-17"
+    severity: minor
+    description: "The 16 behaviour subagents plus usage lookup and two review agents cost roughly 1.7M subagent tokens, and most reports re-confirmed known repeats."
+    solution: "Skip a Skill's check when its data file lists no runs and nothing changed; skip re-reading runs already audited clean."
+  - session: session_013zxzeTChey8pdC2fuTTH7i
+    date: "2026-11-16"
+    severity: minor
+    description: "The retro resumed 20 agents at 75k-130k subagent tokens each, about 1.9M tokens, for replies of about six lines."
+    solution: "Ask the retro in the last message each agent already receives, or run it as one cheap workflow call."

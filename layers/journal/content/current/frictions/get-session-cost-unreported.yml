@@ -64,3 +64,8 @@ occurrences:
     severity: minor
     description: "get_session cost_usd read 0.12 early in run 1 and was put in the PR body; it was a lagging figure (4.22 later), so the PR body is wrong."
     solution: "Have the Skill say to read the cost at the end of the run, or to omit it when the figure is under a minute old."
+  - session: session_013zxzeSoqEeWqPDrCqDCcJn
+    date: "2026-11-16"
+    severity: moderate
+    description: "Stopped after one PR at about a third of the context budget: with no get_session the cost was unknown, and I read that as the repeat loop not applying; the owner had to ask."
+    solution: "glassbox-curate should say the loop applies to scheduled autonomous runs too, with the estimated context limit as the budget (issue 3370)."

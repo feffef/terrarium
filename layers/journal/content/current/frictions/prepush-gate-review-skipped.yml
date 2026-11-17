@@ -173,3 +173,8 @@ occurrences:
     severity: minor
     description: "Skipped code-review on a 76-file mechanical pin diff that exceeds the simple-change 10-line limit, reading the diff myself instead."
     solution: "pr-workflow could name a scripted pin-only diff as simple, or the run runs code-review."
+  - session: session_013zxzeSoqEeWqPDrCqDCcJn
+    date: "2026-11-16"
+    severity: major
+    description: "Opened and merged PR 3369, and opened PR 3371, with no code-review and no gate:scoped. Each added a run-entry file, so neither met the simple-change bar in pr-workflow.md; ADR-0004 requires both."
+    solution: "Run code-review and gate:scoped (in the background) before every PR; count the file-added rule before taking the own-read path."

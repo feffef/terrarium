@@ -84,3 +84,8 @@ occurrences:
     severity: minor
     description: "Ran git fetch and a chained git log in the same Bash command as the gate run, before reading git-conventions.md."
     solution: "Run each git command in its own call and read the gate's exit status in a separate step."
+  - session: session_013zxzeP4NViUQL8i9LwF7Nj
+    date: "2026-11-16"
+    severity: nit
+    description: "Pushed the follow-up commit while its gate:scoped run was still going, after a Stop hook asked; pr-workflow says to push a head only after the gate passed. CI ran in parallel and nothing broke."
+    solution: "Have the Stop hook skip its push request while a background gate or e2e run is still active."

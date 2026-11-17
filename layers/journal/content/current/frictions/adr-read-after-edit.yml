@@ -223,3 +223,23 @@ occurrences:
     severity: minor
     description: "A hook asked me to read ADR-0008 and ADR-0009 after I had already committed SessionCard.vue."
     solution: "Load the ADR-0008 rule when the first Journal file is read."
+  - session: session_013zxzeTChey8pdC2fuTTH7i
+    date: "2026-11-16"
+    severity: nit
+    description: "Late ADR and git-conventions read nudges fired after read-only commands and edits that CLAUDE.md exempts or already followed."
+    solution: "Have the read-first hint skip the commands CLAUDE.md lists as read-only and rule paths the work already honoured."
+  - session: session_013zxzeSFVZRywvYz2rGcRzP
+    date: "2026-11-16"
+    severity: nit
+    description: "ADR-0027, 0029 and 0004 reads were requested by a hook only after I had committed the edit; the ADRs showed the edit was right."
+    solution: "Read the ADR for each governed file before editing it, as the rule summaries say."
+  - session: session_013zxzeRCPF7mHwN6aT8t7RQ
+    date: "2026-11-16"
+    severity: nit
+    description: "Hook notices to read git-conventions, github-integration or an ADR arrived after the action they governed in 6 agents and in me; the docs showed each call was right."
+    solution: "Suppress a late-read notice when the call was read-only, or load the doc with the Skill at session start."
+  - session: session_013zxzeP4NViUQL8i9LwF7Nj
+    date: "2026-11-16"
+    severity: nit
+    description: "The post-edit hook told me to read the same ADR in full four times after four edits to one file, and again for two ADRs after the next edit; each read confirmed the edit was fine."
+    solution: "Fire the read-in-full notice once per governed file per session, and skip it when the session already read that ADR."
