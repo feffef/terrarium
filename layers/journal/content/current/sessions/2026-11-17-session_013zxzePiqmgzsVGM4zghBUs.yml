@@ -1,0 +1,359 @@
+schemaVersion: 1
+session: session_013zxzePiqmgzsVGM4zghBUs
+startedAt: 2026-11-17T04:03:04Z
+endedAt: 2026-11-17T04:05:59Z
+kind: autonomous
+goal: Scheduled audit of the repo's live docs
+status: completed
+outcome: No verified findings; no PR, issue or edit
+summary: "Scheduled audit-docs run; every step was agent-initiated, no human prompted. Fetched origin/main, read the last two audit-docs logs for their Covered lines, and dispatched three read-only reviewers (Freshness, Single-home, Coherence) with a shared brief. A and B reported no findings; C reported none in the required format, only three low-confidence observations (ADR-0014 \"fourth module\" wording, ADR-0029 vs three rules that say \"before\", dated claims in a research note). All three replies are saved in the scratchpad pool. With no findings to fact-check, I dispatched no checkers (0 CONFIRMED, 0 CONFIRMED-BUT, 0 WRONG), edited nothing, opened no PR and filed no issue. I dropped C's observations unconfirmed: two would need an ADR edit (escalation) for little value, and none states a verified defect; the next run could check observation 2. Coverage was thin: B read only 6 files, A mostly grepped, C read the rules and a few Skills. Covered (Agents B and C read in full): docs/agents/{environment-caveats,issue-tracker}.md, README.md, SECURITY.md, deploy/README.md, docs/proposals/README.md, .claude/rules/{adr-0002,0006,0007,0009,0013,0014,0015,0016,0018,0020,0021,0022,0023,adr-0004-human-merge,data-shapes,ui-verification,glossary-terms,tenant-glossary,tenant-layers}.md, ADRs 0007 0029, Skills prune-trial frictions-to-fixes glassbox-curate, docs/research/{subagent-spawn-depth,making-repo-public,public-readiness-review}.md."
+prs: []
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: README.md
+    reason: (no reason given)
+  - path: SECURITY.md
+    reason: (no reason given)
+  - path: deploy/README.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-curate/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/impl-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/design-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0007-derived-files-built-not-committed.md
+    reason: (no reason given)
+  - path: docs/adr/0014-build-time-virtual-routing-module.md
+    reason: (no reason given)
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: (no reason given)
+  - path: docs/research/subagent-spawn-depth.md
+    reason: (no reason given)
+  - path: docs/research/making-repo-public.md
+    reason: (no reason given)
+  - path: docs/research/public-readiness-review.md
+    reason: (no reason given)
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: brief for the three reviewers
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: audit-docs
+    reason: (invoked as a slash command)
+frictions:
+  - description: Reviewers B and C read only part of their focus lists (B six files, C mostly rules and ADRs) and A mostly grepped, so this run's coverage is thin.
+    solution: Split each lens's focus list across two agents, or cap each agent's list to what it can read in full.
+    severity: minor
+durationSec: 175
+models:
+  claude-sonnet-5-5: 33
+toolCounts:
+  Read: 2
+  Skill: 3
+  Bash: 13
+  Agent: 3
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0029.md
+docsReadBySubagents:
+  - docs/agents/environment-caveats.md
+  - docs/agents/issue-tracker.md
+  - docs/proposals/README.md
+  - .agents/skills/clear-backlog/SKILL.md
+  - .agents/skills/log-session/SKILL.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/glassbox-curate/SKILL.md
+  - .agents/skills/frictions-to-fixes/impl-brief.md
+  - .agents/skills/frictions-to-fixes/design-brief.md
+  - .agents/skills/frictions-to-fixes/survey-brief.md
+  - docs/adr/0007-derived-files-built-not-committed.md
+  - docs/adr/0014-build-time-virtual-routing-module.md
+  - docs/adr/0029-instructions-load-with-the-files-they-govern.md
+  - docs/research/subagent-spawn-depth.md
+  - docs/research/making-repo-public.md
+  - docs/research/public-readiness-review.md
+  - docs/research/github-branch-protection-vs-autonomous-log-commits.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0003.md
+        value: confirmed
+        why: "agreed: scheduled run changed nothing"
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: steered
+        why: logged session directly, no PR
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0015.md
+        value: unrelated
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: confirmed
+        why: "agreed: told reviewers to skip trial text"
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0030.md
+        value: unrelated
+      - path: docs/agents/git-conventions.md
+      - path: docs/agents/pr-workflow.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: in-scope
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/glossary-terms.md
+        value: unrelated
+      - path: .claude/rules/adr-0008.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: in-scope
+      - path: docs/agents/git-conventions.md
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/environment-caveats.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/environment-caveats.md
+      - rule: .claude/rules/adr-0001.md
+        via: native
+        trigger: deploy/README.md
+      - rule: .claude/rules/adr-0011.md
+        via: native
+        trigger: deploy/README.md
+      - rule: .claude/rules/adr-0026.md
+        via: native
+        trigger: docs/proposals/README.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/environment-caveats.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/environment-caveats.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0020.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: native
+        trigger: .agents/skills/prune-trial/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/prune-trial/SKILL.md
+      - rule: .claude/rules/adr-0015.md
+        via: native
+        trigger: .agents/skills/frictions-to-fixes/SKILL.md
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0027.md
+        value: in-scope
+      - path: .claude/rules/adr-0029.md
+        value: in-scope
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: unrelated
+      - path: .claude/rules/adr-0020.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: in-scope
+      - path: .claude/rules/adr-0015.md
+        value: in-scope
+      - path: .claude/rules/adr-0008.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/rules/tenant-layers.md
+        value: unrelated
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/adr-0002.md
+        value: in-scope
+      - path: .claude/rules/data-shapes.md
+        value: in-scope
+      - path: .claude/rules/mdc-when-to-use.md
+        value: unrelated
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0030.md
+        value: unrelated
+      - path: docs/agents/environment-caveats.md
+      - path: docs/agents/issue-tracker.md
+subagents:
+  - type: general-purpose
+    task: "Audit A: freshness"
+    durationSec: 53
+    toolCalls: 18
+    modelCalls: 16
+    tokenShare: 25.2
+  - type: general-purpose
+    task: "Audit B: single-home"
+    durationSec: 17
+    toolCalls: 11
+    modelCalls: 5
+    tokenShare: 11.3
+  - type: general-purpose
+    task: "Audit C: coherence"
+    durationSec: 90
+    toolCalls: 28
+    modelCalls: 22
+    tokenShare: 33
+gitBranch: claude/festive-mayer-cybmlp
+entrypoint: remote_trigger
+cliVersion: 2.1.326
+trigger: audit-docs
+landedBy: Stop
