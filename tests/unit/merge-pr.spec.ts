@@ -524,7 +524,7 @@ describe('verdictRefusal() (issues #1276, #1844)', () => {
     })
 
     it('refuses it when the PR copies a file', () => {
-      const copied = { filename: 'c.ts', previousFilename: 'o.ts', status: 'copied' }
+      const copied = { filename: 'c.ts', status: 'copied' }
       expect(verdictRefusal(owner(header(me, ownRead)), me, head, [copied])).toMatch(/adds or renames c\.ts/)
     })
 

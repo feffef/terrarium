@@ -6,12 +6,10 @@
 // a `Reviewed:` line, which claims a code-review run (#3395).
 // --sha replaces HEAD (no checkout needed); a short one expands to the PR head.
 // With a PR number, warns on stderr when the SHA isn't the PR's head.
-import { extractFlag, fail, root, runIfMain } from '../lib/cli.ts'
+import { extractFlag, extractSwitch, fail, root, runIfMain } from '../lib/cli.ts'
 import { git } from '../lib/git.ts'
 import { getJson, resolveAccess } from '../lib/github-client.ts'
 
-/** `ownRead` prints the `Own-read:` line for a diff read without `code-review`;
- *  `merge-pr.ts` accepts it only for a simple diff (#3395). */
 export function verdictLine(sha: string, ownRead = false): string {
   return `${ownRead ? 'Own-read' : 'Reviewed'}: ${sha}`
 }
@@ -27,9 +25,8 @@ export function isHexSha(s: string): boolean {
 }
 
 function main(): void {
-  const { value: shaFlag, rest: withOwnRead } = extractFlag(process.argv.slice(2), '--sha')
-  const ownRead = withOwnRead.includes('--own-read')
-  const rest = withOwnRead.filter((a) => a !== '--own-read')
+  const { value: shaFlag, rest: afterSha } = extractFlag(process.argv.slice(2), '--sha')
+  const { on: ownRead, rest } = extractSwitch(afterSha, '--own-read')
   const usage = 'usage: verdict-line.ts [<pr-number>] [--sha <sha>] [--own-read]'
   const arg = rest[0]
   const prNumber = arg === undefined ? null : Number(arg)

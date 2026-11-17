@@ -199,7 +199,7 @@ export function verdictRefusal(
   if (named.some(coversHead)) return null
   const ownRead = shas(OWN_READ_LINE_RE)
   if (ownRead.some(coversHead)) {
-    const larger = files.filter((f) => f.status === 'added' || f.status === 'renamed' || f.previousFilename)
+    const larger = files.filter((f) => ['added', 'renamed', 'copied'].includes(f.status ?? ''))
     if (larger.length === 0) return null
     return (
       `refused: an Own-read verdict covers only a diff that adds or renames no file, but this PR adds or renames ` +
