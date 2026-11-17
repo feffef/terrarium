@@ -1,0 +1,16 @@
+session: session_013zxzePMRv24VHZ1q24seyG
+mode: interactive
+focus: "House rules: teach the watchFor checklist on the Skill inventory lesson. The owner chose it from the memory page's gap list. Scout had found that the optional, owner-written watchFor list on a Skill Inventory entry, which audit-skills grades item by item and never edits, is taught by no page, and the Skill inventory lesson describes the entry's fields and the audit's grades without it. All eleven House rules pages were read in full; no open PR touches them. Deviations: no Scout this run (the earlier run's Scout found the gap)."
+changes: []
+pagesRead:
+  - terrarium-practice/10.human-in-the-loop
+  - terrarium-practice/20.decision-records
+  - terrarium-practice/30.ubiquitous-language
+  - terrarium-practice/40.session-logs
+  - terrarium-practice/45.ideas-and-lessons-learned
+  - terrarium-practice/50.pruning-instructions
+  - terrarium-practice/60.protected-paths
+  - terrarium-practice/70.cross-tenant-reads
+  - terrarium-practice/80.self-improvement-loop
+  - terrarium-practice/85.skill-inventory
+  - terrarium-practice/90.outside-contributions
