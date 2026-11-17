@@ -14,7 +14,8 @@
 //   ref, in-horizon occurrence count, max severity (issue #1917), the fix
 //   count, latest fix and the highest severity since it (`none` if no
 //   occurrence came after), and the newest of the entry's `notes` in full when it
-//   has any. It ends with every friction two clusters share, for
+//   has any, then `see:` the entry's related clusters, each with the rule that
+//   sends a Friction there instead. It ends with every friction two clusters share, for
 //   the survey to judge.
 //   `--candidates` edits nothing and prints each entry's survey label from the
 //   ledger alone (never-fixed, regression, open-already for a `tracked` entry,

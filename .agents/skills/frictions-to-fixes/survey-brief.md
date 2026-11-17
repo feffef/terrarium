@@ -62,11 +62,12 @@ Every edit goes through
    severity. Match on the harm, not the slip behind it, and read the entry's
    `see:` rules: when one sends the Friction elsewhere, append it there. One
    that fits only in part goes to step 2 when its cause or harm clearly
-   differs; otherwise append it and widen the entry's `summary` and `cause`. A Friction worse than the entry's
-   worst stored severity (above its `acceptedSeverity` for an `accepted` one)
-   may be a new problem, or the same one at higher cost: check whether its
-   cause or harm differs before you split. A session counts once
-   per entry, at its highest severity. One
+   differs, or when it is `moderate` or above (a linked new entry costs
+   little; a severe Friction buried in a milder cluster hides it); otherwise
+   append it. A Friction worse than the entry's worst stored severity (above
+   its `acceptedSeverity` for an `accepted` one) may be a new problem, or the
+   same one at higher cost: check whether its cause or harm differs before you
+   split. A session counts once per entry, at its highest severity. One
    call files them all:
    `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/print-ledger-occurrence.ts --append <entry> <session> <index> [<entry> <session> <index> …]`
    copies each Friction's text from its log (a content test checks the
@@ -88,11 +89,9 @@ Every edit goes through
    change would retire both. When the stored texts show one broad entry
    holding several causes or harms, or two entries holding one, split or
    merge them without reopening the logs; when you split, write the
-   distinction as a `related` pair. Keep clusters apart: a Friction held by two
-   clusters whose text names one cause moves to the cluster that fits, as does
-   one a `see:` rule sends elsewhere; two linked clusters
-   that one change would retire merge; a `see:` rule that no longer holds is
-   corrected. Move each occurrence with
+   distinction as a `related` pair. Keep clusters apart: a Friction a `see:`
+   rule sends elsewhere moves; two linked clusters that one change would
+   retire merge; a `see:` rule that no longer holds is corrected. Move each occurrence with
    `prune-friction-ledger.ts --move <session> <from> <to>` (it refuses a
    session the target already holds and checks every text survived).
 4. **Record each PR that merged to fix a cluster** as a `fixes` entry on it,
@@ -130,7 +129,7 @@ no `tracked` or `on-trial` entry points at something closed.
   its own entry whose `ref` names the original entry and the fix: it is not
   a regression; only the original harm recurring is. An original left empty
   is deleted, so `ref` also says what the original covered.
-- After you split or join, bring every entry the change touched back to a
+- After you split or merge, bring every entry the change touched back to a
   coherent state, and read each one again: `summary` and `cause` cover only
   the occurrences it now holds; `fixes` sit on the entry whose cause the PR
   tried to change; `status` and `ref` fit what is left (a `tracked` or

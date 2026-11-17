@@ -27,11 +27,6 @@ occurrences:
     severity: minor
     description: "The spec put a workshop link in the guide overview without checking page-checks.ts, which forbids guide links outside the guide; caught only by review"
     solution: "Grep the page checks for link rules before specifying a new link on a Glass Box page"
-  - session: session_013zxzeNm7AawB63t1M33Hse
-    date: "2026-11-08"
-    severity: minor
-    description: "Explained how Routines work without first reading the Glass Box overview page that CLAUDE.md requires for such explanations."
-    solution: "Read layers/glassbox/content/guide/pages/index.md before answering."
   - session: session_013zxzeNd2Ethpd3anqbmpkr
     date: "2026-11-09"
     severity: minor
@@ -42,11 +37,6 @@ occurrences:
     severity: minor
     description: "Planned a session-log schema change without reading the full ADR-0009, which CLAUDE.md requires before planning; I relied on its summary rule."
     solution: "Read docs/adr/0009 before designing a schema change; the summary rule happened to cover the additive-only constraint."
-  - session: session_013zxzeS36fzX6FB2vAr7yRR
-    date: "2026-11-09"
-    severity: nit
-    description: "I only noticed ADR-0004's 'behaviour no test can observe' exception after the fix PR's gate was green, then had to add e2e assertions and a second verdict."
-    solution: "Ask which test would fail if this regressed when planning each fix, before opening the PR."
   - session: session_013zxzeP1EixGDy96kmktFi2
     date: "2026-11-12"
     severity: minor

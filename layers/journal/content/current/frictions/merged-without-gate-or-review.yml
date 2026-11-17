@@ -1,6 +1,6 @@
 name: merged-without-gate-or-review
 summary: A PR was opened or merged with neither the code-review Skill nor gate:scoped run.
-cause: "The author skips the whole objective gate (ADR-0004), not just the review: no gate:scoped and no code-review before opening or merging, so nothing checked the change. Signals: 'no code-review and no gate:scoped', 'merged without the gate', a PR opened or merged with neither run."
+cause: "The author skips the whole objective gate (ADR-0004), not just the review: no gate:scoped and no code-review before opening or merging, without the owner's word to skip them, so nothing checked the change. Signals: 'no code-review and no gate:scoped', 'merged without the gate', a PR opened or merged with neither run."
 surface: guard-or-hook
 status: open
 related:

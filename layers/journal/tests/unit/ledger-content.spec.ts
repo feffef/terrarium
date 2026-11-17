@@ -44,7 +44,8 @@ describe('Friction Ledger content', () => {
       for (const r of c.related ?? []) {
         if (r.entry === name || !clusters.has(r.entry)) wrong.push(`${name} -> ${r.entry}: not another existing cluster`)
         else if (!(clusters.get(r.entry).related ?? []).some((b: { entry: string }) => b.entry === name)) wrong.push(`${name} -> ${r.entry}: not listed back`)
-        if (seen.size === seen.add(r.entry).size) wrong.push(`${name} -> ${r.entry}: listed twice`)
+        if (seen.has(r.entry)) wrong.push(`${name} -> ${r.entry}: listed twice`)
+        seen.add(r.entry)
       }
     }
     expect(wrong).toEqual([])

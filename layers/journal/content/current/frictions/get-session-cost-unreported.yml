@@ -6,7 +6,7 @@ status: tracked
 ref: "#3401"
 related:
   - entry: inspect-session-skill-skipped
-    rule: The agent wrote or stated a cost get_session already gave, or skipped inspect-session.
+    rule: get_session did give the cost, but the agent wrote "unreported" or said it was not recorded, or inspected another session without the inspect-session Skill.
 notes: |-
   2026-11-17 regression issue #3401 filed (2 occurrences since #3258).
 fixes:

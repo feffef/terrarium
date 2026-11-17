@@ -8,6 +8,7 @@ related:
     rule: A rule other than ADR-0004's human-merge exception was unread and the build went against it.
 notes: |-
   2026-11-17 design: add the untested-behaviour check to the pre-PR step. dropped: that section is inside an open Prune Trial's territory (.agents/prune-trials.yml:116), and one occurrence costing one review round is thin.
+  2026-11-17: two occurrences moved in from constraint-unread-before-build, so it holds three and "one occurrence" above no longer holds.
 occurrences:
   - session: session_013zxzeP4NViUQL8i9LwF7Nj
     date: "2026-11-16"
@@ -19,3 +20,8 @@ occurrences:
     severity: minor
     description: "Opened the PR before checking ADR-0004's untested-behaviour exception; the CSS mark had no test, so the merge stalled until I added one, which cost a rebuild and a second CI run."
     solution: "At review time ask whether a test observes the change; add the test before the first gate run when none does."
+  - session: session_013zxzeS36fzX6FB2vAr7yRR
+    date: "2026-11-09"
+    severity: nit
+    description: "I only noticed ADR-0004's 'behaviour no test can observe' exception after the fix PR's gate was green, then had to add e2e assertions and a second verdict."
+    solution: "Ask which test would fail if this regressed when planning each fix, before opening the PR."

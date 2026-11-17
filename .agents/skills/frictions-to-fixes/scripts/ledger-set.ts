@@ -26,7 +26,8 @@ import { Document, isMap, isScalar, isSeq, parseDocument, Scalar } from 'yaml'
 import { frictionClusterSchema } from '../../../../layers/journal/tenant.config.ts'
 import { LEDGER_DIR } from '../../../../scripts/session/extract-frictions.ts'
 import { fail, root, runIfMain } from '../../../../scripts/lib/cli.ts'
-import { ledgerSeverityExceeds } from '../../../../layers/journal/app/utils/ledger.ts'
+import { ledgerSeverityExceeds, ledgerWorstSeverity } from '../../../../layers/journal/app/utils/ledger.ts'
+import type { Severity } from '../../../../layers/journal/app/types/journal.ts'
 
 export interface Fix { pr: number; date: string; summary: string }
 
@@ -78,25 +79,25 @@ function fixNode(doc: Document, fix: Fix) {
 
 const SEVERITIES = frictionClusterSchema.shape.acceptedSeverity.unwrap().options
 
-type Sev = (typeof SEVERITIES)[number]
+const worst = (doc: Document) => ledgerWorstSeverity(((doc.toJS().occurrences ?? []) as { severity: Severity }[]).map((o) => o.severity))
 
-function worst(doc: Document): Sev | undefined {
-  const sev = ((doc.toJS().occurrences ?? []) as { severity: Sev }[]).map((o) => o.severity)
-  return sev.reduce<Sev | undefined>((w, s) => (w === undefined || ledgerSeverityExceeds(s, w) ? s : w), undefined)
+/** Adds lines to `notes`, newest last, keeping its block style. */
+function appendNotes(doc: Document, lines: string[]): void {
+  const old = doc.get('notes')
+  const notes = new Scalar([...(typeof old === 'string' && old ? [old] : []), ...lines].join('\n'))
+  notes.type = Scalar.BLOCK_LITERAL
+  put(doc, 'notes', notes)
 }
 
 /** Reopens an `accepted` entry holding an occurrence above its ceiling, and says so in `notes`:
  *  accepting a minor cost must not hide a major one in the same cluster. Returns whether it did. */
 export function reopenOnBreach(doc: Document, today = new Date().toISOString().slice(0, 10)): boolean {
-  const ceiling = doc.get('acceptedSeverity') as Sev | undefined
+  const ceiling = doc.get('acceptedSeverity') as Severity | undefined
   const top = worst(doc)
   if (doc.get('status') !== 'accepted' || !ceiling || !top || !ledgerSeverityExceeds(top, ceiling)) return false
-  const notes = doc.get('notes')
-  const note = new Scalar([...(typeof notes === 'string' && notes ? [notes] : []), `${today}: reopened, a ${top} occurrence is above the accepted ${ceiling}.`].join('\n'))
-  note.type = Scalar.BLOCK_LITERAL
   put(doc, 'status', 'open')
   doc.delete('acceptedSeverity')
-  put(doc, 'notes', note)
+  appendNotes(doc, [`${today}: reopened, a ${top} occurrence is above the accepted ${ceiling}.`])
   return true
 }
 
@@ -120,17 +121,14 @@ export function setEntry(text: string, changes: LedgerChanges): string {
   } else if (changes.acceptedSeverity !== undefined || !doc.has('acceptedSeverity')) {
     const top = worst(doc)
     const ceiling = changes.acceptedSeverity ?? top ?? 'nit'
-    if (top && ledgerSeverityExceeds(top, ceiling as Sev)) throw new Error(`cannot accept up to ${ceiling}: the entry holds a ${top} occurrence`)
+    if (top && ledgerSeverityExceeds(top, ceiling as Severity)) throw new Error(`cannot accept up to ${ceiling}: the entry holds a ${top} occurrence`)
     put(doc, 'acceptedSeverity', ceiling)
   }
   if (changes.ref === '') doc.delete('ref')
   else if (changes.ref !== undefined) put(doc, 'ref', changes.ref)
   if (changes.notes?.length) {
     if (changes.notes.some((n) => n.includes('\n'))) throw new Error('--note takes one line')
-    const old = doc.get('notes')
-    const notes = new Scalar([...(typeof old === 'string' && old ? [old] : []), ...changes.notes].join('\n'))
-    notes.type = Scalar.BLOCK_LITERAL
-    put(doc, 'notes', notes)
+    appendNotes(doc, changes.notes)
   }
   if (changes.related?.length) {
     const kept = ((doc.toJS().related ?? []) as Related[]).filter((r) => !changes.related!.some((n) => n.entry === r.entry))
