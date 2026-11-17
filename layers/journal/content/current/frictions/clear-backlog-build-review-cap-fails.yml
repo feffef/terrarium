@@ -1,6 +1,6 @@
 name: clear-backlog-build-review-cap-fails
 summary: The backlog build script reports a branch as failed when review hits its three-round limit with only small findings left, so the main agent fixes them by hand.
-cause: "reviewBranch in .claude/workflows/clear-backlog-build.js returns status 'failed' with openFindings when round 3 still has worthFixing findings; clear-backlog SKILL.md section 3 says only 'failed: fix the brief and re-run'. Signals: 'review capped at 3 rounds', 'came back failed at the 3-round cap'. A 2026-11-11 run also spent 4.4M tokens over 52 agents when five of six small branches hit the cap on cosmetic findings; PR #3119 then redesigned the review and fix steps (one fresh review round, builders resumed for fixes) and PR #3196 narrowed which findings force another round."
+cause: "clear-backlog section 3 step 4 starts a fresh review round on any defect or spec-mismatch line, whatever the fix size, so a one-line fix can cost a round of about 150000 to 600000 tokens that finds only nits. reviewBranch no longer returns 'failed' at the round cap (older signals: 'review capped at 3 rounds'). A 2026-11-11 run also spent 4.4M tokens over 52 agents when five of six small branches hit the cap on cosmetic findings; PR #3119 then redesigned the review and fix steps (one fresh review round, builders resumed for fixes) and PR #3196 narrowed which findings force another round."
 surface: safe
 status: tracked
 ref: "#3400"
