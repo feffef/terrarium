@@ -61,8 +61,10 @@ Every edit goes through
 1. **Append each window Friction that fully matches an entry**, whatever its
    severity. Match on the harm, not the slip behind it, and read the entry's
    `see:` rules: when one sends the Friction elsewhere, append it there. One
-   that fits only in part, or is worse than the entry's worst stored severity
-   (above its `acceptedSeverity` for an `accepted` one), goes to step 2. A session counts once
+   that fits only in part goes to step 2. A Friction worse than the entry's
+   worst stored severity (above its `acceptedSeverity` for an `accepted` one)
+   may be a new problem, or the same one at higher cost: check whether its
+   cause or harm differs before you split. A session counts once
    per entry, at its highest severity. One
    call files them all:
    `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/print-ledger-occurrence.ts --append <entry> <session> <index> [<entry> <session> <index> …]`
@@ -73,18 +75,19 @@ Every edit goes through
    `summary` or `cause`, rewrite them with `ledger-set.ts <entry> --summary TEXT
    --cause TEXT` so they cover every occurrence.
 2. **Open a new entry** for a cause seen twice, or once at `moderate`,
-   `major` or `blocker`, and for any such Friction no entry fully matches.
-   Link it, on both sides, to each entry it nearly matched
-   (`ledger-set.ts --related <entry> <rule>`; the rule says when a Friction
-   goes there instead). Its `summary` is one plain sentence a visitor can
+   `major` or `blocker`, and for any Friction whose root cause or harm clearly
+   differs from every entry it nearly matched. Link it, on both sides, to
+   each such entry (`ledger-set.ts --related <entry> <rule>`): the rule states
+   the distinction, when a Friction goes there instead. Its `summary` is one plain sentence a visitor can
    read; its `cause` names the root mechanism and the signals that identify
    a new occurrence (error text, file or tool, trigger), so a later run can
    match it.
 3. **Re-cluster when the ledger says so.** A cluster is a shared root cause:
    two Frictions days apart, on different tools, belong together when one
    change would retire both. When the stored texts show one broad entry
-   holding several causes, or two entries holding one, split or merge them
-   without reopening the logs. Keep clusters apart: a Friction held by two
+   holding several causes or harms, or two entries holding one, split or
+   merge them without reopening the logs; when you split, write the
+   distinction as a `related` pair. Keep clusters apart: a Friction held by two
    clusters, or one a `see:` rule sends elsewhere, moves; two linked clusters
    that one change would retire merge; a `see:` rule that no longer holds is
    corrected. Move each occurrence with
