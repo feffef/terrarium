@@ -1,11 +1,13 @@
 name: classifier-no-verdict
 surface: outside
-summary: "The auto-mode classifier returned no verdict on Bash calls for several turns, so a run could not start. see: harness-classifier-denials (that entry's classifier answered with a denial; here it gave no answer)."
-cause: Bash calls fail with a no-verdict error from the auto-mode classifier (an infrastructure outage that recovered on its own), with no denial and nothing the session did to cause it; a later call passes. A denial of a specific git command goes to harness-classifier-denials.
+summary: "The auto-mode classifier returned no verdict on Bash calls for several turns, so a run could not start."
+cause: Bash calls fail with a no-verdict error from the auto-mode classifier (an infrastructure outage that recovered on its own), with no denial and nothing the session did to cause it; a later call passes.
 status: open
 related:
   - entry: harness-classifier-denials
     rule: The classifier answered with a denial of a specific command, not no verdict at all.
+notes: |-
+  2026-11-17: moved the routing prose out of summary and cause; the distinction from harness-classifier-denials lives in related only.
 occurrences:
   - session: session_013zxzeNzhyuFe3JhwD9usjS
     date: "2026-11-16"
