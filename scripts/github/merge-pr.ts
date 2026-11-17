@@ -159,14 +159,24 @@ export interface VerdictBody {
 /** A verdict's `Reviewed: <sha>` line: the commit its code review covered (#1844). */
 const REVIEWED_LINE_RE = /^Reviewed: `?([0-9a-f]{7,40})`?\s*$/gim
 
+/** An `Own-read: <sha>` line: the author read the diff without `code-review`;
+ *  good only for a simple diff (#3395). */
+const OWN_READ_LINE_RE = /^Own-read: `?([0-9a-f]{7,40})`?\s*$/gim
+
 /** Why the PR has no verdict this session posted on `headSha`, or null
  *  (`pr-workflow.md` step 4, issues #1276, #1844). A verdict carries an
  *  ADR-0017 marker and — when the session is known — a header naming it. An
  *  unresolvable session accepts any marker rather than blocking a session whose
  *  environment lacks the id. Only Trusted authors count: the marker is
  *  forgeable by anyone (ADR-0020). The verdict must name `headSha` in a
- *  `Reviewed:` line, so a push after the review needs a fresh one. */
-export function verdictRefusal(bodies: VerdictBody[], sessionId: string | null, headSha: string): string | null {
+ *  `Reviewed:` line, or in an `Own-read:` line when `files` add or rename
+ *  nothing, so a push after the review needs a fresh one. */
+export function verdictRefusal(
+  bodies: VerdictBody[],
+  sessionId: string | null,
+  headSha: string,
+  files: PrFile[],
+): string | null {
   const mine = bodies
     .filter(
       ({ body: b, authorAssociation }) =>
@@ -183,11 +193,23 @@ export function verdictRefusal(bodies: VerdictBody[], sessionId: string | null, 
       `${sessionId ? ` (${sessionId})` : ''}. A verdict a subagent posted carries its own session id. ${next}`
     )
   }
-  const named = mine.flatMap((b) => [...b.matchAll(REVIEWED_LINE_RE)].map((m) => m[1]!.toLowerCase()))
-  if (named.some((sha) => headSha.toLowerCase().startsWith(sha))) return null
-  return named.length === 0
+  const shas = (re: RegExp) => mine.flatMap((b) => [...b.matchAll(re)].map((m) => m[1]!.toLowerCase()))
+  const coversHead = (sha: string) => headSha.toLowerCase().startsWith(sha)
+  const named = shas(REVIEWED_LINE_RE)
+  if (named.some(coversHead)) return null
+  const ownRead = shas(OWN_READ_LINE_RE)
+  if (ownRead.some(coversHead)) {
+    const larger = files.filter((f) => ['added', 'renamed', 'copied'].includes(f.status ?? ''))
+    if (larger.length === 0) return null
+    return (
+      `refused: an Own-read verdict covers only a diff that adds or renames no file, but this PR adds or renames ` +
+      `${larger.map((f) => f.filename).join(', ')}. ${next}`
+    )
+  }
+  const stale = [...named, ...ownRead]
+  return stale.length === 0
     ? `refused: your verdict has no \`Reviewed: <sha>\` line naming the head ${headSha}. ${next}`
-    : `refused: your verdict names ${named.join(', ')}, but the head is ${headSha}. ${next}`
+    : `refused: your verdict names ${stale.join(', ')}, but the head is ${headSha}. ${next}`
 }
 
 /** The single home of the Human-only list (ADR-0004): its frontmatter `paths`.
@@ -583,7 +605,7 @@ export async function mergePrWhenGreen(
 
   const sessionId = resolveGroundTruthFromTranscript(findTranscriptContents(process.env) ?? '')
   const { sha, body: prBody } = meta
-  const noVerdict = verdictRefusal(readVerdictBodies(access, prNumber), sessionId, sha)
+  const noVerdict = verdictRefusal(readVerdictBodies(access, prNumber), sessionId, sha, files)
   if (noVerdict !== null) {
     return { pr: prNumber, verdict: 'no-verdict', merged: false, message: noVerdict }
   }

@@ -55,7 +55,9 @@ re-review each story or repeat its findings.
    output of `pnpm exec tsx scripts/github/verdict-line.ts <pr-number>`, pasted
    (run in the checkout holding the reviewed head, or add `--sha <the SHA in
    the builder's GATE line>` once it is gone; it warns if that isn't the PR
-   head); after any later push,
+   head). After only your own read of a simple diff, add `--own-read` for an
+   `Own-read:` line; merge-pr.ts refuses it when the PR adds or renames a
+   file (#3395). After any later push,
    review the new commits and post a new verdict. Use `event=COMMENT` or
    `add_issue_comment`, never an APPROVE review: on a fork PR it would fake the
    human merge authority

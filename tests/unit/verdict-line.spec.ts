@@ -10,6 +10,11 @@ describe('verdictLine', () => {
     expect(verdictLine(SHA)).toBe(`Reviewed: ${SHA}`)
     expect(verdictLine(SHA)).toMatch(/^Reviewed: `?([0-9a-f]{7,40})`?\s*$/im)
   })
+
+  it('prints a distinct Own-read line, never a Reviewed line, for --own-read (#3395)', () => {
+    expect(verdictLine(SHA, true)).toBe(`Own-read: ${SHA}`)
+    expect(verdictLine(SHA, true)).not.toMatch(/^Reviewed:/im)
+  })
 })
 
 describe('isHexSha', () => {
