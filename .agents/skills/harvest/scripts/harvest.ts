@@ -222,8 +222,10 @@ const TESTS = ['unbuilt', 'unfiled', 'unrejected', 'ledger', 'simplifying', 'una
  *  clusters come before the first workflow one. */
 export function checkClusters(text: string, sessionOf: Map<number, string>): string[] {
   const problems: string[] = []
-  const blocks = text.split(/^## /m).slice(1)
+  const [preamble, ...blocks] = text.split(/^## /m)
   if (!blocks.length) return ['no "## " cluster blocks']
+  // Without a recorded reason a run can quit clustering early unnoticed (#3396).
+  if (!/^stopped:[ \t]*\S/m.test(preamble!)) problems.push('no "stopped:" reason line before the first cluster')
   let workflowSeen = false
   blocks.forEach((block, i) => {
     const f = new Map<string, string>()
