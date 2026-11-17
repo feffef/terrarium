@@ -73,7 +73,7 @@ Every edit goes through
    copies each Friction's text from its log (a content test checks the
    copy) and appends it under its entry; it writes all or nothing:
    one session the entry already holds makes the call write nothing, and the
-   error names that session. Drop those triples and rerun the rest in one call. When an appended Friction goes beyond the entry's
+   error names that session. Pass `--skip-held` (before the triples) to skip those and append the rest; it prints each skip. When an appended Friction goes beyond the entry's
    `summary` or `cause`, rewrite them with `ledger-set.ts <entry> --summary TEXT
    --cause TEXT` so they cover every occurrence.
 2. **Open a new entry** for a cause seen twice, or once at `moderate`,
