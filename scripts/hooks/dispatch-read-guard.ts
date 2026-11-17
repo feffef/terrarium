@@ -51,7 +51,7 @@ export function unfilledPlaceholder(toolName: unknown, toolInput: unknown): stri
 const decide = (payload: unknown) => {
   if (shouldDeny(prop(payload, 'agent_id'), readTranscript(prop(payload, 'transcript_path') as string | undefined))) return formatGuardMessage()
   const found = unfilledPlaceholder(prop(payload, 'tool_name'), prop(payload, 'tool_input'))
-  return found && `Blocked by the ${LABEL} (issue #2996): the brief still holds the unfilled placeholder \`${found}\`. Fill it from its source, then retry.`
+  return found && `Blocked by the ${LABEL} (issue #2996): the brief still holds the unfilled placeholder \`${found}\`. Fill it from its source, or reword the text if you only name the placeholder, then retry.`
 }
 
 function main(): void {
