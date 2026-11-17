@@ -1,0 +1,20 @@
+session: session_013zxzePMRv24VHZ1q24seyG
+mode: interactive
+focus: "Walkthrough diagrams: check each against its stops, the memory page's
+  first good-next-focus. The owner named 'Diagrams' and confirmed this reading.
+  Five of the ten Walkthroughs hold a diagram. A change meets the gate and A
+  change goes live already read beside their stops. A bug report becomes work,
+  A friction becomes a fix and From file to browser do not, so they are
+  redrawn."
+changes: []
+pagesRead:
+  - walkthroughs/10.asking-for-a-change
+  - walkthroughs/15.a-change-meets-the-gate
+  - walkthroughs/20.a-bug-report-becomes-work
+  - walkthroughs/30.planning-a-big-change
+  - walkthroughs/40.session-log-lands-on-main
+  - walkthroughs/50.a-friction-becomes-a-fix
+  - walkthroughs/60.adding-a-site
+  - walkthroughs/70.reading-across-tenants
+  - walkthroughs/80.a-change-goes-live
+  - walkthroughs/90.from-file-to-browser
