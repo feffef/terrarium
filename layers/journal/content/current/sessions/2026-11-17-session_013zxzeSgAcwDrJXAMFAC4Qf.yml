@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_013zxzeSgAcwDrJXAMFAC4Qf
 startedAt: 2026-11-17T06:40:22Z
-endedAt: 2026-11-17T09:19:49Z
+endedAt: 2026-11-17T09:20:44Z
 kind: interactive
 goal: Stop accepted Friction Ledger clusters from hiding worse occurrences
 status: completed
@@ -123,16 +123,19 @@ frictions:
   - description: Piped log-session --author through head -3, which close-session forbids because its refusals and warnings print there; the success line showed, but a warning could have been cut.
     solution: Run log-session.ts bare and read all of it; the Skill's one-line rule could sit beside the command it governs.
     severity: nit
-durationSec: 9567
+  - description: The Stop hook counted 33 of main's commits as unpushed on the merged session branch; my fast-forward push then recreated the remote branch GitHub had deleted, which I did not check with ls-remote.
+    solution: Check git ls-remote for the branch before pushing a merged branch, and have the Stop hook skip a branch whose PR has merged.
+    severity: nit
+durationSec: 9622
 models:
-  claude-sonnet-5-5: 504
+  claude-sonnet-5-5: 521
 toolCounts:
   Grep: 7
   Glob: 1
   Read: 31
   AskUserQuestion: 3
-  Bash: 120
-  Edit: 36
+  Bash: 125
+  Edit: 37
   Write: 7
   Skill: 5
   Agent: 4
@@ -733,25 +736,25 @@ subagents:
     durationSec: 101
     toolCalls: 15
     modelCalls: 14
-    tokenShare: 3.4
+    tokenShare: 3.3
   - task: Spec review of branch diff
     model: opus
     durationSec: 166
     toolCalls: 27
     modelCalls: 21
-    tokenShare: 4.6
+    tokenShare: 4.4
   - task: Second standards review of branch
     model: opus
     durationSec: 90
     toolCalls: 19
     modelCalls: 18
-    tokenShare: 4.2
+    tokenShare: 4.1
   - task: Second spec review of branch
     model: opus
     durationSec: 156
     toolCalls: 28
     modelCalls: 22
-    tokenShare: 4.7
+    tokenShare: 4.5
 gitBranch: ccr-2d6fda00-maifow
 entrypoint: remote_mobile
 cliVersion: 2.1.326
