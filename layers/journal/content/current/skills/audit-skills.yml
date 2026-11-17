@@ -9,28 +9,9 @@ role: >-
   Inventory's grades in line with usage as a by-product, self-merging those
   edits (ADR-0015).
 auditSummary:
-  date: "2026-11-16"
-  text: "Runs daily and lands its Inventory PRs and issues. Small repeated slips: reading the git and GitHub guides after the first command, and once replacing code review with its own read of a large data diff."
+  date: "2026-11-17"
+  text: "Runs daily and lands its Inventory PRs and issues. Small repeated slips: reading the git and GitHub guides after the first command, and twice drafting a wrong session id before catching it."
 observations:
-  - date: "2026-10-07"
-    note: >-
-      Self-check: dispatched 10 behaviour-check subagents this run (one per
-      behaviourChecks entry), each report independently verified against
-      primary sources before use (every PR/issue claim spot-checked via
-      `gh api`/MCP, two reports' quoted log excerpts confirmed verbatim
-      against the raw session log). Confirmed #1627 (the 2026-10-06
-      stale-issue-state finding) accurately captures the one real gap in
-      this window — its one bad intermediate claim (the #1515 reopen) was
-      already corrected before that session closed, and no final committed
-      Inventory text failed re-verification. One new finding escalated as
-      issue #1647 (audit-docs' independent-checker dispatch skipped a 2nd
-      time, clearing the repeated bar — see audit-docs's own entry). #1626
-      (blog-post step-12's 5th skip) re-confirmed still open with nothing
-      new to add; #1515 (visitor-loop) confirmed closed. Step 3 closure
-      completeness: orphan scan clean (`scanned: true`, 1051 merged PRs, 900
-      with a session), both orphan candidates already resolved-by-annotation,
-      no human-prompted or manually-rescued closures this window. Grade/role
-      unchanged.
   - date: "2026-10-08"
     note: >-
       Self-check: dispatched 11 behaviour-check subagents this run (one per
@@ -510,3 +491,5 @@ observations:
       Behaviour check, 7 runs delivered, all PRs merged, no revert. Verified: the 11-10 run (session_013zxzePXTf8YZ6THtADS4yY) left a repeat as an observation because no open issue matched; b09dd4702 now covers closed issues. Repeat n=2: session_013zxzeTKpnXCQm75L92QGhL read its own diff instead of code-review for a data-only Inventory PR; pr-workflow is unclear whether that counts as simple. Unverified: check-states --text before several issues. Grade unchanged.
   - date: "2026-11-16"
     note: "Behaviour check, 7 runs, all Inventory PRs merged (#2989 to #3327). Known repeat: session_013zxzeTKpnXCQm75L92QGhL (11-12, PR #3122) used its own read instead of code-review on 22 data files, disclosed. New repeat (n=3): 11-12, 11-14, 11-15 read git/github docs after the first gh call, hook caught it. Idea: name those docs in step 1. Not issued. Grade unchanged."
+  - date: "2026-11-17"
+    note: "Behaviour check, runs session_013zxzePnUYHpbwDsDER2swv and session_013zxzeS7ZJqB5FMcd5d5fza: both delivered, PRs #3360 and #3327 merged, YAML-only diffs, no revert. New minor repeat n=2: a wrong session id drafted before the write (caught via get_session). Late git/GitHub doc reads n=4. Grade unchanged."

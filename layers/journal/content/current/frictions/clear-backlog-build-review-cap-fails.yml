@@ -2,9 +2,11 @@ name: clear-backlog-build-review-cap-fails
 summary: The backlog build script reports a branch as failed when review hits its three-round limit with only small findings left, so the main agent fixes them by hand.
 cause: "reviewBranch in .claude/workflows/clear-backlog-build.js returns status 'failed' with openFindings when round 3 still has worthFixing findings; clear-backlog SKILL.md section 3 says only 'failed: fix the brief and re-run'. Signals: 'review capped at 3 rounds', 'came back failed at the 3-round cap'. A 2026-11-11 run also spent 4.4M tokens over 52 agents when five of six small branches hit the cap on cosmetic findings; PR #3119 then redesigned the review and fix steps (one fresh review round, builders resumed for fixes) and PR #3196 narrowed which findings force another round."
 surface: safe
-status: open
+status: tracked
+ref: "#3400"
 notes: |-
   2026-11-13 survey: issue #3110 closed completed 2026-11-12T08:50Z (no closing PR in its timeline; PRs #3119 and #3196 relate to it and are recorded in fixes); status reset from tracked.
+  2026-11-17 regression issue #3400 filed (2 occurrences since #3196).
 fixes:
   - pr: 2140
     date: "2026-10-16"
@@ -36,3 +38,13 @@ occurrences:
     severity: moderate
     description: "Round 2 on a two-line Skill edit and round 3 on low-risk test gaps each cost about 150000 to 170000 tokens and found only nits."
     solution: "Apply pr-workflow's simple-change test and a risk bar to clear-backlog §3 step 4 before it forces another fresh round."
+  - session: session_013zxzeTChey8pdC2fuTTH7i
+    date: "2026-11-16"
+    severity: minor
+    description: "Round 3 for merge-pr-retry ran four agents over a missing-test already refused with proof and accepted by the re-check."
+    solution: "clear-backlog §3 step 4: a missing-test the re-check accepted as refused-with-proof should not trigger a further round."
+  - session: session_013zxzeRCPF7mHwN6aT8t7RQ
+    date: "2026-11-16"
+    severity: moderate
+    description: "The second-round rule fired on four small branches because round 1 held a spec-mismatch, defect or both, though each fix was one line or one sentence. Round 2 found only nits, costing about 600k subagent tokens and four extra workflow runs."
+    solution: "Let a small branch stop after a clean re-check of its fix (extend the small flag), or limit round 2 to defects above a size."

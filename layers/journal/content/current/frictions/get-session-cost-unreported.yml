@@ -2,7 +2,10 @@ name: get-session-cost-unreported
 surface: outside
 summary: A Skill or PR body needed the run's cost, but get_session showed none (or none yet), so the PR said the cost was unreported.
 cause: "get_session returns no cost_usd or usage field at some calls (once the field appeared only on a later call than the session's single early one), or is not among a scheduled run's tools, so a Skill step that requires the run cost in the PR body cannot be met. Signals: 'get_session returned no cost figure', 'no usage field', 'Run cost: unreported', 'cost_usd 2.85 on a later call', 'cost_usd 0.12 early, 4.22 later'. Since PR #2944 (2026-11-07) glassbox-curate says to read the cost at landing, not early; since PR #3001 (2026-11-09) it re-reads cost_usd just before the PR body; since PR #3258 (2026-11-13) it estimates usage without get_session when the tool is missing."
-status: open
+status: tracked
+ref: "#3401"
+notes: |-
+  2026-11-17 regression issue #3401 filed (2 occurrences since #3258).
 fixes:
   - pr: 2944
     date: "2026-11-07"
@@ -64,3 +67,8 @@ occurrences:
     severity: minor
     description: "get_session cost_usd read 0.12 early in run 1 and was put in the PR body; it was a lagging figure (4.22 later), so the PR body is wrong."
     solution: "Have the Skill say to read the cost at the end of the run, or to omit it when the figure is under a minute old."
+  - session: session_013zxzeSoqEeWqPDrCqDCcJn
+    date: "2026-11-16"
+    severity: moderate
+    description: "Stopped after one PR at about a third of the context budget: with no get_session the cost was unknown, and I read that as the repeat loop not applying; the owner had to ask."
+    solution: "glassbox-curate should say the loop applies to scheduled autonomous runs too, with the estimated context limit as the budget (issue 3370)."

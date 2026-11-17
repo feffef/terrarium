@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { glassboxDirectory, glassboxSubjectAt, glassboxSubjectOf, glassboxWalkthroughs } from '../../app/utils/subjects.ts'
+import { glassboxDirectory, glassboxSubjectAt, glassboxSubjectOf, glassboxWalkthroughs, glassboxWalkthroughsAt } from '../../app/utils/subjects.ts'
 
 describe('glassboxSubjectOf', () => {
   it("names a Lesson's Subject from its folder, and none for other pages", () => {
@@ -58,5 +58,13 @@ describe('glassboxSubjectAt', () => {
     expect(glassboxSubjectAt('/nuxt-vue/layers')).toBeUndefined()
     expect(glassboxSubjectAt('/walkthroughs')).toBeUndefined()
     expect(glassboxSubjectAt('/')).toBeUndefined()
+  })
+})
+
+describe('glassboxWalkthroughsAt', () => {
+  it('is true for the bare walkthroughs folder only', () => {
+    expect(glassboxWalkthroughsAt('/walkthroughs')).toBe(true)
+    expect(glassboxWalkthroughsAt('/walkthroughs/from-file-to-browser')).toBe(false)
+    expect(glassboxWalkthroughsAt('/nuxt-vue')).toBe(false)
   })
 })

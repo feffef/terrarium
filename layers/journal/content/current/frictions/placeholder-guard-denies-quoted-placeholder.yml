@@ -30,3 +30,8 @@ occurrences:
     severity: nit
     description: "A literal braces placeholder in my own extra asks made the dispatch-read guard deny the survey agent's brief; I reworded and retried."
     solution: "The guard could ignore text that names the placeholder inside a sentence."
+  - session: session_013zxzeSyRCdzfotAbmBuiPp
+    date: "2026-11-16"
+    severity: minor
+    description: "The dispatch-read guard denied my first survey Agent call until I read dispatch-subagents; a second call was denied because my brief text held the literal placeholder token, though I had filled the value."
+    solution: "Have the guard test for an unfilled value, not the literal token, or name this in the Skill's dispatch lines."

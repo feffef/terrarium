@@ -9,20 +9,9 @@ role: >-
   the self-judged "invoke at closure" rule fire reliably; its invocation rate is the evidence for ADR-0009's choice
   of a Skill over a reminder hook.
 auditSummary:
-  date: "2026-11-16"
+  date: "2026-11-17"
   text: "Reliably closes sessions with an honest, complete log after the work lands. The look-back step has no check, so how well it is done is unknown."
 observations:
-  - date: "2026-10-07"
-    note: >-
-      Re-checked (audit-skills behaviour check), 10 newest invocations (PRs
-      #1629-#1646): 0/10 stale, every claimed status independently verified
-      against live PR state (`merged_at`/`state`, not the less-reliable
-      `list_pull_requests` `merged` flag). Genuine-invocation spot-check
-      passed on all 10 (real `landedBy: Stop`, authored summary/outcome,
-      `Skill` tool-call counts matching `skillsUsed`), not a mislabeled tag.
-      `window_not_used` empty again — every window session used it.
-      session_01TMgZyrN42pwudxkUdHLKwP's stale log not re-checked, per the
-      2026-10-06 settled-static-artifact call. Grade/role unchanged.
   - date: "2026-10-08"
     note: >-
       Re-checked (audit-skills behaviour check), 10 usedIn invocations
@@ -264,3 +253,5 @@ observations:
       Behaviour check, 10 runs delivered, all logs landed, 0 missed. Stale in-review log: session e5f88467-c386-4b88-8c16-b9786c748d41 (PR #3288 merged after its last commit); the structural gap noted since 09-28, nothing re-closes a log after the session ends. Human-prompted closure listed by the scorecard: session_013zxzeQyHhutDMJtzGF5UQU (11-07, already on #2956). Orphan scan: 267 merged PRs, 124 issues, 0 orphans. Grade unchanged.
   - date: "2026-11-16"
     note: "Behaviour check, 10 runs: all logs complete, landed by Stop, PRs merged first; no human-prompted closure. session_013zxzeQpVcWQaKyrR36MwpN (visitor-loop) not a miss. Step 2 look-back is still the only step nothing checks. Orphan scan 0, no suppressions. Grade unchanged."
+  - date: "2026-11-17"
+    note: "Behaviour check, 40 runs (11-14 to 11-17): every log is on main, timings fit the last PR merge, no human-prompted closure. session_013zxzeRCPF7mHwN6aT8t7RQ is an honest in-review log with three PRs awaiting the owner; nothing re-closes it. Step 2 look-back still unchecked. Orphan scan: 0 orphans. Idea: flag in-review logs whose PRs are all merged. Grade unchanged."

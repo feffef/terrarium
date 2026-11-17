@@ -9,26 +9,9 @@ role: >-
   gated PR on green (ADR-0003/0004), filing an issue only for a factual conflict
   it can't resolve. Use it when docs and code drift apart.
 auditSummary:
-  date: "2026-11-16"
-  text: "Reliably audits the docs and lands its sweep and escalation PRs. It still miscounts reviewer verdicts by hand, covers Live files thinly on some days, and sometimes pushes a second commit or condenses reviewer replies."
+  date: "2026-11-17"
+  text: "Reliably audits the docs and lands its sweep and escalation PRs. The sweep PR keeps ending up with two commits instead of one, and verdict counts are still sometimes wrong in comments."
 observations:
-  - date: "2026-10-07"
-    note: >-
-      Verified silent failure, escalated as issue #1647: the 2026-10-04
-      entry's "below escalation bar" call on session_01RA14XShYErE96EXs3TMX3c
-      skipping the mandatory independent-checker dispatch ("fact-checked
-      findings myself... rather than dispatching a separate checker") no
-      longer holds — the same shortcut recurred in
-      session_01L6ePb5aMsH4u53XnEs7FLQ (2026-10-06, PR #1631, verbatim: "I
-      fact-checked the chosen findings myself... instead of dispatching a
-      separate checker"), clearing the repeated bar. No damage either time
-      (both sets of inline-checked fixes independently confirmed correct).
-      A same-day fix (commit `5deab149`/PR #1632, "no fix without a checker
-      verdict") landed ~16h after the second lapse started, so it may
-      already be closed — a future sweep should confirm it held on its
-      first live test, since reworded steps elsewhere (blog-post step 12,
-      visitor-loop owner-memory) have not always held on the first try.
-      Grade unchanged.
   - date: "2026-10-08"
     note: >-
       Re-checked (audit-skills behaviour check): issue #1647's open question
@@ -333,3 +316,5 @@ observations:
       Behaviour check, 7 runs, 10 PRs merged. Repeat: thin reviewer coverage with no coverage test in step 1 (11-12 log: most Live files unread); no damage. Grade unchanged.
   - date: "2026-11-16"
     note: "Behaviour check, 7 runs, 10 PRs merged, no revert. Silent failures: sweep PR carries two commits in 11-13/11-14/11-15 (Stop hook pushes the first; §6.1 says one commit); 11-15 (session_013zxzeQE5BDH58h5e21zafo) saved two reviewer replies hand-condensed, not via save-handback.ts. Repeat: verdict counts miscounted in 4 of 7 runs; thin Live-file coverage 11-12, 11-15. Idea: tally-verdicts script. Not issued. Grade unchanged."
+  - date: "2026-11-17"
+    note: "Behaviour check, runs session_013zxzePSjuKdFtiNUSC531Y, session_013zxzeQE5BDH58h5e21zafo, session_013zxzePBHiX6mZNUjPTWpWc: PRs #3368, #3331, #3301, #3302 merged, no revert; log verdict tallies correct. Verified repeat (4 runs, 11-13 to 11-16): two-commit sweep PR against §6.1, Stop hook pushes before the squash; issue #3398. Verdict miscounts in PR comments: 2. Grade unchanged."

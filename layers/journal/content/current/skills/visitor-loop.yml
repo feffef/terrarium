@@ -9,25 +9,9 @@ role: >-
   changes no code and opens no PR. An idea that contradicts a line in
   `decisions.md` is dropped, so rejected ideas stay rejected.
 auditSummary:
-  date: "2026-11-16"
-  text: "Visitors run daily, file issues with labels and post retros reliably. After the read-first line was cut, the first dispatch is blocked every time, which is under trial and not yet judged."
+  date: "2026-11-17"
+  text: "Visitors run daily, file labelled issues and post retros reliably. The first dispatch is still blocked in some runs after the read-first line was cut, which is under trial and not yet judged."
 observations:
-  - date: "2026-10-07"
-    note: >-
-      Re-checked (audit-skills behaviour check), 8 usedIn sessions, all 16
-      PRs re-verified merged. #1515 confirmed CLOSED (fixed by PR #1570 +
-      PR #1623's title-matching fix); its latest comment (2026-10-06) still
-      asks for a human spot-check on the next real revert, unanswered. The
-      one freshly-checked post-#1623 run — session_01ApFY3yyign1ba7pDd4aoeN
-      (2026-10-06, atlas focus, PRs #1641/#1642) — ran the owner-memory
-      step correctly (PR #1641's body: "Owner-correction candidates...
-      not a ruling"), but its session-log summary omits any mention of the
-      step — a disclosure gap, not a skip; n=1, not escalated. Also found:
-      PR #1619 ("Surprise me" footer link) was reverted same-day by
-      owner-requested PR #1624, correctly recorded in decisions.md by the
-      reverting session itself — a previously-unlisted but correctly
-      handled revert case, noted here for completeness. No new silent
-      failure. Grade unchanged.
   - date: "2026-10-08"
     note: >-
       Re-checked (audit-skills behaviour check), 8 usedIn sessions, 1 newly
@@ -346,3 +330,5 @@ observations:
       Behaviour check, 6 runs delivered. Evidence for the open prune trial: 184c36f06 removed the read-first dispatch-subagents line from step 2, and the first run after it (session_013zxzeQWcqG69ABe1v6X1WD) was blocked by the dispatch-read guard (1 run, no verdict). Grade unchanged.
   - date: "2026-11-16"
     note: "Behaviour check, 7 runs; every named issue exists, retro comments on #3244 for 6 runs. Evidence for open prune trial: after 184c36f06 removed the dispatch-subagents read from step 2, the guard blocked the first dispatch in 2 of 2 runs (session_013zxzePoe14MeL6kTvYZMX8, session_013zxzeQWcqG69ABe1v6X1WD), three resent briefs each; no verdict, ADR-0027 forbids restoring. Late doc reads 5 of 6. Grade unchanged."
+  - date: "2026-11-17"
+    note: "Behaviour check, runs session_013zxzeQWcqG69ABe1v6X1WD, session_013zxzePoe14MeL6kTvYZMX8, session_013zxzeQsCq5g9jeQpmsULPZ: issues #3316, #3346, #3347, #3381 exist, retro comments on #3244 present, no PRs. Dispatch guide blocked 2 of 3 after 184c36f06; the third used the Skill. Idea: cap pages per section for one-page focus. Grade unchanged."

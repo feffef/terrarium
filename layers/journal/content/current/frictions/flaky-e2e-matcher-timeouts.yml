@@ -21,3 +21,8 @@ occurrences:
     severity: nit
     description: "Own e2e test used a re-resolving first-unpressed locator and failed the first gate; the reviewer had also caught a once-a-year date flaw in it."
     solution: "Hold the clicked button by its label; reason about the day-0 case when a test asserts ?day=."
+  - session: session_013zxzeTChey8pdC2fuTTH7i
+    date: "2026-11-16"
+    severity: minor
+    description: "Two of six gates failed on the unrelated timing test shell-reads.spec.ts when run alongside another gate, costing a rerun each."
+    solution: "Loosen or isolate the timing assertion in tests/unit/shell-reads.spec.ts, or cap concurrent gates at one."

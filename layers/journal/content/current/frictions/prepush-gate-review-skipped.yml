@@ -33,16 +33,6 @@ fixes:
     date: "2026-10-28"
     summary: "pr-workflow.md's simple-change bar now says a simple change adds, renames or moves no file, so a rename sweep gets code-review before its first push."
 occurrences:
-  - session: session_013zxzeQBuD3C4A1V2DpoHYu
-    date: "2026-11-02"
-    severity: minor
-    description: "Skipped the code-review Skill for a 58-file diff and used my own read of a mechanical diff; the pr-workflow simple-change test names size limits this exceeds."
-    solution: "State the exemption plainly or run code-review on the two edited files."
-  - session: session_013zxzeRkQabGaMQ8gphe4Ra
-    date: "2026-11-02"
-    severity: minor
-    description: "Folded the second review's fixes into the unpushed follow-up commit with only my own read, though the delta was over pr-workflow's 10-line simple-change limit"
-    solution: "Either run code-review on the delta or keep review-driven fixes under the simple-change limit; pr-workflow could say how a fix for a review's own findings is reviewed"
   - session: session_013zxzePsSguQyDiqnq52irG
     date: "2026-11-04"
     severity: minor
@@ -173,3 +163,8 @@ occurrences:
     severity: minor
     description: "Skipped code-review on a 76-file mechanical pin diff that exceeds the simple-change 10-line limit, reading the diff myself instead."
     solution: "pr-workflow could name a scripted pin-only diff as simple, or the run runs code-review."
+  - session: session_013zxzeSoqEeWqPDrCqDCcJn
+    date: "2026-11-16"
+    severity: major
+    description: "Opened and merged PR 3369, and opened PR 3371, with no code-review and no gate:scoped. Each added a run-entry file, so neither met the simple-change bar in pr-workflow.md; ADR-0004 requires both."
+    solution: "Run code-review and gate:scoped (in the background) before every PR; count the file-added rule before taking the own-read path."

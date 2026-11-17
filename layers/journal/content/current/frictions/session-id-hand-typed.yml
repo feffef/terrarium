@@ -116,3 +116,13 @@ occurrences:
     severity: nit
     description: "Wrote a commit-message draft with a session id I made up instead of the one in the attribution reminder; caught via get_session before committing."
     solution: "Copy the id from the Claude-Session line, never retype it; the commit-msg hook adds the trailer anyway."
+  - session: session_013zxzeSNLpQuhLvWkddGuao
+    date: "2026-11-16"
+    severity: nit
+    description: "I typed a wrong session id in a commit trailer by hand; the commit-msg hook corrected it."
+    solution: "Leave the trailer to the hook or copy it from the system prompt."
+  - session: session_013zxzeSgpoaGQ1bLrtX4DkU
+    date: "2026-11-17"
+    severity: nit
+    description: "I typed the session id by hand in a commit message trailer and got it wrong; I caught it with get_session before committing."
+    solution: "Copy the id from the attribution reminder, never retype it."

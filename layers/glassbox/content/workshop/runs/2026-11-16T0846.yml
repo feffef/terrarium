@@ -1,0 +1,8 @@
+session: session_013zxzeSoqEeWqPDrCqDCcJn
+mode: autonomous
+focus: "Installed skills: the memory page's wording lead that the page names ADR-0015 without a gloss. Chosen because it is a one-sentence wording fix with no new claim, no open PR touches the page, and the budget is kept small. Scout found no new topic since the last run. Deviations: only the one page was read in full (not its whole Subject), no writer, claim checker, fresh reader or code-review; the lead read the full diff (2 lines, 2 files)."
+changes:
+  - skill-pack/10.skill-packs | The first Why bullet now says it is recorded as an expandable ADR term, and a shorter phrase keeps the bullet within its word cap | a newcomer met ADR-0015 without a gloss. Wording only, so revision and publishedAt are kept
+  - workshop/pages/index | the ADR-gloss part of the Installed skills lead deleted | done
+pagesRead:
+  - skill-pack/10.skill-packs

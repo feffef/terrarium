@@ -127,3 +127,37 @@ trials:
       Compare `edit-during-gate-run` and `push-chained-to-gate-run` shares with
       `friction-rates.ts`; a clear rise is also damage. NOT damage: those entries
       at their standing rates, or a guard denial followed by a retry.
+  - problem: >
+      The owner-facing UI "ask first, confirm the sample" rule in CLAUDE.md "Ask
+      before building" and `.claude/rules/ui-verification.md` (-1 net on two
+      files, from `git diff --numstat` against the parent: 9 added, 10 deleted;
+      this entry not counted): the bullet's "Owner-facing UI:" pointer and its
+      separate "Clarify all user-facing UI with extra care" sentence merged into
+      one sentence; the rule's second paragraph tightened; every rule kept.
+      Chosen after the search subagent covered CLAUDE.md, `.claude/rules/`,
+      `docs/agents/` (word counts; `guards.md`), 148 ledger files (heads of 8
+      read) and one page of 100 of 1072 closed issues plus the 14 open ones (not
+      older closed issues, not session logs, not guard-script headers):
+      `built-before-owner-decided-ui` (8 occurrences; #3026, #3076, open #3297;
+      PRs #3032, #3094, #3107, #3305) failed as prose and nothing wired holds it,
+      so the cut is deliberately small and does not touch #3305's wording of the
+      rule. Runners-up: `subagent-brief-defects` (guard holds placeholders only;
+      its Skill home sits in an open trial), `governing-doc-read-after-draft`
+      (31 words) and `frictions-to-fixes` §2 (#3326). No trial was judgeable: all
+      three open ones are inside their windows.
+    territory:
+      paths:
+        - "CLAUDE.md: 'Ask before building' bullet"
+        - ".claude/rules/ui-verification.md: 'Before you build owner-facing UI'"
+      keywords:
+        - Ask before building
+        - owner confirms each screenshot
+    opened: 2026-11-16
+    proven: true
+    check: >
+      Damage is a major or blocker Friction where a session built owner-facing UI
+      without agreeing a sample, or opened a PR before the owner confirmed its
+      screenshots, because a cut line no longer said so. Compare the
+      `built-before-owner-decided-ui` share with `friction-rates.ts`; a clear
+      rise is also damage. NOT damage: that entry at its standing rate, or
+      occurrences from before the landing.

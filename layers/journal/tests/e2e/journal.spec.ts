@@ -198,7 +198,7 @@ describe('journal Tenant', async () => {
     expect(html).toContain('Frictions surfaced')
     expect(html).toContain('href="/t/journal/current/skills"')
     expect(html).toContain('href="/t/journal/current/ideas"')
-    expect(html.split('href="/t/journal/current/frictions"').length - 1).toBe(1) // the KPI tile
+    expect(html.split('href="/t/journal/current/frictions"').length - 1).toBe(2) // the KPI tile and the landing list
     expect(html).toContain('aria-expanded="false"')
     expect(html).toMatch(/role="button"/)
   })
@@ -330,6 +330,25 @@ describe('journal Tenant', async () => {
     })
   })
 
+  it('shows each Friction Ledger occurrence with its goal, friction and proposed solution', async () => {
+    await withRendered('/t/journal/current/frictions?days=90', async (page) => {
+      const cluster = page.locator('.ledger > li').first()
+      await cluster.locator('summary').click()
+      const row = cluster.locator('.occ li').first()
+      await row.waitFor({ state: 'visible' })
+      expect(await row.locator('.occ-goal').textContent()).toMatch(/^Goal: \S/)
+      const label = (await row.locator('.occ-text .occ-label').textContent())!
+      const severity = (await row.locator('.dot').getAttribute('title'))!
+      expect(label).toBe(`${severity[0]!.toUpperCase()}${severity.slice(1)} friction:`)
+      const solution = (await row.locator('.proposed').textContent())!.trim()
+      expect(solution).toMatch(/^→ \S/)
+      expect(solution).not.toContain('Proposal:')
+      const description = (await row.locator('.occ-text').textContent())!.replace(label, '').replace(solution, '').trim()
+      expect(description).not.toBe('')
+      expect(await page.getByText('Logged frictions and proposed solution').count()).toBe(0)
+    })
+  })
+
   it('lists ten Friction Ledger clusters per section until its button shows all', async () => {
     await withRendered('/t/journal/current/frictions?days=90', async (page) => {
       const rows = page.locator('h2#severe-h + .intro + .ledger > li')
@@ -399,6 +418,20 @@ describe('journal Tenant', async () => {
     expect(html).toContain(digestBodySnippet(newest)) // the Digest body, preloaded inline
     const digest = await $fetch(`/t/journal/current/digests/${newest}`)
     expect(digest).toMatch(/<h1[ >]/) // the standalone route still renders
+  })
+
+  // The landing's guide list links the newest digest and newest session by anchor,
+  // so a new day or session moves the links with no content edit (#3386).
+  it('links the landing list to the newest digest and session cards', async () => {
+    const html = await $fetch<string>('/t/journal/current')
+    const list = /<section class="intro[^"]*"[^>]*>([\s\S]*?)<\/section>/.exec(html)![1]!
+    const hrefs = [...list.matchAll(/href="([^"]*)"/g)].map((m) => m[1]!)
+    const firstCard = /<article id="(session-[^"]*)"/.exec(html)![1]!
+    expect(hrefs).toEqual([
+      `#digest-${currentDigestDates().at(-1)!}`,
+      `#${firstCard}`,
+      ...['skills', 'frictions', 'ideas', 'routines'].map((p) => `/t/journal/current/${p}`),
+    ])
   })
 
   // Standalone Document pages (#25) must render in the journal theme via the

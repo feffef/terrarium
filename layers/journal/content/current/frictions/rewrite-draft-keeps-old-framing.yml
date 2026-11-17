@@ -11,16 +11,6 @@ fixes:
     date: "2026-11-07"
     summary: "CLAUDE.md 'Ask before building' said to agree sections and tone on a short sample before drafting an owner-shaped page; PR #3032 narrowed it to UI builds only (2026-11-10)."
 occurrences:
-  - session: session_013zxzeRNoKQn8q3NtVRPDyk
-    date: "2026-11-02"
-    severity: moderate
-    description: "The first overview kept Part 1's infrastructure-first order and omitted why Terrarium exists; only the owner's request for a second critical review surfaced it."
-    solution: "Before shipping a page for two audiences, review it against each reader's first question; the code-review spec axis checked facts, not fit."
-  - session: session_013zxzeQCoXnRxbyzhHyy3M1
-    date: "2026-11-02"
-    severity: minor
-    description: "I kept the Contributing list from the old README without asking whether an outsider could act on it; the owner had to point out it was arbitrary"
-    solution: "Apply CLAUDE.md 'question the premise' to inherited sections too: give each link a reason for the stated audience"
   - session: session_013zxzeQUzcNjB7oD8ukBLGp
     date: "2026-11-06"
     severity: moderate

@@ -19,6 +19,7 @@ import {
   isSessionLogPath,
   issueSessionRef,
   lastUsed,
+  OBSERVATIONS_BUDGET,
   parseCommitFileChanges,
   parseLandings,
   parseMergedPullRequests,
@@ -948,14 +949,37 @@ describe('buildBrief()', () => {
     ...over,
   })
 
-  it('lists the newest runs first, capped, with their log files', () => {
-    const w = Array.from({ length: 12 }, (_, i) => win(`s${i}`, `2026-10-${String(i + 1).padStart(2, '0')}T00:00:00Z`, ['demo']))
-    const out = buildBrief(row({ usedIn: w.map((x) => x.session) }), w)
-    const runs = out.split('\n').filter((l) => l.startsWith('- s'))
-    expect(runs).toHaveLength(10)
-    expect(runs[0]).toContain('s11 ·')
-    expect(runs[0]).toContain('s11.yml')
+  it('lists only runs from the last 3 days, newest first, with their log files', () => {
+    const now = Date.parse('2026-10-20T12:00:00Z')
+    const w = [
+      win('old', '2026-10-17T11:59:59Z', ['demo']),
+      win('edge', '2026-10-17T12:00:00Z', ['demo']),
+      win('new', '2026-10-20T00:00:00Z', ['demo']),
+    ]
+    const out = buildBrief(row({ usedIn: w.map((x) => x.session) }), w, now)
+    const runs = out.split('\n').filter((l) => l.startsWith('- '))
+    expect(runs.map((l) => l.split(' ')[1])).toEqual(['new', 'edge'])
+    expect(runs[0]).toContain('new.yml')
     expect(out).not.toContain('Sessions that did not use it')
+  })
+
+  it('does not cap the recent runs by count', () => {
+    const now = Date.parse('2026-10-20T12:00:00Z')
+    const w = Array.from({ length: 15 }, (_, i) => win(`s${i}`, `2026-10-20T${String(i).padStart(2, '0')}:00:00Z`, ['demo']))
+    const out = buildBrief(row({ usedIn: w.map((x) => x.session) }), w, now)
+    expect(out.split('\n').filter((l) => l.startsWith('- s'))).toHaveLength(15)
+  })
+
+  it('lists observations newest first and cuts them at the character budget, keeping the newest', () => {
+    const note = 'x'.repeat(1000)
+    const observations = Array.from({ length: 40 }, (_, i) => ({ date: `2026-10-${String(i + 1).padStart(2, '0')}`, note }))
+    const out = buildBrief(row({ observations }), [])
+    const lines = out.split('\n').filter((l) => l.startsWith('- 2026-10-'))
+    expect(lines.length).toBeLessThan(40)
+    expect(lines.length).toBeGreaterThan(0)
+    expect(lines[0]).toContain('2026-10-40')
+    expect(lines.join('\n').length).toBeLessThanOrEqual(OBSERVATIONS_BUDGET + lines.length)
+    expect(out).toContain(`${40 - lines.length} older observations left out`)
   })
 
   it('gives a model-invoked Skill the sessions that did not use it, and names each landing', () => {

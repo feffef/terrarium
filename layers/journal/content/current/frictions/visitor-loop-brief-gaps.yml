@@ -26,3 +26,8 @@ occurrences:
     severity: minor
     description: "The brief's 'without changing directory' rule has no reason, so two visitors hit ERR_PNPM_RECURSIVE_EXEC_NO_PACKAGE after a cd; the brief also names resolveChromiumPath where launchChromium adds the sandbox flags."
     solution: "In visitor-brief.md say pnpm needs the repo as cwd, and point to launchChromium."
+  - session: session_013zxzeQsCq5g9jeQpmsULPZ
+    date: "2026-11-16"
+    severity: minor
+    description: "Visitors' retros say the brief gives no page-spread guidance for a one-page focus (homepage) or a single big section; the blind crawl spent 16 pages in the Blog."
+    solution: "visitor-brief.md: cap pages per section and say whether a single-page focus needs browser visits or only status checks."

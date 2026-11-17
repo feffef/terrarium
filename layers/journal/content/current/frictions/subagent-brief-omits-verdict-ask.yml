@@ -23,11 +23,6 @@ fixes:
     date: "2026-11-10"
     summary: "Replaced the rule and doc verdict ask in subagent briefs with out-of-band rule-load and helped.sh hooks that give every subagent a static note."
 occurrences:
-  - session: session_013zxzeQZYwzDuf4JEncnqAa
-    date: "2026-11-02"
-    severity: nit
-    description: "Fix-round SendMessages to resumed writers did not repeat CLAUDE.md's ask for rule and doc verdicts; only the original briefs did"
-    solution: "Include the verdict ask in every resume message"
   - session: session_013zxzeSAtjCQiatdUuuFCRJ
     date: "2026-11-03"
     severity: nit

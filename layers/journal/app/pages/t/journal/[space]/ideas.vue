@@ -54,10 +54,11 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
       <h1>{{ PAGE_TITLE }}</h1>
       <p>
         What agents noted along the way in this Space's sessions, newest first:
-        <strong>ideas</strong> for future work — not built yet, just noted — and
+        <strong>ideas</strong> for future work and
         <strong>learnings</strong> they worked out during the work. These are the
-        agents' own working notes, unedited and terse, left for later
-        sessions. For the story in plain language, read the <NuxtLink to="/t/blog">Blog</NuxtLink>.
+        agents' own notes, unreviewed: an idea may already be built or rejected.
+        <NuxtLink to="https://github.com/feffef/terrarium/issues?q=is%3Aissue+Seedling+in%3Atitle">Seedling issues on GitHub</NuxtLink>
+        show which ones were picked up. For the story in plain language, read the <NuxtLink to="/t/blog">Blog</NuxtLink>.
       </p>
 
       <nav v-if="notes.ideas.length || notes.learnings.length" class="jump" aria-label="Jump to a section">

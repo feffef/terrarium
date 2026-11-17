@@ -85,6 +85,35 @@ describe('glassbox Tenant', async () => {
     })
   })
 
+  it('lists the Walkthroughs under an introduction, plain, and links the sidebar label to it', async () => {
+    const html = await $fetch<string>('/t/glassbox/guide/walkthroughs')
+    expect(html).toMatch(/<h1[^>]*>Walkthroughs<\/h1>/)
+    expect(html).toContain('A walkthrough follows one story across several lessons')
+    expect(html).toContain('href="/t/glassbox/guide/walkthroughs/from-file-to-browser"')
+    expect(html).toContain('How a Markdown file becomes a page on a visitor')
+    expect(html).not.toMatch(/\d+ Lessons|\d+ of \d+ read/)
+    expect(html).toMatch(/<a[^>]*href="\/t\/glassbox\/guide\/walkthroughs"[^>]*>Walkthroughs<\/a>/)
+  })
+
+  it('makes the skip link the first tab stop, moving focus to the content', async () => {
+    await withRendered('/t/glassbox/guide/nuxt-vue/layers', async (page) => {
+      await page.keyboard.press('Tab')
+      expect(await page.evaluate('document.activeElement?.textContent')).toBe('Skip to lesson')
+      await page.keyboard.press('Enter')
+      expect(await page.evaluate('document.activeElement?.id')).toBe('gb-content')
+    })
+    expect(await $fetch<string>('/t/glassbox/workshop')).not.toContain('Skip to lesson')
+  })
+
+  it('puts no h2 before the h1', async () => {
+    for (const route of ['/t/glassbox/guide/nuxt-vue/layers', '/t/glassbox/guide/nuxt-vue', '/t/glassbox/guide/walkthroughs']) {
+      const html = await $fetch<string>(route)
+      expect(html.indexOf('<h1'), route).toBeGreaterThan(-1)
+      const h2 = html.indexOf('<h2')
+      expect(h2 === -1 || h2 > html.indexOf('<h1'), route).toBe(true)
+    }
+  })
+
   // The workshop is a live record of one page: no Subject menu, no edition date, and a way back to the guide.
   it('serves the workshop without a sidebar or edition date, linking back to the guide', async () => {
     const html = await $fetch<string>('/t/glassbox/workshop')

@@ -23,11 +23,6 @@ fixes:
     date: "2026-11-08"
     summary: "SKILL.md §2 files regression issues only for still-recurring entries at moderate or worse (top three of those); the ledger PR gets the simple-change review."
 occurrences:
-  - session: session_013zxzeQqRBLg9tUfsbNCCz8
-    date: "2026-11-02"
-    severity: minor
-    description: "The third regression issue had no good candidate: the remaining moderate regressions were owner-decided or superseded, yet the Skill says to file the top three anyway."
-    solution: "Let the Skill skip a regression whose use case was removed or whose half the owner chose to keep."
   - session: session_013zxzeSrSkYPpnoS2ag6EbC
     date: "2026-11-03"
     severity: minor
@@ -83,3 +78,8 @@ occurrences:
     severity: minor
     description: "Skill step 5.4 says review the ledger PR by the simple-change test, which a 30-file generated diff fails; I read the diff stat and ran the gate instead of code-review, deviating from pr-workflow."
     solution: "State in SKILL.md that script-written ledger diffs need only the gate and content test."
+  - session: session_013zxzeSyRCdzfotAbmBuiPp
+    date: "2026-11-16"
+    severity: minor
+    description: "frictions-to-fixes §5.4 asks for the simple-change test on a ledger PR whose generated diff spans 57 files and 437 lines, so it can never pass; I checked paths only."
+    solution: "Say a ledger-only diff counts as simple when it touches only frictions entries and the gate passes."

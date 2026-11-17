@@ -39,7 +39,7 @@ describe('ledgerPanels', () => {
 
   it('links each occurrence to its session log in the right Space, newest first', () => {
     const [e] = ledgerPanels([cluster('x', ['nit', 'minor'])], 'current', new Set(['x-1']), 'archived').severe
-    expect(e!.occurrences).toEqual([
+    expect(e!.occurrences).toMatchObject([
       { date: '2026-10-02', severity: 'minor', to: '/t/journal/current#session-x-1' },
       { date: '2026-10-01', severity: 'nit', to: '/t/journal/archived#session-x-0' },
     ])
@@ -60,16 +60,20 @@ describe('ledgerPanels goals', () => {
   })
 })
 
-describe('ledgerPanels reports', () => {
-  const logged = (name: string, texts: { description: string; solution: string }[]): FrictionClusterDoc => ({
-    ...cluster(name, texts.map(() => 'nit')),
-    occurrences: texts.map((t, i) => ({ session: `${name}-${i}`, date: `2026-10-0${i + 1}`, severity: 'nit' as const, ...t })),
-  })
-
-  it('lists the friction an occurrence carries with its solution once, linked to the Space that holds it', () => {
-    const t = { description: 'Gate ran twice', solution: 'Add a guard' }
-    const [e] = ledgerPanels([logged('x', [t, t])], 'current', new Set(['x-0']), 'archived').severe
-    expect(e!.reports).toEqual([{ ...t, date: '2026-10-02', to: '/t/journal/archived#session-x-1' }])
+describe('ledgerPanels occurrence text', () => {
+  it('carries each occurrence its own friction and solution', () => {
+    const c: FrictionClusterDoc = {
+      ...cluster('x', ['nit', 'nit']),
+      occurrences: [
+        { session: 'x-0', date: '2026-10-01', severity: 'nit', description: 'Gate ran twice', solution: 'Add a guard' },
+        { session: 'x-1', date: '2026-10-02', severity: 'nit', description: 'Gate ran twice', solution: 'Add a guard' },
+      ],
+    }
+    const [e] = ledgerPanels([c], 'current', new Set(['x-0', 'x-1']), 'archived').severe
+    expect(e!.occurrences.map((o) => [o.date, o.description, o.solution])).toEqual([
+      ['2026-10-02', 'Gate ran twice', 'Add a guard'],
+      ['2026-10-01', 'Gate ran twice', 'Add a guard'],
+    ])
   })
 })
 
