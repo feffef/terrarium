@@ -484,14 +484,14 @@ describe('reportReads (the names reported is picked from)', () => {
 
     // Issue #2521: a completed log after a merge with no close-session since is refused.
     it('refuses a completed log after a merge without close-session, and writes no scratch', () => {
-      const res = author(store(['pnpm tsx scripts/github/merge-pr.ts 12']))
+      const res = author(store([['pnpm tsx scripts/github/merge-pr.ts 12', '{ "merged": true }']]))
       expect(res).toMatchObject({ exited: true, scratchWritten: false })
       expect(res.errors).toContain('Invoke the close-session Skill first, then author again')
     })
 
     it('still accepts a completed log with no merge, or a merge with another status', () => {
       expect(author(store(['ls']))).toMatchObject({ exited: false, scratchWritten: true })
-      const merged = store(['pnpm tsx scripts/github/merge-pr.ts 12'])
+      const merged = store([['pnpm tsx scripts/github/merge-pr.ts 12', '{ "merged": true }']])
       expect(author(merged, { status: 'blocked' })).toMatchObject({ exited: false, scratchWritten: true })
     })
     // Issue #2721: the worktree sweep at close, behind a seam so no real worktree is touched.
@@ -708,33 +708,55 @@ describe('committedFiles() — files the session changed through its own commits
 })
 
 describe('closureRefusal() — a completed log hand-written after a merge (#2424, #2521)', () => {
-  const tool = (name: string, input: Record<string, unknown>) => ({
+  const tool = (name: string, input: Record<string, unknown>, id?: string) => ({
     type: 'assistant',
-    message: { content: [{ type: 'tool_use', name, input }] },
+    message: { content: [{ type: 'tool_use', name, input, ...(id ? { id } : {}) }] },
   })
-  const merge = tool('Bash', { command: 'pnpm tsx scripts/github/merge-pr.ts 12' })
+  const result = (id: string, content: unknown) => ({
+    type: 'user',
+    message: { content: [{ type: 'tool_result', tool_use_id: id, content }] },
+  })
+  const merge = tool('Bash', { command: 'pnpm tsx scripts/github/merge-pr.ts 12' }, 'm1')
+  const merged = result('m1', '{ "merged": true }')
   const mcpMerge = tool('mcp__github__merge_pull_request', { pullNumber: 12 })
   const close = tool('Skill', { skill: 'close-session' })
   const refuse = (status: string, ...records: Record<string, unknown>[]) => closureRefusal(status, extractTrace(records))
 
   it('refuses when completed, merged and never closed afterwards', () => {
-    expect(refuse('completed', merge)).toMatch(/close-session/)
+    expect(refuse('completed', merge, merged)).toMatch(/close-session/)
     expect(refuse('completed', mcpMerge)).toMatch(/close-session/)
   })
   it('refuses when the only close came before the last merge', () => {
-    expect(refuse('completed', close, merge)).toMatch(/close-session/)
+    expect(refuse('completed', close, merge, merged)).toMatch(/close-session/)
+  })
+  it('refuses when the merged result lands after close-session', () => {
+    expect(refuse('completed', merge, close, merged)).toMatch(/close-session/)
   })
   it('is silent when close-session ran after the merge', () => {
-    expect(refuse('completed', merge, close)).toBeUndefined()
+    expect(refuse('completed', merge, merged, close)).toBeUndefined()
   })
   it('is silent when the close Skill call carries its name in `command`', () => {
-    expect(refuse('completed', merge, tool('Skill', { command: 'close-session' }))).toBeUndefined()
+    expect(refuse('completed', merge, merged, tool('Skill', { command: 'close-session' }))).toBeUndefined()
   })
   it('is silent without a merge', () => {
     expect(refuse('completed', tool('Bash', { command: 'ls' }))).toBeUndefined()
   })
+  it('is silent when merge-pr.ts was only started, with no merged result', () => {
+    expect(refuse('completed', merge)).toBeUndefined()
+  })
+  it('matches a result given as text blocks, or compact JSON', () => {
+    expect(refuse('completed', merge, result('m1', [{ type: 'text', text: '{"merged":true}' }]))).toMatch(/close-session/)
+  })
+  it('ignores a merged: false result', () => {
+    expect(refuse('completed', merge, result('m1', '{ "merged": false }'))).toBeUndefined()
+  })
+  it('is silent when a command merely names merge-pr.ts, whatever a later record says', () => {
+    const grep = tool('Bash', { command: 'grep -n merge scripts/github/merge-pr.ts' }, 'g1')
+    const other = tool('Bash', { command: 'gh api pulls/1' }, 'o1')
+    expect(refuse('completed', grep, result('g1', 'ok'), other, result('o1', '{ "merged": true }'))).toBeUndefined()
+  })
   it('is silent for a non-completed status', () => {
-    expect(refuse('blocked', merge)).toBeUndefined()
+    expect(refuse('blocked', merge, merged)).toBeUndefined()
   })
 })
 
