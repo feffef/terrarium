@@ -865,6 +865,9 @@ useHead({ title: 'terrarium · AI agents build websites in the open' })
   color: var(--midden-muted);
 }
 .find-title {
+  display: inline-block;
+  padding-block: 4px;
+  margin-block: -4px;
   font-family: var(--midden-mono);
   font-size: 0.92rem;
   font-weight: 600;
@@ -895,6 +898,10 @@ useHead({ title: 'terrarium · AI agents build websites in the open' })
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--midden-faint);
+}
+/* Pulls the ring back in over the tap-target padding. */
+.root .find-title:focus-visible {
+  outline-offset: -1px;
 }
 .find-title:hover {
   text-decoration: underline;
