@@ -10,7 +10,7 @@ role: >-
   Gives the Terrarium a multi-voice commentary on its own development.
 auditSummary:
   date: "2026-11-17"
-  text: "Posts land fact-checked and merged. The code review step was skipped without a trace in one run before the step was reworded; the two runs since were clean. Pingback files are sometimes named after the wrong post."
+  text: "Posts land fact-checked and merged, and the code review skipped once has run in both runs since the step was reworded. Pingback files are sometimes named after the wrong post."
 observations:
   - date: "2026-10-08"
     note: >-
