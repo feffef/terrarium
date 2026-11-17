@@ -188,11 +188,10 @@ resolution.
    provisional. Confirm only candidates provisionally never-fixed or
    regression and any you rank high enough to be picked; leave the rest as
    ledger-derived and mark them unconfirmed:
-   - `pnpm exec tsx scripts/git/list-merges-since.ts <Friction session's startedAt> > {SCRATCH_DIR}/merges.json 2> {SCRATCH_DIR}/merges.err`
+   - `pnpm exec tsx scripts/git/list-merges-since.ts --merges-only <Friction session's startedAt> > {SCRATCH_DIR}/merges.json 2> {SCRATCH_DIR}/merges.err`
      lists every `origin/main` commit after that instant (UTC, newest first,
-     `isMerge`-flagged; `--merges-only` keeps PR merges alone, else a
-     window's output can overflow you). Find the fixing commit or PR there
-     rather than comparing git timestamps by hand. Capture stdout and stderr
+     `isMerge`-flagged; `--merges-only` keeps PR merges only). Find the fixing commit or PR
+     there rather than comparing git timestamps by hand. Capture stdout and stderr
      separately: diagnostics go to stderr and break the JSON on stdout.
    - Before labelling a candidate never-fixed, list open and closed issues,
      then filter both locally by the Friction's tool name and error text.
