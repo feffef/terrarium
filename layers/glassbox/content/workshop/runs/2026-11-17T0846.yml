@@ -1,0 +1,16 @@
+session: session_013zxzeQ8sddaeWL4KijZQnp
+mode: autonomous
+focus: "Walkthroughs: the memory page's wording lead that A change goes live
+  stop 2 never says how long the pause is. Chosen because it is a one-clause fix
+  with a source (deploy/entrypoint.sh:21, the same at the page's revision), and
+  no open PR touches the page. Deviations for the budget: no Scout, writer, claim
+  checker or fresh reader; only this Walkthrough was read in full, plus the
+  guide index. Cost: unreported (no get_session); estimated context about 90k
+  tokens."
+changes:
+  - walkthroughs/80.a-change-goes-live | Stop 2 now says the pause is 120 seconds
+    unless POLL_INTERVAL is set | the stop never said how long the pause is.
+    Wording only, so revision and publishedAt are kept
+  - workshop/pages/index | the stop 2 pause lead deleted | done
+pagesRead:
+  - walkthroughs/80.a-change-goes-live
