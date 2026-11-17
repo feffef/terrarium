@@ -10,6 +10,10 @@ ref: "#2633: the owner accepted partial reads of required docs on 2026-10-28 (cl
 related:
   - entry: output-trim-drops-needed-line
     rule: A command's output was piped through head, tail or grep and lost the line needed.
+  - entry: reviewer-coverage-thin
+    rule: A reviewer or audit agent was handed more files than it could read.
+  - entry: shell-read-detection
+    rule: The warning says a doc was credited from shell output but marked not read.
 fixes:
   - pr: 2448
     date: "2026-10-23"

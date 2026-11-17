@@ -10,6 +10,8 @@ ref: "Issue #2659 closed not planned on 2026-10-29: the owner accepts the cost. 
 related:
   - entry: counts-from-wrong-filter
     rule: A script, window or eligibility filter computed the count and the filter was wrong.
+  - entry: github-body-unchecked-value
+    rule: A path, commit, branch or phrase in a GitHub post came from memory.
 fixes:
   - pr: 2336
     date: "2026-10-20"

@@ -3,6 +3,9 @@ surface: safe
 summary: Clear-backlog orchestrators wrote status lines or vague pointers to open questions in chat, against the Skill's own chat rules.
 cause: "clear-backlog SKILL.md says to write only questions, needs and the report in chat; sessions write short status lines while agents run and later refer to open questions without repeating them in full. Signals: 'wrote several short status lines while agents ran', 'against clear-backlog's chat rules', 'said the questions were open without repeating them'."
 status: open
+related:
+  - entry: builders-started-while-grilling-open
+    rule: Builders were started, and their news interleaved, while questions were still open.
 occurrences:
   - session: session_013zxzeNWbHYVE9UDhB1zNHD
     date: "2026-11-12"

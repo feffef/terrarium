@@ -8,6 +8,8 @@ status: open
 related:
   - entry: pr-opened-without-subscribe
     rule: The PR was opened and never subscribed to, or only partly read.
+  - entry: github-transient-errors-on-push-subscribe-merge
+    rule: subscribe_pr_activity or a push failed with a GitHub error.
 fixes: []
 notes: |-
   2026-10-23 design: a subscribe-after-create sentence or guard dropped: the only home is ADR-0003 (Human-only, an ADR summary cannot add to its ADR) or a guard that cannot tell a guess from a real number, and a wrong guess costs one resubscribe.

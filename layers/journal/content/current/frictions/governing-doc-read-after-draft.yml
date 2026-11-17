@@ -13,6 +13,8 @@ related:
     rule: The doc is git, GitHub, issue or screenshot guidance and the hint fired after the call.
   - entry: constraint-unread-before-build
     rule: The unread doc was a rule or ADR the design or build went against, not drafted text.
+  - entry: glassbox-curate-read-first-skipped
+    rule: The glassbox-curate Skill's own first reads (glossary, QUALITY.md, the Subject's pages) were skipped.
 fixes:
   - pr: 2469
     date: "2026-10-23"

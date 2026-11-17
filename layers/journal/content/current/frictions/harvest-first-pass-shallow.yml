@@ -6,6 +6,8 @@ status: open
 related:
   - entry: harvest-list-read-cost
     rule: The harm is the token cost of reading the whole list.
+  - entry: harvest-step-4-unstated-cases
+    rule: Step 4 did not say how a mixed cluster counts for its cap.
 fixes:
   - pr: 3106
     date: "2026-11-11"

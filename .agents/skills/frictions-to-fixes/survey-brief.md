@@ -58,9 +58,11 @@ Every edit goes through
 
 ### Instructions
 
-1. **Append each window Friction that matches an entry**, whatever its
-   severity. Match on the harm, not the slip behind it; when an entry's
-   `cause` routes a Friction elsewhere, append it there. A session counts once
+1. **Append each window Friction that fully matches an entry**, whatever its
+   severity. Match on the harm, not the slip behind it, and read the entry's
+   `see:` rules: when one sends the Friction elsewhere, append it there. One
+   that fits only in part, or is worse than the entry's worst stored severity
+   (above its `acceptedSeverity` for an `accepted` one), goes to step 2. A session counts once
    per entry, at its highest severity. One
    call files them all:
    `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/print-ledger-occurrence.ts --append <entry> <session> <index> [<entry> <session> <index> …]`
@@ -71,7 +73,10 @@ Every edit goes through
    `summary` or `cause`, rewrite them with `ledger-set.ts <entry> --summary TEXT
    --cause TEXT` so they cover every occurrence.
 2. **Open a new entry** for a cause seen twice, or once at `moderate`,
-   `major` or `blocker`. Its `summary` is one plain sentence a visitor can
+   `major` or `blocker`, and for any such Friction no entry fully matches.
+   Link it, on both sides, to each entry it nearly matched
+   (`ledger-set.ts --related <entry> <rule>`; the rule says when a Friction
+   goes there instead). Its `summary` is one plain sentence a visitor can
    read; its `cause` names the root mechanism and the signals that identify
    a new occurrence (error text, file or tool, trigger), so a later run can
    match it.
@@ -79,7 +84,10 @@ Every edit goes through
    two Frictions days apart, on different tools, belong together when one
    change would retire both. When the stored texts show one broad entry
    holding several causes, or two entries holding one, split or merge them
-   without reopening the logs: move each occurrence with
+   without reopening the logs. Keep clusters apart: a Friction held by two
+   clusters, or one a `see:` rule sends elsewhere, moves; two linked clusters
+   that one change would retire merge; a `see:` rule that no longer holds is
+   corrected. Move each occurrence with
    `prune-friction-ledger.ts --move <session> <from> <to>` (it refuses a
    session the target already holds and checks every text survived).
 4. **Record each PR that merged to fix a cluster** as a `fixes` entry on it,
@@ -110,9 +118,8 @@ no `tracked` or `on-trial` entry points at something closed.
 
 - A Friction sits in one cluster unless its text names two causes.
 - Each `--summary` and `--candidates` line ends with `see:` the entry's
-  `related` clusters and the rule that sends a Friction there instead; check
-  it before you append. Add a pair with `ledger-set.ts --related` on both
-  entries (`ledger-content.spec.ts` refuses a one-way link).
+  `related` clusters and each rule. A pair is written on both entries
+  (`ledger-content.spec.ts` refuses a one-way link).
 - When a fix's guard, hint or refusal catches the slip and the harm is now
   different (a refused call and a retry, a false positive, no cost), give it
   its own entry whose `ref` names the original entry and the fix: it is not

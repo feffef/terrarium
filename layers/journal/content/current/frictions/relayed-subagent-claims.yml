@@ -12,6 +12,8 @@ related:
     rule: The agent itself described how code, a guard or a rule behaves from recall, or made an unchecked only/every claim.
   - entry: subagent-brief-defects
     rule: The brief's wrong path, value or placeholder came from the orchestrator's own memory.
+  - entry: prune-trial-territory-unchecked
+    rule: A triage agent's claim about a trial's territory was relayed or acted on unchecked.
 notes: |-
   2026-10-30 survey: issue #2657 closed by PR #2670 (recorded in fixes); status reset to open.
 fixes:

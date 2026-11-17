@@ -3,6 +3,9 @@ summary: The container's worktree safety check refused helper agents' compound s
 cause: "The container-level worktree-isolation guard refuses compound Bash in an agent worktree (loops, variable expansion, pipes, heredocs piped to node), not only commands naming git twice; agents find out by trial and fall back to plain calls or scratch helper scripts. environment-caveats.md lists some triggers. Signals: 'worktree guard refused' on a compound command, heredoc or pipe, 'forcing plain calls and a helper script'."
 surface: outside
 status: open
+related:
+  - entry: harness-classifier-denials
+    rule: The auto-mode classifier denied an amend, force push or reset.
 fixes:
   - pr: 1825
     date: "2026-10-12"

@@ -3,6 +3,9 @@ summary: A reviewer subagent could not read all the docs or pages it was given, 
 cause: "A reviewer or audit subagent is handed more files than it can read (the whole docs set, Skills, journal pages, glossaries); it reports partial coverage or has to be resumed, doubling its cost. Signals: 'covered only a fraction', 'reviewers reported thin coverage', 'had to be resumed', 'unread'."
 surface: safe
 status: open
+related:
+  - entry: required-doc-read-truncated
+    rule: A required doc was read through a cut or head filter.
 fixes:
   - pr: 2734
     date: "2026-10-31"

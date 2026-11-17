@@ -8,6 +8,10 @@ related:
     rule: The brief has those lines but carries a wrong path, value or placeholder.
   - entry: shared-scratchpad-collisions
     rule: Parallel agents wrote to one scratchpad folder or overwrote each other's helpers.
+  - entry: pending-verdicts-subagent-only-docs
+    rule: log-session --pending asked for verdicts on docs only subagents read.
+  - entry: save-handback-skipped
+    rule: The orchestrator skipped save-handback.ts for subagent replies.
 fixes:
   - pr: 1964
     date: "2026-10-14"

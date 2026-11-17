@@ -6,6 +6,8 @@ status: open
 related:
   - entry: claim-of-fix-not-rendered
     rule: A visual fix was reported working without a real render or the wide-font check.
+  - entry: preview-shot-cannot-clip-or-seed
+    rule: preview.ts shot cannot clip one element or seed page state.
 fixes:
   - pr: 3096
     date: "2026-11-11"

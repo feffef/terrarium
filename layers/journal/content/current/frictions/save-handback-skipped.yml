@@ -3,6 +3,9 @@ surface: safe
 summary: Agents skipped save-handback.ts for subagent replies and worked from the messages in context.
 cause: "dispatch-subagents section 3 asks to keep each subagent's final reply with save-handback.ts; orchestrators skip it for all replies, and a resumed agent's first report is lost since it keeps only the latest. Signals: 'save-handback.ts', 'kept none of the hand-backs'."
 status: open
+related:
+  - entry: subagent-brief-omits-verdict-ask
+    rule: The brief omitted a line CLAUDE.md asks every brief to carry.
 notes: |-
   2026-11-15 survey: issue #3295 closed completed 2026-11-14 (PR #3304, recorded in fixes); status reset from tracked. Session_013zxzeRbcVWW7Upv1bSok39 (2026-11-13) lost two first reports because save-handback.ts keeps only a resumed agent's latest reply.
 fixes:

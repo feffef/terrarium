@@ -6,6 +6,8 @@ status: open
 related:
   - entry: frictions-to-fixes-briefs-mismatch
     rule: The survey brief itself is wrong or out of date.
+  - entry: ledger-fix-date-day-precision
+    rule: A same-day fix or acceptance could not be ordered because dates have day precision.
 fixes:
   - pr: 3365
     date: "2026-11-16"

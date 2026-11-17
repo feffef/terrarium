@@ -3,6 +3,9 @@ surface: safe
 summary: The preview screenshot tool cannot clip one element or set page state, so agents wrote throwaway Playwright scripts.
 cause: "preview.ts shot captures only whole pages, so one element needs a throwaway Playwright script written by each agent again. Since PR #3166 (2026-11-12) it takes --storage KEY=VALUE to seed localStorage, so the seeding half is covered. Signals: 'preview.ts shot', 'throwaway Playwright script', 'clip one element', 'unreadable full-page shot'."
 status: open
+related:
+  - entry: preview-dev-server-stale-or-unhydrated
+    rule: The dev server showed old code, old CSS or an unhydrated page.
 fixes:
   - pr: 3166
     date: "2026-11-12"

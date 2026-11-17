@@ -10,6 +10,8 @@ related:
     rule: A scripted replace broke a file that is not a YAML data file.
   - entry: validate-content-skipped-before-gate
     rule: The gate failed because validate:content was not run after an edit.
+  - entry: ledger-append-refuses-held-session
+    rule: print-ledger-occurrence --append refused a whole call over one held session.
 fixes:
   - pr: 2154
     date: "2026-10-16"

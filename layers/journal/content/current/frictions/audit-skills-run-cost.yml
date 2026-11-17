@@ -3,6 +3,11 @@ surface: safe
 summary: Runs that fan out many subagents (the audit-skills per-Skill checks, a retro resuming 20 agents) spend 1.7M-1.9M tokens on short replies that mostly repeat known findings.
 cause: "A session launches or resumes many subagents whose replies are short or re-confirm known repeats: audit-skills dispatches one per Skill (16-17 per run, about 1.7M tokens; since PR #3377 each reads the last 3 days and reports a repeat in one line, but the count is unchanged, and a 2026-11-17 run still cost about 1.7M), and a retro resumed 20 agents at 75k-130k tokens each (about 1.9M) for six-line replies. Signals: '16 per-Skill checks', '17 subagent reports for a mostly-repeat result', 'about 1.9M tokens', 'resumed 20 agents', 'most reports re-confirmed known repeats'."
 status: open
+related:
+  - entry: glassbox-curate-run-cost
+    rule: The fan-out belongs to a glassbox-curate run.
+  - entry: subagent-fanout-before-probe
+    rule: Agents were dispatched by design, one per Skill, with short repeat replies.
 fixes:
   - pr: 3377
     date: "2026-11-16"

@@ -9,6 +9,8 @@ ref: "issue #3298 (closed 2026-11-14 after the fixes below)"
 related:
   - entry: harness-classifier-denials
     rule: The auto-mode classifier denied an amend, force-with-lease or git reset --hard.
+  - entry: sandboxed-ssh-hang
+    rule: An ssh from the sandboxed Bash tool hung until timeout.
 notes: |-
   2026-11-14: regression after #2976 filed as issue #3298. The owner closed #3298 as completed after PR #3093 and the Unrestricted-environment change for the network Routines (glassbox-curate, glassbox-update, dependabot-sweep; owner, 2026-11-12, issue #3124; no PR, so it is not in `fixes`). The two gh --paginate 403 reports did not reproduce. Reopen on a new occurrence after 2026-11-12T18:40Z.
 fixes:

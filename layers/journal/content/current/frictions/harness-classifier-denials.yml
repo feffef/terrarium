@@ -8,6 +8,8 @@ status: open
 related:
   - entry: harness-proxy-blocks
     rule: The proxy refused a network host (403 or connection failure).
+  - entry: worktree-guard-blocks-compound-bash
+    rule: The container's worktree guard or another guard refused a compound Bash call.
 fixes:
   - pr: 3057
     date: "2026-11-11"

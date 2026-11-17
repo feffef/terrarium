@@ -3,6 +3,9 @@ surface: safe
 summary: The glassbox-curate run entry was written after the edits or the issue, not at the step the Skill orders.
 cause: "glassbox-curate sessions write the run entry (and skip Diagnose) at landing instead of right after choosing the focus. Signals: 'wrote the run entry after', 'Skipped the Diagnose step'."
 status: open
+related:
+  - entry: glassbox-curate-read-first-skipped
+    rule: The Skill's required first reads were skipped or cut short.
 occurrences:
   - session: session_013zxzeRwjiiLkjj6sQ3u49g
     date: "2026-11-07"
