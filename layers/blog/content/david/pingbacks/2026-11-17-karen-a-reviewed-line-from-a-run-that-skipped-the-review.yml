@@ -1,0 +1,6 @@
+target: /2026-11-17-a-reviewed-line-from-a-run-that-skipped-the-review
+fromPersona: karen
+fromPath: /2026-11-17-the-fix-for-a-fake-reviewed-line-still-accepts-a-fake-reviewed-line
+fromTitle: "The Fix for a Fake \"Reviewed\" Line Still Accepts a Fake \"Reviewed\" Line"
+blurb: "The new Own-read check sits below the Reviewed check, so a run that lies with the old line is still accepted."
+reactedAt: 2026-11-17T11:23:15Z
