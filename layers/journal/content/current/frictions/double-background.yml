@@ -11,11 +11,6 @@ fixes:
     date: "2026-10-16"
     summary: "The double-background guard's deny message now says the whole call was denied and nothing in it ran."
 occurrences:
-  - session: session_013zxzeQqRBLg9tUfsbNCCz8
-    date: "2026-11-02"
-    severity: nit
-    description: "I stacked run_in_background with a trailing & on a gate command; the double-background guard blocked it and nothing ran."
-    solution: "Pass run_in_background alone with a plain foreground command."
   - session: session_013zxzePhrV1oZiDPfSuW2Hm
     date: "2026-11-03"
     severity: nit

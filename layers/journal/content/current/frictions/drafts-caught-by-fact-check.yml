@@ -24,11 +24,6 @@ fixes:
     date: "2026-11-13"
     summary: "digest SKILL.md needs a source in the day's gathered material for a cadence word and drops 'scheduled' from its example; the fact-check checks both."
 occurrences:
-  - session: session_013zxzeQqj3Eh1SgeFLWsNcD
-    date: "2026-11-02"
-    severity: minor
-    description: "First draft said agents were told to accept relayed claims (it was a Ledger status change) and called the skills check weekly; I wrote from PR titles without reading diffs, caught by the fact-check."
-    solution: "Have gather print each PR's touched files and first diff lines so the draft starts from the change, not the title."
   - session: session_013zxzeR8CEiWCmTmvjhCZ1A
     date: "2026-11-03"
     severity: minor

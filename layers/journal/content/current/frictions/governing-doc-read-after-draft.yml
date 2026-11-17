@@ -17,11 +17,6 @@ fixes:
     date: "2026-10-29"
     summary: "The tenant-glossary rule says a Tenant's terms apply to everything written under its layer, code comments included."
 occurrences:
-  - session: session_013zxzeRkQabGaMQ8gphe4Ra
-    date: "2026-11-02"
-    severity: nit
-    description: "Wrote the rater and judge briefs before reading ADR-0005 and ADR-0027 in full; a hook asked afterwards (no change was needed)"
-    solution: "Read the ADRs a Skill-folder rule points to before the first Write in that folder"
   - session: session_013zxzeSKTBjSfYnUxNHTJw1
     date: "2026-11-09"
     severity: minor

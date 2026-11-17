@@ -3,6 +3,8 @@ summary: A PR body or ledger quote with a bare angle-bracket tag is rejected by 
 cause: "A body guard or check-body rejects bare angle brackets (read as markup or placeholders) in a PR body or quoted ledger entry; the template warns but agents miss it and the first create_pull_request or write fails, then is reworded. Signals: 'bare angle-bracket tag', 'check-body rejected bare angle brackets', 'create_pull_request failed', 'reworded and retried'."
 surface: guard-or-hook
 status: open
+notes: |-
+  2026-11-17 design: add a PR-body line. dropped: github-integration.md already says to fence them, a guard denies it, and it costs one retry.
 occurrences:
   - session: session_013zxzeT29epAaAQNqmHmeU4
     date: "2026-11-16"

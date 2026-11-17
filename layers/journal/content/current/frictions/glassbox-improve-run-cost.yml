@@ -24,16 +24,6 @@ fixes:
     date: "2026-11-07"
     summary: "Removes the glassbox-improve Skill (issue #2930, owner decision), the source of this cluster's runs."
 occurrences:
-  - session: session_013zxzeSkTLmRxa2PWgt3kPw
-    date: "2026-11-02"
-    severity: minor
-    description: "The PR body must hold the whole tally, so it is 53 KB and too large to paste through the MCP tool; I set it with gh api from a file instead of MCP"
-    solution: "Let grades.ts write a PR-body file and let the provenance guard accept gh api --input from the scratch folder, or have the Skill keep the full tally in a details file"
-  - session: session_013zxzeQZYwzDuf4JEncnqAa
-    date: "2026-11-02"
-    severity: moderate
-    description: "About 127 judges were dispatched by hand in seven waves, which is heavy lead orchestration and a large token cost"
-    solution: "No glassbox-improve workflow exists in .claude/workflows/; one script could fan out judges from the briefs grades.ts writes and call votes"
   - session: session_013zxzeSAtjCQiatdUuuFCRJ
     date: "2026-11-03"
     severity: moderate

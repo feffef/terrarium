@@ -17,11 +17,6 @@ fixes:
     date: "2026-11-12"
     summary: "clear-backlog SKILL.md says to read dispatch-subagents first."
 occurrences:
-  - session: session_013zxzeSuucewJSDd3eyaNnh
-    date: "2026-11-02"
-    severity: nit
-    description: "The first Workflow call was blocked by the dispatch-read guard: I had not read the dispatch-subagents Skill, which CLAUDE.md requires before a subagent brief. A workflow run counts as one."
-    solution: "The guard worked as designed; clear-backlog §1 could name the dispatch-subagents read before the first Workflow call."
   - session: session_013zxzeR4cgWA8MkV51fqC4t
     date: "2026-11-03"
     severity: nit
