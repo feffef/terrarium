@@ -6,6 +6,8 @@ status: open
 related:
   - entry: frictions-to-fixes-briefs-mismatch
     rule: The defect is in survey-brief.md or design-brief.md.
+notes: |-
+  2026-11-17 design: no change: 5 of the 8 since #2970 are the 5.4 simple-change test gap, tracked by #3397; the other 3 are one-offs.
 fixes:
   - pr: 2149
     date: "2026-10-16"

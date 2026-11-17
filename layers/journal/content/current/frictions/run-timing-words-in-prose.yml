@@ -3,6 +3,8 @@ surface: safe
 summary: Prose that says when something runs (for example 'daily') broke a repo convention that the writer met only late.
 cause: Text names a cadence ('daily') where the Glass Box content rule or the skill-cadence validator (scripts/gate/validate-skill-cadence.ts, a Routine's schedule lives outside git) allows only 'automatically'; found at a rule conflict or at validate:content time, not on writing.
 status: open
+notes: |-
+  2026-11-17 design: no change: validate-skill-cadence.ts is the mechanism and caught both in seconds; a doc line would land in a Human-only rule for a self-correcting nit.
 occurrences:
   - session: session_013zxzeRzd6VkoZYwUYQuzAn
     date: "2026-11-16"

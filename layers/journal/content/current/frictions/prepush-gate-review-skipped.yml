@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   ADR-0004 and pr-workflow.md ask for the code-review Skill before a branch's first push (and on a larger follow-up), allowing only a simple change (at most 10 lines in 2 files, adding, renaming or moving no file since PR #2638) the author's own read; sessions judge a small, prose, ledger, test or follow-up diff simple without counting it, self-review instead, or review only after pushing. Signals: 'skipped the code-review Skill', 'pushed before running gate:scoped and code-review', 'reviewed inline', 'self-reviewed', 'simple-change bar', 'without a fresh code-review', code-review run after the first push.
 surface: guard-or-hook
-status: open
-ref: "Issue #2748 (first-push code-review skipped again after #2638) closed not planned 2026-11-01: the owner declined a further fix and accepted the cost up to minor; the moderate of 2026-11-09 is above that."
+status: tracked
+ref: "issue #3407 (regression: moderate above the minor ceiling accepted via #2748)"
 related:
   - entry: followup-review-overcost
     rule: Review ran but cost far more than it found on a tiny first push or small follow-up.

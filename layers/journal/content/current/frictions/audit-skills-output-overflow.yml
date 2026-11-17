@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   scripts/session/audit-skills.ts prints its whole report (56-478 KB) to stdout when run bare, overflowing the tool result, so the survey subagent persists it and re-runs a narrow extraction. Signals: audit-skills.ts, output persisted to a file, "printed about N KB".
 surface: safe
-status: open
-ref: "audit-skills output redirect in frictions-to-fixes §4, 2026-10-16"
+status: tracked
+ref: "fix in progress, frictions-to-fixes run 2026-11-17 (design-brief jq lookup of docReadCounts)"
 related:
   - entry: survey-output-overflow
     rule: The overflow came from session logs, the ledger or another data dump.

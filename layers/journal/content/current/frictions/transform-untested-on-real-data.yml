@@ -11,14 +11,11 @@ related:
 notes: |-
   2026-10-23 design: a general run-it-on-real-data rule dropped: the three transforms differ in kind, code-review caught two before push, and Verify before you state already covers the third.
   2026-11-09 design: a general run-it-on-real-data rule dropped: the two moderate occurrences differ in kind (regex backtracking vs a trial on stand-in data) and the second's code fix already landed; revisit at a third.
+  2026-11-17 design: no change: the SgAc occurrence (prose related-pair rules, no code) moved to new-rule-flaws-caught-in-review, which CLAUDE.md 'Question the premise' already covers; two code-transform occurrences remain, revisit at a third.
+  2026-11-17 correction: one occurrence remains here (session_013zxzeQaeB8hhL2FFfcQhv7), not two; revisit when a second code-transform one arrives.
 occurrences:
   - session: session_013zxzeQaeB8hhL2FFfcQhv7
     date: "2026-11-08"
     severity: moderate
     description: "Trial of the split index used filler text, which fit one Read; real code-dense teaches hit Read's 25,000-token cap, found only in review"
     solution: "Size files meant for Read in tokens with real content, about 2.5 bytes per token for code names; orient now splits parts under 40 KB"
-  - session: session_013zxzeSgAcwDrJXAMFAC4Qf
-    date: "2026-11-17"
-    severity: minor
-    description: "Wrote related-pair rules in bulk without trying the format on two pairs first; the Opus Spec reviews then found four inverted, one wrong and two vague."
-    solution: "Try a new rule format on two concrete pairs and read both sides aloud before bulk-applying it, as CLAUDE.md's Question the premise asks."

@@ -39,3 +39,8 @@ occurrences:
     severity: minor
     description: "The checker's own CONFIRMED-BUT rewording of the CLAUDE.md log/blame clause was still ambiguous; only code-review's Standards axis caught it, costing a checker resume and a second commit."
     solution: "Ask the checker to test each corrected text for a second reading before returning it."
+  - session: session_013zxzeSgAcwDrJXAMFAC4Qf
+    date: "2026-11-17"
+    severity: minor
+    description: "Wrote related-pair rules in bulk without trying the format on two pairs first; the Opus Spec reviews then found four inverted, one wrong and two vague."
+    solution: "Try a new rule format on two concrete pairs and read both sides aloud before bulk-applying it, as CLAUDE.md's Question the premise asks."
