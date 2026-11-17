@@ -2,11 +2,16 @@ name: late-read-first-docs
 summary: >-
   Agents read the doc CLAUDE.md names before a git, GitHub or screenshot step only after taking that step, when the hint points to it.
 cause: >-
-  CLAUDE.md's read-first triggers are prose, and read-first-hint.ts (#1793, the triage docs since #2446) points to the doc only after the first matching git, GitHub, issue-write or screenshot call (PostToolUse). The owner accepted these late reads as a cost in PR #2066 instead of a deny guard (#1819 closed, not refiled): the hint now says a late read that clears the call is not a Friction. Signals: a late read of git-conventions.md, github-integration.md, issue-tracker.md, triage-labels.md or verifying-ui-changes.md after the hint fired, or the hint firing again after a shell read it does not count. A search the fields guard refused is github-search-fields-guard-deny; a wrong label from unread triage docs is triage-docs-unread-before-labelling; other docs have their own entries: pr-workflow-unread-before-push, pr-workflow-read-in-part, dispatch-subagents-skill-unread.
+  CLAUDE.md's read-first triggers are prose, and read-first-hint.ts (#1793, the triage docs since #2446) points to the doc only after the first matching git, GitHub, issue-write or screenshot call (PostToolUse). The owner accepted these late reads as a cost in PR #2066 instead of a deny guard (#1819 closed, not refiled): the hint now says a late read that clears the call is not a Friction. Signals: a late read of git-conventions.md, github-integration.md, issue-tracker.md, triage-labels.md or verifying-ui-changes.md after the hint fired, or the hint firing again after a shell read it does not count.
 surface: guard-or-hook
 status: accepted
 acceptedSeverity: minor
 ref: "PR #2066 (merged): the owner accepts late reads; split from binding-docs-skipped for #2146"
+related:
+  - entry: dispatch-subagents-skill-unread
+    rule: The doc is the dispatch-subagents Skill, read late or never before a dispatch.
+  - entry: pr-workflow-unread-before-push
+    rule: The doc is pr-workflow.md, unread before a push or PR.
 fixes:
   - pr: 1793
     date: "2026-10-11"

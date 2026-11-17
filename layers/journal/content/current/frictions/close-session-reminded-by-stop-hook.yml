@@ -4,6 +4,9 @@ cause: "Comes from close-session-bypassed-by-hand-log and PR #2937 (the Stop hoo
 surface: guard-or-hook
 status: open
 ref: "close-session-bypassed-by-hand-log, fix PR #2937"
+related:
+  - entry: close-session-bypassed-by-hand-log
+    rule: The owner had to ask for the log, or the session wrote it by hand.
 occurrences:
   - session: session_013zxzeNhTeF9B47tZ5Egyhx
     date: "2026-11-11"

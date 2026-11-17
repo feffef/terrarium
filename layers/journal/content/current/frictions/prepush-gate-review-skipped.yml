@@ -2,10 +2,19 @@ name: prepush-gate-review-skipped
 summary: >-
   Agents skipped the required code review before a branch's first push, or gave a change their own read when it was not simple.
 cause: >-
-  ADR-0004 and pr-workflow.md ask for the code-review Skill before a branch's first push (and on a larger follow-up), allowing only a simple change (at most 10 lines in 2 files, adding, renaming or moving no file since PR #2638) the author's own read; sessions judge a small, prose, ledger, test or follow-up diff simple without counting it, self-review instead, or review only after pushing. Signals: 'skipped the code-review Skill', 'pushed before running gate:scoped and code-review', 'reviewed inline', 'self-reviewed', 'simple-change bar', 'without a fresh code-review', code-review run after the first push. A gate:scoped run that did not test the final head belongs to edit-during-gate-run.
+  ADR-0004 and pr-workflow.md ask for the code-review Skill before a branch's first push (and on a larger follow-up), allowing only a simple change (at most 10 lines in 2 files, adding, renaming or moving no file since PR #2638) the author's own read; sessions judge a small, prose, ledger, test or follow-up diff simple without counting it, self-review instead, or review only after pushing. Signals: 'skipped the code-review Skill', 'pushed before running gate:scoped and code-review', 'reviewed inline', 'self-reviewed', 'simple-change bar', 'without a fresh code-review', code-review run after the first push.
 surface: guard-or-hook
 status: open
 ref: "Issue #2748 (first-push code-review skipped again after #2638) closed not planned 2026-11-01: the owner declines a further fix."
+related:
+  - entry: followup-review-overcost
+    rule: Review ran but cost far more than it found on a tiny first push or small follow-up.
+  - entry: merged-without-gate-or-review
+    rule: Neither gate:scoped nor code-review ran before the PR was opened or merged.
+  - entry: edit-during-gate-run
+    rule: A gate:scoped run did not test the pushed head.
+  - entry: verdict-line-asserts-unchecked-review
+    rule: merge-pr.ts accepted a verdict line claiming a review no tool checked.
 notes: |-
   2026-10-28 survey: the PR #2412 Prune Trial is no longer in .agents/prune-trials.yml (judged and deleted by the 2026-10-27 prune run), so the entry is no longer on trial; issue #2472 (regression of #2407) is open.
   2026-10-29 survey: issue #2472 closed by PR #2638 (merged 2026-10-28), which recorded as a fix here.

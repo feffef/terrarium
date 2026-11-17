@@ -2,9 +2,14 @@ name: survey-output-overflow
 summary: >-
   A dump of a large data file or script output (session logs, the ledger, Inventory or run YAML, session records) was too large to read in one go.
 cause: >-
-  The reads behind frictions-to-fixes and similar surveys (session-frictions, extract-frictions --compact at about 90-250 KB with no per-severity view, the ledger directory, Skill Inventory entries) and cat or dumps of big YAML data files (runs.yml 190 KB, a 32 KB observations file, nine get_session records) overflow a tool result or the context, so agents slice, truncate, re-query or write ad hoc filters and can miss lines. Since PR #2640 prune-friction-ledger.ts --summary and --candidates send large output to a file and print a notice. A bare audit-skills.ts run belongs in audit-skills-output-overflow; the glassbox-curate orientation script is orient-output-truncates. Signals: output persisted to a file, '| head truncated', a second narrower query, 'printed N KB', 'dumped ... twice'.
+  The reads behind frictions-to-fixes and similar surveys (session-frictions, extract-frictions --compact at about 90-250 KB with no per-severity view, the ledger directory, Skill Inventory entries) and cat or dumps of big YAML data files (runs.yml 190 KB, a 32 KB observations file, nine get_session records) overflow a tool result or the context, so agents slice, truncate, re-query or write ad hoc filters and can miss lines. Since PR #2640 prune-friction-ledger.ts --summary and --candidates send large output to a file and print a notice. Signals: output persisted to a file, '| head truncated', a second narrower query, 'printed N KB', 'dumped ... twice'.
 surface: safe
 status: open
+related:
+  - entry: audit-skills-output-overflow
+    rule: A bare audit-skills.ts run.
+  - entry: orient-output-truncates
+    rule: The glassbox-curate orientation script.
 fixes:
   - pr: 1918
     date: "2026-10-14"

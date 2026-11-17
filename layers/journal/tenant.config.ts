@@ -112,6 +112,11 @@ export const frictionClusterSchema = z
     // the trial's territory match, what a fix left open, or the entry and fix a new
     // cause came from. Merged PRs that fix this entry go in `fixes`.
     ref: z.string().optional(),
+    // Other clusters a Friction here could be mistaken for, each with the rule
+    // that says when it goes there instead. Symmetric: the other cluster lists
+    // this one (`ledger-content.spec.ts` checks it). The survey shows them
+    // beside each candidate (`prune-friction-ledger.ts`).
+    related: z.array(z.object({ entry: z.string(), rule: z.string() })).default([]),
     // Agents' dated notes for later runs, shown on the Ledger page: above all
     // a designed solution a run dropped and why, so the next run doesn't
     // re-propose it without new evidence. One note per line, newest last.

@@ -1,9 +1,14 @@
 name: verdict-line-asserts-unchecked-review
 summary: The verdict line that merge-pr.ts accepts can state a code-review that never ran, because no tool checks it.
-cause: "verdict-line.ts prints a Reviewed: line and merge-pr.ts accepts a comment carrying it without checking that code-review or gate:scoped ran, so a PR can merge after skipped review while its verdict claims otherwise. Distinct from verdict-comment-hand-typed (a hand-typed SHA) and prepush-gate-review-skipped (the skipping itself). Signals: 'Reviewed: line', 'verdict-line.ts', 'merge-pr.ts accepted', 'asserts a review no tool checks'."
+cause: "verdict-line.ts prints a Reviewed: line and merge-pr.ts accepts a comment carrying it without checking that code-review or gate:scoped ran, so a PR can merge after skipped review while its verdict claims otherwise. Signals: 'Reviewed: line', 'verdict-line.ts', 'merge-pr.ts accepted', 'asserts a review no tool checks'."
 surface: guard-or-hook
 status: tracked
 ref: "#3395"
+related:
+  - entry: prepush-gate-review-skipped
+    rule: "The skipping itself: no code-review, or an own-read on a change that was not simple."
+  - entry: verdict-comment-hand-typed
+    rule: A hand-typed or wrong Reviewed SHA.
 notes: |-
   2026-11-17 design: verdict-line.ts --own-read flag, merge-pr.ts refuses an own-read verdict when the PR adds or renames a file (~25 lines; Human-only merge-pr.ts, open design choice). Tracked by existing issue #3395 (same session).
 occurrences:

@@ -2,9 +2,14 @@ name: dispatch-subagents-skill-unread
 summary: >-
   Agents dispatched subagents or a workflow without first reading the dispatch-subagents Skill.
 cause: >-
-  Agents dispatch before reading the dispatch-subagents Skill, reading CLAUDE.md's trigger as not covering read-only git or a saved workflow (clear-backlog-build, explore) that dispatches for them, so a brief goes out without its rules; the #2484 hint fires only after the call. Since #2550 a guard refuses the dispatch instead; those refusals are dispatch-read-guard-deny. Signals: 'without reading the dispatch-subagents Skill', 'read-only git diff', 'the workflow does the dispatch', a hint after the dispatch.
+  Agents dispatch before reading the dispatch-subagents Skill, reading CLAUDE.md's trigger as not covering read-only git or a saved workflow (clear-backlog-build, explore) that dispatches for them, so a brief goes out without its rules; the #2484 hint fires only after the call. Since #2550 a guard refuses the dispatch instead. Signals: 'without reading the dispatch-subagents Skill', 'read-only git diff', 'the workflow does the dispatch', a hint after the dispatch.
 surface: safe
 status: open
+related:
+  - entry: dispatch-read-guard-deny
+    rule: The dispatch-read guard refused the call until the Skill was read.
+  - entry: late-read-first-docs
+    rule: The doc is git-conventions, github-integration, issue-tracker, triage-labels or verifying-ui-changes, read after the hint.
 fixes:
   - pr: 2448
     date: "2026-10-23"

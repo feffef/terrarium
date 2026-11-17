@@ -5,6 +5,9 @@ surface: guard-or-hook
 status: accepted
 acceptedSeverity: minor
 ref: "readonly-brief-vs-helped-hint (the earlier helped.sh form of the same ask); issue #3020"
+related:
+  - entry: readonly-brief-vs-helped-hint
+    rule: The hint is the older helped.sh ask, not echo rule-use.
 notes: |-
   2026-11-13 survey: issue #3147 closed not planned 2026-11-12: the owner keeps the calls for the rule-use data trial (#3017 reviews it from 2026-11-18); PR #3196 only reworded the note to say why the call matters.
 occurrences:

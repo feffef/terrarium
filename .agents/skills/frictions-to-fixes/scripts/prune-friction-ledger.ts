@@ -87,6 +87,7 @@ interface Entry {
   status?: string
   ref?: string
   notes?: string
+  related?: { entry: string; rule: string }[]
   fixes?: Fix[]
   occurrences?: Occurrence[]
 }
@@ -165,8 +166,13 @@ export function summarizeLedger(today: string, cwd = root, check = regressionChe
     const note = String(e.notes ?? '').trim().split('\n').at(-1)
     const cols = [e.name ?? f, state, e.ref ?? '-', `${occ.length} in horizon`, max, fixes]
     if (note) cols.push(`note: ${note}`)
-    return cols.join(' | ')
+    return [...cols, ...seeAlso(e)].join(' | ')
   })
+}
+
+/** The `see:` column: the clusters a Friction here could belong to instead, each with its rule. */
+function seeAlso(e: Entry): string[] {
+  return e.related?.length ? [`see: ${e.related.map((r) => `${r.entry} (${r.rule})`).join('; ')}`] : []
 }
 
 /** Each entry's survey label from the ledger alone; the tracker is never asked. */
@@ -180,7 +186,7 @@ export function candidateLabels(today: string, cwd = root, check = regressionChe
       : since ? `regression of #${last!.pr} (${since} since)`
       : last ? `drop (fixed by #${last.pr}, none since)`
       : 'never-fixed'
-    return [e.name ?? f, label, max, `${occ.length} in horizon`, e.ref ?? '-'].join(' | ')
+    return [e.name ?? f, label, max, `${occ.length} in horizon`, e.ref ?? '-', ...seeAlso(e)].join(' | ')
   })
 }
 

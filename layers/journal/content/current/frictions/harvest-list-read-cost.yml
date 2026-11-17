@@ -4,6 +4,9 @@ cause: "Comes from harvest-first-pass-shallow and PR #3106: the harvest Skill ha
 surface: safe
 status: open
 ref: "harvest-first-pass-shallow, fix PR #3106"
+related:
+  - entry: harvest-first-pass-shallow
+    rule: The harm is a shallow pass or a skipped step, not the read cost.
 notes: |-
   2026-11-13 survey: Seedling #3191 (cheaper whole read and file-based merge check) closed not planned 2026-11-12; #3178 closed by PR #3182.
 fixes:

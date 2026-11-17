@@ -47,6 +47,22 @@ describe('setEntry()', () => {
     expect(setEntry(accepted, { notes: ['n'] })).toContain('status: accepted\n')
     expect(setEntry(entry.replace('status: open', 'status: tracked'), { fixes: [fix] })).toContain('status: tracked\n')
   })
+  it('adds a related entry, replacing the rule of one already listed', () => {
+    const once = setEntry(entry, { related: [{ entry: 'y', rule: 'First.' }] })
+    expect(once).toContain('related:\n  - entry: y\n    rule: First.\n')
+    const twice = setEntry(once, { related: [{ entry: 'y', rule: 'Second.' }, { entry: 'z', rule: 'Other.' }] })
+    expect(twice).toContain('rule: Second.')
+    expect(twice).not.toContain('First.')
+    expect(twice).toContain('entry: z')
+  })
+  it('parses --related and refuses an unknown or own entry', () => {
+    expect(parseArgs(['x', '--related', 'y', 'When Z.']).changes.related).toEqual([{ entry: 'y', rule: 'When Z.' }])
+    const tmp = mkdtempSync(join(tmpdir(), 'related-'))
+    writeFileSync(join(tmp, 'x.yml'), entry)
+    expect(() => writeEntry(tmp, 'x', { related: [{ entry: 'nope', rule: 'r' }] })).toThrow('not another existing entry')
+    expect(() => writeEntry(tmp, 'x', { related: [{ entry: 'x', rule: 'r' }] })).toThrow('not another existing entry')
+    rmSync(tmp, { recursive: true })
+  })
   describe('acceptedSeverity', () => {
     const occ = (severity: string) => `  - session: b\n    date: "2026-10-05"\n    severity: ${severity}\n    description: "e"\n    solution: "t"\n`
     const accepted = entry.replace('status: open', 'status: accepted\nacceptedSeverity: nit')

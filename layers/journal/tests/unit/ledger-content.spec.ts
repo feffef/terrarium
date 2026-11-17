@@ -36,6 +36,20 @@ describe('Friction Ledger content', () => {
     expect(wrong).toEqual([])
   })
 
+  it('lists related clusters that exist, are not itself, and list it back', () => {
+    const clusters = new Map(read(join(content, 'current/frictions')).map((c) => [c.name, c]))
+    const wrong: string[] = []
+    for (const [name, c] of clusters) {
+      const seen = new Set<string>()
+      for (const r of c.related ?? []) {
+        if (r.entry === name || !clusters.has(r.entry)) wrong.push(`${name} -> ${r.entry}: not another existing cluster`)
+        else if (!(clusters.get(r.entry).related ?? []).some((b: { entry: string }) => b.entry === name)) wrong.push(`${name} -> ${r.entry}: not listed back`)
+        if (seen.size === seen.add(r.entry).size) wrong.push(`${name} -> ${r.entry}: listed twice`)
+      }
+    }
+    expect(wrong).toEqual([])
+  })
+
   it('counts a session once per cluster', () => {
     const wrong: string[] = []
     for (const cluster of read(join(content, 'current/frictions'))) {

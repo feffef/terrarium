@@ -7,6 +7,9 @@ surface: guard-or-hook
 status: accepted
 acceptedSeverity: minor
 ref: "issue #2310 closed not planned on 2026-10-20: the owner accepts the cost. Every slip was a deliberate background attempt that cost one retry, and a trailing-only rewrite would miss a mid-command &."
+related:
+  - entry: blocked-waiting
+    rule: The session sleeps, polls or schedules a wake-up to wait for a background run.
 fixes:
   - pr: 2172
     date: "2026-10-16"
