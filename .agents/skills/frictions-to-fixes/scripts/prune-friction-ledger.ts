@@ -170,7 +170,7 @@ export function summarizeLedger(today: string, cwd = root, check = regressionChe
   })
 }
 
-/** Beside each candidate, so the survey reads the rule that sends a Friction elsewhere before it appends. */
+/** In `--summary` only: that is the file the survey matches Frictions against, and `--candidates` labels fix status, which these rules don't affect. */
 function seeAlso(e: Entry): string[] {
   return e.related?.length ? [`see: ${e.related.map((r) => `${r.entry} (${r.rule})`).join('; ')}`] : []
 }
@@ -186,7 +186,7 @@ export function candidateLabels(today: string, cwd = root, check = regressionChe
       : since ? `regression of #${last!.pr} (${since} since)`
       : last ? `drop (fixed by #${last.pr}, none since)`
       : 'never-fixed'
-    return [e.name ?? f, label, max, `${occ.length} in horizon`, e.ref ?? '-', ...seeAlso(e)].join(' | ')
+    return [e.name ?? f, label, max, `${occ.length} in horizon`, e.ref ?? '-'].join(' | ')
   })
 }
 

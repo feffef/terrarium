@@ -122,8 +122,8 @@ no `tracked` or `on-trial` entry points at something closed.
 ### Edge cases
 
 - A Friction sits in one cluster unless its text names two causes.
-- Each `--summary` and `--candidates` line ends with `see:` the entry's
-  `related` clusters and each rule. A pair is written on both entries
+- Each `--summary` line ends with `see:` the entry's `related` clusters and
+  each rule. A pair is written on both entries
   (`ledger-content.spec.ts` refuses a one-way link).
 - When a fix's guard, hint or refusal catches the slip and the harm is now
   different (a refused call and a retry, a false positive, no cost), give it

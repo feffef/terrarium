@@ -33,11 +33,11 @@ const { data } = await useAsyncData(route.path, async () => {
   return { clusters, goals, own }
 })
 // A merge is an attempt: the states say what happened after it, not that it worked.
-function stateHint(e: { state: string; since: number }): string {
+function stateHint(e: { state: string; since: number; acceptedSeverity?: string }): string {
   if (e.state === 'still recurring') return `${e.since} occurrence(s) dated after the latest merged PR`
   if (e.state === 'likely fixed') return `Merged PR(s) and no occurrence for ${LEDGER_QUIET_DAYS}+ days`
   if (e.state === 'fix landed') return `Merged PR(s), no occurrence yet, under ${LEDGER_QUIET_DAYS} days old`
-  if (e.state === 'accepted') return 'The owner accepts this cost; occurrences are still counted'
+  if (e.state === 'accepted') return `The owner accepts this cost up to ${e.acceptedSeverity}; occurrences are still counted, and one above it reopens the cluster`
   return ''
 }
 // The server's date renders first so hydration matches; then the viewer's clock
@@ -117,7 +117,8 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
         {{ LEDGER_QUIET_DAYS }} days), <em>likely fixed</em> (quiet for longer) or
         <em>still recurring</em> (occurrences after the latest PR); a merge is an
         attempt, not proof. One reads <em>accepted</em> when the owner accepts
-        its cost, whatever its PRs; its occurrences are still counted. A cluster
+        its cost up to a severity, whatever its PRs; its occurrences are still
+        counted, and one above that severity reopens it. A cluster
         sits in the list where it ranks higher. Click a cluster (▸) to expand its
         cause, merged PRs, sessions and logged frictions.
       </p>
