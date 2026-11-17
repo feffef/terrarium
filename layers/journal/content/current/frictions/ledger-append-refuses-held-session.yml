@@ -2,8 +2,7 @@ name: ledger-append-refuses-held-session
 surface: safe
 summary: The ledger append script refused a whole call because one session was already in the entry, so the survey had to retry without it.
 cause: "print-ledger-occurrence.ts --append writes through ledger-set.ts, which refuses a session the entry already holds or the call repeats (PR #2366's content test, PR #2567's named refusal); extract-frictions --unledgered still offers that session's other Frictions, so one call fails whole and is re-run. Signals: '--append fails whole', 'refuses a session already in an entry', 'no way to upgrade its severity'."
-status: tracked
-ref: "fix in progress, frictions-to-fixes run 2026-11-17 (print-ledger-occurrence.ts --skip-held)"
+status: open
 related:
   - entry: ledger-yaml-hand-edit-errors
     rule: A YAML data file was hand-edited or scripted and broke.
@@ -13,6 +12,9 @@ fixes:
   - pr: 2755
     date: "2026-11-01"
     summary: "print-ledger-occurrence --append now names every failing entry in one error, still writing nothing on any failure."
+  - pr: 3409
+    date: "2026-11-17"
+    summary: "print-ledger-occurrence --append --skip-held skips sessions the entry already holds and prints each skip"
 occurrences:
   - session: session_013zxzeS7NuFmaoXJkxVfNby
     date: "2026-11-05"
