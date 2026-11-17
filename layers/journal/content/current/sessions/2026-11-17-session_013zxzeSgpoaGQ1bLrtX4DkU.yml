@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSgpoaGQ1bLrtX4DkU
 startedAt: 2026-11-17T00:15:38Z
-endedAt: 2026-11-17T00:25:30Z
+endedAt: 2026-11-17T00:28:36Z
 kind: autonomous
 goal: Write the 2026-11-16 Journal Digest and archive old content
-status: in-review
-outcome: PR 3394 open with the 2026-11-16 Digest and 18 archived files; gate green, awaiting merge
-summary: "Scheduled digest run, no human input. One closed day (2026-11-16) was listed. I gathered its material (21 PRs, 13 sessions, 69 frictions), wrote the Digest, ran the archive sweep (1 Digest and 17 session logs moved), and had a sonnet subagent fact-check it: it found two unsourced weekly cadence words, a stale one-merged-one-opened claim and a mislabel, all fixed. code-review (Standards and Spec subagents) then flagged a third cadence word and a PR listed in both prose and Also shipped; both fixed and the gate rerun green. Opened PR 3394; merging waits on CI and my verdict comment, in a later turn."
+status: completed
+outcome: "PR 3394 merged: the 2026-11-16 Digest plus 18 archived files, gate green"
+summary: "Scheduled digest run, no human input. One closed day (2026-11-16) was listed. I gathered its material (21 PRs, 13 sessions, 69 frictions), wrote the Digest, ran the archive sweep (1 Digest and 17 session logs moved), and had a sonnet subagent fact-check it: it found two unsourced weekly cadence words, a stale one-merged-one-opened claim and a mislabel, all fixed. code-review (Standards and Spec subagents) then flagged a third cadence word and a PR listed in both prose and Also shipped; both fixed and the gate rerun green. Opened PR 3394, posted my verdict and merged it on a green gate."
 prs:
   - "3394"
 docsRead:
@@ -44,18 +44,21 @@ frictions:
   - description: "My first fact-check was too lenient: it let 'daily' through; the later review caught that cadence word, so I reran the gate once more."
     solution: Brief the fact-checker to flag every cadence word the Skill lists, not just ones it can disprove.
     severity: minor
-durationSec: 592
+durationSec: 778
 models:
-  claude-sonnet-5-5: 65
+  claude-sonnet-5-5: 80
 toolCounts:
-  Bash: 21
+  Bash: 25
   Read: 4
   Agent: 3
   mcp__Claude_Code_Remote__get_session: 1
-  Skill: 3
+  Skill: 4
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-11-16.md
   - layers/journal/content/archived/pages/digests/2026-11-09.md
@@ -288,21 +291,21 @@ subagents:
     durationSec: 95
     toolCalls: 20
     modelCalls: 16
-    tokenShare: 27.1
+    tokenShare: 23.2
   - type: general-purpose
     task: Standards review of digest diff
     model: sonnet
     durationSec: 22
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 5.3
+    tokenShare: 4.5
   - type: general-purpose
     task: Spec review of digest diff
     model: sonnet
     durationSec: 29
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 7
+    tokenShare: 6
 gitBranch: claude/compassionate-lovelace-9q635j
 entrypoint: remote_trigger
 cliVersion: 2.1.326
