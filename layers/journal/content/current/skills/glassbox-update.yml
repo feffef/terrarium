@@ -6,7 +6,7 @@ role: >-
   The one-way code-to-pages sync for the Glass Box textbook: re-pins every
   guide page and term to a commit, flags the ones whose prose
   or diagrams may now be stale, and lands a self-merging PR once they're
-  re-checked. Essential to keeping Glass Box honest as the Platform changes.
+  re-checked. Fired by a Routine; keeps Glass Box honest as the Platform changes.
 auditSummary:
   date: "2026-11-17"
   text: "Keeps the textbook pinned to current commits through daily merged PRs. It skips code review on large pin-only diffs every time; the scoping fix for its reader step has one clean run so far."

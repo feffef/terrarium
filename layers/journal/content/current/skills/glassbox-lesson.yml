@@ -9,7 +9,7 @@ role: >-
   per-topic from the topic inventory, not model-invoked
   (disable-model-invocation: true).
 auditSummary:
-  date: "2026-11-16"
+  date: "2026-11-17"
   text: "Produces Lessons that merge, but the owner has had to correct reading order and quality after the fact. Its checks cover files, not prose quality."
 observations:
   - date: "2026-10-17"
@@ -33,4 +33,4 @@ observations:
   - date: "2026-11-16"
     note: "Behaviour check, 3 runs, PRs #3062, #3066, #3102, #3160, #3162 merged. Lesson quality problems reached the owner after merge (session_013zxzeRvdzBc3xXGo24TkVf, fixed in #3162: missing antecedent, wrong order). Skill gained an Orient step (d87ec97c2, 6082e3053). Idea: reread-top-to-bottom Done check. Not issued. Grade unchanged."
   - date: "2026-11-17"
-    note: "No runs in the last 3 days; nothing graded (a quiet window is normal, it is dispatched per topic). Next audit with runs: check Orient (d87ec97c2, 6082e3053) and orient.ts change 5987bc605 against post-merge fixes. Grade unchanged."
+    note: "No run in the last 3 days to grade; the 7-day window has 3 uses, last on 11-12 (a quiet stretch is normal, it is dispatched per topic). Next audit with runs: check Orient (d87ec97c2, 6082e3053) and orient.ts change 5987bc605 against post-merge fixes. Grade unchanged."
