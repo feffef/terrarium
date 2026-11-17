@@ -63,7 +63,6 @@ None of these is false.
 ### Stale or missing
 
 - No page teaches the `visitor-loop` Skill (blind and informed visitors, report-only); it is still changing fast, so teach only the stable idea. Nearest page: *Ideas and lessons learned*.
-- No page teaches `watchFor`, a checklist the owner writes on a Skill Inventory entry for `audit-skills` to grade. Nearest page: *Skill inventory*.
 ### Claims to check
 
 Each may be true; a later run should read the tool's source or run it.
