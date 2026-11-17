@@ -42,8 +42,6 @@ These are the owner's goals for the guide. A run builds toward them directly; a 
 
 1. **Decide how pages say "a person merges" a Human-only file.** Since the owner waiver (ADR-0004), an agent may merge one when the owner says so in the session. *Protected paths*, *Human-only* and the overview say so. These still state it flatly, each true as the default: *Path-specific rules*, *Decision records*, *Merge gate*, *Claude Code hooks* (twice), *GitHub Actions*, *Cross-tenant reads* and *Asking an agent for a change*. Ask the owner whether to name the waiver there or keep one home.
 
-2. **Check every Walkthrough diagram against its stops.** A diagram is read beside the stops (on wide screens it sits next to them), so what it shows should roughly match the steps; a reader who can't match them gains nothing. It is a simplified picture, never a 1:1 copy: not every box or arrow needs a stop. Try to match, but not too hard, and keep it simple. The stops read better than the diagrams, so expect to redraw the diagram. Keep the same check for any new diagram. *A change goes live* is the model to match: a few boxes in a line, one side branch, no numbers.
-
 ### Wording fresh readers still find hard
 
 None of these is false.
@@ -65,6 +63,8 @@ None of these is false.
 ### Stale or missing
 
 - No page teaches the `visitor-loop` Skill (blind and informed visitors, report-only); it is still changing fast, so teach only the stable idea. Nearest page: *Ideas and lessons learned*.
+- No page teaches the `--own-read` verdict: for a small PR, `verdict-line.ts` prints an `Own-read:` line that `merge-pr.ts` accepts in place of a review. Nearest page: *Pull requests*.
+- No page teaches `watchFor`, a checklist the owner writes on a Skill Inventory entry for `audit-skills` to grade. Nearest page: *Skill inventory*.
 ### Claims to check
 
 Each may be true; a later run should read the tool's source or run it.
