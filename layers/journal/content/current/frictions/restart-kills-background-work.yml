@@ -3,7 +3,11 @@ summary: A container or worker restart silently killed running workflows and gat
 cause: "Container/worker restart kills background workflows and gate runs (exit 137). Signals: 'container restart killed', 'exit 137', 'args.session required'."
 surface: outside
 status: accepted
+acceptedSeverity: moderate
 ref: "issue #2773 closed on 2026-11-02: the owner accepts the cost. The liveness instruction already exists at clear-backlog SKILL.md §3 since PR #2140, and a restart is an infrastructure event the repo cannot prevent."
+related:
+  - entry: usage-limit-kills-agents
+    rule: The 5-hour usage limit killed agents mid-run.
 fixes:
   - pr: 2140
     date: "2026-10-16"

@@ -4,6 +4,9 @@ cause: ".agents/skills/glassbox-update/scripts/glassbox-update.ts matches a page
 surface: safe
 status: open
 ref: "issue #2193 closed by PR #2207"
+related:
+  - entry: glassbox-update-edited-range-pages-left-stale
+    rule: A page with an edited range was left unpinned and unreported.
 notes: |-
   2026-10-23 survey: issue #2097 (have the report carry each page's cited-file diffs) was closed not planned on 2026-10-16; 01Aji3mg asks for the same after PR #2207.
 fixes:

@@ -6,6 +6,9 @@ cause: >-
 surface: safe
 status: open
 ref: "audit-skills output redirect in frictions-to-fixes §4, 2026-10-16"
+related:
+  - entry: survey-output-overflow
+    rule: The overflow came from session logs, the ledger or another data dump.
 fixes:
   - pr: 2109
     date: "2026-10-16"

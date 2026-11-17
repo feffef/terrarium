@@ -5,6 +5,9 @@ cause: >-
   The Stop hook's git check counts commits a branch inherited from main (after a fast-forward, a switch to a PR's branch, or on a branch with no upstream) as unpushed work and asks to push them. Signals: the hook naming many unpushed commits that origin/main..HEAD does not show, 'only inherited from origin/main', 'counted main's merged commits'.
 surface: safe
 status: open
+related:
+  - entry: stop-hook-nag
+    rule: The hook asked to commit and push while a gate, build or fact-check was still running.
 fixes:
   - pr: 2123
     date: "2026-10-16"

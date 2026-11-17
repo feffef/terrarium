@@ -5,6 +5,9 @@ cause: >-
   Visual work ships after at most the agent's own screenshot check, or with that check skipped or not yet back, and the human first sees it once published. Signals: 'screenshot step skipped', 'pushed before the screenshot-review agent returned', a self-merged illustration, unreadable at 390px, the owner judging a published visual poor.
 surface: safe
 status: open
+related:
+  - entry: claim-of-fix-not-rendered
+    rule: A render was checked, but at the wrong fonts or without the computed styles.
 fixes:
   - pr: 1821
     date: "2026-10-12"
@@ -31,3 +34,8 @@ occurrences:
     severity: minor
     description: "Did not render or screenshot the homepage change, nor get owner confirmation, despite the ui-verification rule."
     solution: "Run scripts/ui/preview.ts shot on the home page and show it before calling it done."
+  - session: session_013zxzeRB6ciegpxcRDfedSF
+    date: "2026-11-09"
+    severity: minor
+    description: "CLAUDE.md says to read the UI verification doc before claiming a UI change works; I never rendered the page, relying on e2e passing."
+    solution: "Read docs/agents/verifying-ui-changes.md and screenshot the tile before closing."

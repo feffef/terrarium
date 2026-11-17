@@ -6,6 +6,16 @@ import { sessionAnchor } from './dashboard'
 
 const SEVERITY_RANK: Record<Severity, number> = { nit: 0, minor: 1, moderate: 2, major: 3, blocker: 4 }
 
+/** The worst of `severities`, or `undefined` for none. */
+export function ledgerWorstSeverity(severities: Severity[]): Severity | undefined {
+  return severities.reduce<Severity | undefined>((w, s) => (w === undefined || SEVERITY_RANK[s] > SEVERITY_RANK[w] ? s : w), undefined)
+}
+
+/** Whether `severity` is worse than `ceiling`: an `accepted` cluster's occurrence above its `acceptedSeverity` breaks the acceptance. */
+export function ledgerSeverityExceeds(severity: Severity, ceiling: Severity): boolean {
+  return SEVERITY_RANK[severity] > SEVERITY_RANK[ceiling]
+}
+
 /** A cluster with merged PRs shows one of these, derived from its `fixes` and
  *  occurrences so nobody has to maintain it; one without, or one `accepted`
  *  (the owner accepts the cause as a cost, issue #2148), shows its stored status. */
@@ -85,6 +95,8 @@ export interface LedgerEntry {
   /** Occurrences dated after the latest PR; only a "still recurring" state has any. */
   since: number
   ref?: string
+  /** The worst severity the owner accepted; set only when `state` is `accepted`. */
+  acceptedSeverity?: Severity
   notes?: string
   /** Newest first. */
   fixes: { pr: number; url: string; date: string; summary: string }[]
@@ -119,7 +131,7 @@ export function ledgerPanels(
   const asOf = clusters.flatMap((c) => c.occurrences.map((o) => o.date)).sort().at(-1) ?? ''
   const entries = clusters.map((c): LedgerEntry => {
     const inWindow = c.occurrences.filter((o) => o.date >= from)
-    const worst = inWindow.reduce<Severity>((w, o) => (SEVERITY_RANK[o.severity] > SEVERITY_RANK[w] ? o.severity : w), 'nit')
+    const worst = ledgerWorstSeverity(inWindow.map((o) => o.severity)) ?? 'nit'
     const occurrences = inWindow
       .map((o) => ({
         date: o.date,
@@ -140,6 +152,7 @@ export function ledgerPanels(
       cause: c.cause,
       ...(derived ? { state: derived.state, since: derived.since } : { state: c.status.replace('-', ' ') as LedgerState, since: 0 }),
       ref: c.ref,
+      acceptedSeverity: c.acceptedSeverity,
       notes: c.notes,
       fixes: fixes.slice(0, LEDGER_MAX_PRS),
       fixDates: fixes.map((f) => f.date),

@@ -3,6 +3,9 @@ summary: The harvest Skill's filing step did not say which kind a mixed cluster 
 cause: "harvest SKILL.md step 4 did not say which kind a mixed cluster counts under for its 5-per-kind cap; one run left two passing clusters unfiled. PR #3182 added the rule. Signals: 'Step 4', '5-per-kind cap', 'mixed cluster'."
 surface: safe
 status: open
+related:
+  - entry: harvest-first-pass-shallow
+    rule: A harvest step was read and then compressed or skipped.
 fixes:
   - pr: 3182
     date: "2026-11-12"

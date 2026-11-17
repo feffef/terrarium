@@ -3,6 +3,11 @@ surface: outside
 summary: Pushes, merges and PR subscriptions failed with GitHub 5xx or access-verification errors until retried.
 cause: "The cloud git credential service and GitHub reads return 500, 502 or 503, or subscribe_pr_activity says 'Unable to verify repository access', for minutes at a time; retries work later, and a retried push can print 'Everything up-to-date' with a non-zero exit while the remote is behind. Signals: 'Internal Server Error', 'credential service temporarily unavailable', 'HTTP 502' from merge-pr.ts, 'Failed to subscribe to PR activity'."
 status: open
+related:
+  - entry: deferred-tool-name-guessed
+    rule: The tool was called under a guessed name or before its schema was loaded.
+  - entry: pr-number-guessed-before-create
+    rule: A PR number was guessed before the PR existed.
 fixes:
   - pr: 3329
     date: "2026-11-15"

@@ -3,6 +3,9 @@ summary: Branches built in parallel edited the same lines of a shared file, and 
 cause: "One run builds branches in parallel that edit the same lines of one shared file (Where next lists, a stamped pointer line, a roster table), and nothing orders or groups them; signals: merge conflicts on adjacent shared lines between a run's own PRs, restamps, lists re-grown past the cap. Strays 01JuCbPD and 013RCsUF are conflicts with main changed by another session (fixes: fetch before pushing; land large moves quickly)."
 surface: safe
 status: open
+related:
+  - entry: glassbox-page-check-edit-loops
+    rule: A guide page check failed (word cap, link text) after an edit, with no merge conflict.
 notes: |-
   2026-10-21 design: a rule on parallel branches dropped: the five occurrences have different causes, one is already fixed by a cap in the contract, and the cost is one merge step.
 occurrences:

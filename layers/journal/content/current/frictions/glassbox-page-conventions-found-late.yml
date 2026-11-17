@@ -3,6 +3,9 @@ surface: safe
 summary: Glass Box curate runs wrote guide pages against conventions (body-text case, Where next rows, no descriptions) that no Skill step states, and a test, a reviewer or the owner found it afterwards.
 cause: "Glass Box page conventions (lowercase body terms, Where next rows as bare links with exact titles, no per-row descriptions per ADR-0028) live in the glossary, page tests and an ADR, not in the glassbox-curate Skill's steps, so a writer applies its own habit and learns the rule from a failing page test, a reviewer or the owner. Signals: 'the owner had to tell me', 'learn from a failing page test', 'against ADR-0028', 'Where next'."
 status: open
+related:
+  - entry: glassbox-page-check-edit-loops
+    rule: A known page check (65-word cap, link text) failed after an edit or rename.
 notes: |-
   2026-11-15 design: prose line dropped: rules already landed after the sessions (owner-decisions.md lowercase rule 8feb4cafe, writing-pages.md bare-link rule d87ec97c2, page check 952af880e, payload trim f318904ec); extra prose would duplicate a checked rule
 occurrences:

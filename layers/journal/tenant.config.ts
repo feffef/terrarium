@@ -99,15 +99,24 @@ export const frictionClusterSchema = z
     surface: z.enum(['safe', 'human-only', 'guard-or-hook', 'outside']),
     // The tracking state: `open`: no open issue or PR covers it. `tracked`:
     // one does. `on-trial`: inside a Prune Trial's territory (ADR-0027).
-    // `accepted`: the owner accepts the cause as a cost; it shows over the fix
-    // state (issue #2148) until a fix is recorded: `ledger-set.ts --fix` sets it
-    // back to `open`. Whether the merged PRs in `fixes` worked is not
+    // `accepted`: the owner accepts the cause as a cost, up to `acceptedSeverity`;
+    // it shows over the fix state (issue #2148) until a fix is recorded:
+    // `ledger-set.ts --fix` sets it back to `open`, and so does an occurrence
+    // above that severity. Whether the merged PRs in `fixes` worked is not
     // stored: the page derives it (`ledgerFixState` in `app/utils/ledger.ts`).
     status: z.enum(['open', 'tracked', 'on-trial', 'accepted']),
+    // The worst severity the owner accepted; set exactly when `status` is
+    // `accepted` (`ledger-content.spec.ts` checks it: a refine would break the collection schema).
+    acceptedSeverity: sessionSchema.shape.frictions.element.shape.severity.optional(),
     // Agents' notes on the status, shown on the Ledger page: the tracking issue or open PR,
     // the trial's territory match, what a fix left open, or the entry and fix a new
     // cause came from. Merged PRs that fix this entry go in `fixes`.
     ref: z.string().optional(),
+    // Other clusters a Friction here could be mistaken for, each with the rule
+    // that says when it goes there instead. Symmetric: the other cluster lists
+    // this one (`ledger-content.spec.ts` checks it). The survey's `--summary`
+    // shows them beside each entry (`prune-friction-ledger.ts`).
+    related: z.array(z.object({ entry: z.string(), rule: z.string() })).default([]),
     // Agents' dated notes for later runs, shown on the Ledger page: above all
     // a designed solution a run dropped and why, so the next run doesn't
     // re-propose it without new evidence. One note per line, newest last.

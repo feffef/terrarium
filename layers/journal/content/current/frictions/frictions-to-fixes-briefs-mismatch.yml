@@ -6,6 +6,11 @@ cause: >-
 surface: safe
 status: open
 ref: "issue #2877 (regression of #2733)"
+related:
+  - entry: frictions-to-fixes-skill-gaps
+    rule: SKILL.md leaves a recurring situation unspecified.
+  - entry: survey-label-and-ledger-errors
+    rule: The survey agent mislabelled a candidate or left ledger work undone, though its brief was right.
 notes: |-
   2026-10-30 survey: the Prune Trial of PR #2539 was judged and deleted by PR #2681; status reset to open.
 fixes:

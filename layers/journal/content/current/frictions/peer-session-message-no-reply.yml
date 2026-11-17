@@ -3,6 +3,9 @@ surface: outside
 summary: A message sent to another session was delivered but that session had no tool to answer, so the owner had to relay its reply by hand.
 cause: "The session reached with send_message (a designer or update session) has no send_message tool of its own, so its answer or retro reaches the sender only when the owner pastes it. Signals: 'had no tool to reply', 'the update session had no send_message tool', 'the user relayed its answer by hand'."
 status: open
+related:
+  - entry: peer-session-conversation-cost
+    rule: Both sessions could reply, but messages crossed or ran on without a stop point.
 occurrences:
   - session: session_013zxzeR6zoUiicLXRckpnkb
     date: "2026-11-06"

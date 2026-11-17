@@ -5,6 +5,11 @@ cause: >-
   A command's output is piped to tail -N, head -N or grep assuming the wanted line (a PID, a path, a section, a status) is in what is kept, but the script prints it elsewhere or the filter hides a failure; later commands get garbage args, work from a truncated report, or the agent reports success it did not see. The old tail-pipe guard is gone (tail-pipe-guard). Signals: 'tail -3 dropped', 'tail -1 assuming it prints only its path', 'filtered through grep, which hid', 'head -300 truncated'. Since PR #2937 (2026-11-07) close-session and log-session SKILL.md say never to filter log-session.ts output; a piped call can still drop a needed line.
 surface: safe
 status: open
+related:
+  - entry: required-doc-read-truncated
+    rule: The cut output was a required doc read through a pipe.
+  - entry: survey-output-overflow
+    rule: The output was too large to read at once, not cut by the agent's own pipe.
 fixes:
   - pr: 2534
     date: "2026-10-25"

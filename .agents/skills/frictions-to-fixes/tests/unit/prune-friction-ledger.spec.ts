@@ -252,6 +252,13 @@ describe('moveOccurrence()', () => {
     const moved = moveOccurrence('s1', file('a', block('s1', 'one'), block('s2', 'two')), 'name: b\n# kept comment\nstatus: open\noccurrences: []\n')
     expect(moved.to).toBe(file('b', block('s1', 'one')))
   })
+  it('reopens an accepted target when the moved occurrence is above its ceiling', () => {
+    const major = block('s1', 'one').replace('nit', 'major')
+    const accepted = file('b', block('s3', 'three')).replace('status: open', 'status: accepted\nacceptedSeverity: minor')
+    const to = moveOccurrence('s1', file('a', major), accepted).to
+    expect(to).toContain('status: open\n')
+    expect(to).toMatch(/\d{4}-\d\d-\d\d: reopened, a major occurrence is above the accepted minor\./)
+  })
   it('refuses when the target already holds the same friction from that session', () => {
     expect(() => moveOccurrence('s1', file('a', block('s1', 'one')), file('b', block('s1', 'one'))))
       .toThrow('duplicate session: the target already holds s1 with the same text')

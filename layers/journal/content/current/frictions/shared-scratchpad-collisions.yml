@@ -3,6 +3,9 @@ summary: "Parallel subagents share one scratchpad, so one overwrites or runs ano
 cause: "Dispatched agents write helper scripts and drafts to the same scratchpad directory; a stale or foreign script runs or is overwritten. Signals: \"shared the scratchpad\", \"stale helper\", \"overwrote another's helper script\"."
 surface: safe
 status: open
+related:
+  - entry: subagent-brief-omits-verdict-ask
+    rule: The brief left out the per-agent scratchpad subfolder line or another every-brief ask.
 fixes:
   - pr: 2197
     date: "2026-10-17"

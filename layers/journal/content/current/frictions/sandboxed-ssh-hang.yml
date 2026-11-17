@@ -3,6 +3,9 @@ surface: outside
 summary: An ssh from the sandboxed Bash tool hung until timeout, and the agent blamed port forwarding or a passphrase before trying outside the sandbox.
 cause: "The Bash sandbox blocks or stalls outbound ssh (banner exchange timeout) and nothing in the output says the sandbox is the cause. Signals: 'ssh ... timed out in banner exchange', a 120s hang, a fix by rerunning outside the sandbox."
 status: open
+related:
+  - entry: harness-proxy-blocks
+    rule: An HTTP host was refused by the proxy (403 or connection failure).
 occurrences:
   - session: fd29c728-8222-4915-94ab-25776442397b
     date: "2026-11-10"

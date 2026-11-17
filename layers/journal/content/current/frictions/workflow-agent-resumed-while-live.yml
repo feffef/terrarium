@@ -3,6 +3,9 @@ summary: An orchestrator messaged a workflow's build agent while the workflow ru
 cause: "In a clear-backlog run the orchestrator SendMessage-resumed a build agent of a clear-backlog-build workflow that had not finished; the resumed copy and the workflow's own agent both wrote the same worktree. The same session twice resumed a builder before run-summary.ts had written the findings files, getting 'nothing to fix'. Signals: 'SendMessage-resumed a workflow's build agent while its run was live', 'two writers', 'the workflow reported failed'."
 surface: safe
 status: open
+related:
+  - entry: finished-subagent-resumed-by-message
+    rule: The agent had already finished and the message resumed it.
 fixes:
   - pr: 3196
     date: "2026-11-12"

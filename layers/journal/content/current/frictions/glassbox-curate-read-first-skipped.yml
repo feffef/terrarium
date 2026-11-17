@@ -3,6 +3,12 @@ surface: safe
 summary: Glass Box curate runs edited or dispatched before reading the Skill's required first reads (glossary, QUALITY.md, the Subject's pages), and the Spec reviewer found the gap.
 cause: "The glassbox-curate Skill lists the Glass Box GLOSSARY, QUALITY.md (Lenses) and the Subject's pages to read first; runs skip or truncate them, leave pagesRead short, and a reviewer names the unread pages. Signals: 'never opened QUALITY.md', 'pagesRead was short', 'skipped the curate Read step', 'short of the Skill's read-the-Subject step'. Since PRs #2929 and #2944 (2026-11-07) the Skill reads the Subject first, in full, with orient.ts --subject printing its pages and the pagesRead lines. Since PR #3001 (2026-11-09) SKILL.md states the Subject read as a Done-when."
 status: accepted
+acceptedSeverity: minor
+related:
+  - entry: governing-doc-read-after-draft
+    rule: The doc governs text just drafted and is not on the Skill's read-first list.
+  - entry: glassbox-curate-run-entry-late
+    rule: The run entry was written after the edits, not at its step.
 notes: |-
   2026-11-14 survey: issue #3226 closed not planned 2026-11-13: owner decision (clear-backlog): leave the Skill as is; one post-#3001 skip, caught by the Spec review; no mechanical pagesRead check. Reopen on another skip with a single-Subject focus.
 fixes:

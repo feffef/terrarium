@@ -3,6 +3,9 @@ surface: safe
 summary: A glassbox-improve rater graded a draft page its plan did not list, so the tally refused the report and the lead deleted lines from the saved hand-back.
 cause: "The rater B brief gave B a catalog of guide pages and drafts without saying a draft is not graded, so B graded an extra draft page and grades.ts tally refused the hand-back; the lead edited the saved hand-back by hand. PR #2881 (2026-11-06) made the brief say to grade guide pages only. Signals: 'graded four draft pages the plan never listed', 'tally refused the report', 'deleted those lines from the saved hand-back'."
 status: open
+related:
+  - entry: glassbox-grades-tally-crashes
+    rule: The tally crashed or rejected a report of the wrong shape.
 fixes:
   - pr: 2881
     date: "2026-11-06"

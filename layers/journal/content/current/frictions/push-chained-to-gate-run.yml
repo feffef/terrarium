@@ -5,7 +5,13 @@ cause: >-
   git-conventions.md forbids a push or other state-changing git later in the same Bash command as a gate or test run, and says to read the exit status in its own step; sessions chain git commit, --amend or git push with gate:scoped or with reading the gate log, or read the exit code of a backgrounded command that ends in tail as the gate's own, so a red gate reaches CI or reads as green. Signals: GATE_EXIT or EXIT=1 printed by the command that pushed, 'in the same command as git commit --amend', 'chained', the exit code of tail taken for the gate's.
 surface: guard-or-hook
 status: accepted
+acceptedSeverity: minor
 ref: "Issue #2752 closed not planned on 2026-11-14: the owner accepts the nit-level cost. The prune trial on git-conventions.md was judged and deleted on 2026-11-13: no major or blocker Friction."
+related:
+  - entry: chained-git-step-fails-silently
+    rule: A failed git step inside a chained command was missed.
+  - entry: edit-during-gate-run
+    rule: Files were edited or committed while gate:scoped ran.
 fixes:
   - pr: 2359
     date: "2026-10-21"

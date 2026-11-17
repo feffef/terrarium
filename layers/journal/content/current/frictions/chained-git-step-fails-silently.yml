@@ -5,6 +5,9 @@ cause: >-
   A git add with an ignored pathspec, or a commit given both -m and -F, errors; `&&` skips the commit (or the commit fails unseen) and the session carries on, reading an older HEAD or running the gate on an uncommitted tree. git-conventions.md covers only a branch rename or create chained with the commit. Signals: 'git add' error, 'HEAD stayed on an old commit', 'git log -1 showed an older commit', 'both -m and -F'.
 surface: safe
 status: open
+related:
+  - entry: push-chained-to-gate-run
+    rule: A push or commit was chained with a gate or test run.
 fixes:
   - pr: 2525
     date: "2026-10-25"

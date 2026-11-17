@@ -8,7 +8,8 @@
 // Usage:
 //   tsx .agents/skills/frictions-to-fixes/scripts/ledger-set.ts <entry>
 //     [--create] [--summary TEXT] [--cause TEXT] [--surface S]
-//     [--status open|tracked|on-trial|accepted] [--ref TEXT | --clear-ref]
+//     [--status open|tracked|on-trial|accepted] [--accepted-severity S]
+//     [--ref TEXT | --clear-ref] [--related <entry> <rule>]...
 //     [--note TEXT]... [--fix <pr> <YYYY-MM-DD> <summary>]... [--replace-fixes]
 //     [--occurrences <file>|-]
 //   `<entry>` is the file name without `.yml`. `--create` writes a new entry
@@ -25,14 +26,21 @@ import { Document, isMap, isScalar, isSeq, parseDocument, Scalar } from 'yaml'
 import { frictionClusterSchema } from '../../../../layers/journal/tenant.config.ts'
 import { LEDGER_DIR } from '../../../../scripts/session/extract-frictions.ts'
 import { fail, root, runIfMain } from '../../../../scripts/lib/cli.ts'
+import { ledgerSeverityExceeds, ledgerWorstSeverity } from '../../../../layers/journal/app/utils/ledger.ts'
+import type { Severity } from '../../../../layers/journal/app/types/journal.ts'
 
 export interface Fix { pr: number; date: string; summary: string }
 
+export type Related = (typeof frictionClusterSchema)['_output']['related'][number]
+
 export interface LedgerChanges {
   status?: string
+  /** With status `accepted`: the worst severity the owner accepts. */
+  acceptedSeverity?: string
   ref?: string
   fixes?: Fix[]
   replaceFixes?: boolean
+  related?: Related[]
   /** Lines appended to `notes`, oldest first. */
   notes?: string[]
   /** Occurrence blocks as `print-ledger-occurrence.ts` prints them. */
@@ -69,6 +77,30 @@ function fixNode(doc: Document, fix: Fix) {
   return node
 }
 
+const SEVERITIES = frictionClusterSchema.shape.acceptedSeverity.unwrap().options
+
+const worst = (doc: Document) => ledgerWorstSeverity(((doc.toJS().occurrences ?? []) as { severity: Severity }[]).map((o) => o.severity))
+
+/** Adds lines to `notes`, newest last, keeping its block style. */
+function appendNotes(doc: Document, lines: string[]): void {
+  const old = doc.get('notes')
+  const notes = new Scalar([...(typeof old === 'string' && old ? [old] : []), ...lines].join('\n'))
+  notes.type = Scalar.BLOCK_LITERAL
+  put(doc, 'notes', notes)
+}
+
+/** Reopens an `accepted` entry holding an occurrence above its ceiling, and says so in `notes`:
+ *  accepting a minor cost must not hide a major one in the same cluster. Returns whether it did. */
+export function reopenOnBreach(doc: Document, today = new Date().toISOString().slice(0, 10)): boolean {
+  const ceiling = doc.get('acceptedSeverity') as Severity | undefined
+  const top = worst(doc)
+  if (doc.get('status') !== 'accepted' || !ceiling || !top || !ledgerSeverityExceeds(top, ceiling)) return false
+  put(doc, 'status', 'open')
+  doc.delete('acceptedSeverity')
+  appendNotes(doc, [`${today}: reopened, a ${top} occurrence is above the accepted ${ceiling}.`])
+  return true
+}
+
 /** The entry's new text; throws when the result fails the ledger schema. */
 export function setEntry(text: string, changes: LedgerChanges): string {
   const doc = parseDocument(text)
@@ -82,14 +114,25 @@ export function setEntry(text: string, changes: LedgerChanges): string {
   const reopens = doc.get('status') === 'accepted' && !changes.replaceFixes && !!changes.fixes?.length
   const status = changes.status ?? (reopens ? 'open' : undefined)
   if (status !== undefined) put(doc, 'status', status)
+  if (changes.acceptedSeverity !== undefined && !(SEVERITIES as readonly string[]).includes(changes.acceptedSeverity)) throw new Error(`--accepted-severity: one of ${SEVERITIES.join(', ')}`)
+  if (doc.get('status') !== 'accepted') {
+    if (changes.acceptedSeverity !== undefined) throw new Error('--accepted-severity needs status accepted')
+    doc.delete('acceptedSeverity')
+  } else if (changes.acceptedSeverity !== undefined || !doc.has('acceptedSeverity')) {
+    const top = worst(doc)
+    const ceiling = changes.acceptedSeverity ?? top ?? 'nit'
+    if (top && ledgerSeverityExceeds(top, ceiling as Severity)) throw new Error(`cannot accept up to ${ceiling}: the entry holds a ${top} occurrence`)
+    put(doc, 'acceptedSeverity', ceiling)
+  }
   if (changes.ref === '') doc.delete('ref')
   else if (changes.ref !== undefined) put(doc, 'ref', changes.ref)
   if (changes.notes?.length) {
     if (changes.notes.some((n) => n.includes('\n'))) throw new Error('--note takes one line')
-    const old = doc.get('notes')
-    const notes = new Scalar([...(typeof old === 'string' && old ? [old] : []), ...changes.notes].join('\n'))
-    notes.type = Scalar.BLOCK_LITERAL
-    put(doc, 'notes', notes)
+    appendNotes(doc, changes.notes)
+  }
+  if (changes.related?.length) {
+    const kept = ((doc.toJS().related ?? []) as Related[]).filter((r) => !changes.related!.some((n) => n.entry === r.entry))
+    put(doc, 'related', doc.createNode([...kept, ...changes.related]))
   }
   if (changes.replaceFixes && !changes.fixes?.length) throw new Error('--replace-fixes needs at least one --fix')
   if (changes.fixes) append(doc, 'fixes', changes.fixes.map((f) => fixNode(doc, f)), changes.replaceFixes)
@@ -98,6 +141,7 @@ export function setEntry(text: string, changes: LedgerChanges): string {
     if (!isSeq(blocks)) throw new Error('occurrences: expected the list print-ledger-occurrence.ts prints')
     append(doc, 'occurrences', blocks.items)
   }
+  reopenOnBreach(doc)
   const result = frictionClusterSchema.safeParse(doc.toJS())
   if (!result.success) throw new Error(`schema refuses the result:\n${result.error.issues.map((i) => `  ${i.path.join('.')}: ${i.message}`).join('\n')}`)
   return doc.toString({ lineWidth: 0 })
@@ -107,13 +151,16 @@ export function setEntry(text: string, changes: LedgerChanges): string {
 export function writeEntry(dir: string, entry: string, changes: LedgerChanges): void {
   const path = join(dir, `${entry}.yml`)
   if (changes.create && existsSync(path)) throw new Error(`${entry} already exists`)
+  for (const { entry: other } of changes.related ?? []) {
+    if (other === entry || !existsSync(join(dir, `${other}.yml`))) throw new Error(`--related ${other}: not another existing entry`)
+  }
   const text = changes.create ? new Document({ name: entry, ...changes.create, status: 'open', occurrences: [] }).toString() : readFileSync(path, 'utf8')
   writeFileSync(path, setEntry(text, changes))
 }
 
 export function parseArgs(argv: string[]): { entry: string; changes: LedgerChanges } {
   const [entry, ...rest] = argv
-  if (!entry || entry.startsWith('--')) throw new Error('usage: ledger-set.ts <entry> [--create] [--summary TEXT] [--cause TEXT] [--surface S] [--status S] [--ref TEXT|--clear-ref] [--note TEXT]... [--fix <pr> <date> <summary>]... [--replace-fixes] [--occurrences <file>|-]')
+  if (!entry || entry.startsWith('--')) throw new Error('usage: ledger-set.ts <entry> [--create] [--summary TEXT] [--cause TEXT] [--surface S] [--status S] [--accepted-severity S] [--ref TEXT|--clear-ref] [--related ENTRY RULE]... [--note TEXT]... [--fix <pr> <date> <summary>]... [--replace-fixes] [--occurrences <file>|-]')
   const changes: LedgerChanges = {}
   const fields: EntryFields = {}
   let create = false
@@ -129,8 +176,13 @@ export function parseArgs(argv: string[]): { entry: string; changes: LedgerChang
       return v
     }
     if (flag === '--status') changes.status = value()
+    else if (flag === '--accepted-severity') changes.acceptedSeverity = value()
     else if (flag === '--ref') setRef(value())
     else if (flag === '--clear-ref') setRef('')
+    else if (flag === '--related') {
+      const related = value()
+      changes.related = [...(changes.related ?? []), { entry: related, rule: value() }]
+    }
     else if (flag === '--note') changes.notes = [...(changes.notes ?? []), value()]
     else if (flag === '--create') create = true
     else if (flag === '--summary' || flag === '--cause' || flag === '--surface') fields[flag.slice(2) as keyof typeof fields] = value()

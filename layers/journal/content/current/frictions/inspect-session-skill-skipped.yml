@@ -3,6 +3,9 @@ summary: Agents inspected another session through its log files or by guesswork 
 cause: "CLAUDE.md orders the inspect-session Skill before any list_events/get_event read, and before reading a session's API cost and token usage (get_session). A session reads Journal logs or audit-skills output first (QrhK: told the user cost was not recorded when get_session had it), or skips the Skill when a Skill step asks to verify regression reports (TLLY). PR #2812 (2026-11-03) made CLAUDE.md and the Skill's description name the cost and token usage. Signals: 'before invoking inspect-session', 'skipped inspect-session', a claim about another session's cost or events that get_session or list_events later contradicts."
 surface: safe
 status: open
+related:
+  - entry: get-session-cost-unreported
+    rule: get_session itself returned no cost or usage field.
 fixes:
   - pr: 2812
     date: "2026-11-03"

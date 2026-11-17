@@ -4,6 +4,9 @@ summary: After a merge, agents wrote the completed session log by hand, so the l
 cause: "log-session --author warns (PR #2452) and, since PR #2536, refuses a completed log after a merge with no close-session call, so a session that authors the log first loses a call and then invokes close-session. Signals: 'the script warned', 'warning fired', 'refused until close-session ran', 'one extra call'."
 status: open
 ref: "Comes from the fixes PR #2452 and #2536 for close-session-bypassed-by-hand-log (a log closed by hand, skipping close-session, so the user had to ask for a proper close)."
+related:
+  - entry: close-session-bypassed-by-hand-log
+    rule: The hand-written log got through, or the owner had to prompt for it.
 notes: |-
   2026-10-28 design: dropped: the refusal is the designed enforcement of #2536 and names the fix; cost is one call.
   2026-11-05 design: stronger close-session hint or relaxing the refusal dropped: the refusal is the designed enforcement (close-session-bypassed-by-hand-log), a hint change is Human-only, the cost is one call; the #2798 hint did not move it

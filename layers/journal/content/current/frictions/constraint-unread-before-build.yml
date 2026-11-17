@@ -1,8 +1,15 @@
 name: constraint-unread-before-build
 surface: safe
 summary: A design or build went against a rule or check that governs it, because the agent leaned on precedent or advice instead of reading the rule, and review found it.
-cause: "An agent specs, designs or builds a page or feature without reading the governing rule or the full ADR first (ADR-0006: a page reads only its own Space; page-checks.ts: no guide links outside the guide; ADR-0003's per-row bounds), relying on a precedent (the Journal), another session's advice or an ADR summary; a reviewer or the check finds it after the work is built. PR #2980 (CLAUDE.md, 2026-11-08) now says to read the full ADR of each decision a plan touches before planning or designing, and the overview bullet applies to explaining the Platform. Signals: 'although ADR-0006 says', 'page-checks.ts forbids', 'leaned on the Journal', 'explained X without reading the overview'."
+cause: "An agent specs, designs or builds a page or feature without reading the governing rule or the full ADR first (ADR-0006: a page reads only its own Space; page-checks.ts: no guide links outside the guide; ADR-0003's per-row bounds), relying on a precedent (the Journal), another session's advice or an ADR summary; a reviewer or the check finds it after the work is built. PR #2980 (CLAUDE.md, 2026-11-08) now says to read the full ADR of each decision a plan touches before planning or designing. Signals: 'although ADR-0006 says', 'page-checks.ts forbids', 'leaned on the Journal'."
 status: open
+related:
+  - entry: adr-read-after-edit
+    rule: The ADR was read late but the edit was already right.
+  - entry: governing-doc-read-after-draft
+    rule: The doc was read after drafting, and a reviewer or hint found a wording or term it settles.
+  - entry: human-merge-need-found-after-pr-opened
+    rule: ADR-0004's untested-behaviour exception was recognised only after the PR was open.
 notes: |-
   2026-11-07 design: no change: RCJH read ADR-0006 and built the cross-Space read anyway (judgement against a rule in front of it); QUzc's page-check miss is caught mechanically by the gate. dropped: more prose would not change it; revisit on a third occurrence.
 fixes:
@@ -20,11 +27,6 @@ occurrences:
     severity: minor
     description: "The spec put a workshop link in the guide overview without checking page-checks.ts, which forbids guide links outside the guide; caught only by review"
     solution: "Grep the page checks for link rules before specifying a new link on a Glass Box page"
-  - session: session_013zxzeNm7AawB63t1M33Hse
-    date: "2026-11-08"
-    severity: minor
-    description: "Explained how Routines work without first reading the Glass Box overview page that CLAUDE.md requires for such explanations."
-    solution: "Read layers/glassbox/content/guide/pages/index.md before answering."
   - session: session_013zxzeNd2Ethpd3anqbmpkr
     date: "2026-11-09"
     severity: minor
@@ -35,11 +37,6 @@ occurrences:
     severity: minor
     description: "Planned a session-log schema change without reading the full ADR-0009, which CLAUDE.md requires before planning; I relied on its summary rule."
     solution: "Read docs/adr/0009 before designing a schema change; the summary rule happened to cover the additive-only constraint."
-  - session: session_013zxzeS36fzX6FB2vAr7yRR
-    date: "2026-11-09"
-    severity: nit
-    description: "I only noticed ADR-0004's 'behaviour no test can observe' exception after the fix PR's gate was green, then had to add e2e assertions and a second verdict."
-    solution: "Ask which test would fail if this regressed when planning each fix, before opening the PR."
   - session: session_013zxzeP1EixGDy96kmktFi2
     date: "2026-11-12"
     severity: minor
@@ -55,8 +52,3 @@ occurrences:
     severity: minor
     description: "CLAUDE.md says read the full ADR of each decision a plan touches; I recommended changes around ADR-0004, 0009, 0017 and 0027 from lessons and rule summaries only."
     solution: "For a repo-wide assessment, have the lesson-digest agents also read the cited ADRs, or say in the output that reasons come from lessons."
-  - session: session_013zxzeSLrkzfApGBDhjgFqB
-    date: "2026-11-12"
-    severity: minor
-    description: "Opened the PR before checking ADR-0004's untested-behaviour exception; the CSS mark had no test, so the merge stalled until I added one, which cost a rebuild and a second CI run."
-    solution: "At review time ask whether a test observes the change; add the test before the first gate run when none does."

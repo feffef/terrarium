@@ -58,10 +58,16 @@ Every edit goes through
 
 ### Instructions
 
-1. **Append each window Friction that matches an entry**, whatever its
-   severity. Match on the harm, not the slip behind it; when an entry's
-   `cause` routes a Friction elsewhere, append it there. A session counts once
-   per entry, at its highest severity. One
+1. **Append each window Friction that fully matches an entry**, whatever its
+   severity. Match on the harm, not the slip behind it, and read the entry's
+   `see:` rules: when one sends the Friction elsewhere, append it there. One
+   that fits only in part goes to step 2 when its cause or harm clearly
+   differs, or when it is `moderate` or above (a linked new entry costs
+   little; a severe Friction buried in a milder cluster hides it); otherwise
+   append it. A Friction worse than the entry's worst stored severity (above
+   its `acceptedSeverity` for an `accepted` one) may be a new problem, or the
+   same one at higher cost: check whether its cause or harm differs before you
+   split. A session counts once per entry, at its highest severity. One
    call files them all:
    `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/print-ledger-occurrence.ts --append <entry> <session> <index> [<entry> <session> <index> …]`
    copies each Friction's text from its log (a content test checks the
@@ -71,15 +77,21 @@ Every edit goes through
    `summary` or `cause`, rewrite them with `ledger-set.ts <entry> --summary TEXT
    --cause TEXT` so they cover every occurrence.
 2. **Open a new entry** for a cause seen twice, or once at `moderate`,
-   `major` or `blocker`. Its `summary` is one plain sentence a visitor can
+   `major` or `blocker`, and for any Friction whose root cause or harm clearly
+   differs from every entry it nearly matched. Link it to
+   each such entry (`ledger-set.ts --related <entry> <rule>`): the rule states
+   the distinction, when a Friction goes there instead. Its `summary` is one plain sentence a visitor can
    read; its `cause` names the root mechanism and the signals that identify
    a new occurrence (error text, file or tool, trigger), so a later run can
    match it.
 3. **Re-cluster when the ledger says so.** A cluster is a shared root cause:
    two Frictions days apart, on different tools, belong together when one
    change would retire both. When the stored texts show one broad entry
-   holding several causes, or two entries holding one, split or merge them
-   without reopening the logs: move each occurrence with
+   holding several causes or harms, or two entries holding one, split or
+   merge them without reopening the logs; when you split, write the
+   distinction as a `related` pair. Keep clusters apart: a Friction a `see:`
+   rule sends elsewhere moves; two linked clusters that one change would
+   retire merge; a `see:` rule that no longer holds is corrected. Move each occurrence with
    `prune-friction-ledger.ts --move <session> <from> <to>` (it refuses a
    session the target already holds and checks every text survived).
 4. **Record each PR that merged to fix a cluster** as a `fixes` entry on it,
@@ -109,11 +121,23 @@ no `tracked` or `on-trial` entry points at something closed.
 ### Edge cases
 
 - A Friction sits in one cluster unless its text names two causes.
+- Each `--summary` line ends with `see:` the entry's `related` clusters and
+  each rule. A pair is written on both entries
+  (`ledger-content.spec.ts` refuses a one-way link).
 - When a fix's guard, hint or refusal catches the slip and the harm is now
   different (a refused call and a retry, a false positive, no cost), give it
   its own entry whose `ref` names the original entry and the fix: it is not
   a regression; only the original harm recurring is. An original left empty
   is deleted, so `ref` also says what the original covered.
+- After you split or merge, bring every entry the change touched back to a
+  coherent state, and read each one again: `summary` and `cause` cover only
+  the occurrences it now holds; `fixes` sit on the entry whose cause the PR
+  tried to change; `status` and `ref` fit what is left (a `tracked` or
+  `accepted` source may no longer qualify, and an `accepted` target needs a
+  ceiling for what it received); `notes` carry the dated reason and what
+  moved; a deleted entry's `fixes`, `notes` and `ref` go to the survivor; and
+  every other entry's `cause`, `ref` and `related` that named the old one is
+  repointed (grep its name).
 - `--unledgered` drops per Friction, not per session: a session's other
   Frictions stay listed, so skip one already in the target cluster.
 - This run's own PRs are recorded by the main session. A PR an earlier run
@@ -123,9 +147,12 @@ no `tracked` or `on-trial` entry points at something closed.
   (`open`, `tracked`, `on-trial`, `accepted`); from `fixes`, the page and
   `--summary` derive `fix landed`, `likely fixed` (3 quiet days after the
   latest PR) or `still recurring`. A re-fix after a regression needs only
-  its `fixes` entry. An `accepted` cluster (the owner accepts its cost) is
-  never re-proposed; recording a fix on it (`ledger-set.ts --fix`) sets it
-  back to `open`.
+  its `fixes` entry. An `accepted` cluster (the owner accepts its cost, up
+  to its `acceptedSeverity`) is never re-proposed; recording a fix on it
+  (`ledger-set.ts --fix`) sets it back to `open`, and so does an occurrence
+  above that severity (appending or moving one does it, with a note). Accept
+  with `ledger-set.ts --status accepted [--accepted-severity S]`; the default
+  is the worst occurrence stored now.
 - `ref` holds the tracking issue or open PR, the trial's territory match,
   what a fix left open, or the entry and fix a new cause came from; never a
   merged PR that fixes this entry (that goes in `fixes`).

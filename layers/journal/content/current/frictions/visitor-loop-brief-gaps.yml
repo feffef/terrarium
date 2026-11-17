@@ -3,6 +3,9 @@ surface: safe
 summary: The visitor-loop brief left out details its visitors needed, so they wandered or tripped.
 cause: "The visitor brief and its context file leak hints to the blind visitor (repo root, other visitors), omit that screenshots need absolute output paths, give no reason for 'do not change directory', name the wrong chromium helper or say to follow links that open in place. Signals: visitor-loop, visitor brief, blind visitor, screenshots in the repo root, ERR_PNPM_RECURSIVE_EXEC_NO_PACKAGE."
 status: open
+related:
+  - entry: subagent-brief-defects
+    rule: The brief carried a wrong path or value, or an unfilled placeholder.
 fixes:
   - pr: 3249
     date: "2026-11-13"

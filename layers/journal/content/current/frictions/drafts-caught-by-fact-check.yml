@@ -5,6 +5,9 @@ cause: >-
   A Skill that drafts first and checks after (blog posts, blog replies, Digests, PR bodies, reports, Glass Box pages) catches the draft's unchecked dates, counts, cadence words and claims by design, at the cost of a rewrite round; a reply angle built from an issue body before its comments is the same slip, and so is a shipped page carrying a count copied from a draft. Since PR #3251 (2026-11-13) the Digest Skill requires a source for cadence words. Signals: "first draft", "the fact-check caught", "claim checker caught", "Spec reviewer caught", "caught before writing the post" on a written piece.
 surface: safe
 status: open
+related:
+  - entry: draft-style-caught-by-review
+    rule: The draft broke the Skill's style rules (jargon, length, opening) and its facts were right.
 notes: |-
   2026-11-04 reopened: fix #2712 (2026-10-30) merged after the owner accepted it on 2026-10-19.
 fixes:

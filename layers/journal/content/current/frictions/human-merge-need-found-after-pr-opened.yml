@@ -3,11 +3,25 @@ summary: A change no test observes (ADR-0004 human merge) was recognised only af
 cause: "The session built a change and opened its PR before noticing ADR-0004 reserves a human merge for behaviour no test or gate step can observe; fixing it needed a test, an owner question, a second review and a second gate run. Signals: 'no test asserted the rendered row text', 'reserves a human merge', 'recognised only after opening the PR'."
 surface: safe
 status: open
+related:
+  - entry: constraint-unread-before-build
+    rule: A rule other than ADR-0004's human-merge exception was unread and the build went against it.
 notes: |-
   2026-11-17 design: add the untested-behaviour check to the pre-PR step. dropped: that section is inside an open Prune Trial's territory (.agents/prune-trials.yml:116), and one occurrence costing one review round is thin.
+  2026-11-17: two occurrences moved in from constraint-unread-before-build, so it holds three and "one occurrence" above no longer holds.
 occurrences:
   - session: session_013zxzeP4NViUQL8i9LwF7Nj
     date: "2026-11-16"
     severity: moderate
     description: "Recognised only after opening the PR that ADR-0004 reserves a human merge for changes no test observes; no test asserted the rendered row text, so I needed a verdict, an owner question, a second review and a second gate run."
     solution: "At the pre-PR step, check the diff against ADR-0004's untested-behaviour exception and add the missing e2e or unit assertion before the first push."
+  - session: session_013zxzeSLrkzfApGBDhjgFqB
+    date: "2026-11-12"
+    severity: minor
+    description: "Opened the PR before checking ADR-0004's untested-behaviour exception; the CSS mark had no test, so the merge stalled until I added one, which cost a rebuild and a second CI run."
+    solution: "At review time ask whether a test observes the change; add the test before the first gate run when none does."
+  - session: session_013zxzeS36fzX6FB2vAr7yRR
+    date: "2026-11-09"
+    severity: nit
+    description: "I only noticed ADR-0004's 'behaviour no test can observe' exception after the fix PR's gate was green, then had to add e2e assertions and a second verdict."
+    solution: "Ask which test would fail if this regressed when planning each fix, before opening the PR."

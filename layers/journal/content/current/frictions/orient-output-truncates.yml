@@ -3,6 +3,9 @@ surface: safe
 summary: The glassbox-curate orientation script prints more than a tool result holds, so a section (the guide pages) was cut off and had to be re-fetched.
 cause: ".agents/skills/glassbox-curate/scripts/orient.ts prints about 73 KB unfiltered; the harness cuts it to a file or the agent pipes it through head -300, losing the guide-pages section at the end, so the curate run works from an incomplete orientation. Signals: 'orient.ts output', 'head -300 truncated the guide-pages section', 'cut to a file and one lost the guide-pages section'. Since PRs #2929 and #2944 (2026-11-07) the unflagged orient.ts prints a short output and writes the guide index to files in parts (one entry per page, with its Teaches, Why and Watch lead-ins), but --subject printed every page of the Subject whole and uncapped, 18 to about 114 KB (#3362). Issue #2906 closed completed."
 status: open
+related:
+  - entry: survey-output-overflow
+    rule: The overflow came from a survey read or a data-file dump.
 fixes:
   - pr: 2929
     date: "2026-11-07"

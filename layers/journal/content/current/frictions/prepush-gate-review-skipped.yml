@@ -2,14 +2,24 @@ name: prepush-gate-review-skipped
 summary: >-
   Agents skipped the required code review before a branch's first push, or gave a change their own read when it was not simple.
 cause: >-
-  ADR-0004 and pr-workflow.md ask for the code-review Skill before a branch's first push (and on a larger follow-up), allowing only a simple change (at most 10 lines in 2 files, adding, renaming or moving no file since PR #2638) the author's own read; sessions judge a small, prose, ledger, test or follow-up diff simple without counting it, self-review instead, or review only after pushing. Signals: 'skipped the code-review Skill', 'pushed before running gate:scoped and code-review', 'reviewed inline', 'self-reviewed', 'simple-change bar', 'without a fresh code-review', code-review run after the first push. A gate:scoped run that did not test the final head belongs to edit-during-gate-run.
+  ADR-0004 and pr-workflow.md ask for the code-review Skill before a branch's first push (and on a larger follow-up), allowing only a simple change (at most 10 lines in 2 files, adding, renaming or moving no file since PR #2638) the author's own read; sessions judge a small, prose, ledger, test or follow-up diff simple without counting it, self-review instead, or review only after pushing. Signals: 'skipped the code-review Skill', 'pushed before running gate:scoped and code-review', 'reviewed inline', 'self-reviewed', 'simple-change bar', 'without a fresh code-review', code-review run after the first push.
 surface: guard-or-hook
-status: accepted
-ref: "Issue #2748 (first-push code-review skipped again after #2638) closed not planned 2026-11-01: the owner declines a further fix."
+status: open
+ref: "Issue #2748 (first-push code-review skipped again after #2638) closed not planned 2026-11-01: the owner declined a further fix and accepted the cost up to minor; the moderate of 2026-11-09 is above that."
+related:
+  - entry: followup-review-overcost
+    rule: Review ran but cost far more than it found on a tiny first push or small follow-up.
+  - entry: edit-during-gate-run
+    rule: A gate:scoped run did not test the pushed head.
+  - entry: verdict-line-asserts-unchecked-review
+    rule: merge-pr.ts accepted a verdict line claiming a review no tool checked.
+  - entry: merged-without-gate-or-review
+    rule: The author ran neither gate:scoped nor code-review before the PR was opened or merged, without the owner's word to skip them.
 notes: |-
   2026-10-28 survey: the PR #2412 Prune Trial is no longer in .agents/prune-trials.yml (judged and deleted by the 2026-10-27 prune run), so the entry is no longer on trial; issue #2472 (regression of #2407) is open.
   2026-10-29 survey: issue #2472 closed by PR #2638 (merged 2026-10-28), which recorded as a fix here.
   2026-11-02 survey: set accepted after issue #2748 closed not planned; session_013zxzeSgWhesrfA7R1JBnhE (escalation PR, one rule line) is the newest occurrence.
+  2026-11-17: acceptance was set while its occurrences were nit to minor, so its ceiling was backfilled as minor and a major occurrence reopened it. That occurrence moved to merged-without-gate-or-review; the moderate of 2026-11-09 still sits above the minor ceiling, so the entry stays open until the owner re-accepts it.
 fixes:
   - pr: 1852
     date: "2026-10-12"
@@ -163,8 +173,3 @@ occurrences:
     severity: minor
     description: "Skipped code-review on a 76-file mechanical pin diff that exceeds the simple-change 10-line limit, reading the diff myself instead."
     solution: "pr-workflow could name a scripted pin-only diff as simple, or the run runs code-review."
-  - session: session_013zxzeSoqEeWqPDrCqDCcJn
-    date: "2026-11-16"
-    severity: major
-    description: "Opened and merged PR 3369, and opened PR 3371, with no code-review and no gate:scoped. Each added a run-entry file, so neither met the simple-change bar in pr-workflow.md; ADR-0004 requires both."
-    solution: "Run code-review and gate:scoped (in the background) before every PR; count the file-added rule before taking the own-read path."

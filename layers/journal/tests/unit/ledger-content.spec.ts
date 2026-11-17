@@ -4,6 +4,7 @@ import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { parse } from 'yaml'
+import { ledgerSeverityExceeds } from '../../app/utils/ledger'
 
 const content = join(import.meta.dirname, '../../content')
 const read = (dir: string) => readdirSync(dir).filter((f) => f.endsWith('.yml')).map((f) => parse(readFileSync(join(dir, f), 'utf8')))
@@ -21,6 +22,30 @@ describe('Friction Ledger content', () => {
       for (const o of cluster.occurrences) {
         const logged = sessions.get(o.session)?.frictions.some((f) => f.severity === o.severity && flat(f.description) === o.description && flat(f.solution) === o.solution)
         if (!logged) wrong.push(`${cluster.name} ${o.session}`)
+      }
+    }
+    expect(wrong).toEqual([])
+  })
+
+  it('sets acceptedSeverity exactly on an accepted cluster, and no occurrence is above it', () => {
+    const wrong: string[] = []
+    for (const c of read(join(content, 'current/frictions'))) {
+      if ((c.status === 'accepted') !== (c.acceptedSeverity !== undefined)) wrong.push(`${c.name}: acceptedSeverity vs status ${c.status}`)
+      else if (c.status === 'accepted') for (const o of c.occurrences) if (ledgerSeverityExceeds(o.severity, c.acceptedSeverity)) wrong.push(`${c.name} ${o.session}: ${o.severity} above ${c.acceptedSeverity}`)
+    }
+    expect(wrong).toEqual([])
+  })
+
+  it('lists related clusters that exist, are not itself, and list it back', () => {
+    const clusters = new Map(read(join(content, 'current/frictions')).map((c) => [c.name, c]))
+    const wrong: string[] = []
+    for (const [name, c] of clusters) {
+      const seen = new Set<string>()
+      for (const r of c.related ?? []) {
+        if (r.entry === name || !clusters.has(r.entry)) wrong.push(`${name} -> ${r.entry}: not another existing cluster`)
+        else if (!(clusters.get(r.entry).related ?? []).some((b: { entry: string }) => b.entry === name)) wrong.push(`${name} -> ${r.entry}: not listed back`)
+        if (seen.has(r.entry)) wrong.push(`${name} -> ${r.entry}: listed twice`)
+        seen.add(r.entry)
       }
     }
     expect(wrong).toEqual([])

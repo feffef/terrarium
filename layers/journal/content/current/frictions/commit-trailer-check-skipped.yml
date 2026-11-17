@@ -3,6 +3,9 @@ summary: The ADR-0017 commit trailer is checked on the first commit but not on l
 cause: "ADR-0017 and git-conventions.md ask for a check that the commit trailer landed after every commit; sessions check the first commit and skip the follow-ups. Signals: 'did not check that the commit trailer landed', 'checked the ADR-0017 commit trailer on the first commit only'."
 surface: safe
 status: open
+related:
+  - entry: session-id-hand-typed
+    rule: The session id in a trailer or post was typed or guessed wrong.
 notes: |-
   2026-11-17 design: commit-msg prints a trailer confirmation. dropped: .githooks is Human-only and the trailer landed in both sessions.
 occurrences:

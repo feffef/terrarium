@@ -1,8 +1,11 @@
 name: peer-session-conversation-cost
 surface: safe
 summary: Talking with another session cost many rounds, crossed messages or relays until the owner or the agent set a limit.
-cause: "Two sessions exchange send_message turns with no agreed stop point: messages cross, each side relays the owner's words and replies back, an open-ended rating iteration resumes helpers every round, or the receiver treats the peer message as data and asks the owner first. Differs from peer-session-message-no-reply (the peer has no reply tool). Signals: 'relayed', 'messages crossed', 'eight rounds', 'peer data'."
+cause: "Two sessions exchange send_message turns with no agreed stop point: messages cross, each side relays the owner's words and replies back, an open-ended rating iteration resumes helpers every round, or the receiver treats the peer message as data and asks the owner first. Signals: 'relayed', 'messages crossed', 'eight rounds', 'peer data'."
 status: open
+related:
+  - entry: peer-session-message-no-reply
+    rule: The peer session had no tool to answer, so the owner relayed its reply.
 fixes:
   - pr: 3365
     date: "2026-11-16"

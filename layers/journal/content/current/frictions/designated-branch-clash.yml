@@ -5,6 +5,9 @@ cause: >-
   CLAUDE.md's "Stay on the branch your session started on" and the session's designated-branch instruction collide with tasks that need a PR's branch, several independent PRs or a worktree, so the session asks or breaks the rule. Signals: 'designated branch', 'against stay on the branch', a new branch cut and undone.
 surface: safe
 status: open
+related:
+  - entry: git-checkout-misused-to-read-or-switch
+    rule: git checkout or switch was used to read a file or move branches, and discarded work.
 notes: |-
   2026-10-20 design: a repo doc granting pushes to other branches dropped: the harness pins one pushable branch and a repo doc cannot grant that; issue-tracker.md already says to flag it upfront and ask.
 fixes: []

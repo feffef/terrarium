@@ -2,10 +2,20 @@ name: late-read-first-docs
 summary: >-
   Agents read the doc CLAUDE.md names before a git, GitHub or screenshot step only after taking that step, when the hint points to it.
 cause: >-
-  CLAUDE.md's read-first triggers are prose, and read-first-hint.ts (#1793, the triage docs since #2446) points to the doc only after the first matching git, GitHub, issue-write or screenshot call (PostToolUse). The owner accepted these late reads as a cost in PR #2066 instead of a deny guard (#1819 closed, not refiled): the hint now says a late read that clears the call is not a Friction. Signals: a late read of git-conventions.md, github-integration.md, issue-tracker.md, triage-labels.md or verifying-ui-changes.md after the hint fired, or the hint firing again after a shell read it does not count. A search the fields guard refused is github-search-fields-guard-deny; a wrong label from unread triage docs is triage-docs-unread-before-labelling; other docs have their own entries: pr-workflow-unread-before-push, pr-workflow-read-in-part, dispatch-subagents-skill-unread.
+  CLAUDE.md's read-first triggers are prose, and read-first-hint.ts (#1793, the triage docs since #2446) points to the doc only after the first matching git, GitHub, issue-write or screenshot call (PostToolUse). The owner accepted these late reads as a cost in PR #2066 instead of a deny guard (#1819 closed, not refiled): the hint now says a late read that clears the call is not a Friction. Signals: a late read of git-conventions.md, github-integration.md, issue-tracker.md, triage-labels.md or verifying-ui-changes.md after the hint fired, or the hint firing again after a shell read it does not count.
 surface: guard-or-hook
 status: accepted
+acceptedSeverity: minor
 ref: "PR #2066 (merged): the owner accepts late reads; split from binding-docs-skipped for #2146"
+related:
+  - entry: dispatch-subagents-skill-unread
+    rule: The doc is the dispatch-subagents Skill, read late or never before a dispatch.
+  - entry: pr-workflow-unread-before-push
+    rule: The doc is pr-workflow.md, unread before a push or PR.
+  - entry: adr-read-after-edit
+    rule: The hint named a governing ADR after an edit to a file it governs.
+  - entry: governing-doc-read-after-draft
+    rule: The doc governs the text just drafted (a Tenant GLOSSARY, a Skill voice rule, the overview).
 fixes:
   - pr: 1793
     date: "2026-10-11"
@@ -394,11 +404,6 @@ occurrences:
     severity: nit
     description: "Ran git rev-parse and status before reading docs/agents/git-conventions.md, which CLAUDE.md requires before the first git command."
     solution: "Put the git-conventions read in the glassbox-update Skill's step 1 or accept it as a late read."
-  - session: session_013zxzeP1EixGDy96kmktFi2
-    date: "2026-11-12"
-    severity: nit
-    description: "Planned and reviewed changes spanning the guide, Skills and rules without reading the Glass Box overview that CLAUDE.md names for cross-part work."
-    solution: "Name the overview in the read-first trigger the code-review Skill gives its reviewers."
   - session: session_013zxzePP7cbXFfoqEXbKwKW
     date: "2026-11-12"
     severity: nit
@@ -549,11 +554,6 @@ occurrences:
     severity: nit
     description: "Ran git commands before reading docs/agents/git-conventions.md (hook reminded me afterwards)."
     solution: "Read the doc before the first non-read-only git command."
-  - session: session_013zxzePNLUgD6AbfEmXykEJ
-    date: "2026-11-15"
-    severity: nit
-    description: "I explained how Skill observations and the Journal work without first reading the overview page CLAUDE.md requires."
-    solution: "Read layers/glassbox/content/guide/pages/index.md before explaining the Platform."
   - session: session_013zxzeQESWGW1qj9P1Egphc
     date: "2026-11-15"
     severity: nit

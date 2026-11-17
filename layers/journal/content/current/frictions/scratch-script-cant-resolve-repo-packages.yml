@@ -3,6 +3,9 @@ surface: safe
 summary: A script run from the scratchpad could not find tsx or repo packages.
 cause: "An agent runs tsx or a Playwright script from inside its scratch folder, where node_modules does not resolve (CLAUDE.md says scripts that import repo packages go in .throwaway/). Signals: 'Command tsx not found', 'playwright-core does not resolve in the scratchpad'."
 status: open
+related:
+  - entry: bare-cd-moves-session-cwd
+    rule: A cd in the main shell persisted and moved later relative paths or git calls.
 notes: |-
   2026-11-14 survey: issue #3279 (a Seedling to note in environment-caveats that tsx fails outside the repo root) closed not planned 2026-11-14: agents would not read it before the error and the error is clear; visitor-brief.md covers the visitor case.
 fixes:

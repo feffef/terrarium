@@ -4,6 +4,9 @@ cause: "In the primary session the Bash tool keeps the working directory between
 surface: safe
 status: open
 ref: "fix PR #2507 merged 2026-10-25"
+related:
+  - entry: scratch-script-cant-resolve-repo-packages
+    rule: The script was run from inside the scratchpad folder, where node_modules does not resolve.
 notes: |-
   2026-10-21 design: a hint or guard on a bare cd, or a reworded cd line in docs, dropped: our own briefs tell sessions to run cd <root> &&, so a guard would flag recommended usage; the harness flags the drift and recovery is one cd. Note for any later edit of dispatch-subagents §3 (open trial territory): its claim that the Bash tool resets cwd between calls is wrong for the primary session.
 fixes:

@@ -1,11 +1,20 @@
 name: governing-doc-read-after-draft
 summary: >-
-  A doc that governs a Tenant's content or glossary is read only after the agent drafted or added text it governs.
+  A doc that governs what an agent writes or explains (a Tenant's glossary or content, the Platform overview) is read only after the agent drafted or added text it governs.
 cause: >-
-  A doc that governs new text (a Tenant Skill's voice or title rule, the Tenant's own GLOSSARY.md or ADR, docs/agents/domain.md for a glossary term) is read after the agent drafted or added the text, or not at all, and a reviewer, a hint or the rule's late load finds the miss. Signals: 'without first reading', 'plain-words voice rule', 'domain.md', a Tenant GLOSSARY.md read after the draft, a reviewer correcting wording or a term the doc already settles.
+  A doc that governs new text (a Tenant Skill's voice or title rule, the Tenant's own GLOSSARY.md or ADR, docs/agents/domain.md for a glossary term, the Glass Box overview CLAUDE.md names before explaining the Platform) is read after the agent drafted or added the text, or not at all, and a reviewer, a hint or the rule's late load finds the miss. Signals: 'without first reading', 'plain-words voice rule', 'domain.md', a Tenant GLOSSARY.md read after the draft, a reviewer correcting wording or a term the doc already settles, 'explained X without reading the overview'.
 surface: safe
 status: tracked
 ref: "issue #3234"
+related:
+  - entry: adr-read-after-edit
+    rule: The post-edit hook named a governing ADR after the first edit and the late read changed nothing.
+  - entry: late-read-first-docs
+    rule: The doc is git, GitHub, issue or screenshot guidance and the hint fired after the call.
+  - entry: constraint-unread-before-build
+    rule: The unread doc was a rule or ADR the design or build went against, not drafted text.
+  - entry: glassbox-curate-read-first-skipped
+    rule: The glassbox-curate Skill's own first reads (glossary, QUALITY.md, the Subject's pages) were skipped.
 fixes:
   - pr: 2469
     date: "2026-10-23"
@@ -137,3 +146,13 @@ occurrences:
     severity: nit
     description: "Drafted prose from gather output before reading the ADR-0010 page text I had only cat'd alongside other output; no harm."
     solution: "Read the ADR on its own before drafting."
+  - session: session_013zxzeP1EixGDy96kmktFi2
+    date: "2026-11-12"
+    severity: nit
+    description: "Planned and reviewed changes spanning the guide, Skills and rules without reading the Glass Box overview that CLAUDE.md names for cross-part work."
+    solution: "Name the overview in the read-first trigger the code-review Skill gives its reviewers."
+  - session: session_013zxzePNLUgD6AbfEmXykEJ
+    date: "2026-11-15"
+    severity: nit
+    description: "I explained how Skill observations and the Journal work without first reading the overview page CLAUDE.md requires."
+    solution: "Read layers/glassbox/content/guide/pages/index.md before explaining the Platform."

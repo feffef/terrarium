@@ -1,0 +1,16 @@
+name: merged-without-gate-or-review
+summary: A PR was opened or merged with neither the code-review Skill nor gate:scoped run.
+cause: "The author skips the whole objective gate (ADR-0004), not just the review: no gate:scoped and no code-review before opening or merging, without the owner's word to skip them, so nothing checked the change. Signals: 'no code-review and no gate:scoped', 'merged without the gate', a PR opened or merged with neither run."
+surface: guard-or-hook
+status: open
+related:
+  - entry: prepush-gate-review-skipped
+    rule: A gate ran but the review was skipped, or an own-read replaced it on a diff judged simple.
+notes: |-
+  2026-11-17: split from prepush-gate-review-skipped, whose accepted cost covers a lighter review, not a merge with no gate.
+occurrences:
+  - session: session_013zxzeSoqEeWqPDrCqDCcJn
+    date: "2026-11-16"
+    severity: major
+    description: "Opened and merged PR 3369, and opened PR 3371, with no code-review and no gate:scoped. Each added a run-entry file, so neither met the simple-change bar in pr-workflow.md; ADR-0004 requires both."
+    solution: "Run code-review and gate:scoped (in the background) before every PR; count the file-added rule before taking the own-read path."

@@ -14,7 +14,8 @@
 //   ref, in-horizon occurrence count, max severity (issue #1917), the fix
 //   count, latest fix and the highest severity since it (`none` if no
 //   occurrence came after), and the newest of the entry's `notes` in full when it
-//   has any. It ends with every friction two clusters share, for
+//   has any, then `see:` the entry's related clusters, each with the rule that
+//   sends a Friction there instead. It ends with every friction two clusters share, for
 //   the survey to judge.
 //   `--candidates` edits nothing and prints each entry's survey label from the
 //   ledger alone (never-fixed, regression, open-already for a `tracked` entry,
@@ -35,6 +36,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { isMap, isSeq, parse as parseYaml, parseDocument, type YAMLMap } from 'yaml'
 import { LEDGER_HORIZON_DAYS, ledgerFixState, ledgerWindowStart } from '../../../../layers/journal/app/utils/ledger.ts'
+import { reopenOnBreach, type Related } from './ledger-set.ts'
 import { LEDGER_DIR } from '../../../../scripts/session/extract-frictions.ts'
 import { fail, flagValue, resolveOutputTarget, root, runIfMain } from '../../../../scripts/lib/cli.ts'
 import { tryGit } from '../../../../scripts/lib/git.ts'
@@ -86,6 +88,7 @@ interface Entry {
   status?: string
   ref?: string
   notes?: string
+  related?: Related[]
   fixes?: Fix[]
   occurrences?: Occurrence[]
 }
@@ -164,8 +167,13 @@ export function summarizeLedger(today: string, cwd = root, check = regressionChe
     const note = String(e.notes ?? '').trim().split('\n').at(-1)
     const cols = [e.name ?? f, state, e.ref ?? '-', `${occ.length} in horizon`, max, fixes]
     if (note) cols.push(`note: ${note}`)
-    return cols.join(' | ')
+    return [...cols, ...seeAlso(e)].join(' | ')
   })
+}
+
+/** In `--summary` only: that is the file the survey matches Frictions against, and `--candidates` labels fix status, which these rules don't affect. */
+function seeAlso(e: Entry): string[] {
+  return e.related?.length ? [`see: ${e.related.map((r) => `${r.entry} (${r.rule})`).join('; ')}`] : []
 }
 
 /** Each entry's survey label from the ledger alone; the tracker is never asked. */
@@ -218,6 +226,7 @@ export function moveOccurrence(session: string, fromText: string, toText: string
   }
   dst.items.push(src.items.splice(i, 1)[0]!)
   dst.flow = false
+  reopenOnBreach(to)
   return { from: src.items.length ? from.toString({ lineWidth: 0 }) : null, to: to.toString({ lineWidth: 0 }) }
 }
 
