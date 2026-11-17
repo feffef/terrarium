@@ -94,3 +94,8 @@ occurrences:
     severity: nit
     description: "A scripted text edit after the worker restart removed a paragraph break; I saw it only when I printed the file."
     solution: "Print the edited lines right after any scripted rewrite before committing."
+  - session: session_013zxzeSgAcwDrJXAMFAC4Qf
+    date: "2026-11-17"
+    severity: nit
+    description: "Edited the brief, scripts and tests with Python replace scripts in Bash, not Read plus Edit; one left an unwrapped line that a reviewer flagged."
+    solution: "Use Read then Edit for each text change, and keep scripted writes for data files a helper tool covers."

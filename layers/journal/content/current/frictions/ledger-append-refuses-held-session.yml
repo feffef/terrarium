@@ -2,8 +2,8 @@ name: ledger-append-refuses-held-session
 surface: safe
 summary: The ledger append script refused a whole call because one session was already in the entry, so the survey had to retry without it.
 cause: "print-ledger-occurrence.ts --append writes through ledger-set.ts, which refuses a session the entry already holds or the call repeats (PR #2366's content test, PR #2567's named refusal); extract-frictions --unledgered still offers that session's other Frictions, so one call fails whole and is re-run. Signals: '--append fails whole', 'refuses a session already in an entry', 'no way to upgrade its severity'."
-status: open
-ref: "Comes from the fixes PR #2366 and #2567 for survey-appends-duplicate-sessions (a session written twice into one entry)."
+status: tracked
+ref: "fix in progress, frictions-to-fixes run 2026-11-17 (print-ledger-occurrence.ts --skip-held)"
 related:
   - entry: ledger-yaml-hand-edit-errors
     rule: A YAML data file was hand-edited or scripted and broke.
@@ -54,3 +54,8 @@ occurrences:
     severity: minor
     description: "Survey report's window start was ambiguous (extract-frictions prefix 2026-11-13T02:27 versus first session 2026-11-12T23:06) and its ledger append refused all 84 triples over 15 held sessions, needing a throwaway filter script."
     solution: "Print one canonical window start; let print-ledger-occurrence --append skip held sessions with a flag."
+  - session: session_013zxzeSZQpKBLnM3DK1cPRQ
+    date: "2026-11-17"
+    severity: minor
+    description: "Survey agent: ledger append refused three already-held session triples after --unledgered, and it first typed the commit-trailer session id by hand; design agent: audit-skills output dumps 66KB, no path lookup for trial territory, no guidance when every pick is no change."
+    solution: "Add session-level pre-filtering to --unledgered, a doc-counts mode for audit-skills, and a no-change clause in design-brief section 6."

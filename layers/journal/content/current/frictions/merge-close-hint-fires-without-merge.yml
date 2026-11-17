@@ -2,7 +2,8 @@ name: merge-close-hint-fires-without-merge
 surface: guard-or-hook
 summary: A hook told the session a PR had merged and to close the session when no PR had merged yet, or the session had none.
 cause: "A 'PR merged: invoke close-session' prompt arrives when no PR of the session merged. Before PR #2890 (2026-11-06), read-first-hint.ts (PostToolUse) pushed MERGE_CLOSE_SESSION_HINT for any main-session Bash command naming merge-pr.ts; it now needs the run's stdout to report merged true. The Stop hook merge-close-stop.ts (PR #2937, 2026-11-07) still has the old test: it blocks on trace.mergedWithoutClose, which scripts/session/transcript-trace.ts sets for any Bash command whose text includes scripts/github/merge-pr.ts, so it fires while merge-pr.ts only polls CI in the background, or in a session that opened and merged no PR. Signals: 'PR merged' hint, 'the Stop hook said a PR merged', 'still open and waiting on CI', 'this session opened none', 'merge-pr.ts failed with 503', 'had to check origin/main'."
-status: open
+status: tracked
+ref: fix in progress, frictions-to-fixes run 2026-11-17 (transcript-trace.ts counts a merge only on merged:true)
 related:
   - entry: close-session-reminded-by-stop-hook
     rule: The Stop hook correctly flagged a merge the session had not closed over.
@@ -106,3 +107,8 @@ occurrences:
     severity: nit
     description: "Stop hook said a PR merged and demanded close-session, though this session opened and merged none; cost an extra closure pass."
     solution: "Have the hook check the session's own PRs, not any merge event, before demanding close-session."
+  - session: session_013zxzeNzhyuFe3JhwD9usjS
+    date: "2026-11-16"
+    severity: minor
+    description: "Stop hook repeatedly said a PR merged and demanded close-session while no PR existed yet and subagents were still running, costing several turns of redundant status replies."
+    solution: "Gate the merge-close Stop hook on a PR this session actually opened or merged."

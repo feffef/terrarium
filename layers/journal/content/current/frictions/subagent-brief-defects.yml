@@ -120,3 +120,8 @@ occurrences:
     severity: minor
     description: "Told subagents to run no command while also asking them to read each rule's paths, so four could not verify their path-based labels."
     solution: "Paste each rule's paths into the brief, or allow reading the rule files."
+  - session: session_013zxzeNzhyuFe3JhwD9usjS
+    date: "2026-11-16"
+    severity: nit
+    description: "First dispatch brief held an unfilled placeholder and the dispatch guard rejected it."
+    solution: "Inline the assignment text when writing the brief instead of a placeholder."

@@ -2,13 +2,15 @@ name: placeholder-guard-denies-quoted-placeholder
 summary: The guard against unfilled brief placeholders denied a dispatch whose prompt only named the placeholder while explaining it, costing a retry.
 cause: "Comes from subagent-brief-defects and PR #3064: dispatch-read-guard.ts denies an Agent prompt or SendMessage message matching /@@\\w+@@|{UPPER_CASE}/ (scripts/hooks/dispatch-read-guard.ts:39), so an orchestrator's wrapper text that quotes the brief's literal scratch-dir placeholder to say how to fill it is denied as unfilled. Signals: 'my own wrapper text contained the literal placeholder', 'mentioned the literal curly-braced scratch placeholder while explaining it', a retry with the prompt reworded."
 surface: guard-or-hook
-status: open
-ref: "subagent-brief-defects, fix PR #3064"
+status: tracked
+ref: "issue #3406 (deny message wording; guard is Human-only)"
 related:
   - entry: subagent-brief-defects
     rule: The brief held a real unfilled placeholder, wrong path or wrong value.
   - entry: dispatch-read-guard-deny
     rule: The guard denied the first dispatch until the Skill was read.
+notes: |-
+  2026-11-17 design: reword the guard deny message (1 line), filed as #3406; a SKILL.md clause dropped: adds prose where the Skill is already read before the guard fires.
 occurrences:
   - session: session_013zxzeSPxncNsUJXwnc2DvG
     date: "2026-11-11"
@@ -40,3 +42,8 @@ occurrences:
     severity: minor
     description: "The dispatch-read guard denied my first survey Agent call until I read dispatch-subagents; a second call was denied because my brief text held the literal placeholder token, though I had filled the value."
     solution: "Have the guard test for an unfilled value, not the literal token, or name this in the Skill's dispatch lines."
+  - session: session_013zxzeSZQpKBLnM3DK1cPRQ
+    date: "2026-11-17"
+    severity: minor
+    description: "The dispatch-read guard blocked my first survey brief because it named the curly-brace scratch placeholder literally; I reworded and resent."
+    solution: "Have the Skill's briefs say how to fill the placeholder without quoting it, or let the guard ignore a quoted one."

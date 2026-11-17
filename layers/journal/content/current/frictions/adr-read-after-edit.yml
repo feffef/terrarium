@@ -242,3 +242,8 @@ occurrences:
     severity: nit
     description: "The post-edit hook told me to read the same ADR in full four times after four edits to one file, and again for two ADRs after the next edit; each read confirmed the edit was fine."
     solution: "Fire the read-in-full notice once per governed file per session, and skip it when the session already read that ADR."
+  - session: session_013zxzeSgAcwDrJXAMFAC4Qf
+    date: "2026-11-17"
+    severity: nit
+    description: "Edited survey-brief.md twice before reading ADR-0027 and checking .agents/prune-trials.yml; the hook prompted the read, and no open trial overlapped."
+    solution: "Check the open trials' territory before the first edit under .agents/skills/frictions-to-fixes."

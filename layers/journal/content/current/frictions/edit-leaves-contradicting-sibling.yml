@@ -62,3 +62,8 @@ occurrences:
     severity: minor
     description: "Rewrote the Skill's loop text four times; each pass fixed only the sentences I thought of, and the person's follow-ups found the leftover one-focus-per-run wording and an if-a-focus-remains stop that contradicted their budget-only answer."
     solution: "When changing a rule, re-read the whole Skill and grep its other statements in the same edit (CLAUDE.md, one home per fact), and check the new text against the person's earlier answers."
+  - session: session_013zxzeSgAcwDrJXAMFAC4Qf
+    date: "2026-11-17"
+    severity: minor
+    description: "Cluster moves and the join left stale causes, refs and notes and three misplaced occurrences that the two Opus review rounds found, though I had just added a checklist for exactly that."
+    solution: "After each move or join, re-read every touched entry and grep the others for its name before committing, as the new brief step says."

@@ -41,3 +41,8 @@ occurrences:
     severity: minor
     description: "Replaced Cloud sessions' Journal Where next row without checking that an e2e test needs a non-Glass-Box row there, and dropped three pages below the two-incoming-links check; the gate failed once and page checks flagged the rest."
     solution: "Before swapping a Where next entry, run the page checks and grep the e2e spec for the page."
+  - session: session_013zxzeSoqEeWqPDrCqDCcJn
+    date: "2026-11-16"
+    severity: nit
+    description: "Glossing ADR pushed the Why bullet over its word cap; found only by running the page test, then fixed by trimming other words."
+    solution: "Say in the Skill's Fix step that a bullet near 65 words has no room for a gloss."

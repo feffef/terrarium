@@ -201,3 +201,8 @@ occurrences:
     severity: minor
     description: "The #3386 builder ran the gate on an uncommitted test fix, so HEAD moved afterwards. That forced a reviewer re-check and a second full gate, about ten extra minutes."
     solution: "Tell the builder in its rules to commit before it gates, or to gate only a clean tree."
+  - session: session_013zxzeSgAcwDrJXAMFAC4Qf
+    date: "2026-11-17"
+    severity: minor
+    description: "Ran gate:scoped on uncommitted trees, before code-review and the commit, against pr-workflow's order; each run then blocked my commits and edits for minutes."
+    solution: "Commit, review, then run the gate once on the final head, as pr-workflow says; the gate-edit guard message could name that order."

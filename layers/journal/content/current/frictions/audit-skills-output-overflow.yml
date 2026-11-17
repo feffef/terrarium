@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   scripts/session/audit-skills.ts prints its whole report (56-478 KB) to stdout when run bare, overflowing the tool result, so the survey subagent persists it and re-runs a narrow extraction. Signals: audit-skills.ts, output persisted to a file, "printed about N KB".
 surface: safe
-status: open
-ref: "audit-skills output redirect in frictions-to-fixes §4, 2026-10-16"
+status: tracked
+ref: "fix in progress, frictions-to-fixes run 2026-11-17 (design-brief jq lookup of docReadCounts)"
 related:
   - entry: survey-output-overflow
     rule: The overflow came from session logs, the ledger or another data dump.
@@ -22,3 +22,8 @@ occurrences:
     severity: minor
     description: "Design subagent: design-brief section 3 says to read only docReadCounts, but printing the audit-skills JSON put 75 KB (a 160-entry window array) into its context first."
     solution: "Give the one-liner that prints only docReadCounts in the brief."
+  - session: session_013zxzeSZQpKBLnM3DK1cPRQ
+    date: "2026-11-17"
+    severity: minor
+    description: "Survey agent: ledger append refused three already-held session triples after --unledgered, and it first typed the commit-trailer session id by hand; design agent: audit-skills output dumps 66KB, no path lookup for trial territory, no guidance when every pick is no change."
+    solution: "Add session-level pre-filtering to --unledgered, a doc-counts mode for audit-skills, and a no-change clause in design-brief section 6."

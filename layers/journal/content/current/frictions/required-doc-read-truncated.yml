@@ -57,3 +57,8 @@ occurrences:
     severity: nit
     description: "I decided the ADR-0004 untested-behaviour exception for the new script from a grep of the ADR's Scope lines, not a full read as CLAUDE.md asks before reviewing work an ADR governs."
     solution: "The Scope list was the part needed; reading it whole costs about 1300 tokens and I should have."
+  - session: session_013zxzeSgAcwDrJXAMFAC4Qf
+    date: "2026-11-17"
+    severity: nit
+    description: "Read docs/agents/git-conventions.md with sed lines 1-60 only, against CLAUDE.md's read-it-whole rule, before committing; the later sections went unread."
+    solution: "Read the whole doc with the Read tool before the first non-read-only git command."

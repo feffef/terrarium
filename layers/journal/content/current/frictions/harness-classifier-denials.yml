@@ -1,6 +1,6 @@
 name: harness-classifier-denials
 summary: >-
-  The auto-mode classifier denied a git command that rewrites history or discards work, and the session fell back to a follow-up commit or a plain push.
+  The auto-mode classifier denied a git command that rewrites history or discards work, and the session fell back to a follow-up commit or a plain push. see: harness-proxy-blocks (The proxy refused a network host (403 or connection failure).); worktree-guard-blocks-compound-bash (The container's worktree guard or another guard refused a compound Bash call.); classifier-no-verdict (The classifier gave no verdict at all, so no command ran for several turns.)
 cause: >-
   The classifier denies amend or force-with-lease of an already-pushed commit and `git reset --hard HEAD` used to clear a stale index, with no reason and no in-session override. A plain push or a follow-up commit works; a branch restarted after its merge is a fast-forward and needs no force. The Stop hook pushes early, so a commit is often already pushed when the session wants to amend it. PR #3057 (2026-11-11) changed git-conventions.md: a pushed commit gets a follow-up commit, not an amend, and a stale index is cleared with git restore --staged . then git restore ., not git reset --hard HEAD.
 surface: outside
@@ -10,6 +10,8 @@ related:
     rule: The proxy refused a network host (403 or connection failure).
   - entry: worktree-guard-blocks-compound-bash
     rule: The container's worktree guard or another guard refused a compound Bash call.
+  - entry: classifier-no-verdict
+    rule: The classifier gave no verdict at all, so no command ran for several turns.
 fixes:
   - pr: 3057
     date: "2026-11-11"

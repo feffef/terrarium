@@ -157,3 +157,8 @@ occurrences:
     severity: nit
     description: "The first background gate call stacked run_in_background with a text-level ampersand and the double-background guard blocked it."
     solution: "Pass run_in_background alone with a plain command."
+  - session: session_013zxzeQnWZGH17Bmo7pqtaf
+    date: "2026-11-17"
+    severity: nit
+    description: "Backgrounded the gate with both run_in_background and a trailing ampersand; the double-background guard rejected it, one retry."
+    solution: "Use run_in_background alone."
