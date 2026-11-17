@@ -257,7 +257,7 @@ describe('moveOccurrence()', () => {
     const accepted = file('b', block('s3', 'three')).replace('status: open', 'status: accepted\nacceptedSeverity: minor')
     const to = moveOccurrence('s1', file('a', major), accepted).to
     expect(to).toContain('status: open\n')
-    expect(to).toContain('Reopened: a major occurrence is above the accepted minor.')
+    expect(to).toMatch(/\d{4}-\d\d-\d\d: reopened, a major occurrence is above the accepted minor\./)
   })
   it('refuses when the target already holds the same friction from that session', () => {
     expect(() => moveOccurrence('s1', file('a', block('s1', 'one')), file('b', block('s1', 'one'))))

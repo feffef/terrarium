@@ -5,7 +5,7 @@ cause: "The visitor brief and its context file leak hints to the blind visitor (
 status: open
 related:
   - entry: subagent-brief-defects
-    rule: The visitor brief left out details its visitors needed.
+    rule: The brief carried a wrong path or value, or an unfilled placeholder.
 fixes:
   - pr: 3249
     date: "2026-11-13"

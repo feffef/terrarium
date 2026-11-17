@@ -4,6 +4,7 @@ import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { parse } from 'yaml'
+import { ledgerSeverityExceeds } from '../../app/utils/ledger'
 
 const content = join(import.meta.dirname, '../../content')
 const read = (dir: string) => readdirSync(dir).filter((f) => f.endsWith('.yml')).map((f) => parse(readFileSync(join(dir, f), 'utf8')))
@@ -27,11 +28,10 @@ describe('Friction Ledger content', () => {
   })
 
   it('sets acceptedSeverity exactly on an accepted cluster, and no occurrence is above it', () => {
-    const rank = ['nit', 'minor', 'moderate', 'major', 'blocker']
     const wrong: string[] = []
     for (const c of read(join(content, 'current/frictions'))) {
       if ((c.status === 'accepted') !== (c.acceptedSeverity !== undefined)) wrong.push(`${c.name}: acceptedSeverity vs status ${c.status}`)
-      else if (c.status === 'accepted') for (const o of c.occurrences) if (rank.indexOf(o.severity) > rank.indexOf(c.acceptedSeverity)) wrong.push(`${c.name} ${o.session}: ${o.severity} above ${c.acceptedSeverity}`)
+      else if (c.status === 'accepted') for (const o of c.occurrences) if (ledgerSeverityExceeds(o.severity, c.acceptedSeverity)) wrong.push(`${c.name} ${o.session}: ${o.severity} above ${c.acceptedSeverity}`)
     }
     expect(wrong).toEqual([])
   })

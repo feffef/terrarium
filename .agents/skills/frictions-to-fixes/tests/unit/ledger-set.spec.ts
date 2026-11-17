@@ -78,7 +78,7 @@ describe('setEntry()', () => {
       const out = setEntry(accepted, { occurrences: occ('minor') })
       expect(out).toContain('status: open\n')
       expect(out).not.toContain('acceptedSeverity')
-      expect(out).toContain('Reopened: a minor occurrence is above the accepted nit.')
+      expect(out).toMatch(/\d{4}-\d\d-\d\d: reopened, a minor occurrence is above the accepted nit\./)
     })
     it('stays accepted for an occurrence at or below the ceiling', () => {
       expect(setEntry(accepted.replace('nit', 'minor'), { occurrences: occ('minor') })).toContain('status: accepted\nacceptedSeverity: minor\n')

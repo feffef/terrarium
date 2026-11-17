@@ -8,7 +8,7 @@ related:
   - entry: proposal-duplicates-existing-decision
     rule: A candidate duplicated an existing feature, issue or decision.
   - entry: relayed-subagent-claims
-    rule: A subagent's or another session's claim was relayed as fact, trial or not.
+    rule: A subagent's or another session's claim about anything but a trial's territory was relayed as fact unchecked.
 notes: |-
   2026-10-22 design: one sentence in clear-backlog-explore.js brief() to quote the trial territory line dropped: adr-check already lists open trials, the failure is orchestrators skipping adr-check (covered by binding-docs-skipped), and the one wrong triage claim was caught; revisit on a second wrong trial claim from a triage agent
 fixes:

@@ -7,7 +7,7 @@ related:
   - entry: glassbox-curate-run-cost
     rule: The fan-out belongs to a glassbox-curate run.
   - entry: subagent-fanout-before-probe
-    rule: Agents were dispatched by design, one per Skill, with short repeat replies.
+    rule: Many agents were dispatched over transcripts before one was probed.
 fixes:
   - pr: 3377
     date: "2026-11-16"

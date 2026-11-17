@@ -1,8 +1,8 @@
 name: governing-doc-read-after-draft
 summary: >-
-  A doc that governs a Tenant's content or glossary is read only after the agent drafted or added text it governs.
+  A doc that governs what an agent writes or explains (a Tenant's glossary or content, the Platform overview) is read only after the agent drafted or added text it governs.
 cause: >-
-  A doc that governs new text (a Tenant Skill's voice or title rule, the Tenant's own GLOSSARY.md or ADR, docs/agents/domain.md for a glossary term) is read after the agent drafted or added the text, or not at all, and a reviewer, a hint or the rule's late load finds the miss. Signals: 'without first reading', 'plain-words voice rule', 'domain.md', a Tenant GLOSSARY.md read after the draft, a reviewer correcting wording or a term the doc already settles.
+  A doc that governs new text (a Tenant Skill's voice or title rule, the Tenant's own GLOSSARY.md or ADR, docs/agents/domain.md for a glossary term, the Glass Box overview CLAUDE.md names before explaining the Platform) is read after the agent drafted or added the text, or not at all, and a reviewer, a hint or the rule's late load finds the miss. Signals: 'without first reading', 'plain-words voice rule', 'domain.md', a Tenant GLOSSARY.md read after the draft, a reviewer correcting wording or a term the doc already settles, 'explained X without reading the overview'.
 surface: safe
 status: tracked
 ref: "issue #3234"

@@ -30,6 +30,8 @@ import { ledgerSeverityExceeds } from '../../../../layers/journal/app/utils/ledg
 
 export interface Fix { pr: number; date: string; summary: string }
 
+export type Related = (typeof frictionClusterSchema)['_output']['related'][number]
+
 export interface LedgerChanges {
   status?: string
   /** With status `accepted`: the worst severity the owner accepts. */
@@ -37,8 +39,7 @@ export interface LedgerChanges {
   ref?: string
   fixes?: Fix[]
   replaceFixes?: boolean
-  /** Related entries to add, or to give a new rule. */
-  related?: { entry: string; rule: string }[]
+  related?: Related[]
   /** Lines appended to `notes`, oldest first. */
   notes?: string[]
   /** Occurrence blocks as `print-ledger-occurrence.ts` prints them. */
@@ -86,12 +87,12 @@ function worst(doc: Document): Sev | undefined {
 
 /** Reopens an `accepted` entry holding an occurrence above its ceiling, and says so in `notes`:
  *  accepting a minor cost must not hide a major one in the same cluster. Returns whether it did. */
-export function reopenOnBreach(doc: Document): boolean {
+export function reopenOnBreach(doc: Document, today = new Date().toISOString().slice(0, 10)): boolean {
   const ceiling = doc.get('acceptedSeverity') as Sev | undefined
   const top = worst(doc)
   if (doc.get('status') !== 'accepted' || !ceiling || !top || !ledgerSeverityExceeds(top, ceiling)) return false
   const notes = doc.get('notes')
-  const note = new Scalar([...(typeof notes === 'string' && notes ? [notes] : []), `Reopened: a ${top} occurrence is above the accepted ${ceiling}.`].join('\n'))
+  const note = new Scalar([...(typeof notes === 'string' && notes ? [notes] : []), `${today}: reopened, a ${top} occurrence is above the accepted ${ceiling}.`].join('\n'))
   note.type = Scalar.BLOCK_LITERAL
   put(doc, 'status', 'open')
   doc.delete('acceptedSeverity')
@@ -117,8 +118,8 @@ export function setEntry(text: string, changes: LedgerChanges): string {
     if (changes.acceptedSeverity !== undefined) throw new Error('--accepted-severity needs status accepted')
     doc.delete('acceptedSeverity')
   } else if (changes.acceptedSeverity !== undefined || !doc.has('acceptedSeverity')) {
-    const ceiling = changes.acceptedSeverity ?? worst(doc) ?? 'nit'
     const top = worst(doc)
+    const ceiling = changes.acceptedSeverity ?? top ?? 'nit'
     if (top && ledgerSeverityExceeds(top, ceiling as Sev)) throw new Error(`cannot accept up to ${ceiling}: the entry holds a ${top} occurrence`)
     put(doc, 'acceptedSeverity', ceiling)
   }
@@ -132,7 +133,7 @@ export function setEntry(text: string, changes: LedgerChanges): string {
     put(doc, 'notes', notes)
   }
   if (changes.related?.length) {
-    const kept = ((doc.toJS().related ?? []) as { entry: string; rule: string }[]).filter((r) => !changes.related!.some((n) => n.entry === r.entry))
+    const kept = ((doc.toJS().related ?? []) as Related[]).filter((r) => !changes.related!.some((n) => n.entry === r.entry))
     put(doc, 'related', doc.createNode([...kept, ...changes.related]))
   }
   if (changes.replaceFixes && !changes.fixes?.length) throw new Error('--replace-fixes needs at least one --fix')

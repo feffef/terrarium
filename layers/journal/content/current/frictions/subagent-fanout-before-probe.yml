@@ -5,7 +5,7 @@ cause: "A plan fans out subagents over session transcripts (events omit hook-inj
 status: open
 related:
   - entry: audit-skills-run-cost
-    rule: Many agents were dispatched over transcripts before one was probed.
+    rule: Agents were dispatched by design, one per Skill, and their replies were short repeats.
 notes: |-
   2026-11-10 design: a dispatch-subagents §1 line (probe one before fanning out) dropped: one owner-directed session, the cause is a data omission, and the Skill sits beside an open Prune Trial. Re-raise on a second occurrence.
 occurrences:

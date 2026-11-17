@@ -61,7 +61,8 @@ Every edit goes through
 1. **Append each window Friction that fully matches an entry**, whatever its
    severity. Match on the harm, not the slip behind it, and read the entry's
    `see:` rules: when one sends the Friction elsewhere, append it there. One
-   that fits only in part goes to step 2. A Friction worse than the entry's
+   that fits only in part goes to step 2 when its cause or harm clearly
+   differs; otherwise append it and widen the entry's `summary` and `cause`. A Friction worse than the entry's
    worst stored severity (above its `acceptedSeverity` for an `accepted` one)
    may be a new problem, or the same one at higher cost: check whether its
    cause or harm differs before you split. A session counts once
@@ -76,7 +77,7 @@ Every edit goes through
    --cause TEXT` so they cover every occurrence.
 2. **Open a new entry** for a cause seen twice, or once at `moderate`,
    `major` or `blocker`, and for any Friction whose root cause or harm clearly
-   differs from every entry it nearly matched. Link it, on both sides, to
+   differs from every entry it nearly matched. Link it to
    each such entry (`ledger-set.ts --related <entry> <rule>`): the rule states
    the distinction, when a Friction goes there instead. Its `summary` is one plain sentence a visitor can
    read; its `cause` names the root mechanism and the signals that identify
@@ -88,7 +89,8 @@ Every edit goes through
    holding several causes or harms, or two entries holding one, split or
    merge them without reopening the logs; when you split, write the
    distinction as a `related` pair. Keep clusters apart: a Friction held by two
-   clusters, or one a `see:` rule sends elsewhere, moves; two linked clusters
+   clusters whose text names one cause moves to the cluster that fits, as does
+   one a `see:` rule sends elsewhere; two linked clusters
    that one change would retire merge; a `see:` rule that no longer holds is
    corrected. Move each occurrence with
    `prune-friction-ledger.ts --move <session> <from> <to>` (it refuses a
@@ -136,7 +138,7 @@ no `tracked` or `on-trial` entry points at something closed.
   ceiling for what it received); `notes` carry the dated reason and what
   moved; a deleted entry's `fixes`, `notes` and `ref` go to the survivor; and
   every other entry's `cause`, `ref` and `related` that named the old one is
-  repointed (grep its name). Split halves link to each other with `related`.
+  repointed (grep its name).
 - `--unledgered` drops per Friction, not per session: a session's other
   Frictions stay listed, so skip one already in the target cluster.
 - This run's own PRs are recorded by the main session. A PR an earlier run

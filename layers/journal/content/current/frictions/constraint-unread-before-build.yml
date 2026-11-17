@@ -1,7 +1,7 @@
 name: constraint-unread-before-build
 surface: safe
 summary: A design or build went against a rule or check that governs it, because the agent leaned on precedent or advice instead of reading the rule, and review found it.
-cause: "An agent specs, designs or builds a page or feature without reading the governing rule or the full ADR first (ADR-0006: a page reads only its own Space; page-checks.ts: no guide links outside the guide; ADR-0003's per-row bounds), relying on a precedent (the Journal), another session's advice or an ADR summary; a reviewer or the check finds it after the work is built. PR #2980 (CLAUDE.md, 2026-11-08) now says to read the full ADR of each decision a plan touches before planning or designing, and the overview bullet applies to explaining the Platform. Signals: 'although ADR-0006 says', 'page-checks.ts forbids', 'leaned on the Journal', 'explained X without reading the overview'."
+cause: "An agent specs, designs or builds a page or feature without reading the governing rule or the full ADR first (ADR-0006: a page reads only its own Space; page-checks.ts: no guide links outside the guide; ADR-0003's per-row bounds), relying on a precedent (the Journal), another session's advice or an ADR summary; a reviewer or the check finds it after the work is built. PR #2980 (CLAUDE.md, 2026-11-08) now says to read the full ADR of each decision a plan touches before planning or designing. Signals: 'although ADR-0006 says', 'page-checks.ts forbids', 'leaned on the Journal'."
 status: open
 related:
   - entry: adr-read-after-edit

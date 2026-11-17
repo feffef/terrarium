@@ -5,7 +5,7 @@ surface: safe
 status: open
 related:
   - entry: glassbox-page-check-edit-loops
-    rule: A page check failed after an edit, or parallel agents collided on Where next lists.
+    rule: A guide page check failed (word cap, link text) after an edit, with no merge conflict.
 notes: |-
   2026-10-21 design: a rule on parallel branches dropped: the five occurrences have different causes, one is already fixed by a cap in the contract, and the cost is one merge step.
 occurrences:

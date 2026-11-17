@@ -35,7 +35,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { isMap, isSeq, parse as parseYaml, parseDocument, type YAMLMap } from 'yaml'
 import { LEDGER_HORIZON_DAYS, ledgerFixState, ledgerWindowStart } from '../../../../layers/journal/app/utils/ledger.ts'
-import { reopenOnBreach } from './ledger-set.ts'
+import { reopenOnBreach, type Related } from './ledger-set.ts'
 import { LEDGER_DIR } from '../../../../scripts/session/extract-frictions.ts'
 import { fail, flagValue, resolveOutputTarget, root, runIfMain } from '../../../../scripts/lib/cli.ts'
 import { tryGit } from '../../../../scripts/lib/git.ts'
@@ -87,7 +87,7 @@ interface Entry {
   status?: string
   ref?: string
   notes?: string
-  related?: { entry: string; rule: string }[]
+  related?: Related[]
   fixes?: Fix[]
   occurrences?: Occurrence[]
 }
@@ -170,7 +170,7 @@ export function summarizeLedger(today: string, cwd = root, check = regressionChe
   })
 }
 
-/** The `see:` column: the clusters a Friction here could belong to instead, each with its rule. */
+/** Beside each candidate, so the survey reads the rule that sends a Friction elsewhere before it appends. */
 function seeAlso(e: Entry): string[] {
   return e.related?.length ? [`see: ${e.related.map((r) => `${r.entry} (${r.rule})`).join('; ')}`] : []
 }

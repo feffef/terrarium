@@ -12,10 +12,10 @@ related:
     rule: The brief relays another agent's unchecked claim.
   - entry: subagent-brief-omits-verdict-ask
     rule: The brief lacks a line CLAUDE.md asks every brief to carry.
-  - entry: visitor-loop-brief-gaps
-    rule: The brief carried a wrong path or value, or an unfilled placeholder.
   - entry: workflow-brief-backticks-break-script
     rule: Unescaped backticks in a workflow script's brief broke the script.
+  - entry: visitor-loop-brief-gaps
+    rule: The visitor brief left out details its visitors needed.
 fixes:
   - pr: 2150
     date: "2026-10-16"

@@ -19,8 +19,7 @@ notes: |-
   2026-10-28 survey: the PR #2412 Prune Trial is no longer in .agents/prune-trials.yml (judged and deleted by the 2026-10-27 prune run), so the entry is no longer on trial; issue #2472 (regression of #2407) is open.
   2026-10-29 survey: issue #2472 closed by PR #2638 (merged 2026-10-28), which recorded as a fix here.
   2026-11-02 survey: set accepted after issue #2748 closed not planned; session_013zxzeSgWhesrfA7R1JBnhE (escalation PR, one rule line) is the newest occurrence.
-  2026-11-17: acceptance was set while its occurrences were nit to minor; this entry's ceiling was backfilled as minor.
-  Reopened: a major occurrence is above the accepted minor.
+  2026-11-17: acceptance was set while its occurrences were nit to minor, so its ceiling was backfilled as minor and a major occurrence reopened it. That occurrence moved to merged-without-gate-or-review; the moderate of 2026-11-09 still sits above the minor ceiling, so the entry stays open until the owner re-accepts it.
 fixes:
   - pr: 1852
     date: "2026-10-12"
