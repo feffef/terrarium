@@ -169,12 +169,13 @@ const OWN_READ_LINE_RE = /^Own-read: `?([0-9a-f]{7,40})`?\s*$/gim
  *  unresolvable session accepts any marker rather than blocking a session whose
  *  environment lacks the id. Only Trusted authors count: the marker is
  *  forgeable by anyone (ADR-0020). The verdict must name `headSha` in a
- *  `Reviewed:` line, so a push after the review needs a fresh one. */
+ *  `Reviewed:` line, or in an `Own-read:` line when `files` add or rename
+ *  nothing, so a push after the review needs a fresh one. */
 export function verdictRefusal(
   bodies: VerdictBody[],
   sessionId: string | null,
   headSha: string,
-  files: PrFile[] = [],
+  files: PrFile[],
 ): string | null {
   const mine = bodies
     .filter(
@@ -201,14 +202,14 @@ export function verdictRefusal(
     const larger = files.filter((f) => f.status === 'added' || f.status === 'renamed' || f.previousFilename)
     if (larger.length === 0) return null
     return (
-      `refused: an Own-read verdict covers only a diff that adds or renames no file, but this PR ` +
+      `refused: an Own-read verdict covers only a diff that adds or renames no file, but this PR adds or renames ` +
       `${larger.map((f) => f.filename).join(', ')}. ${next}`
     )
   }
-  named.push(...ownRead)
-  return named.length === 0
+  const stale = [...named, ...ownRead]
+  return stale.length === 0
     ? `refused: your verdict has no \`Reviewed: <sha>\` line naming the head ${headSha}. ${next}`
-    : `refused: your verdict names ${named.join(', ')}, but the head is ${headSha}. ${next}`
+    : `refused: your verdict names ${stale.join(', ')}, but the head is ${headSha}. ${next}`
 }
 
 /** The single home of the Human-only list (ADR-0004): its frontmatter `paths`.
