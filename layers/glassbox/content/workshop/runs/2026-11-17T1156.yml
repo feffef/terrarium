@@ -5,8 +5,15 @@ focus: "Walkthrough diagrams: check each against its stops, the memory page's
   Five of the ten Walkthroughs hold a diagram. A change meets the gate and A
   change goes live already read beside their stops. A bug report becomes work,
   A friction becomes a fix and From file to browser do not, so they are
-  redrawn."
-changes: []
+  redrawn. Deviations: one opus writer drew all three; a fresh sonnet reader
+  judged them against the stops (no change needed); no claim checker, since
+  labels reuse stop wording and no stop text changed. Cost: unreported (no
+  get_session); estimated context about 150k tokens."
+changes:
+  - walkthroughs/20.a-bug-report-becomes-work | Diagram redrawn: six boxes in a line from the issue to the merge, one dotted branch for a trusted author whose design is settled | the old diagram had a decision, a rejoin and no sweep or claim check, and stop 7's merge was not drawn. Diagram only, so revision and publishedAt are kept
+  - walkthroughs/50.a-friction-becomes-a-fix | Diagram redrawn: six boxes, one dotted branch for a fix that needs a human merge | the old one had two decisions and showed neither the log landing on main nor the helper agents. Diagram only
+  - walkthroughs/90.from-file-to-browser | Diagram redrawn: six boxes in a line, one dotted branch for the browser's own SQLite | the old one had two database shapes and crossing paths. Diagram only
+  - workshop/pages/index | the diagram check lead deleted; the Own-read and watchFor gaps added from Scout | done, and not taught by any page
 pagesRead:
   - walkthroughs/10.asking-for-a-change
   - walkthroughs/15.a-change-meets-the-gate
