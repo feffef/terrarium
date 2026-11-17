@@ -161,6 +161,12 @@ Grade each Skill's importance by the definitions below, after reading its
   made stale. Do the same when the runs show a regular behaviour the text
   doesn't state, or contradict a claim in it. `role` stays ≤ ~50 words and free of PR, issue or
   session ids; the scorecard prints it.
+- **`watchFor`** is the owner's checklist for a Skill; never edit it. When
+  the subagent graded its items, start that Skill's observation note with one
+  verdict per item (held, failed or couldn't tell). A failed item escalates
+  under step 4's usual bar; one an earlier note already records as failed is
+  repeated. Suggest retiring an item, as the Skill's idea, when
+  it held in every run it was graded on across the window.
 - **`observations`** hold a 40-day window of history. Append
   `{ date: <today, UTC>, note }` for a grade or role change, a finding
   (verified or unverified, say which) or an idea, or a clean check (name the

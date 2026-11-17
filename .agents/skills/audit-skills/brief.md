@@ -4,6 +4,12 @@ in it, the log files of its recent runs and what earlier
 audits observed. Keep scratch files in a scratchpad subfolder named for
 yourself.
 
+If your data file has a Watch for section, it is the owner's checklist: grade
+each item first, as held, failed or couldn't tell, with the run ids and quoted
+evidence. Don't let an observation or a run's own claim pass an item; "couldn't
+tell" is a valid verdict when the logs can't show it. Then do the rest of this
+brief as usual.
+
 Read the observations first, as the baseline: what is normal, what is new
 and what has stopped. Then read every run in the Runs section in full; observations never
 replace reading a run.

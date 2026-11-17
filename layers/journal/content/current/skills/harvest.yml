@@ -8,6 +8,11 @@ role: >-
   light, preferring Tenant, content and UI ideas and leaving Frictions to
   `frictions-to-fixes`. Files issues only; fired by a Routine, or invoked by a
   person (disable-model-invocation: true).
+watchFor:
+  - "A run that stops before its Seedling quota or cluster limit logs a `stopped:` reason that check-clusters accepts."
+  - "Every Seedling the run filed exists on GitHub with a well-formed body."
+  - "Existing Seedlings were checked without reading the whole issue list into the run's own context."
+  - "No new Seedling duplicates an open issue or one the owner closed as not planned."
 auditSummary:
   date: "2026-11-17"
   text: "Files well-formed Seedling issues from the logs on a schedule. It keeps stopping before its quota or cluster limit with no reason logged, leaving many learnings unchecked."

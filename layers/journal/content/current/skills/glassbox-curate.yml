@@ -8,6 +8,13 @@ role: >-
   Terrarium relies on has none. Runs three ways: fired by a Routine, started
   by hand and told to act autonomously, or interactive with the owner via
   `grilling`.
+watchFor:
+  - "A run that merges its PR first ran the code-review Skill (or recorded a read of its own diff for a simple change) and the gate, and the PR's `Reviewed:` line says what really ran."
+  - "The Subject was read through the parts files that `orient.ts --subject` writes, or the run says why it was not."
+  - "The cost in the PR body matches what get_session reports, or says it could not be read; an estimate says it is one."
+  - "After a PR opens, the run starts the next full run while the budget has room, whether or not get_session is available, and stops only when the budget is spent, saying whether it was measured or estimated."
+  - "Each scheduled run makes a substantial set of changes (not only a typo or metadata fix), and its run entry names which weak spot or owner direction from the memory page it addresses."
+  - "The page conventions and the governing docs were read before the first draft, not after."
 auditSummary:
   date: "2026-11-17"
   text: "Lands Glass Box pages that pass review. A scheduled run once skipped review and the gate yet merged, and runs stop early when cost cannot be read; Subjects are now read in parts."
