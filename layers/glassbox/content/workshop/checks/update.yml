@@ -111,3 +111,13 @@ pages:
     checked: '2026-11-15'
   - page: verification/20.type-checking
     checked: '2026-11-15'
+  - page: verification/30.content-validation
+    checked: '2026-11-17'
+  - page: verification/40.testing
+    checked: '2026-11-17'
+  - page: verification/50.linting
+    checked: '2026-11-17'
+  - page: verification/60.zod-refinements
+    checked: '2026-11-17'
+  - page: verification/70.schema-evolution
+    checked: '2026-11-17'
