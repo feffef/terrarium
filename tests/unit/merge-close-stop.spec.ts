@@ -13,8 +13,8 @@ const tool = (name: string, input: Record<string, unknown>) => ({
   type: 'assistant',
   message: { content: [{ type: 'tool_use', name, input }] },
 })
-const merge = tool('Bash', { command: 'pnpm tsx scripts/github/merge-pr.ts 12' })
-const merged = { type: 'user', message: { content: [{ type: 'tool_result', content: '{ "merged": true }' }] } }
+const merge = { type: 'assistant', message: { content: [{ type: 'tool_use', id: 'm1', name: 'Bash', input: { command: 'pnpm tsx scripts/github/merge-pr.ts 12' } }] } }
+const merged = { type: 'user', message: { content: [{ type: 'tool_result', tool_use_id: 'm1', content: '{ "merged": true }' }] } }
 const close = tool('Skill', { skill: 'close-session' })
 
 describe('the Stop hook', () => {

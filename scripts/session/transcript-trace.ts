@@ -620,8 +620,8 @@ export function extractTrace(
   const failedIds = failedToolUseIds(records)
   const prSignals: string[] = []
   let mergedWithoutClose = false
-  // merge-pr.ts only merges when its output says so; the result may arrive in a later record.
-  let pendingMerge = false
+  // merge-pr.ts only merges when its own result says so; that may land in a later record.
+  const mergeCmdIds = new Set<string>()
   const rules: string[] = []
   const alwaysLoadedRules: string[] = []
   const loads: RuleLoad[] = []
@@ -651,10 +651,6 @@ export function extractTrace(
     }
     for (const r of [...alwaysLoadedRules, ...rules]) if (!ruleLoadedAt.has(r)) ruleLoadedAt.set(r, i)
 
-    if (pendingMerge && JSON.stringify(rec).includes('merged\\": true')) {
-      mergedWithoutClose = true
-      pendingMerge = false
-    }
     const msg = rec.message as { content?: unknown; model?: string; id?: string; usage?: ApiUsage } | undefined
     if (rec.type === 'assistant' && msg?.model) {
       models[msg.model] = (models[msg.model] ?? 0) + 1
@@ -667,6 +663,10 @@ export function extractTrace(
     for (const block of content) {
       if (!block || typeof block !== 'object') continue
       const b = block as { type?: string; name?: string; input?: Record<string, unknown> }
+      const r = block as { tool_use_id?: string; content?: unknown; is_error?: boolean }
+      if (b.type === 'tool_result' && mergeCmdIds.has(r.tool_use_id ?? '') && !r.is_error && /"merged":\s*true/.test(toolResultText(r.content))) {
+        mergedWithoutClose = true
+      }
       if (b.type !== 'tool_use') continue
       const name = b.name ?? '?'
       const input = b.input ?? {}
@@ -695,7 +695,7 @@ export function extractTrace(
 
       if (name === 'Bash') {
         const cmd = (input.command as string) ?? ''
-        if (cmd.includes('scripts/github/merge-pr.ts')) pendingMerge = true
+        if (cmd.includes('scripts/github/merge-pr.ts')) mergeCmdIds.add((block as { id?: string }).id ?? '')
         if (cmd.includes('git push') || cmd.includes('pr create')) {
           prSignals.push(`(bash) ${cmd.slice(0, 60)}`)
         }
