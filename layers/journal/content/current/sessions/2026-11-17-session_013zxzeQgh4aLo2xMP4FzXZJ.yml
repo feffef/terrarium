@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_013zxzeQgh4aLo2xMP4FzXZJ
 startedAt: 2026-11-17T08:21:33Z
-endedAt: 2026-11-17T08:43:37Z
+endedAt: 2026-11-17T08:44:17Z
 kind: delegated
 goal: Turn recent session frictions into fixes
 status: in-review
-outcome: Ledger PR and fix PRs 3409 and 3410 open, 3408 merged, fix A being reworked
+outcome: Fix PRs 3408 and 3409 merged, ledger PR 3410 open, fix A being reworked
 summary: "Ran the frictions-to-fixes Skill on the owner's /frictions-to-fixes invocation (the one human ask; every step after is agent-initiated under that Skill). A survey subagent read the 2026-11-15 to 2026-11-17 window (36 unledgered Frictions), appended 31 occurrences, opened two entries and committed the ledger. I picked eight never-fixed or recurring entries, and a design agent recommended dispatching three fixes, filing one issue and changing nothing for four. I filed issue 3406 (guard deny message wording, Human-only) and issue 3407 (regression of prepush-gate-review-skipped, moderate above the owner's accepted ceiling), then committed the decisions to the ledger and pushed. Built by Sonnet agents in worktrees: fix C (two brief edits, PR 3408 opened, own-read verdict posted, merged via merge-pr.ts once CI was green) and fix B (--skip-held; code-review found skip lines printed before the all-or-nothing check, so the agent was resumed to fix it); fix A (Stop hook counts a merge only on merged:true) is still building. Still open: the scoped gate on the ledger branch (running), the ledger PR, reviewing and landing B and A, the closing ledger PR. A design agent suggested moving one occurrence out of transform-untested-on-real-data; I did it and had to correct a note."
 prs:
   - "3408"
@@ -84,13 +84,13 @@ frictions:
   - description: "Linked worktree(s) left with uncommitted or unpushed work at close: /home/user/terrarium/.claude/worktrees/agent-a4ec033b93a4d7e66"
     solution: Push each, or remove it if its work is meant to be dropped.
     severity: minor
-durationSec: 1324
+durationSec: 1364
 models:
-  claude-sonnet-5-5: 148
+  claude-sonnet-5-5: 160
 toolCounts:
-  Skill: 4
+  Skill: 6
   Read: 2
-  Bash: 48
+  Bash: 50
   Agent: 10
   ToolSearch: 1
   mcp__github__issue_write: 2
@@ -98,7 +98,7 @@ toolCounts:
   mcp__github__create_pull_request: 3
   mcp__claude-code-remote__subscribe_pr_activity: 3
   mcp__github__add_issue_comment: 3
-  ReadNotifications: 2
+  ReadNotifications: 3
   mcp__github__update_issue_comment: 1
 filesEdited:
   - .agents/skills/frictions-to-fixes/scripts/print-ledger-occurrence.ts
@@ -525,62 +525,62 @@ subagents:
     durationSec: 319
     toolCalls: 36
     modelCalls: 32
-    tokenShare: 16.6
+    tokenShare: 15.9
   - type: general-purpose
     task: Design fixes for picks
     durationSec: 197
     toolCalls: 32
     modelCalls: 28
-    tokenShare: 10.3
+    tokenShare: 9.9
   - type: general-purpose
     task: Build fix A (stop hook merge)
     model: sonnet
-    durationSec: 691
-    toolCalls: 31
-    modelCalls: 26
-    tokenShare: 9.5
+    durationSec: 719
+    toolCalls: 32
+    modelCalls: 27
+    tokenShare: 9.3
   - type: general-purpose
     task: Build fix B (--skip-held)
     model: sonnet
     durationSec: 524
     toolCalls: 32
     modelCalls: 23
-    tokenShare: 7.5
+    tokenShare: 7.2
   - type: general-purpose
     task: Build fix C (brief edits)
     model: sonnet
     durationSec: 144
     toolCalls: 13
     modelCalls: 11
-    tokenShare: 2.8
+    tokenShare: 2.6
   - type: general-purpose
     task: "Review B: standards axis"
     model: sonnet
     durationSec: 18
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 2.7
+    tokenShare: 2.5
   - type: general-purpose
     task: "Review B: spec axis"
     model: sonnet
     durationSec: 20
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 2.7
+    tokenShare: 2.6
   - type: general-purpose
     task: "Review A: standards axis"
     model: sonnet
     durationSec: 25
     toolCalls: 6
     modelCalls: 6
-    tokenShare: 3.3
+    tokenShare: 3.2
   - type: general-purpose
     task: "Review A: spec axis"
     model: sonnet
     durationSec: 33
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 3
+    tokenShare: 2.9
 gitBranch: ccr-a6b576f8-d8rvvx
 entrypoint: remote_mobile
 cliVersion: 2.1.326
