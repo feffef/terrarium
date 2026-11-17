@@ -51,18 +51,14 @@ in a brief as `.agents/skills/...`.
 
 ## How a run goes
 
-**Know the guide before you change it.** Glass Box is one textbook, not a
-set of separate pages. A reader meets a concept once, in one Lesson, and
-follows Where next and Walkthroughs to the rest. An edit made without knowing
-the other pages breaks that: it repeats what a sibling page already teaches,
-contradicts it, adds a page that exists under another title, or cuts the only
-place a fact was taught. Runs that read only the page they changed repeated a
-sibling page (#2943) and cut the only place a fact was taught (#2927). So
-every run reads at two depths before it edits: every page's entry in the
-guide index, to know what the whole guide teaches, and every page of its
-Subject in full, to know exactly what its neighbours say. The first depth is
-only as good as each page's `teaches` and bold lead-ins (Fix says how a run
-keeps them so).
+**Read before you edit.** Glass Box is one textbook: a reader meets a concept
+once, in one Lesson. An edit that doesn't know the other pages repeats or contradicts a
+sibling, or duplicates it under another title (#2943), or cuts the only place a fact was taught (#2927). Before you
+edit, read two things in full: the guide index (every page's entry, so you know
+what the whole guide teaches) and every page of your Subject (so you know
+exactly what its neighbours say). Orient and Read below say how. The index is
+only as good as each page's `teaches` and bold lead-ins; Fix says how a run
+keeps them.
 
 - **Orient.** This is the orientation step: run
   `pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts`, with no flag
@@ -70,8 +66,7 @@ keeps them so).
   output whole, never through `head`; if the tool saves it to a file, read that
   file whole. It gives where to write the run entry, open PRs, memory, recent
   runs and warnings, and names the guide index files it wrote: read each
-  whole too, one Read per file. The index is the whole-guide depth above; its first
-  lines say how to read an entry. Leave alone every page an open PR touches. While a
+  whole too, one Read per file. Its first lines say how to read an entry. Leave alone every page an open PR touches. While a
   `glassbox-update` PR is open, wait for it: subscribe to its activity, end
   your turn, and orient again once it merges or closes. An autonomous run stops
   without a PR once that PR has been open 20 hours; an interactive run keeps
@@ -92,7 +87,7 @@ keeps them so).
   Before you take any lead from the memory page, check it still stands and that
   no earlier step (settled titles, a pending Subject move) should come first;
   grep the guide for its key terms.
-- **Read.** The full depth above. Run `orient.ts --subject <folder>`; it
+- **Read.** Run `orient.ts --subject <folder>`; it
   writes the Subject's pages to part files and names them: read each whole, one
   Read per file. It ends with the `pagesRead` lines to paste. Also read in
   full every page outside the Subject that a change would edit, link or
