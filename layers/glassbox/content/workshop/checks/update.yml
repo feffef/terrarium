@@ -121,3 +121,13 @@ pages:
     checked: '2026-11-17'
   - page: verification/70.schema-evolution
     checked: '2026-11-17'
+  - page: verification/80.headless-browser-checks
+    checked: '2026-11-17'
+  - page: walkthroughs/10.asking-for-a-change
+    checked: '2026-11-17'
+  - page: walkthroughs/15.a-change-meets-the-gate
+    checked: '2026-11-17'
+  - page: walkthroughs/20.a-bug-report-becomes-work
+    checked: '2026-11-17'
+  - page: walkthroughs/30.planning-a-big-change
+    checked: '2026-11-17'
