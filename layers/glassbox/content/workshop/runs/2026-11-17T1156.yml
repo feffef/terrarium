@@ -6,14 +6,15 @@ focus: "Walkthrough diagrams: check each against its stops, the memory page's
   change goes live already read beside their stops. A bug report becomes work,
   A friction becomes a fix and From file to browser do not, so they are
   redrawn. Deviations: one opus writer drew all three; a fresh sonnet reader
-  judged them against the stops (no change needed); no claim checker, since
-  labels reuse stop wording and no stop text changed. Cost: unreported (no
+  judged them against the stops (no change needed); no claim checker (labels
+  reuse stop wording, no stop text changed; code-review's Spec reviewer read
+  the labels against the stops, and its findings were fixed). Cost: unreported (no
   get_session); estimated context about 150k tokens."
 changes:
-  - walkthroughs/20.a-bug-report-becomes-work | Diagram redrawn: six boxes in a line from the issue to the merge, one dotted branch for a trusted author whose design is settled | the old diagram had a decision, a rejoin and no sweep or claim check, and stop 7's merge was not drawn. Diagram only, so revision and publishedAt are kept
-  - walkthroughs/50.a-friction-becomes-a-fix | Diagram redrawn: six boxes, one dotted branch for a fix that needs a human merge | the old one had two decisions and showed neither the log landing on main nor the helper agents. Diagram only
-  - walkthroughs/90.from-file-to-browser | Diagram redrawn: six boxes in a line, one dotted branch for the browser's own SQLite | the old one had two database shapes and crossing paths. Diagram only
-  - workshop/pages/index | the diagram check lead deleted; the Own-read and watchFor gaps added from Scout | done, and not taught by any page
+  - "walkthroughs/20.a-bug-report-becomes-work | The diagram is redrawn as boxes in a line from the issue to the merge, with one dotted branch for a trusted author whose design is settled | the old diagram had a decision and a rejoin, and drew neither the sweep nor the claim check. Diagram only, so revision and publishedAt are kept"
+  - "walkthroughs/50.a-friction-becomes-a-fix | The diagram is redrawn as boxes in a line, with one dotted branch for a fix that needs a human merge | the old one had two decisions and drew neither the log landing on main nor the helper agents. Diagram only"
+  - "walkthroughs/90.from-file-to-browser | The diagram is redrawn as boxes in a line, with one dotted branch for the browser's own SQLite; the render and the first query's restore share one box | the old one had two database shapes and crossing paths, and the stops put the render before the restore. Diagram only"
+  - "workshop/pages/index | The diagram check lead is deleted; the Own-read and watchFor gaps from Scout are added | the lead is done; no page teaches either gap"
 pagesRead:
   - walkthroughs/10.asking-for-a-change
   - walkthroughs/15.a-change-meets-the-gate
