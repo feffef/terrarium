@@ -9,21 +9,9 @@ role: >-
   against the PRs' diffs, and merges its own gated PR on green. Scheduled; run
   by hand to catch up.
 auditSummary:
-  date: "2026-11-16"
-  text: "Produces a daily digest that lands fact-checked and merged. The fact-check step is repeatedly blocked on its first attempt because the dispatch guide is not named, wasting a call."
+  date: "2026-11-17"
+  text: "Produces a daily digest that lands fact-checked and merged. The fact-check step is often blocked on its first attempt because the dispatch guide is not named, and cadence words slip past the fact-checker."
 observations:
-  - date: "2026-10-07"
-    note: >-
-      Re-checked (audit-skills behaviour check), 7 usedIn sessions; 6
-      already covered by prior checks, re-confirmed consistent. Newest,
-      previously-unchecked: session_01TY4CnbUTCjYqaKpHAHKHku (PR #1646, the
-      2026-10-06 Digest) verified end-to-end — retention sweep moved
-      exactly 1 digest + 13 session logs matching `RETAIN_DATES = 7`, a
-      genuine fact-check subagent dispatch (23 claims, none wrong), and 3
-      spot-checked factual claims (PRs #1632/#1633/#1642) all matched live
-      PR bodies exactly. Only `digest.ts` change in the window is the
-      already-noted comment-only 2026-10-04 fix. No new post-merge
-      correction beyond the already-known #1478 case. Grade unchanged.
   - date: "2026-10-08"
     note: >-
       Re-checked (audit-skills behaviour check), 7 usedIn sessions. Newest,
@@ -290,3 +278,5 @@ observations:
       Behaviour check, 7 runs, 7 PRs merged. Cadence words still on main in digests 2026-11-09 and 2026-11-11 (the latter sourced only to a PR title); #3251 landed 11-13, so only the 11-14 and 11-15 runs ran under it (#3228 closed). Unverified for 2026-11-14. Grade unchanged.
   - date: "2026-11-16"
     note: "Behaviour check, 7 runs, 7 PRs merged (#3014 to #3359), 7 consecutive digests on main, code-review and fact-check in every run. Repeat: dispatch-read guard blocked first fact-check Agent call in 4 of 7 (11-11, 11-12, 11-14, 11-16); step 3 does not name dispatch-subagents. Cadence-word rule landed 11-13 (c2abcf51f), 2 runs under it. Idea: name the Skill in step 3. Not issued. Grade unchanged."
+  - date: "2026-11-17"
+    note: "Behaviour check, runs session_013zxzeQeBzhDzmSvD9thT22, session_013zxzeQwDvvHbis5TK1nUw5, session_013zxzeSgpoaGQ1bLrtX4DkU: PRs #3324, #3359, #3394 merged, Digests on main, no revert. Dispatch guide blocked the first Agent call in 2 of 3. Cadence word reached code-review in the last run. Grade unchanged."

@@ -8,22 +8,9 @@ role: >-
   and the post-dispatch check that no finished subagent work is stranded. Every
   rule in it was paid for by a session that lost work.
 auditSummary:
-  date: "2026-11-16"
-  text: "Subagent work lands and nothing is stranded in recent runs. It is skipped in one respect: replies meant to outlive the session are sometimes retyped instead of saved verbatim."
+  date: "2026-11-17"
+  text: "Subagent work lands and nothing is stranded in recent runs. Replies meant to outlive the session are sometimes retyped instead of saved verbatim, and resuming many finished agents for a retro is costly."
 observations:
-  - date: "2026-10-07"
-    note: >-
-      Re-checked (audit-skills behaviour check), 10 newest usedIn sessions:
-      no stranded work, no merge-pr.ts dispatched to a subagent, no new
-      branch/worktree collision; #1480 (cd-into-worktree) has still not
-      recurred a third time. Confirmed PR #1620's shared-branch integration
-      rule (the #1585 fix) is still present in current SKILL.md, not
-      reverted. Screened all 73 `window_not_used` sessions by goal, opened
-      ~38 (every visitor-loop/audit-docs/audit-skills run plus other
-      multi-subagent-shaped goals): every dispatch found was strictly
-      read-only, within this Skill's own carve-out — no new missed
-      invocation beyond the already-tracked #1586. Both #1480 and #1586
-      remain open, unaddressed. Grade unchanged.
   - date: "2026-10-08"
     note: >-
       Re-checked (audit-skills behaviour check), 10 usedIn sessions: no
@@ -365,3 +352,5 @@ observations:
       Behaviour check, 10 runs, 15 PRs merged, 51 non-users ruled out. Repeat: leads accepted subagent claims unchecked (session_013zxzeT5pQrVtuNLAzUQRaP, session_013zxzeT6JgNuWiqXaqyMFpF, session_013zxzeQeBzhDzmSvD9thT22, session_013zxzePBHiX6mZNUjPTWpWc). Unverified: whether the survey subagent in session_013zxzeQDRyvj3Vc8GUWHvBv used a worktree. Grade unchanged.
   - date: "2026-11-16"
     note: "Behaviour check, 10 runs, PRs merged, no stranded worktree. Repeat: session_013zxzeQE5BDH58h5e21zafo saved reviewer replies hand-condensed instead of save-handback.ts (same as audit-docs). Minor: session_013zxzePH9gQTPAHjR7vCj71 brief told agents to run no command yet asked label checks. 36 non-users with dispatches all read the SKILL.md. Idea: flag pool files not from save-handback. Not issued. Grade unchanged."
+  - date: "2026-11-17"
+    note: "Behaviour check, 28 runs, 46 PRs on main, no stranded work, no revert. Repeats: save-handback skipped (session_013zxzeQE5BDH58h5e21zafo, session_013zxzeQDRyvj3Vc8GUWHvBv); unchecked subagent claims relayed (session_013zxzeT5pQrVtuNLAzUQRaP). Cost: session_013zxzeTChey8pdC2fuTTH7i resumed 20 agents (about 1.9M tokens). §7 not yet exercised. Grade unchanged."

@@ -9,19 +9,9 @@ role: >-
   impl agents build the rest, and merges those PRs itself, escalating only
   high-risk ones. Use when frictions pile up.
 auditSummary:
-  date: "2026-11-16"
-  text: "Turns recurring frictions into issues and fixes on schedule and lands its ledger PRs. It needs judgement to skip entries the owner already declined, which the text does not say."
+  date: "2026-11-17"
+  text: "Turns recurring frictions into issues and fixes on schedule and lands its ledger PRs. Its simple-change test cannot pass for a ledger diff, so every run falls back to reading the diffstat."
 observations:
-  - date: "2026-10-07"
-    note: >-
-      Re-checked (audit-skills behaviour check), 8 usedIn sessions; 2
-      freshly end-to-end verified: PR #1630 (2026-10-06, 4 files, doc-only
-      grouped fix) and PR #1500 (2026-09-30, 2 files). Both match their
-      session logs exactly, with 3 of the specific claimed fixes confirmed
-      present in current code. Issue #1499 (worktree-isolation guard
-      regression, correctly escalated rather than silently re-fixed)
-      re-confirmed still open. No reverts of any landed fix in the 2-week
-      git-log sweep. Grade unchanged.
   - date: "2026-10-08"
     note: >-
       NEW silent failure, escalated as issue #1676 (audit-skills behaviour
@@ -302,3 +292,5 @@ observations:
       Behaviour check, 9 runs, 16 PRs merged. Repeat, filed #3326: §2 top-three rule overridden by judgement (session_013zxzeSPxncNsUJXwnc2DvG, session_013zxzeNdAgdKF5tpWTQLowx, session_013zxzeQDRyvj3Vc8GUWHvBv) and §5.3 tracked with no ref. §5.4 ledger PRs always exceed the simple-change bar; runs diverge (#3300 diffstat only, #3237 two reviewers). Grade unchanged.
   - date: "2026-11-16"
     note: "Behaviour check, 8 runs, PRs merged (#2998 to #3330), no revert, top-three rule followed 11-13 to 11-15. Idea: exclude entries whose regression issue the owner closed not planned (#2852, #2876, #2997, #3047); the override by judgement is noted 11-04, 11-08, 11-12, 11-14. Not issued. Grade unchanged."
+  - date: "2026-11-17"
+    note: "Behaviour check, runs session_013zxzeQDRyvj3Vc8GUWHvBv, session_013zxzeRLqFejsZTowNzt1Lt, session_013zxzeSyRCdzfotAbmBuiPp: PRs #3300, #3328 to #3330, #3365 to #3367 merged, issues acted on, no revert. Verified repeat 3 of 3: §5.4 simple-change mismatch, filed #3397. Grade unchanged."
