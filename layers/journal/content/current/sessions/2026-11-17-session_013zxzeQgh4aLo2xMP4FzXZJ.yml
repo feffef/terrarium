@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQgh4aLo2xMP4FzXZJ
 startedAt: 2026-11-17T08:21:33Z
-endedAt: 2026-11-17T08:39:59Z
+endedAt: 2026-11-17T08:43:15Z
 kind: delegated
 goal: Turn recent session frictions into fixes
 status: in-review
-outcome: Ledger updated, 2 issues filed, 3 fixes built; PR 3408 open, others still in progress
-summary: "Ran the frictions-to-fixes Skill on the owner's /frictions-to-fixes invocation (the one human ask; every step after is agent-initiated under that Skill). A survey subagent read the 2026-11-15 to 2026-11-17 window (36 unledgered Frictions), appended 31 occurrences, opened two entries and committed the ledger. I picked eight never-fixed or recurring entries, and a design agent recommended dispatching three fixes, filing one issue and changing nothing for four. I filed issue 3406 (guard deny message wording, Human-only) and issue 3407 (regression of prepush-gate-review-skipped, moderate above the owner's accepted ceiling), then committed the decisions to the ledger and pushed. Built by Sonnet agents in worktrees: fix C (two brief edits, PR 3408 opened, own-read verdict posted) and fix B (--skip-held; code-review found skip lines printed before the all-or-nothing check, so the agent was resumed to fix it); fix A (Stop hook counts a merge only on merged:true) is still building. Still open: scoped gate on the ledger branch, the ledger PR, reviewing and landing B and A, the closing ledger PR. A design agent suggested moving one occurrence out of transform-untested-on-real-data; I did it and had to correct a note."
+outcome: Ledger updated, 2 issues filed, PR 3408 merged; two more fixes and the ledger PR still in progress
+summary: "Ran the frictions-to-fixes Skill on the owner's /frictions-to-fixes invocation (the one human ask; every step after is agent-initiated under that Skill). A survey subagent read the 2026-11-15 to 2026-11-17 window (36 unledgered Frictions), appended 31 occurrences, opened two entries and committed the ledger. I picked eight never-fixed or recurring entries, and a design agent recommended dispatching three fixes, filing one issue and changing nothing for four. I filed issue 3406 (guard deny message wording, Human-only) and issue 3407 (regression of prepush-gate-review-skipped, moderate above the owner's accepted ceiling), then committed the decisions to the ledger and pushed. Built by Sonnet agents in worktrees: fix C (two brief edits, PR 3408 opened, own-read verdict posted, merged via merge-pr.ts once CI was green) and fix B (--skip-held; code-review found skip lines printed before the all-or-nothing check, so the agent was resumed to fix it); fix A (Stop hook counts a merge only on merged:true) is still building. Still open: the scoped gate on the ledger branch (running), the ledger PR, reviewing and landing B and A, the closing ledger PR. A design agent suggested moving one occurrence out of transform-untested-on-real-data; I did it and had to correct a note."
 prs:
   - "3408"
 docsRead:
@@ -73,24 +73,29 @@ frictions:
   - description: "Linked worktree(s) left with uncommitted or unpushed work at close: /home/user/terrarium/.claude/worktrees/agent-a0ac2eb7e0ee5c6f9"
     solution: Push each, or remove it if its work is meant to be dropped.
     severity: minor
-durationSec: 1106
+durationSec: 1302
 models:
-  claude-sonnet-5-5: 108
+  claude-sonnet-5-5: 143
 toolCounts:
   Skill: 4
   Read: 2
-  Bash: 38
-  Agent: 8
+  Bash: 47
+  Agent: 10
   ToolSearch: 1
   mcp__github__issue_write: 2
-  SendMessage: 1
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
-  mcp__github__add_issue_comment: 1
+  SendMessage: 2
+  mcp__github__create_pull_request: 3
+  mcp__claude-code-remote__subscribe_pr_activity: 3
+  mcp__github__add_issue_comment: 3
+  ReadNotifications: 1
+  mcp__github__update_issue_comment: 1
 filesEdited:
   - .agents/skills/frictions-to-fixes/scripts/print-ledger-occurrence.ts
   - .agents/skills/frictions-to-fixes/tests/unit/print-ledger-occurrence.spec.ts
   - .agents/skills/frictions-to-fixes/survey-brief.md
+  - scripts/session/transcript-trace.ts
+  - tests/unit/log-session.spec.ts
+  - tests/unit/merge-close-stop.spec.ts
   - .agents/skills/frictions-to-fixes/design-brief.md
   - layers/journal/content/current/frictions/audit-skills-output-overflow.yml
   - layers/journal/content/current/frictions/frictions-to-fixes-briefs-mismatch.yml
@@ -458,6 +463,48 @@ ruleUse:
         value: unrelated
       - path: .claude/rules/adr-0017.md
         value: unrelated
+  - by: general-purpose
+    subagent: 8
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 9
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
 subagents:
   - type: general-purpose
     task: Survey frictions ledger
@@ -467,48 +514,62 @@ subagents:
     durationSec: 319
     toolCalls: 36
     modelCalls: 32
-    tokenShare: 21.7
+    tokenShare: 17.1
   - type: general-purpose
     task: Design fixes for picks
     durationSec: 197
     toolCalls: 32
     modelCalls: 28
-    tokenShare: 13.5
+    tokenShare: 10.6
   - type: general-purpose
     task: Build fix A (stop hook merge)
     model: sonnet
-    durationSec: 206
-    toolCalls: 23
-    modelCalls: 18
-    tokenShare: 8.1
+    durationSec: 671
+    toolCalls: 28
+    modelCalls: 23
+    tokenShare: 8.9
   - type: general-purpose
     task: Build fix B (--skip-held)
     model: sonnet
-    durationSec: 330
-    toolCalls: 29
-    modelCalls: 20
-    tokenShare: 8.9
+    durationSec: 524
+    toolCalls: 32
+    modelCalls: 23
+    tokenShare: 7.8
   - type: general-purpose
     task: Build fix C (brief edits)
     model: sonnet
     durationSec: 144
     toolCalls: 13
     modelCalls: 11
-    tokenShare: 3.6
+    tokenShare: 2.8
   - type: general-purpose
     task: "Review B: standards axis"
     model: sonnet
     durationSec: 18
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 3.5
+    tokenShare: 2.7
   - type: general-purpose
     task: "Review B: spec axis"
     model: sonnet
     durationSec: 20
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 3.5
+    tokenShare: 2.8
+  - type: general-purpose
+    task: "Review A: standards axis"
+    model: sonnet
+    durationSec: 25
+    toolCalls: 6
+    modelCalls: 6
+    tokenShare: 3.4
+  - type: general-purpose
+    task: "Review A: spec axis"
+    model: sonnet
+    durationSec: 33
+    toolCalls: 4
+    modelCalls: 4
+    tokenShare: 3.1
 gitBranch: ccr-a6b576f8-d8rvvx
 entrypoint: remote_mobile
 cliVersion: 2.1.326
