@@ -311,27 +311,33 @@ describe('retro key', () => {
 
 describe('checkClusters()', () => {
   const ns = new Map([[1, 'a'], [2, 'b'], [3, 'b']])
+  const check = (text: string, sessions: Map<number, string>) => checkClusters(`stopped: quota filled\n${text}`, sessions)
   const open = (label: string, extra = '') =>
     `## c\nlabel: ${label}\nentries: 1, 2\nsessions: 2\nunbuilt: read x.ts\nunfiled: no match, title filter\nunrejected: none\nledger: none\nunacted: prs empty\n${extra}verdict: open\n`
 
   it('accepts open product and workflow clusters, and a drop naming its failed test', () => {
     const text = open('product') + open('workflow', 'simplifying: retires y\n') + '## d\nlabel: workflow\nentries: 3\nsessions: 1\nledger: entry z\nverdict: dropped ledger\n'
-    expect(checkClusters(text, ns)).toEqual([])
+    expect(check(text, ns)).toEqual([])
   })
 
   it('refuses a missing field, a drop with no test, an unknown entry and an empty record', () => {
-    expect(checkClusters(open('workflow'), ns)).toEqual(['cluster 1: no "simplifying:" evidence'])
-    expect(checkClusters('## d\nlabel: product\nentries: 1\nsessions: 1\nverdict: dropped\n', ns).join()).toContain('verdict must be')
-    expect(checkClusters(open('product').replace('1, 2', '9'), ns).join()).toContain('entry numbers')
-    expect(checkClusters(open('product').replace('sessions: 2', 'sessions: 5'), ns).join()).toContain('distinct sessions')
-    expect(checkClusters('nothing', ns)).toEqual(['no "## " cluster blocks'])
+    expect(check(open('workflow'), ns)).toEqual(['cluster 1: no "simplifying:" evidence'])
+    expect(check('## d\nlabel: product\nentries: 1\nsessions: 1\nverdict: dropped\n', ns).join()).toContain('verdict must be')
+    expect(check(open('product').replace('1, 2', '9'), ns).join()).toContain('entry numbers')
+    expect(check(open('product').replace('sessions: 2', 'sessions: 5'), ns).join()).toContain('distinct sessions')
+    expect(check('nothing', ns)).toEqual(['no "## " cluster blocks'])
   })
 
   it('refuses a simplifying drop of a product cluster', () => {
-    expect(checkClusters('## d\nlabel: product\nentries: 1\nsessions: 1\nsimplifying: s\nverdict: dropped simplifying\n', ns).join()).toContain('for workflow clusters')
+    expect(check('## d\nlabel: product\nentries: 1\nsessions: 1\nsimplifying: s\nverdict: dropped simplifying\n', ns).join()).toContain('for workflow clusters')
   })
 
   it('refuses a product cluster after a workflow one', () => {
-    expect(checkClusters(open('workflow', 'simplifying: r\n') + open('product'), ns).join()).toContain('check every product cluster first')
+    expect(check(open('workflow', 'simplifying: r\n') + open('product'), ns).join()).toContain('check every product cluster first')
+  })
+
+  it('refuses a record with no stopped reason before the first cluster', () => {
+    expect(checkClusters(open('product'), ns)).toEqual(['no "stopped:" reason line before the first cluster'])
+    expect(checkClusters(`stopped: 30 checked\n${open('product')}`, ns)).toEqual([])
   })
 })

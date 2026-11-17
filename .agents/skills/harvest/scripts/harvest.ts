@@ -216,14 +216,17 @@ export function summaryOf(yamlText: string): string {
 /** The tests of step 3, and the fields a cluster record carries. */
 const TESTS = ['unbuilt', 'unfiled', 'unrejected', 'ledger', 'simplifying', 'unacted'] as const
 
-/** What is wrong with the per-cluster record (empty: fine). A cluster is a `## ` block of
+/** What is wrong with the per-cluster record (empty: fine). It opens with a `stopped:`
+ *  line saying why clustering ended. A cluster is a `## ` block of
  *  `field: value` lines. An open one holds evidence for every test (`simplifying` only
  *  when workflow); a dropped one holds the evidence of the test it failed. Product
  *  clusters come before the first workflow one. */
 export function checkClusters(text: string, sessionOf: Map<number, string>): string[] {
   const problems: string[] = []
-  const blocks = text.split(/^## /m).slice(1)
+  const [preamble, ...blocks] = text.split(/^## /m)
   if (!blocks.length) return ['no "## " cluster blocks']
+  // Without a recorded reason a run can quit clustering early unnoticed (#3396).
+  if (!/^stopped:[ \t]*\S/m.test(preamble!)) problems.push('no "stopped:" reason line before the first cluster')
   let workflowSeen = false
   blocks.forEach((block, i) => {
     const f = new Map<string, string>()
