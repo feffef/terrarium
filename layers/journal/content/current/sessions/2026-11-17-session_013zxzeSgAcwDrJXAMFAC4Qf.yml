@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSgAcwDrJXAMFAC4Qf
 startedAt: 2026-11-17T06:40:22Z
-endedAt: 2026-11-17T08:16:45Z
+endedAt: 2026-11-17T08:18:58Z
 kind: interactive
 goal: Stop accepted Friction Ledger clusters from hiding worse occurrences
-status: in-review
-outcome: Severity ceiling, related clusters and survey rules built, reviewed twice and gated; the PR is open and waits for a human merge
-summary: "The owner reported that a major no-gate merge sat in a Friction Ledger cluster still marked accepted, and asked for acceptance to be bound to a severity or for a new cluster. Human-instructed: the acceptedSeverity design (their answers to my questions), splitting the major into merged-without-gate-or-review, leaving prepush-gate-review-skipped open, a symmetric related field with a rule per pair shown beside each candidate, migrating the prose relations, reviewing candidate pairs and the clusters that had no relation, the survey-brief rules (new linked cluster for a partial moderate-or-worse match, severity as a hint, split on a clearly different cause or harm, extra care after a split or merge), the Ledger page ceiling text, dropping see: from --candidates, and two Opus code reviews. The owner opened the PR themselves after I asked. Agent-initiated: which pairs to link and the wording of every rule, the one join (simplify-cut-drops-needed-instruction into rewrite-pass-scope-drift), moving misfiled occurrences, removing prose pointers to clusters that no longer exist, the dated breach note, and the fixes for review findings; the owner approved the lists in aggregate, not pair by pair. What surprised me: the first two rounds of related rules still held inverted or vague rules and misplaced occurrences that only the Opus reviewers found, and gate runs on an uncommitted tree kept blocking my own commits and edits. Open: PR 3405 needs a human merge because tenant.config.ts is Human-only; a Glass Box guide page still describes accepted without a ceiling and belongs to glassbox-update."
+status: completed
+outcome: "The owner merged the PR: accepted clusters carry a severity ceiling, related clusters carry rules for telling them apart, and the survey brief uses both"
+summary: "The owner reported that a major no-gate merge sat in a Friction Ledger cluster still marked accepted, and asked for acceptance to be bound to a severity or for a new cluster. Human-instructed: the acceptedSeverity design (their answers to my questions), splitting the major into merged-without-gate-or-review, leaving prepush-gate-review-skipped open, a symmetric related field with a rule per pair shown beside each candidate, migrating the prose relations, reviewing candidate pairs and the clusters that had no relation, the survey-brief rules (new linked cluster for a partial moderate-or-worse match, severity as a hint, split on a clearly different cause or harm, extra care after a split or merge), the Ledger page ceiling text, dropping see: from --candidates, and two Opus code reviews. The owner opened the PR themselves after I asked and merged it at 08:18 UTC after CI was green on the reviewed head; tenant.config.ts is Human-only, so the merge was theirs to make. Agent-initiated: which pairs to link and the wording of every rule, the one join (simplify-cut-drops-needed-instruction into rewrite-pass-scope-drift), moving misfiled occurrences, removing prose pointers to clusters that no longer exist, the dated breach note, and the fixes for review findings; the owner approved the lists in aggregate, not pair by pair. What surprised me: the first two rounds of related rules still held inverted or vague rules and misplaced occurrences that only the Opus reviewers found, and gate runs on an uncommitted tree kept blocking my own commits and edits. Still open: a Glass Box guide page describes accepted without a ceiling and belongs to glassbox-update, and prepush-gate-review-skipped stays open until the owner re-accepts it above its minor ceiling."
 prs:
   - "3405"
 docsRead:
@@ -115,25 +115,29 @@ frictions:
   - description: Checked the ADR-0017 commit trailer on some of the commits I made but not on every one, though the rule says to check that it landed each time.
     solution: Print git log -1 for the trailer after each commit, or have the hook report a missing one.
     severity: nit
-durationSec: 5783
+  - description: "Added the see: column to both survey outputs without checking which survey step reads which; the Spec review and the owner's answer then removed it from --candidates."
+    solution: Read which step uses each output before adding a column to it, and add it only where the matching happens.
+    severity: nit
+durationSec: 5916
 models:
-  claude-sonnet-5-5: 436
+  claude-sonnet-5-5: 464
 toolCounts:
   Grep: 7
   Glob: 1
   Read: 31
   AskUserQuestion: 3
-  Bash: 108
+  Bash: 111
   Edit: 35
-  Write: 5
+  Write: 6
   Skill: 3
   Agent: 4
   SendUserFile: 1
   ToolSearch: 2
   mcp__github__list_pull_requests: 1
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 7
   mcp__claude-code-remote__subscribe_pr_activity: 1
   mcp__github__update_pull_request: 1
+  ReadNotifications: 4
 filesEdited:
   - layers/journal/tenant.config.ts
   - layers/journal/app/utils/ledger.ts
@@ -723,25 +727,25 @@ subagents:
     durationSec: 101
     toolCalls: 15
     modelCalls: 14
-    tokenShare: 4.1
+    tokenShare: 3.7
   - task: Spec review of branch diff
     model: opus
     durationSec: 166
     toolCalls: 27
     modelCalls: 21
-    tokenShare: 5.5
+    tokenShare: 5
   - task: Second standards review of branch
     model: opus
     durationSec: 90
     toolCalls: 19
     modelCalls: 18
-    tokenShare: 5.1
+    tokenShare: 4.6
   - task: Second spec review of branch
     model: opus
     durationSec: 156
     toolCalls: 28
     modelCalls: 22
-    tokenShare: 5.6
+    tokenShare: 5.1
 gitBranch: ccr-2d6fda00-maifow
 entrypoint: remote_mobile
 cliVersion: 2.1.326
