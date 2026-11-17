@@ -1,6 +1,6 @@
 name: glassbox-curate
 category: platform-operation
-importance: specialist
+importance: routine
 gist: Makes the Glass Box guide easier to learn from, then fills gaps.
 role: >-
   One focused curation pass over the Glass Box guide per run, landed as one
@@ -9,8 +9,8 @@ role: >-
   by hand and told to act autonomously, or interactive with the owner via
   `grilling`.
 auditSummary:
-  date: "2026-11-16"
-  text: "Lands Glass Box pages that pass review. It often reads only part of a Subject under budget pressure, reports a too-low cost early, and trips on unquoted YAML colons in its run entries."
+  date: "2026-11-17"
+  text: "Lands Glass Box pages that pass review. A scheduled run once skipped review and the gate yet merged, and runs stop early when cost cannot be read; Subjects are now read in parts."
 observations:
   - date: "2026-11-07"
     note: >-
@@ -43,3 +43,5 @@ observations:
     note: "Behaviour check, 10 runs, PRs merged (#3257 to #3352). Repeats: Subject-wide read skipped for budget in 4 runs (orient.ts --subject prints 70-113 KB); cost in PR body wrong because get_session lags (0.12 vs 4.22, 4 vs 12.68); code-review skipped on #3311 (disclosed); unquoted-colon YAML broke validation in 4 runs. Idea: shorter orient output. Not issued. Grade unchanged."
   - date: "2026-11-16"
     note: "Size cause of the skipped Subject-wide reads: orient.ts --subject printed every page of the Subject whole and uncapped (18 to about 114 KB), past the Read cap; #3362 makes it write parts of at most 40 KB to files."
+  - date: "2026-11-17"
+    note: "Behaviour check, 4 runs (session_013zxzeSoqEeWqPDrCqDCcJn, session_013zxzePak78Sud7pyRQMjeV, session_013zxzePxNrkPQ4muYeaAFZT, session_013zxzeP4m4R15EP9UBBmzfR): PRs #3311, #3336, #3345, #3348 to #3352, #3369, #3371 merged. Verified silent failure: session_013zxzeSoqEeWqPDrCqDCcJn skipped review and gate, `Reviewed:` line printed anyway: #3395. Loop skipped when get_session absent, 2 of 4: #3370. Graded routine (scheduled runs: session_013zxzeSoqEeWqPDrCqDCcJn, session_013zxzePxNrkPQ4muYeaAFZT)."

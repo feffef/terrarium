@@ -1,16 +1,16 @@
 name: harvest
 category: platform-operation
-importance: specialist
+importance: routine
 gist: Turns recent sessions' ideas and learnings into proposals to green-light.
 role: >-
   Reads the last week of session logs' ideas and learnings and files up to ten
   Seedlings: self-contained issues that wait for a Trusted user's green
   light, preferring Tenant, content and UI ideas and leaving Frictions to
-  `frictions-to-fixes`. Files issues only; user-invoked
-  (disable-model-invocation: true), alone or with a person.
+  `frictions-to-fixes`. Files issues only; fired by a Routine, or invoked by a
+  person (disable-model-invocation: true).
 auditSummary:
-  date: "2026-11-16"
-  text: "Files well-formed Seedling issues from the logs. It tends to stop checking clusters well before its quota or limit, leaving many learnings unchecked."
+  date: "2026-11-17"
+  text: "Files well-formed Seedling issues from the logs on a schedule. It keeps stopping before its quota or cluster limit with no reason logged, leaving many learnings unchecked."
 observations:
   - date: "2026-11-13"
     note: >-
@@ -23,3 +23,5 @@ observations:
       Behaviour check, 7 runs delivered (Seedlings exist on GitHub). Repeat n>=7: git and GitHub docs read late; whole-list read costs 33k to 90k tokens. One scheduled run so far (session_013zxzeNxZVrKu9whNTs4pnR, 11-14); not enough to regrade to routine. Grade unchanged.
   - date: "2026-11-16"
     note: "Behaviour check, 8 runs; 14 Seedlings checked on GitHub exist. Silent failure (new, n=3): step 2 stops early on 11-13, 11-14, 11-15 (6, 8, 11 clusters; 4, 3, 6 filed; quota 10, limit 30), no friction logged. Late git/GitHub doc reads repeat. Idea: make check-clusters require a stopped reason. Not issued. Grade unchanged."
+  - date: "2026-11-17"
+    note: "Behaviour check, runs session_013zxzeNxZVrKu9whNTs4pnR, session_013zxzeRGXYTuwyQrcDEwRpw, session_013zxzeT29epAaAQNqmHmeU4: 15 of 15 Seedlings exist (#3318 to #3320, #3353 to #3358, #3382 to #3387). Verified silent failure n=4: step 2 stops early with no friction; filed #3396. Graded routine: scheduled runs on 11-13 to 11-16 (session_013zxzeNxZVrKu9whNTs4pnR, session_013zxzeRGXYTuwyQrcDEwRpw, session_013zxzeT29epAaAQNqmHmeU4). Role reworded."

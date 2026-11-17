@@ -9,20 +9,9 @@ role: >-
   bounded exception). Usually invoked by `close-session`; call it directly only
   to amend a written log.
 auditSummary:
-  date: "2026-11-16"
-  text: "Reliably produces honest logs that land on main. Many loaded rules still go unrated even though each log is marked as answered; whether the rating prompt omits some of them is not yet checked."
+  date: "2026-11-17"
+  text: "Reliably produces honest logs that land on main. Many loaded rules, mostly those loaded by hint, still go unrated while the log is marked answered; the gap is now confirmed in 7 of 19 logs."
 observations:
-  - date: "2026-10-07"
-    note: >-
-      Re-checked (audit-skills behaviour check), 10 newest usedIn sessions,
-      cross-checked every PR claim against GitHub and ran
-      `pnpm exec tsx scripts/validate-content.ts` repo-wide (0 violations).
-      Re-confirmed #1482/#1542 are genuinely closed (`state_reason:
-      completed`, both since 2026-10-03) — the 2026-10-06 correction holds.
-      All 10 summaries/outcomes matched live PR/git state exactly; frictions
-      honestly recorded and cross-consistent with each other across
-      sessions (several independently logged the same known guard
-      frictions). No silent failure found. Grade unchanged.
   - date: "2026-10-08"
     note: >-
       Re-checked (audit-skills behaviour check), 10 usedIn sessions
@@ -326,3 +315,5 @@ observations:
       Behaviour check, 10 runs, all logs landed, no silent failure. The ruleVerdicts-incomplete pattern (#2607, #2645) did not recur: ruleUse (#3009, #3020) replaced it and all 10 logs have answered: true. Two Skill-less sessions (session_013zxzeRumtXDY7MVhKUgVT7, session_013zxzeR9Usddfqi4gQ697DR) read the SKILL.md and logged through close-session. Grade unchanged.
   - date: "2026-11-16"
     note: "Behaviour check, 10 logs landed, 17 PRs merged. Unverified defect: main-session loaded rules left unrated while every ruleUse says answered: true (RGXY 24 loaded/4 rated; PNLU 22/9; PxNr 16/4; PAAj 10/4; Q65i 17/4; Pak7 18/13); unrated were via hint in RGXY, Pak7; whether --pending lists hint loads unchecked. Earlier pattern #2607, #2645 (both closed). No friction logged. Idea: compute answered from coverage. Grade unchanged."
+  - date: "2026-11-17"
+    note: "Behaviour check, 42 logs: all on main with a complete schema, PR claims match GitHub, no revert. Verified: after the 11-15 change, 7 of 19 main-session logs leave loaded rules unrated with answered: true (worst: session_013zxzeRGXYTuwyQrcDEwRpw 20 of 24, session_013zxzeT29epAaAQNqmHmeU4 18 of 24), none logged a friction. Commented on #3340. Grade unchanged."

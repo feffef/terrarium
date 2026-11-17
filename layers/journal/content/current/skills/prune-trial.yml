@@ -9,21 +9,9 @@ role: >-
   PR, except a trial changing an ADR or its summary rule starts only with a
   Trusted user and a human merges it.
 auditSummary:
-  date: "2026-11-16"
-  text: "Runs daily and lands small, honest cuts with the ledger kept in step. The tracker half of its search is sometimes missing when GitHub GraphQL is blocked, and its required reading is often done late."
+  date: "2026-11-17"
+  text: "Runs daily and lands small, honest cuts with the ledger kept in step. The tracker half of its search is sometimes missing when GitHub GraphQL is blocked, and ADR-0027 and the git guide are read after the first edit."
 observations:
-  - date: "2026-10-07"
-    note: >-
-      Re-checked (audit-skills behaviour check), 8 usedIn sessions:
-      `validate-prune-trials.ts` passes, ledger holds 4 open trials
-      (workflow-edit-guard, pr-workflow, ScheduleWakeup, provenance), none
-      judgeable yet. Mapped each session to its verdict commits by exact
-      timestamp; all traceable to genuine evidence, no silent reversal
-      found (`git log origin/main -i --grep=prune-trial` over two weeks).
-      `origin/prune/backgrounding-cluster` still exists on the remote,
-      unaddressed — already escalated as issue #1628 (open), not
-      re-escalated. No new silent failure beyond the already-known,
-      self-fixed corpus-search skip. Grade unchanged.
   - date: "2026-10-08"
     note: >-
       NEW finding, escalated as issue #1677 (audit-skills behaviour check):
@@ -320,3 +308,5 @@ observations:
       Behaviour check, 7 runs delivered, deltas match git except session_013zxzePvPobQ2Cfg3UyUHSt (ledger -2, merged diff -1: a review follow-up restored a line). Its #2472 tracker claim is still in the ledger. ADR-0027 read after the first edit in several logs. Session_013zxzeQfaLWV38YeNLH6Ezs judged a trial about 6 minutes before the 3-day floor, within the one-hour grace in find-trial-window.ts. Grade unchanged.
   - date: "2026-11-16"
     note: "Behaviour check, 7 runs, PRs #3005 to #3342 merged, ledger fits. SKILL.md changed once (96d2014df, #3199). Repeat: ADR-0027 and git-conventions read after first edit/command in 5 of 7 runs; criterion-1 tracker search missing in 2 (11-09, 11-15, gh GraphQL blocked). Cuts stay tiny. Idea: tracker-read command with MCP fallback. Not issued. Grade unchanged."
+  - date: "2026-11-17"
+    note: "Behaviour check, runs session_013zxzeQb8CcK1KnPAhju2GY, session_013zxzePAAjqaHMt85Ee6cxA, session_013zxzeSFVZRywvYz2rGcRzP: PRs #3315, #3342, #3380 merged, line deltas match numstat, no revert. Late ADR-0027/git-conventions read 3 of 3. Idea: write the ledger entry with proven: false until the probe passes. Grade unchanged."
