@@ -26,6 +26,16 @@ describe('Friction Ledger content', () => {
     expect(wrong).toEqual([])
   })
 
+  it('sets acceptedSeverity exactly on an accepted cluster, and no occurrence is above it', () => {
+    const rank = ['nit', 'minor', 'moderate', 'major', 'blocker']
+    const wrong: string[] = []
+    for (const c of read(join(content, 'current/frictions'))) {
+      if ((c.status === 'accepted') !== (c.acceptedSeverity !== undefined)) wrong.push(`${c.name}: acceptedSeverity vs status ${c.status}`)
+      else if (c.status === 'accepted') for (const o of c.occurrences) if (rank.indexOf(o.severity) > rank.indexOf(c.acceptedSeverity)) wrong.push(`${c.name} ${o.session}: ${o.severity} above ${c.acceptedSeverity}`)
+    }
+    expect(wrong).toEqual([])
+  })
+
   it('counts a session once per cluster', () => {
     const wrong: string[] = []
     for (const cluster of read(join(content, 'current/frictions'))) {

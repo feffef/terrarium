@@ -47,6 +47,34 @@ describe('setEntry()', () => {
     expect(setEntry(accepted, { notes: ['n'] })).toContain('status: accepted\n')
     expect(setEntry(entry.replace('status: open', 'status: tracked'), { fixes: [fix] })).toContain('status: tracked\n')
   })
+  describe('acceptedSeverity', () => {
+    const occ = (severity: string) => `  - session: b\n    date: "2026-10-05"\n    severity: ${severity}\n    description: "e"\n    solution: "t"\n`
+    const accepted = entry.replace('status: open', 'status: accepted\nacceptedSeverity: nit')
+    it('defaults to the worst stored severity when status becomes accepted', () => {
+      expect(setEntry(entry, { status: 'accepted' })).toContain('status: accepted\nacceptedSeverity: nit\n')
+    })
+    it('takes an explicit ceiling at or above the stored worst, and refuses one below', () => {
+      expect(setEntry(entry, { status: 'accepted', acceptedSeverity: 'moderate' })).toContain('acceptedSeverity: moderate\n')
+      expect(() => setEntry(entry + occ('major'), { status: 'accepted', acceptedSeverity: 'minor' })).toThrow('holds a major')
+      expect(() => setEntry(entry, { acceptedSeverity: 'minor' })).toThrow('needs status accepted')
+    })
+    it('reopens and notes it when an occurrence above the ceiling arrives', () => {
+      const out = setEntry(accepted, { occurrences: occ('minor') })
+      expect(out).toContain('status: open\n')
+      expect(out).not.toContain('acceptedSeverity')
+      expect(out).toContain('Reopened: a minor occurrence is above the accepted nit.')
+    })
+    it('stays accepted for an occurrence at or below the ceiling', () => {
+      expect(setEntry(accepted.replace('nit', 'minor'), { occurrences: occ('minor') })).toContain('status: accepted\nacceptedSeverity: minor\n')
+    })
+    it('drops the ceiling when the status leaves accepted', () => {
+      expect(setEntry(accepted, { status: 'tracked' })).not.toContain('acceptedSeverity')
+      expect(setEntry(accepted, { fixes: [{ pr: 11, date: '2026-10-03', summary: 'Second fix.' }] })).not.toContain('acceptedSeverity')
+    })
+    it('parses --accepted-severity', () => {
+      expect(parseArgs(['x', '--status', 'accepted', '--accepted-severity', 'minor']).changes.acceptedSeverity).toBe('minor')
+    })
+  })
   it('replaces the fixes with replaceFixes', () => {
     expect(setEntry(entry, { fixes: [{ pr: 12, date: '2026-10-04', summary: 'Only fix.' }], replaceFixes: true })).toBe(
       entry.replace(/fixes:\n[\s\S]*?occurrences:/, 'fixes:\n  - pr: 12\n    date: "2026-10-04"\n    summary: "Only fix."\noccurrences:'),

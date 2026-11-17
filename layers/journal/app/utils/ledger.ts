@@ -6,6 +6,11 @@ import { sessionAnchor } from './dashboard'
 
 const SEVERITY_RANK: Record<Severity, number> = { nit: 0, minor: 1, moderate: 2, major: 3, blocker: 4 }
 
+/** Whether `severity` is worse than `ceiling`: an `accepted` cluster's occurrence above its `acceptedSeverity` breaks the acceptance. */
+export function ledgerSeverityExceeds(severity: Severity, ceiling: Severity): boolean {
+  return SEVERITY_RANK[severity] > SEVERITY_RANK[ceiling]
+}
+
 /** A cluster with merged PRs shows one of these, derived from its `fixes` and
  *  occurrences so nobody has to maintain it; one without, or one `accepted`
  *  (the owner accepts the cause as a cost, issue #2148), shows its stored status. */

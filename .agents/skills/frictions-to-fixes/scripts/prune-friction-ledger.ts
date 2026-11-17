@@ -35,6 +35,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { isMap, isSeq, parse as parseYaml, parseDocument, type YAMLMap } from 'yaml'
 import { LEDGER_HORIZON_DAYS, ledgerFixState, ledgerWindowStart } from '../../../../layers/journal/app/utils/ledger.ts'
+import { reopenOnBreach } from './ledger-set.ts'
 import { LEDGER_DIR } from '../../../../scripts/session/extract-frictions.ts'
 import { fail, flagValue, resolveOutputTarget, root, runIfMain } from '../../../../scripts/lib/cli.ts'
 import { tryGit } from '../../../../scripts/lib/git.ts'
@@ -218,6 +219,7 @@ export function moveOccurrence(session: string, fromText: string, toText: string
   }
   dst.items.push(src.items.splice(i, 1)[0]!)
   dst.flow = false
+  reopenOnBreach(to)
   return { from: src.items.length ? from.toString({ lineWidth: 0 }) : null, to: to.toString({ lineWidth: 0 }) }
 }
 

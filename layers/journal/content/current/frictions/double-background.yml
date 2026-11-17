@@ -5,6 +5,7 @@ cause: >-
   Sessions combine run_in_background: true with a trailing & or nohup, and the double-background guard denies it.
 surface: guard-or-hook
 status: accepted
+acceptedSeverity: minor
 ref: "issue #2310 closed not planned on 2026-10-20: the owner accepts the cost. Every slip was a deliberate background attempt that cost one retry, and a trailing-only rewrite would miss a mid-command &."
 fixes:
   - pr: 2172
