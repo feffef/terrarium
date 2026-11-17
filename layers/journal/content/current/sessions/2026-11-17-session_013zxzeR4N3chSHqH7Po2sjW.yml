@@ -1,0 +1,144 @@
+schemaVersion: 1
+session: session_013zxzeR4N3chSHqH7Po2sjW
+startedAt: 2026-11-17T17:05:57Z
+endedAt: 2026-11-17T17:14:06Z
+kind: autonomous
+goal: Scheduled harvest of session ideas and learnings into Seedlings
+status: completed
+outcome: Seven Seedlings filed (#3431-#3437) plus one retro Seedling (#3438); no repo changes
+summary: "Scheduled harvest run, no human prompt. Extracted 203 unharvested entries (96 ideas, 107 learnings) from the last 7 days and checked 13 clusters, product first. Seven passed and were filed: five product ideas (Atlas specimen contradictions, dormant Atlas log, phone-first Atlas landings, Atlas 404 suggestion, Journal Routine naming) and two workflow learnings (gate inert Markdown rule, stale dev preview content). Six product clusters and one workflow cluster were dropped as already built (Atlas prev/next, Tinkerfund aids, Journal ledger and landing), filed, or covered by pr-workflow.md. The retro Seedling #3438 notes that the harvest list file exceeds the Read tool cap, so reading it whole takes two calls. Everything was agent-initiated under the Skill; its approval covers filing Seedlings. I cited only docs I grep-read for triage-labels.md and issue-tracker.md."
+prs: []
+docsRead:
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: .agents/skills/harvest/body-template.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/retro/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: harvest
+    reason: (invoked as a slash command)
+frictions:
+  - description: Ran git log, git grep and list-merges-since and issue_read before reading git-conventions.md and github-integration.md, as CLAUDE.md requires; hooks flagged it after the call.
+    solution: Read both docs at the first git or GitHub command; the harvest Skill could list them in its first step.
+    severity: minor
+  - description: Filed issues after only grepping issue-tracker.md and triage-labels.md instead of reading them once, as step 4 and CLAUDE.md require.
+    solution: Read both docs whole before the first issue_write.
+    severity: minor
+  - description: Wrote a Seedling body draft into the repo root through a wrong working directory; moved it to the scratchpad before anything was committed.
+    solution: Use absolute scratchpad paths in every file write.
+    severity: nit
+durationSec: 488
+models:
+  claude-sonnet-5-5: 96
+toolCounts:
+  Bash: 40
+  Read: 2
+  ToolSearch: 1
+  mcp__github__issue_read: 4
+  mcp__github__issue_write: 8
+  Skill: 2
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/retro/SKILL.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/retro/SKILL.md
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+      - rule: .claude/rules/adr-0006.md
+        via: hint
+      - rule: .claude/rules/adr-0016.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0025.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0026.md
+        via: hint
+      - rule: .claude/rules/adr-0020.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: header on every issue body
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: filed Seedlings, built nothing
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: in-scope
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: unrelated
+      - path: .claude/rules/adr-0006.md
+        value: confirmed
+        why: "agreed: kept 404 idea within ADR-0006"
+      - path: .claude/rules/ui-verification.md
+        value: duplicate
+        why: "skill: harvest lists the UI questions"
+      - path: .agents/skills/visitor-loop/decisions.md
+      - path: .agents/skills/harvest/body-template.md
+      - path: .agents/skills/retro/SKILL.md
+gitBranch: claude/eager-cerf-z0sny1
+entrypoint: remote_trigger
+cliVersion: 2.1.326
+trigger: harvest
+learnings:
+  - harvest-list.txt for 203 entries is about 76 KB, over the Read tool's 25,000-token cap, so step 1's read-whole takes two paged reads
+landedBy: Stop
