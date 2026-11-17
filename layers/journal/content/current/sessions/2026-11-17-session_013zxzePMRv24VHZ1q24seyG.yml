@@ -1,15 +1,16 @@
 schemaVersion: 1
 session: session_013zxzePMRv24VHZ1q24seyG
 startedAt: 2026-11-17T11:56:15Z
-endedAt: 2026-11-17T14:51:52Z
+endedAt: 2026-11-17T15:13:46Z
 kind: interactive
 goal: "Improve the Glass Box guide: redraw diagrams, teach the Own-read verdict"
-status: completed
-outcome: "Both PRs merged: three redrawn diagrams (#3427) and the Own-read lesson update (#3428)"
-summary: "The owner invoked glassbox-curate with no focus and answered \"Diagrams\", then picked \"Walkthrough diagrams vs stops\" (human instructed). I redrew three Walkthrough diagrams through an opus writer, had a fresh reader and code-review check them, got the owner's confirmation of the screenshots (the UI rule), and merged PR #3427 after a green gate. Scout found two uncovered topics. The owner then chose \"Teach the Own-read verdict\" for a second run (human instructed); I read the Git and GitHub Subject in full, had an opus writer update the Pull requests lesson, and a sonnet claim checker, a fresh reader and code-review's two reviewers checked it. Their findings (copied files also count, the script checks only a file list and not how simple a change is, a stale \"checks only\" sentence, a Why bullet over its word cap) were fixed, the gate passed, and PR #3428 merged after my verdict comment. I skipped reading five linked lessons the Spec reviewer named for pagesRead, after a grep found nothing to recheck. Cost is about $7.8 and 365k context tokens for both runs. A third run was not started: the owner was not asked again."
+status: in-review
+outcome: "Two PRs merged (diagrams #3427, Own-read #3428); the watchFor lesson PR #3429 is open and waiting on CI"
+summary: "The owner invoked glassbox-curate with no focus and answered \"Diagrams\", then picked \"Walkthrough diagrams vs stops\" (human instructed). I redrew three Walkthrough diagrams through an opus writer, had a fresh reader and code-review check them, got the owner's confirmation of the screenshots (the UI rule), and merged PR #3427 after a green gate. Scout found two uncovered topics. The owner then chose \"Teach the Own-read verdict\" for a second run (human instructed); I read the Git and GitHub Subject in full, had an opus writer update the Pull requests lesson, and a sonnet claim checker, a fresh reader and code-review's two reviewers checked it. Their findings (copied files also count, the script checks only a file list and not how simple a change is, a stale \"checks only\" sentence, a Why bullet over its word cap) were fixed, the gate passed, and PR #3428 merged after my verdict comment. I skipped reading five linked lessons the Spec reviewer named for pagesRead, after a grep found nothing to recheck. The owner then chose \"Teach the watchFor checklist\" for a third run (human instructed): I read all eleven House rules pages, an opus writer updated the Skill inventory lesson, a claim checker, a fresh reader and code-review's two reviewers checked it, small fixes landed, the gate passed on the final head and PR #3429 is open. Cost is about $9.5 for all three runs; the token budget is nearly spent, so no fourth run. Open: merge #3429 once CI is green, then close-session again."
 prs:
   - "3427"
   - "3428"
+  - "3429"
 docsRead:
   - path: .agents/skills/glassbox-lesson/writing-pages.md
     reason: (no reason given)
@@ -37,6 +38,8 @@ docsRead:
     reason: (no reason given)
   - path: .throwaway/glassbox-curate/subject-3.md
     reason: (no reason given)
+  - path: .throwaway/glassbox-curate/subject-4.md
+    reason: (no reason given)
   - path: layers/glassbox/content/guide/pages/walkthroughs/90.from-file-to-browser.md
     reason: (read before editing)
   - path: layers/glassbox/content/guide/pages/git-github/10.pull-requests.md
@@ -45,6 +48,8 @@ docsRead:
     reason: (no reason given)
   - path: scripts/github/verdict-line.ts
     reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/85.skill-inventory.md
+    reason: (read before editing)
   - path: layers/glassbox/GLOSSARY.md
     reason: (no reason given)
   - path: layers/glassbox/content/guide/pages/nuxt-content/60.mermaid-pre-rendering.md
@@ -56,6 +61,12 @@ docsRead:
   - path: layers/glassbox/content/guide/pages/walkthroughs/50.a-friction-becomes-a-fix.md
     reason: (read before editing)
   - path: docs/adr/0024-build-time-mermaid-prerender.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/brief.md
+    reason: (no reason given)
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
     reason: (no reason given)
   - path: .agents/skills/glassbox-curate/SKILL.md
     reason: (no reason given)
@@ -95,23 +106,26 @@ frictions:
   - description: After the claim-check fixes I reworded a Why bullet and the page test failed on its word cap twice before I cut enough words; the cap is only visible in the test output.
     solution: Fine as designed; a writer brief could name the 65-word Why bullet cap, which I had left out of the follow-up edit.
     severity: nit
-durationSec: 10537
+  - description: I edited a page while a background gate:scoped was running, so the gate aborted with 'working tree changed during the run' and I had to rerun it, about four minutes lost.
+    solution: Hold edits until the gate notification arrives; the abort message was clear.
+    severity: nit
+durationSec: 11851
 models:
-  claude-sonnet-5-5: 227
+  claude-sonnet-5-5: 267
   <synthetic>: 1
 toolCounts:
-  Bash: 64
-  Read: 22
+  Bash: 77
+  Read: 26
   Grep: 1
   AskUserQuestion: 5
-  Agent: 12
+  Agent: 17
   Write: 1
-  Skill: 6
+  Skill: 7
   ToolSearch: 3
   SendUserFile: 1
-  mcp__github__create_pull_request: 2
-  mcp__claude-code-remote__subscribe_pr_activity: 2
-  ReadNotifications: 5
+  mcp__github__create_pull_request: 3
+  mcp__claude-code-remote__subscribe_pr_activity: 3
+  ReadNotifications: 6
   mcp__github__pull_request_read: 1
   mcp__github__add_issue_comment: 2
   mcp__claude-code-remote__get_session: 2
@@ -119,11 +133,13 @@ toolCounts:
 filesEdited:
   - layers/glassbox/content/workshop/runs/2026-11-17T1156.yml
   - layers/glassbox/content/guide/pages/git-github/10.pull-requests.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/85.skill-inventory.md
   - layers/glassbox/content/guide/pages/walkthroughs/20.a-bug-report-becomes-work.md
   - layers/glassbox/content/guide/pages/walkthroughs/50.a-friction-becomes-a-fix.md
   - layers/glassbox/content/guide/pages/walkthroughs/90.from-file-to-browser.md
-  - layers/glassbox/content/workshop/runs/2026-11-17T1437.yml
   - layers/glassbox/content/workshop/pages/index.md
+  - layers/glassbox/content/workshop/runs/2026-11-17T1503.yml
+  - layers/glassbox/content/workshop/runs/2026-11-17T1437.yml
   - app/assets/mermaid/77acf22eae3dfc68.svg
   - app/assets/mermaid/abc1482a598809b0.svg
   - app/assets/mermaid/23ab5ddfe8e12d17.svg
@@ -137,6 +153,7 @@ rulesGlobal:
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0017.md
 rulesFollowedUp:
+  - .claude/rules/adr-0015.md
   - .claude/rules/adr-0024.md
 adrHints:
   - adr: 24
@@ -144,8 +161,11 @@ adrHints:
     readAfter: true
     by: subagent
 docsReadBySubagents:
-  - docs/adr/0024-build-time-mermaid-prerender.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/audit-skills/brief.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
   - .agents/skills/glassbox-curate/SKILL.md
+  - docs/adr/0024-build-time-mermaid-prerender.md
 ruleUse:
   - by: main
     answered: true
@@ -690,6 +710,221 @@ ruleUse:
       - path: .claude/rules/adr-0004-human-merge.md
         value: unrelated
       - path: docs/agents/pr-workflow.md
+  - by: general-purpose
+    subagent: 12
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/writing-pages.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/writing-pages.md
+      - rule: .claude/rules/glassbox-content.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/terrarium-practice/85.skill-inventory.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/terrarium-practice/85.skill-inventory.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/terrarium-practice/85.skill-inventory.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: duplicate
+        why: "brief:"
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/glassbox-content.md
+        value: steered
+      - path: .claude/rules/tenant-glossary.md
+        value: duplicate
+        why: "brief:"
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/glossary-terms.md
+        value: unrelated
+      - path: .agents/skills/glassbox-lesson/writing-pages.md
+      - path: docs/agents/git-conventions.md
+  - by: general-purpose
+    subagent: 13
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 14
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 15
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/glassbox-content.md
+        value: confirmed
+        why: "agreed:"
+      - path: .agents/skills/glassbox-lesson/writing-pages.md
+      - path: layers/glassbox/GLOSSARY.md
+  - by: general-purpose
+    subagent: 16
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/glassbox-content.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/terrarium-practice/85.skill-inventory.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/terrarium-practice/85.skill-inventory.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/terrarium-practice/85.skill-inventory.md
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
 subagents:
   - task: Scout new undocumented topics
     model: sonnet
@@ -699,71 +934,101 @@ subagents:
     durationSec: 25
     toolCalls: 11
     modelCalls: 5
-    tokenShare: 3.1
+    tokenShare: 2.3
   - task: Redraw three Walkthrough diagrams
     model: opus
     durationSec: 481
     toolCalls: 49
     modelCalls: 33
-    tokenShare: 9.1
+    tokenShare: 6.8
   - task: Fresh reader checks diagrams
     model: sonnet
     durationSec: 11
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 1.9
+    tokenShare: 1.4
   - task: Standards review of diagram diff
     model: sonnet
     durationSec: 46
     toolCalls: 16
     modelCalls: 8
-    tokenShare: 2
+    tokenShare: 1.5
   - task: Spec review of diagram diff
     model: sonnet
     durationSec: 38
     toolCalls: 10
     modelCalls: 7
-    tokenShare: 1.7
+    tokenShare: 1.3
   - task: Review follow-up commit diff
     model: sonnet
     durationSec: 23
     toolCalls: 9
     modelCalls: 5
-    tokenShare: 2.3
+    tokenShare: 1.7
   - task: Write Own-read section on Pull requests
     model: opus
     durationSec: 130
     toolCalls: 29
     modelCalls: 17
-    tokenShare: 5
+    tokenShare: 3.7
   - task: Claim-check changed sentences
     model: sonnet
     durationSec: 24
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 2.2
+    tokenShare: 1.7
   - task: Fresh reader of Pull requests page
     model: sonnet
     durationSec: 9
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.9
+    tokenShare: 1.4
   - task: Standards review of Own-read diff
     model: sonnet
     durationSec: 32
     toolCalls: 12
     modelCalls: 5
-    tokenShare: 1.4
+    tokenShare: 1.1
   - task: Spec review of Own-read diff
     model: sonnet
     durationSec: 19
     toolCalls: 10
     modelCalls: 4
-    tokenShare: 1.2
+    tokenShare: 0.9
+  - task: Write watchFor section on Skill inventory
+    model: opus
+    durationSec: 159
+    toolCalls: 41
+    modelCalls: 26
+    tokenShare: 5.4
+  - task: Claim-check watchFor sentences
+    model: sonnet
+    durationSec: 35
+    toolCalls: 13
+    modelCalls: 5
+    tokenShare: 1.7
+  - task: Fresh reader of Skill inventory page
+    model: sonnet
+    durationSec: 9
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 1.4
+  - task: Standards review of watchFor diff
+    model: sonnet
+    durationSec: 46
+    toolCalls: 11
+    modelCalls: 8
+    tokenShare: 1.5
+  - task: Spec review of watchFor diff
+    model: sonnet
+    durationSec: 39
+    toolCalls: 12
+    modelCalls: 8
+    tokenShare: 1.5
 gitBranch: ccr-c44b1c27-5ec02s
 entrypoint: remote_mobile
 cliVersion: 2.1.326
 learnings:
   - The gate's content validation parses run entries as YAML, so a plain scalar holding a colon plus a space becomes a map and fails; run pnpm validate:content right after writing a run entry.
   - The Own-read verdict is checked only by file status (added, renamed, copied), not by how large or complex the change is; the simple-change rule lives in pr-workflow.md and the script cannot enforce it.
-landedBy: SessionStart
+landedBy: Stop
