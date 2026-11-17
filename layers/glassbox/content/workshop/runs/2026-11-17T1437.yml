@@ -1,0 +1,13 @@
+session: session_013zxzePMRv24VHZ1q24seyG
+mode: interactive
+focus: "Git & GitHub: teach the Own-read verdict on Pull requests. The owner chose it from the memory page's gap list, where Scout had found that verdict-line.ts --own-read and merge-pr.ts's Own-read branch (accepted only when the PR adds or renames no file) have no page. The Pull requests page says the verdict ends in a Reviewed line and that verdictRefusal accepts only that, which is now incomplete. All eight Git & GitHub pages were read in full; no open PR touches them."
+changes: []
+pagesRead:
+  - git-github/10.pull-requests
+  - git-github/20.author-trust
+  - git-github/30.composite-actions
+  - git-github/40.dependabot-grouping
+  - git-github/50.git-worktrees
+  - git-github/60.attribution
+  - git-github/70.issue-triage-labels
+  - git-github/80.git-plumbing
