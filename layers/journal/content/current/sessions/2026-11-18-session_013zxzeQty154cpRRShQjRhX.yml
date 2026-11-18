@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQty154cpRRShQjRhX
 startedAt: 2026-11-18T00:45:48Z
-endedAt: 2026-11-18T00:56:45Z
+endedAt: 2026-11-18T00:59:50Z
 kind: autonomous
 goal: Weekly check of the Platform's own Skills
-status: in-review
-outcome: "Inventory PR #3441 open with verdict posted; one issue filed (#3440); waiting on CI and merge"
-summary: "A schedule started this audit-skills run; nothing was human-instructed. Fetched the 7-day scorecard, had one subagent fetch usage for 11 Routine runs, then one read-only subagent per behaviour-checked Skill (16). All reports came back with no new silent failure except glassbox-curate (a small scheduled run stopped at about 20% of its budget after the loop fix, and review steps were skipped while a Reviewed line printed); I checked that against the session log, #3370 and #3395 and filed #3440. Other findings went to Skill observations: the dispatch-read guard blocks the first dispatch in most scheduled Skills, unrated hint-loaded rules in log-session (unverified), and glassbox-update skipping its reader step once (unverified). Orphan scan was conclusive: 0 orphaned sessions, 0 suppressions, 0 human-prompted closures. Appended observations and replaced summaries for 15 Skills, appended 11 Routine run costs, no grade changes. PR #3441 holds only Inventory YAML; code-review found only wording nits, fixed in a second commit that I read myself (4 files, over the simple limit, disclosed). gate:scoped passed on the final head. Merging waits on CI."
+status: completed
+outcome: "Inventory PR #3441 merged; one issue filed (#3440)"
+summary: "A schedule started this audit-skills run; nothing was human-instructed. Fetched the 7-day scorecard, had one subagent fetch usage for 11 Routine runs, then one read-only subagent per behaviour-checked Skill (16). All reports came back with no new silent failure except glassbox-curate (a small scheduled run stopped at about 20% of its budget after the loop fix, and review steps were skipped while a Reviewed line printed); I checked that against the session log, #3370 and #3395 and filed #3440. Other findings went to Skill observations: the dispatch-read guard blocks the first dispatch in most scheduled Skills, unrated hint-loaded rules in log-session (unverified), and glassbox-update skipping its reader step once (unverified). Orphan scan was conclusive: 0 orphaned sessions, 0 suppressions, 0 human-prompted closures. Appended observations and replaced summaries for 15 Skills, appended 11 Routine run costs, no grade changes. PR #3441 holds only Inventory YAML; code-review found only wording nits, fixed in a second commit that I read myself (4 files, over the simple limit, disclosed). gate:scoped passed on the final head. CI went green and I merged it with merge-pr.ts after posting the verdict."
 prs:
   - "3441"
 docsRead:
@@ -93,12 +93,12 @@ frictions:
   - description: Sixteen near-identical behaviour subagents cost roughly 1.6M tokens; most found only repeats of known observations for Skills with clean runs.
     solution: Have the scorecard print each Skill's last observation date so unchanged, clean Skills are skipped or batched.
     severity: minor
-durationSec: 657
+durationSec: 842
 models:
-  claude-sonnet-5-5: 130
+  claude-sonnet-5-5: 140
 toolCounts:
-  Bash: 36
-  Skill: 4
+  Bash: 39
+  Skill: 5
   Agent: 19
   mcp__Claude_Code_Remote__get_session: 1
   ToolSearch: 2
@@ -109,6 +109,7 @@ toolCounts:
   mcp__github__subscribe_pr_activity: 1
   mcp__github__add_issue_comment: 1
   PushNotification: 1
+  ReadNotifications: 1
 filesEdited:
   - layers/journal/content/current/skills/close-session.yml
   - layers/journal/content/current/skills/dispatch-subagents.yml
@@ -924,61 +925,61 @@ subagents:
     durationSec: 20
     toolCalls: 16
     modelCalls: 4
-    tokenShare: 3
+    tokenShare: 2.9
   - task: Audit audit-docs
     model: sonnet
     durationSec: 42
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 2.5
+    tokenShare: 2.4
   - task: Audit audit-skills
     model: sonnet
     durationSec: 54
     toolCalls: 14
     modelCalls: 11
-    tokenShare: 3.6
+    tokenShare: 3.5
   - task: Audit blog-post
     model: sonnet
     durationSec: 70
     toolCalls: 14
     modelCalls: 10
-    tokenShare: 4.2
+    tokenShare: 4.1
   - task: Audit clear-backlog
     model: sonnet
     durationSec: 63
     toolCalls: 10
     modelCalls: 9
-    tokenShare: 3.3
+    tokenShare: 3.2
   - task: Audit close-session
     model: sonnet
     durationSec: 96
     toolCalls: 19
     modelCalls: 18
-    tokenShare: 5.6
+    tokenShare: 5.4
   - task: Audit digest
     model: sonnet
     durationSec: 43
     toolCalls: 10
     modelCalls: 6
-    tokenShare: 2.4
+    tokenShare: 2.3
   - task: Audit dispatch-subagents
     model: sonnet
     durationSec: 93
     toolCalls: 16
     modelCalls: 15
-    tokenShare: 6.1
+    tokenShare: 5.9
   - task: Audit frictions-to-fixes
     model: sonnet
     durationSec: 68
     toolCalls: 14
     modelCalls: 12
-    tokenShare: 4.1
+    tokenShare: 4
   - task: Audit glassbox-curate
     model: sonnet
     durationSec: 99
     toolCalls: 20
     modelCalls: 15
-    tokenShare: 6
+    tokenShare: 5.8
   - task: Audit glassbox-lesson
     model: sonnet
     durationSec: 19
@@ -990,7 +991,7 @@ subagents:
     durationSec: 43
     toolCalls: 9
     modelCalls: 7
-    tokenShare: 2.5
+    tokenShare: 2.4
   - task: Audit harvest
     model: sonnet
     durationSec: 58
@@ -1002,37 +1003,37 @@ subagents:
     durationSec: 66
     toolCalls: 15
     modelCalls: 11
-    tokenShare: 4.5
+    tokenShare: 4.4
   - task: Audit log-session
     model: sonnet
     durationSec: 64
     toolCalls: 11
     modelCalls: 7
-    tokenShare: 2.9
+    tokenShare: 2.8
   - task: Audit prune-trial
     model: sonnet
     durationSec: 41
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 2.6
+    tokenShare: 2.5
   - task: Audit visitor-loop
     model: sonnet
     durationSec: 50
     toolCalls: 11
     modelCalls: 10
-    tokenShare: 3.4
+    tokenShare: 3.3
   - task: Standards review of Inventory diff
     model: sonnet
     durationSec: 47
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 3.6
+    tokenShare: 3.5
   - task: Spec review of Inventory diff
     model: sonnet
     durationSec: 48
     toolCalls: 14
     modelCalls: 10
-    tokenShare: 4.8
+    tokenShare: 4.6
 gitBranch: claude/loving-tesla-waam1o
 entrypoint: remote_trigger
 cliVersion: 2.1.327
