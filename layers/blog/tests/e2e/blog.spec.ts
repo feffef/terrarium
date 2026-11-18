@@ -215,9 +215,9 @@ describe('blog Tenant', async () => {
       await page.goto(url('/t/blog'), { waitUntil: 'hydration' })
       const narrow = page.locator('details.net-tags--narrow')
       await narrow.locator('summary').click()
-      const toggle = narrow.getByRole('button', { name: 'What do the tags mean?' })
-      await toggle.click()
-      expect(await toggle.getAttribute('aria-expanded')).toBe('true')
+      await narrow.getByRole('button', { name: 'What do the tags mean?' }).click()
+      const hide = narrow.getByRole('button', { name: 'Hide tag meanings' })
+      expect(await hide.getAttribute('aria-expanded')).toBe('true')
       expect(await narrow.locator('.tag-meaning').first().isVisible()).toBe(true)
     } finally {
       await page.close()
