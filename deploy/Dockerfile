@@ -6,11 +6,11 @@
 # requires rebuilding or redeploying this image. The image only changes when the
 # base tooling here does.
 #
-# node:22 must meet package.json engines for @nuxt/content's native `node:sqlite`
-# connector (see nuxt.config.ts). pnpm comes from corepack, pinned by the repo's
-# `packageManager` field.
+# The Node image must meet package.json engines (issue #1552). pnpm comes from
+# corepack, pinned by the repo's `packageManager` field; Node 25+ no longer
+# bundles corepack, so it is installed from npm.
 
-ARG NODE_VERSION=22.16-bookworm-slim
+ARG NODE_VERSION=26.13-bookworm-slim
 FROM node:${NODE_VERSION}
 
 # git: pull the repo. rsync: publish .output -> serve dir. ca-certificates:
@@ -22,7 +22,7 @@ RUN apt-get update \
        ca-certificates \
   && rm -rf /var/lib/apt/lists/*
 
-RUN corepack enable
+RUN npm install -g corepack@0.36.0 && corepack enable
 
 WORKDIR /app
 
