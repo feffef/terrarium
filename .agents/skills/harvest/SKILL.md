@@ -30,7 +30,8 @@ harvests both.
    start, PRs, goal, outcome and source file printed once before its first
    entry. It holds everything steps 2 and 3 read; use `jq` on the JSON only for
    more on an entry (the list's last lines show how). Done when you have the
-   counts per kind and the last entry's number equals the extract's entry count.
+   counts per kind and the last entry's number equals the count `extract`
+   printed.
 2. **Cluster, in order.** Merge near-duplicate entries into clusters, taking
    entries from the top, and label each cluster **product** (what a visitor or
    the owner sees or uses on the site: a Tenant, its content, the UI) or
