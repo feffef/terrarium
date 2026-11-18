@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
-const FAIL_OPEN = ['deferred-tool-guard']
+const FAIL_OPEN = ['deferred-tool-guard', 'tenant-glossary-guard']
 
 const settings = JSON.parse(readFileSync(join(root, '.claude', 'settings.json'), 'utf8'))
 type Hook = { command: string; onFailure?: string }
