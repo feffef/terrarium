@@ -10,8 +10,6 @@ ref: "issue #2426 closed not planned on 2026-10-26: the owner accepts the cost. 
 related:
   - entry: double-background
     rule: The call combined run_in_background with a trailing & or nohup.
-  - entry: owner-corrections-slow-runtime
-    rule: owner-corrections.ts took over two minutes or timed out.
 fixes:
   - pr: 1790
     date: "2026-10-11"

@@ -1,15 +1,12 @@
 name: clear-backlog-build-review-cap-fails
-summary: The backlog build loop starts a fresh review round after any defect or spec-mismatch, however small the fix, and the round finds only nits.
-cause: "clear-backlog section 3 step 4 starts a fresh review round on any defect or spec-mismatch line, whatever the fix size, so a one-line fix can cost a whole round that finds only nits (2026-11-16: four small branches, about 600k tokens by the run logs). reviewBranch no longer returns 'failed' at the round cap (older signals: 'review capped at 3 rounds'). A 2026-11-11 run also spent 4.4M tokens over 52 agents when five of six small branches hit the cap on cosmetic findings; PR #3119 then redesigned the review and fix steps (one fresh review round, builders resumed for fixes) and PR #3196 narrowed which findings force another round."
+summary: "The backlog build loop started a fresh review round after any defect or spec-mismatch, however small the fix, and the round found only nits; since PR #3419 a round starts by fix size."
+cause: "clear-backlog section 3 step 4 started a fresh review round on any defect or spec-mismatch line, whatever the fix size, so a one-line fix could cost a whole round that found only nits (2026-11-16: four small branches, about 600k tokens by the run logs). reviewBranch no longer returns 'failed' at the round cap (older signals: 'review capped at 3 rounds'). A 2026-11-11 run also spent 4.4M tokens over 52 agents when five of six small branches hit the cap on cosmetic findings; PR #3119 redesigned the review and fix steps, PR #3196 narrowed which findings force another round, and PR #3419 (2026-11-17) starts round N+1 only by fix size: a defect still open after the re-check, over about 10 lines of round N fixes, or a missing-test above 50 lines."
 surface: safe
-status: tracked
-ref: "#3400"
-related:
-  - entry: first-review-pass-misses-defect
-    rule: A defect passed the first review round.
+status: open
 notes: |-
   2026-11-13 survey: issue #3110 closed completed 2026-11-12T08:50Z (no closing PR in its timeline; PRs #3119 and #3196 relate to it and are recorded in fixes); status reset from tracked.
   2026-11-17 regression issue #3400 filed (2 occurrences since #3196).
+  2026-11-18 survey: issue #3400 closed completed 2026-11-17 by PR #3419 (recorded in fixes); status reset from tracked.
 fixes:
   - pr: 2140
     date: "2026-10-16"
@@ -20,6 +17,9 @@ fixes:
   - pr: 3196
     date: "2026-11-12"
     summary: "clear-backlog: a missing-test finding forces a fresh round only above 50 changed lines, a branch meeting the simple-change test gets one reviewer and no further round, and wrap width is the builder's check, not a finding."
+  - pr: 3419
+    date: "2026-11-17"
+    summary: "clear-backlog section 3 step 4 starts a fresh round N+1 only for a defect still open after the re-check, round N's fixes over about 10 lines, or a missing-test on a branch over 50 lines; a spec-mismatch fixed with a clean re-check starts none."
 occurrences:
   - session: session_013zxzeSj1mJxbgdKHbwgK2s
     date: "2026-11-09"

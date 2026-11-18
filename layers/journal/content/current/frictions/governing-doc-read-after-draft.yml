@@ -161,3 +161,18 @@ occurrences:
     severity: nit
     description: "Edited the Journal layer before reading layers/journal/GLOSSARY.md; the tenant-glossary rule loaded only on the first edit, and nothing in it changed my wording."
     solution: "Read the Tenant's GLOSSARY.md when a plan names its layer, before the first edit."
+  - session: session_013zxzeSpYABZ15tUzNbPJN9
+    date: "2026-11-17"
+    severity: minor
+    description: "Edited Skill and brief text and an ADR without invoking writing-for-agents or domain-modeling, which exist for those edits; the Standards reviewer then found duplicated statements."
+    solution: "Invoke writing-for-agents before editing SKILL.md or brief docs, so one-home-per-fact checks run before review."
+  - session: session_013zxzePjedjMk4SeDKFvzPt
+    date: "2026-11-17"
+    severity: nit
+    description: "I read the Blog glossary and ADR-0012 only after drafting and the first save, although the tenant-glossary rule says read it before working on a Tenant."
+    solution: "Have blog-post step 5 name layers/blog/GLOSSARY.md as a read before drafting."
+  - session: session_013zxzeQty154cpRRShQjRhX
+    date: "2026-11-18"
+    severity: nit
+    description: "Edited layers/journal Inventory files without reading layers/journal/GLOSSARY.md, which the tenant-glossary rule asks for before Tenant work."
+    solution: "Have audit-skills step 5 name the Journal glossary as read-first."

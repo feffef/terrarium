@@ -22,26 +22,6 @@ fixes:
     date: "2026-11-12"
     summary: "clear-backlog SKILL.md says to read dispatch-subagents first."
 occurrences:
-  - session: session_013zxzeR4cgWA8MkV51fqC4t
-    date: "2026-11-03"
-    severity: nit
-    description: "First clear-backlog-explore Workflow call was blocked until I read dispatch-subagents; the Skill doesn't say that read comes first"
-    solution: "clear-backlog §1 could name dispatch-subagents as a prerequisite before running the workflows"
-  - session: session_013zxzeQrhKwVsWaJZV8Bs7y
-    date: "2026-11-03"
-    severity: minor
-    description: "First review Agent dispatch was blocked by the dispatch-read guard because I had not read dispatch-subagents."
-    solution: "Read dispatch-subagents before writing any subagent brief."
-  - session: session_013zxzeRUFEQvJ2mE6PXbv3w
-    date: "2026-11-03"
-    severity: nit
-    description: "My first Agent call was blocked by the dispatch-read guard because I had not read dispatch-subagents; one wasted call."
-    solution: "Read dispatch-subagents before the first brief in a prune run."
-  - session: session_013zxzeQbPLMkHvh94sawgDU
-    date: "2026-11-03"
-    severity: minor
-    description: "First Workflow call failed twice: the dispatch-read guard wanted dispatch-subagents read first, and I had mistyped the session id with an extra letter."
-    solution: "Read dispatch-subagents before the first Workflow call; copy the session id from the attribution template instead of retyping it."
   - session: session_013zxzePsSguQyDiqnq52irG
     date: "2026-11-04"
     severity: nit
@@ -372,3 +352,28 @@ occurrences:
     severity: nit
     description: "First Agent dispatch was blocked by the dispatch-read guard because I had not read dispatch-subagents; one wasted call."
     solution: "Load the dispatch-subagents Skill before drafting any brief."
+  - session: session_013zxzeS9acFkKg79nkVrA5R
+    date: "2026-11-17"
+    severity: nit
+    description: "Called the clear-backlog-explore Workflow before reading dispatch-subagents; the dispatch-read guard denied the call, costing one retry."
+    solution: "Read dispatch-subagents at the start of any run that dispatches agents; the clear-backlog Skill could name it in section 1."
+  - session: session_013zxzePjedjMk4SeDKFvzPt
+    date: "2026-11-17"
+    severity: nit
+    description: "The dispatch-read guard blocked my first subagent call until I read the dispatch-subagents Skill, costing one retry."
+    solution: "None needed; the guard worked as designed."
+  - session: session_013zxzePMRv24VHZ1q24seyG
+    date: "2026-11-17"
+    severity: nit
+    description: "My first Agent call was refused by the dispatch-read guard because I had not yet read the dispatch-subagents Skill; I read it and resent the call."
+    solution: "Fine as designed; the curate Skill could name dispatch-subagents beside its Scout step so it is read before the first brief."
+  - session: session_013zxzeNkrnZpMkYb9UUBh2t
+    date: "2026-11-17"
+    severity: nit
+    description: "Dispatch-read guard denied the three visitor Agent calls until I read dispatch-subagents; visitor-loop step 2 does not mention it."
+    solution: "Point visitor-loop step 2 at the dispatch-subagents Skill, or read it before composing the briefs."
+  - session: session_013zxzePDuDw1pEuTakjKjF7
+    date: "2026-11-18"
+    severity: nit
+    description: "The first Agent call was denied by the dispatch-read guard because I had not read dispatch-subagents; one wasted call."
+    solution: "Have the digest Skill step 3 name dispatch-subagents next to its fact-check subagent."

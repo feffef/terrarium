@@ -39,3 +39,8 @@ occurrences:
     severity: minor
     description: "Two full Standards+Spec subagent rounds (four agents) for a YAML install and a 20-line test, because pr-workflow says any added file is never simple"
     solution: "Let pr-workflow call a small new test file or a moved file simple, so it gets a self-read"
+  - session: session_013zxzeSgAcwDrJXAMFAC4Qf
+    date: "2026-11-17"
+    severity: minor
+    description: "A 5-line addition to a Skill brief failed the simple-change test because it changes the Skill's meaning, so it needed two Opus review agents, about 175k subagent tokens, for a one-sentence edit."
+    solution: "Let a one-sentence doc addition that two pages already cover take the own-read path, or review it with one agent."

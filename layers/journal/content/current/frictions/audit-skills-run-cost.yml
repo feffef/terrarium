@@ -33,3 +33,8 @@ occurrences:
     severity: minor
     description: "The retro resumed 20 agents at 75k-130k subagent tokens each, about 1.9M tokens, for replies of about six lines."
     solution: "Ask the retro in the last message each agent already receives, or run it as one cheap workflow call."
+  - session: session_013zxzeQty154cpRRShQjRhX
+    date: "2026-11-18"
+    severity: minor
+    description: "Sixteen near-identical behaviour subagents cost roughly 1.6M tokens; most found only repeats of known observations for Skills with clean runs."
+    solution: "Have the scorecard print each Skill's last observation date so unchanged, clean Skills are skipped or batched."

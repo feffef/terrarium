@@ -11,11 +11,6 @@ related:
 notes: |-
   2026-11-03 design: no change: ADR-0004 already says to run validate:content, the gate runs it as a floor step, and moving it earlier edits Human-only gate files for a rare one-rerun cost; dropped: same cause as ledger-yaml-hand-edit-errors
 occurrences:
-  - session: session_013zxzePh7qKycsJT9g2eqU1
-    date: "2026-11-03"
-    severity: moderate
-    description: "My text wrapping split hyphenated words across folded YAML lines, so the first gate:scoped failed on validate-content-schema and I reran the gate. I had not run validate:content first."
-    solution: "Run pnpm validate:content after any Journal content edit and before gate:scoped, as ADR-0004 says."
   - session: session_013zxzeQN4dgz9seaMtnRf7u
     date: "2026-11-10"
     severity: nit

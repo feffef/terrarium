@@ -23,3 +23,8 @@ occurrences:
     severity: minor
     description: "I ran the fact-check before code-review, against the Skill's order (commit, review, then fact-check); review then changed the post, so the checker ran twice more."
     solution: "Follow step 9's order: code-review first, then dispatch the fact-checker on the reviewed text."
+  - session: session_013zxzePjedjMk4SeDKFvzPt
+    date: "2026-11-17"
+    severity: minor
+    description: "Blog-post step 2 asks for the newest three posts of all four Personas and the last five blog( PR bodies; I listed filenames and read only David's three posts."
+    solution: "Give the step a script that prints those posts and PR bodies in one call, so skipping the read costs more than doing it."

@@ -45,11 +45,6 @@ notes: |-
   2026-10-23 re-cluster: 01Fay2Gi (a check grepping failure-only output), 013RCsUF (dated content not excluded), 011RZgGT (explore triage schema lacks the ADR-0004 exception), 011xvPjJ (audit-skills ids, PR 2318), 01XWMuHG (auth research boundary), 01WxHaU2 (workflow agent asked to dispatch), 0135hcUf and 01VH74k3 (frictions-to-fixes Skill briefs) each need their own fix; left here as single low-severity strays.
   2026-11-13 survey: Le6nsJ (2026-11-12) dispatched PAGES_PLACEHOLDER and FULL_PLACEHOLDER unfilled; the #3064 guard pattern (@@NAME@@ or braces) does not match that form. Issue #3227 (audit-skills, opened 2026-11-13) tracks unfilled placeholders.
 occurrences:
-  - session: session_013zxzeSAtjCQiatdUuuFCRJ
-    date: "2026-11-03"
-    severity: nit
-    description: "The researcher brief I filled in kept the placeholder phrase listed in the run notes below, which named a list that did not exist; I patched it with sed."
-    solution: "Fill briefs from one script that asserts no placeholder text is left, and keep the run notes out of the brief."
   - session: session_013zxzeRCJHe4rmKN5i2CQ16
     date: "2026-11-06"
     severity: minor
@@ -125,3 +120,8 @@ occurrences:
     severity: nit
     description: "First dispatch brief held an unfilled placeholder and the dispatch guard rejected it."
     solution: "Inline the assignment text when writing the brief instead of a placeholder."
+  - session: session_013zxzeQgh4aLo2xMP4FzXZJ
+    date: "2026-11-17"
+    severity: nit
+    description: "My fix C spec carried a literal brace placeholder that my own fill step replaced; I caught it by re-reading the filled brief before dispatch."
+    solution: "Describe a placeholder in words inside fix specs, or fill briefs in a single pass over the template only."

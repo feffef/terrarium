@@ -18,11 +18,6 @@ fixes:
     date: "2026-11-07"
     summary: "Closes #2884: close-session and log-session SKILL.md now say never to filter log-session.ts output, and a Stop hook blocks the turn's end after a merge without close-session."
 occurrences:
-  - session: session_013zxzePCZc7PkwLBo6YoDJt
-    date: "2026-11-03"
-    severity: nit
-    description: "Piped owner-corrections output through head, truncating the JSON, then had to rerun it."
-    solution: "Redirect to a file first; the Skill could say so."
   - session: session_013zxzeQDfNNTXpQYQtt9saY
     date: "2026-11-06"
     severity: moderate
@@ -123,3 +118,8 @@ occurrences:
     severity: nit
     description: "Piped the first log-session --author output through head, which close-session forbids; I re-ran it unfiltered and found no warning."
     solution: "Print the run's output through a tool that cannot truncate, or have log-session --author refuse a piped stdout."
+  - session: session_013zxzeSgAcwDrJXAMFAC4Qf
+    date: "2026-11-17"
+    severity: nit
+    description: "Piped log-session --author through head -3, which close-session forbids because its refusals and warnings print there; the success line showed, but a warning could have been cut."
+    solution: "Run log-session.ts bare and read all of it; the Skill's one-line rule could sit beside the command it governs."

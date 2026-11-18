@@ -87,3 +87,8 @@ occurrences:
     severity: minor
     description: "The Skill wants every page the review names read in full before landing; I read only the inventory lines of four overlapping pages, to save budget."
     solution: "Say in Land whether a grep of the overlap is enough when the added claim is narrow."
+  - session: session_013zxzePMRv24VHZ1q24seyG
+    date: "2026-11-17"
+    severity: nit
+    description: "Land says to read every guide page the Spec reviewer names as missing from pagesRead; I skipped the nine linked lessons because the diff changes only diagram labels."
+    solution: "Say in glassbox-curate that a diagram-only change needs only the page's own stops read."

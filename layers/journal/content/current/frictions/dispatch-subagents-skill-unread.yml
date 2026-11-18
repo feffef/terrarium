@@ -21,11 +21,6 @@ fixes:
     date: "2026-10-25"
     summary: "A guard blocks the first subagent dispatch until the dispatch-subagents Skill is read."
 occurrences:
-  - session: session_013zxzeR8CEiWCmTmvjhCZ1A
-    date: "2026-11-03"
-    severity: nit
-    description: "Subagent briefs and the dispatch-subagents Skill were read after the first Agent call was already written in my head; I invoked the Skill just before dispatching, so no guard fired."
-    solution: "None needed."
   - session: session_013zxzeQfaLWV38YeNLH6Ezs
     date: "2026-11-11"
     severity: nit

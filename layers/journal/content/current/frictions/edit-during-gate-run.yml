@@ -206,3 +206,13 @@ occurrences:
     severity: minor
     description: "Ran gate:scoped on uncommitted trees, before code-review and the commit, against pr-workflow's order; each run then blocked my commits and edits for minutes."
     solution: "Commit, review, then run the gate once on the final head, as pr-workflow says; the gate-edit guard message could name that order."
+  - session: session_013zxzePMRv24VHZ1q24seyG
+    date: "2026-11-17"
+    severity: nit
+    description: "I edited a page while a background gate:scoped was running, so the gate aborted with 'working tree changed during the run' and I had to rerun it, about four minutes lost."
+    solution: "Hold edits until the gate notification arrives; the abort message was clear."
+  - session: session_013zxzePDuDw1pEuTakjKjF7
+    date: "2026-11-18"
+    severity: minor
+    description: "I edited the Digest wording while gate:scoped ran, so it aborted on a changed tree and I reran it, costing about a minute."
+    solution: "Gather review fixes first; start the gate only once every edit is done."

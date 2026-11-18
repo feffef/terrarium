@@ -11,11 +11,6 @@ fixes:
     date: "2026-11-03"
     summary: "CLAUDE.md and the inspect-session Skill description now say the Skill also extracts a session's API cost and token usage (get_session)."
 occurrences:
-  - session: session_013zxzeQrhKwVsWaJZV8Bs7y
-    date: "2026-11-03"
-    severity: major
-    description: "Read journal logs and audit-skills.ts about other sessions before invoking inspect-session, then told the user cost was not recorded; it was in get_session."
-    solution: "Invoke inspect-session first (CLAUDE.md: before inspecting another session); this PR makes cost lookup a stated trigger."
   - session: session_013zxzeSdKDZBdqz6vRp3xW1
     date: "2026-11-12"
     severity: nit

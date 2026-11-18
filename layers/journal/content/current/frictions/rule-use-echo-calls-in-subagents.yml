@@ -63,3 +63,8 @@ occurrences:
     severity: minor
     description: "The rule-use echo hook asked 18 of 23 small-task or read-only agents for two extra Bash calls each, for rules they judged unrelated; the overhead was reported by builders and reviewers."
     solution: "Ask for rule-use once at the end, and skip it for read-only reviewers (hook scripts under scripts/hooks)."
+  - session: session_013zxzeS9acFkKg79nkVrA5R
+    date: "2026-11-17"
+    severity: minor
+    description: "The SubagentStart rule-use echo ritual ran twice per agent and read-only reviewers had no rule to rate; 15 of 17 retro answers named it."
+    solution: "Ask once at the end, or skip it for read-only reviewer subagents, in the hook that emits it under scripts/hooks."

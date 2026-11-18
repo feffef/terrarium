@@ -19,11 +19,6 @@ fixes:
     date: "2026-10-26"
     summary: "The sibling-collapse e2e waits for the digest body to render before measuring."
 occurrences:
-  - session: session_013zxzePCZc7PkwLBo6YoDJt
-    date: "2026-11-03"
-    severity: nit
-    description: "Own e2e test used a re-resolving first-unpressed locator and failed the first gate; the reviewer had also caught a once-a-year date flaw in it."
-    solution: "Hold the clicked button by its label; reason about the day-0 case when a test asserts ?day=."
   - session: session_013zxzeTChey8pdC2fuTTH7i
     date: "2026-11-16"
     severity: minor

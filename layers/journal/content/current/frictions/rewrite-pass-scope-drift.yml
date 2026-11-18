@@ -14,11 +14,6 @@ notes: |-
   2026-10-23 design: a rewrite-discipline line dropped: the two newer sessions were caught by code-review before merge, no session shipped the drift, and the candidate homes sit in open Prune Trial territory.
   2026-11-17: simplify-cut-drops-needed-instruction joined here: a trim that cuts a needed line is the same slip as a rewrite that drops a rule.
 occurrences:
-  - session: session_013zxzeRUFEQvJ2mE6PXbv3w
-    date: "2026-11-03"
-    severity: minor
-    description: "My first prune cut the ADR bullet and typecheck clause in ways that lost meaning; reviewers caught both before the push and I reverted them."
-    solution: "Before committing a CLAUDE.md wording cut, reread each cut bullet against the rule summaries it paraphrases."
   - session: session_013zxzeRhiMxk5cCGYkz4u1n
     date: "2026-11-08"
     severity: minor

@@ -22,51 +22,6 @@ fixes:
     date: "2026-11-04"
     summary: "ADR-0003/0004 and pr-workflow.md: agents may push early and often, the PR opens only after review and the gate; git-conventions says to push when the Stop hook asks."
 occurrences:
-  - session: session_013zxzeR8CEiWCmTmvjhCZ1A
-    date: "2026-11-03"
-    severity: nit
-    description: "Stop hook asked to commit and push twice while the fact-check and gate were pending; ADR-0004 says wait, so each time needed a refusal."
-    solution: "Have the Stop hook stay quiet while a background subagent or gate run is in flight."
-  - session: session_013zxzeSrSkYPpnoS2ag6EbC
-    date: "2026-11-03"
-    severity: nit
-    description: "The Stop hook asked twice to push the ledger commits before the pre-push gate and review had run, as ADR-0004 allows overriding."
-    solution: "Have the hook stay quiet while a gate run is in progress or on a branch with no PR yet."
-  - session: session_013zxzeSuptjybJT9eajhiUR
-    date: "2026-11-03"
-    severity: nit
-    description: "A Stop hook repeatedly asked me to push while review and gate were still running, contradicting the review-before-first-push rule."
-    solution: "Have the Stop hook skip its push prompt while a code-review or gate is pending, or say it defers to ADR-0004."
-  - session: session_013zxzeSAtjCQiatdUuuFCRJ
-    date: "2026-11-03"
-    severity: nit
-    description: "The Stop hook asked me repeatedly to push 25 commits while ADR-0004 required code-review and gate:scoped first; each turn I explained instead of working."
-    solution: "Let the unpushed-commit hook stay quiet until the review and gate have run, or have its message cite the ADR-0004 order."
-  - session: session_013zxzeSF22kmtzW5QWaTDTX
-    date: "2026-11-03"
-    severity: nit
-    description: "The Stop hook asked twice to push before the gate and review finished; ADR-0004 required waiting."
-    solution: "Stop hook could skip the nag while a gate run is in progress."
-  - session: session_013zxzeQH3GSc8uMpvhebnFr
-    date: "2026-11-03"
-    severity: nit
-    description: "The Stop hook asked me to push six times while the review and gate were still pending; each time I had to restate ADR-0004's 'even when the Stop hook asks'."
-    solution: "Have the Stop hook skip the nudge while the branch has no first push and a closure-review Skill is running, or point to the ADR-0004 rule in its message."
-  - session: session_013zxzeRUFEQvJ2mE6PXbv3w
-    date: "2026-11-03"
-    severity: nit
-    description: "The Stop hook asked me to push four times while the probe, review and gate were pending; ADR-0004 required waiting."
-    solution: "Have the Stop hook stay quiet while a probe, review or gate is pending."
-  - session: session_013zxzePCZc7PkwLBo6YoDJt
-    date: "2026-11-03"
-    severity: nit
-    description: "The mid-gate Stop hook asked repeatedly to push unreviewed commits, conflicting with the review-first rule."
-    solution: "Hook could skip the nag while a gate or review is in flight."
-  - session: session_013zxzePui7aGrhHSAUCjE85
-    date: "2026-11-03"
-    severity: minor
-    description: "I first looked for the push nag in the repo settings, then guessed it came from the harness, until the owner said it was in the home folder."
-    solution: "Read the stop-hook-nag ledger entry first (it names stop-hook-git-check.sh), or check ~/.claude/launcher-settings.json when a repo grep finds no such hook."
   - session: session_013zxzePsSguQyDiqnq52irG
     date: "2026-11-04"
     severity: nit
@@ -287,3 +242,8 @@ occurrences:
     severity: nit
     description: "The Stop hook flagged uncommitted ledger changes while the survey agent was still mid-run; I had to check status to see they were the agent's."
     solution: "None needed beyond waiting; the hook can't see subagent work in progress."
+  - session: session_013zxzeSgAcwDrJXAMFAC4Qf
+    date: "2026-11-17"
+    severity: minor
+    description: "The Stop hook asked to commit and push repeatedly while a gate was running and the gate-edit guard blocked the commit, so each reminder cost a refusal turn."
+    solution: "Have the Stop hook stay quiet while a gate:scoped run holds its lock in this checkout."

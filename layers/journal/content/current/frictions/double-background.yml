@@ -17,21 +17,6 @@ fixes:
     date: "2026-10-16"
     summary: "The double-background guard's deny message now says the whole call was denied and nothing in it ran."
 occurrences:
-  - session: session_013zxzePhrV1oZiDPfSuW2Hm
-    date: "2026-11-03"
-    severity: nit
-    description: "Backgrounding gate with trailing & plus run_in_background was blocked by the double-background guard; resent plain."
-    solution: "Remember run_in_background alone; the Skill doc could say so at the gate step."
-  - session: session_013zxzeSAtjCQiatdUuuFCRJ
-    date: "2026-11-03"
-    severity: nit
-    description: "A bash command set run_in_background and also ended in an ampersand, so the double-background guard blocked it and I resent it."
-    solution: "Pass run_in_background alone with a plain foreground command, as the guard says."
-  - session: session_013zxzeQH3GSc8uMpvhebnFr
-    date: "2026-11-03"
-    severity: nit
-    description: "My first gate:scoped call set run_in_background and ended with a trailing ampersand; the double-background guard refused it and I resent it plainly."
-    solution: "Pass run_in_background alone, as the guard's message and CLAUDE.md say."
   - session: session_013zxzeSjNrJGoGzDkoSzhK9
     date: "2026-11-05"
     severity: nit
@@ -162,3 +147,13 @@ occurrences:
     severity: nit
     description: "Backgrounded the gate with both run_in_background and a trailing ampersand; the double-background guard rejected it, one retry."
     solution: "Use run_in_background alone."
+  - session: session_013zxzeSpYABZ15tUzNbPJN9
+    date: "2026-11-17"
+    severity: nit
+    description: "Started the gate with both run_in_background and a trailing ampersand; the double-background guard blocked it and the batched read ran with it."
+    solution: "Pass run_in_background alone with a plain foreground command."
+  - session: session_013zxzePMRv24VHZ1q24seyG
+    date: "2026-11-17"
+    severity: nit
+    description: "A Bash call with run_in_background and a trailing ampersand was refused by the double-background guard; one resend without the ampersand worked."
+    solution: "Nothing to change; the guard message was clear."

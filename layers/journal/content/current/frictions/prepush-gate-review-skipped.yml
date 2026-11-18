@@ -4,8 +4,7 @@ summary: >-
 cause: >-
   ADR-0004 and pr-workflow.md ask for the code-review Skill before a branch's first push (and on a larger follow-up), allowing only a simple change (at most 10 lines in 2 files, adding, renaming or moving no file since PR #2638) the author's own read; sessions judge a small, prose, ledger, test or follow-up diff simple without counting it, self-review instead, or review only after pushing. Signals: 'skipped the code-review Skill', 'pushed before running gate:scoped and code-review', 'reviewed inline', 'self-reviewed', 'simple-change bar', 'without a fresh code-review', code-review run after the first push.
 surface: guard-or-hook
-status: tracked
-ref: "issue #3407 (regression: moderate above the minor ceiling accepted via #2748)"
+status: open
 related:
   - entry: followup-review-overcost
     rule: Review ran but cost far more than it found on a tiny first push or small follow-up.
@@ -20,6 +19,7 @@ notes: |-
   2026-10-29 survey: issue #2472 closed by PR #2638 (merged 2026-10-28), which recorded as a fix here.
   2026-11-02 survey: set accepted after issue #2748 closed not planned; session_013zxzeSgWhesrfA7R1JBnhE (escalation PR, one rule line) is the newest occurrence.
   2026-11-17: acceptance was set while its occurrences were nit to minor, so its ceiling was backfilled as minor and a major occurrence reopened it. That occurrence moved to merged-without-gate-or-review; the moderate of 2026-11-09 still sits above the minor ceiling, so the entry stays open until the owner re-accepts it.
+  2026-11-18 survey: issue #3407 closed completed 2026-11-17 by PR #3416 (recorded in fixes: a mechanism, not a re-acceptance); status reset from tracked.
 fixes:
   - pr: 1852
     date: "2026-10-12"
@@ -42,6 +42,9 @@ fixes:
   - pr: 2638
     date: "2026-10-28"
     summary: "pr-workflow.md's simple-change bar now says a simple change adds, renames or moves no file, so a rename sweep gets code-review before its first push."
+  - pr: 3416
+    date: "2026-11-17"
+    summary: "merge-pr.ts refuses an Own-read: verdict on a PR that adds, renames or copies a file, so an own read cannot stand in for code-review on such a diff (partial: a modified-file diff still passes)."
 occurrences:
   - session: session_013zxzePsSguQyDiqnq52irG
     date: "2026-11-04"
@@ -178,3 +181,13 @@ occurrences:
     severity: minor
     description: "Skipped the code-review Skill that ADR-0004 asks for on a larger diff, reading the mechanical diff myself instead."
     solution: "Either run code-review or let pr-workflow's simple-change test cover pure re-pin diffs of any size."
+  - session: session_013zxzeQgh4aLo2xMP4FzXZJ
+    date: "2026-11-17"
+    severity: minor
+    description: "For fix B's follow-up commit (+18/-14, over the 10-line bar) I read the diff myself instead of re-running code-review, as pr-workflow asks for a larger follow-up, and disclosed it."
+    solution: "Run code-review on any follow-up over the simple-change bar, or resume the agent with a smaller change."
+  - session: session_013zxzeQty154cpRRShQjRhX
+    date: "2026-11-18"
+    severity: minor
+    description: "The follow-up commit changed 4 files, over the simple-change limit of 2; I did my own read instead of code-review and disclosed it in the verdict."
+    solution: "Fold wording nits into one file, or let the simple limit count data-only files differently."

@@ -12,3 +12,8 @@ occurrences:
     severity: nit
     description: "Monitor tool schema was not loaded, so my first call failed validation until a ToolSearch"
     solution: "Load deferred tools with ToolSearch before first use"
+  - session: session_013zxzeSpYABZ15tUzNbPJN9
+    date: "2026-11-17"
+    severity: nit
+    description: "Tried subscribe_pr_activity and the GitHub tools under the wrong namespace first; they were deferred or in the claude-code-remote server, costing extra calls."
+    solution: "Load deferred GitHub tools by name up front and use the claude-code-remote namespace for subscribing."

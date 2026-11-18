@@ -36,11 +36,6 @@ fixes:
     date: "2026-11-11"
     summary: "The site footer shows the deployed build's commit and time, so a session can tell what is deployed when the site is unreachable."
 occurrences:
-  - session: session_013zxzeQH3GSc8uMpvhebnFr
-    date: "2026-11-03"
-    severity: minor
-    description: "Official docs sites (nuxt.com, vuejs.org, docs.github.com and others) were unreachable for raters and writers, so many docs claims were checked only against installed packages; some rater claims stayed unverified."
-    solution: "Allow the docs hosts in the environment's network policy, or add a docs-source fallback list to EVERY-PAGE for the common ones."
   - session: session_013zxzeT8tDd5GPJiRNZRA4J
     date: "2026-11-04"
     severity: minor
@@ -86,3 +81,8 @@ occurrences:
     severity: minor
     description: "The criterion-1 search subagent could not read the tracker because gh GraphQL is blocked, so the failed-prose search was partial."
     solution: "Give the search brief the REST route (gh api search/issues) and the list_issues MCP tool explicitly."
+  - session: session_013zxzeSgAcwDrJXAMFAC4Qf
+    date: "2026-11-17"
+    severity: nit
+    description: "Tried three ways to delete the stale remote branch (git twice, then the REST API); the proxy refused all of them, costing three calls before I reported it blocked."
+    solution: "Say in environment-caveats.md that this proxy permits no branch deletion, so a session asks the owner at once."

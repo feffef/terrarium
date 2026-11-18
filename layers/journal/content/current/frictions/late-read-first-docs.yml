@@ -24,41 +24,6 @@ fixes:
     date: "2026-10-15"
     summary: "Hint now says a late read that clears the call is not a Friction."
 occurrences:
-  - session: session_013zxzeR8CEiWCmTmvjhCZ1A
-    date: "2026-11-03"
-    severity: nit
-    description: "Ran git status and the digest list before reading git-conventions.md, which CLAUDE.md requires before git beyond read-only commands; status is read-only so no harm."
-    solution: "None needed; the hook reminded me and the doc was read before any commit."
-  - session: session_013zxzePh7qKycsJT9g2eqU1
-    date: "2026-11-03"
-    severity: minor
-    description: "Ran git rev-parse HEAD before reading docs/agents/git-conventions.md, which CLAUDE.md orders before the first git command beyond read-only ones."
-    solution: "Read the doc first; the hook caught it and the late read changed nothing."
-  - session: session_013zxzeSrSkYPpnoS2ag6EbC
-    date: "2026-11-03"
-    severity: nit
-    description: "The design subagent tried gh issue view (GraphQL, 403) before reading github-integration.md, and the survey agent's own occurrence count was unverified (tail cut its output)."
-    solution: "Brief the agent with the cloud gh limitation inline; have append scripts print a total count."
-  - session: session_013zxzeR4cgWA8MkV51fqC4t
-    date: "2026-11-03"
-    severity: nit
-    description: "Ran gh api reads before reading docs/agents/github-integration.md, which CLAUDE.md requires before the first GitHub operation"
-    solution: "Read it before the first gh api call; a PreToolUse guard (not just a PostToolUse hint) on gh api would have caught it"
-  - session: session_013zxzeQrhKwVsWaJZV8Bs7y
-    date: "2026-11-03"
-    severity: minor
-    description: "Read git-conventions, pr-workflow and github-integration docs after the first non-read-only git command was planned, not before."
-    solution: "Read the CLAUDE.md read-first docs before the first git or GitHub operation."
-  - session: session_013zxzePCZc7PkwLBo6YoDJt
-    date: "2026-11-03"
-    severity: nit
-    description: "Ran git fetch before reading git-conventions.md, which CLAUDE.md requires before a non-read-only git command; the hook then pointed me to it."
-    solution: "Fetch is the first command the Skill itself needs; list fetch as allowed before the doc read."
-  - session: session_013zxzeQbPLMkHvh94sawgDU
-    date: "2026-11-03"
-    severity: nit
-    description: "Ran git rev-parse, list-open-issues and gh api reads before reading git-conventions.md and github-integration.md, which CLAUDE.md says to read before the first such command."
-    solution: "Read both docs first; a hook only reminded me after the commands, so the reminder could fire before the first non-allowlisted call."
   - session: session_013zxzePsSguQyDiqnq52irG
     date: "2026-11-04"
     severity: nit
@@ -629,3 +594,53 @@ occurrences:
     severity: nit
     description: "Ran git fetch before reading git-conventions.md, which CLAUDE.md requires before the first non-read-only git command; a hook reminded me afterwards."
     solution: "The doc matched what I did; no harm. Hook-at-first-git already exists."
+  - session: session_013zxzeSZQpKBLnM3DK1cPRQ
+    date: "2026-11-17"
+    severity: nit
+    description: "Ran my first non-read-only git command before reading git-conventions.md; the post-hook told me to read it first. No harm, nothing in it changed my call."
+    solution: "None needed; the hook already catches it."
+  - session: session_013zxzeQgh4aLo2xMP4FzXZJ
+    date: "2026-11-17"
+    severity: nit
+    description: "Ran git log -3 before reading git-conventions.md; the PostToolUse hint then told me to read it."
+    solution: "Treat git log as non-exempt and read the doc first."
+  - session: session_013zxzeSpYABZ15tUzNbPJN9
+    date: "2026-11-17"
+    severity: nit
+    description: "Ran git log on Skill folders to draw a conclusion before reading git-conventions.md, which CLAUDE.md requires before the first non-read-only git command."
+    solution: "Read the git doc before any git command; a hook hint arrived only after the call."
+  - session: session_013zxzePMRv24VHZ1q24seyG
+    date: "2026-11-17"
+    severity: nit
+    description: "I ran git fetch and status before the git-conventions doc, which CLAUDE.md wants first; the hint arrived after the call and I read it then."
+    solution: "Fine as designed; the late read changed nothing."
+  - session: session_013zxzePEh76m48UZNU4Ue1j
+    date: "2026-11-17"
+    severity: nit
+    description: "Filed the needs-triage issue before reading triage-labels.md, which CLAUDE.md names for filing; the PostToolUse hint reached me after the call."
+    solution: "Read triage-labels.md together with issue-tracker.md before the first issue write."
+  - session: session_013zxzeNkrnZpMkYb9UUBh2t
+    date: "2026-11-17"
+    severity: nit
+    description: "Ran git fetch before reading git-conventions.md, which CLAUDE.md requires before any non-read-only git command; the hook flagged it."
+    solution: "Read the doc first when a Skill's step 1 starts with a git command."
+  - session: session_013zxzeR4N3chSHqH7Po2sjW
+    date: "2026-11-17"
+    severity: minor
+    description: "Ran git log, git grep and list-merges-since and issue_read before reading git-conventions.md and github-integration.md, as CLAUDE.md requires; hooks flagged it after the call."
+    solution: "Read both docs at the first git or GitHub command; the harvest Skill could list them in its first step."
+  - session: session_013zxzePDuDw1pEuTakjKjF7
+    date: "2026-11-18"
+    severity: nit
+    description: "Ran digest.ts list, then list-recent-prs, which fetches, before reading git-conventions.md; the hook flagged it afterwards."
+    solution: "Load the git read hint before the Skill's first helper that runs git fetch."
+  - session: session_013zxzeQty154cpRRShQjRhX
+    date: "2026-11-18"
+    severity: nit
+    description: "Ran git log on origin/main to judge #3411 and #3428 timing before reading git-conventions.md, which the first conclusion-drawing git command requires."
+    solution: "Read the git doc in step 1, before the first git log."
+  - session: session_013zxzeS9acFkKg79nkVrA5R
+    date: "2026-11-17"
+    severity: minor
+    description: "PostToolUse read-first hints (git-conventions, ADRs) reached all 5 builders after the action they govern, so the reads changed nothing."
+    solution: "Fire the hint before the action, or drop it for subagents whose brief names the files, in the read-hint hook under scripts/hooks."
