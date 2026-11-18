@@ -387,6 +387,11 @@ describe('evidenceReport()', () => {
     expect(evidenceReport(['log'], { ...sources, frictions: [{ file: 'f4.yml', summary: 'a catalog' }] })).not.toContain('f4.yml')
   })
 
+  it('matches a keyword that starts with a non-word character, such as an issue reference', () => {
+    const r = evidenceReport(['#7'], { ...sources, frictions: [{ file: 'f5.yml', summary: 'see #7 and (#70)' }] })
+    expect(r).toContain('f5.yml')
+  })
+
   it('prints an open issue without a reason', () => {
     expect(evidenceReport(['other'], sources)).toContain('#9 open: Other')
   })

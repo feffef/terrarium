@@ -245,7 +245,7 @@ export interface EvidenceSources {
  *  Friction Ledger. A hit is only a hint: SKILL.md step 3 has the agent read each one. */
 export function evidenceReport(keywords: string[], src: EvidenceSources): string {
   // A keyword matches at the start of a word, so `log` finds `logs` but not `catalog`.
-  const re = new RegExp(`\\b(?:${keywords.map((k) => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})`, 'i')
+  const re = new RegExp(`(?<!\\w)(?:${keywords.map((k) => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})`, 'i')
   const hit = (text: string | null) => re.test(text ?? '')
   const section = (name: string, found: string[]) => [`${name}:`, ...(found.length ? found : ['  (no match)'])]
   return [
