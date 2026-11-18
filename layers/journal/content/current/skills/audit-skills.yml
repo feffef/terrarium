@@ -9,35 +9,9 @@ role: >-
   Inventory's grades in line with usage as a by-product, self-merging those
   edits (ADR-0015).
 auditSummary:
-  date: "2026-11-17"
-  text: "Runs daily and lands its Inventory PRs and issues. Small repeated slips: reading the git and GitHub guides after the first command, and twice drafting a wrong session id before catching it."
+  date: "2026-11-18"
+  text: "Grades the Platform's Skills from real runs and lands Inventory updates each night. It spends heavily on near-identical reports for Skills that did not change, and sometimes reads its docs late."
 observations:
-  - date: "2026-10-08"
-    note: >-
-      Self-check: dispatched 11 behaviour-check subagents this run (one per
-      behaviourChecks entry), each report independently verified against
-      primary sources before use (every PR/issue claim checked live via
-      GitHub, several quoted log excerpts confirmed verbatim against the raw
-      session log). 3 new findings cleared the significant/repeated bar and
-      were filed as fresh issues (none had a standing open-issue home to
-      comment on instead): #1675 (auto-triage's PR #1630→#1631 revert
-      dropped a real friction's fix untracked), #1676 (frictions-to-fixes'
-      own new surface-blocked-filing rule, PR #1655, broke on its first live
-      test 2 hours after merging, and the run's `outcome` field hid it),
-      #1677 (prune-trial's narrow-margin scheduling miss hit the 5th instance
-      this Inventory's own 2026-10-04/06 entries set as the escalation
-      threshold). One comment with new evidence added to the already-open
-      #1647 (audit-docs' independent-checker dispatch fix held on its first
-      live test). The rest — blog-post, close-session, digest,
-      dispatch-subagents, log-session, visitor-loop — came back clean or
-      matched an already-tracked, already-open issue (#1515 confirmed closed;
-      #1586 confirmed still open with no new instance). Step 3 closure
-      completeness: orphan scan clean (`scanned: true`, 1071 merged PRs, 920
-      with a session), both orphan candidates carry `resolvedBy` (already
-      tracked, left alone), orphanSuppressionLog both entries
-      `resolved-annotation` with plausible issue numbers (healthy),
-      humanPromptedClosures and manuallyRescuedClosures both empty. Grade/role
-      unchanged.
   - date: "2026-10-09"
     note: >-
       Self-check: dispatched 11 behaviour-check subagents this run (one per
@@ -493,3 +467,5 @@ observations:
     note: "Behaviour check, 7 runs, all Inventory PRs merged (#2989 to #3327). Known repeat: session_013zxzeTKpnXCQm75L92QGhL (11-12, PR #3122) used its own read instead of code-review on 22 data files, disclosed. New repeat (n=3): 11-12, 11-14, 11-15 read git/github docs after the first gh call, hook caught it. Idea: name those docs in step 1. Not issued. Grade unchanged."
   - date: "2026-11-17"
     note: "Behaviour check, runs session_013zxzePnUYHpbwDsDER2swv and session_013zxzeS7ZJqB5FMcd5d5fza: both delivered, PRs #3360 and #3327 merged, YAML-only diffs, no revert. New minor repeat n=2: a wrong session id drafted before the write (caught via get_session). Late git/GitHub doc reads n=4. Grade unchanged."
+  - date: "2026-11-18"
+    note: "Behaviour check, runs session_013zxzeTBn6kP1nZ2KA22n9i and session_013zxzePnUYHpbwDsDER2swv: PRs #3399 and #3360 merged (YAML-only diffs), issues #3395-#3398 closed, no revert. Repeats: late git/GitHub doc reads (n=5), wrong session id drafted before the write (n=3), 16-17 near-identical subagent reports (n=2, ~1.7M tokens in 11-17). Idea: scorecard prints each Skill's last-run count so unchanged Skills are skipped."

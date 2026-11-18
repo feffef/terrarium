@@ -1,21 +1,5 @@
 name: glassbox-update
 runs:
-  - session: session_01BZfZ9Ro87HdnHqwjc2j6m2
-    startedAt: 2026-10-17T06:38:43Z
-    durationSeconds: 1006
-    inputTokens: 287
-    outputTokens: 56760
-    cacheReadTokens: 9492411
-    cacheWriteTokens: 556340
-    costUsd: 3.0892011
-  - session: session_0148agurVWH8QQeSkGCDm23e
-    startedAt: 2026-10-18T06:33:50Z
-    durationSeconds: 537
-    inputTokens: 73
-    outputTokens: 11544
-    cacheReadTokens: 3431677
-    cacheWriteTokens: 100785
-    costUsd: 0.8618937
   - session: session_01QEZ5a5X44d3ZzbF2vPwmAo
     startedAt: 2026-10-19T06:33:25Z
     durationSeconds: 610
@@ -240,3 +224,19 @@ runs:
     cacheReadTokens: 11984559
     cacheWriteTokens: 635205
     costUsd: 3.7091649
+  - session: session_013zxzeQnWZGH17Bmo7pqtaf
+    startedAt: 2026-11-17T07:33:20Z
+    durationSeconds: 1024
+    inputTokens: 8871
+    outputTokens: 35173
+    cacheReadTokens: 6898482
+    cacheWriteTokens: 254397
+    costUsd: 1.8045269
+  - session: session_013zxzeNzhyuFe3JhwD9usjS
+    startedAt: 2026-11-16T07:32:44Z
+    durationSeconds: 80291
+    inputTokens: 199308
+    outputTokens: 130570
+    cacheReadTokens: 23388155
+    cacheWriteTokens: 957769
+    costUsd: 6.2631142

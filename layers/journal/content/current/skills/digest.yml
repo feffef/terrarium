@@ -9,25 +9,9 @@ role: >-
   against the PRs' diffs, and merges its own gated PR on green. Scheduled; run
   by hand to catch up.
 auditSummary:
-  date: "2026-11-17"
-  text: "Produces a daily digest that lands fact-checked and merged. The fact-check step is often blocked on its first attempt because the dispatch guide is not named, and cadence words slip past the fact-checker."
+  date: "2026-11-18"
+  text: "Writes the daily Digest from verified facts and lands it; fact-check catches wrong claims before merge. Its first subagent call is usually refused until the dispatch Skill is read."
 observations:
-  - date: "2026-10-08"
-    note: >-
-      Re-checked (audit-skills behaviour check), 7 usedIn sessions. Newest,
-      session_01KCWd4fWsUfUxL6uT4Bephj (PR #1674, the 2026-10-07 Digest)
-      verified end-to-end: content matches primary sources (PRs #1645/#1655),
-      retention sweep moved exactly 1 digest + 12 session logs per
-      `RETAIN_DATES = 7`, genuine fact-check dispatch (22 claims, 1 reworded),
-      and the session correctly left the PR open/in-review for a human
-      because an out-of-scope e2e-test fix rode along — confirmed live via
-      GitHub (PR #1674 still open, gate green). Two separate retention-sweep
-      side-effect incidents this window (an unquoted YAML colon breaking the
-      gate, fixed via PR #1660; the sweep archiving a digest a blog e2e test
-      hard-coded, fixed inline) share the same underlying shape — the sweep's
-      side effects reach outside its own Space — but both were loudly caught
-      and fixed/escalated in the same run, not silent. Worth a human's
-      attention on a third occurrence. No new silent failure. Grade unchanged.
   - date: "2026-10-09"
     note: >-
       Re-checked (audit-skills behaviour check), 7 usedIn sessions. Newest,
@@ -280,3 +264,5 @@ observations:
     note: "Behaviour check, 7 runs, 7 PRs merged (#3014 to #3359), 7 consecutive digests on main, code-review and fact-check in every run. Repeat: dispatch-read guard blocked first fact-check Agent call in 4 of 7 (11-11, 11-12, 11-14, 11-16); step 3 does not name dispatch-subagents. Cadence-word rule landed 11-13 (c2abcf51f), 2 runs under it. Idea: name the Skill in step 3. Not issued. Grade unchanged."
   - date: "2026-11-17"
     note: "Behaviour check, runs session_013zxzeQeBzhDzmSvD9thT22, session_013zxzeQwDvvHbis5TK1nUw5, session_013zxzeSgpoaGQ1bLrtX4DkU: PRs #3324, #3359, #3394 merged, Digests on main, no revert. Dispatch guide blocked the first Agent call in 2 of 3. Cadence word reached code-review in the last run. Grade unchanged."
+  - date: "2026-11-18"
+    note: "Behaviour check, runs session_013zxzeQwDvvHbis5TK1nUw5, session_013zxzeSgpoaGQ1bLrtX4DkU, session_013zxzePDuDw1pEuTakjKjF7: PRs #3359, #3394, #3439 merged, Digests on main, no revert, no cadence word shipped (8bb55ab8c works). Dispatch-read guard blocked the first Agent call in 3 of 3 (earlier: 4 then 5 of 7). Wrong session id typed in a commit trailer twice, caught before shipping. Idea: name dispatch-subagents in step 3."

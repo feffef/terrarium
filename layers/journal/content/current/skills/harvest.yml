@@ -14,8 +14,8 @@ watchFor:
   - "Existing Seedlings were checked without reading the whole issue list into the run's own context."
   - "No new Seedling duplicates an open issue or one the owner closed as not planned."
 auditSummary:
-  date: "2026-11-17"
-  text: "Files well-formed Seedling issues from the logs on a schedule. It keeps stopping before its quota or cluster limit with no reason logged, leaving many learnings unchecked."
+  date: "2026-11-18"
+  text: "Files well-formed, non-duplicate Seedling issues each run. It stops searching early without saying why, a gap fixed only on the latest run; issue docs are often grepped rather than read."
 observations:
   - date: "2026-11-13"
     note: >-
@@ -30,3 +30,5 @@ observations:
     note: "Behaviour check, 8 runs; 14 Seedlings checked on GitHub exist. Silent failure (new, n=3): step 2 stops early on 11-13, 11-14, 11-15 (6, 8, 11 clusters; 4, 3, 6 filed; quota 10, limit 30), no friction logged. Late git/GitHub doc reads repeat. Idea: make check-clusters require a stopped reason. Not issued. Grade unchanged."
   - date: "2026-11-17"
     note: "Behaviour check, runs session_013zxzeNxZVrKu9whNTs4pnR, session_013zxzeRGXYTuwyQrcDEwRpw, session_013zxzeT29epAaAQNqmHmeU4: 15 of 15 Seedlings exist (#3318 to #3320, #3353 to #3358, #3382 to #3387). Verified silent failure n=4: step 2 stops early with no friction; filed #3396. Graded routine: scheduled runs on 11-13 to 11-16 (session_013zxzeNxZVrKu9whNTs4pnR, session_013zxzeRGXYTuwyQrcDEwRpw, session_013zxzeT29epAaAQNqmHmeU4). Role reworded."
+  - date: "2026-11-18"
+    note: "Watch for: 1 stop reason: 11-15 and 11-16 failed (no `stopped:`, pre-c0cb58a text), 11-17 couldn't tell; 2 Seedlings exist: held (#3353, #3358, #3382, #3387, #3431-#3438 checked); 3 no whole-list read: couldn't tell; 4 duplicates: held on spot check. Runs session_013zxzeRGXYTuwyQrcDEwRpw, session_013zxzeT29epAaAQNqmHmeU4, session_013zxzeR4N3chSHqH7Po2sjW delivered, no revert. Step 2 early stop with no reason n=5. Idea: read issue-tracker.md and triage-labels.md in step 3's first read."
