@@ -10,7 +10,7 @@ focus: "Memory page: drop wording leads that the pages now answer. Chosen
   and Spec) ran on the diff. Cost: unreported (no get_session); estimated
   context about 170k tokens."
 changes:
-  - "workshop/pages/index | Three stale leads deleted: Planning skills (the ready-for-agent override reached before its rule; the file-sharing list beside 'a brief names no files') and the Wayfinder Fog and Not yet specified naming | the Planning skills page links the override from its concept and says the sweep's file list stays out of the brief; Wayfinder's concept ties Not yet specified to the fog and In Terrarium says the Fog section is the one the skill calls Not yet specified. The Wayfinder lead about the one-ticket rule stays, as no source gives its reason"
+  - "workshop/pages/index | Three stale leads deleted: Planning skills (the ready-for-agent override reached before its rule; the file-sharing list beside 'a brief names no files') and the Wayfinder Fog and Not yet specified naming | the Planning skills page links the override from its concept and says the sweep's file list stays out of the brief; Wayfinder's concept ties Not yet specified to the fog and In Terrarium says the Fog section is the one the skill calls Not yet specified. The Wayfinder lead about the one-ticket rule and the HITL, frontier and fog list stay: no source gives that reason, and the list still comes before any example"
 pagesRead:
   - skill-pack/20.planning-with-the-pack
   - skill-pack/40.wayfinder
