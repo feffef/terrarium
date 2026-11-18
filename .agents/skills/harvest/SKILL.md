@@ -25,11 +25,13 @@ harvests both.
    included). Within a kind the newest come first and the kinds alternate, idea
    first; recency is the only ranking, so an idea from a smooth session ranks like
    any other. Then redirect `harvest list <scratchpad>/harvest-extract.json` to
-   `<scratchpad>/harvest-list.txt` and read that file whole: every
-   entry in that order, with each session's start, PRs, goal, outcome and source
-   file printed once before its first entry. It holds everything steps 2 and 3
-   read; use `jq` on the JSON only for more on an entry (the list's last lines
-   show how). Done when you have the counts per kind and the last entry's number.
+   `<scratchpad>/harvest-list.txt` and read it with Read in pages of about 150
+   lines until its last line: every entry in that order, with each session's
+   start, PRs, goal, outcome and source file printed once before its first
+   entry. It holds everything steps 2 and 3 read; use `jq` on the JSON only for
+   more on an entry (the list's last lines show how). Done when you have the
+   counts per kind and the last entry's number equals the count `extract`
+   printed.
 2. **Cluster, in order.** Merge near-duplicate entries into clusters, taking
    entries from the top, and label each cluster **product** (what a visitor or
    the owner sees or uses on the site: a Tenant, its content, the UI) or
