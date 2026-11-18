@@ -1,7 +1,7 @@
 // WCAG AA (4.5:1) for the Atlas's text colours on their real ground, in both
 // themes (#3430). Reads theme.css so the stylesheet stays the only home of the
 // colours; `--atlas-faint` is ornament only, so it is deliberately not tested.
-import { readFileSync } from 'node:fs'
+import { readdirSync, readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 
 const css = readFileSync(new URL('../../app/assets/theme.css', import.meta.url), 'utf8')
@@ -69,10 +69,10 @@ function ground(v: Vars): Rgb {
 
 describe('--atlas-faint', () => {
   it('is used only for the cover ornament, never text', () => {
-    const files = ['assets/theme.css', 'pages/t/atlas/index.vue', 'pages/t/atlas/[space]/index.vue', 'components/atlas/SpecimenPlate.vue']
+    const app = new URL('../../app/', import.meta.url)
+    const files = readdirSync(app, { recursive: true, encoding: 'utf8' }).filter((f) => /\.(css|vue|ts)$/.test(f))
     const uses = files.flatMap((f) =>
-      readFileSync(new URL(`../../app/${f}`, import.meta.url), 'utf8').split('\n')
-        .filter((l) => l.includes('var(--atlas-faint)')))
+      readFileSync(new URL(f, app), 'utf8').split('\n').filter((l) => l.includes('var(--atlas-faint)')))
     expect(uses.length).toBe(1)
     expect(uses[0]).toContain('.cover-orn')
   })
