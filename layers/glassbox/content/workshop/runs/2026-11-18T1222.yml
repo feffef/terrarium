@@ -12,8 +12,7 @@ changes:
     modules now says the routing module also sits in modules/ but is installed
     once; teaches and publishedAt are updated | the page named only the list
     for routing and only the folder for catalog, leaving open whether routing
-    ran twice. Checked with a log line in setup() during nuxt prepare (one call,
-    reverted)"
+    ran twice. Checked with a log line in setup() during nuxt prepare (one call, reverted). The claim checker read resolveModules in nuxt 4.6.4 (index.mjs:10160-10172) as keying the config entry by the raw string and the folder scan by its absolute path, which would predict two installs; the observed single call is the evidence kept, and the source reading is unexplained"
   - "workshop/pages/index | the registered-twice lead deleted | done"
 pagesRead:
   - nuxt-vue/40.virtual-modules
