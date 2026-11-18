@@ -13,6 +13,17 @@ async function nitroCacheMount() {
   return config.nitro.storage.cache
 }
 
+// In dev the cache would hold an edited page for its maxAge, hiding content edits.
+it('turns the page cache off in development, for the Platform rules only', async () => {
+  vi.stubGlobal('defineNuxtConfig', (c: unknown) => c)
+  const { default: config } = await import(pathToFileURL(resolve('nuxt.config.ts')).href)
+  expect(Object.keys(config.routeRules)).toEqual(['/', '/t/**'])
+  expect(config.$development.routeRules).toEqual({
+    '/': { cache: false },
+    '/t/**': { cache: false },
+  })
+})
+
 async function nitroDriver(name: string) {
   let req = createRequire(pathToFileURL(resolve('package.json')))
   for (const pkg of ['nuxt', '@nuxt/nitro-server', 'nitropack']) {
