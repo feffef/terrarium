@@ -9,8 +9,8 @@ role: >-
   enter the asking session's context. Essential whenever a session must
   inspect a sibling's history, rare otherwise.
 auditSummary:
-  date: "2026-11-17"
-  text: "Answers questions about other sessions from logs and cheap reads first, with event reads kept in a subagent. Its known slips are fixed; it does not warn that a live session's cost figure lags."
+  date: "2026-11-18"
+  text: "Answers questions about other sessions from logs and a subagent, keeping events out of context. Live-session cost reads lag behind, which has caught several sessions out."
 observations:
   - date: "2026-10-20"
     note: >-
@@ -158,3 +158,5 @@ observations:
     note: "Behaviour check, 8 runs, no miss among the listed non-users (162 in the data file), PRs #3160, #3162, #3334 merged. The send_message mis-inference was fixed by 966cfc7af (11-11); no later repeat. Idea: note cost_usd lags a live session (glassbox-curate misreported 0.12 vs 4.22). Not issued. Grade unchanged."
   - date: "2026-11-17"
     note: "Behaviour check, run session_013zxzePH9gQTPAHjR7vCj71: subagent read the events, PR #3334 merged, no revert; 154 non-user sessions ruled out. Known: get_session cost lags a live session (0.12 against 4.22 in session_013zxzePak78Sud7pyRQMjeV). Idea: move the probe-one-session warning into step 4. Grade unchanged."
+  - date: "2026-11-18"
+    note: "Behaviour check, runs session_013zxzePH9gQTPAHjR7vCj71 (clean: subagent-first, #3334 merged) and session_013zxzeSgAcwDrJXAMFAC4Qf (unverified: lists the Skill with no calls, likely a mis-log). About 150 non-users ruled out by grep; single-hit logs not opened. Own-session get_session cost lags a live session: third window noted. Idea: step 2 says read cost after the turn ends. Grade unchanged."

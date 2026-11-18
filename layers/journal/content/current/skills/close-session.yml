@@ -9,22 +9,9 @@ role: >-
   the self-judged "invoke at closure" rule fire reliably; its invocation rate is the evidence for ADR-0009's choice
   of a Skill over a reminder hook.
 auditSummary:
-  date: "2026-11-17"
-  text: "Reliably closes sessions with an honest, complete log after the work lands. The look-back step has no check, so how well it is done is unknown."
+  date: "2026-11-18"
+  text: "Closes sessions reliably: every log in the window landed, matched its merges, and none needed a human nudge. Whether it looks back at earlier work cannot be told from the logs."
 observations:
-  - date: "2026-10-08"
-    note: >-
-      Re-checked (audit-skills behaviour check), 10 usedIn invocations
-      (2026-10-01/02, all `kind: autonomous`, 10 merged PRs): 0/10 stale,
-      every claimed status matched live PR state. The two-step
-      finalize cycle (in-review → completed) independently re-verified
-      working cleanly in 6/10 sessions that needed it (exactly two Journal
-      commits each, verbatim-replace semantics honored, no field corruption
-      or duplicated frictions); the other 4 self-merged within one turn,
-      correctly single-commit. `window_not_used` empty, independently
-      corroborated by grepping every session log in the window for
-      `skillsUsed`. No reverts touching this Skill's mechanics. Grade/role
-      unchanged.
   - date: "2026-10-09"
     note: >-
       Re-checked (audit-skills behaviour check), 10 newest invocations: 0/10
@@ -255,3 +242,5 @@ observations:
     note: "Behaviour check, 10 runs: all logs complete, landed by Stop, PRs merged first; no human-prompted closure. session_013zxzeQpVcWQaKyrR36MwpN (visitor-loop) not a miss. Step 2 look-back is still the only step nothing checks. Orphan scan 0, no suppressions. Grade unchanged."
   - date: "2026-11-17"
     note: "Behaviour check, 40 runs (11-14 to 11-17): every log is on main, timings fit the last PR merge, no human-prompted closure. session_013zxzeRCPF7mHwN6aT8t7RQ is an honest in-review log with three PRs awaiting the owner; nothing re-closes it. Step 2 look-back still unchecked. Orphan scan: 0 orphans. Idea: flag in-review logs whose PRs are all merged. Grade unchanged."
+  - date: "2026-11-18"
+    note: "Behaviour check, 44 runs (11-15 to 11-18): all logs on main, all completed, 0 human-prompted, 0 in-review; timings fit the merges (20 PRs checked). Stale in-review log session_013zxzeRCPF7mHwN6aT8t7RQ re-closed within a minute of the last merge, so the earlier stale-log note is resolved. Two visitor-loop runs list close-session without log-session in skillsUsed (accounting gap, unverified why). Step 2 look-back still uncheckable from logs. Idea: a `lookback` tag."

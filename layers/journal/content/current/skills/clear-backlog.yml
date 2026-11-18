@@ -10,8 +10,8 @@ role: >-
   everything now" pass, not a substitute for the smaller on-interval Skills it
   composes.
 auditSummary:
-  date: "2026-11-17"
-  text: "Clears backlog batches into merged PRs. It sometimes skips the grilling Skill or relays unverified claims, and its second review round can cost far more than the nits it finds."
+  date: "2026-11-18"
+  text: "Clears a batch of issues into reviewed, merged PRs and parks what it cannot settle. Its first dispatch is refused every time until the dispatch Skill is read; second-round review cost was recently trimmed."
 observations:
   - date: "2026-10-13"
     note: >-
@@ -243,3 +243,5 @@ observations:
     note: "Behaviour check, 10 runs; delivery confirmed for 3, spot-checked others. Repeats: picks relayed unverified (session_013zxzeT5pQrVtuNLAzUQRaP, owner caught); partial grilling answers proceeded on guesses (session_013zxzeP5Vhec86YSiybqM8g); close-session not re-invoked after merge in 2 runs (Stop hook caught); worktree left open (session_013zxzeR3mLZWKT2R7LWmtqf, tracked #3229). Idea: mechanical VERIFY/Q gate in run-summary.ts --triage. Not issued. Grade unchanged."
   - date: "2026-11-17"
     note: "Behaviour check, 6 runs, 22 of 22 PRs exist (19 merged, 3 await the owner), no revert. Unverified silent failure n=3: grilling not in skillsUsed in session_013zxzeRCPF7mHwN6aT8t7RQ, session_013zxzeSECfNzcU6b53GPzxG, session_013zxzeT3bxsaccpcz9P65Ra though owners answered rounds. Moderate friction: second round on four small branches cost about 600k tokens for nits. Grade unchanged."
+  - date: "2026-11-18"
+    note: "Behaviour check, runs session_013zxzeSECfNzcU6b53GPzxG, session_013zxzeTChey8pdC2fuTTH7i, session_013zxzeRCPF7mHwN6aT8t7RQ, session_013zxzeS9acFkKg79nkVrA5R: 18 of 18 PRs merged, no revert. Dispatch-read guard blocked the first Workflow call in 4 of 4. `grilling` missing from skillsUsed in 2 of 4 though owner answers were logged (unverified why). Round-2 cost fixed by #3419; watch for recurrence. Idea: name the dispatch-subagents read in \u00a71."

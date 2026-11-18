@@ -34,3 +34,5 @@ observations:
     note: "Behaviour check, 3 runs, PRs #3062, #3066, #3102, #3160, #3162 merged. Lesson quality problems reached the owner after merge (session_013zxzeRvdzBc3xXGo24TkVf, fixed in #3162: missing antecedent, wrong order). Skill gained an Orient step (d87ec97c2, 6082e3053). Idea: reread-top-to-bottom Done check. Not issued. Grade unchanged."
   - date: "2026-11-17"
     note: "No run in the last 3 days to grade; the 7-day window has 3 uses, last on 11-12 (a quiet stretch is normal, it is dispatched per topic). Next audit with runs: check Orient (d87ec97c2, 6082e3053) and orient.ts change 5987bc605 against post-merge fixes. Grade unchanged."
+  - date: "2026-11-18"
+    note: "2026-11-18: no runs in the window, nothing to grade. SKILL.md Orient step confirmed on main; orient.ts change (#3375) touches only the script. Open from earlier notes: post-merge quality gap behind #3162. Idea: final step to reread the Lesson for antecedents and order and grep for digit-plus-unit counts. Grade unchanged."

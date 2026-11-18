@@ -9,25 +9,9 @@ role: >-
   PR, and a merged post owes a decision on whether another Persona replies.
   Gives the Terrarium a multi-voice commentary on its own development.
 auditSummary:
-  date: "2026-11-17"
-  text: "Posts land fact-checked and merged, and the code review skipped once has run in both runs since the step was reworded. Pingback files are sometimes named after the wrong post."
+  date: "2026-11-18"
+  text: "Writes and lands a daily Persona post that is fact-checked and reviewed before merge. It sometimes runs review steps out of order, and the first dispatch is usually refused until the dispatch Skill is read."
 observations:
-  - date: "2026-10-08"
-    note: >-
-      Re-checked (audit-skills behaviour check), 10 usedIn sessions, 2
-      newly-audited beyond #1626's filing: session_01RGKoFL9ZKfvji8zENgRVBT
-      (PR #1656 Kevin standalone, PR #1657 Karen reply) and
-      session_01AQ91ENQEqf8iMne1PrzFiu (PR #1670 Eyra standalone, PR #1671
-      Karen reply, correctly escalated for human merge per the Skill's own
-      rule rather than self-merged, since the "who caught it" claim rested
-      only on an agent-written log). Both ran genuine step-12 reader
-      dispatches and step-7 fact-checks with specific, non-boilerplate
-      tallies (38/32 and 36/32 claims respectively), content spot-checked
-      against primary sources (PR #1658's actual diff stats matched the
-      Eyra post's claimed line counts exactly). #1626 (step 12's 5th skip)
-      still open, nothing new; its fix has not yet been tested by a genuine
-      "none" verdict — both post-fix runs checked had actual reply winners.
-      No reverts found. Grade unchanged.
   - date: "2026-10-09"
     note: >-
       Re-checked (audit-skills behaviour check), 10 newest usedIn sessions,
@@ -305,3 +289,5 @@ observations:
     note: "Behaviour check, 8 runs, 15 PRs merged; Fact-checked blob lines all match main. Silent failure (verified for session_013zxzeQTse2DhxedTzE2wcE, PRs #3312/#3313: no code-review anywhere; likely for session_013zxzeSTLT98vFMqWFKbjqG, PR #3267). Step 12 reply path leaves no review trace. Pingback stubs still named by own slug in 2 PRs (#3267, #3313). Idea: Reviewed: <sha> PR-body line. Not issued (unverified 2nd). Grade unchanged."
   - date: "2026-11-17"
     note: "Behaviour check, 4 runs (session_013zxzeQTse2DhxedTzE2wcE, session_013zxzeQnCCyBdXZDEv9qTNh, session_013zxzeQ65iPt7YSAHWJBs1q, session_013zxzeSNLpQuhLvWkddGuao; PRs #3312 to #3314, #3338, #3339, #3379 merged, no revert). Verified: session_013zxzeQTse2DhxedTzE2wcE (11-14) skipped code-review before 96f5bef; the step-12 fix held in the two later runs. Pingback stub misnamed, 3rd case. Grade unchanged."
+  - date: "2026-11-18"
+    note: "Behaviour check, runs session_013zxzePjedjMk4SeDKFvzPt, session_013zxzeSNLpQuhLvWkddGuao, session_013zxzeQ65iPt7YSAHWJBs1q: PRs #3422, #3424, #3379, #3338, #3339 merged, Fact-checked blobs match, no revert. Fact-check before code-review (against step 9's order) in 2 of 3. Dispatch-read guard blocked the first Agent call in 3 of 3: the 11-02 fix d1d302476 did not hold. Unverified: step 2 persona reading skipped on 11-17 (self-disclosed)."

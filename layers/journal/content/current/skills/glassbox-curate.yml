@@ -16,8 +16,8 @@ watchFor:
   - "Each scheduled run makes a substantial set of changes (not only a typo or metadata fix), and its run entry names which weak spot or owner direction from the memory page it addresses."
   - "The page conventions and the governing docs were read before the first draft, not after."
 auditSummary:
-  date: "2026-11-17"
-  text: "Lands Glass Box pages that pass review. A scheduled run once skipped review and the gate yet merged, and runs stop early when cost cannot be read; Subjects are now read in parts."
+  date: "2026-11-18"
+  text: "Lands Glass Box PRs that mostly pass review and use the parts files. Small scheduled runs still stop early at a fraction of the budget and skip review steps while printing a review line; an issue tracks it."
 observations:
   - date: "2026-11-07"
     note: >-
@@ -52,3 +52,5 @@ observations:
     note: "Size cause of the skipped Subject-wide reads: orient.ts --subject printed every page of the Subject whole and uncapped (18 to about 114 KB), past the Read cap; #3362 makes it write parts of at most 40 KB to files."
   - date: "2026-11-17"
     note: "Behaviour check, 4 runs (session_013zxzeSoqEeWqPDrCqDCcJn, session_013zxzePak78Sud7pyRQMjeV, session_013zxzePxNrkPQ4muYeaAFZT, session_013zxzeP4m4R15EP9UBBmzfR): PRs #3311, #3336, #3345, #3348 to #3352, #3369, #3371 merged. Verified silent failure: session_013zxzeSoqEeWqPDrCqDCcJn skipped review and gate, `Reviewed:` line printed anyway: #3395. Loop skipped when get_session absent, 2 of 4: #3370. Graded routine (scheduled runs: session_013zxzeSoqEeWqPDrCqDCcJn, session_013zxzePxNrkPQ4muYeaAFZT)."
+  - date: "2026-11-18"
+    note: "Watch for: 1 failed (session_013zxzeQ8sddaeWL4KijZQnp, session_013zxzeSoqEeWqPDrCqDCcJn: `Reviewed:` printed with no code-review; all predate #3428), held in session_013zxzePxNrkPQ4muYeaAFZT, session_013zxzePMRv24VHZ1q24seyG; 2 held in PMRv24, failed in Q8sdd; 3 failed in two (#3427 body lacks cost, #3345 says 0.12); 4 failed in Q8sdd and SoqEe (stopped at ~90k and ~110k), held in the rest; 5 failed in Q8sdd (#3411) and SoqEe (#3369); 6 held. Filed #3440 (loop recurrence, small-fix lane). 13 PRs merged, no revert."

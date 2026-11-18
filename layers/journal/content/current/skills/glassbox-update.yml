@@ -8,8 +8,8 @@ role: >-
   or diagrams may now be stale, and lands a self-merging PR once they're
   re-checked. Fired by a Routine; keeps Glass Box honest as the Platform changes.
 auditSummary:
-  date: "2026-11-17"
-  text: "Keeps the textbook pinned to current commits through daily merged PRs. It skips code review on large pin-only diffs every time; the scoping fix for its reader step has one clean run so far."
+  date: "2026-11-18"
+  text: "Re-pins and re-dates Glass Box pages on a rotation and fixes false claims; all three runs landed. It skips the lighter-review step and, once, the reader check on pages with only style changes."
 observations:
   - date: "2026-10-16"
     note: >-
@@ -177,3 +177,5 @@ observations:
     note: "Behaviour check, 8 runs, PRs #3000 to #3332 merged, no revert. Repeat: code-review replaced by own read on 5 of 8 mechanical pin PRs (#2748 closed not planned); session_013zxzePSj9Rpf6qCGowU7gi stamped partly-checked pages. Scoping fix 4767f3755 (11-14) untested by any run. Idea: tell checkers ranges are already advanced. Not issued. Grade unchanged."
   - date: "2026-11-17"
     note: "Behaviour check, runs session_013zxzeRDWicEfcb8rCWFepr and session_013zxzeRchVHk3fp9wS3yUgM: PRs #3308, #3332 merged, no revert. Own read replaced code-review 2 of 2 (77 and 76 files), filed with the other simple-change cases as #3397. 11-15 is the first run after scoping fix 4767f3755: weak positive. Graded routine (scheduled runs, same two sessions)."
+  - date: "2026-11-18"
+    note: "Behaviour check, runs session_013zxzeRchVHk3fp9wS3yUgM, session_013zxzeNzhyuFe3JhwD9usjS, session_013zxzeQnWZGH17Bmo7pqtaf: PRs #3332, #3403, #3404 merged, update.yml +10 lines each, no revert. Own read replaced code-review in 3 of 3 (#3397 area). Unverified silent failure: 11-17 run self-checked six flagged pages instead of dispatching step 5 readers, with no docs fetch. Stale-tree checkers on 11-16 (no fix yet). Idea: a diff of only scripted pins and dates counts as simple."

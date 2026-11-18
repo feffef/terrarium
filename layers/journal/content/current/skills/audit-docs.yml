@@ -9,27 +9,9 @@ role: >-
   gated PR on green (ADR-0003/0004), filing an issue only for a factual conflict
   it can't resolve. Use it when docs and code drift apart.
 auditSummary:
-  date: "2026-11-17"
-  text: "Reliably audits the docs and lands its sweep and escalation PRs. The sweep PR keeps ending up with two commits instead of one, and verdict counts are still sometimes wrong in comments."
+  date: "2026-11-18"
+  text: "Reviews the docs each night and lands the fixes that hold up, with each verdict counted correctly. Reviewer coverage is often thin, and the log may overstate what was read."
 observations:
-  - date: "2026-10-08"
-    note: >-
-      Re-checked (audit-skills behaviour check): issue #1647's open question
-      answered. The very next audit-docs run after the `5deab149` fix,
-      session_01N6jqFrkCMkEm3g6kJW9Zqk (2026-10-07T04:01-10:38Z, entirely
-      under the fixed wording), dispatched 4 distinct, explicitly-named
-      checker subagents ("Check batch 1 findings," "Check CLAUDE.md verbose
-      findings," "Check GLOSSARY/MAP verbose findings," "Check tenant/README
-      verbose findings") and its log summary named the checker verdict tally
-      (CONFIRMED-BUT/WRONG counts), exactly as the fixed Step 5 requires — the
-      independent-checker-dispatch fix held on its first live test. Commented
-      this evidence onto #1647 rather than closing it (one post-fix run is
-      the "first" test the issue's own triage comment asked for, not
-      conclusive on its own; left the close/no-close call to a human per the
-      `ready-for-human` label). PR #1649 (self-merged, 14 Live-tier files)
-      and PR #1650 (ADR-0003/0004 fixes, correctly escalated to and merged by
-      a human) both independently verified correct. Rest of the 7 usedIn
-      sessions re-confirmed clean. Grade unchanged.
   - date: "2026-10-09"
     note: >-
       Re-checked (audit-skills behaviour check), 7 usedIn sessions
@@ -318,3 +300,5 @@ observations:
     note: "Behaviour check, 7 runs, 10 PRs merged, no revert. Silent failures: sweep PR carries two commits in 11-13/11-14/11-15 (Stop hook pushes the first; §6.1 says one commit); 11-15 (session_013zxzeQE5BDH58h5e21zafo) saved two reviewer replies hand-condensed, not via save-handback.ts. Repeat: verdict counts miscounted in 4 of 7 runs; thin Live-file coverage 11-12, 11-15. Idea: tally-verdicts script. Not issued. Grade unchanged."
   - date: "2026-11-17"
     note: "Behaviour check, runs session_013zxzePSjuKdFtiNUSC531Y, session_013zxzeQE5BDH58h5e21zafo, session_013zxzePBHiX6mZNUjPTWpWc: PRs #3368, #3331, #3301, #3302 merged, no revert; log verdict tallies correct. Verified repeat (4 runs, 11-13 to 11-16): two-commit sweep PR against §6.1, Stop hook pushes before the squash; issue #3398. Verdict miscounts in PR comments: 2. Grade unchanged."
+  - date: "2026-11-18"
+    note: "Behaviour check, runs session_013zxzeQE5BDH58h5e21zafo, session_013zxzePSjuKdFtiNUSC531Y, session_013zxzePiqmgzsVGM4zghBUs (11-15 to 11-17): PRs #3331 and #3368 merged, verdict tallies add up, 11-17 was a clean no-finding run, no revert. Two-commit sweep PR repeated (#3398); c736e4c12 dropped the one-commit promise. Unverified: 11-17 `Covered:` line says B and C read ~30 items in full while its own friction says B read 6 files. Idea: reviewers end with the Live files they read; the log copies that list."
