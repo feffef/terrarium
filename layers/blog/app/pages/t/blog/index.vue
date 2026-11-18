@@ -25,6 +25,9 @@ interface FrontPost {
 
 const route = useRoute()
 
+// Client-only and closed by default; both tag-directory layouts share it.
+const showMeanings = ref(false)
+
 const { data } = await useAsyncData('blog-front', async () => {
   const perPersona = await Promise.all(PERSONA_SLUGS.map(async (persona): Promise<FrontPost[]> => {
     const resolved = resolveSpaceRoute('blog', persona, undefined)
@@ -125,7 +128,10 @@ useSeoMeta({
               <component :is="narrow ? 'summary' : 'p'" class="net-tags-label">
                 Browse by tag<template v-if="narrow"> ({{ tagCounts.length }})</template>
               </component>
-              <nav class="tag-directory" aria-label="Browse by tag">
+              <button type="button" class="tag-meanings-toggle" :aria-expanded="showMeanings" @click="showMeanings = !showMeanings">
+                {{ showMeanings ? 'Hide tag meanings' : 'What do the tags mean?' }}
+              </button>
+              <nav class="tag-directory" :class="{ 'tag-directory--meanings': showMeanings }" aria-label="Browse by tag">
                 <NuxtLink to="/t/blog" class="tag-chip" :class="{ active: !selectedTag }">all</NuxtLink>
                 <NuxtLink
                   v-for="[t, count] in tagCounts"
@@ -133,7 +139,7 @@ useSeoMeta({
                   :to="`/t/blog?tag=${t}`"
                   class="tag-chip"
                   :class="{ active: selectedTag === t }"
-                >{{ t }} <span class="tag-count">{{ count }}</span></NuxtLink>
+                >{{ t }} <span class="tag-count">{{ count }}</span><span v-if="showMeanings" class="tag-meaning">{{ blogTagMeaning(t) }}</span></NuxtLink>
               </nav>
             </component>
           </template>
@@ -144,6 +150,7 @@ useSeoMeta({
         <p v-if="selectedTag" class="feed-filter">
           {{ filteredPosts.length }} {{ filteredPosts.length === 1 ? 'post' : 'posts' }} tagged <strong>#{{ selectedTag }}</strong> ·
           <NuxtLink to="/t/blog">clear filter</NuxtLink>
+          <span v-if="blogTagMeaning(selectedTag)" class="feed-filter-meaning">{{ blogTagMeaning(selectedTag) }}</span>
         </p>
         <NuxtLink v-else to="/t/journal/current/highlights" class="start-here">
           <span class="start-here-label">New here?</span>

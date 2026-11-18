@@ -33,6 +33,7 @@ const meta = personaMeta(space)
 
 const landing = computed(() => data.value?.landing ?? null)
 const posts = computed(() => data.value?.posts ?? [])
+const postsByMonth = computed(() => withBlogMonths(posts.value))
 
 // Same 20 + "Show all" cap as the front door.
 const POSTS_VISIBLE = 20
@@ -77,13 +78,17 @@ useSeoMeta({ description: () => tagline.value })
 
       <div class="landing-feed">
         <ul v-if="posts.length" class="feed">
-          <BlogFeedItem
-            v-for="(post, i) in posts"
-            v-show="showAllPosts || i < POSTS_VISIBLE"
-            :key="post.path"
-            :post="post"
-            :link-prefix="space"
-          />
+          <template v-for="({ post, month }, i) in postsByMonth" :key="post.path">
+            <!-- Hidden with its posts, so "Show all" never leaves an empty heading. -->
+            <li v-if="month" v-show="showAllPosts || i < POSTS_VISIBLE" class="feed-month">
+              <h2>{{ month }}</h2>
+            </li>
+            <BlogFeedItem
+              v-show="showAllPosts || i < POSTS_VISIBLE"
+              :post="post"
+              :link-prefix="space"
+            />
+          </template>
         </ul>
         <p v-else class="empty">No posts here yet.</p>
         <button
