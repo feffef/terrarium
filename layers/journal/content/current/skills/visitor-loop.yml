@@ -3,7 +3,7 @@ category: platform-operation
 importance: routine
 gist: Sends test visitors through the site and files what they find.
 role: >-
-  The daily visit run: three Sonnet visitors (one blind, two informed) each
+  The visit run: three Sonnet visitors (one blind, two informed) each
   browse one rotating part of a live build through a different lens. It files
   verified bugs as issues and logs ideas and learnings for `harvest`; it
   changes no code and opens no PR. An idea that contradicts a line in

@@ -1,6 +1,6 @@
 ---
 name: visitor-loop
-description: Daily visit run — three Sonnet visitors, one blind and two informed, each with its own lens, browse one focus area of a live Terrarium; the run logs their ideas and its hard-won learnings for harvest and files verified bugs as issues. It changes no code.
+description: Visit run — three Sonnet visitors, one blind and two informed, each with its own lens, browse one focus area of a live Terrarium; the run logs their ideas and its hard-won learnings for harvest and files verified bugs as issues. It changes no code.
 disable-model-invocation: true
 ---
 
@@ -59,7 +59,7 @@ sections on today's focus, each "none" when empty:
   the words being the focus and its Space names, comma-separated
   (`--match midden,trench,stores`);
 - open issues: those labelled `area:<focus>` (the focus's name in the table) in
-  `pnpm exec tsx scripts/github/list-open-issues.ts`, with their numbers.
+  `pnpm exec tsx scripts/github/list-open-issues.ts 5000`, with their numbers.
 
 Then dispatch three read-only subagents **in one message**, all with
 `model: sonnet`, one per lens:
@@ -89,7 +89,7 @@ once, keeping every lens that raised each item, then mark each item:
   it yourself against the source and the rendered page before you mark it; a
   visitor can misread. Mark one you can't reproduce *dropped (not reproduced)*.
   Then match it against every open issue
-  (`pnpm exec tsx scripts/github/list-open-issues.ts`): mark it *dropped (#N)*
+  (`pnpm exec tsx scripts/github/list-open-issues.ts 5000`): mark it *dropped (#N)*
   if an issue already states it, or *amend #N* if it fits one and adds a new
   page, symptom or evidence.
 - **idea**: anything else worth doing, wording and taste included.

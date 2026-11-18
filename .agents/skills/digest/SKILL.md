@@ -106,7 +106,7 @@ commit), description and linked issues, and the day's commits; git alone when
 GitHub is unavailable. *Where* a change landed is settled by the files it
 touched, never by a label in a PR title or session goal (a "(homepage)" focus
 tag once became "the homepage gained…" for a Journal page). A cadence word or
-"scheduled" with no source is `wrong`/`unverifiable`. It returns one row
+"scheduled" with no source is `wrong`. It returns one row
 per claim: claim · source checked · verdict `ok` / `wrong` / `unverifiable`.
 It ends with the standard asks (CLAUDE.md, "Every subagent brief").
 Fix every `wrong` claim; keep an `unverifiable` one.

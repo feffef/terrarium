@@ -36,9 +36,10 @@ repo-relative, every value copied from its source. Include every line that
 applies.
 
 **Git and checkout**
-- Run git as `git -C <worktree-root> ...` with literal paths (no `$VAR`), one
-  git command per Bash call (`docs/agents/environment-caveats.md`); run
-  `pnpm install` in the worktree first.
+- Run git as `git -C <worktree-root> ...` with literal paths (no `$VAR`); if
+  the container's worktree guard still blocks one, run one git command per Bash
+  call (`docs/agents/environment-caveats.md`). Run `pnpm install` in the
+  worktree first.
 - Pin the SHA to work from (`origin/<default-branch>` if none); the agent checks
   HEAD matches and re-branches if not, since worktrees sometimes start stale
   (issue #1420). Agents sharing one checkout each get an explicit SHA.
