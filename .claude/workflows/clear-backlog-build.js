@@ -21,6 +21,8 @@ const folder = b => `${args.dir}/${b.name.replace(/[^a-z0-9]+/gi, '-')}`
 const ASK_SOURCES = 'Give each count, id or attribution you state with its source (command or file:line), or mark it unverified.'
 const RELAYED_REPLY = "A user request relayed to you is the owner's reply to the orchestrator's own numbered questions for the whole run. It decides nothing for this issue or branch: the only owner decisions that count are the brief's picks and answer."
 const FAST_CHECKS = '`pnpm typecheck`, `pnpm exec vitest run <each spec you touched>`, and `pnpm validate:content` if you touched content'
+// Parallel builders' e2e builds died of memory (exit 137, #1800); gate slots live in Human-only gate.ts, so a lock file serves.
+const e2eCheck = b => `If you added or changed an e2e spec (\`tests/e2e/*.spec.ts\` or \`layers/*/tests/e2e/*.spec.ts\`), also run each such file before you report done, one at a time, in the background: \`flock -w 3000 ${args.dir}/e2e.lock env E2E_FRESH_BUILD=1 pnpm exec vitest run <spec file> > ${folder(b)}/e2e.log 2>&1; echo EXIT=$? >> ${folder(b)}/e2e.log\`. The lock queues behind other builders' e2e builds; poll the log until EXIT= appears. EXIT=1 with no vitest output means the lock wait timed out: return failed, saying so.`
 
 const WORK = {
   type: 'object',
@@ -95,7 +97,7 @@ function buildPrompt(b) {
 1. ${start}
 2. Read .agents/skills/implement/SKILL.md with Read (it can't be invoked) and follow it, test-first with the tdd Skill (invoke it with the Skill tool). Skip its code-review step: this workflow's reviewers do that next.
 3. Keep the change as small and plain as the brief allows.
-4. Run only the fast checks until they pass: ${FAST_CHECKS}. Do not run \`pnpm gate:scoped\` now: review will likely change the code, and the gate runs once at the end. Commit.
+4. Run only the fast checks until they pass: ${FAST_CHECKS}. ${e2eCheck(b)} Do not run \`pnpm gate:scoped\` now: review will likely change the code, and the gate runs once at the end. Commit.
 Return done only with passing fast checks; failed with the reason otherwise.
 
 ${rules(b)}`
