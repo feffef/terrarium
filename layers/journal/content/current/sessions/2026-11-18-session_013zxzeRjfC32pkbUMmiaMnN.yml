@@ -1,0 +1,237 @@
+schemaVersion: 1
+session: session_013zxzeRjfC32pkbUMmiaMnN
+startedAt: 2026-11-18T21:38:15Z
+endedAt: 2026-11-18T21:57:31Z
+kind: interactive
+goal: Judge whether the clear-backlog redesign worked, then retire its report thread
+status: in-review
+outcome: Analysis posted and the thread closed; the PR that removes the retro-to-issue step is open and awaits CI
+summary: "Human-instructed throughout. The owner asked whether the rewritten clear-backlog Skill (they named PR 3119, the resume-builders redesign, which kept the workflow scripts) worked and beat the older version, pointing at issue 3143. I read the issue, its 20 comments (16 run reports), issue 3110 (the baseline: 52 agents, 4.37M tokens on one run) and the 23 PRs that touched the Skill in the last two weeks, then at the owner's request did a deeper pass over the report YAML. Main result: fresh agents per branch fell from 8.7 to about 3.4, but agent turns per branch (fresh plus resumes) fell only about 10 percent, token cost per branch is flat to modestly lower, and later review rounds on small branches found almost only nits. I first told the owner the saving was about half and corrected it in the next turn after comparing notice tokens with transcript tokens. The owner then told me to post a summary on 3143, close it, remove the instruction to post a retro there, and raise retro findings only in the session log. I posted the summary and closed the issue, then edited clear-backlog SKILL.md section 5 so it carries the retro message inline and records replies as Frictions in the session log. Agent-initiated: the PR, per ADR-0003 once the branch passed code-review and the gate. Standards and Spec reviewers found two lines of the old retro message dropped plus wording nits, I fixed them in a second commit and both re-checked CLEAN. gate:scoped passed on the final head. Open: CI, my verdict comment and the merge via merge-pr.ts; the \"at most 6 lines\" cap now sits beside two extra asks."
+prs:
+  - "3472"
+docsRead:
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (read before editing)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/adr/0005-skill-model.md
+    reason: (no reason given)
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: Standards and Spec review of the section 5 edit before the PR
+  - name: dispatch-subagents
+    reason: read before writing the two reviewer briefs
+  - name: close-session
+    reason: PR opened
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran git log on the Skill's paths to build a conclusion before reading git-conventions.md, which CLAUDE.md requires first; the hook reminded me afterwards.
+    solution: Nothing was lost; the read-first hint already fires, but only after the call, so an earlier cue on first git log would help.
+    severity: nit
+  - description: Closed issue 3143 although the hook then asked for triage-labels.md; I never read it, treating a plain close as outside labelling.
+    solution: State in CLAUDE.md whether closing an issue counts as triage, or have the hook fire before the first issue write.
+    severity: nit
+  - description: Told the owner the redesign roughly halved token cost by comparing notice tokens that exclude resumed turns with a baseline that included them; I caught it next turn and corrected it.
+    solution: Before stating a before-and-after cost figure, name each side's counting basis; a one-line note in the run report template would force that.
+    severity: minor
+  - description: issue_read get_comments on 3143 returned 254K characters and overflowed context, forcing a saved-file slice; github-integration.md warns only about get_sub_issues and bodies.
+    solution: Add get_comments on a long standing thread to the 'Three calls return huge output' list in docs/agents/github-integration.md, with the python slice recipe.
+    severity: minor
+  - description: An awk one-liner to sum git numstat per commit printed zeros for every commit, wasting a call and a screen of output.
+    solution: Use git log --shortstat or a short python loop instead of awk state across lines; no repo change needed.
+    severity: nit
+  - description: The ADR read-first demand for the edited SKILL.md arrived in a hook note after the Edit; the rule can't order a step before the read that loads it, so three ADRs were read after editing.
+    solution: Mention in clear-backlog's SKILL.md header that ADR-0005, 0022 and 0027 govern it, so a session can read them before editing; or accept the late read.
+    severity: nit
+durationSec: 1156
+models:
+  claude-sonnet-5-5: 127
+toolCounts:
+  Read: 9
+  ToolSearch: 4
+  mcp__github__issue_read: 3
+  Bash: 30
+  mcp__github__list_pull_requests: 1
+  AskUserQuestion: 1
+  mcp__github__pull_request_read: 1
+  Grep: 3
+  mcp__github__add_issue_comment: 1
+  mcp__github__issue_write: 1
+  Edit: 2
+  Write: 3
+  Skill: 3
+  Agent: 2
+  SendMessage: 2
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - .agents/skills/clear-backlog/SKILL.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0022.md
+adrHints:
+  - adr: 5
+    via: path
+    readAfter: true
+    by: main
+  - adr: 22
+    via: path
+    readAfter: true
+    by: main
+  - adr: 27
+    via: path
+    readAfter: true
+    by: main
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/github-integration.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/github-integration.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/clear-backlog/SKILL.md
+      - rule: .claude/rules/adr-0022.md
+        via: native
+        trigger: .agents/skills/clear-backlog/SKILL.md
+      - rule: .claude/rules/adr-0030.md
+        via: native
+        trigger: docs/adr/0005-skill-model.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: docs/adr/0005-skill-model.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: ran code-review and gate:scoped before the PR
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: opened the PR unasked after review and gate
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: session header on comment, PR and trailer checked
+      - path: .claude/rules/adr-0009.md
+        value: duplicate
+        why: "claude-md: close-session line"
+      - path: .claude/rules/adr-0027.md
+        value: confirmed
+        why: "agreed: weighed trims before adding to the message"
+      - path: .claude/rules/adr-0005.md
+        value: confirmed
+        why: "agreed: Skill change landed as a gated PR"
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0022.md
+        value: unrelated
+      - path: .claude/rules/adr-0030.md
+        value: unrelated
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: unrelated
+      - path: docs/agents/github-integration.md
+      - path: docs/agents/git-conventions.md
+      - path: docs/agents/pr-workflow.md
+      - path: .agents/skills/dispatch-subagents/SKILL.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: in-scope
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+subagents:
+  - type: general-purpose
+    task: Standards review of SKILL.md edit
+    durationSec: 43
+    toolCalls: 9
+    modelCalls: 6
+    tokenShare: 7.9
+  - type: general-purpose
+    task: Spec review of SKILL.md edit
+    durationSec: 43
+    toolCalls: 6
+    modelCalls: 5
+    tokenShare: 7.5
+gitBranch: claude/busy-thompson-xdpidv
+entrypoint: remote
+cliVersion: 2.1.327
+learnings:
+  - "Inferred from the 16 reports, not read: after the resume redesign, resumed turns cost about as much as a fresh agent, so the fall in agents per branch (8.7 to 3.4) overstates the saving; agent turns per branch fell only about 10 percent."
+ideas:
+  - Give clear-backlog a script that derives the report's counts (agents, resumes, tokens per branch, findings by round) straight from the workflow journals and agent transcripts, so a later analysis does not depend on 16 hand-counted reports where only 30 of 68 PR rows have a token figure; it would also settle whether get_session usage includes subagents.
+landedBy: Stop
