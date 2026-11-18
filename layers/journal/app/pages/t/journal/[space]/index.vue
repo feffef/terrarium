@@ -53,15 +53,26 @@ const digests = computed(() => digestList(allPages.value))
 // adding or reordering a door needs no edit here. Isolation-respecting: sourced
 // from THIS Space's own `pages`, so a page must exist in-Space to surface — the
 // archived Space, lacking these pages, shows none.
-const onrampCards = computed(() =>
-  onrampSteps(allPages.value).map((s, i, all) => ({
+// The Glass Box guide is another Tenant's page, so it can't opt in through
+// frontmatter: it is a fixed first card, shown only where in-Space doors exist
+// (the archived Space, with none, shows no on-ramp). A plain link, no
+// cross-Tenant read (ADR-0025).
+const GUIDE_CARD = {
+  key: '/t/glassbox/guide',
+  title: 'How Terrarium works',
+  blurb: 'Start with how Terrarium works, the overview that opens the Glass Box guide.',
+  to: '/t/glassbox/guide',
+}
+const onrampCards = computed(() => {
+  const steps = onrampSteps(allPages.value).map((s) => ({
     key: s.path,
-    kicker: `Start here · ${i + 1} of ${all.length}`,
     title: s.label,
     blurb: s.blurb,
     to: `/t/${tenant}/${space}${s.path}`,
-  })),
-)
+  }))
+  const all = steps.length ? [GUIDE_CARD, ...steps] : []
+  return all.map((c, i) => ({ ...c, kicker: `Start here · ${i + 1} of ${all.length}` }))
+})
 
 // Page-wide accordion: a single item — one session card OR one digest — is open
 // at a time, tracked by its deep-link anchor. Both inline feeds share this one
@@ -183,7 +194,6 @@ useSeoMeta({
     </template>
 
     <section v-if="onrampCards.length" class="onramp" aria-label="Start here">
-      <p class="onramp-lead">New here? Start with <NuxtLink to="/t/glassbox/guide">how Terrarium works</NuxtLink>, the overview that opens the Glass Box guide. Then the short version:</p>
       <div class="onramp-cards">
         <NuxtLink v-for="c in onrampCards" :key="c.key" :to="c.to" class="onramp-card">
           <span class="onramp-kicker">{{ c.kicker }}</span>
@@ -361,16 +371,6 @@ h1 {
 .intro :deep(h2) { margin: 1.3rem 0 0.5rem; }
 
 .onramp { margin: 1.6rem 0 0; }
-.onramp-lead {
-  margin: 0 0 0.7rem;
-  font-family: var(--jd-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--jd-muted);
-}
-.onramp-lead a { color: var(--jd-accent); text-underline-offset: 2px; }
-.onramp-lead a:hover { color: var(--jd-accent-bright); }
 .onramp-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
 .onramp-card {
   display: flex;
