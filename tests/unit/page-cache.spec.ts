@@ -6,23 +6,16 @@ import { resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { expect, it, vi } from 'vitest'
 
-async function nitroCacheMount() {
+async function loadConfig() {
   vi.stubGlobal('defineNuxtConfig', (c: unknown) => c)
   // A computed specifier keeps nuxt.config.ts (Nuxt-typed) out of the node tsconfig program.
   const { default: config } = await import(pathToFileURL(resolve('nuxt.config.ts')).href)
-  return config.nitro.storage.cache
+  return config
 }
 
-// In dev the cache would hold an edited page for its maxAge, hiding content edits.
-it('turns the page cache off in development, for the Platform rules only', async () => {
-  vi.stubGlobal('defineNuxtConfig', (c: unknown) => c)
-  const { default: config } = await import(pathToFileURL(resolve('nuxt.config.ts')).href)
-  expect(Object.keys(config.routeRules)).toEqual(['/', '/t/**'])
-  expect(config.$development.routeRules).toEqual({
-    '/': { cache: false },
-    '/t/**': { cache: false },
-  })
-})
+async function nitroCacheMount() {
+  return (await loadConfig()).nitro.storage.cache
+}
 
 async function nitroDriver(name: string) {
   let req = createRequire(pathToFileURL(resolve('package.json')))
@@ -46,4 +39,12 @@ it('evicts least-recently-used page entries beyond the configured cap', async ()
 
   expect((await storage.getKeys()).length).toBe(cap)
   expect(await storage.hasItem('nitro:routes:/t/blog/current:first.json')).toBe(false)
+})
+
+// In dev the cache would hold an edited page for its maxAge, hiding content edits.
+it('turns off every Platform page-cache rule in development', async () => {
+  const config = await loadConfig()
+  const off = Object.fromEntries(Object.keys(config.routeRules).map(route => [route, { cache: false }]))
+  expect(off).not.toEqual({})
+  expect(config.$development.routeRules).toEqual(off)
 })
