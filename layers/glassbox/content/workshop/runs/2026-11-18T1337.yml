@@ -1,0 +1,20 @@
+session: session_013zxzeQbSZQ554vFZiT2f2D
+mode: autonomous
+focus: "Virtual modules: explain why the routing module runs once, the gap the
+  previous run left open. A second nuxt prepare with a counter in setup() again
+  printed one call; the cause is in @nuxt/kit 4.6.4: defineNuxtModule's
+  normalizedModule returns early when nuxt.options._requiredModules already
+  holds meta.name (dist/index.mjs:155-159), and both modules set a name, while
+  resolveModules keeps both the config entry and the scanned path in the install
+  list (nuxt dist/index.mjs:10160-10172). Chosen because the earlier sentence
+  said 'installed once' without a mechanism and a reviewer could not square it
+  with the source. This run also ran the Scout (late, after the owner asked why
+  it was skipped; it found no new topic and one weak candidate, the digest
+  Routine's archive step, a new Lesson that waits for the owner), a sonnet claim
+  checker and a sonnet fresh reader; the earlier runs of this session skipped
+  them wrongly, since the budget never required it. Cost: unreported (no
+  get_session); estimated context about 300k tokens."
+changes:
+  - "nuxt-vue/40.virtual-modules | The sentence now says Nuxt finds the routing module by both routes, that each module sets a meta.name and that defineNuxtModule skips a module whose name it has already set up; teaches and publishedAt follow | the previous wording said 'installed once' with no mechanism. A claim checker found all four parts true against the source; a fresh reader found the first rewrite hard to follow (the name was never shown), so the final sentence names both modules' names and states the rule before its consequence. The reader's other findings (terms before their gloss, expand and loadManifests unintroduced) are left"
+pagesRead:
+  - nuxt-vue/40.virtual-modules
