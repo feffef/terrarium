@@ -106,7 +106,8 @@ Every edit goes through
    `docs/agents/github-integration.md`); read the body, since a batched doc
    PR's title names no cluster. Then rewrite the entry's `cause` to say
    what the fix changed, so no line it made stale survives.
-5. **Reset stale statuses.** A `tracked` or `on-trial` entry whose PR closed
+5. **Reset stale statuses.** Skip a `tracked` entry with no `ref`: a dispatched
+   fix in flight. A `tracked` or `on-trial` entry whose PR closed
    unmerged, or whose `ref` names no open issue, PR or trial in
    `.agents/prune-trials.yml`, goes back to `open`, unless its issue closed
    as not planned (not as superseded): then `accepted`, with the close and its reason in `notes`. One whose `ref` PR
