@@ -10,6 +10,7 @@ import {
   relationsFor,
   rhythmCells,
   signatureVars,
+  specimenByCommonName,
   type Edge,
 } from '../../app/utils/atlas.ts'
 
@@ -97,5 +98,42 @@ describe('signatureVars()', () => {
   })
   it('is empty for no signature', () => {
     expect(signatureVars(undefined)).toEqual({})
+  })
+})
+
+describe('specimenByCommonName()', () => {
+  const canopy = [
+    { path: '/lumina-fabulae', title: 'Lumina fabulae', commonName: 'the lantern moth' },
+    { path: '/aranea-patiens', title: 'Aranea patiens', commonName: 'the patient weaver' },
+    { path: '/index-less', title: 'Unnamed one', description: 'the quiet one' },
+  ]
+
+  it('matches the common name minus "the", hyphenated', () => {
+    expect(specimenByCommonName('lantern-moth', canopy)).toEqual({
+      slug: 'lumina-fabulae',
+      binomial: 'Lumina fabulae',
+      commonName: 'the lantern moth',
+    })
+  })
+
+  it('finds nothing for a partial name or a binomial slug', () => {
+    expect(specimenByCommonName('weaver', canopy)).toBeNull()
+    expect(specimenByCommonName('lumina-fabulae', canopy)).toBeNull()
+  })
+
+  it('does not fall back to the description', () => {
+    expect(specimenByCommonName('quiet-one', canopy)).toBeNull()
+  })
+
+  it('finds nothing in a Biome with no common names', () => {
+    expect(specimenByCommonName('lantern-moth', [{ path: '/x', title: 'X' }])).toBeNull()
+  })
+
+  it('finds nothing when two Specimens match', () => {
+    const twins = [
+      { path: '/a', title: 'A a', commonName: 'the lantern moth' },
+      { path: '/b', title: 'B b', commonName: 'The Lantern  Moth' },
+    ]
+    expect(specimenByCommonName('lantern-moth', twins)).toBeNull()
   })
 })

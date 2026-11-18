@@ -126,6 +126,17 @@ describe('atlas Tenant', async () => {
     })
   }
 
+  it('suggests the one Specimen a known-Biome 404 names by common name', async () => {
+    await withRendered('/t/atlas/canopy/lantern-moth', async (page) => {
+      expect(await page.locator('h1').textContent()).toBe('Not catalogued')
+      expect(await page.locator('.not-found p', { hasText: 'Did you mean' }).textContent()).toContain('Did you mean Lumina fabulae, the lantern moth?')
+      expect(await page.locator('.not-found p em a').getAttribute('href')).toBe('/t/atlas/canopy/lumina-fabulae')
+    })
+    await withRendered('/t/atlas/canopy/nope', async (page) => {
+      expect(await page.locator('.not-found').textContent()).not.toContain('Did you mean')
+    })
+  })
+
   it('names each wing\'s creatures on its directory card', async () => {
     await withRendered('/t/atlas', async (page) => {
       for (const wing of ['canopy', 'floor', 'pool']) {

@@ -206,6 +206,23 @@ export function toSpecimenView(d: RawSpecimenDoc): SpecimenView {
   }
 }
 
+/** The one Specimen of a Biome whose real `commonName` ("the lantern moth")
+ *  reads as `segment` ("lantern-moth"), for the 404's "Did you mean". Matches
+ *  `commonName` only, never `common`'s fallback; none or several give null. */
+export function specimenByCommonName(
+  segment: string,
+  docs: RawSpecimenDoc[],
+): { slug: string; binomial: string; commonName: string } | null {
+  const hits = docs.filter(
+    (d) =>
+      d.commonName &&
+      d.commonName.replace(/^the\s+/i, '').trim().toLowerCase().replace(/\s+/g, '-') === segment,
+  )
+  const d = hits[0]
+  if (hits.length !== 1 || !d) return null
+  return { slug: specimenSlugOf(d.path), binomial: toSpecimenView(d).binomial, commonName: d.commonName! }
+}
+
 /** A specimen's primary signature color, or the biome accent fallback — the
  *  color a food-web/relations-web strand or sigrule borrows from its node.
  *  Shared so a specimen's strand color can't drift between the two diagrams. */
