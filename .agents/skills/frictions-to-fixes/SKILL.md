@@ -86,9 +86,10 @@ ledger reaches `main` whatever happens to the fixes.
    fix neither filed nor listed is lost to the next run.
 3. **Update the ledger** on top of the survey's commit, through
    `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/ledger-set.ts`:
-   `status: tracked` on every entry filed or dispatched (issue number in `ref`
-   for a filed one); for a dropped fix, `--note "<date> design: <solution>
-   dropped: <reason>"` with the entry's status unchanged; then run
+   `status: tracked` on every filed entry (issue number in `ref`; a dispatched
+   fix's entry stays as it is until §8); for a dropped fix, `--note "<date>
+   design: <solution> dropped: <reason>"` with the entry's status unchanged;
+   then run
    `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/prune-friction-ledger.ts`.
 4. **Open the ledger PR**: review by `docs/agents/pr-workflow.md`'s simple-change
    test, `pnpm gate:scoped` on the final head, push, open, land by that doc's
