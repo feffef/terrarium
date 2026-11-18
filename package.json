@@ -34,6 +34,8 @@
     "@nuxt/kit": "^4.6.4",
     "@nuxt/test-utils": "^4.4.0",
     "@types/node": "^26.6.6",
+    "@typescript/native": "npm:typescript@7.1.0-beta",
+    "@typescript/typescript6": "6.0.2",
     "eslint": "^10.14.0",
     "jiti": "^2.7.0",
     "mermaid": "^12.3.0",
