@@ -143,6 +143,28 @@ describe('atlas Tenant', async () => {
     })
   }
 
+  // The 404 document itself logs a console error, which `withRendered` rejects,
+  // so this drives the page directly like the 404 test above.
+  for (const [route, suggested] of [
+    ['/t/atlas/canopy/lantern-moth', true],
+    ['/t/atlas/canopy/nope', false],
+  ] as const) {
+    it(`${suggested ? 'suggests' : 'does not suggest'} a Specimen on the ${route} 404`, async () => {
+      const page = await createPage()
+      try {
+        await page.goto(url(route), { waitUntil: 'hydration' })
+        const line = page.locator('.not-found p', { hasText: 'Did you mean' })
+        expect(await line.count()).toBe(suggested ? 1 : 0)
+        if (suggested) {
+          expect(await line.textContent()).toContain('Did you mean Lumina fabulae, the lantern moth?')
+          expect(await line.locator('em a').getAttribute('href')).toBe('/t/atlas/canopy/lumina-fabulae')
+        }
+      } finally {
+        await page.close()
+      }
+    })
+  }
+
   it('names each wing\'s creatures on its directory card', async () => {
     await withRendered('/t/atlas', async (page) => {
       for (const wing of ['canopy', 'floor', 'pool']) {

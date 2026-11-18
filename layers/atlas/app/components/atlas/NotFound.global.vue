@@ -5,6 +5,8 @@
 // `AtlasNotFound` for the Platform's not-found seam, docs/agents/tenant-layers.md §4).
 // Route-derived rather than prop-fed so the two callers share one code path.
 // Reads no Space data: `BIOMES` is presentational metadata only (ADR-0006).
+// An optional `suggestion` (a known-Biome 404 only) adds one "Did you mean" line.
+defineProps<{ suggestion?: { slug: string; binomial: string; commonName: string } | null }>()
 const route = useRoute()
 const segments = route.path.split('/').filter(Boolean) // ['t', 'atlas', <biome>, ...rest]
 const biome = BIOMES.find((b) => b.slug === segments[2])
@@ -85,6 +87,9 @@ const illustration = `
         <p>
           No specimen answers to <code>{{ rest }}</code><template v-if="biome"> in {{ biome.name }}</template><template v-else>, and no wing of the Atlas bears that name</template>.
           Perhaps it was never here; perhaps it simply prefers to be elsewhere.
+        </p>
+        <p v-if="biome && suggestion">
+          Did you mean <em><NuxtLink :to="`/t/atlas/${biome.slug}/${suggestion.slug}`">{{ suggestion.binomial }}</NuxtLink></em>, {{ suggestion.commonName }}?
         </p>
         <p><NuxtLink :to="back.to">{{ back.label }}</NuxtLink></p>
       </div>

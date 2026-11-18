@@ -30,6 +30,9 @@ const entry = computed(() => {
   const doc = pages.value.find((p) => p.path === path) ?? null
   return doc ? { doc, specimen: toSpecimenView(doc) } : null
 })
+const suggestion = computed(() =>
+  entry.value ? null : specimenByCommonName(path.split('/').filter(Boolean).pop() ?? '', pages.value),
+)
 const relations = computed(() =>
   entry.value ? relationsFor(entry.value.specimen.slug, edges.value) : [],
 )
@@ -74,7 +77,7 @@ useSeoMeta({
 </script>
 
 <template>
-  <AtlasNotFound v-if="!entry" />
+  <AtlasNotFound v-if="!entry" :suggestion="suggestion" />
   <main v-else class="atlas" :class="`atlas--${space}`" :style="sigStyle">
     <div class="atlas-page">
       <nav class="atlas-crumb" aria-label="Breadcrumb">
