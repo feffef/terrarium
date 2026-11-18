@@ -28,6 +28,9 @@ fixes:
   - pr: 3160
     date: "2026-11-12"
     summary: "glassbox-lesson gains an Orient step (orient.ts --index, read the index whole) before the Lesson is written (commits d87ec97c2, 6082e3053)."
+  - pr: 3476
+    date: "2026-11-18"
+    summary: "tenant-glossary-guard denies an Edit or Write under layers/<tenant>/ until that Tenant's GLOSSARY.md was read in full; it fails open."
 occurrences:
   - session: session_013zxzeSKTBjSfYnUxNHTJw1
     date: "2026-11-09"
