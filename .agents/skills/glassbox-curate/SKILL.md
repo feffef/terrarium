@@ -161,8 +161,8 @@ keeps them.
   `origin/main` and PR; in an interactive session, settle that focus with the
   person first. Take the next focus from the instructions you were given, then
   the memory page's leads, page-check warnings, Scout topics and gaps, and last
-  pages no fresh reader has seen lately. This always applies, unless your
-  context window is filled with more than 500k tokens. Hand over to a new
+  pages no fresh reader has seen lately. Do this unless your context
+  window is filled with more than 500k tokens. Hand over to a new
   session only when the invocation says so: create it with `source_url:
   https://github.com/feffef/terrarium` and the same prompt.
 
