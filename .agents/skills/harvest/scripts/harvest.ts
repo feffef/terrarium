@@ -13,7 +13,7 @@
 //   tsx .agents/skills/harvest/scripts/harvest.ts check-body <body-file> --extract <extract.json> [--title T]
 //   tsx .agents/skills/harvest/scripts/harvest.ts check-posted <issue-number> <body-file>
 import { createHash } from 'node:crypto'
-import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { parse as parseYaml } from 'yaml'
@@ -403,7 +403,7 @@ export function rulingFiles(dir: string): string[] {
     ...readdirSync(join(dir, '.out-of-scope')).map((f) => `.out-of-scope/${f}`),
     '.agents/skills/visitor-loop/decisions.md',
     '.agents/skills/glassbox-lesson/owner-decisions.md',
-    ...glossaries.filter((f) => existsSync(join(dir, f))),
+    ...glossaries,
   ]
 }
 

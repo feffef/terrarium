@@ -1,7 +1,8 @@
 // Unit tests for the harvest helper's pure core: key rendering and parsing, the
 // harvested-state scan, entry ordering, and the before/after-posting checks.
 // The IO shell (GitHub listing, files) is exercised by running the script.
-import { existsSync, readFileSync } from 'node:fs'
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { root } from '../../../../../scripts/lib/cli.ts'
@@ -406,10 +407,20 @@ describe('productDecisions()', () => {
 })
 
 describe('rulingFiles()', () => {
-  it('lists the rulings sources step 3 names, all present in the repo', () => {
-    const files = rulingFiles(root)
-    expect(files).toEqual(expect.arrayContaining(['.agents/skills/visitor-loop/decisions.md', '.agents/skills/glassbox-lesson/owner-decisions.md', 'layers/atlas/GLOSSARY.md']))
-    expect(files.some((f) => f.startsWith('.out-of-scope/'))).toBe(true)
-    expect(files.filter((f) => !existsSync(join(root, f)))).toEqual([])
+  it('lists the fixed rulings files, the .out-of-scope files and one glossary per Tenant layer', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'harvest-rulings-'))
+    mkdirSync(join(dir, '.out-of-scope'))
+    writeFileSync(join(dir, '.out-of-scope', 'x.md'), '')
+    mkdirSync(join(dir, 'layers', 'atlas'), { recursive: true })
+    expect(rulingFiles(dir)).toEqual([
+      '.out-of-scope/x.md',
+      '.agents/skills/visitor-loop/decisions.md',
+      '.agents/skills/glassbox-lesson/owner-decisions.md',
+      'layers/atlas/GLOSSARY.md',
+    ])
+  })
+
+  it('names only files that exist in the repo, so a moved rulings file fails here', () => {
+    expect(rulingFiles(root).filter((f) => !existsSync(join(root, f)))).toEqual([])
   })
 })
