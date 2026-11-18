@@ -28,7 +28,7 @@ defineProps<{
 <style scoped>
 .plate-wanting {
   font-style: italic;
-  color: var(--atlas-faint);
+  color: var(--atlas-muted);
   text-align: center;
   max-width: 22ch;
   margin: 0;
