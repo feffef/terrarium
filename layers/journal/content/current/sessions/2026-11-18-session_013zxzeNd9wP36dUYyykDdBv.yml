@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeNd9wP36dUYyykDdBv
 startedAt: 2026-11-18T22:09:43Z
-endedAt: 2026-11-18T23:00:24Z
+endedAt: 2026-11-18T23:01:57Z
 kind: interactive
 goal: Clear the open backlog with a full sweep
 status: in-review
-outcome: "Four issues closed, two PRs merged (#3474, #3478), one closed by the owner (#3475), three waiting for a human merge (#3476, #3477, #3479)"
-summary: "Human-instructed: the owner started /clear-backlog with \"full sweep\" and answered every grilling question (Q1 research first, then close #1689; Q2 yes; 3b, 4d, 5 summarize the thread, 6b, 7a, 8a; 9c), asked for a deep-research pass on #1689 and an explore of all the other open issues, told visitor-loop to stop posting to #3244 (then asked to close and summarize it), confirmed the 390px screenshots and said to merge #3474, and closed #3475 with a comment asking for the findings to go in #1551. Agent-initiated: the explore set (the default sweep rule gave 4 issues, the owner then added the 6 it skipped), branch grouping and briefs, the judgement calls on review owner-calls, treating #3477 and #3479 as human-merge (ADR-0004, unattended-run behaviour no test sees), opening the PRs under ADR-0003, and the retro. The research (three docs-only researchers and a report writer, no live test) found hosted sessions run every write as the owner through the proxy, a custom App is documented only for the GitHub Action and self-hosted runners, an App can be a ruleset bypass actor, and the built-in Actions app and proxy token minting are unconfirmed; the owner then closed #1689 as not planned. Closed on the owner's word: #1689, #3297, #3244, #3401 (with comments). Six branches were built, reviewed (Standards and Spec, then re-checks) and gated. Merged: the blog nav overflow fix (#3474, closes #3452) after the owner confirmed the screenshots, and the ledger update for get-session-cost-unreported (#3478; merge-pr.ts refused the Closes keyword on a ready-for-human issue, so I reworded it and closed #3401 by hand). Closed unmerged by the owner: the TypeScript 7.1 native alias trial (#3475, needs a beta and version pins); its findings are on #1551. Waiting for a human merge: the tenant-glossary read guard (#3476, Human-only hook files), the frictions-to-fixes survey skip (#3477) and visitor-loop no longer posting to #3244 (#3479). Review caught something material on three of six branches (inert dependencies, a false §8 sentence plus a re-pick gap, an untested inline-code rule); on the rest it re-found nits the builders had already recorded. The retro (18 replies, builders and reviewers) mostly asks for the workflow script to fix the section citation, one return channel, the rule-use echo for read-only reviewers and the wrap-width and install notes. Still open: the three human merges and the log landing on main."
+outcome: "Four issues closed by the owner's decisions, four PRs merged (#3474, #3476, #3478, #3479), one PR closed by the owner (#3475), one waiting for a human merge (#3477)"
+summary: "Human-instructed: the owner started /clear-backlog with \"full sweep\" and answered every grilling question (Q1 research first, then close #1689; Q2 yes; 3b, 4d, 5 summarize the thread, 6b, 7a, 8a; 9c), asked for a deep-research pass on #1689 and an explore of all the other open issues, told visitor-loop to stop posting to #3244 (then asked to close and summarize it), confirmed the 390px screenshots and said to merge #3474, closed #3475 with a comment asking for the findings to go in #1551, and merged #3476 and #3479 themselves. Agent-initiated: the explore set (the default sweep rule gave 4 issues, the owner then added the 6 it skipped), branch grouping and briefs, the judgement calls on review owner-calls, treating #3477 and #3479 as human-merge (ADR-0004, unattended-run behaviour no test sees), opening the PRs under ADR-0003, and the retro. The research (three docs-only researchers and a report writer, no live test) found hosted sessions run every write as the owner through the proxy, a custom App is documented only for the GitHub Action and self-hosted runners, an App can be a ruleset bypass actor, and the built-in Actions app and proxy token minting are unconfirmed; the owner then closed #1689 as not planned. Closed on the owner's word: #1689, #3297, #3244, #3401 (with comments). Six branches were built, reviewed (Standards and Spec, then re-checks) and gated. Merged: the blog nav overflow fix (#3474, closed #3452) after the owner confirmed the screenshots; the ledger update for get-session-cost-unreported (#3478; merge-pr.ts refused the Closes keyword on a ready-for-human issue, so I reworded it and closed #3401 by hand); and, by the owner, the tenant-glossary read guard (#3476, closed #3234) and visitor-loop no longer posting to #3244 (#3479). Closed unmerged by the owner: the TypeScript 7.1 native alias trial (#3475, needs a beta and version pins); its findings are on #1551. Still waiting for a human merge: the frictions-to-fixes survey skip (#3477, closes #3326 on merge). Review caught something material on three of six branches (inert dependencies, a false section 8 sentence plus a re-pick gap, an untested inline-code rule); on the rest it re-found nits the builders had already recorded. The retro (18 replies) asks for the workflow script to fix the section citation, use one return channel, skip the rule-use echo for read-only reviewers, and add the wrap-width and install notes; it is in the Frictions. Open: the human merge of #3477 and #3326's closing."
 prs:
   - "3474"
   - "3475"
@@ -138,13 +138,13 @@ frictions:
   - description: "merge-pr.ts refused #3478 because its Closes keyword named a ready-for-human issue the owner had already agreed to close; I edited the PR body and closed the issue by hand."
     solution: When an owner pick closes an issue, write 'relates to' from the start and close it by hand after the merge.
     severity: nit
-durationSec: 3041
+durationSec: 3134
 models:
-  claude-sonnet-5-5: 274
+  claude-sonnet-5-5: 285
 toolCounts:
-  Bash: 52
+  Bash: 54
   Read: 10
-  Skill: 6
+  Skill: 7
   mcp__claude-code-remote__get_session: 1
   Workflow: 4
   ToolSearch: 5
@@ -156,8 +156,8 @@ toolCounts:
   SendMessage: 41
   mcp__github__create_pull_request: 6
   mcp__claude-code-remote__subscribe_pr_activity: 6
-  Write: 2
-  ReadNotifications: 4
+  Write: 3
+  ReadNotifications: 6
   mcp__github__pull_request_read: 3
   mcp__github__issue_read: 1
   mcp__github__update_pull_request: 1
@@ -2105,7 +2105,7 @@ subagents:
     durationSec: 70
     toolCalls: 10
     modelCalls: 9
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: general-purpose
     task: a2949a39d2b007962
     model: claude-sonnet-5-5
@@ -2119,49 +2119,49 @@ subagents:
     durationSec: 1958
     toolCalls: 10
     modelCalls: 8
-    tokenShare: 1.1
+    tokenShare: 1
   - type: general-purpose
     task: a3bbe6df095f524c3
     model: claude-sonnet-5-5
     durationSec: 2166
     toolCalls: 62
     modelCalls: 34
-    tokenShare: 5.3
+    tokenShare: 5.2
   - type: general-purpose
     task: a56597226900b78ba
     model: claude-sonnet-5-5
     durationSec: 2005
     toolCalls: 11
     modelCalls: 7
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: general-purpose
     task: a65a485fae0e6395c
     model: claude-sonnet-5-5
     durationSec: 2167
     toolCalls: 29
     modelCalls: 24
-    tokenShare: 2.9
+    tokenShare: 2.8
   - type: general-purpose
     task: a66f4849425aec571
     model: claude-sonnet-5-5
     durationSec: 2165
     toolCalls: 23
     modelCalls: 22
-    tokenShare: 2.2
+    tokenShare: 2.1
   - type: general-purpose
     task: a71668cf6bab30f4c
     model: claude-sonnet-5-5
     durationSec: 1961
     toolCalls: 38
     modelCalls: 25
-    tokenShare: 3.2
+    tokenShare: 3.1
   - type: general-purpose
     task: a7bca7ea3ce6dfb84
     model: claude-sonnet-5-5
     durationSec: 2165
     toolCalls: 48
     modelCalls: 43
-    tokenShare: 4.7
+    tokenShare: 4.6
   - type: general-purpose
     task: a8de047cb4623ad99
     model: claude-sonnet-5-5
@@ -2175,7 +2175,7 @@ subagents:
     durationSec: 2148
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 1
+    tokenShare: 0.9
   - type: general-purpose
     task: acb15d288c48729b5
     model: claude-sonnet-5-5
@@ -2189,7 +2189,7 @@ subagents:
     durationSec: 2165
     toolCalls: 85
     modelCalls: 54
-    tokenShare: 7
+    tokenShare: 6.9
   - type: general-purpose
     task: ad33058832f1a3b69
     model: claude-sonnet-5-5
@@ -2217,7 +2217,7 @@ subagents:
     durationSec: 2150
     toolCalls: 11
     modelCalls: 7
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: general-purpose
     task: af2ef023fa289c952
     model: claude-sonnet-5-5
@@ -2280,7 +2280,7 @@ subagents:
     durationSec: 28
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 0.5
+    tokenShare: 0.4
   - type: workflow-subagent
     task: build cost-friction-ledger-update
     model: claude-sonnet-5-5
@@ -2301,7 +2301,7 @@ subagents:
     durationSec: 227
     toolCalls: 26
     modelCalls: 21
-    tokenShare: 2
+    tokenShare: 1.9
   - type: workflow-subagent
     task: Spec tenant-glossary-read-guard r1
     model: claude-sonnet-5-5
@@ -2322,7 +2322,7 @@ subagents:
     durationSec: 1110
     toolCalls: 64
     modelCalls: 40
-    tokenShare: 3.8
+    tokenShare: 3.7
   - type: workflow-subagent
     task: Standards cost-friction-ledger-update r1
     model: claude-sonnet-5-5
@@ -2343,14 +2343,14 @@ subagents:
     durationSec: 18
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: workflow-subagent
     task: Standards f2f-tracked-ref-contradiction r1
     model: claude-sonnet-5-5
     durationSec: 20
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: workflow-subagent
     task: Spec typescript-7-alias-trial r1
     model: claude-sonnet-5-5
