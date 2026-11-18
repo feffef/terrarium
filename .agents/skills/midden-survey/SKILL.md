@@ -21,9 +21,8 @@ firing one).
 
 - Read `layers/midden/GLOSSARY.md` first — especially **The inclusion bar**
   and **Artifact** (what a candidate would become).
-- The sweep needs full history: if `git rev-parse --is-shallow-repository`
-  says `true`, run `git fetch --unshallow origin main` first. The script below
-  refuses to run shallow rather than silently under-reporting.
+- The sweep needs full history (`docs/agents/git-conventions.md`); the script
+  below refuses to run shallow rather than silently under-reporting.
 - Run the mechanical half:
 
   ```

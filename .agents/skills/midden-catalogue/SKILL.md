@@ -49,7 +49,9 @@ write has a source you have read this session. What the record doesn't say
   verbatim line, byte-for-byte.
 - **Placement** — trench or stores, by the test in GLOSSARY.md, The Stores.
   A trench find needs a `site`: fold it into an existing report
-  whose argument it extends, or write a new one.
+  whose argument it extends, or write a new one. Demoting a find (or the
+  reverse) is a file move plus deleting (or adding) its `site:` line; the diff
+  is the record.
 - **Condition** — grade against the definition text in `condition.ts`, never
   the word's connotation.
 - **Cause** — pick the one cause in `layers/midden/app/utils/cause.ts` the record best supports.

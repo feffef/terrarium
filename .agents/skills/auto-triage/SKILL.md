@@ -117,7 +117,7 @@ explicit skip here instead of relying on timing.
 above for this run only — every open, in-scope issue is eligible regardless of who commented last. Use it only when
 a human directs a brave re-triage; an agent never picks it on its own.
 
-1. **Resolve the set.** List every open issue via `pnpm exec tsx scripts/github/list-open-issues.ts`
+1. **Resolve the set.** List every open issue via `pnpm exec tsx scripts/github/list-open-issues.ts 5000`
    (overflow-safe — see `docs/agents/github-integration.md` — not raw
    `list_issues`/`search_issues`) plus in-scope external PRs (`issue-tracker.md`'s
    "List external PRs"); for each, check its most recent comment

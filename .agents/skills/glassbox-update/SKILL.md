@@ -19,9 +19,9 @@ The script is `.agents/skills/glassbox-update/scripts/glassbox-update.ts`, run
 with `pnpm exec tsx`. Its report's `main` is **the commit**: this run reviews and
 pins to that one commit, never a later fetch.
 
-1. **Report.** If `git rev-parse --is-shallow-repository` says `true`, run
-   `git fetch --unshallow origin main`. Run the script and save its JSON
-   report. Done when you hold it.
+1. **Report.** Run the script (it refuses a shallow clone; see
+   `docs/agents/git-conventions.md`) and save its JSON report. Done when you
+   hold it.
 2. **Advance.** Run the script with `--write --to <the commit>`: it shifts
    moved `lines` ranges and pins every page to the commit, except a page with
    an `edited` range, which is left wholly untouched.

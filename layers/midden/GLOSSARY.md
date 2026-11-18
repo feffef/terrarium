@@ -40,7 +40,7 @@ A `pages` Document in the `trench` Space: one dig report — curator's-voice pro
 A curator-declared date range, named for what the Platform was mostly doing or
 discarding during it (e.g. "the Routing Excavation", never a bare "Q1 2026";
 #519). The canonical, ordered list is single-homed (see What lives where
-below), mirroring the Atlas's `almanac.ts` seasons pattern. One season stays open-ended, "the Current Midden", for freshly-discarded, not-yet-seasoned finds. An Artifact's `stratum` field
+below). One season stays open-ended, "the Current Midden", for freshly-discarded, not-yet-seasoned finds. An Artifact's `stratum` field
 references a season by slug. A season also labels each inline find on a Site page (via the condition word).
 
 ### Artifact
@@ -57,9 +57,7 @@ a `lost` artifact, since nothing survives to view. The exact shape and its
 rules (SHA-pinned links, when `site` is required): see What lives where below.
 
 ### Condition
-The curator-graded preservation state of an Artifact, one of six grades in
-this order: `fresh → intact → fragmentary → dissolved` (the
-erosion axis), then `never-activated` (complete but never fired; a distinct axis, not a further decay step) and `lost` (its own gravestone template; #523). **Curator-authored, never mechanically re-derived**, not from `assessedAt` or any future continuity check (#526). Shown as its word, never a glyph. The six grades and their definitions are single-homed (see What lives where below).
+The curator-graded preservation state of an Artifact, one of six grades (order, axes and definitions: `layers/midden/app/utils/condition.ts`). **Curator-authored, never mechanically re-derived**, not from `assessedAt` or any future continuity check (#526). Shown as its word, never a glyph.
 
 ### Cause of death
 Why an Artifact ended, as one curator-chosen cause. Condition says what is left of a thing;
@@ -79,9 +77,7 @@ report can still point at one).
 
 A find moves here when the curator judges it **sound but not significant**: it
 passed the same two-gate inclusion bar as everything in the trench, but carries
-no decision, reversal, or transferable fact a dig report can argue from. The
-demotion is a file move plus the deleted `site:` line, so the diff is the
-demotion record; the reverse move is the same operation. Demotion is explicitly
+no decision, reversal, or transferable fact a dig report can argue from. Demotion is explicitly
 *not* a quality judgment and never edits a record down — a real museum keeps
 most of its collection in the stores and nobody reads that as a verdict.
 

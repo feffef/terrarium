@@ -43,15 +43,14 @@ Each carries its own palette and character — **The Canopy** (*dappled, patient
 ### Specimen
 The Atlas's atomic unit of contribution: one invented creature, catalogued as one
 Document in a Biome's routed `pages` collection. It is simultaneously a **record**
-(an invented Latin binomial, common name, classification, a **rarity** grade —
-*abundant | common | uncommon | rare | mythic* — size, diet, an activity
+(an invented Latin binomial, common name, classification, a **rarity** grade (`Rarity` in `layers/atlas/app/utils/atlas.ts`), size, diet, an activity
 **rhythm**, and a 2–3 hue **color signature** that is part of its identity) and a
 **field note** (the naturalist's prose essay), fronted by a hand-drawn **engraved
 plate**.
 
 ### Interaction
-A single directed relationship between two Specimens **of the same Biome** — one
-of *preys-on, pollinates, mimics, shelters, fears*. Authored once as a directed
+A single directed relationship between two Specimens **of the same Biome**, of one
+kind from `interactionKind` in `layers/atlas/tenant.config.ts`. Authored once as a directed
 edge (a Document in the Biome's `interactions` data collection); the reverse label
 ("preyed on by") is *derived*, so a Specimen's own Relations and the Biome's
 food-web diagram are two views of the one single-homed fact. Contrast the Blog's Pingback (ADR-0012).
