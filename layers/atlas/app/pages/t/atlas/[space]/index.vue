@@ -172,8 +172,8 @@ useHead({ title: `${meta.name} · The Atlas of the Terrarium` })
   text-wrap: balance;
 }
 .catalogue-key { margin: 0.8rem 0 0; font-size: 0.85rem; font-style: italic; color: var(--atlas-muted); }
-.foodweb-caption { margin: 0.8rem 0 0; font-size: 0.9rem; font-style: italic; color: var(--atlas-muted); }
 .catalogue-key a { color: inherit; }
+.foodweb-caption { margin: 0.8rem 0 0; font-size: 0.9rem; font-style: italic; color: var(--atlas-muted); }
 .biome-intro { margin-top: 1.1rem; max-width: 40rem; color: var(--atlas-muted); }
 .choreo { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.4rem; }
 .choreo li {
