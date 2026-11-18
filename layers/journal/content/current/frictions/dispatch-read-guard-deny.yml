@@ -11,6 +11,7 @@ related:
     rule: The guard denied a prompt that only quoted a placeholder token.
 notes: |-
   2026-11-04 reopened: fix #2768 (2026-11-02) merged after the owner accepted it on 2026-10-27.
+  2026-11-18 owner decision (#3425): the prune trial of 2026-11-14 (184c36f06) cut the read-first lines of #2768, #3136 and #3196, and the denial share rose from 22.3% to 43.1%; one short line, "Read the `dispatch-subagents` Skill before your first dispatch.", is restored in visitor-loop, blog-post, clear-backlog and glassbox-curate.
 fixes:
   - pr: 2768
     date: "2026-11-02"
