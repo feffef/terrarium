@@ -1,8 +1,10 @@
 // Unit tests for the harvest helper's pure core: key rendering and parsing, the
 // harvested-state scan, entry ordering, and the before/after-posting checks.
 // The IO shell (GitHub listing, files) is exercised by running the script.
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
+import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
+import { root } from '../../../../../scripts/lib/cli.ts'
 import { decodeHtmlEntities } from '../../../../../scripts/lib/github-client.ts'
 import {
   BODY_LIMIT,
@@ -15,12 +17,13 @@ import {
   comparePosted,
   entryKey,
   evidenceReport,
-  productDecisions,
   harvestedState,
   noteTexts,
   parseKeys,
+  productDecisions,
   renderBlock,
   renderList,
+  rulingFiles,
   summaryOf,
   type Entry,
 } from '../../scripts/harvest.ts'
@@ -379,6 +382,11 @@ describe('evidenceReport()', () => {
     expect(evidenceReport(['zzz'], sources)).toBe('rulings:\n  (no match)\ntracker:\n  (no match)\nledger:\n  (no match)')
   })
 
+  it('matches at the start of a word, so a short keyword does not flood', () => {
+    expect(evidenceReport(['log'], { ...sources, frictions: [{ file: 'f3.yml', summary: 'the catalog logs' }, { file: 'f4.yml', summary: 'a catalog' }] })).toContain('f3.yml')
+    expect(evidenceReport(['log'], { ...sources, frictions: [{ file: 'f4.yml', summary: 'a catalog' }] })).not.toContain('f4.yml')
+  })
+
   it('prints an open issue without a reason', () => {
     expect(evidenceReport(['other'], sources)).toContain('#9 open: Other')
   })
@@ -389,5 +397,14 @@ describe('productDecisions()', () => {
     const md = '# G\n- term\n## Product decisions\n- no plates (#1)\n## Next\n- other'
     expect(productDecisions(md)).toEqual('\n\n\n- no plates (#1)\n\n')
     expect(productDecisions('# G\n- term').trim()).toBe('')
+  })
+})
+
+describe('rulingFiles()', () => {
+  it('lists the rulings sources step 3 names, all present in the repo', () => {
+    const files = rulingFiles(root)
+    expect(files).toEqual(expect.arrayContaining(['.agents/skills/visitor-loop/decisions.md', '.agents/skills/glassbox-lesson/owner-decisions.md', 'layers/atlas/GLOSSARY.md']))
+    expect(files.some((f) => f.startsWith('.out-of-scope/'))).toBe(true)
+    expect(files.filter((f) => !existsSync(join(root, f)))).toEqual([])
   })
 })

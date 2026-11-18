@@ -50,12 +50,10 @@ harvests both.
    its pattern can match. Do not filter script output with `head` or `tail`.
    Step 4 starts only when `harvest check-clusters <that file> --extract
    <extract.json>` passes. For each cluster run `harvest evidence <keywords...>`
-   (several words per idea): it prints candidates only, from the owner's rulings
-   (`.out-of-scope/`, `visitor-loop/decisions.md`,
-   `glassbox-lesson/owner-decisions.md`, Tenant `## Product decisions`), the
-   tracker (titles and bodies, open and closed) and Ledger summaries. Read each
-   hit and decide; "(no match)" is evidence only once you know the keywords can
-   match. A cluster is open when all of these hold:
+   (several words per idea; each matches at the start of a word): it prints
+   candidates only, from the owner's rulings, the tracker (titles and bodies,
+   open and closed) and Ledger summaries. Read each hit and decide. A cluster is
+   open when all of these hold:
    - **Unbuilt.** Name the file or symbol it would change and read it now. Run
      `pnpm exec tsx scripts/git/list-merges-since.ts` from its session's start
      (`started` in the list). For a learning, grep `CLAUDE.md`, `.claude/rules/`, `docs/agents/`

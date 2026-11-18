@@ -9,7 +9,6 @@
 //   tsx .agents/skills/harvest/scripts/harvest.ts extract [--kind ideas|learnings] [--out PATH]
 //   tsx .agents/skills/harvest/scripts/harvest.ts list <extract.json>
 //   tsx .agents/skills/harvest/scripts/harvest.ts block <extract.json> <n> [n...]
-//   tsx .agents/skills/harvest/scripts/harvest.ts evidence <keyword...>
 //   tsx .agents/skills/harvest/scripts/harvest.ts check-clusters <harvest-checks.md> --extract <extract.json>
 //   tsx .agents/skills/harvest/scripts/harvest.ts check-body <body-file> --extract <extract.json> [--title T]
 //   tsx .agents/skills/harvest/scripts/harvest.ts check-posted <issue-number> <body-file>
@@ -245,8 +244,9 @@ export interface EvidenceSources {
 /** Candidates for one cluster's keywords from the owner's rulings, the tracker and the
  *  Friction Ledger. A hit is only a hint: SKILL.md step 3 has the agent read each one. */
 export function evidenceReport(keywords: string[], src: EvidenceSources): string {
-  const words = keywords.map((k) => k.toLowerCase())
-  const hit = (...texts: (string | null)[]) => words.some((w) => texts.some((t) => (t ?? '').toLowerCase().includes(w)))
+  // A keyword matches at the start of a word, so `log` finds `logs` but not `catalog`.
+  const re = new RegExp(`\\b(?:${keywords.map((k) => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})`, 'i')
+  const hit = (text: string | null) => re.test(text ?? '')
   const section = (name: string, found: string[]) => [`${name}:`, ...(found.length ? found : ['  (no match)'])]
   return [
     ...section(
@@ -255,7 +255,7 @@ export function evidenceReport(keywords: string[], src: EvidenceSources): string
     ),
     ...section(
       'tracker',
-      src.issues.filter((i) => hit(i.title, i.body)).map((i) => `#${i.number} ${i.state}${i.state_reason ? ` ${i.state_reason}` : ''}: ${i.title}`),
+      src.issues.filter((i) => hit(`${i.title}\n${i.body ?? ''}`)).map((i) => `#${i.number} ${i.state}${i.state_reason ? ` ${i.state_reason}` : ''}: ${i.title}`),
     ),
     ...section('ledger', src.frictions.filter((f) => hit(f.summary)).map((f) => `${f.file}: ${f.summary}`)),
   ].join('\n')
@@ -395,20 +395,25 @@ function cmdExtract(argv: string[]): void {
   console.log(`harvest: ${entries.length} entries, ordered, written to ${out}`)
 }
 
-/** The rulings SKILL.md step 3 checks: `.out-of-scope/`, the visitor-loop and Glass Box
- *  decision lists, and each Tenant glossary's product decisions. */
-function cmdEvidence(keywords: string[]): void {
-  const read = (rel: string) => ({ file: rel, text: readFileSync(join(root, rel), 'utf8') })
-  const dir = (rel: string) => readdirSync(join(root, rel)).map((f) => `${rel}/${f}`)
-  const glossaries = readdirSync(join(root, 'layers')).map((t) => `layers/${t}/GLOSSARY.md`)
-  const rulings = [
-    ...dir('.out-of-scope').map(read),
-    read('.agents/skills/visitor-loop/decisions.md'),
-    read('.agents/skills/glassbox-lesson/owner-decisions.md'),
-    ...glossaries.filter((f) => existsSync(join(root, f))).map(read).map((r) => ({ ...r, text: productDecisions(r.text) })),
+/** The rulings files `evidence` reads: `.out-of-scope/`, the visitor-loop and Glass Box decision
+ *  lists, and each Tenant glossary (cut to its product decisions when read). */
+export function rulingFiles(dir: string): string[] {
+  const glossaries = readdirSync(join(dir, 'layers')).map((t) => `layers/${t}/GLOSSARY.md`)
+  return [
+    ...readdirSync(join(dir, '.out-of-scope')).map((f) => `.out-of-scope/${f}`),
+    '.agents/skills/visitor-loop/decisions.md',
+    '.agents/skills/glassbox-lesson/owner-decisions.md',
+    ...glossaries.filter((f) => existsSync(join(dir, f))),
   ]
+}
+
+function cmdEvidence(keywords: string[]): void {
+  const rulings = rulingFiles(root).map((file) => {
+    const text = readFileSync(join(root, file), 'utf8')
+    return { file, text: file.endsWith('/GLOSSARY.md') ? productDecisions(text) : text }
+  })
   const ledger = 'layers/journal/content/current/frictions'
-  const frictions = dir(ledger).map((f) => ({ file: f, summary: summaryOf(readFileSync(join(root, f), 'utf8')) }))
+  const frictions = readdirSync(join(root, ledger)).map((f) => ({ file: `${ledger}/${f}`, summary: summaryOf(readFileSync(join(root, ledger, f), 'utf8')) }))
   console.log(evidenceReport(keywords, { rulings, issues: listIssueBodies(), frictions }))
 }
 
