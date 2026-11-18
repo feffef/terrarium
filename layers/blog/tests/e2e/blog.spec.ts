@@ -235,6 +235,31 @@ describe('blog Tenant', async () => {
     }
   })
 
+  it('does not scroll a post sideways at 390px with a long Newer title (#3452)', async () => {
+    const page = await createPage()
+    try {
+      await page.setViewportSize({ width: 390, height: 800 })
+      await page.goto(url('/t/blog/eyra/2026-11-10-a-notebook-14644-pixels-tall-with-no-door-out'), {
+        waitUntil: 'hydration',
+      })
+      expect(await page.locator('.post-nav-newer .post-nav-title').count()).toBe(1)
+      expect(await page.evaluate('document.documentElement.scrollWidth')).toBeLessThanOrEqual(390)
+    } finally {
+      await page.close()
+    }
+  })
+
+  it('does not scroll a post sideways at 390px with a long inline code string (#3452)', async () => {
+    const page = await createPage()
+    try {
+      await page.setViewportSize({ width: 390, height: 800 })
+      await page.goto(url('/t/blog/david/2026-07-06-field-notes-write-themselves'), { waitUntil: 'hydration' })
+      expect(await page.evaluate('document.documentElement.scrollWidth')).toBeLessThanOrEqual(390)
+    } finally {
+      await page.close()
+    }
+  })
+
   it('heads each month on a Persona page and hides a heading with its posts (#3460)', async () => {
     const page = await createPage()
     try {
