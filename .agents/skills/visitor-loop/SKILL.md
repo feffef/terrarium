@@ -131,10 +131,8 @@ idea and learning in the draft.
 ## 5. Retro, then close
 
 Run the retro in issue #3244: send each visitor its retro message by agent id,
-then post the run's report there as one comment: its yield per lens, filter and
-brief friction, the retros and Skill-change candidates, as in that issue's
-template. Leave out its cost, token, effort and timing fields; the owner reads
-costs in the Journal. Log each problem the run hit outside visitor-loop itself
+then post the run's report there as one comment, following that issue's rules
+and template minus its cost fields. Log each problem the run hit outside visitor-loop itself
 (another Skill, tool, hook or doc) as a Friction in the draft. Then invoke
 `close-session`, writing the log from the draft.
 
