@@ -105,7 +105,7 @@ describe('specimenByCommonName()', () => {
   const canopy = [
     { path: '/lumina-fabulae', title: 'Lumina fabulae', commonName: 'the lantern moth' },
     { path: '/aranea-patiens', title: 'Aranea patiens', commonName: 'the patient weaver' },
-    { path: '/index-less', title: 'Unnamed one', description: 'the quiet one' },
+    { path: '/quiet-one', title: 'Unnamed one', description: 'the quiet one' },
   ]
 
   it('matches the common name minus "the", hyphenated', () => {
