@@ -8,7 +8,7 @@ const next = computed(() => props.steps[at.value + 1])
 
 <template>
   <nav v-if="at >= 0" class="tour" aria-label="Start here">
-    <p class="tour-step">Start here · {{ at + 1 }} of {{ steps.length }}</p>
+    <p class="tour-step">Start here · {{ at + 1 + ONRAMP_LEADING.length }} of {{ steps.length + ONRAMP_LEADING.length }}</p>
     <div class="tour-links">
       <NuxtLink v-if="prev" :to="base + prev.path" rel="prev" class="tour-prev">
         <span aria-hidden="true">←</span> {{ prev.label }}

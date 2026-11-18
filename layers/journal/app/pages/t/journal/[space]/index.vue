@@ -53,16 +53,8 @@ const digests = computed(() => digestList(allPages.value))
 // adding or reordering a door needs no edit here. Isolation-respecting: sourced
 // from THIS Space's own `pages`, so a page must exist in-Space to surface — the
 // archived Space, lacking these pages, shows none.
-// The Glass Box guide is another Tenant's page, so it can't opt in through
-// frontmatter: it is a fixed first card, shown only where in-Space doors exist
-// (the archived Space, with none, shows no on-ramp). A plain link, no
-// cross-Tenant read (ADR-0025).
-const GUIDE_CARD = {
-  key: '/t/glassbox/guide',
-  title: 'How Terrarium works',
-  blurb: 'Start with how Terrarium works, the overview that opens the Glass Box guide.',
-  to: '/t/glassbox/guide',
-}
+// The leading cards (the Glass Box guide) show only where the Space has its own
+// doors, so the archived Space, with none, still shows no on-ramp.
 const onrampCards = computed(() => {
   const steps = onrampSteps(allPages.value).map((s) => ({
     key: s.path,
@@ -70,7 +62,7 @@ const onrampCards = computed(() => {
     blurb: s.blurb,
     to: `/t/${tenant}/${space}${s.path}`,
   }))
-  const all = steps.length ? [GUIDE_CARD, ...steps] : []
+  const all = steps.length ? [...ONRAMP_LEADING.map((c) => ({ ...c, key: c.to })), ...steps] : []
   return all.map((c, i) => ({ ...c, kicker: `Start here · ${i + 1} of ${all.length}` }))
 })
 
