@@ -1,0 +1,266 @@
+schemaVersion: 1
+session: session_013zxzeSLYR7qbBXfqwKYbcc
+startedAt: 2026-11-18T16:02:58Z
+endedAt: 2026-11-18T16:09:35Z
+kind: autonomous
+goal: Scheduled visitor-loop run on the Blog
+status: completed
+outcome: "Three visitors reviewed the Blog; one bug filed as #3452, retro posted on #3244"
+summary: "Scheduled run, no human prompts; everything was agent-initiated under the visitor-loop Skill. Focus was blog (rotation row 1). Built and served the production preview, wrote the context file, dispatched blind, content-editor and UI-tester visitors on sonnet, then tallied. One bug confirmed against source and rendered page: the Newer/Older post-nav title overflows at 390px on 95 of 217 posts (filed as #3452, needs-triage). The other findings were checked lightly: a claimed Kevin contradiction (three lines vs 8 lines) is not one, the Threads tab works at ?view=threads, and the missing Journal footer on one-day-old posts is most likely the Journal day page not existing yet (unverified). Start-here pins were dropped by analogy to decisions.md rulings on Persona and homepage start lists, a judgement call. Ideas and one learning went to the log; retro report posted on #3244 with token and cost fields marked unknown."
+prs: []
+docsRead:
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: scripts/lib/chromium.ts
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/visitor-brief.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+skillsUsed:
+  - name: visitor-loop
+    reason: the scheduled task
+  - name: dispatch-subagents
+    reason: read after the guard blocked the first dispatch
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: The dispatch-read guard blocked the first three Agent calls of the visitor-loop run until I read dispatch-subagents; the briefs had to be resent in full.
+    solution: Exempt a session running a Skill that defines its own brief, or have visitor-loop step 2 name dispatch-subagents first.
+    severity: minor
+  - description: I ran git fetch and a gh api issue read before reading git-conventions and github-integration; hooks reminded me after the fact, and the calls were fine.
+    solution: Load these hints before the first command, or keep read-only fetch out of the trigger list.
+    severity: nit
+  - description: The context file listed 222 URLs while the brief asks for 10 to 20 pages; two visitors said they picked pages blind.
+    solution: Have step 2 add a short sample of URLs to the context file, or say to sample from the list.
+    severity: nit
+durationSec: 398
+models:
+  claude-sonnet-5-5: 66
+toolCounts:
+  Bash: 21
+  Agent: 6
+  Read: 1
+  ToolSearch: 2
+  mcp__github__issue_write: 2
+  SendMessage: 3
+  mcp__github__add_issue_comment: 1
+  Skill: 2
+filesEdited:
+  - .throwaway/visitor-blind/crawl.ts
+  - .throwaway/visitor-blind/deep.ts
+  - .throwaway/visitor-blind/more.ts
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/dispatch-subagents/SKILL.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/dispatch-subagents/SKILL.md
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/adr-0006.md
+        via: hint
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+      - rule: .claude/rules/adr-0016.md
+        via: hint
+      - rule: .claude/rules/adr-0025.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: no branch or PR; bug went to an issue
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: provenance header on issue and comment
+      - path: .claude/rules/adr-0009.md
+        value: steered
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0028.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/rules/tenant-layers.md
+        value: unrelated
+      - path: .claude/rules/ui-verification.md
+        value: unrelated
+      - path: .claude/rules/adr-0006.md
+        value: unrelated
+      - path: .claude/rules/adr-0012.md
+        value: unrelated
+      - path: .claude/rules/adr-0016.md
+        value: unrelated
+      - path: .claude/rules/adr-0025.md
+        value: unrelated
+      - path: .claude/rules/adr-0022.md
+        value: unrelated
+      - path: .agents/skills/dispatch-subagents/SKILL.md
+      - path: docs/agents/github-integration.md
+      - path: docs/agents/issue-tracker.md
+  - by: general-purpose
+    subagent: 3
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 4
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 5
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+subagents:
+  - type: general-purpose
+    task: Blind first-time visitor
+    model: sonnet
+    denied: true
+  - type: general-purpose
+    task: Informed content editor
+    model: sonnet
+    denied: true
+  - type: general-purpose
+    task: Informed UI tester
+    model: sonnet
+    denied: true
+  - type: general-purpose
+    task: Blind first-time visitor
+    model: sonnet
+    durationSec: 175
+    toolCalls: 14
+    modelCalls: 12
+    tokenShare: 13.4
+  - type: general-purpose
+    task: Informed content editor
+    model: sonnet
+    durationSec: 178
+    toolCalls: 9
+    modelCalls: 8
+    tokenShare: 13.6
+  - type: general-purpose
+    task: Informed UI tester
+    model: sonnet
+    durationSec: 174
+    toolCalls: 13
+    modelCalls: 10
+    tokenShare: 13.5
+gitBranch: claude/lucid-heisenberg-kx65y2
+entrypoint: remote_trigger
+cliVersion: 2.1.327
+trigger: visitor-loop
+learnings:
+  - The Blog's Threads tab is addressed as /t/blog?view=threads, not ?tab=threads; a wrong param silently shows the Latest list.
+  - "Per-post overflow checks at 390px are cheap: loading all 217 Blog posts and reading documentElement.scrollWidth took one script and a few minutes."
+ideas:
+  - "[content editor] /t/blog/eyra/2026-07-22-i-brought-you-a-house-with-balconies: the opening post leans on unexplained metaphors (lantern language, bookstand, courtyard). Replace each with one concrete sentence saying what Eyra will do, since this is where Eyra's readers start."
+  - "[content editor] /t/blog/eyra/2026-11-16-the-door-parked-64-pixels-above-the-page: the line 'Karen, before you ask: I have no number for how many visitors use a keyboard' answers no visible Karen post. Drop it or link the post it answers, so readers aren't puzzled."
+  - "[content editor] Recent David, Karen and Kevin posts: each re-defines the same terms in mid-sentence parentheses (a single working run, a pull request, Skill, Friction Ledger), which breaks the Persona voice. Gloss a term once per post or link it, so voices read cleaner."
+  - "[content editor] /t/blog/david/2026-08-24-the-rule-about-who-gets-to-merge-kept-being-wrong: a wall of long paragraphs with no scene. Open with PR #972 as a scene and tighten, so a reader keeps going."
+  - "[UI tester] /t/blog/karen: a roughly 360-link chronological list with no breaks. Add month headings so visitors and screen-reader users can jump, and tell where July ends and November begins."
+  - "[UI tester] Blog post pages: Older and Newer link only within one Persona. Order the cross-Persona THREAD box as previous and next in the thread so readers can follow one story across all four."
+  - "[blind] /t/blog/<persona>: a page pairing one event as David, Karen, Kevin and Eyra each read it, since that is the Blog's gimmick and a visitor sees it in seconds."
+  - "[blind] /t/blog: a short dated 'story so far' of 6 to 8 milestones, each linking to a Persona post, so a newcomer gets the arc without reading 80 replies."
+  - "[blind] /t/blog posts about process: a two-line 'In plain words' summary at the top so a visitor can decide whether to read the other 600 words."
+  - "[blind] /t/blog/david: the Popular posts line is a comma run in the bio, so titles blur into blurbs. Render it as a list with title links and blurbs after a dash."
+  - "[blind] Blog posts: many links go to commit-pinned raw YAML on GitHub. Link the Journal's rendered pages where one exists, so a newcomer lands on something readable."
+  - "[blind, content editor] /t/blog: the 18 tags with counts up to 82 carry no explanation (rulebook, slop, guards). Add a one-clause hover or description per tag."
+  - "[UI tester] Blog post pages: breadcrumb and Back to the Blog links measure about 15px tall at 390px, under the 24px WCAG 2.2 target size. Add vertical padding; unverified by the orchestrator."
+landedBy: Stop
