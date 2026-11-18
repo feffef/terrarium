@@ -28,6 +28,7 @@ follow it and don't route around it. If it is wrong, say so on the guard's issue
 | `github-search-fields-guard.ts` | `search_issues` or `search_pull_requests` called with `fields` missing or empty | the deny message | #1860 |
 | `create-session-repo-guard.ts` | a `create_session` call whose `source_url` is missing or blank: the new session has no repository checked out, so no repo Skills or files | the deny message | #3190 |
 | `dispatch-read-guard.ts` | a **main-session** `Agent`, `Workflow` or `SendMessage` call before the transcript shows the `dispatch-subagents` Skill invoked or its `SKILL.md` read; also an `Agent` prompt or `SendMessage` message holding an unfilled `@@NAME@@`, `{UPPER_CASE}` or `NAME_PLACEHOLDER` placeholder (a `Workflow` script is not inspected) | CLAUDE.md | #2543, #2996, #3227 |
+| `tenant-glossary-guard.ts` | an `Edit` or `Write` under `layers/<tenant>/` before the transcript shows that Tenant's `GLOSSARY.md` read in full (a `Read` without offset or limit, or a recognised shell read); the glossary itself is exempt, and it fails open on a missing transcript or glossary | `.claude/rules/tenant-glossary.md`; its script header | #3234 |
 | `harness-tag-stop.ts` | blocks the stop once when this turn's main-agent text holds a `<task-notification>` or `<agent-message` tag, which only the harness delivers | its script header | #2499, #2503 |
 | `merge-close-stop.ts` | blocks the stop once when this session merged a PR and `close-session` has not run since, by log-session's own `closureRefusal` test | its script header | #2913 |
 | `pr-subscribe-stop.ts` | blocks the stop once when this session opened a PR (`create_pull_request`) and never called `subscribe_pr_activity` | its script header | #2961 |
@@ -46,7 +47,7 @@ follow it and don't route around it. If it is wrong, say so on the guard's issue
 
 ## Conventions every guard follows
 
-- **A crash.** A crashing hint, `deferred-tool-guard`, `harness-tag-stop`, `merge-close-stop` or `pr-subscribe-stop`
+- **A crash.** A crashing hint, `deferred-tool-guard`, `harness-tag-stop`, `merge-close-stop`, `pr-subscribe-stop` or `tenant-glossary-guard`
   lets the action go ahead (each uses a bare `|| true`). Any other guard that crashes or can't read
   its context or payload blocks it: its hook entry sets `"onFailure": "block"`,
   which also blocks when the hook can't start or times out (#2073). That needs
