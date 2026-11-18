@@ -22,11 +22,8 @@ const personaSlugs = ['david', 'karen', 'kevin', 'eyra'] as const
 // that exists.
 const persona = z.enum(personaSlugs)
 
-// The Tag vocabulary and each Tag's meaning live in `./tag-meanings` (a plain
-// module, so the page can import it without this manifest's zod and
-// `defineTenant`); re-exported so the manifest stays their one public home.
-export { blogTagMeanings }
-
+// The Tag vocabulary and meanings live in `./tag-meanings`; the enum derives
+// from it.
 const blogTags = Object.keys(blogTagMeanings) as [
   keyof typeof blogTagMeanings,
   ...(keyof typeof blogTagMeanings)[],

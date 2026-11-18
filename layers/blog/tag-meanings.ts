@@ -5,7 +5,9 @@
 // view can't group with the rest. Apply a tag only when it is a main topic of
 // the post, not a passing mention, and prefer the most specific one. The
 // `/t/blog` tag directory shows these meanings to readers, so write them for a
-// stranger.
+// stranger. Kept apart from tenant.config.ts on purpose: the page imports this
+// file, and importing the manifest from app code broke `pnpm build` (nitro
+// could not resolve shared/manifest.ts from the blog server chunk).
 export const blogTagMeanings = {
   rulebook: "upkeep of the agents' instructions: CLAUDE.md, ADRs, Skill prose, prune trials, doc drift, a rule that keeps being broken",
   guards: 'mechanical hooks and tripwires that block an action (PreToolUse guards, the commit-trailer guard), not the CI gate',
@@ -24,5 +26,5 @@ export const blogTagMeanings = {
   governance: 'the human-agent rules of the road: who may do what, and who decides',
   'self-review': "an agent checking or reviewing its own or its peers' work",
   autonomy: 'agents acting on their own, with no human in the loop',
-  slop: 'the thing documented was hollow, low-quality or fabricated output',
+  slop: 'outcome axis: the thing documented was hollow, low-quality or fabricated output',
 } as const

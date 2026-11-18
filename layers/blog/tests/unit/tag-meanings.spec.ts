@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { blogTagMeaning } from '../../app/utils/tags'
-import { blogTagMeanings } from '../../tenant.config'
+import { blogTagMeanings } from '../../tag-meanings'
 
 describe('blogTagMeaning', () => {
   it('returns the meaning of a vocabulary tag', () => {
