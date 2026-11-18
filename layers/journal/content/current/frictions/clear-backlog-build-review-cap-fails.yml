@@ -3,9 +3,6 @@ summary: "The backlog build loop started a fresh review round after any defect o
 cause: "clear-backlog section 3 step 4 started a fresh review round on any defect or spec-mismatch line, whatever the fix size, so a one-line fix could cost a whole round that found only nits (2026-11-16: four small branches, about 600k tokens by the run logs). reviewBranch no longer returns 'failed' at the round cap (older signals: 'review capped at 3 rounds'). A 2026-11-11 run also spent 4.4M tokens over 52 agents when five of six small branches hit the cap on cosmetic findings; PR #3119 redesigned the review and fix steps, PR #3196 narrowed which findings force another round, and PR #3419 (2026-11-17) starts round N+1 only by fix size: a defect still open after the re-check, over about 10 lines of round N fixes, or a missing-test above 50 lines."
 surface: safe
 status: open
-related:
-  - entry: first-review-pass-misses-defect
-    rule: A defect passed the first review round.
 notes: |-
   2026-11-13 survey: issue #3110 closed completed 2026-11-12T08:50Z (no closing PR in its timeline; PRs #3119 and #3196 relate to it and are recorded in fixes); status reset from tracked.
   2026-11-17 regression issue #3400 filed (2 occurrences since #3196).
