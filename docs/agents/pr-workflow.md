@@ -15,15 +15,15 @@ PR exists for the branch, commit, run the
 [`code-review`](../../.agents/skills/code-review/SKILL.md) Skill on the
 committed diff against `origin/main` in the checkout that holds it, fix the
 findings, then run `pnpm gate:scoped` on the final head and edit nothing while
-it runs. The gate treats only `.md` files outside `layers/`, and
-`.claude/skills/`, as inert: a change of only those skips `test`, `build` and
-`test:e2e`; with other Skill or workflow files (`.agents/skills/`,
-`.claude/workflows/`) it skips only `build` and `test:e2e`; any other path runs
-everything (`scripts/gate/gate.ts`, `isInert`). So a unit test that reads an
-inert file (`tests/unit/area-labels.spec.ts` reads an auto-triage `SKILL.md`)
-can fail only on `main` after a Markdown-only PR. Push that head, then open the
-PR. Exempt: a session-log commit, and a
+it runs. Push that head, then open the PR. Exempt: a session-log commit, and a
 Skill whose own steps review the diff before the PR (`midden-catalogue` §4).
+
+The gate skips `test`, `build` and `test:e2e` when every changed path is a `.md`
+outside `layers/` or under `.claude/skills/`; when the rest are under
+`.agents/skills/` or `.claude/workflows/`, it skips only `build` and `test:e2e`;
+any other path runs everything (`scripts/gate/gate.ts`). So a unit test that
+reads such a Markdown file (`tests/unit/area-labels.spec.ts` reads an
+auto-triage `SKILL.md`) can fail only on `main` after a Markdown-only PR.
 
 **A simple change** gets your own read of its full diff instead. Count; don't
 judge by how plain it looks. Simple is a typo, rewrap, broken link or path, an
