@@ -15,8 +15,8 @@ learnings into Seedlings, and its bugs become issues for triage.
 ## Remit
 
 The run changes nothing but its own session log, its confirmed bugs (one new
-issue per group, or a comment on an open issue they fit) and its retro comment
-on #3244: no branch or PR (ADR-0003).
+issue per group, or a comment on an open issue they fit): no branch or PR
+(ADR-0003).
 Its Frictions are only where the run itself was bumpy, never site bugs.
 
 ## Today's focus
@@ -130,11 +130,14 @@ idea and learning in the draft.
 
 ## 5. Retro, then close
 
-Run the retro in issue #3244: send each visitor its retro message by agent id,
-then post the run's report there as one comment, following that issue's rules
-and template minus its cost fields. Log each problem the run hit outside visitor-loop itself
-(another Skill, tool, hook or doc) as a Friction in the draft. Then invoke
-`close-session`, writing the log from the draft.
+Run the retro: send each visitor, by agent id, "Read-only: change no files.
+Say nothing about the site; only about the workflow around your visit. In at
+most 4 lines: what in your instructions (brief, context file, scripts) made
+your visit slower or less reliable, and the one change you would make, naming
+its home file; or `NOTHING`. Give each claim its source." Put the run's yield
+per lens, filter misses (duplicates let through, wrong drops) and the visitor
+retros in the log's `summary`, and each problem with this Skill or the
+tools around it as a Friction whose `solution` names the home file. Then
+invoke `close-session`, writing the log from the draft.
 
-Done when the report comment is posted and the authored log holds every entry
-in the draft.
+Done when the authored log holds every entry in the draft.
