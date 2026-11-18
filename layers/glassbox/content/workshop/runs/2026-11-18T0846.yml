@@ -6,7 +6,7 @@ focus: "Installed skills: the memory page's wording lead that the gate checks
   diffLock, the same at the page's revision) and no open PR touches the page.
   Deviations for the budget: no Scout, writer, claim checker or fresh reader; all
   four skill-pack pages were read in full, plus the guide index. Cost:
-  unreported (no get_session); estimated context about 90k tokens."
+  unreported (no get_session); estimated context about 120k tokens. code-review ran after the PR opened; its Spec reviewer named Skill inventory and Merge gate as overlapping pages; both say a file that no longer matches its pin fails, which stays true, so nothing changed there."
 changes:
   - skill-pack/10.skill-packs | The paragraph before the validate-skills-lock
     Excerpt now says a skill with no inventory entry is checked only for a missing
@@ -18,3 +18,5 @@ pagesRead:
   - skill-pack/20.planning-with-the-pack
   - skill-pack/30.engineering-skills
   - skill-pack/40.wayfinder
+  - terrarium-practice/85.skill-inventory
+  - verification/10.gate
