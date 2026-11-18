@@ -6,7 +6,8 @@
 # requires rebuilding or redeploying this image. The image only changes when the
 # base tooling here does.
 #
-# The Node image must meet package.json engines (issue #1552). pnpm comes from
+# The Node image must meet package.json engines, which @nuxt/content's native
+# `node:sqlite` connector needs (see nuxt.config.ts). pnpm comes from
 # corepack, pinned by the repo's `packageManager` field; Node 25+ no longer
 # bundles corepack, so it is installed from npm.
 
