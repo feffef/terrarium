@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: c8d9ced5-3fe1-47f1-981f-8dcc4b5191f7
 startedAt: 2026-11-18T21:47:46Z
-endedAt: 2026-11-18T21:59:24Z
+endedAt: 2026-11-18T22:08:52Z
 kind: interactive
 goal: Move Terrarium to Node 26 LTS and deploy it to vigia
-status: in-review
-outcome: "PR #3473 open for a human merge; vigia already runs the Node 26 image"
-summary: "The owner asked directly for this: address issue 1552, update Node in the Docker build, deploy to vigia and update the types. Per the owner's earlier choice in the issue, the target is Node 26 LTS (26.13.x). engines, the Gate action's node-version, the deploy image tag and @types/node all moved to 26. The issue also listed deploy/README.md and ADR-0011, but on main they already name no Node version. On its own initiative the session found that Node 25+ no longer bundles corepack, which would have broken the image's `corepack enable`, and added a pinned `npm install -g corepack` before it. Review found a stale \"Node 22\" in a Glass Box page; it was dropped there, along with the version number. The scoped gate passed under a locally nvm-installed Node v26.13.1. The first run failed only in e2e: no Chromium for the newly locked playwright-core. Deploying was the owner's ask, and they acknowledged the downtime (\"ok\"). The image was built first on vigia and smoke-tested (node, corepack and pnpm 10.33.0 via corepack), then the container was recreated. It rebuilt main on Node 26 in about 50s, reports healthy and serves 200 publicly. Still open: the host clone at /opt/terrarium/repo sits on node-26 until the merge. Sessions on Node 22 are now below the engines floor; pnpm only warns."
+status: completed
+outcome: "PR #3473 merged; vigia serves main on Node 26; local default Node is 26"
+summary: "The owner asked directly for this: address issue 1552, update Node in the Docker build, deploy to vigia and update the types. After the merge they asked for \"the remaining things\". Per the owner's earlier choice in the issue, the target is Node 26 LTS (26.13.x). engines, the Gate action's node-version, the deploy image tag and @types/node all moved to 26. The issue also listed deploy/README.md and ADR-0011, but on main they already name no Node version. On its own initiative the session found that Node 25+ no longer bundles corepack, which would have broken the image's `corepack enable`, and added a pinned `npm install -g corepack` before it. Review found a stale \"Node 22\" in a Glass Box page; it was dropped there, along with the version number. The scoped gate passed under a locally nvm-installed Node v26.13.1 after one e2e-only failure (missing Chromium). With the owner's ok on the downtime, the image was built first on vigia and smoke-tested, then the container was recreated. It rebuilt main on Node 26 in about 50s and later served the merge commit 452e05135, healthy, 200 publicly. After the owner merged: the host clone at /opt/terrarium/repo was reset to main, and nvm's default became 26.13.1, so fresh shells get Node 26. The running Claude Code session keeps 22.16 until it restarts. The owner chose to leave the unbumped image tag and corepack pin as they are, with no Dependabot docker ecosystem."
 prs:
   - "3473"
 docsRead:
@@ -46,16 +46,23 @@ frictions:
   - description: Edited a Glass Box page without first reading layers/glassbox/GLOSSARY.md, as tenant-glossary.md requires; edit was a one-word removal.
     solution: Read the Tenant glossary before any edit under layers/, however small.
     severity: nit
-durationSec: 698
+  - description: A `zsh -lic 'node -v'` check of the new nvm default misreported 22.16 because it inherited Claude Code's PATH; needed an env -i retry.
+    solution: Test shell defaults with `env -i HOME=$HOME zsh -lic` from the start.
+    severity: nit
+  - description: First image smoke test on vigia failed on nested ssh/sh quoting of a JSON package.json, needing a second call.
+    solution: Pipe a heredoc over ssh instead of nesting quoted JSON in a remote sh -c.
+    severity: nit
+durationSec: 1266
 models:
-  claude-opus-5-5: 119
+  claude-opus-5-5: 145
 toolCounts:
-  Bash: 82
+  Bash: 95
   Read: 1
   Edit: 6
   Skill: 3
   Agent: 2
   Write: 1
+  AskUserQuestion: 1
 filesEdited:
   - deploy/Dockerfile
   - layers/glassbox/content/guide/pages/nuxt-content/30.content-database.md
@@ -240,13 +247,13 @@ subagents:
     durationSec: 60
     toolCalls: 17
     modelCalls: 10
-    tokenShare: 11.7
+    tokenShare: 10
   - type: general-purpose
     task: Spec review of Node 26 diff
     durationSec: 58
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 11.2
+    tokenShare: 9.5
 gitBranch: main
 entrypoint: cli
 cliVersion: 2.1.326
