@@ -281,11 +281,13 @@ it (your brief, `rules()` and `reviewPrompt()` in
 `.claude/workflows/clear-backlog-build.js`, the files you were told to read, the
 hooks and tools). In at most 6 lines: what made your work slower, costlier or
 less reliable, and the one change you would make, naming its home file; or
-`NOTHING`. Give each claim its source or mark it unverified."
+`NOTHING`. Reviewers: say where a review step caught something that mattered
+and where it only re-found small things. Give each claim its source or mark it
+unverified. Add one line on what worked well and should stay."
 
-Its focus is the workflow's efficiency with the reviews kept as a valid safety
-net: a cut needs evidence that the step caught nothing that mattered. Record
-what they say and your own findings as Frictions in the session log, nowhere
-else: no issue and no report comment. `frictions-to-fixes` picks them up.
+Weigh the workflow's efficiency with the reviews kept as a valid safety net: a
+cut needs evidence that the step caught nothing that mattered. Record the
+replies and your own findings as Frictions in the session log, nowhere else;
+`frictions-to-fixes` picks them up.
 
-**Done:** the retro replies are in the log's Frictions.
+**Done:** the retro replies and your findings are in the log's Frictions.
