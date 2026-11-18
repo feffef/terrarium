@@ -274,12 +274,20 @@ built.
 
 ## 5. Retro
 
-Once every PR has merged or waits for the owner, run the retro in issue #3143:
-ask each builder and reviewer for its retro, and post the run's report there
-as one comment, following that issue's rules and template. Its focus is the
-workflow's efficiency with the reviews kept as a valid safety net: a cut needs
-evidence that the step caught nothing that mattered. Log everything unrelated
-to clear-backlog itself as a Friction, never as an issue; `frictions-to-fixes`
-picks it up.
+Once every PR has merged or waits for the owner, send each builder and reviewer
+this by agent id: "Retro on the clear-backlog workflow, read-only: change no
+files, make no commits. Say nothing about your task, only the workflow around
+it (your brief, `rules()` and `reviewPrompt()` in
+`.claude/workflows/clear-backlog-build.js`, the files you were told to read, the
+hooks and tools). In at most 6 lines: what made your work slower, costlier or
+less reliable, and the one change you would make, naming its home file; or
+`NOTHING`. Reviewers: say where a review step caught something that mattered
+and where it only re-found small things. Give each claim its source or mark it
+unverified. Add one line on what worked well and should stay."
 
-**Done:** the report comment is posted and those Frictions are in the log.
+Weigh the workflow's efficiency with the reviews kept as a valid safety net: a
+cut needs evidence that the step caught nothing that mattered. Record the
+replies and your own findings as Frictions in the session log, nowhere else;
+`frictions-to-fixes` picks them up.
+
+**Done:** the retro replies and your findings are in the log's Frictions.
