@@ -483,8 +483,9 @@ describe('journal Tenant', async () => {
   // specific empty-state copy anymore (that would need a synthetic/mocked
   // fixture — this repo has no component-test infra for that yet).
   it('renders the archived Space dashboard without erroring', async () => {
-    const html = await $fetch('/t/journal/archived')
+    const html = await $fetch<string>('/t/journal/archived')
     expect(html).toContain('Recent activity')
+    expect(html).not.toContain('class="onramp"') // no own doors, so no Glass Box card either
   })
 
   it('loads at most JOURNAL_SESSIONS_LOADED sessions and says when it filters', async () => {

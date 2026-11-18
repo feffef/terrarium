@@ -50,11 +50,11 @@ const digests = computed(() => digestList(allPages.value))
 // ── Newcomer on-ramp — labelled doors to the explainer pages ──
 // Content-homed: a page opts in through its OWN frontmatter (`onramp` sort order
 // plus `onrampLabel`/`onrampBlurb` teaser copy — see the `pages` schema), so
-// adding or reordering a door needs no edit here. Isolation-respecting: sourced
-// from THIS Space's own `pages`, so a page must exist in-Space to surface — the
-// archived Space, lacking these pages, shows none.
-// The leading cards (the Glass Box guide) show only where the Space has its own
-// doors, so the archived Space, with none, still shows no on-ramp.
+// adding or reordering one of this Space's own doors needs no edit here.
+// Isolation-respecting: sourced from THIS Space's own `pages`, so a page must
+// exist in-Space to surface — the archived Space, lacking these pages, shows none.
+// The leading cards (the Glass Box guide, in utils/onramp.ts) show only where the
+// Space has its own doors, so the archived Space still shows no on-ramp.
 const onrampCards = computed(() => {
   const steps = onrampSteps(allPages.value).map((s) => ({
     key: s.path,
@@ -62,8 +62,8 @@ const onrampCards = computed(() => {
     blurb: s.blurb,
     to: `/t/${tenant}/${space}${s.path}`,
   }))
-  const all = steps.length ? [...ONRAMP_LEADING.map((c) => ({ ...c, key: c.to })), ...steps] : []
-  return all.map((c, i) => ({ ...c, kicker: `Start here · ${i + 1} of ${all.length}` }))
+  const cards = steps.length ? [...ONRAMP_LEADING.map((c) => ({ ...c, key: c.to })), ...steps] : []
+  return cards.map((c, i) => ({ ...c, kicker: `Start here · ${i + 1} of ${cards.length}` }))
 })
 
 // Page-wide accordion: a single item — one session card OR one digest — is open
