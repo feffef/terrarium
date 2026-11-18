@@ -1,0 +1,361 @@
+schemaVersion: 1
+session: session_013zxzeNx4V4gWZvzs8HQ3sZ
+startedAt: 2026-11-18T11:08:21Z
+endedAt: 2026-11-18T11:17:47Z
+kind: autonomous
+goal: Scheduled blog post in a Persona's voice
+status: in-review
+outcome: "One Kevin post on the merge-close Stop hook (#3412) is in PR #3445 with a green gate; the reply decision is still owed."
+summary: "Scheduled blog-post Routine run, no human prompt; every step was agent-run from the Skill. Rotation allowed only Kevin. I gathered the last three days of merged PRs and drafted three Kevin candidates (the watchFor checklist in #3421, the Stop hook merge-count fix in #3412, the one-retry merge fix in #3378). A blind sonnet reader picked the Stop-hook post; I revised it for its confusion notes. A fact-check subagent found one wrong blob line range (fixed) and two missing glosses (added); a re-check passed. code-review (Standards and Spec) found no hard violation, gate:scoped passed, PR #3445 opened and subscribed. Step 12 (reply decision) is owed once it merges. Irony worth noting: the Stop hook fired falsely in this very session while I wrote about that bug."
+prs:
+  - "3445"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-11-18-the-hook-said-a-pr-merged-because-the-command-contained-a-filename.md
+    reason: (read before editing)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/kevin.md
+    reason: (no reason given)
+  - path: layers/blog/GLOSSARY.md
+    reason: (no reason given)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (no reason given)
+  - path: .agents/skills/code-review/SKILL.md
+    reason: (no reason given)
+  - path: GLOSSARY.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: the scheduled task itself
+  - name: code-review
+    reason: pre-PR review of the new post
+  - name: dispatch-subagents
+    reason: read after the guard blocked my first brief
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: The merge-close Stop hook said a PR merged and close-session had not run, though this session had merged nothing.
+    solution: "Already fixed for the trace by #3412; the hook still fired here, so check whether Stop reads a stale trace or another path."
+    severity: minor
+  - description: The dispatch-read guard blocked my first Agent call until I read dispatch-subagents; I should have read it before writing the brief.
+    solution: Read the Skill at the first brief, as CLAUDE.md says.
+    severity: nit
+  - description: I tried a foreground sleep to wait for the gate and it was blocked; CLAUDE.md says to end the turn.
+    solution: End the turn after starting a background gate run.
+    severity: nit
+  - description: I read only one section of the Blog glossary before drafting, though the tenant-glossary rule says to read the Tenant's terms.
+    solution: Read layers/blog/GLOSSARY.md whole at step 2.
+    severity: nit
+durationSec: 565
+models:
+  claude-sonnet-5-5: 98
+toolCounts:
+  Bash: 33
+  Read: 5
+  mcp__github__pull_request_read: 4
+  Agent: 5
+  SendMessage: 1
+  ReadNotifications: 1
+  Skill: 3
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+filesEdited:
+  - layers/blog/content/kevin/pages/2026-11-18-the-hook-said-a-pr-merged-because-the-command-contained-a-filename.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0009.md
+adrHints:
+  - adr: 12
+    via: path
+    readAfter: true
+    by: main
+docsReadBySubagents:
+  - GLOSSARY.md
+  - .agents/skills/blog-post/SKILL.md
+  - layers/blog/GLOSSARY.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/pr-workflow.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/pr-workflow.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/dispatch-subagents/SKILL.md
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+      - rule: .claude/rules/adr-0030.md
+        via: native
+        trigger: docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: ran code-review and gate:scoped before the PR
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: opened and subscribed to the PR
+      - path: .claude/rules/adr-0009.md
+        value: steered
+        why: invoked close-session at PR open
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: session header and trailer on writes
+      - path: .claude/rules/adr-0012.md
+        value: confirmed
+        why: "agreed: standalone post, no Pingback"
+      - path: .claude/rules/tenant-glossary.md
+        value: missed
+        why: "skipped: read only one section of the Blog glossary"
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0002.md
+        value: unrelated
+      - path: .claude/rules/data-shapes.md
+        value: unrelated
+      - path: .claude/rules/mdc-when-to-use.md
+        value: unrelated
+      - path: .claude/rules/tenant-layers.md
+        value: unrelated
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/glossary-terms.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: unrelated
+      - path: .claude/rules/adr-0030.md
+        value: unrelated
+      - path: docs/agents/git-conventions.md
+      - path: docs/agents/github-integration.md
+      - path: docs/agents/pr-workflow.md
+      - path: .agents/skills/dispatch-subagents/SKILL.md
+      - path: .agents/skills/blog-post/personas/kevin.md
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/content/kevin/pages/2026-11-18-the-hook-said-a-pr-merged-because-the-command-contained-a-filename.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/blog/content/kevin/pages/2026-11-18-the-hook-said-a-pr-merged-because-the-command-contained-a-filename.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: layers/blog/content/kevin/pages/2026-11-18-the-hook-said-a-pr-merged-because-the-command-contained-a-filename.md
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/rules/adr-0012.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 3
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/blog-post/personas/kevin.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: .agents/skills/blog-post/personas/kevin.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/blog-post/personas/kevin.md
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/blog/GLOSSARY.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/blog/GLOSSARY.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0012.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 4
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/blog-post/SKILL.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: .agents/skills/blog-post/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/blog-post/SKILL.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0012.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+subagents:
+  - task: Blind read of three blog drafts
+    model: sonnet
+    denied: true
+  - task: Blind read of three blog drafts
+    model: sonnet
+    durationSec: 14
+    toolCalls: 6
+    modelCalls: 3
+    tokenShare: 8
+  - task: Fact-check Kevin blog post
+    model: sonnet
+    durationSec: 84
+    toolCalls: 14
+    modelCalls: 9
+    tokenShare: 9.2
+  - task: Standards review of blog post
+    model: sonnet
+    durationSec: 28
+    toolCalls: 10
+    modelCalls: 5
+    tokenShare: 5.5
+  - task: Spec review of blog post
+    model: sonnet
+    durationSec: 14
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 4.4
+gitBranch: claude/zen-heisenberg-bukf10
+entrypoint: remote_trigger
+cliVersion: 2.1.327
+trigger: blog-post
+landedBy: Stop
