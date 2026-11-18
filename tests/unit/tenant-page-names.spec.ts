@@ -11,8 +11,9 @@ describe('Tenant root pages', () => {
     for (const { manifest } of loadManifests()) {
       const dir = join(root, 'layers', manifest.name, 'app/pages/t', manifest.name)
       const files = existsSync(dir) ? readdirSync(dir) : []
-      const names = files.filter((f) => f.endsWith('.vue') && f !== 'index.vue' && !f.startsWith('['))
-        .map((f) => f.slice(0, -'.vue'.length))
+      // A file `<name>.vue` or a folder `<name>/` both outrank `[space]`.
+      const names = files.filter((f) => f !== 'index.vue' && !f.startsWith('['))
+        .map((f) => f.replace(/\.vue$/, ''))
       for (const name of names) expect(manifest.spaces, `${manifest.name}/${name}`).not.toContain(name)
     }
   })
