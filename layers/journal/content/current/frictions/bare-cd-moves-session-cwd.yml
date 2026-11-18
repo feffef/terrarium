@@ -94,3 +94,13 @@ occurrences:
     severity: nit
     description: "A cd into .agents/skills moved the primary working directory; the next call needed an environment fix-up."
     solution: "Use absolute paths or git -C instead of cd."
+  - session: session_013zxzeQgh4aLo2xMP4FzXZJ
+    date: "2026-11-17"
+    severity: nit
+    description: "A cd inside one Bash call moved the shell's working directory into the ledger folder and a worktree, so later git and gate commands briefly ran from the wrong place."
+    solution: "Use absolute paths or start every call with cd to the repo root."
+  - session: session_013zxzeR4N3chSHqH7Po2sjW
+    date: "2026-11-17"
+    severity: nit
+    description: "Wrote a Seedling body draft into the repo root through a wrong working directory; moved it to the scratchpad before anything was committed."
+    solution: "Use absolute scratchpad paths in every file write."

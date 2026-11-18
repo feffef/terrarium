@@ -1,9 +1,8 @@
 name: verdict-line-asserts-unchecked-review
 summary: The verdict line that merge-pr.ts accepts can state a code-review that never ran, because no tool checks it.
-cause: "verdict-line.ts prints a Reviewed: line and merge-pr.ts accepts a comment carrying it without checking that code-review or gate:scoped ran, so a PR can merge after skipped review while its verdict claims otherwise. Signals: 'Reviewed: line', 'verdict-line.ts', 'merge-pr.ts accepted', 'asserts a review no tool checks'."
+cause: "verdict-line.ts printed a Reviewed: line and merge-pr.ts accepted a comment carrying it without checking that code-review or gate:scoped ran, so a PR could merge after skipped review while its verdict claimed otherwise. Since PR #3416 (2026-11-17) an own read prints a distinct Own-read: line that merge-pr.ts refuses on a PR that adds, renames or copies a file; a Reviewed: line is still not checked against a real code-review run. Signals: 'Reviewed: line', 'verdict-line.ts', 'merge-pr.ts accepted', 'asserts a review no tool checks'."
 surface: guard-or-hook
-status: tracked
-ref: "#3395"
+status: open
 related:
   - entry: prepush-gate-review-skipped
     rule: "The skipping itself: no code-review, or an own-read on a change that was not simple."
@@ -11,6 +10,11 @@ related:
     rule: A hand-typed or wrong Reviewed SHA.
 notes: |-
   2026-11-17 design: verdict-line.ts --own-read flag, merge-pr.ts refuses an own-read verdict when the PR adds or renames a file (~25 lines; Human-only merge-pr.ts, open design choice). Tracked by existing issue #3395 (same session).
+  2026-11-18 survey: issue #3395 closed completed 2026-11-17 by PR #3416 (recorded in fixes); status reset from tracked.
+fixes:
+  - pr: 3416
+    date: "2026-11-17"
+    summary: "merge-pr.ts refuses an Own-read: verdict on a PR that adds, renames or copies a file; verdict-line.ts --own-read prints the distinct line, and Reviewed: stays for code-review."
 occurrences:
   - session: session_013zxzeSoqEeWqPDrCqDCcJn
     date: "2026-11-16"

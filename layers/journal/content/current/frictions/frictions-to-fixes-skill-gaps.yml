@@ -93,3 +93,8 @@ occurrences:
     severity: minor
     description: "SKILL section 5.4 asks the simple-change test on a ledger PR whose generated diff spans 58 files, so it can never pass (already tracked in #3397)."
     solution: "Say a generated ledger diff gets the gate plus a read of the decisions commit."
+  - session: session_013zxzeQgh4aLo2xMP4FzXZJ
+    date: "2026-11-17"
+    severity: minor
+    description: "Skill section 5.4 asks the simple-change test on the ledger PR, whose diff spans dozens of generated files, so it cannot pass."
+    solution: "Tracked by issue 3397: gate plus a read of the decisions commit."

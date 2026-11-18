@@ -46,3 +46,8 @@ occurrences:
     severity: nit
     description: "After fast-forwarding to origin/main the Stop hook counted five session-log commits from main as unpushed; pushing my branch cleared it though none of the work was mine."
     solution: "Count only commits in origin/main..HEAD, as git-conventions.md already says to do by hand."
+  - session: session_013zxzeSgAcwDrJXAMFAC4Qf
+    date: "2026-11-17"
+    severity: nit
+    description: "The Stop hook counted 33 of main's commits as unpushed on the merged session branch; my fast-forward push then recreated the remote branch GitHub had deleted, which I did not check with ls-remote."
+    solution: "Check git ls-remote for the branch before pushing a merged branch, and have the Stop hook skip a branch whose PR has merged."

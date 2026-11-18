@@ -46,3 +46,8 @@ occurrences:
     severity: nit
     description: "Glossing ADR pushed the Why bullet over its word cap; found only by running the page test, then fixed by trimming other words."
     solution: "Say in the Skill's Fix step that a bullet near 65 words has no room for a gloss."
+  - session: session_013zxzePMRv24VHZ1q24seyG
+    date: "2026-11-17"
+    severity: nit
+    description: "After the claim-check fixes I reworded a Why bullet and the page test failed on its word cap twice before I cut enough words; the cap is only visible in the test output."
+    solution: "Fine as designed; a writer brief could name the 65-word Why bullet cap, which I had left out of the follow-up edit."

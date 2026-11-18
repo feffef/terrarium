@@ -177,3 +177,8 @@ occurrences:
     severity: minor
     description: "My first fact-check was too lenient: it let 'daily' through; the later review caught that cadence word, so I reran the gate once more."
     solution: "Brief the fact-checker to flag every cadence word the Skill lists, not just ones it can disprove."
+  - session: session_013zxzePjedjMk4SeDKFvzPt
+    date: "2026-11-17"
+    severity: minor
+    description: "The first fact-check pass found an inexact quote, an ambiguous within-a-day claim and an unverifiable that-morning time, forcing two re-check rounds."
+    solution: "At drafting time, quote primary text verbatim and state time claims as explicit UTC times from the event."

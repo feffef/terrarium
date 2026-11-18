@@ -151,3 +151,8 @@ occurrences:
     severity: nit
     description: "Briefed the first reviewers with 'about 130 of the 143 changed files are data' without counting; the file list I printed gave 135, and I never verified either."
     solution: "Count with git diff --name-only and a filter before stating a number in a brief, or leave the number out."
+  - session: session_013zxzeQgh4aLo2xMP4FzXZJ
+    date: "2026-11-17"
+    severity: nit
+    description: "My first ledger PR verdict stated 44 changed files without counting; the real count was 35 and I had to edit the comment."
+    solution: "Count with git diff --no-renames --name-only before stating a number."

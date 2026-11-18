@@ -125,3 +125,8 @@ occurrences:
     severity: nit
     description: "First dispatch brief held an unfilled placeholder and the dispatch guard rejected it."
     solution: "Inline the assignment text when writing the brief instead of a placeholder."
+  - session: session_013zxzeQgh4aLo2xMP4FzXZJ
+    date: "2026-11-17"
+    severity: nit
+    description: "My fix C spec carried a literal brace placeholder that my own fill step replaced; I caught it by re-reading the filled brief before dispatch."
+    solution: "Describe a placeholder in words inside fix specs, or fill briefs in a single pass over the template only."

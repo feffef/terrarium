@@ -70,3 +70,8 @@ occurrences:
     severity: minor
     description: "A colon-space inside an unquoted run-entry YAML item broke validate:content; glassbox unit tests passed, so the gate was the first to see it."
     solution: "Have workshop.spec.ts parse run entries, or tell the Skill to quote each changes item."
+  - session: session_013zxzePMRv24VHZ1q24seyG
+    date: "2026-11-17"
+    severity: minor
+    description: "The run entry skeleton printed by orient.ts starts with changes: [] and says nothing about quoting; my unquoted changes lines held a colon, parsed as maps and failed validate-content in the first full gate run, costing a wasted gate run of about three minutes."
+    solution: "Make orient.ts print the changes lines quoted in its skeleton, or say so in glassbox-curate's Run entry step."

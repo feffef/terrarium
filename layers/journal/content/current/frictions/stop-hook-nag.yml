@@ -287,3 +287,8 @@ occurrences:
     severity: nit
     description: "The Stop hook flagged uncommitted ledger changes while the survey agent was still mid-run; I had to check status to see they were the agent's."
     solution: "None needed beyond waiting; the hook can't see subagent work in progress."
+  - session: session_013zxzeSgAcwDrJXAMFAC4Qf
+    date: "2026-11-17"
+    severity: minor
+    description: "The Stop hook asked to commit and push repeatedly while a gate was running and the gate-edit guard blocked the commit, so each reminder cost a refusal turn."
+    solution: "Have the Stop hook stay quiet while a gate:scoped run holds its lock in this checkout."

@@ -138,3 +138,18 @@ occurrences:
     severity: minor
     description: "Survey agent: ledger append refused three already-held session triples after --unledgered, and it first typed the commit-trailer session id by hand; design agent: audit-skills output dumps 66KB, no path lookup for trial territory, no guidance when every pick is no change."
     solution: "Add session-level pre-filtering to --unledgered, a doc-counts mode for audit-skills, and a no-change clause in design-brief section 6."
+  - session: session_013zxzeQgh4aLo2xMP4FzXZJ
+    date: "2026-11-17"
+    severity: minor
+    description: "I typed a made-up session id into fix A's dispatch prompt inside a self-correcting NO line, before reading the real id from the commit trailer."
+    solution: "Copy the id from the Claude-Session trailer; never type one into a brief."
+  - session: session_013zxzePDuDw1pEuTakjKjF7
+    date: "2026-11-18"
+    severity: nit
+    description: "I typed a made-up session id into a commit message file before noticing the hook adds the real trailer; no commit used it."
+    solution: "Never write the trailer by hand; the commit-msg hook supplies it."
+  - session: session_013zxzeQty154cpRRShQjRhX
+    date: "2026-11-18"
+    severity: nit
+    description: "Drafted the issue header with a session id typed from memory; it was wrong. get_session gave the right id before the issue was posted."
+    solution: "Print the session id once from get_session at the start of the run and reuse it."

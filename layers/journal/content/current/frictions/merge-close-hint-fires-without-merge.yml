@@ -114,3 +114,13 @@ occurrences:
     severity: minor
     description: "Stop hook repeatedly said a PR merged and demanded close-session while no PR existed yet and subagents were still running, costing several turns of redundant status replies."
     solution: "Gate the merge-close Stop hook on a PR this session actually opened or merged."
+  - session: session_013zxzeQgh4aLo2xMP4FzXZJ
+    date: "2026-11-17"
+    severity: minor
+    description: "The Stop hook said a PR merged and close-session had not run, twice, when no PR had merged in this session."
+    solution: "Fix A makes the Stop hook count a merge only when merge-pr.ts reports merged."
+  - session: session_013zxzePjedjMk4SeDKFvzPt
+    date: "2026-11-17"
+    severity: minor
+    description: "The Stop hook said a PR merged and demanded close-session twice, and a PostToolUse hint did too, when this session had merged nothing; I had only run commands naming merge-pr.ts."
+    solution: "Fix 3412 landed hours earlier; check whether it covers the PostToolUse hint and the Stop hook for commands that only grep or log the script name."

@@ -86,3 +86,8 @@ occurrences:
     severity: minor
     description: "The criterion-1 search subagent could not read the tracker because gh GraphQL is blocked, so the failed-prose search was partial."
     solution: "Give the search brief the REST route (gh api search/issues) and the list_issues MCP tool explicitly."
+  - session: session_013zxzeSgAcwDrJXAMFAC4Qf
+    date: "2026-11-17"
+    severity: nit
+    description: "Tried three ways to delete the stale remote branch (git twice, then the REST API); the proxy refused all of them, costing three calls before I reported it blocked."
+    solution: "Say in environment-caveats.md that this proxy permits no branch deletion, so a session asks the owner at once."
