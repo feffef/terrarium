@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRjfC32pkbUMmiaMnN
 startedAt: 2026-11-18T21:38:15Z
-endedAt: 2026-11-18T21:57:31Z
+endedAt: 2026-11-18T21:58:30Z
 kind: interactive
 goal: Judge whether the clear-backlog redesign worked, then retire its report thread
-status: in-review
-outcome: Analysis posted and the thread closed; the PR that removes the retro-to-issue step is open and awaits CI
-summary: "Human-instructed throughout. The owner asked whether the rewritten clear-backlog Skill (they named PR 3119, the resume-builders redesign, which kept the workflow scripts) worked and beat the older version, pointing at issue 3143. I read the issue, its 20 comments (16 run reports), issue 3110 (the baseline: 52 agents, 4.37M tokens on one run) and the 23 PRs that touched the Skill in the last two weeks, then at the owner's request did a deeper pass over the report YAML. Main result: fresh agents per branch fell from 8.7 to about 3.4, but agent turns per branch (fresh plus resumes) fell only about 10 percent, token cost per branch is flat to modestly lower, and later review rounds on small branches found almost only nits. I first told the owner the saving was about half and corrected it in the next turn after comparing notice tokens with transcript tokens. The owner then told me to post a summary on 3143, close it, remove the instruction to post a retro there, and raise retro findings only in the session log. I posted the summary and closed the issue, then edited clear-backlog SKILL.md section 5 so it carries the retro message inline and records replies as Frictions in the session log. Agent-initiated: the PR, per ADR-0003 once the branch passed code-review and the gate. Standards and Spec reviewers found two lines of the old retro message dropped plus wording nits, I fixed them in a second commit and both re-checked CLEAN. gate:scoped passed on the final head. Open: CI, my verdict comment and the merge via merge-pr.ts; the \"at most 6 lines\" cap now sits beside two extra asks."
+status: completed
+outcome: Analysis posted, thread closed, and the PR removing the retro-to-issue step merged
+summary: "Human-instructed throughout. The owner asked whether the rewritten clear-backlog Skill (they named PR 3119, the resume-builders redesign, which kept the workflow scripts) worked and beat the older version, pointing at issue 3143. I read the issue, its 20 comments (16 run reports), issue 3110 (the baseline: 52 agents, 4.37M tokens on one run) and the 23 PRs that touched the Skill in the last two weeks, then at the owner's request did a deeper pass over the report YAML. Main result: fresh agents per branch fell from 8.7 to about 3.4, but agent turns per branch (fresh plus resumes) fell only about 10 percent, token cost per branch is flat to modestly lower, and later review rounds on small branches found almost only nits. I first told the owner the saving was about half and corrected it in the next turn after comparing notice tokens with transcript tokens. The owner then told me to post a summary on 3143, close it, remove the instruction to post a retro there, and raise retro findings only in the session log. I posted the summary and closed the issue, then edited clear-backlog SKILL.md section 5 so it carries the retro message inline and records replies as Frictions in the session log. Agent-initiated: the PR, per ADR-0003 once the branch passed code-review and the gate, and its merge via merge-pr.ts after CI went green (no Human-only path touched). Standards and Spec reviewers found two lines of the old retro message dropped plus wording nits, I fixed them in a second commit and both re-checked CLEAN. gate:scoped passed on the final head and CI's gate was green on it. PR 3472 merged as 134095648. Open: the \"at most 6 lines\" cap now sits beside two extra asks in the retro message."
 prs:
   - "3472"
 docsRead:
@@ -56,27 +56,32 @@ frictions:
   - description: The ADR read-first demand for the edited SKILL.md arrived in a hook note after the Edit; the rule can't order a step before the read that loads it, so three ADRs were read after editing.
     solution: Mention in clear-backlog's SKILL.md header that ADR-0005, 0022 and 0027 govern it, so a session can read them before editing; or accept the late read.
     severity: nit
-durationSec: 1156
+  - description: ADR-0004 says a human merges a change to 'behaviour no test or gate step can observe'; it is unclear whether Skill prose counts, so I judged by precedent (agents merged earlier Skill PRs) and said so in the verdict.
+    solution: Add one line to docs/agents/pr-workflow.md saying whether a Skill-text-only PR counts as untested behaviour.
+    severity: nit
+durationSec: 1215
 models:
-  claude-sonnet-5-5: 127
+  claude-sonnet-5-5: 147
 toolCounts:
   Read: 9
   ToolSearch: 4
   mcp__github__issue_read: 3
-  Bash: 30
+  Bash: 35
   mcp__github__list_pull_requests: 1
   AskUserQuestion: 1
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 2
   Grep: 3
-  mcp__github__add_issue_comment: 1
+  mcp__github__add_issue_comment: 2
   mcp__github__issue_write: 1
   Edit: 2
-  Write: 3
-  Skill: 3
+  Write: 4
+  Skill: 4
   Agent: 2
   SendMessage: 2
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/skills/clear-backlog/SKILL.md
 rulesGlobal:
@@ -220,13 +225,13 @@ subagents:
     durationSec: 43
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 7.9
+    tokenShare: 6.7
   - type: general-purpose
     task: Spec review of SKILL.md edit
     durationSec: 43
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 7.5
+    tokenShare: 6.4
 gitBranch: claude/busy-thompson-xdpidv
 entrypoint: remote
 cliVersion: 2.1.327
