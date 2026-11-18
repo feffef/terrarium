@@ -38,11 +38,6 @@ fixes:
     date: "2026-11-17"
     summary: "survey-brief command now shows --merges-only; design-brief looks up one docReadCounts entry with jq"
 occurrences:
-  - session: session_013zxzeSrSkYPpnoS2ag6EbC
-    date: "2026-11-03"
-    severity: minor
-    description: "The survey report omitted each regression's highest-severity-since, though its brief asks for it; I re-derived it from the summary file with grep."
-    solution: "Have the survey brief require the since value column copied per regression, or write the ranked list to a file."
   - session: session_013zxzeNezKVRxRiZLs4z9n4
     date: "2026-11-04"
     severity: minor

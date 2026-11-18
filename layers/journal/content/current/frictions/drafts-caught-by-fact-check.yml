@@ -27,16 +27,6 @@ fixes:
     date: "2026-11-13"
     summary: "digest SKILL.md needs a source in the day's gathered material for a cadence word and drops 'scheduled' from its example; the fact-check checks both."
 occurrences:
-  - session: session_013zxzeR8CEiWCmTmvjhCZ1A
-    date: "2026-11-03"
-    severity: minor
-    description: "Both review subagents flagged project jargon (judges, Skills, pruning trial) that the fact-check had not; needed a second commit and a gate run afterwards."
-    solution: "Add a plain-wording check to the Digest fact-check brief so jargon is caught before the first commit."
-  - session: session_013zxzeSF22kmtzW5QWaTDTX
-    date: "2026-11-03"
-    severity: minor
-    description: "My first draft framed the one-judge cut as the fix for the misread question; the checker found they were separate changes, the cut cost-driven."
-    solution: "Read the PR body's change list before writing a causal link between two changes; the checker caught it before landing."
   - session: session_013zxzePsSguQyDiqnq52irG
     date: "2026-11-04"
     severity: minor

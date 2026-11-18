@@ -11,11 +11,6 @@ notes: |-
   2026-10-28 design: dropped: the refusal is the designed enforcement of #2536 and names the fix; cost is one call.
   2026-11-05 design: stronger close-session hint or relaxing the refusal dropped: the refusal is the designed enforcement (close-session-bypassed-by-hand-log), a hint change is Human-only, the cost is one call; the #2798 hint did not move it
 occurrences:
-  - session: session_013zxzeSrSkYPpnoS2ag6EbC
-    date: "2026-11-03"
-    severity: nit
-    description: "log-session refused the completed log right after the merge until I re-invoked close-session, though I had just run the same close steps; one extra round trip."
-    solution: "Let the merge hint say to invoke close-session before editing the log's status, as PR 2798 now does."
   - session: session_013zxzeQFKLDc1URLih3edaf
     date: "2026-11-04"
     severity: nit

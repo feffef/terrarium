@@ -24,41 +24,6 @@ fixes:
     date: "2026-10-15"
     summary: "Hint now says a late read that clears the call is not a Friction."
 occurrences:
-  - session: session_013zxzeR8CEiWCmTmvjhCZ1A
-    date: "2026-11-03"
-    severity: nit
-    description: "Ran git status and the digest list before reading git-conventions.md, which CLAUDE.md requires before git beyond read-only commands; status is read-only so no harm."
-    solution: "None needed; the hook reminded me and the doc was read before any commit."
-  - session: session_013zxzePh7qKycsJT9g2eqU1
-    date: "2026-11-03"
-    severity: minor
-    description: "Ran git rev-parse HEAD before reading docs/agents/git-conventions.md, which CLAUDE.md orders before the first git command beyond read-only ones."
-    solution: "Read the doc first; the hook caught it and the late read changed nothing."
-  - session: session_013zxzeSrSkYPpnoS2ag6EbC
-    date: "2026-11-03"
-    severity: nit
-    description: "The design subagent tried gh issue view (GraphQL, 403) before reading github-integration.md, and the survey agent's own occurrence count was unverified (tail cut its output)."
-    solution: "Brief the agent with the cloud gh limitation inline; have append scripts print a total count."
-  - session: session_013zxzeR4cgWA8MkV51fqC4t
-    date: "2026-11-03"
-    severity: nit
-    description: "Ran gh api reads before reading docs/agents/github-integration.md, which CLAUDE.md requires before the first GitHub operation"
-    solution: "Read it before the first gh api call; a PreToolUse guard (not just a PostToolUse hint) on gh api would have caught it"
-  - session: session_013zxzeQrhKwVsWaJZV8Bs7y
-    date: "2026-11-03"
-    severity: minor
-    description: "Read git-conventions, pr-workflow and github-integration docs after the first non-read-only git command was planned, not before."
-    solution: "Read the CLAUDE.md read-first docs before the first git or GitHub operation."
-  - session: session_013zxzePCZc7PkwLBo6YoDJt
-    date: "2026-11-03"
-    severity: nit
-    description: "Ran git fetch before reading git-conventions.md, which CLAUDE.md requires before a non-read-only git command; the hook then pointed me to it."
-    solution: "Fetch is the first command the Skill itself needs; list fetch as allowed before the doc read."
-  - session: session_013zxzeQbPLMkHvh94sawgDU
-    date: "2026-11-03"
-    severity: nit
-    description: "Ran git rev-parse, list-open-issues and gh api reads before reading git-conventions.md and github-integration.md, which CLAUDE.md says to read before the first such command."
-    solution: "Read both docs first; a hook only reminded me after the commands, so the reminder could fire before the first non-allowlisted call."
   - session: session_013zxzePsSguQyDiqnq52irG
     date: "2026-11-04"
     severity: nit

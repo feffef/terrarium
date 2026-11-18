@@ -14,21 +14,11 @@ fixes:
     date: "2026-11-07"
     summary: "Removes the glassbox-improve Skill (issue #2930, owner decision), the source of this cluster's runs."
 occurrences:
-  - session: session_013zxzeSAtjCQiatdUuuFCRJ
-    date: "2026-11-03"
-    severity: minor
-    description: "grades.ts tally crashed with a TypeError in summary when rater C1 wrote gaps with the keys better instead of exemplar and take; no line was named."
-    solution: "Validate gap keys while parsing the hand-back and name the page and key, like the skill promises for parse errors; tell raters the keys in the brief."
   - session: session_013zxzeT8tDd5GPJiRNZRA4J
     date: "2026-11-04"
     severity: minor
     description: "grades.ts tally listed two steps as pending that grades.yml already held as dropped, and a cut step without a gist crashed its summary with a TypeError."
     solution: "Print a step's earlier decision beside any re-raise, and require a gist in reportProblems (filed in issue 2848)."
-  - session: session_013zxzeQH3GSc8uMpvhebnFr
-    date: "2026-11-03"
-    severity: nit
-    description: "The tally listed the invariant-tests section step as pending a third time although grades.yml already marked the same step dropped; a researcher then spent a round confirming what the history said."
-    solution: "tally should not relist a step dropped with an unchanged gist inside the churn window."
   - session: session_013zxzeTJp1jinYqgNJRczgA
     date: "2026-11-05"
     severity: minor
