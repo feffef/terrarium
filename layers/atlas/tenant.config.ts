@@ -59,6 +59,8 @@ export default defineTenant({
       kind: 'page', // opt into the cross-Tenant #catalog (ADR-0025)
       source: '**/*.md',
       schema: z.object({
+        // Biome landing only: one-line caption under the food web.
+        foodWebCaption: z.string().optional(),
         // The museum label (#67). `title` (from the page type) holds the Latin
         // binomial; these complete the caption card.
         commonName: z.string().optional(), // "the lantern moth"

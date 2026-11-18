@@ -96,9 +96,26 @@ describe('atlas Tenant', async () => {
     expect(html).toContain('The Canopy')
     expect(html).toContain('The Floor')
     expect(html).toContain('The Pool')
+    expect(html).not.toContain('Choose a wing, and go quietly.')
+    expect(html).toContain('Start with a wing.')
     expect(html).not.toContain('/t/atlas/plates')
     expect(html).not.toContain('/t/atlas/random')
   })
+
+  // Each Biome landing carries its hand-written food-web caption (landing
+  // frontmatter `foodWebCaption`) and the plate-numbering note under the catalogue key.
+  for (const [biome, caption] of [
+    ['canopy', 'The weaver keeps the top of the web'],
+    ['floor', 'The grey lattice keeps the gate'],
+    ['pool', 'The pool keeps no apex'],
+  ]) {
+    it(`captions the ${biome} food web and explains plate gaps`, async () => {
+      const html = await $fetch(`/t/atlas/${biome}`)
+      expect(html).toContain('class="foodweb-caption"')
+      expect(html).toContain(caption)
+      expect(html).toContain('a missing number is a plate not yet drawn')
+    })
+  }
 
   // Both dead-address shapes answer 404 in the guide's own voice: a known Biome
   // with no such specimen (the entry page) and an unknown Biome (the Platform's

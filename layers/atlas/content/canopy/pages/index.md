@@ -1,5 +1,6 @@
 ---
 title: The Canopy
+foodWebCaption: The weaver keeps the top of the web; the false-leaf walks away from her, and the moth lends the mold its evening.
 description: The high green rooms, where the light arrives in pieces and everything has learned to wait.
 ---
 
