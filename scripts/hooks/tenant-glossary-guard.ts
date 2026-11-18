@@ -1,15 +1,11 @@
-// Issue #3234: `.claude/rules/tenant-glossary.md` loads on the first touch of a
-// layer file, so it cannot order a read before that touch (ADR-0029) and the
-// Friction Ledger entry `governing-doc-read-after-draft` kept growing. So this
-// denies an `Edit` or `Write` under `layers/<tenant>/` until the transcript
-// shows `layers/<tenant>/GLOSSARY.md` read in full: a `Read` without offset or
-// limit, or a shell read the session trace recognises. A grep or a partial
-// read does not count, since the Friction was a glossary only grepped.
-// Decisions: the glossary itself is exempt (the harness already makes an Edit
-// follow a Read, and a new Tenant has none to read); `tenant.config.ts` and
-// code are not, since the rule says the terms apply to them; read-only tools
-// are not matched. A subagent is checked against its own transcript, not its
-// parent's. Fails open on a missing or unreadable transcript or glossary, and
+// Issue #3234: a rule loads only on the first touch of a layer file, so it
+// cannot order the glossary read before it (ADR-0029). This denies an `Edit` or
+// `Write` under `layers/<tenant>/` until the transcript shows that Tenant's
+// GLOSSARY.md read in full (a `Read` without offset or limit, or a shell read
+// the session trace recognises; a grep or partial read does not count).
+// Exempt: the glossary itself and read-only tools; code and `tenant.config.ts`
+// are not, since the rule covers them. A subagent is checked against its own
+// transcript. Fails open on a missing or unreadable transcript or glossary and
 // on any crash: a wrong block costs more than a missed nit.
 //
 // Usage:
@@ -36,11 +32,16 @@ export function glossaryFor(path: unknown): string | null {
 
 const isReadOf = (doc: string, p: unknown) => typeof p === 'string' && (p === doc || p.endsWith(`/${doc}`))
 
+function wholeRead(block: unknown, doc: string): boolean {
+  const input = prop(block, 'input')
+  return prop(block, 'type') === 'tool_use' && prop(block, 'name') === 'Read'
+    && prop(input, 'offset') === undefined && prop(input, 'limit') === undefined
+    && isReadOf(doc, prop(input, 'file_path'))
+}
+
 export function readInFull(records: Record<string, unknown>[], doc: string, text: string): boolean {
-  const whole = records.some((r) => [prop(prop(r, 'message'), 'content')].flat().some((b) => prop(b, 'type') === 'tool_use'
-    && prop(b, 'name') === 'Read' && prop(prop(b, 'input'), 'offset') === undefined && prop(prop(b, 'input'), 'limit') === undefined
-    && isReadOf(doc, prop(prop(b, 'input'), 'file_path'))))
-  return whole || extractTrace(records, process.env, buildDocLineIndex([{ path: doc, text }])).docsReadViaShell.some((p) => isReadOf(doc, p))
+  const viaRead = records.some((r) => [prop(prop(r, 'message'), 'content')].flat().some((b) => wholeRead(b, doc)))
+  return viaRead || extractTrace(records, process.env, buildDocLineIndex([{ path: doc, text }])).docsReadViaShell.some((p) => isReadOf(doc, p))
 }
 
 export const formatGuardMessage = (doc: string) =>
