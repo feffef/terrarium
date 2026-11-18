@@ -1,13 +1,12 @@
 name: dependabot-sweep
 category: platform-operation
-importance: supporting
-gist: Reacts when a Dependabot PR opens; merges safe bumps, triages the rest.
+importance: routine
+gist: Sweeps the open Dependabot PRs; merges safe bumps, triages the rest.
 role: >-
-  Runs when a Dependabot PR is opened, with no fixed schedule (user-invoked
-  only, model-invocation disabled), over every open Dependabot PR: merges a
-  safe minor/patch bump itself, leaves a major for a human, with a written
-  risk/benefit case in a `needs-triage` issue (opened or commented on). Opens
-  no branch, edits no file.
+  Fired by a Routine (model-invocation disabled), over every open
+  Dependabot PR: merges a safe minor/patch bump itself, leaves a major for a
+  human, with a written risk/benefit case in a `needs-triage` issue (opened or
+  commented on). Opens no branch, edits no file.
 observations:
   - date: "2026-10-20"
     note: >-
@@ -20,3 +19,10 @@ observations:
       behaviour-checked by this run (not in this week's `behaviourChecks`
       list) — no verification performed. Revisit the grade once it has
       several real scheduled runs.
+  - date: "2026-11-18"
+    note: >-
+      Graded routine: both Routine runs were scheduled (no human prompt), a
+      week apart, session_013zxzeQyhG5Jn9REJydTepm (2026-11-07) and
+      session_013zxzeRuCR8sXBSSogW2Jvy (2026-11-14); each log's summary says
+      "Scheduled dependabot-sweep run". The earlier "no fixed schedule" role was
+      stale.
