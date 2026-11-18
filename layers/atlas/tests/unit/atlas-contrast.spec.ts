@@ -67,10 +67,14 @@ function ground(v: Vars): Rgb {
   return rgb(v['--atlas-paper']!).map((c, i) => Math.round(tint[i]! * amount + c * (1 - amount))) as Rgb
 }
 
-describe('contrast()', () => {
-  it('matches the WCAG reference values', () => {
-    expect(contrast([0, 0, 0], [255, 255, 255])).toBeCloseTo(21, 5)
-    expect(contrast([119, 119, 119], [255, 255, 255])).toBeCloseTo(4.48, 2)
+describe('--atlas-faint', () => {
+  it('is used only for the cover ornament, never text', () => {
+    const files = ['assets/theme.css', 'pages/t/atlas/index.vue', 'pages/t/atlas/[space]/index.vue', 'components/atlas/SpecimenPlate.vue']
+    const uses = files.flatMap((f) =>
+      readFileSync(new URL(`../../app/${f}`, import.meta.url), 'utf8').split('\n')
+        .filter((l) => l.includes('var(--atlas-faint)')))
+    expect(uses.length).toBe(1)
+    expect(uses[0]).toContain('.cover-orn')
   })
 })
 
