@@ -13,7 +13,7 @@
 //   tsx .agents/skills/harvest/scripts/harvest.ts check-body <body-file> --extract <extract.json> [--title T]
 //   tsx .agents/skills/harvest/scripts/harvest.ts check-posted <issue-number> <body-file>
 import { createHash } from 'node:crypto'
-import { readFileSync, writeFileSync } from 'node:fs'
+import { readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { parse as parseYaml } from 'yaml'
@@ -213,6 +213,54 @@ export function summaryOf(yamlText: string): string {
   return typeof summary === 'string' ? flattenText(summary) : ''
 }
 
+/** The text of a Tenant glossary's `## Product decisions` section with every other line blanked,
+ *  so a match keeps its line number in the file. */
+export function productDecisions(md: string): string {
+  let inside = false
+  return md
+    .split('\n')
+    .map((l) => {
+      if (/^## /.test(l)) {
+        inside = /^## Product decisions\s*$/.test(l)
+        return ''
+      }
+      return inside ? l : ''
+    })
+    .join('\n')
+}
+
+export interface EvidenceIssue extends IssueBody {
+  title: string
+  state: string
+  state_reason?: string | null
+}
+
+export interface EvidenceSources {
+  rulings: { file: string; text: string }[]
+  issues: EvidenceIssue[]
+  frictions: { file: string; summary: string }[]
+}
+
+/** Candidates for one cluster's keywords from the owner's rulings, the tracker and the
+ *  Friction Ledger. A hit is only a hint: SKILL.md step 3 has the agent read each one. */
+export function evidenceReport(keywords: string[], src: EvidenceSources): string {
+  // A keyword matches at the start of a word, so `log` finds `logs` but not `catalog`.
+  const re = new RegExp(`(?<!\\w)(?:${keywords.map((k) => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})`, 'i')
+  const hit = (text: string | null) => re.test(text ?? '')
+  const section = (name: string, found: string[]) => [`${name}:`, ...(found.length ? found : ['  (no match)'])]
+  return [
+    ...section(
+      'rulings',
+      src.rulings.flatMap(({ file, text }) => text.split('\n').flatMap((l, i) => (hit(l) ? [`${file}:${i + 1}: ${l}`] : []))),
+    ),
+    ...section(
+      'tracker',
+      src.issues.filter((i) => hit(`${i.title}\n${i.body ?? ''}`)).map((i) => `#${i.number} ${i.state}${i.state_reason ? ` ${i.state_reason}` : ''}: ${i.title}`),
+    ),
+    ...section('ledger', src.frictions.filter((f) => hit(f.summary)).map((f) => `${f.file}: ${f.summary}`)),
+  ].join('\n')
+}
+
 /** The tests of step 3, and the fields a cluster record carries. */
 const TESTS = ['unbuilt', 'unfiled', 'unrejected', 'ledger', 'simplifying', 'unacted'] as const
 
@@ -310,11 +358,11 @@ export function comparePosted(stored: string, file: string): string[] {
 
 // ── IO shell ──────────────────────────────────────────────────────────────────
 
-interface RawIssue extends IssueBody {
+interface RawIssue extends EvidenceIssue {
   pull_request?: unknown
 }
 
-function listIssueBodies(): IssueBody[] {
+function listIssueBodies(): RawIssue[] {
   const access = resolveAccess(root)
   return listAll<RawIssue>(access, 'issues', { state: 'all' }).filter((i) => i.pull_request === undefined)
 }
@@ -347,6 +395,28 @@ function cmdExtract(argv: string[]): void {
   console.log(`harvest: ${entries.length} entries, ordered, written to ${out}`)
 }
 
+/** The rulings files `evidence` reads: `.out-of-scope/`, the visitor-loop and Glass Box decision
+ *  lists, and each Tenant glossary (cut to its product decisions when read). */
+export function rulingFiles(dir: string): string[] {
+  const glossaries = readdirSync(join(dir, 'layers')).map((t) => `layers/${t}/GLOSSARY.md`)
+  return [
+    ...readdirSync(join(dir, '.out-of-scope')).map((f) => `.out-of-scope/${f}`),
+    '.agents/skills/visitor-loop/decisions.md',
+    '.agents/skills/glassbox-lesson/owner-decisions.md',
+    ...glossaries,
+  ]
+}
+
+function cmdEvidence(keywords: string[]): void {
+  const rulings = rulingFiles(root).map((file) => {
+    const text = readFileSync(join(root, file), 'utf8')
+    return { file, text: file.endsWith('/GLOSSARY.md') ? productDecisions(text) : text }
+  })
+  const ledger = 'layers/journal/content/current/frictions'
+  const frictions = readdirSync(join(root, ledger)).map((f) => ({ file: `${ledger}/${f}`, summary: summaryOf(readFileSync(join(root, ledger, f), 'utf8')) }))
+  console.log(evidenceReport(keywords, { rulings, issues: listIssueBodies(), frictions }))
+}
+
 function readExtract(path: string): { entries: Entry[] } {
   return JSON.parse(readFileSync(path, 'utf8')) as { entries: Entry[] }
 }
@@ -370,6 +440,10 @@ function main(): void {
     const { out, err } = blockOutput(picked, (file) => readFileSync(join(root, file), 'utf8'))
     if (err) console.error(err)
     return console.log(out)
+  }
+  if (cmd === 'evidence') {
+    if (!argv.length) fail('usage: evidence <keyword...>')
+    return cmdEvidence(argv)
   }
   if (cmd === 'check-clusters') {
     const [file] = argv
@@ -395,7 +469,7 @@ function main(): void {
     if (problems.length) fail(problems.join('\n'))
     return console.log(`check-posted: #${number} stores the checked keys`)
   }
-  fail('unknown command; expected extract | list | block | check-clusters | check-body | check-posted')
+  fail('unknown command; expected extract | list | block | evidence | check-clusters | check-body | check-posted')
 }
 
 runIfMain(import.meta.url, main)
