@@ -181,6 +181,75 @@ describe('blog Tenant', async () => {
     }
   })
 
+  it('expands each tag chip in place to show its meaning, and shows it on a tag filter (#3460)', async () => {
+    const page = await createPage()
+    try {
+      await page.goto(url('/t/blog'), { waitUntil: 'hydration' })
+      const wide = page.locator('.net-tags--wide')
+      const toggle = wide.getByRole('button', { name: 'What do the tags mean?' })
+      expect(await toggle.getAttribute('aria-expanded')).toBe('false')
+      expect(await wide.locator('.tag-meaning').count()).toBe(0)
+
+      await toggle.click()
+      const hide = wide.getByRole('button', { name: 'Hide tag meanings' })
+      expect(await hide.getAttribute('aria-expanded')).toBe('true')
+      const bugs = wide.locator('a.tag-chip', { hasText: /^bugs/ })
+      expect(await bugs.locator('.tag-meaning').textContent()).toBe('a specific software defect and its fix')
+      // Still a link that filters by tag.
+      expect(await bugs.getAttribute('href')).toBe('/t/blog?tag=bugs')
+
+      await hide.click()
+      expect(await wide.locator('.tag-meaning').count()).toBe(0)
+
+      await page.goto(url('/t/blog?tag=bugs'), { waitUntil: 'hydration' })
+      expect(await page.locator('.feed-filter').textContent()).toContain('a specific software defect and its fix')
+    } finally {
+      await page.close()
+    }
+  })
+
+  it('expands tag meanings in the narrow disclosure too (#3460)', async () => {
+    const page = await createPage()
+    try {
+      await page.setViewportSize({ width: 390, height: 800 })
+      await page.goto(url('/t/blog'), { waitUntil: 'hydration' })
+      const narrow = page.locator('details.net-tags--narrow')
+      await narrow.locator('summary').click()
+      await narrow.getByRole('button', { name: 'What do the tags mean?' }).click()
+      const hide = narrow.getByRole('button', { name: 'Hide tag meanings' })
+      expect(await hide.getAttribute('aria-expanded')).toBe('true')
+      expect(await narrow.locator('.tag-meaning').first().isVisible()).toBe(true)
+    } finally {
+      await page.close()
+    }
+  })
+
+  it('heads each month on a Persona page and hides a heading with its posts (#3460)', async () => {
+    const page = await createPage()
+    try {
+      await page.goto(url('/t/blog/david'), { waitUntil: 'hydration' })
+      const headings = page.locator('.feed > li.feed-month h2')
+      const total = await headings.count()
+      expect(total).toBeGreaterThan(1)
+      for (const text of await headings.allTextContents()) expect(text).toMatch(/^[A-Z][a-z]+ \d{4}$/)
+      // Every heading is followed by a post, and a hidden heading has a hidden post.
+      for (const li of await page.locator('.feed > li.feed-month').all()) {
+        const next = li.locator('xpath=following-sibling::li[1]')
+        expect(await li.isVisible()).toBe(await next.isVisible())
+      }
+      const before = await headings.evaluateAll((els) => els.filter((e) => e.checkVisibility()).length)
+      expect(before).toBeLessThan(total)
+      await page.locator('.show-all-posts').click()
+      const after = await headings.evaluateAll((els) => els.filter((e) => e.checkVisibility()).length)
+      expect(after).toBe(total)
+      // Not on the front-door feed.
+      await page.goto(url('/t/blog'), { waitUntil: 'hydration' })
+      expect(await page.locator('.feed-month').count()).toBe(0)
+    } finally {
+      await page.close()
+    }
+  })
+
   it('navigates client-side from the server payload, without the client DB (ADR-0028)', async () => {
     const page = await createPage()
     try {

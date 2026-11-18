@@ -512,3 +512,15 @@ body.bl-page {
 .bl .pingbacks .pb-title a { color: var(--bl-ink); text-decoration: none; font-weight: 600; }
 .bl .pingbacks .pb-title a:hover { color: var(--bl-accent); }
 .bl .pingbacks .blurb { color: var(--bl-muted); font-size: 0.92rem; font-style: italic; }
+
+/* Month headings on a Persona's post list; the first row needs no top gap. */
+.bl .feed > li.feed-month { border-top: 0; padding: 1.4rem 0 0; }
+.bl .feed > li.feed-month:first-child { padding-top: 0; }
+.bl .feed > li.feed-month h2 { font-family: var(--bl-mono); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--bl-faint); margin: 0; padding-bottom: 0.3rem; border-bottom: 1px solid var(--bl-line); }
+
+/* Tag directory with meanings: each chip grows into a full-width row. */
+.bl .tag-meanings-toggle { display: block; margin: 0 0 0.6rem; padding: 0; background: none; border: 0; cursor: pointer; font-family: var(--bl-mono); font-size: 0.72rem; color: var(--bl-accent); text-decoration: underline; text-align: left; }
+.bl .tag-directory--meanings { flex-direction: column; flex-wrap: nowrap; gap: 0.4rem; }
+.bl .tag-directory--meanings .tag-chip { display: block; border-radius: 10px; padding: 0.4rem 0.7rem; text-align: left; font-size: 0.72rem; }
+.bl .tag-directory--meanings .tag-meaning { display: block; margin-top: 0.15rem; font-size: 0.8rem; line-height: 1.35; opacity: 0.85; white-space: normal; }
+.bl .feed-filter-meaning { display: block; color: var(--bl-muted); }
