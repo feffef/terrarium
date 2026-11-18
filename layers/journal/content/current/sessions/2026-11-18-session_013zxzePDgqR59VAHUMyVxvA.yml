@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzePDgqR59VAHUMyVxvA
 startedAt: 2026-11-18T13:09:23Z
-endedAt: 2026-11-18T13:16:02Z
+endedAt: 2026-11-18T13:19:43Z
 kind: autonomous
 goal: Scheduled prune trial of the Platform's instructions
-status: in-review
-outcome: Judged the gate-run trial (holds), deleted its entry, opened no new trial; PR 3449 open
-summary: "Scheduled /prune-trial run, so all work was agent-initiated under the Skill; no human prompt. Judged the gate-run restatements trial: no major or blocker Frictions, push-chained share fell 5.3% to 2.9%, edit-during-gate rose 12.8% to 17.1% on 35 sessions, which I judged noise, so the entry was deleted with no issue. A search subagent for failed prose found only candidates inside or against trial territory (the dispatch read-first lines were just judged, #3425; the gate-edit rule's home is an open trial), so no new prune was made. Code-review (two subagents) and gate:scoped passed; PR 3449 opened and subscribed, awaiting CI."
+status: completed
+outcome: Judged the gate-run trial (holds), deleted its entry, opened no new trial; PR 3449 merged
+summary: "Scheduled /prune-trial run, so all work was agent-initiated under the Skill; no human prompt. Judged the gate-run restatements trial: no major or blocker Frictions, push-chained share fell 5.3% to 2.9%, edit-during-gate rose 12.8% to 17.1% on 35 sessions, which I judged noise, so the entry was deleted with no issue. A search subagent for failed prose found only candidates inside or against trial territory (the dispatch read-first lines were just judged, #3425; the gate-edit rule's home is an open trial), so no new prune was made. Code-review (two subagents) and gate:scoped passed; PR 3449 opened and subscribed, merged after green CI."
 prs:
   - "3449"
 docsRead:
@@ -38,15 +38,19 @@ frictions:
   - description: Hand-edited the session id in a commit message file with several sed calls and mangled it; dropped the line and let the commit-msg hook add the trailer.
     solution: Never type the trailer; the hook adds it.
     severity: nit
-durationSec: 399
+durationSec: 621
 models:
-  claude-sonnet-5-5: 56
+  claude-sonnet-5-5: 71
 toolCounts:
-  Bash: 17
-  Skill: 4
+  Bash: 21
+  Skill: 5
   Agent: 3
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/prune-trials.yml
 rulesGlobal:
@@ -152,19 +156,19 @@ subagents:
     durationSec: 78
     toolCalls: 19
     modelCalls: 16
-    tokenShare: 19.5
+    tokenShare: 15.7
   - type: Explore
     task: Standards review of diff
     durationSec: 24
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 4.7
+    tokenShare: 3.8
   - type: Explore
     task: Spec review of diff
     durationSec: 12
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 4.1
+    tokenShare: 3.4
 gitBranch: claude/practical-rubin-tjavyc
 entrypoint: remote_trigger
 cliVersion: 2.1.327
