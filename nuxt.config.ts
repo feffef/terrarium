@@ -25,6 +25,11 @@ export default defineNuxtConfig({
     '/': { cache: { maxAge: 60, swr: false } },
     '/t/**': { cache: { maxAge: 60, swr: false } },
   },
+  // Dev serves fresh pages: the cache would hold an edited page for its maxAge.
+  // Only the Platform's rules; a Tenant layer's own rules stay as they are.
+  $development: {
+    routeRules: { '/': { cache: false }, '/t/**': { cache: false } },
+  },
   // Bounds that page cache's memory (ADR-0028, #1446).
   nitro: { storage: { cache: { driver: 'lru-cache', max: 200 } } },
   // Nothing reads them: the server runs without --enable-source-maps. Skipping them
