@@ -229,7 +229,7 @@ useHead({ title: 'The Atlas of the Terrarium' })
 }
 .cover-what { max-width: 30rem; margin: 0.2rem auto 0.9rem; color: var(--atlas-muted); font-size: 1rem; text-wrap: balance; }
 .cover-what a { color: inherit; }
-.cover-wings { font-family: var(--atlas-label); font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--atlas-faint); margin: 0 0 0.4rem; }
+.cover-wings { font-family: var(--atlas-label); font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--atlas-muted); margin: 0 0 0.4rem; }
 .cover-wings a { color: var(--biome-accent); text-decoration-color: var(--atlas-rule); text-underline-offset: 0.2em; }
 .cover-wings a:focus-visible { outline: 2px solid var(--biome-accent); outline-offset: 3px; border-radius: 2px; }
 
@@ -249,12 +249,12 @@ useHead({ title: 'The Atlas of the Terrarium' })
 .today p { margin: 0 0 0.45rem; }
 .today p:last-child { margin-bottom: 0; }
 .today a { color: var(--atlas-ink); font-style: italic; }
-.today-log-h { font-family: var(--atlas-label); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--atlas-faint); margin: 0.9rem 0 0.4rem; font-weight: normal; }
+.today-log-h { font-family: var(--atlas-label); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--atlas-muted); margin: 0.9rem 0 0.4rem; font-weight: normal; }
 .today-log { list-style: none; margin: 0; padding: 0; color: var(--atlas-muted); font-size: 0.92rem; }
 .today-log li { padding: 0.35rem 0; border-top: 1px solid var(--atlas-line); }
 .today-log li:first-child { border-top: 0; }
 .today-log .biome-tag { font-family: var(--atlas-data); font-size: 0.74rem; color: var(--atlas-muted); white-space: nowrap; }
-.today-log .when { display: block; font-family: var(--atlas-data); font-size: 0.74rem; color: var(--atlas-faint); }
+.today-log .when { display: block; font-family: var(--atlas-data); font-size: 0.74rem; color: var(--atlas-muted); }
 
 /* Directory — three wings, each a card that wears its own palette. */
 .directory { display: grid; gap: 1rem; }
@@ -288,9 +288,9 @@ useHead({ title: 'The Atlas of the Terrarium' })
 .wing-foot { grid-area: foot; display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-top: 0.9rem; }
 .wing-foot .swatch { width: 14px; height: 14px; border-radius: 3px; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.18); }
 .wing-names { flex-basis: 100%; font-style: italic; font-size: 0.88rem; color: var(--atlas-muted); }
-.wing-count { font-family: var(--atlas-data); font-size: 0.72rem; color: var(--atlas-faint); margin-left: 0.3rem; }
+.wing-count { font-family: var(--atlas-data); font-size: 0.72rem; color: var(--atlas-muted); margin-left: 0.3rem; }
 
-.colophon { margin-top: 3rem; text-align: center; font-family: var(--atlas-data); font-size: 0.72rem; color: var(--atlas-faint); line-height: 1.7; }
+.colophon { margin-top: 3rem; text-align: center; font-family: var(--atlas-data); font-size: 0.72rem; color: var(--atlas-muted); line-height: 1.7; }
 .colophon p { margin: 0; }
 
 @keyframes settle { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
@@ -306,7 +306,7 @@ useHead({ title: 'The Atlas of the Terrarium' })
 .roster-astir .rname { font-family: var(--atlas-display); font-style: italic; color: var(--atlas-ink); text-decoration: none; border-bottom: 1px solid transparent; }
 .roster-astir .rname:hover { border-bottom-color: currentColor; }
 .roster-astir .rcommon { font-style: italic; font-size: 0.82rem; color: var(--atlas-muted); text-align: right; }
-.roster-none { color: var(--atlas-faint); font-style: italic; margin: 0 0 0.8rem; }
+.roster-none { color: var(--atlas-muted); font-style: italic; margin: 0 0 0.8rem; }
 .season-picks { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.8rem; }
 .season-picks button { font-family: var(--atlas-label); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--atlas-ink); background: transparent; border: 1px solid var(--atlas-line); padding: 0.45rem 0.7rem; min-height: 2.75rem; cursor: pointer; }
 .season-picks button[aria-pressed="true"] { color: var(--atlas-ink); border-color: var(--atlas-ink); background: var(--atlas-paper-2); }

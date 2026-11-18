@@ -28,7 +28,7 @@
   --atlas-paper: #e8e2d3;
   --atlas-paper-2: #f1ebdf;
   --atlas-ink: #2a251d;
-  --atlas-muted: #736a58;
+  --atlas-muted: #5c5444;
   --atlas-faint: #a89c83;
   --atlas-line: #c9bea7;
   --atlas-rule: #b0a687;
@@ -72,7 +72,7 @@
 .atlas--floor {
   --atlas-paper: #e7ddc8;
   --atlas-paper-2: #f0e8d6;
-  --biome-accent: #8a4f26; /* umber */
+  --biome-accent: #874d25; /* umber */
   --biome-accent-2: #a85a2c; /* rust */
   --biome-tint: rgb(138, 79, 38);
   --biome-tint-amount: 6%;
@@ -80,7 +80,7 @@
 .atlas--pool {
   --atlas-paper: #dfe6e3;
   --atlas-paper-2: #ecf1ee;
-  --biome-accent: #356f7e; /* pondlight */
+  --biome-accent: #326876; /* pondlight */
   --biome-accent-2: #5f97a1; /* glass */
   --biome-tint: rgb(63, 127, 143);
   --biome-tint-amount: 5%;
@@ -137,7 +137,7 @@
   font-family: var(--atlas-data);
   font-size: 0.72rem;
   letter-spacing: 0.02em;
-  color: var(--atlas-faint);
+  color: var(--atlas-muted);
   margin: 0 0 2.2rem;
   text-transform: none;
 }
@@ -145,7 +145,7 @@
   display: inline-block;
   padding: 0.3rem 0;
   margin: -0.3rem 0;
-  color: var(--atlas-faint);
+  color: var(--atlas-muted);
   text-decoration: underline transparent;
   text-underline-offset: 0.2em;
 }
@@ -265,7 +265,7 @@
   font-size: 0.66rem;
   text-transform: uppercase;
   letter-spacing: 0.16em;
-  color: var(--atlas-faint);
+  color: var(--atlas-muted);
   align-self: baseline;
   padding-top: 0.28rem;
 }
@@ -368,7 +368,7 @@
 .atlas-relations .who:hover { color: var(--biome-accent); }
 .atlas-relations .who .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 0.4ch; vertical-align: baseline; }
 .atlas-relations .rel-note { color: var(--atlas-muted); font-size: 0.92rem; }
-.atlas-relations .empty { color: var(--atlas-faint); font-style: italic; }
+.atlas-relations .empty { color: var(--atlas-muted); font-style: italic; }
 
 /* ── Field log (#72) ───────────────────────────────────────────────────────*/
 .atlas-log { list-style: none; margin: 0; padding: 0; }
@@ -378,13 +378,13 @@
   .atlas-log li { grid-template-columns: auto 1fr; row-gap: 0.15rem; }
   .atlas-log .obs { grid-column: 1 / -1; }
 }
-.atlas-log .when { font-family: var(--atlas-data); font-size: 0.76rem; color: var(--atlas-faint); }
+.atlas-log .when { font-family: var(--atlas-data); font-size: 0.76rem; color: var(--atlas-muted); }
 .atlas-log .tod { font-family: var(--atlas-label); font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--biome-accent); }
 .atlas-log .obs { color: var(--atlas-ink); }
 .atlas-log .obs .who { font-style: italic; text-decoration: none; color: inherit; border-bottom: 1px solid var(--atlas-muted); }
 .atlas-log .obs .who:hover { color: var(--biome-accent); }
-.atlas-log .empty { color: var(--atlas-faint); font-style: italic; }
-.atlas-log-more { margin: 0; padding: 0.7rem 0 0; border-top: 1px solid var(--atlas-line); font-family: var(--atlas-data); font-size: 0.74rem; color: var(--atlas-faint); max-width: 34rem; line-height: 1.6; }
+.atlas-log .empty { color: var(--atlas-muted); font-style: italic; }
+.atlas-log-more { margin: 0; padding: 0.7rem 0 0; border-top: 1px solid var(--atlas-line); font-family: var(--atlas-data); font-size: 0.74rem; color: var(--atlas-muted); max-width: 34rem; line-height: 1.6; }
 /* The honest-count note's own reveal control (#450) — set in the note's type, so
    the count and the affordance read as one sentence. */
 .atlas-log-toggle { display: inline; margin-left: 0.4rem; padding: 0; background: none; border: 0; font: inherit; color: var(--biome-accent); border-bottom: 1px solid currentcolor; cursor: pointer; }
@@ -399,7 +399,7 @@
 .atlas-rhythm .track i:last-child { border-right: 0; }
 .atlas-rhythm .track i.on { background: var(--sig-1); }
 .atlas-rhythm .track i.dawn-tick { box-shadow: inset 1px 0 0 var(--atlas-rule); }
-.atlas-rhythm .scale { display: flex; justify-content: space-between; font-size: 0.6rem; color: var(--atlas-faint); margin-top: 0.25rem; }
+.atlas-rhythm .scale { display: flex; justify-content: space-between; font-size: 0.6rem; color: var(--atlas-muted); margin-top: 0.25rem; }
 .atlas-rhythm .rlabel { font-family: var(--atlas-label); font-size: 0.7rem; letter-spacing: 0.06em; color: var(--atlas-muted); margin-top: 0.4rem; text-transform: lowercase; }
 
 /* ── Almanac dial (#282/#279) ──────────────────────────────────────────────
@@ -473,14 +473,14 @@
    dial's two vocabularies (shared seasons vs this specimen's phases) never blur */
 .atlas-almanac .wread { margin: 0.15rem 0 0; display: flex; align-items: baseline; justify-content: center; gap: 0.7ch; flex-wrap: wrap; }
 .atlas-almanac .wcap .wread:first-child { margin-top: 0; }
-.atlas-almanac .wlabel { font-family: var(--atlas-label); font-size: 0.56rem; text-transform: uppercase; letter-spacing: 0.13em; color: var(--atlas-faint); }
+.atlas-almanac .wlabel { font-family: var(--atlas-label); font-size: 0.56rem; text-transform: uppercase; letter-spacing: 0.13em; color: var(--atlas-muted); }
 .atlas-almanac .wval { display: inline-flex; align-items: baseline; gap: 0.6ch; }
 .atlas-almanac .wseason,
 .atlas-almanac .wphase { font-family: var(--atlas-label); font-size: 0.72rem; letter-spacing: 0.05em; text-transform: lowercase; color: var(--atlas-ink); }
 /* phase mode: the phase line is primary (larger ink), the season line context */
 .atlas-almanac .wphase-row .wphase { font-size: 0.82rem; color: var(--atlas-ink); }
 .atlas-almanac.is-phase-mode .wseason-row .wseason { font-size: 0.68rem; color: var(--atlas-muted); }
-.atlas-almanac .wday { font-family: var(--atlas-data); font-size: 0.66rem; color: var(--atlas-faint); }
+.atlas-almanac .wday { font-family: var(--atlas-data); font-size: 0.66rem; color: var(--atlas-muted); }
 
 /* ── Food web (#70): the wanderable diagram ────────────────────────────────*/
 .atlas-web { position: relative; }
@@ -548,7 +548,7 @@
 .atlas-relweb .strand-hit { fill: none; stroke: transparent; stroke-width: 18; cursor: pointer; }
 .atlas-relweb .node-hit:hover .nm,
 .atlas-relweb .node-hit:focus-visible .nm { fill: var(--biome-accent); }
-.atlas-web .empty { color: var(--atlas-faint); font-style: italic; text-align: center; padding: 2rem; }
+.atlas-web .empty { color: var(--atlas-muted); font-style: italic; text-align: center; padding: 2rem; }
 
 /* ── Rarity legend (#69) ───────────────────────────────────────────────────*/
 .atlas-rarity-legend { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.35rem; }
@@ -586,7 +586,7 @@
   letter-spacing: 0.16em;
   color: var(--biome-accent);
 }
-.atlas-phase-note .sn-span { font-family: var(--atlas-data); font-size: 0.68rem; color: var(--atlas-faint); }
+.atlas-phase-note .sn-span { font-family: var(--atlas-data); font-size: 0.68rem; color: var(--atlas-muted); }
 .atlas-phase-note .sn-body > :first-child { margin-top: 0; }
 .atlas-phase-note .sn-body > :last-child { margin-bottom: 0; }
 /* the essay's drop-cap belongs to its opening paragraph only, not each note's */
@@ -624,7 +624,7 @@
 }
 .atlas-sighting .s-quote p { margin: 0 0 0.4rem; }
 .atlas-sighting .s-quote p:last-child { margin-bottom: 0; }
-.atlas-sighting .s-wanting { color: var(--atlas-faint); }
+.atlas-sighting .s-wanting { color: var(--atlas-muted); }
 .atlas-sighting .s-cite {
   display: flex;
   align-items: baseline;
@@ -638,7 +638,7 @@
 .atlas-sighting .s-rosette { width: 0.8em; height: 0.8em; flex: none; align-self: center; }
 .atlas-sighting .s-rosette path { fill: none; stroke: currentColor; stroke-width: 1.1; transition: fill 0.2s ease; }
 .atlas-sighting .s-source { font-family: var(--atlas-text); font-style: italic; }
-.atlas-sighting .s-date { font-family: var(--atlas-data); font-size: 0.72rem; color: var(--atlas-faint); }
+.atlas-sighting .s-date { font-family: var(--atlas-data); font-size: 0.72rem; color: var(--atlas-muted); }
 .atlas-sighting .s-tod {
   font-size: 0.64rem;
   text-transform: uppercase;

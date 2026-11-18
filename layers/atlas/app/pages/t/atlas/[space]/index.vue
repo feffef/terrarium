@@ -236,14 +236,14 @@ useHead({ title: `${meta.name} · The Atlas of the Terrarium` })
   color: var(--atlas-muted);
   text-align: right;
 }
-.roster-none { color: var(--atlas-faint); font-style: italic; margin: 0 0 1rem; }
+.roster-none { color: var(--atlas-muted); font-style: italic; margin: 0 0 1rem; }
 .roster-quiet { font-size: 0.85rem; color: var(--atlas-muted); margin: 0; line-height: 1.7; }
 .roster-quiet .rq-label {
   font-family: var(--atlas-label);
   font-size: 0.66rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: var(--atlas-faint);
+  color: var(--atlas-muted);
 }
 .roster-quiet a { color: var(--atlas-muted); text-decoration: none; border-bottom: 1px solid var(--atlas-line); }
 .roster-quiet a:hover { color: var(--biome-accent); border-bottom-color: currentColor; }
