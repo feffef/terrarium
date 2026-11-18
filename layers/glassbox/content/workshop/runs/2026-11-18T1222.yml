@@ -1,0 +1,19 @@
+session: session_013zxzeQbSZQ554vFZiT2f2D
+mode: autonomous
+focus: "Virtual modules: settle the memory page's unchecked claim that
+  modules/routing is registered twice. Chosen because it is checkable from the
+  installed code. Result: Nuxt's resolveModules keeps modules in a Map, and a
+  nuxt prepare with a log line in setup() printed it once, so the module is
+  installed once. Deviations: no Scout, writer or fresh reader; code-review
+  ran on the diff. Cost: unreported (no get_session); estimated context about
+  215k tokens."
+changes:
+  - "nuxt-vue/40.virtual-modules | The paragraph on how Nuxt reaches the two
+    modules now says the routing module also sits in modules/ but is installed
+    once; teaches and publishedAt are updated | the page named only the list
+    for routing and only the folder for catalog, leaving open whether routing
+    ran twice. Checked with a log line in setup() during nuxt prepare (one call,
+    reverted)"
+  - "workshop/pages/index | the registered-twice lead deleted | done"
+pagesRead:
+  - nuxt-vue/40.virtual-modules
