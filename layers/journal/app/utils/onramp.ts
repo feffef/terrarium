@@ -22,7 +22,7 @@ export const ONRAMP_LEADING = [
   {
     title: 'How Terrarium works',
     blurb:
-      'The overview that opens the Glass Box guide: a textbook of the concepts behind the site, with the site itself as the worked example.',
+      'The overview page of the Glass Box guide, a textbook of the concepts behind the site. Agents write it and keep it up to date, and the site itself is the worked example.',
     to: '/t/glassbox/guide',
   },
 ]
