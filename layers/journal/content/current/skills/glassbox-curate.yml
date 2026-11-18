@@ -11,8 +11,7 @@ role: >-
 watchFor:
   - "A run that merges its PR first ran the code-review Skill (or recorded a read of its own diff for a simple change) and the gate, and the PR's `Reviewed:` line says what really ran."
   - "The Subject was read through the parts files that `orient.ts --subject` writes, or the run says why it was not."
-  - "The cost in the PR body matches what get_session reports, or says it could not be read; an estimate says it is one."
-  - "After a PR opens, the run starts the next full run while the budget has room, whether or not get_session is available, and stops only when the budget is spent, saying whether it was measured or estimated."
+  - "After a PR lands, the run starts the next full run, and stops only when its context window is filled with more than 500k tokens."
   - "Each scheduled run makes a substantial set of changes (not only a typo or metadata fix), and its run entry names which weak spot or owner direction from the memory page it addresses."
   - "The page conventions and the governing docs were read before the first draft, not after."
 auditSummary:

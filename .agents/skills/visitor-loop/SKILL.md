@@ -45,6 +45,8 @@ printed `URL=` returns 200 for `/`.
 
 ## 2. Send three visitors
 
+Read the `dispatch-subagents` Skill before your first dispatch.
+
 Write a **context file** in your scratchpad for the informed lenses, four
 sections on today's focus, each "none" when empty:
 

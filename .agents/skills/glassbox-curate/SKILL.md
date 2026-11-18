@@ -1,6 +1,6 @@
 ---
 name: glassbox-curate
-description: Make the Glass Box guide easier to learn from, then fill gaps; one focus and one PR per run, and another run while the budget lasts (its Remit says which PRs wait for the owner's merge). It runs autonomously, or interactively with a person.
+description: Make the Glass Box guide easier to learn from, then fill gaps; one focus and one PR per run, and another run after each lands (its Remit says which PRs wait for the owner's merge). It runs autonomously, or interactively with a person.
 disable-model-invocation: true
 ---
 
@@ -14,11 +14,8 @@ steps; improvise.
 **Shape.** A session works through foci, one run each: a run takes one focus (a
 Subject, a structural question or a gap), from the instructions you were given
 or the memory page, and opens one PR; then the next run takes the next focus.
-There is always another, so only the budget ends a session, and this holds for
-every run, scheduled autonomous ones included. The budget, for the
-whole session, is $25 of spend or 500k tokens of context in the main session,
-whichever comes first; Loop, the last step, says how to read it and what it
-decides. Several runs a day must work.
+There is always another, scheduled autonomous runs included; Loop, the last
+step, says when a session ends. Several runs a day must work.
 
 **Modes.** *Autonomous*: your first message carries a system-reminder
 `Fired by routine "/glassbox-curate"`; decide everything, ask nothing, and say
@@ -71,7 +68,8 @@ keeps them.
   your turn, and orient again once it merges or closes. An autonomous run stops
   without a PR once that PR has been open 20 hours; an interactive run keeps
   waiting.
-- **Scout.** Right after orienting, start a background sonnet subagent; choosing
+- **Scout.** Read the `dispatch-subagents` Skill before your first dispatch.
+  Right after orienting, start a background sonnet subagent; choosing
   the Subject and focus doesn't wait for it. Give it the guide index files the
   orientation wrote (it must not run `orient.ts` itself: that rewrites them) and
   the time of the newest run entry before yours (the last 30 commits when there
@@ -95,7 +93,7 @@ keeps them.
   outside page a change would edit, link or overlap.
 - **Choose.** Pick this run's focus from the instructions you were given, else
   from what you read, preferring concrete memory items you can solve completely
-  within the budget that is left. Fix every reader finding the run can fix; only what State allows goes on the memory page. The
+  in one run. Fix every reader finding the run can fix; only what State allows goes on the memory page. The
   run entry says why you chose the focus.
 - **Owner's questions.** Build the option you'd recommend. A question only the
   owner can answer (where a topic belongs, whether a practice is recorded)
@@ -146,8 +144,7 @@ keeps them.
 - **Land.** Merge `origin/main` and keep the newer pin. Two runs on one day can
   both rewrite the memory page: the later one keeps both runs' leads. Rewrite
   the memory page so it is shorter than you found it (the orientation prints its
-  word count against the cap; Scout lines count), complete the run entry, get the run's cost (Loop says how) for the PR
-  body, and open one PR
+  word count against the cap; Scout lines count), complete the run entry, and open one PR
   (`docs/agents/pr-workflow.md`), self-merged unless the Remit says it waits.
   Wait for the Scout now; a topic of its that this run does not write goes on the
   memory page as State allows. Give `code-review`
@@ -156,30 +153,17 @@ keeps them.
   checks already ran. Its Spec reviewer also judges which pages the change
   needed read (the ones it edits, links or overlaps), and names each one missing
   from `pagesRead`. Read those, recheck the change against them, and add them
-  to `pagesRead` before you land. Done when the PR is open, its body gives the
-  run's cost (without `get_session`: "unreported" and the token estimate), and the
-  memory page and run entry are current. Then Loop.
+  to `pagesRead` before you land. Done when the PR is open and the memory page and
+  run entry are current. Then Loop.
 - **Loop.** Every run that opened a PR ends here, whether it merged or waits for
-  the owner; finishing a focus is not the end of the session, and closing it
-  straight after Land skips this step. This holds for scheduled runs too: when
-  cost can't be read, the 450k estimated-token context budget decides, and
-  never stop only because cost is unknown. First read the budget. Call
-  `get_session` with no session id: `external_metadata.usage.cost_usd` (it
-  appears only partway into a run) and
-  `external_metadata.context_usage.used_tokens`. If `get_session` is not among
-  your tools, estimate the context instead: every tool result, subagent report
-  and turn so far (about 4 characters a token, rounding up when unsure) plus
-  about 25k for the system prompt and tools. Past runs reached $25 at about 450k
-  tokens, so without `get_session` the budget is 450k estimated tokens, and
-  every figure you report says it is an estimate. A run adds up to about 100k
-  tokens of context. When the budget leaves room for that, start the next run as
+  the owner. The default path is the next run: when one lands, start the next as
   a full one: orient again, its own focus, run entry, branch from a fresh
-  `origin/main` and PR; in an interactive session, settle that focus with the person first. Take the next focus from the
-  instructions you were given, then the memory page's leads, page-check
-  warnings, Scout topics and gaps, and last pages no fresh reader has seen
-  lately. Stop only when the budget is spent, and say in your last message and
-  the session log what it was, measured or estimated. Hand over to a new session
-  only when the invocation says so: create it with `source_url:
+  `origin/main` and PR; in an interactive session, settle that focus with the
+  person first. Take the next focus from the instructions you were given, then
+  the memory page's leads, page-check warnings, Scout topics and gaps, and last
+  pages no fresh reader has seen lately. Do this unless your context
+  window is filled with more than 500k tokens. Hand over to a new
+  session only when the invocation says so: create it with `source_url:
   https://github.com/feffef/terrarium` and the same prompt.
 
 ## Lenses
@@ -216,7 +200,7 @@ All in `layers/glassbox/content/workshop/`:
   State a count only after counting its items in their source.
   Each run leaves it shorter: it solves concrete items completely and deletes
   them, never marking one done. It adds only what a later run cannot do itself:
-  an owner question, a one-line gap you could not fill within the budget
+  an owner question, a one-line gap you could not fill in one run
   (a gap left uncovered on purpose too), or a decision a later run would
   otherwise redo or reverse. A fact the next run still needs stays as a plain
   current fact under a heading that fits. What a run did goes in its run entry,
