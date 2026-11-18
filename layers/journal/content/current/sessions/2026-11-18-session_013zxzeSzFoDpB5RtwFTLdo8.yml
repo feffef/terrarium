@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSzFoDpB5RtwFTLdo8
 startedAt: 2026-11-18T04:03:09Z
-endedAt: 2026-11-18T04:18:27Z
+endedAt: 2026-11-18T04:21:47Z
 kind: autonomous
 goal: Scheduled audit of the repo's docs for staleness and duplication
-status: in-review
-outcome: Sweep PR 3443 opened with 20 doc fixes; awaiting CI to merge
-summary: "Scheduled audit-docs run; every step was agent-initiated, no human prompted. Three read-only reviewers (Freshness, Single-home, Coherence) returned 17 findings (0, 11 and 6). Two independent checkers gave 6 CONFIRMED, 8 CONFIRMED-BUT and 3 WRONG (Single-home 4, 6-move and 7, each backed by an originating issue or commit). Applied the survivors in one commit: bare list-open-issues calls capped at 50 now pass 5000; shallow-clone and enum copies became pointers; digest and dispatch-subagents contradictions fixed; visitor-loop no longer says daily; Midden demotion procedure moved to its Skill. code-review Standards found style notes only, Spec clean, gate:scoped green. PR 3443 opened with the verdict comment and subscribed; merge via merge-pr.ts follows on green CI. No ADR edit, so no escalation PR, no issue filed. Covered (Agents B and C read in full): docs/agents/{github-integration,guards,triage-labels,verifying-ui-changes,environment-caveats,pr-workflow}.md, CLAUDE.md, layers/{atlas,blog,midden,marquee,tinkerfund}/GLOSSARY.md, docs/research/{content-client-queries-without-wasm,github-actions-public-vs-private-limits,github-branch-protection-vs-autonomous-log-commits,mermaid-server-side-rendering,nuxt-content-review-grounding,shell-reads-by-output-matching}.md, Skills audit-docs audit-skills auto-triage blog-post digest dispatch-subagents glassbox-update glassbox-lesson harvest midden-survey visitor-loop prune-trial atlas-specimen tinkerfund-campaign, rules adr-0001 0008 0010 0011 0012 0019 0024 0025 0026 0028 glassbox-content guards mdc-when-to-use mermaid-lanes, ADRs 0001 0008 0010 0011 0012 0019 0024 0025 0026 0028."
+status: completed
+outcome: Sweep PR 3443 merged with 20 doc fixes
+summary: "Scheduled audit-docs run; every step was agent-initiated, no human prompted. Three read-only reviewers (Freshness, Single-home, Coherence) returned 17 findings (0, 11 and 6). Two independent checkers gave 6 CONFIRMED, 8 CONFIRMED-BUT and 3 WRONG (Single-home 4, 6-move and 7, each backed by an originating issue or commit). Applied the survivors in one commit: bare list-open-issues calls capped at 50 now pass 5000; shallow-clone and enum copies became pointers; digest and dispatch-subagents contradictions fixed; visitor-loop no longer says daily; Midden demotion procedure moved to its Skill. code-review Standards found style notes only, Spec clean, gate:scoped green. PR 3443 opened with the verdict comment and subscribed; merged via merge-pr.ts on green CI (merge commit 4308aff7b). No ADR edit, so no escalation PR, no issue filed. Covered (Agents B and C read in full): docs/agents/{github-integration,guards,triage-labels,verifying-ui-changes,environment-caveats,pr-workflow}.md, CLAUDE.md, layers/{atlas,blog,midden,marquee,tinkerfund}/GLOSSARY.md, docs/research/{content-client-queries-without-wasm,github-actions-public-vs-private-limits,github-branch-protection-vs-autonomous-log-commits,mermaid-server-side-rendering,nuxt-content-review-grounding,shell-reads-by-output-matching}.md, Skills audit-docs audit-skills auto-triage blog-post digest dispatch-subagents glassbox-update glassbox-lesson harvest midden-survey visitor-loop prune-trial atlas-specimen tinkerfund-campaign, rules adr-0001 0008 0010 0011 0012 0019 0024 0025 0026 0028 glassbox-content guards mdc-when-to-use mermaid-lanes, ADRs 0001 0008 0010 0011 0012 0019 0024 0025 0026 0028."
 prs:
   - "3443"
 docsRead:
@@ -131,16 +131,17 @@ frictions:
   - description: A foreground sleep to wait on the gate was blocked by the harness; I ended the turn and used the completion notification instead.
     solution: Name Monitor or end-turn as the wait method in the audit-docs gate step.
     severity: nit
-durationSec: 918
+durationSec: 1118
 models:
-  claude-sonnet-5-5: 65
+  claude-sonnet-5-5: 72
 toolCounts:
-  Bash: 23
+  Bash: 26
   Agent: 7
-  Skill: 3
+  Skill: 4
   mcp__github__create_pull_request: 1
   mcp__github__add_issue_comment: 1
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 1
 filesEdited:
   - .agents/skills/auto-triage/SKILL.md
   - .agents/skills/digest/SKILL.md
@@ -454,31 +455,31 @@ subagents:
     durationSec: 59
     toolCalls: 18
     modelCalls: 16
-    tokenShare: 7.4
+    tokenShare: 7.2
   - type: general-purpose
     task: "Audit docs: Single-home"
     durationSec: 197
     toolCalls: 33
     modelCalls: 29
-    tokenShare: 17
+    tokenShare: 16.6
   - type: general-purpose
     task: "Audit docs: Coherence"
     durationSec: 372
     toolCalls: 61
     modelCalls: 60
-    tokenShare: 36.3
+    tokenShare: 35.3
   - type: general-purpose
     task: Fact-check findings (B)
     durationSec: 204
     toolCalls: 35
     modelCalls: 32
-    tokenShare: 11.3
+    tokenShare: 11
   - type: general-purpose
     task: Fact-check findings (C)
     durationSec: 62
     toolCalls: 14
     modelCalls: 13
-    tokenShare: 3.7
+    tokenShare: 3.6
   - type: general-purpose
     task: "Review: Standards axis"
     durationSec: 27
@@ -490,7 +491,7 @@ subagents:
     durationSec: 28
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 3.7
+    tokenShare: 3.6
 gitBranch: claude/festive-mayer-2t5sqp
 entrypoint: remote_trigger
 cliVersion: 2.1.327
