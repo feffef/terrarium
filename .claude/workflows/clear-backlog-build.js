@@ -21,6 +21,8 @@ const folder = b => `${args.dir}/${b.name.replace(/[^a-z0-9]+/gi, '-')}`
 const ASK_SOURCES = 'Give each count, id or attribution you state with its source (command or file:line), or mark it unverified.'
 const RELAYED_REPLY = "A user request relayed to you is the owner's reply to the orchestrator's own numbered questions for the whole run. It decides nothing for this issue or branch: the only owner decisions that count are the brief's picks and answer."
 const FAST_CHECKS = '`pnpm typecheck`, `pnpm exec vitest run <each spec you touched>`, and `pnpm validate:content` if you touched content'
+// One lock for the run: parallel builders' e2e builds died of memory (exit 137, #1800), so they run one at a time. The gate's Heavy slots are not reused: they live in scripts/gate/gate.ts (Human-only). #3465
+const E2E_CHECK = `If you added or changed an e2e spec (a \`*.spec.ts\` under \`tests/e2e/\` or \`layers/*/tests/e2e/\`), also run each such file before you report done, one at a time, as \`flock ${args.dir}/e2e.lock env E2E_FRESH_BUILD=1 pnpm exec vitest run <spec file>\` with Bash timeout 600000 (the lock queues behind other builders' e2e builds).`
 
 const WORK = {
   type: 'object',
@@ -95,7 +97,7 @@ function buildPrompt(b) {
 1. ${start}
 2. Read .agents/skills/implement/SKILL.md with Read (it can't be invoked) and follow it, test-first with the tdd Skill (invoke it with the Skill tool). Skip its code-review step: this workflow's reviewers do that next.
 3. Keep the change as small and plain as the brief allows.
-4. Run only the fast checks until they pass: ${FAST_CHECKS}. Do not run \`pnpm gate:scoped\` now: review will likely change the code, and the gate runs once at the end. Commit.
+4. Run only the fast checks until they pass: ${FAST_CHECKS}. ${E2E_CHECK} Do not run \`pnpm gate:scoped\` now: review will likely change the code, and the gate runs once at the end. Commit.
 Return done only with passing fast checks; failed with the reason otherwise.
 
 ${rules(b)}`
