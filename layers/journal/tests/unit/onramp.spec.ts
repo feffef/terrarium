@@ -1,7 +1,14 @@
 // The on-ramp ordering shared by the landing's "New here?" cards and each
 // on-ramp page's tour footer (layers/journal/app/utils/onramp.ts).
 import { describe, expect, it } from 'vitest'
-import { onrampSteps } from '../../app/utils/onramp.ts'
+import { ONRAMP_LEADING, onrampSteps } from '../../app/utils/onramp.ts'
+
+describe('ONRAMP_LEADING', () => {
+  it('leads with the Glass Box guide, an absolute link outside the Journal', () => {
+    expect(ONRAMP_LEADING.map((c) => c.to)).toEqual(['/t/glassbox/guide'])
+    expect(ONRAMP_LEADING.every((c) => c.title && c.blurb)).toBe(true)
+  })
+})
 
 describe('onrampSteps', () => {
   it('keeps only labelled on-ramp pages, in onramp order', () => {
