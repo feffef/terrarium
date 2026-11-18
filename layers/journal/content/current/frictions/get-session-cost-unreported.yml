@@ -1,9 +1,8 @@
 name: get-session-cost-unreported
 surface: outside
 summary: A Skill or PR body needed the run's cost, but get_session showed none (or none yet), so the PR said the cost was unreported.
-cause: "get_session returns no cost_usd or usage field at some calls (once the field appeared only on a later call than the session's single early one), or is not among a scheduled run's tools, so a Skill step that requires the run cost in the PR body cannot be met. Signals: 'get_session returned no cost figure', 'no usage field', 'Run cost: unreported', 'cost_usd 2.85 on a later call', 'cost_usd 0.12 early, 4.22 later'. Since PR #2944 (2026-11-07) glassbox-curate says to read the cost at landing, not early; since PR #3001 (2026-11-09) it re-reads cost_usd just before the PR body; since PR #3258 (2026-11-13) it estimates usage without get_session when the tool is missing. PR #3388 (2026-11-17, issue #3370) states at the head of Loop that a scheduled run without get_session still loops under the 450k estimated-token budget; wording only, so a stop-on-unknown-cost run after it would show whether it held."
-status: tracked
-ref: "#3401"
+cause: "A Skill or PR body once required the run's cost from get_session, which returned no cost_usd or usage field at some calls or was not among a scheduled run's tools, so the PR said the cost was unreported. No Skill or doc now asks for a run cost in a PR body, and glassbox-curate loops by default without reading cost. Signals: 'get_session returned no cost figure', 'no usage field', 'Run cost: unreported', 'cost_usd 0.12 early, 4.22 later'."
+status: open
 related:
   - entry: inspect-session-skill-skipped
     rule: get_session did give the cost, but the agent wrote "unreported" or said it was not recorded, or inspected another session without the inspect-session Skill.
@@ -22,6 +21,9 @@ fixes:
   - pr: 3388
     date: "2026-11-17"
     summary: "glassbox-curate SKILL.md: Shape and the head of Loop say a scheduled run without get_session keeps looping, the 450k estimated-token budget decides, never stopping only because cost is unknown."
+  - pr: 3461
+    date: "2026-11-18"
+    summary: "glassbox-curate SKILL.md makes the loop the default and drops every cost_usd, get_session and 450k mention; no Skill or pr-workflow.md asks for a run cost in a PR body."
 occurrences:
   - session: session_013zxzeRwjiiLkjj6sQ3u49g
     date: "2026-11-07"
