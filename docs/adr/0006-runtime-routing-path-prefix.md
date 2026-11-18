@@ -53,7 +53,7 @@ for every page keeps that guarantee in one place, where a unit test covers it.
 ## Consequences
 
 - The smoke test's entry routes come from the manifests, so a new Space is
-  covered without editing the test. A Tenant's root page is not (ADR-0016).
+  covered without editing the test. A Tenant's root page and static pages are not (ADR-0016).
 
 ## See
 

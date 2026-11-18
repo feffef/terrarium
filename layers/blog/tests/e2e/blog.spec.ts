@@ -162,6 +162,17 @@ describe('blog Tenant', async () => {
     await expectCleanHydration('/t/blog')
   })
 
+  // `/t/blog/stories` is a hand-built page beside the root (ADR-0016): the front
+  // door's banner reaches it, and the static route wins over a Persona Space.
+  it('links the front door banner to the stories page, which hydrates', async () => {
+    const html = await $fetch('/t/blog')
+    expect(html).toContain('href="/t/blog/stories"')
+    await expectCleanHydration('/t/blog/stories')
+    const stories = await $fetch('/t/blog/stories')
+    expect(stories).toContain('Twelve Stories from the Blog')
+    expect(stories).toContain('href="/t/blog/david/2026-08-15-one-out-of-four-closed"')
+  })
+
   it('hydrates the front door filtered by tag with no unresolved components', async () => {
     await expectCleanHydration('/t/blog?tag=governance')
   })

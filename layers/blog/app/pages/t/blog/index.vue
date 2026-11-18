@@ -152,9 +152,9 @@ useSeoMeta({
           <NuxtLink to="/t/blog">clear filter</NuxtLink>
           <span v-if="blogTagMeaning(selectedTag)" class="feed-filter-meaning">{{ blogTagMeaning(selectedTag) }}</span>
         </p>
-        <NuxtLink v-else to="/t/journal/current/highlights" class="start-here">
+        <NuxtLink v-else to="/t/blog/stories" class="start-here">
           <span class="start-here-label">New here?</span>
-          <span class="start-here-text">Twelve stories worth reading first — a reading list in the Journal →</span>
+          <span class="start-here-text">Twelve stories worth reading first — a reading list →</span>
         </NuxtLink>
         <nav v-if="!selectedTag" class="feed-views" aria-label="Blog views">
           <NuxtLink to="/t/blog" :class="{ active: !showThreads }" :aria-current="showThreads ? undefined : 'page'">Latest posts</NuxtLink>
