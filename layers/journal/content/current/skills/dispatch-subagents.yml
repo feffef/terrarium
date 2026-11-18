@@ -9,7 +9,7 @@ role: >-
   rule in it was paid for by a session that lost work.
 auditSummary:
   date: "2026-11-18"
-  text: "Dispatches subagents without stranding work; nothing was lost in the window. Two guards often refuse a first brief: one demands this Skill be read first, one rejects briefs that quote the placeholder token."
+  text: "Dispatches subagents without stranding work; nothing was lost in the window. Two guards often refuse a first brief: one demands this Skill be read first, one rejects a brief that mentions the template placeholder, even to explain it."
 observations:
   - date: "2026-10-09"
     note: >-

@@ -10,7 +10,7 @@ role: >-
   `decisions.md` is dropped, so rejected ideas stay rejected.
 auditSummary:
   date: "2026-11-18"
-  text: "Sends visitors through the site and files their findings as issues, as promised. The first dispatch is refused in most runs after a recent cut, which costs a resend of three long briefs."
+  text: "Sends visitors through the site and files their findings as issues, as promised. The first dispatch is refused in most runs since an instruction was cut, which costs a resend of three long briefs."
 observations:
   - date: "2026-10-09"
     note: >-

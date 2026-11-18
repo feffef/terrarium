@@ -10,7 +10,7 @@ role: >-
   to amend a written log.
 auditSummary:
   date: "2026-11-18"
-  text: "Writes complete session logs that land and match the merged work. It lets hint-loaded rules go unrated while marking the rule answers complete, mostly in harvest sessions."
+  text: "Writes complete session logs that land and match the merged work. It marks the rule ratings complete even when some rules the session was shown are unrated, mostly in harvest sessions."
 observations:
   - date: "2026-10-09"
     note: >-
