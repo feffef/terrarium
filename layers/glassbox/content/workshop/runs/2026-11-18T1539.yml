@@ -1,0 +1,22 @@
+session: session_013zxzeQbSZQ554vFZiT2f2D
+mode: autonomous
+focus: "Vue components: the memory page's lead that the clock Excerpt does not
+  show where ticking is set. Chosen because the source is short and certain
+  (layers/tinkerfund/app/composables/clock.ts:29-31 at the page's revision) and
+  no open PR touches the page. This run ran the Scout (no new topic: only the
+  previous run's own commits landed since), read the Nuxt & Vue Subject's ten
+  pages in full, and used a claim checker, a fresh reader, code-review and
+  gate:scoped before opening. Cost: unreported (no get_session); estimated
+  context about 400k tokens."
+changes:
+  - "nuxt-vue/50.vue-components | The clock Excerpt now runs to the line that sets ticking (lines 20-31 instead of 20-29), the sentence before it says ticking is set only when the shop document pins no now, and teaches and publishedAt follow | the Excerpt used ticking in its timer but never showed where it was set, so a reader could not see that a pinned clock never ticks"
+  - "workshop/pages/index | the ticking lead deleted | done"
+pagesRead:
+  - nuxt-vue/10.layers
+  - nuxt-vue/20.auto-imports
+  - nuxt-vue/30.file-routing
+  - nuxt-vue/40.virtual-modules
+  - nuxt-vue/50.vue-components
+  - nuxt-vue/60.nitro
+  - nuxt-vue/70.data-fetching
+  - nuxt-vue/80.hydration
