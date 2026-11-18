@@ -451,9 +451,12 @@ describe('journal Tenant', async () => {
 
   // The on-ramp pages end in a numbered step, in the landing's card order.
   it('ends each on-ramp page with a numbered Read-next step', async () => {
-    expect(await $fetch('/t/journal/current')).toContain('href="/t/glassbox/guide"')
+    const landing = await $fetch<string>('/t/journal/current')
+    expect(landing).toContain('href="/t/glassbox/guide"')
+    expect(landing).toContain('Start here · 1 of 2')
+    expect(landing).toContain('Start here · 2 of 2')
     const last = await $fetch('/t/journal/current/history')
-    expect(last).toContain('Start here · 1 of 1')
+    expect(last).toContain('Start here · 2 of 2')
     expect(last).toContain('back to the Journal')
     const digest = await $fetch(`/t/journal/current/digests/${currentDigestDates().at(-1)!}`)
     expect(digest).not.toContain('Start here ·')
@@ -480,8 +483,9 @@ describe('journal Tenant', async () => {
   // specific empty-state copy anymore (that would need a synthetic/mocked
   // fixture — this repo has no component-test infra for that yet).
   it('renders the archived Space dashboard without erroring', async () => {
-    const html = await $fetch('/t/journal/archived')
+    const html = await $fetch<string>('/t/journal/archived')
     expect(html).toContain('Recent activity')
+    expect(html).not.toContain('class="onramp"') // no own doors, so no Glass Box card either
   })
 
   it('loads at most JOURNAL_SESSIONS_LOADED sessions and says when it filters', async () => {
