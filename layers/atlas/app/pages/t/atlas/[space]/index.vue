@@ -88,12 +88,14 @@ useHead({ title: `${meta.name} · The Atlas of the Terrarium` })
         <p class="catalogue-key">
           The dots before each name are its colour signature; those after it, its rarity,
           read against the scale <a href="#on-rarity">on rarity</a> below.
+          The plates are numbered as the draughtsman drew them; a missing number is a plate not yet drawn.
         </p>
       </section>
 
       <section>
         <div class="atlas-sechead"><span class="atlas-eyebrow">The food web</span></div>
         <AtlasFoodWeb :specimens="specimens" :edges="edges" :biome="space" />
+        <p v-if="landing?.foodWebCaption" class="foodweb-caption">{{ landing.foodWebCaption }}</p>
       </section>
 
       <section v-if="withPhenology.length" class="almanac-section">
@@ -170,6 +172,7 @@ useHead({ title: `${meta.name} · The Atlas of the Terrarium` })
   text-wrap: balance;
 }
 .catalogue-key { margin: 0.8rem 0 0; font-size: 0.85rem; font-style: italic; color: var(--atlas-muted); }
+.foodweb-caption { margin: 0.8rem 0 0; font-size: 0.9rem; font-style: italic; color: var(--atlas-muted); }
 .catalogue-key a { color: inherit; }
 .biome-intro { margin-top: 1.1rem; max-width: 40rem; color: var(--atlas-muted); }
 .choreo { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.4rem; }

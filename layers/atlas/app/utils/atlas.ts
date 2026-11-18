@@ -26,7 +26,7 @@ export const RARITIES: RarityMeta[] = [
   { grade: 'common', dots: 4, mark: '●', gloss: 'seen most visits' },
   { grade: 'uncommon', dots: 3, mark: '◐', gloss: 'worth a note' },
   { grade: 'rare', dots: 2, mark: '◆', gloss: 'worth a plate' },
-  { grade: 'mythic', dots: 0, mark: '✦', gloss: 'reported, never twice by the same observer' },
+  { grade: 'mythic', dots: 0, mark: '✦', gloss: 'reported, and never confirmed' },
 ]
 
 const RARITY_BY_GRADE: Record<Rarity, RarityMeta> = Object.fromEntries(

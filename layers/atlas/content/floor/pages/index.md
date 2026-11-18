@@ -1,5 +1,6 @@
 ---
 title: The Floor
+foodWebCaption: The grey lattice keeps the gate and the whole floor goes round it, while a mender no one has seen keeps the weavers' galleries sound.
 description: The dark under-storey of the world under glass, where everything is worked over twice and nothing is ever quite still.
 ---
 

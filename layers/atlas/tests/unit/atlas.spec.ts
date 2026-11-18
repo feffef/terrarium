@@ -79,6 +79,7 @@ describe('rarityMeta()', () => {
     expect(rarityMeta('abundant').dots).toBe(5)
     expect(rarityMeta('rare').dots).toBe(2)
     expect(rarityMeta('mythic').mark).toBe('✦')
+    expect(rarityMeta('mythic').gloss).toBe('reported, and never confirmed')
   })
   it('falls back to common for an unknown grade', () => {
     expect(rarityMeta(undefined).grade).toBe('common')

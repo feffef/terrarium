@@ -151,7 +151,7 @@ useHead({ title: 'The Atlas of the Terrarium' })
           everything under it lives by that shared calendar; yet each creature keeps
           its own hours within it, a private round of waking and waning that answers
           the season in its own way. We have drawn the year as a dial in every wing;
-          turn it, and the guide keeps pace. Choose a wing, and go quietly.
+          turn it, and the guide keeps pace.
         </p>
       </section>
 

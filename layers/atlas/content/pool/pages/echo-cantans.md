@@ -14,7 +14,7 @@ phenology:
     - name: far-singing
       label: the far singing
       span: [154, 244]
-      gloss: all nine reports fall between the first warm nights and the keeper's holiday; the pool is loudest then, and has the most voices to lend.
+      gloss: every report we credit falls between the first warm nights and the keeper's holiday; the pool is loudest then, and has the most voices to lend.
     - name: still-water
       label: the still water
       span: [244, 154]
@@ -81,11 +81,11 @@ illustration: |
   </g>
 ---
 
-Of the call-mimic we possess a great deal of testimony and almost no evidence, and the guide asks the reader to weigh the following accordingly. It has been reported on nine occasions, at unsociable hours, and never twice by the same observer; the pool, it seems, grants each of us one audience and considers the matter settled.
+Of the call-mimic we possess a great deal of testimony and almost no evidence, and the guide asks the reader to weigh the following accordingly. It has been reported on nine occasions, at unsociable hours, of which the ledger below keeps three and the rest we pass on as hearsay; the pool, it seems, grants each audience once and considers the matter settled.
 
 The accounts agree on this much. Late in the night, from the far water, a call is heard — and the call is always somebody else's. The junior observer heard the drowned star's faint chime, a sound we did not know the drowned star made until it was returned to us; the senior heard the dry whir of the dusk-chronicler, at an hour when no chronicler flies; one of us, who asks not to be named in the record, heard her own cough, given back with perfect gravity from the middle of the pool. In every account the voice is near, startlingly near — and far off, in quite another quarter, a small silver light rides the water. The call is close; the glow is not; and no observer has been able to say which of the two, if either, is the animal.
 
-The plate overleaf is offered with every reservation, reconstructed from the single partial sighting we credit — a lamplit half-second at the water's edge, a pale throat open on a borrowed voice — and the draughtsman has honestly left wanting what the witness could not swear to, which the reader will observe is most of it. Its size we do not record; its diet we do not record. A creature that answers every question in someone else's voice keeps its own particulars remarkably well.
+The plate above is offered with every reservation, reconstructed from the single partial sighting we credit — a lamplit half-second at the water's edge, a pale throat open on a borrowed voice — and the draughtsman has honestly left wanting what the witness could not swear to, which the reader will observe is most of it. Its size we do not record; its diet we do not record. A creature that answers every question in someone else's voice keeps its own particulars remarkably well.
 
 The nine reports do not fall evenly across the year, and the mimic keeps two seasons of its own, only one of which speaks. What follows we have set down as the far water keeps it — not by our calendar but by its own: the far singing, when between the first warm nights and the keeper's holiday the pool is loudest and has the most voices to lend; and the still water, the long remainder in which it keeps its own counsel. Turn the almanac to move between them.
 
@@ -93,7 +93,7 @@ The nine reports do not fall evenly across the year, and the mimic keeps two sea
 ::
 
 :::phase-note{of="far-singing"}
-The far water finds its voices now, for it is now the pool has the most to lend: the misting is at its most liberal, the water fullest and loudest, and all nine of the reports we credit fall between the first warm nights and the keeper's holiday. The first of the season came early, and near enough to shore that two of us heard it together and still could not agree on what it had borrowed:
+The far water finds its voices now, for it is now the pool has the most to lend: the misting is at its most liberal, the water fullest and loudest, and every report we credit falls between the first warm nights and the keeper's holiday. The first of the season came early, and near enough to shore that two of us heard it together and still could not agree on what it had borrowed:
 
 ::sighting{date="2026-06-12"}
 ::

@@ -61,6 +61,8 @@ export default defineTenant({
       schema: z.object({
         // The museum label (#67). `title` (from the page type) holds the Latin
         // binomial; these complete the caption card.
+        // Biome landing only: one-line caption under the food web.
+        foodWebCaption: z.string().optional(),
         commonName: z.string().optional(), // "the lantern moth"
         classification: z.string().optional(), // invented class, e.g. "glimmerwing"
         rarity: rarity.optional(),

@@ -1,5 +1,6 @@
 ---
 title: The Pool
+foodWebCaption: The pool keeps no apex, only a mimic who answers in the wrong voice, and a chronicler who believes every word of it.
 description: The still water at the glass, where the light bends and the slow things live.
 ---
 
