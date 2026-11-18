@@ -49,22 +49,25 @@ harvests both.
    read or ran, and a search that printed nothing is not evidence until you know
    its pattern can match. Do not filter script output with `head` or `tail`.
    Step 4 starts only when `harvest check-clusters <that file> --extract
-   <extract.json>` passes. A cluster is open when all of these hold:
+   <extract.json>` passes. For each cluster run `harvest evidence <keywords...>`
+   (several words per idea): it prints candidates only, from the owner's rulings
+   (`.out-of-scope/`, `visitor-loop/decisions.md`,
+   `glassbox-lesson/owner-decisions.md`, Tenant `## Product decisions`), the
+   tracker (titles and bodies, open and closed) and Ledger summaries. Read each
+   hit and decide; "(no match)" is evidence only once you know the keywords can
+   match. A cluster is open when all of these hold:
    - **Unbuilt.** Name the file or symbol it would change and read it now. Run
      `pnpm exec tsx scripts/git/list-merges-since.ts` from its session's start
      (`started` in the list). For a learning, grep `CLAUDE.md`, `.claude/rules/`, `docs/agents/`
      and the Skills for the fact itself.
    - **Unfiled.** Entries the list marks "same session in issues" were possibly
-     reworded: read those issues. List the tracker with
-     `pnpm exec tsx scripts/github/list-open-issues.ts 5000 [--closed]` and
-     match titles. A title match is a hint. Read a closed issue's `stateReason`:
-     `completed` settles the cluster, `not_planned` rejects it. Any other
-     closed issue goes in the Seedling as the reason to reopen.
-   - **Unrejected.** Not in `.out-of-scope/`, not under an open Prune Trial
-     (`pnpm exec tsx .agents/skills/prune-trial/scripts/trial-territory.ts
-     <files or words>`), no `wontfix` issue, not ruled out by a Tenant's
-     `GLOSSARY.md` or `.agents/skills/visitor-loop/decisions.md`.
-   - **Beyond the Ledger.** Read every summary line it prints:
+     reworded: read those issues. Read each tracker hit: closed `completed`
+     settles the cluster, `not_planned` rejects it. Any other closed issue goes
+     in the Seedling as the reason to reopen.
+   - **Unrejected.** No ruling hit, no `wontfix` issue, and not under an open
+     Prune Trial (`pnpm exec tsx .agents/skills/prune-trial/scripts/trial-territory.ts
+     <files or words>`).
+   - **Beyond the Ledger.** Read every summary line, not only the hits:
      `grep -H '^summary:' layers/journal/content/current/frictions/*.yml`. An entry
      that names the cluster's problem, whatever its status, means
      `frictions-to-fixes` owns it. A cluster the Ledger covers in part stays,

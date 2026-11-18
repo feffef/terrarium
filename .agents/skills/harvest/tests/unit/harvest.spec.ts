@@ -14,6 +14,8 @@ import {
   checkClusters,
   comparePosted,
   entryKey,
+  evidenceReport,
+  productDecisions,
   harvestedState,
   noteTexts,
   parseKeys,
@@ -339,5 +341,53 @@ describe('checkClusters()', () => {
   it('refuses a record with no stopped reason before the first cluster', () => {
     expect(checkClusters(open('product'), ns)).toEqual(['no "stopped:" reason line before the first cluster'])
     expect(checkClusters(`stopped: 30 checked\n${open('product')}`, ns)).toEqual([])
+  })
+})
+
+describe('evidenceReport()', () => {
+  const sources = {
+    rulings: [
+      { file: 'a.md', text: '# T\n- No RSS feeds for the Journal.\n- Footer stays small.' },
+      { file: 'b.md', text: 'nothing here' },
+    ],
+    issues: [
+      { number: 7, title: 'Seedling: add a feed', body: 'unrelated', state: 'closed', state_reason: 'not_planned' },
+      { number: 8, title: 'Seedling: footer', body: 'Built: the RSS reader shipped', state: 'closed', state_reason: 'completed' },
+      { number: 9, title: 'Other', body: null, state: 'open' },
+    ],
+    frictions: [
+      { file: 'f1.yml', summary: 'Agents miss the rss step' },
+      { file: 'f2.yml', summary: 'unrelated' },
+    ],
+  }
+
+  it('prints rulings lines, issues by title or body, and friction summaries that match any keyword, case-insensitively', () => {
+    expect(evidenceReport(['rss', 'FEED'], sources)).toBe(
+      [
+        'rulings:',
+        'a.md:2: - No RSS feeds for the Journal.',
+        'tracker:',
+        '#7 closed not_planned: Seedling: add a feed',
+        '#8 closed completed: Seedling: footer',
+        'ledger:',
+        'f1.yml: Agents miss the rss step',
+      ].join('\n'),
+    )
+  })
+
+  it('says a source matched nothing, so silence is never mistaken for evidence', () => {
+    expect(evidenceReport(['zzz'], sources)).toBe('rulings:\n  (no match)\ntracker:\n  (no match)\nledger:\n  (no match)')
+  })
+
+  it('prints an open issue without a reason', () => {
+    expect(evidenceReport(['other'], sources)).toContain('#9 open: Other')
+  })
+})
+
+describe('productDecisions()', () => {
+  it('keeps only the lines of the "## Product decisions" section, numbered as in the file', () => {
+    const md = '# G\n- term\n## Product decisions\n- no plates (#1)\n## Next\n- other'
+    expect(productDecisions(md)).toEqual('\n\n\n- no plates (#1)\n\n')
+    expect(productDecisions('# G\n- term').trim()).toBe('')
   })
 })

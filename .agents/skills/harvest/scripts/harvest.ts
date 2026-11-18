@@ -9,11 +9,12 @@
 //   tsx .agents/skills/harvest/scripts/harvest.ts extract [--kind ideas|learnings] [--out PATH]
 //   tsx .agents/skills/harvest/scripts/harvest.ts list <extract.json>
 //   tsx .agents/skills/harvest/scripts/harvest.ts block <extract.json> <n> [n...]
+//   tsx .agents/skills/harvest/scripts/harvest.ts evidence <keyword...>
 //   tsx .agents/skills/harvest/scripts/harvest.ts check-clusters <harvest-checks.md> --extract <extract.json>
 //   tsx .agents/skills/harvest/scripts/harvest.ts check-body <body-file> --extract <extract.json> [--title T]
 //   tsx .agents/skills/harvest/scripts/harvest.ts check-posted <issue-number> <body-file>
 import { createHash } from 'node:crypto'
-import { readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { parse as parseYaml } from 'yaml'
@@ -213,6 +214,53 @@ export function summaryOf(yamlText: string): string {
   return typeof summary === 'string' ? flattenText(summary) : ''
 }
 
+/** The text of a Tenant glossary's `## Product decisions` section with every other line blanked,
+ *  so a match keeps its line number in the file. */
+export function productDecisions(md: string): string {
+  let inside = false
+  return md
+    .split('\n')
+    .map((l) => {
+      if (/^## /.test(l)) {
+        inside = /^## Product decisions\s*$/.test(l)
+        return ''
+      }
+      return inside ? l : ''
+    })
+    .join('\n')
+}
+
+export interface EvidenceIssue extends IssueBody {
+  title: string
+  state: string
+  state_reason?: string | null
+}
+
+export interface EvidenceSources {
+  rulings: { file: string; text: string }[]
+  issues: EvidenceIssue[]
+  frictions: { file: string; summary: string }[]
+}
+
+/** Candidates for one cluster's keywords from the owner's rulings, the tracker and the
+ *  Friction Ledger. A hit is only a hint: SKILL.md step 3 has the agent read each one. */
+export function evidenceReport(keywords: string[], src: EvidenceSources): string {
+  const words = keywords.map((k) => k.toLowerCase())
+  const hit = (...texts: (string | null)[]) => words.some((w) => texts.some((t) => (t ?? '').toLowerCase().includes(w)))
+  const section = (name: string, found: string[]) => [`${name}:`, ...(found.length ? found : ['  (no match)'])]
+  return [
+    ...section(
+      'rulings',
+      src.rulings.flatMap(({ file, text }) => text.split('\n').flatMap((l, i) => (hit(l) ? [`${file}:${i + 1}: ${l}`] : []))),
+    ),
+    ...section(
+      'tracker',
+      src.issues.filter((i) => hit(i.title, i.body)).map((i) => `#${i.number} ${i.state}${i.state_reason ? ` ${i.state_reason}` : ''}: ${i.title}`),
+    ),
+    ...section('ledger', src.frictions.filter((f) => hit(f.summary)).map((f) => `${f.file}: ${f.summary}`)),
+  ].join('\n')
+}
+
 /** The tests of step 3, and the fields a cluster record carries. */
 const TESTS = ['unbuilt', 'unfiled', 'unrejected', 'ledger', 'simplifying', 'unacted'] as const
 
@@ -310,11 +358,11 @@ export function comparePosted(stored: string, file: string): string[] {
 
 // ── IO shell ──────────────────────────────────────────────────────────────────
 
-interface RawIssue extends IssueBody {
+interface RawIssue extends EvidenceIssue {
   pull_request?: unknown
 }
 
-function listIssueBodies(): IssueBody[] {
+function listIssueBodies(): RawIssue[] {
   const access = resolveAccess(root)
   return listAll<RawIssue>(access, 'issues', { state: 'all' }).filter((i) => i.pull_request === undefined)
 }
@@ -347,6 +395,23 @@ function cmdExtract(argv: string[]): void {
   console.log(`harvest: ${entries.length} entries, ordered, written to ${out}`)
 }
 
+/** The rulings SKILL.md step 3 checks: `.out-of-scope/`, the visitor-loop and Glass Box
+ *  decision lists, and each Tenant glossary's product decisions. */
+function cmdEvidence(keywords: string[]): void {
+  const read = (rel: string) => ({ file: rel, text: readFileSync(join(root, rel), 'utf8') })
+  const dir = (rel: string) => readdirSync(join(root, rel)).map((f) => `${rel}/${f}`)
+  const glossaries = readdirSync(join(root, 'layers')).map((t) => `layers/${t}/GLOSSARY.md`)
+  const rulings = [
+    ...dir('.out-of-scope').map(read),
+    read('.agents/skills/visitor-loop/decisions.md'),
+    read('.agents/skills/glassbox-lesson/owner-decisions.md'),
+    ...glossaries.filter((f) => existsSync(join(root, f))).map(read).map((r) => ({ ...r, text: productDecisions(r.text) })),
+  ]
+  const ledger = 'layers/journal/content/current/frictions'
+  const frictions = dir(ledger).map((f) => ({ file: f, summary: summaryOf(readFileSync(join(root, f), 'utf8')) }))
+  console.log(evidenceReport(keywords, { rulings, issues: listIssueBodies(), frictions }))
+}
+
 function readExtract(path: string): { entries: Entry[] } {
   return JSON.parse(readFileSync(path, 'utf8')) as { entries: Entry[] }
 }
@@ -370,6 +435,10 @@ function main(): void {
     const { out, err } = blockOutput(picked, (file) => readFileSync(join(root, file), 'utf8'))
     if (err) console.error(err)
     return console.log(out)
+  }
+  if (cmd === 'evidence') {
+    if (!argv.length) fail('usage: evidence <keyword...>')
+    return cmdEvidence(argv)
   }
   if (cmd === 'check-clusters') {
     const [file] = argv
@@ -395,7 +464,7 @@ function main(): void {
     if (problems.length) fail(problems.join('\n'))
     return console.log(`check-posted: #${number} stores the checked keys`)
   }
-  fail('unknown command; expected extract | list | block | check-clusters | check-body | check-posted')
+  fail('unknown command; expected extract | list | block | evidence | check-clusters | check-body | check-posted')
 }
 
 runIfMain(import.meta.url, main)
