@@ -208,6 +208,22 @@ describe('blog Tenant', async () => {
     }
   })
 
+  it('expands tag meanings in the narrow disclosure too (#3460)', async () => {
+    const page = await createPage()
+    try {
+      await page.setViewportSize({ width: 390, height: 800 })
+      await page.goto(url('/t/blog'), { waitUntil: 'hydration' })
+      const narrow = page.locator('details.net-tags--narrow')
+      await narrow.locator('summary').click()
+      const toggle = narrow.getByRole('button', { name: 'What do the tags mean?' })
+      await toggle.click()
+      expect(await toggle.getAttribute('aria-expanded')).toBe('true')
+      expect(await narrow.locator('.tag-meaning').first().isVisible()).toBe(true)
+    } finally {
+      await page.close()
+    }
+  })
+
   it('heads each month on a Persona page and hides a heading with its posts (#3460)', async () => {
     const page = await createPage()
     try {

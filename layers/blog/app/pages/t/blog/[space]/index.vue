@@ -33,7 +33,10 @@ const meta = personaMeta(space)
 
 const landing = computed(() => data.value?.landing ?? null)
 const posts = computed(() => data.value?.posts ?? [])
-const postsByMonth = computed(() => withBlogMonths(posts.value))
+// The query keeps only dated posts; the guard tells the type so.
+const postsByMonth = computed(() =>
+  withBlogMonths(posts.value.filter((p): p is typeof p & { publishedAt: string } => !!p.publishedAt)),
+)
 
 // Same 20 + "Show all" cap as the front door.
 const POSTS_VISIBLE = 20
