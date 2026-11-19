@@ -9,19 +9,9 @@ role: >-
   gated PR on green (ADR-0003/0004), filing an issue only for a factual conflict
   it can't resolve. Use it when docs and code drift apart.
 auditSummary:
-  date: "2026-11-18"
-  text: "Reviews the docs each night and lands the fixes that hold up, with each verdict counted correctly. Reviewer coverage is often thin, and the log may overstate what was read."
+  date: "2026-11-19"
+  text: "Reviews the docs each night and lands the fixes that hold up; the latest sweep was a clean single commit. Reviewer coverage is still sometimes thin, and the Covered line can claim more than was read."
 observations:
-  - date: "2026-10-09"
-    note: >-
-      Re-checked (audit-skills behaviour check), 7 usedIn sessions
-      (2026-10-02 through 10-08, PRs #1527/#1544/#1589/#1613/#1631/#1632/
-      #1649/#1650/#1681, 9 PRs across 7 sessions): all clean against the
-      SKILL.md version in effect when each started. Issue #1647's fix
-      (5deab149) re-confirmed holding on its second live test (PR #1649,
-      5 named checker subagents with a verdict tally). No new silent
-      failure found, no revert of any of the 9 PRs' content in the 2-week
-      git-log sweep. Grade/role unchanged.
   - date: "2026-10-10"
     note: >-
       Re-checked (audit-skills behaviour check), 7 usedIn sessions, graded
@@ -302,3 +292,5 @@ observations:
     note: "Behaviour check, runs session_013zxzePSjuKdFtiNUSC531Y, session_013zxzeQE5BDH58h5e21zafo, session_013zxzePBHiX6mZNUjPTWpWc: PRs #3368, #3331, #3301, #3302 merged, no revert; log verdict tallies correct. Verified repeat (4 runs, 11-13 to 11-16): two-commit sweep PR against §6.1, Stop hook pushes before the squash; issue #3398. Verdict miscounts in PR comments: 2. Grade unchanged."
   - date: "2026-11-18"
     note: "Behaviour check, runs session_013zxzeQE5BDH58h5e21zafo, session_013zxzePSjuKdFtiNUSC531Y, session_013zxzePiqmgzsVGM4zghBUs (11-15 to 11-17): PRs #3331 and #3368 merged, verdict tallies add up, 11-17 was a clean no-finding run, no revert. Two-commit sweep PR repeated (#3398); c736e4c12 dropped the one-commit promise. Unverified: 11-17 `Covered:` line says B and C read ~30 items in full while its own friction says B read 6 files. Idea: reviewers end with the Live files they read; the log copies that list."
+  - date: "2026-11-19"
+    note: "Behaviour check, runs session_013zxzePSjuKdFtiNUSC531Y, session_013zxzePiqmgzsVGM4zghBUs, session_013zxzeSzFoDpB5RtwFTLdo8: delivered; PR #3368 and the 11-18 sweep PR #3443 merged, 11-17 clean no-finding run, no revert. Repeats: two-commit sweep PR (5 runs, 11-18 was one commit after c736e4c12); thin reviewer coverage with a Covered line that contradicts the run's own friction (11-17). Unverified: 11-18 '20 doc fixes' vs 14 surviving findings. Idea: write Covered from the reviewers' unread-file lists. Grade unchanged."

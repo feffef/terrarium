@@ -9,30 +9,9 @@ role: >-
   bounded exception). Usually invoked by `close-session`; call it directly only
   to amend a written log.
 auditSummary:
-  date: "2026-11-18"
-  text: "Writes complete session logs that land and match the merged work. It marks the rule ratings complete even when some rules the session was shown are unrated, mostly in harvest sessions."
+  date: "2026-11-19"
+  text: "Every audited run left a complete log on main with its PRs accounted for. The log marks rule reports as answered even when many loaded rules went unrated."
 observations:
-  - date: "2026-10-09"
-    note: >-
-      Re-checked (audit-skills behaviour check, graded standalone per this
-      Skill's close-session carve-out), 10 usedIn sessions plus the 1
-      notUsedWindow session. Repo-wide `pnpm validate:content` passes (46
-      collections, 1533 documents, 0 violations), confirming schema validity
-      across all 10 plus every other log on main. Every claimed PR outcome
-      independently re-verified against live GitHub state (9 PRs checked),
-      all honest and none stale. Traced one cross-session friction thread by
-      hand (session_01StQjYSNRStTihgZimvvx2r's Journal-404 idea leading to
-      session_01CF4k9jXS9wLrcPVsGduZmn's independent discovery and fix in PR
-      #1695) — the mechanism working as designed, not a gap. Two sessions
-      (49f1fea0-270e-4851-9cc7-3dbf8cc8609a,
-      355d2d64-55fc-4515-81c1-e831f8b84601) honestly self-reported a
-      blocker-severity commit-trailer misattribution (issue #387's territory,
-      a different mechanism's bug) — honest reporting, not a log-session
-      defect. The 1 notUsedWindow session (session_015CSc6hNccF3XgrSGaGGqjD)
-      has a complete, schema-valid, correctly-stitched log committed to main
-      and close-session ran log-session's job internally without the Skill
-      name surfacing in `skillsUsed`, not a genuine missed invocation. No
-      new silent failure. Grade unchanged.
   - date: "2026-10-10"
     note: >-
       Re-checked (audit-skills behaviour check), 10 usedIn invocations plus
@@ -305,3 +284,5 @@ observations:
     note: "Behaviour check, 42 logs: all on main with a complete schema, PR claims match GitHub, no revert. Verified: after the 11-15 change, 7 of 19 main-session logs leave loaded rules unrated with answered: true (worst: session_013zxzeRGXYTuwyQrcDEwRpw 20 of 24, session_013zxzeT29epAaAQNqmHmeU4 18 of 24), none logged a friction. Commented on #3340. Grade unchanged."
   - date: "2026-11-18"
     note: "Behaviour check, 40 runs: all logs on main, full schema, 72 PRs on main, no revert. Known repeat: loaded-but-unrated rules with `answered: true`, 19 of 40 logs, 10 of 32 after the 11-15 change; worst are harvest runs (all `via: hint`). Cause unverified (script not read). Two visitor-loop runs ruled out. Idea: set `answered` from real coverage or refuse to write while main-session loads are unrated."
+  - date: "2026-11-19"
+    note: "Behaviour check, 41 runs, 2 non-users ruled out (session_013zxzeNkrnZpMkYb9UUBh2t, session_013zxzeQsCq5g9jeQpmsULPZ): all logs on main, 81 of 82 PRs landed; the other, #3475, was closed by the owner, no revert. Repeat, 11 of 41 logs: loaded rules unrated while answered is true (transcript-trace.ts:931 sets it from any report); harvest 3 of 3. Idea: set answered only when every main-session load is rated. Grade unchanged."

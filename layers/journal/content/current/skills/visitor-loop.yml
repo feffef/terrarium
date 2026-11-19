@@ -9,27 +9,9 @@ role: >-
   changes no code and opens no PR. An idea that contradicts a line in
   `decisions.md` is dropped, so rejected ideas stay rejected.
 auditSummary:
-  date: "2026-11-18"
-  text: "Sends visitors through the site and files their findings as issues, as promised. The first dispatch is refused in most runs since an instruction was cut, which costs a resend of three long briefs."
+  date: "2026-11-19"
+  text: "Delivers three visitors' findings as issues and a retro, with no PR; every audited bug issue landed and closed. The dispatch guard blocked the first dispatch in all three runs."
 observations:
-  - date: "2026-10-09"
-    note: >-
-      Re-checked (audit-skills behaviour check), all 8 usedIn sessions: no
-      new silent failure. The two self-caught owner-memory skips this window
-      (midden, tinkerfund) are the same already-known pre-#1570 shape, not
-      new. The 5 post-#1623 sessions (mobile, homepage, atlas, blog, journal)
-      all ran the owner-memory step correctly, each resolving its candidates
-      as "not a ruling" — zero skips since the title/branch-matching fix,
-      now 5/5. Cross-checked every session's cited decisions.md rule
-      (#1316, #1312, #1494, #1624, #1364) against the file's current
-      content — all match verbatim. No zombie/dangling preview process found
-      in any of the 8 runs (pkill, "zombie", "dangling" grepped across
-      session logs and git log, no hits). The 2026-10-06/07 request for a
-      human spot-check on a genuine owner revert (to prove the fix catches
-      one end-to-end, not just the same-day manual backfill it was built
-      from) remains unanswered — no owner-directed revert has landed since
-      #1619/#1624 to exercise it; not a new finding, just still open. Grade
-      unchanged.
   - date: "2026-10-10"
     note: >-
       NEW silent failure, escalated as issue #1721 (audit-skills behaviour
@@ -320,3 +302,5 @@ observations:
     note: "Behaviour check, runs session_013zxzeQWcqG69ABe1v6X1WD, session_013zxzePoe14MeL6kTvYZMX8, session_013zxzeQsCq5g9jeQpmsULPZ: issues #3316, #3346, #3347, #3381 exist, retro comments on #3244 present, no PRs. Dispatch guide blocked 2 of 3 after 184c36f06; the third used the Skill. Idea: cap pages per section for one-page focus. Grade unchanged."
   - date: "2026-11-18"
     note: "Behaviour check, runs session_013zxzePoe14MeL6kTvYZMX8, session_013zxzeQsCq5g9jeQpmsULPZ, session_013zxzeNkrnZpMkYb9UUBh2t: issues #3346, #3347, #3381, #3430 exist with retro comments on #3244, no PRs, no revert. Dispatch-read guard blocked 2 of 3; trial evidence now 4 of 5 post-prune runs (ADR-0027 bars restoring the line). Idea: exempt read-only visitor dispatches from the guard or name the read in step 2."
+  - date: "2026-11-19"
+    note: "Behaviour check, runs session_013zxzeSLYR7qbBXfqwKYbcc, session_013zxzeNkrnZpMkYb9UUBh2t, session_013zxzeQsCq5g9jeQpmsULPZ: #3452, #3430, #3381 exist and closed by fix commits, retro comments on #3244 present, no PR, no revert. Dispatch-read guard blocked the first dispatch in 3 of 3 before d8b0381d9 restored the read line (untested; grade the next runs against fdedd6649 text, which moved the report to the log). Minor: 222-URL context file, visitors picked pages blind. Idea: cap the context file. Grade unchanged."

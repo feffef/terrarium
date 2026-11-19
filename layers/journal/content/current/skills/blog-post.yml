@@ -9,26 +9,9 @@ role: >-
   PR, and a merged post owes a decision on whether another Persona replies.
   Gives the Terrarium a multi-voice commentary on its own development.
 auditSummary:
-  date: "2026-11-18"
-  text: "Writes and lands a daily Persona post that is fact-checked and reviewed before merge. It sometimes runs review steps out of order, and the first dispatch is usually refused until the dispatch Skill is read."
+  date: "2026-11-19"
+  text: "Ships Blog posts through a blind reader and fact-check, all merged without being undone. A guard still refuses its first helper dispatch, and reading the Personas is sometimes skipped."
 observations:
-  - date: "2026-10-09"
-    note: >-
-      Re-checked (audit-skills behaviour check), 10 newest usedIn sessions,
-      each graded against the SKILL.md version in effect when it started
-      (mapped across all 12 SKILL.md-touching landings in the window).
-      Step 12's 5th skip (#1614/session_01VKEB6VDDPrzTmGAt2obTsH, issue
-      #1626) independently re-confirmed already fixed and closed via merged
-      PR #1662. Newest 3 sessions fully fresh-audited: PR #1685/#1686
-      (session_01449u16G5rFweMPGkKZe9Tv, clean, specific 23/22-claim
-      fact-check tallies) and PR #1688 (session_016ZmB2wonEm8Aki1P4V59cK,
-      Karen's reply) — the latter's step-9 fact-checker stalled and was
-      stopped by the owner mid-run, but a genuine independent re-dispatch
-      ran before merge and shipped a real tally (27 claims, 1 wrong), so
-      this is a logged, fully-recovered near-miss, not a silent failure.
-      Step 7 fact-check and Persona rotation both re-verified clean across
-      all 10 sessions; no reverts of any published post in the 2-week
-      git-log sweep. Grade/role unchanged.
   - date: "2026-10-10"
     note: >-
       Re-checked (audit-skills behaviour check), 10 usedIn sessions
@@ -291,3 +274,5 @@ observations:
     note: "Behaviour check, 4 runs (session_013zxzeQTse2DhxedTzE2wcE, session_013zxzeQnCCyBdXZDEv9qTNh, session_013zxzeQ65iPt7YSAHWJBs1q, session_013zxzeSNLpQuhLvWkddGuao; PRs #3312 to #3314, #3338, #3339, #3379 merged, no revert). Verified: session_013zxzeQTse2DhxedTzE2wcE (11-14) skipped code-review before 96f5bef; the step-12 fix held in the two later runs. Pingback stub misnamed, 3rd case. Grade unchanged."
   - date: "2026-11-18"
     note: "Behaviour check, runs session_013zxzePjedjMk4SeDKFvzPt, session_013zxzeSNLpQuhLvWkddGuao, session_013zxzeQ65iPt7YSAHWJBs1q: PRs #3422, #3424, #3379, #3338, #3339 merged, Fact-checked blobs match, no revert. Fact-check before code-review (against step 9's order) in 2 of 3. Dispatch-read guard blocked the first Agent call in 3 of 3: the 11-02 fix d1d302476 did not hold. Unverified: step 2 persona reading skipped on 11-17 (self-disclosed)."
+  - date: "2026-11-19"
+    note: "Behaviour check, runs session_013zxzeNx4V4gWZvzs8HQ3sZ, session_013zxzePjedjMk4SeDKFvzPt, session_013zxzeSNLpQuhLvWkddGuao: PRs #3445, #3446, #3422, #3424, #3379 merged, files on main, no revert, step 12 honoured. Repeats: dispatch-read guard blocked the first Agent call in 3 of 3 (read line restored 11-18 in d8b0381d9, untested); fact-check before code-review in 3 of 3; step 2 persona reading skipped on 11-17 (n=2). Idea: scripts/blog-context.ts for step 2. Grade unchanged."

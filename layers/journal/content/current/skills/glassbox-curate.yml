@@ -15,8 +15,8 @@ watchFor:
   - "Each scheduled run makes a substantial set of changes (not only a typo or metadata fix), and its run entry names which weak spot or owner direction from the memory page it addresses."
   - "The page conventions and the governing docs were read before the first draft, not after."
 auditSummary:
-  date: "2026-11-18"
-  text: "Lands Glass Box PRs that mostly pass review and use the parts files. Small scheduled runs still stop early at a fraction of the budget and skip review steps while printing a review line; an issue tracks it."
+  date: "2026-11-19"
+  text: "Lands Glass Box PRs that pass review and gate, and full runs follow every step. Small scheduled runs still skip steps to save budget and stop early; one unchecked fact merged and was rewritten."
 observations:
   - date: "2026-11-07"
     note: >-
@@ -53,3 +53,5 @@ observations:
     note: "Behaviour check, 4 runs (session_013zxzeSoqEeWqPDrCqDCcJn, session_013zxzePak78Sud7pyRQMjeV, session_013zxzePxNrkPQ4muYeaAFZT, session_013zxzeP4m4R15EP9UBBmzfR): PRs #3311, #3336, #3345, #3348 to #3352, #3369, #3371 merged. Verified silent failure: session_013zxzeSoqEeWqPDrCqDCcJn skipped review and gate, `Reviewed:` line printed anyway: #3395. Loop skipped when get_session absent, 2 of 4: #3370. Graded routine (scheduled runs: session_013zxzeSoqEeWqPDrCqDCcJn, session_013zxzePxNrkPQ4muYeaAFZT)."
   - date: "2026-11-18"
     note: "Watch for: 1 failed (session_013zxzeQ8sddaeWL4KijZQnp, session_013zxzeSoqEeWqPDrCqDCcJn: `Reviewed:` printed with no code-review; all predate #3428), held in session_013zxzePxNrkPQ4muYeaAFZT, session_013zxzePMRv24VHZ1q24seyG; 2 held in PMRv24, failed in Q8sdd; 3 failed in two (#3427 body lacks cost, #3345 says 0.12); 4 failed in Q8sdd and SoqEe (stopped at ~90k and ~110k), held in the rest; 5 failed in Q8sdd (#3411) and SoqEe (#3369); 6 held. Filed #3440 (loop recurrence, small-fix lane). 13 PRs merged, no revert."
+  - date: "2026-11-19"
+    note: "Watch for, runs Q8sdd (session_013zxzeQ8sddaeWL4KijZQnp), PMRv24 (session_013zxzePMRv24VHZ1q24seyG), QbSZ (session_013zxzeQbSZQ554vFZiT2f2D), SoqEe (session_013zxzeSoqEeWqPDrCqDCcJn): 1 failed in Q8sdd and SoqEe, 2 failed in QbSZ run 3, 3 failed (stopped early in 3 of 4), 4 failed in 6 entries, 5 held. 11 PRs merged, no revert. Verified n=2: skipped Scout/writer/reader as 'budget' (QbSZ runs 1-3, repeat of #3440 (closed), whose fix QbSZ predates); #3448 merged an unexplained claim, rewritten by #3450. Idea: orient.ts prints changes quoted. Grade unchanged."

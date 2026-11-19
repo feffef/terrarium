@@ -10,8 +10,8 @@ role: >-
   everything now" pass, not a substitute for the smaller on-interval Skills it
   composes.
 auditSummary:
-  date: "2026-11-18"
-  text: "Clears a batch of issues into reviewed, merged PRs and parks what it cannot settle. Its first dispatch is refused every time until the dispatch Skill is read; second-round review cost was recently trimmed."
+  date: "2026-11-19"
+  text: "Clears a batch of issues into reviewed, merged PRs and parks what it cannot settle. It sometimes skips the question-asking Skill and once reported issues closed that were still open."
 observations:
   - date: "2026-10-13"
     note: >-
@@ -245,3 +245,5 @@ observations:
     note: "Behaviour check, 6 runs, 22 of 22 PRs exist (19 merged, 3 await the owner), no revert. Unverified silent failure n=3: grilling not in skillsUsed in session_013zxzeRCPF7mHwN6aT8t7RQ, session_013zxzeSECfNzcU6b53GPzxG, session_013zxzeT3bxsaccpcz9P65Ra though owners answered rounds. Moderate friction: second round on four small branches cost about 600k tokens for nits. Grade unchanged."
   - date: "2026-11-18"
     note: "Behaviour check, runs session_013zxzeSECfNzcU6b53GPzxG, session_013zxzeTChey8pdC2fuTTH7i, session_013zxzeRCPF7mHwN6aT8t7RQ, session_013zxzeS9acFkKg79nkVrA5R: 18 of 18 PRs merged, no revert. Dispatch-read guard blocked the first Workflow call in 4 of 4. `grilling` missing from skillsUsed in 2 of 4 though owner answers were logged (unverified why). Round-2 cost fixed by #3419; watch for recurrence. Idea: name the dispatch-subagents read in \u00a71."
+  - date: "2026-11-19"
+    note: "Behaviour check, 7 runs (session_013zxzeNd9wP36dUYyykDdBv, session_013zxzePBxPjfMQRm8C4FwqZ, session_013zxzePptQQ7GBhnq1eKsbV, session_013zxzeNxx3w5ES8hysf6R4P, session_013zxzeS9acFkKg79nkVrA5R, session_013zxzeRCPF7mHwN6aT8t7RQ, session_013zxzeTChey8pdC2fuTTH7i): 36 PRs merged of 37 named; the other, #3475, was closed by the owner, no revert. Verified: PBx (session_013zxzePBxPjfMQRm8C4FwqZ) logs 'did not invoke the grilling Skill' and reported #3462 and #3464 closed before they were (grilling missing from skillsUsed in 3 of 7, repeat): filed #3481. Unverified n=1: Nd9 built blog CSS before an agreed sample; Nxx has no step for gating with agents lost. Guard blocked first Workflow call in 5 of 7 (restored 11-18). Grade unchanged."

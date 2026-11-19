@@ -8,31 +8,9 @@ role: >-
   and the post-dispatch check that no finished subagent work is stranded. Every
   rule in it was paid for by a session that lost work.
 auditSummary:
-  date: "2026-11-18"
-  text: "Dispatches subagents without stranding work; nothing was lost in the window. Two guards often refuse a first brief: one demands this Skill be read first, one rejects a brief that mentions the template placeholder, even to explain it."
+  date: "2026-11-19"
+  text: "Runs that dispatch helpers read it, and none left work stranded. A guard still refused the first dispatch in many runs, mostly in Skills with no read-first line."
 observations:
-  - date: "2026-10-09"
-    note: >-
-      Re-checked (audit-skills behaviour check), 10 usedIn sessions (18
-      claimed PRs independently verified merged via live GitHub state): no
-      stranded work, no merge-pr.ts dispatched to a subagent, no new
-      branch/worktree collision. One verification-gap note, no damage:
-      session_015nX759CQdTRtT6x6oLDanX (frictions-to-fixes, 2026-10-07)
-      self-logged skipping step 5's required `pnpm check:worktrees` after
-      dispatch; PR #1660 still landed clean. Screened all 84 `notUsedWindow`
-      sessions by goal (70 ruled out from goal text alone, 14 opened in
-      full): 13/14 no missed invocation (every git-touching edit was either
-      made directly by the orchestrator or strictly read-only). The 14th,
-      session_015CSc6hNccF3XgrSGaGGqjD (2026-10-08, frictions-to-fixes),
-      dispatched a worktree-isolated impl agent (PR #1680, confirmed
-      merged) without recording `dispatch-subagents` in `skillsUsed` — a
-      further occurrence of the 2026-10-02-noted logging gap, commented
-      onto #1586. The same session also self-logged a 3rd occurrence of the
-      #1480 cd-into-worktree footgun (self-caught, no damage) — commented
-      onto #1480, whose own 2026-10-03 triage comment had said "no third
-      occurrence" found yet. #1585 confirmed fixed/closed; #1586 and #1480
-      confirmed still open, each with a fresh comment added this round.
-      Grade unchanged (essential).
   - date: "2026-10-10"
     note: >-
       Re-checked (audit-skills behaviour check), 10 usedIn sessions plus the
@@ -341,3 +319,5 @@ observations:
     note: "Behaviour check, 28 runs, 46 PRs on main, no stranded work, no revert. Repeats: save-handback skipped (session_013zxzeQE5BDH58h5e21zafo, session_013zxzeQDRyvj3Vc8GUWHvBv); unchecked subagent claims relayed (session_013zxzeT5pQrVtuNLAzUQRaP). Cost: session_013zxzeTChey8pdC2fuTTH7i resumed 20 agents (about 1.9M tokens). §7 not yet exercised. Grade unchanged."
   - date: "2026-11-18"
     note: "Behaviour check, 25 runs (11-15 to 11-17) and 55 non-users: 45 PRs on main, no stranding, no revert, no missed invocation. Guard denied the first Agent call in 11 of 25 runs. Placeholder guard denied briefs that quote the brace token (session_013zxzeQgh4aLo2xMP4FzXZJ, session_013zxzeSZQpKBLnM3DK1cPRQ, session_013zxzeSyRCdzfotAbmBuiPp). \u00a77 unexercised so far. Unverified: isolation and per-brief asks (logs carry neither). Idea: brief as a file path, never quote the token."
+  - date: "2026-11-19"
+    note: "Behaviour check, 25 runs, 51 non-users all ruled out (36 dispatched, each with the Skill read): 56 of 57 PRs on main (#3475 owner-closed), one worktree, no revert. Repeats: guard denied first Agent/Workflow call in 10 of 25 plus 2 from friction text; placeholder guard denied 3 briefs; retro resumes cost 1.9M tokens; cd-into-worktree footgun in session_013zxzeNd9wP36dUYyykDdBv and session_013zxzeQgh4aLo2xMP4FzXZJ (self-caught). The 11-18 d8b0381d9 restored read lines in four Skills; audit-skills, frictions-to-fixes, glassbox-update, digest, prune-trial lack it. Grade unchanged."

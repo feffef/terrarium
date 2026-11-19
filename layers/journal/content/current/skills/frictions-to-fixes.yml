@@ -12,24 +12,9 @@ watchFor:
   - "The top-three rule is followed: an entry is skipped only for a reason the rule states, not by judgement."
   - "Every Friction cluster the run designed a solution for ends the run fixed immediately, with an issue raised, or with a ledger update saying what design was dropped and why."
 auditSummary:
-  date: "2026-11-18"
-  text: "Turns the most damaging repeated Frictions into fixes and issues, following the top-three cap. Its own review rule contradicts its generated diffs, so every run improvises a review."
+  date: "2026-11-19"
+  text: "Turns recurring frictions into at most three issues or fixes per run, and its PRs land. Its ledger-pruning script can leave stale links that fail the first gate run."
 observations:
-  - date: "2026-10-09"
-    note: >-
-      Re-checked (audit-skills behaviour check), 9 usedIn sessions, each
-      graded against the SKILL.md version in effect when it started (13
-      intervening landings mapped per-session). Issue #1676's finding
-      (session_015nX759CQdTRtT6x6oLDanX, 2026-10-07, surface-blocked
-      ADR-0017 candidate dropped despite the brand-new §4 rule) independently
-      re-confirmed: still open, and its backfill (issue #1684, filed
-      2026-10-08 by a different session) is itself still open too — nothing
-      new to add to either thread. The other 8 sessions' claimed PRs/issues
-      all independently re-verified against live GitHub state and match
-      their logs exactly; the 2026-10-04 precursor instance
-      (session_01RW5WnnVvnyuUbrqVZvdZNc, pre-§4) re-confirmed not itself a
-      violation. No reverts of any landed fix in the 2-week git-log sweep.
-      Grade unchanged.
   - date: "2026-10-10"
     note: >-
       Re-checked (audit-skills behaviour check), 9 usedIn sessions, each
@@ -278,3 +263,5 @@ observations:
     note: "Behaviour check, runs session_013zxzeQDRyvj3Vc8GUWHvBv, session_013zxzeRLqFejsZTowNzt1Lt, session_013zxzeSyRCdzfotAbmBuiPp: PRs #3300, #3328 to #3330, #3365 to #3367 merged, issues acted on, no revert. Verified repeat 3 of 3: §5.4 simple-change mismatch, filed #3397. Grade unchanged."
   - date: "2026-11-18"
     note: "Watch for: item 1 (top three rule) held in all four runs; item 2 (designed clusters end fixed, filed or noted) held on 11-17 08:21, others not checked. Runs session_013zxzeRLqFejsZTowNzt1Lt, session_013zxzeSyRCdzfotAbmBuiPp, session_013zxzeSZQpKBLnM3DK1cPRQ, session_013zxzeQgh4aLo2xMP4FzXZJ: PRs #3328-#3330, #3365-#3367, #3402, #3408-#3413 merged, no revert. \u00a75.4 simple-change test cannot pass for a generated ledger diff, 4 of 4 (#3397). Unverified: #3407 may be an owner-declined entry. Idea: scripted ledger diffs need gate plus a decisions read only."
+  - date: "2026-11-19"
+    note: "Watch for: 1 held (partly unverified: each run filed at most three, fewer by its own log), 2 held in the three runs that designed. Runs session_013zxzeSyRCdzfotAbmBuiPp, session_013zxzeSZQpKBLnM3DK1cPRQ, session_013zxzeQgh4aLo2xMP4FzXZJ, session_013zxzeQxKAZzjCV61mM31sR delivered; PRs #3365, #3408-#3410, #3412, #3413 merged, issues #3407, #3400, #3362 closed by fixes; no revert. Repeats: generated-ledger diff fails the simple-change test (4 of 4, #3397 closed not planned); guard denial on placeholder briefs (3 of 4, #3406). New: prune-friction-ledger leaves related links (Qx, n=1). Idea: make it drop them. Grade unchanged."
