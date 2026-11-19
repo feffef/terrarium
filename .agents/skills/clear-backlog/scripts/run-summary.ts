@@ -187,19 +187,18 @@ export function liveState(issueNumbers: number[], prNumbers: number[]): string {
 const USAGE =
   'usage: run-summary.ts <run .output> --triage | <run .output> --build [--run <run id>] | <findings .json> --findings | --state [--issues 1,2] [--prs 3,4]'
 
-// A flag given without a value parses as NaN, so it fails like a bad number.
-const numbers = (argv: string[], flag: string, { value }: { value?: string }) =>
-  argv.includes(flag) ? (value ?? '').split(',').map((n) => (n ? Number(n) : NaN)) : []
+const numbers = (value: string | undefined) => (value ? value.split(',').map(Number) : [])
 
 runIfMain(import.meta.url, () => {
   if (process.argv[2] === '--state') {
     const argv = process.argv.slice(3)
     const issuesFlag = extractFlag(argv, '--issues')
     const prsFlag = extractFlag(issuesFlag.rest, '--prs')
-    const issueNumbers = numbers(argv, '--issues', issuesFlag)
-    const prNumbers = numbers(argv, '--prs', prsFlag)
+    const issueNumbers = numbers(issuesFlag.value)
+    const prNumbers = numbers(prsFlag.value)
     const all = [...issueNumbers, ...prNumbers]
-    if (prsFlag.rest.length || !all.length || all.some((n) => !Number.isInteger(n) || n < 1)) fail(USAGE)
+    const valueless = (argv.includes('--issues') && !issuesFlag.value) || (argv.includes('--prs') && !prsFlag.value)
+    if (valueless || prsFlag.rest.length || !all.length || all.some((n) => !Number.isInteger(n) || n < 1)) fail(USAGE)
     console.log(liveState(issueNumbers, prNumbers))
     return
   }
