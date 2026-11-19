@@ -65,9 +65,10 @@ blindness matters, so a person reads them before they land.
 - **Make every exception a path, so a script enforces all of them.** A new
   dependency, untested behaviour, new isolation logic or an untrusted author
   has no path to match.
-- **Enforce the pre-PR review with a hook matching the reviewed sha.** The fix
-  and the gate come after the review, so the reviewed sha rarely equals the
-  head, and `merge-pr.ts` already wants a verdict naming the head.
+- **Enforce the pre-PR review with a hook matching the reviewed sha to the
+  head.** The fix and the gate come after the review, so the two rarely match.
+  `merge-pr.ts` instead wants proof of the review in the merging session's
+  transcript, and judges a later fix by the simple-change test.
 - **Skip review for prose-only changes.** Skills, rules and agent docs steer
   every later session, so a mistake in them costs as much as a code bug.
 - **Rely on human review without a gate.** Review misses mechanical breakage,
@@ -80,8 +81,9 @@ blindness matters, so a person reads them before they land.
   label `guest-build` puts on its PRs. The other exceptions rest on the agent
   recognising them, including any other PR built from a Public request: it
   looks Trusted because an agent opens it. The script also refuses some merges
-  no exception covers; `docs/agents/pr-workflow.md` (step 5) lists every
-  refusal.
+  no exception covers, among them a review claimed without proof in the
+  merging session's transcript and an own read of a diff that is not simple;
+  `docs/agents/pr-workflow.md` (step 5) lists every refusal.
 
 ## See
 

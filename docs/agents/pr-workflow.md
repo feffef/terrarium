@@ -9,16 +9,26 @@ The `mcp__github__*` tool surface (retries, polling, overflow traps):
 
 ## Review before opening the PR
 
-Push early; a push opens nothing. Open the PR only on a head that has been
-reviewed and has passed the gate: the PR is where an agent can merge. Name the
-test or gate step that fails if this change regresses; if none would, add a
-test, or the PR needs a human merge (ADR-0004). Check no PR exists for the
-branch, commit, run the
-[`code-review`](../../.agents/skills/code-review/SKILL.md) Skill on the
-committed diff against `origin/main` in the checkout that holds it, fix the
-findings, then run `pnpm gate:scoped` on the final head and edit nothing while
-it runs. Push that head, then open the PR. Exempt: a session-log commit, and a
-Skill whose own steps review the diff before the PR (`midden-catalogue` §4).
+Push early; a push opens nothing. The PR is where an agent can merge, so open
+it only after these steps, in this order:
+
+1. Name the test or gate step that fails if this change regresses. If none
+   would, add a test, or the PR needs a human merge (ADR-0004).
+2. Check no PR exists for the branch, then commit.
+3. Review the commit. Run
+   `pnpm exec tsx scripts/github/verdict-line.ts --review-call` and make the
+   [`code-review`](../../.agents/skills/code-review/SKILL.md) call it prints,
+   in the checkout that holds the commit: its args name the sha, which
+   `merge-pr.ts` looks for in your transcript (step 4 of the recipe). A simple
+   change gets your own read of its full diff instead (below).
+4. Fix the findings, then review each fix as in step 3.
+5. Run `pnpm gate:scoped` on the final head; edit nothing while it runs.
+6. Push that head, then open the PR.
+
+**Done when** the PR is open on a head that `code-review` reviewed (or that
+passed your own read of a simple diff) and `gate:scoped` passed. Exempt: a
+session-log commit, and a Skill whose own steps review the diff before the PR
+(`midden-catalogue` §4).
 
 The gate skips `test`, `build` and `test:e2e` when every changed path is a `.md`
 outside `layers/` or under `.claude/skills/`; when the rest are under
@@ -33,7 +43,10 @@ judge by how plain it looks. Simple is a typo, rewrap, broken link or path, an
 and never a file added, renamed or moved, or a change to code logic, hooks,
 workflow scripts, Skill or rule frontmatter (bar that hash), or the meaning of a
 Skill, rule, ADR or agent doc. A follow-up commit after a review takes the same
-test; a larger one gets `code-review` on its own diff.
+test; a larger one gets `code-review` on its own diff. `merge-pr.ts` checks the
+countable part: lines count as the larger of a file's additions and deletions,
+and any `.ts`, `.js` or `.vue` file, or one under `scripts/hooks/` or
+`.claude/workflows/`, counts as code.
 
 A later push to an open PR that changes only prose or docs may skip
 `gate:scoped` and rely on CI's gate. If `gate:scoped` passed but CI failed,
@@ -64,10 +77,13 @@ re-review each story or repeat its findings.
    output of `pnpm exec tsx scripts/github/verdict-line.ts <pr-number>`, pasted
    (run in the checkout holding the reviewed head, or add `--sha <the SHA in
    the builder's GATE line>` once it is gone; it warns if that isn't the PR
-   head). After only your own read of a simple diff, add `--own-read` for an
-   `Own-read:` line; merge-pr.ts refuses it when the PR adds or renames a
-   file (#3395). After any later push,
-   review the new commits and post a new verdict. Use `event=COMMENT` or
+   head). The `Reviewed:` line names the sha `code-review` ran on. After only
+   your own read of a simple diff, add `--own-read` for an `Own-read:` line;
+   `merge-pr.ts` refuses it unless the PR passes the simple-change test
+   (#3395). After a push that follows the review, end the verdict with
+   `Reviewed: <reviewed sha>` (`--sha`) and `Own-read: <head>`: it is accepted
+   when the review is in your transcript and the fix passes the test; a larger
+   fix gets a new `code-review` and verdict. Use `event=COMMENT` or
    `add_issue_comment`, never an APPROVE review: on a fork PR it would fake the
    human merge authority
    [`guest-contributions.md`](./guest-contributions.md) reserves.
@@ -76,7 +92,12 @@ re-review each story or repeat its findings.
    Human-only path, a fork or Public author, the `guest-pipeline` label, closing
    keywords on an open issue not labelled `ready-for-agent`, a new blog post the
    fact-checker didn't read (`blog-post` step 9), and a PR without your step-4
-   verdict naming its head (why: #1276). Check the other ADR-0004 exceptions (untested
+   verdict naming its head (why: #1276): a `Reviewed:` line needs that review
+   in your own session's transcript (a `code-review` call, a
+   `clear-backlog-build` review round, or a `SendMessage` naming the sha to
+   that run's reviewer; a plain `Agent` reviewer doesn't count; #3483), so run
+   `merge-pr.ts` in the session that reviewed. A plain Dependabot bump needs
+   no proof. Check the other ADR-0004 exceptions (untested
    behaviour, Tenant-reach logic, a PR built from a Public request) yourself first.
    The owner's in-session word to merge a Human-only PR you wrote (ADR-0004)
    goes in as `--owner-approved "<their words>"`: it waives only that refusal
