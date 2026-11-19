@@ -1,0 +1,244 @@
+schemaVersion: 1
+session: session_013zxzeT9rFXvusQJoECfbbV
+startedAt: 2026-11-19T16:03:03Z
+endedAt: 2026-11-19T16:09:17Z
+kind: autonomous
+goal: Visitor-loop run on the Journal (focus 2 of 7)
+status: completed
+outcome: "Three visitors reported; 1 bug filed as #3498, 6 ideas and 2 learnings logged"
+summary: "Scheduled visitor-loop run, no human prompt. Focus: journal (entry /t/journal/current; row 2 of the rotation for 2026-11-19). Built origin/main (1ed36208), served a production preview, wrote a context file and sent a blind first-time visitor, an informed content editor and an informed UI tester (all sonnet). Yield: blind 8 findings and 3 ideas, editor 10 findings and 3 ideas, UI tester 6 findings and 3 ideas. After checking each against source and the rendered page, 1 bug group survived (Friction Ledger: 75.6x23.2px select, 34x14 and 54x14px PR links at 390px, hover-only strips with no aria; issue #3498). Dropped as not reproduced: routines charts lacking aria (each svg has role=img and a label), skills \"0 sessions\" read as a 7-day window (the page counts all 156 logged sessions), no next digest link (11-18 is the latest digest), the /skills/close-session 404 (no such route), history page stale (a dated story whose landing blurb says up to mid-November, so not false). Dropped as already logged: jargon legend, skip link, frictions intro, routines window, KPI tile wrap, ideas page filter. The \"Problems noted\" wording comes from the digest Skill template (SKILL.md:73), so it is an idea, not a bug. Filter misses: two visitor claims (aria on bars, 7-day window) were wrong and caught only by my checks. Retros: all three said the Journal has only about 7 to 10 routes, below the brief's 10 to 20 pages, and that digests and sessions open as in-page anchors; each asked for a line in the context file saying which routes are anchor-only or typed-URL. The blind visitor also wanted a \"fewer than 10 pages: follow outbound links\" line in visitor-brief.md; the UI tester wanted the brief to say which page kinds get a 390px screenshot. Everything here was agent-initiated by the schedule; no human instruction."
+prs: []
+docsRead:
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: scripts/lib/chromium.ts
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/visitor-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: visitor-loop
+    reason: (invoked as a slash command)
+frictions:
+  - description: Ran git fetch origin main before reading docs/agents/git-conventions.md; the hook told me to read it afterwards. The fetch was harmless.
+    solution: List fetch among the read-only commands in CLAUDE.md's git trigger, or let the visitor-loop Skill say its fetch needs no prior read.
+    severity: nit
+  - description: "Read docs/agents/triage-labels.md only after filing issue #3498; the hook reminded me after the write. The labels were right."
+    solution: visitor-loop step 4 should name triage-labels.md beside issue-tracker.md so it is read before filing.
+    severity: nit
+  - description: The context file's pages section gave the Journal's routes, but both informed visitors still crawled only 7 pages because digests and sessions open as in-page anchors; each wrote extra scripts.
+    solution: In .agents/skills/visitor-loop/SKILL.md step 2, have the context file mark which routes are reachable only by anchor or typed URL, and let the brief say what to do when a Space has fewer than 10 pages.
+    severity: minor
+  - description: visitor-brief.md says one 390px screenshot of each kind of page without naming the kinds; the UI tester took 10 and viewed 4, the editor took none.
+    solution: In .agents/skills/visitor-loop/visitor-brief.md, list the page kinds (landing, ledger, chart page, digest) or cap screenshots.
+    severity: nit
+  - description: Two visitor claims were false (routines bars lacking aria; skills 0 sessions read as a 7-day window) and passed to me unchecked; only my own source and DOM checks caught them.
+    solution: Ask visitors in visitor-brief.md to quote the element or text that backs each accessibility or count claim.
+    severity: minor
+durationSec: 374
+models:
+  claude-sonnet-5-5: 57
+toolCounts:
+  Bash: 17
+  Read: 3
+  Agent: 3
+  ToolSearch: 2
+  mcp__github__issue_write: 1
+  SendMessage: 3
+  Skill: 2
+  PushNotification: 1
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/dispatch-subagents/SKILL.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/dispatch-subagents/SKILL.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/adr-0010.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: native
+        trigger: docs/agents/triage-labels.md
+    reported:
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: no branch or PR; filed issue only
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: issue body opens with session header
+      - path: .claude/rules/adr-0009.md
+        value: steered
+        why: logging via close-session
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0028.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/rules/adr-0008.md
+        value: unrelated
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/glossary-terms.md
+        value: unrelated
+      - path: .claude/rules/adr-0010.md
+        value: unrelated
+      - path: .claude/rules/adr-0022.md
+        value: unrelated
+      - path: .agents/skills/dispatch-subagents/SKILL.md
+      - path: .agents/skills/visitor-loop/visitor-brief.md
+      - path: .agents/skills/visitor-loop/decisions.md
+      - path: docs/agents/issue-tracker.md
+      - path: docs/agents/github-integration.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+subagents:
+  - type: general-purpose
+    task: Blind first-time visitor
+    model: sonnet
+    durationSec: 189
+    toolCalls: 14
+    modelCalls: 11
+    tokenShare: 15
+  - type: general-purpose
+    task: Informed content editor
+    model: sonnet
+    durationSec: 191
+    toolCalls: 9
+    modelCalls: 9
+    tokenShare: 13.7
+  - type: general-purpose
+    task: Informed UI tester
+    model: sonnet
+    durationSec: 190
+    toolCalls: 15
+    modelCalls: 10
+    tokenShare: 14.8
+gitBranch: claude/lucid-heisenberg-izozyh
+entrypoint: remote_trigger
+cliVersion: 2.1.328
+trigger: visitor-loop
+learnings:
+  - "The Journal's digests and sessions are in-page anchors on /t/journal/current; digest pages exist at /t/journal/current/digests/<date> (and /archived/digests/<date>) but are not linked as plain hrefs, so a href crawl finds only about 7 pages. Digest rows are not summary elements: click by text and wait about 1s for the open animation."
+  - The Skills page's 'used in N sessions' counts all of the Journal's logged sessions (156), not a recent window, and the digest template in .agents/skills/digest/SKILL.md:73 is the source of the 'Problems noted' wording.
+ideas:
+  - "[content editor] /t/journal/current/digests/2026-11-18: the digest says 'Problems noted: 88' and 'problem log' where the rest of the Journal says Frictions, and its 'Also shipped' list is bare PR numbers (#3477 problem-survey skip rule) running straight into the stats line. Change the digest template (.agents/skills/digest/SKILL.md:73) to say Frictions, link each PR number and put the stats on their own line, so a newcomer reads one vocabulary."
+  - "[blind, content editor] /t/journal/current/history: the story ends at 11 November with 1,479 sessions and reads as frozen next to digests up to 18 November. Add an as-of line, and a Since-then table of sessions and frictions per week from the same script, so the page stays current."
+  - "[content editor, blind] /t/journal/current/skills: every Skill has a DETAILS toggle but no page of its own, and the SUPPORTING chips (grilling, tdd, research) have no description. Give each Skill a page or permalink with when it runs, its last few sessions and open Frictions, and gloss the supporting chips, so a visitor who reads 'used in 155 sessions' can click through to examples."
+  - "[UI tester] /t/journal/current/routines: bar charts have a chart label but no per-run values, which touch and screen-reader users cannot read. Add a show-values table under each chart so exact costs are reachable without hover."
+  - "[blind] /t/journal/current/frictions: nothing leads a visitor from a Friction cluster to the story of its fix. Link a cluster to the Glass Box walkthrough 'A friction becomes a fix' so the Journal bridges to the textbook where a visitor is most curious."
+  - "[content editor] /t/journal/current/digests/<date>: digests link to nothing outside the Journal. Add a link to the Blog post a day's work inspired, bridging the record and the commentary."
+landedBy: Stop
