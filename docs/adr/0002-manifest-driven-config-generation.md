@@ -20,7 +20,8 @@ its manifest and nothing else.
   and the cross-Tenant catalog (ADR-0025), and it refuses two collections with
   the same key.
 - **A manifest is checked before it is expanded.** A misspelt key, an unknown
-  kind or a data Collection with no schema fails at the manifest, with a
+  kind or a data Collection with neither a schema nor a kind fails at the
+  manifest, with a
   message that names the field. The gate also type-checks every manifest.
 - **Adding a Tenant edits no shared config file** (ADR-0018). Its glossary
   entries follow ADR-0021.
