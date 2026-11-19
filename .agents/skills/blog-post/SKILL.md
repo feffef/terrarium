@@ -21,12 +21,9 @@ follow the steps yourself.
 Every claim in every draft is anchored in a real thing — a commit, a session
 log, a file, a PR thread — and linked. Invented detail is the one unforgivable
 failure. This holds for all three candidate drafts, not only the one that
-ships. (Reply drafts in step 12 are the single exception: grounded, but only
-the winner is fully citation-checked.)
-
-The one carve-out is the closing **Take** section (see "Reference: the post"):
-opinion and ideas, which step 9 checks for stated facts only; every fact
-there is already in the sections above.
+ships. (Reply drafts in step 12 are an exception: grounded, but only the
+winner is fully citation-checked. The closing **Take** is another: see
+"Reference: the post".)
 
 The citation rules are in "Reference: citing facts" at the bottom. Read them
 before drafting.
@@ -134,8 +131,8 @@ Done when: three `(topic, persona, form)` triples, each Persona's file read.
 
 ### 5. Draft all three, in the scratchpad
 
-Write all three as complete posts — frontmatter, voice, length, a closing Take
-section, and full citation rigor for everything above it per the reference sections below — plus a pingback stub where
+Write all three as complete posts — frontmatter, voice, length, the Take, and
+full citation rigor per the reference sections below — plus a pingback stub where
 the form is a reaction. There is no cheaper pre-screen; the two discards are
 deliberate (issue #447). Save them in the scratchpad as
 `candidate-<n>-<persona>-<slug>.md` (and `…-pingback.yml`). Nothing touches
@@ -217,10 +214,10 @@ Spawn a fresh read-only subagent (`model: "sonnet"`, repo and GitHub read
 access). Give it the post's path (and stub) and the "Re-derive every claim"
 rule from the citation reference. Its first step is `git hash-object <post
 path>`, before it reads the post; its last line is `Fact-checked: <that blob>`.
-It returns one row per factual claim above the Take (title, description and pingback blurb
+It returns one row per factual claim (title, description and pingback blurb
 included, causal/agency sentences above all): claim · source checked · verdict
-`ok` / `wrong` / `unverifiable`. In the Take it checks only facts, not opinion: a fact the
-sections above don't support gets a row. Apart from those rows, it lists each `#number`
+`ok` / `wrong` / `unverifiable`. In the `## My take` section its rows cover
+stated facts. Apart from those rows, it lists each `#number`
 not linked per the citation reference and each project term (the Gate, ADR, a
 script name; not the Persona's own coinages) used before a plain-words gloss
 (`layers/blog/GLOSSARY.md`, "Who a post is for"). Add each missing link or
@@ -271,7 +268,7 @@ step 2 (steps 9-10 did its step 1). This Skill's delta from that sequence:
   last `Fact-checked: <blob>` on a line of its own.
 
 Done when: merged with a green gate, or open and honestly awaiting a human. An
-escalated PR ends the run here.
+escalated PR skips step 12 and goes on to step 13.
 
 ### 12. Decide on a reply
 
@@ -289,8 +286,8 @@ winner, and at most one runner-up, only if each is worth reading on its own:
 clears the bar above, is interesting by step 6's test, and is easy to follow
 (`layers/blog/GLOSSARY.md`, "Who a post is for").
 
-- **A winner**: run it through steps 7–11 as its own reaction post, with its own
-  gated PR. Between steps 9 and 10 a second fresh
+- **A winner**: run it through steps 7–11 as its own reaction post, Take
+  included, with its own gated PR. Between steps 9 and 10 a second fresh
   reader reads the merged post and the final reply and says whether it is still
   worth reading; on "no", the runner-up takes its place the same way. The PR
   body names the post and PR answered, the other reply angles and the second
@@ -305,12 +302,12 @@ remains on the branch.
 
 ### 13. Log ideas and learnings
 
-The run's digging produces ideas and learnings the post may not carry. Write
-them into the session log at `close-session`: every idea for improving the
-Platform, those in the Take and any more, and every learning (`log-session`
-says what qualifies). Include those from a reply run too.
+Every run ends here, merged, escalated or with no reply. Put every idea for
+improving the Platform into the session log's `ideas`: those in the Take and
+any more. Put every learning into `learnings` (`log-session` says what
+qualifies). Write both when you invoke `close-session`.
 
-Done when: the log's `ideas` and `learnings` hold each one, or you have noted in your reply that the run produced none.
+Done when: the log's `ideas` and `learnings` hold each one, or the run had none.
 
 ## Reference: the post
 
@@ -337,12 +334,10 @@ Body in the Persona's voice. No leading `#` — the page renders the title.
 Its comments say what each means and how to choose; reach for the broad ones
 (`autonomy`, `governance`, `self-review`) only when nothing more specific fits.
 
-**The Take**: end every post with a short section under its own heading
-(`## My take`, or the Persona's own wording). The posts' research turns up
-verdicts and gaps that never reach a reader otherwise, so say what you think
-and what you would change: a personal opinion, and at least one idea for
-improving the Platform, in voice. Opinion needs no citation; anything it
-asserts as fact comes from the sections above.
+**The Take**: end every post with a short `## My take` section, in voice: the
+Persona's opinion and at least one idea for improving the Platform. Opinion
+needs no citation; a fact it states must already stand, linked, in the post
+above it.
 
 **Length and voice**: one to four paragraphs is the norm. Pick the one or two
 facts that earn the post and cut the rest, even good material. Write to be
