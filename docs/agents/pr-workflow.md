@@ -36,21 +36,21 @@ any other path runs everything (`scripts/gate/gate.ts`). So a unit test that
 reads such a Markdown file (`tests/unit/area-labels.spec.ts` reads an
 auto-triage `SKILL.md`) can fail only on `main` after a Markdown-only PR.
 
-**A simple change.** Count; don't judge by how plain it looks. A change is
-simple when all of these hold:
+**A simple change.** Count it; don't judge by how plain it looks. It is simple
+only when all of these hold:
 
-- it touches at most 2 files and at most 10 lines, each file counting the
-  larger of its added and deleted lines;
-- it adds, renames, copies or moves no file;
-- it touches no `.ts`, `.js` or `.vue` file and nothing under `scripts/hooks/`
-  or `.claude/workflows/`;
-- it changes no code logic or hook, no Skill or rule frontmatter bar an
-  `adr:` hash or token-estimate restamp, and not the meaning of a Skill, rule,
-  ADR or agent doc (a typo, rewrap, or broken link or path is fine).
+- at most 2 files and 10 lines, each file counting the larger of its added and
+  deleted lines;
+- no file added, renamed, copied or moved;
+- no `.ts`, `.js` or `.vue` file, and nothing under `scripts/hooks/` or
+  `.claude/workflows/`;
+- no change to code logic, a hook, Skill or rule frontmatter (bar an `adr:` hash
+  or token-estimate restamp), or the meaning of a Skill, rule, ADR or agent doc
+  (a typo, rewrap, or broken link or path is fine).
 
-A follow-up commit after a review takes the same test; a larger one gets
-`code-review` on its own diff. `merge-pr.ts` checks the first three bars, so a
-restamp of three rules needs `code-review` too.
+`merge-pr.ts` checks the first three bars, so a restamp of three rules needs
+`code-review`. A follow-up commit after a review takes the same test; a larger
+one gets `code-review` on its own diff.
 
 A later push to an open PR that changes only prose or docs may skip
 `gate:scoped` and rely on CI's gate. If `gate:scoped` passed but CI failed,
@@ -78,20 +78,17 @@ re-review each story or repeat its findings.
    `mcp__Claude_Code_Remote__send_later` check-ins at about 2h, then 6h, then
    every ~12h (#929).
 4. Before merging, post your verdict as a PR comment, even a clean "merging
-   as-is": the merge must never be the only trace. End it with the
-   output of `pnpm exec tsx scripts/github/verdict-line.ts <pr-number>`, pasted
-   (run in the checkout holding the reviewed head, or add `--sha <the SHA in
-   the builder's GATE line>` once it is gone; it warns if that isn't the PR
-   head). The `Reviewed:` line names the sha `code-review` ran on. After only
-   your own read of a simple diff, add `--own-read` for an `Own-read:` line;
-   `merge-pr.ts` refuses it unless the PR passes the simple-change test
-   (#3395). After a push that follows the review, end the verdict with
-   `Reviewed: <reviewed sha>` (`--sha`, without the PR number, which would
-   warn that it is not the head) and `Own-read: <head>`: it is accepted
-   when the review is in your transcript and the fix passes the test; a larger
-   fix gets a new `code-review` and verdict. Use `event=COMMENT` or
-   `add_issue_comment`, never an APPROVE review: on a fork PR it would fake the
-   human merge authority
+   as-is": the merge must never be the only trace. End it with the pasted output
+   of `pnpm exec tsx scripts/github/verdict-line.ts <pr-number>`, run in the
+   checkout holding the reviewed head (or add `--sha <the SHA in the builder's
+   GATE line>`). Its `Reviewed:` line names the sha `code-review` ran on. After
+   only your own read of a simple diff, add `--own-read`; `merge-pr.ts` refuses
+   it unless the PR passes the simple-change test (#3395). If you pushed after
+   the review, end with `Reviewed: <reviewed sha>` (`--sha`, without the PR
+   number) and `Own-read: <head>`: accepted when the review is in your
+   transcript and the fix is simple; a larger fix gets a new `code-review` and
+   verdict. Use `event=COMMENT` or `add_issue_comment`, never an APPROVE review:
+   on a fork PR it would fake the human merge authority
    [`guest-contributions.md`](./guest-contributions.md) reserves.
 5. Land through `scripts/github/merge-pr.ts <pr-number>`, the only merge path; never
    call `enable_pr_auto_merge`. The script refuses what it can see (ADR-0004, ADR-0020, ADR-0023): a
