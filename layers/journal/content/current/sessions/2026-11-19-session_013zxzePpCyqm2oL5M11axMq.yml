@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzePpCyqm2oL5M11axMq
 startedAt: 2026-11-19T00:15:30Z
-endedAt: 2026-11-19T00:21:08Z
+endedAt: 2026-11-19T00:25:16Z
 kind: autonomous
 goal: Write the 2026-11-18 Journal Digest and archive old content
-status: in-review
-outcome: PR 3480 opened with the 2026-11-18 Digest and the archive sweep, gate green, awaiting CI
-summary: "Scheduled digest run (no human prompts; everything was agent-executed from the Skill). One closed day (2026-11-18) was listed; gathered its 32 PRs and 15 sessions, wrote the Digest, fact-checked it with a fresh subagent (21 claims, 0 wrong), ran the archive sweep (1 Digest and 28 session logs moved), committed, ran a Standards-only code review and gate:scoped (green), pushed and opened PR 3480. Still to do: wait for CI and merge with merge-pr.ts, then re-invoke close-session as completed."
+status: completed
+outcome: PR 3480 merged with the 2026-11-18 Digest and the archive sweep, gate green
+summary: Scheduled digest run (no human prompts; everything was agent-executed from the Skill). One closed day (2026-11-18) was listed; gathered its 32 PRs and 15 sessions, wrote the Digest, fact-checked it with a fresh subagent (21 claims, 0 wrong), ran the archive sweep (1 Digest and 28 session logs moved), committed, ran a Standards-only code review and gate:scoped (green), pushed and opened PR 3480. Merged on green CI with merge-pr.ts after posting a verdict.
 prs:
   - "3480"
 docsRead:
@@ -49,17 +49,20 @@ frictions:
   - description: Spawned the fact-check Agent only after reading dispatch-subagents, but never ran the Spec axis of code-review (no spec exists beyond the Skill), noted here for honesty.
     solution: State in the digest Skill that code-review's Spec axis is skipped for a Digest.
     severity: nit
-durationSec: 338
+durationSec: 586
 models:
-  claude-sonnet-5-5: 43
+  claude-sonnet-5-5: 57
 toolCounts:
-  Bash: 14
+  Bash: 18
   Read: 5
   Write: 2
-  Skill: 4
+  Skill: 5
   Agent: 2
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-11-18.md
   - layers/journal/content/archived/pages/digests/2026-11-11.md
@@ -275,13 +278,13 @@ subagents:
     durationSec: 45
     toolCalls: 14
     modelCalls: 7
-    tokenShare: 24.5
+    tokenShare: 19.6
   - task: Standards review of Digest PR
     model: sonnet
     durationSec: 16
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 7.4
+    tokenShare: 5.9
 gitBranch: claude/compassionate-lovelace-gv24gn
 entrypoint: remote_trigger
 cliVersion: 2.1.327
