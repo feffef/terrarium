@@ -131,3 +131,13 @@ pages:
     checked: '2026-11-17'
   - page: walkthroughs/30.planning-a-big-change
     checked: '2026-11-17'
+  - page: walkthroughs/40.session-log-lands-on-main
+    checked: '2026-11-19'
+  - page: walkthroughs/50.a-friction-becomes-a-fix
+    checked: '2026-11-19'
+  - page: walkthroughs/60.adding-a-site
+    checked: '2026-11-19'
+  - page: walkthroughs/70.reading-across-tenants
+    checked: '2026-11-19'
+  - page: walkthroughs/80.a-change-goes-live
+    checked: '2026-11-19'
