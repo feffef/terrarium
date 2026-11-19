@@ -121,8 +121,10 @@ look the owner asked to see or the answers leave open, and show all the
 screenshots in one message with one numbered approval question per sample. A
 change request gets a revised sample and a new round.
 
-**Done:** every question is answered, every needed sample is approved, and
-every issue in §1's set is `ready-for-agent`, closed, or parked by the owner.
+**Done:** every question is answered, every needed sample is approved, every
+issue in §1's set is `ready-for-agent`, closed, or parked by the owner, and
+this session has called the `grilling` Skill or read
+`.agents/skills/grilling/SKILL.md`.
 
 ## 3. Build and review
 
@@ -241,6 +243,10 @@ the report.
 question or failure is in the report.
 
 ## 4. Land and report
+
+Before you write the report, run `pnpm exec tsx
+.agents/skills/clear-backlog/scripts/run-summary.ts --state --issues <run's
+issues> --prs <run's PRs>` and make the report match the states it prints.
 
 Push each gated branch from its worktree with
 `git push origin HEAD:<branch>`, then in a separate Bash call

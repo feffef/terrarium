@@ -8,10 +8,13 @@
 //     <run .output> --triage
 //     <run .output> --build [--run <workflow run id>]
 //     <findings .json> --findings
+//     --state [--issues 1,2] [--prs 3,4]   live GitHub state, for the §4 report
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
-import { extractFlag, fail, runIfMain } from '../../../../scripts/lib/cli.ts'
+import { extractFlag, fail, root, runIfMain } from '../../../../scripts/lib/cli.ts'
+import { parseClosingKeywordIssues } from '../../../../scripts/github/merge-pr.ts'
+import { getJson, resolveAccess } from '../../../../scripts/lib/github-client.ts'
 
 type Question = { choice: string; options: string[]; pick: string; why: string; wouldChange?: string }
 type OptionCheck = { option: string; holds: string; settledBy?: string }
@@ -151,9 +154,44 @@ export function findingsSummary(path: string): string {
   return found.map(finding).join('\n') || 'no findings'
 }
 
-const USAGE = 'usage: run-summary.ts <run .output> --triage | <run .output> --build [--run <run id>] | <findings .json> --findings'
+export type PrFacts = { number: number; state: string; merged: boolean; body: string | null }
+export type IssueState = { number: number; state: string; state_reason: string | null; labels: string[] }
+
+/** One line per PR and per issue; the issues are the given ones plus those the PRs name by closing keyword. */
+export function stateSummary(prs: PrFacts[], states: IssueState[]): string {
+  const prLines = prs.map((p) => {
+    const named = parseClosingKeywordIssues(p.body ?? '')
+    return `PR #${p.number} ${p.merged ? 'merged' : p.state}${named.length ? `, closing keywords name ${issues(named)}` : ''}`
+  })
+  const issueLines = states.map((i) => `issue #${i.number} ${i.state}${i.state_reason ? ` (${i.state_reason})` : ''} labels: ${i.labels.join(', ') || 'none'}`)
+  return [...prLines, ...issueLines].join('\n')
+}
+
+/** Reads the live state; no claimed outcome is compared (#3481). */
+export function liveState(issueNumbers: number[], prNumbers: number[]): string {
+  const access = resolveAccess(root)
+  const prs = prNumbers.map((n) => getJson<PrFacts>(access, `pulls/${n}`))
+  const all = [...new Set([...issueNumbers, ...prs.flatMap((p) => parseClosingKeywordIssues(p.body ?? ''))])].sort((a, b) => a - b)
+  const found = all.map((n) => {
+    const i = getJson<Omit<IssueState, 'labels'> & { labels: { name: string }[] }>(access, `issues/${n}`)
+    return { ...i, labels: i.labels.map((l) => l.name) }
+  })
+  return stateSummary(prs, found)
+}
+
+const USAGE =
+  'usage: run-summary.ts <run .output> --triage | <run .output> --build [--run <run id>] | <findings .json> --findings | --state [--issues 1,2] [--prs 3,4]'
+
+const numbers = (v: string | undefined) => (v ? v.split(',').map(Number) : [])
 
 runIfMain(import.meta.url, () => {
+  if (process.argv[2] === '--state') {
+    const a = extractFlag(process.argv.slice(3), '--issues')
+    const b = extractFlag(a.rest, '--prs')
+    const ns = [...numbers(a.value), ...numbers(b.value)]
+    if (b.rest.length || ns.some((n) => !Number.isInteger(n) || n < 1)) fail(USAGE)
+    return console.log(liveState(numbers(a.value), numbers(b.value)))
+  }
   const run = extractFlag(process.argv.slice(2), '--run')
   const [path, mode, ...rest] = run.rest
   if (!path || rest.length) fail(USAGE)
