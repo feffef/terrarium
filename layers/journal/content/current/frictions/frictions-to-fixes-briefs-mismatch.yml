@@ -38,11 +38,6 @@ fixes:
     date: "2026-11-17"
     summary: "survey-brief command now shows --merges-only; design-brief looks up one docReadCounts entry with jq"
 occurrences:
-  - session: session_013zxzeNezKVRxRiZLs4z9n4
-    date: "2026-11-04"
-    severity: minor
-    description: "Survey brief's list_issues CLOSED paging asks for a heavy scan; the survey agent substituted a gh api scan, and the survey omitted each regression's severity-since that its brief requires."
-    solution: "Have the survey brief require the since column copied per regression, and name the cheap closed-issue scan."
   - session: session_013zxzeS7NuFmaoXJkxVfNby
     date: "2026-11-05"
     severity: minor

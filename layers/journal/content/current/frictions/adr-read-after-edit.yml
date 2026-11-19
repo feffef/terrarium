@@ -17,16 +17,6 @@ notes: |-
   2026-10-28 design: another digest Skill line dropped: it already says to read ADR-0010 before the first Digest; the hint is the designed backstop and the late read changed nothing. dropped: a guard would be Human-only.
   2026-10-30 design: change the hint or its rules' paths (issue #2575's candidates) dropped: all Human-only files; 85 of 86 late reads changed nothing, 0 'no' verdicts, so the cost is one call
 occurrences:
-  - session: session_013zxzeRxyt249HTzdiM9oo3
-    date: "2026-11-04"
-    severity: nit
-    description: "Edited .agents/prune-trials.yml before reading ADR-0027; the hook asked for it only after my commit. The edit was right."
-    solution: "Read the ADR named by the skill's own rule before the first trials-file edit."
-  - session: session_013zxzeQNXfvE3ck6tjqWpYK
-    date: "2026-11-04"
-    severity: nit
-    description: "Edited ledger-set.ts, its spec and survey-brief.md before reading the ADRs the hook then asked for in full; I read them after."
-    solution: "Read the ADRs a Skill's files name before the first edit there."
   - session: session_013zxzeSbd2LJtWWawqrWBJD
     date: "2026-11-05"
     severity: nit
@@ -237,3 +227,18 @@ occurrences:
     severity: nit
     description: "Edited survey-brief.md twice before reading ADR-0027 and checking .agents/prune-trials.yml; the hook prompted the read, and no open trial overlapped."
     solution: "Check the open trials' territory before the first edit under .agents/skills/frictions-to-fixes."
+  - session: session_013zxzeSpYABZ15tUzNbPJN9
+    date: "2026-11-17"
+    severity: minor
+    description: "Edited an ADR and its summary rule without reading ADR-0030 in full; my first read attempt was blocked and I never retried it. I followed its no-history rule anyway."
+    solution: "After a blocked read, retry it before editing the governed file."
+  - session: session_013zxzePBxPjfMQRm8C4FwqZ
+    date: "2026-11-18"
+    severity: nit
+    description: "The ADR-0008 read-in-full hook fired after my first Journal page edit, so the ADR was read after the edit; it did not change the edit."
+    solution: "Load rules that govern a page file when it is read, not only after the first edit."
+  - session: session_013zxzeRjfC32pkbUMmiaMnN
+    date: "2026-11-18"
+    severity: nit
+    description: "The ADR read-first demand for the edited SKILL.md arrived in a hook note after the Edit; the rule can't order a step before the read that loads it, so three ADRs were read after editing."
+    solution: "Mention in clear-backlog's SKILL.md header that ADR-0005, 0022 and 0027 govern it, so a session can read them before editing; or accept the late read."

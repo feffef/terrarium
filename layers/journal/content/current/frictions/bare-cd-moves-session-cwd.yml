@@ -14,11 +14,6 @@ fixes:
     date: "2026-10-25"
     summary: "dispatch-subagents §3 and clear-backlog-build.js now say run git as git -C <worktree-root>, never cd: the Bash tool keeps its cwd and parallel calls share it."
 occurrences:
-  - session: session_013zxzeNcfR7ezGAhwXWTD1g
-    date: "2026-11-04"
-    severity: nit
-    description: "A bash cd into layers/blog/content shifted the working directory twice, which I only noticed from environment notices."
-    solution: "Use absolute paths and avoid cd in compound commands."
   - session: session_013zxzeS7NuFmaoXJkxVfNby
     date: "2026-11-05"
     severity: nit
@@ -99,3 +94,8 @@ occurrences:
     severity: nit
     description: "Wrote a Seedling body draft into the repo root through a wrong working directory; moved it to the scratchpad before anything was committed."
     solution: "Use absolute scratchpad paths in every file write."
+  - session: session_013zxzeNd9wP36dUYyykDdBv
+    date: "2026-11-18"
+    severity: nit
+    description: "Ran a worktree-scoped cd in a Bash call, moving the main session's working directory into a builder's worktree until the next call."
+    solution: "Use absolute paths with git -C only, as dispatch-subagents says; no new text needed."

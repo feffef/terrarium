@@ -125,3 +125,8 @@ occurrences:
     severity: nit
     description: "My fix C spec carried a literal brace placeholder that my own fill step replaced; I caught it by re-reading the filled brief before dispatch."
     solution: "Describe a placeholder in words inside fix specs, or fill briefs in a single pass over the template only."
+  - session: session_013zxzeNd9wP36dUYyykDdBv
+    date: "2026-11-18"
+    severity: minor
+    description: "My typescript-7 brief said to add each alias 'if required' and did not require showing each dependency was exercised; the first build added two inert packages and cost a fix round."
+    solution: "Brief template for dependency trials: each added package needs a command showing something uses it, or it is dropped."

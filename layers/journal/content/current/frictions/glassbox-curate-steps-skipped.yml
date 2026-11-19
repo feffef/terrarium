@@ -1,0 +1,25 @@
+name: glassbox-curate-steps-skipped
+surface: safe
+summary: "A glassbox-curate run skipped Skill steps or ended its loop with budget left, on its own judgement, and the owner had to ask why. see: blog-post-skill-steps-skipped (the same slip in a blog-post run); glassbox-curate-read-first-skipped (the skipped steps are the required first reads)."
+cause: "The glassbox-curate Skill lists Scout, writer, claim checker, fresh reader, code-review and the gate per run and a Loop step; runs skipped most of them as too large for the change ('by judgement not rule', 'calling it budget') or ended the turn mid-loop with budget left, and the owner found the gap afterwards. Since PR #3461 (2026-11-18) the Skill names no budget and the loop is the default path, so a skip or stop after that date is a new occurrence. Signals: 'skipped the Scout, writer, claim checker', 'ended the turn mid-loop', 'I stopped mid run', 'user had to ask why'."
+status: open
+related:
+  - entry: blog-post-skill-steps-skipped
+    rule: The skipped Skill is blog-post, not glassbox-curate.
+  - entry: glassbox-curate-read-first-skipped
+    rule: The skipped steps are the Skill's required first reads, not its build, check or loop steps.
+fixes:
+  - pr: 3461
+    date: "2026-11-18"
+    summary: "glassbox-curate SKILL.md drops every budget mention and makes the loop the default (closes #3440); no lighter lane and no new skip rule."
+occurrences:
+  - session: session_013zxzeQbSZQ554vFZiT2f2D
+    date: "2026-11-18"
+    severity: major
+    description: "Ended the turn mid-loop twice with budget left, so the user had to say I stopped mid run; the Skill's Loop step says to continue until the budget is spent."
+    solution: "Read the Loop step at every Land and never end the turn while budget remains and a focus is open."
+  - session: session_013zxzeQ8sddaeWL4KijZQnp
+    date: "2026-11-17"
+    severity: minor
+    description: "The curate Skill's full run (Scout, writer, claim checker, fresh reader, code-review, gate:scoped) is far larger than a one-clause fix; I skipped most steps, by judgement not rule."
+    solution: "Let the Skill name a lighter path for a wording-only fix of one clause, so skipping is sanctioned."

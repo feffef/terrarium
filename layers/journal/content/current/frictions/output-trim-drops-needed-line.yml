@@ -123,3 +123,8 @@ occurrences:
     severity: nit
     description: "Piped log-session --author through head -3, which close-session forbids because its refusals and warnings print there; the success line showed, but a warning could have been cut."
     solution: "Run log-session.ts bare and read all of it; the Skill's one-line rule could sit beside the command it governs."
+  - session: session_013zxzeNx4V4gWZvzs8HQ3sZ
+    date: "2026-11-18"
+    severity: nit
+    description: "I piped log-session.ts output through head and to /dev/null, though the skill says never filter it."
+    solution: "Run it unfiltered so its warnings print."

@@ -33,11 +33,6 @@ fixes:
     date: "2026-10-31"
     summary: "CLAUDE.md and the clear-backlog workflows' shared brief line ask each subagent to give every count, id or attribution with its source (command or file:line) or mark it unverified."
 occurrences:
-  - session: session_013zxzeSKLjL9xzvaR2kQ4po
-    date: "2026-11-04"
-    severity: minor
-    description: "Triage agent's pick cited PR 2688 as removing the inspect-session use case, but 2688 is about glassbox-improve; I could only mark it unverified."
-    solution: "Require triage picks to name the commit or file line proving each cited PR claim."
   - session: session_013zxzeQAvRVQM2NhW8WWUPJ
     date: "2026-11-05"
     severity: minor
@@ -163,3 +158,8 @@ occurrences:
     severity: nit
     description: "The Standards subagent reported dead CSS that was live (main pills still use it) and skipped the glossary docs."
     solution: "Tell reviewers to grep consumers before reporting dead code."
+  - session: session_013zxzePBxPjfMQRm8C4FwqZ
+    date: "2026-11-18"
+    severity: minor
+    description: "I relayed the explore agent's stale claim 'max tag count is 12, not 82' in Q1 without re-running the count; the sample later showed bugs 82, so the claim was wrong."
+    solution: "Re-run a counted staleClaim myself before putting it in a question (CLAUDE.md verify-before-state); explore results should carry the command."

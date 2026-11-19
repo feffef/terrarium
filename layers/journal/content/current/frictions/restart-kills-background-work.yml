@@ -28,3 +28,8 @@ occurrences:
     severity: minor
     description: "The worker restarted mid-run and my earlier context was gone, so I re-derived trial state from the repo and spent extra reads."
     solution: "Nothing in the repo; the scheduler resumed correctly."
+  - session: session_013zxzeNxx3w5ES8hysf6R4P
+    date: "2026-11-18"
+    severity: moderate
+    description: "The owner's stop signal killed running builders and gates mid-run; after the session resume the agents were gone, and clear-backlog has no step for running the gate myself."
+    solution: "Add one line to clear-backlog section 3: if agents are gone, run the gate in the background from the worktree and check EXIT in its log."

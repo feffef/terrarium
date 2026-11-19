@@ -60,3 +60,8 @@ occurrences:
     severity: minor
     description: "My first draft kept the Digest-fix and PR #2993 history although the owner said rant only; code-review's Spec axis caught it, costing one extra fact-check round."
     solution: "Before drafting, restate the owner's scope answers as a don't list and check each paragraph against it."
+  - session: session_013zxzeRsaSP4XhVGZDUk153
+    date: "2026-11-19"
+    severity: nit
+    description: "Audit summaries first carried PR numbers and jargon the Skill forbids; a reviewer caught 11 of them and I rewrote all. Cost one follow-up commit."
+    solution: "A check-states-like script could flag digits or a short jargon list in auditSummary text."

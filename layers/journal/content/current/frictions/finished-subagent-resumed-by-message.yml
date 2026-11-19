@@ -8,6 +8,7 @@ related:
     rule: The agent belonged to a workflow run that was still live, so two writers edited one worktree.
 notes: |-
   2026-11-16 design: no change: #3068 (PR #3090) already added the dispatch-subagents §6 resume bullets; the three later occurrences are a typo-class slip, a nit and the already-covered redelivery. dropped: more prose has no sufficient reason.
+  2026-11-19 design: no change dropped: dispatch-subagents §6 holds the resume rule and the session read it; no mechanism can tell a needed resume from an idle one.
 occurrences:
   - session: session_013zxzeRbcVWW7Upv1bSok39
     date: "2026-11-13"
@@ -24,3 +25,8 @@ occurrences:
     severity: nit
     description: "Two resumed subagents answered a new question by redelivering their old reports, so I spent a round trip and got no answer from them."
     solution: "After a resume, wait for the next notification and check it answers the new question before counting the agent as having replied."
+  - session: session_013zxzeNxx3w5ES8hysf6R4P
+    date: "2026-11-18"
+    severity: nit
+    description: "Sent a resume message to a builder that needed no work, waking it for nothing."
+    solution: "Say nothing to a stopped agent when the orchestrator holds the question; ask the owner directly."

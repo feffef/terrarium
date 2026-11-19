@@ -13,11 +13,6 @@ fixes:
     date: "2026-10-25"
     summary: "Its git-conventions section now also covers a git add of an ignored path and a commit given both -m and -F, and says to read git log -1 before the gate."
 occurrences:
-  - session: session_013zxzeNezKVRxRiZLs4z9n4
-    date: "2026-11-04"
-    severity: nit
-    description: "I passed both -m and -F to git commit, which git rejects; the failed commit left the branch unchanged and I redid it."
-    solution: "Use only -F for commit messages, as git-conventions says."
   - session: session_013zxzeR6WXvZ48FrLjwtn9b
     date: "2026-11-08"
     severity: nit
@@ -53,3 +48,13 @@ occurrences:
     severity: nit
     description: "I ran git commit with both -m and -F; git refused, wasting one call. git-conventions already says never to give both."
     solution: "Reuse a message file only with -F and no other message flag."
+  - session: session_013zxzeQbSZQ554vFZiT2f2D
+    date: "2026-11-18"
+    severity: nit
+    description: "Chained git add, status, file write and git commit in one Bash call, against git-conventions.md's one-state-changing-command-per-call rule."
+    solution: "Run each state-changing git command in its own call."
+  - session: session_013zxzeRsaSP4XhVGZDUk153
+    date: "2026-11-19"
+    severity: nit
+    description: "Chained git add, status, a file write and git commit in one Bash call, against git-conventions.md's one state-changing git command per call."
+    solution: "Read git-conventions.md before the first commit; no rule loads at commit time to remind."

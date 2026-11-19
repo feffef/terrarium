@@ -17,11 +17,6 @@ fixes:
     date: "2026-11-13"
     summary: "midden-survey lists closed-unmerged PRs with a script that pages completely, replacing the search call and hand paging."
 occurrences:
-  - session: session_013zxzeQNXfvE3ck6tjqWpYK
-    date: "2026-11-04"
-    severity: minor
-    description: "Built the first list of six reopen candidates from the first git -S date for status accepted, which missed relayed-subagent-claims' re-acceptance, so I corrected to five."
-    solution: "Read each entry's ref and its latest status commit, not the first, before reporting acceptance dates."
   - session: session_013zxzeSbd2LJtWWawqrWBJD
     date: "2026-11-05"
     severity: nit
@@ -77,3 +72,8 @@ occurrences:
     severity: minor
     description: "The data file for glassbox-lesson said no runs in 3 days while the scorecard counted 3 uses in the window; the spec review caught my observation overstating it."
     solution: "Make the scorecard print the 3-day run list count next to useCount so the two are not confused."
+  - session: session_013zxzeRjfC32pkbUMmiaMnN
+    date: "2026-11-18"
+    severity: minor
+    description: "Told the owner the redesign roughly halved token cost by comparing notice tokens that exclude resumed turns with a baseline that included them; I caught it next turn and corrected it."
+    solution: "Before stating a before-and-after cost figure, name each side's counting basis; a one-line note in the run report template would force that."

@@ -13,11 +13,6 @@ related:
 notes: |-
   2026-10-28 design: a guard or prose line dropped: .githooks/commit-msg corrects a wrong trailer and github-provenance-guard.ts denies a wrong id on a post and hands back the right one, so a slip costs one retry, and a guard edit is Human-only.
 occurrences:
-  - session: session_013zxzeQFKLDc1URLih3edaf
-    date: "2026-11-04"
-    severity: nit
-    description: "Typed a wrong session id in the commit trailer; the commit-msg hook replaced it with the correct one."
-    solution: "Let the hook add the trailer instead of hand-typing it."
   - session: session_013zxzeQAvRVQM2NhW8WWUPJ
     date: "2026-11-05"
     severity: nit
@@ -138,3 +133,13 @@ occurrences:
     severity: nit
     description: "Drafted the issue header with a session id typed from memory; it was wrong. get_session gave the right id before the issue was posted."
     solution: "Print the session id once from get_session at the start of the run and reuse it."
+  - session: session_013zxzePDgqR59VAHUMyVxvA
+    date: "2026-11-18"
+    severity: nit
+    description: "Hand-edited the session id in a commit message file with several sed calls and mangled it; dropped the line and let the commit-msg hook add the trailer."
+    solution: "Never type the trailer; the hook adds it."
+  - session: session_013zxzeRsaSP4XhVGZDUk153
+    date: "2026-11-19"
+    severity: minor
+    description: "I wrote truncated session ids into notes (for example a made-up id for the blog-post session); validate:content rejected one and a reviewer flagged others. Cost one rerun and a fix commit."
+    solution: "Pass the full ids from each subagent report to the note writer, or have the apply script validate ids against the scorecard."

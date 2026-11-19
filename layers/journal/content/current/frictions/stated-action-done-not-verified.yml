@@ -1,0 +1,13 @@
+name: stated-action-done-not-verified
+surface: safe
+summary: An agent reported an action as done (issues closed) that it had only partly done, and the owner caught it.
+cause: "The session commented on issues and then reported them closed in later summaries without re-reading their state; CLAUDE.md's Verify-before-you-state rule is prose only. Signals: 'reported them closed', 'a check showed both still open', a status line naming an action never run."
+status: open
+notes: |-
+  2026-11-19 design: no change dropped: CLAUDE.md already holds 'Verify before you state' and the session read the closing doc; a fix needs a Human-only guard for one occurrence; revisit on a second.
+occurrences:
+  - session: session_013zxzePBxPjfMQRm8C4FwqZ
+    date: "2026-11-18"
+    severity: moderate
+    description: "I commented on #3462 and #3464 but never closed them, then reported them closed in two summaries; the owner asked and a check showed both still open."
+    solution: "After a close decision, close with issue_write and verify the state with gh api before reporting it."
