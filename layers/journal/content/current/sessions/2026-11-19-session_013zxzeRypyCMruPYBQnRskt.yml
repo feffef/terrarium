@@ -1,13 +1,14 @@
 schemaVersion: 1
 session: session_013zxzeRypyCMruPYBQnRskt
 startedAt: 2026-11-19T06:43:57Z
-endedAt: 2026-11-19T06:48:53Z
+endedAt: 2026-11-19T07:09:48Z
 kind: interactive
 goal: Make audit-skills observation notes long enough to follow
-status: partial
-outcome: Note length raised to 300-500 words and subagent report cap raised to match; pushed, no PR, gate or review yet
-summary: "The owner said audit-skills observations were too short to follow what the audit or the audited Skill did, and asked for about 250 words each. Per their stated preference I read the Skill and its brief, then asked what text was meant, what to add and how strict the length was. They chose Inventory observations, all four content kinds, and a 300-500 word range. I edited step 5 of the audit-skills SKILL.md (human-instructed), checked no script or test caps the length and no prune trial covers the Skill, then committed and pushed after the Stop hook asked (hook-prompted). I flagged that the subagent brief's report cap (300 words plus 150 per finding) could starve a 500-word note (agent-initiated); the owner then said to raise it (human-instructed), so brief.md now caps reports at 600 plus 200 per finding and names the content a note needs. Both commits are pushed. Not done: gate:scoped, the code-review Skill and the PR; the owner has not asked for them."
-prs: []
+status: in-review
+outcome: "PR #3490 open: 300-500 word notes, larger subagent reports, newest 7 observations shown; gate and review passed"
+summary: "The owner said audit-skills observations were too short to follow what the audit or the audited Skill did. Per their stated preference I read the Skill and its brief, then asked what text was meant, what to add and how strict the length was; they chose Inventory observations, all four content kinds and a 300-500 word range (human-instructed). I edited step 5 of the audit-skills SKILL.md, committed and pushed when the Stop hook asked. I flagged that the subagent report cap could starve the notes (agent-initiated); the owner said to raise it (human-instructed), so brief.md now caps reports at 600 plus 200 per finding. The owner then said to run the gate and open the PR (human-instructed). Code review (Standards and Spec subagents) found that the 30,000-character observation budget in scripts/session/audit-skills.ts would show only about ten long notes; I asked and the owner chose the newest 7 by default with a pointer to the Inventory entry for older ones, so I replaced the budget with a count (human-instructed, agent-implemented), updated its test, and removed a duplicated count from brief.md. typecheck, the spec and pnpm gate:scoped passed on the final head; PR #3490 is open and subscribed. Open: existing notes stay short until the next audit rewrites them; a stale friction file mentions the old budget but is historical."
+prs:
+  - "3490"
 docsRead:
   - path: .agents/skills/audit-skills/SKILL.md
     reason: (read before editing)
@@ -21,9 +22,19 @@ docsRead:
     reason: (no reason given)
   - path: docs/agents/git-conventions.md
     reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: (no reason given)
 skillsUsed:
   - name: close-session
     reason: closure at end of each turn
+  - name: code-review
+    reason: Standards and Spec review before opening the PR
+  - name: dispatch-subagents
+    reason: brief for the two review agents
   - name: log-session
     reason: (no reason given)
 frictions:
@@ -33,21 +44,28 @@ frictions:
   - description: Grepped the repo and a Glass Box page for stale mentions of the 100-word cap with truncated output, costing three calls to learn nothing.
     solution: One grep for the phrase with -n and no -o prefix context would have sufficed.
     severity: nit
-durationSec: 296
+durationSec: 1551
 models:
-  claude-sonnet-5-5: 54
+  claude-sonnet-5-5: 110
 toolCounts:
   Grep: 4
   Glob: 1
-  Read: 6
-  AskUserQuestion: 1
-  Bash: 14
-  Edit: 2
-  Write: 4
-  Skill: 3
+  Read: 9
+  AskUserQuestion: 2
+  Bash: 29
+  Edit: 5
+  Write: 7
+  Skill: 5
+  Agent: 4
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
 filesEdited:
   - .agents/skills/audit-skills/SKILL.md
   - .agents/skills/audit-skills/brief.md
+  - scripts/session/audit-skills.ts
+  - tests/unit/audit-skills.spec.ts
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -70,6 +88,8 @@ adrHints:
     via: path
     readAfter: true
     by: main
+docsReadBySubagents:
+  - .agents/skills/writing-for-agents/SKILL.md
 ruleUse:
   - by: main
     answered: true
@@ -140,6 +160,173 @@ ruleUse:
       - path: .agents/skills/audit-skills/SKILL.md
       - path: .agents/skills/audit-skills/brief.md
       - path: docs/agents/git-conventions.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: in-scope
+      - path: .claude/rules/adr-0015.md
+        value: in-scope
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/data-shapes.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 3
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0005.md
+        value: in-scope
+      - path: .claude/rules/adr-0015.md
+        value: in-scope
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+subagents:
+  - type: general-purpose
+    task: Standards review of diff
+    model: sonnet
+    durationSec: 32
+    toolCalls: 8
+    modelCalls: 5
+    tokenShare: 9.9
+  - type: general-purpose
+    task: Spec review of diff
+    model: sonnet
+    durationSec: 32
+    toolCalls: 8
+    modelCalls: 7
+    tokenShare: 9.9
+  - type: general-purpose
+    task: Standards review of follow-up
+    model: sonnet
+    durationSec: 15
+    toolCalls: 7
+    modelCalls: 3
+    tokenShare: 7.6
+  - type: general-purpose
+    task: Spec review of follow-up
+    model: sonnet
+    durationSec: 14
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 8.1
 gitBranch: ccr-7b87ebd0-a02hfu
 entrypoint: remote_mobile
 cliVersion: 2.1.328
