@@ -11,7 +11,8 @@ tell" is a valid verdict when the logs can't show it. Then do the rest of this
 brief as usual.
 
 Read the observations first, as the baseline: what is normal, what is new
-and what has stopped. Then read every run in the Runs section in full; observations never
+and what has stopped. Your data file lists only the newest; read older ones in
+the Skill's Inventory entry when the history matters. Then read every run in the Runs section in full; observations never
 replace reading a run.
 
 Work out from the `SKILL.md` in effect when each run started (your data file says
@@ -51,4 +52,6 @@ When you propose an observation, name the run ids it covers and what was
 interesting in them, a clean verdict included, so the next audit knows what
 is covered.
 
-Report in under 300 words plus 150 per finding, plus the idea.
+Report in under 600 words plus 200 per finding, plus the idea. The parent
+writes the 300–500 word observation note (`SKILL.md` step 5) from your report,
+so include what it needs.

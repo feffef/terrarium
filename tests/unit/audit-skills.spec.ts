@@ -19,7 +19,7 @@ import {
   isSessionLogPath,
   issueSessionRef,
   lastUsed,
-  OBSERVATIONS_BUDGET,
+  OBSERVATIONS_SHOWN,
   parseCommitFileChanges,
   parseLandings,
   parseMergedPullRequests,
@@ -983,16 +983,13 @@ describe('buildBrief()', () => {
     expect(buildBrief(row(), [])).not.toContain('Watch for')
   })
 
-  it('lists observations newest first and cuts them at the character budget, keeping the newest', () => {
-    const note = 'x'.repeat(1000)
-    const observations = Array.from({ length: 40 }, (_, i) => ({ date: `2026-10-${String(i + 1).padStart(2, '0')}`, note }))
+  it('lists the newest observations first, cuts them at the shown count and says where the rest are', () => {
+    const observations = Array.from({ length: 40 }, (_, i) => ({ date: `2026-10-${String(i + 1).padStart(2, '0')}`, note: 'x' }))
     const out = buildBrief(row({ observations }), [])
     const lines = out.split('\n').filter((l) => l.startsWith('- 2026-10-'))
-    expect(lines.length).toBeLessThan(40)
-    expect(lines.length).toBeGreaterThan(0)
+    expect(lines).toHaveLength(OBSERVATIONS_SHOWN)
     expect(lines[0]).toContain('2026-10-40')
-    expect(lines.join('\n').length).toBeLessThanOrEqual(OBSERVATIONS_BUDGET + lines.length)
-    expect(out).toContain(`${40 - lines.length} older observations left out`)
+    expect(out).toContain(`${40 - OBSERVATIONS_SHOWN} older observations left out; read them in layers/journal/content/current/skills/`)
   })
 
   it('gives a model-invoked Skill the sessions that did not use it, and names each landing', () => {

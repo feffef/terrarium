@@ -450,9 +450,9 @@ export function pickSkillChanges(landings: readonly Landing[], name: string, scr
  *  audits and their findings sit in the observations (#3364). */
 export const BRIEF_RUN_DAYS = 3
 
-/** Observations listed in a brief stop at this many characters (about 8k
- *  tokens), so they fit comfortably beside the runs a subagent reads. */
-export const OBSERVATIONS_BUDGET = 30_000
+/** Observations listed in a brief stop at this many, newest first: notes run
+ *  300-500 words, and an older one is a read of the Inventory entry away. */
+export const OBSERVATIONS_SHOWN = 7
 
 /** The data half of a behaviour-check brief (step 2): what the parent would
  *  otherwise assemble by hand from the scorecard. The ask itself is the
@@ -483,16 +483,10 @@ export function buildBrief(row: SkillRow, window: readonly WindowSession[], now 
   }
   lines.push('', '## Observations (what is already known)')
   const obs = [...row.observations].reverse().sort((a, b) => b.date.localeCompare(a.date)).map((o) => `- ${o.date}: ${o.note.replace(/\s+/g, ' ').trim()}`)
-  let chars = 0
-  const kept: string[] = []
-  for (const l of obs) {
-    if (kept.length && chars + l.length + 1 > OBSERVATIONS_BUDGET) break
-    kept.push(l)
-    chars += l.length + 1
-  }
+  const kept = obs.slice(0, OBSERVATIONS_SHOWN)
   const n = kept.length
   lines.push(...(n ? kept : ['None.']))
-  if (n < obs.length) lines.push(`(${obs.length - n} older observations left out)`)
+  if (n < obs.length) lines.push(`(${obs.length - n} older observations left out; read them in ${INVENTORY_DIR}/${row.name}.yml if the history matters)`)
   return lines.join('\n') + '\n'
 }
 
