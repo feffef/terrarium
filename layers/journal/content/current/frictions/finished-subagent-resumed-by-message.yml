@@ -8,6 +8,7 @@ related:
     rule: The agent belonged to a workflow run that was still live, so two writers edited one worktree.
 notes: |-
   2026-11-16 design: no change: #3068 (PR #3090) already added the dispatch-subagents §6 resume bullets; the three later occurrences are a typo-class slip, a nit and the already-covered redelivery. dropped: more prose has no sufficient reason.
+  2026-11-19 design: no change dropped: dispatch-subagents §6 holds the resume rule and the session read it; no mechanism can tell a needed resume from an idle one.
 occurrences:
   - session: session_013zxzeRbcVWW7Upv1bSok39
     date: "2026-11-13"

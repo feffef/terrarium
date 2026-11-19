@@ -14,11 +14,6 @@ fixes:
     date: "2026-11-07"
     summary: "Removes the glassbox-improve Skill (issue #2930, owner decision), the source of this cluster's runs."
 occurrences:
-  - session: session_013zxzeT8tDd5GPJiRNZRA4J
-    date: "2026-11-04"
-    severity: minor
-    description: "grades.ts tally listed two steps as pending that grades.yml already held as dropped, and a cut step without a gist crashed its summary with a TypeError."
-    solution: "Print a step's earlier decision beside any re-raise, and require a gist in reportProblems (filed in issue 2848)."
   - session: session_013zxzeTJp1jinYqgNJRczgA
     date: "2026-11-05"
     severity: minor

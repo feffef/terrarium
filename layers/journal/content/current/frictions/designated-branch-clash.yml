@@ -12,11 +12,6 @@ notes: |-
   2026-10-20 design: a repo doc granting pushes to other branches dropped: the harness pins one pushable branch and a repo doc cannot grant that; issue-tracker.md already says to flag it upfront and ask.
 fixes: []
 occurrences:
-  - session: session_013zxzeSKLjL9xzvaR2kQ4po
-    date: "2026-11-04"
-    severity: minor
-    description: "System prompt says push only to the designated branch and open no PR unless asked, while clear-backlog and ADR-0003 say to push per-issue branches and open PRs; I followed the Skill."
-    solution: "State in the clear-backlog Skill that invoking it authorises pushing its named branches and opening PRs despite a session branch pin."
   - session: session_013zxzeScSe7rW5BumGHCxoJ
     date: "2026-11-11"
     severity: nit

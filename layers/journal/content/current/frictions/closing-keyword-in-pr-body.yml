@@ -8,6 +8,7 @@ related:
     rule: check-body rejected bare angle brackets in the body.
 notes: |-
   2026-11-08 design: a PreToolUse guard denying negated or labelled closing keywords in PR bodies dropped: it needs a Human-only guard (.claude/settings.json, scripts/hooks/**) for two low-severity events, pr-workflow.md:74 already warns and both sessions read it, and merge-pr.ts already refuses the labelled form.
+  2026-11-19 design: no change dropped: merge-pr.ts already refuses the keyword on a non-ready-for-agent issue; a guard is Human-only; one self-recovering body edit.
 occurrences:
   - session: session_013zxzeRCJHe4rmKN5i2CQ16
     date: "2026-11-06"

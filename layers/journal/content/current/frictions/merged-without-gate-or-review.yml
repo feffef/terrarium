@@ -8,6 +8,7 @@ related:
     rule: A gate ran but the review was skipped, or an own-read replaced it on a diff judged simple.
 notes: |-
   2026-11-17: split from prepush-gate-review-skipped, whose accepted cost covers a lighter review, not a merge with no gate.
+  2026-11-19 design: no change dropped: merge-pr.ts verdictRefusal (18b0618f7, 2026-11-17) already refuses an Own-read verdict on an added file, the bypass this occurrence used; a further check touches Human-only merge-pr.ts; wait for a later occurrence.
 occurrences:
   - session: session_013zxzeSoqEeWqPDrCqDCcJn
     date: "2026-11-16"

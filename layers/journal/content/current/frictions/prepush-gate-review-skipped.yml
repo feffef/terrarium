@@ -4,7 +4,8 @@ summary: >-
 cause: >-
   ADR-0004 and pr-workflow.md ask for the code-review Skill before a branch's first push (and on a larger follow-up), allowing only a simple change (at most 10 lines in 2 files, adding, renaming or moving no file since PR #2638) the author's own read; sessions judge a small, prose, ledger, test or follow-up diff simple without counting it, self-review instead, or review only after pushing. Signals: 'skipped the code-review Skill', 'pushed before running gate:scoped and code-review', 'reviewed inline', 'self-reviewed', 'simple-change bar', 'without a fresh code-review', code-review run after the first push.
 surface: guard-or-hook
-status: open
+status: tracked
+ref: "issue #3483"
 related:
   - entry: followup-review-overcost
     rule: Review ran but cost far more than it found on a tiny first push or small follow-up.
@@ -46,11 +47,6 @@ fixes:
     date: "2026-11-17"
     summary: "merge-pr.ts refuses an Own-read: verdict on a PR that adds, renames or copies a file, so an own read cannot stand in for code-review on such a diff (partial: a modified-file diff still passes)."
 occurrences:
-  - session: session_013zxzePsSguQyDiqnq52irG
-    date: "2026-11-04"
-    severity: minor
-    description: "Skipped the code-review Skill on a diff that adds a file, though the simple-change test excludes added files; I read the diff myself."
-    solution: "Run code-review, or let the pr-workflow simple test exempt Digest pages."
   - session: session_013zxzeQ7Ra7VbsnEayuBNNi
     date: "2026-11-06"
     severity: minor
