@@ -241,12 +241,11 @@ export function verdictRefusal(
     `refused: this session's transcript was not found (CLAUDE_CODE_SESSION_ID unset, or no file under ` +
     `<config>/projects), so no review can be proven. Run merge-pr.ts in the session that ran the review, ` +
     `or set CLAUDE_CODE_SESSION_ID to its id.`
+  if (named.filter(coversHead).some(isProven)) return null
   // An unproven `Reviewed:` line on the head falls through to an `Own-read:` line on it, if any.
   if (named.some(coversHead) && !ownRead.some(coversHead)) {
-    if (named.filter(coversHead).some(isProven)) return null
     return review.reviewed === null ? noTranscript : `refused: this session's transcript shows no review of ${headSha}. ${next}`
   }
-  if (named.filter(coversHead).some(isProven)) return null
   if (ownRead.some(coversHead)) {
     const simpleOnly = `refused: an Own-read verdict covers only a simple diff (docs/agents/pr-workflow.md), but`
     const bases = [...new Set(named.filter(isProven))]
