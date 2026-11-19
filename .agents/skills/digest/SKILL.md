@@ -70,6 +70,7 @@ PRs as [#22](https://github.com/feffef/terrarium/pull/22), issues as
 [#2](https://github.com/feffef/terrarium/issues/2).>
 
 **Also shipped:** [#22](…) tests for page links · [#21](…) review of recent problems
+
 **Sessions:** 3 (all completed) · **Problems noted:** 5 (2 minor, 3 trivial) — worst: <one line>.
 ```
 
