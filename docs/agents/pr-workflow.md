@@ -44,9 +44,9 @@ judge by how plain it looks. A change is simple when all of these hold:
 - it adds, renames, copies or moves no file;
 - it touches no `.ts`, `.js` or `.vue` file and nothing under `scripts/hooks/`
   or `.claude/workflows/`;
-- it changes no Skill or rule frontmatter (bar an `adr:` hash or
-  token-estimate restamp) and not the meaning of a Skill, rule, ADR or agent
-  doc: a typo, rewrap, broken link or path, or such a restamp.
+- it changes no code logic or hook, no Skill or rule frontmatter bar an
+  `adr:` hash or token-estimate restamp, and not the meaning of a Skill, rule,
+  ADR or agent doc (a typo, rewrap, or broken link or path is fine).
 
 A follow-up commit after a review takes the same test; a larger one gets
 `code-review` on its own diff. `merge-pr.ts` checks the first three bars, so a
