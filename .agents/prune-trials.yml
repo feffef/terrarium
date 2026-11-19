@@ -91,3 +91,36 @@ trials:
       so. Compare the `glassbox-curate-read-first-skipped` share with
       `friction-rates.ts`; a clear rise is also damage. NOT damage: that entry
       at its standing rate (13 occurrences before this).
+  - problem: >
+      The simple-change test and the verdict step in `docs/agents/pr-workflow.md`
+      (-3 net, from `git diff --numstat` against the parent: 26 added, 29
+      deleted; this entry not counted): the bar list and recipe step 4 reworded
+      shorter (the "it warns..." asides and the repeated "passes the test" went);
+      every bar and rule kept. Chosen after the search subagent covered
+      CLAUDE.md, GLOSSARY.md, `docs/agents/`, `.claude/rules/`, every
+      `.agents/skills/*/SKILL.md` (word counts), the 152 ledger files (counts,
+      two heads read), the 2 open issues and the 100 most recent of 1120 closed
+      (not older closed issues, not session logs; `guards.md` and
+      `.claude/workflows/` unread). `prepush-gate-review-skipped` (30
+      occurrences; fixes #1852-#2638, #3416; regressions #2472, #3407, #3483)
+      failed as prose; `merge-pr.ts` holds the three countable bars, so the
+      prose cut is safe. Runners-up: clear-backlog's round-N+1 and grilling
+      lines (#3400, #3481, fixed within days) and `frictions-to-fixes` §2
+      (#3326). ADR-0004's summary rule restates the test and was left alone
+      (ADR text). No trial was judgeable: both open ones are inside their windows.
+    territory:
+      paths:
+        - "docs/agents/pr-workflow.md: 'A simple change' and recipe step 4"
+      keywords:
+        - A simple change
+        - Own-read
+    opened: 2026-11-19
+    proven: true
+    check: >
+      Damage is a major or blocker Friction where a session opened a PR on its
+      own read of a diff that failed a bar, or merged with a verdict line
+      missing its `Reviewed:`/`Own-read:` form, because a cut phrase no longer
+      said so. Compare the `prepush-gate-review-skipped` share with
+      `friction-rates.ts`; a clear rise is also damage. NOT damage: that entry
+      at its standing rate (30 occurrences before this) or occurrences from
+      before the landing.
