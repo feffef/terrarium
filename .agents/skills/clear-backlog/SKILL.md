@@ -244,10 +244,6 @@ question or failure is in the report.
 
 ## 4. Land and report
 
-Before you write the report, run `pnpm exec tsx
-.agents/skills/clear-backlog/scripts/run-summary.ts --state --issues <run's
-issues> --prs <run's PRs>` and make the report match the states it prints.
-
 Push each gated branch from its worktree with
 `git push origin HEAD:<branch>`, then in a separate Bash call
 `git fetch origin <branch>` (a build whose
@@ -272,8 +268,11 @@ branch ends with no PR, run `git worktree remove <worktree>` for its branch.
 **Done:** every PR is merged or waiting for a human merge, and
 `pnpm check:worktrees` exits 0.
 
-Report one line per issue: `#N | outcome | PR or "no PR: why" | merged / waits
-for you (why)`. Then do §5 and re-invoke `close-session`. Its log's
+Run `pnpm exec tsx .agents/skills/clear-backlog/scripts/run-summary.ts
+--state --issues <§1's set> --prs <the run's PRs>` (comma-separated, e.g.
+`--issues 12,34`) and make the report match what it prints. Report one line
+per issue: `#N | outcome | PR or "no PR: why" | merged / waits for you
+(why)`. Then do §5 and re-invoke `close-session`. Its log's
 `summary` carries one line per merged or opened branch: what it changed (from
 that branch's `decisions.md`) and any judgement calls left open. In a workflow
 run the orchestrator's log is the Journal's only record of what its agents

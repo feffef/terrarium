@@ -13,7 +13,7 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 
 import { homedir } from 'node:os'
 import { join } from 'node:path'
 import { extractFlag, fail, root, runIfMain } from '../../../../scripts/lib/cli.ts'
-import { parseClosingKeywordIssues } from '../../../../scripts/github/merge-pr.ts'
+import { parseClosingKeywordIssues, type IssueFacts } from '../../../../scripts/github/merge-pr.ts'
 import { getJson, resolveAccess } from '../../../../scripts/lib/github-client.ts'
 
 type Question = { choice: string; options: string[]; pick: string; why: string; wouldChange?: string }
@@ -154,11 +154,17 @@ export function findingsSummary(path: string): string {
   return found.map(finding).join('\n') || 'no findings'
 }
 
-export type PrFacts = { number: number; state: string; merged: boolean; body: string | null }
-export type IssueState = { number: number; state: string; state_reason: string | null; labels: string[] }
+export type PrState = { number: number; state: string; merged: boolean; body: string | null }
+export type IssueState = IssueFacts & { state_reason: string | null }
 
-/** One line per PR and per issue; the issues are the given ones plus those the PRs name by closing keyword. */
-export function stateSummary(prs: PrFacts[], states: IssueState[]): string {
+/** The given issues plus those the PRs name by closing keyword, deduplicated and ascending. */
+export function relatedIssues(issueNumbers: number[], prs: PrState[]): number[] {
+  const named = prs.flatMap((p) => parseClosingKeywordIssues(p.body ?? ''))
+  return [...new Set([...issueNumbers, ...named])].sort((a, b) => a - b)
+}
+
+/** One line per PR, with the issues its body names by closing keyword, then one per issue. */
+export function stateSummary(prs: PrState[], states: IssueState[]): string {
   const prLines = prs.map((p) => {
     const named = parseClosingKeywordIssues(p.body ?? '')
     return `PR #${p.number} ${p.merged ? 'merged' : p.state}${named.length ? `, closing keywords name ${issues(named)}` : ''}`
@@ -170,27 +176,32 @@ export function stateSummary(prs: PrFacts[], states: IssueState[]): string {
 /** Reads the live state; no claimed outcome is compared (#3481). */
 export function liveState(issueNumbers: number[], prNumbers: number[]): string {
   const access = resolveAccess(root)
-  const prs = prNumbers.map((n) => getJson<PrFacts>(access, `pulls/${n}`))
-  const all = [...new Set([...issueNumbers, ...prs.flatMap((p) => parseClosingKeywordIssues(p.body ?? ''))])].sort((a, b) => a - b)
-  const found = all.map((n) => {
+  const prs = prNumbers.map((n) => getJson<PrState>(access, `pulls/${n}`))
+  const states = relatedIssues(issueNumbers, prs).map((n) => {
     const i = getJson<Omit<IssueState, 'labels'> & { labels: { name: string }[] }>(access, `issues/${n}`)
     return { ...i, labels: i.labels.map((l) => l.name) }
   })
-  return stateSummary(prs, found)
+  return stateSummary(prs, states)
 }
 
 const USAGE =
   'usage: run-summary.ts <run .output> --triage | <run .output> --build [--run <run id>] | <findings .json> --findings | --state [--issues 1,2] [--prs 3,4]'
 
-const numbers = (v: string | undefined) => (v ? v.split(',').map(Number) : [])
+// A flag given without a value parses as NaN, so it fails like a bad number.
+const numbers = (argv: string[], flag: string, { value }: { value?: string }) =>
+  argv.includes(flag) ? (value ?? '').split(',').map((n) => (n ? Number(n) : NaN)) : []
 
 runIfMain(import.meta.url, () => {
   if (process.argv[2] === '--state') {
-    const a = extractFlag(process.argv.slice(3), '--issues')
-    const b = extractFlag(a.rest, '--prs')
-    const ns = [...numbers(a.value), ...numbers(b.value)]
-    if (b.rest.length || ns.some((n) => !Number.isInteger(n) || n < 1)) fail(USAGE)
-    return console.log(liveState(numbers(a.value), numbers(b.value)))
+    const argv = process.argv.slice(3)
+    const issuesFlag = extractFlag(argv, '--issues')
+    const prsFlag = extractFlag(issuesFlag.rest, '--prs')
+    const issueNumbers = numbers(argv, '--issues', issuesFlag)
+    const prNumbers = numbers(argv, '--prs', prsFlag)
+    const all = [...issueNumbers, ...prNumbers]
+    if (prsFlag.rest.length || !all.length || all.some((n) => !Number.isInteger(n) || n < 1)) fail(USAGE)
+    console.log(liveState(issueNumbers, prNumbers))
+    return
   }
   const run = extractFlag(process.argv.slice(2), '--run')
   const [path, mode, ...rest] = run.rest

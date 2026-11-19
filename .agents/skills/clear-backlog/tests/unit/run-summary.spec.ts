@@ -3,7 +3,7 @@ import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { agentIds, buildSummary, findingsSummary, stateSummary, triageSummary } from '../../scripts/run-summary.ts'
+import { agentIds, buildSummary, findingsSummary, relatedIssues, stateSummary, triageSummary } from '../../scripts/run-summary.ts'
 
 const fixture = (name: string) => join(import.meta.dirname, 'fixtures', name)
 
@@ -203,6 +203,8 @@ describe('the command line', () => {
     ['an unknown mode', [fixture('build.output'), '--verdict']],
     ['--state with a non-number', ['--state', '--issues', 'x']],
     ['--state with an unknown flag', ['--state', '--bogus']],
+    ['--state with no lists', ['--state']],
+    ['--state with a flag missing its value', ['--state', '--prs', '3', '--issues']],
   ])('rejects %s with the usage line, not a stack trace', (_name, args) => {
     const run = cli(args)
     expect(run.status).toBe(1)
@@ -219,6 +221,16 @@ describe('the command line', () => {
     expect(run.status).toBe(1)
     expect(run.stderr).toContain(message)
     expect(run.stderr).not.toMatch(/\n\s+at /)
+  })
+})
+
+describe('relatedIssues', () => {
+  it('adds the issues the PRs close to the given ones, once each and ascending', () => {
+    const prs = [
+      { number: 20, state: 'closed', merged: true, body: 'Fixes #6, #5' },
+      { number: 21, state: 'open', merged: false, body: null },
+    ]
+    expect(relatedIssues([9, 5], prs)).toEqual([5, 6, 9])
   })
 })
 
