@@ -202,7 +202,7 @@ describe('the command line', () => {
     ['--run outside --build with --findings', [fixture('build.output'), '--findings', '--run', 'wf_1']],
     ['an unknown mode', [fixture('build.output'), '--verdict']],
     ['--state with a non-number', ['--state', '--issues', 'x']],
-    ['--state with an unknown flag', ['--state', '--bogus']],
+    ['--state with an unknown flag', ['--state', '--issues', '1', '--bogus']],
     ['--state with no lists', ['--state']],
     ['--state with a flag missing its value', ['--state', '--prs', '3', '--issues']],
   ])('rejects %s with the usage line, not a stack trace', (_name, args) => {

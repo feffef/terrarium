@@ -8,7 +8,8 @@
 //     <run .output> --triage
 //     <run .output> --build [--run <workflow run id>]
 //     <findings .json> --findings
-//     --state [--issues 1,2] [--prs 3,4]   live GitHub state, for the §4 report
+//     --state --issues 1,2 --prs 3,4   live GitHub state, for the §4 report (one
+//       or both flags)
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
@@ -185,7 +186,7 @@ export function liveState(issueNumbers: number[], prNumbers: number[]): string {
 }
 
 const USAGE =
-  'usage: run-summary.ts <run .output> --triage | <run .output> --build [--run <run id>] | <findings .json> --findings | --state [--issues 1,2] [--prs 3,4]'
+  'usage: run-summary.ts <run .output> --triage | <run .output> --build [--run <run id>] | <findings .json> --findings | --state --issues 1,2 --prs 3,4 (one or both)'
 
 const numbers = (value: string | undefined) => (value ? value.split(',').map(Number) : [])
 

@@ -268,9 +268,9 @@ branch ends with no PR, run `git worktree remove <worktree>` for its branch.
 **Done:** every PR is merged or waiting for a human merge, and
 `pnpm check:worktrees` exits 0.
 
-Run `pnpm exec tsx .agents/skills/clear-backlog/scripts/run-summary.ts
---state --issues <§1's set> --prs <the run's PRs>` (comma-separated, e.g.
-`--issues 12,34`) and make the report match what it prints. Report one line
+Run `run-summary.ts --state --issues <§1's set> --prs <the run's PRs>`
+(comma-separated, e.g. `--issues 12,34`; drop a flag whose list is empty) and
+make the report match what it prints. Report one line
 per issue: `#N | outcome | PR or "no PR: why" | merged / waits for you
 (why)`. Then do §5 and re-invoke `close-session`. Its log's
 `summary` carries one line per merged or opened branch: what it changed (from
