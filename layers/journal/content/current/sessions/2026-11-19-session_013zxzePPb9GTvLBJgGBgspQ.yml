@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzePPb9GTvLBJgGBgspQ
 startedAt: 2026-11-19T04:02:44Z
-endedAt: 2026-11-19T04:16:44Z
+endedAt: 2026-11-19T05:58:42Z
 kind: autonomous
 goal: Daily check that the repo's docs stay true and clear
-status: in-review
-outcome: Sweep PR 3487 merged; ADR escalation PR 3488 waits for a human merge
-summary: "Scheduled audit-docs run; every step was agent-initiated, no human prompted. Fetched origin/main and read the last two audit-docs logs for their Covered lines. Three read-only reviewers (Freshness, Single-home, Coherence) returned 26 findings (1, 8 and 17). Two independent checkers gave 4 CONFIRMED, 5 CONFIRMED-BUT and 17 WRONG; most WRONG verdicts were rewrites that dropped a rule or why, or ADR changes that would alter a decision. Fixed in the sweep PR 3487: clear-backlog push and fetch split into separate calls, its 10-line threshold made exact, the issue-tracker trusted-label author associations, and the domain.md heading. Two ADR drifts (ADR-0002 schema-or-kind, ADR-0030 template pointer) went into escalation PR 3488 with restamped rule hashes, to wait for a human merge. Four confirmed-but findings were left as gaps needing an owner wording or decision (ADR-0004 refusals list, frictions-to-fixes argument, guest-contributions merge bullet, guest-build review model); three real ADR-vs-code tensions (area-label workflow, gate .md skip) are noted in the PR bodies, no issue filed. code-review Standards found no hard violations; gate:scoped green on both heads. Sweep PR 3487 merged on green CI (merge commit c0bf418ea); 3488 stays open for a human. Covered (Agents B and C read in full): GLOSSARY.md, GLOSSARY-MAP.md, tests/README.md, docs/agents/{domain,git-conventions,guest-contributions,tenant-layers,issue-tracker}.md, layers/{journal,glassbox,commons}/GLOSSARY.md, layers/journal/content/current/pages/{index,routines}.md, ADRs 0002 0003 0004 0005 0006 0009 0013 0014 0015 0016 0017 0018 0020 0021 0022 0023 0027 0029 0030 with their rules, Skills close-session dependabot-sweep guest-build guest-intake midden-catalogue midden-survey clear-backlog frictions-to-fixes log-session."
+status: completed
+outcome: Sweep PR 3487 merged; ADR escalation PR 3488 merged by a human
+summary: "Scheduled audit-docs run; every step was agent-initiated, no human prompted. Fetched origin/main and read the last two audit-docs logs for their Covered lines. Three read-only reviewers (Freshness, Single-home, Coherence) returned 26 findings (1, 8 and 17). Two independent checkers gave 4 CONFIRMED, 5 CONFIRMED-BUT and 17 WRONG; most WRONG verdicts were rewrites that dropped a rule or why, or ADR changes that would alter a decision. Fixed in the sweep PR 3487: clear-backlog push and fetch split into separate calls, its 10-line threshold made exact, the issue-tracker trusted-label author associations, and the domain.md heading. Two ADR drifts (ADR-0002 schema-or-kind, ADR-0030 template pointer) went into escalation PR 3488 with restamped rule hashes, to wait for a human merge. Four confirmed-but findings were left as gaps needing an owner wording or decision (ADR-0004 refusals list, frictions-to-fixes argument, guest-contributions merge bullet, guest-build review model); three real ADR-vs-code tensions (area-label workflow, gate .md skip) are noted in the PR bodies, no issue filed. code-review Standards found no hard violations; gate:scoped green on both heads. Sweep PR 3487 merged on green CI (merge commit c0bf418ea); 3488 (ADR fixes) was merged by a human. Covered (Agents B and C read in full): GLOSSARY.md, GLOSSARY-MAP.md, tests/README.md, docs/agents/{domain,git-conventions,guest-contributions,tenant-layers,issue-tracker}.md, layers/{journal,glassbox,commons}/GLOSSARY.md, layers/journal/content/current/pages/{index,routines}.md, ADRs 0002 0003 0004 0005 0006 0009 0013 0014 0015 0016 0017 0018 0020 0021 0022 0023 0027 0029 0030 with their rules, Skills close-session dependabot-sweep guest-build guest-intake midden-catalogue midden-survey clear-backlog frictions-to-fixes log-session."
 prs:
   - "3487"
   - "3488"
@@ -155,13 +155,13 @@ frictions:
   - description: audit-docs requires two PRs but the session instructions name one development branch; I cut a second branch for the escalation PR.
     solution: Say in audit-docs and the system prompt that the escalation PR gets its own branch.
     severity: minor
-durationSec: 840
+durationSec: 6959
 models:
-  claude-sonnet-5-5: 98
+  claude-sonnet-5-5: 110
 toolCounts:
   Read: 5
-  Skill: 4
-  Bash: 30
+  Skill: 5
+  Bash: 32
   Agent: 6
   Edit: 6
   mcp__Claude_Code_Remote__get_session: 1
@@ -169,7 +169,7 @@ toolCounts:
   mcp__github__create_pull_request: 2
   mcp__github__add_issue_comment: 1
   mcp__github__subscribe_pr_activity: 2
-  ReadNotifications: 1
+  ReadNotifications: 4
 filesEdited:
   - .agents/skills/clear-backlog/SKILL.md
   - docs/agents/issue-tracker.md
@@ -799,37 +799,37 @@ subagents:
     durationSec: 75
     toolCalls: 25
     modelCalls: 22
-    tokenShare: 8
+    tokenShare: 7.1
   - type: general-purpose
     task: "Audit docs: Single-home"
     durationSec: 149
     toolCalls: 29
     modelCalls: 23
-    tokenShare: 11.8
+    tokenShare: 10.4
   - type: general-purpose
     task: "Audit docs: Coherence"
     durationSec: 433
     toolCalls: 70
     modelCalls: 60
-    tokenShare: 38.8
+    tokenShare: 34.5
   - type: general-purpose
     task: Fact-check pool part 1
     durationSec: 101
     toolCalls: 27
     modelCalls: 22
-    tokenShare: 7.5
+    tokenShare: 6.7
   - type: general-purpose
     task: Fact-check pool part 2
     durationSec: 57
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 2.7
+    tokenShare: 2.4
   - type: general-purpose
     task: Standards review of sweep diff
     durationSec: 14
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 3.1
+    tokenShare: 2.7
 gitBranch: claude/festive-mayer-e9469m
 entrypoint: remote_trigger
 cliVersion: 2.1.328
