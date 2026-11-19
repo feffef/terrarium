@@ -49,9 +49,12 @@ harvests both.
    read or ran, and a search that printed nothing is not evidence until you know
    its pattern can match. Do not filter script output with `head` or `tail`.
    Step 4 starts only when `harvest check-clusters <that file> --extract
-   <extract.json>` passes. For each cluster run `harvest evidence <keywords...>`
-   (several words per idea; each matches at the start of a word): it prints
-   candidates only, from the owner's rulings, the tracker (titles and bodies,
+   <extract.json>` passes. Run `harvest evidence` once for all clusters: give
+   each cluster's keywords (several words per idea; each matches at the start
+   of a word) as a group, groups separated by `--`, plus
+   `--extract <extract.json>` (it reuses the tracker list `extract` saved, so
+   no refetch). It prints one labelled block per group, with candidates only,
+   from the owner's rulings, the tracker (titles and bodies,
    open and closed) and Ledger summaries. Read each hit and decide. A cluster is
    open when all of these hold:
    - **Unbuilt.** Name the file or symbol it would change and read it now. Run

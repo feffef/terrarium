@@ -18,6 +18,8 @@ import {
   comparePosted,
   entryKey,
   evidenceReport,
+  groupedEvidenceReport,
+  keywordGroups,
   harvestedState,
   noteTexts,
   parseKeys,
@@ -422,5 +424,35 @@ describe('rulingFiles()', () => {
 
   it('names only files that exist in the repo, so a moved rulings file fails here', () => {
     expect(rulingFiles(root).filter((f) => !existsSync(join(root, f)))).toEqual([])
+  })
+})
+
+describe('keywordGroups()', () => {
+  it('splits on a literal -- and drops empty groups', () => {
+    expect(keywordGroups(['a', 'b', '--', 'c', '--', '--'])).toEqual([['a', 'b'], ['c']])
+  })
+
+  it('keeps one group when there is no --', () => {
+    expect(keywordGroups(['a', 'b'])).toEqual([['a', 'b']])
+  })
+})
+
+describe('groupedEvidenceReport()', () => {
+  const sources = { rulings: [{ file: 'a.md', text: 'rss here\nfooter here' }], issues: [], frictions: [] }
+
+  it('prints a single group exactly as evidenceReport does', () => {
+    expect(groupedEvidenceReport([['rss']], sources)).toBe(evidenceReport(['rss'], sources))
+  })
+
+  it('prints one labelled block per group', () => {
+    expect(groupedEvidenceReport([['rss'], ['footer', 'x']], sources)).toBe(
+      [
+        '## evidence: rss',
+        evidenceReport(['rss'], sources),
+        '',
+        '## evidence: footer x',
+        evidenceReport(['footer', 'x'], sources),
+      ].join('\n'),
+    )
   })
 })

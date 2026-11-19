@@ -13,7 +13,7 @@
 //   tsx .agents/skills/harvest/scripts/harvest.ts check-body <body-file> --extract <extract.json> [--title T]
 //   tsx .agents/skills/harvest/scripts/harvest.ts check-posted <issue-number> <body-file>
 import { createHash } from 'node:crypto'
-import { readdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { parse as parseYaml } from 'yaml'
@@ -261,6 +261,19 @@ export function evidenceReport(keywords: string[], src: EvidenceSources): string
   ].join('\n')
 }
 
+/** Keyword groups from `evidence` arguments: groups are separated by a literal `--`. */
+export function keywordGroups(argv: string[]): string[][] {
+  const groups: string[][] = [[]]
+  for (const a of argv) a === '--' ? groups.push([]) : groups[groups.length - 1]!.push(a)
+  return groups.filter((g) => g.length)
+}
+
+/** One group prints as `evidenceReport` does; several print one labelled block each. */
+export function groupedEvidenceReport(groups: string[][], src: EvidenceSources): string {
+  if (groups.length === 1) return evidenceReport(groups[0]!, src)
+  return groups.map((g) => `## evidence: ${g.join(' ')}\n${evidenceReport(g, src)}`).join('\n\n')
+}
+
 /** The tests of step 3, and the fields a cluster record carries. */
 const TESTS = ['unbuilt', 'unfiled', 'unrejected', 'ledger', 'simplifying', 'unacted'] as const
 
@@ -385,10 +398,13 @@ function parseKinds(argv: string[]): Kind[] | undefined {
 function cmdExtract(argv: string[]): void {
   const since = Date.now() - WINDOW_DAYS * 86_400_000
   const kinds = parseKinds(argv)
-  const state = harvestedState(listIssueBodies())
+  const issues = listIssueBodies()
+  const state = harvestedState(issues)
   const { entries, skippedHarvested } = buildEntries(readSessionLogs(root, { archived: true }), state, since, kinds)
   const out = flagValue(argv, '--out') ?? DEFAULT_OUT
   const count = (k: Kind) => entries.filter((e) => e.kind === k).length
+  // `evidence` reads this instead of refetching the tracker (about 34 s per call).
+  writeFileSync(`${out}.issues.json`, JSON.stringify(issues))
   writeFileSync(out, JSON.stringify({ since: new Date(since).toISOString(), days: WINDOW_DAYS, skippedHarvested, entries }, null, 2) + '\n')
   console.log(`harvest: window ${new Date(since).toISOString()} .. now (${WINDOW_DAYS} days)`)
   console.log(`harvest: ${count('idea')} ideas and ${count('learning')} learnings unharvested; ${skippedHarvested} already harvested`)
@@ -407,14 +423,20 @@ export function rulingFiles(dir: string): string[] {
   ]
 }
 
-function cmdEvidence(keywords: string[]): void {
+function cmdEvidence(argv: string[]): void {
+  const extract = flagValue(argv, '--extract')
+  const flagAt = argv.indexOf('--extract')
+  const groups = keywordGroups(flagAt < 0 ? argv : argv.filter((_, i) => i !== flagAt && i !== flagAt + 1))
+  if (!groups.length) fail('usage: evidence <keyword...> [-- <keyword...>]... [--extract <extract.json>]')
+  const saved = extract && existsSync(`${extract}.issues.json`) ? `${extract}.issues.json` : undefined
+  const issues = saved ? (JSON.parse(readFileSync(saved, 'utf8')) as RawIssue[]) : listIssueBodies()
   const rulings = rulingFiles(root).map((file) => {
     const text = readFileSync(join(root, file), 'utf8')
     return { file, text: file.endsWith('/GLOSSARY.md') ? productDecisions(text) : text }
   })
   const ledger = 'layers/journal/content/current/frictions'
   const frictions = readdirSync(join(root, ledger)).map((f) => ({ file: `${ledger}/${f}`, summary: summaryOf(readFileSync(join(root, ledger, f), 'utf8')) }))
-  console.log(evidenceReport(keywords, { rulings, issues: listIssueBodies(), frictions }))
+  console.log(groupedEvidenceReport(groups, { rulings, issues, frictions }))
 }
 
 function readExtract(path: string): { entries: Entry[] } {
@@ -442,7 +464,6 @@ function main(): void {
     return console.log(out)
   }
   if (cmd === 'evidence') {
-    if (!argv.length) fail('usage: evidence <keyword...>')
     return cmdEvidence(argv)
   }
   if (cmd === 'check-clusters') {
