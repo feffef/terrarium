@@ -9,6 +9,8 @@ related:
     rule: The doc governs text just drafted and is not on the Skill's read-first list.
   - entry: glassbox-curate-run-entry-late
     rule: The run entry was written after the edits, not at its step.
+  - entry: glassbox-curate-steps-skipped
+    rule: The skipped steps are the build, check or loop steps, not the required first reads.
 notes: |-
   2026-11-14 survey: issue #3226 closed not planned 2026-11-13: owner decision (clear-backlog): leave the Skill as is; one post-#3001 skip, caught by the Spec review; no mechanical pagesRead check. Reopen on another skip with a single-Subject focus.
 fixes:

@@ -97,3 +97,18 @@ occurrences:
     severity: nit
     description: "Waited on a background capture with an until-loop over pgrep -f, which CLAUDE.md says never to do because it matches itself; it happened to finish."
     solution: "Wait on the task's completion notification or a log-file marker, as CLAUDE.md says; a guard could deny pgrep -f in an until loop."
+  - session: session_013zxzeSzFoDpB5RtwFTLdo8
+    date: "2026-11-18"
+    severity: nit
+    description: "A foreground sleep to wait on the gate was blocked by the harness; I ended the turn and used the completion notification instead."
+    solution: "Name Monitor or end-turn as the wait method in the audit-docs gate step."
+  - session: session_013zxzeNx4V4gWZvzs8HQ3sZ
+    date: "2026-11-18"
+    severity: nit
+    description: "I tried a foreground sleep to wait for the gate and it was blocked; CLAUDE.md says to end the turn."
+    solution: "End the turn after starting a background gate run."
+  - session: session_013zxzeRsaSP4XhVGZDUk153
+    date: "2026-11-19"
+    severity: nit
+    description: "A foreground sleep to wait for agents was blocked by the harness; I had to end the turn and wait for notifications instead."
+    solution: "The Skill already implies ending the turn; no change needed."

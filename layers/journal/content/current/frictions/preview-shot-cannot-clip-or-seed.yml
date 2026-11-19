@@ -31,3 +31,8 @@ occurrences:
     severity: minor
     description: "Finding a log with the new values took three screenshot-script runs; the feed holds 180 cards and a card id lookup timed out."
     solution: "A preview flag or script that opens a card by session id."
+  - session: session_013zxzePBxPjfMQRm8C4FwqZ
+    date: "2026-11-18"
+    severity: nit
+    description: "Element screenshots of the sticky sidebar and Show-all page missed the target states on the first run, costing two extra shoot-and-read rounds for the samples."
+    solution: "Document in verifying-ui-changes that sticky asides need element or scrolled screenshots, with a tiny script template."

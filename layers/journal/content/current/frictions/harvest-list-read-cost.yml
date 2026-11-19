@@ -1,6 +1,6 @@
 name: harvest-list-read-cost
 summary: A harvest run read its whole list of ideas and learnings, 60,000 to 90,000 tokens over several reads, and then checked only a small part of it.
-cause: "Comes from harvest-first-pass-shallow and PR #3106: the harvest Skill has the run read the whole list (270 to 577 lines, needing paged reads or allow_large) before it stops at a capped number of clusters, and many entries are old ideas for a removed Skill (glassbox-improve). The harm is read cost, not a shallow pass. Signals: 'whole read of 577 lines took about 90,000 tokens', 'read the whole 561-line harvest list', 'needing a paged read', 'then checked only 17 clusters'."
+cause: "Comes from harvest-first-pass-shallow and PR #3106: the harvest Skill has the run read the whole list (270 to 577 lines) before it stops at a capped number of clusters, and many entries are old ideas for a removed Skill (glassbox-improve). The harm is read cost, not a shallow pass. Since PR #3454 (2026-11-18) step 1 reads the list in pages with a last-entry count check; the read is still whole, so cost remains. Signals: 'whole read of 577 lines took about 90,000 tokens', 'read the whole 561-line harvest list', 'then checked only 17 clusters', many hand-run searches per cluster."
 surface: safe
 status: open
 ref: "harvest-first-pass-shallow, fix PR #3106"
@@ -13,6 +13,9 @@ fixes:
   - pr: 3195
     date: "2026-11-12"
     summary: "harvest reads the session logs of the last 7 days instead of 28, shortening the list a run reads whole."
+  - pr: 3454
+    date: "2026-11-18"
+    summary: "harvest SKILL.md step 1 reads the list in pages of about 150 lines and checks the last entry's number against the count extract printed; no entry text shortened."
 occurrences:
   - session: session_013zxzeP4WS4kX4LSBrVszT6
     date: "2026-11-12"
@@ -44,3 +47,8 @@ occurrences:
     severity: nit
     description: "Harvest list is about 32k tokens, over the Read cap, so reading it whole took two calls; the same cost was raised and rejected earlier."
     solution: "Already rejected in closed #3191; none."
+  - session: session_013zxzeNYPwVfq4WoT28Nfuu
+    date: "2026-11-18"
+    severity: moderate
+    description: "Each cluster's relevance checks needed about five hand-run searches over the tracker JSON, Ledger, rulings and git; I stopped at 12 of 30 clusters with the quota unfilled."
+    solution: "One harvest command listing rulings, tracker state and Ledger hits per keyword (filed as the retro Seedling)."

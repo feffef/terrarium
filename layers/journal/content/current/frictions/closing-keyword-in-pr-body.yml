@@ -19,3 +19,8 @@ occurrences:
     severity: nit
     description: "My PR body wrote 'Fixes: #2961' as a label for a filed issue; merge-pr.ts refused it as a closing keyword and cost a rerun."
     solution: "Write 'relates to #N' for issues a PR does not complete, as pr-workflow.md says."
+  - session: session_013zxzeNd9wP36dUYyykDdBv
+    date: "2026-11-18"
+    severity: nit
+    description: "merge-pr.ts refused #3478 because its Closes keyword named a ready-for-human issue the owner had already agreed to close; I edited the PR body and closed the issue by hand."
+    solution: "When an owner pick closes an issue, write 'relates to' from the start and close it by hand after the merge."

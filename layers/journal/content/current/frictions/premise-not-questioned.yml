@@ -73,3 +73,8 @@ occurrences:
     severity: minor
     description: "Proposed and then built a survey follow-up whose benefit I could not state when asked; the premise check CLAUDE.md asks for came only after the gate and review."
     solution: "Before offering a follow-up, name the reader it helps and what decision changes; drop it if none."
+  - session: session_013zxzeNd9wP36dUYyykDdBv
+    date: "2026-11-18"
+    severity: minor
+    description: "I copied the owner's pick 'set the status to fixed' and the ledger fix without checking them against the schema (no fixed value; fixes takes a PR number), so the builder, both reviewers and I each spent a step on it."
+    solution: "Before dispatch, check a brief's literal values (status words, PR numbers) against the schema, as the briefs' own 'verify claims' rule asks."

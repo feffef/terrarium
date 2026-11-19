@@ -247,3 +247,8 @@ occurrences:
     severity: minor
     description: "The Stop hook asked to commit and push repeatedly while a gate was running and the gate-edit guard blocked the commit, so each reminder cost a refusal turn."
     solution: "Have the Stop hook stay quiet while a gate:scoped run holds its lock in this checkout."
+  - session: session_013zxzePBxPjfMQRm8C4FwqZ
+    date: "2026-11-18"
+    severity: minor
+    description: "The Stop hook demanded commit and push of an on-ramp sample the owner had not approved, three times, so five commits say 'sample, owner approval pending' and sit on the PR branch."
+    solution: "Let a session mark an owner-pending UI sample as not-to-commit, or keep samples in a throwaway worktree the hook ignores."

@@ -24,3 +24,8 @@ occurrences:
     severity: nit
     description: "Two resumed subagents answered a new question by redelivering their old reports, so I spent a round trip and got no answer from them."
     solution: "After a resume, wait for the next notification and check it answers the new question before counting the agent as having replied."
+  - session: session_013zxzeNxx3w5ES8hysf6R4P
+    date: "2026-11-18"
+    severity: nit
+    description: "Sent a resume message to a builder that needed no work, waking it for nothing."
+    solution: "Say nothing to a stopped agent when the orchestrator holds the question; ask the owner directly."

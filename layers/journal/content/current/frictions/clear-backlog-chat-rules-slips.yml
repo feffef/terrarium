@@ -17,3 +17,18 @@ occurrences:
     severity: nit
     description: "I wrote short status lines between steps while agents worked, though clear-backlog says to write only questions, needs and the report."
     solution: "Stay silent between tool calls unless a question or needs-owner item exists."
+  - session: session_013zxzeNxx3w5ES8hysf6R4P
+    date: "2026-11-18"
+    severity: nit
+    description: "Wrote several status lines to the owner while agents worked, against clear-backlog's keep-the-chat-readable rule."
+    solution: "Stay silent between questions, or make the rule louder where the workflow runs start."
+  - session: session_013zxzePBxPjfMQRm8C4FwqZ
+    date: "2026-11-18"
+    severity: nit
+    description: "clear-backlog says write no status lines while agents work, but hook reminders ('user hasn't heard from you') pushed me to post several short status lines."
+    solution: "Have the hook skip its reminder while a workflow or subagents run, or let the Skill override it."
+  - session: session_013zxzeNd9wP36dUYyykDdBv
+    date: "2026-11-18"
+    severity: nit
+    description: "Wrote many short status messages while agents worked, against the Skill's 'no status lines' rule; most followed the owner asking what was happening."
+    solution: "The Skill could say how to answer an owner's mid-run 'status?' in one line instead of a table."

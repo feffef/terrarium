@@ -99,3 +99,8 @@ occurrences:
     severity: nit
     description: "Wrote a Seedling body draft into the repo root through a wrong working directory; moved it to the scratchpad before anything was committed."
     solution: "Use absolute scratchpad paths in every file write."
+  - session: session_013zxzeNd9wP36dUYyykDdBv
+    date: "2026-11-18"
+    severity: nit
+    description: "Ran a worktree-scoped cd in a Bash call, moving the main session's working directory into a builder's worktree until the next call."
+    solution: "Use absolute paths with git -C only, as dispatch-subagents says; no new text needed."

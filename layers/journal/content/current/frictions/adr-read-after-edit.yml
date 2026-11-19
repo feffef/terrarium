@@ -237,3 +237,18 @@ occurrences:
     severity: nit
     description: "Edited survey-brief.md twice before reading ADR-0027 and checking .agents/prune-trials.yml; the hook prompted the read, and no open trial overlapped."
     solution: "Check the open trials' territory before the first edit under .agents/skills/frictions-to-fixes."
+  - session: session_013zxzeSpYABZ15tUzNbPJN9
+    date: "2026-11-17"
+    severity: minor
+    description: "Edited an ADR and its summary rule without reading ADR-0030 in full; my first read attempt was blocked and I never retried it. I followed its no-history rule anyway."
+    solution: "After a blocked read, retry it before editing the governed file."
+  - session: session_013zxzePBxPjfMQRm8C4FwqZ
+    date: "2026-11-18"
+    severity: nit
+    description: "The ADR-0008 read-in-full hook fired after my first Journal page edit, so the ADR was read after the edit; it did not change the edit."
+    solution: "Load rules that govern a page file when it is read, not only after the first edit."
+  - session: session_013zxzeRjfC32pkbUMmiaMnN
+    date: "2026-11-18"
+    severity: nit
+    description: "The ADR read-first demand for the edited SKILL.md arrived in a hook note after the Edit; the rule can't order a step before the read that loads it, so three ADRs were read after editing."
+    solution: "Mention in clear-backlog's SKILL.md header that ADR-0005, 0022 and 0027 govern it, so a session can read them before editing; or accept the late read."

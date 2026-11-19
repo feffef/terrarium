@@ -14,3 +14,8 @@ occurrences:
     severity: moderate
     description: "pnpm gate:scoped failed twice for environment reasons: the session-start install bumped playwright-core without its Chromium headless shell, then a run stretched to 95 min (Mac likely slept) and 6 unrelated tests timed out."
     solution: "Have the session-start install hook run playwright-core install chromium-headless-shell when the browser revision changes; keep the Mac awake during a gate run."
+  - session: c8d9ced5-3fe1-47f1-981f-8dcc4b5191f7
+    date: "2026-11-18"
+    severity: minor
+    description: "First gate:scoped failed all e2e: SessionStart install bumped playwright-core to 1.65 but no matching Chromium was installed locally."
+    solution: "SessionStart hook could run `playwright-core install chromium` when the locked playwright-core version changes, or the gate could print that fix."

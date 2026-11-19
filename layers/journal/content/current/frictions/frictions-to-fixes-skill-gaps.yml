@@ -95,3 +95,8 @@ occurrences:
     severity: minor
     description: "Skill section 5.4 asks the simple-change test on the ledger PR, whose diff spans dozens of generated files, so it cannot pass."
     solution: "Tracked by issue 3397: gate plus a read of the decisions commit."
+  - session: session_013zxzeQxKAZzjCV61mM31sR
+    date: "2026-11-18"
+    severity: nit
+    description: "Skill section 5.4 asks the simple-change test on the ledger PR, but a script-written 53-file diff cannot pass it, so I used an own read of the diffstat (owner closed #3397 not planned)."
+    solution: "Already accepted by the owner; no new fix proposed."

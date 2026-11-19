@@ -163,3 +163,8 @@ occurrences:
     severity: nit
     description: "The Standards subagent reported dead CSS that was live (main pills still use it) and skipped the glossary docs."
     solution: "Tell reviewers to grep consumers before reporting dead code."
+  - session: session_013zxzePBxPjfMQRm8C4FwqZ
+    date: "2026-11-18"
+    severity: minor
+    description: "I relayed the explore agent's stale claim 'max tag count is 12, not 82' in Q1 without re-running the count; the sample later showed bugs 82, so the claim was wrong."
+    solution: "Re-run a counted staleClaim myself before putting it in a question (CLAUDE.md verify-before-state); explore results should carry the command."

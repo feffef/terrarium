@@ -124,3 +124,8 @@ occurrences:
     severity: minor
     description: "The Stop hook said a PR merged and demanded close-session twice, and a PostToolUse hint did too, when this session had merged nothing; I had only run commands naming merge-pr.ts."
     solution: "Fix 3412 landed hours earlier; check whether it covers the PostToolUse hint and the Stop hook for commands that only grep or log the script name."
+  - session: session_013zxzeNx4V4gWZvzs8HQ3sZ
+    date: "2026-11-18"
+    severity: minor
+    description: "The merge-close Stop hook said a PR merged and close-session had not run, though this session had merged nothing."
+    solution: "Already fixed for the trace by #3412; the hook still fired here, so check whether Stop reads a stale trace or another path."

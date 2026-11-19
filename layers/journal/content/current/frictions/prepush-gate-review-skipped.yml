@@ -191,3 +191,13 @@ occurrences:
     severity: minor
     description: "The follow-up commit changed 4 files, over the simple-change limit of 2; I did my own read instead of code-review and disclosed it in the verdict."
     solution: "Fold wording nits into one file, or let the simple limit count data-only files differently."
+  - session: session_013zxzeQbSZQ554vFZiT2f2D
+    date: "2026-11-18"
+    severity: moderate
+    description: "Treated a change that adds a run-entry file as simple and skipped code-review and gate:scoped, though pr-workflow.md says a added file is never simple."
+    solution: "The curate Skill could say its run entry file means code-review or gate:scoped still applies, or that the run entry is exempt."
+  - session: session_013zxzePpCyqm2oL5M11axMq
+    date: "2026-11-19"
+    severity: nit
+    description: "Spawned the fact-check Agent only after reading dispatch-subagents, but never ran the Spec axis of code-review (no spec exists beyond the Skill), noted here for honesty."
+    solution: "State in the digest Skill that code-review's Spec axis is skipped for a Digest."

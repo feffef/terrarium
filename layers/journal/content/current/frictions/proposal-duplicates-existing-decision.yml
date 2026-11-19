@@ -27,3 +27,8 @@ occurrences:
     severity: nit
     description: "Found issue 3105 had already said the detached-HEAD push is in the Ledger only after drafting it as a candidate; my summary-line check had missed the covering entry."
     solution: "Read a closed Seedling on the same doc before drafting a learning for it."
+  - session: session_013zxzePBxPjfMQRm8C4FwqZ
+    date: "2026-11-18"
+    severity: minor
+    description: "I offered 'a page under /t/blog' as Q7.1a without checking ADR-0016/0006; the owner picked it, forcing an extra question (Q8) about where the page lives."
+    solution: "Before offering a routing or URL option in a grilling question, read the ADRs that govern routes; have the explore agent list route constraints."

@@ -4,8 +4,7 @@ summary: >-
 cause: >-
   A doc that governs new text (a Tenant Skill's voice or title rule, the Tenant's own GLOSSARY.md or ADR, docs/agents/domain.md for a glossary term, the Glass Box overview CLAUDE.md names before explaining the Platform) is read after the agent drafted or added the text, or not at all, and a reviewer, a hint or the rule's late load finds the miss. Signals: 'without first reading', 'plain-words voice rule', 'domain.md', a Tenant GLOSSARY.md read after the draft, a reviewer correcting wording or a term the doc already settles, 'explained X without reading the overview'.
 surface: safe
-status: tracked
-ref: "issue #3234"
+status: open
 related:
   - entry: adr-read-after-edit
     rule: The post-edit hook named a governing ADR after the first edit and the late read changed nothing.
@@ -15,6 +14,8 @@ related:
     rule: The unread doc was a rule or ADR the design or build went against, not drafted text.
   - entry: glassbox-curate-read-first-skipped
     rule: The glassbox-curate Skill's own first reads (glossary, QUALITY.md, the Subject's pages) were skipped.
+notes: |-
+  2026-11-19 survey: issue #3234 closed completed 2026-11-18 by merged PR #3476 (fix already recorded, merged_at 2026-11-18T23:01:30Z); status reset from tracked. Two window occurrences came after it (PpCy: the guard denied the first Write, one retry; RsaS 2026-11-19 00:45Z: Inventory edits under layers/journal without the glossary read, not blocked).
 fixes:
   - pr: 2469
     date: "2026-10-23"
@@ -182,3 +183,28 @@ occurrences:
     severity: nit
     description: "Edited layers/journal Inventory files without reading layers/journal/GLOSSARY.md, which the tenant-glossary rule asks for before Tenant work."
     solution: "Have audit-skills step 5 name the Journal glossary as read-first."
+  - session: session_013zxzeQxKAZzjCV61mM31sR
+    date: "2026-11-18"
+    severity: nit
+    description: "Edited Friction Ledger YAML under layers/journal without reading layers/journal/GLOSSARY.md (tenant-glossary rule); the edit removed two link lines and added no prose."
+    solution: "Scope the tenant-glossary rule to prose edits, or exempt data-only ledger changes."
+  - session: session_013zxzeNx4V4gWZvzs8HQ3sZ
+    date: "2026-11-18"
+    severity: nit
+    description: "I read only one section of the Blog glossary before drafting, though the tenant-glossary rule says to read the Tenant's terms."
+    solution: "Read layers/blog/GLOSSARY.md whole at step 2."
+  - session: session_013zxzePBxPjfMQRm8C4FwqZ
+    date: "2026-11-18"
+    severity: nit
+    description: "Blog page ADR rules (0006, 0012, 0016, 0025) loaded only after my first sample edit, so I read the ADRs after editing; the edit turned out fine."
+    solution: "Load ui-verification's agree-on-a-sample step before the edit, or add paths so the ADR rules load when reading the page files."
+  - session: c8d9ced5-3fe1-47f1-981f-8dcc4b5191f7
+    date: "2026-11-18"
+    severity: nit
+    description: "Edited a Glass Box page without first reading layers/glassbox/GLOSSARY.md, as tenant-glossary.md requires; edit was a one-word removal."
+    solution: "Read the Tenant glossary before any edit under layers/, however small."
+  - session: session_013zxzePpCyqm2oL5M11axMq
+    date: "2026-11-19"
+    severity: nit
+    description: "First Write of the Digest was blocked by the tenant-glossary guard; I had not read the Journal GLOSSARY.md before drafting."
+    solution: "Read the Tenant glossary before drafting under layers/."

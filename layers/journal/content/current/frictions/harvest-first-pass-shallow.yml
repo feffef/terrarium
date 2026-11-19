@@ -34,3 +34,8 @@ occurrences:
     severity: moderate
     description: "Filed three Seedlings without reading their source session logs whole (step 4) or the Glass Box glossary; one body misdescribed the 2026-11-09 session until the owner asked and I corrected it."
     solution: "Read each source log and the Tenant glossary before writing the body, as step 4 and the tenant-glossary rule say."
+  - session: session_013zxzeNYPwVfq4WoT28Nfuu
+    date: "2026-11-18"
+    severity: minor
+    description: "Did not read every source log whole before filing as step 4 requires; relied on the block summaries."
+    solution: "Budget the reads per Seedling before choosing the count."

@@ -34,3 +34,8 @@ occurrences:
     severity: minor
     description: "Visitors' retros say the brief gives no page-spread guidance for a one-page focus (homepage) or a single big section; the blind crawl spent 16 pages in the Blog."
     solution: "visitor-brief.md: cap pages per section and say whether a single-page focus needs browser visits or only status checks."
+  - session: session_013zxzeSLYR7qbBXfqwKYbcc
+    date: "2026-11-18"
+    severity: nit
+    description: "The context file listed 222 URLs while the brief asks for 10 to 20 pages; two visitors said they picked pages blind."
+    solution: "Have step 2 add a short sample of URLs to the context file, or say to sample from the list."

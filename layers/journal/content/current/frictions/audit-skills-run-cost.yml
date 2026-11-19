@@ -38,3 +38,13 @@ occurrences:
     severity: minor
     description: "Sixteen near-identical behaviour subagents cost roughly 1.6M tokens; most found only repeats of known observations for Skills with clean runs."
     solution: "Have the scorecard print each Skill's last observation date so unchanged, clean Skills are skipped or batched."
+  - session: session_013zxzeNxx3w5ES8hysf6R4P
+    date: "2026-11-18"
+    severity: minor
+    description: "Retro asked all 18 builders and reviewers the same questions; each resume cost 75k to 111k subagent tokens for mostly identical answers about the same hook and hand-off wording."
+    solution: "Ask one builder and one reviewer per run, or a sample, once answers repeat; clear-backlog section 5 could say so."
+  - session: session_013zxzeRsaSP4XhVGZDUk153
+    date: "2026-11-19"
+    severity: minor
+    description: "The 15 behaviour subagents each read a 9 to 50 KB data file and logs; the run spent about 1.7M subagent tokens, the same cost earlier runs recorded."
+    solution: "Skip a Skill's agent when its runs, changes and observations repeat the last check (see idea)."

@@ -378,3 +378,28 @@ occurrences:
     severity: nit
     description: "The first Agent call was denied by the dispatch-read guard because I had not read dispatch-subagents; one wasted call."
     solution: "Have the digest Skill step 3 name dispatch-subagents next to its fact-check subagent."
+  - session: session_013zxzeQbSZQ554vFZiT2f2D
+    date: "2026-11-18"
+    severity: nit
+    description: "First dispatch of review subagents was blocked by the dispatch-read guard because I had not read the dispatch-subagents Skill, costing a retry."
+    solution: "Read dispatch-subagents before any subagent brief, as CLAUDE.md says."
+  - session: session_013zxzeNx4V4gWZvzs8HQ3sZ
+    date: "2026-11-18"
+    severity: nit
+    description: "The dispatch-read guard blocked my first Agent call until I read dispatch-subagents; I should have read it before writing the brief."
+    solution: "Read the Skill at the first brief, as CLAUDE.md says."
+  - session: session_013zxzeNxx3w5ES8hysf6R4P
+    date: "2026-11-18"
+    severity: minor
+    description: "First clear-backlog-explore Workflow call was blocked by the dispatch-read guard because dispatch-subagents SKILL.md was unread; I read it and retried unchanged."
+    solution: "Have clear-backlog name dispatch-subagents as a read-first step before its workflow calls."
+  - session: session_013zxzeSLYR7qbBXfqwKYbcc
+    date: "2026-11-18"
+    severity: minor
+    description: "The dispatch-read guard blocked the first three Agent calls of the visitor-loop run until I read dispatch-subagents; the briefs had to be resent in full."
+    solution: "Exempt a session running a Skill that defines its own brief, or have visitor-loop step 2 name dispatch-subagents first."
+  - session: session_013zxzePptQQ7GBhnq1eKsbV
+    date: "2026-11-18"
+    severity: nit
+    description: "First Workflow call was denied by the dispatch-read guard because I had not read dispatch-subagents before the subagent brief, as CLAUDE.md requires."
+    solution: "Read dispatch-subagents when clear-backlog starts, or name it in that Skill's first step (restored in PR 3461)."

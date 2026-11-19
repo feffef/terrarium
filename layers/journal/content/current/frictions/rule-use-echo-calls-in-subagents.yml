@@ -68,3 +68,18 @@ occurrences:
     severity: minor
     description: "The SubagentStart rule-use echo ritual ran twice per agent and read-only reviewers had no rule to rate; 15 of 17 retro answers named it."
     solution: "Ask once at the end, or skip it for read-only reviewer subagents, in the hook that emits it under scripts/hooks."
+  - session: session_013zxzePptQQ7GBhnq1eKsbV
+    date: "2026-11-18"
+    severity: minor
+    description: "Subagent hooks demanded rule-use echoes and full-ADR reads after compliant edits, costing read-only reviewers and builders extra calls (six agents named it)."
+    solution: "Skip the rule-use prompt for read-only subagents and read an ADR only when the edit touches what it governs."
+  - session: session_013zxzePBxPjfMQRm8C4FwqZ
+    date: "2026-11-18"
+    severity: nit
+    description: "The SubagentStart hook makes read-only reviewers run two echo rule-use calls; 14 of 16 reviewers said every listed rule was unrelated and it cost two turns."
+    solution: "Skip the rule-use prompt for review-only subagents, or batch it into the final call."
+  - session: session_013zxzeNd9wP36dUYyykDdBv
+    date: "2026-11-18"
+    severity: minor
+    description: "Twelve read-only reviewers each had to run the rule-use echo twice, rating four ADR rules unrelated each time; two extra turns per reviewer with no signal (retro replies)."
+    solution: "scripts/hooks/rule-use-ask.sh: skip the prompt for read-only reviewer subagents, or ask once at the end of the run."

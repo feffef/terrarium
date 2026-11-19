@@ -124,3 +124,8 @@ occurrences:
     severity: minor
     description: "Treated the owner's answers on symmetry, display and migration as agreement on the related field's shape, which I had written in prose and never asked about directly."
     solution: "Ask a new stored field's shape as its own question with options, as data-shapes.md says, and hold the build until answered."
+  - session: session_013zxzePptQQ7GBhnq1eKsbV
+    date: "2026-11-18"
+    severity: nit
+    description: "Owner's \"everything else waits\" answer to Q10 was ambiguous; I read it as not building the Blog fix and did not re-ask."
+    solution: "Phrase a go/hold question so each option names the issue it holds."
