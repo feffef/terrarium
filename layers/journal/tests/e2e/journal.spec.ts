@@ -338,7 +338,7 @@ describe('journal Tenant', async () => {
       const height = async (selector: string) => (await page.locator(selector).first().boundingBox())!.height
       expect(await height('#ledger-window')).toBeGreaterThanOrEqual(24)
       const prs = page.locator('.pill.status a')
-      if (!(await prs.count())) return
+      expect(await prs.count(), 'the fixture has a cluster with a merged PR').toBeGreaterThan(0)
       expect(await height('.pill.status a')).toBeGreaterThanOrEqual(24)
       const cluster = page.locator('.ledger > li').filter({ has: prs }).first()
       await cluster.locator('summary').click()

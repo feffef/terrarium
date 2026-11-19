@@ -121,7 +121,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
         counted, and one above that severity reopens it. A cluster
         sits in the list where it ranks higher. Click a cluster (▸) to expand its
         cause, merged PRs, sessions and logged frictions.
-        <NuxtLink to="/t/glassbox/guide/walkthroughs/a-friction-becomes-a-fix">See how a friction becomes a fix.</NuxtLink>
+        <NuxtLink to="/t/glassbox/guide/walkthroughs/a-friction-becomes-a-fix">See how a friction becomes a fix</NuxtLink>.
       </p>
       <p class="window">
         <label for="ledger-window">Frictions from the last</label>
