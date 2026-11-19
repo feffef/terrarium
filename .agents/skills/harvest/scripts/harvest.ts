@@ -266,10 +266,14 @@ export function evidenceReport(keywords: string[], src: EvidenceSources): string
 /** The keyword groups and the `--extract` path of `evidence` arguments; groups are
  *  separated by a literal `--`. */
 export function parseEvidenceArgs(argv: string[]): { groups: string[][]; extract?: string } {
-  const at = argv.indexOf('--extract')
-  const extract = at < 0 ? undefined : argv[at + 1]
   const groups: string[][] = [[]]
-  for (const a of argv.filter((_, i) => at < 0 || (i !== at && i !== at + 1))) a === '--' ? groups.push([]) : groups[groups.length - 1]!.push(a)
+  let extract: string | undefined
+  for (let i = 0; i < argv.length; i++) {
+    const a = argv[i]!
+    if (a === '--extract') extract = argv[++i]
+    else if (a === '--') groups.push([])
+    else groups[groups.length - 1]!.push(a)
+  }
   return { groups: groups.filter((g) => g.length), extract }
 }
 
