@@ -55,8 +55,9 @@ const REVIEW = {
       },
     },
     summary: { type: 'string' },
+    head: { type: 'string', description: 'the full sha `git rev-parse HEAD` printed in the worktree before you read the diff' },
   },
-  required: ['findings', 'summary'],
+  required: ['findings', 'summary', 'head'],
 }
 
 // The builder runs on Sonnet; every reviewer keeps the default model, since a later fresh round runs only to catch what round 1 missed (#3110).
@@ -115,7 +116,7 @@ function reviewPrompt(b, axis, wt, round) {
   const again = round > 1 ? ` Earlier rounds' findings are in ${folder(b)}/triage.md: raise a skipped or refused one again only with new evidence.` : ''
   return `You are the ${axis.toUpperCase()} reviewer, round ${round}. ${common(b)}
 ## Task
-Review read-only in ${wt} (\`cd ${wt} && …\`): the diff \`git diff origin/main...HEAD\`, and the builder's decisions in ${folder(b)}/decisions.md if it exists. This workflow runs the axes as separate agents, so follow only ${what}, applied to the diff given. Focus on simplicity: what could be smaller, plainer or deleted. Edit no file except a findings file the orchestrator names later, and run no git command that changes state.${lines}${again}
+Review read-only in ${wt} (\`cd ${wt} && …\`): first run \`git rev-parse HEAD\` and return it as head, then read the diff \`git diff origin/main...HEAD\`, and the builder's decisions in ${folder(b)}/decisions.md if it exists. This workflow runs the axes as separate agents, so follow only ${what}, applied to the diff given. Focus on simplicity: what could be smaller, plainer or deleted. Edit no file except a findings file the orchestrator names later, and run no git command that changes state.${lines}${again}
 Give each finding one kind: defect (wrong behaviour or a false statement), spec-mismatch (differs from the brief, the picks or a 'never' clause), missing-test (logic without a test that would catch its bug), nit (wording, layout, style, anything else cosmetic) or owner-call (needs the owner's choice). The builder fixes by kind, so pick the kind honestly: a cosmetic point is a nit, never a defect. Make each title state the problem in one line; titles reach the PR. ${ASK_SOURCES}
 The orchestrator may resume you later to re-check the builder's fixes and refusals of your findings; keep this review in mind.`
 }
@@ -138,7 +139,10 @@ async function reviewBranch(built, b) {
   const reviews = await parallel(axes.map(axis => () =>
     agent(reviewPrompt(b, axis, out.worktree, round), { label: `${axis} ${b.name} r${round}`, phase: 'Review', schema: REVIEW })))
   if (reviews.some(r => !r)) return { ...out, status: 'failed', reason: `round ${round}: a reviewer returned nothing` }
-  return { ...out, status: 'reviewed', reviews: Object.fromEntries(axes.map((axis, i) => [axis, reviews[i]])) }
+  // merge-pr.ts takes `reviewedHead` in this run's result, which lands in the main transcript, as proof of a review (#3483).
+  const heads = new Set(reviews.map(r => /^[0-9a-f]{40}$/.test(r.head) ? r.head : ''))
+  const reviewedHead = heads.size === 1 && !heads.has('') ? [...heads][0] : undefined
+  return { ...out, status: 'reviewed', reviewedHead, reviews: Object.fromEntries(axes.map((axis, i) => [axis, reviews[i]])) }
 }
 
 const results = await pipeline(args.branches, buildBranch, reviewBranch)

@@ -1,7 +1,8 @@
 // Unit tests for the verdict-line script's pure core (issue #2833). The git
 // and GitHub reads are a thin shell over these.
 import { describe, expect, it } from 'vitest'
-import { verdictLine, headMismatchWarning, isHexSha } from '../../scripts/github/verdict-line.ts'
+import { verdictLine, headMismatchWarning, isHexSha, reviewCall, reviewCallArgs } from '../../scripts/github/verdict-line.ts'
+import { reviewedShasFromTranscript } from '../../scripts/session/review-proof.ts'
 
 const SHA = '0123456789abcdef0123456789abcdef01234567'
 
@@ -14,6 +15,14 @@ describe('verdictLine', () => {
   it('prints a distinct Own-read line, never a Reviewed line, for --own-read (#3395)', () => {
     expect(verdictLine(SHA, true)).toBe(`Own-read: ${SHA}`)
     expect(verdictLine(SHA, true)).not.toMatch(/^Reviewed:/im)
+  })
+})
+
+describe('reviewCall (#3483)', () => {
+  it('prints a call that merge-pr.ts proves as a review of the sha', () => {
+    const call = { type: 'assistant', message: { content: [{ type: 'tool_use', name: 'Skill', input: { skill: 'code-review', args: reviewCallArgs(SHA) } }] } }
+    expect(reviewCall(SHA)).toContain(SHA)
+    expect(reviewedShasFromTranscript(JSON.stringify(call), new Set())).toEqual([SHA])
   })
 })
 
