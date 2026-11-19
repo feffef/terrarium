@@ -20,7 +20,8 @@ import {
   evidenceReport,
   groupedEvidenceReport,
   harvestedState,
-  keywordGroups,
+  issuesPath,
+  loadIssues,
   noteTexts,
   parseEvidenceArgs,
   parseKeys,
@@ -428,16 +429,6 @@ describe('rulingFiles()', () => {
   })
 })
 
-describe('keywordGroups()', () => {
-  it('splits on a literal -- and drops empty groups', () => {
-    expect(keywordGroups(['a', 'b', '--', 'c', '--', '--'])).toEqual([['a', 'b'], ['c']])
-  })
-
-  it('keeps one group when there is no --', () => {
-    expect(keywordGroups(['a', 'b'])).toEqual([['a', 'b']])
-  })
-})
-
 describe('groupedEvidenceReport()', () => {
   const sources = { rulings: [{ file: 'a.md', text: 'rss here\nfooter here' }], issues: [], frictions: [] }
 
@@ -464,7 +455,31 @@ describe('parseEvidenceArgs()', () => {
     expect(parseEvidenceArgs(['--extract', 'x.json', 'a'])).toEqual({ groups: [['a']], extract: 'x.json' })
   })
 
+  it('splits groups on a literal -- and drops empty ones', () => {
+    expect(parseEvidenceArgs(['a', 'b', '--', 'c', '--', '--']).groups).toEqual([['a', 'b'], ['c']])
+  })
+
   it('leaves extract unset without the flag', () => {
     expect(parseEvidenceArgs(['a', 'b'])).toEqual({ groups: [['a', 'b']], extract: undefined })
+  })
+})
+
+describe('loadIssues()', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'harvest-issues-'))
+  const extract = join(dir, 'extract.json')
+  const fetchFresh = () => [{ n: 'fresh' }]
+
+  it('reads the list saved next to the extract instead of fetching', () => {
+    writeFileSync(issuesPath(extract), JSON.stringify([{ n: 'saved' }]))
+    expect(loadIssues(extract, () => { throw new Error('fetched') })).toEqual([{ n: 'saved' }])
+  })
+
+  it('fetches when the saved list is absent or no extract is given', () => {
+    expect(loadIssues(join(dir, 'other.json'), fetchFresh)).toEqual([{ n: 'fresh' }])
+    expect(loadIssues(undefined, fetchFresh)).toEqual([{ n: 'fresh' }])
+  })
+
+  it('names the saved list <extract>.issues.json', () => {
+    expect(issuesPath('/x/e.json')).toBe('/x/e.json.issues.json')
   })
 })
