@@ -144,17 +144,27 @@ keeps them.
 - **Land.** Merge `origin/main` and keep the newer pin. Two runs on one day can
   both rewrite the memory page: the later one keeps both runs' leads. Rewrite
   the memory page so it is shorter than you found it (the orientation prints its
-  word count against the cap; Scout lines count), complete the run entry, and open one PR
-  (`docs/agents/pr-workflow.md`), self-merged unless the Remit says it waits.
-  Wait for the Scout now; a topic of its that this run does not write goes on the
-  memory page as State allows. Give `code-review`
-  the Lesson contract, writing-pages.md, owner-decisions.md and the glassbox-content
-  rule as its standards, without the code-smell baseline, and say the page
-  checks already ran. Its Spec reviewer also judges which pages the change
-  needed read (the ones it edits, links or overlaps), and names each one missing
-  from `pagesRead`. Read those, recheck the change against them, and add them
-  to `pagesRead` before you land. Done when the PR is open and the memory page and
-  run entry are current. Then Loop.
+  word count against the cap; Scout lines count), and complete the run entry.
+  Then, before any PR (`docs/agents/pr-workflow.md`, "Review before opening the
+  PR"), in this order:
+  1. Wait for the Scout now; a topic of its that this run does not write goes on
+     the memory page as State allows.
+  2. Commit, then give `code-review` the args
+     `verdict-line.ts --review-call` prints (they name the head sha
+     `merge-pr.ts` looks for), plus the Lesson contract, writing-pages.md,
+     owner-decisions.md and the glassbox-content rule as its standards,
+     without the code-smell baseline, and say the page checks already ran.
+     Its Spec reviewer also judges which pages the change needed read (the
+     ones it edits, links or overlaps), and names each one missing from
+     `pagesRead`. Read those, recheck the change against them, and add them to
+     `pagesRead`.
+  3. Fix the findings, review each fix (step 4 of `pr-workflow.md`'s "Review
+     before opening the PR"), run `pnpm gate:scoped` on the final head, and
+     push it.
+  4. Open one PR, self-merged unless the Remit says it waits.
+
+  Done when the PR is open on a reviewed, gated head, and the memory page and run
+  entry are current. Then Loop.
 - **Loop.** Every run that opened a PR ends here, whether it merged or waits for
   the owner. The default path is the next run: when one lands, start the next as
   a full one: orient again, its own focus, run entry, branch from a fresh

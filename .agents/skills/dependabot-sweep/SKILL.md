@@ -26,7 +26,8 @@ edits no file.
      notes or changelog of every bumped package show no breaking or deprecation
      change that affects our use of it, the PR adds no direct dependency, and
      no bumped package is 0.x. If safe, post the verdict, ending with
-     `Reviewed: <head sha>`, and land it with
+     `Reviewed: <head sha>` (`merge-pr.ts` needs no `code-review` run behind it
+     for a plain bump), and land it with
      `pnpm exec tsx scripts/github/merge-pr.ts <number>`. If not, comment on
      the PR with why and leave it for a human; never close it. A `merge-pr.ts`
      refusal counts as not safe: quote it.

@@ -249,9 +249,8 @@ function configDir(env: SessionIdEnv): string {
 /** Best-effort transcript-file lookup: `<config>/projects/<munged-cwd>/<uuid>.jsonl`,
  *  keyed by `CLAUDE_CODE_SESSION_ID` (the transcript's own filename). The munged
  *  project dir is opaque, so scan the one `projects/` level for the uuid filename
- *  rather than reconstruct the mangling. Returns the file's contents, or null on
- *  any miss — the caller then falls back to env-only session resolution. */
-export function findTranscriptContents(env: SessionIdEnv): string | null {
+ *  rather than reconstruct the mangling. Returns the path, or null on any miss. */
+export function findTranscriptPath(env: SessionIdEnv): string | null {
   const uuid = env.CLAUDE_CODE_SESSION_ID
   if (!uuid) return null
   const projectsRoot = join(configDir(env), 'projects')
@@ -262,17 +261,24 @@ export function findTranscriptContents(env: SessionIdEnv): string | null {
   } catch {
     return null
   }
-  for (const dir of dirs) {
-    const p = join(projectsRoot, dir, `${uuid}.jsonl`)
-    if (existsSync(p)) {
-      try {
-        return readFileSync(p, 'utf8')
-      } catch {
-        return null
-      }
-    }
+  const dir = dirs.find((d) => existsSync(join(projectsRoot, d, `${uuid}.jsonl`)))
+  return dir === undefined ? null : join(projectsRoot, dir, `${uuid}.jsonl`)
+}
+
+/** The transcript's contents, or null on any miss: the caller then falls back
+ *  to env-only session resolution. */
+export function findTranscriptContents(env: SessionIdEnv): string | null {
+  const p = findTranscriptPath(env)
+  return p === null ? null : readOrNull(p)
+}
+
+/** A file's text, or null when it cannot be read. */
+export function readOrNull(path: string): string | null {
+  try {
+    return readFileSync(path, 'utf8')
+  } catch {
+    return null
   }
-  return null
 }
 
 /** Reconstruct `(sessionUrl, modelName)` for the current session: prefer the

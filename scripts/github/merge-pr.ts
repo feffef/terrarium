@@ -24,7 +24,8 @@
 //   a PR whose closing keywords name an open issue not labelled
 //   `ready-for-agent` (#2104, #2691), a PR adding a blog post whose blob is not
 //   the one its `Fact-checked:` line names (#2370), or unless this session's
-//   verdict, naming the head in a `Reviewed:` line, is on the PR (#1276, #1844).
+//   verdict naming the head is on the PR (#1276, #1844), and backed by proof of
+//   the review or a simple diff (`verdictRefusal`, #3483).
 //   A Dependabot PR skips the Public-author,
 //   guest-pipeline and Human-only refusals only when `dependabotBumpRefusal`
 //   finds a plain minor/patch bump (#1889); a fork still refuses.
@@ -65,7 +66,8 @@ import { matchesGlob } from 'node:path'
 import { fail, root, runIfMain } from '../lib/cli.ts'
 import { git } from '../lib/git.ts'
 import { getJson, listAll, PER_PAGE, requestJson, resolveAccess, type Access } from '../lib/github-client.ts'
-import { findTranscriptContents } from '../session/commit-trailer.ts'
+import { findTranscriptPath, readOrNull } from '../session/commit-trailer.ts'
+import { reviewedShasFromTranscript, reviewerAgentIds } from '../session/review-proof.ts'
 import { hasAuthorshipMarker, readProvenanceHeader } from '../lib/provenance-header.ts'
 import { resolveGroundTruthFromTranscript } from '../session/transcript-trace.ts'
 import { TRUSTED_ASSOCIATIONS } from '../lib/author-trust.ts'
@@ -160,22 +162,57 @@ export interface VerdictBody {
 const REVIEWED_LINE_RE = /^Reviewed: `?([0-9a-f]{7,40})`?\s*$/gim
 
 /** An `Own-read: <sha>` line: the author read the diff without `code-review`;
- *  good only for a simple diff (#3395). */
+ *  good only for a simple diff (#3395, #3483). */
 const OWN_READ_LINE_RE = /^Own-read: `?([0-9a-f]{7,40})`?\s*$/gim
+
+const SIMPLE_MAX_FILES = 2
+const SIMPLE_MAX_LINES = 10
+const NOT_SIMPLE_PATH_RE = /^(?:scripts\/hooks\/|\.claude\/workflows\/)|\.(?:ts|js|vue)$/
+
+/** Why `files` fail the countable part of `pr-workflow.md`'s simple-change
+ *  test, or null (#3483); the judged part stays with the author. A missing
+ *  line count fails closed. */
+export function simpleChangeRefusal(files: PrFile[]): string | null {
+  const larger = files.filter((f) => ['added', 'renamed', 'copied'].includes(f.status ?? ''))
+  if (larger.length) return `it adds, renames or copies ${larger.map((f) => f.filename).join(', ')}`
+  const code = prFilePaths(files).filter((p) => NOT_SIMPLE_PATH_RE.test(p))
+  if (code.length) return `it changes ${code.join(', ')}, a code, hook or workflow path`
+  if (files.length > SIMPLE_MAX_FILES) return `it changes ${files.length} files, over ${SIMPLE_MAX_FILES}`
+  const lines = files.reduce((n, f) => n + Math.max(f.additions ?? Infinity, f.deletions ?? Infinity), 0)
+  return lines > SIMPLE_MAX_LINES ? `it changes ${lines} lines, over ${SIMPLE_MAX_LINES}` : null
+}
+
+/** What this session's transcript shows about review (`review-proof.ts`). */
+export interface ReviewEvidence {
+  /** Shas a review ran on; `exempt` for a plain Dependabot bump; null when the
+   *  transcript could not be read. */
+  reviewed: string[] | 'exempt' | null
+  /** The files changed from `sha` to the PR head; null when they cannot be read. */
+  filesSince: (sha: string) => PrFile[] | null
+}
+
+/** `ReviewEvidence.reviewed` for a PR by `authorLogin`: a Dependabot PR got
+ *  here only as a plain bump (`dependabotBumpRefusal` runs first), which
+ *  needs no proof (#3483). */
+export function reviewedFor(authorLogin: string, proof: () => string[] | null): ReviewEvidence['reviewed'] {
+  return authorLogin === DEPENDABOT_LOGIN ? 'exempt' : proof()
+}
 
 /** Why the PR has no verdict this session posted on `headSha`, or null
  *  (`pr-workflow.md` step 4, issues #1276, #1844). A verdict carries an
  *  ADR-0017 marker and — when the session is known — a header naming it. An
  *  unresolvable session accepts any marker rather than blocking a session whose
  *  environment lacks the id. Only Trusted authors count: the marker is
- *  forgeable by anyone (ADR-0020). The verdict must name `headSha` in a
- *  `Reviewed:` line, or in an `Own-read:` line when `files` add or rename
- *  nothing, so a push after the review needs a fresh one. */
+ *  forgeable by anyone (ADR-0020). Either a `Reviewed:` line names `headSha`
+ *  and `review` proves that review ran, or an `Own-read:` line names it and the
+ *  diff since a proven `Reviewed:` sha (else the whole PR) passes
+ *  `simpleChangeRefusal` (#3483). A push after the review needs a new line. */
 export function verdictRefusal(
   bodies: VerdictBody[],
   sessionId: string | null,
   headSha: string,
   files: PrFile[],
+  review: ReviewEvidence,
 ): string | null {
   const mine = bodies
     .filter(
@@ -185,8 +222,9 @@ export function verdictRefusal(
     )
     .map(({ body }) => body)
   const next =
-    `Run the code-review Skill on ${headSha}, then post your step-4 verdict (docs/agents/pr-workflow.md) ` +
-    `with the line \`Reviewed: ${headSha}\` as a COMMENT-event review or an issue comment — never APPROVE — and re-run.`
+    `Run \`verdict-line.ts --review-call\` and make the code-review call it prints, then post ` +
+    `your step-4 verdict (docs/agents/pr-workflow.md) with the line \`Reviewed: ${headSha}\` as a COMMENT-event ` +
+    `review or an issue comment — never APPROVE — and re-run.`
   if (mine.length === 0) {
     return (
       `refused: no review or comment on the PR carries this session's provenance header` +
@@ -196,15 +234,34 @@ export function verdictRefusal(
   const shas = (re: RegExp) => mine.flatMap((b) => [...b.matchAll(re)].map((m) => m[1]!.toLowerCase()))
   const coversHead = (sha: string) => headSha.toLowerCase().startsWith(sha)
   const named = shas(REVIEWED_LINE_RE)
-  if (named.some(coversHead)) return null
   const ownRead = shas(OWN_READ_LINE_RE)
+  const isProven = (sha: string) =>
+    review.reviewed === 'exempt' || (review.reviewed ?? []).some((p) => p.startsWith(sha) || sha.startsWith(p))
+  const noTranscript =
+    `refused: this session's transcript was not found (CLAUDE_CODE_SESSION_ID unset, or no file under ` +
+    `<config>/projects), so no review can be proven. Run merge-pr.ts in the session that ran the review, ` +
+    `or set CLAUDE_CODE_SESSION_ID to its id.`
+  if (named.filter(coversHead).some(isProven)) return null
+  // An unproven `Reviewed:` line on the head falls through to an `Own-read:` line on it, if any.
+  if (named.some(coversHead) && !ownRead.some(coversHead)) {
+    return review.reviewed === null ? noTranscript : `refused: this session's transcript shows no review of ${headSha}. ${next}`
+  }
   if (ownRead.some(coversHead)) {
-    const larger = files.filter((f) => ['added', 'renamed', 'copied'].includes(f.status ?? ''))
-    if (larger.length === 0) return null
-    return (
-      `refused: an Own-read verdict covers only a diff that adds or renames no file, but this PR adds or renames ` +
-      `${larger.map((f) => f.filename).join(', ')}. ${next}`
-    )
+    const simpleOnly = `refused: an Own-read verdict covers only a simple diff (docs/agents/pr-workflow.md), but`
+    const bases = [...new Set(named.filter(isProven))]
+    if (bases.length === 0) {
+      const why = simpleChangeRefusal(files)
+      if (why === null) return null
+      return named.length > 0 && review.reviewed === null ? noTranscript : `${simpleOnly} ${why}. ${next}`
+    }
+    // Any proven review will do: bodies come in API order, not the order the reviews ran.
+    const whys = bases.map((base) => {
+      const changed = review.filesSince(base)
+      const why = changed === null ? 'the diff could not be read' : simpleChangeRefusal(changed)
+      return why === null ? null : `since the reviewed ${base} ${why}`
+    })
+    if (whys.includes(null)) return null
+    return `${simpleOnly} ${whys.join('; ')}. ${next}`
   }
   const stale = [...named, ...ownRead]
   return stale.length === 0
@@ -273,6 +330,8 @@ export interface PrFile {
   /** Absent when GitHub omits a large diff. */
   patch?: string
   status?: string
+  additions?: number
+  deletions?: number
   /** The file's blob SHA on the PR head. */
   sha?: string
 }
@@ -466,16 +525,37 @@ function closeIssue(a: Access, issueNumber: number): void {
   requestJson(a, 'PATCH', `issues/${issueNumber}`, { state: 'closed', state_reason: 'completed' })
 }
 
-type RawPrFile = { filename: string; previous_filename?: string; patch?: string; status: string; sha: string }
+type RawPrFile = {
+  filename: string
+  previous_filename?: string
+  patch?: string
+  status: string
+  additions: number
+  deletions: number
+  sha: string
+}
+
+const prFileOf = (i: RawPrFile): PrFile => ({
+  filename: i.filename,
+  previousFilename: i.previous_filename,
+  patch: i.patch,
+  status: i.status,
+  additions: i.additions,
+  deletions: i.deletions,
+  sha: i.sha,
+})
 
 function readPrFiles(a: Access, prNumber: number): PrFile[] {
-  return listAll<RawPrFile>(a, `pulls/${prNumber}/files`).map((i) => ({
-    filename: i.filename,
-    previousFilename: i.previous_filename,
-    patch: i.patch,
-    status: i.status,
-    sha: i.sha,
-  }))
+  return listAll<RawPrFile>(a, `pulls/${prNumber}/files`).map(prFileOf)
+}
+
+/** The files changed from `base` to `head`, or null when the comparison fails. */
+function readFilesSince(a: Access, base: string, head: string): PrFile[] | null {
+  try {
+    return getJson<{ files?: RawPrFile[] }>(a, `compare/${base}...${head}`).files?.map(prFileOf) ?? null
+  } catch {
+    return null
+  }
 }
 
 function readHumanMergeGlobsFromMain(cwd: string): string[] {
@@ -603,9 +683,19 @@ export async function mergePrWhenGreen(
     return { pr: prNumber, verdict: 'unchecked-post', merged: false, message: uncheckedPost }
   }
 
-  const sessionId = resolveGroundTruthFromTranscript(findTranscriptContents(process.env) ?? '')
+  const transcriptPath = findTranscriptPath(process.env)
+  const transcript = transcriptPath === null ? null : readOrNull(transcriptPath)
+  const sessionId = resolveGroundTruthFromTranscript(transcript ?? '')
   const { sha, body: prBody } = meta
-  const noVerdict = verdictRefusal(readVerdictBodies(access, prNumber), sessionId, sha, files)
+  const review: ReviewEvidence = {
+    reviewed: reviewedFor(meta.authorLogin, () =>
+      transcript === null || transcriptPath === null
+        ? null
+        : reviewedShasFromTranscript(transcript, reviewerAgentIds(transcriptPath)),
+    ),
+    filesSince: (base) => readFilesSince(access, base, sha),
+  }
+  const noVerdict = verdictRefusal(readVerdictBodies(access, prNumber), sessionId, sha, files, review)
   if (noVerdict !== null) {
     return { pr: prNumber, verdict: 'no-verdict', merged: false, message: noVerdict }
   }
