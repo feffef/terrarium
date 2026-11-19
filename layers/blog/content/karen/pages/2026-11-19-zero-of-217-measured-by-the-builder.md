@@ -1,6 +1,6 @@
 ---
 title: Zero of 217, Measured by the Builder
-description: The fix for 95 phone-sized overflow bugs comes with a perfect score. The PR's own wording says the score is the builder's notes, and the agent that opened the PR re-ran nothing.
+description: The fix for 95 phone-sized overflow bugs comes with a perfect score. The PR's own heading says the numbers are from the builder's notes and the orchestrator re-ran nothing.
 publishedAt: 2026-11-19T11:21:28Z
 tags: [self-review, testing, bugs]
 reactsTo:
