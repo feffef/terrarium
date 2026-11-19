@@ -191,6 +191,13 @@ export interface ReviewEvidence {
   filesSince: (sha: string) => PrFile[] | null
 }
 
+/** `ReviewEvidence.reviewed` for a PR by `authorLogin`: a Dependabot PR got
+ *  here only as a plain bump (`dependabotBumpRefusal` runs first), which
+ *  needs no proof (#3483). */
+export function reviewedFor(authorLogin: string, proof: () => string[] | null): ReviewEvidence['reviewed'] {
+  return authorLogin === DEPENDABOT_LOGIN ? 'exempt' : proof()
+}
+
 /** Why the PR has no verdict this session posted on `headSha`, or null
  *  (`pr-workflow.md` step 4, issues #1276, #1844). A verdict carries an
  *  ADR-0017 marker and — when the session is known — a header naming it. An
@@ -198,7 +205,7 @@ export interface ReviewEvidence {
  *  environment lacks the id. Only Trusted authors count: the marker is
  *  forgeable by anyone (ADR-0020). Either a `Reviewed:` line names `headSha`
  *  and `review` proves that review ran, or an `Own-read:` line names it and the
- *  diff since the last proven `Reviewed:` sha (else the whole PR) passes
+ *  diff since a proven `Reviewed:` sha (else the whole PR) passes
  *  `simpleChangeRefusal` (#3483). A push after the review needs a new line. */
 export function verdictRefusal(
   bodies: VerdictBody[],
@@ -230,24 +237,30 @@ export function verdictRefusal(
   const ownRead = shas(OWN_READ_LINE_RE)
   const isProven = (sha: string) =>
     review.reviewed === 'exempt' || (review.reviewed ?? []).some((p) => p.startsWith(sha) || sha.startsWith(p))
+  const noTranscript =
+    `refused: this session's transcript was not found (CLAUDE_CODE_SESSION_ID unset, or no file under ` +
+    `<config>/projects), so no review can be proven. Run merge-pr.ts in the session that ran the review, ` +
+    `or set CLAUDE_CODE_SESSION_ID to its id.`
   if (named.some(coversHead)) {
     if (named.filter(coversHead).some(isProven)) return null
-    return review.reviewed === null
-      ? `refused: this session's transcript was not found (CLAUDE_CODE_SESSION_ID unset, or no file under ` +
-          `<config>/projects), so no review of ${headSha} can be proven. Run merge-pr.ts in the session that ` +
-          `ran the review, or set CLAUDE_CODE_SESSION_ID to its id.`
-      : `refused: this session's transcript shows no review of ${headSha}. ${next}`
+    return review.reviewed === null ? noTranscript : `refused: this session's transcript shows no review of ${headSha}. ${next}`
   }
   if (ownRead.some(coversHead)) {
-    const reviewedBase = named.find(isProven)
-    const changed = reviewedBase === undefined ? files : review.filesSince(reviewedBase)
-    if (changed === null) return `refused: could not read the diff from ${reviewedBase} to ${headSha}. ${next}`
-    const why = simpleChangeRefusal(changed)
-    if (why === null) return null
-    return (
-      `refused: an Own-read verdict covers only a simple diff (docs/agents/pr-workflow.md)` +
-      `${reviewedBase === undefined ? '' : ` since the reviewed ${reviewedBase}`}, but ${why}. ${next}`
-    )
+    const simpleOnly = `refused: an Own-read verdict covers only a simple diff (docs/agents/pr-workflow.md), but`
+    const bases = [...new Set(named.filter(isProven))]
+    if (bases.length === 0) {
+      const why = simpleChangeRefusal(files)
+      if (why === null) return null
+      return named.length > 0 && review.reviewed === null ? noTranscript : `${simpleOnly} ${why}. ${next}`
+    }
+    // Any proven review will do: bodies come in API order, not the order the reviews ran.
+    const whys = bases.map((base) => {
+      const changed = review.filesSince(base)
+      const why = changed === null ? 'the diff could not be read' : simpleChangeRefusal(changed)
+      return why === null ? null : `since the reviewed ${base} ${why}`
+    })
+    if (whys.includes(null)) return null
+    return `${simpleOnly} ${whys.join('; ')}. ${next}`
   }
   const stale = [...named, ...ownRead]
   return stale.length === 0
@@ -673,11 +686,12 @@ export async function mergePrWhenGreen(
   const transcript = transcriptPath === null ? null : readOrNull(transcriptPath)
   const sessionId = resolveGroundTruthFromTranscript(transcript ?? '')
   const { sha, body: prBody } = meta
-  const proof = () =>
-    transcript === null ? null : reviewedShasFromTranscript(transcript, reviewerAgentIds(transcriptPath!))
-  // A plain Dependabot bump passed `dependabotBumpRefusal` above (#3483).
   const review: ReviewEvidence = {
-    reviewed: meta.authorLogin === DEPENDABOT_LOGIN ? 'exempt' : proof(),
+    reviewed: reviewedFor(meta.authorLogin, () =>
+      transcript === null || transcriptPath === null
+        ? null
+        : reviewedShasFromTranscript(transcript, reviewerAgentIds(transcriptPath)),
+    ),
     filesSince: (base) => readFilesSince(access, base, sha),
   }
   const noVerdict = verdictRefusal(readVerdictBodies(access, prNumber), sessionId, sha, files, review)

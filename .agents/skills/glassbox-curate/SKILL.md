@@ -158,7 +158,8 @@ keeps them.
      ones it edits, links or overlaps), and names each one missing from
      `pagesRead`. Read those, recheck the change against them, and add them to
      `pagesRead`.
-  3. Fix the findings, run `pnpm gate:scoped` on the final head, and push it.
+  3. Fix the findings, review each fix (`pr-workflow.md` step 4), run
+     `pnpm gate:scoped` on the final head, and push it.
   4. Open one PR, self-merged unless the Remit says it waits.
 
   Done when the PR is open on a reviewed, gated head, and the memory page and run

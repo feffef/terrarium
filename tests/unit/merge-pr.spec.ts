@@ -11,6 +11,7 @@ import { describe, expect, it, vi } from 'vitest'
 import {
   failingCheckNames,
   dependabotBumpRefusal,
+  DEPENDABOT_LOGIN,
   factCheckedBlobRefusal,
   humanMergeRefusal,
   humanMergeWaiver,
@@ -23,6 +24,7 @@ import {
   prOriginRefusal,
   readyForHumanRefusal,
   reconcileClosingKeywords,
+  reviewedFor,
   simpleChangeRefusal,
   verdictFromCheckRuns,
   verdictRefusal,
@@ -553,6 +555,13 @@ describe('verdictRefusal() (issues #1276, #1844, #3483)', () => {
     it('needs no proof for a plain Dependabot bump', () => {
       expect(run(owner(header(me)), { reviewed: 'exempt', filesSince: () => null })).toBeNull()
     })
+
+    it('exempts only a Dependabot-authored PR from reading the transcript', () => {
+      const proof = () => [head]
+      expect(reviewedFor(DEPENDABOT_LOGIN, () => { throw new Error('read the transcript') })).toBe('exempt')
+      expect(reviewedFor('feffef', proof)).toEqual([head])
+      expect(reviewedFor('dependabot', () => null)).toBeNull()
+    })
   })
 
   describe('Own-read verdict (#3395, #3483)', () => {
@@ -610,12 +619,31 @@ describe('verdictRefusal() (issues #1276, #1844, #3483)', () => {
       })
 
       it('refuses when the diff since the review cannot be read', () => {
-        expect(run(owner(body), evidence(null), big)).toMatch(/could not read the diff/)
+        expect(run(owner(body), evidence(null), big)).toMatch(/diff could not be read/)
       })
 
       it('judges the whole PR when the named review is not proven', () => {
         const unproven: ReviewEvidence = { reviewed: [], filesSince: () => [small('a.md')] }
         expect(run(owner(body), unproven, big)).toContain('n.ts')
+      })
+
+      it('says the transcript is missing rather than asking for a review it cannot prove', () => {
+        const none: ReviewEvidence = { reviewed: null, filesSince: () => [small('a.md')] }
+        expect(run(owner(body), none, big)).toMatch(/transcript was not found/)
+      })
+
+      it('accepts the fix since a later proven review, whichever verdict came first', () => {
+        const later = 'abcdef0123456789abcdef0123456789abcdef01'
+        const bodies = owner(header(me, `Reviewed: ${reviewedSha}`), header(me, `Reviewed: ${later}\n${ownRead}`))
+        const ev: ReviewEvidence = {
+          reviewed: [reviewedSha, later],
+          filesSince: (sha) => (sha === later ? [small('a.md')] : [small('big.ts')]),
+        }
+        expect(run(bodies, ev, big)).toBeNull()
+        const neither: ReviewEvidence = { ...ev, filesSince: () => [small('big.ts')] }
+        const refusal = run(bodies, neither, big)
+        expect(refusal).toContain(`since the reviewed ${reviewedSha}`)
+        expect(refusal).toContain(`since the reviewed ${later}`)
       })
     })
   })
