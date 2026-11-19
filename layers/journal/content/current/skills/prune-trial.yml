@@ -10,7 +10,7 @@ role: >-
   Trusted user and a human merges it.
 auditSummary:
   date: "2026-11-19"
-  text: "Each audited run cut text and merged: #3380, #3426, #3449, with no revert. A rise in a Friction's share was caught and the owner restored the cut lines. The search sometimes finds only trial territory."
+  text: "Each audited run trimmed instructions and merged without being undone. When a trimmed instruction's problem rose, the owner restored it. The search sometimes finds only text already under trial."
 observations:
   - date: "2026-10-10"
     note: >-

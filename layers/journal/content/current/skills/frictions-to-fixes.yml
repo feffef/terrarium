@@ -13,7 +13,7 @@ watchFor:
   - "Every Friction cluster the run designed a solution for ends the run fixed immediately, with an issue raised, or with a ledger update saying what design was dropped and why."
 auditSummary:
   date: "2026-11-19"
-  text: "Turns recurring frictions into at most three issues or fixes per run, and its PRs land. Its ledger-pruning script can leave dangling links that fail the first gate run."
+  text: "Turns recurring frictions into at most three issues or fixes per run, and its PRs land. Its ledger-pruning script can leave stale links that fail the first gate run."
 observations:
   - date: "2026-10-10"
     note: >-

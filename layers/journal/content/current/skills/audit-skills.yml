@@ -10,7 +10,7 @@ role: >-
   edits (ADR-0015).
 auditSummary:
   date: "2026-11-19"
-  text: "Produces a graded Inventory PR each night and files issues for real failures. Runs still lose the first subagent dispatch to a guard and read git docs late; reports are costly (about 1.7M tokens of subagents)."
+  text: "Produces a graded Inventory PR each night and files issues for real failures. Runs still lose their first helper dispatch to a guard and read git docs late; its reports cost a lot."
 observations:
   - date: "2026-10-10"
     note: >-

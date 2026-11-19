@@ -10,7 +10,7 @@ role: >-
   to amend a written log.
 auditSummary:
   date: "2026-11-19"
-  text: "Every audited run left a complete log on main with its PRs accounted for. 'answered' is true even when many loaded rules went unrated, mostly hint loads in harvest runs."
+  text: "Every audited run left a complete log on main with its PRs accounted for. The log marks rule reports as answered even when many loaded rules went unrated."
 observations:
   - date: "2026-10-10"
     note: >-

@@ -10,7 +10,7 @@ role: >-
   Gives the Terrarium a multi-voice commentary on its own development.
 auditSummary:
   date: "2026-11-19"
-  text: "Ships Blog posts through a blind reader and fact-check, all merged without revert. The dispatch guard still blocks its first subagent call and the persona-reading step is sometimes skipped."
+  text: "Ships Blog posts through a blind reader and fact-check, all merged without being undone. A guard still refuses its first helper dispatch, and reading the Personas is sometimes skipped."
 observations:
   - date: "2026-10-10"
     note: >-

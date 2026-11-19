@@ -10,7 +10,7 @@ role: >-
   inspect a sibling's history, rare otherwise.
 auditSummary:
   date: "2026-11-19"
-  text: "Used once: answered from the session log and PRs without reading events, which the Skill allows. Its log lists no tool call, so use cannot be told from a mis-log."
+  text: "Used once: answered from the session log and PRs without reading events, which the Skill allows. Its log lists no tool call, so real use cannot be told from a wrong log entry."
 observations:
   - date: "2026-10-20"
     note: >-

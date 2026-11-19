@@ -15,7 +15,7 @@ watchFor:
   - "No new Seedling duplicates an open issue or one the owner closed as not planned."
 auditSummary:
   date: "2026-11-19"
-  text: "Files well-formed Seedling issues that exist on GitHub. It still stops its cluster check early with only a thin reason, and one Seedling carried a false claim that a feature was missing."
+  text: "Files well-formed ideas as issues that exist on GitHub. It still stops its cluster check early with only a thin reason, and one idea wrongly said a feature was missing."
 observations:
   - date: "2026-11-13"
     note: >-
@@ -33,4 +33,4 @@ observations:
   - date: "2026-11-18"
     note: "Watch for: 1 stop reason: 11-15 and 11-16 failed (no `stopped:`, pre-c0cb58a text), 11-17 couldn't tell; 2 Seedlings exist: held (#3353, #3358, #3382, #3387, #3431-#3438 checked); 3 no whole-list read: couldn't tell; 4 duplicates: held on spot check. Runs session_013zxzeRGXYTuwyQrcDEwRpw, session_013zxzeT29epAaAQNqmHmeU4, session_013zxzeR4N3chSHqH7Po2sjW delivered, no revert. Step 2 early stop with no reason n=5. Idea: read issue-tracker.md and triage-labels.md in step 3's first read."
   - date: "2026-11-19"
-    note: "Watch for: 1 stop reason couldn't tell (11-17), held 11-18 but 'for effort' passes the check; 2 held (#3460, #3462-#3466, #3431, #3437, #3438, #3382, #3387 checked); 3 couldn't tell; 4 failed once. Runs session_013zxzeNYPwVfq4WoT28Nfuu, session_013zxzeR4N3chSHqH7Po2sjW, session_013zxzeT29epAaAQNqmHmeU4. Unverified silent failure n=1: #3464 says 'grep printed nothing' for next-Specimen links, but [...slug].vue already renders them (d610a4f31); closed not_planned. Step 2 early stop tracked by #3396. Idea: control hit for Unbuilt greps. Grade unchanged."
+    note: "Watch for: 1 stop reason couldn't tell (11-17), held 11-18 but 'for effort' passes the check; 2 held (#3460, #3462-#3466, #3431, #3437, #3438, #3382, #3387 checked); 3 couldn't tell; 4 failed once. Runs session_013zxzeNYPwVfq4WoT28Nfuu, session_013zxzeR4N3chSHqH7Po2sjW, session_013zxzeT29epAaAQNqmHmeU4. Unverified silent failure n=1: #3464 says 'grep printed nothing' for next-Specimen links, but [...slug].vue already renders them (d610a4f31); closed not_planned. Step 2 early stop earlier issue #3396 (closed). Idea: control hit for Unbuilt greps. Grade unchanged."

@@ -10,7 +10,7 @@ role: >-
   by hand to catch up.
 auditSummary:
   date: "2026-11-19"
-  text: "Publishes the daily digest with fact-check and review, and no cadence word shipped. The first Agent call is often denied until dispatch-subagents is read, and git docs are read late."
+  text: "Publishes the daily digest after a fact-check and review, and no wrong cadence word shipped. It often loses its first helper dispatch to a guard and reads git docs late."
 observations:
   - date: "2026-10-10"
     note: >-

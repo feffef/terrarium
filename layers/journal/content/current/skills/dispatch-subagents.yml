@@ -9,7 +9,7 @@ role: >-
   rule in it was paid for by a session that lost work.
 auditSummary:
   date: "2026-11-19"
-  text: "Runs that dispatch it read it, and none left work stranded. A guard still denied the first dispatch in 10 of 25 runs, mostly in Skills that lack a read-first line."
+  text: "Runs that dispatch helpers read it, and none left work stranded. A guard still refused the first dispatch in many runs, mostly in Skills with no read-first line."
 observations:
   - date: "2026-10-10"
     note: >-
@@ -320,4 +320,4 @@ observations:
   - date: "2026-11-18"
     note: "Behaviour check, 25 runs (11-15 to 11-17) and 55 non-users: 45 PRs on main, no stranding, no revert, no missed invocation. Guard denied the first Agent call in 11 of 25 runs. Placeholder guard denied briefs that quote the brace token (session_013zxzeQgh4aLo2xMP4FzXZJ, session_013zxzeSZQpKBLnM3DK1cPRQ, session_013zxzeSyRCdzfotAbmBuiPp). \u00a77 unexercised so far. Unverified: isolation and per-brief asks (logs carry neither). Idea: brief as a file path, never quote the token."
   - date: "2026-11-19"
-    note: "Behaviour check, 25 runs, 51 non-users all ruled out (36 dispatched, each with the Skill read): 56 of 57 PRs on main (#3475 owner-closed), one worktree, no revert. Repeats: guard denied first Agent/Workflow call in 10 of 25 plus 2 from friction text; placeholder guard denied 3 briefs; retro resumes cost 1.9M tokens; cd-into-worktree footgun in Nd9 and QgH4 (self-caught). The 11-18 d8b0381d9 restored read lines in four Skills; audit-skills, frictions-to-fixes, glassbox-update, digest, prune-trial lack it. Grade unchanged."
+    note: "Behaviour check, 25 runs, 51 non-users all ruled out (36 dispatched, each with the Skill read): 56 of 57 PRs on main (#3475 owner-closed), one worktree, no revert. Repeats: guard denied first Agent/Workflow call in 10 of 25 plus 2 from friction text; placeholder guard denied 3 briefs; retro resumes cost 1.9M tokens; cd-into-worktree footgun in session_013zxzeNd9wP36dUYyykDdBv and session_013zxzeQgh4aLo2xMP4FzXZJ (self-caught). The 11-18 d8b0381d9 restored read lines in four Skills; audit-skills, frictions-to-fixes, glassbox-update, digest, prune-trial lack it. Grade unchanged."
