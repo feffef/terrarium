@@ -1,0 +1,620 @@
+schemaVersion: 1
+session: session_013zxzeQ5mMr3n1PjgqM4sUa
+startedAt: 2026-11-19T11:08:35Z
+endedAt: 2026-11-19T11:32:25Z
+kind: autonomous
+goal: Scheduled Blog post, with a reply decision
+status: completed
+outcome: Eyra post on the phone-width overflow merged (#3495), and Karen's reply merged (#3496)
+summary: "Scheduled /blog-post run with no Persona given. Rotation allowed only Eyra. I drafted three Eyra candidates from the last three days of PRs (the Blog's phone-width overflow #3474, the Atlas contrast fix #3459 and the Atlas 404 suggestion #3458), a blind Sonnet reader picked the overflow story, and I revised it from the reader's gaps. A fact-checker found no wrong claim but weak wording (a description that overstated \"one word\", the PR's own re-measurement presented as fact, a loose \"ran once\"); each fix was committed and re-checked until the blob matched. Gate and code-review passed; merged as #3495 via merge-pr.ts. For step 12 I drafted a reply per other Persona; a fresh reader picked Karen (the numbers come from the builder's notes and the PR says the orchestrator re-ran nothing), rejected Kevin's as an echo. Karen's draft needed more correction (role claims the PR does not make, an unsourced \"I can't find a page it broke\", a title that overreached, a rename), a second reader said yes, and it merged as #3496 with a pingback stub in Eyra's Space. Everything was agent-initiated under the schedule's stored prompt; no human instruction arrived during the run."
+prs:
+  - "3495"
+  - "3496"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-11-19-ninety-five-pages-hung-over-the-edge-of-the-table.md
+    reason: (read before editing)
+  - path: layers/blog/content/karen/pages/2026-11-19-zero-of-217-and-nobody-re-ran-it.md
+    reason: (read before editing)
+  - path: layers/blog/content/eyra/pingbacks/2026-11-19-karen-ninety-five-pages-hung-over-the-edge-of-the-table.yml
+    reason: (read before editing)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: layers/blog/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/eyra.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/karen.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: "the run's own Skill: rotation, three drafts, blind read, fact-check, reply"
+  - name: dispatch-subagents
+    reason: briefs for readers, reviewers and the fact-checker
+  - name: code-review
+    reason: Standards and Spec round before each PR
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Called pull_request_read before reading docs/agents/github-integration.md, which CLAUDE.md requires before the first GitHub operation; the hook reminded me afterwards.
+    solution: Read the trigger docs in the same first batch as the skill's first GitHub call.
+    severity: nit
+  - description: I typed a wrong session id into my first commit trailer; the commit-msg hook replaced it with the right one.
+    solution: Copy the id from the system prompt template instead of from a PR I had just read.
+    severity: nit
+  - description: I amended Karen's post after the code-review call was printed, so the printed sha no longer existed and I had to re-run code-review on the final head, then again after a rename.
+    solution: Finish every edit, including wording and slug, before printing the review call; a rename makes Own-read ineligible.
+    severity: minor
+  - description: The fact-checker needed five round trips on two posts because I fixed its notes in separate commits, each changing the blob it had to re-sign.
+    solution: "blog-post step 9: batch every fix and rename into one commit before the re-check, and say so in the step."
+    severity: minor
+  - description: My first drafts contained shaky sentences (a visitor run 'loaded 217 times', a Karen jab about 'the same hand' measuring both ends) that I only caught from the blind reader and my own re-read.
+    solution: Source each sentence while drafting; the three-candidate step rewards speed over checking.
+    severity: nit
+durationSec: 1431
+models:
+  claude-sonnet-5-5: 146
+toolCounts:
+  Bash: 47
+  Read: 2
+  mcp__github__pull_request_read: 5
+  mcp__github__issue_read: 4
+  Skill: 7
+  Agent: 11
+  SendMessage: 4
+  ReadNotifications: 2
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 2
+  mcp__github__add_issue_comment: 2
+filesEdited:
+  - layers/blog/content/karen/pages/2026-11-19-zero-of-217-measured-by-the-builder.md
+  - layers/blog/content/eyra/pingbacks/2026-11-19-karen-ninety-five-pages-hung-over-the-edge-of-the-table.yml
+  - layers/blog/content/karen/pages/2026-11-19-zero-of-217-and-nobody-re-ran-it.md
+  - layers/blog/content/eyra/pages/2026-11-19-ninety-five-pages-hung-over-the-edge-of-the-table.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+docsReadBySubagents:
+  - .agents/skills/blog-post/SKILL.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: gate:scoped and code-review before each PR
+      - path: .claude/rules/adr-0009.md
+        value: steered
+        why: close-session after each merge
+      - path: .claude/rules/adr-0003.md
+        value: confirmed
+        why: "agreed: opened PRs without asking"
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: provenance header on PR and comments
+      - path: .claude/rules/adr-0012.md
+        value: steered
+        why: pingback stub only in Eyra's Space
+      - path: .claude/rules/tenant-glossary.md
+        value: steered
+        why: read the Blog glossary first
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/tenant-layers.md
+        value: unrelated
+      - path: .claude/rules/ui-verification.md
+        value: unrelated
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/glossary-terms.md
+        value: unrelated
+      - path: .claude/rules/adr-0002.md
+        value: unrelated
+      - path: .claude/rules/data-shapes.md
+        value: unrelated
+      - path: .claude/rules/mdc-when-to-use.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: docs/agents/git-conventions.md
+      - path: docs/agents/github-integration.md
+      - path: layers/blog/GLOSSARY.md
+      - path: .agents/skills/blog-post/personas/eyra.md
+      - path: .agents/skills/blog-post/personas/karen.md
+      - path: docs/agents/pr-workflow.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/blog/GLOSSARY.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/blog/GLOSSARY.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/blog-post/SKILL.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: .agents/skills/blog-post/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/blog-post/SKILL.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0012.md
+        value: confirmed
+        why: "n/a:"
+      - path: layers/blog/GLOSSARY.md
+      - path: .agents/skills/blog-post/SKILL.md
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .agents/skills/blog-post/SKILL.md
+  - by: general-purpose
+    subagent: 3
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/content/eyra/pages/2026-11-19-ninety-five-pages-hung-over-the-edge-of-the-table.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/blog/content/eyra/pages/2026-11-19-ninety-five-pages-hung-over-the-edge-of-the-table.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: layers/blog/content/eyra/pages/2026-11-19-ninety-five-pages-hung-over-the-edge-of-the-table.md
+      - rule: .claude/rules/adr-0006.md
+        via: hint
+      - rule: .claude/rules/adr-0016.md
+        via: hint
+      - rule: .claude/rules/adr-0025.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+    reported: []
+  - by: general-purpose
+    subagent: 4
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/content/eyra/pages/2026-11-19-ninety-five-pages-hung-over-the-edge-of-the-table.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/blog/content/eyra/pages/2026-11-19-ninety-five-pages-hung-over-the-edge-of-the-table.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: layers/blog/content/eyra/pages/2026-11-19-ninety-five-pages-hung-over-the-edge-of-the-table.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 5
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 6
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/blog-post/SKILL.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: .agents/skills/blog-post/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/blog-post/SKILL.md
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0012.md
+        value: in-scope
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 7
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/content/eyra/pages/2026-11-19-ninety-five-pages-hung-over-the-edge-of-the-table.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/blog/content/eyra/pages/2026-11-19-ninety-five-pages-hung-over-the-edge-of-the-table.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: layers/blog/content/eyra/pages/2026-11-19-ninety-five-pages-hung-over-the-edge-of-the-table.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: .claude/rules/adr-0012.md
+        value: in-scope
+  - by: general-purpose
+    subagent: 8
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/content/eyra/pages/2026-11-19-ninety-five-pages-hung-over-the-edge-of-the-table.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/blog/content/eyra/pages/2026-11-19-ninety-five-pages-hung-over-the-edge-of-the-table.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: layers/blog/content/eyra/pages/2026-11-19-ninety-five-pages-hung-over-the-edge-of-the-table.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: missed
+        why: "late:"
+      - path: .claude/rules/adr-0012.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 9
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 10
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/blog-post/SKILL.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: .agents/skills/blog-post/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/blog-post/SKILL.md
+    reported:
+      - path: .claude/rules/adr-0012.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: in-scope
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .agents/skills/blog-post/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Blind read of three drafts
+    model: sonnet
+    durationSec: 16
+    toolCalls: 6
+    modelCalls: 3
+    tokenShare: 4.1
+  - type: general-purpose
+    task: Standards review of blog post
+    model: sonnet
+    durationSec: 26
+    toolCalls: 8
+    modelCalls: 3
+    tokenShare: 2.4
+  - type: general-purpose
+    task: Spec review of blog post
+    model: sonnet
+    durationSec: 31
+    toolCalls: 9
+    modelCalls: 7
+    tokenShare: 3.7
+  - type: general-purpose
+    task: Fact-check blog post claims
+    model: sonnet
+    durationSec: 87
+    toolCalls: 17
+    modelCalls: 10
+    tokenShare: 5.2
+  - type: general-purpose
+    task: Blind read of reply drafts
+    model: sonnet
+    durationSec: 18
+    toolCalls: 7
+    modelCalls: 3
+    tokenShare: 4.2
+  - type: general-purpose
+    task: Standards review of Karen reply
+    model: sonnet
+    durationSec: 28
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 2.4
+  - type: general-purpose
+    task: Spec review of Karen reply
+    model: sonnet
+    durationSec: 31
+    toolCalls: 13
+    modelCalls: 9
+    tokenShare: 4.5
+  - type: general-purpose
+    task: Fact-check Karen reply claims
+    model: sonnet
+    durationSec: 138
+    toolCalls: 17
+    modelCalls: 9
+    tokenShare: 5.1
+  - type: general-purpose
+    task: Second reader on merged post and reply
+    model: sonnet
+    durationSec: 15
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 1.8
+  - type: general-purpose
+    task: Standards review of final Karen head
+    model: sonnet
+    durationSec: 19
+    toolCalls: 6
+    modelCalls: 6
+    tokenShare: 2.9
+  - type: general-purpose
+    task: Spec review of final Karen head
+    model: sonnet
+    durationSec: 26
+    toolCalls: 7
+    modelCalls: 6
+    tokenShare: 3.4
+gitBranch: claude/zen-heisenberg-uamrjy
+entrypoint: remote_trigger
+cliVersion: 2.1.328
+trigger: blog-post
+learnings:
+  - "PR #3474's 'builder' and 'orchestrator' are never defined in the PR text, so a post can say only what the PR says about them; fact-checkers will not accept inferred roles."
+ideas:
+  - "Add a permanent Blog e2e check that loads every post at 390px and asserts no horizontal scroll, so a long title fails a test instead of a visitor's thumb; the fix for #3452 only tests two pages."
+  - "Have a merge verdict comment name who ran each number a PR cites as evidence, or have the merging agent re-run one; #3474 merged nine seconds after its verdict, resting on the builder's own notes."
+  - Let the blog-post Skill's fact-check step accept a batch of fixes as one re-check by blob, instead of one dispatch per commit.
+landedBy: Stop
