@@ -9,24 +9,9 @@ role: >-
   against the PRs' diffs, and merges its own gated PR on green. Scheduled; run
   by hand to catch up.
 auditSummary:
-  date: "2026-11-18"
-  text: "Writes the daily Digest from verified facts and lands it; fact-check catches wrong claims before merge. Its first subagent call is usually refused until the dispatch Skill is read."
+  date: "2026-11-19"
+  text: "Publishes the daily digest with fact-check and review, and no cadence word shipped. The first Agent call is often denied until dispatch-subagents is read, and git docs are read late."
 observations:
-  - date: "2026-10-09"
-    note: >-
-      Re-checked (audit-skills behaviour check), 7 usedIn sessions. Newest,
-      session_01Pps6pXDX7ahChHwQajVZNc (PR #1696, the 2026-10-08 Digest),
-      fully re-derived from scratch: ran `scripts/digest.ts gather
-      2026-10-08` directly and its rollup (14 PRs, 84 commits, 17 sessions,
-      99 frictions by severity) matches the merged Digest's footer exactly;
-      its own fact-check caught and fixed 3 wrong claims pre-merge, each
-      independently verified correct against the underlying session records
-      and GitHub state. Retention sweep archived exactly 2026-10-01 + 7
-      session logs, matching `RETAIN_DATES = 7`; `current/pages/digests/`
-      holds exactly the 7 newest dates today, no gaps or duplicates. The
-      other 6 sessions re-corroborated against prior observations (retention
-      file counts, PR merge states). No reverts of digest content beyond the
-      already-known #1478 case. Grade/role unchanged.
   - date: "2026-10-10"
     note: >-
       Re-checked (audit-skills behaviour check), 7 usedIn sessions. Newest,
@@ -266,3 +251,5 @@ observations:
     note: "Behaviour check, runs session_013zxzeQeBzhDzmSvD9thT22, session_013zxzeQwDvvHbis5TK1nUw5, session_013zxzeSgpoaGQ1bLrtX4DkU: PRs #3324, #3359, #3394 merged, Digests on main, no revert. Dispatch guide blocked the first Agent call in 2 of 3. Cadence word reached code-review in the last run. Grade unchanged."
   - date: "2026-11-18"
     note: "Behaviour check, runs session_013zxzeQwDvvHbis5TK1nUw5, session_013zxzeSgpoaGQ1bLrtX4DkU, session_013zxzePDuDw1pEuTakjKjF7: PRs #3359, #3394, #3439 merged, Digests on main, no revert, no cadence word shipped (8bb55ab8c works). Dispatch-read guard blocked the first Agent call in 3 of 3 (earlier: 4 then 5 of 7). Wrong session id typed in a commit trailer twice, caught before shipping. Idea: name dispatch-subagents in step 3."
+  - date: "2026-11-19"
+    note: "Behaviour check, runs session_013zxzeSgpoaGQ1bLrtX4DkU, session_013zxzePDuDw1pEuTakjKjF7, session_013zxzePpCyqm2oL5M11axMq: PRs #3394, #3439, #3480 merged, digests 11-16 to 11-18 on main, footer counts match logs, no revert. Repeats: dispatch-read guard denied in 1-2 of 3 (11-19 read first and avoided it); git-conventions read late 3 of 3; hand-typed session id in trailer 2 of 3. 11-19 ran only the Standards axis of code-review (disclosed). Idea: add the dispatch-subagents read to step 3. Grade unchanged."

@@ -9,40 +9,9 @@ role: >-
   Inventory's grades in line with usage as a by-product, self-merging those
   edits (ADR-0015).
 auditSummary:
-  date: "2026-11-18"
-  text: "Grades the Platform's Skills from real runs and lands Inventory updates each night. It spends heavily on near-identical reports for Skills that did not change, and sometimes reads its docs late."
+  date: "2026-11-19"
+  text: "Produces a graded Inventory PR each night and files issues for real failures. Runs still lose the first subagent dispatch to a guard and read git docs late; reports are costly (about 1.7M tokens of subagents)."
 observations:
-  - date: "2026-10-09"
-    note: >-
-      Self-check: dispatched 11 behaviour-check subagents this run (one per
-      behaviourChecks entry), each report independently verified against
-      primary sources before use (every PR/issue claim checked live via
-      GitHub). No new silent failure or missed invocation found beyond what
-      prior entries already record. dispatch-subagents turned up a 3rd
-      occurrence of the already-open #1480 (cd-into-worktree,
-      session_015CSc6hNccF3XgrSGaGGqjD, 2026-10-08) and a further occurrence
-      of #1586's skillsUsed-logging gap (same session, this time with proper
-      worktree isolation) — both commented onto their existing threads
-      rather than filed as new issues. prune-trial surfaced a noteworthy
-      but unescalated observation: the deleted session-id-recovery trial's
-      own damage condition (a session-id-guard report of a wrong id) has
-      now fired 3 times post-verdict (session_01NRVHQoPm4cP1F7iVUvh9rJ,
-      355d2d64-55fc-4515-81c1-e831f8b84601,
-      49f1fea0-270e-4851-9cc7-3dbf8cc8609a), all traced to a dispatch/worktree
-      branch-sharing collision rather than the pruned behavior recurring —
-      recorded on prune-trial's own entry below, not escalated. The rest —
-      audit-docs, audit-skills (self), auto-triage, blog-post, close-session,
-      digest, frictions-to-fixes, log-session, visitor-loop — came back
-      clean or matched an already-tracked, already-resolved finding (#1627,
-      #1626/#1662, #1676/#1684, #1515 all independently re-confirmed closed
-      via live GitHub state). Step 3 closure completeness: orphan scan ran
-      clean (`scanned: true`, 1086 merged PRs, 935 with a session), both
-      orphan candidates carry `resolvedBy` (already tracked, left alone),
-      orphanSuppressionLog both entries plausible, humanPromptedClosures and
-      manuallyRescuedClosures both empty. Coverage check: `wait-what` is
-      on disk, uninventoried, and has zero uses to date (allTimeUses: 0) —
-      not added per this Skill's own "used but not inventoried" rule.
-      Grade/role unchanged.
   - date: "2026-10-10"
     note: >-
       Self-check: dispatched 11 behaviour-check subagents this run (one per
@@ -469,3 +438,5 @@ observations:
     note: "Behaviour check, runs session_013zxzePnUYHpbwDsDER2swv and session_013zxzeS7ZJqB5FMcd5d5fza: both delivered, PRs #3360 and #3327 merged, YAML-only diffs, no revert. New minor repeat n=2: a wrong session id drafted before the write (caught via get_session). Late git/GitHub doc reads n=4. Grade unchanged."
   - date: "2026-11-18"
     note: "Behaviour check, runs session_013zxzeTBn6kP1nZ2KA22n9i and session_013zxzePnUYHpbwDsDER2swv: PRs #3399 and #3360 merged (YAML-only diffs), issues #3395-#3398 closed, no revert. Repeats: late git/GitHub doc reads (n=5), wrong session id drafted before the write (n=3), 16-17 near-identical subagent reports (n=2, ~1.7M tokens in 11-17). Idea: scorecard prints each Skill's last-run count so unchanged Skills are skipped."
+  - date: "2026-11-19"
+    note: "Behaviour check, runs session_013zxzeTBn6kP1nZ2KA22n9i, session_013zxzeQty154cpRRShQjRhX: delivered; PRs #3399 and #3441 merged, YAML-only, issues #3395-#3398 and #3440 closed, grade changes cite 2-3 sessions, no revert. Repeats: git doc read late (7 runs), wrong session id caught via get_session (4), 16-17 subagent reports ~1.7M tokens (3), dispatch-read guard denied first Agent call on 11-17. 11-18: own read instead of code-review on a 4-file follow-up (disclosed). Idea: name git-conventions and dispatch-subagents read-first in step 1. Grade unchanged."
