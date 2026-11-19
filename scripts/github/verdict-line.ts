@@ -4,8 +4,8 @@
 //   pnpm exec tsx scripts/github/verdict-line.ts [<pr-number>] [--sha <sha>] [--own-read | --review-call]
 // --own-read prints `Own-read: <sha>` for a simple diff you read yourself, not
 // a `Reviewed:` line, which claims a code-review run (#3395). --review-call
-// prints the code-review call to make on that sha: merge-pr.ts accepts a
-// `Reviewed:` line only when this session's transcript shows such a call (#3483).
+// prints the code-review call whose args carry the sha merge-pr.ts looks for
+// (#3483).
 // --sha replaces HEAD (no checkout needed); a short one expands to the PR head.
 // With a PR number, warns on stderr when the SHA isn't the PR's head.
 import { extractFlag, extractSwitch, fail, root, runIfMain } from '../lib/cli.ts'

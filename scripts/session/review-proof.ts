@@ -1,7 +1,8 @@
 // Proof that a review ran in this session, for `merge-pr.ts`'s `Reviewed:`
 // check (#3483); which events count: `docs/agents/pr-workflow.md`, recipe step 5.
-import { existsSync, readFileSync, readdirSync } from 'node:fs'
+import { existsSync, readdirSync } from 'node:fs'
 import { basename, dirname, join } from 'node:path'
+import { readOrNull } from './commit-trailer.ts'
 import { parseTranscript } from './transcript-trace.ts'
 
 const SHA_RE = /\b[0-9a-f]{7,40}\b/gi
@@ -14,14 +15,6 @@ const NOTIFICATION_RE =
 const REVIEWED_HEAD_RE = /"reviewedHead":\s*"([0-9a-f]{7,40})"/g
 /** The label `clear-backlog-build` gives a reviewer agent; its test pins the two together. */
 export const REVIEWER_LABEL_RE = /^(?:Standards|Spec|Both) .* r\d+$/
-
-export const readOrNull = (path: string): string | null => {
-  try {
-    return readFileSync(path, 'utf8')
-  } catch {
-    return null
-  }
-}
 
 function* strings(v: unknown): Generator<string> {
   if (typeof v === 'string') yield v

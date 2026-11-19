@@ -58,9 +58,10 @@ check for base drift, then log a `major` Friction.
 
 ## Assembling several stories into one integration PR
 
-Before opening an integration PR that stacks already-reviewed stories, run
-`code-review` once more on the whole diff, with the branch's base as its fixed
-point: per-story review can't see how correct stories interact (#1421). Don't
+Before opening an integration PR that stacks already-reviewed stories, make
+step 3's `code-review` call once more on the whole diff (the printed call's
+fixed point is `origin/main`; put the branch's base there if it differs):
+per-story review can't see how correct stories interact (#1421). Don't
 re-review each story or repeat its findings.
 
 ## The recipe
@@ -85,7 +86,8 @@ re-review each story or repeat its findings.
    your own read of a simple diff, add `--own-read` for an `Own-read:` line;
    `merge-pr.ts` refuses it unless the PR passes the simple-change test
    (#3395). After a push that follows the review, end the verdict with
-   `Reviewed: <reviewed sha>` (`--sha`) and `Own-read: <head>`: it is accepted
+   `Reviewed: <reviewed sha>` (`--sha`, without the PR number, which would
+   warn that it is not the head) and `Own-read: <head>`: it is accepted
    when the review is in your transcript and the fix passes the test; a larger
    fix gets a new `code-review` and verdict. Use `event=COMMENT` or
    `add_issue_comment`, never an APPROVE review: on a fork PR it would fake the

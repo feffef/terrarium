@@ -595,6 +595,13 @@ describe('verdictRefusal() (issues #1276, #1844, #3483)', () => {
       expect(run(owner(header(me)), proven, [small('n.ts', 'added')])).toBeNull()
     })
 
+    it('lets an Own-read line on the head stand in for an unproven Reviewed line on it', () => {
+      const bodies = owner(header(me), header(me, ownRead))
+      expect(run(bodies, noProof, edit)).toBeNull()
+      expect(run(bodies, noProof, [small('a.ts')])).toMatch(/code, hook or workflow path/)
+      expect(run(bodies, proven, [small('a.ts')])).toBeNull()
+    })
+
     it('refuses an Own-read line naming an older commit', () => {
       const refusal = run(owner(header(me, 'Own-read: fedcba9')), noProof, edit)
       expect(refusal).toContain('names fedcba9')

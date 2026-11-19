@@ -269,9 +269,13 @@ export function findTranscriptPath(env: SessionIdEnv): string | null {
  *  to env-only session resolution. */
 export function findTranscriptContents(env: SessionIdEnv): string | null {
   const p = findTranscriptPath(env)
-  if (p === null) return null
+  return p === null ? null : readOrNull(p)
+}
+
+/** A file's text, or null when it cannot be read. */
+export function readOrNull(path: string): string | null {
   try {
-    return readFileSync(p, 'utf8')
+    return readFileSync(path, 'utf8')
   } catch {
     return null
   }

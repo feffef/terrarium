@@ -66,8 +66,8 @@ import { matchesGlob } from 'node:path'
 import { fail, root, runIfMain } from '../lib/cli.ts'
 import { git } from '../lib/git.ts'
 import { getJson, listAll, PER_PAGE, requestJson, resolveAccess, type Access } from '../lib/github-client.ts'
-import { findTranscriptPath } from '../session/commit-trailer.ts'
-import { readOrNull, reviewedShasFromTranscript, reviewerAgentIds } from '../session/review-proof.ts'
+import { findTranscriptPath, readOrNull } from '../session/commit-trailer.ts'
+import { reviewedShasFromTranscript, reviewerAgentIds } from '../session/review-proof.ts'
 import { hasAuthorshipMarker, readProvenanceHeader } from '../lib/provenance-header.ts'
 import { resolveGroundTruthFromTranscript } from '../session/transcript-trace.ts'
 import { TRUSTED_ASSOCIATIONS } from '../lib/author-trust.ts'
@@ -241,10 +241,12 @@ export function verdictRefusal(
     `refused: this session's transcript was not found (CLAUDE_CODE_SESSION_ID unset, or no file under ` +
     `<config>/projects), so no review can be proven. Run merge-pr.ts in the session that ran the review, ` +
     `or set CLAUDE_CODE_SESSION_ID to its id.`
-  if (named.some(coversHead)) {
+  // An unproven `Reviewed:` line on the head falls through to an `Own-read:` line on it, if any.
+  if (named.some(coversHead) && !ownRead.some(coversHead)) {
     if (named.filter(coversHead).some(isProven)) return null
     return review.reviewed === null ? noTranscript : `refused: this session's transcript shows no review of ${headSha}. ${next}`
   }
+  if (named.filter(coversHead).some(isProven)) return null
   if (ownRead.some(coversHead)) {
     const simpleOnly = `refused: an Own-read verdict covers only a simple diff (docs/agents/pr-workflow.md), but`
     const bases = [...new Set(named.filter(isProven))]

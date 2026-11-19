@@ -81,9 +81,8 @@ blindness matters, so a person reads them before they land.
   label `guest-build` puts on its PRs. The other exceptions rest on the agent
   recognising them, including any other PR built from a Public request: it
   looks Trusted because an agent opens it. The script also refuses some merges
-  no exception covers, among them a review claimed without proof in the
-  merging session's transcript and an own read of a diff that is not simple;
-  `docs/agents/pr-workflow.md` (step 5) lists every refusal.
+  no exception covers; `docs/agents/pr-workflow.md` (step 5) lists every
+  refusal.
 
 ## See
 
