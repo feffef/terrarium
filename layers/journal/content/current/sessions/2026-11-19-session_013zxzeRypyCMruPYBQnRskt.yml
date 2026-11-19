@@ -1,0 +1,145 @@
+schemaVersion: 1
+session: session_013zxzeRypyCMruPYBQnRskt
+startedAt: 2026-11-19T06:43:57Z
+endedAt: 2026-11-19T06:48:13Z
+kind: interactive
+goal: Make audit-skills observation notes long enough to follow
+status: partial
+outcome: Note length rule raised from ~100 to 300-500 words and pushed; no PR, gate or review yet
+summary: "The owner said audit-skills observations were too short to follow what the audit or the audited Skill did, and asked for about 250 words each. Per their stated preference I read the Skill and its brief, then asked what text was meant, what to add and how strict the length was. They chose Inventory observations, all four content kinds, and a 300-500 word range. I edited step 5 of the audit-skills SKILL.md (human-instructed), checked no script or test caps the length and no prune trial covers the Skill, then committed and pushed after the Stop hook asked (hook-prompted). Open and not done: the subagent brief still caps reports at 300 words plus 150 per finding, which may starve a 500-word note (agent-flagged, owner not yet asked); gate:scoped, the code-review Skill and the PR were not run or opened."
+prs: []
+docsRead:
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/audit-skills/brief.md
+    reason: (no reason given)
+  - path: docs/adr/0005-skill-model.md
+    reason: (no reason given)
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: closure at end of turn
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Edited the governed audit-skills SKILL.md before reading ADR-0005, 0015 and 0027 in full; the post-edit hook demanded them. The edit stood.
+    solution: Read the full ADRs when the summary rules loaded, before the first edit to a Skill.
+    severity: minor
+  - description: Grepped the repo and a Glass Box page for stale mentions of the 100-word cap with truncated output, costing three calls to learn nothing.
+    solution: One grep for the phrase with -n and no -o prefix context would have sufficed.
+    severity: nit
+durationSec: 256
+models:
+  claude-sonnet-5-5: 42
+toolCounts:
+  Grep: 4
+  Glob: 1
+  Read: 6
+  AskUserQuestion: 1
+  Bash: 10
+  Edit: 1
+  Write: 2
+  Skill: 2
+filesEdited:
+  - .agents/skills/audit-skills/SKILL.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0005.md
+adrHints:
+  - adr: 5
+    via: path
+    readAfter: true
+    by: main
+  - adr: 15
+    via: path
+    readAfter: true
+    by: main
+  - adr: 27
+    via: path
+    readAfter: true
+    by: main
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/audit-skills/SKILL.md
+      - rule: .claude/rules/adr-0015.md
+        via: native
+        trigger: .agents/skills/audit-skills/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/audit-skills/SKILL.md
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: native
+        trigger: docs/adr/0005-skill-model.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: docs/adr/0005-skill-model.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+    reported:
+      - path: .claude/rules/adr-0005.md
+        value: missed
+        why: "late: edited Skill before ADR read"
+      - path: .claude/rules/adr-0015.md
+        value: missed
+        why: "late: edited Skill before ADR read"
+      - path: .claude/rules/adr-0027.md
+        value: missed
+        why: "late: edited Skill before ADR read"
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: checked commit trailer landed
+      - path: .claude/rules/adr-0003.md
+        value: in-scope
+      - path: .claude/rules/adr-0004.md
+        value: in-scope
+      - path: .claude/rules/adr-0009.md
+        value: in-scope
+      - path: .claude/rules/adr-0030.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: unrelated
+      - path: .claude/rules/glassbox-content.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .agents/skills/audit-skills/SKILL.md
+      - path: .agents/skills/audit-skills/brief.md
+      - path: docs/agents/git-conventions.md
+gitBranch: ccr-7b87ebd0-a02hfu
+entrypoint: remote_mobile
+cliVersion: 2.1.328
+landedBy: Stop
