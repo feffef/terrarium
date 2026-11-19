@@ -208,7 +208,7 @@ For each `reviewed` branch, in round N:
    step 2. After 2 re-checks in a round, what is still open is that round's
    result.
 4. **Next round.** If a `defect` is still open after round N's re-checks, or
-   round N's fix commits together changed more than about 10 lines
+   round N's fix commits together changed more than 10 lines
    (`git -C <worktree> diff --shortstat <first sha before>..HEAD`), or a
    `missing-test` line is in the summary or a re-check on a branch above 50
    changed lines (`--shortstat origin/main...HEAD`), or you judge the branch
@@ -243,7 +243,8 @@ question or failure is in the report.
 ## 4. Land and report
 
 Push each gated branch from its worktree with
-`git push origin HEAD:<branch> && git fetch origin <branch>` (a build whose
+`git push origin HEAD:<branch>`, then in a separate Bash call
+`git fetch origin <branch>` (a build whose
 branch the main checkout holds commits on a `worktree-wf_…` branch). The fetch
 matters: `check:worktrees` counts commits on no remote-tracking ref as
 unpushed. Open its PR with the branch's decisions (its folder's

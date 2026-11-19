@@ -7,7 +7,7 @@
 How to use the domain docs while exploring. The repo's shape (one shared
 glossary plus one per Tenant) is in `GLOSSARY-MAP.md` (ADR-0021).
 
-## Before exploring, read these
+## How this repo differs from the Skill's templates
 
 When to read an ADR: `CLAUDE.md`, not this page.
 
