@@ -2,7 +2,7 @@ session: session_013zxzeRVd5oef56BLsas85y
 mode: autonomous
 focus: "Git & GitHub: settle the memory page's unchecked claims on Author trust and Dependabot grouping. Chosen because they are checkable against GitHub's published docs source (github/docs on raw.githubusercontent.com; docs.github.com was fetched for the GraphQL enum) and no open PR touches the Subject. Result: the pull_request_target approval claim, the first-time-contributor warning, the default 3-day cooldown and the '/' directory reach all match the docs; only the CONTRIBUTOR gloss differed from the enum. Deviations: no writer, claim checker or fresh reader, since the one changed clause is a quote of the enum's description. Scout ran in the background and found four topics (colour contrast, narrow-screen overflow, flock-serialised e2e builds, keeping tenant.config.ts free of runtime imports); the first two went on the memory page, the others fit existing pages. Cost: unreported (no get_session); estimated context about 150k tokens."
 changes:
-  - git-github/20.author-trust | The Concept's CONTRIBUTOR gloss now says 'has previously committed to the repository' and links GitHub's enum description | the old gloss said 'had a change merged before'; the enum says committed. Wording only, so revision and publishedAt are kept
+  - git-github/20.author-trust | The Concept's CONTRIBUTOR gloss now says 'has previously committed to the repository' and links GitHub's enum description | the old gloss said 'had a change merged before'; the enum says committed. The What to watch for bullet had said 'a change of theirs was merged once', so it now says the same (code-review's Spec reviewer found the contradiction). The Walkthrough's A real case keeps its own dated story. Wording only, so revision and publishedAt are kept
   - workshop/pages/index | The Author trust and Dependabot claim lead deleted; one gap line for colour contrast and narrow-screen overflow added; two wording leads trimmed | the claims were confirmed against the docs source
 pagesRead:
   - git-github/10.pull-requests
@@ -13,3 +13,5 @@ pagesRead:
   - git-github/60.attribution
   - git-github/70.issue-triage-labels
   - git-github/80.git-plumbing
+  - walkthroughs/20.a-bug-report-becomes-work
+  - terrarium-practice/90.outside-contributions
