@@ -82,7 +82,7 @@ PRs go through the same labels and states as issues, using `gh pr`:
 - **Read**: `gh pr view <number> --comments`; `gh pr diff <number>` for the diff.
 - **List external PRs**: `gh api --paginate 'repos/{owner}/{repo}/pulls?state=open'` (REST, so it works in a cloud session), then keep only PRs whose `author_association` is in `PUBLIC_ASSOCIATIONS` (`scripts/lib/author-trust.ts`; ADR-0020 says what follows).
 - **Comment / label / close**: `gh pr comment`, `gh pr edit --add-label`/`--remove-label`, `gh pr close`.
-- **The `trusted` label** is applied automatically to same-repo PRs by `.github/workflows/pr-authorassociation-label.yml` (ADR-0020, issue #443). There is no `public` label. A fork PR is left unlabeled on purpose (see the workflow header), so judge Public by `authorAssociation`, not by the missing label.
+- **The `trusted` label** is applied automatically to same-repo PRs from OWNER, MEMBER or COLLABORATOR authors by `.github/workflows/pr-authorassociation-label.yml` (ADR-0020, issue #443). There is no `public` label. A fork PR is left unlabeled on purpose (see the workflow header), so judge Public by `authorAssociation`, not by the missing label.
 
 Issues and PRs share one number space, so a bare `#42` may be either. Try
 `gh pr view 42`, then fall back to `gh issue view 42`.
