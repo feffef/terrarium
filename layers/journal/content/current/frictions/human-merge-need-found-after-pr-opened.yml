@@ -2,13 +2,17 @@ name: human-merge-need-found-after-pr-opened
 summary: A change no test observes (ADR-0004 human merge) was recognised only after the PR was open, forcing extra verdict, question and gate rounds.
 cause: "The session built a change and opened its PR before noticing ADR-0004 reserves a human merge for behaviour no test or gate step can observe; fixing it needed a test, an owner question, a second review and a second gate run. Signals: 'no test asserted the rendered row text', 'reserves a human merge', 'recognised only after opening the PR'."
 surface: safe
-status: tracked
+status: open
 related:
   - entry: constraint-unread-before-build
     rule: A rule other than ADR-0004's human-merge exception was unread and the build went against it.
 notes: |-
   2026-11-17 design: add the untested-behaviour check to the pre-PR step. dropped: that section is inside an open Prune Trial's territory (.agents/prune-trials.yml:116), and one occurrence costing one review round is thin.
   2026-11-17: two occurrences moved in from constraint-unread-before-build, so it holds three and "one occurrence" above no longer holds.
+fixes:
+  - pr: 3485
+    date: "2026-11-19"
+    summary: "pr-workflow.md's pre-PR section now asks the author to name the test or gate step that would fail on a regression, else add a test or expect a human merge (ADR-0004)."
 occurrences:
   - session: session_013zxzeP4NViUQL8i9LwF7Nj
     date: "2026-11-16"
