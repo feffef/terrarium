@@ -7,8 +7,10 @@
 //
 // Usage:
 //   tsx .agents/skills/harvest/scripts/harvest.ts extract [--kind ideas|learnings] [--out PATH]
+//     (also writes the issue list to PATH.issues.json, which `evidence` reads)
 //   tsx .agents/skills/harvest/scripts/harvest.ts list <extract.json>
 //   tsx .agents/skills/harvest/scripts/harvest.ts block <extract.json> <n> [n...]
+//   tsx .agents/skills/harvest/scripts/harvest.ts evidence <kw...> [-- <kw...>]... [--extract <extract.json>]
 //   tsx .agents/skills/harvest/scripts/harvest.ts check-clusters <harvest-checks.md> --extract <extract.json>
 //   tsx .agents/skills/harvest/scripts/harvest.ts check-body <body-file> --extract <extract.json> [--title T]
 //   tsx .agents/skills/harvest/scripts/harvest.ts check-posted <issue-number> <body-file>
@@ -268,6 +270,13 @@ export function keywordGroups(argv: string[]): string[][] {
   return groups.filter((g) => g.length)
 }
 
+/** The keyword groups and the `--extract` path of `evidence` arguments. */
+export function parseEvidenceArgs(argv: string[]): { groups: string[][]; extract?: string } {
+  const at = argv.indexOf('--extract')
+  const extract = at < 0 ? undefined : argv[at + 1]
+  return { groups: keywordGroups(at < 0 ? argv : argv.filter((_, i) => i !== at && i !== at + 1)), extract }
+}
+
 /** One group prints as `evidenceReport` does; several print one labelled block each. */
 export function groupedEvidenceReport(groups: string[][], src: EvidenceSources): string {
   if (groups.length === 1) return evidenceReport(groups[0]!, src)
@@ -424,9 +433,7 @@ export function rulingFiles(dir: string): string[] {
 }
 
 function cmdEvidence(argv: string[]): void {
-  const extract = flagValue(argv, '--extract')
-  const flagAt = argv.indexOf('--extract')
-  const groups = keywordGroups(flagAt < 0 ? argv : argv.filter((_, i) => i !== flagAt && i !== flagAt + 1))
+  const { groups, extract } = parseEvidenceArgs(argv)
   if (!groups.length) fail('usage: evidence <keyword...> [-- <keyword...>]... [--extract <extract.json>]')
   const saved = extract && existsSync(`${extract}.issues.json`) ? `${extract}.issues.json` : undefined
   const issues = saved ? (JSON.parse(readFileSync(saved, 'utf8')) as RawIssue[]) : listIssueBodies()

@@ -19,9 +19,10 @@ import {
   entryKey,
   evidenceReport,
   groupedEvidenceReport,
-  keywordGroups,
   harvestedState,
+  keywordGroups,
   noteTexts,
+  parseEvidenceArgs,
   parseKeys,
   productDecisions,
   renderBlock,
@@ -454,5 +455,16 @@ describe('groupedEvidenceReport()', () => {
         evidenceReport(['footer', 'x'], sources),
       ].join('\n'),
     )
+  })
+})
+
+describe('parseEvidenceArgs()', () => {
+  it('takes --extract and its value out of the keyword groups', () => {
+    expect(parseEvidenceArgs(['a', '--extract', 'x.json', '--', 'b'])).toEqual({ groups: [['a'], ['b']], extract: 'x.json' })
+    expect(parseEvidenceArgs(['--extract', 'x.json', 'a'])).toEqual({ groups: [['a']], extract: 'x.json' })
+  })
+
+  it('leaves extract unset without the flag', () => {
+    expect(parseEvidenceArgs(['a', 'b'])).toEqual({ groups: [['a', 'b']], extract: undefined })
   })
 })
