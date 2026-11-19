@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSbz6S2A8goaq25ibN
 startedAt: 2026-11-19T06:02:41Z
-endedAt: 2026-11-19T07:13:15Z
+endedAt: 2026-11-19T07:13:57Z
 kind: interactive
 goal: Clear the backlog of four open issues with the owner
 status: in-review
 outcome: "PR #3489 merged and closed #3481; PR #3491 for #3483 waits for the owner's merge; two date-blocked issues left"
-summary: "Human-instructed: the owner started /clear-backlog and answered every grilling question (Q1-Q14) across five rounds, including approving the pushes under per-branch names. The sweep found 4 open issues: #3423 (due 2026-11-24) and #3340 (due on or after 2026-11-22) stay blocked on their dates; #3481 and #3483 went to grilling. Agent-initiated: the explore run, my picks, the verification of each pick, the briefs, the builder and reviewer rounds, and the issue comments and labels that recorded the owner's scope. Surprises: the explore agent said #3483's premise did not hold (that the PRs contradicted the Friction), but PR #3444's timestamps showed it opened 11 s after its commit and was reviewed only afterwards; glassbox-curate's Land step orders \"open one PR\" before code-review. The owner rejected my pick to close #3483: they pointed to Karen's 2026-11-17 Blog post and agreed merge-pr.ts made a wrong call, so #3483 grew into a design for proof behind a Reviewed line (from the merging session's own transcript, naming the sha) and the full countable simple-change test for Own-read. A read-only survey subagent mapped every review path before that design round. On #3481 the owner chose a state reminder over a claimed-vs-real check, and a done-when clause for grilling (Skill call or file read) over a mechanical check, after asking whether reading the file had the same outcome. #3481 took three review rounds and passed the gate and opened as PR #3489 (no Human-only paths), merged on green CI with my verdict; merge-pr.ts closed #3481. #3483 took three review rounds (5 defects and a spec-mismatch found and fixed, mostly in how Own-read after a review and the no-transcript case are judged), passed the gate and opened as PR #3491; it changes merge-pr.ts and ADR-0004, so it waits for the owner's merge. It also makes a multi-file rewrap or restamp non-simple, a consequence of the owner's Q6 pick flagged in the PR."
+summary: "Human-instructed: the owner started /clear-backlog and answered every grilling question (Q1-Q14) across five rounds, including approving the pushes under per-branch names. The sweep found 4 open issues: #3423 (due 2026-11-24) and #3340 (due on or after 2026-11-22) stay blocked on their dates; #3481 and #3483 went to grilling. Agent-initiated: the explore run, my picks, the verification of each pick, the briefs, the builder and reviewer rounds, and the issue comments and labels that recorded the owner's scope. Surprises: the explore agent said #3483's premise did not hold (that the PRs contradicted the Friction), but PR #3444's timestamps showed it opened 11 s after its commit and was reviewed only afterwards; glassbox-curate's Land step orders \"open one PR\" before code-review. The owner rejected my pick to close #3483: they pointed to Karen's 2026-11-17 Blog post and agreed merge-pr.ts made a wrong call, so #3483 grew into a design for proof behind a Reviewed line (from the merging session's own transcript, naming the sha) and the full countable simple-change test for Own-read. A read-only survey subagent mapped every review path before that design round. On #3481 the owner chose a state reminder over a claimed-vs-real check, and a done-when clause for grilling (Skill call or file read) over a mechanical check, after asking whether reading the file had the same outcome. #3481 took three review rounds and passed the gate and opened as PR #3489 (no Human-only paths), merged on green CI with my verdict; merge-pr.ts closed #3481. The section 5 retro got replies from all 14 builders and reviewers, recorded as Frictions. #3483 took three review rounds (5 defects and a spec-mismatch found and fixed, mostly in how Own-read after a review and the no-transcript case are judged), passed the gate and opened as PR #3491; it changes merge-pr.ts and ADR-0004, so it waits for the owner's merge. It also makes a multi-file rewrap or restamp non-simple, a consequence of the owner's Q6 pick flagged in the PR."
 prs:
   - "3489"
   - "3491"
@@ -112,11 +112,41 @@ frictions:
   - description: "The explore agent's comment on #3481 misspells one session id (its own side finding); the comment was left uncorrected."
     solution: Explore agents should copy session ids from the log filename, never retype them.
     severity: nit
-durationSec: 4234
+  - description: "Retro, 5 of 8 #3483 reviewers: the brief gave the agreed spec only as an issue-comment URL, so every reviewer fetched it with gh api and drew a read-github-integration hint."
+    solution: "clear-backlog-build.js common(b): have the builder save the spec text to the branch folder once and point reviewers at that file."
+    severity: minor
+  - description: "Retro, 7 reviewers: PostToolUse read-first hints (git-conventions.md, github-integration.md) fired on read-only git log, git diff and gh api calls in read-only reviewers; no read changed anything."
+    solution: Exempt read-only review subagents from those hints in the hook under scripts/hooks/ (Human-only), or say in reviewPrompt() that the hint can be skipped.
+    severity: minor
+  - description: "Retro: a further fresh round started when the previous round's missing-test was already fixed and re-checked clean; #3481's round 3 found one nit (Standards-r3) and nothing on the Spec axis."
+    solution: "clear-backlog SKILL.md section 3 step 4: count only a missing-test still open after the round's re-checks. #3483's round 3, started by open defects, caught 2 defects and a spec-mismatch, so keep the defect trigger."
+    severity: minor
+  - description: "Retro, #3483 builder: almost every nit was fixed, and each nit-only fix got its own re-check (r1-c2, r2-c2, r3-c2), all clean; re-checks after defect fixes did catch a regression (Spec-r1-c1)."
+    solution: "clear-backlog-build.js rules(): when every fixed finding in a pass was a nit, reply recheck none; keep re-checks after any non-nit fix."
+    severity: nit
+  - description: "Retro, 3 reviewers: round 1 returns findings via StructuredOutput but re-checks via a Bash-written JSON file plus a one-line reply, two contracts in one agent's life."
+    solution: "clear-backlog-build.js reviewPrompt(): state both return contracts up front in round 1."
+    severity: minor
+  - description: "Retro, 2 later-round reviewers: triage.md lines name findings by file and number only, so a later round reopens every earlier findings JSON to avoid re-raising."
+    solution: "clear-backlog-build.js rules(): each triage.md line carries the finding's kind and title."
+    severity: nit
+  - description: "Retro, 3 #3483 reviewers: no brief line points to the session transcript, run journal or tasks/*.output files, though the proof design depends on their real shapes; each reviewer searched for them."
+    solution: In a brief whose work reads session transcripts, name the transcript dir and a sample journal path (clear-backlog SKILL.md section 3 brief writing).
+    severity: minor
+  - description: "Retro, both builders: the worktree guard refused non-git commands such as a python3 heredoc and cd-then-git chains, costing retries."
+    solution: "clear-backlog-build.js rules(): say interpreter heredocs that touch files are refused too; use Edit or Write."
+    severity: minor
+  - description: "Retro, 2 reviewers: 'read section 3 of code-review SKILL.md' can't be done by heading, so they read the whole file."
+    solution: "clear-backlog-build.js reviewPrompt(): give the line range of the smell baseline."
+    severity: nit
+  - description: "Retro, #3481 builder: the tdd Skill wants the user to confirm test seams, which a builder can't ask; it treated the brief's testability line as the agreed seam."
+    solution: "clear-backlog-build.js rules(): the brief's testability notes are the agreed tdd seams."
+    severity: nit
+durationSec: 4276
 models:
-  claude-opus-5-5: 268
+  claude-opus-5-5: 275
 toolCounts:
-  Bash: 68
+  Bash: 69
   Workflow: 6
   Read: 1
   Skill: 4
@@ -130,7 +160,7 @@ toolCounts:
   mcp__claude-code-remote__subscribe_pr_activity: 2
   Write: 1
   ReadNotifications: 3
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 2
   mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - scripts/session/commit-trailer.ts
@@ -1469,10 +1499,10 @@ subagents:
   - type: general-purpose
     task: a2a3e0bc4c83c1897
     model: claude-opus-5-5
-    durationSec: 1078
-    toolCalls: 11
-    modelCalls: 11
-    tokenShare: 0.9
+    durationSec: 1084
+    toolCalls: 12
+    modelCalls: 12
+    tokenShare: 1
   - type: general-purpose
     task: a2ad5e2c29f2f9ea9
     model: claude-opus-5-5
@@ -1507,7 +1537,7 @@ subagents:
     durationSec: 2189
     toolCalls: 246
     modelCalls: 147
-    tokenShare: 19.2
+    tokenShare: 19.1
   - type: general-purpose
     task: a731be5f1b3eb1990
     model: claude-opus-5-5
@@ -1549,7 +1579,7 @@ subagents:
     durationSec: 81
     toolCalls: 12
     modelCalls: 11
-    tokenShare: 0.8
+    tokenShare: 0.7
   - type: workflow-subagent
     task: Spec clear-backlog-issue-state r2
     model: claude-opus-5-5
@@ -1584,7 +1614,7 @@ subagents:
     durationSec: 183
     toolCalls: 25
     modelCalls: 21
-    tokenShare: 1.9
+    tokenShare: 1.8
   - type: workflow-subagent
     task: Standards review-proof-merge-check r3
     model: claude-opus-5-5
@@ -1605,14 +1635,14 @@ subagents:
     durationSec: 222
     toolCalls: 28
     modelCalls: 25
-    tokenShare: 2
+    tokenShare: 1.9
   - type: workflow-subagent
     task: Spec review-proof-merge-check r1
     model: claude-opus-5-5
     durationSec: 227
     toolCalls: 26
     modelCalls: 24
-    tokenShare: 1.9
+    tokenShare: 1.8
   - type: workflow-subagent
     task: Spec clear-backlog-issue-state r1
     model: claude-opus-5-5
@@ -1626,7 +1656,7 @@ subagents:
     durationSec: 462
     toolCalls: 111
     modelCalls: 68
-    tokenShare: 7
+    tokenShare: 6.9
   - type: workflow-subagent
     task: Standards clear-backlog-issue-state r1
     model: claude-opus-5-5
@@ -1640,7 +1670,7 @@ subagents:
     durationSec: 107
     toolCalls: 23
     modelCalls: 19
-    tokenShare: 1.6
+    tokenShare: 1.5
   - type: workflow-subagent
     task: "triage #3483"
     model: claude-sonnet-5-5
