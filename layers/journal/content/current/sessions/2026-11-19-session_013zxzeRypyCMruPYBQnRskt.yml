@@ -1,18 +1,18 @@
 schemaVersion: 1
 session: session_013zxzeRypyCMruPYBQnRskt
 startedAt: 2026-11-19T06:43:57Z
-endedAt: 2026-11-19T06:48:13Z
+endedAt: 2026-11-19T06:48:53Z
 kind: interactive
 goal: Make audit-skills observation notes long enough to follow
 status: partial
-outcome: Note length rule raised from ~100 to 300-500 words and pushed; no PR, gate or review yet
-summary: "The owner said audit-skills observations were too short to follow what the audit or the audited Skill did, and asked for about 250 words each. Per their stated preference I read the Skill and its brief, then asked what text was meant, what to add and how strict the length was. They chose Inventory observations, all four content kinds, and a 300-500 word range. I edited step 5 of the audit-skills SKILL.md (human-instructed), checked no script or test caps the length and no prune trial covers the Skill, then committed and pushed after the Stop hook asked (hook-prompted). Open and not done: the subagent brief still caps reports at 300 words plus 150 per finding, which may starve a 500-word note (agent-flagged, owner not yet asked); gate:scoped, the code-review Skill and the PR were not run or opened."
+outcome: Note length raised to 300-500 words and subagent report cap raised to match; pushed, no PR, gate or review yet
+summary: "The owner said audit-skills observations were too short to follow what the audit or the audited Skill did, and asked for about 250 words each. Per their stated preference I read the Skill and its brief, then asked what text was meant, what to add and how strict the length was. They chose Inventory observations, all four content kinds, and a 300-500 word range. I edited step 5 of the audit-skills SKILL.md (human-instructed), checked no script or test caps the length and no prune trial covers the Skill, then committed and pushed after the Stop hook asked (hook-prompted). I flagged that the subagent brief's report cap (300 words plus 150 per finding) could starve a 500-word note (agent-initiated); the owner then said to raise it (human-instructed), so brief.md now caps reports at 600 plus 200 per finding and names the content a note needs. Both commits are pushed. Not done: gate:scoped, the code-review Skill and the PR; the owner has not asked for them."
 prs: []
 docsRead:
   - path: .agents/skills/audit-skills/SKILL.md
     reason: (read before editing)
   - path: .agents/skills/audit-skills/brief.md
-    reason: (no reason given)
+    reason: (read before editing)
   - path: docs/adr/0005-skill-model.md
     reason: (no reason given)
   - path: docs/adr/0015-audit-skills-and-conditional-importance.md
@@ -23,7 +23,7 @@ docsRead:
     reason: (no reason given)
 skillsUsed:
   - name: close-session
-    reason: closure at end of turn
+    reason: closure at end of each turn
   - name: log-session
     reason: (no reason given)
 frictions:
@@ -33,20 +33,21 @@ frictions:
   - description: Grepped the repo and a Glass Box page for stale mentions of the 100-word cap with truncated output, costing three calls to learn nothing.
     solution: One grep for the phrase with -n and no -o prefix context would have sufficed.
     severity: nit
-durationSec: 256
+durationSec: 296
 models:
-  claude-sonnet-5-5: 42
+  claude-sonnet-5-5: 54
 toolCounts:
   Grep: 4
   Glob: 1
   Read: 6
   AskUserQuestion: 1
-  Bash: 10
-  Edit: 1
-  Write: 2
-  Skill: 2
+  Bash: 14
+  Edit: 2
+  Write: 4
+  Skill: 3
 filesEdited:
   - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/audit-skills/brief.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
