@@ -121,8 +121,10 @@ look the owner asked to see or the answers leave open, and show all the
 screenshots in one message with one numbered approval question per sample. A
 change request gets a revised sample and a new round.
 
-**Done:** every question is answered, every needed sample is approved, and
-every issue in §1's set is `ready-for-agent`, closed, or parked by the owner.
+**Done:** every question is answered, every needed sample is approved, every
+issue in §1's set is `ready-for-agent`, closed, or parked by the owner, and
+this session has called the `grilling` Skill or read
+`.agents/skills/grilling/SKILL.md`.
 
 ## 3. Build and review
 
@@ -266,8 +268,11 @@ branch ends with no PR, run `git worktree remove <worktree>` for its branch.
 **Done:** every PR is merged or waiting for a human merge, and
 `pnpm check:worktrees` exits 0.
 
-Report one line per issue: `#N | outcome | PR or "no PR: why" | merged / waits
-for you (why)`. Then do §5 and re-invoke `close-session`. Its log's
+Run `run-summary.ts --state --issues <§1's set> --prs <the run's PRs>`
+(comma-separated, e.g. `--issues 12,34`; drop `--prs` if the run opened none)
+and make the report match what it prints. Report one line
+per issue: `#N | outcome | PR or "no PR: why" | merged / waits for you
+(why)`. Then do §5 and re-invoke `close-session`. Its log's
 `summary` carries one line per merged or opened branch: what it changed (from
 that branch's `decisions.md`) and any judgement calls left open. In a workflow
 run the orchestrator's log is the Journal's only record of what its agents

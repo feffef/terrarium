@@ -3,7 +3,7 @@ import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { agentIds, buildSummary, findingsSummary, triageSummary } from '../../scripts/run-summary.ts'
+import { agentIds, buildSummary, findingsSummary, relatedIssues, stateSummary, triageSummary } from '../../scripts/run-summary.ts'
 
 const fixture = (name: string) => join(import.meta.dirname, 'fixtures', name)
 
@@ -201,6 +201,10 @@ describe('the command line', () => {
     ['--run outside --build', [fixture('explore.output'), '--triage', '--run', 'wf_1']],
     ['--run outside --build with --findings', [fixture('build.output'), '--findings', '--run', 'wf_1']],
     ['an unknown mode', [fixture('build.output'), '--verdict']],
+    ['--state with a non-number', ['--state', '--issues', 'x']],
+    ['--state with an unknown flag', ['--state', '--issues', '1', '--bogus']],
+    ['--state with no lists', ['--state']],
+    ['--state with a flag missing its value', ['--state', '--prs', '3', '--issues']],
   ])('rejects %s with the usage line, not a stack trace', (_name, args) => {
     const run = cli(args)
     expect(run.status).toBe(1)
@@ -217,5 +221,38 @@ describe('the command line', () => {
     expect(run.status).toBe(1)
     expect(run.stderr).toContain(message)
     expect(run.stderr).not.toMatch(/\n\s+at /)
+  })
+})
+
+describe('relatedIssues', () => {
+  it('adds the issues the PRs close to the given ones, once each and ascending', () => {
+    const prs = [
+      { number: 20, state: 'closed', merged: true, body: 'Fixes #6, #5' },
+      { number: 21, state: 'open', merged: false, body: null },
+    ]
+    expect(relatedIssues([9, 5], prs)).toEqual([5, 6, 9])
+  })
+})
+
+describe('stateSummary', () => {
+  it('prints each PR with the issues its body closes, and each issue with its reason and labels', () => {
+    const out = stateSummary(
+      [
+        { number: 20, state: 'closed', merged: true, body: 'Fixes #5, #6' },
+        { number: 21, state: 'open', merged: false, body: 'relates to #7' },
+      ],
+      [
+        { number: 5, state: 'closed', state_reason: 'completed', labels: ['ready-for-agent'] },
+        { number: 7, state: 'open', state_reason: null, labels: [] },
+      ],
+    )
+    expect(out).toBe(
+      [
+        'PR #20 merged, closing keywords name #5, #6',
+        'PR #21 open',
+        'issue #5 closed (completed) labels: ready-for-agent',
+        'issue #7 open labels: none',
+      ].join('\n'),
+    )
   })
 })
