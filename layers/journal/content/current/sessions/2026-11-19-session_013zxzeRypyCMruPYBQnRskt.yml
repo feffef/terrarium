@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRypyCMruPYBQnRskt
 startedAt: 2026-11-19T06:43:57Z
-endedAt: 2026-11-19T07:09:48Z
+endedAt: 2026-11-19T07:14:14Z
 kind: interactive
 goal: Make audit-skills observation notes long enough to follow
-status: in-review
-outcome: "PR #3490 open: 300-500 word notes, larger subagent reports, newest 7 observations shown; gate and review passed"
-summary: "The owner said audit-skills observations were too short to follow what the audit or the audited Skill did. Per their stated preference I read the Skill and its brief, then asked what text was meant, what to add and how strict the length was; they chose Inventory observations, all four content kinds and a 300-500 word range (human-instructed). I edited step 5 of the audit-skills SKILL.md, committed and pushed when the Stop hook asked. I flagged that the subagent report cap could starve the notes (agent-initiated); the owner said to raise it (human-instructed), so brief.md now caps reports at 600 plus 200 per finding. The owner then said to run the gate and open the PR (human-instructed). Code review (Standards and Spec subagents) found that the 30,000-character observation budget in scripts/session/audit-skills.ts would show only about ten long notes; I asked and the owner chose the newest 7 by default with a pointer to the Inventory entry for older ones, so I replaced the budget with a count (human-instructed, agent-implemented), updated its test, and removed a duplicated count from brief.md. typecheck, the spec and pnpm gate:scoped passed on the final head; PR #3490 is open and subscribed. Open: existing notes stay short until the next audit rewrites them; a stale friction file mentions the old budget but is historical."
+status: completed
+outcome: "PR #3490 merged: 300-500 word notes, larger subagent reports, newest 7 observations shown"
+summary: "The owner said audit-skills observations were too short to follow what the audit or the audited Skill did. Per their stated preference I read the Skill and its brief, then asked what text was meant, what to add and how strict the length was; they chose Inventory observations, all four content kinds and a 300-500 word range (human-instructed). I edited step 5 of the audit-skills SKILL.md, committed and pushed when the Stop hook asked. I flagged that the subagent report cap could starve the notes (agent-initiated); the owner said to raise it (human-instructed), so brief.md now caps reports at 600 plus 200 per finding. The owner then said to run the gate and open the PR (human-instructed). Code review (Standards and Spec subagents) found that the 30,000-character observation budget in scripts/session/audit-skills.ts would show only about ten long notes; I asked and the owner chose the newest 7 by default with a pointer to the Inventory entry for older ones, so I replaced the budget with a count (human-instructed, agent-implemented), updated its test, and removed a duplicated count from brief.md. typecheck, the spec and pnpm gate:scoped passed on the final head; CI's safety-gate went green, I posted my verdict and merged through merge-pr.ts (agent-initiated, per ADR-0004). Open: existing notes stay short until the next audit rewrites them; a stale friction file mentions the old budget but is historical."
 prs:
   - "3490"
 docsRead:
@@ -44,23 +44,32 @@ frictions:
   - description: Grepped the repo and a Glass Box page for stale mentions of the 100-word cap with truncated output, costing three calls to learn nothing.
     solution: One grep for the phrase with -n and no -o prefix context would have sufficed.
     severity: nit
-durationSec: 1551
+  - description: Raised the note length without grepping the consumers of observations; only code review found the 30,000-character budget in audit-skills.ts that would cut the history. CLAUDE.md says grep consumers in the same edit.
+    solution: Grep the scripts that read a field (here observations in scripts/session/audit-skills.ts) before changing a limit on it.
+    severity: minor
+  - description: Piped log-session.ts --author output through head twice, against close-session's never-filter rule; its warnings could have been cut off.
+    solution: Run the command unfiltered and read all of its output.
+    severity: nit
+durationSec: 1816
 models:
-  claude-sonnet-5-5: 110
+  claude-sonnet-5-5: 130
 toolCounts:
   Grep: 4
   Glob: 1
   Read: 9
   AskUserQuestion: 2
-  Bash: 29
-  Edit: 5
-  Write: 7
-  Skill: 5
+  Bash: 34
+  Edit: 6
+  Write: 8
+  Skill: 6
   Agent: 4
-  ToolSearch: 1
+  ToolSearch: 3
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - .agents/skills/audit-skills/SKILL.md
   - .agents/skills/audit-skills/brief.md
@@ -305,28 +314,28 @@ subagents:
     durationSec: 32
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 9.9
+    tokenShare: 8.3
   - type: general-purpose
     task: Spec review of diff
     model: sonnet
     durationSec: 32
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 9.9
+    tokenShare: 8.3
   - type: general-purpose
     task: Standards review of follow-up
     model: sonnet
     durationSec: 15
     toolCalls: 7
     modelCalls: 3
-    tokenShare: 7.6
+    tokenShare: 6.4
   - type: general-purpose
     task: Spec review of follow-up
     model: sonnet
     durationSec: 14
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 8.1
+    tokenShare: 6.8
 gitBranch: ccr-7b87ebd0-a02hfu
 entrypoint: remote_mobile
 cliVersion: 2.1.328
