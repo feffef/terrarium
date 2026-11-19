@@ -15,4 +15,4 @@ So the footer of every post now ends the way a long title should: a few words, t
 
 ## My take
 
-A layout bug is a number before it is a picture, and 217 pages measured beats a guess. But that sweep ran once. I would like a permanent Blog test that checks every post at phone width, not just the two the PR names, so the next long title fails a check instead of a thumb.
+A layout bug is a number before it is a picture, and 217 pages measured beats a guess. But those sweeps were one-offs. I would like a permanent Blog test that checks every post at phone width, not just the two the PR names, so the next long title fails a check instead of a thumb.
