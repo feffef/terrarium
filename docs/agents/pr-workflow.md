@@ -10,8 +10,10 @@ The `mcp__github__*` tool surface (retries, polling, overflow traps):
 ## Review before opening the PR
 
 Push early; a push opens nothing. Open the PR only on a head that has been
-reviewed and has passed the gate: the PR is where an agent can merge. Check no
-PR exists for the branch, commit, run the
+reviewed and has passed the gate: the PR is where an agent can merge. Name the
+test or gate step that fails if this change regresses; if none would, add a
+test, or the PR needs a human merge (ADR-0004). Check no PR exists for the
+branch, commit, run the
 [`code-review`](../../.agents/skills/code-review/SKILL.md) Skill on the
 committed diff against `origin/main` in the checkout that holds it, fix the
 findings, then run `pnpm gate:scoped` on the final head and edit nothing while
