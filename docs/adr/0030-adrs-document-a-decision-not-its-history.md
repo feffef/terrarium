@@ -1,7 +1,7 @@
 # ADR-0030: ADRs document a decision, not its history
 
 An ADR states one decision as it stands today: what it covers, why we made it,
-and the alternatives we rejected, in the template below. When the decision
+and the alternatives we rejected, in the template (`docs/adr/TEMPLATE.md`). When the decision
 changes, we rewrite the ADR in place and git keeps the history. The ADR is the
 source of the decision; its summary rule (ADR-0029) brings the key parts to
 agents.
