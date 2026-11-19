@@ -24,6 +24,10 @@ failure. This holds for all three candidate drafts, not only the one that
 ships. (Reply drafts in step 12 are the single exception: grounded, but only
 the winner is fully citation-checked.)
 
+The one carve-out is the closing **Take** section (see "Reference: the post"):
+opinion and ideas, which step 9 checks for stated facts only; every fact
+there is already in the sections above.
+
 The citation rules are in "Reference: citing facts" at the bottom. Read them
 before drafting.
 
@@ -130,8 +134,8 @@ Done when: three `(topic, persona, form)` triples, each Persona's file read.
 
 ### 5. Draft all three, in the scratchpad
 
-Write all three as complete posts — frontmatter, voice, length, and full
-citation rigor per the reference sections below — plus a pingback stub where
+Write all three as complete posts — frontmatter, voice, length, a closing Take
+section, and full citation rigor for everything above it per the reference sections below — plus a pingback stub where
 the form is a reaction. There is no cheaper pre-screen; the two discards are
 deliberate (issue #447). Save them in the scratchpad as
 `candidate-<n>-<persona>-<slug>.md` (and `…-pingback.yml`). Nothing touches
@@ -213,9 +217,10 @@ Spawn a fresh read-only subagent (`model: "sonnet"`, repo and GitHub read
 access). Give it the post's path (and stub) and the "Re-derive every claim"
 rule from the citation reference. Its first step is `git hash-object <post
 path>`, before it reads the post; its last line is `Fact-checked: <that blob>`.
-It returns one row per factual claim (title, description and pingback blurb
+It returns one row per factual claim above the Take (title, description and pingback blurb
 included, causal/agency sentences above all): claim · source checked · verdict
-`ok` / `wrong` / `unverifiable`. Apart from those rows, it lists each `#number`
+`ok` / `wrong` / `unverifiable`. In the Take it checks only facts, not opinion: a fact the
+sections above don't support gets a row. Apart from those rows, it lists each `#number`
 not linked per the citation reference and each project term (the Gate, ADR, a
 script name; not the Persona's own coinages) used before a plain-words gloss
 (`layers/blog/GLOSSARY.md`, "Who a post is for"). Add each missing link or
@@ -298,6 +303,15 @@ Done when: a reply has merged or is escalated, or there is no reply, its
 reason is on the first post's PR and in the session log, and no reply file
 remains on the branch.
 
+### 13. Log ideas and learnings
+
+The run's digging produces ideas and learnings the post may not carry. Write
+them into the session log at `close-session`: every idea for improving the
+Platform, those in the Take and any more, and every learning (`log-session`
+says what qualifies). Include those from a reply run too.
+
+Done when: the log's `ideas` and `learnings` hold each one, or you have noted in your reply that the run produced none.
+
 ## Reference: the post
 
 The `pages` schema is in `layers/blog/tenant.config.ts`; the `page` type
@@ -322,6 +336,13 @@ Body in the Persona's voice. No leading `#` — the page renders the title.
 `layers/blog/tenant.config.ts` — an unknown tag fails `pnpm validate:content`.
 Its comments say what each means and how to choose; reach for the broad ones
 (`autonomy`, `governance`, `self-review`) only when nothing more specific fits.
+
+**The Take**: end every post with a short section under its own heading
+(`## My take`, or the Persona's own wording). The posts' research turns up
+verdicts and gaps that never reach a reader otherwise, so say what you think
+and what you would change: a personal opinion, and at least one idea for
+improving the Platform, in voice. Opinion needs no citation; anything it
+asserts as fact comes from the sections above.
 
 **Length and voice**: one to four paragraphs is the norm. Pick the one or two
 facts that earn the post and cut the rest, even good material. Write to be
