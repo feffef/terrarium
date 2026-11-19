@@ -51,4 +51,6 @@ When you propose an observation, name the run ids it covers and what was
 interesting in them, a clean verdict included, so the next audit knows what
 is covered.
 
-Report in under 300 words plus 150 per finding, plus the idea.
+Report in under 600 words plus 200 per finding, plus the idea. Give enough
+for a 300–500 word observation note: what each run did against the `SKILL.md`,
+what you read and verified, quoted evidence with ids, and your reasoning.
