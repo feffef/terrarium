@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSbxN1yAYBzyNbUST6
 startedAt: 2026-11-19T07:33:03Z
-endedAt: 2026-11-19T07:49:26Z
+endedAt: 2026-11-19T07:53:18Z
 kind: autonomous
 goal: Bring the Glass Box guide up to date with main
-status: in-review
-outcome: PR 3492 open with all 65 flagged pages re-pinned and checked; waiting on CI and merge
-summary: Scheduled glassbox-update run, so every step was the schedule's, with no human prompt. The script reported 65 flagged pages and 3 flagged terms against main 6e979769. I advanced every page, hand-re-lined the 7 pages that had an edited excerpt range, and rewrote the pull-requests page because merge-pr.ts now needs proof of a review. Nine Sonnet claim-check agents (a one-agent pilot first, then eight in parallel) covered the 61 other needsReader pages scoped and the 5 rotation walkthroughs in full; I confirmed each reported contradiction in the source myself (workflow-scripts retro and next-round claims, on-ramp card claims, an ADR-0016 rejected design worded as history, one unsupported ADR-0030 clause) and made minimal fixes. code-review ran on the full diff and again on the follow-up commit; its findings were stale teaches lines and publishedAt, fixed. gate:scoped passed; PR 3492 is open and subscribed, verdict posted, merge waits for CI.
+status: completed
+outcome: "PR 3492 merged: all 65 flagged pages re-pinned and checked"
+summary: Scheduled glassbox-update run, so every step was the schedule's, with no human prompt. The script reported 65 flagged pages and 3 flagged terms against main 6e979769. I advanced every page, hand-re-lined the 7 pages that had an edited excerpt range, and rewrote the pull-requests page because merge-pr.ts now needs proof of a review. Nine Sonnet claim-check agents (a one-agent pilot first, then eight in parallel) covered the 61 other needsReader pages scoped and the 5 rotation walkthroughs in full; I confirmed each reported contradiction in the source myself (workflow-scripts retro and next-round claims, on-ramp card claims, an ADR-0016 rejected design worded as history, one unsupported ADR-0030 clause) and made minimal fixes. code-review ran on the full diff and again on the follow-up commit; its findings were stale teaches lines and publishedAt, fixed. gate:scoped passed; PR 3492 merged through merge-pr.ts once CI was green.
 prs:
   - "3492"
 docsRead:
@@ -99,20 +99,21 @@ frictions:
   - description: Every follow-up after code-review (7 prose files) needed a second two-agent code-review because merge-pr.ts counts it as non-simple.
     solution: None needed; the cost is the intended safety net, but a glassbox-update note could say to fold review fixes in before the first review.
     severity: minor
-durationSec: 983
+durationSec: 1215
 models:
-  claude-sonnet-5-5: 176
+  claude-sonnet-5-5: 188
 toolCounts:
   Read: 4
-  Bash: 66
+  Bash: 69
   Skill: 5
   Agent: 13
-  ReadNotifications: 1
+  ReadNotifications: 3
   ToolSearch: 1
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/agents/20.workflow-scripts.md
   - layers/glassbox/content/guide/pages/git-github/10.pull-requests.md
@@ -723,84 +724,84 @@ subagents:
     durationSec: 130
     toolCalls: 32
     modelCalls: 31
-    tokenShare: 7.6
+    tokenShare: 7.3
   - type: general-purpose
     task: Claim check group 2
     model: sonnet
     durationSec: 154
     toolCalls: 35
     modelCalls: 32
-    tokenShare: 7.7
+    tokenShare: 7.4
   - type: general-purpose
     task: Claim check group 3
     model: sonnet
     durationSec: 77
     toolCalls: 18
     modelCalls: 17
-    tokenShare: 4.5
+    tokenShare: 4.3
   - type: general-purpose
     task: Claim check group 4
     model: sonnet
     durationSec: 127
     toolCalls: 27
     modelCalls: 26
-    tokenShare: 6.2
+    tokenShare: 6
   - type: general-purpose
     task: Claim check group 5
     model: sonnet
     durationSec: 157
     toolCalls: 35
     modelCalls: 31
-    tokenShare: 7.3
+    tokenShare: 7
   - type: general-purpose
     task: Claim check group 6
     model: sonnet
     durationSec: 161
     toolCalls: 35
     modelCalls: 33
-    tokenShare: 8.9
+    tokenShare: 8.5
   - type: general-purpose
     task: Claim check group 7
     model: sonnet
     durationSec: 107
     toolCalls: 20
     modelCalls: 18
-    tokenShare: 5
+    tokenShare: 4.8
   - type: general-purpose
     task: Claim check group 8
     model: sonnet
     durationSec: 191
     toolCalls: 43
     modelCalls: 37
-    tokenShare: 10
+    tokenShare: 9.6
   - type: general-purpose
     task: Claim check group 9
     model: sonnet
     durationSec: 35
     toolCalls: 12
     modelCalls: 9
-    tokenShare: 2
+    tokenShare: 1.9
   - type: general-purpose
     task: Review Standards axis
     model: sonnet
     durationSec: 27
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 1.7
+    tokenShare: 1.6
   - type: general-purpose
     task: Review Spec axis
     model: sonnet
     durationSec: 49
     toolCalls: 13
     modelCalls: 12
-    tokenShare: 2.6
+    tokenShare: 2.5
   - type: general-purpose
     task: Review follow-up, Standards
     model: sonnet
     durationSec: 22
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 1.1
+    tokenShare: 1
   - type: general-purpose
     task: Review follow-up, Spec
     model: sonnet
