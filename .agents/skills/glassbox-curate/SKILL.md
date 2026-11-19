@@ -149,13 +149,15 @@ keeps them.
   PR"), in this order:
   1. Wait for the Scout now; a topic of its that this run does not write goes on
      the memory page as State allows.
-  2. Commit, then give `code-review`
-     the Lesson contract, writing-pages.md, owner-decisions.md and the glassbox-content
-     rule as its standards, without the code-smell baseline, and say the page
-     checks already ran. Its Spec reviewer also judges which pages the change
-     needed read (the ones it edits, links or overlaps), and names each one missing
-     from `pagesRead`. Read those, recheck the change against them, and add them
-     to `pagesRead`.
+  2. Commit, then give `code-review` the args
+     `verdict-line.ts --review-call` prints (they name the head sha
+     `merge-pr.ts` looks for), plus the Lesson contract, writing-pages.md,
+     owner-decisions.md and the glassbox-content rule as its standards,
+     without the code-smell baseline, and say the page checks already ran.
+     Its Spec reviewer also judges which pages the change needed read (the
+     ones it edits, links or overlaps), and names each one missing from
+     `pagesRead`. Read those, recheck the change against them, and add them to
+     `pagesRead`.
   3. Fix the findings, run `pnpm gate:scoped` on the final head, and push it.
   4. Open one PR, self-merged unless the Remit says it waits.
 

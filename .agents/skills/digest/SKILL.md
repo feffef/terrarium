@@ -152,9 +152,9 @@ sync with its contents (`docs/agents/pr-workflow.md`) and include the
 fact-check tally ("N claims checked, M fixed, K unverifiable" — list any
 unverifiable ones).
 
-Run the `code-review` Skill on the Digest PR before you open it (a Digest adds
-a file, so it is never a simple change); the step 3 fact-check does not replace
-it.
+Run the `code-review` Skill on the Digest PR before you open it, with the args
+`verdict-line.ts --review-call` prints (a Digest adds a file, so it is never a
+simple change); the step 3 fact-check does not replace it.
 
 Then follow `docs/agents/pr-workflow.md`'s "Closing a scheduled run's PR".
 The diff may hold only Digest pages under

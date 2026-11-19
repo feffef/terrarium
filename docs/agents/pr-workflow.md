@@ -10,7 +10,8 @@ The `mcp__github__*` tool surface (retries, polling, overflow traps):
 ## Review before opening the PR
 
 Push early; a push opens nothing. The PR is where an agent can merge, so open
-it only after these steps, in this order:
+it only after these steps, in this order. Exempt: a session-log commit, and a
+Skill whose own steps review the diff before the PR (`midden-catalogue` §4).
 
 1. Name the test or gate step that fails if this change regresses. If none
    would, add a test, or the PR needs a human merge (ADR-0004).
@@ -26,9 +27,7 @@ it only after these steps, in this order:
 6. Push that head, then open the PR.
 
 **Done when** the PR is open on a head that `code-review` reviewed (or that
-passed your own read of a simple diff) and `gate:scoped` passed. Exempt: a
-session-log commit, and a Skill whose own steps review the diff before the PR
-(`midden-catalogue` §4).
+passed your own read of a simple diff) and `gate:scoped` passed.
 
 The gate skips `test`, `build` and `test:e2e` when every changed path is a `.md`
 outside `layers/` or under `.claude/skills/`; when the rest are under
@@ -38,15 +37,20 @@ reads such a Markdown file (`tests/unit/area-labels.spec.ts` reads an
 auto-triage `SKILL.md`) can fail only on `main` after a Markdown-only PR.
 
 **A simple change** gets your own read of its full diff instead. Count; don't
-judge by how plain it looks. Simple is a typo, rewrap, broken link or path, an
-`adr:` hash or token-estimate restamp, or at most 10 lines in at most 2 files;
-and never a file added, renamed or moved, or a change to code logic, hooks,
-workflow scripts, Skill or rule frontmatter (bar that hash), or the meaning of a
-Skill, rule, ADR or agent doc. A follow-up commit after a review takes the same
-test; a larger one gets `code-review` on its own diff. `merge-pr.ts` checks the
-countable part: lines count as the larger of a file's additions and deletions,
-and any `.ts`, `.js` or `.vue` file, or one under `scripts/hooks/` or
-`.claude/workflows/`, counts as code.
+judge by how plain it looks. A change is simple when all of these hold:
+
+- it touches at most 2 files and at most 10 lines, each file counting the
+  larger of its added and deleted lines;
+- it adds, renames, copies or moves no file;
+- it touches no `.ts`, `.js` or `.vue` file and nothing under `scripts/hooks/`
+  or `.claude/workflows/`;
+- it changes no Skill or rule frontmatter (bar an `adr:` hash or
+  token-estimate restamp) and not the meaning of a Skill, rule, ADR or agent
+  doc: a typo, rewrap, broken link or path, or such a restamp.
+
+A follow-up commit after a review takes the same test; a larger one gets
+`code-review` on its own diff. `merge-pr.ts` checks the first three bars, so a
+restamp of three rules needs `code-review` too.
 
 A later push to an open PR that changes only prose or docs may skip
 `gate:scoped` and rely on CI's gate. If `gate:scoped` passed but CI failed,

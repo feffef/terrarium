@@ -24,10 +24,8 @@
 //   a PR whose closing keywords name an open issue not labelled
 //   `ready-for-agent` (#2104, #2691), a PR adding a blog post whose blob is not
 //   the one its `Fact-checked:` line names (#2370), or unless this session's
-//   verdict is on the PR (#1276, #1844): a `Reviewed:` line naming the head,
-//   with a review of it in this session's transcript (`review-proof.ts`), or an
-//   `Own-read:` line naming the head when the diff passes `simpleChangeRefusal`
-//   (#3483). A plain Dependabot bump needs no proof.
+//   verdict naming the head is on the PR (#1276, #1844), and backed by proof of
+//   the review or a simple diff (`verdictRefusal`, #3483).
 //   A Dependabot PR skips the Public-author,
 //   guest-pipeline and Human-only refusals only when `dependabotBumpRefusal`
 //   finds a plain minor/patch bump (#1889); a fork still refuses.
@@ -68,8 +66,8 @@ import { matchesGlob } from 'node:path'
 import { fail, root, runIfMain } from '../lib/cli.ts'
 import { git } from '../lib/git.ts'
 import { getJson, listAll, PER_PAGE, requestJson, resolveAccess, type Access } from '../lib/github-client.ts'
-import { findTranscriptContents, findTranscriptPath } from '../session/commit-trailer.ts'
-import { reviewedShasFromFile } from '../session/review-proof.ts'
+import { findTranscriptPath } from '../session/commit-trailer.ts'
+import { readOrNull, reviewedShasFromTranscript, reviewerAgentIds } from '../session/review-proof.ts'
 import { hasAuthorshipMarker, readProvenanceHeader } from '../lib/provenance-header.ts'
 import { resolveGroundTruthFromTranscript } from '../session/transcript-trace.ts'
 import { TRUSTED_ASSOCIATIONS } from '../lib/author-trust.ts'
@@ -172,10 +170,8 @@ const SIMPLE_MAX_LINES = 10
 const NOT_SIMPLE_PATH_RE = /^(?:scripts\/hooks\/|\.claude\/workflows\/)|\.(?:ts|js|vue)$/
 
 /** Why `files` fail the countable part of `pr-workflow.md`'s simple-change
- *  test, or null (#3483): at most 2 files, at most 10 changed lines (each file
- *  counts the larger of its additions and deletions), no file added, renamed or
- *  copied, and no code, hook or workflow path. The judged part (a typo versus a
- *  change of meaning) stays with the author. A missing line count fails closed. */
+ *  test, or null (#3483); the judged part stays with the author. A missing
+ *  line count fails closed. */
 export function simpleChangeRefusal(files: PrFile[]): string | null {
   const larger = files.filter((f) => ['added', 'renamed', 'copied'].includes(f.status ?? ''))
   if (larger.length) return `it adds, renames or copies ${larger.map((f) => f.filename).join(', ')}`
@@ -539,12 +535,10 @@ function readPrFiles(a: Access, prNumber: number): PrFile[] {
   return listAll<RawPrFile>(a, `pulls/${prNumber}/files`).map(prFileOf)
 }
 
-/** The files changed from `base` to `head`, or null when the comparison fails
- *  or GitHub truncates it (300 files). */
+/** The files changed from `base` to `head`, or null when the comparison fails. */
 function readFilesSince(a: Access, base: string, head: string): PrFile[] | null {
   try {
-    const { files } = getJson<{ files?: RawPrFile[] }>(a, `compare/${base}...${head}`)
-    return files && files.length < 300 ? files.map(prFileOf) : null
+    return getJson<{ files?: RawPrFile[] }>(a, `compare/${base}...${head}`).files?.map(prFileOf) ?? null
   } catch {
     return null
   }
@@ -675,11 +669,15 @@ export async function mergePrWhenGreen(
     return { pr: prNumber, verdict: 'unchecked-post', merged: false, message: uncheckedPost }
   }
 
-  const sessionId = resolveGroundTruthFromTranscript(findTranscriptContents(process.env) ?? '')
+  const transcriptPath = findTranscriptPath(process.env)
+  const transcript = transcriptPath === null ? null : readOrNull(transcriptPath)
+  const sessionId = resolveGroundTruthFromTranscript(transcript ?? '')
   const { sha, body: prBody } = meta
+  const proof = () =>
+    transcript === null ? null : reviewedShasFromTranscript(transcript, reviewerAgentIds(transcriptPath!))
   // A plain Dependabot bump passed `dependabotBumpRefusal` above (#3483).
   const review: ReviewEvidence = {
-    reviewed: meta.authorLogin === DEPENDABOT_LOGIN ? 'exempt' : reviewedShasFromFile(findTranscriptPath(process.env)),
+    reviewed: meta.authorLogin === DEPENDABOT_LOGIN ? 'exempt' : proof(),
     filesSince: (base) => readFilesSince(access, base, sha),
   }
   const noVerdict = verdictRefusal(readVerdictBodies(access, prNumber), sessionId, sha, files, review)

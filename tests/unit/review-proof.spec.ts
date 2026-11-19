@@ -1,5 +1,8 @@
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { reviewedShasFromTranscript } from '../../scripts/session/review-proof.ts'
+import { reviewedShasFromTranscript, reviewerAgentIds } from '../../scripts/session/review-proof.ts'
 
 const SHA = '0123456789abcdef0123456789abcdef01234567'
 const jsonl = (...recs: object[]) => recs.map((r) => JSON.stringify(r)).join('\n')
@@ -48,5 +51,40 @@ describe('reviewedShasFromTranscript() (#3483)', () => {
       jsonl(toolUse('Workflow', { name: 'clear-backlog-build', args: {} }, 'toolu_w'), user(note(id)))
     expect(reviewedShasFromTranscript(t('toolu_w'), none)).toEqual([SHA])
     expect(reviewedShasFromTranscript(t('toolu_other'), none)).toEqual([])
+  })
+
+  it('reads reviewedHead from the output file when the notification cut the result', () => {
+    const note = `<task-notification>\n<tool-use-id>toolu_w</tool-use-id>\n<output-file>/tasks/w.output</output-file>\n<status>completed</status>\n<result>[{"branch":"a","reviews":"... (truncated 9000 chars)</result>\n</task-notification>`
+    const t = jsonl(toolUse('Workflow', { name: 'clear-backlog-build', args: {} }, 'toolu_w'), user(note))
+    const full = JSON.stringify({ result: [{ branch: 'a' }, { branch: 'b', reviewedHead: SHA }] }, null, 2)
+    expect(reviewedShasFromTranscript(t, none, (p) => (p === '/tasks/w.output' ? full : null))).toEqual([SHA])
+    expect(reviewedShasFromTranscript(t, none, () => null)).toEqual([])
+  })
+})
+
+describe('reviewerAgentIds() (#3483)', () => {
+  it("returns the reviewers every workflow run's journal started, not its builders", () => {
+    const dir = mkdtempSync(join(tmpdir(), 'review-proof-'))
+    const transcript = join(dir, 'uuid.jsonl')
+    writeFileSync(transcript, '')
+    const run = (id: string, ...recs: object[]) => {
+      const d = join(dir, 'uuid', 'subagents', 'workflows', id)
+      mkdirSync(d, { recursive: true })
+      writeFileSync(join(d, 'journal.jsonl'), jsonl(...recs))
+    }
+    run(
+      'wf_1',
+      { type: 'launched' },
+      { type: 'started', agentId: 'b1', label: 'build fix/1-x' },
+      { type: 'started', agentId: 's1', label: 'Standards fix/1-x r1' },
+      { type: 'result', agentId: 'x1', label: 'Spec fix/1-x r1' },
+    )
+    run('wf_2', { type: 'started', agentId: 'p2', label: 'Both fix/2-y r2' })
+    try {
+      expect([...reviewerAgentIds(transcript)].sort()).toEqual(['p2', 's1'])
+      expect(reviewerAgentIds(join(dir, 'none.jsonl')).size).toBe(0)
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
   })
 })

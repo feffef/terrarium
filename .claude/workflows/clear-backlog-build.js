@@ -139,9 +139,9 @@ async function reviewBranch(built, b) {
   const reviews = await parallel(axes.map(axis => () =>
     agent(reviewPrompt(b, axis, out.worktree, round), { label: `${axis} ${b.name} r${round}`, phase: 'Review', schema: REVIEW })))
   if (reviews.some(r => !r)) return { ...out, status: 'failed', reason: `round ${round}: a reviewer returned nothing` }
-  // merge-pr.ts takes `reviewedHead` in this run's result, which lands in the main transcript, as proof of a review (#3483).
-  const heads = new Set(reviews.map(r => /^[0-9a-f]{40}$/.test(r.head) ? r.head : ''))
-  const reviewedHead = heads.size === 1 && !heads.has('') ? [...heads][0] : undefined
+  // merge-pr.ts takes `reviewedHead` in this run's result as proof of a review (#3483).
+  const h = reviews[0].head
+  const reviewedHead = /^[0-9a-f]{40}$/.test(h) && reviews.every(r => r.head === h) ? h : undefined
   return { ...out, status: 'reviewed', reviewedHead, reviews: Object.fromEntries(axes.map((axis, i) => [axis, reviews[i]])) }
 }
 

@@ -191,8 +191,7 @@ human.
    - its subject is `audit-docs: <date> sweep`;
    - its body lists the fixes and any issue filed;
    - its verdict comment records the audit in one line plus
-     `Reviewed: <head sha>` (`pr-workflow.md`'s "The recipe", step 4), after
-     the `code-review` call it describes ran on that head.
+     `Reviewed: <head sha>` (`pr-workflow.md`'s "The recipe", step 4).
    Merge it yourself on green (ADR-0004).
 2. Put the fixes a human must merge into **one** separate escalation PR:
    any change to a Human-only path (`.claude/rules/adr-0004-human-merge.md`),

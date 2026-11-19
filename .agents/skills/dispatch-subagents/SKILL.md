@@ -72,8 +72,9 @@ applies.
 **Scope and trust**
 - Include the asks in CLAUDE.md's "Every subagent brief" bullet.
 - Impl agents never call `merge-pr.ts`, whatever the brief says. They hand back
-  a committed, green, unpushed branch. You run `/code-review` on its worktree
-  (`pr-workflow.md`, "Review before opening the PR"), resume the agent for every
+  a committed, green, unpushed branch. You run `/code-review` on its worktree,
+  with the args `verdict-line.ts --review-call` prints there (`pr-workflow.md`,
+  "Review before opening the PR"), resume the agent for every
   fix, later ones included, and review again; once clean, you push
   (`git -C <worktree> push origin HEAD:<branch>`), open and land the PR. They do
   not run `close-session` and cannot spawn subagents: run any nested dispatch

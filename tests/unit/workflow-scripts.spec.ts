@@ -4,6 +4,7 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { basename, join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { root } from '../../shared/expand.ts'
+import { REVIEWER_LABEL_RE } from '../../scripts/session/review-proof.ts'
 
 const DIR = join(root, '.claude/workflows')
 const GLOBALS = ['agent', 'pipeline', 'parallel', 'phase', 'log', 'args', 'budget', 'workflow']
@@ -144,6 +145,28 @@ describe('clear-backlog-build (#3110)', () => {
   it('fails the branch when a reviewer returns nothing', async () => {
     const { r } = await run({}, built, { Standards: review('nit'), Spec: null })
     expect(r).toMatchObject({ status: 'failed', reason: 'round 1: a reviewer returned nothing' })
+  })
+
+  describe('reviewedHead, the proof merge-pr.ts reads (#3483)', () => {
+    const head = 'a'.repeat(40)
+    const at = (sha: string) => ({ ...review('nit'), head: sha })
+
+    it('is the head every reviewer read', async () => {
+      const { r } = await run({}, built, { Standards: at(head), Spec: at(head) })
+      expect(r).toMatchObject({ reviewedHead: head })
+    })
+
+    it('is unset when the reviewers disagree or one returns no full sha', async () => {
+      for (const spec of [at('b'.repeat(40)), at('aaaaaaa'), review('nit')]) {
+        const { r } = await run({}, built, { Standards: at(head), Spec: spec })
+        expect((r as { reviewedHead?: string }).reviewedHead).toBeUndefined()
+      }
+    })
+
+    it('labels reviewers so review-proof.ts finds their ids, and the builder not', async () => {
+      const { calls } = await run({})
+      expect(calls.map((c) => REVIEWER_LABEL_RE.test(c.label))).toEqual([false, true, true])
+    })
   })
 })
 

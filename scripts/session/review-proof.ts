@@ -1,9 +1,5 @@
-// What a session's own transcript proves about review (#3483): `merge-pr.ts`
-// accepts a `Reviewed: <sha>` line only when a review that named <sha> ran in
-// the merging session. Counted events: a `code-review` Skill call (tool call or
-// slash command) whose args name the sha, a `clear-backlog-build` review
-// round's `reviewedHead`, and a `SendMessage` naming the sha to one of that
-// run's reviewer agents. A plain `Agent` reviewer does not count.
+// Proof that a review ran in this session, for `merge-pr.ts`'s `Reviewed:`
+// check (#3483); which events count: `docs/agents/pr-workflow.md`, recipe step 5.
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { basename, dirname, join } from 'node:path'
 import { parseTranscript } from './transcript-trace.ts'
@@ -12,12 +8,20 @@ const SHA_RE = /\b[0-9a-f]{7,40}\b/gi
 const shasIn = (text: unknown): string[] =>
   typeof text === 'string' ? (text.match(SHA_RE) ?? []).map((s) => s.toLowerCase()) : []
 
-/** Slash-command expansion: `<command-name>/code-review</command-name>` then its args. */
 const COMMAND_RE = /<command-name>\/?(?:[\w-]+:)?code-review<\/command-name>\s*(?:<command-args>([^<]*)<\/command-args>)?/g
-const NOTIFICATION_RE = /<tool-use-id>([^<]+)<\/tool-use-id>[\s\S]*?<result>([\s\S]*?)<\/result>/g
-const REVIEWED_HEAD_RE = /"reviewedHead":"([0-9a-f]{7,40})"/g
-/** The journal label `clear-backlog-build` gives a reviewer: `<axis> <branch> r<n>`. */
-const REVIEWER_LABEL_RE = /^(?:Standards|Spec|Both) .* r\d+$/
+const NOTIFICATION_RE =
+  /<tool-use-id>([^<]+)<\/tool-use-id>\s*(?:<output-file>([^<]+)<\/output-file>)?[\s\S]*?<result>([\s\S]*?)<\/result>/g
+const REVIEWED_HEAD_RE = /"reviewedHead":\s*"([0-9a-f]{7,40})"/g
+/** The label `clear-backlog-build` gives a reviewer agent; its test pins the two together. */
+export const REVIEWER_LABEL_RE = /^(?:Standards|Spec|Both) .* r\d+$/
+
+export const readOrNull = (path: string): string | null => {
+  try {
+    return readFileSync(path, 'utf8')
+  } catch {
+    return null
+  }
+}
 
 function* strings(v: unknown): Generator<string> {
   if (typeof v === 'string') yield v
@@ -31,13 +35,8 @@ export function reviewerAgentIds(transcriptPath: string): Set<string> {
   const ids = new Set<string>()
   if (!existsSync(runs)) return ids
   for (const run of readdirSync(runs)) {
-    let journal: string
-    try {
-      journal = readFileSync(join(runs, run, 'journal.jsonl'), 'utf8')
-    } catch {
-      continue
-    }
-    for (const rec of parseTranscript(journal)) {
+    const journal = readOrNull(join(runs, run, 'journal.jsonl'))
+    for (const rec of parseTranscript(journal ?? '')) {
       if (rec.type === 'started' && typeof rec.agentId === 'string' && REVIEWER_LABEL_RE.test(String(rec.label))) {
         ids.add(rec.agentId)
       }
@@ -46,8 +45,15 @@ export function reviewerAgentIds(transcriptPath: string): Set<string> {
   return ids
 }
 
-/** The shas (lowercase, 7 to 40 hex) a transcript shows a review of. */
-export function reviewedShasFromTranscript(jsonl: string, reviewers: Set<string>): string[] {
+/** The shas (lowercase, 7 to 40 hex) a transcript shows a review of. A
+ *  workflow's notification cuts its result at about 8000 chars, so a
+ *  `clear-backlog-build` round's `reviewedHead` is also read from the full
+ *  result in the notification's `<output-file>`. */
+export function reviewedShasFromTranscript(
+  jsonl: string,
+  reviewers: Set<string>,
+  readOutput: (path: string) => string | null = readOrNull,
+): string[] {
   const found = new Set<string>()
   const buildCalls = new Set<string>()
   const records = parseTranscript(jsonl)
@@ -74,21 +80,12 @@ export function reviewedShasFromTranscript(jsonl: string, reviewers: Set<string>
   if (buildCalls.size === 0) return [...found]
   for (const rec of records) {
     for (const text of strings(rec)) {
-      for (const n of text.matchAll(NOTIFICATION_RE)) {
-        if (!buildCalls.has(n[1]!.trim())) continue
-        for (const m of n[2]!.matchAll(REVIEWED_HEAD_RE)) found.add(m[1]!.toLowerCase())
+      for (const [, id, outputFile, result] of text.matchAll(NOTIFICATION_RE)) {
+        if (!buildCalls.has(id!.trim())) continue
+        const full = outputFile ? readOutput(outputFile.trim()) ?? '' : ''
+        for (const m of `${result}\n${full}`.matchAll(REVIEWED_HEAD_RE)) found.add(m[1]!.toLowerCase())
       }
     }
   }
   return [...found]
-}
-
-/** Reviewed shas of the transcript at `path`; null when it cannot be read. */
-export function reviewedShasFromFile(path: string | null): string[] | null {
-  if (path === null) return null
-  try {
-    return reviewedShasFromTranscript(readFileSync(path, 'utf8'), reviewerAgentIds(path))
-  } catch {
-    return null
-  }
 }
