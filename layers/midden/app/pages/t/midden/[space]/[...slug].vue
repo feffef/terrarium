@@ -102,7 +102,7 @@ useHead({ title: () => `${site.value?.title.replaceAll('`', '') ?? 'Not found'} 
     <article v-if="site" class="midden-page midden-report">
       <header class="midden-report__head">
         <nav class="tech midden-crumb" aria-label="Breadcrumb">
-          <NuxtLink to="/">terrarium</NuxtLink><span class="sep">/</span><NuxtLink to="/t/midden">the midden</NuxtLink><span class="sep">/</span><NuxtLink :to="`/t/midden/${space}`">{{ space }}</NuxtLink><span class="sep">/</span><span class="here">{{ site.title.replaceAll('`', '') }}</span>
+          <NuxtLink to="/">terrarium</NuxtLink><span class="sep">/</span><NuxtLink to="/t/midden">the midden</NuxtLink><span class="sep">/</span><NuxtLink :to="`/t/midden/${space}`">{{ space }}</NuxtLink><span class="sep">/</span><span class="here">{{ site.title.replaceAll('`', '').toLowerCase() }}</span>
         </nav>
 
         <p class="sc midden-eyebrow">Dig report</p>
