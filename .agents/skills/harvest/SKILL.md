@@ -55,7 +55,9 @@ harvests both.
    `--extract <extract.json>` (it reuses the tracker list `extract` saved, so
    no refetch). It prints one labelled block per group, with candidates only,
    from the owner's rulings, the tracker (titles and bodies,
-   open and closed) and Ledger summaries. Read each hit and decide. A cluster is
+   open and closed) and Ledger summaries. Tracker hits are ranked by keywords
+   matched and capped at 10 per group (issues a keyword names by number always
+   print), with an `N more omitted` line. Read each hit and decide. A cluster is
    open when all of these hold:
    - **Unbuilt.** Name the file or symbol it would change and read it now. Run
      `pnpm exec tsx scripts/git/list-merges-since.ts` from its session's start
