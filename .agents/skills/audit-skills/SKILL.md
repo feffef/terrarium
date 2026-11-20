@@ -156,9 +156,9 @@ Grade each Skill's importance by the definitions below, after reading its
 - **A missed invocation of an own Skill is a trigger problem**: step 4's
   issue, not a demotion. For an installed Skill, whose trigger we cannot fix, the
   grade is the lever.
-- **`gist` and `role`** describe the Skill as it works today. Reread the
-  `SKILL.md` when `changes` lists an edit to it, and rewrite whatever the edit
-  made stale. Do the same when the runs show a regular behaviour the text
+- **`gist` and `role`** describe the Skill as it works today. Take each subagent's
+  role/gist verdict and rewrite what it calls stale; a Skill with `changes` but
+  no behaviour check (so no subagent) is a noted gap. Do the same when the runs show a regular behaviour the text
   doesn't state, or contradict a claim in it. `role` stays ≤ ~50 words and free of PR, issue or
   session ids; the scorecard prints it.
 - **`watchFor`** is the owner's checklist for a Skill; never edit it. When
