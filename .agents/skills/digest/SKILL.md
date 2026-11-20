@@ -71,8 +71,18 @@ PRs as [#22](https://github.com/feffef/terrarium/pull/22), issues as
 
 **Also shipped:** [#22](…) tests for page links · [#21](…) review of recent problems
 
+**Blog:** [Eyra — Post title](/t/blog/eyra/2026-11-19-post-slug) · [Karen — Post title](/t/blog/karen/2026-11-19-post-slug)
+
 **Sessions:** 3 (all completed) · **Problems noted:** 5 (2 minor, 3 trivial) — worst: <one line>.
 ```
+
+The **Blog** line lists each Blog post whose file is dated `<date>`: one link
+per post, `Persona — post title`, URL `/t/blog/<persona>/<file name without
+.md>`. Take the set from the Blog files that day's PRs touched
+(`layers/blog/content/<persona>/pages/<date>-*.md`), not from PR titles, so the
+fact-check can verify it. Omit the line on a day with no Blog post. Keep it out
+of the opening paragraph, and add it to new Digests only; never edit an
+existing one (ADR-0010).
 
 Write in **plain English for someone who knows software but not this
 project**: they should understand what actually happened without the glossary.
