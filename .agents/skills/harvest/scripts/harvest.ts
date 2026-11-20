@@ -243,22 +243,49 @@ export interface EvidenceSources {
   frictions: { file: string; summary: string }[]
 }
 
+/** Tracker hits printed per group; half of them come from the newest `NEWEST` issues. */
+const TRACKER_CAP = 10
+const NEWEST = 100
+
+// A keyword matches at the start of a word, so `log` finds `logs` but not `catalog`.
+const keywordSource = (k: string) => `(?<!\\w)${k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`
+
+/** The tracker hits to print, ranked by distinct keywords matched, ties newest first. An
+ *  issue a keyword names by number always prints; at least half the cap comes from the
+ *  newest issues when that many qualify, the rest from the best-ranked others. */
+function cutTracker(keywords: string[], issues: EvidenceIssue[]): { shown: EvidenceIssue[]; omitted: number } {
+  const res = keywords.map((k) => new RegExp(keywordSource(k), 'i'))
+  const named = new Set(keywords.flatMap((k) => (/^#?\d+$/.test(k) ? [Number(k.replace('#', ''))] : [])))
+  const newest = new Set(issues.map((i) => i.number).sort((a, b) => b - a).slice(0, NEWEST))
+  const ranked = issues
+    .map((i) => ({ i, n: res.filter((r) => r.test(`${i.title}\n${i.body ?? ''}`)).length }))
+    .filter((x) => x.n > 0 || named.has(x.i.number))
+    .sort((a, b) => b.n - a.n || b.i.number - a.i.number)
+    .map((x) => x.i)
+  const chosen = new Set(ranked.filter((i) => named.has(i.number)))
+  const recentChosen = () => [...chosen].filter((i) => newest.has(i.number)).length
+  for (const i of ranked) if (newest.has(i.number) && recentChosen() < TRACKER_CAP / 2) chosen.add(i)
+  for (const i of ranked) if (chosen.size < TRACKER_CAP) chosen.add(i)
+  const shown = ranked.filter((i) => chosen.has(i))
+  return { shown, omitted: ranked.length - shown.length }
+}
+
 /** Candidates for one cluster's keywords from the owner's rulings, the tracker and the
  *  Friction Ledger. A hit is only a hint: SKILL.md step 3 has the agent read each one. */
 export function evidenceReport(keywords: string[], src: EvidenceSources): string {
-  // A keyword matches at the start of a word, so `log` finds `logs` but not `catalog`.
-  const re = new RegExp(`(?<!\\w)(?:${keywords.map((k) => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})`, 'i')
+  const re = new RegExp(`(?:${keywords.map(keywordSource).join('|')})`, 'i')
   const hit = (text: string | null) => re.test(text ?? '')
+  const { shown, omitted } = cutTracker(keywords, src.issues)
   const section = (name: string, found: string[]) => [`${name}:`, ...(found.length ? found : ['  (no match)'])]
   return [
     ...section(
       'rulings',
       src.rulings.flatMap(({ file, text }) => text.split('\n').flatMap((l, i) => (hit(l) ? [`${file}:${i + 1}: ${l}`] : []))),
     ),
-    ...section(
-      'tracker',
-      src.issues.filter((i) => hit(`${i.title}\n${i.body ?? ''}`)).map((i) => `#${i.number} ${i.state}${i.state_reason ? ` ${i.state_reason}` : ''}: ${i.title}`),
-    ),
+    ...section('tracker', [
+      ...shown.map((i) => `#${i.number} ${i.state}${i.state_reason ? ` ${i.state_reason}` : ''}: ${i.title}`),
+      ...(omitted ? [`  (${omitted} more omitted)`] : []),
+    ]),
     ...section('ledger', src.frictions.filter((f) => hit(f.summary)).map((f) => `${f.file}: ${f.summary}`)),
   ].join('\n')
 }

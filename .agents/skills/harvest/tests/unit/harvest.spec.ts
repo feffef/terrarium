@@ -369,14 +369,14 @@ describe('evidenceReport()', () => {
     ],
   }
 
-  it('prints rulings lines, issues by title or body, and friction summaries that match any keyword, case-insensitively', () => {
+  it('prints rulings lines, issues (newest first among equals) by title or body, and friction summaries that match any keyword, case-insensitively', () => {
     expect(evidenceReport(['rss', 'FEED'], sources)).toBe(
       [
         'rulings:',
         'a.md:2: - No RSS feeds for the Journal.',
         'tracker:',
-        '#7 closed not_planned: Seedling: add a feed',
         '#8 closed completed: Seedling: footer',
+        '#7 closed not_planned: Seedling: add a feed',
         'ledger:',
         'f1.yml: Agents miss the rss step',
       ].join('\n'),
@@ -399,6 +399,49 @@ describe('evidenceReport()', () => {
 
   it('prints an open issue without a reason', () => {
     expect(evidenceReport(['other'], sources)).toContain('#9 open: Other')
+  })
+
+  describe('tracker cut', () => {
+    const issue = (number: number, title: string) => ({ number, title, body: null, state: 'open' })
+    const tracker = (kw: string[], issues: ReturnType<typeof issue>[]) =>
+      evidenceReport(kw, { rulings: [], issues, frictions: [] })
+        .split('\n')
+        .slice(3, -2)
+    const printed = (lines: string[]) => lines.filter((l) => l.startsWith('#')).map((l) => Number(/^#(\d+)/.exec(l)![1]))
+
+    it('prints every hit of a one-keyword group when there are at most 10, with no omitted line', () => {
+      const lines = tracker(['rss'], [issue(1, 'rss a'), issue(2, 'rss b'), issue(3, 'none')])
+      expect(printed(lines)).toEqual([2, 1])
+      expect(lines.join()).not.toContain('omitted')
+    })
+
+    it('keeps an old strong hit among many recent weak ones, and says how many were omitted', () => {
+      // #1 is old and matches both keywords; #2..#40 are recent-ish weak hits (one keyword).
+      const issues = [issue(1, 'rss feed'), ...Array.from({ length: 39 }, (_, i) => issue(i + 2, 'rss'))]
+      // Pad so #1 falls outside the newest 100.
+      const padded = [...issues, ...Array.from({ length: 100 }, (_, i) => issue(i + 1000, 'unrelated'))]
+      const lines = tracker(['rss', 'feed'], padded)
+      const nums = printed(lines)
+      expect(nums).toHaveLength(10)
+      expect(nums[0]).toBe(1)
+      expect(lines.at(-1)).toBe('  (30 more omitted)')
+    })
+
+    it('draws at least 5 of the 10 from the newest 100 issues when that many qualify', () => {
+      // Ten strong old hits (#1-10), five weak hits among the newest 100 (#901-905).
+      const old = Array.from({ length: 10 }, (_, i) => issue(i + 1, 'rss feed'))
+      const filler = Array.from({ length: 95 }, (_, i) => issue(i + 906, 'x'))
+      const recent = Array.from({ length: 5 }, (_, i) => issue(i + 901, 'rss'))
+      const nums = printed(tracker(['rss', 'feed'], [...old, ...recent, ...filler]))
+      expect(nums).toHaveLength(10)
+      expect(nums.filter((n) => n >= 901)).toHaveLength(5)
+    })
+
+    it('always prints an issue named by its number, however weak', () => {
+      const issues = [issue(5, 'rss feed'), ...Array.from({ length: 20 }, (_, i) => issue(i + 100, 'rss feed')), issue(7, 'unrelated')]
+      const nums = printed(tracker(['rss', '#7'], issues))
+      expect(nums).toContain(7)
+    })
   })
 })
 
