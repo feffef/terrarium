@@ -15,7 +15,8 @@ the memory page with fewer items than it found.
   notes: what is weak, what the owner wants, what is missing.
 - *Focus*: one goal that improves the guide, taken from the memory page or the
   person's instruction. Any size.
-- *Run*: one focus, from choosing it to its PR. One run, one PR.
+- *Run*: one focus, from choosing it to its PR: steps 3 to 7. One run, one
+  branch, one PR, one run entry.
 - *Run entry*: the record of one run, in
   `layers/glassbox/content/workshop/runs/`.
 
@@ -24,16 +25,19 @@ the memory page with fewer items than it found.
 The only thing that decides the mode is whether the invocation has an argument.
 
 - **No argument: Loop.** Whoever started it (the Routine or a person), you
-  decide everything and ask nothing. Do steps 1 to 8, then repeat 2 to 8.
-  The run entry's `mode` is `autonomous`.
+  decide everything and ask nothing; a person who is there can interrupt you.
+  Do step 1 once, then steps 2 to 8 for each run. Step 8 decides whether the
+  next run starts. The run entry's `mode` is `autonomous`.
 - **An argument: Instruction.** Always interactive. Do steps 1, I1 and I2, then
-  steps 3 to 7 for each PR, then I3. The run entry's `mode` is `interactive`.
+  steps 3 to 7 for each PR in the outline (each PR is one run), then I3. The
+  run entry's `mode` is `interactive`.
 
 ## Rules for every run
 
 1. Never make a page false. A claim the source contradicts at the page's
    `revision` is fixed with the smallest correction, once confirmed in the
-   source.
+   source. If you can't fix it in this run (an open PR touches the page), add
+   it to the memory page's *Claims to check*.
 2. Never go against a line of
    [`../glassbox-lesson/owner-decisions.md`](../glassbox-lesson/owner-decisions.md).
 3. Leave alone every page an open PR touches, your own PRs included.
@@ -48,7 +52,7 @@ The only thing that decides the mode is whether the invocation has an argument.
    new Subject (with its `layers/glassbox/app/utils/subjects.ts` entry), a split
    or a move between Subjects, a change to this Skill, the `glassbox-lesson`
    docs or the page checks. Build it, say in the PR body that it waits for the
-   owner, and don't merge it.
+   owner, and don't merge it. The same goes for any PR `merge-pr.ts` refuses.
 7. Every run does every step. No step is skipped because the change is small.
 
 ## Steps
@@ -68,39 +72,43 @@ Read these in full:
 Then run `pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts` (no
 flag). Read its output whole, never through `head`; if the tool saves it to a
 file, read that file whole. Read each guide index file it names whole, one Read
-per file. It prints where to write the run entry, the open PRs, the memory
-page, the recent runs and the page-check warnings.
+per file. It prints the run entry's skeleton, the open PRs, the memory page,
+the recent runs and the page-check warnings.
 
-**Done when** every file above is read in full and you hold the orientation.
+**Done when** every file above is read in full, and you know the open PRs and
+the memory page's items.
 
 ### 2. Choose the focus (Loop only)
 
-Before each later focus, merge your PRs whose checks are green (step 7's
-recipe), then run `pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts --index`
-and read only its open PR list.
+1. **Your open PRs.** For a later run, check each PR you opened: merge it once
+   its checks are green (step 7's recipe); if its checks are red, fix it on its
+   branch first. Then run
+   `pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts --index` and
+   read only its open PR list.
+2. **Pick.** Take the most important item on the memory page whose pages no
+   open PR touches, in this order:
+   1. the owner's direction;
+   2. weak spots;
+   3. everything else: gaps, open ideas, wording problems, claims to check and
+      other topics.
 
-Take the most important item on the memory page that no open PR's pages block,
-in this order:
-1. the owner's direction;
-2. weak spots;
-3. everything else: gaps, open ideas, wording problems, claims to check and
-   other topics.
+   Within a group, take the first item on the page. Check that it still
+   stands: grep the guide for its key terms and read where they appear. If it
+   no longer stands, note it (step 7 deletes it) and take the next one.
+3. **Nothing to pick.**
+   - If items are left but open PRs block all of them, and one of those PRs is
+     yours and waits only for its checks, end your turn; the gate's comment on
+     the PR wakes you. Then start this step again.
+   - Otherwise stop the session (step 8) and say in your final message which
+     items are left and which PR blocks each.
 
-Within a group, take the first item on the page. Check that the item still
-stands: grep the guide for its key terms. If it no longer stands, delete it
-from the memory page and take the next one.
+**Done when** you hold one focus.
 
-If no item is left that you can work on, say so in your final message and stop
-the session.
+### 3. Start the run and read
 
-Write the run entry now from the orientation's skeleton (`focus` quoted, with
-why you chose it). For a later focus, name the file by the current UTC time,
-`date -u +%Y-%m-%dT%H%M`. Branch from a fresh `origin/main`, commit the run
-entry and push the branch.
-
-**Done when** the run entry names one focus and is pushed on a new branch.
-
-### 3. Read
+Branch from a fresh `origin/main`. Write the run entry from the orientation's
+skeleton, named by the current UTC time (`date -u +%Y-%m-%dT%H%M`), with
+`focus` quoted and why you chose it. Commit it and push the branch.
 
 Run `pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts --subject <folder>`
 for the focus's Subject (the Walkthroughs count as one Subject). Read each part
@@ -110,8 +118,9 @@ lines it prints into the run entry, plus the outside pages. Skip a page you
 already read in full this session and that has not changed on `origin/main`
 since.
 
-**Done when** every page of the Subject, and every outside page the change
-edits, links or overlaps, is read in full and listed in `pagesRead`.
+**Done when** the run entry is pushed on the run's branch, and every page of
+the Subject and every outside page the change edits, links or overlaps is read
+in full and listed in `pagesRead`.
 
 ### 4. Diagnose
 
@@ -136,8 +145,8 @@ small the change, and quotes the `path:line` behind each one. Give it:
 - the rule that each `The cost:` clause needs a source that states that cost;
 - the rule that it runs a command before it says what the command does.
 
-Fix every reader finding you can in this PR. Drop the rest: write a finding to
-the memory page only if it is a question only the owner can answer.
+Fix every reader finding you can in this PR. A finding you can't fix goes on
+the memory page only as State allows; otherwise drop it.
 
 If a page you edit has a `teaches`, `description` or bold lead-ins that fall
 short of writing-pages.md's Pin rule, rewrite them in the same change. A new
@@ -167,7 +176,9 @@ links.
    the page where it fits, back through step 5.
 
 Fix what the checks find, back through step 5. One retry; if it still fails,
-drop that change.
+drop that change. If every change of the run is dropped, keep the memory page
+item, add one line to it saying what failed, and land only the memory page and
+run entry.
 
 **Done when** the claim checker, the page checks and the fresh reader pass on
 every changed page.
@@ -176,8 +187,8 @@ every changed page.
 
 1. Merge `origin/main` into the branch and keep the newer pin. If `main`
    changed the memory page, keep both versions' items.
-2. Update the memory page (State): delete every item this run solved; add only
-   what State allows.
+2. Update the memory page (State): delete every item this run solved and every
+   item step 2 found no longer stands; add only what State allows.
 3. Complete the run entry: `changes` and `pagesRead`.
 4. Commit, then run `pnpm exec tsx scripts/github/verdict-line.ts --review-call`
    and make the `code-review` call it prints. Add as its standards the Lesson
@@ -197,19 +208,22 @@ run entry are current.
 
 ### 8. Next (Loop only)
 
-Go back to step 2 at once. Do not wait for CI or a merge first: step 2 merges
-the PRs that turned green.
+Each run ends at step 7. This step only decides what comes next: go back to
+step 2 at once, without waiting for CI or a merge (step 2 merges the PRs that
+turned green).
 
 The session stops only when:
-- your context window holds more than 500k tokens; or
-- step 2 finds no item left that you can work on.
+- your context window holds more than 500k tokens (a compaction of your
+  context is not a stop); or
+- step 2 finds nothing to pick and says so.
 
 Anything else is not a reason to stop: a PR waiting for CI or the owner, a
 finished `close-session`, a small or done-looking memory page, or a belief that
-the next scheduled run will do it. When you stop, merge every PR that is green,
-then invoke `close-session`.
+the next scheduled run will do it. When you stop, merge every PR of yours that
+is green, then invoke `close-session`.
 
-**Done when** the session stops for one of the two reasons above.
+**Done when** you have started step 2 again, or stopped for one of the two
+reasons above.
 
 ## Instruction steps
 
@@ -229,12 +243,13 @@ they want, then outline what this session will do: the changes and the PRs. Ask
 them to confirm the outline.
 
 **Done when** the person has confirmed the outline. Then do steps 3 to 7 for
-each PR in it, writing the run entry at the start of step 3.
+each PR in it.
 
 ### I3. Report and wait
 
 After each PR, tell the person what landed and what is open, and wait for their
-next instruction. A new instruction starts again at I1.
+next instruction. Merge each of your PRs once its checks are green. A new
+instruction starts again at I1.
 
 **Done when** the person says the session is finished, or your context window
 holds more than 500k tokens. Then invoke `close-session`.
