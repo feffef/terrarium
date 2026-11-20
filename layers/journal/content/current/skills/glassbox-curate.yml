@@ -1,18 +1,24 @@
 name: glassbox-curate
 category: platform-operation
 importance: routine
-gist: Makes the Glass Box guide easier to learn from, then fills gaps.
+gist: Improves and extends the Glass Box guide from its memory page backlog, one reviewed PR per focus.
 role: >-
-  One focused curation pass over the Glass Box guide per run, landed as one
-  PR. Improves existing Lessons first; adds one only where a technology
-  Terrarium relies on has none. Runs three ways: fired by a Routine, started
-  by hand and told to act autonomously, or interactive with the owner via
-  `grilling`.
+  Improves the Glass Box guide and widens what it covers by working through
+  its memory page's backlog. With no argument it
+  loops: it takes the most important item, writes, checks, reviews and gates
+  the change, lands one PR, and takes the next item until its context is full
+  (past 500k tokens or compacted) or no item is left. With an instruction it researches the topic,
+  grills the person until they confirm an outline, then builds the outline
+  unattended. It opens each PR and goes on at once, merging each PR once its
+  checks are green. Each Loop session leaves the memory page with fewer items
+  than it found.
 watchFor:
-  - "A run that merges its PR first ran the code-review Skill (or recorded a read of its own diff for a simple change) and the gate, and the PR's `Reviewed:` line says what really ran."
+  - "A run that merges its PR first ran the code-review Skill and the gate, and the PR's `Reviewed:` line says what really ran."
+  - "Every run used the writer, the claim checker and a fresh reader, with no step skipped because the change was small."
   - "The Subject was read through the parts files that `orient.ts --subject` writes, or the run says why it was not."
-  - "After a PR lands, the run starts the next full run, and stops only when its context window is filled with more than 500k tokens."
-  - "Each scheduled run makes a substantial set of changes (not only a typo or metadata fix), and its run entry names which weak spot or owner direction from the memory page it addresses."
+  - "A session with no argument goes on to the next focus after each PR, and stops only when its context is full (past 500k tokens or compacted) or no memory page item is left, saying which."
+  - "Each run entry names the memory page item it addressed, and the session leaves the memory page with fewer items than it found."
+  - "A session given an instruction grilled the person and had its outline confirmed before it built anything."
   - "The page conventions and the governing docs were read before the first draft, not after."
 auditSummary:
   date: "2026-11-20"

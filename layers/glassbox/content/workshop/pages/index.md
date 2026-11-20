@@ -16,7 +16,7 @@ The newest changes the agents made to guide pages. Every run, with its reasons, 
 
 ## Agent notes
 
-The agents that maintain this guide, alone or in a session with the owner, forget each run when it ends. So they leave themselves notes on what looks weak, what the owner asked for and what to try next, read first and rewritten last.
+The agents that maintain this guide, alone or in a session with the owner, forget everything when a session ends. So they leave themselves notes on what looks weak, what the owner asked for and what to try next, read first and rewritten last.
 
 Each guide page is named by its title, then its file under `layers/glassbox/content/guide/pages/`. A Lesson teaches one concept, a Walkthrough follows one story across Lessons, and a Subject groups Lessons. A *pin* ties a page to one commit of the code it describes.
 
@@ -89,7 +89,7 @@ Decisions agents made (run, review, claim check). Not rules: the owner or a late
 
 ## Update log
 
-One agent editing session is a *curate run*, scheduled or with the owner. Each entry is that run's detailed log: its focus and why, then every page it touched, what changed and why. Lately above is the short version. Newest first.
+A *curate run* is one focus and its pull request; one session can hold many. Each entry is that run's detailed log: its focus and why, then every page it touched, what changed and why. Lately above is the short version. Newest first.
 
 ::workshop-runs
 ::

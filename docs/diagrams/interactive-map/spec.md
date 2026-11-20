@@ -487,7 +487,8 @@ Close-up: `visitor-loop`.
    pins the rest to the newest `main` commit (via `scripts`).
 3. It re-checks each flagged page against that commit, diagrams included, and
    rewrites what disagrees. The page is always the one at fault, never the
-   code.
+   code. A helper agent in `helper-agents` lists each new topic no page
+   teaches on the memory page, for `glassbox-curate`.
 4. It opens a pull request in `prs`; if nothing changed, there is none.
 5. `ci` runs the checks. `glassbox-update` may merge itself. If anything
    outside the Glass Box pages and their diagrams rode in, the pull request
@@ -496,11 +497,10 @@ Close-up: `visitor-loop`.
 ### 13. The Glass Box made easier to learn from — `glassbox-curate`
 
 1. `glassbox-curate` starts on its timer.
-2. A script (via `scripts`) lists the open pull requests, the earlier runs and
-   every guide page's title and description. While a `glassbox-update` pull
-   request is open, it waits.
-3. It picks one focus in `glassbox`: a subject to improve, or a gap no lesson
-   teaches, and reads that whole subject first.
+2. A script (via `scripts`) lists the open pull requests, the earlier runs,
+   the memory page and every guide page's title and description.
+3. It picks the most important item on the memory page in `glassbox` as its
+   focus, and reads that whole subject first.
 4. Fresh readers in `helper-agents`, given only the page text, report where a
    newcomer gets lost.
 5. A writer rewrites the page; a claim checker checks every changed sentence.
@@ -508,6 +508,8 @@ Close-up: `visitor-loop`.
 7. `ci` runs the checks. `glassbox-curate` may merge itself. A new lesson or
    subject, or a change to its own skill, the lesson docs or the page checks,
    waits for the maintainer.
+8. It goes back to step 3 with the next item, until the memory page has none
+   left or its context is full.
 
 ## Close-ups
 
@@ -674,8 +676,8 @@ merges comes from ADR-0004; what each routine may change, from its `SKILL.md`
 | `visitor-loop` | a preview of the site, the visitors' reports, a week of the focus's changes, logged ideas and open issues, its `decisions.md` | its own session log: ideas, learnings, frictions; issues for confirmed bugs | it changes nothing else |
 | `digest` | each finished day's merged pull requests, commits and session logs | one digest per day; moves older logs and digests to `archived` | the change is digests and the move |
 | `blog-post` | whose turn it is, three days of commits and logs (wider if too quiet), every writer's newest posts | one post; for a reply, also a short backlink note | the change is that post and at most one note, and every claim survived the fact-check |
-| `glassbox-update` | the Glass Box guide pages, the history of `main`, the code the pages cite | the pages that fell behind, and their diagrams | only Glass Box pages and their diagrams change |
-| `glassbox-curate` | the guide's pages (every title and description, one subject in full), the open pull requests, its earlier runs, the code and decision records the pages cite | guide pages, diagrams, its own run entry | only the guide, diagrams and its own files change; a new lesson or subject, or a change to its skill, the lesson docs or the page checks, waits for the maintainer |
+| `glassbox-update` | the Glass Box guide pages, the history of `main`, the code the pages cite | the pages that fell behind, and their diagrams; new topics on the memory page | only Glass Box pages, their diagrams and the memory page change |
+| `glassbox-curate` | the memory page, the guide's pages (every title and description, one subject in full), the open pull requests, its earlier runs, the code and decision records the pages cite | guide pages, diagrams, the memory page, its own run entry | only the guide, diagrams and its own files change; a new lesson or subject, or a change to its skill, the lesson docs or the page checks, waits for the maintainer |
 | `dependabot-sweep` | the open Dependabot pull requests, their checks and release notes | verdicts and merges of safe bumps; an issue per major | it opens no branch and edits no file; a major, an Actions bump or anything unsafe waits for the maintainer |
 
 "Works with" lines in the routine panels (no lines on the map):

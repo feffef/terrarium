@@ -2,7 +2,8 @@
 // page's entry to a file the run reads whole: the run reads its own Subject in full
 // (`--subject`), so an entry need only say what every other page teaches.
 // Usage: pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts [--subject <folder> | --index]
-// `--index` is for a new Lesson (glassbox-lesson): the open PRs and the guide index files, without the run's state.
+// `--index` prints the open PRs and writes the guide index files, without the run's state: for a new Lesson (glassbox-lesson)
+// and the Scout (glassbox-update).
 import { existsSync, globSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { parse as parseYaml, stringify as stringifyYaml } from 'yaml'

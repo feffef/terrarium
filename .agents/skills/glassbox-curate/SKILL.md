@@ -1,185 +1,296 @@
 ---
 name: glassbox-curate
-description: Make the Glass Box guide easier to learn from, then fill gaps; one focus and one PR per run, and another run after each lands (its Remit says which PRs wait for the owner's merge). It runs autonomously, or interactively with a person.
+description: Improve and extend the Glass Box guide by clearing its memory page's backlog, one reviewed PR per focus; with an instruction, build it with the person instead.
 disable-model-invocation: true
 ---
 
 # glassbox-curate
 
-**Goals.** Make the guide easier to learn from, page by page and as a whole.
-Second, fill gaps: a technology or process Terrarium relies on that no Lesson
-teaches. Third, every run leaves the memory page shorter (State). You lead and choose the
-steps; improvise.
+**Goal.** Make the Glass Box guide easier to learn from, and make it cover
+every technology and practice Terrarium relies on, by clearing the backlog on
+the memory page. Each Loop session leaves the memory page with fewer items than
+it found.
 
-**Shape.** A session works through foci, one run each: a run takes one focus (a
-Subject, a structural question or a gap), from the instructions you were given
-or the memory page, and opens one PR; then the next run takes the next focus.
-There is always another, scheduled autonomous runs included; Loop, the last
-step, says when a session ends. Several runs a day must work.
+**Words.**
+- *Memory page*: `layers/glassbox/content/workshop/pages/index.md`, its Agent
+  notes: what is weak, what the owner wants, what is missing.
+- *Focus*: one goal that improves the guide, taken from the memory page or the
+  person's instruction. Any size.
+- *Run*: one focus and its PR: steps 3 to 7. One run, one
+  branch, one PR, one run entry.
+- *Run entry*: the record of one run, in
+  `layers/glassbox/content/workshop/runs/`.
 
-**Modes.** *Autonomous*: your first message carries a system-reminder
-`Fired by routine "/glassbox-curate"`; decide everything, ask nothing, and say
-in the run entry why you chose the focus. *Interactive*: a person typed the
-first message, with no such reminder; if no focus was given, ask for one;
-settle every decision with them via `grilling`. If they answer "autonomous",
-the run is autonomous from then on and its entry says so.
+## Pick the mode
 
-**Hard rules.** Never make a page false. Never undo an earlier change without
-new evidence. `owner-decisions.md` lines are hard rules: never go against one.
-One PR per run, within the remit.
+The only thing that decides the mode is whether the invocation has an argument.
 
-**Remit.** Edit `layers/glassbox/content/guide/`, the diagram SVGs you
-re-render, your own workshop files, and a moved page's name in
-`checks/update.yml`. Build, in any mode and never as an issue: a new Lesson, a
-new Subject with its `layers/glassbox/app/utils/subjects.ts` entry, a split or
-a move between Subjects, and a change to this Skill, the `glassbox-lesson` docs
-or the page checks. A PR holding any of these waits for the owner's merge: its
-body says so, and you don't merge it.
+- **No argument: Loop.** Whoever started it (the Routine or a person), you
+  decide everything and ask nothing; a person who is there can interrupt you.
+  Do step 1 once, then steps 2 to 8 for each run. Step 8 decides whether the
+  next run starts. The run entry's `mode` is `autonomous`.
+- **An argument: Instruction.** You ask the person questions only in I2. Do
+  steps 1, I1 and I2. Then, for each PR in the outline (each PR is one run), do
+  *Merging your PRs* and steps 3 to 7, without waiting for the person. Then do
+  I3. If your context is full when a run has ended (as step 8 says), go to
+  I3. The run entry's `mode` is
+  `interactive`.
 
-**Read first, in full.** `layers/glassbox/GLOSSARY.md`,
-[`../glassbox-lesson/writing-pages.md`](../glassbox-lesson/writing-pages.md),
-[`../glassbox-lesson/owner-decisions.md`](../glassbox-lesson/owner-decisions.md),
-`.claude/rules/glassbox-content.md` and, since every run fetches and
-opens a PR, `docs/agents/git-conventions.md`, `docs/agents/github-integration.md`
-and `docs/agents/pr-workflow.md`.
-Write every Skill path in a subagent brief as `.agents/skills/...`
-(`docs/agents/git-conventions.md`: `.claude/skills/<name>` is a symlink).
+## Rules for every run
 
-## How a run goes
+1. Never make a page false. A claim the source contradicts at the page's
+   `revision` is fixed with the smallest correction, once confirmed in the
+   source. If you can't fix it in this run (an open PR touches the page), add
+   it to the memory page's *Claims to check*.
+2. Never go against a line of
+   [`../glassbox-lesson/owner-decisions.md`](../glassbox-lesson/owner-decisions.md).
+3. Leave alone every guide page an open PR touches: the ones step 1's
+   orientation lists, and your own unmerged PRs.
+4. Before a structural change or a retitle, run
+   `git log --oneline origin/main -- <page>` and read the run entries that name
+   the page. Never reverse a change from the last 5 runs unless it made the
+   page false.
+5. Edit only `layers/glassbox/content/guide/`, the diagram SVGs you re-render,
+   the memory page, your run entries, a moved page's name in
+   `layers/glassbox/content/workshop/checks/update.yml` (step 5; that file
+   is otherwise `glassbox-update`'s), and, in a PR that waits for the owner
+   (rule 6), `layers/glassbox/app/utils/subjects.ts`, this Skill, the
+   `glassbox-lesson` docs and the page checks.
+6. A PR that holds any of these waits for the owner's merge: a new Lesson, a
+   new Subject (with its `layers/glassbox/app/utils/subjects.ts` entry), a split
+   or a move between Subjects, a change to this Skill, the `glassbox-lesson`
+   docs or the page checks. Build it, say in the PR body that it waits for the
+   owner, and don't merge it. The same goes for any PR `merge-pr.ts` refuses.
+7. Every run does every step that applies to its change. No step is skipped
+   because the change is small.
 
-**Read before you edit.** Glass Box is one textbook: a reader meets a concept
-once, in one Lesson. An edit that doesn't know the other pages repeats or contradicts a
-sibling, or duplicates it under another title (#2943), or cuts the only place a fact was taught (#2927). Before you
-edit, read two things in full: the guide index (every page's entry, so you know
-what the whole guide teaches) and every page of your Subject (so you know
-exactly what its neighbours say). Orient and Read below say how. The index is
-only as good as each page's `teaches` and bold lead-ins; Fix says how a run
-keeps them.
+## Steps
 
-- **Orient.** This is the orientation step: run
-  `pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts`, with no flag
-  (`--index` is for `glassbox-lesson`), and read its
-  output whole, never through `head`; if the tool saves it to a file, read that
-  file whole. It gives where to write the run entry, open PRs, memory, recent
-  runs and warnings, and names the guide index files it wrote: read each
-  whole too, one Read per file. Its first lines say how to read an entry. Leave alone every page an open PR touches. While a
-  `glassbox-update` PR is open, wait for it: subscribe to its activity, end
-  your turn, and orient again once it merges or closes. An autonomous run stops
-  without a PR once that PR has been open 20 hours; an interactive run keeps
-  waiting.
-- **Scout.** Read the `dispatch-subagents` Skill before your first dispatch.
-  Right after orienting, start a background sonnet subagent; choosing
-  the Subject and focus doesn't wait for it. Give it the guide index files the
-  orientation wrote (it must not run `orient.ts` itself: that rewrites them) and
-  the time of the newest run entry before yours (the last 30 commits when there
-  is none). It reads every commit to `origin/main` since then, all paths, and
-  returns each new topic worth documenting that the index shows no page
-  teaching, with its commits and the nearest page.
-- **Subject.** From the orientation, pick the Subject to work in (the
-  Walkthroughs count as one): from memory leads, the owner's review notes,
-  page-check warnings, problems the orientation shows, or gaps; when nothing
-  is pressing, from pages no fresh reader has seen lately (`pagesRead`). For a
-  gap, it is the Subject the new Lesson would join; for a new Subject, the one
-  it takes pages from or sits beside.
-  Before you take any lead from the memory page, check it still stands and that
-  no earlier step (settled titles, a pending Subject move) should come first;
-  grep the guide for its key terms.
-- **Read.** Run `orient.ts --subject <folder>`; it
-  writes the Subject's pages to part files and names them: read each whole, one
-  Read per file. It ends with the `pagesRead` lines to paste. Also read in
-  full every page outside the Subject that a change would edit, link or
-  overlap. Done when every page of the Subject is read in full, plus every
-  outside page a change would edit, link or overlap.
-- **Choose.** Pick this run's focus from the instructions you were given, else
-  from what you read, preferring concrete memory items you can solve completely
-  in one run. Fix every reader finding the run can fix; only what State allows goes on the memory page. The
-  run entry says why you chose the focus.
-- **Owner's questions.** Build the option you'd recommend. A question only the
-  owner can answer (where a topic belongs, whether a practice is recorded)
-  goes in the PR body, with each move or retitle and its effect on URLs and
-  links, and on the memory page if it outlives the PR.
-- **Gaps.** Compare what Terrarium relies on (`package.json`, the ADRs, the
-  Skills, `scripts/`) with what the Lessons teach. Gaps the run does not
-  fill go on the memory page as State allows. Fix what makes pages hard to learn
-  from first; take a gap when no page problem outweighs it.
-- **Run entry.** Right after choosing, write it from the orientation's
-  skeleton, keeping `focus` quoted, and push the run branch.
-- **Diagnose.** Fresh readers (sonnet, no repo access) get each page as the
-  plain text that `.agents/skills/glassbox-curate/scripts/plain.ts <stem>`
-  prints. They report where a newcomer gets lost. For a gap, read
-  the sources the new Lesson would cite. For a Subject focus, check each Why
-  bullet against its cited ADR or file.
-- **Churn guard.** Before a structural step or a retitle, read
-  `git log --oneline origin/main -- <page>` and the run entries that name the
-  page. Never reverse a change from the last 5 runs unless it made the page
-  false.
-- **Fix.** An opus writer writes every sentence that states a fact, however
-  small the change, and quotes the `path:line` behind each one. Give it the
-  caps and link rules `layers/glassbox/page-checks.ts` enforces: title,
-  description and Why bullet lengths, and a capitalised link's text
-  being its target's title, and a glossary term lowercase mid-sentence (the check
-  warns). Each `The cost:` clause needs a source that states that
-  cost, and the writer runs a command sequence before it says what it does.
-  A page read in full whose `teaches`, `description` or bold lead-ins fall
-  short of writing-pages.md's Pin rule gets a rewrite in the same Fix, which
-  doesn't count as a second focus.
-  A new Lesson follows `.agents/skills/glassbox-lesson/SKILL.md` step by step:
-  give the writer its path and the guide index files the orientation wrote,
-  and have it report each step's Done.
-- **Check.** A separate sonnet claim checker checks the changed sentences;
-  `glassbox-update` owns the claim check of unchanged text, so leave that to
-  it. Run writing-pages.md's Check on the changed pages, and a fresh reader
-  re-reads them. One retry, then drop the change. A reader finding the run cannot
-  fix goes on the memory page only as State allows.
-- **Removal.** A change that only removes text or a page skips the writer, the
-  claim checker and the fresh reader. Still run the page checks, grep for
-  links, slugs and terms that pointed at what you removed, and re-read each
-  sentence next to a cut: it may now point at nothing. Grep the guide for each
-  fact you cut; one no other page teaches is either cut on purpose or taught on
-  the page that fits, as a normal Fix. The run entry's `changes` says what
-  you skipped.
-- **Move.** A page moved or renamed keeps its check: rename its `page` in
-  `checks/update.yml` and keep its date.
-- **Land.** Merge `origin/main` and keep the newer pin. Two runs on one day can
-  both rewrite the memory page: the later one keeps both runs' leads. Rewrite
-  the memory page so it is shorter than you found it (the orientation prints its
-  word count against the cap; Scout lines count), and complete the run entry.
-  Then, before any PR (`docs/agents/pr-workflow.md`, "Review before opening the
-  PR"), in this order:
-  1. Wait for the Scout now; a topic of its that this run does not write goes on
-     the memory page as State allows.
-  2. Commit, then give `code-review` the args
-     `verdict-line.ts --review-call` prints (they name the head sha
-     `merge-pr.ts` looks for), plus the Lesson contract, writing-pages.md,
-     owner-decisions.md and the glassbox-content rule as its standards,
-     without the code-smell baseline, and say the page checks already ran.
-     Its Spec reviewer also judges which pages the change needed read (the
-     ones it edits, links or overlaps), and names each one missing from
-     `pagesRead`. Read those, recheck the change against them, and add them to
-     `pagesRead`.
-  3. Fix the findings, review each fix (step 4 of `pr-workflow.md`'s "Review
-     before opening the PR"), run `pnpm gate:scoped` on the final head, and
-     push it.
-  4. Open one PR, self-merged unless the Remit says it waits.
+### 1. Prepare (once per session)
 
-  Done when the PR is open on a reviewed, gated head, and the memory page and run
-  entry are current. Then Loop.
-- **Loop.** Every run that opened a PR ends here, whether it merged or waits for
-  the owner. The default path is the next run: when one lands, start the next as
-  a full one: orient again, its own focus, run entry, branch from a fresh
-  `origin/main` and PR; in an interactive session, settle that focus with the
-  person first. Take the next focus from the instructions you were given, then
-  the memory page's leads, page-check warnings, Scout topics and gaps, and last
-  pages no fresh reader has seen lately. Do this unless your context
-  window is filled with more than 500k tokens. Hand over to a new
-  session only when the invocation says so: create it with `source_url:
-  https://github.com/feffef/terrarium` and the same prompt.
+Read these in full:
+- `layers/glassbox/GLOSSARY.md`;
+- [`../glassbox-lesson/writing-pages.md`](../glassbox-lesson/writing-pages.md);
+- [`../glassbox-lesson/owner-decisions.md`](../glassbox-lesson/owner-decisions.md);
+- `.claude/rules/glassbox-content.md`;
+- `docs/agents/git-conventions.md`, `docs/agents/github-integration.md` and
+  `docs/agents/pr-workflow.md`;
+- the `dispatch-subagents` Skill;
+- the Lenses and State sections at the end of this file.
+
+Then run `pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts` (no
+flag). Read its output whole, never through `head`; if the tool saves it to a
+file, read that file whole. Read each guide index file it names whole, one Read
+per file. It prints the run entry's skeleton, the open PRs, the memory page,
+the recent runs and the page-check warnings.
+
+**Done when** every file above is read in full, and you know the open PRs and
+the memory page's items.
+
+### 2. Choose the focus (Loop only)
+
+1. **Your open PRs.** Do *Merging your PRs*.
+2. **Pick.** Take the most important item on the memory page whose pages no
+   open PR touches, in this order:
+   1. the owner's direction;
+   2. gaps: topics no page teaches yet (*Stale or missing*);
+   3. weak spots;
+   4. everything else: open ideas, wording problems, claims to check and other
+      topics.
+
+   An item is a bullet or numbered entry under the memory page's *Agent
+   notes*; *Soft decisions* are not items.
+
+   Within a group, take the first item on the page. Skip an item that carries
+   a line saying an earlier run failed on it, and an item whose only open part
+   is a question for the owner. Take an item that needs a new Lesson: rule 6
+   leaves its PR for the owner's merge. Check that it still
+   stands: grep the guide for its key terms and read where they appear. If it
+   no longer stands, note it (step 7 deletes it) and take the next one.
+3. **Nothing to pick.**
+   - If items are left but open PRs block all of them, and one of those PRs is
+     yours with its checks still running, or is a `glassbox-update` PR (it
+     touches every page), subscribe to that PR's activity and end your turn.
+     This is a pause, not a stop: the PR's activity (its checks, the gate's
+     comment, its merge) wakes you. Then start this step again.
+   - Otherwise stop the session (step 8) and say in your final message which
+     items are left and which PR blocks each.
+
+**Done when** you hold one focus.
+
+### 3. Start the run and read
+
+Branch from a fresh `origin/main`. Write the run entry from the orientation's
+skeleton, named by the current UTC time (`date -u +%Y-%m-%dT%H%M`), with
+`focus` quoted and why you chose it. Commit it and push the branch.
+
+Run `pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts --subject <folder>`
+for the focus's Subject (the Walkthroughs count as one Subject). Read each part
+file it names whole, one Read per file. Also read in full every page outside
+the Subject that the change will edit, link or overlap. Copy the `pagesRead`
+lines it prints into the run entry, plus the outside pages. Skip a page you
+already read in full this session and that has not changed on `origin/main`
+since, unless your context was compacted after you read it.
+
+**Done when** the run entry is pushed on the run's branch, and every page of
+the Subject and every outside page the change edits, links or overlaps is read
+in full and listed in `pagesRead`.
+
+### 4. Diagnose
+
+Give each page the focus touches to a fresh reader: a sonnet subagent with no
+repo access, given only the text that
+`pnpm exec tsx .agents/skills/glassbox-curate/scripts/plain.ts <stem>` prints
+and the Lenses. It reports where a newcomer gets lost. Check each Why bullet
+against the ADR or file it cites. For a new Lesson, read the sources it will
+cite.
+
+**Done when** every touched page has a fresh reader's report and every Why
+bullet is checked.
+
+### 5. Write
+
+An opus writer subagent writes every sentence that states a fact and quotes the `path:line` behind each one. Give it:
+- the focus, the reports from step 4 and the pages it will edit;
+- the limits `layers/glassbox/page-checks.ts` enforces: title, description and
+  Why bullet lengths; a capitalised link's text is its target's title; a
+  glossary term is lowercase mid-sentence;
+- the rule that each `The cost:` clause needs a source that states that cost;
+- the rule that it runs a command before it says what the command does.
+
+Fix every reader finding you can in this PR. A finding you can't fix goes on
+the memory page only as State allows; otherwise drop it.
+
+If a page you edit has a `teaches`, `description` or bold lead-ins that fall
+short of writing-pages.md's Pin rule, rewrite them in the same change. A new
+Lesson follows `.agents/skills/glassbox-lesson/SKILL.md` step by step: give the
+writer its path and the guide index files, and have it report each step's Done.
+
+When a page moves or is renamed, rename its `page` in
+`layers/glassbox/content/workshop/checks/update.yml` and keep its date.
+
+When a question only the owner can answer comes up (where a topic belongs,
+whether a practice is recorded), build the option you recommend and put the
+question in the PR body, with each move or retitle and its effect on URLs and
+links.
+
+**Done when** every changed sentence was written by the writer with its source.
+
+### 6. Check
+
+1. A separate sonnet claim checker checks every changed sentence against its
+   source. Unchanged text is `glassbox-update`'s job.
+2. Run writing-pages.md's Check on every changed page.
+3. A fresh reader re-reads every changed page, as in step 4.
+4. If the change cuts text or a page: grep the guide for links, slugs and terms
+   that pointed at it, and re-read each sentence next to a cut, since it may now
+   point at nothing. For each fact you cut, grep the guide: if no other page
+   teaches it, either cut it on purpose (say so in the run entry) or teach it on
+   the page where it fits, back through step 5.
+
+Fix what the checks find, back through step 5. One retry; if it still fails,
+drop that change. If every change of the run is dropped, keep the memory page
+item, add one line to it saying what failed, and land only the memory page and
+run entry.
+
+**Done when** the claim checker, the page checks and the fresh reader pass on
+every changed page.
+
+### 7. Land
+
+1. Merge `origin/main` into the branch and keep the newer pin. If `main`
+   changed the memory page, keep every item from both versions except those
+   either side deleted.
+2. Update the memory page (State): delete every item this run solved and every
+   item step 2 found no longer stands; add only what State allows.
+3. Complete the run entry: `changes` and `pagesRead`.
+4. Follow every step of `docs/agents/pr-workflow.md`, "Review before opening
+   the PR", always with the `code-review` call, never the own read of a simple
+   change. For its `code-review` call, add as standards the Lesson contract,
+   writing-pages.md, owner-decisions.md and the glassbox-content rule, without
+   the code-smell baseline, and say the page checks already ran. Its Spec
+   reviewer names each page the change needed read that is missing from
+   `pagesRead`: read it, recheck the change against it, add it.
+5. Open one PR, subscribe to its activity and invoke `close-session`. Don't
+   wait for its checks: *Merging your PRs* merges it once they are green.
+
+**Done when** the PR is open on a reviewed, gated head and the memory page and
+run entry are current.
+
+### 8. Next (Loop only)
+
+Each run ends at step 7. This step only decides what comes next: go back to
+step 2 at once, without waiting for CI or a merge.
+
+The session stops only when:
+- a run has ended and your context is full: it holds more than 500k tokens,
+  or it has been compacted. No tool shows the token count: estimate it from
+  what you have read, written and received this session; if you are unsure,
+  go on. A compaction always counts; or
+- step 2 finds nothing to pick and says so.
+
+Anything else is not a reason to stop: a PR waiting for CI or the owner, a
+finished `close-session`, a small or done-looking memory page, or a belief that
+the next scheduled run will do it.
+
+**To stop:** do *Merging your PRs* until none of your PRs has checks still
+running (between passes, end your turn; the PR's activity wakes you). Then
+invoke `close-session`, and in your final message say why you stopped and
+name each PR left open.
+
+**Done when** you have started step 2 again, or stopped for one of the two
+reasons above.
+
+## Merging your PRs
+
+Go through each PR you opened in this session that is still open:
+- **Checks green:** merge it with `pr-workflow.md`'s recipe. If rule 6 says it
+  waits for the owner, leave it open for a human merge.
+- **Checks red:** if the cause is in your change, fix it on its branch, review
+  the fix (`pr-workflow.md`, "Review before opening the PR", step 4) and push.
+  If the cause isn't yours, leave it open for a human and name it in your final
+  message.
+- **No checks appear:** it likely has a merge conflict. Merge `origin/main` into
+  its branch, resolve it and push.
+- **Checks still running:** leave it for the next pass.
+
+**Done when** each of your PRs is merged, left for a human merge, or has its
+checks still running.
+
+## Instruction steps
+
+### I1. Research
+
+Read the guide pages the instruction touches (find them in the guide index
+files), the repo sources behind them, and, for a third-party tool, its official
+docs.
+
+**Done when** you can name every page the instruction affects and what its
+sources say.
+
+### I2. Grill
+
+Run the `grilling` Skill with the person. Ask until you understand exactly what
+they want, then outline what this session will do: the changes and the PRs. Ask
+them to confirm the outline.
+
+**Done when** the person has confirmed the outline.
+
+### I3. Finish
+
+After the last PR of the outline, do step 8's **To stop**: merge your PRs,
+invoke `close-session`, and report what landed and what is left open. If the
+person later sends a new instruction, start again at I1.
+
+**Done when** each of your PRs is merged or named as left open, and
+`close-session` has run.
 
 ## Lenses
 
-What to read a page for, as two readers: a developer new to the tool, and one
-who knows the tool but not Terrarium. A page's rules are in writing-pages.md and
-its shape in the glossary; an `owner-decisions.md` line is never a deficit.
+What a fresh reader reads a page for, as two readers: a developer new to the
+tool, and one who knows the tool but not Terrarium. A page's rules are in
+writing-pages.md and its shape in the glossary; an `owner-decisions.md` line is
+never a deficit.
 
 - **Clarity.** The order, plain words, each term introduced before use, a title
   that passes the title rule.
@@ -193,48 +304,37 @@ its shape in the glossary; an `owner-decisions.md` line is never a deficit.
 - **Transfer.** The page teaches the general concept beyond Terrarium and says
   when it is the wrong choice. `n/a` on a Walkthrough.
 - **Relevance.** The concept deserves its own page. A low result leads to a
-  merge, section or cut, never a rewrite.
-
-Correctness is not a lens: a claim the source contradicts at the page's
-`revision` is a false claim, fixed with the smallest correction once confirmed
-in the source.
+  merge, a section or a cut, never a rewrite.
 
 ## State
 
-All in `layers/glassbox/content/workshop/`:
+All in `layers/glassbox/content/workshop/`.
 
-- `pages/index.md`, the memory page: the guide's current weak spots, the
-  owner's direction and the open ideas. Write it in simple, plain words, so a
-  person reads it easily and later runs don't copy needlessly complex wording.
-  State a count only after counting its items in their source.
-  Each run leaves it shorter: it solves concrete items completely and deletes
-  them, never marking one done. It adds only what a later run cannot do itself:
-  an owner question, a one-line gap you could not fill in one run
-  (a gap left uncovered on purpose too), or a decision a later run would
-  otherwise redo or reverse. A fact the next run still needs stays as a plain
-  current fact under a heading that fits. What a run did goes in its run entry,
-  not here. The word cap in
-  `layers/glassbox/tests/unit/workshop.spec.ts` is a ceiling, not a target. If
-  the run still hits it, never shorten what is there: squeezed wording makes
-  passages hard to read. Cut whole items instead, the ones not worth pursuing,
-  judged by what you know of the rest of the guide and by git history (`git log
-  -S` or `git blame` on the item): one that has stood a long time and that no
-  run ever took up goes first; items parked in the last few runs go last.
-  **Soft decisions** (its heading) are decisions you, a reviewer or a claim
-  checker made that pass that test: write each there as it is made, with what
-  decided it, and skip the rest. They are
-  not rules. Overrule or delete one when you have evidence against it or when
-  changed content makes it obsolete. Never put one in `owner-decisions.md`.
-- `../glassbox-lesson/owner-decisions.md` holds the owner's hard rules. Add a
-  line only when the owner says to, in an interactive session, never in a
-  scheduled run. If your change would go against a line, don't make it: log a
-  Friction if that seriously hurts the quality or outcome of your task, or an
-  idea if you have a good content proposal that clashes with it.
-- `runs/<YYYY-MM-DDTHHMM>.yml`: one entry per run, named by the UTC time the
-  orientation printed.
-  Its shape is the `runs` Collection in `layers/glassbox/tenant.config.ts`. A
-  `changes` entry is `page | what changed | why`, `page` being the guide page's
-  stem (its path under `layers/glassbox/content/guide/pages/` without `.md`,
-  `index` for the overview).
-- `checks/update.yml` belongs to `glassbox-update`; write it only to rename a
-  page you moved.
+**The memory page** (`pages/index.md`) is the backlog. Write it in simple,
+plain words. State a count only after counting its items in their source.
+- Delete an item once it is solved. Never mark one done.
+- While you work, you may add a weak spot, a gap or an idea you find outside
+  your focus, and a question only the owner can answer. Add only what you can't
+  fix now and what clearly matters.
+- A fact the next run still needs stays as a plain current fact under a heading
+  that fits. What a run did goes in its run entry, not here.
+- The word cap (`glassboxWorkshopWordCap` in `layers/glassbox/app/utils/workshop.ts`) is a ceiling,
+  not a target. If you hit it, never squeeze the wording: cut whole items not
+  worth pursuing. An item that has stood a long time and that no run took up
+  goes first (`git log -S` on it); items added in the last few runs go last.
+- **Soft decisions** (its heading): decisions you, a reviewer or a claim checker
+  made that a later run would otherwise redo or reverse. Write each as it is
+  made, with what decided it. They are not rules: overrule or delete one with
+  evidence, or when changed content makes it obsolete. Never put one in
+  `owner-decisions.md`.
+
+**`../glassbox-lesson/owner-decisions.md`** holds the owner's hard rules. Add a
+line only when the owner says so. If your change
+would go against a line, don't make it: log a Friction if that seriously hurts
+the outcome, or an idea if you have a good proposal that clashes with it.
+
+**Run entries** (`runs/<YYYY-MM-DDTHHMM>.yml`, UTC): one per run. Their shape is
+the `runs` Collection in `layers/glassbox/tenant.config.ts`. A `changes` entry
+is `page | what changed | why`, where `page` is the guide page's stem: its path
+under `layers/glassbox/content/guide/pages/` without `.md`, or `index` for the
+overview. Quote a `changes` line that holds a colon followed by a space.
