@@ -13,8 +13,8 @@ drift.
   (ADR-0013). The smoke test's list of entry routes comes from it too. None of
   them can disagree with the manifests or with each other.
 - **What the map holds.** Each Tenant's Spaces and each Space's collection
-  keys. Only `pages` gets routes (ADR-0006); a Tenant's root page is not in
-  the map (ADR-0016).
+  keys. Only `pages` gets routes (ADR-0006); a Tenant's root and static pages are
+  not in the map (ADR-0016).
 - **How it reaches code.** As a plain static import of `#routing`, with no Nuxt
   composable, so the resolver in `shared/routing.ts` stays plain code that
   unit tests can run without Nuxt.
