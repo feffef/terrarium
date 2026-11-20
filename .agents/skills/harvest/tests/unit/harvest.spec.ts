@@ -434,6 +434,24 @@ describe('evidenceReport()', () => {
       expect(nums.filter((n) => n >= 901)).toHaveLength(5)
     })
 
+    it('tops up from the best-ranked older hits when fewer than 5 newest ones qualify', () => {
+      const old = Array.from({ length: 12 }, (_, i) => issue(i + 1, 'rss feed'))
+      const recent = [issue(901, 'rss'), issue(902, 'rss')]
+      const filler = Array.from({ length: 98 }, (_, i) => issue(i + 903, 'x'))
+      const nums = printed(tracker(['rss', 'feed'], [...old, ...recent, ...filler]))
+      expect(nums).toEqual([12, 11, 10, 9, 8, 7, 6, 5, 902, 901])
+    })
+
+    it('counts a named issue inside the newest 100 toward the recent quota', () => {
+      const old = Array.from({ length: 12 }, (_, i) => issue(i + 1, 'rss feed'))
+      const recent = Array.from({ length: 6 }, (_, i) => issue(i + 901, 'rss'))
+      const filler = Array.from({ length: 94 }, (_, i) => issue(i + 907, 'x'))
+      const nums = printed(tracker(['rss', 'feed', '#901'], [...old, ...recent, ...filler]))
+      expect(nums.filter((n) => n >= 901)).toHaveLength(5)
+      expect(nums).toContain(901)
+      expect(nums).toHaveLength(10)
+    })
+
     it('always prints an issue named by its number, however weak, and counts the rest as omitted', () => {
       const issues = [issue(5, 'rss feed'), ...Array.from({ length: 20 }, (_, i) => issue(i + 100, 'rss feed')), issue(7, 'unrelated')]
       for (const kw of ['#7', '7']) {
