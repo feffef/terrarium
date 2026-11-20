@@ -268,6 +268,20 @@ describe('journal Tenant', async () => {
     if (ordinaryIdea) expect(await $fetch('/t/journal/current/ideas')).toContain(ordinaryIdea)
   })
 
+  // A per-Skill page exists only in `current`; the list links to it from "used in N sessions".
+  it('opens a Skill page from the Skills list, and 404s for an unknown Skill or the archived Space', async () => {
+    const list = await $fetch<string>('/t/journal/current/skills')
+    const href = /href="(\/t\/journal\/current\/skills\/[^"]+)"/.exec(list)![1]!
+    const page = await $fetch<string>(href)
+    const dir = fileURLToPath(new URL('../../content/current/skills/', import.meta.url))
+    const doc = parseYaml(readFileSync(join(dir, `${href.split('/').pop()}.yml`), 'utf8')) as { gist?: string }
+    if (doc.gist) expect(page).toContain(doc.gist.replace(/&/g, '&amp;').replace(/'/g, '&#39;').replace(/"/g, '&quot;'))
+    expect(page).toContain('href="/t/journal/current/skills"')
+    expect((await fetch('/t/journal/current/skills/no-such-skill')).status).toBe(404)
+    expect((await fetch(href.replace('/current/', '/archived/'))).status).toBe(404)
+    expect(await $fetch<string>('/t/journal/archived/skills')).not.toContain('/t/journal/archived/skills/')
+  })
+
   it('serves the Routine costs page with one chart per Routine and the weekly table', async () => {
     const html = await $fetch('/t/journal/current/routines')
     expect(html).toMatch(/class="jd[\s"]/)

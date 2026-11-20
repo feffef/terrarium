@@ -162,6 +162,14 @@ export function skillUseCounts(sessions: SessionDoc[]): Record<string, number> {
   return counts
 }
 
+// The newest `limit` sessions whose log names the Skill, newest first.
+export function recentSkillSessions(sessions: SessionDoc[], name: string, limit: number): SessionDoc[] {
+  return sessions
+    .filter((s) => (s.skillsUsed ?? []).some((x) => x.name === name))
+    .sort((a, b) => b.startedAt.localeCompare(a.startedAt))
+    .slice(0, limit)
+}
+
 export function skillUrl(name: string, repoSkills: readonly string[]): string | undefined {
   return repoSkills.includes(name) ? `${REPO_URL}/blob/main/.agents/skills/${name}/SKILL.md` : undefined
 }
