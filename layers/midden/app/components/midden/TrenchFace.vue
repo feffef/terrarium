@@ -85,7 +85,7 @@
       <path stroke-width="1.2" stroke-linejoin="round" stroke-dasharray="4 3" d="M708 72 L707 102 L722 96 L723 66" />
     </g>
 
-    <!-- Pebble lenses and charcoal flecks, so the empty stretches read as sterile
+    <!-- Pebble lenses and charcoal flecks, so the empty stretches read as bare
          soil rather than as blank paper. -->
     <g class="f-none s-slate2" stroke-width="0.8" opacity="0.5">
       <path d="M395 54 Q399 51 403 53.5 Q405 56 401 57.5 Q396 58 395 54 Z" />

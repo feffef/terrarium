@@ -1,6 +1,6 @@
 ---
 title: Stood Down
-description: Four automatic checks removed between 9 and 11 October 2026, each after a count showed it had cost more than it caught — one of them only after an attempt to save it.
+description: Four automatic checks removed 9 to 11 October 2026 (graded 10 October to 12 November), each after a count showed it had cost more than it caught — one of them only after an attempt to save it.
 ---
 
 Four automatic checks, each written to stop an agent repeating a recorded

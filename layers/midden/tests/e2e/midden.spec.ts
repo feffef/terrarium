@@ -107,6 +107,30 @@ describe('midden Tenant', async () => {
     expect(html.match(/<a[^>]*midden-report__jump[^>]*>/)?.[0]).toContain(`href="#${listed[0]}"`)
   })
 
+  // WCAG 2.5.8 (#3522): the jump link and the pager links are tap targets.
+  it('keeps a dig report\'s jump and pager links at least 24px tall on a phone', async () => {
+    const page = await createPage()
+    try {
+      await page.setViewportSize({ width: 390, height: 844 })
+      await page.goto(url('/t/midden/trench/the-generated-map'), { waitUntil: 'hydration' })
+      const heights = await page
+        .locator('.midden-report__jump, .midden-report__pager a')
+        .evaluateAll((els) => els.map((el) => el.getBoundingClientRect().height))
+      expect(heights.length).toBe(4)
+      for (const h of heights) expect(h).toBeGreaterThanOrEqual(24)
+    } finally {
+      await page.close()
+    }
+  })
+
+  it('shows each latest find\'s cause of death, one find per report', async () => {
+    const html = (await $fetch('/t/midden')) as string
+    const metas = [...html.matchAll(/midden-latest__meta[^>]*>([^<]+)</g)].map((m) => m[1]!)
+    expect(metas.length).toBe(3)
+    for (const m of metas) expect(m).toMatch(/^[^·]+ · [^·]+ · in [^·]+ · assessed /)
+    expect(new Set(metas.map((m) => m.split(' · in ')[1]!.split(' · ')[0])).size).toBe(3)
+  })
+
   it('ends a report\'s breadcrumb with its title, not its slug', async () => {
     const html = (await $fetch('/t/midden/trench/stood-down')) as string
     expect(html).toMatch(/<span[^>]*class="here"[^>]*>Stood Down<\/span>/)
@@ -155,7 +179,7 @@ describe('midden Tenant', async () => {
   })
 
   // The section drawing's legend (#3278): dates in report style like the rest
-  // of the page, and each season that has a shelf links to it. A sterile season
+  // of the page, and each season that has a shelf links to it. An empty season
   // has no shelf, so its name stays plain text.
   it('links the stores legend to the season shelves, in report-style dates', async () => {
     const html = await $fetch<string>('/t/midden/stores')
