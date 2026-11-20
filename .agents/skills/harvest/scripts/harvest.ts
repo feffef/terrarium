@@ -243,7 +243,7 @@ export interface EvidenceSources {
   frictions: { file: string; summary: string }[]
 }
 
-/** Tracker hits printed per group; half of them come from the newest `NEWEST` issues. */
+/** Tracker hits printed per group, and how many issues count as newest. */
 const TRACKER_CAP = 10
 const NEWEST = 100
 
@@ -262,10 +262,11 @@ function cutTracker(keywords: string[], issues: EvidenceIssue[]): { shown: Evide
     .filter((x) => x.n > 0 || named.has(x.i.number))
     .sort((a, b) => b.n - a.n || b.i.number - a.i.number)
     .map((x) => x.i)
-  const chosen = new Set(ranked.filter((i) => named.has(i.number)))
-  const recentChosen = () => [...chosen].filter((i) => newest.has(i.number)).length
-  for (const i of ranked) if (newest.has(i.number) && recentChosen() < TRACKER_CAP / 2) chosen.add(i)
-  for (const i of ranked) if (chosen.size < TRACKER_CAP) chosen.add(i)
+  const pinned = ranked.filter((i) => named.has(i.number))
+  const rest = ranked.filter((i) => !named.has(i.number))
+  const quota = Math.ceil(TRACKER_CAP / 2) - pinned.filter((i) => newest.has(i.number)).length
+  const chosen = new Set([...pinned, ...rest.filter((i) => newest.has(i.number)).slice(0, Math.max(0, quota))])
+  for (const i of rest) if (chosen.size < TRACKER_CAP) chosen.add(i)
   const shown = ranked.filter((i) => chosen.has(i))
   return { shown, omitted: ranked.length - shown.length }
 }

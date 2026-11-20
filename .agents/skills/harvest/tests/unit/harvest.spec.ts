@@ -403,10 +403,10 @@ describe('evidenceReport()', () => {
 
   describe('tracker cut', () => {
     const issue = (number: number, title: string) => ({ number, title, body: null, state: 'open' })
-    const tracker = (kw: string[], issues: ReturnType<typeof issue>[]) =>
-      evidenceReport(kw, { rulings: [], issues, frictions: [] })
-        .split('\n')
-        .slice(3, -2)
+    const tracker = (kw: string[], issues: ReturnType<typeof issue>[]) => {
+      const lines = evidenceReport(kw, { rulings: [], issues, frictions: [] }).split('\n')
+      return lines.slice(lines.indexOf('tracker:') + 1, lines.indexOf('ledger:'))
+    }
     const printed = (lines: string[]) => lines.filter((l) => l.startsWith('#')).map((l) => Number(/^#(\d+)/.exec(l)![1]))
 
     it('prints every hit of a one-keyword group when there are at most 10, with no omitted line', () => {
@@ -415,16 +415,13 @@ describe('evidenceReport()', () => {
       expect(lines.join()).not.toContain('omitted')
     })
 
-    it('keeps an old strong hit among many recent weak ones, and says how many were omitted', () => {
-      // #1 is old and matches both keywords; #2..#40 are recent-ish weak hits (one keyword).
-      const issues = [issue(1, 'rss feed'), ...Array.from({ length: 39 }, (_, i) => issue(i + 2, 'rss'))]
-      // Pad so #1 falls outside the newest 100.
-      const padded = [...issues, ...Array.from({ length: 100 }, (_, i) => issue(i + 1000, 'unrelated'))]
-      const lines = tracker(['rss', 'feed'], padded)
-      const nums = printed(lines)
-      expect(nums).toHaveLength(10)
-      expect(nums[0]).toBe(1)
-      expect(lines.at(-1)).toBe('  (30 more omitted)')
+    it('keeps an old strong hit among many recent weak ones: 5 newest, the strong one, then the next newest', () => {
+      // #1 is old and matches both keywords; #901..#940 are weak (one keyword) and inside the newest 100.
+      const weak = Array.from({ length: 40 }, (_, i) => issue(i + 901, 'rss'))
+      const filler = Array.from({ length: 60 }, (_, i) => issue(i + 941, 'unrelated'))
+      const lines = tracker(['rss', 'feed'], [issue(1, 'rss feed'), ...weak, ...filler])
+      expect(printed(lines)).toEqual([1, 940, 939, 938, 937, 936, 935, 934, 933, 932])
+      expect(lines.at(-1)).toBe('  (31 more omitted)')
     })
 
     it('draws at least 5 of the 10 from the newest 100 issues when that many qualify', () => {
@@ -437,10 +434,19 @@ describe('evidenceReport()', () => {
       expect(nums.filter((n) => n >= 901)).toHaveLength(5)
     })
 
-    it('always prints an issue named by its number, however weak', () => {
+    it('always prints an issue named by its number, however weak, and counts the rest as omitted', () => {
       const issues = [issue(5, 'rss feed'), ...Array.from({ length: 20 }, (_, i) => issue(i + 100, 'rss feed')), issue(7, 'unrelated')]
-      const nums = printed(tracker(['rss', '#7'], issues))
-      expect(nums).toContain(7)
+      for (const kw of ['#7', '7']) {
+        const lines = tracker(['rss', kw], issues)
+        expect(printed(lines)).toContain(7)
+        expect(lines.at(-1)).toBe('  (12 more omitted)')
+      }
+    })
+
+    it('prints more than 10 when more than 10 issues are named', () => {
+      const issues = Array.from({ length: 12 }, (_, i) => issue(i + 1, 'x'))
+      const kws = issues.map((i) => `#${i.number}`)
+      expect(printed(tracker(kws, issues))).toHaveLength(12)
     })
   })
 })
