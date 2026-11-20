@@ -141,3 +141,13 @@ pages:
     checked: '2026-11-19'
   - page: walkthroughs/80.a-change-goes-live
     checked: '2026-11-19'
+  - page: walkthroughs/90.from-file-to-browser
+    checked: '2026-11-20'
+  - page: web-standards/10.css-custom-properties
+    checked: '2026-11-20'
+  - page: web-standards/20.svg
+    checked: '2026-11-20'
+  - page: web-standards/30.aria
+    checked: '2026-11-20'
+  - page: web-standards/40.colour-and-motion-settings
+    checked: '2026-11-20'
