@@ -30,12 +30,7 @@ useSeoMeta({ title: `${name} · journal/${space}` })
       <h1><JournalSkillName :name="name" /></h1>
       <p v-if="skill.gist">{{ skill.gist }}</p>
       <p v-else>
-        <template v-for="(p, i) in skillRoleParts(skill.role)" :key="i">
-          <code v-if="p.kind === 'code'">{{ p.text }}</code>
-          <em v-else-if="p.kind === 'em'">{{ p.text }}</em>
-          <strong v-else-if="p.kind === 'strong'">{{ p.text }}</strong>
-          <template v-else>{{ p.text }}</template>
-        </template>
+        <JournalRoleText :text="skill.role" />
       </p>
       <JournalSkillAuditLine v-if="skill.auditSummary" :audit="skill.auditSummary" />
 
@@ -44,12 +39,7 @@ useSeoMeta({ title: `${name} · journal/${space}` })
         <ul>
           <li v-for="(o, i) in observations" :key="i">
             <strong>{{ o.date }}</strong> —
-            <template v-for="(p, j) in skillRoleParts(o.note)" :key="j">
-              <code v-if="p.kind === 'code'">{{ p.text }}</code>
-              <em v-else-if="p.kind === 'em'">{{ p.text }}</em>
-              <strong v-else-if="p.kind === 'strong'">{{ p.text }}</strong>
-              <template v-else>{{ p.text }}</template>
-            </template>
+            <JournalRoleText :text="o.note" />
           </li>
         </ul>
       </template>
