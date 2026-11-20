@@ -1,0 +1,222 @@
+schemaVersion: 1
+session: session_013zxzeSsM57HSqjsQnKmeyY
+startedAt: 2026-11-20T16:03:04Z
+endedAt: 2026-11-20T16:07:28Z
+kind: autonomous
+goal: Visitor-loop run on the Midden (daily site visit by three reviewers)
+status: completed
+outcome: "Three visitors reviewed the Midden; one bug filed as #3522, ideas and learnings logged"
+summary: "Scheduled visitor-loop run, no human prompts; every step was agent-executed per the Skill. Focus was row 3, midden. I built and served the production preview from origin/main, wrote a context file, and dispatched blind, content-editor and UI-tester visitors (sonnet). Yield per lens: blind 6 findings and 3 ideas, all jargon or wording (none bugs); editor 8 findings and 3 ideas (wording, jargon, count and date clarity, one dup of an already-logged idea); UI 6 findings and 3 ideas (2 tap-target bugs, 1 silent bogus-filter, 1 dup of logged breadcrumb idea, 1 non-issue). Bugs: only one group survived my own measuring, the 17px standalone links \"Jump to finds\" and \"all dig reports\", filed as #3522. Dropped: the clipped SVG paths (clipped by design, no page scroll), inline Stores legend links (WCAG inline exemption), the barely-cold Fresh date and breadcrumb capitalisation (already logged). Filter misses: I did not check the blind visitor's \"pinned GitHub blob links may be stale\" claim (unverified), left as unlogged. Visitor retros: the blind and UI visitors both said the SubagentStart rule-use survey cost two extra calls (hook text, not the brief); editor and UI said the context file lacked query-string variants and the pages list repeats /t/midden/trench (my own hand-built file, so a Skill gap: no recipe for it). Editor skipped 390px/screenshots, which its lens row does not require."
+prs: []
+docsRead:
+  - path: scripts/lib/chromium.ts
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/visitor-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: visitor-loop
+    reason: (invoked as a slash command)
+frictions:
+  - description: Ran git checkout --detach origin/main and fetch before reading docs/agents/git-conventions.md, which CLAUDE.md requires before non-read-only git commands; also left the session branch against CLAUDE.md's stay-on-branch line.
+    solution: visitor-loop SKILL.md step 1 says 'on a fresh origin/main' but CLAUDE.md says stay on the session branch; state in step 1 which wins (a detached checkout is fine for this read-only run).
+    severity: minor
+  - description: "Filed issue #3522 before reading docs/agents/triage-labels.md; only a grep of it ran afterwards (not counted as a read). The labels used (needs-triage, area:midden) were right."
+    solution: visitor-loop SKILL.md step 4 should name triage-labels.md next to issue-tracker.md as a read-before-filing.
+    severity: nit
+  - description: "The context file has no recipe: I hand-built it, listing /t/midden/trench twice and omitting query-string and 404 URLs, which the UI tester had to find by guessing."
+    solution: Add a short generator script under .agents/skills/visitor-loop/scripts/ that writes the four context sections, deduplicated, with each Space's filter URLs and a 404 URL.
+    severity: minor
+  - description: SubagentStart rule-use survey made both the blind and UI visitors spend two extra tool calls on `echo rule-use:` naming rules unrelated to browsing.
+    solution: Have the SubagentStart hook skip the survey for read-only briefs that quote visitor-brief.md; its home is under scripts/hooks/.
+    severity: nit
+durationSec: 263
+models:
+  claude-sonnet-5-5: 60
+toolCounts:
+  Bash: 19
+  Skill: 3
+  Agent: 3
+  ToolSearch: 2
+  mcp__github__issue_write: 1
+  SendMessage: 3
+  PushNotification: 1
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: issue body opened with provenance header
+      - path: .claude/rules/adr-0009.md
+        value: steered
+        why: invoked close-session at end
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: confirmed
+        why: "agreed: no branch or PR opened"
+      - path: .claude/rules/adr-0028.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/rules/tenant-layers.md
+        value: unrelated
+      - path: .claude/rules/ui-verification.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0022.md
+        value: unrelated
+      - path: .agents/skills/visitor-loop/visitor-brief.md
+      - path: .agents/skills/visitor-loop/decisions.md
+      - path: docs/agents/github-integration.md
+      - path: docs/agents/issue-tracker.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+subagents:
+  - task: Blind first-time visitor
+    model: sonnet
+    durationSec: 111
+    toolCalls: 9
+    modelCalls: 8
+    tokenShare: 13.3
+  - task: Informed content editor
+    model: sonnet
+    durationSec: 102
+    toolCalls: 11
+    modelCalls: 9
+    tokenShare: 14.4
+  - task: Informed UI tester
+    model: sonnet
+    durationSec: 107
+    toolCalls: 13
+    modelCalls: 11
+    tokenShare: 15.7
+gitBranch: claude/lucid-heisenberg-axkkjb
+entrypoint: remote_trigger
+cliVersion: 2.1.329
+trigger: visitor-loop
+learnings:
+  - On Midden Trench the active cause chip is a NuxtLink with aria-current, not matched by a[href*=cause=] selectors; verify filter state by screenshot or [aria-current], per TrenchLanding.vue:165.
+  - ?cause=<unknown> on /t/midden/trench silently shows all 16 sites with no chip active and no notice (middenCauseFromQuery ignores bad values).
+ideas:
+  - "[blind visitor, content editor] /t/midden/trench/the-thirty-day-exception and /the-buried: 'Tenant' appears (4 and 13 times) with no gloss, and the Midden home never says it. Gloss it once on first use ('one of the Platform's small sites') or add a line to the home intro; first-time visitors can then read the best stories without knowing the Platform's vocabulary."
+  - "[content editor, blind visitor] /t/midden/stores: season shelves read 'sterile' with the definition only in a small footer line. Rename to 'none in store' or define it in the intro; the strip then stops reading as noise."
+  - "[content editor, UI tester] /t/midden: the 'Latest finds' strip shows three finds from one report, all 'Intact · in Short Lives · assessed 12 Nov 2026'. Cap it at one per report, or show each find's cause of death, so the strip shows range."
+  - "[UI tester] /t/midden/trench?cause=bogus: an unknown cause silently shows all 16 sites with no chip active. Show a one-line notice 'No cause called bogus; showing all 16 sites' (or redirect) so a stale or mistyped link doesn't mislead."
+  - "[content editor] /t/midden/trench/stood-down: the blurb says 'removed between 9 and 11 October' while the cards show 'assessed 10 Oct 2026 – 12 Nov 2026'. Say 'removed 9–11 Oct; graded 10 Oct–12 Nov' so a reader knows which date is the removal."
+  - "[content editor] /t/midden/trench/the-buried: 'reachable from no ref; the trench floor is the squash itself' is git jargon after the plain-words pass (#3290). Reword to 'reachable from no branch or tag; the bottom of this dig is the single squashed commit itself'."
+  - "[content editor] /t/midden/trench card for short-lives: 'Three finds … two Atlas pages … two sets of agent instructions' lists four things for three finds (the Atlas pair is one find). Reword so the count matches, e.g. 'a pair of Atlas pages (two days) and two sets of agent instructions'."
+  - "[blind visitor] /t/midden/trench: 16 reports listed by season name only. A timeline strip with one dot per find, coloured by condition grade, would show when the abandoning happened at a glance; visitors get the shape of the story before reading."
+landedBy: Stop
