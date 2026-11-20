@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSvAjT1KEC1qBV3wKH
 startedAt: 2026-11-20T16:37:20Z
-endedAt: 2026-11-20T16:47:28Z
+endedAt: 2026-11-20T16:51:39Z
 kind: interactive
 goal: "Curate the Glass Box guide: gloss unexplained terms on three Agents pages"
-status: in-review
-outcome: PR 3523 open on a reviewed, gated head; waits for CI, then a self-merge
-summary: "The owner typed /glassbox-curate with no focus, so I asked; they answered \"autonomous\", and everything after that was agent-initiated within the Skill's remit. I oriented, started the Scout (no new topic), chose the Agents Subject because the memory page listed unglossed terms there, and wrote the run entry first. An opus writer added glosses to Subagents, Workflow scripts and Inspecting past sessions; a sonnet claim checker found the cloud-launcher gloss overstated and the search example too broad, both of which I corrected; a fresh reader found all targeted terms clear. code-review found no violation and named three more pages that gloss the header, which I read on their header sentences and added to pagesRead. It also caught a fused line on the memory page, which I fixed. gate:scoped passed on head d94d87aae. I opened the PR without asking, per ADR-0003, and subscribed to it. Still open: CI, my verdict comment, and merge-pr.ts. Left as memory leads: ADR unglossed in Inspecting."
+status: completed
+outcome: "PR 3523 merged: three Agents pages now gloss their unexplained terms"
+summary: "The owner typed /glassbox-curate with no focus, so I asked; they answered \"autonomous\", and everything after that was agent-initiated within the Skill's remit. I oriented, started the Scout (no new topic), chose the Agents Subject because the memory page listed unglossed terms there, and wrote the run entry first. An opus writer added glosses to Subagents, Workflow scripts and Inspecting past sessions; a sonnet claim checker found the cloud-launcher gloss overstated and the search example too broad, both of which I corrected; a fresh reader found all targeted terms clear. code-review found no violation and named three more pages that gloss the header, which I read on their header sentences and added to pagesRead. It also caught a fused line on the memory page, which I fixed. gate:scoped passed on head d94d87aae. I opened the PR without asking, per ADR-0003, and subscribed to it. CI went green, I posted the verdict and merged with merge-pr.ts. Left as a memory lead: ADR unglossed in Inspecting."
 prs:
   - "3523"
 docsRead:
@@ -59,20 +59,23 @@ frictions:
   - description: The guide index plus Subject pages are about 120 KB across five Reads before any focus could be chosen, costing many tokens for a small wording fix.
     solution: Let orient.ts print a short per-Subject digest first, with full index files on demand.
     severity: minor
-durationSec: 608
+durationSec: 859
 models:
-  claude-sonnet-5-5: 103
+  claude-sonnet-5-5: 120
 toolCounts:
   AskUserQuestion: 1
-  Bash: 30
+  Bash: 34
   Read: 13
-  Skill: 4
+  Skill: 5
   Agent: 6
   Write: 3
   Edit: 3
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/agents/10.subagents.md
   - layers/glassbox/content/guide/pages/agents/50.inspecting-past-sessions.md
@@ -371,37 +374,37 @@ subagents:
     durationSec: 13
     toolCalls: 7
     modelCalls: 3
-    tokenShare: 6.7
+    tokenShare: 5.9
   - task: Write glosses for Agents pages
     model: opus
     durationSec: 89
     toolCalls: 21
     modelCalls: 15
-    tokenShare: 13.7
+    tokenShare: 12
   - task: Claim-check changed sentences
     model: sonnet
     durationSec: 21
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 2.9
+    tokenShare: 2.5
   - task: Fresh-reader pass on three pages
     model: sonnet
     durationSec: 13
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 2.5
+    tokenShare: 2.2
   - task: Standards review of Glass Box diff
     model: sonnet
     durationSec: 33
     toolCalls: 9
     modelCalls: 7
-    tokenShare: 7.7
+    tokenShare: 6.8
   - task: Spec review of Glass Box diff
     model: sonnet
     durationSec: 19
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 6.2
+    tokenShare: 5.4
 gitBranch: ccr-839a384b-gmvgqy
 entrypoint: remote_mobile
 cliVersion: 2.1.329
