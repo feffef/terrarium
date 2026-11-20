@@ -100,8 +100,10 @@ the memory page's items.
    An item is a bullet or numbered entry under the memory page's *Agent
    notes*; *Soft decisions* are not items.
 
-   Within a group, take the first item on the page, skipping an item that
-   carries a line saying an earlier run failed on it. Check that it still
+   Within a group, take the first item on the page. Skip an item that carries
+   a line saying an earlier run failed on it, and an item whose only open part
+   is a question for the owner. Take an item that needs a new Lesson: rule 6
+   leaves its PR for the owner's merge. Check that it still
    stands: grep the guide for its key terms and read where they appear. If it
    no longer stands, note it (step 7 deletes it) and take the next one.
 3. **Nothing to pick.**
