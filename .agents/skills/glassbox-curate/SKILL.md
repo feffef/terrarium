@@ -40,8 +40,8 @@ The only thing that decides the mode is whether the invocation has an argument.
    it to the memory page's *Claims to check*.
 2. Never go against a line of
    [`../glassbox-lesson/owner-decisions.md`](../glassbox-lesson/owner-decisions.md).
-3. Leave alone every page an open PR touches: the ones step 1's orientation
-   lists, and your own unmerged PRs.
+3. Leave alone every guide page an open PR touches: the ones step 1's
+   orientation lists, and your own unmerged PRs.
 4. Before a structural change or a retitle, run
    `git log --oneline origin/main -- <page>` and read the run entries that name
    the page. Never reverse a change from the last 5 runs unless it made the
@@ -55,7 +55,8 @@ The only thing that decides the mode is whether the invocation has an argument.
    or a move between Subjects, a change to this Skill, the `glassbox-lesson`
    docs or the page checks. Build it, say in the PR body that it waits for the
    owner, and don't merge it. The same goes for any PR `merge-pr.ts` refuses.
-7. Every run does every step. No step is skipped because the change is small.
+7. Every run does every step that applies to its change. No step is skipped
+   because the change is small.
 
 ## Steps
 
@@ -95,7 +96,8 @@ the memory page's items.
    An item is a bullet or numbered entry under the memory page's *Agent
    notes*; *Soft decisions* are not items.
 
-   Within a group, take the first item on the page. Check that it still
+   Within a group, take the first item on the page, skipping an item that
+   carries a line saying an earlier run failed on it. Check that it still
    stands: grep the guide for its key terms and read where they appear. If it
    no longer stands, note it (step 7 deletes it) and take the next one.
 3. **Nothing to pick.**
@@ -119,7 +121,7 @@ file it names whole, one Read per file. Also read in full every page outside
 the Subject that the change will edit, link or overlap. Copy the `pagesRead`
 lines it prints into the run entry, plus the outside pages. Skip a page you
 already read in full this session and that has not changed on `origin/main`
-since.
+since, unless your context was compacted after you read it.
 
 **Done when** the run entry is pushed on the run's branch, and every page of
 the Subject and every outside page the change edits, links or overlaps is read
@@ -213,8 +215,8 @@ step 2 at once, without waiting for CI or a merge (step 2 merges the PRs that
 turned green).
 
 The session stops only when:
-- your context window holds more than 500k tokens (a compaction of your
-  context is not a stop); or
+- your context window holds more than 500k tokens when a run has ended (a
+  compaction of your context is not a stop); or
 - step 2 finds nothing to pick and says so.
 
 Anything else is not a reason to stop: a PR waiting for CI or the owner, a
