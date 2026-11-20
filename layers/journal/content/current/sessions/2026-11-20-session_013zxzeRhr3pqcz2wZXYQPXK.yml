@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRhr3pqcz2wZXYQPXK
 startedAt: 2026-11-20T07:32:50Z
-endedAt: 2026-11-20T07:44:52Z
+endedAt: 2026-11-20T07:48:32Z
 kind: autonomous
 goal: Weekly sync of the Glass Box guide pages with the code
-status: in-review
-outcome: "PR 3517 open: all pages re-pinned, one false claim fixed, gate green; awaiting CI and merge."
-summary: Scheduled glassbox-update run, no human prompt. Ran the script, advanced all 76 pages to main 5b714ca, flagged by report (20 pages need a reader, no terms, no prose-only flags found in the commit list), and sent three read-only sonnet claim checkers (scoped for flagged pages, full for the five never-checked rotation pages). One confirmed false claim (web-standards/40 portrait tokens) was fixed; update.yml dated the five rotation pages. The script leaves a page with an edited range untouched, and I initially forgot to pin workflow-scripts by hand; the Standards and Spec reviewers both caught it and I fixed it. Edited a file while gate:scoped ran, which aborted it, so the gate ran twice. Everything was agent-initiated by the schedule's stored prompt; nothing was human-instructed.
+status: completed
+outcome: "PR 3517 merged: all pages re-pinned to 5b714ca, one false claim fixed, rotation dates recorded."
+summary: Scheduled glassbox-update run, no human prompt. Ran the script, advanced all 76 pages to main 5b714ca, flagged by report (20 pages need a reader, no terms, no prose-only flags found in the commit list), and sent three read-only sonnet claim checkers (scoped for flagged pages, full for the five never-checked rotation pages). One confirmed false claim (web-standards/40 portrait tokens) was fixed; update.yml dated the five rotation pages. The script leaves a page with an edited range untouched, and I initially forgot to pin workflow-scripts by hand; the Standards and Spec reviewers both caught it and I fixed it. Edited a file while gate:scoped ran, which aborted it, so the gate ran twice. Everything was agent-initiated by the schedule's stored prompt; nothing was human-instructed. The PR merged through merge-pr.ts after green CI and a posted verdict.
 prs:
   - "3517"
 docsRead:
@@ -63,18 +63,19 @@ frictions:
   - description: Launched a command that both set run_in_background and ended with &, which the double-background guard blocked.
     solution: Use run_in_background alone, per the guard's message.
     severity: nit
-durationSec: 721
+durationSec: 942
 models:
-  claude-sonnet-5-5: 96
+  claude-sonnet-5-5: 112
 toolCounts:
   Read: 5
-  Bash: 32
-  Skill: 4
+  Bash: 37
+  Skill: 5
   Agent: 5
-  ReadNotifications: 3
+  ReadNotifications: 5
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/agents/20.workflow-scripts.md
   - layers/glassbox/content/guide/pages/web-standards/40.colour-and-motion-settings.md
@@ -443,31 +444,31 @@ subagents:
     durationSec: 331
     toolCalls: 68
     modelCalls: 65
-    tokenShare: 38.9
+    tokenShare: 36.2
   - task: Claim check group B
     model: sonnet
     durationSec: 105
     toolCalls: 24
     modelCalls: 21
-    tokenShare: 10.3
+    tokenShare: 9.6
   - task: Claim check group C
     model: sonnet
     durationSec: 135
     toolCalls: 30
     modelCalls: 28
-    tokenShare: 14.5
+    tokenShare: 13.5
   - task: Review Standards axis
     model: sonnet
     durationSec: 26
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 2.1
+    tokenShare: 2
   - task: Review Spec axis
     model: sonnet
     durationSec: 25
     toolCalls: 6
     modelCalls: 6
-    tokenShare: 2.2
+    tokenShare: 2.1
 gitBranch: claude/relaxed-einstein-7dhnxu
 entrypoint: remote_trigger
 cliVersion: 2.1.329
