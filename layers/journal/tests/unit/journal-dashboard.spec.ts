@@ -35,6 +35,7 @@ import {
   ownSkills,
   installedSkills,
   skillUseCounts,
+  recentSkillSessions,
   journalKpiTiles,
   prUrl,
   sessionShortId,
@@ -257,6 +258,15 @@ describe('skill inventory', () => {
       session({}),
     ])
     expect(counts).toEqual({ tdd: 2, digest: 1 })
+  })
+
+  it('recentSkillSessions lists the newest sessions that used the Skill, up to the limit', () => {
+    const use = (...names: string[]) => names.map((name) => ({ name, reason: '' }))
+    const at = (day: string, ...names: string[]) =>
+      session({ session: day, startedAt: `${day}T10:00:00Z`, skillsUsed: use(...names) })
+    const sessions = [at('2026-07-01', 'tdd'), at('2026-07-03', 'tdd', 'tdd'), at('2026-07-02', 'digest'), at('2026-07-04', 'tdd')]
+    expect(recentSkillSessions(sessions, 'tdd', 2).map((s) => s.session)).toEqual(['2026-07-04', '2026-07-03'])
+    expect(recentSkillSessions(sessions, 'nope', 5)).toEqual([])
   })
 
   it('installedSkillCount counts the non-own Skills', () => {

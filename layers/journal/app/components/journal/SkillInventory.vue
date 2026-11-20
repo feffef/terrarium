@@ -7,6 +7,8 @@ import type { Importance, SkillDoc } from '../../types/journal'
 defineProps<{
   groups: { importance: Importance; skills: SkillDoc[] }[]
   uses?: Record<string, number>
+  // Where each Skill's own page lives; absent means no links (the archived Space has none).
+  pageBase?: string
 }>()
 </script>
 
@@ -23,7 +25,10 @@ defineProps<{
         <div v-for="s in g.skills" :key="s.name" class="skill">
           <div class="name">
             <JournalSkillName :name="s.name" />
-            <span v-if="uses" class="uses">used in {{ countOf(uses[s.name] ?? 0, 'session') }}</span>
+            <span v-if="uses" class="uses">
+              <NuxtLink v-if="pageBase" :to="`${pageBase}/${s.name}`">used in {{ countOf(uses[s.name] ?? 0, 'session') }} →</NuxtLink>
+              <template v-else>used in {{ countOf(uses[s.name] ?? 0, 'session') }}</template>
+            </span>
           </div>
           <p v-if="s.gist" class="gist">{{ s.gist }}</p>
           <details v-if="s.gist" class="role-details">
@@ -53,7 +58,7 @@ defineProps<{
       <template v-else>
         <p v-if="uses && g.importance === 'supporting'" class="chips-note">Number after a name: sessions that used it. No number: not used in this Space.</p>
         <div class="chips-inline">
-          <span v-for="s in g.skills" :key="s.name" class="chip"><JournalSkillName :name="s.name" /><span v-if="uses && uses[s.name]" class="chip-uses" :title="`used in ${countOf(uses[s.name] ?? 0, 'session')}`"> · {{ uses[s.name] }}</span></span>
+          <span v-for="s in g.skills" :key="s.name" class="chip"><NuxtLink v-if="pageBase" :to="`${pageBase}/${s.name}`">{{ s.name }}</NuxtLink><JournalSkillName v-else :name="s.name" /><span v-if="uses && uses[s.name]" class="chip-uses" :title="`used in ${countOf(uses[s.name] ?? 0, 'session')}`"> · {{ uses[s.name] }}</span></span>
         </div>
       </template>
     </div>
@@ -83,6 +88,8 @@ defineProps<{
   gap: 0.5rem;
 }
 .uses { margin-left: auto; font-size: 0.7rem; color: var(--jd-faint); }
+.uses a, .chip a { color: inherit; text-decoration: underline dotted; text-underline-offset: 2px; }
+.uses a:hover, .chip a:hover { color: var(--jd-accent); }
 .chip-uses { color: var(--jd-faint); }
 .gist { margin: 0.25rem 0 0; font-size: 0.83rem; color: var(--jd-ink); font-family: var(--jd-serif); }
 .role { margin: 0.25rem 0 0; font-size: 0.83rem; color: var(--jd-muted); font-family: var(--jd-serif); }

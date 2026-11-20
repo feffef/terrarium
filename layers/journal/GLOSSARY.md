@@ -31,7 +31,8 @@ A daily catch-up on Platform activity across all Tenants, condensed from git his
 ## What lives where
 
 - **`layers/journal/app/pages/t/journal/[space]/`** — the pages a visitor sees:
-  `index.vue` (digests, stats, session feed), `skills.vue` (Skill Inventory),
+  `index.vue` (digests, stats, session feed), `skills/` (Skill Inventory, and a
+  page per Skill in `current`),
   `ideas.vue` (ideas and learnings) and `frictions.vue` (the Friction Ledger),
   none a Markdown render of any single file, and `routines.vue` (Routine run
   costs), which renders `content/current/pages/routines.md` beside its charts.

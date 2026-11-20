@@ -24,8 +24,8 @@ Routine run costs and issues.
   scheduled runs drive. `audit-skills` defines the grades.
 - **`role` is plain prose for the site's readers:** what the Skill does for
   this project, not a copy of its own description, with no PR, issue or
-  session ids. Those go in `observations`, the audit's own record, which the
-  site does not show and which keeps only recent history.
+  session ids. Those go in `observations`, the audit's own record, which
+  keeps only recent history and shows only on a Skill's own page.
 - **What `audit-skills` may change:** Inventory entries, the Routine run
   costs in the Journal's `routines` Collection, and issues it files or comments on. It never edits a Skill. A finding about one of our Skills
   becomes an issue when it matters enough, and otherwise an observation, so a

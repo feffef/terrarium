@@ -70,7 +70,7 @@ export function glassboxCites(sources: Record<string, string>, space: string): R
 /** Every Journal page a link may reach: its content pages and its own Vue routes, in each Space. */
 export function glassboxJournalRoutes(projectRoot = root) {
   const journal = join(projectRoot, 'layers/journal')
-  const vue = globSync('*.vue', { cwd: join(journal, 'app/pages/t/journal/[space]') }).filter((f) => !f.startsWith('['))
+  const vue = globSync(['*.vue', '*/index.vue'], { cwd: join(journal, 'app/pages/t/journal/[space]') }).filter((f) => !f.startsWith('['))
   return readdirSync(join(journal, 'content')).flatMap((space) => [
     ...globSync('**/*.md', { cwd: join(journal, 'content', space, 'pages') }),
     ...vue,

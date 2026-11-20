@@ -268,6 +268,28 @@ describe('journal Tenant', async () => {
     if (ordinaryIdea) expect(await $fetch('/t/journal/current/ideas')).toContain(ordinaryIdea)
   })
 
+  // A per-Skill page exists only in `current`; the list links to it from "used in N sessions".
+  it('opens a Skill page from the Skills list with its gist, audit and observations', async () => {
+    const dir = fileURLToPath(new URL('../../content/current/skills/', import.meta.url))
+    type Doc = { name: string; gist?: string; auditSummary?: unknown; observations: { date: string }[] }
+    const doc = readdirSync(dir)
+      .map((f) => parseYaml(readFileSync(join(dir, f), 'utf8')) as Doc)
+      .find((d) => d.gist && d.auditSummary && d.observations.length)!
+    const href = `/t/journal/current/skills/${doc.name}`
+    expect(await $fetch<string>('/t/journal/current/skills')).toContain(`href="${href}"`)
+    const page = await $fetch<string>(href)
+    expect(page).toContain(doc.gist!.replace(/&/g, '&amp;').replace(/'/g, '&#39;').replace(/"/g, '&quot;'))
+    expect(page).toContain('last audited')
+    expect(page).toContain(doc.observations.map((o) => o.date).sort().at(-1)!)
+    expect(page).toContain('href="/t/journal/current/skills"')
+  })
+
+  it('404s a Skill page for an unknown Skill and in the archived Space, which links none', async () => {
+    expect((await fetch('/t/journal/current/skills/no-such-skill')).status).toBe(404)
+    expect((await fetch('/t/journal/archived/skills/close-session')).status).toBe(404)
+    expect(await $fetch<string>('/t/journal/archived/skills')).not.toContain('/t/journal/archived/skills/')
+  })
+
   it('serves the Routine costs page with one chart per Routine and the weekly table', async () => {
     const html = await $fetch('/t/journal/current/routines')
     expect(html).toMatch(/class="jd[\s"]/)
