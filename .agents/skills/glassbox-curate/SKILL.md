@@ -1,6 +1,6 @@
 ---
 name: glassbox-curate
-description: Clear the Glass Box memory page's backlog. With no argument, loop focus by focus, one reviewed and merged PR each, until 500k tokens or nothing is left. With an instruction, research it, grill the person, then build it with them.
+description: Clear the Glass Box memory page's backlog, one reviewed PR per focus; with an instruction, build it with the person instead.
 disable-model-invocation: true
 ---
 
@@ -28,9 +28,9 @@ The only thing that decides the mode is whether the invocation has an argument.
   decide everything and ask nothing; a person who is there can interrupt you.
   Do step 1 once, then steps 2 to 8 for each run. Step 8 decides whether the
   next run starts. The run entry's `mode` is `autonomous`.
-- **An argument: Instruction.** Always interactive. Do steps 1, I1 and I2, then
-  steps 3 to 7 for each PR in the outline (each PR is one run), then I3. The
-  run entry's `mode` is `interactive`.
+- **An argument: Instruction.** Always interactive. Do steps 1, I1 and I2.
+  Then, for each PR in the outline (each PR is one run), do steps 3 to 7 and
+  then I3. The run entry's `mode` is `interactive`.
 
 ## Rules for every run
 
@@ -47,7 +47,8 @@ The only thing that decides the mode is whether the invocation has an argument.
    page false.
 5. Edit only `layers/glassbox/content/guide/`, the diagram SVGs you re-render,
    the memory page, your run entries, and a moved page's name in
-   `layers/glassbox/content/workshop/checks/update.yml` (step 5).
+   `layers/glassbox/content/workshop/checks/update.yml` (step 5; that file
+   is otherwise `glassbox-update`'s).
 6. A PR that holds any of these waits for the owner's merge: a new Lesson, a
    new Subject (with its `layers/glassbox/app/utils/subjects.ts` entry), a split
    or a move between Subjects, a change to this Skill, the `glassbox-lesson`
@@ -81,7 +82,7 @@ the memory page's items.
 ### 2. Choose the focus (Loop only)
 
 1. **Your open PRs.** For a later run, check each PR you opened: merge it once
-   its checks are green (step 7's recipe); if its checks are red, fix it on its
+   its checks are green (`pr-workflow.md`'s recipe); if its checks are red, fix it on its
    branch first. Then run
    `pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts --index` and
    read only its open PR list.
@@ -91,6 +92,9 @@ the memory page's items.
    2. weak spots;
    3. everything else: gaps, open ideas, wording problems, claims to check and
       other topics.
+
+   An item is a bullet or numbered entry under the memory page's *Agent
+   notes*; *Soft decisions* are not items.
 
    Within a group, take the first item on the page. Check that it still
    stands: grep the guide for its key terms and read where they appear. If it
@@ -136,8 +140,7 @@ bullet is checked.
 
 ### 5. Write
 
-An opus writer subagent writes every sentence that states a fact, however
-small the change, and quotes the `path:line` behind each one. Give it:
+An opus writer subagent writes every sentence that states a fact and quotes the `path:line` behind each one. Give it:
 - the focus, the reports from step 4 and the pages it will edit;
 - the limits `layers/glassbox/page-checks.ts` enforces: title, description and
   Why bullet lengths; a capitalised link's text is its target's title; a
@@ -190,18 +193,16 @@ every changed page.
 2. Update the memory page (State): delete every item this run solved and every
    item step 2 found no longer stands; add only what State allows.
 3. Complete the run entry: `changes` and `pagesRead`.
-4. Commit, then run `pnpm exec tsx scripts/github/verdict-line.ts --review-call`
-   and make the `code-review` call it prints. Add as its standards the Lesson
-   contract, writing-pages.md, owner-decisions.md and the glassbox-content
-   rule, without the code-smell baseline, and say the page checks already ran.
-   Its Spec reviewer names each page the change needed read that is missing
-   from `pagesRead`: read it, recheck the change against it, add it.
-5. Fix the findings and review each fix (`pr-workflow.md`, "Review before
-   opening the PR", step 4). Run `pnpm gate:scoped` on the final head and push
-   it.
-6. Open one PR and subscribe to its activity. Unless rule 6 says it waits for
-   the owner, merge it with `pr-workflow.md`'s recipe once its checks are
-   green: post your verdict, then run `scripts/github/merge-pr.ts`.
+4. Follow every step of `docs/agents/pr-workflow.md`, "Review before opening
+   the PR". For its `code-review` call, add as standards the Lesson contract,
+   writing-pages.md, owner-decisions.md and the glassbox-content rule, without
+   the code-smell baseline, and say the page checks already ran. Its Spec
+   reviewer names each page the change needed read that is missing from
+   `pagesRead`: read it, recheck the change against it, add it.
+5. Open one PR, subscribe to its activity and invoke `close-session`. Don't
+   wait for its checks here: step 2 (Loop) or I3 (Instruction) merges it with
+   `pr-workflow.md`'s recipe once they are green, unless rule 6 says it waits
+   for the owner.
 
 **Done when** the PR is open on a reviewed, gated head and the memory page and
 run entry are current.
@@ -219,8 +220,9 @@ The session stops only when:
 
 Anything else is not a reason to stop: a PR waiting for CI or the owner, a
 finished `close-session`, a small or done-looking memory page, or a belief that
-the next scheduled run will do it. When you stop, merge every PR of yours that
-is green, then invoke `close-session`.
+the next scheduled run will do it. When you stop, wait for the checks of every
+PR of yours that doesn't wait for the owner (end your turn; the gate's comment
+on the PR wakes you), merge each once green, then invoke `close-session`.
 
 **Done when** you have started step 2 again, or stopped for one of the two
 reasons above.
@@ -242,8 +244,7 @@ Run the `grilling` Skill with the person. Ask until you understand exactly what
 they want, then outline what this session will do: the changes and the PRs. Ask
 them to confirm the outline.
 
-**Done when** the person has confirmed the outline. Then do steps 3 to 7 for
-each PR in it.
+**Done when** the person has confirmed the outline.
 
 ### I3. Report and wait
 
@@ -288,7 +289,7 @@ plain words. State a count only after counting its items in their source.
   found.
 - A fact the next run still needs stays as a plain current fact under a heading
   that fits. What a run did goes in its run entry, not here.
-- The word cap in `layers/glassbox/tests/unit/workshop.spec.ts` is a ceiling,
+- The word cap (`glassboxWorkshopWordCap` in `layers/glassbox/app/utils/workshop.ts`) is a ceiling,
   not a target. If you hit it, never squeeze the wording: cut whole items not
   worth pursuing. An item that has stood a long time and that no run took up
   goes first (`git log -S` on it); items added in the last few runs go last.
@@ -308,6 +309,3 @@ the `runs` Collection in `layers/glassbox/tenant.config.ts`. A `changes` entry
 is `page | what changed | why`, where `page` is the guide page's stem: its path
 under `layers/glassbox/content/guide/pages/` without `.md`, or `index` for the
 overview. Quote a `changes` line that holds a colon followed by a space.
-
-**`checks/update.yml`** belongs to `glassbox-update`; write it only to rename a
-page you moved.

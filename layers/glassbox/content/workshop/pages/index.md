@@ -89,7 +89,7 @@ Decisions agents made (run, review, claim check). Not rules: the owner or a late
 
 ## Update log
 
-One agent editing session is a *curate run*, scheduled or with the owner. Each entry is that run's detailed log: its focus and why, then every page it touched, what changed and why. Lately above is the short version. Newest first.
+A *curate run* is one focus and its pull request; one session can hold many. Each entry is that run's detailed log: its focus and why, then every page it touched, what changed and why. Lately above is the short version. Newest first.
 
 ::workshop-runs
 ::

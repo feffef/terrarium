@@ -34,7 +34,8 @@ pins to that one commit, never a later fetch.
    At the start of this step, start the **Scout**: run
    `pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts --index`,
    then dispatch a background sonnet subagent (`dispatch-subagents`) with the
-   guide index files it names and the same commit range. It reads every commit
+   guide index files it names and the range from the oldest step-1 `revision`
+   to the commit. It reads every commit
    in that range, all paths, and returns each new topic worth teaching that no
    page in the index teaches, with its commits and the nearest page. Add each
    one as a single line to the memory page's *Stale or missing* section
