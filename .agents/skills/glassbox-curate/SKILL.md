@@ -28,9 +28,11 @@ The only thing that decides the mode is whether the invocation has an argument.
   decide everything and ask nothing; a person who is there can interrupt you.
   Do step 1 once, then steps 2 to 8 for each run. Step 8 decides whether the
   next run starts. The run entry's `mode` is `autonomous`.
-- **An argument: Instruction.** Always interactive. Do steps 1, I1 and I2.
-  Then, for each PR in the outline (each PR is one run), do steps 3 to 7 and
-  then I3. The run entry's `mode` is `interactive`.
+- **An argument: Instruction.** You ask the person questions only in I2. Do
+  steps 1, I1 and I2. Then, for each PR in the outline (each PR is one run), do
+  *Merging your PRs* and steps 3 to 7, without waiting for the person. Then do
+  I3. If your context window holds more than 500k tokens when a run has ended,
+  go to I3. The run entry's `mode` is `interactive`.
 
 ## Rules for every run
 
@@ -83,9 +85,7 @@ the memory page's items.
 
 ### 2. Choose the focus (Loop only)
 
-1. **Your open PRs.** For a later run, check each PR you opened: merge it once
-   its checks are green (`pr-workflow.md`'s recipe); if its checks are red, fix
-   it on its branch first.
+1. **Your open PRs.** Do *Merging your PRs*.
 2. **Pick.** Take the most important item on the memory page whose pages no
    open PR touches, in this order:
    1. the owner's direction;
@@ -102,8 +102,8 @@ the memory page's items.
    no longer stands, note it (step 7 deletes it) and take the next one.
 3. **Nothing to pick.**
    - If items are left but open PRs block all of them, and one of those PRs is
-     yours and waits only for its checks, end your turn; the gate's comment on
-     the PR wakes you. Then start this step again.
+     yours with its checks still running, end your turn. This is a pause, not a
+     stop: the gate's comment on the PR wakes you. Then start this step again.
    - Otherwise stop the session (step 8) and say in your final message which
      items are left and which PR blocks each.
 
@@ -201,9 +201,7 @@ every changed page.
    reviewer names each page the change needed read that is missing from
    `pagesRead`: read it, recheck the change against it, add it.
 5. Open one PR, subscribe to its activity and invoke `close-session`. Don't
-   wait for its checks here: step 2 (Loop) or I3 (Instruction) merges it with
-   `pr-workflow.md`'s recipe once they are green, unless rule 6 says it waits
-   for the owner.
+   wait for its checks: *Merging your PRs* merges it once they are green.
 
 **Done when** the PR is open on a reviewed, gated head and the memory page and
 run entry are current.
@@ -211,8 +209,7 @@ run entry are current.
 ### 8. Next (Loop only)
 
 Each run ends at step 7. This step only decides what comes next: go back to
-step 2 at once, without waiting for CI or a merge (step 2 merges the PRs that
-turned green).
+step 2 at once, without waiting for CI or a merge.
 
 The session stops only when:
 - your context window holds more than 500k tokens when a run has ended (a
@@ -221,12 +218,30 @@ The session stops only when:
 
 Anything else is not a reason to stop: a PR waiting for CI or the owner, a
 finished `close-session`, a small or done-looking memory page, or a belief that
-the next scheduled run will do it. When you stop, wait for the checks of every
-PR of yours that doesn't wait for the owner (end your turn; the gate's comment
-on the PR wakes you), merge each once green, then invoke `close-session`.
+the next scheduled run will do it.
+
+**To stop:** do *Merging your PRs* until none of your PRs has checks still
+running (between passes, end your turn; the gate's comment on the PR wakes
+you). Then invoke `close-session`, and in your final message say why you
+stopped and name each PR left open.
 
 **Done when** you have started step 2 again, or stopped for one of the two
 reasons above.
+
+## Merging your PRs
+
+Go through each PR you opened in this session that is still open:
+- **Checks green:** merge it with `pr-workflow.md`'s recipe (post your verdict,
+  then run `scripts/github/merge-pr.ts`). If rule 6 says it waits for the
+  owner, or `merge-pr.ts` refuses it, leave it open for a human merge.
+- **Checks red:** fix it on its branch, review the fix (`pr-workflow.md`,
+  "Review before opening the PR", step 4) and push.
+- **No checks appear:** it likely has a merge conflict. Merge `origin/main` into
+  its branch, resolve it and push.
+- **Checks still running:** leave it for the next pass.
+
+**Done when** each of your PRs is merged, left for a human merge, or has its
+checks still running.
 
 ## Instruction steps
 
@@ -247,14 +262,14 @@ them to confirm the outline.
 
 **Done when** the person has confirmed the outline.
 
-### I3. Report and wait
+### I3. Finish
 
-After each PR, tell the person what landed and what is open, and wait for their
-next instruction. Merge each of your PRs once its checks are green. A new
-instruction starts again at I1.
+After the last PR of the outline, do step 8's **To stop**: merge your PRs,
+invoke `close-session`, and report what landed and what is left open. If the
+person later sends a new instruction, start again at I1.
 
-**Done when** the person says the session is finished, or your context window
-holds more than 500k tokens. Then invoke `close-session`.
+**Done when** each of your PRs is merged or named as left open, and
+`close-session` has run.
 
 ## Lenses
 

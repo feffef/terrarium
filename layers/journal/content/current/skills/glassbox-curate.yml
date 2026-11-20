@@ -7,8 +7,10 @@ role: >-
   loops: it takes the most important item, writes, checks, reviews and gates
   the change, lands one PR, and takes the next item until its context passes
   500k tokens or no item is left. With an instruction it researches the topic,
-  grills the person until they confirm an outline, then builds it with them PR
-  by PR. Each session leaves the memory page with fewer items than it found.
+  grills the person until they confirm an outline, then builds the outline
+  unattended. It opens each PR and goes on at once, merging each PR once its
+  checks are green. Each session leaves the memory page with fewer items than
+  it found.
 watchFor:
   - "A run that merges its PR first ran the code-review Skill and the gate, and the PR's `Reviewed:` line says what really ran."
   - "Every run used the writer, the claim checker and a fresh reader, with no step skipped because the change was small."
