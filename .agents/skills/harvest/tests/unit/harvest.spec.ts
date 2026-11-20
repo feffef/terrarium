@@ -18,8 +18,12 @@ import {
   comparePosted,
   entryKey,
   evidenceReport,
+  groupedEvidenceReport,
   harvestedState,
+  issuesPath,
+  loadIssues,
   noteTexts,
+  parseEvidenceArgs,
   parseKeys,
   productDecisions,
   renderBlock,
@@ -422,5 +426,60 @@ describe('rulingFiles()', () => {
 
   it('names only files that exist in the repo, so a moved rulings file fails here', () => {
     expect(rulingFiles(root).filter((f) => !existsSync(join(root, f)))).toEqual([])
+  })
+})
+
+describe('groupedEvidenceReport()', () => {
+  const sources = { rulings: [{ file: 'a.md', text: 'rss here\nfooter here' }], issues: [], frictions: [] }
+
+  it('prints a single group exactly as evidenceReport does', () => {
+    expect(groupedEvidenceReport([['rss']], sources)).toBe(evidenceReport(['rss'], sources))
+  })
+
+  it('prints one labelled block per group', () => {
+    expect(groupedEvidenceReport([['rss'], ['footer', 'x']], sources)).toBe(
+      [
+        '## evidence: rss',
+        evidenceReport(['rss'], sources),
+        '',
+        '## evidence: footer x',
+        evidenceReport(['footer', 'x'], sources),
+      ].join('\n'),
+    )
+  })
+})
+
+describe('parseEvidenceArgs()', () => {
+  it('takes --extract and its value out of the keyword groups', () => {
+    expect(parseEvidenceArgs(['a', '--extract', 'x.json', '--', 'b'])).toEqual({ groups: [['a'], ['b']], extract: 'x.json' })
+    expect(parseEvidenceArgs(['--extract', 'x.json', 'a'])).toEqual({ groups: [['a']], extract: 'x.json' })
+  })
+
+  it('splits groups on a literal -- and drops empty ones', () => {
+    expect(parseEvidenceArgs(['a', 'b', '--', 'c', '--', '--']).groups).toEqual([['a', 'b'], ['c']])
+  })
+
+  it('leaves extract unset without the flag', () => {
+    expect(parseEvidenceArgs(['a', 'b'])).toEqual({ groups: [['a', 'b']], extract: undefined })
+  })
+})
+
+describe('loadIssues()', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'harvest-issues-'))
+  const extract = join(dir, 'extract.json')
+  const fetchFresh = () => [{ n: 'fresh' }]
+
+  it('reads the list saved next to the extract instead of fetching', () => {
+    writeFileSync(issuesPath(extract), JSON.stringify([{ n: 'saved' }]))
+    expect(loadIssues(extract, () => { throw new Error('fetched') })).toEqual([{ n: 'saved' }])
+  })
+
+  it('fetches when the saved list is absent or no extract is given', () => {
+    expect(loadIssues(join(dir, 'other.json'), fetchFresh)).toEqual([{ n: 'fresh' }])
+    expect(loadIssues(undefined, fetchFresh)).toEqual([{ n: 'fresh' }])
+  })
+
+  it('names the saved list <extract>.issues.json', () => {
+    expect(issuesPath('/x/e.json')).toBe('/x/e.json.issues.json')
   })
 })

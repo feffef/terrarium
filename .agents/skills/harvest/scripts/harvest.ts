@@ -7,13 +7,15 @@
 //
 // Usage:
 //   tsx .agents/skills/harvest/scripts/harvest.ts extract [--kind ideas|learnings] [--out PATH]
+//     (also writes the issue list to PATH.issues.json, which `evidence` reads)
 //   tsx .agents/skills/harvest/scripts/harvest.ts list <extract.json>
 //   tsx .agents/skills/harvest/scripts/harvest.ts block <extract.json> <n> [n...]
+//   tsx .agents/skills/harvest/scripts/harvest.ts evidence <kw...> [-- <kw...>]... [--extract <extract.json>]
 //   tsx .agents/skills/harvest/scripts/harvest.ts check-clusters <harvest-checks.md> --extract <extract.json>
 //   tsx .agents/skills/harvest/scripts/harvest.ts check-body <body-file> --extract <extract.json> [--title T]
 //   tsx .agents/skills/harvest/scripts/harvest.ts check-posted <issue-number> <body-file>
 import { createHash } from 'node:crypto'
-import { readdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { parse as parseYaml } from 'yaml'
@@ -261,6 +263,34 @@ export function evidenceReport(keywords: string[], src: EvidenceSources): string
   ].join('\n')
 }
 
+/** The keyword groups and the `--extract` path of `evidence` arguments; groups are
+ *  separated by a literal `--`. */
+export function parseEvidenceArgs(argv: string[]): { groups: string[][]; extract?: string } {
+  const groups: string[][] = [[]]
+  let extract: string | undefined
+  for (let i = 0; i < argv.length; i++) {
+    const a = argv[i]!
+    if (a === '--extract') extract = argv[++i]
+    else if (a === '--') groups.push([])
+    else groups[groups.length - 1]!.push(a)
+  }
+  return { groups: groups.filter((g) => g.length), extract }
+}
+
+/** Where `extract` saves the issue list it fetched, for `evidence` to reuse. */
+export const issuesPath = (extract: string): string => `${extract}.issues.json`
+
+/** The saved issue list of `extract` if present, else a fresh fetch. */
+export function loadIssues<T>(extract: string | undefined, fetch: () => T[]): T[] {
+  return extract && existsSync(issuesPath(extract)) ? (JSON.parse(readFileSync(issuesPath(extract), 'utf8')) as T[]) : fetch()
+}
+
+/** One group prints as `evidenceReport` does; several print one labelled block each. */
+export function groupedEvidenceReport(groups: string[][], src: EvidenceSources): string {
+  if (groups.length === 1) return evidenceReport(groups[0]!, src)
+  return groups.map((g) => `## evidence: ${g.join(' ')}\n${evidenceReport(g, src)}`).join('\n\n')
+}
+
 /** The tests of step 3, and the fields a cluster record carries. */
 const TESTS = ['unbuilt', 'unfiled', 'unrejected', 'ledger', 'simplifying', 'unacted'] as const
 
@@ -385,10 +415,13 @@ function parseKinds(argv: string[]): Kind[] | undefined {
 function cmdExtract(argv: string[]): void {
   const since = Date.now() - WINDOW_DAYS * 86_400_000
   const kinds = parseKinds(argv)
-  const state = harvestedState(listIssueBodies())
+  const issues = listIssueBodies()
+  const state = harvestedState(issues)
   const { entries, skippedHarvested } = buildEntries(readSessionLogs(root, { archived: true }), state, since, kinds)
   const out = flagValue(argv, '--out') ?? DEFAULT_OUT
   const count = (k: Kind) => entries.filter((e) => e.kind === k).length
+  // `evidence` reads this instead of refetching the tracker (about 34 s per call).
+  writeFileSync(issuesPath(out), JSON.stringify(issues))
   writeFileSync(out, JSON.stringify({ since: new Date(since).toISOString(), days: WINDOW_DAYS, skippedHarvested, entries }, null, 2) + '\n')
   console.log(`harvest: window ${new Date(since).toISOString()} .. now (${WINDOW_DAYS} days)`)
   console.log(`harvest: ${count('idea')} ideas and ${count('learning')} learnings unharvested; ${skippedHarvested} already harvested`)
@@ -407,14 +440,17 @@ export function rulingFiles(dir: string): string[] {
   ]
 }
 
-function cmdEvidence(keywords: string[]): void {
+function cmdEvidence(argv: string[]): void {
+  const { groups, extract } = parseEvidenceArgs(argv)
+  if (!groups.length) fail('usage: evidence <keyword...> [-- <keyword...>]... [--extract <extract.json>]')
+  const issues = loadIssues(extract, listIssueBodies)
   const rulings = rulingFiles(root).map((file) => {
     const text = readFileSync(join(root, file), 'utf8')
     return { file, text: file.endsWith('/GLOSSARY.md') ? productDecisions(text) : text }
   })
   const ledger = 'layers/journal/content/current/frictions'
   const frictions = readdirSync(join(root, ledger)).map((f) => ({ file: `${ledger}/${f}`, summary: summaryOf(readFileSync(join(root, ledger, f), 'utf8')) }))
-  console.log(evidenceReport(keywords, { rulings, issues: listIssueBodies(), frictions }))
+  console.log(groupedEvidenceReport(groups, { rulings, issues, frictions }))
 }
 
 function readExtract(path: string): { entries: Entry[] } {
@@ -442,7 +478,6 @@ function main(): void {
     return console.log(out)
   }
   if (cmd === 'evidence') {
-    if (!argv.length) fail('usage: evidence <keyword...>')
     return cmdEvidence(argv)
   }
   if (cmd === 'check-clusters') {
