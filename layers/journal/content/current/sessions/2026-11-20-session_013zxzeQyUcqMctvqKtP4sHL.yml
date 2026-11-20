@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQyUcqMctvqKtP4sHL
 startedAt: 2026-11-20T08:45:59Z
-endedAt: 2026-11-20T08:53:18Z
+endedAt: 2026-11-20T08:57:34Z
 kind: autonomous
 goal: "Scheduled upkeep of the Glass Box guide: Walkthroughs"
-status: in-review
-outcome: "PR #3518 open: two wording fixes to Walkthroughs, a run entry and a memory-page cleanup"
-summary: A scheduled glassbox-curate run, so every choice was agent-initiated; no human instruction arrived. I oriented, read the guide index and all ten Walkthroughs, and chose the Walkthroughs focus because a page check warned about a stop over the 80-word cap and a memory lead was settled by the pages alone. The Scout found no new topic. The first reflow of stop 8 shifted a claim about what the smoke test never visits; code-review's Standards and Spec reviewers caught it, so I restored the original sentence and cut only one clause. I also dropped an unexplained "(completed)" from the bug-report real case. I skipped the writer, claim checker and fresh reader on the argument that the edits add no claim, and checked the Testing and File routing pages on their smoke-test lines only, not whole; both are named in the run entry. Gate passed; PR opened for self-merge.
+status: completed
+outcome: "PR #3518 merged: two wording fixes to Walkthroughs, a run entry and a memory-page cleanup"
+summary: A scheduled glassbox-curate run, so every choice was agent-initiated; no human instruction arrived. I oriented, read the guide index and all ten Walkthroughs, and chose the Walkthroughs focus because a page check warned about a stop over the 80-word cap and a memory lead was settled by the pages alone. The Scout found no new topic. The first reflow of stop 8 shifted a claim about what the smoke test never visits; code-review's Standards and Spec reviewers caught it, so I restored the original sentence and cut only one clause. I also dropped an unexplained "(completed)" from the bug-report real case. I skipped the writer, claim checker and fresh reader on the argument that the edits add no claim, and checked the Testing and File routing pages on their smoke-test lines only, not whole; both are named in the run entry. I ended after this one run instead of looping to the next focus, which the Skill's Loop step asks for; the next scheduled firing takes it. Gate passed locally and in CI; I posted my verdict (review on the first commit, own read of the follow-up) and merged with merge-pr.ts.
 prs:
   - "3518"
 docsRead:
@@ -55,17 +55,21 @@ frictions:
   - description: The run-entry changes field is YAML, and an unquoted colon followed by a space in a changes line failed validation until I quoted it.
     solution: Show the quoted form in the orientation skeleton for changes entries.
     severity: nit
-durationSec: 439
+durationSec: 695
 models:
-  claude-sonnet-5-5: 64
+  claude-sonnet-5-5: 82
 toolCounts:
   Read: 13
-  Bash: 19
-  Skill: 4
+  Bash: 23
+  Skill: 5
   Agent: 3
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/walkthroughs/60.adding-a-site.md
   - layers/glassbox/content/workshop/runs/2026-11-20T0846.yml
@@ -269,19 +273,19 @@ subagents:
     durationSec: 14
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 10.1
+    tokenShare: 8.1
   - task: Standards review of glassbox diff
     model: sonnet
     durationSec: 27
     toolCalls: 9
     modelCalls: 5
-    tokenShare: 9.2
+    tokenShare: 7.4
   - task: Spec review of glassbox diff
     model: sonnet
     durationSec: 18
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 8.1
+    tokenShare: 6.5
 gitBranch: claude/compassionate-bardeen-a6rdcl
 entrypoint: remote_trigger
 cliVersion: 2.1.329
