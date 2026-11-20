@@ -50,9 +50,11 @@ The only thing that decides the mode is whether the invocation has an argument.
    the page. Never reverse a change from the last 5 runs unless it made the
    page false.
 5. Edit only `layers/glassbox/content/guide/`, the diagram SVGs you re-render,
-   the memory page, your run entries, and a moved page's name in
+   the memory page, your run entries, a moved page's name in
    `layers/glassbox/content/workshop/checks/update.yml` (step 5; that file
-   is otherwise `glassbox-update`'s).
+   is otherwise `glassbox-update`'s), and, in a PR that waits for the owner
+   (rule 6), `layers/glassbox/app/utils/subjects.ts`, this Skill, the
+   `glassbox-lesson` docs and the page checks.
 6. A PR that holds any of these waits for the owner's merge: a new Lesson, a
    new Subject (with its `layers/glassbox/app/utils/subjects.ts` entry), a split
    or a move between Subjects, a change to this Skill, the `glassbox-lesson`
