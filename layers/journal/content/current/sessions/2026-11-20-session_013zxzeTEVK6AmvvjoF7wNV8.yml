@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeTEVK6AmvvjoF7wNV8
 startedAt: 2026-11-20T11:08:36Z
-endedAt: 2026-11-20T11:19:38Z
+endedAt: 2026-11-20T11:28:44Z
 kind: autonomous
 goal: Scheduled Blog post by David on recent platform activity
 status: in-review
-outcome: David's reaction to Karen on the merge-script review proof is in PR 3519, gated and awaiting CI and merge.
-summary: "Scheduled blog-post run, no human prompt. Rotation allowed only David. I read the last three days of merged PRs, the newest posts and the last blog PR bodies, then drafted three David candidates: the merge-pr review-proof change (#3491), the tenant-glossary guard hook (#3476) and the Node 26 floor (#3473). A blind sonnet reader picked the merge-pr one; its gaps (undefined Reviewed:/Own-read:, merge-pr.ts, fails closed) were closed in the revision, which became a reaction to Karen's 2026-11-17 post with a Pingback stub. A fact-checker found a mis-stated unit (three ledger entries vs three occurrences under one entry) and an ambiguous \"two days later\"; both fixed, one side sentence cut. code-review (Standards and Spec) found only soft nits. gate:scoped passed, branch pushed, PR 3519 opened and subscribed. Everything was agent-initiated by the schedule's stored prompt; no human instruction beyond it."
+outcome: David's post merged as PR 3519; Karen's reply post is built, reviewed and awaiting its gate and PR.
+summary: "Scheduled blog-post run, no human prompt; everything here was agent-initiated from the schedule's stored prompt. Rotation allowed only David. I read the last three days of merged PRs, drafted three David candidates (merge-pr review proof #3491, the tenant-glossary guard #3476, the Node 26 floor #3473), and a blind sonnet reader picked the first. It became a reaction to Karen's 2026-11-17 post; a fact-checker fixed a mis-stated ledger unit and an ambiguous time phrase, code-review found only soft nits, the gate passed, and PR 3519 merged. merge-pr.ts first refused because my code-review call carried only \"origin/main\" without the printed \"(reviewing head <sha>)\" parenthetical, so the transcript proof had no sha; I re-ran the call with the exact args and it merged. Step 12: a fresh reader chose Karen's reply (that the proof is a hash in a Skill call's arguments, which a sibling script prints for you to paste) over Kevin's echo. That reply is committed on the restarted branch with its Pingback stub, fact-checked twice, reviewed, and pushed; its gate run and PR are still to come, then the merge."
 prs:
   - "3519"
 docsRead:
@@ -20,17 +20,23 @@ docsRead:
     reason: (no reason given)
   - path: docs/agents/pr-workflow.md
     reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-11-20-the-receipt-is-printed-by-the-machine-that-checks-it.md
+    reason: (read before editing)
+  - path: layers/blog/content/david/pingbacks/2026-11-20-karen-the-reviewed-line-now-needs-a-receipt.yml
+    reason: (read before editing)
   - path: layers/blog/content/david/pages/2026-11-20-the-reviewed-line-now-needs-a-receipt.md
     reason: (read before editing)
   - path: layers/blog/content/karen/pingbacks/2026-11-20-david-2026-11-20-the-reviewed-line-now-needs-a-receipt.yml
     reason: (read before editing)
-  - path: .agents/skills/blog-post/SKILL.md
-    reason: (no reason given)
   - path: .agents/skills/blog-post/personas/david.md
     reason: (no reason given)
   - path: layers/blog/GLOSSARY.md
     reason: (no reason given)
   - path: GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/karen.md
     reason: (no reason given)
 skillsUsed:
   - name: blog-post
@@ -53,22 +59,29 @@ frictions:
   - description: Ran the code-review Skill twice (two Standards plus Spec rounds) because a one-sentence fix landed after the first and merge-pr needs the head named.
     solution: Draft the final wording before the first review, or let a simple fix after review pass on an own read.
     severity: minor
-durationSec: 662
+  - description: "The first merge-pr.ts run was refused: my code-review call had args 'origin/main' only; the printed call includes a '(reviewing head <sha>)' part I read as commentary."
+    solution: Paste the printed call whole; have verdict-line print the args alone on their own line so nothing looks optional.
+    severity: minor
+durationSec: 1208
 models:
-  claude-sonnet-5-5: 101
+  claude-sonnet-5-5: 175
 toolCounts:
-  Bash: 30
+  Bash: 53
   Read: 5
-  mcp__github__pull_request_read: 4
+  mcp__github__pull_request_read: 5
   mcp__github__issue_read: 4
-  Agent: 7
-  Edit: 1
-  Skill: 4
-  SendMessage: 1
+  Agent: 14
+  Edit: 2
+  Skill: 7
+  SendMessage: 3
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/blog/content/david/pages/2026-11-20-the-reviewed-line-now-needs-a-receipt.md
+  - layers/blog/content/karen/pages/2026-11-20-the-receipt-is-printed-by-the-machine-that-checks-it.md
+  - layers/blog/content/david/pingbacks/2026-11-20-karen-the-reviewed-line-now-needs-a-receipt.yml
   - layers/blog/content/karen/pingbacks/2026-11-20-david-2026-11-20-the-reviewed-line-now-needs-a-receipt.yml
 rulesGlobal:
   - .claude/rules/adr-0004.md
@@ -85,6 +98,7 @@ adrHints:
 docsReadBySubagents:
   - .agents/skills/blog-post/SKILL.md
   - GLOSSARY.md
+  - .agents/skills/blog-post/personas/karen.md
 ruleUse:
   - by: main
     answered: true
@@ -412,49 +426,349 @@ ruleUse:
       - path: .claude/rules/adr-0027.md
         value: unrelated
       - path: .agents/skills/blog-post/SKILL.md
+  - by: general-purpose
+    subagent: 7
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/blog-post/SKILL.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: .agents/skills/blog-post/SKILL.md
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/blog-post/SKILL.md
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0012.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/glossary-terms.md
+        value: unrelated
+      - path: .agents/skills/blog-post/SKILL.md
+      - path: layers/blog/GLOSSARY.md
+  - by: general-purpose
+    subagent: 8
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/blog-post/SKILL.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: .agents/skills/blog-post/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/blog-post/SKILL.md
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0002.md
+        value: unrelated
+      - path: .claude/rules/data-shapes.md
+        value: unrelated
+      - path: .claude/rules/mdc-when-to-use.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/rules/tenant-layers.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 9
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/content/david/pages/2026-11-20-the-reviewed-line-now-needs-a-receipt.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/blog/content/david/pages/2026-11-20-the-reviewed-line-now-needs-a-receipt.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: layers/blog/content/david/pages/2026-11-20-the-reviewed-line-now-needs-a-receipt.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/rules/adr-0012.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 10
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/content/karen/pages/2026-11-20-the-receipt-is-printed-by-the-machine-that-checks-it.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/blog/content/karen/pages/2026-11-20-the-receipt-is-printed-by-the-machine-that-checks-it.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: layers/blog/content/karen/pages/2026-11-20-the-receipt-is-printed-by-the-machine-that-checks-it.md
+    reported: []
+  - by: general-purpose
+    subagent: 11
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/content/david/pages/2026-11-20-the-reviewed-line-now-needs-a-receipt.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/blog/content/david/pages/2026-11-20-the-reviewed-line-now-needs-a-receipt.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: layers/blog/content/david/pages/2026-11-20-the-reviewed-line-now-needs-a-receipt.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 12
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 13
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/blog-post/SKILL.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: .agents/skills/blog-post/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/blog-post/SKILL.md
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0012.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
 subagents:
   - task: Blind read of three drafts
     model: sonnet
     durationSec: 18
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 7
+    tokenShare: 3.4
   - task: Fact-check blog post claims
     model: sonnet
     durationSec: 55
     toolCalls: 12
     modelCalls: 6
-    tokenShare: 5.6
+    tokenShare: 2.7
   - task: Re-check changed post lines
     model: sonnet
     durationSec: 56
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 5
+    tokenShare: 2.5
   - task: Standards review of blog post
     model: sonnet
     durationSec: 27
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 5
+    tokenShare: 2.4
   - task: Spec review of blog post
     model: sonnet
     durationSec: 31
     toolCalls: 10
     modelCalls: 7
-    tokenShare: 6.1
+    tokenShare: 3
   - task: Standards review, final head
     model: sonnet
     durationSec: 22
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 3.7
+    tokenShare: 1.8
   - task: Spec review, final head
     model: sonnet
     durationSec: 20
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 4.3
+    tokenShare: 2.1
+  - task: Standards review of blog PR
+    model: sonnet
+    durationSec: 20
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 3.9
+  - task: Spec review of blog PR
+    model: sonnet
+    durationSec: 23
+    toolCalls: 6
+    modelCalls: 5
+    tokenShare: 4.2
+  - task: Blind read of reply drafts
+    model: sonnet
+    durationSec: 14
+    toolCalls: 6
+    modelCalls: 3
+    tokenShare: 1.4
+  - task: Fact-check Karen reply post
+    model: sonnet
+    durationSec: 128
+    toolCalls: 16
+    modelCalls: 12
+    tokenShare: 4.7
+  - task: Second reader on reply worth
+    model: sonnet
+    durationSec: 16
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 1.4
+  - task: Standards review of Karen reply
+    model: sonnet
+    durationSec: 23
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 2.1
+  - task: Spec review of Karen reply
+    model: sonnet
+    durationSec: 22
+    toolCalls: 7
+    modelCalls: 5
+    tokenShare: 2.4
 gitBranch: claude/zen-heisenberg-r1f4s0
 entrypoint: remote_trigger
 cliVersion: 2.1.329
@@ -463,4 +777,5 @@ learnings:
   - "The cloud session ran Node 22 while package.json now requires 26.13 (the install hook printed an engine warning): the PR 3473 follow-up about sessions below the floor is live."
 ideas:
   - Log one line per merge-pr.ts refusal (no proof, too big for Own-read) into the session log so a later post or audit can count how often each fires and whether any were false alarms.
+  - Have the code-review Skill's reviewers return the head they reviewed and let merge-pr.ts accept a Skill call only when that returned head matches, as the clear-backlog-build reviewedHead path does.
 landedBy: Stop
