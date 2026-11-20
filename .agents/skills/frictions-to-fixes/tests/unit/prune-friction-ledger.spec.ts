@@ -53,6 +53,21 @@ describe('pruneLedger()', () => {
   })
 })
 
+describe('pruneLedger() related links', () => {
+  let cwd: string
+  afterEach(() => rmSync(cwd, { recursive: true, force: true }))
+  it('removes related items naming a deleted entry, and the key when none are left', () => {
+    cwd = mkdtempSync(join(tmpdir(), 'ledger-'))
+    const dir = join(cwd, LEDGER_DIR)
+    mkdirSync(dir, { recursive: true })
+    const rel = (e: string) => `related:\n  - entry: ${e}\n    rule: r\n`
+    writeFileSync(join(dir, 'old.yml'), `${entry(['a', '2026-09-01'])}${rel('keep')}`)
+    writeFileSync(join(dir, 'keep.yml'), `${entry(['b', '2026-10-01'])}${rel('old')}`)
+    pruneLedger('2026-10-13', cwd)
+    expect(readFileSync(join(dir, 'keep.yml'), 'utf8')).toBe(entry(['b', '2026-10-01']))
+  })
+})
+
 describe('summarizeLedger()', () => {
   let cwd: string
   afterEach(() => rmSync(cwd, { recursive: true, force: true }))

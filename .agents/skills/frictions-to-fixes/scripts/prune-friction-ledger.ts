@@ -60,21 +60,40 @@ export function pruneEntry(text: string, start: string): { text: string | null; 
   return { text: dropped ? doc.toString({ lineWidth: 0 }) : text, dropped }
 }
 
+/** Removes `related` items naming a deleted entry (file stems), which the
+ *  journal's ledger-content spec requires to exist. */
+function dropRelated(dir: string, deleted: string[]): void {
+  for (const f of readdirSync(dir).filter((n) => n.endsWith('.yml'))) {
+    const path = join(dir, f)
+    const doc = parseDocument(readFileSync(path, 'utf8'))
+    const rel = doc.get('related')
+    if (!isSeq(rel)) continue
+    const kept = rel.items.filter((r) => !(isMap(r) && deleted.includes(String(r.get('entry')))))
+    if (kept.length === rel.items.length) continue
+    if (kept.length) rel.items = kept
+    else doc.delete('related')
+    writeFileSync(path, doc.toString({ lineWidth: 0 }))
+  }
+}
+
 export function pruneLedger(today: string, cwd = root): string[] {
   const start = horizonStart(today)
   const dir = join(cwd, LEDGER_DIR)
   const report: string[] = []
+  const deleted: string[] = []
   for (const f of readdirSync(dir).filter((n) => n.endsWith('.yml')).sort()) {
     const path = join(dir, f)
     const { text, dropped } = pruneEntry(readFileSync(path, 'utf8'), start)
     if (text === null) {
       rmSync(path)
+      deleted.push(f.replace(/\.yml$/, ''))
       report.push(`${f}: deleted (no occurrence since ${start})`)
     } else if (dropped) {
       writeFileSync(path, text)
       report.push(`${f}: dropped ${dropped} occurrence(s) before ${start}`)
     }
   }
+  if (deleted.length) dropRelated(dir, deleted)
   return report
 }
 
@@ -255,6 +274,7 @@ export function moveInLedger(session: string, from: string, to: string, cwd = ro
   const report = [`moved ${session} from ${from} to ${to}`]
   if (moved.from === null) {
     rmSync(path(from))
+    dropRelated(join(cwd, LEDGER_DIR), [from])
     report.push(`${from}.yml: deleted (no occurrence left; carry its fixes and notes over by hand)`)
   } else writeFileSync(path(from), moved.from)
   return report
