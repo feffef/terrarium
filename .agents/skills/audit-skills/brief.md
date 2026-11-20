@@ -39,6 +39,11 @@ the step, or the log's `docsRead` shows the session read the Skill's
 `SKILL.md` and followed it. You are done when every listed session
 is ruled in or out.
 
+If the data file's "Changes" list touches `SKILL.md`, read the current
+`SKILL.md` and the Inventory entry's `gist` and `role`
+(`layers/journal/content/current/skills/<name>.yml`); report "role/gist current"
+or "stale: <replacement>", within the `role` limits in `SKILL.md` step 5.
+
 Report every new finding labelled silent failure or missed invocation, with
 its session ids, quoted evidence, what the Skill promised against what
 happened, and your best guess at why. Report a repeat of a known observation
