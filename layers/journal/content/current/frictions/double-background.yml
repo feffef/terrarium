@@ -157,3 +157,18 @@ occurrences:
     severity: nit
     description: "A Bash call with run_in_background and a trailing ampersand was refused by the double-background guard; one resend without the ampersand worked."
     solution: "Nothing to change; the guard message was clear."
+  - session: session_013zxzeQwgxgxjDKMhS9WDVG
+    date: "2026-11-19"
+    severity: nit
+    description: "I tried a background gate run with a trailing ampersand plus run_in_background, and a foreground sleep; guards blocked both."
+    solution: "None needed beyond the existing guards."
+  - session: session_013zxzePBiGUC5ThCkjDhzN7
+    date: "2026-11-19"
+    severity: nit
+    description: "My first background gate call was denied by the double-background guard because I appended a bare ampersand to a run_in_background call."
+    solution: "Pass run_in_background alone with a plain foreground command, as the guard says."
+  - session: session_013zxzeQuz1peCEYugreTtXU
+    date: "2026-11-19"
+    severity: nit
+    description: "A Bash call combining run_in_background with a text-level ampersand was blocked by the double-background guard; resent it plainly."
+    solution: "Use run_in_background alone."

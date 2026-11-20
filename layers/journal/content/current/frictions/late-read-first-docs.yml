@@ -679,3 +679,48 @@ occurrences:
     severity: nit
     description: "Ran gh api reads on issues before reading github-integration.md; the read-first hook flagged it. The doc allowed the call, so no harm."
     solution: "Read the GitHub doc in step 4 of audit-skills before the first gh call; a one-line pointer in the Skill would do it."
+  - session: session_013zxzeSgAcwDrJXAMFAC4Qf
+    date: "2026-11-17"
+    severity: nit
+    description: "Grepped docs/agents/environment-caveats.md for keywords before debugging the failed branch delete, though CLAUDE.md says to read it for a push or network error; it held nothing on branch deletion."
+    solution: "Read the whole doc, or ask the owner, before debugging a push error; a grep cannot show that a caveat is absent."
+  - session: session_013zxzeQwgxgxjDKMhS9WDVG
+    date: "2026-11-19"
+    severity: nit
+    description: "I filed issue #3483 before reading docs/agents/triage-labels.md, which CLAUDE.md requires before filing; a hook told me afterwards."
+    solution: "Load the triage-labels reminder before issue_write, not after."
+  - session: session_013zxzeQ5mMr3n1PjgqM4sUa
+    date: "2026-11-19"
+    severity: nit
+    description: "Called pull_request_read before reading docs/agents/github-integration.md, which CLAUDE.md requires before the first GitHub operation; the hook reminded me afterwards."
+    solution: "Read the trigger docs in the same first batch as the skill's first GitHub call."
+  - session: session_013zxzeQuz1peCEYugreTtXU
+    date: "2026-11-19"
+    severity: minor
+    description: "I ran several git-touching and gate reads before reading git-conventions.md and github-integration.md, which CLAUDE.md asks to read first."
+    solution: "Read the trigger docs before the first git or GitHub command."
+  - session: session_013zxzeT9rFXvusQJoECfbbV
+    date: "2026-11-19"
+    severity: nit
+    description: "Read docs/agents/triage-labels.md only after filing issue #3498; the hook reminded me after the write. The labels were right."
+    solution: "visitor-loop step 4 should name triage-labels.md beside issue-tracker.md so it is read before filing."
+  - session: session_013zxzeNr2qY7wyodkaD7vXX
+    date: "2026-11-19"
+    severity: nit
+    description: "Ran git log and read the GitHub doc only after hooks reminded me; CLAUDE.md says read git-conventions.md and github-integration.md before the first such command."
+    solution: "Load those docs at the Skill's start, since step 4 always posts to GitHub."
+  - session: session_013zxzePUNdDXiqJrj8m6Bjs
+    date: "2026-11-19"
+    severity: nit
+    description: "Relabelled issues and edited labels without reading docs/agents/issue-tracker.md first, which the CLAUDE.md trigger and a hook required."
+    solution: "Read issue-tracker.md before the first label write in the land phase."
+  - session: session_013zxzePp6Xf4HuGyQNDdBpB
+    date: "2026-11-20"
+    severity: nit
+    description: "Ran git fetch and git mv before reading git-conventions.md in full, and wrote the Digest before the Journal glossary loaded; CLAUDE.md and the glossary rule require reading first."
+    solution: "Read git-conventions.md and the Journal GLOSSARY.md as the first step of the digest Skill."
+  - session: session_013zxzeQAV89N7K2uJN1FbsR
+    date: "2026-11-20"
+    severity: nit
+    description: "Ran git fetch and a gh api search before reading git-conventions.md and github-integration.md; the hooks flagged both afterwards."
+    solution: "Read both docs at the start of a scheduled run that files issues and opens a PR."

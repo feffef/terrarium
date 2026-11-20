@@ -143,3 +143,33 @@ occurrences:
     severity: minor
     description: "I wrote truncated session ids into notes (for example a made-up id for the blog-post session); validate:content rejected one and a reviewer flagged others. Cost one rerun and a fix commit."
     solution: "Pass the full ids from each subagent report to the note writer, or have the apply script validate ids against the scorecard."
+  - session: session_013zxzeQwgxgxjDKMhS9WDVG
+    date: "2026-11-19"
+    severity: minor
+    description: "I typed this session's id by hand in the first issue body; the ADR-0017 guard blocked it, and I almost cited a truncated session id in the same body."
+    solution: "Show the ground-truth session id in the run's opening context, or have issue_write fill it."
+  - session: session_013zxzePPb9GTvLBJgGBgspQ
+    date: "2026-11-19"
+    severity: nit
+    description: "Mistyped this session's id in a draft commit message file; caught when rewriting it from get_session before committing."
+    solution: "Copy the id from the commit template once into a scratch note and reuse it."
+  - session: session_013zxzeSbxN1yAYBzyNbUST6
+    date: "2026-11-19"
+    severity: nit
+    description: "I drafted a commit message with a mistyped session id before remembering the commit-msg hook adds the trailer."
+    solution: "State in the attribution reminder that the hook adds the Claude-Session line, so none is typed by hand."
+  - session: session_013zxzeQ5mMr3n1PjgqM4sUa
+    date: "2026-11-19"
+    severity: nit
+    description: "I typed a wrong session id into my first commit trailer; the commit-msg hook replaced it with the right one."
+    solution: "Copy the id from the system prompt template instead of from a PR I had just read."
+  - session: session_013zxzePp6Xf4HuGyQNDdBpB
+    date: "2026-11-20"
+    severity: minor
+    description: "Typed a session id by hand into a commit-message draft and the PR footer, both wrong; the hook fixed the commit, I caught the PR footer myself and edited it."
+    solution: "Copy the id from the commit template; the digest Skill could print it."
+  - session: session_013zxzeSbz6S2A8goaq25ibN
+    date: "2026-11-19"
+    severity: nit
+    description: "The explore agent's comment on #3481 misspells one session id (its own side finding); the comment was left uncorrected."
+    solution: "Explore agents should copy session ids from the log filename, never retype them."

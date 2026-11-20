@@ -112,3 +112,13 @@ occurrences:
     severity: nit
     description: "A foreground sleep to wait for agents was blocked by the harness; I had to end the turn and wait for notifications instead."
     solution: "The Skill already implies ending the turn; no change needed."
+  - session: session_013zxzeQwgxgxjDKMhS9WDVG
+    date: "2026-11-19"
+    severity: nit
+    description: "I tried a background gate run with a trailing ampersand plus run_in_background, and a foreground sleep; guards blocked both."
+    solution: "None needed beyond the existing guards."
+  - session: session_013zxzeQuz1peCEYugreTtXU
+    date: "2026-11-19"
+    severity: nit
+    description: "ScheduleWakeup was blocked as it is valid only inside a /loop session; I tried it to wait for a subagent that self-notifies."
+    solution: "Just end the turn when waiting on a subagent."

@@ -99,3 +99,8 @@ occurrences:
     severity: nit
     description: "Ran a worktree-scoped cd in a Bash call, moving the main session's working directory into a builder's worktree until the next call."
     solution: "Use absolute paths with git -C only, as dispatch-subagents says; no new text needed."
+  - session: session_013zxzeQwgxgxjDKMhS9WDVG
+    date: "2026-11-19"
+    severity: nit
+    description: "A cd into the builder's worktree persisted, so my later commands ran there and the harness flagged the changed working directory several times."
+    solution: "Use git -C and absolute paths; never bare cd into a worktree."

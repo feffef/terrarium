@@ -2,7 +2,7 @@ name: frictions-to-fixes-briefs-mismatch
 summary: >-
   The frictions-to-fixes survey and design briefs disagreed with the repo or left steps out, so their helper agents lost rounds or worked by hand.
 cause: >-
-  survey-brief.md and design-brief.md (not SKILL.md) carry broken or outdated instructions: a dangling fragment and a glob that matches nothing, mixed window dates, no status for closed-not-planned or on-trial entries, no named way to find merged PRs missing from the ledger, an impossible 'read every full log' ask, no owner/repo slug, and a design-brief wanting only docReadCounts from a 40 KB audit-skills JSON with no filter. PR #2733 (2026-10-31) gave the survey brief {SCRATCH_DIR} output paths and an all-or-nothing note for --append and redirected the design brief's audit-skills output; PR #2891 (2026-11-06) replaced its closed-issue MCP paging, which contradicted github-integration.md, with list-open-issues.ts --closed. Signals: a survey or design subagent reporting the brief 'says ... but', a glob matching nothing, work done by hand that the brief should have pointed to. PR #3091 (2026-11-11) added the closed_by_pull_requests read for closed regressions to the survey brief.
+  survey-brief.md and design-brief.md (not SKILL.md) carry broken or outdated instructions: a dangling fragment and a glob that matches nothing, mixed window dates, no status for closed-not-planned or on-trial entries, no named way to find merged PRs missing from the ledger, an impossible 'read every full log' ask, no owner/repo slug, and a design-brief wanting only docReadCounts from a 40 KB audit-skills JSON with no filter. PR #2733 (2026-10-31) gave the survey brief {SCRATCH_DIR} output paths and an all-or-nothing note for --append and redirected the design brief's audit-skills output; PR #2891 (2026-11-06) replaced its closed-issue MCP paging, which contradicted github-integration.md, with list-open-issues.ts --closed. Signals: a survey or design subagent reporting the brief 'says ... but', a glob matching nothing, work done by hand that the brief should have pointed to. PR #3091 (2026-11-11) added the closed_by_pull_requests read for closed regressions to the survey brief. PR #3414 (2026-11-17) added the related-only rule for a new entry's distinction; PR #3477 (2026-11-18) made step 5 skip a tracked entry with no ref.
 surface: safe
 status: open
 related:
@@ -37,6 +37,12 @@ fixes:
   - pr: 3408
     date: "2026-11-17"
     summary: "survey-brief command now shows --merges-only; design-brief looks up one docReadCounts entry with jq"
+  - pr: 3414
+    date: "2026-11-17"
+    summary: "survey-brief.md step 2 says a new entry's distinction from a near match lives in related only, never in summary or cause."
+  - pr: 3477
+    date: "2026-11-18"
+    summary: "survey-brief.md step 5 skips a tracked entry with no ref (a dispatched fix in flight), resolving its contradiction with SKILL.md 5.3."
 occurrences:
   - session: session_013zxzeS7NuFmaoXJkxVfNby
     date: "2026-11-05"
@@ -83,3 +89,8 @@ occurrences:
     severity: minor
     description: "Survey brief tells the agent to pass --merges-only to list-merges-since.ts, which rejects that flag; the survey agent filtered by hand."
     solution: "Fix survey-brief.md section 3 to match the script, or add the flag."
+  - session: session_013zxzeQwgxgxjDKMhS9WDVG
+    date: "2026-11-19"
+    severity: minor
+    description: "design-brief.md says run §1 to §5 for each pick but gives no short form for a no-change pick; the survey brief omits the ledger commit hash and the create-entry recipe, and its §2.5 does not cover a tracked entry whose issue closed with no PR."
+    solution: "Add a one-line no-change answer to design-brief, and the hash and create recipe to survey-brief."

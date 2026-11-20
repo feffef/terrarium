@@ -8,6 +8,8 @@ status: open
 related:
   - entry: draft-style-caught-by-review
     rule: The draft broke the Skill's style rules (jargon, length, opening) and its facts were right.
+  - entry: fact-check-blob-resign-rounds
+    rule: The facts were right or fixed, and the cost was repeated checker rounds to re-sign the blob.
 notes: |-
   2026-11-04 reopened: fix #2712 (2026-10-30) merged after the owner accepted it on 2026-10-19.
 fixes:
@@ -162,3 +164,8 @@ occurrences:
     severity: minor
     description: "The first fact-check pass found an inexact quote, an ambiguous within-a-day claim and an unverifiable that-morning time, forcing two re-check rounds."
     solution: "At drafting time, quote primary text verbatim and state time claims as explicit UTC times from the event."
+  - session: session_013zxzePp6Xf4HuGyQNDdBpB
+    date: "2026-11-20"
+    severity: minor
+    description: "Fact-check found 6 of ~25 claims wrong or overstated because I paraphrased PR titles without reading diffs; the Skill says to use list-recent-prs --diff and I skipped it."
+    solution: "Run list-recent-prs --diff before drafting; a title is not a source."

@@ -24,3 +24,18 @@ occurrences:
     severity: nit
     description: "A combined printf-and-commit Bash call was blocked whole by the gate-edit guard, so the message file was never written and the retry failed."
     solution: "Write commit messages with the Write tool, separate from the git call (git-conventions.md already says keep git apart)."
+  - session: session_013zxzeNd9wP36dUYyykDdBv
+    date: "2026-11-18"
+    severity: minor
+    description: "The builder rules say no && chains in a worktree yet their own gate example is a cd && chain, and the wrap-width check assumes 80 columns where blog files keep 120; builders lost a turn to the guard and a gate failed on a missing node_modules (retro replies)."
+    solution: "In rules() in .claude/workflows/clear-backlog-build.js: use the width the file keeps, say Write/Edit for files and one command per Bash call, and tell the builder to pnpm install before a gate."
+  - session: session_013zxzeSbz6S2A8goaq25ibN
+    date: "2026-11-19"
+    severity: minor
+    description: "Retro, both builders: the worktree guard refused non-git commands such as a python3 heredoc and cd-then-git chains, costing retries."
+    solution: "clear-backlog-build.js rules(): say interpreter heredocs that touch files are refused too; use Edit or Write."
+  - session: session_013zxzePUNdDXiqJrj8m6Bjs
+    date: "2026-11-19"
+    severity: nit
+    description: "A builder's commit-message printf chained with git commit was refused by the one-git-command-per-call hook, so the commit failed on a missing file and cost a turn."
+    solution: "Tell builders in rules() to write the commit message with the Write tool, then run git commit -F alone."

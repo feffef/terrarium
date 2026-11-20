@@ -83,3 +83,8 @@ occurrences:
     severity: minor
     description: "Twelve read-only reviewers each had to run the rule-use echo twice, rating four ADR rules unrelated each time; two extra turns per reviewer with no signal (retro replies)."
     solution: "scripts/hooks/rule-use-ask.sh: skip the prompt for read-only reviewer subagents, or ask once at the end of the run."
+  - session: session_013zxzePUNdDXiqJrj8m6Bjs
+    date: "2026-11-19"
+    severity: minor
+    description: "The rule-use echo hook ran twice for every read-only reviewer on rules (ADR-0003/0004/0009/0017) that governed nothing in a review, costing two tool calls each."
+    solution: "Skip the rule-use echo for read-only review subagents, or ask for it once, in the SubagentStart hook under scripts/hooks/."

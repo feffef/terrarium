@@ -1,0 +1,25 @@
+name: merge-pr-review-args-refusal
+surface: safe
+summary: merge-pr.ts refused a verdict because the code-review call carried no head sha or an Own-read line, and each refusal cost an extra review pass or comment.
+cause: "merge-pr.ts accepts a verdict only when the code-review call's args name the reviewed head sha and the verdict line is not an Own-read on a PR that adds a file (PR #3416 refusal); a session that called code-review with bare origin/main args, or amended after the sha was printed, was refused and had to re-run review. Signals: 'merge-pr.ts refused', 'head sha', 'Own-read', 'printed args'."
+status: open
+ref: "verdict-line-asserts-unchecked-review, fix PR #3416 (a guard refusal, not a regression: the original harm was a merge after a skipped review)"
+related:
+  - entry: verdict-line-asserts-unchecked-review
+    rule: The verdict claimed a review that never ran and merge-pr.ts accepted it; here merge-pr.ts refused and the cost was a retry.
+occurrences:
+  - session: session_013zxzeQ5mMr3n1PjgqM4sUa
+    date: "2026-11-19"
+    severity: minor
+    description: "I amended Karen's post after the code-review call was printed, so the printed sha no longer existed and I had to re-run code-review on the final head, then again after a rename."
+    solution: "Finish every edit, including wording and slug, before printing the review call; a rename makes Own-read ineligible."
+  - session: session_013zxzeQuz1peCEYugreTtXU
+    date: "2026-11-19"
+    severity: minor
+    description: "merge-pr.ts refused twice because I called code-review with bare origin/main args, not the printed args naming the head sha; cost two extra review passes."
+    solution: "Copy the verdict-line.ts --review-call output verbatim, args included."
+  - session: session_013zxzeQAV89N7K2uJN1FbsR
+    date: "2026-11-20"
+    severity: minor
+    description: "merge-pr.ts refused four times: my first verdict comment carried an Own-read line (invalid for 26 files), and the code-review call had to carry the head sha in its args. It cost three extra comments and a re-invoked Skill."
+    solution: "Post the verdict only after the review at the final head, with no Own-read line; the printed review call includes the sha in parentheses, so pass it verbatim."

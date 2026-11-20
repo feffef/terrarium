@@ -99,3 +99,8 @@ occurrences:
     severity: nit
     description: "Edited the brief, scripts and tests with Python replace scripts in Bash, not Read plus Edit; one left an unwrapped line that a reviewer flagged."
     solution: "Use Read then Edit for each text change, and keep scripted writes for data files a helper tool covers."
+  - session: session_013zxzePBiGUC5ThCkjDhzN7
+    date: "2026-11-19"
+    severity: nit
+    description: "Edited with a python replace script; the first pass left a garbled step 9 sentence that I caught on my own read and fixed in a second script."
+    solution: "Use the Edit tool for multi-hunk prose changes and re-read each replaced paragraph."

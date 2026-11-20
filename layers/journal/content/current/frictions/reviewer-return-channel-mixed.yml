@@ -1,0 +1,24 @@
+name: reviewer-return-channel-mixed
+surface: safe
+summary: Reviewers and builders in one run were told to hand their result back through different channels, so several reported twice or could not tell which one counted.
+cause: "A review or build brief names StructuredOutput for round 1, while later messages ask for SubagentHandback plus a findings JSON file; the agent gets two contracts and reports on both or asks. Signals: 'StructuredOutput', 'SubagentHandback', 'findings file', 'reported twice'."
+status: open
+related:
+  - entry: subagent-brief-defects
+    rule: The brief held a wrong path, value or placeholder, not two return contracts.
+occurrences:
+  - session: session_013zxzeNd9wP36dUYyykDdBv
+    date: "2026-11-18"
+    severity: minor
+    description: "Builders and reviewers were told to return through StructuredOutput in round 1 and through SubagentHandback plus a JSON file later; five of them reported twice or had to work out which channel counted (retro replies)."
+    solution: "State one return channel and the schema in every message in rules() and reviewPrompt() in .claude/workflows/clear-backlog-build.js."
+  - session: session_013zxzeSbz6S2A8goaq25ibN
+    date: "2026-11-19"
+    severity: minor
+    description: "Retro, 3 reviewers: round 1 returns findings via StructuredOutput but re-checks via a Bash-written JSON file plus a one-line reply, two contracts in one agent's life."
+    solution: "clear-backlog-build.js reviewPrompt(): state both return contracts up front in round 1."
+  - session: session_013zxzePUNdDXiqJrj8m6Bjs
+    date: "2026-11-19"
+    severity: minor
+    description: "Reviewers got three hand-off channels in one run (StructuredOutput in the brief, SubagentHandback and a findings file in later messages); five of them said it was unclear which to use."
+    solution: "State one hand-off channel once in reviewPrompt() in .claude/workflows/clear-backlog-build.js."

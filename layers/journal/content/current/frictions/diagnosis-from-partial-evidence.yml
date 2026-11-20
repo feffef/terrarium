@@ -38,3 +38,8 @@ occurrences:
     severity: minor
     description: "Explained why the improver Skill was rebuilt from Digests alone; issue 2896 held the details and surfaced only when the owner said a ticket existed, costing one rewrite."
     solution: "Search issues for the subject before drafting a why, since Digests omit the owner's reasoning."
+  - session: session_013zxzeSbz6S2A8goaq25ibN
+    date: "2026-11-19"
+    severity: nit
+    description: "I did not check whether the grilling-skipping runs had read the grilling SKILL.md until the owner asked; the check took one grep."
+    solution: "Verify each option's premise before offering it, as section 2 asks."

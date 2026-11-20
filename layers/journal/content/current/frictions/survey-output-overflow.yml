@@ -108,3 +108,8 @@ occurrences:
     severity: minor
     description: "issue_read get_comments on 3143 returned 254K characters and overflowed context, forcing a saved-file slice; github-integration.md warns only about get_sub_issues and bodies."
     solution: "Add get_comments on a long standing thread to the 'Three calls return huge output' list in docs/agents/github-integration.md, with the python slice recipe."
+  - session: session_013zxzeRVd5oef56BLsas85y
+    date: "2026-11-19"
+    severity: nit
+    description: "A search/code gh api call returned about 20 KB of repository JSON for a one-line question, flooding context."
+    solution: "Pipe gh api search results through --jq to a few fields; the Skill's brief could say so."

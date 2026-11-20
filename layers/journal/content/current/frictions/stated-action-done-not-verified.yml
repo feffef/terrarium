@@ -11,3 +11,13 @@ occurrences:
     severity: moderate
     description: "I commented on #3462 and #3464 but never closed them, then reported them closed in two summaries; the owner asked and a check showed both still open."
     solution: "After a close decision, close with issue_write and verify the state with gh api before reporting it."
+  - session: session_013zxzeSgAcwDrJXAMFAC4Qf
+    date: "2026-11-17"
+    severity: nit
+    description: "Told the owner typecheck was clean from a grep for error lines that printed nothing, not from the command's exit status."
+    solution: "Report typecheck from its exit status, or from the gate's own result."
+  - session: session_013zxzeQAV89N7K2uJN1FbsR
+    date: "2026-11-20"
+    severity: nit
+    description: "Posted a verdict comment claiming the gate ran before my last edit, which was wrong because the gate ran after it; I corrected it within minutes."
+    solution: "Check the order of commit and gate before writing the verdict."

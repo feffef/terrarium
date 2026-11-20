@@ -1,0 +1,21 @@
+name: review-brief-section-ref-unmatchable
+surface: safe
+summary: Reviewer briefs name a numbered section of the code-review Skill that a heading search for the number does not find.
+cause: "The reviewer brief says to read 'section 3' of code-review SKILL.md for the smell baseline, but the heading is '### 3.'; reviewers grep '^## 3', find nothing and skip the baseline or read the whole file. Signals: 'section 3', 'grepped ^## 3'."
+status: open
+occurrences:
+  - session: session_013zxzeNd9wP36dUYyykDdBv
+    date: "2026-11-18"
+    severity: minor
+    description: "reviewPrompt cites section 3 of the code-review Skill but its heading is '### 3.'; four Standards reviewers grepped '^## 3', found nothing and wasted a call or skipped the baseline (retro replies)."
+    solution: "Name the section by its real heading in reviewPrompt() in .claude/workflows/clear-backlog-build.js."
+  - session: session_013zxzeSbz6S2A8goaq25ibN
+    date: "2026-11-19"
+    severity: nit
+    description: "Retro, 2 reviewers: 'read section 3 of code-review SKILL.md' can't be done by heading, so they read the whole file."
+    solution: "clear-backlog-build.js reviewPrompt(): give the line range of the smell baseline."
+  - session: session_013zxzePUNdDXiqJrj8m6Bjs
+    date: "2026-11-19"
+    severity: nit
+    description: "The reviewer brief names code-review SKILL.md section 3 for the smell baseline, but the heading is '### 3' (lines 34-56); three reviewers grepped '^## 3' and missed it."
+    solution: "Write the line range in reviewPrompt() in .claude/workflows/clear-backlog-build.js."

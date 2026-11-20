@@ -95,3 +95,8 @@ occurrences:
     severity: nit
     description: "Skill section 5.4 asks the simple-change test on the ledger PR, but a script-written 53-file diff cannot pass it, so I used an own read of the diffstat (owner closed #3397 not planned)."
     solution: "Already accepted by the owner; no new fix proposed."
+  - session: session_013zxzeQwgxgxjDKMhS9WDVG
+    date: "2026-11-19"
+    severity: minor
+    description: "SKILL.md sends the ledger PR to the simple-change test, but a 38-file ledger update can never pass it, so a full two-agent code-review ran on script-made data; the Skill never says whether that is intended."
+    solution: "State in frictions-to-fixes SKILL.md §5 that a script-made ledger PR gets code-review or a named lighter path."

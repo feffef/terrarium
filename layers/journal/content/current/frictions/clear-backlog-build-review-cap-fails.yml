@@ -51,3 +51,13 @@ occurrences:
     severity: moderate
     description: "The second-round rule fired on four small branches because round 1 held a spec-mismatch, defect or both, though each fix was one line or one sentence. Round 2 found only nits, costing about 600k subagent tokens and four extra workflow runs."
     solution: "Let a small branch stop after a clean re-check of its fix (extend the small flag), or limit round 2 to defects above a size."
+  - session: session_013zxzeSbz6S2A8goaq25ibN
+    date: "2026-11-19"
+    severity: minor
+    description: "#3481 needed a third full review round only because round 2 raised a missing-test on a 98-line branch; round 3 found one wording nit."
+    solution: "In clear-backlog section 3 step 4, skip the next round when the missing-test was fixed and re-checked clean in its own round."
+  - session: session_013zxzePUNdDXiqJrj8m6Bjs
+    date: "2026-11-19"
+    severity: minor
+    description: "The clear-backlog rule that a missing-test or a fix over 10 lines forces another full review round cost two extra rounds (about 320k subagent tokens) on the harvest branch; round 3 found only nits."
+    solution: "Skip the next round when the previous round's re-checks were clean and the fix was test-only; or count a clean re-check as closing the round."

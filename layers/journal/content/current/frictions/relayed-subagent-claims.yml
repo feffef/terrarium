@@ -163,3 +163,18 @@ occurrences:
     severity: minor
     description: "I relayed the explore agent's stale claim 'max tag count is 12, not 82' in Q1 without re-running the count; the sample later showed bugs 82, so the claim was wrong."
     solution: "Re-run a counted staleClaim myself before putting it in a question (CLAUDE.md verify-before-state); explore results should carry the command."
+  - session: session_013zxzeSbz6S2A8goaq25ibN
+    date: "2026-11-19"
+    severity: minor
+    description: "The explore agent for #3483 said its PRs contradicted the Friction, but PR #3444 was opened 11 s after its commit and reviewed only afterwards; it never compared timestamps."
+    solution: "For a regression report, the explore brief should compare PR created_at with the review subagents' order or times before calling a premise false."
+  - session: session_013zxzeT9rFXvusQJoECfbbV
+    date: "2026-11-19"
+    severity: minor
+    description: "Two visitor claims were false (routines bars lacking aria; skills 0 sessions read as a 7-day window) and passed to me unchecked; only my own source and DOM checks caught them."
+    solution: "Ask visitors in visitor-brief.md to quote the element or text that backs each accessibility or count claim."
+  - session: session_013zxzeNzhyuFe3JhwD9usjS
+    date: "2026-11-16"
+    severity: minor
+    description: "Claim-check subagents read page text and line numbers from my stale checked-out tree, so they reported already-fixed excerpt ranges as false claims and I re-verified each by hand."
+    solution: "The glassbox-update brief should tell checkers to compare excerpt ranges only against git show of the commit and to ignore ranges the script already shifted."

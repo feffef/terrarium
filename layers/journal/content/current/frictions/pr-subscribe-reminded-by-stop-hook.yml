@@ -33,3 +33,8 @@ occurrences:
     severity: nit
     description: "I opened the PR without calling subscribe_pr_activity, which ADR-0003 requires; the Stop hook had to remind me."
     solution: "Subscribe in the same step as opening the PR; the create-PR hint could name it."
+  - session: session_013zxzePBiGUC5ThCkjDhzN7
+    date: "2026-11-19"
+    severity: nit
+    description: "After opening the PR I asked the owner whether to subscribe to its activity (the system prompt says ask); ADR-0003 says subscribe without asking, and the Stop hook had to prompt me."
+    solution: "Subscribe straight after opening the PR; ADR-0003 overrides the system prompt's ask-first."

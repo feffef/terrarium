@@ -242,3 +242,23 @@ occurrences:
     severity: nit
     description: "The ADR read-first demand for the edited SKILL.md arrived in a hook note after the Edit; the rule can't order a step before the read that loads it, so three ADRs were read after editing."
     solution: "Mention in clear-backlog's SKILL.md header that ADR-0005, 0022 and 0027 govern it, so a session can read them before editing; or accept the late read."
+  - session: session_013zxzeQwgxgxjDKMhS9WDVG
+    date: "2026-11-19"
+    severity: nit
+    description: "I edited pr-workflow.md before the hook's ADR-0027, ADR-0029 and ADR-0004 full reads; the edit was already consistent, but the read came after."
+    solution: "Show the governing-ADR read hint on the first read of a governed file, not after the edit."
+  - session: session_013zxzePPb9GTvLBJgGBgspQ
+    date: "2026-11-19"
+    severity: nit
+    description: "Edited clear-backlog, issue-tracker and domain.md before reading the ADRs those files' rules point to; a hook then demanded the read after each edit."
+    solution: "Read the governing ADRs before editing, or surface the rule when the checker's fix list names the file."
+  - session: session_013zxzeRypyCMruPYBQnRskt
+    date: "2026-11-19"
+    severity: minor
+    description: "Edited the governed audit-skills SKILL.md before reading ADR-0005, 0015 and 0027 in full; the post-edit hook demanded them. The edit stood."
+    solution: "Read the full ADRs when the summary rules loaded, before the first edit to a Skill."
+  - session: session_013zxzePBiGUC5ThCkjDhzN7
+    date: "2026-11-19"
+    severity: minor
+    description: "Committed the Skill edit, then the post-commit hook said to read ADR-0005, ADR-0012 and ADR-0027 in full; I read only ADR-0027, after the commit, and not the other two."
+    solution: "Read the governing ADRs when the rule loads on the first Read of the Skill, before the first Edit."

@@ -237,3 +237,8 @@ occurrences:
     severity: minor
     description: "The Stop hook demanded commit and push of an on-ramp sample the owner had not approved, three times, so five commits say 'sample, owner approval pending' and sit on the PR branch."
     solution: "Let a session mark an owner-pending UI sample as not-to-commit, or keep samples in a throwaway worktree the hook ignores."
+  - session: session_013zxzeSbxN1yAYBzyNbUST6
+    date: "2026-11-19"
+    severity: nit
+    description: "Stop hook flagged uncommitted changes while claim-check agents were still running, four times, forcing partial commits mid-run."
+    solution: "Let a scheduled run's Stop hook skip while a subagent is in flight, or accept commits as progress saves."
