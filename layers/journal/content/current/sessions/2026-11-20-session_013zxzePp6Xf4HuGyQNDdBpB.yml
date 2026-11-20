@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_013zxzePp6Xf4HuGyQNDdBpB
 startedAt: 2026-11-20T00:16:15Z
-endedAt: 2026-11-20T00:23:39Z
+endedAt: 2026-11-20T00:26:33Z
 kind: autonomous
 goal: Write the 2026-11-19 Journal Digest and archive old content
-status: in-review
-outcome: PR 3506 open with the 2026-11-19 Digest and archive sweep; gate green, reviews clean, awaiting CI and merge
+status: completed
+outcome: PR 3506 merged with the 2026-11-19 Digest and archive sweep, gate green
 summary: Scheduled digest run (no human prompt). One closed day (2026-11-19) lacked a Digest; I gathered its data, wrote the page, had a fresh subagent fact-check it (25 claims, 6 wrong or overstated, all fixed, mostly my paraphrases of PR titles), trimmed it under 250 words, ran the archive sweep (1 Digest and 68 session logs moved), ran code-review's Standards and Spec reviewers (both clean), gate:scoped (green), and opened PR 3506. All of it was agent-initiated under the Skill's own instructions; no human direction.
 prs:
   - "3506"
@@ -48,17 +48,20 @@ frictions:
   - description: A reviewer note on jargon (builder, orchestrator) was left unfixed to keep the reviewed sha valid for merge-pr.
     solution: Fix prose before the review round, not after.
     severity: nit
-durationSec: 443
+durationSec: 617
 models:
-  claude-sonnet-5-5: 65
+  claude-sonnet-5-5: 82
 toolCounts:
-  Bash: 24
-  Skill: 4
+  Bash: 29
+  Skill: 5
   Agent: 3
-  ToolSearch: 2
+  ToolSearch: 3
   mcp__github__create_pull_request: 1
   mcp__github__update_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-11-19.md
   - layers/journal/content/archived/pages/digests/2026-11-12.md
@@ -313,21 +316,21 @@ subagents:
     durationSec: 94
     toolCalls: 15
     modelCalls: 14
-    tokenShare: 26.5
+    tokenShare: 21.7
   - type: general-purpose
     task: Standards review of Digest PR
     model: sonnet
     durationSec: 16
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 5.3
+    tokenShare: 4.4
   - type: general-purpose
     task: Spec review of Digest PR
     model: sonnet
     durationSec: 23
     toolCalls: 6
     modelCalls: 6
-    tokenShare: 6.5
+    tokenShare: 5.3
 gitBranch: claude/compassionate-lovelace-33gdxp
 entrypoint: remote_trigger
 cliVersion: 2.1.329
