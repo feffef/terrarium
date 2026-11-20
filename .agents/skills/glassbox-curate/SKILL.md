@@ -1,6 +1,6 @@
 ---
 name: glassbox-curate
-description: Make the Glass Box guide easier to learn from, then fill gaps; one focus and one PR per run, and another run after each lands (its Remit says which PRs wait for the owner's merge). It runs autonomously, or interactively with a person.
+description: Make the Glass Box guide easier to learn from, then fill gaps; a session works through several larger foci, one PR each, and does not stop after the first (its Remit says which PRs wait for the owner's merge). It runs autonomously, or interactively with a person.
 disable-model-invocation: true
 ---
 
@@ -11,11 +11,11 @@ Second, fill gaps: a technology or process Terrarium relies on that no Lesson
 teaches. Third, every run leaves the memory page shorter (State). You lead and choose the
 steps; improvise.
 
-**Shape.** A session works through foci, one run each: a run takes one focus (a
-Subject, a structural question or a gap), from the instructions you were given
-or the memory page, and opens one PR; then the next run takes the next focus.
-There is always another, scheduled autonomous runs included; Loop, the last
-step, says when a session ends. Several runs a day must work.
+**Shape.** A session works through several larger foci, one run each: a focus
+is a Subject, a structural question or a gap, never one small fix. A run opens
+one PR; then the next run takes the next focus. There is always another,
+scheduled autonomous runs included. **A PR is not the end of the session:** the
+turn ends only when Loop's stop conditions hold. Several runs a day must work.
 
 **Modes.** *Autonomous*: your first message carries a system-reminder
 `Fired by routine "/glassbox-curate"`; decide everything, ask nothing, and say
@@ -131,13 +131,14 @@ keeps them.
   it. Run writing-pages.md's Check on the changed pages, and a fresh reader
   re-reads them. One retry, then drop the change. A reader finding the run cannot
   fix goes on the memory page only as State allows.
-- **Removal.** A change that only removes text or a page skips the writer, the
-  claim checker and the fresh reader. Still run the page checks, grep for
-  links, slugs and terms that pointed at what you removed, and re-read each
-  sentence next to a cut: it may now point at nothing. Grep the guide for each
-  fact you cut; one no other page teaches is either cut on purpose or taught on
-  the page that fits, as a normal Fix. The run entry's `changes` says what
-  you skipped.
+- **Removal.** Only a pure removal of text or a page skips the writer, the
+  claim checker and the fresh reader. A reflow, or any edit that moves a claim,
+  is a Fix and runs all three. For a pure removal, still run the page checks,
+  grep for links, slugs and terms that pointed at what you removed, and
+  re-read each sentence next to a cut: it may now point at nothing. Grep the
+  guide for each fact you cut; one no other page teaches is either cut on
+  purpose or taught on the page that fits, as a normal Fix. The run entry's
+  `changes` says what you skipped.
 - **Move.** A page moved or renamed keeps its check: rename its `page` in
   `checks/update.yml` and keep its date.
 - **Land.** Merge `origin/main` and keep the newer pin. Two runs on one day can
@@ -163,16 +164,19 @@ keeps them.
   4. Open one PR, self-merged unless the Remit says it waits.
 
   Done when the PR is open on a reviewed, gated head, and the memory page and run
-  entry are current. Then Loop.
+  entry are current. That is not the end of the session: Loop.
 - **Loop.** Every run that opened a PR ends here, whether it merged or waits for
-  the owner. The default path is the next run: when one lands, start the next as
-  a full one: orient again, its own focus, run entry, branch from a fresh
-  `origin/main` and PR; in an interactive session, settle that focus with the
-  person first. Take the next focus from the instructions you were given, then
-  the memory page's leads, page-check warnings, Scout topics and gaps, and last
-  pages no fresh reader has seen lately. Do this unless your context
-  window is filled with more than 500k tokens. Hand over to a new
-  session only when the invocation says so: create it with `source_url:
+  the owner. Once the PR is open, start the next run at once as a full one:
+  orient again, its own focus, run entry, branch from a fresh `origin/main` and
+  PR; in an interactive session, settle that focus with the person first. The
+  next run never needs the previous PR merged. Take the next focus from the
+  instructions you were given, then the memory page's leads, page-check
+  warnings, Scout topics and gaps, and last pages no fresh reader has seen
+  lately. A session with one PR has not done its job.
+  Not a stop: waiting for CI or the owner's merge, a finished
+  `close-session`, an argument that the next run adds no new claim. Stop only
+  when your context window is filled with more than 500k tokens. Hand over to a
+  new session only when the invocation says so: create it with `source_url:
   https://github.com/feffef/terrarium` and the same prompt.
 
 ## Lenses
