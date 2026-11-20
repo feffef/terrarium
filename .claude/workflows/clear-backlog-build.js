@@ -71,7 +71,7 @@ function common(b) {
 
 ## Brief
 ${b.brief}
-${picks.length ? `\n## Owner's agreed picks (binding)\n${picks.map(p => `- ${p}`).join('\n')}\n` : ''}${b.answer ? `\n## Owner's answer to "${b.question}"\n${b.answer}\n` : ''}\n${RELAYED_REPLY}\n`
+${picks.length ? `\n## Owner's agreed picks (binding)\n${picks.map(p => `- ${p}`).join('\n')}\n` : ''}${b.answer ? `\n## Owner's answer to "${b.question}"\n${b.answer}\n` : ''}\n${RELAYED_REPLY}\nYour first turn ends with the structured result. When a later message resumes you, it names how to reply (one line, or a findings file plus one line); that reply is your whole hand-off, and you return nothing structured again.\n`
 }
 
 function rules(b) {
@@ -85,7 +85,7 @@ function rules(b) {
 - Stop and return needs-owner, with the question, its options and your pick, before you add a new dependency, change stored data or the content schema, make a decision big enough for an ADR, delete content visitors can see, change which Tenant's data a request can reach, or reverse an owner's pick above. Decide everything else yourself, and append each decision as one line to ${dir}/decisions.md (\`mkdir -p ${dir}\` first), now and in every later turn.
 - Return worktree, the absolute path of the worktree that holds your commits, only when the branch has commits.
 - The orchestrator may resume you later with review findings to fix, an owner's answer, or the gate; keep your worktree. In a later turn the same stop rule holds: add \`NEEDS-OWNER\` with the question, its options and your pick after the reply it asked for, or send it alone if you changed nothing.
-- Given findings files, you decide what to fix, by kind: fix every defect, spec-mismatch and missing-test; fix a nit only when it is cheap (a few lines, no new risk) and skip the others; refuse a finding you can prove wrong; an owner-call needs the owner. Append one line per finding, and per owner answer or other fix you are given, to ${dir}/triage.md: \`<findings file> #<n> fixed|skipped|refused: <reason or proof>\`, or \`<what you were given> fixed: <what you did>\`. Then reply with one line, \`FIXED <sha before> <sha after> recheck <axes>\`: the same sha twice if nothing changed, and as axes each reviewer (Standards, Spec, or Both) with a finding you fixed or refused or whose owner-call you were answered on, or \`none\`. Add \`NEEDS-OWNER\` and the question, its options and your pick after it when a finding needs the owner.
+- Given findings files, you decide what to fix, by kind: fix every defect, spec-mismatch and missing-test; fix a nit only when it is cheap (a few lines, no new risk) and skip the others; refuse a finding you can prove wrong; an owner-call needs the owner. Append one line per finding, and per owner answer or other fix you are given, to ${dir}/triage.md: \`<findings file> #<n> <title> fixed|skipped|refused: <reason or proof>\`, or \`<what you were given> fixed: <what you did>\`. Then reply with one line, \`FIXED <sha before> <sha after> recheck <axes>\`: the same sha twice if nothing changed, and as axes each reviewer (Standards, Spec, or Both) with a finding you fixed or refused or whose owner-call you were answered on, or \`none\`. Add \`NEEDS-OWNER\` and the question, its options and your pick after it when a finding needs the owner.
 - ${ASK_SOURCES}`
 }
 
@@ -109,7 +109,7 @@ function fresh(b) {
 }
 
 function reviewPrompt(b, axis, wt, round) {
-  const standards = `the Standards axis: the repo's documented standards plus the smell baseline (read §3 of .agents/skills/code-review/SKILL.md with Read, and nothing else of that Skill)`
+  const standards = `the Standards axis: the repo's documented standards plus the smell baseline (read the section of .agents/skills/code-review/SKILL.md headed "### 3. Identify the standards sources" (find it with \`grep -n "^### 3"\`) with Read, and nothing else of that Skill)`
   const spec = `the Spec axis, with the brief and picks above as the spec`
   const what = axis === 'Standards' ? standards : axis === 'Spec' ? spec : `${standards}, and ${spec}`
   const lines = axis === 'Both' ? ' Say in the summary if the diff passes 10 changed lines or 2 files: the orchestrator then runs the full two-reviewer round.' : ''
