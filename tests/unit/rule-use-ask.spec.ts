@@ -38,9 +38,23 @@ describe('askFor()', () => {
     expect(askFor(payload('echo rule-use:', path))).toContain('.claude/rules/adr-0012.md')
   })
 
-  it('stays silent on a call that names something, and on other commands', () => {
-    expect(askFor(payload('echo rule-use: rule:adr-0027.md=steered', path, 'a1'))).toBeNull()
+  it('stays silent on a call that rates every loaded rule, and on other commands', () => {
+    expect(askFor(payload('echo rule-use: rule:adr-0003.md=steered rule:adr-0027.md=unrelated', path, 'a1'))).toBeNull()
     expect(askFor(payload('grep -rn rule-use: scripts', path, 'a1'))).toBeNull()
+  })
+
+  it('names the loaded rules a call left out, since only the last call counts (#3508)', () => {
+    const reply = askFor(payload('echo rule-use: rule:adr-0027.md=steered doc:docs/a.md', path, 'a1'))!
+    expect(reply).toContain('Not recorded')
+    expect(reply).toContain('.claude/rules/adr-0003.md')
+    expect(reply).not.toContain('adr-0027')
+    expect(reply).toContain('echo rule-use:')
+  })
+
+  it('counts a call that names only docs as leaving every loaded rule out', () => {
+    const reply = askFor(payload('echo rule-use: doc:docs/a.md', path, 'a1'))!
+    expect(reply).toContain('.claude/rules/adr-0003.md')
+    expect(reply).toContain('.claude/rules/adr-0027.md')
   })
 })
 

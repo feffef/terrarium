@@ -2,7 +2,8 @@
 // show it the rules that loaded for it and what each value means, so it rates
 // from that list rather than from memory. Later bare calls get nothing, so "none
 // applies" can end; a call naming a rule without a valid value is told so,
-// since only the last call counts. A subagent's payload carries its parent's
+// since only the last call counts; likewise one that leaves a loaded rule out
+// (#3508). A subagent's payload carries its parent's
 // `transcript_path` (docs/agents/guards.md), so its own transcript is read.
 // Fails open: any error adds nothing.
 // `scripts/hooks/rule-use-ask.sh` is the hot-path pre-filter.
@@ -12,7 +13,7 @@
 //   tsx scripts/hooks/rule-use-ask.ts --dry-run (--input '<payload json>' | --input-file <path>)
 import { printDryRunResult, prop, readHookPayload, readTranscript, resolveDryRunInput, runGuard } from './hook-io.ts'
 import { agentTranscript, extractTrace, hintText } from '../session/transcript-trace.ts'
-import { RULE_USE_ASK_HEAD, RULE_USE_CALL, ruleUseCall, subagentAsk } from '../session/rule-use.ts'
+import { RULE_USE_ASK_HEAD, RULE_USE_CALL, ruleUseCall, subagentAsk, unratedRules } from '../session/rule-use.ts'
 
 export function askFor(payload: unknown): string | null {
   const command = prop(prop(payload, 'tool_input'), 'command')
@@ -24,10 +25,18 @@ export function askFor(payload: unknown): string | null {
       `and confirmed, missed and duplicate need their word after a colon, as in =missed:late: ${call.unvalued.join(' ')}. ` +
       `Only the last call counts, so run ${RULE_USE_CALL} again naming every rule and doc you mean, each rule with its value.`
   }
-  if (call.entries.length) return null
   const parent = String(prop(payload, 'transcript_path') ?? '')
   const agent = prop(payload, 'agent_id')
   const records = readTranscript(agent === undefined ? parent : agentTranscript(parent, String(agent))) ?? []
+  if (call.entries.length) {
+    // The last call is the only one that counts, so one that leaves a loaded rule
+    // out rates it nothing (#3508). A bare call stays the explicit "none applies".
+    const unrated = unratedRules(extractTrace(records).ruleLoads, call.entries)
+    return unrated.length
+      ? `Not recorded, since these loaded rules have no value: ${unrated.join(' ')}. ` +
+        `Only the last call counts, so run ${RULE_USE_CALL} again naming every rule that loaded, each with its value, or with no names if none applies.`
+      : null
+  }
   const asked = records.some((r) => {
     const att = r.attachment as { type?: string; content?: unknown } | undefined
     return att?.type === 'hook_additional_context' && hintText(att.content).includes(RULE_USE_ASK_HEAD)
