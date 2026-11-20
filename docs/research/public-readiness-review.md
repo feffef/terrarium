@@ -69,7 +69,7 @@ Repo-specific priorities:
   `main` (require PR + review + green gate, block force-push) — this is the RCE
   boundary. **Caveat:** classic branch protection would block ADR-0009's direct-to-`main`
   session-log commits, so `main` has used a ruleset with a role/team/app bypass entry
-  since 2026-10-08 (no protection before);
+  since 2026-10-08 (`main` had no protection from 2026-07-11 until then);
   [`github-branch-protection-vs-autonomous-log-commits.md`](./github-branch-protection-vs-autonomous-log-commits.md)
   holds the reasoning and what `main` enforces now.
 - Enable **secret scanning + push protection** (free on public repos, off by
