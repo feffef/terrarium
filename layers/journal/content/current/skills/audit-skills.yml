@@ -10,7 +10,7 @@ role: >-
   edits (ADR-0015).
 auditSummary:
   date: "2026-11-20"
-  text: "Delivers its Inventory PR and issues on schedule, and nothing it landed was reverted. It skipped rewriting stale roles in one run and spends a lot on near-identical checks that mostly repeat."
+  text: "Delivers its Skill-page updates and issues, and nothing it landed was reverted. It skipped rewriting stale roles in one run and spends a lot on near-identical checks that mostly repeat."
 observations:
   - date: "2026-10-11"
     note: >-

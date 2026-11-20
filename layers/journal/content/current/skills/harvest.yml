@@ -15,7 +15,7 @@ watchFor:
   - "No new Seedling duplicates an open issue or one the owner closed as not planned."
 auditSummary:
   date: "2026-11-20"
-  text: "Files well-formed Seedlings that exist on GitHub. It still stops clustering early with invented reasons and once relied on block summaries instead of reading source logs whole."
+  text: "Files well-formed Seedlings that exist on GitHub. It still stops clustering early with invented reasons and once relied on short summaries instead of reading source logs whole."
 observations:
   - date: "2026-11-13"
     note: >-
