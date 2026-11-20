@@ -86,7 +86,7 @@ describe('glassbox-update checks', () => {
     for (const { page } of pages) expect(glassboxGuidePath(page)).toBe(glassboxSitePath('guide', `${page}.md`))
   })
 
-  // A moved page must be renamed here, or it silently loses its check date (glassbox-curate, Move).
+  // A moved page must be renamed here, or it silently loses its check date (glassbox-curate, step 5).
   it('names only guide pages that exist', () => {
     const { pages } = parse(readFileSync(join(root, 'layers/glassbox/content/workshop/checks/update.yml'), 'utf8')) as { pages: { page: string }[] }
     expect(pages.map((p) => p.page).filter((page) => !existsSync(join(root, 'layers/glassbox/content/guide/pages', `${page}.md`)))).toEqual([])

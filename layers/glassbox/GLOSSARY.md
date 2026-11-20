@@ -191,6 +191,6 @@ turned into hyphens: `:term[Nuxt & Vue]` reads `nuxt-vue.yml`,
   written.
 - **`.agents/skills/glassbox-update/SKILL.md`** — how the guide pages are
   brought up to date with `main`.
-- **`.agents/skills/glassbox-curate/SKILL.md`** — how a run makes the guide
-  easier to learn from and fills gaps, one focus at a time; its state lives in
+- **`.agents/skills/glassbox-curate/SKILL.md`** — how a session clears the
+  memory page's backlog, one focus and one PR at a time; its state lives in
   the `workshop` space.

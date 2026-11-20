@@ -1,6 +1,6 @@
 ---
 name: glassbox-update
-description: Bring every Glass Box guide page up to date with main, claim-check flagged pages and a daily rotation, then land it as one self-merging gated PR.
+description: Bring every Glass Box guide page up to date with main, claim-check flagged pages and a daily rotation, list new topics no page teaches on the memory page, then land it as one self-merging gated PR.
 disable-model-invocation: true
 ---
 
@@ -31,8 +31,17 @@ pins to that one commit, never a later fetch.
    something that changed even though it cites no changed file (match by
    concept: a renamed step, a moved rule, a retired Skill). A `major` version
    change also flags *The concept* of every Lesson whose Full reference links that tool's docs.
+   At the start of this step, start the **Scout**: run
+   `pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts --index`,
+   then dispatch a background sonnet subagent (`dispatch-subagents`) with the
+   guide index files it names and the same commit range. It reads every commit
+   in that range, all paths, and returns each new topic worth teaching that no
+   page in the index teaches, with its commits and the nearest page. Add each
+   one as a single line to the memory page's *Stale or missing* section
+   (`layers/glassbox/content/workshop/pages/index.md`), skipping topics already
+   there; `glassbox-curate` works that list.
    Done when every commit since the oldest `revision` has been read against
-   every page.
+   every page, and the Scout's topics are on the memory page.
 4. **Re-check and edit** a flagged page as a whole, diagrams and `teaches`
    included, against the commit, only if its `needsReader` is true, step 3
    flagged it by prose alone, or it is a step 5 rotation page; pin it there
@@ -82,6 +91,6 @@ pins to that one commit, never a later fetch.
 7. **Land.** If nothing changed, `update.yml` included, invoke `close-session`
    and stop. Otherwise follow "Closing a scheduled run's PR" in
    `docs/agents/pr-workflow.md`, one PR titled `glassbox-update: <YYYY-MM-DD>`
-   whose body lists each flagged page and term, why, and what changed, and each
-   page fully checked. If the PR includes anything outside this run's paths,
+   whose body lists each flagged page and term, why, and what changed, each
+   page fully checked, and each Scout topic added. If the PR includes anything outside this run's paths,
    leave it for a human. Done when the PR is merged or left for a human.

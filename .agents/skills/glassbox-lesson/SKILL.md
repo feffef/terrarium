@@ -17,9 +17,8 @@ titles and wording.
    never through `head`; if the tool saves its output to a file, read that file
    whole. It prints the open Glass Box PRs and names the guide index files: read
    each whole, one Read per file. Inside a `glassbox-curate`
-   run, skip the script, which rewrites the files that run's Scout reads, and
-   read the files its orientation named. Done when every index file is read
-   whole.
+   run, skip the script and read the files its orientation named. Done when
+   every index file is read whole.
 2. **Place it.** Choose the Subject from the index: the one whose Lessons sit
    beside the new one. Take the topic's concept, Terrarium files and official
    docs from the [topic inventory](https://github.com/feffef/terrarium/issues/1966#issuecomment-6176385964),

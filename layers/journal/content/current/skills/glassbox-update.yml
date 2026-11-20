@@ -6,7 +6,9 @@ role: >-
   The one-way code-to-pages sync for the Glass Box textbook: re-pins every
   guide page and term to a commit, flags the ones whose prose
   or diagrams may now be stale, and lands a self-merging PR once they're
-  re-checked. Fired by a Routine; keeps Glass Box honest as the Platform changes.
+  re-checked. Its Scout lists each new topic no page teaches on the memory
+  page, for glassbox-curate. Fired by a Routine; keeps Glass Box honest as the
+  Platform changes.
 auditSummary:
   date: "2026-11-20"
   text: "Re-pins the pages and fixes real contradictions, and both runs merged without revert. Its code-review is skipped on mechanical re-pins and doubled when fixes arrive after the first review."
