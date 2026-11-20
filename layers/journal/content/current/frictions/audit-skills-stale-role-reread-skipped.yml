@@ -3,7 +3,6 @@ surface: safe
 summary: An audit-skills run left the role or gist of changed Skills unchecked, though its step 5 says to reread each edited SKILL.md.
 cause: "audit-skills step 5 says to reread SKILL.md and rewrite gist or role when the changes list shows an edit; with a dozen Skills changed in the window the run reread few or none, and the second run repeated the gap the first disclosed. Signals: 'Step 5', 'reread', '13 Skills changed'."
 status: tracked
-ref: dispatched fix (this run)
 occurrences:
   - session: session_013zxzeRsaSP4XhVGZDUk153
     date: "2026-11-19"
