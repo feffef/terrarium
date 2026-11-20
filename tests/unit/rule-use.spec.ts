@@ -3,7 +3,7 @@
 // rule-load ledger in, the stitched session log out.
 import { describe, expect, it } from 'vitest'
 import { extractTrace, foldSubagentTrace, stitch, type AuthoredScratch } from '../../scripts/session/transcript-trace.ts'
-import { governsLine, reportedNames, ruleUseCall, SUBAGENT_NOTE, type RuleLoadRow } from '../../scripts/session/rule-use.ts'
+import { governsLine, reportedNames, ruleUseCall, SUBAGENT_NOTE, unratedRules, type RuleLoadRow } from '../../scripts/session/rule-use.ts'
 import { validateEntry } from '../../scripts/session/journal-files.ts'
 
 const NO_ENV = {}
@@ -299,5 +299,21 @@ describe('governsLine()', () => {
     expect(governsLine('.claude/rules/adr-0004.md')).toMatch(/^governs running gate:scoped/)
     expect(governsLine('.claude/rules/mermaid-lanes.md')).toBe('loads on layers/*/content/**/*.md')
     expect(governsLine('.claude/rules/adr-0099.md')).toBeUndefined()
+  })
+})
+
+describe('unratedRules — the --author completeness check (#3508)', () => {
+  const loads = [
+    { rule: '.claude/rules/adr-0003.md', via: 'start' as const },
+    { rule: '.claude/rules/adr-0004.md', via: 'native' as const },
+  ]
+  it('names each loaded rule with no rating', () => {
+    expect(unratedRules(loads, [{ path: '/repo/.claude/rules/adr-0003.md' }])).toEqual(['.claude/rules/adr-0004.md'])
+    expect(unratedRules(loads, undefined)).toEqual(['.claude/rules/adr-0003.md', '.claude/rules/adr-0004.md'])
+  })
+  it('accepts every rule rated, an explicit none, or nothing loaded', () => {
+    expect(unratedRules(loads, loads.map((l) => ({ path: l.rule })))).toEqual([])
+    expect(unratedRules(loads, [])).toEqual([])
+    expect(unratedRules([], undefined)).toEqual([])
   })
 })
