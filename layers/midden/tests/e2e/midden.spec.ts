@@ -131,9 +131,9 @@ describe('midden Tenant', async () => {
     expect(new Set(metas.map((m) => m.split(' · in ')[1]!.split(' · ')[0])).size).toBe(3)
   })
 
-  it('ends a report\'s breadcrumb with its title, not its slug', async () => {
+  it('ends a report\'s breadcrumb with its lowercased title, not its slug', async () => {
     const html = (await $fetch('/t/midden/trench/stood-down')) as string
-    expect(html).toMatch(/<span[^>]*class="here"[^>]*>Stood Down<\/span>/)
+    expect(html).toMatch(/<span[^>]*class="here"[^>]*>stood down<\/span>/)
   })
 
   it('capitalises the front door\'s latest-find titles', async () => {
