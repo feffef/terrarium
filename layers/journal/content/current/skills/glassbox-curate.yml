@@ -6,8 +6,8 @@ role: >-
   Improves the Glass Box guide and widens what it covers by working through
   its memory page's backlog. With no argument it
   loops: it takes the most important item, writes, checks, reviews and gates
-  the change, lands one PR, and takes the next item until its context passes
-  500k tokens or no item is left. With an instruction it researches the topic,
+  the change, lands one PR, and takes the next item until its context is full
+  (past 500k tokens or compacted) or no item is left. With an instruction it researches the topic,
   grills the person until they confirm an outline, then builds the outline
   unattended. It opens each PR and goes on at once, merging each PR once its
   checks are green. Each Loop session leaves the memory page with fewer items
@@ -16,7 +16,7 @@ watchFor:
   - "A run that merges its PR first ran the code-review Skill and the gate, and the PR's `Reviewed:` line says what really ran."
   - "Every run used the writer, the claim checker and a fresh reader, with no step skipped because the change was small."
   - "The Subject was read through the parts files that `orient.ts --subject` writes, or the run says why it was not."
-  - "A session with no argument goes on to the next focus after each PR, and stops only past 500k tokens of context or when no memory page item is left, saying which."
+  - "A session with no argument goes on to the next focus after each PR, and stops only when its context is full (past 500k tokens or compacted) or no memory page item is left, saying which."
   - "Each run entry names the memory page item it addressed, and the session leaves the memory page with fewer items than it found."
   - "A session given an instruction grilled the person and had its outline confirmed before it built anything."
   - "The page conventions and the governing docs were read before the first draft, not after."

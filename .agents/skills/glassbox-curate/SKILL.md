@@ -32,8 +32,8 @@ The only thing that decides the mode is whether the invocation has an argument.
 - **An argument: Instruction.** You ask the person questions only in I2. Do
   steps 1, I1 and I2. Then, for each PR in the outline (each PR is one run), do
   *Merging your PRs* and steps 3 to 7, without waiting for the person. Then do
-  I3. If your context window holds more than 500k tokens when a run has ended
-  (estimate it as step 8 says), go to I3. The run entry's `mode` is
+  I3. If your context is full when a run has ended (as step 8 says), go to
+  I3. The run entry's `mode` is
   `interactive`.
 
 ## Rules for every run
@@ -223,10 +223,10 @@ Each run ends at step 7. This step only decides what comes next: go back to
 step 2 at once, without waiting for CI or a merge.
 
 The session stops only when:
-- your context window holds more than 500k tokens when a run has ended. No
-  tool shows that number: estimate it from what you have read, written and
-  received this session. If you are unsure, go on. A compaction of your
-  context is not a stop; or
+- a run has ended and your context is full: it holds more than 500k tokens,
+  or it has been compacted. No tool shows the token count: estimate it from
+  what you have read, written and received this session; if you are unsure,
+  go on. A compaction always counts; or
 - step 2 finds nothing to pick and says so.
 
 Anything else is not a reason to stop: a PR waiting for CI or the owner, a
