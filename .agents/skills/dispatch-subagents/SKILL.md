@@ -37,35 +37,33 @@ applies.
 
 **Git and checkout**
 - Run git as `git -C <worktree-root> ...` with literal paths (no `$VAR`); if
-  the container's worktree guard still blocks one, run one git command per Bash
-  call (`docs/agents/environment-caveats.md`). Run `pnpm install` in the
-  worktree first.
-- Pin the SHA to work from (`origin/<default-branch>` if none); the agent checks
-  HEAD matches and re-branches if not, since worktrees sometimes start stale
-  (issue #1420). Agents sharing one checkout each get an explicit SHA.
+  the worktree guard still blocks one, run one git command per Bash call
+  (`docs/agents/environment-caveats.md`). Run `pnpm install` in the worktree first.
+- Pin the SHA to work from (`origin/<default-branch>` if none). The agent checks
+  HEAD matches and re-branches if not (issue #1420). Agents sharing one checkout
+  each get an explicit SHA.
 - **Never move a checkout someone else is on.** A review or read-only agent
-  reads code with `git show <sha>:<path>` or `git diff` (never the branch name),
-  or checks the PR's SHA out detached in its own worktree, never in yours. Outside that worktree
-  it never runs `checkout`, `switch` or `reset`; its brief says so. To
-  experiment, it copies a file aside.
+  reads with `git show <sha>:<path>` or `git diff` (never the branch name), or checks the PR's SHA out
+  detached in its own worktree, never in yours. Outside that worktree it never
+  runs `checkout`, `switch` or `reset`; its brief says so. To experiment, it
+  copies a file aside.
 - Impl agents on the branch you have checked out: detach your checkout first and
   re-sync after hand-back. Each agent bases on a fresh `origin/<branch>`, with no
   same-named local branch.
 
 **Stranding**
-- Commit before stopping, even mid-gate: an agent can end at any time. Bank
-  progress to logs after each step. The harness refuses a subagent's Write of
-  report files, so it returns structured results in its final message.
+- Tell the agent to commit before stopping, even mid-gate, and to log progress
+  after each step. It returns structured results in its final message; the
+  harness refuses a subagent's Write of report files.
 - Create the agent's scratchpad subfolder first (CLAUDE.md); a shared name
-  silently collides.
-- Tell the agent to run every check in the foreground; a guard denies a subagent's background
-  run. If one may outlast a call, name a log-file marker as the done signal and
-  resume with `SendMessage`, pasting the log's real tail.
-- Launch at most (20 − running) agents, and wait for each notification. After a
-  user interrupt, check agents are alive before you report them as running.
+  collides silently.
+- Tell it to run every check in the foreground (a guard denies a subagent's
+  background run). If one may outlast a call, name a log-file marker as the done
+  signal and resume with `SendMessage`, pasting the log's real tail.
+- Launch at most (20 − running) agents and wait for each notification. After a
+  user interrupt, check agents are alive before reporting them running.
 - Run at most 2 full gates at once in one container (`pnpm gate:scoped` waits for
-  a slot; plain `pnpm gate` does not); rerun an exit-137 run alone before
-  diagnosing.
+  a slot; plain `pnpm gate` does not); rerun an exit-137 run alone first.
 - A screenshot agent shoots once `pnpm build` succeeds, reads at most about 12
   images, and stops and reports at the first image "request limit" error.
 
@@ -74,8 +72,8 @@ applies.
 - Impl agents never call `merge-pr.ts`, whatever the brief says. They hand back
   a committed, green, unpushed branch. You run `/code-review` on its worktree,
   with the args `verdict-line.ts --review-call` prints there (`pr-workflow.md`,
-  "Review before opening the PR"), resume the agent for every
-  fix, later ones included, and review again; once clean, you push
+  "Review before opening the PR"), resume the agent for every fix, later ones
+  included, and review again; once clean, you push
   (`git -C <worktree> push origin HEAD:<branch>`), open and land the PR. They do
   not run `close-session` and cannot spawn subagents: run any nested dispatch
   yourself.
@@ -84,8 +82,7 @@ applies.
   retyped. A read-only reply already in context needs no file.
 - Give a size ceiling for a "simple" fix ("under ~50 lines, one new test") and
   tell the agent to report back rather than exceed it.
-- Name the relevant ADR when the work touches routing or architecture (an agent
-  once added a Platform `/t/<tenant>` page against ADR-0016).
+- Name the relevant ADR when the work touches routing or architecture.
 - Allow a listed item to be refused with proof; a proven refusal is a finding
   about the list, so don't re-dispatch it.
 - Paste in what you already hold (counts, fetched sources, a named file). For a
