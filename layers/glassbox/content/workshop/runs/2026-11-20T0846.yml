@@ -4,13 +4,15 @@ focus: "Walkthroughs: clear the one page-check warning (Adding a site, stop 8 ha
   words, over the 80 cap) and the memory lead about `wontfix (completed)` in A bug
   report becomes work. Chosen because both are certain from the pages alone and
   no open PR touches the Subject. Deviations: no writer, claim checker or fresh
-  reader, since the edits reflow or cut existing text and add no claim; the Scout
-  ran in the background and found no new topic. Cost: unreported (no get_session);
+  reader, since the edits only cut words and add no claim; review found a first
+  reflow of stop 8 had shifted a claim, so it became a plain cut; the Testing and
+  File routing pages were checked on their smoke-test lines only, not read whole;
+  the Scout ran in the background and found no new topic. Cost: unreported (no get_session);
   estimated context about 150k tokens."
 changes:
-  - "walkthroughs/60.adding-a-site | Stop 8 reflowed to 79 words: what the smoke test never visits (a tenant's root page redirect, its static pages) now goes in one sentence that points to the tenant's own e2e spec | the stop was over the 80-word cap; no claim added or dropped. Wording only, so revision and publishedAt are kept"
+  - "walkthroughs/60.adding-a-site | Stop 8 is 80 words, down from 83: the clause 'in its folder' is cut, so the stop passes the 80-word check | an earlier reflow moved the smoke test's 'never visits the root or static pages' claim and was reverted after review. Wording only, so revision and publishedAt are kept"
   - "walkthroughs/20.a-bug-report-becomes-work | The real case says the issue was closed as `wontfix`, without the parenthetical `(completed)` | the parenthetical was unexplained and no source in the guide or docs gives it. Wording only, so revision and publishedAt are kept"
-  - workshop/pages/index | The `wontfix (completed)` clause deleted from the Walkthroughs lead | done
+  - workshop/pages/index | The `wontfix (completed)` clause deleted from the Walkthroughs lead | the clause described text that was cut
 pagesRead:
   - "walkthroughs/10.asking-for-a-change"
   - "walkthroughs/15.a-change-meets-the-gate"
