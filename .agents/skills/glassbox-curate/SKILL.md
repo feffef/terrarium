@@ -7,8 +7,8 @@ disable-model-invocation: true
 # glassbox-curate
 
 **Goal.** Make the Glass Box guide easier to learn from by clearing the backlog
-on the memory page. You solve items; you don't collect them. Each session leaves
-the memory page with fewer items than it found.
+on the memory page. You solve items; you don't collect them. Each Loop session
+leaves the memory page with fewer items than it found.
 
 **Words.**
 - *Memory page*: `layers/glassbox/content/workshop/pages/index.md`, its Agent
@@ -103,7 +103,8 @@ the memory page's items.
 3. **Nothing to pick.**
    - If items are left but open PRs block all of them, and one of those PRs is
      yours with its checks still running, end your turn. This is a pause, not a
-     stop: the gate's comment on the PR wakes you. Then start this step again.
+     stop: the PR's activity (its checks, the gate's comment) wakes you. Then
+     start this step again.
    - Otherwise stop the session (step 8) and say in your final message which
      items are left and which PR blocks each.
 
@@ -190,12 +191,14 @@ every changed page.
 ### 7. Land
 
 1. Merge `origin/main` into the branch and keep the newer pin. If `main`
-   changed the memory page, keep both versions' items.
+   changed the memory page, keep every item from both versions except those
+   either side deleted.
 2. Update the memory page (State): delete every item this run solved and every
    item step 2 found no longer stands; add only what State allows.
 3. Complete the run entry: `changes` and `pagesRead`.
 4. Follow every step of `docs/agents/pr-workflow.md`, "Review before opening
-   the PR". For its `code-review` call, add as standards the Lesson contract,
+   the PR", always with the `code-review` call, never the own read of a simple
+   change. For its `code-review` call, add as standards the Lesson contract,
    writing-pages.md, owner-decisions.md and the glassbox-content rule, without
    the code-smell baseline, and say the page checks already ran. Its Spec
    reviewer names each page the change needed read that is missing from
@@ -221,9 +224,9 @@ finished `close-session`, a small or done-looking memory page, or a belief that
 the next scheduled run will do it.
 
 **To stop:** do *Merging your PRs* until none of your PRs has checks still
-running (between passes, end your turn; the gate's comment on the PR wakes
-you). Then invoke `close-session`, and in your final message say why you
-stopped and name each PR left open.
+running (between passes, end your turn; the PR's activity wakes you). Then
+invoke `close-session`, and in your final message say why you stopped and
+name each PR left open.
 
 **Done when** you have started step 2 again, or stopped for one of the two
 reasons above.
@@ -301,8 +304,7 @@ plain words. State a count only after counting its items in their source.
 - Delete an item once it is solved. Never mark one done.
 - While you work, you may add a weak spot, a gap or an idea you find outside
   your focus, and a question only the owner can answer. Add only what you can't
-  fix now and what clearly matters. Each session leaves fewer items than it
-  found.
+  fix now and what clearly matters.
 - A fact the next run still needs stays as a plain current fact under a heading
   that fits. What a run did goes in its run entry, not here.
 - The word cap (`glassboxWorkshopWordCap` in `layers/glassbox/app/utils/workshop.ts`) is a ceiling,
