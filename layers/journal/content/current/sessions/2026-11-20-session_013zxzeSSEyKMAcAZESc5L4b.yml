@@ -1,0 +1,547 @@
+schemaVersion: 1
+session: session_013zxzeSSEyKMAcAZESc5L4b
+startedAt: 2026-11-20T19:26:18Z
+endedAt: 2026-11-20T20:32:13Z
+kind: interactive
+goal: Rewrite the glassbox-curate Skill as a loop and an instruction session
+status: in-review
+outcome: "PR #3537 open, gated, waiting for the owner's merge; #3530 closed as superseded"
+summary: "Human-instructed throughout. The owner first asked me to read PR #3530, issue #3507, the tickets it links, the related friction clusters and the glassbox-curate Inventory observations. Then, at the owner's direction, I had one Sonnet agent analyse 14 days of curate sessions and their costs, and another blind-read the Skill on main. The analysis found 46 sessions; 11 of the 13 scheduled ones stopped after one PR. The blind read found that \"ends\", \"lands\" and \"improvise\" invite early stops and skipped steps. The owner then asked for a full rewrite with two modes. We settled it in a grilling of 27 numbered questions (Q1-Q27), and every design decision in the PR is the owner's answer to one of them: no argument means a loop over the memory page until the context is full; an argument means research, grilling, then building the outline unattended. Two more decisions came from the owner directly. The Scout moves to glassbox-update, and gaps rank second in the pick order. The details I chose myself: the shared \"Merging your PRs\" step, keeping one file instead of a reference.md split (the owner left that call to me), and the follow-on edits to the glossary, the lesson Skill, the diagram spec and the Inventory entries. The draft went through two blind reads, two full Standards and Spec code-review rounds and a Sonnet dry run of both modes on the real memory page. The owner swapped that dry run in for a third code-review round. Each pass found real contradictions: rule 5 forbade edits rule 6 expects; Instruction mode had no branch step and waited after each PR; the stop could leave PRs unmerged; a memory page merge could bring a solved item back. The owner also corrected two premises of mine. Only one session runs at a time, so a later focus needs no open-PR refresh. And a context compaction means the window is full, so it is a stop. gate:scoped passed on b82d62f27. The PR waits for the owner's merge, since it changes the Skill."
+prs:
+  - "3537"
+docsRead:
+  - path: .agents/skills/glassbox-curate/SKILL.md
+    reason: (read before editing)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/writing-for-agents/SKILL-MECHANICS.md
+    reason: (no reason given)
+  - path: layers/glassbox/GLOSSARY.md
+    reason: (read before editing)
+  - path: docs/diagrams/interactive-map/spec.md
+    reason: (read before editing)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/adr/0005-skill-model.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: (no reason given)
+  - path: GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-lesson/owner-decisions.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-lesson/writing-pages.md
+    reason: (no reason given)
+  - path: .agents/skills/inspect-session/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: grilling
+    reason: settled the rewrite's design with the owner, Q1-Q27
+  - name: writing-for-agents
+    reason: owner invoked it for the rewrite
+  - name: dispatch-subagents
+    reason: briefs for the analysis, blind readers and reviewers
+  - name: inspect-session
+    reason: cheap cost sources for the 14-day analysis
+  - name: code-review
+    reason: two Standards and Spec rounds before the PR
+  - name: close-session
+    reason: in-review log at PR open
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: My first rewrite of glassbox-curate held real contradictions (rule 5 vs rule 6, Instruction mode without a branch step, unmerged PRs at a stop) that took five review passes to clear.
+    solution: Run one blind dry run of a rewritten Skill on real state before the first code-review; it found in one pass what reviews found over several.
+    severity: moderate
+  - description: I assumed several curate sessions could run at once and added a per-focus open-PR refresh; the owner had to correct the premise.
+    solution: "Ask how many sessions run concurrently before designing coordination between them (CLAUDE.md: question the premise)."
+    severity: minor
+  - description: I treated a context compaction as not a stop; the owner pointed out it means the window is full, so the first stop rule was wrong.
+    solution: Check what a harness event means for the limit being set before writing a rule around it.
+    severity: minor
+  - description: I started gate:scoped twice and had to stop it both times because the owner's next edit came in mid-run.
+    solution: In an interactive design session, ask whether more edits are coming before starting a long gate.
+    severity: nit
+durationSec: 3955
+models:
+  claude-opus-5-5: 307
+toolCounts:
+  Bash: 97
+  ToolSearch: 5
+  mcp__github__pull_request_read: 3
+  mcp__github__issue_read: 6
+  Skill: 8
+  Agent: 11
+  SendMessage: 1
+  mcp__claude-code-remote__list_triggers: 1
+  Write: 3
+  Edit: 11
+  Read: 1
+  TaskStop: 2
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__update_pull_request: 1
+filesEdited:
+  - .agents/skills/glassbox-curate/SKILL.md
+  - .agents/skills/glassbox-update/SKILL.md
+  - layers/journal/content/current/skills/glassbox-curate.yml
+  - layers/glassbox/content/workshop/pages/index.md
+  - .agents/skills/glassbox-curate/scripts/orient.ts
+  - docs/diagrams/interactive-map/spec.md
+  - .agents/skills/glassbox-lesson/SKILL.md
+  - layers/glassbox/GLOSSARY.md
+  - layers/glassbox/tests/unit/workshop.spec.ts
+  - layers/journal/content/current/skills/glassbox-update.yml
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0005.md
+adrHints:
+  - adr: 5
+    via: path
+    readAfter: true
+    by: main
+  - adr: 27
+    via: path
+    readAfter: true
+    by: main
+docsReadBySubagents:
+  - .agents/skills/writing-for-agents/SKILL.md
+  - GLOSSARY.md
+  - .agents/skills/glassbox-lesson/owner-decisions.md
+  - .agents/skills/glassbox-lesson/writing-pages.md
+  - .agents/skills/inspect-session/SKILL.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/glassbox-curate/scripts/orient.ts
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/pr-workflow.md
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/glassbox-curate/scripts/orient.ts
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: gate:scoped, code-review, owner merge stated
+      - path: .claude/rules/adr-0009.md
+        value: steered
+        why: close-session at PR open
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: opened PR after gate, subscribed
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: header on PR and comment, trailer checked
+      - path: .claude/rules/adr-0027.md
+        value: steered
+        why: checked prune-trials before rewriting
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0015.md
+        value: steered
+        why: kept ids out of Inventory role
+      - path: .claude/rules/tenant-glossary.md
+        value: in-scope
+      - path: .claude/rules/adr-0005.md
+        value: confirmed
+        why: "agreed: Skill changed via gated PR"
+      - path: .claude/rules/glassbox-content.md
+        value: in-scope
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: confirmed
+        why: "agreed: no Human-only path touched"
+      - path: .claude/rules/adr-0030.md
+        value: unrelated
+      - path: docs/agents/pr-workflow.md
+      - path: docs/agents/github-integration.md
+      - path: docs/agents/git-conventions.md
+      - path: .agents/skills/writing-for-agents/SKILL-MECHANICS.md
+      - path: layers/glassbox/GLOSSARY.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported: []
+  - by: general-purpose
+    subagent: 3
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/writing-for-agents/SKILL.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/writing-for-agents/SKILL.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: .agents/skills/writing-for-agents/SKILL.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0009.md
+        value: steered
+      - path: .claude/rules/adr-0003.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0027.md
+        value: steered
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: unrelated
+      - path: .claude/rules/adr-0030.md
+        value: unrelated
+      - path: .claude/rules/adr-0021.md
+        value: in-scope
+      - path: .claude/rules/glossary-terms.md
+        value: confirmed
+        why: "n/a:"
+      - path: .agents/skills/writing-for-agents/SKILL.md
+      - path: docs/agents/pr-workflow.md
+  - by: general-purpose
+    subagent: 4
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: in-scope
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 5
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 6
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0009.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0003.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/glassbox-content.md
+        value: confirmed
+        why: "(no load recorded) agreed:"
+      - path: docs/agents/pr-workflow.md
+      - path: .agents/skills/writing-for-agents/SKILL.md
+  - by: general-purpose
+    subagent: 7
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: in-scope
+      - path: .claude/rules/adr-0003.md
+        value: in-scope
+      - path: .claude/rules/adr-0009.md
+        value: in-scope
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: docs/agents/pr-workflow.md
+  - by: general-purpose
+    subagent: 8
+    answered: false
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/owner-decisions.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/pr-workflow.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/pr-workflow.md
+    reported: []
+  - by: general-purpose
+    subagent: 9
+    answered: false
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported: []
+  - by: general-purpose
+    subagent: 10
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: in-scope
+      - path: .claude/rules/adr-0009.md
+        value: in-scope
+      - path: .claude/rules/adr-0003.md
+        value: in-scope
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+subagents:
+  - type: general-purpose
+    task: Analyse glassbox-curate runs, 14 days
+    model: sonnet
+    durationSec: 408
+    toolCalls: 81
+    modelCalls: 35
+    tokenShare: 12.6
+  - type: general-purpose
+    task: Blind read of glassbox-curate Skill
+    model: sonnet
+    durationSec: 30
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 0.7
+  - type: general-purpose
+    task: Blind read of rewritten curate Skill
+    model: sonnet
+    durationSec: 25
+    toolCalls: 3
+    modelCalls: 3
+    tokenShare: 1.5
+  - type: general-purpose
+    task: Standards review of curate rewrite
+    durationSec: 159
+    toolCalls: 24
+    modelCalls: 22
+    tokenShare: 5.4
+  - type: general-purpose
+    task: Spec review of curate rewrite
+    durationSec: 111
+    toolCalls: 14
+    modelCalls: 13
+    tokenShare: 3.5
+  - type: general-purpose
+    task: Ambiguity review of curate Skill
+    model: sonnet
+    durationSec: 54
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 1.6
+  - type: general-purpose
+    task: Standards re-review of curate rewrite
+    durationSec: 221
+    toolCalls: 29
+    modelCalls: 27
+    tokenShare: 6.4
+  - type: general-purpose
+    task: Spec re-review of curate rewrite
+    durationSec: 161
+    toolCalls: 22
+    modelCalls: 21
+    tokenShare: 5.1
+  - type: general-purpose
+    task: Standards review of follow-up diff
+    durationSec: 13
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 1
+  - type: general-purpose
+    task: Spec review of follow-up diff
+    durationSec: 13
+    toolCalls: 3
+    modelCalls: 2
+    tokenShare: 0.6
+  - type: general-purpose
+    task: Dry run of curate Skill
+    model: sonnet
+    durationSec: 48
+    toolCalls: 7
+    modelCalls: 5
+    tokenShare: 2
+gitBranch: claude/focused-hamilton-kathuf
+entrypoint: remote
+cliVersion: 2.1.329
+ideas:
+  - Have a hook print the session's context-token count on each turn (or on request), so Skills with a context-size stop, like glassbox-curate's 500k loop, check a number instead of estimating, which earlier runs did badly (they stopped near 90k).
+  - "Add a dry-run step to writing-for-agents: hand a new or rewritten Skill to a fresh Sonnet with read-only access to real state and ask what it would do, step by step, in each mode. Here it found a rule conflict and a stalled-pick case that two code-review rounds missed."
+landedBy: Stop
