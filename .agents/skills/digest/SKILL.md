@@ -77,12 +77,12 @@ PRs as [#22](https://github.com/feffef/terrarium/pull/22), issues as
 ```
 
 The **Blog** line lists each Blog post whose file is dated `<date>`: one link
-per post, `Persona — post title`, URL `/t/blog/<persona>/<file name without
+per post, `Persona — post title` (the persona's name and the post's
+front-matter `title`), URL `/t/blog/<persona>/<file name without
 .md>`. Take the set from the Blog files that day's PRs touched
 (`layers/blog/content/<persona>/pages/<date>-*.md`), not from PR titles, so the
 fact-check can verify it. Omit the line on a day with no Blog post. Keep it out
-of the opening paragraph, and add it to new Digests only; never edit an
-existing one (ADR-0010).
+of the opening paragraph.
 
 Write in **plain English for someone who knows software but not this
 project**: they should understand what actually happened without the glossary.
