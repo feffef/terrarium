@@ -42,3 +42,8 @@ occurrences:
     severity: minor
     description: "SubagentStart and PostToolUse hooks made 8 of 11 retro agents run echo rule-use: twice for no decision, and 4 of 11 got late doc reads after their first edit or git command."
     solution: "Fold rule-use reporting into one call (or skip it for short read-only agents) and say up front which docs to read before the first git command, in the hook text."
+  - session: session_013zxzeSbz6S2A8goaq25ibN
+    date: "2026-11-19"
+    severity: minor
+    description: "Retro, 7 reviewers: PostToolUse read-first hints (git-conventions.md, github-integration.md) fired on read-only git log, git diff and gh api calls in read-only reviewers; no read changed anything."
+    solution: "Exempt read-only review subagents from those hints in the hook under scripts/hooks/ (Human-only), or say in reviewPrompt() that the hint can be skipped."

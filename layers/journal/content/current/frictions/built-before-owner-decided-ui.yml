@@ -78,3 +78,8 @@ occurrences:
     severity: minor
     description: "I built owner-facing blog CSS without first agreeing a sample with the owner as ui-verification.md says; the owner's Q2 yes covered the approach, so I held the merge for their screenshot confirmation instead."
     solution: "Show the sample before the build for any visitor-visible change, even a bug fix; the Skill's grilling step already allows it."
+  - session: session_013zxzePUNdDXiqJrj8m6Bjs
+    date: "2026-11-19"
+    severity: nit
+    description: "Built a sample of the shared hover change that the owner then dropped (answer 10a), so the focus/tap sample and its clipped-label finding were discarded work."
+    solution: "Ask the strip-behaviour question with the cost (shared component, label clips at 390px) before building the sample."

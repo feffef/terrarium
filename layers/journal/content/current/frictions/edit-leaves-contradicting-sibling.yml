@@ -67,3 +67,18 @@ occurrences:
     severity: minor
     description: "Cluster moves and the join left stale causes, refs and notes and three misplaced occurrences that the two Opus review rounds found, though I had just added a checklist for exactly that."
     solution: "After each move or join, re-read every touched entry and grep the others for its name before committing, as the new brief step says."
+  - session: session_013zxzeRjfC32pkbUMmiaMnN
+    date: "2026-11-18"
+    severity: nit
+    description: "Closed issue 3143 although the hook then asked for triage-labels.md; I never read it, treating a plain close as outside labelling."
+    solution: "State in CLAUDE.md whether closing an issue counts as triage, or have the hook fire before the first issue write."
+  - session: session_013zxzeRypyCMruPYBQnRskt
+    date: "2026-11-19"
+    severity: minor
+    description: "Raised the note length without grepping the consumers of observations; only code review found the 30,000-character budget in audit-skills.ts that would cut the history. CLAUDE.md says grep consumers in the same edit."
+    solution: "Grep the scripts that read a field (here observations in scripts/session/audit-skills.ts) before changing a limit on it."
+  - session: session_013zxzeRVd5oef56BLsas85y
+    date: "2026-11-19"
+    severity: minor
+    description: "The first writer-less fix left a contradicting watch bullet on the same page; only the Spec reviewer caught it."
+    solution: "After a fact edit, grep the page for the old phrasing before committing."

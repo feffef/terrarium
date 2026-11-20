@@ -16,6 +16,8 @@ related:
     rule: Unescaped backticks in a workflow script's brief broke the script.
   - entry: visitor-loop-brief-gaps
     rule: The visitor brief left out details its visitors needed.
+  - entry: reviewer-return-channel-mixed
+    rule: The brief named two different return channels for the same agent.
 fixes:
   - pr: 2150
     date: "2026-10-16"
@@ -130,3 +132,8 @@ occurrences:
     severity: minor
     description: "My typescript-7 brief said to add each alias 'if required' and did not require showing each dependency was exercised; the first build added two inert packages and cost a fix round."
     solution: "Brief template for dependency trials: each added package needs a command showing something uses it, or it is dropped."
+  - session: session_013zxzePUNdDXiqJrj8m6Bjs
+    date: "2026-11-19"
+    severity: nit
+    description: "The builder brief says to run e2e in the background and poll, but the subagent background guard denies it, so the builder retried in the foreground."
+    solution: "Say foreground with timeout 600000 for builders in rules() in .claude/workflows/clear-backlog-build.js."

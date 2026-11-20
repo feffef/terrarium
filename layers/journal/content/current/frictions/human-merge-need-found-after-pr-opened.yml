@@ -29,3 +29,13 @@ occurrences:
     severity: nit
     description: "I only noticed ADR-0004's 'behaviour no test can observe' exception after the fix PR's gate was green, then had to add e2e assertions and a second verdict."
     solution: "Ask which test would fail if this regressed when planning each fix, before opening the PR."
+  - session: session_013zxzeRjfC32pkbUMmiaMnN
+    date: "2026-11-18"
+    severity: nit
+    description: "ADR-0004 says a human merges a change to 'behaviour no test or gate step can observe'; it is unclear whether Skill prose counts, so I judged by precedent (agents merged earlier Skill PRs) and said so in the verdict."
+    solution: "Add one line to docs/agents/pr-workflow.md saying whether a Skill-text-only PR counts as untested behaviour."
+  - session: session_013zxzePBiGUC5ThCkjDhzN7
+    date: "2026-11-19"
+    severity: nit
+    description: "Told the owner an edit to a Skill needed no Trusted-user approval and was probably not Human-only, without checking; the PR then needed a human merge anyway for untestable behaviour."
+    solution: "Check pr-workflow step 1 (a test that fails on regression) before saying who merges."

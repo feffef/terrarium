@@ -23,11 +23,6 @@ fixes:
     date: "2026-11-12"
     summary: "clear-backlog SKILL.md says to read dispatch-subagents first."
 occurrences:
-  - session: session_013zxzeSbd2LJtWWawqrWBJD
-    date: "2026-11-05"
-    severity: nit
-    description: "The Workflow call was blocked by the dispatch-read guard until I read dispatch-subagents; the clear-backlog Skill doesn't name that read."
-    solution: "Name the dispatch-subagents read in clear-backlog section 1, before the first Workflow call."
   - session: session_013zxzeR86XgVYHo9beEWkmj
     date: "2026-11-06"
     severity: minor
@@ -393,3 +388,13 @@ occurrences:
     severity: nit
     description: "First Workflow call was denied by the dispatch-read guard because I had not read dispatch-subagents before the subagent brief, as CLAUDE.md requires."
     solution: "Read dispatch-subagents when clear-backlog starts, or name it in that Skill's first step (restored in PR 3461)."
+  - session: session_013zxzeQuz1peCEYugreTtXU
+    date: "2026-11-19"
+    severity: nit
+    description: "The dispatch-read guard blocked my first Agent call because I had not yet read the dispatch-subagents Skill; I retried after reading."
+    solution: "Read the Skill before drafting the first brief, as CLAUDE.md says."
+  - session: session_013zxzeQAV89N7K2uJN1FbsR
+    date: "2026-11-20"
+    severity: minor
+    description: "Sent 16 Agent calls without reading dispatch-subagents first, though CLAUDE.md names that read; the dispatch-read guard denied them all and I resent the briefs after reading."
+    solution: "Read the Skill before the first brief; step 2 of audit-skills could name it."

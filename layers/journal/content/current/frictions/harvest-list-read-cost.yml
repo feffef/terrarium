@@ -1,6 +1,6 @@
 name: harvest-list-read-cost
 summary: A harvest run read its whole list of ideas and learnings, 60,000 to 90,000 tokens over several reads, and then checked only a small part of it.
-cause: "Comes from harvest-first-pass-shallow and PR #3106: the harvest Skill has the run read the whole list (270 to 577 lines) before it stops at a capped number of clusters, and many entries are old ideas for a removed Skill (glassbox-improve). The harm is read cost, not a shallow pass. Since PR #3454 (2026-11-18) step 1 reads the list in pages with a last-entry count check; the read is still whole, so cost remains. Signals: 'whole read of 577 lines took about 90,000 tokens', 'read the whole 561-line harvest list', 'then checked only 17 clusters', many hand-run searches per cluster."
+cause: "Comes from harvest-first-pass-shallow and PR #3106: the harvest Skill has the run read the whole list (270 to 577 lines) before it stops at a capped number of clusters, and many entries are old ideas for a removed Skill (glassbox-improve). The harm is read cost, not a shallow pass. Since PR #3454 (2026-11-18) step 1 reads the list in pages with a last-entry count check, since PR #3470 a harvest evidence command replaces per-cluster hand searches, and since PR #3505 (2026-11-20) it reads a saved issue list and takes several keyword groups in one call; the list read is still whole and evidence output is untrimmed. Signals: 'whole read of 577 lines took about 90,000 tokens', 'read the whole 561-line harvest list', 'then checked only 17 clusters', many hand-run searches per cluster, 'each harvest evidence call took about 33 s', '5,215 lines'."
 surface: safe
 status: open
 ref: "harvest-first-pass-shallow, fix PR #3106"
@@ -17,6 +17,12 @@ fixes:
   - pr: 3454
     date: "2026-11-18"
     summary: "harvest SKILL.md step 1 reads the list in pages of about 150 lines and checks the last entry's number against the count extract printed; no entry text shortened."
+  - pr: 3470
+    date: "2026-11-18"
+    summary: "harvest gains a read-only evidence command that prints a cluster's matches from owner rulings, tracker issues and ledger summaries, replacing hand-run search recipes in step 3."
+  - pr: 3505
+    date: "2026-11-20"
+    summary: "harvest extract saves the tracker listing next to its output for evidence to read, and evidence takes several keyword groups in one call, removing a repeated roughly 34 s re-list per call."
 occurrences:
   - session: session_013zxzeP4WS4kX4LSBrVszT6
     date: "2026-11-12"
@@ -53,3 +59,8 @@ occurrences:
     severity: moderate
     description: "Each cluster's relevance checks needed about five hand-run searches over the tracker JSON, Ledger, rulings and git; I stopped at 12 of 30 clusters with the quota unfilled."
     solution: "One harvest command listing rulings, tracker state and Ledger hits per keyword (filed as the retro Seedling)."
+  - session: session_013zxzeNr2qY7wyodkaD7vXX
+    date: "2026-11-19"
+    severity: moderate
+    description: "Each harvest evidence call took about 33 s and printed hundreds of loosely matched lines; ten calls wrote 5,215 lines, so I checked only three clusters and filed too few."
+    solution: "Cache the tracker listing per run and accept several keyword groups per call (retro Seedling #3502)."

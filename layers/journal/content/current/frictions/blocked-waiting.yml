@@ -17,11 +17,6 @@ fixes:
     date: "2026-10-30"
     summary: "CLAUDE.md: in the main session end your turn and let the completion notification wake you; never wait with pgrep -f"
 occurrences:
-  - session: session_013zxzeS7NuFmaoXJkxVfNby
-    date: "2026-11-05"
-    severity: nit
-    description: "I tried a foreground sleep to wait for the gate; the harness blocked it, wasting a call."
-    solution: "End the turn and let the background completion notification wake me."
   - session: session_013zxzeRLzBAw62ZMjhsbHiq
     date: "2026-11-06"
     severity: nit
@@ -112,3 +107,13 @@ occurrences:
     severity: nit
     description: "A foreground sleep to wait for agents was blocked by the harness; I had to end the turn and wait for notifications instead."
     solution: "The Skill already implies ending the turn; no change needed."
+  - session: session_013zxzeQwgxgxjDKMhS9WDVG
+    date: "2026-11-19"
+    severity: nit
+    description: "I tried a background gate run with a trailing ampersand plus run_in_background, and a foreground sleep; guards blocked both."
+    solution: "None needed beyond the existing guards."
+  - session: session_013zxzeQuz1peCEYugreTtXU
+    date: "2026-11-19"
+    severity: nit
+    description: "ScheduleWakeup was blocked as it is valid only inside a /loop session; I tried it to wait for a subagent that self-notifies."
+    solution: "Just end the turn when waiting on a subagent."

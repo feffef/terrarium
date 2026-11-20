@@ -39,3 +39,8 @@ occurrences:
     severity: nit
     description: "The context file listed 222 URLs while the brief asks for 10 to 20 pages; two visitors said they picked pages blind."
     solution: "Have step 2 add a short sample of URLs to the context file, or say to sample from the list."
+  - session: session_013zxzeT9rFXvusQJoECfbbV
+    date: "2026-11-19"
+    severity: minor
+    description: "The context file's pages section gave the Journal's routes, but both informed visitors still crawled only 7 pages because digests and sessions open as in-page anchors; each wrote extra scripts."
+    solution: "In .agents/skills/visitor-loop/SKILL.md step 2, have the context file mark which routes are reachable only by anchor or typed URL, and let the brief say what to do when a Space has fewer than 10 pages."

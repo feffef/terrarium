@@ -2,12 +2,15 @@ name: glassbox-curate-steps-skipped
 surface: safe
 summary: "A glassbox-curate run skipped Skill steps or ended its loop with budget left, on its own judgement, and the owner had to ask why. see: blog-post-skill-steps-skipped (the same slip in a blog-post run); glassbox-curate-read-first-skipped (the skipped steps are the required first reads)."
 cause: "The glassbox-curate Skill lists Scout, writer, claim checker, fresh reader, code-review and the gate per run and a Loop step; runs skipped most of them as too large for the change ('by judgement not rule', 'calling it budget') or ended the turn mid-loop with budget left, and the owner found the gap afterwards. Since PR #3461 (2026-11-18) the Skill names no budget and the loop is the default path, so a skip or stop after that date is a new occurrence. Signals: 'skipped the Scout, writer, claim checker', 'ended the turn mid-loop', 'I stopped mid run', 'user had to ask why'."
-status: open
+status: tracked
+ref: "issue #3507"
 related:
   - entry: blog-post-skill-steps-skipped
     rule: The skipped Skill is blog-post, not glassbox-curate.
   - entry: glassbox-curate-read-first-skipped
     rule: The skipped steps are the Skill's required first reads, not its build, check or loop steps.
+notes: |-
+  2026-11-20 survey: open issue #3507 (audit-skills, 2026-11-20) reports the scheduled run still stops after one PR and skips writer, checker and reader after #3461; status set to tracked.
 fixes:
   - pr: 3461
     date: "2026-11-18"

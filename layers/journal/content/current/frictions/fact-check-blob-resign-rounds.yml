@@ -1,0 +1,21 @@
+name: fact-check-blob-resign-rounds
+surface: safe
+summary: Each wording edit after a fact-check changed the blob the checker had signed, so every follow-up fix cost another checker round.
+cause: "A fact-check verdict is tied to the file's blob (the Fact-checked line), so any edit after it, even a one-word fix from the checker's own note, invalidates it and forces a fresh checker round; fixes made in separate commits multiply the rounds. Signals: 'Fact-checked blob', 'four rounds', 'five round trips', blog-post fact-check."
+status: open
+related:
+  - entry: drafts-caught-by-fact-check
+    rule: The draft carried wrong facts; here the cost is only re-signing after each fix.
+notes: |-
+  2026-11-20 design: relax blob re-sign dropped: rounds came from real checker findings; relaxing removes the guard added after #2370
+occurrences:
+  - session: session_013zxzePjedjMk4SeDKFvzPt
+    date: "2026-11-17"
+    severity: minor
+    description: "Each small wording edit after a fact-check forced another checker round to keep the Fact-checked blob equal to the file; the Karen post took four rounds."
+    solution: "Let blog-post step 9 re-check only the changed lines and accept the last blob when the diff since the checked blob touches no cited fact."
+  - session: session_013zxzeQ5mMr3n1PjgqM4sUa
+    date: "2026-11-19"
+    severity: minor
+    description: "The fact-checker needed five round trips on two posts because I fixed its notes in separate commits, each changing the blob it had to re-sign."
+    solution: "blog-post step 9: batch every fix and rename into one commit before the re-check, and say so in the step."

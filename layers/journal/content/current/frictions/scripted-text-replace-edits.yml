@@ -14,11 +14,6 @@ notes: |-
   2026-11-13 design: run-entry writer script or Skill line dropped: only 2 of the 4 new occurrences hit run-entry YAML (both nits, caught in-run), the wrapping is the session's own and no script owns the entry.
   2026-11-14 design: no change: a guard or prose line dropped: every slip was caught by an assertion, diff or git, a guard is Human-only and would flag legitimate migration scripts. Cause text cites a CLAUDE.md Read-tool rule that is not in CLAUDE.md.
 occurrences:
-  - session: session_013zxzeSSjEgB5DvGmrLdxP9
-    date: "2026-11-05"
-    severity: minor
-    description: "My first python edit of the Eyra post asserted on a missing string and wrote nothing, yet I committed and resumed the checker; it re-read the unchanged file and a round was wasted."
-    solution: "Check the script's exit status and git diff before committing and before resuming a checker."
   - session: session_013zxzeSxfK7X25LqaANsqoE
     date: "2026-11-07"
     severity: minor
@@ -99,3 +94,8 @@ occurrences:
     severity: nit
     description: "Edited the brief, scripts and tests with Python replace scripts in Bash, not Read plus Edit; one left an unwrapped line that a reviewer flagged."
     solution: "Use Read then Edit for each text change, and keep scripted writes for data files a helper tool covers."
+  - session: session_013zxzePBiGUC5ThCkjDhzN7
+    date: "2026-11-19"
+    severity: nit
+    description: "Edited with a python replace script; the first pass left a garbled step 9 sentence that I caught on my own read and fixed in a second script."
+    solution: "Use the Edit tool for multi-hunk prose changes and re-read each replaced paragraph."

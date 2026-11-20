@@ -9,11 +9,6 @@ related:
 notes: |-
   2026-11-08 design: no change dropped: 3 of 5 sessions are not defects (T5vcQT owner said 'choose yourself', Sy38XR clear-backlog says its list wins); NpEgo already had 'settle every decision via grilling' in glassbox-curate, read and ignored, so more prose is the wrong mechanism; the delegation clause is in issue #2962
 occurrences:
-  - session: session_013zxzeQWJEVk8sAXq1hcSjq
-    date: "2026-11-05"
-    severity: nit
-    description: "Asked clarifying questions with AskUserQuestion instead of the grilling Skill that CLAUDE.md names for settling what to build."
-    solution: "CLAUDE.md could say the grilling Skill is required even for a short round of questions, or accept AskUserQuestion."
   - session: session_013zxzeRCJHe4rmKN5i2CQ16
     date: "2026-11-06"
     severity: minor

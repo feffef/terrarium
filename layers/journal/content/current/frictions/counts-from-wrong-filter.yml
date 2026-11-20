@@ -17,11 +17,6 @@ fixes:
     date: "2026-11-13"
     summary: "midden-survey lists closed-unmerged PRs with a script that pages completely, replacing the search call and hand paging."
 occurrences:
-  - session: session_013zxzeSbd2LJtWWawqrWBJD
-    date: "2026-11-05"
-    severity: nit
-    description: "My quick check of the Friction files' occurrence counts was a sloppy grep that returned meaningless numbers; I left the issues' counts marked unverified instead of recounting."
-    solution: "Count with a short script over the occurrences list, or say unverified up front rather than running a grep that cannot count."
   - session: session_013zxzeTDG9WP45rYE5hRMpG
     date: "2026-11-06"
     severity: nit

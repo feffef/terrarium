@@ -208,3 +208,13 @@ occurrences:
     severity: nit
     description: "First Write of the Digest was blocked by the tenant-glossary guard; I had not read the Journal GLOSSARY.md before drafting."
     solution: "Read the Tenant glossary before drafting under layers/."
+  - session: session_013zxzeRsaSP4XhVGZDUk153
+    date: "2026-11-19"
+    severity: nit
+    description: "Never read layers/journal/GLOSSARY.md before editing Inventory files under layers/journal; the tenant-glossary rule loaded but I did not act on it."
+    solution: "The audit-skills Skill could say Inventory edits need no Tenant glossary read, or name it."
+  - session: session_013zxzeQAV89N7K2uJN1FbsR
+    date: "2026-11-20"
+    severity: minor
+    description: "Edited layers/journal Inventory files without reading layers/journal/GLOSSARY.md; validate-content then rejected one note that stated a Routine's schedule (the word daily)."
+    solution: "Read the Tenant glossary before the first edit under a layer; the cadence rule lives there."

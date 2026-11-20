@@ -38,11 +38,6 @@ occurrences:
     severity: nit
     description: "extract-frictions wrote 245KB of JSON to a file with no per-severity view, so I wrote an ad hoc python filter to find major and blocker hits."
     solution: "Give extract-frictions a --min-severity flag for the trial-judging use."
-  - session: session_013zxzeQWJEVk8sAXq1hcSjq
-    date: "2026-11-05"
-    severity: minor
-    description: "Printed about 150 lines of runs.yml findings when I only needed the cost columns, then misjudged which runs counted as v3 until the owner corrected me."
-    solution: "Grep the numeric fields first, and ask the owner which runs count before reading them."
   - session: session_013zxzeQyhG5Jn9REJydTepm
     date: "2026-11-07"
     severity: minor
@@ -108,3 +103,8 @@ occurrences:
     severity: minor
     description: "issue_read get_comments on 3143 returned 254K characters and overflowed context, forcing a saved-file slice; github-integration.md warns only about get_sub_issues and bodies."
     solution: "Add get_comments on a long standing thread to the 'Three calls return huge output' list in docs/agents/github-integration.md, with the python slice recipe."
+  - session: session_013zxzeRVd5oef56BLsas85y
+    date: "2026-11-19"
+    severity: nit
+    description: "A search/code gh api call returned about 20 KB of repository JSON for a one-line question, flooding context."
+    solution: "Pipe gh api search results through --jq to a few fields; the Skill's brief could say so."

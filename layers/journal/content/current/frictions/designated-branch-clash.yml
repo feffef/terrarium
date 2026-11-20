@@ -17,3 +17,13 @@ occurrences:
     severity: nit
     description: "Cut a local branch for the post, then had to delete it and return to the session branch, against the start-on-your-branch rule."
     solution: "The blog-post step 7 wording 'cut a working branch' reads against CLAUDE.md; say 'stay on the session branch'."
+  - session: session_013zxzePBxPjfMQRm8C4FwqZ
+    date: "2026-11-18"
+    severity: nit
+    description: "The system prompt limits pushes to the session branch while clear-backlog section 4 pushes each branch under its own name; I had to ask the owner (Q10) before landing anything."
+    solution: "Let /clear-backlog count as the owner's permission to push its branch names, or state the exception in the cloud-session notes."
+  - session: session_013zxzePPb9GTvLBJgGBgspQ
+    date: "2026-11-19"
+    severity: minor
+    description: "audit-docs requires two PRs but the session instructions name one development branch; I cut a second branch for the escalation PR."
+    solution: "Say in audit-docs and the system prompt that the escalation PR gets its own branch."

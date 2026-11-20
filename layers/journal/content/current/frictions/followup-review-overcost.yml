@@ -44,3 +44,18 @@ occurrences:
     severity: minor
     description: "A 5-line addition to a Skill brief failed the simple-change test because it changes the Skill's meaning, so it needed two Opus review agents, about 175k subagent tokens, for a one-sentence edit."
     solution: "Let a one-sentence doc addition that two pages already cover take the own-read path, or review it with one agent."
+  - session: session_013zxzeSbxN1yAYBzyNbUST6
+    date: "2026-11-19"
+    severity: minor
+    description: "Every follow-up after code-review (7 prose files) needed a second two-agent code-review because merge-pr.ts counts it as non-simple."
+    solution: "None needed; the cost is the intended safety net, but a glassbox-update note could say to fold review fixes in before the first review."
+  - session: session_013zxzePBiGUC5ThCkjDhzN7
+    date: "2026-11-19"
+    severity: minor
+    description: "A 25-line prose change to a Skill took two full code-review rounds (four subagents), because the simple-change bar is 10 lines and a fix commit over it needs a fresh review."
+    solution: "Draft the whole change from the writing-for-agents rules first, so round one finds less."
+  - session: session_013zxzePUNdDXiqJrj8m6Bjs
+    date: "2026-11-19"
+    severity: minor
+    description: "A one-blank-line Skill doc edit got the full build recipe (tdd, three ADR reads forced by hooks after the edit) and a review spawn that only re-confirmed the builder's claims."
+    solution: "Add a fast path to rules() and the small flag: a doc-only change of 5 lines or fewer skips tdd and the review round."

@@ -19,3 +19,8 @@ occurrences:
     severity: minor
     description: "First gate:scoped failed all e2e: SessionStart install bumped playwright-core to 1.65 but no matching Chromium was installed locally."
     solution: "SessionStart hook could run `playwright-core install chromium` when the locked playwright-core version changes, or the gate could print that fix."
+  - session: session_013zxzeNd9wP36dUYyykDdBv
+    date: "2026-11-18"
+    severity: minor
+    description: "The f2f builder's first gate failed for a missing node_modules in a new worktree, and the cost branch's gate log briefly showed a git error; each cost a rerun and a recheck of the log."
+    solution: "clear-backlog-build rules() should tell the builder to run pnpm install before any gate, as dispatch-subagents already says for the checkout."
