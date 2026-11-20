@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeTGi1AXFf7KEwZhLhH
 startedAt: 2026-11-20T13:09:25Z
-endedAt: 2026-11-20T13:20:54Z
+endedAt: 2026-11-20T13:25:15Z
 kind: autonomous
 goal: "Scheduled prune trial: judge two trials, prune one problem"
-status: in-review
-outcome: Two trials judged as holding; dispatch-subagents brief section trimmed as a new trial; PR 3521 open
-summary: "Scheduled prune-trial run, no human prompts. Everything was agent-initiated under the Skill. Judged the owner-facing UI trial (friction share 3.7% to 4.3%, 8/216 to 2/47) and the glassbox-curate read trial (6.1% to 0%): both hold, entries deleted, no issue. Left the pr-workflow trial (judgeable 2026-11-22). Criterion-1 subagent search found failed-prose candidates; the two best (tenant-glossary rule, edit-during-gate-run) were already 13-31 words and held by guards, so I trimmed dispatch-subagents section 3 (-3 lines, justifications only, every rule kept) and opened it as a trial, marking subagent-brief-defects on-trial after the Spec reviewer noted it. Sonnet probe at the pinned SHA passed; gate:scoped passed; code-review found no dropped rule. Honest limit: the cut is tiny because the Skill was pruned several times before. PR 3521 opened and subscribed; merge pending CI."
+status: completed
+outcome: Two trials judged as holding; dispatch-subagents brief section trimmed as a new trial; PR 3521 merged
+summary: "Scheduled prune-trial run, no human prompts. Everything was agent-initiated under the Skill. Judged the owner-facing UI trial (friction share 3.7% to 4.3%, 8/216 to 2/47) and the glassbox-curate read trial (6.1% to 0%): both hold, entries deleted, no issue. Left the pr-workflow trial (judgeable 2026-11-22). Criterion-1 subagent search found failed-prose candidates; the two best (tenant-glossary rule, edit-during-gate-run) were already 13-31 words and held by guards, so I trimmed dispatch-subagents section 3 (-3 lines, justifications only, every rule kept) and opened it as a trial, marking subagent-brief-defects on-trial after the Spec reviewer noted it. Sonnet probe at the pinned SHA passed; gate:scoped passed; code-review found no dropped rule. Honest limit: the cut is tiny because the Skill was pruned several times before. PR 3521 merged after green CI (merge 8b73b145)."
 prs:
   - "3521"
 docsRead:
@@ -49,16 +49,23 @@ frictions:
   - description: Criterion-1 search surfaced only candidates of 13-31 words already held by guards, so most of the run's cost bought a very small cut.
     solution: Let the search subagent also rank prose mass so a run can fall back to a plain rewrite earlier.
     severity: nit
-durationSec: 690
+  - description: Worked out the verdict-line flags for a reviewed-then-followed-up head by trial runs, and the first add_issue_comment call failed on the issue_number name.
+    solution: pr-workflow step 4 could show the literal two-line command for the Reviewed plus Own-read case.
+    severity: nit
+durationSec: 950
 models:
-  claude-sonnet-5-5: 73
+  claude-sonnet-5-5: 91
 toolCounts:
-  Bash: 27
+  Bash: 32
   Read: 3
   Agent: 4
-  Skill: 3
+  Skill: 4
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 2
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/frictions/built-before-owner-decided-ui.yml
   - layers/journal/content/current/frictions/subagent-brief-defects.yml
@@ -257,28 +264,28 @@ subagents:
     durationSec: 47
     toolCalls: 16
     modelCalls: 9
-    tokenShare: 14.6
+    tokenShare: 11.9
   - type: general-purpose
     task: Probe pruned brief rules
     model: sonnet
     durationSec: 12
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 4
+    tokenShare: 3.2
   - type: general-purpose
     task: Standards review of prune
     model: sonnet
     durationSec: 29
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 6.1
+    tokenShare: 4.9
   - type: general-purpose
     task: Spec review of prune
     model: sonnet
     durationSec: 32
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 7.1
+    tokenShare: 5.8
 gitBranch: claude/practical-rubin-p7qm3z
 entrypoint: remote_trigger
 cliVersion: 2.1.329
