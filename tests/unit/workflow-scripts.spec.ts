@@ -120,8 +120,13 @@ describe('clear-backlog-build (#3110)', () => {
       expect(c.prompt, c.label).not.toContain('issue_read')
       expect(c.prompt, c.label).toContain('raise a skipped or refused one again only with new evidence')
     }
-    expect(calls[0]!.prompt).toContain('§3 of .agents/skills/code-review/SKILL.md')
+    expect(calls[0]!.prompt).toContain('headed "### 3. Identify the standards sources"')
     expect(calls[1]!.prompt).not.toContain('code-review/SKILL.md')
+  })
+
+  it('tells builder and reviewer that a resume message names the only reply', async () => {
+    const { calls } = await run({})
+    for (const c of calls) expect(c.prompt, c.label).toContain('that reply is your whole hand-off, and you return nothing structured again')
   })
 
   it('fails a review-only branch given no round, without running a reviewer', async () => {
