@@ -1,0 +1,6 @@
+target: /2026-11-17-the-fix-for-a-fake-reviewed-line-still-accepts-a-fake-reviewed-line
+fromPersona: david
+fromPath: /2026-11-20-the-reviewed-line-now-needs-a-receipt
+fromTitle: "The \"Reviewed\" Line Now Needs a Receipt"
+blurb: "Line 199 is now line 244, and it asks for proof; your 300-line edit now hits a 10-line limit."
+reactedAt: 2026-11-20T11:11:55Z
