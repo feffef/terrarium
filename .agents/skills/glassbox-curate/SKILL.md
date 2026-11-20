@@ -1,21 +1,22 @@
 ---
 name: glassbox-curate
-description: Clear the Glass Box memory page's backlog, one reviewed PR per focus; with an instruction, build it with the person instead.
+description: Improve and extend the Glass Box guide by clearing its memory page's backlog, one reviewed PR per focus; with an instruction, build it with the person instead.
 disable-model-invocation: true
 ---
 
 # glassbox-curate
 
-**Goal.** Make the Glass Box guide easier to learn from by clearing the backlog
-on the memory page. You solve items; you don't collect them. Each Loop session
-leaves the memory page with fewer items than it found.
+**Goal.** Make the Glass Box guide easier to learn from, and make it cover
+every technology and practice Terrarium relies on, by clearing the backlog on
+the memory page. Each Loop session leaves the memory page with fewer items than
+it found.
 
 **Words.**
 - *Memory page*: `layers/glassbox/content/workshop/pages/index.md`, its Agent
   notes: what is weak, what the owner wants, what is missing.
 - *Focus*: one goal that improves the guide, taken from the memory page or the
   person's instruction. Any size.
-- *Run*: one focus, from choosing it to its PR: steps 3 to 7. One run, one
+- *Run*: one focus and its PR: steps 3 to 7. One run, one
   branch, one PR, one run entry.
 - *Run entry*: the record of one run, in
   `layers/glassbox/content/workshop/runs/`.
@@ -89,9 +90,10 @@ the memory page's items.
 2. **Pick.** Take the most important item on the memory page whose pages no
    open PR touches, in this order:
    1. the owner's direction;
-   2. weak spots;
-   3. everything else: gaps, open ideas, wording problems, claims to check and
-      other topics.
+   2. gaps: topics no page teaches yet (*Stale or missing*);
+   3. weak spots;
+   4. everything else: open ideas, wording problems, claims to check and other
+      topics.
 
    An item is a bullet or numbered entry under the memory page's *Agent
    notes*; *Soft decisions* are not items.
@@ -102,9 +104,10 @@ the memory page's items.
    no longer stands, note it (step 7 deletes it) and take the next one.
 3. **Nothing to pick.**
    - If items are left but open PRs block all of them, and one of those PRs is
-     yours with its checks still running, end your turn. This is a pause, not a
-     stop: the PR's activity (its checks, the gate's comment) wakes you. Then
-     start this step again.
+     yours with its checks still running, or is a `glassbox-update` PR (it
+     touches every page), subscribe to that PR's activity and end your turn.
+     This is a pause, not a stop: the PR's activity (its checks, the gate's
+     comment, its merge) wakes you. Then start this step again.
    - Otherwise stop the session (step 8) and say in your final message which
      items are left and which PR blocks each.
 
@@ -234,11 +237,12 @@ reasons above.
 ## Merging your PRs
 
 Go through each PR you opened in this session that is still open:
-- **Checks green:** merge it with `pr-workflow.md`'s recipe (post your verdict,
-  then run `scripts/github/merge-pr.ts`). If rule 6 says it waits for the
-  owner, or `merge-pr.ts` refuses it, leave it open for a human merge.
-- **Checks red:** fix it on its branch, review the fix (`pr-workflow.md`,
-  "Review before opening the PR", step 4) and push.
+- **Checks green:** merge it with `pr-workflow.md`'s recipe. If rule 6 says it
+  waits for the owner, leave it open for a human merge.
+- **Checks red:** if the cause is in your change, fix it on its branch, review
+  the fix (`pr-workflow.md`, "Review before opening the PR", step 4) and push.
+  If the cause isn't yours, leave it open for a human and name it in your final
+  message.
 - **No checks appear:** it likely has a merge conflict. Merge `origin/main` into
   its branch, resolve it and push.
 - **Checks still running:** leave it for the next pass.
@@ -318,7 +322,7 @@ plain words. State a count only after counting its items in their source.
   `owner-decisions.md`.
 
 **`../glassbox-lesson/owner-decisions.md`** holds the owner's hard rules. Add a
-line only when the owner says so, in an Instruction session. If your change
+line only when the owner says so. If your change
 would go against a line, don't make it: log a Friction if that seriously hurts
 the outcome, or an idea if you have a good proposal that clashes with it.
 

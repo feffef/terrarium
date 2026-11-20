@@ -25,22 +25,22 @@ pins to that one commit, never a later fetch.
 2. **Advance.** Run the script with `--write --to <the commit>`: it shifts
    moved `lines` ranges and pins every page to the commit, except a page with
    an `edited` range, which is left wholly untouched.
-3. **Flag.** Every page in the step-1 report's `pages` is flagged, and so is
+3. **Flag.** First start the **Scout**: run
+   `pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts --index`,
+   then dispatch a background sonnet subagent (`dispatch-subagents`) with the
+   guide index files it names and the range from the oldest step-1 `revision`
+   to the commit. It reads every commit in that range, all paths, and returns
+   each new topic worth teaching that no page in the index teaches, with its
+   commits and the nearest page. Add each one as a single line to the memory
+   page's *Stale or missing* section
+   (`layers/glassbox/content/workshop/pages/index.md`), skipping topics already
+   there; `glassbox-curate` works that list.
+   Every page in the step-1 report's `pages` is flagged, and so is
    every term in `terms`. Then read `git log` and `git diff` from each page's
    step-1 `revision` to the commit, and flag any page whose prose describes
    something that changed even though it cites no changed file (match by
    concept: a renamed step, a moved rule, a retired Skill). A `major` version
    change also flags *The concept* of every Lesson whose Full reference links that tool's docs.
-   At the start of this step, start the **Scout**: run
-   `pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts --index`,
-   then dispatch a background sonnet subagent (`dispatch-subagents`) with the
-   guide index files it names and the range from the oldest step-1 `revision`
-   to the commit. It reads every commit
-   in that range, all paths, and returns each new topic worth teaching that no
-   page in the index teaches, with its commits and the nearest page. Add each
-   one as a single line to the memory page's *Stale or missing* section
-   (`layers/glassbox/content/workshop/pages/index.md`), skipping topics already
-   there; `glassbox-curate` works that list.
    Done when every commit since the oldest `revision` has been read against
    every page, and the Scout's topics are on the memory page.
 4. **Re-check and edit** a flagged page as a whole, diagrams and `teaches`

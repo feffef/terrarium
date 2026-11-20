@@ -1,16 +1,17 @@
 name: glassbox-curate
 category: platform-operation
 importance: routine
-gist: Clears the Glass Box memory page's backlog, one reviewed PR per focus.
+gist: Improves and extends the Glass Box guide from its memory page backlog, one reviewed PR per focus.
 role: >-
-  Works through the Glass Box memory page's backlog. With no argument it
+  Improves the Glass Box guide and widens what it covers by working through
+  its memory page's backlog. With no argument it
   loops: it takes the most important item, writes, checks, reviews and gates
   the change, lands one PR, and takes the next item until its context passes
   500k tokens or no item is left. With an instruction it researches the topic,
   grills the person until they confirm an outline, then builds the outline
   unattended. It opens each PR and goes on at once, merging each PR once its
-  checks are green. Each session leaves the memory page with fewer items than
-  it found.
+  checks are green. Each Loop session leaves the memory page with fewer items
+  than it found.
 watchFor:
   - "A run that merges its PR first ran the code-review Skill and the gate, and the PR's `Reviewed:` line says what really ran."
   - "Every run used the writer, the claim checker and a fresh reader, with no step skipped because the change was small."
