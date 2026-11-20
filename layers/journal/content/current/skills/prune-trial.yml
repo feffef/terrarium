@@ -9,28 +9,9 @@ role: >-
   PR, except a trial changing an ADR or its summary rule starts only with a
   Trusted user and a human merges it.
 auditSummary:
-  date: "2026-11-19"
-  text: "Each audited run trimmed instructions and merged without being undone. When a trimmed instruction's problem rose, the owner restored it. The search sometimes finds only text already under trial."
+  date: "2026-11-20"
+  text: "Each daily run delivered a merged cut or judgement that matches its log, with a recorded search and no revert. It reads its required docs late, and one run needed extra review passes."
 observations:
-  - date: "2026-10-10"
-    note: >-
-      Re-checked (audit-skills behaviour check). Issue #1677 re-confirmed
-      CLOSED via live `issue_read` — closed by the human owner, who
-      rejected the audit-filed fix's framing with a correct structural
-      argument, and the real fix (a one-hour grace on the floor, commit
-      `920f20f8`/PR #1683) independently re-run live
-      (`prune-trial-window.ts`): all 4 currently-open trials correctly read
-      "not yet judgeable," no 6th narrow-margin instance since. The
-      2026-10-09 entry's session-id-recovery damage-condition claim
-      independently re-verified: all three cited commits trace to genuine,
-      independently-logged sessions whose commits landed on a different
-      session's branch via dispatch/worktree branch-sharing — not the
-      pruned behavior recurring. One new note: all three firings were
-      logged `blocker` severity by the sessions themselves (not minor, as
-      the prior entry's tone implied), and no open issue tracks the
-      dispatch/worktree branch-sharing collision as its own problem — the
-      "not escalated" call is defensible given the root-cause analysis, but
-      worth a dedicated issue if a 4th instance appears. Grade unchanged.
   - date: "2026-10-11"
     note: >-
       Re-checked (audit-skills behaviour check), 8 usedIn sessions plus a
@@ -268,3 +249,5 @@ observations:
     note: "Behaviour check, runs session_013zxzePAAjqaHMt85Ee6cxA, session_013zxzeSFVZRywvYz2rGcRzP, session_013zxzePEh76m48UZNU4Ue1j: PRs #3342, #3380, #3426 merged; numstat deltas match the ledger (-2, -1, -5); no revert. ADR-0027 read late in 2 of 3. `proven: true` written before the probe passed once (11-16). Idea: set a minimum session count before a rise in a Friction's share counts (11-17 judged on 15 of 34 sessions, issue #3425). Grade unchanged."
   - date: "2026-11-19"
     note: "Behaviour check, runs session_013zxzeSFVZRywvYz2rGcRzP, session_013zxzePEh76m48UZNU4Ue1j, session_013zxzePDgqR59VAHUMyVxvA: PRs #3380, #3426, #3449 merged, numstat deltas -1, -5, -36 match logs, no revert. The 11-17 verdict path worked: #3425 filed, owner restored read lines in d8b0381d9. Repeats: late doc read in 3 of 3. Unverified: 11-18 rates and search coverage in the PR body. Idea: pass trial-territory.ts output to the search brief. Grade unchanged."
+  - date: "2026-11-20"
+    note: "Behaviour check, runs session_013zxzeQuz1peCEYugreTtXU (11-19), session_013zxzePDgqR59VAHUMyVxvA (11-18), session_013zxzePEh76m48UZNU4Ue1j (11-17); SKILL.md unchanged, graded against the file on disk. Delivery verified with git log origin/main and git diff --numstat on each merge: PR #3497 (f0ee3c1c7) changed docs/agents/pr-workflow.md +26/-29 (net -3, matching the log and a ledger entry with proven: true and a named search coverage, two open and 100 recent closed issues, guards.md and workflows named unread); PR #3449 (783768f3a) deleted 36 lines of .agents/prune-trials.yml, judged the gate-run trial as holding and opened no new trial, a legitimate nothing-clears-the-bar result (rates 5.3% to 2.9% and 12.8% to 17.1% come from the log only); PR #3426 (11bd14159) changed the glassbox-curate SKILL.md +10/-15 (net -5), with #3425 filed for the read-first-lines doubling (22.1% to 44.1%, 15 of 34 sessions; the issue was not reopened, the log is the only source). No revert in two weeks. The 11-19 run opened a trial, so the two-runs-with-no-trial retire signal is not triggered. Repeats: late reads of the read-first docs in 3 of 3 runs (git-conventions and github-integration after git and gate commands on 11-19 and 11-18, triage-labels after an issue write on 11-17); the search subagent could read only issue titles on 11-17. New minor: on 11-19 merge-pr.ts refused twice because code-review was called with bare origin/main args instead of the printed args naming the head sha (two extra review passes, resolved, the agent's own failure and not a Skill defect), and the first search dispatch was denied by the dispatch-read guard (a second 60 s search). Not independently checked: that each probe reported the pinned SHA and whether each PR body names the entries and rates. Idea: add one line at the top of section 1 telling the run to read git-conventions.md and github-integration.md (and dispatch-subagents before the first Agent call) before its first command, since find-trial-window.ts is git-based; the late read recurs in 3 of 3 here. Grade unchanged."

@@ -9,21 +9,9 @@ role: >-
   gated PR on green (ADR-0003/0004), filing an issue only for a factual conflict
   it can't resolve. Use it when docs and code drift apart.
 auditSummary:
-  date: "2026-11-19"
-  text: "Reviews the docs each night and lands the fixes that hold up; the latest sweep was a clean single commit. Reviewer coverage is still sometimes thin, and the Covered line can claim more than was read."
+  date: "2026-11-20"
+  text: "Runs its sweeps and delivers merged fixes that stand. Reviewers still propose many wrong rewrites that drop a rule, which costs checker effort but is caught before merge."
 observations:
-  - date: "2026-10-10"
-    note: >-
-      Re-checked (audit-skills behaviour check), 7 usedIn sessions, graded
-      against the SKILL.md text in effect at each start. One
-      previously-unchecked session, session_01Jo3m1r8fyuGvjtRE9qDrPH (PR
-      #1700, 14 Live-tier files), confirmed clean — no human-only surface
-      touched, concision-family rotation math checked out, no revert.
-      Correction to the 2026-10-09 entry above: its "5 named checker
-      subagents" claim for PR #1649/session_01N6jqFrkCMkEm3g6kJW9Zqk is wrong
-      on the count — the log's own `subagents` list has exactly 4, matching
-      the 2026-10-08 entry's correct count; a transcription slip, not a
-      Skill behaviour problem. No new silent failure. Grade/role unchanged.
   - date: "2026-10-11"
     note: >-
       Re-checked (audit-skills behaviour check), 7 usedIn sessions, each
@@ -294,3 +282,5 @@ observations:
     note: "Behaviour check, runs session_013zxzeQE5BDH58h5e21zafo, session_013zxzePSjuKdFtiNUSC531Y, session_013zxzePiqmgzsVGM4zghBUs (11-15 to 11-17): PRs #3331 and #3368 merged, verdict tallies add up, 11-17 was a clean no-finding run, no revert. Two-commit sweep PR repeated (#3398); c736e4c12 dropped the one-commit promise. Unverified: 11-17 `Covered:` line says B and C read ~30 items in full while its own friction says B read 6 files. Idea: reviewers end with the Live files they read; the log copies that list."
   - date: "2026-11-19"
     note: "Behaviour check, runs session_013zxzePSjuKdFtiNUSC531Y, session_013zxzePiqmgzsVGM4zghBUs, session_013zxzeSzFoDpB5RtwFTLdo8: delivered; PR #3368 and the 11-18 sweep PR #3443 merged, 11-17 clean no-finding run, no revert. Repeats: two-commit sweep PR (5 runs, 11-18 was one commit after c736e4c12); thin reviewer coverage with a Covered line that contradicts the run's own friction (11-17). Unverified: 11-18 '20 doc fixes' vs 14 surviving findings. Idea: write Covered from the reviewers' unread-file lists. Grade unchanged."
+  - date: "2026-11-20"
+    note: "Behaviour check, runs session_013zxzePiqmgzsVGM4zghBUs (11-17), session_013zxzeSzFoDpB5RtwFTLdo8 (11-18), session_013zxzePPb9GTvLBJgGBgspQ (11-19). All three delivered; no silent failure or missed invocation was found, and the audit read the three logs in full. 11-17 was a clean no-finding run: no PR, no checkers, three low-confidence observations only, which step 3 allows. 11-18 produced sweep PR #3443 (merge 4308aff7b, one commit ff37cef4c); the verdict tally 6+8+3 = 17 matches the log's \"17 findings\". 11-19 produced sweep PR #3487 (c0bf418ea, one commit) and escalation PR #3488 (22df6ead0, one commit \"fix two ADR drifts\", merged by a human as the Human-only rule needs); tally 4+5+17 = 26 matches the log. After c736e4c12 the sweep is one commit again in 2 of 2 runs, so the #3398 two-commit complaint has not recurred. git log origin/main --since=2026-11-06 shows no revert. Repeats: the 11-17 \"Covered:\" line lists about 30 items while its friction says reviewer B read 6 files and A mostly grepped (2nd sighting, unverified); the 11-18 outcome says \"20 doc fixes\" while ff37cef4c touches 15 files (still unverified). New, not a failure: 17 of 26 findings in the 11-19 run were WRONG (65%), mostly rewrites that dropped a rule or its why, and the run's own friction says \"most reviewer tokens bought nothing\"; step 1 gives reviewers no instruction to quote every rule and why of a rewrite, nor to skip ADR-versus-code tensions that need an owner decision. Could not tell: four CONFIRMED-BUT findings on 11-19 were \"left as gaps needing an owner wording or decision\" while step 4 says to send a gap back to a checker; the log does not say whether that happened. Nit: 11-18 used a foreground sleep to wait on the gate (blocked); 11-19 edited before reading the ADRs its rules point to. Idea: in step 1's finding-format paragraph tell reviewers to quote every rule, condition and why of text they propose to rewrite and to skip tensions needing an owner decision; the 11-19 WRONG rate is the evidence. Grade unchanged; no regrade evidence."

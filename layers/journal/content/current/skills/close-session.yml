@@ -9,26 +9,9 @@ role: >-
   the self-judged "invoke at closure" rule fire reliably; its invocation rate is the evidence for ADR-0009's choice
   of a Skill over a reminder hook.
 auditSummary:
-  date: "2026-11-19"
-  text: "Every audited run left a completed log on main shortly after its PR merged, with no human nudges found. Whether the early look-back step ran still cannot be seen from the logs."
+  date: "2026-11-20"
+  text: "Every session in the window logged, and merges line up with log end times. How well it looks back for frictions cannot be checked from the logs."
 observations:
-  - date: "2026-10-10"
-    note: >-
-      Re-checked (audit-skills behaviour check), 10 usedIn invocations, all
-      read in full and cross-checked against live GitHub state
-      (`pull_request_read`, not the less-reliable `merged` flag): 9/10
-      `status: completed` with matching merged PRs; 1/10
-      (session_01AuUp8RpGpxhyoa3yctctHN) honestly `in-review` for 4
-      still-open PRs. Logs stayed candidly self-critical, not flattering —
-      e.g. session_01VaPP7iMRxMvKvX8KQh1qeY's 15 frictions include two
-      moderate self-criticisms matching its own PR #1708 narrative
-      verbatim. The 1 notUsedWindow session
-      (session_011p9VA5A1CWNG9xd2VrQf8N) re-confirmed an equivalent-closure
-      case: it ran close-session's substantive steps (PR subscription,
-      send_later babysitting, an honest major friction) via `log-session`
-      directly, with an independently-verified accurate final status — not
-      a missed invocation. No stale logs, no fabricated/flattering entries
-      found. Grade/role unchanged.
   - date: "2026-10-11"
     note: >-
       Re-checked (audit-skills behaviour check), 10 usedIn invocations, all
@@ -231,3 +214,5 @@ observations:
     note: "Behaviour check, 44 runs (11-15 to 11-18): all logs on main, all completed, 0 human-prompted, 0 in-review; timings fit the merges (20 PRs checked). Stale in-review log session_013zxzeRCPF7mHwN6aT8t7RQ re-closed within a minute of the last merge, so the earlier stale-log note is resolved. Two visitor-loop runs list close-session without log-session in skillsUsed (accounting gap, unverified why). Step 2 look-back still uncheckable from logs. Idea: a `lookback` tag."
   - date: "2026-11-19"
     note: "Behaviour check, 43 runs 11-16 to 11-19: each has a commit on main and status completed; 6 sampled PR merge times fit the log end times; no revert. 3 HUMAN-PROMPTED-CLOSURE keyword hits look like detector false positives (unverified); orphanScan 0. session_013zxzeQpVcWQaKyrR36MwpN (visitor-loop) not a miss. Step 2 look-back still uncheckable. Idea: tag look-back frictions or add a lookback field. Grade unchanged."
+  - date: "2026-11-20"
+    note: "Behaviour check over all 43 logs in the window (scripted extraction of status, kind, skillsUsed, prs, endedAt, then git log origin/main --grep per session). SKILL.md has not changed in 14 days, so every run is graded against the file on disk. 42 logs are completed and each has at least one journal(sessions) commit on main (1 to 17 commits per session); one, session_013zxzePUNdDXiqJrj8m6Bjs, is honestly in-review with PR #3504 awaiting a human merge (no merge on origin/main). Merge time against log endedAt fits on five PRs: #3506 merged 00:26:16 and its log ended 00:26:33 on 11-20, #3497 13:20:58 against 13:21:17, #3490 07:13:46 against 07:14:14, and #3503 and #3505 (00:03:41, 00:02:12) against the final log at 00:05:01. Frictions per log range from 1 to 25 and none has zero; step 1 is evidenced by session_013zxzePp6Xf4HuGyQNDdBpB (\"Ran git fetch and git mv before reading git-conventions.md\") and session_013zxzePUNdDXiqJrj8m6Bjs (relabelled issues without reading issue-tracker.md). No log contains a human-prompted closure; the scorecard's humanPromptedClosures, manuallyRescuedClosures and orphanedSessions are all empty and orphanScan scanned true (192 merged PRs, 100 issues, 291 logs with a session). Missed invocations: none; session_013zxzeQpVcWQaKyrR36MwpN (visitor-loop, 11-13) never invoked close-session but ran log-session and has three journal commits (7745b7705, dc9b280ff, 976db64e2), and visitor-loop owns its closure step (80d326f03). Known repeat: session_013zxzeNkrnZpMkYb9UUBh2t (visitor-loop 11-17) lists close-session without log-session in skillsUsed, the known accounting gap. Could not tell: step 2's look-back, which no log field records (all 43 runs). No revert of any delivered work. Idea: require a [lookback] prefix on Frictions that step 2 logs, so a completed log with none can be audited mechanically. Grade unchanged: essential, no regrade evidence."
