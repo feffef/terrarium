@@ -63,7 +63,7 @@ import {
 } from './transcript-trace.ts'
 import { isInstructionDoc, type DocLineIndex } from './shell-reads.ts'
 import { fail, flagValue, root, runIfMain } from '../lib/cli.ts'
-import { governsLine, readRuleLoads, ruleUseAsk, type RuleLoadRow } from './rule-use.ts'
+import { governsLine, readRuleLoads, ruleUseAsk, unratedRules, type RuleLoadRow } from './rule-use.ts'
 
 /** The `schemaVersion` newly authored logs should carry; evolution policy: ADR-0009. */
 export const CURRENT_SESSIONS_SCHEMA_VERSION = 1
@@ -913,6 +913,10 @@ export function authorMain(
   const ctx = loadAuthorContext(cwd)
   const closure = ctx && closureRefusal(merged.status, ctx.trace)
   if (closure) fail(closure)
+  const unrated = ctx ? unratedRules(ctx.trace.ruleLoads, merged.reported) : []
+  if (unrated.length) {
+    fail(`reported lacks a rating for:\n${unrated.map((r) => `  ${r}`).join('\n')}\nRate each (see log-session --pending), or write reported: [] if none applies.`)
+  }
   sweepWorktreesAtClose(merged, cwd, opts.worktrees ?? gitWorktrees)
   // Its existence is the wrap-up signal the landing path gates on.
   mkdirSync(dirname(scratchAbs), { recursive: true })

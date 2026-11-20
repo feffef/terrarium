@@ -449,17 +449,18 @@ describe('reportReads (the names reported is picked from)', () => {
     // `exit` throws so a refusal is catchable; `log` lines are what the agent sees.
     function author(
       fixture: { home: string; root: string },
-      { mainSchemaFn = () => null, scratchAbs = join(fixture.root, 'scratch.json'), extra = '', status = 'completed', worktrees, frictions }: {
+      { mainSchemaFn = () => null, scratchAbs = join(fixture.root, 'scratch.json'), extra = '', status = 'completed', worktrees, frictions, reported = 'reported: []\n' }: {
         frictions?: object[]
         mainSchemaFn?: (entry: unknown) => { errors: string; unknownKeys: string[] | null } | null
         worktrees?: WorktreeSeam
         scratchAbs?: string
         extra?: string
         status?: string
+        reported?: string
       } = {},
     ) {
       const yml = join(fixture.root, 'authored.yml')
-      const body = authored.replace('completed', status).replace('frictions: []', `frictions: ${JSON.stringify(frictions ?? [])}`)
+      const body = authored.replace('reported: []\n', reported).replace('completed', status).replace('frictions: []', `frictions: ${JSON.stringify(frictions ?? [])}`)
       writeFileSync(yml, body + extra)
       const logs: string[] = []
       const errors: string[] = []
@@ -487,6 +488,21 @@ describe('reportReads (the names reported is picked from)', () => {
       const res = author(store([['pnpm tsx scripts/github/merge-pr.ts 12', '{ "merged": true }']]))
       expect(res).toMatchObject({ exited: true, scratchWritten: false })
       expect(res.errors).toContain('Invoke the close-session Skill first, then author again')
+    })
+
+    // Issue #3508: every loaded rule rated, or an explicit `reported: []`.
+    it('refuses a partial reported naming the unrated rule, and accepts it once rated', () => {
+      const fixture = withRule(withRule(store(['ls']), 'adr-0012.md'), 'adr-0013.md')
+      const partial = author(fixture, { reported: 'reported:\n  - { path: .claude/rules/adr-0012.md, value: steered }\n' })
+      expect(partial).toMatchObject({ exited: true, scratchWritten: false })
+      expect(partial.errors).toContain('.claude/rules/adr-0013.md')
+      expect(partial.errors).not.toContain('adr-0012')
+      const full = author(fixture, { reported: 'reported:\n  - { path: .claude/rules/adr-0012.md, value: steered }\n  - { path: .claude/rules/adr-0013.md, value: unrelated }\n' })
+      expect(full).toMatchObject({ exited: false, scratchWritten: true })
+    })
+
+    it('accepts an explicit empty reported even with rules loaded', () => {
+      expect(author(withRule(store(['ls']), 'adr-0012.md'))).toMatchObject({ exited: false, scratchWritten: true })
     })
 
     it('still accepts a completed log with no merge, or a merge with another status', () => {

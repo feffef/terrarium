@@ -136,6 +136,14 @@ export const ruleKey = (path: string) => {
   return at === -1 ? path : path.slice(at)
 }
 
+/** Loaded rules `--author` still has no rating for (#3508). An empty `reported`
+ *  is the explicit none-applies, so it leaves none; absent, it leaves all. */
+export function unratedRules(loads: RuleLoad[], reported: { path: string }[] | undefined): string[] {
+  if (reported?.length === 0) return []
+  const rated = new Set((reported ?? []).map((r) => ruleKey(r.path)))
+  return [...new Set(loads.map((l) => ruleKey(l.rule)))].filter((r) => !rated.has(r))
+}
+
 export { isRulePath }
 
 /** A rule named by a path or a bare file name, with or without `.md`, as its
