@@ -2,7 +2,11 @@ name: review-brief-section-ref-unmatchable
 surface: safe
 summary: Reviewer briefs name a numbered section of the code-review Skill that a heading search for the number does not find.
 cause: "The reviewer brief says to read 'section 3' of code-review SKILL.md for the smell baseline, but the heading is '### 3.'; reviewers grep '^## 3', find nothing and skip the baseline or read the whole file. Signals: 'section 3', 'grepped ^## 3'."
-status: tracked
+status: open
+fixes:
+  - pr: 3512
+    date: "2026-11-20"
+    summary: "clear-backlog-build: the Standards reviewer prompt names the code-review section by its heading, found by grep."
 occurrences:
   - session: session_013zxzeNd9wP36dUYyykDdBv
     date: "2026-11-18"
