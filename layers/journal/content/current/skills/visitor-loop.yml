@@ -9,33 +9,9 @@ role: >-
   changes no code and opens no PR. An idea that contradicts a line in
   `decisions.md` is dropped, so rejected ideas stay rejected.
 auditSummary:
-  date: "2026-11-19"
-  text: "Delivers three visitors' findings as issues and a retro, with no PR; every audited bug issue landed and closed. The dispatch guard blocked the first dispatch in all three runs."
+  date: "2026-11-20"
+  text: "Each run files verified bugs that exist and get fixed, and changes no code. Its page list for visitors is inconsistent: too many pages for one site and almost none for another."
 observations:
-  - date: "2026-10-10"
-    note: >-
-      NEW silent failure, escalated as issue #1721 (audit-skills behaviour
-      check): the next visitor-loop run after PR #1667
-      (session_01StQjYSNRStTihgZimvvx2r, PR #1691) batch-dismissed its 10
-      owner-correction candidates as "all blog/digest/dependabot reworks,
-      not rulings" — but PR #1672 (37 minutes after #1667, same cluster)
-      reworked #1667's own output on direct owner instruction ("All of that
-      was human-instructed," per its committed log), and `decisions.md` has
-      no line for it. This is the same failure shape #1515 was fixed to end
-      (#1570/#1623), recurring 3 days after #1515 closed — unlike every
-      other audited run this window, which named specific candidate PR
-      numbers individually rather than dismissing by category. Correction to
-      a prior citation: commit `a0a3a816` (cited elsewhere as "the fix that
-      closed #1515") only touches `audit-skills/SKILL.md` — an unrelated
-      process fix, not a visitor-loop change; the real #1515 fixes are
-      #1570 and #1623. #1515 itself independently re-confirmed CLOSED via
-      live `issue_read`. 6 of the other 7 usedIn sessions showed a genuine,
-      evidenced owner-memory pass with specific candidate PRs named (midden
-      #1709, blog #1666, atlas #1641, homepage #1616, mobile #1599,
-      journal-onramp #1563); 1 (tinkerfund #1571) is the already-documented
-      pre-#1570 skip. Grade unchanged (routine) — reliability gap confined
-      to the owner-memory sub-step's judgment quality on category-dismissal,
-      not the core 3-model/consensus/code-review pipeline.
   - date: "2026-10-11"
     note: >-
       #1721 (2026-10-10 batch-dismissal finding) confirmed resolved:
@@ -304,3 +280,5 @@ observations:
     note: "Behaviour check, runs session_013zxzePoe14MeL6kTvYZMX8, session_013zxzeQsCq5g9jeQpmsULPZ, session_013zxzeNkrnZpMkYb9UUBh2t: issues #3346, #3347, #3381, #3430 exist with retro comments on #3244, no PRs, no revert. Dispatch-read guard blocked 2 of 3; trial evidence now 4 of 5 post-prune runs (ADR-0027 bars restoring the line). Idea: exempt read-only visitor dispatches from the guard or name the read in step 2."
   - date: "2026-11-19"
     note: "Behaviour check, runs session_013zxzeSLYR7qbBXfqwKYbcc, session_013zxzeNkrnZpMkYb9UUBh2t, session_013zxzeQsCq5g9jeQpmsULPZ: #3452, #3430, #3381 exist and closed by fix commits, retro comments on #3244 present, no PR, no revert. Dispatch-read guard blocked the first dispatch in 3 of 3 before d8b0381d9 restored the read line (untested; grade the next runs against fdedd6649 text, which moved the report to the log). Minor: 222-URL context file, visitors picked pages blind. Idea: cap the context file. Grade unchanged."
+  - date: "2026-11-20"
+    note: "Behaviour check, runs session_013zxzeNkrnZpMkYb9UUBh2t (11-17, atlas), session_013zxzeSLYR7qbBXfqwKYbcc (11-18, blog) and session_013zxzeT9rFXvusQJoECfbbV (11-19, journal); all delivered. Issues #3430 (atlas), #3452 (blog) and #3498 (journal) exist, closed by fix commits (e15a0d149, cd4e427c4, 01354bb16; 73477536e, 9571f56ec; bd20c0498) with bug, ready-for-agent and area labels, and nothing was reverted (git log origin/main --since=14.days -G visitor-loop). The 11-19 run is graded against the text of 161700c2b (cost and retro reporting moved into the session log, fdedd6649 and 34fe03f36); its log lines show 6 ideas and 2 learnings, and the retro is in its summary with five Frictions naming home files. The 11-17 and 11-18 retro comments on #3244 were not read (GraphQL blocked), so those are unverified. Repeats: the dispatch-read guard blocked the first dispatch in 2 of 3 runs (11-17 and 11-18), and not in 11-19, the first run after d8b0381d9 restored the read line (1 of 1 clean, not yet a verdict); late reads of git-conventions, triage-labels and github-integration after the first fetch or write (nit) in all three; a 222-URL context file with blind page picking on the blog run, while the journal run had the opposite fault, about 7 routes only because digests and sessions are reached by in-page anchors. Minor, new: the 11-19 run read triage-labels.md only after filing #3498 though step 4 names only issue-tracker.md (final labels were right). The 11-18 run also self-labelled one finding unverified. No silent failure and no missed invocation. Idea: in step 2's context file, cap sampled URLs at 20 and mark routes reachable only by in-page anchor or typed URL. Grade unchanged: routine. Limits: the 11-17 and 11-18 retro comments on the tracking issue were not read because GraphQL is blocked, and the visitors' own claims inside the logs were not re-checked beyond the three issues. The first clean run after the read-line restore is a single data point, so it is not yet a verdict on the guard."

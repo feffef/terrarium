@@ -9,41 +9,9 @@ role: >-
   Inventory's grades in line with usage as a by-product, self-merging those
   edits (ADR-0015).
 auditSummary:
-  date: "2026-11-19"
-  text: "Produces a graded Inventory PR each night and files issues for real failures. Runs still lose their first helper dispatch to a guard and read git docs late; its reports cost a lot."
+  date: "2026-11-20"
+  text: "Delivers its Skill-page updates and issues, and nothing it landed was reverted. It skipped rewriting stale roles in one run and spends a lot on near-identical checks that mostly repeat."
 observations:
-  - date: "2026-10-10"
-    note: >-
-      Self-check: dispatched 11 behaviour-check subagents this run (one per
-      behaviourChecks entry), each report independently verified against
-      primary sources before use (every PR/issue claim checked live via
-      GitHub). Two new silent failures found and escalated as fresh issues
-      (neither had a standing open-issue home to comment on instead): #1720
-      — this Skill's OWN 2026-10-09 entry wrongly claimed issues #1676/#1684
-      were closed; both verified OPEN right now via `issue_read`,
-      independently confirmed three times over (this run's own subagent,
-      this session directly, and a separate frictions-to-fixes subagent) —
-      the third recurrence of #1627's exact failure class, despite #1627's
-      own fix (PR #1661) already landing before the 2026-10-09 run. #1721 —
-      visitor-loop's owner-memory step on PR #1691 batch-dismissed 10
-      owner-correction candidates without individually naming the real
-      rework PR #1667→PR #1672 made 37 minutes apart ("All of that was
-      human-instructed," per #1672's own log); `decisions.md` has no line
-      for it — the same failure shape #1515 was fixed to end, recurring 3
-      days after #1515 closed. One comment with new evidence added to the
-      open #1586 thread (two more sessions,
-      session_015LBxMJwGsviZMj4ScFXD38 and session_01HgJSvxTfhCwRcTZEhFspLX,
-      show the skillsUsed-logging gap also recurs for parallel read-only
-      dispatch, not just git-touching work). The rest — audit-docs (one
-      minor transcription correction, see its own entry), auto-triage,
-      blog-post, close-session, digest, frictions-to-fixes, log-session,
-      prune-trial — came back clean or matched an already-tracked issue
-      (#1675, #1677, #1586, all independently re-confirmed via live GitHub
-      state rather than inherited from the brief). Step 3 closure
-      completeness: orphan scan clean (`scanned: true`), both orphan
-      candidates carry `resolvedBy` (already tracked, left alone),
-      orphanSuppressionLog both entries plausible, humanPromptedClosures and
-      manuallyRescuedClosures both empty. Grade/role unchanged.
   - date: "2026-10-11"
     note: >-
       Self-check: re-verified the two most recent self-runs,
@@ -440,3 +408,5 @@ observations:
     note: "Behaviour check, runs session_013zxzeTBn6kP1nZ2KA22n9i and session_013zxzePnUYHpbwDsDER2swv: PRs #3399 and #3360 merged (YAML-only diffs), issues #3395-#3398 closed, no revert. Repeats: late git/GitHub doc reads (n=5), wrong session id drafted before the write (n=3), 16-17 near-identical subagent reports (n=2, ~1.7M tokens in 11-17). Idea: scorecard prints each Skill's last-run count so unchanged Skills are skipped."
   - date: "2026-11-19"
     note: "Behaviour check, runs session_013zxzeTBn6kP1nZ2KA22n9i, session_013zxzeQty154cpRRShQjRhX: delivered; PRs #3399 and #3441 merged, YAML-only, issues #3395-#3398 and #3440 closed, grade changes cite 2-3 sessions, no revert. Repeats: git doc read late (7 runs), wrong session id caught via get_session (4), 16-17 subagent reports ~1.7M tokens (3), dispatch-read guard denied first Agent call on 11-17. 11-18: own read instead of code-review on a 4-file follow-up (disclosed). Idea: name git-conventions and dispatch-subagents read-first in step 1. Grade unchanged."
+  - date: "2026-11-20"
+    note: "Behaviour check, runs session_013zxzeRsaSP4XhVGZDUk153 (11-19) and session_013zxzeQty154cpRRShQjRhX (11-18); the 11-19 audit's own SKILL.md edit e6a0d6fae landed after both started, so the 300-500 word notes and the newest-7-observations rule are untested by them. Delivery verified from git: PR #3482 (a0e69fe53) changed 9 routine files and 16 skill files only (25 files, matching the log); PR #3441 (ca462f965) changed 10 routine and 17 skill files; issues #3481 and #3440 are closed; no revert. Both runs reported orphanScan scanned true with 0 orphans (not re-run by the audit). Silent failure, self-disclosed, n=1 confirmed: on 11-19 step 5 says to reread SKILL.md and rewrite gist or role when changes lists an edit, but the friction says \"I did not reread any, though 13 Skills changed in the window\" and the summary says \"Not done: role or gist rewrites\". The 11-18 log is silent. Likely cause: nothing in the scorecard prompts it and 16 subagents had used the effort. Repeats: tenant-glossary rule missed in both runs (both ruleUse say missed, both edited layers/journal without its glossary); wording and id rework after the PR in both (d626970a1 fixed 11 jargon or id items; 40b8112d0 reworded three summaries), since only a reviewer checks them; git doc read late, 7 to 9 times in all; a drafted wrong session id, n=5; 15 to 17 near-identical behaviour subagents costing about 1.6M to 1.7M tokens each run. New evidence: the 11-19 run's first Agent call was not blocked by the dispatch-read guard because it read dispatch-subagents first. This 11-20 run repeats the pattern: it again had 15 subagents, and the dispatch-read guard denied its first dispatch until the Skill was read. Idea: the scorecard prints a per-Skill staleFlag when SKILL.md changed after that entry's date, and one skip hint when runs, changes and observations repeat the last check; both runs spent about 1.7M subagent tokens re-confirming repeats. Grade unchanged."
