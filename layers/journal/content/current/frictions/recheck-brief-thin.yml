@@ -2,7 +2,11 @@ name: recheck-brief-thin
 surface: safe
 summary: Re-check reviewers got only one-line finding labels, so a later round reopened every earlier findings file or could not judge a refusal's proof.
 cause: "The re-check brief passes triage.md one-liners that name findings by file and number only, without the builder's refusal reasons, so reviewers reopen earlier findings JSON to avoid re-raising or cannot judge a refusal. Signals: 'triage.md', 'one-liners', 'refusal reasons'."
-status: tracked
+status: open
+fixes:
+  - pr: 3512
+    date: "2026-11-20"
+    summary: "clear-backlog-build rules(): triage.md lines carry the finding title so later rounds need not reopen the findings JSON."
 occurrences:
   - session: session_013zxzeSbz6S2A8goaq25ibN
     date: "2026-11-19"
