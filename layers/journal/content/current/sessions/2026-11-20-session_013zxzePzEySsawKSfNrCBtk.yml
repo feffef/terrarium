@@ -1,0 +1,277 @@
+schemaVersion: 1
+session: session_013zxzePzEySsawKSfNrCBtk
+startedAt: 2026-11-20T19:09:36Z
+endedAt: 2026-11-20T22:44:18Z
+kind: interactive
+goal: Review a week of rule-use data, then settle the unrated-rating problem
+status: in-review
+outcome: Early review and correction posted, issue closed, fix PR open and waiting for a human merge
+summary: "The owner asked, in one message, to do the #3340 week review and then grill #3508. I asked first (the owner's stated preference) because the review window was two days short and #3508 said to decide before the review; the owner chose to run now and flag the effect. I ran rule-use-report and the Friction extract, posted a review comment, then rebuilt counts from the JSON and found the unrated gap is 11% of main loads but 30% of subagent loads, far more than the review had shown; I posted that as a correction. The grilling settled one question (the owner chose to not count blanks in the shares, then reframed: no report change, enforce complete ratings going forward). The owner then directed: post the results, close #3508, change the validation of the subagent echo call, and move #3340 to 5 days out. Human-instructed: the review, the grill, closing #3508, the echo validation, the new date. Agent-initiated: the subagent-gap correction, the extra tests after review, and opening PR #3538 without asking (ADR-0003). The hook can only hint, not reject, so an agent can still ignore it; the 2026-11-25 re-run will show how often. The PR touches scripts/hooks, so a human merges it. Still open: add the PR number and merge date to #3340 once it merges."
+prs:
+  - "3538"
+docsRead:
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: scripts/hooks/rule-use-ask.ts
+    reason: (read before editing)
+  - path: scripts/session/rule-use.ts
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (read before editing)
+  - path: tests/unit/rule-use-ask.spec.ts
+    reason: (read before editing)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+skillsUsed:
+  - name: grilling
+    reason: settled what to do with unrated loads (#3508)
+  - name: code-review
+    reason: Standards and Spec review of the echo hint, then a re-check of the fix commit
+  - name: dispatch-subagents
+    reason: briefed the two read-only reviewers
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran git fetch and git log before reading git-conventions.md; the hook flagged it afterwards. The fetch was right anyway.
+    solution: Pre-read hint at the first git call of a kind CLAUDE.md binds, as read-first-hint does for other docs.
+    severity: nit
+  - description: "Closed #3508 and rewrote #3340 before reading issue-tracker.md and triage-labels.md; the hook asked after the write."
+    solution: Read the issue docs before the first issue write; the hint fired only after it.
+    severity: nit
+  - description: "Rewrote the #3340 body keeping its old session header; the ADR-0017 guard blocked the call and I resent it."
+    solution: When rewriting a body wholesale, replace the header first; the guard worked as designed.
+    severity: nit
+  - description: Edited rule-use-ask.ts, guards.md and its test before reading the ADRs the post-edit hooks named (0004, 0027, 0029, 0003); the edits stood.
+    solution: Read the governing ADR before the first edit to a hook, not after the hint.
+    severity: minor
+  - description: Started the first code-review with hand-written args instead of the call verdict-line.ts --review-call prints; re-ran it on the final head.
+    solution: Print the review call before the first review, as pr-workflow step 3 says.
+    severity: minor
+  - description: "My first draft of the #3340 comment gave a main-versus-subagent split of reported-with-no-load that the report did not give; caught before posting."
+    solution: State only what the report's Data quality line prints, and source each number.
+    severity: nit
+  - description: "My checkout was stale and lacked unratedRules from the merged #3531; found only by grepping. Two Edits also failed on wrong line breaks in a comment."
+    solution: Fast-forward to origin/main before designing against a merged PR; copy comment text exactly.
+    severity: minor
+durationSec: 12882
+models:
+  claude-sonnet-5-5: 190
+toolCounts:
+  Read: 17
+  ToolSearch: 4
+  mcp__github__issue_read: 4
+  AskUserQuestion: 1
+  Bash: 35
+  Write: 4
+  Edit: 15
+  mcp__github__add_issue_comment: 4
+  Skill: 6
+  Grep: 3
+  mcp__github__pull_request_read: 1
+  mcp__github__issue_write: 3
+  Agent: 2
+  SendMessage: 2
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - tests/unit/rule-use-ask.spec.ts
+  - scripts/hooks/rule-use-ask.ts
+  - docs/agents/guards.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0004-human-merge.md
+adrHints:
+  - adr: 4
+    via: path
+    readAfter: true
+    by: main
+  - adr: 27
+    via: path
+    readAfter: true
+    by: main
+  - adr: 29
+    via: path
+    readAfter: true
+    by: main
+  - adr: 3
+    via: text
+    readAfter: true
+    by: main
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/github-integration.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/github-integration.md
+      - rule: .claude/rules/guards.md
+        via: native
+        trigger: scripts/hooks/rule-use-ask.ts
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: scripts/hooks/rule-use-ask.ts
+      - rule: .claude/rules/adr-0022.md
+        via: native
+        trigger: docs/agents/triage-labels.md
+      - rule: .claude/rules/adr-0030.md
+        via: native
+        trigger: docs/adr/0004-objective-safety-gate.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: ran gate:scoped and code-review before the PR
+      - path: .claude/rules/adr-0009.md
+        value: duplicate
+        why: "skill: close-session says the same"
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: opened the PR unasked, then subscribed
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: guard blocked a copied session header
+      - path: .claude/rules/adr-0027.md
+        value: in-scope
+        why: edited a docs/agents roster row
+      - path: .claude/rules/adr-0029.md
+        value: in-scope
+        why: edited a docs/agents doc
+      - path: .claude/rules/guards.md
+        value: steered
+        why: followed its test conventions, updated the roster
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: steered
+        why: PR notes it waits for a human merge
+      - path: .claude/rules/adr-0022.md
+        value: unrelated
+      - path: .claude/rules/adr-0030.md
+        value: unrelated
+      - path: docs/agents/github-integration.md
+      - path: docs/agents/git-conventions.md
+      - path: docs/agents/issue-tracker.md
+      - path: docs/agents/triage-labels.md
+      - path: docs/agents/guards.md
+      - path: docs/agents/pr-workflow.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/guards.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/guards.md
+        value: steered
+      - path: docs/agents/guards.md
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/guards.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+subagents:
+  - type: general-purpose
+    task: Standards review of echo hint
+    durationSec: 261
+    toolCalls: 9
+    modelCalls: 7
+    tokenShare: 6.6
+  - type: general-purpose
+    task: Spec review of echo hint
+    durationSec: 262
+    toolCalls: 5
+    modelCalls: 6
+    tokenShare: 6
+gitBranch: ccr-ffd2df55-9apwzl
+entrypoint: remote_mobile
+cliVersion: 2.1.329
+learnings:
+  - rule-use-report --json stores each rule's value shares as fractions of answeringLoads, so unrated loads equal answeringLoads minus the sum of the rounded value counts
+ideas:
+  - Print the unrated-load count per rule in rule-use-report, beside the shares, so a gap in ratings shows without rebuilding counts from the JSON; it would have shown the 30% subagent gap on the first run.
+landedBy: Stop
