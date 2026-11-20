@@ -47,7 +47,8 @@ export const skillSchema = z
     // `date` is when it was last written; the page dims an old line
     // (`auditIsStale`) so a past problem doesn't read as current.
     auditSummary: z.object({ date: utcDate, text: z.string() }).optional(),
-    // `audit-skills`' own record, shown only on the Skill's own page (ADR-0015). Each
+    // `audit-skills`' own record, shown only on the Skill's own page
+    // (ADR-0015). Each
     // entry is one run's citable finding; PR/issue/session ids go here, not
     // in `role`. How long entries stay: `audit-skills/SKILL.md` step 5.
     observations: z.array(

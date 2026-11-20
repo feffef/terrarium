@@ -17,7 +17,6 @@ if (!skill) throw notFound()
 
 const sessions = data.value?.sessions ?? []
 const recent = recentSkillSessions(sessions, name, 5)
-const total = skillUseCounts(sessions)[name] ?? 0
 const observations = [...skill.observations].sort((a, b) => b.date.localeCompare(a.date))
 
 useSeoMeta({ title: `${name} · journal/${space}` })
@@ -40,14 +39,6 @@ useSeoMeta({ title: `${name} · journal/${space}` })
       </p>
       <JournalSkillAuditLine v-if="skill.auditSummary" :audit="skill.auditSummary" />
 
-      <h2>Last {{ recent.length }} of {{ countOf(total, 'session') }} that used it</h2>
-      <ul v-if="recent.length">
-        <li v-for="s in recent" :key="s.session">
-          <strong>{{ s.startedAt.slice(0, 10) }}</strong> — {{ s.goal }}
-        </li>
-      </ul>
-      <p v-else>No logged session in this Space used it.</p>
-
       <template v-if="observations.length">
         <h2>Audit observations</h2>
         <ul>
@@ -55,11 +46,21 @@ useSeoMeta({ title: `${name} · journal/${space}` })
             <strong>{{ o.date }}</strong> —
             <template v-for="(p, j) in skillRoleParts(o.note)" :key="j">
               <code v-if="p.kind === 'code'">{{ p.text }}</code>
+              <em v-else-if="p.kind === 'em'">{{ p.text }}</em>
+              <strong v-else-if="p.kind === 'strong'">{{ p.text }}</strong>
               <template v-else>{{ p.text }}</template>
             </template>
           </li>
         </ul>
       </template>
+
+      <h2>Recent sessions</h2>
+      <ul v-if="recent.length">
+        <li v-for="s in recent" :key="s.session">
+          <strong>{{ s.startedAt.slice(0, 10) }}</strong> — {{ s.goal }}
+        </li>
+      </ul>
+      <p v-else>No logged session in this Space used it.</p>
 
       <p><NuxtLink :to="`/t/journal/${space}/skills`">← all Skills</NuxtLink></p>
     </article>
