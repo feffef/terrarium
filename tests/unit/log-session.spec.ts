@@ -497,6 +497,8 @@ describe('reportReads (the names reported is picked from)', () => {
       expect(partial).toMatchObject({ exited: true, scratchWritten: false })
       expect(partial.errors).toContain('.claude/rules/adr-0013.md')
       expect(partial.errors).not.toContain('adr-0012')
+      const full = author(fixture, { reported: 'reported:\n  - { path: .claude/rules/adr-0012.md, value: steered }\n  - { path: .claude/rules/adr-0013.md, value: unrelated }\n' })
+      expect(full).toMatchObject({ exited: false, scratchWritten: true })
     })
 
     it('accepts an explicit empty reported even with rules loaded', () => {
