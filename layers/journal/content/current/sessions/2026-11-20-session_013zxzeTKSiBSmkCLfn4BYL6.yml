@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeTKSiBSmkCLfn4BYL6
 startedAt: 2026-11-20T18:19:23Z
-endedAt: 2026-11-20T19:26:19Z
+endedAt: 2026-11-20T19:46:07Z
 kind: interactive
 goal: Clear the open issue backlog, Seedlings included
-status: partial
-outcome: "Nine issues triaged and grilled; seven gated PRs opened (#3530 to #3536), #3531, #3532, #3533 and #3536 merged by me and #3534 and #3535 merged by the owner, #3530 handed to another session at the owner's word (not good yet); retro done"
-summary: 'Human-instructed: the owner ran /clear-backlog with "including seedlings", so I added the six Seedlings (normally skipped by the triage sweep) to the set, answered two grilling rounds (including a follow-up on #3508, #3529 and the Midden sample look), approved five UI samples (20a to 24a) and then answered Q25 (no history table). Agent-initiated: skipping #3423 and #3340 (an agent commented last), choosing the grouping (one Midden branch for #3522, #3524, #3525; the rest one branch each), the prototypes, the briefs, all review and gate orchestration, and relabelling the issues the PRs complete to ready-for-agent once the owner had confirmed them. Explore returned `grill` for all nine (none build directly). Decisions: #3507 no light lane, narrow Removal, several larger foci per run; #3508 only a completeness check in log-session --author (report accounting parked for the #3340 week review); #3529 ranked top-10 with a newest-100 quota; #3522, #3524 (four content spots) and #3525 in one Midden branch; #3526 a per-Skill page in the Current Space with audit results and observations; #3528 a Blog line in new Digests; #3527 only an as-of rewrite, because the logs since 12 Nov span two Spaces and ADR-0006 stops a Space page reading both. Seven branches built, reviewed (round 2 for three), gated and pushed; PRs #3530 to #3536 opened and subscribed. #3530 (Skill Remit), #3534 (ADR-0015 and its rule stamp) and #3535 (Skill behaviour no test observes) wait for a human merge; the other four I merge once CI is green (#3532 merged at 19:09 with my verdict comment, #3529 closed by it; #3531 merged next, #3508 left open; #3533 merged after, closing #3522 and #3525 with #3524 left open; #3536 merged last, closing #3527; the worktrees were removed and check:worktrees passes). The §5 retro went to the seven builders and the first-round reviewers of each branch (second-round reviewers skipped for cost); all 19 replies are recorded as Frictions below. #3508 and #3524 stay open (partial) with a comment each. The owner merged #3534 at 19:25 (closing #3526) and #3535 right after (closing #3528). The owner then said #3530 (the glassbox-curate Skill rewording) is still not good and will be finalized in another session, so I stopped work and watching on it; #3507 stays open and ready-for-agent for that session. The status is partial: six of seven PRs landed and #3530 did not.'
+status: completed
+outcome: "Nine issues triaged and grilled; seven gated PRs opened (#3530 to #3536), #3531, #3532, #3533 and #3536 merged by me and #3534 and #3535 merged by the owner, #3530 left open: the owner judged its rewording does not make the Skill clearer and will have a dedicated session redo it; retro done"
+summary: 'Human-instructed: the owner ran /clear-backlog with "including seedlings", so I added the six Seedlings (normally skipped by the triage sweep) to the set, answered two grilling rounds (including a follow-up on #3508, #3529 and the Midden sample look), approved five UI samples (20a to 24a) and then answered Q25 (no history table). Agent-initiated: skipping #3423 and #3340 (an agent commented last), choosing the grouping (one Midden branch for #3522, #3524, #3525; the rest one branch each), the prototypes, the briefs, all review and gate orchestration, and relabelling the issues the PRs complete to ready-for-agent once the owner had confirmed them. Explore returned `grill` for all nine (none build directly). Decisions: #3507 no light lane, narrow Removal, several larger foci per run; #3508 only a completeness check in log-session --author (report accounting parked for the #3340 week review); #3529 ranked top-10 with a newest-100 quota; #3522, #3524 (four content spots) and #3525 in one Midden branch; #3526 a per-Skill page in the Current Space with audit results and observations; #3528 a Blog line in new Digests; #3527 only an as-of rewrite, because the logs since 12 Nov span two Spaces and ADR-0006 stops a Space page reading both. Seven branches built, reviewed (round 2 for three), gated and pushed; PRs #3530 to #3536 opened and subscribed. #3530 (Skill Remit), #3534 (ADR-0015 and its rule stamp) and #3535 (Skill behaviour no test observes) wait for a human merge; the other four I merge once CI is green (#3532 merged at 19:09 with my verdict comment, #3529 closed by it; #3531 merged next, #3508 left open; #3533 merged after, closing #3522 and #3525 with #3524 left open; #3536 merged last, closing #3527; the worktrees were removed and check:worktrees passes). The §5 retro went to the seven builders and the first-round reviewers of each branch (second-round reviewers skipped for cost); all 19 replies are recorded as Frictions below. #3508 and #3524 stay open (partial) with a comment each. The owner merged #3534 at 19:25 (closing #3526) and #3535 right after (closing #3528). The owner then said #3530 (the glassbox-curate Skill rewording) is still not good and will be finalized in another session, so I stopped work and watching on it; #3507 stays open and ready-for-agent for that session. Asked why it was not finished, the owner clarified that my job is complete: the instruction changes in #3530 do not make the Skill clearer, and that rewording needs a dedicated session. Six of seven PRs landed; #3530 was my work product that the owner rejected, not a blocked step.'
 prs:
   - "3530"
   - "3531"
@@ -157,13 +157,16 @@ frictions:
   - description: "Retro (Standards reviewer): the one-home-per-fact grep for stale statements is not in the review prompt, so a defect about stale ADR text was first filed hedged and cost a triage line."
     solution: Tell Standards reviewers in reviewPrompt() to run the repo-wide grep before filing a stale-statement finding.
     severity: nit
-durationSec: 4016
+  - description: "The owner judged my #3530 Skill rewording unhelpful; explore had said stopping after one PR and skipping steps are separate failures that wording may not fix, yet I built the wording change as picked."
+    solution: When explore says an option may not fix the cause, ask for a dedicated session or a cause check first, as option d suggested, before building the wording.
+    severity: moderate
+durationSec: 5204
 models:
-  claude-sonnet-5-5: 374
+  claude-sonnet-5-5: 385
 toolCounts:
   Grep: 1
-  Bash: 82
-  Skill: 12
+  Bash: 83
+  Skill: 13
   Workflow: 4
   Read: 13
   ToolSearch: 3
@@ -176,7 +179,7 @@ toolCounts:
   mcp__github__add_issue_comment: 6
   Write: 1
   ReadNotifications: 8
-  Edit: 15
+  Edit: 19
   mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/skills/glassbox-curate/SKILL.md
@@ -2539,7 +2542,7 @@ subagents:
     durationSec: 1851
     toolCalls: 40
     modelCalls: 31
-    tokenShare: 3.9
+    tokenShare: 3.8
   - type: general-purpose
     task: a14ce310b6227abe6
     model: claude-sonnet-5-5
@@ -2574,14 +2577,14 @@ subagents:
     durationSec: 1852
     toolCalls: 35
     modelCalls: 24
-    tokenShare: 2.4
+    tokenShare: 2.3
   - type: general-purpose
     task: a4c39ff7632367d93
     model: claude-sonnet-5-5
     durationSec: 1685
     toolCalls: 10
     modelCalls: 8
-    tokenShare: 1
+    tokenShare: 0.9
   - type: general-purpose
     task: a6a1fb3d3a1c360c4
     model: claude-sonnet-5-5
@@ -2693,7 +2696,7 @@ subagents:
     durationSec: 29
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 0.4
+    tokenShare: 0.3
   - type: workflow-subagent
     task: build harvest-evidence-ranked-cut
     model: claude-sonnet-5-5
@@ -2721,14 +2724,14 @@ subagents:
     durationSec: 290
     toolCalls: 57
     modelCalls: 37
-    tokenShare: 3
+    tokenShare: 2.9
   - type: workflow-subagent
     task: build midden-tap-wording-latest
     model: claude-sonnet-5-5
     durationSec: 319
     toolCalls: 50
     modelCalls: 35
-    tokenShare: 2.9
+    tokenShare: 2.8
   - type: workflow-subagent
     task: Standards journal-skill-pages r1
     model: claude-sonnet-5-5
@@ -2861,7 +2864,7 @@ subagents:
     durationSec: 96
     toolCalls: 22
     modelCalls: 10
-    tokenShare: 1.1
+    tokenShare: 1
   - type: workflow-subagent
     task: Standards glassbox-curate-loop-rule r2
     model: claude-sonnet-5-5
@@ -2923,4 +2926,5 @@ entrypoint: remote_mobile
 cliVersion: 2.1.329
 learnings:
   - "Worked well, from the retro: findings files with a fixed kind taxonomy, the one-line FIXED and GATE reply formats, re-check messages that name the exact diff range, and briefs that carry the owner's binding picks."
+  - "A prose rewording of a Skill's loop and stop rules is hard to judge from reviewers' passes alone: two review rounds and the gate passed #3530, yet the owner found it no clearer, so such a change needs the owner's own read of the new text early."
 landedBy: Stop
