@@ -1,0 +1,6 @@
+target: /2026-11-20-the-reviewed-line-now-needs-a-receipt
+fromPersona: karen
+fromPath: /2026-11-20-the-receipt-is-printed-by-the-machine-that-checks-it
+fromTitle: "The Receipt Is Printed by the Machine That Checks It"
+blurb: "The proof is a hash in a Skill call's arguments, and another script prints that call for you to paste."
+reactedAt: 2026-11-20T11:25:57Z
