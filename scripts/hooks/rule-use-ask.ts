@@ -1,10 +1,10 @@
 // A hint, not a guard (#3020): after an agent's first bare `echo rule-use:` call,
 // show it the rules that loaded for it and what each value means, so it rates
 // from that list rather than from memory. Later bare calls get nothing, so "none
-// applies" can end; a call naming a rule without a valid value is told so,
-// since only the last call counts; likewise one that leaves a loaded rule out
-// (#3508). A subagent's payload carries its parent's
-// `transcript_path` (docs/agents/guards.md), so its own transcript is read.
+// applies" can end; a call naming a rule without a valid value, or leaving a
+// loaded rule out (#3508), is told so, since only the last call counts. A
+// subagent's payload carries its parent's `transcript_path`
+// (docs/agents/guards.md), so its own transcript is read.
 // Fails open: any error adds nothing.
 // `scripts/hooks/rule-use-ask.sh` is the hot-path pre-filter.
 //
@@ -29,8 +29,7 @@ export function askFor(payload: unknown): string | null {
   const agent = prop(payload, 'agent_id')
   const records = readTranscript(agent === undefined ? parent : agentTranscript(parent, String(agent))) ?? []
   if (call.entries.length) {
-    // The last call is the only one that counts, so one that leaves a loaded rule
-    // out rates it nothing (#3508). A bare call stays the explicit "none applies".
+    // A bare call stays the explicit "none applies", so only a named one is checked.
     const unrated = unratedRules(extractTrace(records).ruleLoads, call.entries)
     return unrated.length
       ? `Not recorded, since these loaded rules have no value: ${unrated.join(' ')}. ` +
