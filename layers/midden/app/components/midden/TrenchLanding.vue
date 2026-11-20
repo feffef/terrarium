@@ -18,8 +18,10 @@ const { data } = await useAsyncData(`midden-landing-${props.front ? 'front' : 't
   if (props.front) {
     const count = await queryCollection(resolved.pagesKey).where('path', '<>', '/').count()
     const artifacts = await queryCollection(resolved.collections.artifacts).all()
+    // The newest find of each report, so one busy report cannot fill the strip.
     const newest = artifacts
       .sort((a, b) => b.assessedAt.localeCompare(a.assessedAt) || a.stem.localeCompare(b.stem))
+      .filter((a, i, all) => all.findIndex((b) => b.site === a.site) === i)
       .slice(0, 3)
     // Only the three linked reports' titles, not every page (ADR-0028: the payload travels).
     const reports = await queryCollection(resolved.pagesKey)
@@ -31,6 +33,7 @@ const { data } = await useAsyncData(`midden-landing-${props.front ? 'front' : 't
       title: middenFindTitle(a.title.replaceAll('`', '')),
       report: (reports.find((r) => r.path === `/${a.site}`)?.title ?? '').replaceAll('`', ''),
       grade: conditionMeta(a.condition).label,
+      cause: middenCauseMeta(a.cause).label,
       assessed: formatMiddenDate(a.assessedAt),
       hook: middenHook(a.catalogNote),
     }))
@@ -190,7 +193,7 @@ useHead({ title: props.front ? 'The Midden' : 'The Trench · The Midden' })
             <li v-for="f in data.latest" :key="f.href" class="midden-latest__item">
               <NuxtLink :to="f.href" class="midden-latest__link">
                 <span class="midden-latest__title">{{ f.title }}</span>
-                <span class="tech midden-latest__meta">{{ f.grade }} · in {{ f.report }} · assessed {{ f.assessed }}</span>
+                <span class="tech midden-latest__meta">{{ f.grade }} · {{ f.cause }} · in {{ f.report }} · assessed {{ f.assessed }}</span>
               </NuxtLink>
               <p v-if="f.hook" class="midden-latest__hook"><MiddenGlossedText :text="f.hook" /></p>
             </li>

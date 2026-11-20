@@ -38,7 +38,7 @@ const shelves = computed(() =>
 )
 
 // Every season, including any holding nothing — the section drawing states the
-// sterile ones, which `shelves` above deliberately drops.
+// empty ones, which `shelves` above deliberately drops.
 const seasonCounts = computed<Record<string, number>>(() =>
   Object.fromEntries(
     DIG_SEASONS.map((season) => [season.slug, finds.value.filter((f) => f.stratum === season.slug).length]),

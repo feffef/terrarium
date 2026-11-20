@@ -5,7 +5,7 @@
 // Unlike the trench face (TrenchFace.vue, pure atmosphere) this drawing carries a
 // fact the page states nowhere else. The register lists only seasons that hold
 // finds, so a season holding NONE is invisible there — here it is drawn, labelled
-// `sterile`, and counted.
+// `no finds`, and counted.
 //
 // Geometry derives from DIG_SEASONS (strata.ts) rather than being hand-plotted, so
 // a new season redraws the section instead of silently rotting it. The waver that
@@ -135,7 +135,7 @@ const vbTop = computed(() => round(topY.value - 11))
 const vbHeight = computed(() => round(FLOOR_Y + 8 - vbTop.value))
 
 function countLabel(n: number): string {
-  if (n === 0) return 'sterile'
+  if (n === 0) return 'no finds'
   return `${n} ${n === 1 ? 'find' : 'finds'}`
 }
 
@@ -238,7 +238,7 @@ const legend = computed(() => [...bands.value].reverse())
     </ul>
 
     <figcaption class="tech midden-section__caption">
-      the stores in section &middot; oldest at the floor &middot; the surface still accumulating &middot; sterile: nothing in store from that season
+      the stores in section &middot; oldest at the floor &middot; the surface still accumulating
     </figcaption>
   </figure>
 </template>

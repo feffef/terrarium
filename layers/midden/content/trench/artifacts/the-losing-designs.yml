@@ -9,7 +9,7 @@ provenance:
   url: https://github.com/feffef/terrarium/commit/449bf46
   continuityCheck: >-
     nothing under `.claude/worktrees/` is tracked by git, so neither losing design
-    exists in any ref, any branch, or any diff — there is no object to recover. The
+    exists on any branch, tag or diff — there is no object to recover. The
     only showcase implementation on main is the winner's, and the log records that
     even that was re-implemented on the branch rather than merged out of its
     worktree. The
@@ -23,7 +23,7 @@ catalogNote: >-
   other two were complete, working implementations of the same page, and they were
   gone within the hour — not deleted, which would have left a commit, but simply
   never committed at all, in working trees that no longer exist. What is unusual
-  even among the trench's lost finds is that these never touched a ref at all, and
+  even among the trench's lost finds is that these never touched a branch or tag at all, and
   are known only from the log of the session that commissioned them: no diff, no
   blob, no quotable line of their own. That two thirds of the work would be
   destroyed was the plan, not the accident.
