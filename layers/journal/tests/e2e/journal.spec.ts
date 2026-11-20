@@ -262,6 +262,7 @@ describe('journal Tenant', async () => {
       const ledger = await $fetch(`/t/journal/${space}/frictions`)
       expect(ledger).toContain('Friction Ledger')
       expect(ledger).not.toMatch(/No document at <code[\s>]/)
+      expect(ledger.split('href="/t/glassbox/guide/walkthroughs/a-friction-becomes-a-fix"').length - 1).toBe(1)
     }
     const { ordinaryIdea } = currentSessionNotes()
     if (ordinaryIdea) expect(await $fetch('/t/journal/current/ideas')).toContain(ordinaryIdea)
@@ -327,6 +328,21 @@ describe('journal Tenant', async () => {
   it('opens the Friction Ledger on its default window', async () => {
     await withRendered('/t/journal/current/frictions', async (page) => {
       expect(await page.getByLabel('Frictions from the last').inputValue()).toBe(String(LEDGER_DEFAULT_DAYS))
+    })
+  })
+
+  // WCAG 2.5.8: the window select and the PR links are tap targets at phone width (#3498).
+  it('gives the Friction Ledger window select and PR links 24px tap targets at 390px', async () => {
+    await withRendered('/t/journal/current/frictions?days=90', async (page) => {
+      await page.setViewportSize({ width: 390, height: 844 })
+      const height = async (selector: string) => (await page.locator(selector).first().boundingBox())!.height
+      expect(await height('#ledger-window')).toBeGreaterThanOrEqual(24)
+      const prs = page.locator('.pill.status a')
+      expect(await prs.count(), 'the fixture has a cluster with a merged PR').toBeGreaterThan(0)
+      expect(await height('.pill.status a')).toBeGreaterThanOrEqual(24)
+      const cluster = page.locator('.ledger > li').filter({ has: prs }).first()
+      await cluster.locator('summary').click()
+      expect((await cluster.locator('.sol a').first().boundingBox())!.height).toBeGreaterThanOrEqual(24)
     })
   })
 

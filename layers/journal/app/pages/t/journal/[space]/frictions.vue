@@ -121,13 +121,14 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
         counted, and one above that severity reopens it. A cluster
         sits in the list where it ranks higher. Click a cluster (▸) to expand its
         cause, merged PRs, sessions and logged frictions.
+        <NuxtLink to="/t/glassbox/guide/walkthroughs/a-friction-becomes-a-fix">See how a friction becomes a fix</NuxtLink>.
       </p>
       <p class="window">
         <label for="ledger-window">Frictions from the last</label>
         <select id="ledger-window" v-model.number="days">
           <option v-for="d in LEDGER_WINDOWS" :key="d" :value="d">{{ d }} days</option>
         </select>
-        <span>Counts, severity and ranking use only those; merged PRs and fix states use all {{ LEDGER_HORIZON_DAYS }} days. The strip on each row shows the sessions that hit it per UTC day, as the agents reported them; a green line under a day marks a merged fix; hover a strip for the dates.</span>
+        <span>Counts, severity and ranking use only those; merged PRs and fix states use all {{ LEDGER_HORIZON_DAYS }} days. The strip on each row shows the sessions that hit it per UTC day, as the agents reported them; a green line under a day marks a merged fix.</span>
       </p>
 
       <template v-for="sec in sections" :key="sec.id">
@@ -217,6 +218,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
   border: 1px solid var(--jd-line);
   border-radius: 4px;
   padding: 0.1rem 0.3rem;
+  min-height: 1.5rem;
 }
 .window select:focus-visible { outline: 2px solid var(--jd-accent); outline-offset: 2px; }
 .show-all {
@@ -317,6 +319,7 @@ details[open] .summary::before { content: '▾'; }
 .occ-label { font-family: var(--jd-mono); font-size: 0.7rem; color: var(--jd-faint); }
 .jd-prose .sol a { color: var(--jd-faint); font-family: var(--jd-mono); font-size: 0.7rem; }
 .pill.status { white-space: normal; border-radius: 0.9rem; }
+.jd-prose .pill.status a, .jd-prose .sol a { display: inline-block; padding-block: 0.3rem; margin-block: -0.3rem; }
 .jd-prose .pill.status a { color: inherit; text-decoration: underline; }
 .fix-date { color: var(--jd-faint); font-family: var(--jd-mono); font-size: 0.7rem; }
 .jd-prose .occ a {
