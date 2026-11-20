@@ -24,11 +24,6 @@ fixes:
     date: "2026-11-06"
     summary: "dispatch-subagents §3: a read-only or review agent outside its own isolation worktree reads with git show or git diff, never checkout, switch or reset, and its brief says so."
 occurrences:
-  - session: session_013zxzeTJp1jinYqgNJRczgA
-    date: "2026-11-05"
-    severity: minor
-    description: "The Standards reviewer ran git checkout --detach in my checkout because my brief only said read-only; dispatch-subagents section 3 says review agents never use the lead's checkout"
-    solution: "Add 'read commits with git show only; never check out or switch branches' to every review and research brief"
   - session: session_013zxzeSB2Asdc9k89JQywv9
     date: "2026-11-10"
     severity: minor

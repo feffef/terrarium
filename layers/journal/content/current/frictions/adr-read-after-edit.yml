@@ -17,16 +17,6 @@ notes: |-
   2026-10-28 design: another digest Skill line dropped: it already says to read ADR-0010 before the first Digest; the hint is the designed backstop and the late read changed nothing. dropped: a guard would be Human-only.
   2026-10-30 design: change the hint or its rules' paths (issue #2575's candidates) dropped: all Human-only files; 85 of 86 late reads changed nothing, 0 'no' verdicts, so the cost is one call
 occurrences:
-  - session: session_013zxzeSbd2LJtWWawqrWBJD
-    date: "2026-11-05"
-    severity: nit
-    description: "A hook made me read three full ADRs after a one-clause trim of the blog-post Skill, none of which changed the edit."
-    solution: "Let the ADR-load hook skip an edit that only deletes prose, or name the one ADR that bears on the Skill."
-  - session: session_013zxzeTJp1jinYqgNJRczgA
-    date: "2026-11-05"
-    severity: nit
-    description: "Hooks told me to read ADR-0005, ADR-0027 and ADR-0021 only after I had edited grades.ts and the glossary; each ADR was consistent with the edit, but the rule can only load once a governed file is touched"
-    solution: "Read the ADRs a Skill script change names before the first edit: .agents/skills/glassbox-improve/scripts/ falls under ADR-0005 and ADR-0027"
   - session: session_013zxzeSyXPhUKs4jTjqTEw4
     date: "2026-11-06"
     severity: nit

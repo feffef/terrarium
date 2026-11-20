@@ -14,11 +14,6 @@ fixes:
     date: "2026-10-31"
     summary: "environment-caveats.md replaces the guess at the guard's triggers with a dated probe list: only $VAR expansion in a git command was refused; one git command per call with literal paths."
 occurrences:
-  - session: session_013zxzeS7NuFmaoXJkxVfNby
-    date: "2026-11-05"
-    severity: nit
-    description: "Impl agent's combined mkdir && git && pnpm call was refused by the worktree-isolation guard; it split the call."
-    solution: "dispatch-subagents already says one git command per Bash call; repeat it in impl-brief."
   - session: session_013zxzeNiyBNZD3Zn5dUm9Bq
     date: "2026-11-13"
     severity: nit

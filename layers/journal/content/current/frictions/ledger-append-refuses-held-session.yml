@@ -16,11 +16,6 @@ fixes:
     date: "2026-11-17"
     summary: "print-ledger-occurrence --append --skip-held skips sessions the entry already holds and prints each skip"
 occurrences:
-  - session: session_013zxzeS7NuFmaoXJkxVfNby
-    date: "2026-11-05"
-    severity: minor
-    description: "Survey subagent: a 32-call per-triple --append loop outran the foreground limit; all-or-nothing --append plus --unledgered meant bulk calls wrote nothing; --move refusal looked like success."
-    solution: "Have --append skip held sessions and print refusals clearly; the brief should say how to batch."
   - session: session_013zxzeSRr9pF9MCBQDGAN5L
     date: "2026-11-07"
     severity: minor

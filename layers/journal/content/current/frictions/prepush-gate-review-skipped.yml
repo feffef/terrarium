@@ -55,11 +55,6 @@ occurrences:
     severity: minor
     description: "I skipped the Skill's fresh-reader and claim-checker steps and the subagent code-review, doing a lead-only read, a deviation from the Skill and pr-workflow."
     solution: "Give cut-only edits an explicit lighter path in glassbox-curate, so skipping is allowed rather than a judgement."
-  - session: session_013zxzeSbd2LJtWWawqrWBJD
-    date: "2026-11-05"
-    severity: nit
-    description: "I almost merged PR 2864 without running code-review on my hand-fix commit, then ran it after noticing the follow-up exceeded the simple-change limit, and first gave the review a wrong fixed point."
-    solution: "Apply the pr-workflow simple-change count to a hand-fix commit before opening the PR, and take the fixed point from git log."
   - session: session_013zxzeRwjiiLkjj6sQ3u49g
     date: "2026-11-07"
     severity: minor

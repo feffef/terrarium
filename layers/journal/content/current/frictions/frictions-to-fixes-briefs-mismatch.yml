@@ -44,11 +44,6 @@ fixes:
     date: "2026-11-18"
     summary: "survey-brief.md step 5 skips a tracked entry with no ref (a dispatched fix in flight), resolving its contradiction with SKILL.md 5.3."
 occurrences:
-  - session: session_013zxzeS7NuFmaoXJkxVfNby
-    date: "2026-11-05"
-    severity: minor
-    description: "Survey brief asks for paging list_issues CLOSED, which contradicts github-integration.md overflow guidance; subagent substituted gh api and could not confirm paraphrase misses."
-    solution: "Replace the CLOSED paging step with a cheap scripted closed-title scan."
   - session: session_013zxzeQDfNNTXpQYQtt9saY
     date: "2026-11-06"
     severity: minor

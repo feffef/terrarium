@@ -5,6 +5,7 @@ cause: "The session commented on issues and then reported them closed in later s
 status: open
 notes: |-
   2026-11-19 design: no change dropped: CLAUDE.md already holds 'Verify before you state' and the session read the closing doc; a fix needs a Human-only guard for one occurrence; revisit on a second.
+  2026-11-20 design: guard or CLAUDE.md line dropped: a guard is Human-only and cannot judge a free-text claim; the rule is already in CLAUDE.md and two of three occurrences were self-corrected nits; reopen on a moderate+ recurrence
 occurrences:
   - session: session_013zxzePBxPjfMQRm8C4FwqZ
     date: "2026-11-18"

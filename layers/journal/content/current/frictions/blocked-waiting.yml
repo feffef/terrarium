@@ -17,11 +17,6 @@ fixes:
     date: "2026-10-30"
     summary: "CLAUDE.md: in the main session end your turn and let the completion notification wake you; never wait with pgrep -f"
 occurrences:
-  - session: session_013zxzeS7NuFmaoXJkxVfNby
-    date: "2026-11-05"
-    severity: nit
-    description: "I tried a foreground sleep to wait for the gate; the harness blocked it, wasting a call."
-    solution: "End the turn and let the background completion notification wake me."
   - session: session_013zxzeRLzBAw62ZMjhsbHiq
     date: "2026-11-06"
     severity: nit

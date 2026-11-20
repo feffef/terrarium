@@ -47,11 +47,6 @@ occurrences:
     severity: minor
     description: "Review briefs needed the CLAUDE.md every-brief asks pasted by hand; the dispatch-subagents Skill does not carry them."
     solution: "One line in dispatch-subagents section 3 pointing at that CLAUDE.md bullet (issue #2911)."
-  - session: session_013zxzeTJp1jinYqgNJRczgA
-    date: "2026-11-05"
-    severity: minor
-    description: "Several subagents read git-conventions late after a hook, and Rater C8 ran gh api without reading github-integration.md; my briefs did not carry CLAUDE.md's read-first triggers"
-    solution: "Add one line to dispatch-subagents briefs naming the read-first triggers, or say read-only git show needs no doc"
   - session: session_013zxzeNjRy7tpoybG6YTUM6
     date: "2026-11-09"
     severity: nit

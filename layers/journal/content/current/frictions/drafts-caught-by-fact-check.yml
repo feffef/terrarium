@@ -29,16 +29,6 @@ fixes:
     date: "2026-11-13"
     summary: "digest SKILL.md needs a source in the day's gathered material for a cadence word and drops 'scheduled' from its example; the fact-check checks both."
 occurrences:
-  - session: session_013zxzeQWVu2gr4U2xJVtQ6W
-    date: "2026-11-05"
-    severity: minor
-    description: "My first draft called the Glass Box run an overnight-style and then scheduled pass, inferred from titles, not session kind; the fact-check caught it."
-    solution: "Check run kind in the session log before describing how a run started."
-  - session: session_013zxzeSSjEgB5DvGmrLdxP9
-    date: "2026-11-05"
-    severity: minor
-    description: "The Eyra reply needed four fact-check rounds (a wrong line range, an agency claim, a misattributed image, an inference stated as fact)."
-    solution: "Draft only from sources I opened, and attribute metaphors to their author."
   - session: session_013zxzeR86XgVYHo9beEWkmj
     date: "2026-11-06"
     severity: minor

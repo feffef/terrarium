@@ -24,26 +24,6 @@ fixes:
     date: "2026-10-15"
     summary: "Hint now says a late read that clears the call is not a Friction."
 occurrences:
-  - session: session_013zxzeQWVu2gr4U2xJVtQ6W
-    date: "2026-11-05"
-    severity: nit
-    description: "Ran git status, the digest list and gather before reading git-conventions.md as CLAUDE.md orders; a hook pointed to it afterwards. All were read-only."
-    solution: "Allow the read-only first commands the doc already names, or make the hook fire before them."
-  - session: session_013zxzeQAvRVQM2NhW8WWUPJ
-    date: "2026-11-05"
-    severity: nit
-    description: "Read git-conventions.md and github-integration.md only after my first git and GitHub commands, because the hook hint arrived afterwards."
-    solution: "Read both docs before the first command, as CLAUDE.md says."
-  - session: session_013zxzeSbd2LJtWWawqrWBJD
-    date: "2026-11-05"
-    severity: nit
-    description: "My first git command was git rev-parse --is-shallow-repository, outside the read-only list, so I read git-conventions.md only after the hook said so."
-    solution: "Read docs/agents/git-conventions.md before the shallow check that clear-backlog step 1 requires."
-  - session: session_013zxzeQWJEVk8sAXq1hcSjq
-    date: "2026-11-05"
-    severity: nit
-    description: "Used git log to draw a conclusion about which runs are v3 before reading git-conventions.md, which CLAUDE.md requires first."
-    solution: "The read-first hint appeared only after the command ran; load it before any git log used for a conclusion."
   - session: session_013zxzeR86XgVYHo9beEWkmj
     date: "2026-11-06"
     severity: nit

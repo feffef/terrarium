@@ -38,11 +38,6 @@ occurrences:
     severity: nit
     description: "extract-frictions wrote 245KB of JSON to a file with no per-severity view, so I wrote an ad hoc python filter to find major and blocker hits."
     solution: "Give extract-frictions a --min-severity flag for the trial-judging use."
-  - session: session_013zxzeQWJEVk8sAXq1hcSjq
-    date: "2026-11-05"
-    severity: minor
-    description: "Printed about 150 lines of runs.yml findings when I only needed the cost columns, then misjudged which runs counted as v3 until the owner corrected me."
-    solution: "Grep the numeric fields first, and ask the owner which runs count before reading them."
   - session: session_013zxzeQyhG5Jn9REJydTepm
     date: "2026-11-07"
     severity: minor

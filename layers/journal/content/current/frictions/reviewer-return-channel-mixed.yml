@@ -2,7 +2,7 @@ name: reviewer-return-channel-mixed
 surface: safe
 summary: Reviewers and builders in one run were told to hand their result back through different channels, so several reported twice or could not tell which one counted.
 cause: "A review or build brief names StructuredOutput for round 1, while later messages ask for SubagentHandback plus a findings JSON file; the agent gets two contracts and reports on both or asks. Signals: 'StructuredOutput', 'SubagentHandback', 'findings file', 'reported twice'."
-status: open
+status: tracked
 related:
   - entry: subagent-brief-defects
     rule: The brief held a wrong path, value or placeholder, not two return contracts.

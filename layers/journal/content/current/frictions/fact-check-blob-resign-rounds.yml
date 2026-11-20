@@ -6,6 +6,8 @@ status: open
 related:
   - entry: drafts-caught-by-fact-check
     rule: The draft carried wrong facts; here the cost is only re-signing after each fix.
+notes: |-
+  2026-11-20 design: relax blob re-sign dropped: rounds came from real checker findings; relaxing removes the guard added after #2370
 occurrences:
   - session: session_013zxzePjedjMk4SeDKFvzPt
     date: "2026-11-17"
