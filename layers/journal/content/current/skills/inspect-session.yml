@@ -1,7 +1,7 @@
 name: inspect-session
 category: platform-operation
 importance: specialist
-gist: Answers what another Claude session did, read or failed, at the lowest cost to the asking session's own context.
+gist: Finds what another session did without flooding your own context.
 role: >-
   The model-facing front door for reading another session's events
   (`list_events`/`get_event`): answers from the session's log and cheap reads

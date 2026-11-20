@@ -208,7 +208,7 @@ If step 5 changed nothing, there is no PR. Otherwise run
 `pnpm exec tsx .agents/skills/audit-skills/scripts/check-states.ts` (no `--text`:
 it checks the diff) and fix what it flags, as in step 4. Then follow
 `docs/agents/pr-workflow.md`'s "Closing a scheduled run's PR". The diff touches
-only `layers/journal/content/current/skills/*.yml` and `routines/*.yml`, every
+only `layers/journal/content/current/skills/*.yml` and `routines/*.yml`; every
 grade change cites its ≥2 sessions. Anything else in the diff means you leave
 the PR open for a human.
 
