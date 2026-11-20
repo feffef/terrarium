@@ -40,7 +40,8 @@ The only thing that decides the mode is whether the invocation has an argument.
    it to the memory page's *Claims to check*.
 2. Never go against a line of
    [`../glassbox-lesson/owner-decisions.md`](../glassbox-lesson/owner-decisions.md).
-3. Leave alone every page an open PR touches, your own PRs included.
+3. Leave alone every page an open PR touches: the ones step 1's orientation
+   lists, and your own unmerged PRs.
 4. Before a structural change or a retitle, run
    `git log --oneline origin/main -- <page>` and read the run entries that name
    the page. Never reverse a change from the last 5 runs unless it made the
@@ -82,10 +83,8 @@ the memory page's items.
 ### 2. Choose the focus (Loop only)
 
 1. **Your open PRs.** For a later run, check each PR you opened: merge it once
-   its checks are green (`pr-workflow.md`'s recipe); if its checks are red, fix it on its
-   branch first. Then run
-   `pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts --index` and
-   read only its open PR list.
+   its checks are green (`pr-workflow.md`'s recipe); if its checks are red, fix
+   it on its branch first.
 2. **Pick.** Take the most important item on the memory page whose pages no
    open PR touches, in this order:
    1. the owner's direction;
