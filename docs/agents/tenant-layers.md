@@ -68,7 +68,7 @@ wrongly imply per-Tenant scoping.
 ## 3. Verify a routing claim against the layer's actual `pages/` tree, not prose search
 
 Before asserting anywhere that a route exists, check the layer's
-`layers/<tenant>/…/pages/` directory (ADR-0016 tenant-root routes), not
+`layers/<tenant>/…/pages/` directory (ADR-0016 root and static pages), not
 Markdown/Vue prose: text search can miss or misreport a route.
 
 ## 4. The not-found seam: a global `<Tenant>NotFound` component

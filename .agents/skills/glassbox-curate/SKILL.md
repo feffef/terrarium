@@ -42,9 +42,8 @@ body says so, and you don't merge it.
 `.claude/rules/glassbox-content.md` and, since every run fetches and
 opens a PR, `docs/agents/git-conventions.md`, `docs/agents/github-integration.md`
 and `docs/agents/pr-workflow.md`.
-Subagents read committed files at the base with `git show <base>:<path>`,
-which can't follow the `.claude/skills/<name>` link, so write every Skill path
-in a brief as `.agents/skills/...`.
+Write every Skill path in a subagent brief as `.agents/skills/...`
+(`docs/agents/git-conventions.md`: `.claude/skills/<name>` is a symlink).
 
 ## How a run goes
 

@@ -117,8 +117,8 @@ just pushed (ADR-0003). For each branch handed back:
 1. A red gate is never mergeable: resume the agent to fix it.
 2. Review the diff before opening the PR (`dispatch-subagents` §3, "Scope and
    trust"): it implements the §4 design, follows conventions and stays on a safe
-   surface. Run `code-review` on it unless it is a simple change
-   (`pr-workflow.md`). A doc branch must also survive `audit-docs`; a fix that
+   surface. Run `code-review` with the call `verdict-line.ts --review-call` prints,
+   unless it is a simple change (`pr-workflow.md`). A doc branch must also survive `audit-docs`; a fix that
    would be its next finding goes back.
 3. Push and open the PR yourself, with problem, evidence and design in the
    description; `Closes` the issue if the fix came from one (§2).
