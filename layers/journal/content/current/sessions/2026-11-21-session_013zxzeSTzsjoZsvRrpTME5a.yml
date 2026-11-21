@@ -1,0 +1,308 @@
+schemaVersion: 1
+session: session_013zxzeSTzsjoZsvRrpTME5a
+startedAt: 2026-11-21T00:15:52Z
+endedAt: 2026-11-21T00:23:29Z
+kind: autonomous
+goal: Write the 2026-11-20 Journal Digest and archive old content
+status: in-review
+outcome: PR 3540 open with the 2026-11-20 Digest and archive sweep; gate green, awaiting CI and self-merge
+summary: "Scheduled digest run, no human prompts. Listed one missing closed day (2026-11-20), gathered its 26 PRs and 15 sessions, wrote the Digest, and had a read-only subagent fact-check it: one claim was wrong (a Midden change described as a per-report find rather than a home-page strip), one overstated and two labels loose; all fixed. The archive sweep moved the 2026-11-13 Digest. code-review (Standards and Spec) found nothing blocking, gate:scoped passed, and the PR was opened and subscribed. Merge follows once CI is green."
+prs:
+  - "3540"
+docsRead:
+  - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: layers/journal/GLOSSARY.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/digests/2026-11-20.md
+    reason: (read before editing)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-curate/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: digest
+    reason: the scheduled task itself
+  - name: dispatch-subagents
+    reason: read before briefing the fact-checker
+  - name: code-review
+    reason: required review before opening the Digest PR
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran list-recent-prs, which fetches from git, before reading git-conventions.md; the hook flagged it afterwards. The fetch was harmless.
+    solution: Read git-conventions.md at the start of any run that touches git.
+    severity: nit
+  - description: First draft's Midden sentence misdescribed a home-page strip as a per-report find; only the fact-check subagent caught it.
+    solution: Read the diff for each PR named in the prose, not just its title.
+    severity: minor
+durationSec: 457
+models:
+  claude-sonnet-5-5: 60
+toolCounts:
+  Bash: 18
+  Read: 5
+  Write: 2
+  Skill: 4
+  Agent: 3
+  Edit: 4
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-11-20.md
+  - layers/journal/content/archived/pages/digests/2026-11-13.md
+  - layers/journal/content/current/pages/digests/2026-11-13.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0010.md
+docsReadBySubagents:
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/glassbox-curate/SKILL.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0010.md
+        via: native
+        trigger: layers/journal/content/current/pages/digests/2026-11-20.md
+      - rule: .claude/rules/adr-0030.md
+        via: native
+        trigger: docs/adr/0010-digests-derived-append-only-journal-pages.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/adr/0010-digests-derived-append-only-journal-pages.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: docs/adr/0010-digests-derived-append-only-journal-pages.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/journal/content/current/pages/digests/2026-11-20.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/journal/GLOSSARY.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/journal/GLOSSARY.md
+      - rule: .claude/rules/adr-0008.md
+        via: native
+        trigger: layers/journal/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/journal/GLOSSARY.md
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0010.md
+        value: steered
+        why: read ADR before writing; no index edit
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: gate:scoped and code-review before PR
+      - path: .claude/rules/adr-0003.md
+        value: confirmed
+        why: "agreed: PR opened and subscribed"
+      - path: .claude/rules/adr-0017.md
+        value: confirmed
+        why: "agreed: footer and trailer checked"
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: steered
+        why: read Journal glossary before writing
+      - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+      - path: layers/journal/GLOSSARY.md
+      - path: docs/agents/pr-workflow.md
+      - path: docs/agents/github-integration.md
+      - path: docs/agents/git-conventions.md
+      - path: .claude/rules/adr-0030.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/adr-0008.md
+        value: unrelated
+      - path: .claude/rules/glossary-terms.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0012.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/journal/content/current/pages/digests/2026-11-20.md
+      - rule: .claude/rules/adr-0010.md
+        via: native
+        trigger: layers/journal/content/current/pages/digests/2026-11-20.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/journal/content/current/pages/digests/2026-11-20.md
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0010.md
+        value: in-scope
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0010.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0010.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0010.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/adr/0010-digests-derived-append-only-journal-pages.md
+      - rule: .claude/rules/adr-0030.md
+        via: native
+        trigger: docs/adr/0010-digests-derived-append-only-journal-pages.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: docs/adr/0010-digests-derived-append-only-journal-pages.md
+    reported:
+      - path: .claude/rules/adr-0010.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+subagents:
+  - type: general-purpose
+    task: Fact-check 2026-11-20 Digest
+    model: sonnet
+    durationSec: 80
+    toolCalls: 19
+    modelCalls: 12
+    tokenShare: 26.8
+  - type: general-purpose
+    task: "Review Digest: standards axis"
+    model: sonnet
+    durationSec: 16
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 5.5
+  - type: general-purpose
+    task: "Review Digest: spec axis"
+    model: sonnet
+    durationSec: 24
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 6.4
+gitBranch: claude/compassionate-lovelace-q6qdr6
+entrypoint: remote_trigger
+cliVersion: 2.1.330
+trigger: digest
+learnings:
+  - gather writes large JSON to a file; PR diffs from list-recent-prs --diff return diff as a list, not a string.
+landedBy: Stop
