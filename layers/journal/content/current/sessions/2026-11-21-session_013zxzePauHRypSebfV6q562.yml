@@ -1,0 +1,504 @@
+schemaVersion: 1
+session: session_013zxzePauHRypSebfV6q562
+startedAt: 2026-11-21T11:08:13Z
+endedAt: 2026-11-21T11:19:41Z
+kind: autonomous
+goal: Weekly Blog post in a Persona's voice
+status: in-review
+outcome: Kevin post on the tenant-glossary guard opened as PR 3549; merge and reply decision still to come
+summary: "Scheduled blog-post run (no human prompt). Rotation allowed only Kevin. Gathered the last three days of merged PRs and picked three Kevin topics (tenant-glossary guard #3476, harvest evidence cut #3532, builder tdd-seam clause #3544), drafted all three, and a blind Sonnet reader picked the guard post. A fact-checker found two wrong claims in my draft (I had equated the issue's 11 Friction occurrences with the six glossary-rule ones, and misdescribed #2469); I fixed or cut them over three check rounds, renamed the file to fix the title, then ran code-review and gate:scoped on the final head and opened PR 3549 with the fact-check blob in its body. All agent-initiated by the schedule; no owner pick. Step 12 (reply decision) and the merge are still open."
+prs:
+  - "3549"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: layers/blog/GLOSSARY.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-11-21-three-rewordings-failed-so-the-fourth-fix-was-a-hook-that-says-no.md
+    reason: (read before editing)
+  - path: layers/blog/content/kevin/pages/2026-11-21-three-written-fixes-failed-so-the-fourth-was-a-hook-that-says-no.md
+    reason: (read before editing)
+  - path: .agents/skills/blog-post/personas/kevin.md
+    reason: (no reason given)
+  - path: docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: the scheduled task itself
+  - name: dispatch-subagents
+    reason: read before the blind read and fact-check dispatches
+  - name: code-review
+    reason: reviewed the post commit, then again after fact-check fixes including a rename
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Drafted the claim that the issue counted 11 sessions breaking the glossary rule from the issue's prose alone; only six did. The fact-check caught it, costing two extra check rounds.
+    solution: Read the ledger occurrences, not the summary sentence, before writing a count into a draft.
+    severity: minor
+  - description: Blind-read subagent brief omitted the CLAUDE.md ask to write files in a named scratchpad subfolder; the agent wrote none, so no harm.
+    solution: Keep the CLAUDE.md subagent-brief asks as a pasted checklist in the blog-post step 6 brief.
+    severity: nit
+durationSec: 688
+models:
+  claude-sonnet-5-5: 105
+toolCounts:
+  Bash: 34
+  Read: 4
+  ToolSearch: 1
+  mcp__github__pull_request_read: 4
+  mcp__github__issue_read: 2
+  Grep: 1
+  Skill: 5
+  Agent: 7
+  Edit: 1
+  SendMessage: 2
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - layers/blog/content/kevin/pages/2026-11-21-three-rewordings-failed-so-the-fourth-fix-was-a-hook-that-says-no.md
+  - layers/blog/content/kevin/pages/2026-11-21-three-written-fixes-failed-so-the-fourth-was-a-hook-that-says-no.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0012.md
+adrHints:
+  - adr: 12
+    via: path
+    readAfter: true
+    by: main
+docsReadBySubagents:
+  - .agents/skills/blog-post/SKILL.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: .agents/skills/blog-post/personas/kevin.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/blog-post/personas/kevin.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/guards.md
+        via: hint
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/GLOSSARY.md
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/blog/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/blog/GLOSSARY.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/blog/content/kevin/pages/2026-11-21-three-rewordings-failed-so-the-fourth-fix-was-a-hook-that-says-no.md
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0012.md
+        value: confirmed
+        why: "n/a: standalone post"
+      - path: .claude/rules/tenant-glossary.md
+        value: steered
+        why: read the Blog glossary before writing
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: gate:scoped and code-review before PR
+      - path: .claude/rules/adr-0003.md
+        value: confirmed
+        why: "agreed: PR via branch"
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: provenance header and trailer
+      - path: .claude/rules/adr-0009.md
+        value: steered
+        why: invoked close-session at PR open
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: unrelated
+      - path: .claude/rules/guards.md
+        value: unrelated
+      - path: .claude/rules/adr-0002.md
+        value: unrelated
+      - path: .claude/rules/data-shapes.md
+        value: unrelated
+      - path: .claude/rules/mdc-when-to-use.md
+        value: unrelated
+      - path: .claude/rules/tenant-layers.md
+        value: unrelated
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/glossary-terms.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: .claude/rules/adr-0030.md
+        value: unrelated
+      - path: docs/agents/git-conventions.md
+      - path: docs/agents/pr-workflow.md
+      - path: layers/blog/GLOSSARY.md
+      - path: .agents/skills/blog-post/personas/kevin.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/content/kevin/pages/2026-11-21-three-rewordings-failed-so-the-fourth-fix-was-a-hook-that-says-no.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/blog/content/kevin/pages/2026-11-21-three-rewordings-failed-so-the-fourth-fix-was-a-hook-that-says-no.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: layers/blog/content/kevin/pages/2026-11-21-three-rewordings-failed-so-the-fourth-fix-was-a-hook-that-says-no.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/content/kevin/pages/2026-11-21-three-written-fixes-failed-so-the-fourth-was-a-hook-that-says-no.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/blog/content/kevin/pages/2026-11-21-three-written-fixes-failed-so-the-fourth-was-a-hook-that-says-no.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: layers/blog/content/kevin/pages/2026-11-21-three-written-fixes-failed-so-the-fourth-was-a-hook-that-says-no.md
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: GLOSSARY.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/adr-0008.md
+        value: unrelated
+      - path: .claude/rules/glossary-terms.md
+        value: unrelated
+      - path: .claude/rules/adr-0012.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 3
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 4
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0012.md
+        value: confirmed
+        why: "n/a:"
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/rules/adr-0002.md
+        value: unrelated
+      - path: .claude/rules/data-shapes.md
+        value: unrelated
+      - path: .claude/rules/mdc-when-to-use.md
+        value: unrelated
+      - path: .claude/rules/tenant-layers.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 5
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+    reported:
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .agents/skills/blog-post/SKILL.md
+  - by: general-purpose
+    subagent: 6
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+subagents:
+  - task: Blind read of three drafts
+    model: sonnet
+    durationSec: 16
+    toolCalls: 6
+    modelCalls: 3
+    tokenShare: 5.9
+  - task: Fact-check Kevin post
+    model: sonnet
+    durationSec: 49
+    toolCalls: 17
+    modelCalls: 6
+    tokenShare: 5
+  - task: Re-check changed post lines
+    model: sonnet
+    durationSec: 98
+    toolCalls: 18
+    modelCalls: 10
+    tokenShare: 8
+  - task: Code-review standards axis
+    model: sonnet
+    durationSec: 29
+    toolCalls: 7
+    modelCalls: 6
+    tokenShare: 4.5
+  - task: Code-review spec axis
+    model: sonnet
+    durationSec: 25
+    toolCalls: 6
+    modelCalls: 6
+    tokenShare: 4.8
+  - task: Standards review of final post
+    model: sonnet
+    durationSec: 34
+    toolCalls: 9
+    modelCalls: 7
+    tokenShare: 5.1
+  - task: Spec review of final post
+    model: sonnet
+    durationSec: 27
+    toolCalls: 11
+    modelCalls: 9
+    tokenShare: 5.7
+gitBranch: claude/zen-heisenberg-5q50te
+entrypoint: remote_trigger
+cliVersion: 2.1.330
+trigger: blog-post
+ideas:
+  - Flag a Friction Ledger entry whose fixes are all rewordings of an instruction after two entries, with a hint that it probably wants a guard instead of a third rewording
+landedBy: Stop
