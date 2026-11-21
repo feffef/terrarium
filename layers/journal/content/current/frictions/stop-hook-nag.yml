@@ -22,21 +22,6 @@ fixes:
     date: "2026-11-04"
     summary: "ADR-0003/0004 and pr-workflow.md: agents may push early and often, the PR opens only after review and the gate; git-conventions says to push when the Stop hook asks."
 occurrences:
-  - session: session_013zxzeR86XgVYHo9beEWkmj
-    date: "2026-11-06"
-    severity: nit
-    description: "The Stop hook asked repeatedly to push while review and the gate were pending, against the review-before-push order; I declined until the gate passed."
-    solution: "Stop hook could skip its push nag while a gate or review is in flight."
-  - session: session_013zxzeQDfNNTXpQYQtt9saY
-    date: "2026-11-06"
-    severity: nit
-    description: "The Stop hook asked twice to push unpushed commits while the gate ran and before the ledger PR; the ledger commit had to wait for the gate."
-    solution: "Known accepted nag (stop-hook-nag); no new change."
-  - session: session_013zxzeQwTKjoSLKH31R1ijd
-    date: "2026-11-06"
-    severity: nit
-    description: "Stop hook flagged uncommitted changes while a subagent search ran; I committed the trial deletion early rather than with the prune."
-    solution: "Fine as is; the early commit was harmless and still part of the one PR."
   - session: session_013zxzePc3zKAyZGZfucZa9y
     date: "2026-11-07"
     severity: nit

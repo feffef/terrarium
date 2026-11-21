@@ -11,11 +11,6 @@ related:
 notes: |-
   2026-11-08 design: narrow mermaid-lanes.md paths to the Glass Box walkthroughs dropped: .claude/rules/** is Human-only, a nit, and the tenant.config.ts rules are right for editing (RCCqrx agreed); issue #2167 already closed with the loader kept
 occurrences:
-  - session: session_013zxzePuqJcsqc92SUXfWFX
-    date: "2026-11-06"
-    severity: nit
-    description: "Eleven of seventeen loaded rules needed a no verdict in log-session, several loaded after Bash commands that only read Glass Box files, so each cost context and an entry."
-    solution: "Narrow the paths of tenant-layers, data-shapes, mdc-when-to-use, adr-0002 and mermaid-lanes, or let an unused loaded rule count as no without an entry."
   - session: session_013zxzeRYiNjyrjrq8JVWSuu
     date: "2026-11-07"
     severity: nit

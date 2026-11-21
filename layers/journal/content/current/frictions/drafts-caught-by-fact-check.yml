@@ -29,26 +29,6 @@ fixes:
     date: "2026-11-13"
     summary: "digest SKILL.md needs a source in the day's gathered material for a cadence word and drops 'scheduled' from its example; the fact-check checks both."
 occurrences:
-  - session: session_013zxzeR86XgVYHo9beEWkmj
-    date: "2026-11-06"
-    severity: minor
-    description: "First draft described PR 2862 as page-summary history, but it concerns a queued step's gist, and said fold two pages together; the fact-check caught both."
-    solution: "Read each PR's diff before describing it, not only its title and the session outcome."
-  - session: session_013zxzeNeTKPqiQ1jj1FgYXh
-    date: "2026-11-06"
-    severity: minor
-    description: "The first draft overstated that all five plumbing commands use GIT_INDEX_FILE and pinned a cost on ADR-0009 that it does not state; the claim checker caught both."
-    solution: "Keep the separate claim checker step; tell writers to cite a cost to code, not to an ADR that does not state it."
-  - session: session_013zxzeQUzcNjB7oD8ukBLGp
-    date: "2026-11-06"
-    severity: minor
-    description: "The memory page I shipped said the draft had eight stops; it had six. I re-checked counts and titles but not that one"
-    solution: "Re-check every count a page states, not a sample"
-  - session: session_013zxzePuqJcsqc92SUXfWFX
-    date: "2026-11-06"
-    severity: nit
-    description: "The memory page said the draft had eight stops; it had six, so the noted case against it was off."
-    solution: "The next run that edits the memory page should state counts only after counting; this run's entry records it."
   - session: session_013zxzePc3zKAyZGZfucZa9y
     date: "2026-11-07"
     severity: minor

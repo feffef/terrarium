@@ -50,11 +50,6 @@ notes: |-
   2026-10-23 re-cluster: 01Fay2Gi (a check grepping failure-only output), 013RCsUF (dated content not excluded), 011RZgGT (explore triage schema lacks the ADR-0004 exception), 011xvPjJ (audit-skills ids, PR 2318), 01XWMuHG (auth research boundary), 01WxHaU2 (workflow agent asked to dispatch), 0135hcUf and 01VH74k3 (frictions-to-fixes Skill briefs) each need their own fix; left here as single low-severity strays.
   2026-11-13 survey: Le6nsJ (2026-11-12) dispatched PAGES_PLACEHOLDER and FULL_PLACEHOLDER unfilled; the #3064 guard pattern (@@NAME@@ or braces) does not match that form. Issue #3227 (audit-skills, opened 2026-11-13) tracks unfilled placeholders.
 occurrences:
-  - session: session_013zxzeRCJHe4rmKN5i2CQ16
-    date: "2026-11-06"
-    severity: minor
-    description: "The curate Skill's first draft missed five design items; the brief pointed at the design issue but the agent worked from my summary, costing three review-and-gate rounds."
-    solution: "In a brief for a Skill built from a design issue, list each required behaviour from the design, or tell the agent to read the numbered steps in full before drafting."
   - session: session_013zxzeSZva1TWwL6nLdEnUa
     date: "2026-11-08"
     severity: minor

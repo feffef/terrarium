@@ -1,13 +1,15 @@
 name: blog-post-behaviour-fanout-cost
-summary: "A blog-post run dispatched fifteen behaviour agents and two review rounds to confirm mostly known repeats."
-cause: "The blog-post Skill's behaviour check dispatches one agent per note or role, and its review runs two rounds, with no cap or probe step, so cost scales with the note count while most findings repeat known ones. Signals: 'behaviour agents', 'Inventory entry for the role/gist check', blog-post run cost."
+summary: "An audit-skills run dispatched fifteen behaviour agents and two review rounds to confirm mostly known repeats."
+cause: "The audit-skills behaviour check dispatches one agent per Skill whose use count or watchFor qualifies (scripts/session/audit-skills.ts, BEHAVIOUR_CHECK_MIN_USES), and its review runs two rounds, so cost scales with the Skill count while most findings repeat known ones; the role/gist read the brief asks for was skipped by some agents. The same fan-out as audit-skills-run-cost. Signals: 'behaviour agents', 'Inventory entry for the role/gist check'."
 surface: safe
 status: open
 related:
   - entry: audit-skills-run-cost
-    rule: The fan-out belongs to a blog-post run.
+    rule: The same audit-skills fan-out cost; this entry also holds the role/gist-read skip.
   - entry: glassbox-curate-run-cost
-    rule: The fan-out belongs to a blog-post run.
+    rule: The fan-out belongs to a glassbox-curate run.
+notes: |-
+  2026-11-21 design: no change: the session was an audit-skills run, not blog-post; cost half duplicates audit-skills-run-cost (cadence/threshold is an owner call); the role/gist instruction (PR #3510) is one day old with one miss. Revisit if it recurs in 2+ runs.
 occurrences:
   - session: session_013zxzeRKMTCrTfnEGHcTwAZ
     date: "2026-11-21"

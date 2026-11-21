@@ -8,6 +8,8 @@ related:
     rule: Findings were raised and rejected by checkers; here the cost is wrongness, not re-running.
   - entry: relayed-subagent-claims
     rule: A reviewer finding the checkers rejected before it shipped.
+notes: |-
+  2026-11-21 design: reviewer brief in audit-docs step 1.3 should name step 3's WRONG test: dropped: checkers marking most findings WRONG is the two-stage design working; the 11-19 run is one outlier; wait for a third occurrence.
 occurrences:
   - session: session_013zxzePPb9GTvLBJgGBgspQ
     date: "2026-11-19"

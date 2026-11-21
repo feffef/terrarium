@@ -17,16 +17,6 @@ fixes:
     date: "2026-11-08"
     summary: "CLAUDE.md gained a bullet: before you plan or design, read the full ADR of each decision the plan touches."
 occurrences:
-  - session: session_013zxzeRCJHe4rmKN5i2CQ16
-    date: "2026-11-06"
-    severity: major
-    description: "Built a cross-Space read although ADR-0006 says a page reads only its own Space; I leaned on the Journal precedent and the spec session's advice."
-    solution: "Treat a recommendation from another session as non-binding against an ADR; ask the owner before building anything that needs an exception."
-  - session: session_013zxzeQUzcNjB7oD8ukBLGp
-    date: "2026-11-06"
-    severity: minor
-    description: "The spec put a workshop link in the guide overview without checking page-checks.ts, which forbids guide links outside the guide; caught only by review"
-    solution: "Grep the page checks for link rules before specifying a new link on a Glass Box page"
   - session: session_013zxzeNd2Ethpd3anqbmpkr
     date: "2026-11-09"
     severity: minor

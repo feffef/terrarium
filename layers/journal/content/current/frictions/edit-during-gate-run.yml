@@ -36,11 +36,6 @@ fixes:
     date: "2026-11-13"
     summary: "gate-edit-guard.ts also denies git add, stash, checkout and reset (not only commit) while a gate runs, per worktree; scripted Bash writes are left alone."
 occurrences:
-  - session: session_013zxzeQUzcNjB7oD8ukBLGp
-    date: "2026-11-06"
-    severity: minor
-    description: "Started gate:scoped in parallel with the code-review subagents, then committed their fixes, so the gate aborted and had to run twice more"
-    solution: "Run the gate only after review fixes are committed; reviews and the gate are not parallel work"
   - session: session_013zxzeQWJUyfuXJgdfypeuc
     date: "2026-11-07"
     severity: minor

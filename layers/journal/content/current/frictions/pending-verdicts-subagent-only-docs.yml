@@ -13,11 +13,6 @@ fixes:
     date: "2026-11-10"
     summary: "Replaced rule and doc verdicts with out-of-band rule-use capture (rule-load ledger and subagent helped.sh note)."
 occurrences:
-  - session: session_013zxzePZAMHv4JxrNhCtzMg
-    date: "2026-11-06"
-    severity: nit
-    description: "Subagent reports each listed docs verdicts for rules I then had to relay; pending report lists 20 subagent-only rules and docs."
-    solution: "Have the brief ask for verdicts in a structured one-line-per-rule form."
   - session: session_013zxzeShUkKqUQT1kYCw5UK
     date: "2026-11-07"
     severity: nit

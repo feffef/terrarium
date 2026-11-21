@@ -13,11 +13,6 @@ related:
 notes: |-
   2026-10-28 design: a guard or prose line dropped: .githooks/commit-msg corrects a wrong trailer and github-provenance-guard.ts denies a wrong id on a post and hands back the right one, so a slip costs one retry, and a guard edit is Human-only.
 occurrences:
-  - session: session_013zxzeRCJHe4rmKN5i2CQ16
-    date: "2026-11-06"
-    severity: nit
-    description: "Wrote the spec session's id into a commit-message trailer; the commit hook corrected it."
-    solution: "Copy the id from my own system-prompt commit template, never from an issue body."
   - session: session_013zxzeRYiNjyrjrq8JVWSuu
     date: "2026-11-07"
     severity: nit

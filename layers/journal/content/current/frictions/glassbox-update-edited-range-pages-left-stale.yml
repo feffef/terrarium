@@ -11,11 +11,6 @@ fixes:
     date: "2026-11-08"
     summary: "glassbox-update SKILL.md steps 2 and 4 now say --write leaves an edited-range page wholly untouched and the agent re-lines each edited range by hand; no script change."
 occurrences:
-  - session: session_013zxzeRLzBAw62ZMjhsbHiq
-    date: "2026-11-06"
-    severity: minor
-    description: "glassbox-update --write shifted ranges but left Excerpt lines stale on pages with an edited range; fixed by hand after reading files at the commit."
-    solution: "Have the script report the new line numbers for edited ranges or flag them explicitly in step 2."
   - session: session_013zxzeShUkKqUQT1kYCw5UK
     date: "2026-11-07"
     severity: minor

@@ -17,16 +17,6 @@ fixes:
     date: "2026-11-13"
     summary: "midden-survey lists closed-unmerged PRs with a script that pages completely, replacing the search call and hand paging."
 occurrences:
-  - session: session_013zxzeTDG9WP45rYE5hRMpG
-    date: "2026-11-06"
-    severity: nit
-    description: "Page count from ls (66) did not match runs.yml pagesRead (68); left unexplained, so I wrote 'every page' without a verified total"
-    solution: "Count guide pages with the same function grades.ts uses before comparing"
-  - session: session_013zxzePVGCU1ARYitEsVKoy
-    date: "2026-11-06"
-    severity: nit
-    description: "Stated the 21-occurrence count only after checking; my grep of the ledger gave 38 date-like lines, so the figure stayed unverified and I said so."
-    solution: "Ledger tooling should print occurrence counts since a given fix, so a grill question can cite one verified number."
   - session: session_013zxzeRCCqrxVitqSaxJa4K
     date: "2026-11-07"
     severity: minor

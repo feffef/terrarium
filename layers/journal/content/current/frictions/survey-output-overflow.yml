@@ -23,21 +23,6 @@ fixes:
     date: "2026-10-28"
     summary: "prune-friction-ledger --summary and --candidates write output over a size threshold to a file under TMPDIR and print one notice line; --out PATH always writes to that path."
 occurrences:
-  - session: session_013zxzePZAMHv4JxrNhCtzMg
-    date: "2026-11-06"
-    severity: nit
-    description: "Looked up the dispatch-subagents observations by dumping a 32KB YAML twice (output overflowed) before parsing only the last entries."
-    solution: "Print only the last observations with a short python snippet from the start."
-  - session: session_013zxzeQUzcNjB7oD8ukBLGp
-    date: "2026-11-06"
-    severity: minor
-    description: "First Bash call cat'ed grades.yml and the 190 KB runs.yml with the Skill files, overflowing to a saved output and needing re-reads"
-    solution: "Check file sizes with wc first and extract YAML metrics by script, as I did later"
-  - session: session_013zxzeQwTKjoSLKH31R1ijd
-    date: "2026-11-06"
-    severity: nit
-    description: "extract-frictions wrote 245KB of JSON to a file with no per-severity view, so I wrote an ad hoc python filter to find major and blocker hits."
-    solution: "Give extract-frictions a --min-severity flag for the trial-judging use."
   - session: session_013zxzeQyhG5Jn9REJydTepm
     date: "2026-11-07"
     severity: minor

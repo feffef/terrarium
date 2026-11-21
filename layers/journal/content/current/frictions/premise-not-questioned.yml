@@ -28,11 +28,6 @@ fixes:
     date: "2026-11-08"
     summary: "glassbox-curate SKILL.md: before taking any lead from the memory page, check it still stands and that no earlier step (settled titles, a pending Subject move) should come first (closes #2958)."
 occurrences:
-  - session: session_013zxzeTDG9WP45rYE5hRMpG
-    date: "2026-11-06"
-    severity: minor
-    description: "Proposed a claim check on cited-file changes without first reading glassbox-update, which already does it daily; the owner had to point out the overlap"
-    solution: "Before proposing a change to one Glass Box Skill, read the sibling Skills that touch the same pages"
   - session: session_013zxzeRCCqrxVitqSaxJa4K
     date: "2026-11-07"
     severity: moderate
