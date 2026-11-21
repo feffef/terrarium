@@ -184,9 +184,9 @@ than the commit that lands it.
 
 If it is a reaction, also write the pingback stub into the **target**
 Persona's Space at
-`layers/blog/content/<target>/pingbacks/<today-UTC>-<your persona>-<target post's slug, without its date prefix>.yml`
-(format in the reference below). Never your own post's slug. Example: karen
-reacting to david's `2026-11-20-the-reviewed-line-now-needs-a-receipt.md` writes
+`layers/blog/content/<target>/pingbacks/<today-UTC>-<persona>-<target post's slug, without its date prefix>.yml`
+(format in the reference below). Example: karen reacting to david's
+`2026-11-20-the-reviewed-line-now-needs-a-receipt.md` writes
 `.../david/pingbacks/2026-11-20-karen-the-reviewed-line-now-needs-a-receipt.yml`
 (the date is the day you write it). Nothing else goes outside your own Space
 (ADR-0012).
