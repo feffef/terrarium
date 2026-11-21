@@ -1,16 +1,16 @@
 pages:
   - page: agents/10.subagents
-    checked: '2026-11-07'
+    checked: '2026-11-21'
   - page: agents/20.workflow-scripts
-    checked: '2026-11-07'
+    checked: '2026-11-21'
   - page: agents/30.cloud-sessions
-    checked: '2026-11-07'
+    checked: '2026-11-21'
   - page: agents/40.scheduled-tasks
-    checked: '2026-11-07'
+    checked: '2026-11-21'
   - page: agents/50.inspecting-past-sessions
     checked: '2026-11-12'
   - page: claude-code/10.claude-md
-    checked: '2026-11-07'
+    checked: '2026-11-21'
   - page: claude-code/20.path-scoped-rules
     checked: '2026-11-07'
   - page: claude-code/30.skills
