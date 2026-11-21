@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSTzsjoZsvRrpTME5a
 startedAt: 2026-11-21T00:15:52Z
-endedAt: 2026-11-21T00:23:29Z
+endedAt: 2026-11-21T00:27:11Z
 kind: autonomous
 goal: Write the 2026-11-20 Journal Digest and archive old content
-status: in-review
-outcome: PR 3540 open with the 2026-11-20 Digest and archive sweep; gate green, awaiting CI and self-merge
-summary: "Scheduled digest run, no human prompts. Listed one missing closed day (2026-11-20), gathered its 26 PRs and 15 sessions, wrote the Digest, and had a read-only subagent fact-check it: one claim was wrong (a Midden change described as a per-report find rather than a home-page strip), one overstated and two labels loose; all fixed. The archive sweep moved the 2026-11-13 Digest. code-review (Standards and Spec) found nothing blocking, gate:scoped passed, and the PR was opened and subscribed. Merge follows once CI is green."
+status: completed
+outcome: PR 3540 merged with the 2026-11-20 Digest and archive sweep, gate green
+summary: "Scheduled digest run, no human prompts. Listed one missing closed day (2026-11-20), gathered its 26 PRs and 15 sessions, wrote the Digest, and had a read-only subagent fact-check it: one claim was wrong (a Midden change described as a per-report find rather than a home-page strip), one overstated and two labels loose; all fixed. The archive sweep moved the 2026-11-13 Digest. code-review (Standards and Spec) found nothing blocking, gate:scoped passed, and the PR was opened and subscribed. CI's gate went green and I merged it with merge-pr."
 prs:
   - "3540"
 docsRead:
@@ -44,19 +44,25 @@ frictions:
   - description: First draft's Midden sentence misdescribed a home-page strip as a per-report find; only the fact-check subagent caught it.
     solution: Read the diff for each PR named in the prose, not just its title.
     severity: minor
-durationSec: 457
+  - description: Assumed list-recent-prs --diff gave diff as a string; my script crashed and I re-ran it, wasting a call.
+    solution: Document the --diff output shape in the script header or digest Skill.
+    severity: nit
+durationSec: 678
 models:
-  claude-sonnet-5-5: 60
+  claude-sonnet-5-5: 76
 toolCounts:
-  Bash: 18
+  Bash: 22
   Read: 5
   Write: 2
-  Skill: 4
+  Skill: 5
   Agent: 3
   Edit: 4
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-11-20.md
   - layers/journal/content/archived/pages/digests/2026-11-13.md
@@ -284,21 +290,21 @@ subagents:
     durationSec: 80
     toolCalls: 19
     modelCalls: 12
-    tokenShare: 26.8
+    tokenShare: 22.3
   - type: general-purpose
     task: "Review Digest: standards axis"
     model: sonnet
     durationSec: 16
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 5.5
+    tokenShare: 4.6
   - type: general-purpose
     task: "Review Digest: spec axis"
     model: sonnet
     durationSec: 24
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 6.4
+    tokenShare: 5.3
 gitBranch: claude/compassionate-lovelace-q6qdr6
 entrypoint: remote_trigger
 cliVersion: 2.1.330
