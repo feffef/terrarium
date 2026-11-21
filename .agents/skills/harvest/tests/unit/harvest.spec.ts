@@ -431,9 +431,9 @@ describe('evidenceReport()', () => {
   })
 
   describe('rulings and ledger cut', () => {
-    const block = (kw: string[], s: Partial<typeof sources>, name: 'rulings' | 'ledger', next: string) => {
+    const block = (kw: string[], s: Partial<typeof sources>, name: 'rulings' | 'ledger', next = '') => {
       const lines = evidenceReport(kw, { rulings: [], issues: [], frictions: [], ...s }).split('\n')
-      const end = lines.indexOf(next)
+      const end = next ? lines.indexOf(next) : -1
       return lines.slice(lines.indexOf(`${name}:`) + 1, end < 0 ? undefined : end)
     }
     const many = (n: number) => Array.from({ length: n }, (_, i) => `- rss ${i + 1}`).join('\n')
@@ -454,7 +454,7 @@ describe('evidenceReport()', () => {
 
     it('caps the ledger block the same way', () => {
       const frictions = Array.from({ length: 12 }, (_, i) => ({ file: `f${i}.yml`, summary: 'rss' }))
-      const lines = block(['rss'], { frictions }, 'ledger', 'none')
+      const lines = block(['rss'], { frictions }, 'ledger')
       expect(lines).toHaveLength(11)
       expect(lines.at(-1)).toBe('  (2 more omitted)')
     })
