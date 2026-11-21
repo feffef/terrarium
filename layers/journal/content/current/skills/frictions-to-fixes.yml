@@ -13,7 +13,7 @@ watchFor:
   - "Every Friction cluster the run designed a solution for ends the run fixed immediately, with an issue raised, or with a ledger update saying what design was dropped and why."
 auditSummary:
   date: "2026-11-21"
-  text: "Turns logged frictions into merged fixes and honest ledger notes, and both checklist items held. Ledger-only pull requests still pay for full review rounds because they fail the simple-change test."
+  text: "Turns logged frictions into merged fixes and honest Friction Ledger notes, and both checklist items held. Ledger-only pull requests still pay for full review rounds because they fail the simple-change test."
 observations:
   - date: "2026-10-12"
     note: >-

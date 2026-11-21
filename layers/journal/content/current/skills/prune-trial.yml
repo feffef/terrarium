@@ -10,7 +10,7 @@ role: >-
   Trusted user and a human merges it.
 auditSummary:
   date: "2026-11-21"
-  text: "Opens and judges trials that cut text by exactly what its logs say and keeps the rules that matter. It does not say to mark the covered ledger entry as on trial, and one trial's entry was missed."
+  text: "Opens and judges trials that cut text by exactly what its logs say and keeps the rules that matter. It does not say to mark the covered Friction Ledger entry as on trial, and one trial's entry was missed."
 observations:
   - date: "2026-10-12"
     note: >-
