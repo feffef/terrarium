@@ -29,6 +29,7 @@ import {
   renderBlock,
   renderList,
   rulingFiles,
+  authoredOf,
   summaryOf,
   type Entry,
 } from '../../scripts/harvest.ts'
@@ -284,18 +285,46 @@ describe('checkBody() and comparePosted()', () => {
   })
 })
 
-describe('blockOutput() and summaryOf()', () => {
-  it('keeps stdout the pasteable block and sends each session summary, once, to stderr', () => {
+describe('blockOutput(), authoredOf() and summaryOf()', () => {
+  it('keeps stdout the pasteable block and sends each session authored fields, once, to stderr', () => {
     const e = (session: string, n: number) => ({ session, file: `${session}.yml`, line: `Harvested: ${session} idea 0000000${n}` }) as Entry
-    const read = (file: string) => `summary: Did ${file[8]!.toUpperCase()}.\n`
+    const read = (file: string) => `goal: G ${file[8]}\nsummary: Did ${file[8]!.toUpperCase()}.\ntoolCounts: {Bash: 3}\n`
     const entries = [e('session_a', 1), e('session_a', 2), e('session_b', 3)]
-    expect(blockOutput(entries, read)).toEqual({ out: renderBlock(entries), err: 'Summary of session_a:\nDid A.\n\nSummary of session_b:\nDid B.' })
+    expect(blockOutput(entries, read)).toEqual({
+      out: renderBlock(entries),
+      err: 'Session session_a:\ngoal: G a\nsummary: Did A.\n\nSession session_b:\ngoal: G b\nsummary: Did B.',
+    })
+  })
+
+  it('reads goal, outcome, summary, frictions, ideas and learnings, and no trace field', () => {
+    const yaml = [
+      'goal: g',
+      'outcome: o',
+      'summary: >',
+      '  Did',
+      '  it.',
+      'durationSec: 5',
+      'filesEdited: [a.ts]',
+      'frictions:',
+      '  - {description: slow, solution: cache, severity: minor}',
+      '  - {description: odd, solution: "", severity: nit}',
+      'ideas: [i1]',
+      'learnings: [l1, l2]',
+    ].join('\n')
+    expect(authoredOf(yaml)).toBe(
+      'goal: g\noutcome: o\nsummary: Did it.\nfrictions:\n- slow Fix: cache\n- odd\nideas:\n- i1\nlearnings:\n- l1\n- l2',
+    )
   })
 
   it('reads the summary of a log, and nothing when it is missing or not text', () => {
     expect(summaryOf('goal: g\nsummary: >\n  Did\n  it.\n')).toBe('Did it.')
     expect(summaryOf('goal: g\n')).toBe('')
     expect(summaryOf('summary: [a]\n')).toBe('')
+  })
+
+  it('reads nothing from a log that is empty or whose fields are not text', () => {
+    expect(authoredOf('')).toBe('')
+    expect(authoredOf('summary: [a]\nfrictions: []\n')).toBe('')
   })
 })
 

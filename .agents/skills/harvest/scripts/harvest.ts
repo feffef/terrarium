@@ -197,14 +197,14 @@ export function renderBlock(entries: Entry[]): string {
 }
 
 /** What `block` prints: the pasteable block on stdout, and on stderr each source
- *  session's summary, once, for reading. Kept apart so stdout stays exactly what a
- *  body pastes. */
+ *  session's authored fields, once, for reading. Kept apart so stdout stays exactly
+ *  what a body pastes. */
 export function blockOutput(entries: Entry[], readLog: (file: string) => string): { out: string; err: string } {
   const firstOfSession = new Map<string, Entry>()
   for (const e of entries) if (!firstOfSession.has(e.session)) firstOfSession.set(e.session, e)
   const err = [...firstOfSession.values()].flatMap((e) => {
-    const summary = summaryOf(readLog(e.file))
-    return summary ? [`Summary of ${e.session}:\n${summary}`] : []
+    const authored = authoredOf(readLog(e.file))
+    return authored ? [`Session ${e.session}:\n${authored}`] : []
   })
   return { out: renderBlock(entries), err: err.join('\n\n') }
 }
@@ -213,6 +213,26 @@ export function blockOutput(entries: Entry[], readLog: (file: string) => string)
 export function summaryOf(yamlText: string): string {
   const summary = (parseYaml(yamlText) as { summary?: unknown } | null)?.summary
   return typeof summary === 'string' ? flattenText(summary) : ''
+}
+
+/** The fields a session wrote itself (goal, outcome, summary, frictions, ideas, learnings),
+ *  not the derived trace. Empty when the log has none. */
+export function authoredOf(yamlText: string): string {
+  const log = (parseYaml(yamlText) ?? {}) as Record<string, unknown>
+  const text = (v: unknown) => (typeof v === 'string' ? flattenText(v) : '')
+  const list = (v: unknown) => (Array.isArray(v) ? v.map(text).filter(Boolean) : [])
+  const frictions = (Array.isArray(log.frictions) ? log.frictions : []).flatMap((f: { description?: unknown; solution?: unknown } | null) => {
+    const d = text(f?.description)
+    const fix = text(f?.solution)
+    return d ? [d + (fix ? ` Fix: ${fix}` : '')] : []
+  })
+  const section = (label: string, items: string[]) => (items.length ? [`${label}:`, ...items.map((i) => `- ${i}`)] : [])
+  return [
+    ...(['goal', 'outcome', 'summary'] as const).flatMap((k) => (text(log[k]) ? [`${k}: ${text(log[k])}`] : [])),
+    ...section('frictions', frictions),
+    ...section('ideas', list(log.ideas)),
+    ...section('learnings', list(log.learnings)),
+  ].join('\n')
 }
 
 /** The text of a Tenant glossary's `## Product decisions` section with every other line blanked,
