@@ -126,12 +126,6 @@ campaign:
       description: One comparison card, one loupe and one log book of 4,800 comparisons.
       price: 39
       claimed: 0
-      options:
-        - id: loupe
-          name: Loupe
-          choices:
-            - { id: ten-x, label: 10× }
-            - { id: twenty-x, label: 20× }
       shipsTo: [domestic, europe, world]
       delivery: +75d
     - id: field-kit
@@ -139,12 +133,6 @@ campaign:
       description: The Comparison Kit with a collecting tray, a pocket thermometer and an insulated case.
       price: 69
       claimed: 0
-      options:
-        - id: loupe
-          name: Loupe
-          choices:
-            - { id: ten-x, label: 10× }
-            - { id: twenty-x, label: 20× }
       shipsTo: [domestic, europe, world]
       delivery: +75d
     - id: observatory-pair
