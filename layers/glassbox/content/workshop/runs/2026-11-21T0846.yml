@@ -6,5 +6,17 @@ focus: "Agents: a new Lesson on usability testing, taking the visitor-loop gap
   idea (testers who know the site and testers who don't, reports checked before
   they become issues) and not the Skill's fast-changing steps. No open PR touches
   the Subject. A new Lesson waits for the owner's merge (rule 6)."
-changes: []
-pagesRead: []
+changes:
+  - agents/45.usability-testing | New Lesson on usability testing (blind and informed agent visitors, bugs reproduced before they are filed, ideas dropped by owner rulings, agents are not users), taught from the stable idea of the visitor-loop Skill | the memory page listed visitor-loop as a gap. Source for the concept is NN/g's Usability 101. A claim checker found one overstated cost clause (a wording fix) and one misattribution, both fixed; two fresh readers' remaining nits (run, brief and lens before a gloss) went on the memory page. Waits for the owner's merge (new Lesson)
+  - agents/40.scheduled-tasks | The visitor-loop bullet links the new Lesson and says the run, not the visitors, confirms the bugs | the claim checker found the old wording misattributed the check. Wording only, so revision and publishedAt are kept
+  - verification/80.headless-browser-checks | Where next swaps Data fetching for Usability testing | Data fetching was the weakest entry (the body never links it). Wording only
+  - terrarium-practice/45.ideas-and-lessons-learned | Where next swaps Issue triage labels for Usability testing | the body still links triage labels; Where next was full. Wording only
+  - workshop/pages/index | The visitor-loop gap deleted; one wording lead added | done
+pagesRead:
+  - agents/10.subagents
+  - agents/20.workflow-scripts
+  - agents/30.cloud-sessions
+  - agents/40.scheduled-tasks
+  - agents/50.inspecting-past-sessions
+  - terrarium-practice/45.ideas-and-lessons-learned
+  - verification/80.headless-browser-checks
