@@ -138,7 +138,7 @@ describe('tinkerfund Tenant', async () => {
       expect(idle).toContain('href="/t/tinkerfund/qa/inventors"')
     })
 
-    it('lists the Inventors A to Z with their Campaign counts, linked from Home and every page', async () => {
+    it('lists the Inventors A to Z with their Campaign counts, linked from the nav and Home', async () => {
       const prod = main(await $fetch('/t/tinkerfund/prod/inventors'))
       expect(prod).toContain('Inventors · 19<')
       expect(prod).toContain('href="/t/tinkerfund/prod/inventors/henrik-aalto"')
@@ -147,10 +147,10 @@ describe('tinkerfund Tenant', async () => {
       const qa = main(await $fetch('/t/tinkerfund/qa/inventors'))
       expect(qa).toContain('Inventors · 3<')
       expect(qa).toContain('0 Campaigns<')
-      for (const path of ['/t/tinkerfund/prod', '/t/tinkerfund/prod/deals']) {
-        expect(await $fetch(path), path).toContain('href="/t/tinkerfund/prod/inventors"')
-      }
-      const home = main(await $fetch('/t/tinkerfund/prod'))
+      expect(qa).toContain('Überlänge-Zweibrücken')
+      const page = await $fetch<string>('/t/tinkerfund/prod')
+      expect(await $fetch('/t/tinkerfund/prod/deals')).toContain('href="/t/tinkerfund/prod/inventors"')
+      const home = main(page)
       const meet = home.slice(home.indexOf('Meet the Inventors'), home.indexOf('Popular now'))
       expect(meet.match(/class="tf-tokens"/g)).toHaveLength(6)
       expect(meet).toContain('href="/t/tinkerfund/prod/inventors"')
