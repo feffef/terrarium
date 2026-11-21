@@ -209,7 +209,7 @@ export function blockOutput(entries: Entry[], readLog: (file: string) => string)
   return { out: renderBlock(entries), err: err.join('\n\n') }
 }
 
-/** The `summary` of a session log's YAML; empty when absent or not text. */
+/** The `summary` of a Ledger entry's YAML; empty when absent or not text. */
 export function summaryOf(yamlText: string): string {
   const summary = (parseYaml(yamlText) as { summary?: unknown } | null)?.summary
   return typeof summary === 'string' ? flattenText(summary) : ''
@@ -221,14 +221,17 @@ export function authoredOf(yamlText: string): string {
   const log = (parseYaml(yamlText) ?? {}) as Record<string, unknown>
   const text = (v: unknown) => (typeof v === 'string' ? flattenText(v) : '')
   const list = (v: unknown) => (Array.isArray(v) ? v.map(text).filter(Boolean) : [])
-  const frictions = (Array.isArray(log.frictions) ? log.frictions : []).flatMap((f: { description?: unknown; solution?: unknown } | null) => {
+  const frictions = (Array.isArray(log.frictions) ? log.frictions : []).flatMap((f) => {
     const d = text(f?.description)
-    const fix = text(f?.solution)
-    return d ? [d + (fix ? ` Fix: ${fix}` : '')] : []
+    const solution = text(f?.solution)
+    return d ? [d + (solution ? ` solution: ${solution}` : '')] : []
   })
   const section = (label: string, items: string[]) => (items.length ? [`${label}:`, ...items.map((i) => `- ${i}`)] : [])
   return [
-    ...(['goal', 'outcome', 'summary'] as const).flatMap((k) => (text(log[k]) ? [`${k}: ${text(log[k])}`] : [])),
+    ...['goal', 'outcome', 'summary'].flatMap((k) => {
+      const v = text(log[k])
+      return v ? [`${k}: ${v}`] : []
+    }),
     ...section('frictions', frictions),
     ...section('ideas', list(log.ideas)),
     ...section('learnings', list(log.learnings)),

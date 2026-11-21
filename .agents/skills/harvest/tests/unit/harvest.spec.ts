@@ -11,6 +11,7 @@ import {
   BODY_LIMIT,
   NOTE,
   REQUIRED_HEADINGS,
+  authoredOf,
   blockOutput,
   buildEntries,
   checkBody,
@@ -29,7 +30,6 @@ import {
   renderBlock,
   renderList,
   rulingFiles,
-  authoredOf,
   summaryOf,
   type Entry,
 } from '../../scripts/harvest.ts'
@@ -286,7 +286,7 @@ describe('checkBody() and comparePosted()', () => {
 })
 
 describe('blockOutput(), authoredOf() and summaryOf()', () => {
-  it('keeps stdout the pasteable block and sends each session authored fields, once, to stderr', () => {
+  it("keeps stdout the pasteable block and sends each session's authored fields, once, to stderr", () => {
     const e = (session: string, n: number) => ({ session, file: `${session}.yml`, line: `Harvested: ${session} idea 0000000${n}` }) as Entry
     const read = (file: string) => `goal: G ${file[8]}\nsummary: Did ${file[8]!.toUpperCase()}.\ntoolCounts: {Bash: 3}\n`
     const entries = [e('session_a', 1), e('session_a', 2), e('session_b', 3)]
@@ -312,7 +312,7 @@ describe('blockOutput(), authoredOf() and summaryOf()', () => {
       'learnings: [l1, l2]',
     ].join('\n')
     expect(authoredOf(yaml)).toBe(
-      'goal: g\noutcome: o\nsummary: Did it.\nfrictions:\n- slow Fix: cache\n- odd\nideas:\n- i1\nlearnings:\n- l1\n- l2',
+      'goal: g\noutcome: o\nsummary: Did it.\nfrictions:\n- slow solution: cache\n- odd\nideas:\n- i1\nlearnings:\n- l1\n- l2',
     )
   })
 
