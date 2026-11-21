@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzePp9GLW2F1VvQUhWEy
 startedAt: 2026-11-21T07:33:00Z
-endedAt: 2026-11-21T07:41:52Z
+endedAt: 2026-11-21T07:46:45Z
 kind: autonomous
 goal: Bring the Glass Box guide up to date with main
-status: in-review
-outcome: "PR #3547 open: all pages re-pinned to d5d936d, five claim corrections, rotation dates and two missing topics recorded"
-summary: "Scheduled glassbox-update run, agent-initiated by the schedule with no human prompt. Ran the sync script, advanced every page to d5d936d, hand re-lined the Subagents excerpts, and ran a Scout plus four claim-check subagents (rotation pages in full, flagged pages scoped to changed files). Confirmed each reported contradiction in source before editing: visitor-loop description, observations visibility, the main-agent rule rating refusal, and the build agent's tdd and Standards reviewer wording. Added two Scout topics (digest, glassbox-curate modes) to the memory page and dated the five rotation pages. Gate passed and code-review ran on the head; its two findings (a count in prose, teaches out of step with the body) were applied in a prose-only follow-up. PR #3547 awaits CI and merge."
+status: completed
+outcome: "PR #3547 merged: all pages re-pinned to d5d936d, five claim corrections, rotation dates and two missing topics recorded"
+summary: "Scheduled glassbox-update run, agent-initiated by the schedule with no human prompt. Ran the sync script, advanced every page to d5d936d, hand re-lined the Subagents excerpts, and ran a Scout plus four claim-check subagents (rotation pages in full, flagged pages scoped to changed files). Confirmed each reported contradiction in source before editing: visitor-loop description, observations visibility, the main-agent rule rating refusal, and the build agent's tdd and Standards reviewer wording. Added two Scout topics (digest, glassbox-curate modes) to the memory page and dated the five rotation pages. Gate passed and code-review ran on the head; its two findings (a count in prose, teaches out of step with the body) were applied in a prose-only follow-up. PR #3547 merged after CI went green; merge-pr.ts first refused twice (own-read on a 78-file diff, then no review proof because I passed only origin/main as code-review args instead of the full printed args)."
 prs:
   - "3547"
 docsRead:
@@ -32,6 +32,8 @@ docsRead:
     reason: (no reason given)
   - path: .throwaway/glassbox-curate/guide-pages-3.md
     reason: (no reason given)
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: (no reason given)
   - path: .agents/skills/dispatch-subagents/SKILL.md
     reason: (no reason given)
   - path: .agents/skills/visitor-loop/SKILL.md
@@ -39,8 +41,6 @@ docsRead:
   - path: docs/research/subagent-spawn-depth.md
     reason: (no reason given)
   - path: .agents/skills/digest/SKILL.md
-    reason: (no reason given)
-  - path: .agents/skills/glassbox-update/SKILL.md
     reason: (no reason given)
   - path: docs/agents/guards.md
     reason: (no reason given)
@@ -85,18 +85,26 @@ frictions:
   - description: Started the full gate in a background subshell from a foreground call, so no completion notification came and I polled with a sleep loop.
     solution: Use run_in_background on the Bash call itself so the harness wakes the session.
     severity: minor
-durationSec: 532
+  - description: Made the code-review call with only `origin/main` as args; merge-pr.ts found no sha in the transcript and refused, costing a second review round and a superseded verdict comment.
+    solution: Paste the whole printed review-call args, sha included; pr-workflow.md step 3 could say the parenthetical is part of the args.
+    severity: minor
+durationSec: 825
 models:
-  claude-sonnet-5-5: 117
+  claude-sonnet-5-5: 158
 toolCounts:
   Read: 6
-  Bash: 45
-  Skill: 4
-  Agent: 7
+  Bash: 57
+  Skill: 7
+  Agent: 9
   ToolSearch: 1
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 2
+  mcp__github__update_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/agents/40.scheduled-tasks.md
   - layers/glassbox/content/guide/pages/skill-pack/30.engineering-skills.md
@@ -509,48 +517,126 @@ ruleUse:
         value: unrelated
       - path: .claude/rules/adr-0027.md
         value: unrelated
+  - by: general-purpose
+    subagent: 7
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 8
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/glassbox-update/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/glassbox-update/SKILL.md
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
 subagents:
   - task: Scout new topics
     model: sonnet
     durationSec: 23
     toolCalls: 10
     modelCalls: 5
-    tokenShare: 5.4
+    tokenShare: 4.3
   - task: Claim check group 0
     model: sonnet
     durationSec: 103
     toolCalls: 23
     modelCalls: 15
-    tokenShare: 9.6
+    tokenShare: 7.7
   - task: Claim check group 1
     model: sonnet
     durationSec: 126
     toolCalls: 26
     modelCalls: 22
-    tokenShare: 12.4
+    tokenShare: 9.9
   - task: Claim check group 2
     model: sonnet
     durationSec: 108
     toolCalls: 29
     modelCalls: 21
-    tokenShare: 13.8
+    tokenShare: 11
   - task: Claim check group 3
     model: sonnet
     durationSec: 150
     toolCalls: 31
     modelCalls: 25
-    tokenShare: 14.3
+    tokenShare: 11.4
   - task: Standards review
     model: sonnet
     durationSec: 30
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 3.3
+    tokenShare: 2.6
   - task: Spec review
     model: sonnet
     durationSec: 28
     toolCalls: 6
     modelCalls: 6
+    tokenShare: 2.7
+  - task: Standards review r2
+    model: sonnet
+    durationSec: 12
+    toolCalls: 3
+    modelCalls: 3
+    tokenShare: 2
+  - task: Spec review r2
+    model: sonnet
+    durationSec: 32
+    toolCalls: 11
+    modelCalls: 7
     tokenShare: 3.4
 gitBranch: claude/relaxed-einstein-20hsfw
 entrypoint: remote_trigger
