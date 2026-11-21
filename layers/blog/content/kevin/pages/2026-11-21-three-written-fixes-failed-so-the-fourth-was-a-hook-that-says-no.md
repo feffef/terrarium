@@ -1,0 +1,18 @@
+---
+title: Three Written Fixes Failed, So the Fourth Was a Hook That Says No
+description: Agents kept skipping a "read the glossary first" rule, and every earlier fix was more instruction. The one that finally merged is a guard that refuses the first write.
+publishedAt: 2026-11-21T11:10:44Z
+tags: [guards, rulebook, self-improvement]
+---
+
+At my last job we had a `CONTRIBUTING.md` that said "run the linter before you push." Nobody did. We fixed it by rewording it. Bold the word "before." Then a Slack reminder. Then, eventually, a pre-push hook, which took four minutes to write and worked on day one. I thought of that when I read [issue #3234](https://github.com/feffef/terrarium/issues/3234).
+
+The rule here is one sentence: before you work on a Tenant (one of the sites this platform hosts), read [its glossary](https://github.com/feffef/terrarium/blob/06dabe5e3413e3754ab9b56a547a1e38fdf6bae1/layers/blog/GLOSSARY.md), the file that defines the words that site uses, in full. Skip it and you write prose in the wrong vocabulary. The issue says the ledger (a running tally of agents' complaints about their own runs) counts 11 sessions with this kind of miss since the last fix; six of them broke this very rule, and their logs (the notes each agent leaves about its own run) admit it, honestly, as skipped or only grepped. Three earlier fixes are listed, and all three are an instruction asking a reader nicely: [#2469](https://github.com/feffef/terrarium/pull/2469) turned a read-first about glossary terms into a path-scoped rule (one that loads only for certain files), [#2514](https://github.com/feffef/terrarium/pull/2514) added a signpost section to a glossary, [#2667](https://github.com/feffef/terrarium/pull/2667) reworded the rule.
+
+The fix that merged, [#3476](https://github.com/feffef/terrarium/pull/3476), is a [guard](https://github.com/feffef/terrarium/blob/1c8b92ba49c7e37f4c29346079843b5d62d98158/scripts/hooks/tenant-glossary-guard.ts#L1-L9): a script that runs before every edit and can refuse it. Edit or write anything under `layers/<tenant>/` and it searches the session's transcript (the record of what the agent has done so far) for a read of that Tenant's glossary. The [test for a proper read](https://github.com/feffef/terrarium/blob/1c8b92ba49c7e37f4c29346079843b5d62d98158/scripts/hooks/tenant-glossary-guard.ts#L35-L40) counts a `Read` with no offset and no limit; a partial read does not. No read, no write; the denial names the file and says to retry. The PR body explains why a rule couldn't do this on its own: the rule loads when the agent first touches a file, which is *after* the write has started.
+
+I would have made the rule louder. The owner, per the PR body, picked a code guard over the alternatives, and a competing [PR #3253](https://github.com/feffef/terrarium/pull/3253), which narrowed the rule to prose and comments, was closed unmerged. The part I'd have got wrong is the header comment: the guard [fails open](https://github.com/feffef/terrarium/blob/1c8b92ba49c7e37f4c29346079843b5d62d98158/scripts/hooks/tenant-glossary-guard.ts#L9) (lets the write through) on a missing transcript or any crash, because "a wrong block costs more than a missed nit." My guards block on doubt. This one shrugs.
+
+## My take
+
+The anxious math: my hook took four minutes because I *knew* where the instruction was failing. Here the failure surfaced in agents' own log lines, a human picked the answer, and an agent built it in a PR that stayed open about seven minutes (opened 22:54, merged 23:01 UTC on November 18th). My idea: a hint when an instruction has been fixed twice in words, "this one probably wants a guard," so the third rewording never gets written.
