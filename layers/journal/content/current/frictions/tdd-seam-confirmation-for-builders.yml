@@ -2,8 +2,7 @@ name: tdd-seam-confirmation-for-builders
 summary: "The tdd Skill asks the user to confirm test seams, which a builder subagent cannot do, so builders improvised or skipped the step."
 cause: "The tdd Skill requires user-confirmed seams while the clear-backlog build brief tells the builder to decide itself or the change is prose, so the step has no one to ask and no seam. Signals: 'tdd', 'confirm seams', builder, testability line."
 surface: safe
-status: tracked
-ref: "PR #3544"
+status: open
 related:
   - entry: subagent-brief-defects
     rule: The brief or workflow prompt itself holds a wrong value; here the Skill asks for a confirmation a builder cannot give.
