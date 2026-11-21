@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzePzEySsawKSfNrCBtk
 startedAt: 2026-11-20T19:09:36Z
-endedAt: 2026-11-20T22:44:18Z
+endedAt: 2026-11-21T09:05:04Z
 kind: interactive
 goal: Review a week of rule-use data, then settle the unrated-rating problem
-status: in-review
-outcome: Early review and correction posted, issue closed, fix PR open and waiting for a human merge
-summary: "The owner asked, in one message, to do the #3340 week review and then grill #3508. I asked first (the owner's stated preference) because the review window was two days short and #3508 said to decide before the review; the owner chose to run now and flag the effect. I ran rule-use-report and the Friction extract, posted a review comment, then rebuilt counts from the JSON and found the unrated gap is 11% of main loads but 30% of subagent loads, far more than the review had shown; I posted that as a correction. The grilling settled one question (the owner chose to not count blanks in the shares, then reframed: no report change, enforce complete ratings going forward). The owner then directed: post the results, close #3508, change the validation of the subagent echo call, and move #3340 to 5 days out. Human-instructed: the review, the grill, closing #3508, the echo validation, the new date. Agent-initiated: the subagent-gap correction, the extra tests after review, and opening PR #3538 without asking (ADR-0003). The hook can only hint, not reject, so an agent can still ignore it; the 2026-11-25 re-run will show how often. The PR touches scripts/hooks, so a human merges it. Still open: add the PR number and merge date to #3340 once it merges."
+status: completed
+outcome: Early review and correction posted, issue closed, fix PR merged, next review dated
+summary: "The owner asked, in one message, to do the #3340 week review and then grill #3508. I asked first (the owner's stated preference) because the review window was two days short and #3508 said to decide before the review; the owner chose to run now and flag the effect. I ran rule-use-report and the Friction extract, posted a review comment, then rebuilt counts from the JSON and found the unrated gap is 11% of main loads but 30% of subagent loads, far more than the review had shown; I posted that as a correction. The grilling settled one question (the owner chose to not count blanks in the shares, then reframed: no report change, enforce complete ratings going forward). The owner then directed: post the results, close #3508, change the validation of the subagent echo call, and move #3340 to 5 days out. Human-instructed: the review, the grill, closing #3508, the echo validation, the new date. Agent-initiated: the subagent-gap correction, the extra tests after review, and opening PR #3538 without asking (ADR-0003). The owner merged it on 2026-11-21 (it touches scripts/hooks, so a human merges); I then put its number and the MERGE_DATE 2026-11-21T09:04:02Z into #3340's body, as I had said I would. The hook can only hint, not reject, so an agent can still ignore it; the 2026-11-25 re-run of #3340 will show how often. Still open: that re-run itself, and the narrowing proposals it feeds."
 prs:
   - "3538"
 docsRead:
@@ -69,26 +69,30 @@ frictions:
   - description: "My checkout was stale and lacked unratedRules from the merged #3531; found only by grepping. Two Edits also failed on wrong line breaks in a comment."
     solution: Fast-forward to origin/main before designing against a merged PR; copy comment text exactly.
     severity: minor
-durationSec: 12882
+  - description: "The first #3340 review counted the unrated gap for main only; the subagent gap (30%) surfaced later, so I posted a correction comment."
+    solution: Compute unrated loads for both agent groups before posting a review that rests on shares.
+    severity: minor
+durationSec: 50128
 models:
-  claude-sonnet-5-5: 190
+  claude-sonnet-5-5: 223
 toolCounts:
   Read: 17
-  ToolSearch: 4
-  mcp__github__issue_read: 4
+  ToolSearch: 5
+  mcp__github__issue_read: 5
   AskUserQuestion: 1
-  Bash: 35
+  Bash: 37
   Write: 4
-  Edit: 15
-  mcp__github__add_issue_comment: 4
-  Skill: 6
+  Edit: 18
+  mcp__github__add_issue_comment: 5
+  Skill: 7
   Grep: 3
-  mcp__github__pull_request_read: 1
-  mcp__github__issue_write: 3
+  mcp__github__pull_request_read: 4
+  mcp__github__issue_write: 4
   Agent: 2
   SendMessage: 2
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 5
 filesEdited:
   - tests/unit/rule-use-ask.spec.ts
   - scripts/hooks/rule-use-ask.ts
@@ -260,13 +264,13 @@ subagents:
     durationSec: 261
     toolCalls: 9
     modelCalls: 7
-    tokenShare: 6.6
+    tokenShare: 4.7
   - type: general-purpose
     task: Spec review of echo hint
     durationSec: 262
     toolCalls: 5
     modelCalls: 6
-    tokenShare: 6
+    tokenShare: 4.3
 gitBranch: ccr-ffd2df55-9apwzl
 entrypoint: remote_mobile
 cliVersion: 2.1.329
