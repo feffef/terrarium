@@ -312,7 +312,7 @@ describe('blockOutput(), authoredOf() and summaryOf()', () => {
       'learnings: [l1, l2]',
     ].join('\n')
     expect(authoredOf(yaml)).toBe(
-      'goal: g\noutcome: o\nsummary: Did it.\nfrictions:\n- slow solution: cache\n- odd\nideas:\n- i1\nlearnings:\n- l1\n- l2',
+      'goal: g\noutcome: o\nsummary: Did it.\nfrictions:\n- slow; solution: cache\n- odd\nideas:\n- i1\nlearnings:\n- l1\n- l2',
     )
   })
 

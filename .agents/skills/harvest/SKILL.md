@@ -91,8 +91,8 @@ harvests both.
    label still decides the 3-workflow cap. Learnings that belong in one doc
    share one Seedling. Read `docs/agents/issue-tracker.md` and
    `triage-labels.md` first, once. For each:
-   - Run `harvest block <extract> <n>...` for its entries and read what it
-     prints for their sessions: the entry alone lacks the story.
+   - Read what `harvest block <extract.json> <n> [n...]` prints to stderr for
+     its entries: the entry alone lacks the story.
    - Write the body to a scratchpad file as [`body-template.md`](body-template.md)
      says (read it first).
    - If the Seedling would add or change what visitors or the owner see, list

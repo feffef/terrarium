@@ -224,7 +224,7 @@ export function authoredOf(yamlText: string): string {
   const frictions = (Array.isArray(log.frictions) ? log.frictions : []).flatMap((f) => {
     const d = text(f?.description)
     const solution = text(f?.solution)
-    return d ? [d + (solution ? ` solution: ${solution}` : '')] : []
+    return d ? [d + (solution ? `; solution: ${solution}` : '')] : []
   })
   const section = (label: string, items: string[]) => (items.length ? [`${label}:`, ...items.map((i) => `- ${i}`)] : [])
   return [
