@@ -253,7 +253,7 @@ export function tinkerfundHomeSections<T extends TinkerfundListing>(listings: T[
     popular: browseTinkerfundListings(listings.filter((l) => l.status.state !== 'ended'), { sort: 'popular' }),
     // At most 6 so the 1-, 2- and 3-column grids all end on a full row.
     justLaunched: browseTinkerfundListings(live.filter((l) => l !== featured && l.status.launchAt > now - JUST_LAUNCHED), { sort: 'newest' }).slice(0, 6),
-    // One full row of the 3-column grid: the 2 newest, plus the most funded of the rest so a Funded one shows.
+    // One full row of the 3-column grid: the 2 newest, plus the most funded of the rest.
     ended: [...recent, ...browseTinkerfundListings(rest, { sort: 'funded' }).slice(0, 1)],
   }
 }
