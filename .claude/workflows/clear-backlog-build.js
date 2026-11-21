@@ -96,7 +96,7 @@ function buildPrompt(b) {
   return `You are the BUILD agent. ${common(b)}
 ## Task
 1. ${start}
-2. Read .agents/skills/implement/SKILL.md with Read (it can't be invoked) and follow it, test-first with the tdd Skill (invoke it with the Skill tool). Skip its code-review step: this workflow's reviewers do that next.
+2. Read .agents/skills/implement/SKILL.md with Read (it can't be invoked) and follow it, test-first with the tdd Skill (invoke it with the Skill tool) for a change with logic; you pick its seams, nobody can confirm them, and skip tdd for a content-only edit. Skip its code-review step: this workflow's reviewers do that next.
 3. Keep the change as small and plain as the brief allows.
 4. Run only the fast checks until they pass: ${FAST_CHECKS}. ${e2eCheck(b)} Do not run \`pnpm gate:scoped\` now: review will likely change the code, and the gate runs once at the end. Commit.
 Return done only with passing fast checks; failed with the reason otherwise.
