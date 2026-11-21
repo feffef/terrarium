@@ -9,28 +9,9 @@ role: >-
   Inventory's grades in line with usage as a by-product, self-merging those
   edits (ADR-0015).
 auditSummary:
-  date: "2026-11-20"
-  text: "Delivers its Skill-page updates and issues, and nothing it landed was reverted. It skipped rewriting stale roles in one run and spends a lot on near-identical checks that mostly repeat."
+  date: "2026-11-21"
+  text: "Produces the weekly Inventory update, and its recent fix makes role and gist checks part of each Skill's review. Notes are still reworked after review for jargon and cost a lot in helper agents."
 observations:
-  - date: "2026-10-11"
-    note: >-
-      Self-check: re-verified the two most recent self-runs,
-      session_01HgJSvxTfhCwRcTZEhFspLX (PR #1697) and
-      session_01JR1AZGGyi6AEh1SHTp6qsH (PR #1722), independently against
-      live GitHub — both merged, Inventory-YAML-only diffs as promised.
-      Confirmed #1720 (the 2026-10-09 run's stale-issue-state claim on
-      #1676/#1684) was genuinely caught and fixed by merged PR #1727, now
-      live in SKILL.md's provenance rule. #1721 (visitor-loop batch-dismissal)
-      independently re-verified: PR #1672's committed log really says "All of
-      that was human-instructed," decisions.md had no line for it at filing
-      time, and the closing PR #1732 added both a decisions.md line and a
-      mechanical `owner-corrections.ts --check` enforcement script plus 21
-      unit tests — a materially stronger fix than #1515's. No revert found of
-      this Skill's own text/tooling in the 2-week sweep. This run also filed
-      #1752 (triage: 4 issues closed on judgment calls without individual
-      owner confirmation, surfaced via session_018i6d2BQPkf9cq6jSEqCNSX) and
-      commented new evidence (12 further skillsUsed-logging-gap instances)
-      onto dispatch-subagents' just-closed #1586. Grade/role unchanged.
   - date: "2026-10-12"
     note: >-
       Self-check: dispatched 11 behaviour-check subagents this run (one per
@@ -410,3 +391,5 @@ observations:
     note: "Behaviour check, runs session_013zxzeTBn6kP1nZ2KA22n9i, session_013zxzeQty154cpRRShQjRhX: delivered; PRs #3399 and #3441 merged, YAML-only, issues #3395-#3398 and #3440 closed, grade changes cite 2-3 sessions, no revert. Repeats: git doc read late (7 runs), wrong session id caught via get_session (4), 16-17 subagent reports ~1.7M tokens (3), dispatch-read guard denied first Agent call on 11-17. 11-18: own read instead of code-review on a 4-file follow-up (disclosed). Idea: name git-conventions and dispatch-subagents read-first in step 1. Grade unchanged."
   - date: "2026-11-20"
     note: "Behaviour check, runs session_013zxzeRsaSP4XhVGZDUk153 (11-19) and session_013zxzeQty154cpRRShQjRhX (11-18); the 11-19 audit's own SKILL.md edit e6a0d6fae landed after both started, so the 300-500 word notes and the newest-7-observations rule are untested by them. Delivery verified from git: PR #3482 (a0e69fe53) changed 9 routine files and 16 skill files only (25 files, matching the log); PR #3441 (ca462f965) changed 10 routine and 17 skill files; issues #3481 and #3440 are closed; no revert. Both runs reported orphanScan scanned true with 0 orphans (not re-run by the audit). Silent failure, self-disclosed, n=1 confirmed: on 11-19 step 5 says to reread SKILL.md and rewrite gist or role when changes lists an edit, but the friction says \"I did not reread any, though 13 Skills changed in the window\" and the summary says \"Not done: role or gist rewrites\". The 11-18 log is silent. Likely cause: nothing in the scorecard prompts it and 16 subagents had used the effort. Repeats: tenant-glossary rule missed in both runs (both ruleUse say missed, both edited layers/journal without its glossary); wording and id rework after the PR in both (d626970a1 fixed 11 jargon or id items; 40b8112d0 reworded three summaries), since only a reviewer checks them; git doc read late, 7 to 9 times in all; a drafted wrong session id, n=5; 15 to 17 near-identical behaviour subagents costing about 1.6M to 1.7M tokens each run. New evidence: the 11-19 run's first Agent call was not blocked by the dispatch-read guard because it read dispatch-subagents first. This 11-20 run repeats the pattern: it again had 15 subagents, and the dispatch-read guard denied its first dispatch until the Skill was read. Idea: the scorecard prints a per-Skill staleFlag when SKILL.md changed after that entry's date, and one skip hint when runs, changes and observations repeat the last check; both runs spent about 1.7M subagent tokens re-confirming repeats. Grade unchanged."
+  - date: "2026-11-21"
+    note: "Behaviour check of session_013zxzeQAV89N7K2uJN1FbsR (11-20, PR #3509, 26 files) and session_013zxzeRsaSP4XhVGZDUk153 (11-19, PR #3482, 25 files). Both merged (64abc4426 and a0e69fe53); the diff size matches the log's filesEdited; no revert. Both runs started before the 11-20 SKILL.md changes (649e8ffec, e8431d318); the 11-19 run also predates e6a0d6fae (300 to 500 word notes). Observations: the 11-20 run applied the 300 to 500 word rule, the newest-7-observations rule (9049833ad) is untested. Known silent failure, now n=2 and verified in both logs: step 5 asks to reread every changed Skill and rewrite stale gist and role, but 11-20 reread only blog-post's (\"left 13 other changed Skills unchecked\") and 11-19 said \"not done: role or gist rewrites\". The fix landed after both runs (0b8ab4bbe moved the check into per-Skill subagents; 649e8ffec reworded it), so it is untested until this run. This run's check: the per-Skill subagents did return role and gist verdicts for most Skills; several said they did not open the Inventory entry (audit-docs, digest, glassbox-update, log-session), so the fix only partly holds (verified by reading their reports). Repeats: Tenant-glossary rule missed in both main logs (n=3 with 11-18); late git and GitHub doc reads in both (about 9 total); rework after the PR for jargon and truncated ids (both); the dispatch-read guard denied 16 first-dispatch Agent calls on 11-20 but nothing on 11-19. New minor: on 11-20 merge-pr.ts refused four times (an Own-read line in an earlier comment, and code-review args lacking the head sha), costing three extra comments; a verdict comment wrongly said the gate ran before the last edit and was corrected. On 11-19 a single combined reviewer was used on a 25-file Inventory diff instead of the two-axis pair (self-disclosed; own-read-on-Inventory n=3). Role and gist are current (about 48 words, no ids). Nine Skills with runs but no behaviour check get no note, by the current text; whether that is intended is unverified. Idea: print a roleStale flag per Skill in the scorecard (SKILL.md commit later than the Inventory entry) so the role and gist reread is a list, not a memory task; and skip a Skill's behaviour agent when its runs, changes and observations repeat the last check. Grade unchanged (routine)."
