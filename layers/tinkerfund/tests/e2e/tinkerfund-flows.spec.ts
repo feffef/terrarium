@@ -212,7 +212,7 @@ describe('tinkerfund Tenant', async () => {
       await rewardsTab.click()
       expect(await rewardsTab.getAttribute('aria-current')).toBe('location')
       expect(await page.evaluate(() => document.activeElement?.id)).toBe('rewards')
-      await page.getByRole('button', { name: /^Figure 2:/ }).click()
+      await page.getByRole('button', { name: /^Figure 2 of / }).click()
       expect(await page.locator('.hero .frame .cap').first().textContent()).toBe('FIG. 2 · TF-9003')
       const notify = page.locator('.readout button[aria-pressed]')
       expect(await notify.getAttribute('aria-pressed')).toBe('false')

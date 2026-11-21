@@ -21,7 +21,7 @@ const active = ref(0)
         :key="i"
         type="button"
         :aria-pressed="i === active"
-        :aria-label="`Figure ${i + 1}: ${figure.caption}`"
+        :aria-label="`Figure ${i + 1} of ${figures.length}`"
         @click="active = i"
       >
         <span class="frame small">
