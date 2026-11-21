@@ -1,16 +1,17 @@
 schemaVersion: 1
 session: session_013zxzeQLrTRb5hCDjSRuQHb
 startedAt: 2026-11-21T02:07:27Z
-endedAt: 2026-11-21T02:27:36Z
+endedAt: 2026-11-21T02:38:43Z
 kind: autonomous
 goal: Turn recent session Frictions into fixes
-status: in-review
-outcome: Ledger PR merged; one fix PR open for a human merge; one regression issue filed
-summary: "Scheduled frictions-to-fixes run, no human prompt (agent-initiated throughout, per the Skill). A survey subagent filed 61 occurrences from 29 sessions (3 new entries, fixes #3532 and #3537 recorded). Screening found one regression with moderate severity since its fix (harvest-first-pass-shallow), filed as issue #3543. Of the never-fixed candidates, a design subagent recommended: one dispatch (tdd seam confirmation clashing with builders), one dispatch (audit-docs reviewer brief), one no change (blog-post fan-out entry was really an audit-skills run, so its text was corrected). I dropped the audit-docs one (design working as intended, one outlier run) and dispatched only the tdd fix to a Sonnet builder; its PR #3544 changes a workflow prompt no test observes, so it is escalated for a human merge, with its own fixes ledger entry added. The ledger PR #3545 merged after a full code-review, because a many-file data PR fails the simple-change test. No closing ledger PR was needed: no fix PR merged or was abandoned."
+status: completed
+outcome: Ledger PRs merged, one fix PR merged by a human, one regression issue filed
+summary: "Scheduled frictions-to-fixes run, no human prompt (agent-initiated throughout, per the Skill). A survey subagent filed 61 occurrences from 29 sessions (3 new entries, fixes #3532 and #3537 recorded). Screening found one regression with moderate severity since its fix (harvest-first-pass-shallow), filed as issue #3543. Of the never-fixed candidates, a design subagent recommended: one dispatch (tdd seam confirmation clashing with builders), one dispatch (audit-docs reviewer brief), one no change (blog-post fan-out entry was really an audit-skills run, so its text was corrected). I dropped the audit-docs one (design working as intended, one outlier run) and dispatched only the tdd fix to a Sonnet builder; its PR #3544 changes a workflow prompt no test observes, so I escalated it for a human merge, with its own fixes ledger entry added; a human merged it. The ledger PR #3545 merged after a full code-review, because a many-file data PR fails the simple-change test. A closing ledger PR #3546 set the entry back to open."
 prs:
   - "3543"
   - "3544"
   - "3545"
+  - "3546"
 docsRead:
   - path: .agents/skills/frictions-to-fixes/survey-brief.md
     reason: (no reason given)
@@ -78,19 +79,19 @@ frictions:
   - description: Review of a one-line workflow prompt edit still cost two review subagents (about 150k tokens) because ADR-0004 does not count a .claude/workflows file as a simple change.
     solution: Known followup-review-overcost; no change proposed here.
     severity: nit
-durationSec: 1208
+durationSec: 1876
 models:
-  claude-sonnet-5-5: 111
+  claude-sonnet-5-5: 133
 toolCounts:
-  Bash: 35
+  Bash: 41
   Skill: 5
   Agent: 8
   ToolSearch: 1
   mcp__github__issue_write: 2
-  mcp__github__create_pull_request: 2
-  mcp__github__add_issue_comment: 4
+  mcp__github__create_pull_request: 3
+  mcp__github__add_issue_comment: 5
   mcp__github__subscribe_pr_activity: 2
-  ReadNotifications: 5
+  ReadNotifications: 10
   PushNotification: 1
 filesEdited:
   - layers/journal/content/current/frictions/tdd-seam-confirmation-for-builders.yml
@@ -526,44 +527,44 @@ subagents:
     durationSec: 385
     toolCalls: 35
     modelCalls: 33
-    tokenShare: 24.8
+    tokenShare: 21.6
   - type: general-purpose
     task: Design friction fixes
     durationSec: 167
     toolCalls: 30
     modelCalls: 27
-    tokenShare: 12.9
+    tokenShare: 11.3
   - type: general-purpose
     task: Build tdd seam fix
     model: sonnet
     durationSec: 113
     toolCalls: 11
     modelCalls: 8
-    tokenShare: 4.7
+    tokenShare: 4.1
   - type: general-purpose
     task: Standards review
     durationSec: 17
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 1.9
+    tokenShare: 1.7
   - type: general-purpose
     task: Spec review
     durationSec: 13
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.6
+    tokenShare: 1.4
   - type: general-purpose
     task: Standards review ledger
     durationSec: 21
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 2.7
+    tokenShare: 2.4
   - type: general-purpose
     task: Spec review ledger
     durationSec: 48
     toolCalls: 12
     modelCalls: 10
-    tokenShare: 4.3
+    tokenShare: 3.8
 gitBranch: claude/eager-ptolemy-7qzv57
 entrypoint: remote_trigger
 cliVersion: 2.1.330
