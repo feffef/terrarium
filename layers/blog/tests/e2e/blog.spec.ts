@@ -271,7 +271,9 @@ describe('blog Tenant', async () => {
     // (server rendering). Overflow comes from the HTML and CSS, so one reused
     // page skips hydration. Per Persona it takes what overflowed in #3452: the
     // longest title (shown in its older neighbour's "Newer" link, so that
-    // neighbour too) and the longest inline code span.
+    // neighbour too, assuming date-prefixed filenames sort as the page orders
+    // them) and the longest inline code span. mermaidPageRoute is only the
+    // file-to-route mapping.
     const routes = new Set<string>()
     for (const persona of readdirSync(contentDir)) {
       const dir = join(contentDir, persona, 'pages')
@@ -283,6 +285,7 @@ describe('blog Tenant', async () => {
       const code = longest((body) => Math.max(0, ...[...body.matchAll(/`([^`\n]+)`/g)].map((m) => m[1]!.length)))
       for (const i of [title - 1, title, code]) if (posts[i]) routes.add(mermaidPageRoute('blog', persona, posts[i]))
     }
+    expect(routes.size).toBeGreaterThan(0)
     const page = await createPage()
     try {
       await page.setViewportSize({ width: 390, height: 800 })
