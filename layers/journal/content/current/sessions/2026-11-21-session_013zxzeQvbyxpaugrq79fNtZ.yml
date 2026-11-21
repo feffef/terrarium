@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQvbyxpaugrq79fNtZ
 startedAt: 2026-11-21T08:45:35Z
-endedAt: 2026-11-21T09:01:40Z
+endedAt: 2026-11-21T09:23:43Z
 kind: autonomous
 goal: "Glass Box curate run: new Usability testing Lesson"
-status: in-review
-outcome: Lesson written, checked and gated; PR opened and waiting for the owner's merge (new Lesson).
-summary: "A scheduled glassbox-curate run, so every choice was agent-initiated and no human prompted it. Step 1 orientation showed no open Glass Box PRs. The owner's direction items on the memory page were open questions or too broad, so the run took the first gap, the missing visitor-loop page, and wrote it as a general Lesson on usability testing (source: NN/g Usability 101) that teaches only the Skill's stable idea. An opus writer drafted it with sources; a sonnet claim checker found one overstated cost clause and one misattribution in the scheduled-tasks bullet, and a fresh reader's findings were mostly applied. Two retry-limit leftovers (run, brief and lens before a gloss) went on the memory page. Code-review's Spec reviewer asked for two more pages in pagesRead (added). gate:scoped passed; PR 3548 waits for the owner (new Lesson, rule 6). Still open: owner choice of Subject and of the two Where next swaps."
+status: completed
+outcome: New Usability testing Lesson merged (PR 3548) after the owner's merge.
+summary: "A scheduled glassbox-curate run, so every choice was agent-initiated and no human prompted it. Orientation showed no open Glass Box PRs. The owner's direction items on the memory page were open questions or too broad, so the run took the first gap, the missing visitor-loop page, and wrote it as a general Lesson on usability testing (source: NN/g Usability 101) that teaches only the Skill's stable idea. An opus writer drafted it with sources; a sonnet claim checker found one overstated cost clause and one misattribution in the scheduled-tasks bullet; most fresh-reader findings were applied, and two leftovers (run, brief and lens before a gloss) went on the memory page. Code-review's Spec reviewer asked for two more pages in pagesRead (added). gate:scoped passed, and the owner merged PR 3548 (a new Lesson waits for them, rule 6). The run stopped after one PR because the session may push only to its own branch."
 prs:
   - "3548"
 docsRead:
@@ -73,21 +73,22 @@ frictions:
   - description: Three source fetches found nothing usable (usability.gov redirect, an MDN 404, an NN/g video page) before the NN/g Usability 101 article, costing several calls.
     solution: writing-pages.md could list the URLs known to hold plain article text for common concepts, or say to check the article's text length first.
     severity: nit
-durationSec: 965
+durationSec: 2288
 models:
-  claude-sonnet-5-5: 117
+  claude-sonnet-5-5: 130
 toolCounts:
   Read: 16
   Skill: 4
-  Bash: 36
+  Bash: 38
   Agent: 6
-  ReadNotifications: 1
+  ReadNotifications: 5
   SendMessage: 1
   ToolSearch: 1
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   PushNotification: 1
+  mcp__github__pull_request_read: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/agents/45.usability-testing.md
   - layers/glassbox/content/guide/pages/verification/80.headless-browser-checks.md
@@ -421,37 +422,37 @@ subagents:
     durationSec: 469
     toolCalls: 54
     modelCalls: 41
-    tokenShare: 25.4
+    tokenShare: 22.8
   - task: Fresh reader of new Lesson
     model: sonnet
     durationSec: 17
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 2.3
+    tokenShare: 2.1
   - task: Claim-check new Lesson
     model: sonnet
     durationSec: 53
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 3.9
+    tokenShare: 3.5
   - task: Fresh reader re-read
     model: sonnet
     durationSec: 10
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 1.4
+    tokenShare: 1.3
   - task: Standards review of Lesson
     model: sonnet
     durationSec: 34
     toolCalls: 8
     modelCalls: 3
-    tokenShare: 2.3
+    tokenShare: 2.1
   - task: Spec review of Lesson
     model: sonnet
     durationSec: 29
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 2.3
+    tokenShare: 2
 gitBranch: claude/compassionate-bardeen-y2e21r
 entrypoint: remote_trigger
 cliVersion: 2.1.330
