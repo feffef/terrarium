@@ -50,11 +50,6 @@ fixes:
     date: "2026-11-19"
     summary: "Review comes before opening the PR as numbered steps in pr-workflow.md; merge-pr.ts requires proof behind a Reviewed: line and applies the full simple-change test to an Own-read verdict."
 occurrences:
-  - session: session_013zxzeQ7Ra7VbsnEayuBNNi
-    date: "2026-11-06"
-    severity: minor
-    description: "I skipped the Skill's fresh-reader and claim-checker steps and the subagent code-review, doing a lead-only read, a deviation from the Skill and pr-workflow."
-    solution: "Give cut-only edits an explicit lighter path in glassbox-curate, so skipping is allowed rather than a judgement."
   - session: session_013zxzeRwjiiLkjj6sQ3u49g
     date: "2026-11-07"
     severity: minor

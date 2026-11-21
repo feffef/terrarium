@@ -1,0 +1,19 @@
+name: tdd-seam-confirmation-for-builders
+summary: "The tdd Skill asks the user to confirm test seams, which a builder subagent cannot do, so builders improvised or skipped the step."
+cause: "The tdd Skill requires user-confirmed seams while the clear-backlog build brief tells the builder to decide itself or the change is prose, so the step has no one to ask and no seam. Signals: 'tdd', 'confirm seams', builder, testability line."
+surface: safe
+status: tracked
+related:
+  - entry: subagent-brief-defects
+    rule: The brief or workflow prompt itself holds a wrong value; here the Skill asks for a confirmation a builder cannot give.
+occurrences:
+  - session: session_013zxzeSbz6S2A8goaq25ibN
+    date: "2026-11-19"
+    severity: nit
+    description: "Retro, #3481 builder: the tdd Skill wants the user to confirm test seams, which a builder can't ask; it treated the brief's testability line as the agreed seam."
+    solution: "clear-backlog-build.js rules(): the brief's testability notes are the agreed tdd seams."
+  - session: session_013zxzeTKSiBSmkCLfn4BYL6
+    date: "2026-11-20"
+    severity: nit
+    description: "Retro (3 builders): the Implement Skill and brief ask for tdd with user-confirmed seams while the brief says decide yourself, so a prose or small change had no seam and the step was dead weight."
+    solution: "Add one line in rules() of the build workflow: tdd seams are picked by the builder, and skip tdd for content-only edits."

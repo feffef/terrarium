@@ -13,11 +13,6 @@ fixes:
     date: "2026-11-12"
     summary: "clear-backlog-build: wrap width is the builder's check (a length check before committing), not a review finding."
 occurrences:
-  - session: session_013zxzeRCJHe4rmKN5i2CQ16
-    date: "2026-11-06"
-    severity: nit
-    description: "An 80-column re-wrap needed two commits because the agent missed one long line, and each commit meant another full gate run."
-    solution: "Give the agent the awk check up front and ask it to run it before committing."
   - session: session_013zxzeQwU4eYGrEvV8x42ts
     date: "2026-11-08"
     severity: minor

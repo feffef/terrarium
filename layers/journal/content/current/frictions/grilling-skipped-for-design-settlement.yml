@@ -9,11 +9,6 @@ related:
 notes: |-
   2026-11-08 design: no change dropped: 3 of 5 sessions are not defects (T5vcQT owner said 'choose yourself', Sy38XR clear-backlog says its list wins); NpEgo already had 'settle every decision via grilling' in glassbox-curate, read and ignored, so more prose is the wrong mechanism; the delegation clause is in issue #2962
 occurrences:
-  - session: session_013zxzeRCJHe4rmKN5i2CQ16
-    date: "2026-11-06"
-    severity: minor
-    description: "Zod shapes and the list look were settled with the spec session, not the owner, and the grilling Skill was not invoked."
-    solution: "When the spec says settle with the owner, ask the owner directly in the first round, then use grilling."
   - session: session_013zxzeSy38XR1wPjCGFUExY
     date: "2026-11-07"
     severity: nit

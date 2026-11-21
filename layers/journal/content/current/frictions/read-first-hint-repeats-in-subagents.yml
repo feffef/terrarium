@@ -47,3 +47,8 @@ occurrences:
     severity: minor
     description: "Retro, 7 reviewers: PostToolUse read-first hints (git-conventions.md, github-integration.md) fired on read-only git log, git diff and gh api calls in read-only reviewers; no read changed anything."
     solution: "Exempt read-only review subagents from those hints in the hook under scripts/hooks/ (Human-only), or say in reviewPrompt() that the hint can be skipped."
+  - session: session_013zxzeTKSiBSmkCLfn4BYL6
+    date: "2026-11-20"
+    severity: minor
+    description: "Retro (9 of 12 reviewers): the SubagentStart rule-use echo ritual cost two extra Bash calls per read-only reviewer with every listed rule unrelated, and builders got the same ADR read reminder after every edit."
+    solution: "Skip the rule-use ask for read-only review subagents in scripts/hooks, and send a path-scoped ADR reminder once per session, not per edit."

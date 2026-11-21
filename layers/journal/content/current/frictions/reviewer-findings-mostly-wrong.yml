@@ -1,0 +1,23 @@
+name: reviewer-findings-mostly-wrong
+summary: "Most of a review round's findings were rejected by the checkers, so the reviewer tokens bought little."
+cause: "Reviewers raise findings (drift in dated research snapshots, etc.) without verifying them against source, and the checker round marks most WRONG. Signals: 'WRONG', checkers contradicting each other, fraction of findings rejected."
+surface: safe
+status: open
+related:
+  - entry: followup-review-overcost
+    rule: Findings were raised and rejected by checkers; here the cost is wrongness, not re-running.
+  - entry: relayed-subagent-claims
+    rule: A reviewer finding the checkers rejected before it shipped.
+notes: |-
+  2026-11-21 design: reviewer brief in audit-docs step 1.3 should name step 3's WRONG test: dropped: checkers marking most findings WRONG is the two-stage design working; the 11-19 run is one outlier; wait for a third occurrence.
+occurrences:
+  - session: session_013zxzePPb9GTvLBJgGBgspQ
+    date: "2026-11-19"
+    severity: minor
+    description: "Checkers found 17 of 26 reviewer findings WRONG, so most reviewer tokens bought nothing."
+    solution: "Tell reviewers to quote the whole rule list of a rewrite and to skip ADR-vs-code tensions that need an owner decision."
+  - session: session_013zxzePk8A62uhWQwXox3e6
+    date: "2026-11-20"
+    severity: minor
+    description: "One reviewer's findings on dated research snapshots were WRONG as drift, and its cut-to-pointer rewrites dropped a live caveat; checkers contradicted each other on three."
+    solution: "Tell reviewers that a doc with a stated review date is a snapshot, not drift."

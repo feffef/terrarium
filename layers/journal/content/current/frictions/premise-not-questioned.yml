@@ -28,11 +28,6 @@ fixes:
     date: "2026-11-08"
     summary: "glassbox-curate SKILL.md: before taking any lead from the memory page, check it still stands and that no earlier step (settled titles, a pending Subject move) should come first (closes #2958)."
 occurrences:
-  - session: session_013zxzeTDG9WP45rYE5hRMpG
-    date: "2026-11-06"
-    severity: minor
-    description: "Proposed a claim check on cited-file changes without first reading glassbox-update, which already does it daily; the owner had to point out the overlap"
-    solution: "Before proposing a change to one Glass Box Skill, read the sibling Skills that touch the same pages"
   - session: session_013zxzeRCCqrxVitqSaxJa4K
     date: "2026-11-07"
     severity: moderate
@@ -73,3 +68,13 @@ occurrences:
     severity: minor
     description: "I copied the owner's pick 'set the status to fixed' and the ledger fix without checking them against the schema (no fixed value; fixes takes a PR number), so the builder, both reviewers and I each spent a step on it."
     solution: "Before dispatch, check a brief's literal values (status words, PR numbers) against the schema, as the briefs' own 'verify claims' rule asks."
+  - session: session_013zxzeTKSiBSmkCLfn4BYL6
+    date: "2026-11-20"
+    severity: moderate
+    description: "The owner judged my #3530 Skill rewording unhelpful; explore had said stopping after one PR and skipping steps are separate failures that wording may not fix, yet I built the wording change as picked."
+    solution: "When explore says an option may not fix the cause, ask for a dedicated session or a cause check first, as option d suggested, before building the wording."
+  - session: session_013zxzeSSEyKMAcAZESc5L4b
+    date: "2026-11-20"
+    severity: minor
+    description: "I assumed several curate sessions could run at once and added a per-focus open-PR refresh; the owner had to correct the premise."
+    solution: "Ask how many sessions run concurrently before designing coordination between them (CLAUDE.md: question the premise)."

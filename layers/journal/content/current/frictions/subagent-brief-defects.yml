@@ -19,6 +19,8 @@ related:
     rule: The visitor brief left out details its visitors needed.
   - entry: reviewer-return-channel-mixed
     rule: The brief named two different return channels for the same agent.
+  - entry: tdd-seam-confirmation-for-builders
+    rule: The tdd Skill asks the builder for a user-confirmed seam it cannot ask for.
 fixes:
   - pr: 2150
     date: "2026-10-16"
@@ -48,11 +50,6 @@ notes: |-
   2026-10-23 re-cluster: 01Fay2Gi (a check grepping failure-only output), 013RCsUF (dated content not excluded), 011RZgGT (explore triage schema lacks the ADR-0004 exception), 011xvPjJ (audit-skills ids, PR 2318), 01XWMuHG (auth research boundary), 01WxHaU2 (workflow agent asked to dispatch), 0135hcUf and 01VH74k3 (frictions-to-fixes Skill briefs) each need their own fix; left here as single low-severity strays.
   2026-11-13 survey: Le6nsJ (2026-11-12) dispatched PAGES_PLACEHOLDER and FULL_PLACEHOLDER unfilled; the #3064 guard pattern (@@NAME@@ or braces) does not match that form. Issue #3227 (audit-skills, opened 2026-11-13) tracks unfilled placeholders.
 occurrences:
-  - session: session_013zxzeRCJHe4rmKN5i2CQ16
-    date: "2026-11-06"
-    severity: minor
-    description: "The curate Skill's first draft missed five design items; the brief pointed at the design issue but the agent worked from my summary, costing three review-and-gate rounds."
-    solution: "In a brief for a Skill built from a design issue, list each required behaviour from the design, or tell the agent to read the numbered steps in full before drafting."
   - session: session_013zxzeSZva1TWwL6nLdEnUa
     date: "2026-11-08"
     severity: minor
@@ -138,3 +135,13 @@ occurrences:
     severity: nit
     description: "The builder brief says to run e2e in the background and poll, but the subagent background guard denies it, so the builder retried in the foreground."
     solution: "Say foreground with timeout 600000 for builders in rules() in .claude/workflows/clear-backlog-build.js."
+  - session: session_013zxzeSbz6S2A8goaq25ibN
+    date: "2026-11-19"
+    severity: minor
+    description: "Retro, 5 of 8 #3483 reviewers: the brief gave the agreed spec only as an issue-comment URL, so every reviewer fetched it with gh api and drew a read-github-integration hint."
+    solution: "clear-backlog-build.js common(b): have the builder save the spec text to the branch folder once and point reviewers at that file."
+  - session: session_013zxzeTKSiBSmkCLfn4BYL6
+    date: "2026-11-20"
+    severity: minor
+    description: "Retro (6 of 7 builders): the build brief told them to run e2e in the background and prescribed a gate line with cd and semicolons, but the subagent guards refuse both; each refusal cost a retry and one silently dropped a decisions.md write."
+    solution: "In rules() of .claude/workflows/clear-backlog-build.js say gate and e2e run in the foreground with timeout 600000, one command per Bash call, and name the gate line as the exception."

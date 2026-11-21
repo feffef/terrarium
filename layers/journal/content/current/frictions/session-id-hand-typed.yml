@@ -13,11 +13,6 @@ related:
 notes: |-
   2026-10-28 design: a guard or prose line dropped: .githooks/commit-msg corrects a wrong trailer and github-provenance-guard.ts denies a wrong id on a post and hands back the right one, so a slip costs one retry, and a guard edit is Human-only.
 occurrences:
-  - session: session_013zxzeRCJHe4rmKN5i2CQ16
-    date: "2026-11-06"
-    severity: nit
-    description: "Wrote the spec session's id into a commit-message trailer; the commit hook corrected it."
-    solution: "Copy the id from my own system-prompt commit template, never from an issue body."
   - session: session_013zxzeRYiNjyrjrq8JVWSuu
     date: "2026-11-07"
     severity: nit
@@ -163,3 +158,13 @@ occurrences:
     severity: nit
     description: "The explore agent's comment on #3481 misspells one session id (its own side finding); the comment was left uncorrected."
     solution: "Explore agents should copy session ids from the log filename, never retype them."
+  - session: session_013zxzeTKSiBSmkCLfn4BYL6
+    date: "2026-11-20"
+    severity: minor
+    description: "I passed the explore workflow a wrong session id; the provenance guard blocked each agent's first comment and nine agents had to retry with the id it printed."
+    solution: "Copy the id from the Claude-Session trailer or get_session verbatim before passing it, and have the workflow check it once up front."
+  - session: session_013zxzePzEySsawKSfNrCBtk
+    date: "2026-11-20"
+    severity: nit
+    description: "Rewrote the #3340 body keeping its old session header; the ADR-0017 guard blocked the call and I resent it."
+    solution: "When rewriting a body wholesale, replace the header first; the guard worked as designed."

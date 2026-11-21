@@ -23,3 +23,8 @@ occurrences:
     severity: nit
     description: "The reviewer brief names code-review SKILL.md section 3 for the smell baseline, but the heading is '### 3' (lines 34-56); three reviewers grepped '^## 3' and missed it."
     solution: "Write the line range in reviewPrompt() in .claude/workflows/clear-backlog-build.js."
+  - session: session_013zxzeTKSiBSmkCLfn4BYL6
+    date: "2026-11-20"
+    severity: nit
+    description: "Retro (6 reviewers): the review brief points to section 3 of code-review SKILL.md, found only by grep, so reviewers read spawn instructions they were told to skip."
+    solution: "Move the smell baseline to its own short file, or inline it in reviewPrompt(), so one home serves code-review and the workflow."

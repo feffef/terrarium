@@ -17,16 +17,6 @@ fixes:
     date: "2026-11-08"
     summary: "CLAUDE.md gained a bullet: before you plan or design, read the full ADR of each decision the plan touches."
 occurrences:
-  - session: session_013zxzeRCJHe4rmKN5i2CQ16
-    date: "2026-11-06"
-    severity: major
-    description: "Built a cross-Space read although ADR-0006 says a page reads only its own Space; I leaned on the Journal precedent and the spec session's advice."
-    solution: "Treat a recommendation from another session as non-binding against an ADR; ask the owner before building anything that needs an exception."
-  - session: session_013zxzeQUzcNjB7oD8ukBLGp
-    date: "2026-11-06"
-    severity: minor
-    description: "The spec put a workshop link in the guide overview without checking page-checks.ts, which forbids guide links outside the guide; caught only by review"
-    solution: "Grep the page checks for link rules before specifying a new link on a Glass Box page"
   - session: session_013zxzeNd2Ethpd3anqbmpkr
     date: "2026-11-09"
     severity: minor
@@ -52,3 +42,8 @@ occurrences:
     severity: minor
     description: "CLAUDE.md says read the full ADR of each decision a plan touches; I recommended changes around ADR-0004, 0009, 0017 and 0027 from lessons and rule summaries only."
     solution: "For a repo-wide assessment, have the lesson-digest agents also read the cited ADRs, or say in the output that reasons come from lessons."
+  - session: session_013zxzeTKSiBSmkCLfn4BYL6
+    date: "2026-11-20"
+    severity: minor
+    description: "A builder found only at gate time that ADR-0015 and a schema comment said observations are not shown, then re-stamped a rule and widened a Glass Box glob; HEAD moved after review and cost an extra re-check and gate."
+    solution: "Brief builders of a new displayed value to grep every statement saying it is not shown (docs, ADRs, schema comments, Glass Box pages) before building."

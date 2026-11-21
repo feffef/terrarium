@@ -15,11 +15,6 @@ fixes:
     date: "2026-11-07"
     summary: "CLAUDE.md 'Ask before building' said to agree sections and tone on a short sample before drafting an owner-shaped page; PR #3032 narrowed it to UI builds only (2026-11-10)."
 occurrences:
-  - session: session_013zxzeQUzcNjB7oD8ukBLGp
-    date: "2026-11-06"
-    severity: moderate
-    description: "First drafts of the memory page went long and mixed levels; the owner needed three review rounds (retired concepts, derivable facts, plain language) to reach the shape they wanted"
-    solution: "Before drafting a page an agent will read every run, agree its sections and tone with the owner on a short sample"
   - session: session_013zxzeQ9FTpQjBywTHWkdXF
     date: "2026-11-13"
     severity: nit

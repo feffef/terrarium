@@ -36,11 +36,6 @@ fixes:
     date: "2026-11-13"
     summary: "gate-edit-guard.ts also denies git add, stash, checkout and reset (not only commit) while a gate runs, per worktree; scripted Bash writes are left alone."
 occurrences:
-  - session: session_013zxzeQUzcNjB7oD8ukBLGp
-    date: "2026-11-06"
-    severity: minor
-    description: "Started gate:scoped in parallel with the code-review subagents, then committed their fixes, so the gate aborted and had to run twice more"
-    solution: "Run the gate only after review fixes are committed; reviews and the gate are not parallel work"
   - session: session_013zxzeQWJUyfuXJgdfypeuc
     date: "2026-11-07"
     severity: minor
@@ -201,3 +196,13 @@ occurrences:
     severity: minor
     description: "I edited the Digest wording while gate:scoped ran, so it aborted on a changed tree and I reran it, costing about a minute."
     solution: "Gather review fixes first; start the gate only once every edit is done."
+  - session: session_013zxzeRhr3pqcz2wZXYQPXK
+    date: "2026-11-20"
+    severity: minor
+    description: "I edited a page while gate:scoped was running; it aborted at the tree-change check and had to be rerun, costing a full gate cycle."
+    solution: "Finish all edits and reviews before starting the gate, as pr-workflow step 5 says."
+  - session: session_013zxzeSSEyKMAcAZESc5L4b
+    date: "2026-11-20"
+    severity: nit
+    description: "I started gate:scoped twice and had to stop it both times because the owner's next edit came in mid-run."
+    solution: "In an interactive design session, ask whether more edits are coming before starting a long gate."
