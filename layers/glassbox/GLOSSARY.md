@@ -142,7 +142,7 @@ nobody writes that list.
 The folder a lesson is grouped under, usually the tool whose official docs its
 *The concept* section links. A large tool may split into several subjects by
 topic, as Claude Code does (**Claude Code**, **Hooks**, **Agents & automation**). **Verification** instead groups the merge gate
-with the lessons on its checks, whatever the tool. Terrarium's own patterns
+with the lessons on how Terrarium checks its work, whatever the tool. Terrarium's own patterns
 with no official doc form the **House rules** subject, in the folder
 `terrarium-practice/`.
 
