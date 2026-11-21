@@ -1,0 +1,571 @@
+schemaVersion: 1
+session: session_013zxzeQLrTRb5hCDjSRuQHb
+startedAt: 2026-11-21T02:07:27Z
+endedAt: 2026-11-21T02:27:36Z
+kind: autonomous
+goal: Turn recent session Frictions into fixes
+status: in-review
+outcome: Ledger PR merged; one fix PR open for a human merge; one regression issue filed
+summary: "Scheduled frictions-to-fixes run, no human prompt (agent-initiated throughout, per the Skill). A survey subagent filed 61 occurrences from 29 sessions (3 new entries, fixes #3532 and #3537 recorded). Screening found one regression with moderate severity since its fix (harvest-first-pass-shallow), filed as issue #3543. Of the never-fixed candidates, a design subagent recommended: one dispatch (tdd seam confirmation clashing with builders), one dispatch (audit-docs reviewer brief), one no change (blog-post fan-out entry was really an audit-skills run, so its text was corrected). I dropped the audit-docs one (design working as intended, one outlier run) and dispatched only the tdd fix to a Sonnet builder; its PR #3544 changes a workflow prompt no test observes, so it is escalated for a human merge, with its own fixes ledger entry added. The ledger PR #3545 merged after a full code-review, because a many-file data PR fails the simple-change test. No closing ledger PR was needed: no fix PR merged or was abandoned."
+prs:
+  - "3543"
+  - "3544"
+  - "3545"
+docsRead:
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/adr/0005-skill-model.md
+    reason: (no reason given)
+  - path: .claude/skills/frictions-to-fixes/survey-brief.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: layers/journal/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/design-brief.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/impl-brief.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/brief.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: .agents/skills/implement/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: (no reason given)
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: frictions-to-fixes
+    reason: (invoked as a slash command)
+frictions:
+  - description: Ran git commands, then GitHub calls and filed an issue, before reading git-conventions.md, github-integration.md and triage-labels.md; hooks named each doc afterwards.
+    solution: Read the three docs at run start; the Skill could list them as reads for this run.
+    severity: nit
+  - description: Typed a session id from memory in the regression issue body; the provenance guard blocked it and I retried with the real id.
+    solution: Copy the id from the system prompt's trailer template before writing any body.
+    severity: nit
+  - description: First survey dispatch was blocked by the dispatch-read guard because my brief named the scratch placeholder in prose, costing one retry.
+    solution: The Skill's brief says to fill placeholders; reword the dispatch instruction to name the directory rather than the placeholder.
+    severity: nit
+  - description: The ledger PR, 61 machine-written occurrences, failed the simple-change test, so merge-pr refused my own-read verdict and I ran a full two-agent code-review that found only judgement calls.
+    solution: Skill step 5.4 says review the ledger PR by the simple-change test; say what a data-only ledger PR needs instead (its content spec and gate).
+    severity: minor
+  - description: The design agent's pick 1 showed the survey ledger entry named the wrong Skill (audit-skills, not blog-post); the survey had flagged it unverified and the brief has no step for a mislabelled entry.
+    solution: "Survey brief: when a Friction's named home cannot be found in source, check the session's trigger before opening an entry."
+    severity: minor
+  - description: Review of a one-line workflow prompt edit still cost two review subagents (about 150k tokens) because ADR-0004 does not count a .claude/workflows file as a simple change.
+    solution: Known followup-review-overcost; no change proposed here.
+    severity: nit
+durationSec: 1208
+models:
+  claude-sonnet-5-5: 111
+toolCounts:
+  Bash: 35
+  Skill: 5
+  Agent: 8
+  ToolSearch: 1
+  mcp__github__issue_write: 2
+  mcp__github__create_pull_request: 2
+  mcp__github__add_issue_comment: 4
+  mcp__github__subscribe_pr_activity: 2
+  ReadNotifications: 5
+  PushNotification: 1
+filesEdited:
+  - layers/journal/content/current/frictions/tdd-seam-confirmation-for-builders.yml
+  - .claude/workflows/clear-backlog-build.js
+  - layers/journal/content/current/frictions/adr-read-after-edit.yml
+  - layers/journal/content/current/frictions/audit-skills-run-cost.yml
+  - layers/journal/content/current/frictions/bare-cd-moves-session-cwd.yml
+  - layers/journal/content/current/frictions/blocked-waiting.yml
+  - layers/journal/content/current/frictions/blog-post-behaviour-fanout-cost.yml
+  - layers/journal/content/current/frictions/check-worktrees-unpushed-flags.yml
+  - layers/journal/content/current/frictions/close-session-bypassed-by-hand-log.yml
+  - layers/journal/content/current/frictions/closing-keyword-in-pr-body.yml
+  - layers/journal/content/current/frictions/closure-not-invoked-on-answers.yml
+  - layers/journal/content/current/frictions/constraint-unread-before-build.yml
+  - layers/journal/content/current/frictions/counts-from-wrong-filter.yml
+  - layers/journal/content/current/frictions/curate-autonomous-vs-ask.yml
+  - layers/journal/content/current/frictions/diagnosis-from-partial-evidence.yml
+  - layers/journal/content/current/frictions/dispatch-read-guard-deny.yml
+  - layers/journal/content/current/frictions/double-background.yml
+  - layers/journal/content/current/frictions/drafts-caught-by-fact-check.yml
+  - layers/journal/content/current/frictions/edit-during-gate-run.yml
+  - layers/journal/content/current/frictions/followup-review-overcost.yml
+  - layers/journal/content/current/frictions/frictions-to-fixes-briefs-mismatch.yml
+  - layers/journal/content/current/frictions/frictions-to-fixes-skill-gaps.yml
+  - layers/journal/content/current/frictions/gate-comment-sha-not-head.yml
+  - layers/journal/content/current/frictions/glassbox-curate-run-cost.yml
+  - layers/journal/content/current/frictions/glassbox-update-edited-range-pages-left-stale.yml
+  - layers/journal/content/current/frictions/grilling-skipped-for-design-settlement.yml
+  - layers/journal/content/current/frictions/harness-proxy-blocks.yml
+  - layers/journal/content/current/frictions/irrelevant-rules-loaded.yml
+  - layers/journal/content/current/frictions/late-formatting-fix-reruns-gate.yml
+  - layers/journal/content/current/frictions/late-read-first-docs.yml
+  - layers/journal/content/current/frictions/ledger-yaml-hand-edit-errors.yml
+  - layers/journal/content/current/frictions/mechanism-claim-from-recall.yml
+  - layers/journal/content/current/frictions/misread-owner-instruction.yml
+  - layers/journal/content/current/frictions/orient-output-truncates.yml
+  - layers/journal/content/current/frictions/output-trim-drops-needed-line.yml
+  - layers/journal/content/current/frictions/peer-session-message-no-reply.yml
+  - layers/journal/content/current/frictions/pending-verdicts-subagent-only-docs.yml
+  - layers/journal/content/current/frictions/pr-number-guessed-before-create.yml
+  - layers/journal/content/current/frictions/pr-workflow-unread-before-push.yml
+  - layers/journal/content/current/frictions/premise-not-questioned.yml
+  - layers/journal/content/current/frictions/prepush-gate-review-skipped.yml
+  - layers/journal/content/current/frictions/relayed-subagent-claims.yml
+  - layers/journal/content/current/frictions/required-doc-read-truncated.yml
+  - layers/journal/content/current/frictions/reviewer-findings-mostly-wrong.yml
+  - layers/journal/content/current/frictions/rewrite-draft-keeps-old-framing.yml
+  - layers/journal/content/current/frictions/session-id-hand-typed.yml
+  - layers/journal/content/current/frictions/skill-mode-not-detectable.yml
+  - layers/journal/content/current/frictions/stop-hook-nag.yml
+  - layers/journal/content/current/frictions/subagent-brief-defects.yml
+  - layers/journal/content/current/frictions/subagent-brief-omits-verdict-ask.yml
+  - layers/journal/content/current/frictions/survey-output-overflow.yml
+  - layers/journal/content/current/frictions/verdict-comment-hand-typed.yml
+  - layers/journal/content/current/frictions/draft-style-caught-by-review.yml
+  - layers/journal/content/current/frictions/edit-leaves-contradicting-sibling.yml
+  - layers/journal/content/current/frictions/git-checkout-misused-to-read-or-switch.yml
+  - layers/journal/content/current/frictions/glassbox-curate-steps-skipped.yml
+  - layers/journal/content/current/frictions/governing-doc-read-after-draft.yml
+  - layers/journal/content/current/frictions/harvest-first-pass-shallow.yml
+  - layers/journal/content/current/frictions/harvest-list-read-cost.yml
+  - layers/journal/content/current/frictions/merge-pr-review-args-refusal.yml
+  - layers/journal/content/current/frictions/placeholder-guard-denies-quoted-placeholder.yml
+  - layers/journal/content/current/frictions/pr-body-angle-bracket-rejected.yml
+  - layers/journal/content/current/frictions/read-first-hint-repeats-in-subagents.yml
+  - layers/journal/content/current/frictions/review-brief-section-ref-unmatchable.yml
+  - layers/journal/content/current/frictions/reviewer-return-channel-mixed.yml
+  - layers/journal/content/current/frictions/rewrite-pass-scope-drift.yml
+  - layers/journal/content/current/frictions/rule-use-echo-calls-in-subagents.yml
+  - layers/journal/content/current/frictions/visitor-loop-brief-gaps.yml
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0004-human-merge.md
+adrHints:
+  - adr: 5
+    via: path
+    readAfter: true
+    by: subagent
+docsReadBySubagents:
+  - docs/agents/git-conventions.md
+  - docs/adr/0005-skill-model.md
+  - layers/journal/GLOSSARY.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/audit-skills/brief.md
+  - docs/agents/guards.md
+  - .agents/skills/implement/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - docs/adr/0004-objective-safety-gate.md
+  - .agents/skills/writing-for-agents/SKILL.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/pr-workflow.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/pr-workflow.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: ran code-review; escalated unobservable prompt edit
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: opened PRs after review and gate
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: guard fixed my hand-typed session id
+      - path: .claude/rules/adr-0009.md
+        value: in-scope
+      - path: .claude/rules/adr-0005.md
+        value: in-scope
+      - path: .claude/rules/adr-0027.md
+        value: confirmed
+        why: "agreed: subagent-brief-defects on trial, dropped"
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: confirmed
+        why: "agreed: workflow file not on the list"
+      - path: .claude/rules/adr-0015.md
+        value: steered
+        why: tdd Skill is installed; fix went to workflow
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/rules/adr-0030.md
+        value: unrelated
+      - path: docs/agents/pr-workflow.md
+      - path: .agents/skills/frictions-to-fixes/survey-brief.md
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .claude/skills/frictions-to-fixes/survey-brief.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .claude/skills/frictions-to-fixes/survey-brief.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/journal/GLOSSARY.md
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/journal/GLOSSARY.md
+      - rule: .claude/rules/adr-0008.md
+        via: native
+        trigger: layers/journal/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/journal/GLOSSARY.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0027.md
+        value: in-scope
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0015.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: missed
+        why: "late:"
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/adr-0008.md
+        value: in-scope
+      - path: .claude/rules/glossary-terms.md
+        value: unrelated
+      - path: docs/agents/git-conventions.md
+      - path: docs/agents/github-integration.md
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/audit-skills/SKILL.md
+      - rule: .claude/rules/adr-0015.md
+        via: native
+        trigger: .agents/skills/audit-skills/SKILL.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/audit-skills/SKILL.md
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: docs/adr/0004-objective-safety-gate.md
+      - rule: .claude/rules/adr-0030.md
+        via: native
+        trigger: docs/adr/0004-objective-safety-gate.md
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0015.md
+        value: steered
+      - path: .claude/rules/adr-0027.md
+        value: steered
+      - path: .claude/rules/adr-0005.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0030.md
+        value: unrelated
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/adr-0022.md
+        value: unrelated
+      - path: .claude/rules/adr-0012.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: docs/adr/0004-objective-safety-gate.md
+      - path: docs/agents/guards.md
+  - by: general-purpose
+    subagent: 3
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0030.md
+        via: native
+        trigger: docs/adr/0005-skill-model.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: docs/adr/0005-skill-model.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: confirmed
+        why: "agreed:"
+  - by: general-purpose
+    subagent: 4
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0005.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0027.md
+        value: in-scope
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0030.md
+        value: unrelated
+      - path: .agents/skills/writing-for-agents/SKILL.md
+  - by: general-purpose
+    subagent: 5
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 6
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/frictions-to-fixes/survey-brief.md
+      - rule: .claude/rules/adr-0015.md
+        via: native
+        trigger: .agents/skills/frictions-to-fixes/survey-brief.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/frictions-to-fixes/survey-brief.md
+    reported: []
+  - by: general-purpose
+    subagent: 7
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+subagents:
+  - type: general-purpose
+    task: Survey frictions
+    denied: true
+  - type: general-purpose
+    task: Survey frictions
+    durationSec: 385
+    toolCalls: 35
+    modelCalls: 33
+    tokenShare: 24.8
+  - type: general-purpose
+    task: Design friction fixes
+    durationSec: 167
+    toolCalls: 30
+    modelCalls: 27
+    tokenShare: 12.9
+  - type: general-purpose
+    task: Build tdd seam fix
+    model: sonnet
+    durationSec: 113
+    toolCalls: 11
+    modelCalls: 8
+    tokenShare: 4.7
+  - type: general-purpose
+    task: Standards review
+    durationSec: 17
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 1.9
+  - type: general-purpose
+    task: Spec review
+    durationSec: 13
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 1.6
+  - type: general-purpose
+    task: Standards review ledger
+    durationSec: 21
+    toolCalls: 6
+    modelCalls: 5
+    tokenShare: 2.7
+  - type: general-purpose
+    task: Spec review ledger
+    durationSec: 48
+    toolCalls: 12
+    modelCalls: 10
+    tokenShare: 4.3
+gitBranch: claude/eager-ptolemy-7qzv57
+entrypoint: remote_trigger
+cliVersion: 2.1.330
+trigger: frictions-to-fixes
+landedBy: Stop
