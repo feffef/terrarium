@@ -22,11 +22,6 @@ fixes:
     date: "2026-10-28"
     summary: "CLAUDE.md says to read a required doc whole if you can, no longer in one Read call: partial reads are encouraged against, not required."
 occurrences:
-  - session: session_013zxzeTDG9WP45rYE5hRMpG
-    date: "2026-11-06"
-    severity: minor
-    description: "Read docs/agents/github-integration.md with head -80, against CLAUDE.md's read-it-whole rule; a later write trap could have been missed"
-    solution: "Read trigger docs whole with the Read tool; it costs a few hundred tokens"
   - session: session_013zxzeRCCqrxVitqSaxJa4K
     date: "2026-11-07"
     severity: minor

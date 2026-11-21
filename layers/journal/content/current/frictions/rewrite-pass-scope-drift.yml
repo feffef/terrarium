@@ -24,3 +24,8 @@ occurrences:
     severity: moderate
     description: "In the first build I cut the builder's gate:scoped log and Bash-timeout recipe while simplifying rules(); all three reviewers caught it, costing a fix round."
     solution: "When rewriting a prompt, diff the removed lines and give each a reason to drop; a removed timeout is load-bearing."
+  - session: session_013zxzeQyUcqMctvqKtP4sHL
+    date: "2026-11-20"
+    severity: minor
+    description: "My first reflow of Adding a site stop 8 moved a claim about what the smoke test never visits; only code-review caught it."
+    solution: "The Skill could say a reflow of a fact sentence is a Fix needing a writer or claim check, not a Removal."

@@ -6,8 +6,6 @@ cause: >-
 surface: safe
 status: open
 related:
-  - entry: gate-comment-sha-not-head
-    rule: The gate bot's comment names a merge-ref SHA that was read as the PR head.
   - entry: verdict-line-asserts-unchecked-review
     rule: The SHA was right but the line asserted a review that never ran.
   - entry: session-id-hand-typed

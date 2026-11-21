@@ -37,3 +37,8 @@ occurrences:
     severity: nit
     description: "Put a stray git checkout --detach into a read-only grep command, which detached HEAD; I noticed from git status and re-attached the session branch in the next call, with nothing lost."
     solution: "Keep read-only searches free of git commands that change state, and check git status after any git call in a compound command."
+  - session: session_013zxzeSsM57HSqjsQnKmeyY
+    date: "2026-11-20"
+    severity: minor
+    description: "Ran git checkout --detach origin/main and fetch before reading docs/agents/git-conventions.md, which CLAUDE.md requires before non-read-only git commands; also left the session branch against CLAUDE.md's stay-on-branch line."
+    solution: "visitor-loop SKILL.md step 1 says 'on a fresh origin/main' but CLAUDE.md says stay on the session branch; state in step 1 which wins (a detached checkout is fine for this read-only run)."

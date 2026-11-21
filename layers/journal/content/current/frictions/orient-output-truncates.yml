@@ -17,16 +17,6 @@ fixes:
     date: "2026-11-16"
     summary: "orient.ts --subject writes the Subject in parts of at most 40 KB to .throwaway/glassbox-curate and prints the part paths and pagesRead block; the full Subject read stays required."
 occurrences:
-  - session: session_013zxzeQUzcNjB7oD8ukBLGp
-    date: "2026-11-06"
-    severity: moderate
-    description: "My orientation script design sent 73KB unfiltered, so every curate run had it cut to a file and one lost the guide-pages section; I had measured words, not the tool's output limit"
-    solution: "Size a script meant for a context against the tool output cap (about 30KB), not a word count"
-  - session: session_013zxzeRJEE2ehNrQTL62nhX
-    date: "2026-11-06"
-    severity: minor
-    description: "Piped orient.ts output through head -300, which truncated the guide-pages section of its output."
-    solution: "Redirect orient output to a file and read it whole."
   - session: session_013zxzeNqe2cXhykGMMq7vUi
     date: "2026-11-07"
     severity: minor

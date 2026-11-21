@@ -32,16 +32,6 @@ fixes:
     date: "2026-11-10"
     summary: "Replaced the rule and doc verdict ask in subagent briefs with out-of-band rule-load and helped.sh hooks that give every subagent a static note."
 occurrences:
-  - session: session_013zxzeSYWF1rye7qScgSUFV
-    date: "2026-11-06"
-    severity: minor
-    description: "Blind-reader and reviewer briefs omitted two CLAUDE.md brief lines (named scratchpad subfolder; sources for counts or unverified marks), so reports carried unverified figures I had to check myself."
-    solution: "Re-read CLAUDE.md's every-brief rule before the first Agent call, or put the lines in the blog-post Skill's brief text."
-  - session: session_013zxzeNeTKPqiQ1jj1FgYXh
-    date: "2026-11-06"
-    severity: minor
-    description: "Three of four subagent briefs (reader, claim checker, code-review pair) omitted CLAUDE.md's required ask for doc and rule verdicts, scratchpad subfolder and sourced counts; only the writer's brief had them."
-    solution: "Make the dispatch-subagents Skill's brief checklist include the CLAUDE.md every-brief line verbatim, so a brief cannot skip it."
   - session: session_013zxzeSRaXnk1QPxkJvswS3
     date: "2026-11-07"
     severity: minor

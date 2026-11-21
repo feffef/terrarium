@@ -7,11 +7,6 @@ related:
   - entry: peer-session-conversation-cost
     rule: Both sessions could reply, but messages crossed or ran on without a stop point.
 occurrences:
-  - session: session_013zxzeR6zoUiicLXRckpnkb
-    date: "2026-11-06"
-    severity: nit
-    description: "My first message to the other session was delivered and read, but it had no tool to reply, so the user relayed its answer by hand; I first misreported this as never reaching it."
-    solution: "Tell the target where to answer, such as an issue comment, since it may be unable to reply. The inspect-session Skill could say so."
   - session: session_013zxzeQWJUyfuXJgdfypeuc
     date: "2026-11-07"
     severity: minor

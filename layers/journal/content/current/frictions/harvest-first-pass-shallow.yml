@@ -44,3 +44,8 @@ occurrences:
     severity: minor
     description: "The Skill gives no rule for stopping early on budget; I stopped with the quota unfilled and wrote an ad hoc stopped line in the checks file."
     solution: "Say in step 2 what to write when the run stops for cost, or make evidence cheap enough that it never happens."
+  - session: session_013zxzeRcU6k3FNodWxgCMJg
+    date: "2026-11-20"
+    severity: moderate
+    description: "Step 4 asks to read each source log whole; I read one log's authored half and the others' summaries only. I also stopped clustering at 12 of up to 30, so dropped-cluster checks are thin."
+    solution: "The harvest Skill could print each source log's authored fields in one command, so reading them whole is cheap."

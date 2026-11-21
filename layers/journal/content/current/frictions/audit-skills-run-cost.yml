@@ -8,6 +8,8 @@ related:
     rule: The fan-out belongs to a glassbox-curate run.
   - entry: subagent-fanout-before-probe
     rule: Many agents were dispatched over transcripts before one was probed.
+  - entry: blog-post-behaviour-fanout-cost
+    rule: The same audit-skills fan-out cost, plus a skipped role/gist read.
 fixes:
   - pr: 3377
     date: "2026-11-16"

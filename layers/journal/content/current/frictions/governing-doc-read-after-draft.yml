@@ -218,3 +218,23 @@ occurrences:
     severity: minor
     description: "Edited layers/journal Inventory files without reading layers/journal/GLOSSARY.md; validate-content then rejected one note that stated a Routine's schedule (the word daily)."
     solution: "Read the Tenant glossary before the first edit under a layer; the cadence rule lives there."
+  - session: session_013zxzePUNdDXiqJrj8m6Bjs
+    date: "2026-11-19"
+    severity: nit
+    description: "Edited journal files for the sample before reading layers/journal/GLOSSARY.md; the guard blocked all five edits once. Also skipped the ADR-0006/0008/0016 reads the hooks asked for."
+    solution: "Read the Tenant glossary when starting work on a Tenant layer; read the ADRs for any change that will ship, not only a sample."
+  - session: session_013zxzePk8A62uhWQwXox3e6
+    date: "2026-11-20"
+    severity: nit
+    description: "tenant-glossary guard blocked the journal Skill Inventory edit until I read layers/journal/GLOSSARY.md, costing one retry."
+    solution: "Read the Tenant glossary when the audit scope includes layers/journal files."
+  - session: session_013zxzeTKSiBSmkCLfn4BYL6
+    date: "2026-11-20"
+    severity: nit
+    description: "I edited Midden and Journal layer files for samples without reading the Tenant glossaries the rule asks for first."
+    solution: "Read the glossary when the first sample edit touches a layer, or run prototypes through a subagent that reads it."
+  - session: session_013zxzeRKMTCrTfnEGHcTwAZ
+    date: "2026-11-21"
+    severity: nit
+    description: "Did not read layers/journal/GLOSSARY.md before editing journal Inventory files; the Tenant-glossary rule loaded after the edits."
+    solution: "Have audit-skills step 5 name the journal glossary as a read-first doc."

@@ -88,3 +88,13 @@ occurrences:
     severity: minor
     description: "The rule-use echo hook ran twice for every read-only reviewer on rules (ADR-0003/0004/0009/0017) that governed nothing in a review, costing two tool calls each."
     solution: "Skip the rule-use echo for read-only review subagents, or ask for it once, in the SubagentStart hook under scripts/hooks/."
+  - session: session_013zxzeSsM57HSqjsQnKmeyY
+    date: "2026-11-20"
+    severity: nit
+    description: "SubagentStart rule-use survey made both the blind and UI visitors spend two extra tool calls on `echo rule-use:` naming rules unrelated to browsing."
+    solution: "Have the SubagentStart hook skip the survey for read-only briefs that quote visitor-brief.md; its home is under scripts/hooks/."
+  - session: session_013zxzeTKSiBSmkCLfn4BYL6
+    date: "2026-11-20"
+    severity: minor
+    description: "Retro (9 of 12 reviewers): the SubagentStart rule-use echo ritual cost two extra Bash calls per read-only reviewer with every listed rule unrelated, and builders got the same ADR read reminder after every edit."
+    solution: "Skip the rule-use ask for read-only review subagents in scripts/hooks, and send a path-scoped ADR reminder once per session, not per edit."

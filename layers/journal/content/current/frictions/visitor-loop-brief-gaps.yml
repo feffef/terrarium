@@ -44,3 +44,8 @@ occurrences:
     severity: minor
     description: "The context file's pages section gave the Journal's routes, but both informed visitors still crawled only 7 pages because digests and sessions open as in-page anchors; each wrote extra scripts."
     solution: "In .agents/skills/visitor-loop/SKILL.md step 2, have the context file mark which routes are reachable only by anchor or typed URL, and let the brief say what to do when a Space has fewer than 10 pages."
+  - session: session_013zxzeSsM57HSqjsQnKmeyY
+    date: "2026-11-20"
+    severity: minor
+    description: "The context file has no recipe: I hand-built it, listing /t/midden/trench twice and omitting query-string and 404 URLs, which the UI tester had to find by guessing."
+    solution: "Add a short generator script under .agents/skills/visitor-loop/scripts/ that writes the four context sections, deduplicated, with each Space's filter URLs and a 404 URL."

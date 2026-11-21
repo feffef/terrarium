@@ -10,8 +10,6 @@ related:
     rule: log-session refused the completed log after a merge and it cost only a call.
   - entry: close-session-reminded-by-stop-hook
     rule: The Stop hook reminded the session after a merge and the cost was one prompt.
-  - entry: closure-not-invoked-on-answers
-    rule: A session that only answered a question did not close.
 fixes:
   - { pr: 2452, date: "2026-10-23", summary: "log-session --author now warns when a completed log follows a merge with no close-session call." }
   - { pr: 2536, date: "2026-10-25", summary: "log-session --author now refuses a completed log after a merge with no close-session call, and writes no scratch." }
@@ -25,11 +23,6 @@ fixes:
     date: "2026-11-07"
     summary: "Closes #2913: merge-close-stop.ts, a Stop hook, blocks the end of a turn once when this session merged a PR and close-session has not run since."
 occurrences:
-  - session: session_013zxzeQDfNNTXpQYQtt9saY
-    date: "2026-11-06"
-    severity: major
-    description: "HUMAN-PROMPTED-CLOSURE: after the merges I ignored three hook hints to re-invoke close-session (ADR-0009) and sent a completed log that was refused; the owner had to prompt me to log again."
-    solution: "Re-invoke close-session right after each merge-pr.ts run, as the hook hint says, then author and read the full output."
   - session: session_013zxzeS6uNt5yvnz5LyUCCe
     date: "2026-11-11"
     severity: nit

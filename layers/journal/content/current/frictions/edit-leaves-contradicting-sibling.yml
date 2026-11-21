@@ -82,3 +82,8 @@ occurrences:
     severity: minor
     description: "The first writer-less fix left a contradicting watch bullet on the same page; only the Spec reviewer caught it."
     solution: "After a fact edit, grep the page for the old phrasing before committing."
+  - session: session_013zxzeSSEyKMAcAZESc5L4b
+    date: "2026-11-20"
+    severity: moderate
+    description: "My first rewrite of glassbox-curate held real contradictions (rule 5 vs rule 6, Instruction mode without a branch step, unmerged PRs at a stop) that took five review passes to clear."
+    solution: "Run one blind dry run of a rewritten Skill on real state before the first code-review; it found in one pass what reviews found over several."
