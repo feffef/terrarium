@@ -84,13 +84,13 @@ const money = useTinkerfundMoney()
       </ul>
     </section>
 
-    <section v-if="home.recentlyEnded.length" aria-labelledby="tf-ended">
+    <section v-if="home.ended.length" aria-labelledby="tf-ended">
       <div class="head">
-        <h2 id="tf-ended">Recently ended</h2>
+        <h2 id="tf-ended">Ended</h2>
         <NuxtLink :to="link('/discover?state=ended&sort=ending')">See all</NuxtLink>
       </div>
       <ul class="grid">
-        <li v-for="c in home.recentlyEnded" :key="c.path"><TinkerfundBrowseCampaignCard :card="c" :clock="clock" reply /></li>
+        <li v-for="c in home.ended" :key="c.path"><TinkerfundBrowseCampaignCard :card="c" :clock="clock" reply /></li>
       </ul>
     </section>
   </div>

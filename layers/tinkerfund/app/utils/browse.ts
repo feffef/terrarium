@@ -244,14 +244,17 @@ const JUST_LAUNCHED = resolveTinkerfundOffset('+14d', 0)
 export function tinkerfundHomeSections<T extends TinkerfundListing>(listings: T[], now: number) {
   const live = listings.filter((l) => l.status.state === 'live')
   const featured = browseTinkerfundListings(live, { sort: 'funded' })[0]
+  const ended = browseTinkerfundListings(listings.filter((l) => l.status.state === 'ended'), { sort: 'ending' })
+  const recent = ended.slice(0, 2)
+  const rest = ended.slice(2)
   return {
     featured,
     endingSoon: browseTinkerfundListings(live, { sort: 'ending', soon: true }),
     popular: browseTinkerfundListings(listings.filter((l) => l.status.state !== 'ended'), { sort: 'popular' }),
     // At most 6 so the 1-, 2- and 3-column grids all end on a full row.
     justLaunched: browseTinkerfundListings(live.filter((l) => l !== featured && l.status.launchAt > now - JUST_LAUNCHED), { sort: 'newest' }).slice(0, 6),
-    // One full row of the 3-column grid.
-    recentlyEnded: browseTinkerfundListings(listings.filter((l) => l.status.state === 'ended'), { sort: 'ending' }).slice(0, 3),
+    // One full row of the 3-column grid: the 2 newest, plus the most funded of the rest so a Funded one shows.
+    ended: [...recent, ...browseTinkerfundListings(rest, { sort: 'funded' }).slice(0, 1)],
   }
 }
 

@@ -25,6 +25,11 @@ comments:
   - author: Grzegorz K.
     posted: -10d
     text: Does the count reset if I get up in the night?
+    replies:
+      - author: Tomasz Wróbel
+        posted: -9d
+        text: It keeps one total for the night and shows it when you wake up.
+        inventor: true
   - author: Marisol A.
     posted: -6d
     text: Backed the Founder's Edition. Twenty of these seems like exactly the right number to make.

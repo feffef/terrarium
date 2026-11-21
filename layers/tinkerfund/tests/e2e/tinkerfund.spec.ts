@@ -28,7 +28,7 @@ describe('tinkerfund Tenant', async () => {
       expect(res.headers.get('location')).toBe('/t/tinkerfund/prod')
     })
 
-    it('quotes the last Inventor reply on Recently ended cards only', async () => {
+    it('quotes the last Inventor reply on Ended cards only', async () => {
       const html = await $fetch<string>('/t/tinkerfund/prod')
       const [before, ended = ''] = html.split('id="tf-ended"')
       expect(before).not.toMatch(/class="reply"/)
