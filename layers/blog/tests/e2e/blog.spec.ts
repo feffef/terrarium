@@ -383,4 +383,20 @@ describe('blog Tenant', async () => {
       await page.close()
     }
   })
+
+  // WCAG 2.5.8 (#3557): the breadcrumb and Back links are tap targets.
+  it('keeps the breadcrumb and Back links at least 24px tall on a phone', async () => {
+    const page = await createPage()
+    try {
+      await page.setViewportSize({ width: 390, height: 844 })
+      await page.goto(url('/t/blog/karen/2026-07-05-after-themselves'), { waitUntil: 'hydration' })
+      const heights = await page
+        .locator('.crumb a, .post-nav-back a')
+        .evaluateAll((els) => els.map((el) => el.getBoundingClientRect().height))
+      expect(heights.length).toBeGreaterThanOrEqual(3)
+      for (const h of heights) expect(h).toBeGreaterThanOrEqual(24)
+    } finally {
+      await page.close()
+    }
+  })
 })
