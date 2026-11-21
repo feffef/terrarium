@@ -86,7 +86,7 @@ describe('tinkerfund Tenant', async () => {
       // WCAG 1.4.11: the ring must sit on the surface, not over the checked option's ink fill.
       // Reset demo stays away until the visitor has changed something (checked below).
       expect(await page.getByRole('button', { name: 'Reset demo' }).count()).toBe(0)
-      await page.locator('.foot').getByRole('link', { name: 'Deals' }).focus()
+      await page.locator('.foot').getByRole('link', { name: 'Inventors' }).focus()
       await page.keyboard.press('Tab')
       expect(await page.getByLabel('System').evaluate((el) => el === document.activeElement)).toBe(true)
       const ring = await page.locator('.theme .options').evaluate((el) => {
