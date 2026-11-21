@@ -61,6 +61,12 @@ describe('the Discover query', () => {
     })).toEqual({ sort: 'popular' })
   })
 
+  it('round-trips the Ended outcomes as states', () => {
+    for (const state of ['funded', 'unfunded'] as const) {
+      expect(parseTinkerfundBrowseQuery(tinkerfundBrowseRouteQuery({ state, sort: 'popular' }))).toEqual({ state, sort: 'popular' })
+    }
+  })
+
   it('reads the first of a repeated key', () => {
     expect(parseTinkerfundBrowseQuery({ state: ['ended', 'live'], min: ['20', '30'] })).toEqual({ state: 'ended', min: 20, sort: 'popular' })
   })
@@ -127,6 +133,8 @@ describe('browsing Campaigns', () => {
   it('filters by category, state, Ending soon and On Deal', () => {
     expect(titles({ sort: 'popular', category: 'workshop' })).toEqual(['kettle', 'hammock'])
     expect(titles({ sort: 'popular', state: 'ended' })).toEqual(['ruler', 'hammock'])
+    expect(titles({ sort: 'popular', state: 'funded' })).toEqual(['ruler'])
+    expect(titles({ sort: 'popular', state: 'unfunded' })).toEqual(['hammock'])
     expect(titles({ sort: 'popular', soon: true })).toEqual(['lamp'])
     expect(titles({ sort: 'popular', deal: true })).toEqual(['stapler'])
     expect(titles({ sort: 'popular', category: 'workshop', state: 'live' })).toEqual([])

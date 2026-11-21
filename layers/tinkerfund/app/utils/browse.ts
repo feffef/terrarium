@@ -18,7 +18,8 @@ export type TinkerfundSort = keyof typeof TINKERFUND_SORTS
 /** Discover's state; it lives in the URL query (issue #1367). */
 export interface TinkerfundBrowseQuery {
   category?: string
-  state?: CampaignState
+  /** Funded and Unfunded are the outcomes of an Ended Campaign. */
+  state?: CampaignState | 'funded' | 'unfunded'
   soon?: true
   deal?: true
   /** Bounds on Reward price, in EUR. */
@@ -46,7 +47,7 @@ export function parseTinkerfundBrowseQuery(raw: Record<string, RouteQueryValue>)
     sort: sort && sort in TINKERFUND_SORTS ? (sort as TinkerfundSort) : 'popular',
   }
   if (category && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(category)) query.category = category
-  if (state === 'upcoming' || state === 'live' || state === 'ended') query.state = state
+  if (state === 'upcoming' || state === 'live' || state === 'ended' || state === 'funded' || state === 'unfunded') query.state = state
   if (first(raw.soon) === '1') query.soon = true
   if (first(raw.deal) === '1') query.deal = true
   const min = price(raw.min)
@@ -225,7 +226,7 @@ export function browseTinkerfundListings<T extends TinkerfundListing>(listings: 
   return listings
     .filter((l) =>
       (!category || l.category === category)
-      && (!state || l.status.state === state)
+      && (!state || (l.status.outcome ?? l.status.state) === state || (state === 'ended' && l.status.state === 'ended'))
       && (!soon || l.status.endingSoon)
       && (!deal || l.promoted)
       && (!priced || l.prices.some((p) => p >= (min ?? 0) && p <= (max ?? Infinity))),
