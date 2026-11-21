@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRX7scgB88vnRUnnJP
 startedAt: 2026-11-21T19:50:28Z
-endedAt: 2026-11-21T20:04:49Z
+endedAt: 2026-11-21T20:08:28Z
 kind: interactive
 goal: Move the Usability testing lesson into Glass Box's Verification subject
-status: in-review
-outcome: PR 3566 open with the move, repointed links and a reworded intro; gate passed, awaiting CI
-summary: "The owner asked whether the Usability testing lesson belongs in Verification rather than Agents. I laid out the case for and against and asked two questions. The owner agreed it isn't a mechanical gate check, dismissed my only counter-argument (Agents losing its lesson about visitor agents), and then asked for a slight intro change explaining why it is a different but useful kind of verification while still an agent routine. Human-instructed: the move, the 85 slot (my suggestion, accepted), the intro rewording, and the PR (\"pr\"). Agent-initiated: repointing the three links, rewording the Verification Subject entry in the Glass Box glossary, trimming the intro after the two code-review sub-agents flagged an unverified claim that the gate blocks a merge on every other Verification check (the headless-browser lesson never mentions the gate) and a redundant sentence. Still open and unchecked: whether reading progress is keyed by path, so readers could lose the lesson's tick, and whether the lesson's revision pin needs refreshing after the intro edit."
+status: completed
+outcome: "Merged: lesson now lives under Verification with links repointed and a reworded intro"
+summary: "The owner asked whether the Usability testing lesson belongs in Verification rather than Agents. I laid out the case for and against and asked two questions. The owner agreed it isn't a mechanical gate check, dismissed my only counter-argument (Agents losing its lesson about visitor agents), and then asked for a slight intro change explaining why it is a different but useful kind of verification while still an agent routine. Human-instructed: the move, the 85 slot (my suggestion, accepted), the intro rewording, and the PR (\"pr\"). Agent-initiated: repointing the three links, rewording the Verification Subject entry in the Glass Box glossary, trimming the intro after the two code-review sub-agents flagged an unverified claim that the gate blocks a merge on every other Verification check (the headless-browser lesson never mentions the gate) and a redundant sentence, and merging through merge-pr.ts once CI's gate was green. Still open and unchecked: whether reading progress is keyed by path, so readers could lose the lesson's tick, and whether the lesson's revision pin needs refreshing after the intro edit."
 prs:
   - "3566"
 docsRead:
@@ -48,22 +48,26 @@ frictions:
   - description: Wrote that the gate can block a merge on every other Verification check without reading the sibling lessons; both reviewers flagged it and I removed it.
     solution: Check each sibling lesson for the claimed property before writing a claim about all of them.
     severity: nit
-durationSec: 862
+durationSec: 1080
 models:
-  claude-sonnet-5-5: 84
+  claude-sonnet-5-5: 107
 toolCounts:
   Grep: 3
   Glob: 1
   Read: 6
-  Bash: 22
-  Write: 4
+  Bash: 27
+  Write: 5
   Edit: 2
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__list_pull_requests: 1
-  Skill: 4
+  Skill: 5
   Agent: 2
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/verification/85.usability-testing.md
   - layers/glassbox/GLOSSARY.md
@@ -226,13 +230,13 @@ subagents:
     durationSec: 22
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 9.3
+    tokenShare: 7.2
   - type: general-purpose
     task: Spec review of lesson move
     durationSec: 12
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 5.7
+    tokenShare: 4.4
 gitBranch: claude/compassionate-feynman-9fr3d9
 entrypoint: remote
 cliVersion: 2.1.330
