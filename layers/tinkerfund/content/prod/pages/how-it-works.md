@@ -18,8 +18,8 @@ reached its goal, and **Unfunded** if it did not.
 
 **FIG.** numbers count the figures in a Campaign's gallery, and appear only
 there. A **TF** number, such as TF-0028, is the Campaign's registry number.
-**Ending soon** marks a Live Campaign that closes within 48 hours, and
-**Upcoming** one that has not launched yet.
+**Ending soon** marks a Live Campaign that closes within 48 hours.
+**Upcoming** marks one that has not launched yet.
 
 ## Rewards
 

@@ -179,7 +179,20 @@ describe('Home', () => {
   })
 
   it('lists the Campaigns that ended most recently first', () => {
-    expect(titles(tinkerfundHomeSections(listings, NOW).recentlyEnded)).toEqual(['hammock', 'ruler'])
+    expect(titles(tinkerfundHomeSections(listings, NOW).ended)).toEqual(['hammock', 'ruler'])
+  })
+
+  it('adds the most funded of the older Ended Campaigns to the two newest', () => {
+    const ended = (slug: string, end: string, pledged: number) => doc(slug, { launch: '-200d', end, goal: 1000, pledged })
+    const many = tinkerfundListings([
+      ended('a', '-1d', 100), ended('b', '-2d', 200), ended('c', '-50d', 900), ended('d', '-90d', 3000), ended('e', '-130d', 2100),
+    ], [], NOW)
+    expect(titles(tinkerfundHomeSections(many, NOW).ended)).toEqual(['a', 'b', 'd'])
+    // A Funded Campaign already among the 2 newest is not repeated.
+    const newestFunded = tinkerfundListings([
+      ended('a', '-1d', 5000), ended('b', '-2d', 200), ended('c', '-50d', 900), ended('d', '-90d', 300),
+    ], [], NOW)
+    expect(titles(tinkerfundHomeSections(newestFunded, NOW).ended)).toEqual(['a', 'b', 'c'])
   })
 
   it('caps Just launched at six so the grid ends on a full row', () => {
@@ -192,7 +205,7 @@ describe('Home', () => {
     expect(quiet.featured?.title).toBe('old')
     expect(quiet.endingSoon).toEqual([])
     expect(quiet.justLaunched).toEqual([])
-    expect(tinkerfundHomeSections([], NOW)).toEqual({ featured: undefined, endingSoon: [], popular: [], justLaunched: [], recentlyEnded: [] })
+    expect(tinkerfundHomeSections([], NOW)).toEqual({ featured: undefined, endingSoon: [], popular: [], justLaunched: [], ended: [] })
   })
 })
 
