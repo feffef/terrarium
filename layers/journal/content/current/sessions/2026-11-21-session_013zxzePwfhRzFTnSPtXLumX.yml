@@ -1,0 +1,305 @@
+schemaVersion: 1
+session: session_013zxzePwfhRzFTnSPtXLumX
+startedAt: 2026-11-21T04:02:56Z
+endedAt: 2026-11-21T04:06:53Z
+kind: autonomous
+goal: Scheduled audit of the Platform's docs for drift and clutter
+status: completed
+outcome: Ten findings, all rejected by the checker; no edits, no PR
+summary: "Scheduled audit-docs run; every step was agent-initiated, no human prompted. Fetched origin/main (HEAD equal to it, 99486d52e) and read the last two audit-docs logs for their Covered lines. Three read-only reviewers (Freshness, Single-home, Coherence) returned 1, 5 and 4 findings. A single checker re-derived all of them (gate.ts, issues 929, 1955, ADR-0003 and the prune trials) and returned 0 CONFIRMED, 0 CONFIRMED-BUT and 10 WRONG (B2 and C1 merged into one). Reasons: rewrites that drop a rule or why (gate-skip sentence, Who merges), owner decisions (send_later threshold, mdc checklist stance, clear-backlog-build inline bars), a placement fixed by an issue (recovery recipe stays in environment-caveats), and a summary-rule edit that would soften ADR-0003. No files changed, no issue filed, no PR opened. Reviewer coverage was thin: Agents B and C read only the prioritized docs/agents files and a few ADRs, and no Skill bodies, so the next run should cover those. Covered (Agents B and C read in full): CLAUDE.md, docs/agents/{environment-caveats,github-integration,pr-workflow,guards,mdc-when-to-use,triage-labels,verifying-ui-changes}.md, .claude/rules/{guards,mdc-when-to-use}.md, ADRs 0011 0019 0026 (partly)."
+prs: []
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (no reason given)
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: (no reason given)
+  - path: docs/adr/0011-poc-self-updating-deploy-container.md
+    reason: (no reason given)
+  - path: docs/adr/0019-content-load-error-recovery.md
+    reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: layers/glassbox/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-curate/SKILL.md
+    reason: (no reason given)
+  - path: docs/diagrams/interactive-map/spec.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: audit-docs
+    reason: (invoked as a slash command)
+frictions:
+  - description: Reviewers B and C each read only a handful of files before reporting, leaving all Skill bodies and most ADRs unread; both reports called themselves shallow.
+    solution: Skill brief could name a minimum file count or split lenses by file area across more agents.
+    severity: minor
+durationSec: 237
+models:
+  claude-sonnet-5-5: 35
+toolCounts:
+  Read: 2
+  Bash: 11
+  Skill: 3
+  Agent: 4
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0004.md
+docsReadBySubagents:
+  - docs/agents/environment-caveats.md
+  - docs/agents/triage-labels.md
+  - docs/agents/github-integration.md
+  - docs/agents/guards.md
+  - docs/agents/mdc-when-to-use.md
+  - docs/agents/verifying-ui-changes.md
+  - docs/adr/0026-gate-workflow-thin-shell.md
+  - docs/adr/0011-poc-self-updating-deploy-container.md
+  - docs/adr/0019-content-load-error-recovery.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - .agents/skills/clear-backlog/SKILL.md
+  - docs/adr/0004-objective-safety-gate.md
+  - layers/glassbox/GLOSSARY.md
+  - .agents/skills/glassbox-curate/SKILL.md
+  - docs/diagrams/interactive-map/spec.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/glassbox-update/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/digest/SKILL.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: steered
+        why: logged session without a PR
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0015.md
+        value: unrelated
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: steered
+        why: told reviewers to skip trial text
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0030.md
+        value: unrelated
+      - path: docs/agents/git-conventions.md
+      - path: docs/agents/pr-workflow.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: CLAUDE.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/environment-caveats.md
+      - rule: .claude/rules/adr-0022.md
+        via: native
+        trigger: docs/agents/triage-labels.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: in-scope
+      - path: .claude/rules/adr-0027.md
+        value: steered
+      - path: .claude/rules/adr-0022.md
+        value: unrelated
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: unrelated
+      - path: docs/agents/pr-workflow.md
+      - path: docs/agents/guards.md
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/pr-workflow.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/pr-workflow.md
+      - rule: .claude/rules/adr-0022.md
+        via: native
+        trigger: docs/agents/triage-labels.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 3
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+subagents:
+  - type: general-purpose
+    task: Freshness doc review
+    durationSec: 84
+    toolCalls: 22
+    modelCalls: 21
+    tokenShare: 27.6
+  - type: general-purpose
+    task: Single-home doc review
+    durationSec: 44
+    toolCalls: 15
+    modelCalls: 8
+    tokenShare: 14.6
+  - type: general-purpose
+    task: Coherence doc review
+    durationSec: 56
+    toolCalls: 15
+    modelCalls: 7
+    tokenShare: 14.2
+  - type: general-purpose
+    task: Fact-check audit findings
+    durationSec: 70
+    toolCalls: 11
+    modelCalls: 11
+    tokenShare: 12.8
+gitBranch: claude/festive-mayer-bnrjrq
+entrypoint: remote_trigger
+cliVersion: 2.1.330
+trigger: audit-docs
+landedBy: Stop
