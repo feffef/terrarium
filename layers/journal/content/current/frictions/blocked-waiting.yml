@@ -117,3 +117,8 @@ occurrences:
     severity: nit
     description: "ScheduleWakeup was blocked as it is valid only inside a /loop session; I tried it to wait for a subagent that self-notifies."
     solution: "Just end the turn when waiting on a subagent."
+  - session: session_013zxzeRKMTCrTfnEGHcTwAZ
+    date: "2026-11-21"
+    severity: nit
+    description: "A chained sleep and a command mixing run_in_background with a text-level ampersand were blocked by guards, costing two retries."
+    solution: "State in the audit-skills Skill to run gates with run_in_background alone and wait for the notification."

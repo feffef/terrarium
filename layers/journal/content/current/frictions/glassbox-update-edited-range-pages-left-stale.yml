@@ -36,3 +36,8 @@ occurrences:
     severity: minor
     description: "glassbox-update.ts --write left the two pages with an edited range wholly unpinned, so I hand-pinned them and used a grep for the old revision to confirm none remained."
     solution: "Have the script print the unpinned pages by name after --write."
+  - session: session_013zxzeRhr3pqcz2wZXYQPXK
+    date: "2026-11-20"
+    severity: minor
+    description: "glassbox-update step 2 leaves a page with an edited range untouched; I forgot step 4's hand pin until both reviewers flagged it."
+    solution: "Have the script's report list edited-range pages under an explicit to-pin-by-hand line in its summary."

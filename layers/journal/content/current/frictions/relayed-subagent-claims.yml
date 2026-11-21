@@ -14,6 +14,8 @@ related:
     rule: The brief's wrong path, value or placeholder came from the orchestrator's own memory.
   - entry: prune-trial-territory-unchecked
     rule: A triage agent's claim about a trial's territory was relayed or acted on unchecked.
+  - entry: reviewer-findings-mostly-wrong
+    rule: Checkers marked most findings WRONG, nothing was relayed.
 notes: |-
   2026-10-30 survey: issue #2657 closed by PR #2670 (recorded in fixes); status reset to open.
 fixes:
@@ -158,3 +160,8 @@ occurrences:
     severity: minor
     description: "Claim-check subagents read page text and line numbers from my stale checked-out tree, so they reported already-fixed excerpt ranges as false claims and I re-verified each by hand."
     solution: "The glassbox-update brief should tell checkers to compare excerpt ranges only against git show of the commit and to ignore ranges the script already shifted."
+  - session: session_013zxzeRKMTCrTfnEGHcTwAZ
+    date: "2026-11-21"
+    severity: minor
+    description: "Wrote the blog-post note's claim that its role omits the Take from a subagent's report without checking the file; the Spec reviewer caught it."
+    solution: "Check each claim a note takes from a subagent report against its source line before writing it."

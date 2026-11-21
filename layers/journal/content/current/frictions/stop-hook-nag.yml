@@ -232,3 +232,18 @@ occurrences:
     severity: nit
     description: "Stop hook flagged uncommitted changes while claim-check agents were still running, four times, forcing partial commits mid-run."
     solution: "Let a scheduled run's Stop hook skip while a subagent is in flight, or accept commits as progress saves."
+  - session: session_013zxzeQEGaun1DYXBUuVEmu
+    date: "2026-11-20"
+    severity: nit
+    description: "Stop hook asked twice to push branches that were deliberately held back until review passed."
+    solution: "Known stop-hook-nag cluster; no new fix."
+  - session: session_013zxzeSvAjT1KEC1qBV3wKH
+    date: "2026-11-20"
+    severity: nit
+    description: "The Stop hook demanded a commit twice while background subagents were still editing or reviewing, so I committed unreviewed work mid-run."
+    solution: "Let the hook skip while a dispatched subagent or background gate is running."
+  - session: session_013zxzeRKMTCrTfnEGHcTwAZ
+    date: "2026-11-21"
+    severity: nit
+    description: "The Stop hook demanded a push and a commit while the reviewers ran; I pushed early, then pushed two follow-ups."
+    solution: "None needed; a push opens nothing."

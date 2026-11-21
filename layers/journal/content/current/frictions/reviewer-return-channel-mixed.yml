@@ -26,3 +26,8 @@ occurrences:
     severity: minor
     description: "Reviewers got three hand-off channels in one run (StructuredOutput in the brief, SubagentHandback and a findings file in later messages); five of them said it was unclear which to use."
     solution: "State one hand-off channel once in reviewPrompt() in .claude/workflows/clear-backlog-build.js."
+  - session: session_013zxzeTKSiBSmkCLfn4BYL6
+    date: "2026-11-20"
+    severity: minor
+    description: "Retro (5 reviewers): three hand-off formats (StructuredOutput first, then a findings file plus a one-line reply, then SubagentHandback) reached reviewers piecemeal and cost guessing."
+    solution: "State the re-check hand-off format and the one reply channel in reviewPrompt() on the first turn."

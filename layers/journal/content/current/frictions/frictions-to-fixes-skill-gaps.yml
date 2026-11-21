@@ -100,3 +100,8 @@ occurrences:
     severity: minor
     description: "SKILL.md sends the ledger PR to the simple-change test, but a 38-file ledger update can never pass it, so a full two-agent code-review ran on script-made data; the Skill never says whether that is intended."
     solution: "State in frictions-to-fixes SKILL.md §5 that a script-made ledger PR gets code-review or a named lighter path."
+  - session: session_013zxzeQEGaun1DYXBUuVEmu
+    date: "2026-11-20"
+    severity: minor
+    description: "The Skill's ledger PR must pass the simple-change test, which a 68-file ledger diff cannot, so each of the two ledger PRs needed full two-reviewer code-review rounds on data-only diffs."
+    solution: "Let a ledger-only PR made through the ledger scripts take own-read, in the Skill and in merge-pr's check."

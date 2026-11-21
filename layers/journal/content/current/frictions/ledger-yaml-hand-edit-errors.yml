@@ -75,3 +75,8 @@ occurrences:
     severity: minor
     description: "The run entry skeleton printed by orient.ts starts with changes: [] and says nothing about quoting; my unquoted changes lines held a colon, parsed as maps and failed validate-content in the first full gate run, costing a wasted gate run of about three minutes."
     solution: "Make orient.ts print the changes lines quoted in its skeleton, or say so in glassbox-curate's Run entry step."
+  - session: session_013zxzeQyUcqMctvqKtP4sHL
+    date: "2026-11-20"
+    severity: nit
+    description: "The run-entry changes field is YAML, and an unquoted colon followed by a space in a changes line failed validation until I quoted it."
+    solution: "Show the quoted form in the orientation skeleton for changes entries."

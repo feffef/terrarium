@@ -19,6 +19,8 @@ related:
     rule: The visitor brief left out details its visitors needed.
   - entry: reviewer-return-channel-mixed
     rule: The brief named two different return channels for the same agent.
+  - entry: tdd-seam-confirmation-for-builders
+    rule: The tdd Skill asks the builder for a user-confirmed seam it cannot ask for.
 fixes:
   - pr: 2150
     date: "2026-10-16"
@@ -138,3 +140,13 @@ occurrences:
     severity: nit
     description: "The builder brief says to run e2e in the background and poll, but the subagent background guard denies it, so the builder retried in the foreground."
     solution: "Say foreground with timeout 600000 for builders in rules() in .claude/workflows/clear-backlog-build.js."
+  - session: session_013zxzeSbz6S2A8goaq25ibN
+    date: "2026-11-19"
+    severity: minor
+    description: "Retro, 5 of 8 #3483 reviewers: the brief gave the agreed spec only as an issue-comment URL, so every reviewer fetched it with gh api and drew a read-github-integration hint."
+    solution: "clear-backlog-build.js common(b): have the builder save the spec text to the branch folder once and point reviewers at that file."
+  - session: session_013zxzeTKSiBSmkCLfn4BYL6
+    date: "2026-11-20"
+    severity: minor
+    description: "Retro (6 of 7 builders): the build brief told them to run e2e in the background and prescribed a gate line with cd and semicolons, but the subagent guards refuse both; each refusal cost a retry and one silently dropped a decisions.md write."
+    solution: "In rules() of .claude/workflows/clear-backlog-build.js say gate and e2e run in the foreground with timeout 600000, one command per Bash call, and name the gate line as the exception."

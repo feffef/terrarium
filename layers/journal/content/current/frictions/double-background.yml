@@ -162,3 +162,18 @@ occurrences:
     severity: nit
     description: "A Bash call combining run_in_background with a text-level ampersand was blocked by the double-background guard; resent it plainly."
     solution: "Use run_in_background alone."
+  - session: session_013zxzeQEGaun1DYXBUuVEmu
+    date: "2026-11-20"
+    severity: nit
+    description: "A background gate command with a trailing ampersand plus run_in_background was refused by the double-background guard; resent plainly."
+    solution: "None needed; the guard worked as designed, the CLAUDE.md line already says run_in_background alone."
+  - session: session_013zxzeRhr3pqcz2wZXYQPXK
+    date: "2026-11-20"
+    severity: nit
+    description: "Launched a command that both set run_in_background and ended with &, which the double-background guard blocked."
+    solution: "Use run_in_background alone, per the guard's message."
+  - session: session_013zxzeRKMTCrTfnEGHcTwAZ
+    date: "2026-11-21"
+    severity: nit
+    description: "A chained sleep and a command mixing run_in_background with a text-level ampersand were blocked by guards, costing two retries."
+    solution: "State in the audit-skills Skill to run gates with run_in_background alone and wait for the notification."

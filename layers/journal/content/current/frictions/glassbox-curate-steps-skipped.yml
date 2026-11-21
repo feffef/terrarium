@@ -1,9 +1,8 @@
 name: glassbox-curate-steps-skipped
 surface: safe
 summary: "A glassbox-curate run skipped Skill steps or ended its loop with budget left, on its own judgement, and the owner had to ask why. see: blog-post-skill-steps-skipped (the same slip in a blog-post run); glassbox-curate-read-first-skipped (the skipped steps are the required first reads)."
-cause: "The glassbox-curate Skill lists Scout, writer, claim checker, fresh reader, code-review and the gate per run and a Loop step; runs skipped most of them as too large for the change ('by judgement not rule', 'calling it budget') or ended the turn mid-loop with budget left, and the owner found the gap afterwards. Since PR #3461 (2026-11-18) the Skill names no budget and the loop is the default path, so a skip or stop after that date is a new occurrence. Signals: 'skipped the Scout, writer, claim checker', 'ended the turn mid-loop', 'I stopped mid run', 'user had to ask why'."
-status: tracked
-ref: "issue #3507"
+cause: "The glassbox-curate Skill listed Scout, writer, claim checker, fresh reader, code-review and the gate per run and a Loop step; runs skipped most of them as too large for the change ('by judgement not rule', 'calling it budget') or ended the turn mid-loop with budget left, and the owner found the gap afterwards. PR #3461 (2026-11-18) dropped the budget wording; PR #3537 (2026-11-20) rewrote the Skill as two modes with numbered steps and a stop only at full context, so a skip or stop in a session started after 2026-11-20T21:22Z is a new occurrence. Signals: 'skipped the Scout, writer, claim checker', 'ended the turn mid-loop', 'I stopped mid run', 'user had to ask why'."
+status: open
 related:
   - entry: blog-post-skill-steps-skipped
     rule: The skipped Skill is blog-post, not glassbox-curate.
@@ -11,10 +10,14 @@ related:
     rule: The skipped steps are the Skill's required first reads, not its build, check or loop steps.
 notes: |-
   2026-11-20 survey: open issue #3507 (audit-skills, 2026-11-20) reports the scheduled run still stops after one PR and skips writer, checker and reader after #3461; status set to tracked.
+  2026-11-21 survey: issue #3507 closed completed 2026-11-20T21:22:21Z by PR #3537 (merged 2026-11-20T21:22:20Z); status reset from tracked, fix recorded.
 fixes:
   - pr: 3461
     date: "2026-11-18"
     summary: "glassbox-curate SKILL.md drops every budget mention and makes the loop the default (closes #3440); no lighter lane and no new skip rule."
+  - pr: 3537
+    date: "2026-11-20"
+    summary: "glassbox-curate SKILL.md rewritten as a loop mode (no argument) and an instruction mode, numbered steps each with a Done when, loop stops only on full context or nothing left; Scout moves to glassbox-update (closes #3507)."
 occurrences:
   - session: session_013zxzeQbSZQ554vFZiT2f2D
     date: "2026-11-18"

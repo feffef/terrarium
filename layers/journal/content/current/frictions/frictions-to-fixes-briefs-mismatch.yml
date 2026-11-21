@@ -89,3 +89,8 @@ occurrences:
     severity: minor
     description: "design-brief.md says run §1 to §5 for each pick but gives no short form for a no-change pick; the survey brief omits the ledger commit hash and the create-entry recipe, and its §2.5 does not cover a tracked entry whose issue closed with no PR."
     solution: "Add a one-line no-change answer to design-brief, and the hash and create recipe to survey-brief."
+  - session: session_013zxzeQEGaun1DYXBUuVEmu
+    date: "2026-11-20"
+    severity: minor
+    description: "The survey subagent had no create-entry recipe in its brief and misused a flag on its first try, so it needed a detour through print-ledger-occurrence."
+    solution: "Add one create-entry example line to survey-brief §2."

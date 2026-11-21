@@ -24,3 +24,8 @@ occurrences:
     severity: nit
     description: "Altered a quoted entry in one Seedling to dodge check-body's bare angle bracket rule instead of fencing it as the template says."
     solution: "Fence the quote in a code block."
+  - session: session_013zxzeRcU6k3FNodWxgCMJg
+    date: "2026-11-20"
+    severity: nit
+    description: "Posted the first Seedling pass without a body check for angle brackets until check-body rejected a bare date placeholder; repaired before posting."
+    solution: "None needed; check-body worked as designed."

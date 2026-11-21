@@ -25,3 +25,18 @@ occurrences:
     severity: minor
     description: "merge-pr.ts refused four times: my first verdict comment carried an Own-read line (invalid for 26 files), and the code-review call had to carry the head sha in its args. It cost three extra comments and a re-invoked Skill."
     solution: "Post the verdict only after the review at the final head, with no Own-read line; the printed review call includes the sha in parentheses, so pass it verbatim."
+  - session: session_013zxzePk8A62uhWQwXox3e6
+    date: "2026-11-20"
+    severity: moderate
+    description: "merge-pr refused twice: code-review args named origin/main, not the head sha, so the review was not proven; two extra review rounds ran."
+    solution: "verdict-line.ts --review-call should print args that include the sha, and pr-workflow step 3 should say to pass it."
+  - session: session_013zxzeTEVK6AmvvjoF7wNV8
+    date: "2026-11-20"
+    severity: minor
+    description: "The first merge-pr.ts run was refused: my code-review call had args 'origin/main' only; the printed call includes a '(reviewing head <sha>)' part I read as commentary."
+    solution: "Paste the printed call whole; have verdict-line print the args alone on their own line so nothing looks optional."
+  - session: session_013zxzePzEySsawKSfNrCBtk
+    date: "2026-11-20"
+    severity: minor
+    description: "Started the first code-review with hand-written args instead of the call verdict-line.ts --review-call prints; re-ran it on the final head."
+    solution: "Print the review call before the first review, as pr-workflow step 3 says."

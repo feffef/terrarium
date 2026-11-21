@@ -75,3 +75,8 @@ occurrences:
     severity: minor
     description: "Seven of 15 first-draft notes were under 300 words, and several summaries used jargon; the review caught both and a follow-up commit and second review round were needed."
     solution: "Count words and scan summaries for terms a site reader lacks before committing."
+  - session: session_013zxzeRKMTCrTfnEGHcTwAZ
+    date: "2026-11-21"
+    severity: minor
+    description: "Three notes came out under the 300-word floor on first draft, caught only by the reviewers, costing a follow-up commit and a second two-axis review."
+    solution: "Print word counts of the drafted notes in the script that appends them, and refuse under 300."

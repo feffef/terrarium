@@ -159,3 +159,8 @@ occurrences:
     severity: minor
     description: "Fact-check found 6 of ~25 claims wrong or overstated because I paraphrased PR titles without reading diffs; the Skill says to use list-recent-prs --diff and I skipped it."
     solution: "Run list-recent-prs --diff before drafting; a title is not a source."
+  - session: session_013zxzeSTzsjoZsvRrpTME5a
+    date: "2026-11-21"
+    severity: minor
+    description: "First draft's Midden sentence misdescribed a home-page strip as a per-report find; only the fact-check subagent caught it."
+    solution: "Read the diff for each PR named in the prose, not just its title."

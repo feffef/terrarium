@@ -1,6 +1,6 @@
 name: harvest-list-read-cost
 summary: A harvest run read its whole list of ideas and learnings, 60,000 to 90,000 tokens over several reads, and then checked only a small part of it.
-cause: "Comes from harvest-first-pass-shallow and PR #3106: the harvest Skill has the run read the whole list (270 to 577 lines) before it stops at a capped number of clusters, and many entries are old ideas for a removed Skill (glassbox-improve). The harm is read cost, not a shallow pass. Since PR #3454 (2026-11-18) step 1 reads the list in pages with a last-entry count check, since PR #3470 a harvest evidence command replaces per-cluster hand searches, and since PR #3505 (2026-11-20) it reads a saved issue list and takes several keyword groups in one call; the list read is still whole and evidence output is untrimmed. Signals: 'whole read of 577 lines took about 90,000 tokens', 'read the whole 561-line harvest list', 'then checked only 17 clusters', many hand-run searches per cluster, 'each harvest evidence call took about 33 s', '5,215 lines'."
+cause: "Comes from harvest-first-pass-shallow and PR #3106: the harvest Skill has the run read the whole list (270 to 577 lines) before it stops at a capped number of clusters, and many entries are old ideas for a removed Skill (glassbox-improve). The harm is read cost, not a shallow pass. Since PR #3454 (2026-11-18) step 1 reads the list in pages with a last-entry count check, since PR #3470 a harvest evidence command replaces per-cluster hand searches, since PR #3505 (2026-11-20) it reads a saved issue list and takes several keyword groups in one call, and since PR #3532 (2026-11-20T19:08Z) each group's tracker block is ranked and capped at 10 hits; the list read is still whole. Signals: 'whole read of 577 lines took about 90,000 tokens', 'read the whole 561-line harvest list', 'then checked only 17 clusters', many hand-run searches per cluster, 'each harvest evidence call took about 33 s', '5,215 lines', '3,625 lines for nine groups'."
 surface: safe
 status: open
 ref: "harvest-first-pass-shallow, fix PR #3106"
@@ -23,6 +23,9 @@ fixes:
   - pr: 3505
     date: "2026-11-20"
     summary: "harvest extract saves the tracker listing next to its output for evidence to read, and evidence takes several keyword groups in one call, removing a repeated roughly 34 s re-list per call."
+  - pr: 3532
+    date: "2026-11-20"
+    summary: "harvest evidence ranks tracker issues per keyword group by distinct keywords matched and prints the top 10 with an omitted count, keeping 5 from the newest 100 issues (closes #3529)."
 occurrences:
   - session: session_013zxzeP4WS4kX4LSBrVszT6
     date: "2026-11-12"
@@ -64,3 +67,8 @@ occurrences:
     severity: moderate
     description: "Each harvest evidence call took about 33 s and printed hundreds of loosely matched lines; ten calls wrote 5,215 lines, so I checked only three clusters and filed too few."
     solution: "Cache the tracker listing per run and accept several keyword groups per call (retro Seedling #3502)."
+  - session: session_013zxzeRcU6k3FNodWxgCMJg
+    date: "2026-11-20"
+    severity: moderate
+    description: "harvest evidence printed 3,625 lines for nine groups: each group's tracker block was about 260 issues because broad keywords match nearly every issue. I abandoned reading it whole and used targeted greps."
+    solution: "Rank hits by distinct keywords matched and cap the list (filed as #3529)."

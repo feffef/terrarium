@@ -52,3 +52,8 @@ occurrences:
     severity: minor
     description: "CLAUDE.md says read the full ADR of each decision a plan touches; I recommended changes around ADR-0004, 0009, 0017 and 0027 from lessons and rule summaries only."
     solution: "For a repo-wide assessment, have the lesson-digest agents also read the cited ADRs, or say in the output that reasons come from lessons."
+  - session: session_013zxzeTKSiBSmkCLfn4BYL6
+    date: "2026-11-20"
+    severity: minor
+    description: "A builder found only at gate time that ADR-0015 and a schema comment said observations are not shown, then re-stamped a rule and widened a Glass Box glob; HEAD moved after review and cost an extra re-check and gate."
+    solution: "Brief builders of a new displayed value to grep every statement saying it is not shown (docs, ADRs, schema comments, Glass Box pages) before building."

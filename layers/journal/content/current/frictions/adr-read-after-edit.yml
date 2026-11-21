@@ -252,3 +252,18 @@ occurrences:
     severity: minor
     description: "Committed the Skill edit, then the post-commit hook said to read ADR-0005, ADR-0012 and ADR-0027 in full; I read only ADR-0027, after the commit, and not the other two."
     solution: "Read the governing ADRs when the rule loads on the first Read of the Skill, before the first Edit."
+  - session: session_013zxzePk8A62uhWQwXox3e6
+    date: "2026-11-20"
+    severity: nit
+    description: "Edited five governed files before reading their ADRs; hooks asked for the reads after each edit. The edits were still right."
+    solution: "Read the ADRs a Skill or doc names before the first edit; an audit pass could pre-read ADR-0005, 0015, 0027, 0029."
+  - session: session_013zxzeTEVK6AmvvjoF7wNV8
+    date: "2026-11-20"
+    severity: nit
+    description: "Read ADR-0012 and the pingback rules only after saving the post and stub, when the post-edit hook named them."
+    solution: "Have the blog-post Skill's step 7 name ADR-0012 before the stub is written, since the rule loads on the first edit."
+  - session: session_013zxzePzEySsawKSfNrCBtk
+    date: "2026-11-20"
+    severity: minor
+    description: "Edited rule-use-ask.ts, guards.md and its test before reading the ADRs the post-edit hooks named (0004, 0027, 0029, 0003); the edits stood."
+    solution: "Read the governing ADR before the first edit to a hook, not after the hint."

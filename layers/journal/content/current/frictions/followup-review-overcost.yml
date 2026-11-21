@@ -6,6 +6,8 @@ status: open
 related:
   - entry: prepush-gate-review-skipped
     rule: Review was skipped, or the author's own read replaced it on a change that was not simple.
+  - entry: reviewer-findings-mostly-wrong
+    rule: Most findings were WRONG per the checkers, a quality problem not a re-run cost.
 notes: |-
   2026-10-28 design: a looser follow-up review bar dropped: three of six predate the simple-change bar, the others read pr-workflow.md and followed it, and ADR-0004 rejects skipping review for prose. dropped: a policy change for a human, not a fix.
 occurrences:
@@ -59,3 +61,18 @@ occurrences:
     severity: minor
     description: "A one-blank-line Skill doc edit got the full build recipe (tdd, three ADR reads forced by hooks after the edit) and a review spawn that only re-confirmed the builder's claims."
     solution: "Add a fast path to rules() and the small flag: a doc-only change of 5 lines or fewer skips tdd and the review round."
+  - session: session_013zxzeSbz6S2A8goaq25ibN
+    date: "2026-11-19"
+    severity: minor
+    description: "Retro: a further fresh round started when the previous round's missing-test was already fixed and re-checked clean; #3481's round 3 found one nit (Standards-r3) and nothing on the Spec axis."
+    solution: "clear-backlog SKILL.md section 3 step 4: count only a missing-test still open after the round's re-checks. #3483's round 3, started by open defects, caught 2 defects and a spec-mismatch, so keep the defect trigger."
+  - session: session_013zxzeTEVK6AmvvjoF7wNV8
+    date: "2026-11-20"
+    severity: minor
+    description: "Ran the code-review Skill twice (two Standards plus Spec rounds) because a one-sentence fix landed after the first and merge-pr needs the head named."
+    solution: "Draft the final wording before the first review, or let a simple fix after review pass on an own read."
+  - session: session_013zxzeTKSiBSmkCLfn4BYL6
+    date: "2026-11-20"
+    severity: minor
+    description: "Retro (reviews): round 1 caught something that mattered on three of seven branches (curate contradiction, harvest untested case, Skill pages vacuous e2e); the three round-2 pairs and four small branches' reviews re-found only small things."
+    solution: "Start a round 2 only when round 1 had a defect or spec-mismatch, not on fix size alone, and keep one reviewer for diffs under about 100 lines."
