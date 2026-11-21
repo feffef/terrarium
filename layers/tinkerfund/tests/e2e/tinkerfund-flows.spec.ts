@@ -72,6 +72,10 @@ describe('tinkerfund Tenant', async () => {
       await visit('/gallery/index-table')
       await page.setViewportSize({ width: 390, height: 844 })
       expect(await scrollWidth(page)).toBeLessThanOrEqual(390)
+      // WCAG 2.5.8 (#3557): each Campaign link is a tap target.
+      const heights = await page.locator('.inv a').evaluateAll((els) => els.map((el) => el.getBoundingClientRect().height))
+      expect(heights.length).toBeGreaterThan(0)
+      for (const h of heights) expect(h).toBeGreaterThanOrEqual(24)
       await page.setViewportSize({ width: 1280, height: 800 })
 
       // Chromium's default placeholder grey misses 4.5:1 on --tf-bg, and the

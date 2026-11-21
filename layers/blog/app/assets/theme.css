@@ -72,7 +72,8 @@ body.bl-page {
   color: var(--bl-faint);
   margin: 0 0 2.5rem;
 }
-.bl .crumb a { color: var(--bl-faint); text-decoration: none; }
+/* 24px tap target with no layout shift (#3557). */
+.bl .crumb a { display: inline-block; padding-block: 5px; margin-block: -5px; color: var(--bl-faint); text-decoration: none; }
 .bl .crumb a:hover { color: var(--bl-accent); }
 .bl .crumb .sep { margin: 0 0.4rem; opacity: 0.6; }
 .bl .crumb .here { color: var(--bl-muted); }
@@ -169,7 +170,7 @@ body.bl-page {
   font-family: var(--bl-mono);
   font-size: 0.78rem;
 }
-.bl .post-nav-back a { color: var(--bl-muted); text-decoration: none; }
+.bl .post-nav-back a { display: inline-block; padding-block: 5px; margin-block: -5px; color: var(--bl-muted); text-decoration: none; }
 .bl .post-nav-back a:hover { color: var(--bl-accent); }
 
 /* Post feed on the landing */
