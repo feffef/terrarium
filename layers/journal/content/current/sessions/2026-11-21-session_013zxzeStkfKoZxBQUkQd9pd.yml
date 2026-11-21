@@ -1,0 +1,189 @@
+schemaVersion: 1
+session: session_013zxzeStkfKoZxBQUkQd9pd
+startedAt: 2026-11-21T16:02:43Z
+endedAt: 2026-11-21T16:08:14Z
+kind: autonomous
+goal: "Visitor-loop: Tinkerfund visit"
+status: completed
+outcome: "Three visitors reviewed Tinkerfund; 2 bugs filed (#3551, #3552), ideas and learnings logged."
+summary: "Scheduled visitor-loop run, focus tinkerfund (row 4), all agent-initiated by the schedule. Built and served the production preview, sent a blind first-time visitor, an informed content editor and an informed UI tester (sonnet). Yield: blind 8 findings/3 ideas, editor 10 findings/3 ideas, UI tester 6 findings/3 ideas. Confirmed bugs: Snowflake Comparison Kit sells a 20x loupe its stretch goal has not unlocked (#3551); gallery thumbnail aria-label is the full caption (#3552). Dropped after checking: blind and editor \"Backers number missing\" (rendered page shows 410), 15px campaign links in the home table (rows are 42px+ apart, so WCAG 2.5.8 spacing holds; kept as idea), duplicate q inputs (both in forms, not shown as a fault), canned-silence Aarhus (already logged), unfunded-only Recently ended (near logged hall-of-failures idea). Filter misses: none found in duplicates; the editor's re-raise of the Aarhus item was caught by the context file. Retros: blind - breadth-first crawl spent budget on category pages, wants \"one page per URL pattern\" in visitor-brief.md; editor - /t/tinkerfund aliases /prod and /qa is fixture, not in context file, and the SubagentStart rule-use echo cost extra calls; UI tester - NOTHING."
+prs: []
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: scripts/lib/chromium.ts
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/visitor-brief.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: (no reason given)
+  - name: visitor-loop
+    reason: (invoked as a slash command)
+frictions:
+  - description: Blind visitor's breadth-first crawl spent its page budget on category pages and never reached a campaign; it needed a second script.
+    solution: Add "sample one page per URL pattern" and the Space's URL shapes (campaigns/<slug>) to the blind visitor's entry note in .claude/skills/visitor-loop/SKILL.md.
+    severity: nit
+  - description: Context file did not say /t/tinkerfund aliases /prod or that /qa is a component-gallery fixture, so the editor found it by comparing byte counts.
+    solution: In .claude/skills/visitor-loop/SKILL.md step 2, have the context file's pages section note aliases and QA fixture Spaces.
+    severity: nit
+durationSec: 331
+models:
+  claude-sonnet-5-5: 69
+toolCounts:
+  Bash: 28
+  Skill: 1
+  Read: 1
+  Agent: 3
+  ToolSearch: 2
+  mcp__github__issue_write: 2
+  SendMessage: 3
+filesEdited:
+  - .throwaway/visitor-blind/crawl.ts
+  - .throwaway/visitor-blind/deep.ts
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0028.md
+        via: native
+        trigger: .agents/skills/visitor-loop/scripts/ideas.ts
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/log-session/SKILL.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+    reported: []
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported: []
+subagents:
+  - task: Blind first-time visitor
+    model: sonnet
+    durationSec: 159
+    toolCalls: 14
+    modelCalls: 12
+    tokenShare: 14.6
+  - task: Informed content editor
+    model: sonnet
+    durationSec: 161
+    toolCalls: 15
+    modelCalls: 14
+    tokenShare: 18
+  - task: Informed UI tester
+    model: sonnet
+    durationSec: 168
+    toolCalls: 12
+    modelCalls: 10
+    tokenShare: 12.4
+gitBranch: claude/lucid-heisenberg-7e4dsz
+entrypoint: remote_trigger
+cliVersion: 2.1.330
+trigger: visitor-loop
+learnings:
+  - The home page's "Show all N Campaigns" counts only non-ended campaigns (browse.ts popular filter), so it is 20 while 29 exist; not a bug but confuses visitors.
+  - Tinkerfund /t/tinkerfund redirects to /t/tinkerfund/prod; /qa is a component gallery, not a second shop.
+ideas:
+  - "[blind + content editor] /t/tinkerfund/prod: the home table button reads 'Show all 20 Campaigns' while Discover says 29; say 'Show all 20 open Campaigns' or add the ended ones, so the count matches what visitors see elsewhere."
+  - "[content editor] /t/tinkerfund/prod/how-it-works: 'Ending soon marks a Live Campaign that closes within 48 hours, and Upcoming one that has not launched yet.' is garbled; write 'Ending soon marks a Live Campaign that closes within 48 hours. Upcoming marks one that has not launched yet.'"
+  - "[content editor] /t/tinkerfund/prod/campaigns/automatic-sheep-counter: Grzegorz K.'s question about resetting the count at night has no Inventor reply while nearly every other question does; add one in character."
+  - "[content editor] /t/tinkerfund/prod: Recently ended shows only unfunded cards; add one funded ended card (Pocket Sundial with Snooze, 210%) so visitors see success as well as the post-mortem jokes."
+  - "[UI tester] /t/tinkerfund/prod: campaign links in the Popular now table measure 15px tall at 390px (footer 'the Terrarium' 14px); PR #3323 aimed at 24px targets, so add min-height or padding to .inv a."
+  - "[UI tester + blind] /t/tinkerfund/prod/discover: show a visible result count and active-filter chips, plus a Funded/Unfunded/Live filter, so unfunded gems are findable and filtered state is clear."
+  - "[UI tester] /t/tinkerfund/qa: the body gives no cue that it is a component gallery for testing; add a one-line note so visitors do not read it as a second shop."
+  - "[blind] /t/tinkerfund/prod/account: opens as 'Robin Demo, always signed in' with no sample banner (campaign pages have one); add one line saying it is a sample Backer."
+  - "[blind] /t/tinkerfund/prod/inventors/*: inventor pages are reachable only from campaign bylines; add a Meet the Inventors index."
+landedBy: Stop
