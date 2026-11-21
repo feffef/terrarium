@@ -8,29 +8,9 @@ role: >-
   and the post-dispatch check that no finished subagent work is stranded. Every
   rule in it was paid for by a session that lost work.
 auditSummary:
-  date: "2026-11-20"
-  text: "Dispatched work landed: nearly every claimed PR is on main and nothing is stranded. The first dispatch is still often blocked until the Skill is read, and relayed subagent claims are sometimes unchecked."
+  date: "2026-11-21"
+  text: "Briefs are used before nearly every dispatch and nothing was stranded or reverted. The first-dispatch guard now blocks far fewer runs, though reviewer hand-off wording and a reminder ritual still cost extra calls."
 observations:
-  - date: "2026-10-11"
-    note: >-
-      Broader sampling (audit-skills behaviour check): of 73
-      notUsedInWindow sessions, 35 flagged plausible by goal, 19 opened in
-      full. 15/19 had genuinely dispatched subagents, and all 15 omitted
-      `dispatch-subagents` from `skillsUsed` — 12 newly found, none
-      previously logged, including session_01S1WwkpNHDfbvKAf5T1afKq (23
-      subagents, which even read this Skill's own SKILL.md that session yet
-      still didn't credit it) and a git-touching instance,
-      session_01GEqB5frKCNtJYAr9KaRxDo (frictions-to-fixes, 2 impl subagents
-      → merged PRs #1724/#1725), matching #1586's original git-touching
-      shape, not just its read-only extension. Commented this evidence onto
-      #1586, which had just been closed the same day (2026-10-10, "not a
-      regression") on a review that didn't see these 12 instances — left the
-      reopen call to a human. #1480 and #1586 are both now closed
-      (2026-10-10, by the `triage`-process session_018i6d2BQPkf9cq6jSEqCNSX,
-      tracked separately as issue #1752 — a `triage` gap, not a
-      dispatch-subagents one). No stranded work, no merge-pr.ts-to-subagent,
-      no new branch/worktree collision in any of the 19 opened logs. Grade
-      unchanged (essential).
   - date: "2026-10-12"
     note: >-
       Re-checked (audit-skills behaviour check), 10 usedIn sessions plus the
@@ -304,3 +284,5 @@ observations:
     note: "Behaviour check, 25 runs, 51 non-users all ruled out (36 dispatched, each with the Skill read): 56 of 57 PRs on main (#3475 owner-closed), one worktree, no revert. Repeats: guard denied first Agent/Workflow call in 10 of 25 plus 2 from friction text; placeholder guard denied 3 briefs; retro resumes cost 1.9M tokens; cd-into-worktree footgun in session_013zxzeNd9wP36dUYyykDdBv and session_013zxzeQgh4aLo2xMP4FzXZJ (self-caught). The 11-18 d8b0381d9 restored read lines in four Skills; audit-skills, frictions-to-fixes, glassbox-update, digest, prune-trial lack it. Grade unchanged."
   - date: "2026-11-20"
     note: "Behaviour check by script over the 30 logs that used the Skill and 51 that did not (outcome, prs, toolCounts, docsRead, every friction); raw event streams were not read and runs were graded against the current text plus friction text, not each run's start-of-run SKILL.md, so the two newest landings (afac46f0d, 11-19) are unchecked against older runs and the runs' own claims about brief contents are unverified. Delivery: 112 distinct PR numbers claimed, 110 on origin/main; the two not on main are #3475 (closed by the owner, known) and #3504 (open, awaiting a human, honest in its log; state not confirmed on GitHub because GraphQL is blocked). git worktree list shows one worktree, so nothing is stranded, and no revert of run deliverables was found. Missed invocations: none; of 51 non-users, 20 dispatched nothing and the rest read the SKILL.md before dispatching. Repeats: the dispatch-read guard denied the first Agent or Workflow call in about 10 runs (approximate; matched by log suffix); the placeholder-token guard blocked a brief that quoted the brace token (session_013zxzeQgh4aLo2xMP4FzXZJ, session_013zxzeSZQpKBLnM3DK1cPRQ); cd into a builder's worktree persisted in three runs, two self-caught; retro resumes cost 75k to 111k subagent tokens each; reviewers got two or three hand-off channels; code-review's heading level misled grep for its section 3. New, minor: unchecked subagent claims were relayed in two more runs (one wrote \"about 130 of the 143 changed files are data\" while the list gave 135; one relayed \"max tag count is 12\" without recounting and was wrong); after an owner stop signal killed running builders and gates, nothing says what to do when the agents are gone; the Stop hook flagged uncommitted changes while agents ran and forced partial commits in several runs. Unexercised: section 7. Idea: have the dispatch-read guard denial print the Skill path, or auto-read it, and have dispatching Skills cite it in step 1; denials recur in about 10 of 25 runs and each retry resends a long brief. Grade unchanged: essential."
+  - date: "2026-11-21"
+    note: "Behaviour check of 33 runs dated 11-18 to 11-21 plus 32 non-using sessions, from the logs, git and the GitHub REST API. Delivery: 68 PR numbers claimed, 65 on origin/main, #3475 owner-closed, #3530 closed with the log saying it was left to a dedicated session, and #3538 open and logged as awaiting a human merge, so all three are honest; #3462 and #3464 are closed now. No revert; no stranded work seen in the logs (worktrees not rechecked). Prune trial #3521 cut three lines from section 3: six later runs show no major or blocker Friction from a missing brief line and no checkout moved, so no damage is visible from logs (the share against friction-rates.ts was not computed). Non-users: ten dispatched nothing, and the other 22 show dispatch-subagents' SKILL.md in docsRead, so no missed invocation. Repeats: the dispatch-read guard denied the first Agent or Workflow call in 6 of 33 runs (session_013zxzeQAV89N7K2uJN1FbsR denied 16 calls), down from about 10 of 25 since d8b0381d9; the review brief's \"section 3\" of code-review cannot be found by grep (3 runs: session_013zxzePUNdDXiqJrj8m6Bjs, session_013zxzeNd9wP36dUYyykDdBv, session_013zxzeTKSiBSmkCLfn4BYL6); reviewers get three hand-off channels (same 3); builder briefs prescribe background e2e and a cd gate line that the guards refuse (same 3); a cd into a builder's worktree persisted (2); the Stop hook demanded commits while agents ran (4). New minor: the SubagentStart rule-use echo cost every read-only reviewer or visitor two extra Bash calls in five runs, which a brief cannot waive; survey and context briefs lack a recipe (several runs). Section 7 (another session) was not exercised; sections 4 and 5 never appear in frictions. Role and gist are current; section 7 is not named, which only matters if it gets used. Idea: add one brief line, \"Hand-back channel: SubagentHandback only; name code-review's section by its heading\", from the same workflow brief text behind the three-channel and grep misses. Grade unchanged (essential)."

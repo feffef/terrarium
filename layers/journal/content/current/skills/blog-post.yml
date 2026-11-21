@@ -10,26 +10,9 @@ role: >-
   Each post ends with a "My take" section, and the run logs ideas and learnings.
   Gives the Terrarium a multi-voice commentary on its own development.
 auditSummary:
-  date: "2026-11-20"
-  text: "Publishes a fact-checked post and a reply decision each day, and every merged post matches its checked version. Small fixes force repeated full re-checks, and one persona-reading step is sometimes skipped."
+  date: "2026-11-21"
+  text: "Writes and lands one in-character Blog post a day with a verified fact-check, a Take and a reply step. Its reply stub file is often named after the wrong post, and small fixes trigger repeated fact-check rounds."
 observations:
-  - date: "2026-10-11"
-    note: >-
-      Re-checked (audit-skills behaviour check), 12 usedIn sessions; 4
-      freshly audited beyond prior entries. session_01UvFUKPkQSkZS1qS7VndRqX
-      (2026-10-08, PR #1682) was a Skill-maintenance session, not a content
-      run — human-merged correctly, no post/fact-check/rotation applicable.
-      session_01GGSSswkV3J9p255u5hcvSp (PRs #1705/#1706) and
-      session_01WFq4ZnYVWTyGHAAxqo5wKb (PRs #1728/#1729) both ran genuine
-      step-9 fact-checks and step-12 reader dispatches, graded against the
-      correct historical SKILL.md version; no skip. session_01YSGRZcurrkv9WYqPfnRH2t
-      (PR #1750) disclosed, not silently skipped, a new step-12 gap: the
-      reader's chosen reply winner then failed fact-check across ~4 rounds,
-      leaving no path forward in SKILL.md text — logged as a minor friction
-      with a proposed fix, surfaced not hidden, not escalated. Rotation
-      independently reconstructed across all 16 posts 10-04 through 10-10:
-      no two consecutive posts share a Persona. #1479/#1626 both reconfirmed
-      closed live, no reverts. Grade/role unchanged.
   - date: "2026-10-12"
     note: >-
       Re-checked (audit-skills behaviour check), 2 freshly-audited sessions
@@ -262,3 +245,5 @@ observations:
     note: "Behaviour check, runs session_013zxzeNx4V4gWZvzs8HQ3sZ, session_013zxzePjedjMk4SeDKFvzPt, session_013zxzeSNLpQuhLvWkddGuao: PRs #3445, #3446, #3422, #3424, #3379 merged, files on main, no revert, step 12 honoured. Repeats: dispatch-read guard blocked the first Agent call in 3 of 3 (read line restored 11-18 in d8b0381d9, untested); fact-check before code-review in 3 of 3; step 2 persona reading skipped on 11-17 (n=2). Idea: scripts/blog-context.ts for step 2. Grade unchanged."
   - date: "2026-11-20"
     note: "Behaviour check, runs session_013zxzePjedjMk4SeDKFvzPt (11-17), session_013zxzeNx4V4gWZvzs8HQ3sZ (11-18), session_013zxzeQ5mMr3n1PjgqM4sUa (11-19); log files read in full, PR files via REST. All delivered. PRs: 3422 (David) and 3424 (Karen reply) on 11-17, 3445 (Kevin) and 3446 (Karen reply) on 11-18, 3495 (Eyra) and 3496 (Karen reply) on 11-19, all merged within about 25 minutes of each other. All six post blobs on origin/main equal the PR body's last Fact-checked blob, so every final head was fact-checked; each PR touched only its post plus, for replies, one stub in the target Persona's Space (ADR-0012), correctly named by the target's slug. Each body carries rotation state, the three-candidate blind read with losers and the reader's reason, and the fact-check tally; step 12's reply decision was delivered every time. The 11-19 run is the only one graded against d6037d8 (Take and step 13): both its posts have a \"## My take\" section and its log carries 3 ideas and 1 learning, idea 1 matching Eyra's Take. No revert; the only later blog-adjacent landing is 9297cf5cc, which does not touch the posts. Repeats: fact-check before code-review against step 9's order, 3 of 3 (log summaries only, unverified); fact-check redispatch per small fix, 3 of 3 (five round trips on 11-19, four on 11-17), because \"re-check changed lines\" conflicts with the blob-equality criterion; dispatch-read guard blocked the first Agent call in the 11-17 and 11-18 runs, and not in 11-19, the only run after d8b0381d9 restored the read line (n=1); glossary read late in 11-17 and 11-18 (nit); persona reading skipped in 11-17 (self-disclosed), could not tell for the others; the Stop hook's false merge reminder recurred in 11-17 and 11-18. Could not tell: step 8's tone report, which lives in the transcript. Idea: in step 9, batch all post-checker fixes (wording, rename, title) into one commit before the re-check; 11-19's own idea says the same. The role now names the Take. Grade unchanged."
+  - date: "2026-11-21"
+    note: "Behaviour check of session_013zxzeTEVK6AmvvjoF7wNV8 (11-20, PRs #3519 and #3520), session_013zxzeQ5mMr3n1PjgqM4sUa (11-19, #3495 and #3496) and session_013zxzeNx4V4gWZvzs8HQ3sZ (11-18, #3445 and #3446). All six PRs merged (gh api pulls). For all six posts the PR body's last Fact-checked blob equals git rev-parse origin/main:<post path>; scope is the post plus one stub per reply; no revert on layers/blog. The 11-19 and 11-20 posts each have one \"My take\" and their logs carry ideas and learnings, so step 13 (d6037d8, 11-19 08:25) held; the 11-18 run predates it. Step 12 ran each time (reply drafted, reader picked, second reader agreed, merged). Verified silent failure, minor (n=1 this window, 4th or later case overall): PR #3519 named the Karen pingback stub with David's own new slug, layers/blog/content/karen/pingbacks/2026-11-20-david-2026-11-20-the-reviewed-line-now-needs-a-receipt.yml, where step 7 calls for the target's slug (the stub's target is /2026-11-17-the-fix-for-a-fake-reviewed-line-...). Contents are correct, only the name is wrong, and the other five stubs follow the template. It repeats earlier notes on this entry (11-11, 11-12, 11-13, 11-14, 11-15), so it is issued: #3541. Repeats: a fact-check redispatch for each small fix in 3 of 3 runs (five round trips on 11-19, two code-review rounds on 11-20); a late glossary read (11-18, nit); late git and GitHub doc reads (11-19, nit); the post-edit hook naming ADR-0012 after the post was saved (11-20, new but trivial). The dispatch-read guard blocked only the 11-18 run (after d8b0381d9 it held in 2 of 2). merge-pr.ts refused one code-review call that lacked the head sha on 11-20, a code-review and merge-pr matter. Could not tell from logs: step 8's tone line and step 2's persona reading. Role and gist were checked: the gist and role in blog-post.yml are current; the role names the Take (\"My take\" section), matching the 11-20 observation. Idea: in step 9, say to fix every checker finding, rename and title change in one commit and re-dispatch once; write the stub filename as a literal template with the target post's full slug. Grade unchanged."

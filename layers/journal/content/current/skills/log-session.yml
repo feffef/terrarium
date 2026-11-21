@@ -9,28 +9,9 @@ role: >-
   bounded exception). Usually invoked by `close-session`; call it directly only
   to amend a written log.
 auditSummary:
-  date: "2026-11-20"
-  text: "Every session in the window left a log on main and the claimed PRs match, with honest frictions. Some logs rate only part of the rules they loaded yet count as fully answered."
+  date: "2026-11-21"
+  text: "Every session in the window produced a valid log on main and the pull requests it names exist. Unrated rule loads dropped to zero for the main agent after a guard landed, but helper agents still leave some unrated."
 observations:
-  - date: "2026-10-11"
-    note: >-
-      Re-checked (audit-skills behaviour check), both notUsedInWindow
-      sessions independently re-resolved as transitive invocation via
-      close-session, not missed invocations: close-session's SKILL.md
-      explicitly runs log-session's authoring step internally ("Record the
-      session log: invoke `/log-session`"), and both logs
-      (session_01Tcn6x6mZizT14rJuQqYivt, session_015CSc6hNccF3XgrSGaGGqjD)
-      are schema-complete with specific, cross-verified-against-GitHub
-      content (PRs #1726 and #1680, both real and merged) — only the
-      `skillsUsed` tag is missing, an attribution gap in how a transitive
-      Skill-tool call gets credited, not a defect. 8 newest usedIn sessions
-      confirmed committed on origin/main via `git ls-tree`, 3 read
-      end-to-end for genuine (non-placeholder) authorship. The newest
-      log-session.ts change (commit 0ed3b459/PR #1748, "refuse to land a log
-      main's schema rejects") is itself a fix for a major friction
-      self-reported by session_015BjYk46dntcMuAWMn1z4Zw — the
-      self-improvement loop working as designed. No reverts. Grade
-      unchanged.
   - date: "2026-10-12"
     note: >-
       Re-checked (audit-skills behaviour check), 10 newest usedIn sessions
@@ -271,3 +252,5 @@ observations:
     note: "Behaviour check, 41 runs, 2 non-users ruled out (session_013zxzeNkrnZpMkYb9UUBh2t, session_013zxzeQsCq5g9jeQpmsULPZ): all logs on main, 81 of 82 PRs landed; the other, #3475, was closed by the owner, no revert. Repeat, 11 of 41 logs: loaded rules unrated while answered is true (transcript-trace.ts:931 sets it from any report); harvest 3 of 3. Idea: set answered only when every main-session load is rated. Grade unchanged."
   - date: "2026-11-20"
     note: "Behaviour check over 43 logs (41 runs, 2 non-users), parsed by script; the current SKILL.md applies to all because its last landings (64abedad, 2d09f311) predate the runs. All 41 logs are on main with schemaVersion 1 and goal, outcome, summary, frictions and ruleUse; the top-level reported field is absent by design (folded into ruleUse). Of 78 distinct PR numbers claimed, 76 appear in git log origin/main; the other two are #3475 (closed by the owner) and #3504 (open and unmerged per REST, honestly logged in-review). PR content was checked against the log only for #3504 and the digest run. No revert of delivered work. Known repeat with the cause now verified: loaded rules left unrated while answered: true in 7 of 41 logs (the 11-19 note counted 11); scripts/session/transcript-trace.ts:931 sets answered: !!s.reportedNamed so any reported list counts as answered, and rule-use-report.ts:72 skips only logs with answered false. The logs are session_013zxzePp6Xf4HuGyQNDdBpB (8 of 14 unrated), session_013zxzeQuz1peCEYugreTtXU (7 of 13), session_013zxzePBxPjfMQRm8C4FwqZ (2 of 28), session_013zxzeNYPwVfq4WoT28Nfuu (20 of 25), session_013zxzeQbSZQ554vFZiT2f2D (6 of 20), session_013zxzeR4N3chSHqH7Po2sjW (14 of 23) and session_013zxzeSpYABZ15tUzNbPJN9 (1 of 17); none logged a friction about it (only friction counts checked). Escalated as #3508. Self-reporting works elsewhere: session_013zxzePp6Xf4HuGyQNDdBpB marked tenant-glossary missed: late. Non-users ruled out: the two visitor-loop sessions session_013zxzeNkrnZpMkYb9UUBh2t and session_013zxzeQsCq5g9jeQpmsULPZ ran log-session through close-session and their logs are on main. Idea: at transcript-trace.ts:931 set answered true only when every load of that agent has a reported entry or one explicit none-applies entry, so the 7 logs show as unanswered and drop out of the rule-use report. Grade unchanged: essential. Limits: the audit counted frictions per log but did not read every friction text, so \"no friction about it\" is a count, not a reading; PR content was compared with log summaries only for #3504 and the digest run; the 7 of 41 figure uses loads minus reported paths for the main agent only, not subagents."
+  - date: "2026-11-21"
+    note: "Behaviour check of 41 runs dated 11-18 to 11-21 and two non-users, using a script that parsed every log. SKILL.md last changed 64abedad (11-15), before every run; dddedf89 (PR #3531, merged 2026-11-20T19:09:41Z) changed only scripts/session/log-session.ts and rule-use.ts, so refusing unrated rule loads applies to runs that started after it (session_013zxzePzEySsawKSfNrCBtk, session_013zxzeSSEyKMAcAZESc5L4b, session_013zxzeSTzsjoZsvRrpTME5a). All 41 logs parse with goal, outcome, summary, frictions and ruleUse and are on main at schemaVersion 1. PR delivery: 76 distinct PR numbers are claimed; 73 appear in origin/main commit subjects and the other three are honest (#3475 closed by the owner, #3530 closed unmerged, #3538 open and logged in-review). PR content was not compared with diffs. No revert; the only recent landing is the intended guard (7e1fdb01, 2e0ec25f, dddedf89). Known repeat, six of 41 logs leave loaded rules unrated while answered is true: five already named (session_013zxzePp6Xf4HuGyQNDdBpB 8 of 14, session_013zxzeQuz1peCEYugreTtXU 7 of 13, session_013zxzePBxPjfMQRm8C4FwqZ 2 of 28, session_013zxzeNYPwVfq4WoT28Nfuu 20 of 25, session_013zxzeQbSZQ554vFZiT2f2D 6 of 20) and new session_013zxzeTKSiBSmkCLfn4BYL6 (2 of 21: adr-0021 and glossary-terms), which built the guard itself and started 50 minutes before it merged, so it probably wrote its log under the old code (unverified); its friction list has no entry about the rules. The three runs that started after the guard have the main agent at 0 unrated, a first clean stretch at n=3 with the guard the likely cause (unverified). The gap has moved to subagent entries, which the guard does not refuse: session_013zxzeSTzsjoZsvRrpTME5a has subagents unrated 2 of 9, 5 of 11 and 4 of 9, and session_013zxzeSSEyKMAcAZESc5L4b has two entries with answered false; PR #3538 (open) targets the echo call. Non-users session_013zxzeNkrnZpMkYb9UUBh2t and session_013zxzeQsCq5g9jeQpmsULPZ are visitor-loop runs that used close-session and log-session, so not missed. Role and gist were not rechecked. Idea: extend the refusal in scripts/session/rule-use.ts so answered is true only when loads minus reported paths is empty for every by, not just main. Grade unchanged (essential)."
