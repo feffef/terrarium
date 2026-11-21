@@ -15,10 +15,16 @@
 // reloads itself once (ADR-0019), so its tests assert the content comes back
 // with no click — and that a failure surviving that one attempt settles on the
 // dialog instead of reloading again.
+import { globSync, readdirSync, readFileSync } from 'node:fs'
+import { join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import { $fetch, createPage, url } from '@nuxt/test-utils/e2e'
 import type { Page, Route } from 'playwright-core'
 import { expectCleanHydration, setupL2 } from '../../../../tests/support/e2e.ts'
+import { mermaidPageRoute } from '../../../../tests/support/mermaid-pages.ts'
+
+const contentDir = fileURLToPath(new URL('../../content', import.meta.url))
 
 const DAVID_PAYLOAD = '/t/blog/david/_payload.json'
 
@@ -255,6 +261,38 @@ describe('blog Tenant', async () => {
       await page.setViewportSize({ width: 390, height: 800 })
       await page.goto(url('/t/blog/david/2026-07-06-field-notes-write-themselves'), { waitUntil: 'hydration' })
       expect(await page.evaluate('document.documentElement.scrollWidth')).toBeLessThanOrEqual(390)
+    } finally {
+      await page.close()
+    }
+  })
+
+  it('scrolls no post sideways at 390px on the longest titles and code spans (#3560)', async () => {
+    // A sample, since a sweep of every post costs about a minute of e2e time
+    // (server rendering). Overflow comes from the HTML and CSS, so one reused
+    // page skips hydration. Per Persona it takes what overflowed in #3452: the
+    // longest title (shown in its older neighbour's "Newer" link, so that
+    // neighbour too) and the longest inline code span.
+    const routes = new Set<string>()
+    for (const persona of readdirSync(contentDir)) {
+      const dir = join(contentDir, persona, 'pages')
+      const posts = globSync('*.md', { cwd: dir }).filter((f) => f !== 'index.md').sort()
+      const text = posts.map((f) => readFileSync(join(dir, f), 'utf-8'))
+      const longest = (len: (body: string) => number): number =>
+        text.reduce((best, body, i) => (len(body) > len(text[best]!) ? i : best), 0)
+      const title = longest((body) => /^title:\s*(.*)$/m.exec(body)?.[1]?.length ?? 0)
+      const code = longest((body) => Math.max(0, ...[...body.matchAll(/`([^`\n]+)`/g)].map((m) => m[1]!.length)))
+      for (const i of [title - 1, title, code]) if (posts[i]) routes.add(mermaidPageRoute('blog', persona, posts[i]))
+    }
+    const page = await createPage()
+    try {
+      await page.setViewportSize({ width: 390, height: 800 })
+      const wide: string[] = []
+      for (const route of routes) {
+        await page.goto(url(route), { waitUntil: 'load' })
+        const width = (await page.evaluate('document.documentElement.scrollWidth')) as number
+        if (width > 390) wide.push(`${route} (${width}px)`)
+      }
+      expect(wide).toEqual([])
     } finally {
       await page.close()
     }
