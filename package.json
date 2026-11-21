@@ -25,7 +25,7 @@
     "gate:scoped": "tsx scripts/gate/gate.ts"
   },
   "dependencies": {
-    "@nuxt/content": "^3.16.2",
+    "@nuxt/content": "^3.17.0",
     "nuxt": "^4.6.4",
     "zod": "^3.25.76"
   },
@@ -34,13 +34,13 @@
     "@nuxt/kit": "^4.6.4",
     "@nuxt/test-utils": "^4.4.0",
     "@types/node": "^26.6.6",
-    "eslint": "^10.14.0",
+    "eslint": "^10.15.0",
     "jiti": "^2.7.0",
     "mermaid": "^12.3.0",
-    "playwright-core": "^1.65.0",
+    "playwright-core": "^1.65.1",
     "tsx": "^4.23.15",
     "typescript": "^6.0.3",
-    "vitest": "^5.1.0",
+    "vitest": "^5.1.1",
     "vue-tsc": "^3.3.14",
     "yaml": "^2.9.1"
   }
