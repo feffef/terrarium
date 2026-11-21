@@ -430,6 +430,36 @@ describe('evidenceReport()', () => {
     expect(evidenceReport(['other'], sources)).toContain('#9 open: Other')
   })
 
+  describe('rulings and ledger cut', () => {
+    const block = (kw: string[], s: Partial<typeof sources>, name: 'rulings' | 'ledger', next = '') => {
+      const lines = evidenceReport(kw, { rulings: [], issues: [], frictions: [], ...s }).split('\n')
+      const end = next ? lines.indexOf(next) : -1
+      return lines.slice(lines.indexOf(`${name}:`) + 1, end < 0 ? undefined : end)
+    }
+    const many = (n: number) => Array.from({ length: n }, (_, i) => `- rss ${i + 1}`).join('\n')
+
+    it('prints the first 10 ruling hits in order, then how many were omitted', () => {
+      const lines = block(['rss'], { rulings: [{ file: 'a.md', text: many(13) }] }, 'rulings', 'tracker:')
+      expect(lines).toHaveLength(11)
+      expect(lines[0]).toBe('a.md:1: - rss 1')
+      expect(lines[9]).toBe('a.md:10: - rss 10')
+      expect(lines[10]).toBe('  (3 more omitted)')
+    })
+
+    it('prints 10 ruling hits with no omitted line', () => {
+      const lines = block(['rss'], { rulings: [{ file: 'a.md', text: many(10) }] }, 'rulings', 'tracker:')
+      expect(lines).toHaveLength(10)
+      expect(lines.join()).not.toContain('omitted')
+    })
+
+    it('caps the ledger block the same way', () => {
+      const frictions = Array.from({ length: 12 }, (_, i) => ({ file: `f${i}.yml`, summary: 'rss' }))
+      const lines = block(['rss'], { frictions }, 'ledger')
+      expect(lines).toHaveLength(11)
+      expect(lines.at(-1)).toBe('  (2 more omitted)')
+    })
+  })
+
   describe('tracker cut', () => {
     const issue = (number: number, title: string) => ({ number, title, body: null, state: 'open' })
     const tracker = (kw: string[], issues: ReturnType<typeof issue>[]) => {
