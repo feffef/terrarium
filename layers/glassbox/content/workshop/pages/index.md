@@ -49,7 +49,7 @@ None of these is false.
 
 - **Claude Code.** *Claude Code skills* still uses *ADR* without a gloss. *MCP servers*: no source says why the read-first hint matches the whole server while the guards list tools; ask the owner or leave it a plain fact. The "Matched by name, or by server" section puts prose between its two Excerpts, so the first reads as the only example. *Claude Code skills*: the close-session Excerpt shows mostly one dense step, not "a goal and numbered steps".
 - **Hooks.** *Session transcripts*: `isMeta` has no source in the docs.
-- **Agents.** *Workflow scripts*: the `pipeline()` multi-stage form has no source beyond the script. *Cloud sessions*: no source says whether the agent proxy and the GitHub proxy are one, and the page has one Why bullet. *Inspecting past sessions*: "ADR" is not glossed before the first excerpt.
+- **Agents.** *Usability testing*: "the run", "brief" and "lens" come before a gloss in In Terrarium. *Workflow scripts*: the `pipeline()` multi-stage form has no source beyond the script. *Cloud sessions*: no source says whether the agent proxy and the GitHub proxy are one, and the page has one Why bullet. *Inspecting past sessions*: "ADR" is not glossed before the first excerpt.
 - **Git & GitHub.** *Dependabot grouping*: no source says why Terrarium counts a 0.x minor as a major (the page gives the Semantic Versioning rule only), nor why `merge-pr.ts` refuses a Dependabot pull request that touches any file besides `package.json` and the lockfile. *Issue triage labels* and *Commit and PR attribution* are still dense in In Terrarium, with many Skill and function names in a row.
 - **Walkthroughs.** *A bug report becomes work*: stop 7 mixes the Trusted author with the Public requester. *Asking an agent for a change*: stop 1 says a cloud and a local session work the same way, and stop 2 has the `SessionStart` hook install packages; both hold for Terrarium's usual one-repository session, and the Walkthrough could say so.
 - **Installed skills.** *Wayfinder*: the installed Skill gives no reason a session resolves one ticket and research tickets are excepted; "HITL", "frontier" and "fog" arrive as a list before any example. *Engineering skills*: `implement`, which no agent can start, is followed by the build agent without a page saying why that is allowed.
@@ -63,7 +63,6 @@ None of these is false.
 
 ### Stale or missing
 
-- No page teaches the `visitor-loop` Skill (blind and informed visitors, report-only); it is still changing fast, so teach only the stable idea. Nearest page: *Ideas and lessons learned*.
 - No page teaches colour contrast (WCAG AA 4.5:1, tested for Atlas) or narrow-screen overflow. Nearest: *Colour and motion settings*.
 - No page teaches the `digest` Skill (a Digest's Blog line, taken from the Blog files that day's PRs touched so the fact-check can verify it). Nearest page: *Scheduled tasks*.
 - No page teaches how the `glassbox-curate` Skill runs in two modes (a loop session and an instruction session) and pauses for `glassbox-update`; a textbook about its own upkeep may not suit the guide. Nearest page: *Scheduled tasks*.
