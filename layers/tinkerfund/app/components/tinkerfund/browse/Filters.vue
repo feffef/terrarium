@@ -14,6 +14,8 @@ const money = useTinkerfundMoney()
 const STATES = [
   { value: undefined, label: 'Any' },
   ...(['live', 'upcoming', 'ended'] as const).map((value) => ({ value, label: TINKERFUND_STATE_LABELS[value] })),
+  { value: 'funded' as never, label: 'Funded' },
+  { value: 'unfunded' as never, label: 'Unfunded' },
 ]
 
 const set = (patch: Partial<TinkerfundBrowseQuery>) => emit('update', { ...props.query, ...patch })

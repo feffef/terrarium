@@ -251,7 +251,11 @@ export function tinkerfundHomeSections<T extends TinkerfundListing>(listings: T[
     // At most 6 so the 1-, 2- and 3-column grids all end on a full row.
     justLaunched: browseTinkerfundListings(live.filter((l) => l !== featured && l.status.launchAt > now - JUST_LAUNCHED), { sort: 'newest' }).slice(0, 6),
     // One full row of the 3-column grid.
-    recentlyEnded: browseTinkerfundListings(listings.filter((l) => l.status.state === 'ended'), { sort: 'ending' }).slice(0, 3),
+    recentlyEnded: (() => {
+      const ended = browseTinkerfundListings(listings.filter((l) => l.status.state === 'ended'), { sort: 'ending' })
+      const best = browseTinkerfundListings(ended.slice(2), { sort: 'funded' })[0]
+      return [...ended.slice(0, 2), ...(best ? [best] : [])]
+    })(),
   }
 }
 

@@ -6,7 +6,9 @@ const deal = computed(() => groupTinkerfundPromotions(promotions.value, clock.va
 const tiles = computed(() =>
   categories.value.map((c) => ({ ...c, count: cards.value.filter((card) => card.category === c.slug).length })),
 )
-const { link, inventorLink } = useTinkerfundSpace()
+const { link, inventorLink, space, collections } = useTinkerfundSpace()
+const { data: inventorList } = await useAsyncData(`tinkerfund-home-inventors-${space}`, () => queryCollection(collections.inventors).all())
+const someInventors = computed(() => (inventorList.value ?? []).slice(0, 6).map((i) => ({ slug: String(i.stem).split('/').pop() as string, name: i.name, portrait: i.portrait })))
 const locale = useTinkerfundLocale()
 const money = useTinkerfundMoney()
 </script>
@@ -68,6 +70,22 @@ const money = useTinkerfundMoney()
       </ul>
     </section>
 
+    <section v-if="someInventors.length" aria-labelledby="tf-inventors">
+      <div class="head">
+        <h2 id="tf-inventors">Meet the Inventors</h2>
+        <NuxtLink :to="link('/inventors')">See all</NuxtLink>
+      </div>
+      <ul class="invs">
+        <li v-for="i in someInventors" :key="i.slug">
+          <NuxtLink :to="inventorLink(i.slug)">
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <svg class="tf-tokens" viewBox="0 0 100 100" aria-hidden="true" v-html="i.portrait" />
+            {{ i.name }}
+          </NuxtLink>
+        </li>
+      </ul>
+    </section>
+
     <section v-if="home.popular.length" aria-labelledby="tf-popular">
       <TinkerfundBrowseIndexTable :cards="home.popular" :categories="categories" :clock="clock" :limit="10">
         <h2 id="tf-popular">Popular now</h2>
@@ -86,7 +104,7 @@ const money = useTinkerfundMoney()
 
     <section v-if="home.recentlyEnded.length" aria-labelledby="tf-ended">
       <div class="head">
-        <h2 id="tf-ended">Recently ended</h2>
+        <h2 id="tf-ended">Ended</h2>
         <NuxtLink :to="link('/discover?state=ended&sort=ending')">See all</NuxtLink>
       </div>
       <ul class="grid">
@@ -133,6 +151,9 @@ dd { margin: 0; font: 600 16px/1.2 var(--tf-mono); font-variant-numeric: tabular
 .actions { display: flex; flex-wrap: wrap; gap: 10px; }
 
 ul { margin: 0; padding: 0; list-style: none; }
+.invs { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 14px; }
+.invs a { display: grid; gap: 6px; justify-items: center; color: var(--tf-ink); text-decoration: none; font: 600 14px/1.2 var(--tf-font); text-align: center; }
+.invs svg { width: 64px; height: 64px; border: var(--tf-hairline); border-radius: var(--tf-radius); background: var(--tf-surface); color-scheme: light; }
 /* Shrink the whole section, not just `.scroller` below — a full-width `.head`
    over a short card row still read as broken/empty (visitor-loop fix,
    2026-09-27 then 2026-09-28). */

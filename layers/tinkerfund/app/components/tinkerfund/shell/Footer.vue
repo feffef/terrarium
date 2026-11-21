@@ -18,6 +18,7 @@ const categories = useTinkerfundCategories()
         <p class="tf-label">Tinkerfund</p>
         <NuxtLink :to="link('/how-it-works')">How it works</NuxtLink>
         <NuxtLink :to="link('/deals')">Deals</NuxtLink>
+        <NuxtLink :to="link('/inventors')">Inventors</NuxtLink>
         <TinkerfundShellResetDemo />
       </nav>
       <TinkerfundShellThemeSwitch />

@@ -31,6 +31,7 @@ const record = computed(() => {
       <component :is="heading ?? 'h1'" class="tf-h1">{{ inventor.name }}</component>
       <p class="bio">{{ inventor.bio }}</p>
       <NuxtLink :to="link('/discover')">All Campaigns</NuxtLink>
+      <NuxtLink :to="link('/inventors')">All Inventors</NuxtLink>
     </header>
     <ul v-if="cards.length" class="grid">
       <li v-for="c in cards" :key="c.path"><TinkerfundBrowseCampaignCard :card="c" :clock="clock" /></li>
