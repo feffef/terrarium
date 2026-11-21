@@ -133,11 +133,15 @@ describe('browsing Campaigns', () => {
   it('filters by category, state, Ending soon and On Deal', () => {
     expect(titles({ sort: 'popular', category: 'workshop' })).toEqual(['kettle', 'hammock'])
     expect(titles({ sort: 'popular', state: 'ended' })).toEqual(['ruler', 'hammock'])
-    expect(titles({ sort: 'popular', state: 'funded' })).toEqual(['ruler'])
-    expect(titles({ sort: 'popular', state: 'unfunded' })).toEqual(['hammock'])
     expect(titles({ sort: 'popular', soon: true })).toEqual(['lamp'])
     expect(titles({ sort: 'popular', deal: true })).toEqual(['stapler'])
     expect(titles({ sort: 'popular', category: 'workshop', state: 'live' })).toEqual([])
+  })
+
+  it('filters Ended Campaigns by outcome, leaving out Live and Upcoming ones', () => {
+    expect(titles({ sort: 'popular', state: 'funded' })).toEqual(['ruler'])
+    expect(titles({ sort: 'popular', state: 'unfunded' })).toEqual(['hammock'])
+    expect(titles({ sort: 'popular', category: 'workshop', state: 'funded' })).toEqual([])
   })
 
   it('keeps a Campaign with any Reward inside the price range', () => {

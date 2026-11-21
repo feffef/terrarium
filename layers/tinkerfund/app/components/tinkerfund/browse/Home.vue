@@ -8,7 +8,7 @@ const tiles = computed(() =>
 )
 const { link, inventorLink, space, collections } = useTinkerfundSpace()
 const { data: inventorList } = await useAsyncData(`tinkerfund-home-inventors-${space}`, () => queryCollection(collections.inventors).select('stem', 'name', 'portrait').all())
-const someInventors = computed(() => (inventorList.value ?? []).slice(0, 6))
+const someInventors = computed(() => [...(inventorList.value ?? [])].sort((a, b) => a.name.localeCompare(b.name)).slice(0, 6))
 const locale = useTinkerfundLocale()
 const money = useTinkerfundMoney()
 </script>

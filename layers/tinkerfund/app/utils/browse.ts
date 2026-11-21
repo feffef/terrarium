@@ -226,7 +226,7 @@ export function browseTinkerfundListings<T extends TinkerfundListing>(listings: 
   return listings
     .filter((l) =>
       (!category || l.category === category)
-      && (!state || (l.status.outcome ?? l.status.state) === state || (state === 'ended' && l.status.state === 'ended'))
+      && (!state || l.status.state === state || l.status.outcome === state)
       && (!soon || l.status.endingSoon)
       && (!deal || l.promoted)
       && (!priced || l.prices.some((p) => p >= (min ?? 0) && p <= (max ?? Infinity))),

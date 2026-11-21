@@ -142,7 +142,7 @@ describe('tinkerfund Tenant', async () => {
       const prod = main(await $fetch('/t/tinkerfund/prod/inventors'))
       expect(prod).toContain('Inventors · 19<')
       expect(prod).toContain('href="/t/tinkerfund/prod/inventors/henrik-aalto"')
-      expect(prod.indexOf('Annika')).toBeLessThan(prod.indexOf('Tomasz'))
+      expect(prod.indexOf('inventors/annika-sorensen"')).toBeLessThan(prod.indexOf('inventors/tomasz-wrobel"'))
       expect(prod).toMatch(/3 Campaigns</)
       const qa = main(await $fetch('/t/tinkerfund/qa/inventors'))
       expect(qa).toContain('Inventors · 3<')
@@ -150,7 +150,17 @@ describe('tinkerfund Tenant', async () => {
       for (const path of ['/t/tinkerfund/prod', '/t/tinkerfund/prod/deals']) {
         expect(await $fetch(path), path).toContain('href="/t/tinkerfund/prod/inventors"')
       }
-      expect(main(await $fetch('/t/tinkerfund/prod'))).toContain('Meet the Inventors')
+      const home = main(await $fetch('/t/tinkerfund/prod'))
+      const meet = home.slice(home.indexOf('Meet the Inventors'), home.indexOf('Popular now'))
+      expect(meet.match(/class="tf-tokens"/g)).toHaveLength(6)
+      expect(meet).toContain('href="/t/tinkerfund/prod/inventors"')
+    })
+
+    it('offers Funded and Unfunded after Ended in the State filter, on Category pages too', async () => {
+      const html = main(await $fetch('/t/tinkerfund/prod/category/kitchen'))
+      const state = html.slice(html.indexOf('State</legend>'), html.indexOf('</fieldset>', html.indexOf('State</legend>')))
+      expect([...state.matchAll(/<label[^>]*>(?:<[^>]+>)*\s*([A-Za-z]+)\s*<\/label>/g)].map((m) => m[1]))
+        .toEqual(['Any', 'Live', 'Upcoming', 'Ended', 'Funded', 'Unfunded'])
     })
 
     it('filters Discover by an Ended Campaign’s outcome', async () => {
