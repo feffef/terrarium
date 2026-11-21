@@ -70,7 +70,7 @@ const label = useId()
       </table>
     </div>
     <button v-if="limit && !showAll && matching.length > limit" type="button" class="more" @click="expand">
-      Show all {{ matching.length }} Campaigns
+      Show all {{ matching.length }} open Campaigns
     </button>
   </div>
 </template>

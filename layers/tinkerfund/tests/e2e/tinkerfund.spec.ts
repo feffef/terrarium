@@ -135,6 +135,43 @@ describe('tinkerfund Tenant', async () => {
       expect(idle).toContain('Inventor · 0 Campaigns<')
       expect(idle).toContain('No Campaigns yet.')
       expect(idle).not.toContain('class="grid"')
+      expect(idle).toContain('href="/t/tinkerfund/qa/inventors"')
+    })
+
+    it('lists the Inventors A to Z with their Campaign counts, linked from the nav and Home', async () => {
+      const prod = main(await $fetch('/t/tinkerfund/prod/inventors'))
+      expect(prod).toContain('Inventors · 19<')
+      expect(prod).toContain('href="/t/tinkerfund/prod/inventors/henrik-aalto"')
+      expect(prod.indexOf('inventors/annika-sorensen"')).toBeLessThan(prod.indexOf('inventors/tomasz-wrobel"'))
+      expect(prod).toMatch(/3 Campaigns</)
+      const qa = main(await $fetch('/t/tinkerfund/qa/inventors'))
+      expect(qa).toContain('Inventors · 3<')
+      expect(qa).toContain('0 Campaigns<')
+      expect(qa).toContain('Überlänge-Zweibrücken')
+      const page = await $fetch<string>('/t/tinkerfund/prod')
+      expect(await $fetch('/t/tinkerfund/prod/deals')).toContain('href="/t/tinkerfund/prod/inventors"')
+      const home = main(page)
+      const meet = home.slice(home.indexOf('Meet the Inventors'), home.indexOf('Popular now'))
+      expect(meet.match(/class="tf-tokens"/g)).toHaveLength(6)
+      expect(meet).toContain('href="/t/tinkerfund/prod/inventors"')
+    })
+
+    it('offers Funded and Unfunded after Ended in the State filter, on Category pages too', async () => {
+      const html = main(await $fetch('/t/tinkerfund/prod/category/kitchen'))
+      const state = html.slice(html.indexOf('State</legend>'), html.indexOf('</fieldset>', html.indexOf('State</legend>')))
+      expect([...state.matchAll(/<label[^>]*>(?:<[^>]+>)*\s*([A-Za-z]+)\s*<\/label>/g)].map((m) => m[1]))
+        .toEqual(['Any', 'Live', 'Upcoming', 'Ended', 'Funded', 'Unfunded'])
+    })
+
+    it('filters Discover by an Ended Campaign’s outcome', async () => {
+      const funded = main(await $fetch('/t/tinkerfund/prod/discover?state=funded'))
+      const unfunded = main(await $fetch('/t/tinkerfund/prod/discover?state=unfunded'))
+      expect(funded).toMatch(/\d+ Campaigns?</)
+      expect(funded).toContain('data-state="funded"')
+      expect(funded).not.toContain('data-state="unfunded"')
+      expect(funded).not.toContain('data-state="live"')
+      expect(unfunded).toContain('data-state="unfunded"')
+      expect(unfunded).not.toContain('data-state="funded"')
     })
 
     for (const [slug, action] of [
@@ -246,7 +283,7 @@ describe('tinkerfund Tenant', async () => {
       const popular = html.slice(at[4], at[5])
       expect(popular.match(/class="wide"[^>]*>TF-\d+/g)).toHaveLength(10)
       expect(popular).toMatch(/TF-0001/)
-      expect(popular).toMatch(/Show all \d+ Campaigns/)
+      expect(popular).toMatch(/Show all \d+ open Campaigns/)
       expect(popular).not.toContain('TF-0005')
     })
 

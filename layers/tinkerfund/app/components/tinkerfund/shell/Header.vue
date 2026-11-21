@@ -27,6 +27,7 @@ const menu = useTemplateRef('menu')
           <NuxtLink :to="link('/discover')">All Campaigns</NuxtLink>
         </div>
         <NuxtLink :to="link('/deals')">Deals</NuxtLink>
+        <NuxtLink :to="link('/inventors')">Inventors</NuxtLink>
       </nav>
 
       <TinkerfundShellSearchField class="field" />
@@ -56,6 +57,7 @@ const menu = useTemplateRef('menu')
             {{ c.name }}
           </NuxtLink>
           <NuxtLink :to="link('/deals')">Deals</NuxtLink>
+          <NuxtLink :to="link('/inventors')">Inventors</NuxtLink>
           <NuxtLink :to="link('/how-it-works')">How it works</NuxtLink>
         </nav>
       </template>
