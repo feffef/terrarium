@@ -1,0 +1,155 @@
+schemaVersion: 1
+session: session_013zxzeSARDGdXM7Hqe83quy
+startedAt: 2026-11-21T17:05:45Z
+endedAt: 2026-11-21T17:11:38Z
+kind: autonomous
+goal: Scheduled harvest of ideas and learnings into Seedlings
+status: completed
+outcome: "93 entries read, 14 clusters checked, 7 passed; 7 Seedlings (#3554-#3557, #3559-#3561) plus a retro Seedling (#3562) filed and verified"
+summary: "Scheduled run of the harvest Skill, agent-initiated with no human input. Extracted 93 unharvested entries (48 ideas, 45 learnings), read the whole list, and checked 14 clusters: product clusters first (Tinkerfund count, Discover filters, Inventors index, tap targets, content fixes, Blog overflow test, Glass Box prose passed; More like this, Midden unknown cause, Midden Tenant gloss, sample cues, Blog summaries dropped as built, filed or rejected), then two workflow clusters dropped (merge review proof already built; additions retire nothing). Filed seven Seedlings and one retro Seedling about the noisy evidence command. The evidence command was too noisy to rely on, so I verified clusters by reading code and issues directly."
+prs: []
+docsRead:
+  - path: .agents/skills/harvest/body-template.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/retro/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: layers/tinkerfund/GLOSSARY.md
+    reason: (no reason given)
+skillsUsed:
+  - name: harvest
+    reason: the scheduled task
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: harvest evidence printed 488 lines of mostly unrelated hits (glossary lines, old closed issues) so I verified by hand instead.
+    solution: Require two keyword matches per hit and skip glossary files in the rulings block.
+    severity: moderate
+  - description: Ran git log and git show to draw conclusions before reading docs/agents/git-conventions.md, which a hook flagged afterwards.
+    solution: Read the doc first, as CLAUDE.md says, or exempt read-only history lookups in the hook.
+    severity: nit
+  - description: Skipped the retro Skill's step 1 (invoke writing-for-agents) when writing the retro Seedling.
+    solution: Harvest step 5 could name it as an explicit step.
+    severity: nit
+  - description: check-clusters rejected my session counts twice because I counted entries, not distinct sessions.
+    solution: Have the helper print the expected count in its error.
+    severity: nit
+durationSec: 353
+models:
+  claude-sonnet-5-5: 91
+toolCounts:
+  Bash: 40
+  Read: 3
+  ToolSearch: 1
+  mcp__github__issue_write: 8
+  Skill: 2
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/harvest/body-template.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/harvest/body-template.md
+      - rule: .claude/rules/adr-0020.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/adr-0006.md
+        via: hint
+      - rule: .claude/rules/adr-0016.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: filed Seedlings as proposals only
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: provenance header on every issue
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: confirmed
+        why: "agreed: read Tinkerfund glossary"
+      - path: .agents/skills/harvest/body-template.md
+      - path: docs/agents/github-integration.md
+      - path: docs/agents/triage-labels.md
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0020.md
+        value: unrelated
+      - path: .claude/rules/adr-0022.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/glossary-terms.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: .claude/rules/tenant-layers.md
+        value: unrelated
+      - path: .claude/rules/ui-verification.md
+        value: unrelated
+      - path: .claude/rules/adr-0006.md
+        value: unrelated
+      - path: .claude/rules/adr-0016.md
+        value: unrelated
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: unrelated
+gitBranch: claude/eager-cerf-ovrybp
+entrypoint: remote_trigger
+cliVersion: 2.1.330
+trigger: harvest
+learnings:
+  - Midden Trench unknown-cause notice was closed completed in a Seedling (#3382) but the code has no such notice, so closed completed alone does not prove built.
+ideas:
+  - Have harvest check-clusters print the expected distinct-session count, so a wrong count is fixed in one run
+landedBy: Stop
