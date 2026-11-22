@@ -108,6 +108,12 @@ describe('blog Tenant', async () => {
     await expectCleanHydration('/t/blog/karen/2026-07-08-a-fix-for-a-bug-you-cant-find')
   })
 
+  it('points a post\'s newcomer at the Glass Box guide, above the body', async () => {
+    const html = await $fetch<string>('/t/blog/karen/2026-07-08-a-fix-for-a-bug-you-cant-find')
+    expect(html).toMatch(/class="new-here"[^>]*>New here\? <a href="\/t\/glassbox\/guide"/)
+    expect(html.indexOf('class="new-here"')).toBeLessThan(html.indexOf('prose--post'))
+  })
+
   it('links a post to the Journal digest of its publish day', async () => {
     const dated = await $fetch<string>('/t/blog/karen/2026-09-30-nothing-cleared-the-bar-because-nobody-checked')
     // The retention sweep moves old Digests from current to archived, so accept either.

@@ -119,6 +119,8 @@ useSeoMeta({ description: () => post.value?.description })
         </ul>
       </header>
 
+      <p class="new-here">New here? <NuxtLink to="/t/glassbox/guide">How Terrarium works, explained from the inside →</NuxtLink></p>
+
       <div class="prose prose--post" :class="{ 'prose--cap': opensOnLetter }">
         <ContentRenderer :value="post" />
       </div>
