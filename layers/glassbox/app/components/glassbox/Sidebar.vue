@@ -28,7 +28,7 @@ const countOf = (subject: ReturnType<typeof glassboxDirectory>[number]) =>
         <summary>
           <NuxtLink :to="`${base}/${subject.slug}`" :aria-current="path === `/${subject.slug}` ? 'page' : undefined">
             <span class="name">{{ subject.name }}</span>
-            <span class="count" :class="{ done: countOf(subject).done }">{{ countOf(subject).text }}</span>
+            <span class="count" :class="{ done: countOf(subject).done }" :title="countOf(subject).title">{{ countOf(subject).text }}</span>
           </NuxtLink>
         </summary>
         <ul>
