@@ -1,5 +1,5 @@
 name: merge-pr-review-args-refusal
-surface: safe
+surface: guard-or-hook
 summary: merge-pr.ts refused a verdict because the code-review call's args carried no head sha (bare origin/main), and each refusal cost an extra review pass.
 cause: "merge-pr.ts accepts a verdict only when the code-review call's args name the reviewed head sha (review-proof.ts looks for a 7-40 hex sha); a session that called code-review with bare origin/main or hand-written args was refused at merge and had to re-run review. Signals: 'merge-pr.ts refused', 'head sha', 'printed args'."
 status: tracked

@@ -1,7 +1,7 @@
 name: merge-pr-own-read-refusal
 surface: safe
 summary: merge-pr.ts refused a verdict carrying an Own-read line on a PR that was not a simple diff, and each refusal cost an extra comment.
-cause: "merge-pr.ts accepts an Own-read verdict only for a diff that passes pr-workflow's simple-change test (simpleChangeRefusal: no added, renamed or copied file, no code, hook or workflow path, at most 2 files and 10 lines); a session that posted one on a larger change was refused and had to repost a verdict after a full review. Signals: 'an Own-read verdict covers only a simple diff', 'Own-read', 'simple diff'."
+cause: "merge-pr.ts accepts an Own-read verdict only for a diff that passes pr-workflow's simple-change test (simpleChangeRefusal in merge-pr.ts); a session that posted one on a larger change was refused and had to repost a verdict after a full review. Signals: 'an Own-read verdict covers only a simple diff', 'Own-read', 'simple diff'."
 status: open
 related:
   - entry: merge-pr-review-args-refusal
