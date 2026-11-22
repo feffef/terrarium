@@ -99,14 +99,15 @@ the memory page's items.
       topics.
 
    An item is a bullet or numbered entry under the memory page's *Agent
-   notes*; *Soft decisions* are not items.
+   notes*; *Soft decisions* and *Waiting for owner decision* are not items.
 
    Within a group, take the first item on the page. Skip an item that carries
-   a line saying an earlier run failed on it, and an item whose only open part
-   is a question for the owner. Take an item that needs a new Lesson: rule 6
-   leaves its PR for the owner's merge. Check that it still
+   a line saying an earlier run failed on it. Take an item that needs a new
+   Lesson: rule 6 leaves its PR for the owner's merge. Check that it still
    stands: grep the guide for its key terms and read where they appear. If it
-   no longer stands, note it (step 7 deletes it) and take the next one.
+   no longer stands, does not suit a guide page (a Skill-detail gap, say), or
+   its only open part is a question for the owner, note it and take the next
+   one; step 7 deletes or moves it.
 3. **Nothing to pick.**
    - If items are left but open PRs block all of them, and one of those PRs is
      yours with its checks still running, or is a `glassbox-update` PR (it
@@ -120,9 +121,12 @@ the memory page's items.
 
 ### 3. Start the run and read
 
-Branch from a fresh `origin/main`. Write the run entry from the orientation's
-skeleton, named by the current UTC time (`date -u +%Y-%m-%dT%H%M`), with
-`focus` quoted and why you chose it. Commit it and push the branch.
+Each run, the first too, cuts a new branch from a fresh `origin/main`.
+This Skill is the explicit permission to push those branches; never use
+the session's harness-assigned branch. Write the run entry from the
+orientation's skeleton, named by the current UTC time
+(`date -u +%Y-%m-%dT%H%M`), with `focus` quoted and why you chose it.
+Commit it and push the branch.
 
 Run `pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts --subject <folder>`
 for the focus's Subject (the Walkthroughs count as one Subject). Read each part
@@ -201,8 +205,9 @@ every changed page.
 1. Merge `origin/main` into the branch and keep the newer pin. If `main`
    changed the memory page, keep every item from both versions except those
    either side deleted.
-2. Update the memory page (State): delete every item this run solved and every
-   item step 2 found no longer stands; add only what State allows.
+2. Update the memory page (State): delete every item this run solved or step 2
+   found no longer stands, and move the rest step 2 noted to *Waiting for
+   owner decision*. Add only what State allows.
 3. Complete the run entry: `changes` and `pagesRead`.
 4. Follow every step of `docs/agents/pr-workflow.md`, "Review before opening
    the PR", always with the `code-review` call, never the own read of a simple
@@ -314,8 +319,9 @@ All in `layers/glassbox/content/workshop/`.
 plain words. State a count only after counting its items in their source.
 - Delete an item once it is solved. Never mark one done.
 - While you work, you may add a weak spot, a gap or an idea you find outside
-  your focus, and a question only the owner can answer. Add only what you can't
-  fix now and what clearly matters.
+  your focus, and, under *Waiting for owner decision*, a question only the
+  owner can answer. Add only what you can't fix now and what clearly
+  matters.
 - A fact the next run still needs stays as a plain current fact under a heading
   that fits. What a run did goes in its run entry, not here.
 - The word cap (`glassboxWorkshopWordCap` in `layers/glassbox/app/utils/workshop.ts`) is a ceiling,
