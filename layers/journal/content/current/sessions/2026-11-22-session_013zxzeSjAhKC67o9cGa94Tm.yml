@@ -1,0 +1,1037 @@
+schemaVersion: 1
+session: session_013zxzeSjAhKC67o9cGa94Tm
+startedAt: 2026-11-22T00:45:40Z
+endedAt: 2026-11-22T01:03:35Z
+kind: autonomous
+goal: Weekly check of the Platform's own Skills
+status: completed
+outcome: Audited 15 Skills, filed two issues, and landed the Inventory update as PR 3576.
+summary: "Scheduled audit-skills run, started by a schedule with no human prompt; every step was the Skill's own. Step 1 built the scorecard for 11-15 to 11-22 and a subagent fetched usage for 11 Routine runs. Step 2 ran 15 read-only Sonnet behaviour checks, one per Skill, from the repo's brief. Step 3 closure signals were all empty (orphan scan ran: 169 merged PRs, 90 issues, no orphans, no suppressions, no human-prompted or rescued closures). Step 4 escalated two findings that cleared the repeated bar: \"#3574\" (glassbox-curate stopped after one PR again, the first unattended run on the new two-mode text) and \"#3575\" (prune-trial never marks the covered ledger entry on-trial; I confirmed the ledger entry is still open and that the Skill has no marking step). Other findings stayed observations: the clear-backlog Seedling sweep gap, subagent-only rule-use gaps in log-session, the blog-post stub name (already fixed in \"#3558\" after those runs) and several repeated late-read and review-cost patterns. Step 5 appended a fresh observation and auditSummary to each of the 15 Skills, changed no grade, role or gist, and appended 11 Routine run costs. check-states flagged five ordinary-prose phrasings, which I reworded. Step 6 landed \"#3576\" after code-review on the first commit, my own read of a two-line follow-up, and a passing gate:scoped on the final head. Open: nothing; the issues wait for triage. Limits: the subagents' counts and ids were checked only where noted; the many claims marked unverified in the notes were not reread."
+prs:
+  - "3576"
+docsRead:
+  - path: .claude/skills/audit-skills/brief.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: layers/journal/GLOSSARY.md
+    reason: (no reason given)
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: (no reason given)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-11-21-session_013zxzePVqgGH7hbNFvSCqQR.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-11-21-session_013zxzeT3ZUhBeG84jQUD1Hw.yml
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-11-21-session_013zxzePwfhRzFTnSPtXLumX.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-11-21-session_013zxzePp9GLW2F1VvQUhWEy.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-11-21-session_013zxzeRKMTCrTfnEGHcTwAZ.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-11-20-session_013zxzeQAV89N7K2uJN1FbsR.yml
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/harvest/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/inspect-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-curate/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-skills
+    reason: the scheduled task itself
+  - name: dispatch-subagents
+    reason: read before writing the 16 subagent briefs
+  - name: code-review
+    reason: Standards and Spec review of the Inventory commit
+  - name: close-session
+    reason: closure after the PR merged
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Wrote 15 Journal observations with one Node script before reading layers/journal/GLOSSARY.md; the tenant-glossary guard only fired on a later Edit.
+    solution: Read the Journal glossary in step 5 before the first Inventory write; a note in audit-skills step 5 would do it.
+    severity: minor
+  - description: Put counts, ids and attributions from 15 subagent reports into the notes after checking only a few (prune-trial entry status, issue states); the rest carry an unverified tag.
+    solution: Have the brief ask each agent to list its three claims most worth re-checking, so the parent verifies those.
+    severity: minor
+  - description: check-states flagged five ordinary-prose phrasings (written open, merged) in my new notes; I reworded them.
+    solution: Let check-states ignore a state word that follows 'was' or sits in a clause about an earlier audit.
+    severity: nit
+  - description: The log-session note came out at 282 words, under the 300-word floor; my own length check caught it and I extended it.
+    solution: Have the audit-skills scorecard print a draft word count so the floor is met on the first write.
+    severity: nit
+durationSec: 1075
+models:
+  claude-sonnet-5-5: 135
+toolCounts:
+  Bash: 31
+  Read: 9
+  Agent: 18
+  mcp__Claude_Code_Remote__get_session: 1
+  ToolSearch: 1
+  mcp__github__issue_write: 2
+  Write: 2
+  Edit: 2
+  Skill: 3
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+  PushNotification: 1
+filesEdited:
+  - layers/journal/content/current/skills/log-session.yml
+  - layers/journal/content/current/skills/dispatch-subagents.yml
+  - layers/journal/content/current/skills/glassbox-curate.yml
+  - layers/journal/content/current/routines/audit-docs.yml
+  - layers/journal/content/current/routines/audit-skills.yml
+  - layers/journal/content/current/routines/blog-post.yml
+  - layers/journal/content/current/routines/dependabot-sweep.yml
+  - layers/journal/content/current/routines/digest.yml
+  - layers/journal/content/current/routines/frictions-to-fixes.yml
+  - layers/journal/content/current/routines/glassbox-curate.yml
+  - layers/journal/content/current/routines/glassbox-update.yml
+  - layers/journal/content/current/routines/harvest.yml
+  - layers/journal/content/current/routines/prune-trial.yml
+  - layers/journal/content/current/routines/visitor-loop.yml
+  - layers/journal/content/current/skills/audit-docs.yml
+  - layers/journal/content/current/skills/audit-skills.yml
+  - layers/journal/content/current/skills/auto-triage.yml
+  - layers/journal/content/current/skills/blog-post.yml
+  - layers/journal/content/current/skills/clear-backlog.yml
+  - layers/journal/content/current/skills/close-session.yml
+  - layers/journal/content/current/skills/digest.yml
+  - layers/journal/content/current/skills/frictions-to-fixes.yml
+  - layers/journal/content/current/skills/glassbox-update.yml
+  - layers/journal/content/current/skills/harvest.yml
+  - layers/journal/content/current/skills/inspect-session.yml
+  - layers/journal/content/current/skills/prune-trial.yml
+  - layers/journal/content/current/skills/visitor-loop.yml
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0015.md
+adrHints:
+  - adr: 15
+    via: path
+    readAfter: true
+    by: main
+docsReadBySubagents:
+  - .agents/skills/clear-backlog/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/harvest/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/glassbox-update/SKILL.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/inspect-session/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/log-session/SKILL.md
+  - .agents/skills/glassbox-curate/SKILL.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0015.md
+        via: native
+        trigger: layers/journal/content/current/skills/log-session.yml
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .claude/skills/audit-skills/brief.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .claude/skills/audit-skills/brief.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0022.md
+        via: native
+        trigger: docs/agents/triage-labels.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/journal/GLOSSARY.md
+      - rule: .claude/rules/adr-0030.md
+        via: native
+        trigger: docs/adr/0015-audit-skills-and-conditional-importance.md
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/journal/GLOSSARY.md
+      - rule: .claude/rules/adr-0008.md
+        via: native
+        trigger: layers/journal/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/journal/GLOSSARY.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: ran code-review and gate:scoped before the PR
+      - path: .claude/rules/adr-0009.md
+        value: steered
+        why: closure logged through close-session
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: scheduled run limited to Inventory, runs, issues
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: session header on issues, PR and comment
+      - path: .claude/rules/adr-0015.md
+        value: confirmed
+        why: "agreed: no role, grade or watchFor edit"
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0022.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: missed
+        why: "late: wrote Journal entries by script before reading the glossary"
+      - path: .claude/rules/adr-0030.md
+        value: unrelated
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/adr-0008.md
+        value: in-scope
+      - path: .claude/rules/glossary-terms.md
+        value: unrelated
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: unrelated
+      - path: .agents/skills/dispatch-subagents/SKILL.md
+      - path: docs/agents/pr-workflow.md
+      - path: docs/agents/issue-tracker.md
+      - path: docs/agents/git-conventions.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .claude/skills/audit-skills/brief.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .claude/skills/audit-skills/brief.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: .agents/skills/audit-docs/SKILL.md
+      - rule: .claude/rules/adr-0030.md
+        via: native
+        trigger: .agents/skills/audit-docs/SKILL.md
+      - rule: .claude/rules/adr-0015.md
+        via: native
+        trigger: .agents/skills/audit-docs/SKILL.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/journal/content/current/sessions/2026-11-21-session_013zxzePwfhRzFTnSPtXLumX.yml
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: in-scope
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/adr-0030.md
+        value: unrelated
+      - path: .claude/rules/adr-0015.md
+        value: in-scope
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: docs/agents/git-conventions.md
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .claude/skills/audit-skills/brief.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .claude/skills/audit-skills/brief.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/journal/content/current/sessions/2026-11-21-session_013zxzeRKMTCrTfnEGHcTwAZ.yml
+      - rule: .claude/rules/adr-0015.md
+        via: native
+        trigger: .agents/skills/audit-skills/SKILL.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/rules/adr-0015.md
+        value: in-scope
+  - by: general-purpose
+    subagent: 3
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .claude/skills/audit-skills/brief.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .claude/skills/audit-skills/brief.md
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 4
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .claude/skills/audit-skills/brief.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .claude/skills/audit-skills/brief.md
+      - rule: .claude/rules/adr-0022.md
+        via: native
+        trigger: .agents/skills/clear-backlog/SKILL.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/journal/content/current/sessions/2026-11-21-session_013zxzePVqgGH7hbNFvSCqQR.yml
+      - rule: .claude/rules/adr-0020.md
+        via: hint
+    reported: []
+  - by: general-purpose
+    subagent: 5
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .claude/skills/audit-skills/brief.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .claude/skills/audit-skills/brief.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 6
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .claude/skills/audit-skills/brief.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .claude/skills/audit-skills/brief.md
+      - rule: .claude/rules/adr-0010.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 7
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .claude/skills/audit-skills/brief.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .claude/skills/audit-skills/brief.md
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/skills/audit-skills/brief.md
+  - by: general-purpose
+    subagent: 8
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .claude/skills/audit-skills/brief.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .claude/skills/audit-skills/brief.md
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: in-scope
+      - path: .claude/rules/adr-0005.md
+        value: in-scope
+      - path: .claude/rules/adr-0015.md
+        value: in-scope
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 9
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .claude/skills/audit-skills/brief.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .claude/skills/audit-skills/brief.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 10
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .claude/skills/audit-skills/brief.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .claude/skills/audit-skills/brief.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/journal/content/current/sessions/2026-11-21-session_013zxzePp9GLW2F1VvQUhWEy.yml
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 11
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .claude/skills/audit-skills/brief.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .claude/skills/audit-skills/brief.md
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 12
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .claude/skills/audit-skills/brief.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .claude/skills/audit-skills/brief.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 13
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .claude/skills/audit-skills/brief.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .claude/skills/audit-skills/brief.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0015.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/skills/audit-skills/brief.md
+  - by: general-purpose
+    subagent: 14
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .claude/skills/audit-skills/brief.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .claude/skills/audit-skills/brief.md
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: in-scope
+      - path: .claude/rules/adr-0005.md
+        value: in-scope
+  - by: general-purpose
+    subagent: 15
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .claude/skills/audit-skills/brief.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .claude/skills/audit-skills/brief.md
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0028.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 16
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0015.md
+        value: steered
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .agents/skills/audit-skills/SKILL.md
+  - by: general-purpose
+    subagent: 17
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0015.md
+        value: steered
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+subagents:
+  - task: Routine run usage lookup
+    model: sonnet
+    durationSec: 25
+    toolCalls: 14
+    modelCalls: 3
+    tokenShare: 1.5
+  - task: "Audit skill: audit-docs"
+    model: sonnet
+    durationSec: 75
+    toolCalls: 14
+    modelCalls: 10
+    tokenShare: 3.6
+  - task: "Audit skill: audit-skills"
+    model: sonnet
+    durationSec: 82
+    toolCalls: 19
+    modelCalls: 11
+    tokenShare: 5
+  - task: "Audit skill: blog-post"
+    model: sonnet
+    durationSec: 69
+    toolCalls: 13
+    modelCalls: 9
+    tokenShare: 3.1
+  - task: "Audit skill: clear-backlog"
+    model: sonnet
+    durationSec: 71
+    toolCalls: 12
+    modelCalls: 8
+    tokenShare: 2.9
+  - task: "Audit skill: close-session"
+    model: sonnet
+    durationSec: 117
+    toolCalls: 17
+    modelCalls: 15
+    tokenShare: 4.2
+  - task: "Audit skill: digest"
+    model: sonnet
+    durationSec: 64
+    toolCalls: 12
+    modelCalls: 10
+    tokenShare: 2.9
+  - task: "Audit skill: dispatch-subagents"
+    model: sonnet
+    durationSec: 141
+    toolCalls: 20
+    modelCalls: 17
+    tokenShare: 6.7
+  - task: "Audit skill: frictions-to-fixes"
+    model: sonnet
+    durationSec: 91
+    toolCalls: 16
+    modelCalls: 15
+    tokenShare: 4.5
+  - task: "Audit skill: glassbox-curate"
+    model: sonnet
+    durationSec: 68
+    toolCalls: 12
+    modelCalls: 9
+    tokenShare: 3
+  - task: "Audit skill: glassbox-update"
+    model: sonnet
+    durationSec: 56
+    toolCalls: 10
+    modelCalls: 9
+    tokenShare: 2.9
+  - task: "Audit skill: harvest"
+    model: sonnet
+    durationSec: 74
+    toolCalls: 13
+    modelCalls: 7
+    tokenShare: 3.8
+  - task: "Audit skill: inspect-session"
+    model: sonnet
+    durationSec: 78
+    toolCalls: 15
+    modelCalls: 11
+    tokenShare: 3.8
+  - task: "Audit skill: log-session"
+    model: sonnet
+    durationSec: 63
+    toolCalls: 9
+    modelCalls: 8
+    tokenShare: 2.8
+  - task: "Audit skill: prune-trial"
+    model: sonnet
+    durationSec: 65
+    toolCalls: 12
+    modelCalls: 9
+    tokenShare: 2.7
+  - task: "Audit skill: visitor-loop"
+    model: sonnet
+    durationSec: 55
+    toolCalls: 8
+    modelCalls: 7
+    tokenShare: 2.4
+  - task: Review standards axis
+    model: sonnet
+    durationSec: 26
+    toolCalls: 7
+    modelCalls: 5
+    tokenShare: 2.9
+  - task: Review spec axis
+    model: sonnet
+    durationSec: 34
+    toolCalls: 9
+    modelCalls: 7
+    tokenShare: 3.4
+gitBranch: claude/loving-tesla-gu8yob
+entrypoint: remote_trigger
+cliVersion: 2.1.330
+trigger: audit-skills
+learnings:
+  - Fifteen behaviour agents cost about 1.5M subagent tokens; the reports were detailed enough that the parent needed no log reading, but most findings were repeats of known observations.
+ideas:
+  - Edit clear-backlog-build.js once so builder and reviewer prompts state foreground e2e with a timeout, create the scratch folder, name one hand-off channel and give the code-review section 3 line range; evidence is three clear-backlog runs showing refused background e2e, a missing mkdir and hand-off flips.
+  - Make `harvest check-clusters` accept only fixed stopped reasons (quota, 30 clusters, budget n clusters) and print the expected distinct-session count on a mismatch; evidence is three runs stopping short of quota for unwritten reasons and two wrong session counts.
+  - Extend the rule-use refusal in scripts/session/rule-use.ts to subagent entries, since 13 of 14 post-guard runs with subagents left loaded rules unrated; the earlier fix covered only the main agent.
+  - Add a hook warning for `log-session.ts` output piped to head, grep, sed or tail (3 of 43 runs broke the never-filter rule), so the sentence can be cut under ADR-0027.
+  - Write a visitor-loop script that generates the context file's pages section (deduplicated URLs, one per pattern, aliases and fixture Spaces marked, query and 404 URLs added); the context file was faulty in all three runs plus 11-18.
+  - Let a ledger-only PR from ledger-set and prune-friction-ledger take an own-read plus gate:scoped, accepted by merge-pr; it failed the simple-change test in 6 of 6 audited frictions-to-fixes runs and paid a two-agent review each time.
+  - Print a roleStale flag and a draft word count per Skill in the audit-skills scorecard, so the role and gist reread becomes a list and the 300-word floor is met on the first write.
+  - Add a read-first line at the top of digest step 3 (git-conventions, Journal glossary, dispatch-subagents, each PR's diff before drafting); the late git read is 6 of 6 and PR-title paraphrase 3 of 3.
+  - A script that prints the blog-post pingback stub path and target from the target post's path and persona; the stub was misnamed in at least seven runs despite rewordings.
+  - Add one line to inspect-session step 1 that a log-and-PR answer is a complete use and zero event reads is expected; proposed on 11-20 and still absent.
+landedBy: Stop
