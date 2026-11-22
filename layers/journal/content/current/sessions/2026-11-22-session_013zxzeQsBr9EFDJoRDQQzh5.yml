@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQsBr9EFDJoRDQQzh5
 startedAt: 2026-11-22T11:08:31Z
-endedAt: 2026-11-22T11:27:46Z
+endedAt: 2026-11-22T11:31:12Z
 kind: autonomous
 goal: Scheduled Blog post from Eyra, then a Karen reply
-status: in-review
-outcome: Eyra post merged (PR 3587); Karen reply open in PR 3592, gate green, awaiting merge
-summary: "Scheduled blog-post run, nobody prompted it; everything was agent-initiated within the Skill. Rotation allowed only Eyra, so all three candidates were Eyra: the Snowflake kit loupe (#3563), gallery thumbnail names (#3564) and the Home Ended shelf (#3569). A blind Sonnet reader picked the loupe post; I revised it for the confusions it named, a fact-checker found two wrong or imprecise lines, and code-review's two axes led to a tag swap and a cut meta sentence. Gate green; PR 3587 opened and subscribed. PR 3587 merged. Step 12: three reply sketches (Karen, Kevin, David); a blind reader chose Karen (new facts from the PR body), a second reader said yes after the fact-check. Karen's post got its stub filename wrong first (must use the target post's slug); fixed after review. PR 3592 is open, gate green, merge pending."
+status: completed
+outcome: Eyra post (PR 3587) and Karen reply (PR 3592) both merged with green gates
+summary: "Scheduled blog-post run, nobody prompted it; everything was agent-initiated within the Skill. Rotation allowed only Eyra, so all three candidates were Eyra: the Snowflake kit loupe (#3563), gallery thumbnail names (#3564) and the Home Ended shelf (#3569). A blind Sonnet reader picked the loupe post; I revised it for the confusions it named, a fact-checker found two wrong or imprecise lines, and code-review's two axes led to a tag swap and a cut meta sentence. Gate green; PR 3587 opened and subscribed. PR 3587 merged. Step 12: three reply sketches (Karen, Kevin, David); a blind reader chose Karen (new facts from the PR body), a second reader said yes after the fact-check. Karen's post got its stub filename wrong first (must use the target post's slug); fixed after review. PR 3592 then merged the same way."
 prs:
   - "3587"
   - "3592"
@@ -61,22 +61,22 @@ frictions:
   - description: Named the Karen pingback stub after the new post's slug instead of the target post's slug; review caught it before the PR.
     solution: Step 7's example could show both slugs side by side.
     severity: nit
-durationSec: 1155
+durationSec: 1360
 models:
-  claude-sonnet-5-5: 150
+  claude-sonnet-5-5: 165
 toolCounts:
-  Bash: 47
+  Bash: 51
   Read: 4
   mcp__github__pull_request_read: 7
   mcp__github__issue_read: 3
   Agent: 11
   SendMessage: 3
-  Skill: 5
+  Skill: 7
   Monitor: 2
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 2
-  ReadNotifications: 3
-  mcp__github__add_issue_comment: 1
+  ReadNotifications: 5
+  mcp__github__add_issue_comment: 2
 filesEdited:
   - layers/blog/content/eyra/pingbacks/2026-11-22-karen-the-shop-sold-a-20x-loupe-that-was-still-a-wish.yml
   - layers/blog/content/eyra/pingbacks/2026-11-22-karen-twelve-lines-deleted-no-test-added-one-gate-rerun.yml
@@ -603,69 +603,74 @@ subagents:
     durationSec: 14
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 4
+    tokenShare: 3.6
   - task: Fact-check blog post claims
     model: sonnet
     durationSec: 113
     toolCalls: 16
     modelCalls: 11
-    tokenShare: 5
+    tokenShare: 4.5
   - task: Standards review of blog post
     model: sonnet
     durationSec: 19
     toolCalls: 10
     modelCalls: 4
-    tokenShare: 2.4
+    tokenShare: 2.2
   - task: Spec review of blog post
     model: sonnet
     durationSec: 16
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 2.4
+    tokenShare: 2.2
   - task: Blind read of reply drafts
     model: sonnet
     durationSec: 14
     toolCalls: 8
     modelCalls: 4
-    tokenShare: 4.3
+    tokenShare: 3.8
   - task: Fact-check Karen reply post
     model: sonnet
     durationSec: 133
     toolCalls: 18
     modelCalls: 12
-    tokenShare: 6.8
+    tokenShare: 6.1
   - task: Standards review of Karen post
     model: sonnet
     durationSec: 18
     toolCalls: 9
     modelCalls: 4
-    tokenShare: 2.4
+    tokenShare: 2.2
   - task: Spec review of Karen post
     model: sonnet
     durationSec: 16
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 2.2
+    tokenShare: 1.9
   - task: Second reader of Karen reply
     model: sonnet
     durationSec: 11
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 1.7
+    tokenShare: 1.5
   - task: Standards review of final Karen diff
     model: sonnet
     durationSec: 21
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 2.9
+    tokenShare: 2.6
   - task: Spec review of final Karen diff
     model: sonnet
     durationSec: 27
     toolCalls: 8
     modelCalls: 3
-    tokenShare: 1.9
+    tokenShare: 1.7
 gitBranch: claude/zen-heisenberg-5vr7e7
 entrypoint: remote_trigger
 cliVersion: 2.1.330
 trigger: blog-post
+learnings:
+  - A Pingback stub is named for the TARGET post's slug (the post answered), not the new post's slug; the SKILL step 7 example hides this because only one slug appears in it
+ideas:
+  - Add a content check that fails when a Tinkerfund stretch goal's id is also a selectable Reward option choice, so a locked option can't be sold (Eyra's Take on PR 3563)
+  - "Give the visitor-loop a real screen reader so accessible-name findings like #3552 come from listening, not reading source (Eyra's unused gallery draft)"
 landedBy: Stop
