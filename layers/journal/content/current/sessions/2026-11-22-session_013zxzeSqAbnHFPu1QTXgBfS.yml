@@ -1,17 +1,18 @@
 schemaVersion: 1
 session: session_013zxzeSqAbnHFPu1QTXgBfS
 startedAt: 2026-11-22T21:34:02Z
-endedAt: 2026-11-22T22:12:52Z
+endedAt: 2026-11-22T22:19:28Z
 kind: interactive
 goal: Clear the open backlog, Seedlings included
-status: in-review
-outcome: Five issues triaged and built; four PRs open and merging, a fifth gating
-summary: "The owner invoked clear-backlog and said to include the Seedlings, so the four Seedling issues (3597-3600) were swept in although auto-triage normally skips them; that was a human instruction. Explore ran over 7 open issues: 3596 was a plain bug (agent labelled it ready-for-agent), 3340 and 3423 are date-gated (2026-11-25 and 2026-11-24) and went to the report, and the four Seedlings became owner questions. The owner answered six grilling questions (1a 2b 3a 4a 5a 6 two). Q5 had no lettered options, so I read 5a as accepting my picks. The owner then asked for a less invasive look for the 3600 teaser; I revised the sample twice (card, then a slim line above or below the body) and the owner picked variant A. I built the samples in this session and discarded the code, keeping the diff only in the scratchpad rather than on a prototype branch. Build workflow ran five branches (one per issue, 3596 and 3597 kept apart as the owner chose); each got a fresh review, a builder fix round, clean re-checks and a green gate. The Glass Box brand and count titles branch (3597) was still gating when this log was written. PRs 3602-3605 were opened without waiting on the 3597 branch and are merging through merge-pr.ts. Everything built was either owner-answered or a bug fix explore judged determinable; nothing was agent-initiated new work. Retro (section 5) is still to do."
+status: completed
+outcome: Five issues built and merged in five PRs; two date-gated issues left open
+summary: "The owner invoked clear-backlog and said to include the Seedlings, so the four Seedling issues (3597-3600) were swept in although auto-triage normally skips them; that was a human instruction. Explore ran over 7 open issues: 3596 was a plain bug (the agent labelled it ready-for-agent), 3340 and 3423 are date-gated (2026-11-25 and 2026-11-24) and stay open for the report, and the four Seedlings became owner questions. The owner answered six grilling questions (1a 2b 3a 4a 5a 6 two). Q5 had no lettered options, so I read 5a as accepting my picks. The owner then asked for a less invasive look for the 3600 teaser; I revised the sample (card, then a slim line above or below the body) and the owner picked variant A. I built the samples in this session and discarded the code, keeping the diff only in the scratchpad instead of on a prototype branch. The build workflow ran five branches (3596 and 3597 kept apart as the owner chose); each got a fresh review, a builder fix round, clean re-checks and a green gate. PRs 3602-3606 each merged through merge-pr.ts after CI went green and closed 3596-3600. Review value was mostly small: the one real catch was 3597's missing screen-reader text. Everything built was either owner-answered or a bug fix explore judged determinable; nothing was agent-initiated new work. Open: 3340 (due 2026-11-25) and 3423 (due 2026-11-24) are date-gated and need no action today. Retro replies from one builder and three reviewers are logged as frictions."
 prs:
   - "3602"
   - "3603"
   - "3604"
   - "3605"
+  - "3606"
 docsRead:
   - path: .agents/skills/auto-triage/SKILL.md
     reason: (no reason given)
@@ -114,14 +115,29 @@ frictions:
   - description: A Spec reviewer filed an owner-call finding that the PR body must mention the stale premise; it is an orchestrator duty, not a code change, and cost a triage line.
     solution: Say in reviewPrompt() that PR-body duties are not findings.
     severity: nit
-  - description: "Linked worktree(s) left with uncommitted or unpushed work at close: /home/user/terrarium/.claude/worktrees/wf_900f7970-623-2"
-    solution: Push each, or remove it if its work is meant to be dropped.
+  - description: I opened the first PRs and moved on without calling subscribe_pr_activity; the Stop hook had to ask for it. I subscribed to all five PRs afterwards.
+    solution: clear-backlog section 4 could name the subscribe step beside opening the PR, since ADR-0003 says it only in prose.
     severity: minor
-durationSec: 2330
+  - description: "Retro (builder): the tenant-glossary guard blocked its first three parallel Edits until it read layers/glassbox/GLOSSARY.md, a 199-line read made only to satisfy the guard."
+    solution: In rules() of .claude/workflows/clear-backlog-build.js, tell the builder to read the Tenant's GLOSSARY.md before the first edit to that layer.
+    severity: minor
+  - description: "Retro (builder): the brief's flock e2e command contains '; echo EXIT=' while another rule bans chained commands, and a stale e2e.log could be mistaken for the new result."
+    solution: Have rules() in clear-backlog-build.js delete the log before each e2e run and exempt the flock command from the chaining rule.
+    severity: nit
+  - description: "Retro (reviewers): the rule-use hook asked read-only review subagents for a second echo rule-use call listing rules unrelated to their review; pure overhead."
+    solution: Skip or shorten the rule-use prompt for read-only review subagents in the SubagentStart hook under scripts/hooks/ (not located).
+    severity: nit
+  - description: "Retro (reviewers): the brief asked for a StructuredOutput result while the resume protocol asked for a JSON file and a one-line reply, so they reconciled two formats."
+    solution: State the resume hand-off format once in reviewPrompt() of .claude/workflows/clear-backlog-build.js.
+    severity: nit
+  - description: "Retro (reviewers): the pointer to section 3 of the code-review Skill mixes the smell list with sub-agent spawning steps, so reviewers read past what they needed."
+    solution: Point reviewers at the smell list's line range in .agents/skills/code-review/SKILL.md, or paste it into reviewPrompt().
+    severity: nit
+durationSec: 2726
 models:
-  claude-sonnet-5-5: 154
+  claude-sonnet-5-5: 218
 toolCounts:
-  Bash: 35
+  Bash: 46
   Read: 15
   Skill: 3
   Workflow: 2
@@ -130,10 +146,12 @@ toolCounts:
   Grep: 2
   SendUserFile: 2
   mcp__github__issue_write: 4
-  SendMessage: 17
-  mcp__github__create_pull_request: 4
-  mcp__github__add_issue_comment: 4
-  Write: 1
+  SendMessage: 21
+  mcp__github__create_pull_request: 5
+  mcp__github__add_issue_comment: 5
+  Write: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 5
+  ReadNotifications: 13
 filesEdited:
   - layers/blog/app/pages/t/blog/[space]/[...slug].vue
   - layers/blog/app/assets/theme.css
@@ -1640,220 +1658,223 @@ subagents:
     durationSec: 601
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 1.3
+    tokenShare: 1.1
   - type: general-purpose
     task: a1dd0bd8246aa4b1f
     model: claude-sonnet-5-5
     durationSec: 944
     toolCalls: 42
     modelCalls: 30
-    tokenShare: 5.3
+    tokenShare: 4.5
   - type: general-purpose
     task: a3a49753a099c80d9
     model: claude-sonnet-5-5
     durationSec: 425
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 1.4
+    tokenShare: 1.2
   - type: general-purpose
     task: a4472cbc9974d2fbc
     model: claude-sonnet-5-5
-    durationSec: 441
-    toolCalls: 6
-    modelCalls: 5
-    tokenShare: 1.2
+    durationSec: 1581
+    toolCalls: 7
+    modelCalls: 6
+    tokenShare: 1.4
   - type: general-purpose
     task: a590550b485249229
     model: claude-sonnet-5-5
     durationSec: 1215
     toolCalls: 36
     modelCalls: 25
-    tokenShare: 5.7
+    tokenShare: 4.8
   - type: general-purpose
     task: a63f08030f306f6e4
     model: claude-sonnet-5-5
     durationSec: 963
     toolCalls: 23
     modelCalls: 20
-    tokenShare: 3.8
+    tokenShare: 3.1
   - type: general-purpose
     task: a6b64f289d4e5c871
     model: claude-sonnet-5-5
-    durationSec: 1223
-    toolCalls: 37
-    modelCalls: 30
-    tokenShare: 7.2
+    durationSec: 1427
+    toolCalls: 39
+    modelCalls: 32
+    tokenShare: 6.2
   - type: general-purpose
     task: a8d14393d0b40055f
     model: claude-sonnet-5-5
     durationSec: 167
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 1.3
+    tokenShare: 1.1
   - type: general-purpose
     task: aa8fa77a7b3fe5c2c
     model: claude-sonnet-5-5
     durationSec: 427
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 1.3
+    tokenShare: 1.1
   - type: general-purpose
     task: ab0453bce56094a39
     model: claude-sonnet-5-5
-    durationSec: 1233
-    toolCalls: 41
-    modelCalls: 30
-    tokenShare: 6.8
+    durationSec: 1726
+    toolCalls: 42
+    modelCalls: 31
+    tokenShare: 6.5
   - type: general-purpose
     task: af1b6f265371db2af
     model: claude-sonnet-5-5
-    durationSec: 439
-    toolCalls: 8
-    modelCalls: 6
-    tokenShare: 2.3
+    durationSec: 1581
+    toolCalls: 9
+    modelCalls: 7
+    tokenShare: 2.4
   - type: general-purpose
     task: af7471ace41c52ff4
     model: claude-sonnet-5-5
-    durationSec: 244
-    toolCalls: 7
-    modelCalls: 6
-    tokenShare: 1.4
+    durationSec: 1254
+    toolCalls: 8
+    modelCalls: 7
+    tokenShare: 1.7
   - type: workflow-subagent
     task: "triage #3599"
     model: claude-sonnet-5-5
     durationSec: 105
     toolCalls: 29
     modelCalls: 13
-    tokenShare: 3.2
+    tokenShare: 2.7
   - type: workflow-subagent
     task: "triage #3423"
     model: claude-sonnet-5-5
     durationSec: 20
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 0.8
+    tokenShare: 0.7
   - type: workflow-subagent
     task: "triage #3596"
     model: claude-sonnet-5-5
     durationSec: 60
     toolCalls: 17
     modelCalls: 7
-    tokenShare: 1.8
+    tokenShare: 1.5
   - type: workflow-subagent
     task: "triage #3598"
     model: claude-sonnet-5-5
     durationSec: 88
     toolCalls: 20
     modelCalls: 10
-    tokenShare: 2.4
+    tokenShare: 2
   - type: workflow-subagent
     task: "triage #3600"
     model: claude-sonnet-5-5
     durationSec: 100
     toolCalls: 24
     modelCalls: 12
-    tokenShare: 3
+    tokenShare: 2.5
   - type: workflow-subagent
     task: "triage #3597"
     model: claude-sonnet-5-5
     durationSec: 68
     toolCalls: 21
     modelCalls: 8
-    tokenShare: 2.1
+    tokenShare: 1.8
   - type: workflow-subagent
     task: "triage #3340"
     model: claude-sonnet-5-5
     durationSec: 31
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 2.2
+    tokenShare: 1.8
   - type: workflow-subagent
     task: Both fix-glassbox-walkthroughs-title r1
     model: claude-sonnet-5-5
     durationSec: 16
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.7
+    tokenShare: 0.5
   - type: workflow-subagent
     task: build blog-new-here-teaser
     model: claude-sonnet-5-5
     durationSec: 418
     toolCalls: 31
     modelCalls: 21
-    tokenShare: 3.3
+    tokenShare: 2.8
   - type: workflow-subagent
     task: Standards midden-tenant-intro-line r1
     model: claude-sonnet-5-5
     durationSec: 17
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 0.8
+    tokenShare: 0.7
   - type: workflow-subagent
     task: Spec tinkerfund-gallery-note-and-id-check r1
     model: claude-sonnet-5-5
     durationSec: 12
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: workflow-subagent
     task: build midden-tenant-intro-line
     model: claude-sonnet-5-5
     durationSec: 233
     toolCalls: 28
     modelCalls: 17
-    tokenShare: 2.9
+    tokenShare: 2.4
   - type: workflow-subagent
     task: build tinkerfund-gallery-note-and-id-check
     model: claude-sonnet-5-5
     durationSec: 145
     toolCalls: 16
     modelCalls: 13
-    tokenShare: 2.2
+    tokenShare: 1.8
   - type: workflow-subagent
     task: build glassbox-brand-count-titles
     model: claude-sonnet-5-5
     durationSec: 473
     toolCalls: 29
     modelCalls: 23
-    tokenShare: 4.5
+    tokenShare: 3.8
   - type: workflow-subagent
     task: Both blog-new-here-teaser r1
     model: claude-sonnet-5-5
     durationSec: 12
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: Spec midden-tenant-intro-line r1
     model: claude-sonnet-5-5
     durationSec: 18
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 0.8
+    tokenShare: 0.6
   - type: workflow-subagent
     task: build fix-glassbox-walkthroughs-title
     model: claude-sonnet-5-5
     durationSec: 177
     toolCalls: 24
     modelCalls: 17
-    tokenShare: 3.5
+    tokenShare: 3
   - type: workflow-subagent
     task: Standards tinkerfund-gallery-note-and-id-check r1
     model: claude-sonnet-5-5
     durationSec: 15
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1.6
+    tokenShare: 1.4
   - type: workflow-subagent
     task: Both glassbox-brand-count-titles r1
     model: claude-sonnet-5-5
     durationSec: 15
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 0.8
+    tokenShare: 0.7
 gitBranch: ccr-fc3e85e3-20nrv8
 entrypoint: remote_mobile
 cliVersion: 2.1.330
 learnings:
   - list-human-only-paths.ts printing nothing with exit 0 means no Human-only path in the branch.
+  - Clear-backlog review rounds on small branches mostly re-found nits; across five branches the one catch that mattered was 3597's missing screen-reader text (Spec reviewer, Both reviewer on a small branch).
+ideas:
+  - Let the build workflow's rules() emit one line per branch of which Tenant GLOSSARY.md the builder must read first, from the files the brief names, so the tenant-glossary guard never blocks a parallel edit round.
 landedBy: Stop
