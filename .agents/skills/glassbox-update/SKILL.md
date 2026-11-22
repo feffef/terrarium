@@ -1,6 +1,6 @@
 ---
 name: glassbox-update
-description: Bring every Glass Box guide page up to date with main, claim-check flagged pages and a daily rotation, list new topics no page teaches on the memory page, then land it as one self-merging gated PR.
+description: Bring every Glass Box guide page (drafts opt-in) up to date with main, claim-check flagged pages and a daily rotation, list new topics no page teaches on the memory page, then land it as one self-merging gated PR.
 disable-model-invocation: true
 ---
 
@@ -16,8 +16,9 @@ Write, Diagrams, Check) first, then read
 in full: the owner's hard rules, never to be gone against.
 
 The script is `.agents/skills/glassbox-update/scripts/glassbox-update.ts`, run
-with `pnpm exec tsx`. Its report's `main` is **the commit**: this run reviews and
-pins to that one commit, never a later fetch.
+with `pnpm exec tsx`; `--spaces guide,drafts` adds other Spaces (default
+`guide`). Its report's `main` is **the commit**: this run reviews and pins to
+that one commit, never a later fetch.
 
 1. **Report.** Run the script (it refuses a shallow clone; see
    `docs/agents/git-conventions.md`) and save its JSON report. Done when you

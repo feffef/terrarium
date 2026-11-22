@@ -3,6 +3,7 @@ import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { splitFrontmatter } from '../../../../scripts/lib/frontmatter.ts'
 import { root } from '../../../../shared/expand.ts'
+import glassbox from '../../tenant.config.ts'
 import { glassboxCapitalisedTerms, glassboxCites, glassboxFewNextLinks, glassboxGlossaryWords, glassboxLengthProblems, glassboxJournalRoutes, glassboxOrphans, glassboxPageProblems, glassboxPageWarnings, glassboxSitePath, glassboxTermCaseWarning, glassboxTermProblems, glassboxTerms, repoGit, type GlassboxGit, type GlassboxSite } from '../../page-checks.ts'
 
 const rev = 'a'.repeat(40)
@@ -30,11 +31,11 @@ const fakeGit: GlassboxGit = {
   read: (r, path) => (r === rev ? files[path] : undefined),
 }
 const site: GlassboxSite = {
-  pages: ['/t/glassbox/guide', '/t/glassbox/guide/nuxt-content/collections', '/t/glassbox/guide/terrarium-practice/gate', '/t/glassbox/guide/walkthroughs/from-file-to-browser'],
+  pages: ['/t/glassbox/guide', '/t/glassbox/guide/nuxt-content/collections', '/t/glassbox/guide/terrarium-practice/gate', '/t/glassbox/guide/walkthroughs/from-file-to-browser', '/t/glassbox/drafts/zod/timestamps'],
   journal: ['/t/journal/current', '/t/journal/current/history', '/t/journal/current/skills'],
   terms: ['collection'],
   cites: { '/t/glassbox/guide/nuxt-content/collections': ['shared/expand.ts'] },
-  titles: { '/t/glassbox/guide': 'Home', '/t/glassbox/guide/nuxt-content/collections': 'Collections', '/t/glassbox/guide/terrarium-practice/gate': 'The Gate' },
+  titles: { '/t/glassbox/guide': 'Home', '/t/glassbox/guide/nuxt-content/collections': 'Collections', '/t/glassbox/guide/terrarium-practice/gate': 'The Gate', '/t/glassbox/drafts/zod/timestamps': 'Timestamps' },
 }
 
 const frontmatter = `---\ntitle: T\ndescription: D\nteaches: X\nrevision: '${rev}'\nrevisionDate: '2026-10-14'\n---\n`
@@ -115,7 +116,7 @@ return \`out\`. // Not. A. Sentence.
 - [Home](/t/glassbox/guide)
 `
 
-const problemsOf = (file: string, source: string) => glassboxPageProblems(file, source, site, fakeGit)
+const problemsOf = (file: string, source: string, space = 'guide') => glassboxPageProblems(file, source, site, fakeGit, space)
 
 describe('glassboxPageProblems on fixture pages', () => {
   it('passes a good Lesson, House rules Lesson, Walkthrough and landing page', () => {
@@ -215,9 +216,11 @@ describe('glassboxPageProblems on fixture pages', () => {
     expect(problemsOf(file, lesson).join('\n')).toContain(message)
   })
 
-  it('fails a guide page linking outside the guide', () => {
-    const outside = lesson.replace(gateItem, `${gateItem}- [Workshop](/t/glassbox/workshop)\n`)
-    expect(problemsOf('nuxt-content/01.collections.md', outside)).toEqual(['guide page links outside the guide: /t/glassbox/workshop'])
+  it('fails a guide page linking into drafts, and passes a draft linking either way', () => {
+    const toDraft = lesson.replace(gateItem, `${gateItem}- [Timestamps](/t/glassbox/drafts/zod/timestamps)\n`)
+    expect(problemsOf('nuxt-content/01.collections.md', toDraft)).toEqual(['guide page links outside the guide: /t/glassbox/drafts/zod/timestamps'])
+    expect(problemsOf('nuxt-content/01.collections.md', toDraft, 'drafts')).toEqual([])
+    expect(problemsOf('nuxt-content/01.collections.md', toDraft.replace('zod/timestamps', 'zod/gone'), 'drafts')).toEqual(['link /t/glassbox/drafts/zod/gone resolves to no page'])
   })
 
   it.each([
@@ -225,28 +228,32 @@ describe('glassboxPageProblems on fixture pages', () => {
     ['a Lesson description over 120 chars', 'nuxt-content/01.collections.md', lesson, 'description', 121, 'is 121 chars, more than 120'],
     ['a Walkthrough title over 36 chars', 'walkthroughs/from-file-to-browser.md', walkthrough, 'title', 37, 'is 37 chars, more than 36'],
     ['a Walkthrough description over 140 chars', 'walkthroughs/from-file-to-browser.md', walkthrough, 'description', 141, 'is 141 chars, more than 140'],
-  ])('fails %s in the guide', (_name, file, page, field, length, message) => {
+  ])('fails %s in the guide, not in drafts', (_name, file, page, field, length, message) => {
     const placeholder = field === 'title' ? 'title: T' : 'description: D'
     const long = page.replace(placeholder, `${field}: ${'x'.repeat(length)}`)
     expect(problemsOf(file, long).join('\n')).toContain(message)
     expect(problemsOf(file, page.replace(placeholder, `${field}: ${'x'.repeat(length - 1)}`))).toEqual([])
+    expect(problemsOf(file, long, 'drafts').join('\n')).not.toContain('chars, more than')
   })
 
-  it('fails a guide page with no teaches', () => {
+  it('fails a guide page with no teaches, not in drafts', () => {
     expect(problemsOf('nuxt-content/01.collections.md', lesson.replace('teaches: X\n', ''))).toEqual(['no teaches'])
     expect(problemsOf('walkthroughs/from-file-to-browser.md', walkthrough.replace('teaches: X\n', ''))).toEqual(['no teaches'])
+    expect(problemsOf('nuxt-content/01.collections.md', lesson.replace('teaches: X\n', ''), 'drafts')).toEqual([])
   })
 
-  it('fails a guide Lesson title of more than four words, not on a Walkthrough', () => {
+  it('fails a guide Lesson title of more than four words, not in drafts or on a Walkthrough', () => {
     const titled = (page: string, title: string) => page.replace('title: T', `title: ${title}`)
     expect(problemsOf('nuxt-content/01.collections.md', titled(lesson, 'One two three four'))).toEqual([])
     expect(problemsOf('nuxt-content/01.collections.md', titled(lesson, 'One two three four five'))).toEqual(['title "One two three four five" is 5 words, more than 4'])
+    expect(problemsOf('nuxt-content/01.collections.md', titled(lesson, 'One two three four five'), 'drafts')).toEqual([])
     expect(problemsOf('walkthroughs/from-file-to-browser.md', titled(walkthrough, 'One two three four five'))).toEqual([])
   })
 
-  it('fails guide link text that is not its target\'s title, unless it starts lowercase', () => {
+  it('fails guide link text that is not its target\'s title, unless it starts lowercase, and passes it in drafts', () => {
     const stale = lesson.replace('[The Gate](', '[The Old Gate](')
     expect(problemsOf('nuxt-content/01.collections.md', stale)).toEqual(['link text "The Old Gate" is not the title "The Gate" of /t/glassbox/guide/terrarium-practice/gate'])
+    expect(problemsOf('nuxt-content/01.collections.md', stale, 'drafts')).toEqual([])
     expect(problemsOf('nuxt-content/01.collections.md', lesson.replace('[The Gate](', '[the gate step]('))).toEqual([])
   })
 
@@ -292,10 +299,11 @@ describe('In Terrarium motive and long Excerpts', () => {
   const file = 'nuxt-content/01.collections.md'
   const because = lesson.replace(', one per :file[layers/].', ', one per :file[layers/], because each Tenant is a `layer`.')
 
-  it('fails a "because" clause in a guide Lesson\'s In Terrarium, and passes one in Why or What to watch for', () => {
+  it('fails a "because" clause in a guide Lesson\'s In Terrarium, and passes one in Why, What to watch for or a draft', () => {
     expect(problemsOf(file, because)).toEqual(['In Terrarium gives a motive ("because"); move it to Why it\'s built this way: Built in :file[shared/expand.ts]{lines="3-7"}, one per :file[layers/], because each Tenant is a `layer`.'])
     expect(problemsOf(file, lesson.replace('keeps mistakes off', 'because it keeps mistakes off'))).toEqual([])
     expect(problemsOf(file, lesson.replace('See ADR-0004', 'Because of ADR-0004, see it'))).toEqual([])
+    expect(problemsOf(file, because, 'drafts')).toEqual([])
   })
 
   it('warns on a "so" clause in In Terrarium, not in code or Why', () => {
@@ -417,28 +425,34 @@ describe('glassboxTermProblems', () => {
 describe('every Glass Box page matches the code at its revision', () => {
   const content = join(root, 'layers/glassbox/content')
   // The workshop's memory page is state, not a Lesson (workshop.spec.ts checks it).
-  const space = 'guide'
-  const read = (file: string) => readFileSync(join(content, space, 'pages', file), 'utf8')
-  const files = globSync('**/*.md', { cwd: join(content, space, 'pages') }).sort()
+  const spaces = glassbox.spaces.filter((space) => space !== 'workshop')
+  const read = (space: string, file: string) => readFileSync(join(content, space, 'pages', file), 'utf8')
+  const files = Object.fromEntries(spaces.map((space) => [space, globSync('**/*.md', { cwd: join(content, space, 'pages') }).sort()]))
+  const pages = spaces.flatMap((space) => files[space]!.map((file) => ({ space, file })))
   const terms = glassboxTerms()
   const realSite: GlassboxSite = {
-    pages: files.map((file) => glassboxSitePath(space, file)),
+    pages: pages.map(({ space, file }) => glassboxSitePath(space, file)),
     journal: glassboxJournalRoutes(),
     terms: Object.keys(terms),
-    cites: glassboxCites(Object.fromEntries(files.map((file) => [file, read(file)])), space),
-    titles: Object.fromEntries(files.map((file) => [glassboxSitePath(space, file), String(splitFrontmatter(read(file)).frontmatter.title)])),
+    cites: Object.assign({}, ...spaces.map((space) => glassboxCites(Object.fromEntries(files[space]!.map((file) => [file, read(space, file)])), space))),
+    titles: Object.fromEntries(pages.map(({ space, file }) => [glassboxSitePath(space, file), String(splitFrontmatter(read(space, file)).frontmatter.title)])),
   }
 
   it('reaches Journal content pages and the Journal\'s own Vue routes', () => {
     expect(realSite.journal).toEqual(expect.arrayContaining(['/t/journal/current', '/t/journal/current/history', '/t/journal/archived/skills']))
   })
 
-  it('finds the landing page (canary: the walk must not match nothing)', () => {
-    expect(files).toContain('index.md')
+  it('finds the landing page and a draft (canary: the walk must not match nothing)', () => {
+    expect(files.guide).toContain('index.md')
+    expect(files.drafts!.length).toBeGreaterThan(0)
   })
 
-  it.each(files)('%s', (file) => {
-    expect(glassboxPageProblems(file, read(file), realSite, repoGit)).toEqual([])
+  it.each(pages.map(({ space, file }) => [`${space}/${file}`, space, file]))('%s', (_name, space, file) => {
+    expect(glassboxPageProblems(file, read(space, file), realSite, repoGit, space)).toEqual([])
+  })
+
+  it('reads the drafts Space\'s terms through its link to the guide\'s', () => {
+    expect(globSync('*.yml', { cwd: join(content, 'drafts/terms') }).sort()).toEqual(globSync('*.yml', { cwd: join(content, 'guide/terms') }).sort())
   })
 
   it('every term source exists and every term lesson is a page', () => {

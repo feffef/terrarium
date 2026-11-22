@@ -50,14 +50,15 @@ The only thing that decides the mode is whether the invocation has an argument.
    `git log --oneline origin/main -- <page>` and read the run entries that name
    the page. Never reverse a change from the last 5 runs unless it made the
    page false.
-5. Edit only `layers/glassbox/content/guide/`, the diagram SVGs you re-render,
+5. Edit only `layers/glassbox/content/guide/`,
+   `layers/glassbox/content/drafts/`, the diagram SVGs you re-render,
    the memory page, your run entries, a moved page's name in
    `layers/glassbox/content/workshop/checks/update.yml` (step 5; that file
    is otherwise `glassbox-update`'s), and, in a PR that waits for the owner
    (rule 6), `layers/glassbox/app/utils/subjects.ts`, this Skill, the
    `glassbox-lesson` docs and the page checks.
-6. A PR that holds any of these waits for the owner's merge: a new Lesson, a
-   new Subject (with its `layers/glassbox/app/utils/subjects.ts` entry), a split
+6. A PR that holds any of these waits for the owner's merge: a new Lesson (in
+   drafts if it isn't central), a new Subject (with its `layers/glassbox/app/utils/subjects.ts` entry), a split
    or a move between Subjects, a change to this Skill, the `glassbox-lesson`
    docs or the page checks. Build it, say in the PR body that it waits for the
    owner, and don't merge it. The same goes for any PR `merge-pr.ts` refuses.
@@ -183,7 +184,7 @@ links.
 ### 6. Check
 
 1. A separate sonnet claim checker checks every changed sentence against its
-   source. Unchanged text is `glassbox-update`'s job.
+   source, and a promoted draft's whole page. Unchanged text is `glassbox-update`'s job.
 2. Run writing-pages.md's Check on every changed page.
 3. A fresh reader re-reads every changed page, as in step 4.
 4. If the change cuts text or a page: grep the guide for links, slugs and terms

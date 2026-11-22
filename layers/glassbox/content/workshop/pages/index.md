@@ -57,7 +57,6 @@ None of these is false.
 
 ### Stale or missing
 
-- No page teaches narrow-screen overflow.
 - No page teaches the `digest` Skill (a Digest's Blog line, taken from the Blog files that day's PRs touched so the fact-check can verify it). Nearest page: *Scheduled tasks*.
 
 ### Waiting for owner decision
@@ -67,6 +66,7 @@ None of these is false.
 - **Chips per row.** The owner capped the overview at three chips a row. Walkthrough stops may hold five, and several rows in other Walkthroughs hold four or five. Ask the owner whether the cap covers them.
 - **Decide how pages say "a person merges" a Human-only file.** Since the owner waiver (ADR-0004), an agent may merge one when the owner says so in the session. *Protected paths*, *Human-only* and the overview say so. These still state it flatly, each true as the default: *Path-specific rules*, *Decision records*, *Merge gate*, *Claude Code hooks* (twice), *GitHub Actions*, *Cross-tenant reads* and *Asking an agent for a change*. Ask the owner whether to name the waiver there or keep one home.
 - No page teaches how the `glassbox-curate` Skill runs in two modes (a loop session and an instruction session) and pauses for `glassbox-update`; a textbook about its own upkeep may not suit the guide. Nearest page: *Scheduled tasks*.
+- The Lesson on horizontal overflow sits in drafts until a usability Subject has more lessons (owner, on the PR).
 
 ### Claims to check
 
