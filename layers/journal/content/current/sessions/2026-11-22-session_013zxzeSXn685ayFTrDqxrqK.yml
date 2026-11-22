@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSXn685ayFTrDqxrqK
 startedAt: 2026-11-22T04:03:00Z
-endedAt: 2026-11-22T04:13:42Z
+endedAt: 2026-11-22T04:14:19Z
 kind: autonomous
 goal: Scheduled audit of the repo's docs for drift and duplication
-status: in-review
-outcome: Sweep PR 3584 open with a green gate; merge-pr is waiting on CI. No escalation PR needed.
-summary: "Scheduled audit-docs run; every step was agent-initiated, no human prompted. Fetched origin/main and read the last two audit-docs logs for their Covered lines. Three read-only reviewers (Freshness, Single-home, Coherence) returned 1, 12 and 10 findings. Two checkers returned 6 CONFIRMED, 3 CONFIRMED-BUT and 13 WRONG (owner decisions such as the dependabot 0.x rule, taste moves, and fixes that dropped a rule or why). Applied the 9 survivors in one commit: audit-skills prune note, atlas and tinkerfund restatements pointed to their glossaries, a duplicated close-session sentence, blog tag home, Seedling rule moved from root glossary to triage-labels, prune-trial ADR bound, and Session closure wording. code-review Standards and Spec found nothing blocking; gate:scoped green. No ADR edit, so no escalation PR; no issue filed. Sweep PR 3584 opened, verdict posted, merge-pr started in the background. Covered (Agents B and C read in full) - Skills close-session dependabot-sweep guest-build guest-intake auto-triage log-session dispatch-subagents harvest digest frictions-to-fixes audit-docs prune-trial visitor-loop glassbox-update midden-survey midden-catalogue tinkerfund-campaign atlas-specimen; docs/agents/{domain,git-conventions,guest-contributions,issue-tracker,tenant-layers}.md; GLOSSARY.md; GLOSSARY-MAP.md; tests/README.md; journal pages index and routines; tenant glossaries journal blog commons atlas tinkerfund; ADRs 0001-0003 0005 0006 0008-0010 0012-0018 0020-0025 0027-0030 (summary only)."
+status: completed
+outcome: Sweep PR 3584 merged (750d8edc0) on a green gate; no escalation PR needed.
+summary: "Scheduled audit-docs run; every step was agent-initiated, no human prompted. Fetched origin/main and read the last two audit-docs logs for their Covered lines. Three read-only reviewers (Freshness, Single-home, Coherence) returned 1, 12 and 10 findings. Two checkers returned 6 CONFIRMED, 3 CONFIRMED-BUT and 13 WRONG (owner decisions such as the dependabot 0.x rule, taste moves, and fixes that dropped a rule or why). Applied the 9 survivors in one commit: audit-skills prune note, atlas and tinkerfund restatements pointed to their glossaries, a duplicated close-session sentence, blog tag home, Seedling rule moved from root glossary to triage-labels, prune-trial ADR bound, and Session closure wording. code-review Standards and Spec found nothing blocking; gate:scoped green. No ADR edit, so no escalation PR; no issue filed. Sweep PR 3584 opened, verdict posted, merged by merge-pr (750d8edc0). Covered (Agents B and C read in full) - Skills close-session dependabot-sweep guest-build guest-intake auto-triage log-session dispatch-subagents harvest digest frictions-to-fixes audit-docs prune-trial visitor-loop glassbox-update midden-survey midden-catalogue tinkerfund-campaign atlas-specimen; docs/agents/{domain,git-conventions,guest-contributions,issue-tracker,tenant-layers}.md; GLOSSARY.md; GLOSSARY-MAP.md; tests/README.md; journal pages index and routines; tenant glossaries journal blog commons atlas tinkerfund; ADRs 0001-0003 0005 0006 0008-0010 0012-0018 0020-0025 0027-0030 (summary only)."
 prs:
   - "3584"
 docsRead:
@@ -138,17 +138,18 @@ skillsUsed:
   - name: audit-docs
     reason: (invoked as a slash command)
 frictions: []
-durationSec: 642
+durationSec: 679
 models:
-  claude-sonnet-5-5: 66
+  claude-sonnet-5-5: 76
 toolCounts:
   Read: 3
   Skill: 4
-  Bash: 22
+  Bash: 25
   Agent: 7
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   mcp__github__add_issue_comment: 1
+  ReadNotifications: 2
 filesEdited:
   - .agents/skills/atlas-specimen/SKILL.md
   - .agents/skills/audit-skills/SKILL.md
@@ -475,43 +476,43 @@ subagents:
     durationSec: 117
     toolCalls: 30
     modelCalls: 28
-    tokenShare: 16.1
+    tokenShare: 15.4
   - type: general-purpose
     task: "Audit docs: Single-home"
     durationSec: 175
     toolCalls: 28
     modelCalls: 27
-    tokenShare: 19.7
+    tokenShare: 18.8
   - type: general-purpose
     task: "Audit docs: Coherence"
     durationSec: 307
     toolCalls: 37
     modelCalls: 36
-    tokenShare: 23.6
+    tokenShare: 22.6
   - type: general-purpose
     task: Fact-check pool 1
     durationSec: 73
     toolCalls: 15
     modelCalls: 13
-    tokenShare: 4.7
+    tokenShare: 4.5
   - type: general-purpose
     task: Fact-check pool 2
     durationSec: 101
     toolCalls: 22
     modelCalls: 20
-    tokenShare: 7.1
+    tokenShare: 6.8
   - type: general-purpose
     task: "Review: Standards"
     durationSec: 20
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 3.9
+    tokenShare: 3.7
   - type: general-purpose
     task: "Review: Spec"
     durationSec: 18
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 3.7
+    tokenShare: 3.5
 gitBranch: claude/festive-mayer-mx5hcf
 entrypoint: remote_trigger
 cliVersion: 2.1.330
