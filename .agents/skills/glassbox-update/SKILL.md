@@ -1,6 +1,6 @@
 ---
 name: glassbox-update
-description: Bring every Glass Box guide page (drafts opt-in) up to date with main, claim-check flagged pages and a daily rotation, list new topics no page teaches on the memory page, then land it as one self-merging gated PR.
+description: Bring every Glass Box guide page (drafts opt-in) up to date with main, claim-check flagged pages and a daily rotation, list new topics no page teaches and Lessons to split on the memory page, then land it as one self-merging gated PR.
 disable-model-invocation: true
 ---
 
@@ -89,8 +89,18 @@ that one commit, never a later fetch.
    a flagged page leaves its date. The run writes no run entries. Done when
    every checked page's reports are confirmed or rejected and `update.yml` is
    rewritten.
-6. **Check** (writing-pages.md).
-7. **Land.** If nothing changed, `update.yml` included, invoke `close-session`
+6. **Long lessons.** Run `pnpm exec tsx layers/glassbox/page-checks.ts --long`:
+   it prints a `WARNING` for each Lesson over the soft word limit. Give each
+   such Lesson to a fresh sonnet reader (`dispatch-subagents`, at most 8 pages
+   each) to read it whole and propose a split: the new Lessons, each with one
+   concept and a title, and which sections move where. It adds nothing itself.
+   Write one bullet per Lesson in the memory page's *Too long* section (page
+   title, file, word count, the proposal), replacing the Lesson's earlier
+   bullet and deleting the bullets of Lessons no longer warned. A split adds
+   Lessons, so `glassbox-curate` leaves that PR for the owner. Done when
+   *Too long* matches the warnings.
+7. **Check** (writing-pages.md).
+8. **Land.** If nothing changed, `update.yml` included, invoke `close-session`
    and stop. Otherwise follow "Closing a scheduled run's PR" in
    `docs/agents/pr-workflow.md`, one PR titled `glassbox-update: <YYYY-MM-DD>`
    whose body lists each flagged page and term, why, and what changed, each

@@ -59,6 +59,10 @@ None of these is false.
 
 - No page teaches the `digest` Skill (a Digest's Blog line, taken from the Blog files that day's PRs touched so the fact-check can verify it). Nearest page: *Scheduled tasks*.
 
+### Too long
+
+Lessons past the soft word limit, each with a proposed split from a fresh reader (`glassbox-update`). A split adds Lessons, so the owner merges it.
+
 ### Waiting for owner decision
 
 - **Binary images.** No ADR or rule says binary images are kept out of the repository (the repo just holds none), so no web standards page teaches that. Ask the owner whether to record one.

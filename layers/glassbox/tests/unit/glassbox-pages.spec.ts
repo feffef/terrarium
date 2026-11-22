@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest'
 import { splitFrontmatter } from '../../../../scripts/lib/frontmatter.ts'
 import { root } from '../../../../shared/expand.ts'
 import glassbox from '../../tenant.config.ts'
-import { glassboxCapitalisedTerms, glassboxCites, glassboxFewNextLinks, glassboxGlossaryWords, glassboxLengthProblems, glassboxJournalRoutes, glassboxOrphans, glassboxPageProblems, glassboxPageWarnings, glassboxSitePath, glassboxTermCaseWarning, glassboxTermProblems, glassboxTerms, repoGit, type GlassboxGit, type GlassboxSite } from '../../page-checks.ts'
+import { glassboxCapitalisedTerms, glassboxCites, glassboxFewNextLinks, glassboxGlossaryWords, glassboxLengthProblems, glassboxJournalRoutes, glassboxLessonWords, glassboxLongLessons, glassboxLongText, glassboxOrphans, glassboxPageProblems, glassboxPageWarnings, glassboxSitePath, glassboxTermCaseWarning, glassboxTermProblems, glassboxTerms, repoGit, type GlassboxGit, type GlassboxSite } from '../../page-checks.ts'
 
 const rev = 'a'.repeat(40)
 const expandTs = [
@@ -465,5 +465,31 @@ describe('glassboxLengthProblems', () => {
     const page = (title: string) => `---\ntitle: ${title}\ndescription: Short.\nteaches: Short.\n---\n\nBody.\n`
     expect(glassboxLengthProblems({ 'web-standards/04.colour.md': page('Colour and motion preferences'), 'web-standards/02.svg.md': page('SVG') }))
       .toEqual(['guide/pages/web-standards/04.colour.md: title "Colour and motion preferences" is 29 chars, more than 28'])
+  })
+
+  const lesson = (words: number) => `---\ntitle: SVG\ndescription: Short.\nteaches: Short.\n---\n\n${'word '.repeat(words)}\n`
+
+  it('fails a Lesson body over the hard limit, not counting frontmatter, and leaves a walkthrough alone', () => {
+    expect(glassboxLengthProblems({ 'web-standards/02.svg.md': lesson(glassboxLessonWords.hard) })).toEqual([])
+    expect(glassboxLengthProblems({ 'web-standards/02.svg.md': lesson(glassboxLessonWords.hard + 1) }))
+      .toEqual([`guide/pages/web-standards/02.svg.md: body is ${glassboxLessonWords.hard + 1} words, more than ${glassboxLessonWords.hard}: split the lesson`])
+    expect(glassboxLengthProblems({ 'walkthroughs/10.story.md': lesson(glassboxLessonWords.hard + 1) })).toEqual([])
+  })
+
+  it('every guide Lesson is within the hard word limit', () => {
+    const dir = join(root, 'layers/glassbox/content/guide/pages')
+    const sources = Object.fromEntries(globSync('**/*.md', { cwd: dir }).map((f) => [f, readFileSync(join(dir, f), 'utf8')]))
+    expect(glassboxLengthProblems(sources).filter((p) => p.includes('split the lesson'))).toEqual([])
+  })
+})
+
+describe('glassboxLongLessons', () => {
+  const lesson = (words: number) => `---\ntitle: SVG\n---\n\n${'word '.repeat(words)}\n`
+
+  it('lists Lessons over the soft limit, longest first, and skips walkthroughs', () => {
+    const { soft } = glassboxLessonWords
+    const found = glassboxLongLessons({ 'web-standards/02.svg.md': lesson(soft), 'web-standards/04.colour.md': lesson(soft + 5), 'agents/10.subagents.md': lesson(soft + 9), 'walkthroughs/10.story.md': lesson(soft + 50) })
+    expect(found).toEqual([{ file: 'agents/10.subagents.md', words: soft + 9 }, { file: 'web-standards/04.colour.md', words: soft + 5 }])
+    expect(glassboxLongText(found[0]!)).toContain(`${soft + 9} words, over the soft limit of ${soft}`)
   })
 })
