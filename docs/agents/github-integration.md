@@ -88,14 +88,15 @@ Large results overflow your context. Keep them small and read every hit.
   "nothing exists," cross-check with a narrow `list_*` scan.
 - **`issue_read` / `pull_request_read` bodies are HTML-entity-encoded**
   (`&amp;`, `&#34;`, `&lt;`). Decode before you quote or parse them.
-- **Four calls return huge output.** `actions_list` returns full run objects
+- **Some calls return huge output.** `actions_list` returns full run objects
   (~300KB): slice the saved file or query by SHA. `get_job_logs` can return one
   enormous line, so `Read`'s offset/limit doesn't help: redirect to a file and
   slice it, or fetch a small tail. `issue_read`'s `get_sub_issues` returns full
   bodies: for linkage or a count, use `list_issues` with `fields` that omit
   `body`, or read `sub_issues_summary.total_count`.
-  `get_comments` on a long thread returned about 254K characters (issue 3143):
-  fetch comments through REST with a `--jq` slice, or read only the last few.
+  `issue_read`'s `get_comments` on a long thread can return ~250KB: use
+  `gh api --paginate repos/{owner}/{repo}/issues/N/comments --jq
+  '.[] | .body[:300]'` to trim each body.
 
 ## Script escapes — cheaper than the API
 
@@ -117,7 +118,7 @@ Large results overflow your context. Keep them small and read every hit.
   `gh api repos/{owner}/{repo}/check-runs/{id}/annotations`, filtered to
   `annotation_level: failure`, usually names the failing file and message. The
   REST job-log download 403s in the cloud (its blob redirect is blocked); for
-  `get_job_logs`, see "Four calls return huge output" above.
+  `get_job_logs`, see "Some calls return huge output" above.
 - **CI success is not delivered natively.** A green gate wakes a subscribed
   session only through the comment the gate action posts on green (its "doorbell",
   `.github/actions/gate/action.yml`; none on a fork PR). A new PR shows no
