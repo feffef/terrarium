@@ -22,6 +22,12 @@ fixes:
   - pr: 2640
     date: "2026-10-28"
     summary: "prune-friction-ledger --summary and --candidates write output over a size threshold to a file under TMPDIR and print one notice line; --out PATH always writes to that path."
+  - pr: 3532
+    date: "2026-11-20"
+    summary: "harvest evidence ranks tracker hits and caps them at 10."
+  - pr: 3572
+    date: "2026-11-21"
+    summary: "harvest evidence caps the rulings and ledger blocks at 10 hits per group."
 occurrences:
   - session: session_013zxzePZDqGM37D7GdfGumb
     date: "2026-11-08"
