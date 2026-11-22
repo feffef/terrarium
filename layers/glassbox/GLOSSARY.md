@@ -88,10 +88,10 @@ Terrarium applies them without reading the source.
 A page about one concept. It opens with a short general summary that links the
 official docs, then shows how and why Terrarium uses the concept.
 
-Its body, frontmatter not counted, stays under 2,000 words, or the tests fail;
-past 1,700 `glassbox-update` asks for a proposal to split it (`glassboxLessonWords`
-in `page-checks.ts`). It follows one contract, which the page frames like design 1b
-(`layers/glassbox/app/utils/lesson.ts`):
+Its body, frontmatter not counted, has a hard word limit that fails the tests and
+a soft one past which `glassbox-update` asks for a proposal to split it
+(`glassboxLessonWords` in `page-checks.ts`). It follows one contract, which the
+page frames like design 1b (`layers/glassbox/app/utils/lesson.ts`):
 
 - a lede paragraph, then a skip line that links `[In Terrarium](#in-terrarium)`;
 - `## The concept`, whose last paragraph is `Full reference: [label](url)`

@@ -289,13 +289,13 @@ const lengths = { lesson: { title: 28, description: 120 }, walkthrough: { title:
 const lessonTitleWords = 4
 // A Lesson's body, frontmatter left out (GLOSSARY.md, Lesson): over `hard` fails the tests, over `soft` asks glassbox-update for a split proposal.
 export const glassboxLessonWords = { soft: 1700, hard: 2000 }
-const words = (text: string) => text.split(/\s+/).filter(Boolean).length
-const bodyWords = (source: string) => words(splitFrontmatter(source).body)
+const rawWords = (text: string) => text.split(/\s+/).filter(Boolean).length
+const bodyWords = (source: string) => rawWords(splitFrontmatter(source).body)
 
 function lengthProblems(route: string, frontmatter: Record<string, unknown>, bodyWordCount: number): string[] {
   const limit = glassboxSubjectOf(route) ? lengths.lesson : glassboxWalkthroughOf(route) ? lengths.walkthrough : undefined
   if (!limit) return []
-  const titleWords = String(frontmatter.title ?? '').split(/\s+/).filter(Boolean).length
+  const titleWords = rawWords(String(frontmatter.title ?? ''))
   const wordProblems = [
     ...(glassboxSubjectOf(route) && titleWords > lessonTitleWords ? [`title "${frontmatter.title}" is ${titleWords} words, more than ${lessonTitleWords}`] : []),
     ...(glassboxSubjectOf(route) && bodyWordCount > glassboxLessonWords.hard ? [`body is ${bodyWordCount} words, more than ${glassboxLessonWords.hard}: split the lesson`] : []),
@@ -318,7 +318,7 @@ export function glassboxPageProblems(file: string, source: string, site: Glassbo
   if (glassboxSubjectOf(route)) problems.push(...lessonProblems(file, body, prose, space))
   if (glassboxSubjectOf(route) || glassboxWalkthroughOf(route)) problems.push(...nextProblems(prose, Boolean(glassboxSubjectOf(route))))
   // Drafts are set aside (GLOSSARY.md, Three spaces); a page moved to the guide meets its caps.
-  if (space === 'guide') problems.push(...lengthProblems(route, frontmatter, words(body)))
+  if (space === 'guide') problems.push(...lengthProblems(route, frontmatter, rawWords(body)))
 
   const { revision, revisionDate } = frontmatter
   if (typeof revision === 'string') problems.push(...gitProblems(revision, revisionDate, refs.files, prose, git))
@@ -472,7 +472,7 @@ export function glassboxLongLessons(sources: Record<string, string>): { file: st
     .sort((a, b) => b.words - a.words || a.file.localeCompare(b.file))
 }
 
-export const glassboxLongText = ({ words }: { words: number }) => `${words} words, over the soft limit of ${glassboxLessonWords.soft} (hard limit ${glassboxLessonWords.hard}): propose how to split it`
+export const glassboxLongText = ({ words }: { words: number }) => `${words} words, over the soft limit of ${glassboxLessonWords.soft} (hard limit ${glassboxLessonWords.hard}): propose a split, or a cut where none is logical`
 
 /** Each guide page's title, title-word and description cap problems, a Lesson body over the hard limit and a missing teaches, by file under `pages/`. */
 export function glassboxLengthProblems(sources: Record<string, string>): string[] {
