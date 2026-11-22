@@ -45,10 +45,17 @@ describe('glassbox reading progress', () => {
   })
 
   it('labels a Subject count: total when none read, read/total after, done when all', () => {
-    expect(glassboxCountLabel(0, 8)).toEqual({ text: '8', done: false })
-    expect(glassboxCountLabel(3, 8)).toEqual({ text: '3/8', done: false })
-    expect(glassboxCountLabel(8, 8)).toEqual({ text: '8/8', done: true })
+    expect(glassboxCountLabel(0, 8)).toMatchObject({ text: '8', done: false })
+    expect(glassboxCountLabel(3, 8)).toMatchObject({ text: '3/8', done: false })
+    expect(glassboxCountLabel(8, 8)).toMatchObject({ text: '8/8', done: true })
     expect(glassboxCountLabel(0, 0).done).toBe(false)
+  })
+
+  it('titles a Subject count by what it counts: lessons, read of total', () => {
+    expect(glassboxCountLabel(0, 8).title).toBe('8 lessons')
+    expect(glassboxCountLabel(3, 8).title).toBe('3 of 8 lessons read')
+    expect(glassboxCountLabel(0, 1).title).toBe('1 lesson')
+    expect(glassboxCountLabel(1, 1).title).toBe('1 of 1 lesson read')
   })
 
   it("words a Subject page's count: Lesson total until one is read, then `N of M read`", () => {

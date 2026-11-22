@@ -36,6 +36,14 @@ describe('glassbox Tenant', async () => {
     expect(html).toContain('How a change happens')
   })
 
+  it('explains the header brand mark and the sidebar Subject counts on hover', async () => {
+    const html = await $fetch<string>('/t/glassbox/guide')
+    expect(html).toMatch(/class="[^"]*gb-brand"[^>]*title="[^"]*logo/)
+    expect(html).toMatch(/class="[^"]*gb-brand"[^>]*aria-label="[^"]*logo/)
+    expect(html).toMatch(/class="count[^"]*"[^>]*aria-label="\d+ lessons?"/)
+    expect(html).toMatch(/class="count[^"]*"[^>]*title="\d+ lessons?"/)
+  })
+
   // Reading progress lives in the visitor's browser, applied after mount (GLOSSARY.md, Reading progress).
   it('ticks a Lesson once Where next is scrolled into view and moves its link into Lessons already read', async () => {
     const layers = '/t/glassbox/guide/nuxt-vue/layers'

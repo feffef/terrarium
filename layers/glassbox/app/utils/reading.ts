@@ -48,7 +48,12 @@ export function glassboxSubjectCount(readCount: number, total: number) {
   return readCount ? `${readCount} of ${total} read` : `${total} ${total === 1 ? 'Lesson' : 'Lessons'}`
 }
 
-/** A Subject's count in the sidebar: the total until a Lesson is read, then `read/total`. */
+/** A Subject's count in the sidebar: the total until a Lesson is read, then `read/total`; `title` says what it counts. */
 export function glassboxCountLabel(readCount: number, total: number) {
-  return { text: readCount ? `${readCount}/${total}` : String(total), done: total > 0 && readCount === total }
+  const noun = total === 1 ? 'lesson' : 'lessons'
+  return {
+    text: readCount ? `${readCount}/${total}` : String(total),
+    title: readCount ? `${readCount} of ${total} ${noun} read` : `${total} ${noun}`,
+    done: total > 0 && readCount === total,
+  }
 }
