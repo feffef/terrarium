@@ -1,0 +1,496 @@
+schemaVersion: 1
+session: session_013zxzeSDvoZ2wQAG644Uhz7
+startedAt: 2026-11-22T08:46:17Z
+endedAt: 2026-11-22T09:04:52Z
+kind: autonomous
+goal: Weekly Glass Box curate run, adding a Colour contrast lesson
+status: in-review
+outcome: Colour contrast lesson built, reviewed and gated; PR open and waiting for the owner's merge
+summary: "A scheduled glassbox-curate Loop run with no human prompt; every choice was agent-initiated within the Skill. Orientation showed no open Glass Box PRs, so the first pickable memory-page item was the colour contrast gap (the owner's direction items were an owner question or too broad). The run wrote a new web-standards Lesson from the Tinkerfund and Atlas contrast specs and WCAG's own sources, swapped one Where next row on two sibling pages, and trimmed the memory page. An opus writer drafted it; a claim checker found three overstated lines and fixes landed; fresh readers' nits that could not be fixed went on the memory page; code-review findings (a pagesRead gap, a term, a plain-words lead) were fixed and the follow-up reviewed. gate:scoped passed. PR 3586 is open and waits for the owner because a new Lesson is owner-merge (rule 6). The loop did not start a second run: this session may push only its one assigned branch, which now carries that PR, and the next memory-page items are a Skill-detail gap that does not suit a textbook page and small wording leads that would need a branch and PR of their own."
+prs:
+  - "3586"
+docsRead:
+  - path: layers/glassbox/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-lesson/writing-pages.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-lesson/owner-decisions.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: .throwaway/glassbox-curate/guide-pages-1.md
+    reason: (no reason given)
+  - path: .throwaway/glassbox-curate/guide-pages-2.md
+    reason: (no reason given)
+  - path: .throwaway/glassbox-curate/guide-pages-3.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-lesson/SKILL.md
+    reason: (no reason given)
+  - path: .throwaway/glassbox-curate/subject-1.md
+    reason: (no reason given)
+  - path: .throwaway/glassbox-curate/subject-2.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/web-standards/50.colour-contrast.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/verification/40.testing.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/web-standards/10.css-custom-properties.md
+    reason: (read before editing)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-curate/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: glassbox-curate
+    reason: the Skill this run executed
+  - name: code-review
+    reason: required review before the PR
+  - name: dispatch-subagents
+    reason: read before dispatching the writer, checker and readers
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Linked the Testing page from the new Lesson without reading it; the review's Spec reviewer found the pagesRead gap, then I read it and added it.
+    solution: The Skill's step 3 could ask to list every page a writer is told to link before dispatching it.
+    severity: nit
+  - description: A foreground sleep to wait for the background writer was blocked by the harness; I had to end the turn and wait for the notification.
+    solution: The Skill could say to end the turn after dispatching background agents, never to sleep.
+    severity: nit
+  - description: The orientation's guide index only holds lead-ins, so I had to read two full guide pages, plus fetch WCAG sources by raw GitHub copies, before briefing the writer.
+    solution: None needed; the cost was the intended reading.
+    severity: nit
+durationSec: 1115
+models:
+  claude-sonnet-5-5: 126
+toolCounts:
+  Read: 16
+  Skill: 4
+  Bash: 41
+  Write: 1
+  Agent: 8
+  Edit: 2
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  PushNotification: 1
+filesEdited:
+  - layers/glassbox/content/workshop/runs/2026-11-22T0846.yml
+  - layers/glassbox/content/guide/pages/web-standards/50.colour-contrast.md
+  - layers/glassbox/content/guide/pages/web-standards/40.colour-and-motion-settings.md
+  - layers/glassbox/content/guide/pages/web-standards/10.css-custom-properties.md
+  - layers/glassbox/content/workshop/pages/index.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+docsReadBySubagents:
+  - .agents/skills/glassbox-curate/SKILL.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/writing-pages.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/writing-pages.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/web-standards/50.colour-contrast.md
+      - rule: .claude/rules/adr-0010.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: ran code-review and gate:scoped before opening
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: pushed early, opened PR, subscribed
+      - path: .claude/rules/adr-0017.md
+        value: confirmed
+        why: "agreed: header on PR body, trailer checked"
+      - path: .claude/rules/adr-0009.md
+        value: steered
+        why: closed session via close-session
+      - path: .claude/rules/glassbox-content.md
+        value: steered
+        why: kept changing facts out of prose
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: .claude/rules/tenant-layers.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: in-scope
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/glossary-terms.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0002.md
+        value: unrelated
+      - path: .claude/rules/data-shapes.md
+        value: unrelated
+      - path: .claude/rules/mdc-when-to-use.md
+        value: unrelated
+      - path: .claude/rules/ui-verification.md
+        value: unrelated
+      - path: layers/glassbox/GLOSSARY.md
+      - path: .agents/skills/glassbox-lesson/writing-pages.md
+      - path: .agents/skills/glassbox-lesson/owner-decisions.md
+      - path: docs/agents/pr-workflow.md
+      - path: .claude/rules/adr-0010.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/owner-decisions.md
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/owner-decisions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/web-standards/50.colour-contrast.md
+    reported:
+      - path: .claude/rules/glassbox-content.md
+        value: steered
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/glossary-terms.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: duplicate
+        why: "brief:"
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: .agents/skills/glassbox-lesson/writing-pages.md
+      - path: layers/glassbox/GLOSSARY.md
+      - path: layers/glassbox/page-checks.ts
+  - by: general-purpose
+    subagent: 3
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/glassbox-content.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/web-standards/50.colour-contrast.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/web-standards/50.colour-contrast.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/web-standards/50.colour-contrast.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/glassbox-content.md
+        value: in-scope
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 4
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 5
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 6
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 7
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+    reported: []
+subagents:
+  - task: "Fresh reader: CSS custom properties"
+    model: sonnet
+    durationSec: 22
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 2.1
+  - task: "Fresh reader: Colour and motion settings"
+    model: sonnet
+    durationSec: 19
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 2.1
+  - task: Write colour contrast Lesson
+    model: opus
+    durationSec: 357
+    toolCalls: 48
+    modelCalls: 39
+    tokenShare: 18.4
+  - task: Claim-check colour contrast page
+    model: sonnet
+    durationSec: 102
+    toolCalls: 14
+    modelCalls: 10
+    tokenShare: 4.9
+  - task: "Fresh reader: Colour contrast"
+    model: sonnet
+    durationSec: 21
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 2.1
+  - task: Standards review of Colour contrast
+    model: sonnet
+    durationSec: 34
+    toolCalls: 10
+    modelCalls: 8
+    tokenShare: 4.1
+  - task: Spec review of Colour contrast run
+    model: sonnet
+    durationSec: 39
+    toolCalls: 7
+    modelCalls: 6
+    tokenShare: 3.6
+  - task: Review follow-up fixes diff
+    model: sonnet
+    durationSec: 19
+    toolCalls: 5
+    modelCalls: 5
+    tokenShare: 1.9
+gitBranch: claude/compassionate-bardeen-2cdf3f
+entrypoint: remote_trigger
+cliVersion: 2.1.330
+trigger: glassbox-curate
+learnings:
+  - w3.org Understanding pages and MDN were reachable by curl in this cloud session, and raw.githubusercontent.com copies of w3c/wcag and mdn/content work as a fallback; the w3c/wcag raw path for 1.4.3 is understanding/20/contrast-minimum.html while 1.4.11 sits under understanding/21/.
+landedBy: Stop
