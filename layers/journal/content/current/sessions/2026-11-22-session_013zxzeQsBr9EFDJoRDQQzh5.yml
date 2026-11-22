@@ -1,0 +1,334 @@
+schemaVersion: 1
+session: session_013zxzeQsBr9EFDJoRDQQzh5
+startedAt: 2026-11-22T11:08:31Z
+endedAt: 2026-11-22T11:17:15Z
+kind: autonomous
+goal: Scheduled Blog post from Eyra
+status: in-review
+outcome: Eyra post on the Snowflake kit's locked 20x loupe is in PR 3587, gate green, awaiting merge
+summary: "Scheduled blog-post run, nobody prompted it; everything was agent-initiated within the Skill. Rotation allowed only Eyra, so all three candidates were Eyra: the Snowflake kit loupe (#3563), gallery thumbnail names (#3564) and the Home Ended shelf (#3569). A blind Sonnet reader picked the loupe post; I revised it for the confusions it named, a fact-checker found two wrong or imprecise lines, and code-review's two axes led to a tag swap and a cut meta sentence. Gate green; PR 3587 opened and subscribed. Step 12 (reply decision) and merge are still ahead."
+prs:
+  - "3587"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-11-22-the-shop-sold-a-20x-loupe-that-was-still-a-wish.md
+    reason: (read before editing)
+  - path: layers/blog/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/eyra.md
+    reason: (no reason given)
+  - path: layers/blog/tag-meanings.ts
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: blog-post
+    reason: (invoked as a slash command)
+frictions:
+  - description: Made GitHub reads before reading github-integration.md; the hook reminded me afterwards. Nothing went wrong.
+    solution: Read the doc in the first parallel batch with the git docs.
+    severity: nit
+  - description: Guessed the Persona file at layers/blog/personas/eyra.md; it lives under .agents/skills/blog-post/personas/, costing one failed command.
+    solution: The Skill's step 4 could name the full personas path.
+    severity: nit
+  - description: Fact-checker's tally forced a recheck round twice because small post-review edits changed the blob hash.
+    solution: Apply review findings before the first fact-check dispatch, or batch them into one edit.
+    severity: minor
+durationSec: 523
+models:
+  claude-sonnet-5-5: 87
+toolCounts:
+  Bash: 30
+  Read: 4
+  mcp__github__pull_request_read: 5
+  mcp__github__issue_read: 3
+  Agent: 4
+  SendMessage: 2
+  Skill: 3
+  Monitor: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+filesEdited:
+  - layers/blog/content/eyra/pages/2026-11-22-the-shop-sold-a-20x-loupe-that-was-still-a-wish.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+adrHints:
+  - adr: 12
+    via: path
+    readAfter: false
+    by: main
+docsReadBySubagents:
+  - .agents/skills/blog-post/SKILL.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: ran code-review and gate:scoped before PR
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: opened PR, subscribed, scope only the post
+      - path: .claude/rules/adr-0009.md
+        value: steered
+        why: invoked close-session after PR open
+      - path: .claude/rules/adr-0017.md
+        value: confirmed
+        why: "agreed: PR header and commit trailer checked"
+      - path: .claude/rules/adr-0012.md
+        value: in-scope
+        why: standalone post, no pingback needed
+      - path: .claude/rules/tenant-glossary.md
+        value: confirmed
+        why: "agreed: read blog GLOSSARY first"
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/glossary-terms.md
+        value: unrelated
+      - path: docs/agents/git-conventions.md
+      - path: docs/agents/pr-workflow.md
+      - path: layers/blog/GLOSSARY.md
+      - path: .agents/skills/blog-post/personas/eyra.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/content/eyra/pages/2026-11-22-the-shop-sold-a-20x-loupe-that-was-still-a-wish.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/blog/content/eyra/pages/2026-11-22-the-shop-sold-a-20x-loupe-that-was-still-a-wish.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: layers/blog/content/eyra/pages/2026-11-22-the-shop-sold-a-20x-loupe-that-was-still-a-wish.md
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: .claude/rules/adr-0012.md
+        value: unrelated
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/glossary-terms.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: .agents/skills/blog-post/personas/eyra.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/GLOSSARY.md
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/blog/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/blog/GLOSSARY.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/blog-post/personas/eyra.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/blog-post/personas/eyra.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0012.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/glossary-terms.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 3
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0012.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+subagents:
+  - task: Blind read of three blog drafts
+    model: sonnet
+    durationSec: 14
+    toolCalls: 6
+    modelCalls: 3
+    tokenShare: 8.4
+  - task: Fact-check blog post claims
+    model: sonnet
+    durationSec: 113
+    toolCalls: 16
+    modelCalls: 11
+    tokenShare: 10.5
+  - task: Standards review of blog post
+    model: sonnet
+    durationSec: 19
+    toolCalls: 10
+    modelCalls: 4
+    tokenShare: 5.1
+  - task: Spec review of blog post
+    model: sonnet
+    durationSec: 16
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 5.2
+gitBranch: claude/zen-heisenberg-5vr7e7
+entrypoint: remote_trigger
+cliVersion: 2.1.330
+trigger: blog-post
+landedBy: Stop
