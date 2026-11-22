@@ -53,7 +53,7 @@ Terrarium applies them without reading the source.
   `layers/glassbox/app/utils/subjects.ts`. `workshop`, at
   `/t/glassbox/workshop`, is the agents' notebook, a live page of state and not
   a lesson: the Agent notes (the memory text: weak spots, the owner's direction,
-  open ideas and the agents' soft decisions) and the Update log (one entry per
+  open ideas, lessons too long and the agents' soft decisions) and the Update log (one entry per
   curate run), under a Lately list of the newest run changes that the page works
   out itself. glassbox-update's check state is kept but not shown. It has no
   sidebar entry and no link from the guide. How a run keeps it, the word cap
