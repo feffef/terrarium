@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeNisEDZyrmPg2jhA5G
 startedAt: 2026-11-22T10:12:56Z
-endedAt: 2026-11-22T12:33:13Z
+endedAt: 2026-11-22T12:36:37Z
 kind: interactive
 goal: Clear the open issue backlog
-status: in-review
-outcome: "Four PRs merged closing #3575, #3577, #3578, #3579 and #3580; #3593 (#3574) open; #3340 and #3423 wait on dates"
-summary: "Human-instructed: the owner invoked /clear-backlog and answered three grilling rounds (1a, 2a then 7a, 4a, 5a with a named section \"Waiting for owner decision\", 8c to split two Friction Ledger entries, 3a, 6 yes). One question (Q9, glassbox-curate: should owner-question items also move into the new section) is still unanswered. Agent-initiated within the Skill: the sweep (8 open issues, all needs-triage, no external PRs), the explore run (6 full triages that posted comments and labels, 2 date-gated blocked-checks for #3340 due 2026-11-25 and #3423 due 2026-11-24), verifying each agent's GitHub writes, recording the owner's decisions on #3574, #3578, #3579 and #3580 and labelling them ready-for-agent, and one build run of five branches. The owner's own proposal for #3574 (each glassbox-curate run pushes its own branch) replaced my pick of reusing the session branch; the evidence was that frictions-to-fixes' scheduled run pushed and merged its own named branch (#3582) while both glassbox-curate runs stayed on the harness branch. Round 1 found real defects on four branches (a wrong cause in a split ledger entry, an unrunnable ledger-set command, a move with no landing step, a stale cross-entry pointer); the guard branch needed round 2 (its fixes exceeded 10 lines) and round 2 caught a stale surface: safe field. PRs #3588 (#3579), #3589 (#3577, #3578) and #3590 (#3575) merged through merge-pr.ts; the owner merged #3591 (#3580 guard, Human-only). The glassbox-curate branch raised three owner-calls mid-build (Q9: owner-question items move to the new section too; Q10: narrow CLAUDE.md's stay-on-branch line so a Skill that branches per run overrides it, worded by the owner; Q11: move goal 1's two owner-waiting parts), and went through two review rounds; it is open as PR #3593. #3340 and #3423 stay open on their dates."
+status: completed
+outcome: "Five PRs merged closing #3574, #3575, #3577, #3578, #3579 and #3580; #3340 and #3423 wait on their dates"
+summary: "Human-instructed: the owner invoked /clear-backlog and answered three grilling rounds (1a, 2a then 7a, 4a, 5a with a named section \"Waiting for owner decision\", 8c to split two Friction Ledger entries, 3a, 6 yes). One question (Q9, glassbox-curate: should owner-question items also move into the new section) is still unanswered. Agent-initiated within the Skill: the sweep (8 open issues, all needs-triage, no external PRs), the explore run (6 full triages that posted comments and labels, 2 date-gated blocked-checks for #3340 due 2026-11-25 and #3423 due 2026-11-24), verifying each agent's GitHub writes, recording the owner's decisions on #3574, #3578, #3579 and #3580 and labelling them ready-for-agent, and one build run of five branches. The owner's own proposal for #3574 (each glassbox-curate run pushes its own branch) replaced my pick of reusing the session branch; the evidence was that frictions-to-fixes' scheduled run pushed and merged its own named branch (#3582) while both glassbox-curate runs stayed on the harness branch. Round 1 found real defects on four branches (a wrong cause in a split ledger entry, an unrunnable ledger-set command, a move with no landing step, a stale cross-entry pointer); the guard branch needed round 2 (its fixes exceeded 10 lines) and round 2 caught a stale surface: safe field. PRs #3588 (#3579), #3589 (#3577, #3578) and #3590 (#3575) merged through merge-pr.ts; the owner merged #3591 (#3580 guard, Human-only). The glassbox-curate branch raised three owner-calls mid-build (Q9: owner-question items move to the new section too; Q10: narrow CLAUDE.md's stay-on-branch line so a Skill that branches per run overrides it, worded by the owner; Q11: move goal 1's two owner-waiting parts), and went through two review rounds; it merged as PR #3593. #3340 and #3423 stay open on their dates. Branch outcomes: #3588 recorded #3532/#3572 as survey-output-overflow fixes and listed get_comments as a huge-output call; #3589 made clear-backlog start a new round only on a still-open missing-test and sent the retro to one builder plus one reviewer per kind, splitting the retro fan-out into its own ledger entry (judgement call left open: step 4 states 'still open after re-checks' twice); #3590 made prune-trial mark covered ledger entries on-trial and say 'trial entry'; #3591 added the review-call sha guard sharing reviewCallShas with merge-pr's scan, plus a three-way ledger split; #3593 gave each glassbox-curate run its own branch, one Waiting-for-owner-decision section, and narrowed CLAUDE.md's stay-on-branch line. The retro (first under #3589's narrower rule) asked one builder, one Standards and one Spec reviewer."
 prs:
   - "3588"
   - "3589"
@@ -103,11 +103,26 @@ frictions:
   - description: On the glassbox-curate branch I ran a third re-check in round 2 (a CLAUDE.md wording nit) past clear-backlog §3 step 3's 2-re-check cap, judging an always-loaded file worth it.
     solution: clear-backlog §3 could say owner-answer fixes get their own re-check outside the cap, which is how step 2 already reads; the cap's scope is unclear.
     severity: nit
-durationSec: 8417
+  - description: "Retro (Standards reviewer): code-review §3 only says to search for standards files, so each reviewer re-greps which docs bind the diff (guards.md, the ledger schema in tenant.config.ts)."
+    solution: reviewPrompt() in .claude/workflows/clear-backlog-build.js could list standards homes per changed path; source the reviewer's reply, unverified by me.
+    severity: minor
+  - description: "Retro (builder): the wrap-width awk in rules() also flags long diff and @@ header lines, which cost two extra edit rounds before the builder widened the filter."
+    solution: "In rules() (.claude/workflows/clear-backlog-build.js), check only added lines: awk 'length>81 && /^\\+[^+]/'."
+    severity: minor
+  - description: "Retro (builder): the tenant-glossary guard blocked the first memory-page edit until layers/glassbox/GLOSSARY.md was read, costing a round trip."
+    solution: A brief for a branch that touches a Tenant layer names its GLOSSARY.md as a first read.
+    severity: nit
+  - description: "Retro (Spec reviewer): 4 of 5 round-1 Spec findings on the guard branch duplicated Standards findings (triage.md 'same as Standards #N'). Counter-evidence: round 2 on the guard found a defect only Standards saw, and round 2 on glassbox an owner-call only Spec saw."
+    solution: reviewPrompt() could keep Spec to brief fit (picks, never-clauses) and leave code shape and schema to Standards; weigh against the unique catches before cutting.
+    severity: minor
+  - description: "My #3580 brief said to import the SHA regex, too narrow: the guard then matched the skill name its own way, and both reviewers flagged the drift."
+    solution: Brief the shared check, not one of its parts, when two code paths must agree.
+    severity: minor
+durationSec: 8621
 models:
-  claude-opus-5-5: 290
+  claude-opus-5-5: 307
 toolCounts:
-  Bash: 80
+  Bash: 82
   Skill: 3
   Workflow: 4
   Read: 2
@@ -115,12 +130,12 @@ toolCounts:
   PushNotification: 5
   mcp__github__add_issue_comment: 9
   mcp__github__issue_write: 4
-  SendMessage: 32
+  SendMessage: 35
   mcp__github__create_pull_request: 5
   mcp__claude-code-remote__subscribe_pr_activity: 5
   Write: 1
   Edit: 1
-  ReadNotifications: 11
+  ReadNotifications: 14
 filesEdited:
   - scripts/session/review-proof.ts
   - scripts/hooks/review-call-sha-guard.ts
@@ -1983,66 +1998,66 @@ subagents:
   - type: general-purpose
     task: a0cd0ea026b6a4d92
     model: claude-opus-5-5
-    durationSec: 275
-    toolCalls: 16
-    modelCalls: 15
-    tokenShare: 1.5
+    durationSec: 5293
+    toolCalls: 18
+    modelCalls: 17
+    tokenShare: 1.9
   - type: general-purpose
     task: a300fe7dcf03efd9b
     model: claude-opus-5-5
     durationSec: 3714
     toolCalls: 20
     modelCalls: 20
-    tokenShare: 2.2
+    tokenShare: 2.1
   - type: general-purpose
     task: a304f489ad875e8ba
     model: claude-opus-5-5
     durationSec: 1167
     toolCalls: 24
     modelCalls: 22
-    tokenShare: 2.8
+    tokenShare: 2.7
   - type: general-purpose
     task: a549b38d4df999ea2
     model: claude-opus-5-5
     durationSec: 278
     toolCalls: 15
     modelCalls: 13
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: general-purpose
     task: a5bab45d30b1ad1ed
     model: claude-opus-5-5
-    durationSec: 230
-    toolCalls: 23
-    modelCalls: 23
-    tokenShare: 2
+    durationSec: 4990
+    toolCalls: 25
+    modelCalls: 25
+    tokenShare: 2.4
   - type: general-purpose
     task: a6e957a43f55fe971
     model: claude-opus-5-5
     durationSec: 247
     toolCalls: 19
     modelCalls: 18
-    tokenShare: 1.7
+    tokenShare: 1.6
   - type: general-purpose
     task: a73299c0d000d9af5
     model: claude-opus-5-5
     durationSec: 345
     toolCalls: 12
     modelCalls: 11
-    tokenShare: 1.1
+    tokenShare: 1
   - type: general-purpose
     task: a81d98ef8db1f2bd0
     model: claude-sonnet-5-5
     durationSec: 721
     toolCalls: 28
     modelCalls: 21
-    tokenShare: 1.9
+    tokenShare: 1.8
   - type: general-purpose
     task: a85b2467991ae66b8
     model: claude-opus-5-5
     durationSec: 1076
     toolCalls: 92
     modelCalls: 58
-    tokenShare: 5.9
+    tokenShare: 5.6
   - type: general-purpose
     task: a9fb93348c6245876
     model: claude-opus-5-5
@@ -2056,7 +2071,7 @@ subagents:
     durationSec: 849
     toolCalls: 14
     modelCalls: 13
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: general-purpose
     task: aaf898ff36c9bcd4c
     model: claude-opus-5-5
@@ -2070,35 +2085,35 @@ subagents:
     durationSec: 297
     toolCalls: 12
     modelCalls: 11
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: general-purpose
     task: abefa2d17c291efb0
     model: claude-opus-5-5
     durationSec: 305
     toolCalls: 17
     modelCalls: 17
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: general-purpose
     task: ac2737db87db65bfa
     model: claude-sonnet-5-5
     durationSec: 1028
     toolCalls: 41
     modelCalls: 31
-    tokenShare: 2.7
+    tokenShare: 2.6
   - type: general-purpose
     task: ac2f19bcb63e0fb97
     model: claude-opus-5-5
     durationSec: 344
     toolCalls: 14
     modelCalls: 13
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: general-purpose
     task: acc1250eacb4548d9
     model: claude-opus-5-5
-    durationSec: 5242
-    toolCalls: 79
-    modelCalls: 60
-    tokenShare: 7.1
+    durationSec: 5483
+    toolCalls: 80
+    modelCalls: 61
+    tokenShare: 7
   - type: general-purpose
     task: af2107769a30c7106
     model: claude-sonnet-5-5
@@ -2112,7 +2127,7 @@ subagents:
     durationSec: 85
     toolCalls: 15
     modelCalls: 13
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: workflow-subagent
     task: Spec claude/glassbox-curate-own-branch r2
     model: claude-opus-5-5
@@ -2126,7 +2141,7 @@ subagents:
     durationSec: 75
     toolCalls: 13
     modelCalls: 12
-    tokenShare: 1
+    tokenShare: 0.9
   - type: workflow-subagent
     task: Standards claude/glassbox-curate-own-branch r1
     model: claude-opus-5-5
@@ -2140,14 +2155,14 @@ subagents:
     durationSec: 80
     toolCalls: 12
     modelCalls: 10
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: workflow-subagent
     task: Standards claude/clear-backlog-rounds-and-retro r1
     model: claude-opus-5-5
     durationSec: 114
     toolCalls: 16
     modelCalls: 15
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: workflow-subagent
     task: Standards claude/prune-trial-mark-on-trial r1
     model: claude-opus-5-5
@@ -2168,14 +2183,14 @@ subagents:
     durationSec: 195
     toolCalls: 41
     modelCalls: 25
-    tokenShare: 2.3
+    tokenShare: 2.2
   - type: workflow-subagent
     task: Spec claude/clear-backlog-rounds-and-retro r1
     model: claude-opus-5-5
     durationSec: 78
     toolCalls: 13
     modelCalls: 11
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: workflow-subagent
     task: Spec claude/glassbox-curate-own-branch r1
     model: claude-opus-5-5
@@ -2203,42 +2218,42 @@ subagents:
     durationSec: 84
     toolCalls: 24
     modelCalls: 17
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: workflow-subagent
     task: Spec claude/prune-trial-mark-on-trial r1
     model: claude-opus-5-5
     durationSec: 82
     toolCalls: 11
     modelCalls: 10
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: workflow-subagent
     task: build claude/glassbox-curate-own-branch
     model: claude-sonnet-5-5
     durationSec: 92
     toolCalls: 27
     modelCalls: 18
-    tokenShare: 1.8
+    tokenShare: 1.7
   - type: workflow-subagent
     task: build claude/clear-backlog-rounds-and-retro
     model: claude-sonnet-5-5
     durationSec: 149
     toolCalls: 18
     modelCalls: 16
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: workflow-subagent
     task: "triage #3574"
     model: claude-sonnet-5-5
     durationSec: 110
     toolCalls: 28
     modelCalls: 13
-    tokenShare: 1.6
+    tokenShare: 1.5
   - type: workflow-subagent
     task: "triage #3575"
     model: claude-sonnet-5-5
     durationSec: 142
     toolCalls: 28
     modelCalls: 15
-    tokenShare: 1.7
+    tokenShare: 1.6
   - type: workflow-subagent
     task: "triage #3580"
     model: claude-sonnet-5-5
@@ -2294,7 +2309,7 @@ subagents:
     durationSec: 106
     toolCalls: 20
     modelCalls: 20
-    tokenShare: 1.5
+    tokenShare: 1.4
 gitBranch: ccr-c9bbf256-3b3z58
 entrypoint: remote_mobile
 cliVersion: 2.1.330
