@@ -54,7 +54,7 @@ None of these is false.
 - **Walkthroughs.** *A bug report becomes work*: stop 7 mixes the Trusted author with the Public requester. *Asking an agent for a change*: stop 1 says a cloud and a local session work the same way, and stop 2 has the `SessionStart` hook install packages; both hold for Terrarium's usual one-repository session, and the Walkthrough could say so.
 - **Installed skills.** *Wayfinder*: the installed Skill gives no reason a session resolves one ticket and research tickets are excepted; "HITL", "frontier" and "fog" arrive as a list before any example. *Engineering skills*: `implement`, which no agent can start, is followed by the build agent without a page saying why that is allowed.
 - **Nuxt Content.** *Content collections* and *queryCollection* still pack several terms into one sentence beside the manifest, the kind and the search query. *Multi-tenant isolation*: `useSpace`, `pagesKey` and `path` come before their gloss, and the catalog's one-table-at-a-time reads are explained late. *Content database*: no source says why a failed download is retried once, and `tenant-layers.md` is cited without its content. *MDC components*: no Nuxt Content docs are installed to show the YAML-props form. *Mermaid pre-rendering*: sentinel colour is a word the page never defines, and who serves the font is easy to misread.
-- **Web standards.** *SVG*: the Tinkerfund byte budget (4096 for a figure, 1024 for an icon) has no stated reason; the code comment only names a story. *ARIA*: no source says why the Journal's row is a `div` and not a `button`.
+- **Web standards.** *SVG*: the Tinkerfund byte budget (4096 for a figure, 1024 for an icon) has no stated reason; the code comment only names a story. *ARIA*: no source says why the Journal's row is a `div` and not a `button`. *CSS custom properties*: the Journal's dark-mode override is described but not shown, and `<style scoped>` and `v-bind()` come before any token is used. *Colour contrast*: WCAG's levels A, AA and AAA and the linearising step of relative luminance are not glossed.
 - **Nuxt & Vue.** *Virtual modules*: the first Excerpt does not show the `expand(loadManifests())` call it names. *Nitro*: mount, driver and LRU come before any gloss, and "a request is split three ways" lists roles. *Data fetching*: onramp and its tour are unexplained.
 ### Fixes waiting
 
@@ -63,7 +63,7 @@ None of these is false.
 
 ### Stale or missing
 
-- No page teaches colour contrast (WCAG AA 4.5:1, tested for Atlas) or narrow-screen overflow. Nearest: *Colour and motion settings*.
+- No page teaches narrow-screen overflow.
 - No page teaches the `digest` Skill (a Digest's Blog line, taken from the Blog files that day's PRs touched so the fact-check can verify it). Nearest page: *Scheduled tasks*.
 - No page teaches how the `glassbox-curate` Skill runs in two modes (a loop session and an instruction session) and pauses for `glassbox-update`; a textbook about its own upkeep may not suit the guide. Nearest page: *Scheduled tasks*.
 ### Claims to check

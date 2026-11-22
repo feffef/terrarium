@@ -6,5 +6,26 @@ focus: "Web standards: a new Lesson on colour contrast, taking the gap from the
   broad to pick). Terrarium tests contrast for the Atlas and Tinkerfund themes
   (atlas-contrast.spec.ts, tokens-contrast.spec.ts) and no page teaches it. A new
   Lesson waits for the owner's merge (rule 6)."
-changes: []
-pagesRead: []
+changes:
+  - web-standards/50.colour-contrast | New Lesson on colour contrast (the WCAG
+    ratio and its thresholds, and how the Tinkerfund and Atlas specs check their
+    palettes in both themes, with the pairs they fence off from text) | the
+    memory page listed colour contrast as a gap. A claim checker found three
+    overstated lines (the accent pair misses only in the light theme, the faint
+    colour's test reads only .css, .vue and .ts under the layer's app folder,
+    two cost clauses were inferences) and all were fixed; a fresh reader's
+    remaining nits went on the memory page. Waits for the owner's merge (new
+    Lesson)
+  - web-standards/40.colour-and-motion-settings | Where next swaps ARIA for
+    Colour contrast | the body never links ARIA; contrast follows from colour
+    settings. Wording only
+  - web-standards/10.css-custom-properties | Where next swaps Hydration for
+    Colour contrast | the body never links Hydration. Wording only
+  - workshop/pages/index | The colour contrast gap deleted, narrow-screen
+    overflow kept; two reader leads added | done
+pagesRead:
+  - web-standards/10.css-custom-properties
+  - web-standards/20.svg
+  - web-standards/30.aria
+  - web-standards/40.colour-and-motion-settings
+  - verification/40.testing
