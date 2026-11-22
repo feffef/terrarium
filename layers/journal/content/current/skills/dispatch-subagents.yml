@@ -9,7 +9,7 @@ role: >-
   rule in it was paid for by a session that lost work.
 auditSummary:
   date: "2026-11-22"
-  text: "Its rules held across 30 runs: every claimed PR landed, nothing was stranded, and no run that dispatched agents skipped the Skill. Workflow-built briefs still contradict its guards, and two runs skipped its pilot and ask lines."
+  text: "Its rules held: every claimed PR landed, nothing was stranded, and no run that dispatched agents skipped the Skill. Briefs built by workflow scripts still clash with its guards, and two runs skipped its start-one-first and brief-checklist steps."
 observations:
   - date: "2026-10-13"
     note: >-

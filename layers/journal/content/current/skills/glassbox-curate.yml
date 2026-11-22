@@ -22,7 +22,7 @@ watchFor:
   - "The page conventions and the governing docs were read before the first draft, not after."
 auditSummary:
   date: "2026-11-22"
-  text: "Writes, checks and reviews its Lesson pull requests well, but an unattended run still stops after one PR, so the promised loop does not happen. A new Lesson on usability testing merged on 11-21."
+  text: "Writes, checks and reviews its Lesson pull requests well, but an unattended run still stops after one PR, so the promised loop does not happen."
 observations:
   - date: "2026-11-07"
     note: >-
