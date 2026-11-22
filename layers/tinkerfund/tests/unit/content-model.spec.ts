@@ -118,6 +118,11 @@ describe('Campaign pages', () => {
     expect(issues('pages', { campaign: { ...c, stretchGoals: [{ id: 'red', amount: 400, title: 'Red' }] } })).toEqual([])
   })
 
+  it('counts a Stretch goal exactly at pledged as unlocked', () => {
+    const c = validCampaign()
+    expect(issues('pages', { campaign: { ...c, stretchGoals: [{ id: 'red', amount: c.pledged, title: 'Red' }] } })).toEqual([])
+  })
+
   it('rejects a Reward that is neither digital nor shipped', () => {
     const c = validCampaign()
     const { shipsTo: _, ...unshipped } = c.rewards[0]!
