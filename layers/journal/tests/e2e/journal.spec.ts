@@ -282,6 +282,13 @@ describe('journal Tenant', async () => {
     expect(page).toContain('last audited')
     expect(page).toContain(doc.observations.map((o) => o.date).sort().at(-1)!)
     expect(page).toContain('href="/t/journal/current/skills"')
+    // Sessions first, then the audit summary, then the agents' own observations.
+    const at = (h: string) => page.indexOf(`>${h}</h2>`)
+    expect(at('Recent sessions')).toBeGreaterThan(-1)
+    expect(at('Recent sessions')).toBeLessThan(at('Audit summary'))
+    expect(at('Audit summary')).toBeLessThan(at('Audit observations'))
+    expect(page).toContain('Internal notes that agents wrote down while auditing')
+    expect(page).toMatch(/href="\/t\/journal\/current#session-session_[^"]+"/)
   })
 
   it('404s a Skill page for an unknown Skill and in the archived Space, which links none', async () => {
