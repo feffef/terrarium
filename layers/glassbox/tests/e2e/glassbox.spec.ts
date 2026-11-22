@@ -18,6 +18,11 @@ describe('glassbox Tenant', async () => {
     expect(html).toContain('How Nuxt merges several folders into one app')
   })
 
+  it('titles the Walkthroughs list page, and an unknown path Not found', async () => {
+    expect(await $fetch<string>('/t/glassbox/guide/walkthroughs')).toMatch(/<title>Walkthroughs · glassbox<\/title>/)
+    expect(await $fetch<string>('/t/glassbox/guide/nope', { ignoreResponseError: true })).toMatch(/<title>Not found · glassbox<\/title>/)
+  })
+
   it("points a Lesson's Subject chip at the Subject page", async () => {
     expect(await $fetch<string>('/t/glassbox/guide/nuxt-vue/layers')).toContain('href="/t/glassbox/guide/nuxt-vue"')
   })

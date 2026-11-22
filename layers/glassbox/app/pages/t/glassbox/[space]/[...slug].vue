@@ -76,7 +76,8 @@ onMounted(async () => {
 })
 onBeforeUnmount(() => seen?.disconnect())
 
-useHead(() => ({ title: `${page.value?.title ?? subject.value?.name ?? 'Not found'} · glassbox` }))
+const walkthroughsName = 'Walkthroughs'
+useHead(() => ({ title: `${page.value?.title ?? subject.value?.name ?? (walkthroughsIndex.value ? walkthroughsName : 'Not found')} · glassbox` }))
 useSeoMeta({ description: () => page.value?.description })
 </script>
 
@@ -114,7 +115,7 @@ useSeoMeta({ description: () => page.value?.description })
 
       <GlassboxSubject v-else-if="subject" id="gb-content" tabindex="-1" class="gb-column" :name="subject.name" :lessons="subject.lessons" :base="base" />
 
-      <GlassboxSubject v-else-if="walkthroughsIndex" id="gb-content" tabindex="-1" class="gb-column" name="Walkthroughs" intro="A walkthrough follows one story across several lessons, such as a request becoming a merged PR, and links to each lesson instead of repeating it." :lessons="data?.walkthroughs ?? []" :base="base" plain />
+      <GlassboxSubject v-else-if="walkthroughsIndex" id="gb-content" tabindex="-1" class="gb-column" :name="walkthroughsName" intro="A walkthrough follows one story across several lessons, such as a request becoming a merged PR, and links to each lesson instead of repeating it." :lessons="data?.walkthroughs ?? []" :base="base" plain />
 
       <div v-else id="gb-content" tabindex="-1" class="gb-column">
         <h1>Not found</h1>
