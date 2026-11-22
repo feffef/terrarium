@@ -5,7 +5,7 @@ import { basename, dirname, join } from 'node:path'
 import { readOrNull } from './commit-trailer.ts'
 import { parseTranscript } from './transcript-trace.ts'
 
-const SHA_RE = /\b[0-9a-f]{7,40}\b/gi
+export const SHA_RE = /\b[0-9a-f]{7,40}\b/gi
 const shasIn = (text: unknown): string[] =>
   typeof text === 'string' ? (text.match(SHA_RE) ?? []).map((s) => s.toLowerCase()) : []
 

@@ -1,0 +1,11 @@
+name: merge-pr-review-args-amend-after-printing
+surface: safe
+summary: A session amended its work after the code-review call was printed, so the printed head sha no longer existed and the review had to rerun.
+cause: verdict-line.ts --review-call prints the head sha at that moment; a later amend or rename changes the head, so the sha in the review call no longer matches and merge-pr.ts's reviewed-head check fails until review reruns on the final head.
+status: open
+occurrences:
+  - session: session_013zxzeQ5mMr3n1PjgqM4sUa
+    date: "2026-11-19"
+    severity: minor
+    description: "I amended Karen's post after the code-review call was printed, so the printed sha no longer existed and I had to re-run code-review on the final head, then again after a rename."
+    solution: "Finish every edit, including wording and slug, before printing the review call; a rename makes Own-read ineligible."

@@ -1,0 +1,11 @@
+name: merge-pr-own-read-refusal
+surface: safe
+summary: merge-pr.ts refused a verdict carrying an Own-read line on a PR that adds a file, and each refusal cost an extra comment.
+cause: merge-pr.ts accepts an Own-read verdict only when the PR adds no file; a session that posted one on a larger or renamed change was refused and had to repost a verdict after a full review.
+status: open
+occurrences:
+  - session: session_013zxzeQAV89N7K2uJN1FbsR
+    date: "2026-11-20"
+    severity: minor
+    description: "merge-pr.ts refused four times: my first verdict comment carried an Own-read line (invalid for 26 files), and the code-review call had to carry the head sha in its args. It cost three extra comments and a re-invoked Skill."
+    solution: "Post the verdict only after the review at the final head, with no Own-read line; the printed review call includes the sha in parentheses, so pass it verbatim."
