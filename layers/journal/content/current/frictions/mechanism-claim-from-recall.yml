@@ -12,6 +12,8 @@ related:
     rule: A helper's or another session's claim was passed on unchecked.
   - entry: diagnosis-from-partial-evidence
     rule: A cause or attribution was settled from one test or a commit list.
+  - entry: cost-claim-unmeasured
+    rule: A claim about what a change costs, measured later and found far higher.
 notes: |-
   2026-11-04 reopened: fix #2626 (2026-10-28) merged after the owner accepted it on 2026-10-25.
 fixes:
@@ -148,3 +150,13 @@ occurrences:
     severity: nit
     description: "I first wrote 'get_session was not among the tools' in the run entry without checking; it was available. Caught before landing."
     solution: "Check the tool list before stating a tool is missing; the Skill could say where the cost figure comes from."
+  - session: session_013zxzeSvAjT1KEC1qBV3wKH
+    date: "2026-11-20"
+    severity: nit
+    description: "The claim checker reported Excerpt line numbers off by one without reading the Excerpt; I spent a check confirming the page spec already proved otherwise."
+    solution: "Tell claim checkers the layer test already verifies Excerpt lines, so they skip them."
+  - session: session_013zxzeRX7scgB88vnRUnnJP
+    date: "2026-11-21"
+    severity: nit
+    description: "Wrote that the gate can block a merge on every other Verification check without reading the sibling lessons; both reviewers flagged it and I removed it."
+    solution: "Check each sibling lesson for the claimed property before writing a claim about all of them."

@@ -80,3 +80,8 @@ occurrences:
     severity: minor
     description: "Three notes came out under the 300-word floor on first draft, caught only by the reviewers, costing a follow-up commit and a second two-axis review."
     solution: "Print word counts of the drafted notes in the script that appends them, and refuse under 300."
+  - session: session_013zxzeSd7Ki1925oLx6Voj4
+    date: "2026-11-22"
+    severity: minor
+    description: "First draft used Tenant names and insider wording (echo call, builder prompt) and ran about 270 words; review caught it and cost a rewrite commit."
+    solution: "Count words and plain-language check before the first save."

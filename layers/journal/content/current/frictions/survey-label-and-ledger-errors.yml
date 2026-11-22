@@ -26,3 +26,8 @@ occurrences:
     severity: minor
     description: "The survey labelled verdict-line-asserts-unchecked-review never-fixed though open issue #3395 covered it; I found it only by reading the open-issue titles myself."
     solution: "Survey brief should match each new entry's session against open issue bodies, not only titles and a keyword scan."
+  - session: session_013zxzeQLrTRb5hCDjSRuQHb
+    date: "2026-11-21"
+    severity: minor
+    description: "The design agent's pick 1 showed the survey ledger entry named the wrong Skill (audit-skills, not blog-post); the survey had flagged it unverified and the brief has no step for a mislabelled entry."
+    solution: "Survey brief: when a Friction's named home cannot be found in source, check the session's trigger before opening an entry."

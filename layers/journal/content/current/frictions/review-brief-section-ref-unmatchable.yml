@@ -28,3 +28,8 @@ occurrences:
     severity: nit
     description: "Retro (6 reviewers): the review brief points to section 3 of code-review SKILL.md, found only by grep, so reviewers read spawn instructions they were told to skip."
     solution: "Move the smell baseline to its own short file, or inline it in reviewPrompt(), so one home serves code-review and the workflow."
+  - session: session_013zxzeT3ZUhBeG84jQUD1Hw
+    date: "2026-11-21"
+    severity: nit
+    description: "Four reviewers report the brief names the code-review Skill's section 3 with no end line, and its smell baseline is irrelevant to wording-only diffs; extra sed calls resulted."
+    solution: "Name the line range in reviewPrompt() and give a short prose checklist for wording-only diffs."

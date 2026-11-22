@@ -87,3 +87,13 @@ occurrences:
     severity: moderate
     description: "My first rewrite of glassbox-curate held real contradictions (rule 5 vs rule 6, Instruction mode without a branch step, unmerged PRs at a stop) that took five review passes to clear."
     solution: "Run one blind dry run of a rewritten Skill on real state before the first code-review; it found in one pass what reviews found over several."
+  - session: session_013zxzeTKSiBSmkCLfn4BYL6
+    date: "2026-11-20"
+    severity: nit
+    description: "Retro (Standards reviewer): the one-home-per-fact grep for stale statements is not in the review prompt, so a defect about stale ADR text was first filed hedged and cost a triage line."
+    solution: "Tell Standards reviewers in reviewPrompt() to run the repo-wide grep before filing a stale-statement finding."
+  - session: session_013zxzePVqgGH7hbNFvSCqQR
+    date: "2026-11-21"
+    severity: minor
+    description: "Retro: the #3543 builder missed a second statement of the changed fact (body-template.md) and a second caller of summaryOf; both cost a fix round or a failed typecheck."
+    solution: "rules() in clear-backlog-build.js: before the first commit, grep the touched Skill folder for other statements of each changed fact and callers of each touched function (CLAUDE.md One home per fact)."

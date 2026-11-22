@@ -71,3 +71,18 @@ occurrences:
     severity: minor
     description: "Retro (reviews): round 1 caught something that mattered on three of seven branches (curate contradiction, harvest untested case, Skill pages vacuous e2e); the three round-2 pairs and four small branches' reviews re-found only small things."
     solution: "Start a round 2 only when round 1 had a defect or spec-mismatch, not on fix size alone, and keep one reviewer for diffs under about 100 lines."
+  - session: session_013zxzePp6Xf4HuGyQNDdBpB
+    date: "2026-11-20"
+    severity: nit
+    description: "A reviewer note on jargon (builder, orchestrator) was left unfixed to keep the reviewed sha valid for merge-pr."
+    solution: "Fix prose before the review round, not after."
+  - session: session_013zxzeQLrTRb5hCDjSRuQHb
+    date: "2026-11-21"
+    severity: minor
+    description: "The ledger PR, 61 machine-written occurrences, failed the simple-change test, so merge-pr refused my own-read verdict and I ran a full two-agent code-review that found only judgement calls."
+    solution: "Skill step 5.4 says review the ledger PR by the simple-change test; say what a data-only ledger PR needs instead (its content spec and gate)."
+  - session: session_013zxzePVqgGH7hbNFvSCqQR
+    date: "2026-11-21"
+    severity: minor
+    description: "Retro (14 of 14 agents replied): Standards and Spec raised the same nit on #3541, #3552 and #3543; on #3541 and #3551 (docs/content-only) neither axis found anything that mattered."
+    solution: "In clear-backlog-build.js, send a docs- or content-only branch under ~20 lines to one `Both` reviewer, counting deletions lightly (the #3551 12-line deletion exceeds the Both limit at :115); keep the pair for code (Spec alone caught #3552's unanchored locator)."

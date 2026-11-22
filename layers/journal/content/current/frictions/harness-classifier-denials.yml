@@ -52,3 +52,8 @@ occurrences:
     severity: minor
     description: "After the first PR merged, restarting the branch under the same name made git-conventions' suggested force-with-lease push necessary, and the auto-mode classifier denied it; the remote branch was already deleted so a plain push worked."
     solution: "Document that a merged PR's deleted remote branch needs only a plain push, in git-conventions or the blog-post Skill's step 12."
+  - session: session_013zxzeSSEyKMAcAZESc5L4b
+    date: "2026-11-20"
+    severity: nit
+    description: "Cancelling the safety-net check-in after the merge was denied by the auto-mode classifier, so it fires once on a merged PR."
+    solution: "Allow delete_trigger for a session's own send_later check-ins, or have the check-in stop itself when its PR is merged."

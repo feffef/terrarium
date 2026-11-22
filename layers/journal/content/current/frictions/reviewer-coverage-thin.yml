@@ -26,3 +26,8 @@ occurrences:
     severity: minor
     description: "Reviewers B and C read only part of their focus lists (B six files, C mostly rules and ADRs) and A mostly grepped, so this run's coverage is thin."
     solution: "Split each lens's focus list across two agents, or cap each agent's list to what it can read in full."
+  - session: session_013zxzePwfhRzFTnSPtXLumX
+    date: "2026-11-21"
+    severity: minor
+    description: "Reviewers B and C each read only a handful of files before reporting, leaving all Skill bodies and most ADRs unread; both reports called themselves shallow."
+    solution: "Skill brief could name a minimum file count or split lenses by file area across more agents."

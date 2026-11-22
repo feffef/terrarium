@@ -168,3 +168,8 @@ occurrences:
     severity: nit
     description: "Rewrote the #3340 body keeping its old session header; the ADR-0017 guard blocked the call and I resent it."
     solution: "When rewriting a body wholesale, replace the header first; the guard worked as designed."
+  - session: session_013zxzeQLrTRb5hCDjSRuQHb
+    date: "2026-11-21"
+    severity: nit
+    description: "Typed a session id from memory in the regression issue body; the provenance guard blocked it and I retried with the real id."
+    solution: "Copy the id from the system prompt's trailer template before writing any body."

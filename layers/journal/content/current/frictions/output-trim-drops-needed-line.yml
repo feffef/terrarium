@@ -143,3 +143,8 @@ occurrences:
     severity: minor
     description: "Piped the first batch of harvest evidence output through head, which step 3 forbids, and had to rerun a call after a 120 s timeout."
     solution: "Make the evidence helper fast and compact so no one is tempted to trim it."
+  - session: session_013zxzePVqgGH7hbNFvSCqQR
+    date: "2026-11-21"
+    severity: nit
+    description: "Filtered log-session.ts output with head/sed on several re-authors, against log-session's never-filter instruction; nothing was hidden this time."
+    solution: "Run log-session.ts --author unfiltered."

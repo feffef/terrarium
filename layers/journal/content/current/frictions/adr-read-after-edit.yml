@@ -257,3 +257,8 @@ occurrences:
     severity: minor
     description: "Edited rule-use-ask.ts, guards.md and its test before reading the ADRs the post-edit hooks named (0004, 0027, 0029, 0003); the edits stood."
     solution: "Read the governing ADR before the first edit to a hook, not after the hint."
+  - session: session_013zxzeTGi1AXFf7KEwZhLhH
+    date: "2026-11-20"
+    severity: nit
+    description: "Did not read docs/adr/0027-prune-trials.md in full though the rule says to read it to review work it governs; relied on the Skill and rule summary."
+    solution: "Read the ADR once at the start of a prune-trial run."

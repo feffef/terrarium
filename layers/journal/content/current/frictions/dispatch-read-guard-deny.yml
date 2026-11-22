@@ -378,3 +378,8 @@ occurrences:
     severity: minor
     description: "Sent 16 Agent calls without reading dispatch-subagents first, though CLAUDE.md names that read; the dispatch-read guard denied them all and I resent the briefs after reading."
     solution: "Read the Skill before the first brief; step 2 of audit-skills could name it."
+  - session: session_013zxzeSd7Ki1925oLx6Voj4
+    date: "2026-11-22"
+    severity: nit
+    description: "Dispatched the fact-check subagent before reading dispatch-subagents; the guard blocked the call and I had to retry after reading it."
+    solution: "Read the Skill before writing the first brief."

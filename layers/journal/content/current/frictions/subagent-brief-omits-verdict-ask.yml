@@ -47,3 +47,8 @@ occurrences:
     severity: nit
     description: "Subagent briefs did not name a scratchpad subfolder per CLAUDE.md; the three agents wrote no files, so no collision occurred."
     solution: "Put the scratchpad-subfolder line in the blog-post step briefs, or confirm it is only needed for agents that write files."
+  - session: session_013zxzePauHRypSebfV6q562
+    date: "2026-11-21"
+    severity: nit
+    description: "Blind-read subagent brief omitted the CLAUDE.md ask to write files in a named scratchpad subfolder; the agent wrote none, so no harm."
+    solution: "Keep the CLAUDE.md subagent-brief asks as a pasted checklist in the blog-post step 6 brief."

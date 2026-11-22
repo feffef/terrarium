@@ -160,3 +160,8 @@ occurrences:
     severity: minor
     description: "Wrote the blog-post note's claim that its role omits the Take from a subagent's report without checking the file; the Spec reviewer caught it."
     solution: "Check each claim a note takes from a subagent report against its source line before writing it."
+  - session: session_013zxzeSjAhKC67o9cGa94Tm
+    date: "2026-11-22"
+    severity: minor
+    description: "Put counts, ids and attributions from 15 subagent reports into the notes after checking only a few (prune-trial entry status, issue states); the rest carry an unverified tag."
+    solution: "Have the brief ask each agent to list its three claims most worth re-checking, so the parent verifies those."

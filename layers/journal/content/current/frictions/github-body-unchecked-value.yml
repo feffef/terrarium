@@ -19,3 +19,8 @@ occurrences:
     severity: nit
     description: "I wrote an unverified session reference into regression issue #3401, then had to rewrite the body after reading the ledger."
     solution: "Pull occurrence sessions from the entry file before drafting the issue."
+  - session: session_013zxzePauHRypSebfV6q562
+    date: "2026-11-21"
+    severity: nit
+    description: "In the first draft I pinned the Blog glossary link to a SHA that came from another file's git log, not the glossary's; caught before shipping."
+    solution: "Run git log -1 --format=%H on the exact cited path each time, as the Skill says."

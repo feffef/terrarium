@@ -94,3 +94,8 @@ occurrences:
     severity: nit
     description: "Land says to read every guide page the Spec reviewer names as missing from pagesRead; I skipped the nine linked lessons because the diff changes only diagram labels."
     solution: "Say in glassbox-curate that a diagram-only change needs only the page's own stops read."
+  - session: session_013zxzeQyUcqMctvqKtP4sHL
+    date: "2026-11-20"
+    severity: nit
+    description: "The Skill says to read every outside page a change would overlap in full; I read only the smoke-test lines of Testing and File routing."
+    solution: "State whether a one-clause cut needs the sibling pages read whole, or give a cheaper check."

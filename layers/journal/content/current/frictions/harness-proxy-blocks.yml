@@ -76,3 +76,8 @@ occurrences:
     severity: nit
     description: "Tried three ways to delete the stale remote branch (git twice, then the REST API); the proxy refused all of them, costing three calls before I reported it blocked."
     solution: "Say in environment-caveats.md that this proxy permits no branch deletion, so a session asks the owner at once."
+  - session: session_013zxzeP8WnVqEqkerjzNSdX
+    date: "2026-11-21"
+    severity: minor
+    description: "gh api could not read the nuxt/content release notes (repo outside the session's GitHub scope), so the changelog check relied on the PR's commit list."
+    solution: "Let the sweep fetch upstream release notes through a scope-exempt read, or have the PR body carry them."

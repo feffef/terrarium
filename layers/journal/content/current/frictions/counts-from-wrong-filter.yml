@@ -62,3 +62,8 @@ occurrences:
     severity: minor
     description: "Told the owner the redesign roughly halved token cost by comparing notice tokens that exclude resumed turns with a baseline that included them; I caught it next turn and corrected it."
     solution: "Before stating a before-and-after cost figure, name each side's counting basis; a one-line note in the run report template would force that."
+  - session: session_013zxzePzEySsawKSfNrCBtk
+    date: "2026-11-20"
+    severity: minor
+    description: "The first #3340 review counted the unrated gap for main only; the subagent gap (30%) surfaced later, so I posted a correction comment."
+    solution: "Compute unrated loads for both agent groups before posting a review that rests on shares."

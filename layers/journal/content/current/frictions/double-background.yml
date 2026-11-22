@@ -157,3 +157,8 @@ occurrences:
     severity: nit
     description: "A chained sleep and a command mixing run_in_background with a text-level ampersand were blocked by guards, costing two retries."
     solution: "State in the audit-skills Skill to run gates with run_in_background alone and wait for the notification."
+  - session: session_013zxzeT3ZUhBeG84jQUD1Hw
+    date: "2026-11-21"
+    severity: nit
+    description: "A Bash call of mine stacked run_in_background with a text-level ampersand and was blocked by the double-background guard before anything ran."
+    solution: "Use run_in_background alone with a plain foreground command, as the guard says."

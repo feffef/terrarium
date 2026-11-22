@@ -40,3 +40,13 @@ occurrences:
     severity: minor
     description: "Started the first code-review with hand-written args instead of the call verdict-line.ts --review-call prints; re-ran it on the final head."
     solution: "Print the review call before the first review, as pr-workflow step 3 says."
+  - session: session_013zxzePp9GLW2F1VvQUhWEy
+    date: "2026-11-21"
+    severity: minor
+    description: "Made the code-review call with only `origin/main` as args; merge-pr.ts found no sha in the transcript and refused, costing a second review round and a superseded verdict comment."
+    solution: "Paste the whole printed review-call args, sha included; pr-workflow.md step 3 could say the parenthetical is part of the args."
+  - session: session_013zxzePauHRypSebfV6q562
+    date: "2026-11-21"
+    severity: nit
+    description: "merge-pr refused: I called code-review with only origin/main, not the full printed args naming the head sha, so the transcript showed no reviewed sha. One extra Skill call and retry."
+    solution: "Say in pr-workflow step 3 to paste the printed args whole, sha included."

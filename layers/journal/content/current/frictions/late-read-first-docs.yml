@@ -687,3 +687,33 @@ occurrences:
     severity: nit
     description: "Ran git status, a fetch and gh api before reading git-conventions.md and github-integration.md; hooks named them afterwards."
     solution: "List both read-first docs in the audit-skills SKILL.md opening so they load before step 1 (same gap as 9 earlier runs)."
+  - session: session_013zxzeQLrTRb5hCDjSRuQHb
+    date: "2026-11-21"
+    severity: nit
+    description: "Ran git commands, then GitHub calls and filed an issue, before reading git-conventions.md, github-integration.md and triage-labels.md; hooks named each doc afterwards."
+    solution: "Read the three docs at run start; the Skill could list them as reads for this run."
+  - session: session_013zxzePVqgGH7hbNFvSCqQR
+    date: "2026-11-21"
+    severity: nit
+    description: "Ran git fetch origin main before reading docs/agents/git-conventions.md, against CLAUDE.md's 'Before your first git command' trigger; a hook flagged it."
+    solution: "Read git-conventions.md at session start in clear-backlog runs, since §1 needs git history; the hook reminder worked."
+  - session: session_013zxzeSARDGdXM7Hqe83quy
+    date: "2026-11-21"
+    severity: nit
+    description: "Ran git log and git show to draw conclusions before reading docs/agents/git-conventions.md, which a hook flagged afterwards."
+    solution: "Read the doc first, as CLAUDE.md says, or exempt read-only history lookups in the hook."
+  - session: session_013zxzeT3ZUhBeG84jQUD1Hw
+    date: "2026-11-21"
+    severity: minor
+    description: "Hooks demanded late reads: git-conventions.md only after a builder's first git command, ADR notices after every edit (harvest), and the tenant-glossary guard blocked a builder's first edit per layer."
+    solution: "Have builder briefs name git-conventions.md and the Tenant GLOSSARY.md as first reads."
+  - session: session_013zxzeRX7scgB88vnRUnnJP
+    date: "2026-11-21"
+    severity: nit
+    description: "Ran git log on a lesson's history before reading git-conventions.md, as CLAUDE.md requires before the first non-read-only git command; a hook reminded me afterwards."
+    solution: "Use only read-only git listings before the doc is read, or read the doc first in a session that touches git."
+  - session: session_013zxzeSd7Ki1925oLx6Voj4
+    date: "2026-11-22"
+    severity: nit
+    description: "Ran git log and list-recent-prs (a fetch) before reading git-conventions.md; the hook named it afterwards. The fetch was harmless."
+    solution: "Read the doc at start when a Skill's steps call git scripts."

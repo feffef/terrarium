@@ -93,3 +93,8 @@ occurrences:
     severity: nit
     description: "A search/code gh api call returned about 20 KB of repository JSON for a one-line question, flooding context."
     solution: "Pipe gh api search results through --jq to a few fields; the Skill's brief could say so."
+  - session: session_013zxzeSARDGdXM7Hqe83quy
+    date: "2026-11-21"
+    severity: moderate
+    description: "harvest evidence printed 488 lines of mostly unrelated hits (glossary lines, old closed issues) so I verified by hand instead."
+    solution: "Require two keyword matches per hit and skip glossary files in the rulings block."

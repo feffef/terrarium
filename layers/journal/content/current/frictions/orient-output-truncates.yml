@@ -6,6 +6,8 @@ status: open
 related:
   - entry: survey-output-overflow
     rule: The overflow came from a survey read or a data-file dump.
+  - entry: glassbox-curate-orientation-read-cost
+    rule: The opening reads of a glassbox-curate run (guide index, Subject pages) cost 90-120 KB before a focus is chosen.
 fixes:
   - pr: 2929
     date: "2026-11-07"
