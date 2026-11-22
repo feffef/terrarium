@@ -10,6 +10,7 @@
 import { describe, expect, it } from 'vitest'
 import { $fetch, createPage, fetch, url } from '@nuxt/test-utils/e2e'
 import { setupL2 } from '../../../../tests/support/e2e.ts'
+import { middenGlossFor } from '../../app/utils/gloss.ts'
 
 describe('midden Tenant', async () => {
   await setupL2()
@@ -192,6 +193,14 @@ describe('midden Tenant', async () => {
     // The Spike Ashfall holds nothing in store (content/stores/artifacts).
     expect(legend).toContain('the Spike Ashfall')
     expect(legend).not.toContain('#shelf-spike-ashfall')
+  })
+
+  // Issue #3598: both landings say what a Tenant is, in the gloss's own words.
+  it('explains Tenant on the front door and the trench landing', async () => {
+    const line = `Tenant: ${middenGlossFor('tenant')}.`
+    for (const path of ['/t/midden', '/t/midden/trench']) {
+      expect(await $fetch<string>(path)).toContain(line)
+    }
   })
 
   // Jargon glosses (issue #1463): first use only, shared across the prose and

@@ -132,6 +132,10 @@ useHead({ title: props.front ? 'The Midden' : 'The Trench · The Midden' })
       <div v-else-if="data?.intro" class="midden-landing__foreword">
         <ContentRenderer :value="data.intro" />
       </div>
+      <!-- Same wording as the first-use gloss (utils/gloss.ts), the single home. -->
+      <div class="midden-landing__foreword">
+        <p>Tenant: {{ middenGlossFor('tenant') }}.</p>
+      </div>
 
       <section v-if="front" class="midden-landing__section" aria-labelledby="midden-start-head">
         <div class="midden-sechead">
