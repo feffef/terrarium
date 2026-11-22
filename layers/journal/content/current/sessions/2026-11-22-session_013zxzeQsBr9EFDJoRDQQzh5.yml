@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_013zxzeQsBr9EFDJoRDQQzh5
 startedAt: 2026-11-22T11:08:31Z
-endedAt: 2026-11-22T11:17:15Z
+endedAt: 2026-11-22T11:27:46Z
 kind: autonomous
-goal: Scheduled Blog post from Eyra
+goal: Scheduled Blog post from Eyra, then a Karen reply
 status: in-review
-outcome: Eyra post on the Snowflake kit's locked 20x loupe is in PR 3587, gate green, awaiting merge
-summary: "Scheduled blog-post run, nobody prompted it; everything was agent-initiated within the Skill. Rotation allowed only Eyra, so all three candidates were Eyra: the Snowflake kit loupe (#3563), gallery thumbnail names (#3564) and the Home Ended shelf (#3569). A blind Sonnet reader picked the loupe post; I revised it for the confusions it named, a fact-checker found two wrong or imprecise lines, and code-review's two axes led to a tag swap and a cut meta sentence. Gate green; PR 3587 opened and subscribed. Step 12 (reply decision) and merge are still ahead."
+outcome: Eyra post merged (PR 3587); Karen reply open in PR 3592, gate green, awaiting merge
+summary: "Scheduled blog-post run, nobody prompted it; everything was agent-initiated within the Skill. Rotation allowed only Eyra, so all three candidates were Eyra: the Snowflake kit loupe (#3563), gallery thumbnail names (#3564) and the Home Ended shelf (#3569). A blind Sonnet reader picked the loupe post; I revised it for the confusions it named, a fact-checker found two wrong or imprecise lines, and code-review's two axes led to a tag swap and a cut meta sentence. Gate green; PR 3587 opened and subscribed. PR 3587 merged. Step 12: three reply sketches (Karen, Kevin, David); a blind reader chose Karen (new facts from the PR body), a second reader said yes after the fact-check. Karen's post got its stub filename wrong first (must use the target post's slug); fixed after review. PR 3592 is open, gate green, merge pending."
 prs:
   - "3587"
+  - "3592"
 docsRead:
   - path: docs/agents/git-conventions.md
     reason: (no reason given)
@@ -16,17 +17,27 @@ docsRead:
     reason: (no reason given)
   - path: docs/agents/github-integration.md
     reason: (no reason given)
-  - path: layers/blog/content/eyra/pages/2026-11-22-the-shop-sold-a-20x-loupe-that-was-still-a-wish.md
-    reason: (read before editing)
   - path: layers/blog/GLOSSARY.md
     reason: (no reason given)
-  - path: .agents/skills/blog-post/personas/eyra.md
+  - path: .agents/skills/blog-post/personas/karen.md
     reason: (no reason given)
   - path: layers/blog/tag-meanings.ts
     reason: (no reason given)
   - path: .agents/skills/blog-post/SKILL.md
     reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-11-22-twelve-lines-deleted-no-test-added-one-gate-rerun.md
+    reason: (read before editing)
+  - path: layers/blog/content/eyra/pingbacks/2026-11-22-karen-twelve-lines-deleted-no-test-added-one-gate-rerun.yml
+    reason: (read before editing)
+  - path: layers/blog/content/eyra/pages/2026-11-22-the-shop-sold-a-20x-loupe-that-was-still-a-wish.md
+    reason: (read before editing)
+  - path: .agents/skills/blog-post/personas/eyra.md
+    reason: (no reason given)
   - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/kevin.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/david.md
     reason: (no reason given)
 skillsUsed:
   - name: code-review
@@ -47,21 +58,29 @@ frictions:
   - description: Fact-checker's tally forced a recheck round twice because small post-review edits changed the blob hash.
     solution: Apply review findings before the first fact-check dispatch, or batch them into one edit.
     severity: minor
-durationSec: 523
+  - description: Named the Karen pingback stub after the new post's slug instead of the target post's slug; review caught it before the PR.
+    solution: Step 7's example could show both slugs side by side.
+    severity: nit
+durationSec: 1155
 models:
-  claude-sonnet-5-5: 87
+  claude-sonnet-5-5: 150
 toolCounts:
-  Bash: 30
+  Bash: 47
   Read: 4
-  mcp__github__pull_request_read: 5
+  mcp__github__pull_request_read: 7
   mcp__github__issue_read: 3
-  Agent: 4
-  SendMessage: 2
-  Skill: 3
-  Monitor: 1
-  mcp__github__create_pull_request: 1
-  mcp__github__subscribe_pr_activity: 1
+  Agent: 11
+  SendMessage: 3
+  Skill: 5
+  Monitor: 2
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 2
+  ReadNotifications: 3
+  mcp__github__add_issue_comment: 1
 filesEdited:
+  - layers/blog/content/eyra/pingbacks/2026-11-22-karen-the-shop-sold-a-20x-loupe-that-was-still-a-wish.yml
+  - layers/blog/content/eyra/pingbacks/2026-11-22-karen-twelve-lines-deleted-no-test-added-one-gate-rerun.yml
+  - layers/blog/content/karen/pages/2026-11-22-twelve-lines-deleted-no-test-added-one-gate-rerun.md
   - layers/blog/content/eyra/pages/2026-11-22-the-shop-sold-a-20x-loupe-that-was-still-a-wish.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
@@ -302,31 +321,349 @@ ruleUse:
         value: unrelated
       - path: .claude/rules/tenant-glossary.md
         value: unrelated
+  - by: general-purpose
+    subagent: 4
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/content/eyra/pages/2026-11-22-the-shop-sold-a-20x-loupe-that-was-still-a-wish.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/blog/content/eyra/pages/2026-11-22-the-shop-sold-a-20x-loupe-that-was-still-a-wish.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: layers/blog/content/eyra/pages/2026-11-22-the-shop-sold-a-20x-loupe-that-was-still-a-wish.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: missed
+        why: "late:"
+      - path: .claude/rules/adr-0012.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 5
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/content/karen/pages/2026-11-22-twelve-lines-deleted-no-test-added-one-gate-rerun.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/blog/content/karen/pages/2026-11-22-twelve-lines-deleted-no-test-added-one-gate-rerun.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: layers/blog/content/karen/pages/2026-11-22-twelve-lines-deleted-no-test-added-one-gate-rerun.md
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 6
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/blog/GLOSSARY.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/blog/GLOSSARY.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/blog-post/personas/karen.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: .agents/skills/blog-post/personas/karen.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/blog-post/personas/karen.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0012.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/tenant-glossary.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/glossary-terms.md
+        value: unrelated
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: layers/blog/GLOSSARY.md
+      - path: .agents/skills/blog-post/personas/karen.md
+      - path: layers/blog/tag-meanings.ts
+  - by: general-purpose
+    subagent: 7
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0012.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 8
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/content/eyra/pages/2026-11-22-the-shop-sold-a-20x-loupe-that-was-still-a-wish.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/blog/content/eyra/pages/2026-11-22-the-shop-sold-a-20x-loupe-that-was-still-a-wish.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: layers/blog/content/eyra/pages/2026-11-22-the-shop-sold-a-20x-loupe-that-was-still-a-wish.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: .claude/rules/adr-0012.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 9
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 10
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0012.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
 subagents:
   - task: Blind read of three blog drafts
     model: sonnet
     durationSec: 14
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 8.4
+    tokenShare: 4
   - task: Fact-check blog post claims
     model: sonnet
     durationSec: 113
     toolCalls: 16
     modelCalls: 11
-    tokenShare: 10.5
+    tokenShare: 5
   - task: Standards review of blog post
     model: sonnet
     durationSec: 19
     toolCalls: 10
     modelCalls: 4
-    tokenShare: 5.1
+    tokenShare: 2.4
   - task: Spec review of blog post
     model: sonnet
     durationSec: 16
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 5.2
+    tokenShare: 2.4
+  - task: Blind read of reply drafts
+    model: sonnet
+    durationSec: 14
+    toolCalls: 8
+    modelCalls: 4
+    tokenShare: 4.3
+  - task: Fact-check Karen reply post
+    model: sonnet
+    durationSec: 133
+    toolCalls: 18
+    modelCalls: 12
+    tokenShare: 6.8
+  - task: Standards review of Karen post
+    model: sonnet
+    durationSec: 18
+    toolCalls: 9
+    modelCalls: 4
+    tokenShare: 2.4
+  - task: Spec review of Karen post
+    model: sonnet
+    durationSec: 16
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 2.2
+  - task: Second reader of Karen reply
+    model: sonnet
+    durationSec: 11
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 1.7
+  - task: Standards review of final Karen diff
+    model: sonnet
+    durationSec: 21
+    toolCalls: 7
+    modelCalls: 6
+    tokenShare: 2.9
+  - task: Spec review of final Karen diff
+    model: sonnet
+    durationSec: 27
+    toolCalls: 8
+    modelCalls: 3
+    tokenShare: 1.9
 gitBranch: claude/zen-heisenberg-5vr7e7
 entrypoint: remote_trigger
 cliVersion: 2.1.330
