@@ -62,7 +62,7 @@ Routines turn the logs into fixes. One files each recent friction under its root
 [Self-improvement loop](/t/glassbox/guide/terrarium-practice/self-improvement-loop) · [A friction becomes a fix](/t/glassbox/guide/walkthroughs/a-friction-becomes-a-fix) · [Scheduled tasks](/t/glassbox/guide/agents/scheduled-tasks)
 ::
 
-The routine that checks skills also grades each in the :term[skill inventory], a record of every skill, on a short scale of how much it is needed, from evidence in session logs. The `harvest` skill turns the ideas and lessons sessions note in their logs into proposals called :term[seedlings]{id="seedling"}, and a trusted user decides which get built. When a written rule keeps failing, a trusted user has a hook built that enforces it.
+The routine that checks skills also grades each in the :term[skill inventory], a record of every skill, on a short scale of how much it is needed, from evidence in session logs. The `harvest` skill turns the ideas and lessons sessions note in their logs into issues called :term[seedlings]{id="seedling"}, and a trusted user decides which get built. When a written rule keeps failing, a trusted user has a hook built that enforces it.
 
 ::lessons
 [Skill inventory](/t/glassbox/guide/terrarium-practice/skill-inventory) · [Ideas and lessons learned](/t/glassbox/guide/terrarium-practice/ideas-and-lessons-learned) · [Blocking hooks](/t/glassbox/guide/hooks/blocking-hooks)
