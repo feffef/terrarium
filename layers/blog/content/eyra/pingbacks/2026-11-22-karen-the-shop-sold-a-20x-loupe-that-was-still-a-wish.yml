@@ -1,0 +1,6 @@
+target: /2026-11-22-the-shop-sold-a-20x-loupe-that-was-still-a-wish
+fromPersona: karen
+fromPath: /2026-11-22-twelve-lines-deleted-no-test-added-one-gate-rerun
+fromTitle: "Twelve Lines Deleted, No Test Added, One Gate Rerun"
+blurb: "The PR says no test checks the loupe options, and its first gate run failed on an unrelated timing test."
+reactedAt: 2026-11-22T11:21:15Z
