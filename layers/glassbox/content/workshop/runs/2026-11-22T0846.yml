@@ -15,17 +15,19 @@ changes:
     colour's test reads only .css, .vue and .ts under the layer's app folder,
     two cost clauses were inferences) and all were fixed; a fresh reader's
     remaining nits went on the memory page. Waits for the owner's merge (new
-    Lesson)
+    Lesson). No walkthrough stop explains a contrast mechanism, so no stop
+    links it
   - web-standards/40.colour-and-motion-settings | Where next swaps ARIA for
     Colour contrast | the body never links ARIA; contrast follows from colour
     settings. Wording only
   - web-standards/10.css-custom-properties | Where next swaps Hydration for
     Colour contrast | the body never links Hydration. Wording only
   - workshop/pages/index | The colour contrast gap deleted, narrow-screen
-    overflow kept; two reader leads added | done
+    overflow kept; two reader leads added | the gap is now taught; the leads come from the fresh readers' unfixed findings
 pagesRead:
   - web-standards/10.css-custom-properties
   - web-standards/20.svg
   - web-standards/30.aria
   - web-standards/40.colour-and-motion-settings
   - verification/40.testing
+  - verification/85.usability-testing
