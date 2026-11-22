@@ -1,6 +1,6 @@
 // The smoke sweep visits /t/glassbox/guide; the Tenant root is ours (ADR-0016).
 import { describe, expect, it } from 'vitest'
-import { $fetch } from '@nuxt/test-utils/e2e'
+import { $fetch, fetch } from '@nuxt/test-utils/e2e'
 import { expectRedirect, setupL2, withRendered } from '../../../../tests/support/e2e.ts'
 
 describe('glassbox Tenant', async () => {
@@ -16,6 +16,13 @@ describe('glassbox Tenant', async () => {
     expect(html).toContain('href="/t/glassbox/guide/nuxt-vue/layers"')
     expect(html).toMatch(/\d+ Lessons/)
     expect(html).toContain('How Nuxt merges several folders into one app')
+  })
+
+  it('titles the Walkthroughs list page, and an unknown path Not found', async () => {
+    expect(await $fetch<string>('/t/glassbox/guide/walkthroughs')).toMatch(/<title>Walkthroughs · glassbox<\/title>/)
+    const missing = await fetch('/t/glassbox/guide/nope')
+    expect(missing.status).toBe(404)
+    expect(await missing.text()).toMatch(/<title>Not found · glassbox<\/title>/)
   })
 
   it("points a Lesson's Subject chip at the Subject page", async () => {
