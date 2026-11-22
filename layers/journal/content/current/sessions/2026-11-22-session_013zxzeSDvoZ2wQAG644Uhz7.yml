@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSDvoZ2wQAG644Uhz7
 startedAt: 2026-11-22T08:46:17Z
-endedAt: 2026-11-22T09:04:52Z
+endedAt: 2026-11-22T09:36:42Z
 kind: autonomous
 goal: Weekly Glass Box curate run, adding a Colour contrast lesson
-status: in-review
-outcome: Colour contrast lesson built, reviewed and gated; PR open and waiting for the owner's merge
-summary: "A scheduled glassbox-curate Loop run with no human prompt; every choice was agent-initiated within the Skill. Orientation showed no open Glass Box PRs, so the first pickable memory-page item was the colour contrast gap (the owner's direction items were an owner question or too broad). The run wrote a new web-standards Lesson from the Tinkerfund and Atlas contrast specs and WCAG's own sources, swapped one Where next row on two sibling pages, and trimmed the memory page. An opus writer drafted it; a claim checker found three overstated lines and fixes landed; fresh readers' nits that could not be fixed went on the memory page; code-review findings (a pagesRead gap, a term, a plain-words lead) were fixed and the follow-up reviewed. gate:scoped passed. PR 3586 is open and waits for the owner because a new Lesson is owner-merge (rule 6). The loop did not start a second run: this session may push only its one assigned branch, which now carries that PR, and the next memory-page items are a Skill-detail gap that does not suit a textbook page and small wording leads that would need a branch and PR of their own."
+status: completed
+outcome: Colour contrast lesson built, reviewed and gated; the owner merged PR 3586
+summary: "A scheduled glassbox-curate Loop run with no human prompt; every choice was agent-initiated within the Skill. Orientation showed no open Glass Box PRs, so the first pickable memory-page item was the colour contrast gap (the owner's direction items were an owner question or too broad). The run wrote a new web-standards Lesson from the Tinkerfund and Atlas contrast specs and WCAG's own sources, swapped one Where next row on two sibling pages, and trimmed the memory page. An opus writer drafted it; a claim checker found three overstated lines and fixes landed; fresh readers' nits that could not be fixed went on the memory page; code-review findings (a pagesRead gap, a term, a plain-words lead) were fixed and the follow-up reviewed. gate:scoped passed. PR 3586 waited for the owner (new Lesson, rule 6) and was then merged. The loop did not start a second run: this session may push only its one assigned branch, which now carries that PR, and the next memory-page items are a Skill-detail gap that does not suit a textbook page and small wording leads that would need a branch and PR of their own."
 prs:
   - "3586"
 docsRead:
@@ -65,19 +65,21 @@ frictions:
   - description: The orientation's guide index only holds lead-ins, so I had to read two full guide pages, plus fetch WCAG sources by raw GitHub copies, before briefing the writer.
     solution: None needed; the cost was the intended reading.
     severity: nit
-durationSec: 1115
+durationSec: 3025
 models:
-  claude-sonnet-5-5: 126
+  claude-sonnet-5-5: 138
 toolCounts:
   Read: 16
   Skill: 4
-  Bash: 41
+  Bash: 42
   Write: 1
   Agent: 8
   Edit: 2
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   PushNotification: 1
+  ReadNotifications: 4
+  mcp__github__pull_request_read: 1
 filesEdited:
   - layers/glassbox/content/workshop/runs/2026-11-22T0846.yml
   - layers/glassbox/content/guide/pages/web-standards/50.colour-contrast.md
@@ -444,49 +446,49 @@ subagents:
     durationSec: 22
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 2.1
+    tokenShare: 1.9
   - task: "Fresh reader: Colour and motion settings"
     model: sonnet
     durationSec: 19
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 2.1
+    tokenShare: 1.9
   - task: Write colour contrast Lesson
     model: opus
     durationSec: 357
     toolCalls: 48
     modelCalls: 39
-    tokenShare: 18.4
+    tokenShare: 16.7
   - task: Claim-check colour contrast page
     model: sonnet
     durationSec: 102
     toolCalls: 14
     modelCalls: 10
-    tokenShare: 4.9
+    tokenShare: 4.5
   - task: "Fresh reader: Colour contrast"
     model: sonnet
     durationSec: 21
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 2.1
+    tokenShare: 1.9
   - task: Standards review of Colour contrast
     model: sonnet
     durationSec: 34
     toolCalls: 10
     modelCalls: 8
-    tokenShare: 4.1
+    tokenShare: 3.8
   - task: Spec review of Colour contrast run
     model: sonnet
     durationSec: 39
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 3.6
+    tokenShare: 3.3
   - task: Review follow-up fixes diff
     model: sonnet
     durationSec: 19
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 1.9
+    tokenShare: 1.7
 gitBranch: claude/compassionate-bardeen-2cdf3f
 entrypoint: remote_trigger
 cliVersion: 2.1.330
