@@ -53,7 +53,7 @@ provide(glassboxTermsKey, computed(() => data.value?.terms ?? {}))
 
 const { menuOpen, openMenu, closeMenu } = useGlassboxMenu()
 // The workshop is a live record of one page, not a textbook edition: no Subjects to list and no
-// edition date (GLOSSARY.md, A curated textbook and Two Spaces).
+// edition date (GLOSSARY.md, A curated textbook and Three spaces).
 const live = space === 'workshop'
 
 // Read state is browser-only, so it is set after mount (GLOSSARY.md, Reading progress).
@@ -110,7 +110,7 @@ useSeoMeta({ description: () => page.value?.description })
         >≡</button>
       </header>
 
-      <GlassboxArticle v-if="page" id="gb-content" tabindex="-1" class="gb-column" :page="page" :base="base" :surround="data?.surround ?? null" :through="data?.through ?? []" :titles="data?.titles ?? {}" :descriptions="data?.descriptions ?? {}" :dated="!live" :source="source" />
+      <GlassboxArticle v-if="page" id="gb-content" tabindex="-1" class="gb-column" :page="page" :base="base" :surround="data?.surround ?? null" :through="data?.through ?? []" :titles="data?.titles ?? {}" :descriptions="data?.descriptions ?? {}" :draft="space === 'drafts'" :dated="!live" :source="source" />
 
       <GlassboxSubject v-else-if="subject" id="gb-content" tabindex="-1" class="gb-column" :name="subject.name" :lessons="subject.lessons" :base="base" />
 

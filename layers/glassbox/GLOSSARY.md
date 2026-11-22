@@ -41,9 +41,11 @@ Terrarium applies them without reading the source.
   reading order: readers use the sidebar, where
   lessons lead and walkthroughs follow the subjects, plainly listed, none
   named a starting point while they are still being worked out.
-- **Two spaces.** `guide`, at `/t/glassbox/guide`, holds the pages central to
-  Terrarium that the work focuses on; `/t/glassbox` redirects there. A guide
-  page never links to another Glass Box space. Walkthroughs sit in `walkthroughs/`. A
+- **Three spaces.** `guide`, at `/t/glassbox/guide`, holds the pages central to
+  Terrarium that the work focuses on; `/t/glassbox` redirects there. `drafts`
+  holds the rest; each may be improved and moved to the guide. A guide page
+  never links to another Glass Box space; a draft may link to the guide.
+  Walkthroughs sit in `walkthroughs/`. A
   two-digit filename prefix steers the order of lessons inside a folder,
   prerequisites first: pages link each other in loops, so the broader concept
   comes first and a page may link a later one in its body. Subject order and

@@ -32,7 +32,7 @@ Skill's argument wins. Otherwise take row
 | 2 | journal | `/t/journal/current` | `layers/journal/` | |
 | 3 | midden | `/t/midden` | `layers/midden/` | |
 | 4 | tinkerfund | `/t/tinkerfund` | `layers/tinkerfund/` | |
-| 5 | glassbox | `/t/glassbox/guide` | `layers/glassbox/` | Stay inside /t/glassbox/guide. |
+| 5 | glassbox | `/t/glassbox/guide` | `layers/glassbox/` | Stay inside /t/glassbox/guide. Fixes and the feature leave the `drafts` Space alone. |
 | 6 | homepage | `/` | `app/pages/index.vue`, `app/components/HomeShowcase.vue` | |
 
 The focus goes in the session log's summary.
