@@ -1,9 +1,11 @@
 name: audit-skills-run-cost
 surface: safe
-summary: Runs that fan out many subagents (the audit-skills per-Skill checks, a retro resuming 20 agents) spend 1.7M-1.9M tokens on short replies that mostly repeat known findings.
-cause: "A session launches or resumes many subagents whose replies are short or re-confirm known repeats: audit-skills dispatches one per Skill (16-17 per run, about 1.7M tokens; since PR #3377 each reads the last 3 days and reports a repeat in one line, but the count is unchanged, and a 2026-11-17 run still cost about 1.7M), and a retro resumed 20 agents at 75k-130k tokens each (about 1.9M) for six-line replies. Signals: '16 per-Skill checks', '17 subagent reports for a mostly-repeat result', 'about 1.9M tokens', 'resumed 20 agents', 'most reports re-confirmed known repeats'."
+summary: The audit-skills per-Skill behaviour checks spend about 1.7M tokens on short replies that mostly repeat known findings.
+cause: "audit-skills dispatches one subagent per Skill (15-17 per run, about 1.7M tokens; since PR #3377 each reads the last 3 days and reports a repeat in one line, but the count is unchanged, and a 2026-11-17 run still cost about 1.7M). Signals: '16 per-Skill checks', '17 subagent reports for a mostly-repeat result', 'most reports re-confirmed known repeats'."
 status: open
 related:
+  - entry: clear-backlog-retro-fanout-cost
+    rule: The same cost shape from a clear-backlog retro, not an audit-skills run.
   - entry: glassbox-curate-run-cost
     rule: The fan-out belongs to a glassbox-curate run.
   - entry: subagent-fanout-before-probe
@@ -30,28 +32,13 @@ occurrences:
     severity: minor
     description: "The 16 behaviour subagents plus usage lookup and two review agents cost roughly 1.7M subagent tokens, and most reports re-confirmed known repeats."
     solution: "Skip a Skill's check when its data file lists no runs and nothing changed; skip re-reading runs already audited clean."
-  - session: session_013zxzeTChey8pdC2fuTTH7i
-    date: "2026-11-16"
-    severity: minor
-    description: "The retro resumed 20 agents at 75k-130k subagent tokens each, about 1.9M tokens, for replies of about six lines."
-    solution: "Ask the retro in the last message each agent already receives, or run it as one cheap workflow call."
   - session: session_013zxzeQty154cpRRShQjRhX
     date: "2026-11-18"
     severity: minor
     description: "Sixteen near-identical behaviour subagents cost roughly 1.6M tokens; most found only repeats of known observations for Skills with clean runs."
     solution: "Have the scorecard print each Skill's last observation date so unchanged, clean Skills are skipped or batched."
-  - session: session_013zxzeNxx3w5ES8hysf6R4P
-    date: "2026-11-18"
-    severity: minor
-    description: "Retro asked all 18 builders and reviewers the same questions; each resume cost 75k to 111k subagent tokens for mostly identical answers about the same hook and hand-off wording."
-    solution: "Ask one builder and one reviewer per run, or a sample, once answers repeat; clear-backlog section 5 could say so."
   - session: session_013zxzeRsaSP4XhVGZDUk153
     date: "2026-11-19"
     severity: minor
     description: "The 15 behaviour subagents each read a 9 to 50 KB data file and logs; the run spent about 1.7M subagent tokens, the same cost earlier runs recorded."
     solution: "Skip a Skill's agent when its runs, changes and observations repeat the last check (see idea)."
-  - session: session_013zxzeT3ZUhBeG84jQUD1Hw
-    date: "2026-11-21"
-    severity: moderate
-    description: "Sent the retro to 18 of 24 agents; the notifications show about 1.64M subagent tokens for replies that mostly said the reviews re-found small things, and I skipped the later discover reviewers."
-    solution: "Retro only one builder and one reviewer per distinct review kind, or only agents that hit friction."

@@ -1,0 +1,24 @@
+name: clear-backlog-retro-fanout-cost
+surface: safe
+summary: The clear-backlog retro resumes every builder and reviewer (18-20 agents, 75k-130k tokens each) for six-line replies that mostly repeat each other.
+cause: "clear-backlog section 5 sent the retro to every builder and reviewer, and each resume re-reads its whole context, about 1.6M-1.9M tokens per run for replies on the same hooks and hand-off wording. Signals: 'resumed 20 agents', 'retro asked all 18 builders and reviewers', 'about 1.64M subagent tokens'."
+status: open
+related:
+  - entry: audit-skills-run-cost
+    rule: The fan-out belongs to an audit-skills run.
+occurrences:
+  - session: session_013zxzeTChey8pdC2fuTTH7i
+    date: "2026-11-16"
+    severity: minor
+    description: "The retro resumed 20 agents at 75k-130k subagent tokens each, about 1.9M tokens, for replies of about six lines."
+    solution: "Ask the retro in the last message each agent already receives, or run it as one cheap workflow call."
+  - session: session_013zxzeNxx3w5ES8hysf6R4P
+    date: "2026-11-18"
+    severity: minor
+    description: "Retro asked all 18 builders and reviewers the same questions; each resume cost 75k to 111k subagent tokens for mostly identical answers about the same hook and hand-off wording."
+    solution: "Ask one builder and one reviewer per run, or a sample, once answers repeat; clear-backlog section 5 could say so."
+  - session: session_013zxzeT3ZUhBeG84jQUD1Hw
+    date: "2026-11-21"
+    severity: moderate
+    description: "Sent the retro to 18 of 24 agents; the notifications show about 1.64M subagent tokens for replies that mostly said the reviews re-found small things, and I skipped the later discover reviewers."
+    solution: "Retro only one builder and one reviewer per distinct review kind, or only agents that hit friction."
