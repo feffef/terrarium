@@ -13,3 +13,5 @@ pagesRead:
   - web-standards/30.aria
   - web-standards/40.colour-and-motion-settings
   - web-standards/50.colour-contrast
+  - verification/40.testing
+  - verification/80.headless-browser-checks
