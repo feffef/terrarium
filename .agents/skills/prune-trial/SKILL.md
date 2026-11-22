@@ -84,10 +84,11 @@ attributed. `trial-territory.ts <files or words>` names the trial covering each.
 
 **"Nothing clears the bar" is a result you earn, not one you inherit.** Say it
 only after criterion 1's subagent search ran this run, and name what it
-searched in the ledger; earlier ledger entries prove nothing about today (the
-tracker and logs have moved). Any other claim in the ledger or PR (a file has no
-recorded failures, only whole-file inbound pointers) must come from a source you
-read this run, with the Read tool so the log shows it, or be left out.
+searched in the trial entry; earlier trial entries prove nothing about today
+(the tracker and logs have moved). Any other claim in the trial entry or PR (a
+file has no recorded failures, only whole-file inbound pointers) must come from
+a source you read this run, with the Read tool so the log shows it, or be left
+out.
 
 ## 3. Prune it to the goal
 
@@ -99,7 +100,9 @@ chasing. Write that, in the plainest words that stay exact, in one home. Delete
 the rest: the incident histories, the restatements, the step-by-step for
 decisions the reader is capable of making.
 
-Write the trial's ledger entry as you prune, and commit it **with** the prune.
+Write the trial entry as you prune. Set each Friction Ledger entry its `check`
+names to `on-trial` (`ledger-set.ts --status on-trial --ref "Prune Trial opened
+<date> (<territory>)"`). Commit both **with** the prune.
 Before committing, grep the repo for inbound references to anything you deleted —
 Skills, docs and code comments cite sections by name, and the Gate does not catch
 a dangling one.
@@ -121,7 +124,7 @@ reader needs.
 alongside a prune or instead of one; do this when no problem clears the bar. Use
 short sentences and plain English, avoid project jargon, keep every rule and
 decision, and cut the rest. Restructure, merge sections and reword freely. The
-file is the trial's territory and gets the same ledger entry and §4 probe as a
+file is the trial's territory and gets the same trial entry and §4 probe as a
 prune.
 
 When §4's probe fails, or a landed trial's verdict in §1 showed `major` or
@@ -148,12 +151,12 @@ An answer whose reported SHA is missing or differs from the pinned one doesn't
 count — a stale worktree may have fed it the deleted text (issue #1420); re-run
 the probe. A dispatched implementer has no `Agent` tool, so the orchestrator
 runs the probe. If no subagent tool is available at all, say so in the PR
-**and set `proven: false` on the ledger entry** — the PR body is read once, the
+**and set `proven: false` on the trial entry** — the PR body is read once, the
 entry is what the verdict reads later. Never treat the step as satisfied.
 
 ## 5. Ship and record
 
-One PR. Take the line delta for its title and the ledger entry from
+One PR. Take the line delta for its title and the trial entry from
 `git diff --numstat` against the cut's parent commit, never a hand count.
 Follow `docs/agents/pr-workflow.md`'s "Closing a scheduled run's PR"
 sequence. You may prune any instruction text, a script's comments included;
