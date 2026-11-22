@@ -95,8 +95,10 @@ the memory page's items.
    open PR touches, in this order:
    1. the owner's direction;
    2. gaps: topics no page teaches yet (*Stale or missing*);
-   3. weak spots;
-   4. everything else: open ideas, wording problems, claims to check and other
+   3. lessons that are too long (*Too long*), split as proposed, or cut or
+      trimmed where there is no logical split;
+   4. weak spots;
+   5. everything else: open ideas, wording problems, claims to check and other
       topics.
 
    An item is a bullet or numbered entry under the memory page's *Agent

@@ -93,7 +93,9 @@ that one commit, never a later fetch.
    it prints a `WARNING` for each Lesson over the soft word limit. Give each
    such Lesson to a fresh sonnet reader (`dispatch-subagents`, at most 8 pages
    each) to read it whole and propose a split: the new Lessons, each with one
-   concept and a title, and which sections move where. It adds nothing itself.
+   concept and a title, and which sections move where. A split is the
+   preferred way under the limit; where the Lesson has no logical split, it
+   proposes what to cut or trim instead. It adds nothing itself.
    Write one bullet per Lesson in the memory page's *Too long* section (page
    title, file, word count, the proposal), replacing the Lesson's earlier
    bullet and deleting the bullets of Lessons no longer warned. A split adds

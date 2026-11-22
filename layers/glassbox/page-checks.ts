@@ -288,7 +288,7 @@ function nextProblems(prose: string, lesson: boolean): string[] {
 const lengths = { lesson: { title: 28, description: 120 }, walkthrough: { title: 36, description: 140 } }
 const lessonTitleWords = 4
 // A Lesson's body, frontmatter left out (GLOSSARY.md, Lesson): over `hard` fails the tests, over `soft` asks glassbox-update for a split proposal.
-export const glassboxLessonWords = { soft: 1600, hard: 2000 }
+export const glassboxLessonWords = { soft: 1700, hard: 2000 }
 const words = (text: string) => text.split(/\s+/).filter(Boolean).length
 const bodyWords = (source: string) => words(splitFrontmatter(source).body)
 
