@@ -9,6 +9,7 @@ related:
     rule: The verdict claimed a review that never ran and merge-pr.ts accepted it; here merge-pr.ts refused and the cost was a retry.
 notes: |-
   2026-11-20 design: verdict-line --own-read pre-check dropped: the refusal already names the next command; the tweak covers one of three occurrences; pr-workflow prose is in an open trial
+  2026-11-22 ref moved from 'verdict-line-asserts-unchecked-review, fix PR #3416' (a guard refusal, not a regression of that entry) to the tracking issue #3580
 occurrences:
   - session: session_013zxzeQ5mMr3n1PjgqM4sUa
     date: "2026-11-19"
