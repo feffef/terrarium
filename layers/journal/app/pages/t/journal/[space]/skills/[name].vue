@@ -97,8 +97,8 @@ useSeoMeta({ title: `${name} · journal/${space}` })
 .rows li { display: grid; grid-template-columns: max-content 1fr; gap: 0.1rem 0.9rem; align-items: baseline; padding: 0.7rem 0; border-top: 1px solid var(--jd-line); font-size: 0.96rem; }
 .rows li:first-child { border-top: 0; }
 .row-date { font-family: var(--jd-mono); font-size: 0.82rem; color: var(--jd-accent); white-space: nowrap; }
-.rows a { color: var(--jd-ink); text-decoration: underline; text-decoration-color: var(--jd-line); text-underline-offset: 2px; }
-.rows a:hover { color: var(--jd-accent); text-decoration-color: var(--jd-accent); }
+.rows a, .back a { color: var(--jd-accent); text-decoration: underline; text-underline-offset: 2px; }
+.rows a:hover, .back a:hover { color: var(--jd-accent-bright); }
 .show-all { display: block; margin: 0.9rem 0 0; padding: 0.5rem 0.9rem; font-family: var(--jd-mono); font-size: 0.78rem; color: var(--jd-muted); background: var(--jd-surface-2); border: 1px solid var(--jd-line); border-radius: var(--jd-radius); cursor: pointer; }
 .show-all:hover { color: var(--jd-ink); border-color: var(--jd-accent); }
 .back { margin-top: 1.75rem; }
