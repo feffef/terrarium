@@ -238,3 +238,18 @@ occurrences:
     severity: nit
     description: "Did not read layers/journal/GLOSSARY.md before editing journal Inventory files; the Tenant-glossary rule loaded after the edits."
     solution: "Have audit-skills step 5 name the journal glossary as a read-first doc."
+  - session: session_013zxzeRX7scgB88vnRUnnJP
+    date: "2026-11-21"
+    severity: minor
+    description: "Edited the Verification Subject entry in layers/glassbox/GLOSSARY.md and committed before reading ADR-0021 or domain.md, which the glossary-terms rule asks for before changing a term."
+    solution: "Load the glossary-terms rule's read before the first edit to any GLOSSARY.md; the late read showed the edit was fine."
+  - session: session_013zxzeSd7Ki1925oLx6Voj4
+    date: "2026-11-22"
+    severity: nit
+    description: "Wrote Journal Digest prose without reading layers/journal/GLOSSARY.md, which the tenant-glossary rule asks for before working on a Tenant."
+    solution: "The digest Skill could name the Journal glossary in step 3."
+  - session: session_013zxzeSjAhKC67o9cGa94Tm
+    date: "2026-11-22"
+    severity: minor
+    description: "Wrote 15 Journal observations with one Node script before reading layers/journal/GLOSSARY.md; the tenant-glossary guard only fired on a later Edit."
+    solution: "Read the Journal glossary in step 5 before the first Inventory write; a note in audit-skills step 5 would do it."

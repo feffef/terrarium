@@ -94,3 +94,8 @@ occurrences:
     severity: nit
     description: "A cd into the builder's worktree persisted, so my later commands ran there and the harness flagged the changed working directory several times."
     solution: "Use git -C and absolute paths; never bare cd into a worktree."
+  - session: session_013zxzePVqgGH7hbNFvSCqQR
+    date: "2026-11-21"
+    severity: nit
+    description: "A cd into a worktree inside one Bash call moved the session's primary working directory; I had to cd back."
+    solution: "Use git -C and absolute paths for worktree commands, never cd, as dispatch-subagents §5 implies."

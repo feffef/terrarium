@@ -98,3 +98,13 @@ occurrences:
     severity: minor
     description: "Retro (9 of 12 reviewers): the SubagentStart rule-use echo ritual cost two extra Bash calls per read-only reviewer with every listed rule unrelated, and builders got the same ADR read reminder after every edit."
     solution: "Skip the rule-use ask for read-only review subagents in scripts/hooks, and send a path-scoped ADR reminder once per session, not per edit."
+  - session: session_013zxzePVqgGH7hbNFvSCqQR
+    date: "2026-11-21"
+    severity: nit
+    description: "Retro: the SubagentStart rule-use echo costs read-only reviewers 2-3 Bash calls for always-loaded rules (adr-0003/0004/0009/0017) that never govern them."
+    solution: "Let the rule-use hook pre-mark always-loaded PR/merge/log rules unrelated for read-only reviewer agents."
+  - session: session_013zxzeT3ZUhBeG84jQUD1Hw
+    date: "2026-11-21"
+    severity: minor
+    description: "All twelve reviewers report the SubagentStart and PostToolUse hooks demanding two echo rule-use rounds on read-only reviews where all four loaded ADR rules were unrelated, so the calls carried no signal."
+    solution: "Skip the rule-use echo for read-only reviewers in the SubagentStart hook under scripts/hooks/."

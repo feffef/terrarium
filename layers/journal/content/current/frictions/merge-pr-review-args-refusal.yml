@@ -2,13 +2,14 @@ name: merge-pr-review-args-refusal
 surface: safe
 summary: merge-pr.ts refused a verdict because the code-review call carried no head sha or an Own-read line, and each refusal cost an extra review pass or comment.
 cause: "merge-pr.ts accepts a verdict only when the code-review call's args name the reviewed head sha and the verdict line is not an Own-read on a PR that adds a file (PR #3416 refusal); a session that called code-review with bare origin/main args, or amended after the sha was printed, was refused and had to re-run review. Signals: 'merge-pr.ts refused', 'head sha', 'Own-read', 'printed args'."
-status: open
-ref: "verdict-line-asserts-unchecked-review, fix PR #3416 (a guard refusal, not a regression: the original harm was a merge after a skipped review)"
+status: tracked
+ref: "#3580"
 related:
   - entry: verdict-line-asserts-unchecked-review
     rule: The verdict claimed a review that never ran and merge-pr.ts accepted it; here merge-pr.ts refused and the cost was a retry.
 notes: |-
   2026-11-20 design: verdict-line --own-read pre-check dropped: the refusal already names the next command; the tweak covers one of three occurrences; pr-workflow prose is in an open trial
+  2026-11-22 ref moved from 'verdict-line-asserts-unchecked-review, fix PR #3416' (a guard refusal, not a regression of that entry) to the tracking issue #3580
 occurrences:
   - session: session_013zxzeQ5mMr3n1PjgqM4sUa
     date: "2026-11-19"
@@ -40,3 +41,13 @@ occurrences:
     severity: minor
     description: "Started the first code-review with hand-written args instead of the call verdict-line.ts --review-call prints; re-ran it on the final head."
     solution: "Print the review call before the first review, as pr-workflow step 3 says."
+  - session: session_013zxzePp9GLW2F1VvQUhWEy
+    date: "2026-11-21"
+    severity: minor
+    description: "Made the code-review call with only `origin/main` as args; merge-pr.ts found no sha in the transcript and refused, costing a second review round and a superseded verdict comment."
+    solution: "Paste the whole printed review-call args, sha included; pr-workflow.md step 3 could say the parenthetical is part of the args."
+  - session: session_013zxzePauHRypSebfV6q562
+    date: "2026-11-21"
+    severity: nit
+    description: "merge-pr refused: I called code-review with only origin/main, not the full printed args naming the head sha, so the transcript showed no reviewed sha. One extra Skill call and retry."
+    solution: "Say in pr-workflow step 3 to paste the printed args whole, sha included."

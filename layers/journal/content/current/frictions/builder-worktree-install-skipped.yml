@@ -1,0 +1,19 @@
+name: builder-worktree-install-skipped
+surface: safe
+summary: "A builder started in a fresh worktree without running pnpm install, so its first gate failed on missing node_modules and the failed run's log was lost."
+cause: "The build brief's step 1 says to install, but builders in a new worktree skipped it, and the gate log is written with > so the failed run's evidence was overwritten by the rerun. Signals: a builder's first gate:scoped failing on missing node_modules or a missing module in a fresh worktree."
+status: open
+related:
+  - entry: gate-local-env-failures
+    rule: That entry is a local machine's environment failing after an install; this is a builder that never ran the install.
+occurrences:
+  - session: session_013zxzeTKSiBSmkCLfn4BYL6
+    date: "2026-11-20"
+    severity: nit
+    description: "Retro (builders): the first gate failed because pnpm install never ran in a fresh worktree, and a wrap-check awk filter also matched diff hunk headers, giving false positives."
+    solution: "Say in rules() to run pnpm install first when node_modules is missing, and exclude lines starting with @@ in the awk wrap check."
+  - session: session_013zxzePVqgGH7hbNFvSCqQR
+    date: "2026-11-21"
+    severity: minor
+    description: "Retro: the #3541 builder skipped step 1's pnpm install, so its first gate failed on missing node_modules; gate.log is written with > so the failed run's evidence was lost."
+    solution: "rules() gate command: write each run to gate-<n>.log and run pnpm install --frozen-lockfile in the same command."

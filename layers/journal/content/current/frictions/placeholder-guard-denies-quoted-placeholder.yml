@@ -61,3 +61,8 @@ occurrences:
     severity: nit
     description: "The dispatch-read guard refused my first survey brief because it named the scratch-dir placeholder in prose; I reworded and retried."
     solution: "Let the guard skip placeholders written as instructions, or have the Skill give a ready-made fill-in sentence."
+  - session: session_013zxzeQLrTRb5hCDjSRuQHb
+    date: "2026-11-21"
+    severity: nit
+    description: "First survey dispatch was blocked by the dispatch-read guard because my brief named the scratch placeholder in prose, costing one retry."
+    solution: "The Skill's brief says to fill placeholders; reword the dispatch instruction to name the directory rather than the placeholder."

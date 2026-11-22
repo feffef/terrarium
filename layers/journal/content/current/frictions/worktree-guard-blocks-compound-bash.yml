@@ -34,3 +34,8 @@ occurrences:
     severity: nit
     description: "A builder's commit-message printf chained with git commit was refused by the one-git-command-per-call hook, so the commit failed on a missing file and cost a turn."
     solution: "Tell builders in rules() to write the commit message with the Write tool, then run git commit -F alone."
+  - session: session_013zxzeT3ZUhBeG84jQUD1Hw
+    date: "2026-11-21"
+    severity: minor
+    description: "Builders report compound Bash commands refused by the worktree guard, silently dropping a file write or an edit batch (tap-targets, glassbox), though the brief states the rule."
+    solution: "Have the guard's refusal say that nothing in the call ran, and repeat the one-command-per-call rule at the point of the first edit step in rules()."

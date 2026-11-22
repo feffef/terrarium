@@ -22,11 +22,6 @@ fixes:
     date: "2026-10-28"
     summary: "CLAUDE.md says to read a required doc whole if you can, no longer in one Read call: partial reads are encouraged against, not required."
 occurrences:
-  - session: session_013zxzeRCCqrxVitqSaxJa4K
-    date: "2026-11-07"
-    severity: minor
-    description: "My reviewer briefs said read each page in full, but several reviewers read through cut or head filters and truncated long lines, so some keeps rest on ledes and headings."
-    solution: "State in the brief that page text must not be filtered or cut, and ask each reviewer to name any page it read only in part."
   - session: session_013zxzeRL5rU5zS3WRCkH3TE
     date: "2026-11-08"
     severity: nit
@@ -57,3 +52,8 @@ occurrences:
     severity: nit
     description: "Read docs/agents/git-conventions.md with sed lines 1-60 only, against CLAUDE.md's read-it-whole rule, before committing; the later sections went unread."
     solution: "Read the whole doc with the Read tool before the first non-read-only git command."
+  - session: session_013zxzeQvbyxpaugrq79fNtZ
+    date: "2026-11-21"
+    severity: nit
+    description: "I read two outside pages with cut -c1-300 (truncated lines) before listing them in pagesRead, which step 3 says to read whole; the Spec reviewer flagged the gap."
+    solution: "Read each outside page whole with Read before listing it; the skill could name pages the writer links as outside pages earlier."

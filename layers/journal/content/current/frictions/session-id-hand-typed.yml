@@ -4,8 +4,6 @@ summary: Agents typed or guessed their own session id and got it wrong.
 cause: "A session id is copied from another session's PR body or guessed from a system reminder instead of read from the tool that reports it, so a commit trailer or post names the wrong session. Signals: 'another session's id', 'wrong by one letter', commit-msg hook correcting a trailer, get_session."
 status: open
 related:
-  - entry: verdict-comment-hand-typed
-    rule: The hand-typed value is the reviewed commit SHA in a verdict.
   - entry: commit-trailer-check-skipped
     rule: The commit trailer was not checked after a later commit.
   - entry: github-body-unchecked-value
@@ -13,16 +11,6 @@ related:
 notes: |-
   2026-10-28 design: a guard or prose line dropped: .githooks/commit-msg corrects a wrong trailer and github-provenance-guard.ts denies a wrong id on a post and hands back the right one, so a slip costs one retry, and a guard edit is Human-only.
 occurrences:
-  - session: session_013zxzeRYiNjyrjrq8JVWSuu
-    date: "2026-11-07"
-    severity: nit
-    description: "Typed the session id by hand in the commit message; it was wrong, the commit-msg hook rewrote the trailer."
-    solution: "Copy the id from the system-reminder template, or leave the trailer to the hook."
-  - session: session_013zxzeQWJUyfuXJgdfypeuc
-    date: "2026-11-07"
-    severity: minor
-    description: "Sent a garbled first send_message to the designer session, with a wrong header id and no content, then had to send a correction"
-    solution: "Check my own session id with get_session before the first peer message, and write the message before sending"
   - session: session_013zxzeRhiMxk5cCGYkz4u1n
     date: "2026-11-08"
     severity: nit
@@ -168,3 +156,8 @@ occurrences:
     severity: nit
     description: "Rewrote the #3340 body keeping its old session header; the ADR-0017 guard blocked the call and I resent it."
     solution: "When rewriting a body wholesale, replace the header first; the guard worked as designed."
+  - session: session_013zxzeQLrTRb5hCDjSRuQHb
+    date: "2026-11-21"
+    severity: nit
+    description: "Typed a session id from memory in the regression issue body; the provenance guard blocked it and I retried with the real id."
+    solution: "Copy the id from the system prompt's trailer template before writing any body."

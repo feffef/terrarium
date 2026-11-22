@@ -36,11 +36,6 @@ fixes:
     date: "2026-11-13"
     summary: "gate-edit-guard.ts also denies git add, stash, checkout and reset (not only commit) while a gate runs, per worktree; scripted Bash writes are left alone."
 occurrences:
-  - session: session_013zxzeQWJUyfuXJgdfypeuc
-    date: "2026-11-07"
-    severity: minor
-    description: "Edited the curate Skill while pnpm gate:scoped ran, so the gate aborted and had to run again (pr-workflow: edit nothing while it runs)"
-    solution: "Hold new owner requests until the gate finishes, or stop the gate before editing"
   - session: session_013zxzeRYFqNFGvBn4FsDkTk
     date: "2026-11-09"
     severity: minor

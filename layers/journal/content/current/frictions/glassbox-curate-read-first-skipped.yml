@@ -7,8 +7,6 @@ acceptedSeverity: minor
 related:
   - entry: governing-doc-read-after-draft
     rule: The doc governs text just drafted and is not on the Skill's read-first list.
-  - entry: glassbox-curate-run-entry-late
-    rule: The run entry was written after the edits, not at its step.
   - entry: glassbox-curate-steps-skipped
     rule: The skipped steps are the build, check or loop steps, not the required first reads.
 notes: |-
@@ -24,26 +22,6 @@ fixes:
     date: "2026-11-09"
     summary: "glassbox-curate SKILL.md states the Subject read as a Done-when (every Subject page read in full, plus outside pages a change would edit) and drops the removal-only exemption."
 occurrences:
-  - session: session_013zxzeNqe2cXhykGMMq7vUi
-    date: "2026-11-07"
-    severity: minor
-    description: "The Skill's read-first list names glassbox GLOSSARY and QUALITY; I never read them and relied on the subagent reading the GLOSSARY."
-    solution: "Fine for a removal-only edit, but the Skill could say which of the read-first files a removal run may skip."
-  - session: session_013zxzeSkKADXgmp8x1PeS5Z
-    date: "2026-11-07"
-    severity: minor
-    description: "pagesRead was short at review; the Walkthrough and Wayfinder pages overlapping the sweep paragraph were unread until the Spec reviewer named them."
-    solution: "Grep the guide for the topic's terms during Read and read each hit before editing."
-  - session: session_013zxzeQyHhutDMJtzGF5UQU
-    date: "2026-11-07"
-    severity: minor
-    description: "Read only the Agents pair, Nitro and Data fetching in full; ordered Nuxt and Vue and Git and GitHub from link graphs, short of the Skill's read-the-Subject step."
-    solution: "Budget the full reads up front, or let the Skill allow link-graph ordering for pure reorders."
-  - session: session_013zxzeRCCqrxVitqSaxJa4K
-    date: "2026-11-07"
-    severity: minor
-    description: "Skipped the curate Read step: I edited after reading only two walkthroughs myself, relying on reviewer reports, and left pagesRead empty until the Standards reviewer flagged it."
-    solution: "Read the pages the change edits, links or overlaps before the edit, then fill pagesRead from what I read."
   - session: session_013zxzeSKTBjSfYnUxNHTJw1
     date: "2026-11-09"
     severity: nit
@@ -94,3 +72,8 @@ occurrences:
     severity: nit
     description: "Land says to read every guide page the Spec reviewer names as missing from pagesRead; I skipped the nine linked lessons because the diff changes only diagram labels."
     solution: "Say in glassbox-curate that a diagram-only change needs only the page's own stops read."
+  - session: session_013zxzeQyUcqMctvqKtP4sHL
+    date: "2026-11-20"
+    severity: nit
+    description: "The Skill says to read every outside page a change would overlap in full; I read only the smoke-test lines of Testing and File routing."
+    solution: "State whether a one-clause cut needs the sibling pages read whole, or give a cheaper check."

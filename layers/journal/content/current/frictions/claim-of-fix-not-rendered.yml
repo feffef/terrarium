@@ -26,3 +26,8 @@ occurrences:
     severity: nit
     description: "Skipped the wide-font width check from verifying-ui-changes.md for the new buttons and section lines; the button label wrapping on a phone was caught only by eye."
     solution: "Add a scrollWidth versus clientWidth check with DejaVu fonts to the UI review step, or an e2e assert for primary tile buttons."
+  - session: session_013zxzeTKSiBSmkCLfn4BYL6
+    date: "2026-11-20"
+    severity: nit
+    description: "My Q7 text promised no visible layout shift, but my own after-sample shifted the next line about 8px; I only saw it when I viewed the screenshots."
+    solution: "Measure the position of the next element in the sample before writing a no-shift promise into a question."

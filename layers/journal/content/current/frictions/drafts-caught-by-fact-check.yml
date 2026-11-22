@@ -29,16 +29,6 @@ fixes:
     date: "2026-11-13"
     summary: "digest SKILL.md needs a source in the day's gathered material for a cadence word and drops 'scheduled' from its example; the fact-check checks both."
 occurrences:
-  - session: session_013zxzePc3zKAyZGZfucZa9y
-    date: "2026-11-07"
-    severity: minor
-    description: "Fact-check needed four rounds; my drafts stated an unsupported inference and a wrongly labelled \"first incident\", and each fix changed the blob and forced a re-check"
-    solution: "Write only claims with a source at hand; batch all fixes before re-dispatching the checker"
-  - session: session_013zxzeT5vcQTn5YZeNHDSvv
-    date: "2026-11-07"
-    severity: nit
-    description: "First run entry and memory page had a stale 'this week', an unlogged cut and a wrong phrase; code-review caught them before merge."
-    solution: "Diff the page against origin/main and list every cut before writing the run entry; avoid relative dates on the memory page."
   - session: session_013zxzeRnhzjUpugh9vCH4UW
     date: "2026-11-08"
     severity: minor
@@ -144,3 +134,33 @@ occurrences:
     severity: minor
     description: "First draft's Midden sentence misdescribed a home-page strip as a per-report find; only the fact-check subagent caught it."
     solution: "Read the diff for each PR named in the prose, not just its title."
+  - session: session_013zxzeTEVK6AmvvjoF7wNV8
+    date: "2026-11-20"
+    severity: nit
+    description: "Fact-checker found I wrote three new ledger entries where the issue lists three occurrences under one entry; cost a fix commit and a re-check."
+    solution: "Re-derive a count's unit from the source line when drafting, not only its number."
+  - session: session_013zxzeTGi1AXFf7KEwZhLhH
+    date: "2026-11-20"
+    severity: nit
+    description: "First draft of the new ledger entry claimed a cut phrase that was not in the diff, and my first rewrite dropped the rule words never the branch name; both caught by re-reading the diff before commit."
+    solution: "Compare the ledger entry and the rewritten text against git diff before committing."
+  - session: session_013zxzeRcU6k3FNodWxgCMJg
+    date: "2026-11-20"
+    severity: minor
+    description: "My first harvest-checks.md draft cited list-merges-since output I had not run for the first cluster; I only noticed when writing the Seedling and ran it, then softened the claim."
+    solution: "Write each evidence line right after the command that produced it, not in one pass at the end."
+  - session: session_013zxzePzEySsawKSfNrCBtk
+    date: "2026-11-20"
+    severity: nit
+    description: "My first draft of the #3340 comment gave a main-versus-subagent split of reported-with-no-load that the report did not give; caught before posting."
+    solution: "State only what the report's Data quality line prints, and source each number."
+  - session: session_013zxzePauHRypSebfV6q562
+    date: "2026-11-21"
+    severity: minor
+    description: "Drafted the claim that the issue counted 11 sessions breaking the glossary rule from the issue's prose alone; only six did. The fact-check caught it, costing two extra check rounds."
+    solution: "Read the ledger occurrences, not the summary sentence, before writing a count into a draft."
+  - session: session_013zxzeSd7Ki1925oLx6Voj4
+    date: "2026-11-22"
+    severity: minor
+    description: "Draft said a visitor review's bugs were one-fixed and a table's links all padded; fact-check found both wrong, from reading PR titles rather than diffs."
+    solution: "Read each PR's touched files before writing a claim."

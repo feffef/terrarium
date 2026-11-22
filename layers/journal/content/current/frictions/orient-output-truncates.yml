@@ -6,6 +6,8 @@ status: open
 related:
   - entry: survey-output-overflow
     rule: The overflow came from a survey read or a data-file dump.
+  - entry: glassbox-curate-orientation-read-cost
+    rule: The opening reads of a glassbox-curate run (guide index, Subject pages) cost 90-120 KB before a focus is chosen.
 fixes:
   - pr: 2929
     date: "2026-11-07"
@@ -17,11 +19,6 @@ fixes:
     date: "2026-11-16"
     summary: "orient.ts --subject writes the Subject in parts of at most 40 KB to .throwaway/glassbox-curate and prints the part paths and pagesRead block; the full Subject read stays required."
 occurrences:
-  - session: session_013zxzeNqe2cXhykGMMq7vUi
-    date: "2026-11-07"
-    severity: minor
-    description: "orient.ts printed 13KB and --pages 5,400 words for all pages, though the change touched two pages."
-    solution: "Let --pages take a Subject filter, and say the full list is for gap and overlap hunts only."
   - session: session_013zxzeSjaFuTmBXbfN2o5AH
     date: "2026-11-10"
     severity: minor

@@ -6,8 +6,6 @@ status: open
 related:
   - entry: prepush-gate-review-skipped
     rule: "The skipping itself: no code-review, or an own-read on a change that was not simple."
-  - entry: verdict-comment-hand-typed
-    rule: A hand-typed or wrong Reviewed SHA.
   - entry: merge-pr-review-args-refusal
     rule: merge-pr.ts refused the verdict for a missing head sha or an Own-read line, costing a retry.
 notes: |-

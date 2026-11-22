@@ -6,6 +6,8 @@ status: open
 related:
   - entry: flaky-e2e-matcher-timeouts
     rule: A Journal browser test failed at random and passed on rerun.
+  - entry: builder-worktree-install-skipped
+    rule: A builder skipped pnpm install in a fresh worktree, so the first gate failed on missing node_modules.
 notes: |-
   2026-11-14 design: no change: a Chromium install in the session-start command dropped: it is Human-only hook wiring and one owner-local occurrence.
 occurrences:

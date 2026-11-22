@@ -55,11 +55,6 @@ occurrences:
     severity: minor
     description: "Dispatched five claim-check subagents with the literal placeholder @@GROUP@@ in place of the page list; all five stopped immediately and needed resuming."
     solution: "The dispatch-subagents brief checklist already says re-read the brief for unfilled {…}; inline the list when building the brief and grep for placeholders before sending."
-  - session: session_013zxzeRCCqrxVitqSaxJa4K
-    date: "2026-11-07"
-    severity: minor
-    description: "Dispatched eight reviewers asking for one title proposal each, then resumed all eight to ask for ranked alternatives, so every reviewer read its pages and reported twice."
-    solution: "Settle the number of proposals per page before dispatch (dispatch-subagents section 1, lock the shared design axis); skipped because the run began autonomous and ran no grilling."
   - session: session_013zxzeQaeB8hhL2FFfcQhv7
     date: "2026-11-08"
     severity: moderate
@@ -145,3 +140,13 @@ occurrences:
     severity: minor
     description: "Retro (6 of 7 builders): the build brief told them to run e2e in the background and prescribed a gate line with cd and semicolons, but the subagent guards refuse both; each refusal cost a retry and one silently dropped a decisions.md write."
     solution: "In rules() of .claude/workflows/clear-backlog-build.js say gate and e2e run in the foreground with timeout 600000, one command per Bash call, and name the gate line as the exception."
+  - session: session_013zxzePp9GLW2F1VvQUhWEy
+    date: "2026-11-21"
+    severity: nit
+    description: "The first claim-check brief had a garbled sentence about where the page list lives; the agent coped, but the brief was not re-read before dispatch."
+    solution: "Re-read each brief once before dispatching, as dispatch-subagents says."
+  - session: session_013zxzePVqgGH7hbNFvSCqQR
+    date: "2026-11-21"
+    severity: minor
+    description: "My #3552 brief asked to edit a Glass Box sentence without noting the page is pinned to an older revision, so a reviewer raised an owner-call I then had to judge."
+    solution: "When verifying a brief that edits Glass Box prose, check the page's revision pin and state in the brief whether the edit is wanted before a re-pin."

@@ -61,3 +61,13 @@ occurrences:
     severity: minor
     description: "The clear-backlog rule that a missing-test or a fix over 10 lines forces another full review round cost two extra rounds (about 320k subagent tokens) on the harvest branch; round 3 found only nits."
     solution: "Skip the next round when the previous round's re-checks were clean and the fix was test-only; or count a clean re-check as closing the round."
+  - session: session_013zxzePVqgGH7hbNFvSCqQR
+    date: "2026-11-21"
+    severity: minor
+    description: "Retro: #3543's round 2 (triggered by a 13-line fix commit) found only nits; the one real defect (stale body-template.md) was caught in round 1."
+    solution: "clear-backlog §3 step 4: count only logic lines (not prose/test wording) toward the 10-line round-2 trigger; one instance, so gather more runs first."
+  - session: session_013zxzeT3ZUhBeG84jQUD1Hw
+    date: "2026-11-21"
+    severity: moderate
+    description: "Discover ran a third review round only because a round-2 summary held a missing-test already fixed and re-checked clean; it found two nits and cost about 170k subagent tokens."
+    solution: "In clear-backlog section 3 step 4, require the missing-test to be still open after the re-checks before starting the next round."

@@ -52,3 +52,8 @@ occurrences:
     severity: minor
     description: "Retro (9 of 12 reviewers): the SubagentStart rule-use echo ritual cost two extra Bash calls per read-only reviewer with every listed rule unrelated, and builders got the same ADR read reminder after every edit."
     solution: "Skip the rule-use ask for read-only review subagents in scripts/hooks, and send a path-scoped ADR reminder once per session, not per edit."
+  - session: session_013zxzePVqgGH7hbNFvSCqQR
+    date: "2026-11-21"
+    severity: nit
+    description: "Retro: reviewPrompt() says cd ${wt} && ... while rules() forbids cd and chains, and it lists no allowed read-only git commands, so git-conventions hooks fired on reviewers."
+    solution: "reviewPrompt() in clear-backlog-build.js:119: use git -C and name the allowed commands (rev-parse, diff, log, show)."

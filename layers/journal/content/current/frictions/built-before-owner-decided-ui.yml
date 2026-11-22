@@ -28,11 +28,6 @@ fixes:
     date: "2026-11-14"
     summary: "ui-verification.md: for owner-facing UI, review, gate and PR wait until the owner confirms the screenshot, including a change asked for directly."
 occurrences:
-  - session: session_013zxzeSy38XR1wPjCGFUExY
-    date: "2026-11-07"
-    severity: minor
-    description: "The #2884 build brief left the new Session card label open, so the agent built user-facing UI before the owner decided it; I asked afterwards."
-    solution: "In clear-backlog section 2, ask what a displayed value looks like and says in the first grilling round when a pick adds UI."
   - session: session_013zxzeR2kKbsT81QWkXUrvK
     date: "2026-11-09"
     severity: moderate

@@ -17,11 +17,6 @@ fixes:
     date: "2026-11-13"
     summary: "midden-survey lists closed-unmerged PRs with a script that pages completely, replacing the search call and hand paging."
 occurrences:
-  - session: session_013zxzeRCCqrxVitqSaxJa4K
-    date: "2026-11-07"
-    severity: minor
-    description: "No orient output shows which guide file names differ from their titles or how many links use each old address, so I wrote a throwaway bash loop and hand-counted, which led to the wrong counts."
-    solution: "Add a section to glassbox-curate orient.ts listing pages whose file name shares no word with the title, with their inbound link counts; a Skill change that waits for the owner's merge."
   - session: session_013zxzeQaeB8hhL2FFfcQhv7
     date: "2026-11-08"
     severity: minor
@@ -62,3 +57,8 @@ occurrences:
     severity: minor
     description: "Told the owner the redesign roughly halved token cost by comparing notice tokens that exclude resumed turns with a baseline that included them; I caught it next turn and corrected it."
     solution: "Before stating a before-and-after cost figure, name each side's counting basis; a one-line note in the run report template would force that."
+  - session: session_013zxzePzEySsawKSfNrCBtk
+    date: "2026-11-20"
+    severity: minor
+    description: "The first #3340 review counted the unrated gap for main only; the subagent gap (30%) surfaced later, so I posted a correction comment."
+    solution: "Compute unrated loads for both agent groups before posting a review that rests on shares."

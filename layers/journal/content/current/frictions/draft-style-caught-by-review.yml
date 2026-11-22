@@ -2,7 +2,7 @@ name: draft-style-caught-by-review
 surface: safe
 summary: First drafts of posts, PR bodies and write-ups broke the writing Skill's style rules (project jargon, length, a flat or repeated opening), and only a Standards review or the agent's own re-read caught it.
 cause: "A Skill that drafts first and reviews after: the drafter ignores its plain-words, length or opening rules, and a Standards reviewer or step-8 re-read finds it, costing a rewrite commit and sometimes a gate rerun. Signals: 'used project jargon the Skill forbids', 'the Standards review caught it', 'first draft ran six paragraphs', 'replayed the previous post', 'jargon in Also shipped'."
-status: open
+status: tracked
 related:
   - entry: drafts-caught-by-fact-check
     rule: The draft carried wrong or overstated facts, not style slips.
@@ -80,3 +80,8 @@ occurrences:
     severity: minor
     description: "Three notes came out under the 300-word floor on first draft, caught only by the reviewers, costing a follow-up commit and a second two-axis review."
     solution: "Print word counts of the drafted notes in the script that appends them, and refuse under 300."
+  - session: session_013zxzeSd7Ki1925oLx6Voj4
+    date: "2026-11-22"
+    severity: minor
+    description: "First draft used Tenant names and insider wording (echo call, builder prompt) and ran about 270 words; review caught it and cost a rewrite commit."
+    solution: "Count words and plain-language check before the first save."

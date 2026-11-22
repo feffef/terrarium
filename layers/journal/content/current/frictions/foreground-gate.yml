@@ -36,3 +36,8 @@ occurrences:
     severity: nit
     description: "Ran pnpm typecheck in the foreground twice instead of in the background, though CLAUDE.md says to background anything that can take over two minutes."
     solution: "List pnpm typecheck beside the gate and build in CLAUDE.md's background-run line."
+  - session: session_013zxzePp9GLW2F1VvQUhWEy
+    date: "2026-11-21"
+    severity: minor
+    description: "Started the full gate in a background subshell from a foreground call, so no completion notification came and I polled with a sleep loop."
+    solution: "Use run_in_background on the Bash call itself so the harness wakes the session."

@@ -1,0 +1,16 @@
+name: cost-claim-unmeasured
+surface: safe
+summary: "A triage or design pick called a change cheap on reasoning alone, then the measured cost was far higher, so a build, an owner question and a rebuild were spent."
+cause: "The triage step ranks picks by estimated cost without requiring a measurement for a cost claim, so an estimate (a sweep called cheap) became the basis for a build. Signals: a pick whose cost, time or token claim was later measured and found several times higher."
+status: open
+related:
+  - entry: mechanism-claim-from-recall
+    rule: That entry holds claims about how code or a rule behaves from memory; this one is an unmeasured claim about the cost of a change.
+notes: |-
+  2026-11-22 design: add 'or a cost' to CLAUDE.md Verify-before-you-state dropped: one occurrence, existing rule covers it, sibling mechanism-claim-from-recall accepted; revisit on a second
+occurrences:
+  - session: session_013zxzeT3ZUhBeG84jQUD1Hw
+    date: "2026-11-21"
+    severity: moderate
+    description: "The triage pick for the Blog 390px sweep called the full sweep cheap on reasoning alone; it measured +62s on the e2e step (225ms per post of server rendering), so one build, one owner question and one rebuild were spent."
+    solution: "Explore results that recommend a test-cost option should measure a small case first, or the builder should time one page before building the full sweep."

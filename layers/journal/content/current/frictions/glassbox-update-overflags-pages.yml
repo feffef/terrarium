@@ -20,11 +20,6 @@ fixes:
     date: "2026-11-14"
     summary: "glassbox-update step 4 re-checks a flagged page as a whole only for needsReader true, prose-only flags and rotation pages; other flagged pages get a quick look."
 occurrences:
-  - session: session_013zxzeShUkKqUQT1kYCw5UK
-    date: "2026-11-07"
-    severity: minor
-    description: "glassbox-update step 3 asks that every commit since the oldest revision be read against every page; with 123 commits and 72 pages that was not reachable, so I grepped renamed identifiers and leaned on subagents."
-    solution: "Have the script list non-content commit subjects and the identifiers they rename, then grep page prose for them, so the criterion is checkable."
   - session: session_013zxzeR9nyx91atfAKEs7c3
     date: "2026-11-11"
     severity: minor

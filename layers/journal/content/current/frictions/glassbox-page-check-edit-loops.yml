@@ -16,11 +16,6 @@ notes: |-
   2026-10-25 design: moving the page checks into validate:content, or a doc line on the 65-word cap, dropped: both sessions read EVERY-PAGE.md, which points to the cap's one home (#2114); the failure messages already name the limit; a gate-wiring change (Human-only) costs more than the two test runs it saves.
   2026-11-04 design: no change dropped: the page spec is the check working as designed, the writer-brief rule SAtj asked for landed in ec77d4bad, and the ADR-chip case was an installed code-review reviewer's proposal.
 occurrences:
-  - session: session_013zxzeRGhhzxkXgfdpEX9js
-    date: "2026-11-07"
-    severity: minor
-    description: "A retitle to Colour and motion preferences was one character over the 28-character title cap; validate:content passed and only the vitest page spec failed, though the Skill names validate:content as the fast loop."
-    solution: "Run the title and description length check inside validate:content, or say in the Skill that it does not; page checks are outside a curate run's remit, so file an issue."
   - session: session_013zxzeP1EixGDy96kmktFi2
     date: "2026-11-12"
     severity: minor
@@ -41,3 +36,8 @@ occurrences:
     severity: nit
     description: "After the claim-check fixes I reworded a Why bullet and the page test failed on its word cap twice before I cut enough words; the cap is only visible in the test output."
     solution: "Fine as designed; a writer brief could name the 65-word Why bullet cap, which I had left out of the follow-up edit."
+  - session: session_013zxzeT3ZUhBeG84jQUD1Hw
+    date: "2026-11-21"
+    severity: minor
+    description: "The glassbox builder found the link-text-equals-page-title rule only through glassbox-pages.spec.ts, which validate:content does not run, and found the chip cap in page-checks.ts after four greps."
+    solution: "Brief and fast checks for glassbox content edits should run layers/glassbox/tests/unit and name page-checks.ts:55."

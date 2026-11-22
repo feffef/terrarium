@@ -19,3 +19,8 @@ occurrences:
     severity: minor
     description: "The fact-checker needed five round trips on two posts because I fixed its notes in separate commits, each changing the blob it had to re-sign."
     solution: "blog-post step 9: batch every fix and rename into one commit before the re-check, and say so in the step."
+  - session: session_013zxzeTEVK6AmvvjoF7wNV8
+    date: "2026-11-20"
+    severity: nit
+    description: "Step 12 (a reply post) repeated the whole pipeline, so two PRs took about a dozen reviewer and checker rounds, each re-run when a sentence changed."
+    solution: "Let a reply skip the second full code-review when only prose changed after the first, as Own-read already allows for the fix."

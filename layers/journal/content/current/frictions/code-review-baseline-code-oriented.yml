@@ -9,3 +9,8 @@ occurrences:
     severity: nit
     description: "code-review has the baseline of code smells pasted in full for a prose-only Skill diff; the Standards agent reported none applied."
     solution: "Have code-review skip the smell baseline when the diff holds no code."
+  - session: session_013zxzePVqgGH7hbNFvSCqQR
+    date: "2026-11-21"
+    severity: nit
+    description: "Retro: the reviewer smell baseline (code-review SKILL.md) gives nothing on prose-only diffs; the standards actually used were CLAUDE.md Keep it short and One home per fact plus ADR-0027."
+    solution: "reviewPrompt(): for diffs touching only .md or Skill prose, point to those prose standards instead of the smell list."

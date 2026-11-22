@@ -11,11 +11,6 @@ fixes:
     date: "2026-11-08"
     summary: "glassbox-update SKILL.md steps 2 and 4 now say --write leaves an edited-range page wholly untouched and the agent re-lines each edited range by hand; no script change."
 occurrences:
-  - session: session_013zxzeShUkKqUQT1kYCw5UK
-    date: "2026-11-07"
-    severity: minor
-    description: "The glassbox-update report did not say which pages it could not pin (those with an edited range); a subagent told me hooks/01 still carried the old revision."
-    solution: "List unpinned pages in the report with the cited range the change overlaps, and let the claim check start from those overlaps."
   - session: session_013zxzeQMfaaC4C4CNuFY3EH
     date: "2026-11-09"
     severity: minor

@@ -50,3 +50,8 @@ occurrences:
     severity: minor
     description: "The 15 behaviour subagents each read a 9 to 50 KB data file and logs; the run spent about 1.7M subagent tokens, the same cost earlier runs recorded."
     solution: "Skip a Skill's agent when its runs, changes and observations repeat the last check (see idea)."
+  - session: session_013zxzeT3ZUhBeG84jQUD1Hw
+    date: "2026-11-21"
+    severity: moderate
+    description: "Sent the retro to 18 of 24 agents; the notifications show about 1.64M subagent tokens for replies that mostly said the reviews re-found small things, and I skipped the later discover reviewers."
+    solution: "Retro only one builder and one reviewer per distinct review kind, or only agents that hit friction."

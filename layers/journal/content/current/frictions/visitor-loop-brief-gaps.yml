@@ -49,3 +49,8 @@ occurrences:
     severity: minor
     description: "The context file has no recipe: I hand-built it, listing /t/midden/trench twice and omitting query-string and 404 URLs, which the UI tester had to find by guessing."
     solution: "Add a short generator script under .agents/skills/visitor-loop/scripts/ that writes the four context sections, deduplicated, with each Space's filter URLs and a 404 URL."
+  - session: session_013zxzeStkfKoZxBQUkQd9pd
+    date: "2026-11-21"
+    severity: nit
+    description: "Context file did not say /t/tinkerfund aliases /prod or that /qa is a component-gallery fixture, so the editor found it by comparing byte counts."
+    solution: "In .claude/skills/visitor-loop/SKILL.md step 2, have the context file's pages section note aliases and QA fixture Spaces."

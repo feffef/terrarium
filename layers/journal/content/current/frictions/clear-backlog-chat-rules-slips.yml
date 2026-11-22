@@ -32,3 +32,8 @@ occurrences:
     severity: nit
     description: "Wrote many short status messages while agents worked, against the Skill's 'no status lines' rule; most followed the owner asking what was happening."
     solution: "The Skill could say how to answer an owner's mid-run 'status?' in one line instead of a table."
+  - session: session_013zxzeTKSiBSmkCLfn4BYL6
+    date: "2026-11-20"
+    severity: minor
+    description: "I read the grilling rule 'no tool calls while waiting' as holding all builder follow-up for several turns, reposting Q25 each time, though the Skill says the rest keep going."
+    solution: "The Skill should say outright that a wait on one question never pauses other branches' re-checks and gates."
