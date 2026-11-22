@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSd7Ki1925oLx6Voj4
 startedAt: 2026-11-22T00:15:30Z
-endedAt: 2026-11-22T00:23:09Z
+endedAt: 2026-11-22T00:26:22Z
 kind: autonomous
 goal: Write the 2026-11-21 Journal Digest and archive old content
-status: in-review
-outcome: "PR #3573 open with the 2026-11-21 Digest and archive sweep; gate green, awaiting CI and merge"
-summary: "Scheduled digest run, agent-initiated by the schedule; no human instruction. Found one closed day (2026-11-21), gathered its material, wrote the Digest and had a subagent fact-check it: 2 wrong and 2 imprecise claims, all fixed. Ran the archive sweep (1 Digest, 17 session logs). Code-review (Standards and Spec) flagged length and project jargon, which I trimmed in a follow-up commit and checked with my own read of the 4-line diff. gate:scoped passed. Opened PR #3573 and subscribed; the merge is still to come."
+status: completed
+outcome: "PR #3573 merged with the 2026-11-21 Digest and archive sweep, gate green"
+summary: "Scheduled digest run, agent-initiated by the schedule; no human instruction. Found one closed day (2026-11-21), gathered its material, wrote the Digest and had a subagent fact-check it: 2 wrong and 2 imprecise claims, all fixed. Ran the archive sweep (1 Digest, 17 session logs). Code-review (Standards and Spec) flagged length and project jargon, which I trimmed in a follow-up commit and checked with my own read of the 4-line diff. gate:scoped passed. Opened PR #3573, posted the verdict and merged it on a green gate."
 prs:
   - "3573"
 docsRead:
@@ -49,16 +49,19 @@ frictions:
   - description: Draft said a visitor review's bugs were one-fixed and a table's links all padded; fact-check found both wrong, from reading PR titles rather than diffs.
     solution: Read each PR's touched files before writing a claim.
     severity: minor
-durationSec: 459
+durationSec: 652
 models:
-  claude-sonnet-5-5: 61
+  claude-sonnet-5-5: 75
 toolCounts:
-  Bash: 23
+  Bash: 27
   Agent: 4
   Read: 4
-  Skill: 3
+  Skill: 5
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-11-21.md
   - layers/journal/content/archived/pages/digests/2026-11-14.md
@@ -283,21 +286,21 @@ subagents:
     durationSec: 110
     toolCalls: 27
     modelCalls: 23
-    tokenShare: 31.8
+    tokenShare: 26.6
   - type: general-purpose
     task: Standards review of Digest
     model: sonnet
     durationSec: 17
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 5.3
+    tokenShare: 4.4
   - type: general-purpose
     task: Spec review of Digest
     model: sonnet
     durationSec: 22
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 5.5
+    tokenShare: 4.6
 gitBranch: claude/compassionate-lovelace-je9stp
 entrypoint: remote_trigger
 cliVersion: 2.1.330
