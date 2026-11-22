@@ -205,9 +205,9 @@ every changed page.
 1. Merge `origin/main` into the branch and keep the newer pin. If `main`
    changed the memory page, keep every item from both versions except those
    either side deleted.
-2. Update the memory page (State): delete every item this run solved and every
-   item step 2 found no longer stands; move each other item step 2 noted
-   to *Waiting for owner decision*. Add only what State allows.
+2. Update the memory page (State): delete every item this run solved or step 2
+   found no longer stands, and move the rest step 2 noted to *Waiting for
+   owner decision*. Add only what State allows.
 3. Complete the run entry: `changes` and `pagesRead`.
 4. Follow every step of `docs/agents/pr-workflow.md`, "Review before opening
    the PR", always with the `code-review` call, never the own read of a simple
