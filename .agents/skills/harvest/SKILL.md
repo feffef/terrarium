@@ -22,9 +22,8 @@ harvests both.
 1. **Extract.** `harvest extract --out <scratchpad>/harvest-extract.json`, plus
    `--kind ideas` or `--kind learnings` when the run has that argument.
    It lists unharvested entries from the last 7 days (archived logs
-   included). Within a kind the newest come first and the kinds alternate, idea
-   first; recency is the only ranking, so an idea from a smooth session ranks like
-   any other. Then redirect `harvest list <scratchpad>/harvest-extract.json` to
+   included), newest first within a kind, the kinds alternating, idea first.
+   Then redirect `harvest list <scratchpad>/harvest-extract.json` to
    `<scratchpad>/harvest-list.txt` and read it with Read in pages of about 150
    lines until its last line: every entry in that order, with each session's
    start, PRs, goal, outcome and source file printed once before its first
@@ -48,18 +47,13 @@ harvests both.
    A dropped cluster needs only the failed test's evidence. Evidence is what you
    read or ran, and a search that printed nothing is not evidence until you know
    its pattern can match. Do not filter script output with `head` or `tail`.
-   Step 4 starts only when `harvest check-clusters <that file> --extract
-   <extract.json>` passes. Run `harvest evidence` once for all clusters: give
-   each cluster's keywords (several words per idea; each matches at the start
-   of a word) as a group, groups separated by `--`, plus
-   `--extract <extract.json>` (it reuses the tracker list `extract` saved, so
-   no refetch). It prints one labelled block per group, with candidates only,
-   from the owner's rulings, the tracker (titles and bodies,
-   open and closed) and Ledger summaries. Each block is capped at 10 hits per
-   group, with an `N more omitted` line. Tracker hits are ranked by keywords
-   matched (issues a keyword names by number always print); rulings and Ledger
-   hits keep file order. Read each hit and decide. A cluster is
-   open when all of these hold:
+   Run `harvest evidence` once for all clusters: each cluster's keywords (several
+   words per idea; each matches at the start of a word) as a group, groups
+   separated by `--`, plus `--extract <extract.json>`. It prints candidate hits
+   per group from the owner's rulings, the tracker and Ledger summaries. Read
+   each hit and decide. Step 4 starts only when `harvest check-clusters <that
+   file> --extract <extract.json>` passes. A cluster is open when all of these
+   hold:
    - **Unbuilt.** Name the file or symbol it would change and read it now. Run
      `pnpm exec tsx scripts/git/list-merges-since.ts` from its session's start
      (`started` in the list). For a learning, grep `CLAUDE.md`, `.claude/rules/`, `docs/agents/`
