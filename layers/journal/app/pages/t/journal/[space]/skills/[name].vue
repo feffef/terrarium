@@ -37,45 +37,69 @@ useSeoMeta({ title: `${name} · journal/${space}` })
       <p v-else>
         <JournalRoleText :text="skill.role" />
       </p>
-      <h2>Recent sessions</h2>
-      <p class="jd-note">The latest logged sessions that used this Skill.</p>
-      <ul v-if="recent.length">
+    </article>
+
+    <section class="block">
+      <div class="section-head">
+        <h2>Recent sessions</h2>
+        <span class="count">{{ allSessions.length }} logged</span>
+      </div>
+      <p class="panel-intro">The latest logged sessions that used this Skill. Each links to its log.</p>
+      <ul v-if="recent.length" class="rows">
         <li v-for="s in recent" :key="s.session">
-          <strong>{{ s.startedAt.slice(0, 10) }}</strong> — {{ s.goal }}
+          <span class="row-date">{{ s.startedAt.slice(0, 10) }}</span>
+          <NuxtLink :to="`/t/journal/${space}#${sessionAnchor(s.session)}`">{{ s.goal }}</NuxtLink>
         </li>
       </ul>
-      <p v-else>No logged session in this Space used it.</p>
-      <button v-if="!showAllSessions && allSessions.length > CAP" type="button" @click="showAllSessions = true">
+      <p v-else class="empty">No logged session in this Space used it.</p>
+      <button v-if="!showAllSessions && allSessions.length > CAP" type="button" class="show-all" @click="showAllSessions = true">
         Show all {{ allSessions.length }}
       </button>
+    </section>
 
-      <template v-if="skill.auditSummary">
-        <h2>Audit summary</h2>
-        <p class="jd-note">What the most recent audit concluded about this Skill.</p>
-        <JournalSkillAuditLine :audit="skill.auditSummary" />
-      </template>
+    <section v-if="skill.auditSummary" class="block">
+      <div class="section-head"><h2>Audit summary</h2></div>
+      <p class="panel-intro">What the most recent audit concluded about this Skill.</p>
+      <JournalSkillAuditLine :audit="skill.auditSummary" />
+    </section>
 
-      <template v-if="allObservations.length">
+    <section v-if="allObservations.length" class="block">
+      <div class="section-head">
         <h2>Audit observations</h2>
-        <p class="jd-note">Internal notes that agents wrote down while auditing this Skill; newest first.</p>
-        <ul>
-          <li v-for="(o, i) in observations" :key="i">
-            <strong>{{ o.date }}</strong> —
-            <JournalRoleText :text="o.note" />
-          </li>
-        </ul>
-        <button v-if="!showAllObservations && allObservations.length > CAP" type="button" @click="showAllObservations = true">
-          Show all {{ allObservations.length }}
-        </button>
-      </template>
+        <span class="count">{{ allObservations.length }} notes</span>
+      </div>
+      <p class="panel-intro">Internal notes that agents wrote down while auditing this Skill; newest first.</p>
+      <ul class="rows">
+        <li v-for="(o, i) in observations" :key="i">
+          <span class="row-date">{{ o.date }}</span>
+          <JournalRoleText :text="o.note" />
+        </li>
+      </ul>
+      <button v-if="!showAllObservations && allObservations.length > CAP" type="button" class="show-all" @click="showAllObservations = true">
+        Show all {{ allObservations.length }}
+      </button>
+    </section>
 
-      <p><NuxtLink :to="`/t/journal/${space}/skills`">← all Skills</NuxtLink></p>
-    </article>
+    <p class="back"><NuxtLink :to="`/t/journal/${space}/skills`">← all Skills</NuxtLink></p>
 
     <SiteFooter />
   </main>
 </template>
 
 <style scoped>
-.jd-note { margin: -0.25rem 0 0.5rem; font-size: 0.85rem; color: var(--jd-muted); }
+.block { margin-top: 1.75rem; }
+.section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin: 0 0 0.6rem; padding-bottom: 0.55rem; border-bottom: 1px solid var(--jd-line); }
+.section-head h2 { margin: 0; font-family: var(--jd-mono); font-weight: 600; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--jd-ink); }
+.count { color: var(--jd-faint); font-family: var(--jd-mono); font-size: 0.75rem; }
+.panel-intro { margin: 0 0 0.6rem; color: var(--jd-muted); font-size: 0.92rem; line-height: 1.5; }
+.empty { color: var(--jd-faint); font-size: 0.9rem; margin: 0; }
+.rows { list-style: none; margin: 0; padding: 0; }
+.rows li { display: grid; grid-template-columns: max-content 1fr; gap: 0.1rem 0.9rem; align-items: baseline; padding: 0.7rem 0; border-top: 1px solid var(--jd-line); font-size: 0.96rem; }
+.rows li:first-child { border-top: 0; }
+.row-date { font-family: var(--jd-mono); font-size: 0.82rem; color: var(--jd-accent); white-space: nowrap; }
+.rows a { color: var(--jd-ink); text-decoration: underline; text-decoration-color: var(--jd-line); text-underline-offset: 2px; }
+.rows a:hover { color: var(--jd-accent); text-decoration-color: var(--jd-accent); }
+.show-all { display: block; margin: 0.9rem 0 0; padding: 0.5rem 0.9rem; font-family: var(--jd-mono); font-size: 0.78rem; color: var(--jd-muted); background: var(--jd-surface-2); border: 1px solid var(--jd-line); border-radius: var(--jd-radius); cursor: pointer; }
+.show-all:hover { color: var(--jd-ink); border-color: var(--jd-accent); }
+.back { margin-top: 1.75rem; }
 </style>
