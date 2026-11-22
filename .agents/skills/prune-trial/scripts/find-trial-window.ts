@@ -1,6 +1,6 @@
 // Ground truth for a Prune Trial's judging window (ADR-0027). §1 of the
 // `prune-trial` Skill requires dating a trial's window from when its prune
-// *landed on `main`* — never from `opened:`, which records when the ledger
+// *landed on `main`* — never from `opened:`, which records when the trial
 // entry was written and is always earlier. That step was previously freehand
 // prose ("run this git log command, read the date"): PR #1061 shows the
 // failure mode — it judged the guards.md consolidation trial a day before its

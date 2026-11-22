@@ -84,11 +84,10 @@ attributed. `trial-territory.ts <files or words>` names the trial covering each.
 
 **"Nothing clears the bar" is a result you earn, not one you inherit.** Say it
 only after criterion 1's subagent search ran this run, and name what it
-searched in the trial entry; earlier trial entries prove nothing about today
-(the tracker and logs have moved). Any other claim in the trial entry or PR (a
-file has no recorded failures, only whole-file inbound pointers) must come from
-a source you read this run, with the Read tool so the log shows it, or be left
-out.
+searched in the trial entry; earlier ones prove nothing about today (the
+tracker and logs have moved). Any other claim in the trial entry or PR (a file
+has no recorded failures, only whole-file inbound pointers) must come from a
+source read this run, with the Read tool so the log shows it, or be left out.
 
 ## 3. Prune it to the goal
 
@@ -100,9 +99,10 @@ chasing. Write that, in the plainest words that stay exact, in one home. Delete
 the rest: the incident histories, the restatements, the step-by-step for
 decisions the reader is capable of making.
 
-Write the trial entry as you prune. Set each Friction Ledger entry its `check`
-names to `on-trial` (`ledger-set.ts --status on-trial --ref "Prune Trial opened
-<date> (<territory>)"`). Commit both **with** the prune.
+Write the trial entry as you prune. Set each Friction Ledger entry that its
+`check` names to `on-trial` with
+`pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/ledger-set.ts <entry> --status on-trial --ref "Prune Trial opened <date> (.agents/prune-trials.yml): territory <territory>"`.
+Commit both **with** the prune.
 Before committing, grep the repo for inbound references to anything you deleted —
 Skills, docs and code comments cite sections by name, and the Gate does not catch
 a dangling one.
