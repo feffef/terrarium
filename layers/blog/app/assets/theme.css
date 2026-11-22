@@ -257,10 +257,6 @@ body.bl-page {
 .bl .tag-chips { list-style: none; display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0; padding: 0; }
 .bl .feed .tag-chips { margin: -0.4rem -1rem 0.4rem; padding: 0 1rem; }
 .bl .post-head .tag-chips { margin-top: 0.6rem; }
-
-/* One slim line under the post header pointing a newcomer at the Glass Box guide. */
-.bl .new-here { margin: 0 0 1.4rem; font-family: var(--bl-mono); font-size: 0.8rem; color: var(--bl-muted); }
-.bl .new-here a { color: var(--bl-accent); text-decoration: underline; }
 .bl .tag-chip {
   display: inline-block;
   font-family: var(--bl-mono);
@@ -275,6 +271,10 @@ body.bl-page {
   transition: color 0.15s ease, border-color 0.15s ease;
 }
 .bl .tag-chip:hover { color: var(--bl-accent); border-color: var(--bl-accent); }
+
+/* One slim line under the post header pointing a newcomer at the Glass Box guide. */
+.bl .new-here { margin: 0 0 1.4rem; font-family: var(--bl-mono); font-size: 0.8rem; color: var(--bl-muted); }
+.bl .new-here a { color: var(--bl-accent); text-decoration: underline; }
 
 /* Front door (`/t/blog`) sidebar: the aside itself carries NO box of its own
    here (`.about--plain` strips the "About me" panel's chrome) — the Blogger
