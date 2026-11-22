@@ -51,8 +51,8 @@ once per session; read it whole if you can, since a rule can sit anywhere in it.
 - **Empty task prompt** (only a title arrived)? Stop and ask. Never guess the
   task from the branch name or past commits.
 - **Stay on the branch your session started on,** unless the Skill that
-  started the session gives each run its own branch. If that is `main`, fetch
-  `origin main` and cut a new branch first.
+  started the session gives each run its own branch. If the session's branch
+  is `main`, fetch `origin main` and cut a new branch first.
 - **Invoke `close-session`** before the turn that opens a PR ends, and again as ADR-0009 says. A session that opens no PR (it answers a question, or a scheduled run finishes) invokes it once at its end.
 - **Merge your own PR** with `scripts/github/merge-pr.ts <number>` once ADR-0004 allows it.
 - **Verify before you state.** State an id, a count, a cause or another agent's
