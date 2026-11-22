@@ -99,7 +99,9 @@ the memory page's items.
       topics.
 
    An item is a bullet or numbered entry under the memory page's *Agent
-   notes*; *Soft decisions* are not items.
+   notes*; *Soft decisions* and *Waiting for owner decision* are not items.
+   An item that does not suit a guide page (a Skill-detail gap, say) moves to
+   *Waiting for owner decision*; pick another. This is not a stop reason.
 
    Within a group, take the first item on the page. Skip an item that carries
    a line saying an earlier run failed on it, and an item whose only open part
@@ -120,9 +122,12 @@ the memory page's items.
 
 ### 3. Start the run and read
 
-Branch from a fresh `origin/main`. Write the run entry from the orientation's
-skeleton, named by the current UTC time (`date -u +%Y-%m-%dT%H%M`), with
-`focus` quoted and why you chose it. Commit it and push the branch.
+Every run, the first too, creates its own new branch from a fresh
+`origin/main`. This Skill is the explicit permission to push those branches;
+never use the session's harness-assigned branch. Write the run entry from
+the orientation's skeleton, named by the current UTC time
+(`date -u +%Y-%m-%dT%H%M`), with `focus` quoted and why you chose it.
+Commit it and push the branch.
 
 Run `pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts --subject <folder>`
 for the focus's Subject (the Walkthroughs count as one Subject). Read each part

@@ -65,7 +65,11 @@ None of these is false.
 
 - No page teaches narrow-screen overflow.
 - No page teaches the `digest` Skill (a Digest's Blog line, taken from the Blog files that day's PRs touched so the fact-check can verify it). Nearest page: *Scheduled tasks*.
+
+### Waiting for owner decision
+
 - No page teaches how the `glassbox-curate` Skill runs in two modes (a loop session and an instruction session) and pauses for `glassbox-update`; a textbook about its own upkeep may not suit the guide. Nearest page: *Scheduled tasks*.
+
 ### Claims to check
 
 Each may be true; a later run should read the tool's source or run it.
