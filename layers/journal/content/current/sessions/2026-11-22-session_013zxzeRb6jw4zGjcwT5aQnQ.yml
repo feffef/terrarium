@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRb6jw4zGjcwT5aQnQ
 startedAt: 2026-11-22T07:32:45Z
-endedAt: 2026-11-22T07:43:45Z
+endedAt: 2026-11-22T07:48:03Z
 kind: autonomous
 goal: Weekly update of the Glass Box textbook against main
-status: in-review
-outcome: "All pages re-pinned to 9346a61, claims checked, PR #3585 open and subscribed"
-summary: "Scheduled glassbox-update run (no human prompt; the schedule assigned all of it). Advanced every page to main's 9346a610f, flagged 29 pages, and had five sonnet subagents run the claim check (32 pages: 5 full-check rotation pages, the rest scoped to changed files). A Scout subagent found one topic, already on the memory page. Confirmed corrections were small: a re-lined triage-labels excerpt plus the new Seedling line, one word in the overview, and an ADR-0029 citation. Five rotation dates written to update.yml. code-review (both axes) found only an ordering nit, fixed. gate:scoped passed. PR #3585 opened and subscribed; a human is not needed unless CI fails."
+status: completed
+outcome: "All pages re-pinned to 9346a61, claims checked, PR #3585 merged"
+summary: "Scheduled glassbox-update run (no human prompt; the schedule assigned all of it). Advanced every page to main's 9346a610f, flagged 29 pages, and had five sonnet subagents run the claim check (32 pages: 5 full-check rotation pages, the rest scoped to changed files). A Scout subagent found one topic, already on the memory page. Confirmed corrections were small: a re-lined triage-labels excerpt plus the new Seedling line, one word in the overview, and an ADR-0029 citation. Five rotation dates written to update.yml. code-review (both axes) found only an ordering nit, fixed. gate:scoped passed. PR #3585 passed CI and I merged it."
 prs:
   - "3585"
 docsRead:
@@ -79,16 +79,20 @@ frictions:
   - description: Subagent report sat unusably long; checking 32 pages needed five agents and ~8 hand-backs to read.
     solution: Have the script emit per-page claim-check briefs and ask subagents to return only falseClaims.
     severity: minor
-durationSec: 660
+durationSec: 917
 models:
-  claude-sonnet-5-5: 108
+  claude-sonnet-5-5: 125
 toolCounts:
   Read: 7
-  Bash: 40
+  Bash: 45
   Agent: 8
-  Skill: 3
+  Skill: 4
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/workshop/checks/update.yml
   - layers/glassbox/content/guide/pages/claude-code/20.path-scoped-rules.md
@@ -517,56 +521,56 @@ subagents:
     durationSec: 28
     toolCalls: 10
     modelCalls: 5
-    tokenShare: 5.1
+    tokenShare: 4.6
   - type: general-purpose
     task: Claim check group A
     model: sonnet
     durationSec: 188
     toolCalls: 42
     modelCalls: 36
-    tokenShare: 19.7
+    tokenShare: 17.9
   - type: general-purpose
     task: Claim check group B
     model: sonnet
     durationSec: 97
     toolCalls: 26
     modelCalls: 21
-    tokenShare: 8.9
+    tokenShare: 8.1
   - type: general-purpose
     task: Claim check group C
     model: sonnet
     durationSec: 115
     toolCalls: 23
     modelCalls: 18
-    tokenShare: 9
+    tokenShare: 8.2
   - type: general-purpose
     task: Claim check group D
     model: sonnet
     durationSec: 100
     toolCalls: 23
     modelCalls: 17
-    tokenShare: 7.8
+    tokenShare: 7.1
   - type: general-purpose
     task: Claim check group E
     model: sonnet
     durationSec: 29
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 2.7
+    tokenShare: 2.4
   - type: general-purpose
     task: Review standards axis
     model: sonnet
     durationSec: 30
     toolCalls: 7
     modelCalls: 7
-    tokenShare: 2.2
+    tokenShare: 2
   - type: general-purpose
     task: Review spec axis
     model: sonnet
     durationSec: 23
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 2.1
+    tokenShare: 1.9
 gitBranch: claude/relaxed-einstein-psaplm
 entrypoint: remote_trigger
 cliVersion: 2.1.330
