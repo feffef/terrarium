@@ -12,11 +12,11 @@ pages:
   - page: claude-code/10.claude-md
     checked: '2026-11-21'
   - page: claude-code/20.path-scoped-rules
-    checked: '2026-11-07'
+    checked: '2026-11-22'
   - page: claude-code/30.skills
-    checked: '2026-11-07'
+    checked: '2026-11-22'
   - page: claude-code/40.permissions
-    checked: '2026-11-07'
+    checked: '2026-11-22'
   - page: claude-code/50.mcp-servers
     checked: '2026-11-08'
   - page: deploy/10.continuous-deployment
@@ -40,7 +40,7 @@ pages:
   - page: git-github/80.git-plumbing
     checked: '2026-11-10'
   - page: hooks/10.hooks
-    checked: '2026-11-07'
+    checked: '2026-11-22'
   - page: hooks/20.blocking-hooks
     checked: '2026-11-07'
   - page: hooks/30.hook-added-context
@@ -123,6 +123,8 @@ pages:
     checked: '2026-11-17'
   - page: verification/80.headless-browser-checks
     checked: '2026-11-17'
+  - page: verification/85.usability-testing
+    checked: '2026-11-22'
   - page: walkthroughs/10.asking-for-a-change
     checked: '2026-11-17'
   - page: walkthroughs/15.a-change-meets-the-gate
