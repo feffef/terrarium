@@ -105,6 +105,19 @@ describe('Campaign pages', () => {
     expect(issues('pages', { campaign: { ...c, rewards: [mug, { ...manual, options: mug!.options }] } })).toEqual([])
   })
 
+  it('rejects a locked Stretch goal whose id is also an option choice id', () => {
+    const c = validCampaign()
+    const goal = { id: 'red', amount: 2000, title: 'Red' }
+    expect(issues('pages', { campaign: { ...c, stretchGoals: [goal] } })).toEqual([
+      expect.stringMatching(/^campaign\.stretchGoals\.0\.id: .*"red".*option choice/),
+    ])
+  })
+
+  it('lets an unlocked Stretch goal share an option choice id', () => {
+    const c = validCampaign()
+    expect(issues('pages', { campaign: { ...c, stretchGoals: [{ id: 'red', amount: 400, title: 'Red' }] } })).toEqual([])
+  })
+
   it('rejects a Reward that is neither digital nor shipped', () => {
     const c = validCampaign()
     const { shipsTo: _, ...unshipped } = c.rewards[0]!

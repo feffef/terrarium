@@ -139,6 +139,14 @@ export const campaign = z
     }
     flagDuplicateIds(ctx, { rewards: c.rewards, addons: c.addons, stretchGoals: c.stretchGoals })
     flagRecentBackers(ctx, c)
+    // A locked goal and a choice sharing an id read alike in the gallery's hover and focus ids;
+    // an unlocked one is legitimate (#3599). `pledged` is stored content, so this is stable.
+    const choiceIds = new Set(c.rewards.flatMap((r) => r.options?.flatMap((g) => g.choices.map((ch) => ch.id)) ?? []))
+    c.stretchGoals?.forEach((g, i) => {
+      if (g.amount > c.pledged && choiceIds.has(g.id)) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['stretchGoals', i, 'id'], message: `id "${g.id}" is also an option choice id while the goal is locked` })
+      }
+    })
     for (const where of new Set(c.rewards.flatMap((r) => r.shipsTo ?? []))) {
       if (c.shipping[where] === undefined) {
         ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['shipping', where], message: 'a Reward ships here, so it needs a rate' })
