@@ -123,6 +123,8 @@ pages:
     checked: '2026-11-17'
   - page: verification/80.headless-browser-checks
     checked: '2026-11-17'
+  - page: verification/85.usability-testing
+    checked: '2026-11-22'
   - page: walkthroughs/10.asking-for-a-change
     checked: '2026-11-17'
   - page: walkthroughs/15.a-change-meets-the-gate
@@ -151,5 +153,3 @@ pages:
     checked: '2026-11-20'
   - page: web-standards/40.colour-and-motion-settings
     checked: '2026-11-20'
-  - page: verification/85.usability-testing
-    checked: '2026-11-22'
