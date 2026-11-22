@@ -1,15 +1,17 @@
 schemaVersion: 1
 session: session_013zxzeNisEDZyrmPg2jhA5G
 startedAt: 2026-11-22T10:12:56Z
-endedAt: 2026-11-22T11:18:51Z
+endedAt: 2026-11-22T11:23:31Z
 kind: interactive
 goal: Clear the open issue backlog
 status: in-review
-outcome: "Six issues triaged and grilled; five branches built and reviewed, two PRs open (#3588, #3589), three branches still gating"
-summary: "Human-instructed: the owner invoked /clear-backlog and answered three grilling rounds (1a, 2a then 7a, 4a, 5a with a named section \"Waiting for owner decision\", 8c to split two Friction Ledger entries, 3a, 6 yes). One question (Q9, glassbox-curate: should owner-question items also move into the new section) is still unanswered. Agent-initiated within the Skill: the sweep (8 open issues, all needs-triage, no external PRs), the explore run (6 full triages that posted comments and labels, 2 date-gated blocked-checks for #3340 due 2026-11-25 and #3423 due 2026-11-24), verifying each agent's GitHub writes, recording the owner's decisions on #3574, #3578, #3579 and #3580 and labelling them ready-for-agent, and one build run of five branches. The owner's own proposal for #3574 (each glassbox-curate run pushes its own branch) replaced my pick of reusing the session branch; the evidence was that frictions-to-fixes' scheduled run pushed and merged its own named branch (#3582) while both glassbox-curate runs stayed on the harness branch. Round 1 found real defects on four branches (a wrong cause in a split ledger entry, an unrunnable ledger-set command, a move with no landing step, a stale cross-entry pointer); the guard branch needed round 2 (its fixes exceeded 10 lines) and round 2 caught a stale surface: safe field. PRs #3588 (#3579) and #3589 (#3577, #3578) are open; the guard (#3580, Human-only), prune-trial (#3575) and glassbox-curate (#3574, waits on Q9) branches are still in gate or waiting."
+outcome: "Two PRs merged closing #3577, #3578 and #3579; #3590 (#3575) open; #3591 (#3580 guard) waits for a human merge; #3574 waits on Q9"
+summary: "Human-instructed: the owner invoked /clear-backlog and answered three grilling rounds (1a, 2a then 7a, 4a, 5a with a named section \"Waiting for owner decision\", 8c to split two Friction Ledger entries, 3a, 6 yes). One question (Q9, glassbox-curate: should owner-question items also move into the new section) is still unanswered. Agent-initiated within the Skill: the sweep (8 open issues, all needs-triage, no external PRs), the explore run (6 full triages that posted comments and labels, 2 date-gated blocked-checks for #3340 due 2026-11-25 and #3423 due 2026-11-24), verifying each agent's GitHub writes, recording the owner's decisions on #3574, #3578, #3579 and #3580 and labelling them ready-for-agent, and one build run of five branches. The owner's own proposal for #3574 (each glassbox-curate run pushes its own branch) replaced my pick of reusing the session branch; the evidence was that frictions-to-fixes' scheduled run pushed and merged its own named branch (#3582) while both glassbox-curate runs stayed on the harness branch. Round 1 found real defects on four branches (a wrong cause in a split ledger entry, an unrunnable ledger-set command, a move with no landing step, a stale cross-entry pointer); the guard branch needed round 2 (its fixes exceeded 10 lines) and round 2 caught a stale surface: safe field. PRs #3588 (#3579) and #3589 (#3577, #3578) merged; PR #3590 (#3575) is open and waiting on CI; PR #3591 (#3580 guard, Human-only) waits for a human merge; the glassbox-curate branch (#3574) is reviewed but waits on the owner's answer to Q9."
 prs:
   - "3588"
   - "3589"
+  - "3590"
+  - "3591"
 docsRead:
   - path: .agents/skills/code-review/SKILL.md
     reason: (no reason given)
@@ -95,23 +97,30 @@ frictions:
   - description: "Linked worktree(s) left with uncommitted or unpushed work at close: /home/user/terrarium/.claude/worktrees/wf_3d330e93-ace-1, /home/user/terrarium/.claude/worktrees/wf_3d330e93-ace-2, /home/user/terrarium/.claude/worktrees/wf_3d330e93-ace-4"
     solution: Push each, or remove it if its work is meant to be dropped.
     severity: minor
-durationSec: 3955
+  - description: "Linked worktree(s) left with uncommitted or unpushed work at close: /home/user/terrarium/.claude/worktrees/wf_3d330e93-ace-1, /home/user/terrarium/.claude/worktrees/wf_3d330e93-ace-2"
+    solution: Push each, or remove it if its work is meant to be dropped.
+    severity: minor
+  - description: "Linked worktree(s) left with uncommitted or unpushed work at close: /home/user/terrarium/.claude/worktrees/wf_3d330e93-ace-2"
+    solution: Push each, or remove it if its work is meant to be dropped.
+    severity: minor
+durationSec: 4235
 models:
-  claude-opus-5-5: 170
+  claude-opus-5-5: 215
 toolCounts:
-  Bash: 47
+  Bash: 63
   Skill: 3
   Workflow: 3
-  Read: 1
+  Read: 2
   ToolSearch: 4
   PushNotification: 4
-  mcp__github__add_issue_comment: 4
+  mcp__github__add_issue_comment: 8
   mcp__github__issue_write: 4
   SendMessage: 21
-  mcp__github__create_pull_request: 2
-  mcp__claude-code-remote__subscribe_pr_activity: 2
+  mcp__github__create_pull_request: 4
+  mcp__claude-code-remote__subscribe_pr_activity: 4
   Write: 1
   Edit: 1
+  ReadNotifications: 6
 filesEdited:
   - scripts/session/review-proof.ts
   - scripts/hooks/review-call-sha-guard.ts
@@ -521,7 +530,8 @@ ruleUse:
         trigger: layers/journal/GLOSSARY.md
     reported:
       - path: .claude/rules/adr-0004.md
-        value: unrelated
+        value: confirmed
+        why: "agreed:"
       - path: .claude/rules/adr-0009.md
         value: unrelated
       - path: .claude/rules/adr-0003.md
@@ -549,7 +559,6 @@ ruleUse:
         value: in-scope
       - path: .claude/rules/glossary-terms.md
         value: unrelated
-      - path: docs/agents/guards.md
   - by: general-purpose
     subagent: 8
     answered: true
@@ -1860,287 +1869,287 @@ subagents:
     durationSec: 275
     toolCalls: 16
     modelCalls: 15
-    tokenShare: 2.1
+    tokenShare: 1.9
   - type: general-purpose
     task: a300fe7dcf03efd9b
     model: claude-opus-5-5
     durationSec: 311
     toolCalls: 16
     modelCalls: 16
-    tokenShare: 2.2
+    tokenShare: 2
   - type: general-purpose
     task: a549b38d4df999ea2
     model: claude-opus-5-5
     durationSec: 278
     toolCalls: 15
     modelCalls: 13
-    tokenShare: 2.1
+    tokenShare: 1.9
   - type: general-purpose
     task: a5bab45d30b1ad1ed
     model: claude-opus-5-5
     durationSec: 230
     toolCalls: 23
     modelCalls: 23
-    tokenShare: 2.8
+    tokenShare: 2.6
   - type: general-purpose
     task: a6e957a43f55fe971
     model: claude-opus-5-5
     durationSec: 247
     toolCalls: 19
     modelCalls: 18
-    tokenShare: 2.3
+    tokenShare: 2.1
   - type: general-purpose
     task: a73299c0d000d9af5
     model: claude-opus-5-5
     durationSec: 345
     toolCalls: 12
     modelCalls: 11
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: general-purpose
     task: a81d98ef8db1f2bd0
     model: claude-sonnet-5-5
     durationSec: 721
     toolCalls: 28
     modelCalls: 21
-    tokenShare: 2.7
+    tokenShare: 2.4
   - type: general-purpose
     task: a85b2467991ae66b8
     model: claude-opus-5-5
-    durationSec: 772
-    toolCalls: 87
-    modelCalls: 54
-    tokenShare: 7.8
+    durationSec: 1076
+    toolCalls: 92
+    modelCalls: 58
+    tokenShare: 7.6
   - type: general-purpose
     task: a9fb93348c6245876
     model: claude-opus-5-5
     durationSec: 247
     toolCalls: 16
     modelCalls: 14
-    tokenShare: 1.9
+    tokenShare: 1.7
   - type: general-purpose
     task: aaf898ff36c9bcd4c
     model: claude-opus-5-5
     durationSec: 310
     toolCalls: 12
     modelCalls: 12
-    tokenShare: 1.6
+    tokenShare: 1.4
   - type: general-purpose
     task: ab02979b7a650387e
     model: claude-opus-5-5
     durationSec: 297
     toolCalls: 12
     modelCalls: 11
-    tokenShare: 2
+    tokenShare: 1.8
   - type: general-purpose
     task: abefa2d17c291efb0
     model: claude-opus-5-5
     durationSec: 305
     toolCalls: 17
     modelCalls: 17
-    tokenShare: 1.8
+    tokenShare: 1.7
   - type: general-purpose
     task: ac2737db87db65bfa
     model: claude-sonnet-5-5
-    durationSec: 736
-    toolCalls: 38
-    modelCalls: 29
-    tokenShare: 3.6
+    durationSec: 1028
+    toolCalls: 41
+    modelCalls: 31
+    tokenShare: 3.5
   - type: general-purpose
     task: ac2f19bcb63e0fb97
     model: claude-opus-5-5
     durationSec: 344
     toolCalls: 14
     modelCalls: 13
-    tokenShare: 1.9
+    tokenShare: 1.8
   - type: general-purpose
     task: acc1250eacb4548d9
     model: claude-sonnet-5-5
     durationSec: 357
     toolCalls: 36
     modelCalls: 26
-    tokenShare: 3.9
+    tokenShare: 3.6
   - type: general-purpose
     task: af2107769a30c7106
     model: claude-sonnet-5-5
     durationSec: 752
     toolCalls: 29
     modelCalls: 25
-    tokenShare: 3.5
+    tokenShare: 3.2
   - type: workflow-subagent
     task: Spec claude/review-call-sha-guard r1
     model: claude-opus-5-5
     durationSec: 75
     toolCalls: 13
     modelCalls: 12
-    tokenShare: 1.4
+    tokenShare: 1.2
   - type: workflow-subagent
     task: Standards claude/glassbox-curate-own-branch r1
     model: claude-opus-5-5
     durationSec: 74
     toolCalls: 13
     modelCalls: 13
-    tokenShare: 1.5
+    tokenShare: 1.3
   - type: workflow-subagent
     task: Standards claude/review-call-sha-guard r1
     model: claude-opus-5-5
     durationSec: 80
     toolCalls: 12
     modelCalls: 10
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: workflow-subagent
     task: Standards claude/clear-backlog-rounds-and-retro r1
     model: claude-opus-5-5
     durationSec: 114
     toolCalls: 16
     modelCalls: 15
-    tokenShare: 1.6
+    tokenShare: 1.5
   - type: workflow-subagent
     task: Standards claude/prune-trial-mark-on-trial r1
     model: claude-opus-5-5
     durationSec: 60
     toolCalls: 9
     modelCalls: 8
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: workflow-subagent
     task: build claude/survey-overflow-fixes-record
     model: claude-sonnet-5-5
     durationSec: 76
     toolCalls: 17
     modelCalls: 12
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: workflow-subagent
     task: build claude/review-call-sha-guard
     model: claude-sonnet-5-5
     durationSec: 195
     toolCalls: 41
     modelCalls: 25
-    tokenShare: 3.2
+    tokenShare: 3
   - type: workflow-subagent
     task: Spec claude/clear-backlog-rounds-and-retro r1
     model: claude-opus-5-5
     durationSec: 78
     toolCalls: 13
     modelCalls: 11
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: workflow-subagent
     task: Spec claude/glassbox-curate-own-branch r1
     model: claude-opus-5-5
     durationSec: 61
     toolCalls: 9
     modelCalls: 9
-    tokenShare: 1
+    tokenShare: 0.9
   - type: workflow-subagent
     task: Standards claude/survey-overflow-fixes-record r1
     model: claude-opus-5-5
     durationSec: 59
     toolCalls: 9
     modelCalls: 8
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: workflow-subagent
     task: Spec claude/survey-overflow-fixes-record r1
     model: claude-opus-5-5
     durationSec: 77
     toolCalls: 13
     modelCalls: 13
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: workflow-subagent
     task: build claude/prune-trial-mark-on-trial
     model: claude-sonnet-5-5
     durationSec: 84
     toolCalls: 24
     modelCalls: 17
-    tokenShare: 1.6
+    tokenShare: 1.5
   - type: workflow-subagent
     task: Spec claude/prune-trial-mark-on-trial r1
     model: claude-opus-5-5
     durationSec: 82
     toolCalls: 11
     modelCalls: 10
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: workflow-subagent
     task: build claude/glassbox-curate-own-branch
     model: claude-sonnet-5-5
     durationSec: 92
     toolCalls: 27
     modelCalls: 18
-    tokenShare: 2.5
+    tokenShare: 2.3
   - type: workflow-subagent
     task: build claude/clear-backlog-rounds-and-retro
     model: claude-sonnet-5-5
     durationSec: 149
     toolCalls: 18
     modelCalls: 16
-    tokenShare: 1.7
+    tokenShare: 1.5
   - type: workflow-subagent
     task: "triage #3574"
     model: claude-sonnet-5-5
     durationSec: 110
     toolCalls: 28
     modelCalls: 13
-    tokenShare: 2.3
+    tokenShare: 2.1
   - type: workflow-subagent
     task: "triage #3575"
     model: claude-sonnet-5-5
     durationSec: 142
     toolCalls: 28
     modelCalls: 15
-    tokenShare: 2.4
+    tokenShare: 2.2
   - type: workflow-subagent
     task: "triage #3580"
     model: claude-sonnet-5-5
     durationSec: 90
     toolCalls: 18
     modelCalls: 10
-    tokenShare: 1.6
+    tokenShare: 1.4
   - type: workflow-subagent
     task: "triage #3578"
     model: claude-sonnet-5-5
     durationSec: 71
     toolCalls: 18
     modelCalls: 9
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: "triage #3423"
     model: claude-sonnet-5-5
     durationSec: 24
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: workflow-subagent
     task: "triage #3579"
     model: claude-sonnet-5-5
     durationSec: 109
     toolCalls: 25
     modelCalls: 14
-    tokenShare: 2
+    tokenShare: 1.9
   - type: workflow-subagent
     task: "triage #3340"
     model: claude-sonnet-5-5
     durationSec: 23
     toolCalls: 8
     modelCalls: 4
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: workflow-subagent
     task: "triage #3577"
     model: claude-sonnet-5-5
     durationSec: 88
     toolCalls: 17
     modelCalls: 10
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: workflow-subagent
     task: Spec claude/review-call-sha-guard r2
     model: claude-opus-5-5
     durationSec: 97
     toolCalls: 12
     modelCalls: 12
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: Standards claude/review-call-sha-guard r2
     model: claude-opus-5-5
     durationSec: 106
     toolCalls: 20
     modelCalls: 20
-    tokenShare: 2.1
+    tokenShare: 1.9
 gitBranch: ccr-c9bbf256-3b3z58
 entrypoint: remote_mobile
 cliVersion: 2.1.330
