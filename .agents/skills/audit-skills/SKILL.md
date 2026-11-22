@@ -178,8 +178,8 @@ Grade each Skill's importance by the definitions below, after reading its
   couldn't tell, the key evidence quoted with its ids (PRs, issues, sessions,
   commits), and the reasoning behind the verdict, grade or idea. Then run
   `pnpm exec tsx .agents/skills/audit-skills/scripts/prune-observations.ts`,
-  which removes entries past that window (git keeps the history) and prints
-  what it removed.
+  which removes entries past that window (git keeps the history), prints what
+  it removed, and flags any note of today outside 300–500 words.
 - **`auditSummary`** `{ date: <today, UTC>, text }` is the line the Skills page
   shows for each Skill: two plain sentences (about 40 words, no ids or jargon)
   giving the overall picture from all its `observations` and this window's runs,

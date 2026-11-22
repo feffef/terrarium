@@ -103,7 +103,7 @@ branch you dropped. `log-session --author` enforces this and removes clean workt
 already merged (`EXCUSALS` in `scripts/git/check-worktrees.ts` lists the exceptions).
 
 If you `cd`'d into a subagent's worktree, `cd` back (or use absolute paths) and
-re-check `git status` at the root: a closure Stop-hook flag may belong to that
+re-check `git status` at the root: a Session closure Stop-hook flag may belong to that
 worktree, not your own tree.
 
 ## 6. Resume a stopped subagent; never re-dispatch it

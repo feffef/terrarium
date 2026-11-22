@@ -168,8 +168,9 @@ written for a human to apply once, not for agents to read.
 
 Three exceptions and one refusal:
 
-- **ADRs** (`docs/adr/`) and their summary rules change only through a
-  human-led rewrite (ADR-0030) or a trial a Trusted user starts (ADR-0027).
+- **ADRs** (`docs/adr/`) and their summary rules change in a trial
+  only when a Trusted user starts it (ADR-0027); every ADR edit waits for a human
+  merge (ADR-0004).
 - **Installed Skills** (`skills-lock.json`) — the Gate rejects the edit.
 - **Session logs** — the record, not instructions.
 - **Retiring a Skill or a Routine, including your own** — file a `needs-triage`

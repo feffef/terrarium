@@ -21,6 +21,7 @@ the AFK-ready triage label"), use that string.
 > `ready-for-human`: `triage`, `auto-triage`, `clear-backlog` and the guest
 > pipeline. The one exception: `harvest` files its `Seedling:` issues as
 > `ready-for-human`, since a Trusted user's green light is what they wait for.
+> Nobody else files a `Seedling:`, whoever asked.
 > Every other Skill, installed Skills included, files its issues
 > `needs-triage`, however settled they look (`to-spec` and `to-tickets` say
 > `ready-for-agent`; don't apply it), except a spec on hold, which carries no

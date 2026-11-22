@@ -1,6 +1,6 @@
 ---
 name: close-session
-description: "Invoke when this Claude session is wrapping up — coming to a close, or the work has reached a coherent, honest state (a PR opened, changes committed, a question answered), whether or not anything has merged. The model-facing front door for Session closure: it records the session log via `log-session`. Judge closure yourself; invoke early and re-invoke if work continues — logging self-heals, so closing early costs nothing."
+description: "Invoke when this Claude session is wrapping up — coming to a close, or the work has reached a coherent, honest state (a PR opened, changes committed, a question answered), whether or not anything has merged. The model-facing front door for Session closure: it records the session log via `log-session`. Judge Session closure yourself; invoke early and re-invoke if work continues — logging self-heals, so closing early costs nothing."
 ---
 
 You've reached **Session closure**. Goal: the Journal holds an honest log of
@@ -24,8 +24,6 @@ this session, with its final status.
    If a PR-open step (`subscribe_pr_activity`, or this Skill) was rejected, log
    anyway, as `in-review`, and name the skipped step.
 
-Never filter `log-session.ts` output (`grep`, `head`): its refusals and warnings print there.
-
 **Re-invoke** `/close-session` whenever more work follows, such as another PR or
 the merge. Each log replaces the last.
 
@@ -36,10 +34,10 @@ at end of turn, so after you author), and `git fetch origin main` then
 later babysitting turn. A scheduled run has no human to notice a missing log
 (issue #176), so authoring it yourself is the only way one gets committed.
 
-**If a human had to prompt this closure** after a PR was already opened or
+**If a human had to prompt this Session closure** after a PR was already opened or
 merged, you missed the PR-open log. Record a **`major`** Friction (fixed grade
 here) whose `description` contains the exact keyword **`HUMAN-PROMPTED-CLOSURE`**.
-Self-judged closure needs none.
+Self-judged Session closure needs none.
 
 **Dispatched worktree-isolated impl agents must not self-invoke this Skill**; they
 would clobber the orchestrator's shared log. `log-session.ts --author` refuses
