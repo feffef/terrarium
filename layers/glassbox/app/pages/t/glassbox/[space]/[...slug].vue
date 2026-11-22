@@ -43,6 +43,7 @@ const { data, status, error } = await useAsyncData(route.path, async () => {
 const page = computed(() => data.value?.page ?? null)
 // A Subject has no content file: its page lists its Lessons.
 const subject = computed(() => data.value?.subjects.find((s) => path === `/${s.slug}`))
+const walkthroughsName = 'Walkthroughs'
 // The bare `/walkthroughs` folder lists the Walkthroughs the same plain way.
 const walkthroughsIndex = computed(() => !page.value && glassboxWalkthroughsAt(path) && !!data.value?.walkthroughs.length)
 if (!page.value && !subject.value && !walkthroughsIndex.value && !error.value) setResponseStatus(404)
@@ -76,7 +77,6 @@ onMounted(async () => {
 })
 onBeforeUnmount(() => seen?.disconnect())
 
-const walkthroughsName = 'Walkthroughs'
 useHead(() => ({ title: `${page.value?.title ?? subject.value?.name ?? (walkthroughsIndex.value ? walkthroughsName : 'Not found')} · glassbox` }))
 useSeoMeta({ description: () => page.value?.description })
 </script>
