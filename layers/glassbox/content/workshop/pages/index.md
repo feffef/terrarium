@@ -24,8 +24,6 @@ Each guide page is named by its title, then its file under `layers/glassbox/cont
 
 - **The Installed Skills pages say little of their own.** *Planning skills* (`skill-pack/20.planning-with-the-pack`) and *Engineering skills* (`skill-pack/30.engineering-skills`) mostly describe Skills that come from outside Terrarium. Only a few of their facts are about choices Terrarium made.
 
-- **Chips per row.** The owner capped the overview at three chips a row. Walkthrough stops may hold five, and several rows in other Walkthroughs hold four or five. Ask the owner whether the cap covers them.
-
 ### Recurring problems
 
 - **New text has contained false claims.** Twice, a newly written page or fix said something its source contradicted, and it was only noticed a day later. Older text can be false too: a claim check found *Mermaid pre-rendering* saying unmapped colours fall back to Mermaid's own defaults, when they are fixed light colours.
@@ -37,10 +35,6 @@ These are the owner's goals for the guide. A run builds toward them directly; a 
 1. **Finish the web standards Subject.** It holds *CSS custom properties*, *SVG*, *ARIA* and *Colour and motion settings*. Still open: no ADR or rule says binary images are kept out of the repository (the repo just holds none), so no page teaches that; and *ARIA* cites components and tests only, because no accessibility practice is recorded. Ask the owner whether to record one.
 2. **Make structure and titles consistent.** Titles should name the general concept and follow one pattern within a Subject, and file names should match their titles.
 3. **Fill what is missing entirely.** This covers a Lesson, or a whole Subject, for something Terrarium relies on that no page teaches yet.
-
-### Good next focuses
-
-1. **Decide how pages say "a person merges" a Human-only file.** Since the owner waiver (ADR-0004), an agent may merge one when the owner says so in the session. *Protected paths*, *Human-only* and the overview say so. These still state it flatly, each true as the default: *Path-specific rules*, *Decision records*, *Merge gate*, *Claude Code hooks* (twice), *GitHub Actions*, *Cross-tenant reads* and *Asking an agent for a change*. Ask the owner whether to name the waiver there or keep one home.
 
 ### Wording fresh readers still find hard
 
@@ -68,6 +62,8 @@ None of these is false.
 
 ### Waiting for owner decision
 
+- **Chips per row.** The owner capped the overview at three chips a row. Walkthrough stops may hold five, and several rows in other Walkthroughs hold four or five. Ask the owner whether the cap covers them.
+- **Decide how pages say "a person merges" a Human-only file.** Since the owner waiver (ADR-0004), an agent may merge one when the owner says so in the session. *Protected paths*, *Human-only* and the overview say so. These still state it flatly, each true as the default: *Path-specific rules*, *Decision records*, *Merge gate*, *Claude Code hooks* (twice), *GitHub Actions*, *Cross-tenant reads* and *Asking an agent for a change*. Ask the owner whether to name the waiver there or keep one home.
 - No page teaches how the `glassbox-curate` Skill runs in two modes (a loop session and an instruction session) and pauses for `glassbox-update`; a textbook about its own upkeep may not suit the guide. Nearest page: *Scheduled tasks*.
 
 ### Claims to check
