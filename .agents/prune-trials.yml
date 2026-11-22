@@ -64,7 +64,7 @@ trials:
       most recent closed, 152 ledger files (9 read) and CLAUDE.md, `docs/agents/`
       and four Skills for word counts (not session logs, not older closed
       issues, not the other Skills). `harvest-first-pass-shallow` (fixes #3106,
-      #3137, #3417; regression #3543) failed as prose; `harvest.ts` holds the
+      #3137, #3417) failed as prose; `harvest.ts` holds the
       `stopped:` line, `check-clusters`, `check-body` and `check-posted`.
       Runners-up: glassbox-curate steps 8 and "Pick the mode" and clear-backlog
       §3 step 4, both edited by hand the same day (so left alone), and the
