@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeNfqQhFTf6j6WBEjgF
 startedAt: 2026-11-22T15:30:20Z
-endedAt: 2026-11-22T20:11:27Z
+endedAt: 2026-11-22T20:14:45Z
 kind: interactive
 goal: "Glass Box curate run: a Lesson on horizontal overflow, kept in a revived drafts space"
-status: in-review
-outcome: "PR 3595 merged (drafts space, Lesson kept there); PR 3601 open: Claude Code wording fixes"
-summary: "A scheduled glassbox-curate run. Agent-initiated: it chose the focus (the last Web standards gap, narrow-screen overflow) from the memory page, wrote a new Lesson on horizontal overflow through a writer subagent, had it claim-checked and read by fresh readers twice, applied code-review findings, ran the gate and opened PR 3595. Human-instructed, later: the owner commented on the PR that the topic is weak for web standards and asked to move it to a drafts space, then to revive that space as it was before. The agent first asked which option the owner wanted, because a new Space is the owner's call, then followed the owner's answer: a subagent restored the removed drafts Space by hand (a plain revert conflicted with later renames), the Lesson moved there, the three guide Where next swaps were undone, and the PR title and body were rewritten. A second code-review ran on that revival and the gate passed. The owner then enabled auto-merge and the PR merged. The owner asked why the session had stopped and said to continue; the agent then ran a second curate run (Claude Code wording leads), opened PR 3601, and it waits for CI and its own merge."
+status: completed
+outcome: "PR 3595 merged (drafts space, Lesson kept there); PR 3601 merged: Claude Code wording fixes"
+summary: "A scheduled glassbox-curate run. Agent-initiated: it chose the focus (the last Web standards gap, narrow-screen overflow) from the memory page, wrote a new Lesson on horizontal overflow through a writer subagent, had it claim-checked and read by fresh readers twice, applied code-review findings, ran the gate and opened PR 3595. Human-instructed, later: the owner commented on the PR that the topic is weak for web standards and asked to move it to a drafts space, then to revive that space as it was before. The agent first asked which option the owner wanted, because a new Space is the owner's call, then followed the owner's answer: a subagent restored the removed drafts Space by hand (a plain revert conflicted with later renames), the Lesson moved there, the three guide Where next swaps were undone, and the PR title and body were rewritten. A second code-review ran on that revival and the gate passed. The owner then enabled auto-merge and the PR merged. The owner asked why the session had stopped and said to continue; the agent then ran a second curate run (Claude Code wording leads), opened PR 3601, and merged it with merge-pr.ts after green CI and a posted verdict. The session then stopped because its context is estimated above 500k tokens."
 prs:
   - "3595"
   - "3601"
@@ -91,22 +91,22 @@ frictions:
   - description: Stopped after one run although the curate Skill says to start the next run at once; I misread the pause rule, which applies only when open PRs block every remaining item.
     solution: Step 8 could say a PR waiting for the owner is never a reason to end the session, and that the pause rule needs every remaining item blocked.
     severity: minor
-durationSec: 16867
+durationSec: 17065
 models:
-  claude-sonnet-5-5: 259
+  claude-sonnet-5-5: 273
 toolCounts:
   Read: 20
-  Skill: 7
-  Bash: 68
+  Skill: 8
+  Bash: 72
   Agent: 14
   ScheduleWakeup: 1
   ToolSearch: 3
   SendMessage: 3
   mcp__github__create_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 2
-  ReadNotifications: 13
+  ReadNotifications: 15
   PushNotification: 1
-  mcp__github__add_issue_comment: 1
+  mcp__github__add_issue_comment: 2
   mcp__github__update_issue_comment: 1
   mcp__github__update_pull_request: 1
 filesEdited:
@@ -842,13 +842,13 @@ subagents:
     durationSec: 1100
     toolCalls: 85
     modelCalls: 62
-    tokenShare: 9.1
+    tokenShare: 8.7
   - task: Claim-check horizontal overflow page
     model: sonnet
     durationSec: 137
     toolCalls: 18
     modelCalls: 14
-    tokenShare: 1.9
+    tokenShare: 1.8
   - task: Fresh reader of overflow page
     model: sonnet
     durationSec: 35
@@ -860,7 +860,7 @@ subagents:
     durationSec: 130
     toolCalls: 21
     modelCalls: 19
-    tokenShare: 2
+    tokenShare: 1.9
   - task: Fresh read of revised overflow page
     model: sonnet
     durationSec: 34
@@ -878,31 +878,31 @@ subagents:
     durationSec: 36
     toolCalls: 10
     modelCalls: 8
-    tokenShare: 1
+    tokenShare: 0.9
   - task: Revive Glass Box drafts space
     model: opus
     durationSec: 522
     toolCalls: 89
     modelCalls: 86
-    tokenShare: 15.6
+    tokenShare: 14.9
   - task: Standards review of drafts revival
     model: sonnet
     durationSec: 44
     toolCalls: 10
     modelCalls: 9
-    tokenShare: 1.2
+    tokenShare: 1.1
   - task: Spec review of drafts revival
     model: sonnet
     durationSec: 50
     toolCalls: 10
     modelCalls: 9
-    tokenShare: 1.8
+    tokenShare: 1.7
   - task: Claim-check three wording edits
     model: sonnet
     durationSec: 19
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 0.8
+    tokenShare: 0.7
   - task: Fresh read of two Claude Code pages
     model: sonnet
     durationSec: 22
@@ -925,6 +925,8 @@ gitBranch: claude/compassionate-bardeen-vtppoj
 entrypoint: remote_trigger
 cliVersion: 2.1.330
 trigger: glassbox-curate
+learnings:
+  - The owner judged the Horizontal overflow topic weak and a poor fit for web standards, though the memory page listed it as a gap; the curate Skill's gap-first pick order can choose a topic the owner would not rank, so a gap needs a relevance check before a Lesson is built.
 ideas:
   - Make orient.ts print this session's id in the run-entry skeleton, so a run entry never carries the previous run's id.
 landedBy: Stop
