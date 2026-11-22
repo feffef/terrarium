@@ -1,0 +1,282 @@
+schemaVersion: 1
+session: session_013zxzeP2sh6W36WLkBacBVy
+startedAt: 2026-11-22T13:09:10Z
+endedAt: 2026-11-22T13:17:54Z
+kind: autonomous
+goal: Scheduled prune of one problem's instructions
+status: in-review
+outcome: "Judged the pr-workflow trial (held); opened PR #3594 pruning harvest steps 1 and 3"
+summary: "Scheduled /prune-trial run; everything was agent-initiated under the stored prompt, no human instruction. Judged the pr-workflow trial: prepush-gate-review-skipped fell from 11.6% to 0.0%, post-landing Frictions traced to kept bars or the untouched step 3, so it held and its entry was deleted. The dispatch-subagents trial is not judgeable until 2026-11-23. A search subagent ranked failed-prose candidates; glassbox-curate and clear-backlog had been hand-edited the same day, so I pruned harvest steps 1 and 3 (-6 net), which restated helper output. A pinned-SHA Sonnet probe passed. Standards and Spec reviews found one unverified cite, removed. gate:scoped green; PR #3594 opened and subscribed. Open: CI, verdict comment, merge."
+prs:
+  - "3594"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: .agents/skills/harvest/SKILL.md
+    reason: (read before editing)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-curate/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: prune-trial
+    reason: (invoked as a slash command)
+frictions:
+  - description: Every failed-prose candidate had been hand-edited the same day, so the search subagent's ranking cost a round before I could pick a stable target.
+    solution: Have the search brief ask for each candidate's last-edit date and skip those edited within 3 days.
+    severity: minor
+durationSec: 524
+models:
+  claude-sonnet-5-5: 71
+toolCounts:
+  Bash: 29
+  Read: 1
+  Agent: 4
+  Skill: 3
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - .agents/prune-trials.yml
+  - .agents/skills/harvest/SKILL.md
+  - layers/journal/content/current/frictions/harvest-first-pass-shallow.yml
+  - layers/journal/content/current/frictions/prepush-gate-review-skipped.yml
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+docsReadBySubagents:
+  - docs/adr/0027-prune-trials.md
+  - .agents/skills/clear-backlog/SKILL.md
+  - .agents/skills/glassbox-curate/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0027.md
+        value: steered
+        why: trial judging and territory rules
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: review and gate before PR
+      - path: .claude/rules/adr-0003.md
+        value: steered
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: provenance header and trailers
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0030.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/rules/adr-0015.md
+        value: unrelated
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: unrelated
+      - path: docs/agents/pr-workflow.md
+      - path: docs/agents/git-conventions.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/github-integration.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/github-integration.md
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 3
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0030.md
+        via: native
+        trigger: .agents/skills/prune-trial/SKILL.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/prune-trial/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/prune-trial/SKILL.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: .agents/skills/prune-trial/SKILL.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0030.md
+        value: unrelated
+subagents:
+  - type: general-purpose
+    task: Find prose that already failed
+    durationSec: 65
+    toolCalls: 17
+    modelCalls: 12
+    tokenShare: 18.4
+  - type: general-purpose
+    task: Probe harvest SKILL on Sonnet
+    model: sonnet
+    durationSec: 14
+    toolCalls: 3
+    modelCalls: 3
+    tokenShare: 4.2
+  - type: general-purpose
+    task: Standards review of harvest prune
+    durationSec: 38
+    toolCalls: 8
+    modelCalls: 7
+    tokenShare: 8.2
+  - type: general-purpose
+    task: Spec review of harvest prune
+    durationSec: 30
+    toolCalls: 8
+    modelCalls: 6
+    tokenShare: 8
+gitBranch: claude/practical-rubin-9mzsbz
+entrypoint: remote_trigger
+cliVersion: 2.1.330
+trigger: prune-trial
+landedBy: Stop
