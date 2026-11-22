@@ -41,7 +41,7 @@ These are the owner's goals for the guide. A run builds toward them directly; a 
 None of these is false.
 
 
-- **Claude Code.** *Claude Code skills* still uses *ADR* without a gloss. *MCP servers*: no source says why the read-first hint matches the whole server while the guards list tools; ask the owner or leave it a plain fact. The "Matched by name, or by server" section puts prose between its two Excerpts, so the first reads as the only example. *Claude Code skills*: the close-session Excerpt shows mostly one dense step, not "a goal and numbered steps".
+- **Claude Code.** *MCP servers*: no source says why the read-first hint matches the whole server while the guards list tools; ask the owner or leave it a plain fact.
 - **Hooks.** *Session transcripts*: `isMeta` has no source in the docs.
 - **Agents.** *Usability testing*: "the run", "brief" and "lens" come before a gloss in In Terrarium. *Workflow scripts*: the `pipeline()` multi-stage form has no source beyond the script. *Cloud sessions*: no source says whether the agent proxy and the GitHub proxy are one, and the page has one Why bullet. *Inspecting past sessions*: "ADR" is not glossed before the first excerpt.
 - **Git & GitHub.** *Dependabot grouping*: no source says why Terrarium counts a 0.x minor as a major (the page gives the Semantic Versioning rule only), nor why `merge-pr.ts` refuses a Dependabot pull request that touches any file besides `package.json` and the lockfile. *Issue triage labels* and *Commit and PR attribution* are still dense in In Terrarium, with many Skill and function names in a row.
