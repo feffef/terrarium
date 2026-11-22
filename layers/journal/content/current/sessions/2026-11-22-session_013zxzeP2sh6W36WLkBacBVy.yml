@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeP2sh6W36WLkBacBVy
 startedAt: 2026-11-22T13:09:10Z
-endedAt: 2026-11-22T13:17:54Z
+endedAt: 2026-11-22T13:20:49Z
 kind: autonomous
 goal: Scheduled prune of one problem's instructions
-status: in-review
-outcome: "Judged the pr-workflow trial (held); opened PR #3594 pruning harvest steps 1 and 3"
-summary: "Scheduled /prune-trial run; everything was agent-initiated under the stored prompt, no human instruction. Judged the pr-workflow trial: prepush-gate-review-skipped fell from 11.6% to 0.0%, post-landing Frictions traced to kept bars or the untouched step 3, so it held and its entry was deleted. The dispatch-subagents trial is not judgeable until 2026-11-23. A search subagent ranked failed-prose candidates; glassbox-curate and clear-backlog had been hand-edited the same day, so I pruned harvest steps 1 and 3 (-6 net), which restated helper output. A pinned-SHA Sonnet probe passed. Standards and Spec reviews found one unverified cite, removed. gate:scoped green; PR #3594 opened and subscribed. Open: CI, verdict comment, merge."
+status: completed
+outcome: "Judged the pr-workflow trial (held); pruned harvest steps 1 and 3 and merged PR #3594"
+summary: "Scheduled /prune-trial run; everything was agent-initiated under the stored prompt, no human instruction. Judged the pr-workflow trial: prepush-gate-review-skipped fell from 11.6% to 0.0%, post-landing Frictions traced to kept bars or the untouched step 3, so it held and its entry was deleted. The dispatch-subagents trial is not judgeable until 2026-11-23. A search subagent ranked failed-prose candidates; glassbox-curate and clear-backlog had been hand-edited the same day, so I pruned harvest steps 1 and 3 (-6 net), which restated helper output. A pinned-SHA Sonnet probe passed. Standards and Spec reviews found one unverified cite, removed. gate:scoped green; PR #3594 opened and subscribed. PR #3594 merged after green CI and my verdict comment."
 prs:
   - "3594"
 docsRead:
@@ -43,16 +43,19 @@ frictions:
   - description: Every failed-prose candidate had been hand-edited the same day, so the search subagent's ranking cost a round before I could pick a stable target.
     solution: Have the search brief ask for each candidate's last-edit date and skip those edited within 3 days.
     severity: minor
-durationSec: 524
+durationSec: 699
 models:
-  claude-sonnet-5-5: 71
+  claude-sonnet-5-5: 88
 toolCounts:
-  Bash: 29
+  Bash: 34
   Read: 1
   Agent: 4
-  Skill: 3
+  Skill: 4
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - .agents/prune-trials.yml
   - .agents/skills/harvest/SKILL.md
@@ -255,26 +258,26 @@ subagents:
     durationSec: 65
     toolCalls: 17
     modelCalls: 12
-    tokenShare: 18.4
+    tokenShare: 15.3
   - type: general-purpose
     task: Probe harvest SKILL on Sonnet
     model: sonnet
     durationSec: 14
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 4.2
+    tokenShare: 3.5
   - type: general-purpose
     task: Standards review of harvest prune
     durationSec: 38
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 8.2
+    tokenShare: 6.8
   - type: general-purpose
     task: Spec review of harvest prune
     durationSec: 30
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 8
+    tokenShare: 6.6
 gitBranch: claude/practical-rubin-9mzsbz
 entrypoint: remote_trigger
 cliVersion: 2.1.330
