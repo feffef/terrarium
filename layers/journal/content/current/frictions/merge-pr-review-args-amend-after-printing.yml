@@ -1,8 +1,13 @@
 name: merge-pr-review-args-amend-after-printing
 surface: safe
 summary: A session amended its work after the code-review call was printed, so the printed head sha no longer existed and the review had to rerun.
-cause: verdict-line.ts --review-call prints the head sha at that moment; a later amend or rename changes the head, so the sha in the review call no longer matches and merge-pr.ts's reviewed-head check fails until review reruns on the final head.
+cause: "verdict-line.ts --review-call prints the head sha at that moment; a later amend or rename changes the head, so the sha in the review call no longer matches and merge-pr.ts's reviewed-head check fails until review reruns on the final head. Signals: 'printed sha no longer existed', 'amended after', 'rename', 're-ran code-review on the final head'."
 status: open
+related:
+  - entry: merge-pr-review-args-refusal
+    rule: That entry is a review call whose args named no sha at all; here they named a sha the head later moved past.
+  - entry: merge-pr-own-read-refusal
+    rule: That entry is a verdict's Own-read line refused on a diff that was not simple; here the review call's sha went stale.
 occurrences:
   - session: session_013zxzeQ5mMr3n1PjgqM4sUa
     date: "2026-11-19"

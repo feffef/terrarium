@@ -5,9 +5,13 @@ import { basename, dirname, join } from 'node:path'
 import { readOrNull } from './commit-trailer.ts'
 import { parseTranscript } from './transcript-trace.ts'
 
-export const SHA_RE = /\b[0-9a-f]{7,40}\b/gi
+const SHA_RE = /\b[0-9a-f]{7,40}\b/gi
 const shasIn = (text: unknown): string[] =>
   typeof text === 'string' ? (text.match(SHA_RE) ?? []).map((s) => s.toLowerCase()) : []
+/** The shas a `code-review` Skill call's args name, or null for any other
+ *  Skill; `review-call-sha-guard.ts` shares it so the two cannot disagree. */
+export const reviewCallShas = (input: Record<string, unknown>): string[] | null =>
+  /^(?:[\w-]+:)?code-review$/.test(String(input.skill)) ? shasIn(input.args) : null
 
 const COMMAND_RE = /<command-name>\/?(?:[\w-]+:)?code-review<\/command-name>\s*(?:<command-args>([^<]*)<\/command-args>)?/g
 const NOTIFICATION_RE =
@@ -56,7 +60,7 @@ export function reviewedShasFromTranscript(
       for (const b of content as { type?: string; id?: string; name?: string; input?: Record<string, unknown> }[]) {
         if (b?.type !== 'tool_use') continue
         const input = b.input ?? {}
-        if (b.name === 'Skill' && /^(?:[\w-]+:)?code-review$/.test(String(input.skill))) shasIn(input.args).forEach((s) => found.add(s))
+        if (b.name === 'Skill') reviewCallShas(input)?.forEach((s) => found.add(s))
         else if (b.name === 'Workflow' && input.name === 'clear-backlog-build' && b.id) buildCalls.add(b.id)
         else if (b.name === 'SendMessage' && reviewers.has(String(input.to))) shasIn(input.message).forEach((s) => found.add(s))
       }

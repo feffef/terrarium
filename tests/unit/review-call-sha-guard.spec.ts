@@ -3,7 +3,7 @@
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import { denyOutputFor, formatGuardMessage, lacksReviewSha } from '../../scripts/hooks/review-call-sha-guard.ts'
+import { GUARD_MESSAGE, lacksReviewSha } from '../../scripts/hooks/review-call-sha-guard.ts'
 import { runTsx } from '../support/run-script.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
@@ -14,6 +14,10 @@ describe('lacksReviewSha()', () => {
   it('DENIES a code-review call with bare origin/main args', () => {
     expect(lacksReviewSha({ skill: 'code-review', args: 'origin/main' })).toBe(true)
     expect(lacksReviewSha({ skill: 'code-review' })).toBe(true)
+  })
+
+  it('DENIES a plugin-prefixed code-review call with bare args, as merge-pr counts it', () => {
+    expect(lacksReviewSha({ skill: 'x:code-review', args: 'origin/main' })).toBe(true)
   })
 
   it('ALLOWS the --review-call form, which names the head sha', () => {
@@ -27,13 +31,10 @@ describe('lacksReviewSha()', () => {
   })
 })
 
-describe('the deny output', () => {
+describe('the deny message', () => {
   it('names the verdict-line command and says to paste its args whole', () => {
-    const msg = formatGuardMessage()
-    expect(msg).toContain('pnpm exec tsx scripts/github/verdict-line.ts --review-call')
-    expect(msg).toMatch(/paste the printed args whole/)
-    expect(denyOutputFor(true)?.hookSpecificOutput.permissionDecision).toBe('deny')
-    expect(denyOutputFor(false)).toBeNull()
+    expect(GUARD_MESSAGE).toContain('pnpm exec tsx scripts/github/verdict-line.ts --review-call')
+    expect(GUARD_MESSAGE).toMatch(/paste the printed args whole/)
   })
 })
 
@@ -44,7 +45,9 @@ describe('the CLI as the PreToolUse hook', () => {
     }).trim()
 
   it('END TO END: denies bare args, stays silent with a sha', () => {
-    expect(JSON.parse(run('origin/main')).hookSpecificOutput.permissionDecision).toBe('deny')
+    const deny = JSON.parse(run('origin/main')).hookSpecificOutput
+    expect(deny.permissionDecision).toBe('deny')
+    expect(deny.permissionDecisionReason).toContain('verdict-line.ts --review-call')
     expect(run(`origin/main (reviewing head ${SHA})`)).toBe('')
   })
 })

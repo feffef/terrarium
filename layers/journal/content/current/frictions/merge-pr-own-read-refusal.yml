@@ -1,8 +1,15 @@
 name: merge-pr-own-read-refusal
 surface: safe
-summary: merge-pr.ts refused a verdict carrying an Own-read line on a PR that adds a file, and each refusal cost an extra comment.
-cause: merge-pr.ts accepts an Own-read verdict only when the PR adds no file; a session that posted one on a larger or renamed change was refused and had to repost a verdict after a full review.
+summary: merge-pr.ts refused a verdict carrying an Own-read line on a PR that was not a simple diff, and each refusal cost an extra comment.
+cause: "merge-pr.ts accepts an Own-read verdict only for a diff that passes pr-workflow's simple-change test (simpleChangeRefusal: no added, renamed or copied file, no code, hook or workflow path, at most 2 files and 10 lines); a session that posted one on a larger change was refused and had to repost a verdict after a full review. Signals: 'an Own-read verdict covers only a simple diff', 'Own-read', 'simple diff'."
 status: open
+related:
+  - entry: merge-pr-review-args-refusal
+    rule: That entry is a code-review call whose args named no head sha; here the verdict's Own-read line was refused.
+  - entry: merge-pr-review-args-amend-after-printing
+    rule: That entry is a head that changed after the review call was printed; here the verdict's Own-read line was refused.
+notes: |-
+  2026-11-20 design (moved from merge-pr-review-args-refusal at the split): verdict-line --own-read pre-check dropped: the refusal already names the next command; the tweak covered one of three occurrences; pr-workflow prose is in an open trial
 occurrences:
   - session: session_013zxzeQAV89N7K2uJN1FbsR
     date: "2026-11-20"
