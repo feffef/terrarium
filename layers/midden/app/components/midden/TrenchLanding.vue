@@ -128,12 +128,11 @@ useHead({ title: props.front ? 'The Midden' : 'The Trench · The Midden' })
         <p class="sc midden-landing__pull">
           &ldquo;You catalogue a corpse only where nothing living grew back.&rdquo;
         </p>
+        <!-- Same wording as the first-use gloss (utils/gloss.ts), the single home. -->
+        <p>Tenant: {{ middenGlossFor('tenant') }}.</p>
       </div>
       <div v-else-if="data?.intro" class="midden-landing__foreword">
         <ContentRenderer :value="data.intro" />
-      </div>
-      <!-- Same wording as the first-use gloss (utils/gloss.ts), the single home. -->
-      <div class="midden-landing__foreword">
         <p>Tenant: {{ middenGlossFor('tenant') }}.</p>
       </div>
 
