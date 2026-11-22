@@ -49,6 +49,16 @@ export function pruneObservations(text: string, cutoff: string): Pruned {
   return result
 }
 
+/** Today's notes outside the 300-500 word range the Skill asks for; print-only. */
+export function shortNotes(text: string, today: string): number[] {
+  const obs = parseDocument(text).get('observations')
+  if (!isSeq(obs)) return []
+  return obs.items
+    .filter((i) => isMap(i) && String(i.get('date')) === today)
+    .map((i) => (String((i as { get(k: string): unknown }).get('note') ?? '').match(/\S+/g) ?? []).length)
+    .filter((n) => n < 300 || n > 500)
+}
+
 export function pruneInventory(today: string, cwd = root): string[] {
   const dir = join(cwd, INVENTORY_DIR)
   const cutoff = cutoffFor(today)
@@ -58,6 +68,7 @@ export function pruneInventory(today: string, cwd = root): string[] {
     const { text, removed, unreadable } = pruneObservations(readFileSync(path, 'utf8'), cutoff)
     if (removed.length) writeFileSync(path, text)
     for (const r of removed) report.push(`${f}  ${r.date}  ${r.note.slice(0, 60)}`)
+    for (const w of shortNotes(text, today)) report.push(`${f}  note of ${today} has ${w} words (300-500)`)
     for (const n of unreadable) report.push(`${f}  kept, no readable date: ${n.slice(0, 60)}`)
   }
   return report

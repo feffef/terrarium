@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { cutoffFor, pruneObservations } from '../../scripts/prune-observations.ts'
+import { cutoffFor, pruneObservations, shortNotes } from '../../scripts/prune-observations.ts'
 
 const entry = `name: x
 role: >-
@@ -50,5 +50,16 @@ observations:
   it('leaves a file without observations untouched', () => {
     const text = 'name: x\nrole: >-\n  A role.\n'
     expect(pruneObservations(text, '2026-09-14')).toEqual({ text, removed: [], unreadable: [] })
+  })
+})
+
+describe('shortNotes', () => {
+  const day = (words: number) => `observations:\n  - date: 2026-10-24\n    note: ${Array(words).fill('w').join(' ')}\n`
+  it('flags a note of today outside 300-500 words and ignores older ones', () => {
+    expect(shortNotes(day(212), '2026-10-24')).toEqual([212])
+    expect(shortNotes(day(212), '2026-10-25')).toEqual([])
+  })
+  it('does not flag a 300-word note', () => {
+    expect(shortNotes(day(300), '2026-10-24')).toEqual([])
   })
 })
