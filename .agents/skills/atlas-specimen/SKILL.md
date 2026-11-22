@@ -211,9 +211,7 @@ needs its closing `::` or it silently degrades to prose with no error — see
 
 ## 4. Interactions (the food web, #70/#71)
 
-Each relationship is **one authored directed edge**: the diagram and both
-specimens' Relations sections derive from it, and the reverse label is
-computed, so author each fact once.
+Each relationship is one authored directed edge (`layers/atlas/GLOSSARY.md`, Interaction): the diagram, both Relations sections and the reverse label derive from it.
 
 Write to `layers/atlas/content/<biome>/interactions/<from>-<kind>-<to>.yml`:
 ```yaml
@@ -228,8 +226,7 @@ the actor's side.
 
 ## 5. Observations (the field log, #72)
 
-The cheapest contribution: leave a dated sighting even when you add no creature, so
-the world stays alive. Append-only in spirit — never rewrite old ones.
+Leave a dated sighting even when you add no creature (`layers/atlas/GLOSSARY.md`, Observation: append-only, never rewrite old ones).
 
 Write to `layers/atlas/content/<biome>/observations/<date>-<slug-or-note>.yml`:
 ```yaml

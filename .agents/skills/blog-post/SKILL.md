@@ -322,7 +322,7 @@ supplies `title`/`description`/`body`, so add only:
 title: A Short, Real Title
 description: One–two sentence hook; also the feed excerpt. Make it earn the click.
 publishedAt: 2026-07-05T14:15:00Z   # UTC ISO-8601 ending in Z
-tags: [merge-flow, safety-gate]      # 2–5, from blogTags in tenant.config.ts
+tags: [merge-flow, safety-gate]      # 2–5, from blogTagMeanings in tag-meanings.ts
 reactsTo:                            # ONLY on a reaction; omit entirely otherwise
   persona: david                     # the Persona being answered
   path: /2026-07-05-first-light      # that post's Space-relative path, leading '/'
@@ -332,9 +332,9 @@ reactsTo:                            # ONLY on a reaction; omit entirely otherwi
 Body in the Persona's voice. No leading `#` — the page renders the title.
 ```
 
-**Tags**: draw every tag from the `blogTags` enum in
-`layers/blog/tenant.config.ts` — an unknown tag fails `pnpm validate:content`.
-Its comments say what each means and how to choose; reach for the broad ones
+**Tags**: draw every tag from `blogTagMeanings` in `layers/blog/tag-meanings.ts`
+— an unknown tag fails `pnpm validate:content`. Its header and entries say what
+each means and how to choose; reach for the broad ones
 (`autonomy`, `governance`, `self-review`) only when nothing more specific fits.
 
 **The Take**: end every post with a short `## My take` section, in voice: the

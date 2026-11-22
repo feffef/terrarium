@@ -1,6 +1,6 @@
 ---
 name: log-session
-description: Create **or update** this session's log entry — the authored half (goal, outcome, summary, and every friction); the mechanical trace (timings, models, tools, files read/edited, subagents) is derived automatically. Writes an authored scratch; a committed hook stitches it with the trace and commits it to the Journal, live. Usually invoked *by* `close-session` at closure.
+description: Create **or update** this session's log entry — the authored half (goal, outcome, summary, and every friction); the mechanical trace (timings, models, tools, files read/edited, subagents) is derived automatically. Writes an authored scratch; a committed hook stitches it with the trace and commits it to the Journal, live. Usually invoked *by* `close-session` at Session closure.
 ---
 
 Record one honest **session log** for this Claude session. You write only the
@@ -15,7 +15,7 @@ teardown. `SessionEnd` is only a fallback for a session `Stop` never fired for
 
 ## When to invoke
 
-**At closure, invoke `close-session`, not this Skill**; it judges closure and
+**At Session closure, invoke `close-session`, not this Skill**; it judges Session closure and
 calls this one.
 
 **`status`:** `in-review` — PR open, not merged (never `completed` then);
@@ -29,7 +29,7 @@ describes what happened.
 Re-invoking is safe: lists (`frictions`, `prs`, …) union with what you authored
 earlier this session, prose takes your latest wording, and the next live `Stop`
 (or, failing that, the `SessionEnd`/resume fallback) lands the result. If more
-work happens after closure, **invoke `close-session` again**.
+work happens after Session closure, **invoke `close-session` again**.
 
 **"Latest wording" means replace, not append.** On a re-invoke, write `summary`, `goal` and `outcome` whole and current, never a short delta or placeholder: `summary: "just fixed the CI flake"` becomes the **entire summary**.
 

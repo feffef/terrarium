@@ -64,9 +64,7 @@ the tests a new Campaign disturbs.
 
 ## Voice
 
-**Deadpan.** The shop is polished and serious; only the invention is absurd, and
-nobody on the page notices. The joke is always in the premise, never in the
-wording.
+**Deadpan** (`layers/tinkerfund/GLOSSARY.md`, Why it exists). Nobody on the page notices the absurdity; the joke is always in the premise, never in the wording.
 
 - State the absurd plainly, with engineering specifics: numbers, materials, test
   hours, tolerances. "The drive has passed 2,000 hours of continuous stirring
