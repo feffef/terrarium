@@ -5,7 +5,7 @@ cause: "glassbox-curate dispatches writers, checkers and fresh readers per page,
 status: open
 related:
   - entry: audit-skills-run-cost
-    rule: The fan-out belongs to an audit-skills or retro run.
+    rule: The fan-out belongs to an audit-skills run.
   - entry: blog-post-behaviour-fanout-cost
     rule: The fan-out belongs to an audit-skills run.
   - entry: glassbox-curate-orientation-read-cost

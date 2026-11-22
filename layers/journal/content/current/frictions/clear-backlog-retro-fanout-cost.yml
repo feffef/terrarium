@@ -5,7 +5,7 @@ cause: "clear-backlog section 5 sent the retro to every builder and reviewer, an
 status: open
 related:
   - entry: audit-skills-run-cost
-    rule: The same cost shape from a different run, the audit-skills per-Skill fan-out.
+    rule: The fan-out belongs to an audit-skills run.
 occurrences:
   - session: session_013zxzeTChey8pdC2fuTTH7i
     date: "2026-11-16"

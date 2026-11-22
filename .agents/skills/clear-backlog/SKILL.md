@@ -279,9 +279,9 @@ built.
 
 ## 5. Retro
 
-Once every PR has merged or waits for the owner, send one builder and one
-reviewer per review kind (Standards, Spec, Both) used in the run this by agent
-id: "Retro on the clear-backlog workflow, read-only: change no
+Once every PR has merged or waits for the owner, send this by agent id to
+one builder, and to one reviewer of each review kind (Standards, Spec, Both) the
+run used: "Retro on the clear-backlog workflow, read-only: change no
 files, make no commits. Say nothing about your task, only the workflow around
 it (your brief, `rules()` and `reviewPrompt()` in
 `.claude/workflows/clear-backlog-build.js`, the files you were told to read, the
