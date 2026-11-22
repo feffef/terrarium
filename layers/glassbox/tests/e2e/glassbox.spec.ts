@@ -31,8 +31,10 @@ describe('glassbox Tenant', async () => {
 
   it('explains the header brand mark and the sidebar Subject counts on hover', async () => {
     const html = await $fetch<string>('/t/glassbox/guide')
-    expect(html).toMatch(/class="[^"]*gb-brand"[^>]*title="[^"]*logo mark/)
-    expect(html).toMatch(/class="count"[^>]*title="\d+ lessons?"/)
+    expect(html).toMatch(/class="[^"]*gb-brand"[^>]*title="[^"]*logo/)
+    expect(html).toMatch(/class="[^"]*gb-brand"[^>]*aria-label="[^"]*logo/)
+    expect(html).toMatch(/class="count[^"]*"[^>]*aria-label="\d+ lessons?"/)
+    expect(html).toMatch(/class="count[^"]*"[^>]*title="\d+ lessons?"/)
   })
 
   // Reading progress lives in the visitor's browser, applied after mount (GLOSSARY.md, Reading progress).
