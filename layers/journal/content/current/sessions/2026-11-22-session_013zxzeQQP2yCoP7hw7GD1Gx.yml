@@ -1,15 +1,16 @@
 schemaVersion: 1
 session: session_013zxzeQQP2yCoP7hw7GD1Gx
 startedAt: 2026-11-22T02:07:23Z
-endedAt: 2026-11-22T02:29:48Z
+endedAt: 2026-11-22T02:35:07Z
 kind: autonomous
 goal: "Scheduled run: turn recurring Frictions into fixes"
-status: in-review
-outcome: Ledger and one fix merged; closing ledger PR still open
-summary: "Scheduled frictions-to-fixes run (nothing human-instructed; all agent-initiated under the Skill). A survey subagent appended about 60 Frictions to the ledger, opened 3 entries and recorded #3513; I filed regression issues #3577-#3579 (clear-backlog review cost, retro fan-out cost, survey overflow) and picked 3 fixes. The design agent said: drop cost-claim-unmeasured (one occurrence, covered by an existing rule), build a print-only word-count check for audit-skills notes (merged as #3582), and file the guard for the code-review sha slip as #3580 because it touches Human-only hook files. Ledger PR #3581 merged after code-review; a closing ledger PR records #3582 as a fix. Open: whether the guard in #3580 is wanted; the three regression issues await triage."
+status: completed
+outcome: Ledger, one fix and closing ledger PR merged; three regression issues and a guard issue filed
+summary: "Scheduled frictions-to-fixes run (nothing human-instructed; all agent-initiated under the Skill). A survey subagent appended about 60 Frictions to the ledger, opened 3 entries and recorded #3513; I filed regression issues #3577-#3579 (clear-backlog review cost, retro fan-out cost, survey overflow) and picked 3 fixes. The design agent said: drop cost-claim-unmeasured (one occurrence, covered by an existing rule), build a print-only word-count check for audit-skills notes (merged as #3582), and file the guard for the code-review sha slip as #3580 because it touches Human-only hook files. Ledger PR #3581 merged after code-review; closing ledger PR #3583 recorded #3582 as a fix. Open: whether the guard in #3580 is wanted; the three regression issues await triage."
 prs:
   - "3581"
   - "3582"
+  - "3583"
 docsRead:
   - path: docs/agents/git-conventions.md
     reason: (no reason given)
@@ -69,20 +70,20 @@ frictions:
   - description: Stop hook demanded close-session after the first merge while the closing ledger PR still waited on its gate, so I had to log mid-flow.
     solution: Nothing to change; re-invocation is safe and this log is replaced at the end.
     severity: nit
-durationSec: 1346
+durationSec: 1665
 models:
-  claude-sonnet-5-5: 124
+  claude-sonnet-5-5: 152
 toolCounts:
-  Bash: 33
+  Bash: 43
   Read: 3
-  Skill: 5
+  Skill: 6
   Agent: 8
-  ReadNotifications: 5
+  ReadNotifications: 8
   ToolSearch: 1
   mcp__github__issue_write: 4
-  mcp__github__create_pull_request: 2
-  mcp__github__add_issue_comment: 2
-  mcp__github__subscribe_pr_activity: 2
+  mcp__github__create_pull_request: 3
+  mcp__github__add_issue_comment: 3
+  mcp__github__subscribe_pr_activity: 3
   mcp__github__pull_request_read: 1
 filesEdited:
   - layers/journal/content/current/frictions/draft-style-caught-by-review.yml
@@ -517,44 +518,44 @@ subagents:
     durationSec: 430
     toolCalls: 47
     modelCalls: 43
-    tokenShare: 28.3
+    tokenShare: 24.6
   - type: general-purpose
     task: Design fixes for picks
     durationSec: 123
     toolCalls: 20
     modelCalls: 17
-    tokenShare: 8.8
+    tokenShare: 7.7
   - type: general-purpose
     task: Build audit-notes word check
     model: sonnet
     durationSec: 159
     toolCalls: 10
     modelCalls: 7
-    tokenShare: 2.7
+    tokenShare: 2.3
   - type: general-purpose
     task: Standards review of ledger diff
     durationSec: 74
     toolCalls: 13
     modelCalls: 8
-    tokenShare: 3.5
+    tokenShare: 3.1
   - type: general-purpose
     task: Spec review of ledger diff
     durationSec: 34
     toolCalls: 10
     modelCalls: 8
-    tokenShare: 3.5
+    tokenShare: 3
   - type: general-purpose
     task: Standards review of fix diff
     durationSec: 11
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.4
+    tokenShare: 1.2
   - type: general-purpose
     task: Spec review of fix diff
     durationSec: 14
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1.8
+    tokenShare: 1.6
 gitBranch: claude/eager-ptolemy-515f8p
 entrypoint: remote_trigger
 cliVersion: 2.1.330
