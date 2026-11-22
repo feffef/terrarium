@@ -1,0 +1,138 @@
+schemaVersion: 1
+session: session_013zxzeQJrAMvGnEhyNo1NNY
+startedAt: 2026-11-22T17:05:45Z
+endedAt: 2026-11-22T17:09:53Z
+kind: autonomous
+goal: Weekly harvest of logged ideas into Seedlings
+status: completed
+outcome: "Four Seedlings filed (#3597 to #3600), keys checked; no retro Seedling needed."
+summary: "Scheduled harvest run, nobody prompted it; every step was agent-initiated within the Skill. Extract gave 91 entries (46 ideas, 45 learnings). I clustered product ideas first, read the evidence hits and the closed issues behind them, and dropped clusters already built (Glass Box guide glosses), rejected (Midden unknown cause, #3246; Blog story strip, #3462) or workflow learnings that failed the simplifying test or already sit in docs. Four product clusters passed and were filed as Seedlings 3597 (Glass Box header square and counts), 3598 (Midden Tenant gloss), 3599 (Tinkerfund gallery note and id check), 3600 (Blog plain-words summary); check-posted confirmed each. Retro: the only candidate, oversized evidence output, is held by closed #3562 and my first evidence call failed because I misread the argument format, so nothing was filed. Stopped after 12 clusters checked; the workflow cap was not the limit."
+prs: []
+docsRead:
+  - path: layers/glassbox/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/harvest/body-template.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: .agents/skills/retro/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: harvest
+    reason: the run's Skill
+  - name: close-session
+    reason: closing log
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran gh api issue reads and git fetch (via list-merges-since) before reading github-integration.md and git-conventions.md, which CLAUDE.md requires; I never read github-integration.md at all.
+    solution: Name both read-first docs in harvest step 3/4 so they are read in the first batch.
+    severity: minor
+  - description: Passed harvest evidence quoted multi-word groups, so the first call matched nothing; I misread the argument format and the usage error text does not show it.
+    solution: Print a one-line usage example for evidence when every group matches nothing.
+    severity: minor
+  - description: Retro step 1 says to load writing-for-agents; I skipped it because no Skill text was edited.
+    solution: None needed unless retro is meant to load it always.
+    severity: nit
+  - description: The evidence output for 15 groups was 43 KB and had to be read via a saved file and targeted greps, costing several extra calls.
+    solution: "Already held by closed #3562; a rulings exclusion for glossary files would cut it."
+    severity: minor
+durationSec: 249
+models:
+  claude-sonnet-5-5: 53
+toolCounts:
+  Bash: 23
+  Read: 1
+  ToolSearch: 1
+  mcp__github__issue_write: 4
+  Skill: 2
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0020.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: filed Seedlings only, built nothing
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: header on every issue body
+      - path: .claude/rules/adr-0009.md
+        value: steered
+        why: logged via close-session
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/rules/tenant-layers.md
+        value: unrelated
+      - path: .claude/rules/ui-verification.md
+        value: unrelated
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/glassbox-content.md
+        value: unrelated
+      - path: .claude/rules/glossary-terms.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0020.md
+        value: unrelated
+      - path: .claude/rules/adr-0022.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .agents/skills/harvest/body-template.md
+      - path: docs/agents/triage-labels.md
+gitBranch: claude/eager-cerf-kk8t22
+entrypoint: remote_trigger
+cliVersion: 2.1.330
+trigger: harvest
+learnings:
+  - harvest evidence takes each group as separate words with `--` between groups, not one quoted phrase per group; quoted phrases silently match nothing.
+landedBy: Stop
