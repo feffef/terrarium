@@ -28,11 +28,6 @@ fixes:
     date: "2026-11-08"
     summary: "glassbox-curate SKILL.md: before taking any lead from the memory page, check it still stands and that no earlier step (settled titles, a pending Subject move) should come first (closes #2958)."
 occurrences:
-  - session: session_013zxzeRCCqrxVitqSaxJa4K
-    date: "2026-11-07"
-    severity: moderate
-    description: "Planned and costed a 12-file rename, grepping every link, before checking whether titles were settled; the owner's question about a title consolidation redirected the run."
-    solution: "The memory page's good next focus should say titles are not yet reviewed, or the rename lead should wait until they are."
   - session: session_013zxzeRL5rU5zS3WRCkH3TE
     date: "2026-11-08"
     severity: moderate

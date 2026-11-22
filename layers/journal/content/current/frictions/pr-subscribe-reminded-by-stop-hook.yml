@@ -4,9 +4,6 @@ summary: A session opened a PR without subscribing and the Stop hook for it remi
 cause: "Comes from pr-opened-without-subscribe and PR #2972 (Stop hook that prompts for subscribe_pr_activity): the hook now catches the slip (signal: 'the Stop hook had to prompt me'), so the original harm (PR left unwatched) is not recurring; the original entry keeps the unwatched-PR occurrences."
 status: open
 ref: "pr-opened-without-subscribe, fix PR #2972"
-related:
-  - entry: pr-opened-without-subscribe
-    rule: The PR was left unwatched, or the session missed the owner's comments.
 occurrences:
   - session: session_013zxzeRYFqNFGvBn4FsDkTk
     date: "2026-11-09"

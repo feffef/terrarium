@@ -29,16 +29,6 @@ fixes:
     date: "2026-11-13"
     summary: "digest SKILL.md needs a source in the day's gathered material for a cadence word and drops 'scheduled' from its example; the fact-check checks both."
 occurrences:
-  - session: session_013zxzePc3zKAyZGZfucZa9y
-    date: "2026-11-07"
-    severity: minor
-    description: "Fact-check needed four rounds; my drafts stated an unsupported inference and a wrongly labelled \"first incident\", and each fix changed the blob and forced a re-check"
-    solution: "Write only claims with a source at hand; batch all fixes before re-dispatching the checker"
-  - session: session_013zxzeT5vcQTn5YZeNHDSvv
-    date: "2026-11-07"
-    severity: nit
-    description: "First run entry and memory page had a stale 'this week', an unlogged cut and a wrong phrase; code-review caught them before merge."
-    solution: "Diff the page against origin/main and list every cut before writing the run entry; avoid relative dates on the memory page."
   - session: session_013zxzeRnhzjUpugh9vCH4UW
     date: "2026-11-08"
     severity: minor

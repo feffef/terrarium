@@ -6,6 +6,8 @@ status: open
 related:
   - entry: mechanism-claim-from-recall
     rule: That entry holds claims about how code or a rule behaves from memory; this one is an unmeasured claim about the cost of a change.
+notes: |-
+  2026-11-22 design: add 'or a cost' to CLAUDE.md Verify-before-you-state dropped: one occurrence, existing rule covers it, sibling mechanism-claim-from-recall accepted; revisit on a second
 occurrences:
   - session: session_013zxzeT3ZUhBeG84jQUD1Hw
     date: "2026-11-21"

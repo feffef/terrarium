@@ -14,11 +14,6 @@ fixes:
     date: "2026-11-17"
     summary: "Stop hook counts a merge only when merge-pr.ts's own result reports merged: true"
 occurrences:
-  - session: session_013zxzeShUkKqUQT1kYCw5UK
-    date: "2026-11-07"
-    severity: minor
-    description: "merge-close-stop.ts blocked the stop saying a PR merged while PR 2946 was still open and merge-pr.ts was only waiting on the gate in the background."
-    solution: "Make closureRefusal count a merge only on merge-pr.ts output with merged true; add a transcript test with the command started and no result."
   - session: session_013zxzeS3L4tvAUKm5q3d9qD
     date: "2026-11-08"
     severity: minor

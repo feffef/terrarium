@@ -50,16 +50,6 @@ fixes:
     date: "2026-11-19"
     summary: "Review comes before opening the PR as numbered steps in pr-workflow.md; merge-pr.ts requires proof behind a Reviewed: line and applies the full simple-change test to an Own-read verdict."
 occurrences:
-  - session: session_013zxzeRwjiiLkjj6sQ3u49g
-    date: "2026-11-07"
-    severity: minor
-    description: "Skipped code-review although the diff adds a file, so it was not a simple change by pr-workflow."
-    solution: "Run code-review, or have pr-workflow exempt state-only run entries."
-  - session: session_013zxzePgtT7wXDhHd9eBdH2
-    date: "2026-11-07"
-    severity: nit
-    description: "Opened the PR after the gate with only my own diff read, not code-review, which pr-workflow allows for simple changes; the diff touched nine files of prose."
-    solution: "Fine for a prose-only cut; state the skip in the PR as I did."
   - session: session_013zxzeRnhzjUpugh9vCH4UW
     date: "2026-11-08"
     severity: minor

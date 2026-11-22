@@ -2,7 +2,7 @@ name: draft-style-caught-by-review
 surface: safe
 summary: First drafts of posts, PR bodies and write-ups broke the writing Skill's style rules (project jargon, length, a flat or repeated opening), and only a Standards review or the agent's own re-read caught it.
 cause: "A Skill that drafts first and reviews after: the drafter ignores its plain-words, length or opening rules, and a Standards reviewer or step-8 re-read finds it, costing a rewrite commit and sometimes a gate rerun. Signals: 'used project jargon the Skill forbids', 'the Standards review caught it', 'first draft ran six paragraphs', 'replayed the previous post', 'jargon in Also shipped'."
-status: open
+status: tracked
 related:
   - entry: drafts-caught-by-fact-check
     rule: The draft carried wrong or overstated facts, not style slips.

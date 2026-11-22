@@ -8,16 +8,6 @@ fixes:
     date: "2026-11-08"
     summary: "glassbox-curate Modes paragraph defines Autonomous by the first message's 'Fired by routine' system-reminder, so a Routine-fired run is always autonomous."
 occurrences:
-  - session: session_013zxzeRwjiiLkjj6sQ3u49g
-    date: "2026-11-07"
-    severity: nit
-    description: "Skill says ask for a focus in interactive mode but gives no way to tell the mode when invoked; I asked the user."
-    solution: "State in the Skill how to tell a Routine run from a person's."
-  - session: session_013zxzeNqe2cXhykGMMq7vUi
-    date: "2026-11-07"
-    severity: minor
-    description: "The invocation carried no sign of whether a person or a Routine started the run, so I spent a question round trip on the mode."
-    solution: "Have orient.ts print how the run was started, or default to autonomous when nothing says otherwise."
   - session: session_013zxzeQwU4eYGrEvV8x42ts
     date: "2026-11-08"
     severity: minor

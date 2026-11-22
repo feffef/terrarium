@@ -22,11 +22,6 @@ fixes:
     date: "2026-11-01"
     summary: "CLAUDE.md Self-verification: after changing a type or a test, run pnpm typecheck and the touched spec before gate:scoped."
 occurrences:
-  - session: session_013zxzeRwjiiLkjj6sQ3u49g
-    date: "2026-11-07"
-    severity: minor
-    description: "Did not rekey grades.yml and update.yml page stems after moving pages; their owners' files, so left stale."
-    solution: "Have the Skills tolerate moved stems or give the move a rekey step."
   - session: session_013zxzeRB6ciegpxcRDfedSF
     date: "2026-11-09"
     severity: minor

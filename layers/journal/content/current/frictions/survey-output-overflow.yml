@@ -23,11 +23,6 @@ fixes:
     date: "2026-10-28"
     summary: "prune-friction-ledger --summary and --candidates write output over a size threshold to a file under TMPDIR and print one notice line; --out PATH always writes to that path."
 occurrences:
-  - session: session_013zxzeQyhG5Jn9REJydTepm
-    date: "2026-11-07"
-    severity: minor
-    description: "pull_request_read method get returned 92k characters, overflowing context, and needed a python slice to read."
-    solution: "github-integration.md overflow list should name pull_request_read get; use get_files and get_check_runs first."
   - session: session_013zxzePZDqGM37D7GdfGumb
     date: "2026-11-08"
     severity: nit
