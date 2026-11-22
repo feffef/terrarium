@@ -100,15 +100,14 @@ the memory page's items.
 
    An item is a bullet or numbered entry under the memory page's *Agent
    notes*; *Soft decisions* and *Waiting for owner decision* are not items.
-   An item that does not suit a guide page (a Skill-detail gap, say) moves to
-   *Waiting for owner decision*; pick another. This is not a stop reason.
 
    Within a group, take the first item on the page. Skip an item that carries
    a line saying an earlier run failed on it, and an item whose only open part
    is a question for the owner. Take an item that needs a new Lesson: rule 6
    leaves its PR for the owner's merge. Check that it still
    stands: grep the guide for its key terms and read where they appear. If it
-   no longer stands, note it (step 7 deletes it) and take the next one.
+   no longer stands, or does not suit a guide page (a Skill-detail gap, say),
+   note it and take the next one; step 7 deletes or moves it.
 3. **Nothing to pick.**
    - If items are left but open PRs block all of them, and one of those PRs is
      yours with its checks still running, or is a `glassbox-update` PR (it
@@ -122,10 +121,10 @@ the memory page's items.
 
 ### 3. Start the run and read
 
-Every run, the first too, creates its own new branch from a fresh
-`origin/main`. This Skill is the explicit permission to push those branches;
-never use the session's harness-assigned branch. Write the run entry from
-the orientation's skeleton, named by the current UTC time
+Each run, the first too, cuts a new branch from a fresh `origin/main`.
+This Skill is the explicit permission to push those branches; never use
+the session's harness-assigned branch. Write the run entry from the
+orientation's skeleton, named by the current UTC time
 (`date -u +%Y-%m-%dT%H%M`), with `focus` quoted and why you chose it.
 Commit it and push the branch.
 
@@ -207,7 +206,8 @@ every changed page.
    changed the memory page, keep every item from both versions except those
    either side deleted.
 2. Update the memory page (State): delete every item this run solved and every
-   item step 2 found no longer stands; add only what State allows.
+   item step 2 found no longer stands; move each item step 2 found unsuited
+   to *Waiting for owner decision*. Add only what State allows.
 3. Complete the run entry: `changes` and `pagesRead`.
 4. Follow every step of `docs/agents/pr-workflow.md`, "Review before opening
    the PR", always with the `code-review` call, never the own read of a simple
