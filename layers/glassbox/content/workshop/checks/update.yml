@@ -18,11 +18,11 @@ pages:
   - page: claude-code/40.permissions
     checked: '2026-11-22'
   - page: claude-code/50.mcp-servers
-    checked: '2026-11-08'
+    checked: '2026-11-23'
   - page: deploy/10.continuous-deployment
-    checked: '2026-11-08'
+    checked: '2026-11-23'
   - page: deploy/20.pnpm-lockfile
-    checked: '2026-11-08'
+    checked: '2026-11-23'
   - page: git-github/10.pull-requests
     checked: '2026-11-08'
   - page: git-github/20.author-trust
@@ -42,7 +42,7 @@ pages:
   - page: hooks/10.hooks
     checked: '2026-11-22'
   - page: hooks/20.blocking-hooks
-    checked: '2026-11-07'
+    checked: '2026-11-23'
   - page: hooks/30.hook-added-context
     checked: '2026-11-10'
   - page: hooks/40.session-transcripts
@@ -153,3 +153,5 @@ pages:
     checked: '2026-11-20'
   - page: web-standards/40.colour-and-motion-settings
     checked: '2026-11-20'
+  - page: web-standards/50.colour-contrast
+    checked: '2026-11-23'
