@@ -16,6 +16,7 @@ const platformSkills = computed(() => ownSkills(data.value?.skills ?? []))
 const groupedSkills = computed(() => skillGroups(platformSkills.value))
 const groupedInstalled = computed(() => skillGroups(installedSkills(data.value?.skills ?? [])))
 const uses = computed(() => skillUseCounts(data.value?.sessions ?? []))
+const ideas = computed(() => skillIdeaCounts(data.value?.sessions ?? []))
 // Per-Skill pages exist only in the current Space.
 const pageBase = computed(() => (space === 'current' ? `/t/journal/${space}/skills` : undefined))
 const sessionTotal = computed(() => data.value?.sessions.length ?? 0)
@@ -42,7 +43,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
       </p>
     </article>
 
-    <JournalSkillInventory v-if="groupedSkills.length" :groups="groupedSkills" :uses="uses" :page-base="pageBase" class="inventory" />
+    <JournalSkillInventory v-if="groupedSkills.length" :groups="groupedSkills" :uses="uses" :ideas="ideas" :page-base="pageBase" class="inventory" />
     <p v-else class="jd-prose">No Platform Skills authored in this Space yet.</p>
 
     <template v-if="groupedInstalled.length">
@@ -53,7 +54,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
           evolved here. Marginal ones are left out.
         </p>
       </article>
-      <JournalSkillInventory :groups="groupedInstalled" :uses="uses" :page-base="pageBase" class="inventory" />
+      <JournalSkillInventory :groups="groupedInstalled" :uses="uses" :ideas="ideas" :page-base="pageBase" class="inventory" />
     </template>
 
     <SiteFooter />

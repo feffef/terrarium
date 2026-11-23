@@ -162,6 +162,11 @@ export function skillUseCounts(sessions: SessionDoc[]): Record<string, number> {
   return counts
 }
 
+// Of those, the sessions whose log also lists ideas; a Skill never used here has no entry.
+export function skillIdeaCounts(sessions: SessionDoc[]): Record<string, number> {
+  return skillUseCounts(sessions.filter((s) => (s.ideas ?? []).length > 0))
+}
+
 // The newest `limit` sessions whose log names the Skill, newest first.
 export function recentSkillSessions(sessions: SessionDoc[], name: string, limit: number): SessionDoc[] {
   return sessions

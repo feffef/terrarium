@@ -35,6 +35,7 @@ import {
   ownSkills,
   installedSkills,
   skillUseCounts,
+  skillIdeaCounts,
   recentSkillSessions,
   journalKpiTiles,
   prUrl,
@@ -258,6 +259,17 @@ describe('skill inventory', () => {
       session({}),
     ])
     expect(counts).toEqual({ tdd: 2, digest: 1 })
+  })
+
+  it('skillIdeaCounts counts the sessions that used the Skill and logged ideas', () => {
+    const use = (...names: string[]) => names.map((name) => ({ name, reason: '' }))
+    const counts = skillIdeaCounts([
+      session({ skillsUsed: use('tdd', 'tdd', 'digest'), ideas: ['a', 'b'] }),
+      session({ skillsUsed: use('tdd'), ideas: [] }),
+      session({ skillsUsed: use('digest'), ideas: ['c'] }),
+      session({ ideas: ['d'] }),
+    ])
+    expect(counts).toEqual({ tdd: 1, digest: 2 })
   })
 
   it('recentSkillSessions lists the newest sessions that used the Skill, up to the limit', () => {
