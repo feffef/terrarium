@@ -172,3 +172,27 @@ describe('validateContent() — a folded line ending in `word-` (journal skills)
     expect(check('note: >-\n  the session-id-\n  recovery\n', baseCollection('.', schema))).toEqual([])
   })
 })
+
+describe('validateContent() — blog pingback stub filenames (#3611)', () => {
+  const schema = z.object({ target: z.string(), fromPersona: z.string(), reactedAt: z.string() }).strict()
+  const col = { ...baseCollection('.', schema), tenant: 'blog', collection: 'pingbacks' }
+  const stub = (name: string, reactedAt: string) =>
+    writeFileSync(join(dir, name), `target: /2026-11-20-the-post\nfromPersona: karen\nreactedAt: ${reactedAt}\n`)
+
+  it('passes a stub named <date>-<fromPersona>-<target slug without its date>', () => {
+    stub('2026-11-22-karen-the-post.yml', '2026-11-22T10:00:00Z')
+    expect(validateContent([col], dir).violations).toEqual([])
+  })
+
+  it('flags a new stub named under the replier’s own slug, with the expected name', () => {
+    stub('2026-11-22-karen-my-reply.yml', '2026-11-22T10:00:00Z')
+    const v = validateContent([col], dir).violations
+    expect(v).toHaveLength(1)
+    expect(v[0]?.messages.join()).toContain('-karen-the-post.yml')
+  })
+
+  it('exempts stubs reacted before the #3558 fix', () => {
+    stub('2026-11-21-karen-my-reply.yml', '2026-11-21T11:00:00Z')
+    expect(validateContent([col], dir).violations).toEqual([])
+  })
+})
