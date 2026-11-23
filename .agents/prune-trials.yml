@@ -23,38 +23,40 @@
 #            topic's tools correctly.
 trials:
   - problem: >
-      Subagent-brief mistakes in `dispatch-subagents` §3 "Write the brief" (-3
-      net, from `git diff --numstat` against the parent: 22 added, 25 deleted;
-      this entry not counted): the "since worktrees sometimes start stale",
-      the ADR-0016 incident aside and similar justifications went;
-      every rule kept. Chosen after the search subagent covered CLAUDE.md,
-      GLOSSARY.md, `docs/agents/`, `.claude/rules/`, every Skill SKILL.md, the
-      ledger (not read in full) and the 100 most recent closed issues plus open
-      ones (not older closed issues, not session logs). `subagent-brief-defects`
-      (18 occurrences; 8 fixes; open #3227) failed as prose; `dispatch-read-guard`
-      holds placeholders only. Runners-up, too small to cut: the tenant-glossary
-      rule (31 words, `tenant-glossary-guard.ts` holds it) and "edit nothing
-      while the gate runs" (13 words, `gate-edit-guard.ts` holds it). Same run
-      judged and deleted two trials, both holding: the owner-facing UI rule
-      (landed 38874c4d): `built-before-owner-decided-ui` 3.7% -> 4.3% (8/216 ->
-      2/47), the two after hits nit and minor, no issue; and the glassbox-curate
-      read rule (landed 11bd1415): `glassbox-curate-read-first-skipped` 6.1% ->
-      0.0% (14/231 -> 0/32).
+      `frictions-to-fixes` survey brief (`survey-brief.md`) restated its helpers'
+      output and each rule several times (-934 words: 2612 -> 1678 by `wc -w`;
+      line delta in the PR title): the helper-flag walkthroughs, the §2
+      step-5 and edge-case restatements and the §6 sub-lists went; every
+      command, label, ranking rule and report part kept. Chosen after a search
+      subagent this run read the ledger `fixes:` lists of 155 entries, CLAUDE.md,
+      `.claude/rules`, `docs/agents/guards.md`, this file, the 2 open issues and
+      the 100 most recently updated closed ones (not session logs, not older
+      closed issues). `frictions-to-fixes-briefs-mismatch` (10 fixes, each
+      patching one more brief contradiction) failed as prose; nothing enforces
+      brief correctness. Runner-up: clear-backlog §3 "Build and review"
+      (1179 words, hand-edited by #3589 on 2026-11-22). Same run judged and
+      deleted the dispatch-subagents §3 trial (landed 8b73b145): it holds.
+      `subagent-brief-defects` 6.4% -> 16.7% (14/218 -> 6/36), but 3 of the 6
+      after hits trace to `clear-backlog-build.js` `rules()`
+      telling builders to run e2e in the background, which the guard refuses; the
+      cut kept the foreground line, and the other hits are a brief a session
+      wrote itself, so no issue.
     territory:
       paths:
-        - ".agents/skills/dispatch-subagents/SKILL.md: '3. Write the brief'"
+        - ".agents/skills/frictions-to-fixes/survey-brief.md"
       keywords:
-        - Write the brief
-        - Never move a checkout
-    opened: 2026-11-20
+        - survey-brief
+        - print-ledger-occurrence
+    opened: 2026-11-23
     proven: true
     check: >
-      Damage is a major or blocker Friction where a brief omitted a line the cut
-      text carried (a pinned SHA, a foreground-checks ask, the no-checkout rule)
-      and a run was wasted or a checkout moved. Compare the
-      `subagent-brief-defects` share with `friction-rates.ts`; a clear rise is
-      also damage. NOT damage: that entry at its standing rate (18 occurrences
-      before this) or placeholder denials the guard already handles.
+      Damage is a major or blocker Friction where a survey agent skipped a step
+      the cut text carried (a stale `tracked` status left, a fix not recorded,
+      a never-fixed label with no tracker check, a missing report part) and the
+      main session had to catch it. Compare the shares of
+      `frictions-to-fixes-briefs-mismatch` and `survey-label-and-ledger-errors`
+      with `friction-rates.ts`; a clear rise is also damage. NOT damage: a
+      survey agent hitting a script refusal the brief still names.
   - problem: >
       `harvest` steps 1 and 3 restated what its helper prints (-6 net, from
       `git diff --numstat` against the parent: 9 added, 15 deleted; this entry
