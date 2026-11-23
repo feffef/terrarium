@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzePJuqzjJyKT2zEFnME
 startedAt: 2026-11-23T13:09:50Z
-endedAt: 2026-11-23T13:21:13Z
+endedAt: 2026-11-23T15:53:26Z
 kind: autonomous
 goal: "Scheduled prune trial: judge one open trial, cut one problem's instructions"
-status: in-review
-outcome: "PR 3623 open: trial judged, survey brief trimmed, new trial opened; gate green"
-summary: "Scheduled /prune-trial run, no human prompts; every step was agent-initiated under the Skill. Judged the dispatch-subagents section 3 trial (judgeable): the subagent-brief-defects share rose 6.4% to 16.7% but 3 of 6 hits trace to clear-backlog-build.js rules(), not the cut, so it holds with no issue. The harvest trial is not judgeable until 2026-11-25. A search subagent ranked failed prose; I took the frictions-to-fixes survey brief (10 recorded fixes, nothing enforcing it), cut it 2612 to 1815 words, set two ledger entries on-trial, probed on Sonnet pinned to the post-prune SHA (correct), then Standards and Spec review found several rules lost; a follow-up commit restored them and a plain re-check agent confirmed. Gate passed on 5dc59f1. PR 3623 left open: the follow-up diff is not simple and its re-check was not a code-review call, so merge-pr would refuse; a human or later session should land it. Open: a trial on design-brief.md is not covered."
+status: completed
+outcome: "PR 3623 merged by a human: trial judged, survey brief trimmed, new trial opened"
+summary: "Scheduled /prune-trial run, no human prompts; every step was agent-initiated under the Skill. Judged the dispatch-subagents section 3 trial (judgeable): the subagent-brief-defects share rose 6.4% to 16.7% but 3 of 6 hits trace to clear-backlog-build.js rules(), not the cut, so it holds with no issue. The harvest trial is not judgeable until 2026-11-25. A search subagent ranked failed prose; I took the frictions-to-fixes survey brief (10 recorded fixes, nothing enforcing it), cut it 2612 to 1815 words, set two ledger entries on-trial, probed on Sonnet pinned to the post-prune SHA (correct), then Standards and Spec review found several rules lost; a follow-up commit restored them and a plain re-check agent confirmed. Gate passed on 5dc59f1. A second code-review on the head found small rule losses; I restored them in a last commit (own read only). PR 3623 was left for a human, who merged it. Open: a trial on design-brief.md is not covered."
 prs:
   - "3623"
 docsRead:
@@ -59,20 +59,21 @@ frictions:
   - description: Edited survey-brief.md before reading ADR-0005 and ADR-0027 in full; the post-write hook asked for them, and the late read changed nothing.
     solution: Read the governing ADRs listed in the rule summaries before the first edit in a trial.
     severity: nit
-durationSec: 683
+durationSec: 9816
 models:
-  claude-sonnet-5-5: 94
+  claude-sonnet-5-5: 128
 toolCounts:
-  Bash: 31
+  Bash: 36
   Read: 6
-  Agent: 5
-  ReadNotifications: 1
+  Agent: 7
+  ReadNotifications: 8
   Write: 1
-  Skill: 3
-  ToolSearch: 1
+  Skill: 4
+  ToolSearch: 2
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   PushNotification: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - .agents/skills/frictions-to-fixes/survey-brief.md
   - .agents/prune-trials.yml
@@ -346,6 +347,73 @@ ruleUse:
         value: unrelated
       - path: .claude/rules/adr-0017.md
         value: unrelated
+  - by: general-purpose
+    subagent: 5
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 6
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0027.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: in-scope
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0030.md
+        value: unrelated
 subagents:
   - type: general-purpose
     task: Search for failed prose rule
@@ -353,35 +421,49 @@ subagents:
     durationSec: 77
     toolCalls: 19
     modelCalls: 17
-    tokenShare: 14.1
+    tokenShare: 8.1
   - type: general-purpose
     task: Probe pruned survey brief
     model: sonnet
     durationSec: 19
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 2.9
+    tokenShare: 1.7
   - type: general-purpose
     task: "Code review: Standards"
     model: sonnet
     durationSec: 44
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 5.8
+    tokenShare: 3.3
   - type: general-purpose
     task: "Code review: Spec"
     model: sonnet
     durationSec: 34
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 5.8
+    tokenShare: 3.4
   - type: general-purpose
     task: Re-check follow-up diff
     model: sonnet
     durationSec: 24
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 4.6
+    tokenShare: 2.6
+  - type: general-purpose
+    task: "Code review: Standards (head)"
+    model: sonnet
+    durationSec: 53
+    toolCalls: 8
+    modelCalls: 6
+    tokenShare: 4.3
+  - type: general-purpose
+    task: "Code review: Spec (head)"
+    model: sonnet
+    durationSec: 33
+    toolCalls: 7
+    modelCalls: 6
+    tokenShare: 3.9
 gitBranch: claude/practical-rubin-avbwo8
 entrypoint: remote_trigger
 cliVersion: 2.1.330
