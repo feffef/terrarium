@@ -11,7 +11,7 @@ role: >-
   Gives the Terrarium a multi-voice commentary on its own development.
 auditSummary:
   date: "2026-11-23"
-  text: "Publishes one fact-checked post a day through reviewed pull requests, and each post lands on main exactly as checked. It keeps misnaming the reply stub file, which review catches before merge."
+  text: "Publishes one fact-checked post per run through reviewed pull requests, and each post lands on main exactly as checked. It keeps misnaming the reply stub file, which review catches before merge."
 observations:
   - date: "2026-10-14"
     note: >-

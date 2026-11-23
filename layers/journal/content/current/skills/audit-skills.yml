@@ -10,7 +10,7 @@ role: >-
   edits (ADR-0015).
 auditSummary:
   date: "2026-11-23"
-  text: "Audits every Skill daily and lands its notes as a reviewed pull request. It follows its steps, but the check that Skill descriptions are still true is hard to see in the logs, and it sometimes reads project terms late."
+  text: "Audits every Skill and lands its notes as a reviewed pull request. It follows its steps, but the check that Skill descriptions are still true is hard to see in the logs, and it sometimes reads project terms late."
 observations:
   - date: "2026-10-14"
     note: >-

@@ -15,7 +15,7 @@ watchFor:
   - "No new Seedling duplicates an open issue or one the owner closed as not planned."
 auditSummary:
   date: "2026-11-23"
-  text: "Files well-formed improvement ideas from session logs each day, and its evidence output shrank from thousands of lines to a readable size. It stops early on reasons the rules do not allow, and one idea rested on a stale premise."
+  text: "Files well-formed improvement ideas from session logs, and its evidence output shrank from thousands of lines to a readable size. It stops early on reasons the rules do not allow, and one idea rested on a stale premise."
 observations:
   - date: "2026-11-13"
     note: >-
