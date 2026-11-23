@@ -1,0 +1,18 @@
+session: session_013zxzeS6gys4MPSEMWnZd1m
+mode: autonomous
+focus: "Verification of practice: trim the Skill inventory Lesson, the next Too long item on the memory page (a cut of 100 to 150 words, no new Lesson). No open PR touches the page. Run three of one session."
+changes:
+  - terrarium-practice/85.skill-inventory | The fields paragraph is shortened to one sentence naming gist, observations and auditSummary; the prune-observations and role-length sentence, the audit-docs reader bullet and the stale scheduled-skill entry bullet are cut; the reader count and teaches follow; Its other jobs reads The audit's other jobs | the Lesson was over the soft word limit and has one concept, so no split. Facts removed and taught nowhere else, none needed for the argument, were that audit-docs reads observations, that role is about 50 words, and that the audit rewords a stale scheduled entry. A claim checker found every changed sentence true plus three small wording fixes, applied. The concept and the claims that stay are unchanged, so revision and publishedAt are kept. The pages this Lesson links (Subagents, Scheduled tasks, Installed skills) were not read whole; no edited sentence uses them beyond their titles, and the code-review Spec reviewer named them
+  - workshop/pages/index | The Skill inventory Too long item deleted; one wording lead on the same page added from the fresh reader | done
+pagesRead:
+  - terrarium-practice/10.human-in-the-loop
+  - terrarium-practice/20.decision-records
+  - terrarium-practice/30.ubiquitous-language
+  - terrarium-practice/40.session-logs
+  - terrarium-practice/45.ideas-and-lessons-learned
+  - terrarium-practice/50.pruning-instructions
+  - terrarium-practice/60.protected-paths
+  - terrarium-practice/70.cross-tenant-reads
+  - terrarium-practice/80.self-improvement-loop
+  - terrarium-practice/85.skill-inventory
+  - terrarium-practice/90.outside-contributions
