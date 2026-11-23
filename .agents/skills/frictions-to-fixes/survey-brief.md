@@ -22,8 +22,10 @@ Goal: the ledger's state and every in-window Friction in front of you.
 2. Run
    `pnpm exec tsx scripts/session/extract-frictions.ts --compact --unledgered --out {SCRATCH_DIR}/frictions.json`
    and read the file, not stdout. It drops Frictions the ledger already carries
-   and keeps each remaining one's `index`. Open a full log (its `file`) only
-   when a candidate needs it.
+   per Friction (a session's other Frictions stay listed: skip one already in
+   the target cluster), and keeps each remaining one's `index` and its
+   session's `subagents`. It prints where the window starts. Open a full log
+   (its `file`) only when a candidate needs it.
 
 The window is a recency window: read every session in it and chase nothing from
 older sessions. External sessions are already excluded (ADR-0009).
@@ -38,8 +40,11 @@ it refuses a result the schema rejects) or `prune-friction-ledger.ts --move`
 
 1. **Append** each Friction that fully matches an entry, whatever its severity:
    `print-ledger-occurrence.ts --append <entry> <session> <index> [<entry> <session> <index> …]`
-   (add `--skip-held` first to skip sessions an entry already holds). Match on
-   the harm, not the slip behind it, and obey the entry's `see:` rules. A
+   (it writes all or nothing, and the error names a session the entry already
+   holds; add `--skip-held` first to skip those). Match on the harm, not the
+   slip behind it, and obey the entry's `see:` rules. A Friction sits in one
+   cluster unless its text names two causes; one that fits only in part is
+   appended unless step 2 applies. A
    session counts once per entry, at its highest severity. When the new text
    goes beyond the entry's `summary` or `cause`, rewrite them
    (`ledger-set.ts <entry> --summary TEXT --cause TEXT`) so they cover every
@@ -48,7 +53,8 @@ it refuses a result the schema rejects) or `prune-friction-ledger.ts --move`
    when a Friction's cause or harm clearly differs from every entry it nearly
    matched (including one that fits an entry only in part and is `moderate` or
    above: don't bury a severe one in a milder cluster; a Friction worse than the
-   entry's worst severity, or above its `acceptedSeverity`, may be this).
+   entry's worst severity, or above its `acceptedSeverity`, may be this or the
+   same problem at higher cost: check whether its cause or harm differs).
    `summary` is one plain sentence a visitor can read; `cause` names the root
    mechanism and the signals that identify a new occurrence (error text, file
    or tool, trigger). Link each nearly-matching entry with
@@ -77,21 +83,25 @@ it refuses a result the schema rejects) or `prune-friction-ledger.ts --move`
    in flight). A `tracked` or `on-trial` entry whose PR closed unmerged, or
    whose `ref` names no open issue, open PR or trial in
    `.agents/prune-trials.yml`, goes back to `open`; if its issue closed as not
-   planned, to `accepted` with the reason in `notes`. One whose `ref` PR merged
-   goes to `open` too, and that PR's `fixes` `date` becomes its `merged_at`.
+   planned (not as superseded), to `accepted` with the reason in `notes`. One
+   whose `ref` PR merged (not the fix a new cause came from) goes to `open` too, and that PR's `fixes` `date` becomes its `merged_at`.
 
 Rules that hold throughout:
 
 - A fix whose guard, hint or refusal now catches the slip leaves a different
   harm (a refused call and a retry, a false positive): give it its own entry
   whose `ref` names the original and the fix. Only the original harm recurring
-  is a regression.
+  is a regression. An original left empty is deleted, so `ref` also says what
+  it covered.
 - Never record that a fix worked. `status` is only the tracking state (`open`,
   `tracked`, `on-trial`, `accepted`); the page and `--summary` derive `fix
-  landed`, `likely fixed` or `still recurring` from `fixes`. An `accepted`
-  cluster is never re-proposed; recording a fix on it, or an occurrence above
+  landed`, `likely fixed` or `still recurring` from `fixes`. A re-fix after a
+  regression needs only its `fixes` entry. An `accepted` cluster (an owner
+  ceiling, `acceptedSeverity`) is never re-proposed; recording a fix on it, or an occurrence above
   its `acceptedSeverity`, sets it back to `open`. Accept with
-  `ledger-set.ts --status accepted [--accepted-severity S]`.
+  `ledger-set.ts --status accepted [--accepted-severity S]` (default: the worst
+  occurrence stored now); an `accepted` merge target needs a ceiling for what
+  it received.
 - `ref` holds the tracking issue or open PR, the trial's territory match, what a
   fix left open, or the entry and fix a new cause came from; never a merged PR
   that fixes this entry.
@@ -117,7 +127,8 @@ never-fixed or regression and any you rank high, and mark the rest unconfirmed.
 2. **Drop what is on trial:** a fix that would restore prose inside an open
    Prune Trial's territory (`.agents/prune-trials.yml`) is the trial's evidence
    (ADR-0027). Quote the matching `territory` path or keyword verbatim; with no
-   quotable match, it is not on trial.
+   quotable match, it is not on trial. A `blocker` on trial is still listed, as a
+   drop flagged `blocker`; the main session files it, naming the trial.
 3. **Check the rest against the tracker and `main`.**
    `pnpm exec tsx scripts/git/list-merges-since.ts --merges-only <Friction session's startedAt> > {SCRATCH_DIR}/merges.json 2> {SCRATCH_DIR}/merges.err`
    lists PR merges after that instant (keep stderr apart: it breaks the JSON).
@@ -134,8 +145,7 @@ never-fixed or regression and any you rank high, and mark the rest unconfirmed.
 4. **Label:**
    - **Never-fixed:** no issue or PR addresses it.
    - **Drop:** dropped in step 1 or 2, or fixed and not logged since (cite the
-     issue or PR). A `blocker` on trial is still listed, as a drop flagged
-     `blocker`.
+     issue or PR).
    - **Open-already:** an open issue or PR tracks it (cite it). One with no
      commit or comment within the horizon is idle: surface it.
    - **Regression:** it reappeared after its fix merged. When the issue is

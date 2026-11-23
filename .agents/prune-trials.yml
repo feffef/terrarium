@@ -24,10 +24,12 @@
 trials:
   - problem: >
       `frictions-to-fixes` survey brief (`survey-brief.md`) restated its helpers'
-      output and each rule several times (-934 words: 2612 -> 1678 by `wc -w`;
+      output and each rule several times (-797 words: 2612 -> 1815 by `wc -w`;
       line delta in the PR title): the helper-flag walkthroughs, the §2
       step-5 and edge-case restatements and the §6 sub-lists went; every
-      command, label, ranking rule and report part kept. Chosen after a search
+      command, label, ranking rule and report part kept; rules restored after
+      review: `accepted` ceilings, the on-trial blocker line, partial-fit
+      appends. Chosen after a search
       subagent this run read the ledger `fixes:` lists of 155 entries, CLAUDE.md,
       `.claude/rules`, `docs/agents/guards.md`, this file, the 2 open issues and
       the 100 most recently updated closed ones (not session logs, not older
