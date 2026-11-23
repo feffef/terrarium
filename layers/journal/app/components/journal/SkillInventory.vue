@@ -7,6 +7,8 @@ import type { Importance, SkillDoc } from '../../types/journal'
 defineProps<{
   groups: { importance: Importance; skills: SkillDoc[] }[]
   uses?: Record<string, number>
+  // Sessions that used the Skill and logged ideas; shown only beside a use count.
+  ideas?: Record<string, number>
   // Where each Skill's own page lives; absent means no links (the archived Space has none).
   pageBase?: string
 }>()
@@ -30,6 +32,7 @@ defineProps<{
               <template v-else>used in {{ countOf(uses[s.name] ?? 0, 'session') }}</template>
             </span>
           </div>
+          <p v-if="uses?.[s.name]" class="ideas-line">ideas in {{ ideas?.[s.name] ?? 0 }} of {{ countOf(uses[s.name] ?? 0, 'session') }}</p>
           <p v-if="s.gist" class="gist">{{ s.gist }}</p>
           <details v-if="s.gist" class="role-details">
             <summary>Details</summary>
@@ -91,6 +94,7 @@ defineProps<{
 .uses a, .chip a { color: inherit; text-decoration: underline dotted; text-underline-offset: 2px; }
 .uses a:hover, .chip a:hover { color: var(--jd-accent); }
 .chip-uses { color: var(--jd-faint); }
+.ideas-line { margin: 0.2rem 0 0; font-family: var(--jd-mono); font-size: 0.7rem; color: var(--jd-faint); }
 .gist { margin: 0.25rem 0 0; font-size: 0.83rem; color: var(--jd-ink); font-family: var(--jd-serif); }
 .role { margin: 0.25rem 0 0; font-size: 0.83rem; color: var(--jd-muted); font-family: var(--jd-serif); }
 .role code {
