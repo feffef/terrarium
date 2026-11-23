@@ -44,7 +44,7 @@ None of these is false.
 - **Claude Code.** *MCP servers*: no source says why the read-first hint matches the whole server while the guards list tools; ask the owner or leave it a plain fact.
 - **Hooks.** *Session transcripts*: `isMeta` has no source in the docs.
 - **Agents.** *Usability testing*: "the run", "brief" and "lens" come before a gloss in In Terrarium. *Workflow scripts*: the `pipeline()` multi-stage form has no source beyond the script. *Cloud sessions*: no source says whether the agent proxy and the GitHub proxy are one, and the page has one Why bullet. *Inspecting past sessions*: "ADR" is not glossed before the first excerpt.
-- **Git & GitHub.** *Dependabot grouping*: no source says why Terrarium counts a 0.x minor as a major (the page gives the Semantic Versioning rule only), nor why `merge-pr.ts` refuses a Dependabot pull request that touches any file besides `package.json` and the lockfile. *Issue triage labels* and *Commit and PR attribution* are still dense in In Terrarium, with many Skill and function names in a row.
+- **Git & GitHub.** *Dependabot grouping*: no source says why Terrarium counts a 0.x minor as a major (the page gives the Semantic Versioning rule only), nor why `merge-pr.ts` refuses a Dependabot pull request that touches any file besides `package.json` and the lockfile. *Issue triage labels* and *Commit and PR attribution* are still dense in In Terrarium, with many Skill and function names in a row. *Path-based labels*: the Why bullet on copied areas names no alternative to copying, and the friction-ledger sentence in In Terrarium is a long detour from path labelling.
 - **Terrarium practice.** *Skill inventory*: the Why bullets give a reason but rarely a cost or an alternative, and the audit paragraph in In Terrarium is one long sentence-chain.
 - **Walkthroughs.** *A bug report becomes work*: stop 7 mixes the Trusted author with the Public requester. *Asking an agent for a change*: stop 1 says a cloud and a local session work the same way, and stop 2 has the `SessionStart` hook install packages; both hold for Terrarium's usual one-repository session, and the Walkthrough could say so.
 - **Installed skills.** *Wayfinder*: the installed Skill gives no reason a session resolves one ticket and research tickets are excepted; "HITL", "frontier" and "fog" arrive as a list before any example. *Engineering skills*: `implement`, which no agent can start, is followed by the build agent without a page saying why that is allowed.
@@ -56,15 +56,10 @@ None of these is false.
 
 - **Verification.** *Zod refinements*: no source says why the `pages` rule ties the `page` type to the name `pages`. *Headless browser checks*: no repo source says who sets up the cloud proxy; the `--no-sandbox` and `--disable-gpu` flags have only the code comment "the flags every launch needs in this sandbox".
 
-### Stale or missing
-
-- No page teaches the `digest` Skill (a Digest's Blog line, taken from the Blog files that day's PRs touched so the fact-check can verify it). Nearest page: *Scheduled tasks*.
-
 ### Too long
 
 Lessons past the soft word limit, each with a proposed split from a fresh reader (`glassbox-update`). A split adds Lessons, so the owner merges it.
 
-- **Issue triage labels** (`git-github/70.issue-triage-labels.md`, 1933 words): split off *Path-based labels* (the area-label workflow and its excerpt, the copied-areas and unlisted-tenant bullets, about 350 words) and leave a one-line link; its Try it is a small `gh pr edit --add-label` workflow.
 - **Blocking hooks** (`hooks/20.blocking-hooks.md`, 1718 words): split off *Hook failure modes* (fail open versus closed, exit 2, `onFailure`, the `runGuard` crash and `|| true` wiring excerpts, the guards-wiring spec, the crash, can't-tell and version-bound bullets, the current Try it, about 800 words); *Blocking hooks* keeps the deny JSON, the guard pattern and registry, and needs a new Try it.
 - **Scheduled tasks** (`agents/40.scheduled-tasks.md`, 1713 words): split off *Session timers* (`/loop`, `ScheduleWakeup`, `CronCreate`, `disable-model-invocation` under `/loop`, `send_later`, `loop-only-tool-guard`, the timers-vanish and wake-up bullets, about 450 words); the complete Routine list stays on *Scheduled tasks*.
 
