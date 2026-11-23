@@ -63,10 +63,13 @@ it refuses a result the schema rejects) or `prune-friction-ledger.ts --move`
    each `--summary` with `see:` its related entries and rules.
 3. **Re-cluster** when the stored texts show one entry holding several causes
    or two entries holding one (a cluster is a shared root cause: one change
-   would retire all of it). Move occurrences with
+   would retire all of it), without reopening the logs. When you split, write
+   the distinction as a `related` pair; a Friction a `see:` rule sends
+   elsewhere moves; correct a `see:` rule that no longer holds. Move occurrences with
    `prune-friction-ledger.ts --move <session> <from> <to>`. Afterwards make
    every touched entry coherent: `summary`, `cause`, `fixes`, `status`, `ref`
-   and `notes` fit what it now holds, a deleted entry's `fixes`, `notes` and
+   and `notes` fit what it now holds (a `tracked` or `accepted` source may no
+   longer qualify), a deleted entry's `fixes`, `notes` and
    `ref` go to the survivor, and grep the old name to repoint every `related`,
    `cause` and `ref` that used it.
 4. **Record each PR that merged to fix a cluster** in its `fixes`, oldest
@@ -84,7 +87,7 @@ it refuses a result the schema rejects) or `prune-friction-ledger.ts --move`
    whose `ref` names no open issue, open PR or trial in
    `.agents/prune-trials.yml`, goes back to `open`; if its issue closed as not
    planned (not as superseded), to `accepted` with the reason in `notes`. One
-   whose `ref` PR merged (not the fix a new cause came from) goes to `open` too, and that PR's `fixes` `date` becomes its `merged_at`.
+   whose `ref` PR merged (not the fix a new cause came from) goes to `open` too, and that PR's `fixes` `date` becomes its `merged_at` (the same call).
 
 Rules that hold throughout:
 
@@ -98,7 +101,7 @@ Rules that hold throughout:
   landed`, `likely fixed` or `still recurring` from `fixes`. A re-fix after a
   regression needs only its `fixes` entry. An `accepted` cluster (an owner
   ceiling, `acceptedSeverity`) is never re-proposed; recording a fix on it, or an occurrence above
-  its `acceptedSeverity`, sets it back to `open`. Accept with
+  its `acceptedSeverity` (with a note), sets it back to `open`. Accept with
   `ledger-set.ts --status accepted [--accepted-severity S]` (default: the worst
   occurrence stored now); an `accepted` merge target needs a ceiling for what
   it received.
@@ -134,7 +137,7 @@ never-fixed or regression and any you rank high, and mark the rest unconfirmed.
    lists PR merges after that instant (keep stderr apart: it breaks the JSON).
    Before labelling never-fixed, list issues
    (`pnpm exec tsx scripts/github/list-open-issues.ts > {SCRATCH_DIR}/open-issues.json`
-   and `... 200 --closed > {SCRATCH_DIR}/closed-issues.json`; the closed list
+   and `pnpm exec tsx scripts/github/list-open-issues.ts 200 --closed > {SCRATCH_DIR}/closed-issues.json`; the closed list
    holds only the 200 most recently updated, so an older fix shows in
    `merges.json`) and filter by the Friction's tool name and error text. For a
    Friction naming a doc or Skill, also run
