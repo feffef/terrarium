@@ -34,10 +34,9 @@ Rules:
     body as a string, since `tsx` breaks a function passed to it. Page
     overflow is `documentElement.scrollWidth`; clipped content is a
     per-element `getBoundingClientRect` scan. Skip 0x0 hidden links in
-    tap-target scans. Chromium reports tinted backgrounds as `color(srgb
-    ...)`, so a contrast script that parses only `rgb()` misreads them. Read
-    a closed `<details>` with `textContent` and hover text from `title`
-    attributes.
+    tap-target scans. Tinted backgrounds come back as `color(srgb ...)`, not
+    `rgb()`; parse both in contrast scripts. Read a closed `<details>` with
+    `textContent` and hover text from `title` attributes.
   - **What must be seen** (overlap, clipping, contrast, awkward wrapping,
     images, a first impression): screenshot it and look at the screenshot.
     Judge an SVG by screenshot, not a text dump.

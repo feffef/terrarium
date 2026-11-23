@@ -63,15 +63,15 @@ sections on today's focus, each "none" when empty:
 - open issues: those labelled `area:<focus>` (the focus's name in the table) in
   `pnpm exec tsx scripts/github/list-open-issues.ts 5000`, with their numbers.
 
-Add the focus's line below to the pages section, when it has one:
+Add the focus's line below to the pages section:
 
-  - tinkerfund: `/t/tinkerfund` redirects to `/t/tinkerfund/prod`; `/qa` is a
-    component gallery, not a second shop;
-  - midden: the Trench's active cause chip is a link marked `aria-current`;
-  - blog: the Threads tab is `/t/blog?view=threads`; a wrong `view` silently
-    shows the Latest list;
-  - journal: digests and sessions are in-page anchors, so a link crawl finds
-    few pages.
+- tinkerfund: `/t/tinkerfund` redirects to `/t/tinkerfund/prod`;
+  `/t/tinkerfund/qa` is a component gallery, not a second shop;
+- midden: the Trench's active cause chip is a link marked `aria-current`;
+- blog: the Threads tab is `/t/blog?view=threads`; a wrong `view` silently
+  shows the Latest list;
+- journal: digests and sessions are in-page anchors, so a link crawl finds
+  few pages.
 
 Then dispatch three read-only subagents **in one message**, all with
 `model: sonnet`, one per lens:
