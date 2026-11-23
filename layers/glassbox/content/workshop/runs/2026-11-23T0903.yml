@@ -1,5 +1,12 @@
 session: session_013zxzeS6gys4MPSEMWnZd1m
 mode: autonomous
 focus: "Web standards: trim the Colour contrast Lesson, the next Too long item on the memory page (no logical split, one concept). No open PR touches the page. Run two of one session: the first run's PR (a new Lesson) waits for the owner."
-changes: []
-pagesRead: []
+changes:
+  - web-standards/50.colour-contrast | The faint-colour Excerpt, the deal badge paragraph, the reference-value sentence in In Terrarium, the order-free sentence and the derived-colour bullet (folded into the stylesheet-reading bullet) are cut; the cover ornament and the deal badge get a short gloss in the bullets and paragraph that name them; teaches follows | the Lesson was over the soft word limit and has one concept, so no split. Removed facts: the badge's accent-ink colour, the ornament's file and aria-hidden, and the white-on-white reference value; none is taught elsewhere and none is needed for the argument. A claim checker found every changed sentence true and the missing ornament gloss, now added. Wording only on what it teaches, so revision and publishedAt are kept
+  - workshop/pages/index | The Colour contrast Too long item deleted | done
+pagesRead:
+  - web-standards/10.css-custom-properties
+  - web-standards/20.svg
+  - web-standards/30.aria
+  - web-standards/40.colour-and-motion-settings
+  - web-standards/50.colour-contrast
