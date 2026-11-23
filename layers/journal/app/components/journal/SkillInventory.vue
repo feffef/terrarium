@@ -7,8 +7,8 @@ import type { Importance, SkillDoc } from '../../types/journal'
 defineProps<{
   groups: { importance: Importance; skills: SkillDoc[] }[]
   uses?: Record<string, number>
-  // Sessions that used the Skill and logged ideas; shown only beside a use count.
-  ideas?: Record<string, number>
+  // Sessions that used the Skill and logged ideas, and those ideas; shown only beside a use count.
+  ideas?: Record<string, { sessions: number; ideas: number }>
   // Where each Skill's own page lives; absent means no links (the archived Space has none).
   pageBase?: string
 }>()
@@ -32,7 +32,7 @@ defineProps<{
               <template v-else>used in {{ countOf(uses[s.name] ?? 0, 'session') }}</template>
             </span>
           </div>
-          <p v-if="uses?.[s.name]" class="ideas-line">ideas in {{ ideas?.[s.name] ?? 0 }} of {{ countOf(uses[s.name] ?? 0, 'session') }}</p>
+          <p v-if="uses?.[s.name]" class="ideas-line">{{ countOf(ideas?.[s.name]?.ideas ?? 0, 'idea') }} in {{ ideas?.[s.name]?.sessions ?? 0 }} of {{ countOf(uses[s.name] ?? 0, 'session') }}</p>
           <p v-if="s.gist" class="gist">{{ s.gist }}</p>
           <details v-if="s.gist" class="role-details">
             <summary>Details</summary>
