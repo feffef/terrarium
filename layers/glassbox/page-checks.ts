@@ -287,12 +287,19 @@ function nextProblems(prose: string, lesson: boolean): string[] {
 // Caps keep each `title` and `description` short wherever pages are listed (writing-pages.md, Pin).
 const lengths = { lesson: { title: 28, description: 120 }, walkthrough: { title: 36, description: 140 } }
 const lessonTitleWords = 4
+// A Lesson's body, frontmatter left out (GLOSSARY.md, Lesson): over `hard` fails the tests, over `soft` asks glassbox-update for a split proposal.
+export const glassboxLessonWords = { soft: 1700, hard: 2000 }
+const rawWords = (text: string) => text.split(/\s+/).filter(Boolean).length
+const bodyWords = (source: string) => rawWords(splitFrontmatter(source).body)
 
-function lengthProblems(route: string, frontmatter: Record<string, unknown>): string[] {
+function lengthProblems(route: string, frontmatter: Record<string, unknown>, bodyWordCount: number): string[] {
   const limit = glassboxSubjectOf(route) ? lengths.lesson : glassboxWalkthroughOf(route) ? lengths.walkthrough : undefined
   if (!limit) return []
-  const words = String(frontmatter.title ?? '').split(/\s+/).filter(Boolean).length
-  const wordProblems = glassboxSubjectOf(route) && words > lessonTitleWords ? [`title "${frontmatter.title}" is ${words} words, more than ${lessonTitleWords}`] : []
+  const titleWords = rawWords(String(frontmatter.title ?? ''))
+  const wordProblems = [
+    ...(glassboxSubjectOf(route) && titleWords > lessonTitleWords ? [`title "${frontmatter.title}" is ${titleWords} words, more than ${lessonTitleWords}`] : []),
+    ...(glassboxSubjectOf(route) && bodyWordCount > glassboxLessonWords.hard ? [`body is ${bodyWordCount} words, more than ${glassboxLessonWords.hard}: split the lesson`] : []),
+  ]
   const missing = frontmatter.teaches === undefined ? ['no teaches'] : []
   return [...wordProblems, ...missing, ...(['title', 'description'] as const).flatMap((field) => {
     const text = String(frontmatter[field] ?? '')
@@ -311,7 +318,7 @@ export function glassboxPageProblems(file: string, source: string, site: Glassbo
   if (glassboxSubjectOf(route)) problems.push(...lessonProblems(file, body, prose, space))
   if (glassboxSubjectOf(route) || glassboxWalkthroughOf(route)) problems.push(...nextProblems(prose, Boolean(glassboxSubjectOf(route))))
   // Drafts are set aside (GLOSSARY.md, Three spaces); a page moved to the guide meets its caps.
-  if (space === 'guide') problems.push(...lengthProblems(route, frontmatter))
+  if (space === 'guide') problems.push(...lengthProblems(route, frontmatter, rawWords(body)))
 
   const { revision, revisionDate } = frontmatter
   if (typeof revision === 'string') problems.push(...gitProblems(revision, revisionDate, refs.files, prose, git))
@@ -456,20 +463,40 @@ export function glassboxFewNextLinks(sources: Record<string, string>): { file: s
 
 export const glassboxFewNextText = (count: number) => `only ${count} other ${count === 1 ? 'page lists' : 'pages list'} it in Where next, fewer than ${glassboxFewNextMin}`
 
-/** Each guide page's title, title-word and description cap problems, and a missing teaches, by file under `pages/`. */
-export function glassboxLengthProblems(sources: Record<string, string>): string[] {
-  return Object.entries(sources).flatMap(([file, source]) => lengthProblems(`/${contentRoute(file)}`, splitFrontmatter(source).frontmatter).map((p) => `guide/pages/${file}: ${p}`)).sort()
+/** Each guide Lesson, by file under `pages/`, whose body is over the soft limit, longest first. */
+export function glassboxLongLessons(sources: Record<string, string>): { file: string, words: number }[] {
+  return Object.entries(sources)
+    .filter(([file]) => glassboxSubjectOf(`/${contentRoute(file)}`))
+    .map(([file, source]) => ({ file, words: bodyWords(source) }))
+    .filter(({ words }) => words > glassboxLessonWords.soft)
+    .sort((a, b) => b.words - a.words || a.file.localeCompare(b.file))
 }
 
-// Usage: pnpm exec tsx layers/glassbox/page-checks.ts [--lengths]: prints every page's warnings, the guide's
-// orphans and the Glass Box glossary's capitalised terms; with --lengths, fails on a title or description over its cap or a missing teaches, so `pnpm validate:content` catches it.
+export const glassboxLongText = ({ words }: { words: number }) => `${words} words, over the soft limit of ${glassboxLessonWords.soft} (hard limit ${glassboxLessonWords.hard}): propose a split, or a cut where none is logical`
+
+/** Each guide page's title, title-word and description cap problems, a Lesson body over the hard limit and a missing teaches, by file under `pages/`. */
+export function glassboxLengthProblems(sources: Record<string, string>): string[] {
+  return Object.entries(sources).flatMap(([file, source]) => lengthProblems(`/${contentRoute(file)}`, splitFrontmatter(source).frontmatter, bodyWords(source)).map((p) => `guide/pages/${file}: ${p}`)).sort()
+}
+
+const guideSources = () => {
+  const guide = join(root, 'layers/glassbox/content/guide/pages')
+  return Object.fromEntries(globSync('**/*.md', { cwd: guide }).map((f) => [f, readFileSync(join(guide, f), 'utf8')]))
+}
+
+// Usage: pnpm exec tsx layers/glassbox/page-checks.ts [--lengths | --long]: with --long, prints each Lesson over the soft word limit
+// (glassbox-update runs it); otherwise prints every page's warnings, the guide's
+// orphans and the Glass Box glossary's capitalised terms; with --lengths, fails on a title or description over its cap, a Lesson body over the hard limit or a missing teaches, so `pnpm validate:content` catches it.
 runIfMain(import.meta.url, () => {
   const content = join(root, 'layers/glassbox/content')
   if (process.argv.includes('--lengths')) {
-    const guide = join(content, 'guide/pages')
-    const problems = glassboxLengthProblems(Object.fromEntries(globSync('**/*.md', { cwd: guide }).map((f) => [f, readFileSync(join(guide, f), 'utf8')])))
+    const problems = glassboxLengthProblems(guideSources())
     for (const p of problems) console.error(p)
     process.exit(problems.length ? 1 : 0)
+  }
+  if (process.argv.includes('--long')) {
+    for (const lesson of glassboxLongLessons(guideSources())) console.log(`WARNING guide/pages/${lesson.file}: ${glassboxLongText(lesson)}`)
+    return
   }
   const words = glassboxGlossaryWords()
   // The glossary's capitalised headings are where agents copy a term's capital from, so its prose is scanned too.
@@ -477,8 +504,7 @@ runIfMain(import.meta.url, () => {
   for (const file of globSync('*/pages/**/*.md', { cwd: content }).sort()) {
     for (const warning of glassboxPageWarnings(readFileSync(join(content, file), 'utf8'), file.startsWith('guide/') ? words : [])) console.log(`${file}: ${warning}`)
   }
-  const guide = join(content, 'guide/pages')
-  const sources = Object.fromEntries(globSync('**/*.md', { cwd: guide }).map((f) => [f, readFileSync(join(guide, f), 'utf8')]))
+  const sources = guideSources()
   for (const file of glassboxOrphans(sources)) console.log(`guide/pages/${file}: ${glassboxOrphanText}`)
   for (const { file, count } of glassboxFewNextLinks(sources)) console.log(`guide/pages/${file}: ${glassboxFewNextText(count)}`)
 })

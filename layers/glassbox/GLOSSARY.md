@@ -53,7 +53,7 @@ Terrarium applies them without reading the source.
   `layers/glassbox/app/utils/subjects.ts`. `workshop`, at
   `/t/glassbox/workshop`, is the agents' notebook, a live page of state and not
   a lesson: the Agent notes (the memory text: weak spots, the owner's direction,
-  open ideas and the agents' soft decisions) and the Update log (one entry per
+  open ideas, lessons too long and the agents' soft decisions) and the Update log (one entry per
   curate run), under a Lately list of the newest run changes that the page works
   out itself. glassbox-update's check state is kept but not shown. It has no
   sidebar entry and no link from the guide. How a run keeps it, the word cap
@@ -88,8 +88,10 @@ Terrarium applies them without reading the source.
 A page about one concept. It opens with a short general summary that links the
 official docs, then shows how and why Terrarium uses the concept.
 
-Its body follows one contract, which the page frames like design 1b
-(`layers/glassbox/app/utils/lesson.ts`):
+Its body, frontmatter not counted, has a hard word limit that fails the tests and
+a soft one past which `glassbox-update` asks for a proposal to split it
+(`glassboxLessonWords` in `page-checks.ts`). It follows one contract, which the
+page frames like design 1b (`layers/glassbox/app/utils/lesson.ts`):
 
 - a lede paragraph, then a skip line that links `[In Terrarium](#in-terrarium)`;
 - `## The concept`, whose last paragraph is `Full reference: [label](url)`
