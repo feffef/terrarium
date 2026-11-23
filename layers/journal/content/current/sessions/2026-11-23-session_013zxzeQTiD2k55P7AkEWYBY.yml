@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQTiD2k55P7AkEWYBY
 startedAt: 2026-11-23T02:07:33Z
-endedAt: 2026-11-23T02:22:37Z
+endedAt: 2026-11-23T02:26:00Z
 kind: autonomous
 goal: Scheduled sweep turning recurring session Frictions into fixes
-status: in-review
-outcome: "Ledger PR #3613 open (gate green, review clean); no fix was dispatched, filed or escalated this run"
-summary: "Scheduled frictions-to-fixes run, no human prompts. A survey subagent updated the Friction Ledger for the 2026-11-20..23 window (about 70 occurrences appended, 6 new entries, fixes #3591, #3589, #3593 and #3565 recorded) and committed it. Every still-recurring cluster had only minor or nit severity since its latest fix, so no regression issue was filed. Of the never-fixed candidates, a design subagent judged both picks (round-1 review yield in clear-backlog; grilling question wording) as no change: one is an owner policy call with mixed evidence, the other is an installed Skill whose rule already exists in clear-backlog. I recorded both as dropped notes, pruned old occurrences, ran code-review (Standards and Spec subagents, clean) and the scoped gate (green), and opened ledger PR #3613 with my verdict comment. No fix PRs exist, so no closing ledger PR. Everything was agent-initiated under the schedule's Skill. Open: merge #3613 once CI is green."
+status: completed
+outcome: "Ledger PR #3613 merged; no fix was dispatched, filed or escalated this run"
+summary: "Scheduled frictions-to-fixes run, no human prompts. A survey subagent updated the Friction Ledger for the 2026-11-20..23 window (about 70 occurrences appended, 6 new entries, fixes #3591, #3589, #3593 and #3565 recorded) and committed it. Every still-recurring cluster had only minor or nit severity since its latest fix, so no regression issue was filed. Of the never-fixed candidates, a design subagent judged both picks (round-1 review yield in clear-backlog; grilling question wording) as no change: one is an owner policy call with mixed evidence, the other is an installed Skill whose rule already exists in clear-backlog. I recorded both as dropped notes, pruned old occurrences, ran code-review (Standards and Spec subagents, clean) and the scoped gate (green), and opened ledger PR #3613 with my verdict comment. No fix PRs exist, so no closing ledger PR. Everything was agent-initiated under the schedule's Skill. Merged #3613 after green CI; no closing ledger PR was needed."
 prs:
   - "3613"
 docsRead:
@@ -54,18 +54,20 @@ frictions:
   - description: The design agent skipped the subagents and docReadCounts docstring checks, so its doc-read findings are only partly verified.
     solution: Let design-brief §2 and §3 say which steps may be skipped when no doc edit is proposed.
     severity: nit
-durationSec: 904
+durationSec: 1107
 models:
-  claude-sonnet-5-5: 51
+  claude-sonnet-5-5: 64
 toolCounts:
-  Bash: 17
+  Bash: 20
   Read: 4
-  Skill: 4
+  Skill: 5
   Agent: 4
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   mcp__github__add_issue_comment: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
 filesEdited:
   - layers/journal/content/current/frictions/adr-read-after-edit.yml
   - layers/journal/content/current/frictions/bare-cd-moves-session-cwd.yml
@@ -361,25 +363,25 @@ subagents:
     durationSec: 518
     toolCalls: 61
     modelCalls: 54
-    tokenShare: 55
+    tokenShare: 51.1
   - type: general-purpose
     task: Design friction fixes
     durationSec: 62
     toolCalls: 11
     modelCalls: 9
-    tokenShare: 5.9
+    tokenShare: 5.5
   - type: general-purpose
     task: Standards review of ledger diff
     durationSec: 64
     toolCalls: 15
     modelCalls: 12
-    tokenShare: 7.7
+    tokenShare: 7.1
   - type: general-purpose
     task: Spec review of ledger diff
     durationSec: 36
     toolCalls: 9
     modelCalls: 7
-    tokenShare: 4.2
+    tokenShare: 3.9
 gitBranch: claude/eager-ptolemy-y2xwyp
 entrypoint: remote_trigger
 cliVersion: 2.1.330
