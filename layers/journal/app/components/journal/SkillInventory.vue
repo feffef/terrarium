@@ -32,7 +32,7 @@ defineProps<{
               <template v-else>used in {{ countOf(uses[s.name] ?? 0, 'session') }}</template>
             </span>
           </div>
-          <p v-if="uses?.[s.name]" class="ideas-line">{{ countOf(ideas?.[s.name]?.ideas ?? 0, 'idea') }} in {{ ideas?.[s.name]?.sessions ?? 0 }} of {{ countOf(uses[s.name] ?? 0, 'session') }}</p>
+          <p v-if="uses?.[s.name]" class="ideas-line">{{ countOf(ideas?.[s.name]?.ideas ?? 0, 'idea') }} in <template v-if="ideas?.[s.name]">{{ ideas[s.name]?.sessions }} of </template>{{ countOf(uses[s.name] ?? 0, 'session') }}</p>
           <p v-if="s.gist" class="gist">{{ s.gist }}</p>
           <details v-if="s.gist" class="role-details">
             <summary>Details</summary>
