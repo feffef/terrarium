@@ -57,7 +57,7 @@ a `lost` artifact, since nothing survives to view. The exact shape and its
 rules (SHA-pinned links, when `site` is required): see What lives where below.
 
 ### Condition
-The curator-graded preservation state of an Artifact, one of six grades (order, axes and definitions: `layers/midden/app/utils/condition.ts`). **Curator-authored, never mechanically re-derived**, not from `assessedAt` or any future continuity check (#526). Shown as its word, never a glyph.
+The curator-graded preservation state of an Artifact, one of the grades (order, axes and definitions: `layers/midden/app/utils/condition.ts`). **Curator-authored, never mechanically re-derived**, not from `assessedAt` or any future continuity check (#526). Shown as its word, never a glyph.
 
 ### Cause of death
 Why an Artifact ended, as one curator-chosen cause. Condition says what is left of a thing;
@@ -68,7 +68,7 @@ their definitions are single-homed (see What lives where below).
 
 ### The Stores
 The Midden's second Space (`stores`): catalogued finds held **off display**. An
-Artifact here is the same Artifact — same six Conditions, same Dig seasons, the
+Artifact here is the same Artifact — same Conditions, same Dig seasons, the
 same record card rendered whole — minus its `site` back-reference, because the
 stores have no Sites to narrate them. The organising axis is the Dig season
 instead: a single season-grouped register at `/t/midden/stores`, no sub-routes

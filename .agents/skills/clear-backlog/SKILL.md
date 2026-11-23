@@ -68,8 +68,7 @@ branch per group of issues in which every pair shares a file or is clearly
 related. Adjust the grouping where you know better; a grouping you are unsure of is a grilling question. The summary runs several thousand
 characters per issue and ends with the workflow's `logs`, which carry harness
 warnings about an agent's output: write it to a file and `Read` it in parts, and
-relay each warning to the owner. Start no build yet, not even for a `build`
-result: go to §2.
+relay each warning to the owner. Go to §2.
 
 **Done:** every issue has a result, or is in `missing` and goes to the
 report with that word.
@@ -108,8 +107,7 @@ on any pick you could not verify. Where its format differs, this list wins:
 - Include Public issues (a Trusted user's yes is the approval ADR-0020
   requires) and proposals to close an issue as obsolete or superseded. Close
   only on a yes.
-- Answers may raise new questions. Keep each follow-up round to those alone,
-  with its own push notification.
+- Answers may raise new questions. Keep each follow-up round to those alone.
 
 The answers are the owner's confirmation. Record an answer on its issue
 only when it changes the issue's state or scope, and set the label it
@@ -122,7 +120,8 @@ screenshots in one message with one numbered approval question per sample. A
 change request gets a revised sample and a new round.
 
 **Done:** every question is answered, every needed sample is approved, every
-issue in §1's set is `ready-for-agent`, closed, or parked by the owner, and
+issue in §1's set, bar the `blocked` ones, is `ready-for-agent`, closed, or
+parked by the owner, and
 this session has called the `grilling` Skill or read
 `.agents/skills/grilling/SKILL.md`.
 
@@ -174,8 +173,8 @@ Tell it to read `.claude/workflows/clear-backlog-build.js` and follow `rules()`
 
 Act on each branch's `status`:
 
-- `needs-owner`: an interrupt (the script lists the conditions). Send a push
-  notification and ask its `question` in the running `Q` numbering. The rest
+- `needs-owner`: an interrupt (the script lists the conditions). Ask its
+  `question` in the running `Q` numbering. The rest
   keep going. With the answer, resume the builder to go on, run the fast
   checks, commit, and reply with one line: `BUILT <HEAD sha>`. Then run the
   workflow on that branch with `review: true` and `round: 1`. A builder

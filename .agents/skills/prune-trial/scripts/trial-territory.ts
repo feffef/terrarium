@@ -1,5 +1,5 @@
 // Says which open Prune Trial covers a file or word (ADR-0027), so a session
-// edits no text an open trial owns. Reads the ledger from origin/main so a
+// edits no text an open trial owns. Reads .agents/prune-trials.yml from origin/main so a
 // stale branch does not hide a newly merged trial.
 //   tsx .agents/skills/prune-trial/scripts/trial-territory.ts <path-or-word>...
 import { git } from '../../../../scripts/lib/git.ts'
