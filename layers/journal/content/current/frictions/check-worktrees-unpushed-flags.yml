@@ -22,11 +22,6 @@ fixes:
     date: "2026-11-13"
     summary: "log-session --author: a later author call whose worktree sweep finds nothing stranded drops the earlier hook-written stranded-worktree Friction, so the final state decides."
 occurrences:
-  - session: session_013zxzeQwU4eYGrEvV8x42ts
-    date: "2026-11-08"
-    severity: minor
-    description: "Linked worktree(s) left with uncommitted or unpushed work at close: /home/user/terrarium/.claude/worktrees/wf_48077a04-70c-1"
-    solution: "Push each, or remove it if its work is meant to be dropped."
   - session: session_013zxzeSiQ4jom3vFu8GreLw
     date: "2026-11-10"
     severity: minor

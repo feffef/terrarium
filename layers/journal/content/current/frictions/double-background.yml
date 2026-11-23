@@ -17,11 +17,6 @@ fixes:
     date: "2026-10-16"
     summary: "The double-background guard's deny message now says the whole call was denied and nothing in it ran."
 occurrences:
-  - session: session_013zxzePKudcTUhp46zRqz4X
-    date: "2026-11-08"
-    severity: nit
-    description: "First attempt to start the gate stacked run_in_background with a trailing ampersand and the double-background guard refused it."
-    solution: "Pass run_in_background alone; the guard message said so."
   - session: session_013zxzeSKTBjSfYnUxNHTJw1
     date: "2026-11-09"
     severity: nit

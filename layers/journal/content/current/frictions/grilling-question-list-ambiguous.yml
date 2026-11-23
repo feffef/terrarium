@@ -3,6 +3,8 @@ surface: safe
 summary: Owners answered a grilling question list ambiguously (a bare letter, a number that matched another question, or a reply that skipped some) and the orchestrator had to ask again or guess.
 cause: "The orchestrator's numbered question list gives no lettered options, or numbers drift from the owner's reply, or states a question's scope unclearly, so the owner's short reply ('5a', '11a 12a', 'cut the cluster') cannot be mapped to one question. Signals: 'ambiguous', 'unanswered twice', 'had to ask again', question numbers Q10/Q11 or Q3/Q6 in a long thread."
 status: open
+notes: |-
+  2026-11-23 design: lettered-options/scope line dropped: clear-backlog §2 already says label options a), b), c) and one line per issue; grilling is installed (ADR-0015); slips, not a missing rule
 occurrences:
   - session: session_013zxzeNisEDZyrmPg2jhA5G
     date: "2026-11-22"

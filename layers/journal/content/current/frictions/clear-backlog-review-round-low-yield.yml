@@ -6,6 +6,8 @@ status: open
 related:
   - entry: followup-review-overcost
     rule: That entry is a review that cost far more than it found on a tiny first push or small follow-up; here a normal first round on larger branches found little.
+notes: |-
+  2026-11-23 design: widen small bar / narrow Spec prompt / drop round-1 Spec axis dropped: two sessions with mixed evidence (round 1 found real defects on four branches in NisE); a review-cost policy call for the owner, not a deletion
 occurrences:
   - session: session_013zxzeT3ZUhBeG84jQUD1Hw
     date: "2026-11-21"

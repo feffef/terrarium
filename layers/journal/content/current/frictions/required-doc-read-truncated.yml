@@ -22,11 +22,6 @@ fixes:
     date: "2026-10-28"
     summary: "CLAUDE.md says to read a required doc whole if you can, no longer in one Read call: partial reads are encouraged against, not required."
 occurrences:
-  - session: session_013zxzeRL5rU5zS3WRCkH3TE
-    date: "2026-11-08"
-    severity: nit
-    description: "Labelled 2975 after only grepping issue-tracker.md; the hook asked for the whole doc, which I read afterwards and which held the supersession and trial checks I then ran."
-    solution: "Read issue-tracker.md whole before the first label call, as CLAUDE.md says; the late read cost nothing here."
   - session: session_013zxzeRVjHExXhciv5BwiTB
     date: "2026-11-11"
     severity: nit

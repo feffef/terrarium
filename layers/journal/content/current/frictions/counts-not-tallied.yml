@@ -26,16 +26,6 @@ fixes:
     date: "2026-10-25"
     summary: "Cut the Verify-before-you-state family to one plain home in CLAUDE.md and dropped its restatements in four Skills and the build reviewer."
 occurrences:
-  - session: session_013zxzeQhMWFqY3DzWrbVdEs
-    date: "2026-11-08"
-    severity: nit
-    description: "The checker's summary preamble said five CONFIRMED-BUT but listed four; I had to recount the verdicts myself from the body."
-    solution: "Ask checkers to end with a verdict-count line derived from their own list."
-  - session: session_013zxzeRWFHU5d6sAXJTbbP7
-    date: "2026-11-08"
-    severity: minor
-    description: "Stated the guide-page list had 73 lines, and about 30 ADR rules, from memory; actual list had 72 lines. Counted only when asked to file the issue."
-    solution: "Count with wc or grep -c before stating any number, as CLAUDE.md Verify before you state requires."
   - session: session_013zxzeSKTBjSfYnUxNHTJw1
     date: "2026-11-09"
     severity: moderate

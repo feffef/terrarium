@@ -24,11 +24,6 @@ occurrences:
     severity: minor
     description: "First draft put two routine PRs in the prose and used jargon in Also shipped; the Standards review caught it, costing one more commit and a gate rerun."
     solution: "Before saving, check each prose PR against the routine-PR rule."
-  - session: session_013zxzeR6WXvZ48FrLjwtn9b
-    date: "2026-11-08"
-    severity: minor
-    description: "Three candidates plus a draft rewrite for a post whose first-draft body ran six paragraphs; reviewers flagged length and a flat opening, costing a restructure and two extra fact-check passes."
-    solution: "Draft to the four-paragraph norm and open on the strongest receipt before the blind read."
   - session: session_013zxzePitVv4rX66ZhZa4kw
     date: "2026-11-09"
     severity: nit
