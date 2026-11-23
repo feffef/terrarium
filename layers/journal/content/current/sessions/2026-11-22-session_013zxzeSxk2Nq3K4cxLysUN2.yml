@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSxk2Nq3K4cxLysUN2
 startedAt: 2026-11-22T23:09:34Z
-endedAt: 2026-11-22T23:36:46Z
+endedAt: 2026-11-23T06:25:47Z
 kind: interactive
 goal: Limit how long Glass Box lessons may be
-status: in-review
-outcome: Hard (2000) and soft (1700) lesson word limits built; PR 3608 open, waits for the owner's merge
-summary: "The owner asked how long the Glass Box lessons are and which limit exists (none for a whole lesson), then directed, in their own words, a hard limit of 2000 words without frontmatter that fails tests, a soft limit with a script warning run by glassbox-update, a workshop bullet per warned lesson, readers proposing the splits, a note that cutting is allowed when no split is logical, and a Too long priority in glassbox-curate. The owner chose the soft limit (first 1600 from my recommendation, then 1800, finally 1700) and, from my questions, that a reader proposes for every flagged lesson, a new Too long section, and guide lessons only with raw body words. Agent-initiated: the code-review rounds, the doc edits that keep one home per fact, and removing a redundant clause after review. The PR waits for the owner because it changes the page checks and two Skills. The Too long section is empty on purpose; the next glassbox-update run fills it. Open: the owner may want the first bullets written now."
+status: completed
+outcome: Hard (2000) and soft (1700) lesson word limits merged via PR 3608; the next glassbox-update run fills the Too long section
+summary: "The owner asked how long the Glass Box lessons are and which limit exists (none for a whole lesson), then directed, in their own words, a hard limit of 2000 words without frontmatter that fails tests, a soft limit with a script warning run by glassbox-update, a workshop bullet per warned lesson, readers proposing the splits, a note that cutting is allowed when no split is logical, and a Too long priority in glassbox-curate. The owner chose the soft limit (first 1600 from my recommendation, then 1800, finally 1700) and, from my questions, that a reader proposes for every flagged lesson, a new Too long section, and guide lessons only with raw body words. Agent-initiated: the code-review rounds, the doc edits that keep one home per fact, and removing a redundant clause after review. The PR waited for the owner because it changes the page checks and two Skills, and the owner merged it. The Too long section was left empty on purpose; the first glassbox-update run after the merge writes the readers' split proposals there."
 prs:
   - "3608"
 docsRead:
@@ -66,22 +66,24 @@ frictions:
   - description: Read ADR-0005 and ADR-0027 only after a hook prompted, after editing the glassbox-update Skill; the edits matched both
     solution: Read the ADRs a Skill's rule names before the first Skill edit
     severity: nit
-durationSec: 1632
+durationSec: 26173
 models:
-  claude-sonnet-5-5: 144
+  claude-sonnet-5-5: 161
 toolCounts:
   Grep: 9
   Glob: 1
   Read: 11
-  Bash: 44
+  Bash: 45
   AskUserQuestion: 1
   Edit: 4
-  Skill: 5
+  Skill: 6
   Agent: 4
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 4
+  mcp__github__pull_request_read: 2
 filesEdited:
   - .agents/skills/glassbox-update/SKILL.md
   - .agents/skills/glassbox-curate/SKILL.md
@@ -332,28 +334,28 @@ subagents:
     durationSec: 17
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 6.6
+    tokenShare: 4.9
   - type: general-purpose
     task: Spec review of branch
     model: sonnet
     durationSec: 34
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 7.8
+    tokenShare: 5.8
   - type: general-purpose
     task: Standards review of final head
     model: sonnet
     durationSec: 38
     toolCalls: 9
     modelCalls: 3
-    tokenShare: 4.2
+    tokenShare: 3.2
   - type: general-purpose
     task: Spec review of final head
     model: sonnet
     durationSec: 29
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 3.8
+    tokenShare: 2.9
 gitBranch: ccr-b4fdb08e-3pal72
 entrypoint: remote_mobile
 cliVersion: 2.1.330
