@@ -1,0 +1,197 @@
+schemaVersion: 1
+session: session_013zxzePaBNkuBSUPc9jtA9d
+startedAt: 2026-11-23T16:03:03Z
+endedAt: 2026-11-23T16:07:55Z
+kind: autonomous
+goal: Scheduled visitor-loop on the homepage
+status: completed
+outcome: Three visitors saw the homepage; no bug survived checking, six ideas logged
+summary: "Scheduled visitor-loop run, no human prompt; everything here was agent-initiated by the schedule. Focus: homepage (entry /, row 6 of the rotation for 2026-11-23). Built origin/main (eca2bf0c), served a production preview, wrote a context file and sent a blind first-time visitor, an informed content editor and an informed UI tester (all sonnet). Yield: blind 7 findings and 3 ideas, editor 7 findings and 3 ideas, UI tester 7 findings and 3 ideas. After checking against source and the rendered page, no bug survived, so no issue was filed. Dropped as not reproduced: Tinkerfund prod and Midden/trench overflow at 390px (documentElement.scrollWidth is 390; only internal elements extend), Tinkerfund campaign link lacking a name (its accessible text is figure label, title and 92% funded). Dropped by decisions.md: Marquee and Commons links on the homepage, reading-order or orientation strip, jargon line in the hero, clickable jar, Journal \"up to mid-November\" blurb (already ruled a dated story on 11-19). Dropped as out of focus or already logged: Journal counters without definitions, 404 links. Dropped as exempt: 21px inline prose links (WCAG 2.5.8). Filter misses: two visitors (blind, UI) claimed overflow or a nameless link without the page-level measure; the content editor guessed the Journal blurb text was homepage copy. Retros: blind said the SubagentStart rule-use echo ran twice and rated four irrelevant ADRs, asking for it to be skipped for read-only visitors (hook path unverified); editor said breadth-first crawling from a one-page focus spent 10 of 16 pages in Glass Box and Blog, and the brief gave no width guidance for a homepage focus (it took no 390px shot); the UI tester's resumed reply repeated its visit report instead of a retro."
+prs: []
+docsRead:
+  - path: scripts/lib/chromium.ts
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/visitor-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: read before dispatching three visitors
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: visitor-loop
+    reason: (invoked as a slash command)
+frictions:
+  - description: Visitors followed the homepage's ~40 links breadth-first, so most pages went to Glass Box and Blog; the brief has no guidance for a one-page focus, and no width for it.
+    solution: ".agents/skills/visitor-loop/visitor-brief.md: for a one-page focus, follow only links the page features and take a 390px screenshot."
+    severity: minor
+  - description: A resumed UI tester answered the retro question by re-sending its visit report, so I had no retro from it.
+    solution: ".agents/skills/visitor-loop/SKILL.md step 5: say to reply with the retro only, not repeat the report."
+    severity: nit
+  - description: Subagent startup hook made the blind visitor echo rule-use twice and rate four ADRs that do not apply to a read-only visit.
+    solution: Skip the rule-use echo for read-only visitor subagents (SubagentStart hook config; path unverified).
+    severity: nit
+durationSec: 293
+models:
+  claude-sonnet-5-5: 45
+toolCounts:
+  Bash: 18
+  Skill: 3
+  Agent: 3
+  Read: 1
+  SendMessage: 3
+filesEdited:
+  - .throwaway/visitor-ui/crawl.ts
+  - .throwaway/visitor-ui/home.ts
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0025.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0003.md
+        value: confirmed
+        why: "agreed: changed nothing, no branch or PR"
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: steered
+        why: authored the log, kept it off a branch
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0028.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0025.md
+        value: unrelated
+      - path: .claude/rules/ui-verification.md
+        value: unrelated
+      - path: .agents/skills/visitor-loop/decisions.md
+      - path: .agents/skills/visitor-loop/visitor-brief.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+subagents:
+  - type: general-purpose
+    task: Blind first-time visitor
+    model: sonnet
+    durationSec: 110
+    toolCalls: 10
+    modelCalls: 7
+    tokenShare: 14.8
+  - type: general-purpose
+    task: Informed content editor
+    model: sonnet
+    durationSec: 111
+    toolCalls: 8
+    modelCalls: 6
+    tokenShare: 13.4
+  - type: general-purpose
+    task: Informed UI tester
+    model: sonnet
+    durationSec: 118
+    toolCalls: 15
+    modelCalls: 12
+    tokenShare: 19
+gitBranch: claude/lucid-heisenberg-9kcf94
+entrypoint: remote_trigger
+cliVersion: 2.1.330
+trigger: visitor-loop
+learnings:
+  - A per-element overflow scan flags code blocks and decorative SVG children even when the page itself does not scroll; check documentElement.scrollWidth first, and skip 0x0 hidden links in tap-target scans.
+ideas:
+  - "[content editor, UI tester, blind] / Midden Today's find card: the card shows a 200-330 word dig report that fades out mid-sentence, with figures swamping a teaser slot and no read-more cue besides the title link. Show a one-sentence teaser plus a visible 'Read the full find' link, so a phone visitor can scan it."
+  - "[content editor, blind] / Glass Box card: the 'Lesson of the day' label reads 'INSTALLED SKILLS' (a section name) above 'Planning skills', with the button 'Start with the Glass Box'. Label it 'Lesson: Planning skills' so a visitor knows what the teaser is."
+  - "[content editor, blind, UI tester] / Journal digests card: the two or three latest digests fade out mid-sentence ('...and a new guard checks code...'). Give each a short headline or cut to the first clause so the teaser reads whole."
+  - "[content editor] / intro: 'People steer, and have to manually merge only the risky changes' is awkward and 'manually' is redundant. Change it to 'People steer, and merge by hand only the risky changes.'"
+  - "[content editor] / section taglines: the Blog tagline 'Recent interesting events, retold in several voices, and discarded work curated like a museum' also describes the Midden, so it reads as a leftover. Shorten it to describe only the Blog's block."
+  - "[UI tester, blind] / hero: the jar drawing sits behind the intro paragraphs and its lines cross the text at 390px (home390.png, y=230-600). Fade it further under the text so reading stays easy."
+landedBy: Stop
