@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzePAekyp1bgbnenrGfK
 startedAt: 2026-11-23T00:15:31Z
-endedAt: 2026-11-23T00:22:10Z
+endedAt: 2026-11-23T00:26:15Z
 kind: autonomous
 goal: Write the 2026-11-22 Journal Digest and archive old content
-status: in-review
-outcome: PR 3609 open with the 2026-11-22 Digest and archive sweep; gate green, review clean, awaiting CI
-summary: Scheduled digest run, no human prompts. Listed one closed day (2026-11-22), gathered its 24 merged PRs and 15 session logs, wrote the Digest, ran the archive sweep (the 2026-11-15 Digest and 16 session logs moved to archived), then fact-checked with a subagent. It found five wrong claims (two unsourced cadence/automation words, a misgrouped PR, an overstated link between a PR and a Blog post, a loose label), all fixed. code-review (Standards and Spec) found one project term, Tenant, fixed in a one-line follow-up with own read. gate:scoped passed on the pre-fix head. Opened PR 3609 and subscribed; merging via merge-pr.ts is still to do once CI is green. Everything was agent-initiated under the Skill's schedule.
+status: completed
+outcome: PR 3609 merged with the 2026-11-22 Digest and archive sweep, gate green
+summary: Scheduled digest run, no human prompts. Listed one closed day (2026-11-22), gathered its 24 merged PRs and 15 session logs, wrote the Digest, ran the archive sweep (the 2026-11-15 Digest and 16 session logs moved to archived), then fact-checked with a subagent. It found five wrong claims (two unsourced cadence/automation words, a misgrouped PR, an overstated link between a PR and a Blog post, a loose label), all fixed. code-review (Standards and Spec) found one project term, Tenant, fixed in a one-line follow-up with own read. gate:scoped passed on the pre-fix head. Opened PR 3609, posted the verdict, and merged it with merge-pr.ts on a green gate. Everything was agent-initiated under the Skill's schedule.
 prs:
   - "3609"
 docsRead:
@@ -58,17 +58,20 @@ frictions:
   - description: Stop hook asked for a commit while the fact-check was still running, forcing a premature commit and push.
     solution: None needed; follow-up commits are cheap.
     severity: nit
-durationSec: 399
+durationSec: 644
 models:
-  claude-sonnet-5-5: 61
+  claude-sonnet-5-5: 78
 toolCounts:
-  Bash: 22
+  Bash: 27
   Read: 5
-  Skill: 4
+  Skill: 5
   Agent: 3
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-11-22.md
   - layers/journal/content/archived/pages/digests/2026-11-15.md
@@ -340,25 +343,27 @@ subagents:
     durationSec: 77
     toolCalls: 20
     modelCalls: 14
-    tokenShare: 22.6
+    tokenShare: 18.7
   - type: general-purpose
     task: Standards review of Digest
     model: sonnet
     durationSec: 19
     toolCalls: 9
     modelCalls: 4
-    tokenShare: 6
+    tokenShare: 4.9
   - type: general-purpose
     task: Spec review of Digest
     model: sonnet
     durationSec: 24
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 5.3
+    tokenShare: 4.4
 gitBranch: claude/compassionate-lovelace-pth9x0
 entrypoint: remote_trigger
 cliVersion: 2.1.330
 trigger: digest
+learnings:
+  - "verdict-line.ts prints Reviewed: and Own-read: from separate calls: --sha alone gives the Reviewed line, --own-read alone gives the head's Own-read line; combining them prints only Own-read with the wrong sha."
 ideas:
   - Add a digest.ts check subcommand that greps a draft Digest for banned project names and unsourced cadence words (weekly, daily, scheduled, automated) before the fact-check, since the same two defects recur in the drafts.
 landedBy: Stop
