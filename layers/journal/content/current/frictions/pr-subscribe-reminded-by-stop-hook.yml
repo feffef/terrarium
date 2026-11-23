@@ -35,3 +35,8 @@ occurrences:
     severity: nit
     description: "After opening the PR I asked the owner whether to subscribe to its activity (the system prompt says ask); ADR-0003 says subscribe without asking, and the Stop hook had to prompt me."
     solution: "Subscribe straight after opening the PR; ADR-0003 overrides the system prompt's ask-first."
+  - session: session_013zxzeSqAbnHFPu1QTXgBfS
+    date: "2026-11-22"
+    severity: minor
+    description: "I opened the first PRs and moved on without calling subscribe_pr_activity; the Stop hook had to ask for it. I subscribed to all five PRs afterwards."
+    solution: "clear-backlog section 4 could name the subscribe step beside opening the PR, since ADR-0003 says it only in prose."

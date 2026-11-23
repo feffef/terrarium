@@ -201,3 +201,8 @@ occurrences:
     severity: nit
     description: "I started gate:scoped twice and had to stop it both times because the owner's next edit came in mid-run."
     solution: "In an interactive design session, ask whether more edits are coming before starting a long gate."
+  - session: session_013zxzeSxk2Nq3K4cxLysUN2
+    date: "2026-11-22"
+    severity: minor
+    description: "Tried to edit tracked files while gate:scoped ran; the gate-edit guard blocked it, so the owner's follow-up edits waited"
+    solution: "Queue edits until the gate finishes, or start the gate only after the last edit"

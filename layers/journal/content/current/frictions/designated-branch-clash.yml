@@ -27,3 +27,8 @@ occurrences:
     severity: minor
     description: "audit-docs requires two PRs but the session instructions name one development branch; I cut a second branch for the escalation PR."
     solution: "Say in audit-docs and the system prompt that the escalation PR gets its own branch."
+  - session: session_013zxzeNfqQhFTf6j6WBEjgF
+    date: "2026-11-22"
+    severity: minor
+    description: "The system prompt names a harness branch to develop on while glassbox-curate says never use the harness-assigned branch; I followed the Skill."
+    solution: "State once, in the scheduled routine's prompt or the Skill, which of the two wins for curate runs."

@@ -8,6 +8,8 @@ related:
     rule: Review was skipped, or the author's own read replaced it on a change that was not simple.
   - entry: reviewer-findings-mostly-wrong
     rule: Most findings were WRONG per the checkers, a quality problem not a re-run cost.
+  - entry: clear-backlog-review-round-low-yield
+    rule: That entry is a normal first review round on several clear-backlog branches finding little; here the change was a tiny push or small follow-up.
 notes: |-
   2026-10-28 design: a looser follow-up review bar dropped: three of six predate the simple-change bar, the others read pr-workflow.md and followed it, and ADR-0004 rejects skipping review for prose. dropped: a policy change for a human, not a fix.
 occurrences:

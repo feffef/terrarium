@@ -140,3 +140,8 @@ occurrences:
     severity: nit
     description: "Wrote that the gate can block a merge on every other Verification check without reading the sibling lessons; both reviewers flagged it and I removed it."
     solution: "Check each sibling lesson for the claimed property before writing a claim about all of them."
+  - session: session_013zxzeRQQomSvhPo9RWTEkC
+    date: "2026-11-23"
+    severity: nit
+    description: "My first drafts of two notes named the wrong current grade for clear-backlog and inspect-session; I caught it by grepping importance before applying them."
+    solution: "Have the scorecard print each Skill's grade next to its observation slot, or read it before drafting."

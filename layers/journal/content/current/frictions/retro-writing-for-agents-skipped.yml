@@ -1,0 +1,16 @@
+name: retro-writing-for-agents-skipped
+surface: safe
+summary: A session skipped step 1 of the retro Skill, which says to invoke writing-for-agents before writing the Seedling.
+cause: "The retro Skill's step 1 asks for the writing-for-agents Skill first; sessions judged it unneeded (no Skill text edited, or a Seedling only) and went straight to writing. Signals: 'retro', 'writing-for-agents', 'skipped step 1'."
+status: open
+occurrences:
+  - session: session_013zxzeSARDGdXM7Hqe83quy
+    date: "2026-11-21"
+    severity: nit
+    description: "Skipped the retro Skill's step 1 (invoke writing-for-agents) when writing the retro Seedling."
+    solution: "Harvest step 5 could name it as an explicit step."
+  - session: session_013zxzeQJrAMvGnEhyNo1NNY
+    date: "2026-11-22"
+    severity: nit
+    description: "Retro step 1 says to load writing-for-agents; I skipped it because no Skill text was edited."
+    solution: "None needed unless retro is meant to load it always."

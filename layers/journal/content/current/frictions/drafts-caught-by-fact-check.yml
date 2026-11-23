@@ -164,3 +164,8 @@ occurrences:
     severity: minor
     description: "Draft said a visitor review's bugs were one-fixed and a table's links all padded; fact-check found both wrong, from reading PR titles rather than diffs."
     solution: "Read each PR's touched files before writing a claim."
+  - session: session_013zxzePAekyp1bgbnenrGfK
+    date: "2026-11-23"
+    severity: minor
+    description: "First draft said weekly, automated and the bug behind a post; fact-check found five wrong claims, costing a fix commit."
+    solution: "Digest step 3 should say every cadence or automation word needs a source and a PR 'guard' is not the bug fix."

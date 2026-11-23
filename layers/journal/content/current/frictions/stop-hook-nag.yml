@@ -207,3 +207,8 @@ occurrences:
     severity: nit
     description: "The Stop hook demanded a push and a commit while the reviewers ran; I pushed early, then pushed two follow-ups."
     solution: "None needed; a push opens nothing."
+  - session: session_013zxzePAekyp1bgbnenrGfK
+    date: "2026-11-23"
+    severity: nit
+    description: "Stop hook asked for a commit while the fact-check was still running, forcing a premature commit and push."
+    solution: "None needed; follow-up commits are cheap."

@@ -1,0 +1,16 @@
+name: glassbox-pagesread-gap
+surface: safe
+summary: A Glass Box run listed fewer pages as read than it edited or linked, and the Spec reviewer found the gap.
+cause: "The run edits or links a guide page after only grepping it or never opening it, then builds its pagesRead list from the pages it read in full, leaving out pages it touched. Found at review, not by a check. Signals: 'pagesRead', 'left out', 'Testing', 'Headless browser checks', 'Spec reviewer caught'."
+status: open
+occurrences:
+  - session: session_013zxzeSDvoZ2wQAG644Uhz7
+    date: "2026-11-22"
+    severity: nit
+    description: "Linked the Testing page from the new Lesson without reading it; the review's Spec reviewer found the pagesRead gap, then I read it and added it."
+    solution: "The Skill's step 3 could ask to list every page a writer is told to link before dispatching it."
+  - session: session_013zxzeNfqQhFTf6j6WBEjgF
+    date: "2026-11-22"
+    severity: nit
+    description: "First pagesRead left out two pages the run edited (Testing, Headless browser checks) because I only grepped them; the Spec reviewer caught it."
+    solution: "orient.ts could name the Where next pages a change will edit so they are read whole in step 3."

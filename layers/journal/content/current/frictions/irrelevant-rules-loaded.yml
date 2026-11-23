@@ -71,3 +71,8 @@ occurrences:
     severity: nit
     description: "Writing docs/research/single-site-template-breakdown.md loaded .claude/rules/adr-0027.md and a hint to read the full ADR; neither bears on adding a research note."
     solution: "Narrow that rule's paths from docs/** so docs/research/** is left out."
+  - session: session_013zxzeSBnJpmHMj77KQcdWv
+    date: "2026-11-22"
+    severity: nit
+    description: "The adr-0004-human-merge rule loaded when I only grepped package.json and read tests/README.md, saying I touched a Human-only file when none changed."
+    solution: "Load the rule on edits to its paths only, not on shell reads of them."

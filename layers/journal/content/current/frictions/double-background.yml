@@ -152,3 +152,18 @@ occurrences:
     severity: nit
     description: "A Bash call of mine stacked run_in_background with a text-level ampersand and was blocked by the double-background guard before anything ran."
     solution: "Use run_in_background alone with a plain foreground command, as the guard says."
+  - session: session_013zxzeQQP2yCoP7hw7GD1Gx
+    date: "2026-11-22"
+    severity: nit
+    description: "A Bash call with run_in_background and a trailing & was blocked by the double-background guard; resent plainly."
+    solution: "None needed; the guard worked as designed."
+  - session: session_013zxzeSxk2Nq3K4cxLysUN2
+    date: "2026-11-22"
+    severity: nit
+    description: "Ran a background gate with a text-level & plus run_in_background; the double-background guard blocked it and nothing ran"
+    solution: "Pass run_in_background alone with a plain foreground command"
+  - session: session_013zxzeRQQomSvhPo9RWTEkC
+    date: "2026-11-23"
+    severity: nit
+    description: "A background gate command also contained a trailing ampersand and the double-background guard refused it; nothing ran."
+    solution: "Pass run_in_background alone with a plain foreground command."

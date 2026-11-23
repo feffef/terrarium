@@ -1,8 +1,9 @@
 name: glassbox-curate-steps-skipped
 surface: safe
 summary: "A glassbox-curate run skipped Skill steps or ended its loop with budget left, on its own judgement, and the owner had to ask why. see: blog-post-skill-steps-skipped (the same slip in a blog-post run); glassbox-curate-read-first-skipped (the skipped steps are the required first reads)."
-cause: "The glassbox-curate Skill listed Scout, writer, claim checker, fresh reader, code-review and the gate per run and a Loop step; runs skipped most of them as too large for the change ('by judgement not rule', 'calling it budget') or ended the turn mid-loop with budget left, and the owner found the gap afterwards. PR #3461 (2026-11-18) dropped the budget wording; PR #3537 (2026-11-20) rewrote the Skill as two modes with numbered steps and a stop only at full context, so a skip or stop in a session started after 2026-11-20T21:22Z is a new occurrence. Signals: 'skipped the Scout, writer, claim checker', 'ended the turn mid-loop', 'I stopped mid run', 'user had to ask why'."
-status: open
+cause: "The glassbox-curate Skill listed Scout, writer, claim checker, fresh reader, code-review and the gate per run and a Loop step; runs skipped most of them as too large for the change ('by judgement not rule', 'calling it budget') or ended the turn mid-loop with budget left, and the owner found the gap afterwards. PR #3461 (2026-11-18) dropped the budget wording; PR #3537 (2026-11-20) rewrote the Skill as two modes with numbered steps and a stop only at full context; PR #3593 (2026-11-22) has each run push its own branch, because runs had stopped after one PR on a belief they could push only the harness branch. A skip or stop in a session started after 2026-11-22T12:35Z is a new occurrence. Signals: 'skipped the Scout, writer, claim checker', 'ended the turn mid-loop', 'I stopped mid run', 'user had to ask why', 'may push only one assigned branch'."
+status: tracked
+ref: "#3610"
 related:
   - entry: blog-post-skill-steps-skipped
     rule: The skipped Skill is blog-post, not glassbox-curate.
@@ -11,6 +12,7 @@ related:
 notes: |-
   2026-11-20 survey: open issue #3507 (audit-skills, 2026-11-20) reports the scheduled run still stops after one PR and skips writer, checker and reader after #3461; status set to tracked.
   2026-11-21 survey: issue #3507 closed completed 2026-11-20T21:22:21Z by PR #3537 (merged 2026-11-20T21:22:20Z); status reset from tracked, fix recorded.
+  2026-11-23 survey: issue #3610 (audit-skills, open, filed 2026-11-23T00:50Z) reports the writer skipped again and an early loop stop after PR #3593; status set to tracked.
 fixes:
   - pr: 3461
     date: "2026-11-18"
@@ -18,6 +20,9 @@ fixes:
   - pr: 3537
     date: "2026-11-20"
     summary: "glassbox-curate SKILL.md rewritten as a loop mode (no argument) and an instruction mode, numbered steps each with a Done when, loop stops only on full context or nothing left; Scout moves to glassbox-update (closes #3507)."
+  - pr: 3593
+    date: "2026-11-22"
+    summary: "glassbox-curate: every run cuts and pushes its own branch off fresh origin/main and the harness branch is never used; items waiting on an owner question go to a Waiting for owner decision section and the run takes the next item."
 occurrences:
   - session: session_013zxzeQbSZQ554vFZiT2f2D
     date: "2026-11-18"
@@ -29,3 +34,8 @@ occurrences:
     severity: minor
     description: "The curate Skill's full run (Scout, writer, claim checker, fresh reader, code-review, gate:scoped) is far larger than a one-clause fix; I skipped most steps, by judgement not rule."
     solution: "Let the Skill name a lighter path for a wording-only fix of one clause, so skipping is sanctioned."
+  - session: session_013zxzeNfqQhFTf6j6WBEjgF
+    date: "2026-11-22"
+    severity: minor
+    description: "Stopped after one run although the curate Skill says to start the next run at once; I misread the pause rule, which applies only when open PRs block every remaining item."
+    solution: "Step 8 could say a PR waiting for the owner is never a reason to end the session, and that the pause rule needs every remaining item blocked."

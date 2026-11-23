@@ -24,3 +24,8 @@ occurrences:
     severity: nit
     description: "Step 12 (a reply post) repeated the whole pipeline, so two PRs took about a dozen reviewer and checker rounds, each re-run when a sentence changed."
     solution: "Let a reply skip the second full code-review when only prose changed after the first, as Own-read already allows for the fix."
+  - session: session_013zxzeQsBr9EFDJoRDQQzh5
+    date: "2026-11-22"
+    severity: minor
+    description: "Fact-checker's tally forced a recheck round twice because small post-review edits changed the blob hash."
+    solution: "Apply review findings before the first fact-check dispatch, or batch them into one edit."

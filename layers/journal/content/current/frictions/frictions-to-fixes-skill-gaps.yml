@@ -95,3 +95,8 @@ occurrences:
     severity: minor
     description: "The Skill's ledger PR must pass the simple-change test, which a 68-file ledger diff cannot, so each of the two ledger PRs needed full two-reviewer code-review rounds on data-only diffs."
     solution: "Let a ledger-only PR made through the ledger scripts take own-read, in the Skill and in merge-pr's check."
+  - session: session_013zxzeQQP2yCoP7hw7GD1Gx
+    date: "2026-11-22"
+    severity: minor
+    description: "pr-workflow's simple-change test sends a 400-line ledger-data PR to code-review (two subagents) though it is only machine-edited YAML; reviewers found two small cause and ref wording issues."
+    solution: "Let a ledger-only PR whose gate passed take an own read, or state this case in the simple-change test."

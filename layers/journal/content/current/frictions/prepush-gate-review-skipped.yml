@@ -187,3 +187,8 @@ occurrences:
     severity: nit
     description: "code-review was run as one combined reviewer on a 25-file diff, not the two-axis Standards and Spec pair; the follow-up commit got only my own read."
     solution: "Say in the audit-skills Skill that a single reviewer on the step 5 standard is the accepted review for Inventory diffs."
+  - session: session_013zxzeSxk2Nq3K4cxLysUN2
+    date: "2026-11-22"
+    severity: minor
+    description: "The last commit (three files, a Skill clause cut) got only my own read, though it is not a simple change under pr-workflow"
+    solution: "Run code-review on the follow-up diff, or keep review-round fixes inside the simple-change bars; the PR discloses it"

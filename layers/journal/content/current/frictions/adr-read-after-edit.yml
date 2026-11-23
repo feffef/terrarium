@@ -262,3 +262,13 @@ occurrences:
     severity: nit
     description: "Did not read docs/adr/0027-prune-trials.md in full though the rule says to read it to review work it governs; relied on the Skill and rule summary."
     solution: "Read the ADR once at the start of a prune-trial run."
+  - session: session_013zxzeSBnJpmHMj77KQcdWv
+    date: "2026-11-22"
+    severity: nit
+    description: "Hooks said to read ADR-0006, ADR-0008 and ADR-0016 in full after I edited the page; I did not read them, only kept the useSpace data path unchanged."
+    solution: "Narrow ADR-0016 and ADR-0006 paths so a styling-only edit to a Space page does not trigger three ADR reads."
+  - session: session_013zxzeSxk2Nq3K4cxLysUN2
+    date: "2026-11-22"
+    severity: nit
+    description: "Read ADR-0005 and ADR-0027 only after a hook prompted, after editing the glassbox-update Skill; the edits matched both"
+    solution: "Read the ADRs a Skill's rule names before the first Skill edit"

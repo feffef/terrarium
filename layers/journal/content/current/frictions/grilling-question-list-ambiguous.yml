@@ -1,0 +1,21 @@
+name: grilling-question-list-ambiguous
+surface: safe
+summary: Owners answered a grilling question list ambiguously (a bare letter, a number that matched another question, or a reply that skipped some) and the orchestrator had to ask again or guess.
+cause: "The orchestrator's numbered question list gives no lettered options, or numbers drift from the owner's reply, or states a question's scope unclearly, so the owner's short reply ('5a', '11a 12a', 'cut the cluster') cannot be mapped to one question. Signals: 'ambiguous', 'unanswered twice', 'had to ask again', question numbers Q10/Q11 or Q3/Q6 in a long thread."
+status: open
+occurrences:
+  - session: session_013zxzeNisEDZyrmPg2jhA5G
+    date: "2026-11-22"
+    severity: minor
+    description: "Owner left Q3 and Q6 unanswered twice and wrote an ambiguous 'cut the cluster' reply, costing two extra rounds; my Q3 wording didn't make its scope (clear-backlog only) clear."
+    solution: "State each question's scope in its first line, and use the glossary term (Friction Ledger entry) rather than leaving side findings for the owner to map."
+  - session: session_013zxzeT3ZUhBeG84jQUD1Hw
+    date: "2026-11-21"
+    severity: nit
+    description: "My 17-question list held two answers that clashed (2d no fixed number, 3b stop and ask past the bound) and a moot Q17; the owner later asked what Q18 was, buried in a long thread."
+    solution: "Drop questions made moot by an earlier option, and re-send an unanswered interrupt question with a short plain recap."
+  - session: session_013zxzeSqAbnHFPu1QTXgBfS
+    date: "2026-11-22"
+    severity: nit
+    description: "Q5 of the grilling list had no lettered options, so the owner's answer '5a' was ambiguous and I had to interpret it as accepting my picks."
+    solution: "Label every choice a), b), c) even when the only choice is accept or change; clear-backlog already says so."

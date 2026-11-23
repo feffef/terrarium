@@ -1,9 +1,8 @@
 name: merge-pr-review-args-refusal
 surface: guard-or-hook
-summary: merge-pr.ts refused a verdict because the code-review call's args carried no head sha (bare origin/main), and each refusal cost an extra review pass.
-cause: "merge-pr.ts accepts a verdict only when the code-review call's args name the reviewed head sha (review-proof.ts looks for a 7-40 hex sha); a session that called code-review with bare origin/main or hand-written args was refused at merge and had to re-run review. Signals: 'merge-pr.ts refused', 'head sha', 'printed args'."
-status: tracked
-ref: "#3580"
+summary: A code-review call made with hand-written args (no sha, or a sha that does not match the reviewed head) was refused at merge or needed a repeat review, each costing an extra review pass.
+cause: "merge-pr.ts accepts a verdict only when the code-review call's args name the reviewed head sha (review-proof.ts looks for a 7-40 hex sha); a session that called code-review with bare origin/main or hand-written args was refused at merge and had to re-run review. Since PR #3591 a guard denies a call with no sha at all (see review-call-sha-guard-denial), so what remains is hand-written args whose sha does not match the head. Signals: 'merge-pr.ts refused', 'head sha', 'printed args', 'hand-written args'."
+status: open
 related:
   - entry: verdict-line-asserts-unchecked-review
     rule: The verdict claimed a review that never ran and merge-pr.ts accepted it; here merge-pr.ts refused and the cost was a retry.
@@ -11,9 +10,16 @@ related:
     rule: That entry is a review call whose sha went stale after an amend or rename; here the args named no sha at all.
   - entry: merge-pr-own-read-refusal
     rule: That entry is a verdict's Own-read line refused on a diff that was not simple; here the review call's args named no sha.
+  - entry: review-call-sha-guard-denial
+    rule: That entry is the guard's own denial of a bare-args call, one retry; here the bare args reached a review, or a hand-written sha did not match the head, and the cost was a repeat review or a refused merge.
 notes: |-
   2026-11-22 ref moved from 'verdict-line-asserts-unchecked-review, fix PR #3416' (a guard refusal, not a regression of that entry) to the tracking issue #3580
   2026-11-22 split by cause: the amend-after-printing and Own-read-refusal occurrences moved to merge-pr-review-args-amend-after-printing and merge-pr-own-read-refusal; this entry keeps the bare-args slip; the 2026-11-20 Own-read design note moved with its occurrence
+  2026-11-23 survey: PR #3591 merged 2026-11-22T12:10Z; status reset from tracked (issue #3580 closed). RQQo's guard denial moved to review-call-sha-guard-denial; Sxk2 (hand-written args, 2026-11-22T23:09Z, after the fix) stays here.
+fixes:
+  - pr: 3591
+    date: "2026-11-22"
+    summary: "Adds a PreToolUse guard that denies a code-review Skill call whose args hold no head sha and names verdict-line.ts --review-call; it checks only that a sha is present."
 occurrences:
   - session: session_013zxzeQuz1peCEYugreTtXU
     date: "2026-11-19"
@@ -45,3 +51,8 @@ occurrences:
     severity: nit
     description: "merge-pr refused: I called code-review with only origin/main, not the full printed args naming the head sha, so the transcript showed no reviewed sha. One extra Skill call and retry."
     solution: "Say in pr-workflow step 3 to paste the printed args whole, sha included."
+  - session: session_013zxzeSxk2Nq3K4cxLysUN2
+    date: "2026-11-22"
+    severity: minor
+    description: "First code-review call used hand-written args instead of verdict-line.ts --review-call, so the final head needed a second review round"
+    solution: "Print the review call from verdict-line.ts --review-call before the first review"

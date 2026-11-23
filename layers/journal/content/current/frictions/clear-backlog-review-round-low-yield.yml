@@ -1,0 +1,19 @@
+name: clear-backlog-review-round-low-yield
+surface: safe
+summary: The first review round of clear-backlog branches mostly re-found nits, or its Spec reviewer repeated the Standards findings, at a large subagent cost.
+cause: "Each branch gets a Standards and a Spec reviewer in round one by rule; the gate and unit specs caught the real failures, and the reviewers raised nits or each other's findings. Signals: 'round-1 reviews re-found only nits', 'Spec findings duplicated Standards', 'same as Standards'."
+status: open
+related:
+  - entry: followup-review-overcost
+    rule: That entry is a review that cost far more than it found on a tiny first push or small follow-up; here a normal first round on larger branches found little.
+occurrences:
+  - session: session_013zxzeT3ZUhBeG84jQUD1Hw
+    date: "2026-11-21"
+    severity: moderate
+    description: "Round-1 reviews re-found only nits on five of six branches (only discover's added real missing tests); builders and reviewers both say so, while the gate and a unit spec caught the two real failures. The reviews plus later rounds cost many subagent tokens."
+    solution: "Let a CSS-only or wording-only diff with recorded measurements take one merged Standards and Spec reviewer (widen the small bar in pr-workflow.md and clear-backlog), an owner decision."
+  - session: session_013zxzeNisEDZyrmPg2jhA5G
+    date: "2026-11-22"
+    severity: minor
+    description: "Retro (Spec reviewer): 4 of 5 round-1 Spec findings on the guard branch duplicated Standards findings (triage.md 'same as Standards #N'). Counter-evidence: round 2 on the guard found a defect only Standards saw, and round 2 on glassbox an owner-call only Spec saw."
+    solution: "reviewPrompt() could keep Spec to brief fit (picks, never-clauses) and leave code shape and schema to Standards; weigh against the unique catches before cutting."

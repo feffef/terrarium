@@ -150,3 +150,18 @@ occurrences:
     severity: minor
     description: "My #3552 brief asked to edit a Glass Box sentence without noting the page is pinned to an older revision, so a reviewer raised an owner-call I then had to judge."
     solution: "When verifying a brief that edits Glass Box prose, check the page's revision pin and state in the brief whether the edit is wanted before a re-pin."
+  - session: session_013zxzeT3ZUhBeG84jQUD1Hw
+    date: "2026-11-21"
+    severity: minor
+    description: "Four builders (discover, tap-targets, ended-cards, blog) report that the brief and rules() tell subagents to run e2e in the background, but the subagent background guard refuses it; each lost a call, and the scratch dir mkdir was missing."
+    solution: "In rules() of .claude/workflows/clear-backlog-build.js say foreground with Bash timeout 600000 and mkdir -p the scratch dir first; check the flock e2e command fits a 600s foreground call."
+  - session: session_013zxzeSqAbnHFPu1QTXgBfS
+    date: "2026-11-22"
+    severity: nit
+    description: "Retro (builder): the brief's flock e2e command contains '; echo EXIT=' while another rule bans chained commands, and a stale e2e.log could be mistaken for the new result."
+    solution: "Have rules() in clear-backlog-build.js delete the log before each e2e run and exempt the flock command from the chaining rule."
+  - session: session_013zxzeNisEDZyrmPg2jhA5G
+    date: "2026-11-22"
+    severity: minor
+    description: "My #3580 brief said to import the SHA regex, too narrow: the guard then matched the skill name its own way, and both reviewers flagged the drift."
+    solution: "Brief the shared check, not one of its parts, when two code paths must agree."

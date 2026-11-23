@@ -1,0 +1,19 @@
+name: recheck-axis-name-mismatch
+surface: safe
+summary: A builder's re-check request named a review axis (Both, Standards) that the branch's reviewer set did not have, so the orchestrator had to map it by hand.
+cause: "Builders reply with 'recheck Both' or 'Standards' using the clear-backlog axis names, but a small branch has only a Both reviewer and a larger one has a Standards plus Spec pair, so the name is ambiguous or absent for the branch. Signals: 'recheck Both', 'asked for a Standards re-check', 'small Blog branch'."
+status: open
+related:
+  - entry: recheck-brief-thin
+    rule: That entry is a re-check brief too thin to judge a refusal; here the builder's requested axis name does not match the branch's reviewers.
+occurrences:
+  - session: session_013zxzePVqgGH7hbNFvSCqQR
+    date: "2026-11-21"
+    severity: nit
+    description: "Builders replied 'recheck Both' on a branch with a Standards+Spec pair; 'Both' is also the small-branch reviewer's name, so the axis list was ambiguous."
+    solution: "In clear-backlog-build.js rules(), have the builder name the axes it means (Standards Spec) rather than 'Both' on a non-small branch."
+  - session: session_013zxzeSqAbnHFPu1QTXgBfS
+    date: "2026-11-22"
+    severity: nit
+    description: "A builder reply on the small Blog branch asked for a 'Standards' re-check, but small branches only have a Both reviewer; I had to map it myself."
+    solution: "Have the build workflow's rules() tell a builder on a small branch to name Both in its recheck axes."

@@ -74,3 +74,8 @@ occurrences:
     severity: moderate
     description: "harvest evidence printed 3,625 lines for nine groups: each group's tracker block was about 260 issues because broad keywords match nearly every issue. I abandoned reading it whole and used targeted greps."
     solution: "Rank hits by distinct keywords matched and cap the list (filed as #3529)."
+  - session: session_013zxzeQJrAMvGnEhyNo1NNY
+    date: "2026-11-22"
+    severity: minor
+    description: "The evidence output for 15 groups was 43 KB and had to be read via a saved file and targeted greps, costing several extra calls."
+    solution: "Already held by closed #3562; a rulings exclusion for glossary files would cut it."

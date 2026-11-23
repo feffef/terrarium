@@ -161,3 +161,8 @@ occurrences:
     severity: nit
     description: "Typed a session id from memory in the regression issue body; the provenance guard blocked it and I retried with the real id."
     solution: "Copy the id from the system prompt's trailer template before writing any body."
+  - session: session_013zxzeNfqQhFTf6j6WBEjgF
+    date: "2026-11-22"
+    severity: minor
+    description: "Copied the previous run's session id into the new run entry instead of this session's id; fixed by a follow-up commit after the first push."
+    solution: "orient.ts could print this session's id in the run-entry skeleton so it is never copied from the last run."

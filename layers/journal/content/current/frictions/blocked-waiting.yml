@@ -102,3 +102,18 @@ occurrences:
     severity: nit
     description: "A chained sleep and a command mixing run_in_background with a text-level ampersand were blocked by guards, costing two retries."
     solution: "State in the audit-skills Skill to run gates with run_in_background alone and wait for the notification."
+  - session: session_013zxzeSDvoZ2wQAG644Uhz7
+    date: "2026-11-22"
+    severity: nit
+    description: "A foreground sleep to wait for the background writer was blocked by the harness; I had to end the turn and wait for the notification."
+    solution: "The Skill could say to end the turn after dispatching background agents, never to sleep."
+  - session: session_013zxzePNKjPWkVNAkzZbSVC
+    date: "2026-11-22"
+    severity: nit
+    description: "Blocked a foreground sleep to wait for visitors, and the 600s build wait timed out into the background."
+    solution: "visitor-loop SKILL.md step 1 should say to build with run_in_background and a log, then end the turn."
+  - session: session_013zxzeNfqQhFTf6j6WBEjgF
+    date: "2026-11-22"
+    severity: nit
+    description: "Called ScheduleWakeup outside a loop session while waiting for a subagent; the loop-only guard blocked it."
+    solution: "The glassbox-curate pause step could say a subagent wait needs no wakeup tool, only ending the turn."

@@ -114,3 +114,8 @@ occurrences:
     severity: nit
     description: "Owner's \"everything else waits\" answer to Q10 was ambiguous; I read it as not building the Blog fix and did not re-ask."
     solution: "Phrase a go/hold question so each option names the issue it holds."
+  - session: session_013zxzeSSEyKMAcAZESc5L4b
+    date: "2026-11-20"
+    severity: minor
+    description: "I treated a context compaction as not a stop; the owner pointed out it means the window is full, so the first stop rule was wrong."
+    solution: "Check what a harness event means for the limit being set before writing a rule around it."

@@ -672,3 +672,43 @@ occurrences:
     severity: nit
     description: "Ran git log and list-recent-prs (a fetch) before reading git-conventions.md; the hook named it afterwards. The fetch was harmless."
     solution: "Read the doc at start when a Skill's steps call git scripts."
+  - session: session_013zxzeNisEDZyrmPg2jhA5G
+    date: "2026-11-22"
+    severity: minor
+    description: "Labelled four issues with issue_write before reading issue-tracker.md and triage-labels.md; the hook flagged it after the write. Labels turned out correct."
+    solution: "clear-backlog §2 says to set the label the answer implies; it could name the two docs there."
+  - session: session_013zxzeQQP2yCoP7hw7GD1Gx
+    date: "2026-11-22"
+    severity: nit
+    description: "Read docs/agents/triage-labels.md only after filing three issues, when the post-write hint named it; CLAUDE.md requires it before filing."
+    solution: "List triage-labels.md beside issue-tracker.md in the Skill's issue step so one read covers both."
+  - session: session_013zxzeQsBr9EFDJoRDQQzh5
+    date: "2026-11-22"
+    severity: nit
+    description: "Made GitHub reads before reading github-integration.md; the hook reminded me afterwards. Nothing went wrong."
+    solution: "Read the doc in the first parallel batch with the git docs."
+  - session: session_013zxzePNKjPWkVNAkzZbSVC
+    date: "2026-11-22"
+    severity: nit
+    description: "Ran git fetch before reading git-conventions.md, and filed the issue before reading triage-labels.md; both reads came from hook reminders afterwards."
+    solution: "Both docs matched what I did; the CLAUDE.md read-first triggers need a line in visitor-loop's SKILL.md step 1 and 4 naming them."
+  - session: session_013zxzeQJrAMvGnEhyNo1NNY
+    date: "2026-11-22"
+    severity: minor
+    description: "Ran gh api issue reads and git fetch (via list-merges-since) before reading github-integration.md and git-conventions.md, which CLAUDE.md requires; I never read github-integration.md at all."
+    solution: "Name both read-first docs in harvest step 3/4 so they are read in the first batch."
+  - session: session_013zxzeSqAbnHFPu1QTXgBfS
+    date: "2026-11-22"
+    severity: minor
+    description: "Ran git fetch and git checkout -- on the Blog layer before reading git-conventions.md; a hook told me afterwards. I had saved the sample diff first, so nothing was lost."
+    solution: "The late-read hint arrives after the command; list fetch and checkout among the read-first triggers, or load the doc at session start."
+  - session: session_013zxzePAekyp1bgbnenrGfK
+    date: "2026-11-23"
+    severity: nit
+    description: "Ran list-recent-prs (a git fetch) before reading git-conventions.md; hook named it afterwards. Harmless."
+    solution: "Digest step 3 should list git-conventions as a read-first doc (already proposed in earlier logs)."
+  - session: session_013zxzeRQQomSvhPo9RWTEkC
+    date: "2026-11-23"
+    severity: nit
+    description: "Ran git fetch before reading docs/agents/git-conventions.md; the hook reminded me afterwards and the fetch was correct anyway."
+    solution: "None needed; the hook reminder already covers it."
