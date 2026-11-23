@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_013zxzeS6gys4MPSEMWnZd1m
 startedAt: 2026-11-23T08:45:42Z
-endedAt: 2026-11-23T09:04:52Z
+endedAt: 2026-11-23T09:16:25Z
 kind: autonomous
-goal: Split the area-label material off the Issue triage labels Lesson in the Glass Box guide
+goal: "Clear Glass Box guide backlog items: split Path-based labels, trim Colour contrast and Skill inventory"
 status: in-review
-outcome: PR 3618 open with the new Path-based labels Lesson; it waits for the owner's merge
-summary: Scheduled glassbox-curate Loop run, no human prompt. Everything was agent-chosen under the Skill. Read the required docs and the guide index, took the first Too long item on the memory page (Issue triage labels, over the soft word limit) and dropped the digest Skill gap as a Skill-detail gap that suits no guide page. A fresh reader, an opus writer and a sonnet claim checker produced and checked a new Lesson, Path-based labels, and a trimmed Issue triage labels page. The checker found one false Try it line (missing repository flag) and one unsupported judgement about actions/labeler; both fixed. code-review named Protected paths missing from pagesRead; I read it and listed it. gate:scoped passed; the PR is open and waits for the owner's merge (new Lesson, rule 6). I stopped after one run because the PR must stay open for the owner and context was still small; the next run can take the next memory page item.
+outcome: Colour contrast trim merged; the new Path-based labels Lesson awaits the owner; the Skill inventory trim is going through its gate
+summary: Scheduled glassbox-curate Loop run, no human prompt; every choice was agent-made under the Skill. Run 1 took the first Too long item (Issue triage labels) and split Path-based labels into a new Lesson (PR 3618), which waits for the owner's merge by rule 6; the digest Skill gap was dropped as a Skill-detail gap. Run 2 trimmed the Colour contrast Lesson under the soft word limit (PR 3619, merged after green CI and a posted verdict). Run 3 trims the Skill inventory Lesson on its own branch; its gate was still running at this log. Each run used a fresh reader, a claim checker and code-review. Checkers found one false Try it line and one unsupported judgement in run 1, a missing gloss in run 2 and small wording fixes in run 3, all fixed. Run entries broke twice on a colon followed by a space in a changes line. I stop after run 3 because the loop has already read a lot of guide text and the remaining items need the owner or are small.
 prs:
   - "3618"
+  - "3619"
 docsRead:
   - path: layers/glassbox/GLOSSARY.md
     reason: (no reason given)
@@ -38,11 +39,15 @@ docsRead:
     reason: (read before editing)
   - path: layers/glassbox/content/guide/pages/terrarium-practice/60.protected-paths.md
     reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/verification/40.testing.md
+    reason: (no reason given)
+  - path: .throwaway/glassbox-curate/subject-4.md
+    reason: (no reason given)
   - path: docs/agents/triage-labels.md
     reason: (no reason given)
-  - path: .agents/skills/auto-triage/SKILL.md
-    reason: (no reason given)
   - path: .agents/skills/glassbox-curate/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
     reason: (no reason given)
   - path: .agents/skills/glassbox-lesson/SKILL.md
     reason: (no reason given)
@@ -64,35 +69,46 @@ frictions:
   - description: The memory page's digest gap said a Skill-detail gap suits no guide page, yet it stayed listed for runs; each run re-judged it.
     solution: Step 2 should say to delete such an item at once, in the run that first judges it.
     severity: nit
-durationSec: 1150
+  - description: A run entry's changes line held a colon followed by a space, so validate:content failed; it happened twice, once after I had already committed.
+    solution: The Skill's State section says to quote such a line, but orient.ts's skeleton could warn, or validate:content could name the colon.
+    severity: minor
+  - description: Step 3 makes the run read a whole Subject (four files, about 116 KB for terrarium-practice) to trim one page, which cost a large share of the session's context.
+    solution: For a pure cut, the Skill could allow reading only the focus page and the pages it links.
+    severity: minor
+durationSec: 1843
 models:
-  claude-sonnet-5-5: 106
+  claude-sonnet-5-5: 204
 toolCounts:
-  Read: 19
-  Skill: 4
-  Bash: 30
-  Agent: 8
-  ReadNotifications: 1
+  Read: 24
+  Skill: 7
+  Bash: 60
+  Agent: 14
+  ReadNotifications: 8
   Edit: 1
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__list_pull_requests: 1
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/git-github/75.path-based-labels.md
   - layers/glassbox/content/guide/pages/git-github/30.composite-actions.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/85.skill-inventory.md
+  - layers/glassbox/content/workshop/pages/index.md
+  - layers/glassbox/content/workshop/runs/2026-11-23T0911.yml
+  - layers/glassbox/content/guide/pages/web-standards/50.colour-contrast.md
   - layers/glassbox/content/workshop/runs/2026-11-23T0903.yml
   - layers/glassbox/content/guide/pages/git-github/70.issue-triage-labels.md
   - layers/glassbox/content/workshop/runs/2026-11-23T0846.yml
-  - layers/glassbox/content/workshop/pages/index.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0017.md
 docsReadBySubagents:
-  - .agents/skills/auto-triage/SKILL.md
   - .agents/skills/glassbox-curate/SKILL.md
+  - .agents/skills/auto-triage/SKILL.md
   - .agents/skills/glassbox-lesson/SKILL.md
 ruleUse:
   - by: main
@@ -168,7 +184,8 @@ ruleUse:
       - path: .claude/rules/adr-0005.md
         value: unrelated
       - path: .claude/rules/adr-0004-human-merge.md
-        value: unrelated
+        value: confirmed
+        why: "n/a: no Human-only file touched"
       - path: .claude/rules/adr-0029.md
         value: unrelated
       - path: .claude/rules/adr-0022.md
@@ -445,7 +462,7 @@ ruleUse:
         value: unrelated
   - by: general-purpose
     subagent: 6
-    answered: false
+    answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
         via: start
@@ -455,10 +472,18 @@ ruleUse:
         via: start
       - rule: .claude/rules/adr-0017.md
         via: start
-    reported: []
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
   - by: general-purpose
     subagent: 7
-    answered: false
+    answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
         via: start
@@ -468,52 +493,330 @@ ruleUse:
         via: start
       - rule: .claude/rules/adr-0017.md
         via: start
-    reported: []
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 8
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/writing-pages.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/writing-pages.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/glassbox-content.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/glossary-terms.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .agents/skills/glassbox-lesson/writing-pages.md
+  - by: general-purpose
+    subagent: 9
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 10
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 11
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 12
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 13
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
 subagents:
   - task: "Fresh reader: triage labels page"
     model: sonnet
     durationSec: 16
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 2.5
+    tokenShare: 1.2
   - task: Write split lesson and trim page
     model: opus
     durationSec: 405
     toolCalls: 40
     modelCalls: 33
-    tokenShare: 23.2
+    tokenShare: 11.3
   - task: Claim check new and changed sentences
     model: sonnet
     durationSec: 88
     toolCalls: 14
     modelCalls: 10
-    tokenShare: 5.1
+    tokenShare: 2.5
   - task: "Fresh reader: both pages"
     model: sonnet
     durationSec: 15
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 2.4
+    tokenShare: 1.2
   - task: Standards review of split
     model: sonnet
     durationSec: 42
     toolCalls: 12
     modelCalls: 6
-    tokenShare: 4.4
+    tokenShare: 2.1
   - task: Spec review of split
     model: sonnet
     durationSec: 39
     toolCalls: 11
     modelCalls: 10
-    tokenShare: 4.9
+    tokenShare: 2.4
   - task: "Fresh reader: colour contrast"
     model: sonnet
-    durationSec: 0
-    toolCalls: 0
+    durationSec: 14
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 1.1
   - task: Claim check colour contrast edits
     model: sonnet
-    durationSec: 0
-    toolCalls: 0
+    durationSec: 32
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 1.4
+  - task: Standards review of trim
+    model: sonnet
+    durationSec: 22
+    toolCalls: 10
+    modelCalls: 5
+    tokenShare: 1.8
+  - task: Spec review of trim
+    model: sonnet
+    durationSec: 22
+    toolCalls: 5
+    modelCalls: 5
+    tokenShare: 1.8
+  - task: Claim check inventory edits
+    model: sonnet
+    durationSec: 27
+    toolCalls: 7
+    modelCalls: 3
+    tokenShare: 1.4
+  - task: "Fresh reader: skill inventory"
+    model: sonnet
+    durationSec: 12
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 1.1
+  - task: Standards review of inventory trim
+    model: sonnet
+    durationSec: 24
+    toolCalls: 5
+    modelCalls: 5
+    tokenShare: 1.7
+  - task: Spec review of inventory trim
+    model: sonnet
+    durationSec: 22
+    toolCalls: 7
+    modelCalls: 5
+    tokenShare: 1.7
 gitBranch: claude/compassionate-bardeen-2a4jlp
 entrypoint: remote_trigger
 cliVersion: 2.1.330
