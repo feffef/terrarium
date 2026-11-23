@@ -67,7 +67,7 @@ Add the focus's line below to the pages section:
 
 - tinkerfund: `/t/tinkerfund` redirects to `/t/tinkerfund/prod`;
   `/t/tinkerfund/qa` is a component gallery, not a second shop;
-- midden: the Trench's active cause chip is a link marked `aria-current`;
+- midden: the Midden Trench's active cause chip is a link marked `aria-current`;
 - blog: the Threads tab is `/t/blog?view=threads`; a wrong `view` silently
   shows the Latest list;
 - journal: digests and sessions are in-page anchors, so a link crawl finds
