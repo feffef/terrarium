@@ -178,6 +178,13 @@ export function skillIdeaCounts(sessions: SessionDoc[]): Record<string, { sessio
   return counts
 }
 
+// The line under a Skill's use count: "12 ideas in 5 of 8 sessions", or
+// "0 ideas in 8 sessions" when none of its sessions logged an idea.
+export function skillIdeasLine(entry: { sessions: number; ideas: number } | undefined, used: number): string {
+  const sessions = countOf(used, 'session')
+  return entry ? `${countOf(entry.ideas, 'idea')} in ${entry.sessions} of ${sessions}` : `0 ideas in ${sessions}`
+}
+
 // The newest `limit` sessions whose log names the Skill, newest first.
 export function recentSkillSessions(sessions: SessionDoc[], name: string, limit: number): SessionDoc[] {
   return sessions

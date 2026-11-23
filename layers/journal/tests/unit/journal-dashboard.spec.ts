@@ -36,6 +36,7 @@ import {
   installedSkills,
   skillUseCounts,
   skillIdeaCounts,
+  skillIdeasLine,
   recentSkillSessions,
   journalKpiTiles,
   prUrl,
@@ -270,6 +271,12 @@ describe('skill inventory', () => {
       session({ ideas: ['d'] }),
     ])
     expect(counts).toEqual({ tdd: { sessions: 1, ideas: 2 }, digest: { sessions: 2, ideas: 3 } })
+  })
+
+  it('skillIdeasLine puts the idea count first and drops "0 of" when there are none', () => {
+    expect(skillIdeasLine({ sessions: 5, ideas: 12 }, 8)).toBe('12 ideas in 5 of 8 sessions')
+    expect(skillIdeasLine({ sessions: 1, ideas: 1 }, 1)).toBe('1 idea in 1 of 1 session')
+    expect(skillIdeasLine(undefined, 6)).toBe('0 ideas in 6 sessions')
   })
 
   it('recentSkillSessions lists the newest sessions that used the Skill, up to the limit', () => {
