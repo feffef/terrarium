@@ -65,7 +65,6 @@ None of these is false.
 Lessons past the soft word limit, each with a proposed split from a fresh reader (`glassbox-update`). A split adds Lessons, so the owner merges it.
 
 - **Issue triage labels** (`git-github/70.issue-triage-labels.md`, 1933 words): split off *Path-based labels* (the area-label workflow and its excerpt, the copied-areas and unlisted-tenant bullets, about 350 words) and leave a one-line link; its Try it is a small `gh pr edit --add-label` workflow.
-- **Colour contrast** (`web-standards/50.colour-contrast.md`, 1827 words): no logical split, one concept. Cut 150-200 words: the `--atlas-faint` excerpt (keep its prose), the `.cover-orn` detail and the DealBadge paragraph; fold the formula-pinned bullet into the paragraph that states the reference values; merge the overlapping derived-colour bullet.
 - **Blocking hooks** (`hooks/20.blocking-hooks.md`, 1718 words): split off *Hook failure modes* (fail open versus closed, exit 2, `onFailure`, the `runGuard` crash and `|| true` wiring excerpts, the guards-wiring spec, the crash, can't-tell and version-bound bullets, the current Try it, about 800 words); *Blocking hooks* keeps the deny JSON, the guard pattern and registry, and needs a new Try it.
 - **Scheduled tasks** (`agents/40.scheduled-tasks.md`, 1713 words): split off *Session timers* (`/loop`, `ScheduleWakeup`, `CronCreate`, `disable-model-invocation` under `/loop`, `send_later`, `loop-only-tool-guard`, the timers-vanish and wake-up bullets, about 450 words); the complete Routine list stays on *Scheduled tasks*.
 
