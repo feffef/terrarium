@@ -11,6 +11,7 @@ import { fail, flagValue, root, runIfMain } from '../../../../scripts/lib/cli.ts
 import { tryGit } from '../../../../scripts/lib/git.ts'
 import { splitFrontmatter } from '../../../../scripts/lib/frontmatter.ts'
 import { listAll, resolveAccess } from '../../../../scripts/lib/github-client.ts'
+import { normalizeRemoteSessionId } from '../../../../scripts/session/transcript-trace.ts'
 import { glassboxWorkshopWordCap, glassboxWorkshopWords } from '../../../../layers/glassbox/app/utils/workshop.ts'
 import { glassboxFewNextLinks, glassboxFewNextText, glassboxMotiveWarning, glassboxOrphans, glassboxGlossaryWords, glassboxOrphanText, glassboxPageWarnings } from '../../../../layers/glassbox/page-checks.ts'
 
@@ -186,7 +187,7 @@ export function indexOrientation(index: IndexFile[], prs = openGlassboxPrs): str
   return [section('Open PRs that touch Glass Box', prs()), guideIndexSection(index)].join('\n\n')
 }
 
-export function orientation(base = join(root, content), { log = guideLog, prs = openGlassboxPrs, now = new Date(), index = [] as IndexFile[], words = glassboxGlossaryWords } = {}): string {
+export function orientation(base = join(root, content), { log = guideLog, prs = openGlassboxPrs, now = new Date(), index = [] as IndexFile[], words = glassboxGlossaryWords, env = process.env } = {}): string {
   const guide = files(join(base, 'guide/pages'), '**/*.md')
   const runs = files(join(base, 'workshop/runs'), '*.yml').reverse()
   const memory = files(join(base, 'workshop/pages'), 'index.md')[0]?.[1] ?? ''
@@ -197,7 +198,8 @@ export function orientation(base = join(root, content), { log = guideLog, prs = 
     ...glassboxOrphans(Object.fromEntries(guide)).map((f) => `- ${f}: ${glassboxOrphanText}`),
     ...glassboxFewNextLinks(Object.fromEntries(guide)).map(({ file, count }) => `- ${file}: ${glassboxFewNextText(count)}`),
   ]
-  const skeleton = ['session: <this session id>', 'mode: <autonomous or interactive>', 'focus: "<what you take on, and why>"', 'changes: []', 'pagesRead: []']
+  const session = normalizeRemoteSessionId(env.CLAUDE_CODE_REMOTE_SESSION_ID) ?? env.CLAUDE_CODE_SESSION_ID ?? '<this session id>'
+  const skeleton = [`session: ${session}`, 'mode: <autonomous or interactive>', 'focus: "<what you take on, and why>"', 'changes: []', 'pagesRead: []']
   const out = [
     section('Run entry', [`Write it to ${content}/workshop/runs/${runStem(now)}.yml when you claim the focus:`, '', ...skeleton.map((l) => `    ${l}`)].join('\n')),
     section('Open PRs that touch Glass Box', prs()),

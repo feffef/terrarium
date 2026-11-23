@@ -68,6 +68,13 @@ describe('orientation', () => {
   const run = (log = (_since: string | undefined) => 'abc1234 a guide commit') =>
     orientation(base, { log, prs: () => '- #1 a PR: layers/glassbox/x.md', words: () => ['Hook'], now: new Date('2026-11-07T10:05:30Z') })
 
+  it("prints this session's id in the run entry: cloud form, else the local UUID, else a placeholder", () => {
+    const entry = (env: Record<string, string>) => orientation(base, { log: () => '', prs: () => '', words: () => [], env }).match(/^ {4}session: .*$/m)?.[0]
+    expect(entry({ CLAUDE_CODE_REMOTE_SESSION_ID: 'cse_abc', CLAUDE_CODE_SESSION_ID: 'u-1' })).toBe('    session: session_abc')
+    expect(entry({ CLAUDE_CODE_SESSION_ID: 'u-1' })).toBe('    session: u-1')
+    expect(entry({})).toBe('    session: <this session id>')
+  })
+
   it('prints every section in order, runs newest first, pages as one line each, and no terms', () => {
     const seen: (string | undefined)[] = []
     const out = run((since) => (seen.push(since), 'abc1234 a guide commit'))
