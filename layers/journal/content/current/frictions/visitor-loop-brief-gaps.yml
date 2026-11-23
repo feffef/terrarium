@@ -54,3 +54,8 @@ occurrences:
     severity: nit
     description: "Context file did not say /t/tinkerfund aliases /prod or that /qa is a component-gallery fixture, so the editor found it by comparing byte counts."
     solution: "In .claude/skills/visitor-loop/SKILL.md step 2, have the context file's pages section note aliases and QA fixture Spaces."
+  - session: session_013zxzePNKjPWkVNAkzZbSVC
+    date: "2026-11-22"
+    severity: minor
+    description: "The context file's ideas-already-logged list held two items already shipped, so the editor re-checked them; the visitor brief gives no way to tell shipped from open."
+    solution: "ideas.ts list (.agents/skills/visitor-loop/scripts/ideas.ts) should mark ideas whose page changed after the idea's date."

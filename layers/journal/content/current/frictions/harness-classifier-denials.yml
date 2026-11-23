@@ -17,11 +17,6 @@ fixes:
     date: "2026-11-11"
     summary: "git-conventions.md: amend covers an unpushed tip commit only, and a stale index is cleared with git restore instead of git reset --hard HEAD."
 occurrences:
-  - session: session_013zxzeQaeB8hhL2FFfcQhv7
-    date: "2026-11-08"
-    severity: minor
-    description: "Tried amend plus force-with-lease to fix a stale commit message; the auto-mode classifier denied it, so the message stays wrong"
-    solution: "Write the commit message after the subagent reports, not as a checkpoint label; or accept a follow-up commit"
   - session: session_013zxzePY5ruxnnX3PjPY9WM
     date: "2026-11-10"
     severity: minor

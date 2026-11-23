@@ -1,11 +1,15 @@
 name: clear-backlog-retro-fanout-cost
 surface: safe
 summary: The clear-backlog retro resumes every builder and reviewer (18-20 agents, 75k-130k tokens each) for six-line replies that mostly repeat each other.
-cause: "clear-backlog section 5 sent the retro to every builder and reviewer, and each resume re-reads its whole context, about 1.6M-1.9M tokens per run for replies on the same hooks and hand-off wording. Signals: 'resumed 20 agents', 'retro asked all 18 builders and reviewers', 'about 1.64M subagent tokens'."
+cause: "clear-backlog section 5 sent the retro to every builder and reviewer, and each resume re-reads its whole context, about 1.6M-1.9M tokens per run for replies on the same hooks and hand-off wording; since PR #3589 (2026-11-22) it goes to one builder and one reviewer per review kind. Signals: 'resumed 20 agents', 'retro asked all 18 builders and reviewers', 'about 1.64M subagent tokens'."
 status: open
 related:
   - entry: audit-skills-run-cost
     rule: The fan-out belongs to an audit-skills run.
+fixes:
+  - pr: 3589
+    date: "2026-11-22"
+    summary: "clear-backlog section 5 Retro goes to one builder plus one reviewer per review kind used in the run, not every builder and reviewer."
 occurrences:
   - session: session_013zxzeTChey8pdC2fuTTH7i
     date: "2026-11-16"

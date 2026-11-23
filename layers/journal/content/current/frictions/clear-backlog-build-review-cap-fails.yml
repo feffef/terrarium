@@ -1,6 +1,6 @@
 name: clear-backlog-build-review-cap-fails
 summary: "The backlog build loop started a fresh review round after any defect or spec-mismatch, however small the fix, and the round found only nits; since PR #3419 a round starts by fix size."
-cause: "clear-backlog section 3 step 4 started a fresh review round on any defect or spec-mismatch line, whatever the fix size, so a one-line fix could cost a whole round that found only nits (2026-11-16: four small branches, about 600k tokens by the run logs). reviewBranch no longer returns 'failed' at the round cap (older signals: 'review capped at 3 rounds'). A 2026-11-11 run also spent 4.4M tokens over 52 agents when five of six small branches hit the cap on cosmetic findings; PR #3119 redesigned the review and fix steps, PR #3196 narrowed which findings force another round, and PR #3419 (2026-11-17) starts round N+1 only by fix size: a defect still open after the re-check, over about 10 lines of round N fixes, or a missing-test above 50 lines."
+cause: "clear-backlog section 3 step 4 started a fresh review round on any defect or spec-mismatch line, whatever the fix size, so a one-line fix could cost a whole round that found only nits (2026-11-16: four small branches, about 600k tokens by the run logs). reviewBranch no longer returns 'failed' at the round cap (older signals: 'review capped at 3 rounds'). A 2026-11-11 run also spent 4.4M tokens over 52 agents when five of six small branches hit the cap on cosmetic findings; PR #3119 redesigned the review and fix steps, PR #3196 narrowed which findings force another round, PR #3419 (2026-11-17) starts round N+1 only by fix size, and PR #3589 (2026-11-22) counts a missing-test only while it is still open after the re-checks."
 surface: safe
 status: open
 notes: |-
@@ -20,6 +20,9 @@ fixes:
   - pr: 3419
     date: "2026-11-17"
     summary: "clear-backlog section 3 step 4 starts a fresh round N+1 only for a defect still open after the re-check, round N's fixes over about 10 lines, or a missing-test on a branch over 50 lines; a spec-mismatch fixed with a clean re-check starts none."
+  - pr: 3589
+    date: "2026-11-22"
+    summary: "clear-backlog section 3 step 4: a missing-test starts round N+1 only if still open after round N's re-checks on a branch above 50 changed lines; one already fixed and re-checked clean no longer does."
 occurrences:
   - session: session_013zxzeSj1mJxbgdKHbwgK2s
     date: "2026-11-09"
@@ -71,3 +74,8 @@ occurrences:
     severity: moderate
     description: "Discover ran a third review round only because a round-2 summary held a missing-test already fixed and re-checked clean; it found two nits and cost about 170k subagent tokens."
     solution: "In clear-backlog section 3 step 4, require the missing-test to be still open after the re-checks before starting the next round."
+  - session: session_013zxzeNisEDZyrmPg2jhA5G
+    date: "2026-11-22"
+    severity: nit
+    description: "On the glassbox-curate branch I ran a third re-check in round 2 (a CLAUDE.md wording nit) past clear-backlog §3 step 3's 2-re-check cap, judging an always-loaded file worth it."
+    solution: "clear-backlog §3 could say owner-answer fixes get their own re-check outside the cap, which is how step 2 already reads; the cap's scope is unclear."

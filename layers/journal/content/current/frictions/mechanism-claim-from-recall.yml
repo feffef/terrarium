@@ -30,11 +30,6 @@ fixes:
     date: "2026-10-28"
     summary: "glassbox-improve's lead proposes only facts and wording found in the source (an absence claim most of all), and its researcher checks an absence claim against every code location."
 occurrences:
-  - session: session_013zxzeQwU4eYGrEvV8x42ts
-    date: "2026-11-08"
-    severity: minor
-    description: "The docs build wrote that a session branch reset onto main can be pushed plainly; the friction ledger showed that holds only for a fast-forward. I caught it in my own read before the PR, but the brief had carried the unverified claim."
-    solution: "Brief a docs change from the ledger entries' exact conditions, or have the review axis check a new instruction against its cited evidence."
   - session: session_013zxzeR9Usddfqi4gQ697DR
     date: "2026-11-09"
     severity: minor
@@ -140,3 +135,8 @@ occurrences:
     severity: nit
     description: "Wrote that the gate can block a merge on every other Verification check without reading the sibling lessons; both reviewers flagged it and I removed it."
     solution: "Check each sibling lesson for the claimed property before writing a claim about all of them."
+  - session: session_013zxzeRQQomSvhPo9RWTEkC
+    date: "2026-11-23"
+    severity: nit
+    description: "My first drafts of two notes named the wrong current grade for clear-backlog and inspect-session; I caught it by grepping importance before applying them."
+    solution: "Have the scorecard print each Skill's grade next to its observation slot, or read it before drafting."

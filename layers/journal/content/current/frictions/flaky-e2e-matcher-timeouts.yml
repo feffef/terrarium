@@ -1,8 +1,8 @@
 name: flaky-e2e-matcher-timeouts
 summary: >-
-  Journal browser tests that open or collapse a session card fail at random, so unrelated changes fail once and pass on a retry.
+  Browser or timing tests fail at random in a gate on diffs that do not touch them (Journal session-card tests, the shell-reads wall-clock ratio test), and pass on a rerun.
 cause: >-
-  The Journal accordion e2e test (journal.spec.ts, the session-card head toggle) times out in gate:scoped or CI on diffs that do not touch it and passes on re-run; raising expect.poll's timeout to 10 s (PR #1919) did not stop it. The sibling-collapse layout check (a displacement measured before the digest body renders, PR #2565) flakes the same way. Signals: 'Journal accordion e2e', journal.spec.ts:393, 'displacement ... < 30px', 'sibling-collapse', a gate red on an unrelated Journal test that passes on rerun. Most likely (issue #2231; not reproduced, 120 throttled Chromium runs passed, commit 19077ebc): the test clicked a session card while the digest it had just opened was still expanding, so the card moved under the click.
+  The Journal accordion e2e test (journal.spec.ts, the session-card head toggle) times out in gate:scoped or CI on diffs that do not touch it and passes on re-run; raising expect.poll's timeout to 10 s (PR #1919) did not stop it. The sibling-collapse layout check (a displacement measured before the digest body renders, PR #2565) flakes the same way. Signals: 'Journal accordion e2e', journal.spec.ts:393, 'displacement ... < 30px', 'sibling-collapse', a gate red on an unrelated Journal test that passes on rerun. Most likely (issue #2231; not reproduced, 120 throttled Chromium runs passed, commit 19077ebc): the test clicked a session card while the digest it had just opened was still expanding, so the card moved under the click. Also tests/unit/shell-reads.spec.ts, whose wall-clock ratio assertion fails under load on unrelated or content-only diffs (signals: 'shell-reads.spec.ts', 'wall-clock ratio', 'timing test'); a rerun passes.
 surface: safe
 status: open
 related:
@@ -24,3 +24,8 @@ occurrences:
     severity: minor
     description: "Two of six gates failed on the unrelated timing test shell-reads.spec.ts when run alongside another gate, costing a rerun each."
     solution: "Loosen or isolate the timing assertion in tests/unit/shell-reads.spec.ts, or cap concurrent gates at one."
+  - session: session_013zxzePVqgGH7hbNFvSCqQR
+    date: "2026-11-21"
+    severity: minor
+    description: "The #3551 builder's first gate:scoped failed only on the wall-clock ratio test in tests/unit/shell-reads.spec.ts, on a content-only diff; an unchanged rerun passed."
+    solution: "Make the shell-reads linearity test robust to a loaded container (e.g. compare operation counts, not wall-clock ratios), since two gates run at once."

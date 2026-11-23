@@ -38,11 +38,6 @@ occurrences:
     severity: minor
     description: "I dispatched writers before reading overlapping pages; the Spec reviewer then named six: terrarium-practice session-logs, protected-paths and self-improvement-loop, verification gate, and two walkthroughs. I read them before landing; they needed no edit. Token cost not measured."
     solution: "Have orient.ts print, per Subject page, the pages that link to it or share its cited files, so they are read before the writers start."
-  - session: session_013zxzeNm7AawB63t1M33Hse
-    date: "2026-11-08"
-    severity: minor
-    description: "Explained Routines without first reading the Glass Box overview page that CLAUDE.md requires for such explanations."
-    solution: "Read layers/glassbox/content/guide/pages/index.md before answering."
   - session: session_013zxzeR2kKbsT81QWkXUrvK
     date: "2026-11-09"
     severity: nit
@@ -253,3 +248,33 @@ occurrences:
     severity: minor
     description: "Wrote 15 Journal observations with one Node script before reading layers/journal/GLOSSARY.md; the tenant-glossary guard only fired on a later Edit."
     solution: "Read the Journal glossary in step 5 before the first Inventory write; a note in audit-skills step 5 would do it."
+  - session: session_013zxzeQQP2yCoP7hw7GD1Gx
+    date: "2026-11-22"
+    severity: nit
+    description: "Edited ledger entries with ledger-set.ts before reading layers/journal/GLOSSARY.md; the tenant-glossary rule only loaded on the later read."
+    solution: "Let the frictions-to-fixes Skill name the Journal glossary, or load the rule on ledger scripts."
+  - session: session_013zxzeSBnJpmHMj77KQcdWv
+    date: "2026-11-22"
+    severity: minor
+    description: "Edited the Journal Skill page without reading layers/journal/GLOSSARY.md, though the tenant-glossary rule says to read it before working on a Tenant."
+    solution: "A rule can't order a read before the one that loads it; add the glossary read to the start of any Tenant UI task, or load it on layers/journal paths at session start."
+  - session: session_013zxzePAekyp1bgbnenrGfK
+    date: "2026-11-23"
+    severity: nit
+    description: "Wrote the Digest and edited under layers/journal before reading layers/journal/GLOSSARY.md in full; only the first 60 lines."
+    solution: "Digest Skill step 3 should name the Journal glossary as a read-first file."
+  - session: session_013zxzeSqAbnHFPu1QTXgBfS
+    date: "2026-11-22"
+    severity: minor
+    description: "Retro (builder): the tenant-glossary guard blocked its first three parallel Edits until it read layers/glassbox/GLOSSARY.md, a 199-line read made only to satisfy the guard."
+    solution: "In rules() of .claude/workflows/clear-backlog-build.js, tell the builder to read the Tenant's GLOSSARY.md before the first edit to that layer."
+  - session: session_013zxzeNisEDZyrmPg2jhA5G
+    date: "2026-11-22"
+    severity: nit
+    description: "Retro (builder): the tenant-glossary guard blocked the first memory-page edit until layers/glassbox/GLOSSARY.md was read, costing a round trip."
+    solution: "A brief for a branch that touches a Tenant layer names its GLOSSARY.md as a first read."
+  - session: session_013zxzeSxk2Nq3K4cxLysUN2
+    date: "2026-11-22"
+    severity: nit
+    description: "Read the Glass Box glossary by grep and in parts before editing, not its terms in full as the tenant-glossary rule asks"
+    solution: "Read layers/<tenant>/GLOSSARY.md whole before the first edit under the layer"

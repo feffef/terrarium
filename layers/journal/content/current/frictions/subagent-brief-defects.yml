@@ -50,16 +50,6 @@ notes: |-
   2026-10-23 re-cluster: 01Fay2Gi (a check grepping failure-only output), 013RCsUF (dated content not excluded), 011RZgGT (explore triage schema lacks the ADR-0004 exception), 011xvPjJ (audit-skills ids, PR 2318), 01XWMuHG (auth research boundary), 01WxHaU2 (workflow agent asked to dispatch), 0135hcUf and 01VH74k3 (frictions-to-fixes Skill briefs) each need their own fix; left here as single low-severity strays.
   2026-11-13 survey: Le6nsJ (2026-11-12) dispatched PAGES_PLACEHOLDER and FULL_PLACEHOLDER unfilled; the #3064 guard pattern (@@NAME@@ or braces) does not match that form. Issue #3227 (audit-skills, opened 2026-11-13) tracks unfilled placeholders.
 occurrences:
-  - session: session_013zxzeSZva1TWwL6nLdEnUa
-    date: "2026-11-08"
-    severity: minor
-    description: "Dispatched five claim-check subagents with the literal placeholder @@GROUP@@ in place of the page list; all five stopped immediately and needed resuming."
-    solution: "The dispatch-subagents brief checklist already says re-read the brief for unfilled {…}; inline the list when building the brief and grep for placeholders before sending."
-  - session: session_013zxzeQaeB8hhL2FFfcQhv7
-    date: "2026-11-08"
-    severity: moderate
-    description: "Fanned out six writer subagents on an untried brief; its grep filter was wrong and its loose licence gave 29 uneven extra lead-in rewrites"
-    solution: "Pilot a fan-out brief on one agent or a cold reviewer first; dispatch-subagents could say so for any brief sent to more than two agents"
   - session: session_013zxzePvPobQ2Cfg3UyUHSt
     date: "2026-11-09"
     severity: minor
@@ -150,3 +140,18 @@ occurrences:
     severity: minor
     description: "My #3552 brief asked to edit a Glass Box sentence without noting the page is pinned to an older revision, so a reviewer raised an owner-call I then had to judge."
     solution: "When verifying a brief that edits Glass Box prose, check the page's revision pin and state in the brief whether the edit is wanted before a re-pin."
+  - session: session_013zxzeT3ZUhBeG84jQUD1Hw
+    date: "2026-11-21"
+    severity: minor
+    description: "Four builders (discover, tap-targets, ended-cards, blog) report that the brief and rules() tell subagents to run e2e in the background, but the subagent background guard refuses it; each lost a call, and the scratch dir mkdir was missing."
+    solution: "In rules() of .claude/workflows/clear-backlog-build.js say foreground with Bash timeout 600000 and mkdir -p the scratch dir first; check the flock e2e command fits a 600s foreground call."
+  - session: session_013zxzeSqAbnHFPu1QTXgBfS
+    date: "2026-11-22"
+    severity: nit
+    description: "Retro (builder): the brief's flock e2e command contains '; echo EXIT=' while another rule bans chained commands, and a stale e2e.log could be mistaken for the new result."
+    solution: "Have rules() in clear-backlog-build.js delete the log before each e2e run and exempt the flock command from the chaining rule."
+  - session: session_013zxzeNisEDZyrmPg2jhA5G
+    date: "2026-11-22"
+    severity: minor
+    description: "My #3580 brief said to import the SHA regex, too narrow: the guard then matched the skill name its own way, and both reviewers flagged the drift."
+    solution: "Brief the shared check, not one of its parts, when two code paths must agree."

@@ -44,11 +44,6 @@ fixes:
     date: "2026-11-18"
     summary: "survey-brief.md step 5 skips a tracked entry with no ref (a dispatched fix in flight), resolving its contradiction with SKILL.md 5.3."
 occurrences:
-  - session: session_013zxzeRSjTLQV8K5UzQtX95
-    date: "2026-11-08"
-    severity: minor
-    description: "The survey subagent appended fixes but missed that PR #2973 closed regression issue #2958 for premise-not-questioned; I found it only because I re-checked the regression screen before filing."
-    solution: "Survey-brief §2.4 could say to check each closed regression issue's closing PR and record it as a fix on that entry."
   - session: session_013zxzeP1cnvEr2zK5BaCnc9
     date: "2026-11-10"
     severity: nit
@@ -89,3 +84,8 @@ occurrences:
     severity: minor
     description: "The survey subagent had no create-entry recipe in its brief and misused a flag on its first try, so it needed a detour through print-ledger-occurrence."
     solution: "Add one create-entry example line to survey-brief §2."
+  - session: session_013zxzeQQP2yCoP7hw7GD1Gx
+    date: "2026-11-22"
+    severity: minor
+    description: "Survey brief says --unledgered drops Frictions the ledger carries, but after append with --skip-held sessions still list others; the survey agent found out by rerunning (its own report)."
+    solution: "Say in survey-brief step 1 that the output keeps Frictions whose session already sits in the entry."

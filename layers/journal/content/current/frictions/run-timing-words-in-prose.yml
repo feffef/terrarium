@@ -16,3 +16,8 @@ occurrences:
     severity: nit
     description: "The skill cadence validator rejected 'daily' in two new notes, and a truncated session id in another, only at validate:content time."
     solution: "Mention in step 5 that validate:content checks cadence words and full ids, so write them right the first time."
+  - session: session_013zxzeRQQomSvhPo9RWTEkC
+    date: "2026-11-23"
+    severity: minor
+    description: "gate:scoped failed on validate-skill-cadence because a note said a Skill runs daily; this cost a fix commit, a second review round and two more gate runs."
+    solution: "State the never-say-when convention in audit-skills step 5 where notes are written, instead of only in the validator."

@@ -36,3 +36,8 @@ occurrences:
     severity: minor
     description: "Seven reviewers report the hand-off channel flipping between the first turn (structured result) and resumes (SubagentHandback plus a JSON file), so each guessed which one counts."
     solution: "State the single hand-off channel once in reviewPrompt() in .claude/workflows/clear-backlog-build.js."
+  - session: session_013zxzeSqAbnHFPu1QTXgBfS
+    date: "2026-11-22"
+    severity: nit
+    description: "Retro (reviewers): the brief asked for a StructuredOutput result while the resume protocol asked for a JSON file and a one-line reply, so they reconciled two formats."
+    solution: "State the resume hand-off format once in reviewPrompt() of .claude/workflows/clear-backlog-build.js."

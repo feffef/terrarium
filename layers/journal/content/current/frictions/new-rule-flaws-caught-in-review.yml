@@ -3,9 +3,6 @@ surface: safe
 summary: A rule or selection step drafted for a Skill or the ledger had a logic flaw that only later reviewers caught, costing extra rounds.
 cause: "The author drafts a new ordering, splitting or selection rule without trying it on the cases it must handle (a ranking direction, two clusters of the same shape); reviewers or the owner find the flaw after the draft. Signals: 'first draft', 'reviewers flagged', 'would have raised the best pages', 'the user had to settle it'.\" Since PR #2810 (2026-11-03) CLAUDE.md Question the premise also asks for two concrete cases across consecutive runs when a rule rotates or carries state."
 status: open
-related:
-  - entry: transform-untested-on-real-data
-    rule: A regex or heuristic was committed without running it on the real data.
 fixes:
   - pr: 2697
     date: "2026-10-30"

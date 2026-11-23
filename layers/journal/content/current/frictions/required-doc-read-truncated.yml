@@ -22,11 +22,6 @@ fixes:
     date: "2026-10-28"
     summary: "CLAUDE.md says to read a required doc whole if you can, no longer in one Read call: partial reads are encouraged against, not required."
 occurrences:
-  - session: session_013zxzeRL5rU5zS3WRCkH3TE
-    date: "2026-11-08"
-    severity: nit
-    description: "Labelled 2975 after only grepping issue-tracker.md; the hook asked for the whole doc, which I read afterwards and which held the supersession and trial checks I then ran."
-    solution: "Read issue-tracker.md whole before the first label call, as CLAUDE.md says; the late read cost nothing here."
   - session: session_013zxzeRVjHExXhciv5BwiTB
     date: "2026-11-11"
     severity: nit
@@ -57,3 +52,13 @@ occurrences:
     severity: nit
     description: "I read two outside pages with cut -c1-300 (truncated lines) before listing them in pagesRead, which step 3 says to read whole; the Spec reviewer flagged the gap."
     solution: "Read each outside page whole with Read before listing it; the skill could name pages the writer links as outside pages earlier."
+  - session: session_013zxzePVqgGH7hbNFvSCqQR
+    date: "2026-11-21"
+    severity: nit
+    description: "Read only the external-PR section of docs/agents/issue-tracker.md by grep, not the whole doc as CLAUDE.md asks once triage is involved."
+    solution: "Read the doc whole once per session when a trigger applies."
+  - session: session_013zxzeSBnJpmHMj77KQcdWv
+    date: "2026-11-22"
+    severity: nit
+    description: "Read only the first 80 lines of verifying-ui-changes.md though CLAUDE.md says read the whole doc, since a rule can sit anywhere."
+    solution: "Shorten the doc, or move its key rules into the ui-verification rule."

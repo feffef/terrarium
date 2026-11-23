@@ -3,6 +3,9 @@ surface: safe
 summary: Re-check reviewers got only one-line finding labels, so a later round reopened every earlier findings file or could not judge a refusal's proof.
 cause: "The re-check brief passes triage.md one-liners that name findings by file and number only, without the builder's refusal reasons, so reviewers reopen earlier findings JSON to avoid re-raising or cannot judge a refusal. Signals: 'triage.md', 'one-liners', 'refusal reasons'."
 status: open
+related:
+  - entry: recheck-axis-name-mismatch
+    rule: That entry is a builder's re-check request naming an axis the branch lacks; here the brief given to the reviewer was thin.
 fixes:
   - pr: 3512
     date: "2026-11-20"

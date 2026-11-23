@@ -1,0 +1,15 @@
+name: review-call-sha-guard-denial
+surface: guard-or-hook
+summary: The review-call guard denied a code-review call that carried no head sha, costing one retry with the printed args.
+cause: "scripts/hooks/review-call-sha-guard.ts (PR #3591) denies a code-review Skill call whose args hold no 7-40 hex sha and says to run verdict-line.ts --review-call; the slip is caught before any review runs, so the cost is one retry. Signals: 'the guard blocked it', 'lacked the head sha', 'reran with the printed args'."
+status: open
+ref: "merge-pr-review-args-refusal, fix PR #3591 (the guard that denies the call; the original harm is a refusal at merge and a re-run review)"
+related:
+  - entry: merge-pr-review-args-refusal
+    rule: That entry is the original harm, a bare-args review refused at merge or re-run after it; here the guard caught the slip first and the cost was one retry.
+occurrences:
+  - session: session_013zxzeRQQomSvhPo9RWTEkC
+    date: "2026-11-23"
+    severity: nit
+    description: "First code-review call lacked the head sha and the guard blocked it; I reran with the printed args."
+    solution: "Run verdict-line.ts --review-call before invoking code-review."

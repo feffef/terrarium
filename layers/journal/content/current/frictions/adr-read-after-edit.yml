@@ -17,16 +17,6 @@ notes: |-
   2026-10-28 design: another digest Skill line dropped: it already says to read ADR-0010 before the first Digest; the hint is the designed backstop and the late read changed nothing. dropped: a guard would be Human-only.
   2026-10-30 design: change the hint or its rules' paths (issue #2575's candidates) dropped: all Human-only files; 85 of 86 late reads changed nothing, 0 'no' verdicts, so the cost is one call
 occurrences:
-  - session: session_013zxzeQwU4eYGrEvV8x42ts
-    date: "2026-11-08"
-    severity: minor
-    description: "Edited two Skill files in worktrees before reading ADR-0005/0015/0027; the edit hook then demanded them, and the ADRs confirmed the edits were right."
-    solution: "A rule loaded on opening a Skill file could say to read the three ADRs first, or the clear-backlog hand-fix step could list them."
-  - session: session_013zxzeNm7AawB63t1M33Hse
-    date: "2026-11-08"
-    severity: minor
-    description: "Edited governed Skill, spec and Inventory files before reading ADR-0005, 0015 and 0027; hooks told me to read them afterwards."
-    solution: "Read each ADR a rule summary names before the first edit under its paths."
   - session: session_013zxzeRB6ciegpxcRDfedSF
     date: "2026-11-09"
     severity: nit
@@ -262,3 +252,13 @@ occurrences:
     severity: nit
     description: "Did not read docs/adr/0027-prune-trials.md in full though the rule says to read it to review work it governs; relied on the Skill and rule summary."
     solution: "Read the ADR once at the start of a prune-trial run."
+  - session: session_013zxzeSBnJpmHMj77KQcdWv
+    date: "2026-11-22"
+    severity: nit
+    description: "Hooks said to read ADR-0006, ADR-0008 and ADR-0016 in full after I edited the page; I did not read them, only kept the useSpace data path unchanged."
+    solution: "Narrow ADR-0016 and ADR-0006 paths so a styling-only edit to a Space page does not trigger three ADR reads."
+  - session: session_013zxzeSxk2Nq3K4cxLysUN2
+    date: "2026-11-22"
+    severity: nit
+    description: "Read ADR-0005 and ADR-0027 only after a hook prompted, after editing the glassbox-update Skill; the edits matched both"
+    solution: "Read the ADRs a Skill's rule names before the first Skill edit"

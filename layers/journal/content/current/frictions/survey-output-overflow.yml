@@ -29,16 +29,6 @@ fixes:
     date: "2026-11-21"
     summary: "harvest evidence caps the rulings and ledger blocks at 10 hits per group."
 occurrences:
-  - session: session_013zxzePZDqGM37D7GdfGumb
-    date: "2026-11-08"
-    severity: nit
-    description: "I printed QUALITY.md whole through a shell cat of 38KB mixed with other pages, which overflowed and wasted tokens."
-    solution: "The curate Skill says to read only the Lenses; its pointer could give the line range."
-  - session: session_013zxzeNm7AawB63t1M33Hse
-    date: "2026-11-08"
-    severity: minor
-    description: "A repo-wide grep (28KB) and a dump of whole Routine run files flooded context for little value."
-    solution: "Use count mode or head limits on Journal Routine records."
   - session: session_013zxzeQRndZ5iHweDq8ceMP
     date: "2026-11-11"
     severity: minor

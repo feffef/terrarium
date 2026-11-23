@@ -19,11 +19,6 @@ fixes:
     date: "2026-11-16"
     summary: "CLAUDE.md 'Ask before building': an unanswered, option-less or deferred reply is not a yes; ask again or hold the step."
 occurrences:
-  - session: session_013zxzeRL5rU5zS3WRCkH3TE
-    date: "2026-11-08"
-    severity: moderate
-    description: "Offered Q2 option 2a as sharpening the overview line only, which narrowed the owner's intent (make the whole read-first section more encouraging); they picked it on my framing and corrected me after the merge."
-    solution: "Before grilling, state the premise in the owner's terms and ask what scope they mean; do not fold a scope limit into an option label."
   - session: session_013zxzeRB6ciegpxcRDfedSF
     date: "2026-11-09"
     severity: minor
@@ -114,3 +109,8 @@ occurrences:
     severity: nit
     description: "Owner's \"everything else waits\" answer to Q10 was ambiguous; I read it as not building the Blog fix and did not re-ask."
     solution: "Phrase a go/hold question so each option names the issue it holds."
+  - session: session_013zxzeSSEyKMAcAZESc5L4b
+    date: "2026-11-20"
+    severity: minor
+    description: "I treated a context compaction as not a stop; the owner pointed out it means the window is full, so the first stop rule was wrong."
+    solution: "Check what a harness event means for the limit being set before writing a rule around it."

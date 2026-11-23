@@ -30,16 +30,6 @@ fixes:
     date: "2026-11-08"
     summary: "SKILL.md §2 files regression issues only for still-recurring entries at moderate or worse (top three of those); the ledger PR gets the simple-change review."
 occurrences:
-  - session: session_013zxzeS3L4tvAUKm5q3d9qD
-    date: "2026-11-08"
-    severity: minor
-    description: "The Skill says to file regression issues for the top three by severity, but almost all 42 still-recurring entries are minor or nit and several were owner-accepted, so the third pick was a judgement call."
-    solution: "Restrict regression issues to moderate and above, as issue #2960 proposes."
-  - session: session_013zxzeRSjTLQV8K5UzQtX95
-    date: "2026-11-08"
-    severity: minor
-    description: "SKILL.md §5 step 4 says to review the ledger PR by the simple-change test, but the ledger diff (25 files, 238 lines) fails that test, so I ran code-review with two subagents."
-    solution: "Say in §5 that a ledger PR is exempt from code-review, or that it is reviewed by the ledger content test and gate only."
   - session: session_013zxzeNjRy7tpoybG6YTUM6
     date: "2026-11-09"
     severity: nit
@@ -95,3 +85,8 @@ occurrences:
     severity: minor
     description: "The Skill's ledger PR must pass the simple-change test, which a 68-file ledger diff cannot, so each of the two ledger PRs needed full two-reviewer code-review rounds on data-only diffs."
     solution: "Let a ledger-only PR made through the ledger scripts take own-read, in the Skill and in merge-pr's check."
+  - session: session_013zxzeQQP2yCoP7hw7GD1Gx
+    date: "2026-11-22"
+    severity: minor
+    description: "pr-workflow's simple-change test sends a 400-line ledger-data PR to code-review (two subagents) though it is only machine-edited YAML; reviewers found two small cause and ref wording issues."
+    solution: "Let a ledger-only PR whose gate passed take an own read, or state this case in the simple-change test."

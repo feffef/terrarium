@@ -33,3 +33,8 @@ occurrences:
     severity: nit
     description: "Four reviewers report the brief names the code-review Skill's section 3 with no end line, and its smell baseline is irrelevant to wording-only diffs; extra sed calls resulted."
     solution: "Name the line range in reviewPrompt() and give a short prose checklist for wording-only diffs."
+  - session: session_013zxzeSqAbnHFPu1QTXgBfS
+    date: "2026-11-22"
+    severity: nit
+    description: "Retro (reviewers): the pointer to section 3 of the code-review Skill mixes the smell list with sub-agent spawning steps, so reviewers read past what they needed."
+    solution: "Point reviewers at the smell list's line range in .agents/skills/code-review/SKILL.md, or paste it into reviewPrompt()."

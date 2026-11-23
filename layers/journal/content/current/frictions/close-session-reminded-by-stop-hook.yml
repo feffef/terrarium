@@ -40,3 +40,8 @@ occurrences:
     severity: nit
     description: "The Stop hook demanded close-session after PR 3236 merged although I had re-authored the log with log-session after that merge; it counts only the Skill call."
     solution: "Known entry close-session-reminded-by-stop-hook; I should have invoked close-session, not log-session.ts, for the re-author."
+  - session: session_013zxzeQQP2yCoP7hw7GD1Gx
+    date: "2026-11-22"
+    severity: nit
+    description: "Stop hook demanded close-session after the first merge while the closing ledger PR still waited on its gate, so I had to log mid-flow."
+    solution: "Nothing to change; re-invocation is safe and this log is replaced at the end."

@@ -19,6 +19,9 @@ fixes:
   - pr: 3417
     date: "2026-11-17"
     summary: "harvest check-clusters fails unless the cluster checks file carries a stopped: reason line before the first cluster; step 2 tells the run to write it."
+  - pr: 3565
+    date: "2026-11-21"
+    summary: "harvest block prints each source session's authored fields to stderr, and SKILL.md step 4 reads that print instead of the whole source logs."
 occurrences:
   - session: session_013zxzeP6PH92ubTps39j3HD
     date: "2026-11-11"

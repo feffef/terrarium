@@ -11,11 +11,6 @@ related:
 notes: |-
   2026-10-28 design: a guard or prose line dropped: .githooks/commit-msg corrects a wrong trailer and github-provenance-guard.ts denies a wrong id on a post and hands back the right one, so a slip costs one retry, and a guard edit is Human-only.
 occurrences:
-  - session: session_013zxzeRhiMxk5cCGYkz4u1n
-    date: "2026-11-08"
-    severity: nit
-    description: "I first typed a session id copied from a friction list into a commit message; I caught it before committing and let the hook add the trailer."
-    solution: "Never hand-type the Claude-Session trailer; the commit-msg hook adds it."
   - session: session_013zxzePXTf8YZ6THtADS4yY
     date: "2026-11-10"
     severity: nit
@@ -161,3 +156,8 @@ occurrences:
     severity: nit
     description: "Typed a session id from memory in the regression issue body; the provenance guard blocked it and I retried with the real id."
     solution: "Copy the id from the system prompt's trailer template before writing any body."
+  - session: session_013zxzeNfqQhFTf6j6WBEjgF
+    date: "2026-11-22"
+    severity: minor
+    description: "Copied the previous run's session id into the new run entry instead of this session's id; fixed by a follow-up commit after the first push."
+    solution: "orient.ts could print this session's id in the run-entry skeleton so it is never copied from the last run."

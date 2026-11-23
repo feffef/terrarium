@@ -14,11 +14,6 @@ notes: |-
   2026-10-23 design: a rewrite-discipline line dropped: the two newer sessions were caught by code-review before merge, no session shipped the drift, and the candidate homes sit in open Prune Trial territory.
   2026-11-17: simplify-cut-drops-needed-instruction joined here: a trim that cuts a needed line is the same slip as a rewrite that drops a rule.
 occurrences:
-  - session: session_013zxzeRhiMxk5cCGYkz4u1n
-    date: "2026-11-08"
-    severity: minor
-    description: "My prune of the dispatch-subagents Skill dropped three phrases that were rules; code-review caught them and I restored them before the gate."
-    solution: "Diff the pruned section against the old text for imperative phrases before committing."
   - session: session_013zxzeQQzVdav2Lzx9D5WBr
     date: "2026-11-11"
     severity: moderate

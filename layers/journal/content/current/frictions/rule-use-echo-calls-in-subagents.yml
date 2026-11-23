@@ -108,3 +108,8 @@ occurrences:
     severity: minor
     description: "All twelve reviewers report the SubagentStart and PostToolUse hooks demanding two echo rule-use rounds on read-only reviews where all four loaded ADR rules were unrelated, so the calls carried no signal."
     solution: "Skip the rule-use echo for read-only reviewers in the SubagentStart hook under scripts/hooks/."
+  - session: session_013zxzeSqAbnHFPu1QTXgBfS
+    date: "2026-11-22"
+    severity: nit
+    description: "Retro (reviewers): the rule-use hook asked read-only review subagents for a second echo rule-use call listing rules unrelated to their review; pure overhead."
+    solution: "Skip or shorten the rule-use prompt for read-only review subagents in the SubagentStart hook under scripts/hooks/ (not located)."
