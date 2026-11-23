@@ -100,6 +100,18 @@ function foldedHyphens(absPath: string): string[] {
   return out
 }
 
+/** A Blog pingback stub is named `<date>-<fromPersona>-<target slug, no date>.yml`
+ *  (blog-post Skill, step 7; #3611). Stubs reacted before the #3558 fix keep their
+ *  names, so `reactedAt` is the cutoff. */
+const PINGBACK_NAME_RULE_FROM = '2026-11-21T17:12:00Z'
+function pingbackName(rel: string, data: Record<string, unknown>): string[] {
+  const { target, fromPersona, reactedAt } = data
+  if (typeof target !== 'string' || typeof fromPersona !== 'string' || typeof reactedAt !== 'string') return []
+  if (reactedAt <= PINGBACK_NAME_RULE_FROM) return []
+  const tail = `-${fromPersona}-${target.replace(/^\/(\d{4}-\d{2}-\d{2}-)?/, '')}.yml`
+  return rel.endsWith(tail) ? [] : [`stub name must end in "${tail}" (the target post's slug, not the reply's)`]
+}
+
 /** Validate every Document in every expanded Collection that carries a schema.
  *  Pure aside from the file reads — takes the already-expanded collections so
  *  it's testable against a hand-built list, not just the real `layers/` tree. */
@@ -132,6 +144,7 @@ export function validateContent(cols: ExpandedCollection[], projectRoot = root):
       const messages = col.kind === 'session' ? [] : truncations(absPath)
       if (col.tenant === 'journal' && col.collection === 'skills') messages.push(...foldedHyphens(absPath))
       const res = schema.safeParse(data)
+      if (col.tenant === 'blog' && col.collection === 'pingbacks') messages.push(...pingbackName(rel, data))
       if (!res.success) {
         messages.push(
           ...res.error.issues.map((i) => {
