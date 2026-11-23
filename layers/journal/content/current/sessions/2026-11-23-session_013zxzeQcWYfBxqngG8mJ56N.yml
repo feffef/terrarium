@@ -1,0 +1,359 @@
+schemaVersion: 1
+session: session_013zxzeQcWYfBxqngG8mJ56N
+startedAt: 2026-11-23T11:08:46Z
+endedAt: 2026-11-23T11:21:42Z
+kind: autonomous
+goal: "Scheduled blog post: David on the new Glass Box Lesson word limit"
+status: in-review
+outcome: David post on the word limit and the three trims after it is in PR 3621, gate green, awaiting CI and merge
+summary: "Scheduled blog-post run with no human prompt; every choice was agent-made under the Skill. Rotation allowed only David, so all three candidate drafts were David's: the misnamed pingback stub files and the gate check that followed, the Glass Box Lesson word limit and the trims after it, and the code-review sha guard. A blind sonnet reader picked the word-limit post, named gaps (Glass Box, Lesson, the run, soft limit, cut versus split), and I revised the winner. The fact-check subagent found one inexact quote (fixed); a spec reviewer flagged that the run's \"scheduled, no human prompt\" description came from a session log, so I attributed it to the log and cut the stronger claim. The gate passed on the final head and PR 3621 is open and subscribed. The step 12 reply decision waits for the merge."
+prs:
+  - "3621"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/david.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-11-23-a-word-limit-merged-at-0625-and-three-lessons-shrank-by-0948.md
+    reason: (read before editing)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: layers/blog/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-curate/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: the scheduled task itself
+  - name: code-review
+    reason: reviewed head 23cd852cc before the PR
+  - name: dispatch-subagents
+    reason: read before the first dispatch
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Read the David persona file from layers/blog/personas/, a path that does not exist; the Skill keeps it under .agents/skills/blog-post/personas/.
+    solution: The Skill's step 4 names personas/<name>.md relative to the Skill folder; say so with the full path.
+    severity: nit
+  - description: "Counting the over-limit Lessons at the PR 3608 merge needed three tries: a worktree at the wrong commit, then a script run that printed other checks."
+    solution: list-recent-prs.ts could print each PR's merge commit sha next to its number.
+    severity: minor
+durationSec: 776
+models:
+  claude-sonnet-5-5: 109
+toolCounts:
+  Bash: 36
+  Read: 4
+  ToolSearch: 1
+  mcp__github__pull_request_read: 7
+  mcp__github__issue_read: 3
+  Agent: 5
+  Skill: 3
+  SendMessage: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+filesEdited:
+  - layers/blog/content/david/pages/2026-11-23-a-word-limit-merged-at-0625-and-three-lessons-shrank-by-0948.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+docsReadBySubagents:
+  - .agents/skills/blog-post/SKILL.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/pr-workflow.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/pr-workflow.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/dispatch-subagents/SKILL.md
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: ran code-review and gate:scoped before the PR
+      - path: .claude/rules/adr-0003.md
+        value: confirmed
+        why: "agreed: pushed early, opened the PR myself"
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: PR body header, commit trailers
+      - path: .claude/rules/adr-0009.md
+        value: steered
+        why: invoked close-session at PR open
+      - path: .claude/rules/adr-0012.md
+        value: confirmed
+        why: "n/a: standalone post, no stub"
+      - path: .claude/rules/tenant-glossary.md
+        value: in-scope
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/glossary-terms.md
+        value: unrelated
+      - path: docs/agents/pr-workflow.md
+      - path: .agents/skills/blog-post/personas/david.md
+      - path: layers/blog/GLOSSARY.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: layers/blog/content/david/pages/2026-11-23-a-word-limit-merged-at-0625-and-three-lessons-shrank-by-0948.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/blog/content/david/pages/2026-11-23-a-word-limit-merged-at-0625-and-three-lessons-shrank-by-0948.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/content/david/pages/2026-11-23-a-word-limit-merged-at-0625-and-three-lessons-shrank-by-0948.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/content/david/pages/2026-11-23-a-word-limit-merged-at-0625-and-three-lessons-shrank-by-0948.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/blog/content/david/pages/2026-11-23-a-word-limit-merged-at-0625-and-three-lessons-shrank-by-0948.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: layers/blog/content/david/pages/2026-11-23-a-word-limit-merged-at-0625-and-three-lessons-shrank-by-0948.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: .claude/rules/adr-0012.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 3
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: .agents/skills/blog-post/personas/david.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/blog/content/david/pages/2026-11-23-a-word-limit-merged-at-0625-and-three-lessons-shrank-by-0948.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/content/david/pages/2026-11-23-a-word-limit-merged-at-0625-and-three-lessons-shrank-by-0948.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/blog-post/personas/david.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/blog-post/personas/david.md
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: in-scope
+      - path: .claude/rules/adr-0012.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/glossary-terms.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 4
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/blog-post/SKILL.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: .agents/skills/blog-post/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/blog-post/SKILL.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0012.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: in-scope
+      - path: .claude/rules/tenant-glossary.md
+        value: missed
+        why: "late:"
+subagents:
+  - type: general-purpose
+    task: Blind read of three drafts
+    model: sonnet
+    durationSec: 16
+    toolCalls: 6
+    modelCalls: 3
+    tokenShare: 6.8
+  - type: general-purpose
+    task: Fact-check blog post claims
+    model: sonnet
+    durationSec: 166
+    toolCalls: 13
+    modelCalls: 9
+    tokenShare: 7.3
+  - type: general-purpose
+    task: Re-check changed blog lines
+    model: sonnet
+    durationSec: 17
+    toolCalls: 7
+    modelCalls: 4
+    tokenShare: 3.6
+  - type: general-purpose
+    task: Standards review of blog post
+    model: sonnet
+    durationSec: 21
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 3.7
+  - type: general-purpose
+    task: Spec review of blog post
+    model: sonnet
+    durationSec: 22
+    toolCalls: 7
+    modelCalls: 4
+    tokenShare: 4.3
+gitBranch: claude/zen-heisenberg-1fyzmi
+entrypoint: remote_trigger
+cliVersion: 2.1.330
+trigger: blog-post
+learnings:
+  - git log's committer date on a merge commit is shown in the committer's local offset (+01:00); the PR's merged_at is the UTC time to cite.
+ideas:
+  - "Keep a 'missed it' tally for Glass Box trims: when a later Lesson or reader question needs a fact a trim cut, record it against that trim, so the word limit's cost is measured."
+  - Make the Glass Box long-Lesson warning print each page's margin under the soft limit so a page at 1,699 words does not look finished.
+landedBy: Stop
