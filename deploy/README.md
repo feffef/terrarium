@@ -137,10 +137,8 @@ default) and `docker compose up -d`; the volume checkout switches refs cleanly
 
 ## Notes & caveats
 
-- Every update pays a **full rebuild** — content is baked into the app's SQLite
-  at build time, not hot-reloaded. Fine for infrequent updates.
+- Every update pays a **full rebuild** (content is baked in at build time,
+  ADR-0001), which is fine for infrequent updates. So the SQLite is disposable:
+  no Litestream, nothing to replicate.
 - A Nuxt build peaks at **~2.1 GB RAM**. The live host (3.8 GB) has a 2 GB
-  `/swapfile` in `/etc/fstab`, added after builds were OOM-killed (#3029). An
-  OOM-killed build leaves the old build live until the next commit rebuilds.
-- No Litestream: Terrarium's SQLite is **derived** from git content and rebuilt
-  every deploy — disposable, nothing to replicate.
+  `/swapfile` in `/etc/fstab`, added after builds were OOM-killed (#3029).

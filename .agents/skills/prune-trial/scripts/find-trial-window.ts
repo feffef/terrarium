@@ -26,7 +26,7 @@
 //
 // Usage:
 //   tsx .agents/skills/prune-trial/scripts/find-trial-window.ts
-//     every open trial in the ledger
+//     every open trial in .agents/prune-trials.yml
 //   tsx .agents/skills/prune-trial/scripts/find-trial-window.ts <problem-substr>
 //     just the trial(s) whose problem text contains this
 import { readFileSync } from 'node:fs'
