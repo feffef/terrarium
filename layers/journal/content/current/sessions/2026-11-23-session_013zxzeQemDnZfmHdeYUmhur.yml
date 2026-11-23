@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQemDnZfmHdeYUmhur
 startedAt: 2026-11-23T06:36:14Z
-endedAt: 2026-11-23T07:19:00Z
+endedAt: 2026-11-23T07:21:25Z
 kind: interactive
 goal: Clear the open issue backlog
-status: in-review
-outcome: "#3615 merged and closed #3610; #3616 open awaiting its gate; two date-blocked issues left for later"
-summary: "Owner started /clear-backlog (human-instructed). The sweep found four open issues, all needs-triage, no external PRs, no wayfinder labels. Explore agents (agent-initiated under the Skill) marked #3340 and #3423 blocked on dates (2026-11-25 and 2026-11-24; today is 2026-11-23) and posted comments on #3610 and #3611 (ready-for-human, with options). I verified the comments and labels on GitHub. The owner answered the one grilling round (1a 2a 3yes): for #3610 only the orient.ts session-id fix, since a light lane was already declined in PR #3530; for #3611 a content-gate check on new pingback stub filenames only, leaving the old stubs alone. I relabelled both ready-for-agent with a comment recording the picks. Neither change shows anything to visitors, so there were no prototypes. One build run made two branches, each reviewed by a Standards and a Spec reviewer; all findings were nits, the builders fixed some and skipped the rest with proof, re-checks were clean, both gates passed. I pushed both and opened #3615 and #3616 without asking, as ADR-0003 says. Neither touches a Human-only path. #3615's gate went green first; I posted the verdict and merged it with merge-pr.ts, which closed #3610. Still open: #3616's gate, its verdict and merge, the retro (section 5), and the date-blocked #3340 and #3423."
+status: completed
+outcome: "#3615 and #3616 merged, closing #3610 and #3611; two date-blocked issues left for later"
+summary: "Owner started /clear-backlog (human-instructed). The sweep found four open issues, all needs-triage, no external PRs, no wayfinder labels. Explore agents (agent-initiated under the Skill) marked #3340 and #3423 blocked on dates (2026-11-25 and 2026-11-24; today is 2026-11-23) and posted comments on #3610 and #3611 (ready-for-human, with options). I verified the comments and labels on GitHub. The owner answered the one grilling round (1a 2a 3yes): for #3610 only the orient.ts session-id fix, since a light lane was already declined in PR #3530; for #3611 a content-gate check on new pingback stub filenames only, leaving the old stubs alone. I relabelled both ready-for-agent with a comment recording the picks. Neither change shows anything to visitors, so there were no prototypes. One build run made two branches, each reviewed by a Standards and a Spec reviewer; all findings were nits, the builders fixed some and skipped the rest with proof, re-checks were clean, both gates passed. I pushed both and opened #3615 and #3616 without asking, as ADR-0003 says. Neither touches a Human-only path. Both gates went green; I posted each verdict and merged both with merge-pr.ts, which closed #3610 and #3611. Worktrees removed, check:worktrees passes. The retro (section 5, agent-initiated under the Skill) went to one builder and one Standards and one Spec reviewer; their replies are logged as Frictions and said the brief's binding picks, stale claims and size ceiling plus the fixed one-line replies and findings JSON files worked well. Still open: the date-blocked #3340 and #3423 wait for 2026-11-25 and 2026-11-24."
 prs:
   - "3615"
   - "3616"
@@ -54,25 +54,43 @@ frictions:
   - description: "I wrote 'five nits fixed' in PR #3615's body from memory; the triage lines show four fixed and one skipped. Corrected by a PR edit."
     solution: Count from triage.md before writing the PR body, as CLAUDE.md says (verify before you state).
     severity: nit
-durationSec: 2566
+  - description: "Retro, builder: rules() puts the no-chaining Bash rule after the task steps, so a compound cd command was refused by the worktree guard and rewritten; the gate command in the first-turn brief also blurs which turn it is."
+    solution: "In .claude/workflows/clear-backlog-build.js rules(), put the no-chaining rule and scratchpad-script tip first, and drop the gate command from the first-turn brief (unverified: builder's own report)."
+    severity: nit
+  - description: "Retro, builder: brief step 2 says to read implement/SKILL.md, whose lines 15-16 say to invoke code-review, while the brief says to skip it; reconciling the two cost a re-read (builder's claim, not re-checked)."
+    solution: Have the build brief say once which implement/SKILL.md steps apply, in .claude/workflows/clear-backlog-build.js.
+    severity: nit
+  - description: "Retro, all three agents: the rule-use hook asked for two echo calls per agent, listing rules that did not apply to a read-only review or a small build, with no effect on the work (their reports; hook home file unverified)."
+    solution: Skip the rule-use prompt for read-only review subagents, in the hook script that emits it, likely under scripts/hooks/ (unverified).
+    severity: minor
+  - description: "Retro, reviewers: round-1 Standards and Spec reviews of two diffs of about 10 to 40 lines found only cosmetic nits (import order, cast, test title) and no defect, which looked costly for their size (reviewers' reports and findings files)."
+    solution: "Evidence only, from n=2 branches: a lower bar for small:true than the simple-change test would cut one reviewer per small branch; weigh before cutting, since a safety net is kept."
+    severity: minor
+  - description: "Retro, Spec reviewer: the first turn asked for structured output and the resume asked for a JSON file plus one line, two hand-off formats in one run."
+    solution: The resume text in .claude/workflows/clear-backlog-build.js should always name the hand-off and the file path (reviewer's report; first-turn source unverified).
+    severity: nit
+  - description: "Retro, Standards reviewer: told to read only the '### 3' section of code-review SKILL.md without an end line, so its sed range also pulled in step 4's prompt text."
+    solution: Name the section's end line or heading in the review brief in .claude/workflows/clear-backlog-build.js (reviewer's claim, unverified).
+    severity: nit
+durationSec: 2711
 models:
-  claude-sonnet-5-5: 110
+  claude-sonnet-5-5: 131
 toolCounts:
-  Bash: 24
+  Bash: 29
   Read: 9
-  Skill: 4
+  Skill: 5
   Workflow: 2
   ToolSearch: 3
   PushNotification: 1
   mcp__github__issue_write: 2
-  mcp__github__add_issue_comment: 3
+  mcp__github__add_issue_comment: 4
   Grep: 1
-  SendMessage: 6
+  SendMessage: 9
   mcp__github__create_pull_request: 2
   mcp__github__update_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 2
   Write: 1
-  ReadNotifications: 2
+  ReadNotifications: 4
   Edit: 2
 filesEdited:
   - tests/unit/validate-content-schema.spec.ts
@@ -680,101 +698,101 @@ subagents:
   - type: general-purpose
     task: a7b87235320a872b8
     model: claude-sonnet-5-5
-    durationSec: 131
-    toolCalls: 6
-    modelCalls: 6
-    tokenShare: 2.6
+    durationSec: 640
+    toolCalls: 7
+    modelCalls: 7
+    tokenShare: 3.3
   - type: general-purpose
     task: a97bbef421e243593
     model: claude-sonnet-5-5
-    durationSec: 316
-    toolCalls: 34
-    modelCalls: 22
-    tokenShare: 11.3
+    durationSec: 718
+    toolCalls: 35
+    modelCalls: 23
+    tokenShare: 11.7
   - type: general-purpose
     task: ac939105d8589b0e6
     model: claude-sonnet-5-5
-    durationSec: 131
-    toolCalls: 8
-    modelCalls: 6
-    tokenShare: 4.4
+    durationSec: 641
+    toolCalls: 9
+    modelCalls: 7
+    tokenShare: 4.9
   - type: general-purpose
     task: af3d9351c868944c5
     model: claude-sonnet-5-5
     durationSec: 411
     toolCalls: 44
     modelCalls: 32
-    tokenShare: 14.6
+    tokenShare: 13.1
   - type: workflow-subagent
     task: Spec blog-pingback-stub-name-gate r1
     model: claude-sonnet-5-5
     durationSec: 18
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: workflow-subagent
     task: Spec glassbox-curate-orient-session-id r1
     model: claude-sonnet-5-5
     durationSec: 10
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 1.3
+    tokenShare: 1.1
   - type: workflow-subagent
     task: Standards blog-pingback-stub-name-gate r1
     model: claude-sonnet-5-5
     durationSec: 16
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 1.5
+    tokenShare: 1.3
   - type: workflow-subagent
     task: build glassbox-curate-orient-session-id
     model: claude-sonnet-5-5
     durationSec: 77
     toolCalls: 23
     modelCalls: 14
-    tokenShare: 6.2
+    tokenShare: 5.6
   - type: workflow-subagent
     task: Standards glassbox-curate-orient-session-id r1
     model: claude-sonnet-5-5
     durationSec: 13
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 2.9
+    tokenShare: 2.6
   - type: workflow-subagent
     task: build blog-pingback-stub-name-gate
     model: claude-sonnet-5-5
     durationSec: 137
     toolCalls: 35
     modelCalls: 25
-    tokenShare: 9.4
+    tokenShare: 8.4
   - type: workflow-subagent
     task: "triage #3610"
     model: claude-sonnet-5-5
     durationSec: 115
     toolCalls: 27
     modelCalls: 12
-    tokenShare: 5.6
+    tokenShare: 5
   - type: workflow-subagent
     task: "triage #3340"
     model: claude-sonnet-5-5
     durationSec: 21
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 1.9
+    tokenShare: 1.7
   - type: workflow-subagent
     task: "triage #3423"
     model: claude-sonnet-5-5
     durationSec: 17
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 1.6
+    tokenShare: 1.4
   - type: workflow-subagent
     task: "triage #3611"
     model: claude-sonnet-5-5
     durationSec: 81
     toolCalls: 22
     modelCalls: 9
-    tokenShare: 5.9
+    tokenShare: 5.3
 gitBranch: ccr-91706c05-qhudz5
 entrypoint: remote_mobile
 cliVersion: 2.1.330
