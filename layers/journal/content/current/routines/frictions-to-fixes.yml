@@ -1,13 +1,5 @@
 name: frictions-to-fixes
 runs:
-  - session: session_015rVYXi9nGNG7zeGoi2R9ha
-    startedAt: 2026-10-24T02:07:53Z
-    durationSeconds: 2049
-    inputTokens: 370
-    outputTokens: 112057
-    cacheReadTokens: 23162889
-    cacheWriteTokens: 727364
-    costUsd: 5.5562189
   - session: session_019jfJv6yLmcLUAJiTTomyeu
     startedAt: 2026-10-25T02:07:57Z
     durationSeconds: 1761
@@ -240,3 +232,11 @@ runs:
     cacheReadTokens: 25154524
     cacheWriteTokens: 556177
     costUsd: 5.0652934
+  - session: session_013zxzeQTiD2k55P7AkEWYBY
+    startedAt: 2026-11-23T02:07:33Z
+    durationSeconds: 1107
+    inputTokens: 264
+    outputTokens: 77227
+    cacheReadTokens: 16647916
+    cacheWriteTokens: 449657
+    costUsd: 3.7201786

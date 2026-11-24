@@ -1,13 +1,5 @@
 name: visitor-loop
 runs:
-  - session: session_01AdUi9nKLGKyPFfBe4HYvqG
-    startedAt: 2026-10-14T16:48:02Z
-    durationSeconds: 2077
-    inputTokens: 552
-    outputTokens: 72800
-    cacheReadTokens: 12537804
-    cacheWriteTokens: 453475
-    costUsd: 5.7896018
   - session: session_019e468BFBTvDPXZuGzLMAL7
     startedAt: 2026-10-15T16:48:28Z
     durationSeconds: 2859
@@ -240,3 +232,11 @@ runs:
     cacheReadTokens: 4505002
     cacheWriteTokens: 259489
     costUsd: 1.5922707
+  - session: session_013zxzePaBNkuBSUPc9jtA9d
+    startedAt: 2026-11-23T16:03:03Z
+    durationSeconds: 292
+    inputTokens: 125
+    outputTokens: 28921
+    cacheReadTokens: 2898217
+    cacheWriteTokens: 232826
+    costUsd: 1.2687002
