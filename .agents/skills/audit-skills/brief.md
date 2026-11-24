@@ -13,7 +13,8 @@ brief as usual.
 Read the observations first, as the baseline: what is normal, what is new
 and what has stopped. Your data file lists only the newest; read older ones in
 the Skill's Inventory entry when the history matters. Then read every run in the Runs section in full; observations never
-replace reading a run.
+replace reading a run. If the newest note ends with a
+`Next focus:` line, check that first, as extra depth on top of this brief.
 
 Work out from the `SKILL.md` in effect when each run started (your data file says
 if and when it changed) what a run must deliver: its outcome and each
@@ -56,6 +57,9 @@ the evidence behind it, in under 60 words. Every Skill has one.
 When you propose an observation, name the run ids it covers and what was
 interesting in them, a clean verdict included, so the next audit knows what
 is covered.
+
+End your report with one line, `Focus: <what you barely touched>`: the
+next audit's depth target.
 
 Report in under 600 words plus 200 per finding, plus the idea. The parent
 writes the 300–500 word observation note (`SKILL.md` step 5) from your report,
