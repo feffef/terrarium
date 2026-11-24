@@ -1,0 +1,277 @@
+schemaVersion: 1
+session: session_013zxzeSqibnzqVVC4yRJ1eN
+startedAt: 2026-11-24T16:03:10Z
+endedAt: 2026-11-24T16:08:26Z
+kind: autonomous
+goal: Visitor-loop sweep of the Atlas
+status: completed
+outcome: "Three visitors toured the Atlas; two confirmed bugs filed as #3652 and #3653, ideas and learnings logged."
+summary: 'Scheduled visitor-loop run (agent-initiated by the schedule; no human instruction beyond the stored prompt). Focus: atlas (row 0). Built and served a production preview, wrote a context file, dispatched a blind first-time visitor, an informed content editor and an informed UI tester (all sonnet). Yield: blind 3 ideas and 7 findings (none confirmed bugs; mostly orientation and taste); editor 9 findings, 1 confirmed bug (Umbra vacans prose dates the first report 24 June while sightings start 6 June; the west-bough sighting of 15 July has no specimen) and 3 ideas; UI tester 1 confirmed bug (Biome and specimen section titles are spans, so only an h1 exists) and 3 ideas. Filed #3652 (Umbra dates) and #3653 (headings). Dropped: breadcrumb tap targets (not reproduced, 28px at 390px), footer "last observation 2026-10-19" freshness (decision #1318), food-web cropping at 390px (decision #1494), plate-gap display only as an idea (within-wing, not a cross-Biome page per #1984). Filter misses: none found. Visitor retros: all three said their brief had no starter script or snippet; the editor lacked a path to content files; the UI tester lost two reruns to a "\n"-in-template-string trap in page.evaluate; the blind visitor hit SVG a.href being an object. Each suggested a one-line addition to .agents/skills/visitor-loop/visitor-brief.md.'
+prs: []
+docsRead:
+  - path: scripts/lib/chromium.ts
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/visitor-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: visitor-loop
+    reason: (invoked as a slash command)
+frictions:
+  - description: Ran `git checkout --detach origin/main` before reading docs/agents/git-conventions.md; the hook reminded me afterwards. The command was read-safe in effect.
+    solution: Have the visitor-loop step 1 say 'detach with git checkout --detach origin/main' so the git-conventions read is not triggered late, or exempt that command in CLAUDE.md.
+    severity: nit
+  - description: Filed issues, then the hook pointed me at docs/agents/triage-labels.md, which I had not read; labels needs-triage and area:atlas were right by luck.
+    solution: visitor-loop step 4 should name triage-labels.md next to issue-tracker.md as a read before filing.
+    severity: minor
+  - description: Brief gives no pointer to content paths or a starter crawl script, so each visitor rewrote the same crawl and hit the same page.evaluate string-escaping trap.
+    solution: "Add to .agents/skills/visitor-loop/visitor-brief.md: content lives at layers/<tenant>/, a one-line string page.evaluate example (join with '|', never a newline), and that SVG a.href is an object."
+    severity: minor
+  - description: The brief and context file were written to the scratchpad and referenced by path instead of pasted; the Skill says to give the brief verbatim, so this is a small deviation, and the blind visitor had to read a file.
+    solution: State in .claude/skills/visitor-loop/SKILL.md that passing the brief by scratchpad path is acceptable, or generate it with a script.
+    severity: nit
+durationSec: 316
+models:
+  claude-sonnet-5-5: 49
+toolCounts:
+  Bash: 18
+  Skill: 3
+  Agent: 3
+  mcp__github__issue_write: 2
+  SendMessage: 3
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0006.md
+        via: hint
+      - rule: .claude/rules/adr-0016.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: no branch or PR; only issues
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: provenance header on both issues
+      - path: .claude/rules/adr-0009.md
+        value: steered
+        why: log via close-session
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/rules/adr-0028.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0006.md
+        value: unrelated
+      - path: .claude/rules/adr-0016.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: .claude/rules/tenant-layers.md
+        value: unrelated
+      - path: .claude/rules/ui-verification.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .agents/skills/visitor-loop/visitor-brief.md
+      - path: .agents/skills/visitor-loop/decisions.md
+      - path: docs/agents/github-integration.md
+      - path: docs/agents/issue-tracker.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/adr-0006.md
+        via: hint
+      - rule: .claude/rules/adr-0016.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: in-scope
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/glossary-terms.md
+        value: unrelated
+      - path: .claude/rules/tenant-layers.md
+        value: unrelated
+      - path: .claude/rules/ui-verification.md
+        value: unrelated
+      - path: .claude/rules/adr-0006.md
+        value: unrelated
+      - path: .claude/rules/adr-0016.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0006.md
+        via: hint
+      - rule: .claude/rules/adr-0016.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0006.md
+        value: unrelated
+      - path: .claude/rules/adr-0016.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/rules/tenant-layers.md
+        value: unrelated
+      - path: .claude/rules/ui-verification.md
+        value: in-scope
+subagents:
+  - type: general-purpose
+    task: Blind first-time visitor
+    model: sonnet
+    durationSec: 156
+    toolCalls: 13
+    modelCalls: 12
+    tokenShare: 13.7
+  - type: general-purpose
+    task: Informed content editor
+    model: sonnet
+    durationSec: 155
+    toolCalls: 24
+    modelCalls: 21
+    tokenShare: 27.2
+  - type: general-purpose
+    task: Informed UI tester
+    model: sonnet
+    durationSec: 156
+    toolCalls: 21
+    modelCalls: 18
+    tokenShare: 17.8
+gitBranch: claude/lucid-heisenberg-qv8spz
+entrypoint: remote_trigger
+cliVersion: 2.1.331
+trigger: visitor-loop
+learnings:
+  - The Atlas Biome and specimen pages' section titles are span.atlas-eyebrow, not headings; the landing page alone uses an h2.
+  - Observation files without a `specimen:` key show on no page, so prose that counts them (Umbra vacans 'fourth entry') cannot be reconciled from the site.
+ideas:
+  - "[content editor] /t/atlas/<wing>: the catalogue shows rarity dots only while the page text says a missing plate number is a plate not yet drawn; print each plate's numeral in its row and show undrawn numbers as dashed 'not yet drawn' rows, to make the joke visible without a cross-Biome page."
+  - "[content editor, first-time visitor] /t/atlas/pool/snail: the 404 suggestion only matches a full common name; also match the last word ('snail', 'weaver', 'moth') when unique, so a visitor who types a short name lands on the Specimen."
+  - "[first-time visitor] /t/atlas: the landing never says what Terrarium is; add one plain sentence under the subtitle linking to the Terrarium overview."
+  - "[first-time visitor, UI tester] /t/atlas/<wing>/<specimen>: pages are long; add previous/next plate links or a section mini-index so a visitor can keep wandering or jump to the almanac."
+  - "[UI tester] /t/atlas/<wing>: mark the current hour on the Daily choreography bars so the chart shows what is abroad now."
+landedBy: Stop
