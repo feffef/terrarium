@@ -170,6 +170,7 @@
   gap: 1rem;
   margin: 3rem 0 1.2rem;
 }
+.atlas-sechead .atlas-eyebrow { margin: 0; }
 .atlas-sechead::after {
   content: "";
   flex: 1;

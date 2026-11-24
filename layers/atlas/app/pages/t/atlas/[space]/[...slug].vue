@@ -122,7 +122,7 @@ useSeoMeta({
         </div>
 
         <section class="entry-section">
-          <div class="atlas-sechead"><span class="atlas-eyebrow">Relations · {{ entry.specimen.binomial }}</span></div>
+          <div class="atlas-sechead"><h2 class="atlas-eyebrow">Relations · {{ entry.specimen.binomial }}</h2></div>
           <AtlasRelationsWeb
             v-if="relations.length"
             :specimen="entry.specimen"
@@ -149,7 +149,7 @@ useSeoMeta({
         </div>
 
         <section class="entry-section">
-          <div class="atlas-sechead"><span class="atlas-eyebrow">Recent sightings</span></div>
+          <div class="atlas-sechead"><h2 class="atlas-eyebrow">Recent sightings</h2></div>
           <AtlasFieldLog :observations="sightings" :specimens-by-slug="specimensBySlug" :biome="space" />
         </section>
 
