@@ -1,5 +1,16 @@
 session: session_013zxzeQF4hazkBfaftfPo5b
 mode: autonomous
 focus: "Nuxt & Vue: the Data fetching wording lead on the memory page (the Journal's onramp and its tour are unexplained where the page's Excerpt uses them). Chosen because the owner's directions have no small item left, the page was read whole earlier in this session, and no open PR touches it. Run four of one session."
-changes: []
-pagesRead: []
+changes:
+  - "nuxt-vue/70.data-fetching | The In Terrarium paragraph before the Journal document page Excerpt now says what the Journal's onramp is (a tour of the pages that set onramp and onrampLabel in their frontmatter, shown as cards on the space's landing page, each ending in a footer that links the previous and next steps), with a link to MDC components, which shows those fields | the memory page lead said onramp and its tour were unexplained where the Excerpt uses them. A claim checker found the first wording overstated (a page needs onrampLabel too, and the footer links the previous and next step), fixed. Wording only, so revision and publishedAt are kept. The fresh reader's other suggestions (the ADR path repeated, unmeasured payload sizes, a Try it note on prefetch) are not false and are left"
+  - "workshop/pages/index | The Data fetching lead deleted, which empties the Nuxt & Vue wording bullet | solved by the onramp gloss"
+pagesRead:
+  - nuxt-vue/10.layers
+  - nuxt-vue/20.auto-imports
+  - nuxt-vue/30.file-routing
+  - nuxt-vue/40.virtual-modules
+  - nuxt-vue/50.vue-components
+  - nuxt-vue/60.nitro
+  - nuxt-vue/70.data-fetching
+  - nuxt-vue/80.hydration
+  - nuxt-content/50.mdc-components
