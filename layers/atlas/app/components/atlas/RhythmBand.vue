@@ -5,12 +5,20 @@
 
 const props = defineProps<{ bands: Band[]; label?: string }>()
 const cells = computed(() => rhythmCells(props.bands))
+// The visitor's own hour, set after mount: /t/** pages are cached for 60 s
+// (ADR-0028), so a server-rendered hour would be stale and mismatch hydration.
+const now = ref<number | null>(null)
+onMounted(() => { now.value = new Date().getHours() })
+const nowNote = computed(() => {
+  if (now.value === null) return ''
+  return cells.value[now.value] ? '; abroad now' : '; resting now'
+})
 </script>
 
 <template>
   <div class="atlas-rhythm">
-    <div class="track" role="img" :aria-label="`active hours: ${label ?? ''}`">
-      <i v-for="(on, h) in cells" :key="h" :class="{ on, 'dawn-tick': h % 6 === 0 }" />
+    <div class="track" role="img" :aria-label="`active hours: ${label ?? ''}${nowNote}`">
+      <i v-for="(on, h) in cells" :key="h" :class="{ on, now: h === now, 'dawn-tick': h % 6 === 0 }" />
     </div>
     <div class="scale" aria-hidden="true"><span>0</span><span>6</span><span>12</span><span>18</span><span>24</span></div>
     <p v-if="label" class="rlabel">{{ label }}</p>
