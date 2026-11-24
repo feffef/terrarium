@@ -1,0 +1,5 @@
+session: session_013zxzeQF4hazkBfaftfPo5b
+mode: autonomous
+focus: "Web standards: a new Lesson on Web Storage (localStorage and sessionStorage). It serves the owner's first direction (finish the web standards Subject) and the third (fill what no page teaches). No open PR touches the Subject. Terrarium keeps per-browser state in the Journal's maintainer view, Tinkerfund's cart, demo and theme, Glass Box's reading progress and the content-load recovery, and only Hydration and Content database mention it in passing. A new Lesson waits for the owner's merge (rule 6)."
+changes: []
+pagesRead: []
