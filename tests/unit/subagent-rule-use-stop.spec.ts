@@ -9,12 +9,14 @@ import { stopReason } from '../../scripts/hooks/subagent-rule-use-stop.ts'
 const loaded = (rule: string) => ({ type: 'attachment', attachment: { type: 'nested_memory', path: `/repo/.claude/rules/${rule}` } })
 const bash = (command: string) => ({ type: 'assistant', message: { content: [{ type: 'tool_use', name: 'Bash', input: { command } }] } })
 
+let n = 0
 function payload(records: unknown[], extra: object = {}) {
+  const id = `a${process.pid}-${n++}`
   const dir = mkdtempSync(join(tmpdir(), 'subagent-stop-'))
   mkdirSync(join(dir, 'session', 'subagents'), { recursive: true })
   const all = [{ type: 'user', cwd: '/repo', message: { content: 'go' } }, ...records]
-  writeFileSync(join(dir, 'session', 'subagents', 'agent-a1.jsonl'), all.map((r) => JSON.stringify(r)).join('\n'))
-  return { transcript_path: join(dir, 'session.jsonl'), agent_id: 'a1', ...extra }
+  writeFileSync(join(dir, 'session', 'subagents', `agent-${id}.jsonl`), all.map((r) => JSON.stringify(r)).join('\n'))
+  return { transcript_path: join(dir, 'session.jsonl'), agent_id: id, ...extra }
 }
 
 describe('stopReason()', () => {
@@ -27,6 +29,11 @@ describe('stopReason()', () => {
     expect(stopReason(payload([rule, bash('echo rule-use: rule:adr-0003.md=steered')]))).toBeNull()
     expect(stopReason(payload([rule, bash('echo rule-use:')]))).toBeNull()
     expect(stopReason(payload([]))).toBeNull()
+  })
+  it('blocks each agent once, with no stop_hook_active', () => {
+    const p = payload([rule])
+    expect(stopReason(p)).toContain('adr-0003.md')
+    expect(stopReason(p)).toBeNull()
   })
   it('blocks on a start-loaded rule too', () => {
     const start = { type: 'attachment', attachment: { type: 'instructions', files: [{ path: '/repo/.claude/rules/adr-0004.md' }] } }
