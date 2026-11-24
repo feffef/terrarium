@@ -1,5 +1,15 @@
 session: session_013zxzeQF4hazkBfaftfPo5b
 mode: autonomous
 focus: "Web standards: a new Lesson on Web Storage (localStorage and sessionStorage). It serves the owner's first direction (finish the web standards Subject) and the third (fill what no page teaches). No open PR touches the Subject. Terrarium keeps per-browser state in the Journal's maintainer view, Tinkerfund's cart, demo and theme, Glass Box's reading progress and the content-load recovery, and only Hydration and Content database mention it in passing. A new Lesson waits for the owner's merge (rule 6)."
-changes: []
-pagesRead: []
+changes:
+  - "web-standards/35.web-storage | New Lesson on Web Storage (localStorage and sessionStorage: persistence, per-tab sessions and the window.open copy, strings only, quota, SecurityError, browser-only so read after mount, no secrets, when to pick IndexedDB or a cookie), with Glass Box's reading progress, the Journal's maintainer view, Tinkerfund's demo state and theme and Nuxt's reload guard as evidence; a new origin term | the topic was a gap, used by five tenants and the framework and taught nowhere. Two claim-check rounds found one overstated line (a new tab always starting empty, wrong for window.open), four citations that named the wrong file and two small wordings, all fixed; two fresh-reader rounds led to glosses, a merged Why bullet and a cut test sentence. Waits for the owner's merge (new Lesson). Title is Web Storage, the API's own proper name"
+  - "nuxt-vue/80.hydration, web-standards/40.colour-and-motion-settings, nuxt-content/30.content-database | Where next swaps Nuxt layers, SVG and Content validation respectively for Web Storage | each page names localStorage or sessionStorage in passing and had no page to point at. Wording only"
+  - "workshop/pages/index | The web standards direction lists Web Storage and Colour contrast; a soft decision says why Web Storage sits in the guide | keeps the memory page current"
+pagesRead:
+  - web-standards/10.css-custom-properties
+  - web-standards/20.svg
+  - web-standards/30.aria
+  - web-standards/40.colour-and-motion-settings
+  - web-standards/50.colour-contrast
+  - nuxt-vue/80.hydration
+  - nuxt-content/30.content-database
