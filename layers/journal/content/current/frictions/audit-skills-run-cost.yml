@@ -2,8 +2,9 @@ name: audit-skills-run-cost
 surface: safe
 summary: The audit-skills per-Skill behaviour checks spend about 1.7M tokens on short replies that mostly repeat known findings.
 cause: "audit-skills dispatches one subagent per Skill (15-17 per run, about 1.7M tokens; since PR #3377 each reads the last 3 days and reports a repeat in one line, but the count is unchanged, and a 2026-11-17 run still cost about 1.7M). Signals: '16 per-Skill checks', '17 subagent reports for a mostly-repeat result', 'most reports re-confirmed known repeats'."
-status: tracked
-ref: "Issue #3637 (regression of #3377)"
+status: accepted
+acceptedSeverity: moderate
+ref: "Issue #3637 (regression of #3377): the owner accepts the cost (2026-11-24 comment) and asks each run to suggest a focus for the next; built as a Next focus line in each Skill's observation note (PR closing #3637)."
 related:
   - entry: clear-backlog-retro-fanout-cost
     rule: The same cost shape from a clear-backlog retro, not an audit-skills run.
