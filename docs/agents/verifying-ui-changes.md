@@ -23,8 +23,6 @@ layout bug, or asserting a style took effect.
   `scripts/ui/screenshot.ts <url> <out.png>` per shot; `shot` starts and stops
   a server each call. After an edit, curl the URL until 200 and wait for HMR
   before reshooting.
-- **Seed browser state:** `--storage KEY=VALUE` (repeatable; `shot` and
-  `review`) sets a `localStorage` entry before the page loads.
 - **A page review:** `scripts/ui/preview.ts review` writes four full-page shots (desktop and mobile, light and dark) from one server (`USAGE` has the names and sizes).
 - **A server that stays up:** `scripts/ui/preview.ts start [--dev]` prints `PID=`
   and `URL=`; `scripts/ui/preview.ts stop <pid>` stops it (always exits 0).
