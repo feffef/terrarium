@@ -91,7 +91,7 @@ illustration: |
   </g>
 ---
 
-The first report is the junior draughtsman's, dated the twenty-fourth of June, and it is short: a patch of shade crossed the west bough at noon, against the drift of the dapple. Shade is the canopy's principal weather and we had thought ourselves fluent in it — it moves with the light, all of it together, like a tide obeying one moon. This patch went the other way. By the time a second observer had been fetched the bough wore only the shade it had earned, and the draughtsman was already unpopular.
+One report is the junior draughtsman's, and it is short: a patch of shade crossed the west bough at noon, against the drift of the dapple. Shade is the canopy's principal weather and we had thought ourselves fluent in it — it moves with the light, all of it together, like a tide obeying one moon. This patch went the other way. By the time a second observer had been fetched the bough wore only the shade it had earned, and the draughtsman was already unpopular.
 
 *Umbra vacans* — if it is a creature, a question the company is no longer permitted to debate at meals — keeps the boldest hours of anything in this guide, abroad at noon when the light is sharpest and every shadow in the wing can be called to account. Its plate is the only one in the guide that is a portrait of an absence — the shade drawn faithfully, the caster left a dashed guess hung in the air above — and we are uneasily aware that the absence sat for it more patiently than most of our specimens do.
 
@@ -107,6 +107,9 @@ Here, in the highest light of the year, the audit fails. Every entry that will n
 ::
 
 ::sighting{date="2026-06-15"}
+::
+
+::sighting{date="2026-07-15"}
 ::
 
 ::sighting{date="2026-07-25"}
