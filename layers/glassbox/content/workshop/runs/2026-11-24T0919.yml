@@ -1,0 +1,17 @@
+session: session_013zxzeQF4hazkBfaftfPo5b
+mode: autonomous
+focus: "Nuxt & Vue: the Nitro wording lead on the memory page (mount, driver and LRU come before any gloss, and the three-way split lists roles). Chosen because the owner's directions have no small item left and the whole Subject was read earlier in this session; no open PR touches Nitro (PR 3646 touches Hydration, not Nitro). Run three of one session."
+changes:
+  - "nuxt-vue/60.nitro | The Concept gains a plain paragraph on Nitro's storage (a key-value store whose key prefixes are mounts, each backed by a driver), the cache sentence uses those words, LRU is spelled out where the config is introduced, the three-part request paragraph says what each part does (payload and hydration glossed) and a preset is defined where .output/server/index.mjs starts; teaches follows | the memory page lead said mount, driver and LRU came before any gloss and the three roles were only listed. A claim checker found every changed sentence true; one pre-existing claim (the output folder needs nothing else installed) is only lightly sourced and was left. The concept and claims that stay are unchanged, so revision and publishedAt are kept. The fresh reader's other suggestions (the 60 and 200 numbers unexplained, a dev note in Try it) are not false and are left"
+  - "workshop/pages/index | The Nitro lead deleted | solved by the glosses"
+pagesRead:
+  - nuxt-vue/10.layers
+  - nuxt-vue/20.auto-imports
+  - nuxt-vue/30.file-routing
+  - nuxt-vue/40.virtual-modules
+  - nuxt-vue/50.vue-components
+  - nuxt-vue/60.nitro
+  - nuxt-vue/70.data-fetching
+  - nuxt-vue/80.hydration
+  - deploy/10.continuous-deployment
+  - nuxt-content/30.content-database
