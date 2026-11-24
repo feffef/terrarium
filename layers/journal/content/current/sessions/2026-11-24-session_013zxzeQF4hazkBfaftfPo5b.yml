@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_013zxzeQF4hazkBfaftfPo5b
 startedAt: 2026-11-24T08:46:05Z
-endedAt: 2026-11-24T09:08:53Z
+endedAt: 2026-11-24T09:15:09Z
 kind: autonomous
 goal: Add a Web Storage Lesson to the Glass Box textbook
 status: in-review
 outcome: New Lesson, term and links written, checked and gated; PR open, waiting for the owner's merge
-summary: "A scheduled glassbox-curate run, so nothing was human-instructed in-session; the Skill's own rules and the memory page's owner directions (finish web standards, fill what no page teaches) were the mandate. I read the required docs and guide index, found no open PRs, and chose a gap myself: Web Storage, used by five tenants and the framework but taught nowhere. An opus writer subagent wrote the Lesson with sources; a sonnet claim checker found an overstated line (a new tab always starts empty, wrong for window.open) and four wrong citations, and two fresh-reader rounds led to glosses and a merged Why bullet. I swapped Where next rows on three pages, finished the run entry and memory page, ran code-review (Standards and Spec), fixed its findings (a Zod link, wording, two pagesRead pages), ran gate:scoped green and opened PR 3646, which waits for the owner (new Lesson, rule 6). The last fix commit touched three files, so it strictly needed its own code-review; I gave it my own read only. Only one run was done: the session stopped at PR open, not on step 8's two stop reasons, because this run's tooling gives no way to wait for CI and loop again in one turn; the next scheduled run continues."
+summary: "A scheduled glassbox-curate run, so nothing was human-instructed in-session; the Skill's own rules and the memory page's owner directions (finish web standards, fill what no page teaches) were the mandate. Run one: I read the required docs and guide index, found no open PRs and chose a gap myself, Web Storage, used by five tenants and the framework but taught nowhere. An opus writer subagent wrote the Lesson with sources; a sonnet claim checker found an overstated line (a new tab always starts empty, wrong for window.open) and four wrong citations, and two fresh-reader rounds led to glosses and a merged Why bullet. I swapped Where next rows on three pages, ran code-review (Standards and Spec), fixed its findings, ran gate:scoped green and opened PR 3646, which waits for the owner (new Lesson, rule 6). Run two: a small wording lead on Virtual modules (the first Excerpt did not show the expand and loadManifests calls); claim check, fresh reader, code-review, gate, PR 3647, which may merge once CI is green. The last fix commit of each run was gated and gave my own read; run one's touched three files, over the two-file simple-change bar, so it strictly needed its own code-review. Left open for later runs: every other memory-page item."
 prs:
   - "3646"
+  - "3647"
 docsRead:
   - path: layers/glassbox/GLOSSARY.md
     reason: (no reason given)
@@ -40,6 +41,8 @@ docsRead:
     reason: (no reason given)
   - path: layers/glassbox/content/guide/pages/verification/30.content-validation.md
     reason: (no reason given)
+  - path: .agents/skills/glassbox-curate/SKILL.md
+    reason: (no reason given)
   - path: layers/glassbox/content/guide/pages/web-standards/40.colour-and-motion-settings.md
     reason: (read before editing)
   - path: layers/glassbox/content/guide/pages/web-standards/30.aria.md
@@ -52,10 +55,14 @@ docsRead:
     reason: (no reason given)
   - path: layers/glassbox/app/utils/lesson.ts
     reason: (no reason given)
-  - path: .agents/skills/glassbox-curate/SKILL.md
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/40.virtual-modules.md
+    reason: (read before editing)
+  - path: modules/routing.ts
     reason: (no reason given)
   - path: layers/glassbox/content/guide/terms/origin.yml
     reason: (read before editing)
+  - path: .agents/skills/glassbox-lesson/writing-pages.md
+    reason: (no reason given)
   - path: layers/tinkerfund/GLOSSARY.md
     reason: (no reason given)
   - path: docs/adr/0028-navigation-reads-server-payloads.md
@@ -81,18 +88,19 @@ frictions:
   - description: Fresh-reader reports repeated rendering artefacts (stripped links, inline bracket definitions) and needed filtering before each fix pass.
     solution: plain.ts could keep link text or mark stripped links so readers don't report them as dangling.
     severity: nit
-durationSec: 1368
+durationSec: 1744
 models:
-  claude-sonnet-5-5: 141
+  claude-sonnet-5-5: 184
 toolCounts:
   Read: 21
-  Skill: 4
-  Bash: 45
-  Agent: 9
-  ReadNotifications: 1
+  Skill: 5
+  Bash: 61
+  Agent: 11
+  ReadNotifications: 3
   SendMessage: 1
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  mcp__github__pull_request_read: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/web-standards/35.web-storage.md
   - layers/glassbox/content/guide/pages/nuxt-vue/40.virtual-modules.md
@@ -109,9 +117,9 @@ rulesGlobal:
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0017.md
 docsReadBySubagents:
+  - .agents/skills/glassbox-curate/SKILL.md
   - layers/tinkerfund/GLOSSARY.md
   - docs/adr/0028-navigation-reads-server-payloads.md
-  - .agents/skills/glassbox-curate/SKILL.md
 ruleUse:
   - by: main
     answered: true
@@ -200,6 +208,16 @@ ruleUse:
         value: unrelated
       - path: layers/glassbox/GLOSSARY.md
       - path: docs/agents/pr-workflow.md
+      - path: .claude/rules/adr-0007.md
+        value: unrelated
+      - path: .claude/rules/adr-0014.md
+        value: confirmed
+        why: "agreed: routing map built, not committed"
+      - path: .claude/rules/adr-0001.md
+        value: unrelated
+      - path: .claude/rules/adr-0013.md
+        value: confirmed
+        why: "agreed: content.config builds from expand"
   - by: general-purpose
     subagent: 0
     answered: true
@@ -605,7 +623,7 @@ ruleUse:
         value: unrelated
   - by: general-purpose
     subagent: 7
-    answered: false
+    answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
         via: start
@@ -615,10 +633,18 @@ ruleUse:
         via: start
       - rule: .claude/rules/adr-0017.md
         via: start
-    reported: []
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
   - by: general-purpose
     subagent: 8
-    answered: false
+    answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
         via: start
@@ -628,58 +654,173 @@ ruleUse:
         via: start
       - rule: .claude/rules/adr-0017.md
         via: start
+      - rule: .claude/rules/glassbox-content.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/nuxt-vue/40.virtual-modules.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/nuxt-vue/40.virtual-modules.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/nuxt-vue/40.virtual-modules.md
+      - rule: .claude/rules/adr-0014.md
+        via: native
+        trigger: modules/routing.ts
+      - rule: .claude/rules/adr-0007.md
+        via: native
+        trigger: modules/routing.ts
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: modules/routing.ts
     reported: []
+  - by: general-purpose
+    subagent: 9
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 10
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/glassbox-curate/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/glassbox-curate/SKILL.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+    reported:
+      - path: .claude/rules/glassbox-content.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: in-scope
 subagents:
   - task: Write Web Storage Lesson
     model: opus
     durationSec: 651
     toolCalls: 52
     modelCalls: 43
-    tokenShare: 24
+    tokenShare: 17.4
   - task: Fresh reader of Web Storage
     model: sonnet
     durationSec: 26
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.8
+    tokenShare: 1.3
   - task: Claim-check Web Storage Lesson
     model: sonnet
     durationSec: 127
     toolCalls: 20
     modelCalls: 12
-    tokenShare: 5.7
+    tokenShare: 4.1
   - task: Re-read revised Web Storage page
     model: sonnet
     durationSec: 23
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.1
+    tokenShare: 0.8
   - task: Re-check changed Web Storage claims
     model: sonnet
     durationSec: 74
     toolCalls: 15
     modelCalls: 10
-    tokenShare: 3.7
+    tokenShare: 2.7
   - task: Standards review of Web Storage run
     model: sonnet
     durationSec: 42
     toolCalls: 9
     modelCalls: 4
-    tokenShare: 2.9
+    tokenShare: 2.1
   - task: Spec review of Web Storage run
     model: sonnet
     durationSec: 24
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 2.8
+    tokenShare: 2.1
   - task: Fresh reader of Virtual modules
     model: sonnet
-    durationSec: 0
-    toolCalls: 0
+    durationSec: 27
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 1.2
   - task: Claim-check Virtual modules edit
     model: sonnet
-    durationSec: 0
-    toolCalls: 0
+    durationSec: 14
+    toolCalls: 6
+    modelCalls: 3
+    tokenShare: 1.4
+  - task: Standards review of Virtual modules run
+    model: sonnet
+    durationSec: 24
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 1.7
+  - task: Spec review of Virtual modules run
+    model: sonnet
+    durationSec: 18
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 1.8
 gitBranch: claude/compassionate-bardeen-3zhpkl
 entrypoint: remote_trigger
 cliVersion: 2.1.331
