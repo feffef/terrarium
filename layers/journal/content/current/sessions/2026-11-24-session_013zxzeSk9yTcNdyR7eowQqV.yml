@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSk9yTcNdyR7eowQqV
 startedAt: 2026-11-24T00:45:33Z
-endedAt: 2026-11-24T00:59:26Z
+endedAt: 2026-11-24T01:03:44Z
 kind: autonomous
 goal: Weekly check of the Platform's own Skills
-status: in-review
-outcome: Inventory notes for 15 Skills and nine Routine cost rows are in PR 3636 awaiting CI; three repeated failures were filed as issues.
-summary: "Scheduled audit-skills run (no human prompt; everything agent-initiated within the Skill's remit). Gathered the 7-day scorecard, had one Sonnet agent read run costs and fifteen Sonnet agents check each Skill, then verified the reports against the source they cite where I could. Closure check (step 3): orphanScan scanned true (167 merged PRs, 89 issues, 255 with a session); one orphan, session_013zxzePy1ZjrPSpQ5fDkVkz, a harvest session that filed Seedlings 3624 to 3627 and never logged (no damage; recorded in close-session notes, not escalated); orphanSuppressionLog empty; no human-prompted or manually rescued closures. Filed three needs-triage issues for repeated silent failures: 3633 (log-session subagent ratings and a Stop-landed log that skipped the check, repeat after closed 3508), 3634 (glassbox-curate writer skipped and early stop, both watchFor items failed), 3635 (blog-post stub misnamed again). Wrote 15 observation notes and audit summaries, appended nine Routine run-cost rows and pruned old observations; no grade, role or gist changed. PR 3636 got code-review (Standards and Spec, no findings) and a passing gate:scoped on the head; it is awaiting CI before merge. Limits: per-Skill agents read most logs by extracted field; several of their counts are marked unverified in the notes, and I re-checked only the orphan, the StkfK log and the issue states."
+status: completed
+outcome: Inventory notes for 15 Skills and nine Routine cost rows merged in PR 3636; three repeated failures were filed as issues.
+summary: "Scheduled audit-skills run (no human prompt; everything agent-initiated within the Skill's remit). Gathered the 7-day scorecard, had one Sonnet agent read run costs and fifteen Sonnet agents check each Skill, then verified the reports against the source they cite where I could. Closure check (step 3): orphanScan scanned true (167 merged PRs, 89 issues, 255 with a session); one orphan, session_013zxzePy1ZjrPSpQ5fDkVkz, a harvest session that filed Seedlings 3624 to 3627 and never logged (no damage; recorded in close-session notes, not escalated); orphanSuppressionLog empty; no human-prompted or manually rescued closures. Filed three needs-triage issues for repeated silent failures: 3633 (log-session subagent ratings and a Stop-landed log that skipped the check, repeat after closed 3508), 3634 (glassbox-curate writer skipped and early stop, both watchFor items failed), 3635 (blog-post stub misnamed again). Wrote 15 observation notes and audit summaries, appended nine Routine run-cost rows and pruned old observations; no grade, role or gist changed. PR 3636 got code-review (Standards and Spec, no findings) and a passing gate:scoped on the head; CI went green and I merged it (8235799bf) after posting the verdict. Limits: per-Skill agents read most logs by extracted field; several of their counts are marked unverified in the notes, and I re-checked only the orphan, the StkfK log and the issue states."
 prs:
   - "3636"
 docsRead:
@@ -96,12 +96,12 @@ frictions:
   - description: One agent returned a report that its own scorecard mislabelled (StkfK as a non-user); checking it cost extra reads of the log.
     solution: Brief agents to cite file and line for every claimed hole, as the log-session agent partly did.
     severity: minor
-durationSec: 833
+durationSec: 1092
 models:
-  claude-sonnet-5-5: 125
+  claude-sonnet-5-5: 139
 toolCounts:
-  Bash: 26
-  Skill: 5
+  Bash: 29
+  Skill: 6
   Agent: 18
   Read: 6
   mcp__github__issue_read: 1
@@ -112,6 +112,9 @@ toolCounts:
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/journal/content/current/routines/audit-docs.yml
   - layers/journal/content/current/routines/audit-skills.yml
@@ -877,109 +880,109 @@ subagents:
     durationSec: 24
     toolCalls: 12
     modelCalls: 3
-    tokenShare: 2.4
+    tokenShare: 2.2
   - task: "Audit skill: audit-docs"
     model: sonnet
     durationSec: 64
     toolCalls: 13
     modelCalls: 10
-    tokenShare: 3.9
+    tokenShare: 3.7
   - task: "Audit skill: audit-skills"
     model: sonnet
     durationSec: 99
     toolCalls: 21
     modelCalls: 14
-    tokenShare: 6.7
+    tokenShare: 6.3
   - task: "Audit skill: blog-post"
     model: sonnet
     durationSec: 76
     toolCalls: 12
     modelCalls: 7
-    tokenShare: 3.8
+    tokenShare: 3.6
   - task: "Audit skill: clear-backlog"
     model: sonnet
     durationSec: 68
     toolCalls: 13
     modelCalls: 7
-    tokenShare: 3.8
+    tokenShare: 3.6
   - task: "Audit skill: close-session"
     model: sonnet
     durationSec: 71
     toolCalls: 9
     modelCalls: 8
-    tokenShare: 3.4
+    tokenShare: 3.2
   - task: "Audit skill: digest"
     model: sonnet
     durationSec: 72
     toolCalls: 13
     modelCalls: 10
-    tokenShare: 4
+    tokenShare: 3.8
   - task: "Audit skill: dispatch-subagents"
     model: sonnet
     durationSec: 112
     toolCalls: 18
     modelCalls: 16
-    tokenShare: 6.2
+    tokenShare: 5.9
   - task: "Audit skill: frictions-to-fixes"
     model: sonnet
     durationSec: 41
     toolCalls: 9
     modelCalls: 5
-    tokenShare: 3.1
+    tokenShare: 2.9
   - task: "Audit skill: glassbox-curate"
     model: sonnet
     durationSec: 116
     toolCalls: 18
     modelCalls: 13
-    tokenShare: 6
+    tokenShare: 5.7
   - task: "Audit skill: glassbox-update"
     model: sonnet
     durationSec: 49
     toolCalls: 10
     modelCalls: 7
-    tokenShare: 3.6
+    tokenShare: 3.4
   - task: "Audit skill: harvest"
     model: sonnet
     durationSec: 49
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 3.1
+    tokenShare: 2.9
   - task: "Audit skill: inspect-session"
     model: sonnet
     durationSec: 61
     toolCalls: 13
     modelCalls: 8
-    tokenShare: 3.9
+    tokenShare: 3.7
   - task: "Audit skill: log-session"
     model: sonnet
     durationSec: 86
     toolCalls: 12
     modelCalls: 11
-    tokenShare: 4.4
+    tokenShare: 4.1
   - task: "Audit skill: prune-trial"
     model: sonnet
     durationSec: 56
     toolCalls: 9
     modelCalls: 7
-    tokenShare: 3.4
+    tokenShare: 3.2
   - task: "Audit skill: visitor-loop"
     model: sonnet
     durationSec: 60
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 3.3
+    tokenShare: 3.1
   - task: Standards review
     model: sonnet
     durationSec: 28
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 2.7
+    tokenShare: 2.6
   - task: Spec review
     model: sonnet
     durationSec: 42
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 3
+    tokenShare: 2.9
 gitBranch: claude/loving-tesla-krbtab
 entrypoint: remote_trigger
 cliVersion: 2.1.331
