@@ -89,7 +89,7 @@ Decisions agents made (run, review, claim check). Not rules: the owner or a late
 - **Continuous deployment's Full reference stays Wikipedia.** A practice has no official docs (review).
 - **Agent tooling comes first in the guide's order, and Web standards never sits between the two Nuxt Subjects**.
 - **Guide titles.** Every title has been weighed against 2 to 4 alternatives; owner rulings are in owner-decisions.md. Closest rivals that lost: *Required status checks* for *Merge gate*, *Claude Code workflows* for *Workflow scripts*.
-- **Web Storage sits in the guide, not drafts.** Glass Box, the Journal and Tinkerfund all keep browser state in it, so the topic is central (rule 6 allows drafts only for pages that are not).
+- **Web Storage sits in the guide, not drafts.** Glass Box, the Journal and Tinkerfund all keep browser state in it, so the topic is central (a new Lesson goes to drafts only when it is not central).
 - **Folding *Planning skills* into *Installed skills*.** *Planning skills* holds facts about Terrarium's own choices that would lose their page.
 - **`wontfix` is the fifth triage state.** *Issue triage labels* lists four states first and names `wontfix` as the fifth: `docs/agents/triage-labels.md` says skills name five roles (claim check).
 - **A Git & GitHub page may keep a one-clause pointer to a fact a sibling owns.** A page that must stand alone says in a clause how a linked worktree is told (*Git worktrees*, owned by *Session logs*), what a cloud session is, what the guest pipeline is and what a PreToolUse hook is; the sibling keeps the full account (overlap check).

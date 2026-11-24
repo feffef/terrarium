@@ -13,3 +13,5 @@ pagesRead:
   - web-standards/50.colour-contrast
   - nuxt-vue/80.hydration
   - nuxt-content/30.content-database
+  - nuxt-vue/10.layers
+  - verification/30.content-validation
