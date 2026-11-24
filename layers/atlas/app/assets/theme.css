@@ -398,6 +398,8 @@
 .atlas-rhythm .track i { border-right: 1px solid color-mix(in srgb, var(--atlas-rule) 45%, transparent); }
 .atlas-rhythm .track i:last-child { border-right: 0; }
 .atlas-rhythm .track i.on { background: var(--sig-1); }
+.atlas-rhythm .track i.now { position: relative; }
+.atlas-rhythm .track i.now::after { content: ''; position: absolute; left: 50%; top: -0.3rem; bottom: -0.3rem; width: 2px; margin-left: -1px; background: var(--atlas-ink); }
 .atlas-rhythm .track i.dawn-tick { box-shadow: inset 1px 0 0 var(--atlas-rule); }
 .atlas-rhythm .scale { display: flex; justify-content: space-between; font-size: 0.6rem; color: var(--atlas-muted); margin-top: 0.25rem; }
 .atlas-rhythm .rlabel { font-family: var(--atlas-label); font-size: 0.7rem; letter-spacing: 0.06em; color: var(--atlas-muted); margin-top: 0.4rem; text-transform: lowercase; }

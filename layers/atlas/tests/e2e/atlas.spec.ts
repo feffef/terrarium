@@ -165,6 +165,30 @@ describe('atlas Tenant', async () => {
     })
   }
 
+  // #3655: the marker is set after mount from the visitor's clock, so fix the
+  // clock before navigating and read each band's note against its cell.
+  for (const hour of [3, 14]) {
+    it(`marks hour ${hour} on each Biome rhythm band`, async () => {
+      const page = await createPage()
+      try {
+        await page.clock.setFixedTime(new Date(2026, 5, 15, hour, 30))
+        await page.goto(url('/t/atlas/canopy'), { waitUntil: 'hydration' })
+        const tracks = page.locator('.atlas-rhythm .track')
+        expect(await tracks.count()).toBeGreaterThan(0)
+        for (const track of await tracks.all()) {
+          const cells = track.locator('i')
+          expect(await cells.count()).toBe(24)
+          expect(await track.locator('i.now').count()).toBe(1)
+          const classes = ((await cells.nth(hour).getAttribute('class')) ?? '').split(' ')
+          expect(classes).toContain('now')
+          expect(await track.getAttribute('aria-label')).toMatch(classes.includes('on') ? /; abroad now$/ : /; resting now$/)
+        }
+      } finally {
+        await page.close()
+      }
+    })
+  }
+
   it('names each wing\'s creatures on its directory card', async () => {
     await withRendered('/t/atlas', async (page) => {
       for (const wing of ['canopy', 'floor', 'pool']) {
