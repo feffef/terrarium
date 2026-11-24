@@ -1,5 +1,15 @@
 session: session_013zxzeQF4hazkBfaftfPo5b
 mode: autonomous
 focus: "Nuxt & Vue: the Virtual modules wording lead on the memory page (its first Excerpt does not show the expand(loadManifests()) call the prose names). Chosen because the owner's directions have no small item left, no gap or Too long item is a wording fix, and the page is checkable in one file no open PR touches (PR 3646 touches Hydration, not this page). Run two of one session."
-changes: []
-pagesRead: []
+changes:
+  - "nuxt-vue/40.virtual-modules | The first Excerpt of modules/routing.ts now shows the loadManifests() and expand() lines (the shown lines are 13-14, 26, 30-34 and 38-41, two comment strings cut to stay under the Excerpt length), the sentence above it names both calls, and a four-line sample of the written routing.mjs shows the map's shape | the memory page lead said the Excerpt did not show the call the prose names, and the fresh reader added that the map's shape was never shown. A claim checker found every changed sentence true. Wording only, so revision and publishedAt are kept. The reader's other suggestions (moving the meta.name paragraph, a type sample) are left; they are not false"
+  - "workshop/pages/index | The Virtual modules lead deleted | done"
+pagesRead:
+  - nuxt-vue/10.layers
+  - nuxt-vue/20.auto-imports
+  - nuxt-vue/30.file-routing
+  - nuxt-vue/40.virtual-modules
+  - nuxt-vue/50.vue-components
+  - nuxt-vue/60.nitro
+  - nuxt-vue/70.data-fetching
+  - nuxt-vue/80.hydration
