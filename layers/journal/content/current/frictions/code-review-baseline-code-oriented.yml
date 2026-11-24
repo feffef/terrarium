@@ -4,11 +4,6 @@ cause: "The installed code-review Skill (ADR-0015: never edited) ships a code-or
 surface: safe
 status: open
 occurrences:
-  - session: session_013zxzeRYFqNFGvBn4FsDkTk
-    date: "2026-11-09"
-    severity: nit
-    description: "code-review has the baseline of code smells pasted in full for a prose-only Skill diff; the Standards agent reported none applied."
-    solution: "Have code-review skip the smell baseline when the diff holds no code."
   - session: session_013zxzePVqgGH7hbNFvSCqQR
     date: "2026-11-21"
     severity: nit

@@ -29,8 +29,3 @@ occurrences:
     severity: minor
     description: "Did not render or screenshot the homepage change, nor get owner confirmation, despite the ui-verification rule."
     solution: "Run scripts/ui/preview.ts shot on the home page and show it before calling it done."
-  - session: session_013zxzeRB6ciegpxcRDfedSF
-    date: "2026-11-09"
-    severity: minor
-    description: "CLAUDE.md says to read the UI verification doc before claiming a UI change works; I never rendered the page, relying on e2e passing."
-    solution: "Read docs/agents/verifying-ui-changes.md and screenshot the tile before closing."

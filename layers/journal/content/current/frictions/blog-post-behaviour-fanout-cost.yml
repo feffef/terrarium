@@ -6,8 +6,6 @@ status: open
 related:
   - entry: audit-skills-run-cost
     rule: The same audit-skills fan-out cost; this entry also holds the role/gist-read skip.
-  - entry: glassbox-curate-run-cost
-    rule: The fan-out belongs to a glassbox-curate run.
 notes: |-
   2026-11-21 design: no change: the session was an audit-skills run, not blog-post; cost half duplicates audit-skills-run-cost (cadence/threshold is an owner call); the role/gist instruction (PR #3510) is one day old with one miss. Revisit if it recurs in 2+ runs.
 occurrences:

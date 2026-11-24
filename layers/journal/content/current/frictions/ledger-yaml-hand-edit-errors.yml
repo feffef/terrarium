@@ -38,11 +38,6 @@ fixes:
     date: "2026-11-20"
     summary: "prune-friction-ledger.ts drops related links that name an entry it deletes, so a prune or move no longer leaves a dangling link for ledger-content.spec to fail on."
 occurrences:
-  - session: session_013zxzeRSMtPAREKXCce9GT6
-    date: "2026-11-09"
-    severity: minor
-    description: "The run entry's changes line held a colon followed by a space, which YAML read as an object and failed validate:content."
-    solution: "The orient.ts skeleton or the curate Skill's State section could warn that a changes entry must avoid a colon followed by a space."
   - session: session_013zxzeNeWJTvqXPTEeR63qC
     date: "2026-11-11"
     severity: nit

@@ -22,16 +22,6 @@ fixes:
     date: "2026-11-01"
     summary: "CLAUDE.md Self-verification: after changing a type or a test, run pnpm typecheck and the touched spec before gate:scoped."
 occurrences:
-  - session: session_013zxzeRB6ciegpxcRDfedSF
-    date: "2026-11-09"
-    severity: minor
-    description: "Changed a fact but grepped only code for its other statements, so the stale line in layers/glassbox/GLOSSARY.md surfaced only in code review."
-    solution: "Grep the Tenant glossary and docs for the old fact in the same edit, as CLAUDE.md One home per fact says."
-  - session: session_013zxzeRumtXDY7MVhKUgVT7
-    date: "2026-11-09"
-    severity: moderate
-    description: "My first pass missed six Skill briefs that also asked for verdict tables, and several parser cases; the design author's review and later review rounds caught them, costing five review rounds."
-    solution: "Before removing a flow, git grep for every phrasing of the ask (\"why it loaded\", \"yes/partly/no\"), and probe a shell-command parser with adversarial inputs before the first review."
   - session: session_013zxzePXpUx7WY6K2uHsxKz
     date: "2026-11-12"
     severity: minor

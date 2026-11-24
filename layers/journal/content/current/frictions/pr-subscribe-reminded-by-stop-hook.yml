@@ -5,11 +5,6 @@ cause: "Comes from pr-opened-without-subscribe and PR #2972 (Stop hook that prom
 status: open
 ref: "pr-opened-without-subscribe, fix PR #2972"
 occurrences:
-  - session: session_013zxzeRYFqNFGvBn4FsDkTk
-    date: "2026-11-09"
-    severity: minor
-    description: "Opened the PR and ran close-session without calling subscribe_pr_activity; the Stop hook had to prompt me (ADR-0003)."
-    solution: "Subscribe in the same step as opening the PR, before close-session."
   - session: session_013zxzeSB2Asdc9k89JQywv9
     date: "2026-11-10"
     severity: nit

@@ -11,11 +11,6 @@ fixes:
     date: "2026-11-08"
     summary: "glassbox-update SKILL.md steps 2 and 4 now say --write leaves an edited-range page wholly untouched and the agent re-lines each edited range by hand; no script change."
 occurrences:
-  - session: session_013zxzeQMfaaC4C4CNuFY3EH
-    date: "2026-11-09"
-    severity: minor
-    description: "glassbox-update --write leaves hand-edited pages' revision unpinned; I only noticed through a failing glassbox-pages spec."
-    solution: "Step 2 could say those pages' revision and revisionDate still need pinning by hand in step 4."
   - session: session_013zxzePSj9Rpf6qCGowU7gi
     date: "2026-11-10"
     severity: minor

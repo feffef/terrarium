@@ -33,16 +33,6 @@ fixes:
     date: "2026-11-18"
     summary: "tenant-glossary-guard denies an Edit or Write under layers/<tenant>/ until that Tenant's GLOSSARY.md was read in full; it fails open."
 occurrences:
-  - session: session_013zxzeSKTBjSfYnUxNHTJw1
-    date: "2026-11-09"
-    severity: minor
-    description: "I dispatched writers before reading overlapping pages; the Spec reviewer then named six: terrarium-practice session-logs, protected-paths and self-improvement-loop, verification gate, and two walkthroughs. I read them before landing; they needed no edit. Token cost not measured."
-    solution: "Have orient.ts print, per Subject page, the pages that link to it or share its cited files, so they are read before the writers start."
-  - session: session_013zxzeR2kKbsT81QWkXUrvK
-    date: "2026-11-09"
-    severity: nit
-    description: "Did not read layers/journal/GLOSSARY.md before working on the Journal layer, as tenant-glossary.md requires; only grepped it"
-    solution: "Read the Tenant glossary at the first edit under its layer"
   - session: session_013zxzeSjczLUzQPWWSHP4t9
     date: "2026-11-10"
     severity: minor

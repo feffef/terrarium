@@ -6,8 +6,6 @@ status: open
 related:
   - entry: orient-output-truncates
     rule: The orientation script's output was cut off and a section had to be re-fetched; this entry is reads that fit but cost too much.
-  - entry: glassbox-curate-run-cost
-    rule: The cost is the subagent fan-out, not the opening reads.
   - entry: harvest-list-read-cost
     rule: The large read is a harvest run's ideas list, not the guide.
 occurrences:

@@ -28,16 +28,6 @@ fixes:
     date: "2026-11-14"
     summary: "ui-verification.md: for owner-facing UI, review, gate and PR wait until the owner confirms the screenshot, including a change asked for directly."
 occurrences:
-  - session: session_013zxzeR2kKbsT81QWkXUrvK
-    date: "2026-11-09"
-    severity: moderate
-    description: "Built the whole tile UI from the spec before showing the owner a sample; the first screenshot triggered a full tile redesign"
-    solution: "CLAUDE.md says to agree a short sample first for user-facing UI; send a screenshot after the first tile renders, before tests and review"
-  - session: session_013zxzeQ93oSKkX5CBEcFiXU
-    date: "2026-11-09"
-    severity: nit
-    description: "The CLAUDE.md 'Ask before building' rule and the user's ask-first preference were not applied; I built from a one-line screenshot request without confirming."
-    solution: "Low cost here because the request was specific; for a fixed-count UI choice, a one-question check such as 'four even when data is younger?' would have been cheap."
   - session: session_013zxzeR7qQ3HKogNsnf5Zm8
     date: "2026-11-11"
     severity: minor

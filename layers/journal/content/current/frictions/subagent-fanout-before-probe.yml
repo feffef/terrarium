@@ -9,11 +9,6 @@ related:
 notes: |-
   2026-11-10 design: a dispatch-subagents §1 line (probe one before fanning out) dropped: one owner-directed session, the cause is a data omission, and the Skill sits beside an open Prune Trial. Re-raise on a second occurrence.
 occurrences:
-  - session: session_013zxzeNd2Ethpd3anqbmpkr
-    date: "2026-11-09"
-    severity: moderate
-    description: "Dispatched seven transcript subagents (about 774k subagent tokens) before probing one: events omit hook-injected rule context in some sessions, so three reports found no loads."
-    solution: "inspect-session should say events may omit hook output; probe one session before fanning out."
   - session: session_013zxzePp9GLW2F1VvQUhWEy
     date: "2026-11-21"
     severity: nit

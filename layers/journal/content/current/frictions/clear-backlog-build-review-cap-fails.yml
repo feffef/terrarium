@@ -24,11 +24,6 @@ fixes:
     date: "2026-11-22"
     summary: "clear-backlog section 3 step 4: a missing-test starts round N+1 only if still open after round N's re-checks on a branch above 50 changed lines; one already fixed and re-checked clean no longer does."
 occurrences:
-  - session: session_013zxzeSj1mJxbgdKHbwgK2s
-    date: "2026-11-09"
-    severity: minor
-    description: "The 2987 build ran its 3 review rounds and returned failed on three cosmetic findings; two review rounds went to rewrapping and wording churn."
-    solution: "Treat cosmetic-only findings as a stop condition for the review loop so the branch returns ready-to-push."
   - session: session_013zxzeSiQ4jom3vFu8GreLw
     date: "2026-11-10"
     severity: minor
