@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQF4hazkBfaftfPo5b
 startedAt: 2026-11-24T08:46:05Z
-endedAt: 2026-11-24T09:42:13Z
+endedAt: 2026-11-24T09:46:12Z
 kind: autonomous
 goal: Add a Web Storage Lesson to the Glass Box textbook
-status: in-review
-outcome: Web Storage Lesson and two wording fixes merged; a fourth run's PR (Data fetching onramp gloss) is open and may merge once CI is green
-summary: "A scheduled glassbox-curate run, so nothing was human-instructed in-session; the Skill's own rules and the memory page's owner directions (finish web standards, fill what no page teaches) were the mandate. Run one: I read the required docs and guide index, found no open PRs and chose a gap myself, Web Storage, used by five tenants and the framework but taught nowhere. An opus writer subagent wrote the Lesson with sources; a sonnet claim checker found an overstated line (a new tab always starts empty, wrong for window.open) and four wrong citations, and two fresh-reader rounds led to glosses and a merged Why bullet. I swapped Where next rows on three pages, ran code-review (Standards and Spec), fixed its findings, ran gate:scoped green and opened PR 3646, which waited for the owner (new Lesson, rule 6) and was then merged by them. Run two: a small wording lead on Virtual modules (the first Excerpt did not show the expand and loadManifests calls); claim check, fresh reader, code-review, gate, PR 3647, merged after its checks went green. Run three: the Nitro wording lead (storage, mount, driver and LRU glosses), written by an opus subagent with sources, claim-checked, fresh-read, code-reviewed and gated; PR 3648, merged after green CI. Run four: the Data fetching onramp gloss, claim-checked (one overstated wording fixed), fresh-read, code-reviewed and gated; PR 3649, which may merge once CI is green. The last fix commit of each run was gated and gave my own read; run one's touched three files, over the two-file simple-change bar, so it strictly needed its own code-review. Left open for later runs: every other memory-page item."
+status: completed
+outcome: "Four curate runs landed: the Web Storage Lesson and three wording fixes, all merged"
+summary: "A scheduled glassbox-curate run, so nothing was human-instructed in-session; the Skill's own rules and the memory page's owner directions (finish web standards, fill what no page teaches) were the mandate. Run one: I read the required docs and guide index, found no open PRs and chose a gap myself, Web Storage, used by five tenants and the framework but taught nowhere. An opus writer subagent wrote the Lesson with sources; a sonnet claim checker found an overstated line (a new tab always starts empty, wrong for window.open) and four wrong citations, and two fresh-reader rounds led to glosses and a merged Why bullet. I swapped Where next rows on three pages, ran code-review (Standards and Spec), fixed its findings, ran gate:scoped green and opened PR 3646, which waited for the owner (new Lesson, rule 6) and was then merged by them. Run two: a small wording lead on Virtual modules (the first Excerpt did not show the expand and loadManifests calls); claim check, fresh reader, code-review, gate, PR 3647, merged after its checks went green. Run three: the Nitro wording lead (storage, mount, driver and LRU glosses), written by an opus subagent with sources, claim-checked, fresh-read, code-reviewed and gated; PR 3648, merged after green CI. Run four: the Data fetching onramp gloss, claim-checked (one overstated wording fixed), fresh-read, code-reviewed and gated; PR 3649, merged after green CI. I stopped after four runs because my context had grown large; the rest of the memory page is new-Lesson splits for the owner, small wording leads and claims to check. The last fix commit of each run was gated and gave my own read; run one's touched three files, over the two-file simple-change bar, so it strictly needed its own code-review. Left open for later runs: every other memory-page item."
 prs:
   - "3646"
   - "3647"
@@ -96,20 +96,23 @@ frictions:
   - description: Fresh-reader reports repeated rendering artefacts (stripped links, inline bracket definitions) and needed filtering before each fix pass.
     solution: plain.ts could keep link text or mark stripped links so readers don't report them as dangling.
     severity: nit
-durationSec: 3368
+  - description: A Read of the orient Subject index files failed once as 'does not exist' after a branch switch, so I re-ran orient and re-read about 75 KB.
+    solution: orient.ts could print the files' absolute paths, or keep them across branch switches.
+    severity: nit
+durationSec: 3607
 models:
-  claude-sonnet-5-5: 296
+  claude-sonnet-5-5: 309
 toolCounts:
   Read: 23
-  Skill: 9
-  Bash: 94
+  Skill: 10
+  Bash: 98
   Agent: 22
-  ReadNotifications: 10
+  ReadNotifications: 12
   SendMessage: 1
   mcp__github__create_pull_request: 4
   mcp__claude-code-remote__subscribe_pr_activity: 4
   mcp__github__pull_request_read: 2
-  mcp__github__add_issue_comment: 2
+  mcp__github__add_issue_comment: 3
 filesEdited:
   - layers/glassbox/content/guide/pages/web-standards/35.web-storage.md
   - layers/glassbox/content/guide/pages/nuxt-vue/70.data-fetching.md
@@ -1284,7 +1287,7 @@ subagents:
     durationSec: 651
     toolCalls: 52
     modelCalls: 43
-    tokenShare: 9.5
+    tokenShare: 9.1
   - task: Fresh reader of Web Storage
     model: sonnet
     durationSec: 26
@@ -1296,7 +1299,7 @@ subagents:
     durationSec: 127
     toolCalls: 20
     modelCalls: 12
-    tokenShare: 2.2
+    tokenShare: 2.1
   - task: Re-read revised Web Storage page
     model: sonnet
     durationSec: 23
@@ -1308,7 +1311,7 @@ subagents:
     durationSec: 74
     toolCalls: 15
     modelCalls: 10
-    tokenShare: 1.5
+    tokenShare: 1.4
   - task: Standards review of Web Storage run
     model: sonnet
     durationSec: 42
@@ -1326,13 +1329,13 @@ subagents:
     durationSec: 27
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.7
+    tokenShare: 0.6
   - task: Claim-check Virtual modules edit
     model: sonnet
     durationSec: 14
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 0.8
+    tokenShare: 0.7
   - task: Standards review of Virtual modules run
     model: sonnet
     durationSec: 24
@@ -1344,7 +1347,7 @@ subagents:
     durationSec: 18
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1
+    tokenShare: 0.9
   - task: Fresh reader of Nitro page
     model: sonnet
     durationSec: 41
@@ -1356,37 +1359,37 @@ subagents:
     durationSec: 128
     toolCalls: 26
     modelCalls: 13
-    tokenShare: 2
+    tokenShare: 1.9
   - task: Claim-check Nitro glosses
     model: sonnet
     durationSec: 59
     toolCalls: 19
     modelCalls: 11
-    tokenShare: 1.3
+    tokenShare: 1.2
   - task: Re-read Nitro page
     model: sonnet
     durationSec: 19
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.7
+    tokenShare: 0.6
   - task: Standards review of Nitro run
     model: sonnet
     durationSec: 25
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 0.7
+    tokenShare: 0.6
   - task: Spec review of Nitro run
     model: sonnet
     durationSec: 19
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 0.7
+    tokenShare: 0.6
   - task: Write onramp gloss
     model: opus
     durationSec: 94
     toolCalls: 12
     modelCalls: 10
-    tokenShare: 1.7
+    tokenShare: 1.6
   - task: Claim-check onramp gloss
     model: sonnet
     durationSec: 23
@@ -1398,19 +1401,19 @@ subagents:
     durationSec: 20
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.7
+    tokenShare: 0.6
   - task: Standards review of onramp run
     model: sonnet
     durationSec: 25
     toolCalls: 12
     modelCalls: 6
-    tokenShare: 1.2
+    tokenShare: 1.1
   - task: Spec review of onramp run
     model: sonnet
     durationSec: 35
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 1.2
+    tokenShare: 1.1
 gitBranch: claude/compassionate-bardeen-3zhpkl
 entrypoint: remote_trigger
 cliVersion: 2.1.331
