@@ -28,7 +28,11 @@ describe('stopReason()', () => {
     expect(stopReason(payload([rule, bash('echo rule-use:')]))).toBeNull()
     expect(stopReason(payload([]))).toBeNull()
   })
-  it('passes a re-entered stop, the main agent and a missing transcript', () => {
+  it('blocks on a start-loaded rule too', () => {
+    const start = { type: 'attachment', attachment: { type: 'instructions', files: [{ path: '/repo/.claude/rules/adr-0004.md' }] } }
+    expect(stopReason(payload([start]))).toContain('adr-0004.md')
+  })
+  it('passes a re-entered stop, a payload without agent_id and a missing transcript', () => {
     expect(stopReason(payload([rule], { stop_hook_active: true }))).toBeNull()
     expect(stopReason({ ...payload([rule]), agent_id: undefined })).toBeNull()
     expect(stopReason({ transcript_path: '/nope/x.jsonl', agent_id: 'a1' })).toBeNull()

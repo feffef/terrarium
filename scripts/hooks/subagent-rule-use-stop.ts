@@ -14,8 +14,7 @@ import { agentTranscript, extractTrace } from '../session/transcript-trace.ts'
 export function stopReason(payload: unknown): string | null {
   const agent = prop(payload, 'agent_id')
   if (prop(payload, 'stop_hook_active') === true || typeof agent !== 'string') return null
-  const own = prop(payload, 'agent_transcript_path')
-  const records = readTranscript(typeof own === 'string' ? own : agentTranscript(String(prop(payload, 'transcript_path') ?? ''), agent))
+  const records = readTranscript(agentTranscript(String(prop(payload, 'transcript_path') ?? ''), agent))
   if (!records) return null
   const trace = extractTrace(records)
   const unrated = unratedRules(trace.ruleLoads, trace.reportedNamed)
