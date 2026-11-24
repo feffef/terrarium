@@ -1,16 +1,17 @@
 schemaVersion: 1
 session: session_013zxzeQF4hazkBfaftfPo5b
 startedAt: 2026-11-24T08:46:05Z
-endedAt: 2026-11-24T09:36:14Z
+endedAt: 2026-11-24T09:42:13Z
 kind: autonomous
 goal: Add a Web Storage Lesson to the Glass Box textbook
-status: partial
-outcome: Web Storage Lesson and two wording fixes merged; a fourth run (Data fetching onramp gloss) was still open when this log was written
-summary: "A scheduled glassbox-curate run, so nothing was human-instructed in-session; the Skill's own rules and the memory page's owner directions (finish web standards, fill what no page teaches) were the mandate. Run one: I read the required docs and guide index, found no open PRs and chose a gap myself, Web Storage, used by five tenants and the framework but taught nowhere. An opus writer subagent wrote the Lesson with sources; a sonnet claim checker found an overstated line (a new tab always starts empty, wrong for window.open) and four wrong citations, and two fresh-reader rounds led to glosses and a merged Why bullet. I swapped Where next rows on three pages, ran code-review (Standards and Spec), fixed its findings, ran gate:scoped green and opened PR 3646, which waited for the owner (new Lesson, rule 6) and was then merged by them. Run two: a small wording lead on Virtual modules (the first Excerpt did not show the expand and loadManifests calls); claim check, fresh reader, code-review, gate, PR 3647, merged after its checks went green. Run three: the Nitro wording lead (storage, mount, driver and LRU glosses), written by an opus subagent with sources, claim-checked, fresh-read, code-reviewed and gated; PR 3648, merged after green CI. Run four, the Data fetching onramp gloss, was in progress when this log was written. The last fix commit of each run was gated and gave my own read; run one's touched three files, over the two-file simple-change bar, so it strictly needed its own code-review. Left open for later runs: every other memory-page item."
+status: in-review
+outcome: Web Storage Lesson and two wording fixes merged; a fourth run's PR (Data fetching onramp gloss) is open and may merge once CI is green
+summary: "A scheduled glassbox-curate run, so nothing was human-instructed in-session; the Skill's own rules and the memory page's owner directions (finish web standards, fill what no page teaches) were the mandate. Run one: I read the required docs and guide index, found no open PRs and chose a gap myself, Web Storage, used by five tenants and the framework but taught nowhere. An opus writer subagent wrote the Lesson with sources; a sonnet claim checker found an overstated line (a new tab always starts empty, wrong for window.open) and four wrong citations, and two fresh-reader rounds led to glosses and a merged Why bullet. I swapped Where next rows on three pages, ran code-review (Standards and Spec), fixed its findings, ran gate:scoped green and opened PR 3646, which waited for the owner (new Lesson, rule 6) and was then merged by them. Run two: a small wording lead on Virtual modules (the first Excerpt did not show the expand and loadManifests calls); claim check, fresh reader, code-review, gate, PR 3647, merged after its checks went green. Run three: the Nitro wording lead (storage, mount, driver and LRU glosses), written by an opus subagent with sources, claim-checked, fresh-read, code-reviewed and gated; PR 3648, merged after green CI. Run four: the Data fetching onramp gloss, claim-checked (one overstated wording fixed), fresh-read, code-reviewed and gated; PR 3649, which may merge once CI is green. The last fix commit of each run was gated and gave my own read; run one's touched three files, over the two-file simple-change bar, so it strictly needed its own code-review. Left open for later runs: every other memory-page item."
 prs:
   - "3646"
   - "3647"
   - "3648"
+  - "3649"
 docsRead:
   - path: layers/glassbox/GLOSSARY.md
     reason: (no reason given)
@@ -95,27 +96,27 @@ frictions:
   - description: Fresh-reader reports repeated rendering artefacts (stripped links, inline bracket definitions) and needed filtering before each fix pass.
     solution: plain.ts could keep link text or mark stripped links so readers don't report them as dangling.
     severity: nit
-durationSec: 3009
+durationSec: 3368
 models:
-  claude-sonnet-5-5: 271
+  claude-sonnet-5-5: 296
 toolCounts:
   Read: 23
-  Skill: 7
-  Bash: 85
-  Agent: 20
-  ReadNotifications: 9
+  Skill: 9
+  Bash: 94
+  Agent: 22
+  ReadNotifications: 10
   SendMessage: 1
-  mcp__github__create_pull_request: 3
-  mcp__claude-code-remote__subscribe_pr_activity: 3
+  mcp__github__create_pull_request: 4
+  mcp__claude-code-remote__subscribe_pr_activity: 4
   mcp__github__pull_request_read: 2
   mcp__github__add_issue_comment: 2
 filesEdited:
   - layers/glassbox/content/guide/pages/web-standards/35.web-storage.md
   - layers/glassbox/content/guide/pages/nuxt-vue/70.data-fetching.md
+  - layers/glassbox/content/workshop/pages/index.md
   - layers/glassbox/content/workshop/runs/2026-11-24T0933.yml
   - layers/glassbox/content/guide/pages/nuxt-vue/60.nitro.md
   - layers/glassbox/content/workshop/runs/2026-11-24T0919.yml
-  - layers/glassbox/content/workshop/pages/index.md
   - layers/glassbox/content/guide/pages/nuxt-vue/40.virtual-modules.md
   - layers/glassbox/content/workshop/runs/2026-11-24T0907.yml
   - layers/glassbox/content/workshop/runs/2026-11-24T0846.yml
@@ -1161,55 +1162,171 @@ ruleUse:
         value: unrelated
       - path: .claude/rules/adr-0017.md
         value: unrelated
+  - by: general-purpose
+    subagent: 20
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .claude/skills/glassbox-lesson/writing-pages.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .claude/skills/glassbox-lesson/writing-pages.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+    reported:
+      - path: .claude/rules/glassbox-content.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: in-scope
+      - path: .claude/rules/glossary-terms.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 21
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/glassbox-curate/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/glassbox-curate/SKILL.md
+      - rule: .claude/rules/adr-0006.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/adr-0016.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/glassbox-content.md
+        value: in-scope
+      - path: .claude/rules/tenant-glossary.md
+        value: in-scope
 subagents:
   - task: Write Web Storage Lesson
     model: opus
     durationSec: 651
     toolCalls: 52
     modelCalls: 43
-    tokenShare: 10.7
+    tokenShare: 9.5
   - task: Fresh reader of Web Storage
     model: sonnet
     durationSec: 26
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.8
+    tokenShare: 0.7
   - task: Claim-check Web Storage Lesson
     model: sonnet
     durationSec: 127
     toolCalls: 20
     modelCalls: 12
-    tokenShare: 2.5
+    tokenShare: 2.2
   - task: Re-read revised Web Storage page
     model: sonnet
     durationSec: 23
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.5
+    tokenShare: 0.4
   - task: Re-check changed Web Storage claims
     model: sonnet
     durationSec: 74
     toolCalls: 15
     modelCalls: 10
-    tokenShare: 1.6
+    tokenShare: 1.5
   - task: Standards review of Web Storage run
     model: sonnet
     durationSec: 42
     toolCalls: 9
     modelCalls: 4
-    tokenShare: 1.3
+    tokenShare: 1.1
   - task: Spec review of Web Storage run
     model: sonnet
     durationSec: 24
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 1.3
+    tokenShare: 1.1
   - task: Fresh reader of Virtual modules
     model: sonnet
     durationSec: 27
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.8
+    tokenShare: 0.7
   - task: Claim-check Virtual modules edit
     model: sonnet
     durationSec: 14
@@ -1221,67 +1338,79 @@ subagents:
     durationSec: 24
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1
+    tokenShare: 0.9
   - task: Spec review of Virtual modules run
     model: sonnet
     durationSec: 18
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1.1
+    tokenShare: 1
   - task: Fresh reader of Nitro page
     model: sonnet
     durationSec: 41
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.8
+    tokenShare: 0.7
   - task: Write Nitro glosses
     model: opus
     durationSec: 128
     toolCalls: 26
     modelCalls: 13
-    tokenShare: 2.2
+    tokenShare: 2
   - task: Claim-check Nitro glosses
     model: sonnet
     durationSec: 59
     toolCalls: 19
     modelCalls: 11
-    tokenShare: 1.5
+    tokenShare: 1.3
   - task: Re-read Nitro page
     model: sonnet
     durationSec: 19
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.8
+    tokenShare: 0.7
   - task: Standards review of Nitro run
     model: sonnet
     durationSec: 25
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 0.8
+    tokenShare: 0.7
   - task: Spec review of Nitro run
     model: sonnet
     durationSec: 19
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 0.8
+    tokenShare: 0.7
   - task: Write onramp gloss
     model: opus
     durationSec: 94
     toolCalls: 12
     modelCalls: 10
-    tokenShare: 1.9
+    tokenShare: 1.7
   - task: Claim-check onramp gloss
     model: sonnet
-    durationSec: 10
-    toolCalls: 5
-    modelCalls: 3
+    durationSec: 23
+    toolCalls: 6
+    modelCalls: 4
     tokenShare: 0.8
   - task: Re-read Data fetching page
     model: sonnet
-    durationSec: 5
-    toolCalls: 3
-    modelCalls: 2
+    durationSec: 20
+    toolCalls: 4
+    modelCalls: 3
     tokenShare: 0.7
+  - task: Standards review of onramp run
+    model: sonnet
+    durationSec: 25
+    toolCalls: 12
+    modelCalls: 6
+    tokenShare: 1.2
+  - task: Spec review of onramp run
+    model: sonnet
+    durationSec: 35
+    toolCalls: 8
+    modelCalls: 5
+    tokenShare: 1.2
 gitBranch: claude/compassionate-bardeen-3zhpkl
 entrypoint: remote_trigger
 cliVersion: 2.1.331
