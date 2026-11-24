@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRQRYWw3yLJzSdaozk
 startedAt: 2026-11-24T07:07:04Z
-endedAt: 2026-11-24T07:41:55Z
+endedAt: 2026-11-24T07:43:30Z
 kind: interactive
 goal: Clear the open issue backlog with the clear-backlog workflow
 status: in-review
 outcome: 6 issues explored, 4 grilled, 1 closed as done, 3 built and gated or gating, 1 PR open, 1 parked, 1 blocked until 11-25
-summary: "Human-instructed: the owner started /clear-backlog, answered the nine grilling questions and the four follow-ups (watchFor pilot kept with harvest item 1 reworded, frictions-to-fixes items kept, SubagentStop hook to try, #3340 review on 11-25, #3634 parked with a writer-disclosure line and a 30-minute stop bar decided but unbuilt, #3637 cost accepted and focus idea built), and accepted my picks for the rest. Agent-initiated: the explore workflow's triage agents closed #3635 as already done (PR 3616 gate check) and labelled the others; I set ready-for-agent on #3423, #3633 and #3637 after the owner's answers, recorded the parking on #3634, grouped the work into three branches (no shared files), and ran the build workflow. Branches: watchfor-pilot-review (PR 3642, merged, #3423 closed), subagent-rule-ratings (PR 3644, SubagentStop hook; a re-check found a real defect, the loop cap relied on stop_hook_active which the hooks docs do not confirm for SubagentStop, fixed with a per-agent marker file; Human-only files so it waits for a human merge) and audit-next-focus (PR 3643, clean re-check, CI running, to merge on green). Still open: merge PR 3643, #3340 stays blocked until 2026-11-25, #3634 re-check around 11-28, retro and final report."
+summary: "Human-instructed: the owner started /clear-backlog, answered the nine grilling questions and the four follow-ups (watchFor pilot kept with harvest item 1 reworded, frictions-to-fixes items kept, SubagentStop hook to try, #3340 review on 11-25, #3634 parked with a writer-disclosure line and a 30-minute stop bar decided but unbuilt, #3637 cost accepted and focus idea built), and accepted my picks for the rest. Agent-initiated: the explore workflow's triage agents closed #3635 as already done (PR 3616 gate check) and labelled the others; I set ready-for-agent on #3423, #3633 and #3637 after the owner's answers, recorded the parking on #3634, grouped the work into three branches (no shared files), and ran the build workflow. Branches: watchfor-pilot-review (PR 3642, merged, #3423 closed), subagent-rule-ratings (PR 3644, SubagentStop hook; a re-check found a real defect, the loop cap relied on stop_hook_active which the hooks docs do not confirm for SubagentStop, fixed with a per-agent marker file; Human-only files so it waits for a human merge) and audit-next-focus (PR 3643, clean re-check, merged, #3637 closed). Still open: PR 3644 waits for the owner, #3340 stays blocked until 2026-11-25, #3634 re-check around 11-28. The retro ran with one builder and one reviewer of each kind; its replies are in the frictions."
 prs:
   - "3642"
   - "3643"
@@ -70,26 +70,38 @@ frictions:
   - description: The explore workflow's grouping put all four ready issues in one group although none share a file; I overrode it by hand into three branches.
     solution: Make run-summary --triage group by the files each result lists, not one group when every pair is merely related.
     severity: minor
-durationSec: 2091
+  - description: "Retro, builder (unverified by me): rules() forbids && and ; in a worktree yet prescribes the gate command with cd and &&; its own chained call was refused, taking a turn and skipping pnpm install, so vitest was missing."
+    solution: State in rules() of .claude/workflows/clear-backlog-build.js that every Bash call is one plain command (writes through Write and Edit) and the gate command is the only chain.
+    severity: minor
+  - description: "Retro, builder: the hooks docs fetch was truncated before the SubagentStop section, so stop_hook_active and agent_transcript_path stayed unverified and the PR carries that caveat."
+    solution: Add a docs/research note on the hook payload fields, or have the brief name the doc section to fetch.
+    severity: minor
+  - description: "Retro, reviewers (their claims, unverified by me): briefs gave no line ranges (code-review SKILL.md section 3, harvest.ts:361 for the stopped check), so each searched; read-only reviewers also paid rule-use echo round trips."
+    solution: Have reviewPrompt() in .claude/workflows/clear-backlog-build.js carry file paths and line numbers for spec sources and say the smell list is section 3 only.
+    severity: nit
+  - description: "Retro verdict on review value: the Standards re-check caught a real defect (loop cap relied on an unconfirmed field) and the Spec round caught a missing test; the small-diff watchFor branch's review found only nits."
+    solution: Keep the review rounds; no cut is supported by evidence from this run.
+    severity: nit
+durationSec: 2186
 models:
-  claude-sonnet-5-5: 142
+  claude-sonnet-5-5: 168
 toolCounts:
   Skill: 5
   Read: 8
-  Bash: 34
+  Bash: 40
   Grep: 1
   Workflow: 2
   ToolSearch: 5
   PushNotification: 2
   mcp__github__issue_write: 3
-  mcp__github__add_issue_comment: 2
-  SendMessage: 12
+  mcp__github__add_issue_comment: 3
+  SendMessage: 16
   mcp__github__create_pull_request: 3
   mcp__claude-code-remote__subscribe_pr_activity: 3
   Write: 1
-  ReadNotifications: 3
+  ReadNotifications: 5
   mcp__github__pull_request_read: 2
-  Edit: 2
+  Edit: 5
 filesEdited:
   - scripts/hooks/subagent-rule-use-stop.ts
   - tests/unit/subagent-rule-use-stop.spec.ts
@@ -307,9 +319,30 @@ ruleUse:
         via: start
       - rule: .claude/rules/adr-0017.md
         via: start
-    reported: []
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
   - by: general-purpose
     subagent: 4
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported: []
+  - by: general-purpose
+    subagent: 5
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -352,7 +385,7 @@ ruleUse:
         value: steered
       - path: docs/agents/guards.md
   - by: general-purpose
-    subagent: 5
+    subagent: 6
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -391,7 +424,7 @@ ruleUse:
       - path: .claude/rules/adr-0017.md
         value: unrelated
   - by: general-purpose
-    subagent: 6
+    subagent: 7
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -412,7 +445,7 @@ ruleUse:
       - path: .claude/rules/adr-0017.md
         value: unrelated
   - by: workflow-subagent
-    subagent: 7
+    subagent: 8
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -457,27 +490,6 @@ ruleUse:
       - path: .claude/rules/adr-0029.md
         value: unrelated
       - path: docs/agents/git-conventions.md
-  - by: workflow-subagent
-    subagent: 8
-    answered: true
-    loads:
-      - rule: .claude/rules/adr-0004.md
-        via: start
-      - rule: .claude/rules/adr-0009.md
-        via: start
-      - rule: .claude/rules/adr-0003.md
-        via: start
-      - rule: .claude/rules/adr-0017.md
-        via: start
-    reported:
-      - path: .claude/rules/adr-0004.md
-        value: unrelated
-      - path: .claude/rules/adr-0009.md
-        value: unrelated
-      - path: .claude/rules/adr-0003.md
-        value: unrelated
-      - path: .claude/rules/adr-0017.md
-        value: unrelated
   - by: workflow-subagent
     subagent: 9
     answered: true
@@ -532,9 +544,30 @@ ruleUse:
         via: start
       - rule: .claude/rules/adr-0017.md
         via: start
-    reported: []
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
   - by: workflow-subagent
     subagent: 12
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported: []
+  - by: workflow-subagent
+    subagent: 13
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -577,7 +610,7 @@ ruleUse:
         value: steered
       - path: docs/agents/guards.md
   - by: workflow-subagent
-    subagent: 13
+    subagent: 14
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -616,7 +649,7 @@ ruleUse:
       - path: .claude/rules/adr-0017.md
         value: unrelated
   - by: workflow-subagent
-    subagent: 14
+    subagent: 15
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -637,7 +670,7 @@ ruleUse:
       - path: .claude/rules/adr-0017.md
         value: unrelated
   - by: workflow-subagent
-    subagent: 15
+    subagent: 16
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -674,7 +707,7 @@ ruleUse:
       - path: .claude/rules/adr-0017.md
         value: unrelated
   - by: workflow-subagent
-    subagent: 16
+    subagent: 17
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -711,7 +744,7 @@ ruleUse:
         via: hint
     reported: []
   - by: workflow-subagent
-    subagent: 17
+    subagent: 18
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -779,7 +812,7 @@ ruleUse:
       - path: docs/agents/git-conventions.md
       - path: docs/agents/triage-labels.md
   - by: workflow-subagent
-    subagent: 18
+    subagent: 19
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -800,7 +833,7 @@ ruleUse:
       - path: .claude/rules/adr-0017.md
         value: unrelated
   - by: workflow-subagent
-    subagent: 19
+    subagent: 20
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -837,7 +870,7 @@ ruleUse:
       - path: .claude/rules/adr-0017.md
         value: unrelated
   - by: workflow-subagent
-    subagent: 20
+    subagent: 21
     answered: true
     loads:
       - rule: .claude/rules/adr-0004.md
@@ -907,147 +940,154 @@ subagents:
     durationSec: 457
     toolCalls: 23
     modelCalls: 19
-    tokenShare: 5.8
+    tokenShare: 5.3
   - type: general-purpose
     task: a1b92016924db5309
     model: claude-sonnet-5-5
-    durationSec: 110
-    toolCalls: 11
-    modelCalls: 8
-    tokenShare: 2.1
+    durationSec: 701
+    toolCalls: 12
+    modelCalls: 9
+    tokenShare: 2.6
   - type: general-purpose
     task: a2345df71b66aeb1d
     model: claude-sonnet-5-5
     durationSec: 156
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 2.7
+    tokenShare: 2.5
+  - type: general-purpose
+    task: a3d6206ba729d4ca1
+    model: claude-sonnet-5-5
+    durationSec: 763
+    toolCalls: 6
+    modelCalls: 6
+    tokenShare: 1.6
   - type: general-purpose
     task: a4ca7ddf79c9efc70
     model: claude-sonnet-5-5
-    durationSec: 194
-    toolCalls: 11
-    modelCalls: 9
-    tokenShare: 2.4
+    durationSec: 702
+    toolCalls: 12
+    modelCalls: 10
+    tokenShare: 2.9
   - type: general-purpose
     task: a5855ff4055de354e
     model: claude-sonnet-5-5
-    durationSec: 650
-    toolCalls: 46
-    modelCalls: 35
-    tokenShare: 10
+    durationSec: 832
+    toolCalls: 47
+    modelCalls: 36
+    tokenShare: 9.2
   - type: general-purpose
     task: ab0d1ff0aa9a7512a
     model: claude-sonnet-5-5
     durationSec: 522
     toolCalls: 23
     modelCalls: 19
-    tokenShare: 6.3
+    tokenShare: 5.7
   - type: general-purpose
     task: ad28738306f5c490f
     model: claude-sonnet-5-5
     durationSec: 155
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 1.5
+    tokenShare: 1.3
   - type: workflow-subagent
     task: build watchfor-pilot-review
     model: claude-sonnet-5-5
     durationSec: 69
     toolCalls: 17
     modelCalls: 13
-    tokenShare: 3.4
+    tokenShare: 3.1
   - type: workflow-subagent
     task: Spec subagent-rule-ratings r1
     model: claude-sonnet-5-5
     durationSec: 28
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 1.1
+    tokenShare: 1
   - type: workflow-subagent
     task: Standards audit-next-focus r1
     model: claude-sonnet-5-5
     durationSec: 21
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.9
+    tokenShare: 1.7
   - type: workflow-subagent
     task: Both watchfor-pilot-review r1
     model: claude-sonnet-5-5
     durationSec: 21
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 1.1
+    tokenShare: 1
   - type: workflow-subagent
     task: Standards subagent-rule-ratings r1
     model: claude-sonnet-5-5
     durationSec: 20
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: workflow-subagent
     task: build subagent-rule-ratings
     model: claude-sonnet-5-5
     durationSec: 130
     toolCalls: 30
     modelCalls: 23
-    tokenShare: 5.6
+    tokenShare: 5.1
   - type: workflow-subagent
     task: build audit-next-focus
     model: claude-sonnet-5-5
     durationSec: 64
     toolCalls: 16
     modelCalls: 12
-    tokenShare: 3.4
+    tokenShare: 3.1
   - type: workflow-subagent
     task: Spec audit-next-focus r1
     model: claude-sonnet-5-5
     durationSec: 13
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 0.8
+    tokenShare: 0.7
   - type: workflow-subagent
     task: "triage #3423"
     model: claude-sonnet-5-5
     durationSec: 95
     toolCalls: 18
     modelCalls: 10
-    tokenShare: 3.2
+    tokenShare: 2.9
   - type: workflow-subagent
     task: "triage #3635"
     model: claude-sonnet-5-5
     durationSec: 92
     toolCalls: 27
     modelCalls: 12
-    tokenShare: 3.5
+    tokenShare: 3.2
   - type: workflow-subagent
     task: "triage #3634"
     model: claude-sonnet-5-5
     durationSec: 158
     toolCalls: 33
     modelCalls: 16
-    tokenShare: 6.2
+    tokenShare: 5.6
   - type: workflow-subagent
     task: "triage #3340"
     model: claude-sonnet-5-5
     durationSec: 22
     toolCalls: 8
     modelCalls: 4
-    tokenShare: 1.1
+    tokenShare: 1
   - type: workflow-subagent
     task: "triage #3637"
     model: claude-sonnet-5-5
     durationSec: 85
     toolCalls: 17
     modelCalls: 8
-    tokenShare: 2.3
+    tokenShare: 2.1
   - type: workflow-subagent
     task: "triage #3633"
     model: claude-sonnet-5-5
     durationSec: 157
     toolCalls: 36
     modelCalls: 19
-    tokenShare: 5.2
+    tokenShare: 4.7
 gitBranch: ccr-1206a6c6-kh63ut
 entrypoint: remote_mobile
 cliVersion: 2.1.331
