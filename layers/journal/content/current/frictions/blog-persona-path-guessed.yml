@@ -2,7 +2,11 @@ name: blog-persona-path-guessed
 surface: safe
 summary: A blog-post run read or named a Persona file at layers/blog/personas/, a path that does not exist, and lost a call.
 cause: "The Persona files live under .agents/skills/blog-post/personas/, but a blog-post run guesses a path under the Blog layer. Signals: 'layers/blog/personas', a failed read of a Persona file."
-status: tracked
+status: open
+fixes:
+  - pr: 3639
+    date: "2026-11-24"
+    summary: "The blog-post Skill names Persona files by their full path .agents/skills/blog-post/personas/ instead of the bare personas/."
 occurrences:
   - session: session_013zxzeQsBr9EFDJoRDQQzh5
     date: "2026-11-22"
