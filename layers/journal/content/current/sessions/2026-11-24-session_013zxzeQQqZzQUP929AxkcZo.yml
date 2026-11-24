@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQQqZzQUP929AxkcZo
 startedAt: 2026-11-24T07:32:47Z
-endedAt: 2026-11-24T07:41:39Z
+endedAt: 2026-11-24T07:44:57Z
 kind: autonomous
 goal: Weekly sync of Glass Box guide pages with main
-status: in-review
-outcome: "All 79 guide pages re-pinned, 19 pages claim-checked with no false claims; PR #3645 open"
-summary: "Scheduled glassbox-update run (agent-initiated by the schedule; no human prompt). Pinned every guide page to main at 9cb3bb9, re-lined one excerpt, and read the 83 commits since the oldest revision against the 15 flagged pages. Three sonnet readers claim-checked the 15 flagged pages (scoped to changed files) and the 5 oldest-checked rotation pages (full); none found a false claim, so no prose changed and only update.yml dates were rewritten. The Scout found no new topic, and the memory page's Too long section already matched the two long-lesson warnings. Gate and the two-axis code-review passed; the PR is open and subscribed. Left unfixed: git-github/75.path-based-labels is appended out of order in update.yml (cosmetic)."
+status: completed
+outcome: "All 79 guide pages re-pinned, 19 pages claim-checked with no false claims; PR #3645 merged"
+summary: "Scheduled glassbox-update run (agent-initiated by the schedule; no human prompt). Pinned every guide page to main at 9cb3bb9, re-lined one excerpt, and read the 83 commits since the oldest revision against the 15 flagged pages. Three sonnet readers claim-checked the 15 flagged pages (scoped to changed files) and the 5 oldest-checked rotation pages (full); none found a false claim, so no prose changed and only update.yml dates were rewritten. The Scout found no new topic, and the memory page's Too long section already matched the two long-lesson warnings. Gate and the two-axis code-review passed; PR #3645 merged after CI went green. Left unfixed: git-github/75.path-based-labels is appended out of order in update.yml (cosmetic)."
 prs:
   - "3645"
 docsRead:
@@ -61,17 +61,20 @@ frictions:
   - description: Tried to background a gate run with both run_in_background and a trailing ampersand; the double-background guard blocked it.
     solution: Pass run_in_background alone.
     severity: nit
-durationSec: 532
+durationSec: 730
 models:
-  claude-sonnet-5-5: 87
+  claude-sonnet-5-5: 102
 toolCounts:
-  Bash: 30
+  Bash: 35
   Read: 4
-  Skill: 4
+  Skill: 5
   Agent: 6
   ToolSearch: 1
   mcp__github__create_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/glassbox/content/workshop/checks/update.yml
   - layers/glassbox/content/guide/pages/agents/10.subagents.md
@@ -432,42 +435,42 @@ subagents:
     durationSec: 21
     toolCalls: 9
     modelCalls: 4
-    tokenShare: 8.4
+    tokenShare: 7.3
   - type: general-purpose
     task: "Claim check: rotation pages"
     model: sonnet
     durationSec: 139
     toolCalls: 32
     modelCalls: 14
-    tokenShare: 14.8
+    tokenShare: 13
   - type: general-purpose
     task: "Claim check: flagged pages A"
     model: sonnet
     durationSec: 33
     toolCalls: 10
     modelCalls: 9
-    tokenShare: 6
+    tokenShare: 5.3
   - type: general-purpose
     task: "Claim check: flagged pages B"
     model: sonnet
     durationSec: 60
     toolCalls: 12
     modelCalls: 7
-    tokenShare: 6.8
+    tokenShare: 5.9
   - type: general-purpose
     task: "Review: Standards axis"
     model: sonnet
     durationSec: 32
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 5.8
+    tokenShare: 5.1
   - type: general-purpose
     task: "Review: Spec axis"
     model: sonnet
     durationSec: 25
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 5.9
+    tokenShare: 5.2
 gitBranch: claude/relaxed-einstein-t97vpx
 entrypoint: remote_trigger
 cliVersion: 2.1.331
