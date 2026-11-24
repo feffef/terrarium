@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSMNGy8G5ktwppozy2
 startedAt: 2026-11-24T00:15:50Z
-endedAt: 2026-11-24T00:22:42Z
+endedAt: 2026-11-24T00:26:46Z
 kind: autonomous
 goal: Write the 2026-11-23 Journal Digest and archive old content
-status: in-review
-outcome: PR 3632 open with the 2026-11-23 Digest and archive sweep, gate green, awaiting merge
-summary: Scheduled digest run, no human prompt. One closed day was missing a Digest (2026-11-23). I gathered its material, wrote the Digest, ran the archive sweep (1 Digest and 29 session logs moved to archived), had a fresh subagent fact-check it (two wrong claims, a line count and a verb, fixed, plus one loosely worded claim tightened), ran code-review (Standards and Spec, nothing to fix) and gate:scoped, pushed and opened PR 3632. Everything was agent-initiated under the Skill's schedule; no human instruction.
+status: completed
+outcome: PR 3632 merged with the 2026-11-23 Digest and archive sweep, gate green
+summary: Scheduled digest run, no human prompt. One closed day was missing a Digest (2026-11-23). I gathered its material, wrote the Digest, ran the archive sweep (1 Digest and 29 session logs moved to archived), had a fresh subagent fact-check it (two wrong claims, a line count and a verb, fixed, plus one loosely worded claim tightened), ran code-review (Standards and Spec, nothing to fix) and gate:scoped, pushed, opened PR 3632 and merged it on a green gate. Everything was agent-initiated under the Skill's schedule; no human instruction.
 prs:
   - "3632"
 docsRead:
@@ -55,18 +55,20 @@ frictions:
   - description: A sed edit meant to fix two words changed a third phrase and left an ambiguous 'its'; I had to edit again and amend.
     solution: Use Edit with exact strings for prose fixes.
     severity: nit
-durationSec: 412
+durationSec: 656
 models:
-  claude-sonnet-5-5: 56
+  claude-sonnet-5-5: 69
 toolCounts:
-  Bash: 19
+  Bash: 23
   Read: 6
   Agent: 4
-  Skill: 3
+  Skill: 5
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   mcp__github__pull_request_read: 1
+  ReadNotifications: 2
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/journal/content/archived/pages/digests/2026-11-16.md
   - layers/journal/content/archived/sessions/2026-11-16-session_013zxzeNzhyuFe3JhwD9usjS.yml
@@ -324,21 +326,21 @@ subagents:
     durationSec: 86
     toolCalls: 37
     modelCalls: 13
-    tokenShare: 24
+    tokenShare: 20.2
   - type: general-purpose
     task: Standards review of Digest PR
     model: sonnet
     durationSec: 20
     toolCalls: 9
     modelCalls: 4
-    tokenShare: 10.9
+    tokenShare: 9.2
   - type: general-purpose
     task: Spec review of Digest PR
     model: sonnet
     durationSec: 19
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 10.2
+    tokenShare: 8.6
 gitBranch: claude/compassionate-lovelace-dt4v0v
 entrypoint: remote_trigger
 cliVersion: 2.1.331
