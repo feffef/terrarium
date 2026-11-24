@@ -9,7 +9,10 @@ const cells = computed(() => rhythmCells(props.bands))
 // (ADR-0028), so a server-rendered hour would be stale and mismatch hydration.
 const now = ref<number | null>(null)
 onMounted(() => { now.value = new Date().getHours() })
-const nowNote = computed(() => (now.value === null ? '' : cells.value[now.value] ? '; abroad now' : '; resting now'))
+const nowNote = computed(() => {
+  if (now.value === null) return ''
+  return cells.value[now.value] ? '; abroad now' : '; resting now'
+})
 </script>
 
 <template>

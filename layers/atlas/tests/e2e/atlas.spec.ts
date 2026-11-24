@@ -166,7 +166,8 @@ describe('atlas Tenant', async () => {
   }
 
   // #3655: the marker is set after mount from the visitor's clock, so fix the
-  // clock before navigating and read each band's note against its cell.
+  // clock before navigating, wait for hydration (the marker appears after
+  // mount) and read each band's note against its cell.
   for (const hour of [3, 14]) {
     it(`marks hour ${hour} on each Biome rhythm band`, async () => {
       const page = await createPage()
