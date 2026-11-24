@@ -24,13 +24,13 @@ pages:
   - page: deploy/20.pnpm-lockfile
     checked: '2026-11-23'
   - page: git-github/10.pull-requests
-    checked: '2026-11-08'
+    checked: '2026-11-24'
   - page: git-github/20.author-trust
-    checked: '2026-11-08'
+    checked: '2026-11-24'
   - page: git-github/30.composite-actions
-    checked: '2026-11-09'
+    checked: '2026-11-24'
   - page: git-github/40.dependabot-grouping
-    checked: '2026-11-09'
+    checked: '2026-11-24'
   - page: git-github/50.git-worktrees
     checked: '2026-11-09'
   - page: git-github/60.attribution
@@ -155,3 +155,5 @@ pages:
     checked: '2026-11-20'
   - page: web-standards/50.colour-contrast
     checked: '2026-11-23'
+  - page: git-github/75.path-based-labels
+    checked: '2026-11-24'
