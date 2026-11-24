@@ -172,8 +172,6 @@ Grade each Skill's importance by the definitions below, after reading its
   `{ date: <today, UTC>, note }` for a grade or role change, a finding
   (verified or unverified, say which) or an idea, or a clean check (name the
   run ids covered).
-  End each Skill's note with the subagent's `Focus:` line as
-  `Next focus: <text>`; the next brief reads it.
   Write the note fresh, 300–500 words, so a reader who has not seen the runs
   can follow it: what the audited runs did against what the `SKILL.md`
   promises, which runs and sources the audit read and what it verified or
@@ -182,6 +180,8 @@ Grade each Skill's importance by the definitions below, after reading its
   `pnpm exec tsx .agents/skills/audit-skills/scripts/prune-observations.ts`,
   which removes entries past that window (git keeps the history), prints what
   it removed, and flags any note of today outside 300–500 words.
+  End each Skill's note with the subagent's `Focus:` line as
+  `Next focus: <text>`; the next brief reads it.
 - **`auditSummary`** `{ date: <today, UTC>, text }` is the line the Skills page
   shows for each Skill: two plain sentences (about 40 words, no ids or jargon)
   giving the overall picture from all its `observations` and this window's runs,
