@@ -147,6 +147,7 @@ describe('atlas Tenant', async () => {
   // so this drives the page directly like the 404 test above.
   for (const [route, suggested] of [
     ['/t/atlas/canopy/lantern-moth', true],
+    ['/t/atlas/pool/snail', true],
     ['/t/atlas/canopy/nope', false],
   ] as const) {
     it(`${suggested ? 'suggests' : 'does not suggest'} a Specimen on the ${route} 404`, async () => {
@@ -156,8 +157,11 @@ describe('atlas Tenant', async () => {
         const line = page.locator('.not-found p', { hasText: 'Did you mean' })
         expect(await line.count()).toBe(suggested ? 1 : 0)
         if (suggested) {
-          expect(await line.textContent()).toContain('Did you mean Lumina fabulae, the lantern moth?')
-          expect(await line.locator('em a').getAttribute('href')).toBe('/t/atlas/canopy/lumina-fabulae')
+          const [binomial, common, href] = route.endsWith('snail')
+            ? ['Vitrea placida', 'the glass snail', '/t/atlas/pool/vitrea-placida']
+            : ['Lumina fabulae', 'the lantern moth', '/t/atlas/canopy/lumina-fabulae']
+          expect(await line.textContent()).toContain(`Did you mean ${binomial}, ${common}?`)
+          expect(await line.locator('em a').getAttribute('href')).toBe(href)
         }
       } finally {
         await page.close()

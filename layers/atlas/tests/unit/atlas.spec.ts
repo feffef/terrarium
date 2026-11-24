@@ -117,9 +117,40 @@ describe('specimenByCommonName()', () => {
     })
   })
 
-  it('finds nothing for a partial name or a binomial slug', () => {
-    expect(specimenByCommonName('weaver', canopy)).toBeNull()
+  it('finds nothing for a binomial slug or a word that is not a last word', () => {
     expect(specimenByCommonName('lumina-fabulae', canopy)).toBeNull()
+    expect(specimenByCommonName('patient', canopy)).toBeNull()
+  })
+
+  it('matches the last word of one Specimen\'s common name', () => {
+    expect(specimenByCommonName('weaver', canopy)).toEqual({
+      slug: 'aranea-patiens',
+      binomial: 'Aranea patiens',
+      commonName: 'the patient weaver',
+    })
+  })
+
+  it('prefers a full common-name match over a last word', () => {
+    const docs = [
+      { path: '/a', title: 'A a', commonName: 'the moth' },
+      { path: '/b', title: 'B b', commonName: 'the lantern moth' },
+    ]
+    expect(specimenByCommonName('moth', docs)?.slug).toBe('a')
+  })
+
+  it('finds nothing when two Specimens share the last word', () => {
+    const docs = [
+      { path: '/a', title: 'A a', commonName: 'the lantern moth' },
+      { path: '/b', title: 'B b', commonName: 'the dusk moth' },
+    ]
+    expect(specimenByCommonName('moth', docs)).toBeNull()
+  })
+
+  it('does not split a hyphenated name', () => {
+    const docs = [{ path: '/a', title: 'A a', commonName: 'the weaver-ant' }]
+    expect(specimenByCommonName('ant', docs)).toBeNull()
+    expect(specimenByCommonName('weaver', docs)).toBeNull()
+    expect(specimenByCommonName('weaver-ant', docs)?.slug).toBe('a')
   })
 
   it('does not fall back to the description', () => {

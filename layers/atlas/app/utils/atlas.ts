@@ -207,17 +207,19 @@ export function toSpecimenView(d: RawSpecimenDoc): SpecimenView {
 }
 
 /** The one Specimen of a Biome whose real `commonName` ("the lantern moth")
- *  reads as `segment` ("lantern-moth"), for the 404's "Did you mean". Matches
- *  `commonName` only, never `common`'s fallback; none or several give null. */
+ *  reads as `segment` ("lantern-moth"), for the 404's "Did you mean". Failing
+ *  a full match, the one whose name ends in the word `segment` ("moth"; a
+ *  hyphenated name stays one word). Matches `commonName` only, never
+ *  `common`'s fallback; none or several give null. */
 export function specimenByCommonName(
   segment: string,
   docs: RawSpecimenDoc[],
 ): { slug: string; binomial: string; commonName: string } | null {
-  const hits = docs.filter(
-    (d) =>
-      d.commonName &&
-      d.commonName.replace(/^the\s+/i, '').trim().toLowerCase().replace(/\s+/g, '-') === segment,
-  )
+  const named = docs.filter((d) => d.commonName)
+  const words = (d: RawSpecimenDoc) =>
+    d.commonName!.replace(/^the\s+/i, '').trim().toLowerCase().split(/\s+/)
+  const full = named.filter((d) => words(d).join('-') === segment)
+  const hits = full.length ? full : named.filter((d) => words(d).at(-1) === segment)
   const d = hits[0]
   if (hits.length !== 1 || !d) return null
   return { slug: specimenSlugOf(d.path), binomial: toSpecimenView(d).binomial, commonName: d.commonName! }
