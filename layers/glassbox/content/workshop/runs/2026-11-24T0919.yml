@@ -13,3 +13,5 @@ pagesRead:
   - nuxt-vue/60.nitro
   - nuxt-vue/70.data-fetching
   - nuxt-vue/80.hydration
+  - deploy/10.continuous-deployment
+  - nuxt-content/30.content-database
