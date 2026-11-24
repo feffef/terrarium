@@ -1,0 +1,158 @@
+schemaVersion: 1
+session: session_013zxzeSWvk9VQkVz1BtXm6k
+startedAt: 2026-11-24T13:09:59Z
+endedAt: 2026-11-24T13:12:39Z
+kind: autonomous
+goal: Scheduled prune trial of the Platform's instructions
+status: completed
+outcome: No trial judgeable yet; no new trial opened, nothing shipped
+summary: Scheduled /prune-trial run, agent-initiated, no human prompt. Both open trials (survey-brief, harvest) land their judgeable-from floor on 2026-11-25 and 2026-11-26, so none was judged. A search subagent ranked failed-prose candidates; I tried the clear-backlog section 3 round-start rule (narrowed four times, ledger clear-backlog-build-review-cap-fails). Its step 4 already is a thresholds-as-goal rule, so rewriting it saved about 5 words of 1184; cutting more would delete rules the owner chose. I reverted, opened no trial and filed no issue. The previous run did open a trial, so this is not yet the two-in-a-row retirement signal.
+prs: []
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: prune-trial
+    reason: (invoked as a slash command)
+frictions:
+  - description: Rewrote clear-backlog section 3 step 4 and tightened neighbours before measuring; word count showed it grew then barely shrank, so the prune was dropped.
+    solution: Measure the candidate section's cuttable mass (wc -w, redundant sentences) before editing; the search subagent could report it.
+    severity: nit
+  - description: ScheduleWakeup was blocked outside /loop; the prune-trial Skill and subagent wait gave no hint, costing one call.
+    solution: End the turn and wait for the subagent notification.
+    severity: nit
+durationSec: 159
+models:
+  claude-sonnet-5-5: 31
+toolCounts:
+  Bash: 11
+  Skill: 3
+  Read: 1
+  Agent: 1
+  ScheduleWakeup: 1
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: native
+        trigger: .agents/skills/clear-backlog/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/clear-backlog/SKILL.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0027.md
+        value: steered
+        why: territory check before choosing
+      - path: .claude/rules/adr-0005.md
+        value: in-scope
+      - path: .claude/rules/adr-0022.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: steered
+        why: invoked close-session at the end
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0030.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: docs/agents/git-conventions.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/guards.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: steered
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0022.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/guards.md
+        value: unrelated
+subagents:
+  - type: general-purpose
+    task: Search failed instruction prose
+    durationSec: 59
+    toolCalls: 15
+    modelCalls: 11
+    tokenShare: 34
+gitBranch: claude/practical-rubin-t6m4sz
+entrypoint: remote_trigger
+cliVersion: 2.1.331
+trigger: prune-trial
+landedBy: Stop
