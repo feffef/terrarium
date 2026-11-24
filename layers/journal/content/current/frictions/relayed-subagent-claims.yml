@@ -35,11 +35,6 @@ fixes:
     date: "2026-10-31"
     summary: "CLAUDE.md and the clear-backlog workflows' shared brief line ask each subagent to give every count, id or attribution with its source (command or file:line) or mark it unverified."
 occurrences:
-  - session: session_013zxzeTCierbbAWbnFNcAE5
-    date: "2026-11-09"
-    severity: minor
-    description: "A behaviour subagent quoted a glassbox-curate log line (newest run skipped the cost read) that does not exist; I only caught it by grepping the log before filing."
-    solution: "Briefs should require each quote to carry file:line; the brief.md says to verify, which saved the issue."
   - session: session_013zxzeSiQ4jom3vFu8GreLw
     date: "2026-11-10"
     severity: minor
@@ -155,3 +150,8 @@ occurrences:
     severity: minor
     description: "Put counts, ids and attributions from 15 subagent reports into the notes after checking only a few (prune-trial entry status, issue states); the rest carry an unverified tag."
     solution: "Have the brief ask each agent to list its three claims most worth re-checking, so the parent verifies those."
+  - session: session_013zxzeSk9yTcNdyR7eowQqV
+    date: "2026-11-24"
+    severity: minor
+    description: "One agent returned a report that its own scorecard mislabelled (StkfK as a non-user); checking it cost extra reads of the log."
+    solution: "Brief agents to cite file and line for every claimed hole, as the log-session agent partly did."

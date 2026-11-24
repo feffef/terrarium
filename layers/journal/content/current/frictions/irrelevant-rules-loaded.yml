@@ -11,26 +11,6 @@ related:
 notes: |-
   2026-11-08 design: narrow mermaid-lanes.md paths to the Glass Box walkthroughs dropped: .claude/rules/** is Human-only, a nit, and the tenant.config.ts rules are right for editing (RCCqrx agreed); issue #2167 already closed with the loader kept
 occurrences:
-  - session: session_013zxzeRYFqNFGvBn4FsDkTk
-    date: "2026-11-09"
-    severity: nit
-    description: "ADR-0029 and ADR-0030 loaded in a session that touched no ADR or rule, and the log then needed a verdict for each."
-    solution: "Narrow both rules' paths to the files they govern (their current paths unverified this session)."
-  - session: session_013zxzeS36fzX6FB2vAr7yRR
-    date: "2026-11-09"
-    severity: nit
-    description: "Reading Glass Box layer files loaded about ten unrelated rules (mermaid-lanes, mdc-when-to-use, adr-0021, adr-0025, adr-0030) into context."
-    solution: "Narrow the paths of mermaid-lanes.md and mdc-when-to-use.md to files that hold diagrams or content components."
-  - session: session_013zxzeQyUMxeD3fYivwaeLU
-    date: "2026-11-09"
-    severity: nit
-    description: "Every subagent and I received the same dozen unrelated ADR rules via hooks on read-only greps, costing context for no use."
-    solution: "Narrow the rule paths so a read-only grep of a doc does not load ADR rules it cannot use."
-  - session: session_013zxzePitVv4rX66ZhZa4kw
-    date: "2026-11-09"
-    severity: minor
-    description: "Hook-injected rules (about 17) loaded from incidental reads of journal and glassbox files, requiring verdicts that mostly said not applicable."
-    solution: "Narrower paths on rules that load when reading a PR diff's touched files, or fewer ADR summary rules loading on journal reads."
   - session: session_013zxzeNkk5oEC8RnBdMeMEt
     date: "2026-11-10"
     severity: nit

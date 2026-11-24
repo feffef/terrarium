@@ -24,3 +24,8 @@ occurrences:
     severity: minor
     description: "Added Where next descriptions for every page in the payload, against ADR-0028; a reviewer found it and I trimmed it to the linked targets."
     solution: "Apply the payload ADR when adding a field to useAsyncData, not after review."
+  - session: session_013zxzeQtxW3Ee58XJAgSyVi
+    date: "2026-11-23"
+    severity: minor
+    description: "Excerpt fences need a gap marker line between ranges; I learned that from two failing glassbox-pages tests after re-lining, not from the page-writing doc."
+    solution: "State in writing-pages.md or the Excerpt glossary entry that each gap between ranges is a // … line in the fence."

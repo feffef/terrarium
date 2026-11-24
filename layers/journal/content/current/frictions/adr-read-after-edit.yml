@@ -17,26 +17,6 @@ notes: |-
   2026-10-28 design: another digest Skill line dropped: it already says to read ADR-0010 before the first Digest; the hint is the designed backstop and the late read changed nothing. dropped: a guard would be Human-only.
   2026-10-30 design: change the hint or its rules' paths (issue #2575's candidates) dropped: all Human-only files; 85 of 86 late reads changed nothing, 0 'no' verdicts, so the cost is one call
 occurrences:
-  - session: session_013zxzeRB6ciegpxcRDfedSF
-    date: "2026-11-09"
-    severity: nit
-    description: "Did not read ADR-0025 before editing app/pages/index.vue; a post-commit hook told me to. The edit was compliant, so no cost."
-    solution: "Load the ADR-0025 rule on read of the file, not only on edit, so it arrives before the edit."
-  - session: session_013zxzeRYFqNFGvBn4FsDkTk
-    date: "2026-11-09"
-    severity: minor
-    description: "Read ADR-0005 and ADR-0027 only after editing the Skill, when the PostToolUse hook prompted; the edit turned out fine."
-    solution: "Read the ADRs a rule names before the first edit of a governed file, or load the rule at read time."
-  - session: session_013zxzeSj1mJxbgdKHbwgK2s
-    date: "2026-11-09"
-    severity: nit
-    description: "Read ADR-0005 and ADR-0027 only after a hook demanded them following my SKILL.md edit, not before editing."
-    solution: "Read the governing ADRs when the Skill is first opened; the edit was consistent with both."
-  - session: session_013zxzePvPobQ2Cfg3UyUHSt
-    date: "2026-11-09"
-    severity: nit
-    description: "Edited pr-workflow.md before reading ADR-0027 and ADR-0029; a hook asked for a late full read, and I read only ADR-0027 and skipped ADR-0029 and ADR-0003."
-    solution: "Read the ADRs a Skill's own rule names (ADR-0027) before the first edit; the hook's late read is the only reminder."
   - session: session_013zxzePY5ruxnnX3PjPY9WM
     date: "2026-11-10"
     severity: nit
@@ -262,3 +242,18 @@ occurrences:
     severity: nit
     description: "Read ADR-0005 and ADR-0027 only after a hook prompted, after editing the glassbox-update Skill; the edits matched both"
     solution: "Read the ADRs a Skill's rule names before the first Skill edit"
+  - session: session_013zxzeRZHMEnUJhXdAbEh4G
+    date: "2026-11-23"
+    severity: nit
+    description: "Edit hooks demanded full ADR reads after edits; I ran a word-count cat that showed no content, so I did not truly read them. The edits were trivial and checker-verified."
+    solution: "Read the named ADRs with Read before editing, or have the hook name only ADRs the edit's topic touches."
+  - session: session_013zxzePJuqzjJyKT2zEFnME
+    date: "2026-11-23"
+    severity: nit
+    description: "Edited survey-brief.md before reading ADR-0005 and ADR-0027 in full; the post-write hook asked for them, and the late read changed nothing."
+    solution: "Read the governing ADRs listed in the rule summaries before the first edit in a trial."
+  - session: session_013zxzeT6Ss7hjULbaTx2PS2
+    date: "2026-11-23"
+    severity: nit
+    description: "After a prototype edit under layers/journal a hook asked me to read ADR-0006, ADR-0008 and ADR-0016 in full; I skipped it because the edit was throwaway and reverted."
+    solution: "The prototype Skill could say a reverted sample needs no ADR read, or the ADR rules could exclude layers/journal/app/pages in a prototype."

@@ -17,11 +17,6 @@ fixes:
     date: "2026-11-08"
     summary: "CLAUDE.md gained a bullet: before you plan or design, read the full ADR of each decision the plan touches."
 occurrences:
-  - session: session_013zxzeNd2Ethpd3anqbmpkr
-    date: "2026-11-09"
-    severity: minor
-    description: "Drafted rule-path proposals before reading ADR-0029 and the Bash hint, though CLAUDE.md says read the full ADR before planning; its broad-paths stance reframed the advice."
-    solution: "Make CLAUDE.md's plan trigger name audits and reviews of a mechanism, so the ADR is read first."
   - session: session_013zxzeSjczLUzQPWWSHP4t9
     date: "2026-11-10"
     severity: minor

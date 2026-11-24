@@ -113,3 +113,18 @@ occurrences:
     severity: nit
     description: "Retro (reviewers): the rule-use hook asked read-only review subagents for a second echo rule-use call listing rules unrelated to their review; pure overhead."
     solution: "Skip or shorten the rule-use prompt for read-only review subagents in the SubagentStart hook under scripts/hooks/ (not located)."
+  - session: session_013zxzeQemDnZfmHdeYUmhur
+    date: "2026-11-23"
+    severity: minor
+    description: "Retro, all three agents: the rule-use hook asked for two echo calls per agent, listing rules that did not apply to a read-only review or a small build, with no effect on the work (their reports; hook home file unverified)."
+    solution: "Skip the rule-use prompt for read-only review subagents, in the hook script that emits it, likely under scripts/hooks/ (unverified)."
+  - session: session_013zxzeT6Ss7hjULbaTx2PS2
+    date: "2026-11-23"
+    severity: minor
+    description: "Subagent retro (all three): the rule-use hook demands `echo rule-use:` twice per subagent and the loaded ADR rules were unrelated to a read-only review, costing two extra Bash calls each."
+    solution: "Skip the rule-use ritual for read-only reviewer and builder subagents, or load only the rules their paths match."
+  - session: session_013zxzePaBNkuBSUPc9jtA9d
+    date: "2026-11-23"
+    severity: nit
+    description: "Subagent startup hook made the blind visitor echo rule-use twice and rate four ADRs that do not apply to a read-only visit."
+    solution: "Skip the rule-use echo for read-only visitor subagents (SubagentStart hook config; path unverified)."

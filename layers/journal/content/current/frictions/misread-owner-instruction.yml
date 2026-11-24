@@ -19,16 +19,6 @@ fixes:
     date: "2026-11-16"
     summary: "CLAUDE.md 'Ask before building': an unanswered, option-less or deferred reply is not a yes; ask again or hold the step."
 occurrences:
-  - session: session_013zxzeRB6ciegpxcRDfedSF
-    date: "2026-11-09"
-    severity: minor
-    description: "Took the option \"Drop the intro line\" literally and deleted the wording the user wanted kept; the user said so and I redid it as a fold into the blurb."
-    solution: "When an option removes user-visible text, say where its wording goes before acting, and ask if that is unclear."
-  - session: session_013zxzeNd2Ethpd3anqbmpkr
-    date: "2026-11-09"
-    severity: minor
-    description: "I cut the four-value scale for rules on my own reading of 'strip it' when the owner had not chosen between my two options; they asked for it back much later, after the implementer built the binary form."
-    solution: "When a reply does not pick between options I offered, ask again before acting on one."
   - session: session_013zxzeR6YXBiMLnmDFQpBs9
     date: "2026-11-10"
     severity: minor
@@ -39,11 +29,6 @@ occurrences:
     severity: minor
     description: "Relaunched the #3046 build on my own reading of the owner's correction to 4c without confirming the scope first; the owner interrupted to ask what was being built."
     solution: "Restate a corrected scope in one line and wait for a yes before relaunching a build."
-  - session: session_013zxzeRumtXDY7MVhKUgVT7
-    date: "2026-11-09"
-    severity: minor
-    description: "Owner decisions reached me relayed through another session, several messages apart; I built while one question was still open and proceeded on my default."
-    solution: "Collect every open design question before building and send them in one message to the deciding session."
   - session: session_013zxzeQgXPpoTcwuDuvvDtE
     date: "2026-11-11"
     severity: moderate
@@ -114,3 +99,8 @@ occurrences:
     severity: minor
     description: "I treated a context compaction as not a stop; the owner pointed out it means the window is full, so the first stop rule was wrong."
     solution: "Check what a harness event means for the limit being set before writing a rule around it."
+  - session: session_013zxzeT6Ss7hjULbaTx2PS2
+    date: "2026-11-23"
+    severity: minor
+    description: "Owner's #3626 reply 'include the total number of ideas' changed the look, so I built a second sample, then the owner replied 'Just write ideas in b of C sessions' and I guessed it meant dropping the total without asking."
+    solution: "When an answer to a look question could be read two ways, ask the one-line question before building a second sample."

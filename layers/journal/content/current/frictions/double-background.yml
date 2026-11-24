@@ -17,16 +17,6 @@ fixes:
     date: "2026-10-16"
     summary: "The double-background guard's deny message now says the whole call was denied and nothing in it ran."
 occurrences:
-  - session: session_013zxzeSKTBjSfYnUxNHTJw1
-    date: "2026-11-09"
-    severity: nit
-    description: "I gave a background gate run both run_in_background and a trailing nohup ampersand; the double-background guard (issue 1208) refused it, nothing ran, and I resent it once."
-    solution: "CLAUDE.md or the dispatch Skill could show the one correct form: a plain foreground command, run_in_background true, output redirected to a log."
-  - session: session_013zxzeRSMtPAREKXCce9GT6
-    date: "2026-11-09"
-    severity: nit
-    description: "Sent a background Bash call with a trailing nohup and ampersand as well as run_in_background; the double-background guard blocked it."
-    solution: "Pass run_in_background alone, as the guard's message and dispatch-subagents say."
   - session: session_013zxzeNa1RNcdysLXBJAD5N
     date: "2026-11-11"
     severity: nit
@@ -162,3 +152,18 @@ occurrences:
     severity: nit
     description: "A background gate command also contained a trailing ampersand and the double-background guard refused it; nothing ran."
     solution: "Pass run_in_background alone with a plain foreground command."
+  - session: session_013zxzeQTiD2k55P7AkEWYBY
+    date: "2026-11-23"
+    severity: nit
+    description: "Sent a background Bash call with a trailing & too; the double-background guard refused it and nothing ran."
+    solution: "Pass run_in_background alone with a plain command."
+  - session: session_013zxzeQtxW3Ee58XJAgSyVi
+    date: "2026-11-23"
+    severity: nit
+    description: "A Bash call with run_in_background plus a trailing & was blocked by the double-background guard; resent as two calls."
+    solution: "None needed; the guard worked as designed."
+  - session: session_013zxzeS6gys4MPSEMWnZd1m
+    date: "2026-11-23"
+    severity: nit
+    description: "Stacked run_in_background with a text-level ampersand on the gate command; the double-background guard denied it and I resent it."
+    solution: "The Skill and pr-workflow could say to run the gate with run_in_background alone and no trailing ampersand."

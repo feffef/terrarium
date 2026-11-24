@@ -24,11 +24,6 @@ occurrences:
     severity: minor
     description: "Opened the PR before checking ADR-0004's untested-behaviour exception; the CSS mark had no test, so the merge stalled until I added one, which cost a rebuild and a second CI run."
     solution: "At review time ask whether a test observes the change; add the test before the first gate run when none does."
-  - session: session_013zxzeS36fzX6FB2vAr7yRR
-    date: "2026-11-09"
-    severity: nit
-    description: "I only noticed ADR-0004's 'behaviour no test can observe' exception after the fix PR's gate was green, then had to add e2e assertions and a second verdict."
-    solution: "Ask which test would fail if this regressed when planning each fix, before opening the PR."
   - session: session_013zxzeRjfC32pkbUMmiaMnN
     date: "2026-11-18"
     severity: nit
@@ -39,3 +34,8 @@ occurrences:
     severity: nit
     description: "Told the owner an edit to a Skill needed no Trusted-user approval and was probably not Human-only, without checking; the PR then needed a human merge anyway for untestable behaviour."
     solution: "Check pr-workflow step 1 (a test that fails on regression) before saying who merges."
+  - session: session_013zxzeT6Ss7hjULbaTx2PS2
+    date: "2026-11-23"
+    severity: minor
+    description: "The ideas-line wording lived only in the Vue template, so PR #3629 shipped it untested; I moved it into a tested helper late, in the follow-up, to meet ADR-0004."
+    solution: "clear-backlog briefs for owner-visible text should say to put the wording logic in a pure, tested helper from the start."

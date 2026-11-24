@@ -52,26 +52,6 @@ fixes:
     date: "2026-11-19"
     summary: "Review comes before opening the PR as numbered steps in pr-workflow.md; merge-pr.ts requires proof behind a Reviewed: line and applies the full simple-change test to an Own-read verdict."
 occurrences:
-  - session: session_013zxzeRB6ciegpxcRDfedSF
-    date: "2026-11-09"
-    severity: minor
-    description: "Change was over the 10-line simple limit, so code-review was owed, but I read the diff myself instead of dispatching the review subagents."
-    solution: "Dispatch the two review agents, or state the skip in the PR; the diff was tiny so the risk was low."
-  - session: session_013zxzeRYFqNFGvBn4FsDkTk
-    date: "2026-11-09"
-    severity: moderate
-    description: "Second commit changes the Skill's meaning, so it fails pr-workflow's simple-change test, yet I read the diff myself instead of re-running code-review; disclosed in the PR body."
-    solution: "Re-run code-review on a follow-up that changes meaning, or ask whether the owner accepts the lighter check."
-  - session: session_013zxzeQMfaaC4C4CNuFY3EH
-    date: "2026-11-09"
-    severity: minor
-    description: "Skipped code-review for a mechanical 73-file diff that fails the simple-change count; read the non-pin diff myself."
-    solution: "pr-workflow could name pin-only glassbox-update diffs as simple."
-  - session: session_013zxzeSj1mJxbgdKHbwgK2s
-    date: "2026-11-09"
-    severity: minor
-    description: "Did not run code-review on my follow-up commit that moved a Skill sentence; pr-workflow says a Skill-meaning follow-up gets its own review. I read the diff and disclosed it."
-    solution: "Run code-review on the follow-up diff, or state in pr-workflow that a reorder of an already reviewed sentence counts as simple."
   - session: session_013zxzeR9nyx91atfAKEs7c3
     date: "2026-11-11"
     severity: nit
@@ -187,3 +167,8 @@ occurrences:
     severity: minor
     description: "The last commit (three files, a Skill clause cut) got only my own read, though it is not a simple change under pr-workflow"
     solution: "Run code-review on the follow-up diff, or keep review-round fixes inside the simple-change bars; the PR discloses it"
+  - session: session_013zxzePJuqzjJyKT2zEFnME
+    date: "2026-11-23"
+    severity: minor
+    description: "The follow-up commit that restored rules was not simple, so a code-review call was due, but I ran a plain subagent re-check that merge-pr.ts will not accept; I left the PR for a human."
+    solution: "Run the printed code-review call on the follow-up diff in the same session when reviewers find lost rules."

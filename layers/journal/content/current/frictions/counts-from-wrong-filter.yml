@@ -17,11 +17,6 @@ fixes:
     date: "2026-11-13"
     summary: "midden-survey lists closed-unmerged PRs with a script that pages completely, replacing the search call and hand paging."
 occurrences:
-  - session: session_013zxzeNd2Ethpd3anqbmpkr
-    date: "2026-11-09"
-    severity: nit
-    description: "Keyed sessions by a 10-character id prefix; three of 390 collided and skewed the edit-versus-read table until I reran on full ids. Caught before publishing."
-    solution: "Key by full session id and assert uniqueness in throwaway aggregation scripts."
   - session: session_013zxzeRvdzBc3xXGo24TkVf
     date: "2026-11-12"
     severity: nit
@@ -57,3 +52,8 @@ occurrences:
     severity: minor
     description: "The first #3340 review counted the unrated gap for main only; the subagent gap (30%) surfaced later, so I posted a correction comment."
     solution: "Compute unrated loads for both agent groups before posting a review that rests on shares."
+  - session: session_013zxzeQcWYfBxqngG8mJ56N
+    date: "2026-11-23"
+    severity: minor
+    description: "Counting the over-limit Lessons at the PR 3608 merge needed three tries: a worktree at the wrong commit, then a script run that printed other checks."
+    solution: "list-recent-prs.ts could print each PR's merge commit sha next to its number."

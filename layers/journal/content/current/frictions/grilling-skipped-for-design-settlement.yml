@@ -9,11 +9,6 @@ related:
 notes: |-
   2026-11-08 design: no change dropped: 3 of 5 sessions are not defects (T5vcQT owner said 'choose yourself', Sy38XR clear-backlog says its list wins); NpEgo already had 'settle every decision via grilling' in glassbox-curate, read and ignored, so more prose is the wrong mechanism; the delegation clause is in issue #2962
 occurrences:
-  - session: session_013zxzeRB6ciegpxcRDfedSF
-    date: "2026-11-09"
-    severity: minor
-    description: "Trimmed the tile intro instead of asking what it should say, so the user had to flag it as meaningless; one extra round and commit."
-    solution: "Settle every displayed string, intro lines included, in the first question round, as CLAUDE.md says for user-facing UI."
   - session: session_013zxzePXpUx7WY6K2uHsxKz
     date: "2026-11-12"
     severity: minor

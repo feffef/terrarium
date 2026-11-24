@@ -16,3 +16,8 @@ occurrences:
     severity: minor
     description: "merge-pr.ts refused four times: my first verdict comment carried an Own-read line (invalid for 26 files), and the code-review call had to carry the head sha in its args. It cost three extra comments and a re-invoked Skill."
     solution: "Post the verdict only after the review at the final head, with no Own-read line; the printed review call includes the sha in parentheses, so pass it verbatim."
+  - session: session_013zxzeS6gys4MPSEMWnZd1m
+    date: "2026-11-23"
+    severity: minor
+    description: "Merging main into a run branch pulled the other run's files into the diff, so merge-pr.ts refused an Own-read verdict and I had to run a second code-review."
+    solution: "The Skill could say to merge main into a branch only after the review, or to expect a second review when a merge brings in files."

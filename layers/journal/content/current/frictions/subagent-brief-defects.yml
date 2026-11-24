@@ -50,11 +50,6 @@ notes: |-
   2026-11-13 survey: Le6nsJ (2026-11-12) dispatched PAGES_PLACEHOLDER and FULL_PLACEHOLDER unfilled; the #3064 guard pattern (@@NAME@@ or braces) does not match that form. Issue #3227 (audit-skills, opened 2026-11-13) tracks unfilled placeholders.
   2026-11-23 prune trial (dispatch-subagents §3 cut) judged: it holds; the post-cut rise (6/36 vs 14/218) traces to clear-backlog-build.js rules(), not the cut text
 occurrences:
-  - session: session_013zxzePvPobQ2Cfg3UyUHSt
-    date: "2026-11-09"
-    severity: minor
-    description: "Criterion 1 search subagent did not query the issue tracker, only ledger refs and doc incident tags, so issue states in the ledger entry are unverified."
-    solution: "Brief the search subagent with a tracker query command (gh api search/issues) so it can verify issue states, or have the Skill name one."
   - session: session_013zxzeSjaFuTmBXbfN2o5AH
     date: "2026-11-10"
     severity: nit
@@ -155,3 +150,13 @@ occurrences:
     severity: minor
     description: "My #3580 brief said to import the SHA regex, too narrow: the guard then matched the skill name its own way, and both reviewers flagged the drift."
     solution: "Brief the shared check, not one of its parts, when two code paths must agree."
+  - session: session_013zxzeQTiD2k55P7AkEWYBY
+    date: "2026-11-23"
+    severity: nit
+    description: "My design brief gave the clear-backlog source as a nonexistent Skill path; the design agent had to correct it."
+    solution: "Check each path in a filled brief exists before dispatch."
+  - session: session_013zxzeQemDnZfmHdeYUmhur
+    date: "2026-11-23"
+    severity: nit
+    description: "Retro, builder: brief step 2 says to read implement/SKILL.md, whose lines 15-16 say to invoke code-review, while the brief says to skip it; reconciling the two cost a re-read (builder's claim, not re-checked)."
+    solution: "Have the build brief say once which implement/SKILL.md steps apply, in .claude/workflows/clear-backlog-build.js."

@@ -1,0 +1,16 @@
+name: resumed-agent-repeats-report-on-retro
+surface: safe
+summary: A resumed agent answered the orchestrator's retro question by re-sending its earlier report, so the retro was missing.
+cause: "The orchestrator resumes a finished agent (a UI tester or visitor) with a retro question, and the agent replies with its previous visit report instead of answering; no retro results. Signals: 'answered the retro request by repeating its site report', 'resumed UI tester answered the retro question by re-sending its visit report'."
+status: open
+occurrences:
+  - session: session_013zxzePNKjPWkVNAkzZbSVC
+    date: "2026-11-22"
+    severity: nit
+    description: "The UI tester answered the retro request by repeating its site report, so that retro is missing."
+    solution: "In visitor-loop SKILL.md step 5, open the retro message with 'Do not repeat your site report'."
+  - session: session_013zxzePaBNkuBSUPc9jtA9d
+    date: "2026-11-23"
+    severity: nit
+    description: "A resumed UI tester answered the retro question by re-sending its visit report, so I had no retro from it."
+    solution: ".agents/skills/visitor-loop/SKILL.md step 5: say to reply with the retro only, not repeat the report."

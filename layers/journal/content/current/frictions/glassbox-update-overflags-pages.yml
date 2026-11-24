@@ -40,3 +40,8 @@ occurrences:
     severity: minor
     description: "The skill's one-line instruction implies about 50 page checks; it took seven agents and many turns, with a pilot rule slowing the fan-out."
     solution: "State in the Skill that an all-pages-flagged run is expected and give a ready batch script."
+  - session: session_013zxzeRb6jw4zGjcwT5aQnQ
+    date: "2026-11-22"
+    severity: minor
+    description: "Subagent report sat unusably long; checking 32 pages needed five agents and ~8 hand-backs to read."
+    solution: "Have the script emit per-page claim-check briefs and ask subagents to return only falseClaims."

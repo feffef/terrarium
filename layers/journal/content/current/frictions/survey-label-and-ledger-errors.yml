@@ -32,3 +32,8 @@ occurrences:
     severity: minor
     description: "The design agent's pick 1 showed the survey ledger entry named the wrong Skill (audit-skills, not blog-post); the survey had flagged it unverified and the brief has no step for a mislabelled entry."
     solution: "Survey brief: when a Friction's named home cannot be found in source, check the session's trigger before opening an entry."
+  - session: session_013zxzeQTiD2k55P7AkEWYBY
+    date: "2026-11-23"
+    severity: minor
+    description: "A prune-friction-ledger --move of a cluster's only occurrence silently deleted the entry with its fixes and notes; the survey agent had to restore it from git."
+    solution: "Have --move refuse or warn when the source entry would end empty."

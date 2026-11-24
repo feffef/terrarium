@@ -41,3 +41,13 @@ occurrences:
     severity: nit
     description: "Retro (reviewers): the brief asked for a StructuredOutput result while the resume protocol asked for a JSON file and a one-line reply, so they reconciled two formats."
     solution: "State the resume hand-off format once in reviewPrompt() of .claude/workflows/clear-backlog-build.js."
+  - session: session_013zxzeQemDnZfmHdeYUmhur
+    date: "2026-11-23"
+    severity: nit
+    description: "Retro, Spec reviewer: the first turn asked for structured output and the resume asked for a JSON file plus one line, two hand-off formats in one run."
+    solution: "The resume text in .claude/workflows/clear-backlog-build.js should always name the hand-off and the file path (reviewer's report; first-turn source unverified)."
+  - session: session_013zxzeT6Ss7hjULbaTx2PS2
+    date: "2026-11-23"
+    severity: minor
+    description: "Subagent retro (builder and Standards reviewer): the first turn says return structured output, later resumes say reply with one line or a findings file; two hand-off channels were confusing."
+    solution: "State the hand-off channel once in rules() in .claude/workflows/clear-backlog-build.js."

@@ -11,16 +11,6 @@ fixes:
     date: "2026-11-03"
     summary: "CLAUDE.md Question the premise: a new ordering, split or selection rule is also run across consecutive runs if it rotates or carries state."
 occurrences:
-  - session: session_013zxzeRYFqNFGvBn4FsDkTk
-    date: "2026-11-09"
-    severity: minor
-    description: "First Scout draft contradicted itself (never wait vs wait now) and had Scout re-run orient.ts, which rewrites the index files; only code-review caught it."
-    solution: "Before committing a new instruction, run its steps on a concrete run, as CLAUDE.md's question-the-premise rule says."
-  - session: session_013zxzeNd2Ethpd3anqbmpkr
-    date: "2026-11-09"
-    severity: minor
-    description: "My capture-design draft broke its own no-trigger-change constraint by editing the hint hooks and understated cost by ignoring cache re-reads; the Fable reviewer caught both before anything was built."
-    solution: "Check a draft against its own stated constraints, and price a forced extra turn as a context re-read, before sending it for review."
   - session: session_013zxzeNhTeF9B47tZ5Egyhx
     date: "2026-11-11"
     severity: minor

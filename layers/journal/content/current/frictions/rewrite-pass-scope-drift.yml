@@ -24,3 +24,8 @@ occurrences:
     severity: minor
     description: "My first reflow of Adding a site stop 8 moved a claim about what the smoke test never visits; only code-review caught it."
     solution: "The Skill could say a reflow of a fact sentence is a Fix needing a writer or claim check, not a Removal."
+  - session: session_013zxzePJuqzjJyKT2zEFnME
+    date: "2026-11-23"
+    severity: minor
+    description: "First trial entry claimed every command, label and rule was kept; the Standards reviewer showed several rules were lost, so I restored them and re-reviewed."
+    solution: "Diff the old and new brief's rules before writing the trial entry's keep claim."

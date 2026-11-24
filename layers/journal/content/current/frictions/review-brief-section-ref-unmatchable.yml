@@ -38,3 +38,13 @@ occurrences:
     severity: nit
     description: "Retro (reviewers): the pointer to section 3 of the code-review Skill mixes the smell list with sub-agent spawning steps, so reviewers read past what they needed."
     solution: "Point reviewers at the smell list's line range in .agents/skills/code-review/SKILL.md, or paste it into reviewPrompt()."
+  - session: session_013zxzeT6Ss7hjULbaTx2PS2
+    date: "2026-11-23"
+    severity: nit
+    description: "Subagent retro (Standards reviewer): the brief names section 3 of code-review/SKILL.md; the reviewer had to grep for it and read lines that pulled in unrelated dispatch text."
+    solution: "Give the line range or paste the smell baseline in reviewPrompt() in .claude/workflows/clear-backlog-build.js."
+  - session: session_013zxzeQemDnZfmHdeYUmhur
+    date: "2026-11-23"
+    severity: nit
+    description: "Retro, Standards reviewer: told to read only the '### 3' section of code-review SKILL.md without an end line, so its sed range also pulled in step 4's prompt text."
+    solution: "Name the section's end line or heading in the review brief in .claude/workflows/clear-backlog-build.js (reviewer's claim, unverified)."
