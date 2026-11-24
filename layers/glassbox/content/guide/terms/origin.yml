@@ -1,0 +1,3 @@
+term: Origin
+definition: The scheme, host name and port of the address a page was loaded from. Two pages share an origin only when all three match, and the browser gives each origin its own storage.
+lesson: /t/glassbox/guide/web-standards/web-storage
