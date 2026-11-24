@@ -9,7 +9,7 @@ role: >-
   `frictions-to-fixes`. Files issues only; fired by a Routine, or invoked by a
   person (disable-model-invocation: true).
 watchFor:
-  - "A run that stops before its Seedling quota or cluster limit logs a `stopped:` reason that check-clusters accepts."
+  - "The session log gives the stop reason: Seedling quota filled, 30 clusters checked or an explicit budget."
   - "Every Seedling the run filed exists on GitHub with a well-formed body."
   - "Existing Seedlings were checked without reading the whole issue list into the run's own context."
   - "No new Seedling duplicates an open issue or one the owner closed as not planned."
