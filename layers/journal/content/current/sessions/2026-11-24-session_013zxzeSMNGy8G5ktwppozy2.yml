@@ -1,0 +1,346 @@
+schemaVersion: 1
+session: session_013zxzeSMNGy8G5ktwppozy2
+startedAt: 2026-11-24T00:15:50Z
+endedAt: 2026-11-24T00:22:42Z
+kind: autonomous
+goal: Write the 2026-11-23 Journal Digest and archive old content
+status: in-review
+outcome: PR 3632 open with the 2026-11-23 Digest and archive sweep, gate green, awaiting merge
+summary: Scheduled digest run, no human prompt. One closed day was missing a Digest (2026-11-23). I gathered its material, wrote the Digest, ran the archive sweep (1 Digest and 29 session logs moved to archived), had a fresh subagent fact-check it (two wrong claims, a line count and a verb, fixed, plus one loosely worded claim tightened), ran code-review (Standards and Spec, nothing to fix) and gate:scoped, pushed and opened PR 3632. Everything was agent-initiated under the Skill's schedule; no human instruction.
+prs:
+  - "3632"
+docsRead:
+  - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/digests/2026-11-23.md
+    reason: (read before editing)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/GLOSSARY.md
+    reason: (no reason given)
+  - path: GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: digest
+    reason: (invoked as a slash command)
+frictions:
+  - description: Ran list-recent-prs (a git fetch) before reading git-conventions.md; the hook named it only afterwards. Harmless.
+    solution: Have the digest Skill step 3 name git-conventions.md before the list-recent-prs command.
+    severity: nit
+  - description: First Agent dispatch was blocked by the dispatch-read guard because I had not read the dispatch Skill; I read it and retried.
+    solution: Digest Skill step 3 could name dispatch-subagents next to the fact-check subagent.
+    severity: nit
+  - description: Ran verdict-line.ts from scripts/gate/, a wrong path; pr-workflow gives scripts/github/. One failed call.
+    solution: Say the path in the digest Skill step 6.
+    severity: nit
+  - description: First draft said a counts claim, a line count from a PR title (-109 vs net -106) and wrote 'counts' for what a post lists; the fact-check caught both.
+    solution: Take line counts from git numstat of the merge, not PR titles.
+    severity: minor
+  - description: A sed edit meant to fix two words changed a third phrase and left an ambiguous 'its'; I had to edit again and amend.
+    solution: Use Edit with exact strings for prose fixes.
+    severity: nit
+durationSec: 412
+models:
+  claude-sonnet-5-5: 56
+toolCounts:
+  Bash: 19
+  Read: 6
+  Agent: 4
+  Skill: 3
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+filesEdited:
+  - layers/journal/content/archived/pages/digests/2026-11-16.md
+  - layers/journal/content/archived/sessions/2026-11-16-session_013zxzeNzhyuFe3JhwD9usjS.yml
+  - layers/journal/content/archived/sessions/2026-11-16-session_013zxzeP4NViUQL8i9LwF7Nj.yml
+  - layers/journal/content/archived/sessions/2026-11-16-session_013zxzePSjuKdFtiNUSC531Y.yml
+  - layers/journal/content/archived/sessions/2026-11-16-session_013zxzePnUYHpbwDsDER2swv.yml
+  - layers/journal/content/archived/sessions/2026-11-16-session_013zxzeQsCq5g9jeQpmsULPZ.yml
+  - layers/journal/content/archived/sessions/2026-11-16-session_013zxzeQwDvvHbis5TK1nUw5.yml
+  - layers/journal/content/archived/sessions/2026-11-16-session_013zxzeRCPF7mHwN6aT8t7RQ.yml
+  - layers/journal/content/archived/sessions/2026-11-16-session_013zxzeRzd6VkoZYwUYQuzAn.yml
+  - layers/journal/content/archived/sessions/2026-11-16-session_013zxzeSFVZRywvYz2rGcRzP.yml
+  - layers/journal/content/archived/sessions/2026-11-16-session_013zxzeSNLpQuhLvWkddGuao.yml
+  - layers/journal/content/archived/sessions/2026-11-16-session_013zxzeSoqEeWqPDrCqDCcJn.yml
+  - layers/journal/content/archived/sessions/2026-11-16-session_013zxzeSyRCdzfotAbmBuiPp.yml
+  - layers/journal/content/archived/sessions/2026-11-16-session_013zxzeT29epAaAQNqmHmeU4.yml
+  - layers/journal/content/archived/sessions/2026-11-16-session_013zxzeTChey8pdC2fuTTH7i.yml
+  - layers/journal/content/archived/sessions/2026-11-17-session_013zxzeNkrnZpMkYb9UUBh2t.yml
+  - layers/journal/content/archived/sessions/2026-11-17-session_013zxzePEh76m48UZNU4Ue1j.yml
+  - layers/journal/content/archived/sessions/2026-11-17-session_013zxzePMRv24VHZ1q24seyG.yml
+  - layers/journal/content/archived/sessions/2026-11-17-session_013zxzePiqmgzsVGM4zghBUs.yml
+  - layers/journal/content/archived/sessions/2026-11-17-session_013zxzePjedjMk4SeDKFvzPt.yml
+  - layers/journal/content/archived/sessions/2026-11-17-session_013zxzeQ8sddaeWL4KijZQnp.yml
+  - layers/journal/content/archived/sessions/2026-11-17-session_013zxzeQgh4aLo2xMP4FzXZJ.yml
+  - layers/journal/content/archived/sessions/2026-11-17-session_013zxzeQnWZGH17Bmo7pqtaf.yml
+  - layers/journal/content/archived/sessions/2026-11-17-session_013zxzeR4N3chSHqH7Po2sjW.yml
+  - layers/journal/content/archived/sessions/2026-11-17-session_013zxzeS9acFkKg79nkVrA5R.yml
+  - layers/journal/content/archived/sessions/2026-11-17-session_013zxzeSZQpKBLnM3DK1cPRQ.yml
+  - layers/journal/content/archived/sessions/2026-11-17-session_013zxzeSgAcwDrJXAMFAC4Qf.yml
+  - layers/journal/content/archived/sessions/2026-11-17-session_013zxzeSgpoaGQ1bLrtX4DkU.yml
+  - layers/journal/content/archived/sessions/2026-11-17-session_013zxzeSpYABZ15tUzNbPJN9.yml
+  - layers/journal/content/archived/sessions/2026-11-17-session_013zxzeTBn6kP1nZ2KA22n9i.yml
+  - layers/journal/content/current/pages/digests/2026-11-16.md
+  - layers/journal/content/current/pages/digests/2026-11-23.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0010.md
+docsReadBySubagents:
+  - .agents/skills/glassbox-update/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - layers/journal/GLOSSARY.md
+  - GLOSSARY.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0010.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: native
+        trigger: docs/adr/0010-digests-derived-append-only-journal-pages.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/adr/0010-digests-derived-append-only-journal-pages.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: docs/adr/0010-digests-derived-append-only-journal-pages.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/dispatch-subagents/SKILL.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: ran review and gate before the PR
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: opened PR only after review and gate
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: session header and commit trailer checked
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0010.md
+        value: steered
+        why: read ADR first, Digest written once
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0030.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: in-scope
+      - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+      - path: .agents/skills/dispatch-subagents/SKILL.md
+      - path: docs/agents/pr-workflow.md
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/journal/content/current/pages/digests/2026-11-23.md
+      - rule: .claude/rules/adr-0010.md
+        via: native
+        trigger: layers/journal/content/current/pages/digests/2026-11-23.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/journal/content/current/pages/digests/2026-11-23.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0010.md
+        value: in-scope
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: in-scope
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: docs/agents/git-conventions.md
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/digest/SKILL.md
+      - rule: .claude/rules/adr-0010.md
+        via: native
+        trigger: .agents/skills/digest/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/digest/SKILL.md
+      - rule: .claude/rules/adr-0030.md
+        via: native
+        trigger: docs/adr/0010-digests-derived-append-only-journal-pages.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: docs/adr/0010-digests-derived-append-only-journal-pages.md
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/journal/GLOSSARY.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/journal/GLOSSARY.md
+      - rule: .claude/rules/adr-0008.md
+        via: native
+        trigger: layers/journal/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/journal/GLOSSARY.md
+    reported:
+      - path: .claude/rules/adr-0010.md
+        value: in-scope
+      - path: .claude/rules/adr-0008.md
+        value: in-scope
+      - path: .claude/rules/tenant-glossary.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0030.md
+        value: unrelated
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/glossary-terms.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: unrelated
+      - path: .agents/skills/digest/SKILL.md
+  - by: general-purpose
+    subagent: 3
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+subagents:
+  - type: general-purpose
+    task: Fact-check Digest 2026-11-23
+    model: sonnet
+    denied: true
+  - type: general-purpose
+    task: Fact-check Digest 2026-11-23
+    model: sonnet
+    durationSec: 86
+    toolCalls: 37
+    modelCalls: 13
+    tokenShare: 24
+  - type: general-purpose
+    task: Standards review of Digest PR
+    model: sonnet
+    durationSec: 20
+    toolCalls: 9
+    modelCalls: 4
+    tokenShare: 10.9
+  - type: general-purpose
+    task: Spec review of Digest PR
+    model: sonnet
+    durationSec: 19
+    toolCalls: 7
+    modelCalls: 4
+    tokenShare: 10.2
+gitBranch: claude/compassionate-lovelace-dt4v0v
+entrypoint: remote_trigger
+cliVersion: 2.1.331
+trigger: digest
+landedBy: Stop
