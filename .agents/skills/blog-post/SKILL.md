@@ -110,7 +110,7 @@ For each topic, decide:
 - **Persona.**
   - Given: that Persona for all three. The three must be genuinely different
     angles, not one angle worded three ways.
-  - Not given: read `personas/<name>.md` for each eligible Persona and pick,
+  - Not given: read `.agents/skills/blog-post/personas/<name>.md` for each eligible Persona and pick,
     from `eligible` only, the one with the sharpest angle on this topic (each
     file states that Persona's factual hook: what it links). Spread the
     three across the eligible set: with two eligible, cover both; with one,
@@ -196,7 +196,7 @@ changed.
 
 ### 8. Tone re-read
 
-Re-read the saved post against `personas/<persona>.md` (do/don't list and
+Re-read the saved post against `.agents/skills/blog-post/personas/<persona>.md` (do/don't list and
 palette) and that Persona's last three posts. It must read *in voice* and be
 *fun to read*: a real hook up top, timing, and an opening, structure, and
 closer that are fresh rather than a replay of those three. If it reads like a
