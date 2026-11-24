@@ -162,9 +162,27 @@ export function skillUseCounts(sessions: SessionDoc[]): Record<string, number> {
   return counts
 }
 
-// Of those, the sessions whose log also lists ideas; a Skill never used here has no entry.
-export function skillIdeaCounts(sessions: SessionDoc[]): Record<string, number> {
-  return skillUseCounts(sessions.filter((s) => (s.ideas ?? []).length > 0))
+// Of those, the sessions whose log also lists ideas, and how many ideas they
+// list; a Skill never used here has no entry.
+export function skillIdeaCounts(sessions: SessionDoc[]): Record<string, { sessions: number; ideas: number }> {
+  const counts: Record<string, { sessions: number; ideas: number }> = {}
+  for (const s of sessions) {
+    const n = (s.ideas ?? []).length
+    if (!n) continue
+    for (const name of new Set((s.skillsUsed ?? []).map((x) => x.name))) {
+      const c = (counts[name] ??= { sessions: 0, ideas: 0 })
+      c.sessions++
+      c.ideas += n
+    }
+  }
+  return counts
+}
+
+// The line under a Skill's use count: "12 ideas in 5 of 8 sessions", or
+// "0 ideas in 8 sessions" when none of its sessions logged an idea.
+export function skillIdeasLine(entry: { sessions: number; ideas: number } | undefined, used: number): string {
+  const sessions = countOf(used, 'session')
+  return entry ? `${countOf(entry.ideas, 'idea')} in ${entry.sessions} of ${sessions}` : `0 ideas in ${sessions}`
 }
 
 // The newest `limit` sessions whose log names the Skill, newest first.
