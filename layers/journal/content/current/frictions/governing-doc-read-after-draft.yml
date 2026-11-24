@@ -278,3 +278,8 @@ occurrences:
     severity: nit
     description: "Read the Glass Box glossary by grep and in parts before editing, not its terms in full as the tenant-glossary rule asks"
     solution: "Read layers/<tenant>/GLOSSARY.md whole before the first edit under the layer"
+  - session: session_013zxzeT6Ss7hjULbaTx2PS2
+    date: "2026-11-23"
+    severity: nit
+    description: "tenant-glossary guard blocked five edits in a row because I only grepped layers/journal/GLOSSARY.md; the guard wants a full Read."
+    solution: "The rule text (tenant-glossary.md) should say a full Read, not a search, so I read it before the first edit."

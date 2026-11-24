@@ -13,3 +13,13 @@ occurrences:
     severity: nit
     description: "First code-review call lacked the head sha and the guard blocked it; I reran with the printed args."
     solution: "Run verdict-line.ts --review-call before invoking code-review."
+  - session: session_013zxzeT6Ss7hjULbaTx2PS2
+    date: "2026-11-23"
+    severity: nit
+    description: "My first code-review call was blocked by the Review-call sha guard because I passed 'origin/main' without the printed head sha."
+    solution: "The Skill step that tells me to run verdict-line.ts --review-call should say to paste its args whole, as the guard does."
+  - session: session_013zxzeSk9yTcNdyR7eowQqV
+    date: "2026-11-24"
+    severity: nit
+    description: "First code-review call named only origin/main; the sha guard blocked it and I reran with the printed args."
+    solution: "Print the args line as the only output of verdict-line.ts --review-call so it can be pasted whole."

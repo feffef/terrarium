@@ -39,3 +39,8 @@ occurrences:
     severity: minor
     description: "Builders report compound Bash commands refused by the worktree guard, silently dropping a file write or an edit batch (tap-targets, glassbox), though the brief states the rule."
     solution: "Have the guard's refusal say that nothing in the call ran, and repeat the one-command-per-call rule at the point of the first edit step in rules()."
+  - session: session_013zxzeQemDnZfmHdeYUmhur
+    date: "2026-11-23"
+    severity: nit
+    description: "Retro, builder: rules() puts the no-chaining Bash rule after the task steps, so a compound cd command was refused by the worktree guard and rewritten; the gate command in the first-turn brief also blurs which turn it is."
+    solution: "In .claude/workflows/clear-backlog-build.js rules(), put the no-chaining rule and scratchpad-script tip first, and drop the gate command from the first-turn brief (unverified: builder's own report)."

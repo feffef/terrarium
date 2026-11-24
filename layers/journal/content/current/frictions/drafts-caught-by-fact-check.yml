@@ -159,3 +159,8 @@ occurrences:
     severity: minor
     description: "First draft said weekly, automated and the bug behind a post; fact-check found five wrong claims, costing a fix commit."
     solution: "Digest step 3 should say every cadence or automation word needs a source and a PR 'guard' is not the bug fix."
+  - session: session_013zxzeSMNGy8G5ktwppozy2
+    date: "2026-11-24"
+    severity: minor
+    description: "First draft said a counts claim, a line count from a PR title (-109 vs net -106) and wrote 'counts' for what a post lists; the fact-check caught both."
+    solution: "Take line counts from git numstat of the merge, not PR titles."

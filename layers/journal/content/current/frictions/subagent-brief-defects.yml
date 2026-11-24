@@ -155,3 +155,13 @@ occurrences:
     severity: minor
     description: "My #3580 brief said to import the SHA regex, too narrow: the guard then matched the skill name its own way, and both reviewers flagged the drift."
     solution: "Brief the shared check, not one of its parts, when two code paths must agree."
+  - session: session_013zxzeQTiD2k55P7AkEWYBY
+    date: "2026-11-23"
+    severity: nit
+    description: "My design brief gave the clear-backlog source as a nonexistent Skill path; the design agent had to correct it."
+    solution: "Check each path in a filled brief exists before dispatch."
+  - session: session_013zxzeQemDnZfmHdeYUmhur
+    date: "2026-11-23"
+    severity: nit
+    description: "Retro, builder: brief step 2 says to read implement/SKILL.md, whose lines 15-16 say to invoke code-review, while the brief says to skip it; reconciling the two cost a re-read (builder's claim, not re-checked)."
+    solution: "Have the build brief say once which implement/SKILL.md steps apply, in .claude/workflows/clear-backlog-build.js."

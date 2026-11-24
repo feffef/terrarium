@@ -84,3 +84,8 @@ occurrences:
     severity: nit
     description: "Edited with a python replace script; the first pass left a garbled step 9 sentence that I caught on my own read and fixed in a second script."
     solution: "Use the Edit tool for multi-hunk prose changes and re-read each replaced paragraph."
+  - session: session_013zxzeSMNGy8G5ktwppozy2
+    date: "2026-11-24"
+    severity: nit
+    description: "A sed edit meant to fix two words changed a third phrase and left an ambiguous 'its'; I had to edit again and amend."
+    solution: "Use Edit with exact strings for prose fixes."

@@ -187,3 +187,8 @@ occurrences:
     severity: minor
     description: "The last commit (three files, a Skill clause cut) got only my own read, though it is not a simple change under pr-workflow"
     solution: "Run code-review on the follow-up diff, or keep review-round fixes inside the simple-change bars; the PR discloses it"
+  - session: session_013zxzePJuqzjJyKT2zEFnME
+    date: "2026-11-23"
+    severity: minor
+    description: "The follow-up commit that restored rules was not simple, so a code-review call was due, but I ran a plain subagent re-check that merge-pr.ts will not accept; I left the PR for a human."
+    solution: "Run the printed code-review call on the follow-up diff in the same session when reviewers find lost rules."

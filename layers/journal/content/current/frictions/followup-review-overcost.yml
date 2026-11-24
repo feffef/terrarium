@@ -88,3 +88,13 @@ occurrences:
     severity: minor
     description: "Retro (14 of 14 agents replied): Standards and Spec raised the same nit on #3541, #3552 and #3543; on #3541 and #3551 (docs/content-only) neither axis found anything that mattered."
     solution: "In clear-backlog-build.js, send a docs- or content-only branch under ~20 lines to one `Both` reviewer, counting deletions lightly (the #3551 12-line deletion exceeds the Both limit at :115); keep the pair for code (Spec alone caught #3552's unanchored locator)."
+  - session: session_013zxzeQemDnZfmHdeYUmhur
+    date: "2026-11-23"
+    severity: minor
+    description: "Retro, reviewers: round-1 Standards and Spec reviews of two diffs of about 10 to 40 lines found only cosmetic nits (import order, cast, test title) and no defect, which looked costly for their size (reviewers' reports and findings files)."
+    solution: "Evidence only, from n=2 branches: a lower bar for small:true than the simple-change test would cut one reviewer per small branch; weigh before cutting, since a safety net is kept."
+  - session: session_013zxzeT6Ss7hjULbaTx2PS2
+    date: "2026-11-23"
+    severity: nit
+    description: "Round 2 on the visitor-loop branch was triggered by a 25-line prose-and-list fix commit (over the 10-line rule) and returned only nits; one data point that the line threshold over-triggers for content edits."
+    solution: "Gather more rounds before changing step 4 of clear-backlog; the one case here suggests counting only code or logic lines."

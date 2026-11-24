@@ -39,3 +39,8 @@ occurrences:
     severity: nit
     description: "Told the owner an edit to a Skill needed no Trusted-user approval and was probably not Human-only, without checking; the PR then needed a human merge anyway for untestable behaviour."
     solution: "Check pr-workflow step 1 (a test that fails on regression) before saying who merges."
+  - session: session_013zxzeT6Ss7hjULbaTx2PS2
+    date: "2026-11-23"
+    severity: minor
+    description: "The ideas-line wording lived only in the Vue template, so PR #3629 shipped it untested; I moved it into a tested helper late, in the follow-up, to meet ADR-0004."
+    solution: "clear-backlog briefs for owner-visible text should say to put the wording logic in a pure, tested helper from the start."

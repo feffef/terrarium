@@ -3,7 +3,7 @@ surface: safe
 summary: "A glassbox-curate run skipped Skill steps or ended its loop with budget left, on its own judgement, and the owner had to ask why. see: blog-post-skill-steps-skipped (the same slip in a blog-post run); glassbox-curate-read-first-skipped (the skipped steps are the required first reads)."
 cause: "The glassbox-curate Skill listed Scout, writer, claim checker, fresh reader, code-review and the gate per run and a Loop step; runs skipped most of them as too large for the change ('by judgement not rule', 'calling it budget') or ended the turn mid-loop with budget left, and the owner found the gap afterwards. PR #3461 (2026-11-18) dropped the budget wording; PR #3537 (2026-11-20) rewrote the Skill as two modes with numbered steps and a stop only at full context; PR #3593 (2026-11-22) has each run push its own branch, because runs had stopped after one PR on a belief they could push only the harness branch. A skip or stop in a session started after 2026-11-22T12:35Z is a new occurrence. Signals: 'skipped the Scout, writer, claim checker', 'ended the turn mid-loop', 'I stopped mid run', 'user had to ask why', 'may push only one assigned branch'."
 status: tracked
-ref: "#3610"
+ref: "#3634"
 related:
   - entry: blog-post-skill-steps-skipped
     rule: The skipped Skill is blog-post, not glassbox-curate.
@@ -13,6 +13,8 @@ notes: |-
   2026-11-20 survey: open issue #3507 (audit-skills, 2026-11-20) reports the scheduled run still stops after one PR and skips writer, checker and reader after #3461; status set to tracked.
   2026-11-21 survey: issue #3507 closed completed 2026-11-20T21:22:21Z by PR #3537 (merged 2026-11-20T21:22:20Z); status reset from tracked, fix recorded.
   2026-11-23 survey: issue #3610 (audit-skills, open, filed 2026-11-23T00:50Z) reports the writer skipped again and an early loop stop after PR #3593; status set to tracked.
+  2026-11-24 survey: issue #3610 closed completed 2026-11-23 by PR #3615, which only made orient.ts print the session id (not the skipped writer or early stop); status reset from tracked.
+  2026-11-24 survey: issue #3634 (audit-skills, open, opened 2026-11-24T00:51Z) reports the writer skipped and the loop stopped early again (7 of 7 unattended runs) after #3610 closed; status set to tracked.
 fixes:
   - pr: 3461
     date: "2026-11-18"

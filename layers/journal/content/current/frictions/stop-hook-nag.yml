@@ -197,3 +197,8 @@ occurrences:
     severity: nit
     description: "Stop hook asked for a commit while the fact-check was still running, forcing a premature commit and push."
     solution: "None needed; follow-up commits are cheap."
+  - session: session_013zxzeQtxW3Ee58XJAgSyVi
+    date: "2026-11-23"
+    severity: nit
+    description: "Stop hook flagged uncommitted work mid-run twice, forcing work-in-progress commits and pushes before the review."
+    solution: "Let a scheduled run's Stop hook skip the check while background subagents are still running."

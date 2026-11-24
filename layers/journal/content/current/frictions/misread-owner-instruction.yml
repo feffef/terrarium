@@ -114,3 +114,8 @@ occurrences:
     severity: minor
     description: "I treated a context compaction as not a stop; the owner pointed out it means the window is full, so the first stop rule was wrong."
     solution: "Check what a harness event means for the limit being set before writing a rule around it."
+  - session: session_013zxzeT6Ss7hjULbaTx2PS2
+    date: "2026-11-23"
+    severity: minor
+    description: "Owner's #3626 reply 'include the total number of ideas' changed the look, so I built a second sample, then the owner replied 'Just write ideas in b of C sessions' and I guessed it meant dropping the total without asking."
+    solution: "When an answer to a look question could be read two ways, ask the one-line question before building a second sample."

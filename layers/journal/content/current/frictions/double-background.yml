@@ -162,3 +162,18 @@ occurrences:
     severity: nit
     description: "A background gate command also contained a trailing ampersand and the double-background guard refused it; nothing ran."
     solution: "Pass run_in_background alone with a plain foreground command."
+  - session: session_013zxzeQTiD2k55P7AkEWYBY
+    date: "2026-11-23"
+    severity: nit
+    description: "Sent a background Bash call with a trailing & too; the double-background guard refused it and nothing ran."
+    solution: "Pass run_in_background alone with a plain command."
+  - session: session_013zxzeQtxW3Ee58XJAgSyVi
+    date: "2026-11-23"
+    severity: nit
+    description: "A Bash call with run_in_background plus a trailing & was blocked by the double-background guard; resent as two calls."
+    solution: "None needed; the guard worked as designed."
+  - session: session_013zxzeS6gys4MPSEMWnZd1m
+    date: "2026-11-23"
+    severity: nit
+    description: "Stacked run_in_background with a text-level ampersand on the gate command; the double-background guard denied it and I resent it."
+    solution: "The Skill and pr-workflow could say to run the gate with run_in_background alone and no trailing ampersand."

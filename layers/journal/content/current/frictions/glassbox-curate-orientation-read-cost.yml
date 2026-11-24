@@ -26,3 +26,8 @@ occurrences:
     severity: nit
     description: "The orientation's guide index only holds lead-ins, so I had to read two full guide pages, plus fetch WCAG sources by raw GitHub copies, before briefing the writer."
     solution: "None needed; the cost was the intended reading."
+  - session: session_013zxzeS6gys4MPSEMWnZd1m
+    date: "2026-11-23"
+    severity: minor
+    description: "Step 3 makes the run read a whole Subject (four files, about 116 KB for terrarium-practice) to trim one page, which cost a large share of the session's context."
+    solution: "For a pure cut, the Skill could allow reading only the focus page and the pages it links."

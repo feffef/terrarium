@@ -42,3 +42,8 @@ occurrences:
     severity: minor
     description: "The 15 behaviour subagents each read a 9 to 50 KB data file and logs; the run spent about 1.7M subagent tokens, the same cost earlier runs recorded."
     solution: "Skip a Skill's agent when its runs, changes and observations repeat the last check (see idea)."
+  - session: session_013zxzeSk9yTcNdyR7eowQqV
+    date: "2026-11-24"
+    severity: moderate
+    description: "Sixteen per-Skill agents again mostly re-confirmed known repeats; I could not re-verify most counts and marked them unverified in the notes."
+    solution: "Have the scorecard flag Skills whose runs and Changes are unchanged since the last note and skip their agent."

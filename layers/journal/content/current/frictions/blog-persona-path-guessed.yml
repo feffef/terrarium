@@ -1,0 +1,16 @@
+name: blog-persona-path-guessed
+surface: safe
+summary: A blog-post run read or named a Persona file at layers/blog/personas/, a path that does not exist, and lost a call.
+cause: "The Persona files live under .agents/skills/blog-post/personas/, but a blog-post run guesses a path under the Blog layer. Signals: 'layers/blog/personas', a failed read of a Persona file."
+status: open
+occurrences:
+  - session: session_013zxzeQsBr9EFDJoRDQQzh5
+    date: "2026-11-22"
+    severity: nit
+    description: "Guessed the Persona file at layers/blog/personas/eyra.md; it lives under .agents/skills/blog-post/personas/, costing one failed command."
+    solution: "The Skill's step 4 could name the full personas path."
+  - session: session_013zxzeQcWYfBxqngG8mJ56N
+    date: "2026-11-23"
+    severity: nit
+    description: "Read the David persona file from layers/blog/personas/, a path that does not exist; the Skill keeps it under .agents/skills/blog-post/personas/."
+    solution: "The Skill's step 4 names personas/<name>.md relative to the Skill folder; say so with the full path."

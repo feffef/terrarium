@@ -79,3 +79,8 @@ occurrences:
     severity: nit
     description: "A cd into a worktree inside one Bash call moved the session's primary working directory; I had to cd back."
     solution: "Use git -C and absolute paths for worktree commands, never cd, as dispatch-subagents §5 implies."
+  - session: session_013zxzeT6Ss7hjULbaTx2PS2
+    date: "2026-11-23"
+    severity: nit
+    description: "My Bash cwd ended inside a builder's worktree after a cd chain for verdict-line.ts; removing that worktree deleted my own cwd and the next command failed."
+    solution: "Run worktree removal with git -C from the main checkout and run verdict-line.ts via an absolute path, never cd into a worktree."

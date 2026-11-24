@@ -161,3 +161,8 @@ occurrences:
     severity: minor
     description: "Copied the previous run's session id into the new run entry instead of this session's id; fixed by a follow-up commit after the first push."
     solution: "orient.ts could print this session's id in the run-entry skeleton so it is never copied from the last run."
+  - session: session_013zxzePJuqzjJyKT2zEFnME
+    date: "2026-11-23"
+    severity: nit
+    description: "Drafted a commit message with a session id typed from memory, not copied; caught before committing and let the commit hook add the trailer."
+    solution: "Copy the id from the system reminder or leave the trailer to the hook."

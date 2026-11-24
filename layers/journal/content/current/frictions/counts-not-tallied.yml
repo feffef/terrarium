@@ -131,3 +131,8 @@ occurrences:
     severity: nit
     description: "check-clusters rejected my session counts twice because I counted entries, not distinct sessions."
     solution: "Have the helper print the expected count in its error."
+  - session: session_013zxzeQemDnZfmHdeYUmhur
+    date: "2026-11-23"
+    severity: nit
+    description: "I wrote 'five nits fixed' in PR #3615's body from memory; the triage lines show four fixed and one skipped. Corrected by a PR edit."
+    solution: "Count from triage.md before writing the PR body, as CLAUDE.md says (verify before you state)."

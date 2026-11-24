@@ -155,3 +155,8 @@ occurrences:
     severity: minor
     description: "Put counts, ids and attributions from 15 subagent reports into the notes after checking only a few (prune-trial entry status, issue states); the rest carry an unverified tag."
     solution: "Have the brief ask each agent to list its three claims most worth re-checking, so the parent verifies those."
+  - session: session_013zxzeSk9yTcNdyR7eowQqV
+    date: "2026-11-24"
+    severity: minor
+    description: "One agent returned a report that its own scorecard mislabelled (StkfK as a non-user); checking it cost extra reads of the log."
+    solution: "Brief agents to cite file and line for every claimed hole, as the log-session agent partly did."

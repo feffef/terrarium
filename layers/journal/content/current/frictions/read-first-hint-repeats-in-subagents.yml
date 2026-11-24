@@ -57,3 +57,8 @@ occurrences:
     severity: nit
     description: "Retro: reviewPrompt() says cd ${wt} && ... while rules() forbids cd and chains, and it lists no allowed read-only git commands, so git-conventions hooks fired on reviewers."
     solution: "reviewPrompt() in clear-backlog-build.js:119: use git -C and name the allowed commands (rev-parse, diff, log, show)."
+  - session: session_013zxzeRZHMEnUJhXdAbEh4G
+    date: "2026-11-23"
+    severity: nit
+    description: "Subagent output was long; saving each handback by id worked, but a dispatch hook injected the git-conventions notice into a read-only checker after its first git call."
+    solution: "Put the git-conventions pointer in every read-only brief so checkers read it first."

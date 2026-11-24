@@ -57,3 +57,8 @@ occurrences:
     severity: minor
     description: "The first #3340 review counted the unrated gap for main only; the subagent gap (30%) surfaced later, so I posted a correction comment."
     solution: "Compute unrated loads for both agent groups before posting a review that rests on shares."
+  - session: session_013zxzeQcWYfBxqngG8mJ56N
+    date: "2026-11-23"
+    severity: minor
+    description: "Counting the over-limit Lessons at the PR 3608 merge needed three tries: a worktree at the wrong commit, then a script run that printed other checks."
+    solution: "list-recent-prs.ts could print each PR's merge commit sha next to its number."

@@ -83,3 +83,8 @@ occurrences:
     severity: minor
     description: "prune-friction-ledger deleted emptied entries and left a related link to one, so ledger-content.spec failed until I removed the link by hand."
     solution: "Fixed in #3513: dropRelated in the prune and move paths."
+  - session: session_013zxzeS6gys4MPSEMWnZd1m
+    date: "2026-11-23"
+    severity: minor
+    description: "A run entry's changes line held a colon followed by a space, so validate:content failed; it happened twice, once after I had already committed."
+    solution: "The Skill's State section says to quote such a line, but orient.ts's skeleton could warn, or validate:content could name the colon."
