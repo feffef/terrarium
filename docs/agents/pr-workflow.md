@@ -91,11 +91,10 @@ re-review each story or repeat its findings.
    on a fork PR it would fake the human merge authority
    [`guest-contributions.md`](./guest-contributions.md) reserves.
 5. Land through `scripts/github/merge-pr.ts <pr-number>`, the only merge path; never
-   call `enable_pr_auto_merge`. The script refuses what it can see (ADR-0004, ADR-0020, ADR-0023): a
-   Human-only path, a fork or Public author, the `guest-pipeline` label, closing
-   keywords on an open issue not labelled `ready-for-agent`, a new blog post the
-   fact-checker didn't read (`blog-post` step 9), and a PR without your step-4
-   verdict naming its head (why: #1276): a `Reviewed:` line needs that review
+   call `enable_pr_auto_merge`. The script refuses what it can see (its header lists each; ADR-0004, ADR-0020,
+   ADR-0023), among them a new blog post the fact-checker didn't read (`blog-post`
+   step 9) and a PR without your step-4 verdict naming its head (why: #1276): a
+   `Reviewed:` line needs that review
    in your own session's transcript (a `code-review` call, a
    `clear-backlog-build` review round, or a `SendMessage` naming the sha to
    that run's reviewer; a plain `Agent` reviewer doesn't count; #3483), so run

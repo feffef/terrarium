@@ -61,9 +61,9 @@ Terrarium applies them without reading the source.
 - **Reading progress.** A lesson is *read* once its Where next heading, or the
   `Lessons already read` section that replaces it, has scrolled into view in this
   browser; walkthroughs and the workshop are never marked. The list lives in
-  `localStorage` under `glassbox:read` and is applied only after the page mounts,
+  this browser only and is applied only after the page mounts,
   so the cached server render is the same for every visitor (ADR-0028). Read
-  lessons get a ✓ (one shared SVG) after their title in the sidebar, where a
+  lessons get a ✓ after their title in the sidebar, where a
   subject's count reads `3/8` once any is read. A subject page ticks them the
   same way, shows a book after each unread title, and its count line reads
   `3 of 8 read` once any is read; it has no reset. Every row of a subject's
