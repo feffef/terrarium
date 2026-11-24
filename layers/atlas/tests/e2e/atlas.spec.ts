@@ -74,6 +74,10 @@ describe('atlas Tenant', async () => {
         expect(await page.locator('.entry-almanac').count()).toBe(almanac)
         expect(await page.locator('.atlas-phase-note').count()).toBe(phaseNote)
         expect(await page.locator('.atlas-sighting').count()).toBe(sighting)
+        // Section titles are real headings, so a screen reader can list them.
+        const h2s = await page.locator('h2.atlas-eyebrow').allTextContents()
+        expect(h2s.some((t) => t.startsWith('Relations'))).toBe(true)
+        expect(h2s).toContain('Recent sightings')
         if (route === '/t/atlas/canopy/mycora-susurrans') {
           const fieldnote = await page.locator('.atlas-fieldnote').textContent()
           expect(fieldnote).toContain('a company of pale sage caps standing shoulder to shoulder')
@@ -114,6 +118,7 @@ describe('atlas Tenant', async () => {
       expect(html).toContain('class="foodweb-caption"')
       expect(html).toContain(caption)
       expect(html).toContain('a missing number is a plate not yet drawn')
+      expect(html).toMatch(/<h2 class="atlas-eyebrow"/)
     })
   }
 

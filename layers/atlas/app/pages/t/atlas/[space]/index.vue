@@ -83,7 +83,7 @@ useHead({ title: `${meta.name} · The Atlas of the Terrarium` })
       </header>
 
       <section>
-        <div class="atlas-sechead"><span class="atlas-eyebrow">The catalogue</span></div>
+        <div class="atlas-sechead"><h2 class="atlas-eyebrow">The catalogue</h2></div>
         <AtlasSpecimenIndex v-model:highlight="hoveredSpecimen" :specimens="specimens" :biome="space" />
         <p class="catalogue-key">
           The dots before each name are its colour signature; those after it, its rarity,
@@ -93,13 +93,13 @@ useHead({ title: `${meta.name} · The Atlas of the Terrarium` })
       </section>
 
       <section>
-        <div class="atlas-sechead"><span class="atlas-eyebrow">The food web</span></div>
+        <div class="atlas-sechead"><h2 class="atlas-eyebrow">The food web</h2></div>
         <AtlasFoodWeb :specimens="specimens" :edges="edges" :biome="space" />
         <p v-if="landing?.foodWebCaption" class="foodweb-caption">{{ landing.foodWebCaption }}</p>
       </section>
 
       <section v-if="withPhenology.length" class="almanac-section">
-        <div class="atlas-sechead"><span class="atlas-eyebrow">The wing's year</span></div>
+        <div class="atlas-sechead"><h2 class="atlas-eyebrow">The wing's year</h2></div>
         <p class="almanac-lede">
           Turn the needle (drag it, or use the arrow keys for a day and Page Up or Page Down for the next or previous season) to a season of the Glass Year — the calendar the whole terrarium
           shares — and the roster names who this wing would find abroad in it. Each creature's
@@ -137,12 +137,12 @@ useHead({ title: `${meta.name} · The Atlas of the Terrarium` })
       </section>
 
       <section>
-        <div class="atlas-sechead"><span class="atlas-eyebrow">Field log</span></div>
+        <div class="atlas-sechead"><h2 class="atlas-eyebrow">Field log</h2></div>
         <AtlasFieldLog :observations="observations" :specimens-by-slug="specimensBySlug" :biome="space" :limit="8" />
       </section>
 
       <section v-if="withRhythm.length">
-        <div class="atlas-sechead"><span class="atlas-eyebrow">Daily choreography</span></div>
+        <div class="atlas-sechead"><h2 class="atlas-eyebrow">Daily choreography</h2></div>
         <ul class="choreo">
           <li v-for="s in withRhythm" :key="s.slug" :style="sigStyle(s)">
             <NuxtLink class="cname" :to="`/t/atlas/${space}/${s.slug}`">{{ s.binomial }}</NuxtLink>
@@ -152,7 +152,7 @@ useHead({ title: `${meta.name} · The Atlas of the Terrarium` })
       </section>
 
       <section id="on-rarity">
-        <div class="atlas-sechead"><span class="atlas-eyebrow">On rarity</span></div>
+        <div class="atlas-sechead"><h2 class="atlas-eyebrow">On rarity</h2></div>
         <AtlasRarityLegend />
       </section>
 
