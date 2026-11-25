@@ -293,3 +293,13 @@ occurrences:
     severity: nit
     description: "Dispatched the fact-check subagent before reading dispatch-subagents; the guard blocked the call and I had to retry after reading it."
     solution: "Read the Skill before writing the first brief."
+  - session: session_013zxzeSMNGy8G5ktwppozy2
+    date: "2026-11-24"
+    severity: nit
+    description: "First Agent dispatch was blocked by the dispatch-read guard because I had not read the dispatch Skill; I read it and retried."
+    solution: "Digest Skill step 3 could name dispatch-subagents next to the fact-check subagent."
+  - session: session_013zxzeT1KJU1C5ggyu5ibSA
+    date: "2026-11-25"
+    severity: nit
+    description: "First Agent dispatch was blocked by the dispatch-read guard because I had not read the dispatch-subagents Skill; I read it and retried."
+    solution: "Digest step 3 could name dispatch-subagents next to the fact-check subagent."

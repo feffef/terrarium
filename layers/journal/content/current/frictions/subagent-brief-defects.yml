@@ -160,3 +160,8 @@ occurrences:
     severity: nit
     description: "Retro, builder: brief step 2 says to read implement/SKILL.md, whose lines 15-16 say to invoke code-review, while the brief says to skip it; reconciling the two cost a re-read (builder's claim, not re-checked)."
     solution: "Have the build brief say once which implement/SKILL.md steps apply, in .claude/workflows/clear-backlog-build.js."
+  - session: session_013zxzeSBTTxHztyPoJeEwAj
+    date: "2026-11-24"
+    severity: minor
+    description: "Retro (builder, unverified in the workflow file): the build brief says to run the e2e spec in the background, but the subagent hook refuses run_in_background, costing a lost call and a foreground rerun."
+    solution: "Say foreground with a long timeout for dispatched agents in .claude/workflows/clear-backlog-build.js e2eCheck and rules()."

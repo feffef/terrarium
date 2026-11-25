@@ -17,3 +17,8 @@ occurrences:
     severity: nit
     description: "A builder reply on the small Blog branch asked for a 'Standards' re-check, but small branches only have a Both reviewer; I had to map it myself."
     solution: "Have the build workflow's rules() tell a builder on a small branch to name Both in its recheck axes."
+  - session: session_013zxzeRQRYWw3yLJzSdaozk
+    date: "2026-11-24"
+    severity: nit
+    description: "The build workflow's builder replied `recheck Both` on a branch that had Standards and Spec reviewers; I had to guess both should be re-checked."
+    solution: "Have rules() name the branch's actual axes in the recheck line, or tell builders to use the axis names the run printed."

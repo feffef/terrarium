@@ -85,3 +85,8 @@ occurrences:
     severity: minor
     description: "pr-workflow's simple-change test sends a 400-line ledger-data PR to code-review (two subagents) though it is only machine-edited YAML; reviewers found two small cause and ref wording issues."
     solution: "Let a ledger-only PR whose gate passed take an own read, or state this case in the simple-change test."
+  - session: session_013zxzeQtsYHUcYiiVy88LyU
+    date: "2026-11-24"
+    severity: minor
+    description: "A 66-file ledger-only PR is not a simple change, so a full two-axis code-review ran on prune output and appends."
+    solution: "Let the simple-change test exempt ledger-only diffs produced by the ledger scripts, or review only the script-written parts."

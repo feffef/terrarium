@@ -17,3 +17,8 @@ occurrences:
     severity: nit
     description: "Tried subscribe_pr_activity and the GitHub tools under the wrong namespace first; they were deferred or in the claude-code-remote server, costing extra calls."
     solution: "Load deferred GitHub tools by name up front and use the claude-code-remote namespace for subscribing."
+  - session: session_013zxzeSBTTxHztyPoJeEwAj
+    date: "2026-11-24"
+    severity: nit
+    description: "subscribe_pr_activity is under mcp__claude-code-remote, but the PR text says use mcp__github tools; my first call used the wrong namespace and failed."
+    solution: "Name the full tool in ADR-0003 or pr-workflow.md where subscription is required."

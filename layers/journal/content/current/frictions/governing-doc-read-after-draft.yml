@@ -273,3 +273,8 @@ occurrences:
     severity: nit
     description: "tenant-glossary guard blocked five edits in a row because I only grepped layers/journal/GLOSSARY.md; the guard wants a full Read."
     solution: "The rule text (tenant-glossary.md) should say a full Read, not a search, so I read it before the first edit."
+  - session: session_013zxzeTByFmhGSRvkLKBFUY
+    date: "2026-11-24"
+    severity: nit
+    description: "Read Atlas code and cited its GLOSSARY ruling via evidence output without reading the Tenant glossary in full first."
+    solution: "Read layers/atlas/GLOSSARY.md before inspecting Atlas files."

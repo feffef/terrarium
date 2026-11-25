@@ -90,3 +90,8 @@ occurrences:
     severity: minor
     description: "Survey brief says --unledgered drops Frictions the ledger carries, but after append with --skip-held sessions still list others; the survey agent found out by rerunning (its own report)."
     solution: "Say in survey-brief step 1 that the output keeps Frictions whose session already sits in the entry."
+  - session: session_013zxzeQtsYHUcYiiVy88LyU
+    date: "2026-11-24"
+    severity: minor
+    description: "survey-brief §3 says every window Friction too new for an entry is a candidate, which would be about 30 nits; the agent had to invent a cut."
+    solution: "Say in survey-brief §3 that a lone nit or minor is not a candidate."

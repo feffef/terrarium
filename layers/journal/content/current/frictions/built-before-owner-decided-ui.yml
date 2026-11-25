@@ -68,3 +68,8 @@ occurrences:
     severity: nit
     description: "Built a sample of the shared hover change that the owner then dropped (answer 10a), so the focus/tap sample and its clipped-label finding were discarded work."
     solution: "Ask the strip-behaviour question with the cost (shared component, label clips at 390px) before building the sample."
+  - session: session_013zxzeSBTTxHztyPoJeEwAj
+    date: "2026-11-24"
+    severity: minor
+    description: "PR opening for UI-visible branches needs owner confirmation of unshown text and unchanged looks; the skill gives no step to show these before the build, so it surfaces late."
+    solution: "Add to the clear-backlog grilling step that visitor-visible prose edits are shown as a sample sentence with the pick."

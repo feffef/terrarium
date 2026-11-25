@@ -79,3 +79,8 @@ occurrences:
     severity: nit
     description: "Review's Standards pass found Tenant in prose, a term the Skill bans, after the gate had started, so the fix landed after the gated head."
     solution: "Run the project-term check on the draft before the first commit."
+  - session: session_013zxzeQ5m7BGxJD5bJ1fkPZ
+    date: "2026-11-24"
+    severity: nit
+    description: "First draft opened with 'Confession:', the same opening as Kevin's 2026-11-18 post; the tone re-read caught it before the PR."
+    solution: "Step 4's overlap grep could include the opening line of the Persona's last three posts."

@@ -257,3 +257,8 @@ occurrences:
     severity: nit
     description: "After a prototype edit under layers/journal a hook asked me to read ADR-0006, ADR-0008 and ADR-0016 in full; I skipped it because the edit was throwaway and reverted."
     solution: "The prototype Skill could say a reverted sample needs no ADR read, or the ADR rules could exclude layers/journal/app/pages in a prototype."
+  - session: session_013zxzeQqSgD4eRH99VvRtLc
+    date: "2026-11-24"
+    severity: minor
+    description: "A hook told me to read six ADRs in full after my commit; I only word-counted them and went on to review without reading them."
+    solution: "Hook should name only ADRs whose decision the edit touches; I should read or say I skipped."

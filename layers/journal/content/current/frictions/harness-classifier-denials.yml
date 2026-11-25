@@ -42,3 +42,8 @@ occurrences:
     severity: nit
     description: "Cancelling the safety-net check-in after the merge was denied by the auto-mode classifier, so it fires once on a merged PR."
     solution: "Allow delete_trigger for a session's own send_later check-ins, or have the check-in stop itself when its PR is merged."
+  - session: session_013zxzeTByFmhGSRvkLKBFUY
+    date: "2026-11-24"
+    severity: nit
+    description: "A long shell function building bodies was refused by a safety check as a possible removal although it deleted nothing; I rewrote it with Write."
+    solution: "Write multi-file bodies with the Write tool, not shell functions."

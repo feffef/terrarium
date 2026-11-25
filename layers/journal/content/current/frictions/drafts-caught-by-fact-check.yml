@@ -149,3 +149,13 @@ occurrences:
     severity: minor
     description: "First draft said a counts claim, a line count from a PR title (-109 vs net -106) and wrote 'counts' for what a post lists; the fact-check caught both."
     solution: "Take line counts from git numstat of the merge, not PR titles."
+  - session: session_013zxzeQ5m7BGxJD5bJ1fkPZ
+    date: "2026-11-24"
+    severity: minor
+    description: "Draft claims were imprecise (flag wording, '31 of 35' mixing bare and partial answers, a Take fact absent above it); the fact-check and review caught them, costing three checker round trips."
+    solution: "None needed beyond the existing fact-check; read the issue's comments before drafting from its body."
+  - session: session_013zxzeT1KJU1C5ggyu5ibSA
+    date: "2026-11-25"
+    severity: minor
+    description: "First draft said three Atlas fixes came from the visitor session; the fact-check could not verify it, so I removed the sentence."
+    solution: "Digest step 3 could say to attribute provenance only from PR bodies."

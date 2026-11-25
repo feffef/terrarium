@@ -166,3 +166,23 @@ occurrences:
     severity: nit
     description: "Drafted a commit message with a session id typed from memory, not copied; caught before committing and let the commit hook add the trailer."
     solution: "Copy the id from the system reminder or leave the trailer to the hook."
+  - session: session_013zxzeQtsYHUcYiiVy88LyU
+    date: "2026-11-24"
+    severity: nit
+    description: "The survey subagent typed a session id into the commit trailer from memory; the commit-msg hook corrected it."
+    solution: "Brief the survey agent to copy the trailer from the dispatcher's commit template."
+  - session: session_013zxzeQQqZzQUP929AxkcZo
+    date: "2026-11-24"
+    severity: nit
+    description: "I hand-typed the session id in the PR body and got it wrong (QQ vs Qq); the provenance guard blocked the call and I retried."
+    solution: "Copy the id from the guard or system prompt, never retype it."
+  - session: session_013zxzeTByFmhGSRvkLKBFUY
+    date: "2026-11-24"
+    severity: nit
+    description: "Typed a wrong session id for the ADR-0017 header several times before finding the real one in the environment."
+    solution: "Have the harvest body-template or a helper print the session id for the header."
+  - session: session_013zxzeR2f7URRYrx7PdwVDH
+    date: "2026-11-25"
+    severity: minor
+    description: "Drafted two issue bodies with a session id I had not looked up, then caught it before posting by calling get_session."
+    solution: "Print the session id once at the start (get_session) and paste from it; the system prompt's commit template gives it."
