@@ -33,8 +33,8 @@ that one commit, never a later fetch.
    to the commit. It reads every commit in that range, all paths, and returns
    each new topic worth teaching that no page in the index teaches, with its
    commits and the nearest page. Add each one as a single line to the memory
-   page's *Stale or missing* section
-   (`layers/glassbox/content/workshop/pages/index.md`), skipping topics already
+   page's *Stale or missing* section (add it if absent;
+   `layers/glassbox/content/workshop/pages/index.md`), skipping topics already
    there; `glassbox-curate` works that list.
    Every page in the step-1 report's `pages` is flagged, and so is
    every term in `terms`. Then read `git log` and `git diff` from each page's

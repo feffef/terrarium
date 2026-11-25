@@ -94,7 +94,7 @@ the memory page's items.
 2. **Pick.** Take the most important item on the memory page whose pages no
    open PR touches, in this order:
    1. the owner's direction;
-   2. gaps: topics no page teaches yet (*Stale or missing*);
+   2. gaps: topics no page teaches yet (*Stale or missing*, if the page has it);
    3. lessons that are too long (*Too long*), split as proposed, or cut or
       trimmed where there is no logical split;
    4. weak spots;
