@@ -50,16 +50,6 @@ notes: |-
   2026-11-13 survey: Le6nsJ (2026-11-12) dispatched PAGES_PLACEHOLDER and FULL_PLACEHOLDER unfilled; the #3064 guard pattern (@@NAME@@ or braces) does not match that form. Issue #3227 (audit-skills, opened 2026-11-13) tracks unfilled placeholders.
   2026-11-23 prune trial (dispatch-subagents §3 cut) judged: it holds; the post-cut rise (6/36 vs 14/218) traces to clear-backlog-build.js rules(), not the cut text
 occurrences:
-  - session: session_013zxzeSjaFuTmBXbfN2o5AH
-    date: "2026-11-10"
-    severity: nit
-    description: "My brief to a writer said an inner MDC block needs more colons; the writer found it false in the parser. A fresh reader's guess went into my brief unchecked."
-    solution: "Mark reader findings as unverified in writer briefs; the writer already re-checks."
-  - session: session_013zxzeSBfN7oWScF9TgN4eB
-    date: "2026-11-10"
-    severity: nit
-    description: "Code-review spec file I wrote for the reviewer left out the owner's 'always loaded' tag decision, so the reviewer flagged it as scope creep."
-    solution: "Copy each owner decision into a review spec from the issue comment, not from memory."
   - session: session_013zxzeSvnCo3utAZGMChBZA
     date: "2026-11-11"
     severity: minor

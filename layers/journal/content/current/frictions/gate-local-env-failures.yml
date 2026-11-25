@@ -11,11 +11,6 @@ related:
 notes: |-
   2026-11-14 design: no change: a Chromium install in the session-start command dropped: it is Human-only hook wiring and one owner-local occurrence.
 occurrences:
-  - session: fd29c728-8222-4915-94ab-25776442397b
-    date: "2026-11-10"
-    severity: moderate
-    description: "pnpm gate:scoped failed twice for environment reasons: the session-start install bumped playwright-core without its Chromium headless shell, then a run stretched to 95 min (Mac likely slept) and 6 unrelated tests timed out."
-    solution: "Have the session-start install hook run playwright-core install chromium-headless-shell when the browser revision changes; keep the Mac awake during a gate run."
   - session: c8d9ced5-3fe1-47f1-981f-8dcc4b5191f7
     date: "2026-11-18"
     severity: minor

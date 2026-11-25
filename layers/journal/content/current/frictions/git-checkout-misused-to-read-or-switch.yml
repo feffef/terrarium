@@ -4,24 +4,12 @@ summary: Agents used git checkout or switch to read a file or change branch and 
 cause: "git checkout <ref> -- . or git switch with discard-changes is used to read a file or move branches; git-conventions.md forbids it. Signals: 'git switch --discard-changes', 'git checkout origin/main -- .', classifier denial, a lost edit."
 status: open
 related:
-  - entry: worktree-subagent-moves-branch
-    rule: A helper agent or workflow, not the main agent, moved the branch.
   - entry: designated-branch-clash
     rule: The rule to stay on the session branch clashed with a task needing another branch.
 notes: |-
   2026-11-08 design: a PreToolUse guard denying git switch --discard-changes and git checkout <ref> -- . dropped: it needs a Human-only guard, the harness classifier already denied the costlier case, git-conventions.md:27 already forbids it, and the other cost one redone edit.
   2026-11-11 design: no non-guard fix dropped: git-conventions.md:26-28 already forbids it, SBfN's call was a no-op, and the owner accepts late reads.
 occurrences:
-  - session: session_013zxzeSBfN7oWScF9TgN4eB
-    date: "2026-11-10"
-    severity: moderate
-    description: "Ran `git checkout origin/main -- layers/journal/content` before reading git-conventions.md, which forbids checkout of a ref onto paths (it stages them)."
-    solution: "Read git-conventions.md before the first non-read-only git command, as CLAUDE.md says; it was a no-op only because the branch equalled main."
-  - session: session_013zxzeSSDUXBAYYrwXtej8b
-    date: "2026-11-10"
-    severity: nit
-    description: "A stray git checkout -b tmp-check in a compound command moved me off the session branch briefly; fixed with checkout and branch -d."
-    solution: "Keep exploratory git read-only (git show) per git-conventions."
   - session: session_013zxzeNrvAWHmAPYsSy8u7x
     date: "2026-11-12"
     severity: nit

@@ -19,11 +19,6 @@ fixes:
     date: "2026-11-16"
     summary: "orient.ts --subject writes the Subject in parts of at most 40 KB to .throwaway/glassbox-curate and prints the part paths and pagesRead block; the full Subject read stays required."
 occurrences:
-  - session: session_013zxzeSjaFuTmBXbfN2o5AH
-    date: "2026-11-10"
-    severity: minor
-    description: "orient.ts output for a Subject is 50 to 70 KB, so I read it in two pages three times; plain.ts for readers duplicated it."
-    solution: "Let orient --subject skip the frontmatter and Excerpt blocks, or print plain text only."
   - session: session_013zxzeS5rcf8VwnGmjcpphq
     date: "2026-11-12"
     severity: minor

@@ -6,8 +6,6 @@ status: accepted
 acceptedSeverity: minor
 ref: "readonly-brief-vs-helped-hint (the earlier helped.sh form of the same ask); issue #3020"
 related:
-  - entry: readonly-brief-vs-helped-hint
-    rule: The hint is the older helped.sh ask, not echo rule-use.
   - entry: read-first-hint-repeats-in-subagents
     rule: The hint is a read-first doc hint repeating in a subagent.
 notes: |-

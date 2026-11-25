@@ -11,11 +11,6 @@ related:
 notes: |-
   2026-11-03 design: no change: ADR-0004 already says to run validate:content, the gate runs it as a floor step, and moving it earlier edits Human-only gate files for a rare one-rerun cost; dropped: same cause as ledger-yaml-hand-edit-errors
 occurrences:
-  - session: session_013zxzeQN4dgz9seaMtnRf7u
-    date: "2026-11-10"
-    severity: nit
-    description: "A page description I edited came back over its 120-character cap twice, and an unquoted # in the run entry broke validate:content; both only showed after a commit."
-    solution: "Run glassbox-pages.spec.ts and validate:content after each edit to a description or run entry, and note the cap in the writer brief."
   - session: session_013zxzePbgAjUYqz6Zpvm4uU
     date: "2026-11-12"
     severity: minor

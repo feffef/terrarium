@@ -19,11 +19,6 @@ fixes:
     date: "2026-11-18"
     summary: "nuxt.config.ts turns off the two Platform page-cache rules in dev, so a dev preview no longer serves 60-second-old HTML."
 occurrences:
-  - session: session_013zxzeSBfN7oWScF9TgN4eB
-    date: "2026-11-10"
-    severity: minor
-    description: "The nuxt dev server reloaded the SessionCard template but not the edited dashboard.ts utils, so one screenshot mixed old and new code."
-    solution: "Restart the preview server after editing a layer util before a screenshot (or note it in verifying-ui-changes.md)."
   - session: session_013zxzeR7qQ3HKogNsnf5Zm8
     date: "2026-11-11"
     severity: moderate

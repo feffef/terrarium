@@ -17,11 +17,6 @@ fixes:
     date: "2026-10-30"
     summary: "CLAUDE.md: in the main session end your turn and let the completion notification wake you; never wait with pgrep -f"
 occurrences:
-  - session: session_013zxzeNvpKDRhFYp216ti6n
-    date: "2026-11-10"
-    severity: nit
-    description: "ScheduleWakeup was blocked outside /loop; I tried it to wait for a subagent that self-notifies."
-    solution: "The skill text could say subagents self-notify, so never schedule a wakeup."
   - session: session_013zxzeSdKDZBdqz6vRp3xW1
     date: "2026-11-12"
     severity: nit
