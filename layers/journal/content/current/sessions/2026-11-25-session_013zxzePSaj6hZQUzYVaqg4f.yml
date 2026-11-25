@@ -1,0 +1,149 @@
+schemaVersion: 1
+session: session_013zxzePSaj6hZQUzYVaqg4f
+startedAt: 2026-11-25T17:05:48Z
+endedAt: 2026-11-25T17:11:22Z
+kind: autonomous
+goal: Scheduled harvest of ideas and learnings into Seedlings
+status: completed
+outcome: "Three Seedlings filed (#3676, #3677, #3678); five product clusters dropped; no workflow cluster checked"
+summary: "Scheduled run of the harvest Skill, no human prompt; everything was agent-initiated within the Skill's approval. Extracted 105 entries (57 ideas, 48 learnings), clustered the product ideas first, ran one evidence call for 21 groups, then checked source files and the tracker directly because the evidence output was mostly unrelated hits. Eight product clusters were checked: three passed (homepage copy, Blog thread order and month jump row, Glass Box Installed skills casing) and five dropped (Atlas next plate, Midden unknown cause and homepage teasers rejected as not planned; Blog start link and Tinkerfund account note already built). I stopped there for budget, so no workflow cluster or learning was checked and the quota of ten was not filled. The retro step found only problems already held by closed Seedlings and Ledger entries, so no retro Seedling was filed."
+prs: []
+docsRead:
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: .agents/skills/retro/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/harvest/body-template.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+skillsUsed:
+  - name: harvest
+    reason: the scheduled task itself
+  - name: close-session
+    reason: session closure
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran gh api issue searches before reading github-integration.md and git log before git-conventions.md; hooks named the docs afterwards. Both docs showed the calls were fine.
+    solution: None needed; the hooks caught it at no cost.
+    severity: nit
+  - description: Filed issues after only grepping issue-tracker.md and triage-labels.md in a shell call, not reading issue-tracker.md whole as CLAUDE.md requires; the detector did not count it.
+    solution: Read issue-tracker.md whole before the first issue_write; the harvest Skill step 4 could name it as the first call.
+    severity: minor
+  - description: harvest evidence printed tracker hits unrelated to the keywords (the same Midden survey and audit-skills issues in most groups) and omitted hundreds, so I searched the tracker by hand instead.
+    solution: "Rank tracker hits by keyword overlap and print only those matching two or more keywords; held by closed Seedlings #3529 and #3562."
+    severity: moderate
+  - description: Stopped after eight product clusters and checked no workflow cluster or learning, so the quota was not filled; the same slip harvest-first-pass-shallow records.
+    solution: Cap the evidence read, then check at least one workflow cluster before stopping.
+    severity: moderate
+  - description: "check-clusters rejected my first file twice: sessions counted per entry and the verdict written as one line with its evidence. The Skill gives no example block."
+    solution: Add one filled example block to harvest step 3.
+    severity: nit
+durationSec: 335
+models:
+  claude-sonnet-5-5: 61
+toolCounts:
+  Bash: 23
+  Read: 5
+  ToolSearch: 1
+  mcp__github__issue_write: 3
+  Skill: 2
+  PushNotification: 1
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0025.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/github-integration.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/github-integration.md
+      - rule: .claude/rules/adr-0006.md
+        via: hint
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+      - rule: .claude/rules/adr-0016.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/retro/SKILL.md
+      - rule: .claude/rules/adr-0020.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: session header on each issue
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: filed Seedlings only, built nothing
+      - path: .claude/rules/adr-0009.md
+        value: steered
+        why: logged this session
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0025.md
+        value: unrelated
+      - path: .claude/rules/ui-verification.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0006.md
+        value: unrelated
+      - path: .claude/rules/adr-0012.md
+        value: unrelated
+      - path: .claude/rules/adr-0016.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/rules/tenant-layers.md
+        value: unrelated
+      - path: .claude/rules/glassbox-content.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0020.md
+        value: unrelated
+      - path: .claude/rules/adr-0022.md
+        value: unrelated
+      - path: docs/agents/github-integration.md
+      - path: .agents/skills/harvest/body-template.md
+gitBranch: claude/eager-cerf-t8r3jg
+entrypoint: remote_trigger
+cliVersion: 2.1.332
+trigger: harvest
+learnings:
+  - harvest check-body rejects any bare angle-bracket span, even inside a pasted quote like /t/blog/<persona>; swap in braces.
+landedBy: Stop
