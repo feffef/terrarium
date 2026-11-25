@@ -79,7 +79,7 @@ describe('clear-backlog-build (#3110)', () => {
   it('has the builder run a changed e2e spec under one lock for the whole run (#3465)', async () => {
     const { calls } = await run({})
     const p = calls[0]!.prompt
-    for (const t of ['flock -w 3000 /d/e2e.lock', 'E2E_FRESH_BUILD=1', 'layers/*/tests/e2e/*.spec.ts', '> /d/fix-1-x/e2e.log 2>&1; echo EXIT=$? >> /d/fix-1-x/e2e.log']) expect(p).toContain(t)
+    for (const t of ['flock -w 540 /d/e2e.lock', 'E2E_FRESH_BUILD=1', 'layers/*/tests/e2e/*.spec.ts', '> /d/fix-1-x/e2e.log 2>&1; echo EXIT=$? >> /d/fix-1-x/e2e.log']) expect(p).toContain(t)
   })
 
   it('points the builder and the reviewers at one decisions file in the branch folder', async () => {
