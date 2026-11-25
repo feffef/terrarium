@@ -446,4 +446,21 @@ describe('blog Tenant', async () => {
       await page.close()
     }
   })
+
+  // WCAG 2.5.8 (#3675): the tag summary and the tag-meanings button.
+  it('keeps the tag disclosure controls at least 24px tall on a phone', async () => {
+    const page = await createPage()
+    try {
+      await page.setViewportSize({ width: 390, height: 844 })
+      await page.goto(url('/t/blog'), { waitUntil: 'hydration' })
+      await page.locator('details.net-tags summary').click()
+      const heights = await page
+        .locator('details.net-tags summary, details.net-tags .tag-meanings-toggle')
+        .evaluateAll((els) => els.map((el) => el.getBoundingClientRect().height))
+      expect(heights).toHaveLength(2)
+      for (const h of heights) expect(h).toBeGreaterThanOrEqual(24)
+    } finally {
+      await page.close()
+    }
+  })
 })
