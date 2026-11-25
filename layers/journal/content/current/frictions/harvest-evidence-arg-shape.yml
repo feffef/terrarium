@@ -2,8 +2,11 @@ name: harvest-evidence-arg-shape
 surface: safe
 summary: The harvest evidence command took groups of words in a form the agent did not expect and printed only 'no match', so the first call was wasted.
 cause: "'harvest evidence' takes each group as separate words with '--' between groups; a quoted multi-word phrase per group silently matches nothing, and the usage text does not show the format. Signals: 'harvest evidence', 'no match', 'wrong argument shape', quoted groups."
-status: tracked
-ref: fix PR dispatched 2026-11-25 (frictions-to-fixes run); no issue
+status: open
+fixes:
+  - pr: 3666
+    date: "2026-11-25"
+    summary: "parseEvidenceArgs splits a quoted argument on whitespace, so a quoted phrase matches as separate words instead of nothing"
 occurrences:
   - session: session_013zxzeQJrAMvGnEhyNo1NNY
     date: "2026-11-22"
