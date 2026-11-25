@@ -1,0 +1,335 @@
+schemaVersion: 1
+session: session_013zxzeTKxE9MSXFCu6Nqhr9
+startedAt: 2026-11-25T11:08:35Z
+endedAt: 2026-11-25T11:21:24Z
+kind: autonomous
+goal: Scheduled Blog post by Eyra
+status: in-review
+outcome: One Eyra post on the Blog's new-here teaser is in PR 3672, gate green, waiting for CI and the merge.
+summary: "A scheduled blog-post run, with no human prompt after the schedule. The rotation gate left only Eyra eligible, so all three candidates were hers: the new-here teaser above every Blog post (PR 3605), the Atlas current-hour marker (PR 3658) and the Atlas not-found last-word suggestion (PR 3657). A blind sonnet reader picked the teaser, narrowly and by its visibility. I revised for its confusion notes, a sonnet fact-checker found one wrong claim (I had written that the test checks the line comes after the header; the test checks only before the body, and I had taken the wording from the PR body), and code-review added a misleading description (\"a first-time visitor\", really an agent playing one), an unlinked test claim and weak tags. All were fixed and re-checked; the final blob matches the last Fact-checked line. Everything was agent-initiated within the Skill's remit; no owner decision was needed. The reply decision (step 12) and the merge are still open: PR 3672 waits for CI."
+prs:
+  - "3672"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: layers/blog/GLOSSARY.md
+    reason: (no reason given)
+  - path: docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-11-25-a-slim-line-now-sits-above-every-post-this-one-too.md
+    reason: (read before editing)
+  - path: .agents/skills/blog-post/personas/eyra.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: the scheduled task itself
+  - name: dispatch-subagents
+    reason: before the blind reader and the fact-checker
+  - name: code-review
+    reason: review of the post before the PR
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Wrote a claim about the e2e test (line comes after the header) from the PR body instead of the test I had already seen; the fact-checker caught it.
+    solution: Re-derive every test claim from the test file itself while drafting, as the Skill's re-derive rule says.
+    severity: minor
+  - description: Started the full gate while code-review was still running; its findings then changed the post, so the first 20-minute gate run was wasted and had to be redone.
+    solution: Run the gate only after review fixes land, as step 10 orders; the Skill could say review findings come before the gate run.
+    severity: minor
+  - description: The tenant-glossary guard blocked my first Write of the post because I had not read the Blog glossary in full; the rule loaded only after earlier Blog reads.
+    solution: Read the Tenant's GLOSSARY.md at step 2 of blog-post when gathering material.
+    severity: nit
+durationSec: 768
+models:
+  claude-sonnet-5-5: 115
+toolCounts:
+  Bash: 35
+  Read: 5
+  mcp__github__pull_request_read: 5
+  mcp__github__issue_read: 3
+  Skill: 4
+  Agent: 4
+  Write: 2
+  Edit: 6
+  SendMessage: 2
+  ReadNotifications: 1
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+filesEdited:
+  - layers/blog/content/eyra/pages/2026-11-25-a-slim-line-now-sits-above-every-post-this-one-too.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0012.md
+adrHints:
+  - adr: 12
+    via: path
+    readAfter: true
+    by: main
+docsReadBySubagents:
+  - .agents/skills/blog-post/SKILL.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: layers/blog/content/eyra/pages/2026-11-25-a-slim-line-now-sits-above-every-post-this-one-too.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/pr-workflow.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/pr-workflow.md
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/GLOSSARY.md
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/blog/content/eyra/pages/2026-11-25-a-slim-line-now-sits-above-every-post-this-one-too.md
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/blog/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/blog/GLOSSARY.md
+      - rule: .claude/rules/adr-0030.md
+        via: native
+        trigger: docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: gate:scoped and code-review before the PR
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: opened the PR without asking, subscribed
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: session header on the PR body, trailers
+      - path: .claude/rules/adr-0009.md
+        value: in-scope
+      - path: .claude/rules/adr-0012.md
+        value: confirmed
+        why: "agreed: standalone post, no Pingback"
+      - path: .claude/rules/tenant-glossary.md
+        value: steered
+        why: guard made me read the Blog glossary first
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/glassbox-content.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/glossary-terms.md
+        value: unrelated
+      - path: .claude/rules/adr-0030.md
+        value: unrelated
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: unrelated
+      - path: docs/agents/pr-workflow.md
+      - path: docs/agents/github-integration.md
+      - path: layers/blog/GLOSSARY.md
+  - by: general-purpose
+    subagent: 0
+    answered: false
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported: []
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/content/eyra/pages/2026-11-25-a-slim-line-now-sits-above-every-post-this-one-too.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/blog/content/eyra/pages/2026-11-25-a-slim-line-now-sits-above-every-post-this-one-too.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: layers/blog/content/eyra/pages/2026-11-25-a-slim-line-now-sits-above-every-post-this-one-too.md
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: .claude/rules/adr-0012.md
+        value: unrelated
+      - path: .claude/rules/glassbox-content.md
+        value: unrelated
+      - path: .claude/rules/adr-0002.md
+        value: unrelated
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/data-shapes.md
+        value: unrelated
+      - path: .claude/rules/glossary-terms.md
+        value: unrelated
+      - path: .claude/rules/mdc-when-to-use.md
+        value: unrelated
+      - path: .claude/rules/tenant-layers.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 3
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+subagents:
+  - type: general-purpose
+    task: Blind read of three drafts
+    model: sonnet
+    durationSec: 14
+    toolCalls: 4
+    modelCalls: 2
+    tokenShare: 6.1
+  - type: general-purpose
+    task: Fact-check blog post
+    model: sonnet
+    durationSec: 335
+    toolCalls: 16
+    modelCalls: 11
+    tokenShare: 8.6
+  - type: general-purpose
+    task: Standards review of blog post
+    model: sonnet
+    durationSec: 29
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 3.8
+  - type: general-purpose
+    task: Spec review of blog post
+    model: sonnet
+    durationSec: 41
+    toolCalls: 8
+    modelCalls: 7
+    tokenShare: 5.8
+gitBranch: claude/zen-heisenberg-orr31l
+entrypoint: remote_trigger
+cliVersion: 2.1.332
+trigger: blog-post
+learnings:
+  - A PR body can describe a test as checking more than it asserts (here 'after the header' was only 'before the body'); the test file is the source.
+ideas:
+  - Blog posts could carry a per-tag Glass Box link (a merge-flow post points at the pull-requests lesson) in place of the one fixed new-here link, so a newcomer lands on the lesson for the post's topic.
+landedBy: Stop
