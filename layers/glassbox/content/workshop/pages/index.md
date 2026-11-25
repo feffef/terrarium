@@ -55,6 +55,10 @@ None of these is false.
 
 - **Verification.** *Zod refinements*: no source says why the `pages` rule ties the `page` type to the name `pages`. *Headless browser checks*: no repo source says who sets up the cloud proxy; the `--no-sandbox` and `--disable-gpu` flags have only the code comment "the flags every launch needs in this sandbox".
 
+### Stale or missing
+
+- **A stop hook that blocks once.** `scripts/hooks/subagent-rule-use-stop.ts` blocks a `SubagentStop` while a loaded rule has no rating, and caps the block per `agent_id` with a marker file so a subagent that can't rate is never trapped; no page teaches the loop cap (commits `dc0412d58`, `385083717`, `b962f1eb7`). Nearest page: `hooks/20.blocking-hooks.md`.
+
 ### Too long
 
 Lessons past the soft word limit, each with a proposed split from a fresh reader (`glassbox-update`). A split adds Lessons, so the owner merges it.
