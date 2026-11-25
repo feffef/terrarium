@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQU1aX4cz6nKeBuxbP
 startedAt: 2026-11-25T04:02:52Z
-endedAt: 2026-11-25T04:11:45Z
+endedAt: 2026-11-25T06:25:42Z
 kind: autonomous
 goal: Scheduled check that the repo's prose matches the code
-status: in-review
-outcome: Sweep PR 3668 merged; escalation PR 3669 awaits a human merge
-summary: Scheduled audit-docs run; every step was agent-initiated, no human prompted. Fetched origin/main and read the last two audit-docs logs for their Covered lines. Three read-only reviewers (Freshness, Single-home, Coherence) returned 2, 6 and 1 findings. One checker returned 2 CONFIRMED (visitor-loop focus note, tenant-layers rule pointer), 2 CONFIRMED-BUT (glassbox-update and glassbox-curate no longer find the Stale or missing heading; fixed by allowing it to be absent) and 5 WRONG (glossary entries and Skill pointers that were already the shorter home or whose rewrite was longer). Sweep PR 3668 applied the 3 non-Human-only fixes; code-review Standards and Spec found nothing blocking, gate:scoped green, verdict posted, merged by merge-pr (db1ae6084). The tenant-layers pointer edits a Human-only path, so it went in escalation PR 3669 (gate green), subscribed and waiting for a human merge. No issue filed. Covered (Agents B and C read in full) - CLAUDE.md, GLOSSARY.md, GLOSSARY-MAP.md, docs/agents/{domain,git-conventions,guest-contributions,issue-tracker,tenant-layers,pr-workflow,guards,verifying-ui-changes}.md; deploy/README.md; layers/glassbox/GLOSSARY.md; journal pages history, index, routines; docs/research/{content-client-queries-without-wasm,github-actions-public-vs-private-limits,github-branch-protection-vs-autonomous-log-commits(partly),making-repo-public(partly),nuxt-content-review-grounding}.md; Skills audit-docs dispatch-subagents frictions-to-fixes(not survey-brief) harvest(not steps 1,3) digest auto-triage guest-build guest-intake midden-catalogue midden-survey atlas-specimen tinkerfund-campaign audit-skills clear-backlog visitor-loop prune-trial glassbox-curate close-session log-session(blog-post not read).
+status: completed
+outcome: Sweep PR 3668 and escalation PR 3669 both merged
+summary: Scheduled audit-docs run; every step was agent-initiated, no human prompted. Fetched origin/main and read the last two audit-docs logs for their Covered lines. Three read-only reviewers (Freshness, Single-home, Coherence) returned 2, 6 and 1 findings. One checker returned 2 CONFIRMED (visitor-loop focus note, tenant-layers rule pointer), 2 CONFIRMED-BUT (glassbox-update and glassbox-curate no longer find the Stale or missing heading; fixed by allowing it to be absent) and 5 WRONG (glossary entries and Skill pointers that were already the shorter home or whose rewrite was longer). Sweep PR 3668 applied the 3 non-Human-only fixes; code-review Standards and Spec found nothing blocking, gate:scoped green, verdict posted, merged by merge-pr (db1ae6084). The tenant-layers pointer edits a Human-only path, so it went in escalation PR 3669 (gate green), which a human then merged. No issue filed. Covered (Agents B and C read in full) - CLAUDE.md, GLOSSARY.md, GLOSSARY-MAP.md, docs/agents/{domain,git-conventions,guest-contributions,issue-tracker,tenant-layers,pr-workflow,guards,verifying-ui-changes}.md; deploy/README.md; layers/glassbox/GLOSSARY.md; journal pages history, index, routines; docs/research/{content-client-queries-without-wasm,github-actions-public-vs-private-limits,github-branch-protection-vs-autonomous-log-commits(partly),making-repo-public(partly),nuxt-content-review-grounding}.md; Skills audit-docs dispatch-subagents frictions-to-fixes(not survey-brief) harvest(not steps 1,3) digest auto-triage guest-build guest-intake midden-catalogue midden-survey atlas-specimen tinkerfund-campaign audit-skills clear-backlog visitor-loop prune-trial glassbox-curate close-session log-session(blog-post not read).
 prs:
   - "3668"
   - "3669"
@@ -117,18 +117,19 @@ frictions:
   - description: Escalation PR needed its own branch but the session branch had already merged; the system prompt forbids other branches, so I restarted the merged branch name from main.
     solution: Say in audit-docs section 6 which branch name the escalation PR uses.
     severity: nit
-durationSec: 534
+durationSec: 8570
 models:
-  claude-sonnet-5-5: 73
+  claude-sonnet-5-5: 84
 toolCounts:
   Read: 1
-  Bash: 25
+  Bash: 26
   Skill: 4
   Agent: 6
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 2
   mcp__github__add_issue_comment: 1
   PushNotification: 1
+  ReadNotifications: 4
 filesEdited:
   - .claude/rules/tenant-layers.md
   - .agents/skills/glassbox-curate/SKILL.md
@@ -574,37 +575,37 @@ subagents:
     durationSec: 55
     toolCalls: 18
     modelCalls: 15
-    tokenShare: 10.9
+    tokenShare: 9.3
   - type: general-purpose
     task: Single-home reviewer (B)
     durationSec: 144
     toolCalls: 28
     modelCalls: 22
-    tokenShare: 20.9
+    tokenShare: 18
   - type: general-purpose
     task: Coherence reviewer (C)
     durationSec: 92
     toolCalls: 32
     modelCalls: 16
-    tokenShare: 17.4
+    tokenShare: 14.9
   - type: general-purpose
     task: Fact-check audit findings
     durationSec: 94
     toolCalls: 21
     modelCalls: 20
-    tokenShare: 10.9
+    tokenShare: 9.4
   - type: general-purpose
     task: Standards review
     durationSec: 13
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 4.7
+    tokenShare: 4.1
   - type: general-purpose
     task: Spec review
     durationSec: 9
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 4.4
+    tokenShare: 3.8
 gitBranch: claude/festive-mayer-8ndke9
 entrypoint: remote_trigger
 cliVersion: 2.1.332
