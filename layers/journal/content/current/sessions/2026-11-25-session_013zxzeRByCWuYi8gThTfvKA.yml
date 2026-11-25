@@ -1,0 +1,267 @@
+schemaVersion: 1
+session: session_013zxzeRByCWuYi8gThTfvKA
+startedAt: 2026-11-25T16:03:03Z
+endedAt: 2026-11-25T16:08:39Z
+kind: autonomous
+goal: Scheduled visitor-loop of the Blog
+status: completed
+outcome: "Three visitors toured the Blog; one bug filed as #3675, ideas and learnings logged"
+summary: "Scheduled run, no human prompts; everything was agent-initiated under the visitor-loop Skill. Focus was blog (row 1). Built and served the production preview, wrote a context file, and sent a blind first-time visitor, an informed content editor and an informed UI tester (all sonnet). Yield: blind 8 findings and 3 ideas, editor 8 findings and 3 ideas, UI tester 11 findings and 3 ideas. Sorting: one confirmed bug group, filed as #3675 (summary, tag-meanings button, Karen list links and stories links under 24px at 390px; re-measured myself). Dropped as not a bug: the doubled Browse by tag nav (the hidden twin of a narrow/wide pair in index.vue:120-134, zero height), /t/blog/<persona>/pingbacks 404 (collection has no route, ADR-0006), Kevin's timing sentence (reads awkwardly but is not false), the threads order (grouping by thread is by design, intro wording is an idea). Everything else went to ideas. Filter misses: none seen; open-issue list had 4 issues, none about the Blog. Retros: blind - first crawl followed only /t/blog filter links, no way to list links (brief); editor - my context file had a garbled URL-rule line and gave no URL for pingbacks; UI - one failed run from quote nesting in evaluate strings, wants a one-quote-style hint in the brief (visitor-brief.md)."
+prs: []
+docsRead:
+  - path: scripts/lib/chromium.ts
+    reason: (no reason given)
+  - path: layers/blog/GLOSSARY.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/visitor-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: visitor-loop
+    reason: (invoked as a slash command)
+frictions:
+  - description: I wrote the context file's URL-rule line with leftover drafting text, so the editor visitor had to infer the pattern; its pingbacks guess cost a fetch.
+    solution: Have the visitor-loop Skill (SKILL.md step 2) give a ready script that prints the pages section, instead of hand-assembling it.
+    severity: minor
+  - description: Ran git fetch before reading docs/agents/git-conventions.md; a hook reminded me afterwards. The doc showed the call was fine.
+    solution: None needed; the hook caught it and cost nothing.
+    severity: nit
+  - description: Blind visitor's first crawl followed only filter links and found no posts, costing an extra script run; brief gives no way to enumerate article links.
+    solution: "Add to .agents/skills/visitor-loop/visitor-brief.md: save text and links per page and follow article links, not only filters."
+    severity: minor
+  - description: "SHELL-READ-DETECTION: I read docs/agents/triage-labels.md (first 30 lines, label table) in a command the detector did not count: pnpm exec tsx scripts/github/list-open-issues.ts 5000 2>&1 | grep -E '\"(number|title)\"' | paste - - | head -30 (same Bash call as cat docs/agents/triage-labels.md | head -30). Path expected: docs/agents/triage-labels.md."
+    solution: Count a cat of a doc as read when it shares a Bash call with another command.
+    severity: moderate
+durationSec: 335
+models:
+  claude-sonnet-5-5: 68
+toolCounts:
+  Bash: 17
+  Skill: 3
+  Agent: 3
+  ReadNotifications: 8
+  ToolSearch: 2
+  mcp__github__issue_write: 1
+  SendMessage: 3
+  PushNotification: 1
+filesEdited:
+  - .throwaway/visitor-ui/walk.ts
+  - .throwaway/visitor-blind/crawl.ts
+  - .throwaway/visitor-blind/posts.ts
+  - .throwaway/visitor-blind/last.ts
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+docsReadBySubagents:
+  - layers/blog/GLOSSARY.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0006.md
+        via: hint
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+      - rule: .claude/rules/adr-0016.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+      - rule: .claude/rules/adr-0025.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0003.md
+        value: confirmed
+        why: "agreed: remit only issues, no branch or PR"
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: issue body starts with session header
+      - path: .claude/rules/adr-0009.md
+        value: steered
+        why: log this session via close-session
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0028.md
+        value: unrelated
+      - path: .claude/rules/adr-0006.md
+        value: confirmed
+        why: "agreed: pingbacks have no route"
+      - path: .claude/rules/adr-0012.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0016.md
+        value: unrelated
+      - path: .claude/rules/adr-0022.md
+        value: unrelated
+      - path: .claude/rules/adr-0025.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/rules/tenant-layers.md
+        value: unrelated
+      - path: .claude/rules/ui-verification.md
+        value: unrelated
+      - path: docs/agents/git-conventions.md
+      - path: docs/agents/issue-tracker.md
+      - path: docs/agents/github-integration.md
+      - path: .agents/skills/visitor-loop/visitor-brief.md
+      - path: .agents/skills/visitor-loop/decisions.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/blog/GLOSSARY.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/blog/GLOSSARY.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/glossary-terms.md
+        value: unrelated
+      - path: layers/blog/GLOSSARY.md
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+subagents:
+  - task: Blind first-time visitor
+    model: sonnet
+    durationSec: 155
+    toolCalls: 17
+    modelCalls: 13
+    tokenShare: 17.4
+  - task: Informed content editor visitor
+    model: sonnet
+    durationSec: 152
+    toolCalls: 11
+    modelCalls: 10
+    tokenShare: 13.4
+  - task: Informed UI tester visitor
+    model: sonnet
+    durationSec: 145
+    toolCalls: 13
+    modelCalls: 10
+    tokenShare: 13.4
+gitBranch: claude/lucid-heisenberg-olliue
+entrypoint: remote_trigger
+cliVersion: 2.1.332
+trigger: visitor-loop
+learnings:
+  - On /t/blog the tag directory is rendered twice (narrow details and wide div, index.vue:120-134); the hidden twin measures zero height, so two navs labelled Browse by tag are not an accessibility fault.
+  - Blog post URLs are /t/blog/<persona>/<date-slug>; /t/blog/<persona>/pingbacks has no route and returns the 404, by ADR-0006.
+ideas:
+  - "[content editor] /t/blog/eyra/2026-07-22-i-brought-you-a-house-with-balconies: the opening post is lantern and courtyard metaphor and never says what Eyra will publish. Replace the closing paragraphs with one plain sentence about her beat (the look of the Platform, with a screenshot where it helps), so a newcomer who starts at her first post knows what the column is."
+  - "[content editor, blind] /t/blog/karen/2026-11-25-an-issue-asked-for-a-summary-and-closed-as-completed-without-one and /t/blog/eyra/2026-11-25-a-slim-line-now-sits-above-every-post-this-one-too: both argue over the owner's comment but link neither issue #3600 nor the comment. Link them so a reader can check the claim; Karen's 'The repo has a rule' should name its doc."
+  - "[content editor] /t/blog/eyra (masthead): Popular posts run title and blurb together with a comma, so a title and the next blurb read as clauses. Show 'Title — blurb' with the title as a link; the same fault was already seen on David."
+  - "[blind] /t/blog: the 'Twelve stories worth reading first' link is one small line under 18 tags, so a first-time visitor reaches posts about internals. Move it into the intro as 'New here? Start with twelve stories' and consider collapsing the tags by default on wide screens."
+  - "[blind, content editor] /t/blog/kevin/2026-11-24-31-of-35-logs-said-complete-the-fix-is-a-marker-file: the opening packs seven numbers and Hook jargon before saying what went wrong, and the drop cap sits on the one-letter word A. Open with one plain sentence, and skip the drop cap when the first word is a single letter."
+  - "[UI tester, content editor] /t/blog?view=threads: the intro says newest first but threads run Nov 21, Nov 17, Nov 20, so it looks mis-sorted. Say threads are ordered by their newest post, or add a divider per thread."
+  - "[UI tester] /t/blog/<persona>: lists run 176 to 306 links with month headings only. Add a jump-to-month row at the top so one tap reaches older posts on a phone."
+  - "[UI tester] /t/blog/nobody: an unknown persona gets the generic site 404 while an unknown post gets the persona-styled one. Show the four persona cards on the persona 404 so a mistyped URL lands on real choices."
+  - "[blind] /t/blog posts: add a two to three line In plain words box at the top of each post (what broke, what changed) so non-engineers get the point before the numbers; and a 'pick a voice' strip on /t/blog with each persona's sample line and most popular post."
+  - "[editor, blind] /t/blog/stories: twelve hand-picked stories from July and August with nothing recent. Add a Since then strip of three fresh posts, and number the four-part sequence 1 to 4."
+landedBy: Stop
