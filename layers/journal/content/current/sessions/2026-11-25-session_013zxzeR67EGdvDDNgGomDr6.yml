@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeR67EGdvDDNgGomDr6
 startedAt: 2026-11-25T02:07:15Z
-endedAt: 2026-11-25T02:21:51Z
+endedAt: 2026-11-25T02:25:26Z
 kind: autonomous
 goal: Scheduled run turning recurring session Frictions into fixes
 status: in-review
-outcome: "Ledger PR #3665 and one fix PR #3666 are open; closing ledger PR waits for the fix to merge"
-summary: "Scheduled frictions-to-fixes run, no human prompts. A survey subagent updated the Friction Ledger from 26 window sessions (appended occurrences, one new entry, two rewritten causes) and found no regression at moderate or above since its fix, so no regression issue was filed. I picked one pick, harvest-evidence-arg-shape (quoted groups to harvest evidence match nothing); a design agent proposed splitting arguments on whitespace instead of printing usage, a Sonnet agent built it in a worktree, and code-review (Standards and Spec) found only a comment that said WHAT, fixed on resume. The ledger PR #3665 holds the survey commit, the tracked status and the prune run; its Standards review caught one dangling ref to a deleted entry, which I repointed and re-gated. Both PRs are agent-initiated under the Skill; nothing was human-instructed. Open: merge both once CI is green, then the closing ledger PR with the fix PR number. Left unpicked as nit/minor and guarded or owner calls: session-id-hand-typed, clear-backlog-review-round-low-yield, deferred-tool-name-guessed."
+outcome: "Ledger PR #3665 and fix PR #3666 merged; closing ledger PR for the fix is open and waiting on CI"
+summary: "Scheduled frictions-to-fixes run, no human prompts. A survey subagent updated the Friction Ledger from 26 window sessions (appended occurrences, one new entry, two rewritten causes) and found no regression at moderate or above since its fix, so no regression issue was filed. I picked one pick, harvest-evidence-arg-shape (quoted groups to harvest evidence match nothing); a design agent proposed splitting arguments on whitespace instead of printing usage, a Sonnet agent built it in a worktree, and code-review found only a comment that said WHAT, fixed on resume. The ledger PR #3665 (survey commit, tracked status, prune run) merged after its Standards review caught a dangling ref that I repointed and re-gated. Fix PR #3666 merged after a second code-review, because merge-pr refused an own-read verdict for a follow-up that touches a .ts file. The closing ledger PR records the fix and sets the entry open; it still needs CI and merge. All of it was agent-initiated under the Skill; nothing was human-instructed. Left unpicked as nit/minor and guarded or owner calls: session-id-hand-typed, clear-backlog-review-round-low-yield, deferred-tool-name-guessed."
 prs:
   - "3665"
   - "3666"
@@ -71,22 +71,28 @@ frictions:
   - description: Ledger-only PR touched 58 files, so it failed the simple-change test and needed a two-agent code-review, costly for data with no logic.
     solution: Let a ledger-only diff produced by the Skill's scripts count as simple, or review it by the ledger spec.
     severity: minor
-durationSec: 876
+  - description: merge-pr.ts refused my own-read verdict because the follow-up commit touched a .ts file, though it was a one-line comment edit; I ran another full code-review.
+    solution: Let the simple-change test ignore comment-only lines, or say in the Skill that a builder's comment fix needs a review round.
+    severity: minor
+durationSec: 1091
 models:
-  claude-sonnet-5-5: 95
+  claude-sonnet-5-5: 139
 toolCounts:
-  Bash: 29
+  Bash: 42
   Read: 3
-  Skill: 6
-  Agent: 8
+  Skill: 8
+  Agent: 10
   ToolSearch: 3
   TaskStop: 1
   SendMessage: 1
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 2
+  ReadNotifications: 4
+  mcp__github__add_issue_comment: 3
 filesEdited:
   - .agents/skills/harvest/scripts/harvest.ts
   - .agents/skills/harvest/tests/unit/harvest.spec.ts
+  - layers/journal/content/current/frictions/harvest-evidence-arg-shape.yml
   - layers/journal/content/current/frictions/rule-use-echo-calls-in-subagents.yml
   - layers/journal/content/current/frictions/adr-read-after-edit.yml
   - layers/journal/content/current/frictions/blocked-waiting.yml
@@ -109,7 +115,6 @@ filesEdited:
   - layers/journal/content/current/frictions/governing-doc-read-after-draft.yml
   - layers/journal/content/current/frictions/harness-classifier-denials.yml
   - layers/journal/content/current/frictions/harness-proxy-blocks.yml
-  - layers/journal/content/current/frictions/harvest-evidence-arg-shape.yml
   - layers/journal/content/current/frictions/irrelevant-rules-loaded.yml
   - layers/journal/content/current/frictions/late-read-first-docs.yml
   - layers/journal/content/current/frictions/ledger-append-refuses-held-session.yml
@@ -457,6 +462,48 @@ ruleUse:
         value: unrelated
       - path: .claude/rules/adr-0017.md
         value: unrelated
+  - by: general-purpose
+    subagent: 8
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 9
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
 subagents:
   - type: general-purpose
     task: Survey frictions ledger
@@ -466,44 +513,56 @@ subagents:
     durationSec: 307
     toolCalls: 35
     modelCalls: 29
-    tokenShare: 26.6
+    tokenShare: 20.3
   - type: general-purpose
     task: Design harvest-evidence fix
     durationSec: 79
     toolCalls: 16
     modelCalls: 9
-    tokenShare: 4.9
+    tokenShare: 3.7
   - type: general-purpose
     task: Build harvest evidence fix
     model: sonnet
     durationSec: 313
     toolCalls: 30
     modelCalls: 20
-    tokenShare: 8.7
+    tokenShare: 6.6
   - type: general-purpose
     task: "Code review: Standards axis"
     durationSec: 52
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 4.3
+    tokenShare: 3.3
   - type: general-purpose
     task: "Code review: Spec axis"
     durationSec: 52
     toolCalls: 11
     modelCalls: 9
-    tokenShare: 5
+    tokenShare: 3.8
   - type: general-purpose
     task: "Code review: Standards axis"
     durationSec: 15
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 1.9
+    tokenShare: 1.5
   - type: general-purpose
     task: "Code review: Spec axis"
     durationSec: 26
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 2.5
+    tokenShare: 1.9
+  - type: general-purpose
+    task: "Code review: Standards axis"
+    durationSec: 12
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 1.4
+  - type: general-purpose
+    task: "Code review: Spec axis"
+    durationSec: 16
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 1.4
 gitBranch: claude/eager-ptolemy-mruzvm
 entrypoint: remote_trigger
 cliVersion: 2.1.332
