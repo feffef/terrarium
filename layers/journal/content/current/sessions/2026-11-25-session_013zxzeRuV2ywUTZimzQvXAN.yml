@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRuV2ywUTZimzQvXAN
 startedAt: 2026-11-25T13:09:35Z
-endedAt: 2026-11-25T13:18:38Z
-kind: autonomous
+endedAt: 2026-11-25T13:55:07Z
+kind: interactive
 goal: Scheduled prune trial run
-status: in-review
-outcome: "Judged the harvest trial as holding and opened PR #3674; no new trial opened"
-summary: "Scheduled /prune-trial run, agent-initiated under the stored prompt with no human instruction. Judged the harvest steps 1 and 3 trial (landed 5f225a7f): harvest-first-pass-shallow fell from 2.1% to 0.0%, and the two harvest-evidence-arg-shape hits (0% to 6.5%, minor and nit) trace to the helper's usage text that PR #3666 fixed, not to the cut, so it holds; entry deleted and the ledger entry reset to open. The survey-brief trial is not yet judgeable (floor 2026-11-26). A search subagent ranked failed-prose candidates; none was cuttable (two already pruned and judged, the CLAUDE.md read-first block already terse and bound by ADR-0029 reachability, the rest small and guard-held), so no new trial was opened. Reviewed with code-review (no findings), gate passed, PR #3674 waits for a human merge because prune-trials.yml is Human-only."
+status: completed
+outcome: "Judged the harvest trial as holding; PR #3674 merged; no new trial opened"
+summary: "Scheduled /prune-trial run, agent-initiated under the stored prompt with no human instruction. Judged the harvest steps 1 and 3 trial (landed 5f225a7f): harvest-first-pass-shallow fell from 2.1% to 0.0%, and the two harvest-evidence-arg-shape hits (0% to 6.5%, minor and nit) trace to the helper's usage text that PR #3666 fixed, not to the cut, so it holds; entry deleted and the ledger entry reset to open. The survey-brief trial is not yet judgeable (floor 2026-11-26). A search subagent ranked failed-prose candidates; none was cuttable (two already pruned and judged, the CLAUDE.md read-first block already terse and bound by ADR-0029 reachability, the rest small and guard-held), so no new trial was opened. Reviewed with code-review (no findings), gate passed, I wrongly called prune-trials.yml Human-only in the PR and notification; the owner asked why, I checked the rule paths, corrected it and merged PR #3674 myself with merge-pr.ts after green CI."
 prs:
   - "3674"
 docsRead:
@@ -46,17 +46,23 @@ frictions:
   - description: Combined run_in_background with a trailing ampersand in one Bash call; the double-background guard refused it.
     solution: Pass run_in_background alone.
     severity: nit
-durationSec: 543
+  - description: Told the PR and the push notification that prune-trials.yml needs a human merge without checking the Human-only rule's paths; the owner had to ask, delaying the merge.
+    solution: Check a file against adr-0004-human-merge.md paths before claiming Human-only; the rule loads on other triggers too.
+    severity: moderate
+durationSec: 2732
 models:
-  claude-sonnet-5-5: 70
+  claude-sonnet-5-5: 93
 toolCounts:
-  Bash: 26
+  Bash: 31
   Read: 5
   Agent: 4
-  Skill: 3
+  Skill: 4
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 4
+  PushNotification: 1
+  mcp__github__add_issue_comment: 2
 filesEdited:
   - .agents/prune-trials.yml
   - layers/journal/content/current/frictions/harvest-first-pass-shallow.yml
@@ -247,21 +253,21 @@ subagents:
     durationSec: 142
     toolCalls: 24
     modelCalls: 22
-    tokenShare: 29.2
+    tokenShare: 22.8
   - type: general-purpose
     task: Review standards axis
     model: sonnet
     durationSec: 18
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 5.1
+    tokenShare: 4
   - type: general-purpose
     task: Review spec axis
     model: sonnet
     durationSec: 29
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 5.8
+    tokenShare: 4.5
 gitBranch: claude/practical-rubin-3eyqax
 entrypoint: remote_trigger
 cliVersion: 2.1.332
