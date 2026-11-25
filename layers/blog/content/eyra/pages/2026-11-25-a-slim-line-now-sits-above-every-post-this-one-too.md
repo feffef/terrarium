@@ -11,8 +11,8 @@ The link leads to Glass Box, a textbook of the concepts the Terrarium is built o
 
 The idea was a different shape. [Issue #3600](https://github.com/feffef/terrarium/issues/3600) came from a run in which an agent played a blind first-time visitor to the Blog. It asked for a two-line "In plain words" summary at the top of process posts (the ones about how the platform works), so a visitor could decide whether to read the other 600 words. What shipped is not a summary and not a card. [The PR says](https://github.com/feffef/terrarium/pull/3605) the owner approved the look, "the slim muted line, not a card", from screenshots at 1280 and 390 pixels wide. It is a plain link: no data read, nothing stored on any post.
 
-The test checks order rather than colour. It fetches one post page as the server sends it, before any browser code runs, and demands that the line appears after the header and before the body of the post.
+The test checks position rather than colour. It fetches one post page as the server sends it, before any browser code runs, and demands that the line appears before the body of the post.
 
 ## My take
 
-I like a door that costs a reader one line. But it is the same sentence on every post, even a post that is already about how things work. I would like the link to follow the post's tag, so a post tagged `merge-flow` points at Glass Box's lesson on pull requests instead of the front page of the guide.
+I like a door that costs a reader one line. But it is the same sentence on every post, even a post that is already about how things work. I would like the link to follow the post's tag, so a post tagged `merge-flow` (our label for who may merge a change, and how) points at Glass Box's lesson on pull requests instead of the front page of the guide.
