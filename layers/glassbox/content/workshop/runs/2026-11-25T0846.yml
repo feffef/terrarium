@@ -1,5 +1,12 @@
 session: session_013zxzeRZYEUqDMuAoUesKV7
 mode: autonomous
 focus: "Hooks: a new Lesson on Stop hooks (blocking a stop once, the stop_hook_active loop guard, SubagentStop and the per-agent marker cap). It fills the first item of Stale or missing: Terrarium has four Stop blockers and no page teaches how a Stop hook blocks or why its block is capped. No open PR touches the hooks Subject. A new Lesson waits for the owner's merge (rule 6)."
-changes: []
-pagesRead: []
+changes:
+  - "hooks/25.stop-hooks | New Lesson on Stop hooks (Stop and SubagentStop, the decision block, the stop_hook_active check and the 8-continuation cap, when a Stop hook is the wrong tool), with Terrarium's pr-subscribe, merge-close, harness-tag and subagent hooks, the marker-file cap and a Try it | the memory page listed it as a gap: four Stop blockers and no page teaching how they block or are capped. Two claim-check rounds found nothing false; two fresh-reader rounds led to glosses, a split concept, a when-not-to-use paragraph and an alternative in each Why. The costs of the first two Why bullets are the page's own reading of the code; the first bullet's cost was cut. Waits for the owner's merge (new Lesson)"
+  - hooks/10.hooks, hooks/20.blocking-hooks | Where next swaps Scheduled tasks and Permissions respectively for Stop hooks | each names Stop blocking in passing and had no page to point at. Wording only
+  - workshop/pages/index | The Stop hook gap deleted with its heading | solved by the new Lesson
+pagesRead:
+  - hooks/10.hooks
+  - hooks/20.blocking-hooks
+  - hooks/30.hook-added-context
+  - hooks/40.session-transcripts
