@@ -319,7 +319,7 @@ export function evidenceReport(keywords: string[], src: EvidenceSources): string
 }
 
 /** The keyword groups and the `--extract` path of `evidence` arguments; groups are
- *  separated by a literal `--`. */
+ *  separated by a literal `--`; agents quote a group as one argument, which as a literal phrase matched nothing. */
 export function parseEvidenceArgs(argv: string[]): { groups: string[][]; extract?: string } {
   const groups: string[][] = [[]]
   let extract: string | undefined
@@ -327,7 +327,7 @@ export function parseEvidenceArgs(argv: string[]): { groups: string[][]; extract
     const a = argv[i]!
     if (a === '--extract') extract = argv[++i]
     else if (a === '--') groups.push([])
-    else groups[groups.length - 1]!.push(a)
+    else groups[groups.length - 1]!.push(...a.split(/\s+/).filter(Boolean))
   }
   return { groups: groups.filter((g) => g.length), extract }
 }
