@@ -44,3 +44,13 @@ occurrences:
     severity: nit
     description: "Retro, builder: rules() puts the no-chaining Bash rule after the task steps, so a compound cd command was refused by the worktree guard and rewritten; the gate command in the first-turn brief also blurs which turn it is."
     solution: "In .claude/workflows/clear-backlog-build.js rules(), put the no-chaining rule and scratchpad-script tip first, and drop the gate command from the first-turn brief (unverified: builder's own report)."
+  - session: session_013zxzeRQRYWw3yLJzSdaozk
+    date: "2026-11-24"
+    severity: minor
+    description: "Retro, builder (unverified by me): rules() forbids && and ; in a worktree yet prescribes the gate command with cd and &&; its own chained call was refused, taking a turn and skipping pnpm install, so vitest was missing."
+    solution: "State in rules() of .claude/workflows/clear-backlog-build.js that every Bash call is one plain command (writes through Write and Edit) and the gate command is the only chain."
+  - session: session_013zxzeSBTTxHztyPoJeEwAj
+    date: "2026-11-24"
+    severity: nit
+    description: "Retro (builder): the worktree guard refused three chained or heredoc Bash calls; the brief states the no-chaining rule only for git, so non-git chains were retried."
+    solution: "Reword the rule in .claude/workflows/clear-backlog-build.js as one simple command per Bash call, no heredocs, in a worktree."

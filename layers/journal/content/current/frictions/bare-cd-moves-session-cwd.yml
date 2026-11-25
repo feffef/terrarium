@@ -84,3 +84,13 @@ occurrences:
     severity: nit
     description: "My Bash cwd ended inside a builder's worktree after a cd chain for verdict-line.ts; removing that worktree deleted my own cwd and the next command failed."
     solution: "Run worktree removal with git -C from the main checkout and run verdict-line.ts via an absolute path, never cd into a worktree."
+  - session: session_013zxzeSBTTxHztyPoJeEwAj
+    date: "2026-11-24"
+    severity: nit
+    description: "I changed directory into builder worktrees to run verdict-line, which moved the session's working directory each time, and I removed worktrees only after each merge."
+    solution: "Run verdict-line with git -C or an absolute path instead of cd."
+  - session: session_013zxzeR2f7URRYrx7PdwVDH
+    date: "2026-11-25"
+    severity: nit
+    description: "Two bash cd calls left the shell cwd inside the skills folder, so later relative paths needed a reset."
+    solution: "Use absolute paths in grep calls instead of cd."

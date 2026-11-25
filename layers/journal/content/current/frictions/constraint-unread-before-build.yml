@@ -17,11 +17,6 @@ fixes:
     date: "2026-11-08"
     summary: "CLAUDE.md gained a bullet: before you plan or design, read the full ADR of each decision the plan touches."
 occurrences:
-  - session: session_013zxzeSjczLUzQPWWSHP4t9
-    date: "2026-11-10"
-    severity: minor
-    description: "Planned a session-log schema change without reading the full ADR-0009, which CLAUDE.md requires before planning; I relied on its summary rule."
-    solution: "Read docs/adr/0009 before designing a schema change; the summary rule happened to cover the additive-only constraint."
   - session: session_013zxzeP1EixGDy96kmktFi2
     date: "2026-11-12"
     severity: minor

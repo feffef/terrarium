@@ -14,11 +14,6 @@ fixes:
     date: "2026-11-22"
     summary: "audit-skills prune-observations.ts reports today's notes outside the 300-500 word range (print-only)"
 occurrences:
-  - session: session_013zxzeNkk5oEC8RnBdMeMEt
-    date: "2026-11-10"
-    severity: minor
-    description: "First draft put two routine PRs in the prose and used jargon in Also shipped; the Standards review caught it, costing one more commit and a gate rerun."
-    solution: "Before saving, check each prose PR against the routine-PR rule."
   - session: session_013zxzeRvdzBc3xXGo24TkVf
     date: "2026-11-12"
     severity: moderate
@@ -79,3 +74,8 @@ occurrences:
     severity: nit
     description: "Review's Standards pass found Tenant in prose, a term the Skill bans, after the gate had started, so the fix landed after the gated head."
     solution: "Run the project-term check on the draft before the first commit."
+  - session: session_013zxzeQ5m7BGxJD5bJ1fkPZ
+    date: "2026-11-24"
+    severity: nit
+    description: "First draft opened with 'Confession:', the same opening as Kevin's 2026-11-18 post; the tone re-read caught it before the PR."
+    solution: "Step 4's overlap grep could include the opening line of the Persona's last three posts."

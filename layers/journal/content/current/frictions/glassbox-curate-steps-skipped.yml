@@ -41,3 +41,8 @@ occurrences:
     severity: minor
     description: "Stopped after one run although the curate Skill says to start the next run at once; I misread the pause rule, which applies only when open PRs block every remaining item."
     solution: "Step 8 could say a PR waiting for the owner is never a reason to end the session, and that the pause rule needs every remaining item blocked."
+  - session: session_013zxzeQF4hazkBfaftfPo5b
+    date: "2026-11-24"
+    severity: minor
+    description: "The Skill's step 8 loops to the next run, but a single turn cannot wait for CI between runs, so the session stopped after one run and PR."
+    solution: "Say in the Skill how a scheduled one-turn run should end when the first PR is still waiting on checks and the owner."

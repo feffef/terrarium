@@ -14,3 +14,8 @@ occurrences:
     severity: nit
     description: "One of my own verification scripts had a syntax error in a page.evaluate string and needed a second run."
     solution: "Pass evaluate a plain string built once, as the brief says, and test it on one page first."
+  - session: session_013zxzeSqibnzqVVC4yRJ1eN
+    date: "2026-11-24"
+    severity: minor
+    description: "Brief gives no pointer to content paths or a starter crawl script, so each visitor rewrote the same crawl and hit the same page.evaluate string-escaping trap."
+    solution: "Add to .agents/skills/visitor-loop/visitor-brief.md: content lives at layers/<tenant>/, a one-line string page.evaluate example (join with '|', never a newline), and that SVG a.href is an object."

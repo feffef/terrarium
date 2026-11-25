@@ -14,11 +14,6 @@ fixes:
     date: "2026-11-17"
     summary: "Stop hook counts a merge only when merge-pr.ts's own result reports merged: true"
 occurrences:
-  - session: session_013zxzeQN4dgz9seaMtnRf7u
-    date: "2026-11-10"
-    severity: minor
-    description: "The Stop hook claimed a PR merged and close-session had not run, though this session merged nothing; it made me close early."
-    solution: "Have the merge-close hook match only a merge-pr.ts run in this session, not merge text in tool output."
   - session: session_013zxzeRpiY8hmJh8z3HELvr
     date: "2026-11-11"
     severity: nit

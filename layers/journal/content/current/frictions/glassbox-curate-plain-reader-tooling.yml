@@ -11,11 +11,6 @@ fixes:
     date: "2026-11-13"
     summary: "plain.ts takes a bare stem and lists near matches, and prints plainer fresh-reader pages."
 occurrences:
-  - session: session_013zxzeQN4dgz9seaMtnRf7u
-    date: "2026-11-10"
-    severity: nit
-    description: "plain.ts strips term chips, so fresh readers kept reporting Skill, Routine and Gate as undefined and I had to filter that noise by hand."
-    solution: "Have plain.ts print each term's definition, or have the brief say to ignore capitalised glossary terms."
   - session: session_013zxzeQ2wC57fFKCB2ZNBZb
     date: "2026-11-11"
     severity: minor

@@ -83,3 +83,8 @@ occurrences:
     severity: minor
     description: "A run entry's changes line held a colon followed by a space, so validate:content failed; it happened twice, once after I had already committed."
     solution: "The Skill's State section says to quote such a line, but orient.ts's skeleton could warn, or validate:content could name the colon."
+  - session: session_013zxzeR2f7URRYrx7PdwVDH
+    date: "2026-11-25"
+    severity: minor
+    description: "My first apply script re-serialized every Inventory yml (1815 deleted lines) because the yaml library reflowed old block notes; I redid it as a text append."
+    solution: "audit-skills could ship a small append-observation script so each run does not hand-roll one."

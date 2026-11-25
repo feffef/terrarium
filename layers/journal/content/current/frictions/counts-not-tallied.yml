@@ -26,11 +26,6 @@ fixes:
     date: "2026-10-25"
     summary: "Cut the Verify-before-you-state family to one plain home in CLAUDE.md and dropped its restatements in four Skills and the build reviewer."
 occurrences:
-  - session: session_013zxzeSiQ4jom3vFu8GreLw
-    date: "2026-11-10"
-    severity: nit
-    description: "The push notification said six questions but the grill had five; I had not counted the issues first."
-    solution: "Count the grill results before sending the notification."
   - session: session_013zxzeRKJEWdWhMoxhqHgGG
     date: "2026-11-11"
     severity: minor

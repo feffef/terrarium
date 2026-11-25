@@ -17,21 +17,6 @@ notes: |-
   2026-10-28 design: another digest Skill line dropped: it already says to read ADR-0010 before the first Digest; the hint is the designed backstop and the late read changed nothing. dropped: a guard would be Human-only.
   2026-10-30 design: change the hint or its rules' paths (issue #2575's candidates) dropped: all Human-only files; 85 of 86 late reads changed nothing, 0 'no' verdicts, so the cost is one call
 occurrences:
-  - session: session_013zxzePY5ruxnnX3PjPY9WM
-    date: "2026-11-10"
-    severity: nit
-    description: "A hook said to read ADR-0004 and ADR-0027 in full after the ADR-0009 edit; I read only ADR-0009 and ADR-0030."
-    solution: "Read the named ADRs, or make the hook say which read is optional for a one-sentence drift fix."
-  - session: session_013zxzeSSDUXBAYYrwXtej8b
-    date: "2026-11-10"
-    severity: nit
-    description: "Wrote the post file before reading ADR-0012, which a hook flagged; the post was standalone with no pingback, so no impact."
-    solution: "Read the flagged ADR when the Skill's reaction form is in play, otherwise skip."
-  - session: session_013zxzeS3L4n7Fke1jtRbDTc
-    date: "2026-11-10"
-    severity: nit
-    description: "Edited prune-trials.yml and git-conventions.md before reading ADR-0027 and ADR-0029 in full; the post-edit hook asked afterward."
-    solution: "The prune-trial Skill could list ADR-0027 as read-first, since it governs every edit it makes."
   - session: session_013zxzeQdDhmjuBmtPSZi6tK
     date: "2026-11-11"
     severity: nit
@@ -257,3 +242,8 @@ occurrences:
     severity: nit
     description: "After a prototype edit under layers/journal a hook asked me to read ADR-0006, ADR-0008 and ADR-0016 in full; I skipped it because the edit was throwaway and reverted."
     solution: "The prototype Skill could say a reverted sample needs no ADR read, or the ADR rules could exclude layers/journal/app/pages in a prototype."
+  - session: session_013zxzeQqSgD4eRH99VvRtLc
+    date: "2026-11-24"
+    severity: minor
+    description: "A hook told me to read six ADRs in full after my commit; I only word-counted them and went on to review without reading them."
+    solution: "Hook should name only ADRs whose decision the edit touches; I should read or say I skipped."

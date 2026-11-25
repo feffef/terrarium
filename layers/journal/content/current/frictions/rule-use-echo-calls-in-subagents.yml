@@ -4,10 +4,8 @@ cause: "The SubagentStart note (scripts/hooks/subagent-note.ts, #3009) tells eve
 surface: guard-or-hook
 status: accepted
 acceptedSeverity: minor
-ref: "readonly-brief-vs-helped-hint (the earlier helped.sh form of the same ask); issue #3020"
+ref: "issue #3020 (also covered the earlier helped.sh form of the same ask, a deleted entry)"
 related:
-  - entry: readonly-brief-vs-helped-hint
-    rule: The hint is the older helped.sh ask, not echo rule-use.
   - entry: read-first-hint-repeats-in-subagents
     rule: The hint is a read-first doc hint repeating in a subagent.
 notes: |-
@@ -128,3 +126,13 @@ occurrences:
     severity: nit
     description: "Subagent startup hook made the blind visitor echo rule-use twice and rate four ADRs that do not apply to a read-only visit."
     solution: "Skip the rule-use echo for read-only visitor subagents (SubagentStart hook config; path unverified)."
+  - session: session_013zxzeRQRYWw3yLJzSdaozk
+    date: "2026-11-24"
+    severity: nit
+    description: "Retro, reviewers (their claims, unverified by me): briefs gave no line ranges (code-review SKILL.md section 3, harvest.ts:361 for the stopped check), so each searched; read-only reviewers also paid rule-use echo round trips."
+    solution: "Have reviewPrompt() in .claude/workflows/clear-backlog-build.js carry file paths and line numbers for spec sources and say the smell list is section 3 only."
+  - session: session_013zxzeSBTTxHztyPoJeEwAj
+    date: "2026-11-24"
+    severity: nit
+    description: "Retro (both reviewers): hooks demanded a rule-use echo round trip on each Bash call, and the hand-off format changed between the first brief and a later message (structured output, then a JSON file with a one-line reply)."
+    solution: "Fold the rule-use echo into the final call for reviewers, and state the findings-file hand-off once in reviewPrompt()."

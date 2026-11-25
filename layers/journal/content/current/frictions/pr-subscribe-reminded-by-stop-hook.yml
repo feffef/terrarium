@@ -5,11 +5,6 @@ cause: "Comes from pr-opened-without-subscribe and PR #2972 (Stop hook that prom
 status: open
 ref: "pr-opened-without-subscribe, fix PR #2972"
 occurrences:
-  - session: session_013zxzeSB2Asdc9k89JQywv9
-    date: "2026-11-10"
-    severity: nit
-    description: "Stop hooks demanded subscribe_pr_activity after I opened the test PR, though the task said not to subscribe."
-    solution: "Let the hook skip PRs whose title carries a test marker, or let a session mark a PR as not to watch."
   - session: session_013zxzeP1EixGDy96kmktFi2
     date: "2026-11-12"
     severity: minor

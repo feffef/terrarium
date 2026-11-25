@@ -29,16 +29,6 @@ fixes:
     date: "2026-11-13"
     summary: "digest SKILL.md needs a source in the day's gathered material for a cadence word and drops 'scheduled' from its example; the fact-check checks both."
 occurrences:
-  - session: session_013zxzeNkk5oEC8RnBdMeMEt
-    date: "2026-11-10"
-    severity: minor
-    description: "The digest Skill's wording invites unsourced cadence words: I wrote 'weekly' and 'runs daily' for jobs with no source; the fact-check caught the weekly one."
-    solution: "Digest Skill: tell writers to state no cadence unless a doc names it."
-  - session: session_013zxzeSSDUXBAYYrwXtej8b
-    date: "2026-11-10"
-    severity: minor
-    description: "Draft said \"a scheduled run called visitor-loop\" from an inference the PR did not support; the fact-checker caught it and it cost two extra checker rounds."
-    solution: "Take a run's kind from the PR wording or the Routine file before writing agency words."
   - session: session_013zxzeSvVL3Eaha8hHj2Q8i
     date: "2026-11-11"
     severity: minor
@@ -149,3 +139,13 @@ occurrences:
     severity: minor
     description: "First draft said a counts claim, a line count from a PR title (-109 vs net -106) and wrote 'counts' for what a post lists; the fact-check caught both."
     solution: "Take line counts from git numstat of the merge, not PR titles."
+  - session: session_013zxzeQ5m7BGxJD5bJ1fkPZ
+    date: "2026-11-24"
+    severity: minor
+    description: "Draft claims were imprecise (flag wording, '31 of 35' mixing bare and partial answers, a Take fact absent above it); the fact-check and review caught them, costing three checker round trips."
+    solution: "None needed beyond the existing fact-check; read the issue's comments before drafting from its body."
+  - session: session_013zxzeT1KJU1C5ggyu5ibSA
+    date: "2026-11-25"
+    severity: minor
+    description: "First draft said three Atlas fixes came from the visitor session; the fact-check could not verify it, so I removed the sentence."
+    solution: "Digest step 3 could say to attribute provenance only from PR bodies."

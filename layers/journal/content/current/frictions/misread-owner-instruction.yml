@@ -19,11 +19,6 @@ fixes:
     date: "2026-11-16"
     summary: "CLAUDE.md 'Ask before building': an unanswered, option-less or deferred reply is not a yes; ask again or hold the step."
 occurrences:
-  - session: session_013zxzeR6YXBiMLnmDFQpBs9
-    date: "2026-11-10"
-    severity: minor
-    description: "The user said audit-logs, which no Routine is named; grepping for it cost a few calls before the screenshot showed it was audit-docs."
-    solution: "Ask which run or list the latest Routine logs first when a named Routine does not exist"
   - session: session_013zxzeNhTeF9B47tZ5Egyhx
     date: "2026-11-11"
     severity: minor

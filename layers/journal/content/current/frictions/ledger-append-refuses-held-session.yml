@@ -16,11 +16,6 @@ fixes:
     date: "2026-11-17"
     summary: "print-ledger-occurrence --append --skip-held skips sessions the entry already holds and prints each skip"
 occurrences:
-  - session: session_013zxzeP1cnvEr2zK5BaCnc9
-    date: "2026-11-10"
-    severity: minor
-    description: "Survey subagent could not pre-check that --append refuses sessions already held under another Friction index, so whole calls failed twice."
-    solution: "Have --unledgered or --append report held sessions up front."
   - session: session_013zxzeNa1RNcdysLXBJAD5N
     date: "2026-11-11"
     severity: minor

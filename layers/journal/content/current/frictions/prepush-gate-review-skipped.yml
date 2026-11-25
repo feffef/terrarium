@@ -172,3 +172,8 @@ occurrences:
     severity: minor
     description: "The follow-up commit that restored rules was not simple, so a code-review call was due, but I ran a plain subagent re-check that merge-pr.ts will not accept; I left the PR for a human."
     solution: "Run the printed code-review call on the follow-up diff in the same session when reviewers find lost rules."
+  - session: session_013zxzeQF4hazkBfaftfPo5b
+    date: "2026-11-24"
+    severity: minor
+    description: "The follow-up commit after code-review changed three files, over the two-file simple-change bar, but I gave it only my own read instead of a second code-review."
+    solution: "Run code-review on the fix diff, or keep review fixes to two files; the Skill could say how to count a memory-page edit."

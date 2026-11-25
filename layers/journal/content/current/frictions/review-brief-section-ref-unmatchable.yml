@@ -1,7 +1,7 @@
 name: review-brief-section-ref-unmatchable
 surface: safe
-summary: Reviewer briefs name a numbered section of the code-review Skill that a heading search for the number does not find.
-cause: "The reviewer brief says to read 'section 3' of code-review SKILL.md for the smell baseline, but the heading is '### 3.'; reviewers grep '^## 3', find nothing and skip the baseline or read the whole file. Signals: 'section 3', 'grepped ^## 3'."
+summary: "Reviewers were left to search for what to read: a briefed section number a heading search does not find, no line ranges, or no list of the docs that bind the diff."
+cause: "The reviewer brief says to read 'section 3' of code-review SKILL.md for the smell baseline, but the heading is '### 3.'; reviewers grep '^## 3', find nothing and skip the baseline or read the whole file. After PR #3512 named the heading, reviewers still searched: briefs gave no line ranges (code-review SKILL.md section 3, harvest.ts:361) and section 3 only says to search for standards files, so each reviewer re-greps which docs bind the diff. Signals: 'section 3', 'grepped ^## 3', 'gave no line ranges', 'each searched', 're-greps which docs bind'."
 status: open
 fixes:
   - pr: 3512
@@ -48,3 +48,13 @@ occurrences:
     severity: nit
     description: "Retro, Standards reviewer: told to read only the '### 3' section of code-review SKILL.md without an end line, so its sed range also pulled in step 4's prompt text."
     solution: "Name the section's end line or heading in the review brief in .claude/workflows/clear-backlog-build.js (reviewer's claim, unverified)."
+  - session: session_013zxzeRQRYWw3yLJzSdaozk
+    date: "2026-11-24"
+    severity: nit
+    description: "Retro, reviewers (their claims, unverified by me): briefs gave no line ranges (code-review SKILL.md section 3, harvest.ts:361 for the stopped check), so each searched; read-only reviewers also paid rule-use echo round trips."
+    solution: "Have reviewPrompt() in .claude/workflows/clear-backlog-build.js carry file paths and line numbers for spec sources and say the smell list is section 3 only."
+  - session: session_013zxzeNisEDZyrmPg2jhA5G
+    date: "2026-11-22"
+    severity: minor
+    description: "Retro (Standards reviewer): code-review §3 only says to search for standards files, so each reviewer re-greps which docs bind the diff (guards.md, the ledger schema in tenant.config.ts)."
+    solution: "reviewPrompt() in .claude/workflows/clear-backlog-build.js could list standards homes per changed path; source the reviewer's reply, unverified by me."

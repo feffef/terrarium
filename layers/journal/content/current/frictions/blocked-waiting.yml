@@ -17,11 +17,6 @@ fixes:
     date: "2026-10-30"
     summary: "CLAUDE.md: in the main session end your turn and let the completion notification wake you; never wait with pgrep -f"
 occurrences:
-  - session: session_013zxzeNvpKDRhFYp216ti6n
-    date: "2026-11-10"
-    severity: nit
-    description: "ScheduleWakeup was blocked outside /loop; I tried it to wait for a subagent that self-notifies."
-    solution: "The skill text could say subagents self-notify, so never schedule a wakeup."
   - session: session_013zxzeSdKDZBdqz6vRp3xW1
     date: "2026-11-12"
     severity: nit
@@ -117,3 +112,13 @@ occurrences:
     severity: nit
     description: "Called ScheduleWakeup outside a loop session while waiting for a subagent; the loop-only guard blocked it."
     solution: "The glassbox-curate pause step could say a subagent wait needs no wakeup tool, only ending the turn."
+  - session: session_013zxzeSWvk9VQkVz1BtXm6k
+    date: "2026-11-24"
+    severity: nit
+    description: "ScheduleWakeup was blocked outside /loop; the prune-trial Skill and subagent wait gave no hint, costing one call."
+    solution: "End the turn and wait for the subagent notification."
+  - session: session_013zxzeR2f7URRYrx7PdwVDH
+    date: "2026-11-25"
+    severity: nit
+    description: "Edits blocked while the scoped gate ran (gate-edit guard); a sleep command and a double-background call were also refused."
+    solution: "Plan the edit before starting the gate; use Monitor with an until-loop to wait."

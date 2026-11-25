@@ -47,3 +47,8 @@ occurrences:
     severity: moderate
     description: "Sixteen per-Skill agents again mostly re-confirmed known repeats; I could not re-verify most counts and marked them unverified in the notes."
     solution: "Have the scorecard flag Skills whose runs and Changes are unchanged since the last note and skip their agent."
+  - session: session_013zxzeR2f7URRYrx7PdwVDH
+    date: "2026-11-25"
+    severity: minor
+    description: "The skill asks for 15 per-Skill subagents each run; most only re-confirmed known repeats, so a large share of tokens bought no new finding."
+    solution: "Let step 2 skip a Skill whose newest note already covers its runs, with a one-line clean verdict."

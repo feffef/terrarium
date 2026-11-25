@@ -1,7 +1,7 @@
 name: visitor-loop-brief-gaps
 surface: safe
 summary: The visitor-loop brief left out details its visitors needed, so they wandered or tripped.
-cause: "The visitor brief and its context file leak hints to the blind visitor (repo root, other visitors), omit that screenshots need absolute output paths, give no reason for 'do not change directory', name the wrong chromium helper, say to follow links that open in place, or give no guidance on page budget or breadth (a breadth-first crawl of the homepage's links spent the budget on category pages or other Tenants and never reached the focus). PR #3630 (2026-11-23) added cross-site reading facts to the brief and Tenant facts to the context file; it does not address page budget or a one-page focus. Signals: visitor-loop, visitor brief, blind visitor, screenshots in the repo root, ERR_PNPM_RECURSIVE_EXEC_NO_PACKAGE, breadth-first, page budget, never reached a campaign."
+cause: "The visitor brief and its context file leak hints to the blind visitor (repo root, other visitors), omit that screenshots need absolute output paths, give no reason for 'do not change directory', name the wrong chromium helper, say to follow links that open in place, or give no guidance on page budget or breadth (a breadth-first crawl of the homepage's links spent the budget on category pages or other Tenants and never reached the focus). PR #3630 (2026-11-23) added cross-site reading facts to the brief and Tenant facts to the context file; it does not address page budget or a one-page focus. On 2026-11-24 (after #3630) each visitor still rewrote the same crawl, with no pointer to content paths or a starter crawl script, and hit the same page.evaluate string-escaping trap. Signals: visitor-loop, visitor brief, blind visitor, screenshots in the repo root, ERR_PNPM_RECURSIVE_EXEC_NO_PACKAGE, breadth-first, page budget, never reached a campaign, rewrote the same crawl, page.evaluate."
 status: open
 related:
   - entry: subagent-brief-defects
@@ -67,3 +67,8 @@ occurrences:
     severity: minor
     description: "Visitors followed the homepage's ~40 links breadth-first, so most pages went to Glass Box and Blog; the brief has no guidance for a one-page focus, and no width for it."
     solution: ".agents/skills/visitor-loop/visitor-brief.md: for a one-page focus, follow only links the page features and take a 390px screenshot."
+  - session: session_013zxzeSqibnzqVVC4yRJ1eN
+    date: "2026-11-24"
+    severity: minor
+    description: "Brief gives no pointer to content paths or a starter crawl script, so each visitor rewrote the same crawl and hit the same page.evaluate string-escaping trap."
+    solution: "Add to .agents/skills/visitor-loop/visitor-brief.md: content lives at layers/<tenant>/, a one-line string page.evaluate example (join with '|', never a newline), and that SVG a.href is an object."

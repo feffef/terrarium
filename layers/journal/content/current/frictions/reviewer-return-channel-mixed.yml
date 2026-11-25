@@ -51,3 +51,8 @@ occurrences:
     severity: minor
     description: "Subagent retro (builder and Standards reviewer): the first turn says return structured output, later resumes say reply with one line or a findings file; two hand-off channels were confusing."
     solution: "State the hand-off channel once in rules() in .claude/workflows/clear-backlog-build.js."
+  - session: session_013zxzeSBTTxHztyPoJeEwAj
+    date: "2026-11-24"
+    severity: nit
+    description: "Retro (both reviewers): hooks demanded a rule-use echo round trip on each Bash call, and the hand-off format changed between the first brief and a later message (structured output, then a JSON file with a one-line reply)."
+    solution: "Fold the rule-use echo into the final call for reviewers, and state the findings-file hand-off once in reviewPrompt()."

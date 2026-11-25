@@ -19,3 +19,13 @@ occurrences:
     severity: minor
     description: "Retro (Spec reviewer): 4 of 5 round-1 Spec findings on the guard branch duplicated Standards findings (triage.md 'same as Standards #N'). Counter-evidence: round 2 on the guard found a defect only Standards saw, and round 2 on glassbox an owner-call only Spec saw."
     solution: "reviewPrompt() could keep Spec to brief fit (picks, never-clauses) and leave code shape and schema to Standards; weigh against the unique catches before cutting."
+  - session: session_013zxzeRQRYWw3yLJzSdaozk
+    date: "2026-11-24"
+    severity: nit
+    description: "Retro verdict on review value: the Standards re-check caught a real defect (loop cap relied on an unconfirmed field) and the Spec round caught a missing test; the small-diff watchFor branch's review found only nits."
+    solution: "Keep the review rounds; no cut is supported by evidence from this run."
+  - session: session_013zxzeSBTTxHztyPoJeEwAj
+    date: "2026-11-24"
+    severity: nit
+    description: "Retro (Standards and builder, unverified): all four round-1 reviews found only nits and no defects on diffs of 5 to about 40 lines; the re-check round added little. Evidence is one run of four small branches."
+    solution: "Keep the review; consider marking diffs under about 50 lines small by default. One run is too little evidence to cut a step."

@@ -35,16 +35,6 @@ fixes:
     date: "2026-10-31"
     summary: "CLAUDE.md and the clear-backlog workflows' shared brief line ask each subagent to give every count, id or attribution with its source (command or file:line) or mark it unverified."
 occurrences:
-  - session: session_013zxzeSiQ4jom3vFu8GreLw
-    date: "2026-11-10"
-    severity: minor
-    description: "Build agents and my own issue comments called CLAUDE.md Human-only; the rule paths on origin/main do not list it, so I repeated an unverified claim on three issues."
-    solution: "Check list-human-only-paths.ts output before a brief or comment names a file Human-only."
-  - session: session_013zxzeSBfN7oWScF9TgN4eB
-    date: "2026-11-10"
-    severity: moderate
-    description: "Relayed two of #3009's reasons for excluding always-loaded rules as if sound; the owner had to point out they were weak."
-    solution: "Before passing on a prior decision's rationale, test each reason against the current goal (CLAUDE.md, Question the premise)."
   - session: session_013zxzeQjCNYD6UbYX7LTjkR
     date: "2026-11-11"
     severity: nit
