@@ -59,36 +59,3 @@ trials:
       `frictions-to-fixes-briefs-mismatch` and `survey-label-and-ledger-errors`
       with `friction-rates.ts`; a clear rise is also damage. NOT damage: a
       survey agent hitting a script refusal the brief still names.
-  - problem: >
-      `harvest` steps 1 and 3 restated what its helper prints (-6 net, from
-      `git diff --numstat` against the parent: 9 added, 15 deleted; this entry
-      not counted): the ranking aside, the tracker-list reuse and the hit-cap and
-      ranking description of `harvest evidence` went; every rule and check kept.
-      Chosen after a search subagent this run covered open issues (2), the 100
-      most recent closed, 152 ledger files (9 read) and CLAUDE.md, `docs/agents/`
-      and four Skills for word counts (not session logs, not older closed
-      issues, not the other Skills). `harvest-first-pass-shallow` (fixes #3106,
-      #3137, #3417) failed as prose; `harvest.ts` holds the
-      `stopped:` line, `check-clusters`, `check-body` and `check-posted`.
-      Runners-up: glassbox-curate steps 8 and "Pick the mode" and clear-backlog
-      §3 step 4, both edited by hand the same day (so left alone), and the
-      environment-caveats proxy bullet (small, held by `network-start.ts`).
-      Same run judged and deleted the pr-workflow trial (landed f0ee3c1c7):
-      `prepush-gate-review-skipped` 11.6% -> 0.0% (26/225 -> 0/33); the
-      Frictions after it (Own-read line refused on a 26-file diff, minor) trace
-      to bars the cut kept or to step 3, which it did not touch.
-    territory:
-      paths:
-        - ".agents/skills/harvest/SKILL.md: steps 1 and 3"
-      keywords:
-        - harvest evidence
-        - harvest check-clusters
-    opened: 2026-11-22
-    proven: true
-    check: >
-      Damage is a major or blocker Friction where a harvest run read a stale
-      tracker list, skipped a cluster the cut text carried or filed a Seedling
-      missing a check, because a cut phrase no longer said so. Compare the
-      `harvest-first-pass-shallow` share with `friction-rates.ts`; a clear rise
-      is also damage. NOT damage: that entry at its standing rate or a run that
-      reads a `harvest evidence` block correctly and still finds a cluster open.
