@@ -1,15 +1,16 @@
 schemaVersion: 1
 session: session_013zxzeR67EGdvDDNgGomDr6
 startedAt: 2026-11-25T02:07:15Z
-endedAt: 2026-11-25T02:25:26Z
+endedAt: 2026-11-25T02:31:49Z
 kind: autonomous
 goal: Scheduled run turning recurring session Frictions into fixes
-status: in-review
-outcome: "Ledger PR #3665 and fix PR #3666 merged; closing ledger PR for the fix is open and waiting on CI"
-summary: "Scheduled frictions-to-fixes run, no human prompts. A survey subagent updated the Friction Ledger from 26 window sessions (appended occurrences, one new entry, two rewritten causes) and found no regression at moderate or above since its fix, so no regression issue was filed. I picked one pick, harvest-evidence-arg-shape (quoted groups to harvest evidence match nothing); a design agent proposed splitting arguments on whitespace instead of printing usage, a Sonnet agent built it in a worktree, and code-review found only a comment that said WHAT, fixed on resume. The ledger PR #3665 (survey commit, tracked status, prune run) merged after its Standards review caught a dangling ref that I repointed and re-gated. Fix PR #3666 merged after a second code-review, because merge-pr refused an own-read verdict for a follow-up that touches a .ts file. The closing ledger PR records the fix and sets the entry open; it still needs CI and merge. All of it was agent-initiated under the Skill; nothing was human-instructed. Left unpicked as nit/minor and guarded or owner calls: session-id-hand-typed, clear-backlog-review-round-low-yield, deferred-tool-name-guessed."
+status: completed
+outcome: "Survey ledger PR #3665, the harvest-evidence fix #3666 and the closing ledger PR #3667 all merged"
+summary: "Scheduled frictions-to-fixes run, no human prompts. A survey subagent updated the Friction Ledger from 26 window sessions (appended occurrences, one new entry, two rewritten causes) and found no regression at moderate or above since its fix, so no regression issue was filed. I picked one pick, harvest-evidence-arg-shape (quoted groups to harvest evidence match nothing); a design agent proposed splitting arguments on whitespace instead of printing usage, a Sonnet agent built it in a worktree, and code-review found only a comment that said WHAT, fixed on resume. The ledger PR #3665 (survey commit, tracked status, prune run) merged after its Standards review caught a dangling ref that I repointed and re-gated. Fix PR #3666 merged after a second code-review, because merge-pr refused an own-read verdict for a follow-up that touches a .ts file. The closing ledger PR #3667 recorded the fix and set the entry open; it merged too. All of it was agent-initiated under the Skill; nothing was human-instructed. Left unpicked as nit/minor and guarded or owner calls: session-id-hand-typed, clear-backlog-review-round-low-yield, deferred-tool-name-guessed."
 prs:
   - "3665"
   - "3666"
+  - "3667"
 docsRead:
   - path: docs/agents/git-conventions.md
     reason: (no reason given)
@@ -74,21 +75,21 @@ frictions:
   - description: merge-pr.ts refused my own-read verdict because the follow-up commit touched a .ts file, though it was a one-line comment edit; I ran another full code-review.
     solution: Let the simple-change test ignore comment-only lines, or say in the Skill that a builder's comment fix needs a review round.
     severity: minor
-durationSec: 1091
+durationSec: 1474
 models:
-  claude-sonnet-5-5: 139
+  claude-sonnet-5-5: 160
 toolCounts:
-  Bash: 42
+  Bash: 48
   Read: 3
-  Skill: 8
+  Skill: 9
   Agent: 10
   ToolSearch: 3
   TaskStop: 1
   SendMessage: 1
-  mcp__github__create_pull_request: 2
-  mcp__github__subscribe_pr_activity: 2
-  ReadNotifications: 4
-  mcp__github__add_issue_comment: 3
+  mcp__github__create_pull_request: 3
+  mcp__github__subscribe_pr_activity: 3
+  ReadNotifications: 7
+  mcp__github__add_issue_comment: 4
 filesEdited:
   - .agents/skills/harvest/scripts/harvest.ts
   - .agents/skills/harvest/tests/unit/harvest.spec.ts
@@ -513,56 +514,56 @@ subagents:
     durationSec: 307
     toolCalls: 35
     modelCalls: 29
-    tokenShare: 20.3
+    tokenShare: 18
   - type: general-purpose
     task: Design harvest-evidence fix
     durationSec: 79
     toolCalls: 16
     modelCalls: 9
-    tokenShare: 3.7
+    tokenShare: 3.3
   - type: general-purpose
     task: Build harvest evidence fix
     model: sonnet
     durationSec: 313
     toolCalls: 30
     modelCalls: 20
-    tokenShare: 6.6
+    tokenShare: 5.9
   - type: general-purpose
     task: "Code review: Standards axis"
     durationSec: 52
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 3.3
+    tokenShare: 2.9
   - type: general-purpose
     task: "Code review: Spec axis"
     durationSec: 52
     toolCalls: 11
     modelCalls: 9
-    tokenShare: 3.8
+    tokenShare: 3.4
   - type: general-purpose
     task: "Code review: Standards axis"
     durationSec: 15
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 1.5
+    tokenShare: 1.3
   - type: general-purpose
     task: "Code review: Spec axis"
     durationSec: 26
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 1.9
+    tokenShare: 1.7
   - type: general-purpose
     task: "Code review: Standards axis"
     durationSec: 12
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.4
+    tokenShare: 1.2
   - type: general-purpose
     task: "Code review: Spec axis"
     durationSec: 16
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.4
+    tokenShare: 1.3
 gitBranch: claude/eager-ptolemy-mruzvm
 entrypoint: remote_trigger
 cliVersion: 2.1.332
