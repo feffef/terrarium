@@ -31,5 +31,5 @@ paths:
   dependency (a new one escalates, ADR-0004), and storage is one origin
   (prefix keys, delete only yours, never `clear()`).
 
-Wrapper CSS tokens, content-component overrides and routing claims:
-docs/agents/tenant-layers.md.
+Wrapper CSS tokens, content-component overrides, routing claims and the
+not-found seam: docs/agents/tenant-layers.md.
