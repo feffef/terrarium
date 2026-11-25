@@ -45,6 +45,12 @@ describe('stopReason()', () => {
       expect(stopReason(p)).toBeNull()
     }
   })
+  it('treats a corrupt counter file as no blocks yet', () => {
+    const p = payload([rule])
+    const dir = mkdtempSync(join(tmpdir(), 'subagent-marker-'))
+    writeFileSync(join(dir, `subagent-rule-use-stop-${p.agent_id.replace(/\W/g, '_')}`), 'junk')
+    expect(stopReason(p, dir)).toContain('adr-0003.md')
+  })
   it('blocks on a start-loaded rule too', () => {
     const start = { type: 'attachment', attachment: { type: 'instructions', files: [{ path: '/repo/.claude/rules/adr-0004.md' }] } }
     expect(stopReason(payload([start]))).toContain('adr-0004.md')
