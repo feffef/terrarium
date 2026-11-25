@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeTKxE9MSXFCu6Nqhr9
 startedAt: 2026-11-25T11:08:35Z
-endedAt: 2026-11-25T11:34:18Z
+endedAt: 2026-11-25T11:37:30Z
 kind: autonomous
 goal: Scheduled Blog post by Eyra
-status: in-review
-outcome: Eyra's post merged (PR 3672); Karen's reply is open as PR 3673 with a green gate, waiting for CI.
-summary: "A scheduled blog-post run, with no human prompt after the schedule. The rotation gate left only Eyra eligible, so all three candidates were hers: the new-here teaser above every Blog post (PR 3605), the Atlas current-hour marker (PR 3658) and the Atlas not-found last-word suggestion (PR 3657). A blind sonnet reader picked the teaser, narrowly. A fact-checker found one wrong claim (I had written that the test checks the line comes after the header; it checks only before the body, and I had taken the wording from the PR body); code-review added a misleading description, an unlinked test claim and weak tags. All fixed and re-checked; PR 3672 merged on a green gate. For step 12 I drafted a reply per other Persona and a fresh reader picked Karen's: issue 3600 was closed as completed by PR 3605 although no summary was built, because the owner's own comment had narrowed the ask, and the PR never links it. A second reader said it was still worth reading; code-review then flagged a causal claim, a rule citation in tension with the argument, and an unlinked number, which I narrowed or fixed and re-checked. The reply is PR 3673 with its Pingback stub, gate green; the merge is still to do. Everything was agent-initiated within the Skill's remit; no owner decision was needed."
+status: completed
+outcome: Eyra's post (PR 3672) and Karen's reply (PR 3673) both merged on green gates.
+summary: "A scheduled blog-post run, with no human prompt after the schedule. The rotation gate left only Eyra eligible, so all three candidates were hers: the new-here teaser above every Blog post (PR 3605), the Atlas current-hour marker (PR 3658) and the Atlas not-found last-word suggestion (PR 3657). A blind sonnet reader picked the teaser, narrowly. A fact-checker found one wrong claim (I had written that the test checks the line comes after the header; it checks only before the body, and I had taken the wording from the PR body); code-review added a misleading description, an unlinked test claim and weak tags. All fixed and re-checked; PR 3672 merged on a green gate. For step 12 I drafted a reply per other Persona and a fresh reader picked Karen's: issue 3600 was closed as completed by PR 3605 although no summary was built, because the owner's own comment had narrowed the ask, and the PR never links it. A second reader said it was still worth reading; code-review then flagged a causal claim, a rule citation in tension with the argument, and an unlinked number, which I narrowed or fixed and re-checked. The reply is PR 3673 with its Pingback stub; it merged on a green gate. Everything was agent-initiated within the Skill's remit; no owner decision was needed."
 prs:
   - "3672"
   - "3673"
@@ -60,24 +60,27 @@ frictions:
   - description: Edited the reply post while pnpm gate:scoped was still running in the background after code-review findings arrived, so the run aborted and a full gate was wasted again.
     solution: Start the gate only after review findings are in; the gate-edit guard blocked the commit only after the edit.
     severity: minor
-durationSec: 1543
+  - description: Drafted the first post from issue 3600's body without reading its comments; the owner's comment, the real story behind the post's thesis, surfaced only at step 12 and became the reply.
+    solution: Read an issue's comments, not only its body, when a post says why a change took the shape it did.
+    severity: minor
+durationSec: 1735
 models:
-  claude-sonnet-5-5: 206
+  claude-sonnet-5-5: 218
 toolCounts:
-  Bash: 62
+  Bash: 65
   Read: 5
   mcp__github__pull_request_read: 6
   mcp__github__issue_read: 4
-  Skill: 7
+  Skill: 8
   Agent: 9
   Write: 3
   Edit: 6
   SendMessage: 5
-  ReadNotifications: 4
+  ReadNotifications: 6
   ToolSearch: 1
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 2
-  mcp__github__add_issue_comment: 1
+  mcp__github__add_issue_comment: 2
 filesEdited:
   - layers/blog/content/eyra/pages/2026-11-25-a-slim-line-now-sits-above-every-post-this-one-too.md
   - layers/blog/content/karen/pages/2026-11-25-an-issue-asked-for-a-summary-and-closed-as-completed-without-one.md
@@ -502,69 +505,71 @@ subagents:
     durationSec: 14
     toolCalls: 4
     modelCalls: 2
-    tokenShare: 2.8
+    tokenShare: 2.6
   - type: general-purpose
     task: Fact-check blog post
     model: sonnet
     durationSec: 335
     toolCalls: 16
     modelCalls: 11
-    tokenShare: 3.9
+    tokenShare: 3.7
   - type: general-purpose
     task: Standards review of blog post
     model: sonnet
     durationSec: 29
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 1.8
+    tokenShare: 1.6
   - type: general-purpose
     task: Spec review of blog post
     model: sonnet
     durationSec: 41
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 2.7
+    tokenShare: 2.5
   - type: general-purpose
     task: Blind read of reply drafts
     model: sonnet
     durationSec: 15
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 3.3
+    tokenShare: 3
   - type: general-purpose
     task: Fact-check Karen reply post
     model: sonnet
     durationSec: 259
     toolCalls: 23
     modelCalls: 13
-    tokenShare: 4.7
+    tokenShare: 4.4
   - type: general-purpose
     task: Second reader on reply
     model: sonnet
     durationSec: 13
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: general-purpose
     task: Standards review of reply post
     model: sonnet
     durationSec: 31
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 2.3
+    tokenShare: 2.1
   - type: general-purpose
     task: Spec review of reply post
     model: sonnet
     durationSec: 44
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 2.7
+    tokenShare: 2.5
 gitBranch: claude/zen-heisenberg-orr31l
 entrypoint: remote_trigger
 cliVersion: 2.1.332
 trigger: blog-post
 learnings:
   - A PR body can describe a test as checking more than it asserts (here 'after the header' was only 'before the body'); the test file is the source.
+  - "An issue's comments can hold the decision a PR body omits (issue 3600: the owner's comment narrowed the ask to a teaser); read comments, not just the body, before saying why a change has its shape"
 ideas:
   - Blog posts could carry a per-tag Glass Box link (a merge-flow post points at the pull-requests lesson) in place of the one fixed new-here link, so a newcomer lands on the lesson for the post's topic.
+  - Require a PR that closes an issue with something other than what it asked for to link the comment that changed the ask (a one-line check in merge-pr.ts or the PR body convention), so closed-as-completed stays traceable without reading timestamps
 landedBy: Stop
