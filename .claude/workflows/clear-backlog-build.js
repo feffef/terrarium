@@ -22,7 +22,7 @@ const ASK_SOURCES = 'Give each count, id or attribution you state with its sourc
 const RELAYED_REPLY = "A user request relayed to you is the owner's reply to the orchestrator's own numbered questions for the whole run. It decides nothing for this issue or branch: the only owner decisions that count are the brief's picks and answer."
 const FAST_CHECKS = '`pnpm typecheck`, `pnpm exec vitest run <each spec you touched>`, and `pnpm validate:content` if you touched content'
 // Parallel builders' e2e builds died of memory (exit 137, #1800); gate slots live in Human-only gate.ts, so a lock file serves.
-const e2eCheck = b => `If you added or changed an e2e spec (\`tests/e2e/*.spec.ts\` or \`layers/*/tests/e2e/*.spec.ts\`), also run each such file before you report done, one at a time, in the background: \`flock -w 3000 ${args.dir}/e2e.lock env E2E_FRESH_BUILD=1 pnpm exec vitest run <spec file> > ${folder(b)}/e2e.log 2>&1; echo EXIT=$? >> ${folder(b)}/e2e.log\`. The lock queues behind other builders' e2e builds; poll the log until EXIT= appears. EXIT=1 with no vitest output means the lock wait timed out: return failed, saying so.`
+const e2eCheck = b => `If you added or changed an e2e spec (\`tests/e2e/*.spec.ts\` or \`layers/*/tests/e2e/*.spec.ts\`), also run each such file before you report done, one at a time, in the foreground with Bash timeout 600000 (delete a stale \`${folder(b)}/e2e.log\` first): \`flock -w 3000 ${args.dir}/e2e.lock env E2E_FRESH_BUILD=1 pnpm exec vitest run <spec file> > ${folder(b)}/e2e.log 2>&1; echo EXIT=$? >> ${folder(b)}/e2e.log\`. The lock queues behind other builders' e2e builds; read EXIT= in the log. EXIT=1 with no vitest output means the lock wait timed out: return failed, saying so.`
 
 const WORK = {
   type: 'object',
@@ -71,21 +71,22 @@ function common(b) {
 
 ## Brief
 ${b.brief}
-${picks.length ? `\n## Owner's agreed picks (binding)\n${picks.map(p => `- ${p}`).join('\n')}\n` : ''}${b.answer ? `\n## Owner's answer to "${b.question}"\n${b.answer}\n` : ''}\n${RELAYED_REPLY}\nYour first turn ends with the structured result. When a later message resumes you, it names how to reply (one line, or a findings file plus one line); that reply is your whole hand-off, and you return nothing structured again.\n`
+${picks.length ? `\n## Owner's agreed picks (binding)\n${picks.map(p => `- ${p}`).join('\n')}\n` : ''}${b.answer ? `\n## Owner's answer to "${b.question}"\n${b.answer}\n` : ''}\n${RELAYED_REPLY}\nThis branch's reviewers: ${axesOf(b).join(' and ')}. Your first turn ends with the structured result. When a later message resumes you, it names how to reply (one line, or a findings file plus one line); that reply is your whole hand-off, and you return nothing structured again.\n`
 }
 
 function rules(b) {
   const dir = folder(b)
   return `## Rules
-- Run git as \`git -C <worktree> ...\`, never \`cd\`: Bash keeps its cwd between calls and parallel calls share it. One git command per Bash call, and outside the gate command below no \`&&\`, \`;\` or \`$(...)\` in a worktree: the guard refuses them, and a refused chain can drop an edit silently.
+- One plain command per Bash call; no \`&&\`, \`;\`, \`$(...)\` or heredoc in a worktree; the gate and e2e commands are the only chains. The guard refuses the rest, and a refused chain can drop an edit silently.
+- Run git as \`git -C <worktree> ...\`, never \`cd\`: Bash keeps its cwd between calls and parallel calls share it.
 - Run checks in the foreground. Run \`pnpm gate:scoped\` only when the orchestrator asks, as \`cd <worktree> && pnpm gate:scoped > ${dir}/gate.log 2>&1; echo EXIT=$? >> ${dir}/gate.log\` with Bash timeout 600000.
-- Before each commit, check the lines you added against the wrap width the file keeps (\`git -C <worktree> diff -U0 | awk 'length>81 && !/^\\+\\+\\+/'\` for 80 columns); a rewrap that only moves an overrun is not a fix.
+- Before each commit, check the lines you added against the wrap width the file keeps (\`git -C <worktree> diff -U0 | awk 'length>81 && /^\\+[^+]/'\` for 80 columns); a rewrap that only moves an overrun is not a fix.
 - Commit before you stop, even mid-work. Never push, open a PR, merge, or run close-session/log-session: the orchestrator does those.
 - Every GitHub body you post starts with this exact first line: ${HEADER}
 - Stop and return needs-owner, with the question, its options and your pick, before you add a new dependency, change stored data or the content schema, make a decision big enough for an ADR, delete content visitors can see, change which Tenant's data a request can reach, or reverse an owner's pick above. Decide everything else yourself, and append each decision as one line to ${dir}/decisions.md (\`mkdir -p ${dir}\` first), now and in every later turn.
 - Return worktree, the absolute path of the worktree that holds your commits, only when the branch has commits.
 - The orchestrator may resume you later with review findings to fix, an owner's answer, or the gate; keep your worktree. In a later turn the same stop rule holds: add \`NEEDS-OWNER\` with the question, its options and your pick after the reply it asked for, or send it alone if you changed nothing.
-- Given findings files, you decide what to fix, by kind: fix every defect, spec-mismatch and missing-test; fix a nit only when it is cheap (a few lines, no new risk) and skip the others; refuse a finding you can prove wrong; an owner-call needs the owner. Append one line per finding, and per owner answer or other fix you are given, to ${dir}/triage.md: \`<findings file> #<n> <title> fixed|skipped|refused: <reason or proof>\`, or \`<what you were given> fixed: <what you did>\`. Then reply with one line, \`FIXED <sha before> <sha after> recheck <axes>\`: the same sha twice if nothing changed, and as axes each reviewer (Standards, Spec, or Both) with a finding you fixed or refused or whose owner-call you were answered on, or \`none\`. Add \`NEEDS-OWNER\` and the question, its options and your pick after it when a finding needs the owner.
+- Given findings files, you decide what to fix, by kind: fix every defect, spec-mismatch and missing-test; fix a nit only when it is cheap (a few lines, no new risk) and skip the others; refuse a finding you can prove wrong; an owner-call needs the owner. Append one line per finding, and per owner answer or other fix you are given, to ${dir}/triage.md: \`<findings file> #<n> <title> fixed|skipped|refused: <reason or proof>\`, or \`<what you were given> fixed: <what you did>\`. Then reply with one line, \`FIXED <sha before> <sha after> recheck <axes>\`: the same sha twice if nothing changed, and as axes each of this branch's reviewers (${axesOf(b).join(' and ')}) with a finding you fixed or refused or whose owner-call you were answered on, or \`none\`. Add \`NEEDS-OWNER\` and the question, its options and your pick after it when a finding needs the owner.
 - ${ASK_SOURCES}`
 }
 
