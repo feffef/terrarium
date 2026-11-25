@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQrwxsU3KF9z6QX2zS
 startedAt: 2026-11-25T07:32:47Z
-endedAt: 2026-11-25T07:43:52Z
+endedAt: 2026-11-25T07:47:10Z
 kind: autonomous
 goal: Bring the Glass Box guide pages up to date with main
-status: in-review
-outcome: All 80 pages re-pinned, three false or stale claims fixed, PR 3670 open and gate green
-summary: "Scheduled glassbox-update run, no human prompts; everything was agent-initiated under the Skill's own instructions. Re-pinned all guide pages to one main commit, had a Scout subagent look for untaught topics (one added to the workshop memory page) and four sonnet readers claim-check 26 pages (the 23 flagged plus the 5 oldest-checked, with overlap). Two pages made a false claim (auto-imports layer rule scope, skill-inventory watchFor location) and the hooks page missed that SubagentStop now blocks; all three fixed minimally. update.yml records the five full checks. Code-review and gate:scoped passed. Open: PR 3670 awaits CI and the merge."
+status: completed
+outcome: All 80 pages re-pinned, three false or stale claims fixed, PR 3670 merged
+summary: Scheduled glassbox-update run, no human prompts; everything was agent-initiated under the Skill's own instructions. Re-pinned all guide pages to one main commit, had a Scout subagent look for untaught topics (one added to the workshop memory page) and four sonnet readers claim-check 26 pages (the 23 flagged plus the 5 oldest-checked, with overlap). Two pages made a false claim (auto-imports layer rule scope, skill-inventory watchFor location) and the hooks page missed that SubagentStop now blocks; all three fixed minimally. update.yml records the five full checks. Code-review and gate:scoped passed. PR 3670 merged after CI went green.
 prs:
   - "3670"
 docsRead:
@@ -77,19 +77,22 @@ frictions:
   - description: guards.md's crash convention does not list the new blocking subagent-rule-use-stop hook that is wired with || true; reviewers and readers see a gap.
     solution: Add it to the fail-open list in docs/agents/guards.md lines 52-56 (human-merge file).
     severity: nit
-durationSec: 665
+durationSec: 863
 models:
-  claude-sonnet-5-5: 119
+  claude-sonnet-5-5: 135
 toolCounts:
-  Bash: 40
+  Bash: 44
   Read: 2
-  Skill: 5
+  Skill: 6
   Agent: 7
-  ReadNotifications: 5
+  ReadNotifications: 7
   Edit: 1
   Monitor: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/nuxt-vue/20.auto-imports.md
   - layers/glassbox/content/guide/pages/terrarium-practice/85.skill-inventory.md
@@ -499,49 +502,49 @@ subagents:
     durationSec: 35
     toolCalls: 10
     modelCalls: 5
-    tokenShare: 5.1
+    tokenShare: 4.8
   - type: general-purpose
     task: Claim check group 1
     model: sonnet
     durationSec: 218
     toolCalls: 42
     modelCalls: 28
-    tokenShare: 16
+    tokenShare: 14.9
   - type: general-purpose
     task: Claim check group 2
     model: sonnet
     durationSec: 195
     toolCalls: 33
     modelCalls: 26
-    tokenShare: 15.6
+    tokenShare: 14.5
   - type: general-purpose
     task: Claim check group 3
     model: sonnet
     durationSec: 113
     toolCalls: 28
     modelCalls: 21
-    tokenShare: 10.7
+    tokenShare: 10
   - type: general-purpose
     task: Claim check group 4
     model: sonnet
     durationSec: 146
     toolCalls: 27
     modelCalls: 18
-    tokenShare: 9
+    tokenShare: 8.4
   - type: general-purpose
     task: Review standards axis
     model: sonnet
     durationSec: 34
     toolCalls: 9
     modelCalls: 7
-    tokenShare: 3.1
+    tokenShare: 2.9
   - type: general-purpose
     task: Review spec axis
     model: sonnet
     durationSec: 45
     toolCalls: 11
     modelCalls: 9
-    tokenShare: 3.8
+    tokenShare: 3.6
 gitBranch: claude/relaxed-einstein-qlqq91
 entrypoint: remote_trigger
 cliVersion: 2.1.332
