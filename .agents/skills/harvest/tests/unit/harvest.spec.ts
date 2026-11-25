@@ -585,6 +585,10 @@ describe('parseEvidenceArgs()', () => {
     expect(parseEvidenceArgs(['a', 'b', '--', 'c', '--', '--']).groups).toEqual([['a', 'b'], ['c']])
   })
 
+  it('splits a quoted argument into words', () => {
+    expect(parseEvidenceArgs(['glass box', '--', 'a  b']).groups).toEqual([['glass', 'box'], ['a', 'b']])
+  })
+
   it('leaves extract unset without the flag', () => {
     expect(parseEvidenceArgs(['a', 'b'])).toEqual({ groups: [['a', 'b']], extract: undefined })
   })
