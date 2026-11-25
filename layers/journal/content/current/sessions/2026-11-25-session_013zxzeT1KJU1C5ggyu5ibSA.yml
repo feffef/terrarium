@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeT1KJU1C5ggyu5ibSA
 startedAt: 2026-11-25T00:15:23Z
-endedAt: 2026-11-25T00:21:44Z
+endedAt: 2026-11-25T00:25:45Z
 kind: autonomous
 goal: Write the 2026-11-24 Journal Digest and archive old content
-status: in-review
-outcome: PR 3661 open with the 2026-11-24 Digest and one archive move; gate and code-review green, awaiting CI
-summary: Scheduled digest run. Only 2026-11-24 lacked a Digest. I gathered the day's material, wrote the Digest, had a read-only subagent fact-check it (one unverifiable attribution sentence removed), ran the archive sweep (one old Digest moved), reviewed with code-review, ran gate:scoped and opened PR 3661. All work was agent-initiated by the schedule; no human instruction in-session.
+status: completed
+outcome: PR 3661 merged with the 2026-11-24 Digest and one archive move, gate green
+summary: Scheduled digest run. Only 2026-11-24 lacked a Digest. I gathered the day's material, wrote the Digest, had a read-only subagent fact-check it (one unverifiable attribution sentence removed), ran the archive sweep (one old Digest moved), reviewed with code-review, ran gate:scoped, opened PR 3661, and merged it on green CI. All work was agent-initiated by the schedule; no human instruction in-session.
 prs:
   - "3661"
 docsRead:
@@ -46,17 +46,20 @@ frictions:
   - description: First draft said three Atlas fixes came from the visitor session; the fact-check could not verify it, so I removed the sentence.
     solution: Digest step 3 could say to attribute provenance only from PR bodies.
     severity: minor
-durationSec: 381
+durationSec: 622
 models:
-  claude-sonnet-5-5: 46
+  claude-sonnet-5-5: 63
 toolCounts:
-  Bash: 17
+  Bash: 22
   Read: 5
   Agent: 4
-  Skill: 3
-  ToolSearch: 1
+  Skill: 4
+  ToolSearch: 2
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-11-24.md
   - layers/journal/content/archived/pages/digests/2026-11-17.md
@@ -258,21 +261,21 @@ subagents:
     durationSec: 64
     toolCalls: 9
     modelCalls: 7
-    tokenShare: 21.7
+    tokenShare: 17
   - type: general-purpose
     task: Standards review of Digest PR
     model: sonnet
     durationSec: 17
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 6.1
+    tokenShare: 4.7
   - type: general-purpose
     task: Spec review of Digest PR
     model: sonnet
     durationSec: 15
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 7.3
+    tokenShare: 5.7
 gitBranch: claude/compassionate-lovelace-7yz3dg
 entrypoint: remote_trigger
 cliVersion: 2.1.331
