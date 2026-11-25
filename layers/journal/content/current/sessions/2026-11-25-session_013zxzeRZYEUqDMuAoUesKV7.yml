@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRZYEUqDMuAoUesKV7
 startedAt: 2026-11-25T08:45:49Z
-endedAt: 2026-11-25T09:04:10Z
+endedAt: 2026-11-25T13:53:22Z
 kind: autonomous
 goal: "Glass Box curate run: new Stop hooks Lesson"
-status: in-review
-outcome: "PR 3671 open: new Stop hooks Lesson in the Hooks subject, waiting for the owner's merge"
-summary: "Scheduled glassbox-curate Loop run, agent-initiated by the schedule, no human prompt. Read the required docs and orientation, picked the memory page gap \"a stop hook that blocks once\" (no open PRs touched hooks), and wrote one run: a new Lesson hooks/25.stop-hooks via an opus writer, two sonnet claim-check rounds and two fresh-reader rounds, Where next swaps on two hook pages, a chip on one walkthrough stop, memory page and run entry. code-review ran on the head and on the follow-up, gate:scoped passed, PR 3671 opened and subscribed. It waits for the owner's merge because a new Lesson is a rule-6 change. The turn ends here to wait on the PR's checks; the Skill's step 8 would start a next run, which a later wake-up or the next scheduled run takes. Still open: PR checks, and the new Lesson's merge by the owner."
+status: completed
+outcome: "PR 3671 merged: new Stop hooks Lesson in the Hooks subject"
+summary: "Scheduled glassbox-curate Loop run, agent-initiated by the schedule, no human prompt. Read the required docs and orientation, picked the memory page gap \"a stop hook that blocks once\" (no open PRs touched hooks), and wrote one run: a new Lesson hooks/25.stop-hooks via an opus writer, two sonnet claim-check rounds and two fresh-reader rounds, Where next swaps on two hook pages, a chip on one walkthrough stop, memory page and run entry. code-review ran on the head and on the follow-up, gate:scoped passed, PR 3671 opened and subscribed. It waits for the owner's merge because a new Lesson is a rule-6 change. The turn ends here to wait on the PR's checks; the Skill's step 8 would start a next run, which a later wake-up or the next scheduled run takes. The owner merged the PR afterwards; nothing is open."
 prs:
   - "3671"
 docsRead:
@@ -69,13 +69,13 @@ frictions:
   - description: The Skill steps ask for a fresh reader and claim checker per round plus two code-review rounds; one small Lesson took many subagent calls and idle waits.
     solution: Allow a one-round check when round two changes only wording.
     severity: minor
-durationSec: 1101
+durationSec: 18453
 models:
-  claude-sonnet-5-5: 134
+  claude-sonnet-5-5: 148
 toolCounts:
   Read: 20
   Skill: 5
-  Bash: 38
+  Bash: 39
   Agent: 9
   SendMessage: 1
   Grep: 1
@@ -83,6 +83,8 @@ toolCounts:
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 4
+  mcp__github__pull_request_read: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/hooks/25.stop-hooks.md
   - layers/glassbox/content/guide/pages/walkthroughs/40.session-log-lands-on-main.md
@@ -592,55 +594,55 @@ subagents:
     durationSec: 442
     toolCalls: 49
     modelCalls: 38
-    tokenShare: 16.9
+    tokenShare: 13.6
   - task: Fresh reader for Stop hooks
     model: sonnet
     durationSec: 15
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 2
+    tokenShare: 1.6
   - task: Claim-check Stop hooks Lesson
     model: sonnet
     durationSec: 46
     toolCalls: 12
     modelCalls: 6
-    tokenShare: 3.3
+    tokenShare: 2.7
   - task: Recheck revised Stop hooks page
     model: sonnet
     durationSec: 41
     toolCalls: 10
     modelCalls: 7
-    tokenShare: 3
+    tokenShare: 2.4
   - task: Fresh reader round 2
     model: sonnet
     durationSec: 13
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.2
+    tokenShare: 1
   - task: Standards review of Stop hooks
     model: sonnet
     durationSec: 41
     toolCalls: 10
     modelCalls: 4
-    tokenShare: 2.2
+    tokenShare: 1.8
   - task: Spec review of Stop hooks
     model: sonnet
     durationSec: 36
     toolCalls: 11
     modelCalls: 8
-    tokenShare: 3
+    tokenShare: 2.4
   - task: Standards review of follow-up
     model: sonnet
     durationSec: 17
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 1.6
+    tokenShare: 1.3
   - task: Spec review of follow-up
     model: sonnet
     durationSec: 15
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 1.3
+    tokenShare: 1
 gitBranch: claude/compassionate-bardeen-5rms08
 entrypoint: remote_trigger
 cliVersion: 2.1.332
