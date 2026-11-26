@@ -48,9 +48,9 @@ lenses.
 
 1. Fetch `origin/main` (`docs/agents/git-conventions.md`).
    Print the last two runs' Covered lines with
-   `grep -ho 'Covered *[(:] *[^"]*' $(grep -l '^trigger: audit-docs' layers/journal/content/current/sessions/*.yml | tail -2)`
+   `grep -o 'Covered *[(:] *[^"]*' $(grep -l '^trigger: audit-docs' layers/journal/content/current/sessions/*.yml | tail -2)`
    and paste the output verbatim into the Agent B and C briefs: they skip those
-   areas, unless a file in one changed since that run (`git log --since=<its date>`).
+   areas, unless a file in one changed since that run (`git log --since=<date in its filename>`).
 2. Dispatch three read-only reviewer agents in parallel, one per pair of
    lenses below.
 3. Tell every agent the finding format: the file plus the exact sentence,
