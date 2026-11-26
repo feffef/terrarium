@@ -1,0 +1,226 @@
+schemaVersion: 1
+session: session_013zxzeQMTfvZZmLxob6aT7A
+startedAt: 2026-11-26T16:02:48Z
+endedAt: 2026-11-26T16:08:00Z
+kind: autonomous
+goal: Visitor-loop run on the Journal
+status: completed
+outcome: "Three visitors toured the Journal; 2 bugs filed (#3698, #3699), ideas and learnings logged"
+summary: "Scheduled visitor-loop run, no human prompt; every step was agent-executed per the Skill. Focus: journal (row 2 of the table, /t/journal/current). Built and served the production preview, wrote a context file, dispatched blind, content-editor and UI-tester visitors (sonnet), each reporting 16-20 pages. Yield: blind 8 findings and 3 ideas; editor 8 findings and 3 ideas; UI tester 7 findings and 3 ideas. I re-measured the candidate bugs at 390px: dependabot-sweep overflows (scrollWidth 424, reproducible; filed #3698) and sub-24px tap targets on Skills/Ideas/History (106/83/44; filed #3699). Dropped or turned to ideas: /sessions and /digests 404s (no link points at them, hand-typed only), History 1,479 vs archive 1,623 counts (different cut-offs; as-of line already shipped in #3536), \"1 logged\" vs 99/100 sessions (window wording), jargon on the landing, raw-id audit notes on Skill pages. No visitor-loop filter misses found: ideas.ts list showed the History, digest-wording and Routines-values ideas already logged, and visitors' repeats of those were dropped. Retros: UI tester says the context file gave no digest URL pattern and no note of intermittent faults, and wants a starter crawl script in docs/agents/verifying-ui-changes.md; editor lost two visits to /t/journal/current/digests and /sessions, which my context file wrongly listed as pages (my error, not the Skill's, but the rule \"Spaces' pages\" could say \"folder roots 404\"); blind visitor says the SubagentStart rule-use hook made it rate four ADR rules for a read-only visit. Preview stopped; no branch or PR."
+prs: []
+docsRead:
+  - path: .claude/skills/visitor-loop/visitor-brief.md
+    reason: (no reason given)
+  - path: .claude/skills/visitor-loop/decisions.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: scripts/lib/chromium.ts
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: brief rules for three read-only visitors
+  - name: visitor-loop
+    reason: the run itself
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Context file listed /t/journal/current/digests as a page; it and /sessions return 404, costing the editor two visits and a finding.
+    solution: ".agents/skills/visitor-loop/SKILL.md step 2: say a Space or folder root that has no index (digests, sessions) is not a page; list only URLs that return 200."
+    severity: minor
+  - description: UI tester's overflow (424px on dependabot-sweep) was reported unconfirmed because the brief's measurement hint finds no wide element; the li scrolls inside its own box.
+    solution: "visitor-brief.md: add 'also scan elements whose scrollWidth exceeds clientWidth, not only getBoundingClientRect().right'."
+    severity: minor
+  - description: Isolating the overflow source took four ad hoc scripts; the culprit token still unknown.
+    solution: Add a starter overflow-finder script under .agents/skills/visitor-loop/scripts/ or docs/agents/verifying-ui-changes.md.
+    severity: minor
+  - description: Read git-conventions and github-integration/triage-labels only after the first git fetch and issue writes, which CLAUDE.md says to read first; head -30 of triage-labels was too little to count.
+    solution: visitor-loop SKILL.md step 1 could name git-conventions.md and github-integration.md as first reads.
+    severity: nit
+  - description: SubagentStart rule-use hook made the blind visitor rate four ADR rules for a read-only browse, wasting turns.
+    solution: Skip the rule-use note for read-only visitor briefs in the SubagentStart hook under scripts/hooks/.
+    severity: nit
+durationSec: 312
+models:
+  claude-sonnet-5-5: 78
+toolCounts:
+  Bash: 28
+  Read: 3
+  Skill: 3
+  Monitor: 3
+  Agent: 3
+  ToolSearch: 1
+  mcp__github__issue_write: 2
+  SendMessage: 3
+  PushNotification: 1
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .claude/skills/visitor-loop/decisions.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .claude/skills/visitor-loop/decisions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: native
+        trigger: docs/agents/triage-labels.md
+    reported:
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: no branch or PR, only issues
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: provenance header on both issues
+      - path: .claude/rules/adr-0009.md
+        value: in-scope
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0028.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/rules/adr-0022.md
+        value: unrelated
+      - path: docs/agents/git-conventions.md
+      - path: docs/agents/issue-tracker.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+subagents:
+  - type: general-purpose
+    task: Blind first-time visitor
+    model: sonnet
+    durationSec: 162
+    toolCalls: 9
+    modelCalls: 7
+    tokenShare: 10.8
+  - type: general-purpose
+    task: Informed content editor
+    model: sonnet
+    durationSec: 155
+    toolCalls: 8
+    modelCalls: 7
+    tokenShare: 11.2
+  - type: general-purpose
+    task: Informed UI tester
+    model: sonnet
+    durationSec: 150
+    toolCalls: 14
+    modelCalls: 9
+    tokenShare: 11.6
+gitBranch: claude/lucid-heisenberg-dgn20t
+entrypoint: remote_trigger
+cliVersion: 2.1.332
+trigger: visitor-loop
+learnings:
+  - Overflow on a Journal Skill page can sit inside a list item whose own scrollWidth exceeds clientWidth while no descendant rect passes the viewport; scan scrollWidth > clientWidth per element.
+  - The Journal's digests and sessions are anchors on /t/journal/current; /t/journal/current/digests and /sessions are 404 and nothing links to them.
+ideas:
+  - "[blind, content editor] /t/journal/current: the page never says what Terrarium is in one plain sentence and uses Friction, Routine, Skill, Tenant, Digest unexplained. Add a two-line 'What is this?' above the stat tiles plus a short glossary strip of those terms from GLOSSARY.md, so a stranger can read the numbers. (Check against the owner ruling that the on-ramp explains the Platform itself, not the demo sites.)"
+  - "[content editor, blind] /t/journal/current/skills/<name>: audit observations are dense agent shorthand with session UUIDs and code identifiers. Put a one-line plain-language verdict first, fold the full notes behind a disclosure, and link or drop the ids, so a newcomer learns whether the Skill is healthy."
+  - "[content editor, UI tester] /t/journal/current/frictions: the intro is one ~170-word paragraph of state names (fix landed, likely fixed, still recurring, accepted). Cut it to two sentences and show the four states as a legend beside the filters, so the data is reachable first."
+  - "[UI tester] /t/journal/current: Recent activity has ~100 h3 headings in a row and a zero tally ('0 delegated'). Cap the list at 10-15 entries with a show-all link, or group by day linking each digest, and hide or grey zero tallies, so screen-reader heading navigation is usable."
+  - "[UI tester, content editor] /t/journal/current/ideas: a flat list of 145 ideas and 65 learnings. Add filter chips by originating Skill, and on each Skill page list that Skill's ideas linking back, tying the 'N ideas in M sessions' count to the ideas themselves."
+  - "[content editor] /t/journal/current/digests/<date>: the digest says 'trivial' where the homepage says 'nit', and the page is headed only by the date. Use one lowest-severity word across the Journal and head the page 'Digest, Tuesday 25 November 2026'."
+  - "[blind, UI tester] /t/journal/current: counts disagree without stating a window (100 sessions vs '99 logged' on a Skill page, '1 logged' on dependabot-sweep against two runs in its note). Print the window beside each count, so numbers don't look contradictory."
+  - "[blind] /t/journal/current/history: a static table of sessions and frictions that stops at 11 Nov. Add a small chart of sessions per week against frictions per session, so the 'activity fell but was not decline' point reads at a glance."
+  - "[blind] /t/journal/archived: one page with 1,356 links and no grouping. Group digests by month with collapsible headings so the archive can be browsed."
+landedBy: Stop
