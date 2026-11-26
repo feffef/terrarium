@@ -28,6 +28,9 @@ fixes:
   - pr: 3532
     date: "2026-11-20"
     summary: "harvest evidence ranks tracker issues per keyword group by distinct keywords matched and prints the top 10 with an omitted count, keeping 5 from the newest 100 issues (closes #3529)."
+  - pr: 3572
+    date: "2026-11-21"
+    summary: "harvest evidence reserves 5 of its 10 tracker hits for the newest 100 issues and prints every issue a keyword names by number."
 occurrences:
   - session: session_013zxzeP4WS4kX4LSBrVszT6
     date: "2026-11-12"

@@ -31,45 +31,41 @@ harvests both.
    more on an entry (the list's last lines show how). Done when you have the
    counts per kind and the last entry's number equals the count `extract`
    printed.
-2. **Cluster, in order.** Merge near-duplicate entries into clusters, taking
+2. **Cluster.** Merge near-duplicate entries into clusters, taking
    entries from the top, and label each cluster **product** (what a visitor or
    the owner sees or uses on the site: a Tenant, its content, the UI) or
    **workflow** (how agents are instructed, fenced or equipped: `CLAUDE.md`,
-   rules, ADRs, Skills, guards, hooks, the gate, scripts agents run). The label
-   outranks recency: check every product cluster before the first workflow one.
+   rules, ADRs, Skills, guards, hooks, the gate, scripts agents run).
    Stop when step 4's quota is filled or 30 clusters have been checked; write why
    as `stopped: <why>` atop step 3's file.
 3. **Check relevance.** Write `<scratchpad>/harvest-checks.md`, one block per
-   cluster, product clusters first: a `## <name>` line, then `label:`
+   cluster: a `## <name>` line, then `label:`
    (product or workflow), `entries:` (their numbers), `sessions:` (a count), one
    `field: evidence` line per test below (`unbuilt`, `unfiled`, `unrejected`,
    `ledger`, `simplifying`, `unacted`) and `verdict:` `open` or `dropped <test>`.
    A dropped cluster needs only the failed test's evidence. Evidence is what you
    read or ran, and a search that printed nothing is not evidence until you know
    its pattern can match. Do not filter script output with `head` or `tail`.
-   Run `harvest evidence` once for all clusters: each cluster's keywords (several
-   words per idea; each matches at the start of a word) as a group, groups
-   separated by `--`, plus `--extract <extract.json>`. It prints candidate hits
-   per group from the owner's rulings, the tracker and Ledger summaries. Read
-   each hit and decide. Step 4 starts only when `harvest check-clusters <that
-   file> --extract <extract.json>` passes. A cluster is open when all of these
-   hold:
+   Redirect `harvest digest --extract <extract.json>` to
+   `<scratchpad>/harvest-digest.txt` once and read it whole in pages: the
+   owner's rulings, every issue title with its state and close reason, every
+   Ledger summary. Judge each cluster against it. Step 4 starts only when
+   `harvest check-clusters <that file> --extract <extract.json>` passes. A
+   cluster is open when all of these hold:
    - **Unbuilt.** Name the file or symbol it would change and read it now. Run
      `pnpm exec tsx scripts/git/list-merges-since.ts` from its session's start
      (`started` in the list). For a learning, grep `CLAUDE.md`, `.claude/rules/`, `docs/agents/`
      and the Skills for the fact itself.
    - **Unfiled.** Entries the list marks "same session in issues" were possibly
-     reworded: read those issues. Read each tracker hit: closed `completed`
-     settles the cluster, `not_planned` rejects it. Any other closed issue goes
-     in the Seedling as the reason to reopen.
-   - **Unrejected.** No ruling hit, no `wontfix` issue, and not under an open
+     reworded: read those issues. A digest issue on the cluster's topic: closed
+     `completed` settles the cluster, `not_planned` rejects it. Any other closed
+     issue goes in the Seedling as the reason to reopen.
+   - **Unrejected.** No ruling, no `wontfix` issue, and not under an open
      Prune Trial (`pnpm exec tsx .agents/skills/prune-trial/scripts/trial-territory.ts
      <files or words>`).
-   - **Beyond the Ledger.** Read every summary line, not only the hits:
-     `grep -H '^summary:' layers/journal/content/current/frictions/*.yml`. An entry
-     that names the cluster's problem, whatever its status, means
-     `frictions-to-fixes` owns it. A cluster the Ledger covers in part stays,
-     narrowed to the part it misses.
+   - **Beyond the Ledger.** A digest ledger entry that names the cluster's
+     problem, whatever its status, means `frictions-to-fixes` owns it.
+     A cluster the Ledger covers in part stays, narrowed to the part it misses.
    - **Simplifying** (workflow clusters only; a product cluster that adds files
      is welcome). An idea gives the Platform a capability it lacks or
      makes it simpler, and retires as much as it adds: a new flag, file, check or

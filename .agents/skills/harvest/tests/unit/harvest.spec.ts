@@ -18,13 +18,11 @@ import {
   checkClusters,
   comparePosted,
   entryKey,
-  evidenceReport,
-  groupedEvidenceReport,
+  digestReport,
   harvestedState,
   issuesPath,
   loadIssues,
   noteTexts,
-  parseEvidenceArgs,
   parseKeys,
   productDecisions,
   renderBlock,
@@ -371,8 +369,8 @@ describe('checkClusters()', () => {
     expect(check('## d\nlabel: product\nentries: 1\nsessions: 1\nsimplifying: s\nverdict: dropped simplifying\n', ns).join()).toContain('for workflow clusters')
   })
 
-  it('refuses a product cluster after a workflow one', () => {
-    expect(check(open('workflow', 'simplifying: r\n') + open('product'), ns).join()).toContain('check every product cluster first')
+  it('accepts a product cluster after a workflow one, so a mid-way stop covers both kinds', () => {
+    expect(check(open('workflow', 'simplifying: r\n') + open('product'), ns)).toEqual([])
   })
 
   it('refuses a record with no stopped reason before the first cluster', () => {
@@ -381,150 +379,41 @@ describe('checkClusters()', () => {
   })
 })
 
-describe('evidenceReport()', () => {
+describe('digestReport()', () => {
   const sources = {
-    rulings: [
-      { file: 'a.md', text: '# T\n- No RSS feeds for the Journal.\n- Footer stays small.' },
-      { file: 'b.md', text: 'nothing here' },
-    ],
+    rulings: [{ file: 'a.md', text: '# T\n\n- No RSS feeds.' }],
     issues: [
-      { number: 7, title: 'Seedling: add a feed', body: 'unrelated', state: 'closed', state_reason: 'not_planned' },
-      { number: 8, title: 'Seedling: footer', body: 'Built: the RSS reader shipped', state: 'closed', state_reason: 'completed' },
+      { number: 7, title: 'Seedling: add a feed', body: null, state: 'closed', state_reason: 'not_planned' },
       { number: 9, title: 'Other', body: null, state: 'open' },
+      { number: 8, title: 'Footer', body: null, state: 'closed', state_reason: 'completed' },
     ],
-    frictions: [
-      { file: 'f1.yml', summary: 'Agents miss the rss step' },
-      { file: 'f2.yml', summary: 'unrelated' },
-    ],
+    frictions: [{ file: 'f1.yml', summary: 'Agents miss a step' }, { file: 'f2.yml', summary: 'unrelated' }],
   }
 
-  it('prints rulings lines, issues (newest first among equals) by title or body, and friction summaries that match any keyword, case-insensitively', () => {
-    expect(evidenceReport(['rss', 'FEED'], sources)).toBe(
+  it('prints every ruling line, every issue newest first with its state and close reason, and every ledger summary', () => {
+    expect(digestReport(sources)).toBe(
       [
         'rulings:',
-        'a.md:2: - No RSS feeds for the Journal.',
+        'a.md:1: # T',
+        'a.md:3: - No RSS feeds.',
         'tracker:',
-        '#8 closed completed: Seedling: footer',
+        '#9 open: Other',
+        '#8 closed completed: Footer',
         '#7 closed not_planned: Seedling: add a feed',
         'ledger:',
-        'f1.yml: Agents miss the rss step',
+        'f1.yml: Agents miss a step',
+        'f2.yml: unrelated',
       ].join('\n'),
     )
   })
 
-  it('says a source matched nothing, so silence is never mistaken for evidence', () => {
-    expect(evidenceReport(['zzz'], sources)).toBe('rulings:\n  (no match)\ntracker:\n  (no match)\nledger:\n  (no match)')
+  it('prints no cap: 300 issues all appear', () => {
+    const issues = Array.from({ length: 300 }, (_, i) => ({ number: i + 1, title: 't', body: null, state: 'open' }))
+    expect(digestReport({ ...sources, issues }).split('\n').filter((l) => l.startsWith('#'))).toHaveLength(300)
   })
 
-  it('matches at the start of a word, so a short keyword does not flood', () => {
-    expect(evidenceReport(['log'], { ...sources, frictions: [{ file: 'f3.yml', summary: 'the catalog logs' }, { file: 'f4.yml', summary: 'a catalog' }] })).toContain('f3.yml')
-    expect(evidenceReport(['log'], { ...sources, frictions: [{ file: 'f4.yml', summary: 'a catalog' }] })).not.toContain('f4.yml')
-  })
-
-  it('matches a keyword that starts with a non-word character, such as an issue reference', () => {
-    const r = evidenceReport(['#7'], { ...sources, frictions: [{ file: 'f5.yml', summary: 'see #7 and (#70)' }] })
-    expect(r).toContain('f5.yml')
-  })
-
-  it('prints an open issue without a reason', () => {
-    expect(evidenceReport(['other'], sources)).toContain('#9 open: Other')
-  })
-
-  describe('rulings and ledger cut', () => {
-    const block = (kw: string[], s: Partial<typeof sources>, name: 'rulings' | 'ledger', next = '') => {
-      const lines = evidenceReport(kw, { rulings: [], issues: [], frictions: [], ...s }).split('\n')
-      const end = next ? lines.indexOf(next) : -1
-      return lines.slice(lines.indexOf(`${name}:`) + 1, end < 0 ? undefined : end)
-    }
-    const many = (n: number) => Array.from({ length: n }, (_, i) => `- rss ${i + 1}`).join('\n')
-
-    it('prints the first 10 ruling hits in order, then how many were omitted', () => {
-      const lines = block(['rss'], { rulings: [{ file: 'a.md', text: many(13) }] }, 'rulings', 'tracker:')
-      expect(lines).toHaveLength(11)
-      expect(lines[0]).toBe('a.md:1: - rss 1')
-      expect(lines[9]).toBe('a.md:10: - rss 10')
-      expect(lines[10]).toBe('  (3 more omitted)')
-    })
-
-    it('prints 10 ruling hits with no omitted line', () => {
-      const lines = block(['rss'], { rulings: [{ file: 'a.md', text: many(10) }] }, 'rulings', 'tracker:')
-      expect(lines).toHaveLength(10)
-      expect(lines.join()).not.toContain('omitted')
-    })
-
-    it('caps the ledger block the same way', () => {
-      const frictions = Array.from({ length: 12 }, (_, i) => ({ file: `f${i}.yml`, summary: 'rss' }))
-      const lines = block(['rss'], { frictions }, 'ledger')
-      expect(lines).toHaveLength(11)
-      expect(lines.at(-1)).toBe('  (2 more omitted)')
-    })
-  })
-
-  describe('tracker cut', () => {
-    const issue = (number: number, title: string) => ({ number, title, body: null, state: 'open' })
-    const tracker = (kw: string[], issues: ReturnType<typeof issue>[]) => {
-      const lines = evidenceReport(kw, { rulings: [], issues, frictions: [] }).split('\n')
-      return lines.slice(lines.indexOf('tracker:') + 1, lines.indexOf('ledger:'))
-    }
-    const printed = (lines: string[]) => lines.filter((l) => l.startsWith('#')).map((l) => Number(/^#(\d+)/.exec(l)![1]))
-
-    it('prints every hit of a one-keyword group when there are at most 10, with no omitted line', () => {
-      const lines = tracker(['rss'], [issue(1, 'rss a'), issue(2, 'rss b'), issue(3, 'none')])
-      expect(printed(lines)).toEqual([2, 1])
-      expect(lines.join()).not.toContain('omitted')
-    })
-
-    it('keeps an old strong hit among many recent weak ones: 5 newest, the strong one, then the next newest', () => {
-      // #1 is old and matches both keywords; #901..#940 are weak (one keyword) and inside the newest 100.
-      const weak = Array.from({ length: 40 }, (_, i) => issue(i + 901, 'rss'))
-      const filler = Array.from({ length: 60 }, (_, i) => issue(i + 941, 'unrelated'))
-      const lines = tracker(['rss', 'feed'], [issue(1, 'rss feed'), ...weak, ...filler])
-      expect(printed(lines)).toEqual([1, 940, 939, 938, 937, 936, 935, 934, 933, 932])
-      expect(lines.at(-1)).toBe('  (31 more omitted)')
-    })
-
-    it('draws at least 5 of the 10 from the newest 100 issues when that many qualify', () => {
-      // Ten strong old hits (#1-10), five weak hits among the newest 100 (#901-905).
-      const old = Array.from({ length: 10 }, (_, i) => issue(i + 1, 'rss feed'))
-      const filler = Array.from({ length: 95 }, (_, i) => issue(i + 906, 'x'))
-      const recent = Array.from({ length: 5 }, (_, i) => issue(i + 901, 'rss'))
-      const nums = printed(tracker(['rss', 'feed'], [...old, ...recent, ...filler]))
-      expect(nums).toHaveLength(10)
-      expect(nums.filter((n) => n >= 901)).toHaveLength(5)
-    })
-
-    it('tops up from the best-ranked older hits when fewer than 5 newest ones qualify', () => {
-      const old = Array.from({ length: 12 }, (_, i) => issue(i + 1, 'rss feed'))
-      const recent = [issue(901, 'rss'), issue(902, 'rss')]
-      const filler = Array.from({ length: 98 }, (_, i) => issue(i + 903, 'x'))
-      const nums = printed(tracker(['rss', 'feed'], [...old, ...recent, ...filler]))
-      expect(nums).toEqual([12, 11, 10, 9, 8, 7, 6, 5, 902, 901])
-    })
-
-    it('counts a named issue inside the newest 100 toward the recent quota', () => {
-      const old = Array.from({ length: 12 }, (_, i) => issue(i + 1, 'rss feed'))
-      const recent = Array.from({ length: 6 }, (_, i) => issue(i + 901, 'rss'))
-      const filler = Array.from({ length: 94 }, (_, i) => issue(i + 907, 'x'))
-      const nums = printed(tracker(['rss', 'feed', '#901'], [...old, ...recent, ...filler]))
-      expect(nums.filter((n) => n >= 901)).toHaveLength(5)
-      expect(nums).toContain(901)
-      expect(nums).toHaveLength(10)
-    })
-
-    it('always prints an issue named by its number, however weak, and counts the rest as omitted', () => {
-      const issues = [issue(5, 'rss feed'), ...Array.from({ length: 20 }, (_, i) => issue(i + 100, 'rss feed')), issue(7, 'unrelated')]
-      for (const kw of ['#7', '7']) {
-        const lines = tracker(['rss', kw], issues)
-        expect(printed(lines)).toContain(7)
-        expect(lines.at(-1)).toBe('  (12 more omitted)')
-      }
-    })
-
-    it('prints more than 10 when more than 10 issues are named', () => {
-      const issues = Array.from({ length: 12 }, (_, i) => issue(i + 1, 'x'))
-      const kws = issues.map((i) => `#${i.number}`)
-      expect(printed(tracker(kws, issues))).toHaveLength(12)
-    })
+  it('says a source is empty', () => {
+    expect(digestReport({ rulings: [], issues: [], frictions: [] })).toBe('rulings:\n  (none)\ntracker:\n  (none)\nledger:\n  (none)')
   })
 })
 
@@ -552,45 +441,6 @@ describe('rulingFiles()', () => {
 
   it('names only files that exist in the repo, so a moved rulings file fails here', () => {
     expect(rulingFiles(root).filter((f) => !existsSync(join(root, f)))).toEqual([])
-  })
-})
-
-describe('groupedEvidenceReport()', () => {
-  const sources = { rulings: [{ file: 'a.md', text: 'rss here\nfooter here' }], issues: [], frictions: [] }
-
-  it('prints a single group exactly as evidenceReport does', () => {
-    expect(groupedEvidenceReport([['rss']], sources)).toBe(evidenceReport(['rss'], sources))
-  })
-
-  it('prints one labelled block per group', () => {
-    expect(groupedEvidenceReport([['rss'], ['footer', 'x']], sources)).toBe(
-      [
-        '## evidence: rss',
-        evidenceReport(['rss'], sources),
-        '',
-        '## evidence: footer x',
-        evidenceReport(['footer', 'x'], sources),
-      ].join('\n'),
-    )
-  })
-})
-
-describe('parseEvidenceArgs()', () => {
-  it('takes --extract and its value out of the keyword groups', () => {
-    expect(parseEvidenceArgs(['a', '--extract', 'x.json', '--', 'b'])).toEqual({ groups: [['a'], ['b']], extract: 'x.json' })
-    expect(parseEvidenceArgs(['--extract', 'x.json', 'a'])).toEqual({ groups: [['a']], extract: 'x.json' })
-  })
-
-  it('splits groups on a literal -- and drops empty ones', () => {
-    expect(parseEvidenceArgs(['a', 'b', '--', 'c', '--', '--']).groups).toEqual([['a', 'b'], ['c']])
-  })
-
-  it('splits a quoted argument into words', () => {
-    expect(parseEvidenceArgs(['glass box', '--', 'a  b']).groups).toEqual([['glass', 'box'], ['a', 'b']])
-  })
-
-  it('leaves extract unset without the flag', () => {
-    expect(parseEvidenceArgs(['a', 'b'])).toEqual({ groups: [['a', 'b']], extract: undefined })
   })
 })
 

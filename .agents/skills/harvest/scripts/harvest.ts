@@ -7,10 +7,10 @@
 //
 // Usage:
 //   tsx .agents/skills/harvest/scripts/harvest.ts extract [--kind ideas|learnings] [--out PATH]
-//     (also writes the issue list to PATH.issues.json, which `evidence` reads)
+//     (also writes the issue list to PATH.issues.json, which `digest` reads)
 //   tsx .agents/skills/harvest/scripts/harvest.ts list <extract.json>
 //   tsx .agents/skills/harvest/scripts/harvest.ts block <extract.json> <n> [n...]
-//   tsx .agents/skills/harvest/scripts/harvest.ts evidence <kw...> [-- <kw...>]... [--extract <extract.json>]
+//   tsx .agents/skills/harvest/scripts/harvest.ts digest [--extract <extract.json>]
 //   tsx .agents/skills/harvest/scripts/harvest.ts check-clusters <harvest-checks.md> --extract <extract.json>
 //   tsx .agents/skills/harvest/scripts/harvest.ts check-body <body-file> --extract <extract.json> [--title T]
 //   tsx .agents/skills/harvest/scripts/harvest.ts check-posted <issue-number> <body-file>
@@ -254,85 +254,37 @@ export function productDecisions(md: string): string {
     .join('\n')
 }
 
-export interface EvidenceIssue extends IssueBody {
+export interface DigestIssue extends IssueBody {
   title: string
   state: string
   state_reason?: string | null
 }
 
-export interface EvidenceSources {
+export interface DigestSources {
   rulings: { file: string; text: string }[]
-  issues: EvidenceIssue[]
+  issues: DigestIssue[]
   frictions: { file: string; summary: string }[]
 }
 
-/** Hits printed per block (rulings, tracker, ledger) per group, and how many issues count as newest. */
-const HIT_CAP = 10
-const NEWEST = 100
-
-// A keyword matches at the start of a word, so `log` finds `logs` but not `catalog`.
-const keywordSource = (k: string) => `(?<!\\w)${k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`
-
-/** The tracker hits to print, ranked by distinct keywords matched, ties newest first. An
- *  issue a keyword names by number always prints; at least half the cap comes from the
- *  newest issues when that many qualify, the rest from the best-ranked others. */
-function cutTracker(keywords: string[], issues: EvidenceIssue[]): { shown: EvidenceIssue[]; omitted: number } {
-  const res = keywords.map((k) => new RegExp(keywordSource(k), 'i'))
-  const named = new Set(keywords.flatMap((k) => (/^#?\d+$/.test(k) ? [Number(k.replace('#', ''))] : [])))
-  const newest = new Set(issues.map((i) => i.number).sort((a, b) => b - a).slice(0, NEWEST))
-  const ranked = issues
-    .map((i) => ({ i, n: res.filter((r) => r.test(`${i.title}\n${i.body ?? ''}`)).length }))
-    .filter((x) => x.n > 0 || named.has(x.i.number))
-    .sort((a, b) => b.n - a.n || b.i.number - a.i.number)
-    .map((x) => x.i)
-  const pinned = ranked.filter((i) => named.has(i.number))
-  const rest = ranked.filter((i) => !named.has(i.number))
-  const quota = Math.ceil(HIT_CAP / 2) - pinned.filter((i) => newest.has(i.number)).length
-  const chosen = new Set([...pinned, ...rest.filter((i) => newest.has(i.number)).slice(0, Math.max(0, quota))])
-  for (const i of rest) if (chosen.size < HIT_CAP) chosen.add(i)
-  const shown = ranked.filter((i) => chosen.has(i))
-  return { shown, omitted: ranked.length - shown.length }
-}
-
-/** Candidates for one cluster's keywords from the owner's rulings, the tracker and the
- *  Friction Ledger. A hit is only a hint: SKILL.md step 3 has the agent read each one. */
-export function evidenceReport(keywords: string[], src: EvidenceSources): string {
-  const re = new RegExp(`(?:${keywords.map(keywordSource).join('|')})`, 'i')
-  const hit = (text: string | null) => re.test(text ?? '')
-  const { shown, omitted } = cutTracker(keywords, src.issues)
-  const section = (name: string, found: string[]) => [`${name}:`, ...(found.length ? found : ['  (no match)'])]
-  const capped = (found: string[]) => [
-    ...found.slice(0, HIT_CAP),
-    ...(found.length > HIT_CAP ? [`  (${found.length - HIT_CAP} more omitted)`] : []),
-  ]
+/** Everything step 3 judges clusters against, for the model to read whole: the owner's
+ *  rulings, every issue title with its state and close reason, every Ledger summary.
+ *  No keyword matching, so no cut can hide a hit (#3681). */
+export function digestReport(src: DigestSources): string {
+  const section = (name: string, found: string[]) => [`${name}:`, ...(found.length ? found : ['  (none)'])]
   return [
     ...section(
       'rulings',
-      capped(src.rulings.flatMap(({ file, text }) => text.split('\n').flatMap((l, i) => (hit(l) ? [`${file}:${i + 1}: ${l}`] : [])))),
+      src.rulings.flatMap(({ file, text }) => text.split('\n').flatMap((l, i) => (l.trim() ? [`${file}:${i + 1}: ${l}`] : []))),
     ),
-    ...section('tracker', [
-      ...shown.map((i) => `#${i.number} ${i.state}${i.state_reason ? ` ${i.state_reason}` : ''}: ${i.title}`),
-      ...(omitted ? [`  (${omitted} more omitted)`] : []),
-    ]),
-    ...section('ledger', capped(src.frictions.filter((f) => hit(f.summary)).map((f) => `${f.file}: ${f.summary}`))),
+    ...section(
+      'tracker',
+      [...src.issues].sort((a, b) => b.number - a.number).map((i) => `#${i.number} ${i.state}${i.state_reason ? ` ${i.state_reason}` : ''}: ${i.title}`),
+    ),
+    ...section('ledger', src.frictions.map((f) => `${f.file}: ${f.summary}`)),
   ].join('\n')
 }
 
-/** The keyword groups and the `--extract` path of `evidence` arguments; groups are
- *  separated by a literal `--`; agents quote a group as one argument, which as a literal phrase matched nothing. */
-export function parseEvidenceArgs(argv: string[]): { groups: string[][]; extract?: string } {
-  const groups: string[][] = [[]]
-  let extract: string | undefined
-  for (let i = 0; i < argv.length; i++) {
-    const a = argv[i]!
-    if (a === '--extract') extract = argv[++i]
-    else if (a === '--') groups.push([])
-    else groups[groups.length - 1]!.push(...a.split(/\s+/).filter(Boolean))
-  }
-  return { groups: groups.filter((g) => g.length), extract }
-}
-
-/** Where `extract` saves the issue list it fetched, for `evidence` to reuse. */
+/** Where `extract` saves the issue list it fetched, for `digest` to reuse. */
 export const issuesPath = (extract: string): string => `${extract}.issues.json`
 
 /** The saved issue list of `extract` if present, else a fresh fetch. */
@@ -340,26 +292,18 @@ export function loadIssues<T>(extract: string | undefined, fetch: () => T[]): T[
   return extract && existsSync(issuesPath(extract)) ? (JSON.parse(readFileSync(issuesPath(extract), 'utf8')) as T[]) : fetch()
 }
 
-/** One group prints as `evidenceReport` does; several print one labelled block each. */
-export function groupedEvidenceReport(groups: string[][], src: EvidenceSources): string {
-  if (groups.length === 1) return evidenceReport(groups[0]!, src)
-  return groups.map((g) => `## evidence: ${g.join(' ')}\n${evidenceReport(g, src)}`).join('\n\n')
-}
-
 /** The tests of step 3, and the fields a cluster record carries. */
 const TESTS = ['unbuilt', 'unfiled', 'unrejected', 'ledger', 'simplifying', 'unacted'] as const
 
 /** What is wrong with the per-cluster record (empty: fine). A cluster is a `## ` block of
  *  `field: value` lines. An open one holds evidence for every test (`simplifying` only
- *  when workflow); a dropped one holds the evidence of the test it failed. Product
- *  clusters come before the first workflow one. */
+ *  when workflow); a dropped one holds the evidence of the test it failed. */
 export function checkClusters(text: string, sessionOf: Map<number, string>): string[] {
   const problems: string[] = []
   const [preamble, ...blocks] = text.split(/^## /m)
   if (!blocks.length) return ['no "## " cluster blocks']
   // Without a recorded reason a run can quit clustering early unnoticed (#3396).
   if (!/^stopped:[ \t]*\S/m.test(preamble!)) problems.push('no "stopped:" reason line before the first cluster')
-  let workflowSeen = false
   blocks.forEach((block, i) => {
     const f = new Map<string, string>()
     for (const l of block.split(/\r?\n/).slice(1)) {
@@ -369,8 +313,6 @@ export function checkClusters(text: string, sessionOf: Map<number, string>): str
     const at = `cluster ${i + 1}`
     const label = f.get('label')
     if (label !== 'product' && label !== 'workflow') problems.push(`${at}: label must be product or workflow`)
-    if (label === 'workflow') workflowSeen = true
-    else if (label === 'product' && workflowSeen) problems.push(`${at}: a product cluster after a workflow one; check every product cluster first`)
     const ns = (f.get('entries') ?? '').split(',').map((n) => Number(n.trim()))
     if (!f.has('entries') || ns.some((n) => !sessionOf.has(n))) problems.push(`${at}: entries must list entry numbers of the extract`)
     else if (Number(f.get('sessions')) !== new Set(ns.map((n) => sessionOf.get(n))).size) problems.push(`${at}: sessions must be the count of distinct sessions behind the entries`)
@@ -443,7 +385,7 @@ export function comparePosted(stored: string, file: string): string[] {
 
 // ── IO shell ──────────────────────────────────────────────────────────────────
 
-interface RawIssue extends EvidenceIssue {
+interface RawIssue extends DigestIssue {
   pull_request?: unknown
 }
 
@@ -475,7 +417,7 @@ function cmdExtract(argv: string[]): void {
   const { entries, skippedHarvested } = buildEntries(readSessionLogs(root, { archived: true }), state, since, kinds)
   const out = flagValue(argv, '--out') ?? DEFAULT_OUT
   const count = (k: Kind) => entries.filter((e) => e.kind === k).length
-  // `evidence` reads this instead of refetching the tracker (about 34 s per call).
+  // `digest` reads this instead of refetching the tracker (about 34 s per call).
   writeFileSync(issuesPath(out), JSON.stringify(issues))
   writeFileSync(out, JSON.stringify({ since: new Date(since).toISOString(), days: WINDOW_DAYS, skippedHarvested, entries }, null, 2) + '\n')
   console.log(`harvest: window ${new Date(since).toISOString()} .. now (${WINDOW_DAYS} days)`)
@@ -483,7 +425,7 @@ function cmdExtract(argv: string[]): void {
   console.log(`harvest: ${entries.length} entries, ordered, written to ${out}`)
 }
 
-/** The rulings files `evidence` reads: `.out-of-scope/`, the visitor-loop and Glass Box decision
+/** The rulings files `digest` reads: `.out-of-scope/`, the visitor-loop and Glass Box decision
  *  lists, and each Tenant glossary (cut to its product decisions when read). */
 export function rulingFiles(dir: string): string[] {
   const glossaries = readdirSync(join(dir, 'layers')).map((t) => `layers/${t}/GLOSSARY.md`)
@@ -495,17 +437,15 @@ export function rulingFiles(dir: string): string[] {
   ]
 }
 
-function cmdEvidence(argv: string[]): void {
-  const { groups, extract } = parseEvidenceArgs(argv)
-  if (!groups.length) fail('usage: evidence <keyword...> [-- <keyword...>]... [--extract <extract.json>]')
-  const issues = loadIssues(extract, listIssueBodies)
+function cmdDigest(argv: string[]): void {
+  const issues = loadIssues(flagValue(argv, '--extract'), listIssueBodies)
   const rulings = rulingFiles(root).map((file) => {
     const text = readFileSync(join(root, file), 'utf8')
     return { file, text: file.endsWith('/GLOSSARY.md') ? productDecisions(text) : text }
   })
   const ledger = 'layers/journal/content/current/frictions'
   const frictions = readdirSync(join(root, ledger)).map((f) => ({ file: `${ledger}/${f}`, summary: summaryOf(readFileSync(join(root, ledger, f), 'utf8')) }))
-  console.log(groupedEvidenceReport(groups, { rulings, issues, frictions }))
+  console.log(digestReport({ rulings, issues, frictions }))
 }
 
 function readExtract(path: string): { entries: Entry[] } {
@@ -532,9 +472,7 @@ function main(): void {
     if (err) console.error(err)
     return console.log(out)
   }
-  if (cmd === 'evidence') {
-    return cmdEvidence(argv)
-  }
+  if (cmd === 'digest') return cmdDigest(argv)
   if (cmd === 'check-clusters') {
     const [file] = argv
     const extract = flagValue(argv, '--extract')
@@ -559,7 +497,7 @@ function main(): void {
     if (problems.length) fail(problems.join('\n'))
     return console.log(`check-posted: #${number} stores the checked keys`)
   }
-  fail('unknown command; expected extract | list | block | evidence | check-clusters | check-body | check-posted')
+  fail('unknown command; expected extract | list | block | digest | check-clusters | check-body | check-posted')
 }
 
 runIfMain(import.meta.url, main)
