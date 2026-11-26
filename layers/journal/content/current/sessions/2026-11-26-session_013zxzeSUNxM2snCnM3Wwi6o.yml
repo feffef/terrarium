@@ -1,0 +1,294 @@
+schemaVersion: 1
+session: session_013zxzeSUNxM2snCnM3Wwi6o
+startedAt: 2026-11-26T04:02:42Z
+endedAt: 2026-11-26T04:08:22Z
+kind: autonomous
+goal: Scheduled audit of the repo's docs for staleness and muddle
+status: completed
+outcome: "No PR: the fact-checker rejected all 7 reviewer findings, so nothing was changed"
+summary: "Scheduled audit-docs run (no human prompt). Three read-only reviewers (Freshness, Single-home, Coherence) produced 7 findings (A none, B 5, C 2); one checker returned WRONG on all 7 (CONFIRMED 0, CONFIRMED-BUT 0, WRONG 7): proposed cuts lost info or were not plainer, one placement was stated by its originating issue, and two items are owner decisions. Open for the owner, not filed: dependabot-sweep sends 0.x patches to a human while ADR-0004 lets an agent merge them; harvest.yml watchFor says 'explicit budget' that harvest SKILL step 2 lacks. All work was agent-initiated under the schedule's prompt. Covered: README.md, SECURITY.md, tests/README.md, docs/proposals/README.md, layers/{blog,journal,atlas,midden,marquee,tinkerfund,commons}/GLOSSARY.md, .claude/rules non-ADR rules, Skills blog-post dependabot-sweep glassbox-update glassbox-lesson glassbox-walkthrough harvest frictions-to-fixes briefs, docs/research branch-protection doc (partly)."
+prs: []
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: layers/journal/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/blog/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/atlas/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/midden/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/marquee/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/tinkerfund/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/commons/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dependabot-sweep/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-lesson/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-lesson/writing-pages.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-lesson/owner-decisions.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-walkthrough/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/diagrams/interactive-map/README.md
+    reason: (no reason given)
+  - path: .agents/skills/harvest/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/david.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/karen.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/impl-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/design-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/harvest/body-template.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: (no reason given)
+  - path: docs/research/making-repo-public.md
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: audit-docs
+    reason: (invoked as a slash command)
+frictions:
+  - description: Saved Agent A and B replies to the pool as hand-typed summaries instead of save-handback.ts verbatim, against the Skill; re-saved with the script.
+    solution: State the exact save-handback command in the Skill's step 4 as a copyable line.
+    severity: nit
+  - description: Reviewers proposed fixes the checker rejected as not shorter or plainer, or as owner-owned (watchFor, Skill merge policy); all 7 findings were wasted effort.
+    solution: Put the checker's lose-nothing and shorter bar, and that watchFor and Skill merge policy are owner-owned, in the reviewer brief.
+    severity: minor
+  - description: Ran a pointless foreground sleep while waiting for reviewers.
+    solution: End the turn and wait for notifications.
+    severity: nit
+durationSec: 340
+models:
+  claude-sonnet-5-5: 38
+toolCounts:
+  Read: 2
+  Bash: 11
+  Skill: 3
+  Agent: 4
+  ReadNotifications: 1
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+docsReadBySubagents:
+  - docs/proposals/README.md
+  - layers/journal/GLOSSARY.md
+  - layers/blog/GLOSSARY.md
+  - layers/atlas/GLOSSARY.md
+  - layers/midden/GLOSSARY.md
+  - layers/marquee/GLOSSARY.md
+  - layers/tinkerfund/GLOSSARY.md
+  - layers/commons/GLOSSARY.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/dependabot-sweep/SKILL.md
+  - .agents/skills/glassbox-update/SKILL.md
+  - .agents/skills/glassbox-lesson/SKILL.md
+  - .agents/skills/glassbox-lesson/writing-pages.md
+  - .agents/skills/glassbox-lesson/owner-decisions.md
+  - .agents/skills/glassbox-walkthrough/SKILL.md
+  - docs/agents/environment-caveats.md
+  - docs/diagrams/interactive-map/README.md
+  - .agents/skills/harvest/SKILL.md
+  - .agents/skills/frictions-to-fixes/survey-brief.md
+  - .agents/skills/blog-post/personas/david.md
+  - .agents/skills/blog-post/personas/karen.md
+  - .agents/skills/frictions-to-fixes/impl-brief.md
+  - .agents/skills/frictions-to-fixes/design-brief.md
+  - .agents/skills/harvest/body-template.md
+  - .agents/skills/audit-docs/SKILL.md
+  - docs/research/github-branch-protection-vs-autonomous-log-commits.md
+  - docs/research/making-repo-public.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: steered
+        why: logged session, no PR
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0015.md
+        value: in-scope
+      - path: .claude/rules/adr-0030.md
+        value: in-scope
+      - path: .claude/rules/adr-0005.md
+        value: in-scope
+      - path: .claude/rules/adr-0021.md
+        value: in-scope
+      - path: .claude/rules/adr-0027.md
+        value: in-scope
+      - path: .claude/rules/adr-0029.md
+        value: in-scope
+      - path: docs/agents/git-conventions.md
+      - path: docs/agents/pr-workflow.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: in-scope
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 3
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+subagents:
+  - type: general-purpose
+    task: "Audit docs: Freshness"
+    durationSec: 37
+    toolCalls: 14
+    modelCalls: 11
+    tokenShare: 10.8
+  - type: general-purpose
+    task: "Audit docs: Single-home"
+    durationSec: 79
+    toolCalls: 19
+    modelCalls: 18
+    tokenShare: 19
+  - type: general-purpose
+    task: "Audit docs: Coherence"
+    durationSec: 163
+    toolCalls: 37
+    modelCalls: 36
+    tokenShare: 35.7
+  - type: general-purpose
+    task: Fact-check audit findings
+    durationSec: 82
+    toolCalls: 18
+    modelCalls: 16
+    tokenShare: 11.6
+gitBranch: claude/festive-mayer-kcc4f0
+entrypoint: remote_trigger
+cliVersion: 2.1.332
+trigger: audit-docs
+landedBy: Stop
