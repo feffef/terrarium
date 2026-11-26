@@ -71,3 +71,8 @@ occurrences:
     severity: nit
     description: "Subagent brief hit the dispatch-read guard because it named the scratch placeholder literally; reworded and retried."
     solution: "Fill the placeholder into a copy of the brief file, as done after the first denial."
+  - session: session_013zxzeR67EGdvDDNgGomDr6
+    date: "2026-11-25"
+    severity: nit
+    description: "First survey dispatch was blocked by the dispatch-read guard because my brief named the scratch placeholder literally; I reworded and resent."
+    solution: "Guard could allow a placeholder named in prose, or the Skill could say to fill it in the brief."

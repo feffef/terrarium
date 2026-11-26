@@ -21,3 +21,8 @@ occurrences:
     severity: minor
     description: "Merging main into a run branch pulled the other run's files into the diff, so merge-pr.ts refused an Own-read verdict and I had to run a second code-review."
     solution: "The Skill could say to merge main into a branch only after the review, or to expect a second review when a merge brings in files."
+  - session: session_013zxzeR67EGdvDDNgGomDr6
+    date: "2026-11-25"
+    severity: minor
+    description: "merge-pr.ts refused my own-read verdict because the follow-up commit touched a .ts file, though it was a one-line comment edit; I ran another full code-review."
+    solution: "Let the simple-change test ignore comment-only lines, or say in the Skill that a builder's comment fix needs a review round."

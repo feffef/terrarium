@@ -149,3 +149,8 @@ occurrences:
     severity: minor
     description: "First draft said three Atlas fixes came from the visitor session; the fact-check could not verify it, so I removed the sentence."
     solution: "Digest step 3 could say to attribute provenance only from PR bodies."
+  - session: session_013zxzeTKxE9MSXFCu6Nqhr9
+    date: "2026-11-25"
+    severity: minor
+    description: "Wrote a claim about the e2e test (line comes after the header) from the PR body instead of the test I had already seen; the fact-checker caught it."
+    solution: "Re-derive every test claim from the test file itself while drafting, as the Skill's re-derive rule says."

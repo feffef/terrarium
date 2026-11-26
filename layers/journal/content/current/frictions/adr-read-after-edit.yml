@@ -247,3 +247,8 @@ occurrences:
     severity: minor
     description: "A hook told me to read six ADRs in full after my commit; I only word-counted them and went on to review without reading them."
     solution: "Hook should name only ADRs whose decision the edit touches; I should read or say I skipped."
+  - session: session_013zxzeRuV2ywUTZimzQvXAN
+    date: "2026-11-25"
+    severity: nit
+    description: "Edited prune-trials.yml and committed before reading ADR-0027 in full, which the hook asked for; the late read changed nothing."
+    solution: "Read the ADR with the Skill's first reads."

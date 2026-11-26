@@ -45,3 +45,8 @@ occurrences:
     severity: nit
     description: "Stop hook demanded close-session after the first merge while the closing ledger PR still waited on its gate, so I had to log mid-flow."
     solution: "Nothing to change; re-invocation is safe and this log is replaced at the end."
+  - session: session_013zxzeTKxE9MSXFCu6Nqhr9
+    date: "2026-11-25"
+    severity: nit
+    description: "Merged PR 3672 and carried on to the reply without re-running close-session; the Stop hook had to remind me."
+    solution: "Re-invoke close-session at each merge, as CLAUDE.md says, before the next step."

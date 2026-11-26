@@ -171,3 +171,13 @@ occurrences:
     severity: nit
     description: "Edits blocked while the scoped gate ran (gate-edit guard); a sleep command and a double-background call were also refused."
     solution: "Plan the edit before starting the gate; use Monitor with an until-loop to wait."
+  - session: session_013zxzeR67EGdvDDNgGomDr6
+    date: "2026-11-25"
+    severity: minor
+    description: "Started pnpm gate:scoped on the ledger branch, then the Standards review found a dangling ref, so I stopped the gate and reran it, wasting minutes."
+    solution: "Skill §5: run code-review before the gate, not in parallel; the review can change the head."
+  - session: session_013zxzeTKxE9MSXFCu6Nqhr9
+    date: "2026-11-25"
+    severity: minor
+    description: "Edited the reply post while pnpm gate:scoped was still running in the background after code-review findings arrived, so the run aborted and a full gate was wasted again."
+    solution: "Start the gate only after review findings are in; the gate-edit guard blocked the commit only after the edit."

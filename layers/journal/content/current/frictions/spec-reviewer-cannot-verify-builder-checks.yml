@@ -1,0 +1,19 @@
+name: spec-reviewer-cannot-verify-builder-checks
+surface: safe
+summary: "A read-only Spec reviewer could not confirm what the builder had checked (fast checks, screenshots) because the builder left only a one-line decisions.md."
+cause: "clear-backlog-build builders record little in decisions.md and the Spec reviewer cannot run pnpm validate:content or open screenshots, so it flags the builder's checks unverified; its reviewPrompt() also does not say which reads the Spec axis needs (glossary, owner decisions). Signals: 'Spec reviewer', 'decisions.md was one line', 'could not confirm', 'flagged unverified'."
+status: open
+related:
+  - entry: recheck-brief-thin
+    rule: That entry is a re-check brief too thin to judge a refusal; here the first-round Spec reviewer lacks the builder's record of its own checks.
+occurrences:
+  - session: session_013zxzeT6Ss7hjULbaTx2PS2
+    date: "2026-11-23"
+    severity: minor
+    description: "Subagent retro (Spec reviewer): it skipped the glossary and owner-decisions reads and could not confirm that pnpm validate:content passed, since a read-only reviewer cannot run it."
+    solution: "Have the builder record its fast-check results in decisions.md, and say in reviewPrompt() which reads the Spec axis needs."
+  - session: session_013zxzeSBTTxHztyPoJeEwAj
+    date: "2026-11-24"
+    severity: nit
+    description: "Retro (Spec reviewer): decisions.md was one line, so the brief's screenshots requirement could not be verified and was flagged unverified."
+    solution: "Have the builder list screenshot paths and what they showed in decisions.md, and say so in reviewPrompt()."

@@ -90,3 +90,8 @@ occurrences:
     severity: minor
     description: "survey-brief §3 says every window Friction too new for an entry is a candidate, which would be about 30 nits; the agent had to invent a cut."
     solution: "Say in survey-brief §3 that a lone nit or minor is not a candidate."
+  - session: session_013zxzeR67EGdvDDNgGomDr6
+    date: "2026-11-25"
+    severity: minor
+    description: "The survey subagent reported the survey brief section 3 asks to label every candidate but cannot confirm 157 entries; append aborts on repeated sessions within one call."
+    solution: "Say which subset to confirm in survey-brief section 3 (inside an open prune trial's territory, so left for the trial)."

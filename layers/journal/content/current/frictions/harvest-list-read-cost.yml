@@ -79,3 +79,8 @@ occurrences:
     severity: minor
     description: "The evidence output for 15 groups was 43 KB and had to be read via a saved file and targeted greps, costing several extra calls."
     solution: "Already held by closed #3562; a rulings exclusion for glossary files would cut it."
+  - session: session_013zxzePSaj6hZQUzYVaqg4f
+    date: "2026-11-25"
+    severity: moderate
+    description: "harvest evidence printed tracker hits unrelated to the keywords (the same Midden survey and audit-skills issues in most groups) and omitted hundreds, so I searched the tracker by hand instead."
+    solution: "Rank tracker hits by keyword overlap and print only those matching two or more keywords; held by closed Seedlings #3529 and #3562."

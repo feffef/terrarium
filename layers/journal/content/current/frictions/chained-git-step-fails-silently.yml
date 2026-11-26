@@ -43,3 +43,8 @@ occurrences:
     severity: nit
     description: "Chained git add, status, a file write and git commit in one Bash call, against git-conventions.md's one state-changing git command per call."
     solution: "Read git-conventions.md before the first commit; no rule loads at commit time to remind."
+  - session: session_013zxzeQrwxsU3KF9z6QX2zS
+    date: "2026-11-25"
+    severity: nit
+    description: "Gave git commit both -m and -F in one call, which failed, and tried foreground sleep which the harness blocks."
+    solution: "Use one message source; wait with Monitor."

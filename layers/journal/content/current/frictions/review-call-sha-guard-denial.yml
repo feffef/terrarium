@@ -23,3 +23,8 @@ occurrences:
     severity: nit
     description: "First code-review call named only origin/main; the sha guard blocked it and I reran with the printed args."
     solution: "Print the args line as the only output of verdict-line.ts --review-call so it can be pasted whole."
+  - session: session_013zxzeQrwxsU3KF9z6QX2zS
+    date: "2026-11-25"
+    severity: nit
+    description: "Called code-review with args lacking the head sha; the review-call guard blocked it and I reran with the printed args."
+    solution: "Always paste the output of verdict-line.ts --review-call whole."

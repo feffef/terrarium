@@ -32,3 +32,8 @@ occurrences:
     severity: minor
     description: "The system prompt names a harness branch to develop on while glassbox-curate says never use the harness-assigned branch; I followed the Skill."
     solution: "State once, in the scheduled routine's prompt or the Skill, which of the two wins for curate runs."
+  - session: session_013zxzeQU1aX4cz6nKeBuxbP
+    date: "2026-11-25"
+    severity: nit
+    description: "Escalation PR needed its own branch but the session branch had already merged; the system prompt forbids other branches, so I restarted the merged branch name from main."
+    solution: "Say in audit-docs section 6 which branch name the escalation PR uses."

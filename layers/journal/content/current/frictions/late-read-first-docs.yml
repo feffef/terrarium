@@ -667,3 +667,28 @@ occurrences:
     severity: nit
     description: "Ran git fetch and a GraphQL gh issue list before reading git-conventions.md and github-integration.md, which CLAUDE.md requires first; the gh call 403ed."
     solution: "Read both docs at the first git or GitHub call; a hook hint at the first fetch would have prompted it."
+  - session: session_013zxzeQrwxsU3KF9z6QX2zS
+    date: "2026-11-25"
+    severity: nit
+    description: "Ran git fetch in the same parallel call that read git-conventions.md, so the doc was not read before my first non-read-only git command."
+    solution: "Read the doc in an earlier call than the first fetch."
+  - session: session_013zxzeRuV2ywUTZimzQvXAN
+    date: "2026-11-25"
+    severity: nit
+    description: "Ran find-trial-window.ts, which fetches git, and a bash call chain before reading git-conventions.md, which CLAUDE.md requires before the first git command; the hint named it after."
+    solution: "Read the named doc in the first batch of tool calls."
+  - session: session_013zxzeRByCWuYi8gThTfvKA
+    date: "2026-11-25"
+    severity: nit
+    description: "Ran git fetch before reading docs/agents/git-conventions.md; a hook reminded me afterwards. The doc showed the call was fine."
+    solution: "None needed; the hook caught it and cost nothing."
+  - session: session_013zxzePSaj6hZQUzYVaqg4f
+    date: "2026-11-25"
+    severity: nit
+    description: "Ran gh api issue searches before reading github-integration.md and git log before git-conventions.md; hooks named the docs afterwards. Both docs showed the calls were fine."
+    solution: "None needed; the hooks caught it at no cost."
+  - session: session_013zxzeSK7bEhaxexffUGupq
+    date: "2026-11-26"
+    severity: nit
+    description: "Ran git add and the archive sweep before reading git-conventions.md, which CLAUDE.md requires before any non-read-only git command; the hook named it afterwards."
+    solution: "Read the doc at session start for any run that will commit."

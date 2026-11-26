@@ -52,3 +52,8 @@ occurrences:
     severity: moderate
     description: "Step 4 asks to read each source log whole; I read one log's authored half and the others' summaries only. I also stopped clustering at 12 of up to 30, so dropped-cluster checks are thin."
     solution: "The harvest Skill could print each source log's authored fields in one command, so reading them whole is cheap."
+  - session: session_013zxzePSaj6hZQUzYVaqg4f
+    date: "2026-11-25"
+    severity: moderate
+    description: "Stopped after eight product clusters and checked no workflow cluster or learning, so the quota was not filled; the same slip harvest-first-pass-shallow records."
+    solution: "Cap the evidence read, then check at least one workflow cluster before stopping."

@@ -125,3 +125,8 @@ occurrences:
     severity: nit
     description: "My first drafts of two notes named the wrong current grade for clear-backlog and inspect-session; I caught it by grepping importance before applying them."
     solution: "Have the scorecard print each Skill's grade next to its observation slot, or read it before drafting."
+  - session: session_013zxzeRuV2ywUTZimzQvXAN
+    date: "2026-11-25"
+    severity: moderate
+    description: "Told the PR and the push notification that prune-trials.yml needs a human merge without checking the Human-only rule's paths; the owner had to ask, delaying the merge."
+    solution: "Check a file against adr-0004-human-merge.md paths before claiming Human-only; the rule loads on other triggers too."
