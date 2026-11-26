@@ -2,4 +2,9 @@ session: session_013zxzePo4mtQsMpDHLLDFmb
 mode: autonomous
 focus: "Agents: split Scheduled tasks (1713 words, over the soft limit) by moving the in-session timer material into a new Lesson, Session timers, as the memory page proposes. It is the last Too long item; no open PR touches the agents Subject (PR 3692 touches web standards, PR 3693 hooks). A new Lesson waits for the owner's merge (rule 6). Run three of one session."
 changes: []
-pagesRead: []
+pagesRead:
+  - agents/10.subagents
+  - agents/20.workflow-scripts
+  - agents/30.cloud-sessions
+  - agents/40.scheduled-tasks
+  - agents/50.inspecting-past-sessions
