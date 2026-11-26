@@ -59,3 +59,34 @@ trials:
       `frictions-to-fixes-briefs-mismatch` and `survey-label-and-ledger-errors`
       with `friction-rates.ts`; a clear rise is also damage. NOT damage: a
       survey agent hitting a script refusal the brief still names.
+  - problem: >
+      `docs/agents/verifying-ui-changes.md` plainly rewritten (-438 words: 1550 ->
+      1112 by `wc -w`; -42 lines by `git diff --numstat`, 101 added, 143 deleted):
+      session-id citations, repeated justifications and the capture-tooling
+      restatements went; every rule, command, sharp edge and CSS edge kept, and
+      the heading "The sharp edges" with its two subsections stays (cited by
+      `tests/README.md`). Chosen after a search subagent this run searched the
+      ledger `fixes:` lists, the tracker's "Regression" issues and `git log`
+      for rules that failed as prose: `claim-of-fix-not-rendered` (2 fixes, both
+      paragraphs added to this doc, nothing enforces them) and
+      `preview-dev-server-stale-or-unhydrated` (3 fixes, partly code-backed).
+      Largest candidate home of five (1550 words); no open trial covers it
+      (`trial-territory.ts`).
+    territory:
+      paths:
+        - "docs/agents/verifying-ui-changes.md"
+      keywords:
+        - verifying-ui-changes
+        - scrollWidth
+        - computed colour
+    opened: 2026-11-26
+    proven: true
+    check: >
+      Damage is a major or blocker Friction where a session reported a UI change
+      working without the check the cut text carried (SSR HTML grep instead of the
+      rendered DOM, a colour or fit fix confirmed only by screenshot, a `--dev`
+      shot trusted for diagnosis, a "pre-existing" e2e failure from a filtered
+      run). Compare the shares of `claim-of-fix-not-rendered` and
+      `preview-dev-server-stale-or-unhydrated` with `friction-rates.ts`; a clear
+      rise is also damage. NOT damage: a session following the doc correctly and
+      still hitting a Chromium quirk the doc names.
