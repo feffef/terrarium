@@ -88,7 +88,7 @@ Decisions agents made (run, review, claim check). Not rules: the owner or a late
 - **Continuous deployment's Full reference stays Wikipedia.** A practice has no official docs (review).
 - **Agent tooling comes first in the guide's order, and Web standards never sits between the two Nuxt Subjects**.
 - **Guide titles.** Every title has been weighed against 2 to 4 alternatives; owner rulings are in owner-decisions.md. Closest rivals that lost: *Required status checks* for *Merge gate*, *Claude Code workflows* for *Workflow scripts*.
-- **Minimum target size sits in the guide, not drafts.** Four tenants pad small links to 24px and test it, so the topic is central.
+- **Minimum target size sits in the guide, not drafts.** Four tenants size small links to 24px and test it, so the topic is central.
 - **Web Storage sits in the guide, not drafts.** Glass Box, the Journal and Tinkerfund all keep browser state in it, so the topic is central (a new Lesson goes to drafts only when it is not central).
 - **Folding *Planning skills* into *Installed skills*.** *Planning skills* holds facts about Terrarium's own choices that would lose their page.
 - **`wontfix` is the fifth triage state.** *Issue triage labels* lists four states first and names `wontfix` as the fifth: `docs/agents/triage-labels.md` says skills name five roles (claim check).
