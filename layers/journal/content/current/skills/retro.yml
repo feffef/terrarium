@@ -8,13 +8,4 @@ role: >-
   rather than vague process advice. Distinct from this project's own
   `frictions-to-fixes`, which mines Frictions across many sessions instead
   of one.
-observations:
-  - date: "2026-10-16"
-    note: >-
-      Coverage gap (audit-skills sweep): first use this window
-      (allTimeUses: 1, session_019ZQjo7wiuxrS9KLEG2GiTU, /retro after a
-      glassbox-update drafts run), on disk, no Inventory entry; added.
-      Verified genuine: 8 candidates listed, the owner picked 2 to file, both
-      exist as open issues (#2096 sentence-count check for Walkthrough stops;
-      #2097 a --diff flag for glassbox-update), each citing the session that
-      found it. Below the ≥3-session bar for a behaviour check.
+observations: []
