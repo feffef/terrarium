@@ -46,13 +46,13 @@ pages:
   - page: hooks/20.blocking-hooks
     checked: '2026-11-23'
   - page: hooks/30.hook-added-context
-    checked: '2026-11-10'
+    checked: '2026-11-26'
   - page: hooks/40.session-transcripts
-    checked: '2026-11-10'
+    checked: '2026-11-26'
   - page: index
-    checked: '2026-11-10'
+    checked: '2026-11-26'
   - page: nuxt-content/10.content-collections
-    checked: '2026-11-10'
+    checked: '2026-11-26'
   - page: nuxt-content/20.multi-tenant-isolation
     checked: '2026-11-11'
   - page: nuxt-content/30.content-database
@@ -159,3 +159,5 @@ pages:
     checked: '2026-11-20'
   - page: web-standards/50.colour-contrast
     checked: '2026-11-23'
+  - page: hooks/25.stop-hooks
+    checked: '2026-11-26'

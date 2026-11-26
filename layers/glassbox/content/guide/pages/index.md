@@ -2,7 +2,7 @@
 title: Glass Box guide
 description: How Terrarium works as a whole, in plain words, with links to the lessons that explain each part in depth.
 teaches: "Who's involved: trusted and public users, sessions, routines; a change: read, work, gate, pull request, session log, merge; who decides: approval, triage labels, clear-backlog, planning big work with wayfinder, human-only merges; improving: frictions, fixes, prune trials, skill inventory, seedlings, Journal; the repo: CLAUDE.md, rules, decision records, skills, hooks, glossaries, tenants, spaces, collections, manifests, build-time decisions; shipping: continuous deployment, hydration; why Nuxt."
-revision: '86b8d43a555ea85e4e38f8083a21bfffe6e1c551'
+revision: 'dc559508f1193112bd3b1f4e2d299ee06c7547ba'
 revisionDate: '2026-11-26'
 publishedAt: '2026-11-26T07:04:42Z'
 ---

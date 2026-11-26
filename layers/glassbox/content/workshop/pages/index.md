@@ -55,6 +55,10 @@ None of these is false.
 
 - **Verification.** *Zod refinements*: no source says why the `pages` rule ties the `page` type to the name `pages`. *Headless browser checks*: no repo source says who sets up the cloud proxy; the `--no-sandbox` and `--disable-gpu` flags have only the code comment "the flags every launch needs in this sandbox".
 
+### Stale or missing
+
+- Minimum touch-target size (WCAG 2.5.8, 24px): the fix grows a small control's hit area with `padding-block` and an equal negative margin so the layout holds still, and an e2e test at 390px asserts the height; no page teaches it (commit 91117f6f6). Nearest page: *ARIA* (`web-standards/30.aria.md`).
+
 ### Too long
 
 Lessons past the soft word limit, each with a proposed split from a fresh reader (`glassbox-update`). A split adds Lessons, so the owner merges it.
