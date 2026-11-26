@@ -12,6 +12,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { isExternalSession, NO_LOAD_WHY, ruleValue, valueWords, whyWord, type RuleUseEntry } from '../../shared/schemas/session.ts'
 import { extractSwitch, fail, flagValue, resolveOutputTarget, root, runIfMain } from '../lib/cli.ts'
+import { unratedRules } from './rule-use.ts'
 import { readSessionLogs, type SessionLog } from './journal-files.ts'
 
 /** Below this many answering loads a rule's shares say little. */
@@ -43,7 +44,7 @@ export interface RuleUseReport {
   rules: RuleRow[]
   via: { start: number; native: number; hint: number; read: number }
   /** An unanswered subagent may never have been asked (its loads still count, #3019). */
-  quality: { noLoadRecorded: number; unansweredSubagents: number }
+  quality: { noLoadRecorded: number; unansweredSubagents: number; unratedSubagents: number }
 }
 
 const share = (n: number, of: number) => (of ? Math.round((1000 * n) / of) / 1000 : 0)
@@ -54,12 +55,14 @@ export function ruleUseReport(logs: SessionLog[], since: number): RuleUseReport 
   const answered: RuleUseReport['answered'] = {}
   const rows = new Map<string, Omit<RuleRow, 'shares'> & { values: Record<string, number> }>()
   const via = { start: 0, native: 0, hint: 0, read: 0 }
-  const quality = { noLoadRecorded: 0, unansweredSubagents: 0 }
+  const quality = { noLoadRecorded: 0, unansweredSubagents: 0, unratedSubagents: 0 }
   for (const e of entries) {
     const a = (answered[e.by] ??= { entries: 0, answered: 0 })
     a.entries++
     if (e.answered) a.answered++
     else if (e.by !== 'main') quality.unansweredSubagents++
+    // A bare call (empty `reported`) is the explicit none-applies (#3662).
+    if (e.by !== 'main' && e.answered && unratedRules(e.loads, e.reported).length && e.reported.length) quality.unratedSubagents++
     for (const r of e.reported) if (r.why?.startsWith(NO_LOAD_WHY)) quality.noLoadRecorded++
     for (const l of e.loads) {
       const row = rows.get(l.rule) ?? { rule: l.rule, loads: 0, answeringLoads: 0, words: {}, enoughData: false, start: 0, native: 0, hint: 0, read: 0, triggers: {}, values: {} }
@@ -114,7 +117,7 @@ export function renderReport(r: RuleUseReport): string {
     ]),
     '',
     `Loads by via: start ${r.via.start}, native ${r.via.native}, hint ${r.via.hint}, read ${r.via.read}`,
-    `Data quality: ${r.quality.noLoadRecorded} reported with no load recorded, ${r.quality.unansweredSubagents} subagent entries unanswered`,
+    `Data quality: ${r.quality.noLoadRecorded} reported with no load recorded, ${r.quality.unansweredSubagents} subagent entries unanswered, ${r.quality.unratedSubagents} with a named report that misses a loaded rule`,
   ]
   return `${lines.join('\n')}\n`
 }
