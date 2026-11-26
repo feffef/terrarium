@@ -384,7 +384,7 @@ describe('journal Tenant', async () => {
   }
   for (const [route, selectors] of Object.entries(TAP_TARGETS)) {
     for (const width of [390, 1280]) {
-      it(`gives ${route} tap targets at least 24px high and no layout shift at ${width}px`, async () => {
+      it(`keeps ${route} tap targets from shifting the layout at ${width}px${width === 390 ? ' and at least 24px high' : ''}`, async () => {
         await withRendered(route, async (page) => {
           await page.setViewportSize({ width, height: 900 })
           for (const selector of selectors) {
