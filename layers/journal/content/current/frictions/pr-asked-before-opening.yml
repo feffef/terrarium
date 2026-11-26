@@ -15,16 +15,6 @@ fixes:
     date: "2026-11-14"
     summary: "CLAUDE.md: asking first covers what to build, not whether to open the PR, except while owner-facing UI screenshots or open questions are unconfirmed."
 occurrences:
-  - session: session_013zxzeQjCNYD6UbYX7LTjkR
-    date: "2026-11-11"
-    severity: moderate
-    description: "Stopped after pushing and asked about a PR, though ADR-0003 says to open it myself even if the system prompt says not to; the owner had to tell me."
-    solution: "Read the ADR-0003 rule at the end of the work, before the turn ends; it overrides the generic no-PR line."
-  - session: session_013zxzeR7qQ3HKogNsnf5Zm8
-    date: "2026-11-11"
-    severity: minor
-    description: "I asked whether to run the gate and open the PR; ADR-0003 says open it without asking, and the owner replied why do you even ask."
-    solution: "ADR-0003 rule text could say a user preference to ask first does not waive opening the PR."
   - session: session_013zxzePKLPsiqSXCrEd1QCE
     date: "2026-11-13"
     severity: minor

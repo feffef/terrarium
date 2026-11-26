@@ -14,16 +14,6 @@ fixes:
     date: "2026-10-25"
     summary: "dispatch-subagents §3 and clear-backlog-build.js now say run git as git -C <worktree-root>, never cd: the Bash tool keeps its cwd and parallel calls share it."
 occurrences:
-  - session: session_013zxzeShqaQAEUkXf1Hwnd6
-    date: "2026-11-11"
-    severity: nit
-    description: "Piped list-open-issues through head -150, which cut the list, and a cd into a tests folder shifted the primary working directory; each cost an extra call."
-    solution: "Filter the full output with a script instead of head, and use absolute paths."
-  - session: session_013zxzeS6uNt5yvnz5LyUCCe
-    date: "2026-11-11"
-    severity: nit
-    description: "A compound cd into a worktree moved the session's working directory; later commands needed absolute paths and git -C."
-    solution: "Use git -C and absolute paths for a worktree; never cd in a compound command."
   - session: session_013zxzeNWbHYVE9UDhB1zNHD
     date: "2026-11-12"
     severity: nit
@@ -94,3 +84,8 @@ occurrences:
     severity: nit
     description: "Two bash cd calls left the shell cwd inside the skills folder, so later relative paths needed a reset."
     solution: "Use absolute paths in grep calls instead of cd."
+  - session: session_013zxzeQrwxsU3KF9z6QX2zS
+    date: "2026-11-25"
+    severity: minor
+    description: "Started gate:scoped as a bare background subshell after cd had drifted; the first run had the wrong cwd output and a second gate refused to start beside it."
+    solution: "Launch with run_in_background and an explicit cd /home/user/terrarium, as CLAUDE.md says, and check cwd first."

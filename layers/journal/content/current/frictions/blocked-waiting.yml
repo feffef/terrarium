@@ -122,3 +122,8 @@ occurrences:
     severity: nit
     description: "Edits blocked while the scoped gate ran (gate-edit guard); a sleep command and a double-background call were also refused."
     solution: "Plan the edit before starting the gate; use Monitor with an until-loop to wait."
+  - session: session_013zxzeQrwxsU3KF9z6QX2zS
+    date: "2026-11-25"
+    severity: nit
+    description: "Gave git commit both -m and -F in one call, which failed, and tried foreground sleep which the harness blocks."
+    solution: "Use one message source; wait with Monitor."

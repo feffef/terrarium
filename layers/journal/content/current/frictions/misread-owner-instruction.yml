@@ -19,21 +19,6 @@ fixes:
     date: "2026-11-16"
     summary: "CLAUDE.md 'Ask before building': an unanswered, option-less or deferred reply is not a yes; ask again or hold the step."
 occurrences:
-  - session: session_013zxzeNhTeF9B47tZ5Egyhx
-    date: "2026-11-11"
-    severity: minor
-    description: "Relaunched the #3046 build on my own reading of the owner's correction to 4c without confirming the scope first; the owner interrupted to ask what was being built."
-    solution: "Restate a corrected scope in one line and wait for a yes before relaunching a build."
-  - session: session_013zxzeQgXPpoTcwuDuvvDtE
-    date: "2026-11-11"
-    severity: moderate
-    description: "I read the owner's 'let's discuss this later' too narrowly, kept building, and posted a 'merging as-is' verdict before the owner objected."
-    solution: "After a deferral answer, stop and ask what waits before building or merging; hold any merge verdict until the deferred point is settled."
-  - session: session_013zxzeQRndZ5iHweDq8ceMP
-    date: "2026-11-11"
-    severity: minor
-    description: "I ranked harvest entries by the session's Friction severity without asking what best meant; the owner then said creative ideas must not be buried, costing a code, test and Skill-text change."
-    solution: "Ask the owner what the selection criterion should favour before building the ranking, not after a review comment."
   - session: session_013zxzeP1EixGDy96kmktFi2
     date: "2026-11-12"
     severity: moderate

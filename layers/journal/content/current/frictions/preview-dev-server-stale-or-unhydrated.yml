@@ -19,16 +19,6 @@ fixes:
     date: "2026-11-18"
     summary: "nuxt.config.ts turns off the two Platform page-cache rules in dev, so a dev preview no longer serves 60-second-old HTML."
 occurrences:
-  - session: session_013zxzeR7qQ3HKogNsnf5Zm8
-    date: "2026-11-11"
-    severity: moderate
-    description: "preview.ts shot --dev on a cold dev server timed out three times; only a persistent start --dev polled until 200 worked."
-    solution: "Apply verifying-ui-changes.md: start a persistent dev server and poll before any screenshot."
-  - session: session_013zxzeNeWJTvqXPTEeR63qC
-    date: "2026-11-11"
-    severity: minor
-    description: "The dev preview server never hydrated in headless Chromium, so two checks returned empty before I rebuilt production, which cost a few minutes."
-    solution: "verifying-ui-changes.md could say dev preview may not hydrate in the headless check, so build first."
   - session: session_013zxzeSiYFQ3mgaCyMXicwp
     date: "2026-11-12"
     severity: minor

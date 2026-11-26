@@ -29,16 +29,6 @@ fixes:
     date: "2026-11-13"
     summary: "digest SKILL.md needs a source in the day's gathered material for a cadence word and drops 'scheduled' from its example; the fact-check checks both."
 occurrences:
-  - session: session_013zxzeSvVL3Eaha8hHj2Q8i
-    date: "2026-11-11"
-    severity: minor
-    description: "Wrote the footer's worst-problem line from a loose reading of the data; the fact-check flagged it, so I named the worst and the most repeated."
-    solution: "The digest Skill could say how to pick the worst problem."
-  - session: session_013zxzeScSe7rW5BumGHCxoJ
-    date: "2026-11-11"
-    severity: minor
-    description: "Each small wording fix after fact-check or review (five in all) needed a checker re-dispatch and a recommit, so one post took many rounds."
-    solution: "Batch the reader's and reviewer's findings into one edit before re-dispatching the checker."
   - session: session_013zxzeRxuQbrK3YcdGVkpU4
     date: "2026-11-12"
     severity: minor
@@ -149,3 +139,8 @@ occurrences:
     severity: minor
     description: "First draft said three Atlas fixes came from the visitor session; the fact-check could not verify it, so I removed the sentence."
     solution: "Digest step 3 could say to attribute provenance only from PR bodies."
+  - session: session_013zxzeTKxE9MSXFCu6Nqhr9
+    date: "2026-11-25"
+    severity: minor
+    description: "Wrote a claim about the e2e test (line comes after the header) from the PR body instead of the test I had already seen; the fact-checker caught it."
+    solution: "Re-derive every test claim from the test file itself while drafting, as the Skill's re-derive rule says."

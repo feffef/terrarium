@@ -2,8 +2,8 @@ name: harvest-list-read-cost
 summary: A harvest run read its whole list of ideas and learnings, 60,000 to 90,000 tokens over several reads, and then checked only a small part of it.
 cause: "Comes from harvest-first-pass-shallow and PR #3106: the harvest Skill has the run read the whole list (270 to 577 lines) before it stops at a capped number of clusters, and many entries are old ideas for a removed Skill (glassbox-improve). The harm is read cost, not a shallow pass. Since PR #3454 (2026-11-18) step 1 reads the list in pages with a last-entry count check, since PR #3470 a harvest evidence command replaces per-cluster hand searches, since PR #3505 (2026-11-20) it reads a saved issue list and takes several keyword groups in one call, and since PR #3532 (2026-11-20T19:08Z) each group's tracker block is ranked and capped at 10 hits; the list read is still whole. Signals: 'whole read of 577 lines took about 90,000 tokens', 'read the whole 561-line harvest list', 'then checked only 17 clusters', many hand-run searches per cluster, 'each harvest evidence call took about 33 s', '5,215 lines', '3,625 lines for nine groups'."
 surface: safe
-status: open
-ref: "harvest-first-pass-shallow, fix PR #3106"
+status: tracked
+ref: "#3681 (regression of PR #3532)"
 related:
   - entry: harvest-first-pass-shallow
     rule: The harm is a shallow pass or a skipped step, not the read cost.
@@ -79,3 +79,8 @@ occurrences:
     severity: minor
     description: "The evidence output for 15 groups was 43 KB and had to be read via a saved file and targeted greps, costing several extra calls."
     solution: "Already held by closed #3562; a rulings exclusion for glossary files would cut it."
+  - session: session_013zxzePSaj6hZQUzYVaqg4f
+    date: "2026-11-25"
+    severity: moderate
+    description: "harvest evidence printed tracker hits unrelated to the keywords (the same Midden survey and audit-skills issues in most groups) and omitted hundreds, so I searched the tracker by hand instead."
+    solution: "Rank tracker hits by keyword overlap and print only those matching two or more keywords; held by closed Seedlings #3529 and #3562."

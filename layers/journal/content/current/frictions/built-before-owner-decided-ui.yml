@@ -28,21 +28,6 @@ fixes:
     date: "2026-11-14"
     summary: "ui-verification.md: for owner-facing UI, review, gate and PR wait until the owner confirms the screenshot, including a change asked for directly."
 occurrences:
-  - session: session_013zxzeR7qQ3HKogNsnf5Zm8
-    date: "2026-11-11"
-    severity: minor
-    description: "I did not ask the owner to confirm the first UI screenshot; the owner had to point it out."
-    solution: "End every UI iteration by sending the screenshot and asking for confirmation, as CLAUDE.md implies."
-  - session: session_013zxzeNeWJTvqXPTEeR63qC
-    date: "2026-11-11"
-    severity: moderate
-    description: "Built a new Term.vue link with the plain text Lesson without agreeing a sample first; the owner then pointed to the existing titled Lesson chip."
-    solution: "Before a UI change, grep the tenant for an existing component for the same element and show a sample with preview, as CLAUDE.md says."
-  - session: session_013zxzeRVjHExXhciv5BwiTB
-    date: "2026-11-11"
-    severity: moderate
-    description: "Grilled the #3075 footer SHA as one vague question; it never said which pages show it, so the line shipped on every page and the owner had to correct it."
-    solution: "Ask where it shows, what it displays and a sample before the pick, as CLAUDE.md says for user-facing UI; filed as #3098."
   - session: session_013zxzePKLPsiqSXCrEd1QCE
     date: "2026-11-13"
     severity: moderate

@@ -11,11 +11,6 @@ related:
 notes: |-
   2026-11-08 design: narrow mermaid-lanes.md paths to the Glass Box walkthroughs dropped: .claude/rules/** is Human-only, a nit, and the tenant.config.ts rules are right for editing (RCCqrx agreed); issue #2167 already closed with the loader kept
 occurrences:
-  - session: session_013zxzeS6w7fCCAw12ds3rtt
-    date: "2026-11-11"
-    severity: minor
-    description: "The Human-only rule (adr-0004-human-merge) loaded though none of my edited files is on its paths list, so I told the user the PR needed a human merge for the wrong reason until I checked the list."
-    solution: "Have the rule-loaded notice name the path that matched; unverified why it loaded for these files."
   - session: session_013zxzeQ4cuLLoFfdaf5sE2d
     date: "2026-11-13"
     severity: nit

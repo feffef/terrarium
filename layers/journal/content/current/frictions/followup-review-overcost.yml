@@ -98,3 +98,8 @@ occurrences:
     severity: nit
     description: "Round 2 on the visitor-loop branch was triggered by a 25-line prose-and-list fix commit (over the 10-line rule) and returned only nits; one data point that the line threshold over-triggers for content edits."
     solution: "Gather more rounds before changing step 4 of clear-backlog; the one case here suggests counting only code or logic lines."
+  - session: session_013zxzeSBTTxHztyPoJeEwAj
+    date: "2026-11-24"
+    severity: nit
+    description: "Retro (Both reviewer, unverified in the workflow file): on a 5-line, 2-file content diff the full review re-found nothing that mattered, and it spent two Bash calls on unrelated rule-use echoes; the code-review Skill section it was told to read is mostly about its own sub-agent spawning."
+    solution: "In reviewPrompt() of .claude/workflows/clear-backlog-build.js paste the smell list instead of pointing at the Skill, and consider the orchestrator's own read for diffs of 10 lines or fewer when the owner's picks are binding."

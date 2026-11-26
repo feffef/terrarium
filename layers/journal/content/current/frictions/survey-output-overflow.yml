@@ -29,16 +29,6 @@ fixes:
     date: "2026-11-21"
     summary: "harvest evidence caps the rulings and ledger blocks at 10 hits per group."
 occurrences:
-  - session: session_013zxzeQRndZ5iHweDq8ceMP
-    date: "2026-11-11"
-    severity: minor
-    description: "The Skill says to read the extract whole, but the JSON is 150 KB, mostly repeated fields; I printed a compact one-line-per-entry view instead."
-    solution: "Have extract also print or write that compact list and say to read it."
-  - session: session_013zxzeS6uNt5yvnz5LyUCCe
-    date: "2026-11-11"
-    severity: minor
-    description: "list_triggers with include_completed returned about 40k characters of one-shot reminders to find the latest routine run."
-    solution: "Pass recurring: true and enabled: true, or read the Journal session logs for the latest scheduled run."
   - session: session_013zxzeQ4cuLLoFfdaf5sE2d
     date: "2026-11-13"
     severity: nit

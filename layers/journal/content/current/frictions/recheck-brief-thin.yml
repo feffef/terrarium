@@ -6,6 +6,8 @@ status: open
 related:
   - entry: recheck-axis-name-mismatch
     rule: That entry is a builder's re-check request naming an axis the branch lacks; here the brief given to the reviewer was thin.
+  - entry: spec-reviewer-cannot-verify-builder-checks
+    rule: That entry is the first-round Spec reviewer lacking the builder's record of its checks; here the re-check brief was thin.
 fixes:
   - pr: 3512
     date: "2026-11-20"

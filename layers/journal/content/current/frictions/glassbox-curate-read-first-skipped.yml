@@ -22,11 +22,6 @@ fixes:
     date: "2026-11-09"
     summary: "glassbox-curate SKILL.md states the Subject read as a Done-when (every Subject page read in full, plus outside pages a change would edit) and drops the removal-only exemption."
 occurrences:
-  - session: session_013zxzeSgDqRuwZif7Rgt2MW
-    date: "2026-11-11"
-    severity: minor
-    description: "Skipped QUALITY.md Lenses from the curate Skill's Read first list until the owner asked whether I used glassbox-lesson. Never opened it for four passes."
-    solution: "Make the curate Skill's Read first list load QUALITY.md, or have orient.ts print a reminder when it was not read."
   - session: session_013zxzeQKydDYQaAEhBMqoW3
     date: "2026-11-12"
     severity: minor
@@ -72,3 +67,8 @@ occurrences:
     severity: nit
     description: "The Skill says to read every outside page a change would overlap in full; I read only the smoke-test lines of Testing and File routing."
     solution: "State whether a one-clause cut needs the sibling pages read whole, or give a cheaper check."
+  - session: session_013zxzeRZYEUqDMuAoUesKV7
+    date: "2026-11-25"
+    severity: minor
+    description: "Spec review found I swapped two Where next rows without reading those pages whole and skipped a walkthrough chip until reviewed; the Skill's step 3 reading rule for outside pages is easy to under-do."
+    solution: "Have step 3 list linked outside pages with a checkbox before writing, and the writer brief name walkthroughs that describe the mechanism."

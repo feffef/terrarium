@@ -13,11 +13,6 @@ fixes:
     date: "2026-10-25"
     summary: "Its git-conventions section now also covers a git add of an ignored path and a commit given both -m and -F, and says to read git log -1 before the gate."
 occurrences:
-  - session: session_013zxzeR7qQ3HKogNsnf5Zm8
-    date: "2026-11-11"
-    severity: nit
-    description: "I chained git add, a heredoc and git commit in one Bash call, against git-conventions one-state-changing-command-per-call; no harm."
-    solution: "Run add, commit and push each in their own Bash call and check each landed."
   - session: session_013zxzeNhTtnWyYs2Mh6hn26
     date: "2026-11-12"
     severity: nit
@@ -43,3 +38,8 @@ occurrences:
     severity: nit
     description: "Chained git add, status, a file write and git commit in one Bash call, against git-conventions.md's one state-changing git command per call."
     solution: "Read git-conventions.md before the first commit; no rule loads at commit time to remind."
+  - session: session_013zxzeQrwxsU3KF9z6QX2zS
+    date: "2026-11-25"
+    severity: nit
+    description: "Gave git commit both -m and -F in one call, which failed, and tried foreground sleep which the harness blocks."
+    solution: "Use one message source; wait with Monitor."

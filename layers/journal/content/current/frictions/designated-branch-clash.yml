@@ -12,11 +12,6 @@ notes: |-
   2026-10-20 design: a repo doc granting pushes to other branches dropped: the harness pins one pushable branch and a repo doc cannot grant that; issue-tracker.md already says to flag it upfront and ask.
 fixes: []
 occurrences:
-  - session: session_013zxzeScSe7rW5BumGHCxoJ
-    date: "2026-11-11"
-    severity: nit
-    description: "Cut a local branch for the post, then had to delete it and return to the session branch, against the start-on-your-branch rule."
-    solution: "The blog-post step 7 wording 'cut a working branch' reads against CLAUDE.md; say 'stay on the session branch'."
   - session: session_013zxzePBxPjfMQRm8C4FwqZ
     date: "2026-11-18"
     severity: nit
@@ -32,3 +27,8 @@ occurrences:
     severity: minor
     description: "The system prompt names a harness branch to develop on while glassbox-curate says never use the harness-assigned branch; I followed the Skill."
     solution: "State once, in the scheduled routine's prompt or the Skill, which of the two wins for curate runs."
+  - session: session_013zxzeQU1aX4cz6nKeBuxbP
+    date: "2026-11-25"
+    severity: nit
+    description: "Escalation PR needed its own branch but the session branch had already merged; the system prompt forbids other branches, so I restarted the merged branch name from main."
+    solution: "Say in audit-docs section 6 which branch name the escalation PR uses."

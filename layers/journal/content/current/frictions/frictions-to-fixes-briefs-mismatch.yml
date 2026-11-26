@@ -45,11 +45,6 @@ fixes:
     date: "2026-11-18"
     summary: "survey-brief.md step 5 skips a tracked entry with no ref (a dispatched fix in flight), resolving its contradiction with SKILL.md 5.3."
 occurrences:
-  - session: session_013zxzeNa1RNcdysLXBJAD5N
-    date: "2026-11-11"
-    severity: minor
-    description: "Design subagent: my picks named the wrong Skills (digest, glassbox-update, not blog or curate), and the design brief has no shape for a no-change recommendation; it spent about 137k tokens to drop all four picks."
-    solution: "Name each session's Skill in a pick; give the design brief a no-change form and an early drop path for guard-only fixes."
   - session: session_013zxzeP3xBUNvHd5kGFihuo
     date: "2026-11-12"
     severity: minor
@@ -90,3 +85,8 @@ occurrences:
     severity: minor
     description: "survey-brief §3 says every window Friction too new for an entry is a candidate, which would be about 30 nits; the agent had to invent a cut."
     solution: "Say in survey-brief §3 that a lone nit or minor is not a candidate."
+  - session: session_013zxzeR67EGdvDDNgGomDr6
+    date: "2026-11-25"
+    severity: minor
+    description: "The survey subagent reported the survey brief section 3 asks to label every candidate but cannot confirm 157 entries; append aborts on repeated sessions within one call."
+    solution: "Say which subset to confirm in survey-brief section 3 (inside an open prune trial's territory, so left for the trial)."

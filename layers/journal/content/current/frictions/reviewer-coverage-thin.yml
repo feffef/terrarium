@@ -6,16 +6,13 @@ status: open
 related:
   - entry: required-doc-read-truncated
     rule: A required doc was read through a cut or head filter.
+  - entry: audit-docs-covered-lines-handcopied
+    rule: That entry is the Covered lines of earlier audit-docs runs hand-copied into briefs; here a reviewer was handed more files than it could read.
 fixes:
   - pr: 2734
     date: "2026-10-31"
     summary: "audit-docs rotates coverage: reviewers B and C skip areas the last two runs' Covered line names, end replies with unread Live files, and are never resumed."
 occurrences:
-  - session: session_013zxzeQRndZ5iHweDq8ceMP
-    date: "2026-11-11"
-    severity: minor
-    description: "The explore agent read summaries and traces of only 1 of 57 logs though I asked for full reads; I had to disclose that gap in my reply."
-    solution: "Brief should say a partial read is not acceptable, or split the logs across several agents."
   - session: session_013zxzeNq8X5Pc3Xwjpv6Wxe
     date: "2026-11-12"
     severity: minor

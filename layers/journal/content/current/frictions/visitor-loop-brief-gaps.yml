@@ -72,3 +72,8 @@ occurrences:
     severity: minor
     description: "Brief gives no pointer to content paths or a starter crawl script, so each visitor rewrote the same crawl and hit the same page.evaluate string-escaping trap."
     solution: "Add to .agents/skills/visitor-loop/visitor-brief.md: content lives at layers/<tenant>/, a one-line string page.evaluate example (join with '|', never a newline), and that SVG a.href is an object."
+  - session: session_013zxzeRByCWuYi8gThTfvKA
+    date: "2026-11-25"
+    severity: minor
+    description: "Blind visitor's first crawl followed only filter links and found no posts, costing an extra script run; brief gives no way to enumerate article links."
+    solution: "Add to .agents/skills/visitor-loop/visitor-brief.md: save text and links per page and follow article links, not only filters."

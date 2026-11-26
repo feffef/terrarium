@@ -16,11 +16,6 @@ fixes:
     date: "2026-11-17"
     summary: "The dispatch-read guard's deny message now says to reword the text if it only names the placeholder; the regex is unchanged."
 occurrences:
-  - session: session_013zxzeSPxncNsUJXwnc2DvG
-    date: "2026-11-11"
-    severity: nit
-    description: "The dispatch-read guard blocked my first survey brief because my own wrapper text contained the literal placeholder, costing one retry and a filled copy of the brief."
-    solution: "Have the Skill say to write the filled brief to a scratchpad file and hand that path, since pasting verbatim trips the guard."
   - session: session_013zxzeP3xBUNvHd5kGFihuo
     date: "2026-11-12"
     severity: nit
@@ -71,3 +66,8 @@ occurrences:
     severity: nit
     description: "Subagent brief hit the dispatch-read guard because it named the scratch placeholder literally; reworded and retried."
     solution: "Fill the placeholder into a copy of the brief file, as done after the first denial."
+  - session: session_013zxzeR67EGdvDDNgGomDr6
+    date: "2026-11-25"
+    severity: nit
+    description: "First survey dispatch was blocked by the dispatch-read guard because my brief named the scratch placeholder literally; I reworded and resent."
+    solution: "Guard could allow a placeholder named in prose, or the Skill could say to fill it in the brief."

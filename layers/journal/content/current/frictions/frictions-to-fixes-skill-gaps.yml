@@ -90,3 +90,8 @@ occurrences:
     severity: minor
     description: "A 66-file ledger-only PR is not a simple change, so a full two-axis code-review ran on prune output and appends."
     solution: "Let the simple-change test exempt ledger-only diffs produced by the ledger scripts, or review only the script-written parts."
+  - session: session_013zxzeR67EGdvDDNgGomDr6
+    date: "2026-11-25"
+    severity: minor
+    description: "Ledger-only PR touched 58 files, so it failed the simple-change test and needed a two-agent code-review, costly for data with no logic."
+    solution: "Let a ledger-only diff produced by the Skill's scripts count as simple, or review it by the ledger spec."

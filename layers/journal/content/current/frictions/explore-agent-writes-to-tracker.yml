@@ -14,16 +14,6 @@ fixes:
     date: "2026-11-14"
     summary: "clear-backlog section 1: after explore, the orchestrator compares each issue's comments and labels with the agent's reported writes before reporting them."
 occurrences:
-  - session: session_013zxzeShqaQAEUkXf1Hwnd6
-    date: "2026-11-11"
-    severity: moderate
-    description: "First explore run commented on ten tickets and closed one before the owner could say read-only; I had not warned that explore writes. Needed relabel, reopen, and comment deletion."
-    solution: "Say before the explore run that its agents post comments and may close issues, or have clear-backlog confirm that once."
-  - session: session_013zxzeS6uNt5yvnz5LyUCCe
-    date: "2026-11-11"
-    severity: minor
-    description: "Accepted an explore agent's writes: [] as true; the agent had posted a comment and relabelled the issue, found only later in the transcript."
-    solution: "The explore script could compare the writes list with the issue's events, or the orchestrator check events before trusting an empty writes."
   - session: session_013zxzeNWbHYVE9UDhB1zNHD
     date: "2026-11-12"
     severity: minor

@@ -24,11 +24,6 @@ fixes:
     date: "2026-11-22"
     summary: "clear-backlog section 3 step 4: a missing-test starts round N+1 only if still open after round N's re-checks on a branch above 50 changed lines; one already fixed and re-checked clean no longer does."
 occurrences:
-  - session: session_013zxzeTEBhUnvwNNBASiFDg
-    date: "2026-11-11"
-    severity: moderate
-    description: "clear-backlog-build used 52 agents and 4.4M tokens on six small branches; five hit the 3-round cap on cosmetic findings, and the cost showed only after the run."
-    solution: "Skip reviewers for simple diffs, one round for the rest, nits reported not fixed; filed as issue 3110."
   - session: session_013zxzeSiYFQ3mgaCyMXicwp
     date: "2026-11-12"
     severity: moderate

@@ -29,3 +29,13 @@ occurrences:
     severity: moderate
     description: "SHELL-READ-DETECTION: docs/agents/triage-labels.md was read in full, yet is not counted. Command: cd /Users/feffef/Development/ai-playground/terrarium && cat docs/agents/git-conventions.md docs/agents/github-integration.md docs/agents/pr-workflow.md docs/agents/triage-labels.md docs/agents/issue-tracker.md docs/proposals/README.md. Its output overflowed to a persisted file, and I then Read that file whole."
     solution: "Have shell-reads.ts credit a multi-file cat whose persisted output file is later Read in full"
+  - session: session_013zxzeRByCWuYi8gThTfvKA
+    date: "2026-11-25"
+    severity: moderate
+    description: "SHELL-READ-DETECTION: I read docs/agents/triage-labels.md (first 30 lines, label table) in a command the detector did not count: pnpm exec tsx scripts/github/list-open-issues.ts 5000 2>&1 | grep -E '\"(number|title)\"' | paste - - | head -30 (same Bash call as cat docs/agents/triage-labels.md | head -30). Path expected: docs/agents/triage-labels.md."
+    solution: "Count a cat of a doc as read when it shares a Bash call with another command."
+  - session: session_013zxzePSaj6hZQUzYVaqg4f
+    date: "2026-11-25"
+    severity: minor
+    description: "Filed issues after only grepping issue-tracker.md and triage-labels.md in a shell call, not reading issue-tracker.md whole as CLAUDE.md requires; the detector did not count it."
+    solution: "Read issue-tracker.md whole before the first issue_write; the harvest Skill step 4 could name it as the first call."

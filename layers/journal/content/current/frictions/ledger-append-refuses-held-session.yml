@@ -16,11 +16,6 @@ fixes:
     date: "2026-11-17"
     summary: "print-ledger-occurrence --append --skip-held skips sessions the entry already holds and prints each skip"
 occurrences:
-  - session: session_013zxzeNa1RNcdysLXBJAD5N
-    date: "2026-11-11"
-    severity: minor
-    description: "Survey subagent: print-ledger-occurrence --append refused the whole call on 7 held sessions, and short session ids were mistyped three times; the --unledgered count fell by 101 while 80 occurrences were added, unexplained."
-    solution: "Let --append skip held sessions with a warning, and accept short suffixes; document why --unledgered counts differ."
   - session: session_013zxzeNdAgdKF5tpWTQLowx
     date: "2026-11-13"
     severity: minor
@@ -36,3 +31,8 @@ occurrences:
     severity: minor
     description: "Survey agent: ledger append refused three already-held session triples after --unledgered, and it first typed the commit-trailer session id by hand; design agent: audit-skills output dumps 66KB, no path lookup for trial territory, no guidance when every pick is no change."
     solution: "Add session-level pre-filtering to --unledgered, a doc-counts mode for audit-skills, and a no-change clause in design-brief section 6."
+  - session: session_013zxzeR67EGdvDDNgGomDr6
+    date: "2026-11-25"
+    severity: minor
+    description: "The survey subagent reported the survey brief section 3 asks to label every candidate but cannot confirm 157 entries; append aborts on repeated sessions within one call."
+    solution: "Say which subset to confirm in survey-brief section 3 (inside an open prune trial's territory, so left for the trial)."
