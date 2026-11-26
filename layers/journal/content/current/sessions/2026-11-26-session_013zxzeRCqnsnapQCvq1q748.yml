@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRCqnsnapQCvq1q748
 startedAt: 2026-11-26T13:09:59Z
-endedAt: 2026-11-26T13:17:05Z
+endedAt: 2026-11-26T13:21:28Z
 kind: autonomous
 goal: "Scheduled prune of agent instructions: UI verification doc"
-status: in-review
-outcome: "Opened PR #3697 rewriting verifying-ui-changes.md plainly and opening a prune trial; nothing judged yet."
-summary: "Scheduled /prune-trial run, fully agent-initiated (no human prompt). The one open trial (frictions-to-fixes survey brief) is not judgeable until 14:52Z today, so §1 judged nothing. A search subagent looked for prose that already failed; I picked docs/agents/verifying-ui-changes.md (largest candidate home, two ledger entries with fixes that only added paragraphs to it). Rewrote it plainly (1550 -> 1112 words, -42 lines), kept every rule and the cited headings, set two ledger entries on-trial, wrote the trial entry. A Sonnet probe pinned to the post-prune SHA answered six situations correctly. Standards and Spec review found two dropped phrases (restored) and unverified claims in my trial entry (removed or re-read from the ledger files). Gate passed; PR #3697 opened and subscribed. The verdict on the trial comes from a later run."
+status: completed
+outcome: "Merged PR #3697 rewriting verifying-ui-changes.md plainly and opening a prune trial; nothing judged yet."
+summary: "Scheduled /prune-trial run, fully agent-initiated (no human prompt). The one open trial (frictions-to-fixes survey brief) is not judgeable until 14:52Z today, so §1 judged nothing. A search subagent looked for prose that already failed; I picked docs/agents/verifying-ui-changes.md (largest candidate home, two ledger entries with fixes that only added paragraphs to it). Rewrote it plainly (1550 -> 1112 words, -42 lines), kept every rule and the cited headings, set two ledger entries on-trial, wrote the trial entry. A Sonnet probe pinned to the post-prune SHA answered six situations correctly. Standards and Spec review found two dropped phrases (restored) and unverified claims in my trial entry (removed or re-read from the ledger files). Gate passed; PR #3697 merged after one corrected verdict (I first named the head as reviewed; code-review had run on the prior commit). The verdict on the trial comes from a later run."
 prs:
   - "3697"
 docsRead:
@@ -42,18 +42,24 @@ frictions:
   - description: First code-review call was blocked by the sha guard because I copied args from memory, not the printed review call.
     solution: Paste verdict-line.ts --review-call output whole.
     severity: nit
-durationSec: 426
+  - description: First verdict comment claimed the head was reviewed when code-review ran on the previous commit; merge-pr.ts refused and I posted a correction.
+    solution: "After a follow-up commit, write Reviewed: <reviewed sha> and Own-read: <head> from the start."
+    severity: nit
+durationSec: 688
 models:
-  claude-sonnet-5-5: 66
+  claude-sonnet-5-5: 85
 toolCounts:
-  Bash: 22
+  Bash: 27
   Read: 2
-  Skill: 5
+  Skill: 6
   Agent: 4
   Write: 1
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 2
 filesEdited:
   - docs/agents/verifying-ui-changes.md
   - .agents/prune-trials.yml
@@ -260,28 +266,28 @@ subagents:
     durationSec: 59
     toolCalls: 14
     modelCalls: 12
-    tokenShare: 15
+    tokenShare: 12
   - type: general-purpose
     task: Probe pruned UI doc
     model: sonnet
     durationSec: 12
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 4.2
+    tokenShare: 3.4
   - type: general-purpose
     task: Standards review of prune
     model: sonnet
     durationSec: 25
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 7.3
+    tokenShare: 5.8
   - type: general-purpose
     task: Spec review of prune
     model: sonnet
     durationSec: 21
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 7.4
+    tokenShare: 5.9
 gitBranch: claude/practical-rubin-rvn6xy
 entrypoint: remote_trigger
 cliVersion: 2.1.332
