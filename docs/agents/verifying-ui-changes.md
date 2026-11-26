@@ -1,93 +1,71 @@
 # Verifying UI changes
 
-How to actually confirm a presentational change works in this repo — and the
-Playwright/Chromium/client-only sharp edges that make "it looked fine" or "the
-test passed" untrustworthy. Read this before eyeballing a render, debugging a
-layout bug, or asserting a style took effect.
+Goal: confirm a presentational change works in the rendered page. A passing
+test, a grepped HTML string or a glance at a screenshot is not proof. Read this
+before you check a render, debug a layout or assert a style took effect.
 
 ## Capture tooling
 
-- **The deployed site (terrarium.feffef.de) is blocked in cloud sessions:** the
-  proxy answers 403 on CONNECT. Review a local production build instead:
-  `pnpm build`, then `pnpm exec tsx scripts/ui/preview.ts start`, `shot` or `review`
-  (scripts are not executable; later verbs take the same prefix).
-- **One screenshot:** `scripts/ui/preview.ts shot` (flags: its `USAGE`).
-  It starts a server on its own port and stops it, so
-  there is nothing to `pkill` (issue #240). By default it serves the production
-  build (run `pnpm build` first). `--dev` needs no build and suits samples
-  shown to the owner, but its DevTools overlay badge can cover real content and
-  look like a UI bug, and it can serve stale layer utils or CSS: for a
-  diagnosis or a trusted shot, `pnpm build` and shoot the build. A `#anchor`
-  in `<route>` scrolls to an element.
-- **Several shots of one task:** `start --dev` once (one server per task), then
-  `scripts/ui/screenshot.ts <url> <out.png>` per shot; `shot` starts and stops
-  a server each call. After an edit, curl the URL until 200 and wait for HMR
-  before reshooting.
-- **A page review:** `scripts/ui/preview.ts review` writes four full-page shots (desktop and mobile, light and dark) from one server (`USAGE` has the names and sizes).
-- **A server that stays up:** `scripts/ui/preview.ts start [--dev]` prints `PID=`
-  and `URL=`; `scripts/ui/preview.ts stop <pid>` stops it (always exits 0).
-- **A URL that is already serving:** `scripts/ui/screenshot.ts <url> <out.png> [WxH]`
-  drives the pre-installed Chromium directly.
+Scripts are not executable: run `pnpm exec tsx scripts/ui/<file>.ts` (flags: each
+script's `USAGE`).
 
-**Browser facts** hold for the `playwright-core` and `nuxt` versions in
-`package.json`; re-check them after a bump. Entries from a specific session
-cite it.
+- **The deployed site (terrarium.feffef.de) is blocked in cloud sessions** (the
+  proxy answers 403). Review a local build: `pnpm build`, then `preview.ts shot`
+  or `preview.ts review`.
+- **One screenshot:** `preview.ts shot <route>`. It starts and stops its own
+  server (nothing to kill, issue #240) and serves the production build by
+  default. A `#anchor` in `<route>` scrolls to it.
+- **`--dev`** needs no build and suits samples for the owner. Its DevTools badge
+  can cover real content, and it can serve stale layer utils or CSS. For a
+  diagnosis or a trusted shot, `pnpm build` and shoot the build.
+- **Several shots of one task:** `preview.ts start --dev` once (prints `PID=` and
+  `URL=`), then `screenshot.ts <url> <out.png> [WxH]` per shot, then
+  `preview.ts stop <pid>`. After an edit, curl the URL until 200 and wait for
+  HMR before reshooting.
+- **A page review:** `preview.ts review` writes four full-page shots (desktop and
+  mobile, light and dark).
+- **One in-page value** (a computed style, a bounding rect, any `page.evaluate`
+  result) from a serving page: `eval-in-page.ts`, before an ad-hoc script.
+- **A click or other interaction:** write a small `playwright-core` script in
+  `.throwaway/` that starts Chromium with `launchChromium()` from
+  `scripts/lib/chromium.ts` (it finds the browser and adds this sandbox's flags).
+  Pass `page.evaluate` its body as a **string**: a function reference throws
+  `__name is not defined` in the page (esbuild injects a helper that exists only
+  in Node).
 
-## The methodology
+These facts hold for the `playwright-core` and `nuxt` versions in
+`package.json`; re-check them after a bump.
 
-- **Drive the affected flow and observe it before committing.**
-- **A grep of SSR HTML does not prove a change renders.** The HTML includes a
-  serialized `useAsyncData` payload, so a string match can succeed even when the
-  DOM never picks up the change (or errors trying). Check the **rendered DOM**:
-  take a screenshot with `scripts/ui/screenshot.ts`, or drive the page with
-  Playwright.
-- **If a standalone repro of the logic matches expectations but the live app
-  doesn't, immediately render the computed value into the DOM (a debug
-  marker);** don't iterate cache-busting/rebuild theories first. A stale build
-  looks like a live logic bug from outside, and the marker tells them apart in
-  one step.
-- **Before calling an e2e/Playwright failure "pre-existing" or
-  "environment-only," reproduce it on both `origin/main` and the branch** with the
-  full `pnpm test:e2e` suite, never a `-t`-filtered single test. A filtered test
-  skips setup and ordering the full suite exercises (rebuild rules:
-  `tests/README.md`). A PR once called a failing assertion pre-existing on a
-  narrowed or stale repro, and CI then failed for real on it (issue #907). For
-  a quick look at one spec file see `tests/README.md`.
-- **To read one in-page value from an already-serving page** (a computed style,
-  a bounding rect, any `page.evaluate` result), use `scripts/ui/eval-in-page.ts` (usage in its header) before an
-  ad-hoc script; it handles the gotchas below.
-- **To verify a click/interaction, not just a static render**, write a small
-  ad-hoc `playwright-core` script and launch the pre-installed Chromium with
-  `launchChromium()` from `scripts/lib/chromium.ts`, as `scripts/ui/screenshot.ts`
-  does: it finds the browser and adds the flags this sandbox needs (don't
-  re-derive either). Write it in `.throwaway/` (CLAUDE.md).
-  Pass `page.evaluate(...)` its body as a **string**: `tsx`/esbuild's
-  `keepNames` injects a `__name` helper that exists only in Node, so a
-  function reference throws `__name is not defined` in the page.
-- **A screenshot can't confirm a colour, tint or scheme fix, nor rule out a
-  subtle/scoped CSS change:** downscaled or compressed PNGs can mask a style
-  that applied, and a grey can pass for a tint. Before you report such a fix as
-  working (or accept a subagent's "green"), or conclude a style is missing,
-  read the element's *computed* colour with `scripts/ui/eval-in-page.ts`
-  (above); pin it with an e2e assert.
-- **A screenshot from this Linux build can't confirm text fits a fixed width**
-  (tiles, badges, fixed-width columns): its fallback fonts are narrow. Before
-  calling the layout done, force a wider font (DejaVu Serif and Sans Mono,
-  installed here) and compare `scrollWidth` with `clientWidth` (or the bounding
-  rect) with `scripts/ui/eval-in-page.ts`; ideally pin it with an e2e assert.
-- **A diagram, illustration or layout from a brief needs the human's eye first.**
-  Agree the reader and the question it answers, and show a rough draft for a
-  quick reaction before you polish and publish. Passing gates is necessary, not
-  sufficient.
-- **A Space landing may be a custom `.vue` dashboard, not a Markdown render.**
-  Editing `index.md` alone may not change what most of the page shows; check the
-  layer's `app/pages/` and its glossary's "What lives where" (the Journal's,
-  `layers/journal/GLOSSARY.md`, has one).
-- **Before shipping a `display: none` (or hide-at-breakpoint) rule, check what
-  it hides.** Decorative or redundant markup is fine. If it hides the only
-  rendering of real data (e.g. a dataset dimension with no other place at that
-  breakpoint), say in the PR description why losing it there is acceptable, or
-  where it reappears.
+## Method
+
+- **Drive the affected flow and observe it before you commit.**
+- **Check the rendered DOM, not SSR HTML.** The HTML carries a serialized
+  `useAsyncData` payload, so a string match can pass when the DOM never picks the
+  change up. Take a screenshot or drive the page.
+- **A standalone repro passes but the live app doesn't:** render the computed
+  value into the DOM as a debug marker at once. It tells a stale build from a
+  logic bug in one step; don't iterate cache-busting theories first.
+- **Before you call an e2e failure "pre-existing" or "environment-only,"**
+  reproduce it on both `origin/main` and the branch with the full
+  `pnpm test:e2e`, never a `-t`-filtered test (it skips setup the full suite
+  runs; issue #907; rebuild rules: `tests/README.md`).
+- **A screenshot can't confirm a colour, tint or scheme fix, or that a style is missing:** compressed PNGs
+  hide an applied style and a grey passes for a tint. Read the element's
+  *computed* colour with `eval-in-page.ts` before you report the fix (or accept a
+  subagent's "green"), and pin it with an e2e assert.
+- **A screenshot can't confirm text fits a fixed width** (tiles, badges,
+  fixed-width columns): this Linux build's fallback fonts are narrow. Force a
+  wider font (DejaVu Serif or Sans Mono, installed here), then compare `scrollWidth` with
+  `clientWidth` with `eval-in-page.ts`; ideally pin it with an e2e assert.
+- **A diagram, illustration or layout from a brief needs the owner's eye first:**
+  agree the reader and the question it answers, and show a rough draft before you
+  polish. Passing gates is necessary, not sufficient.
+- **A Space landing may be a custom `.vue` dashboard,** so editing `index.md` may
+  not change the page. Check the layer's `app/pages/` and its glossary's "What
+  lives where".
+- **Before a `display: none` (or hide-at-breakpoint) rule,** check what it hides.
+  If it hides the only rendering of real data at that breakpoint, say in the PR
+  why losing it there is acceptable, or where it reappears.
 
 ## The sharp edges
 
@@ -95,89 +73,69 @@ Each is documented, intended behaviour, not a bug.
 
 ### Visibility is not in-viewport
 
-`locator.isVisible()` / `state: 'visible'` is true for any element with a
-non-empty box that isn't `display:none`/`visibility:hidden`, **even when
-scrolled off-screen**. To prove it is in the viewport, compare
-`getBoundingClientRect()` against the viewport. (Session `…ysCUut`.)
+`isVisible()` is true for any element with a non-empty box that isn't hidden,
+even when scrolled off-screen. To prove it is in the viewport, compare
+`getBoundingClientRect()` with the viewport.
 
 ### `locator.click()` scrolls the element into view first
 
-Playwright's actionability checks scroll the target into view before the click,
-so geometry measured around a click is post-scroll, not what the user saw. When
-geometry matters, call `scrollIntoViewIfNeeded()` yourself first (or account for
-the scroll). (Session `…q1cMNn`.)
+Geometry measured around a click is post-scroll, not what the user saw. When it
+matters, call `scrollIntoViewIfNeeded()` yourself first.
 
 ### `screenshot({ clip })` is viewport-relative unless `fullPage: true`
 
-`clip` is read against the **viewport origin**, not the document, unless you
-also pass `fullPage: true`; on a scrolled or tall page it silently captures the
-wrong region, so pass `fullPage: true` when clipping below the fold. (Session `…CnKWrh`.)
+On a scrolled or tall page, `clip` silently captures the wrong region; pass
+`fullPage: true` when you clip below the fold.
 
 ### Desktop Chromium ignores the page's `<meta name="viewport">`
 
-Playwright's `viewport` option (`newPage({ viewport })`) sizes the CSS layout
-viewport **directly**; the page's `<meta name="viewport">` is a
-mobile-emulation input and is ignored in an ordinary desktop launch. So once
-you've confirmed the tag is present, a "missing viewport meta" theory for a
-mobile-overflow bug is usually a dead end: set the viewport via the driver to
-reproduce the narrow width. (Session `…Bhu3Y1`.) **Don't reach for a
-`--window-size` launch arg as an equivalent**: it leaves a Chromium
-chrome/viewport offset uncompensated and ships a frame shorter than requested;
-`scripts/ui/screenshot.ts` hit exactly this and switched to `newPage({ viewport })`
-(issue #575).
+`newPage({ viewport })` sizes the layout viewport directly, so a "missing
+viewport meta" theory for a mobile-overflow bug is usually a dead end: set the
+width in the driver to reproduce it. Don't use a `--window-size` launch arg
+instead: it ships a frame shorter than requested (issue #575).
 
-### A screenshot needs a wait; the shutter can fire pre-render
+### A screenshot needs a wait
 
-A screenshot captures whatever frame exists *now*. Two ways the frame is empty:
+It captures whatever frame exists now.
 
-- **Async client-only content** (e.g. any Nuxt Content body that loads
-  post-hydration) may not have rendered yet. `scripts/ui/preview.ts shot` waits
-  for it (`--wait`, `--wait-for`; see `USAGE`); use the selector wait when you
-  know the element you're waiting on.
-- **A `--dev` server** compiles routes on demand and can read as a
-  false-positive layout bug. Use a selector wait, or built `preview` mode,
-  before trusting a `--dev` screenshot for diagnosis. (Sessions `…pm7Vkb`,
-  `…Bhu3Y1`.)
+- **Async client-only content** (e.g. a Nuxt Content body loaded after
+  hydration) may not have rendered. `preview.ts shot` waits for it (`--wait`,
+  `--wait-for`); use the selector wait when you know the element.
+- **A `--dev` server** compiles routes on demand, so an early frame can look
+  like a layout bug. Use a selector wait, or a built preview, before you
+  diagnose from it.
 
-### A green production `preview` probe doesn't prove a dev-warning fix
+### A green production probe doesn't prove a dev-warning fix
 
 Hydration-mismatch and other Vue dev warnings are compiled out of production
-builds, so a clean production run can't tell "fixed" from "can't appear in
-this build mode." Verify such a fix against a `--dev` build (instead or as
-well), checking the actual console/warning output.
+builds. Verify such a fix against a `--dev` build and read the console output.
 
 ### `<ClientOnly>` attaches its slot DOM *after* `onMounted`
 
-Nuxt's `<ClientOnly>` renders its default slot only after its own `onMounted`
-sets its `mounted` ref to `true` (`nuxt/dist/app/components/client-only.js`), so
-the slot's DOM attaches on the render *after* both child and parent `onMounted`
-have fired. A parent `onMounted` that reads a `ref` pointing *inside* the slot
-therefore gets `null`. Drive the render from
-`watch(theRef, …, { immediate: true })` instead, so it fires when the ref
-actually attaches. (Session `…pm7Vkb` — a Mermaid diagram that rendered blank
-because its container ref was null in `onMounted`.)
+The slot renders only after `<ClientOnly>`'s own `onMounted`, so a parent
+`onMounted` that reads a `ref` inside the slot gets `null`. Drive the work from
+`watch(theRef, …, { immediate: true })` (a Mermaid diagram once rendered blank
+this way).
 
 ## CSS sharp edges
 
 - **Media-query order:** an equal-specificity rule inside `@media` loses to a
   later base rule. Put the override after it (#1312).
-- **Overrides live elsewhere:** a component's narrow-screen rules may sit in
-  the layer's `theme.css`, not its own `<style>`. Grep repo-wide before
-  renaming a class (#1434).
-- **Scoped classes reach child roots:** a parent's scoped `.filters` also
-  styles a child component whose root has class `filters` (#1522).
-- **Scroll fades:** an absolutely positioned fade inside a scroller scrolls
-  away with the content; put `mask-image` on the scroller instead (#1476).
-- **SVG `viewBox`:** CSS can hide SVG parts at a breakpoint but can't change
-  the `viewBox`; crop it from JS with `matchMedia` (#1494).
+- **Overrides live elsewhere:** a component's narrow-screen rules may sit in the
+  layer's `theme.css`. Grep repo-wide before renaming a class (#1434).
+- **Scoped classes reach child roots:** a parent's scoped `.filters` also styles
+  a child whose root has class `filters` (#1522).
+- **Scroll fades:** an absolutely positioned fade inside a scroller scrolls away
+  with the content; put `mask-image` on the scroller (#1476).
+- **SVG `viewBox`:** CSS can hide SVG parts at a breakpoint but can't change the
+  `viewBox`; crop it from JS with `matchMedia` (#1494).
 - **GPU-only bugs:** a translucent full-page background can band on some phone
-  GPUs, and headless Chromium can't reproduce driver bugs. Prefer opaque page
-  backgrounds (#1506).
-- **Sticky/scroll-dependent layouts:** a static shot hid a broken one. Scroll,
+  GPUs and headless Chromium can't reproduce it. Prefer opaque backgrounds
+  (#1506).
+- **Sticky or scroll-dependent layouts:** a static shot hid a broken one. Scroll,
   then assert bounding boxes after `scrollTo`.
 
 ## See also
 
-- `docs/agents/tenant-layers.md` — Nuxt-layer render gotchas (Platform-wide
-  component overrides, scoped-CSS token inheritance); auto-imports and alias
-  resolution are in `.claude/rules/tenant-layers.md`.
+`docs/agents/tenant-layers.md` — Nuxt-layer render gotchas; auto-imports and
+alias resolution are in `.claude/rules/tenant-layers.md`.
