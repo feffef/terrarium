@@ -2,7 +2,8 @@ name: claim-of-fix-not-rendered
 surface: safe
 summary: A fix or screenshot was reported as working, but the page actually rendered wrong, and no test or look caught it until later.
 cause: "An agent or impl subagent claims a visual fix works from code or its own screenshot without checking the computed styles or the wide-font width (PR #2614: colours and schemes; PR #3031: fixed-width text that fits only in the narrow Linux fallback fonts), so the bug survives until a reviewer or the owner finds it. Signals: 'reported as green', 'no test or screenshot covered it', dark-mode or theme tokens, CSS variables bound on :root, a tile that overflows at the real font."
-status: open
+status: on-trial
+ref: "Prune Trial opened 2026-11-26 (.agents/prune-trials.yml): territory docs/agents/verifying-ui-changes.md"
 related:
   - entry: visual-work-published-unseen
     rule: The change was never rendered or screenshot before it shipped.
