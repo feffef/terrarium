@@ -3,7 +3,7 @@ mode: autonomous
 focus: "Web standards: a new Lesson on minimum target size (WCAG 2.5.8, 24px; padding plus an equal negative margin and a 390px e2e height check). It serves the owner's first direction (finish the web standards Subject) and fills the memory page's Stale or missing item, since no page teaches it. No open PR touches Glass Box. A new Lesson waits for the owner's merge (rule 6)."
 changes:
   - "web-standards/55.minimum-target-size | New Lesson on Minimum target size (SC 2.5.8 and its five exceptions, how padding and an equal negative margin make a link 24px tall without moving the layout, measuring with getBoundingClientRect at 390px), with the Blog, Midden, Tinkerfund and footer rules, the Journal's min-height select and the e2e height tests as evidence | the memory page listed it as a gap: four tenants pad small links to 24px and pin it with tests, and no page taught it. Two claim-check rounds found five false or unsourced lines (a 4-or-5 pixel mix, a comment wording that only the Blog uses, a Tinkerfund test that is not one page, a visitor-loop reading, a motive in a Why bullet), all fixed; the card-link stacking paragraph and a Why bullet with no source were cut. Two fresh-reader rounds led to a mechanism sentence in the lede, the inline versus inline-block explanation, a trimmed test Excerpt and a min-height alternative; their other suggestions (shorter In Terrarium, an alternative in each Why, a cut visitor-loop paragraph) are not false and are left. Waits for the owner's merge (new Lesson)"
-  - web-standards/30.aria, web-standards/50.colour-contrast | Where next gains Minimum target size as a fifth entry | both name controls and accessibility checks and had no page to point at. Wording only
+  - web-standards/30.aria, web-standards/50.colour-contrast | Where next gains Minimum target size as a fifth entry | both name controls and accessibility checks and had no page to point at. Wording only. Headless browser checks and Usability testing relate to it too, but their Where next lists are full and every entry there is closer; no Walkthrough stop explains this mechanism, so none gained a chip
   - workshop/pages/index | The Stale or missing item deleted with its heading; the web standards direction lists Minimum target size; a soft decision says why it sits in the guide | solved by the new Lesson
 pagesRead:
   - web-standards/10.css-custom-properties
@@ -15,3 +15,4 @@ pagesRead:
   - verification/40.testing
   - verification/80.headless-browser-checks
   - verification/85.usability-testing
+  - drafts/web-standards/60.horizontal-overflow
