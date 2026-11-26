@@ -4,9 +4,8 @@ importance: specialist
 gist: Clears the open-issue backlog in one run, asking the owner once.
 role: >-
   Runs `auto-triage`, `implement`, `dispatch-subagents` and `code-review`
-  through two saved workflows as one pass over the open issues its sweep picks
-  up: explores them, grills the owner once,
-  then builds, reviews and lands the PRs unattended. For a deliberate "clear
+  through two saved workflows as one pass over the issues its sweep picks
+  up: explores them, grills the owner once, then builds, reviews and lands the PRs unattended. For a deliberate "clear
   everything now" pass.
 auditSummary:
   date: "2026-11-26"

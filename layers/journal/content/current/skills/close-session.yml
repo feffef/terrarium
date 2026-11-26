@@ -10,7 +10,7 @@ role: >-
   of a Skill over a reminder hook.
 auditSummary:
   date: "2026-11-26"
-  text: "Reliably gets every session's diary entry written: all recent logs landed, no human nudges were needed, and the claimed PRs are on main. Its look-back step leaves no trace, so nobody can tell whether it happens."
+  text: "Reliably gets every session's log written: all recent logs landed, no human nudges were needed, and the claimed PRs are on main. Its look-back step leaves no trace, so nobody can tell whether it happens."
 observations:
   - date: "2026-10-17"
     note: >-
