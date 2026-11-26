@@ -49,13 +49,13 @@ These facts hold for the `playwright-core` and `nuxt` versions in
   reproduce it on both `origin/main` and the branch with the full
   `pnpm test:e2e`, never a `-t`-filtered test (it skips setup the full suite
   runs; issue #907; rebuild rules: `tests/README.md`).
-- **A screenshot can't confirm a colour, tint or scheme fix:** compressed PNGs
+- **A screenshot can't confirm a colour, tint or scheme fix, or that a style is missing:** compressed PNGs
   hide an applied style and a grey passes for a tint. Read the element's
   *computed* colour with `eval-in-page.ts` before you report the fix (or accept a
   subagent's "green"), and pin it with an e2e assert.
 - **A screenshot can't confirm text fits a fixed width** (tiles, badges,
   fixed-width columns): this Linux build's fallback fonts are narrow. Force a
-  wider font (DejaVu Serif or Sans Mono), then compare `scrollWidth` with
+  wider font (DejaVu Serif or Sans Mono, installed here), then compare `scrollWidth` with
   `clientWidth` with `eval-in-page.ts`; ideally pin it with an e2e assert.
 - **A diagram, illustration or layout from a brief needs the owner's eye first:**
   agree the reader and the question it answers, and show a rough draft before you

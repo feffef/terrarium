@@ -67,11 +67,11 @@ trials:
       the heading "The sharp edges" with its two subsections stays (cited by
       `tests/README.md`). Chosen after a search subagent this run searched the
       ledger `fixes:` lists, the tracker's "Regression" issues and `git log`
-      for rules that failed as prose: `claim-of-fix-not-rendered` (2 fixes, both
-      paragraphs added to this doc, nothing enforces them) and
-      `preview-dev-server-stale-or-unhydrated` (3 fixes, partly code-backed).
-      Largest candidate home of five (1550 words); no open trial covers it
-      (`trial-territory.ts`).
+      for rules that failed as prose; its pick: `claim-of-fix-not-rendered` (2
+      fixes, PRs #2614 and #3031, each added a paragraph to this doc) and
+      `preview-dev-server-stale-or-unhydrated` (3 fixes, PRs #3096, #3254,
+      #3456; counts read from the ledger files this run). No open trial covers
+      the doc (`trial-territory.ts` run this run).
     territory:
       paths:
         - "docs/agents/verifying-ui-changes.md"
