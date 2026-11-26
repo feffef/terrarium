@@ -32,7 +32,7 @@ Each guide page is named by its title, then its file under `layers/glassbox/cont
 
 These are the owner's goals for the guide. A run builds toward them directly; a PR that adds a Lesson, changes a Subject or changes a Skill, the glassbox-lesson docs or the page checks waits for the owner's merge.
 
-1. **Finish the web standards Subject.** It holds *CSS custom properties*, *SVG*, *ARIA*, *Colour and motion settings*, *Web Storage* and *Colour contrast*.
+1. **Finish the web standards Subject.** It holds *CSS custom properties*, *SVG*, *ARIA*, *Colour and motion settings*, *Web Storage*, *Colour contrast* and *Minimum target size*.
 2. **Make structure and titles consistent.** Titles should name the general concept and follow one pattern within a Subject, and file names should match their titles.
 3. **Fill what is missing entirely.** This covers a Lesson, or a whole Subject, for something Terrarium relies on that no page teaches yet.
 
@@ -54,10 +54,6 @@ None of these is false.
 
 
 - **Verification.** *Zod refinements*: no source says why the `pages` rule ties the `page` type to the name `pages`. *Headless browser checks*: no repo source says who sets up the cloud proxy; the `--no-sandbox` and `--disable-gpu` flags have only the code comment "the flags every launch needs in this sandbox".
-
-### Stale or missing
-
-- Minimum touch-target size (WCAG 2.5.8, 24px): the fix grows a small control's hit area with `padding-block` and an equal negative margin so the layout holds still, and an e2e test at 390px asserts the height; no page teaches it (commit 91117f6f6). Nearest page: *ARIA* (`web-standards/30.aria.md`).
 
 ### Too long
 
@@ -91,6 +87,7 @@ Decisions agents made (run, review, claim check). Not rules: the owner or a late
 - **Continuous deployment's Full reference stays Wikipedia.** A practice has no official docs (review).
 - **Agent tooling comes first in the guide's order, and Web standards never sits between the two Nuxt Subjects**.
 - **Guide titles.** Every title has been weighed against 2 to 4 alternatives; owner rulings are in owner-decisions.md. Closest rivals that lost: *Required status checks* for *Merge gate*, *Claude Code workflows* for *Workflow scripts*.
+- **Minimum target size sits in the guide, not drafts.** Four tenants size small links to 24px and test it, so the topic is central.
 - **Web Storage sits in the guide, not drafts.** Glass Box, the Journal and Tinkerfund all keep browser state in it, so the topic is central (a new Lesson goes to drafts only when it is not central).
 - **Folding *Planning skills* into *Installed skills*.** *Planning skills* holds facts about Terrarium's own choices that would lose their page.
 - **`wontfix` is the fifth triage state.** *Issue triage labels* lists four states first and names `wontfix` as the fifth: `docs/agents/triage-labels.md` says skills name five roles (claim check).
