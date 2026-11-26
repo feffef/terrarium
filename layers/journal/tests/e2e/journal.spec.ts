@@ -375,6 +375,55 @@ describe('journal Tenant', async () => {
     })
   })
 
+  // WCAG 2.5.8 on the Skills, Ideas and History pages (#3699). Each target gets its hit area from
+  // padding that a negative margin takes back, so nothing around it may move.
+  const TAP_TARGETS: Record<string, string[]> = {
+    '/t/journal/current/skills': ['.uses a', '.chip a', '.role-details > summary'],
+    '/t/journal/current/ideas': ['.note-copy', '.jd-prose .src'],
+    '/t/journal/current/history': ['.jd-prose td:first-child a'],
+  }
+  for (const [route, selectors] of Object.entries(TAP_TARGETS)) {
+    for (const width of [390, 1280]) {
+      it(`gives ${route} tap targets at least 24px high and no layout shift at ${width}px`, async () => {
+        await withRendered(route, async (page) => {
+          await page.setViewportSize({ width, height: 900 })
+          for (const selector of selectors) {
+            const targets = page.locator(selector)
+            const heights = await targets.evaluateAll((els) =>
+              els.map((e) => e.getBoundingClientRect().height).filter((h) => h > 0))
+            expect(heights.length, `${selector} renders`).toBeGreaterThan(0)
+            if (width === 390) expect(Math.min(...heights), selector).toBeGreaterThanOrEqual(24)
+            // Every other box on the page, with and without the target's padding and margin.
+            const layout = () => page.evaluate((sel) => {
+              const own = new Set(document.querySelectorAll(sel))
+              return [...document.querySelectorAll('main *')]
+                .filter((e) => !own.has(e) && e.getBoundingClientRect().height > 0)
+                .map((e) => Math.round(e.getBoundingClientRect().top + window.scrollY))
+            }, selector)
+            const withPadding = await layout()
+            // The target as it was: no padding, and the margin the padding had offset added back.
+            await targets.evaluateAll((els) => els.forEach((e) => {
+              const [s, el] = [getComputedStyle(e), e as HTMLElement]
+              el.style.setProperty('margin-top', `${parseFloat(s.marginTop) + parseFloat(s.paddingTop)}px`, 'important')
+              el.style.setProperty('margin-bottom', `${parseFloat(s.marginBottom) + parseFloat(s.paddingBottom)}px`, 'important')
+              el.style.setProperty('padding-block', '0', 'important')
+            }))
+            const without = await layout()
+            expect(withPadding.length).toBe(without.length)
+            withPadding.forEach((top, i) => expect(Math.abs(top - without[i]!), `${selector} neighbour ${i}`).toBeLessThanOrEqual(1))
+          }
+        })
+      })
+    }
+  }
+
+  it('keeps a Skill page inside the viewport at 390px when an entry holds an unbreakable token', async () => {
+    await withRendered('/t/journal/current/skills/dependabot-sweep', async (page) => {
+      await page.setViewportSize({ width: 390, height: 844 })
+      expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390)
+    })
+  })
+
   it('shows each Friction Ledger occurrence with its goal, friction and proposed solution', async () => {
     await withRendered('/t/journal/current/frictions?days=90', async (page) => {
       const cluster = page.locator('.ledger > li').first()

@@ -93,6 +93,8 @@ defineProps<{
 .uses { margin-left: auto; font-size: 0.7rem; color: var(--jd-faint); }
 .uses a, .chip a { color: inherit; text-decoration: underline dotted; text-underline-offset: 2px; }
 .uses a:hover, .chip a:hover { color: var(--jd-accent); }
+/* 24px tap target (WCAG 2.5.8) without moving the line: padding offset by margin. */
+.uses a, .chip a { display: inline-block; padding-block: 0.35rem; margin-block: -0.35rem; }
 .chip-uses { color: var(--jd-faint); }
 .ideas-line { margin: 0.2rem 0 0; font-family: var(--jd-mono); font-size: 0.7rem; color: var(--jd-faint); }
 .gist { margin: 0.25rem 0 0; font-size: 0.83rem; color: var(--jd-ink); font-family: var(--jd-serif); }
@@ -106,6 +108,9 @@ defineProps<{
 }
 .role-details { margin-top: 0.35rem; }
 .role-details > summary {
+  display: inline-block;
+  padding-block: 0.35rem;
+  margin-block: -0.35rem;
   cursor: pointer;
   list-style: none;
   font-family: var(--jd-mono);
