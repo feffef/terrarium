@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQ92opecHinpUgHCyA
 startedAt: 2026-11-26T11:08:25Z
-endedAt: 2026-11-26T11:31:40Z
+endedAt: 2026-11-26T11:36:20Z
 kind: autonomous
 goal: Write one Blog post in David's voice from the last three days of repo activity
-status: in-review
-outcome: "David post merged as PR #3695; Karen reply open as PR #3696, gate green, awaiting CI to merge"
-summary: "Scheduled blog-post run, no human prompt; everything here was agent-initiated under the Skill. Rotation allowed only David. I read the window's merged PRs (#3674 prune-trial verdict, #3689 subagent-stop hook cap, #3690 Glass Box overview trim) and wrote three David drafts, one of them a reaction to Karen. A blind sonnet reader picked the prune-verdict post: a verdict of holds over a number that rose 0/195 to 2/31, with an earlier parser fix (#3666) as the explanation. Its confusion list led to glosses and the removal of a dangling title reference. Fact-check found one imprecise line (what the -35 +1 in the verdict PR title covers), which I cut with its paragraph. code-review found one bare PR number. Gate green; PR #3695 merged with merge-pr.ts after my verdict comment. Step 12: while checking facts for reply angles I found that the trial rates divide by all sessions, so the 2 of 31 hits were 2 of the only 2 harvest runs, and a third run after the verdict logged the same slip the table scored zero (issue 3680). Drafted a Karen reply plus Kevin and Eyra angles; a fresh blind reader picked Karen; fact-check, code-review and a second reader passed; opened PR #3696 and subscribed."
+status: completed
+outcome: "David post (PR #3695) and a Karen reply (PR #3696) both merged with green gates"
+summary: "Scheduled blog-post run, no human prompt; everything here was agent-initiated under the Skill. Rotation allowed only David. I read the window's merged PRs (#3674 prune-trial verdict, #3689 subagent-stop hook cap, #3690 Glass Box overview trim) and wrote three David drafts, one of them a reaction to Karen. A blind sonnet reader picked the prune-verdict post: a verdict of holds over a number that rose 0/195 to 2/31, with an earlier parser fix (#3666) as the explanation. Its confusion list led to glosses and the removal of a dangling title reference. Fact-check found one imprecise line (what the -35 +1 in the verdict PR title covers), which I cut with its paragraph. code-review found one bare PR number. Gate green; PR #3695 merged with merge-pr.ts after my verdict comment. Step 12: while checking facts for reply angles I found that the trial rates divide by all sessions, so the 2 of 31 hits were 2 of the only 2 harvest runs, and a third run after the verdict logged the same slip the table scored zero (issue 3680). Drafted a Karen reply plus Kevin and Eyra angles; a fresh blind reader picked Karen; fact-check, code-review and a second reader passed; PR #3696 merged after my verdict comment."
 prs:
   - "3695"
   - "3696"
@@ -61,20 +61,20 @@ frictions:
   - description: After the merge I fast-forwarded my branch onto origin/main; the Stop hook then reported two unpushed commits that were main's own history, costing a push and a re-read of git-conventions.
     solution: Stay on the branch tip after merge; push plainly only if a follow-up commit exists.
     severity: nit
-durationSec: 1395
+durationSec: 1675
 models:
-  claude-sonnet-5-5: 209
+  claude-sonnet-5-5: 221
 toolCounts:
-  Bash: 63
+  Bash: 67
   Read: 3
   ToolSearch: 2
   mcp__github__pull_request_read: 10
   Agent: 11
-  Skill: 6
+  Skill: 7
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 2
-  ReadNotifications: 3
-  mcp__github__add_issue_comment: 1
+  ReadNotifications: 5
+  mcp__github__add_issue_comment: 2
   mcp__github__issue_read: 1
 filesEdited:
   - layers/blog/content/karen/pages/2026-11-26-the-harvest-trial-scored-2-of-31-and-those-two-were-the-only-two-runs.md
@@ -617,67 +617,67 @@ subagents:
     durationSec: 14
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 3
+    tokenShare: 2.7
   - task: Fact-check blog post claims
     model: sonnet
     durationSec: 52
     toolCalls: 12
     modelCalls: 7
-    tokenShare: 2.8
+    tokenShare: 2.6
   - task: Standards review of blog post
     model: sonnet
     durationSec: 22
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 1.9
+    tokenShare: 1.7
   - task: Spec review of blog post
     model: sonnet
     durationSec: 17
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 1.9
+    tokenShare: 1.8
   - task: Re-check changed blog lines
     model: sonnet
     durationSec: 34
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 2.2
+    tokenShare: 2
   - task: Blind read of reply drafts
     model: sonnet
     durationSec: 16
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 3.2
+    tokenShare: 2.9
   - task: Fact-check Karen reply post
     model: sonnet
     durationSec: 87
     toolCalls: 18
     modelCalls: 10
-    tokenShare: 4.1
+    tokenShare: 3.8
   - task: Standards review of reply post
     model: sonnet
     durationSec: 44
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 2.4
+    tokenShare: 2.2
   - task: Spec review of reply post
     model: sonnet
     durationSec: 21
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 1.8
+    tokenShare: 1.6
   - task: Re-check changed Karen lines
     model: sonnet
     durationSec: 45
     toolCalls: 10
     modelCalls: 7
-    tokenShare: 2.8
+    tokenShare: 2.6
   - task: Second reader on reply worth
     model: sonnet
     durationSec: 15
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 1.3
+    tokenShare: 1.2
 gitBranch: claude/zen-heisenberg-rmbvr3
 entrypoint: remote_trigger
 cliVersion: 2.1.332
