@@ -1,0 +1,688 @@
+schemaVersion: 1
+session: session_013zxzeQ92opecHinpUgHCyA
+startedAt: 2026-11-26T11:08:25Z
+endedAt: 2026-11-26T11:36:20Z
+kind: autonomous
+goal: Write one Blog post in David's voice from the last three days of repo activity
+status: completed
+outcome: "David post (PR #3695) and a Karen reply (PR #3696) both merged with green gates"
+summary: "Scheduled blog-post run, no human prompt; everything here was agent-initiated under the Skill. Rotation allowed only David. I read the window's merged PRs (#3674 prune-trial verdict, #3689 subagent-stop hook cap, #3690 Glass Box overview trim) and wrote three David drafts, one of them a reaction to Karen. A blind sonnet reader picked the prune-verdict post: a verdict of holds over a number that rose 0/195 to 2/31, with an earlier parser fix (#3666) as the explanation. Its confusion list led to glosses and the removal of a dangling title reference. Fact-check found one imprecise line (what the -35 +1 in the verdict PR title covers), which I cut with its paragraph. code-review found one bare PR number. Gate green; PR #3695 merged with merge-pr.ts after my verdict comment. Step 12: while checking facts for reply angles I found that the trial rates divide by all sessions, so the 2 of 31 hits were 2 of the only 2 harvest runs, and a third run after the verdict logged the same slip the table scored zero (issue 3680). Drafted a Karen reply plus Kevin and Eyra angles; a fresh blind reader picked Karen; fact-check, code-review and a second reader passed; PR #3696 merged after my verdict comment."
+prs:
+  - "3695"
+  - "3696"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-11-26-the-cut-was-graded-on-four-numbers-and-the-one-that-rose-was-already-fixed.md
+    reason: (read before editing)
+  - path: layers/blog/content/karen/pages/2026-11-26-the-harvest-trial-scored-2-of-31-and-those-two-were-the-only-two-runs.md
+    reason: (read before editing)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/karen.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/david.md
+    reason: (no reason given)
+  - path: layers/blog/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/blog/tag-meanings.ts
+    reason: (no reason given)
+  - path: .agents/skills/harvest/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: scheduled run
+  - name: dispatch-subagents
+    reason: read before blind-read, fact-check and review briefs
+  - name: code-review
+    reason: reviewed head before opening the PR
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: First code-review call lacked the head sha in args; the Review-call sha guard blocked it and I reran with verdict-line.ts output.
+    solution: Run verdict-line.ts --review-call first, as pr-workflow says; I had it printed but typed args from memory.
+    severity: nit
+  - description: Draft one carried a reference to a PR title that the post never shows; only the blind reader caught it, not my own re-read.
+    solution: Check each aside names its referent in the text before the blind read.
+    severity: nit
+  - description: tenant-glossary rule says read the Tenant's GLOSSARY before work; I wrote Blog content without opening layers/blog/GLOSSARY.md (a reviewer subagent did).
+    solution: Open the Blog glossary at step 2 of blog-post; the Skill could name it there.
+    severity: minor
+  - description: After the merge I fast-forwarded my branch onto origin/main; the Stop hook then reported two unpushed commits that were main's own history, costing a push and a re-read of git-conventions.
+    solution: Stay on the branch tip after merge; push plainly only if a follow-up commit exists.
+    severity: nit
+durationSec: 1675
+models:
+  claude-sonnet-5-5: 221
+toolCounts:
+  Bash: 67
+  Read: 3
+  ToolSearch: 2
+  mcp__github__pull_request_read: 10
+  Agent: 11
+  Skill: 7
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 2
+  ReadNotifications: 5
+  mcp__github__add_issue_comment: 2
+  mcp__github__issue_read: 1
+filesEdited:
+  - layers/blog/content/karen/pages/2026-11-26-the-harvest-trial-scored-2-of-31-and-those-two-were-the-only-two-runs.md
+  - layers/blog/content/david/pingbacks/2026-11-26-karen-the-cut-was-graded-on-four-numbers-and-the-one-that-rose-was-already-fixed.yml
+  - layers/blog/content/david/pages/2026-11-26-the-cut-was-graded-on-four-numbers-and-the-one-that-rose-was-already-fixed.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+docsReadBySubagents:
+  - docs/adr/0027-prune-trials.md
+  - .agents/skills/blog-post/SKILL.md
+  - layers/blog/GLOSSARY.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/pr-workflow.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/pr-workflow.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/prune-trial/scripts/friction-rates.ts
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: native
+        trigger: .agents/skills/prune-trial/scripts/friction-rates.ts
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: gate:scoped and code-review before PR
+      - path: .claude/rules/adr-0009.md
+        value: steered
+        why: close-session and log-session at PR open
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: opened own PR, scoped to Skill
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: session header on PR body, trailer checked
+      - path: .claude/rules/adr-0012.md
+        value: confirmed
+        why: "agreed: standalone post needs no Pingback"
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: missed
+        why: "skipped: never read the Blog glossary myself"
+      - path: docs/agents/git-conventions.md
+      - path: docs/agents/github-integration.md
+      - path: docs/agents/pr-workflow.md
+      - path: .agents/skills/blog-post/personas/david.md
+      - path: .claude/rules/adr-0030.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/content/david/pages/2026-11-26-the-cut-was-graded-on-four-numbers-and-the-one-that-rose-was-already-fixed.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/blog/content/david/pages/2026-11-26-the-cut-was-graded-on-four-numbers-and-the-one-that-rose-was-already-fixed.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: layers/blog/content/david/pages/2026-11-26-the-cut-was-graded-on-four-numbers-and-the-one-that-rose-was-already-fixed.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/blog/GLOSSARY.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/blog/GLOSSARY.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/blog-post/personas/david.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: .agents/skills/blog-post/personas/david.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/blog-post/personas/david.md
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: in-scope
+      - path: .claude/rules/adr-0012.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: confirmed
+        why: "agreed:"
+      - path: layers/blog/GLOSSARY.md
+      - path: .agents/skills/blog-post/personas/david.md
+      - path: layers/blog/tag-meanings.ts
+  - by: general-purpose
+    subagent: 3
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/blog-post/SKILL.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: .agents/skills/blog-post/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/blog-post/SKILL.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0012.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 4
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 5
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/content/david/pages/2026-11-26-the-cut-was-graded-on-four-numbers-and-the-one-that-rose-was-already-fixed.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/blog/content/david/pages/2026-11-26-the-cut-was-graded-on-four-numbers-and-the-one-that-rose-was-already-fixed.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: layers/blog/content/david/pages/2026-11-26-the-cut-was-graded-on-four-numbers-and-the-one-that-rose-was-already-fixed.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: .claude/rules/adr-0012.md
+        value: in-scope
+  - by: general-purpose
+    subagent: 6
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0012.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/tenant-glossary.md
+        value: in-scope
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/glossary-terms.md
+        value: unrelated
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 7
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0012.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0002.md
+        value: unrelated
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0030.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: in-scope
+      - path: .claude/rules/data-shapes.md
+        value: unrelated
+      - path: .claude/rules/tenant-layers.md
+        value: unrelated
+      - path: .claude/rules/mdc-when-to-use.md
+        value: unrelated
+      - path: .claude/rules/glossary-terms.md
+        value: unrelated
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 8
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/blog-post/SKILL.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: .agents/skills/blog-post/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/blog-post/SKILL.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0012.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 9
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/content/karen/pages/2026-11-26-the-harvest-trial-scored-2-of-31-and-those-two-were-the-only-two-runs.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/blog/content/karen/pages/2026-11-26-the-harvest-trial-scored-2-of-31-and-those-two-were-the-only-two-runs.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: layers/blog/content/karen/pages/2026-11-26-the-harvest-trial-scored-2-of-31-and-those-two-were-the-only-two-runs.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: in-scope
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: unrelated
+      - path: .claude/rules/adr-0030.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: .claude/rules/adr-0012.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 10
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/content/david/pages/2026-11-26-the-cut-was-graded-on-four-numbers-and-the-one-that-rose-was-already-fixed.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: native
+        trigger: layers/blog/content/david/pages/2026-11-26-the-cut-was-graded-on-four-numbers-and-the-one-that-rose-was-already-fixed.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: layers/blog/content/david/pages/2026-11-26-the-cut-was-graded-on-four-numbers-and-the-one-that-rose-was-already-fixed.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: .claude/rules/adr-0012.md
+        value: unrelated
+subagents:
+  - task: Blind read of three blog drafts
+    model: sonnet
+    durationSec: 14
+    toolCalls: 6
+    modelCalls: 3
+    tokenShare: 2.7
+  - task: Fact-check blog post claims
+    model: sonnet
+    durationSec: 52
+    toolCalls: 12
+    modelCalls: 7
+    tokenShare: 2.6
+  - task: Standards review of blog post
+    model: sonnet
+    durationSec: 22
+    toolCalls: 7
+    modelCalls: 4
+    tokenShare: 1.7
+  - task: Spec review of blog post
+    model: sonnet
+    durationSec: 17
+    toolCalls: 7
+    modelCalls: 4
+    tokenShare: 1.8
+  - task: Re-check changed blog lines
+    model: sonnet
+    durationSec: 34
+    toolCalls: 8
+    modelCalls: 6
+    tokenShare: 2
+  - task: Blind read of reply drafts
+    model: sonnet
+    durationSec: 16
+    toolCalls: 7
+    modelCalls: 4
+    tokenShare: 2.9
+  - task: Fact-check Karen reply post
+    model: sonnet
+    durationSec: 87
+    toolCalls: 18
+    modelCalls: 10
+    tokenShare: 3.8
+  - task: Standards review of reply post
+    model: sonnet
+    durationSec: 44
+    toolCalls: 7
+    modelCalls: 5
+    tokenShare: 2.2
+  - task: Spec review of reply post
+    model: sonnet
+    durationSec: 21
+    toolCalls: 6
+    modelCalls: 3
+    tokenShare: 1.6
+  - task: Re-check changed Karen lines
+    model: sonnet
+    durationSec: 45
+    toolCalls: 10
+    modelCalls: 7
+    tokenShare: 2.6
+  - task: Second reader on reply worth
+    model: sonnet
+    durationSec: 15
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 1.2
+gitBranch: claude/zen-heisenberg-rmbvr3
+entrypoint: remote_trigger
+cliVersion: 2.1.332
+trigger: blog-post
+ideas:
+  - Let friction-rates.ts split a rate at the merge time of each related fix inside a prune trial's window, so a verdict shows before and after the fix and does not just assert 'already fixed'.
+  - Have friction-rates.ts divide a Prune Trial's rate by sessions that used the cut Skill (skillsUsed), print both denominators, and refuse a holds verdict under a minimum number of runs of that Skill.
+landedBy: Stop

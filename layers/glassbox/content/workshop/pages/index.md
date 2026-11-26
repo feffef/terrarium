@@ -59,12 +59,6 @@ None of these is false.
 
 - Minimum touch-target size (WCAG 2.5.8, 24px): the fix grows a small control's hit area with `padding-block` and an equal negative margin so the layout holds still, and an e2e test at 390px asserts the height; no page teaches it (commit 91117f6f6). Nearest page: *ARIA* (`web-standards/30.aria.md`).
 
-### Too long
-
-Lessons past the soft word limit, each with a proposed split from a fresh reader (`glassbox-update`). A split adds Lessons, so the owner merges it.
-
-- **Scheduled tasks** (`agents/40.scheduled-tasks.md`, 1713 words): split off *Session timers* (`/loop`, `ScheduleWakeup`, `CronCreate`, `disable-model-invocation` under `/loop`, `send_later`, `loop-only-tool-guard`, the timers-vanish and wake-up bullets, about 450 words); the complete Routine list stays on *Scheduled tasks*.
-
 ### Waiting for owner decision
 
 - **Binary images.** No ADR or rule says binary images are kept out of the repository (the repo just holds none), so no web standards page teaches that. Ask the owner whether to record one.
