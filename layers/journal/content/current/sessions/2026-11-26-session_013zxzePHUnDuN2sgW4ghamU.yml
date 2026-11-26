@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzePHUnDuN2sgW4ghamU
 startedAt: 2026-11-26T02:07:06Z
-endedAt: 2026-11-26T02:28:43Z
+endedAt: 2026-11-26T02:32:04Z
 kind: autonomous
 goal: "Scheduled run: turn recurring session Frictions into fixes"
-status: in-review
-outcome: Ledger and one doc fix merged, three issues filed; closing ledger PR open
-summary: Scheduled frictions-to-fixes run, no human prompts. A survey subagent appended 34 window occurrences, opened two new entries and committed the ledger. Two regressions at moderate severity since their fix (harvest-first-pass-shallow, harvest-list-read-cost) got regression issues 3680 and 3681; the remaining 49 recurring clusters had only minor or nit occurrences since their fix and are listed in the ledger PR. A design subagent recommended dispatching both never-fixed picks; I dispatched the audit-docs Covered-lines fix (a Sonnet builder, PR 3684, merged after code-review and a follow-up that restored the run date to the grep output) and filed the clear-backlog-build one as issue 3682, since open issue 3663 edits the same file. Ledger PR 3683 (tracking, prune of old occurrences, one dangling ref fixed after review) merged. The closing ledger PR 3685 records PR 3684 and awaits CI. All work was agent-initiated under the Skill's standing task; nothing was human-instructed beyond the schedule.
+status: completed
+outcome: Ledger and one doc fix merged, three issues filed, closing ledger PR merged
+summary: Scheduled frictions-to-fixes run, no human prompts. A survey subagent appended 34 window occurrences, opened two new entries and committed the ledger. Two regressions at moderate severity since their fix (harvest-first-pass-shallow, harvest-list-read-cost) got regression issues 3680 and 3681; the remaining 49 recurring clusters had only minor or nit occurrences since their fix and are listed in the ledger PR. A design subagent recommended dispatching both never-fixed picks; I dispatched the audit-docs Covered-lines fix (a Sonnet builder, PR 3684, merged after code-review and a follow-up that restored the run date to the grep output) and filed the clear-backlog-build one as issue 3682, since open issue 3663 edits the same file. Ledger PR 3683 (tracking, prune of old occurrences, one dangling ref fixed after review) merged. The closing ledger PR 3685 records PR 3684 and merged. All work was agent-initiated under the Skill's standing task; nothing was human-instructed beyond the schedule.
 prs:
   - "3683"
   - "3684"
@@ -79,13 +79,13 @@ frictions:
   - description: "Survey brief step 2 says to end each summary with see: related entries while stored summaries do not carry it; the subagent wrote then removed it."
     solution: "State that see: is derived and never stored."
     severity: nit
-durationSec: 1296
+durationSec: 1498
 models:
-  claude-sonnet-5-5: 134
+  claude-sonnet-5-5: 148
 toolCounts:
-  Bash: 38
+  Bash: 41
   Read: 4
-  Skill: 5
+  Skill: 6
   Agent: 8
   ToolSearch: 2
   mcp__github__issue_write: 3
@@ -93,10 +93,11 @@ toolCounts:
   mcp__github__create_pull_request: 3
   mcp__github__subscribe_pr_activity: 3
   SendMessage: 1
-  ReadNotifications: 3
+  ReadNotifications: 5
   mcp__github__pull_request_read: 2
-  mcp__github__add_issue_comment: 2
+  mcp__github__add_issue_comment: 3
   Write: 1
+  PushNotification: 1
 filesEdited:
   - layers/journal/content/current/frictions/dispatch-read-guard-deny.yml
   - .agents/skills/audit-docs/SKILL.md
@@ -579,44 +580,44 @@ subagents:
     durationSec: 373
     toolCalls: 38
     modelCalls: 32
-    tokenShare: 23.6
+    tokenShare: 21.8
   - type: general-purpose
     task: Design fixes for two picks
     durationSec: 81
     toolCalls: 10
     modelCalls: 8
-    tokenShare: 3.8
+    tokenShare: 3.5
   - type: general-purpose
     task: Build audit-docs Covered fix
     model: sonnet
     durationSec: 340
     toolCalls: 29
     modelCalls: 22
-    tokenShare: 9.2
+    tokenShare: 8.5
   - type: general-purpose
     task: Standards review of ledger diff
     durationSec: 49
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 2.6
+    tokenShare: 2.4
   - type: general-purpose
     task: Spec review of ledger diff
     durationSec: 37
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 2.6
+    tokenShare: 2.4
   - type: general-purpose
     task: Standards review of audit-docs diff
     durationSec: 23
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 2.1
+    tokenShare: 1.9
   - type: general-purpose
     task: Spec review of audit-docs diff
     durationSec: 12
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 1.4
+    tokenShare: 1.3
 gitBranch: claude/eager-ptolemy-gqy8u2
 entrypoint: remote_trigger
 cliVersion: 2.1.332
