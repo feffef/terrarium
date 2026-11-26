@@ -47,11 +47,10 @@ lenses.
 ### Instructions
 
 1. Fetch `origin/main` (`docs/agents/git-conventions.md`).
-   Read the summaries of the last two audit-docs session logs
-   (`grep -l '^trigger: audit-docs'` in
-   `layers/journal/content/current/sessions/`). Tell Agents B and C to skip
-   the areas their `Covered:` line names, unless a file in one changed since
-   that run (`git log --since=<its date>`).
+   Print the last two runs' Covered lines with
+   `grep -ho 'Covered *[(:] *[^"]*' $(grep -l '^trigger: audit-docs' layers/journal/content/current/sessions/*.yml | tail -2)`
+   and paste the output verbatim into the Agent B and C briefs: they skip those
+   areas, unless a file in one changed since that run (`git log --since=<its date>`).
 2. Dispatch three read-only reviewer agents in parallel, one per pair of
    lenses below.
 3. Tell every agent the finding format: the file plus the exact sentence,
@@ -200,7 +199,8 @@ human.
    it merges or closes.
 3. Log the session (ADR-0009). Its summary gives the verdict counts
    (CONFIRMED / CONFIRMED-BUT / WRONG) and ends with the areas Agents B and
-   C read in full, e.g. `Covered: docs/agents/*, GLOSSARY.md, Skills a-f`,
+   C read in full, as `Covered: <areas>` (step 1's grep matches that
+   form), e.g. `Covered: docs/agents/*, GLOSSARY.md, Skills a-f`,
    even on a no-PR run.
 
 Done when the sweep PR has merged green, or is open and honestly escalated.
