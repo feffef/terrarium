@@ -1,0 +1,153 @@
+schemaVersion: 1
+session: session_013zxzeSJY7CjGgJdwhJmTgV
+startedAt: 2026-11-26T17:05:50Z
+endedAt: 2026-11-26T19:36:34Z
+kind: autonomous
+goal: Scheduled harvest of ideas and learnings into Seedlings
+status: completed
+outcome: "98 entries extracted; 13 clusters checked, 4 passed and filed as Seedlings #3700-#3703, 9 dropped; retro Seedling #3704."
+summary: Scheduled run with no human prompt; every step agent-executed per the harvest Skill. Extracted 98 unharvested entries from the last 7 days, clustered them, and checked 13 product clusters against code, tracker, rulings and the Friction Ledger. Nine were dropped (already built, closed not planned, or already filed from the same session). Four passed and were filed as Seedlings 3700 to 3703 (Journal ideas linked to Skills, Skill page count windows, archive Digests by month, a Blocking hooks diagram). Workflow clusters were not reached because the product quota filled. A retro Seedling 3704 covers unclear check-clusters error messages. No PR opened.
+prs: []
+docsRead:
+  - path: .agents/skills/harvest/body-template.md
+    reason: (no reason given)
+  - path: .agents/skills/retro/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: harvest
+    reason: the scheduled task itself
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: harvest check-clusters errors name neither the comma separator for entries nor the computed session count, so two checker reruns were needed.
+    solution: Print the accepted form and the computed count in the message (retro issue 3704).
+    severity: nit
+  - description: Read the GitHub and issue-tracker docs CLAUDE.md names only after my first GitHub reads and the first issue write; no wrong outcome followed.
+    solution: Read the named docs before the first GitHub call.
+    severity: nit
+durationSec: 9044
+models:
+  claude-sonnet-5-5: 65
+toolCounts:
+  Bash: 28
+  Read: 3
+  mcp__github__issue_read: 2
+  mcp__github__issue_write: 5
+  Skill: 2
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0006.md
+        via: hint
+      - rule: .claude/rules/adr-0016.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+      - rule: .claude/rules/adr-0025.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/adr-0002.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/mdc-when-to-use.md
+        via: hint
+      - rule: .claude/rules/adr-0020.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: filed Seedlings, built nothing
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: session header on every issue body
+      - path: .claude/rules/adr-0009.md
+        value: confirmed
+        why: "agreed: log goes to main"
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/ui-verification.md
+        value: in-scope
+      - path: .claude/rules/tenant-glossary.md
+        value: in-scope
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0022.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0006.md
+        value: unrelated
+      - path: .claude/rules/adr-0016.md
+        value: unrelated
+      - path: .claude/rules/glassbox-content.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+      - path: .claude/rules/tenant-layers.md
+        value: unrelated
+      - path: .claude/rules/adr-0008.md
+        value: unrelated
+      - path: .claude/rules/adr-0012.md
+        value: unrelated
+      - path: .claude/rules/adr-0025.md
+        value: unrelated
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/glossary-terms.md
+        value: unrelated
+      - path: .claude/rules/adr-0002.md
+        value: unrelated
+      - path: .claude/rules/data-shapes.md
+        value: unrelated
+      - path: .claude/rules/mdc-when-to-use.md
+        value: unrelated
+      - path: .claude/rules/adr-0020.md
+        value: unrelated
+      - path: .agents/skills/harvest/body-template.md
+gitBranch: claude/eager-cerf-7rdnsh
+entrypoint: remote_trigger
+cliVersion: 2.1.332
+trigger: harvest
+landedBy: Stop
