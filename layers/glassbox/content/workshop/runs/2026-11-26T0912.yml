@@ -2,4 +2,9 @@ session: session_013zxzePo4mtQsMpDHLLDFmb
 mode: autonomous
 focus: "Hooks: split Blocking hooks (1718 words, over the soft limit) by moving the failure-mode material into a new Lesson, Hook failure modes, as the memory page proposes. It is the first Too long item; no open PR touches the hooks Subject (the earlier run's PR 3692 touches web standards). A new Lesson waits for the owner's merge (rule 6). Run two of one session."
 changes: []
-pagesRead: []
+pagesRead:
+  - hooks/10.hooks
+  - hooks/20.blocking-hooks
+  - hooks/25.stop-hooks
+  - hooks/30.hook-added-context
+  - hooks/40.session-transcripts
