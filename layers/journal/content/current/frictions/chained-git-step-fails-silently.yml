@@ -13,11 +13,6 @@ fixes:
     date: "2026-10-25"
     summary: "Its git-conventions section now also covers a git add of an ignored path and a commit given both -m and -F, and says to read git log -1 before the gate."
 occurrences:
-  - session: session_013zxzeR7qQ3HKogNsnf5Zm8
-    date: "2026-11-11"
-    severity: nit
-    description: "I chained git add, a heredoc and git commit in one Bash call, against git-conventions one-state-changing-command-per-call; no harm."
-    solution: "Run add, commit and push each in their own Bash call and check each landed."
   - session: session_013zxzeNhTtnWyYs2Mh6hn26
     date: "2026-11-12"
     severity: nit

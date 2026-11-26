@@ -5,8 +5,6 @@ cause: "PR #2550's guard denies the first Agent, Workflow or SendMessage call un
 status: open
 ref: "Comes from PR #2550, the fix for dispatch-subagents-skill-unread (briefs written without the Skill). Issue #2580 closed not planned on 2026-10-27: the owner accepts the one-retry cost; saved workflows stay unexempted, since clear-backlog-build takes orchestrator-written briefs."
 related:
-  - entry: dispatch-subagents-skill-unread
-    rule: No guard refused the dispatch; the brief went out without the Skill read.
   - entry: placeholder-guard-denies-quoted-placeholder
     rule: The guard denied a prompt that only quoted a placeholder token.
 notes: |-
@@ -23,46 +21,6 @@ fixes:
     date: "2026-11-12"
     summary: "clear-backlog SKILL.md says to read dispatch-subagents first."
 occurrences:
-  - session: session_013zxzeSvVL3Eaha8hHj2Q8i
-    date: "2026-11-11"
-    severity: nit
-    description: "First Agent call was blocked by the dispatch-read guard because I had not read dispatch-subagents before writing a brief."
-    solution: "The digest Skill's fact-check step could name dispatch-subagents."
-  - session: session_013zxzeNhTeF9B47tZ5Egyhx
-    date: "2026-11-11"
-    severity: nit
-    description: "The dispatch-read guard blocked my first Workflow call until I read dispatch-subagents; one retry."
-    solution: "Read dispatch-subagents before any Workflow call; clear-backlog could name it."
-  - session: session_013zxzeQ2wC57fFKCB2ZNBZb
-    date: "2026-11-11"
-    severity: nit
-    description: "My first Agent call was denied by the dispatch-read guard because I had not read the dispatch-subagents Skill before writing a brief."
-    solution: "Read dispatch-subagents right after orienting, as CLAUDE.md says before any subagent brief."
-  - session: session_013zxzeSvnCo3utAZGMChBZA
-    date: "2026-11-11"
-    severity: nit
-    description: "First Workflow call was blocked by the dispatch-read guard because I had not read the dispatch-subagents Skill, though CLAUDE.md names Workflow briefs as a trigger."
-    solution: "Read dispatch-subagents before the first Workflow or Agent call."
-  - session: session_013zxzeShqaQAEUkXf1Hwnd6
-    date: "2026-11-11"
-    severity: nit
-    description: "First Workflow call was denied by the dispatch-read guard because I had not read dispatch-subagents; I read it and retried unchanged."
-    solution: "None needed; the guard worked as designed."
-  - session: session_013zxzeQuYEfmPngc6xxNTn1
-    date: "2026-11-11"
-    severity: nit
-    description: "My first Agent call (the Scout) was blocked by the dispatch-read guard because I had not read dispatch-subagents first, though CLAUDE.md says to."
-    solution: "List dispatch-subagents in the glassbox-curate Skill's Read first, since the Scout is its first subagent."
-  - session: session_013zxzeSgDqRuwZif7Rgt2MW
-    date: "2026-11-11"
-    severity: nit
-    description: "First subagent brief was blocked by the dispatch-read guard because I had not read dispatch-subagents; CLAUDE.md names that trigger and I skipped it."
-    solution: "Read the Skill when the curate run first plans a subagent, as the CLAUDE.md read-first list says."
-  - session: session_013zxzeS6uNt5yvnz5LyUCCe
-    date: "2026-11-11"
-    severity: nit
-    description: "Launched the explore Workflow before reading dispatch-subagents; the dispatch-read guard denied it and I retried unchanged after reading."
-    solution: "clear-backlog section 1 could name dispatch-subagents as a read before running the explore workflow."
   - session: session_013zxzeRxuQbrK3YcdGVkpU4
     date: "2026-11-12"
     severity: nit

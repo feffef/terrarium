@@ -33,16 +33,6 @@ fixes:
     date: "2026-11-18"
     summary: "tenant-glossary-guard denies an Edit or Write under layers/<tenant>/ until that Tenant's GLOSSARY.md was read in full; it fails open."
 occurrences:
-  - session: session_013zxzeRpiY8hmJh8z3HELvr
-    date: "2026-11-11"
-    severity: nit
-    description: "Broke tenant-glossary.md: edited layers/journal without reading layers/journal/GLOSSARY.md; the change added no prose, so it cost nothing."
-    solution: "Reading it at the first layer edit would have satisfied the rule; low impact for a pure template change."
-  - session: session_013zxzePhW9hepYUkqdiWzwf
-    date: "2026-11-11"
-    severity: nit
-    description: "Worked on the Journal Tenant but only grepped its GLOSSARY.md instead of reading it, against the tenant-glossary rule."
-    solution: "Read layers/journal/GLOSSARY.md whole before editing under that layer; the rule loaded only after I had already edited."
   - session: session_013zxzePXpUx7WY6K2uHsxKz
     date: "2026-11-12"
     severity: nit

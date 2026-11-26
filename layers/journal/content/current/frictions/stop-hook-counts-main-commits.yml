@@ -16,11 +16,6 @@ fixes:
     date: "2026-10-16"
     summary: "git-conventions.md now says to push a branch whose only unpushed commits are main's, ending the per-turn Stop hook nag."
 occurrences:
-  - session: session_013zxzeQRndZ5iHweDq8ceMP
-    date: "2026-11-11"
-    severity: nit
-    description: "The Stop hook counted 46 unpushed commits against a remote branch deleted after the merge, though almost all were main's own commits."
-    solution: "Count commits against origin/main, or skip the nag when the remote branch no longer exists."
   - session: session_013zxzeNjAbKXTy5zKs2fg8r
     date: "2026-11-12"
     severity: nit

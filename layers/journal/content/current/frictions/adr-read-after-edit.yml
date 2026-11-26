@@ -17,56 +17,6 @@ notes: |-
   2026-10-28 design: another digest Skill line dropped: it already says to read ADR-0010 before the first Digest; the hint is the designed backstop and the late read changed nothing. dropped: a guard would be Human-only.
   2026-10-30 design: change the hint or its rules' paths (issue #2575's candidates) dropped: all Human-only files; 85 of 86 late reads changed nothing, 0 'no' verdicts, so the cost is one call
 occurrences:
-  - session: session_013zxzeQdDhmjuBmtPSZi6tK
-    date: "2026-11-11"
-    severity: nit
-    description: "Edited governed Inventory yml before reading ADR-0015 in full; the hook asked afterwards. Also grepped triage-labels.md instead of reading it before labelling."
-    solution: "Name ADR-0015 and triage-labels in audit-skills step 5 and 4 as read-first."
-  - session: session_013zxzeRKJEWdWhMoxhqHgGG
-    date: "2026-11-11"
-    severity: nit
-    description: "A path-hook asked to read ADRs 0005, 0020, 0027 in full after an auto-triage edit; I only word-counted them and read ADR-0022."
-    solution: "Read the named ADRs, or skip them when the edit is a pointer to an ADR already read."
-  - session: session_013zxzeS6w7fCCAw12ds3rtt
-    date: "2026-11-11"
-    severity: nit
-    description: "Edited audit-skills.ts and its SKILL.md before reading the full ADRs the PostToolUse hooks named; the ADRs showed the edits were fine."
-    solution: "The rule summaries said to read the ADR to change governed work; read it at the first Read of the governed file."
-  - session: session_013zxzePhW9hepYUkqdiWzwf
-    date: "2026-11-11"
-    severity: nit
-    description: "ADR-0015 loaded and its full read was demanded only after I had already edited the Inventory entry."
-    solution: "A rule matching layers/journal/content/current/skills/ that loads on first read, not on edit, would have put it ahead of the change."
-  - session: session_013zxzeSucFXKnyzvRpP8pnm
-    date: "2026-11-11"
-    severity: nit
-    description: "Edited the workflow and run-summary.ts before reading ADR-0005, 0022 and 0027; a hook asked for the reads afterwards."
-    solution: "Read the governing ADRs of the files before the first edit, as CLAUDE.md says."
-  - session: session_013zxzeShqaQAEUkXf1Hwnd6
-    date: "2026-11-11"
-    severity: nit
-    description: "Edited .claude/workflows/clear-backlog-explore.js and run-summary.ts before reading ADR-0005, ADR-0017, ADR-0020, ADR-0022 and ADR-0027; the post-edit hooks prompted each read."
-    solution: "Load the ADR summary rule when the file is read, not only after the first edit."
-  - session: session_013zxzeRVjHExXhciv5BwiTB
-    date: "2026-11-11"
-    severity: nit
-    description: "Chose not to read the ADRs two edit hooks asked for (0006, 0008, 0016, 0025) on a one-prop footer change, judging them irrelevant."
-    solution: "Have the adr-read-hint skip a change that touches no routing or data-reading line."
-  - session: session_013zxzeQQzVdav2Lzx9D5WBr
-    date: "2026-11-11"
-    severity: nit
-    description: "Wrote the workflow script and run-summary.ts before reading ADR-0005, ADR-0022 and ADR-0027 in full; hooks prompted the late reads, none changed the edit."
-    solution: "Read the governing ADRs when the rule loads on first Read, before the first Edit."
-  - session: session_013zxzeQRndZ5iHweDq8ceMP
-    date: "2026-11-11"
-    severity: minor
-    description: "Edit hooks asked me to read about ten ADRs in full after each write; each is correct to read but together they cost many tokens for edits of a few lines."
-    solution: "Read an ADR only when its rule says a change conflicts with it, or let the hook name just the clause that applies."
-  - session: session_013zxzeQgXPpoTcwuDuvvDtE
-    date: "2026-11-11"
-    severity: minor
-    description: "Edit hooks demanded a full read of ADR-0027; I read the other three ADRs but never 0027, and skipped the grilling Skill."
-    solution: "Cat each hook-named ADR in its own call and check the output, or read the rule summary only when the ADR cannot change the edit."
   - session: session_013zxzeNq8X5Pc3Xwjpv6Wxe
     date: "2026-11-12"
     severity: nit

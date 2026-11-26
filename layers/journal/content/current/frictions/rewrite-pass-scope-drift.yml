@@ -14,11 +14,6 @@ notes: |-
   2026-10-23 design: a rewrite-discipline line dropped: the two newer sessions were caught by code-review before merge, no session shipped the drift, and the candidate homes sit in open Prune Trial territory.
   2026-11-17: simplify-cut-drops-needed-instruction joined here: a trim that cuts a needed line is the same slip as a rewrite that drops a rule.
 occurrences:
-  - session: session_013zxzeQQzVdav2Lzx9D5WBr
-    date: "2026-11-11"
-    severity: moderate
-    description: "In the first build I cut the builder's gate:scoped log and Bash-timeout recipe while simplifying rules(); all three reviewers caught it, costing a fix round."
-    solution: "When rewriting a prompt, diff the removed lines and give each a reason to drop; a removed timeout is load-bearing."
   - session: session_013zxzeQyUcqMctvqKtP4sHL
     date: "2026-11-20"
     severity: minor

@@ -14,21 +14,6 @@ fixes:
     date: "2026-11-17"
     summary: "Stop hook counts a merge only when merge-pr.ts's own result reports merged: true"
 occurrences:
-  - session: session_013zxzeRpiY8hmJh8z3HELvr
-    date: "2026-11-11"
-    severity: nit
-    description: "Stop hook said a PR merged and demanded close-session while merge-pr.ts for #3051 was still waiting on CI; PR was open."
-    solution: "Have the Stop hook confirm the merge (PR state or merge-pr.ts exit) before claiming one."
-  - session: session_013zxzeR9nyx91atfAKEs7c3
-    date: "2026-11-11"
-    severity: minor
-    description: "Stop hook demanded close-session claiming a PR merged, while this run opened none, forcing an early log mid-run."
-    solution: "Make the merged-PR check ignore sessions that opened no PR."
-  - session: session_013zxzeSPxncNsUJXwnc2DvG
-    date: "2026-11-11"
-    severity: nit
-    description: "The Stop hook claimed a PR had merged and demanded close-session, though no PR had merged or opened this run."
-    solution: "Make the merge-close hint check the session's own PRs before firing."
   - session: session_013zxzePXpUx7WY6K2uHsxKz
     date: "2026-11-12"
     severity: minor

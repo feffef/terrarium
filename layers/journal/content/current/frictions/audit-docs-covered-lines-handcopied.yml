@@ -2,7 +2,7 @@ name: audit-docs-covered-lines-handcopied
 surface: safe
 summary: "A reviewer brief cannot point at the Covered lines of the last audit-docs runs, so the orchestrator hand-copies them from two logs and reviewers still re-read covered areas."
 cause: "audit-docs briefs must carry what earlier runs already Covered, but those lines sit in two session logs with no command that prints them; the orchestrator copies both lists into each reviewer brief by hand and reviewers still partly re-read covered areas. Signals: 'Covered lines', 'two logs', 'hand-copied', audit-docs reviewers re-reading covered areas."
-status: open
+status: tracked
 related:
   - entry: reviewer-coverage-thin
     rule: That entry is a reviewer or audit agent handed more files than it could read; here the work to pass the Covered lines is by hand and the reviewers re-read areas already covered.

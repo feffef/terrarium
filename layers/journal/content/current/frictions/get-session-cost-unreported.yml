@@ -25,11 +25,6 @@ fixes:
     date: "2026-11-18"
     summary: "glassbox-curate SKILL.md makes the loop the default and drops every cost_usd, get_session and 450k mention; no Skill or pr-workflow.md asks for a run cost in a PR body."
 occurrences:
-  - session: session_013zxzeQ2wC57fFKCB2ZNBZb
-    date: "2026-11-11"
-    severity: minor
-    description: "get_session was not available, so the run's cost_usd could not be read and the PR says unreported."
-    solution: "Say in the Skill how to read cost when no get_session tool exists, or allow unreported as the Skill already does."
   - session: session_013zxzeSYMKya1mzpFJhAcSk
     date: "2026-11-13"
     severity: minor

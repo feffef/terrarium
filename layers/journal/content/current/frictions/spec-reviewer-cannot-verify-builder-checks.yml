@@ -2,7 +2,8 @@ name: spec-reviewer-cannot-verify-builder-checks
 surface: safe
 summary: "A read-only Spec reviewer could not confirm what the builder had checked (fast checks, screenshots) because the builder left only a one-line decisions.md."
 cause: "clear-backlog-build builders record little in decisions.md and the Spec reviewer cannot run pnpm validate:content or open screenshots, so it flags the builder's checks unverified; its reviewPrompt() also does not say which reads the Spec axis needs (glossary, owner decisions). Signals: 'Spec reviewer', 'decisions.md was one line', 'could not confirm', 'flagged unverified'."
-status: open
+status: tracked
+ref: "#3682"
 related:
   - entry: recheck-brief-thin
     rule: That entry is a re-check brief too thin to judge a refusal; here the first-round Spec reviewer lacks the builder's record of its own checks.

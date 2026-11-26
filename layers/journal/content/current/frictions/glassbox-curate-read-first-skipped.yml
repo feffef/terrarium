@@ -22,11 +22,6 @@ fixes:
     date: "2026-11-09"
     summary: "glassbox-curate SKILL.md states the Subject read as a Done-when (every Subject page read in full, plus outside pages a change would edit) and drops the removal-only exemption."
 occurrences:
-  - session: session_013zxzeSgDqRuwZif7Rgt2MW
-    date: "2026-11-11"
-    severity: minor
-    description: "Skipped QUALITY.md Lenses from the curate Skill's Read first list until the owner asked whether I used glassbox-lesson. Never opened it for four passes."
-    solution: "Make the curate Skill's Read first list load QUALITY.md, or have orient.ts print a reminder when it was not read."
   - session: session_013zxzeQKydDYQaAEhBMqoW3
     date: "2026-11-12"
     severity: minor

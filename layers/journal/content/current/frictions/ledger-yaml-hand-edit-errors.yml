@@ -38,16 +38,6 @@ fixes:
     date: "2026-11-20"
     summary: "prune-friction-ledger.ts drops related links that name an entry it deletes, so a prune or move no longer leaves a dangling link for ledger-content.spec to fail on."
 occurrences:
-  - session: session_013zxzeNeWJTvqXPTEeR63qC
-    date: "2026-11-11"
-    severity: nit
-    description: "Two content files failed validation on a colon in an unquoted YAML scalar, found only when the full validator or page test ran."
-    solution: "Quote any description or changes entry that holds a colon; the glassbox-curate run-entry skeleton could show them quoted."
-  - session: session_013zxzeSgDqRuwZif7Rgt2MW
-    date: "2026-11-11"
-    severity: nit
-    description: "Run entry failed validate:content twice because plain YAML scalars held colon-space inside changes rows, parsed as objects; also the memory page exceeded its word cap once."
-    solution: "Have the orient skeleton warn to avoid colon-space in changes rows, and run workshop.spec before the first commit."
   - session: session_013zxzeS6AE1WUN124PHnm4b
     date: "2026-11-13"
     severity: minor

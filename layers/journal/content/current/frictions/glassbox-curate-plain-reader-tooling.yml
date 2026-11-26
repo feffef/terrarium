@@ -11,21 +11,6 @@ fixes:
     date: "2026-11-13"
     summary: "plain.ts takes a bare stem and lists near matches, and prints plainer fresh-reader pages."
 occurrences:
-  - session: session_013zxzeQ2wC57fFKCB2ZNBZb
-    date: "2026-11-11"
-    severity: minor
-    description: "plain.ts pastes term definitions inline and strips link text, so fresh readers kept reporting those artifacts as confusion and I had to filter them out."
-    solution: "Have plain.ts keep terms as a short gloss outside the sentence, and keep link labels, or tell readers about both artifacts in the brief."
-  - session: session_013zxzeQuYEfmPngc6xxNTn1
-    date: "2026-11-11"
-    severity: minor
-    description: "Fresh readers flagged repeated Term parentheticals as duplicated page text, though they render from Term entries; I had to tell the writer to ignore them."
-    solution: "Have plain.ts mark rendered Term glosses, or tell readers in the brief that parenthesised glosses are generated."
-  - session: session_013zxzeSgDqRuwZif7Rgt2MW
-    date: "2026-11-11"
-    severity: nit
-    description: "plain.ts rejected bare walkthrough stems; I redirected output to files, so the error hid in nine five-word files until I read one."
-    solution: "Show a stem example with its folder in plain.ts usage, and print the error to the terminal."
   - session: session_013zxzeNk79ER2isup9ZscRm
     date: "2026-11-12"
     severity: nit

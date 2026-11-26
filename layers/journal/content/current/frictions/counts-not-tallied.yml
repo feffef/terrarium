@@ -26,11 +26,6 @@ fixes:
     date: "2026-10-25"
     summary: "Cut the Verify-before-you-state family to one plain home in CLAUDE.md and dropped its restatements in four Skills and the build reviewer."
 occurrences:
-  - session: session_013zxzeRKJEWdWhMoxhqHgGG
-    date: "2026-11-11"
-    severity: minor
-    description: "My first PR verdict comment gave verdict counts I had not tallied; I corrected it after counting the checker replies."
-    solution: "Tally verdicts before writing the comment."
   - session: session_013zxzeQKydDYQaAEhBMqoW3
     date: "2026-11-12"
     severity: minor

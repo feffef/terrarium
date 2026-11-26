@@ -10,11 +10,6 @@ related:
   - entry: merge-close-hint-fires-without-merge
     rule: A hook said a PR merged when it had not, or the session merged none.
 occurrences:
-  - session: session_013zxzeNhTeF9B47tZ5Egyhx
-    date: "2026-11-11"
-    severity: nit
-    description: "Merged PR 3053 and moved on without re-invoking close-session; the Stop hook had to remind me."
-    solution: "Re-invoke close-session in the same turn as the merge-pr.ts call."
   - session: session_013zxzeP3xBUNvHd5kGFihuo
     date: "2026-11-12"
     severity: minor

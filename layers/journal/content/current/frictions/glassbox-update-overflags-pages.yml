@@ -20,11 +20,6 @@ fixes:
     date: "2026-11-14"
     summary: "glassbox-update step 4 re-checks a flagged page as a whole only for needsReader true, prose-only flags and rotation pages; other flagged pages get a quick look."
 occurrences:
-  - session: session_013zxzeR9nyx91atfAKEs7c3
-    date: "2026-11-11"
-    severity: minor
-    description: "Subagents reported excerpt line ranges as stale though the advance script had already shifted them; I had to recheck each."
-    solution: "Tell claim-check briefs that the advance step already shifted lines ranges, so only report ranges that mismatch the current page."
   - session: session_013zxzeNbirdJSVYjNLe6nsJ
     date: "2026-11-12"
     severity: moderate

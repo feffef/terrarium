@@ -19,16 +19,6 @@ occurrences:
     severity: nit
     description: "Ran a Python replace script that asserted on a string I had retyped wrongly, costing a retry; the wording differed in case from the file."
     solution: "Use Edit with exact text instead of a retyped Python replace."
-  - session: session_013zxzeQQzVdav2Lzx9D5WBr
-    date: "2026-11-11"
-    severity: nit
-    description: "A python string-replace script failed on a slice boundary (substring not found), and save-handback failed once because its output folder didn't exist."
-    solution: "Edit with the Edit tool for multi-hunk changes; mkdir -p the scratch subfolder before save-handback."
-  - session: session_013zxzeS6w7fCCAw12ds3rtt
-    date: "2026-11-11"
-    severity: nit
-    description: "A global sed rename also changed an unrelated use of the imported type, which I only spotted from the file-changed notice and then fixed."
-    solution: "Use targeted Edits for renames in a file that imports a same-named type."
   - session: session_013zxzePDpmX3Lq9AEQGGTTW
     date: "2026-11-12"
     severity: nit
