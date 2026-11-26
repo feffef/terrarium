@@ -55,12 +55,6 @@ None of these is false.
 
 - **Verification.** *Zod refinements*: no source says why the `pages` rule ties the `page` type to the name `pages`. *Headless browser checks*: no repo source says who sets up the cloud proxy; the `--no-sandbox` and `--disable-gpu` flags have only the code comment "the flags every launch needs in this sandbox".
 
-### Too long
-
-Lessons past the soft word limit, each with a proposed split from a fresh reader (`glassbox-update`). A split adds Lessons, so the owner merges it.
-
-- **Blocking hooks** (`hooks/20.blocking-hooks.md`, 1718 words): split off *Hook failure modes* (fail open versus closed, exit 2, `onFailure`, the `runGuard` crash and `|| true` wiring excerpts, the guards-wiring spec, the crash, can't-tell and version-bound bullets, the current Try it, about 800 words); *Blocking hooks* keeps the deny JSON, the guard pattern and registry, and needs a new Try it.
-
 ### Waiting for owner decision
 
 - **Binary images.** No ADR or rule says binary images are kept out of the repository (the repo just holds none), so no web standards page teaches that. Ask the owner whether to record one.
