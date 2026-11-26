@@ -1,7 +1,11 @@
 session: session_013zxzePo4mtQsMpDHLLDFmb
 mode: autonomous
 focus: "Hooks: split Blocking hooks (1718 words, over the soft limit) by moving the failure-mode material into a new Lesson, Hook failure modes, as the memory page proposes. It is the first Too long item; no open PR touches the hooks Subject (the earlier run's PR 3692 touches web standards). A new Lesson waits for the owner's merge (rule 6). Run two of one session."
-changes: []
+changes:
+  - "hooks/22.hook-failure-modes | New Lesson Hook failure modes, split from Blocking hooks: fail open versus fail closed, exit codes, onFailure and || true, runGuard's crash deny, the guards that fail open and the wiring test, with the old Try it | the memory page's Too long item: Blocking hooks was over the soft limit. A claim check of the split found nothing false; a second round found seven wordings that the sources contradict or do not state (a guard defined as PreToolUse only, a fail-open list claimed complete, a denyUninspectable gloss, a transcript gloss, an unsourced deferred-tool reason, an unscoped cost clause, a /hooks detail), all fixed. Waits for the owner's merge (new Lesson)"
+  - "hooks/20.blocking-hooks | The failure material moved to the new page; the page keeps the deny decision, exit 2, the guard pattern and registry, and the tests, gains a blind-spot bullet, a when-not-to-use line and a new Try it (a hook that denies grep); description and teaches rewritten; publishedAt moves, revision is kept | the page was over the soft word limit (1718 words, now about 1100). Where next drops MCP servers as the weakest entry"
+  - hooks/10.hooks, hooks/30.hook-added-context | Three links in Claude Code hooks and one in Hook-added context now point to the new page; its Where next gains Hook failure modes in place of Session transcripts, and Hook-added context's in place of the Friction Ledger row | each sent the reader to Blocking hooks for the crash material that moved. Hook-added context now has no Journal row; Path-specific rules was the other candidate
+  - workshop/pages/index | The Blocking hooks Too long item deleted | solved by the split
 pagesRead:
   - hooks/10.hooks
   - hooks/20.blocking-hooks
