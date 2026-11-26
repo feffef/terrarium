@@ -310,8 +310,8 @@ body.bl-page {
   .bl.bl--front .bl-network .net-card-tagline { display: none; }
   .bl.bl--front .bl-network .net-cards a { height: auto; padding: 0.5rem 0.65rem; }
   .bl.bl--front .start-here { margin-top: 0.9rem; }
-  .bl.bl--front .net-tags summary { cursor: pointer; margin: 0; }
-  .bl.bl--front .net-tags[open] summary { margin-bottom: 0.6rem; }
+  .bl.bl--front .net-tags summary { cursor: pointer; margin: -4px 0; }
+  .bl.bl--front .net-tags[open] summary { margin-bottom: calc(0.6rem - 4px); }
 }
 /* The Tag directory, folded into the SAME box via the Network's `#extra` slot
    (not a second panel) — a thin rule separates it from the hint text above.
@@ -323,7 +323,9 @@ body.bl-page {
   text-transform: uppercase;
   letter-spacing: 0.14em;
   color: var(--bl-faint);
-  margin: 0 0 0.6rem;
+  /* 24px tap target with no layout shift (#3675). */
+  padding-block: 4px;
+  margin: -4px 0 calc(0.6rem - 4px);
 }
 .bl .tag-directory { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .bl .tag-directory .tag-chip.active { color: #fff; background: var(--bl-accent); border-color: var(--bl-accent); }
@@ -525,7 +527,8 @@ body.bl-page {
 .bl .feed > li.feed-month h2 { font-family: var(--bl-mono); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--bl-faint); margin: 0; padding-bottom: 0.3rem; border-bottom: 1px solid var(--bl-line); }
 
 /* Tag directory with meanings: each chip grows into a full-width row. */
-.bl .tag-meanings-toggle { display: block; margin: 0 0 0.6rem; padding: 0; background: none; border: 0; cursor: pointer; font-family: var(--bl-mono); font-size: 0.72rem; color: var(--bl-accent); text-decoration: underline; text-align: left; }
+/* Padding and negative margin make a 24px tap target with no layout shift (#3675). */
+.bl .tag-meanings-toggle { display: block; margin: -6px 0 calc(0.6rem - 6px); padding: 6px 0; background: none; border: 0; cursor: pointer; font-family: var(--bl-mono); font-size: 0.72rem; color: var(--bl-accent); text-decoration: underline; text-align: left; }
 .bl .tag-directory--meanings { flex-direction: column; flex-wrap: nowrap; gap: 0.4rem; }
 .bl .tag-directory--meanings .tag-chip { display: block; border-radius: 10px; padding: 0.4rem 0.7rem; text-align: left; font-size: 0.72rem; }
 .bl .tag-directory--meanings .tag-meaning { display: block; margin-top: 0.15rem; font-size: 0.8rem; line-height: 1.35; opacity: 0.85; white-space: normal; }
