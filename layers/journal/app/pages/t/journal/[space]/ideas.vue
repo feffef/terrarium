@@ -173,13 +173,16 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
   color: var(--jd-faint);
   text-decoration: none;
   white-space: nowrap;
+  display: inline-block;
+  padding-block: 0.35rem;
+  margin-block: -0.35rem;
 }
 .jd-prose .src:hover { color: var(--jd-accent); text-decoration: underline; }
 .note-copy {
   align-self: start;
   display: inline-flex;
-  padding: 0;
-  margin-top: 0.1rem;
+  padding: 0.25rem;
+  margin: -0.15rem -0.25rem -0.25rem;
   background: none;
   border: none;
   color: var(--jd-faint);

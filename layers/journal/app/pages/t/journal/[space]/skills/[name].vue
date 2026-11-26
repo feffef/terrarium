@@ -94,7 +94,7 @@ useSeoMeta({ title: `${name} · journal/${space}` })
 .panel-intro { margin: 0 0 0.6rem; color: var(--jd-muted); font-size: 0.92rem; line-height: 1.5; }
 .empty { color: var(--jd-faint); font-size: 0.9rem; margin: 0; }
 .rows { list-style: none; margin: 0; padding: 0; }
-.rows li { display: grid; grid-template-columns: max-content 1fr; gap: 0.1rem 0.9rem; align-items: baseline; padding: 0.7rem 0; border-top: 1px solid var(--jd-line); font-size: 0.96rem; }
+.rows li { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 0.1rem 0.9rem; align-items: baseline; padding: 0.7rem 0; border-top: 1px solid var(--jd-line); font-size: 0.96rem; overflow-wrap: anywhere; }
 .rows li:first-child { border-top: 0; }
 .row-date { font-family: var(--jd-mono); font-size: 0.82rem; color: var(--jd-accent); white-space: nowrap; }
 .rows a, .back a { color: var(--jd-accent); text-decoration: underline; text-underline-offset: 2px; }

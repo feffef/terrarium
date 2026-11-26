@@ -91,7 +91,8 @@ defineProps<{
   gap: 0.5rem;
 }
 .uses { margin-left: auto; font-size: 0.7rem; color: var(--jd-faint); }
-.uses a, .chip a { color: inherit; text-decoration: underline dotted; text-underline-offset: 2px; }
+/* inline-block padding offset by margin: a 24px tap target (WCAG 2.5.8) that moves nothing. */
+.uses a, .chip a { color: inherit; text-decoration: underline dotted; text-underline-offset: 2px; display: inline-block; padding-block: 0.35rem; margin-block: -0.35rem; }
 .uses a:hover, .chip a:hover { color: var(--jd-accent); }
 .chip-uses { color: var(--jd-faint); }
 .ideas-line { margin: 0.2rem 0 0; font-family: var(--jd-mono); font-size: 0.7rem; color: var(--jd-faint); }
@@ -106,6 +107,9 @@ defineProps<{
 }
 .role-details { margin-top: 0.35rem; }
 .role-details > summary {
+  display: inline-block;
+  padding-block: 0.35rem;
+  margin-block: -0.35rem;
   cursor: pointer;
   list-style: none;
   font-family: var(--jd-mono);

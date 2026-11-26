@@ -186,6 +186,7 @@ body:has(.jd) { margin: 0; }
 .jd-prose th, .jd-prose td { padding: 0.4rem 0.6rem; border-bottom: 1px solid var(--jd-line); text-align: left; vertical-align: top; }
 .jd-prose th { font-size: 0.8rem; color: var(--jd-muted); font-weight: 600; }
 .jd-prose td:first-child { min-width: 9rem; }
+.jd-prose td:first-child a { display: inline-block; padding-block: 0.35rem; margin-block: -0.35rem; }
 @media (max-width: 600px) {
   .jd-prose table { font-size: 0.82rem; }
   .jd-prose th, .jd-prose td { padding: 0.35rem 0.45rem; }
