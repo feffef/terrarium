@@ -31,7 +31,7 @@ harvests both.
    more on an entry (the list's last lines show how). Done when you have the
    counts per kind and the last entry's number equals the count `extract`
    printed.
-2. **Cluster, in order.** Merge near-duplicate entries into clusters, taking
+2. **Cluster.** Merge near-duplicate entries into clusters, taking
    entries from the top, and label each cluster **product** (what a visitor or
    the owner sees or uses on the site: a Tenant, its content, the UI) or
    **workflow** (how agents are instructed, fenced or equipped: `CLAUDE.md`,
