@@ -62,7 +62,7 @@ export function ruleUseReport(logs: SessionLog[], since: number): RuleUseReport 
     if (e.answered) a.answered++
     else if (e.by !== 'main') quality.unansweredSubagents++
     // A bare call (empty `reported`) is the explicit none-applies (#3662).
-    if (e.by !== 'main' && e.answered && unratedRules(e.loads, e.reported).length && e.reported.length) quality.unratedSubagents++
+    if (e.by !== 'main' && e.answered && unratedRules(e.loads, e.reported).length) quality.unratedSubagents++
     for (const r of e.reported) if (r.why?.startsWith(NO_LOAD_WHY)) quality.noLoadRecorded++
     for (const l of e.loads) {
       const row = rows.get(l.rule) ?? { rule: l.rule, loads: 0, answeringLoads: 0, words: {}, enoughData: false, start: 0, native: 0, hint: 0, read: 0, triggers: {}, values: {} }
