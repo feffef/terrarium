@@ -30,10 +30,26 @@ describe('stopReason()', () => {
     expect(stopReason(payload([rule, bash('echo rule-use:')]))).toBeNull()
     expect(stopReason(payload([]))).toBeNull()
   })
-  it('blocks each agent once, with no stop_hook_active', () => {
+  it('blocks each agent 3 times, with no stop_hook_active, then releases', () => {
     const p = payload([rule])
-    expect(stopReason(p)).toContain('adr-0003.md')
+    for (let i = 0; i < 3; i++) expect(stopReason(p)).toContain('adr-0003.md')
     expect(stopReason(p)).toBeNull()
+  })
+  it('releases once a bare call or a full named call lands, however many blocks came before', () => {
+    for (const call of ['echo rule-use:', 'echo rule-use: rule:adr-0003.md=steered']) {
+      const p = payload([rule])
+      expect(stopReason(p)).toContain('adr-0003.md')
+      expect(stopReason(p)).toContain('adr-0003.md')
+      writeFileSync(join(p.transcript_path.replace('session.jsonl', ''), 'session', 'subagents', `agent-${p.agent_id}.jsonl`),
+        [{ type: 'user', cwd: '/repo', message: { content: 'go' } }, rule, bash(call)].map((r) => JSON.stringify(r)).join('\n'))
+      expect(stopReason(p)).toBeNull()
+    }
+  })
+  it('treats a corrupt counter file as no blocks yet', () => {
+    const p = payload([rule])
+    const dir = mkdtempSync(join(tmpdir(), 'subagent-marker-'))
+    writeFileSync(join(dir, `subagent-rule-use-stop-${p.agent_id.replace(/\W/g, '_')}`), 'junk')
+    expect(stopReason(p, dir)).toContain('adr-0003.md')
   })
   it('blocks on a start-loaded rule too', () => {
     const start = { type: 'attachment', attachment: { type: 'instructions', files: [{ path: '/repo/.claude/rules/adr-0004.md' }] } }
