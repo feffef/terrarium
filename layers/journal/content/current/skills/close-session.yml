@@ -9,18 +9,10 @@ role: >-
   the self-judged "invoke at closure" rule fire reliably; its invocation rate is the evidence for ADR-0009's choice
   of a Skill over a reminder hook.
 auditSummary:
-  date: "2026-11-26"
-  text: "Reliably gets every session's log written: all recent logs landed, no human nudges were needed, and the claimed PRs are on main. Its look-back step leaves no trace, so nobody can tell whether it happens."
+  date: "2026-11-27"
+  text: "Gets almost every session's log written and keeps unmerged work honest. One long session was closed only after the owner asked, the first such nudge in several audits; its look-back step still leaves no trace."
+
 observations:
-  - date: "2026-10-17"
-    note: >-
-      Self-check (audit-skills behaviour check), Part A (10 usedIn): all logs
-      landed on main with correct session authorship; 3/10 honesty-spot-checked
-      against real merges (PRs #2170/#2171/#2176, #2172, #2173) all honest.
-      Part B (1 notUsedSession, session_01NVG22rfEsjhW9zkcCco6W8): equivalent
-      closure via log-session directly (no PR to open), not a miss - same
-      pattern as prior observations. No new finding. Grade/role unchanged
-      (essential).
   - date: "2026-10-18"
     note: >-
       Self-check (audit-skills behaviour check), Part A (10 usedIn, all
@@ -124,3 +116,40 @@ observations:
   - date: "2026-11-26"
     note: >-
       Behaviour check of 33 run logs (session_013zxzeSK7bEhaxexffUGupq back to session_013zxzeQTiD2k55P7AkEWYBY, 11-23 02:07Z to 11-26 00:15Z) plus the non-user session_013zxzeStkfKoZxBQUkQd9pd. The audit extracted all logs by script, read the newest log in full and the frictions of session_013zxzeRuV2ywUTZimzQvXAN, and checked the other 31 at field level only. SKILL.md last changed in 7a0f512c0 (11-22), so every run ran the current text. Verdict: clean. All 33 logs are completed with 1 to 25 journal commits on origin/main; no friction text contains HUMAN-PROMPTED; all 48 claimed PR numbers appear on origin/main; five sampled PRs show the log ending seconds after the merge (#3679 merged 00:26:30Z, log 00:26:46Z; #3674; #3661; #3660; #3631), which shows the re-close after a merge works. The scorecard's closure signals: orphanScan scanned true (138 merged PRs, 62 issues, 199 with a session), orphanSuppressionLog empty, humanPromptedClosures and manuallyRescuedClosures empty. One orphaned session, session_013zxzePy1ZjrPSpQ5fDkVkz (harvest, filed Seedlings #3624 to #3627 on 11-23 at 17:10Z), has no log; earlier audits recorded it and did not escalate because its work landed and the issues closed, and nothing new in this window changes that, so it stays an observation. Two session ids looked orphaned in the subagent's checkout (session_013zxzePHUnDuN2sgW4ghamU and session_013zxzeSUNxM2snCnM3Wwi6o) but are logged on origin/main (fe53f4059, a5e9c5483), a checkout lag, not an orphan. The non-user session_013zxzeStkfKoZxBQUkQd9pd (a visitor-loop Tinkerfund visit) landed its log via Stop; close-session is absent from its skillsUsed, the known accounting gap, so it is not a missed invocation. Repeats: step 2's look-back leaves no trace in any log (33 of 33) and has been unverifiable in every audit since 11-16; step 1 is evidenced (the newest run logged a git-conventions read-after-act; RuV logged git-conventions, ADR-0027 and dispatch-subagents read late and a wrong Human-only claim the owner had to question, corrected and then merged). No zero-friction log (2 to 14 each). Role and gist are current; importance essential, unchanged. No revert in the 14-day searches. The audit subagent itself ran git log before reading git-conventions.md, a nit. Idea kept: fold step 2's look-back into step 1 as one sentence (also log late knowledge and detours), since ADR-0027 says to cut what cannot be tested and one log already proposes it. Next focus: transcript-level order of events (invocation before the turn ends) and full reads of the 31 logs that were only field-checked.
+  - date: "2026-11-27"
+    note: >-
+      Behaviour check of 35 run logs (11-24 to 11-27) plus the non-user
+      session_013zxzeStkfKoZxBQUkQd9pd, by script and git on origin/main. The
+      auditor read the two newest logs in full and checked the rest at field
+      level only, so this is partial. SKILL.md last changed in 750d8edc0 (11-22,
+      wording only), so one text applies. No watchFor items. Delivery held: all
+      logs have status completed except session_013zxzeQivG2v72EMRPiQ5aR, which
+      is honestly in-review because its Digest PR #3710 is open and blocked, and
+      each log has 1 to 31 journal commits on origin/main. No revert. One new
+      silent failure, a human-prompted closure: session_013zxzePo4mtQsMpDHLLDFmb
+      (interactive, glassbox-curate, 11-26) logged a major friction, quoted:
+      HUMAN-PROMPTED-CLOSURE: after all three PRs merged I said the log still
+      read in-review and left it, so the owner had to ask why the session was
+      not closed. The merges landed at 13:01 and 13:02Z and 16:34Z; the log
+      ended at 19:28:54Z. This is the first human-prompted closure in four
+      audits (earlier notes found none); the friction was recorded honestly and
+      the log landed. The scorecard's humanPromptedClosures lists the same
+      session. Hypothesis: the session was long and the merge arrived as a
+      notification, and the agent reported the stale state in a message instead
+      of re-invoking close-session. It is a single event, so it is an
+      observation here and the evidence went onto the open glassbox-curate
+      thread, #3634, where the owner-merge wait is the cause; a standing closure
+      thread was closed earlier as #2956. Orphan check: orphanScan scanned true
+      (140 merged PRs, 67 issues, 206 with a session); the one orphan,
+      session_013zxzePy1ZjrPSpQ5fDkVkz (harvest, Seedling issues #3624 to #3627
+      on 11-23), was recorded by earlier audits and stays an observation because
+      its work landed. orphanSuppressionLog is empty and manuallyRescuedClosures
+      is empty. The non-user visitor-loop session landed its log via Stop; ruled
+      out. Repeat: step 2's look-back leaves no trace in any log (35 of 35). The
+      newest log's git-conventions read came after the act, a nit, and the
+      auditor did the same. Role and gist are current; importance essential,
+      unchanged. Idea kept: add to step 3 that a merge notification means
+      re-invoking close-session before replying, and fold step 2's look-back
+      into step 1. Next focus: transcript-level order of events (re-invocation
+      after merge notifications) and full reads of the logs that were only
+      field-checked.

@@ -12,18 +12,6 @@ auditSummary:
   date: "2026-11-17"
   text: "Produces Lessons that merge, but the owner has had to correct reading order and quality after the fact. Its checks cover files, not prose quality."
 observations:
-  - date: "2026-10-17"
-    note: >-
-      Coverage gap found (audit-skills sweep): used once this window
-      (allTimeUses: 1), on disk, no prior Inventory entry.
-      session_01NFv67izdzVGrFHb2EVwZJ2 (a Glass Box Lesson on Nitro, the
-      server under Nuxt) verified merged and genuine. Below the
-      ≥3-session bar for a dedicated behaviour check this window; graded
-      `specialist` on its own structure, not session-count evidence: it is
-      explicitly non-model-invoked (`disable-model-invocation: true`),
-      dispatched per topic from a fixed topic inventory rather than reached
-      for — essential whenever a Lesson is being written, but that kind of
-      work is itself rare, matching GLOSSARY.md's definition of the grade.
   - date: "2026-11-13"
     note: >-
       Behaviour check, 4 runs, every Lesson still on main. Unverified weak signal: session_013zxzeRvdzBc3xXGo24TkVf needed follow-up PR #3162 after the owner found a missing antecedent and a bad excerpt post-merge, so step 6's check missed reading-order problems; its friction suggests rereading the section in order. Grade unchanged.

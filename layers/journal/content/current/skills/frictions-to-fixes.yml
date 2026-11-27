@@ -12,19 +12,10 @@ watchFor:
   - "The top-three rule is followed: an entry is skipped only for a reason the rule states, not by judgement."
   - "Every Friction cluster the run designed a solution for ends the run fixed immediately, with an issue raised, or with a ledger update saying what design was dropped and why."
 auditSummary:
-  date: "2026-11-26"
-  text: "Turns the week's recurring problems into fixes or filed issues, and each run's picks end up fixed or noted. A ledger-only fix pays for a heavy two-agent review that finds little, and the survey step still has no clear cut-off."
+  date: "2026-11-27"
+  text: "Turns the top recurring problems into fixes or issues, and the fixes it files get merged and hold. Its review step is heavy for data-only changes, and its survey brief leaves open how many candidates to confirm."
+
 observations:
-  - date: "2026-10-17"
-    note: >-
-      Self-check (audit-skills behaviour check): 4 freshly-verified sessions
-      beyond prior entries (session_01RnZJ7VrgWpgzfJUCEdif77 PRs
-      #2107-#2109, session_01XUuxhnMc7t2zXaH9ebtxKZ PR #2140 + issue #2138,
-      session_01Mf4dUxuWB7WtkC5fVzByH6 PRs #2149-#2151,
-      session_018sAirSgDY1Nv82JVogjcyR PRs #2155-#2157), all merged and
-      diff-matched; no PR touched a Human-only path. #1449 reconfirmed still
-      CLOSED (wontfix), no recurrence. No reverts in the 2-week sweep. No new
-      silent failure. Grade/role unchanged.
   - date: "2026-10-18"
     note: >-
       Self-check (audit-skills behaviour check): 10/10 usedIn sessions
@@ -172,3 +163,42 @@ observations:
   - date: "2026-11-26"
     note: >-
       Behaviour check of session_013zxzeR67EGdvDDNgGomDr6 (11-25, new), session_013zxzeQtsYHUcYiiVy88LyU (11-24) and session_013zxzeQTiD2k55P7AkEWYBY (11-23). The logs were read through their frictions and toolCounts sections only, GitHub issue states were not checked and merges were verified through git log origin/main. SKILL.md last changed in e8431d318 (11-20) and the survey brief was trimmed on 11-23 (b4bd47dd9); nothing changed since 11-24, so the 11-25 and 11-24 runs ran the same text. Watch for: (1) the top-three rule held on 11-25 (it found no regression at moderate or above and filed none; the audit-skills-run-cost ledger entry is accepted, which section 2 excludes; severity ranking was not recomputed, a caveat); 11-24 filed one issue (#3637) and 11-23 none. (2) Designed clusters end fixed, filed or noted: held. The 11-25 pick, harvest-evidence-arg-shape, was fixed by #3666 (merge a535eb1d8; harvest.ts and harvest.spec.ts, +6/-2, the evidence arg now splits on whitespace) and recorded by the closing ledger #3667 (88f1fb92e); 11-24's blog-persona-path-guessed was fixed by #3639; 11-23 closed both picks as no-change with dated notes. The 11-25 pick is thin (one minor and one nit occurrence in the same file) and passes section 3's 'lone low-severity one-off' skip only barely. Both items have held in every graded run since 11-17, so the owner may retire them. Delivery: #3665 (6c0d00420), #3666, #3667, #3638, #3639, #3640 and #3613 are on origin/main; no revert in the 14-day grep. No silent failure, no missed invocation. New, n=1 on 11-25: the run started pnpm gate:scoped on the ledger branch in parallel with code-review, the Standards review then found a dangling ref, and the gate was stopped and rerun (section 5.4 says to gate on the final head but not to review first); the survey agent 'cannot confirm 157 entries' and reported append aborts on repeated sessions in one call, a variant of the 11-24 finding that survey-brief section 3 gives no cut (2 of 2 runs on the trimmed brief); merge-pr.ts refused an own-read verdict for a one-line comment edit to a .ts file, so a second full code-review ran; code-review asked the user for a spec and the unattended run substituted the Skill text (nit). Known repeats: a ledger-only PR fails the simple-change test, 11 of 11 audited runs (58 files here), paying a two-agent review; the dispatch-read guard refused a brief naming the scratch placeholder; the double-background guard refusal; read-first docs late. The --move, --append and --unledgered slips seen on 11-23 did not reappear (inconclusive, n=2). Cost: 1474 s, 10 Agent calls, 48 Bash calls, claude-sonnet-5-5 only. Grade routine, unchanged; role and gist carried as current from the earlier note (unverified this run). Idea kept: in section 5.4 say a ledger-only PR made by ledger-set and prune-friction-ledger takes an own read plus pnpm gate:scoped, which merge-pr accepts, and add 'review first, then gate'. Next focus: recompute regressions on the ledger tree at 6c0d00420 to confirm none at moderate or above qualified on 11-25, and check whether survey-brief section 3 still leaves candidate scope undefined.
+  - date: "2026-11-27"
+    note: >-
+      Behaviour check of session_013zxzePHUnDuN2sgW4ghamU (11-26),
+      session_013zxzeR67EGdvDDNgGomDr6 (11-25) and
+      session_013zxzeQtsYHUcYiiVy88LyU (11-24); the logs were read through
+      frictions, summary and prs, not full event streams. SKILL.md has not
+      changed since e8431d318 (11-20) and the survey brief was trimmed on 11-23
+      (b4bd47dd9), so all three ran current text. Watch for 1, the top-three
+      rule: held in all three. The 11-26 run filed regression issues #3680 and
+      #3681 (two), 11-25 filed none and 11-24 filed #3637 only; that no other
+      cluster qualified is the logs' claim, since the severity was not
+      recomputed on the ledger tree. Watch for 2, designed clusters end fixed,
+      filed or noted: held. On 11-26 PR #3684 (the audit-docs Covered-lines fix)
+      merged and the clear-backlog-build pick became issue #3682 (since closed) because
+      issue #3663 edited the same file; 11-25 fixed harvest-evidence-arg-shape
+      with #3666 and recorded it with #3667; 11-24 fixed
+      blog-persona-path-guessed with #3639 and #3640. Both items have held in
+      every audited run since 11-17, so the owner may retire them. Delivery:
+      ledger PRs #3683 and #3685 are merged; #3680 was closed by #3707; #3682 is
+      closed; no revert. New, n=1 and minor: issue #3680 is titled as not a
+      regression yet was filed in the regression section, and its body says the
+      cause is unknown. Repeat now 3 of 3 on the trimmed brief: the survey agent
+      confirmed only a few of roughly 150 candidates because survey-brief
+      section 3 defines no confirmation scope; the 11-26 run also found the
+      brief asks summaries to end with see: although stored summaries do not
+      carry it. Known repeats: a ledger-only PR fails the simple-change test and
+      pays a two-agent code-review, 14 of 14 audited runs (65, 58 and 66 files);
+      the dispatch-read guard refused a brief naming the scratch placeholder
+      (11-25, 11-26); the double-background guard (11-25, 11-26);
+      git-conventions read late (11-26, 11-24); gate:scoped overlapped
+      code-review once. The tenant-glossary guard blocked a ledger YAML once, a
+      nit. Cost: 1,498, 1,474 and 1,383 seconds, 8, 10 and 5 Agent calls. Role
+      and gist: SKILL.md did not change; the start of the role still matches,
+      but the rest was not read against the step 5 limits (unverified).
+      Importance routine, unchanged. Idea kept: say in step 5.4 that a
+      ledger-only PR from the ledger scripts gets an own read plus pnpm
+      gate:scoped, and let merge-pr accept that verdict. Next focus: recompute
+      regression severity on the ledger tree at 2c009d366 and check whether
+      survey-brief section 3 still leaves the confirmation scope undefined.

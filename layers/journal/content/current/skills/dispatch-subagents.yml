@@ -8,23 +8,10 @@ role: >-
   and the post-dispatch check that no finished subagent work is stranded. Every
   rule in it was paid for by a session that lost work.
 auditSummary:
-  date: "2026-11-26"
-  text: "Its rules for handing work to helper agents hold up: no stranded work, no reverts, and the read-before-dispatch guard catches the few misses. The workflow script that briefs the builders still contradicts itself and wastes a turn in several runs."
+  date: "2026-11-27"
+  text: "Its worktree and hand-back rules hold: every claimed PR landed and no work was left stranded. Agents still trip the same guards, such as the first-dispatch read check, and often read git docs late."
+
 observations:
-  - date: "2026-10-17"
-    note: >-
-      Self-check (audit-skills behaviour check), Part A (10 usedIn, all
-      2026-10-16): no stranded work, no branch/worktree collision beyond the
-      already-known owner-accepted #1480 recurrence (not_planned, self-caught,
-      no damage), no merge-pr.ts dispatched to a subagent;
-      `pnpm exec tsx scripts/check-worktrees.ts` passes clean. Part B (124
-      notUsedSessions, 105 ruled out by goal, 19 opened in full): 0 new missed
-      invocations - every dispatch found was strictly read-only or a clean
-      worktree-isolated landing; every skillsUsed omission matches the
-      already-tracked, owner-closed-not_planned #1586/#1915 logging gap, which
-      this Skill's own grading rule excludes (outcome delivered, just
-      untagged). No reverts of this Skill's own mechanics. Grade/role
-      unchanged (essential).
   - date: "2026-10-18"
     note: >-
       Self-check (audit-skills behaviour check): 10/10 usedIn verified (no
@@ -210,3 +197,40 @@ observations:
   - date: "2026-11-26"
     note: >-
       Behaviour check of 24 runs (11-23 02:07Z to 11-25 16:03Z) and 20 non-users (11-19 to 11-26), from log fields (goal, outcome, summary, prs, frictions, toolCounts, docsRead) via a YAML dump; raw event streams were not read, so run-level claims are self-reported. SKILL.md last changed in 7a0f512c0 (11-22), so all runs used the current text. Delivery clean: the 24 runs claim 56 distinct PRs and all 56 appear on origin/main; git worktree list shows a single line, so nothing is stranded; no revert; the two PRs held by session_013zxzeSBTTxHztyPoJeEwAj (#3659, #3660) are on main; Prune Trial #3521 (the section 3 cut) was judged and deleted on 11-23 (eaba4ee02). All 20 non-users are ruled out: 8 dispatched nothing (harvest runs, the Dependabot sweep) and 12 dispatched with the Skill's SKILL.md in docsRead. Three of those 12 (session_013zxzeRuV2ywUTZimzQvXAN, session_013zxzeT1KJU1C5ggyu5ibSA, session_013zxzeSMNGy8G5ktwppozy2) were denied on their first Agent call by the dispatch-read guard and then read the Skill and retried, so the guard rather than the model enforces read-before-dispatch. Known observation, repeat: .claude/workflows/clear-backlog-build.js on origin/main is unchanged and still contradicts itself (e2e 'in the background' against 'Run checks in the foreground', a cd-and-&& gate chain in a file that forbids &&, an awk filter that drops lines) and cost turns in SBTT, session_013zxzeRQRYWw3yLJzSdaozk and session_013zxzeQemDnZfmHdeYUmhur; the open issue is #3663 and the audit could not read its state (GraphQL blocked), though this run's search confirms it is open. Other repeats by keyword over frictions: late git-conventions read about 18 mentions; double-background guard block 8 runs; rule-use echo costing read-only agents 7; dispatch-read guard denial on the first call 4; hand-off channel flips 3; review sha guard blocking the first code-review call 3; per-Skill or fan-out cost with little new finding 3. Single sightings: a brief naming the scratch placeholder literally (session_013zxzeR67EGdvDDNgGomDr6); a visitor brief and context file passed by path rather than pasted (a gray area); a garbled URL-rule line in a context file (session_013zxzeRByCWuYi8gThTfvKA); Covered lines hand-copied into briefs (now fixed by #3684); a cd into a builder worktree whose removal deleted the cwd (section 5 warns about it); a resumed UI tester that re-sent its report instead of the retro (section 6 covers it). Section 7 appears in no run, and sections 2 and 6 show no failure but only the lead's view is logged. Role and gist are current; neither names sections 6 or 7. Importance essential, unchanged. Idea kept: edit clear-backlog-build.js once (no-chaining rule first, e2e in the foreground with a timeout, a corrected awk filter, axis names stated); the evidence is seven sessions' retro frictions pointing at the same script. Next focus: sections 2 and 6 (isolation and resume) from raw events, whether a brief's pilot-first step was followed, and section 7.
+  - date: "2026-11-27"
+    note: >-
+      Behaviour check of 26 run logs (the data file header says 24 but lists
+      26), read through a dump of goal, outcome, summary, prs, toolCounts and
+      frictions; raw event streams were not read, so run-level claims are
+      self-reported. SKILL.md last changed in 7a0f512c0 (11-22), before every
+      run. No watchFor items. Delivery clean: the runs claim 44 distinct PRs and
+      all 44 appear as merge references in the two-week git log on origin/main;
+      git worktree list shows only the main checkout, so nothing is stranded.
+      Three revert commits in the window (9571f56ec, bfd1e4e40, f47b12b91) do
+      not concern any run's deliverable (titles only). No missed invocation: of
+      20 non-using sessions, 14 dispatched agents and had the SKILL.md in
+      docsRead, and 4 dispatched nothing; two harvest sessions
+      (session_013zxzeSJY7CjGgJdwhJmTgV and the 11-24 one) were not checked
+      directly and are ruled out as unlikely. Counts over the 26 runs from
+      friction text: the dispatch-read guard denied the first Agent call in 4
+      runs; the double-background guard blocked in 6; a read-first doc was read
+      late in about 12; the rule-use echo cost read-only agents in 5; the
+      review-call sha guard blocked the first code-review call in 4; a gate was
+      started before code-review finished in 3. Changed since the last note: the
+      clear-backlog-build workflow contradictions (background e2e, the cd and
+      chain, the awk) were fixed in dc7a91146 and tightened by 71bbaa64c,
+      d60c98c0e and 89f8bf3b9, issue #3663 is closed, and the 11-26 retro shows
+      only narrower builder gaps (pnpm ran in the main checkout, not the
+      worktree). New, minor: ledger-only PRs of 58 to 66 script-written files
+      always fail the simple-change test and each paid a two-agent review (three
+      runs); this belongs to the frictions-to-fixes and pr-workflow text and is
+      dispatch cost only. Section coverage: pilot-first and worktree isolation
+      showed no violation; resume via SendMessage was used heavily with no
+      failure; the save rule was caught late once (hand-typed pool summaries
+      re-saved with the script). Sections 2 and 6 and section 7 could not be
+      checked from logs. Role and gist: no SKILL.md change, no new verdict; the
+      earlier note called them current. Importance essential, unchanged. Idea
+      kept: add one line to section 3's scope bullet that a script-written diff
+      needs the script's output checked, not a two-axis review. Next focus:
+      sections 2 and 6 from raw events, whether pilot-first was followed in the
+      briefs, section 7, and the two harvest non-users.

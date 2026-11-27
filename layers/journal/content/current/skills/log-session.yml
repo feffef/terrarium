@@ -9,20 +9,10 @@ role: >-
   bounded exception). Usually invoked by `close-session`; call it directly only
   to amend a written log.
 auditSummary:
-  date: "2026-11-26"
-  text: "Reliably produces an honest log for each session; every recent log landed and the PRs it claims are on main. Subagents' rule ratings are often missing while the log still counts as answered, which an open issue tracks."
+  date: "2026-11-27"
+  text: "Gets a complete, honest log on main for essentially every session, and in-review states are reported truthfully. The rule ratings from helper agents are still often incomplete, though a recent fix aims at it."
+
 observations:
-  - date: "2026-10-17"
-    note: >-
-      Self-check (audit-skills behaviour check), Part A (10 usedIn) - 0
-      silent failures, all schema-valid and committed direct-to-main, honest
-      frictions, all PR claims cross-checked live. Part B (16 notUsedWindow)
-      - 0 missed invocations, all are the known gap where close-session
-      invokes log-session internally without it surfacing in skillsUsed
-      (#1915, already closed/fixed via PR #1933). #1450 (word limit)
-      reconfirmed still closed and holding - no numeric-cap regression. No
-      new finding. Grade/role unchanged
-      (essential).
   - date: "2026-10-18"
     note: >-
       Self-check (audit-skills behaviour check), Part A (10/10 usedIn,
@@ -173,3 +163,38 @@ observations:
   - date: "2026-11-26"
     note: >-
       Behaviour check of 31 run logs (11-23 to 11-26) and two non-users, against origin/main tip a5e9c5483. A Python script parsed every log through git show origin/main; PR diffs against summaries were not checked. SKILL.md last changed in 750d8edc0 (11-22, wording) and the script guard dddedf899 landed 11-20, so every run used one contract. Delivery is clean: all 31 logs and both non-user logs exist on origin/main, completed, landed by Stop, each with goal, outcome, summary, frictions (2 to 14) and ruleUse; close-session is in skillsUsed for 30 of 31 runs; the logs claim 48 distinct PRs and all 48 appear on origin/main; no revert in the 14-day searches (only guard commits 7e1fdb012, 2e0ec25f6, dddedf899). Five logs carry moderate or worse frictions (session_013zxzePSaj6hZQUzYVaqg4f twice, session_013zxzeRByCWuYi8gThTfvKA, session_013zxzeRuV2ywUTZimzQvXAN, session_013zxzeQQqZzQUP929AxkcZo), texts not read. Silent failure, known repeat (rule-rating gap in subagent entries): main entries have 0 unrated rules in all 30 runs with a real count, but 22 of 30 parsed logs have at least one subagent entry with loads minus reported non-empty while answered is true; worst are session_013zxzeR2f7URRYrx7PdwVDH (11 entries), session_013zxzeT6Ss7hjULbaTx2PS2 (workflow-subagent12 at 16 of 20), session_013zxzeQU1aX4cz6nKeBuxbP (general-purpose3 at 19 of 21 and general-purpose2 at 18 of 23), session_013zxzeQF4hazkBfaftfPo5b (general-purpose18 at 15 of 15) and the newest run session_013zxzeSK7bEhaxexffUGupq (general-purpose0 at 8 of 8). The issue is #3662 (open, owner decisions of 11-25 on it: tighten the SubagentStop hook rather than redefine answered); I added today's evidence as a comment. Cause verified in code: scripts/session/log-session.ts:916-918 runs unratedRules over the main agent's loads only and line 1051 sets answered true for any authored reported. Silent failure, known repeat (Stop-path hole): session_013zxzeStkfKoZxBQUkQd9pd (visitor-loop, no close-session) landed via Stop with its main entry 15 of 15 unrated and a general-purpose2 at 4 of 4; the --author refusal is not on that path (a code reading of those lines, not traced through the Stop handler). The other non-user session_013zxzePNKjPWkVNAkzZbSVC used close-session and is clean at 0 of 13; neither non-user is a missed invocation since both logs landed. Role and gist are current (checked against log-session.yml). Importance essential, unchanged. Idea kept: extend unratedRules to every by entry and have the Stop-path landing set answered false when any entry has unrated loads and no none-applies entry; evidence is 22 of 30 logs here, 31 of 35 last window and the 15-of-15 Stop-path log; this extends dddedf899 from the main agent to all agents, though #3662's decision keeps answered's meaning, so it should be weighed against that. Next focus: PR diffs against log summaries and friction texts, which were not read, and the Stop handler path near lines 931 and 1051 of log-session.ts.
+  - date: "2026-11-27"
+    note: >-
+      Behaviour check of 35 run logs (11-24 to 11-27) read by script from
+      origin/main at b787a84e7; friction texts were not read one by one and PRs
+      were matched by number only. SKILL.md last changed in 750d8edc0 (11-22,
+      wording only) and the script guard in dddedf899 (11-20), so one contract
+      applies. No watchFor items. Delivery clean: all 35 logs exist on main, all
+      landed via Stop, 34 are completed and session_013zxzeQivG2v72EMRPiQ5aR is
+      honestly in-review (its Digest PR #3710 is open). Both close-session and
+      log-session appear in skillsUsed in all 35. The logs claim 52 distinct PRs
+      and 51 appear on origin/main; the exception is #3710. No revert. Friction
+      counts run 1 to 12, none empty. Moderate-or-worse frictions appear in 9
+      logs; session_013zxzePo4mtQsMpDHLLDFmb holds the only major, a
+      human-prompted closure that is a close-session gap, not a log-session one,
+      since the log was corrected and recorded honestly. Known repeat: the
+      rule-rating gap in subagent entries. Main-agent entries have no unrated
+      rules in any of 35 logs, but 26 of 35 have at least one subagent entry
+      with unrated loads while answered is true (worst: 11 in
+      session_013zxzeR2f7URRYrx7PdwVDH). Issue #3662 is closed by PR #3689
+      (11-26), which blocks a subagent's stop up to three times and adds
+      quality.unratedSubagents to the rule-use report. Of the 10 runs that
+      started after it, 8 still have unrated subagent loads by this script, but
+      the script counts a bare none-applies call as unrated and #3689 allows
+      that, so the metric over-counts; it should be rerun with unratedSubagents
+      before any issue is filed, and the hook code and subagent transcripts were
+      not read, so whether the three-block cap or a missing hook leaves the gap
+      is unverified. Non-users session_013zxzePNKjPWkVNAkzZbSVC and
+      session_013zxzeStkfKoZxBQUkQd9pd are visitor-loop runs with logs on main;
+      not missed invocations. Role and gist are current (read in the Inventory
+      file). Importance essential, unchanged. Idea kept: after #3689, rerun the
+      check with quality.unratedSubagents, and if the gap holds make the Stop
+      landing write answered false for entries with unrated named loads. Next
+      focus: whether the three-block cap in subagent-rule-use-stop.ts leaves the
+      post-#3689 runs unrated, plus PR diffs against summaries and friction
+      texts.

@@ -9,32 +9,10 @@ role: >-
   Inventory's grades in line with usage as a by-product, self-merging those
   edits (ADR-0015).
 auditSummary:
-  date: "2026-11-26"
-  text: "Runs daily, grades every Skill and lands the notes in a PR; recent runs delivered and nothing was reverted. It sometimes edits the Journal before reading its glossary and often reads git and GitHub guides late."
+  date: "2026-11-27"
+  text: "Writes grounded notes and files issues that got fixed within a day or two. A rate-limited fan-out cost hours, and its scripts have rewritten whole files when only an append was needed."
+
 observations:
-  - date: "2026-10-17"
-    note: >-
-      Self-check: dispatched 13 behaviour-check subagents this run (one per
-      behaviourChecks entry — audit-docs, audit-skills self, auto-triage,
-      blog-post, clear-backlog, close-session, digest, dispatch-subagents,
-      frictions-to-fixes, glassbox-update, log-session, prune-trial,
-      visitor-loop), each report independently verified against primary
-      sources before use. All 13 came back clean this run — no new silent
-      failure or missed invocation found anywhere, an unusually clean week
-      given the heavy churn (all 13 Skills' SKILL.md changed, up to 33 edits
-      each), which the checks confirm is the trail of fixes landing from
-      prior audit findings rather than fresh instability. One watch item
-      from visitor-loop's own check, not escalated: an owner-directed rework
-      (PR #2178, 5h after PR #2164) sits in the 3-day owner-corrections.ts
-      window untested, since no visitor-loop run has fired since — worth
-      confirming next run. Step 3 closure completeness: orphan scan clean
-      (scanned: true), both orphan candidates carry `resolvedBy` (left
-      alone), orphanSuppressionLog both entries plausible
-      (`resolved-annotation`), humanPromptedClosures' one entry
-      (session_014uXxmT6359K4Z42a6We6Gh) already settled 2026-10-13,
-      manuallyRescuedClosures empty. Coverage gap found and added:
-      `glassbox-lesson` (1 use, session_01NFv67izdzVGrFHb2EVwZJ2's Glass Box
-      Nitro Lesson, verified merged). Grade/role unchanged (routine).
   - date: "2026-10-18"
     note: >-
       Self-check: dispatched 13 behaviour-check subagents this run (same 13
@@ -240,3 +218,37 @@ observations:
   - date: "2026-11-26"
     note: >-
       Behaviour check of session_013zxzeSk9yTcNdyR7eowQqV (11-24, PR #3636) and session_013zxzeR2f7URRYrx7PdwVDH (11-25, PR #3664). Logs, git and PR diffs were read. The 11-24 run started before 69617f9a8 (11-24 07:42Z, the Next focus rule), so that step was untested for it; the 11-25 run ran on current text. Both delivered: #3664 (242aa1649) touches 26 files, 10 routines and 16 skills, nothing else, and its follow-up 72b5f61bc corrected an inspect-session note, matching the log's own-read follow-up; #3636 (8235799bf) touched 25 files. No revert in the 14-day grep. Issues #3662 and #3663 and the #3634 comment named in the 11-25 log were not re-checked on GitHub by the subagent; #3662 and #3663 were confirmed open when this run searched. Next focus check: the Next focus line was written and used, held (all 15 11-25 notes end with it, 357 to 497 words; whether subagents acted on it is unverified). Per-Skill subagents returning role/gist verdicts: couldn't tell, the logs do not show subagent reports (n=7 on the step 5 reread). The 11-25 Journal-glossary read before the first Journal edit FAILED: docsRead lacks layers/journal/GLOSSARY.md and ruleUse for tenant-glossary.md says missed, 'late: edited Journal entries without reading its glossary'; 11-24 read it. This is a repeat of the Tenant-glossary miss (n=6 or more). Known repeats: git and GitHub docs read late (about 13 runs, and this run's audit subagents hit the same reminder); a wrong or invented session id in a draft caught by get_session (n=6); the 15 per-Skill subagents mostly re-confirming known repeats (both logs show 18 Agent calls). New minor items, n=1 each: the 11-25 apply script re-serialised every Inventory yml via the yaml library (1815 deleted lines) and was redone as a text append; the gate-edit guard blocked edits while gate:scoped ran. The skillsUsed count of 16 subagents against 15 in the friction and 18 Agent calls in toolCounts is unreconciled. The schedule-wording rejection by validate-skill-cadence did not recur. Role and gist are current. This run's own conduct: the first dispatch of 16 agents hit a rate limit and all 16 failed; they were resumed by SendMessage once it lifted and all 15 reports arrived, so the audit completed late rather than skipping any check. No grade change. Idea kept: a small append-observation script, or an extension of prune-observations.ts, that appends a note as plain text, flags schedule words and prints each Skill's grade beside its slot; the evidence is the lost script on 11-25 and the lost commit and review round on 11-23. Next focus: whether the 11-25 subagent reports returned role/gist verdicts and followed the prior Next focus (read one report), and check #3662, #3663 and the #3634 comment on GitHub.
+  - date: "2026-11-27"
+    note: >-
+      Behaviour check of session_013zxzeR2f7URRYrx7PdwVDH (11-25) and
+      session_013zxzePQedy4SaB83pQYkET (11-26). Both ran on the current SKILL.md
+      (69617f9a8, 11-24). The auditor read both logs in full, the observations,
+      git, and issues #3662, #3663, #3634 and #3680 with comments. No watchFor
+      items. Delivery verified: the 11-25 run landed PR #3664 (242aa1649,
+      follow-up 72b5f61bc); the 11-26 run landed PR #3686 (b997e7980), 26 files,
+      10 routines and 16 skills, none outside the allowed paths. The log's three
+      escalation comments exist on #3634, #3680 and #3662 with the 11-26 session
+      header. The 11-25 escalations led to fixes: #3663 was closed by #3687 and
+      #3662 by #3689, within about 30 hours. The 15 notes of 11-26 run 380 to
+      492 words, each ends with a Next focus line, and the gate passed. One new
+      item, n=1 and moderate by the log's own rating: the 11-26 fan-out of 16
+      subagents hit a rate limit; all 16 first calls failed, the run took 19,489
+      s against 1,069 s on 11-25, and all 16 were resumed by SendMessage, so no
+      check was skipped and the cost was time. SKILL.md step 2 has no batching
+      or resume wording. Repeats: the tenant-glossary rule was missed in both
+      runs and layers/journal/GLOSSARY.md is absent from docsRead (the 11-26 run
+      wrote diary entry where the glossary says session log, caught in
+      code-review); open issue #3705 covers it. The git-conventions and
+      github-integration docs were read late again. The 11-25 apply script
+      re-serialised every Inventory yml (1,815 deleted lines), the third run in
+      a row with such a script slip, which is why this note was appended
+      textually. Whether subagent reports carry role and gist verdicts still
+      cannot be seen in the logs; indirectly all notes of both days contain a
+      role-and-gist statement. Minor and unverified: the 11-26 auditSummary says
+      daily while a log goal says weekly. Role and gist are current; importance
+      routine, unchanged. Idea kept: batch the per-Skill subagents in groups of
+      about five and resume by SendMessage after a rate limit, and add an
+      append-observation script so notes never need an Inventory rewrite. Next
+      focus: read one raw subagent report to see whether it carries role and
+      gist verdicts and follows the prior Next focus, and whether #3689 closed
+      the Stop-path hole raised in the 11-26 #3662 comment.

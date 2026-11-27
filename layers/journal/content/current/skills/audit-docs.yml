@@ -9,20 +9,10 @@ role: >-
   gated PR on green (ADR-0003/0004), filing an issue only for a factual conflict
   it can't resolve. Use it when docs and code drift apart.
 auditSummary:
-  date: "2026-11-26"
-  text: "Sweeps the docs for stale or wrong claims, fixes the safe ones in a PR and sends rule changes to a human; its changes land and stay. Over half of the problems its reviewers report turn out to be false, and the line saying what was read is looser than the reading."
+  date: "2026-11-27"
+  text: "Finds and fixes real doc conflicts and stays out of the Human-only files. Most of what its reviewers flag is rejected by its own checker as wrong, so a lot of review effort is spent for little."
+
 observations:
-  - date: "2026-10-17"
-    note: >-
-      Self-check (audit-skills behaviour check): 3 freshly re-verified
-      sessions beyond the 2026-10-16 entry (session_01XxPqcyjVxcgmHTidWtoF1g
-      PRs #2161/#2162, session_017xginqTj2NjZ8XgrbRqvkm PRs #2110/#2111,
-      session_01M9Ryb84DYs5HxKy2Z3cpA2 PRs #1921/#1922), all confirmed merged
-      and scoped as claimed; 7 others corroborated via 2-week revert sweep
-      (clean). Sub-threshold, not escalated: the step-3 pooling-instruction
-      ambiguity ("copied, never retyped") self-caught a 3rd recurrence in
-      session_01XxPqcyjVxcgmHTidWtoF1g - worth a future SKILL.md wording fix
-      if a 4th instance turns up. No new silent failure. Grade/role unchanged.
   - date: "2026-10-18"
     note: >-
       Self-check (audit-skills behaviour check): 9 of 10 usedIn sessions
@@ -211,3 +201,40 @@ observations:
   - date: "2026-11-26"
     note: >-
       Behaviour check of session_013zxzeRZHMEnUJhXdAbEh4G (11-23, PR #3614), session_013zxzeQqSgD4eRH99VvRtLc (11-24, PR #3641) and session_013zxzeQU1aX4cz6nKeBuxbP (11-25, PRs #3668 and #3669). The audited logs, git and the merge diffs were read; SKILL.md changed on 11-26 (c04c32b0c, c95d854c3, merged as #3684, step 1 prints the Covered lines with one grep), after all three runs, so they were graded on the earlier text. No watchFor items. Delivery held: #3668 (db1ae6084) touched exactly three non-Human-only Skill files (glassbox-curate, glassbox-update, visitor-loop SKILL.md, 4 added and 4 removed lines), matching the log; #3669 (98b28e6de) touched only .claude/rules/tenant-layers.md, a Human-only path, and a human merged it, as the Skill requires. The 'Stale or missing' fix is real: the Glass Box memory page has no such heading, so the edit '(if the page has it)' was justified. 11-24 (58f43ea0b) and 11-23 (6c565006e) stand; no revert in the 14-day grep. Tallies: 11-25 reviewers produced 9 findings and the checker graded 2 CONFIRMED, 2 CONFIRMED-BUT and 5 WRONG. Running WRONG share is 8 of 11 on 11-24, 10 of 17 on 11-23 and 5 of 9 on 11-25, so 23 of 37 over the three runs, the seventh window above half; the logs name the cause as glossary entries or Skill pointers that were already the shorter home, or rewrites that came out longer. Known repeat, now 8 sightings: the Covered line names docs nobody read in full. On 11-25 docsReadBySubagents lacks CLAUDE.md, GLOSSARY-MAP.md and two docs/research files, though several other Covered items sit in the main session's own docsRead, so the 'read in full' wording is loose rather than clearly false (grep-only reading could explain it). The hand-copying of Covered lists into briefs (3rd and 4th sightings, 11-24 and 11-25) is now fixed by #3684; the next audit should check that the first run after 11-26 uses the grep and pastes it verbatim. New nit (n=1): the escalation PR needed its own branch after the session branch had merged, and step 6.2 does not name which branch to use, so the run reused the merged name from main (#3669 shares its head name with #3668). Role and gist were not re-read in full; the 11-26 edit is step-1 wording only, so both are probably still current (unverified). No grade change. Idea kept: give reviewers the same why-rule sentence the checkers already get, and tell them to skip findings that need an owner decision, a guessed threshold, a Human-only file or a pointer that is already the shorter home; the evidence is 23 of 37 findings WRONG with the causes named. Next focus: whether reviewers B and C's own unread-file lists match the Covered line, and the first run to use the new Covered grep.
+  - date: "2026-11-27"
+    note: >-
+      Behaviour check of session_013zxzeSUNxM2snCnM3Wwi6o (11-26),
+      session_013zxzeQU1aX4cz6nKeBuxbP (11-25) and
+      session_013zxzeQqSgD4eRH99VvRtLc (11-24). The auditor read the logs'
+      summaries, frictions and docsRead lists (11-24 and 11-25 only in part),
+      SKILL.md and git on origin/main. No watchFor items. The 11-24 and 11-25
+      runs predate the Covered-grep text of #3684 (de721b803); the 11-26 run
+      started after it. A later change, 6910dae27 (#3709, 11-27), scopes older
+      ADRs out and makes Agent A grep all of docs/agents; no run has used it
+      yet. Delivery held: the 11-24 sweep (58f43ea0b), the 11-25 sweep
+      (db1ae6084) and the escalation PR (98b28e6de) are on origin/main; the
+      11-26 run opened no PR, which the Skill allows. No revert in the 14-day
+      greps. The 11-26 checker rejected all seven findings (A 0, B 5, C 2): 7
+      WRONG, 0 CONFIRMED, quoted from the log summary. The running WRONG share
+      is 30 of 44 over four runs, the eighth window above half; the checker's
+      reasons are cuts that lose information, placements an originating issue
+      stated, and owner decisions. The run's own friction asks for the checker's
+      lose-nothing bar in the reviewer brief, which matches the idea kept below.
+      Known repeat, ninth sighting: the Covered line names docs absent from
+      docsReadBySubagents (README.md, SECURITY.md, tests/README.md and the
+      non-ADR rules), though grep-only reading could explain it, so it stays
+      unverified. The Covered-grep fix looks to have worked: the 11-26 Covered
+      areas differ from the 11-24 and 11-25 lists and the log shows no hand-copy
+      friction, but the commands themselves were not visible. New, n=1: on 11-26
+      the Agent A and B replies were first saved as hand-typed summaries instead
+      of save-handback.ts output, then re-saved. Two open owner decisions were
+      left unfiled, correctly under step 4.3: dependabot-sweep line 28 sends 0.x
+      patch bumps to a human where ADR-0004 lets an agent merge them, and
+      harvest.yml's watchFor text says explicit budget where harvest's SKILL.md
+      has no such wording; watchFor is the owner's and is never edited here.
+      Role and gist are current; the role omits the human-merged escalation PR,
+      a nit as before. Importance routine, unchanged. Idea kept: give reviewers
+      the checker's lose-nothing bar and a skip list (owner decisions, guessed
+      thresholds, Human-only files, watchFor, merge policy). Next focus: whether
+      the first run on the 6910dae27 text greps every docs/agents doc, and
+      whether reviewers B and C's own unread-file lists match the Covered line.
