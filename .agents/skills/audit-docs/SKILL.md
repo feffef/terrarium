@@ -72,15 +72,16 @@ origin/main` and its diff.
   grep every noun the diff removed (an old path, a deleted job name) across
   all docs. For a Skill, its Inventory entry's `observations` may back up a
   finding.
-- **Orphan-addition:** something added in the last 48 hours that lacks the
-  reference it needs. Only two cases count:
-  1. a new `docs/agents/*` doc named neither in CLAUDE.md's "Docs you must
-     read first" nor by a `.claude/rules/` rule (ADR-0029): add the link.
+- **Orphan-addition:** something that lacks the reference it needs. Only two
+  cases count:
+  1. any `docs/agents/*.md`, found by a grep over all of them, not only recent
+     additions, named neither in CLAUDE.md's "Docs you must read first" nor by
+     a `.claude/rules/` rule (ADR-0029): add the link.
      `docs/research/` is unindexed on purpose.
-  2. a new ADR that changes another ADR's decision while the old one still
-     states it (ADR-0030): rewrite the old ADR (it escalates).
+  2. a new ADR (last 48 hours) that changes another ADR's decision while the
+     old one still states it (ADR-0030): rewrite the old ADR (it escalates).
 
-  Older additions are out of scope. Never add a hand-kept ADR list to
+  Older ADRs are out of scope. Never add a hand-kept ADR list to
   `CLAUDE.md`.
 
 **Agent B, Single-home.**
