@@ -21,7 +21,7 @@ Every session that changes something follows the same path:
 
 1. **Read** the guidance for the task: :file[CLAUDE.md], the :term[rules]{id="rule"} for the files it touches, and a skill. :lessons[[CLAUDE.md](/t/glassbox/guide/claude-code/claude-md) · [Claude Code skills](/t/glassbox/guide/claude-code/skills)]
 2. **Work** on its own branch, with hooks checking some actions. :lessons[[Claude Code hooks](/t/glassbox/guide/hooks/hooks)]
-3. **Check** against the :term[gate], the fixed set of automatic checks every change must pass, plus screenshots for anything visual. :lessons[[Merge gate](/t/glassbox/guide/verification/gate)]
+3. **Check** against the :term[gate], the fixed set of automatic checks every change must pass, plus screenshots for anything visual. :lessons[[Merge gate](/t/glassbox/guide/verification/merge-gate)]
 4. **Open a pull request**, where :term[CI] runs the same checks. :lessons[[Pull requests](/t/glassbox/guide/git-github/pull-requests)]
 5. **Log** what happened in a :term[session log], including every :term[friction]{id="friction"}, a problem it hit. :lessons[[Session logs](/t/glassbox/guide/terrarium-practice/session-logs)]
 6. **Merge** once CI is green, unless a person must.
@@ -54,7 +54,7 @@ Routines turn the logs into fixes: they file each friction under its root cause,
 
 One idea runs through the design: **decide it at build time**. Every site, page and setting is declared in a file and compiled before the first visitor arrives, so everything that ships shows up in a diff a reviewer can read.
 
-- **Guidance for agents:** :file[CLAUDE.md], rules that load with the files they govern, decision records that say why, skills as step-by-step playbooks, hooks that refuse wrong actions, and glossaries that keep words exact. :lessons[[Path-specific rules](/t/glassbox/guide/claude-code/path-scoped-rules) · [Decision records](/t/glassbox/guide/terrarium-practice/decision-records) · [Ubiquitous language](/t/glassbox/guide/terrarium-practice/ubiquitous-language)]
+- **Guidance for agents:** :file[CLAUDE.md], rules that load with the files they govern, decision records that say why, skills as step-by-step playbooks, hooks that refuse wrong actions, and glossaries that keep words exact. :lessons[[Path-specific rules](/t/glassbox/guide/claude-code/path-specific-rules) · [Decision records](/t/glassbox/guide/terrarium-practice/decision-records) · [Ubiquitous language](/t/glassbox/guide/terrarium-practice/ubiquitous-language)]
 - **The app:** one Nuxt application serves every site. Each site is a :term[tenant] with its own pages and design. :lessons[[Nuxt layers](/t/glassbox/guide/nuxt-vue/layers)]
 - **The content:** Markdown and YAML files. A tenant splits them into :term[spaces]{id="space"} and :term[collections]{id="collection"}, declared in one short :term[manifest]. Each space gets its own tables, so a page can't read another space's content by mistake. :lessons[[Content collections](/t/glassbox/guide/nuxt-content/content-collections) · [Multi-tenant isolation](/t/glassbox/guide/nuxt-content/multi-tenant-isolation) · [Adding a site](/t/glassbox/guide/walkthroughs/adding-a-site)]
 
