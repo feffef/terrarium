@@ -1,0 +1,223 @@
+schemaVersion: 1
+session: session_013zxzeRAtiER4WiBiS7UMsb
+startedAt: 2026-11-27T16:02:47Z
+endedAt: 2026-11-27T16:07:13Z
+kind: autonomous
+goal: Visitor-loop run on the Midden (focus 3)
+status: completed
+outcome: "Three visitors reported; one bug filed as #3721, ideas and frictions logged; no branch or PR."
+summary: "Scheduled visitor-loop run, nobody prompted it; everything was agent-initiated within the Skill's remit (issues and this log only). Focus: midden (row 3). Built and served production preview, sent blind first-time, informed content-editor and informed UI-tester visitors (sonnet) through /t/midden. Yield: blind 7 findings/3 ideas, editor 11 findings/3 ideas, UI 7 findings/3 ideas. Sorting: 1 bug confirmed and filed (#3721: the report-page summary toggles measure 17-18px tall at 390px, rest of the file targets 24px). Dropped: chip-click-lands-at-top (not reproduced, scrollY 903 after click), chip tap targets (measured 26px), \"16 sites\" wording (Site is a Midden glossary term), repeated Tenant line (added deliberately by #3603), footer missing Marquee/Commons and \"Surprise me\" (decisions.md), missing prev/next (exists), home card 3 teaser (already logged 2026-11-23). Filter misses: none observed; the UI visitor's inline-link size findings were treated as idea-level, not bugs. Retros: blind NOTHING; UI tester wanted a walk.ts sample in visitor-brief.md and noted my context.md put the note on the pages line and listed /t/midden/trench twice; editor NOTHING except a cap on ?cause= variants in the brief."
+prs: []
+docsRead:
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: scripts/lib/chromium.ts
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/visitor-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: (no reason given)
+  - path: layers/midden/GLOSSARY.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: read before dispatching the three visitors
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: visitor-loop
+    reason: (invoked as a slash command)
+frictions:
+  - description: I ran git checkout --detach and back before reading docs/agents/git-conventions.md, and ran list-open-issues before github-integration.md; the checkout was pointless since HEAD already equalled origin/main.
+    solution: Skip the checkout when HEAD equals origin/main; read the git doc before any non-read-only git command.
+    severity: nit
+  - description: "I wrote context.md badly: the aria-current note sat on the pages line and /t/midden/trench was listed twice, so the UI tester noticed and a parsing script would break."
+    solution: .agents/skills/visitor-loop/SKILL.md could give the context file's exact pages-section layout, with the note as a separate line.
+    severity: nit
+  - description: The visitor brief gives no launchChromium sample, so informed visitors spent an extra call reading scripts/lib/chromium.ts; the UI tester also ran two cd commands against the brief's never-cd rule.
+    solution: Add a ten-line walk.ts example to .agents/skills/visitor-loop/visitor-brief.md and say how to read scratch files without cd.
+    severity: nit
+durationSec: 266
+models:
+  claude-sonnet-5-5: 52
+toolCounts:
+  Bash: 16
+  Skill: 3
+  Agent: 3
+  Read: 1
+  ToolSearch: 2
+  mcp__github__issue_write: 1
+  SendMessage: 3
+filesEdited:
+  - .throwaway/visitor-blind/crawl.ts
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/github-integration.md
+      - rule: .claude/rules/adr-0006.md
+        via: hint
+      - rule: .claude/rules/adr-0016.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: steered
+        why: closed via close-session and log-session
+      - path: .claude/rules/adr-0003.md
+        value: confirmed
+        why: "agreed: no branch or PR opened"
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: header on filed issue body
+      - path: .claude/rules/adr-0028.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0006.md
+        value: unrelated
+      - path: .claude/rules/adr-0016.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: in-scope
+      - path: .claude/rules/tenant-layers.md
+        value: unrelated
+      - path: .claude/rules/ui-verification.md
+        value: unrelated
+      - path: .claude/rules/glossary-terms.md
+        value: unrelated
+      - path: docs/agents/github-integration.md
+      - path: .agents/skills/visitor-loop/decisions.md
+      - path: layers/midden/GLOSSARY.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+subagents:
+  - type: general-purpose
+    task: Blind first-time visitor
+    model: sonnet
+    durationSec: 110
+    toolCalls: 11
+    modelCalls: 9
+    tokenShare: 14.1
+  - type: general-purpose
+    task: Informed content editor
+    model: sonnet
+    durationSec: 120
+    toolCalls: 10
+    modelCalls: 10
+    tokenShare: 16.2
+  - type: general-purpose
+    task: Informed UI tester
+    model: sonnet
+    durationSec: 115
+    toolCalls: 15
+    modelCalls: 11
+    tokenShare: 15.3
+gitBranch: claude/lucid-heisenberg-7nw3tk
+entrypoint: remote_trigger
+cliVersion: 2.1.332
+trigger: visitor-loop
+ideas:
+  - "[blind] /t/midden: the Latest finds cards pack four jargon facts into one line (Intact · cost more than it caught · in Short Lives · assessed 12 Nov 2026), and terms like season and stratum come before any explanation. Add a one-line legend above the cards (condition · cause · report · date graded) so a first-time visitor can read them without opening the Stores page."
+  - "[content editor] /t/midden/trench: the Short Lives teaser reads 'two sets of agent instructions after under four days and about ten days', which is ambiguous. Reword to 'two sets of agent instructions, taken down after under four days and about ten days', so the teaser states what happened and when."
+  - "[content editor] /t/midden/trench/<any dig report>: the Condition key repeats 'a Dissolved find's Remains links may still show an intact original', which a newcomer cannot parse. Reword to 'A Dissolved find's links may still lead to the full original.'"
+  - "[blind, content editor] /t/midden/stores: four of eight seasons say 'no finds', and the same eight seasons appear twice (a date strip and headings), with 'The Current Midden' heading twice. Show empty seasons as one line (4 seasons held nothing) and keep one list, so the page stops reading as filler."
+  - "[content editor] /t/midden/trench: Barely Cold is described as freshest when dug but sits at slot 10 under newest-stratum-first. Say 'freshest at the time of the dig (July)', so the name does not contradict the list order."
+  - "[content editor] /t/midden: cause chips only filter. Add a tally (count of finds by cause across all reports) to the front door, so visitors see the project's failure patterns at a glance."
+  - "[UI tester] /t/midden/trench?cause=bogus: an unknown cause silently shows all 16 reports with no chip active. Show an 'unknown cause' note and a visible clear-filter link, so a mistyped or stale link is not mistaken for a working filter."
+  - "[UI tester] /t/midden/stores: the page is a long scroll of 11 stored finds across 4 seasons on a phone. Add a season jump list, so a visitor can reach a season without scrolling."
+landedBy: Stop
