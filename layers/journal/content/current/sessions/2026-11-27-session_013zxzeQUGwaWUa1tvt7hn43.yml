@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQUGwaWUa1tvt7hn43
 startedAt: 2026-11-27T13:09:25Z
-endedAt: 2026-11-27T13:17:36Z
+endedAt: 2026-11-27T13:21:21Z
 kind: autonomous
 goal: Scheduled prune trial for the Platform's instructions
-status: in-review
-outcome: Judged the survey-brief trial (holds) and opened PR 3720 condensing pr-workflow.md as a new trial
-summary: "Agent-initiated scheduled /prune-trial run; no human prompted. Judged the survey-brief trial: no major or blocker damage, briefs-mismatch 3.5% to 7.5% on a small sample of nits and minors, so it holds; entry deleted, ledger entries reopened. The verifying-ui trial is not judgeable until 2026-11-29. A search subagent picked docs/agents/pr-workflow.md (prepush-gate-review-skipped, 9 fixes, 5 regression issues; merge-pr.ts already enforces the simple-change bars). I condensed it (-13 lines, -109 words), a Sonnet probe on the pinned SHA answered correctly, code-review found four lost rules which I restored, gate:scoped passed, PR 3720 opened and subscribed. Open: CI, verdict comment and merge via merge-pr.ts."
+status: completed
+outcome: Judged the survey-brief trial (holds) and merged PR 3720 condensing pr-workflow.md as a new trial
+summary: "Agent-initiated scheduled /prune-trial run; no human prompted. Judged the survey-brief trial: no major or blocker damage, briefs-mismatch 3.5% to 7.5% on a small sample of nits and minors, so it holds; entry deleted, ledger entries reopened. The verifying-ui trial is not judgeable until 2026-11-29. A search subagent picked docs/agents/pr-workflow.md (prepush-gate-review-skipped, 9 fixes, 5 regression issues; merge-pr.ts already enforces the simple-change bars). I condensed it (-13 lines, -109 words), a Sonnet probe on the pinned SHA answered correctly, code-review found four lost rules which I restored, gate:scoped passed, PR 3720 opened and subscribed. CI green, verdict posted, merged via merge-pr.ts."
 prs:
   - "3720"
 docsRead:
@@ -39,16 +39,20 @@ frictions:
   - description: The first code-review call was blocked by the sha guard because I typed the args from memory instead of pasting verdict-line --review-call output.
     solution: Paste the printed review-call args whole, as the guard says.
     severity: nit
-durationSec: 491
+durationSec: 717
 models:
-  claude-sonnet-5-5: 87
+  claude-sonnet-5-5: 104
 toolCounts:
-  Bash: 34
+  Bash: 39
   Read: 3
-  Skill: 5
+  Skill: 6
   Agent: 4
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/prune-trials.yml
   - docs/agents/pr-workflow.md
@@ -217,28 +221,28 @@ subagents:
     durationSec: 43
     toolCalls: 11
     modelCalls: 9
-    tokenShare: 11.1
+    tokenShare: 9.4
   - type: general-purpose
     task: Probe condensed pr-workflow doc
     model: sonnet
     durationSec: 12
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 3.8
+    tokenShare: 3.2
   - type: general-purpose
     task: Standards review of prune diff
     model: sonnet
     durationSec: 25
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 9.9
+    tokenShare: 8.4
   - type: general-purpose
     task: Spec review of prune diff
     model: sonnet
     durationSec: 26
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 9.1
+    tokenShare: 7.7
 gitBranch: claude/practical-rubin-u2jj12
 entrypoint: remote_trigger
 cliVersion: 2.1.332
