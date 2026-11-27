@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQLTeC8GETW73Aho8C
 startedAt: 2026-11-26T20:59:25Z
-endedAt: 2026-11-27T00:16:05Z
+endedAt: 2026-11-27T00:16:30Z
 kind: interactive
 goal: "Clear the backlog: triage six open issues, grill the owner, build and gate fixes"
-status: in-review
-outcome: Six issues decided; PRs 3707, 3708 and 3709 merged; PR 3706 open for a human merge
-summary: "Human-instructed: the owner started the clear-backlog Skill, then answered the grilling round (rule-path narrowing proposal approved, no subagent echo default, drop product-first ordering in harvest, replace harvest keyword evidence with a full digest, relabel and retitle issues). Agent-initiated: the sweep set (6 eligible issues; 8 Seedlings and one ready-for-human issue skipped), the explore run, relabelling to ready-for-agent, filing issue 3705 (late tenant-glossary hint, as the owner decided), the briefs, the build run, the pushes, the PRs and the merge of 3707. Four branches were built in worktrees. Harvest digest (3707) merged after green CI: it replaces keyword evidence with a full digest and drops the product-first ordering. Workflow evidence (3706) is open and waits for a human merge, since prompt wording is not test-observable. Journal tap targets and overflow (3708) merged after the owner confirmed the before and after screenshots I sent (no sample was shown first, since the change is meant to move nothing). The rule-paths branch (3340) became PR 3709: the builder held the adr-0029 path because no gate check catches an unreachable docs/agents doc; the owner answered drop it and update audit-docs to check every docs/agents doc, which was built, reviewed and gated. The owner pushed back on two triage picks: subagents cannot be told read-only from builder (all general-purpose or workflow-subagent), and keyword matching was dropped for a full digest. 3709 was merged by the owner. Still open: the human merge of 3706. The section 5 retro ran: four replies, recorded as Frictions."
+status: completed
+outcome: All six issues closed; PRs 3706, 3707, 3708 and 3709 merged (3706 and 3709 by the owner)
+summary: "Human-instructed: the owner started the clear-backlog Skill, then answered the grilling round (rule-path narrowing proposal approved, no subagent echo default, drop product-first ordering in harvest, replace harvest keyword evidence with a full digest, relabel and retitle issues). Agent-initiated: the sweep set (6 eligible issues; 8 Seedlings and one ready-for-human issue skipped), the explore run, relabelling to ready-for-agent, filing issue 3705 (late tenant-glossary hint, as the owner decided), the briefs, the build run, the pushes, the PRs and the merge of 3707. Four branches were built in worktrees. Harvest digest (3707) merged after green CI: it replaces keyword evidence with a full digest and drops the product-first ordering. Workflow evidence (3706) is open and waits for a human merge, since prompt wording is not test-observable. Journal tap targets and overflow (3708) merged after the owner confirmed the before and after screenshots I sent (no sample was shown first, since the change is meant to move nothing). The rule-paths branch (3340) became PR 3709: the builder held the adr-0029 path because no gate check catches an unreachable docs/agents doc; the owner answered drop it and update audit-docs to check every docs/agents doc, which was built, reviewed and gated. The owner pushed back on two triage picks: subagents cannot be told read-only from builder (all general-purpose or workflow-subagent), and keyword matching was dropped for a full digest. The owner merged 3706 and 3709; nothing is open. The section 5 retro ran: four replies, recorded as Frictions."
 prs:
   - "3706"
   - "3707"
@@ -116,13 +116,16 @@ frictions:
   - description: "Review value across the run: the Standards and Spec rounds each caught one real defect on the harvest and rules branches (a false ledger cause, stale clauses); the Both round on the small branch only re-found a nit."
     solution: Keep the Standards plus Spec pair for branches above the simple-change bar; the Both round is the cheap path for small ones.
     severity: nit
-durationSec: 11800
+  - description: Put a triage pick (a SubagentStart default for read-only subagents) to the owner without checking its premise; the owner had to ask whether such agents can be detected, costing a round.
+    solution: "Verify an explore pick's unverified premise before asking: in clear-backlog section 2, check each pick's marked-unverified claim, not only its cited sources."
+    severity: minor
+durationSec: 11826
 models:
-  claude-sonnet-5-5: 245
+  claude-sonnet-5-5: 252
 toolCounts:
-  Bash: 60
+  Bash: 62
   Read: 8
-  Skill: 8
+  Skill: 9
   Workflow: 3
   ToolSearch: 4
   PushNotification: 2
@@ -132,7 +135,7 @@ toolCounts:
   mcp__github__create_pull_request: 4
   mcp__claude-code-remote__subscribe_pr_activity: 4
   Write: 2
-  ReadNotifications: 14
+  ReadNotifications: 15
   SendUserFile: 1
 filesEdited:
   - .throwaway/build/measure.ts
@@ -1547,21 +1550,21 @@ subagents:
     durationSec: 10187
     toolCalls: 14
     modelCalls: 11
-    tokenShare: 2
+    tokenShare: 1.9
   - type: general-purpose
     task: a0fb1bcf7c2151726
     model: claude-sonnet-5-5
     durationSec: 986
     toolCalls: 76
     modelCalls: 51
-    tokenShare: 6.6
+    tokenShare: 6.5
   - type: general-purpose
     task: a102475bbeceffd92
     model: claude-sonnet-5-5
     durationSec: 659
     toolCalls: 35
     modelCalls: 22
-    tokenShare: 3
+    tokenShare: 2.9
   - type: general-purpose
     task: a4483c0c61ec12059
     model: claude-sonnet-5-5
@@ -1582,14 +1585,14 @@ subagents:
     durationSec: 10357
     toolCalls: 52
     modelCalls: 27
-    tokenShare: 4.1
+    tokenShare: 4
   - type: general-purpose
     task: aab026813b757f33f
     model: claude-sonnet-5-5
     durationSec: 52
     toolCalls: 9
     modelCalls: 7
-    tokenShare: 1.6
+    tokenShare: 1.5
   - type: general-purpose
     task: abe3be2aba5d949ea
     model: claude-sonnet-5-5
@@ -1603,7 +1606,7 @@ subagents:
     durationSec: 10403
     toolCalls: 85
     modelCalls: 48
-    tokenShare: 10.6
+    tokenShare: 10.5
   - type: general-purpose
     task: ae9d889ff9613ef81
     model: claude-sonnet-5-5
@@ -1624,21 +1627,21 @@ subagents:
     durationSec: 455
     toolCalls: 58
     modelCalls: 36
-    tokenShare: 4.2
+    tokenShare: 4.1
   - type: workflow-subagent
     task: build build-spec-reviewer-evidence
     model: claude-sonnet-5-5
     durationSec: 50
     toolCalls: 23
     modelCalls: 13
-    tokenShare: 1.9
+    tokenShare: 1.8
   - type: workflow-subagent
     task: Both build-spec-reviewer-evidence r1
     model: claude-sonnet-5-5
     durationSec: 9
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 1
+    tokenShare: 0.9
   - type: workflow-subagent
     task: Standards journal-mobile-tap-targets-overflow r1
     model: claude-sonnet-5-5
@@ -1666,7 +1669,7 @@ subagents:
     durationSec: 216
     toolCalls: 58
     modelCalls: 34
-    tokenShare: 5.5
+    tokenShare: 5.4
   - type: workflow-subagent
     task: Spec journal-mobile-tap-targets-overflow r1
     model: claude-sonnet-5-5
@@ -1694,7 +1697,7 @@ subagents:
     durationSec: 129
     toolCalls: 24
     modelCalls: 13
-    tokenShare: 2.1
+    tokenShare: 2
   - type: workflow-subagent
     task: "triage #3680"
     model: claude-sonnet-5-5
@@ -1735,6 +1738,7 @@ entrypoint: remote
 cliVersion: 2.1.332
 learnings:
   - Subagent rule-use entries record only general-purpose or workflow-subagent, so no hook can tell a read-only reviewer from a builder.
+  - Harvest step 1 already loads every unharvested entry into context (94 entries, 36 KB); the keyword evidence in step 3 was the only place it narrowed, so the owner's full-context idea meant replacing evidence, not the list.
 ideas:
   - Give harvest a full digest of tracker titles with close reasons, ledger summaries and rulings, so the model checks relevance by reading instead of by keywords.
 landedBy: Stop
