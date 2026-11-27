@@ -99,7 +99,7 @@ function buildPrompt(b) {
 1. ${start}
 2. Read .agents/skills/implement/SKILL.md with Read (it can't be invoked) and follow it, test-first with the tdd Skill (invoke it with the Skill tool) for a change with logic; you pick its seams, nobody can confirm them, and skip tdd for a content-only edit. Skip its code-review step: this workflow's reviewers do that next.
 3. Keep the change as small and plain as the brief allows.
-4. Run only the fast checks until they pass: ${FAST_CHECKS}. ${e2eCheck(b)} Do not run \`pnpm gate:scoped\` now: review will likely change the code, and the gate runs once at the end. Commit.
+4. Run only the fast checks until they pass: ${FAST_CHECKS}. Record in ${folder(b)}/decisions.md each check you ran (e2e too) with its result, and each screenshot path with what it shows (only if you took any). ${e2eCheck(b)} Do not run \`pnpm gate:scoped\` now: review will likely change the code, and the gate runs once at the end. Commit.
 Return done only with passing fast checks; failed with the reason otherwise.
 
 ${rules(b)}`
@@ -117,7 +117,7 @@ function reviewPrompt(b, axis, wt, round) {
   const again = round > 1 ? ` Earlier rounds' findings are in ${folder(b)}/triage.md: raise a skipped or refused one again only with new evidence.` : ''
   return `You are the ${axis.toUpperCase()} reviewer, round ${round}. ${common(b)}
 ## Task
-Review read-only in ${wt} (\`cd ${wt} && …\`): first run \`git rev-parse HEAD\` and return it as head, then read the diff \`git diff origin/main...HEAD\`, and the builder's decisions in ${folder(b)}/decisions.md if it exists. This workflow runs the axes as separate agents, so follow only ${what}, applied to the diff given. Focus on simplicity: what could be smaller, plainer or deleted. Edit no file except a findings file the orchestrator names later, and run no git command that changes state.${lines}${again}
+Review read-only in ${wt} (\`cd ${wt} && …\`): first run \`git rev-parse HEAD\` and return it as head, then read the diff \`git diff origin/main...HEAD\`, and the builder's decisions in ${folder(b)}/decisions.md if it exists. This workflow runs the axes as separate agents, so follow only ${what}, applied to the diff given. Treat the check results and screenshots recorded there as claims: open a screenshot with Read, flag what you can't confirm as unverified, and don't run \`pnpm validate:content\` (read-only).${axis === 'Standards' ? '' : ` Read the touched layer's \`layers/<tenant>/GLOSSARY.md\`.`} Focus on simplicity: what could be smaller, plainer or deleted. Edit no file except a findings file the orchestrator names later, and run no git command that changes state.${lines}${again}
 Give each finding one kind: defect (wrong behaviour or a false statement), spec-mismatch (differs from the brief, the picks or a 'never' clause), missing-test (logic without a test that would catch its bug), nit (wording, layout, style, anything else cosmetic) or owner-call (needs the owner's choice). The builder fixes by kind, so pick the kind honestly: a cosmetic point is a nit, never a defect. Make each title state the problem in one line; titles reach the PR. ${ASK_SOURCES}
 The orchestrator may resume you later to re-check the builder's fixes and refusals of your findings; keep this review in mind.`
 }
