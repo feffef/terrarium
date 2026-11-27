@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzePYUBsXDVMueBkH5Ax
 startedAt: 2026-11-27T07:33:17Z
-endedAt: 2026-11-27T07:45:49Z
+endedAt: 2026-11-27T07:48:49Z
 kind: autonomous
 goal: Weekly update of the Glass Box textbook against main
-status: in-review
-outcome: "PR #3717 opened with all guide pages re-pinned and three false claims fixed; gate green, not yet merged"
-summary: "Scheduled glassbox-update run, fully agent-initiated by the schedule (no human prompt). Re-pinned all 84 guide pages to e701b430, re-lined the one excerpt whose source changed, ran a Scout over 100 commits (no new topics) and three sonnet claim-check readers over 8 flagged pages each plus the 5 rotation pages. Three false claims fixed (stale excerpt, a removed cluster-ordering rule in teaches, a GraphQL clause the caveats doc never held), update.yml dated for the five full checks. code-review and gate:scoped passed; PR #3717 opened per the scheduled-run recipe. Still open: watch CI and merge via merge-pr.ts."
+status: completed
+outcome: "PR #3717 merged: all guide pages re-pinned, three false claims fixed, gate green"
+summary: "Scheduled glassbox-update run, fully agent-initiated by the schedule (no human prompt). Re-pinned all 84 guide pages to e701b430, re-lined the one excerpt whose source changed, ran a Scout over 100 commits (no new topics) and three sonnet claim-check readers over 8 flagged pages each plus the 5 rotation pages. Three false claims fixed (stale excerpt, a removed cluster-ordering rule in teaches, a GraphQL clause the caveats doc never held), update.yml dated for the five full checks. code-review and gate:scoped passed; PR #3717 opened per the scheduled-run recipe. The PR merged after green CI."
 prs:
   - "3717"
 docsRead:
@@ -71,17 +71,21 @@ frictions:
   - description: Wrote the Scout subagent brief before reading dispatch-subagents as CLAUDE.md requires; the dispatch-read guard blocked the first Agent call and cost one retry.
     solution: Read dispatch-subagents at the start of any run whose Skill dispatches subagents, or name it in the glassbox-update Skill step 3.
     severity: nit
-durationSec: 752
+durationSec: 933
 models:
-  claude-sonnet-5-5: 88
+  claude-sonnet-5-5: 106
 toolCounts:
-  Bash: 34
+  Bash: 38
   Agent: 7
   Read: 1
-  ReadNotifications: 1
-  Skill: 3
+  ReadNotifications: 3
+  Skill: 4
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ToolSearch: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/agents/30.cloud-sessions.md
   - layers/glassbox/content/workshop/checks/update.yml
@@ -418,42 +422,42 @@ subagents:
     durationSec: 24
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 5.4
+    tokenShare: 5
   - type: general-purpose
     task: Claim check group A
     model: sonnet
     durationSec: 147
     toolCalls: 29
     modelCalls: 26
-    tokenShare: 19.4
+    tokenShare: 17.8
   - type: general-purpose
     task: Claim check group B
     model: sonnet
     durationSec: 134
     toolCalls: 29
     modelCalls: 22
-    tokenShare: 12.2
+    tokenShare: 11.2
   - type: general-purpose
     task: Claim check group C
     model: sonnet
     durationSec: 300
     toolCalls: 54
     modelCalls: 39
-    tokenShare: 24.4
+    tokenShare: 22.5
   - type: general-purpose
     task: Standards review
     model: sonnet
     durationSec: 29
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 3.2
+    tokenShare: 2.9
   - type: general-purpose
     task: Spec review
     model: sonnet
     durationSec: 32
     toolCalls: 6
     modelCalls: 6
-    tokenShare: 3.7
+    tokenShare: 3.4
 gitBranch: claude/relaxed-einstein-ypjkde
 entrypoint: remote_trigger
 cliVersion: 2.1.332
