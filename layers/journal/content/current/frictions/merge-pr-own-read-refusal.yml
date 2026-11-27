@@ -2,7 +2,8 @@ name: merge-pr-own-read-refusal
 surface: safe
 summary: merge-pr.ts refused a verdict carrying an Own-read line on a PR that was not a simple diff, and each refusal cost an extra comment.
 cause: "merge-pr.ts accepts an Own-read verdict only for a diff that passes pr-workflow's simple-change test (simpleChangeRefusal in merge-pr.ts); a session that posted one on a larger change was refused and had to repost a verdict after a full review. Signals: 'an Own-read verdict covers only a simple diff', 'Own-read', 'simple diff'."
-status: open
+status: on-trial
+ref: "Prune Trial opened 2026-11-27 (.agents/prune-trials.yml): territory docs/agents/pr-workflow.md"
 related:
   - entry: merge-pr-review-args-refusal
     rule: That entry is a code-review call whose args named no head sha; here the verdict's Own-read line was refused.

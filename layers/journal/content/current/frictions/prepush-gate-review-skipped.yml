@@ -4,7 +4,8 @@ summary: >-
 cause: >-
   ADR-0004 and pr-workflow.md ask for the code-review Skill before a branch's first push (and on a larger follow-up), allowing only a simple change (at most 10 lines in 2 files, adding, renaming or moving no file since PR #2638) the author's own read; sessions judge a small, prose, ledger, test or follow-up diff simple without counting it, self-review instead, or review only after pushing. Since PR #3491 (2026-11-19) pr-workflow.md puts review before opening the PR as numbered steps, and merge-pr.ts requires proof behind a Reviewed: line and the full simple-change test for an Own-read line. Signals: 'skipped the code-review Skill', 'pushed before running gate:scoped and code-review', 'reviewed inline', 'self-reviewed', 'simple-change bar', 'without a fresh code-review', code-review run after the first push.
 surface: guard-or-hook
-status: open
+status: on-trial
+ref: "Prune Trial opened 2026-11-27 (.agents/prune-trials.yml): territory docs/agents/pr-workflow.md"
 related:
   - entry: followup-review-overcost
     rule: Review ran but cost far more than it found on a tiny first push or small follow-up.

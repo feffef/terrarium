@@ -23,43 +23,6 @@
 #            topic's tools correctly.
 trials:
   - problem: >
-      `frictions-to-fixes` survey brief (`survey-brief.md`) restated its helpers'
-      output and each rule several times (-797 words: 2612 -> 1815 by `wc -w`;
-      line delta in the PR title): the helper-flag walkthroughs, the §2
-      step-5 and edge-case restatements and the §6 sub-lists went; every
-      command, label, ranking rule and report part kept; rules restored after
-      review: `accepted` ceilings, the on-trial blocker line, partial-fit
-      appends. Chosen after a search
-      subagent this run read the ledger `fixes:` lists of 155 entries, CLAUDE.md,
-      `.claude/rules`, `docs/agents/guards.md`, this file, the 2 open issues and
-      the 100 most recently updated closed ones (not session logs, not older
-      closed issues). `frictions-to-fixes-briefs-mismatch` (10 fixes, each
-      patching one more brief contradiction) failed as prose; nothing enforces
-      brief correctness. Runner-up: clear-backlog §3 "Build and review"
-      (1179 words, hand-edited by #3589 on 2026-11-22). Same run judged and
-      deleted the dispatch-subagents §3 trial (landed 8b73b145): it holds.
-      `subagent-brief-defects` 6.4% -> 16.7% (14/218 -> 6/36), but 3 of the 6
-      after hits trace to `clear-backlog-build.js` `rules()`
-      telling builders to run e2e in the background, which the guard refuses; the
-      cut kept the foreground line, and the other hits are a brief a session
-      wrote itself, so no issue.
-    territory:
-      paths:
-        - ".agents/skills/frictions-to-fixes/survey-brief.md"
-      keywords:
-        - survey-brief
-        - print-ledger-occurrence
-    opened: 2026-11-23
-    proven: true
-    check: >
-      Damage is a major or blocker Friction where a survey agent skipped a step
-      the cut text carried (a stale `tracked` status left, a fix not recorded,
-      a never-fixed label with no tracker check, a missing report part) and the
-      main session had to catch it. Compare the shares of
-      `frictions-to-fixes-briefs-mismatch` and `survey-label-and-ledger-errors`
-      with `friction-rates.ts`; a clear rise is also damage. NOT damage: a
-      survey agent hitting a script refusal the brief still names.
-  - problem: >
       `docs/agents/verifying-ui-changes.md` plainly rewritten (-438 words: 1550 ->
       1112 by `wc -w`; -42 lines by `git diff --numstat`, 101 added, 143 deleted):
       session-id citations, repeated justifications and the capture-tooling
@@ -90,3 +53,33 @@ trials:
       `preview-dev-server-stale-or-unhydrated` with `friction-rates.ts`; a clear
       rise is also damage. NOT damage: a session following the doc correctly and
       still hitting a Chromium quirk the doc names.
+  - problem: >
+      `docs/agents/pr-workflow.md` plainly condensed (-109 words: 1321 -> 1212 by
+      `wc -w`; line delta in the PR title): issue-number citations, the gate-skip
+      path list, the recipe step 3 and 5 justifications and repeated reminders
+      went; every step, its numbering, the simple-change test and every heading
+      kept (Skills and scripts cite them by name). Chosen after a search subagent
+      this run read the ledger `fixes:` lists of all 139 entries and searched the
+      tracker (one `search/issues` query); `prepush-gate-review-skipped` (9 fixes,
+      #1852 .. #3491, several narrowing this same section) and 5 closed
+      "Regression: prepush-gate-review-skipped recurs" issues (#2311, #2354,
+      #2397, #2472, #3407; titles read, bodies not). `merge-pr.ts`
+      (`simpleChangeRefusal`, `verdictRefusal`) already enforces the simple-change
+      bars and the review proof. Not searched: `guards.md`, `.agents/skills/**`.
+    territory:
+      paths:
+        - "docs/agents/pr-workflow.md"
+      keywords:
+        - simple change
+        - Own-read
+        - verdict-line
+    opened: 2026-11-27
+    proven: true
+    check: >
+      Damage is a major or blocker Friction where a session opened a PR without
+      the review or gate the cut text carried, posted no verdict, or merged
+      around a `merge-pr.ts` refusal it should have foreseen from the doc.
+      Compare the shares of `prepush-gate-review-skipped` and
+      `merge-pr-own-read-refusal` with `friction-rates.ts`; a clear rise is also
+      damage. NOT damage: a refusal `merge-pr.ts` raises on a diff that fails
+      the simple-change test the doc still states.
