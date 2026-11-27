@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQivG2v72EMRPiQ5aR
 startedAt: 2026-11-27T00:15:45Z
-endedAt: 2026-11-27T00:24:16Z
-kind: autonomous
+endedAt: 2026-11-27T00:57:37Z
+kind: interactive
 goal: Write the 2026-11-26 Journal Digest and archive old content
-status: in-review
-outcome: "PR #3710 open with the Digest and 28 archive moves; not merged because main's gate is red since #3709"
-summary: "Scheduled digest run (agent-initiated by the schedule; no human prompt). One closed day, 2026-11-26, was missing a Digest. I gathered its 12 sessions and 18 PRs, wrote the page, fact-checked it with a subagent (one wrong figure fixed: 1,112 became 1,120 words, a trial entry's number predated a later commit), ran the archive sweep (28 renames), ran code-review (no hard violations), softened project jargon, and passed gate:scoped locally. CI's gate failed on tests/unit/rule-use.spec.ts, which also fails on main since #3709, so per the closing recipe I left the PR open and sent a notification instead of merging. Open: main must be fixed, then CI re-run and merge-pr.ts 3710."
+status: completed
+outcome: "PR #3710 merged with the 2026-11-26 Digest and 28 archive moves after main's gate was fixed"
+summary: "Started as a scheduled digest run (schedule-initiated). I wrote the 2026-11-26 Digest from the day's 12 sessions and 18 PRs, fact-checked it with a subagent (one wrong figure fixed, 1,112 to 1,120 words), ran the archive sweep (28 renames), ran code-review and gate:scoped, and opened PR 3710. CI failed on a test that was also red on main since PR 3709, so I left the PR open, commented why and sent a notification. The owner then replied in-session that another session would fix main and asked me to keep checking and retry (human-instructed; that reply makes the session interactive). A one-shot check found main green after #3711; I merged main into the branch, but merge-pr refused my own-read verdict because the merge pulled two session logs into the diff, so I re-ran a full code-review on the new head, posted its verdict and merge-pr landed the PR. Nothing is open."
 prs:
   - "3710"
 docsRead:
@@ -50,22 +50,28 @@ frictions:
   - description: Read the PR verdict doc and ran verdict-line twice; its Own-read output names the reviewed sha, not the head, so I wrote the follow-up verdict lines by hand.
     solution: verdict-line should accept a separate head for Own-read.
     severity: nit
-durationSec: 511
+  - description: Merging main into the branch to sync after the fix added two session-log files to the diff since the reviewed sha, so merge-pr refused the own-read verdict and a second full code-review was needed.
+    solution: merge-pr could ignore files the base merge brought in, or the doc could say to merge main before the first review.
+    severity: minor
+durationSec: 2512
 models:
-  claude-sonnet-5-5: 74
+  claude-sonnet-5-5: 115
 toolCounts:
-  Bash: 29
-  Agent: 4
+  Bash: 38
+  Agent: 6
   Read: 1
-  Skill: 3
+  Skill: 5
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__github__update_pull_request: 1
-  mcp__github__add_issue_comment: 1
+  mcp__github__add_issue_comment: 4
   mcp__github__subscribe_pr_activity: 1
   mcp__github__pull_request_read: 1
   mcp__github__get_job_logs: 2
   PushNotification: 1
+  ReadNotifications: 4
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__list_triggers: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-11-26.md
   - layers/journal/content/archived/pages/digests/2026-11-19.md
@@ -282,6 +288,85 @@ ruleUse:
         value: unrelated
       - path: .agents/skills/digest/SKILL.md
       - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+  - by: general-purpose
+    subagent: 4
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0010.md
+        via: native
+        trigger: .agents/skills/digest/SKILL.md
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/digest/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/digest/SKILL.md
+    reported:
+      - path: .claude/rules/adr-0010.md
+        value: in-scope
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .agents/skills/digest/SKILL.md
+  - by: general-purpose
+    subagent: 5
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0010.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0010.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
 subagents:
   - type: general-purpose
     task: Fact-check 2026-11-26 Digest
@@ -293,25 +378,40 @@ subagents:
     durationSec: 48
     toolCalls: 9
     modelCalls: 7
-    tokenShare: 15.9
+    tokenShare: 10.1
   - type: general-purpose
     task: Standards review of Digest PR
     model: sonnet
     durationSec: 21
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 5.4
+    tokenShare: 3.4
   - type: general-purpose
     task: Spec review of Digest PR
     model: sonnet
     durationSec: 29
     toolCalls: 9
     modelCalls: 5
-    tokenShare: 7
+    tokenShare: 4.5
+  - type: general-purpose
+    task: Standards review of Digest PR
+    model: sonnet
+    durationSec: 17
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 3.6
+  - type: general-purpose
+    task: Spec review of Digest PR
+    model: sonnet
+    durationSec: 24
+    toolCalls: 4
+    modelCalls: 4
+    tokenShare: 3.5
 gitBranch: claude/compassionate-lovelace-q3qykz
 entrypoint: remote_trigger
 cliVersion: 2.1.332
 trigger: digest
 learnings:
   - "On a scheduled run, check origin/main's gate before spending a review and gate cycle: a red main makes the run's own PR unmergeable regardless of its content."
+  - merge-pr's own-read check compares against the reviewed sha, so a plain merge of main (session logs land there constantly) forces a new code-review; inferred from its refusal message.
 landedBy: Stop
