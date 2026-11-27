@@ -202,3 +202,8 @@ occurrences:
     severity: nit
     description: "Edited prune-trials.yml and committed before reading ADR-0027 in full, which the hook asked for; the late read changed nothing."
     solution: "Read the ADR with the Skill's first reads."
+  - session: session_013zxzeRCqnsnapQCvq1q748
+    date: "2026-11-26"
+    severity: nit
+    description: "Edited the doc before reading ADR-0027 and ADR-0029; the post-write hook told me to read them after the edit."
+    solution: "Read the ADRs a prune governs before the first edit; the Skill could name them."

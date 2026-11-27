@@ -167,3 +167,18 @@ occurrences:
     severity: nit
     description: "Combined run_in_background with a trailing ampersand in one Bash call; the double-background guard refused it."
     solution: "Pass run_in_background alone."
+  - session: session_013zxzePHUnDuN2sgW4ghamU
+    date: "2026-11-26"
+    severity: nit
+    description: "Chained a trailing ampersand onto a run_in_background gate command; the double-background guard refused it and I resent."
+    solution: "Background a gate with the tool flag alone."
+  - session: session_013zxzePo4mtQsMpDHLLDFmb
+    date: "2026-11-26"
+    severity: nit
+    description: "A pnpm gate:scoped call written with a trailing & plus run_in_background was blocked by the double-background guard and had to be resent."
+    solution: "The Bash tool text could say plainly not to add & when run_in_background is set."
+  - session: session_013zxzeQivG2v72EMRPiQ5aR
+    date: "2026-11-27"
+    severity: minor
+    description: "Started pnpm gate:scoped with both run_in_background and a trailing ampersand; the double-background guard blocked it and the chained commit did not run, so I redid the commit."
+    solution: "Pass run_in_background alone, never a text-level ampersand."

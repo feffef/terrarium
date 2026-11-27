@@ -29,3 +29,8 @@ occurrences:
     severity: minor
     description: "The #3551 builder's first gate:scoped failed only on the wall-clock ratio test in tests/unit/shell-reads.spec.ts, on a content-only diff; an unchanged rerun passed."
     solution: "Make the shell-reads linearity test robust to a loaded container (e.g. compare operation counts, not wall-clock ratios), since two gates run at once."
+  - session: session_013zxzeQLTeC8GETW73Aho8C
+    date: "2026-11-26"
+    severity: minor
+    description: "The journal branch's first gate run failed on a timing assert in tests/unit/shell-reads.spec.ts that the diff did not touch; the rerun passed, costing one gate run."
+    solution: "Make the heredoc linearity test robust against load, or run it with a generous bound."

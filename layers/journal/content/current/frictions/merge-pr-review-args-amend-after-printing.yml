@@ -14,3 +14,8 @@ occurrences:
     severity: minor
     description: "I amended Karen's post after the code-review call was printed, so the printed sha no longer existed and I had to re-run code-review on the final head, then again after a rename."
     solution: "Finish every edit, including wording and slug, before printing the review call; a rename makes Own-read ineligible."
+  - session: session_013zxzeRCqnsnapQCvq1q748
+    date: "2026-11-26"
+    severity: nit
+    description: "First verdict comment claimed the head was reviewed when code-review ran on the previous commit; merge-pr.ts refused and I posted a correction."
+    solution: "After a follow-up commit, write Reviewed: <reviewed sha> and Own-read: <head> from the start."

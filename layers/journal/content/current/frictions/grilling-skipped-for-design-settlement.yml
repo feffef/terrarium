@@ -29,3 +29,8 @@ occurrences:
     severity: nit
     description: "I did not invoke the grilling Skill for section 2 as clear-backlog requires; I followed its format by hand."
     solution: "Invoke grilling before building the question list, as section 2 says."
+  - session: session_013zxzeNZgq56jQ3U7rZbQkk
+    date: "2026-11-26"
+    severity: nit
+    description: "Asked scoping questions with AskUserQuestion without invoking the grilling Skill that CLAUDE.md names for asking before building."
+    solution: "Invoke grilling before asking what the trusted user will see."

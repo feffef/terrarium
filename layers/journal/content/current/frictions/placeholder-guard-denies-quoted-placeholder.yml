@@ -71,3 +71,8 @@ occurrences:
     severity: nit
     description: "First survey dispatch was blocked by the dispatch-read guard because my brief named the scratch placeholder literally; I reworded and resent."
     solution: "Guard could allow a placeholder named in prose, or the Skill could say to fill it in the brief."
+  - session: session_013zxzePHUnDuN2sgW4ghamU
+    date: "2026-11-26"
+    severity: nit
+    description: "The dispatch-read guard refused my survey brief for the literal scratch-directory placeholder name; I reworded and resent, one wasted call."
+    solution: "Fill the placeholder in the Skill's dispatch step or let the guard allow a named reference."

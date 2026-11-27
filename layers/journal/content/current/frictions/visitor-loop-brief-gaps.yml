@@ -77,3 +77,8 @@ occurrences:
     severity: minor
     description: "Blind visitor's first crawl followed only filter links and found no posts, costing an extra script run; brief gives no way to enumerate article links."
     solution: "Add to .agents/skills/visitor-loop/visitor-brief.md: save text and links per page and follow article links, not only filters."
+  - session: session_013zxzeQMTfvZZmLxob6aT7A
+    date: "2026-11-26"
+    severity: minor
+    description: "Context file listed /t/journal/current/digests as a page; it and /sessions return 404, costing the editor two visits and a finding."
+    solution: ".agents/skills/visitor-loop/SKILL.md step 2: say a Space or folder root that has no index (digests, sessions) is not a page; list only URLs that return 200."

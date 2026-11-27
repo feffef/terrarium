@@ -33,3 +33,8 @@ occurrences:
     severity: minor
     description: "I saved two reviewer replies as hand-condensed summaries instead of with save-handback.ts, so the pool is not verbatim as the Skill requires."
     solution: "Run save-handback.ts for every reply; the brief's step 4 already says so, I skipped it for speed."
+  - session: session_013zxzeSUNxM2snCnM3Wwi6o
+    date: "2026-11-26"
+    severity: nit
+    description: "Saved Agent A and B replies to the pool as hand-typed summaries instead of save-handback.ts verbatim, against the Skill; re-saved with the script."
+    solution: "State the exact save-handback command in the Skill's step 4 as a copyable line."

@@ -45,3 +45,8 @@ occurrences:
     severity: nit
     description: "Merged PR 3672 and carried on to the reply without re-running close-session; the Stop hook had to remind me."
     solution: "Re-invoke close-session at each merge, as CLAUDE.md says, before the next step."
+  - session: session_013zxzeQLTeC8GETW73Aho8C
+    date: "2026-11-26"
+    severity: nit
+    description: "After a merge I re-authored the log with log-session directly instead of invoking close-session, so the Stop hook blocked the turn end twice."
+    solution: "Say in the merge step of pr-workflow that close-session, not log-session, is the re-invoke after a merge."

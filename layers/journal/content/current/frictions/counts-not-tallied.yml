@@ -111,3 +111,13 @@ occurrences:
     severity: nit
     description: "I wrote 'five nits fixed' in PR #3615's body from memory; the triage lines show four fixed and one skipped. Corrected by a PR edit."
     solution: "Count from triage.md before writing the PR body, as CLAUDE.md says (verify before you state)."
+  - session: session_013zxzePQedy4SaB83pQYkET
+    date: "2026-11-26"
+    severity: nit
+    description: "The role trim to 50 words needed a follow-up commit because I counted words wrongly; the follow-up fit the two-file simple-change bar only after reverting a third edit."
+    solution: "Count words with a script (yaml load plus split) when trimming a role."
+  - session: session_013zxzeQivG2v72EMRPiQ5aR
+    date: "2026-11-27"
+    severity: nit
+    description: "A subagent's trial-entry word count (1,112) was copied into the Digest; the fact-check caught that a later commit made it 1,120. I should have run wc on the merged file."
+    solution: "Take counts from the merged file, not a PR's own notes."

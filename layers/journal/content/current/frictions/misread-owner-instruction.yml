@@ -84,3 +84,8 @@ occurrences:
     severity: minor
     description: "Owner's #3626 reply 'include the total number of ideas' changed the look, so I built a second sample, then the owner replied 'Just write ideas in b of C sessions' and I guessed it meant dropping the total without asking."
     solution: "When an answer to a look question could be read two ways, ask the one-line question before building a second sample."
+  - session: session_013zxzeNZgq56jQ3U7rZbQkk
+    date: "2026-11-26"
+    severity: minor
+    description: "The owner's single reply 'Sounds good' covered two questions; I took it as a yes to the PR and left the length unchanged, rather than asking again."
+    solution: "Re-ask the unanswered question (lengthen the body?) before treating the reply as settled."

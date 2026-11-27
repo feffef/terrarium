@@ -161,3 +161,8 @@ occurrences:
     severity: minor
     description: "Edited the reply post while pnpm gate:scoped was still running in the background after code-review findings arrived, so the run aborted and a full gate was wasted again."
     solution: "Start the gate only after review findings are in; the gate-edit guard blocked the commit only after the edit."
+  - session: session_013zxzeNZgq56jQ3U7rZbQkk
+    date: "2026-11-26"
+    severity: nit
+    description: "Started gate:scoped before the code-review, against pr-workflow's order (review, fix, then gate on the final head); no edits followed, so it stayed valid."
+    solution: "Run the review first, or start the gate only once no fixes are possible."

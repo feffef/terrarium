@@ -127,3 +127,8 @@ occurrences:
     severity: nit
     description: "Gave git commit both -m and -F in one call, which failed, and tried foreground sleep which the harness blocks."
     solution: "Use one message source; wait with Monitor."
+  - session: session_013zxzeSUNxM2snCnM3Wwi6o
+    date: "2026-11-26"
+    severity: nit
+    description: "Ran a pointless foreground sleep while waiting for reviewers."
+    solution: "End the turn and wait for notifications."

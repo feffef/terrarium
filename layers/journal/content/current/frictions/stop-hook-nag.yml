@@ -127,3 +127,13 @@ occurrences:
     severity: nit
     description: "Stop hook flagged uncommitted work mid-run twice, forcing work-in-progress commits and pushes before the review."
     solution: "Let a scheduled run's Stop hook skip the check while background subagents are still running."
+  - session: session_013zxzePo4mtQsMpDHLLDFmb
+    date: "2026-11-26"
+    severity: minor
+    description: "The harness stop hook asked to commit and push untracked and uncommitted files mid-run, three times, while claim checks were still running, forcing extra draft commits."
+    solution: "Let the hook skip while a subagent is running, or accept the Skill's draft-commit rhythm in the hook text."
+  - session: session_013zxzeQLTeC8GETW73Aho8C
+    date: "2026-11-26"
+    severity: minor
+    description: "The Stop hook repeatedly asked to push the harvest branch before its gate passed, conflicting with clear-backlog push-after-gate."
+    solution: "Have the stop hook skip worktree branches a running workflow owns."

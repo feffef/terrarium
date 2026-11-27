@@ -29,3 +29,8 @@ occurrences:
     severity: minor
     description: "Excerpt fences need a gap marker line between ranges; I learned that from two failing glassbox-pages tests after re-lining, not from the page-writing doc."
     solution: "State in writing-pages.md or the Excerpt glossary entry that each gap between ranges is a // … line in the fence."
+  - session: session_013zxzePxkwAcvTVUDd7sToK
+    date: "2026-11-25"
+    severity: minor
+    description: "The Glass Box page edit in the #3662 brief failed glassbox-pages.spec on the first gate because the page is pinned to a revision; one full gate run was wasted."
+    solution: "A brief that names a Glass Box page should say it is pinned and may not be edited outside a Glass Box run."

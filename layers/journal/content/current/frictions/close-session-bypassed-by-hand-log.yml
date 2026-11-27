@@ -10,6 +10,8 @@ related:
     rule: log-session refused the completed log after a merge and it cost only a call.
   - entry: close-session-reminded-by-stop-hook
     rule: The Stop hook reminded the session after a merge and the cost was one prompt.
+notes: |-
+  2026-11-27 survey: session Po4m (2026-11-26, major) merged three PRs, left the log reading in-review and the owner had to ask, after the Stop hook of PR #2937; a regression of the original harm.
 fixes:
   - { pr: 2452, date: "2026-10-23", summary: "log-session --author now warns when a completed log follows a merge with no close-session call." }
   - { pr: 2536, date: "2026-10-25", summary: "log-session --author now refuses a completed log after a merge with no close-session call, and writes no scratch." }
@@ -28,3 +30,8 @@ occurrences:
     severity: minor
     description: "Opened the PR, then ended a turn without invoking close-session to avoid disturbing a running gate; CLAUDE.md says to invoke it before that turn ends."
     solution: "Invoke close-session right after the PR opens; the log lands at end of turn and does not touch the tree the gate watches."
+  - session: session_013zxzePo4mtQsMpDHLLDFmb
+    date: "2026-11-26"
+    severity: major
+    description: "HUMAN-PROMPTED-CLOSURE: after all three PRs merged I said the log still read in-review and left it, so the owner had to ask why the session was not closed."
+    solution: "Re-invoke close-session in the same turn a merge notification arrives, before reporting; a final message that names a missing close is a step to do, not to mention."

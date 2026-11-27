@@ -610,3 +610,43 @@ occurrences:
     severity: nit
     description: "Ran git add and the archive sweep before reading git-conventions.md, which CLAUDE.md requires before any non-read-only git command; the hook named it afterwards."
     solution: "Read the doc at session start for any run that will commit."
+  - session: session_013zxzePxkwAcvTVUDd7sToK
+    date: "2026-11-25"
+    severity: nit
+    description: "I ran git log on a worktree to verify a builder's claim before reading git-conventions.md; the hook said read first, and the doc showed the call was fine."
+    solution: "None needed; the read-only log exemption is narrow, so read the doc at the first conclusion-drawing log."
+  - session: session_013zxzePQedy4SaB83pQYkET
+    date: "2026-11-26"
+    severity: nit
+    description: "Ran a gh api search before reading github-integration.md; the PostToolUse hook pointed at it afterwards."
+    solution: "Read github-integration.md before the first GitHub call, as CLAUDE.md says."
+  - session: session_013zxzePHUnDuN2sgW4ghamU
+    date: "2026-11-26"
+    severity: nit
+    description: "Ran git log and status before reading git-conventions.md, which CLAUDE.md requires before the first non-read-only git command; a hook reminded me afterwards."
+    solution: "Read the three docs the Skill's first steps imply before any git call."
+  - session: session_013zxzeQMTfvZZmLxob6aT7A
+    date: "2026-11-26"
+    severity: nit
+    description: "Read git-conventions and github-integration/triage-labels only after the first git fetch and issue writes, which CLAUDE.md says to read first; head -30 of triage-labels was too little to count."
+    solution: "visitor-loop SKILL.md step 1 could name git-conventions.md and github-integration.md as first reads."
+  - session: session_013zxzeSJY7CjGgJdwhJmTgV
+    date: "2026-11-26"
+    severity: nit
+    description: "Read the GitHub and issue-tracker docs CLAUDE.md names only after my first GitHub reads and the first issue write; no wrong outcome followed."
+    solution: "Read the named docs before the first GitHub call."
+  - session: session_013zxzeQLTeC8GETW73Aho8C
+    date: "2026-11-26"
+    severity: nit
+    description: "Ran git fetch and other git commands before reading git-conventions.md; the hook flagged it only after. No wrong result followed."
+    solution: "Load git-conventions earlier, or make the read-first hint fire on the first non-read-only git command."
+  - session: session_013zxzeQivG2v72EMRPiQ5aR
+    date: "2026-11-27"
+    severity: nit
+    description: "Ran git status and gather commands before reading git-conventions.md, which CLAUDE.md requires before the first non-read-only git command; the hook named it afterwards."
+    solution: "None needed beyond the existing hook; the late read changed nothing."
+  - session: session_013zxzeNzjxhJGhG6XbWHDf3
+    date: "2026-11-27"
+    severity: nit
+    description: "Ran gh api issue searches before reading github-integration.md; the hook then reminded me, so the doc was read after the first GitHub operation."
+    solution: "Read the GitHub docs in step 4 of audit-skills before the issue searches; the Skill could name them there."

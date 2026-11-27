@@ -136,3 +136,13 @@ occurrences:
     severity: nit
     description: "Retro (both reviewers): hooks demanded a rule-use echo round trip on each Bash call, and the hand-off format changed between the first brief and a later message (structured output, then a JSON file with a one-line reply)."
     solution: "Fold the rule-use echo into the final call for reviewers, and state the findings-file hand-off once in reviewPrompt()."
+  - session: session_013zxzePxkwAcvTVUDd7sToK
+    date: "2026-11-25"
+    severity: nit
+    description: "Retro (builder and Standards reviewer): subagents hit repeated SubagentStop blocks as each new rule loaded and re-sent rule-use echoes for unrelated rules; a few extra calls with no new information."
+    solution: "Unverified how much it cost; the capped 3-block hook in PR 3689 bounds it, so judge after it merges."
+  - session: session_013zxzeQMTfvZZmLxob6aT7A
+    date: "2026-11-26"
+    severity: nit
+    description: "SubagentStart rule-use hook made the blind visitor rate four ADR rules for a read-only browse, wasting turns."
+    solution: "Skip the rule-use note for read-only visitor briefs in the SubagentStart hook under scripts/hooks/."

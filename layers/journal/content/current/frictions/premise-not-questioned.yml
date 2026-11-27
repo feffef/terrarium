@@ -58,3 +58,13 @@ occurrences:
     severity: minor
     description: "I assumed several curate sessions could run at once and added a per-focus open-PR refresh; the owner had to correct the premise."
     solution: "Ask how many sessions run concurrently before designing coordination between them (CLAUDE.md: question the premise)."
+  - session: session_013zxzePxkwAcvTVUDd7sToK
+    date: "2026-11-25"
+    severity: moderate
+    description: "I asked the owner Q5 a on an explore pick whose audit-counting premise the agent itself marked unverified; no such count existed, which cost an extra owner question and a fix round."
+    solution: "Before asking, check each pick premise that explore marks unverified, or ask it as an open question instead of a recommendation."
+  - session: session_013zxzeQLTeC8GETW73Aho8C
+    date: "2026-11-26"
+    severity: minor
+    description: "Put a triage pick (a SubagentStart default for read-only subagents) to the owner without checking its premise; the owner had to ask whether such agents can be detected, costing a round."
+    solution: "Verify an explore pick's unverified premise before asking: in clear-backlog section 2, check each pick's marked-unverified claim, not only its cited sources."

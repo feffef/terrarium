@@ -58,3 +58,8 @@ occurrences:
     severity: minor
     description: "Retro (Standards reviewer): code-review §3 only says to search for standards files, so each reviewer re-greps which docs bind the diff (guards.md, the ledger schema in tenant.config.ts)."
     solution: "reviewPrompt() in .claude/workflows/clear-backlog-build.js could list standards homes per changed path; source the reviewer's reply, unverified by me."
+  - session: session_013zxzeQLTeC8GETW73Aho8C
+    date: "2026-11-26"
+    severity: minor
+    description: "Retro (Standards reviewer): the rule-use echo hook demands a full repeat when the first answer misses rules; the brief gives no end line for the code-review Skill's Standards section, so the reviewer guessed a sed range."
+    solution: "Accept a partial rule-use list in the SubagentStop hook, and name the smell-baseline heading or end line in reviewPrompt() of .claude/workflows/clear-backlog-build.js."

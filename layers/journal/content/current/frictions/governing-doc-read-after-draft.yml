@@ -268,3 +268,28 @@ occurrences:
     severity: nit
     description: "The tenant-glossary guard blocked my first Write of the post because I had not read the Blog glossary in full; the rule loaded only after earlier Blog reads."
     solution: "Read the Tenant's GLOSSARY.md at step 2 of blog-post when gathering material."
+  - session: session_013zxzePQedy4SaB83pQYkET
+    date: "2026-11-26"
+    severity: minor
+    description: "Edited Journal Inventory yml without reading layers/journal/GLOSSARY.md first; wrote 'diary entry' where the glossary says session log, caught in code-review."
+    solution: "Step 5 of audit-skills should list the Journal glossary among docs to read before editing Inventory entries."
+  - session: session_013zxzePHUnDuN2sgW4ghamU
+    date: "2026-11-26"
+    severity: nit
+    description: "The tenant-glossary guard refused a one-line Edit to a Journal ledger YAML until I read the Journal glossary; the file is data, not Tenant prose."
+    solution: "Exempt content/current/frictions data files from the tenant-glossary guard."
+  - session: session_013zxzeNZgq56jQ3U7rZbQkk
+    date: "2026-11-26"
+    severity: nit
+    description: "First Write of the guide page was blocked because I had not read the Glass Box glossary; the rule loads only after a read of the layer."
+    solution: "Read layers/<tenant>/GLOSSARY.md when a task names a tenant page, before the first Write."
+  - session: session_013zxzeQ92opecHinpUgHCyA
+    date: "2026-11-26"
+    severity: minor
+    description: "tenant-glossary rule says read the Tenant's GLOSSARY before work; I wrote Blog content without opening layers/blog/GLOSSARY.md (a reviewer subagent did)."
+    solution: "Open the Blog glossary at step 2 of blog-post; the Skill could name it there."
+  - session: session_013zxzeNzjxhJGhG6XbWHDf3
+    date: "2026-11-27"
+    severity: minor
+    description: "Wrote 14 Inventory notes without reading layers/journal/GLOSSARY.md, which the tenant-glossary rule asks for before Journal work; no term error was found afterwards."
+    solution: "Name the Journal glossary in audit-skills step 5, as earlier audits already suggest."

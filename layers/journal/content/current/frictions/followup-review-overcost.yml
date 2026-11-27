@@ -103,3 +103,8 @@ occurrences:
     severity: nit
     description: "Retro (Both reviewer, unverified in the workflow file): on a 5-line, 2-file content diff the full review re-found nothing that mattered, and it spent two Bash calls on unrelated rule-use echoes; the code-review Skill section it was told to read is mostly about its own sub-agent spawning."
     solution: "In reviewPrompt() of .claude/workflows/clear-backlog-build.js paste the smell list instead of pointing at the Skill, and consider the orchestrator's own read for diffs of 10 lines or fewer when the owner's picks are binding."
+  - session: session_013zxzeQLTeC8GETW73Aho8C
+    date: "2026-11-26"
+    severity: nit
+    description: "Retro (Both reviewer): for a 2-line diff the reviewer paid three reads and two rule-use echo calls; its single nit was a small re-find. The re-check brief naming the diff range worked well."
+    solution: "Skip the code-review Skill section read and the rule-use echo for a Both reviewer on a diff at or under the simple-change bar."

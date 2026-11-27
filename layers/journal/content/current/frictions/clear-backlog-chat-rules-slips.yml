@@ -37,3 +37,8 @@ occurrences:
     severity: minor
     description: "I read the grilling rule 'no tool calls while waiting' as holding all builder follow-up for several turns, reposting Q25 each time, though the Skill says the rest keep going."
     solution: "The Skill should say outright that a wait on one question never pauses other branches' re-checks and gates."
+  - session: session_013zxzeQLTeC8GETW73Aho8C
+    date: "2026-11-26"
+    severity: nit
+    description: "Kept making tool calls (verifying hand-backs, sending resumes) while question Q9 was pending, against the clear-backlog rule to ask with no tool calls."
+    solution: "Cut the rule's no-tool-call clause, or say it applies only to the grilling round."

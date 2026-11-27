@@ -90,3 +90,8 @@ occurrences:
     severity: minor
     description: "The survey subagent reported the survey brief section 3 asks to label every candidate but cannot confirm 157 entries; append aborts on repeated sessions within one call."
     solution: "Say which subset to confirm in survey-brief section 3 (inside an open prune trial's territory, so left for the trial)."
+  - session: session_013zxzePHUnDuN2sgW4ghamU
+    date: "2026-11-26"
+    severity: minor
+    description: "survey-brief step 3 asks to confirm every never-fixed or regression label, but the survey subagent could confirm only a few of roughly 150 candidates and labelled the rest unconfirmed."
+    solution: "Limit confirmation to the top-ranked candidates in the brief."

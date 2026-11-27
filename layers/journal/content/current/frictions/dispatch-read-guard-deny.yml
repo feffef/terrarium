@@ -236,3 +236,18 @@ occurrences:
     severity: nit
     description: "First Agent call was denied by the dispatch-read guard because I had not read the dispatch-subagents Skill; one retry after reading it."
     solution: "Read dispatch-subagents before the first brief; the guard already enforces it."
+  - session: session_013zxzeNcnMkgSejraf9DmiH
+    date: "2026-11-26"
+    severity: nit
+    description: "First Agent call was blocked by the dispatch-read guard because I had not read dispatch-subagents; I read it and retried."
+    solution: "Name the dispatch-subagents read in the glassbox-update step that dispatches the Scout."
+  - session: session_013zxzeQivG2v72EMRPiQ5aR
+    date: "2026-11-27"
+    severity: nit
+    description: "First Agent call was refused by the dispatch-read guard because I had not read dispatch-subagents; I read it and resent, one wasted call."
+    solution: "Read dispatch-subagents before the first brief, as CLAUDE.md says."
+  - session: session_013zxzeSaCTGsDruHYZ8cVWD
+    date: "2026-11-27"
+    severity: minor
+    description: "Wrote two subagent briefs before reading the dispatch-subagents Skill; the dispatch-read guard blocked both calls and I had to retry."
+    solution: "code-review's SKILL.md step 4 should name dispatch-subagents, so the read happens before the first brief."

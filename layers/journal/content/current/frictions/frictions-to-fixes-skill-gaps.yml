@@ -95,3 +95,8 @@ occurrences:
     severity: minor
     description: "Ledger-only PR touched 58 files, so it failed the simple-change test and needed a two-agent code-review, costly for data with no logic."
     solution: "Let a ledger-only diff produced by the Skill's scripts count as simple, or review it by the ledger spec."
+  - session: session_013zxzePHUnDuN2sgW4ghamU
+    date: "2026-11-26"
+    severity: minor
+    description: "SKILL step 5 says to review the ledger PR by the simple-change test, but a 65-file data diff always fails it, so I ran full two-agent code-review on YAML."
+    solution: "Say whether ledger-only PRs count as simple, or give them their own review step."

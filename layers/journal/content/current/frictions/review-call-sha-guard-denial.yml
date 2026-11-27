@@ -28,3 +28,18 @@ occurrences:
     severity: nit
     description: "Called code-review with args lacking the head sha; the review-call guard blocked it and I reran with the printed args."
     solution: "Always paste the output of verdict-line.ts --review-call whole."
+  - session: session_013zxzeNZgq56jQ3U7rZbQkk
+    date: "2026-11-26"
+    severity: nit
+    description: "First code-review call omitted the head sha; the review-call guard blocked it and I reran with the printed args."
+    solution: "Paste the output of verdict-line.ts --review-call whole the first time."
+  - session: session_013zxzeQ92opecHinpUgHCyA
+    date: "2026-11-26"
+    severity: nit
+    description: "First code-review call lacked the head sha in args; the Review-call sha guard blocked it and I reran with verdict-line.ts output."
+    solution: "Run verdict-line.ts --review-call first, as pr-workflow says; I had it printed but typed args from memory."
+  - session: session_013zxzeRCqnsnapQCvq1q748
+    date: "2026-11-26"
+    severity: nit
+    description: "First code-review call was blocked by the sha guard because I copied args from memory, not the printed review call."
+    solution: "Paste verdict-line.ts --review-call output whole."

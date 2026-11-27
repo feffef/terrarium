@@ -1,9 +1,8 @@
 name: harvest-first-pass-shallow
 surface: safe
 summary: A first harvest run stopped after a few clusters, or skipped a step of its Skill, so the owner had to challenge it before a real pass.
-cause: "The harvest Skill's steps are read and then compressed: the list is read in part, a learning is judged by the idea test, or the list-merges step is skipped, so a run files nothing or records no per-cluster result. PR #3106 made step 1 read the list whole and step 3 name the failed test; PR #3137 made the per-cluster record and the source read checked. The stop is a free-text `stopped:` line that any reason satisfies, and step 2 used to put every product cluster before the first workflow one, so a run that stopped early never checked a workflow cluster (#3680). Signals: 'first pass stopped after about ten clusters', 'filed nothing', 'skipped the Skill's list-merges-since step', 'head -300'."
-status: tracked
-ref: "#3680"
+cause: "The harvest Skill's steps are read and then compressed: the list is read in part, a learning is judged by the idea test, or the list-merges step is skipped, so a run files nothing or records no per-cluster result. PR #3106 made step 1 read the list whole and step 3 name the failed test; PR #3137 made the per-cluster record and the source read checked. The stop is a free-text stopped: line that any reason satisfies; step 2 used to put every product cluster before the first workflow one, so an early stop never checked a workflow cluster (#3680). PR #3707 (2026-11-26) dropped that ordering and its check so a stop covers both kinds. Signals: 'first pass stopped after about ten clusters', 'filed nothing', 'skipped the Skill's list-merges-since step', 'head -300'."
+status: open
 related:
   - entry: harvest-list-read-cost
     rule: The harm is the token cost of reading the whole list.
@@ -22,6 +21,9 @@ fixes:
   - pr: 3565
     date: "2026-11-21"
     summary: "harvest block prints each source session's authored fields to stderr, and SKILL.md step 4 reads that print instead of the whole source logs."
+  - pr: 3707
+    date: "2026-11-26"
+    summary: "Harvest step 2 drops the product-before-workflow ordering and the workflowSeen check, so a mid-way stop covers both kinds; the 3-workflow cap and a non-empty stopped: line stay."
 occurrences:
   - session: session_013zxzeP4WS4kX4LSBrVszT6
     date: "2026-11-12"

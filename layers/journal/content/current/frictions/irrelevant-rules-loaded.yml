@@ -10,6 +10,11 @@ related:
     rule: A hook named a governing ADR after an edit to a file it governs.
 notes: |-
   2026-11-08 design: narrow mermaid-lanes.md paths to the Glass Box walkthroughs dropped: .claude/rules/** is Human-only, a nit, and the tenant.config.ts rules are right for editing (RCCqrx agreed); issue #2167 already closed with the loader kept
+  2026-11-27 survey: PR #3709 narrowed the paths of adr-0021, adr-0029 and mermaid-lanes (recorded in fixes); Po4m's 2026-11-26 occurrence predates it.
+fixes:
+  - pr: 3709
+    date: "2026-11-27"
+    summary: "Narrows three rules' paths (adr-0021, adr-0029, mermaid-lanes) after 84-97% of their loads were rated unrelated."
 occurrences:
   - session: session_013zxzeQ4cuLLoFfdaf5sE2d
     date: "2026-11-13"
@@ -21,3 +26,8 @@ occurrences:
     severity: nit
     description: "The adr-0004-human-merge rule loaded when I only grepped package.json and read tests/README.md, saying I touched a Human-only file when none changed."
     solution: "Load the rule on edits to its paths only, not on shell reads of them."
+  - session: session_013zxzePo4mtQsMpDHLLDFmb
+    date: "2026-11-26"
+    severity: nit
+    description: "Two path-scoped rules for Tenant pages (tenant-layers, ui-verification, adr-0006, adr-0016) loaded on a Bash grep of layers/ though the run only edited Glass Box Markdown."
+    solution: "Narrow their paths so a Bash read of CSS and Vue files in other tenants does not load them for a content-only run."
