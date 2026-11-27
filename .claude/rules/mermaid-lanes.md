@@ -1,6 +1,6 @@
 ---
 paths:
-  - "layers/*/content/**/*.md"
+  - "layers/glassbox/content/guide/pages/walkthroughs/**"
 ---
 # Mermaid: group lanes with `classDef`, not `subgraph`
 
