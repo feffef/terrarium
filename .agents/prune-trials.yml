@@ -53,3 +53,33 @@ trials:
       `preview-dev-server-stale-or-unhydrated` with `friction-rates.ts`; a clear
       rise is also damage. NOT damage: a session following the doc correctly and
       still hitting a Chromium quirk the doc names.
+  - problem: >
+      `docs/agents/pr-workflow.md` plainly condensed (-141 words: 1321 -> 1180 by
+      `wc -w`; line delta in the PR title): issue-number citations, the gate-skip
+      path list, the recipe step 3 and 5 justifications and repeated reminders
+      went; every step, its numbering, the simple-change test and every heading
+      kept (Skills and scripts cite them by name). Chosen after a search subagent
+      this run read the ledger `fixes:` lists of all 139 entries and searched the
+      tracker (one `search/issues` query); `prepush-gate-review-skipped` (9 fixes,
+      #1852 .. #3491, several narrowing this same section) and 5 closed
+      "Regression: prepush-gate-review-skipped recurs" issues (#2311, #2354,
+      #2397, #2472, #3407; titles read, bodies not). `merge-pr.ts`
+      (`simpleChangeRefusal`, `verdictRefusal`) already enforces the simple-change
+      bars and the review proof. Not searched: `guards.md`, `.agents/skills/**`.
+    territory:
+      paths:
+        - "docs/agents/pr-workflow.md"
+      keywords:
+        - simple change
+        - Own-read
+        - verdict-line
+    opened: 2026-11-27
+    proven: true
+    check: >
+      Damage is a major or blocker Friction where a session opened a PR without
+      the review or gate the cut text carried, posted no verdict, or merged
+      around a `merge-pr.ts` refusal it should have foreseen from the doc.
+      Compare the shares of `prepush-gate-review-skipped` and
+      `merge-pr-own-read-refusal` with `friction-rates.ts`; a clear rise is also
+      damage. NOT damage: a refusal `merge-pr.ts` raises on a diff that fails
+      the simple-change test the doc still states.
