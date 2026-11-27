@@ -1,0 +1,317 @@
+schemaVersion: 1
+session: session_013zxzeQivG2v72EMRPiQ5aR
+startedAt: 2026-11-27T00:15:45Z
+endedAt: 2026-11-27T00:24:16Z
+kind: autonomous
+goal: Write the 2026-11-26 Journal Digest and archive old content
+status: in-review
+outcome: "PR #3710 open with the Digest and 28 archive moves; not merged because main's gate is red since #3709"
+summary: "Scheduled digest run (agent-initiated by the schedule; no human prompt). One closed day, 2026-11-26, was missing a Digest. I gathered its 12 sessions and 18 PRs, wrote the page, fact-checked it with a subagent (one wrong figure fixed: 1,112 became 1,120 words, a trial entry's number predated a later commit), ran the archive sweep (28 renames), ran code-review (no hard violations), softened project jargon, and passed gate:scoped locally. CI's gate failed on tests/unit/rule-use.spec.ts, which also fails on main since #3709, so per the closing recipe I left the PR open and sent a notification instead of merging. Open: main must be fixed, then CI re-run and merge-pr.ts 3710."
+prs:
+  - "3710"
+docsRead:
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: digest
+    reason: (invoked as a slash command)
+frictions:
+  - description: Ran git status and gather commands before reading git-conventions.md, which CLAUDE.md requires before the first non-read-only git command; the hook named it afterwards.
+    solution: None needed beyond the existing hook; the late read changed nothing.
+    severity: nit
+  - description: First Agent call was refused by the dispatch-read guard because I had not read dispatch-subagents; I read it and resent, one wasted call.
+    solution: Read dispatch-subagents before the first brief, as CLAUDE.md says.
+    severity: nit
+  - description: Started pnpm gate:scoped with both run_in_background and a trailing ampersand; the double-background guard blocked it and the chained commit did not run, so I redid the commit.
+    solution: Pass run_in_background alone, never a text-level ampersand.
+    severity: minor
+  - description: A subagent's trial-entry word count (1,112) was copied into the Digest; the fact-check caught that a later commit made it 1,120. I should have run wc on the merged file.
+    solution: Take counts from the merged file, not a PR's own notes.
+    severity: nit
+  - description: "Digest PR cannot merge: main's safety gate has been red since PR 3709 narrowed rule paths and broke rule-use.spec.ts; I found this only after CI failed and had to dig through logs."
+    solution: Check main's latest gate status before opening a scheduled run's PR.
+    severity: moderate
+  - description: Read the PR verdict doc and ran verdict-line twice; its Own-read output names the reviewed sha, not the head, so I wrote the follow-up verdict lines by hand.
+    solution: verdict-line should accept a separate head for Own-read.
+    severity: nit
+durationSec: 511
+models:
+  claude-sonnet-5-5: 74
+toolCounts:
+  Bash: 29
+  Agent: 4
+  Read: 1
+  Skill: 3
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__update_pull_request: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+  mcp__github__get_job_logs: 2
+  PushNotification: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-11-26.md
+  - layers/journal/content/archived/pages/digests/2026-11-19.md
+  - layers/journal/content/archived/sessions/2026-11-19-session_013zxzeNr2qY7wyodkaD7vXX.yml
+  - layers/journal/content/archived/sessions/2026-11-19-session_013zxzePBiGUC5ThCkjDhzN7.yml
+  - layers/journal/content/archived/sessions/2026-11-19-session_013zxzePPb9GTvLBJgGBgspQ.yml
+  - layers/journal/content/archived/sessions/2026-11-19-session_013zxzePUNdDXiqJrj8m6Bjs.yml
+  - layers/journal/content/archived/sessions/2026-11-19-session_013zxzePpCyqm2oL5M11axMq.yml
+  - layers/journal/content/archived/sessions/2026-11-19-session_013zxzeQ5mMr3n1PjgqM4sUa.yml
+  - layers/journal/content/archived/sessions/2026-11-19-session_013zxzeQuz1peCEYugreTtXU.yml
+  - layers/journal/content/archived/sessions/2026-11-19-session_013zxzeQwgxgxjDKMhS9WDVG.yml
+  - layers/journal/content/archived/sessions/2026-11-19-session_013zxzeRVd5oef56BLsas85y.yml
+  - layers/journal/content/archived/sessions/2026-11-19-session_013zxzeRsaSP4XhVGZDUk153.yml
+  - layers/journal/content/archived/sessions/2026-11-19-session_013zxzeRypyCMruPYBQnRskt.yml
+  - layers/journal/content/archived/sessions/2026-11-19-session_013zxzeSbxN1yAYBzyNbUST6.yml
+  - layers/journal/content/archived/sessions/2026-11-19-session_013zxzeSbz6S2A8goaq25ibN.yml
+  - layers/journal/content/archived/sessions/2026-11-19-session_013zxzeT9rFXvusQJoECfbbV.yml
+  - layers/journal/content/archived/sessions/2026-11-20-session_013zxzePk8A62uhWQwXox3e6.yml
+  - layers/journal/content/archived/sessions/2026-11-20-session_013zxzePp6Xf4HuGyQNDdBpB.yml
+  - layers/journal/content/archived/sessions/2026-11-20-session_013zxzeQAV89N7K2uJN1FbsR.yml
+  - layers/journal/content/archived/sessions/2026-11-20-session_013zxzeQEGaun1DYXBUuVEmu.yml
+  - layers/journal/content/archived/sessions/2026-11-20-session_013zxzeQyUcqMctvqKtP4sHL.yml
+  - layers/journal/content/archived/sessions/2026-11-20-session_013zxzeRcU6k3FNodWxgCMJg.yml
+  - layers/journal/content/archived/sessions/2026-11-20-session_013zxzeRhr3pqcz2wZXYQPXK.yml
+  - layers/journal/content/archived/sessions/2026-11-20-session_013zxzeSSEyKMAcAZESc5L4b.yml
+  - layers/journal/content/archived/sessions/2026-11-20-session_013zxzeSsM57HSqjsQnKmeyY.yml
+  - layers/journal/content/archived/sessions/2026-11-20-session_013zxzeSvAjT1KEC1qBV3wKH.yml
+  - layers/journal/content/archived/sessions/2026-11-20-session_013zxzeTEVK6AmvvjoF7wNV8.yml
+  - layers/journal/content/archived/sessions/2026-11-20-session_013zxzeTGi1AXFf7KEwZhLhH.yml
+  - layers/journal/content/archived/sessions/2026-11-20-session_013zxzeTKSiBSmkCLfn4BYL6.yml
+  - layers/journal/content/current/pages/digests/2026-11-19.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0010.md
+docsReadBySubagents:
+  - .agents/skills/digest/SKILL.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0010.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/dispatch-subagents/SKILL.md
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/dispatch-subagents/SKILL.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: ran review and gate before PR
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: scoped diff, left red PR open
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: headers and trailers on writes
+      - path: .claude/rules/adr-0009.md
+        value: confirmed
+        why: "agreed: log via close-session"
+      - path: .claude/rules/adr-0010.md
+        value: steered
+        why: digest written once, via PR
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0030.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+      - path: docs/agents/pr-workflow.md
+      - path: docs/agents/github-integration.md
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0010.md
+        via: hint
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0010.md
+        value: in-scope
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/rules/mermaid-lanes.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 2
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0010.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0010.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .agents/skills/digest/SKILL.md
+  - by: general-purpose
+    subagent: 3
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/digest/SKILL.md
+      - rule: .claude/rules/adr-0010.md
+        via: native
+        trigger: .agents/skills/digest/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/digest/SKILL.md
+      - rule: .claude/rules/adr-0030.md
+        via: native
+        trigger: docs/adr/0010-digests-derived-append-only-journal-pages.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: docs/adr/0010-digests-derived-append-only-journal-pages.md
+      - rule: .claude/rules/mermaid-lanes.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/adr-0010.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0030.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: unrelated
+      - path: .agents/skills/digest/SKILL.md
+      - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+subagents:
+  - type: general-purpose
+    task: Fact-check 2026-11-26 Digest
+    model: sonnet
+    denied: true
+  - type: general-purpose
+    task: Fact-check 2026-11-26 Digest
+    model: sonnet
+    durationSec: 48
+    toolCalls: 9
+    modelCalls: 7
+    tokenShare: 15.9
+  - type: general-purpose
+    task: Standards review of Digest PR
+    model: sonnet
+    durationSec: 21
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 5.4
+  - type: general-purpose
+    task: Spec review of Digest PR
+    model: sonnet
+    durationSec: 29
+    toolCalls: 9
+    modelCalls: 5
+    tokenShare: 7
+gitBranch: claude/compassionate-lovelace-q3qykz
+entrypoint: remote_trigger
+cliVersion: 2.1.332
+trigger: digest
+learnings:
+  - "On a scheduled run, check origin/main's gate before spending a review and gate cycle: a red main makes the run's own PR unmergeable regardless of its content."
+landedBy: Stop
