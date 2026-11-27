@@ -29,7 +29,7 @@ before the PR (`midden-catalogue` §4).
 **Done when** the PR is open on a head that `code-review` reviewed (or that
 passed your own read of a simple diff) and `gate:scoped` passed.
 
-The gate skips `test`, `build` and `test:e2e` for Markdown-only changes
+The gate skips `test`, `build` and `test:e2e` for some Markdown-only changes
 (`scripts/gate/gate.ts` has the exact paths), so a unit test that reads a
 Markdown file can fail first on `main`.
 
@@ -74,9 +74,11 @@ see how correct stories interact (#1421). Don't re-review each story.
    of `pnpm exec tsx scripts/github/verdict-line.ts <pr-number>`, run in the
    checkout holding the reviewed head (or add `--sha <the SHA in the builder's
    GATE line>`). Its `Reviewed:` line names the sha `code-review` ran on. After
-   only your own read of a simple diff, add `--own-read`. If you pushed after
+   only your own read of a simple diff, add `--own-read`; `merge-pr.ts` refuses it
+   unless the diff passes the simple-change test. If you pushed after
    the review, end with `Reviewed: <reviewed sha>` (`--sha`, without the PR
-   number) and `Own-read: <head>`; a fix that isn't simple needs a new
+   number) and `Own-read: <head>`, accepted when the review is in your
+   transcript and the fix is simple; a fix that isn't simple needs a new
    `code-review` and verdict. Post it as `event=COMMENT` or `add_issue_comment`,
    never an APPROVE review: on a fork PR that would fake the human merge
    authority [`guest-contributions.md`](./guest-contributions.md) reserves.
@@ -106,7 +108,7 @@ Before pushing a follow-up to an existing PR branch, check with
 the branch. A branch restarted after the merge, or a session branch reset onto
 `main` that fast-forwards the remote branch (`git merge-base --is-ancestor`),
 is fine: push plainly, without `--force-with-lease`. To reuse a merged session
-branch, check it out and `git merge --ff-only origin/main`. The Stop hook may
+branch, check it out and `git merge --ff-only origin/main` (only when its tip is already in `main`). The Stop hook may
 then flag the merged history as unpushed: see `git-conventions.md`.
 
 Reply on a review thread before calling `resolve_review_thread`. Keep the PR's
