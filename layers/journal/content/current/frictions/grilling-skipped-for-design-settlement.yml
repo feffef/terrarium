@@ -9,11 +9,6 @@ related:
 notes: |-
   2026-11-08 design: no change dropped: 3 of 5 sessions are not defects (T5vcQT owner said 'choose yourself', Sy38XR clear-backlog says its list wins); NpEgo already had 'settle every decision via grilling' in glassbox-curate, read and ignored, so more prose is the wrong mechanism; the delegation clause is in issue #2962
 occurrences:
-  - session: session_013zxzePXpUx7WY6K2uHsxKz
-    date: "2026-11-12"
-    severity: minor
-    description: "Did not invoke the grilling Skill for owner-facing UI (CLAUDE.md asks it); one question round, then about twenty owner corrections to layout and copy arrived as redo rounds."
-    solution: "Grill the claim, each tile's content, section lines and mobile behaviour in the first round, before building a prototype."
   - session: session_013zxzePNLUgD6AbfEmXykEJ
     date: "2026-11-15"
     severity: nit
@@ -29,3 +24,8 @@ occurrences:
     severity: nit
     description: "I did not invoke the grilling Skill for section 2 as clear-backlog requires; I followed its format by hand."
     solution: "Invoke grilling before building the question list, as section 2 says."
+  - session: session_013zxzeNZgq56jQ3U7rZbQkk
+    date: "2026-11-26"
+    severity: nit
+    description: "Asked scoping questions with AskUserQuestion without invoking the grilling Skill that CLAUDE.md names for asking before building."
+    solution: "Invoke grilling before asking what the trusted user will see."

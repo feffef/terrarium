@@ -10,11 +10,6 @@ notes: |-
   2026-11-08 design: a PreToolUse guard denying git switch --discard-changes and git checkout <ref> -- . dropped: it needs a Human-only guard, the harness classifier already denied the costlier case, git-conventions.md:27 already forbids it, and the other cost one redone edit.
   2026-11-11 design: no non-guard fix dropped: git-conventions.md:26-28 already forbids it, SBfN's call was a no-op, and the owner accepts late reads.
 occurrences:
-  - session: session_013zxzeNrvAWHmAPYsSy8u7x
-    date: "2026-11-12"
-    severity: nit
-    description: "Put a stray git checkout --detach into a read-only grep command, which detached HEAD; I noticed from git status and re-attached the session branch in the next call, with nothing lost."
-    solution: "Keep read-only searches free of git commands that change state, and check git status after any git call in a compound command."
   - session: session_013zxzeSsM57HSqjsQnKmeyY
     date: "2026-11-20"
     severity: minor

@@ -1,9 +1,8 @@
 name: harvest-list-read-cost
 summary: A harvest run read its whole list of ideas and learnings, 60,000 to 90,000 tokens over several reads, and then checked only a small part of it.
-cause: "Comes from harvest-first-pass-shallow and PR #3106: the harvest Skill has the run read the whole list (270 to 577 lines) before it stops at a capped number of clusters, and many entries are old ideas for a removed Skill (glassbox-improve). The harm is read cost, not a shallow pass. Since PR #3454 (2026-11-18) step 1 reads the list in pages with a last-entry count check, since PR #3470 a harvest evidence command replaces per-cluster hand searches, since PR #3505 (2026-11-20) it reads a saved issue list and takes several keyword groups in one call, and since PR #3532 (2026-11-20T19:08Z) each group's tracker block is ranked and capped at 10 hits; the list read is still whole. Signals: 'whole read of 577 lines took about 90,000 tokens', 'read the whole 561-line harvest list', 'then checked only 17 clusters', many hand-run searches per cluster, 'each harvest evidence call took about 33 s', '5,215 lines', '3,625 lines for nine groups'."
+cause: "Comes from harvest-first-pass-shallow and PR #3106: the harvest Skill has the run read the whole list (270 to 577 lines) before it stops at a capped number of clusters, and many entries are old ideas for a removed Skill (glassbox-improve). The harm is read cost, not a shallow pass. Since PR #3454 (2026-11-18) step 1 reads the list in pages with a last-entry count check, since PR #3470 a harvest evidence command replaced per-cluster hand searches, since PR #3505 it read a saved issue list, and PR #3532 (2026-11-20) ranked and capped each group's tracker block at 10 hits; the list read was still whole. PR #3707 (2026-11-26) replaced keyword evidence with a harvest digest of about 181 KB read whole; its read cost is unmeasured on a scheduled run. Signals: 'whole read of 577 lines took about 90,000 tokens', 'read the whole 561-line harvest list', 'then checked only 17 clusters', many hand-run searches per cluster, 'each harvest evidence call took about 33 s', '5,215 lines', '3,625 lines for nine groups'."
 surface: safe
-status: tracked
-ref: "#3681 (regression of PR #3532)"
+status: open
 related:
   - entry: harvest-first-pass-shallow
     rule: The harm is a shallow pass or a skipped step, not the read cost.
@@ -31,22 +30,10 @@ fixes:
   - pr: 3572
     date: "2026-11-21"
     summary: "harvest evidence reserves 5 of its 10 tracker hits for the newest 100 issues and prints every issue a keyword names by number."
+  - pr: 3707
+    date: "2026-11-26"
+    summary: "A harvest digest command replaces keyword evidence, the cut tracker and the recency quota; it prints rulings, every issue with state and every ledger summary to read whole."
 occurrences:
-  - session: session_013zxzeP4WS4kX4LSBrVszT6
-    date: "2026-11-12"
-    severity: minor
-    description: "The idea list ran to 162 entries over 270 lines, needing a paged read; most are old glassbox-improve ideas for a Skill that no longer exists."
-    solution: "Have harvest extract drop entries whose named Skill or file is gone before listing."
-  - session: session_013zxzeS6gV5rfHembHQYP6K
-    date: "2026-11-12"
-    severity: minor
-    description: "Step 1 whole read of 577 lines took about 90,000 tokens and two Reads, one needing allow_large, though step 2 stops at 30 clusters."
-    solution: "Let harvest list cut entry text, as Seedling 3178 proposes."
-  - session: session_013zxzeNrvAWHmAPYsSy8u7x
-    date: "2026-11-12"
-    severity: moderate
-    description: "Read the whole 561-line harvest list in three Read calls of about 62,000 tokens, then checked only 17 clusters."
-    solution: "Cut each list entry's text, as the retro Seedling proposes."
   - session: session_013zxzeNxZVrKu9whNTs4pnR
     date: "2026-11-14"
     severity: nit

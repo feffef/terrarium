@@ -17,11 +17,6 @@ fixes:
     date: "2026-10-30"
     summary: "CLAUDE.md: in the main session end your turn and let the completion notification wake you; never wait with pgrep -f"
 occurrences:
-  - session: session_013zxzeSdKDZBdqz6vRp3xW1
-    date: "2026-11-12"
-    severity: nit
-    description: "A foreground sleep was blocked, and a python replace silently never matched because the run-entry YAML is line-wrapped."
-    solution: "Wait with the completion notification; match wrapped text by line or regex."
   - session: session_013zxzeRxyNcwt53TXLHjTsg
     date: "2026-11-13"
     severity: nit
@@ -127,3 +122,8 @@ occurrences:
     severity: nit
     description: "Gave git commit both -m and -F in one call, which failed, and tried foreground sleep which the harness blocks."
     solution: "Use one message source; wait with Monitor."
+  - session: session_013zxzeSUNxM2snCnM3Wwi6o
+    date: "2026-11-26"
+    severity: nit
+    description: "Ran a pointless foreground sleep while waiting for reviewers."
+    solution: "End the turn and wait for notifications."

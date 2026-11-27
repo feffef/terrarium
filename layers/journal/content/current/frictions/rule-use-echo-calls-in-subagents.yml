@@ -11,16 +11,6 @@ related:
 notes: |-
   2026-11-13 survey: issue #3147 closed not planned 2026-11-12: the owner keeps the calls for the rule-use data trial (#3017 reviews it from 2026-11-18); PR #3196 only reworded the note to say why the call matters.
 occurrences:
-  - session: session_013zxzeSiYFQ3mgaCyMXicwp
-    date: "2026-11-12"
-    severity: minor
-    description: "The rule-use hooks made 15 of 31 build and review agents run two extra echo rule-use Bash calls, a large share of a read-only reviewer's 3 to 7 calls."
-    solution: "Answer the rule-use note in the reply text or limit it to agents that edit (also filed as #3147)."
-  - session: session_013zxzeR3mLZWKT2R7LWmtqf
-    date: "2026-11-12"
-    severity: minor
-    description: "The SubagentStart hook demanded repeated echo rule-use: Bash calls from every read-only reviewer (8 of 8, two or three each) with no effect on the review."
-    solution: "Give read-only reviewers one rule-use report call at the end, or drop the start-of-run demand for them."
   - session: session_013zxzePiaeVXJsUcoKh7LFv
     date: "2026-11-13"
     severity: minor
@@ -136,3 +126,13 @@ occurrences:
     severity: nit
     description: "Retro (both reviewers): hooks demanded a rule-use echo round trip on each Bash call, and the hand-off format changed between the first brief and a later message (structured output, then a JSON file with a one-line reply)."
     solution: "Fold the rule-use echo into the final call for reviewers, and state the findings-file hand-off once in reviewPrompt()."
+  - session: session_013zxzePxkwAcvTVUDd7sToK
+    date: "2026-11-25"
+    severity: nit
+    description: "Retro (builder and Standards reviewer): subagents hit repeated SubagentStop blocks as each new rule loaded and re-sent rule-use echoes for unrelated rules; a few extra calls with no new information."
+    solution: "Unverified how much it cost; the capped 3-block hook in PR 3689 bounds it, so judge after it merges."
+  - session: session_013zxzeQMTfvZZmLxob6aT7A
+    date: "2026-11-26"
+    severity: nit
+    description: "SubagentStart rule-use hook made the blind visitor rate four ADR rules for a read-only browse, wasting turns."
+    solution: "Skip the rule-use note for read-only visitor briefs in the SubagentStart hook under scripts/hooks/."

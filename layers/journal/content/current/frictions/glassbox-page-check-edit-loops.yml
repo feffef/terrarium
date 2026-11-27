@@ -8,24 +8,10 @@ status: open
 related:
   - entry: glassbox-page-conventions-found-late
     rule: A convention no Skill step states was learned from a failing test, a reviewer or the owner.
-  - entry: glassbox-memory-page-word-cap
-    rule: The workshop memory page hit its 2,500-word cap.
-  - entry: parallel-branches-same-lines-conflict
-    rule: Branches built in parallel edited the same lines of a shared file.
 notes: |-
   2026-10-25 design: moving the page checks into validate:content, or a doc line on the 65-word cap, dropped: both sessions read EVERY-PAGE.md, which points to the cap's one home (#2114); the failure messages already name the limit; a gate-wiring change (Human-only) costs more than the two test runs it saves.
   2026-11-04 design: no change dropped: the page spec is the check working as designed, the writer-brief rule SAtj asked for landed in ec77d4bad, and the ADR-chip case was an installed code-review reviewer's proposal.
 occurrences:
-  - session: session_013zxzeP1EixGDy96kmktFi2
-    date: "2026-11-12"
-    severity: minor
-    description: "Counted Where next room using only guide links, not the Journal link that also counts toward the cap of five; the link-edit script aborted partway and had to be redone."
-    solution: "Count list items, not matching links, before editing a capped list."
-  - session: session_013zxzeRvdzBc3xXGo24TkVf
-    date: "2026-11-12"
-    severity: minor
-    description: "Replaced Cloud sessions' Journal Where next row without checking that an e2e test needs a non-Glass-Box row there, and dropped three pages below the two-incoming-links check; the gate failed once and page checks flagged the rest."
-    solution: "Before swapping a Where next entry, run the page checks and grep the e2e spec for the page."
   - session: session_013zxzeSoqEeWqPDrCqDCcJn
     date: "2026-11-16"
     severity: nit

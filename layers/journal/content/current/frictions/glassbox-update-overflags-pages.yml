@@ -20,16 +20,6 @@ fixes:
     date: "2026-11-14"
     summary: "glassbox-update step 4 re-checks a flagged page as a whole only for needsReader true, prose-only flags and rotation pages; other flagged pages get a quick look."
 occurrences:
-  - session: session_013zxzeNbirdJSVYjNLe6nsJ
-    date: "2026-11-12"
-    severity: moderate
-    description: "Skill step 4 asks for a whole-page re-check of all 53 flagged pages with no scoping, so the run cost seven subagents for mostly pin-only pages."
-    solution: "Scope the whole-page re-check to pages whose cited files changed meaningfully (needsReader), as step 5 already does."
-  - session: session_013zxzePP7cbXFfoqEXbKwKW
-    date: "2026-11-12"
-    severity: nit
-    description: "The Skill says re-check each flagged page as a whole, but 11 re-pin-only pages were checked through scoped reader reports only, not read whole by me."
-    solution: "Say in step 4 that a flagged page with no changed claim needs only the scoped reader, or require a whole read."
   - session: session_013zxzePSF8TMPrem83fkCmA
     date: "2026-11-13"
     severity: minor

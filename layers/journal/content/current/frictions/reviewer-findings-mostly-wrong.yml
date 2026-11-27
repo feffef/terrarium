@@ -21,3 +21,8 @@ occurrences:
     severity: minor
     description: "One reviewer's findings on dated research snapshots were WRONG as drift, and its cut-to-pointer rewrites dropped a live caveat; checkers contradicted each other on three."
     solution: "Tell reviewers that a doc with a stated review date is a snapshot, not drift."
+  - session: session_013zxzeSUNxM2snCnM3Wwi6o
+    date: "2026-11-26"
+    severity: minor
+    description: "Reviewers proposed fixes the checker rejected as not shorter or plainer, or as owner-owned (watchFor, Skill merge policy); all 7 findings were wasted effort."
+    solution: "Put the checker's lose-nothing and shorter bar, and that watchFor and Skill merge policy are owner-owned, in the reviewer brief."

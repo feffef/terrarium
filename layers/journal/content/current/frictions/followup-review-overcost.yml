@@ -13,16 +13,6 @@ related:
 notes: |-
   2026-10-28 design: a looser follow-up review bar dropped: three of six predate the simple-change bar, the others read pr-workflow.md and followed it, and ADR-0004 rejects skipping review for prose. dropped: a policy change for a human, not a fix.
 occurrences:
-  - session: session_013zxzeP3xBUNvHd5kGFihuo
-    date: "2026-11-12"
-    severity: minor
-    description: "SKILL §5 says review the ledger PR by the simple-change test, but a 58-file data-only diff fails the count, so I ran full code-review on machine-written YAML."
-    solution: "Say what a ledger PR needs: its content spec and gate, or one reviewer on occurrences."
-  - session: session_013zxzeNrvAWHmAPYsSy8u7x
-    date: "2026-11-12"
-    severity: minor
-    description: "Ran two code-review subagents (about 164,000 tokens) on a 4-line, 2-file change because pr-workflow's simple-change test excludes any code-logic change, even a constant."
-    solution: "Let the simple-change test treat a single constant or number change as simple, or let code-review run both axes inline for a diff this small."
   - session: session_013zxzeNdAgdKF5tpWTQLowx
     date: "2026-11-13"
     severity: minor
@@ -103,3 +93,8 @@ occurrences:
     severity: nit
     description: "Retro (Both reviewer, unverified in the workflow file): on a 5-line, 2-file content diff the full review re-found nothing that mattered, and it spent two Bash calls on unrelated rule-use echoes; the code-review Skill section it was told to read is mostly about its own sub-agent spawning."
     solution: "In reviewPrompt() of .claude/workflows/clear-backlog-build.js paste the smell list instead of pointing at the Skill, and consider the orchestrator's own read for diffs of 10 lines or fewer when the owner's picks are binding."
+  - session: session_013zxzeQLTeC8GETW73Aho8C
+    date: "2026-11-26"
+    severity: nit
+    description: "Retro (Both reviewer): for a 2-line diff the reviewer paid three reads and two rule-use echo calls; its single nit was a small re-find. The re-check brief naming the diff range worked well."
+    solution: "Skip the code-review Skill section read and the rule-use echo for a Both reviewer on a diff at or under the simple-change bar."

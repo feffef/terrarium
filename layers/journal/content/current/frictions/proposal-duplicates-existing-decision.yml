@@ -6,22 +6,10 @@ status: open
 related:
   - entry: premise-not-questioned
     rule: A change was built without asking whether it should exist or how big it should be.
-  - entry: prune-trial-territory-unchecked
-    rule: A claim about or action in a Prune Trial's territory skipped .agents/prune-trials.yml.
 notes: |-
   2026-11-04 design: no change dropped: the retro half is an installed Skill (ADR-0015) and the visitor-loop half was closed by PR #2824 (decisions.md line) with the step 4 refiner as backstop; revisit on a third occurrence.
   2026-11-14 design: no change: the newest occurrence is a nit that review caught, and the earlier mechanism drop stands. dropped: a CLAUDE.md 'Question the premise' phrase; revisit on a moderate recurrence.
 occurrences:
-  - session: session_013zxzePXpUx7WY6K2uHsxKz
-    date: "2026-11-12"
-    severity: nit
-    description: "Added Glass Box to the footer site list as a consistency fix, against an owner ruling in visitor-loop decisions.md that fixes that list; review caught it and I reverted."
-    solution: "Grep .agents/skills/*/decisions.md for a list before extending it, or point app/utils/sites.ts at its ruling in a comment."
-  - session: session_013zxzeNrvAWHmAPYsSy8u7x
-    date: "2026-11-12"
-    severity: nit
-    description: "Found issue 3105 had already said the detached-HEAD push is in the Ledger only after drafting it as a candidate; my summary-line check had missed the covering entry."
-    solution: "Read a closed Seedling on the same doc before drafting a learning for it."
   - session: session_013zxzePBxPjfMQRm8C4FwqZ
     date: "2026-11-18"
     severity: minor

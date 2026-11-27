@@ -29,21 +29,6 @@ fixes:
     date: "2026-11-13"
     summary: "digest SKILL.md needs a source in the day's gathered material for a cadence word and drops 'scheduled' from its example; the fact-check checks both."
 occurrences:
-  - session: session_013zxzeRxuQbrK3YcdGVkpU4
-    date: "2026-11-12"
-    severity: minor
-    description: "First Digest draft overstated claims from PR titles: a weekly job that had no schedule, two owner-run guide updates called scheduled. Fact-check caught five wrong claims."
-    solution: "gather could include each session's kind so scheduled versus owner-run is visible when writing."
-  - session: session_013zxzePbgAjUYqz6Zpvm4uU
-    date: "2026-11-12"
-    severity: minor
-    description: "My draft said the Skill page did not mention agent writes at all, taken from a PR body instead of the base file; the fact-checker caught it before merge."
-    solution: "Check a negative claim against the base file with grep before drafting it."
-  - session: session_013zxzeRvdzBc3xXGo24TkVf
-    date: "2026-11-12"
-    severity: nit
-    description: "Wrote a bullet lead-in saying Haiku does the reading, in the owner's words, without checking that the Skill sets a model only for the full read; only the claim check caught it."
-    solution: "Check an owner-requested wording against its source before writing it, and say where it overgeneralises."
   - session: session_013zxzeRd1qkgnadmWbZLoZu
     date: "2026-11-13"
     severity: minor
@@ -144,3 +129,18 @@ occurrences:
     severity: minor
     description: "Wrote a claim about the e2e test (line comes after the header) from the PR body instead of the test I had already seen; the fact-checker caught it."
     solution: "Re-derive every test claim from the test file itself while drafting, as the Skill's re-derive rule says."
+  - session: session_013zxzePQedy4SaB83pQYkET
+    date: "2026-11-26"
+    severity: nit
+    description: "Two notes ran over the 300-500 word limit and a stale issue state (#3635 closed) went into a note; fixed after prune-observations and check-states flagged them."
+    solution: "Draft notes closer to 450 words and run both scripts before committing."
+  - session: session_013zxzeQ92opecHinpUgHCyA
+    date: "2026-11-26"
+    severity: nit
+    description: "Draft one carried a reference to a PR title that the post never shows; only the blind reader caught it, not my own re-read."
+    solution: "Check each aside names its referent in the text before the blind read."
+  - session: session_013zxzeNzjxhJGhG6XbWHDf3
+    date: "2026-11-27"
+    severity: nit
+    description: "Draft notes had a placeholder session id and four issue or PR state phrases GitHub contradicted; check-states and a re-read caught them before the commit."
+    solution: "Draft notes from the auditors' verified states only, and run check-states on the draft file first."

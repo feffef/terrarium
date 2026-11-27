@@ -1,8 +1,8 @@
 name: summary-from-narrow-evidence-span
 summary: >-
-  An agent wrote a summary from only the latest slice of the evidence and had to redo it over the whole span.
+  An agent wrote a summary or draft from only part of the evidence (the latest slice, or an issue body without its comments) and had to redo it over the whole.
 cause: >-
-  A summary is drawn from the latest slice of the evidence, without asking what span it must cover, and is redone over the whole history.
+  A summary or draft is built from a slice of the evidence (the latest span, or an issue's body without its comments) without asking what it must cover, and is redone over the whole. Signals: summary redone over the whole history; a draft from an issue body whose owner comment held the real story.
 surface: safe
 status: open
 related:
@@ -16,3 +16,8 @@ occurrences:
     severity: moderate
     description: "My first backfill lines drew only on each Skill's latest notes, so the owner had to ask for an overall verdict and I redid all 17 lines in a second PR."
     solution: "Read a Skill's whole observation history before summarising it; the owner's wording \"last week's runs\" invited a short window, so ask what span the summary covers."
+  - session: session_013zxzeTKxE9MSXFCu6Nqhr9
+    date: "2026-11-25"
+    severity: minor
+    description: "Drafted the first post from issue 3600's body without reading its comments; the owner's comment, the real story behind the post's thesis, surfaced only at step 12 and became the reply."
+    solution: "Read an issue's comments, not only its body, when a post says why a change took the shape it did."

@@ -1,6 +1,6 @@
 name: edit-leaves-contradicting-sibling
 summary: >-
-  An edit to a doc, Skill or rule left other statements or references that contradicted it or pointed at removed text, caught only by review.
+  An edit to a doc, Skill or rule left other statements or references that contradicted it or pointed at removed text, caught only by review; see: rule-path-narrowing-breaks-pinned-test.
 cause: >-
   After adding, changing, moving or cutting a section, rule, field or test, the author did not grep the same file and its consumers (docs, Skills, scripts, tests, typechecked callers, code comments, cross-references) for statements it overrides or references it breaks. Signals: a leftover line contradicting a new section, a dangling section reference, callers pointing at a removed section, a required field breaking another spec's typecheck, a test assertion built on a matcher or order the suite lacks; caught by code-review or the gate.
 surface: safe
@@ -9,8 +9,8 @@ acceptedSeverity: moderate
 related:
   - entry: rewrite-pass-scope-drift
     rule: A rewrite or trim lost meaning in the text it changed.
-  - entry: page-insert-not-reread-in-order
-    rule: A paragraph was added to a Lesson and the section was not reread in order.
+  - entry: rule-path-narrowing-breaks-pinned-test
+    rule: That entry is a scoped gate passing and main going red after a rule-paths change; here an edit left a sibling statement contradicting it.
 notes: |-
   2026-11-11 survey: issue #3047 closed not planned 2026-11-11: the owner leaves the Friction logged as accepted noise; a diff-based gate check would have caught 1 of 3 recent occurrences and audit-docs already greps the nouns the last 48 hours removed. Reopen if it turns moderate or recurs at a higher rate.
   2026-11-13 survey: gzxT (2026-11-12, moderate: row text changed with only unit tests run, an e2e assertion on the old text failed the gate) and sxKz (minor) appended; the 2026-11-11 note's reopen condition (turns moderate) is met, left accepted for the owner to decide.
@@ -22,16 +22,6 @@ fixes:
     date: "2026-11-01"
     summary: "CLAUDE.md Self-verification: after changing a type or a test, run pnpm typecheck and the touched spec before gate:scoped."
 occurrences:
-  - session: session_013zxzePXpUx7WY6K2uHsxKz
-    date: "2026-11-12"
-    severity: minor
-    description: "Found stale references (page title, comments, two smoke tests, glossary entry, dead wide/.wip code) only in a final pass, not in the same edit as each change (CLAUDE.md one home per fact)."
-    solution: "Grep a changed string's other statements and the tests that count tiles right after each structural or copy edit."
-  - session: session_013zxzeSLxxdLwoN9gcngzxT
-    date: "2026-11-12"
-    severity: moderate
-    description: "Changed Where next and Lessons already read row text and ran only unit tests; an e2e assertion on the old text failed in the gate, costing a second full gate run."
-    solution: "Grep tests/e2e for the changed text and run the touched e2e before the gate, per One home per fact."
   - session: session_013zxzeNiyBNZD3Zn5dUm9Bq
     date: "2026-11-13"
     severity: minor
@@ -42,11 +32,6 @@ occurrences:
     severity: minor
     description: "First edit left stale 'standalone' and 'two earlier drafts' wording that both reviewers caught; needed a second commit."
     solution: "After removing a reference, grep the README and sibling docs for other statements of the same fact before committing."
-  - session: session_013zxzeS7WM4TBNbgtufBjAT
-    date: "2026-11-12"
-    severity: minor
-    description: "Rewrote the Skill's loop text four times; each pass fixed only the sentences I thought of, and the person's follow-ups found the leftover one-focus-per-run wording and an if-a-focus-remains stop that contradicted their budget-only answer."
-    solution: "When changing a rule, re-read the whole Skill and grep its other statements in the same edit (CLAUDE.md, one home per fact), and check the new text against the person's earlier answers."
   - session: session_013zxzeSgAcwDrJXAMFAC4Qf
     date: "2026-11-17"
     severity: minor
@@ -82,3 +67,13 @@ occurrences:
     severity: minor
     description: "Retro: the #3543 builder missed a second statement of the changed fact (body-template.md) and a second caller of summaryOf; both cost a fix round or a failed typecheck."
     solution: "rules() in clear-backlog-build.js: before the first commit, grep the touched Skill folder for other statements of each changed fact and callers of each touched function (CLAUDE.md One home per fact)."
+  - session: session_013zxzePxkwAcvTVUDd7sToK
+    date: "2026-11-25"
+    severity: nit
+    description: "A builder appended to decisions.md without updating earlier lines, so the #3662 file contradicted itself (no count added, then count added); I had to use my own summary for the PR body."
+    solution: "Tell builders to rewrite superseded decisions.md lines instead of appending."
+  - session: session_013zxzePo4mtQsMpDHLLDFmb
+    date: "2026-11-26"
+    severity: minor
+    description: "A writer subagent edited a Where next list on a page that an open PR rewrites, against rule 3; I reverted it. The first full gate then failed an e2e test that reads one Journal row in a Where next list, and a run entry line with a colon, unquoted, failed validate:content."
+    solution: "The Skill could say in step 5 that a Where next swap must keep any Journal row a layer e2e test reads (cloud-sessions), and the writer brief template should name the open-PR pages to leave alone."

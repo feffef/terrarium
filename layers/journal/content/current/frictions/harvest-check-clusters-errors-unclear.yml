@@ -1,0 +1,17 @@
+name: harvest-check-clusters-errors-unclear
+surface: safe
+summary: The harvest check-clusters errors do not say how to fix the file, so a first draft was rejected and rerun.
+cause: "harvest's check-clusters refuses a file with errors that omit the comma separator for entries and the computed per-entry session count, and the Skill gives no example block; a session wrote sessions counted per entry and the verdict as one line with its evidence and needed two reruns. Signals: check-clusters rejected, comma separator, session count, no example block."
+status: tracked
+ref: "#3704"
+occurrences:
+  - session: session_013zxzePSaj6hZQUzYVaqg4f
+    date: "2026-11-25"
+    severity: nit
+    description: "check-clusters rejected my first file twice: sessions counted per entry and the verdict written as one line with its evidence. The Skill gives no example block."
+    solution: "Add one filled example block to harvest step 3."
+  - session: session_013zxzeSJY7CjGgJdwhJmTgV
+    date: "2026-11-26"
+    severity: nit
+    description: "harvest check-clusters errors name neither the comma separator for entries nor the computed session count, so two checker reruns were needed."
+    solution: "Print the accepted form and the computed count in the message (retro issue 3704)."

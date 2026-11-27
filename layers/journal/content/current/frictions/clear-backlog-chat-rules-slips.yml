@@ -3,15 +3,7 @@ surface: safe
 summary: Clear-backlog orchestrators wrote status lines or vague pointers to open questions in chat, against the Skill's own chat rules.
 cause: "clear-backlog SKILL.md says to write only questions, needs and the report in chat; sessions write short status lines while agents run and later refer to open questions without repeating them in full. Signals: 'wrote several short status lines while agents ran', 'against clear-backlog's chat rules', 'said the questions were open without repeating them'."
 status: open
-related:
-  - entry: builders-started-while-grilling-open
-    rule: Builders were started, and their news interleaved, while questions were still open.
 occurrences:
-  - session: session_013zxzeNWbHYVE9UDhB1zNHD
-    date: "2026-11-12"
-    severity: nit
-    description: "Wrote several short status lines while agents ran, and later messages said the questions were open without repeating them in full, against clear-backlog's chat rules."
-    solution: "Keep silent while agents work; paste every unanswered Q in full each time I write."
   - session: session_013zxzeT5pQrVtuNLAzUQRaP
     date: "2026-11-14"
     severity: nit
@@ -37,3 +29,8 @@ occurrences:
     severity: minor
     description: "I read the grilling rule 'no tool calls while waiting' as holding all builder follow-up for several turns, reposting Q25 each time, though the Skill says the rest keep going."
     solution: "The Skill should say outright that a wait on one question never pauses other branches' re-checks and gates."
+  - session: session_013zxzeQLTeC8GETW73Aho8C
+    date: "2026-11-26"
+    severity: nit
+    description: "Kept making tool calls (verifying hand-backs, sending resumes) while question Q9 was pending, against the clear-backlog rule to ask with no tool calls."
+    solution: "Cut the rule's no-tool-call clause, or say it applies only to the grilling round."

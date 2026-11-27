@@ -19,26 +19,11 @@ fixes:
     date: "2026-11-16"
     summary: "CLAUDE.md 'Ask before building': an unanswered, option-less or deferred reply is not a yes; ask again or hold the step."
 occurrences:
-  - session: session_013zxzeP1EixGDy96kmktFi2
-    date: "2026-11-12"
-    severity: moderate
-    description: "Read the ambiguous 'here the numbers could make sense' as all three remaining diagrams and redrew them; the owner interrupted to say just the one."
-    solution: "When a request names a target with 'here' or 'that one', ask which before building; the owner had asked to be asked first."
-  - session: session_013zxzeR3mLZWKT2R7LWmtqf
-    date: "2026-11-12"
-    severity: minor
-    description: "The owner's one-word reply 'Three columns' was ambiguous, and my own question tables may have prompted it, so one round was spent clarifying."
-    solution: "Keep grilling answers to lettered options and avoid tables inside the question text."
   - session: session_013zxzeQ4cuLLoFfdaf5sE2d
     date: "2026-11-13"
     severity: moderate
     description: "Took 'read them all' literally and read 22 lessons (about 30k words) into the main context before the owner redirected me to explore agents."
     solution: "Size the reading first and propose delegation when it exceeds a few thousand words, before starting."
-  - session: session_013zxzeP4WS4kX4LSBrVszT6
-    date: "2026-11-12"
-    severity: moderate
-    description: "Read step 3's simplifying test as barring any visitor-facing addition and dropped three passing product ideas; the owner had to ask for a second look."
-    solution: "Word the test so it says a feature in an existing component with nothing named replaced still passes, or give a worked example."
   - session: session_013zxzeS6AE1WUN124PHnm4b
     date: "2026-11-13"
     severity: moderate
@@ -84,3 +69,8 @@ occurrences:
     severity: minor
     description: "Owner's #3626 reply 'include the total number of ideas' changed the look, so I built a second sample, then the owner replied 'Just write ideas in b of C sessions' and I guessed it meant dropping the total without asking."
     solution: "When an answer to a look question could be read two ways, ask the one-line question before building a second sample."
+  - session: session_013zxzeNZgq56jQ3U7rZbQkk
+    date: "2026-11-26"
+    severity: minor
+    description: "The owner's single reply 'Sounds good' covered two questions; I took it as a yes to the PR and left the length unchanged, rather than asking again."
+    solution: "Re-ask the unanswered question (lengthen the body?) before treating the reply as settled."

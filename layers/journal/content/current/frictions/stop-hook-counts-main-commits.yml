@@ -16,11 +16,6 @@ fixes:
     date: "2026-10-16"
     summary: "git-conventions.md now says to push a branch whose only unpushed commits are main's, ending the per-turn Stop hook nag."
 occurrences:
-  - session: session_013zxzeNjAbKXTy5zKs2fg8r
-    date: "2026-11-12"
-    severity: nit
-    description: "Merged origin/main into the session branch to run a lookup script, so the Stop hook counted 40 unpushed commits (merged main history on a remote branch deleted by an earlier merge) and asked for a push."
-    solution: "Use a detached checkout of origin/main for a read-only check instead of merging it into the session branch."
   - session: session_013zxzeRifuq1jTn2WseeBhP
     date: "2026-11-13"
     severity: nit
@@ -46,3 +41,8 @@ occurrences:
     severity: nit
     description: "My fast-forward of the session branch to origin/main made the Stop hook flag main's own log commit as unpushed; I pushed the branch to quiet it."
     solution: "Leave the session branch where it started when I only read main; use origin/main in read commands instead of fast-forwarding."
+  - session: session_013zxzeQ92opecHinpUgHCyA
+    date: "2026-11-26"
+    severity: nit
+    description: "After the merge I fast-forwarded my branch onto origin/main; the Stop hook then reported two unpushed commits that were main's own history, costing a push and a re-read of git-conventions."
+    solution: "Stay on the branch tip after merge; push plainly only if a follow-up commit exists."

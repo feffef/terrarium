@@ -12,8 +12,6 @@ related:
     rule: The brief relays another agent's unchecked claim.
   - entry: subagent-brief-omits-verdict-ask
     rule: The brief lacks a line CLAUDE.md asks every brief to carry.
-  - entry: workflow-brief-backticks-break-script
-    rule: Unescaped backticks in a workflow script's brief broke the script.
   - entry: visitor-loop-brief-gaps
     rule: The visitor brief left out details its visitors needed.
   - entry: reviewer-return-channel-mixed
@@ -50,11 +48,6 @@ notes: |-
   2026-11-13 survey: Le6nsJ (2026-11-12) dispatched PAGES_PLACEHOLDER and FULL_PLACEHOLDER unfilled; the #3064 guard pattern (@@NAME@@ or braces) does not match that form. Issue #3227 (audit-skills, opened 2026-11-13) tracks unfilled placeholders.
   2026-11-23 prune trial (dispatch-subagents §3 cut) judged: it holds; the post-cut rise (6/36 vs 14/218) traces to clear-backlog-build.js rules(), not the cut text
 occurrences:
-  - session: session_013zxzeNbirdJSVYjNLe6nsJ
-    date: "2026-11-12"
-    severity: minor
-    description: "Dispatched the pilot subagent with unfilled PAGES_PLACEHOLDER and FULL_PLACEHOLDER; had to correct it by message."
-    solution: "Fill the template per batch from a script before dispatch, as the dispatch-subagents re-read step says."
   - session: session_013zxzePfDFCA2whsn1WaK5j
     date: "2026-11-13"
     severity: nit
@@ -135,3 +128,8 @@ occurrences:
     severity: minor
     description: "Retro (builder, unverified in the workflow file): the build brief says to run the e2e spec in the background, but the subagent hook refuses run_in_background, costing a lost call and a foreground rerun."
     solution: "Say foreground with a long timeout for dispatched agents in .claude/workflows/clear-backlog-build.js e2eCheck and rules()."
+  - session: session_013zxzePxkwAcvTVUDd7sToK
+    date: "2026-11-25"
+    severity: minor
+    description: "Retro (builder): my brief named list-human-only-paths.ts without its path, so the builder looked under scripts/hooks, wrongly reported it missing and needed a correction round."
+    solution: "Briefs in clear-backlog-build.js should give the script's full path .agents/skills/clear-backlog/scripts/list-human-only-paths.ts."

@@ -29,3 +29,13 @@ occurrences:
     severity: nit
     description: "Retro (Standards and builder, unverified): all four round-1 reviews found only nits and no defects on diffs of 5 to about 40 lines; the re-check round added little. Evidence is one run of four small branches."
     solution: "Keep the review; consider marking diffs under about 50 lines small by default. One run is too little evidence to cut a step."
+  - session: session_013zxzePxkwAcvTVUDd7sToK
+    date: "2026-11-25"
+    severity: nit
+    description: "Retro (Standards reviewer): round 2, triggered by the over-10-lines fix rule, found only wording leftovers, while the check on the Glass Box revert caught the one real issue."
+    solution: "Keep the size rule but let the re-check of a revert or pin conflict count as the second look; one data point, so frictions-to-fixes should wait for more."
+  - session: session_013zxzeQLTeC8GETW73Aho8C
+    date: "2026-11-26"
+    severity: nit
+    description: "Review value across the run: the Standards and Spec rounds each caught one real defect on the harvest and rules branches (a false ledger cause, stale clauses); the Both round on the small branch only re-found a nit."
+    solution: "Keep the Standards plus Spec pair for branches above the simple-change bar; the Both round is the cheap path for small ones."

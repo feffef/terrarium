@@ -13,11 +13,6 @@ fixes:
     date: "2026-10-31"
     summary: "audit-docs rotates coverage: reviewers B and C skip areas the last two runs' Covered line names, end replies with unread Live files, and are never resumed."
 occurrences:
-  - session: session_013zxzeNq8X5Pc3Xwjpv6Wxe
-    date: "2026-11-12"
-    severity: minor
-    description: "Reviewer agents B and C read only about eight docs/agents files; most Live files went unread, so coverage is thin."
-    solution: "Split each lens over narrower file sets so each agent can finish."
   - session: session_013zxzePiqmgzsVGM4zghBUs
     date: "2026-11-17"
     severity: minor

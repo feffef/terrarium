@@ -22,16 +22,6 @@ fixes:
     date: "2026-11-12"
     summary: "read-first-hint.ts no longer fires the git-conventions hint for git rev-parse or a list-only git branch."
 occurrences:
-  - session: session_013zxzeSiYFQ3mgaCyMXicwp
-    date: "2026-11-12"
-    severity: minor
-    description: "Hook reminders to read a doc or ADR reached 6 of 7 builder subagents after their first edit or git call, so each paid tokens for a read that changed nothing."
-    solution: "Name the docs in the build brief or fire the reminder earlier for subagents (also filed as #3146)."
-  - session: session_013zxzeR3mLZWKT2R7LWmtqf
-    date: "2026-11-12"
-    severity: nit
-    description: "The git-conventions hint fired after read-only or first git commands for three clear-backlog agents, though CLAUDE.md already exempts read-only git."
-    solution: "Narrow the hint in scripts/hooks/ to skip diff, log, show and rev-parse."
   - session: session_013zxzePiaeVXJsUcoKh7LFv
     date: "2026-11-13"
     severity: minor

@@ -3,9 +3,6 @@ surface: outside
 summary: A Skill or PR body needed the run's cost, but get_session showed none (or none yet), so the PR said the cost was unreported.
 cause: "A Skill or PR body once required the run's cost from get_session, which returned no cost_usd or usage field at some calls or was not among a scheduled run's tools, so the PR said the cost was unreported. No Skill or doc now asks for a run cost in a PR body, and glassbox-curate loops by default without reading cost. Signals: 'get_session returned no cost figure', 'no usage field', 'Run cost: unreported', 'cost_usd 0.12 early, 4.22 later'."
 status: open
-related:
-  - entry: inspect-session-skill-skipped
-    rule: get_session did give the cost, but the agent wrote "unreported" or said it was not recorded, or inspected another session without the inspect-session Skill.
 notes: |-
   2026-11-17 regression issue #3401 filed (2 occurrences since #3258).
 fixes:

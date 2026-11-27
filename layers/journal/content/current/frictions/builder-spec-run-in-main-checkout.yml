@@ -1,0 +1,13 @@
+name: builder-spec-run-in-main-checkout
+surface: safe
+summary: A harvest builder ran a spec in the main checkout instead of its worktree, so the result described the wrong tree.
+cause: "A builder in a worktree ran a spec from the main checkout (67 tests, not 49), so its pass or fail did not describe its branch. Signals: spec ran in the main checkout, not the worktree, test count differs from the worktree's."
+status: open
+notes: |-
+  2026-11-27 design: none. One occurrence, mechanism unverified (builders already run in an isolated worktree); a pwd/-C line would add prose without a shown cause. Reopen on a second occurrence showing the command and cwd.
+occurrences:
+  - session: session_013zxzeQLTeC8GETW73Aho8C
+    date: "2026-11-26"
+    severity: moderate
+    description: "Retro (harvest builder): hooks demanded late reads (git-conventions, ADR-0005, ADR-0027, Journal glossary) after the first action, and a spec run once ran in the main checkout, not the worktree (67 tests, not 49)."
+    solution: "List the governing docs in the brief for harvest and ledger work, and have rules() in .claude/workflows/clear-backlog-build.js say to run pnpm as pnpm -C <worktree>."

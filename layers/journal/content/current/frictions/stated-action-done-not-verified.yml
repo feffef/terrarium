@@ -6,6 +6,7 @@ status: open
 notes: |-
   2026-11-19 design: no change dropped: CLAUDE.md already holds 'Verify before you state' and the session read the closing doc; a fix needs a Human-only guard for one occurrence; revisit on a second.
   2026-11-20 design: guard or CLAUDE.md line dropped: a guard is Human-only and cannot judge a free-text claim; the rule is already in CLAUDE.md and two of three occurrences were self-corrected nits; reopen on a moderate+ recurrence
+  2026-11-27 design: none dropped: the rule already sits in CLAUDE.md and the newest case ignored an exit-1 refusal (log-session.ts fail() writes stderr and exits 1), so no tool change makes the signal clearer; reopen on a recurrence with a quiet failure.
 occurrences:
   - session: session_013zxzePBxPjfMQRm8C4FwqZ
     date: "2026-11-18"
@@ -22,3 +23,13 @@ occurrences:
     severity: nit
     description: "Posted a verdict comment claiming the gate ran before my last edit, which was wrong because the gate ran after it; I corrected it within minutes."
     solution: "Check the order of commit and gate before writing the verdict."
+  - session: session_013zxzeSJY7CjGgJdwhJmTgV
+    date: "2026-11-26"
+    severity: moderate
+    description: "Reported the session log as authored after an --author call that printed a refusal (18 loaded rules unrated); the owner had to ask before I checked, then I re-ran it. Breaks CLAUDE.md Verify before you state."
+    solution: "Read the full --author output for the written-scratch line before saying it landed, and confirm the commit on origin/main in a later turn."
+  - session: session_013zxzeQLTeC8GETW73Aho8C
+    date: "2026-11-26"
+    severity: minor
+    description: "Retro (Spec reviewer): the builder's decisions.md claimed no Glass Box lesson hit while its grep pattern missed the stale clause; a required ledger-writer check was skipped silently and reached review."
+    solution: "Have rules() in .claude/workflows/clear-backlog-build.js require decisions.md to list the grep patterns used for each removed concept, so the Spec reviewer can test them."

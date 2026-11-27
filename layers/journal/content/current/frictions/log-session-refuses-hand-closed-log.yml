@@ -16,3 +16,8 @@ occurrences:
     severity: nit
     description: "Authored the completed log straight after the merge, though the hook said to invoke close-session first; log-session refused it and I reran."
     solution: "After a merge, invoke close-session before writing any log scratch, as the merge hook says."
+  - session: session_013zxzeNzjxhJGhG6XbWHDf3
+    date: "2026-11-27"
+    severity: nit
+    description: "Authored the completed log straight after the merge; log-session refused until close-session was invoked again, one extra round."
+    solution: "After a merge, invoke close-session before the log-session author call; the merge hook says so."
