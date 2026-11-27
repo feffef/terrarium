@@ -54,9 +54,9 @@ pages:
   - page: nuxt-content/10.content-collections
     checked: '2026-11-26'
   - page: nuxt-content/20.multi-tenant-isolation
-    checked: '2026-11-11'
+    checked: '2026-11-27'
   - page: nuxt-content/30.content-database
-    checked: '2026-11-11'
+    checked: '2026-11-27'
   - page: nuxt-content/40.query-collection
     checked: '2026-11-11'
   - page: nuxt-content/50.mdc-components
@@ -161,3 +161,9 @@ pages:
     checked: '2026-11-23'
   - page: hooks/25.stop-hooks
     checked: '2026-11-26'
+  - page: agents/45.session-timers
+    checked: '2026-11-27'
+  - page: hooks/22.hook-failure-modes
+    checked: '2026-11-27'
+  - page: web-standards/55.minimum-target-size
+    checked: '2026-11-27'
