@@ -54,7 +54,7 @@ trials:
       rise is also damage. NOT damage: a session following the doc correctly and
       still hitting a Chromium quirk the doc names.
   - problem: >
-      `docs/agents/pr-workflow.md` plainly condensed (-141 words: 1321 -> 1180 by
+      `docs/agents/pr-workflow.md` plainly condensed (-109 words: 1321 -> 1212 by
       `wc -w`; line delta in the PR title): issue-number citations, the gate-skip
       path list, the recipe step 3 and 5 justifications and repeated reminders
       went; every step, its numbering, the simple-change test and every heading
