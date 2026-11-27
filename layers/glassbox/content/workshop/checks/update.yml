@@ -11,7 +11,7 @@ pages:
     checked: '2026-11-12'
   - page: claude-code/10.claude-md
     checked: '2026-11-21'
-  - page: claude-code/20.path-scoped-rules
+  - page: claude-code/20.path-specific-rules
     checked: '2026-11-22'
   - page: claude-code/30.skills
     checked: '2026-11-22'
@@ -27,7 +27,7 @@ pages:
     checked: '2026-11-24'
   - page: git-github/20.author-trust
     checked: '2026-11-24'
-  - page: git-github/30.composite-actions
+  - page: git-github/30.github-actions
     checked: '2026-11-24'
   - page: git-github/40.dependabot-grouping
     checked: '2026-11-24'
@@ -79,9 +79,9 @@ pages:
     checked: '2026-11-12'
   - page: nuxt-vue/80.hydration
     checked: '2026-11-12'
-  - page: skill-pack/10.skill-packs
+  - page: skill-pack/10.installed-skills
     checked: '2026-11-12'
-  - page: skill-pack/20.planning-with-the-pack
+  - page: skill-pack/20.planning-skills
     checked: '2026-11-12'
   - page: skill-pack/30.engineering-skills
     checked: '2026-11-13'
@@ -109,7 +109,7 @@ pages:
     checked: '2026-11-15'
   - page: terrarium-practice/90.outside-contributions
     checked: '2026-11-15'
-  - page: verification/10.gate
+  - page: verification/10.merge-gate
     checked: '2026-11-15'
   - page: verification/20.type-checking
     checked: '2026-11-15'

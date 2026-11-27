@@ -22,7 +22,7 @@ Each guide page is named by its title, then its file under `layers/glassbox/cont
 
 ### Weak spots
 
-- **The Installed Skills pages say little of their own.** *Planning skills* (`skill-pack/20.planning-with-the-pack`) and *Engineering skills* (`skill-pack/30.engineering-skills`) mostly describe Skills that come from outside Terrarium. Only a few of their facts are about choices Terrarium made.
+- **The Installed Skills pages say little of their own.** *Planning skills* (`skill-pack/20.planning-skills`) and *Engineering skills* (`skill-pack/30.engineering-skills`) mostly describe Skills that come from outside Terrarium. Only a few of their facts are about choices Terrarium made.
 
 ### Recurring problems
 
@@ -80,6 +80,7 @@ Decisions agents made (run, review, claim check). Not rules: the owner or a late
 - **A missing `publishedAt` on a page whose teaching hasn't changed is not a deficit.** Adding one shows an old page on the Commons Timeline as new (review).
 - **Continuous deployment's Full reference stays Wikipedia.** A practice has no official docs (review).
 - **Agent tooling comes first in the guide's order, and Web standards never sits between the two Nuxt Subjects**.
+- **A file name follows its page's title, but a long title may keep a shorter name.** Five names that differed from their titles were renamed (GitHub Actions, Merge gate, Path-specific rules, Installed skills, Planning skills). *Commit and PR attribution* (`attribution`) and *queryCollection* (`query-collection`) keep theirs: the name is the concept's own word and the title only adds context.
 - **Guide titles.** Every title has been weighed against 2 to 4 alternatives; owner rulings are in owner-decisions.md. Closest rivals that lost: *Required status checks* for *Merge gate*, *Claude Code workflows* for *Workflow scripts*.
 - **Minimum target size sits in the guide, not drafts.** Four tenants size small links to 24px and test it, so the topic is central.
 - **Web Storage sits in the guide, not drafts.** Glass Box, the Journal and Tinkerfund all keep browser state in it, so the topic is central (a new Lesson goes to drafts only when it is not central).
