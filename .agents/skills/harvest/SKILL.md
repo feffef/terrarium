@@ -42,7 +42,7 @@ harvests both.
    cluster: a `## <name>` line, then `label:`
    (product or workflow), `entries:` (their numbers), `sessions:` (a count), one
    `field: evidence` line per test below (`unbuilt`, `unfiled`, `unrejected`,
-   `ledger`, `simplifying`, `unacted`) and `verdict:` `open` or `dropped <test>`.
+   `ledger`, `unacted`, and `simplifying` for a workflow cluster only) and `verdict:` `open` or `dropped <test>`.
    A dropped cluster needs only the failed test's evidence. Evidence is what you
    read or ran, and a search that printed nothing is not evidence until you know
    its pattern can match. Do not filter script output with `head` or `tail`.

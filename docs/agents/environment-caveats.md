@@ -43,9 +43,8 @@ them as new. Incident detail lives in the cited issue.
   `send_message` and `ToolSearch` finds none (probed 2026-11-11). A message to
   an idle or disconnected session wakes it and costs a turn. Don't count on a
   reply message; ask for the answer in the session's **final reply** (say
-  "read-only, answer in your final reply") and read it with `list_events`,
-  `kinds:["result"]`, `limit 100`: the text is in the newest result's `result`
-  field. `get_session`'s `turn_handoff.tools` does not show this reliably, so
+  "read-only, answer in your final reply") and read it from the newest result event, as
+  `inspect-session` step 2 says. `get_session`'s `turn_handoff.tools` does not show this reliably, so
   check the session's own events, not that list.
 - **A fired self-bind Routine's output may not show as a turn.** Check
   `last_run.fired_at` via `list_triggers` before deciding it didn't fire.
