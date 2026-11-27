@@ -4,7 +4,8 @@ summary: >-
 cause: >-
   A session that has the close-session or log-session text in context authors the log directly instead of invoking the Skill, skipping its steps such as the rule re-read. log-session refuses only a completed log after a merge (PR #2536); since PR #2707 its text no longer invites a direct call and log-session.ts --pending lists awaiting verdicts; since PR #2798 (2026-11-02) a hint after a successful merge-pr.ts run names close-session (a piped run can still miss it), yet session QDfN (2026-11-06) ignored three such hints after its merges and the owner had to prompt the log. A log written by hand at a PR open or a first merge can still get through. Signals: HUMAN-PROMPTED-CLOSURE, 'authored the log directly', 'updated the log with log-session directly', 'ignored three hook hints', 'having edited a Skill is not having run it'. Since PR #2937 (2026-11-07) a Stop hook (merge-close-stop.ts) blocks the end of a turn once after a merge without close-session.
 surface: safe
-status: open
+status: tracked
+ref: "issue #3714 (regression of PR #2937)"
 related:
   - entry: log-session-refuses-hand-closed-log
     rule: log-session refused the completed log after a merge and it cost only a call.
@@ -12,6 +13,7 @@ related:
     rule: The Stop hook reminded the session after a merge and the cost was one prompt.
 notes: |-
   2026-11-27 survey: session Po4m (2026-11-26, major) merged three PRs, left the log reading in-review and the owner had to ask, after the Stop hook of PR #2937; a regression of the original harm.
+  2026-11-27 regression issue #3714 filed.
 fixes:
   - { pr: 2452, date: "2026-10-23", summary: "log-session --author now warns when a completed log follows a merge with no close-session call." }
   - { pr: 2536, date: "2026-10-25", summary: "log-session --author now refuses a completed log after a merge with no close-session call, and writes no scratch." }
@@ -25,11 +27,6 @@ fixes:
     date: "2026-11-07"
     summary: "Closes #2913: merge-close-stop.ts, a Stop hook, blocks the end of a turn once when this session merged a PR and close-session has not run since."
 occurrences:
-  - session: session_013zxzeS7WM4TBNbgtufBjAT
-    date: "2026-11-12"
-    severity: minor
-    description: "Opened the PR, then ended a turn without invoking close-session to avoid disturbing a running gate; CLAUDE.md says to invoke it before that turn ends."
-    solution: "Invoke close-session right after the PR opens; the log lands at end of turn and does not touch the tree the gate watches."
   - session: session_013zxzePo4mtQsMpDHLLDFmb
     date: "2026-11-26"
     severity: major

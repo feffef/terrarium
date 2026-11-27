@@ -22,11 +22,6 @@ fixes:
     date: "2026-10-28"
     summary: "CLAUDE.md says to read a required doc whole if you can, no longer in one Read call: partial reads are encouraged against, not required."
 occurrences:
-  - session: session_013zxzeSKomYVTsF4Xw4PeC9
-    date: "2026-11-12"
-    severity: nit
-    description: "Read only the first lines of github-integration.md and pr-workflow.md before the first GitHub operation, though CLAUDE.md says read each whole."
-    solution: "Read both docs whole before the first GitHub call; a head cut-off hides rules lower in the file."
   - session: session_013zxzeNdAgdKF5tpWTQLowx
     date: "2026-11-13"
     severity: nit

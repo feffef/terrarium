@@ -1,6 +1,6 @@
 name: edit-leaves-contradicting-sibling
 summary: >-
-  An edit to a doc, Skill or rule left other statements or references that contradicted it or pointed at removed text, caught only by review.
+  An edit to a doc, Skill or rule left other statements or references that contradicted it or pointed at removed text, caught only by review; see: rule-path-narrowing-breaks-pinned-test.
 cause: >-
   After adding, changing, moving or cutting a section, rule, field or test, the author did not grep the same file and its consumers (docs, Skills, scripts, tests, typechecked callers, code comments, cross-references) for statements it overrides or references it breaks. Signals: a leftover line contradicting a new section, a dangling section reference, callers pointing at a removed section, a required field breaking another spec's typecheck, a test assertion built on a matcher or order the suite lacks; caught by code-review or the gate.
 surface: safe
@@ -9,8 +9,6 @@ acceptedSeverity: moderate
 related:
   - entry: rewrite-pass-scope-drift
     rule: A rewrite or trim lost meaning in the text it changed.
-  - entry: page-insert-not-reread-in-order
-    rule: A paragraph was added to a Lesson and the section was not reread in order.
   - entry: rule-path-narrowing-breaks-pinned-test
     rule: That entry is a scoped gate passing and main going red after a rule-paths change; here an edit left a sibling statement contradicting it.
 notes: |-
@@ -24,16 +22,6 @@ fixes:
     date: "2026-11-01"
     summary: "CLAUDE.md Self-verification: after changing a type or a test, run pnpm typecheck and the touched spec before gate:scoped."
 occurrences:
-  - session: session_013zxzePXpUx7WY6K2uHsxKz
-    date: "2026-11-12"
-    severity: minor
-    description: "Found stale references (page title, comments, two smoke tests, glossary entry, dead wide/.wip code) only in a final pass, not in the same edit as each change (CLAUDE.md one home per fact)."
-    solution: "Grep a changed string's other statements and the tests that count tiles right after each structural or copy edit."
-  - session: session_013zxzeSLxxdLwoN9gcngzxT
-    date: "2026-11-12"
-    severity: moderate
-    description: "Changed Where next and Lessons already read row text and ran only unit tests; an e2e assertion on the old text failed in the gate, costing a second full gate run."
-    solution: "Grep tests/e2e for the changed text and run the touched e2e before the gate, per One home per fact."
   - session: session_013zxzeNiyBNZD3Zn5dUm9Bq
     date: "2026-11-13"
     severity: minor
@@ -44,11 +32,6 @@ occurrences:
     severity: minor
     description: "First edit left stale 'standalone' and 'two earlier drafts' wording that both reviewers caught; needed a second commit."
     solution: "After removing a reference, grep the README and sibling docs for other statements of the same fact before committing."
-  - session: session_013zxzeS7WM4TBNbgtufBjAT
-    date: "2026-11-12"
-    severity: minor
-    description: "Rewrote the Skill's loop text four times; each pass fixed only the sentences I thought of, and the person's follow-ups found the leftover one-focus-per-run wording and an if-a-focus-remains stop that contradicted their budget-only answer."
-    solution: "When changing a rule, re-read the whole Skill and grep its other statements in the same edit (CLAUDE.md, one home per fact), and check the new text against the person's earlier answers."
   - session: session_013zxzeSgAcwDrJXAMFAC4Qf
     date: "2026-11-17"
     severity: minor

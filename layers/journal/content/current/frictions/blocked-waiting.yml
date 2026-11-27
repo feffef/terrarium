@@ -17,11 +17,6 @@ fixes:
     date: "2026-10-30"
     summary: "CLAUDE.md: in the main session end your turn and let the completion notification wake you; never wait with pgrep -f"
 occurrences:
-  - session: session_013zxzeSdKDZBdqz6vRp3xW1
-    date: "2026-11-12"
-    severity: nit
-    description: "A foreground sleep was blocked, and a python replace silently never matched because the run-entry YAML is line-wrapped."
-    solution: "Wait with the completion notification; match wrapped text by line or regex."
   - session: session_013zxzeRxyNcwt53TXLHjTsg
     date: "2026-11-13"
     severity: nit

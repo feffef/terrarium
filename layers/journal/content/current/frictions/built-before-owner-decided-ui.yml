@@ -6,8 +6,6 @@ status: open
 related:
   - entry: grilling-skipped-for-design-settlement
     rule: Questions were asked ad hoc or settled with the spec session, with the grilling Skill unused.
-  - entry: builders-started-while-grilling-open
-    rule: An orchestrator started builders while its questions to the owner were still open.
 notes: |-
   2026-11-11 survey: issue #3026 closed by PR #3032 (recorded in fixes); status reset to open.
   2026-11-11 survey: two sessions after PR #3032 (R7qQ3HKo built UI without asking the owner to confirm the first screenshot; NeWJTvqX built a Term.vue link without agreeing a sample) show the sample-first rule did not hold.

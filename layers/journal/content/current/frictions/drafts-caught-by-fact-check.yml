@@ -29,21 +29,6 @@ fixes:
     date: "2026-11-13"
     summary: "digest SKILL.md needs a source in the day's gathered material for a cadence word and drops 'scheduled' from its example; the fact-check checks both."
 occurrences:
-  - session: session_013zxzeRxuQbrK3YcdGVkpU4
-    date: "2026-11-12"
-    severity: minor
-    description: "First Digest draft overstated claims from PR titles: a weekly job that had no schedule, two owner-run guide updates called scheduled. Fact-check caught five wrong claims."
-    solution: "gather could include each session's kind so scheduled versus owner-run is visible when writing."
-  - session: session_013zxzePbgAjUYqz6Zpvm4uU
-    date: "2026-11-12"
-    severity: minor
-    description: "My draft said the Skill page did not mention agent writes at all, taken from a PR body instead of the base file; the fact-checker caught it before merge."
-    solution: "Check a negative claim against the base file with grep before drafting it."
-  - session: session_013zxzeRvdzBc3xXGo24TkVf
-    date: "2026-11-12"
-    severity: nit
-    description: "Wrote a bullet lead-in saying Haiku does the reading, in the owner's words, without checking that the Skill sets a model only for the full read; only the claim check caught it."
-    solution: "Check an owner-requested wording against its source before writing it, and say where it overgeneralises."
   - session: session_013zxzeRd1qkgnadmWbZLoZu
     date: "2026-11-13"
     severity: minor

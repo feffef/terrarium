@@ -11,11 +11,6 @@ fixes:
     date: "2026-11-12"
     summary: "preview.ts shot and review take a repeatable --storage KEY=VALUE that seeds localStorage before the page loads; clipping one element is not covered."
 occurrences:
-  - session: session_013zxzeSiYFQ3mgaCyMXicwp
-    date: "2026-11-12"
-    severity: minor
-    description: "preview.ts shot and review cannot seed localStorage, so the orchestrator and two builders each wrote a throwaway Playwright script to screenshot a page in a read state."
-    solution: "Add a repeatable --storage KEY=VALUE option to the shot and review verbs, applied before navigation (also filed as #3144)."
   - session: session_013zxzeQrRhhVjja2AkCLcyV
     date: "2026-11-13"
     severity: minor

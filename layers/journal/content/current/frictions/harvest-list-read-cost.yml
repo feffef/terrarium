@@ -34,21 +34,6 @@ fixes:
     date: "2026-11-26"
     summary: "A harvest digest command replaces keyword evidence, the cut tracker and the recency quota; it prints rulings, every issue with state and every ledger summary to read whole."
 occurrences:
-  - session: session_013zxzeP4WS4kX4LSBrVszT6
-    date: "2026-11-12"
-    severity: minor
-    description: "The idea list ran to 162 entries over 270 lines, needing a paged read; most are old glassbox-improve ideas for a Skill that no longer exists."
-    solution: "Have harvest extract drop entries whose named Skill or file is gone before listing."
-  - session: session_013zxzeS6gV5rfHembHQYP6K
-    date: "2026-11-12"
-    severity: minor
-    description: "Step 1 whole read of 577 lines took about 90,000 tokens and two Reads, one needing allow_large, though step 2 stops at 30 clusters."
-    solution: "Let harvest list cut entry text, as Seedling 3178 proposes."
-  - session: session_013zxzeNrvAWHmAPYsSy8u7x
-    date: "2026-11-12"
-    severity: moderate
-    description: "Read the whole 561-line harvest list in three Read calls of about 62,000 tokens, then checked only 17 clusters."
-    solution: "Cut each list entry's text, as the retro Seedling proposes."
   - session: session_013zxzeNxZVrKu9whNTs4pnR
     date: "2026-11-14"
     severity: nit

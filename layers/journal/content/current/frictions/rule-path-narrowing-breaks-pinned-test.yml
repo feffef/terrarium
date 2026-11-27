@@ -2,7 +2,8 @@ name: rule-path-narrowing-breaks-pinned-test
 surface: safe
 summary: "A PR that narrowed rule paths left a unit test pinned to the old paths, so main's gate was red until a fix merged. see: edit-leaves-contradicting-sibling."
 cause: "PR #3709 (merged 2026-11-27T00:15Z) narrowed three rules' paths without updating tests/unit/rule-use.spec.ts's governsLine pin; gate:scoped passed, main went red for five pushes and a later PR could not merge until PR #3711 (00:44Z) fixed the test. The harm is a red main the author's gate did not show, not a sibling text left stale. Signals: rule paths narrowed, rule-use.spec.ts, governsLine, main gate red."
-status: open
+status: tracked
+ref: "issue #3713"
 related:
   - entry: edit-leaves-contradicting-sibling
     rule: That entry is an edit leaving another statement contradicting it in a PR's own review or gate; here a scoped gate passed and main went red.

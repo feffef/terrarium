@@ -5,8 +5,6 @@ cause: "An agent or impl subagent claims a visual fix works from code or its own
 status: on-trial
 ref: "Prune Trial opened 2026-11-26 (.agents/prune-trials.yml): territory docs/agents/verifying-ui-changes.md"
 related:
-  - entry: visual-work-published-unseen
-    rule: The change was never rendered or screenshot before it shipped.
   - entry: preview-dev-server-stale-or-unhydrated
     rule: The dev server served old code, so the screenshot or probe was misleading.
 fixes:
@@ -17,11 +15,6 @@ fixes:
     date: "2026-11-10"
     summary: "verifying-ui-changes.md: a Linux screenshot can't confirm fixed-width text fits; force a wider font and compare scrollWidth with clientWidth."
 occurrences:
-  - session: session_013zxzePXpUx7WY6K2uHsxKz
-    date: "2026-11-12"
-    severity: nit
-    description: "Skipped the wide-font width check from verifying-ui-changes.md for the new buttons and section lines; the button label wrapping on a phone was caught only by eye."
-    solution: "Add a scrollWidth versus clientWidth check with DejaVu fonts to the UI review step, or an e2e assert for primary tile buttons."
   - session: session_013zxzeTKSiBSmkCLfn4BYL6
     date: "2026-11-20"
     severity: nit

@@ -22,21 +22,6 @@ fixes:
     date: "2026-11-09"
     summary: "glassbox-curate SKILL.md states the Subject read as a Done-when (every Subject page read in full, plus outside pages a change would edit) and drops the removal-only exemption."
 occurrences:
-  - session: session_013zxzeQKydDYQaAEhBMqoW3
-    date: "2026-11-12"
-    severity: minor
-    description: "Skipped the Skill's Scout subagent and the full-subject read; the Spec reviewer later named linked pages missing from pagesRead, so three Lessons were read after the review."
-    solution: "Read the pages the new text links before editing, or write the skip and its reason into the run entry when the plan is made."
-  - session: session_013zxzeNhTtnWyYs2Mh6hn26
-    date: "2026-11-12"
-    severity: minor
-    description: "In the second run I skipped re-reading the whole guide index and the Scout, both steps the Skill requires, to save context, and the code-review Spec reviewer named outside pages I had not read."
-    solution: "Budget a whole-index re-read per run, or let the Skill say a second run in one session may reuse the first run's index read."
-  - session: session_013zxzePDpmX3Lq9AEQGGTTW
-    date: "2026-11-12"
-    severity: minor
-    description: "Skipped re-reading the whole guide index and the Scout in the second and third runs of this session to save budget, against the Skill's every-run rule; the run entries say so."
-    solution: "The Skill could say whether a same-session repeat run may reuse the index read, so the deviation is not a judgement call."
   - session: session_013zxzeRxyNcwt53TXLHjTsg
     date: "2026-11-13"
     severity: minor

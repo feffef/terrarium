@@ -16,11 +16,6 @@ fixes:
     date: "2026-11-17"
     summary: "The dispatch-read guard's deny message now says to reword the text if it only names the placeholder; the regex is unchanged."
 occurrences:
-  - session: session_013zxzeP3xBUNvHd5kGFihuo
-    date: "2026-11-12"
-    severity: nit
-    description: "The retry was denied again because my own prompt mentioned the literal curly-braced scratch placeholder while explaining it; I reworded it."
-    solution: "The guard could ignore a placeholder named inside backticks, or the briefs could say to hand them by path without naming it."
   - session: session_013zxzeNdAgdKF5tpWTQLowx
     date: "2026-11-13"
     severity: nit

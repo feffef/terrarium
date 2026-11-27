@@ -13,16 +13,6 @@ related:
 notes: |-
   2026-10-28 design: a looser follow-up review bar dropped: three of six predate the simple-change bar, the others read pr-workflow.md and followed it, and ADR-0004 rejects skipping review for prose. dropped: a policy change for a human, not a fix.
 occurrences:
-  - session: session_013zxzeP3xBUNvHd5kGFihuo
-    date: "2026-11-12"
-    severity: minor
-    description: "SKILL §5 says review the ledger PR by the simple-change test, but a 58-file data-only diff fails the count, so I ran full code-review on machine-written YAML."
-    solution: "Say what a ledger PR needs: its content spec and gate, or one reviewer on occurrences."
-  - session: session_013zxzeNrvAWHmAPYsSy8u7x
-    date: "2026-11-12"
-    severity: minor
-    description: "Ran two code-review subagents (about 164,000 tokens) on a 4-line, 2-file change because pr-workflow's simple-change test excludes any code-logic change, even a constant."
-    solution: "Let the simple-change test treat a single constant or number change as simple, or let code-review run both axes inline for a diff this small."
   - session: session_013zxzeNdAgdKF5tpWTQLowx
     date: "2026-11-13"
     severity: minor

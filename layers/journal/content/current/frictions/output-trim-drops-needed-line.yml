@@ -18,26 +18,6 @@ fixes:
     date: "2026-11-07"
     summary: "Closes #2884: close-session and log-session SKILL.md now say never to filter log-session.ts output, and a Stop hook blocks the turn's end after a merge without close-session."
 occurrences:
-  - session: session_013zxzeP4WS4kX4LSBrVszT6
-    date: "2026-11-12"
-    severity: minor
-    description: "Piped log-session.ts output through tail and head, though close-session says never to filter it; a refusal or warning could have been cut."
-    solution: "Run the script bare; a hook could flag a filtered log-session.ts call."
-  - session: session_013zxzePXpUx7WY6K2uHsxKz
-    date: "2026-11-12"
-    severity: nit
-    description: "Piped log-session.ts output through head against close-session's rule never to filter it; I re-ran it unfiltered and nothing had been hidden."
-    solution: "Run the helper bare, or redirect to a file and read all of it."
-  - session: session_013zxzeNrvAWHmAPYsSy8u7x
-    date: "2026-11-12"
-    severity: minor
-    description: "Filtered list-merges-since output with head and grep, though step 3 says not to filter script output, and nearly wrote \"none about it\" from six visible merges."
-    solution: "Redirect the script to a file and read it whole, or use git log --name-only as the retro Seedling proposes; caught before posting."
-  - session: session_013zxzeS57UamaBVVLjwvKFq
-    date: "2026-11-12"
-    severity: nit
-    description: "Piped --author output through head once, against the skill's never-filter rule."
-    solution: "Run it unfiltered."
   - session: session_013zxzeQ4cuLLoFfdaf5sE2d
     date: "2026-11-13"
     severity: nit

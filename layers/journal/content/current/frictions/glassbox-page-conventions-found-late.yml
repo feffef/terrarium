@@ -9,21 +9,6 @@ related:
 notes: |-
   2026-11-15 design: prose line dropped: rules already landed after the sessions (owner-decisions.md lowercase rule 8feb4cafe, writing-pages.md bare-link rule d87ec97c2, page check 952af880e, payload trim f318904ec); extra prose would duplicate a checked rule
 occurrences:
-  - session: session_013zxzeQKydDYQaAEhBMqoW3
-    date: "2026-11-12"
-    severity: minor
-    description: "The glassbox-curate Skill and the Glass Box docs hold no body-text lowercase rule, only the title rule; the owner had to tell me the overview still capitalised terms."
-    solution: "Owner-decisions.md now has the line; the weak spot is recorded on the memory page for a sweep of the other pages."
-  - session: session_013zxzeRvdzBc3xXGo24TkVf
-    date: "2026-11-12"
-    severity: minor
-    description: "Chose lowercase and typed link text for Where next rows of guide pages, then had to learn from a failing page test and the glossary that guide rows are bare links and inline text must be the exact title."
-    solution: "Read the glossary's Where next rule and page-checks link rules before writing links; the writing-pages.md bullet now states them."
-  - session: session_013zxzeP1EixGDy96kmktFi2
-    date: "2026-11-12"
-    severity: minor
-    description: "Added Where next descriptions for every page in the payload, against ADR-0028; a reviewer found it and I trimmed it to the linked targets."
-    solution: "Apply the payload ADR when adding a field to useAsyncData, not after review."
   - session: session_013zxzeQtxW3Ee58XJAgSyVi
     date: "2026-11-23"
     severity: minor

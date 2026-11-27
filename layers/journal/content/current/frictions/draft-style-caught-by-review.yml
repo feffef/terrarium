@@ -14,11 +14,6 @@ fixes:
     date: "2026-11-22"
     summary: "audit-skills prune-observations.ts reports today's notes outside the 300-500 word range (print-only)"
 occurrences:
-  - session: session_013zxzeRvdzBc3xXGo24TkVf
-    date: "2026-11-12"
-    severity: moderate
-    description: "Wrote changing counts and history in Lesson prose (\"has cost over a hundred thousand subagent tokens\", \"two sessions were wrong\") although glassbox-content.md was loaded; only code-review caught it, and the claims were unsourced."
-    solution: "Check new prose against glassbox-content.md and each claim against its source before the first commit."
   - session: session_013zxzeRd1qkgnadmWbZLoZu
     date: "2026-11-13"
     severity: nit

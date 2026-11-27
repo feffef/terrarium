@@ -10,21 +10,6 @@ related:
   - entry: merge-close-hint-fires-without-merge
     rule: A hook said a PR merged when it had not, or the session merged none.
 occurrences:
-  - session: session_013zxzeP3xBUNvHd5kGFihuo
-    date: "2026-11-12"
-    severity: minor
-    description: "close-session was prompted by the Stop hook after the first merge, not run by me when #3125 opened."
-    solution: "Run close-session in the same turn that opens a PR, before ending the turn."
-  - session: session_013zxzeNhTtnWyYs2Mh6hn26
-    date: "2026-11-12"
-    severity: nit
-    description: "After PR 3163 merged I went on with the next focus and did not re-invoke close-session until the Stop hook flagged it, against CLAUDE.md's rule to invoke it again when the work merges."
-    solution: "Invoke close-session in the same turn as the merge-pr.ts call, before starting any further work."
-  - session: session_013zxzeR3mLZWKT2R7LWmtqf
-    date: "2026-11-12"
-    severity: nit
-    description: "After the PR merged I updated the log with log-session directly and skipped close-session; the Stop hook had to block the turn to make me invoke it."
-    solution: "The merge-pr.ts output or the PostToolUse hint already says to invoke close-session; follow it before any other write."
   - session: session_013zxzePiaeVXJsUcoKh7LFv
     date: "2026-11-13"
     severity: nit

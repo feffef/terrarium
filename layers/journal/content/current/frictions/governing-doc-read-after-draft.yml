@@ -33,21 +33,6 @@ fixes:
     date: "2026-11-18"
     summary: "tenant-glossary-guard denies an Edit or Write under layers/<tenant>/ until that Tenant's GLOSSARY.md was read in full; it fails open."
 occurrences:
-  - session: session_013zxzePXpUx7WY6K2uHsxKz
-    date: "2026-11-12"
-    severity: nit
-    description: "Edited homepage tiles for the Blog, Midden and Tinkerfund without reading their Tenant glossaries in full, only grepping the Blog's persona lines (tenant-glossary rule)."
-    solution: "Read each Tenant glossary whose tile text changes, or restrict the wording edits to what the owner supplied."
-  - session: session_013zxzeRvdzBc3xXGo24TkVf
-    date: "2026-11-12"
-    severity: moderate
-    description: "Chose the new Lesson's Where next and inline links from memory and titles without running orient.ts or reading how sibling Lessons end bullets; the owner had to point this out twice and links were reworked in three rounds."
-    solution: "glassbox-lesson now starts with an Orient step (orient.ts --index, read the index whole); writing-pages.md holds the link form."
-  - session: session_013zxzeS7WM4TBNbgtufBjAT
-    date: "2026-11-12"
-    severity: minor
-    description: "Added an instruction-like note to the root GLOSSARY.md before reading ADR-0021, whose loaded rule says keep that file to definitions; the reviewer called it borderline."
-    solution: "Read the ADR a loaded rule names before editing a file it governs; the rule summary said so already."
   - session: session_013zxzeRd1qkgnadmWbZLoZu
     date: "2026-11-13"
     severity: nit
@@ -123,11 +108,6 @@ occurrences:
     severity: nit
     description: "Drafted prose from gather output before reading the ADR-0010 page text I had only cat'd alongside other output; no harm."
     solution: "Read the ADR on its own before drafting."
-  - session: session_013zxzeP1EixGDy96kmktFi2
-    date: "2026-11-12"
-    severity: nit
-    description: "Planned and reviewed changes spanning the guide, Skills and rules without reading the Glass Box overview that CLAUDE.md names for cross-part work."
-    solution: "Name the overview in the read-first trigger the code-review Skill gives its reviewers."
   - session: session_013zxzePNLUgD6AbfEmXykEJ
     date: "2026-11-15"
     severity: nit

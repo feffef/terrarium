@@ -6,8 +6,6 @@ status: open
 related:
   - entry: harvest-list-read-cost
     rule: The harm is the token cost of reading the whole list.
-  - entry: harvest-step-4-unstated-cases
-    rule: Step 4 did not say how a mixed cluster counts for its cap.
 fixes:
   - pr: 3106
     date: "2026-11-11"
@@ -25,11 +23,6 @@ fixes:
     date: "2026-11-26"
     summary: "Harvest step 2 drops the product-before-workflow ordering and the workflowSeen check, so a mid-way stop covers both kinds; the 3-workflow cap and a non-empty stopped: line stay."
 occurrences:
-  - session: session_013zxzeP4WS4kX4LSBrVszT6
-    date: "2026-11-12"
-    severity: moderate
-    description: "Filed three Seedlings without reading their source session logs whole (step 4) or the Glass Box glossary; one body misdescribed the 2026-11-09 session until the owner asked and I corrected it."
-    solution: "Read each source log and the Tenant glossary before writing the body, as step 4 and the tenant-glossary rule say."
   - session: session_013zxzeNYPwVfq4WoT28Nfuu
     date: "2026-11-18"
     severity: minor

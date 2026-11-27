@@ -13,11 +13,6 @@ fixes:
     date: "2026-11-15"
     summary: "github-integration.md Transient failures covers push and merge-pr 5xx, subscribe errors and the merge-pr no-Human-only-paths refusal"
 occurrences:
-  - session: session_013zxzeQAc52ZMCkhtp4ihGY
-    date: "2026-11-12"
-    severity: nit
-    description: "git push of the local branch name returned Internal Server Error twice; worked around by renaming the branch to the already-pushed remote name."
-    solution: "Retry later or push to a distinct remote name from the start."
   - session: session_013zxzeQ9FTpQjBywTHWkdXF
     date: "2026-11-13"
     severity: minor
