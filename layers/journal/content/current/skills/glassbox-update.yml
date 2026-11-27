@@ -10,16 +10,10 @@ role: >-
   page, for glassbox-curate. Fired by a Routine; keeps Glass Box honest as the
   Platform changes.
 auditSummary:
-  date: "2026-11-26"
-  text: "Keeps the Glass Box guide pages in line with the code; recent updates landed with real fixes and the earlier missing-section problem is repaired. Its step of reading changes by concept leaves no trace, so whether it happens is unclear."
+  date: "2026-11-27"
+  text: "Keeps the Glass Box pages in step with the code: its updates land and the claims it checks hold up. It cannot show whether its history-reading step happens, and the first scout dispatch is sometimes refused."
+
 observations:
-  - date: "2026-10-17"
-    note: >-
-      Self-check (audit-skills behaviour check): all 3 usedIn sessions
-      checked end-to-end (PR #2091; PRs #2094/#2095; PR #2182),
-      pins/excerpts/citations verified word-for-word against source at each
-      pinned commit. No reverts. No new silent failure. Grade unchanged
-      (specialist).
   - date: "2026-10-18"
     note: >-
       Self-check (audit-skills behaviour check): all 6 usedIn sessions
@@ -187,3 +181,39 @@ observations:
   - date: "2026-11-26"
     note: >-
       Behaviour check of session_013zxzeQtxW3Ee58XJAgSyVi (11-23, PR #3617), session_013zxzeQQqZzQUP929AxkcZo (11-24, PR #3645) and session_013zxzeQrwxsU3KF9z6QX2zS (11-25, PR #3670). Logs read in full, git checked on origin/main. SKILL.md: 11-23 and 11-24 ran under a6a7684 (step 6, soft limit 1700); 11-25 ran under db1ae608 (PR #3668), which changed only step 3 to '(add it if absent; ...)' for the Stale or missing section. No watchFor. All three delivered, no revert of #3585, #3617, #3645 or #3670. Per run: 11-23 merged 650ffc5e6 and self-reported skipping the step 3 by-concept read ('Open gap'); 11-24 merged c4d5b670d and noted the Stale or missing section no longer existed and path-based-labels was left out of order; 11-25 merged 6962bf043 with 82 files (+175/-169; the log's '80 pages' is pages only, plus update.yml and the memory index). The three prose fixes are in the diff and minimal (10.hooks.md names Stop and SubagentStop; 20.auto-imports.md narrows the layer rule to a layer's app/ folder or config files; 85.skill-inventory.md says the watchFor list goes into the subagent's data file and the brief has it grade); update.yml carries five checks dated 2026-11-25 and the ordering nit is gone; the Scout topic landed on the memory page as '### Stale or missing' (dc0412d58, 385083717, b962f1eb7) and was consumed by glassbox-curate (5b2e80651). Seven agents ran on 11-25 (a 35 s Scout, four claim checkers, two reviewers); claim checkers found 0 false claims on 11-24 and two or three on 11-23 and 11-25; code-review ran in all three. The earlier latent failure (step 3 names a section that does not exist) is resolved by db1ae608 and the 11-25 run recreated the heading; a residue is glassbox-curate/SKILL.md:97 '(Stale or missing, if the page has it)', tolerant, a nit. Repeats: the step 3 by-concept read skipped or unconfirmed (n=2, 11-24 unconfirmed); what orient.ts --index returned is unrecorded in all three logs (the Scout's range stays unverified); the Stop hook forced WIP commits (11-23); the double-background guard (11-23, 11-24); gate:scoped started as a bare background subshell (11-25); code-review args lacking the head sha (11-25, nit); the provenance guard blocking a hand-typed id (11-24). New minor, n=1 (11-25): git fetch in the same call that read git-conventions.md; a git commit with both -m and -F; a foreground sleep blocked; and docs/agents/guards.md does not list the new SubagentStop hook, a doc gap in a human-merge file outside this Skill. Role and gist: the change in db1ae608 is small and importance is routine as before; role was not read in full, so unverified but probably current. No grade change. Idea kept: a glassbox-update.ts step-3 helper that prints, per flagged page, the non-session commit subjects and stats since its revision, with the page count read logged, turning the unobservable by-concept read into a list to scan. Next focus: whether the by-concept read happens (sample a page's diff against a claim), what orient.ts --index and the Scout range returned, and whether Too long bullets match page-checks.ts --long.
+  - date: "2026-11-27"
+    note: >-
+      Behaviour check of session_013zxzeQQqZzQUP929AxkcZo (11-24),
+      session_013zxzeQrwxsU3KF9z6QX2zS (11-25) and
+      session_013zxzeNcnMkgSejraf9DmiH (11-26). All three used the Skill, so no
+      missed invocations were assessed. No watchFor items. The newest SKILL.md
+      commit on main is 6bc87aae4 (11-25, audit-docs), but the data file lists
+      db1ae608; the two were not reconciled, which is unverified. Delivery
+      checked on origin/main: PR #3691 (merge c5ce78233, 83 files, 81 guide
+      pages plus update.yml and the memory page) moved 4 dates and added a
+      hooks/25.stop-hooks entry, 5 rotation pages as logged. The Stop hooks page
+      now says up to three times and a counter file, matching
+      scripts/hooks/subagent-rule-use-stop.ts (MAX_BLOCKS = 3 at line 17). The
+      touch-target topic landed as a Stale or missing bullet and glassbox-curate
+      later consumed it (0e813c428). Four claim-check subagents found no false
+      claims, as the log says. The 11-25 PR #3670 and the 11-24 PR #3645 are on
+      main. No revert in the greps since 11-13. Repeats: the 11-24 run logged
+      that step 3 named a Stale or missing section the page lacked; the 11-26
+      run recreated it, so that is resolved. The double-background guard blocked
+      11-24; the provenance guard blocked a hand-typed id on 11-24; gate:scoped
+      was started as a bare background subshell on 11-25; the first code-review
+      call lacked the head sha on 11-25. New, n=1: the 11-26 Scout call was
+      refused by the dispatch-read guard because dispatch-subagents had not been
+      read, then succeeded; step 3 names the Skill but does not require reading
+      it first. Unconfirmed in 4 runs: step 3's by-concept read of git log per
+      flagged page (a grep of the 11-25 and 11-26 logs found nothing; the 11-24
+      log self-reports it, the 11-23 one a skip), and what orient.ts --index and
+      the Scout range returned, unrecorded in all three logs although the Scout
+      ran each time (21, 35 and 27 seconds). Role and gist were not re-read; the
+      Skill has not changed since the data file's last landing, so probably
+      current. Importance routine, unchanged. Idea kept: name the
+      dispatch-subagents read before the Scout in step 3 and add a helper that
+      lists non-session commit subjects since each flagged page's revision, so
+      the by-concept read becomes a list to scan. Next focus: whether the step 3
+      by-concept read happens, sampled by checking one page's diff against a
+      claim, and what orient.ts --index and the Scout range returned.

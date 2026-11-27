@@ -9,18 +9,10 @@ role: >-
   PR, except a trial changing an ADR or its summary rule starts only with a
   Trusted user and a human merges it.
 auditSummary:
-  date: "2026-11-26"
-  text: "Judges a recent instruction cut and deletes it or keeps it, and its merges stand. A rule that it should file a retirement issue after two no-trial runs was missed once, and it once told the owner a merge needed a human when it did not."
+  date: "2026-11-27"
+  text: "Cuts instruction text down and records each cut as a trial, which lands as a reviewed PR; the latest one matches its log. A run that should have flagged a repeated no-trial result for retirement did not mention it."
+
 observations:
-  - date: "2026-10-17"
-    note: >-
-      Self-check (audit-skills behaviour check): all 8 usedIn sessions
-      checked (2 freshly end-to-end: PR #2153; PRs #2165/#2166/#2168 - the
-      latter correctly human-merged for touching Human-only ADR/rule paths,
-      one new trial opened per run as required). #1451 (verbatim-quote
-      clause) reconfirmed still resolved by the earlier prune, not restored.
-      No reverts in the 2-week sweep. No new silent failure. Grade/role
-      unchanged.
   - date: "2026-10-18"
     note: >-
       Self-check (audit-skills behaviour check): all 8 usedIn sessions
@@ -173,3 +165,39 @@ observations:
   - date: "2026-11-26"
     note: >-
       Behaviour check of session_013zxzePJuqzjJyKT2zEFnME (11-23, PR #3623), session_013zxzeSWvk9VQkVz1BtXm6k (11-24) and session_013zxzeRuV2ywUTZimzQvXAN (11-25, PR #3674). The three logs were read (first ~7000 bytes, so ruleUse tails were skimmed), SKILL.md in full on origin/main and the data file's observations. No watchFor; SKILL.md unchanged since 11-22. New silent failure (n=1): the retirement signal tripped and nothing was filed. Bounds says 'Two runs in a row that open no trial (a failed probe aside) is the signal to file yours.' 11-24 opened none ('no new trial opened, nothing shipped'; its log correctly said it was not yet the two-in-a-row signal) and 11-25 opened none; the 11-25 summary and frictions never mention the signal, no retire issue was written (gh search for 'retire prune-trial' returns only closed issues from September to 11-13; no retire commit since 11-25; the Inventory ideas were grepped, no hit). Probable cause: the cadence check is a prose sentence that needs the run to remember the previous run's outcome. A single sighting stays an observation, not an issue; if the next run opens no trial too, the standing signal is plainly unmet and should escalate. Delivery checks: 11-25 PR #3674 (merge 0097a5e16) deleted the harvest entry from .agents/prune-trials.yml (0 added, 33 deleted); its 'holds' verdict (harvest-first-pass-shallow 2.1% to 0.0%) was not re-run, and that ledger entry now reads tracked at #3680 (a regression of PR #3565), changed later by a survey, not a revert of the prune. The survey-brief trial (opened 11-23, proven) is still open. 11-25 friction, moderate: the run told the PR and notification that prune-trials.yml needs a human merge, the owner asked why, and it corrected itself and merged; Bounds says 'ADR-0004's Human-only merge rule stands' without pointing to which paths are Human-only (inference). 11-24 had no PR, consistent with both open trials being unjudgeable, and its search subagent ran (59 s, 15 calls). 11-23's earlier numstat checks stand; the -106 line figure is carried from the earlier note (unverified). No revert in the 14-day grep. Repeats: late git-conventions or github-integration read (2 of 3 self-reported); ADR-0027 or ADR-0005 read after the first edit (2 of 3); the first Agent call denied by the dispatch-read guard (11-25, matching 11-19, n=2); a new nit of run_in_background combined with a trailing & refused. Role and gist are current (checked against prune-trial.yml). Importance routine, unchanged. Not checked: whether the 11-23 or 11-25 probes reported the pinned SHA (11-25 opened no trial, so had no probe). Idea kept: make find-trial-window.ts print 'consecutive no-trial runs: N' by scanning recent prune-trial logs and say 'file the retirement issue' at N of 2 or more, turning a remembered prose rule into a printed one. Next focus: the SHA-pinned probe report in each run's subagent output, and whether a retire ideas entry already exists in the Inventory beyond the grep done here.
+  - date: "2026-11-27"
+    note: >-
+      Behaviour check of session_013zxzeSWvk9VQkVz1BtXm6k (11-24),
+      session_013zxzeRuV2ywUTZimzQvXAN (11-25) and
+      session_013zxzeRCqnsnapQCvq1q748 (11-26). The auditor read the three logs
+      (the 11-25 and 11-26 ruleUse tails only skimmed), SKILL.md (unchanged
+      since 8ad7600ff on 11-22) and the observations. No watchFor items.
+      Delivery: the 11-26 run's PR #3697 (merge 7b9d964f9, commits 23e003eba and
+      e4ce23f98) rewrote verifying-ui-changes.md, net -42 lines, matching the
+      log, with a trial entry at .agents/prune-trials.yml lines 62 to 87 (opened
+      2026-11-26, proven true) and two ledger entries marked on-trial. The word
+      counts in the entry were not re-run. The 11-25 run's PR #3674 deleted the
+      harvest entry; the 11-24 run opened no PR and no trial, consistent with
+      both open trials being unjudgeable, and its search subagent ran. No revert
+      in the 14-day grep. Known silent failure, n=1 still: 11-24 and 11-25
+      opened no trial, so the two-in-a-row retire signal was met on 11-25; the
+      11-25 log never mentions it and a search of main for retire commits in
+      three days found none, though the tracker was not searched. The 11-26 run
+      then opened a trial, so the signal no longer stands; neither a retire
+      issue nor an Inventory retire idea was checked. Repeats: ADR-0027 and
+      ADR-0029 read after the first edit on 11-26 and on 11-25 (2 of 3);
+      git-conventions read late on 11-25 and unclear on 11-24 and 11-26; the
+      dispatch-read guard denied the first Agent call on 11-25; the earlier
+      moderate friction of wrongly calling prune-trials.yml Human-only did not
+      repeat. The on-trial marking fix held at n=3 on fixed text. Nits: on 11-26
+      the first code-review call was blocked because its args came from memory
+      and its first verdict named the unreviewed head, resolved before merge; on
+      11-24 ScheduleWakeup was blocked outside /loop. Could not tell whether the
+      11-26 probe's reported SHA matched the pinned one. Open trials are
+      survey-brief (11-23) and verifying-ui (11-26). Role and gist were not
+      re-read; carried from earlier notes as current. Importance routine,
+      unchanged. Idea kept: make find-trial-window.ts print the count of
+      consecutive no-trial runs and say to file the retirement issue at two.
+      Next focus: the SHA reported by each probe in subagent output, whether a
+      retire Inventory idea exists, and whether git-conventions was read before
+      the first git command on 11-24 and 11-26.

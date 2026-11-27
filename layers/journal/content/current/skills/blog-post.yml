@@ -10,17 +10,10 @@ role: >-
   Each post ends with a "My take" section, and the run logs ideas and learnings.
   Gives the Terrarium a multi-voice commentary on its own development.
 auditSummary:
-  date: "2026-11-26"
-  text: "Writes one in-character post a day from real site activity, checks its claims and merges it; all recent posts landed correctly. It twice started the long gate before the review had finished and sometimes drafts from an issue without reading its comments."
+  date: "2026-11-27"
+  text: "Delivers a daily post and a reaction stub on schedule, and the posts match their fact-checked text on main. It keeps skipping the Blog glossary read, and a few process steps still get done in the wrong order."
+
 observations:
-  - date: "2026-10-17"
-    note: >-
-      Self-check (audit-skills behaviour check): fresh end-to-end audit of
-      session_01N9bwDKW51kMS6WJvK2nfSU (PR #2139 Kevin standalone, PR #2141
-      Karen reply) - both merged, fact-check tallies and rotation state match
-      claims verbatim, pingback stub shape correct. Other 9 usedIn sessions
-      corroborated via durability sweep; #1479/#1626 both still closed, no
-      recurrence. No new silent failure. Grade/role unchanged.
   - date: "2026-10-18"
     note: >-
       Self-check (audit-skills behaviour check): fresh end-to-end audit of
@@ -201,3 +194,38 @@ observations:
   - date: "2026-11-26"
     note: >-
       Behaviour check of session_013zxzeTKxE9MSXFCu6Nqhr9 (11-25, PRs #3672 and #3673), session_013zxzeQ5m7BGxJD5bJ1fkPZ (11-24) and session_013zxzeQcWYfBxqngG8mJ56N (11-23). All three logs were read; the 11-25 run was verified against GitHub and git. Only bc6d025ed (11-24 02:23Z, persona paths in full, wording only) falls after the earliest run, so 11-24 and 11-25 ran on current text and 11-23 on the text before. No watchFor section. Delivery of 11-25: #3672 (Eyra, standalone) merged 11:24Z with one file, the post; #3673 (Karen's reply) merged 11:37Z with two files, the post and an Eyra pingback stub. The last 'Fact-checked:' hash in each PR body equals origin/main's blob for the post; each post has exactly one '## My take'; the stub is named correctly, targets the right post and has reactedAt after publishedAt. Karen's thesis holds: issue #3600 is closed as completed and the owner's comment reads 'Only a new here teaser, linking to the glassbox guide index page'. Steps 11 to 13 ran: PR bodies carry rotation state, losers and the tally; three sketches went to a fresh reader who picked Karen and a second reader agreed; ideas and learnings fields were filled in all three runs. No revert since the merges. Known repeats: the stub filename is correct for the third run in a row, and issue #3635 is closed as completed, so a recurrence would need a new issue; the fact-check was re-dispatched after edits in 3 of 3 runs; GitHub read before github-integration.md (11-24). New observations, nits or minor, none silent failures: the 11-25 run started the full gate while code-review was still running, twice, wasting about 20 minutes each time although step 10 says to run it once on the final head after step 9's fixes; it drafted from issue #3600's body without its comments, so the owner's comment surfaced only at step 12 (the 11-24 run had a stale body next to its triage comment too); it merged #3672 and carried on without re-invoking close-session until the Stop hook reminded it; the Tenant-glossary guard blocked the first Write because the Blog glossary was unread, and step 2 does not list it; the 11-24 first draft opened with 'Confession:' like Kevin's 11-18 post and the step 8 tone re-read caught it. The 11-23 persona path was guessed on the older text and later fixed; 11-24 and 11-25 read the persona files at the full path with no friction. Couldn't tell from logs: step 8's one-line tone report, step 2's persona reading and step 4's overlap grep. Role and gist are current. No grade change. Idea kept: open step 10 with 'Start the gate only after code-review has returned and its fixes are committed; a gate that overlaps a review or an edit is discarded'; the stub-path script idea can be dropped for now. Next focus: step 8's tone line and step 2's persona reading (needs transcripts), the 11-23 and 11-24 PRs re-fetched, and whether the gate-timing friction recurs.
+  - date: "2026-11-27"
+    note: >-
+      Behaviour check of session_013zxzeQ92opecHinpUgHCyA (11-26),
+      session_013zxzeTKxE9MSXFCu6Nqhr9 (11-25) and
+      session_013zxzeQ5m7BGxJD5bJ1fkPZ (11-24). The last SKILL.md change,
+      222aab944 (11-24 02:21Z), predates all three, so one text applies. No
+      watchFor items. The auditor read all three logs and verified the 11-26
+      delivery against GitHub and git: PR #3695 (the David post) and #3696 (the
+      Karen post plus the David pingback stub) are merged, and the blob on
+      origin/main for each post matches the last Fact-checked hash in its PR
+      body. Each post has exactly one My take section. The stub has the right
+      target slug, fromPersona and reactedAt. The PR bodies carry rotation, the
+      blind reader's pick, a second reader and the fact-check tallies (about 27
+      and about 30 claims, none wrong). The step 13 idea count held at two.
+      Karen's thesis holds: issue #3680 is closed as completed and the harvest
+      prune trial PR #3674 merged. The 11-24 and 11-25 delivery was verified by
+      the earlier note. No revert in the 14-day greps. Repeats: the stub
+      filename is correct for the fourth run in a row (issue #3635 stays
+      closed); the fact-check was redispatched after post-review edits in 3 of 3
+      runs, 6 of 6 recently; the Blog glossary was read late or skipped in 11-25
+      and 11-26 (2 of the last 3 runs) although step 2 does not name it; the
+      issue body was read without its comments in 11-24 and 11-25; the first
+      code-review call lacked the head sha in 11-26 (the third recurrence of
+      that pattern); and the gate overlapped a review on 11-25. New nits: on
+      11-26 a draft carried an aside about a PR title that only the blind reader
+      caught, and after the merge the branch fast-forward made the Stop hook
+      report two unpushed commits that were main's own history. The fact-check
+      cutting an imprecise paragraph is the intended mechanism. Could not tell
+      from the logs: step 8's tone line, step 2's persona reading and step 4's
+      overlap grep. Role and gist are current. Importance routine, unchanged.
+      Idea kept: name layers/blog/GLOSSARY.md in step 2's read list, since the
+      tenant-glossary guard otherwise blocks the first write or a subagent reads
+      it instead. Next focus: step 8's tone line and step 2's persona reading
+      from transcripts, and the 11-26 ruleUse missed report on the
+      tenant-glossary rule.

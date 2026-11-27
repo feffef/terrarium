@@ -9,21 +9,10 @@ role: >-
   changes no code and opens no PR. An idea that contradicts a line in
   `decisions.md` is dropped, so rejected ideas stay rejected.
 auditSummary:
-  date: "2026-11-26"
-  text: "Sends fresh visitors through the site each day and files a verified issue for what they find; recent filings were accurate and the label drift is explained. The context file it builds for visitors is unreliable in a new way each time."
+  date: "2026-11-27"
+  text: "Its runs find real problems and file them with measurements; the 11-26 bugs were fixed within hours. Visitors lose time to a context file that points at pages that do not exist, and a brief that misses one overflow case."
+
 observations:
-  - date: "2026-10-17"
-    note: >-
-      Self-check (audit-skills behaviour check): all 9 usedIn sessions
-      checked (1 freshly end-to-end: session_01RKUs8JUM5uASMfiE3hvXRA, PRs
-      #2163/#2164 - 3-model dispatch, refiner step, owner-memory step all
-      ran correctly, 16 candidates each resolved individually, none
-      batched). #1452 reconfirmed CLOSED and holding, 3/3 clean post-fix
-      tests now. Watch item, not escalated: owner-directed rework PR #2178
-      (5h after #2164, same file) sits in the 3-day owner-corrections.ts
-      rework window untested - no visitor-loop run has fired since to pick
-      it up; confirm on the next run whether decisions.md catches it. No
-      new silent failure. Grade/role unchanged (routine).
   - date: "2026-10-18"
     note: >-
       Self-check (audit-skills behaviour check): 8 of 9 usedIn sessions
@@ -193,3 +182,36 @@ observations:
   - date: "2026-11-26"
     note: >-
       Behaviour check of session_013zxzeRByCWuYi8gThTfvKA (11-25, blog, new), session_013zxzeSqibnzqVVC4yRJ1eN (11-24, atlas) and session_013zxzePaBNkuBSUPc9jtA9d (11-23, homepage), from the three logs. No watchFor section. 11-25 started after db1ae608, which only reworded the glassbox table note; 11-24 started after e2bd1d056 and 11-23 before it, and steps 2 to 5 are the same in both versions. Delivery: 11-25 filed #3675 (focus blog, UI-tester lens), verified through the GitHub API: open, line one is the session header, the body names URL, elements, sizes, source (index.vue:129-133) and a fix, and records the 'not a bug' check of the doubled Browse by tag nav; labels were needs-triage and area:blog at filing (16:07Z), then a human or retriage swapped them for enhancement and ready-for-human at 22:14Z and ready-for-agent at 22:21Z. This settles the long-running label-drift observation: issues are filed needs-triage and re-triaged later, so it is not a silent failure. The issue is still open and unfixed. 11-24's #3652 and #3653 were verified in the last note (not rechecked). 11-23 filed nothing, with per-item drop reasons. All three logs carry the focus, yield per lens, filter misses and visitor retros in the summary, plus ideas and learnings; no PR in any run (prs empty), as the Remit says. No revert in the 14-day grep. Retros: all three visitors answered on 11-25; the UI tester's 11-24 retro was real (the '\n' trap and the SVG href trap), which answers the last note's open question. Known repeats: triage-labels.md read late or not via a counted read (2 of 3 runs here; 11-25's read happened in a shared Bash call the detector missed; step 4 still names only issue-tracker.md); git before git-conventions.md (11-24 and 11-25); a visitor tripping on page.evaluate string handling (the 11-25 UI tester lost a run to quote nesting, 11-24 lost two to '\n'; visitor-brief.md lines 33 to 34 do not warn about it; 2 of 2 since e2bd1d056, so the reading facts did not prevent it); the context file guiding visitors badly in a different way each run (a garbled URL-rule line, a missing pingbacks URL, no way to enumerate articles, no starter script); the UI tester repeating its report instead of a retro (11-23 only, 1 of 3 here); the brief and context file passed by scratchpad path rather than verbatim. New, minor and unverified: the 11-25 summary says 'one confirmed bug group' yet the issue ended up labelled enhancement, likely a classification question (a 24px target is a WCAG AAA-level nicety). Role and gist are current in content (role text not re-read in full). Importance routine, unchanged. Idea kept: a context.ts script under .agents/skills/visitor-loop/scripts/ that prints the context file's pages section (URL pattern rule, one URL per pattern, query and 404 URLs, anchors marked), since the hand-built 11-25 file had a garbled line and a missing URL. Next focus: step 3's checking claims on 11-23 and 11-24 (drops by decisions.md, the 'not reproduced at 390px' evidence) and the 11-25 visitor claims behind the ideas, which were not re-run.
+  - date: "2026-11-27"
+    note: >-
+      Behaviour check of session_013zxzeQMTfvZZmLxob6aT7A (11-26, Journal), the
+      11-25 blog run (session ending RByCWuYi8gThTfvKA) and the 11-24 atlas run
+      (ending SqibnzqVVC4yRJ1eN). No watchFor items. The 11-24 run started after
+      e2bd1d056 (11-23) and the other two after db1ae608 (11-25, SKILL.md only),
+      whose diff was not opened; the current steps 2 to 5 were read and all
+      three were graded on them. Delivery verified for 11-26 through the GitHub
+      API: issues #3698 (dependabot-sweep overflow, scrollWidth 424 at 390px)
+      and #3699 (tap targets under 24px) were filed with the session header on
+      line one and an explicit unverified part, and both are closed by PR #3708,
+      which is merged. The log holds 9 ideas, 2 learnings, yield per lens,
+      filter misses and three retros, with prs empty. The 11-24 and 11-25
+      deliveries (#3652, #3653 and #3675) were verified in earlier notes and not
+      re-fetched. The re-measure step held: the 11-26 run re-measured both bugs
+      itself and dropped two 404s nothing links. No revert in the 14-day grep.
+      Repeats, counted over these three runs: labels are ready-for-agent where
+      step 4 says needs-triage (probably later retriage, unverified);
+      triage-labels.md was read late or missed in 3 of 3 (step 4 names only
+      issue-tracker.md); git ran before git-conventions in 3 of 3; the context
+      file guided visitors badly in a different way each time in 3 of 3 (404
+      folder roots on 11-26, a garbled URL rule on 11-25, no starter script on
+      11-24); the page.evaluate quote trap hit 11-24 twice and 11-25 once, and
+      visitor-brief.md line 33 now mentions it, so it is partly covered; the
+      SubagentStart rule-use hook cost a visitor turns on 11-26. New, minor: the
+      11-26 UI tester reported the 424px overflow as unconfirmed because the
+      brief's bounding-rect hint misses a list item that scrolls inside its own
+      box, which cost four ad hoc scripts. Role and gist were not re-read; the
+      11-26 note called them current. Importance routine, unchanged. Idea kept:
+      add one line to visitor-brief.md's measuring facts to also scan every
+      element where scrollWidth exceeds clientWidth. Next focus: the 11-25 and
+      11-26 visitor retro and idea claims, which were not re-run, db1ae608's
+      diff, and the Inventory role and gist text.

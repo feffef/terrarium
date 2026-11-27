@@ -8,18 +8,10 @@ role: >-
   up: explores them, grills the owner once, then builds, reviews and lands the PRs unattended. For a deliberate "clear
   everything now" pass.
 auditSummary:
-  date: "2026-11-26"
-  text: "Works through the issue backlog, builds the fixes in branches and lands them with review, and the owner steers it. The builder brief still contradicts itself on running checks, which costs a turn in most runs."
+  date: "2026-11-27"
+  text: "Reliably clears the backlog in one run: its PRs merge and the issues close. It twice put an unchecked assumption to the owner as a question, which cost an extra round each time."
+
 observations:
-  - date: "2026-10-17"
-    note: >-
-      Self-check (audit-skills behaviour check): 3 newest usedIn sessions
-      checked beyond the 2026-10-16 entry (the other 7 already independently
-      verified). session_01VPNHf6qDdJPXX23GghKs74 (PRs #2119-#2123),
-      session_011RZgGTE5Mh25D2ZNoKqfAM (PR #2158), session_015vXkKcdLwYRQqKKVJ8BLJJ
-      (PRs #2159/#2160) all confirmed merged, scoped as claimed, correct
-      self-merge-vs-human-merge split, posted `Reviewed: <sha>` verdicts
-      before merge. No reverts. Grade unchanged (specialist).
   - date: "2026-10-18"
     note: >-
       Self-check (audit-skills behaviour check): all 10 usedIn sessions
@@ -193,3 +185,37 @@ observations:
   - date: "2026-11-26"
     note: >-
       Behaviour check of session_013zxzeSBTTxHztyPoJeEwAj (11-24 21:19Z), session_013zxzeRQRYWw3yLJzSdaozk (11-24 07:07Z), session_013zxzeT6Ss7hjULbaTx2PS2 (11-23 20:42Z) and session_013zxzeQemDnZfmHdeYUmhur (11-23 06:36Z). SBTT and RQRY were read in full; Qem and T6Ss through summary and frictions only, so their ruleUse and subagent bulk are unread. SKILL.md last changed in 6c565006e (11-23 04:18Z), before all four runs, so one text applies. Delivery held: all 13 PRs (#3615 and #3616, #3628 to #3631, #3642 to #3644, #3657 to #3660) are merged; issue states match the logs; #3340 stays open though its date gate (11-25) has passed. No revert. SBTT's summary is stale (it says #3652 and #3653 are held although #3659 and #3660 merged a minute before the log ended); the outcome line is right and this repeats the 11-25 observation. No new silent failure or missed invocation; all four runs list clear-backlog and grilling. The PR-open steps (subscribe, close-session) were skipped in T6Ss only; 2 of the last 5 runs, so not a rule. Round-1 review caught real defects on #3624, #3627 and #3644 while small branches found only nits, so the rounds stay. Repeats: late read-first docs in all four runs (about 8 of 9 overall); reviewer problems (rule-use echo on read-only agents, an unlocatable 'section 3 of code-review', hand-off channel confusion) in 3 to 4 runs each; the builder brief's contradictions (e2e 'in the background' against the subagent guard, a cd-and-&& gate chain in a file that forbids chaining) in SBTT, RQRY and Qem, tracked by open issue #3663; cd into a worktree moving the session cwd (n=3). Single sightings: Explore grouped four unrelated issues into one group; UI prose reached the owner only after the PR was up; an explore agent for #3655 wrote nothing and --triage passed it silently; PR #3615 said 'five nits fixed' from memory when four were fixed and one skipped. Role: current in content but about 62 words against the 50-word limit, so it is trimmed this run (the schedule-flavoured 'on-interval' phrase and the aside on plain words are dropped); gist current; importance stays specialist since the owner invoked it in all four runs. Idea kept: fix #3663 at its source by putting one rule first in rules() of clear-backlog-build.js (every Bash call is one plain command, the gate is the only chain, e2e runs in the foreground with a long timeout); the retro asked for this in three runs. Next focus: the explore workflow's GitHub-side writes and whether run-summary --triage flags a grill with no writes, the ruleUse and subagent bulk of Qem and T6Ss, and whether the owner-confirmation wait on UI-visible prose recurs.
+  - date: "2026-11-27"
+    note: >-
+      Behaviour check of session_013zxzeQLTeC8GETW73Aho8C (11-26),
+      session_013zxzePxkwAcvTVUDd7sToK (11-25), and the two 11-24 runs
+      (session_013zxzeSBTTxHztyPoJeEwAj and session_013zxzeRQRYWw3yLJzSdaozk).
+      The authored parts of all four logs were read; the ruleUse and subagent
+      bulk of the three older logs was not. SKILL.md last changed in 18b36e659
+      (11-23), before all four runs. No watchFor items. Delivery verified
+      through the API: the 11-26 run merged #3706 to #3709 and closed #3680,
+      #3681, #3682, #3698, #3699 and #3340; #3705 stays open as the log says.
+      The 11-25 run merged #3687 to #3689 and closed #3663, #3675 and #3662. The
+      older 13 PRs were verified earlier. No revert. The #3663 fix held in two
+      runs: PR #3687 put the chain rule first in rules() and made e2e foreground
+      in the builder workflow, so the earlier builder-brief contradiction
+      finding is closed, and the current auditSummary was stale. PR-open steps
+      (subscribe and close-session) held in all four runs, 6 of the last 7
+      complete. New, n=2 and self-logged: the orchestrator put a pick to the
+      owner without checking a premise that explore itself marked unverified. On
+      11-25 the audit-counting premise did not exist and cost an extra owner
+      question and a fix round (moderate); on 11-26 a SubagentStart default was
+      put to the owner unverified, costing a round (minor). Step 2 verifies a
+      pick's cited sources but not the unverified entries in optionChecks.
+      Repeats: read-first docs late in 3 of 4 runs; the rule-use echo and the
+      code-review section 3 pointer cost reviewers in all four; cd into a
+      worktree moved the session cwd (n=4). Single sightings: the 11-26 Stop
+      hook asked for a push before the gate passed; the log was re-authored with
+      log-session instead of re-invoking close-session, and the Stop hook
+      blocked twice; a gate failed once on an unrelated timing test; a brief
+      named a script without its path. Role and gist are current (41 words).
+      Importance specialist, unchanged. Idea kept: in step 2, also verify each
+      optionChecks unverified premise, or ask it as an open question, not a
+      pick. Next focus: the ruleUse and subagent bulk of the three older logs,
+      the explore agents' comment authorship and labels, and whether --triage
+      flags a grill with no writes.

@@ -21,8 +21,9 @@ watchFor:
   - "A session given an instruction grilled the person and had its outline confirmed before it built anything."
   - "The page conventions and the governing docs were read before the first draft, not after."
 auditSummary:
-  date: "2026-11-26"
-  text: "Grows and corrects the Glass Box guide pages with real review; its PRs land and stand. Unattended runs still stop after one PR instead of working until nothing is left, which the owner has parked on an open issue."
+  date: "2026-11-27"
+  text: "Produces reviewed new Glass Box lessons that land, and its checks held in the latest runs. It still stops early with items left, and its newest session was closed only after the owner asked."
+
 observations:
   - date: "2026-11-07"
     note: >-
@@ -76,3 +77,43 @@ observations:
   - date: "2026-11-26"
     note: >-
       Behaviour check of session_013zxzeRZYEUqDMuAoUesKV7 (11-25, PR #3671), session_013zxzeQF4hazkBfaftfPo5b (11-24, four runs, PRs #3646 to #3649) and session_013zxzeS6gys4MPSEMWnZd1m (11-23, three runs). Session logs were read in full; 11-25 ran after db1ae60 (11-25 04:10, not diffed by the subagent), 11-24 and 11-23 were re-read for outcome, frictions and summary only. Watch for: (1) review and gate before merge: held for 11-25 (PR body 'code-review on the head and again on the follow-up; pnpm gate:scoped passed', bot comment 'safety-gate green on 0c9de6cd' equal to the head; merged 894a80d07). (2) writer, claim checker and fresh reader with nothing skipped: held for 11-25 (opus writer, two claim-check rounds, two fresh-reader rounds, Standards and Spec reviews on head and follow-up); the known 11-24 run 2 and 11-23 runs 2 and 3 skips stand and were not rechecked. (3) subject read through the parts files: held (subject-1.md and subject-2.md in docsRead, pagesRead for hooks pages and the walkthrough). (4) a no-argument session continues until context is full or nothing is left: FAILED for 11-25. It did one PR and stopped; its summary says 'turn ends here to wait on the PR's checks; the Skill's step 8 would start a next run', yet step 8 says a PR waiting for CI or the owner is no reason to stop. The run lasted 18453 s idling until the owner merged. By the audit's count that is 9 of 9 unattended sessions stopping early (earlier counts unverified); repeated, so it escalated as a comment on open issue #3634 today. (5) run entry names the item and the memory page shrinks: held for 11-25. (6) instruction grilling: couldn't tell, no run had an argument. (7) docs before the first draft: held with the known gap, .claude/rules/glassbox-content.md loaded by hint but is absent from docsRead although step 1 lists it. Delivery: #3671 is merged and hooks/25.stop-hooks.md is on origin/main; no revert in the 14-day log. New, n=1: the Spec reviewer found two Where-next rows swapped and a skipped walkthrough chip because Scheduled tasks and Permissions were 'judged from their descriptions, not read whole', though step 3 says to read outside pages in full; a double-background guard denial of the gate command (count 2). Known repeats: skipping steps without a writer (11-24 run 2, three sessions in a row, #3634); the gate command's trailing & friction. The step 2 hedge '(Stale or missing, if the page has it)' fixes the earlier mismatch. Role and gist: SKILL.md changed in db1ae60 but the Inventory entry was not read (unverified). No grade change. Idea kept: state step 8's stop rule as a checklist, and have close-session refuse a no-argument log with one PR and items left, or tell scheduled one-turn runs to stop after a single PR; the wording has failed nine times. Next focus: whether the step 1 rules-file read happens before the first draft, the db1ae60 diff and the Inventory role and gist, and the Reviewed lines of the 11-23 and 11-24 PRs.
+  - date: "2026-11-27"
+    note: >-
+      Behaviour check of session_013zxzePo4mtQsMpDHLLDFmb (11-26, three PRs),
+      session_013zxzeRZYEUqDMuAoUesKV7 (11-25, one PR) and
+      session_013zxzeQF4hazkBfaftfPo5b (11-24, four PRs). Logs read via the
+      session files; the 11-24 and 11-25 ruleUse sections only skimmed. The
+      11-25 and 11-26 runs ran after db1ae60, whose only change is that step 2
+      now says Stale or missing, if the page has it; 11-24 ran on the a6a7684
+      text. Watch for 1, review and gate before merge: held; PR #3693's body
+      names Standards and Spec on 034bccdcb and green gates, and the owner
+      merged #3692 to #3694. Watch for 2, writer, claim checker and fresh
+      reader: held for 11-26 (three opus writers, each with claim-check and
+      fresh-reader subagents) and 11-25; failed, known repeat, for 11-24 run 2
+      (#3647), which has reviewers but no writer. Watch for 3, subject read
+      through parts files: held in all three; new minor, outside Where-next
+      pages were read whole at about 5,000 words in one run and checked by
+      sentence in another. Watch for 4, no-argument session continues until
+      context is full or nothing is left: failed or could not tell for both
+      newer runs. The 11-25 run did one PR and said the turn ends to wait on the
+      PR's checks, which step 8 says is no reason to stop; the 11-26 run did
+      three PRs, the best so far, then stopped because the context was large and
+      PRs were waiting for the owner, the second half being a banned reason
+      while the memory page still held items (unverified as item counts). By the
+      earlier tally that is the tenth early stop. Watch for 5, run entry names
+      the item and the memory page shrinks: held for 11-26. Watch for 6,
+      grilling: could not tell, no run had an argument. Watch for 7, docs before
+      first draft: held with the known gap that glassbox-content.md is absent
+      from docsRead in all three. Delivery: #3671, #3692 to #3694 and #3646 to
+      #3649 are merged and the new pages exist on origin/main; no revert. New,
+      moderate, n=1: the 11-26 closure was human-prompted (major friction, log
+      ended about three hours after the last merge); the evidence and a
+      suggested fix went onto the open thread, issue #3634, as a comment. Also
+      minor: a writer edited a Where next on a page an open PR rewrites,
+      reverted by the lead, and an unquoted colon in a run entry failed
+      validate:content (third count). Role and gist are current; importance
+      routine, unchanged. Idea kept: have close-session refuse a no-argument log
+      with items left unless it names an allowed stop reason, and say
+      owner-merge PRs are left open at close. Next focus: whether context really
+      passed the limit at the 11-26 stop, CI status of the 11-26 PR heads, and
+      the Reviewed lines of #3692 and #3694.

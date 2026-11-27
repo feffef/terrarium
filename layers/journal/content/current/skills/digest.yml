@@ -9,17 +9,10 @@ role: >-
   against the PRs' diffs, and merges its own gated PR on green. Scheduled; run
   by hand to catch up.
 auditSummary:
-  date: "2026-11-26"
-  text: "Publishes one daily summary of the Platform's activity that checks out against the logs and merges cleanly. Its first draft reliably contains wrong claims that a fact-check then catches, and it often reads the git guide late."
+  date: "2026-11-27"
+  text: "Writes a fact-checked daily Digest and archives old content, and two of the last three landed on main. The newest one is stuck behind a red main gate, which it reported honestly, and it never reads the Journal glossary."
+
 observations:
-  - date: "2026-10-17"
-    note: >-
-      Self-check (audit-skills behaviour check): fresh end-to-end audit of
-      session_01CZ2bdCKBrotyVQL9mtkeGS (PR #2191, the 2026-10-16 Digest) -
-      file on main, retention sweep correct (7 dates, no gaps/dupes),
-      fact-check tally matches, 3 spot-checked narrative claims accurate. 18
-      consecutive clean daily audits now since the single 2026-09-28 #1478
-      case. No new silent failure. Grade/role unchanged.
   - date: "2026-10-18"
     note: >-
       Self-check (audit-skills behaviour check): fresh end-to-end audit of
@@ -179,3 +172,38 @@ observations:
   - date: "2026-11-26"
     note: >-
       Behaviour check of session_013zxzeSK7bEhaxexffUGupq (11-26, PR #3679, new), session_013zxzeT1KJU1C5ggyu5ibSA (11-25, #3661) and session_013zxzeSMNGy8G5ktwppozy2 (11-24, #3632). All three logs were read in full; the last two were audited on 11-25 so only their logs were rechecked. No watchFor items. SKILL.md last changed in 7ba3c516a (11-20), before all three runs. Delivery held. The 11-26 run is merge bf0b8137d, commit 637795d9e, 17 files (one added Digest and 16 renames, +18 lines), matching the log's 'one Digest and 15 session logs moved' and containing only the Digest and archive moves step 6 allows. The 11-25 Digest has been touched by one commit only. The footer 'Sessions: 10 (all completed)' matches ten logs ended 11-25 with status completed; the friction tally '47 (4 moderate, 19 minor, 24 trivial)' matches a count over those logs; both Blog links point to existing 11-25 files; the prose is about 230 words, inside the 100 to 250 limit. Merged PRs #3665, #3666, #3667, #3670, #3671 and #3674 appear in git log origin/main. No revert in the 14-day grep. Unverified: the prose claims beyond that (the 'stop hooks' lesson text, 'three stale or false claims'), CI state and the PR-body fact-check tally. Frictions: on 11-26 git add and the sweep ran before git-conventions.md was read (nit), and ADR-0010 was read as its first 60 lines rather than in full as step 3 requires (nit; nothing changed). Known repeats: git-conventions read after a git command, now 3 of 3 runs here; the first-draft fact-check catching wrong claims (4 on 11-26), now 3 of 3, which suggests the draft-from-titles habit persists; the Journal glossary absent from docsRead on 11-25 and 11-26 (2 of 2, 3 of 3 counting 11-24), though the fact-check subagent may have read it (docsReadBySubagents lists only SKILL.md). The dispatch guard did not block on 11-26. Could not tell: whether verdict-line.ts --review-call was used on 11-26 (the log says standards and spec reviews ran). Role and gist are current (SKILL.md unchanged in the window; Inventory not reopened). Grade routine, unchanged. Idea kept: at the top of step 3, one line asking the run to read git-conventions.md, layers/journal/GLOSSARY.md and dispatch-subagents before the first helper call and to take line counts from git show --numstat and provenance only from PR bodies; the evidence is the late git read 3 of 3, glossary skipped 2 of 3 and draft claims fixed 3 of 3. Next focus: the PR-body fact-check tally against the log's claim, whether verdict-line.ts --review-call is used, and whether the main session or only the subagent reads the Journal glossary.
+  - date: "2026-11-27"
+    note: >-
+      Behaviour check of session_013zxzeQivG2v72EMRPiQ5aR (11-27),
+      session_013zxzeSK7bEhaxexffUGupq (11-26) and
+      session_013zxzeT1KJU1C5ggyu5ibSA (11-25), all logs read in full. SKILL.md
+      has no changes in the window. No watchFor items. Delivery: the 11-26 run's
+      PR #3679 (merge bf0b8137d) and the 11-25 run's PR #3661 (merge 208d615bf,
+      follow-up 896d9fdeb) are on origin/main with their Digests; no revert in
+      the 14-day grep. The 11-27 run is the exception: it wrote a clean Digest
+      and 28 archive moves in PR #3710, which is open with mergeable_state
+      blocked, so the 2026-11-26 Digest is not yet on main. The log says so
+      honestly (status in-review). The cause was main's gate failing on
+      tests/unit/rule-use.spec.ts after #3709; main later got da135f42c
+      narrowing the spec, but the PR's base predates it, so it needs a rebase or
+      CI re-run before merge-pr.ts, which nobody had done when checked. CI state
+      itself was not checked. The run found the red main only after CI failed,
+      then dug through logs, a moderate friction; leaving the PR open and
+      sending a notification followed pr-workflow's closing recipe. Step 6 has
+      no case for a red main outside the human-escalation list. Repeats:
+      git-conventions read after the first git command in 3 of 3 runs (6 of 6
+      across two notes); the dispatch-read guard blocked the first Agent call in
+      two of three runs; the fact-check caught wrong claims in the first draft
+      in 3 of 3 (4 wrong in the 11-26 summary, one word count, one unverifiable
+      attribution); layers/journal/GLOSSARY.md was never read by the main agent
+      or a subagent in any of the three runs; on 11-26 ADR-0010 was read as its
+      first 60 lines only although step 3 says in full. The PR-body tally format
+      was followed this time. Could not tell whether verdict-line.ts was used on
+      every run; both review agents ran each time. Role and gist: no SKILL.md
+      change, so no new verdict; the earlier note called them current.
+      Importance routine, unchanged. Idea kept: add a step that checks
+      origin/main's gate status first, so a red main is known before the review
+      and gate cycle and stated in the PR body. Next focus: whether PR #3710
+      merges and the 2026-11-26 Digest lands without the next run duplicating
+      it, the PR-body fact-check tallies against the logs, and whether anyone
+      reads layers/journal/GLOSSARY.md.
