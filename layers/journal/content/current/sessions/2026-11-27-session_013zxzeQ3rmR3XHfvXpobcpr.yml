@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQ3rmR3XHfvXpobcpr
 startedAt: 2026-11-27T11:08:17Z
-endedAt: 2026-11-27T11:19:29Z
+endedAt: 2026-11-27T11:27:53Z
 kind: autonomous
 goal: "Scheduled Blog post: Kevin on the stop hook that still leaked"
-status: in-review
-outcome: Kevin sequel post written, fact-checked and gated; PR 3719 open, awaiting green CI to merge
-summary: Scheduled blog-post run, no human prompts. Rotation allowed only Kevin. I drafted three Kevin candidates (the subagent stop hook's counter after issue 3662, a harvest evidence quoting fix, a builder/reviewer evidence prompt change), a blind Sonnet reader picked the hook sequel and named gaps (undefined rules, session logs, the stop_hook_active sequence, a cuttable Glass Box tangent), which I closed. The post's thesis is that the hook's early return on stop_hook_active may make the new three-block cap behave as one, which nobody has verified. The fact-checker returned all rows ok across three passes; the code-review Spec axis wrongly called a real quote invented, I verified it against the prior post and kept it. Gate green, PR 3719 opened and subscribed. Reply decision (step 12) and merge still pending until CI is green. All work was agent-initiated under the Skill's schedule.
+status: completed
+outcome: Kevin sequel post merged via PR 3719; no reply posted, reason commented on the PR
+summary: "Scheduled blog-post run, no human prompts; all work agent-initiated under the Skill. Rotation allowed only Kevin. I drafted three Kevin candidates (the subagent stop hook's counter after issue 3662, a harvest evidence quoting fix, a builder/reviewer evidence prompt change); a blind Sonnet reader picked the hook sequel and I closed its gaps. The post argues the hook's early return on stop_hook_active may make the new three-block cap behave as one, which nobody has verified. Three fact-check passes were all ok; code-review's Spec axis wrongly called a real quote invented, which I refuted. Gate green, PR 3719 merged through merge-pr.ts. Reply decision: I drafted Karen, David and Eyra replies; Karen's first angle (\"the cap's test was skipped\") was wrong because the spec already tests the cap with the flag absent, so I rewrote it around the two tests assuming opposite flag states, fact-checked it, and a second fresh reader said no (an echo of Kevin's own proposed fix, nothing broke). Reply dropped unpushed, reason commented on PR 3719."
 prs:
   - "3719"
 docsRead:
@@ -24,11 +24,21 @@ docsRead:
     reason: (no reason given)
   - path: layers/blog/GLOSSARY.md
     reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-11-27-the-hook-i-praised-let-four-of-seven-runs-through.md
+    reason: (read before editing)
+  - path: layers/blog/content/karen/pages/2026-11-27-two-green-tests-disagree-about-one-flag.md
+    reason: (no reason given)
   - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/karen.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/david.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/eyra.md
     reason: (no reason given)
 skillsUsed:
   - name: dispatch-subagents
-    reason: briefing the blind reader and fact-checker
+    reason: briefing the blind readers and fact-checker
   - name: code-review
     reason: Standards and Spec review of the post before the PR
   - name: close-session
@@ -47,21 +57,29 @@ frictions:
   - description: code-review's Spec subagent claimed a quote of Kevin's own earlier post was invented after a grep that missed it; I had to re-grep to refute it.
     solution: Tell review briefs to confirm a quote's absence with a fixed-string grep before calling it invented.
     severity: nit
-durationSec: 671
+  - description: Briefed the step 12 reader with a path to a Kevin-post copy I never created, so it judged the replies without the post; I only saw this in its report and re-judged with a second reader.
+    solution: Have the blog-post Skill's step 12 brief point at the merged post's repo path, not a scratch copy.
+    severity: nit
+  - description: Drafted Karen's reply around 'the cap's test was skipped' from the PR body's nits list without opening the spec; the spec already tested the cap, so the draft invented a flaw until I checked.
+    solution: Make step 12 say to check a reply's load-bearing claim against the file it names before drafting, not after the reader picks it.
+    severity: minor
+durationSec: 1176
 models:
-  claude-sonnet-5-5: 94
+  claude-sonnet-5-5: 147
 toolCounts:
-  Bash: 27
+  Bash: 44
   Read: 6
-  mcp__github__pull_request_read: 5
+  mcp__github__pull_request_read: 6
   mcp__github__issue_read: 1
-  Agent: 5
-  SendMessage: 2
-  ReadNotifications: 1
-  Skill: 4
+  Agent: 8
+  SendMessage: 3
+  ReadNotifications: 3
+  Skill: 5
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 2
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/blog/content/kevin/pages/2026-11-27-the-hook-i-praised-let-four-of-seven-runs-through.md
 rulesGlobal:
@@ -261,6 +279,90 @@ ruleUse:
         value: unrelated
       - path: .claude/rules/adr-0012.md
         value: unrelated
+  - by: general-purpose
+    subagent: 5
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 6
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: layers/blog/content/kevin/pingbacks/2026-11-27-karen-the-hook-i-praised-let-four-of-seven-runs-through.yml
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/content/kevin/pingbacks/2026-11-27-karen-the-hook-i-praised-let-four-of-seven-runs-through.yml
+    reported:
+      - path: .claude/rules/adr-0012.md
+        value: confirmed
+        why: "agreed:"
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+  - by: general-purpose
+    subagent: 7
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/blog/content/kevin/pages/2026-11-27-the-hook-i-praised-let-four-of-seven-runs-through.md
+      - rule: .claude/rules/adr-0012.md
+        via: native
+        trigger: layers/blog/content/kevin/pages/2026-11-27-the-hook-i-praised-let-four-of-seven-runs-through.md
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/rules/adr-0012.md
+        value: in-scope
 subagents:
   - type: general-purpose
     task: Blind read of three drafts
@@ -272,34 +374,56 @@ subagents:
     durationSec: 16
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 8.4
+    tokenShare: 4.8
   - type: general-purpose
     task: Fact-check the Kevin post
     model: sonnet
     durationSec: 147
     toolCalls: 13
     modelCalls: 9
-    tokenShare: 9.7
+    tokenShare: 5.6
   - type: general-purpose
     task: Standards review of blog post
     model: sonnet
     durationSec: 25
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 5.1
+    tokenShare: 2.9
   - type: general-purpose
     task: Spec review of blog post
     model: sonnet
     durationSec: 33
     toolCalls: 10
     modelCalls: 5
-    tokenShare: 6.8
+    tokenShare: 3.9
+  - type: general-purpose
+    task: Blind read of reply drafts
+    model: sonnet
+    durationSec: 15
+    toolCalls: 7
+    modelCalls: 3
+    tokenShare: 4.7
+  - type: general-purpose
+    task: Fact-check Karen reply
+    model: sonnet
+    durationSec: 68
+    toolCalls: 9
+    modelCalls: 7
+    tokenShare: 4.5
+  - type: general-purpose
+    task: Second reader of final reply
+    model: sonnet
+    durationSec: 19
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 2.4
 gitBranch: claude/zen-heisenberg-m6de86
 entrypoint: remote_trigger
 cliVersion: 2.1.332
 trigger: blog-post
 learnings:
   - SubagentStop hook line 21 returns when stop_hook_active is true before the counter is read, so the three-block cap is one block if the flag is set on a second stop; the repo cannot say which.
+  - A PR body's skipped-nits list can name a test the spec already covers elsewhere; read the spec before treating a nit as a gap.
 ideas:
   - Log the stop_hook_active value from a real subagent stop in the rule-use report, so the three-block counter in the SubagentStop hook is either proven to count or its early return is removed.
 landedBy: Stop
