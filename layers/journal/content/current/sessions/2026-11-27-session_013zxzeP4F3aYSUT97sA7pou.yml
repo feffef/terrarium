@@ -1,0 +1,143 @@
+schemaVersion: 1
+session: session_013zxzeP4F3aYSUT97sA7pou
+startedAt: 2026-11-27T17:05:50Z
+endedAt: 2026-11-27T17:11:05Z
+kind: autonomous
+goal: Scheduled harvest of ideas and learnings into Seedlings
+status: completed
+outcome: "Three Seedlings filed (#3722, #3723, #3724); five clusters dropped; run stopped early, quota not filled."
+summary: "Scheduled harvest run, no human prompt; everything was agent-initiated within the Skill's remit (issues and this log only). Extracted 105 unharvested entries (59 ideas, 46 learnings), read the list and the 1518-line digest, and checked 8 clusters. Three passed and were filed as Seedlings: Midden trench wording (#3722), homepage card labels (#3723) and a Glass Box doc fact that renaming a page changes its URL (#3724). Five were dropped: two learnings already in github-integration.md, an Atlas idea already built or rejected in #3464, a Tinkerfund note already built, an unknown-cause filter rejected in #3246, and a stop-hook learning already commented in the hook. I stopped before the 30-cluster limit and did not fill the quota; Journal, Blog and Glass Box styling ideas were left unchecked. No retro Seedling: the one snag, a digest read over the token cap, is held by the open Ledger entry harvest-list-read-cost."
+prs: []
+docsRead:
+  - path: .agents/skills/retro/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/harvest/body-template.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+skillsUsed:
+  - name: harvest
+    reason: scheduled run
+  - name: close-session
+    reason: closure
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Read git-adjacent history and made GitHub reads and writes before docs/agents/git-conventions.md and github-integration.md; hooks reminded me afterwards.
+    solution: Read both docs at run start when the Skill will file issues.
+    severity: nit
+  - description: A 560-line Read of the harvest digest exceeded the token cap and cost a retry; the Skill gives no page size for the digest.
+    solution: State a page size of about 300 lines in step 3.
+    severity: minor
+  - description: Stopped after 8 clusters with the quota unfilled, because the digest and code checks used up the run budget.
+    solution: Cheaper per-cluster checks, such as a script that greps a cluster's quoted phrases in the repo.
+    severity: minor
+durationSec: 315
+models:
+  claude-sonnet-5-5: 78
+toolCounts:
+  Bash: 29
+  Read: 7
+  ToolSearch: 1
+  mcp__github__issue_read: 2
+  mcp__github__issue_write: 3
+  Skill: 2
+  PushNotification: 1
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0006.md
+        via: hint
+      - rule: .claude/rules/adr-0016.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/retro/SKILL.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/retro/SKILL.md
+      - rule: .claude/rules/adr-0025.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/guards.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+      - rule: .claude/rules/adr-0020.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: filed Seedlings as ready-for-human, built nothing
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: session header on each issue
+      - path: .claude/rules/adr-0009.md
+        value: steered
+        why: log only, no PR
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0006.md
+        value: unrelated
+      - path: .claude/rules/adr-0016.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/rules/tenant-layers.md
+        value: unrelated
+      - path: .claude/rules/ui-verification.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0025.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0008.md
+        value: unrelated
+      - path: .claude/rules/glossary-terms.md
+        value: unrelated
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: unrelated
+      - path: .claude/rules/guards.md
+        value: unrelated
+      - path: .claude/rules/adr-0022.md
+        value: unrelated
+      - path: .claude/rules/adr-0020.md
+        value: unrelated
+      - path: .agents/skills/harvest/body-template.md
+      - path: docs/agents/triage-labels.md
+gitBranch: claude/eager-cerf-0vhv5u
+entrypoint: remote_trigger
+cliVersion: 2.1.332
+trigger: harvest
+landedBy: Stop
