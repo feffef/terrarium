@@ -78,10 +78,10 @@ origin/main` and its diff.
      additions, named neither in CLAUDE.md's "Docs you must read first" nor by
      a `.claude/rules/` rule (ADR-0029): add the link.
      `docs/research/` is unindexed on purpose.
-  2. a new ADR from the last 48 hours that changes another ADR's decision while the old one still
-     states it (ADR-0030): rewrite the old ADR (it escalates).
+  2. a new ADR (last 48 hours) that changes another ADR's decision while the
+     old one still states it (ADR-0030): rewrite the old ADR (it escalates).
 
-  Older additions are out of scope. Never add a hand-kept ADR list to
+  Older ADRs are out of scope. Never add a hand-kept ADR list to
   `CLAUDE.md`.
 
 **Agent B, Single-home.**
