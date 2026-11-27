@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSaCTGsDruHYZ8cVWD
 startedAt: 2026-11-27T00:34:16Z
-endedAt: 2026-11-27T00:41:02Z
+endedAt: 2026-11-27T00:44:32Z
 kind: delegated
 goal: Find why main's gate was red and fix it
-status: in-review
-outcome: Fix PR opened and subscribed; awaiting CI, then merge
-summary: "The user's one instruction was to check why main's gate is broken and fix it; everything after was agent-initiated follow-through under ADR-0003/0004 (pushing, review, opening the PR). The safety-gate on main went red at 6910dae27 (merge of #3709), found through the check-run annotations. #3709 narrowed .claude/rules/mermaid-lanes.md paths, but tests/unit/rule-use.spec.ts:300 still expected the old glob. I updated that one assertion (da135f42c). pnpm test passed (3538 tests) and pnpm gate:scoped passed in full, build and e2e included. code-review (Standards and Spec subagents) found nothing blocking; both noted the test pins a live rule path, which will break again on the next narrowing, and I kept the minimal fix. PR feffef/terrarium#3711 is open and subscribed; merge via merge-pr.ts follows green CI."
+status: completed
+outcome: Fix merged; main gate green again
+summary: "The user's one instruction was to check why main's gate is broken and fix it; everything after was agent-initiated follow-through under ADR-0003/0004 (pushing, review, opening the PR). The safety-gate on main went red at 6910dae27 (merge of #3709), found through the check-run annotations. #3709 narrowed .claude/rules/mermaid-lanes.md paths, but tests/unit/rule-use.spec.ts:300 still expected the old glob. I updated that one assertion (da135f42c). pnpm test passed (3538 tests) and pnpm gate:scoped passed in full, build and e2e included. code-review (Standards and Spec subagents) found nothing blocking; both noted the test pins a live rule path, which will break again on the next narrowing, and I kept the minimal fix. PR feffef/terrarium#3711 passed CI, got a verdict comment and was merged with merge-pr.ts (8f00657d9)."
 prs:
   - "3711"
 docsRead:
@@ -36,20 +36,23 @@ frictions:
   - description: PR 3709 narrowed a rule's paths without updating the unit test that pins that rule's governsLine, turning main red for five pushes.
     solution: Pin a fixture rule in that test instead of the live rule file, so a paths change can't break it.
     severity: moderate
-durationSec: 405
+durationSec: 616
 models:
-  claude-sonnet-5-5: 64
+  claude-sonnet-5-5: 79
 toolCounts:
-  Bash: 19
+  Bash: 23
   Read: 4
   ToolSearch: 2
   Edit: 1
-  Skill: 3
+  Skill: 4
   Agent: 4
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   Write: 1
+  ReadNotifications: 2
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - tests/unit/rule-use.spec.ts
 rulesGlobal:
@@ -164,13 +167,13 @@ subagents:
     durationSec: 13
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 15.4
+    tokenShare: 12.7
   - type: general-purpose
     task: Spec review
     durationSec: 18
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 17.8
+    tokenShare: 14.6
 gitBranch: claude/vigilant-archimedes-fppair
 entrypoint: remote
 cliVersion: 2.1.332
