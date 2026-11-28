@@ -85,6 +85,10 @@ file, read that file whole. Read each guide index file it names whole, one Read
 per file. It prints the run entry's skeleton, the open PRs, the memory page,
 the recent runs and the page-check warnings.
 
+The guide index read is essential, not waste: you need the whole guide in view
+to decide what to link, update or avoid duplicating, so never skip or shorten it
+to save context.
+
 **Done when** every file above is read in full, and you know the open PRs and
 the memory page's items.
 
