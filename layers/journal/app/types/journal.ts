@@ -71,15 +71,13 @@ export interface SessionCardView {
 }
 
 // One rule row of a `ruleUse` log's card (#3020). `hover` holds the path and
-// how the rule loaded; `whys` are the main agent's reasons. Subagents show
-// loads only: they no longer rate (#3741).
+// how the rule loaded; `whys` are the main agent's reasons. The card shows the
+// main session only: a subagent no longer rates, and its loads stay in the log (#3741).
 interface RuleUseRowBase { path: string; title?: string; alwaysLoaded: boolean; hover: string }
 export interface RuleUseMainRow extends RuleUseRowBase { followedUp: boolean; value?: RuleValue; whys: string[] }
-export interface RuleUseSubagentRow extends RuleUseRowBase { loadedBy: number }
 export interface RuleUseView {
   // null: the log has no main entry, so whether main answered is unknown.
   main: { answered: boolean | null; rules: RuleUseMainRow[] }
-  subagents: { total: number; rules: RuleUseSubagentRow[] }
 }
 
 // ── Ideas & learnings (issue #440) ───────────────────────

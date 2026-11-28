@@ -553,26 +553,13 @@ describe('sessionCardViews', () => {
       })
     })
 
-    it('tallies subagents per rule by loads only, whether or not an old log rated them', () => {
+    it('shows no subagent rules on the card, old rated logs included', () => {
       const c = view({
-        subagents: [{ type: 'Explore', task: 'scan' }, { type: 'Explore', task: 'check' }, { type: 'Explore', task: 'late' }],
-        ruleUse: [
-          { by: 'Explore', subagent: 0, answered: true, loads: [load('adr-0004.md', 'native', 'a.ts')], reported: [{ path: '.claude/rules/adr-0004.md', value: 'backed', why: 'x' }] },
-          { by: 'Explore', subagent: 1, answered: true, loads: [load('adr-0004.md', 'native', 'a.ts')], reported: [] },
-          { by: 'Explore', subagent: 2, answered: false, loads: [load('adr-0004.md', 'hint')], reported: [] },
-        ],
+        subagents: [{ type: 'Explore', task: 'scan' }],
+        ruleUse: [{ by: 'Explore', subagent: 0, answered: true, loads: [load('adr-0004.md', 'native', 'a.ts')], reported: [{ path: '.claude/rules/adr-0004.md', value: 'backed', why: 'x' }] }],
       })
       expect(c.ruleUse!.main).toEqual({ answered: null, rules: [] })
-      expect(c.ruleUse!.subagents).toEqual({
-        total: 3,
-        rules: [{
-          path: '.claude/rules/adr-0004.md',
-          title: undefined,
-          alwaysLoaded: false,
-          hover: '.claude/rules/adr-0004.md\nnative 2 · hint 1\ntriggered by a.ts ×2',
-          loadedBy: 3,
-        }],
-      })
+      expect(c.ruleUse).not.toHaveProperty('subagents')
     })
 
     it('shows the session-wide always-loaded rules under main on a log with no start loads', () => {
@@ -590,7 +577,6 @@ describe('sessionCardViews', () => {
         ],
       })
       expect(c.ruleUse!.main.rules.map((r) => [r.path, r.value, r.hover])).toEqual([['.claude/rules/adr-0012.md', 'steered', '.claude/rules/adr-0012.md\nno load recorded']])
-      expect(c.ruleUse!.subagents.rules.map((r) => [r.path, r.loadedBy])).toEqual([['.claude/rules/adr-0012.md', 0]])
     })
 
     it('says who reported a doc instead of "no verdict"', () => {

@@ -34,7 +34,7 @@ const prParts = computed(() => ({
 const NO_VERDICT = 'no verdict provided'
 const ruleUseCount = computed(() => {
   const u = card.ruleUse
-  return u ? new Set([...u.main.rules, ...u.subagents.rules].map((r) => r.path)).size : 0
+  return u ? new Set(u.main.rules.map((r) => r.path)).size : 0
 })
 const tokenBar = computed(() => sessionTokenBar(card.subagents, card.kind))
 const hoveredSeg = ref<string | null>(null)
@@ -203,20 +203,6 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
                   <div v-for="w in r.whys" :key="w" class="entry-reason">{{ w }}</div>
                 </li>
               </ul>
-              <template v-if="card.ruleUse.subagents.total">
-                <h4 class="rule-group">
-                  Subagents <span class="n">{{ card.ruleUse.subagents.total }}</span>
-                </h4>
-                <ul>
-                  <li v-for="r in card.ruleUse.subagents.rules" :key="r.path">
-                    <div class="entry-head">
-                      <JournalHint :text="r.hover">{{ r.title ?? r.path }}</JournalHint
-                      ><span v-if="r.alwaysLoaded" class="always">always loaded</span
-                      ><span v-if="!r.alwaysLoaded" class="via">{{ r.loadedBy ? `loaded by ${r.loadedBy}` : 'no load recorded' }}</span
-                    ></div>
-                  </li>
-                </ul>
-              </template>
             </details>
             <details v-else-if="card.rules.length" class="trace">
               <summary>Rules loaded <span class="n">{{ card.rules.length }}</span></summary>
