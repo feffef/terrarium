@@ -14,26 +14,6 @@ fixes:
     date: "2026-11-22"
     summary: "audit-skills prune-observations.ts reports today's notes outside the 300-500 word range (print-only)"
 occurrences:
-  - session: session_013zxzeRd1qkgnadmWbZLoZu
-    date: "2026-11-13"
-    severity: nit
-    description: "The Digest prose was 264 words against the Skill's 250 cap; code-review caught it and it cost one more commit before the gate."
-    solution: "Count the prose words before committing the draft."
-  - session: session_013zxzeQ9FTpQjBywTHWkdXF
-    date: "2026-11-13"
-    severity: minor
-    description: "The first version of the draft used the retired term 'Skill pack' fifteen times though GLOSSARY.md is loaded at start and says to write 'installed Skill'; the standards reviewer caught it."
-    solution: "Grep a new doc for the glossary's retired terms before committing; a lint rule over docs/ for the retired-term list would catch it without a reviewer."
-  - session: session_013zxzeSvCUWdcpBdHi4sdX2
-    date: "2026-11-13"
-    severity: nit
-    description: "Neutral doc first draft named GitHub-like hosts and multi-tenant machinery despite the no-repo-names brief; found only by a grep after writing."
-    solution: "Grep the draft for repo and product terms before reporting it done."
-  - session: session_013zxzeNmq54AMia53quaCHn
-    date: "2026-11-13"
-    severity: minor
-    description: "The draft was written at about 6900 words against the owner's \"about 4800\"; the size was only measured after writing."
-    solution: "Budget words per section before writing a document with a stated length."
   - session: session_013zxzeQnCCyBdXZDEv9qTNh
     date: "2026-11-14"
     severity: minor

@@ -3,15 +3,7 @@ surface: outside
 summary: Agents called a deferred tool under the wrong name or without loading its schema, and the call failed once.
 cause: "A deferred MCP tool (subscribe_pr_activity, Monitor) is called with a guessed prefix or before ToolSearch loads its schema; resolution is by fully-qualified name only (github-integration.md 'Resolving deferred tool names'). Signals: 'No such tool available', 'mcp__github__subscribe_pr_activity', 'without loading its schema'."
 status: open
-related:
-  - entry: github-transient-errors-on-push-subscribe-merge
-    rule: The call failed with GitHub 5xx or access-verification errors that went away on retry.
 occurrences:
-  - session: session_013zxzeQpVcWQaKyrR36MwpN
-    date: "2026-11-13"
-    severity: nit
-    description: "Monitor tool schema was not loaded, so my first call failed validation until a ToolSearch"
-    solution: "Load deferred tools with ToolSearch before first use"
   - session: session_013zxzeSpYABZ15tUzNbPJN9
     date: "2026-11-17"
     severity: nit

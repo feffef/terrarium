@@ -10,6 +10,7 @@ related:
 notes: |-
   2026-11-04 reopened: fix #2768 (2026-11-02) merged after the owner accepted it on 2026-10-27.
   2026-11-18 owner decision (#3425): the prune trial of 2026-11-14 (184c36f06) cut the read-first lines of #2768, #3136 and #3196, and the denial share rose from 22.3% to 43.1%; one short line, "Read the `dispatch-subagents` Skill before your first dispatch.", is restored in visitor-loop, blog-post, clear-backlog and glassbox-curate.
+  2026-11-28 issue #3732: guard ignores a read through the .claude/skills symlink (a distinct mechanism from the accepted cost; guard is Human-only); status unchanged
 fixes:
   - pr: 2768
     date: "2026-11-02"

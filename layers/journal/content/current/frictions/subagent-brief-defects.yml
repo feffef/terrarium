@@ -48,11 +48,6 @@ notes: |-
   2026-11-13 survey: Le6nsJ (2026-11-12) dispatched PAGES_PLACEHOLDER and FULL_PLACEHOLDER unfilled; the #3064 guard pattern (@@NAME@@ or braces) does not match that form. Issue #3227 (audit-skills, opened 2026-11-13) tracks unfilled placeholders.
   2026-11-23 prune trial (dispatch-subagents §3 cut) judged: it holds; the post-cut rise (6/36 vs 14/218) traces to clear-backlog-build.js rules(), not the cut text
 occurrences:
-  - session: session_013zxzePfDFCA2whsn1WaK5j
-    date: "2026-11-13"
-    severity: nit
-    description: "The builder looked for list-human-only-paths.ts in the wrong place and reported it missing; the brief named no path."
-    solution: "Give the full script path in builder briefs."
   - session: session_013zxzePH9gQTPAHjR7vCj71
     date: "2026-11-15"
     severity: minor

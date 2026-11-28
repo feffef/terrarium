@@ -22,16 +22,6 @@ fixes:
     date: "2026-11-01"
     summary: "CLAUDE.md Self-verification: after changing a type or a test, run pnpm typecheck and the touched spec before gate:scoped."
 occurrences:
-  - session: session_013zxzeNiyBNZD3Zn5dUm9Bq
-    date: "2026-11-13"
-    severity: minor
-    description: "The first retro-step commit invoked close-session in both step 4 and step 5, contradicting the #3244 timing I had just written; review caught it."
-    solution: "When a Skill step and its standing issue state the same order, write the order once in the issue and check the Skill against it before committing."
-  - session: session_013zxzeR9vRBRGWAa4ScJTRD
-    date: "2026-11-13"
-    severity: minor
-    description: "First edit left stale 'standalone' and 'two earlier drafts' wording that both reviewers caught; needed a second commit."
-    solution: "After removing a reference, grep the README and sibling docs for other statements of the same fact before committing."
   - session: session_013zxzeSgAcwDrJXAMFAC4Qf
     date: "2026-11-17"
     severity: minor

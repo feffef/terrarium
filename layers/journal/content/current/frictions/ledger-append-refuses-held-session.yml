@@ -16,11 +16,6 @@ fixes:
     date: "2026-11-17"
     summary: "print-ledger-occurrence --append --skip-held skips sessions the entry already holds and prints each skip"
 occurrences:
-  - session: session_013zxzeNdAgdKF5tpWTQLowx
-    date: "2026-11-13"
-    severity: minor
-    description: "Survey subagent: brief 2.1's once-per-entry rule means a session's second Friction with the same cause is never stored, so --unledgered offers it again every run (about 25 this run)."
-    solution: "Let extract-frictions --unledgered drop a Friction whose session already sits in the entry it would match, or accept the re-offer in the brief."
   - session: session_013zxzeSyRCdzfotAbmBuiPp
     date: "2026-11-16"
     severity: minor

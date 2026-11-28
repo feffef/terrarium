@@ -2,7 +2,7 @@ name: reviewer-findings-mostly-wrong
 summary: "Most of a review round's findings were rejected by the checkers, so the reviewer tokens bought little."
 cause: "Reviewers raise findings (drift in dated research snapshots, etc.) without verifying them against source, and the checker round marks most WRONG. Signals: 'WRONG', checkers contradicting each other, fraction of findings rejected."
 surface: safe
-status: open
+status: tracked
 related:
   - entry: followup-review-overcost
     rule: Findings were raised and rejected by checkers; here the cost is wrongness, not re-running.

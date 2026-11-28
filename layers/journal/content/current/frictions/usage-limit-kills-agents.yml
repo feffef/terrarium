@@ -9,16 +9,6 @@ related:
 notes: |-
   2026-11-16 design: no change: the cause is the account usage limit; get_session rate_limit_info shows no remaining quota, so a pre-check cannot predict it. dropped: nothing in the repo helps; the survey's lighter confirm step lowers load.
 occurrences:
-  - session: session_013zxzeNdAgdKF5tpWTQLowx
-    date: "2026-11-13"
-    severity: moderate
-    description: "The account's 5-hour usage limit hit mid-run: two reviewers and two builders died at once and the run sat idle about 90 minutes until resumed."
-    solution: "Nothing in the repo; the run dispatches up to four subagents at once on top of a 255k-token survey. A cheaper survey would leave more room."
-  - session: session_013zxzeS6AE1WUN124PHnm4b
-    date: "2026-11-13"
-    severity: nit
-    description: "A Standards reviewer subagent died on the 5-hour rate limit, so the first code-review round had only one axis until I reran it."
-    solution: "Check rate_limit_info in get_session before launching parallel reviewers late in a long session."
   - session: session_013zxzePQedy4SaB83pQYkET
     date: "2026-11-26"
     severity: moderate

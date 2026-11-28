@@ -11,11 +11,6 @@ fixes:
     date: "2026-11-12"
     summary: "preview.ts shot and review take a repeatable --storage KEY=VALUE that seeds localStorage before the page loads; clipping one element is not covered."
 occurrences:
-  - session: session_013zxzeQrRhhVjja2AkCLcyV
-    date: "2026-11-13"
-    severity: minor
-    description: "preview.ts shot only captures whole pages; a 6000px full-page shot was unreadable, so I wrote a throwaway Playwright script to clip one element."
-    solution: "Add a --selector option to preview.ts shot and screenshot.ts."
   - session: session_013zxzePH9gQTPAHjR7vCj71
     date: "2026-11-15"
     severity: minor

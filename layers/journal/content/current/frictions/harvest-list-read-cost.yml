@@ -2,7 +2,8 @@ name: harvest-list-read-cost
 summary: A harvest run read its whole list of ideas and learnings, 60,000 to 90,000 tokens over several reads, and then checked only a small part of it.
 cause: "Comes from harvest-first-pass-shallow and PR #3106: the harvest Skill has the run read the whole list (270 to 577 lines) before it stops at a capped number of clusters, and many entries are old ideas for a removed Skill (glassbox-improve). The harm is read cost, not a shallow pass. Since PR #3454 (2026-11-18) step 1 reads the list in pages with a last-entry count check, since PR #3470 a harvest evidence command replaced per-cluster hand searches, since PR #3505 it read a saved issue list, and PR #3532 (2026-11-20) ranked and capped each group's tracker block at 10 hits; the list read was still whole. PR #3707 (2026-11-26) replaced keyword evidence with a harvest digest of about 181 KB read whole; its read cost is unmeasured on a scheduled run. Signals: 'whole read of 577 lines took about 90,000 tokens', 'read the whole 561-line harvest list', 'then checked only 17 clusters', many hand-run searches per cluster, 'each harvest evidence call took about 33 s', '5,215 lines', '3,625 lines for nine groups'."
 surface: safe
-status: open
+status: tracked
+ref: "#3731 (regression of PR #3707)"
 related:
   - entry: harvest-first-pass-shallow
     rule: The harm is a shallow pass or a skipped step, not the read cost.

@@ -14,16 +14,6 @@ notes: |-
   2026-11-13 design: run-entry writer script or Skill line dropped: only 2 of the 4 new occurrences hit run-entry YAML (both nits, caught in-run), the wrapping is the session's own and no script owns the entry.
   2026-11-14 design: no change: a guard or prose line dropped: every slip was caught by an assertion, diff or git, a guard is Human-only and would flag legitimate migration scripts. Cause text cites a CLAUDE.md Read-tool rule that is not in CLAUDE.md.
 occurrences:
-  - session: session_013zxzeRbcVWW7Upv1bSok39
-    date: "2026-11-13"
-    severity: minor
-    description: "A bulk regex rename turned Terrarium evidence (Frictions, visitor-loop) into the new template terms; caught on a re-read and restored by hand"
-    solution: "Scope term renames to requirement statements and list each hit before replacing"
-  - session: e5f88467-c386-4b88-8c16-b9786c748d41
-    date: "2026-11-13"
-    severity: nit
-    description: "My mutation check of the new test first edited nothing: sed's pattern missed a list item that ends a line, so the test passed and I had to retry"
-    solution: "Check git diff --stat after a mutation, before reading the test result"
   - session: session_013zxzeQ65iPt7YSAHWJBs1q
     date: "2026-11-15"
     severity: nit

@@ -22,21 +22,6 @@ fixes:
     date: "2026-11-09"
     summary: "glassbox-curate SKILL.md states the Subject read as a Done-when (every Subject page read in full, plus outside pages a change would edit) and drops the removal-only exemption."
 occurrences:
-  - session: session_013zxzeRxyNcwt53TXLHjTsg
-    date: "2026-11-13"
-    severity: minor
-    description: "The Skill asks for every Subject page in full, but with the budget I read only the pages I edited; the run entry states it."
-    solution: "Let the Skill say which pages count as the Subject when the focus is a topic list, not a Subject."
-  - session: session_013zxzeSYMKya1mzpFJhAcSk
-    date: "2026-11-13"
-    severity: minor
-    description: "Skill said to read the Subject in full before editing; I edited after grepping most pages, and review caught it, forcing a late full read."
-    solution: "Read the Subject's pages in full right after the orientation, before any edit."
-  - session: session_013zxzeS6AE1WUN124PHnm4b
-    date: "2026-11-13"
-    severity: minor
-    description: "glassbox-curate asks for a Scout, fresh readers, a claim checker and a full read of every linked page; with an interactive ask I skipped most of that and read only three pages, so the review had to flag it."
-    solution: "Say in the Skill which steps an interactive, chips-and-terms-only run may skip, so the choice is not an improvised deviation."
   - session: session_013zxzePak78Sud7pyRQMjeV
     date: "2026-11-15"
     severity: minor

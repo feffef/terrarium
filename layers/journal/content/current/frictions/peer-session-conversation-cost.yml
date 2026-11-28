@@ -8,11 +8,6 @@ fixes:
     date: "2026-11-16"
     summary: "dispatch-subagents new §7: open a peer exchange with owner-contact and a round limit, pre-authorise surveys, reuse subagent answers."
 occurrences:
-  - session: session_013zxzeP357BagrJREfWSJ6U
-    date: "2026-11-13"
-    severity: minor
-    description: "I relayed each owner statement to the other session and each of its replies back until the owner told me to stop relaying everything."
-    solution: "Ask once, when an exchange with another session starts, which side talks to the owner and what gets passed on."
   - session: session_013zxzePH9gQTPAHjR7vCj71
     date: "2026-11-15"
     severity: moderate

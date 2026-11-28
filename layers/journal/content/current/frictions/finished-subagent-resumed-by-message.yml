@@ -7,11 +7,6 @@ notes: |-
   2026-11-16 design: no change: #3068 (PR #3090) already added the dispatch-subagents §6 resume bullets; the three later occurrences are a typo-class slip, a nit and the already-covered redelivery. dropped: more prose has no sufficient reason.
   2026-11-19 design: no change dropped: dispatch-subagents §6 holds the resume rule and the session read it; no mechanism can tell a needed resume from an idle one.
 occurrences:
-  - session: session_013zxzeRbcVWW7Upv1bSok39
-    date: "2026-11-13"
-    severity: minor
-    description: "Sent owner corrections to agents that had already finished, so each was resumed and re-ran part of its work"
-    solution: "Settle load-bearing premises with the owner before dispatch (dispatch-subagents step 1); grill earlier"
   - session: session_013zxzeT3bxsaccpcz9P65Ra
     date: "2026-11-14"
     severity: nit

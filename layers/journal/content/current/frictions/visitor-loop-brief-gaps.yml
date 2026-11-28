@@ -17,21 +17,6 @@ fixes:
     date: "2026-11-23"
     summary: "visitor-brief.md gains cross-site reading facts (overflow is documentElement.scrollWidth, skip 0x0 hidden links, color(srgb) backgrounds) and the informed visitors' context file gains four Tenant facts."
 occurrences:
-  - session: session_013zxzeNiyBNZD3Zn5dUm9Bq
-    date: "2026-11-13"
-    severity: moderate
-    description: "First brief rewrite still leaked repo-root and other-visitor hints to the blind visitor; two extra review rounds and commits to remove them."
-    solution: "When a brief serves both blind and informed agents, write the blind variant first and grep it for repo, git and peer mentions before committing."
-  - session: session_013zxzeQpVcWQaKyrR36MwpN
-    date: "2026-11-13"
-    severity: minor
-    description: "Visitor brief says to run from the working directory but never says to use absolute output paths; the blind visitor's screenshots landed in the repo root and tripped the Stop hook"
-    solution: "Add to visitor-brief.md: run tsx from the repo root and write every output as an absolute path in the scratch folder"
-  - session: session_013zxzeRifuq1jTn2WseeBhP
-    date: "2026-11-13"
-    severity: minor
-    description: "The brief's 'without changing directory' rule has no reason, so two visitors hit ERR_PNPM_RECURSIVE_EXEC_NO_PACKAGE after a cd; the brief also names resolveChromiumPath where launchChromium adds the sandbox flags."
-    solution: "In visitor-brief.md say pnpm needs the repo as cwd, and point to launchChromium."
   - session: session_013zxzeQsCq5g9jeQpmsULPZ
     date: "2026-11-16"
     severity: minor

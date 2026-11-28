@@ -14,11 +14,6 @@ fixes:
     date: "2026-10-31"
     summary: "environment-caveats.md replaces the guess at the guard's triggers with a dated probe list: only $VAR expansion in a git command was refused; one git command per call with literal paths."
 occurrences:
-  - session: session_013zxzeNiyBNZD3Zn5dUm9Bq
-    date: "2026-11-13"
-    severity: nit
-    description: "A combined printf-and-commit Bash call was blocked whole by the gate-edit guard, so the message file was never written and the retry failed."
-    solution: "Write commit messages with the Write tool, separate from the git call (git-conventions.md already says keep git apart)."
   - session: session_013zxzeNd9wP36dUYyykDdBv
     date: "2026-11-18"
     severity: minor
