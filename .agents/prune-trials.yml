@@ -84,18 +84,17 @@ trials:
       damage. NOT damage: a refusal `merge-pr.ts` raises on a diff that fails
       the simple-change test the doc still states.
   - problem: >
-      `.agents/skills/dispatch-subagents/SKILL.md` plainly condensed (-46 words:
-      1129 -> 1083 by `wc -w`; -6 lines by `git diff --numstat`, 36 added, 42
+      `.agents/skills/dispatch-subagents/SKILL.md` plainly condensed (-31 words:
+      1129 -> 1098 by `wc -w`; -5 lines by `git diff --numstat`, 37 added, 42
       deleted): restatements merged (impl-agent bans, collision and resume
       sections), every rule, section number and heading kept (Skills cite
       `dispatch-subagents` §3 and "Scope and trust"). Small because an earlier
       trial (PR #2324, judged 2026-11-23) already cut this text. Chosen after a
-      search subagent this run searched the ledger `fixes:` lists and 'Regression'
-      issue titles: `subagent-brief-defects` (8 fixes; #2610, #2996),
-      `relayed-subagent-claims`, `counts-not-tallied`, `premise-not-questioned`
-      (5 regression issues, CLAUDE.md prose, 63 words, left uncut). Counts are the
-      subagent's, not re-verified. Largest prose mass among the failed rules.
-      `dispatch-read-guard.ts` backs only the placeholder and Skill-read checks.
+      search subagent this run searched ledger `fixes:` lists and 'Regression'
+      issue titles (not read: bodies, `guards.md` beyond its roster); it ranked
+      the subagent-brief rules by largest prose mass among those with failures.
+      Its counts are unverified here, so none are cited. `trial-territory.ts` run
+      this run: no overlap. Sonnet probe pinned to 10841085bebc passed.
     territory:
       paths:
         - ".agents/skills/dispatch-subagents/SKILL.md"

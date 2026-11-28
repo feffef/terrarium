@@ -9,7 +9,8 @@ Goal: every subagent's work lands, is right, and is never **stranded**
 ## 1. Lock the shared design axis first
 
 If several subagents' outputs depend on one **load-bearing** choice (what the
-owner will see, a length bound, who owns a shared item), settle it first with
+owner will see, a length bound, who owns a shared item; even two agents
+on a small pass), settle it first with
 the `grilling` Skill; a choice that shifts after agents start forces a full
 redo. More than 3 agents from one brief you improvised this session: run one
 first and check its result before the rest. A brief defined in the repo needs
@@ -42,7 +43,7 @@ applies.
   HEAD matches and re-branches if not (issue #1420). Agents sharing one checkout
   each get an explicit SHA.
 - Never move a checkout someone else is on. A review or read-only agent reads
-  with `git show <sha>:<path>` or `git diff`, or checks the PR's SHA out detached
+  with `git show <sha>:<path>` or `git diff` (never the branch name), or checks the PR's SHA out detached
   in its own worktree; outside that worktree it never runs `checkout`, `switch`
   or `reset`, and its brief says so. To experiment, it copies a file aside.
 - Impl agents on the branch you have checked out: detach your checkout first and
@@ -97,7 +98,7 @@ in any order; edits in adjacent regions conflict silently (issue #603).
 Before you finish, push every reviewed branch and remove the worktree of any
 branch you dropped (`log-session --author` enforces this and removes clean
 merged worktrees; `EXCUSALS` in `scripts/git/check-worktrees.ts` lists the
-exceptions). If you `cd`'d into a subagent's worktree, `cd` back and re-check
+exceptions). If you `cd`'d into a subagent's worktree, `cd` back (or use absolute paths) and re-check
 `git status` at the root: a Session closure Stop-hook flag may belong to that
 worktree.
 
