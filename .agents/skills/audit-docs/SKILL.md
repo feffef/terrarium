@@ -58,7 +58,9 @@ lenses.
    (reviewers get them wrong). A finding outside its own lenses is still
    reported, named by its lens, and joins the pool like any other. Tell them
    to skip text an open trial in `.agents/prune-trials.yml` covers (ADR-0027).
-   Tell each to end its reply with the Live files it did not read.
+   Tell each to end its reply with the Live files it did not read. Tell them
+   the bar in §3 step 2 for a rewrite or cut, and to propose no edit to an
+   Inventory entry's `watchFor` (ADR-0015).
 4. Save each agent's reply verbatim into the pool, a new scratchpad folder:
    `pnpm exec tsx scripts/session/save-handback.ts <agent-id> <pool>/<agent-id>.md`.
    Never resume a reviewer to finish; the next run covers what it skipped.
