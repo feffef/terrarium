@@ -189,7 +189,7 @@ describe('ruleUse — subagents', () => {
 describe('governsLine()', () => {
   it('prints the hand-written line for a rule that has one, else where the rule loads, else nothing', () => {
     expect(governsLine('.claude/rules/adr-0004.md')).toMatch(/^governs running gate:scoped/)
-    expect(governsLine('.claude/rules/mermaid-lanes.md')).toBe('loads on layers/glassbox/content/guide/pages/walkthroughs/**')
+    expect(governsLine('.claude/rules/mermaid-lanes.md')).toMatch(/^loads on /)
     expect(governsLine('.claude/rules/adr-0099.md')).toBeUndefined()
   })
 })

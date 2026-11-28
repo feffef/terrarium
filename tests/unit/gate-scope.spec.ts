@@ -40,6 +40,10 @@ describe('isInert()', () => {
     expect(isInert('docs/research/diagram.png')).toBe(false)
   })
 
+  it('treats a rule as non-inert although it is a .md: unit tests read it (#3713)', () => {
+    expect(isInert('.claude/rules/adr-0004.md')).toBe(false)
+  })
+
   it('keeps .claude paths outside skills/, and the real Skill bodies, on their own footing', () => {
     expect(isInert('.claude/settings.json')).toBe(false)
     expect(isInert('.agents/skills/wayfinder/scripts/run.ts')).toBe(false)
@@ -80,6 +84,17 @@ describe('decideScope()', () => {
     const scope = decideScope(['.claude/workflows/clear-backlog-build.js', '.agents/skills/clear-backlog/SKILL.md'])
     expect(scope).toMatchObject({ skipHeavy: false, skipBuild: true })
     expect(planSteps(scope)).toEqual([...FLOOR, 'test'])
+  })
+
+  it('treats a rule as a Skill file: skips build + e2e, runs test (#3713)', () => {
+    const scope = decideScope(['.claude/rules/adr-0004.md'])
+    expect(scope).toMatchObject({ skipHeavy: false, skipBuild: true })
+    expect(planSteps(scope)).toEqual([...FLOOR, 'test'])
+  })
+
+  it('runs the full gate when a rule comes with a code path (#3713)', () => {
+    const scope = decideScope(['.claude/rules/adr-0004.md', 'scripts/gate/gate.ts'])
+    expect(planSteps(scope)).toEqual([...FLOOR, ...HEAVY])
   })
 
   it('runs the full gate when a Skill file comes with any other non-inert path', () => {
