@@ -4,6 +4,7 @@ focus: "Web standards: a new Lesson on responsive layout (media queries, fluid s
 changes:
   - "web-standards/15.responsive-layout | New Lesson Responsive layout (viewport meta, media queries and paired breakpoints, clamp(), auto-fit and auto-fill grids, container queries), with Glass Box's and the Blog's breakpoint pairs, the Blog's Network panel and Tinkerfund's Campaign page as evidence, plus two new terms (viewport, breakpoint) | no page taught it though every tenant's CSS uses it. The claim check found two false or overstated sentences (the Blog's narrow cards still show an epithet and latest title, so not 'names only'; the front-door panel is under 30rem only from 60rem up) and two comment-only claims; all fixed or softened. The fresh reader's wishes for a cost in each Why bullet and a weaker Updated excerpt are not false and are left. Waits for the owner's merge (new Lesson)"
   - web-standards/40.colour-and-motion-settings, web-standards/55.minimum-target-size, verification/80.headless-browser-checks | Where next gains Responsive layout in place of Mermaid pre-rendering, Testing and Mermaid pre-rendering | each uses media queries or checks a layout at 390px, and the new page had no other page listing it. Wording only
+  - walkthroughs, web-standards/10.css-custom-properties, web-standards/50.colour-contrast | Not edited | no Walkthrough stop explains a responsive mechanism, and the two lessons mention media queries only for dark mode and contrast, so their Where next lists keep closer entries
   - workshop/pages/index | Responsive layout added to the web standards direction; a weak-spot line says which of its reasons no source gives | solved by the new Lesson, and the missing reasons are left for a later run
 pagesRead:
   - web-standards/10.css-custom-properties
@@ -14,3 +15,7 @@ pagesRead:
   - web-standards/50.colour-contrast
   - web-standards/55.minimum-target-size
   - verification/80.headless-browser-checks
+  - nuxt-vue/layers
+  - verification/testing
+  - nuxt-content/mermaid-pre-rendering
+  - drafts/web-standards/60.horizontal-overflow
