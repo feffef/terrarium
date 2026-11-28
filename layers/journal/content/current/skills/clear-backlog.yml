@@ -8,26 +8,10 @@ role: >-
   up: explores them, grills the owner once, then builds, reviews and lands the PRs unattended. For a deliberate "clear
   everything now" pass.
 auditSummary:
-  date: "2026-11-27"
-  text: "Reliably clears the backlog in one run: its PRs merge and the issues close. It twice put an unchecked assumption to the owner as a question, which cost an extra round each time."
+  date: "2026-11-28"
+  text: "Triages the open issues, asks the owner once and lands the chosen fixes, with reviews that catch real defects. It sometimes offers the owner an option whose premise it never checked, costing a question and a fix round."
 
 observations:
-  - date: "2026-10-18"
-    note: >-
-      Self-check (audit-skills behaviour check): all 10 usedIn sessions
-      checked, 27 PRs + 3 issues cross-verified against live GitHub - no new
-      silent failures. Both known failures (session_015LwBgLjaCn36ayZedges6G's
-      skipped §1 explore, fixed via merged PR #1864; session_017NBxJhtBSd9AoCwTzsg6pM's
-      unreviewed 3m15s self-merge, which itself produced issue #1844, closed
-      via merged PR #2058) reconfirmed still fixed, not reverted. PR
-      #2211/#2215 ("Drop clear-backlog silent-chat rule") is a deliberate,
-      owner-approved removal via grilling, not a silent regression. Worth
-      watching, not escalated: `clear-backlog-build`'s self-reported
-      `gatePassed`/Human-only fields have been wrong more than once (always
-      caught before merge); PR #1948 landed a structural fix (read
-      Human-only paths from the diff, not from build agents) but
-      `gatePassed` itself still relies on self-report per the workflow's
-      schema. No new finding. Grade unchanged (specialist).
   - date: "2026-10-19"
     note: >-
       Self-check (audit-skills behaviour check), 2 sessions freshly
@@ -219,3 +203,45 @@ observations:
       pick. Next focus: the ruleUse and subagent bulk of the three older logs,
       the explore agents' comment authorship and labels, and whether --triage
       flags a grill with no writes.
+  - date: "2026-11-28"
+    note: >-
+      Behaviour check of session_013zxzeQLTeC8GETW73Aho8C (11-26) and
+      session_013zxzePxkwAcvTVUDd7sToK (11-25), both owner-invoked; the last
+      SKILL.md commit is 18b36e659 (11-23), while the clear-backlog-build.js
+      workflow changed during the window (dc7a91146 from PR #3687, d60c98c0e and
+      89f8bf3b9 from PR #3706). No watchFor items on this entry. The Skill
+      promises to triage open issues, ask the owner once, build the chosen
+      branches with Standards and Spec review, and land the PRs. Verified by gh
+      api: the 11-26 run merged #3706, #3707, #3708 and #3709 and closed #3680,
+      #3681, #3682, #3698, #3699 and #3340 as completed; #3705 is open (needs-triage) as its log says. The 11-25 run merged #3687, #3688 and #3689
+      within 06:11 to 06:28Z and closed #3663, #3675 and #3662. Every explore
+      and owner-decision comment on all nine issues carries the right session
+      header. The ready-for-human labels on #3662 and #3675 were set by explore
+      and changed after the grill, as the log says. subscribe_pr_activity was
+      called once per PR (4 and 3), close-session is in skillsUsed in both, and
+      grilling ran in both. The retro step held: four replies on 11-26, three on
+      11-25, each recorded as a Friction. No revert in a 14-day grep; later
+      commits are follow-ups. Merged_by is the owner for every PR, so owner and
+      agent merges cannot be told apart. Repeats, n=2: an owner pick put forward
+      without checking a premise that explore marked unverified. On 11-25 the
+      audit-count premise did not exist (moderate, "cost an extra owner question
+      and a fix round"); on 11-26 a SubagentStart default for read-only
+      subagents was offered when "no hook can tell a read-only reviewer from a
+      builder". Section 2 says to verify each pick's claim but says nothing
+      about optionChecks entries marked unverified. Read-first docs late in both
+      runs, and reviewers echoing rule use, repeat. The line-19 no tool calls
+      while waiting rule was broken on 11-26 (second sighting). Single
+      sightings: the Stop hook asked for a push before the gate passed,
+      conflicting with the push-after-gate step; a spec ran in the main checkout
+      instead of the worktree (67 tests, not 49); a builder's decisions.md
+      claimed no Glass Box lesson hit while its grep missed a stale clause; on
+      11-25 a brief named a script without its path. The 11-26 summary says
+      nothing is open while #3705 is, ambiguous rather than false. Review value:
+      each Standards or Spec round caught a real defect on 11-26 and the 11-25
+      Spec round caught the missing audit count, so the rounds earn their cost,
+      though the Both round on a two-line branch only re-found a nit. Role and
+      gist read as current. Idea: in section 2's verify sentence, add that
+      optionChecks entries marked unverified are settled by grep or asked as an
+      open question, not offered as picks. Importance specialist, unchanged.
+      Next focus: the ruleUse and subagent bulk of both logs, and whether the
+      triage flag fires on a grill with no writes.

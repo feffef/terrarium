@@ -9,28 +9,10 @@ role: >-
   PR, except a trial changing an ADR or its summary rule starts only with a
   Trusted user and a human merges it.
 auditSummary:
-  date: "2026-11-27"
-  text: "Cuts instruction text down and records each cut as a trial, which lands as a reviewed PR; the latest one matches its log. A run that should have flagged a repeated no-trial result for retirement did not mention it."
+  date: "2026-11-28"
+  text: "Opens and judges trials on measured rates, and each landed run did what its log says. Its judging relies on remembering earlier runs, and a rate doubling in the newest judgement was accepted without a confirmed issue."
 
 observations:
-  - date: "2026-10-18"
-    note: >-
-      Self-check (audit-skills behaviour check): all 8 usedIn sessions
-      checked. REPEATED finding, escalated as issue #2228: the 2026-10-16
-      observation's line-delta discrepancy (session_0147UencKKZS3WLHvsbgywp7,
-      PR #2063, close-session SKILL.md prune) independently re-derived from
-      source again this run - PR title/body/live ledger entry still say
-      "60→46, -14" but `git show --numstat 97721ad0` confirms the real
-      delta is 59→40, -19 - and it is STILL uncorrected in the open,
-      unjudged `.agents/prune-trials.yml` entry two runs later. Two
-      independent audits now agree; filed since the trial's eventual
-      verdict risks being judged against a wrong baseline. Ledger otherwise
-      healthy: 4 open trials, all correctly "not yet judgeable," no
-      reverts in the 2-week sweep. Human-merge compliance held on every
-      Human-only-touching PR checked (#2223, #2165/#2168), and PR #1813's
-      2026-10-12 self-merge via the then-existing `--prune-trial` flag
-      reconfirmed compliant with the rule in force at the time. Grade/role
-      unchanged.
   - date: "2026-10-19"
     note: >-
       Self-check (audit-skills behaviour check), 8/8 usedInLogs sessions
@@ -201,3 +183,47 @@ observations:
       Next focus: the SHA reported by each probe in subagent output, whether a
       retire Inventory idea exists, and whether git-conventions was read before
       the first git command on 11-24 and 11-26.
+  - date: "2026-11-28"
+    note: >-
+      Behaviour check of session_013zxzeRuV2ywUTZimzQvXAN (11-25, PR #3674),
+      session_013zxzeRCqnsnapQCvq1q748 (11-26, #3697) and
+      session_013zxzeQUGwaWUa1tvt7hn43 (11-27, #3720); SKILL.md is unchanged
+      since 8ad7600ff (11-22), so all three are graded on current text; no
+      watchFor items and no Next focus line in the last note. I read all three
+      logs in full with their ruleUse tails and the 183-line SKILL.md. Delivery
+      verified in git. The 11-27 PR #3720 (merge 260a46f35) is net minus 13
+      lines on docs/agents/pr-workflow.md (47 added, 60 deleted) and minus 109
+      words (1321 to 1212); effabd921 deleted the survey-brief trial and reset
+      both ledger entries to open; a new trial opened 2026-11-27 with proven
+      true is on main. I re-ran friction-rates.ts for the judged survey-brief
+      entry: briefs-mismatch moved from 4 of 126 (3.2%) to 3 of 40 (7.5%), while
+      the log says 3.5% to 7.5%, and survey-label-and-ledger-errors went from
+      3.2% to 0.0%. Judging holds on small samples of nits and minors is
+      defensible, but the briefs-mismatch rise is a doubling, which section 1
+      lets a judge file an issue for; whether one was filed is unverified
+      because a gh search returned 403. The 11-26 PR #3697 (merge 7b9d964f9)
+      opened the verifying-ui trial and the 11-25 PR #3674 (merge 0097a5e16)
+      deleted the harvest entry, both consistent with their logs (word counts
+      and rates not re-run). find-trial-window.ts now shows two open trials,
+      verifying-ui (judgeable from 11-29T12:21Z) and pr-workflow (11-30T12:21Z),
+      matching the log. No revert in 14 days. Known repeats: the cadence gap of
+      11-24 and 11-25 is still a silent failure at n=1 and the retire signal is
+      not standing now that 11-27 opened a trial; ADR-0027 and ADR-0029 read
+      after the first edit on 2 of 3 runs; the first code-review call blocked by
+      the sha guard on 11-26 and 11-27 (n=2, consecutive); a verdict naming the
+      unreviewed head corrected after merge-pr refused it on 11-26. New nits: a
+      git commit chained with a background gate on 11-27; proven true written
+      before the Sonnet probe returned, since section 4 does not say when to
+      write it; code-review found four lost rules that were restored in
+      64e499c58, echoing the 11-23 survey-brief case. The on-trial marking step
+      held on both new-trial runs (n=5 on fixed text). Could not tell: the SHA
+      each probe reports, and whether git-conventions was read before the first
+      git command on 11-26 and 11-27. Role and gist carried from earlier notes,
+      unverified. Reasoning: trials land and are judged on evidence, but the
+      judge floor and the retire signal rely on a run remembering previous runs.
+      Idea: make find-trial-window.ts count consecutive no-trial runs and say to
+      file the retirement issue at two, or state in section 4 to write proven
+      true only after the probe returns. Importance routine, unchanged. Next
+      focus: the SHA each probe reports, whether a retire issue or Inventory
+      idea exists, and whether the survey-brief rate rise produced an issue
+      under section 1.

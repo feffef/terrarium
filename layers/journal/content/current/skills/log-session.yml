@@ -9,22 +9,10 @@ role: >-
   bounded exception). Usually invoked by `close-session`; call it directly only
   to amend a written log.
 auditSummary:
-  date: "2026-11-27"
-  text: "Gets a complete, honest log on main for essentially every session, and in-review states are reported truthfully. The rule ratings from helper agents are still often incomplete, though a recent fix aims at it."
+  date: "2026-11-28"
+  text: "Every recent run logged and landed honestly. Its flag that subagent rule ratings were answered is true in name only, since most recent logs have subagent entries with missing ratings."
 
 observations:
-  - date: "2026-10-18"
-    note: >-
-      Self-check (audit-skills behaviour check), Part A (10/10 usedIn,
-      split and graded against the correct pre/post-SKILL.md-change text
-      for each session's startedAt): all 10 logs real, schema-complete,
-      honestly record every friction their own narrative implies, including
-      several self-critical ones (failure to self-invoke close-session, a
-      shipped-content quality miss). Part B (19/19 notUsed): all carry
-      close-session in skillsUsed and have a real, non-stub log on main -
-      the already-tracked close-session-to-log-session transitive-invocation
-      gap (#1915), not a genuine miss. No new silent failure, no new missed
-      invocation. Grade/role unchanged (essential).
   - date: "2026-10-19"
     note: >-
       Self-check (audit-skills behaviour check), 33 sessions checked (10
@@ -198,3 +186,47 @@ observations:
       focus: whether the three-block cap in subagent-rule-use-stop.ts leaves the
       post-#3689 runs unrated, plus PR diffs against summaries and friction
       texts.
+  - date: "2026-11-28"
+    note: >-
+      Behaviour check of all 34 run logs from 11-25 to 11-28 (origin/main tip
+      24834c57f), by script, plus a full read of the newest run
+      session_013zxzePtpYfD71WKEC9Henf; friction texts and PR diffs against
+      summaries were not read. SKILL.md last changed in 750d8edc0 (11-22,
+      wording), before every run, so one text applies; no watchFor items; role
+      and gist not re-read, unverified. The Skill promises an authored log with
+      the goal, outcome, summary and every friction, stitched with the trace and
+      committed to main. Delivery held: all 34 logs exist on origin/main, status
+      completed, landedBy Stop, with close-session and log-session in skillsUsed
+      in all of them (26 autonomous, 6 interactive, 1 delegated). The earlier
+      in-review session session_013zxzeQivG2v72EMRPiQ5aR is now completed after
+      #3710 merged. All 41 distinct PR numbers claimed across logs appear as
+      numbers in the last 3000 main commits (matched by number only), and the
+      newest run's claimed #3725 matches its filesEdited. Every log has 1 to 12
+      frictions; 10 have moderate or worse, including a major in
+      session_013zxzePo4mtQsMpDHLLDFmb and two moderate in
+      session_013zxzePSaj6hZQUzYVaqg4f. No revert in 14 days (only guard commits
+      such as 7e1fdb012, 2e0ec25f6, dddedf899). Silent failure, repeated:
+      subagent rule ratings. Main-agent entries have 0 unrated loads in all 34
+      logs, but subagent entries whose named report misses a loaded rule while
+      answered is true occur in 21 of 34 logs, and 13 of the 21 runs that
+      started after #3689 merged (60707ddc4, 11-26T06:28Z); rule-use-report.ts
+      --since 2026-11-26 prints 47 such entries. Worst cases: 18 unrated of 22
+      in session_013zxzeQLTeC8GETW73Aho8C and 10 of 14 in
+      session_013zxzePo4mtQsMpDHLLDFmb. Likely cause, unverified and not traced
+      in a transcript: the Stop hook's three-block cap and fail-open on a
+      missing transcript (scripts/hooks/subagent-rule-use-stop.ts,
+      MAX_BLOCKS=3). The count excludes bare none-applies entries, correcting
+      the last note's over-count. This repeated finding went to a new issue,
+      #3727, which names closed #3662. Missed invocation: none;
+      session_013zxzeStkfKoZxBQUkQd9pd (11-21) is a visitor-loop run whose log
+      landed via Stop, a known Stop-path hole at one session. The newest run is
+      clean, with its late glossary read recorded honestly. Reasoning: logs land
+      reliably and honestly; the one systematic gap is a flag that says the
+      ratings were answered when they were not, so the log overstates its own
+      completeness. Idea: have the Stop landing set answered false for any
+      subagent entry whose named report misses a loaded rule, excluding bare
+      none-applies; 13 of 21 post-#3689 runs and 47 entries show the hook cap
+      alone does not close it. Importance essential, unchanged. Next focus:
+      friction texts and PR diffs against summaries, and a subagent transcript
+      to confirm whether the three-block cap or the fail-open causes the unrated
+      entries.

@@ -10,20 +10,10 @@ role: >-
   page, for glassbox-curate. Fired by a Routine; keeps Glass Box honest as the
   Platform changes.
 auditSummary:
-  date: "2026-11-27"
-  text: "Keeps the Glass Box pages in step with the code: its updates land and the claims it checks hold up. It cannot show whether its history-reading step happens, and the first scout dispatch is sometimes refused."
+  date: "2026-11-28"
+  text: "Keeps the textbook's claims honest: recent runs fixed false claims and merged cleanly. Whether it really reads commit history by concept before judging pages cannot be seen in the logs, and its first subagent call is often blocked."
 
 observations:
-  - date: "2026-10-18"
-    note: >-
-      Self-check (audit-skills behaviour check): all 6 usedIn sessions
-      checked, 3 freshly verified beyond the prior entry (PR #2203 guide
-      re-pin; PR #2218 guide re-pin + stale guard-wrap.sh fix; PR #2219 +
-      PR #2222 CSS fix). Every pinned revision hash confirmed real, every
-      cited `:file[...]`/excerpt block confirmed to exist at its exact
-      pinned commit with the exact quoted line range, no misdescribed
-      claim found. No reverts of any glassbox-update PR's content in the
-      2-week sweep. No new silent failure. Grade unchanged (specialist).
   - date: "2026-10-19"
     note: >-
       Self-check (audit-skills behaviour check), 7/7 usedInLogs sessions
@@ -217,3 +207,44 @@ observations:
       the by-concept read becomes a list to scan. Next focus: whether the step 3
       by-concept read happens, sampled by checking one page's diff against a
       claim, and what orient.ts --index and the Scout range returned.
+  - date: "2026-11-28"
+    note: >-
+      Behaviour check of session_013zxzeQrwxsU3KF9z6QX2zS (11-25, PR #3670),
+      session_013zxzeNcnMkgSejraf9DmiH (11-26, #3691) and
+      session_013zxzePYUBsXDVMueBkH5Ax (11-27, #3717), logs read in full and git
+      checked after a fetch; no watchFor items. The newest SKILL.md commit is
+      6bc87aae4 (11-25 04:08), which added the step 3 add it if absent wording,
+      so all three ran under the same effective text. Delivery verified clean.
+      The 11-27 merge bedf9eefc has 85 files; update.yml moved two dates (nuxt-content 20 and 30, from 11-11) and gained three entries
+      (agents/45.session-timers, hooks/22.hook-failure-modes, web-standards/55.minimum-target-size), the five rotation pages, with the no-entry-first rule held. Three fixes are on main: the cloud-sessions page
+      lost its GraphQL clause (59526f3c0; grep -ic graphql on environment-caveats.md returns 0), the harvest page dropped product before workflow
+      clusters (9a53e122e; no hit remains under the harvest Skill), and a stale
+      excerpt was re-lined (not diffed, unverified). The Scout over about 100
+      commits found no topics, so no memory-page edit, which fits the log. The
+      11-26 merge c5ce78233 and 11-25 merge 6962bf043 are still on main. No
+      revert in 14 days; later commits are journal and audit work. Known
+      repeats: the step 3 by-concept read is still unconfirmed, with none of the
+      three logs mentioning it (5 runs unconfirmed or skipped now); what
+      orient.ts --index returned and the Scout range are unrecorded in all three
+      logs (n=6); gate:scoped started as a bare background subshell on 11-25
+      (n=2) and code-review args lacked the head sha there (n=2). Resolved: the
+      earlier latent failure, step 3 naming a Stale or missing section that does
+      not exist, was fixed by the add it if absent wording. Confirmed at n=2,
+      minor: on 11-26 and 11-27 the first Agent call, the Scout, was blocked by
+      the dispatch-read guard because dispatch-subagents had not been read,
+      costing one retry; step 3 names the Skill in parentheses but does not
+      require reading it first, and both logs propose the same fix. Per-run
+      notes: 11-25 fixed three claims (auto-imports layer-rule scope, skill-inventory watchFor location, hooks page naming SubagentStop); 11-26
+      flagged 15 pages and fixed the Stop hooks page and re-lined workflow-scripts, with one Scout topic later consumed by glassbox-curate PR #3692;
+      11-27 used three Sonnet claim readers over eight pages each and fixed
+      three false claims. The total pinned files per run is about 80 or more
+      even when two or three pages change prose, by design of the script. Role
+      and gist unchanged since the last note and not re-read, unverified.
+      Reasoning: the Skill reliably keeps the textbook's claims honest; its weak
+      point is evidence of the by-concept read, which cannot be observed in
+      logs. Idea: add read dispatch-subagents first to step 3 before the Scout
+      dispatch, and consider a helper listing non-session commit subjects since
+      each flagged page's revision. Importance routine, unchanged. Next focus:
+      whether the step 3 by-concept read happens (sample one page's diff against
+      a claim), what orient.ts --index and the Scout range returned, and whether
+      the 11-27 stale-excerpt fix is in cbc646489.

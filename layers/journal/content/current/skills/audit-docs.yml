@@ -9,25 +9,10 @@ role: >-
   gated PR on green (ADR-0003/0004), filing an issue only for a factual conflict
   it can't resolve. Use it when docs and code drift apart.
 auditSummary:
-  date: "2026-11-27"
-  text: "Finds and fixes real doc conflicts and stays out of the Human-only files. Most of what its reviewers flag is rejected by its own checker as wrong, so a lot of review effort is spent for little."
+  date: "2026-11-28"
+  text: "Sweeps the docs and lands real fixes through a gated PR, and its checker keeps wrong findings out of PRs. It rejects most of what its reviewers propose, and reviewers sometimes run out of budget before covering every Skill."
 
 observations:
-  - date: "2026-10-18"
-    note: >-
-      Self-check (audit-skills behaviour check): 9 of 10 usedIn sessions
-      already thoroughly verified by prior entries; the newest,
-      session_011HBcCLzMW7CshmqnHLnegb (2026-10-15, PR #2038), freshly
-      verified end-to-end and added as a 4th corroborating instance of the
-      step-3 pooling-instruction gap ("copied, never retyped" was
-      unmeetable since subagent hand-backs arrive only as messages, not
-      files) — this instance predates the fix, not a new open occurrence.
-      Issue #2196 (the tracked regression) confirmed CLOSED, fixed via
-      merged PR #2205 (`scripts/session/save-handback.ts`, landed
-      2026-10-17T07:13:57Z); current SKILL.md already cites the script. No
-      usedIn session ran after the fix landed, so it is untested live yet -
-      worth confirming next run. No reverts of audit-docs-delivered content
-      in the 2-week sweep. No new silent failure. Grade/role unchanged.
   - date: "2026-10-19"
     note: >-
       Self-check (audit-skills behaviour check): the predicted risk named
@@ -238,3 +223,47 @@ observations:
       thresholds, Human-only files, watchFor, merge policy). Next focus: whether
       the first run on the 6910dae27 text greps every docs/agents doc, and
       whether reviewers B and C's own unread-file lists match the Covered line.
+  - date: "2026-11-28"
+    note: >-
+      Behaviour check of session_013zxzePiPyk1zG2CKhVGEzg (11-27, PR #3716,
+      merge 2dc4441d7), session_013zxzeSUNxM2snCnM3Wwi6o (11-26, no PR) and
+      session_013zxzeQU1aX4cz6nKeBuxbP (11-25, PRs #3668 and #3669). No watchFor
+      items. The 11-27 run is the first on the 6910dae27 text; the 11-25 and
+      11-26 runs started before it. Verified findings: the sweep promises a
+      gated PR that fixes confirmed doc defects and a separate escalation PR for
+      Human-only paths, with a checker rejecting wrong findings. Delivery held.
+      The 11-27 commits ee90d1a8f and c18d36ec0 touch exactly environment-caveats.md and the inspect-session and harvest SKILL.md files, matching
+      the log's three filesEdited. The harvest edit is true to code
+      (.agents/skills/harvest/scripts/harvest.ts:324 filters simplifying to
+      workflow-label clusters). The pointer loop between environment-caveats and
+      inspect-session is really broken. The 11-25 PRs are on origin/main
+      (db1ae6084, 98b28e6de; taken from the earlier note, not re-fetched); the
+      tenant-layers pointer went to the escalation PR as the Skill requires. The
+      11-26 run correctly opened no PR (7 findings, all rejected by the
+      checker). No revert in a 14-day grep. Repeats: the checker rejected most
+      findings again, 19 of 26 in this window (7 of 10, 7 of 7, 5 of 9) and a
+      running 37 of 54, the ninth window above half; the named causes are
+      relocations that were not shorter or moved a doc away from where it is
+      read. The Covered line names docs absent from docsReadBySubagents on 11-26
+      (README.md, SECURITY.md, tests/README.md), a tenth sighting; grep-only
+      reading could explain it, so it stays unverified. ADR reads demanded by
+      hooks were word-counted rather than read (adrHints readAfter false), third
+      run in a row, a nit. New and minor (11-27, n=1): reviewers ran out of
+      budget before many Skills and Inventory entries, and Agent B had to guess
+      which were uncovered; the Covered mechanism records read areas but not
+      unread ones, and the log proposes a per-run unread list. Could not tell:
+      whether Agent A grepped all docs/agents/* for orphans (no commands
+      logged), though a grep run now finds zero docs named in neither CLAUDE.md
+      nor the rules; and whether reviewer unread lists match the Covered line
+      (no reviewer replies in the logs). Role and gist read as current; the role
+      still omits the human-merged escalation PR, a nit. Reasoning: the Skill
+      delivers real fixes at a modest rate and its filter is working, since
+      wrong findings never reach a PR, but the reviewers keep proposing changes
+      that violate the lose-nothing and shorter-or-plainer bar, which wastes
+      subagent budget rather than doing damage. Idea: give reviewers the
+      checker's bar up front (skip owner decisions, watchFor text, merge policy
+      and Human-only files; list every rule they would drop). Grade routine
+      unchanged; the three scheduled runs observed support it. Next focus:
+      whether Agent A's orphan grep over all docs/agents/* ran (needs the
+      reviewer reply or its commands), and whether the Skills and Inventory
+      entries left unread on 11-27 get covered next run.

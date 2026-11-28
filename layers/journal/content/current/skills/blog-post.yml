@@ -10,23 +10,10 @@ role: >-
   Each post ends with a "My take" section, and the run logs ideas and learnings.
   Gives the Terrarium a multi-voice commentary on its own development.
 auditSummary:
-  date: "2026-11-27"
-  text: "Delivers a daily post and a reaction stub on schedule, and the posts match their fact-checked text on main. It keeps skipping the Blog glossary read, and a few process steps still get done in the wrong order."
+  date: "2026-11-28"
+  text: "Publishes fact-checked in-character posts and replies that merge cleanly, with correct pingback stubs. It keeps skipping the Blog glossary, and a shell heredoc write slips past the guard that would remind it."
 
 observations:
-  - date: "2026-10-18"
-    note: >-
-      Self-check (audit-skills behaviour check): fresh end-to-end audit of
-      session_01E7YFbvBvT8HWhVJb6kTDMq (2026-10-17, PR #2220 Eyra standalone
-      sequel + PR #2221 Karen reply) - both merged, frontmatter/blogTags
-      valid, pingback stub matches schema, voice non-authoritative per
-      GLOSSARY, core factual claims against real PR #2204 verified accurate,
-      fact-check tallies present (25/1, 37/2), step-12 reader+second-reader
-      chain genuine. Re-verified session_01N9bwDKW51kMS6WJvK2nfSU
-      independently beyond the existing entry - still clean. #1479/#1626
-      re-confirmed via live issue_read (closed/completed, #1626 via a real
-      merged fix PR #1662). Deletion sweep found only the two already-known
-      disclosed deletions. No new silent failure. Grade/role unchanged.
   - date: "2026-10-19"
     note: >-
       Self-check (audit-skills behaviour check), 2 sessions freshly
@@ -229,3 +216,43 @@ observations:
       it instead. Next focus: step 8's tone line and step 2's persona reading
       from transcripts, and the 11-26 ruleUse missed report on the
       tenant-glossary rule.
+  - date: "2026-11-28"
+    note: >-
+      Behaviour check of session_013zxzeTKxE9MSXFCu6Nqhr9 (11-25),
+      session_013zxzeQ92opecHinpUgHCyA (11-26) and
+      session_013zxzeQ3rmR3XHfvXpobcpr (11-27); the last SKILL.md commit is
+      222aab944 (11-24), so one text applies. No watchFor items on the data
+      file. Delivery verified through the GitHub API and origin/main: the 11-25
+      run merged #3672 (Eyra post, 1 file) and #3673 (Karen reply, 2 files); the
+      11-26 run merged #3695 (David) and #3696 (Karen reply with pingback stub);
+      the 11-27 run merged #3719 (Kevin standalone sequel). Each post's blob on
+      main equals the last Fact-checked hash in its PR body, each has exactly
+      one My take heading, the pingback stubs name the right target, fromPersona
+      and a reactedAt equal to the reply's publishedAt, and issue #3680 is
+      closed as completed so Karen's thesis holds. Spot checks on the 11-27 post
+      held: #3689 opened 06:07:48Z and merged 06:28:44Z, issue #3662 created
+      00:51 UTC on the 25th. The PR body carries persona, losing candidates,
+      rotation and a 33-claim fact-check tally. Step 12 on 11-27 ended in none,
+      with the reason in a PR comment (a first reader favoured Karen's draft, a
+      second said echo), which is the Skill's no-reply branch. No revert or
+      rewrite in 14 days of layers/blog/content history. Repeats: the Blog
+      glossary skipped or read late in 3 of 3 runs (the guard blocked the first
+      write on 11-25); step 2 does not name it, and the 11-27 run wrote the post
+      through a Bash heredoc, which the Edit and Write guard cannot see. Fact-check re-dispatch on changed lines after review edits held 3 of 3. Issue
+      read without comments (11-25) and gate started while review ran (11-25,
+      twice) repeat; close-session was not re-invoked after the first merge on
+      11-25. New nits on 11-27: the step 12 brief pointed the reader at a
+      scratch copy of the Kevin post that did not exist, so a second reader
+      redid the judgement; Karen's reply was drafted from the PR body's nits
+      without opening the spec, caught by the fact-check; a Spec reviewer
+      wrongly called a real quote invented, refuted by the run. On 11-26 a draft
+      aside referred to a PR title the post never shows, caught only by the
+      blind reader. Could not tell: step 8's tone line, step 2's persona reading
+      and step 9's tally against checker transcripts. Role and gist current.
+      Reasoning: the posts are real, fact-checked and merged; the recurring cost
+      is the glossary read, and the heredoc route shows the guard hole. Idea:
+      add a one-line read of layers/blog/GLOSSARY.md to step 2; it repeats the
+      previous idea and every log proposes it. Grade routine unchanged. Next
+      focus: step 8's tone line and step 2's persona reading from transcripts,
+      the ideas and learnings of the 11-25 and 11-26 logs, and whether the step
+      12 reply-brief path error recurs.

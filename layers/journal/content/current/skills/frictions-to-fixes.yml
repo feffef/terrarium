@@ -12,23 +12,10 @@ watchFor:
   - "The top-three rule is followed: an entry is skipped only for a reason the rule states, not by judgement."
   - "Every Friction cluster the run designed a solution for ends the run fixed immediately, with an issue raised, or with a ledger update saying what design was dropped and why."
 auditSummary:
-  date: "2026-11-27"
-  text: "Turns the top recurring problems into fixes or issues, and the fixes it files get merged and hold. Its review step is heavy for data-only changes, and its survey brief leaves open how many candidates to confirm."
+  date: "2026-11-28"
+  text: "Picks the right recurring problems and either fixes, files or notes each one; no recent run skipped a qualifying one. It pays a heavy review for ledger-only PRs and its survey brief asks for more checks than the agent does."
 
 observations:
-  - date: "2026-10-18"
-    note: >-
-      Self-check (audit-skills behaviour check): 10/10 usedIn sessions
-      checked, 3 freshly re-verified end-to-end against live GitHub + main
-      (PRs #1801/#1845, #1820/#1821/#1819, #1917-1920), 7 corroborated
-      against the existing verified trail with no contradiction. Ledger
-      data-hygiene follow-through confirmed: `shell-read-detection.yml` and
-      `reviewer-line-ranges-off.yml` both show their stale `ref` fields were
-      since corrected, not left dangling. The 3 already-known failure shapes
-      (#1676/#1684, #2024, #2104's GitHub-native-auto-close bypass) all
-      re-confirmed correctly tracked, not recurring undetected. No reverts
-      of this Skill's ledger/fix work in the 2-week sweep. No new silent
-      failure. Grade/role unchanged.
   - date: "2026-10-19"
     note: >-
       Self-check (audit-skills behaviour check), 10/10 usedInLogs sessions
@@ -202,3 +189,44 @@ observations:
       gate:scoped, and let merge-pr accept that verdict. Next focus: recompute
       regression severity on the ledger tree at 2c009d366 and check whether
       survey-brief section 3 still leaves the confirmation scope undefined.
+  - date: "2026-11-28"
+    note: >-
+      Behaviour check of session_013zxzeRF9wSXqBPZvCnNxKb (11-27),
+      session_013zxzePHUnDuN2sgW4ghamU (11-26) and
+      session_013zxzeR67EGdvDDNgGomDr6 (11-25), logs read in full; SKILL.md last
+      changed 988104f8f (11-20) and the survey brief was trimmed 11-23, so all
+      runs used current text. Watch for 1, the top-three rule: held in all
+      three. I recomputed regressions on the ledger tree of each run's survey
+      commit (entries with a fix and a later occurrence, minus accepted, on-trial and tracked). At the 11-27 tree the only unaccepted entry at
+      moderate or above was close-session-bypassed-by-hand-log, and the run
+      filed exactly that as #3714 (open); at the 11-26 tree two qualified,
+      harvest-list-read-cost and harvest-first-pass-shallow, filed as #3681 and
+      #3680 (both closed); at the 11-25 tree none qualified and none was filed.
+      Watch for 2, designed clusters end fixed, filed or noted: held. On 11-27
+      the gate pick became #3713 (open, Human-only gate.ts) and two no-change
+      picks got dated notes, with PR #3715 merged as 8b360becf; on 11-26 PR
+      #3684 merged (de721b803) and the clear-backlog-build pick became #3682; on
+      11-25 #3666, #3665 and #3667 are on main. Both items have held in every
+      audited run since 11-17, so I suggest the owner retire them. No revert in
+      14 days and every named PR is on main. New minor, n=1: on 11-27 the run
+      knowingly shipped a ledger note without the dropped word step 5.3 asks
+      for, to avoid a 70 second gate rerun; design-brief steps 2 and 3 assume a
+      doc Friction, so a code-cause pick stepped outside the brief; the survey
+      agent's commit message miscounted appends (68 and 44 against 65 and 39
+      plus 3 new). Repeats: survey-brief section 3 asks for confirmation of
+      every never-fixed or regression label (about 85 to 150 candidates) and the
+      agent confirms only a few, 4 of 4 runs on the trimmed brief; a ledger-only
+      PR fails the simple-change test and pays a two-agent code-review, 15 of 15
+      by count; the dispatch-read guard refused the first subagent in all three
+      runs; the double-background guard all three; git-conventions or triage-labels read late on two runs; #3680 is titled not a regression yet filed
+      as one. 11-27 was correctly a no-fix-PR run, so the closing ledger PR was
+      skipped per section 8. Cost: 1139, 1498 and 1474 seconds with 7, 8 and 10
+      Agent calls. Role and gist need no check since SKILL.md did not change.
+      Reasoning: the Skill picks the right things and lands or files each; its
+      cost is process friction around reviews and the brief, not wrong outcomes.
+      Idea: in survey-brief section 3 replace confirming every candidate with
+      confirming only the top 15 ranked and marking the rest unconfirmed, since
+      the agent already does that unsaid. Importance routine, unchanged. Next
+      focus: the survey agent's own accuracy (commit-message counts, see:
+      handling, append behaviour) and whether design-brief handles code-cause
+      picks.

@@ -9,36 +9,10 @@ role: >-
   changes no code and opens no PR. An idea that contradicts a line in
   `decisions.md` is dropped, so rejected ideas stay rejected.
 auditSummary:
-  date: "2026-11-27"
-  text: "Its runs find real problems and file them with measurements; the 11-26 bugs were fixed within hours. Visitors lose time to a context file that points at pages that do not exist, and a brief that misses one overflow case."
+  date: "2026-11-28"
+  text: "Produces measured, honest issues from blind and informed visits, and the filtering step works. The hand-built context file given to visitors was wrong in every recent run, wasting visits."
 
 observations:
-  - date: "2026-10-18"
-    note: >-
-      Self-check (audit-skills behaviour check): 8 of 9 usedIn sessions
-      already thoroughly verified by prior entries; the newest,
-      session_01CXxyUmwkN3Rx5DTSK2s391 (PR #2225, 2026-10-17), freshly
-      verified end to end. REPEATED finding, escalated as issue #2229: PR
-      #2225's owner-memory tally batched 14 candidates (#2159 through
-      #2108) onto one shared-verdict line - the exact shape #1721 and #1912
-      were filed to stop. Reconstructed the tally text and ran it through
-      the live `owner-corrections.ts --check` logic: it resolves only
-      `#2159`, the other 13 come back unresolved, so `--check` would have
-      failed against this exact published text though the PR claims it
-      passed. Root cause confirmed still live in `unresolved()`
-      (line ~135): `l.match()` with no global flag credits only the first
-      `#N`/URL per "not a ruling" line. #1912's fix (PR #1931) only built
-      half of its own two named options - pasting the tally verbatim into
-      the PR body - and left hardening the regex itself "pending a human
-      decision," so the root cause survived #1912's closure and recurred a
-      3rd/4th time. 2026-10-16/17's "2/2 clean since the #1912 fix" grade
-      was premature - the gate was never actually re-exercised against a
-      batched line until now. Rest of the pipeline (3-model dispatch,
-      consensus, refiner, code-review, merge, decisions.md carry-forward of
-      #2178/#2171/#2176) all checked out. No new silent failure beyond this
-      one. Grade/role unchanged (routine) - the dispatch/consensus/build
-      mechanics remain sound; only the owner-memory mechanical gate is
-      broken.
   - date: "2026-10-19"
     note: >-
       Self-check (audit-skills behaviour check), 9/9 usedInLogs sessions
@@ -215,3 +189,42 @@ observations:
       element where scrollWidth exceeds clientWidth. Next focus: the 11-25 and
       11-26 visitor retro and idea claims, which were not re-run, db1ae608's
       diff, and the Inventory role and gist text.
+  - date: "2026-11-28"
+    note: >-
+      Behaviour check of session_013zxzeRByCWuYi8gThTfvKA (11-25, blog),
+      session_013zxzeQMTfvZZmLxob6aT7A (11-26, journal) and
+      session_013zxzeRAtiER4WiBiS7UMsb (11-27, midden). All started after
+      db1ae6084 (11-25 04:10Z), whose diff only rewords the glassbox table note,
+      so steps 2 to 5 are unchanged and the current text applies; no watchFor
+      items. The Skill promises a context file, blind and informed visitors, a
+      verified and measured issue per real finding, and a log with focus and
+      yield. Delivery verified by gh api. The 11-27 run filed #3721 (open,
+      needs-triage, header on line one, URL, 17 and 18 pixel summary toggles at
+      390 pixels, how measured, a proposed fix and a Not claimed section; only
+      the first report was re-measured and the issue says so); it is unfixed so
+      far. The 11-26 run's #3698 and #3699 are closed with bug, ready-for-agent
+      and area:journal labels after retriage. The 11-25 run's #3675 was verified
+      in earlier notes and not re-fetched. Step 3's re-measure held on 11-27: it
+      dropped two claims it measured as non-issues. All logs have focus, per-lens yield, filter misses and retros. No revert in 14 days; later commits
+      are Skill edits and audits. No silent failure and no missed invocation.
+      Repeats, counted over these three logs: triage-labels.md not read before
+      filing 3 of 3 (step 4 names only issue-tracker.md); git before git-conventions.md 3 of 3 by the logs' own frictions; the hand-built context
+      file bad in a different way each time 3 of 3 (aria-current note on the
+      pages line and a doubled URL; digests and sessions roots listed though
+      both 404; a garbled URL-rule line and no pingbacks URL), which cost
+      visitors visits and which the dispatch-subagents auditor found
+      independently. Informed visitors lacked a launchChromium sample on 11-27
+      and the page.evaluate quote trap hit 11-25. The SubagentStart rule-use
+      echo cost the blind visitor turns on 11-26. The label drift between
+      11-26's ready-for-agent issues and #3721's needs-triage is explained by
+      the later retriage. Minor and unverified: the 11-27 UI tester wanted a
+      walk.ts sample and the editor a cap on ?cause= variants. Duration 266
+      seconds with three visitors at 110 to 120 seconds each, cost routine. Role
+      and gist read as current. Reasoning: the Skill reliably produces measured,
+      honest issues; its repeated weak point is the hand-assembled context file,
+      which makes visitors waste visits on wrong paths. Idea: replace the hand-built context file with a script that prints the pages section,
+      deduplicating URLs, skipping folder roots with no index, and emitting one
+      URL per pattern. Importance routine, unchanged. Next focus: the 11-27 UI
+      tester's and editor's retro claims (walk.ts sample, ?cause= cap), whether
+      whether the midden summary-size issue #3721 gets a fix, and the 11-25 and 11-26 visitor idea claims behind the
+      logged ideas, none re-run.
