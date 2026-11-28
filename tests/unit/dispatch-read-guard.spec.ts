@@ -21,6 +21,10 @@ const transcripts: [string, Record<string, unknown>[], boolean][] = [
   ['Skill invoked', [start, toolUse('s', 'Skill', { skill: 'dispatch-subagents' })], true],
   ['slash command', [start, { type: 'user', message: { content: '<command-name>/dispatch-subagents</command-name>' } }], true],
   ['file read', [start, toolUse('r', 'Read', { file_path: `${repo}/${DOC}` })], true],
+  ['file read via the .claude symlink', [start, toolUse('r', 'Read', { file_path: `${repo}/.claude/skills/dispatch-subagents/SKILL.md` })], true],
+  ['relative file read via the .claude symlink', [start, toolUse('r', 'Read', { file_path: '.claude/skills/dispatch-subagents/SKILL.md' })], true],
+  ['symlink read without a cwd', [{ type: 'user', message: { content: 'hi' } }, toolUse('r', 'Read', { file_path: '/elsewhere/.claude/skills/dispatch-subagents/SKILL.md' })], true],
+  ['another Skill read via the .claude symlink', [start, toolUse('r', 'Read', { file_path: `${repo}/.claude/skills/tdd/SKILL.md` })], false],
   ['shell read', [start, toolUse('b', 'Bash', { command: `cat ${DOC}` }), toolResult('b', readFileSync(join(repo, DOC), 'utf8'))], true],
 ]
 
