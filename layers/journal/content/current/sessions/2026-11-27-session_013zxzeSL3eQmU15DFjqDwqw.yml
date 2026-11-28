@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSL3eQmU15DFjqDwqw
 startedAt: 2026-11-27T21:59:12Z
-endedAt: 2026-11-28T00:33:40Z
+endedAt: 2026-11-28T00:35:39Z
 kind: interactive
 goal: Move five Glass Box lessons into a new Self-improvement subject
-status: in-review
-outcome: PR 3726 is open, reviewed and gated; it waits for the owner's merge, which the owner pre-approved
-summary: "The owner asked why the Session transcripts lesson sits in the hooks subject. I answered from the lesson and its hooks neighbours, then, on the owner's follow-ups, surveyed the whole Glass Box guide with the glassbox-curate orient script and read the House rules lessons in full. I first suggested a four-page Session records subject, then advised keeping things as they were, then recommended the split that was built: five lessons (Self-improvement loop, Session logs, Ideas and lessons learned, Pruning instructions, Skill inventory) move out of House rules into a new Self-improvement subject. Human-instructed: the question, the request to look for a new subject, the walkthrough staying put, using the orient script, looking at the House rules split, and the explicit green light to build and later merge (\"Sounds good\", \"You have my green light for the merge later\"). Agent-initiated: choosing the five pages, the name Self-improvement and its position, the page order (broad concept first), and the glossary and page-check exemption edits; the owner never answered those two sub-choices directly, so they were built as recommended and flagged in the PR body. Checks before the PR: churn guard on the pages and last five run entries, scoped gate green, Standards and Spec reviewers with no hard findings. Still open: CI on the PR, a verdict comment, and the merge with the owner's quoted approval."
+status: completed
+outcome: "PR 3726 merged: Self-improvement is a new Glass Box subject holding five lessons, House rules keeps six"
+summary: "The owner asked why the Session transcripts lesson sits in the hooks subject. I answered from the lesson and its hooks neighbours, then, on the owner's follow-ups, surveyed the whole Glass Box guide with the glassbox-curate orient script and read the House rules lessons in full. I first suggested a four-page Session records subject, then advised keeping things as they were, then recommended the split that was built: five lessons (Self-improvement loop, Session logs, Ideas and lessons learned, Pruning instructions, Skill inventory) move out of House rules into a new Self-improvement subject. Human-instructed: the question, the request to look for a new subject, the walkthrough staying put, using the orient script, looking at the House rules split, and the explicit green light to build and later merge (\"Sounds good\", \"You have my green light for the merge later\"). Agent-initiated: choosing the five pages, the name Self-improvement and its position, the page order (broad concept first), and the glossary and page-check exemption edits; the owner never answered those two sub-choices directly, so they were built as recommended and flagged in the PR body. Checks before the PR: churn guard on the pages and last five run entries, scoped gate green, Standards and Spec reviewers with no hard findings. The PR needed the owner's merge (new subject, page-check change), so after CI and the gate went green I posted the verdict comment and merged with merge-pr.ts, passing the owner's quoted green light as the human-only waiver. Nothing is left open on this PR."
 prs:
   - "3726"
 docsRead:
@@ -96,24 +96,30 @@ frictions:
   - description: Wrote 'no findings' in the PR body for code-review, though the Standards reviewer listed one low judgement note about the exemption list living in two places.
     solution: Quote each reviewer's verdict line when summarizing a review in a PR body.
     severity: nit
-durationSec: 9269
+durationSec: 9387
 models:
-  claude-sonnet-5-5: 170
+  claude-sonnet-5-5: 204
 toolCounts:
   Grep: 3
   Glob: 3
   Read: 28
-  Bash: 37
+  Bash: 42
   Edit: 6
-  Write: 2
+  Write: 3
   mcp__claude-code-remote__get_session: 1
-  Skill: 3
+  Skill: 4
   Agent: 2
-  ToolSearch: 2
+  ToolSearch: 4
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   mcp__github__update_pull_request: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 4
+  mcp__claude-code-remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__delete_trigger: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/app/utils/subjects.ts
   - layers/glassbox/page-checks.ts
@@ -279,14 +285,14 @@ subagents:
     durationSec: 23
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 5.7
+    tokenShare: 4.7
   - type: general-purpose
     task: Spec review of subject split
     model: sonnet
     durationSec: 25
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 5.8
+    tokenShare: 4.8
 gitBranch: ccr-ef04a1c9-4e9fbr
 entrypoint: remote_mobile
 cliVersion: 2.1.332
