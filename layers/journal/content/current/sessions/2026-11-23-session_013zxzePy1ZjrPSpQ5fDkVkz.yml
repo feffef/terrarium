@@ -1,0 +1,158 @@
+schemaVersion: 1
+session: session_013zxzePy1ZjrPSpQ5fDkVkz
+startedAt: 2026-11-23T17:05:53Z
+endedAt: 2026-11-28T07:10:39Z
+kind: autonomous
+goal: Harvest ideas and learnings from recent session logs into Seedlings
+status: completed
+outcome: "Four Seedlings filed (#3624 to #3627); nine other clusters dropped; no retro Seedling"
+summary: "Scheduled harvest run, no human prompt; everything was agent-initiated by the schedule's Skill. Extracted 98 unharvested entries (47 ideas, 51 learnings), clustered them into 13 clusters (9 product, 4 workflow after reordering), and checked each against the code, tracker and Friction Ledger. Four passed: the Glass Box skill-inventory page (#3624), homepage digest teasers (#3625), a Journal ideas-share per Skill view (#3626), and six visitor-brief reading traps (#3627). Dropped: homepage card and hero copy (settled by #3383), Midden unknown cause and Blog story-so-far (rejected not_planned), hero jar, Tinkerfund account banner, blocking-hooks and tagline ideas (already built or premise wrong), small Glass Box UI ideas (#3597 area), and the workflow ideas that each add a script without retiring anything. The retro step found nothing new that an open issue or Ledger entry did not already hold (late-read docs, harvest list read cost)."
+prs: []
+docsRead:
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/harvest/body-template.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/retro/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: harvest
+    reason: (invoked as a slash command)
+frictions:
+  - description: Ran list-merges-since and a GitHub issue read before reading git-conventions.md and github-integration.md; hook reminders pointed at them afterwards.
+    solution: Read the CLAUDE.md first-operation docs before the first git or GitHub call, as the Skill's step 3 reads happen early.
+    severity: nit
+  - description: harvest evidence printed 413 lines and only ten tracker hits per group, so most of the tracker could not be read hit by hit.
+    solution: Let evidence print only hits matching two keywords, or let a group be narrowed to open or recent issues.
+    severity: minor
+durationSec: 396286
+models:
+  claude-sonnet-5-5: 71
+toolCounts:
+  Bash: 28
+  Read: 3
+  mcp__github__issue_read: 3
+  mcp__github__issue_write: 4
+  Skill: 2
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0020.md
+        via: hint
+      - rule: .claude/rules/adr-0025.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0006.md
+        via: hint
+      - rule: .claude/rules/adr-0016.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0010.md
+        via: hint
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+      - rule: .claude/rules/guards.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: filed only ready-for-human Seedlings
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: session header on every issue body
+      - path: .claude/rules/adr-0009.md
+        value: confirmed
+        why: "agreed: no PR, log via close-session"
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: docs/agents/github-integration.md
+      - path: .agents/skills/harvest/body-template.md
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0022.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/adr-0020.md
+        value: unrelated
+      - path: .claude/rules/adr-0025.md
+        value: unrelated
+      - path: .claude/rules/ui-verification.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: .claude/rules/adr-0006.md
+        value: unrelated
+      - path: .claude/rules/adr-0016.md
+        value: unrelated
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/glossary-terms.md
+        value: unrelated
+      - path: .claude/rules/tenant-layers.md
+        value: unrelated
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: unrelated
+      - path: .claude/rules/adr-0010.md
+        value: unrelated
+      - path: .claude/rules/adr-0012.md
+        value: unrelated
+      - path: .claude/rules/guards.md
+        value: unrelated
+      - path: .claude/rules/adr-0008.md
+        value: unrelated
+      - path: .claude/rules/adr-0028.md
+        value: unrelated
+gitBranch: claude/eager-cerf-xz7h60
+entrypoint: remote_trigger
+cliVersion: 2.1.330
+trigger: harvest
+landedBy: Stop
