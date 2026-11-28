@@ -70,10 +70,13 @@ export const REPORTED_MESSAGE =
 /** The two checks every reported entry passes, wherever it is validated. */
 export const withReportedChecks = <T extends z.ZodType<ReportedEntry>>(entry: T) =>
   entry.refine(reportedEntryHasItsValue, { message: REPORTED_MESSAGE }).refine(reportedEntryHasItsWord, { message: REPORTED_MESSAGE })
-// Per agent: what loaded, whether it answered the rule-use ask, and the
-// rules and docs it reported. A loaded rule it left out has no value, which
-// counts against it. A subagent has an entry when it was asked, answered
-// or loaded a rule; the main agent when it loaded a rule or named something.
+// Per agent: what loaded, and for the main agent whether it answered the
+// rule-use ask and which rules and docs it reported. A loaded rule it left out
+// has no value, which counts against it. A subagent has an entry when it loaded
+// a rule; the main agent when it loaded a rule or named something. DEPRECATED
+// for a subagent entry (#3741): `answered` and `reported` are no longer written
+// (always `false` and `[]`); older logs keep their ratings. Nothing is removed
+// (ADR-0009).
 export const ruleUseEntry = z.object({
   by: z.string(), // `main`, or the subagent's agent type (`workflow` when it has none)
   // A subagent's index in `subagents`; absent on `main`, on logs before #3019,

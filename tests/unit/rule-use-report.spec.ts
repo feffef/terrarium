@@ -25,8 +25,8 @@ describe('ruleUseReport', () => {
     expect(report.coverage).toEqual({ logs: 2, withRuleUse: 1 })
   })
 
-  it('gives the answered rate per agent type', () => {
-    expect(report.answered).toEqual({ main: { entries: 1, answered: 1 }, Explore: { entries: 2, answered: 1 } })
+  it('gives the answered rate for the main agent only', () => {
+    expect(report.answered).toEqual({ main: { entries: 1, answered: 1 } })
   })
 
   it('rates each rule over the answering agents that loaded it, flagging thin data', () => {
@@ -40,17 +40,7 @@ describe('ruleUseReport', () => {
 
   it('counts loads by via, and the data-quality gaps', () => {
     expect(report.via).toEqual({ start: 1, native: 3, hint: 0, read: 0 })
-    expect(report.quality).toEqual({ noLoadRecorded: 1, unansweredSubagents: 1, unratedSubagents: 0 })
-  })
-
-  it('counts only named subagent reports that miss a loaded rule as unrated', () => {
-    const entry = (answered: boolean, reported: object[]) => ({ by: 'Explore', subagent: 0, answered, loads: [{ rule: A, via: 'native' }, { rule: B, via: 'start' }], reported })
-    const r = ruleUseReport([log('2026-11-09T00:00:00Z', { ruleUse: [
-      entry(true, [{ path: A, value: 'steered' }]), entry(true, []), entry(false, []), entry(true, [{ path: A, value: 'steered' }, { path: B, value: 'steered' }]),
-      { ...entry(true, [{ path: A, value: 'steered' }]), by: 'main' },
-    ] })], Date.parse('2026-11-08T00:00:00Z'))
-    expect(r.quality.unratedSubagents).toBe(1)
-    expect(renderReport(r)).toContain('1 with a named report that misses a loaded rule')
+    expect(report.quality).toEqual({ noLoadRecorded: 1 })
   })
 
   it('splits the main agents from the subagents', () => {
@@ -59,7 +49,7 @@ describe('ruleUseReport', () => {
     const main = ruleUseReport(parts.main, since)
     const subs = ruleUseReport(parts.subagents, since)
     expect(Object.keys(main.answered)).toEqual(['main'])
-    expect(Object.keys(subs.answered)).toEqual(['Explore'])
+    expect(subs.answered).toEqual({})
     expect(main.rules.find((r) => r.rule === A)).toMatchObject({ loads: 1, shares: { confirmed: 1 } })
     expect(subs.rules.find((r) => r.rule === A)).toMatchObject({ loads: 2, answeringLoads: 1, shares: { steered: 1 } })
   })
@@ -68,6 +58,14 @@ describe('ruleUseReport', () => {
     const text = renderReport(report)
     expect(text).toContain(A)
     expect(text).toContain('not enough data')
+  })
+
+  it('renders subagents with loads only: no answered counts, shares or data quality', () => {
+    const subs = ruleUseReport(splitByAgent(logs).subagents, Date.parse('2026-11-08T00:00:00Z'))
+    const text = renderReport(subs, true)
+    expect(text).toContain(`${A}: 2 loads`)
+    expect(text).toContain('native 2')
+    expect(text).not.toMatch(/Answered|answering|Data quality/)
   })
 
   it('shows each value share and counts the fixed words once a rule has enough data', () => {

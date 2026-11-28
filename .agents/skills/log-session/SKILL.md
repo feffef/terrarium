@@ -157,8 +157,8 @@ your "this session is done" signal.
 `--pending`, and `--author` again, list the rules that loaded for you, those
 loaded at start included, each with what it governs, and the instruction docs
 you read, and say what each value means. Follow what they print; write
-`reported: []` when nothing applies. A subagent answers for
-itself (the SubagentStart note), so don't collect its view.
+`reported: []` when nothing applies. A subagent's loads are
+logged without ratings, so don't collect its view.
 
 Every pass is a full scratch with every field the schema requires. Its lists
 merge with the earlier pass, so list only new entries, plus any `skillsUsed`
