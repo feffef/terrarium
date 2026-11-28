@@ -16,7 +16,7 @@ import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { buildDenyOutput, denyUninspectable, printDryRunResult, prop, readHookPayload, readTranscript, resolveDryRunInput, runGuard } from './hook-io.ts'
 import { extractTrace } from '../session/transcript-trace.ts'
-import { buildDocLineIndex } from '../session/shell-reads.ts'
+import { buildDocLineIndex, canonicalizeInstructionPath } from '../session/shell-reads.ts'
 import { root } from '../lib/cli.ts'
 
 const LABEL = 'dispatch-read guard'
@@ -27,7 +27,14 @@ export function shouldDeny(agentId: unknown, records: Record<string, unknown>[] 
   if (agentId !== undefined || !records) return false
   const trace = extractTrace(records, process.env, buildDocLineIndex([{ path: DOC, text: readFileSync(join(root, DOC), 'utf8') }]))
   return !trace.skillsUsed.includes('dispatch-subagents')
-    && ![...trace.filesRead, ...trace.docsReadViaShell].some((p) => p === DOC || p.endsWith(`/${DOC}`))
+    && ![...trace.filesRead, ...trace.docsReadViaShell].some(isDoc)
+}
+
+// `.claude/skills/<name>` links to `.agents/skills/<name>`; an absolute path
+// keeps the link name when the record carried no cwd to strip.
+const isDoc = (p: string): boolean => {
+  const c = canonicalizeInstructionPath(p)
+  return c === DOC || c.endsWith(`/${DOC}`) || p.endsWith(`/${DOC.replace('.agents', '.claude')}`)
 }
 
 export const formatGuardMessage = () =>
