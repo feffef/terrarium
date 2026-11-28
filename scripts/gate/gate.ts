@@ -21,16 +21,19 @@ export const HEAVY = ['test', 'build', 'test:e2e'] as const
 // still covers `.agents/skills/**/SKILL.md`. Rationale: #350.
 // `.claude/skills/` is the symlink mirror of `.agents/skills/` (ADR-0005) and is
 // read by no HEAVY step — `test`/`test:e2e` collect only the spec globs owned by
-// `vitest.config.ts`, and `build` reads only `.claude/rules/` there. Rationale: #544.
+// `vitest.config.ts`. Rationale: #544. `.claude/rules/` is not inert even as `.md`:
+// unit specs read it, so `test` must run (#3713).
 export function isInert(path: string): boolean {
+  if (path.startsWith('.claude/rules/')) return false
   return (path.endsWith('.md') && !path.startsWith('layers/')) || path.startsWith('.claude/skills/')
 }
 
 // Build reads `.agents/skills/` only to list which folders hold a SKILL.md, and no
 // e2e spec reads it, so build and e2e may skip these (#1603). A workflow script
-// is its Skill's code (ADR-0005).
+// is its Skill's code (ADR-0005). Rules are the same to build and e2e: no input
+// reads them (#3713).
 export function isSkillFile(path: string): boolean {
-  return path.startsWith('.agents/skills/') || path.startsWith('.claude/workflows/')
+  return path.startsWith('.agents/skills/') || path.startsWith('.claude/workflows/') || path.startsWith('.claude/rules/')
 }
 
 export const BUILT = ['build', 'test:e2e'] as const
