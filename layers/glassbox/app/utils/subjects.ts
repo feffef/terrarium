@@ -10,6 +10,7 @@ export const glassboxSubjects = [
   { slug: 'web-standards', name: 'Web standards' },
   { slug: 'git-github', name: 'Git & GitHub' },
   { slug: 'deploy', name: 'Deploy' },
+  { slug: 'self-improvement', name: 'Self-improvement' },
   { slug: 'terrarium-practice', name: 'House rules' },
 ] as const
 

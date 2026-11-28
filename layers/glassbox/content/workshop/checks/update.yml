@@ -93,19 +93,19 @@ pages:
     checked: '2026-11-13'
   - page: terrarium-practice/30.ubiquitous-language
     checked: '2026-11-13'
-  - page: terrarium-practice/40.session-logs
+  - page: self-improvement/20.session-logs
     checked: '2026-11-14'
-  - page: terrarium-practice/45.ideas-and-lessons-learned
+  - page: self-improvement/30.ideas-and-lessons-learned
     checked: '2026-11-14'
-  - page: terrarium-practice/50.pruning-instructions
+  - page: self-improvement/40.pruning-instructions
     checked: '2026-11-14'
   - page: terrarium-practice/60.protected-paths
     checked: '2026-11-14'
   - page: terrarium-practice/70.cross-tenant-reads
     checked: '2026-11-14'
-  - page: terrarium-practice/80.self-improvement-loop
+  - page: self-improvement/10.self-improvement-loop
     checked: '2026-11-15'
-  - page: terrarium-practice/85.skill-inventory
+  - page: self-improvement/50.skill-inventory
     checked: '2026-11-15'
   - page: terrarium-practice/90.outside-contributions
     checked: '2026-11-15'

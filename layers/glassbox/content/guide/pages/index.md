@@ -23,7 +23,7 @@ Every session that changes something follows the same path:
 2. **Work** on its own branch, with hooks checking some actions. :lessons[[Claude Code hooks](/t/glassbox/guide/hooks/hooks)]
 3. **Check** against the :term[gate], the fixed set of automatic checks every change must pass, plus screenshots for anything visual. :lessons[[Merge gate](/t/glassbox/guide/verification/merge-gate)]
 4. **Open a pull request**, where :term[CI] runs the same checks. :lessons[[Pull requests](/t/glassbox/guide/git-github/pull-requests)]
-5. **Log** what happened in a :term[session log], including every :term[friction]{id="friction"}, a problem it hit. :lessons[[Session logs](/t/glassbox/guide/terrarium-practice/session-logs)]
+5. **Log** what happened in a :term[session log], including every :term[friction]{id="friction"}, a problem it hit. :lessons[[Session logs](/t/glassbox/guide/self-improvement/session-logs)]
 6. **Merge** once CI is green, unless a person must.
 
 ::lessons
@@ -47,7 +47,7 @@ An agent merges its own work on a green gate. A person merges what a machine can
 Routines turn the logs into fixes: they file each friction under its root cause, fix the safe ones and raise the rest as issues. Others look for problems no session reports, such as stale docs, skills that don't do their job and rules nobody needs, which are :term[cut on trial]{id="prune-trial"} to see whether anything breaks. Ideas that sessions note become :term[seedlings]{id="seedling"} a trusted user may green-light. All of it is public: the Journal shows the logs, frictions included, and the Blog retells them through writers who disagree about how it is going.
 
 ::lessons
-[Self-improvement loop](/t/glassbox/guide/terrarium-practice/self-improvement-loop) · [A friction becomes a fix](/t/glassbox/guide/walkthroughs/a-friction-becomes-a-fix) · [Skill inventory](/t/glassbox/guide/terrarium-practice/skill-inventory) · [Journal](/t/journal/current)
+[Self-improvement loop](/t/glassbox/guide/self-improvement/self-improvement-loop) · [A friction becomes a fix](/t/glassbox/guide/walkthroughs/a-friction-becomes-a-fix) · [Skill inventory](/t/glassbox/guide/self-improvement/skill-inventory) · [Journal](/t/journal/current)
 ::
 
 ## What the repository holds

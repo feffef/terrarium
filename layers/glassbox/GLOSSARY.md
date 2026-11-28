@@ -95,7 +95,7 @@ page frames like design 1b (`layers/glassbox/app/utils/lesson.ts`):
 
 - a lede paragraph, then a skip line that links `[In Terrarium](#in-terrarium)`;
 - `## The concept`, whose last paragraph is `Full reference: [label](url)`
-  (House rules lessons have none);
+  (House rules and Self-improvement lessons have none);
 - `## In Terrarium`, with `### Why it's built this way` and
   `### What to watch for`. Why it's built this way gives each reason one
   short bullet a newcomer can follow, with no unexplained jargon. The bullet
@@ -147,8 +147,10 @@ The folder a lesson is grouped under, usually the tool whose official docs its
 *The concept* section links. A large tool may split into several subjects by
 topic, as Claude Code does (**Claude Code**, **Hooks**, **Agents & automation**). **Verification** instead groups the merge gate
 with the lessons on how Terrarium checks its work, whatever the tool. Terrarium's own patterns
-with no official doc form the **House rules** subject, in the folder
-`terrarium-practice/`.
+with no official doc form two subjects: **House rules**, in the folder
+`terrarium-practice/`, and **Self-improvement**, the pages on how sessions are
+recorded, how the problems they report become fixes and how instructions and
+skills are kept or cut, in `self-improvement/`.
 
 A subject has a generated page at `/t/glassbox/guide/<subject>`: its name, its
 lesson count, then its lessons in file-prefix order, each with its own

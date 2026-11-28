@@ -263,7 +263,7 @@ function lessonProblems(file: string, body: string, prose: string, space: string
   }
   if (space === 'guide') for (const l of motiveLines(body, 'because')) problems.push(`In Terrarium gives a motive ("because"); move it to Why it's built this way: ${l}`)
   const fullReference = new RegExp(`^${glassboxLessonLabels.fullReference}:?\\s*\\[[^\\]]+\\]\\(https://`, 'm')
-  if (!file.startsWith('terrarium-practice/') && !fullReference.test(prose)) problems.push('Lesson has no "Full reference" https link')
+  if (!/^(terrarium-practice|self-improvement)\//.test(file) && !fullReference.test(prose)) problems.push('Lesson has no "Full reference" https link')
   return problems
 }
 
