@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQXqFgSJQrDyLQLxJW
 startedAt: 2026-11-28T13:09:12Z
-endedAt: 2026-11-28T13:17:54Z
+endedAt: 2026-11-28T13:26:16Z
 kind: autonomous
 goal: Scheduled prune trial of agent instructions
-status: in-review
-outcome: "Opened PR #3747 condensing dispatch-subagents, as a new trial; no trial was judgeable yet"
-summary: "Scheduled run, no human involved. find-trial-window showed both open trials (verifying-ui-changes, pr-workflow) not judgeable until 2026-11-29/30, so nothing was judged. A search subagent ranked failed rules; I picked the subagent-brief rules (largest prose mass) and condensed dispatch-subagents SKILL.md (-31 words only, since PR #2324 already cut it). A Sonnet probe pinned to the post-prune SHA passed; code-review found three dropped clauses and unverifiable claims in the trial entry, which I fixed. Gate passed; PR #3747 opened. Candidates left for later runs: CLAUDE.md Question the premise, Verify before you state, One home per fact (5, 12 and 2 regression issues per the subagent, unverified). Merge and CI watching are still open."
+status: completed
+outcome: "Merged PR #3747 condensing dispatch-subagents as a new prune trial; no trial was judgeable yet"
+summary: "Scheduled run, no human involved. find-trial-window showed both open trials (verifying-ui-changes, pr-workflow) not judgeable until 2026-11-29/30, so nothing was judged. A search subagent ranked failed rules; I picked the subagent-brief rules (largest prose mass) and condensed dispatch-subagents SKILL.md (-31 words only, since PR #2324 already cut it). A Sonnet probe pinned to the post-prune SHA passed; code-review found three dropped clauses and unverifiable claims in the trial entry, which I fixed. Gate passed; PR #3747 opened. Candidates left for later runs: CLAUDE.md Question the premise, Verify before you state, One home per fact (5, 12 and 2 regression issues per the subagent, unverified). PR #3747 merged after CI green and my posted verdict."
 prs:
   - "3747"
 docsRead:
@@ -42,17 +42,23 @@ frictions:
   - description: The prune of an already-pruned Skill saved only 31 words; the search subagent ranked by prose mass without noting the earlier trial on the same text.
     solution: Have the prune-trial search brief exclude text a landed trial already cut.
     severity: minor
-durationSec: 522
+  - description: Fixing first-review findings made a 12-line follow-up, over the simple-change bar, so a second full code-review round was needed.
+    solution: Fold review fixes into one commit, and count the follow-up's lines before choosing own-read.
+    severity: minor
+durationSec: 1023
 models:
-  claude-sonnet-5-5: 61
+  claude-sonnet-5-5: 92
 toolCounts:
-  Bash: 19
-  Skill: 5
-  Agent: 4
-  ReadNotifications: 1
-  ToolSearch: 1
+  Bash: 27
+  Skill: 7
+  Agent: 6
+  ReadNotifications: 3
+  ToolSearch: 2
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/prune-trials.yml
   - .agents/skills/dispatch-subagents/SKILL.md
@@ -81,7 +87,8 @@ ruleUse:
       - rule: .claude/rules/adr-0017.md
         via: start
       - rule: .claude/rules/adr-0027.md
-        via: hint
+        via: native
+        trigger: docs/agents/pr-workflow.md
       - rule: .claude/rules/adr-0029.md
         via: hint
       - rule: .claude/rules/adr-0030.md
@@ -203,6 +210,42 @@ ruleUse:
         via: native
         trigger: .agents/skills/prune-trial/SKILL.md
     reported: []
+  - by: general-purpose
+    subagent: 4
+    answered: false
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+    reported: []
+  - by: general-purpose
+    subagent: 5
+    answered: false
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+    reported: []
 subagents:
   - type: general-purpose
     task: Search failed prose rules
@@ -210,30 +253,46 @@ subagents:
     durationSec: 54
     toolCalls: 10
     modelCalls: 9
-    tokenShare: 13.8
+    tokenShare: 8.8
   - type: general-purpose
     task: Probe pruned dispatch skill
     model: sonnet
     durationSec: 8
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 3.9
+    tokenShare: 2.5
   - type: general-purpose
     task: Standards review
     model: sonnet
     durationSec: 22
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 10.5
+    tokenShare: 6.7
   - type: general-purpose
     task: Spec review
     model: sonnet
     durationSec: 27
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 10.3
+    tokenShare: 6.6
+  - type: general-purpose
+    task: Standards review final head
+    model: sonnet
+    durationSec: 21
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 6
+  - type: general-purpose
+    task: Spec review final head
+    model: sonnet
+    durationSec: 30
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 7.3
 gitBranch: claude/practical-rubin-t2y98e
 entrypoint: remote_trigger
 cliVersion: 2.1.332
 trigger: prune-trial
+learnings:
+  - A scheduled prune run can find both open trials unjudgeable; the new trial must then be chosen by failure evidence, and an already-pruned Skill yields only a small cut.
 landedBy: Stop
