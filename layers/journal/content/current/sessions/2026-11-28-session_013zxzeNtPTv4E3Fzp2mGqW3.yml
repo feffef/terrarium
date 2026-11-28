@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeNtPTv4E3Fzp2mGqW3
 startedAt: 2026-11-28T07:48:41Z
-endedAt: 2026-11-28T08:07:44Z
+endedAt: 2026-11-28T08:46:02Z
 kind: interactive
 goal: Remove the subagent rule-rating machinery (#3741)
-status: in-review
-outcome: PR 3742 is open and waits for a human merge; typecheck, specs, the scoped gate and code-review passed
-summary: "Human-instructed: the owner approved issue 3741 and set the plan (remove subagent ratings and their UI, keep main-session ratings, deprecate schema fields without deleting, keep subagent loads), told me to edit rule-use.ts and transcript-trace.ts together, to screenshot the card before and after, and not to open the PR until they confirmed. Midway the owner asked me to record the frictions of the earlier session session_013zxzeRSWoXMFrjotsqrUF9, whose log cannot land (relayed frictions 1 to 3 below; I verified only that transcript-trace.ts imported the removed exports). After seeing the first screenshot the owner also changed the decision: the Journal card shows no subagent block at all. They then asked for a sweep of the 23 open issues; I reported #3727 as closable and #3713 as needing a line-number comment, and posted nothing because I had no go-ahead. Agent-initiated: edit order (trace first so imports stayed valid), the loads-only render in rule-use-report --split, the Glass Box session-logs page edit, and leaving the reviewers' judgement calls unapplied. Result: 23 files in two commits, typecheck clean, 105 targeted specs and the scoped gate passed on the final tree, code-review (Standards and Spec) found no hard violations, owner confirmed the revised screenshot, PR 3742 opened and subscribed. Open: the human merge, plus the owner's call on closing #3727, commenting on #3713 and #3741, and the Friction Ledger entry."
+status: completed
+outcome: "PR 3742 merged by the owner: subagent rating hooks and card block removed, main-session ratings and subagent loads kept"
+summary: "Human-instructed: the owner approved issue 3741 and set the plan (remove subagent ratings and their UI, keep main-session ratings, deprecate schema fields without deleting, keep subagent loads), told me to edit rule-use.ts and transcript-trace.ts together, to screenshot the card before and after, and not to open the PR until they confirmed. The owner then asked me to record the frictions of the earlier session session_013zxzeRSWoXMFrjotsqrUF9, whose log cannot land (relayed frictions 1 to 3 in this log; I verified only that transcript-trace.ts imported the removed exports). After the first screenshot the owner dropped the subagent block from the Journal card entirely. They asked for a sweep of the 23 open issues and agreed to my proposals: I closed #3727 as not planned and commented on #3713 and #3741. They then asked for a repo-wide leftover review and told me to do the follow-up it found. Agent-initiated: edit order (trace first so imports stayed valid), the loads-only render in rule-use-report --split, the Glass Box session-logs page edit, and leaving the reviewers' two wording nits unapplied. Result: three commits, typecheck clean, scoped gate and CI green on the final head 6f5507991, code-review (Standards and Spec) twice with no hard violations, and the owner merged PR 3742 at 08:45 UTC. Left open by choice: the Friction Ledger entry rule-use-echo-calls-in-subagents.yml (history), and two stale-wording nits in rule-use-report.ts."
 prs:
   - "3742"
 docsRead:
@@ -20,6 +20,10 @@ docsRead:
     reason: (read before editing)
   - path: docs/agents/pr-workflow.md
     reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
   - path: layers/journal/GLOSSARY.md
     reason: (no reason given)
   - path: docs/agents/guards.md
@@ -29,6 +33,8 @@ docsRead:
   - path: .agents/skills/glassbox-lesson/owner-decisions.md
     reason: (no reason given)
   - path: layers/glassbox/GLOSSARY.md
+    reason: (no reason given)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
     reason: (no reason given)
 skillsUsed:
   - name: close-session
@@ -78,27 +84,39 @@ frictions:
   - description: I made the code-review call by hand (merge-base args plus an amendment) instead of the call verdict-line.ts --review-call prints; the printed one names origin/main and the head sha.
     solution: Print the review call first and add amendments after it.
     severity: nit
-durationSec: 1143
+  - description: "In my #3713 comment I said a second copy of the governsLine assertion at line 300 was gone, reading two grep outputs as two hits; there was one assertion, moved from 300 to 192. I corrected the posted comment right away."
+    solution: Label each grep output with its ref and check the count before putting a claim on a public issue.
+    severity: nit
+durationSec: 3442
 models:
-  claude-sonnet-5-5: 206
+  claude-sonnet-5-5: 303
 toolCounts:
-  Bash: 72
-  Read: 9
+  Bash: 85
+  Read: 11
   mcp__github__issue_read: 1
   SendUserFile: 2
-  Skill: 5
-  mcp__claude-code-remote__send_later: 1
-  Write: 2
-  mcp__claude-code-remote__delete_trigger: 1
-  Agent: 2
-  ToolSearch: 1
+  Skill: 8
+  mcp__claude-code-remote__send_later: 2
+  Write: 3
+  mcp__claude-code-remote__delete_trigger: 2
+  Agent: 6
+  ToolSearch: 5
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 3
+  mcp__github__update_issue_comment: 1
+  mcp__github__issue_write: 1
+  ReadNotifications: 6
+  mcp__github__pull_request_read: 4
+  mcp__github__update_pull_request: 1
 filesEdited:
+  - layers/journal/app/utils/dashboard.ts
+  - scripts/session/rule-use-report.ts
+  - shared/schemas/session.ts
+  - tests/unit/rule-use-report.spec.ts
   - layers/journal/app/components/journal/SessionCard.vue
   - layers/journal/app/types/journal.ts
-  - layers/journal/app/utils/dashboard.ts
   - layers/journal/tests/unit/journal-dashboard.spec.ts
   - .agents/skills/log-session/SKILL.md
   - .claude/settings.json
@@ -110,12 +128,9 @@ filesEdited:
   - scripts/hooks/rule-use-ask.ts
   - scripts/hooks/subagent-note.ts
   - scripts/hooks/subagent-rule-use-stop.ts
-  - scripts/session/rule-use-report.ts
   - scripts/session/rule-use.ts
   - scripts/session/transcript-trace.ts
-  - shared/schemas/session.ts
   - tests/unit/rule-use-ask.spec.ts
-  - tests/unit/rule-use-report.spec.ts
   - tests/unit/rule-use.spec.ts
   - tests/unit/subagent-note.spec.ts
   - tests/unit/subagent-rule-use-stop.spec.ts
@@ -124,6 +139,10 @@ rulesGlobal:
   - .claude/rules/adr-0009.md
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0009.md
+docsReadBySubagents:
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
 ruleUse:
   - by: main
     answered: true
@@ -173,6 +192,9 @@ ruleUse:
         via: hint
       - rule: .claude/rules/glassbox-content.md
         via: hint
+      - rule: .claude/rules/adr-0022.md
+        via: native
+        trigger: docs/agents/triage-labels.md
     reported:
       - path: .claude/rules/adr-0004.md
         value: steered
@@ -223,6 +245,8 @@ ruleUse:
       - path: docs/agents/verifying-ui-changes.md
       - path: docs/agents/guards.md
       - path: .agents/skills/glassbox-lesson/owner-decisions.md
+      - path: .claude/rules/adr-0022.md
+        value: unrelated
   - by: general-purpose
     subagent: 0
     answered: false
@@ -289,19 +313,135 @@ ruleUse:
       - rule: .claude/rules/ui-verification.md
         via: hint
     reported: []
+  - by: general-purpose
+    subagent: 2
+    answered: false
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0025.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/adr-0030.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/guards.md
+        via: hint
+    reported: []
+  - by: general-purpose
+    subagent: 3
+    answered: false
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/tenant-layers.md
+        via: hint
+      - rule: .claude/rules/ui-verification.md
+        via: hint
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0025.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/adr-0015.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/guards.md
+        via: hint
+    reported: []
+  - by: general-purpose
+    subagent: 4
+    answered: false
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+    reported: []
+  - by: general-purpose
+    subagent: 5
+    answered: false
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported: []
 subagents:
   - type: general-purpose
     task: "Standards review of #3741 branch"
     durationSec: 55
     toolCalls: 12
     modelCalls: 11
-    tokenShare: 8.8
+    tokenShare: 5
   - type: general-purpose
     task: "Spec review of #3741 branch"
     durationSec: 47
     toolCalls: 13
     modelCalls: 9
-    tokenShare: 8.8
+    tokenShare: 5
+  - type: general-purpose
+    task: "Standards review: docs and skills leftovers"
+    durationSec: 29
+    toolCalls: 6
+    modelCalls: 6
+    tokenShare: 1.9
+  - type: general-purpose
+    task: "Spec review: code leftovers and consumers"
+    durationSec: 44
+    toolCalls: 10
+    modelCalls: 8
+    tokenShare: 2.7
+  - type: general-purpose
+    task: Standards review of follow-up commit
+    durationSec: 15
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 2.6
+  - type: general-purpose
+    task: Spec review of follow-up commit
+    durationSec: 23
+    toolCalls: 7
+    modelCalls: 5
+    tokenShare: 2.8
 gitBranch: ccr-1fd69d5c-emcpp0
 entrypoint: remote_mobile
 cliVersion: 2.1.332
