@@ -12,6 +12,8 @@ your first GitHub call, load the tools you need in one `ToolSearch`
 
 ## 1. Read the ledger and the window
 
+Before any ledger write, read `layers/journal/GLOSSARY.md` in full.
+
 Goal: the ledger's state and every in-window Friction in front of you.
 
 1. The Friction Ledger (`layers/journal/content/current/frictions/*.yml`; schema
