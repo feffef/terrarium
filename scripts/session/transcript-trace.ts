@@ -677,7 +677,8 @@ export function extractTrace(
       const r = block as { tool_use_id?: string; content?: unknown; is_error?: boolean }
       if (b.type === 'tool_result' && mergeCmdIds.has(r.tool_use_id ?? '') && !r.is_error && /"merged":\s*true/.test(toolResultText(r.content))) {
         mergedWithoutClose = true
-        selfMerged.add(mergeCmdIds.get(r.tool_use_id ?? '') ?? '')
+        const pr = mergeCmdIds.get(r.tool_use_id ?? '')
+        if (pr) selfMerged.add(pr)
       }
       if (b.type !== 'tool_use') continue
       const name = b.name ?? '?'
