@@ -46,6 +46,25 @@ describe('the Stop hook', () => {
   it('passes a re-entered stop', () => {
     expect(run(true)).toBe('')
   })
+  describe('a PR the owner merged (#3714)', () => {
+    // Real notification text from a scheduled run; the transcript wrapper is unverified.
+    const text = '<wake reason="external-event" current-time="2026-11-26T16:34:33Z">\n  <event source="github" kind="pull_request.closed" from="system" trust="relay">\n    <!-- The PR has been merged. -->\n    {"outcome":"merged","pr":"feffef/terrarium#3693"}\n  </event>\n</wake>'
+    const wrappers = {
+      string: { type: 'user', message: { role: 'user', content: text } },
+      blocks: { type: 'user', message: { role: 'user', content: [{ type: 'text', text }] } },
+      queued: { type: 'attachment', attachment: { type: 'queued_command', prompt: text } },
+    }
+    it.each(Object.entries(wrappers))('blocks after a %s notification, until close-session runs', (_, rec) => {
+      expect(JSON.parse(run(false, [rec])).decision).toBe('block')
+      expect(run(false, [rec, close])).toBe('')
+    })
+    it('ignores other events, closed-unmerged PRs and quoted text', () => {
+      const other = text.replace('"outcome":"merged"', '"outcome":"closed"')
+      expect(run(false, [{ type: 'user', message: { content: other } }])).toBe('')
+      expect(run(false, [{ type: 'user', message: { content: text.replace('pull_request.closed', 'issue_comment.created').replace('merged', 'x') } }])).toBe('')
+      expect(run(false, [tool('Bash', { command: `echo '${text}'` })])).toBe('')
+    })
+  })
   describe('closure without a log (#3728)', () => {
     const author = tool('Bash', { command: 'pnpm exec tsx scripts/session/log-session.ts --author x.json' })
     it('blocks when close-session or --author ran and no scratch exists', () => {

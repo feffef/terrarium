@@ -595,6 +595,16 @@ function mergeAdrHints(hints: AdrHint[]): AdrHint[] {
   return [...out.values()]
 }
 
+/** A subscription event saying someone else merged a watched PR (#3714). The
+ *  transcript wrapper is unverified, so match the serialized record, not a field
+ *  path. Assistant text and tool results only quote such an event; they don't receive one. */
+export function isOwnerMergeNotice(rec: Record<string, unknown>): boolean {
+  if (rec.type === 'assistant') return false
+  const text = JSON.stringify(rec)
+  return !text.includes('tool_result') && /source=\\?"github\\?"/.test(text) &&
+    text.includes('pull_request.closed') && /\\?"outcome\\?":\s*\\?"merged\\?"/.test(text)
+}
+
 /** Derive the mechanical trace from parsed transcript records. Pure — the
  *  testable core. `env` is injectable (defaults to `process.env`). `docIndex`
  *  is what `docsReadViaShell` is credited against (ADR-0009): the lander and
@@ -650,6 +660,8 @@ export function extractTrace(
       models[msg.model] = (models[msg.model] ?? 0) + 1
     }
     if (rec.type === 'assistant' && msg?.id && msg.usage) usageById.set(msg.id, msg.usage)
+
+    if (isOwnerMergeNotice(rec)) mergedWithoutClose = true
 
     const content = msg?.content
     if (rec.type === 'user') commandSkills.push(...commandSkillNames(content))
