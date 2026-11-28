@@ -226,7 +226,7 @@ For each `reviewed` branch, in round N:
    rules' gate command and timeout. If it fails, fix the cause and run it
    again until it exits 0. Reply with one line: `GATE <log> <sha before>
    <HEAD sha>`." Check `tail -n 1 <log>` reads `EXIT=0` and HEAD matches. If
-   HEAD moved, resume the latest round's Standards reviewer on `<sha
+   HEAD moved, resume the latest round's Standards reviewer (`Both` on a `small` branch) on `<sha
    before>..<HEAD sha>` as in step 3, then gate once more; if that fails or
    moves HEAD again, report the branch.
 
