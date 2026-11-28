@@ -595,6 +595,18 @@ function mergeAdrHints(hints: AdrHint[]): AdrHint[] {
   return [...out.values()]
 }
 
+/** The PR number ('?' if unreadable) of a subscription event saying a watched PR
+ *  merged (#3714), else null. The transcript wrapper is unverified, so match the
+ *  serialized record, not a field path. Assistant text and tool results only
+ *  quote such an event, so a record holding `tool_result` is dropped whole. */
+export function mergedPrNotice(rec: Record<string, unknown>): string | null {
+  if (rec.type === 'assistant') return null
+  const text = JSON.stringify(rec)
+  if (text.includes('tool_result') || !/source=\\?"github\\?"/.test(text) || !text.includes('pull_request.closed')) return null
+  if (!/\\?"outcome\\?":\s*\\?"merged\\?"/.test(text)) return null
+  return /\\?"pr\\?":\s*\\?"[^"#\\]*#(\d+)/.exec(text)?.[1] ?? '?'
+}
+
 /** Derive the mechanical trace from parsed transcript records. Pure — the
  *  testable core. `env` is injectable (defaults to `process.env`). `docIndex`
  *  is what `docsReadViaShell` is credited against (ADR-0009): the lander and
@@ -617,7 +629,9 @@ export function extractTrace(
   const prSignals: string[] = []
   let mergedWithoutClose = false
   // merge-pr.ts only merges when its own result says so; that may land in a later record.
-  const mergeCmdIds = new Set<string>()
+  const mergeCmdIds = new Map<string, string>()
+  // PRs this session merged itself: their own subscription event is no owner merge.
+  const selfMerged = new Set<string>()
   const rules: string[] = []
   const alwaysLoadedRules: string[] = []
   const loads: RuleLoad[] = []
@@ -651,6 +665,9 @@ export function extractTrace(
     }
     if (rec.type === 'assistant' && msg?.id && msg.usage) usageById.set(msg.id, msg.usage)
 
+    const noticed = mergedPrNotice(rec)
+    if (noticed !== null && !selfMerged.has(noticed)) mergedWithoutClose = true
+
     const content = msg?.content
     if (rec.type === 'user') commandSkills.push(...commandSkillNames(content))
     if (!Array.isArray(content)) continue
@@ -660,6 +677,8 @@ export function extractTrace(
       const r = block as { tool_use_id?: string; content?: unknown; is_error?: boolean }
       if (b.type === 'tool_result' && mergeCmdIds.has(r.tool_use_id ?? '') && !r.is_error && /"merged":\s*true/.test(toolResultText(r.content))) {
         mergedWithoutClose = true
+        const pr = mergeCmdIds.get(r.tool_use_id ?? '')
+        if (pr) selfMerged.add(pr)
       }
       if (b.type !== 'tool_use') continue
       const name = b.name ?? '?'
@@ -685,11 +704,12 @@ export function extractTrace(
         prSignals.push((input.title as string) ?? '(pr)')
       } else if (name.endsWith('merge_pull_request')) {
         mergedWithoutClose = true
+        selfMerged.add(String(input.pullNumber))
       }
 
       if (name === 'Bash') {
         const cmd = (input.command as string) ?? ''
-        if (cmd.includes('scripts/github/merge-pr.ts')) mergeCmdIds.add((block as { id?: string }).id ?? '')
+        if (cmd.includes('scripts/github/merge-pr.ts')) mergeCmdIds.set((block as { id?: string }).id ?? '', /merge-pr\.ts\s+(\d+)/.exec(cmd)?.[1] ?? '')
         if (cmd.includes('git push') || cmd.includes('pr create')) {
           prSignals.push(`(bash) ${cmd.slice(0, 60)}`)
         }
