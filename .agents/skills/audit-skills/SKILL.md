@@ -18,7 +18,8 @@ Keeping the **Skill Inventory** (`layers/journal/content/current/skills/`) in
 line with real usage is a by-product of the same evidence.
 
 This Skill writes only Inventory `.yml` entries, Routine run costs and GitHub
-issues (ADR-0015).
+issues (ADR-0015). Before you write any, read `layers/journal/GLOSSARY.md` in
+full.
 
 ## 1. Gather the scorecard
 

@@ -33,7 +33,7 @@ Done when you hold the list of days to author.
 
 ## 3. Write one Digest per day
 
-Before the first Digest you save, read
+Before the first Digest you save, read `layers/journal/GLOSSARY.md` and
 `docs/adr/0010-digests-derived-append-only-journal-pages.md` in full.
 
 For each listed `<date>`:

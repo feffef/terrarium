@@ -19,6 +19,8 @@ Three kinds of PR: the **ledger PR** (§5, every run, fixes or none), **fix PRs*
 
 ## 1. Survey
 
+Before any ledger write, read `layers/journal/GLOSSARY.md` in full.
+
 Goal: a ranked, screened candidate list with the ledger updated. The logs and
 tracker are too big for your context, so work only from a subagent's report.
 
