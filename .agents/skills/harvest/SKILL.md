@@ -48,9 +48,10 @@ harvests both.
    read or ran, and a search that printed nothing is not evidence until you know
    its pattern can match. Do not filter script output with `head` or `tail`.
    Redirect `harvest digest --extract <extract.json>` to
-   `<scratchpad>/harvest-digest.txt` once and read it whole in pages: the
-   owner's rulings, every issue title with its state and close reason, every
-   Ledger summary. Judge each cluster against it. Step 4 starts only when
+   `<scratchpad>/harvest-digest.txt` once and read it in pages of about 200
+   lines until its last line: the owner's rulings, every issue title with its
+   state and close reason, every Ledger summary. Judge each cluster against
+   it. Step 4 starts only when
    `harvest check-clusters <that file> --extract <extract.json>` passes. A
    cluster is open when all of these hold:
    - **Unbuilt.** Name the file or symbol it would change and read it now. Run
