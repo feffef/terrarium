@@ -1,0 +1,246 @@
+schemaVersion: 1
+session: session_013zxzeSNzFS3pFsxSWmEuYC
+startedAt: 2026-11-28T11:08:06Z
+endedAt: 2026-11-28T11:19:02Z
+kind: autonomous
+goal: Scheduled blog post by Eyra
+status: in-review
+outcome: Eyra post on the removed subagent rule-rating strip is gated and open as PR 3745, awaiting CI to merge
+summary: A scheduled blog-post run, with no human prompt. The rotation gate allowed only Eyra. Three Eyra candidate drafts were written (the Journal card colour strip removed in PR 3742, the Glass Box Self-improvement shelf move in PRs 3726 and 3739, the Journal skill page overflow in PR 3708). A blind sonnet read picked the rating-strip post for its weight (a measured feature cut in a 764-line deletion). A fact-check subagent was run four times; it caught an overstated "every subagent", an agency claim the PR and issue disagreed on (cut to what the PR says), an impossible counterfactual in the Take, and an unglossed term; all fixed. code-review found only nits. gate:scoped passed on the final blob, PR opened and subscribed. Merge and the reply decision (step 12) follow once CI is green. All work was agent-initiated under the Skill, none human-instructed beyond the schedule.
+prs:
+  - "3745"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/eyra.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: layers/blog/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: (no reason given)
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: blog-post
+    reason: (invoked as a slash command)
+frictions:
+  - description: Called pull_request_read three times before reading docs/agents/github-integration.md as CLAUDE.md requires; the hook pointed to it afterwards.
+    solution: Read the doc at the first GitHub tool call; a PreToolUse hint on the first mcp__github call would have made me do it before.
+    severity: nit
+  - description: The checker had to be re-dispatched four times because each small fix changed the blob hash the Skill requires to match the Fact-checked line.
+    solution: Batch all fixes (fact-check, review nits) before re-dispatching the checker once; I edited after the code-review nits instead of before.
+    severity: minor
+  - description: Code-review's Spec agent flagged nits already known from the fact-check; running it after the checker duplicated work on a one-file diff.
+    solution: For a one-file post, step 9 could say code-review is the fact-check, or name which of the two a content-only diff needs.
+    severity: nit
+durationSec: 655
+models:
+  claude-sonnet-5-5: 99
+toolCounts:
+  Bash: 35
+  Read: 1
+  mcp__github__pull_request_read: 6
+  mcp__github__issue_read: 1
+  Skill: 4
+  Agent: 4
+  SendMessage: 3
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+filesEdited:
+  - layers/blog/content/eyra/pages/2026-11-28-the-strip-of-colour-that-was-nearly-one-colour.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+adrHints:
+  - adr: 12
+    via: path
+    readAfter: false
+    by: main
+docsReadBySubagents:
+  - layers/blog/GLOSSARY.md
+  - .agents/skills/blog-post/SKILL.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/git-conventions.md
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: ran gate:scoped and code-review before PR
+      - path: .claude/rules/adr-0003.md
+        value: duplicate
+        why: "skill: open PR and subscribe"
+      - path: .claude/rules/adr-0017.md
+        value: confirmed
+        why: "agreed: PR header and trailer checked"
+      - path: .claude/rules/adr-0009.md
+        value: confirmed
+        why: "agreed: log via close-session"
+      - path: .claude/rules/adr-0012.md
+        value: confirmed
+        why: "agreed: standalone, no pingback needed"
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/tenant-glossary.md
+        value: unrelated
+      - path: docs/agents/git-conventions.md
+      - path: docs/agents/pr-workflow.md
+      - path: .agents/skills/blog-post/personas/eyra.md
+  - by: general-purpose
+    subagent: 0
+    answered: false
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported: []
+  - by: general-purpose
+    subagent: 1
+    answered: false
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: docs/agents/github-integration.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0025.md
+        via: hint
+      - rule: .claude/rules/data-shapes.md
+        via: hint
+      - rule: .claude/rules/adr-0008.md
+        via: hint
+      - rule: .claude/rules/adr-0021.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+    reported: []
+  - by: general-purpose
+    subagent: 2
+    answered: false
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+    reported: []
+  - by: general-purpose
+    subagent: 3
+    answered: false
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0005.md
+        via: hint
+      - rule: .claude/rules/adr-0012.md
+        via: hint
+      - rule: .claude/rules/adr-0027.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported: []
+subagents:
+  - task: Blind read of three drafts
+    model: sonnet
+    durationSec: 12
+    toolCalls: 4
+    modelCalls: 2
+    tokenShare: 7
+  - task: Fact-check blog post claims
+    model: sonnet
+    durationSec: 181
+    toolCalls: 20
+    modelCalls: 12
+    tokenShare: 12.6
+  - task: Standards review of blog post
+    model: sonnet
+    durationSec: 33
+    toolCalls: 4
+    modelCalls: 4
+    tokenShare: 4.9
+  - task: Spec review of blog post
+    model: sonnet
+    durationSec: 16
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 4
+gitBranch: claude/zen-heisenberg-6l3qd3
+entrypoint: remote_trigger
+cliVersion: 2.1.332
+trigger: blog-post
+learnings:
+  - "A fact-checker should be asked to settle agency claims from the PR body and issue comments together: they disagreed here (PR said the implementing session dropped the block, issue comment said the owner did)."
+ideas:
+  - Have the blog-post Skill order its checks so every edit-causing step (code-review nits, tone) runs before the single fact-check pass, so the final blob is checked once instead of four times.
+landedBy: Stop
