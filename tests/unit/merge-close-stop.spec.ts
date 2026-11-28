@@ -1,6 +1,6 @@
 // Coverage for the merge-without-close Stop hook (#2913; rationale in
 // `scripts/hooks/merge-close-stop.ts`).
-import { mkdtempSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -18,10 +18,18 @@ const merged = { type: 'user', message: { content: [{ type: 'tool_result', tool_
 const close = tool('Skill', { skill: 'close-session' })
 
 describe('the Stop hook', () => {
-  const run = (stopHookActive: boolean, records: object[] = [merge, merged]) => {
-    const transcript = join(mkdtempSync(join(tmpdir(), 'merge-close-')), 't.jsonl')
+  const run = (stopHookActive: boolean, records: object[] = [merge, merged], scratch = true) => {
+    const dir = mkdtempSync(join(tmpdir(), 'merge-close-'))
+    const transcript = join(dir, 't.jsonl')
     writeFileSync(transcript, records.map((r) => JSON.stringify(r)).join('\n'))
-    return runTsx(SCRIPT, { input: JSON.stringify({ transcript_path: transcript, stop_hook_active: stopHookActive }) })
+    if (scratch) {
+      mkdirSync(join(dir, '.session-logs'))
+      writeFileSync(join(dir, '.session-logs/pending.scratch.json'), '{}')
+    }
+    return runTsx(SCRIPT, {
+      input: JSON.stringify({ transcript_path: transcript, stop_hook_active: stopHookActive }),
+      env: { ...process.env, CLAUDE_PROJECT_DIR: dir },
+    })
   }
   it('blocks the stop once, with a reason', () => {
     const out = JSON.parse(run(false))
@@ -37,5 +45,20 @@ describe('the Stop hook', () => {
   })
   it('passes a re-entered stop', () => {
     expect(run(true)).toBe('')
+  })
+  describe('closure without a log (#3728)', () => {
+    const author = tool('Bash', { command: 'pnpm exec tsx scripts/session/log-session.ts --author x.json' })
+    it('blocks when close-session or --author ran and no scratch exists', () => {
+      for (const records of [[close], [author]]) {
+        const out = JSON.parse(run(false, records, false))
+        expect(out.decision).toBe('block')
+        expect(out.reason).toContain('no log was written')
+      }
+    })
+    it('passes when the scratch exists, when nothing attempted closure, or on a re-entered stop', () => {
+      expect(run(false, [close, author], true)).toBe('')
+      expect(run(false, [tool('Bash', { command: 'ls' })], false)).toBe('')
+      expect(run(true, [close], false)).toBe('')
+    })
   })
 })
