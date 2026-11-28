@@ -2,7 +2,7 @@ name: reviewer-findings-mostly-wrong
 summary: "Most of a review round's findings were rejected by the checkers, so the reviewer tokens bought little."
 cause: "Reviewers raise findings (drift in dated research snapshots, etc.) without verifying them against source, and the checker round marks most WRONG. Signals: 'WRONG', checkers contradicting each other, fraction of findings rejected."
 surface: safe
-status: tracked
+status: open
 related:
   - entry: followup-review-overcost
     rule: Findings were raised and rejected by checkers; here the cost is wrongness, not re-running.
@@ -10,6 +10,10 @@ related:
     rule: A reviewer finding the checkers rejected before it shipped.
 notes: |-
   2026-11-21 design: reviewer brief in audit-docs step 1.3 should name step 3's WRONG test: dropped: checkers marking most findings WRONG is the two-stage design working; the 11-19 run is one outlier; wait for a third occurrence.
+fixes:
+  - pr: 3735
+    date: "2026-11-28"
+    summary: "audit-docs §1 step 3 tells reviewers the checker's bar for a rewrite or cut and to propose no edit to an Inventory entry's watchFor."
 occurrences:
   - session: session_013zxzePPb9GTvLBJgGBgspQ
     date: "2026-11-19"
