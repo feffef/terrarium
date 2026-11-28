@@ -8,7 +8,7 @@ pages:
   - page: agents/40.scheduled-tasks
     checked: '2026-11-21'
   - page: agents/50.inspecting-past-sessions
-    checked: '2026-11-12'
+    checked: '2026-11-28'
   - page: claude-code/10.claude-md
     checked: '2026-11-21'
   - page: claude-code/20.path-specific-rules
@@ -58,13 +58,13 @@ pages:
   - page: nuxt-content/30.content-database
     checked: '2026-11-27'
   - page: nuxt-content/40.query-collection
-    checked: '2026-11-11'
+    checked: '2026-11-28'
   - page: nuxt-content/50.mdc-components
-    checked: '2026-11-11'
+    checked: '2026-11-28'
   - page: nuxt-content/60.mermaid-pre-rendering
-    checked: '2026-11-11'
+    checked: '2026-11-28'
   - page: nuxt-vue/10.layers
-    checked: '2026-11-12'
+    checked: '2026-11-28'
   - page: nuxt-vue/20.auto-imports
     checked: '2026-11-12'
   - page: nuxt-vue/30.file-routing
