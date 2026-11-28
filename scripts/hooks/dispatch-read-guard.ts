@@ -22,6 +22,7 @@ import { root } from '../lib/cli.ts'
 const LABEL = 'dispatch-read guard'
 const REF = 'issue #2543'
 export const DOC = '.agents/skills/dispatch-subagents/SKILL.md'
+const LINKED_DOC = '.claude/skills/dispatch-subagents/SKILL.md'
 
 export function shouldDeny(agentId: unknown, records: Record<string, unknown>[] | null): boolean {
   if (agentId !== undefined || !records) return false
@@ -34,7 +35,7 @@ export function shouldDeny(agentId: unknown, records: Record<string, unknown>[] 
 // keeps the link name when the record carried no cwd to strip.
 const isDoc = (p: string): boolean => {
   const c = canonicalizeInstructionPath(p)
-  return c === DOC || c.endsWith(`/${DOC}`) || p.endsWith(`/${DOC.replace('.agents', '.claude')}`)
+  return c === DOC || c.endsWith(`/${DOC}`) || p.endsWith(`/${LINKED_DOC}`)
 }
 
 export const formatGuardMessage = () =>

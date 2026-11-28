@@ -24,6 +24,7 @@ const transcripts: [string, Record<string, unknown>[], boolean][] = [
   ['file read via the .claude symlink', [start, toolUse('r', 'Read', { file_path: `${repo}/.claude/skills/dispatch-subagents/SKILL.md` })], true],
   ['relative file read via the .claude symlink', [start, toolUse('r', 'Read', { file_path: '.claude/skills/dispatch-subagents/SKILL.md' })], true],
   ['symlink read without a cwd', [{ type: 'user', message: { content: 'hi' } }, toolUse('r', 'Read', { file_path: '/elsewhere/.claude/skills/dispatch-subagents/SKILL.md' })], true],
+  ['another Skill read via the .claude symlink', [start, toolUse('r', 'Read', { file_path: `${repo}/.claude/skills/tdd/SKILL.md` })], false],
   ['shell read', [start, toolUse('b', 'Bash', { command: `cat ${DOC}` }), toolResult('b', readFileSync(join(repo, DOC), 'utf8'))], true],
 ]
 
