@@ -2,7 +2,7 @@ name: reviewer-findings-mostly-wrong
 summary: "Most of a review round's findings were rejected by the checkers, so the reviewer tokens bought little."
 cause: "Reviewers raise findings (drift in dated research snapshots, etc.) without verifying them against source, and the checker round marks most WRONG. Signals: 'WRONG', checkers contradicting each other, fraction of findings rejected."
 surface: safe
-status: open
+status: tracked
 related:
   - entry: followup-review-overcost
     rule: Findings were raised and rejected by checkers; here the cost is wrongness, not re-running.
@@ -26,3 +26,8 @@ occurrences:
     severity: minor
     description: "Reviewers proposed fixes the checker rejected as not shorter or plainer, or as owner-owned (watchFor, Skill merge policy); all 7 findings were wasted effort."
     solution: "Put the checker's lose-nothing and shorter bar, and that watchFor and Skill merge policy are owner-owned, in the reviewer brief."
+  - session: session_013zxzeQ3rmR3XHfvXpobcpr
+    date: "2026-11-27"
+    severity: nit
+    description: "code-review's Spec subagent claimed a quote of Kevin's own earlier post was invented after a grep that missed it; I had to re-grep to refute it."
+    solution: "Tell review briefs to confirm a quote's absence with a fixed-string grep before calling it invented."

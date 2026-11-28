@@ -33,3 +33,8 @@ occurrences:
     severity: minor
     description: "Retro (Spec reviewer): the builder's decisions.md claimed no Glass Box lesson hit while its grep pattern missed the stale clause; a required ledger-writer check was skipped silently and reached review."
     solution: "Have rules() in .claude/workflows/clear-backlog-build.js require decisions.md to list the grep patterns used for each removed concept, so the Spec reviewer can test them."
+  - session: session_013zxzeSL3eQmU15DFjqDwqw
+    date: "2026-11-27"
+    severity: nit
+    description: "Wrote 'no findings' in the PR body for code-review, though the Standards reviewer listed one low judgement note about the exemption list living in two places."
+    solution: "Quote each reviewer's verdict line when summarizing a review in a PR body."

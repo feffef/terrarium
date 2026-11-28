@@ -11,11 +11,6 @@ fixes:
     date: "2026-11-16"
     summary: "survey-brief §3: check direct commits on a named doc path before never-fixed; confirm only likely picks."
 occurrences:
-  - session: session_013zxzeNdAgdKF5tpWTQLowx
-    date: "2026-11-13"
-    severity: minor
-    description: "The survey left work the ledger review had to catch: three causes with a stored 'One occurrence.', no cause rewrite after nine recorded fixes (brief 2.4), and an entry set accepted after a later fix merged."
-    solution: "Fixed in a follow-up commit; the survey admitted the 2.4 gap in its report. Its workload (330 Frictions in one pass) is the root."
   - session: session_013zxzeRLqFejsZTowNzt1Lt
     date: "2026-11-15"
     severity: minor
@@ -36,3 +31,8 @@ occurrences:
     severity: minor
     description: "A prune-friction-ledger --move of a cluster's only occurrence silently deleted the entry with its fixes and notes; the survey agent had to restore it from git."
     solution: "Have --move refuse or warn when the source entry would end empty."
+  - session: session_013zxzeRF9wSXqBPZvCnNxKb
+    date: "2026-11-27"
+    severity: nit
+    description: "The survey agent's commit message miscounted its appends (68 and 44 against 65 and 39 plus 3 new entries), and the Standards reviewer wrongly reported an unchanged status; I verified both against the diff."
+    solution: "Have the survey cite counts from git diff, not from its own tally."

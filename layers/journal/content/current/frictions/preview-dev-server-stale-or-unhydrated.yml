@@ -20,11 +20,6 @@ fixes:
     date: "2026-11-18"
     summary: "nuxt.config.ts turns off the two Platform page-cache rules in dev, so a dev preview no longer serves 60-second-old HTML."
 occurrences:
-  - session: session_013zxzeQrRhhVjja2AkCLcyV
-    date: "2026-11-13"
-    severity: nit
-    description: "The dev server kept serving a stale layer component after an edit (tooltips stayed centred), costing two screenshot rounds before a restart."
-    solution: "Restart the dev server when a layer component edit does not show, as verifying-ui-changes.md warns."
   - session: session_013zxzeTChey8pdC2fuTTH7i
     date: "2026-11-16"
     severity: nit

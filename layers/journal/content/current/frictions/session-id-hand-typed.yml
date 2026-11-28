@@ -11,11 +11,6 @@ related:
 notes: |-
   2026-10-28 design: a guard or prose line dropped: .githooks/commit-msg corrects a wrong trailer and github-provenance-guard.ts denies a wrong id on a post and hands back the right one, so a slip costs one retry, and a guard edit is Human-only.
 occurrences:
-  - session: session_013zxzeR9vRBRGWAa4ScJTRD
-    date: "2026-11-13"
-    severity: nit
-    description: "Typed this session's id from memory into the commit message file; it was another session's id. Caught before committing via get_session."
-    solution: "Copy the id from the attribution lines in context, never recall it; the commit template should be pasted whole."
   - session: session_013zxzeQnCCyBdXZDEv9qTNh
     date: "2026-11-14"
     severity: nit
@@ -156,3 +151,8 @@ occurrences:
     severity: minor
     description: "Drafted two issue bodies with a session id I had not looked up, then caught it before posting by calling get_session."
     solution: "Print the session id once at the start (get_session) and paste from it; the system prompt's commit template gives it."
+  - session: session_013zxzeSL3eQmU15DFjqDwqw
+    date: "2026-11-27"
+    severity: nit
+    description: "Typed the session id from memory into a commit message and got it wrong; caught by calling get_session before committing."
+    solution: "Have log-session --pending or the commit-msg hook print the id ready to paste, so nobody types it."

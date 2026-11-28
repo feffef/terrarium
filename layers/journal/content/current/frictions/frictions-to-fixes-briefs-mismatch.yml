@@ -44,11 +44,6 @@ fixes:
     date: "2026-11-18"
     summary: "survey-brief.md step 5 skips a tracked entry with no ref (a dispatched fix in flight), resolving its contradiction with SKILL.md 5.3."
 occurrences:
-  - session: session_013zxzeNdAgdKF5tpWTQLowx
-    date: "2026-11-13"
-    severity: minor
-    description: "Survey subagent: brief section 3 asks it to confirm every candidate entry against tracker and main (138 entries), which did not fit one pass, so about 60 labels came back unconfirmed."
-    solution: "Limit the confirm step to entries that gained occurrences this window or are ranked for picking."
   - session: session_013zxzeQDRyvj3Vc8GUWHvBv
     date: "2026-11-14"
     severity: minor
@@ -89,3 +84,8 @@ occurrences:
     severity: minor
     description: "survey-brief step 3 asks to confirm every never-fixed or regression label, but the survey subagent could confirm only a few of roughly 150 candidates and labelled the rest unconfirmed."
     solution: "Limit confirmation to the top-ranked candidates in the brief."
+  - session: session_013zxzeRF9wSXqBPZvCnNxKb
+    date: "2026-11-27"
+    severity: minor
+    description: "survey-brief step 3 asks to confirm every never-fixed or regression label, impossible for about 85 candidates; the survey agent confirmed only the top ones and said so."
+    solution: "Ask for confirmation of the top-ranked candidates only."

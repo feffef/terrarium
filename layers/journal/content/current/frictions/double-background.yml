@@ -17,11 +17,6 @@ fixes:
     date: "2026-10-16"
     summary: "The double-background guard's deny message now says the whole call was denied and nothing in it ran."
 occurrences:
-  - session: session_013zxzeSBqHVEFogR6M3SoDX
-    date: "2026-11-13"
-    severity: nit
-    description: "Combined run_in_background with a trailing ampersand and later tried a foreground sleep; both were blocked by hooks and cost two calls."
-    solution: "Use run_in_background alone and Monitor for waits, as CLAUDE.md already says."
   - session: session_013zxzeQeBzhDzmSvD9thT22
     date: "2026-11-15"
     severity: nit
@@ -172,3 +167,8 @@ occurrences:
     severity: minor
     description: "Started pnpm gate:scoped with both run_in_background and a trailing ampersand; the double-background guard blocked it and the chained commit did not run, so I redid the commit."
     solution: "Pass run_in_background alone, never a text-level ampersand."
+  - session: session_013zxzeRF9wSXqBPZvCnNxKb
+    date: "2026-11-27"
+    severity: nit
+    description: "A Bash call with run_in_background plus a trailing & was denied by the double-background guard; resent plainly."
+    solution: "Pass run_in_background alone."

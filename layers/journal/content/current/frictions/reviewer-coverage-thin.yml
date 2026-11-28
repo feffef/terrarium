@@ -23,3 +23,8 @@ occurrences:
     severity: minor
     description: "Reviewers B and C each read only a handful of files before reporting, leaving all Skill bodies and most ADRs unread; both reports called themselves shallow."
     solution: "Skill brief could name a minimum file count or split lenses by file area across more agents."
+  - session: session_013zxzePiPyk1zG2CKhVGEzg
+    date: "2026-11-27"
+    severity: minor
+    description: "Reviewers B and C ran out of budget before most Skills and Skill Inventory entries; Agent B had to guess which Skills were uncovered."
+    solution: "Give the audit a per-run coverage list of unread Skills and entries to hand each reviewer."

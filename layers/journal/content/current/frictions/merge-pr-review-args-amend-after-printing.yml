@@ -8,6 +8,8 @@ related:
     rule: That entry is a review call whose args named no sha at all; here they named a sha the head later moved past.
   - entry: merge-pr-own-read-refusal
     rule: That entry is a verdict's Own-read line refused on a diff that was not simple; here the review call's sha went stale.
+notes: |-
+  2026-11-28 design: none dropped: pr-workflow.md already gives the follow-up form (all three sessions opened it) and sits in an open prune trial's territory; a verdict-line flag only saves typing a sha; revisit on a fourth occurrence
 occurrences:
   - session: session_013zxzeQ5mMr3n1PjgqM4sUa
     date: "2026-11-19"
@@ -19,3 +21,8 @@ occurrences:
     severity: nit
     description: "First verdict comment claimed the head was reviewed when code-review ran on the previous commit; merge-pr.ts refused and I posted a correction."
     solution: "After a follow-up commit, write Reviewed: <reviewed sha> and Own-read: <head> from the start."
+  - session: session_013zxzeQivG2v72EMRPiQ5aR
+    date: "2026-11-27"
+    severity: nit
+    description: "Read the PR verdict doc and ran verdict-line twice; its Own-read output names the reviewed sha, not the head, so I wrote the follow-up verdict lines by hand."
+    solution: "verdict-line should accept a separate head for Own-read."

@@ -19,11 +19,6 @@ fixes:
     date: "2026-11-17"
     summary: "design-brief looks up one docReadCounts entry with jq instead of reading all of it"
 occurrences:
-  - session: session_013zxzeNdAgdKF5tpWTQLowx
-    date: "2026-11-13"
-    severity: minor
-    description: "Design subagent: design-brief section 3 says to read only docReadCounts, but printing the audit-skills JSON put 75 KB (a 160-entry window array) into its context first."
-    solution: "Give the one-liner that prints only docReadCounts in the brief."
   - session: session_013zxzeSZQpKBLnM3DK1cPRQ
     date: "2026-11-17"
     severity: minor

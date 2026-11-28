@@ -43,3 +43,8 @@ occurrences:
     severity: moderate
     description: "Stopped after eight product clusters and checked no workflow cluster or learning, so the quota was not filled; the same slip harvest-first-pass-shallow records."
     solution: "Cap the evidence read, then check at least one workflow cluster before stopping."
+  - session: session_013zxzeP4F3aYSUT97sA7pou
+    date: "2026-11-27"
+    severity: minor
+    description: "Stopped after 8 clusters with the quota unfilled, because the digest and code checks used up the run budget."
+    solution: "Cheaper per-cluster checks, such as a script that greps a cluster's quoted phrases in the repo."

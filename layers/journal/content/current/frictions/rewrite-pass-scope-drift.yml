@@ -6,8 +6,6 @@ cause: >-
 surface: safe
 status: open
 related:
-  - entry: rewrite-draft-keeps-old-framing
-    rule: The rewrite kept the old structure and missed what its reader needs.
   - entry: edit-leaves-contradicting-sibling
     rule: An edit left another statement or reference contradicting it.
 notes: |-

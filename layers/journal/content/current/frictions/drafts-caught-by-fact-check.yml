@@ -29,16 +29,6 @@ fixes:
     date: "2026-11-13"
     summary: "digest SKILL.md needs a source in the day's gathered material for a cadence word and drops 'scheduled' from its example; the fact-check checks both."
 occurrences:
-  - session: session_013zxzeRd1qkgnadmWbZLoZu
-    date: "2026-11-13"
-    severity: minor
-    description: "The first Digest draft had five wrong or misleading claims; I wrote three Specimens from a WIP commit message and misattributed a rule to PR 3138 without reading the merged code (CLAUDE.md, Verify before you state)."
-    solution: "Read the merged file or diff for every number and attribution before drafting; the fact-check subagent caught all five before the PR."
-  - session: session_013zxzeP357BagrJREfWSJ6U
-    date: "2026-11-13"
-    severity: minor
-    description: "The first README stated times as coming from first commits for two files that had none, and credited the owner-confirmed corrections to me; code-review caught both."
-    solution: "Mark, while writing, each fact whose source is the conversation and not git or a log."
   - session: session_013zxzeQeBzhDzmSvD9thT22
     date: "2026-11-15"
     severity: minor
@@ -144,3 +134,13 @@ occurrences:
     severity: nit
     description: "Draft notes had a placeholder session id and four issue or PR state phrases GitHub contradicted; check-states and a re-read caught them before the commit."
     solution: "Draft notes from the auditors' verified states only, and run check-states on the draft file first."
+  - session: session_013zxzeR9wuoRUezpWhAdNaL
+    date: "2026-11-27"
+    severity: minor
+    description: "My first soft decision on the memory page covered only two of eleven names that stay short and was written as past-tense history; a reviewer caught both."
+    solution: "List the guide files whose slug differs from their title before writing the decision, and write soft decisions as present-tense rules."
+  - session: session_013zxzeQ3rmR3XHfvXpobcpr
+    date: "2026-11-27"
+    severity: minor
+    description: "Drafted Karen's reply around 'the cap's test was skipped' from the PR body's nits list without opening the spec; the spec already tested the cap, so the draft invented a flaw until I checked."
+    solution: "Make step 12 say to check a reply's load-bearing claim against the file it names before drafting, not after the reader picks it."

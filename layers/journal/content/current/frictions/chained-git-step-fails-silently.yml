@@ -13,11 +13,6 @@ fixes:
     date: "2026-10-25"
     summary: "Its git-conventions section now also covers a git add of an ignored path and a commit given both -m and -F, and says to read git log -1 before the gate."
 occurrences:
-  - session: session_013zxzeQ9FTpQjBywTHWkdXF
-    date: "2026-11-13"
-    severity: nit
-    description: "I chained a git log check and a git push in one Bash call, against git-conventions' rule that a state-changing git command runs alone; the push then failed and its exit code was read through a pipe."
-    solution: "Run the push in its own call, as the doc says."
   - session: session_013zxzeQnCCyBdXZDEv9qTNh
     date: "2026-11-14"
     severity: nit

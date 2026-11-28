@@ -2,7 +2,8 @@ name: glassbox-curate-orientation-read-cost
 surface: safe
 summary: "A glassbox-curate run read 90-120 KB of the guide index and Subject pages before it could pick a focus for a small edit."
 cause: "The Skill's orientation has the run read the guide index and the Subject pages before a focus is chosen, so a run that needs one memory-page item still reads the whole guide (about 91 KB in three files, about 120 KB in five Reads). Signals: a glassbox-curate session whose Friction names the KB or tokens spent on the guide index before choosing a focus."
-status: open
+status: tracked
+ref: "#3733"
 related:
   - entry: orient-output-truncates
     rule: The orientation script's output was cut off and a section had to be re-fetched; this entry is reads that fit but cost too much.
@@ -29,3 +30,8 @@ occurrences:
     severity: minor
     description: "Step 3 makes the run read a whole Subject (four files, about 116 KB for terrarium-practice) to trim one page, which cost a large share of the session's context."
     solution: "For a pure cut, the Skill could allow reading only the focus page and the pages it links."
+  - session: session_013zxzeR9wuoRUezpWhAdNaL
+    date: "2026-11-27"
+    severity: nit
+    description: "I read about 105 KB of guide index files plus the orient output before choosing a focus; most of it did not bear on a rename."
+    solution: "Let orient.ts print a short per-Subject list for the first pick and the full index only when a page must be read."

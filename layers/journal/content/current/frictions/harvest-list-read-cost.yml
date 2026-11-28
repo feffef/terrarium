@@ -2,7 +2,8 @@ name: harvest-list-read-cost
 summary: A harvest run read its whole list of ideas and learnings, 60,000 to 90,000 tokens over several reads, and then checked only a small part of it.
 cause: "Comes from harvest-first-pass-shallow and PR #3106: the harvest Skill has the run read the whole list (270 to 577 lines) before it stops at a capped number of clusters, and many entries are old ideas for a removed Skill (glassbox-improve). The harm is read cost, not a shallow pass. Since PR #3454 (2026-11-18) step 1 reads the list in pages with a last-entry count check, since PR #3470 a harvest evidence command replaced per-cluster hand searches, since PR #3505 it read a saved issue list, and PR #3532 (2026-11-20) ranked and capped each group's tracker block at 10 hits; the list read was still whole. PR #3707 (2026-11-26) replaced keyword evidence with a harvest digest of about 181 KB read whole; its read cost is unmeasured on a scheduled run. Signals: 'whole read of 577 lines took about 90,000 tokens', 'read the whole 561-line harvest list', 'then checked only 17 clusters', many hand-run searches per cluster, 'each harvest evidence call took about 33 s', '5,215 lines', '3,625 lines for nine groups'."
 surface: safe
-status: open
+status: tracked
+ref: "#3731 (regression of PR #3707)"
 related:
   - entry: harvest-first-pass-shallow
     rule: The harm is a shallow pass or a skipped step, not the read cost.
@@ -11,6 +12,7 @@ related:
 notes: |-
   2026-11-13 survey: Seedling #3191 (cheaper whole read and file-based merge check) closed not planned 2026-11-12; #3178 closed by PR #3182.
   2026-11-19 survey: the PBxP-era occurrence (NYPw, 2026-11-18) is per-cluster search cost; PR #3470 (merged 2026-11-18T21:05Z, after that session) added 'harvest evidence' for it, so no regression issue filed.
+  2026-11-28 survey: P4F3 (2026-11-27, after PR #3707 merged 2026-11-26) read the 560-line harvest digest in one Read that exceeded the token cap and cost a retry; the Skill gives no page size for the digest.
 fixes:
   - pr: 3195
     date: "2026-11-12"
@@ -74,3 +76,8 @@ occurrences:
     severity: moderate
     description: "harvest evidence printed tracker hits unrelated to the keywords (the same Midden survey and audit-skills issues in most groups) and omitted hundreds, so I searched the tracker by hand instead."
     solution: "Rank tracker hits by keyword overlap and print only those matching two or more keywords; held by closed Seedlings #3529 and #3562."
+  - session: session_013zxzeP4F3aYSUT97sA7pou
+    date: "2026-11-27"
+    severity: minor
+    description: "A 560-line Read of the harvest digest exceeded the token cap and cost a retry; the Skill gives no page size for the digest."
+    solution: "State a page size of about 300 lines in step 3."

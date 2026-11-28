@@ -14,36 +14,6 @@ fixes:
     date: "2026-11-17"
     summary: "Stop hook counts a merge only when merge-pr.ts's own result reports merged: true"
 occurrences:
-  - session: session_013zxzeQ4cuLLoFfdaf5sE2d
-    date: "2026-11-13"
-    severity: minor
-    description: "The Stop hook said a PR merged and demanded close-session, but this session opened and merged no PR; work was still running."
-    solution: "merge-close-stop should match only this session's own merge-pr.ts run, not the word merged in tool output."
-  - session: session_013zxzeRd1qkgnadmWbZLoZu
-    date: "2026-11-13"
-    severity: nit
-    description: "The Stop hook reported that a PR merged and demanded close-session right after I started merge-pr.ts in the background; PR 3224 was still open and waiting on CI."
-    solution: "Have the hook check the PR's merged state, not that a merge-pr.ts command ran."
-  - session: session_013zxzeRqf691rc3SdLaPbvP
-    date: "2026-11-13"
-    severity: nit
-    description: "The Stop hook said a PR merged and demanded close-session while PR 3231 was still open (merge-pr.ts was only polling CI in the background)."
-    solution: "Have the hook check the PR's merged state, not that merge-pr.ts was started."
-  - session: session_013zxzeRbcVWW7Upv1bSok39
-    date: "2026-11-13"
-    severity: nit
-    description: "The merge-close Stop hook fired while merge-pr.ts was still polling for green CI, before any merge happened"
-    solution: "Have the hook check the PR's merged state rather than the merge command being run"
-  - session: session_013zxzeQ9FTpQjBywTHWkdXF
-    date: "2026-11-13"
-    severity: minor
-    description: "The merge-close Stop hook blocked two turn ends with 'A PR merged' though no PR exists; a read-only grep had named scripts/github/merge-pr.ts."
-    solution: "Key merge-close-stop.ts on a merge-pr.ts run that reported merged true, as the PostToolUse hint already does, not on any Bash command naming the file."
-  - session: session_013zxzeP357BagrJREfWSJ6U
-    date: "2026-11-13"
-    severity: minor
-    description: "The merge-close Stop hook blocked the turn twice saying a PR merged; none did. My Bash commands only named scripts/github/merge-pr.ts while reading it."
-    solution: "Make merge-close-stop.ts test a merge result, not command text (cause merge-close-hint-fires-without-merge)."
   - session: session_013zxzeQDRyvj3Vc8GUWHvBv
     date: "2026-11-14"
     severity: minor

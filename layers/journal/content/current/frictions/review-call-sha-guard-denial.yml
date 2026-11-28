@@ -43,3 +43,13 @@ occurrences:
     severity: nit
     description: "First code-review call was blocked by the sha guard because I copied args from memory, not the printed review call."
     solution: "Paste verdict-line.ts --review-call output whole."
+  - session: session_013zxzeQUGwaWUa1tvt7hn43
+    date: "2026-11-27"
+    severity: nit
+    description: "The first code-review call was blocked by the sha guard because I typed the args from memory instead of pasting verdict-line --review-call output."
+    solution: "Paste the printed review-call args whole, as the guard says."
+  - session: session_013zxzeQi2wG6G8UMWa2bHxB
+    date: "2026-11-28"
+    severity: nit
+    description: "First code-review call omitted the head sha and the guard blocked it; I reran verdict-line --review-call and pasted its args."
+    solution: "Paste the review-call args whole the first time."
