@@ -83,3 +83,31 @@ trials:
       `merge-pr-own-read-refusal` with `friction-rates.ts`; a clear rise is also
       damage. NOT damage: a refusal `merge-pr.ts` raises on a diff that fails
       the simple-change test the doc still states.
+  - problem: >
+      `.agents/skills/dispatch-subagents/SKILL.md` plainly condensed (-31 words:
+      1129 -> 1098 by `wc -w`; -5 lines by `git diff --numstat`, 37 added, 42
+      deleted): restatements merged (impl-agent bans, collision and resume
+      sections), every rule, section number and heading kept (Skills cite
+      `dispatch-subagents` §3 and "Scope and trust"). Small because an earlier
+      trial (PR #2324, judged 2026-11-23) already cut this text. Chosen after a
+      search subagent this run searched ledger `fixes:` lists and 'Regression'
+      issue titles (not read: bodies, `guards.md` beyond its roster); it ranked
+      the subagent-brief rules by largest prose mass among those with failures.
+      Its counts are unverified here, so none are cited. `trial-territory.ts` run
+      this run on the file path: no overlap. Sonnet probe pinned to 10841085bebc
+      passed; three original clauses were restored verbatim after it (96bdcd8).
+    territory:
+      paths:
+        - ".agents/skills/dispatch-subagents/SKILL.md"
+      keywords:
+        - dispatch-subagents
+        - subagent brief
+    opened: 2026-11-28
+    proven: true
+    check: >
+      Damage is a major or blocker Friction where a brief omitted a line the cut
+      text carried (SHA pin, worktree isolation, commit-before-stop, foreground
+      checks, the Scope and trust rules). Compare the shares of
+      `subagent-brief-defects` and `subagent-brief-omits-verdict-ask` with
+      `friction-rates.ts`; a clear rise is damage. NOT damage: an unfilled
+      placeholder the guard denies.
