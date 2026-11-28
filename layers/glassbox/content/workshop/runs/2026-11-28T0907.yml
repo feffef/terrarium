@@ -1,0 +1,14 @@
+session: session_013zxzeSYNKHAFBxfHPQi9Qb
+mode: autonomous
+focus: "Verification: Usability testing, a wording weak spot on the memory page (the run, the brief and the lens come before a gloss in In Terrarium). No open Glass Box PR touches it (PR 3743 adds a Lesson in web standards and edits other Where next lists). Run two of one session."
+changes: []
+pagesRead:
+  - verification/10.merge-gate
+  - verification/20.type-checking
+  - verification/30.content-validation
+  - verification/40.testing
+  - verification/50.linting
+  - verification/60.zod-refinements
+  - verification/70.schema-evolution
+  - verification/80.headless-browser-checks
+  - verification/85.usability-testing
